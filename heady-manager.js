@@ -208,6 +208,11 @@ app.use("/api/", rateLimit({
   max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
+  // Exempt internal/localhost traffic — swarm + internal IPC must not be rate-limited
+  skip: (req) => {
+    const ip = req.ip || req.connection?.remoteAddress || "";
+    return ip === "127.0.0.1" || ip === "::1" || ip === "::ffff:127.0.0.1" || ip === "localhost";
+  },
 }));
 
 const coreApi = require('./services/core-api');
@@ -419,6 +424,15 @@ computeDashboard.registerRoutes(app, orchestrator);
 const selfOptimizer = require("./src/self-optimizer");
 selfOptimizer.registerRoutes(app, vectorMemory);
 console.log("  ∞ SelfOptimizer: WIRED (continuous heartbeat + error recovery)");
+
+// ─── Continuous Learning Engine ─────────────────────────────────────
+try {
+  const learningEngine = require("./src/continuous-learning");
+  learningEngine.registerRoutes(app);
+  app.locals.vectorMemory = vectorMemory; // For /api/learn/run endpoint
+} catch (err) {
+  console.warn(`  ⚠ ContinuousLearning: not loaded: ${err.message}`);
+}
 // ─── Static Assets ─────────────────────────────────────────────────
 const frontendBuildPath = path.join(__dirname, "frontend", "dist");
 if (fs.existsSync(frontendBuildPath)) {

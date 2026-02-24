@@ -229,6 +229,65 @@ async function runOptimizationCycle(vectorMem) {
     return result;
 }
 
+// ── 6. System Health Scan (local, free — runs every cycle) ──────
+async function runSystemScan() {
+    const issues = [];
+    const checks = {};
+
+    // Memory usage
+    const memUsage = process.memoryUsage();
+    const heapPct = (memUsage.heapUsed / memUsage.heapTotal * 100).toFixed(1);
+    checks.memory = { heapUsedMB: Math.round(memUsage.heapUsed / 1024 / 1024), heapPct: +heapPct, rssMB: Math.round(memUsage.rss / 1024 / 1024) };
+    if (+heapPct > 85) issues.push({ severity: "high", message: `Heap usage at ${heapPct}%`, check: "memory" });
+
+    // Disk space for data dir
+    try {
+        const dataDir = path.join(__dirname, "..", "data");
+        const files = fs.readdirSync(dataDir);
+        let totalSize = 0;
+        for (const f of files) {
+            try { totalSize += fs.statSync(path.join(dataDir, f)).size; } catch { }
+        }
+        checks.disk = { dataFiles: files.length, dataSizeMB: +(totalSize / 1024 / 1024).toFixed(2) };
+        if (totalSize > 500 * 1024 * 1024) issues.push({ severity: "medium", message: `Data dir is ${(totalSize / 1024 / 1024).toFixed(0)}MB`, check: "disk" });
+    } catch { checks.disk = { error: "cannot read data dir" }; }
+
+    // Audit log size
+    try {
+        const auditSize = fs.statSync(OPT_AUDIT).size;
+        checks.auditLog = { sizeMB: +(auditSize / 1024 / 1024).toFixed(2) };
+        if (auditSize > 50 * 1024 * 1024) issues.push({ severity: "low", message: "Audit log > 50MB, consider rotation", check: "auditLog" });
+    } catch { }
+
+    // Source file integrity — check key modules exist
+    const criticalModules = ["agent-orchestrator.js", "vector-memory.js", "heady-conductor.js", "continuous-learning.js", "self-optimizer.js"];
+    const missingModules = criticalModules.filter(m => !fs.existsSync(path.join(__dirname, m)));
+    checks.modules = { total: criticalModules.length, missing: missingModules.length };
+    if (missingModules.length > 0) issues.push({ severity: "critical", message: `Missing modules: ${missingModules.join(", ")}`, check: "modules" });
+
+    // Event loop lag (rough estimate)
+    const lagStart = Date.now();
+    await new Promise(r => setImmediate(r));
+    const lag = Date.now() - lagStart;
+    checks.eventLoop = { lagMs: lag };
+    if (lag > 100) issues.push({ severity: "high", message: `Event loop lag ${lag}ms`, check: "eventLoop" });
+
+    // Env vars — key providers still configured
+    const envChecks = {
+        HF_TOKEN: !!process.env.HF_TOKEN,
+        GEMINI_KEY: !!(process.env.GEMINI_API_KEY_HEADY || process.env.GOOGLE_API_KEY),
+        GROQ_KEY: !!process.env.GROQ_API_KEY,
+        ANTHROPIC_KEY: !!process.env.ANTHROPIC_API_KEY,
+        PERPLEXITY_KEY: !!process.env.PERPLEXITY_API_KEY,
+    };
+    const missingEnv = Object.entries(envChecks).filter(([, v]) => !v).map(([k]) => k);
+    checks.env = { configured: Object.values(envChecks).filter(Boolean).length, total: Object.keys(envChecks).length, missing: missingEnv };
+    if (missingEnv.length > 0) issues.push({ severity: "medium", message: `Missing env: ${missingEnv.join(", ")}`, check: "env" });
+
+    audit({ type: "system:scan", issues: issues.length, checks: Object.keys(checks).length });
+    return { ok: true, issues, checks, ts: Date.now() };
+}
+
 // ── Continuous Loop Controller ──────────────────────────────────
 let loopIntervalId = null;
 let vectorMemRef = null;
@@ -237,10 +296,48 @@ function startContinuousLoop(vectorMem) {
     vectorMemRef = vectorMem;
     heartbeat.status = "running";
 
+    // Wire continuous learning engine
+    let learningEngine = null;
+    try {
+        learningEngine = require("./continuous-learning");
+        console.log("  🧠 Optimizer: Learning engine WIRED");
+    } catch (err) {
+        console.warn(`  ⚠ Optimizer: Learning engine not loaded: ${err.message}`);
+    }
+
     function scheduleNext() {
         loopIntervalId = setTimeout(async () => {
             try {
+                // ── Phase 1: Standard optimization (benchmark, tune, discover) ──
                 const result = await runOptimizationCycle(vectorMemRef);
+
+                // ── Phase 2: System health scan (local, free) ──
+                const healthScan = await runSystemScan();
+                if (healthScan && vectorMemRef && typeof vectorMemRef.ingestMemory === "function") {
+                    const issues = healthScan.issues || [];
+                    if (issues.length > 0) {
+                        try {
+                            await vectorMemRef.ingestMemory({
+                                content: `[System Scan] ${issues.length} issues found: ${issues.map(i => i.message).join("; ")}`,
+                                metadata: { type: "system_scan", issueCount: issues.length, cycle: heartbeat.cycleCount },
+                            });
+                        } catch { }
+                    }
+                }
+
+                // ── Phase 3: Active learning (calls AI providers) ──
+                // Run every 3rd cycle to balance cost, or every cycle for first 14 topics
+                const learningStats = learningEngine ? learningEngine.getLearnStats() : null;
+                const shouldLearn = learningEngine && (heartbeat.cycleCount % 3 === 0 || (learningStats && learningStats.remaining > 0 && learningStats.totalLearned < 14));
+                let learnResult = null;
+                if (shouldLearn) {
+                    try {
+                        learnResult = await learningEngine.runLearningCycle(vectorMemRef);
+                    } catch (learnErr) {
+                        console.warn(`  ⚠ Learning cycle error: ${learnErr.message}`);
+                        audit({ type: "learning:error", error: learnErr.message });
+                    }
+                }
 
                 // SUCCESS
                 heartbeat.lastCycleAt = Date.now();
@@ -253,8 +350,9 @@ function startContinuousLoop(vectorMem) {
                 if (heartbeat.cycleCount % 10 === 0 && vectorMemRef && typeof vectorMemRef.ingestMemory === "function") {
                     heartbeat.proofOfLifeStored++;
                     try {
+                        const lStats = learningEngine ? learningEngine.getLearnStats() : {};
                         await vectorMemRef.ingestMemory({
-                            content: `Optimizer proof-of-life #${heartbeat.proofOfLifeStored}: ${heartbeat.cycleCount} cycles, ${heartbeat.totalErrors} total errors, ${heartbeat.recoveries} recoveries. Uptime: ${Math.round((Date.now() - heartbeat.startedAt) / 1000)}s`,
+                            content: `Optimizer proof-of-life #${heartbeat.proofOfLifeStored}: ${heartbeat.cycleCount} cycles, ${heartbeat.totalErrors} total errors, ${heartbeat.recoveries} recoveries. Learned: ${lStats.totalLearned || 0} topics. Uptime: ${Math.round((Date.now() - heartbeat.startedAt) / 1000)}s`,
                             metadata: { type: "optimizer_heartbeat", cycle: heartbeat.cycleCount },
                         });
                     } catch { }

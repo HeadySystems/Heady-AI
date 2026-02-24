@@ -293,7 +293,23 @@ async function computeReadinessScore(context) {
 }
 
 async function sendCheckpointEmail(context) {
-  return { task: "send_checkpoint_email", status: "completed", result: "Checkpoint email queued (stub)" };
+  // Log checkpoint data for run audit — email notification deferred to external integration
+  const summary = {
+    runId: context.runId,
+    stageId: context.stageId,
+    ts: new Date().toISOString(),
+  };
+  try {
+    const http = require("http");
+    const payload = JSON.stringify({ type: "checkpoint", input: JSON.stringify(summary), output: "checkpoint_logged" });
+    const req = http.request({
+      hostname: "localhost", port: 3301, path: "/api/brain/log", method: "POST",
+      headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) }
+    });
+    req.write(payload);
+    req.end();
+  } catch { /* non-blocking */ }
+  return { task: "send_checkpoint_email", status: "completed", result: `Checkpoint logged for run ${context.runId || "unknown"}` };
 }
 
 async function logRunConfigHash(context) {

@@ -10,14 +10,41 @@ const AgentCascade = () => {
     const [battleMode, setBattleMode] = useState(false);
     const [autoOptimize, setAutoOptimize] = useState(true);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!input.trim()) return;
-        setMessages(prev => [...prev, { role: 'user', content: input }]);
-        setTimeout(() => {
-            const optMsg = autoOptimize ? '[Optimization Service: Safe Range Parameters Auto-Tuned]' : '';
-            setMessages(prev => [...prev, { role: 'assistant', content: `Processing request via ${battleMode ? 'BE VERY AWARE MODE' : 'heady-brain inference'}... ${optMsg}` }]);
-        }, 500);
+        const userMsg = input;
+        setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
         setInput('');
+
+        const optMsg = autoOptimize ? '\n\n[Optimization Service: Safe Range Parameters Auto-Tuned]' : '';
+        const loadingMsgId = Date.now();
+        setMessages(prev => [...prev, { id: loadingMsgId, role: 'assistant', content: `Processing request via ${battleMode ? 'BE VERY AWARE MODE' : 'heady-brain inference'}...` }]);
+
+        try {
+            const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('ide.', '')}`;
+            const response = await fetch(`${baseUrl}/api/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userMsg,
+                    mode: battleMode ? 'battle' : 'normal',
+                    optimize: autoOptimize
+                })
+            });
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            const data = await response.json();
+
+            setMessages(prev => prev.map(msg =>
+                msg.id === loadingMsgId ? { role: 'assistant', content: (data.response || data.message || 'Action completed.') + optMsg } : msg
+            ));
+        } catch (error) {
+            console.error('Chat error:', error);
+            setMessages(prev => prev.map(msg =>
+                msg.id === loadingMsgId ? { role: 'assistant', content: `Error communicating with Heady Brain: ${error.message}${optMsg}` } : msg
+            ));
+        }
     };
 
     return (

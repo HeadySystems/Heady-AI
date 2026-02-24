@@ -47,14 +47,14 @@ const SystemHealth = ({ health, onRefresh }) => {
   };
 
   const mockServices = [
-    { name: 'HeadyManager', status: health?.status || 'OPTIMAL', endpoint: 'localhost:3300' },
-    { name: 'Monte Carlo', status: 'running', endpoint: 'localhost:3300/api/monte-carlo' },
-    { name: 'Pattern Engine', status: 'running', endpoint: 'localhost:3300/api/patterns' },
-    { name: 'Vector Storage', status: 'healthy', endpoint: 'localhost:6333' },
-    { name: 'LiteLLM Proxy', status: 'healthy', endpoint: 'localhost:4000' },
-    { name: 'Arena Mode', status: 'ready', endpoint: 'localhost:3300/api/arena' },
-    { name: 'Memory System', status: 'running', endpoint: 'localhost:3300/api/memory' },
-    { name: 'Risk Analysis', status: 'active', endpoint: 'localhost:3300/api/risk' }
+    { name: 'HeadyManager', status: health?.status || 'OPTIMAL', endpoint: window.location.hostname === 'localhost' ? 'localhost:3300' : `api.${window.location.hostname.replace('buddy.', '')}` },
+    { name: 'Monte Carlo', status: 'running', endpoint: window.location.hostname === 'localhost' ? 'localhost:3300/api/monte-carlo' : `api.${window.location.hostname.replace('buddy.', '')}/api/monte-carlo` },
+    { name: 'Pattern Engine', status: 'running', endpoint: window.location.hostname === 'localhost' ? 'localhost:3300/api/patterns' : `api.${window.location.hostname.replace('buddy.', '')}/api/patterns` },
+    { name: 'Vector Storage', status: 'healthy', endpoint: window.location.hostname === 'localhost' ? 'localhost:6333' : `vector.${window.location.hostname.replace('buddy.', '')}` },
+    { name: 'LiteLLM Proxy', status: 'healthy', endpoint: window.location.hostname === 'localhost' ? 'localhost:4000' : `llm.${window.location.hostname.replace('buddy.', '')}` },
+    { name: 'Arena Mode', status: 'ready', endpoint: window.location.hostname === 'localhost' ? 'localhost:3300/api/arena' : `api.${window.location.hostname.replace('buddy.', '')}/api/arena` },
+    { name: 'Memory System', status: 'running', endpoint: window.location.hostname === 'localhost' ? 'localhost:3300/api/memory' : `api.${window.location.hostname.replace('buddy.', '')}/api/memory` },
+    { name: 'Risk Analysis', status: 'active', endpoint: window.location.hostname === 'localhost' ? 'localhost:3300/api/risk' : `api.${window.location.hostname.replace('buddy.', '')}/api/risk` }
   ];
 
   const mockMetrics = {
@@ -176,8 +176,8 @@ const SystemHealth = ({ health, onRefresh }) => {
                 <span className="text-sm font-medium">{mockMetrics.cpu}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full" 
+                <div
+                  className="bg-blue-600 h-2 rounded-full"
                   style={{ width: mockMetrics.cpu }}
                 ></div>
               </div>
@@ -188,8 +188,8 @@ const SystemHealth = ({ health, onRefresh }) => {
                 <span className="text-sm font-medium">{mockMetrics.memory}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-600 h-2 rounded-full" 
+                <div
+                  className="bg-green-600 h-2 rounded-full"
                   style={{ width: mockMetrics.memory }}
                 ></div>
               </div>
@@ -200,8 +200,8 @@ const SystemHealth = ({ health, onRefresh }) => {
                 <span className="text-sm font-medium">{mockMetrics.disk}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-yellow-600 h-2 rounded-full" 
+                <div
+                  className="bg-yellow-600 h-2 rounded-full"
                   style={{ width: mockMetrics.disk }}
                 ></div>
               </div>

@@ -80,6 +80,33 @@ hcfp.command('health').description('Website health check').action(() => run('nod
 hcfp.command('config').description('Show HCFP config').action(() => run('node bin/hcfp config'));
 
 // ══════════════════════════════════════════════
+// 🚀 Top-Level Auto-Success (shortcut)
+// ══════════════════════════════════════════════
+program
+  .command('auto-success [project] [customization] [modules] [intensive]')
+  .alias('full-auto-success')
+  .alias('auto-flow-success')
+  .alias('auto-flow')
+  .description('🚀 Run HCFP Auto-Success — Train • Enhance • Deploy • Automate')
+  .action((project, customization, modules, intensive) => {
+    banner('HCFP AUTO-SUCCESS — FULL THROTTLE');
+    const script = path.join(SCRIPTS, 'hcfp', 'hcfp-auto-success.sh');
+    if (!fs.existsSync(script)) {
+      // Fallback: run via hcfp subcommand
+      console.log('⚡ Delegating to HCFP auto-success...');
+      run('node bin/hcfp auto-success');
+      return;
+    }
+    const args = [project, customization, modules, intensive].filter(Boolean).join(' ');
+    console.log(`  Project:       ${project || 'HeadySystems'}`);
+    console.log(`  Customization: ${customization || 'arena-mode'}`);
+    console.log(`  Modules:       ${modules || 'nextjs,cloudflare,drupal11'}`);
+    console.log(`  Intensive:     ${intensive || 'true'}`);
+    console.log('');
+    run(`bash "${script}" ${args || 'HeadySystems arena-mode "nextjs,cloudflare,drupal11" true'}`);
+  });
+
+// ══════════════════════════════════════════════
 // 📊 Status & Health
 // ══════════════════════════════════════════════
 program
@@ -90,7 +117,7 @@ program
     try {
       const h = await apiGet('/api/health');
       console.log(`  System:      ${h.status || 'unknown'}`);
-      console.log(`  Uptime:      ${h.uptime ? Math.floor(h.uptime/3600)+'h '+Math.floor((h.uptime%3600)/60)+'m' : 'N/A'}`);
+      console.log(`  Uptime:      ${h.uptime ? Math.floor(h.uptime / 3600) + 'h ' + Math.floor((h.uptime % 3600) / 60) + 'm' : 'N/A'}`);
       console.log(`  Services:    ${h.services || 'N/A'}`);
       console.log(`  HCFP Mode:   ${h.hcfp_mode || 'N/A'}`);
       console.log(`  Version:     ${h.version || VERSION}`);
@@ -104,8 +131,8 @@ program
       const a = await apiGet('/api/autonomy/status');
       console.log(`\n  Autonomy:    ${a.mode || 'unknown'}`);
       if (a.allocation) {
-        console.log(`  Knowledge:   ${a.allocation.knowledge_gathering||0}%`);
-        console.log(`  User Task:   ${a.allocation.user_task||0}%`);
+        console.log(`  Knowledge:   ${a.allocation.knowledge_gathering || 0}%`);
+        console.log(`  User Task:   ${a.allocation.user_task || 0}%`);
       }
     } catch { console.log('  Autonomy:    offline'); }
     console.log('');
@@ -117,9 +144,9 @@ program
   .action(async () => {
     banner('HEADY HEALTH CHECK');
     const endpoints = [
-      { name: 'HeadyManager',  url: '/api/health' },
-      { name: 'Brain API',     url: '/api/brain/health' },
-      { name: 'Autonomy',      url: '/api/autonomy/status' },
+      { name: 'HeadyManager', url: '/api/health' },
+      { name: 'Brain API', url: '/api/brain/health' },
+      { name: 'Autonomy', url: '/api/autonomy/status' },
     ];
     for (const ep of endpoints) {
       try {
@@ -141,7 +168,7 @@ brain.command('chat <message>').description('Send a chat message to HeadyBrain')
   .option('-t, --temp <temp>', 'Temperature', '0.7')
   .action((message, opts) => {
     const body = JSON.stringify({ message, model: opts.model, temperature: parseFloat(opts.temp) });
-    run(`curl -s -X POST ${API}/api/brain/chat -H "Content-Type: application/json" -d '${body}' | node -e "process.stdin.on('data',d=>{const r=JSON.parse(d);console.log(r.response||r.message||JSON.stringify(r,null,2))})"`, { stdio: ['pipe','inherit','inherit'] });
+    run(`curl -s -X POST ${API}/api/brain/chat -H "Content-Type: application/json" -d '${body}' | node -e "process.stdin.on('data',d=>{const r=JSON.parse(d);console.log(r.response||r.message||JSON.stringify(r,null,2))})"`, { stdio: ['pipe', 'inherit', 'inherit'] });
   });
 brain.command('analyze <file>').description('Analyze a file with HeadyBrain')
   .option('-f, --focus <focus>', 'Analysis focus', 'general')
@@ -149,13 +176,13 @@ brain.command('analyze <file>').description('Analyze a file with HeadyBrain')
     const content = fs.readFileSync(path.resolve(file), 'utf8');
     const lang = path.extname(file).slice(1);
     const body = JSON.stringify({ content, type: 'code', language: lang, focus: opts.focus });
-    run(`curl -s -X POST ${API}/api/brain/analyze -H "Content-Type: application/json" -d '${body.replace(/'/g, "'\\''")}' | node -e "process.stdin.on('data',d=>console.log(JSON.parse(d).analysis||d.toString()))"`, { stdio: ['pipe','inherit','inherit'] });
+    run(`curl -s -X POST ${API}/api/brain/analyze -H "Content-Type: application/json" -d '${body.replace(/'/g, "'\\''")}' | node -e "process.stdin.on('data',d=>console.log(JSON.parse(d).analysis||d.toString()))"`, { stdio: ['pipe', 'inherit', 'inherit'] });
   });
 brain.command('search <query>').description('Search the knowledge base')
   .option('-l, --limit <n>', 'Max results', '10')
   .action((query, opts) => {
     const body = JSON.stringify({ query, scope: 'all', limit: parseInt(opts.limit) });
-    run(`curl -s -X POST ${API}/api/brain/search -H "Content-Type: application/json" -d '${body}' | node -e "process.stdin.on('data',d=>console.log(JSON.stringify(JSON.parse(d),null,2)))"`, { stdio: ['pipe','inherit','inherit'] });
+    run(`curl -s -X POST ${API}/api/brain/search -H "Content-Type: application/json" -d '${body}' | node -e "process.stdin.on('data',d=>console.log(JSON.stringify(JSON.parse(d),null,2)))"`, { stdio: ['pipe', 'inherit', 'inherit'] });
   });
 
 // ══════════════════════════════════════════════
@@ -174,7 +201,7 @@ const lens = program.command('lens').description('🔬 HeadyLens — Visual moni
 lens.command('scan').description('Scan all production domains')
   .action(async () => {
     banner('HEADYLENS — DOMAIN SCAN');
-    const domains = ['headyme.com','headysystems.com','headyconnection.org','headymcp.com','headyio.com','headybuddy.org'];
+    const domains = ['headyme.com', 'headysystems.com', 'headyconnection.org', 'headymcp.com', 'headyio.com', 'headybuddy.org'];
     for (const d of domains) {
       try {
         const start = Date.now();
@@ -184,7 +211,7 @@ lens.command('scan').description('Scan all production domains')
             res.on('end', resolve);
           }).on('error', reject);
         });
-        console.log(`  ✅ ${d.padEnd(25)} ${Date.now()-start}ms`);
+        console.log(`  ✅ ${d.padEnd(25)} ${Date.now() - start}ms`);
       } catch (e) {
         console.log(`  ❌ ${d.padEnd(25)} ${e.code || 'ERROR'}`);
       }
@@ -205,14 +232,14 @@ memory.command('status').description('Memory system status')
       const stats = fs.statSync(memFile);
       const data = JSON.parse(fs.readFileSync(memFile, 'utf8'));
       const count = Array.isArray(data) ? data.length : Object.keys(data).length;
-      console.log(`  memory-store.json:     ${count} entries (${(stats.size/1024).toFixed(1)}KB)`);
+      console.log(`  memory-store.json:     ${count} entries (${(stats.size / 1024).toFixed(1)}KB)`);
       console.log(`  Last modified:         ${stats.mtime.toISOString()}`);
     } else { console.log('  memory-store.json:     NOT FOUND'); }
     if (fs.existsSync(brainFile)) {
       const stats = fs.statSync(brainFile);
       const data = JSON.parse(fs.readFileSync(brainFile, 'utf8'));
       const count = Array.isArray(data) ? data.length : Object.keys(data).length;
-      console.log(`  brain-interactions:    ${count} logged (${(stats.size/1024).toFixed(1)}KB)`);
+      console.log(`  brain-interactions:    ${count} logged (${(stats.size / 1024).toFixed(1)}KB)`);
     } else { console.log('  brain-interactions:    NOT FOUND'); }
     console.log('');
   });
@@ -331,7 +358,7 @@ program
     const scanDir = opts.category && categories[opts.category]
       ? path.join(SCRIPTS, categories[opts.category])
       : SCRIPTS;
-    
+
     function listScripts(dir, prefix = '') {
       if (!fs.existsSync(dir)) return;
       const items = fs.readdirSync(dir).sort();
@@ -363,7 +390,7 @@ program
       const files = fs.readdirSync(CONFIGS).filter(f => /\.(json|yaml|yml)$/.test(f)).sort();
       for (const f of files) {
         const stat = fs.statSync(path.join(CONFIGS, f));
-        console.log(`  ${f.padEnd(40)} ${(stat.size/1024).toFixed(1)}KB  ${stat.mtime.toISOString().slice(0,16)}`);
+        console.log(`  ${f.padEnd(40)} ${(stat.size / 1024).toFixed(1)}KB  ${stat.mtime.toISOString().slice(0, 16)}`);
       }
     }
     console.log('');

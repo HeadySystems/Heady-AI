@@ -9,9 +9,9 @@
         "mcp-bridge",
         "canvas"
       ],
-      "lastAllocatedAt": null,
-      "allocationCount": 0,
-      "avgAffinity": 0
+      "lastAllocatedAt": "2026-02-24T18:02:52.180Z",
+      "allocationCount": 30,
+      "avgAffinity": 0.25
     },
     "soul": {
       "activeInstances": 1,
@@ -29,9 +29,9 @@
       "presences": [
         "local"
       ],
-      "lastAllocatedAt": null,
-      "allocationCount": 0,
-      "avgAffinity": 0
+      "lastAllocatedAt": "2026-02-24T18:02:52.180Z",
+      "allocationCount": 30,
+      "avgAffinity": 0.2249999999999999
     },
     "battle": {
       "activeInstances": 0,
@@ -62,9 +62,9 @@
         "local",
         "system-wide"
       ],
-      "lastAllocatedAt": null,
-      "allocationCount": 0,
-      "avgAffinity": 0
+      "lastAllocatedAt": "2026-02-24T18:02:52.180Z",
+      "allocationCount": 30,
+      "avgAffinity": 0.5
     },
     "lens": {
       "activeInstances": 0,
@@ -115,9 +115,9 @@
         "timer",
         "system-wide"
       ],
-      "lastAllocatedAt": null,
-      "allocationCount": 0,
-      "avgAffinity": 0
+      "lastAllocatedAt": "2026-02-24T18:02:52.180Z",
+      "allocationCount": 30,
+      "avgAffinity": 0.2599999999999999
     },
     "stream": {
       "activeInstances": 1,
@@ -128,9 +128,9 @@
         "websocket",
         "system-wide"
       ],
-      "lastAllocatedAt": null,
-      "allocationCount": 0,
-      "avgAffinity": 0
+      "lastAllocatedAt": "2026-02-24T18:02:52.180Z",
+      "allocationCount": 30,
+      "avgAffinity": 0.36999999999999983
     },
     "buddy": {
       "activeInstances": 0,
@@ -153,11 +153,11 @@
         "tunnel",
         "system-wide"
       ],
-      "lastAllocatedAt": null,
-      "allocationCount": 0,
-      "avgAffinity": 0
+      "lastAllocatedAt": "2026-02-24T18:02:52.180Z",
+      "allocationCount": 30,
+      "avgAffinity": 0.24000000000000016
     }
   },
-  "totalFlows": 0,
-  "ts": "2026-02-24T07:53:42.379Z"
+  "totalFlows": 30,
+  "ts": "2026-02-24T19:54:05.122Z"
 }

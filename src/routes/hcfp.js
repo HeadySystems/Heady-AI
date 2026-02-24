@@ -136,4 +136,74 @@ router.get("/dashboard", (req, res) => {
     });
 });
 
+// ─── HeadySwarm Routes ──────────────────────────────────────────────────
+// Read honeycomb from disk (swarm runs in separate PM2 process)
+
+const HONEYCOMB_PATH = require("path").join(__dirname, "..", "..", "heady-hive-sdk", "lib", "..", "..", "data", "honeycomb.json");
+
+router.get("/swarm/status", (req, res) => {
+    try {
+        const fs = require("fs");
+        let honeycombData = [];
+        try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, "utf8")); } catch { }
+
+        // Read PM2 process status for hcfp-auto-success
+        const { execSync } = require("child_process");
+        let processInfo = {};
+        try {
+            const pm2Data = JSON.parse(execSync("pm2 jlist 2>/dev/null", { encoding: "utf8" }));
+            const swarmProc = pm2Data.find(p => p.name === "hcfp-auto-success");
+            if (swarmProc) {
+                processInfo = {
+                    status: swarmProc.pm2_env.status,
+                    restarts: swarmProc.pm2_env.restart_time,
+                    uptime: Date.now() - swarmProc.pm2_env.pm_uptime,
+                    memory: swarmProc.monit.memory,
+                    cpu: swarmProc.monit.cpu,
+                };
+            }
+        } catch { }
+
+        res.json({
+            ok: true,
+            swarm: "HeadySwarm",
+            process: processInfo,
+            honeycomb: { total: honeycombData.length, recentCategories: honeycombData.slice(-10).map(h => h.category) },
+            ts: new Date().toISOString(),
+        });
+    } catch (err) {
+        res.json({ ok: false, error: err.message });
+    }
+});
+
+router.get("/swarm/honeycomb", (req, res) => {
+    try {
+        const fs = require("fs");
+        let data = [];
+        try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, "utf8")); } catch { }
+        const limit = parseInt(req.query.limit) || 20;
+        res.json({ ok: true, entries: data.slice(-limit), total: data.length });
+    } catch (err) {
+        res.json({ ok: false, error: err.message });
+    }
+});
+
+router.post("/swarm/nudge", (req, res) => {
+    // Nudge writes a task to a queue file that the swarm reads on next round
+    try {
+        const fs = require("fs");
+        const nudgePath = require("path").join(__dirname, "..", "..", "data", "swarm-nudges.json");
+        const { name, prompt, category, priority } = req.body || {};
+        if (!prompt) return res.status(400).json({ ok: false, error: "prompt is required" });
+
+        let nudges = [];
+        try { nudges = JSON.parse(fs.readFileSync(nudgePath, "utf8")); } catch { }
+        nudges.push({ name, prompt, category, priority, ts: new Date().toISOString() });
+        fs.writeFileSync(nudgePath, JSON.stringify(nudges, null, 2));
+        res.json({ ok: true, message: "Flower queued for next round", queueSize: nudges.length });
+    } catch (err) {
+        res.json({ ok: false, error: err.message });
+    }
+});
+
 module.exports = router;

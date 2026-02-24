@@ -11,6 +11,9 @@ const HeadyCreative = require("./creative");
 const HeadyMCP = require("./mcp");
 const HeadyAuth = require("./auth");
 const HeadyEvents = require("./events");
+const HeadyGateway = require("./gateway");
+const HeadySwarm = require("./swarm");
+const { createProviders } = require("./providers");
 
 class HeadyClient {
     /**
@@ -32,6 +35,16 @@ class HeadyClient {
         this._port = parsed.port || (this._isHttps ? 443 : 80);
         this._basePath = parsed.pathname === "/" ? "" : parsed.pathname;
 
+        // Initialize liquid gateway
+        this.gateway = new HeadyGateway({
+            budget: opts.budget || { daily: 10, monthly: 100 },
+            cacheTTL: opts.cacheTTL || 300000,
+        });
+
+        // Register providers from environment
+        const providers = createProviders(opts.env || process.env);
+        for (const p of providers) this.gateway.registerProvider(p);
+
         // Initialize sub-clients
         this.brain = new HeadyBrain(this);
         this.battle = new HeadyBattle(this);
@@ -39,6 +52,12 @@ class HeadyClient {
         this.mcp = new HeadyMCP(this);
         this.auth = new HeadyAuth(this);
         this.events = new HeadyEvents(this);
+
+        // Initialize HeadySwarm — the bee colony
+        this.swarm = new HeadySwarm(this.gateway, {
+            beeCount: opts.beeCount || 5,
+            roundInterval: opts.roundInterval || 60000,
+        });
     }
 
     /** Raw HTTP request to Heady Manager */
@@ -102,6 +121,24 @@ class HeadyClient {
     /** Auto-success engine status */
     async autoSuccess() { return this.get("/api/auto-success/status"); }
 
+    /** Gateway-direct chat — bypasses HeadyManager, routes through liquid gateway */
+    async chat(message, opts = {}) { return this.gateway.chat(message, opts); }
+
+    /** Gateway-direct embed */
+    async embed(text, opts = {}) { return this.gateway.embed(text, opts); }
+
+    /** Decompose a complex task across all available providers */
+    async decompose(task, opts = {}) { return this.gateway.decompose(task, opts); }
+
+    /** Gateway stats and provider health */
+    gatewayStats() { return this.gateway.getStats(); }
+
+    /** Gateway optimization recommendations */
+    gatewayOptimizations() { return this.gateway.getOptimizations(); }
+
+    /** Gateway race audit log */
+    gatewayAudit(limit = 20) { return this.gateway.getAudit(limit); }
+
     /** Full system info */
     async info() {
         const [health, as] = await Promise.allSettled([this.health(), this.autoSuccess()]);
@@ -109,6 +146,7 @@ class HeadyClient {
             connected: health.status === "fulfilled",
             health: health.value || health.reason?.message,
             autoSuccess: as.value || as.reason?.message,
+            gateway: this.gateway.getStats(),
             sdk: { version: this.version, url: this.baseUrl },
         };
     }

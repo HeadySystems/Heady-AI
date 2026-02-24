@@ -2104,5 +2104,3371 @@
     "fallbackUsed": false,
     "priorityFix": null,
     "ts": "2026-02-24T07:25:14.676Z"
+  },
+  {
+    "id": "4ab72b21-24b1-4d3f-9d85-01ac420dd024",
+    "stored": "Stored in vector DB: \"Chat interaction: Say hello...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:22:48.377Z"
+  },
+  {
+    "id": "5ae1942e-5464-434f-a50f-0659b9766c4c",
+    "stored": "Stored in vector DB: \"Brain response: \n\nHello! How can I assist you today? 😊...\" (55 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:22:52.668Z"
+  },
+  {
+    "id": "34b3b2db-1645-43a0-a674-3d0f375a0436",
+    "stored": "Stored in vector DB: \"Code analysis (general): [HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: t...\" (225 chars, type: brain_analyze)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:22:53.042Z"
+  },
+  {
+    "id": "952605af-302b-4bea-b176-bc5a2a52c239",
+    "stored": "Stored in vector DB: \"Chat interaction: Say WORKING in one word...\" (41 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:23:03.129Z"
+  },
+  {
+    "id": "c7e1d905-db81-444a-adf3-b89f65849d92",
+    "stored": "Stored in vector DB: \"Brain response: \n\nFUNCTIONAL...\" (28 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:23:09.523Z"
+  },
+  {
+    "id": "2b47570d-449f-4efa-a40e-bfeb0a15b4d5",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---...\" (281 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:24:26.938Z"
+  },
+  {
+    "id": "4c5bf2b0-f1b9-4764-be80-f2cd27c6c14c",
+    "stored": "Stored in vector DB: \"Brain response: [HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---\nC...\" (279 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:24:30.272Z"
+  },
+  {
+    "id": "eb41a7ad-9934-484e-bbd6-43c9e5eace11",
+    "stored": "Stored in vector DB: \"Code analysis (general): [HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: t...\" (225 chars, type: brain_analyze)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:24:30.515Z"
+  },
+  {
+    "id": "fb62cb35-999f-4bf0-b0f1-2ba0f7eba606",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady e...\" (541 chars, type: brain_chat)",
+    "notStored": "41 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:28:21.057Z"
+  },
+  {
+    "id": "c9e7e01d-e1c1-4fe2-a2c9-4a7f7a9cceec",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 2 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (950 chars, type: brain_chat)",
+    "notStored": "450 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:28:22.197Z"
+  },
+  {
+    "id": "803f8866-7166-433e-8611-e0b046089224",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (1905 chars, type: brain_chat)",
+    "notStored": "1405 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:28:53.583Z"
+  },
+  {
+    "id": "2c4a275c-4bbf-4dba-a84a-6d09296d4590",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (3780 chars, type: brain_chat)",
+    "notStored": "3280 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:29:30.276Z"
+  },
+  {
+    "id": "78b955e2-9b91-4693-9c4f-9e7c17c71680",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (3875 chars, type: brain_chat)",
+    "notStored": "3375 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:29:31.441Z"
+  },
+  {
+    "id": "f50b1412-6182-4121-adec-b3bc7564bf34",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (3780 chars, type: brain_chat)",
+    "notStored": "3280 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:29:50.912Z"
+  },
+  {
+    "id": "e36d3704-c41f-42d1-b817-a8f0c8417506",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (3780 chars, type: brain_chat)",
+    "notStored": "3280 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:29:54.579Z"
+  },
+  {
+    "id": "0268dac9-58fe-41b8-84fb-cd41a9d70d40",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (3780 chars, type: brain_chat)",
+    "notStored": "3280 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:30:23.217Z"
+  },
+  {
+    "id": "7ae3936e-f6f7-4042-9661-65b158772ece",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, I emphasize that Node.js event loop optimization is critic...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:30:33.728Z"
+  },
+  {
+    "id": "7f51cf61-12da-4efe-b385-9da0f72eb0a4",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (4194 chars, type: brain_chat)",
+    "notStored": "3694 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:30:34.528Z"
+  },
+  {
+    "id": "40b174e9-8961-4223-8818-8601b7ed755b",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, managing 150+ concurrent async tasks in Node.js requires s...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:30:45.361Z"
+  },
+  {
+    "id": "9b1db0b1-0693-497a-94f5-b63237d87307",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady is the unified AI ecosystem\n...\" (474 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:30:57.024Z"
+  },
+  {
+    "id": "e3cb7c6a-bdf6-4fb9-b754-bf837b085e8f",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, I anticipate the semantic search landscape in 2025-2026 will be dominated by further refi...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:31:08.433Z"
+  },
+  {
+    "id": "c205283a-3186-4e82-89bd-e76b3aefab99",
+    "stored": "Stored in vector DB: \"Chat interaction: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionab...\" (313 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:31:20.101Z"
+  },
+  {
+    "id": "d0934d41-2ccf-452b-b855-23fcfc53c431",
+    "stored": "Stored in vector DB: \"Chat interaction: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionab...\" (313 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:31:51.384Z"
+  },
+  {
+    "id": "8091757c-9701-4b4b-b697-4e95910cea21",
+    "stored": "Stored in vector DB: \"Brain response: \n\nTo implement RAG with 3D spatial vector indexing, follow this structured approach:\n\n### 1. **Data Prep...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:32:17.735Z"
+  },
+  {
+    "id": "ee120426-87b7-4daf-a1fc-8d3340e7e673",
+    "stored": "Stored in vector DB: \"Chat interaction: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionab...\" (313 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:32:22.719Z"
+  },
+  {
+    "id": "a48e678e-8da7-499c-aa2a-327669dcaa60",
+    "stored": "Stored in vector DB: \"Brain response: Implementing RAG with 3D spatial vector indexing extends traditional RAG by allowing retrieval based on ...\" (455 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:32:34.747Z"
+  },
+  {
+    "id": "a4c6ef28-ca4b-46fe-abb1-71540599fe9c",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (6296 chars, type: brain_chat)",
+    "notStored": "5796 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:32:46.456Z"
+  },
+  {
+    "id": "e1727861-3b22-449e-8458-0274af2e2f7c",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key ...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:32:54.979Z"
+  },
+  {
+    "id": "acb6deee-b770-4a00-8b97-e7825cd4079e",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system ar...\" (1462 chars, type: brain_chat)",
+    "notStored": "962 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:33:06.693Z"
+  },
+  {
+    "id": "fcabf3a0-03c1-4c6a-b57a-1e51b84c0f46",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (2872 chars, type: brain_chat)",
+    "notStored": "2372 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:33:38.159Z"
+  },
+  {
+    "id": "7535b0ab-c393-48f8-8521-2270446743fb",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (4356 chars, type: brain_chat)",
+    "notStored": "3856 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:34:15.807Z"
+  },
+  {
+    "id": "47997226-7930-4ea3-8bc4-f5fb6af42de6",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (4356 chars, type: brain_chat)",
+    "notStored": "3856 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:34:47.417Z"
+  },
+  {
+    "id": "831bf807-d68f-4811-a42f-9de413ccac3e",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and l...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:35:04.975Z"
+  },
+  {
+    "id": "fc7b2ca7-d518-44cd-a3f7-954ea8b63777",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (2648 chars, type: brain_chat)",
+    "notStored": "2148 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:35:18.643Z"
+  },
+  {
+    "id": "585c0b67-8fd4-4395-84f6-34b51c2d9f18",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Federated routing across edge, cloud, and local compute layers** requires dynamic decision-making to...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:35:40.460Z"
+  },
+  {
+    "id": "78629103-bf9d-4e5d-b4be-b4c579d61378",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (2648 chars, type: brain_chat)",
+    "notStored": "2148 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:35:49.991Z"
+  },
+  {
+    "id": "df508975-ca89-48b7-9f9f-3ef2de8bc74e",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Implementing Federated Routing Across Edge, Cloud, and Local Compute Layers**  \nFederated routing re...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:36:21.042Z"
+  },
+  {
+    "id": "af6385b2-a65a-4540-814c-f24e7d70630f",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1884 chars, type: brain_chat)",
+    "notStored": "1384 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:36:21.321Z"
+  },
+  {
+    "id": "72828b5e-aa4f-47dc-bfeb-4cb42461eea4",
+    "stored": "Stored in vector DB: \"Brain response: Implementing federated routing across edge, cloud, and local compute layers requires a unified control p...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:36:32.512Z"
+  },
+  {
+    "id": "fa54321b-f580-4919-b865-42e9d3f710a5",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (6288 chars, type: brain_chat)",
+    "notStored": "5788 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:36:44.223Z"
+  },
+  {
+    "id": "9082f772-4c4f-45c0-bc34-5c1eaaa874d8",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, implementing federated routing across edge, cloud, and local compute layers requires ba...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:36:46.203Z"
+  },
+  {
+    "id": "8ac89d8c-4583-498e-937c-2f5f2eb4f956",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, optimizing core functionalities like cross-device state sy...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:36:55.741Z"
+  },
+  {
+    "id": "5501468d-e58e-4848-8af0-cbd86ddb7c3b",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (5590 chars, type: brain_chat)",
+    "notStored": "5090 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:37:07.548Z"
+  },
+  {
+    "id": "95ac40c9-2268-4570-a097-00eea31709af",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (5685 chars, type: brain_chat)",
+    "notStored": "5185 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:37:38.775Z"
+  },
+  {
+    "id": "739ba479-43f6-4ef9-af7e-e66d7f18fb57",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (5685 chars, type: brain_chat)",
+    "notStored": "5185 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:38:10.125Z"
+  },
+  {
+    "id": "ed342167-daf2-4e01-b9cc-59990957a31b",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, an expert AI system architect, here are the best practices for implementing circuit bre...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:38:11.538Z"
+  },
+  {
+    "id": "a18fd1f3-d4d1-4bc5-9de1-52c64277e213",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, I emphasize these critical practices for handling circuit ...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:38:21.162Z"
+  },
+  {
+    "id": "19be9f32-978f-413b-af16-fef9fdafa273",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, an expert AI system architect, here are actionable best practices for implementing circ...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:38:33.050Z"
+  },
+  {
+    "id": "379f6a88-521a-4db5-a263-a1b211f4c339",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (5673 chars, type: brain_chat)",
+    "notStored": "5173 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:38:38.082Z"
+  },
+  {
+    "id": "028fbf7c-4e5d-47a8-8ff1-94d13f2c9b69",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, selecting an LLM provider involves a critical balancing ac...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:38:49.729Z"
+  },
+  {
+    "id": "710058f9-9a30-45e0-af43-071b1e069fa1",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system ar...\" (4358 chars, type: brain_chat)",
+    "notStored": "3858 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:39:01.466Z"
+  },
+  {
+    "id": "915ccf71-c8c2-421d-8dcf-6d85510acd35",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system ar...\" (4358 chars, type: brain_chat)",
+    "notStored": "3858 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:39:32.786Z"
+  },
+  {
+    "id": "e37624be-036a-4768-bf73-3ef3e46c7a90",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, here's a structured approach to handle rate limiting across multiple API providers in p...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:39:53.457Z"
+  },
+  {
+    "id": "1199930f-d0d8-4c63-a249-365ae30a8286",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (2706 chars, type: brain_chat)",
+    "notStored": "2206 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:40:23.221Z"
+  },
+  {
+    "id": "7aa68c19-29fc-48f8-be32-25e731d7aef0",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in ...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:40:35.459Z"
+  },
+  {
+    "id": "ab3c8456-461e-43c6-860f-a17b952677f0",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (3484 chars, type: brain_chat)",
+    "notStored": "2984 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:40:59.402Z"
+  },
+  {
+    "id": "9433e306-5ef5-4676-a485-e7fc695a02a5",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, here’s a concise, actionable framework for handling rate limiting across multiple API p...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:41:32.988Z"
+  },
+  {
+    "id": "29ae9ee3-3687-428c-8883-7c763f271085",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (4190 chars, type: brain_chat)",
+    "notStored": "3690 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:41:37.363Z"
+  },
+  {
+    "id": "8f2bcaca-2209-4db1-9bab-17bb8f7da30c",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, here's a concise, actionable guide to handling rate limiting across multiple API provid...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:41:50.654Z"
+  },
+  {
+    "id": "125211b7-21d2-47d3-9d1c-0bb70d4383b6",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (4896 chars, type: brain_chat)",
+    "notStored": "4396 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:41:59.653Z"
+  },
+  {
+    "id": "169e0215-9145-4443-892c-e99540153162",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, here’s a concise, actionable strategy for handling rate limiting across multiple API pr...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:42:27.555Z"
+  },
+  {
+    "id": "5769c2a4-e037-4a8f-8027-36660ce7a4da",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (6380 chars, type: brain_chat)",
+    "notStored": "5880 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:42:36.027Z"
+  },
+  {
+    "id": "19c48f1f-a2fb-4081-b2d4-b3addd8578f6",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in pr...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:42:47.323Z"
+  },
+  {
+    "id": "e929de26-19f3-4a6f-a35d-9210949bca35",
+    "stored": "Stored in vector DB: \"Brain response: \n\nAs HeadyBrain, here’s a concise, actionable strategy to handle rate limiting across multiple API provi...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:43:00.396Z"
+  },
+  {
+    "id": "7b0422ae-7404-4e1f-a090-965660a64735",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (4358 chars, type: brain_chat)",
+    "notStored": "3858 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:44:15.573Z"
+  },
+  {
+    "id": "45bb2a66-ce43-4ea1-b1db-d7972ec36513",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, reducing cold start latency in serverless functions (like ...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:44:26.395Z"
+  },
+  {
+    "id": "399b753c-320c-4445-8c28-eba6972766a3",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect....\" (5671 chars, type: brain_chat)",
+    "notStored": "5171 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:44:41.849Z"
+  },
+  {
+    "id": "424c2b16-b5f2-4e43-8805-7b16141c1268",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, optimizing WebSocket connections for real-time voice relay...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:44:53.714Z"
+  },
+  {
+    "id": "03b81bac-62d5-4a94-a10b-cf76f2d010be",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:45:10.688Z"
+  },
+  {
+    "id": "ef968bea-33dc-47cd-8b22-6f37c2c5310d",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:45:41.980Z"
+  },
+  {
+    "id": "36516261-a25f-477c-a9d1-28ba7b3c38f0",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:46:13.344Z"
+  },
+  {
+    "id": "fd6f17d6-b970-43c0-9791-fb76ab771aba",
+    "stored": "Stored in vector DB: \"Brain response: \n\nHere's a concise, actionable guide for implementing Cloudflare Workers as intelligent edge routers wit...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:46:24.705Z"
+  },
+  {
+    "id": "0110ea20-a0f1-469e-9110-7cc4677dcf8e",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Cloudflare Workers as Intelligent Edge Routers: Best Practices**  \nCloudflare Workers enable low-lat...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:46:38.947Z"
+  },
+  {
+    "id": "074b04f3-3a59-4ccb-9433-0d3371f421aa",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:46:47.525Z"
+  },
+  {
+    "id": "6ce2285f-28a4-48f9-98e7-fb88aa98d163",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:47:19.246Z"
+  },
+  {
+    "id": "2f80f42b-4ee2-415d-8559-35c242463874",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers**  \nLeverage Workers’ low-latency ...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:47:22.891Z"
+  },
+  {
+    "id": "402fbed3-5c04-42fa-b2e8-67262da35d8e",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:47:50.616Z"
+  },
+  {
+    "id": "987eb5e6-8198-4781-829b-5fa679742e43",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers with Dynamic Routing Tables**\n\nClo...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:47:51.468Z"
+  },
+  {
+    "id": "846e372e-96be-4a16-b91a-771fa55f89c5",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers**  \nLeverage Cloudflare Workers fo...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:48:11.802Z"
+  },
+  {
+    "id": "5e4b06e5-06a6-413f-9c01-c5a32a0c2c72",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\n**Best Practices for Cloudflare Wor...\" (1940 chars, type: brain_chat)",
+    "notStored": "1440 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:48:22.309Z"
+  },
+  {
+    "id": "a8a94f40-0824-4992-bbc1-e5b674c03e94",
+    "stored": "Stored in vector DB: \"Brain response: Cloudflare Workers are powerful for intelligent edge routing due to their global distribution and low-la...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:48:34.420Z"
+  },
+  {
+    "id": "c5f7f1ae-7c7a-4935-bc3d-e556c2d47797",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant me...\" (2634 chars, type: brain_chat)",
+    "notStored": "2134 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:48:49.202Z"
+  },
+  {
+    "id": "777d448d-a197-4e57-ad9e-8f58c638a193",
+    "stored": "Stored in vector DB: \"Brain response: \n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers**  \nCloudflare Workers enable low-...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:48:58.367Z"
+  },
+  {
+    "id": "c0186a26-7706-4a14-acdd-69c1a1abc234",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, an expert AI system architect, a premium, modern web UI in 2026 transcends mere aesthetic...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T08:49:00.454Z"
+  },
+  {
+    "id": "8eabae9d-646d-4ea1-a9cb-11cd41c8e7a7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.025Z"
+  },
+  {
+    "id": "d1c86362-451a-4494-9715-e2ccd9b16ce0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.137Z"
+  },
+  {
+    "id": "b48de545-b4f7-4cdd-9070-260cdb7ab642",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.152Z"
+  },
+  {
+    "id": "d27b6c60-bf58-476b-89af-8964a9f9f390",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.168Z"
+  },
+  {
+    "id": "26436dce-5fcb-4b42-b409-27a8696c6fbf",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.180Z"
+  },
+  {
+    "id": "ec6b9d4b-55b8-4200-a6fc-16a68d88fdd8",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.190Z"
+  },
+  {
+    "id": "d9e3688d-020a-4c52-bf66-693c04d62b43",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.200Z"
+  },
+  {
+    "id": "7ccc0608-bf10-44aa-9c05-7d1512098493",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:08.209Z"
+  },
+  {
+    "id": "71b78923-582b-461b-a294-f307c96754c0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.030Z"
+  },
+  {
+    "id": "2861a024-9b50-4b25-8849-667600c3cfe8",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.061Z"
+  },
+  {
+    "id": "1dc3d9d8-8404-4451-a6dc-0b1da3efd52e",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.074Z"
+  },
+  {
+    "id": "f9fd9b1c-72b4-4351-b1f5-436b94245f39",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.083Z"
+  },
+  {
+    "id": "fbd6da24-1256-4452-849b-fad440fdb186",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.105Z"
+  },
+  {
+    "id": "61fca617-4b35-4d61-aa6d-3d1f62782741",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.116Z"
+  },
+  {
+    "id": "00a947b8-119e-423a-8d1d-cbab8371398b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.130Z"
+  },
+  {
+    "id": "3ae68ea9-fa84-4823-b5b8-c5c1d2c39537",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:38:38.140Z"
+  },
+  {
+    "id": "b392b9c3-6322-4846-819e-990793c8b383",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.095Z"
+  },
+  {
+    "id": "0bc26a0c-4b68-4e86-937a-fdc9b7e9ff41",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.140Z"
+  },
+  {
+    "id": "f0df0205-7281-4ad0-b222-2505115370a1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.155Z"
+  },
+  {
+    "id": "80ec0359-c14a-4ccb-8428-d9254bc32bac",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.171Z"
+  },
+  {
+    "id": "57afdd21-4ba3-4a7b-8526-216f1855ed32",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.190Z"
+  },
+  {
+    "id": "54bfe035-73de-417b-8b5c-9fd6eda72273",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.208Z"
+  },
+  {
+    "id": "496a2ab2-0a70-444c-92e5-e917fda59610",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.221Z"
+  },
+  {
+    "id": "65076fc7-035a-41a3-88e3-19b36ddf0c39",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:08.228Z"
+  },
+  {
+    "id": "ed67d7c8-7753-4002-b17d-cafd74400466",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.101Z"
+  },
+  {
+    "id": "58182a45-c831-4bd4-94e2-a4aefc890574",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.115Z"
+  },
+  {
+    "id": "0f939c4a-bfe7-4a12-b856-3468ce711f30",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.418Z"
+  },
+  {
+    "id": "2a7675fd-27da-423d-9f2f-b775219fcb8b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.497Z"
+  },
+  {
+    "id": "7ad366a3-97a4-4a0c-a068-e7bb31f25ee4",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.507Z"
+  },
+  {
+    "id": "69acacd6-bb97-4cda-9a70-89125a9786dd",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.568Z"
+  },
+  {
+    "id": "add546b5-65fe-4a0c-858e-6c09c1f26386",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.680Z"
+  },
+  {
+    "id": "017000e3-e4a9-41fd-a0a6-b0135f97002f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:39:38.872Z"
+  },
+  {
+    "id": "22051792-d9cf-46e0-8c52-09c745f75b52",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.044Z"
+  },
+  {
+    "id": "0a4265f2-7502-4f7f-b474-49b7c086d7b1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.069Z"
+  },
+  {
+    "id": "4997c6fd-d1ae-4000-9549-89b6bddb98cb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.086Z"
+  },
+  {
+    "id": "c887f5d7-ad91-49df-ba66-bc3623e67a15",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.103Z"
+  },
+  {
+    "id": "429c03da-f9a8-4c48-8daf-e747ff71bfac",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.117Z"
+  },
+  {
+    "id": "f0920c57-c9d2-4ce5-86b9-a10c68868364",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.139Z"
+  },
+  {
+    "id": "5ed94af9-750b-4aaf-80f1-cc6f2f854ceb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:08.160Z"
+  },
+  {
+    "id": "150bb1ca-7965-4cb7-b6c6-6bbf9912120c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.068Z"
+  },
+  {
+    "id": "0d550abf-c674-4360-8b3d-2e046d5a0109",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.213Z"
+  },
+  {
+    "id": "f1a37b68-76c9-46ec-bd48-b07804d92403",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.346Z"
+  },
+  {
+    "id": "39209d47-99e2-431d-afd2-666ef2b63aa1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.376Z"
+  },
+  {
+    "id": "ecd9317e-4aca-4b04-bd36-f5839cc6c565",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.400Z"
+  },
+  {
+    "id": "9303912b-d1fd-43fa-b62e-9cef864e2a8c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.421Z"
+  },
+  {
+    "id": "adcb031b-5c87-49d7-a8f2-c151dc972106",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:40:38.449Z"
+  },
+  {
+    "id": "f55c4225-c3f6-4f33-999e-479e601a5164",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.080Z"
+  },
+  {
+    "id": "8900b6d1-e1d8-4943-93a7-f8456fbe5ef3",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.128Z"
+  },
+  {
+    "id": "c8f46f85-bd0d-4190-9b81-9d3e29d077a5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.151Z"
+  },
+  {
+    "id": "87df3880-e004-4ca3-bbc3-756c1b24a6d7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.168Z"
+  },
+  {
+    "id": "42cd39ca-3d2a-4af4-8ed2-c7776d1cafa5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.181Z"
+  },
+  {
+    "id": "94d284cc-2028-427f-8f6e-06650c386faf",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.199Z"
+  },
+  {
+    "id": "dff3f7d2-e4f6-424d-b51d-fda5b71e7deb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:08.212Z"
+  },
+  {
+    "id": "bb52d637-e7ea-4d60-a9d4-86b156e9eec7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.035Z"
+  },
+  {
+    "id": "cbf10fc6-9f72-4802-aaca-ab100d52c702",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.065Z"
+  },
+  {
+    "id": "36f7b344-229c-4801-a565-7ff0c1df675a",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.089Z"
+  },
+  {
+    "id": "39124683-3241-4b23-a2e3-dfe04cbcb2f5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.109Z"
+  },
+  {
+    "id": "d74a8379-1015-4b99-96d6-2ca04e732174",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.131Z"
+  },
+  {
+    "id": "b5ce8b1e-8921-47b9-aaed-6634a2b59a78",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.214Z"
+  },
+  {
+    "id": "9fada8ef-8b8a-4712-947a-21d5d8af5257",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:41:38.245Z"
+  },
+  {
+    "id": "d199cbb5-9a62-4814-bb0f-b5de6a03933b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:08.036Z"
+  },
+  {
+    "id": "6b3b1080-8037-4e05-b578-1368f479bb24",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:08.065Z"
+  },
+  {
+    "id": "b8e70af6-37a9-4d3a-abec-e30f0dbf7f98",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:08.087Z"
+  },
+  {
+    "id": "54455a39-1e8b-44c9-ba88-f96161cada42",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:08.101Z"
+  },
+  {
+    "id": "680c4ceb-959e-4830-b352-1c96347fb555",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:08.118Z"
+  },
+  {
+    "id": "a3908ac1-5af7-4215-a405-3825ab531c64",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:08.137Z"
+  },
+  {
+    "id": "5229c811-99fe-445a-a8a5-00998656bec1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:37.980Z"
+  },
+  {
+    "id": "fea4a911-e42d-4d89-a4b7-ad6e6b77fecb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.029Z"
+  },
+  {
+    "id": "459be0a3-ca65-418f-98af-5363664ff8f3",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.038Z"
+  },
+  {
+    "id": "b81a41c2-5329-4a26-bbc3-acea5df6b921",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.055Z"
+  },
+  {
+    "id": "2de82fc5-bf35-477a-ad9a-dcc092766fd0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.067Z"
+  },
+  {
+    "id": "dd95b9db-652c-4bfa-bce0-3b85a1622d10",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.110Z"
+  },
+  {
+    "id": "975cb39a-4f3b-4a4d-a2ec-2258029af295",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.121Z"
+  },
+  {
+    "id": "fb8ebe8e-23a9-4d32-a995-c5f468de74bb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:42:38.140Z"
+  },
+  {
+    "id": "a24cc21b-c5d3-4a00-9cd9-06ff94e155bf",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:07.984Z"
+  },
+  {
+    "id": "06a99043-c4e3-4360-bd21-357f367dc34b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:08.085Z"
+  },
+  {
+    "id": "17a5ebb9-7ef5-4635-87a5-84069f309f88",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:08.101Z"
+  },
+  {
+    "id": "75ccaaae-7d22-49d8-9bdd-f12e9087034b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:08.115Z"
+  },
+  {
+    "id": "79fb59e3-fa6c-41cd-90f3-132ffc9c6493",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:08.209Z"
+  },
+  {
+    "id": "e48a1196-17c3-4197-82d6-7b99a4dd3fcc",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.072Z"
+  },
+  {
+    "id": "2bca2f4a-c0d9-4049-9f06-406f3598f34d",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.096Z"
+  },
+  {
+    "id": "791767a3-7065-4d7b-acf1-8a30eb41ac91",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.121Z"
+  },
+  {
+    "id": "94134a5e-f90b-499f-bb88-48e1af8793f5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.142Z"
+  },
+  {
+    "id": "45286de6-924d-4be1-965f-96b8f659793d",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.157Z"
+  },
+  {
+    "id": "2bc2bd7a-e112-4657-a43e-f7128d8b554a",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.176Z"
+  },
+  {
+    "id": "30413445-01b6-4096-81a5-fa935154875e",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.194Z"
+  },
+  {
+    "id": "c1ba8842-aa67-40cd-a91b-242526745d87",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:43:38.207Z"
+  },
+  {
+    "id": "e5af90d9-db3e-4a15-a4c0-b244168c0f3e",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.056Z"
+  },
+  {
+    "id": "1db0bb0a-378b-44fc-aff5-3293e3b5e044",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.098Z"
+  },
+  {
+    "id": "f53449d5-8c8a-4dc0-8301-3a5ac37ee0cd",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.114Z"
+  },
+  {
+    "id": "7b55427d-4a1d-4d8a-916e-3d0723eb5b6d",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.129Z"
+  },
+  {
+    "id": "0fdbd0f0-606a-485a-8c53-13b2faa37c86",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.147Z"
+  },
+  {
+    "id": "6b6b70bd-3891-4b5e-be90-d7d79a511a33",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.160Z"
+  },
+  {
+    "id": "2c575187-ba38-4d8b-a826-fdd8aaef7739",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.178Z"
+  },
+  {
+    "id": "47017665-2618-4431-930e-2882be710107",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:08.297Z"
+  },
+  {
+    "id": "b7913dc0-f90e-470e-b40f-215a619f335c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:38.684Z"
+  },
+  {
+    "id": "1d9dfb8c-0df1-4233-b500-675d470c4e79",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:38.774Z"
+  },
+  {
+    "id": "e3f30552-8fc2-4970-85ea-c9046567c5be",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:38.793Z"
+  },
+  {
+    "id": "0a66d981-91f9-41e9-9cdf-702cb85b8712",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:38.920Z"
+  },
+  {
+    "id": "01c34f1b-7b17-4661-8e1b-7eb3ecff0927",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:44:38.937Z"
+  },
+  {
+    "id": "c8d28c7c-c788-41c8-aa62-132c69887dc9",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.155Z"
+  },
+  {
+    "id": "92048d1b-d3d0-4b44-9868-79e7eeb52485",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.210Z"
+  },
+  {
+    "id": "84aba7e6-f069-4065-a713-3cc45fbacf14",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.242Z"
+  },
+  {
+    "id": "42931fff-724e-4aea-b34c-fe96e68c07a5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.288Z"
+  },
+  {
+    "id": "f872919c-7673-4674-9f78-404132017a1f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.306Z"
+  },
+  {
+    "id": "c6ab6cec-6c19-4613-ad8f-08f07885fb06",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.327Z"
+  },
+  {
+    "id": "9256c3d1-06c2-4e89-911f-067ea0927534",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.338Z"
+  },
+  {
+    "id": "87a0f1b2-8dbf-440e-8843-ae90cea4ba25",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:08.353Z"
+  },
+  {
+    "id": "4a065683-0105-441c-8255-5cf01718ff79",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:38.032Z"
+  },
+  {
+    "id": "d239f205-5ebd-48c7-8e13-1c639ae48d57",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:38.043Z"
+  },
+  {
+    "id": "914df68c-2bd8-4404-b7ee-cfcd08811dd2",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:38.059Z"
+  },
+  {
+    "id": "a3ca5941-b33c-45a1-a585-1b20fbc6ac93",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:45:38.069Z"
+  },
+  {
+    "id": "f8756ef1-71f9-4610-a3fa-c2ef1d97dbc5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:07.974Z"
+  },
+  {
+    "id": "3b68d952-bdd3-435b-bdb5-d9bd312b5425",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:07.999Z"
+  },
+  {
+    "id": "1eea49b7-a3c7-4f37-9c92-69e050694c79",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:08.031Z"
+  },
+  {
+    "id": "84a02ad9-207c-46f5-9535-1c7aa097cad7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:08.052Z"
+  },
+  {
+    "id": "084238d6-5fbf-428e-afc4-c8ac46ed84e2",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:08.076Z"
+  },
+  {
+    "id": "4ceb0e67-c4ac-4c7d-8db6-59ef3d3b6caa",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:08.095Z"
+  },
+  {
+    "id": "a3c7a203-c951-43ea-a1db-5dd69927934c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:08.113Z"
+  },
+  {
+    "id": "01d59653-8512-4e9d-917c-61064b7acd92",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.125Z"
+  },
+  {
+    "id": "cbf0357e-eca6-4497-854b-dbfe0466369d",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.163Z"
+  },
+  {
+    "id": "9996e35d-648c-4d33-aa62-17b0268da4ff",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.196Z"
+  },
+  {
+    "id": "48b9b601-ec42-4695-87ea-3b848fc557ab",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.257Z"
+  },
+  {
+    "id": "6f918a30-75db-4870-b717-89ee180af8a2",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.282Z"
+  },
+  {
+    "id": "e28699f6-f57f-49d1-8c8a-87028b2c6183",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.308Z"
+  },
+  {
+    "id": "1fd91aad-cf02-4ef4-9d0f-010361dd3a6d",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:46:38.337Z"
+  },
+  {
+    "id": "24580d81-ae5c-4d32-acad-c0d1f0aa5bc6",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.070Z"
+  },
+  {
+    "id": "94503f83-4386-46ee-9540-60e14d483408",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.120Z"
+  },
+  {
+    "id": "a1a195e2-e825-4cb5-b273-7b0cf382de72",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.137Z"
+  },
+  {
+    "id": "82be04b8-df49-4e66-b90c-c34af58fbfef",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.155Z"
+  },
+  {
+    "id": "a46f90cd-f15f-42fc-b03b-febb97ffa991",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.192Z"
+  },
+  {
+    "id": "f5162e7a-a659-4c0e-8275-9b0351f2dad2",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.212Z"
+  },
+  {
+    "id": "a66e008f-27e1-4da6-821f-00d7e020ecf0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.241Z"
+  },
+  {
+    "id": "04df9e78-5ccb-48ef-938f-c51b36f28d10",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:08.261Z"
+  },
+  {
+    "id": "0f41e1b4-f25e-4e7e-b72c-03d9505fee14",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.028Z"
+  },
+  {
+    "id": "2a5172ac-6b2c-461e-bdbd-e5c5190ac265",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.044Z"
+  },
+  {
+    "id": "0cfeb683-012f-472c-a4b9-82dfcf8db7fd",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.061Z"
+  },
+  {
+    "id": "caea3531-3d91-424b-b17d-9d3774b4237e",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.079Z"
+  },
+  {
+    "id": "71dcdf54-d977-4266-90e0-6c7c9055190c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.094Z"
+  },
+  {
+    "id": "58d92dc4-7357-4cb3-ad89-f8ba2611a7fb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.112Z"
+  },
+  {
+    "id": "9c91f960-0a7c-494c-bf7d-64ae06484138",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.131Z"
+  },
+  {
+    "id": "0e4a1481-9c16-41ec-8d00-406cc8f112cb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:47:38.151Z"
+  },
+  {
+    "id": "e9e1bd9d-8a88-415b-a123-ca7ca095506f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.141Z"
+  },
+  {
+    "id": "3de4c259-2661-4622-be96-559e8d009fd7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.159Z"
+  },
+  {
+    "id": "5adcedc0-1cb8-4cae-9f36-918b0cf041ce",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.180Z"
+  },
+  {
+    "id": "2c297700-bfc7-41d3-ab55-789561c37ce0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.197Z"
+  },
+  {
+    "id": "d957e76b-e06b-4cad-adb2-69334b1f2305",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.217Z"
+  },
+  {
+    "id": "0b87bc7d-1831-413a-9d1e-c63d593a74e7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.234Z"
+  },
+  {
+    "id": "928f8653-5e3e-48cc-8e8f-47cd4ebffa82",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:48:08.252Z"
+  },
+  {
+    "id": "29fbe04c-bbf3-4afa-909b-3394f2346e7f",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady ecosystem\n---\nHeadyBrain is ...\" (282 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:02.127Z"
+  },
+  {
+    "id": "55779370-bc71-44fa-ad39-01b10bec9855",
+    "stored": "Stored in vector DB: \"Brain response: Based on the provided context, the **Heady ecosystem** is the larger system that **HeadyBrain**, an AI r...\" (161 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:06.019Z"
+  },
+  {
+    "id": "d4312853-2583-45ab-89e8-6da39a83ab38",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:07.978Z"
+  },
+  {
+    "id": "52a16205-6554-4ff5-904d-2e6d85cb9f5a",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.063Z"
+  },
+  {
+    "id": "dc975f36-56de-4071-b604-213acfd055ce",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.077Z"
+  },
+  {
+    "id": "4874a171-ce5a-4ccc-aebc-958483603869",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.135Z"
+  },
+  {
+    "id": "360e70ee-5e03-4044-aab3-f4fcf303b5e9",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.171Z"
+  },
+  {
+    "id": "e4dae86b-5cfe-4ecb-8a44-7d2189e2d6c0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.191Z"
+  },
+  {
+    "id": "549c6314-148d-4921-922f-ac5c4c040581",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.226Z"
+  },
+  {
+    "id": "76c6d070-f899-41d5-bc2e-6a386b3755ac",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:08.241Z"
+  },
+  {
+    "id": "e53a5503-496c-44e5-b989-94e9e59b20d0",
+    "stored": "Stored in vector DB: \"[LATE RESPONSE] huggingface (14117ms): \n\nThe **Heady ecosystem** is a comprehensive platform powered by **HeadyBrain**, ...\" (339 chars, type: race_late_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:16.301Z"
+  },
+  {
+    "id": "94269714-65f1-42f4-9a41-e9378699a7e5",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.055Z"
+  },
+  {
+    "id": "24bde69c-2cb2-4835-bae6-9e746178410a",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.101Z"
+  },
+  {
+    "id": "87aa72c6-f36e-4b2a-9a28-de64209c37a6",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.116Z"
+  },
+  {
+    "id": "6e702253-4375-4adc-b587-5ceab23071d9",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.132Z"
+  },
+  {
+    "id": "51e6461d-6dc4-49e3-8076-4001a6acd515",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.150Z"
+  },
+  {
+    "id": "660fbac5-796e-4a20-b4d5-ebe43fdd8c8b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.163Z"
+  },
+  {
+    "id": "dffe812b-c6bf-406d-a796-fbb6059d0470",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:50:38.263Z"
+  },
+  {
+    "id": "4a1f611d-67a0-4f46-9a15-abbe90d374f0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.062Z"
+  },
+  {
+    "id": "adbe016b-aded-4920-b806-9b7b845eea79",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.090Z"
+  },
+  {
+    "id": "8570171e-add4-45b6-a251-8d7944e7cf51",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.101Z"
+  },
+  {
+    "id": "1fbcb2a9-3ea8-4d34-a7a1-0776c2f5e8f2",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.115Z"
+  },
+  {
+    "id": "28a13aa9-f7dc-4564-b941-0808195f8ac6",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.136Z"
+  },
+  {
+    "id": "ff2f53af-bcf4-4f68-8d21-1a8e0bfbed36",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.148Z"
+  },
+  {
+    "id": "7b7306e1-75b1-40c1-9044-2f867b4e21a4",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.159Z"
+  },
+  {
+    "id": "18121668-580f-451e-92ce-97c43994daa6",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:08.195Z"
+  },
+  {
+    "id": "0029880f-cfaa-4442-8d7a-d278ac3c0b18",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.014Z"
+  },
+  {
+    "id": "0ba4dfb3-abc8-48f0-8934-5df7b5125606",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.049Z"
+  },
+  {
+    "id": "f561811d-15eb-43df-b014-8d260e38fab6",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.060Z"
+  },
+  {
+    "id": "cbeedaab-2d98-42ea-9b0b-bc096246c2dc",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.071Z"
+  },
+  {
+    "id": "933766ea-58d2-4a67-ab55-99a038cbbb4b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.120Z"
+  },
+  {
+    "id": "f56e2553-f0c1-469d-a465-9ce3f732e9f7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.138Z"
+  },
+  {
+    "id": "874254c3-5170-4531-9271-a86a3a762e92",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:51:38.207Z"
+  },
+  {
+    "id": "7f289d16-256a-4f74-8ae2-3cd6f2de11b8",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.013Z"
+  },
+  {
+    "id": "1ff1886b-40cc-4e65-9424-b1413cb4f9f7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.036Z"
+  },
+  {
+    "id": "63bc009d-2812-46dd-9ced-dd07bae8eda0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.074Z"
+  },
+  {
+    "id": "feeb10cc-d52e-4d58-85b9-fdf112684b28",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.102Z"
+  },
+  {
+    "id": "a7ef0409-a805-4ab1-a144-ffbcbcb9f81c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.115Z"
+  },
+  {
+    "id": "55571c6f-edf0-486c-9e3e-71ccb089f3bc",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.136Z"
+  },
+  {
+    "id": "664eb090-13a0-40b1-8ad7-bd2bf3f616a2",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:08.196Z"
+  },
+  {
+    "id": "efc8c856-df68-41df-bbab-449edf46bae9",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.045Z"
+  },
+  {
+    "id": "2d22f0d1-dfaf-497f-a7d3-26de48ca6f59",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.062Z"
+  },
+  {
+    "id": "94abb266-73cf-4c48-a850-812bd045fb67",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.076Z"
+  },
+  {
+    "id": "1c8800fd-da17-4f53-b618-5aac93a04c46",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.097Z"
+  },
+  {
+    "id": "266f96e5-5780-4f64-b8c0-aac9bad2648f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.113Z"
+  },
+  {
+    "id": "05f37147-34a6-4a4a-82c0-75074e8ddcc3",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.125Z"
+  },
+  {
+    "id": "63bc28a9-f793-44af-8f69-616c79e0542b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:52:38.148Z"
+  },
+  {
+    "id": "d24625ed-8437-496f-bcb1-e2d22ab387da",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:08.038Z"
+  },
+  {
+    "id": "068ffbdf-df4f-4493-ab61-2cc26d3fad30",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:08.051Z"
+  },
+  {
+    "id": "dcb73fa0-3eba-4983-962c-6757255ac433",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:08.064Z"
+  },
+  {
+    "id": "543242e0-e9c3-45cf-bad0-b0af9c64e9e4",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:08.093Z"
+  },
+  {
+    "id": "d179846e-bca2-4c83-a077-f366f64abfdd",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:08.106Z"
+  },
+  {
+    "id": "81edd2e8-a08e-411c-ad6b-0bab26f55438",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:08.135Z"
+  },
+  {
+    "id": "20b7c967-f7a7-4289-9a66-d2d5af70350f",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: Based on the provided context, the **...\" (530 chars, type: brain_chat)",
+    "notStored": "30 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:15.659Z"
+  },
+  {
+    "id": "c4a0e8a2-22f8-416f-9571-0f1351b2e2ac",
+    "stored": "Stored in vector DB: \"Brain response: \n\nHeady is a holistic ecosystem centered around **HeadyBrain**, an AI reasoning engine that powers and i...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T12:53:40.525Z"
+  },
+  {
+    "id": "4defa077-7b25-44bb-a013-72189ef15e7b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.068Z"
+  },
+  {
+    "id": "35bc7fd7-b037-4c64-8d58-f124ceb9704f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.080Z"
+  },
+  {
+    "id": "549d3f3f-0389-444f-81cf-487877604553",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.089Z"
+  },
+  {
+    "id": "4c109455-cc7d-4379-b8de-e0c5e3090deb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.105Z"
+  },
+  {
+    "id": "17ab24f3-2805-425b-9cfa-9b2c24e904d0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.118Z"
+  },
+  {
+    "id": "5dde4038-31ea-44bd-9a80-3c711afd7e69",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.135Z"
+  },
+  {
+    "id": "42fcbcfa-3a52-44f5-892f-f77815560292",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.145Z"
+  },
+  {
+    "id": "0c1fc2d3-00cf-4242-b8fa-c022bd6f15c1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:05:30.156Z"
+  },
+  {
+    "id": "55dd4445-72c1-439f-a850-a1e6fa0d1fda",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.091Z"
+  },
+  {
+    "id": "d7599714-f9c6-444c-9685-b98e2f3b560f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.107Z"
+  },
+  {
+    "id": "c0a73241-814d-4bae-8a66-3615bebbbbd4",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.122Z"
+  },
+  {
+    "id": "9acfb063-3fd7-4d81-9097-0f99d0209215",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.133Z"
+  },
+  {
+    "id": "4715a8f5-44cb-4760-8920-546e247f3b38",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.153Z"
+  },
+  {
+    "id": "88e3d0cb-b87e-4d87-b378-71d1a158e849",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.176Z"
+  },
+  {
+    "id": "0b4e99b8-a608-45f1-8984-0a61819224f9",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.187Z"
+  },
+  {
+    "id": "b4842b72-bddb-4974-a1b5-47e31109a4b0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:00.200Z"
+  },
+  {
+    "id": "b3c8d6f3-e962-41b0-987b-5d54ec018bd1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.075Z"
+  },
+  {
+    "id": "cfb4e6f0-577a-41c1-8a73-c1f34bba2cca",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.087Z"
+  },
+  {
+    "id": "3e4ee166-f4ed-49ee-a775-c34ce4e6aa77",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.098Z"
+  },
+  {
+    "id": "58b807db-4603-4599-b913-326d49228bc8",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.113Z"
+  },
+  {
+    "id": "7d6af34b-9625-4d36-8f6f-245c2adc2446",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.129Z"
+  },
+  {
+    "id": "9f8a3fdf-65ec-4020-a0d9-d5bbc9173a6d",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.153Z"
+  },
+  {
+    "id": "291e9a43-5886-401e-9075-0a204ba95b52",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.164Z"
+  },
+  {
+    "id": "c962ecb1-84ed-47ae-b7de-584bc43e29c4",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:06:30.238Z"
+  },
+  {
+    "id": "9c0a46ef-2e72-4990-8072-f292a13e73bb",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.088Z"
+  },
+  {
+    "id": "ebf60f77-3c5f-4c7d-a69a-35c427b529a0",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.103Z"
+  },
+  {
+    "id": "8374198c-09cd-42bc-bdc7-d4281baef7ae",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.114Z"
+  },
+  {
+    "id": "22836678-4b26-4333-b95a-94c663aca6a9",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.133Z"
+  },
+  {
+    "id": "df20adc1-b5a2-47ba-b997-4f746271afdc",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.142Z"
+  },
+  {
+    "id": "fb1c6aa1-e74d-4edd-8251-87be86ef81da",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.151Z"
+  },
+  {
+    "id": "ab6f8313-cd50-4420-aa66-479a3bb5109f",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.163Z"
+  },
+  {
+    "id": "7a8bbd95-3e34-4537-83e4-86fa25f7559c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:00.280Z"
+  },
+  {
+    "id": "1f1948ec-cbec-49ef-a95f-d03155a46be1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.112Z"
+  },
+  {
+    "id": "3c22d98b-46a1-4ad9-b0cf-45c45af80fff",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.209Z"
+  },
+  {
+    "id": "4081ab01-f219-41e9-aced-27b59f1fc9bd",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.222Z"
+  },
+  {
+    "id": "8a28bd36-3470-45a4-acf4-af57444094d1",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.234Z"
+  },
+  {
+    "id": "62ec4874-c297-4901-a7eb-dfe1fb759b71",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.247Z"
+  },
+  {
+    "id": "b1f9f17e-7443-4b34-8715-352b49dacd6b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.258Z"
+  },
+  {
+    "id": "e9fcf331-d253-4d69-8038-73970a0959f7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.272Z"
+  },
+  {
+    "id": "6c0e383d-d532-43ff-88dd-91a9df8ffb11",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:07:30.480Z"
+  },
+  {
+    "id": "242cfd97-2ec9-4d5d-85dc-83d4ccc1581c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.086Z"
+  },
+  {
+    "id": "3989b56f-20ac-4faa-88a6-53af210ab027",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.100Z"
+  },
+  {
+    "id": "10ffec6b-4f31-469f-b185-6409138058c4",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.118Z"
+  },
+  {
+    "id": "9c439559-9c13-4258-8f88-3bad64691e57",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.133Z"
+  },
+  {
+    "id": "b5a4cc92-3abe-44f4-897d-bb1bd5f82195",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.145Z"
+  },
+  {
+    "id": "5575c83b-531d-4e84-9f50-94ac9a979f6a",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.157Z"
+  },
+  {
+    "id": "fa779591-67e6-4a1e-9b5e-1996e65e808b",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.207Z"
+  },
+  {
+    "id": "0292dd79-c3d7-4d6d-9649-56617b316a81",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:00.277Z"
+  },
+  {
+    "id": "d8de2869-2aa7-44e3-847b-a6426df710a8",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.073Z"
+  },
+  {
+    "id": "bd060e2b-779d-4a8b-bec2-0829b00b3599",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.114Z"
+  },
+  {
+    "id": "e549a424-b5d9-47dc-b280-03bb9ec23c9c",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.148Z"
+  },
+  {
+    "id": "cc7971ec-1828-42f3-9bed-bc53d0a8bded",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.162Z"
+  },
+  {
+    "id": "4005f993-a48f-4cfa-a937-8a8bf3c5f0f6",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.199Z"
+  },
+  {
+    "id": "a8d368c2-7d23-4082-ad61-45610e16a3f8",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.216Z"
+  },
+  {
+    "id": "f4488e1f-2b34-46bc-a979-75dd8a316ec7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.245Z"
+  },
+  {
+    "id": "898388fe-5d15-43f9-a6fe-d6aff664f483",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:08:30.357Z"
+  },
+  {
+    "id": "bd2bab6a-c1e7-40ae-b301-2ebe9d82814e",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.155Z"
+  },
+  {
+    "id": "c6846f76-5a0d-42b7-98a4-9b4c72b3f0ec",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.172Z"
+  },
+  {
+    "id": "c97035c9-a081-467a-89fb-919c7413a4f7",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.190Z"
+  },
+  {
+    "id": "864fde41-5d7b-4583-83bd-bdf7d607f814",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.205Z"
+  },
+  {
+    "id": "2d31cea0-477c-4071-b8a2-ddfce8b3e3db",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.232Z"
+  },
+  {
+    "id": "d3140a28-412d-495a-8dcd-5ead11e42017",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.246Z"
+  },
+  {
+    "id": "71b20332-6e5a-4429-8353-2dfa340e5a53",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.260Z"
+  },
+  {
+    "id": "72118ffc-423f-4e24-9d09-29c4d24bf608",
+    "stored": "Stored in vector DB: \"Chat interaction: undefined...\" (27 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:09:00.288Z"
+  },
+  {
+    "id": "35422f74-c3af-4b61-b44e-e6f109f73baa",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\n**Implementing Federated Routing Ac...\" (1697 chars, type: brain_chat)",
+    "notStored": "1197 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:31:51.941Z"
+  },
+  {
+    "id": "6e6140b7-e608-423a-9530-e11af85c42ef",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, I am an AI reasoning engine and do not personally \"route through providers\" in the physic...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:31:55.979Z"
+  },
+  {
+    "id": "f536c81b-e3e5-400a-92ef-95fb37cca6c1",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: Say hello\nA: \n\nHello! How can I assist you today? ...\" (251 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:35:40.637Z"
+  },
+  {
+    "id": "805c9a97-f3dc-41ea-bbc8-a451c18eb9a1",
+    "stored": "Stored in vector DB: \"Brain response: Greetings! How may I help?...\" (42 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:35:41.484Z"
+  },
+  {
+    "id": "365babda-ff43-425d-b9b9-006b4f9987ef",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: Say hello in 5 words\nA: Greetings! How may I help?...\" (458 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:35:41.678Z"
+  },
+  {
+    "id": "aa27ce9b-d236-454f-b778-0f8b42762f0f",
+    "stored": "Stored in vector DB: \"Brain response: Greetings! How may I help?...\" (42 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:35:42.492Z"
+  },
+  {
+    "id": "17b754c9-4372-4eb6-a7b9-8a63630d87fb",
+    "stored": "Stored in vector DB: \"Chat interaction: Say hi in exactly 3 words...\" (43 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:41:22.710Z"
+  },
+  {
+    "id": "c2c8fdd9-5c73-47c7-9ce8-40f96be98d5b",
+    "stored": "Stored in vector DB: \"Brain response: Hello, I'm HeadyBrain....\" (38 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:41:23.931Z"
+  },
+  {
+    "id": "e04acfd4-d876-410e-a834-76fc7bfd6817",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 1 relevant memories found]\nQ: Say hi in exactly 3 words\nA: Hello, I'm HeadyBrain...\" (154 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:43:47.825Z"
+  },
+  {
+    "id": "db899c21-c8af-4985-95fd-734296a5fdba",
+    "stored": "Stored in vector DB: \"Brain response: Hi, I'm HeadyBrain....\" (35 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:43:50.181Z"
+  },
+  {
+    "id": "22aa7286-e31f-4d79-a239-b31b5e76c0ab",
+    "stored": "Stored in vector DB: \"Chat interaction: What is the golden ratio?...\" (43 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:50:11.841Z"
+  },
+  {
+    "id": "f8cc96ab-9ab1-4a40-b4d7-40f834823844",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, I can tell you that the **golden ratio**, often represented by the Greek letter **phi ($\\...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:50:17.968Z"
+  },
+  {
+    "id": "778a034d-dd99-4381-845a-b043530a0bcf",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nWhat is the golden ratio?\n---\nQ: What is the golden r...\" (1691 chars, type: brain_chat)",
+    "notStored": "1191 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:50:18.058Z"
+  },
+  {
+    "id": "4a495d50-3c40-426f-8220-cb91921e6e56",
+    "stored": "Stored in vector DB: \"Brain response: As HeadyBrain, I can tell you that the **golden ratio**, often represented by the Greek letter **phi ($\\...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:50:20.492Z"
+  },
+  {
+    "id": "e4048ec1-9b08-4f10-b9f4-3e49d2874403",
+    "stored": "Stored in vector DB: \"Chat interaction: Tell me about phi the golden number...\" (53 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:50:20.563Z"
+  },
+  {
+    "id": "2ef43369-ce71-4a8c-8524-0d85eac67b07",
+    "stored": "Stored in vector DB: \"Brain response: Greetings. As HeadyBrain, the AI reasoning engine of the Heady ecosystem, I can tell you a great deal ab...\" (516 chars, type: brain_response)",
+    "notStored": "16 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T13:50:30.546Z"
+  },
+  {
+    "id": "02df8a5b-76da-4c3d-8324-9091731af2cc",
+    "stored": "Stored in vector DB: \"Chat interaction: ping...\" (22 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T15:20:44.674Z"
+  },
+  {
+    "id": "7f4e77d2-6c5f-4bfe-a7a9-b823a79c10b5",
+    "stored": "Stored in vector DB: \"Brain response: PONG...\" (20 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T15:20:45.468Z"
+  },
+  {
+    "id": "9356bca5-1e6b-483e-95d7-d7ba76c92572",
+    "stored": "Stored in vector DB: \"Chat interaction: Respond with exactly: BRAIN_ALIVE...\" (51 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T16:40:58.309Z"
+  },
+  {
+    "id": "ba9efeb1-bb3b-4998-9181-e1eb1279efb7",
+    "stored": "Stored in vector DB: \"Brain response: ...\" (16 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T16:40:59.098Z"
+  },
+  {
+    "id": "2a8be969-a232-4983-a77a-2322dac69952",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 1 relevant memories found]\n[Learning: security] Q: Secure Multi-Tenant AI System...\" (2091 chars, type: brain_chat)",
+    "notStored": "1591 chars of extended content trimmed from vector index",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T16:45:26.717Z"
+  },
+  {
+    "id": "bec0ee29-c6ff-40c8-8eff-052707ff06dc",
+    "stored": "Stored in vector DB: \"Brain response: pong...\" (20 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-24T16:45:27.536Z"
   }
 ]

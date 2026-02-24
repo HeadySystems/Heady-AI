@@ -17,7 +17,7 @@ const AdminIDE = () => {
               <Settings className="w-6 h-6 text-blue-600" />
               <h3 className="text-xl font-semibold">Admin Dashboard</h3>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between py-3 border-b border-gray-100">
                 <span className="text-gray-700">Service Status</span>
@@ -39,14 +39,20 @@ const AdminIDE = () => {
 
             <div className="mt-6 space-y-3">
               <button
-                onClick={() => window.open('http://localhost:3300/admin', '_blank')}
+                onClick={() => {
+                  const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+                  window.open(`${baseUrl}/admin`, '_blank');
+                }}
                 className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <ExternalLink className="w-4 h-4" />
                 Open Admin UI
               </button>
               <button
-                onClick={() => window.open('http://localhost:3300/api/health', '_blank')}
+                onClick={() => {
+                  const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+                  window.open(`${baseUrl}/api/health`, '_blank');
+                }}
                 className="w-full flex items-center justify-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 <Activity className="w-4 h-4" />
@@ -61,7 +67,7 @@ const AdminIDE = () => {
               <Monitor className="w-6 h-6 text-green-600" />
               <h3 className="text-xl font-semibold">Development Environment</h3>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between py-3 border-b border-gray-100">
                 <span className="text-gray-700">Current Workspace</span>
@@ -83,14 +89,20 @@ const AdminIDE = () => {
 
             <div className="mt-6 space-y-3">
               <button
-                onClick={() => window.open('http://localhost:3300/ide', '_blank')}
+                onClick={() => {
+                  const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+                  window.open(`${baseUrl}/ide`, '_blank');
+                }}
                 className="w-full flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
               >
                 <ExternalLink className="w-4 h-4" />
                 Open IDE
               </button>
               <button
-                onClick={() => window.open('http://localhost:3300/api/arena/status', '_blank')}
+                onClick={() => {
+                  const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+                  window.open(`${baseUrl}/api/arena/status`, '_blank');
+                }}
                 className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
               >
                 <Zap className="w-4 h-4" />
@@ -104,7 +116,7 @@ const AdminIDE = () => {
         <div className="mt-8 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6 border border-blue-200">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Seamless Integration</h3>
           <p className="text-gray-700 mb-4">
-            Admin + IDE mode provides unified access to both system administration and development tools. 
+            Admin + IDE mode provides unified access to both system administration and development tools.
             Navigate seamlessly between configuration and coding without context switching.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

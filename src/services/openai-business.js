@@ -7,6 +7,9 @@
  * Business plan = unlimited, but burst-respect for API stability.
  */
 const OpenAI = require('openai');
+const path = require('path');
+const HeadyGateway = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'gateway'));
+const { createProviders } = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'providers'));
 
 // ── Client Initialization ──
 let _client = null;
@@ -18,6 +21,17 @@ function getClient() {
         });
     }
     return _client;
+}
+
+// ── SDK Gateway (for chat/embed routing) ──
+let _gateway = null;
+function getGateway() {
+    if (!_gateway) {
+        _gateway = new HeadyGateway({ cacheTTL: 300000 });
+        const providers = createProviders(process.env);
+        for (const p of providers) _gateway.registerProvider(p);
+    }
+    return _gateway;
 }
 
 // ── Model Catalog (Business Plan — Unlimited Access) ──
@@ -77,39 +91,34 @@ function trackUsage(model, inputTokens, outputTokens) {
     usage.byModel[model].tokens += (inputTokens || 0) + (outputTokens || 0);
 }
 
-// ── Core Chat Function ──
+// ── Core Chat Function (routes through SDK gateway) ──
 async function chat(message, opts = {}) {
     if (!canMakeRequest()) {
         return { error: 'throttled', message: 'Rate limit reached. Try again shortly.', retryAfter: 2 };
     }
 
     const model = MODELS[opts.tier || 'standard'];
-    const client = getClient();
     trackRequest();
 
     try {
-        const response = await client.chat.completions.create({
-            model: model.id,
-            messages: [
-                ...(opts.system ? [{ role: 'system', content: opts.system }] : []),
-                { role: 'user', content: message },
-            ],
-            max_tokens: opts.maxTokens || model.maxTokens,
+        const gateway = getGateway();
+        const result = await gateway.chat(message, {
+            system: opts.system,
             temperature: opts.temperature ?? 0.7,
-            ...(opts.responseFormat ? { response_format: opts.responseFormat } : {}),
+            maxTokens: opts.maxTokens || model.maxTokens,
         });
 
-        const result = response.choices[0]?.message?.content;
-        const u = response.usage || {};
-        trackUsage(model.id, u.prompt_tokens, u.completion_tokens);
-
-        return {
-            response: result,
-            model: model.id,
-            provider: 'openai-business',
-            plan: 'ChatGPT Business (2 seats, unlimited)',
-            tokens: { input: u.prompt_tokens, output: u.completion_tokens },
-        };
+        if (result.ok) {
+            trackUsage(result.model || model.id, 0, 0);
+            return {
+                response: result.response,
+                model: result.model || model.id,
+                provider: 'openai-business (via gateway)',
+                plan: 'ChatGPT Business (2 seats, unlimited)',
+                engine: result.engine,
+            };
+        }
+        throw new Error(result.error || 'gateway-failed');
     } catch (err) {
         usage.errors++;
         throw err;
@@ -151,13 +160,24 @@ async function* streamChat(message, opts = {}) {
     }
 }
 
-// ── Embeddings ──
+// ── Embeddings (routes through SDK gateway) ──
 async function embed(text, model = 'text-embedding-3-small') {
+    try {
+        const gateway = getGateway();
+        const result = await gateway.embed(text);
+        if (result.ok && result.embedding) {
+            trackUsage(result.model || model, 0, 0);
+            return {
+                embedding: result.embedding,
+                dimensions: result.embedding.length,
+                model: result.model || model,
+            };
+        }
+    } catch { /* gateway failed, fall through to direct */ }
+
+    // Fallback to direct OpenAI if gateway fails
     const client = getClient();
-    const response = await client.embeddings.create({
-        model,
-        input: text,
-    });
+    const response = await client.embeddings.create({ model, input: text });
     trackUsage(model, 0, 0);
     return {
         embedding: response.data[0].embedding,

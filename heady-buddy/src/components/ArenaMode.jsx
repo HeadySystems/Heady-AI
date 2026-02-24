@@ -27,7 +27,8 @@ const ArenaMode = () => {
   const startArena = async () => {
     try {
       setArenaStatus('starting');
-      const response = await fetch('http://localhost:3300/api/arena/start', {
+      const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300/api/arena/start' : `https://api.${window.location.hostname.replace('buddy.', '')}/api/arena/start`;
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -43,7 +44,7 @@ const ArenaMode = () => {
           }
         })
       });
-      
+
       if (response.ok) {
         setArenaStatus('running');
         initializeCandidates();
@@ -149,12 +150,11 @@ const ArenaMode = () => {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Status:</span>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  arenaStatus === 'running' ? 'bg-blue-100 text-blue-800' :
-                  arenaStatus === 'completed' ? 'bg-green-100 text-green-800' :
-                  arenaStatus === 'error' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${arenaStatus === 'running' ? 'bg-blue-100 text-blue-800' :
+                    arenaStatus === 'completed' ? 'bg-green-100 text-green-800' :
+                      arenaStatus === 'error' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800'
+                  }`}>
                   {arenaStatus.toUpperCase()}
                 </span>
               </div>
@@ -209,7 +209,7 @@ const ArenaMode = () => {
                   <h4 className="font-semibold text-gray-900">{candidate.name}</h4>
                   {getStatusIcon(candidate.status)}
                 </div>
-                
+
                 <div className="mb-4">
                   <div className="text-sm text-gray-600 mb-1">Strategy</div>
                   <div className="font-medium text-gray-900">{candidate.strategy}</div>
@@ -221,8 +221,8 @@ const ArenaMode = () => {
                     <span className="text-sm font-medium">{Math.round(candidate.progress)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-purple-600 h-2 rounded-full transition-all duration-500" 
+                    <div
+                      className="bg-purple-600 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${candidate.progress}%` }}
                     ></div>
                   </div>
@@ -233,8 +233,8 @@ const ArenaMode = () => {
                     <span className="text-sm text-gray-600">Code Quality</span>
                     <div className="flex items-center gap-2">
                       <div className="w-16 bg-gray-200 rounded-full h-1">
-                        <div 
-                          className="bg-green-600 h-1 rounded-full" 
+                        <div
+                          className="bg-green-600 h-1 rounded-full"
                           style={{ width: `${candidate.metrics.codeQuality}%` }}
                         ></div>
                       </div>
@@ -245,8 +245,8 @@ const ArenaMode = () => {
                     <span className="text-sm text-gray-600">Performance</span>
                     <div className="flex items-center gap-2">
                       <div className="w-16 bg-gray-200 rounded-full h-1">
-                        <div 
-                          className="bg-blue-600 h-1 rounded-full" 
+                        <div
+                          className="bg-blue-600 h-1 rounded-full"
                           style={{ width: `${candidate.metrics.performance}%` }}
                         ></div>
                       </div>
@@ -257,8 +257,8 @@ const ArenaMode = () => {
                     <span className="text-sm text-gray-600">Innovation</span>
                     <div className="flex items-center gap-2">
                       <div className="w-16 bg-gray-200 rounded-full h-1">
-                        <div 
-                          className="bg-purple-600 h-1 rounded-full" 
+                        <div
+                          className="bg-purple-600 h-1 rounded-full"
                           style={{ width: `${candidate.metrics.innovation}%` }}
                         ></div>
                       </div>

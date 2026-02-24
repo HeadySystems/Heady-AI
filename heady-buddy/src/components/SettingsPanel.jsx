@@ -34,33 +34,30 @@ const SettingsPanel = ({ preferences, onSave }) => {
               <div className="grid grid-cols-3 gap-4">
                 <button
                   onClick={() => handleChange('theme', 'light')}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${
-                    localPreferences.theme === 'light'
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${localPreferences.theme === 'light'
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   <Sun className="w-6 h-6 text-yellow-500" />
                   <span className="text-sm font-medium">Light</span>
                 </button>
                 <button
                   onClick={() => handleChange('theme', 'dark')}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${
-                    localPreferences.theme === 'dark'
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${localPreferences.theme === 'dark'
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   <Moon className="w-6 h-6 text-gray-700" />
                   <span className="text-sm font-medium">Dark</span>
                 </button>
                 <button
                   onClick={() => handleChange('theme', 'system')}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${
-                    localPreferences.theme === 'system'
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${localPreferences.theme === 'system'
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                    }`}
                 >
                   <Monitor className="w-6 h-6 text-gray-500" />
                   <span className="text-sm font-medium">System</span>
@@ -193,10 +190,10 @@ const SettingsPanel = ({ preferences, onSave }) => {
               </label>
               <input
                 type="url"
-                value={localPreferences.apiEndpoint || 'http://localhost:3300'}
+                value={localPreferences.apiEndpoint || (window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`)}
                 onChange={(e) => handleChange('apiEndpoint', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="http://localhost:3300"
+                placeholder={window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`}
               />
             </div>
             <div>

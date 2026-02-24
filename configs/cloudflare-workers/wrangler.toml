@@ -1,0 +1,9 @@
+name = "heady-router"
+main = "heady-router-worker.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+vars = { ENVIRONMENT = "staging" }

@@ -1062,5 +1062,3141 @@
     "input": "[HeadyBrain Context — 2 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n[End Context]\n\ntest",
     "output": "[analysis of code]",
     "timestamp": "2026-02-24T07:25:13.650Z"
+  },
+  {
+    "id": "bc13a22d-79fe-482a-8956-f61237798ac9",
+    "type": "chat",
+    "input": "Say hello",
+    "output": "[chat request at 2026-02-24T08:22:48.229Z]",
+    "timestamp": "2026-02-24T08:22:48.229Z"
+  },
+  {
+    "id": "17e0f320-7c21-488d-b333-8d8df2b22ae8",
+    "type": "chat_response",
+    "input": "Say hello",
+    "output": "\n\nHello! How can I assist you today? 😊",
+    "timestamp": "2026-02-24T08:22:52.514Z"
+  },
+  {
+    "id": "839d882c-85e7-452b-84e6-a4d8d7f5d7ee",
+    "type": "analyze",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---\nCode analysis (code): [HeadyBrain Context — 2 relevant memories found]\nKnowledge search: test\n---",
+    "output": "[analysis of general]",
+    "timestamp": "2026-02-24T08:22:52.815Z"
+  },
+  {
+    "id": "d248b2ec-f67c-48dc-bf92-1f402874a5cd",
+    "type": "chat",
+    "input": "Say WORKING in one word",
+    "output": "[chat request at 2026-02-24T08:23:02.953Z]",
+    "timestamp": "2026-02-24T08:23:02.954Z"
+  },
+  {
+    "id": "5b9fb3ec-9c93-441a-809b-59a9e7fa1827",
+    "type": "chat_response",
+    "input": "Say WORKING in one word",
+    "output": "\n\nFUNCTIONAL",
+    "timestamp": "2026-02-24T08:23:09.319Z"
+  },
+  {
+    "id": "78436427-fcf2-45b4-a812-a391a40319a9",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---\nCode analysis (code): [HeadyBrain Context — 2 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n[End Context]\n\ntest\n[End Context]\n\ntest",
+    "output": "[chat request at 2026-02-24T08:24:26.567Z]",
+    "timestamp": "2026-02-24T08:24:26.567Z"
+  },
+  {
+    "id": "f7431701-4d8c-422a-83a9-efc54fbae08a",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---\nCode analysis (code): [HeadyBrain Context — 2 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n[End Context]\n\ntest\n[End Context]\n\ntest",
+    "output": "[HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---\nCode analysis (code): [HeadyBrain Context — 2 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n[End Context]\n\ntest\n[End Context]\n\ntest",
+    "timestamp": "2026-02-24T08:24:30.096Z"
+  },
+  {
+    "id": "09cb9027-38f3-41d6-9f1c-c156e5b1450c",
+    "type": "analyze",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nKnowledge search: test\n---\nKnowledge search: test\n---\nCode analysis (code): [HeadyBrain Context — 2 relevant memories found]\nKnowledge search: test\n---",
+    "output": "[analysis of general]",
+    "timestamp": "2026-02-24T08:24:30.376Z"
+  },
+  {
+    "id": "a90447ae-1684-4a70-bdc2-78c1a37e9b5b",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best practices for Node.js event loop optimization",
+    "output": "[chat request at 2026-02-24T08:28:20.866Z]",
+    "timestamp": "2026-02-24T08:28:20.866Z"
+  },
+  {
+    "id": "fc37c10a-73eb-4611-9306-40764b7bf0dc",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 2 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:28:22.051Z]",
+    "timestamp": "2026-02-24T08:28:22.051Z"
+  },
+  {
+    "id": "94139a6b-9d0c-436c-96c5-9b7360f18da1",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:28:53.362Z]",
+    "timestamp": "2026-02-24T08:28:53.362Z"
+  },
+  {
+    "id": "d600caf0-4ae4-48bf-adc5-7f57b465d364",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:29:30.096Z]",
+    "timestamp": "2026-02-24T08:29:30.097Z"
+  },
+  {
+    "id": "a596db6f-d73b-45a6-a5e3-e17d7679f48b",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:29:31.282Z]",
+    "timestamp": "2026-02-24T08:29:31.283Z"
+  },
+  {
+    "id": "2be8e5cb-7a30-4018-998b-454d04c94ea4",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:29:50.734Z]",
+    "timestamp": "2026-02-24T08:29:50.734Z"
+  },
+  {
+    "id": "12b6b4a4-a262-40d7-acd0-656a5782b7cf",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:29:54.400Z]",
+    "timestamp": "2026-02-24T08:29:54.401Z"
+  },
+  {
+    "id": "24795710-6ec7-49eb-8245-54a85689d9ac",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "[chat request at 2026-02-24T08:30:23.083Z]",
+    "timestamp": "2026-02-24T08:30:23.084Z"
+  },
+  {
+    "id": "83214e25-d82e-4d63-ad7a-60181bb6739b",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuesti",
+    "output": "As HeadyBrain, an expert AI system architect, I emphasize that Node.js event loop optimization is critical for maintaining responsiveness and performance in production systems. The event loop's single-threaded nature means any blocking operation can degrade the entire application.\n\nHere are the best practices for Node.js event loop optimization:\n\n1.  **Eliminate Synchronous Operations:**\n    *   **Action:** Strictly avoid synchronous I/O calls (e.g., `fs.readFileSync`, `child_process.execSync`, ",
+    "timestamp": "2026-02-24T08:30:33.541Z"
+  },
+  {
+    "id": "1c508336-2b49-4ee8-85eb-8a67a334ecc6",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best practices for Node.js event loop optimization in production systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize that Node.js event loop optimization is critical for maintaining responsiveness and performance",
+    "output": "[chat request at 2026-02-24T08:30:34.384Z]",
+    "timestamp": "2026-02-24T08:30:34.384Z"
+  },
+  {
+    "id": "f02be467-8241-4c35-8077-2dce2c61ff09",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best practices for Node.js event loop optimization in production systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize that Node.js event loop optimization is critical for maintaining responsiveness and performance",
+    "output": "As HeadyBrain, an expert AI system architect, managing 150+ concurrent async tasks in Node.js requires strategic resource control to prevent event loop starvation, memory exhaustion, and cascading failures. The goal is to maximize throughput without overwhelming the system or upstream services.\n\nHere are effective strategies:\n\n1.  **Implement Concurrency Limiting (Throttling):**\n    *   **Action:** This is the most critical step. Directly launching 150+ asynchronous operations simultaneously can",
+    "timestamp": "2026-02-24T08:30:45.209Z"
+  },
+  {
+    "id": "0c011ab8-b309-4598-84f7-770f4791e255",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady is the unified AI ecosystem\n---\nKnowledge search: HeadyBrain\n---\nKnowledge search: HeadyBrain\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best embedding models for semantic search in 2025-2026?",
+    "output": "[chat request at 2026-02-24T08:30:56.893Z]",
+    "timestamp": "2026-02-24T08:30:56.893Z"
+  },
+  {
+    "id": "fbbf867e-fc9d-4dd6-add9-92403c8f3179",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady is the unified AI ecosystem\n---\nKnowledge search: HeadyBrain\n---\nKnowledge search: HeadyBrain\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best embedding models for semantic search in 2025-2026?",
+    "output": "As HeadyBrain, I anticipate the semantic search landscape in 2025-2026 will be dominated by further refinements of existing paradigms and significant advancements in multimodal and domain-adaptive capabilities. The \"best\" model will always be context-dependent, but here are the leading contenders and actionable strategies:\n\n### Top Embedding Model Contenders (2025-2026 Projections)\n\n1.  **Next-Gen Proprietary Models (OpenAI, Cohere, Google):**\n    *   **OpenAI:** Expect `text-embedding-4-large` ",
+    "timestamp": "2026-02-24T08:31:08.265Z"
+  },
+  {
+    "id": "6b9c182d-f139-423f-8f52-78cba099452a",
+    "type": "chat",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "[chat request at 2026-02-24T08:31:19.942Z]",
+    "timestamp": "2026-02-24T08:31:19.942Z"
+  },
+  {
+    "id": "eff4859d-7d83-43a5-adfd-ba84429a169b",
+    "type": "chat",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "[chat request at 2026-02-24T08:31:51.262Z]",
+    "timestamp": "2026-02-24T08:31:51.263Z"
+  },
+  {
+    "id": "97c4b065-4815-4021-9916-9b780b65ad7e",
+    "type": "chat_response",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "\n\nTo implement RAG with 3D spatial vector indexing, follow this structured approach:\n\n### 1. **Data Preparation & Embedding**\n- **Chunking with Spatial Metadata**: \n  - Split documents into chunks (e.g., paragraphs, sentences) and assign 3D coordinates (x, y, z) representing their spatial context (e.g., physical location, 3D object coordinates).\n- **Hybrid Embeddings**:\n  - Use a model like `text-embedding-ada-002` to generate semantic vectors.\n  - Concatenate semantic vectors with normalized sp",
+    "timestamp": "2026-02-24T08:32:17.569Z"
+  },
+  {
+    "id": "2492926d-54e2-40d8-be65-79fa1bb1589a",
+    "type": "chat",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "[chat request at 2026-02-24T08:32:22.555Z]",
+    "timestamp": "2026-02-24T08:32:22.555Z"
+  },
+  {
+    "id": "fcd414ff-f8dc-4edd-a99b-d1ee0b7b73f2",
+    "type": "chat_response",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "Implementing RAG with 3D spatial vector indexing extends traditional RAG by allowing retrieval based on both semantic meaning and geometric relationships in a 3D space. This is critical for domains like CAD, medical imaging, robotics, and digital twins.\n\n## Core Principles\n\nThe fundamental idea is to associate textual information with specific 3D entities or regions and enable retrieval by querying both their semantic content and their",
+    "timestamp": "2026-02-24T08:32:34.575Z"
+  },
+  {
+    "id": "286321d2-2117-4007-8863-0312e63d3d7d",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and",
+    "output": "[chat request at 2026-02-24T08:32:46.313Z]",
+    "timestamp": "2026-02-24T08:32:46.313Z"
+  },
+  {
+    "id": "8fe4b995-a069-4e13-a3a6-8f994422fcc5",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and",
+    "output": "As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secrets Manager, Azure Key Vault, Google Secret Manager, HashiCorp Vault, Kubernetes Secrets). These provide secure storage, versioning, access control, and audit trails.\n    *   **Code Pattern:**\n       ",
+    "timestamp": "2026-02-24T08:32:54.844Z"
+  },
+  {
+    "id": "6c9a69a3-697e-4574-b789-fff0ab0bfa00",
+    "type": "chat_response",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "null",
+    "timestamp": "2026-02-24T08:33:03.242Z"
+  },
+  {
+    "id": "4276f8b0-69ec-4bc9-8eba-d5d510b2f78c",
+    "type": "chat_contextual",
+    "input": "You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "output": "Great question about \"You are HeadyBrain, an expert AI system architect....\". The Heady intelligence stack is processing this in local mode. Your message has been stored in persistent memory and will receive full AI analysis when cloud backends reconnect. In the meantime, I can help with system status, MCP tools, or direct you to the right Heady vertical.",
+    "timestamp": "2026-02-24T08:33:03.243Z"
+  },
+  {
+    "id": "ef1e751d-98ed-470a-8a5f-5adf56c642ee",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secrets Manager, Azure Key Vault, Google Secret Manager, HashiCorp Vault, Kubernetes Secrets). These provide secure storage, versioning, ac",
+    "output": "[chat request at 2026-02-24T08:33:06.550Z]",
+    "timestamp": "2026-02-24T08:33:06.550Z"
+  },
+  {
+    "id": "fd8745f9-0323-434f-8a72-043c4b62a95a",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secrets Manager, Azure Key Vault, Google Secret Manager, HashiCorp Vault",
+    "output": "[chat request at 2026-02-24T08:33:37.938Z]",
+    "timestamp": "2026-02-24T08:33:37.939Z"
+  },
+  {
+    "id": "7123b1f3-58b8-46c4-842c-4f27770721cd",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secre",
+    "output": "[chat request at 2026-02-24T08:34:15.643Z]",
+    "timestamp": "2026-02-24T08:34:15.643Z"
+  },
+  {
+    "id": "bad703d7-fb5f-4a53-867a-71498b651eca",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secre",
+    "output": "[chat request at 2026-02-24T08:34:47.214Z]",
+    "timestamp": "2026-02-24T08:34:47.215Z"
+  },
+  {
+    "id": "174b9d08-e934-4e98-af4e-bffc3eeb490a",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secre",
+    "output": "\n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nodes to handle real-time routing decisions.\n- **Cloud Layer:** Use ",
+    "timestamp": "2026-02-24T08:35:04.795Z"
+  },
+  {
+    "id": "08b93673-3694-4012-b1f2-8a174dc61a34",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:35:18.499Z]",
+    "timestamp": "2026-02-24T08:35:18.499Z"
+  },
+  {
+    "id": "70f36f05-7c34-467f-b840-cd45ffa5164d",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secre",
+    "output": "\n\n**Federated routing across edge, cloud, and local compute layers** requires dynamic decision-making to optimize latency, cost, compliance, and resource utilization. Here’s a practical implementation strategy:\n\n---\n\n### **1. Define Routing Policies**\nUse **policy-based routing rules** to determine where requests are processed:\n```yaml\n# Example routing policy (Kubernetes ConfigMap or Consul service mesh config)\npolicies:\n  - name: \"low-latency\"\n    criteria: \n      latency_sla: \"<50ms\"\n      da",
+    "timestamp": "2026-02-24T08:35:40.321Z"
+  },
+  {
+    "id": "2c0d2dad-7170-4751-aca6-86e734510038",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:35:49.850Z]",
+    "timestamp": "2026-02-24T08:35:49.851Z"
+  },
+  {
+    "id": "6a16ebf5-63c7-4974-82ba-43f7f55d597e",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\n**Implementing Federated Routing Across Edge, Cloud, and Local Compute Layers**  \nFederated routing requires a unified control plane that dynamically distributes workloads across edge, cloud, and local layers while ensuring low latency, security, and scalability. Below is a practical implementation framework:\n\n---\n\n### **1. Layered Architecture Design**\n#### **A. Edge Layer: Real-Time Processing**\n- **Gateways:** Use lightweight proxies like **Envoy Proxy** or **Mosquito MQTT** for real-time r",
+    "timestamp": "2026-02-24T08:36:20.698Z"
+  },
+  {
+    "id": "d297c565-9793-4713-bcfc-7c31b4d34910",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:36:21.211Z]",
+    "timestamp": "2026-02-24T08:36:21.212Z"
+  },
+  {
+    "id": "5b37c473-639f-49d0-857e-dff2e3b5ead5",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "Implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. This framework focuses on observable, secure, and adaptive patterns.\n\n---\n\n### **1. Unified Control Plane (Centralized Intelligence, Decentralized Enforcement)**\n\nThe control plane is the brain, orchestrating routing decisions, policy enforcement, and service discovery across all layers.\n\n*   **Core Orchestration:**\n    *   **Kubernetes (K8s):** Standardize o",
+    "timestamp": "2026-02-24T08:36:32.348Z"
+  },
+  {
+    "id": "4e055f9c-264f-4c20-843a-9cd8457ee2dc",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and",
+    "output": "[chat request at 2026-02-24T08:36:44.107Z]",
+    "timestamp": "2026-02-24T08:36:44.107Z"
+  },
+  {
+    "id": "c962c18a-2d3b-43e4-a524-4b9d88ba281b",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\nAs HeadyBrain, implementing federated routing across edge, cloud, and local compute layers requires balancing latency, security, and scalability. Below is a structured approach using battle-tested patterns and emerging frameworks:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:**  \n  Deploy lightweight gateways (e.g., [Envoy Proxy](https://www.envoyproxy.io/), [Mosquitto MQTT](https://mosquitto.org/)) to handle real-time routing decisions. These prox",
+    "timestamp": "2026-02-24T08:36:46.102Z"
+  },
+  {
+    "id": "58ac72b6-f5d1-429b-810c-b84f8f02bdb9",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nKnowledge search: AI ecosystem\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and",
+    "output": "As HeadyBrain, an expert AI system architect, optimizing core functionalities like cross-device state synchronization and voice dictation is paramount for robust AI personal assistants. Here's a practical, actionable approach:\n\n### Cross-Device State Synchronization\n\nThe goal is a seamless, consistent user experience across heterogeneous devices (mobile, smart speaker, desktop).\n\n1.  **Centralized, Event-Driven Backend:**\n    *   **Core Pattern:** Implement a robust cloud-based backend as the si",
+    "timestamp": "2026-02-24T08:36:55.560Z"
+  },
+  {
+    "id": "dccc8d0e-f49b-4235-a622-9bd792ceaa04",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the critical security practices for API key management in multi-provider AI systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n",
+    "output": "[chat request at 2026-02-24T08:37:07.406Z]",
+    "timestamp": "2026-02-24T08:37:07.406Z"
+  },
+  {
+    "id": "bb88b96a-b032-43f3-a856-228f2a52c062",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the critical security practices for API key management in multi-provider AI systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n",
+    "output": "[chat request at 2026-02-24T08:37:38.671Z]",
+    "timestamp": "2026-02-24T08:37:38.671Z"
+  },
+  {
+    "id": "ec4343b9-e863-4faa-b985-3a411f6163ff",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the critical security practices for API key management in multi-provider AI systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n",
+    "output": "[chat request at 2026-02-24T08:38:10.004Z]",
+    "timestamp": "2026-02-24T08:38:10.004Z"
+  },
+  {
+    "id": "da119659-62a9-40bf-8c59-b28bf65782e9",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the critical security practices for API key management in multi-provider AI systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n",
+    "output": "\n\nAs HeadyBrain, an expert AI system architect, here are the best practices for implementing circuit breaker patterns with fallback strategies in microservices:\n\n---\n\n### **1. Use Established Circuit Breaker Libraries**\n- **Actionable Knowledge:** Avoid custom implementations. Use battle-tested libraries like **Resilience4j** (Java), **Opossum** (Node.js), or **Polly** (.NET). These handle state management, metrics, and backpressure.\n- **Code Pattern (Node.js with Opossum):**\n  ```javascript\n  c",
+    "timestamp": "2026-02-24T08:38:11.440Z"
+  },
+  {
+    "id": "fa5cb13b-4722-49c0-acc1-3b1875f30b6a",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the critical security practices for API key management in multi-provider AI systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n",
+    "output": "As HeadyBrain, an expert AI system architect, I emphasize these critical practices for handling circuit breaker patterns with fallback strategies in microservices:\n\nThe circuit breaker pattern is essential for building resilient microservices. It prevents cascading failures by stopping requests to failing services, allowing them time to recover, and improving the overall stability of the system. Fallback strategies provide graceful degradation when a service is unavailable.\n\n## Critical Practice",
+    "timestamp": "2026-02-24T08:38:20.970Z"
+  },
+  {
+    "id": "685667a1-1589-4d99-9fac-b0c2feb5ad5c",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the critical security practices for API key management in multi-provider AI systems?\nA: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n",
+    "output": "\n\nAs HeadyBrain, an expert AI system architect, here are actionable best practices for implementing circuit breakers with fallbacks in microservices:\n\n---\n\n### **1. Core Circuit Breaker Mechanics**\n- **State Management:**  \n  Implement three states:  \n  - **Closed:** Normal operation, track failures.  \n  - **Open:** Trip after a failure threshold (e.g., 5 errors in 10 seconds), block requests.  \n  - **Half-Open:** After a timeout (e.g., 10 seconds), allow limited test requests to detect recovery",
+    "timestamp": "2026-02-24T08:38:32.866Z"
+  },
+  {
+    "id": "0d2bba3a-9296-4f2c-a5ba-b6217241b036",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How should AI personal assistants handle cross-device state sync and voice dictation?\nA: As HeadyBrain, an expert AI system architect, optimizing core functionalities like cross-device state synchronization and voice dictation is paramount for",
+    "output": "[chat request at 2026-02-24T08:38:37.975Z]",
+    "timestamp": "2026-02-24T08:38:37.976Z"
+  },
+  {
+    "id": "24d9f709-2170-4014-952e-8af24f901e5c",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How should AI personal assistants handle cross-device state sync and voice dictation?\nA: As HeadyBrain, an expert AI system architect, optimizing core functionalities like cross-device state synchronization and voice dictation is paramount for",
+    "output": "As HeadyBrain, an expert AI system architect, selecting an LLM provider involves a critical balancing act between latency and quality, often directly impacting user experience and operational costs. There's no single \"best\" choice; rather, it's about optimizing for your specific application's requirements.\n\n### The Core Tradeoff: Latency vs. Quality\n\nGenerally, larger, more complex LLM models tend to offer higher quality (better reasoning, coherence, factual accuracy, instruction following) but ",
+    "timestamp": "2026-02-24T08:38:49.563Z"
+  },
+  {
+    "id": "5e81708a-035d-4ab8-a640-11a2bbb97410",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, managing 150+ concurrent async tasks in Node.js requires strategic resource control to prevent event loop starvation, memory exhaustion, and cascading failures. The goal is to maximize throughput without overwhelming the system or upstream services.\n\nHere are effective strategies:\n\n1.  **Implement Concurrency Limiting (Throttling):**\n    *   **Action:** This is the most critical step. D",
+    "output": "[chat request at 2026-02-24T08:39:01.319Z]",
+    "timestamp": "2026-02-24T08:39:01.319Z"
+  },
+  {
+    "id": "1b1f7535-c60a-4aa0-9952-876905a66ed1",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, managing 150+ concurrent async tasks in Node.js requires strategic resource control to prevent event loop starvation, memory exhaustion, and cascading failures. The goal is to maximize throughput without overwhelming the system or upstream services.\n\nHere are effective strategies:\n\n1.  **Implement Concurrency Limiting (Throttling):**\n    *   **Action:** This is the most critical step. D",
+    "output": "[chat request at 2026-02-24T08:39:32.667Z]",
+    "timestamp": "2026-02-24T08:39:32.668Z"
+  },
+  {
+    "id": "c9748a07-b81b-4c5a-b236-eb02385dcbc1",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, managing 150+ concurrent async tasks in Node.js requires strategic resource control to prevent event loop starvation, memory exhaustion, and cascading failures. The goal is to maximize throughput without overwhelming the system or upstream services.\n\nHere are effective strategies:\n\n1.  **Implement Concurrency Limiting (Throttling):**\n    *   **Action:** This is the most critical step. D",
+    "output": "\n\nAs HeadyBrain, here's a structured approach to handle rate limiting across multiple API providers in production:\n\n---\n\n### **Key Strategies**\n1. **Centralized Rate Limiting (Shared State)**\n   - Use a distributed cache (Redis) to track usage across providers.\n   - Implement dynamic rate limits based on provider-specific quotas (e.g., 1000 req/min for Provider A, 500 req/min for Provider B).\n   - **Tool:** Use Redis scripts for atomic increments and expiry.\n\n2. **Per-Provider Throttling Pipelin",
+    "timestamp": "2026-02-24T08:39:53.272Z"
+  },
+  {
+    "id": "1b895270-f1ba-4206-84c1-9037f3b3b61d",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How should a production system handle rate limiting across multiple API providers?\nA: \n\nAs HeadyBrain, here's a structured approach to handle rate limiting across multiple API providers in production:\n\n---\n\n### **Key Strategies**\n1. **Centrali",
+    "output": "[chat request at 2026-02-24T08:40:23.052Z]",
+    "timestamp": "2026-02-24T08:40:23.053Z"
+  },
+  {
+    "id": "a7a9acde-a3dc-433e-bde0-4198af3b86cb",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, managing 150+ concurrent async tasks in Node.js requires strategic resource control to prevent event loop starvation, memory exhaustion, and cascading failures. The goal is to maximize throughput without overwhelming the system or upstream services.\n\nHere are effective strategies:\n\n1.  **Implement Concurrency Limiting (Throttling):**\n    *   **Action:** This is the most critical step. D",
+    "output": "\n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or gateway to enforce rate limits across providers:\n- **API Gateway/Service Mesh:** Use tools like Envoy Proxy, NGINX Plus, or Istio to m",
+    "timestamp": "2026-02-24T08:40:31.038Z"
+  },
+  {
+    "id": "e7f42051-e4c9-4056-aa51-094b3b266d4e",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or gateway to enforce rate limits across providers:\n- **API Gateway/Serv",
+    "output": "[chat request at 2026-02-24T08:40:54.418Z]",
+    "timestamp": "2026-02-24T08:40:54.419Z"
+  },
+  {
+    "id": "19e52707-0250-4a9e-857e-38f695292ad2",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How should a production system handle rate limiting across multiple API providers?\nA: \n\nAs HeadyBrain, here's a structured approach to handle rate limiting across multiple API providers in production:\n\n---\n\n### **Key Strategies**\n1. **Centrali",
+    "output": "\n\nAs HeadyBrain, here’s a concise, actionable framework for handling rate limiting across multiple API providers in production systems:\n\n---\n\n### **1. Centralized Distributed Rate Limiting**\n- **Use Redis for Shared State**:  \n  Track usage across providers using Redis with atomic operations to avoid race conditions.  \n  **Example**: Lua script for atomic rate limit checks:  \n  ```lua\n  -- KEYS[1] = provider-specific key (e.g., \"provider_a:123\")  \n  -- ARGV[1] = max_requests, ARGV[2] = window_se",
+    "timestamp": "2026-02-24T08:41:26.613Z"
+  },
+  {
+    "id": "a7906d1c-f158-47db-b0a7-d418c9a2790c",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or ga",
+    "output": "[chat request at 2026-02-24T08:41:28.162Z]",
+    "timestamp": "2026-02-24T08:41:28.162Z"
+  },
+  {
+    "id": "7da55911-37c8-4939-bb0c-c1617ec42543",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or gateway to enforce rate limits across providers:\n- **API Gateway/Serv",
+    "output": "\n\nAs HeadyBrain, here's a concise, actionable guide to handling rate limiting across multiple API providers in production:\n\n---\n\n### **Key Strategies**\n1. **Centralized Rate Limiting Layer**\n   - **Shared State via Redis:** Use Redis with a sliding window algorithm to enforce global rate limits across providers.\n   - **Example (Redis Lua Script):**\n     ```lua\n     -- Check rate limit (key = provider ID, limit = max reqs, window = seconds)\n     local key = KEYS[1]\n     local limit = tonumber(ARG",
+    "timestamp": "2026-02-24T08:41:47.412Z"
+  },
+  {
+    "id": "d6d39c0a-96b6-4d44-9974-3cf954f89842",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or ga",
+    "output": "[chat request at 2026-02-24T08:41:59.517Z]",
+    "timestamp": "2026-02-24T08:41:59.517Z"
+  },
+  {
+    "id": "b83c1943-33e1-4773-8bcf-87efa0c12c54",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or ga",
+    "output": "\n\nAs HeadyBrain, here’s a concise, actionable strategy for handling rate limiting across multiple API providers in production:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\n- **API Gateway Integration:** Use Envoy Proxy or NGINX Plus to enforce rate limits at the edge. Example Envoy config snippet:\n  ```yaml\n  rate_limits:\n    - stage: 0\n      domain: external_api\n      descriptor_entries:\n        - key: generic_key\n          value: ai_provider\n      limit: \n        requests_per_unit: 1000\n  ",
+    "timestamp": "2026-02-24T08:42:22.029Z"
+  },
+  {
+    "id": "e5a4872c-720e-4fc2-b958-a04a8aa89d70",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or ga",
+    "output": "[chat request at 2026-02-24T08:42:35.940Z]",
+    "timestamp": "2026-02-24T08:42:35.940Z"
+  },
+  {
+    "id": "3594417f-19b2-494d-8f2c-7e9bd5e4f5f1",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or ga",
+    "output": "As HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or gateway to enforce rate limits across providers. This centralizes control and prevents individual microservices from independently overw",
+    "timestamp": "2026-02-24T08:42:47.153Z"
+  },
+  {
+    "id": "95a8a148-4e68-4774-bebb-19a720c92a4a",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, handling rate limiting across multiple API providers in production requires a layered, adaptive strategy to ensure reliability, cost control, and compliance with provider policies. Here's a structured approach with actionable patterns:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nImplement a dedicated service or ga",
+    "output": "\n\nAs HeadyBrain, here’s a concise, actionable strategy to handle rate limiting across multiple API providers in production:\n\n---\n\n### **1. Centralized Rate Limiting Layer**\nUse an API gateway/service mesh (e.g., Envoy, NGINX Plus, Istio) to enforce limits at the edge. This decouples your system from upstream API policies and provides a single control plane.\n\n- **Envoy Example** (Rate Limit Service):\n  ```yaml\n  rate_limits:\n    - name: \"provider_x\"\n      domain: \"provider-x\"\n      stage: 0\n     ",
+    "timestamp": "2026-02-24T08:43:00.218Z"
+  },
+  {
+    "id": "a2e2ea72-d414-4913-b27f-3431bfa3b6eb",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secrets Manager, Azure Key Vault, Google Secret Manager, HashiCorp Vault",
+    "output": "[chat request at 2026-02-24T08:44:12.411Z]",
+    "timestamp": "2026-02-24T08:44:12.412Z"
+  },
+  {
+    "id": "e31c880c-5df7-4a6e-9a78-2e9d7c04ec52",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: As HeadyBrain, an expert AI system architect, I emphasize these critical security practices for API key management in multi-provider AI systems:\n\n1.  **Centralized Secret Management:**\n    *   **Actionable Knowledge:** Never hardcode API keys. Use dedicated secret management services (e.g., AWS Secrets Manager, Azure Key Vault, Google Secret Manager, HashiCorp Vault",
+    "output": "As HeadyBrain, an expert AI system architect, reducing cold start latency in serverless functions (like AWS Lambda, Azure Functions, Google Cloud Functions) and container deployments (e.g., Kubernetes, AWS Fargate, Azure Container Instances) is crucial for responsiveness and user experience. Cold starts occur when a new instance needs to be spun up, initialized, and loaded with code, leading to delays.\n\nHere are practical techniques focusing on actionable knowledge and real-world best practices:",
+    "timestamp": "2026-02-24T08:44:26.177Z"
+  },
+  {
+    "id": "46bf44b9-b164-4a2a-9424-cc135abef38d",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How should AI personal assistants handle cross-device state sync and voice dictation?\nA: As HeadyBrain, an expert AI system architect, optimizing core functionalities like cross-device state synchronization and voice dictation is paramount for",
+    "output": "[chat request at 2026-02-24T08:44:41.716Z]",
+    "timestamp": "2026-02-24T08:44:41.717Z"
+  },
+  {
+    "id": "a23d157d-c78c-45b2-939d-7e6e61be317f",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: You are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: How should AI personal assistants handle cross-device state sync and voice dictation?\nA: As HeadyBrain, an expert AI system architect, optimizing core functionalities like cross-device state synchronization and voice dictation is paramount for",
+    "output": "As HeadyBrain, an expert AI system architect, optimizing WebSocket connections for real-time voice relay systems demands a meticulous focus on low-latency, high-throughput, and resilient communication. Here are the best practices:\n\n### 1. Secure & Efficient Protocol Foundation\n\n*   **Always Use WSS (WebSocket Secure):** Encrypt all voice data in transit using TLS/SSL. This is non-negotiable for privacy and security.\n*   **Binary Data Encoding:** Voice data is inherently binary. Transmit it as `A",
+    "timestamp": "2026-02-24T08:44:53.549Z"
+  },
+  {
+    "id": "9b3cfb3a-148a-4d77-9550-4a27006cb646",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:45:10.543Z]",
+    "timestamp": "2026-02-24T08:45:10.544Z"
+  },
+  {
+    "id": "9693415b-dfee-45db-afd9-3119065366dc",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:45:41.842Z]",
+    "timestamp": "2026-02-24T08:45:41.843Z"
+  },
+  {
+    "id": "796b7ea5-f473-4e25-ab6d-32ef87b396f4",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:46:13.180Z]",
+    "timestamp": "2026-02-24T08:46:13.180Z"
+  },
+  {
+    "id": "22da9b7c-027e-4490-aae8-0ad88641054c",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\nHere's a concise, actionable guide for implementing Cloudflare Workers as intelligent edge routers with dynamic routing tables:\n\n---\n\n### **1. Core Architecture**\n#### **A. Event-Driven Routing Engine**\n- **Request Interception:** Use the `fetch` event to capture and analyze incoming requests.\n- **Dynamic Table Storage:** Store routing rules in **Cloudflare KV** for real-time updates:\n  ```javascript\n  async function getRoute(path) {\n    return await ROUTING_TABLE.get(`route:${path}`);\n  }\n  `",
+    "timestamp": "2026-02-24T08:46:24.555Z"
+  },
+  {
+    "id": "5874b3d0-01f7-4913-9baf-8ffff5c3063d",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\n**Cloudflare Workers as Intelligent Edge Routers: Best Practices**  \nCloudflare Workers enable low-latency, dynamic routing at the edge. To implement them effectively as intelligent routers with dynamic routing tables:  \n\n---\n\n### **1. Dynamic Routing Table Management**  \n- **Use Cloudflare KV (Key-Value Store):**  \n  Store routing rules in a geo-distributed KV namespace (e.g., `ROUTE_TABLE`). Workers fetch rules at runtime, enabling real-time updates without redeploying code.  \n  ```javascrip",
+    "timestamp": "2026-02-24T08:46:38.759Z"
+  },
+  {
+    "id": "2b5dfb5c-b8ca-4d3a-8383-4db930cb7755",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:46:47.414Z]",
+    "timestamp": "2026-02-24T08:46:47.414Z"
+  },
+  {
+    "id": "99cc5229-d185-40f2-a39e-55c9f27fc734",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers**  \nLeverage Workers’ low-latency edge execution for dynamic, scalable routing. Below are actionable patterns for implementation:\n\n---\n\n### **1. Dynamic Routing Table Management**  \n- **KV Storage as a Centralized Routing DB**:  \n  Use Cloudflare KV to store routing rules (e.g., path → origin mappings). Example:  \n  ```javascript\n  const route = await KV.get(`route:${url.pathname}`);\n  ```  \n  Use `cache-while-revalidate` patt",
+    "timestamp": "2026-02-24T08:47:17.464Z"
+  },
+  {
+    "id": "305000f6-1a8e-4e3f-8c35-a97868032a8b",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:47:19.088Z]",
+    "timestamp": "2026-02-24T08:47:19.089Z"
+  },
+  {
+    "id": "5d568c28-5c54-45e4-a172-cf6c7f6d15cb",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "[chat request at 2026-02-24T08:47:50.447Z]",
+    "timestamp": "2026-02-24T08:47:50.448Z"
+  },
+  {
+    "id": "5e6df952-dd37-4fca-bec6-450a452b029b",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers with Dynamic Routing Tables**\n\nCloudflare Workers excel as lightweight, globally distributed edge routers when paired with dynamic routing logic. Below are actionable patterns to optimize security, scalability, and performance.\n\n---\n\n### **1. Secure by Design**\n- **Validate All Inputs**: Sanitize headers, query parameters, and cookies at the edge. Use schema validation libraries like [Zod](https://zod.dev/) to reject malformed",
+    "timestamp": "2026-02-24T08:47:51.357Z"
+  },
+  {
+    "id": "c1c01586-0eec-41de-9857-e422782a21bd",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers**  \nLeverage Cloudflare Workers for low-latency, dynamic routing by combining serverless execution with real-time data. Below is a structured, actionable approach:\n\n---\n\n### **1. Core Architecture**\n**Key Components:**  \n- **Routing Table Storage:** Use **Cloudflare KV** (Key-Value store) or **Durable Objects** for dynamic, globally consistent routing tables.  \n  - *KV Example:*  \n    ```javascript\n    const route = await ROUT",
+    "timestamp": "2026-02-24T08:48:11.633Z"
+  },
+  {
+    "id": "6a4b03bd-9de5-48a7-8077-40e0b9e36e7d",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers with Dynamic Routing Tables**\n\nCloudflare Workers excel as lightweight, globally distributed edge routers when paired with dynamic routing logic. Below are actionable patterns to optimize security, scalability, and performance.\n\n---\n\n### **1. Secure by Design**\n- **Validate All Inputs**: Sanitize headers, query parameters, and cookies at the edge. Use schema vali",
+    "output": "[chat request at 2026-02-24T08:48:22.085Z]",
+    "timestamp": "2026-02-24T08:48:22.086Z"
+  },
+  {
+    "id": "dda2c635-d918-441d-bf56-36c382b85da3",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers with Dynamic Routing Tables**\n\nCloudflare Workers excel as lightweight, globally distributed edge routers when paired with dynamic routing logic. Below are actionable patterns to optimize security, scalability, and performance.\n\n---\n\n### **1. Secure by Design**\n- **Validate All Inputs**: Sanitize headers, query parameters, and cookies at the edge. Use schema vali",
+    "output": "Cloudflare Workers are powerful for intelligent edge routing due to their global distribution and low-latency execution. Here are best practices for building dynamic routing tables:\n\n---\n\n### **1. Dynamic Routing Table Management**\n\n*   **KV Store for Rules:** Store your dynamic routing rules in Cloudflare KV. This provides globally distributed, low-latency access to configuration.\n    *   **Structure:** Represent rules as JSON objects, mapping incoming request attributes (path, headers, geoloca",
+    "timestamp": "2026-02-24T08:48:34.268Z"
+  },
+  {
+    "id": "95ae43b3-1017-4141-867a-62ba4a31c84c",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady is the unified AI ecosystem\n---\nKnowledge search: HeadyBrain\n---\nKnowledge search: HeadyBrain\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best embedding models for semant",
+    "output": "[chat request at 2026-02-24T08:48:49.045Z]",
+    "timestamp": "2026-02-24T08:48:49.047Z"
+  },
+  {
+    "id": "0a5609b9-510f-4475-842d-cbdfd04dbced",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system architect, implementing federated routing across edge, cloud, and local compute layers requires a unified control plane with decentralized execution. Below is a practical framework using observable, secure, and adaptive patterns:\n\n---\n\n### **1. Architectural Foundation**\n#### **A. Layered Control Plane**\n- **Edge Layer:** Deploy lightweight gateways (e.g., Envoy Proxy, Mosquito MQTT) at edge nod",
+    "output": "\n\n**Best Practices for Cloudflare Workers as Intelligent Edge Routers**  \nCloudflare Workers enable low-latency, edge-native routing with dynamic decision-making. Below are actionable guidelines for secure, scalable, and adaptive implementations:\n\n---\n\n### **1. Dynamic Routing Table Management**  \n#### **A. Use Workers KV for Global State**  \n- Store routing tables in **Workers KV** for low-latency, globally consistent access.  \n- Structure keys hierarchically (e.g., `routes_v1.<tenant_id>.<regi",
+    "timestamp": "2026-02-24T08:48:58.226Z"
+  },
+  {
+    "id": "902c5fe8-fbdf-4e88-bdd8-2b592da46a4f",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady is the unified AI ecosystem\n---\nKnowledge search: HeadyBrain\n---\nKnowledge search: HeadyBrain\n[End Context]\n\nYou are HeadyBrain, an expert AI system architect. Answer concisely and practically. Focus on actionable knowledge, code patterns, and real-world best practices. Keep responses under 800 words.\n\nQuestion: What are the best embedding models for semant",
+    "output": "As HeadyBrain, an expert AI system architect, a premium, modern web UI in 2026 transcends mere aesthetics to deliver an experience that is **intelligent, intuitive, and anticipatory**. It feels state-of-the-art by seamlessly integrating advanced capabilities with meticulous design and engineering.\n\nHere are the key elements that define this state-of-the-art feel:\n\n1.  **Intelligent Proactivity & Hyper-Personalization:**\n    *   **Feel:** The UI understands user intent, context (device, location,",
+    "timestamp": "2026-02-24T08:49:00.326Z"
+  },
+  {
+    "id": "a2cebb26-fb87-477f-9c35-abcde607faaa",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:44:38.167Z]",
+    "timestamp": "2026-02-24T12:44:38.170Z"
+  },
+  {
+    "id": "c2ae121f-edea-42d7-8f76-19c422356b91",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:44:38.183Z]",
+    "timestamp": "2026-02-24T12:44:38.184Z"
+  },
+  {
+    "id": "b95bf740-ad1e-45fb-9bdf-8f00180c5c69",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:44:38.201Z]",
+    "timestamp": "2026-02-24T12:44:38.203Z"
+  },
+  {
+    "id": "60056f75-0a01-4fbc-90a4-530a442ace7b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:44:38.212Z]",
+    "timestamp": "2026-02-24T12:44:38.213Z"
+  },
+  {
+    "id": "6b8b6e5b-9371-411f-8248-fda199dc42f4",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:44:38.280Z]",
+    "timestamp": "2026-02-24T12:44:38.280Z"
+  },
+  {
+    "id": "45affa98-0df8-40bf-9152-a3085f4824a2",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:44:39.699Z"
+  },
+  {
+    "id": "22ea37bf-435b-4f54-9a3b-de1c7fd85e66",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:44:39.726Z"
+  },
+  {
+    "id": "53e762fc-05cf-472d-ad26-3ac4c0e6f3cb",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:44:39.732Z"
+  },
+  {
+    "id": "daaabae4-84a9-4b2b-bc0e-77a082fe63e6",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:44:39.855Z"
+  },
+  {
+    "id": "11e4deee-4365-4be3-8dee-6ba8d0b6cdf0",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:44:40.077Z"
+  },
+  {
+    "id": "34001d3b-ee51-49c2-b9fe-0099379c3127",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:07.983Z]",
+    "timestamp": "2026-02-24T12:45:07.985Z"
+  },
+  {
+    "id": "85a8f66c-dcdf-4681-a146-8d47c8529a81",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.100Z]",
+    "timestamp": "2026-02-24T12:45:08.101Z"
+  },
+  {
+    "id": "f672622f-eee5-4ccc-9a96-e4399b8a2d90",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.108Z]",
+    "timestamp": "2026-02-24T12:45:08.109Z"
+  },
+  {
+    "id": "b8acc208-7d5d-4260-b0be-029d43b55136",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.127Z]",
+    "timestamp": "2026-02-24T12:45:08.129Z"
+  },
+  {
+    "id": "96443c6e-3e7a-43f4-8815-ea403d2d7889",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.144Z]",
+    "timestamp": "2026-02-24T12:45:08.146Z"
+  },
+  {
+    "id": "ffad1072-1d94-47a5-91e9-29b396145664",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.187Z]",
+    "timestamp": "2026-02-24T12:45:08.188Z"
+  },
+  {
+    "id": "bbf111b4-660d-43fe-b3e3-39f8209226bd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.198Z]",
+    "timestamp": "2026-02-24T12:45:08.199Z"
+  },
+  {
+    "id": "7e34e131-5a78-4b3e-9071-d4b6a3309dff",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:08.232Z]",
+    "timestamp": "2026-02-24T12:45:08.233Z"
+  },
+  {
+    "id": "912210b9-d612-4e63-9c1d-d3e8697610c3",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:08.849Z"
+  },
+  {
+    "id": "5d0be694-6b02-4d7f-a157-868f9ad38d74",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:08.999Z"
+  },
+  {
+    "id": "cad6110a-d593-49aa-a639-0afb2aeb9422",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:09.057Z"
+  },
+  {
+    "id": "2233e14f-68a4-4038-8941-31d7e104aa3e",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:09.115Z"
+  },
+  {
+    "id": "f79a842f-a46e-40e9-b59b-0706b33b35ec",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:09.207Z"
+  },
+  {
+    "id": "3686ebc7-7650-4f90-a5c1-037d95223cf5",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:09.227Z"
+  },
+  {
+    "id": "5c510346-5f32-41fb-98ed-4111120ba002",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:09.256Z"
+  },
+  {
+    "id": "32749b9b-d8a4-4f7c-b91e-1da44ee2cc45",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:09.346Z"
+  },
+  {
+    "id": "5ad04ab8-cebc-44ba-b466-2c629ca8e366",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:37.912Z]",
+    "timestamp": "2026-02-24T12:45:37.912Z"
+  },
+  {
+    "id": "0c539458-1845-482d-89ff-c1acf4a0a7cb",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:37.930Z]",
+    "timestamp": "2026-02-24T12:45:37.931Z"
+  },
+  {
+    "id": "4f8cbb43-e34f-4d4c-976e-ef09877a892b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:37.943Z]",
+    "timestamp": "2026-02-24T12:45:37.944Z"
+  },
+  {
+    "id": "933f6c77-f542-40c5-8656-f1584040fc6c",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:45:37.950Z]",
+    "timestamp": "2026-02-24T12:45:37.951Z"
+  },
+  {
+    "id": "04409b2d-4390-4fd2-b7cb-b3ec317b12cb",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:38.875Z"
+  },
+  {
+    "id": "278bd442-c9c3-452c-9484-a914d27271ac",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:38.893Z"
+  },
+  {
+    "id": "b306844b-1c03-45be-b937-6c3180f5f1f6",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:38.923Z"
+  },
+  {
+    "id": "4cf4c78e-58ee-4f77-909e-563f70d69949",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:45:38.929Z"
+  },
+  {
+    "id": "122a92bc-9d6a-46b7-baf7-9c5c051ddbf7",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.849Z]",
+    "timestamp": "2026-02-24T12:46:07.849Z"
+  },
+  {
+    "id": "44b48dac-f6f7-41ca-80e5-15dd1f4e9171",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.907Z]",
+    "timestamp": "2026-02-24T12:46:07.907Z"
+  },
+  {
+    "id": "fd63c3ba-adea-4661-9853-c1b4c0986552",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.922Z]",
+    "timestamp": "2026-02-24T12:46:07.923Z"
+  },
+  {
+    "id": "51026de7-a274-4fc8-9e6c-6b83cbda7d4a",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.927Z]",
+    "timestamp": "2026-02-24T12:46:07.928Z"
+  },
+  {
+    "id": "d6901a4a-f6c1-45a1-ba5d-653effde04ea",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.943Z]",
+    "timestamp": "2026-02-24T12:46:07.944Z"
+  },
+  {
+    "id": "90b01f64-23b2-4ab9-80d1-62480aec95a4",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.960Z]",
+    "timestamp": "2026-02-24T12:46:07.962Z"
+  },
+  {
+    "id": "00db8f05-a6f2-4c02-bad7-814dbcd7126e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:07.968Z]",
+    "timestamp": "2026-02-24T12:46:07.969Z"
+  },
+  {
+    "id": "27fe2a2c-462c-4d46-af78-e68722f88f08",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:08.814Z"
+  },
+  {
+    "id": "0ec0fa7c-7f94-41c2-b2fb-44196bcff0f6",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:08.882Z"
+  },
+  {
+    "id": "52f60e18-5def-4d7d-93f1-e2ea66db9936",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:08.925Z"
+  },
+  {
+    "id": "86ddebb7-33b6-4157-b2f7-65986543a2e4",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:08.929Z"
+  },
+  {
+    "id": "c392698a-cc3c-437b-a87c-1ba31942f4b9",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:08.937Z"
+  },
+  {
+    "id": "d3032d4c-ea4b-4046-9c64-b274c3e316b0",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:08.977Z"
+  },
+  {
+    "id": "f67901f7-3e2f-41a2-be53-20540b092512",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:09.078Z"
+  },
+  {
+    "id": "980b9c1e-3f9e-4900-ac64-c9689496fe68",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:37.997Z]",
+    "timestamp": "2026-02-24T12:46:37.998Z"
+  },
+  {
+    "id": "674e4dd6-3d42-4ba9-bcbc-75627da958d6",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:38.025Z]",
+    "timestamp": "2026-02-24T12:46:38.026Z"
+  },
+  {
+    "id": "5b86e098-ba1d-4624-b1a6-feb445848d98",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:38.038Z]",
+    "timestamp": "2026-02-24T12:46:38.039Z"
+  },
+  {
+    "id": "c72b3458-fcb2-41f9-94af-fd2ba9a933e6",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:38.058Z]",
+    "timestamp": "2026-02-24T12:46:38.059Z"
+  },
+  {
+    "id": "91c9e771-8843-4bed-a621-7bf4ec272a13",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:38.068Z]",
+    "timestamp": "2026-02-24T12:46:38.069Z"
+  },
+  {
+    "id": "c5e2d65f-ef60-48eb-9559-bd016117d987",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:38.077Z]",
+    "timestamp": "2026-02-24T12:46:38.079Z"
+  },
+  {
+    "id": "305e7969-7478-4706-8271-f0572b2775bd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:46:38.099Z]",
+    "timestamp": "2026-02-24T12:46:38.100Z"
+  },
+  {
+    "id": "b6189620-2a70-4c76-bb6a-ce7a811ba2d3",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:38.976Z"
+  },
+  {
+    "id": "1ebc5206-fe31-4a51-bbb7-450bb4e1270e",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:38.990Z"
+  },
+  {
+    "id": "e2b3c777-1ea0-4732-8cf4-b970f47530b1",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:38.999Z"
+  },
+  {
+    "id": "968d096e-ef0e-4271-b564-a5ec9b1be57e",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:39.011Z"
+  },
+  {
+    "id": "a81d0d73-705b-44e4-9204-a9cd3fa6f1ed",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:39.131Z"
+  },
+  {
+    "id": "7355339c-4918-4c7e-81fc-3e7d9a30e99c",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:39.143Z"
+  },
+  {
+    "id": "0ed824bc-d781-4292-ac20-ed5f4fcdbcb2",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:46:39.310Z"
+  },
+  {
+    "id": "5939b095-0921-4021-994b-1c275ff81f95",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:07.903Z]",
+    "timestamp": "2026-02-24T12:47:07.904Z"
+  },
+  {
+    "id": "f7be15a5-8d93-4c94-865e-907f3527bb4f",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.015Z]",
+    "timestamp": "2026-02-24T12:47:08.016Z"
+  },
+  {
+    "id": "6663fc07-171b-48b3-8d9c-8641ac9af44c",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.027Z]",
+    "timestamp": "2026-02-24T12:47:08.028Z"
+  },
+  {
+    "id": "8b194e3b-764c-4914-9079-011066b3d2f5",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.037Z]",
+    "timestamp": "2026-02-24T12:47:08.038Z"
+  },
+  {
+    "id": "b15f524b-b3c7-42bf-b8aa-e9d696d76a99",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.048Z]",
+    "timestamp": "2026-02-24T12:47:08.051Z"
+  },
+  {
+    "id": "34a98743-50b7-4958-8555-a42ac8d04855",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.059Z]",
+    "timestamp": "2026-02-24T12:47:08.060Z"
+  },
+  {
+    "id": "9030081d-4094-40eb-a222-494711570282",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.099Z]",
+    "timestamp": "2026-02-24T12:47:08.100Z"
+  },
+  {
+    "id": "46812913-a914-4e52-a2fd-dd6804e85d24",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:08.107Z]",
+    "timestamp": "2026-02-24T12:47:08.108Z"
+  },
+  {
+    "id": "31ceb485-59d0-438e-9668-f230ad00262a",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.022Z"
+  },
+  {
+    "id": "1d30d8e8-b5e1-409b-a1dd-354753caee65",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.029Z"
+  },
+  {
+    "id": "bc7d3356-8bd1-4cdc-92ec-0d3974757171",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.036Z"
+  },
+  {
+    "id": "e3ca9719-2ce2-4d9c-b0b9-6a4e4c1f9e7d",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.042Z"
+  },
+  {
+    "id": "667a0420-496f-4176-86db-1a76b04e4474",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.050Z"
+  },
+  {
+    "id": "73bc05b9-2927-4f42-92b8-22235a7c8c7d",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.062Z"
+  },
+  {
+    "id": "e41d5ecc-5220-4697-9c15-fcecbca1fd04",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.068Z"
+  },
+  {
+    "id": "a2c8cdc1-e748-445f-8283-322e7634bc33",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:09.085Z"
+  },
+  {
+    "id": "0ad1447b-3381-40eb-93d0-6a70541c62bd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:37.933Z]",
+    "timestamp": "2026-02-24T12:47:37.934Z"
+  },
+  {
+    "id": "750c19da-600e-44ed-a6ab-ee70774db7ca",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:37.944Z]",
+    "timestamp": "2026-02-24T12:47:37.945Z"
+  },
+  {
+    "id": "d25d7049-c857-4cdd-b38c-d8d60db9e0d9",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:37.953Z]",
+    "timestamp": "2026-02-24T12:47:37.954Z"
+  },
+  {
+    "id": "5311b49a-8321-45d0-a068-c71293a9169c",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:37.967Z]",
+    "timestamp": "2026-02-24T12:47:37.968Z"
+  },
+  {
+    "id": "f67d0886-96e7-4a0c-a001-6e3df090fb0a",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:37.984Z]",
+    "timestamp": "2026-02-24T12:47:37.985Z"
+  },
+  {
+    "id": "b47ae2c9-3106-4c2c-b9cd-2c4ded77ccaf",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:37.991Z]",
+    "timestamp": "2026-02-24T12:47:37.992Z"
+  },
+  {
+    "id": "8ccad4a8-2708-4d35-aec8-630b0d750ca8",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:38.014Z]",
+    "timestamp": "2026-02-24T12:47:38.015Z"
+  },
+  {
+    "id": "3e1ad043-974d-465d-982d-f96625b35bb1",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:47:38.039Z]",
+    "timestamp": "2026-02-24T12:47:38.040Z"
+  },
+  {
+    "id": "4575c51f-2d97-4f0b-a039-669f4428194c",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.682Z"
+  },
+  {
+    "id": "9ac256f5-09f3-4e45-b575-6b1ab7483965",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.894Z"
+  },
+  {
+    "id": "f5eb828d-2a95-4ca7-ab65-055a662c037d",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.902Z"
+  },
+  {
+    "id": "8c32de92-2662-4217-9e0d-4ea4dc9fe92f",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.908Z"
+  },
+  {
+    "id": "1fbfd2fe-f1e4-4089-94db-0cea0536cf3c",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.941Z"
+  },
+  {
+    "id": "8e6483fb-6e2c-4765-a6f6-c0a6bab987d5",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.966Z"
+  },
+  {
+    "id": "addbe3fa-4973-43f5-9a83-f8358034da09",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.976Z"
+  },
+  {
+    "id": "97b3c404-7272-4636-a86c-838d7ec73312",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:47:38.995Z"
+  },
+  {
+    "id": "c9158d61-b9ea-4726-89a0-efc409c10c6f",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:07.980Z]",
+    "timestamp": "2026-02-24T12:48:07.981Z"
+  },
+  {
+    "id": "5bca20a7-4506-4bec-8152-459d7f447661",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:08.031Z]",
+    "timestamp": "2026-02-24T12:48:08.033Z"
+  },
+  {
+    "id": "386bb47c-94c8-4d72-8038-0f75cc7b4ddc",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:08.042Z]",
+    "timestamp": "2026-02-24T12:48:08.044Z"
+  },
+  {
+    "id": "4ac8c6a5-e2d0-4657-b0ab-1b9a075cf264",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:08.058Z]",
+    "timestamp": "2026-02-24T12:48:08.059Z"
+  },
+  {
+    "id": "296324d3-c72a-4bc1-9e8a-b29a62bddbd6",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:08.092Z]",
+    "timestamp": "2026-02-24T12:48:08.094Z"
+  },
+  {
+    "id": "de67b4a4-b083-498a-9267-4f3a786b4b72",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:08.111Z]",
+    "timestamp": "2026-02-24T12:48:08.112Z"
+  },
+  {
+    "id": "3c506cd9-d3ab-41d8-bce3-545e152aa222",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:48:08.130Z]",
+    "timestamp": "2026-02-24T12:48:08.131Z"
+  },
+  {
+    "id": "8ebafcbd-0d36-448d-b3c6-7a7c353edf35",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:08.952Z"
+  },
+  {
+    "id": "4f18cfbd-0d97-4c48-a0a3-c6655d248ed6",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:08.982Z"
+  },
+  {
+    "id": "0de88313-6723-4a97-b592-278c4b1ab206",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:09.003Z"
+  },
+  {
+    "id": "7fde4a8e-1de3-4edf-bcc4-a299b716de56",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:09.050Z"
+  },
+  {
+    "id": "e38b0f3c-f989-4e5f-a126-12f755f884d1",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:09.067Z"
+  },
+  {
+    "id": "b5b86671-e3ad-4835-b0d9-2b3ee360af10",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:09.077Z"
+  },
+  {
+    "id": "ca0a42e8-8c0d-4383-8581-15f46f77a668",
+    "type": "chat_contextual",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:48:09.086Z"
+  },
+  {
+    "id": "dfa63662-5a06-45a9-a184-78ebbe6b62bd",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n[End Context]\n\nWhat is the Heady ecosystem?",
+    "output": "[chat request at 2026-02-24T12:50:01.977Z]",
+    "timestamp": "2026-02-24T12:50:01.977Z"
+  },
+  {
+    "id": "b2d25024-e8cc-4219-a5da-291a46c07a64",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nEmbedding request: Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine powering the Heady ecosystem\n---\nHeadyBrain is the AI reasoning engine for the Heady ecosystem\n[End Context]\n\nWhat is the Heady ecosystem?",
+    "output": "Based on the provided context, the **Heady ecosystem** is the larger system that **HeadyBrain**, an AI reasoning engine, is a part of and powers.",
+    "timestamp": "2026-02-24T12:50:05.871Z"
+  },
+  {
+    "id": "156c09b3-5eab-4fd7-bc77-9e131d46cd97",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:07.866Z]",
+    "timestamp": "2026-02-24T12:50:07.867Z"
+  },
+  {
+    "id": "903b9992-1cd5-45e2-b62c-759646d11f0a",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:07.892Z]",
+    "timestamp": "2026-02-24T12:50:07.893Z"
+  },
+  {
+    "id": "7b21f3b8-b2e7-4d9c-8e91-8bdebe3501c4",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:07.957Z]",
+    "timestamp": "2026-02-24T12:50:07.958Z"
+  },
+  {
+    "id": "c4dbbe95-1906-48a5-8bde-242619897b65",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:08.022Z]",
+    "timestamp": "2026-02-24T12:50:08.023Z"
+  },
+  {
+    "id": "8e9240ef-7299-47d8-9591-f4c85a7cd281",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:08.033Z]",
+    "timestamp": "2026-02-24T12:50:08.034Z"
+  },
+  {
+    "id": "d59bb882-a371-417f-b3e6-58b4bbd5d569",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:08.055Z]",
+    "timestamp": "2026-02-24T12:50:08.056Z"
+  },
+  {
+    "id": "5b1120fd-cb3c-40ac-85d6-95935e70c623",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:08.095Z]",
+    "timestamp": "2026-02-24T12:50:08.096Z"
+  },
+  {
+    "id": "29792dc8-74ff-463b-b936-b74fae0ec6f7",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:08.108Z]",
+    "timestamp": "2026-02-24T12:50:08.109Z"
+  },
+  {
+    "id": "19eff086-190e-41f7-9fa8-e3c14ac4a43f",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:37.894Z]",
+    "timestamp": "2026-02-24T12:50:37.895Z"
+  },
+  {
+    "id": "0ad3cfb0-e961-4ac6-a3c0-8cc0801e6f7c",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:37.986Z"
+  },
+  {
+    "id": "88cc9857-d1df-40af-8fbc-0ff3b57100d5",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:37.992Z]",
+    "timestamp": "2026-02-24T12:50:37.993Z"
+  },
+  {
+    "id": "2645a400-4684-4c34-83f9-06e6830756ab",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:38.004Z]",
+    "timestamp": "2026-02-24T12:50:38.005Z"
+  },
+  {
+    "id": "051418d7-d6db-434e-968f-f652b89ae591",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:38.021Z]",
+    "timestamp": "2026-02-24T12:50:38.022Z"
+  },
+  {
+    "id": "b03aec5f-497e-4cc4-995f-16705025bae0",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:38.035Z]",
+    "timestamp": "2026-02-24T12:50:38.036Z"
+  },
+  {
+    "id": "b94a9e91-9522-4fb2-ad27-9b45c817d1bd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:38.047Z]",
+    "timestamp": "2026-02-24T12:50:38.048Z"
+  },
+  {
+    "id": "a1406daa-dc7f-48af-a87c-cc64a2c521bf",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.070Z"
+  },
+  {
+    "id": "5ab17872-62df-4ea8-9a29-218d3642c180",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.085Z"
+  },
+  {
+    "id": "b583fc49-98fa-4c9e-bb5f-704c3ed96930",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:50:38.092Z]",
+    "timestamp": "2026-02-24T12:50:38.093Z"
+  },
+  {
+    "id": "53ebfda9-2da9-4e54-88b2-ae9946c3afd2",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.142Z"
+  },
+  {
+    "id": "1abe2fc4-9076-4c0e-8e3d-e03ab06fbd56",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.179Z"
+  },
+  {
+    "id": "658d81a7-8524-4abd-b244-897c448f4e89",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.208Z"
+  },
+  {
+    "id": "d0684590-3589-4888-a132-d6c2497a46c3",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.232Z"
+  },
+  {
+    "id": "ae789499-b58c-4583-9577-eae103423893",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:50:38.249Z"
+  },
+  {
+    "id": "eb7493d6-119d-4526-b61b-8ca9059ad997",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:07.949Z]",
+    "timestamp": "2026-02-24T12:51:07.950Z"
+  },
+  {
+    "id": "59240c20-c179-4bfb-b629-d9a775f24646",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:07.959Z]",
+    "timestamp": "2026-02-24T12:51:07.959Z"
+  },
+  {
+    "id": "239008e9-ceb7-409c-8563-ff3d6c65ed85",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:07.972Z]",
+    "timestamp": "2026-02-24T12:51:07.974Z"
+  },
+  {
+    "id": "fdd4076e-442e-4898-ba40-cde0b87c11a7",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:07.979Z]",
+    "timestamp": "2026-02-24T12:51:07.980Z"
+  },
+  {
+    "id": "631655a2-26ca-4b97-aad2-8902b3fa514f",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:08.000Z]",
+    "timestamp": "2026-02-24T12:51:08.001Z"
+  },
+  {
+    "id": "0c3860dc-5729-49f1-907f-02bfb2946014",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:08.012Z]",
+    "timestamp": "2026-02-24T12:51:08.013Z"
+  },
+  {
+    "id": "40ced77e-9667-4bba-9ee0-353f9a521709",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:08.027Z]",
+    "timestamp": "2026-02-24T12:51:08.028Z"
+  },
+  {
+    "id": "f2755256-780d-46c7-b36f-cfdea9197854",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.073Z"
+  },
+  {
+    "id": "3d32088f-8552-43b0-b59c-2c5ca1298c5f",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:08.085Z]",
+    "timestamp": "2026-02-24T12:51:08.086Z"
+  },
+  {
+    "id": "bf357ee3-abc7-437d-9e1d-097b89976c61",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.125Z"
+  },
+  {
+    "id": "38b58220-98ef-455a-9b4f-2160d92b1739",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.129Z"
+  },
+  {
+    "id": "325beb8f-6664-4c3f-8e08-fb86c652cdc0",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.172Z"
+  },
+  {
+    "id": "cd89db77-f257-472f-a327-14f9a6ae978d",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.176Z"
+  },
+  {
+    "id": "8dabad5c-a270-4755-9fc8-1324a8b21481",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.180Z"
+  },
+  {
+    "id": "b52b5d4d-7e21-4f63-97b8-0cc1f91e1e6a",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:08.267Z"
+  },
+  {
+    "id": "0ff57566-f0b1-40dd-ad93-83e420237836",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:37.864Z]",
+    "timestamp": "2026-02-24T12:51:37.865Z"
+  },
+  {
+    "id": "067f0039-028b-47ed-a6d6-4c8211732027",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:37.955Z]",
+    "timestamp": "2026-02-24T12:51:37.956Z"
+  },
+  {
+    "id": "adb4e1b4-ab9c-4f2c-ab5e-2437be6d6cfd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:37.966Z]",
+    "timestamp": "2026-02-24T12:51:37.967Z"
+  },
+  {
+    "id": "6dcf216c-fa2f-434e-b43f-1a3500849576",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:37.972Z]",
+    "timestamp": "2026-02-24T12:51:37.973Z"
+  },
+  {
+    "id": "22a22270-63fa-48da-8f61-0411cd155012",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:37.977Z]",
+    "timestamp": "2026-02-24T12:51:37.978Z"
+  },
+  {
+    "id": "0f7ef4b5-8f99-4683-9c9e-f99e4d5264cf",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:37.989Z]",
+    "timestamp": "2026-02-24T12:51:37.990Z"
+  },
+  {
+    "id": "2b889fce-e24d-4f70-bb88-7ecfaeb40791",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:51:38.002Z]",
+    "timestamp": "2026-02-24T12:51:38.003Z"
+  },
+  {
+    "id": "36656e6c-43aa-4163-9e18-a835b616c072",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.080Z"
+  },
+  {
+    "id": "ca0f6da3-68dc-49a9-9928-6a20cb39976a",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.096Z"
+  },
+  {
+    "id": "734e8efe-d010-4080-843f-8c62cda3de12",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.108Z"
+  },
+  {
+    "id": "5a2bab5c-b03d-4a76-b273-4d49219e986e",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.130Z"
+  },
+  {
+    "id": "7066b308-c365-41b0-8bc9-5e6b5cf21596",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.149Z"
+  },
+  {
+    "id": "6b9ba503-8e28-4aff-b119-41ce729055ff",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.160Z"
+  },
+  {
+    "id": "0c68c14c-da94-4f08-8a38-47551d40fed1",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.165Z"
+  },
+  {
+    "id": "ecb26405-9c24-4835-a914-b1b4dc8e109f",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:51:38.203Z"
+  },
+  {
+    "id": "a4a7360f-ee7e-46cb-a439-48fe14891b1d",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:07.864Z]",
+    "timestamp": "2026-02-24T12:52:07.865Z"
+  },
+  {
+    "id": "002e6f38-dd3e-4e10-b42e-a06947fe283e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:07.937Z]",
+    "timestamp": "2026-02-24T12:52:07.938Z"
+  },
+  {
+    "id": "e2b633da-c070-425a-a3aa-abec95e1eccd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:07.974Z]",
+    "timestamp": "2026-02-24T12:52:07.975Z"
+  },
+  {
+    "id": "3a01498a-0294-4e8b-a725-dffbee56609b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:07.986Z]",
+    "timestamp": "2026-02-24T12:52:07.987Z"
+  },
+  {
+    "id": "6554a1c7-2155-4db1-ac51-ad8ee8f65f00",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:07.992Z]",
+    "timestamp": "2026-02-24T12:52:07.993Z"
+  },
+  {
+    "id": "8b369b1c-b2b7-4c3f-9b0f-daeb5bffe49e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:08.001Z]",
+    "timestamp": "2026-02-24T12:52:08.002Z"
+  },
+  {
+    "id": "7c6b001f-9ec8-41cf-8bb4-f355f38715b0",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.023Z"
+  },
+  {
+    "id": "41df00e5-2fea-4f1b-b467-3eb7b3c1f311",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:08.029Z]",
+    "timestamp": "2026-02-24T12:52:08.030Z"
+  },
+  {
+    "id": "a5dfd4d0-17ab-45ae-92ca-6340edac55f6",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.054Z"
+  },
+  {
+    "id": "50b52919-9a38-4b29-9c58-bac4a87920b4",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.066Z"
+  },
+  {
+    "id": "dd541276-7d34-499f-9aee-5626a9d3e7d4",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.093Z"
+  },
+  {
+    "id": "840c5321-a247-49f2-a609-2ae3f8c2ca0d",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.128Z"
+  },
+  {
+    "id": "97a8caf2-fbfb-4910-8013-25c54d714edd",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.149Z"
+  },
+  {
+    "id": "013a53c3-5c2d-4a0c-8b62-26b6f0beaf60",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:08.212Z"
+  },
+  {
+    "id": "78e6963f-a846-4cf5-9847-06252bbcaa60",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.924Z]",
+    "timestamp": "2026-02-24T12:52:37.927Z"
+  },
+  {
+    "id": "b0da6bee-2929-46eb-94db-d7fabbd8ebac",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.951Z]",
+    "timestamp": "2026-02-24T12:52:37.953Z"
+  },
+  {
+    "id": "f35f376e-6b58-49da-8c48-aedcb8ad3bd4",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.964Z]",
+    "timestamp": "2026-02-24T12:52:37.965Z"
+  },
+  {
+    "id": "c34f02a5-33c7-41b0-852c-270ccd214cfc",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.973Z]",
+    "timestamp": "2026-02-24T12:52:37.974Z"
+  },
+  {
+    "id": "3bcd6d49-7593-45f6-a098-264be90ca3e3",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.980Z]",
+    "timestamp": "2026-02-24T12:52:37.981Z"
+  },
+  {
+    "id": "c4b31737-270d-426c-bd9f-1ab988148401",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.988Z]",
+    "timestamp": "2026-02-24T12:52:37.989Z"
+  },
+  {
+    "id": "304d9e0d-b0f7-4265-810c-066c7c83110e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:52:37.996Z]",
+    "timestamp": "2026-02-24T12:52:37.997Z"
+  },
+  {
+    "id": "cacf3505-c8d4-43da-8593-23644d73321d",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.019Z"
+  },
+  {
+    "id": "64b0b0aa-8fae-44e9-8ffe-45d8174731b7",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.056Z"
+  },
+  {
+    "id": "f4b4d808-23b3-423f-af3d-29bd509b85ad",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.090Z"
+  },
+  {
+    "id": "fd9a8e88-581b-45d4-ab37-560b0cd5ab49",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.136Z"
+  },
+  {
+    "id": "1bfe3051-d172-4149-bb78-466f11e89d4c",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.140Z"
+  },
+  {
+    "id": "b34f75ab-d16e-461e-ba8d-a26b02c72cd1",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.161Z"
+  },
+  {
+    "id": "c8ad34d6-2a54-4489-942f-cd6290090f3e",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:52:38.202Z"
+  },
+  {
+    "id": "28c9d237-07a5-437f-9a7d-df068897e2d6",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:53:07.917Z]",
+    "timestamp": "2026-02-24T12:53:07.918Z"
+  },
+  {
+    "id": "bb7ef257-b3e9-4f44-92c1-14f8171e8cd5",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:53:07.955Z]",
+    "timestamp": "2026-02-24T12:53:07.956Z"
+  },
+  {
+    "id": "ea39826e-376c-4d84-ba77-4a89394ccd90",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:53:07.961Z]",
+    "timestamp": "2026-02-24T12:53:07.962Z"
+  },
+  {
+    "id": "955b40cd-518e-4c99-80c8-9fd26de900a6",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:53:07.986Z]",
+    "timestamp": "2026-02-24T12:53:07.987Z"
+  },
+  {
+    "id": "66ae1b65-acae-4e54-919c-1e29cdbd4b94",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:53:07.993Z]",
+    "timestamp": "2026-02-24T12:53:07.994Z"
+  },
+  {
+    "id": "9f5300bf-a987-43aa-9e23-a5d5b1bf2f30",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T12:53:08.032Z]",
+    "timestamp": "2026-02-24T12:53:08.032Z"
+  },
+  {
+    "id": "3b9315ea-7796-479f-8e09-2dfb02cfe0e3",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.076Z"
+  },
+  {
+    "id": "dccec090-b8cd-4c69-9d81-e83b52982753",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.082Z"
+  },
+  {
+    "id": "9e26f50d-7e57-45c1-a4e1-7a77db951328",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.118Z"
+  },
+  {
+    "id": "af6d5b9f-598e-4314-b204-156bff352468",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.123Z"
+  },
+  {
+    "id": "33e0c64b-fcd9-4ef0-95b9-113c5743630c",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.127Z"
+  },
+  {
+    "id": "d0c3068c-9dfe-4667-a370-33bddff68816",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.148Z"
+  },
+  {
+    "id": "e07bf5bf-ffae-49c3-b3f8-9079f6b58e8a",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:08.155Z"
+  },
+  {
+    "id": "b64c39f0-83fa-407d-b1c9-5a702c9828c1",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: Based on the provided context, the **Heady ecosystem** is the larger system that **HeadyBrain**, an AI reasoning engine, is a part of and powers.\n---\nHeady uses sacred geometry and golden ratio principles throughout its architecture\n---\nQ: What is the Heady ecosystem?\nA: Based on the provided context, the **Heady ecosystem** is the larger system that **HeadyBrain**, an AI reasoning engine, is a part of and powers.\n[End Context]\n\nWh",
+    "output": "[chat request at 2026-02-24T12:53:15.515Z]",
+    "timestamp": "2026-02-24T12:53:15.516Z"
+  },
+  {
+    "id": "e5b8ca45-d767-4728-881a-ee1027916c87",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:38.046Z"
+  },
+  {
+    "id": "c9504f01-a56c-4d9b-b327-20292ef242c2",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:38.058Z"
+  },
+  {
+    "id": "84a58946-1dfa-4b15-9e3d-6d1bc459a9d1",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:38.072Z"
+  },
+  {
+    "id": "35badd62-cfdf-4b24-b42e-b817ae9abb00",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:38.099Z"
+  },
+  {
+    "id": "dc89c094-0b0d-4aa1-b8ad-52dc3caa8cb8",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:38.111Z"
+  },
+  {
+    "id": "cb84cea9-7b02-43e3-a450-d61eacc96f86",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T12:53:38.141Z"
+  },
+  {
+    "id": "976ad61a-4028-4de7-b224-99c90bb0cc9b",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: Based on the provided context, the **Heady ecosystem** is the larger system that **HeadyBrain**, an AI reasoning engine, is a part of and powers.\n---\nHeady uses sacred geometry and golden ratio principles throughout its architecture\n---\nQ: What is the Heady ecosystem?\nA: Based on the provided context, the **Heady ecosystem** is the larger system that **HeadyBrain**, an AI reasoning engine, is a part of and powers.\n[End Context]\n\nWh",
+    "output": "\n\nHeady is a holistic ecosystem centered around **HeadyBrain**, an AI reasoning engine that powers and integrates its components. The ecosystem is designed using principles of **sacred geometry** and the **golden ratio**, which shape its architecture to create balanced, harmonious, and efficient systems. HeadyBrain acts as the core intelligence, enabling the ecosystem to process information, solve problems, and maintain structural integrity through these timeless mathematical concepts. Think of ",
+    "timestamp": "2026-02-24T12:53:40.403Z"
+  },
+  {
+    "id": "65dfeb88-30f3-4d57-bc02-3c4d03e84bda",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:29.910Z]",
+    "timestamp": "2026-02-24T13:05:29.912Z"
+  },
+  {
+    "id": "8712c93d-1a70-4c3e-a03c-08f7fea2d621",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:29.970Z]",
+    "timestamp": "2026-02-24T13:05:29.970Z"
+  },
+  {
+    "id": "0d4538bc-12c0-4538-8eda-cd8e9df8e31b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:29.982Z]",
+    "timestamp": "2026-02-24T13:05:29.983Z"
+  },
+  {
+    "id": "aab0b07e-bd6c-4bfc-9b9f-9bace733f11e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:30.004Z]",
+    "timestamp": "2026-02-24T13:05:30.005Z"
+  },
+  {
+    "id": "2b8d6a35-24a5-4cac-ac33-4d118a86809f",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:30.016Z]",
+    "timestamp": "2026-02-24T13:05:30.017Z"
+  },
+  {
+    "id": "b0e9f31b-3192-4605-a690-df487f19b6ac",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:30.036Z]",
+    "timestamp": "2026-02-24T13:05:30.037Z"
+  },
+  {
+    "id": "5a6eb6cc-9aef-4805-bfed-1dd5d14cb3b1",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:30.048Z]",
+    "timestamp": "2026-02-24T13:05:30.048Z"
+  },
+  {
+    "id": "928e03b0-ef3a-4ad1-90da-593a32224652",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:30.053Z]",
+    "timestamp": "2026-02-24T13:05:30.054Z"
+  },
+  {
+    "id": "160350a5-74fd-41d5-ba02-114bd2646f72",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:05:59.976Z]",
+    "timestamp": "2026-02-24T13:05:59.977Z"
+  },
+  {
+    "id": "c631bf1e-0bfd-4aaa-a588-5fd4206fc5ee",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.008Z]",
+    "timestamp": "2026-02-24T13:06:00.010Z"
+  },
+  {
+    "id": "e024858c-f80a-48b4-ad11-6be5eb4f1bb5",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.025Z]",
+    "timestamp": "2026-02-24T13:06:00.026Z"
+  },
+  {
+    "id": "31e6a75b-d674-4bf7-a4ba-9587b993488d",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.032Z]",
+    "timestamp": "2026-02-24T13:06:00.032Z"
+  },
+  {
+    "id": "b690c15d-c1ae-4205-ac95-2f66ab67c598",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.037Z]",
+    "timestamp": "2026-02-24T13:06:00.038Z"
+  },
+  {
+    "id": "a2979651-87e5-4d2b-a85d-18d1ed210783",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.049Z]",
+    "timestamp": "2026-02-24T13:06:00.050Z"
+  },
+  {
+    "id": "d876e9a5-8aed-4177-ba3d-2cde413b73fa",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.061Z]",
+    "timestamp": "2026-02-24T13:06:00.061Z"
+  },
+  {
+    "id": "03fab004-910d-4912-beaf-73d60c707212",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:00.069Z]",
+    "timestamp": "2026-02-24T13:06:00.070Z"
+  },
+  {
+    "id": "b8e000c5-8f59-4961-ba9d-6531950500e8",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.074Z"
+  },
+  {
+    "id": "568eec67-80f3-450e-b5d4-21e584fb296b",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.085Z"
+  },
+  {
+    "id": "4fbdf759-afe0-4b5f-9140-1a54b0a413b9",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.102Z"
+  },
+  {
+    "id": "fa9950ff-ac40-4b93-9455-ea56bbcf501b",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.117Z"
+  },
+  {
+    "id": "4f35c779-2a07-4261-a99a-9046ee1f06dd",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.142Z"
+  },
+  {
+    "id": "ffaa8619-6802-4160-97db-2a4dca83fb4a",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.146Z"
+  },
+  {
+    "id": "6b3e8691-16ea-4fd1-a8af-f24652e59cb3",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.163Z"
+  },
+  {
+    "id": "95662873-a912-4b48-8301-7bc77c2840c3",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:00.167Z"
+  },
+  {
+    "id": "019bd380-ae22-4566-aa73-d4e15c0cc944",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:29.924Z]",
+    "timestamp": "2026-02-24T13:06:29.925Z"
+  },
+  {
+    "id": "df79162f-7905-47db-b6e4-daa589a1afed",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:29.980Z]",
+    "timestamp": "2026-02-24T13:06:29.981Z"
+  },
+  {
+    "id": "92beb509-1f67-4c27-b0f0-63e91ef26c1a",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:29.990Z]",
+    "timestamp": "2026-02-24T13:06:29.991Z"
+  },
+  {
+    "id": "66eafe45-17ae-45a8-a23d-2007ffcf7f8b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:30.017Z]",
+    "timestamp": "2026-02-24T13:06:30.018Z"
+  },
+  {
+    "id": "9f820864-5dbe-4eda-a8c1-621299aa9fb4",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:30.032Z]",
+    "timestamp": "2026-02-24T13:06:30.034Z"
+  },
+  {
+    "id": "bd460e1f-de82-4640-ae2f-c2fc185d94df",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:30.045Z]",
+    "timestamp": "2026-02-24T13:06:30.046Z"
+  },
+  {
+    "id": "d69a1899-3908-48a3-94bc-56126f5b8424",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:30.054Z]",
+    "timestamp": "2026-02-24T13:06:30.055Z"
+  },
+  {
+    "id": "872925bf-7013-4a08-8eb0-e74323946cfd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:30.066Z]",
+    "timestamp": "2026-02-24T13:06:30.067Z"
+  },
+  {
+    "id": "84e2c21b-2dce-49ac-8a84-88c7a8f13db4",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.107Z"
+  },
+  {
+    "id": "b25a9ad1-5fce-405d-bacc-f28600c104e1",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.123Z"
+  },
+  {
+    "id": "2539d25a-775a-484e-8e13-222c8fa03f4d",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.140Z"
+  },
+  {
+    "id": "ea79762a-5213-4333-8f4c-fe76b2fae7d0",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.145Z"
+  },
+  {
+    "id": "10506cbc-dc35-42af-9f11-87bd0bc407bd",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.175Z"
+  },
+  {
+    "id": "c567a4a1-b8e6-4249-ae2a-ff7d176e05bf",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.184Z"
+  },
+  {
+    "id": "2548a6f7-2c5a-4641-a8be-223257c86cbb",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.193Z"
+  },
+  {
+    "id": "cada1c08-359d-40f5-ac59-8208f1bf53b3",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:06:30.206Z"
+  },
+  {
+    "id": "c1ac8c69-7eba-4ed3-b766-995720711f95",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:59.980Z]",
+    "timestamp": "2026-02-24T13:06:59.981Z"
+  },
+  {
+    "id": "112a0722-9e8f-41a4-bf9f-5fce54bd2c4e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:59.986Z]",
+    "timestamp": "2026-02-24T13:06:59.987Z"
+  },
+  {
+    "id": "11a884b0-d334-454f-bbf3-34dedaa4a9bc",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:06:59.991Z]",
+    "timestamp": "2026-02-24T13:06:59.992Z"
+  },
+  {
+    "id": "5f90cd5c-01db-48a9-bc5e-1ad9ee04452a",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:00.003Z]",
+    "timestamp": "2026-02-24T13:07:00.004Z"
+  },
+  {
+    "id": "57ac9725-9f5f-4033-813e-956b99442d92",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:00.010Z]",
+    "timestamp": "2026-02-24T13:07:00.011Z"
+  },
+  {
+    "id": "ac19ae37-a71e-4cc0-a9c1-7109b8513c14",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:00.030Z]",
+    "timestamp": "2026-02-24T13:07:00.031Z"
+  },
+  {
+    "id": "7fff917c-27f9-4eab-90c3-04fd47a024b1",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:00.043Z]",
+    "timestamp": "2026-02-24T13:07:00.044Z"
+  },
+  {
+    "id": "3314cff5-885d-4c3a-89b7-9f55f9c32ca6",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.081Z"
+  },
+  {
+    "id": "7db35184-7399-4628-bedb-bc8491025d91",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.099Z"
+  },
+  {
+    "id": "4a19d5ff-eb4a-4e99-a0a0-c602a7454c1c",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.122Z"
+  },
+  {
+    "id": "05e916d8-8e72-498e-b554-cff20a9a2ef6",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.127Z"
+  },
+  {
+    "id": "16ee1a26-b309-432e-aeea-ab571f8d7fc1",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.173Z"
+  },
+  {
+    "id": "4dbb7ca1-de4d-4bae-a933-81f23d844b00",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.182Z"
+  },
+  {
+    "id": "d18db1b9-7581-4c97-8eed-6ce939f57663",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.186Z"
+  },
+  {
+    "id": "aae4943a-59ea-4395-b9d0-ec95eff3fdee",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:00.194Z]",
+    "timestamp": "2026-02-24T13:07:00.195Z"
+  },
+  {
+    "id": "3b8a72a3-70e4-4f6c-9c89-459efafc9aaa",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:00.242Z"
+  },
+  {
+    "id": "d1c3e56e-505f-4e8a-b6da-6ca74467827b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:29.915Z]",
+    "timestamp": "2026-02-24T13:07:29.916Z"
+  },
+  {
+    "id": "f9140d76-a485-4806-90c4-bace529ba4ca",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.006Z]",
+    "timestamp": "2026-02-24T13:07:30.007Z"
+  },
+  {
+    "id": "a0eb4d7c-f216-4ada-983c-71ddf60b0ed9",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.020Z]",
+    "timestamp": "2026-02-24T13:07:30.021Z"
+  },
+  {
+    "id": "73b3a04d-e407-4f10-84e7-4d3549998679",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.033Z]",
+    "timestamp": "2026-02-24T13:07:30.034Z"
+  },
+  {
+    "id": "400ef078-c011-463b-99ae-44164eea9228",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.039Z]",
+    "timestamp": "2026-02-24T13:07:30.041Z"
+  },
+  {
+    "id": "80e1ff47-4f38-4da7-b457-12def5a6efd6",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.055Z]",
+    "timestamp": "2026-02-24T13:07:30.056Z"
+  },
+  {
+    "id": "e9d629c0-81fe-4c25-933e-b7d4171fa023",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.066Z]",
+    "timestamp": "2026-02-24T13:07:30.068Z"
+  },
+  {
+    "id": "43024ae6-3e0a-4d93-9861-c063fdee108e",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.095Z"
+  },
+  {
+    "id": "2a9970cb-28f1-49a5-a222-3388e9f5149b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:30.104Z]",
+    "timestamp": "2026-02-24T13:07:30.105Z"
+  },
+  {
+    "id": "bc5da4f5-8567-4109-af27-c917a1bf0187",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.194Z"
+  },
+  {
+    "id": "5f5f5e73-fbd0-45c8-8b12-3249ed262fec",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.202Z"
+  },
+  {
+    "id": "c8e44c34-ccfb-4beb-87d2-f320f0c529dd",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.285Z"
+  },
+  {
+    "id": "a221a171-89af-4ec9-bb25-81f105f51e70",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.290Z"
+  },
+  {
+    "id": "773875c2-06ce-4c8e-90c1-5f850f8bf4e4",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.295Z"
+  },
+  {
+    "id": "d8f641ab-e98a-4ece-b311-a2c78b5ad641",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.300Z"
+  },
+  {
+    "id": "04173813-05c9-405b-9956-8b73f7688294",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:07:30.307Z"
+  },
+  {
+    "id": "14d8b05b-7b15-4a01-ac88-67278b4bf4bf",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:59.978Z]",
+    "timestamp": "2026-02-24T13:07:59.978Z"
+  },
+  {
+    "id": "db8f8570-3a9f-48d9-b46e-784c4b3351e9",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:07:59.990Z]",
+    "timestamp": "2026-02-24T13:07:59.991Z"
+  },
+  {
+    "id": "650974e1-a46f-46c8-b9b8-55b6774c56f0",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:00.001Z]",
+    "timestamp": "2026-02-24T13:08:00.002Z"
+  },
+  {
+    "id": "8838ece6-c9b6-445d-a959-9c3c9b7f935e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:00.008Z]",
+    "timestamp": "2026-02-24T13:08:00.009Z"
+  },
+  {
+    "id": "535780a7-8661-47d7-8584-9e54b8eee0df",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:00.016Z]",
+    "timestamp": "2026-02-24T13:08:00.016Z"
+  },
+  {
+    "id": "b3cc22ff-2f75-4093-8a3e-b6f8f4bffe48",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:00.033Z]",
+    "timestamp": "2026-02-24T13:08:00.034Z"
+  },
+  {
+    "id": "b871bef7-7c95-499d-b988-8af29182ca19",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:00.055Z]",
+    "timestamp": "2026-02-24T13:08:00.055Z"
+  },
+  {
+    "id": "38c6449d-ac82-4ace-9edd-421f4671b099",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:00.111Z]",
+    "timestamp": "2026-02-24T13:08:00.112Z"
+  },
+  {
+    "id": "9a7706e6-89c5-4b6b-9934-c5c1e204cdfc",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.127Z"
+  },
+  {
+    "id": "68112df8-9a85-4bb9-9f84-e2f624404648",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.216Z"
+  },
+  {
+    "id": "5ab6af79-32e0-4e87-bf20-0fc4815ac7d0",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.229Z"
+  },
+  {
+    "id": "2d21c281-503a-4230-aca3-8bf899ffefbb",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.241Z"
+  },
+  {
+    "id": "5cf0f2e2-a7de-4948-819e-b19fddf3b286",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.253Z"
+  },
+  {
+    "id": "60a8f195-0d2b-4177-b763-68ab82bf9af0",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.263Z"
+  },
+  {
+    "id": "ed7c89f4-7714-41bb-94db-c8e12707a420",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.287Z"
+  },
+  {
+    "id": "192105c3-6b17-4016-9dfb-c109f149ef3f",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:00.485Z"
+  },
+  {
+    "id": "34a43bfa-27f1-4b46-b9a7-01212dcde42a",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:29.920Z]",
+    "timestamp": "2026-02-24T13:08:29.922Z"
+  },
+  {
+    "id": "961dbc8e-080f-46c4-868f-694ed0413208",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:29.985Z]",
+    "timestamp": "2026-02-24T13:08:29.986Z"
+  },
+  {
+    "id": "c02ee061-0fe1-48e2-b6fc-8417c9f91661",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:29.994Z]",
+    "timestamp": "2026-02-24T13:08:29.995Z"
+  },
+  {
+    "id": "5d946c37-9c9d-42b2-8668-d9ba32d05e20",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:30.008Z]",
+    "timestamp": "2026-02-24T13:08:30.010Z"
+  },
+  {
+    "id": "96feebd7-510b-4edc-87a7-e2e67fc8670d",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:30.049Z]",
+    "timestamp": "2026-02-24T13:08:30.050Z"
+  },
+  {
+    "id": "cd455193-28f0-4701-b884-a5117ddbd5d5",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:30.062Z]",
+    "timestamp": "2026-02-24T13:08:30.063Z"
+  },
+  {
+    "id": "327350cb-b442-49a4-a513-f9becb012911",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.094Z"
+  },
+  {
+    "id": "47a1646d-e34c-4c49-a26c-a1175cbb401e",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:30.107Z]",
+    "timestamp": "2026-02-24T13:08:30.108Z"
+  },
+  {
+    "id": "197c8456-27f3-4152-84d2-71d5cdbe3fbd",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:08:30.126Z]",
+    "timestamp": "2026-02-24T13:08:30.127Z"
+  },
+  {
+    "id": "4eaff4d2-31b9-4d10-adda-eece4d699f5a",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.135Z"
+  },
+  {
+    "id": "4faad7bc-b44f-4eba-81f6-66b50b5ea040",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.140Z"
+  },
+  {
+    "id": "3adf8bf2-22c9-4334-87b1-e12585e5efa9",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.175Z"
+  },
+  {
+    "id": "5cb823b9-7aa5-4e37-813d-abd7ce8f4031",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.181Z"
+  },
+  {
+    "id": "8c12c2d8-5344-4a15-9e2c-174c554c98a9",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.185Z"
+  },
+  {
+    "id": "aaa35af8-ffd0-43d6-a211-ea5fe7ac92dc",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.234Z"
+  },
+  {
+    "id": "96b8d4a0-f1dd-4fa7-8605-9e303538c6ac",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:08:30.283Z"
+  },
+  {
+    "id": "21b2769b-2794-46e3-9134-0af828c2a944",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.057Z]",
+    "timestamp": "2026-02-24T13:09:00.058Z"
+  },
+  {
+    "id": "be0510fa-252d-4ea6-9f2d-f1abe35ff8c1",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.065Z]",
+    "timestamp": "2026-02-24T13:09:00.066Z"
+  },
+  {
+    "id": "9b4ed6ec-9885-452e-87a4-fc1515491c10",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.071Z]",
+    "timestamp": "2026-02-24T13:09:00.072Z"
+  },
+  {
+    "id": "a4d77655-ce30-4cc0-886e-387da73aeffa",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.080Z]",
+    "timestamp": "2026-02-24T13:09:00.081Z"
+  },
+  {
+    "id": "557afba1-772e-4cf6-abc1-07e89d920a05",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.091Z]",
+    "timestamp": "2026-02-24T13:09:00.093Z"
+  },
+  {
+    "id": "73e4271a-114f-4c07-9afa-08186c0bde1e",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.099Z"
+  },
+  {
+    "id": "7127d1fc-7fd7-4182-b73b-ed01c1a001f5",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.105Z]",
+    "timestamp": "2026-02-24T13:09:00.106Z"
+  },
+  {
+    "id": "0ea45be0-7c87-45bb-8ca8-48c99b1a7b6b",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.111Z]",
+    "timestamp": "2026-02-24T13:09:00.113Z"
+  },
+  {
+    "id": "ab9b41d3-51b5-4c86-8838-5b0a9c9513b0",
+    "type": "chat",
+    "input": "",
+    "output": "[chat request at 2026-02-24T13:09:00.122Z]",
+    "timestamp": "2026-02-24T13:09:00.123Z"
+  },
+  {
+    "id": "cff65d44-c035-4aec-bbbf-6247a7d538b8",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.128Z"
+  },
+  {
+    "id": "3e96b83a-9074-4614-a331-40ce342b29ca",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.164Z"
+  },
+  {
+    "id": "41e3231e-bcbd-4b1d-915f-1f09e5a809c5",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.183Z"
+  },
+  {
+    "id": "4176ac3c-b9f2-4eb5-8168-75c61aefa6d7",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.214Z"
+  },
+  {
+    "id": "8c7acda6-f565-4d57-855b-90d6e13a3666",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.225Z"
+  },
+  {
+    "id": "a1991c73-af70-41a7-a6d6-1c5e683e64f7",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.271Z"
+  },
+  {
+    "id": "ae0910ef-a84b-44d6-8f3c-7690dcb6cc44",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:00.362Z"
+  },
+  {
+    "id": "ec111254-bcb2-435d-b4ec-7f27f335e992",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.160Z"
+  },
+  {
+    "id": "b3bbdde3-8e34-4f20-a369-60f332143a66",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.180Z"
+  },
+  {
+    "id": "948aaced-6a11-40d2-8fd9-864d2a129a4e",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.198Z"
+  },
+  {
+    "id": "a88c6932-fe82-46dd-a57a-79f9a6ea885b",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.212Z"
+  },
+  {
+    "id": "4c5c4277-676c-497d-bf9c-ea24d0943030",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.241Z"
+  },
+  {
+    "id": "6c401ff5-86e5-40bf-8e9c-50bd0eb92949",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.253Z"
+  },
+  {
+    "id": "9b47601a-7d28-4f1a-9827-5f18c5e311d9",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.267Z"
+  },
+  {
+    "id": "695e6c9b-1f43-4aac-a987-dedf93584405",
+    "type": "chat_contextual_timeout",
+    "input": "",
+    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
+    "timestamp": "2026-02-24T13:09:30.295Z"
+  },
+  {
+    "id": "2d37aa8e-da82-45fa-ad93-042ccbf72577",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\n**Implementing Federated Routing Across Edge, Cloud, and Local Compute Layers**  \nFederated routing requires a unified control plane that dynamically distributes workloads across edge, cloud, and local layers while ensuring low latency, security, and scalability. Below is a practical implementation framework:\n\n---\n\n### **1. Layered Architecture Design**\n#### **A. Edge Layer: Real-Time Processing**\n- **Gateways:** Use lightweight ",
+    "output": "[chat request at 2026-02-24T13:31:51.477Z]",
+    "timestamp": "2026-02-24T13:31:51.478Z"
+  },
+  {
+    "id": "1e350700-5838-44d9-b947-142854d8da6b",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\n**Implementing Federated Routing Across Edge, Cloud, and Local Compute Layers**  \nFederated routing requires a unified control plane that dynamically distributes workloads across edge, cloud, and local layers while ensuring low latency, security, and scalability. Below is a practical implementation framework:\n\n---\n\n### **1. Layered Architecture Design**\n#### **A. Edge Layer: Real-Time Processing**\n- **Gateways:** Use lightweight ",
+    "output": "As HeadyBrain, I am an AI reasoning engine and do not personally \"route through providers\" in the physical sense. My function is to process information and generate insights.\n\nHowever, if I were to describe the *types* of providers and technologies a system implementing the federated routing strategies I've discussed would leverage, based on the provided context, it would involve:\n\n1.  **Edge Layer Providers:**\n    *   **Cloudflare Workers:** For intelligent edge routing, dynamic decision-making",
+    "timestamp": "2026-02-24T13:31:55.104Z"
+  },
+  {
+    "id": "6319f5d1-ae9a-4f1a-825d-48e0a11c773d",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: Say hello\nA: \n\nHello! How can I assist you today? 😊\n---\nChat interaction: Say WORKING in one word\n---\nQ: Say WORKING in one word\nA: \n\nFUNCTIONAL\n[End Context]\n\nSay hello in 5 words",
+    "output": "[chat request at 2026-02-24T13:35:40.374Z]",
+    "timestamp": "2026-02-24T13:35:40.375Z"
+  },
+  {
+    "id": "a97af3ce-0097-495d-978e-901e9d25b373",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: Say hello\nA: \n\nHello! How can I assist you today? 😊\n---\nChat interaction: Say WORKING in one word\n---\nQ: Say WORKING in one word\nA: \n\nFUNCTIONAL\n[End Context]\n\nSay hello in 5 words",
+    "output": "Greetings! How may I help?",
+    "timestamp": "2026-02-24T13:35:41.381Z"
+  },
+  {
+    "id": "4d93980b-7f29-4535-89fe-d468d2d9e605",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: Say hello in 5 words\nA: Greetings! How may I help?\n---\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: Say hello\nA: \n\nHello! How can I assist you today? 😊\n---\nChat interaction: Say WORKING in one word\n---\nQ: Say WORKING in one word\nA: \n\nFUNCTIONAL\n[End Context]\n\nSay hello in 5 words\n---\nChat interaction: Say WORKING in one word\n[End Context]\n\nSay hello in 5 words",
+    "output": "[chat request at 2026-02-24T13:35:41.498Z]",
+    "timestamp": "2026-02-24T13:35:41.499Z"
+  },
+  {
+    "id": "0cbad6b4-5b67-4d92-9364-a21524ac8606",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nQ: Say hello in 5 words\nA: Greetings! How may I help?\n---\nChat interaction: [HeadyBrain Context — 3 relevant memories found]\nQ: Say hello\nA: \n\nHello! How can I assist you today? 😊\n---\nChat interaction: Say WORKING in one word\n---\nQ: Say WORKING in one word\nA: \n\nFUNCTIONAL\n[End Context]\n\nSay hello in 5 words\n---\nChat interaction: Say WORKING in one word\n[End Context]\n\nSay hello in 5 words",
+    "output": "Greetings! How may I help?",
+    "timestamp": "2026-02-24T13:35:42.396Z"
+  },
+  {
+    "id": "82d15d0c-cdbf-4fce-b255-a147bb20b39e",
+    "type": "chat",
+    "input": "Say hi in exactly 3 words",
+    "output": "[chat request at 2026-02-24T13:41:22.484Z]",
+    "timestamp": "2026-02-24T13:41:22.485Z"
+  },
+  {
+    "id": "b49fd252-3687-43d3-8c65-c3c00a545f46",
+    "type": "chat_response",
+    "input": "Say hi in exactly 3 words",
+    "output": "Hello, I'm HeadyBrain.",
+    "timestamp": "2026-02-24T13:41:23.338Z"
+  },
+  {
+    "id": "e852a381-0329-42fa-ab8e-06c7051ecd33",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 1 relevant memories found]\nQ: Say hi in exactly 3 words\nA: Hello, I'm HeadyBrain.\n[End Context]\n\nSay hi in 3 words",
+    "output": "[chat request at 2026-02-24T13:43:47.575Z]",
+    "timestamp": "2026-02-24T13:43:47.577Z"
+  },
+  {
+    "id": "f631bbb8-0115-449d-8c28-52f61d9bef42",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 1 relevant memories found]\nQ: Say hi in exactly 3 words\nA: Hello, I'm HeadyBrain.\n[End Context]\n\nSay hi in 3 words",
+    "output": "Hi, I'm HeadyBrain.",
+    "timestamp": "2026-02-24T13:43:50.105Z"
+  },
+  {
+    "id": "724d5e2c-4ede-4d50-9d1b-77ca8a70e5ea",
+    "type": "chat",
+    "input": "What is the golden ratio?",
+    "output": "[chat request at 2026-02-24T13:50:11.741Z]",
+    "timestamp": "2026-02-24T13:50:11.744Z"
+  },
+  {
+    "id": "afa5834c-fc4e-4a4b-aff1-854025bb615f",
+    "type": "chat_response",
+    "input": "What is the golden ratio?",
+    "output": "As HeadyBrain, I can tell you that the **golden ratio**, often represented by the Greek letter **phi ($\\phi$)**, is a special irrational number approximately equal to **1.6180339887...**\n\nHere's a more detailed breakdown:\n\n1.  **Mathematical Definition**: Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities.\n    *   If you have two numbers, $a$ and $b$, with $a > b > 0$, they are in the golden ratio if:\n        $\\frac{a+b",
+    "timestamp": "2026-02-24T13:50:17.859Z"
+  },
+  {
+    "id": "cd83c8ae-258f-4bf9-8d8a-509462aa33a6",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nWhat is the golden ratio?\n---\nQ: What is the golden ratio?\nA: As HeadyBrain, I can tell you that the **golden ratio**, often represented by the Greek letter **phi ($\\phi$)**, is a special irrational number approximately equal to **1.6180339887...**\n\nHere's a more detailed breakdown:\n\n1.  **Mathematical Definition**: Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities.\n    ",
+    "output": "[chat request at 2026-02-24T13:50:17.988Z]",
+    "timestamp": "2026-02-24T13:50:17.989Z"
+  },
+  {
+    "id": "bd453437-24d3-4096-bf51-b809efb609b6",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nWhat is the golden ratio?\n---\nQ: What is the golden ratio?\nA: As HeadyBrain, I can tell you that the **golden ratio**, often represented by the Greek letter **phi ($\\phi$)**, is a special irrational number approximately equal to **1.6180339887...**\n\nHere's a more detailed breakdown:\n\n1.  **Mathematical Definition**: Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities.\n    ",
+    "output": "As HeadyBrain, I can tell you that the **golden ratio**, often represented by the Greek letter **phi ($\\phi$)**, is a special irrational number approximately equal to **1.6180339887...**\n\nHere's a more detailed breakdown:\n\n1.  **Mathematical Definition**: Two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities.\n    *   If you have two numbers, $a$ and $b$, with $a > b > 0$, they are in the golden ratio if:\n        $\\frac{a+b",
+    "timestamp": "2026-02-24T13:50:20.413Z"
+  },
+  {
+    "id": "10ca5330-af2b-4215-a023-758b92984134",
+    "type": "chat",
+    "input": "Tell me about phi the golden number",
+    "output": "[chat request at 2026-02-24T13:50:20.506Z]",
+    "timestamp": "2026-02-24T13:50:20.506Z"
+  },
+  {
+    "id": "79b19ae3-18c6-44d1-9415-a813c9ad3350",
+    "type": "chat_response",
+    "input": "Tell me about phi the golden number",
+    "output": "Greetings. As HeadyBrain, the AI reasoning engine of the Heady ecosystem, I can tell you a great deal about **phi ($\\phi$)**, often referred to as **the Golden Number** or **the Golden Ratio**.\n\n---\n\n### What is Phi ($\\phi$)?\n\nPhi ($\\phi$) is an **irrational mathematical constant** that appears frequently in geometry, art, architecture, and nature. It is approximately equal to **1.6180339887...** It is often called the **Golden Ratio**, the **Golden Section**, or the **Divine Proportion**.\n\n### ",
+    "timestamp": "2026-02-24T13:50:30.366Z"
+  },
+  {
+    "id": "df3483b3-8c8a-4caa-92cb-1f57ddb2e80e",
+    "type": "chat",
+    "input": "ping",
+    "output": "[chat request at 2026-02-24T15:20:44.603Z]",
+    "timestamp": "2026-02-24T15:20:44.605Z"
+  },
+  {
+    "id": "f2887fdf-ee07-4440-b44f-1c284273e658",
+    "type": "chat_response",
+    "input": "ping",
+    "output": "PONG",
+    "timestamp": "2026-02-24T15:20:45.400Z"
+  },
+  {
+    "id": "186effb1-09ba-4491-8b1e-4576c80a44a8",
+    "type": "chat",
+    "input": "Respond with exactly: BRAIN_ALIVE",
+    "output": "[chat request at 2026-02-24T16:40:58.220Z]",
+    "timestamp": "2026-02-24T16:40:58.221Z"
+  },
+  {
+    "id": "e86aac01-7e7e-4386-b524-fc9064509ddd",
+    "type": "chat_response",
+    "input": "Respond with exactly: BRAIN_ALIVE",
+    "output": "",
+    "timestamp": "2026-02-24T16:40:59.042Z"
+  },
+  {
+    "id": "05d14c7d-3949-45ec-b805-e7a694e89134",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 1 relevant memories found]\n[Learning: security] Q: Secure Multi-Tenant AI Systems & Data Isolation in Vector Memory and Edge\nA: As HeadyBrain, I'll cut straight to actionable strategies for securing multi-tenant AI systems, focusing on vector memory and edge data isolation.\n\n---\n\n### Secure Multi-Tenant AI Systems & Data Isolation\n\nThe core challenge is ensuring Tenant A's data and model interactions never expose or influence Tenant B's. This demands a layered security appr",
+    "output": "[chat request at 2026-02-24T16:45:26.650Z]",
+    "timestamp": "2026-02-24T16:45:26.651Z"
+  },
+  {
+    "id": "48f6136a-b5b9-422c-9833-ff0c225295a2",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 1 relevant memories found]\n[Learning: security] Q: Secure Multi-Tenant AI Systems & Data Isolation in Vector Memory and Edge\nA: As HeadyBrain, I'll cut straight to actionable strategies for securing multi-tenant AI systems, focusing on vector memory and edge data isolation.\n\n---\n\n### Secure Multi-Tenant AI Systems & Data Isolation\n\nThe core challenge is ensuring Tenant A's data and model interactions never expose or influence Tenant B's. This demands a layered security appr",
+    "output": "pong",
+    "timestamp": "2026-02-24T16:45:27.465Z"
   }
 ]

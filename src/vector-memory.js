@@ -26,6 +26,8 @@
 
 const fs = require("fs");
 const path = require("path");
+const HeadyGateway = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "gateway"));
+const { createProviders } = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "providers"));
 
 const PHI = 1.6180339887;
 let federation = null;
@@ -149,21 +151,20 @@ function initShards() {
     console.log(`  ∞ VectorMemory: Zone distribution: ${JSON.stringify(zoneDistribution)}`);
 }
 
-// ── HF Client Pool ──────────────────────────────────────────────
-function initHFClients() {
-    try {
-        const { InferenceClient } = require("@huggingface/inference");
-        const tokens = [process.env.HF_TOKEN, process.env.HF_TOKEN_2, process.env.HF_TOKEN_3]
-            .filter(t => t && !t.includes("placeholder"));
-        hfClients = tokens.map(t => new InferenceClient(t));
-        if (hfClients.length > 0) {
-            console.log(`  ∞ VectorMemory: ${hfClients.length} HF embedding workers (${EMBEDDING_MODEL})`);
-        } else {
-            console.warn("  ⚠ VectorMemory: No HF tokens — local hash fallback");
-        }
-    } catch {
-        console.warn("  ⚠ VectorMemory: HF SDK not available, local hash fallback");
+// ── SDK Gateway for Embeddings ───────────────────────────────────
+let _gateway = null;
+function getGateway() {
+    if (!_gateway) {
+        _gateway = new HeadyGateway({ cacheTTL: 300000 });
+        const providers = createProviders(process.env);
+        for (const p of providers) _gateway.registerProvider(p);
     }
+    return _gateway;
+}
+
+function initHFClients() {
+    // Legacy — SDK gateway handles provider selection now
+    console.log(`  ∞ VectorMemory: Embeddings via SDK Gateway (${EMBEDDING_MODEL})`);
 }
 
 // ── Embedding ───────────────────────────────────────────────────
@@ -172,24 +173,14 @@ let embedRoundRobin = 0;
 async function embed(text) {
     const truncated = typeof text === "string" ? text.substring(0, 2000) : String(text).substring(0, 2000);
 
-    if (hfClients.length > 0) {
-        const client = hfClients[embedRoundRobin % hfClients.length];
-        embedRoundRobin++;
-        try {
-            const result = await client.featureExtraction({ model: EMBEDDING_MODEL, inputs: truncated });
+    try {
+        const gateway = getGateway();
+        const result = await gateway.embed(truncated);
+        if (result.ok && result.embedding) {
             remoteEmbedCount++;
-            return Array.isArray(result) ? result : Array.from(result);
-        } catch {
-            for (let i = 1; i < hfClients.length; i++) {
-                const fb = hfClients[(embedRoundRobin + i) % hfClients.length];
-                try {
-                    const result = await fb.featureExtraction({ model: EMBEDDING_MODEL, inputs: truncated });
-                    remoteEmbedCount++;
-                    return Array.isArray(result) ? result : Array.from(result);
-                } catch { }
-            }
+            return Array.isArray(result.embedding) ? result.embedding : Array.from(result.embedding);
         }
-    }
+    } catch { /* gateway embed failed, fall through */ }
 
     localFallbackCount++;
     return localHashEmbed(truncated, 384);

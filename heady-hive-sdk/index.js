@@ -17,6 +17,8 @@ const HeadyCreative = require("./lib/creative");
 const HeadyMCP = require("./lib/mcp");
 const HeadyAuth = require("./lib/auth");
 const HeadyEvents = require("./lib/events");
+const HeadyGateway = require("./lib/gateway");
+const { createProviders } = require("./lib/providers");
 const OpenAIBridge = require("./lib/openai-bridge");
 const GCloudBridge = require("./lib/gcloud-bridge");
 
@@ -28,6 +30,8 @@ module.exports = {
     HeadyMCP,
     HeadyAuth,
     HeadyEvents,
+    HeadyGateway,
+    createProviders,
     OpenAIBridge,
     GCloudBridge,
     version: require("./package.json").version,

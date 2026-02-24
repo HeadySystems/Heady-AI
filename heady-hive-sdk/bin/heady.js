@@ -1,21 +1,34 @@
 #!/usr/bin/env node
 /**
- * Heady CLI — Command-line interface for the Heady Hive SDK
+ * ═══ Heady CLI — Unified Interface to the Heady Hive SDK ═══
+ *
  * Usage: heady <command> [args]
+ *        heady --help | -h
+ *        heady --version | -v
  */
 
-const { HeadyClient, OpenAIBridge, GCloudBridge } = require("../index");
+const { HeadyClient, HeadyGateway, createProviders, OpenAIBridge, GCloudBridge } = require("../index");
 
 const args = process.argv.slice(2);
 const cmd = args[0];
 const rest = args.slice(1).join(" ");
+const flags = new Set(args.filter(a => a.startsWith("-")));
+const pkg = require("../package.json");
 
+// Initialize client
 const heady = new HeadyClient({
     url: process.env.HEADY_URL || "http://localhost:3301",
     apiKey: process.env.HEADY_API_KEY || "",
+    budget: {
+        daily: parseFloat(process.env.HEADY_BUDGET_DAILY || "10"),
+        monthly: parseFloat(process.env.HEADY_BUDGET_MONTHLY || "100"),
+    },
 });
 
+// ─── Commands ───────────────────────────────────────────────────────
+
 const COMMANDS = {
+    // ── Brain ──
     async chat() {
         if (!rest) return console.log("Usage: heady chat \"message\"");
         const res = await heady.brain.chat(rest);
@@ -28,18 +41,128 @@ const COMMANDS = {
         console.log(JSON.stringify(res, null, 2));
     },
 
+    async search() {
+        if (!rest) return console.log("Usage: heady search \"query\"");
+        const res = await heady.brain.search(rest);
+        console.log(JSON.stringify(res, null, 2));
+    },
+
+    async embed() {
+        if (!rest) return console.log("Usage: heady embed \"text\"");
+        const res = await heady.embed(rest);
+        console.log(JSON.stringify(res, null, 2));
+    },
+
+    async complete() {
+        if (!rest) return console.log("Usage: heady complete \"prompt\"");
+        const res = await heady.brain.complete(rest);
+        console.log(JSON.stringify(res, null, 2));
+    },
+
+    async refactor() {
+        if (!rest) return console.log("Usage: heady refactor \"code\"");
+        const res = await heady.brain.refactor(rest);
+        console.log(JSON.stringify(res, null, 2));
+    },
+
+    // ── Battle ──
+    async battle() {
+        if (!rest) return console.log("Usage: heady battle \"change description\"");
+        const res = await heady.battle.validate(rest);
+        console.log(JSON.stringify(res, null, 2));
+    },
+
+    // ── Creative ──
+    async creative() {
+        if (!rest) return console.log("Usage: heady creative \"prompt\"");
+        const res = await heady.creative.generate(rest);
+        console.log(JSON.stringify(res, null, 2));
+    },
+
+    // ── MCP ──
+    async mcp() {
+        const tools = await heady.mcp.listTools();
+        console.log("🔧 MCP Tools:");
+        if (Array.isArray(tools)) tools.forEach(t => console.log(`   ${t.name} — ${t.description?.substring(0, 60)}`));
+        else console.log(JSON.stringify(tools, null, 2));
+    },
+
+    // ── Decompose ──
+    async decompose() {
+        if (!rest) return console.log("Usage: heady decompose \"complex task description\"");
+        console.log("🔀 Decomposing task across all providers...");
+        const res = await heady.decompose(rest);
+        if (res.ok) {
+            console.log(`✅ Completed in ${res.latency}ms using ${res.decomposition.providersUsed.length} providers`);
+            console.log(`   Subtasks: ${res.decomposition.subtasks.length} completed, ${res.decomposition.failed} failed`);
+            console.log(`   Strategy: ${res.decomposition.mergeStrategy}`);
+            for (const s of res.decomposition.subtasks) {
+                console.log(`   📌 [${s.provider}] ${s.task.substring(0, 60)}... (${s.latency}ms, ${s.responseLength} chars)`);
+            }
+            console.log("\n─── MERGED RESPONSE ───");
+            console.log(res.response);
+        } else {
+            console.error(`❌ ${res.error}`);
+        }
+    },
+
+    // ── Gateway ──
+    async gateway() {
+        const sub = args[1];
+        if (sub === "stats" || !sub) {
+            const stats = heady.gatewayStats();
+            console.log("⚡ Gateway Stats:");
+            console.log(JSON.stringify(stats, null, 2));
+        } else if (sub === "audit") {
+            const limit = parseInt(args[2]) || 10;
+            const audit = heady.gatewayAudit(limit);
+            console.log(`📊 Race Audit (last ${audit.length}):`);
+            for (const a of audit) {
+                const w = a.winner?.source || "?";
+                const lat = a.winner?.latency || "?";
+                console.log(`  ${a.raceId}: Winner=${w} (${lat}ms) | Losers: ${(a.lateResponses || []).length} | Errors: ${(a.errors || []).length}`);
+            }
+        } else if (sub === "optimize") {
+            const opts = heady.gatewayOptimizations();
+            console.log("🔬 Optimization Signals:");
+            if (opts.signals.length === 0) console.log("   No signals yet — run more requests first");
+            for (const s of opts.signals) console.log(`   ⚡ [${s.type}] ${s.recommendation}`);
+            console.log("\nWin Rates:", JSON.stringify(opts.winRate));
+            console.log("Avg Latency:", JSON.stringify(opts.avgLatency));
+        } else if (sub === "providers") {
+            const stats = heady.gatewayStats();
+            console.log("🌐 Providers:");
+            for (const p of stats.providers) {
+                const h = p.health;
+                const icon = h?.healthy ? "🟢" : "🔴";
+                console.log(`   ${icon} ${p.name} (${p.serviceGroup}) — priority:${p.priority} caps:[${p.capabilities.join(",")}] calls:${h?.totalCalls || 0} errs:${h?.totalErrors || 0} avg:${h?.avgLatency || 0}ms`);
+            }
+        } else if (sub === "budget") {
+            const stats = heady.gatewayStats();
+            const b = stats.budget;
+            console.log("💰 Budget:");
+            console.log(`   Daily:   $${b.spent.daily.toFixed(4)} / $${b.daily}`);
+            console.log(`   Monthly: $${b.spent.monthly.toFixed(4)} / $${b.monthly}`);
+        } else {
+            console.log("Usage: heady gateway [stats|audit|optimize|providers|budget]");
+        }
+    },
+
+    // ── System ──
     async health() {
         const info = await heady.info();
         console.log("🧠 Heady System Info");
         console.log(`   Connected: ${info.connected}`);
         console.log(`   SDK: v${info.sdk.version}`);
         console.log(`   URL: ${info.sdk.url}`);
-        if (info.autoSuccess) {
+        const gw = info.gateway;
+        if (gw) {
+            console.log(`   Gateway: ${gw.providers.length} providers | ${gw.totalRequests} requests | ${gw.cacheHits} cache hits`);
+            console.log(`   Budget: $${gw.budget.spent.daily.toFixed(4)}/$${gw.budget.daily} daily`);
+        }
+        if (info.autoSuccess && typeof info.autoSuccess === "object") {
             const as = info.autoSuccess;
             console.log(`   Engine: ${as.running ? "RUNNING" : "STOPPED"}`);
-            console.log(`   Tasks: ${as.totalTasks}`);
-            console.log(`   Cycles: ${as.cycleCount}`);
-            console.log(`   Success Rate: ${as.successRate}`);
         }
     },
 
@@ -49,31 +172,7 @@ const COMMANDS = {
         console.log(JSON.stringify(res, null, 2));
     },
 
-    async battle() {
-        if (!rest) return console.log("Usage: heady battle \"change description\"");
-        const res = await heady.battle.validate(rest);
-        console.log(JSON.stringify(res, null, 2));
-    },
-
-    async creative() {
-        if (!rest) return console.log("Usage: heady creative \"prompt\"");
-        const res = await heady.creative.generate(rest);
-        console.log(JSON.stringify(res, null, 2));
-    },
-
-    async search() {
-        if (!rest) return console.log("Usage: heady search \"query\"");
-        const res = await heady.brain.search(rest);
-        console.log(JSON.stringify(res, null, 2));
-    },
-
-    async mcp() {
-        const tools = await heady.mcp.listTools();
-        console.log("🔧 MCP Tools:");
-        if (Array.isArray(tools)) tools.forEach(t => console.log(`   ${t.name} — ${t.description?.substring(0, 60)}`));
-        else console.log(JSON.stringify(tools, null, 2));
-    },
-
+    // ── Bridges ──
     async openai() {
         const bridge = new OpenAIBridge();
         const h = await bridge.health();
@@ -86,36 +185,66 @@ const COMMANDS = {
         console.log("☁️  Google Cloud:", JSON.stringify(h));
     },
 
+    // ── Help ──
     help() {
         console.log(`
-🐝 Heady Hive SDK CLI — v${require("../package.json").version}
+═══════════════════════════════════════════════
+  🐝 Heady Hive SDK — v${pkg.version}
+  Liquid Unified AI Gateway
+═══════════════════════════════════════════════
 
-Commands:
-  heady chat "message"      Chat with HeadyBrain
-  heady analyze "content"   Analyze code/text
-  heady search "query"      Search knowledge base
-  heady battle "change"     Validate a change through HeadyBattle
-  heady creative "prompt"   Generate creative content
-  heady health              System health check
-  heady status              Auto-success engine status
-  heady mcp                 List MCP tools
-  heady openai              OpenAI bridge health
-  heady gcloud              Google Cloud bridge health
-  heady help                This help
+BRAIN
+  heady chat "message"         Chat with HeadyBrain (routes through liquid gateway)
+  heady analyze "content"      Analyze code/text via AI
+  heady search "query"         Search Heady knowledge base
+  heady embed "text"           Generate vector embeddings
+  heady complete "prompt"      Text/code completion
+  heady refactor "code"        AI-powered code refactoring
 
-Environment:
-  HEADY_URL         Heady Manager URL (default: http://localhost:3301)
-  HEADY_API_KEY     API authentication key
-  OPENAI_API_KEY    OpenAI API key (for bridge)
-  GCLOUD_API_KEY    Google Cloud API key (for bridge)
+SERVICES
+  heady battle "change"        Validate changes through HeadyBattle
+  heady creative "prompt"      Generate creative content
+  heady mcp                    List available MCP tools (31+)
+  heady decompose "task"       Split complex task across ALL providers (fan-out/merge)
+
+GATEWAY
+  heady gateway stats          Provider health, cache, budget overview
+  heady gateway providers      List all registered providers with status
+  heady gateway audit [N]      Show last N race audit entries
+  heady gateway optimize       AI-driven optimization recommendations
+  heady gateway budget         Current budget spend/limits
+
+SYSTEM
+  heady health                 Full system health check
+  heady status                 Auto-success engine status
+  heady openai                 OpenAI bridge health
+  heady gcloud                 Google Cloud bridge health
+
+FLAGS
+  --help, -h                   Show this help
+  --version, -v                Show version
+
+ENVIRONMENT
+  HEADY_URL                    Heady Manager URL (default: http://localhost:3301)
+  HEADY_API_KEY                API authentication key
+  HEADY_BUDGET_DAILY           Daily budget cap in USD (default: 10)
+  HEADY_BUDGET_MONTHLY         Monthly budget cap in USD (default: 100)
+  OPENAI_API_KEY               OpenAI API key
+  CLAUDE_API_KEY               Anthropic Claude API key
+  GOOGLE_API_KEY               Google/Gemini API key
+  HF_TOKEN                     HuggingFace token
+  HEADY_LOCAL_ENABLED          Enable local Ollama (default: false)
 `);
     },
 };
 
+// ─── Entry Point ────────────────────────────────────────────────────
+
 (async () => {
     try {
-        if (!cmd || cmd === "help" || cmd === "--help") return COMMANDS.help();
-        if (!COMMANDS[cmd]) return console.log(`Unknown command: ${cmd}. Run 'heady help' for usage.`);
+        if (flags.has("--version") || flags.has("-v")) return console.log(pkg.version);
+        if (!cmd || cmd === "help" || flags.has("--help") || flags.has("-h")) return COMMANDS.help();
+        if (!COMMANDS[cmd]) return console.log(`Unknown command: ${cmd}. Run 'heady --help' for usage.`);
         await COMMANDS[cmd]();
     } catch (err) {
         console.error(`❌ ${err.message}`);

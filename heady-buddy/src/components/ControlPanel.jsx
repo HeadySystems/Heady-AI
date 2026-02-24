@@ -3,19 +3,23 @@ import { Monitor, Code, Activity, History, Zap, Play, CheckCircle, AlertCircle }
 
 const ControlPanel = ({ preferences, recentProjects, onLaunchArenaMode, onAddProject }) => {
   const handleLaunchAdminIDE = () => {
-    window.open('http://localhost:3300/admin', '_blank');
+    const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+    window.open(`${baseUrl}/admin`, '_blank');
   };
 
   const handleLaunchIDEOnly = () => {
-    window.open('http://localhost:3300/ide', '_blank');
+    const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+    window.open(`${baseUrl}/ide`, '_blank');
   };
 
   const handleCheckMetrics = () => {
-    window.open('http://localhost:3300/api/resources/health', '_blank');
+    const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+    window.open(`${baseUrl}/api/resources/health`, '_blank');
   };
 
   const handleRunPipeline = () => {
-    fetch('http://localhost:3300/api/pipeline/run', { method: 'POST' })
+    const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+    fetch(`${baseUrl}/api/pipeline/run`, { method: 'POST' })
       .then(response => response.json())
       .then(data => console.log('Pipeline started:', data))
       .catch(error => console.error('Failed to start pipeline:', error));
@@ -69,7 +73,10 @@ const ControlPanel = ({ preferences, recentProjects, onLaunchArenaMode, onAddPro
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <button
-              onClick={() => window.open('http://localhost:3300/api/arena/status', '_blank')}
+              onClick={() => {
+                const baseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3300' : `https://api.${window.location.hostname.replace('buddy.', '')}`;
+                window.open(`${baseUrl}/api/arena/status`, '_blank');
+              }}
               className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
             >
               <Zap className="w-6 h-6 text-purple-600" />

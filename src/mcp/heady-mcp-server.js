@@ -210,6 +210,19 @@ const HEADY_TOOLS = [
     },
   },
   {
+    name: 'heady_memory',
+    description: 'Directly search HeadyMemory (3D vector space) for persistent user facts, context, or procedural workflows.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'What to search for in memory' },
+        limit: { type: 'integer', default: 5, description: 'Max results to return' },
+        minScore: { type: 'number', default: 0.6, description: 'Minimum semantic relevance score' }
+      },
+      required: ['query'],
+    },
+  },
+  {
     name: 'heady_refactor',
     description: 'Request code refactoring suggestions from Heady Brain.',
     inputSchema: {

@@ -21,7 +21,7 @@
  * Registered with the Supervisor for code-generation, analysis, refactoring,
  * architecture, and debugging tasks.
  *
- * ROUTING: Direct (no proxy) via @heady/networking internal client.
+ * ROUTING: All AI traffic proxied through HeadyGateway (heady-hive-sdk).
  *
  * USAGE:
  *   - Supervisor routes code-related tasks to this agent.
@@ -214,7 +214,7 @@ class ClaudeCodeAgent {
 
   /**
    * Execute Claude Code CLI with the given prompt.
-   * Falls back to a simulated response if CLI is not available.
+   * Falls back to SDK gateway if CLI is not available.
    */
   async _executeClaudeCode(prompt, request) {
     // Try CLI first
@@ -313,32 +313,45 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Fallback when CLI is not available — returns structured task acknowledgment.
-   * The Supervisor can still use this to track what needs to be done.
+   * Fallback when CLI is not available — route through SDK gateway for real AI response.
    */
   _fallbackExecution(prompt, request) {
-    return Promise.resolve({
-      output: [
-        `[Claude Code Agent — Fallback Mode]`,
-        `CLI not available. Task queued for manual execution.`,
-        ``,
-        `Task Type: ${request.taskType || "general"}`,
-        `Target: ${request.target || "N/A"}`,
-        `Description: ${request.description || request.prompt || "N/A"}`,
-        ``,
-        `To execute manually, run:`,
-        `  claude --print --model ${this.model} "${prompt.slice(0, 200)}..."`,
-        ``,
-        `Or install Claude Code: npm install -g @anthropic-ai/claude-code`,
-      ].join("\n"),
-      files: [],
-      suggestions: [
-        "Install Claude Code CLI: npm install -g @anthropic-ai/claude-code",
-        "Set ANTHROPIC_API_KEY in environment",
-        "Re-run pipeline to execute with full Claude Code integration",
-      ],
-      fallback: true,
-    });
+    return (async () => {
+      try {
+        const path = require("path");
+        const HeadyGateway = require(path.join(__dirname, "..", "..", "heady-hive-sdk", "lib", "gateway"));
+        const { createProviders } = require(path.join(__dirname, "..", "..", "heady-hive-sdk", "lib", "providers"));
+        const gateway = new HeadyGateway({ cacheTTL: 300000 });
+        const providers = createProviders(process.env);
+        for (const p of providers) gateway.registerProvider(p);
+
+        const result = await gateway.chat(prompt, {
+          system: `You are a senior software engineer working on the Heady ecosystem. Task type: ${request.taskType || "general"}.`,
+        });
+        if (result.ok) {
+          return {
+            output: result.response,
+            files: [],
+            suggestions: [],
+            fallback: false,
+            engine: result.engine,
+          };
+        }
+      } catch { /* gateway unavailable */ }
+
+      // Absolute fallback
+      return {
+        output: [
+          `[Claude Code Agent — Gateway Fallback]`,
+          `Task Type: ${request.taskType || "general"}`,
+          `Target: ${request.target || "N/A"}`,
+          `Description: ${request.description || request.prompt || "N/A"}`,
+        ].join("\n"),
+        files: [],
+        suggestions: [],
+        fallback: true,
+      };
+    })();
   }
 
   /**

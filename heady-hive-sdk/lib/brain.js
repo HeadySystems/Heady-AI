@@ -4,10 +4,20 @@
 class HeadyBrain {
     constructor(client) { this._c = client; }
 
-    /** Chat with HeadyBrain */
+    /** Chat with HeadyBrain (via HeadyManager or direct gateway) */
     async chat(prompt, opts = {}) {
+        // Try gateway-direct first if available
+        if (this._c.gateway) {
+            return this._c.gateway.chat(prompt, {
+                system: opts.system,
+                priority: opts.priority || "medium",
+                temperature: opts.temperature,
+                maxTokens: opts.maxTokens || 2048,
+            });
+        }
+        // Fallback to HeadyManager HTTP
         return this._c.post("/api/brain/chat", {
-            prompt, model: opts.model || "heady-brain",
+            message: prompt, model: opts.model || "heady-brain",
             max_tokens: opts.maxTokens || 2048,
             temperature: opts.temperature || 0.3,
             context: opts.context || "sdk",

@@ -1,0 +1,218 @@
+[
+  {
+    "topic": "What are the best practices for Node.js event loop optimization in production systems?",
+    "category": "architecture",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:30:33.873Z",
+    "provider": "heady-brain",
+    "responseLength": 5672
+  },
+  {
+    "topic": "How should microservices handle circuit breaker patterns with fallback strategies?",
+    "category": "architecture",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:38:21.274Z",
+    "provider": "heady-brain",
+    "responseLength": 5964
+  },
+  {
+    "topic": "What are effective strategies for managing 150+ concurrent async tasks in Node.js?",
+    "category": "architecture",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:30:45.473Z",
+    "provider": "heady-brain",
+    "responseLength": 4942
+  },
+  {
+    "topic": "What are the best embedding models for semantic search in 2025-2026?",
+    "category": "ai",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:31:08.547Z",
+    "provider": "heady-brain",
+    "responseLength": 4480
+  },
+  {
+    "topic": "How do you implement RAG (retrieval augmented generation) with 3D spatial vector indexing?",
+    "category": "ai",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:32:34.854Z",
+    "provider": "heady-brain",
+    "responseLength": 439
+  },
+  {
+    "topic": "What are the tradeoffs between different LLM providers for latency vs quality?",
+    "category": "ai",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:38:49.862Z",
+    "provider": "heady-brain",
+    "responseLength": 5995
+  },
+  {
+    "topic": "What are the critical security practices for API key management in multi-provider AI systems?",
+    "category": "security",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:32:55.092Z",
+    "provider": "heady-brain",
+    "responseLength": 4755
+  },
+  {
+    "topic": "How should a production system handle rate limiting across multiple API providers?",
+    "category": "security",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:44:00.939Z",
+    "provider": "heady-brain",
+    "responseLength": 3106
+  },
+  {
+    "topic": "What techniques reduce cold start latency in serverless and container deployments?",
+    "category": "performance",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:44:26.508Z",
+    "provider": "heady-brain",
+    "responseLength": 1183
+  },
+  {
+    "topic": "How do you optimize WebSocket connections for real-time voice relay systems?",
+    "category": "performance",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:44:58.918Z",
+    "provider": "heady-brain",
+    "responseLength": 6143
+  },
+  {
+    "topic": "Best practices for Cloudflare Workers as intelligent edge routers with dynamic routing tables?",
+    "category": "infrastructure",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:48:34.549Z",
+    "provider": "heady-brain",
+    "responseLength": 3902
+  },
+  {
+    "topic": "How to implement federated routing across edge, cloud, and local compute layers?",
+    "category": "infrastructure",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:36:32.624Z",
+    "provider": "heady-brain",
+    "responseLength": 2999
+  },
+  {
+    "topic": "What makes a premium, modern web UI feel state-of-the-art in 2026?",
+    "category": "design",
+    "priority": 3,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:49:00.564Z",
+    "provider": "heady-brain",
+    "responseLength": 3196
+  },
+  {
+    "topic": "How should AI personal assistants handle cross-device state sync and voice dictation?",
+    "category": "product",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T08:36:55.860Z",
+    "provider": "heady-brain",
+    "responseLength": 4643
+  },
+  {
+    "topic": "Dynamic Multi-Provider AI Routing & Orchestration Patterns (e.g., API Gateways, Service Mesh for AI)",
+    "category": "architecture",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:51:43.310Z",
+    "provider": "heady-cloud-fallback",
+    "responseLength": 3138
+  },
+  {
+    "topic": "Advanced Vector Database Indexing Strategies & Query Optimization for High-Throughput RAG",
+    "category": "ai",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:52:03.428Z",
+    "provider": "heady-cloud-fallback",
+    "responseLength": 2624
+  },
+  {
+    "topic": "Global Low-Latency Edge Compute Architectures & Data Locality for AI Inference",
+    "category": "infrastructure",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:52:23.984Z",
+    "provider": "heady-multimodal",
+    "responseLength": 3553
+  },
+  {
+    "topic": "Real-time Audio Streaming Protocols (e.g., WebRTC, SRTP) & Low-Latency Codec Optimization",
+    "category": "performance",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:52:43.865Z",
+    "provider": "heady-multimodal",
+    "responseLength": 2227
+  },
+  {
+    "topic": "Secure Multi-Tenant AI Systems & Data Isolation in Vector Memory and Edge",
+    "category": "security",
+    "priority": 1,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:53:03.514Z",
+    "provider": "heady-multimodal",
+    "responseLength": 3726
+  },
+  {
+    "topic": "Distributed Context Management & State Synchronization for Stateful AI Conversations Across Providers/Edge",
+    "category": "architecture",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:53:23.800Z",
+    "provider": "heady-multimodal",
+    "responseLength": 1602
+  },
+  {
+    "topic": "WebAssembly (WASM) for On-Device/Edge AI Inference and Pre-processing",
+    "category": "infrastructure",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:53:43.622Z",
+    "provider": "heady-cloud-fallback",
+    "responseLength": 2277
+  },
+  {
+    "topic": "AI Model Governance, Versioning, and Blue/Green Deployment for Multi-Provider Environments",
+    "category": "ai",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:54:03.696Z",
+    "provider": "heady-cloud-fallback",
+    "responseLength": 1381
+  },
+  {
+    "topic": "Advanced Voice Activity Detection (VAD) & Speaker Diarization at Scale for Real-time Voice Streams",
+    "category": "ai",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:54:23.358Z",
+    "provider": "heady-multimodal",
+    "responseLength": 2933
+  },
+  {
+    "topic": "Cost Optimization & Observability for Dynamic Multi-Provider AI Workloads",
+    "category": "product",
+    "priority": 2,
+    "learned": true,
+    "learnedAt": "2026-02-24T14:54:43.832Z",
+    "provider": "heady-multimodal",
+    "responseLength": 2093
+  }
+]

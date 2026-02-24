@@ -34,10 +34,11 @@ const server = http.createServer((req, res) => {
 
 function proxyRequest(req, res) {
   const axios = require('axios');
-  const targetUrl = `http://localhost:3300${req.url}`;
-  
+  const targetHost = req.headers.host ? req.headers.host.replace('buddy.', 'api.') : 'api.headysystems.com';
+  const targetUrl = `https://${targetHost}${req.url}`;
+
   console.log(`Proxying ${req.method} ${req.url} to ${targetUrl}`);
-  
+
   if (req.method === 'GET') {
     axios.get(targetUrl)
       .then(response => {
@@ -54,7 +55,7 @@ function proxyRequest(req, res) {
     req.on('data', chunk => {
       body += chunk.toString();
     });
-    
+
     req.on('end', () => {
       try {
         const data = JSON.parse(body);
@@ -79,7 +80,7 @@ function proxyRequest(req, res) {
 function serveStatic(req, res) {
   const fs = require('fs');
   const filePath = path.join(__dirname, '../dist', req.url);
-  
+
   try {
     const content = fs.readFileSync(filePath);
     const ext = path.extname(filePath);
@@ -91,7 +92,7 @@ function serveStatic(req, res) {
       '.jpg': 'image/jpeg',
       '.svg': 'image/svg+xml'
     }[ext] || 'text/plain';
-    
+
     res.writeHead(200, { 'Content-Type': contentType });
     res.end(content);
   } catch (error) {
@@ -110,11 +111,11 @@ const storage = {
     },
     recentProjects: []
   },
-  
+
   get: (key, defaultValue) => {
     return storage.data[key] || defaultValue;
   },
-  
+
   set: (key, value) => {
     storage.data[key] = value;
     return true;
@@ -124,15 +125,15 @@ const storage = {
 // API endpoints for the web app
 if (require.main === module) {
   const port = process.env.PORT || 5175;
-  
+
   server.listen(port, () => {
     console.log(`Heady Buddy running on http://localhost:${port}`);
     console.log('Opening browser...');
-    
+
     // Open browser
-    const open = process.platform === 'darwin' ? 'open' : 
-                 process.platform === 'win32' ? 'start' : 'xdg-open';
-    
+    const open = process.platform === 'darwin' ? 'open' :
+      process.platform === 'win32' ? 'start' : 'xdg-open';
+
     spawn(open, [`http://localhost:${port}`], { stdio: 'ignore' });
   });
 }
