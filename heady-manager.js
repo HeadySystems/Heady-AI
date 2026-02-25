@@ -32,7 +32,6 @@ const https = require('https');
 const fs = require('fs');
 const http = require('http');
 const yaml = require('js-yaml');
-const fs = require('fs');
 const path = require("path");
 const fetch = require('node-fetch');
 const { createAppAuth } = require('@octokit/auth-app');

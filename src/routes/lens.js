@@ -16,6 +16,17 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// ── Vision Provider Setup (lazy — reads env at request time) ──
+let _genAI = null;
+function getGenAI() {
+    const key = process.env.GOOGLE_API_KEY || process.env.GEMINI_API_KEY_HEADY || "";
+    if (!key) return null;
+    if (!_genAI) _genAI = new GoogleGenerativeAI(key);
+    return _genAI;
+}
+function getOpenAIKey() { return process.env.OPENAI_API_KEY || ""; }
 
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
 const LENS_STATE_FILE = path.join(DATA_DIR, "lens-state.json");
@@ -121,27 +132,140 @@ router.post("/analyze", async (req, res) => {
 router.post("/detect", (req, res) => handleImageAnalysis(req, res, "detect"));
 router.post("/process", (req, res) => handleImageAnalysis(req, res, "process"));
 
-// Helper for Vision AI mock/pass-through
+// ── Vision AI — real provider integration ──
+const ACTION_PROMPTS = {
+    analyze: "Analyze this image in detail. Describe what you see, identify key elements, colors, composition, and any text present.",
+    detect: "Detect and list all distinct objects, people, text, logos, and notable elements in this image. Return structured results.",
+    process: "Process this image: extract all text (OCR), identify dominant colors, estimate dimensions, and summarize the visual content.",
+};
+
 async function handleImageAnalysis(req, res, actionType) {
     const { image_url, prompt } = req.body;
+    const systemPrompt = prompt || ACTION_PROMPTS[actionType] || ACTION_PROMPTS.analyze;
+    let provider = "none";
+
     try {
-        // Here we would integrate with actual Vision APIs (OpenAI, Anthropic, or Google)
-        // For now, returning a simulated response format matching the system's style
+        let analysisText = "";
+
+        // ── Strategy 1: Google Gemini Vision ──
+        const genAI = getGenAI();
+        const OPENAI_API_KEY = getOpenAIKey();
+        if (genAI) {
+            try {
+                provider = "google-gemini";
+                const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+                let parts = [{ text: systemPrompt }];
+
+                // If image_url is a local file path, read and inline it
+                const resolvedPath = path.isAbsolute(image_url)
+                    ? image_url
+                    : path.join(__dirname, "..", "..", image_url);
+
+                if (fs.existsSync(resolvedPath)) {
+                    const imageData = fs.readFileSync(resolvedPath);
+                    const ext = path.extname(resolvedPath).toLowerCase().replace(".", "");
+                    const mimeMap = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp", svg: "image/svg+xml" };
+                    parts.push({
+                        inlineData: {
+                            mimeType: mimeMap[ext] || "image/png",
+                            data: imageData.toString("base64"),
+                        },
+                    });
+                } else if (image_url.startsWith("http")) {
+                    // For remote URLs, pass as file data via fetch
+                    const imgRes = await fetch(image_url, { signal: AbortSignal.timeout(10000) });
+                    if (imgRes.ok) {
+                        const buf = Buffer.from(await imgRes.arrayBuffer());
+                        const ct = imgRes.headers.get("content-type") || "image/png";
+                        parts.push({ inlineData: { mimeType: ct, data: buf.toString("base64") } });
+                    } else {
+                        parts = [{ text: `${systemPrompt}\n\nImage URL: ${image_url}` }];
+                    }
+                } else {
+                    parts = [{ text: `${systemPrompt}\n\nImage reference: ${image_url}` }];
+                }
+
+                const result = await model.generateContent(parts);
+                analysisText = result.response.text();
+            } catch (geminiErr) {
+                console.warn(`⚠ HeadyLens Gemini failed: ${geminiErr.message}, falling back to OpenAI`);
+                analysisText = "";
+            }
+        }
+
+        // ── Strategy 2: OpenAI Vision fallback ──
+        if (!analysisText && OPENAI_API_KEY) {
+            try {
+                provider = "openai-vision";
+                const messages = [{ role: "user", content: [{ type: "text", text: systemPrompt }] }];
+
+                const resolvedPath = path.isAbsolute(image_url)
+                    ? image_url
+                    : path.join(__dirname, "..", "..", image_url);
+
+                if (fs.existsSync(resolvedPath)) {
+                    const imageData = fs.readFileSync(resolvedPath);
+                    const ext = path.extname(resolvedPath).toLowerCase().replace(".", "");
+                    const mimeMap = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp" };
+                    const dataUrl = `data:${mimeMap[ext] || "image/png"};base64,${imageData.toString("base64")}`;
+                    messages[0].content.push({ type: "image_url", image_url: { url: dataUrl } });
+                } else if (image_url.startsWith("http")) {
+                    messages[0].content.push({ type: "image_url", image_url: { url: image_url } });
+                }
+
+                const oaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENAI_API_KEY}` },
+                    body: JSON.stringify({ model: "gpt-4o-mini", messages, max_tokens: 1024 }),
+                    signal: AbortSignal.timeout(20000),
+                });
+
+                if (oaiRes.ok) {
+                    const data = await oaiRes.json();
+                    analysisText = data.choices?.[0]?.message?.content || "";
+                }
+            } catch (oaiErr) {
+                console.warn(`⚠ HeadyLens OpenAI fallback failed: ${oaiErr.message}`);
+            }
+        }
+
+        if (!analysisText) {
+            analysisText = `No vision provider available. Ensure GOOGLE_API_KEY or OPENAI_API_KEY is set.`;
+            provider = "none";
+        }
+
+        // Persist as a lens observation
+        const observation = {
+            id: `lens-vision-${Date.now()}`,
+            source: "heady-lens-vision",
+            metric: actionType,
+            value: analysisText.substring(0, 500),
+            context: image_url,
+            significance: 0.8,
+            ts: new Date().toISOString(),
+        };
+        differentials.push(observation);
+        if (differentials.length > MAX_DIFFERENTIALS) differentials.splice(0, differentials.length - MAX_DIFFERENTIALS);
+        persistObservation(observation);
+
         res.json({
             ok: true,
             service: "heady-lens",
             action: actionType,
+            provider,
             target: image_url,
             result: {
-                summary: `Simulated vision analysis for ${image_url}`,
-                confidence: 0.95,
-                tags: ["vision", actionType, "simulated"],
-                prompt_used: prompt || "default analysis"
+                analysis: analysisText,
+                confidence: analysisText && provider !== "none" ? 0.95 : 0.0,
+                tags: ["vision", actionType, provider],
+                prompt_used: systemPrompt,
             },
-            ts: new Date().toISOString()
+            ts: new Date().toISOString(),
         });
     } catch (err) {
-        res.status(500).json({ ok: false, error: err.message });
+        console.error(`✖ HeadyLens vision error:`, err.message);
+        res.status(500).json({ ok: false, service: "heady-lens", error: err.message });
     }
 }
 

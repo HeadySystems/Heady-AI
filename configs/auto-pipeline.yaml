@@ -28,6 +28,12 @@ services:
   - name: HeadyRender
     endpoint: https://headyio.com/render
     weight: 0.7
+  - name: HeadyLens
+    endpoint: https://headyio.com/api/lens
+    weight: 0.9
+    providers:
+      - google-gemini
+      - openai-vision
 
 task_types:
   analysis: HeadyBrain
@@ -41,6 +47,9 @@ task_types:
   cost_optimization: HeadyBrain
   drift_detection: HeadyBrain
   scan_3d_persistent_vector_storage: HeadyBrain
+  vision_analyze: HeadyLens
+  vision_detect: HeadyLens
+  vision_process: HeadyLens
   default: HeadyBrain  # Fallback for all unconfigured types
 
 optimization:

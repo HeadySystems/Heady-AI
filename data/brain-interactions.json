@@ -1,26 +1,5 @@
 [
   {
-    "id": "4575c51f-2d97-4f0b-a039-669f4428194c",
-    "type": "chat_contextual",
-    "input": "",
-    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
-    "timestamp": "2026-02-24T12:47:38.682Z"
-  },
-  {
-    "id": "9ac256f5-09f3-4e45-b575-6b1ab7483965",
-    "type": "chat_contextual",
-    "input": "",
-    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
-    "timestamp": "2026-02-24T12:47:38.894Z"
-  },
-  {
-    "id": "f5eb828d-2a95-4ca7-ab65-055a662c037d",
-    "type": "chat_contextual",
-    "input": "",
-    "output": "Processing \"\". Your message has been stored in persistent memory. All Heady intelligence backends are being engaged for full analysis.",
-    "timestamp": "2026-02-24T12:47:38.902Z"
-  },
-  {
     "id": "8c32de92-2662-4217-9e0d-4ea4dc9fe92f",
     "type": "chat_contextual",
     "input": "",
@@ -6998,5 +6977,26 @@
     "input": "[HeadyBrain Context — 3 relevant memories found]\nCode analysis (general): test\n---\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nCode analysis (general): test\n[End Context]\n\ntest\n",
     "output": "[analysis of general]",
     "timestamp": "2026-02-25T10:48:56.379Z"
+  },
+  {
+    "id": "be63b520-3cc5-41bf-96aa-b9a48367cbd1",
+    "type": "chat",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nping\n[End Context]\n\nping\n---\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nping\n[End Context]\n\nping\n---\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nping\n[End Context]\n\nping\n[End Context]\n\nping",
+    "output": "[chat request at 2026-02-25T11:00:01.366Z]",
+    "timestamp": "2026-02-25T11:00:01.368Z"
+  },
+  {
+    "id": "0aa199c4-ef01-410f-a7a1-43b53660ff40",
+    "type": "chat_response",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nping\n[End Context]\n\nping\n---\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nping\n[End Context]\n\nping\n---\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nping\n[End Context]\n\nping\n[End Context]\n\nping",
+    "output": "\n\npong",
+    "timestamp": "2026-02-25T11:00:01.533Z"
+  },
+  {
+    "id": "6e4863ab-cb41-485a-ae55-3caba24c0d81",
+    "type": "analyze",
+    "input": "[HeadyBrain Context — 3 relevant memories found]\nCode analysis (general): test\n---\nChat interaction: [HeadyBrain Context — 1 relevant memories found]\nCode analysis (general): test\n[End Context]\n\ntest\n",
+    "output": "[analysis of general]",
+    "timestamp": "2026-02-25T11:00:01.640Z"
   }
 ]

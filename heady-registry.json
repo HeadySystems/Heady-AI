@@ -6,9 +6,9 @@
       "role": "inference",
       "critical": true,
       "endpoint": "/api/brain/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 3,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "soul",
@@ -16,9 +16,9 @@
       "role": "reflection",
       "critical": true,
       "endpoint": "/api/soul/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 2,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "conductor",
@@ -26,9 +26,9 @@
       "role": "orchestration",
       "critical": true,
       "endpoint": "/api/conductor/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "battle",
@@ -36,9 +36,9 @@
       "role": "competition",
       "critical": false,
       "endpoint": "/api/battle/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "hcfp",
@@ -46,9 +46,9 @@
       "role": "pipeline",
       "critical": true,
       "endpoint": "/api/hcfp/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "patterns",
@@ -56,9 +56,9 @@
       "role": "resilience",
       "critical": true,
       "endpoint": "/api/patterns/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "lens",
@@ -66,9 +66,9 @@
       "role": "differentials",
       "critical": false,
       "endpoint": "/api/lens/health",
-      "lastScanHealthy": true,
+      "lastScanHealthy": false,
       "lastScanLatencyMs": null,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "vinci",
@@ -76,9 +76,9 @@
       "role": "creative",
       "critical": false,
       "endpoint": "/api/vinci/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 2,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "notion",
@@ -86,9 +86,9 @@
       "role": "knowledge",
       "critical": false,
       "endpoint": "/api/notion/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "ops",
@@ -96,9 +96,9 @@
       "role": "operations",
       "critical": true,
       "endpoint": "/api/ops/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "maintenance",
@@ -106,9 +106,9 @@
       "role": "housekeeping",
       "critical": true,
       "endpoint": "/api/maintenance/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "registry",
@@ -116,9 +116,9 @@
       "role": "catalog",
       "critical": true,
       "endpoint": "/api/registry",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "auto-success",
@@ -126,9 +126,9 @@
       "role": "background-tasks",
       "critical": true,
       "endpoint": "/api/auto-success/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "stream",
@@ -136,9 +136,9 @@
       "role": "real-time",
       "critical": false,
       "endpoint": "/api/stream/clients",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "cloud",
@@ -146,9 +146,9 @@
       "role": "cloud-connector",
       "critical": true,
       "endpoint": "/api/cloud/status",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "memory",
@@ -156,9 +156,9 @@
       "role": "context-store",
       "critical": false,
       "endpoint": "/api/memory/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "config",
@@ -166,9 +166,9 @@
       "role": "configuration",
       "critical": false,
       "endpoint": "/api/config/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "system",
@@ -176,9 +176,9 @@
       "role": "system-info",
       "critical": false,
       "endpoint": "/api/system/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     },
     {
       "id": "nodes",
@@ -186,54 +186,16 @@
       "role": "ai-node-registry",
       "critical": false,
       "endpoint": "/api/nodes/health",
-      "lastScanHealthy": true,
-      "lastScanLatencyMs": 1,
-      "lastScannedAt": "2026-02-25T10:44:58.224Z"
+      "lastScanHealthy": false,
+      "lastScanLatencyMs": null,
+      "lastScannedAt": "2026-02-25T10:59:22.846Z"
     }
   ],
-  "cloudProviders": {
-    "cloudflare": {
-      "status": "active",
-      "services": [
-        "DNS",
-        "Tunnel",
-        "Workers",
-        "KV",
-        "Vectorize",
-        "Pages",
-        "Access"
-      ]
-    },
-    "google": {
-      "status": "configured",
-      "services": [
-        "Vertex AI",
-        "Cloud Run",
-        "Colab T4/A100",
-        "Cloud Storage"
-      ]
-    },
-    "github": {
-      "status": "active",
-      "services": [
-        "Repositories",
-        "Actions CI/CD",
-        "Pages"
-      ]
-    },
-    "litellm": {
-      "status": "active",
-      "gateway": "api.headysystems.com",
-      "services": [
-        "Multi-Model Proxy",
-        "Key Management"
-      ]
-    }
-  },
+  "cloudProviders": {},
   "patternsSummary": {
-    "circuitBreakers": 5,
-    "pools": 3,
-    "caches": 2
+    "circuitBreakers": 0,
+    "pools": 0,
+    "caches": 0
   },
   "bestPracticeScores": {
     "resilience": {
@@ -256,29 +218,29 @@
     },
     "monitoring": {
       "name": "Service Health Monitoring",
-      "score": 1,
-      "optimal": true,
-      "recommendation": "All services reporting healthy"
+      "score": 0,
+      "optimal": false,
+      "recommendation": "19 services are unhealthy — investigate immediately"
     },
     "redundancy": {
       "name": "Failover & Graceful Degradation",
-      "score": 1,
-      "optimal": true,
-      "recommendation": "Full redundancy active — system self-heals"
+      "score": 0.5,
+      "optimal": false,
+      "recommendation": "Enable missing failover capabilities"
     },
     "cloudCoverage": {
       "name": "External Cloud Integration",
-      "score": 0.75,
+      "score": 0,
       "optimal": false,
-      "recommendation": "Configure inactive providers: google"
+      "recommendation": "All external cloud providers active"
     },
     "autoSuccess": {
       "name": "Background Task Engine Coverage",
-      "score": 1,
-      "optimal": true,
-      "recommendation": "Auto-Success 100 is cycling — system continuously improving"
+      "score": 0,
+      "optimal": false,
+      "recommendation": "Start the Auto-Success engine for continuous background optimization"
     }
   },
-  "overallSystemScore": 0.54,
-  "lastDeepScan": "2026-02-25T10:44:58.224Z"
+  "overallSystemScore": 0.07,
+  "lastDeepScan": "2026-02-25T10:59:22.846Z"
 }
