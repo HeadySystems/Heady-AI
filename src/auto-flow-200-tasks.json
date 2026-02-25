@@ -1,5 +1,165 @@
 [
   {
+    "id": "ide-sync-001",
+    "name": "Deep Proxy Interception (mitmproxy)",
+    "cat": "integration",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Upgrade proxy workflow with mitmproxy to inject local Heady CA cert into Windsurf, forcing 100% of WebSocket and HTTP/2 traffic through HeadyConductor to fix Issue #43."
+  },
+  {
+    "id": "ide-sync-002",
+    "name": "Shift-Left Monte Carlo Validation",
+    "cat": "development",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Create a local git hook to run a lightweight Monte Carlo simulation on local commits or large AI generation, rendering 'Deployment Risk Score' in IDE."
+  },
+  {
+    "id": "ide-sync-003",
+    "name": "AST-Aware 'Arena Merge'",
+    "cat": "development",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Equip nodes to parse the Abstract Syntax Tree (AST) of conflicting branches to logically resolve parallel Arena Merge conflicts without breaking code structure."
+  },
+  {
+    "id": "ide-sync-004",
+    "name": "LSP Integration for BRAIN",
+    "cat": "intelligence",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Equip the BRAIN node with an LSP client (pygls/vscode-languageserver-node) for native workspace awareness, reading cursor positions and repo-wide diagnostics."
+  },
+  {
+    "id": "ide-sync-005",
+    "name": "OpenTelemetry Tracing for LENS",
+    "cat": "telemetry",
+    "pool": "warm",
+    "w": 3,
+    "desc": "Enable the CONDUCTOR to emit OpenTelemetry traces for agent hops, allowing the LENS node to render a live 3D flow map of Sacred Geometry coding tasks."
+  },
+  {
+    "id": "ide-sync-006",
+    "name": "Policy-as-Code for SOUL (OPA/Cedar)",
+    "cat": "governance",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Implement Open Policy Agent (OPA) or AWS Cedar for the SOUL node to allow millisecond-fast, deterministic vetos without consuming LLM token inference."
+  },
+  {
+    "id": "ide-sync-007",
+    "name": "GraphRAG Spatial Mapping for MEMORY",
+    "cat": "duckdb-memory",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Equip the MEMORY node with an MCP connection to a Knowledge Graph (Neo4j/Memgraph) to map relationships spatially across concepts, replacing linear vector queries."
+  },
+  {
+    "id": "ide-sync-008",
+    "name": "Durable Execution for INTELLIGENCE (Temporal.io)",
+    "cat": "liquid-federation",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Wrap the INTELLIGENCE node's parallel DAG scheduler in Temporal.io to prevent race conditions and seamlessly resume paused multi-agent refactors."
+  },
+  {
+    "id": "ide-sync-009",
+    "name": "eBPF System Tracing for LENS",
+    "cat": "monitoring",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Enable LENS to perform OS kernel-level tracing using eBPF (Cilium/Pixie) for zero-overhead observability across network requests and data structures."
+  },
+  {
+    "id": "cmdctr-001",
+    "name": "Deploy CPU Command Center",
+    "cat": "ops",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Deploy LiteLLM, Redis, Cloudflared, Uptime Kuma, Dozzle, and Watchtower to /opt/heady-stack on Bossgame node."
+  },
+  {
+    "id": "cmdctr-002",
+    "name": "Configure LiteLLM Gateway Routing",
+    "cat": "edge-routing",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Apply configs/cmd-center-litellm.yaml to route Tier 1 to Colab Pro nodes and Tier 2 failover to Groq."
+  },
+  {
+    "id": "cmdctr-003",
+    "name": "Configure Uptime Kuma Hub",
+    "cat": "telemetry",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Setup Uptime Kuma monitors for Colab node health checks and configure alerting to Slack/Discord."
+  },
+  {
+    "id": "cmdctr-004",
+    "name": "Secure Control Plane IP",
+    "cat": "security",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Ensure routing logic and business IP are isolated behind firewall and Cloudflare Tunnel on the physical Mini PC."
+  },
+  {
+    "id": "cmdctr-005",
+    "name": "Expose Status Dashboard",
+    "cat": "security",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Write Cloudflared config block to securely expose Uptime Kuma (port 3001) to the internet via Zero Trust login."
+  },
+  {
+    "id": "frontier-killer-001",
+    "name": "Mycelial Context Sharing Protocol",
+    "cat": "intelligence",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Surpass OpenAI's shared context by implementing fractal, mycelial memory where agents organically absorb context from adjacent workflows without rigid API schemas."
+  },
+  {
+    "id": "frontier-killer-002",
+    "name": "Sub-Swarm Autonomous Compute Bidding",
+    "cat": "liquid-federation",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Obsolete centralized orchestration (Frontier) by allowing Heady nodes to dynamically bid on and negotiate compute resources via token-burn autonomously."
+  },
+  {
+    "id": "frontier-killer-003",
+    "name": "Quantum DOM Prediction Engine",
+    "cat": "vision",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Surpass OpenAI Operator's sequential UI clicking by analyzing the DOM AST to probabilistically predict and execute 3-hop interactions concurrently."
+  },
+  {
+    "id": "frontier-killer-004",
+    "name": "Real-Time Synaptic Pruning",
+    "cat": "duckdb-memory",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Go beyond Frontier's evaluation loops by dynamically pruning unused vector paths and physically re-weighting memory connections during live sessions."
+  },
+  {
+    "id": "frontier-killer-005",
+    "name": "Homomorphic Encryption Reasoning",
+    "cat": "pqc-security",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Obliterate enterprise privacy limits by enabling the BRAIN to perform multi-hop reasoning over cryptographically encrypted memory states without decryption."
+  },
+  {
+    "id": "frontier-killer-006",
+    "name": "Ambient IoT Mesh Manifestation",
+    "cat": "integration",
+    "pool": "cold",
+    "w": 3,
+    "desc": "Extend agents beyond screen-based enterprise workflows by mapping Heady decisions into physical ambient IoT states within the HeadyConnection network."
+  },
+  {
     "id": "strategic-001",
     "name": "Implement Lookahead Routing",
     "cat": "intelligence",
