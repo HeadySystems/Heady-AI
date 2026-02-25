@@ -1,31 +1,5 @@
 [
   {
-    "taskId": "health-001",
-    "taskName": "System Health Analysis",
-    "category": "health",
-    "response": "Here are the top 3 health risks for your Node.js system with 18 PM2 processes and Cloudflare Tunnels, along with specific, actionable mitigation strategies:\n\n---\n\n**",
-    "engine": "heady-multimodal",
-    "model": "gemini-2.5-flash",
-    "quality": 65,
-    "latencyMs": 5867,
-    "beeId": "bee-forager-2",
-    "role": "forager",
-    "ts": "2026-02-24T19:56:42.476Z"
-  },
-  {
-    "taskId": "infra-001",
-    "taskName": "PM2 Configuration Optimization",
-    "category": "infrastructure",
-    "response": "Here's an optimized PM2 ecosystem config for your 18 Node.js processes on a 4GB RAM, 4 CPU core machine. This assumes your 18 processes are",
-    "engine": "heady-multimodal",
-    "model": "gemini-2.5-flash",
-    "quality": 65,
-    "latencyMs": 6390,
-    "beeId": "bee-nurse-5",
-    "role": "nurse",
-    "ts": "2026-02-24T19:56:42.999Z"
-  },
-  {
     "taskId": "human-002",
     "taskName": "Six Sigma Error Budget",
     "category": "health",
@@ -6498,5 +6472,31 @@
     "beeId": "bee-forager-3",
     "role": "forager",
     "ts": "2026-02-25T00:49:43.033Z"
+  },
+  {
+    "taskId": "human-002",
+    "taskName": "Six Sigma Error Budget",
+    "category": "health",
+    "response": "Heady AI, reporting for duty. Here's your Six Sigma analysis:\n\n**1. Calculate Sigma Level (Current State)**\n\n*   **Assumption:** \"45 forages\" represents",
+    "engine": "heady-multimodal",
+    "model": "gemini-2.5-flash",
+    "quality": 65,
+    "latencyMs": 9895,
+    "beeId": "bee-scout-4",
+    "role": "scout",
+    "ts": "2026-02-25T00:51:17.500Z"
+  },
+  {
+    "taskId": "infra-001",
+    "taskName": "PM2 Configuration Optimization",
+    "category": "infrastructure",
+    "response": "```yaml\napps:\n  - name: \"my-nodejs-app\"\n    script: \"app.js\"\n    exec_mode: \"cluster\" # Use cluster mode for CPU",
+    "engine": "heady-multimodal",
+    "model": "gemini-2.5-flash",
+    "quality": 55,
+    "latencyMs": 10137,
+    "beeId": "bee-nurse-5",
+    "role": "nurse",
+    "ts": "2026-02-25T00:51:17.742Z"
   }
 ]
