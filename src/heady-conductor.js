@@ -317,7 +317,35 @@ class HeadyConductor extends EventEmitter {
 // ─── Singleton ──────────────────────────────────────────────────────
 let _conductor = null;
 function getConductor() {
-    if (!_conductor) _conductor = new HeadyConductor();
+    if (!_conductor) {
+        _conductor = new HeadyConductor();
+
+        // ═══ AUTO-WIRE: DuckDB V2 Vector Memory ═══
+        try {
+            const duckdbMem = require('./intelligence/duckdb-memory');
+            duckdbMem.init().then(() => {
+                _conductor.setVectorMemory(duckdbMem);
+                console.log("  🧠 [Conductor] DuckDB V2 Vector Memory WIRED for zone-aware routing.");
+            }).catch(err => {
+                console.warn(`  ⚠️ [Conductor] DuckDB init deferred: ${err.message}`);
+            });
+        } catch (e) {
+            console.warn(`  ⚠️ [Conductor] DuckDB not available: ${e.message}`);
+        }
+
+        // ═══ AUTO-WIRE: Secret Rotation Audit ═══
+        try {
+            const { SecretRotation } = require('./security/secret-rotation');
+            const sr = new SecretRotation();
+            const audit = sr.audit();
+            console.log(`  🔐 [Conductor] Secret Rotation Audit: ${audit.score} healthy (${audit.total} tracked, ${audit.expired.length} expired)`);
+            if (audit.expired.length > 0) {
+                console.warn(`  ⚠️ [Conductor] EXPIRED SECRETS: ${audit.expired.map(s => s.name).join(', ')}`);
+            }
+        } catch (e) {
+            console.warn(`  ⚠️ [Conductor] Secret rotation audit skipped: ${e.message}`);
+        }
+    }
     return _conductor;
 }
 

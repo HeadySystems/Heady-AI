@@ -22,11 +22,13 @@ const ALLOWED_ORIGINS = [
     'https://app.headysystems.com',
     'https://dashboard.headysystems.com',
     'https://api.headysystems.com',
-    // Development
-    'http://localhost:3000',
-    'http://localhost:3301',
-    'http://localhost:5173',
-    'http://localhost:9000',
+    // Development (only in non-production environments)
+    ...(process.env.NODE_ENV !== 'production' ? [
+        `http://${process.env.DEV_HOST || '0.0.0.0'}:3000`,
+        `http://${process.env.DEV_HOST || '0.0.0.0'}:3301`,
+        `http://${process.env.DEV_HOST || '0.0.0.0'}:5173`,
+        `http://${process.env.DEV_HOST || '0.0.0.0'}:9000`,
+    ] : []),
 ];
 
 // Dynamic origin matcher for wildcard subdomains

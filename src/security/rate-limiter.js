@@ -1,7 +1,7 @@
 const Redis = require('ioredis');
 
 // Connect to local redis instance orchestrator
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL || 'redis://127.0.0.1:6379');
 
 const RATE_LIMIT_WINDOW_SECS = 60; // 1 minute window
 const MAX_REQUESTS_PER_WINDOW = 120; // 120 requests per minute
