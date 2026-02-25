@@ -1,5 +1,85 @@
 [
   {
+    "id": "enterprise-001",
+    "name": "Cryptographic Purge & Credential Rotation",
+    "cat": "security",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Execute BFG Repo-Cleaner to scrub all .env, .jsonl, and PID artifacts from Git history and enforce zero-trust credential rotation."
+  },
+  {
+    "id": "enterprise-002",
+    "name": "GHAS & CI/CD Pipeline Hardening",
+    "cat": "ops",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Integrate GitHub Advanced Security, SAST, Dependabot, and Renovate bots to block merges failing vulnerability or secret scans."
+  },
+  {
+    "id": "enterprise-003",
+    "name": "Heady Hive SDK Standardization",
+    "cat": "integration",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Standardize heady-hive-sdk as the mandatory routing, budgeting, and receipt-generating library for all model interactions."
+  },
+  {
+    "id": "enterprise-004",
+    "name": "MCP Verified Connector Studio",
+    "cat": "governance",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Enforce default-deny tool allowlists and mandatory JSON schema argument validation for all MCP plugins to secure the moat."
+  },
+  {
+    "id": "enterprise-005",
+    "name": "Policy Plane Activation (Human-on-the-Loop)",
+    "cat": "governance",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Transition HeadyValidator to enforce user-facing interstitial approval queues for high-stakes autonomous execution."
+  },
+  {
+    "id": "enterprise-006",
+    "name": "Qdrant H3VP Memory Solidification",
+    "cat": "duckdb-memory",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Eliminate fallbacks and make Qdrant-backed H3VP memory highly available with strict query, export, and delete capabilities."
+  },
+  {
+    "id": "enterprise-007",
+    "name": "FinOps Budget Router Execution",
+    "cat": "optimization",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Implement a cost-aware routing engine that delegates simple tasks to local models (Ollama) and reserves high-tier APIs for deep reasoning."
+  },
+  {
+    "id": "enterprise-008",
+    "name": "Immutable 'Proof View' Receipts",
+    "cat": "telemetry",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Generate cryptographic receipts for every action showing intent, routing decisions, tools executed, and exact transaction costs."
+  },
+  {
+    "id": "enterprise-009",
+    "name": "Corporate Procurement Agent Packs",
+    "cat": "mission",
+    "pool": "cold",
+    "w": 3,
+    "desc": "Develop vertical-specific orchestration bundles for corporate procurement and SRE incident response to dominate high-value markets."
+  },
+  {
+    "id": "enterprise-010",
+    "name": "Turborepo & Semantic Versioning",
+    "cat": "ops",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Integrate Turborepo, release-please, and Helm to automate semantic versioning and eliminate monorepo deployment friction."
+  },
+  {
     "id": "ide-sync-001",
     "name": "Deep Proxy Interception (mitmproxy)",
     "cat": "integration",
