@@ -35,11 +35,17 @@ const fs = require("fs");
 const path = require("path");
 
 // ─── Security Layer (PQC + Handshake) ────────────────────────────────
-let headyPQC, Handshake;
-try {
-    headyPQC = require("./security/pqc").headyPQC;
-    Handshake = require("./security/handshake");
-} catch { headyPQC = null; Handshake = null; }
+const { headyPQC } = require("./security/pqc");
+const Handshake = require("./security/handshake");
+const rateLimiter = require("./security/rate-limiter");
+
+if (!headyPQC || !Handshake) {
+    console.error("🚨 [FATAL] PQC or Handshake modules missing. Core IP protection degraded. Halting Conductor.");
+    process.exit(1);
+}
+
+console.log("🛡️ [Conductor] PQC Quantum-Resistant Hybrid Signatures ACTIVE for all mesh RPCs.");
+console.log("🛡️ [Conductor] Redis Sliding-Window Rate Limiter Armed.");
 
 const PHI = 1.6180339887;
 const AUDIT_PATH = path.join(__dirname, "..", "data", "conductor-audit.jsonl");
@@ -153,9 +159,16 @@ class HeadyConductor extends EventEmitter {
      * @param {Object} task - { action, payload }
      * @returns {Object} - { serviceGroup, vectorZone, pattern, weight, routeId }
      */
-    async route(task) {
+    async route(task, requestIp = '127.0.0.1') {
         const start = Date.now();
         const action = task.action || "unknown";
+
+        // ── 0. DEFENSE IN DEPTH (Rate Limiting) ──
+        const limitStatus = await rateLimiter.checkLimit(requestIp, action);
+        if (!limitStatus.allowed) {
+            console.warn(`⛔ [DEFENSE] Conductor blocked request from ${requestIp}. Reason: ${limitStatus.reason}`);
+            throw new Error(`429 Too Many Requests: ${limitStatus.reason}. Retry after ${limitStatus.retryAfter}s`);
+        }
 
         // ── 1. SERVICE GROUP (absorbed DynamicRouter) ──
         const serviceGroup = ROUTING_TABLE[action] || "reasoning";

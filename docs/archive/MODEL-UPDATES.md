@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Systems - Advanced Model Integration Update
 
 ## 🎯 MODEL UPGRADES COMPLETED!
@@ -88,9 +93,9 @@ cd /home/headyme/CascadeProjects
 podman compose -f docker-compose.heady-all-models.yml up -d
 
 # Verify new models
-curl http://localhost:4800/health  # Claude Opus 4.6
-curl http://localhost:5600/health  # Gemini 3.1 Pro
-curl http://localhost:5800/health  # GPT-Codex 5.3
+curl https://api.headysystems.com/health  # Claude Opus 4.6
+curl https://api.headysystems.com/health  # Gemini 3.1 Pro
+curl https://api.headysystems.com/health  # GPT-Codex 5.3
 ```
 
 ## 🎉 ADVANTAGES OF NEW MODELS

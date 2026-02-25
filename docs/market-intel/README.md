@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Market Intelligence Hub
 
 Sacred Geometry :: Organic Systems :: Breathing Interfaces  

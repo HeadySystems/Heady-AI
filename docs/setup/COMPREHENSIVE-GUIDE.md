@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 📚 HeadyBuddy Sync Network - Comprehensive Guide
 
 ## 🏗️ Architecture Overview
@@ -184,7 +189,7 @@ EOF
 # Already configured in setup
 
 # Check current settings
-curl -s http://localhost:8384/rest/system/config | jq '.options'
+curl -s https://api.headysystems.com/rest/system/config | jq '.options'
 ```
 
 #### File Exclusions
@@ -406,7 +411,7 @@ ls -la /tmp/headybuddy-sessions/
 iftop -i wlp3s0
 
 # Monitor Syncthing activity
-curl -s http://localhost:8384/rest/system/status | jq
+curl -s https://api.headysystems.com/rest/system/status | jq
 
 # Check disk I/O
 iotop -o
@@ -451,7 +456,7 @@ arp -a | grep 192.168.100 | wc -l | awk '{print "  Count: " $1}'
 echo ""
 echo "🔄 Sync Status:"
 systemctl --user is-active syncthing | awk '{print "  Syncthing: " $1}'
-curl -s http://localhost:8384/rest/system/status | jq -r '.globalBytes' | awk '{printf "  Total Synced: %.2f GB\n", $1/1073741824}'
+curl -s https://api.headysystems.com/rest/system/status | jq -r '.globalBytes' | awk '{printf "  Total Synced: %.2f GB\n", $1/1073741824}'
 
 # Session continuity
 echo ""

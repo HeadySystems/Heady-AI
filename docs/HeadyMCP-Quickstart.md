@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # HeadyMCP — API Quickstart Guide
 
 **Heady Systems, Inc.** | [headymcp.com](https://headymcp.com) | [headysystems.com](https://headysystems.com)

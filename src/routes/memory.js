@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * HeadyMemory — 3D Persistent Vector Memory System
  * The core differentiator for HeadyBuddy. Every memory is either

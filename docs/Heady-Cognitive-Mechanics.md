@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Cognitive Mechanics & Philosophy
 
 This document contains the foundational philosophy for the Heady Project, defining how the system's architecture mirrors optimal human consciousness and energy allocation.

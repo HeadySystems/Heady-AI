@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — Operating Model
 
 > How Heady ships: Arena Mode, branch gating, quality gates, cadences, and Proof View.  

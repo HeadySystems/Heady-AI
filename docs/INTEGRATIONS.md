@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Integration Ecosystem Map
 
 > Generated: 2026-02-23 | 4 Colab Pro+ Plans | $600 GCloud Credits

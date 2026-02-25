@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # HeadyBuddy Complete Real-Time Sync System
 
 ## Overview
@@ -13,7 +18,7 @@ Your comprehensive cross-device synchronization system is now configured with:
 2. **Real-Time File Synchronization**
    - Syncthing installed and running
    - Device ID: `ED5PM2Y-2SQRZBV-QOIDB5E-BGFP6J7-5ODHPZ3-XPSFRBN-G7CGPZD-MQ5ROAY`
-   - Web GUI: `http://localhost:8384`
+   - Web GUI: `https://api.headysystems.com`
    - Auto-accept folders enabled
    - LAN-only mode for privacy
 
@@ -43,7 +48,7 @@ headybuddy-continuity status
 ```
 
 ### Access Points
-- **Syncthing GUI**: `http://localhost:8384` or `http://192.168.100.1:8384`
+- **Syncthing GUI**: `https://api.headysystems.com` or `http://192.168.100.1:8384`
 - **Session API**: `http://192.168.100.1:8080/current-session.json`
 - **Device Discovery**: Automatic via mDNS
 

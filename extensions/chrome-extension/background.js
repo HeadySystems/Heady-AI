@@ -1,9 +1,14 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Heady Chrome Extension — Background Service Worker
  * Sets up context menus, keyboard shortcuts, and side panel
  */
 
-const HEADY_API = "http://127.0.0.1:3301/api";
+const HEADY_API = "http://api.headysystems.com/api";
 
 // ── Context Menus ──
 chrome.runtime.onInstalled.addListener(() => {

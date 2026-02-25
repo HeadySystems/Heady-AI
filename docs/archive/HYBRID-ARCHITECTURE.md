@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Systems - Hybrid Cloud Architecture Guide
 
 ## 🎯 HYBRID SETUP STRATEGIES
@@ -481,9 +486,9 @@ cd /home/headyme/CascadeProjects
 podman compose -f docker-compose.local.yml up -d
 
 # Verify local services
-curl http://localhost:3300/health  # HeadyBrain
-curl http://localhost:3700/health  # HeadyBattle
-curl http://localhost:4700/health  # AI Gateway
+curl https://api.headysystems.com/health  # HeadyBrain
+curl https://api.headysystems.com/health  # HeadyBattle
+curl https://api.headysystems.com/health  # AI Gateway
 ```
 
 ### **☁️ Deploy Cloud Services:**
@@ -501,15 +506,15 @@ wrangler deploy
 ### **🔄 Test Hybrid Setup:**
 ```bash
 # Test local service
-curl http://localhost:4700/api/local/brain/status
+curl https://api.headysystems.com/api/local/brain/status
 
 # Test cloud AI service
-curl http://localhost:4700/api/ai/claude/generate \
+curl https://api.headysystems.com/api/ai/claude/generate \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Generate Heady system code"}'
 
 # Test heavy processing
-curl http://localhost:4700/api/heavy/process \
+curl https://api.headysystems.com/api/heavy/process \
   -H "Content-Type: application/json" \
   -d '{"type": "code_generation", "prompt": "Complex algorithm"}'
 ```

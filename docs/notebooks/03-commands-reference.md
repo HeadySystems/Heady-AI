@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Commands & Services Reference
 
 > **NotebookLM Source Document — Notebook 3 of 3**
@@ -67,7 +72,7 @@ podman run -d --name heady-manager-local \
 ### Verify Everything Works
 
 ```bash
-curl -4 http://127.0.0.1:3301/api/soul/health
+curl -4 http://api.headysystems.com/api/soul/health
 # → {"status":"ACTIVE","service":"heady-soul"}
 ```
 
@@ -82,7 +87,7 @@ Add to `~/.config/windsurf/mcp_config.json`:
     "args": ["src/mcp/heady-mcp-server.js"],
     "cwd": "/home/headyme/Heady",
     "env": {
-      "HEADY_MANAGER_URL": "http://127.0.0.1:3301",
+      "HEADY_MANAGER_URL": "http://api.headysystems.com",
       "NODE_ENV": "production"
     }
   }
@@ -216,8 +221,8 @@ GET  /api/orchestrator/layers    → List active layers
 |----------|---------|---------|
 | `NODE_ENV` | Environment mode | `production` |
 | `PORT` | Server port | `3300` |
-| `HEADY_MANAGER_URL` | Manager URL for MCP | `http://127.0.0.1:3301` |
-| `HEADY_BRAIN_URL` | Brain service URL | `http://127.0.0.1:3301` |
+| `HEADY_MANAGER_URL` | Manager URL for MCP | `http://api.headysystems.com` |
+| `HEADY_BRAIN_URL` | Brain service URL | `http://api.headysystems.com` |
 | `HEADY_API_KEY` | API authentication key | `heady_api_key_001` |
 | `NOTION_TOKEN` | Notion integration token | `ntn_...` |
 | `ANTHROPIC_API_KEY` | Claude API key | `sk-ant-...` |
@@ -259,7 +264,7 @@ podman run -d --name heady-manager-local \
 
 ```bash
 # Use IPv4 explicitly (container binds 0.0.0.0, not ::1)
-curl -4 http://127.0.0.1:3301/api/soul/health
+curl -4 http://api.headysystems.com/api/soul/health
 ```
 
 ### Memory fallback warning
@@ -267,7 +272,7 @@ curl -4 http://127.0.0.1:3301/api/soul/health
 The system logs when vector DB (Ollama) is unavailable and falls back to hash-based pseudo-embeddings. Check priorities:
 
 ```bash
-curl -4 http://127.0.0.1:3301/api/brain/memory-receipts
+curl -4 http://api.headysystems.com/api/brain/memory-receipts
 ```
 
 ### MCP tools not responding
@@ -275,5 +280,5 @@ curl -4 http://127.0.0.1:3301/api/brain/memory-receipts
 Verify the MCP server can reach the manager:
 
 ```bash
-HEADY_MANAGER_URL=http://127.0.0.1:3301 node src/mcp/heady-mcp-server.js
+HEADY_MANAGER_URL=http://api.headysystems.com node src/mcp/heady-mcp-server.js
 ```

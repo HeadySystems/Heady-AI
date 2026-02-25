@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Impact Meter - End-to-End Example
 
 This example demonstrates how HeadyVinci, HeadyQA, HeadyRisk, and HeadyCheck work together to design, implement, and deploy a cross-platform feature.

@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Heady Graceful Shutdown — Clean lifecycle management
  * Handles SIGTERM, SIGINT, uncaught exceptions, and unhandled rejections.

@@ -1,3 +1,6 @@
+# © 2026 Heady Systems LLC.
+# PROPRIETARY AND CONFIDENTIAL.
+# Unauthorized copying, modification, or distribution is strictly prohibited.
 #!/usr/bin/env bash
 # HEADY_BRAND:BEGIN
 # ╔══════════════════════════════════════════════════════════════════╗

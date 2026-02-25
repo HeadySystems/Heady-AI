@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — 17 Vertical Playbooks
 
 > Each vertical ships on the same core primitives: Proof View, Policy Ladder, Connector Trust Model, Arena Mode.  

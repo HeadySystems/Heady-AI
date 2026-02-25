@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * ═══ Deploy Gates — Fail-Closed — SPEC-2 ═══
  * Every deploy must pass ALL gates or it is rejected.

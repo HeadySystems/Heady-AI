@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚨 **WEBSITE CRITICAL DIAGNOSIS REPORT**
 
 **Date**: February 19, 2026  
@@ -123,13 +128,13 @@ credentials-file: ~/.cloudflared/heady-dev-tunnel.json
 
 ingress:
   - hostname: dev.headyme.com
-    service: http://localhost:3000
+    service: https://api.headysystems.com
   - hostname: dev-api.headyme.com
-    service: http://localhost:3300
+    service: https://api.headysystems.com
   - hostname: dev.headysystems.com
-    service: http://localhost:3010
+    service: https://api.headysystems.com
   - hostname: dev-api.headysystems.com
-    service: http://localhost:3310
+    service: https://api.headysystems.com
 ```
 
 ---

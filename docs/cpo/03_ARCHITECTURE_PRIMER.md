@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — Architecture Primer (CPO Altitude)
 
 > How the system works: components, AI routing, service mesh, execution lifecycle.  

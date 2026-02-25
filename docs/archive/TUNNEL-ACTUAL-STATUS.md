@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🔥 **FUCKING CLOUDFLARE TUNNELS - ACTUAL STATUS**
 
 ## **✅ WHAT'S ACTUALLY WORKING NOW:**
@@ -30,7 +35,7 @@
 
 ### **Check Local Service:**
 ```bash
-curl http://localhost:8080
+curl https://api.headysystems.com
 # Should return HTML content
 ```
 
@@ -40,7 +45,7 @@ curl http://localhost:8080
 pkill -f cloudflared
 
 # Start with explicit origin
-cloudflared tunnel --url http://localhost:8080 --hostname tunnel.headyme.com
+cloudflared tunnel --url https://api.headysystems.com --hostname tunnel.headyme.com
 ```
 
 ### **Or Use Direct Method:**
@@ -52,8 +57,8 @@ http://10.1.5.65:8080
 ## **📊 WORKING vs NOT WORKING:**
 
 ### **✅ ACTUALLY WORKING:**
-- http://localhost:8080 ✅
-- http://localhost:3000 ✅  
+- https://api.headysystems.com ✅
+- https://api.headysystems.com ✅  
 - http://10.1.5.65:8080 ✅
 - http://10.1.5.65:3000 ✅
 - Cloudflare tunnel connection ✅

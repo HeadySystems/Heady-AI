@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Strategic Intel — Pros/Cons Transformation Playbook
 >
 > Source: Gemini 2026-02-24 argumentative analysis

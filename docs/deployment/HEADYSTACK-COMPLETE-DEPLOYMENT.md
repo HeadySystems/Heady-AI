@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 HEADYSTACK COMPLETE DEPLOYMENT GUIDE
 ## Parrot OS 7 + Windsurf + HeadyBuddy Sync Network Integration
 
@@ -62,7 +67,7 @@ sudo ./alternative-mesh-setup.sh && headybuddy-continuity start
 headybuddy-continuity status
 
 # Access services
-# Syncthing GUI: http://localhost:8384
+# Syncthing GUI: https://api.headysystems.com
 # Session API: http://192.168.100.1:8080
 # WiFi: HeadyBuddySync (password: headybuddy2026)
 ```
@@ -156,14 +161,14 @@ node scripts/migrate-localhost-to-domains.js --verify-only  # Validation
 ```bash
 # Add internal domain mappings
 sudo tee -a /etc/hosts << 'EOF'
-127.0.0.1 manager.dev.local.heady.internal
-127.0.0.1 app-web.dev.local.heady.internal
-127.0.0.1 tools-mcp.dev.local.heady.internal
-127.0.0.1 sync-headybuddy.dev.local.heady.internal
-127.0.0.1 session-api.dev.local.heady.internal
-127.0.0.1 db-postgres.dev.local.heady.internal
-127.0.0.1 db-redis.dev.local.heady.internal
-127.0.0.1 ai-ollama.dev.local.heady.internal
+api.headysystems.com manager.dev.local.heady.internal
+api.headysystems.com app-web.dev.local.heady.internal
+api.headysystems.com tools-mcp.dev.local.heady.internal
+api.headysystems.com sync-headybuddy.dev.local.heady.internal
+api.headysystems.com session-api.dev.local.heady.internal
+api.headysystems.com db-postgres.dev.local.heady.internal
+api.headysystems.com db-redis.dev.local.heady.internal
+api.headysystems.com ai-ollama.dev.local.heady.internal
 EOF
 
 # Verify DNS resolution

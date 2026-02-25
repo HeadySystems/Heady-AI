@@ -110,7 +110,7 @@
             "properties": {
                 "heady.apiUrl": {
                     "type": "string",
-                    "default": "http://127.0.0.1:3301",
+                    "default": "http://api.headysystems.com",
                     "description": "HeadyManager API URL"
                 },
                 "heady.apiKey": {

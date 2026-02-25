@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 #!/usr/bin/env node
 /**
  * heady-output-lint.js — Scans for forbidden patterns in Heady codebase

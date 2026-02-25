@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🎯 HeadyBuddy Branded Device IDs
 
 ## Your New Branded Network
@@ -36,7 +41,7 @@ Your sync network now uses human-readable, branded device IDs instead of random 
    ```
 
 3. **Connect devices** in Syncthing:
-   - Open `http://localhost:8384` on primary device
+   - Open `https://api.headysystems.com` on primary device
    - Click "Add Remote Device"
    - Enter the new device's branded ID
    - Select folders to sync
@@ -49,7 +54,7 @@ Your sync network now uses human-readable, branded device IDs instead of random 
 # Output:
 # Device ID: HEADY-5ec81fb-829adc4-8360e38-72e57e5-c7d1
 # Device Name: HeadyBuddy-Laptop
-# Web GUI: http://localhost:8384
+# Web GUI: https://api.headysystems.com
 ```
 
 ## 📁 Folder Sync Configuration

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # The Heady Project: Daily Manifest
 
 **Purpose**: To force a split-second decision on every input and track the "Resolution" of your active projects.

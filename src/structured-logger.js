@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * ═══ Structured Logger — SPEC-5 ═══
  * JSON logging with request IDs, secret redaction, child loggers, Express middleware.

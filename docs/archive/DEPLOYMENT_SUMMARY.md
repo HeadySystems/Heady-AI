@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Systems Deployment Summary
 
 **Date**: February 19, 2026  
@@ -16,7 +21,7 @@
   - React 18 + Vite + TailwindCSS
   - Socket.io for real-time communication
 - **Access**: 
-  - Local: http://localhost:5181
+  - Local: https://api.headysystems.com
   - Production: https://buddy.headysystems.com
 - **Repository**: Ready for Git initialization
 
@@ -29,7 +34,7 @@
   - React 18 + Vite
   - Development tools integration
 - **Access**: 
-  - Local: http://localhost:5173 (planned)
+  - Local: https://api.headysystems.com (planned)
   - Production: https://ide.headysystems.com
 
 ### 🌐 **HeadyWeb** - Main Web Platform
@@ -40,7 +45,7 @@
   - React 18 + Vite + TailwindCSS
   - Service integration
 - **Access**: 
-  - Local: http://localhost:5174 (planned)
+  - Local: https://api.headysystems.com (planned)
   - Production: https://web.headysystems.com
 
 ---

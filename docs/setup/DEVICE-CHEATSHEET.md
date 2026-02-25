@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 📋 HeadyBuddy Device Cheatsheet
 
 ## 🎯 One-Liner Commands
@@ -58,17 +63,17 @@ journalctl --user -u syncthing -n 50 && echo "---" && sudo journalctl -u hostapd
 curl -X POST -H "X-API-Key: $(grep apiKey ~/.config/syncthing/config.xml | cut -d'"' -f4)" \
   -H "Content-Type: application/json" \
   -d '{"folder":{"id":"new-folder","path":"/path/to/folder","devices":[{"deviceID":"HEADY-6173818-5421911-e48cf7d-80c688d-1b48"}]}}' \
-  http://localhost:8384/rest/config/folders
+  https://api.headysystems.com/rest/config/folders
 ```
 
 ### List Current Folders
 ```bash
-curl -s http://localhost:8384/rest/config/folders | jq -r '.[].id'
+curl -s https://api.headysystems.com/rest/config/folders | jq -r '.[].id'
 ```
 
 ### Check Sync Progress
 ```bash
-curl -s http://localhost:8384/rest/system/status | jq '.globalBytes'
+curl -s https://api.headysystems.com/rest/system/status | jq '.globalBytes'
 ```
 
 ---
@@ -120,7 +125,7 @@ curl -f http://192.168.100.1:8080/current-session.json && echo "✅ Session API 
 
 ### Syncthing Not Connecting
 ```bash
-systemctl --user restart syncthing && sleep 5 && curl -s http://localhost:8384/rest/system/ping
+systemctl --user restart syncthing && sleep 5 && curl -s https://api.headysystems.com/rest/system/ping
 ```
 
 ### WiFi Hotspot Issues
@@ -149,7 +154,7 @@ watch -n 2 'iftop -i wlp3s0 -t -s 2'
 
 ### Sync Progress Monitor
 ```bash
-watch -n 5 'curl -s http://localhost:8384/rest/system/status | jq "{completed: .globalBytes, total: .globalBytes + .needBytes, percent: (.globalBytes / (.globalBytes + .needBytes) * 100) | round}"'
+watch -n 5 'curl -s https://api.headysystems.com/rest/system/status | jq "{completed: .globalBytes, total: .globalBytes + .needBytes, percent: (.globalBytes / (.globalBytes + .needBytes) * 100) | round}"'
 ```
 
 ### Device List Monitor
@@ -210,7 +215,7 @@ arp -a | grep 192.168.100 | awk '{print $2}' | sed 's/[()]//g' | while read ip; 
 
 ### Verify Encryption
 ```bash
-curl -s http://localhost:8384/rest/system/config | jq '.options | {localAnnounceEnabled, globalAnnounceEnabled, relaysEnabled}'
+curl -s https://api.headysystems.com/rest/system/config | jq '.options | {localAnnounceEnabled, globalAnnounceEnabled, relaysEnabled}'
 ```
 
 ---
@@ -229,7 +234,7 @@ systemctl --user stop syncthing && rm -rf ~/.cache/syncthing && systemctl --user
 
 ### Force Full Rescan
 ```bash
-curl -X POST http://localhost:8384/rest/db/scan?folder=*
+curl -X POST https://api.headysystems.com/rest/db/scan?folder=*
 ```
 
 ---
@@ -239,7 +244,7 @@ curl -X POST http://localhost:8384/rest/db/scan?folder=*
 ### Start: `sudo ./alternative-mesh-setup.sh && headybuddy-continuity start`
 ### Stop: `headybuddy-continuity stop && sudo systemctl stop hostapd dnsmasq`
 ### Status: `headybuddy-continuity status`
-### GUI: http://localhost:8384
+### GUI: https://api.headysystems.com
 ### API: http://192.168.100.1:8080
 ### WiFi: HeadyBuddySync / headybuddy2026
 

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # The Heady Project — What It Is and How It Works
 
 **A plain-language guide for anyone who wants to understand the Heady ecosystem.**

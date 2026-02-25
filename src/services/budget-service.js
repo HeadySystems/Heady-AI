@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * BudgetService — Core logic for AI cost governance.
  * Manages budget quotas, usage tracking, and automated down-shifting logic.

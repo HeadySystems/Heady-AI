@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Systems - Complete AI Model Integration Guide
 
 ## 🎯 YOU'RE ABSOLUTELY RIGHT! ALL MODELS SHOULD BE INTEGRATED!
@@ -159,27 +164,27 @@ cd /home/headyme/CascadeProjects
 podman compose -f docker-compose.heady-all-models.yml up -d
 
 # Verify all services
-curl http://localhost:4700/health  # HeadyCoder
-curl http://localhost:5400/health  # HeadyPerplexity
-curl http://localhost:5500/health  # HeadyOpenAI
-curl http://localhost:5600/health  # HeadyGemini
-curl http://localhost:5700/health  # HeadyGroq
+curl https://api.headysystems.com/health  # HeadyCoder
+curl https://api.headysystems.com/health  # HeadyPerplexity
+curl https://api.headysystems.com/health  # HeadyOpenAI
+curl https://api.headysystems.com/health  # HeadyGemini
+curl https://api.headysystems.com/health  # HeadyGroq
 ```
 
 ### **🎯 Test Model Integration**
 ```bash
 # Test research capabilities
-curl -X POST http://localhost:5400/research \
+curl -X POST https://api.headysystems.com/research \
   -H "Content-Type: application/json" \
   -d '{"query": "latest React best practices"}'
 
 # Test multimodal capabilities
-curl -X POST http://localhost:5600/vision \
+curl -X POST https://api.headysystems.com/vision \
   -H "Content-Type: application/json" \
   -d '{"image_url": "https://example.com/screenshot.png"}'
 
 # Test high-speed inference
-curl -X POST http://localhost:5700/inference \
+curl -X POST https://api.headysystems.com/inference \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Generate Python function for sorting"}'
 ```

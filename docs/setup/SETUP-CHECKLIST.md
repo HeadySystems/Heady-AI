@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # ✅ HeadyBuddy Setup Checklist
 
 ## 🚀 Pre-Setup Checklist
@@ -77,7 +82,7 @@ headybuddy-continuity start
 ping -c 3 192.168.100.1
 
 # Test Syncthing
-curl -s http://localhost:8384/rest/system/ping
+curl -s https://api.headysystems.com/rest/system/ping
 
 # Test session API
 curl -f http://192.168.100.1:8080/current-session.json
@@ -94,7 +99,7 @@ curl -f http://192.168.100.1:8080/current-session.json
 ### Primary Device
 - [ ] Device ID: `HEADY-6173818-5421911-e48cf7d-80c688d-1b48`
 - [ ] Name: HeadyBuddy Primary
-- [ ] Syncthing GUI: http://localhost:8384
+- [ ] Syncthing GUI: https://api.headysystems.com
 - [ ] All folders configured
 
 ### Additional Devices (as added)
@@ -206,7 +211,7 @@ sudo ufw status verbose | grep -E "(22000|21027|8080)"
 ### Encryption Check
 ```bash
 # Check Syncthing encryption
-curl -s http://localhost:8384/rest/system/config | jq '.options | {localAnnounceEnabled, globalAnnounceEnabled, relaysEnabled}'
+curl -s https://api.headysystems.com/rest/system/config | jq '.options | {localAnnounceEnabled, globalAnnounceEnabled, relaysEnabled}'
 ```
 
 - [ ] Local discovery enabled
@@ -232,7 +237,7 @@ ping -c 10 192.168.100.50
 ### Sync Performance
 ```bash
 # Monitor sync speed
-watch -n 2 'curl -s http://localhost:8384/rest/system/status | jq ".globalBytes"'
+watch -n 2 'curl -s https://api.headysystems.com/rest/system/status | jq ".globalBytes"'
 ```
 
 - [ ] Files sync within seconds
@@ -293,7 +298,7 @@ tar -czf headybuddy-setup-backup-$(date +%Y%m%d).tar.gz \
 
 ### ✅ **System is Ready When:**
 - WiFi hotspot "HeadyBuddySync" is active
-- Syncthing GUI accessible at http://localhost:8384
+- Syncthing GUI accessible at https://api.headysystems.com
 - Session API responding at http://192.168.100.1:8080
 - At least one additional device can connect
 - Files sync between devices within 10 seconds

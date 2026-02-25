@@ -793,18 +793,18 @@
             </div>
             <div class="code-content" id="code-panel-2" style="display:none">
                 <span class="cmt"># Chat with HeadyBrain via API</span><br>
-                <span class="fn">curl</span> <span class="str">-X POST</span> http://localhost:3301/api/brain/chat \<br>
+                <span class="fn">curl</span> <span class="str">-X POST</span> https://api.headysystems.com/api/brain/chat \<br>
                 &nbsp;&nbsp;<span class="str">-H</span> <span class="str">"Content-Type: application/json"</span> \<br>
                 &nbsp;&nbsp;<span class="str">-H</span> <span class="str">"Authorization: Bearer $HEADY_API_KEY"</span>
                 \<br>
                 &nbsp;&nbsp;<span class="str">-d</span> <span class="str">'{"prompt":"Analyze
                     architecture"}'</span><br><br>
                 <span class="cmt"># Check system health</span><br>
-                <span class="fn">curl</span> http://localhost:3301/api/health<br><br>
+                <span class="fn">curl</span> https://api.headysystems.com/api/health<br><br>
                 <span class="cmt"># Auto-success engine status (155 tasks)</span><br>
-                <span class="fn">curl</span> http://localhost:3301/api/auto-success/status<br><br>
+                <span class="fn">curl</span> https://api.headysystems.com/api/auto-success/status<br><br>
                 <span class="cmt"># Validate via HeadyBattle</span><br>
-                <span class="fn">curl</span> <span class="str">-X POST</span> http://localhost:3301/api/battle/validate
+                <span class="fn">curl</span> <span class="str">-X POST</span> https://api.headysystems.com/api/battle/validate
                 \<br>
                 &nbsp;&nbsp;<span class="str">-d</span> <span class="str">'{"change":"Added caching layer"}'</span>
             </div>

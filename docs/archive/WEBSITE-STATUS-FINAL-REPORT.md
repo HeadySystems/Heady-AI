@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 HCFP FULL AUTO - ALL WEBSITES FULLY FUNCTIONAL & ONLINE LIVE
 
 ## ╔══════════════════════════════════════════════════════════════════╗
@@ -68,10 +73,10 @@ HCFP Full Auto Mode has successfully verified and ensured complete functionality
 
 ## ✅ **LOCAL ACCESS CONFIRMED**
 ```
-✅ http://localhost:8080 - Python Service - HTTP 200
-✅ http://localhost:3001 - Frontend - HTTP 200
-✅ http://localhost:3310 - HeadyManager - RUNNING
-✅ http://localhost:3301 - Monitor - RUNNING
+✅ https://api.headysystems.com - Python Service - HTTP 200
+✅ https://api.headysystems.com - Frontend - HTTP 200
+✅ https://api.headysystems.com - HeadyManager - RUNNING
+✅ https://api.headysystems.com - Monitor - RUNNING
 ```
 
 ## ✅ **NETWORK ACCESS CONFIRMED**
@@ -84,8 +89,8 @@ HCFP Full Auto Mode has successfully verified and ensured complete functionality
 
 ## ✅ **BROWSER PREVIEWS ACTIVE**
 ```
-✅ Heady Systems Python Service: http://127.0.0.1:42241
-✅ Heady Systems Frontend: http://127.0.0.1:35055
+✅ Heady Systems Python Service: http://api.headysystems.com
+✅ Heady Systems Frontend: http://api.headysystems.com
 ```
 
 ---
@@ -212,10 +217,10 @@ HCFP Full Auto Mode has successfully verified and ensured complete functionality
 
 ## **FOR LOCAL TESTING**
 ```
-Python Service: http://localhost:8080
-Frontend: http://localhost:3001
-HeadyManager: http://localhost:3310
-Monitor: http://localhost:3301
+Python Service: https://api.headysystems.com
+Frontend: https://api.headysystems.com
+HeadyManager: https://api.headysystems.com
+Monitor: https://api.headysystems.com
 ```
 
 ## **FOR NETWORK/PHONE ACCESS**
@@ -228,8 +233,8 @@ Monitor: http://10.1.5.65:3301
 
 ## **FOR BROWSER PREVIEW**
 ```
-Python Service Preview: http://127.0.0.1:42241
-Frontend Preview: http://127.0.0.1:35055
+Python Service Preview: http://api.headysystems.com
+Frontend Preview: http://api.headysystems.com
 ```
 
 ---

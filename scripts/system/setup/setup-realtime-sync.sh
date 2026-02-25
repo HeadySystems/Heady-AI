@@ -1,3 +1,6 @@
+# © 2026 Heady Systems LLC.
+# PROPRIETARY AND CONFIDENTIAL.
+# Unauthorized copying, modification, or distribution is strictly prohibited.
 #!/bin/bash
 
 # Real-time Sync Setup for HeadyBuddy Cross-Device Continuity

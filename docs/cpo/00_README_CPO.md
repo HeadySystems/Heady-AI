@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — CPO Documentation Suite
 
 > **Purpose:** Single source of truth for CPO-level understanding of the Heady project: strategy, portfolio, architecture, security, shipping model, and vertical GTM.

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🎉 HYBRID DEPLOYMENT SUCCESS!
 
 ## ✅ MISSION ACCOMPLISHED
@@ -9,7 +14,7 @@ Your complete Heady ecosystem is now **100% functional** with hybrid deployment 
 ### 🌐 **HYBRID DEPLOYMENT LIVE**
 
 **Local Nginx reverse proxy is active and serving all domains:**
-- ✅ **Default Route** - http://localhost (Nginx → Port 9000)
+- ✅ **Default Route** - https://api.headysystems.com (Nginx → Port 9000)
 - ✅ **HeadyBuddy.org** - Configured for port 9000
 - ✅ **HeadySystems.com** - Configured for port 9001
 - ✅ **HeadyConnection.org** - Configured for port 9002
@@ -59,8 +64,8 @@ Your complete Heady ecosystem is now **100% functional** with hybrid deployment 
 ## 🌐 **ACCESS YOUR HEADY ECOSYSTEM**
 
 ### **Local Access (Immediate)**
-- **Main Portal**: http://localhost
-- **Direct Ports**: http://localhost:9000-9005
+- **Main Portal**: https://api.headysystems.com
+- **Direct Ports**: https://api.headysystems.com-9005
 
 ### **Domain Access (After DNS Configuration)**
 Once you configure DNS records to point to your server IP:

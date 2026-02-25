@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * ─── Heady Remote Compute Dispatcher ─────────────────────────────
  * Routes ALL compute to remote APIs, minimizes local resource use.

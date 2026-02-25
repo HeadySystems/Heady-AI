@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🎉 INSTALLABLE PACKAGES BUILD COMPLETE
 
 **Date**: February 19, 2026  
@@ -78,9 +83,9 @@
 | HeadyWeb | 8082 | ✅ Running | python3 -m http.server 8082 |
 
 ### ✅ **Access URLs**
-- **HeadyBuddy**: http://localhost:8080
-- **HeadyAI-IDE**: http://localhost:8081
-- **HeadyWeb**: http://localhost:8082
+- **HeadyBuddy**: https://api.headysystems.com
+- **HeadyAI-IDE**: https://api.headysystems.com
+- **HeadyWeb**: https://api.headysystems.com
 
 ---
 
@@ -201,7 +206,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ## 🚀 **NEXT STEPS**
 
 ### ✅ **Immediate Use**
-1. **Local Testing**: Access http://localhost:8080-8082
+1. **Local Testing**: Access https://api.headysystems.com-8082
 2. **Production Deployment**: Use deploy-all.sh or copy to web server
 3. **Cloud Hosting**: Upload packages to preferred platform
 

@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Auth Routes — Extended OAuth and device auth flows
  * Supplements inline auth at /api/auth/login and /api/auth/policy

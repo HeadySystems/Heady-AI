@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🔍 Website Status Report - All Working!
 
 ## Summary
@@ -11,8 +16,8 @@
 
 ### **📱 Access URLs:**
 - **Local Computer**: 
-  - http://localhost:8080 ✅
-  - http://localhost:3000 ✅
+  - https://api.headysystems.com ✅
+  - https://api.headysystems.com ✅
 - **Phone/Other Devices**: 
   - http://10.1.5.65:8080 ✅
   - http://10.1.5.65:3000 ✅
@@ -78,15 +83,15 @@ ps aux | grep -E "(python|next)" | grep -v grep
 netstat -tlnp | grep -E ":(8080|3000)"
 
 # Test HTTP responses
-curl -s -o /dev/null -w "%{http_code}" http://localhost:8080
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
+curl -s -o /dev/null -w "%{http_code}" https://api.headysystems.com
+curl -s -o /dev/null -w "%{http_code}" https://api.headysystems.com
 ```
 
 ### **Network Testing:**
 ```bash
 # Test local access
-curl http://localhost:8080
-curl http://localhost:3000
+curl https://api.headysystems.com
+curl https://api.headysystems.com
 
 # Test network access
 curl http://10.1.5.65:8080
@@ -131,7 +136,7 @@ curl http://10.1.5.65:3000
 - DNS resolution issues
 
 **Try these URLs:**
-- **Local**: http://localhost:8080 and http://localhost:3000
+- **Local**: https://api.headysystems.com and https://api.headysystems.com
 - **Phone**: http://10.1.5.65:8080 and http://10.1.5.65:3000
 
 **Both should work perfectly!** 🚀

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 HeadyBuddy Sync Network - Quick Start Guide
 
 ## ⚡ 5-Minute Setup
@@ -12,7 +17,7 @@ headybuddy-continuity start
 ```
 
 ### 2. Access Services
-- **Syncthing GUI**: http://localhost:8384
+- **Syncthing GUI**: https://api.headysystems.com
 - **Session API**: http://192.168.100.1:8080
 - **Network Name**: HeadyBuddySync
 - **WiFi Password**: headybuddy2026

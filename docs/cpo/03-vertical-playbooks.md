@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Vertical Solution Packs — 17 Industry Playbooks
 
 Each vertical pack includes: tailored Arena prompts, industry-specific knowledge base, compliance checklist, and ROI calculator.

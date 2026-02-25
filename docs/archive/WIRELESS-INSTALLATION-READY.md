@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 📱 Wireless App Installation - Ready!
 
 ## 🎯 **Answer: YES - Wireless Installation Available!**
@@ -21,7 +26,7 @@ I've set up **complete wireless deployment** for installing all your apps on pho
 
 #### **💻 For Computers:**
 1. **Open browser**
-2. **Go to**: `http://localhost:8080`
+2. **Go to**: `https://api.headysystems.com`
 3. **Bookmark or create desktop shortcut**
 4. **✅ App accessible on computer**
 
@@ -73,7 +78,7 @@ I've set up **complete wireless deployment** for installing all your apps on pho
 
 When you run `./simple-wireless-deploy.sh`, you'll see:
 - **Phone URL**: `http://YOUR_IP:8080`
-- **Computer URL**: `http://localhost:8080`
+- **Computer URL**: `https://api.headysystems.com`
 
 ## 🚀 **Advanced Options:**
 

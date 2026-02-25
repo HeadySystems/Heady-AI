@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Technical Specification: Integration of HeadyConnection and HeadySystems
 
 **Target Architecture:** The "Heady" Fault-Tolerant Lattice (Alternative to Standard Heavy Hex)

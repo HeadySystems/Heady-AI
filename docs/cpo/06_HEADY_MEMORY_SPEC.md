@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — HeadyMemory Product Specification
 
 > Memory system powering Buddy, IDE, and Enterprise continuity.  

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 HCFP Auto-Success: Model Optimization Complete
 
 ## 🎯 OPTIMIZATION IMPLEMENTATION FINISHED!
@@ -85,20 +90,20 @@ cd /home/headyme/CascadeProjects
 podman compose -f docker-compose.heady-all-models.yml up -d
 
 # Test Claude optimizations
-curl http://localhost:4800/health
+curl https://api.headysystems.com/health
 
 # Test custom skills
-curl -X POST http://localhost:4800/skills/heady_battle_analysis \
+curl -X POST https://api.headysystems.com/skills/heady_battle_analysis \
   -H "Content-Type: application/json" \
   -d '{"decision_context": "system_upgrade", "complexity_score": 0.9}'
 
 # Test web search
-curl -X POST http://localhost:4800/web_search \
+curl -X POST https://api.headysystems.com/web_search \
   -H "Content-Type: application/json" \
   -d '{"query": "Heady systems optimization best practices"}'
 
 # Test code execution
-curl -X POST http://localhost:4800/execute_code \
+curl -X POST https://api.headysystems.com/execute_code \
   -H "Content-Type: application/json" \
   -d '{"code": "print(\"Heady Systems Optimized!\")", "language": "python"}'
 ```

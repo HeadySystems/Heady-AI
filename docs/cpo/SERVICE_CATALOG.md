@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Service Catalog
 >
 > **Canonical inventory of every service, component, and AI node.** Last Updated: 2026-02-24

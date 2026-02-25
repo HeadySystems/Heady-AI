@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Systems - 8-Node Colab Pro+ GPU Cluster Guide
 
 ## 🎯 **THE 8-NODE COLAB PRO+ ADVANTAGE**

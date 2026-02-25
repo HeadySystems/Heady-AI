@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🌩️ **CLOUDFLARE TUNNEL SETUP COMPLETE!**
 
 ## ╔══════════════════════════════════════════════════════════════════╗
@@ -47,10 +52,10 @@
 ### **Option 2: Manual Start**
 ```bash
 # Terminal 1 - Port 8080
-cloudflared tunnel run --url http://localhost:8080
+cloudflared tunnel run --url https://api.headysystems.com
 
 # Terminal 2 - Port 3000  
-cloudflared tunnel run --url http://localhost:3000
+cloudflared tunnel run --url https://api.headysystems.com
 ```
 
 ### **Option 3: Advanced Start**

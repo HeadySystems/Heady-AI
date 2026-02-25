@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Local Deployment Guide
 ## Complete Migration from Render to Local Computer
 
@@ -80,9 +85,9 @@ manager.headyme.com → YOUR_PUBLIC_IP
 
 #### Local Testing (add to /etc/hosts)
 ```
-127.0.0.1 headyme.com
-127.0.0.1 chat.headyme.com
-127.0.0.1 manager.headyme.com
+api.headysystems.com headyme.com
+api.headysystems.com chat.headyme.com
+api.headysystems.com manager.headyme.com
 ```
 
 ### 🔧 Service Management
@@ -110,8 +115,8 @@ manager.headyme.com → YOUR_PUBLIC_IP
 
 ### 📊 Monitoring
 
-- **Grafana**: http://localhost:3001 (admin: your password)
-- **Prometheus**: http://localhost:9090
+- **Grafana**: https://api.headysystems.com (admin: your password)
+- **Prometheus**: https://api.headysystems.com
 - **Service Health**: Built-in health endpoints
 
 ### 💾 Backup Strategy

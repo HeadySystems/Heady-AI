@@ -1,0 +1,32 @@
+name: IP Obfuscation Pipeline
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'src/**/*.js'
+      - 'bin/**/*.js'
+
+jobs:
+  obfuscate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install JavaScript Obfuscator
+        run: npm install -g javascript-obfuscator
+        
+      - name: Obfuscate Core IP Files
+        run: |
+          echo "Obfuscating public SDK and sensitive logic..."
+          # Target directories containing code that gets distributed
+          javascript-obfuscator ./src/ --output ./dist/src/ --compact true --control-flow-flattening true --control-flow-flattening-threshold 0.7 --dead-code-injection true --dead-code-injection-threshold 0.4 --string-array true --string-array-encoding 'rc4' --string-array-threshold 0.75 --transform-object-keys true --unicode-escape-sequence false --disable-console-output false
+          
+          javascript-obfuscator ./heady-hive-sdk/bin/ --output ./dist/heady-hive-sdk/bin/ --compact true --string-array true
+          
+          echo "✅ Obfuscation complete. Artifacts written to ./dist/"

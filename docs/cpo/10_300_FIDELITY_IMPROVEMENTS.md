@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — 300+ High-Fidelity System Improvements
 
 > This document extracts all uncompleted tasks from legacy documentation and synthesizes 300 additional high-fidelity architectural improvements to be processed by the HCFP Auto-Success Pipeline.

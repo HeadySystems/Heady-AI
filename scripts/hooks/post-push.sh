@@ -1,3 +1,6 @@
+# © 2026 Heady Systems LLC.
+# PROPRIETARY AND CONFIDENTIAL.
+# Unauthorized copying, modification, or distribution is strictly prohibited.
 #!/bin/bash
 # Heady post-push hook — auto-sync and audit-log to Notion after push
 # Install: ln -sf ../../scripts/hooks/post-push.sh .git/hooks/post-push

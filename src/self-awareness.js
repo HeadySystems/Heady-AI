@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Self-Awareness — Branding Monitor + System Introspection + Vector Memory
  * Continuously ensures Heady branding integrity across all services

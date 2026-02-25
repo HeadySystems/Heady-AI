@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 HEADY STACK - Parrot OS 7 + Windsurf Complete Deployment Guide
 
 ## 📋 Executive Summary
@@ -133,34 +138,34 @@ node scripts/configure-service-domains.js --verify-only  # Validation
 # Add production domain mappings (Windows: C:\Windows\System32\drivers\etc\hosts)
 sudo tee -a /etc/hosts << 'EOF'
 # Core Services
-127.0.0.1 manager.heady.systems
-127.0.0.1 app.heady.systems
-127.0.0.1 admin.heady.systems
+api.headysystems.com manager.heady.systems
+api.headysystems.com app.heady.systems
+api.headysystems.com admin.heady.systems
 
 # MCP Integration
-127.0.0.1 tools-mcp.heady.systems
-127.0.0.1 fs-mcp.heady.systems
-127.0.0.1 net-mcp.heady.systems
-127.0.0.1 forensics-mcp.heady.systems
+api.headysystems.com tools-mcp.heady.systems
+api.headysystems.com fs-mcp.heady.systems
+api.headysystems.com net-mcp.heady.systems
+api.headysystems.com forensics-mcp.heady.systems
 
 # Data Layer
-127.0.0.1 db-postgres.heady.systems
-127.0.0.1 db-redis.heady.systems
-127.0.0.1 db-mongo.heady.systems
+api.headysystems.com db-postgres.heady.systems
+api.headysystems.com db-redis.heady.systems
+api.headysystems.com db-mongo.heady.systems
 
 # AI/ML Services
-127.0.0.1 ai-ollama.heady.systems
-127.0.0.1 ai-ml.heady.systems
+api.headysystems.com ai-ollama.heady.systems
+api.headysystems.com ai-ml.heady.systems
 
 # Security Tools
-127.0.0.1 security-scanner.heady.systems
-127.0.0.1 siem.heady.systems
+api.headysystems.com security-scanner.heady.systems
+api.headysystems.com siem.heady.systems
 
 # Monitoring & Observability
-127.0.0.1 metrics.heady.systems
-127.0.0.1 logging.heady.systems
-127.0.0.1 tracing.heady.systems
-127.0.0.1 svc-telemetry.heady.systems
+api.headysystems.com metrics.heady.systems
+api.headysystems.com logging.heady.systems
+api.headysystems.com tracing.heady.systems
+api.headysystems.com svc-telemetry.heady.systems
 EOF
 
 # Verify DNS resolution

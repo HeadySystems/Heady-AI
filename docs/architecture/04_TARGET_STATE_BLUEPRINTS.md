@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady System Architecture Blueprints (CPO & Engineering Addendum)
 
 > **Context:** This document synthesizes the high-level functional architecture laid out in the `03_ARCHITECTURE_PRIMER.md` with the concrete database schemas, API contracts, and pipeline definitions required for the next phase of Heady's evolution. It serves as the blueprint for moving from the current Node.js/in-memory state towards a hardened, PostgreSQL-backed control plane.

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Systems - Complete Coding & Operations Ecosystem
 
 ## 🎯 WHY YOU NEED HEADYCODER & SPECIALIZED SERVICES
@@ -184,10 +189,10 @@ cd /home/headyme/CascadeProjects
 podman compose -f docker-compose.heady-coding.yml up -d
 
 # Verify services
-curl http://localhost:4700/health  # HeadyCoder
-curl http://localhost:4800/health  # HeadyClaude
-curl http://localhost:4900/health  # HeadyJules
-curl http://localhost:5000/health  # HeadyCopilot
+curl https://api.headysystems.com/health  # HeadyCoder
+curl https://api.headysystems.com/health  # HeadyClaude
+curl https://api.headysystems.com/health  # HeadyJules
+curl https://api.headysystems.com/health  # HeadyCopilot
 ```
 
 ### **🎯 Launch Operations Ecosystem**
@@ -196,9 +201,9 @@ curl http://localhost:5000/health  # HeadyCopilot
 podman compose -f docker-compose.heady-coding.yml up -d
 
 # Verify operations
-curl http://localhost:5100/health  # HeadyMaid
-curl http://localhost:5200/health  # HeadyMaintenance
-curl http://localhost:5300/health  # HeadyOps
+curl https://api.headysystems.com/health  # HeadyMaid
+curl https://api.headysystems.com/health  # HeadyMaintenance
+curl https://api.headysystems.com/health  # HeadyOps
 ```
 
 ## 🎉 CONCLUSION

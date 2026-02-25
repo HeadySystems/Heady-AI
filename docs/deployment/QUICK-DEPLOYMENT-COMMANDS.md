@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # ⚡ HeadyStack + HeadyBuddy - Quick Deployment Commands
 
 ## 🚀 ONE-COMMAND COMPLETE DEPLOYMENT
@@ -50,7 +55,7 @@ echo "=== Security Tools ===" && which nmap metasploit wireshark burpsuite
 ### Quick Health Check
 ```bash
 # Test all critical services
-curl -f http://localhost:8384/rest/system/ping && \
+curl -f https://api.headysystems.com/rest/system/ping && \
 curl -f http://192.168.100.1:8080/current-session.json && \
 curl -f http://manager.dev.local.heady.internal:3300/api/health && \
 echo "✅ All services operational"
@@ -103,7 +108,7 @@ watch -n 5 'echo "=== CPU/Memory ===" && free -h && echo "=== Sync Status ===" &
 ### Performance Metrics
 ```bash
 windsurf --metrics && \
-curl -s http://localhost:8384/rest/system/status | jq '.globalBytes' && \
+curl -s https://api.headysystems.com/rest/system/status | jq '.globalBytes' && \
 curl -s http://192.168.100.1:8080/current-session.json | jq '.device_name'
 ```
 
@@ -152,7 +157,7 @@ john --wordlist=rockyou.txt hashfile && hashcat -m 0 -a 0 hashfile rockyou.txt
 echo "Mobile sync test $(date)" > ~/Documents/mobile-test.txt
 
 # Check sync status
-curl -s http://localhost:8384/rest/system/status | jq '.globalBytes'
+curl -s https://api.headysystems.com/rest/system/status | jq '.globalBytes'
 ```
 
 ## 🔐 SECURITY QUICK CHECKS
@@ -233,7 +238,7 @@ windsurf --clear-cache && windsurf
 # All services running
 headybuddy-continuity status | grep running && \
 windsurf --version && \
-curl -f http://localhost:8384/rest/system/ping
+curl -f https://api.headysystems.com/rest/system/ping
 
 # Network active
 iwgetid -r | grep HeadyBuddySync && \

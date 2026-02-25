@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady Next.js Frontend Build Guide
 # Optimized for Mini-Computer Edge Deployment & Render Services
 
@@ -530,7 +535,7 @@ services:
           cpus: '0.5'
           memory: 256M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3300/api/health"]
+      test: ["CMD", "curl", "-f", "https://api.headysystems.com/api/health"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -563,7 +568,7 @@ services:
           cpus: '0.25'
           memory: 128M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "https://api.headysystems.com/health"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -664,7 +669,7 @@ Create `CODING_AGENT_PROMPT.md`:
 
 ## CRITICAL RULES (NEVER VIOLATE)
 
-1. **ZERO LOCALHOST**: NEVER use localhost, 127.0.0.1, 0.0.0.0 in ANY code
+1. **ZERO LOCALHOST**: NEVER use localhost, api.headysystems.com, 0.0.0.0 in ANY code
 2. **PRODUCTION DOMAINS ONLY**: Always use headyme.com, chat.headyme.com
 3. **ADMIN UI LOCATION**: Admin UI goes at headyme.com/admin-ui.html
 4. **PUBLIC-FACING ONLY**: All endpoints must be internet accessible
@@ -682,7 +687,7 @@ Create `CODING_AGENT_PROMPT.md`:
 const apiUrl = 'https://headyme.com/api/drupal-jsonapi';
 
 // ❌ FORBIDDEN: Localhost
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'https://api.headysystems.com/api';
 ```
 
 ## OPTIMIZATION REQUIREMENTS

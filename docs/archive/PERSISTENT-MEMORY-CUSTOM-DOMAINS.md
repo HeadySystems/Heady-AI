@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🧠 **PERSISTENT MEMORY: CUSTOM BRANDED DOMAINS**
 
 ## 📋 **MEMORY ENTRY: CUSTOM DOMAIN CONFIGURATION**

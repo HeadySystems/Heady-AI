@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🚀 Heady — Quick Start Guide
 
 ## Prerequisites
@@ -21,14 +26,14 @@ sudo systemctl status heady-manager
 ## 2. Verify Health
 
 ```bash
-curl http://127.0.0.1:3301/api/pulse
+curl http://api.headysystems.com/api/pulse
 # → { "status": "active", "version": "3.0.0" }
 ```
 
 ## 3. Chat with Heady Brain
 
 ```bash
-curl -X POST http://127.0.0.1:3301/api/brain/chat \
+curl -X POST http://api.headysystems.com/api/brain/chat \
   -H 'Content-Type: application/json' \
   -d '{"message": "Hello!"}'
 ```
@@ -45,7 +50,7 @@ First provider to respond wins.
 ## 4. Monitor Claude Usage
 
 ```bash
-curl http://127.0.0.1:3301/api/brain/claude-usage
+curl http://api.headysystems.com/api/brain/claude-usage
 # → { "totalCost": 0.12, "budgetRemaining": { "total": 89.88 }, ... }
 ```
 

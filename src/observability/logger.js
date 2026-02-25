@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Heady Logger — Structured JSON logging for production observability
  * Outputs structured JSON to stdout, compatible with CloudWatch, Datadog, Grafana Loki.

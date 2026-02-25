@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Heady Patterns API — Exposes circuit breaker, auto-tuning pool,
  * and hot/cold cache status + management endpoints.

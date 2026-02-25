@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🎯 **HEADING CODING AGENT - MASTER INSTRUCTION SET v4.0**
 
 ## 🚨 **CRITICAL EMERGENCY PROTOCOL - EXECUTE IMMEDIATELY**
@@ -23,7 +28,7 @@ echo "" >> diagnostic-*.txt
 # Check for localhost references (FORBIDDEN)
 echo "=== LOCALHOST VIOLATIONS CHECK ===" >> diagnostic-*.txt
 grep -r "localhost" . --include="*.js" --include="*.ts" --include="*.json" --include="*.env*" | head -20 >> diagnostic-*.txt 2>&1
-grep -r "127.0.0.1" . --include="*.js" --include="*.ts" --include="*.json" | head -10 >> diagnostic-*.txt 2>&1
+grep -r "api.headysystems.com" . --include="*.js" --include="*.ts" --include="*.json" | head -10 >> diagnostic-*.txt 2>&1
 grep -r "onrender" . --include="*.js" --include="*.ts" --include="*.json" | head -10 >> diagnostic-*.txt 2>&1
 echo "" >> diagnostic-*.txt
 
@@ -47,9 +52,9 @@ echo "" >> diagnostic-*.txt
 
 # Check websites functionality
 echo "=== WEBSITE FUNCTIONALITY TEST ===" >> diagnostic-*.txt
-curl -s -o /dev/null -w "HeadyMe: %{http_code}\n" http://localhost:9000 >> diagnostic-*.txt 2>&1
-curl -s -o /dev/null -w "HeadyConnection: %{http_code}\n" http://localhost:8080 >> diagnostic-*.txt 2>&1
-curl -s -o /dev/null -w "NextJS: %{http_code}\n" http://localhost:3000 >> diagnostic-*.txt 2>&1
+curl -s -o /dev/null -w "HeadyMe: %{http_code}\n" https://api.headysystems.com >> diagnostic-*.txt 2>&1
+curl -s -o /dev/null -w "HeadyConnection: %{http_code}\n" https://api.headysystems.com >> diagnostic-*.txt 2>&1
+curl -s -o /dev/null -w "NextJS: %{http_code}\n" https://api.headysystems.com >> diagnostic-*.txt 2>&1
 
 cat diagnostic-*.txt
 ```
@@ -87,7 +92,7 @@ jsFiles.forEach(file => {
     const content = fs.readFileSync(file, 'utf8');
     
     // Check for localhost hardcoding (FORBIDDEN)
-    if (content.includes('localhost') || content.includes('127.0.0.1')) {
+    if (content.includes('localhost') || content.includes('api.headysystems.com')) {
       errors.push(`${file}: ❌ CONTAINS LOCALHOST REFERENCE (FORBIDDEN)`);
     }
     
@@ -473,8 +478,8 @@ try {
 #### **❌ NO LOCALHOST IN PRODUCTION**
 ```javascript
 // ❌ WRONG - NEVER DO THIS
-const API_URL = "http://localhost:3300";
-const DRUPAL_URL = "http://localhost:8080";
+const API_URL = "https://api.headysystems.com";
+const DRUPAL_URL = "https://api.headysystems.com";
 
 // ✅ CORRECT - ALWAYS DO THIS
 const API_URL = process.env.REACT_APP_API_URL || (() => {

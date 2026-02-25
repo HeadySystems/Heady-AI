@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # HeadyConnection Repository
 
 🔗 **Connection Platform Repository**
@@ -8,7 +13,7 @@
 - **Path**: `/headyconnection-web/`
 - **Purpose**: Connection Platform Web Interface
 - **Start**: `./headyconnection-web/start.sh`
-- **Access**: http://localhost:3001 | https://headyconnection.org
+- **Access**: https://api.headysystems.com | https://headyconnection.org
 
 ## Infrastructure
 

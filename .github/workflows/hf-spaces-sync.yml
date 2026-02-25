@@ -1,0 +1,35 @@
+name: Hugging Face Spaces Sync
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'heady-hf-space/**'
+      - 'heady-hf-space-systems/**'
+      - 'heady-hf-space-connection/**'
+
+jobs:
+  sync-to-hf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Push to HF Space (Brain)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push https://HeadyMe:$HF_TOKEN@huggingface.co/spaces/HeadyMe/heady-hf-space main:main || true
+
+      - name: Push to HF Space (Systems)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push https://HeadyMe:$HF_TOKEN@huggingface.co/spaces/HeadyMe/heady-hf-space-systems main:main || true
+
+      - name: Push to HF Space (Connection)
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push https://HeadyMe:$HF_TOKEN@huggingface.co/spaces/HeadyMe/heady-hf-space-connection main:main || true

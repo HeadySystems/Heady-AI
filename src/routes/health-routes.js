@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Heady Health Routes — Production health and readiness endpoints
  * Provides /health/live, /health/ready, and /health/full for Kubernetes-style probes.

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Signals & Metrics: Keeping Market Intel Alive
 
 ## Product Instrumentation (Minimum Viable)

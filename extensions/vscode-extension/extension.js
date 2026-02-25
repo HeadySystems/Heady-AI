@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * Heady AI — VS Code Extension
  * Connects every editor action to the Heady Intelligence Layer.
@@ -6,7 +11,7 @@ const vscode = require("vscode");
 const http = require("http");
 
 function getApiUrl() {
-    return vscode.workspace.getConfiguration("heady").get("apiUrl") || "http://127.0.0.1:3301";
+    return vscode.workspace.getConfiguration("heady").get("apiUrl") || "http://api.headysystems.com";
 }
 
 async function callHeady(message) {

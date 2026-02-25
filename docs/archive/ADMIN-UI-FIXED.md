@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🔥 **HEADYME.COM ADMIN UI - FIXED**
 
 ## ✅ **ADMIN UI AT headyme.com**

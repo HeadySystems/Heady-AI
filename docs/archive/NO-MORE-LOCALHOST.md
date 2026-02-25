@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🔥 **HERE'S THE REAL ANSWER - NO MORE LOCALHOST!**
 
 ## **Your External IP: 38.15.43.47**
@@ -10,8 +15,8 @@
 - **http://10.1.5.65:3000** ✅
 
 ### **💻 From Your Computer:**
-- **http://localhost:8080** ✅
-- **http://localhost:3000** ✅
+- **https://api.headysystems.com** ✅
+- **https://api.headysystems.com** ✅
 
 ## **🔥 WHY LOCALHOST DOESN'T WORK EXTERNALLY:**
 
@@ -62,7 +67,7 @@ ngrok http 8080
 **STOP USING LOCALHOST! Use these URLs:**
 
 **📱 Phone:** http://10.1.5.65:8080 and http://10.1.5.65:3000  
-**💻 Computer:** http://localhost:8080 and http://localhost:3000
+**💻 Computer:** https://api.headysystems.com and https://api.headysystems.com
 
 **If you want external access from anywhere, open firewall ports or use ngrok!**
 

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady — Trust & Security Posture
 
 > What exists, what's enforced, what must improve, and the trust contract for enterprise buyers.  

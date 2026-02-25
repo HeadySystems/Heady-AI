@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * ─── Heady SDK Services — Battle, Creative, MCP, Auth, Events ────
  * Completes the full heady-hive-sdk server-side contract.

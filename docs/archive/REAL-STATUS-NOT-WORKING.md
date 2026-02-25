@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # ❌ **REAL STATUS - NOTHING IS WORKING**
 
 ## **🔥 ACTUAL TEST RESULTS:**
@@ -37,10 +42,10 @@ ps aux | grep cloudflared | grep -v grep
 ### **Option 1: Start Tunnels Manually**
 ```bash
 # Terminal 1
-cloudflared tunnel run --url http://localhost:8080
+cloudflared tunnel run --url https://api.headysystems.com
 
 # Terminal 2  
-cloudflared tunnel run --url http://localhost:3000
+cloudflared tunnel run --url https://api.headysystems.com
 ```
 
 ### **Option 2: Use Existing Tunnels**
@@ -58,8 +63,8 @@ cloudflared tunnel route dns heady-web-tunnel app.headyme.com
 ## **📊 WORKING vs NOT WORKING:**
 
 ### **✅ What Actually Works:**
-- http://localhost:8080 (local only)
-- http://localhost:3000 (local only)
+- https://api.headysystems.com (local only)
+- https://api.headysystems.com (local only)
 - http://10.1.5.65:8080 (local network)
 - http://10.1.5.65:3000 (local network)
 
@@ -73,8 +78,8 @@ cloudflared tunnel route dns heady-web-tunnel app.headyme.com
 ### **Immediate Fix:**
 ```bash
 # Start tunnels in background
-nohup cloudflared tunnel run --url http://localhost:8080 > /tmp/tunnel-8080.log 2>&1 &
-nohup cloudflared tunnel run --url http://localhost:3000 > /tmp/tunnel-3000.log 2>&1 &
+nohup cloudflared tunnel run --url https://api.headysystems.com > /tmp/tunnel-8080.log 2>&1 &
+nohup cloudflared tunnel run --url https://api.headysystems.com > /tmp/tunnel-3000.log 2>&1 &
 
 # Check status
 sleep 5

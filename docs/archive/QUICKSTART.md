@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # Heady Quickstart Guide
 
 > **Updated: February 22, 2026** — Reflects HeadyLens monitoring, LLM Gateway (52 models), /v1/create creative service, Notion sync, and auto-ASAP policy.
@@ -50,7 +55,7 @@ npm start
 
 | Mode | URL |
 |---|---|
-| Local dev | <http://localhost:5180> (frontend) + <http://localhost:4800> (API) |
+| Local dev | <https://api.headysystems.com> (frontend) + <https://api.headysystems.com> (API) |
 | Production | <https://buddy.headysystems.com> |
 
 ### Use it
@@ -72,7 +77,7 @@ npm start
 
 ```bash
 # Chat with HeadyBuddy's API
-curl -X POST http://localhost:4800/api/chat \
+curl -X POST https://api.headysystems.com/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "What can you do?", "provider": "heady-brain"}'
 ```
@@ -87,14 +92,14 @@ curl -X POST http://localhost:4800/api/chat \
 
 ```bash
 cd ~/CascadeProjects/HeadyWeb
-npm run dev        # Dev server at http://localhost:5173
+npm run dev        # Dev server at https://api.headysystems.com
 ```
 
 ### Access it
 
 | Mode | URL |
 |---|---|
-| Local dev | <http://localhost:5173> |
+| Local dev | <https://api.headysystems.com> |
 | Production | <https://headysystems.com> |
 | Cloudflare Pages | <https://master.headyweb.pages.dev> |
 
@@ -116,14 +121,14 @@ npm run dev        # Dev server at http://localhost:5173
 
 ```bash
 cd ~/CascadeProjects/HeadyAI-IDE
-npm run dev        # Dev server at http://localhost:5174
+npm run dev        # Dev server at https://api.headysystems.com
 ```
 
 ### Access it
 
 | Mode | URL |
 |---|---|
-| Local dev | <http://localhost:5174> |
+| Local dev | <https://api.headysystems.com> |
 | Production | Accessed through HeadyMCP tools |
 
 ### Use it
@@ -153,21 +158,21 @@ node heady-manager.js    # Starts on port 3301
 
 ```bash
 # Health check
-curl http://localhost:3301/api/health
+curl https://api.headysystems.com/api/health
 
 # System status
-curl http://localhost:3301/api/system/status
+curl https://api.headysystems.com/api/system/status
 
 # Edge proxy status
-curl http://localhost:3301/api/edge/status
+curl https://api.headysystems.com/api/edge/status
 
 # AI chat (via Brain API)
-curl -X POST http://localhost:3301/api/brain/chat \
+curl -X POST https://api.headysystems.com/api/brain/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Hello from curl"}'
 
 # Service pulse
-curl http://localhost:3301/api/pulse
+curl https://api.headysystems.com/api/pulse
 ```
 
 ---

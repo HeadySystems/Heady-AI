@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady Systems LLC.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 /**
  * OpenAI Business Connector — Full utilization of 2-seat ChatGPT Business plan
  * Unlimited model access: GPT-4o, GPT-4o-mini, o1, o1-mini, o3-mini, Codex

@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 l# 📚 HeadyStack + HeadyBuddy - Complete Documentation Suite
 
 > **Comprehensive instruction set for enterprise-grade security development with cross-device synchronization**
@@ -146,8 +151,8 @@ echo "✅ Complete system operational!"
 
 | Service | URL | Purpose |
 |---------|-----|---------|
-| **Windsurf IDE** | http://localhost:8384 | Development environment |
-| **Syncthing GUI** | http://localhost:8384 | File synchronization |
+| **Windsurf IDE** | https://api.headysystems.com | Development environment |
+| **Syncthing GUI** | https://api.headysystems.com | File synchronization |
 | **Session API** | http://192.168.100.1:8080 | Cross-device continuity |
 | **API Gateway** | http://manager.dev.local.heady.internal:3300 | Service management |
 | **Web Frontend** | http://app-web.dev.local.heady.internal:3000 | Web interface |

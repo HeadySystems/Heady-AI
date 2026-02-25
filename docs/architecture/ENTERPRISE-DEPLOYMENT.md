@@ -1,3 +1,8 @@
+<!--
+  © 2026 Heady Systems LLC.
+  PROPRIETARY AND CONFIDENTIAL.
+  Unauthorized copying, modification, or distribution is strictly prohibited.
+-->
 # 🏢 ENTERPRISE DEPLOYMENT GUIDE
 ## HeadyStack + HeadyBuddy for Production Environments
 
@@ -101,16 +106,16 @@ DOMAIN="enterprise.heady.internal"
 # Configure enterprise DNS zones
 sudo tee -a /etc/hosts << EOF
 # HeadyStack Enterprise Services
-127.0.0.1 manager.$DOMAIN
-127.0.0.1 app-web.$DOMAIN
-127.0.0.1 tools-mcp.$DOMAIN
-127.0.0.1 sync.$DOMAIN
-127.0.0.1 session.$DOMAIN
-127.0.0.1 db-postgres.$DOMAIN
-127.0.0.1 db-redis.$DOMAIN
-127.0.0.1 ai-ollama.$DOMAIN
-127.0.0.1 svc-telemetry.$DOMAIN
-127.0.0.1 svc-monitoring.$DOMAIN
+api.headysystems.com manager.$DOMAIN
+api.headysystems.com app-web.$DOMAIN
+api.headysystems.com tools-mcp.$DOMAIN
+api.headysystems.com sync.$DOMAIN
+api.headysystems.com session.$DOMAIN
+api.headysystems.com db-postgres.$DOMAIN
+api.headysystems.com db-redis.$DOMAIN
+api.headysystems.com ai-ollama.$DOMAIN
+api.headysystems.com svc-telemetry.$DOMAIN
+api.headysystems.com svc-monitoring.$DOMAIN
 EOF
 
 # Configure enterprise firewall rules
@@ -439,7 +444,7 @@ EOF
 sudo systemctl restart prometheus
 
 echo "✅ Enterprise monitoring configured"
-echo "📊 Grafana available at: http://localhost:3000 (admin/admin)"
+echo "📊 Grafana available at: https://api.headysystems.com (admin/admin)"
 ```
 
 ### Compliance Reporting
@@ -464,7 +469,7 @@ sudo journalctl _SYSTEMD_UNIT=sshd.service --since "1 day ago" >> "$REPORT_DIR/a
 
 # 2. File Sync Activity Report
 echo "=== FILE SYNC ACTIVITY ===" > "$REPORT_DIR/sync-$REPORT_DATE.txt"
-curl -s http://localhost:8384/rest/events | jq '.[] | select(.time > "'$(date -d '1 day ago' -Iseconds)'")' >> "$REPORT_DIR/sync-$REPORT_DATE.txt"
+curl -s https://api.headysystems.com/rest/events | jq '.[] | select(.time > "'$(date -d '1 day ago' -Iseconds)'")' >> "$REPORT_DIR/sync-$REPORT_DATE.txt"
 
 # 3. Security Tool Usage Report
 echo "=== SECURITY TOOL USAGE ===" > "$REPORT_DIR/tools-$REPORT_DATE.txt"
@@ -472,7 +477,7 @@ sudo journalctl --since "1 day ago" | grep -E "(nmap|metasploit|wireshark|burpsu
 
 # 4. MCP Server Activity
 echo "=== MCP SERVER ACTIVITY ===" > "$REPORT_DIR/mcp-$REPORT_DATE.txt"
-curl -s http://localhost:3001/metrics >> "$REPORT_DIR/mcp-$REPORT_DATE.txt"
+curl -s https://api.headysystems.com/metrics >> "$REPORT_DIR/mcp-$REPORT_DATE.txt"
 
 # 5. System Performance Report
 echo "=== SYSTEM PERFORMANCE ===" > "$REPORT_DIR/performance-$REPORT_DATE.txt"
@@ -484,7 +489,7 @@ df -h >> "$REPORT_DIR/performance-$REPORT_DATE.txt"
 echo "=== COMPLIANCE SUMMARY ===" > "$REPORT_DIR/summary-$REPORT_DATE.txt"
 echo "Report Date: $REPORT_DATE" >> "$REPORT_DIR/summary-$REPORT_DATE.txt"
 echo "Total Logins: $(sudo journalctl _SYSTEMD_UNIT=sshd.service --since "1 day ago" | grep "Accepted" | wc -l)" >> "$REPORT_DIR/summary-$REPORT_DATE.txt"
-echo "Files Synced: $(curl -s http://localhost:8384/rest/system/status | jq '.globalFiles')" >> "$REPORT_DIR/summary-$REPORT_DATE.txt"
+echo "Files Synced: $(curl -s https://api.headysystems.com/rest/system/status | jq '.globalFiles')" >> "$REPORT_DIR/summary-$REPORT_DATE.txt"
 echo "Security Tools Executed: $(sudo journalctl --since "1 day ago" | grep -c -E "(nmap|metasploit|wireshark|burpsuite)")" >> "$REPORT_DIR/summary-$REPORT_DATE.txt"
 echo "System Uptime: $(uptime -p)" >> "$REPORT_DIR/summary-$REPORT_DATE.txt"
 
@@ -548,7 +553,7 @@ headybuddy-continuity start
 windsurf
 
 echo "🎉 HeadyStack Enterprise Deployment Complete!"
-echo "📊 Monitoring: http://localhost:3000 (Grafana)"
+echo "📊 Monitoring: https://api.headysystems.com (Grafana)"
 echo "🔐 Security: All controls applied"
 echo "📋 Compliance: Daily reports scheduled"
 echo "🌐 Network: HeadyStack-Enterprise (saved password)"

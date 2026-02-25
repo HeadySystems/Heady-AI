@@ -12,7 +12,7 @@
     ],
     "host_permissions": [
         "https://headyme.com/*",
-        "http://127.0.0.1:3301/*"
+        "http://api.headysystems.com/*"
     ],
     "action": {
         "default_popup": "popup.html",
