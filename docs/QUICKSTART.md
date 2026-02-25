@@ -7,114 +7,17 @@
 
 > Last updated: February 2026
 
-## Prerequisites
+## System Status
 
-- Node.js 20+
-- npm 10+
-- Redis (for rate limiting and caching)
-- DuckDB (auto-installed via `npm install`)
-
-## 1. Clone & Install
+Everything is PM2-managed and auto-starts. To check status:
 
 ```bash
-git clone https://github.com/headysystems/Heady.git
-cd Heady
-npm install
+pm2 list
 ```
 
-## 2. Environment Setup
+All 23 services start automatically from `ecosystem.config.cjs`. No manual setup required.
 
-```bash
-cp .env.example .env
-```
-
-Required secrets (managed via PQC-rotated vault):
-
-- `HEADY_BRAIN_KEY` — HeadyBrain API master key
-- `REDIS_URL` — Redis connection string
-- `STRIPE_SECRET_KEY` — Stripe billing integration
-
-Optional:
-
-- `HEADY_MEMORY_DB` — Path to DuckDB vector store (default: `~/.headyme/heady-brain-v2.duckdb`)
-- `ALLOWED_ORIGINS` — CORS whitelist (comma-separated)
-
-## 3. Start HeadyConductor
-
-```bash
-node src/heady-conductor.js
-```
-
-You should see:
-
-```
-🛡️ [Conductor] PQC Quantum-Resistant Hybrid Signatures ACTIVE for all mesh RPCs.
-🛡️ [Conductor] Redis Sliding-Window Rate Limiter Armed.
-  ∞ HeadyConductor: LOADED (federated liquid routing)
-    → Endpoints: /api/conductor/status, /route-map, /health, /analyze-route
-    → Layers: taskRouter, patternEngine
-```
-
-## 4. Verify Health
-
-```bash
-curl https://api.headysystems.com/api/conductor/health
-```
-
-Response:
-
-```json
-{
-  "ok": true,
-  "uptime": 12345,
-  "totalRoutes": 0,
-  "layers": { "taskRouter": true, "vectorZone": false, "brainRouter": false, "patternEngine": true },
-  "supervisors": 0
-}
-```
-
-## 5. Chat with HeadyBrain
-
-```bash
-curl -X POST https://api.headysystems.com/api/brain/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"message": "Hello Heady!"}'
-```
-
-HeadyBrain uses the **Liquid Gateway** — an intelligent auto-routing layer that selects the optimal intelligence engine for each request:
-
-- **HeadyBrain Core** — Primary reasoning engine
-- **HeadyReasoner** — Deep analytical tasks
-- **HeadyMultimodal** — Vision, audio, and cross-modal inference
-- **HeadyEdge** — Sub-50ms edge-native inference via Cloudflare Workers AI
-
-## 6. Key API Endpoints
-
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/conductor/health` | System health + layer status |
-| `GET /api/conductor/status` | Full routing telemetry |
-| `GET /api/conductor/route-map` | Service group topology |
-| `POST /api/conductor/analyze-route` | Test a hypothetical route |
-| `POST /api/brain/chat` | AI chat (Liquid Gateway) |
-| `POST /api/brain/analyze` | Code/text analysis |
-| `POST /api/brain/embed` | Vector embeddings |
-| `POST /api/brain/search` | Knowledge search |
-| `POST /api/swarm/dispatch` | Deploy HeadyBees for task completion |
-
-## 7. Admin UI
-
-The HeadyOS Admin Canvas provides a premium glassmorphism dashboard for managing the entire fleet:
-
-```bash
-cd sites/headyos-react
-npm install
-npm run dev
-```
-
-Access via `https://admin.headysystems.com` when deployed, or the local Vite dev server during development. Includes Command Center, Fleet Manager, Package Builder, Security Panel, Billing Config, and Network Topology views.
-
-## Architecture Overview
+## Architecture
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -124,14 +27,14 @@ Access via `https://admin.headysystems.com` when deployed, or the local Vite dev
 │         Cloudflare Edge Proxy Layer              │
 │  Workers AI  •  Vectorize  •  KV Cache           │
 ├──────────────────────────────────────────────────┤
-│         HeadyConductor (Federated Liquid Router)  │
-│  Task Routing • Zone Routing • Pattern Engine     │
+│         HeadyManager (port 3301)                 │
+│  Express Runtime • Orchestrator • MCP Server     │
 ├──────────────────────────────────────────────────┤
 │         HeadyBrain + 20 AI Nodes                 │
 │  Arena Mode • Liquid Gateway • Auto-Success       │
 ├──────────────────────────────────────────────────┤
-│         HeadySwarm + HeadyBees                   │
-│  Headless Browser Fleet • Task Completion Engine  │
+│         3D Spatial Vector Memory                 │
+│  HF Embeddings • 5 Shards • 8 Octant Zones      │
 ├──────────────────────────────────────────────────┤
 │         DuckDB Vector Memory V2                  │
 │  HNSW Index • Cosine Similarity • Session Memory  │
@@ -139,6 +42,59 @@ Access via `https://admin.headysystems.com` when deployed, or the local Vite dev
 │         Security Layer                           │
 │  PQC (ML-KEM + ML-DSA) • mTLS • Rate Limiter    │
 └──────────────────────────────────────────────────┘
+```
+
+## Key API Endpoints (port 3301)
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/brain/health` | Brain orchestrator health |
+| `POST /api/brain/chat` | AI chat (multi-model routing) |
+| `POST /api/brain/search` | Knowledge search |
+| `POST /api/vector/query` | Semantic vector search |
+| `POST /api/vector/store` | Ingest into vector memory |
+| `GET /api/vector/stats` | Vector memory statistics |
+| `GET /api/vector/3d/map` | 3D spatial zone visualization |
+| `GET /api/memory/health` | Memory system health |
+| `POST /api/memory/process` | Gain-or-reject memory protocol |
+| `POST /api/memory/recall` | Recall memories by query |
+| `GET /api/memory/stats` | Memory statistics |
+
+## PM2 Services
+
+> **🧠 DEFAULT INTELLIGENCE PROCESSING:**
+> **Blatantly Obvious Note:** All data handled by Heady is processed intelligently by default. Heady evaluates your task and provides what it found as the **best action in response**.
+>
+> You can trigger this explicitly by providing Heady with: `"stuff for heady to intelligently process"`
+> Or by using the shortcut: `"heady's intelligence processing shortcut"`
+>
+> *If ever necessary*, you can bypass the default routing and use specific services directly. The 24 specialized services (HeadyBuddy, HeadyMaestro, HeadyBuilder, etc.) are available to use if you need dedicated focus, but default handling is intelligent routing.
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| heady-manager | 3301 | Core runtime, API, orchestrator |
+| hcfp-auto-success | — | Policy enforcement engine |
+| site-headysystems | 9000 | headysystems.com |
+| site-headyme | 9001 | headyme.com |
+| site-headyconnection | 9002 | headyconnection.org |
+| site-headybuddy | 9003 | headybuddy.org |
+| site-headymcp | 9004 | headymcp.com |
+| site-headyio | 9005 | headyio.com |
+| site-headyapi | 9006 | headyapi.com |
+| site-headyos | 9007 | headyos.com |
+| site-headyweb | 3000 | HeadyWeb search engine |
+
+## Restart / Reload
+
+```bash
+# Restart everything
+pm2 restart ecosystem.config.cjs
+
+# Restart just the core
+pm2 restart heady-manager
+
+# Re-ingest all project knowledge into vector memory
+node scripts/ingest-all-knowledge.js
 ```
 
 ## Live Properties

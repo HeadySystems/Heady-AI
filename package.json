@@ -1,9 +1,34 @@
 {
   "name": "heady-systems",
   "version": "3.0.0",
-  "description": "Heady Systems - Sacred Geometry :: Organic Systems :: Breathing Interfaces",
-  "type": "module",
+  "description": "Heady AI Platform — Autonomous multi-agent AI operating system with 20 specialized intelligence nodes, federated liquid routing, and post-quantum security.",
   "main": "heady-manager.js",
+  "license": "UNLICENSED",
+  "author": {
+    "name": "HeadyMe",
+    "email": "e@headyconnection.org",
+    "url": "https://headyme.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeadySystems/Heady.git"
+  },
+  "homepage": "https://headysystems.com",
+  "bugs": {
+    "url": "https://github.com/HeadySystems/Heady/issues",
+    "email": "e@headyconnection.org"
+  },
+  "keywords": [
+    "ai",
+    "multi-agent",
+    "mcp",
+    "post-quantum",
+    "arena-mode",
+    "headybrain",
+    "headyswarm",
+    "liquid-routing",
+    "sacred-geometry"
+  ],
   "scripts": {
     "start:mcp": "node backend/app.js",
     "cli": "python scripts/heady_cli.py",
@@ -37,7 +62,16 @@
     "branch:sync": "node scripts/branch-sync.js",
     "branch:dev-to-staging": "node scripts/branch-sync.js --dev-to-staging",
     "branch:staging-to-main": "node scripts/branch-sync.js --staging-to-main",
-    "branch:continuous": "node scripts/branch-sync.js --continuous"
+    "branch:continuous": "node scripts/branch-sync.js --continuous",
+    "sites:generate": "node scripts/generate-sites.js",
+    "health": "curl -s http://localhost:3301/health/live",
+    "status": "pm2 list",
+    "manager:restart": "pm2 restart heady-manager",
+    "healthcheck": "node scripts/healthcheck.js",
+    "scan:stale": "node scripts/stale-scanner.js",
+    "scan:seo": "node scripts/seo-batch-improve.js",
+    "scan:quality": "node scripts/code-quality-batch.js",
+    "logs:setup": "node scripts/setup-log-rotation.js"
   },
   "dependencies": {
     "@headynexus-ai/sdk": "^0.74.0",

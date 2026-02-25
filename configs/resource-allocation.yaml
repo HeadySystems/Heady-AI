@@ -125,7 +125,7 @@ storage:
   persistent:
     vector_db:
       engine: "qdrant"
-      url: "http://localhost:6333"
+      url: "http://qdrant.headyio.com:6333"
       collection: "heady_memories"
       embedding_dim: 1536
       auto_compact: true

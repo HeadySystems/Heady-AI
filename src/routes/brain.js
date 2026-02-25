@@ -290,7 +290,7 @@ function filterResponse(text, options = {}) {
 // Inspired by: NanoClaw (agent SDK patterns), Lumo (privacy-first design),
 // OpenClaw (task automation), HeadyJulesOptimized (custom skills).
 
-const HeadyNexus = require("@headynexus-ai/sdk");
+const HeadyNexus = require("@anthropic-ai/sdk");
 
 // ── Dual-Org Configuration ──
 const CLAUDE_ORGS = [
@@ -471,7 +471,7 @@ async function chatViaHuggingFace(message, system, temperature, max_tokens) {
         .filter(t => t && !t.includes("your_") && !t.includes("placeholder"));
     if (tokens.length === 0) throw new Error("no-key");
 
-    const { InferenceClient } = require("@headyhub/inference");
+    const { InferenceClient } = require("@huggingface/inference");
     const client = new InferenceClient(tokens[Math.floor(Date.now() / 120000) % tokens.length]);
 
     const msgs = [];

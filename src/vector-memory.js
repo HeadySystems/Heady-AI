@@ -178,15 +178,45 @@ let embedRoundRobin = 0;
 async function embed(text) {
     const truncated = typeof text === "string" ? text.substring(0, 2000) : String(text).substring(0, 2000);
 
+    // Strategy 1: HuggingFace Inference API (free tier, no token needed for public models)
     try {
-        const gateway = getGateway();
-        const result = await gateway.embed(truncated);
-        if (result.ok && result.embedding) {
-            remoteEmbedCount++;
-            return Array.isArray(result.embedding) ? result.embedding : Array.from(result.embedding);
+        const hfRes = await fetch("https://router.huggingface.co/hf-inference/models/sentence-transformers/all-MiniLM-L6-v2/pipeline/feature-extraction", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                ...(process.env.HF_TOKEN ? { "Authorization": `Bearer ${process.env.HF_TOKEN}` } : {}),
+            },
+            body: JSON.stringify({ inputs: truncated }),
+            signal: AbortSignal.timeout(8000),
+        });
+        if (hfRes.ok) {
+            const data = await hfRes.json();
+            const embedding = Array.isArray(data) ? (Array.isArray(data[0]) ? data[0] : data) : null;
+            if (embedding && embedding.length >= 100) {
+                remoteEmbedCount++;
+                return embedding;
+            }
         }
-    } catch { /* gateway embed failed, fall through */ }
+    } catch { /* HF API failed, try next */ }
 
+    // Strategy 2: Ollama local (if running)
+    try {
+        const ollamaRes = await fetch(`http://127.0.0.1:${process.env.OLLAMA_PORT || 11434}/api/embeddings`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ model: "nomic-embed-text", prompt: truncated }),
+            signal: AbortSignal.timeout(5000),
+        });
+        if (ollamaRes.ok) {
+            const data = await ollamaRes.json();
+            if (data.embedding && data.embedding.length >= 100) {
+                remoteEmbedCount++;
+                return data.embedding;
+            }
+        }
+    } catch { /* Ollama not available, fall through */ }
+
+    // Strategy 3: Local hash embed (deterministic fallback — works but no semantic meaning)
     localFallbackCount++;
     return localHashEmbed(truncated, 384);
 }

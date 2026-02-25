@@ -475,8 +475,8 @@ function evictLowestSignificance() {
 function persistMemory(memory, vector) {
     try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-        fs.appendFileSync(MEMORY_FILE, JSON.stringify(memory) + "\n");
-        fs.appendFileSync(VECTOR_FILE, JSON.stringify({ id: memory.id, dimensions: CONFIG.vectorDimensions, vectorHash: memory.vectorHash }) + "\n");
+        // Store memory AND its vector embedding together so they survive restarts
+        fs.appendFileSync(MEMORY_FILE, JSON.stringify({ ...memory, _vector: vector }) + "\n");
     } catch { /* non-critical */ }
 }
 
@@ -597,19 +597,17 @@ function detectTags(text) {
             const lines = fs.readFileSync(MEMORY_FILE, "utf8").split("\n").filter(Boolean);
             for (const line of lines) {
                 try {
-                    const mem = JSON.parse(line);
-                    memories.set(mem.id, mem);
-                    vectors.set(mem.id, generateEmbedding(mem.content));
+                    const data = JSON.parse(line);
+                    const vec = data._vector || null;
+                    delete data._vector;
+                    memories.set(data.id, data);
+                    // Use persisted vector if available, otherwise regenerate
+                    vectors.set(data.id, vec || generateEmbedding(data.content));
                     stats.gained++;
                     stats.totalProcessed++;
                 } catch { /* skip malformed lines */ }
             }
-            // Sync loaded memories to Qdrant
-            console.log(`HeadyMemory: loaded ${memories.size} memories, syncing to Qdrant...`);
-            for (const [id, mem] of memories) {
-                const vec = vectors.get(id);
-                if (vec) upsertToQdrant(mem, vec).catch(() => { });
-            }
+            console.log(`  ∞ HeadyMemory: loaded ${memories.size} memories from disk`);
         }
     } catch { /* no persisted data yet */ }
 })();

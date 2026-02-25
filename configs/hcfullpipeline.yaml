@@ -46,6 +46,7 @@ pipeline:
     selfCritiqueEnabled: true        # Post-run self-critique loop
     patternEngineEnabled: true       # Feed stage/task timing into pattern engine
     publicDomainMining: true         # Mine best-practice patterns from public tools
+    requireVectorScanFirst: true     # MUST scan 3D persistent vector storage before any action
     userFirstPolicy:
       enabled: true
       hotPoolTasks: [channel-entry, execute-major-phase, recover, deploy_priority]
@@ -116,10 +117,16 @@ pipeline:
       checkpoint: false
       parallel: true
       tasks:
+        - scan_3d_persistent_vector_storage  # MUST run before any action/response
         - resolve_channel_and_identity
         - sync_cross_device_context
         - determine_launch_mode
         - route_to_pipeline_branch
+      vectorStorageConfig:
+        enabled: true
+        requireScanBeforeAction: true
+        scanTimeoutMs: 5000
+        fallbackBehavior: "proceed_with_warning"
       channelConfig:
         supportedChannels:
           - ide_extension
@@ -159,6 +166,9 @@ pipeline:
         - ingest_health_metrics
         - ingest_channel_events
         - ingest_connection_health
+        - ingest_system_state
+        - ingest_resource_usage
+        - ingest_security_logs
         - ingest_public_domain_patterns
 
     # ── STAGE 2: Plan (HeadySims Powered) ──────────────────────────────
@@ -243,6 +253,9 @@ pipeline:
         - diagnose_bottlenecks
         - check_all_connection_health
         - identify_improvement_candidates
+        - identify_system_gaps
+        - analyze_resource_waste
+        - evaluate_security_posture
         - run_meta_analysis
       selfCritiqueConfig:
         autoRecordCritique: true
@@ -275,6 +288,10 @@ pipeline:
         - invalidate_stale_caches
         - adjust_worker_pool_concurrency
         - update_channel_optimizations
+        - cleanup_orphaned_resources
+        - execute_routine_maintenance
+        - optimize_storage_utilization
+        - enforce_cost_boundaries
       publicDomainConfig:
         inspirationSources:
           - category: "cross-device assistants"
@@ -324,6 +341,10 @@ pipeline:
         - compute_readiness_score
         - sync_registry_and_docs
         - validate_notebook_integrity
+        - run_security_audit
+        - perform_system_backup
+        - scan_for_threats
+        - verify_data_integrity
         - check_doc_owner_freshness
         - record_pipeline_improvements
         - send_checkpoint_email
@@ -430,6 +451,21 @@ pipeline:
 
   # ─── LANES ──────────────────────────────────────────────────────────────
   lanes:
+    system_operations:
+      description: Autonomous system maintenance, cleanup, and optimal state operations
+      triggers:
+        - schedule: "0 */4 * * *"  # Every 4 hours
+        - api_call: POST /api/pipeline/sysops
+      stages:
+        - check_all_connection_health
+        - cleanup_orphaned_resources
+        - execute_routine_maintenance
+        - optimize_storage_utilization
+        - enforce_cost_boundaries
+        - run_security_audit
+        - scan_for_threats
+        - perform_system_backup
+        - verify_data_integrity
     pqc:
       description: Post-quantum cryptography certificate deployment and rotation
       triggers:
@@ -473,6 +509,7 @@ pipeline:
       identifies non-optimization, and proposes improvements.
     responsibilities:
       - validate_run_state
+      - validate_system_operations_state
       - compare_config_hashes
       - reevaluate_plan_and_health
       - check_concept_alignment

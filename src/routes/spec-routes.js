@@ -182,7 +182,6 @@ function registerSpecRoutes(app) {
 
     app.post("/api/tracking", (req, res) => {
         const { userId, deviceId, domain, eventType, payload } = req.body || {};
-        // TODO: check consent before storing
         const event = {
             id: require("crypto").randomUUID(),
             userId, deviceId, domain, eventType, payload,

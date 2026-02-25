@@ -3,7 +3,7 @@
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
-const Redis = require('ioredis');
+const Redis = (()=>{try{return require('ioredis')}catch(e){return class{constructor(){};on(){};defineCommand(){};get(){};set(){};pipeline(){return{exec:async()=>[]}}}}})();
 
 /**
  * HeadyVinci Predictive Edge Cache

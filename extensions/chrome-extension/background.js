@@ -5,33 +5,45 @@
  */
 /**
  * Heady Chrome Extension — Background Service Worker
- * Sets up context menus, keyboard shortcuts, and side panel
+ * Sets up context menus, keyboard shortcuts, and side panel.
+ * Model-aware: routes to the correct Heady model per action.
  */
 
-const HEADY_API = "http://api.headysystems.com/api";
+const HEADY_API = "https://manager.headysystems.com/api";
+
+// Model mapping: each context menu action routes to the best model
+const ACTION_MODELS = {
+    "heady-ask": "heady-flash",
+    "heady-explain": "heady-reason",
+    "heady-code": "heady-flash",
+    "heady-battle": "heady-battle-v1",
+};
 
 // ── Context Menus ──
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "heady-ask",
-        title: "🐝 Ask Heady",
+        title: "🐝 Ask Heady (Flash)",
         contexts: ["selection"],
     });
     chrome.contextMenus.create({
         id: "heady-explain",
-        title: "🧠 Explain with Heady",
+        title: "🧠 Explain with Heady (Reason)",
         contexts: ["selection"],
     });
     chrome.contextMenus.create({
         id: "heady-code",
-        title: "⚡ Refactor with Heady",
+        title: "⚡ Refactor with Heady (Flash)",
         contexts: ["selection"],
     });
     chrome.contextMenus.create({
         id: "heady-battle",
-        title: "⚔️ Battle-validate with Heady",
+        title: "🏆 Battle-validate with Heady (Arena)",
         contexts: ["selection"],
     });
+
+    // Store default model
+    chrome.storage.sync.set({ headyModel: 'heady-flash' });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -46,31 +58,46 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     };
 
     const message = prompts[info.menuItemId] || text;
+    const model = ACTION_MODELS[info.menuItemId] || 'heady-flash';
 
-    // Open side panel and send the message
+    // Open side panel and send the message with model info
     try {
         await chrome.sidePanel.open({ tabId: tab.id });
-        // Small delay for panel to initialize
         setTimeout(() => {
-            chrome.runtime.sendMessage({ type: "heady-query", message, source: info.menuItemId });
+            chrome.runtime.sendMessage({ type: "heady-query", message, model, source: info.menuItemId });
         }, 500);
     } catch (e) {
-        // Fallback: open popup
         chrome.action.openPopup();
     }
 });
 
-// ── Message Relay ──
+// ── Message Relay (now uses OpenAI-compatible endpoint) ──
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.type === "heady-api") {
-        fetch(`${HEADY_API}/brain/chat`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: msg.message, model: "auto" }),
-        })
-            .then(r => r.json())
-            .then(data => sendResponse({ ok: true, data }))
-            .catch(err => sendResponse({ ok: false, error: err.message }));
+        const model = msg.model || 'heady-flash';
+
+        // Get API key from storage
+        chrome.storage.sync.get(['headyApiKey'], (result) => {
+            const headers = { "Content-Type": "application/json" };
+            if (result.headyApiKey) {
+                headers["Authorization"] = `Bearer ${result.headyApiKey}`;
+            }
+
+            fetch(`${HEADY_API}/v1/chat/completions`, {
+                method: "POST",
+                headers,
+                body: JSON.stringify({
+                    model: model,
+                    messages: [{ role: 'user', content: msg.message }],
+                }),
+            })
+                .then(r => r.json())
+                .then(data => {
+                    const reply = data.choices?.[0]?.message?.content || data.response || '';
+                    sendResponse({ ok: true, data: { reply, model: data.model, heady: data.heady } });
+                })
+                .catch(err => sendResponse({ ok: false, error: err.message }));
+        });
         return true; // async response
     }
 });

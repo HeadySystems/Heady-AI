@@ -241,10 +241,70 @@ function generateSite(site) {
     /* ── Footer ── */
     footer { padding: 60px 0; text-align: center; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; }
 
+    /* ── Chat Widget ── */
+    .buddy-fab { position: fixed; bottom: 24px; right: 24px; z-index: 9999; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--g1), var(--g2)); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px var(--accent)33; transition: all 0.3s; }
+    .buddy-fab:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(0,0,0,0.6), 0 0 40px var(--accent)55; }
+    .buddy-panel { position: fixed; bottom: 90px; right: 24px; z-index: 9998; width: 380px; max-height: 520px; background: rgba(10,10,15,0.95); border: 1px solid var(--border); border-radius: 20px; backdrop-filter: blur(20px); display: none; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+    .buddy-panel.open { display: flex; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .buddy-header { padding: 16px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); background: rgba(20,20,30,0.6); }
+    .buddy-header .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse 2s ease infinite; }
+    .buddy-header span { font-size: 0.85rem; font-weight: 600; color: #fff; }
+    .buddy-header .close-btn { margin-left: auto; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+    .buddy-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 280px; }
+    .buddy-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 0.82rem; line-height: 1.5; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .buddy-msg.bot { background: rgba(255,255,255,0.08); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .buddy-msg.user { background: var(--accent); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
+    .buddy-input-wrap { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: rgba(15,15,25,0.6); }
+    .buddy-input-wrap input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; color: #fff; font-size: 0.82rem; outline: none; }
+    .buddy-input-wrap input:focus { border-color: var(--accent); }
+    .buddy-input-wrap button { background: var(--accent); border: none; border-radius: 12px; padding: 10px 16px; color: #000; font-weight: 700; cursor: pointer; font-size: 0.82rem; transition: all 0.2s; }
+    .buddy-input-wrap button:hover { transform: scale(1.05); }
+    .buddy-typing { display: flex; gap: 4px; padding: 10px 14px; align-self: flex-start; }
+    .buddy-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: typingDot 1.2s ease infinite; }
+    .buddy-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .buddy-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+    /* ── Auth Modal ── */
+    .auth-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; }
+    .auth-overlay.open { display: flex; animation: fadeIn 0.3s ease; }
+    .auth-modal { background: rgba(15,15,25,0.95); border: 1px solid var(--border); border-radius: 24px; padding: 40px; width: 400px; max-width: 90vw; text-align: center; backdrop-filter: blur(20px); }
+    .auth-modal h2 { font-size: 1.5rem; color: #fff; margin-bottom: 8px; }
+    .auth-modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+    .auth-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s; border: 1px solid var(--border); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .auth-btn.google { background: #fff; color: #333; }
+    .auth-btn.google:hover { background: #f0f0f0; transform: translateY(-1px); }
+    .auth-btn.email { background: var(--accent); color: #000; border-color: var(--accent); }
+    .auth-btn.email:hover { transform: translateY(-1px); box-shadow: 0 4px 15px var(--accent)44; }
+    .auth-btn.skip { background: transparent; color: var(--text-muted); border-color: transparent; font-size: 0.8rem; }
+    .auth-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--text-muted); font-size: 0.75rem; }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .auth-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+
+    /* ── Nav Sign-In ── */
+    .nav-auth { padding: 6px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: #000; background: var(--accent); text-decoration: none; cursor: pointer; border: none; transition: all 0.3s; }
+    .nav-auth:hover { box-shadow: 0 0 15px var(--accent); transform: translateY(-1px); }
+    .nav-user { display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 50px; background: rgba(255,255,255,0.08); border: 1px solid var(--border); }
+    .nav-user img { width: 24px; height: 24px; border-radius: 50%; }
+    .nav-user span { font-size: 0.7rem; color: var(--text); }
+
+    /* ── Live Pulse ── */
+    .live-pulse { position: fixed; top: 16px; right: 16px; z-index: 100; display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 50px; background: rgba(10,10,15,0.8); border: 1px solid var(--border); backdrop-filter: blur(10px); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.5px; }
+    .live-pulse .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+    .live-pulse.offline .dot { background: #ef4444; }
+
+    /* ── Toast Notifications ── */
+    .toast { position: fixed; top: 60px; right: 24px; z-index: 10001; padding: 12px 20px; border-radius: 12px; background: rgba(15,15,25,0.95); border: 1px solid var(--accent); backdrop-filter: blur(10px); font-size: 0.8rem; color: #fff; transform: translateX(120%); transition: transform 0.4s ease; }
+    .toast.show { transform: translateX(0); }
+
     @media (max-width: 768px) {
       .p-grid { grid-template-columns: 1fr; }
       nav { display: none; }
       .hero h1 { font-size: 2.8rem; }
+      .buddy-panel { width: calc(100vw - 32px); right: 16px; bottom: 80px; }
+      .auth-modal { padding: 24px; }
     }
   </style>
 </head>
@@ -262,6 +322,7 @@ function generateSite(site) {
           <a href="https://headyio.com">Developers</a>
           <a href="https://headymcp.com">Marketplace</a>
           <a href="https://headyio.com/downloads.html" style="color: var(--accent); font-weight: 700;">Downloads</a>
+          <button class="nav-auth" id="authBtn" onclick="window.headyAuth.showModal()">Sign In</button>
         </nav>
       </header>
 
@@ -271,7 +332,10 @@ function generateSite(site) {
         <p class="hero-sub">${site.tagline.split('.')[0]}</p>
         <div class="sacred-badge">${site.geoType.toUpperCase()} · SACRED GEOMETRY v3</div>
         <p class="hero-mantra">${site.description}</p>
-        <a href="${site.ctaHref}" class="btn btn-primary">${site.cta}</a>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+          <a href="${site.ctaHref}" class="btn btn-primary">${site.cta}</a>
+          <button class="btn" style="background:rgba(255,255,255,0.08);color:var(--accent);border:1px solid var(--border);" onclick="window.headyBuddy.toggle()">💬 Chat with Buddy</button>
+        </div>
       </section>
 
       <section class="playbook">
@@ -291,7 +355,17 @@ function generateSite(site) {
       </section>
 
       <footer>
-        © ${new Date().getFullYear()} ${site.title.split('—')[0].trim()} — ∞ SACRED GEOMETRY ∞ — Powered by HCFP Auto-Success 135
+        <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:16px;">
+          <a href="https://headysystems.com" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadySystems</a>
+          <a href="https://headyme.com" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyMe</a>
+          <a href="https://headyio.com" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyIO</a>
+          <a href="https://headyapi.com" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyAPI</a>
+          <a href="https://headymcp.com" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyMCP</a>
+          <a href="https://headyos.com" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyOS</a>
+          <a href="https://headyconnection.org" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyConnection</a>
+          <a href="https://headybuddy.org" style="color:var(--text-muted);text-decoration:none;font-size:0.7rem;">HeadyBuddy</a>
+        </div>
+        © ${new Date().getFullYear()} ${site.title.split('—')[0].trim()} — ∞ SACRED GEOMETRY ∞ — Powered by HCFP Auto-Success
       </footer>
     </div>
   </div>
@@ -386,6 +460,183 @@ function generateSite(site) {
         window.addEventListener('resize', resize);
         resize(); animate();
     })();
+  </script>
+
+  <!-- Live System Pulse -->
+  <div class="live-pulse" id="livePulse"><span class="dot"></span> <span id="pulseText">Connecting...</span></div>
+
+  <!-- Auth Modal -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-modal">
+      <h2>Welcome to ${site.title.split('—')[0].trim()}</h2>
+      <p>Sign in to access your dashboard, chat with HeadyBuddy, and unlock the full platform.</p>
+      <button class="auth-btn google" onclick="window.headyAuth.google()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+      <div class="auth-divider">or</div>
+      <button class="auth-btn email" onclick="window.headyAuth.email()">✉️ Sign in with Email</button>
+      <button class="auth-btn skip" onclick="window.headyAuth.skip()">Continue as guest →</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- HeadyBuddy Chat Widget -->
+  <div class="buddy-panel" id="buddyPanel">
+    <div class="buddy-header">
+      <span class="dot"></span>
+      <span>HeadyBuddy</span>
+      <button class="close-btn" onclick="window.headyBuddy.toggle()">✕</button>
+    </div>
+    <div class="buddy-messages" id="buddyMessages">
+      <div class="buddy-msg bot">Hey! 👋 HeadyBuddy here, your AI companion. Connected to 20 intelligence nodes. How can I help?</div>
+    </div>
+    <div class="buddy-input-wrap">
+      <input type="text" id="buddyInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')window.headyBuddy.send()" />
+      <button onclick="window.headyBuddy.send()">Send</button>
+    </div>
+  </div>
+  <button class="buddy-fab" onclick="window.headyBuddy.toggle()" title="Chat with HeadyBuddy">💬</button>
+
+  <script>
+  // ── HeadyBuddy Chat Widget ────────────────────────────────────────
+  window.headyBuddy = {
+    open: false,
+    panel: null,
+    msgs: null,
+    input: null,
+    init() {
+      this.panel = document.getElementById('buddyPanel');
+      this.msgs = document.getElementById('buddyMessages');
+      this.input = document.getElementById('buddyInput');
+    },
+    toggle() {
+      this.open = !this.open;
+      this.panel.classList.toggle('open', this.open);
+      if (this.open) this.input.focus();
+    },
+    addMsg(text, type) {
+      const div = document.createElement('div');
+      div.className = 'buddy-msg ' + type;
+      div.textContent = text;
+      this.msgs.appendChild(div);
+      this.msgs.scrollTop = this.msgs.scrollHeight;
+    },
+    showTyping() {
+      const t = document.createElement('div');
+      t.className = 'buddy-typing';
+      t.id = 'typingIndicator';
+      t.innerHTML = '<span></span><span></span><span></span>';
+      this.msgs.appendChild(t);
+      this.msgs.scrollTop = this.msgs.scrollHeight;
+    },
+    hideTyping() {
+      const t = document.getElementById('typingIndicator');
+      if (t) t.remove();
+    },
+    async send() {
+      const msg = this.input.value.trim();
+      if (!msg) return;
+      this.input.value = '';
+      this.addMsg(msg, 'user');
+      this.showTyping();
+      try {
+        const res = await fetch('https://manager.headysystems.com/api/brain/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg }),
+        });
+        this.hideTyping();
+        if (res.ok) {
+          const data = await res.json();
+          this.addMsg(data.reply || data.response || 'I heard you! Let me think...', 'bot');
+        } else {
+          this.addMsg('Having trouble connecting. Try again in a moment!', 'bot');
+        }
+      } catch {
+        this.hideTyping();
+        this.addMsg('Network is down. Be right back!', 'bot');
+      }
+    },
+  };
+  document.addEventListener('DOMContentLoaded', () => window.headyBuddy.init());
+
+  // ── Auth System ──────────────────────────────────────────────────
+  window.headyAuth = {
+    user: null,
+    showModal() {
+      document.getElementById('authOverlay').classList.add('open');
+    },
+    hideModal() {
+      document.getElementById('authOverlay').classList.remove('open');
+    },
+    google() {
+      // Firebase Google Sign-In placeholder — opens popup
+      this.hideModal();
+      window.headyToast('🔐 Google Sign-In opening... Configure Firebase to complete.');
+      // In production: firebase.auth().signInWithPopup(googleProvider)
+    },
+    email() {
+      this.hideModal();
+      window.headyToast('✉️ Email sign-in coming soon!');
+    },
+    skip() {
+      this.hideModal();
+      this.user = { name: 'Guest', photo: null };
+      this.updateUI();
+      window.headyToast('Welcome, Guest! Sign in anytime for the full experience.');
+    },
+    updateUI() {
+      const btn = document.getElementById('authBtn');
+      if (this.user && this.user.name !== 'Guest') {
+        btn.outerHTML = '<div class="nav-user"><img src="' + (this.user.photo || '') + '" alt=""/><span>' + this.user.name + '</span></div>';
+      }
+    },
+  };
+
+  // ── Toast ──────────────────────────────────────────────────────────
+  window.headyToast = function(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  };
+
+  // ── Live Pulse ────────────────────────────────────────────────────
+  (async function checkPulse() {
+    const pulse = document.getElementById('livePulse');
+    const text = document.getElementById('pulseText');
+    try {
+      const res = await fetch('https://manager.headysystems.com/api/health', { signal: AbortSignal.timeout(5000) });
+      if (res.ok) {
+        const data = await res.json();
+        pulse.classList.remove('offline');
+        text.textContent = 'System Live · ' + (data.uptime ? Math.floor(data.uptime / 60) + 'm uptime' : 'Online');
+      } else {
+        pulse.classList.add('offline');
+        text.textContent = 'Connecting...';
+      }
+    } catch {
+      pulse.classList.add('offline');
+      text.textContent = 'Offline';
+    }
+    setTimeout(checkPulse, 30000);
+  })();
+
+  // ── Interactive Feature Cards ─────────────────────────────────────
+  document.querySelectorAll('.f-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      const title = card.querySelector('h3').textContent;
+      window.headyBuddy.toggle();
+      setTimeout(() => {
+        window.headyBuddy.input.value = 'Tell me more about ' + title;
+        window.headyBuddy.send();
+      }, 400);
+    });
+  });
   </script>
 </body>
 </html>`;
@@ -525,6 +776,32 @@ function generateDownloadsPage() {
         </div>
 
         <div class="dl-category">
+          <h2>🔧 Browser & IDE Extensions</h2>
+          <div class="dl-grid">
+            <div class="dl-card">
+              <div>
+                <div class="dl-header">
+                  <div class="dl-icon">💻</div>
+                  <div><span class="dl-title">VS Code Extension</span><span class="dl-version">v1.1.0</span></div>
+                </div>
+                <p class="dl-desc">Official Heady AI extension for VS Code. Chat, refactor, and battle-validate code using all 5 Heady models directly in your editor.</p>
+              </div>
+              <a href="https://manager.headysystems.com/dist/extensions/heady-ai-1.1.0.vsix" class="dl-btn">Download .vsix (Manual Install)</a>
+            </div>
+            <div class="dl-card">
+              <div>
+                <div class="dl-header">
+                  <div class="dl-icon">🌐</div>
+                  <div><span class="dl-title">Chrome Extension</span><span class="dl-version">v1.0.0</span></div>
+                </div>
+                <p class="dl-desc">Official Heady AI extension for Chrome. Context menu actions and side panel chat with model-per-action routing.</p>
+              </div>
+              <a href="https://manager.headysystems.com/dist/extensions/heady-chrome-1.0.0.zip" class="dl-btn">Download .zip (Load Unpacked)</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dl-category">
           <h2>💻 Developer Tools & SDKs</h2>
           <div class="dl-grid">
             <div class="dl-card">
@@ -535,7 +812,7 @@ function generateDownloadsPage() {
                 </div>
                 <p class="dl-desc">The official command-line interface for Heady. Deploy configurations, manage edge workers, and interact with the Swarm.</p>
               </div>
-              <a href="#" class="dl-btn">npm install -g heady-cli</a>
+              <a href="https://headyio.com/api-docs" class="dl-btn">npm install -g heady-cli</a>
             </div>
             <div class="dl-card">
               <div>
@@ -545,7 +822,7 @@ function generateDownloadsPage() {
                 </div>
                 <p class="dl-desc">Integrate 20-node federated routing and Proof View receipts into your JavaScript/TypeScript applications.</p>
               </div>
-              <a href="#" class="dl-btn">npm install @heady/hive-sdk</a>
+              <a href="https://github.com/heady-systems/hive-sdk" class="dl-btn">npm install @heady/hive-sdk</a>
             </div>
             <div class="dl-card">
               <div>

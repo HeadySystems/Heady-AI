@@ -3,18 +3,18 @@
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# HeadyMCP-Quickstart (Superseded)
+# HeadyMCP — Quickstart Guide
 
-> **Notice:** As of the Q1 2026 Architecture Upgrade, the contents of this document have been deprecated, merged, and superseded by the core platform documentation.
+> **Notice:** As of the February 2026 Heady Systems Production Go-Live, the HeadyMCP configuration has been consolidated into the core platform documentation.
 
-The Heady AI platform has evolved from a decentralized local mesh to a federated liquid routing architecture (HeadyConductor).
+Heady provides a unified, local MCP server (`heady-local`) exposing 40+ specialized tools for seamless IDE integration.
 
 ## Canonical Documentation
+
 Please refer to the following updated resources:
 
-1. **[Quick Start Guide](../QUICKSTART.md)** — For initial setup and architecture overview.
-2. **[Architecture Blueprints](../architecture/04_TARGET_STATE_BLUEPRINTS.md)** — For DuckDB V2, PQC Security, and Conductor topology.
-3. **[API Reference](../API.md)** — For programmatic interaction with HeadyBrain.
-4. **[CPO Executive Brief](../cpo/01_EXEC_BRIEF.md)** — For business strategy and product roadmaps.
+1. **[Integrations Guide](./INTEGRATIONS.md#mcp-server-integration)** — For HeadyMCP capabilities, available tools, and IDE configuration paths.
+2. **[Quick Start Guide](./QUICKSTART.md)** — For initial Heady platform setup and architecture overview.
+3. **[API Reference](./API.md)** — For programmatic interaction with HeadyBrain if bypassing the MCP layer.
 
-*Original contents have been preserved in the secure `archive/` directory for historical reference.*
+*Historical MCP configurations targeting `heady.io` have been deprecated in favor of the unified `headyio.com` / `headymcp.com` infrastructure.*

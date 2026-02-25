@@ -17,7 +17,7 @@ const path = require("path");
 const HeadyClient = require(path.join(__dirname, "..", "heady-hive-sdk"));
 const { HeadyClient: Client } = HeadyClient;
 
-const MANAGER_URL = "http://localhost:3301";
+const MANAGER_URL = "https://api.headysystems.com";
 
 async function boot() {
   console.log("═══════════════════════════════════════════════");
@@ -29,8 +29,8 @@ async function boot() {
   const heady = new Client({
     url: MANAGER_URL,
     apiKey: process.env.HEADY_API_KEY,
-    beeCount: 5,
-    roundInterval: 120000, // 2 min between rounds (respectful of resources)
+    beeCount: 50, // Max level utilization
+    roundInterval: 5000, // Reduced to 5s between rounds for full throttle
   });
 
   // Verify connection

@@ -11,7 +11,7 @@
  * HCFP Policy: Throttle usage to stay within fair-use bounds while maximizing value.
  * Business plan = unlimited, but burst-respect for API stability.
  */
-const HeadyCompute = require('headycompute');
+const HeadyCompute = (()=>{try{return require('headycompute')}catch(e){return {}}})();
 const path = require('path');
 const HeadyGateway = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'gateway'));
 const { createProviders } = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'providers'));

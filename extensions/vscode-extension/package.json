@@ -1,10 +1,19 @@
 {
     "name": "heady-ai",
     "displayName": "Heady AI — Intelligence Layer",
-    "description": "AI assistant powered by the Heady Intelligence Layer. 9 service groups, 77 nodes. Chat, code, battle-validate, and create from your editor.",
-    "version": "1.0.0",
+    "description": "AI assistant powered by the Heady Intelligence Layer. 5 branded models, 20 competing nodes, arena-validated responses. Chat, code, battle-validate, and create from your editor.",
+    "version": "1.1.0",
     "publisher": "HeadyAI",
     "icon": "icon.png",
+    "license": "SEE LICENSE IN LICENSE",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/heady-systems/heady-ai-vscode"
+    },
+    "homepage": "https://headyio.com",
+    "bugs": {
+        "url": "https://github.com/heady-systems/heady-ai-vscode/issues"
+    },
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -19,7 +28,10 @@
         "heady",
         "code assistant",
         "mcp",
-        "ai chat"
+        "ai chat",
+        "arena",
+        "battle",
+        "model"
     ],
     "activationEvents": [
         "onStartupFinished"
@@ -30,6 +42,11 @@
             {
                 "command": "heady.chat",
                 "title": "Heady: Chat",
+                "category": "Heady"
+            },
+            {
+                "command": "heady.selectModel",
+                "title": "Heady: Select Model",
                 "category": "Heady"
             },
             {
@@ -110,13 +127,32 @@
             "properties": {
                 "heady.apiUrl": {
                     "type": "string",
-                    "default": "http://api.headysystems.com",
-                    "description": "HeadyManager API URL"
+                    "default": "https://manager.headysystems.com",
+                    "description": "Heady API URL"
                 },
                 "heady.apiKey": {
                     "type": "string",
                     "default": "",
-                    "description": "Heady API key (optional for local)"
+                    "description": "Heady API key (required for premium models)"
+                },
+                "heady.model": {
+                    "type": "string",
+                    "default": "heady-flash",
+                    "enum": [
+                        "heady-flash",
+                        "heady-edge",
+                        "heady-buddy",
+                        "heady-reason",
+                        "heady-battle-v1"
+                    ],
+                    "enumDescriptions": [
+                        "⚡ Fast & free — top 3 fastest nodes (~1s)",
+                        "🌐 Edge inference — sub-200ms latency",
+                        "🤝 Memory-aware companion (Pro)",
+                        "🧠 Extended thinking — deep analysis (Premium)",
+                        "🏆 Full 20-node arena — highest quality (Premium)"
+                    ],
+                    "description": "Select which Heady model to use for inference"
                 }
             }
         },
@@ -125,8 +161,20 @@
                 "command": "heady.chat",
                 "key": "ctrl+shift+h",
                 "mac": "cmd+shift+h"
+            },
+            {
+                "command": "heady.selectModel",
+                "key": "ctrl+shift+m",
+                "mac": "cmd+shift+m"
             }
         ]
+    },
+    "scripts": {
+        "package": "npx @vscode/vsce package --no-dependencies",
+        "publish": "npx @vscode/vsce publish"
+    },
+    "devDependencies": {
+        "@vscode/vsce": "^3.0.0"
     },
     "dependencies": {}
 }

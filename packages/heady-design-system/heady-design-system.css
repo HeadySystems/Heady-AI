@@ -105,36 +105,90 @@ body {
 
 /* ─── Button System ─── */
 .btn-primary {
-    padding: 0.625rem 1.25rem;
-    background: linear-gradient(135deg, var(--heady-primary), var(--heady-secondary));
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--heady-primary), var(--heady-secondary), var(--heady-accent));
+    background-size: 200% 200%;
+    animation: gradientShift 6s ease infinite;
     color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     transition: transform var(--duration-fast) var(--ease-premium),
-        box-shadow var(--duration-normal) var(--ease-premium);
+        box-shadow var(--duration-normal) var(--ease-premium),
+        border-color var(--duration-fast);
 }
 
 .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    transform: translateY(-2px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 12px 30px rgba(168, 85, 247, 0.6);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
 }
 
 .btn-secondary {
-    padding: 0.625rem 1.25rem;
+    padding: 0.75rem 1.5rem;
     background: var(--bg-panel);
+    backdrop-filter: blur(10px);
     color: #e2e8f0;
     border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    font-weight: 500;
+    border-radius: 12px;
+    font-weight: 600;
     cursor: pointer;
     transition: all var(--duration-normal) var(--ease-premium);
 }
 
 .btn-secondary:hover {
     background: var(--bg-panel-hover);
-    border-color: var(--border-active);
+    border-color: var(--heady-primary);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+    transform: translateY(-1px);
+}
+
+/* ─── Animated Neon Containment ─── */
+.neon-border-box {
+    position: relative;
+    border-radius: 16px;
+    background: var(--bg-void);
+}
+
+.neon-border-box::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--heady-primary), var(--heady-accent), var(--heady-cyan), var(--heady-secondary));
+    background-size: 300% 300%;
+    z-index: -1;
+    border-radius: 18px;
+    animation: gradientShift 4s ease infinite, pulse-glow 4s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+/* ─── Premium Input System ─── */
+.heady-input {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    color: white;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    font-family: var(--font-mono);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.heady-input:focus {
+    outline: none;
+    border-color: var(--heady-primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), inset 0 0 15px rgba(102, 126, 234, 0.1);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 /* ─── Animations ─── */

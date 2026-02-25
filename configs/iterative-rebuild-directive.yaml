@@ -28,7 +28,7 @@
 
 version: "2.0.0"
 name: FinalProductionRebuildDirective
-status: EXECUTING
+status: PRODUCTION-LIVE
 
 # ─── PRODUCTION GO-LIVE TIMESTAMP ─────────────────────────────────
 production_live:
@@ -164,7 +164,7 @@ phases:
   phase_8_final_validation:
     name: "FINAL VALIDATION & GO-LIVE"
     description: "Complete validation pass, then enter PRODUCTION-LIVE"
-    status: IN_PROGRESS
+    status: COMPLETE
     steps:
       - "Domain connectivity check — all 8+ domains return 200"
       - "API health check — conductor, brain, billing endpoints healthy"

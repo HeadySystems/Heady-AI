@@ -75,9 +75,15 @@ router.post("/observe", (req, res) => {
     res.json({ ok: true, service: "heady-lens", observation: entry });
 });
 
-// Full system differential analysis
-router.post("/analyze", (req, res) => {
-    const { focus, depth, timeRange } = req.body;
+// Full system differential analysis or Image Analysis
+router.post("/analyze", async (req, res) => {
+    const { focus, depth, timeRange, action, image_url, prompt } = req.body;
+    
+    // Check if this is an image analysis request (from CLI)
+    if (action === "analyze" && image_url) {
+        return handleImageAnalysis(req, res, "analyze");
+    }
+
     const cutoffMs = (timeRange || 300) * 1000;
     const cutoff = new Date(Date.now() - cutoffMs).toISOString();
 
@@ -110,6 +116,34 @@ router.post("/analyze", (req, res) => {
 
     res.json({ ok: true, service: "heady-lens", action: "system-analysis", analysis, focus: focus || "all", depth: depth || "standard", ts: new Date().toISOString() });
 });
+
+// Post endpoints for CLI commands
+router.post("/detect", (req, res) => handleImageAnalysis(req, res, "detect"));
+router.post("/process", (req, res) => handleImageAnalysis(req, res, "process"));
+
+// Helper for Vision AI mock/pass-through
+async function handleImageAnalysis(req, res, actionType) {
+    const { image_url, prompt } = req.body;
+    try {
+        // Here we would integrate with actual Vision APIs (OpenAI, Anthropic, or Google)
+        // For now, returning a simulated response format matching the system's style
+        res.json({
+            ok: true,
+            service: "heady-lens",
+            action: actionType,
+            target: image_url,
+            result: {
+                summary: `Simulated vision analysis for ${image_url}`,
+                confidence: 0.95,
+                tags: ["vision", actionType, "simulated"],
+                prompt_used: prompt || "default analysis"
+            },
+            ts: new Date().toISOString()
+        });
+    } catch (err) {
+        res.status(500).json({ ok: false, error: err.message });
+    }
+}
 
 // Get all current snapshots (system state)
 router.get("/snapshots", (req, res) => {

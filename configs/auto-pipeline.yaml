@@ -33,6 +33,14 @@ task_types:
   analysis: HeadyBrain
   deployment: HeadyMCP
   build: HeadyRender
+  maintenance: HeadyBrain
+  security_audit: HeadyBrain
+  backup: HeadyMCP
+  cleanup: HeadyMCP
+  threat_detection: HeadyBrain
+  cost_optimization: HeadyBrain
+  drift_detection: HeadyBrain
+  scan_3d_persistent_vector_storage: HeadyBrain
   default: HeadyBrain  # Fallback for all unconfigured types
 
 optimization:

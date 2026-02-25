@@ -1,3 +1,4 @@
+const logger = require("./src/utils/logger");
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -27,6 +28,8 @@
 // ║  💎 Service Mesh Integration · Distributed Tracing Ready       ║
 
 // Core dependencies
+const https = require('https');
+const fs = require('fs');
 const http = require('http');
 const yaml = require('js-yaml');
 const fs = require('fs');
@@ -87,16 +90,16 @@ function checkRemoteService(service) {
 
 // Modify remote calls to respect config
 if (remoteConfig.critical_only) {
-  console.log('Running in local-first mode (non-critical remote calls disabled)');
+  logger.logNodeActivity("CONDUCTOR", 'Running in local-first mode (non-critical remote calls disabled)');
 }
 
 // ─── Imagination Engine ─────────────────────────────────────────────
 let imaginationRoutes = null;
 try {
   imaginationRoutes = require("./src/routes/imagination-routes");
-  console.log("  ∞ Imagination Engine: ROUTES LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Imagination Engine: ROUTES LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Imagination routes not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Imagination routes not loaded: ${err.message}`);
 }
 
 // ─── Secrets & Cloudflare Management ──────────────────────────────
@@ -127,13 +130,13 @@ try {
     secretsManager.register({ ...s, source: "env" });
   }
   secretsManager.restoreState();
-  console.log("  \u221e Secrets Manager: LOADED (" + secretsManager.getAll().length + " secrets tracked)");
-  console.log("  \u221e Cloudflare Manager: LOADED (token " + (cfManager.isTokenValid() ? "valid" : "needs refresh") + ")");
+  logger.logNodeActivity("CONDUCTOR", "  \u221e Secrets Manager: LOADED (" + secretsManager.getAll().length + " secrets tracked)");
+  logger.logNodeActivity("CONDUCTOR", "  \u221e Cloudflare Manager: LOADED (token " + (cfManager.isTokenValid() ? "valid" : "needs refresh") + ")");
 } catch (err) {
-  console.warn(`  \u26a0 Secrets/Cloudflare not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  \u26a0 Secrets/Cloudflare not loaded: ${err.message}`);
 }
 
-const PORT = 3301;
+const PORT = process.env.HEADY_PORT || 3301;
 const app = express();
 
 // ─── Middleware ─────────────────────────────────────────────────────
@@ -165,8 +168,8 @@ app.use(cors({
 try {
   const { requestId } = require('./src/middleware/request-id');
   app.use(requestId());
-  console.log('  ∞ Request ID Tracing: INSTALLED');
-} catch (err) { console.warn(`  ⚠ Request ID middleware not loaded: ${err.message}`); }
+  logger.logNodeActivity("CONDUCTOR", '  ∞ Request ID Tracing: INSTALLED');
+} catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ Request ID middleware not loaded: ${err.message}`); }
 
 try {
   const { installShutdownHooks, onShutdown } = require('./src/lifecycle/graceful-shutdown');
@@ -176,7 +179,7 @@ try {
     if (typeof server !== 'undefined' && server.close) server.close(resolve);
     else resolve();
   }));
-} catch (err) { console.warn(`  ⚠ Graceful shutdown not loaded: ${err.message}`); }
+} catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ Graceful shutdown not loaded: ${err.message}`); }
 
 // ─── Hybrid Colab/Edge Caching Engine ───────────────────────────────
 const ColabEdgeCache = {
@@ -247,10 +250,15 @@ app.use("/api", coreApi);
 // ─── Swagger UI Setup ─────────────────────────────────────────────────
 try {
   const swaggerDocument = YAML.load('./docs/api/openapi.yaml');
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-  console.log("  ∞ Swagger UI: LOADED → /api-docs");
+  const swaggerOptions = {
+    customCssUrl: '/css/heady-swagger.css',
+    customSiteTitle: 'Heady Systems API — Developer Platform',
+    customfavIcon: '/favicon.ico',
+  };
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Swagger UI: LOADED → /api-docs");
 } catch (err) {
-  console.warn(`  ⚠ Swagger UI not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Swagger UI not loaded: ${err.message}`);
 }
 
 // ─── Imagination Routes ────────────────────────────────────────────
@@ -262,9 +270,9 @@ if (imaginationRoutes) {
 let claudeRoutes = null;
 try {
   claudeRoutes = require("./src/routes/claude-routes");
-  console.log("  ∞ Claude Service: ROUTES LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Claude Service: ROUTES LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Claude routes not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Claude routes not loaded: ${err.message}`);
 }
 
 // ─── Claude Routes ────────────────────────────────────────────
@@ -277,9 +285,9 @@ let vmTokenRoutes = null;
 try {
   const createVmTokenRoutes = require("./src/routes/vm-token-routes");
   vmTokenRoutes = createVmTokenRoutes(secretsManager);
-  console.log("  ∞ VM Token Routes: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ VM Token Routes: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ VM Token routes not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ VM Token routes not loaded: ${err.message}`);
 }
 
 if (vmTokenRoutes) {
@@ -327,7 +335,7 @@ app.post('/api/vm/revoke', async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.error('Revocation failed:', error);
+    logger.logError("CONDUCTOR", 'Revocation failed:', error);
     res.status(500).json({ error: 'Failed to revoke token' });
   }
 });
@@ -349,11 +357,11 @@ try {
   }
 
   registerAuthRoutes(app, authEngine);
-  console.log("  🔐 HeadyAuth: LOADED (4 methods: manual, device, WARP, Google OAuth)");
-  console.log("    → Endpoints: /api/auth/login, /device, /warp, /google, /verify, /refresh, /sessions");
-  console.log("    → Token lengths: WARP 365d, Google 180d, Device 90d, Standard 30d");
+  logger.logNodeActivity("CONDUCTOR", "  🔐 HeadyAuth: LOADED (4 methods: manual, device, WARP, Google OAuth)");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/auth/login, /device, /warp, /google, /verify, /refresh, /sessions");
+  logger.logNodeActivity("CONDUCTOR", "    → Token lengths: WARP 365d, Google 180d, Device 90d, Standard 30d");
 } catch (err) {
-  console.warn(`  ⚠ HeadyAuth not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyAuth not loaded: ${err.message}`);
   // Fallback to basic auth
   app.post("/api/auth/login", (req, res) => {
     const { username, password } = req.body;
@@ -396,35 +404,35 @@ vectorPipeline.registerRoutes(app, vectorMemory);
 const vectorFederation = require("./src/vector-federation");
 vectorFederation.registerRoutes(app);
 
-console.log("  ∞ VectorPipeline: ACTIVE — every /brain/* call queries memory first");
+logger.logNodeActivity("CONDUCTOR", "  ∞ VectorPipeline: ACTIVE — every /brain/* call queries memory first");
 
 vectorMemory.registerRoutes(app);
-console.log("  ∞ VectorMemory: LOADED (HF embeddings + cosine similarity)");
+logger.logNodeActivity("CONDUCTOR", "  ∞ VectorMemory: LOADED (HF embeddings + cosine similarity)");
 
 // Wire into brain.js so all brain interactions get stored as real vectors
 try {
   const brainRoutes = require("./src/routes/brain");
   if (brainRoutes.setMemoryWrapper) {
     brainRoutes.setMemoryWrapper(vectorMemory);
-    console.log("  ∞ VectorMemory → Brain: CONNECTED (storeInMemory = real embeddings)");
+    logger.logNodeActivity("CONDUCTOR", "  ∞ VectorMemory → Brain: CONNECTED (storeInMemory = real embeddings)");
   }
 } catch (err) {
-  console.warn("  ⚠ VectorMemory → Brain: Not connected:", err.message);
+  logger.logNodeActivity("CONDUCTOR", "  ⚠ VectorMemory → Brain: Not connected:", err.message);
 }
 
 // ─── HeadyCorrections — Behavior Analysis Engine ────────────────────
 const corrections = require("./src/corrections");
 corrections.init();
 corrections.registerRoutes(app);
-console.log("  ∞ HeadyCorrections: LOADED (behavior analysis + audit trail)");
+logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyCorrections: LOADED (behavior analysis + audit trail)");
 
 // ─── Dynamic Agent Orchestrator ─────────────────────────────────────
 const { getOrchestrator } = require("./src/agent-orchestrator");
 const orchestrator = getOrchestrator({ baseUrl: "http://127.0.0.1:" + PORT, apiKey: process.env.HEADY_API_KEY });
 orchestrator.registerRoutes(app);
-orchestrator.on("supervisor:spawned", (d) => console.log(`  ∞ HeadySupervisor spawned: ${d.id} (${d.serviceGroup})`));
+orchestrator.on("supervisor:spawned", (d) => logger.logNodeActivity("CONDUCTOR", `  ∞ HeadySupervisor spawned: ${d.id} (${d.serviceGroup})`));
 orchestrator.on("task:complete", (d) => { /* silent */ });
-console.log("  ∞ AgentOrchestrator: LOADED (dynamic spawn + deterministic routing)");
+logger.logNodeActivity("CONDUCTOR", "  ∞ AgentOrchestrator: LOADED (dynamic spawn + deterministic routing)");
 
 // ─── HeadyConductor — Federated Liquid Routing ──────────────────────
 const { getConductor } = require("./src/heady-conductor");
@@ -449,15 +457,15 @@ setInterval(() => {
 setInterval(() => {
   const report = secretRotation.audit();
   if (report.expired.length > 0 || report.warning.length > 0) {
-    console.warn(`[SECURITY] Secret Audit: ${report.expired.length} expired, ${report.warning.length} warnings. Score: ${report.score}`);
+    logger.logNodeActivity("CONDUCTOR", `[SECURITY] Secret Audit: ${report.expired.length} expired, ${report.warning.length} warnings. Score: ${report.score}`);
   }
 }, 1000 * 60 * 60 * 24);
 
 // Initial Audits & Checks
 const initialAudit = secretRotation.audit();
-console.log(`  ∞ Secret Rotation: INITIALIZED (Score: ${initialAudit.score})`);
+logger.logNodeActivity("CONDUCTOR", `  ∞ Secret Rotation: INITIALIZED (Score: ${initialAudit.score})`);
 autoHeal.check();
-console.log(`  ∞ Auto-Heal Resilience: ACTIVE`);
+logger.logNodeActivity("CONDUCTOR", `  ∞ Auto-Heal Resilience: ACTIVE`);
 
 conductor.setOrchestrator(orchestrator);
 conductor.setVectorMemory(vectorMemory);
@@ -470,7 +478,7 @@ computeDashboard.registerRoutes(app, orchestrator);
 // ─── Continuous Self-Optimization Engine ────────────────────────────
 const selfOptimizer = require("./src/self-optimizer");
 selfOptimizer.registerRoutes(app, vectorMemory);
-console.log("  ∞ SelfOptimizer: WIRED (continuous heartbeat + error recovery)");
+logger.logNodeActivity("CONDUCTOR", "  ∞ SelfOptimizer: WIRED (continuous heartbeat + error recovery)");
 
 // ─── Continuous Learning Engine ─────────────────────────────────────
 try {
@@ -478,7 +486,7 @@ try {
   learningEngine.registerRoutes(app);
   app.locals.vectorMemory = vectorMemory; // For /api/learn/run endpoint
 } catch (err) {
-  console.warn(`  ⚠ ContinuousLearning: not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ ContinuousLearning: not loaded: ${err.message}`);
 }
 // ─── Static Assets ─────────────────────────────────────────────────
 const frontendBuildPath = path.join(__dirname, "frontend", "dist");
@@ -495,7 +503,8 @@ app.use("/headymcp", express.static("/home/headyme/CascadeProjects/headymcp-com"
 app.use("/headyio", express.static("/home/headyme/CascadeProjects/headyio"));
 app.use("/headyweb", express.static("/home/headyme/CascadeProjects/HeadyWeb"));
 app.use("/admin", express.static("/home/headyme/CascadeProjects/admin-ui"));
-console.log("  ∞ Vertical Sites: 8 sites served (headyme, headysystems, headybuddy, headyconnection, headymcp, headyio, headyweb, admin)");
+app.use("/dist", express.static(path.join(__dirname, "dist")));
+logger.logNodeActivity("CONDUCTOR", "  ∞ Vertical Sites: 8 sites served (headyme, headysystems, headybuddy, headyconnection, headymcp, headyio, headyweb, admin)");
 
 // ─── HeadyAI-IDE (ide.headyme.com) ──────────────────────────────────
 const IDE_DIST = path.join(__dirname, "heady-ide-ui", "dist");
@@ -665,6 +674,10 @@ function readJsonSafe(filePath) {
  * @description Service pulse check
  * @returns {Object} Service pulse data
  */
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", service: "heady-manager", timestamp: new Date().toISOString() });
+});
+
 app.get("/api/pulse", (req, res) => {
   res.json({
     ok: true,
@@ -710,11 +723,11 @@ app.get("/api/pulse", (req, res) => {
       "/api/orchestrator/reload",
       "/api/brain/health", "/api/brain/plan", "/api/brain/feedback", "/api/brain/status",
     ],
-    aloha: alohaState ? {
-      mode: alohaState.mode,
-      protocols: alohaState.protocols,
-      stabilityDiagnosticMode: alohaState.stabilityDiagnosticMode,
-      crashReports: alohaState.crashReports.length,
+    aloha: app.locals.alohaState ? {
+      mode: app.locals.alohaState.mode,
+      protocols: app.locals.alohaState.protocols,
+      stabilityDiagnosticMode: app.locals.alohaState.stabilityDiagnosticMode,
+      crashReports: app.locals.alohaState.crashReports.length,
     } : null,
     secrets: secretsManager ? secretsManager.getSummary() : null,
     cloudflare: cfManager ? { tokenValid: cfManager.isTokenValid(), expiresIn: cfManager.expiresAt ? cfManager._timeUntil(cfManager.expiresAt) : null } : null,
@@ -1054,10 +1067,10 @@ let pipelineError = null;
 try {
   const pipelineMod = require("./src/hc_pipeline");
   pipeline = pipelineMod.pipeline;
-  console.log("  ∞ Pipeline engine: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Pipeline engine: LOADED");
 } catch (err) {
   pipelineError = err.message;
-  console.warn(`  ⚠ Pipeline engine not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Pipeline engine not loaded: ${err.message}`);
 }
 
 /**
@@ -1338,17 +1351,17 @@ try {
 
   resourceManager.on("resource_event", (event) => {
     if (event.severity === "WARN_HARD" || event.severity === "CRITICAL") {
-      console.warn(`  ⚠ Resource ${event.severity}: ${event.resourceType} at ${event.currentUsagePercent}%`);
+      logger.logNodeActivity("CONDUCTOR", `  ⚠ Resource ${event.severity}: ${event.resourceType} at ${event.currentUsagePercent}%`);
     }
   });
 
   resourceManager.on("escalation_required", (data) => {
-    console.warn(`  ⚠ ESCALATION: ${data.event.resourceType} at ${data.event.currentUsagePercent}% — user prompt required`);
+    logger.logNodeActivity("CONDUCTOR", `  ⚠ ESCALATION: ${data.event.resourceType} at ${data.event.currentUsagePercent}% — user prompt required`);
   });
 
-  console.log("  ∞ Resource Manager: LOADED (polling every 5s)");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Resource Manager: LOADED (polling every 5s)");
 } catch (err) {
-  console.warn(`  ⚠ Resource Manager not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Resource Manager not loaded: ${err.message}`);
 
   // Fallback inline resource health endpoint
   app.get("/api/resources/health", (req, res) => {
@@ -1393,9 +1406,9 @@ try {
     });
   }
 
-  console.log("  ∞ Task Scheduler: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Task Scheduler: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Task Scheduler not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Task Scheduler not loaded: ${err.message}`);
 }
 
 // ─── Resource Diagnostics ────────────────────────────────────────────
@@ -1407,9 +1420,9 @@ try {
     taskScheduler,
   });
   registerDiagnosticRoutes(app, resourceDiagnostics);
-  console.log("  ∞ Resource Diagnostics: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Resource Diagnostics: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Resource Diagnostics not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Resource Diagnostics not loaded: ${err.message}`);
 }
 
 // ─── HeadySims Plan Scheduler ──────────────────────────────────────
@@ -1423,7 +1436,7 @@ try {
 
   // Wire MC plan scheduler drift alerts into pattern engine (loaded below)
   mcPlanScheduler.on("drift:detected", (alert) => {
-    console.warn(`  ⚠ MC Drift: ${alert.taskType}/${alert.strategyId} at ${alert.medianMs}ms (target ${alert.targetMs}ms)`);
+    logger.logNodeActivity("CONDUCTOR", `  ⚠ MC Drift: ${alert.taskType}/${alert.strategyId} at ${alert.medianMs}ms (target ${alert.targetMs}ms)`);
   });
 
   // Bind MC global to pipeline if available
@@ -1437,10 +1450,10 @@ try {
   // Default to speed_priority mode — speed is a first-class objective
   mcPlanScheduler.setSpeedMode("on");
 
-  console.log("  ∞ HeadySims Plan Scheduler: LOADED (speed_priority mode)");
-  console.log("  ∞ HeadySims Global: AUTO-RUN started (60s cycles)");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadySims Plan Scheduler: LOADED (speed_priority mode)");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadySims Global: AUTO-RUN started (60s cycles)");
 } catch (err) {
-  console.warn(`  ⚠ HeadySims not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadySims not loaded: ${err.message}`);
 }
 
 // ─── Pattern Recognition Engine ──────────────────────────────────────
@@ -1496,9 +1509,9 @@ try {
   // Start continuous pattern analysis
   patternEngine.start();
 
-  console.log("  ∞ Pattern Engine: LOADED (30s analysis cycles)");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Pattern Engine: LOADED (30s analysis cycles)");
 } catch (err) {
-  console.warn(`  ⚠ Pattern Engine not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Pattern Engine not loaded: ${err.message}`);
 }
 
 // ─── Story Driver ────────────────────────────────────────────────────
@@ -1550,9 +1563,9 @@ try {
     });
   }
 
-  console.log("  ∞ Story Driver: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Story Driver: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Story Driver not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Story Driver not loaded: ${err.message}`);
 }
 
 // ─── Self-Critique & Optimization Engine ─────────────────────────────
@@ -1585,10 +1598,10 @@ try {
     });
   }
 
-  console.log("  ∞ Self-Critique Engine: LOADED");
-  console.log("    → Endpoints: /api/self/*, /api/pricing/*");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Self-Critique Engine: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/self/*, /api/pricing/*");
 } catch (err) {
-  console.warn(`  ⚠ Self-Critique Engine not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Self-Critique Engine not loaded: ${err.message}`);
 }
 
 // ─── Auto-Task Conversion Hook ──────────────────────────────────────
@@ -1601,7 +1614,7 @@ function setupAutoTaskConversion() {
         : 'medium';
       const taskId = `rec-${Date.now()}`;
       const text = typeof recommendation === 'string' ? recommendation : (recommendation.text || 'auto-task');
-      console.log(`[AutoTask] Task ${taskId}: ${text} (${priority})`);
+      logger.logNodeActivity("CONDUCTOR", `[AutoTask] Task ${taskId}: ${text} (${priority})`);
 
       if (storyDriver) {
         storyDriver.ingestSystemEvent({
@@ -1611,7 +1624,7 @@ function setupAutoTaskConversion() {
         });
       }
     } catch (err) {
-      console.warn(`[AutoTask] Failed: ${err.message}`);
+      logger.logNodeActivity("CONDUCTOR", `[AutoTask] Failed: ${err.message}`);
     }
   });
 }
@@ -1627,9 +1640,9 @@ try {
     patternEngine: patternEngine || null,
     selfCritique: selfCritiqueEngine || null,
   });
-  console.log("  ∞ Pipeline bound to MC + Patterns + Self-Critique");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Pipeline bound to MC + Patterns + Self-Critique");
 } catch (err) {
-  console.warn(`  ⚠ Pipeline bind failed: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Pipeline bind failed: ${err.message}`);
 }
 
 // ─── Continuous Improvement Scheduler ─────────────────────────────────
@@ -1648,9 +1661,9 @@ try {
   // Start the scheduler
   improvementScheduler.start();
 
-  console.log("  ∞ Improvement Scheduler: LOADED (15m cycles)");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Improvement Scheduler: LOADED (15m cycles)");
 } catch (err) {
-  console.warn(`  ⚠ Improvement Scheduler not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Improvement Scheduler not loaded: ${err.message}`);
 }
 
 // ─── Auto-Success Task Engine (135 tasks × 9 categories, φ-aligned) ──
@@ -1679,14 +1692,14 @@ try {
     const conductorModule = require("./src/routes/conductor");
     if (conductorModule.bindAutoSuccess) {
       conductorModule.bindAutoSuccess(autoSuccessEngine);
-      console.log("    → Auto-Success ↔ Conductor: WIRED");
+      logger.logNodeActivity("CONDUCTOR", "    → Auto-Success ↔ Conductor: WIRED");
     }
   } catch { /* conductor bind optional */ }
 
-  console.log("  ∞ Auto-Success Engine: LOADED (135 tasks, 9 categories, φ-aligned 16.18s, 13/batch)");
-  console.log("    → Endpoints: /api/auto-success/health, /status, /tasks, /history, /force-cycle");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Auto-Success Engine: LOADED (135 tasks, 9 categories, φ-aligned 16.18s, 13/batch)");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/auto-success/health, /status, /tasks, /history, /force-cycle");
 } catch (err) {
-  console.warn(`  ⚠ Auto-Success Engine not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Auto-Success Engine not loaded: ${err.message}`);
 }
 
 // ─── HeadyScientist — System Integrity & Determinism Protocol ────────
@@ -1711,13 +1724,12 @@ try {
   registerScientistRoutes(app, scientistEngine);
   scientistEngine.start();
 
-  console.log("  🔬 HeadyScientist: LOADED (integrity protocol, determinism proof, drift detection)");
-  console.log("    → Endpoints: /api/scientist/health, /status, /scan, /proof-chain, /predictions");
+  logger.logNodeActivity("CONDUCTOR", "  🔬 HeadyScientist: LOADED (integrity protocol, determinism proof, drift detection)");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/scientist/health, /status, /scan, /proof-chain, /predictions");
 } catch (err) {
-  console.warn(`  ⚠ HeadyScientist not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyScientist not loaded: ${err.message}`);
 }
 
-// ─── SSE Text Streaming Engine ───────────────────────────────────────
 // ─── HeadyQA — Live Quality Assurance Engine ─────────────────────────
 let qaEngine = null;
 try {
@@ -1725,94 +1737,13 @@ try {
   qaEngine = new HeadyQA({ projectRoot: __dirname, managerPort: PORT });
   registerQARoutes(app, qaEngine);
   qaEngine.startContinuousLoop();
-  console.log("  ✅ HeadyQA: LOADED (endpoint probes + schema validation + integration smoke tests)");
-  console.log("    → Endpoints: /api/qa/status, /run, /reports, /latest");
+  logger.logNodeActivity("CONDUCTOR", "  ✅ HeadyQA: LOADED (endpoint probes + schema validation + integration smoke tests)");
 } catch (err) {
-  console.warn(`  ⚠ HeadyQA not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyQA not loaded: ${err.message}`);
 }
 
-// ─── SSE Text Streaming Engine ───────────────────────────────────────
-const sseClients = new Set();
-
-app.get("/api/stream/connect", (req, res) => {
-  res.writeHead(200, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache",
-    Connection: "keep-alive",
-    "Access-Control-Allow-Origin": "*",
-  });
-  res.write("data: {\"type\":\"connected\",\"ts\":\"" + new Date().toISOString() + "\"}\n\n");
-  sseClients.add(res);
-  req.on("close", () => sseClients.delete(res));
-});
-
-// Broadcast to all connected SSE clients
-function sseBroadcast(eventType, payload) {
-  const data = JSON.stringify({ type: eventType, ...payload, ts: new Date().toISOString() });
-  for (const client of sseClients) {
-    try { client.write(`data: ${data}\n\n`); } catch { sseClients.delete(client); }
-  }
-}
-
-// Stream text token-by-token into a target area
-app.post("/api/stream/text", async (req, res) => {
-  const { text, targetId, chunkSize = 3, delayMs = 30 } = req.body;
-  if (!text) return res.status(400).json({ error: "text is required" });
-
-  const chunks = [];
-  for (let i = 0; i < text.length; i += chunkSize) {
-    chunks.push(text.slice(i, i + chunkSize));
-  }
-
-  // Stream chunks to all connected clients
-  for (let i = 0; i < chunks.length; i++) {
-    sseBroadcast("text_chunk", {
-      targetId: targetId || "default",
-      chunk: chunks[i],
-      index: i,
-      total: chunks.length,
-      done: i === chunks.length - 1,
-    });
-    await new Promise((r) => setTimeout(r, delayMs));
-  }
-
-  res.json({ ok: true, chunksStreamed: chunks.length, targetId: targetId || "default" });
-});
-
-// Stream a full file's content for live editing
-app.post("/api/stream/file", async (req, res) => {
-  const { filePath, targetId, chunkSize = 80, delayMs = 15 } = req.body;
-  if (!filePath) return res.status(400).json({ error: "filePath is required" });
-
-  try {
-    const content = fs.readFileSync(filePath, "utf8");
-    const lines = content.split("\n");
-
-    for (let i = 0; i < lines.length; i++) {
-      sseBroadcast("text_line", {
-        targetId: targetId || "editor",
-        line: lines[i],
-        lineNumber: i + 1,
-        total: lines.length,
-        done: i === lines.length - 1,
-      });
-      await new Promise((r) => setTimeout(r, delayMs));
-    }
-
-    res.json({ ok: true, linesStreamed: lines.length, filePath, targetId: targetId || "editor" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/api/stream/clients", (req, res) => {
-  res.json({ ok: true, connectedClients: sseClients.size, ts: new Date().toISOString() });
-});
-
-// Expose sseBroadcast globally for other modules
-global.__sseBroadcast = sseBroadcast;
-
-console.log("  📡 SSE Text Streaming: LOADED (/api/stream/connect, /text, /file)");
+// ─── SSE Text Streaming Engine (Pillar Module) ──────────────────────
+const { sseBroadcast } = require("./src/routes/sse-streaming")(app);
 
 // ─── Deep Scan & Unified Control API ─────────────────────────────────
 try {
@@ -1826,13 +1757,13 @@ try {
   setTimeout(async () => {
     try {
       const scan = await runDeepScan();
-      console.log(`  🔬 Initial Deep Scan: Score ${scan.overallScore} | ${Object.values(scan.internal).filter(s => s.healthy).length}/${Object.keys(scan.internal).length} services healthy`);
+      logger.logNodeActivity("CONDUCTOR", `  🔬 Initial Deep Scan: Score ${scan.overallScore} | ${Object.values(scan.internal).filter(s => s.healthy).length}/${Object.keys(scan.internal).length} services healthy`);
     } catch (err) {
-      console.warn(`  ⚠ Initial deep scan deferred: ${err.message}`);
+      logger.logNodeActivity("CONDUCTOR", `  ⚠ Initial deep scan deferred: ${err.message}`);
     }
   }, 10000);
 } catch (err) {
-  console.warn(`  ⚠ Deep Scan module not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Deep Scan module not loaded: ${err.message}`);
 }
 
 // ─── HeadyCreative — Unified Creative Services Engine ───────────────
@@ -1863,9 +1794,9 @@ try {
     }
   });
 
-  console.log("  ✓ HeadyCreative engine: ACTIVE");
+  logger.logNodeActivity("CONDUCTOR", "  ✓ HeadyCreative engine: ACTIVE");
 } catch (err) {
-  console.warn(`  ⚠ HeadyCreative not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyCreative not loaded: ${err.message}`);
 }
 
 // ─── HeadyDeepIntel — Deep System Intelligence Protocol ─────────────
@@ -1888,9 +1819,9 @@ try {
     });
   }, 5000);
 
-  console.log("  ✓ HeadyDeepIntel engine: ACTIVE (10 perspectives, 10 nodes, 3D vectors)");
+  logger.logNodeActivity("CONDUCTOR", "  ✓ HeadyDeepIntel engine: ACTIVE (10 perspectives, 10 nodes, 3D vectors)");
 } catch (err) {
-  console.warn(`  ⚠ HeadyDeepIntel not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyDeepIntel not loaded: ${err.message}`);
 }
 
 // ─── Liquid Component Allocation Engine ──────────────────────────────
@@ -1916,7 +1847,7 @@ try {
   // Persist liquid state every 60s
   setInterval(() => liquidAllocator.persist(), 60000);
 } catch (err) {
-  console.warn(`  ⚠ Liquid Allocator not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Allocator not loaded: ${err.message}`);
 }
 
 // ─── HCSysOrchestrator — Multi-Brain Task Router ────────────────────
@@ -1924,10 +1855,10 @@ let orchestratorRoutes = null;
 try {
   orchestratorRoutes = require("./services/orchestrator/hc_sys_orchestrator");
   app.use("/api/orchestrator", orchestratorRoutes);
-  console.log("  ∞ HCSysOrchestrator: LOADED");
-  console.log("    → Endpoints: /api/orchestrator/health, /route, /brains, /layers, /contract, /rebuild-status");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HCSysOrchestrator: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/orchestrator/health, /route, /brains, /layers, /contract, /rebuild-status");
 } catch (err) {
-  console.warn(`  ⚠ HCSysOrchestrator not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HCSysOrchestrator not loaded: ${err.message}`);
 }
 
 // ─── HeadyBrain API — Per-Layer Intelligence ────────────────────────
@@ -1935,8 +1866,8 @@ let brainApiRoutes = null;
 try {
   brainApiRoutes = require("./services/orchestrator/brain_api");
   app.use("/api/brain", brainApiRoutes);
-  console.log("  ∞ HeadyBrain API: LOADED");
-  console.log("    → Endpoints: /api/brain/health, /plan, /feedback, /status");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyBrain API: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/brain/health, /plan, /feedback, /status");
 
   // Initialize BrainConnector for 100% uptime
   const { getBrainConnector } = require("./src/brain_connector");
@@ -1947,23 +1878,23 @@ try {
 
   // Monitor brain connector events
   brainConnector.on('circuitBreakerOpen', (data) => {
-    console.warn(`  ⚠ Brain circuit breaker OPEN: ${data.endpointId} (${data.failures} failures)`);
+    logger.logNodeActivity("CONDUCTOR", `  ⚠ Brain circuit breaker OPEN: ${data.endpointId} (${data.failures} failures)`);
   });
 
   brainConnector.on('allEndpointsFailed', (data) => {
-    console.error(`  🚨 ALL BRAIN ENDPOINTS FAILED! Using fallback mode.`);
+    logger.logError("CONDUCTOR", `  🚨 ALL BRAIN ENDPOINTS FAILED! Using fallback mode.`);
   });
 
   brainConnector.on('healthCheck', (results) => {
     const healthy = Array.from(results.entries()).filter(([_, r]) => r.status === 'healthy').length;
     if (healthy < results.size) {
-      console.warn(`  ⚠ Brain health check: ${healthy}/${results.size} endpoints healthy`);
+      logger.logNodeActivity("CONDUCTOR", `  ⚠ Brain health check: ${healthy}/${results.size} endpoints healthy`);
     }
   });
 
-  console.log("  ∞ BrainConnector: ACTIVE (100% uptime guarantee)");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ BrainConnector: ACTIVE (100% uptime guarantee)");
 } catch (err) {
-  console.warn(`  ⚠ HeadyBrain API not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyBrain API not loaded: ${err.message}`);
 }
 
 // ─── Mount src/routes/brain.js (chat, analyze, embed, search) ───────
@@ -2020,68 +1951,68 @@ try {
   orchestrator.registerHandler("embed", async (payload) => ({ note: "use /api/brain/embed HTTP endpoint" }));
   orchestrator.registerHandler("search", async (payload) => ({ note: "use /api/brain/search HTTP endpoint" }));
 
-  console.log("  ∞ HeadyBrain Core Routes: LOADED (orchestrated)");
-  console.log("    → Memory-first: pipeline scans vector memory before every action");
-  console.log("    → Orchestrator: tracks agents + tasks on every /brain/* POST");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyBrain Core Routes: LOADED (orchestrated)");
+  logger.logNodeActivity("CONDUCTOR", "    → Memory-first: pipeline scans vector memory before every action");
+  logger.logNodeActivity("CONDUCTOR", "    → Orchestrator: tracks agents + tasks on every /brain/* POST");
 } catch (err) {
-  console.warn(`  ⚠ HeadyBrain Core Routes not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyBrain Core Routes not loaded: ${err.message}`);
 }
 
 // ─── Mount src/routes/hive-sdk.js (battle, creative, mcp, auth, events)
 try {
   const { router: hiveSdkRoutes } = require("./src/routes/hive-sdk");
   app.use("/api", hiveSdkRoutes);
-  console.log("  ∞ Heady Hive SDK Endpoints: LOADED");
-  console.log("    → Endpoints: /api/battle/*, /api/creative/*, /api/mcp/*, /api/auth/*, /api/events/*");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Heady Hive SDK Endpoints: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/battle/*, /api/creative/*, /api/mcp/*, /api/auth/*, /api/events/*");
 } catch (err) {
-  console.warn(`  ⚠ Heady Hive SDK Endpoints not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Hive SDK Endpoints not loaded: ${err.message}`);
 }
 
 // ─── Mount Notion sync routes ───────────────────────────────────────
 try {
   const { registerNotionRoutes } = require("./src/services/heady-notion");
   registerNotionRoutes(app);
-  console.log("  ∞ HeadyNotion Sync: LOADED");
-  console.log("    → Endpoints: /api/notion/sync, /health, /state");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyNotion Sync: LOADED");
+  logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/notion/sync, /health, /state");
 } catch (err) {
-  console.warn(`  ⚠ HeadyNotion routes not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyNotion routes not loaded: ${err.message}`);
 }
 
 // ─── Real Service Routers (replacing stubs) ─────────────────────────
 try {
   const soulRouter = require("./src/routes/soul");
   app.use("/api/soul", soulRouter);
-  console.log("  ∞ HeadySoul: LOADED (real router) → /api/soul/*");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadySoul: LOADED (real router) → /api/soul/*");
 } catch (err) {
-  console.warn(`  ⚠ HeadySoul router not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadySoul router not loaded: ${err.message}`);
 }
 
 try {
   const battleRouter = require("./src/routes/battle");
   app.use("/api/battle", battleRouter);
-  console.log("  ∞ HeadyBattle: LOADED (real router) → /api/battle/*");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyBattle: LOADED (real router) → /api/battle/*");
 } catch (err) {
-  console.warn(`  ⚠ HeadyBattle router not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyBattle router not loaded: ${err.message}`);
 }
 
 try {
   const hcfpRouter = require("./src/routes/hcfp");
   app.use("/api/hcfp", hcfpRouter);
-  console.log("  ∞ HCFP Router: INSTALLED");
-} catch (err) { console.warn(`  ⚠ HCFP router not loaded: ${err.message}`); }
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HCFP Router: INSTALLED");
+} catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ HCFP router not loaded: ${err.message}`); }
 
 try {
   const budgetRouter = require("./src/routes/budget-router");
   app.use("/api/budget", budgetRouter);
-  console.log("  ∞ Budget Router: INSTALLED");
-} catch (err) { console.warn(`  ⚠ Budget router not loaded: ${err.message}`); }
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Budget Router: INSTALLED");
+} catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ Budget router not loaded: ${err.message}`); }
 
 try {
   const patternsRouter = require("./src/routes/patterns");
   app.use("/api/patterns", patternsRouter);
-  console.log("  ∞ HeadyPatterns: LOADED (real router) → /api/patterns/*");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyPatterns: LOADED (real router) → /api/patterns/*");
 } catch (err) {
-  console.warn(`  ⚠ HeadyPatterns router not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyPatterns router not loaded: ${err.message}`);
 }
 
 // Wave 4 real routers
@@ -2089,9 +2020,9 @@ for (const [name, file] of [["ops", "ops"], ["maintenance", "maintenance"], ["le
   try {
     const r = require(`./src/routes/${file}`);
     app.use(`/api/${name}`, r);
-    console.log(`  ∞ Heady${name.charAt(0).toUpperCase() + name.slice(1)}: LOADED (real router) → /api/${name}/*`);
+    logger.logNodeActivity("CONDUCTOR", `  ∞ Heady${name.charAt(0).toUpperCase() + name.slice(1)}: LOADED (real router) → /api/${name}/*`);
   } catch (err) {
-    console.warn(`  ⚠ Heady${name} router not loaded: ${err.message}`);
+    logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady${name} router not loaded: ${err.message}`);
   }
 }
 
@@ -2110,562 +2041,43 @@ try {
     }
   });
 
-  console.log("  🎨 HeadyVinci Canvas: LOADED → /api/canvas/*, /canvas");
+  logger.logNodeActivity("CONDUCTOR", "  🎨 HeadyVinci Canvas: LOADED → /api/canvas/*, /canvas");
 } catch (err) {
-  console.warn(`  ⚠ HeadyVinci Canvas not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyVinci Canvas not loaded: ${err.message}`);
 }
 
-// ─── Service Stub Routes for remaining MCP Tools ────────────────────
-// These ensure all heady_* MCP tools have working backend endpoints.
-// Each stub logs the request, records the connectivity pattern, and
-// returns a structured response.
-
-function createServiceStub(name, endpoints) {
-  const router = express.Router();
-  const serviceLog = [];
-
-  // Health endpoint for every service
-  router.get("/health", (req, res) => {
-    res.json({ status: "ACTIVE", service: name, logged: serviceLog.length, ts: new Date().toISOString() });
-  });
-
-  // Create POST handlers for each endpoint
-  for (const ep of endpoints) {
-    router.post(`/${ep}`, (req, res) => {
-      const entry = {
-        id: `${name}-${Date.now()}`,
-        endpoint: ep,
-        input: JSON.stringify(req.body).substring(0, 500),
-        source: req.body.source || "unknown",
-        ts: new Date().toISOString(),
-      };
-      serviceLog.push(entry);
-      if (serviceLog.length > 500) serviceLog.splice(0, serviceLog.length - 500);
-
-      res.json({
-        ok: true,
-        service: name,
-        endpoint: ep,
-        requestId: entry.id,
-        message: `${name} received ${ep} request. Routed through Heady Manager.`,
-        input_received: true,
-        stored: true,
-        ts: entry.ts,
-      });
-    });
-  }
-
-  // GET handler for read-only endpoints
-  for (const ep of endpoints) {
-    router.get(`/${ep}`, (req, res) => {
-      res.json({
-        ok: true,
-        service: name,
-        endpoint: ep,
-        logged: serviceLog.length,
-        recentActivity: serviceLog.slice(-5),
-        ts: new Date().toISOString(),
-      });
-    });
-  }
-
-  return router;
-}
-
-// Register all service stubs
-const serviceStubs = {
-  perplexity: ["search", "research"],
-  jules: ["task", "status"],
-  huggingface: ["model"],
-  risks: ["assess", "mitigate"],
-  coder: ["generate", "orchestrate"],
-  openai: ["chat", "complete"],
-  gemini: ["generate", "analyze"],
-  groq: ["chat", "complete"],
-  codex: ["generate", "transform"],
-  copilot: ["suggest", "complete"],
-  maid: ["clean", "schedule"],
-};
-
-for (const [svc, endpoints] of Object.entries(serviceStubs)) {
-  app.use(`/api/${svc}`, Handshake.middleware, createServiceStub(`heady-${svc}`, endpoints));
-  console.log(`  ∞ Heady${svc.charAt(0).toUpperCase() + svc.slice(1)} stub routes: PROTECTED (mTLS) → /api/${svc}/*`);
-}
+// ─── Service Stubs + Connectivity (Pillar Module) ───────────────────
+require("./src/routes/service-stubs")(app, Handshake);
 
 // ─── ChatGPT Business Plan Integration ──────────────────────────────
-// Enhance OpenAI routes with org headers for Business plan features
 app.get("/api/openai/business", (req, res) => {
   res.json({
-    ok: true,
-    plan: "business",
+    ok: true, plan: "business",
     org_id: process.env.OPENAI_ORG_ID || "not_configured",
     workspace_id: process.env.OPENAI_WORKSPACE_ID || "not_configured",
     seats: (process.env.OPENAI_BUSINESS_SEATS || "").split(",").filter(Boolean),
-    capabilities: {
-      codex_cli: process.env.OPENAI_CODEX_ENABLED === "true",
-      connectors: process.env.OPENAI_CONNECTORS_ENABLED === "true",
-      github_connector: process.env.OPENAI_GITHUB_CONNECTOR === "true",
-      gpt_builder: true,
-      custom_apps: true,
-    },
-    api_headers: {
-      "OpenAI-Organization": process.env.OPENAI_ORG_ID,
-      "OpenAI-Project": process.env.OPENAI_WORKSPACE_ID,
-    },
+    capabilities: { codex_cli: process.env.OPENAI_CODEX_ENABLED === "true", connectors: process.env.OPENAI_CONNECTORS_ENABLED === "true", github_connector: process.env.OPENAI_GITHUB_CONNECTOR === "true", gpt_builder: true, custom_apps: true },
+    api_headers: { "OpenAI-Organization": process.env.OPENAI_ORG_ID, "OpenAI-Project": process.env.OPENAI_WORKSPACE_ID },
     domain_verification: { domain: "headysystems.com", status: "verified" },
     models: ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "o1", "o1-mini", "o3-mini", "dall-e-3"],
   });
 });
 if (process.env.OPENAI_ORG_ID) {
-  console.log(`  🔑 ChatGPT Business: CONFIGURED (org: ${process.env.OPENAI_ORG_ID.slice(0, 15)}..., 2 seats, connectors ON)`);
+  logger.logNodeActivity("CONDUCTOR", `  🔑 ChatGPT Business: CONFIGURED (org: ${process.env.OPENAI_ORG_ID.slice(0, 15)}..., 2 seats, connectors ON)`);
 }
 
-// ─── Connectivity Pattern Logger for HeadyRegistry ──────────────────
-// Stores connectivity patterns persistently for automation comparison
-const CONNECTIVITY_PATTERNS_PATH = path.join(__dirname, "data", "connectivity-patterns.json");
-
-function logConnectivityPattern(service, endpoint, status, details) {
-  try {
-    if (!fs.existsSync(path.join(__dirname, "data"))) {
-      fs.mkdirSync(path.join(__dirname, "data"), { recursive: true });
-    }
-    let patterns = [];
-    if (fs.existsSync(CONNECTIVITY_PATTERNS_PATH)) {
-      patterns = JSON.parse(fs.readFileSync(CONNECTIVITY_PATTERNS_PATH, "utf8"));
-    }
-    patterns.push({
-      service,
-      endpoint,
-      status,
-      details,
-      ts: new Date().toISOString(),
-      source: "heady-manager-auto",
-    });
-    if (patterns.length > 2000) patterns = patterns.slice(-2000);
-    fs.writeFileSync(CONNECTIVITY_PATTERNS_PATH, JSON.stringify(patterns, null, 2));
-  } catch (err) {
-    console.warn(`  ⚠ Connectivity pattern log error: ${err.message}`);
-  }
-}
-
-// Expose connectivity patterns via API for registry/automation
-app.get("/api/connectivity/patterns", (req, res) => {
-  try {
-    const patterns = fs.existsSync(CONNECTIVITY_PATTERNS_PATH)
-      ? JSON.parse(fs.readFileSync(CONNECTIVITY_PATTERNS_PATH, "utf8"))
-      : [];
-    const recent = patterns.slice(-50);
-    const byService = {};
-    for (const p of patterns) {
-      if (!byService[p.service]) byService[p.service] = { total: 0, ok: 0, error: 0 };
-      byService[p.service].total++;
-      if (p.status === "ok") byService[p.service].ok++;
-      else byService[p.service].error++;
-    }
-    res.json({ ok: true, total: patterns.length, byService, recent, ts: new Date().toISOString() });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+// ─── HeadyBuddy API (Pillar Module) ─────────────────────────────────
+require("./src/routes/buddy")(app, {
+  continuousPipeline,
+  storyDriver,
+  resourceManager,
+  resourceDiagnostics: typeof resourceDiagnostics !== "undefined" ? resourceDiagnostics : null,
+  patternEngine,
+  selfCritiqueEngine: typeof selfCritiqueEngine !== "undefined" ? selfCritiqueEngine : null,
+  mcGlobal: typeof mcGlobal !== "undefined" ? mcGlobal : null,
+  improvementScheduler: typeof improvementScheduler !== "undefined" ? improvementScheduler : null,
 });
 
-app.post("/api/connectivity/scan", (req, res) => {
-  // Scan all registered services and log connectivity
-  const results = [];
-  for (const [svc] of Object.entries(serviceStubs)) {
-    const status = "ok"; // Local stubs are always reachable
-    logConnectivityPattern(svc, "health", status, { type: "local_stub", reachable: true });
-    results.push({ service: svc, status, ts: new Date().toISOString() });
-  }
-  // Also check manager-native services
-  for (const native of ["brain", "orchestrator", "claude", "buddy", "registry"]) {
-    logConnectivityPattern(native, "health", "ok", { type: "native_route", reachable: true });
-    results.push({ service: native, status: "ok", ts: new Date().toISOString() });
-  }
-  res.json({ ok: true, scanned: results.length, results, ts: new Date().toISOString() });
-});
-
-// ─── HeadyBuddy API ─────────────────────────────────────────────────
-const buddyStartTime = Date.now();
-
-/**
- * @swagger
- * /api/buddy/health:
- *   get:
- *     summary: HeadyBuddy health check
- *     responses:
- *       200:
- *         description: HeadyBuddy is healthy
- */
-app.get("/api/buddy/health", (req, res) => {
-  res.json({
-    ok: true,
-    service: "heady-buddy",
-    version: "2.0.0",
-    uptime: (Date.now() - buddyStartTime) / 1000,
-    continuousMode: continuousPipeline.running,
-    ts: new Date().toISOString(),
-  });
-});
-
-/**
- * @swagger
- * /api/buddy/chat:
- *   post:
- *     summary: Send chat message to HeadyBuddy
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               message:
- *                 type: string
- *     responses:
- *       200:
- *         description: HeadyBuddy response
- */
-app.post("/api/buddy/chat", (req, res) => {
-  const { message } = req.body;
-  if (!message) return res.status(400).json({ error: "message required" });
-
-  const reg = loadRegistry();
-  const activeNodes = Object.values(reg.nodes || {}).filter(n => n.status === "active").length;
-
-  const hour = new Date().getHours();
-  let greeting = hour < 12 ? "Good morning!" : hour < 17 ? "Good afternoon!" : "Good evening!";
-  const lowerMsg = message.toLowerCase();
-  let reply = "";
-
-  if (lowerMsg.includes("plan") && lowerMsg.includes("day")) {
-    reply = `${greeting} Let's plan your perfect day. I see ${activeNodes} nodes active. What are your top 3 priorities today?`;
-  } else if (lowerMsg.includes("pipeline") || lowerMsg.includes("hcfull")) {
-    const contState = continuousPipeline.running ? `running (cycle ${continuousPipeline.cycleCount})` : "stopped";
-    reply = `Pipeline continuous mode: ${contState}. ${activeNodes} nodes active. Would you like me to start a pipeline run or check the orchestrator dashboard?`;
-  } else if (lowerMsg.includes("diagnos") || lowerMsg.includes("why slow") || lowerMsg.includes("bottleneck") || lowerMsg.includes("fix resource")) {
-    if (resourceDiagnostics) {
-      const diag = resourceDiagnostics.diagnose();
-      const snap = resourceManager ? resourceManager.getSnapshot() : {};
-      const cpuPct = snap.cpu?.currentPercent || 0;
-      const ramPct = snap.ram?.currentPercent || 0;
-      const topIssue = diag.findings[0];
-      reply = `Diagnostic scan complete — ${diag.totalFindings} findings (${diag.critical} critical, ${diag.high} high).\n\n${topIssue ? `Top issue: ${topIssue.title} (${topIssue.severity}).` : "No critical issues."} Say "diagnose" for full report or "apply quick wins" for fast fixes.`;
-    } else if (resourceManager) {
-      const snap = resourceManager.getSnapshot();
-      const events = resourceManager.getRecentEvents(5);
-      const cpuPct = snap.cpu?.currentPercent || 0;
-      const ramPct = snap.ram?.currentPercent || 0;
-      const contributors = events.length > 0 && events[events.length - 1].contributors
-        ? events[events.length - 1].contributors.slice(0, 3).map(c => `${c.description} (${c.ramMB || 0} MB)`).join(", ")
-        : "no major contributors detected";
-      const severity = cpuPct >= 90 || ramPct >= 85 ? "CRITICAL" : cpuPct >= 75 || ramPct >= 70 ? "CONSTRAINED" : "HEALTHY";
-      reply = `Resource status: ${severity}. CPU: ${cpuPct}%, RAM: ${ramPct}%. Top contributors: ${contributors}. ${snap.safeMode ? "Safe mode is ACTIVE." : ""} Check the Resources tab for details.`;
-    } else {
-      reply = `System memory at ${Math.round(process.memoryUsage().heapUsed / 1048576)}MB heap. For detailed analysis, the Resource Manager needs to be running.`;
-    }
-  } else if (lowerMsg.includes("resource") || lowerMsg.includes("gpu") || lowerMsg.includes("tier")) {
-    if (resourceManager) {
-      const snap = resourceManager.getSnapshot();
-      const diskInfo = snap.disk && snap.disk.capacity > 0 ? `, Disk ${snap.disk.currentPercent}%` : "";
-      reply = `Resource overview: CPU ${snap.cpu?.currentPercent || 0}%, RAM ${snap.ram?.currentPercent || 0}%${diskInfo}${snap.gpu ? `, GPU ${snap.gpu.compute?.currentPercent || 0}%` : ""}. ${activeNodes} nodes active. ${snap.safeMode ? "⚠ Safe mode active." : ""} Say "diagnose" for deep analysis.`;
-    } else {
-      reply = `Resource overview: ${activeNodes} nodes active. Memory: ${Math.round(process.memoryUsage().heapUsed / 1048576)}MB heap. Check the Orchestrator tab for details.`;
-    }
-  } else if (lowerMsg.includes("story") || lowerMsg.includes("what changed") || lowerMsg.includes("narrative")) {
-    if (storyDriver) {
-      const sysSummary = storyDriver.getSystemSummary();
-      reply = `Story Driver: ${sysSummary.totalStories} stories (${sysSummary.ongoing} ongoing). ${sysSummary.recentNarrative || "No recent events."} Check the Story tab in Expanded View for full timelines.`;
-    } else {
-      reply = "Story Driver is not loaded. It tracks project narratives, feature lifecycles, and incident timelines.";
-    }
-  } else if (lowerMsg.includes("status") || lowerMsg.includes("health")) {
-    reply = `System healthy. ${activeNodes} nodes active. Uptime: ${Math.round(process.uptime())}s. Continuous mode: ${continuousPipeline.running ? "active" : "off"}.`;
-  } else if (lowerMsg.includes("help") || lowerMsg.includes("what can")) {
-    reply = `I can help with: planning your day, running HCFullPipeline, monitoring resources/nodes, orchestrating parallel tasks, automating workflows, and checking system health.`;
-  } else if (lowerMsg.includes("stop") || lowerMsg.includes("pause")) {
-    if (continuousPipeline.running) {
-      clearInterval(continuousPipeline.intervalId);
-      continuousPipeline.running = false;
-      continuousPipeline.exitReason = "user_requested_stop";
-      reply = `Continuous pipeline stopped after ${continuousPipeline.cycleCount} cycles. Resume anytime.`;
-    } else {
-      reply = "No continuous pipeline running. I'm here whenever you need me!";
-    }
-  } else {
-    reply = `${greeting} I'm HeadyBuddy, your perfect day AI companion and orchestration copilot. ${activeNodes} nodes standing by. How can I help?`;
-  }
-
-  res.json({
-    reply,
-    context: {
-      nodes: { total: Object.keys(reg.nodes || {}).length, active: activeNodes },
-      continuousMode: continuousPipeline.running,
-      cycleCount: continuousPipeline.cycleCount,
-    },
-    ts: new Date().toISOString(),
-  });
-});
-
-/**
- * @swagger
- * /api/buddy/suggestions:
- *   get:
- *     summary: Get HeadyBuddy suggestions
- *     responses:
- *       200:
- *         description: HeadyBuddy suggestions
- */
-app.get("/api/buddy/suggestions", (req, res) => {
-  const hour = new Date().getHours();
-  const reg = loadRegistry();
-  const activeNodes = Object.values(reg.nodes || {}).filter(n => n.status === "active").length;
-
-  const chips = [];
-
-  if (hour < 10) chips.push({ label: "Plan my morning", icon: "calendar", prompt: "Help me plan my morning." });
-  else if (hour < 14) chips.push({ label: "Plan my afternoon", icon: "calendar", prompt: "Help me plan my afternoon." });
-  else if (hour < 18) chips.push({ label: "Wrap up my day", icon: "calendar", prompt: "Help me wrap up today." });
-  else chips.push({ label: "Plan tomorrow", icon: "calendar", prompt: "Help me plan tomorrow." });
-
-  chips.push({ label: "Summarize this", icon: "file-text", prompt: "Summarize the content I'm looking at." });
-  chips.push({ label: continuousPipeline.running ? "Pipeline status" : "Run pipeline", icon: "play", prompt: continuousPipeline.running ? "Show pipeline status." : "Start HCFullPipeline." });
-  if (activeNodes > 0) chips.push({ label: "Check resources", icon: "activity", prompt: "Show resource usage and node health." });
-  chips.push({ label: "Surprise me", icon: "sparkles", prompt: "Suggest something useful right now." });
-
-  res.json({ suggestions: chips.slice(0, 5), ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/buddy/orchestrator:
- *   get:
- *     summary: Get HeadyBuddy orchestrator data
- *     responses:
- *       200:
- *         description: HeadyBuddy orchestrator data
- */
-app.get("/api/buddy/orchestrator", (req, res) => {
-  const reg = loadRegistry();
-  const nodes = Object.entries(reg.nodes || {}).map(([id, n]) => ({
-    id, name: n.name || id, role: n.role || "unknown",
-    status: n.status || "unknown", tier: n.tier || "M",
-    lastInvoked: n.last_invoked || null,
-  }));
-  const mem = process.memoryUsage();
-
-  res.json({
-    ok: true,
-    system: {
-      uptime: process.uptime(),
-      memory: {
-        heapUsedMB: Math.round(mem.heapUsed / 1048576),
-        heapTotalMB: Math.round(mem.heapTotal / 1048576),
-        rssMB: Math.round(mem.rss / 1048576),
-      },
-    },
-    nodes: {
-      total: nodes.length,
-      active: nodes.filter(n => n.status === "active").length,
-      list: nodes,
-    },
-    resourceTiers: {
-      L: nodes.filter(n => n.tier === "L").length,
-      M: nodes.filter(n => n.tier === "M").length,
-      S: nodes.filter(n => n.tier === "S").length,
-    },
-    pipeline: {
-      available: true,
-      state: null,
-      continuous: {
-        running: continuousPipeline.running,
-        cycleCount: continuousPipeline.cycleCount,
-        lastCycleTs: continuousPipeline.lastCycleTs,
-        exitReason: continuousPipeline.exitReason,
-        gates: continuousPipeline.gateResults,
-        recentErrors: continuousPipeline.errors.slice(-5),
-      },
-    },
-    ts: new Date().toISOString(),
-  });
-});
-
-/**
- * @swagger
- * /api/buddy/pipeline/continuous:
- *   post:
- *     summary: Start or stop continuous pipeline
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               action:
- *                 type: string
- *     responses:
- *       200:
- *         description: Continuous pipeline started or stopped
- */
-app.post("/api/buddy/pipeline/continuous", (req, res) => {
-  const { action = "start" } = req.body;
-
-  if (action === "stop") {
-    if (continuousPipeline.intervalId) clearInterval(continuousPipeline.intervalId);
-    continuousPipeline.running = false;
-    continuousPipeline.exitReason = "user_requested_stop";
-    return res.json({ ok: true, action: "stopped", cycleCount: continuousPipeline.cycleCount, ts: new Date().toISOString() });
-  }
-
-  if (continuousPipeline.running) return res.json({ ok: true, action: "already_running", cycleCount: continuousPipeline.cycleCount });
-
-  continuousPipeline.running = true;
-  continuousPipeline.exitReason = null;
-  continuousPipeline.errors = [];
-  continuousPipeline.cycleCount = 0;
-
-  const runCycle = () => {
-    if (!continuousPipeline.running) return;
-    continuousPipeline.cycleCount++;
-    continuousPipeline.lastCycleTs = new Date().toISOString();
-    continuousPipeline.gateResults = {
-      quality: true,
-      resource: (process.memoryUsage().heapUsed / process.memoryUsage().heapTotal) < 0.9,
-      stability: true,
-      user: continuousPipeline.running,
-    };
-    const allPass = Object.values(continuousPipeline.gateResults).every(Boolean);
-
-    // Emit story events for pipeline cycles
-    if (storyDriver) {
-      if (allPass) {
-        storyDriver.ingestSystemEvent({
-          type: "PIPELINE_CYCLE_COMPLETE",
-          refs: { cycleNumber: continuousPipeline.cycleCount, gatesSummary: "all passed" },
-          source: "hcfullpipeline",
-        });
-      } else {
-        storyDriver.ingestSystemEvent({
-          type: "PIPELINE_GATE_FAIL",
-          refs: {
-            cycleNumber: continuousPipeline.cycleCount,
-            gate: Object.entries(continuousPipeline.gateResults).find(([, v]) => !v)?.[0] || "unknown",
-            reason: "Gate check returned false",
-          },
-          source: "hcfullpipeline",
-        });
-      }
-    }
-
-    if (!allPass) {
-      continuousPipeline.running = false;
-      continuousPipeline.exitReason = "gate_failed";
-      if (continuousPipeline.intervalId) clearInterval(continuousPipeline.intervalId);
-    }
-
-    // Checkpoint validation logged (async — avoids blocking the event loop)
-    if (fs.existsSync(path.join(__dirname, 'scripts', 'checkpoint-validation.ps1'))) {
-      console.log(`[Pipeline] Checkpoint validation available (cycle ${continuousPipeline.cycleCount})`);
-    }
-  };
-
-  runCycle();
-  if (continuousPipeline.running) {
-    continuousPipeline.intervalId = setInterval(runCycle, req.body.intervalMs || 30000);
-  }
-
-  res.json({
-    ok: true, action: "started", running: continuousPipeline.running,
-    cycleCount: continuousPipeline.cycleCount, gates: continuousPipeline.gateResults,
-    ts: new Date().toISOString(),
-  });
-});
-
-// ─── HeadyBuddy State Sync Endpoints ─────────────────────────────────
-let buddyState = {
-  conversation: [],
-  viewState: 'pill',
-  pipelineState: {},
-  config: null
-};
-
-/**
- * @swagger
- * /api/buddy/state:
- *   post:
- *     summary: Update HeadyBuddy state
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               conversation:
- *                 type: array
- *               viewState:
- *                 type: string
- *               pipelineState:
- *                 type: object
- *               config:
- *                 type: object
- *     responses:
- *       200:
- *         description: HeadyBuddy state updated
- */
-app.post('/api/buddy/state', (req, res) => {
-  try {
-    // Validate and update state
-    if (req.body.conversation) buddyState.conversation = req.body.conversation;
-    if (req.body.viewState) buddyState.viewState = req.body.viewState;
-    if (req.body.pipelineState) buddyState.pipelineState = req.body.pipelineState;
-    if (req.body.config) buddyState.config = req.body.config;
-
-    res.json({
-      ok: true,
-      message: 'State updated successfully',
-      ts: new Date().toISOString()
-    });
-  } catch (err) {
-    res.status(500).json({
-      error: 'State update failed',
-      message: err.message
-    });
-  }
-});
-
-/**
- * @swagger
- * /api/buddy/state:
- *   get:
- *     summary: Get HeadyBuddy state
- *     responses:
- *       200:
- *         description: HeadyBuddy state
- */
-app.get('/api/buddy/state', (req, res) => {
-  res.json({
-    ...buddyState,
-    ts: new Date().toISOString()
-  });
-});
-
-// ─── Sync Events Endpoint ────────────────────────────────────────────
-app.get('/api/buddy/sync-events', (req, res) => {
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-
-  // Send initial status
-  res.write(`data: ${JSON.stringify({ status: 'connected' })}\n\n`);
-
-  // Simulate status updates
-  const interval = setInterval(() => {
-    res.write(`data: ${JSON.stringify({ status: Math.random() > 0.2 ? 'connected' : 'syncing' })}\n\n`);
-  }, 10000);
-
-  req.on('close', () => clearInterval(interval));
-});
 
 // ─── Secrets & Cloudflare Routes ─────────────────────────────────────
 try {
@@ -2679,7 +2091,7 @@ try {
     registerCloudflareRoutes(app, cfManager);
   }
 } catch (err) {
-  console.warn(`  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
 }
 
 // ─── Layer Management ─────────────────────────────────────────────────
@@ -2743,405 +2155,16 @@ app.post("/api/layer/switch", (req, res) => {
   });
 });
 
-// ─── Aloha Protocol System (Always-On) ───────────────────────────────
-const alohaProtocol = yaml.load(fs.readFileSync('./configs/aloha-protocol.yaml', 'utf8'));
-const deOptProtocol = yaml.load(fs.readFileSync('./configs/de-optimization-protocol.yaml', 'utf8'));
-const stabilityFirst = yaml.load(fs.readFileSync('./configs/stability-first.yaml', 'utf8'));
-
-const alohaState = {
-  mode: "aloha",
-  activeSince: new Date().toISOString(),
-  protocols: {
-    aloha: !!alohaProtocol,
-    deOptimization: !!deOptProtocol,
-    stabilityFirst: !!stabilityFirst,
-  },
-  stabilityDiagnosticMode: false,
-  crashReports: [],
-  deOptChecks: 0,
-};
-
-if (alohaProtocol) console.log("  \u221e Aloha Protocol: LOADED (always-on)");
-if (deOptProtocol) console.log("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
-if (stabilityFirst) console.log("  \u221e Stability First: LOADED (the canoe must not sink)");
-
-/**
- * @swagger
- * /api/aloha/status:
- *   get:
- *     summary: Get Aloha protocol status
- *     responses:
- *       200:
- *         description: Aloha protocol status
- */
-app.get("/api/aloha/status", (req, res) => {
-  res.json({
-    ok: true,
-    mode: alohaState.mode,
-    activeSince: alohaState.activeSince,
-    protocols: alohaState.protocols,
-    stabilityDiagnosticMode: alohaState.stabilityDiagnosticMode,
-    crashReportCount: alohaState.crashReports.length,
-    deOptChecksRun: alohaState.deOptChecks,
-    priorities: alohaProtocol ? alohaProtocol.priorities : null,
-    ts: new Date().toISOString(),
-  });
+// ─── Aloha Protocol System (Pillar Module) ───────────────────────────
+require("./src/routes/aloha")(app, {
+  selfCritiqueEngine: typeof selfCritiqueEngine !== "undefined" ? selfCritiqueEngine : null,
+  storyDriver,
+  resourceManager,
+  continuousPipeline,
+  mcGlobal: typeof mcGlobal !== "undefined" ? mcGlobal : null,
+  improvementScheduler: typeof improvementScheduler !== "undefined" ? improvementScheduler : null,
+  patternEngine,
 });
-
-/**
- * @swagger
- * /api/aloha/protocol:
- *   get:
- *     summary: Get Aloha protocol
- *     responses:
- *       200:
- *         description: Aloha protocol
- */
-app.get("/api/aloha/protocol", (req, res) => {
-  if (!alohaProtocol) return res.status(404).json({ error: "Aloha protocol not found" });
-  res.json({ ok: true, ...alohaProtocol, ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/aloha/de-optimization:
- *   get:
- *     summary: Get de-optimization protocol
- *     responses:
- *       200:
- *         description: De-optimization protocol
- */
-app.get("/api/aloha/de-optimization", (req, res) => {
-  if (!deOptProtocol) return res.status(404).json({ error: "De-optimization protocol not found" });
-  res.json({ ok: true, ...deOptProtocol, ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/aloha/stability:
- *   get:
- *     summary: Get stability first protocol
- *     responses:
- *       200:
- *         description: Stability first protocol
- */
-app.get("/api/aloha/stability", (req, res) => {
-  if (!stabilityFirst) return res.status(404).json({ error: "Stability first protocol not found" });
-  res.json({ ok: true, ...stabilityFirst, ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/aloha/priorities:
- *   get:
- *     summary: Get Aloha priorities
- *     responses:
- *       200:
- *         description: Aloha priorities
- */
-app.get("/api/aloha/priorities", (req, res) => {
-  if (!alohaProtocol) return res.status(404).json({ error: "Aloha protocol not found" });
-  res.json({
-    ok: true,
-    priorities: alohaProtocol.priorities,
-    no_assist: alohaProtocol.no_assist,
-    web_baseline: alohaProtocol.web_baseline,
-    ts: new Date().toISOString(),
-  });
-});
-
-/**
- * @swagger
- * /api/aloha/checklist:
- *   get:
- *     summary: Get de-optimization checklist
- *     responses:
- *       200:
- *         description: De-optimization checklist
- */
-app.get("/api/aloha/checklist", (req, res) => {
-  if (!deOptProtocol) return res.status(404).json({ error: "De-optimization protocol not found" });
-  res.json({
-    ok: true,
-    checklist: deOptProtocol.checklist,
-    code_rules: deOptProtocol.code_generation,
-    arch_rules: deOptProtocol.architecture_suggestions,
-    prompt_rules: deOptProtocol.prompt_and_workflow,
-    ts: new Date().toISOString(),
-  });
-});
-
-/**
- * @swagger
- * /api/aloha/crash-report:
- *   post:
- *     summary: Report crash
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               description:
- *                 type: string
- *               context:
- *                 type: string
- *               severity:
- *                 type: string
- *     responses:
- *       200:
- *         description: Crash report received
- */
-app.post("/api/aloha/crash-report", (req, res) => {
-  const { description, context, severity } = req.body;
-  const report = {
-    id: `crash-${Date.now()}`,
-    description: description || "IDE/system crash reported",
-    context: context || "unknown",
-    severity: severity || "high",
-    ts: new Date().toISOString(),
-  };
-  alohaState.crashReports.push(report);
-  alohaState.stabilityDiagnosticMode = true;
-
-  // Wire crash report into self-critique
-  if (selfCritiqueEngine) {
-    selfCritiqueEngine.recordCritique({
-      context: "stability:crash",
-      weaknesses: [`System crash: ${report.description}`],
-      severity: "critical",
-      suggestedImprovements: ["Enter Stability Diagnostic Mode", "Reduce local resource usage", "Disable non-essential extensions"],
-    });
-  }
-
-  // Wire into story driver
-  if (storyDriver) {
-    storyDriver.ingestSystemEvent({
-      type: "STABILITY_CRASH_REPORTED",
-      refs: { crashId: report.id, description: report.description },
-      source: "aloha_protocol",
-    });
-  }
-
-  // Crash threshold — 3+ crashes in 1 hour triggers emergency stability
-  console.warn(`[ALOHA CRASH REPORT] ${report.id}: ${report.description} (${report.severity})`);
-  const recentCrashes = alohaState.crashReports.filter(r =>
-    new Date(r.ts) > new Date(Date.now() - 3600000)
-  );
-
-  let emergencyActivated = false;
-  if (recentCrashes.length >= 3) {
-    alohaState.mode = "emergency_stability";
-    emergencyActivated = true;
-    console.error("[ALOHA] Emergency stability mode activated - multiple crashes detected");
-
-    if (resourceManager && !resourceManager.safeMode) {
-      try { resourceManager.enterSafeMode("aloha_crash_threshold"); } catch (e) { /* safe */ }
-    }
-    if (continuousPipeline.running) {
-      continuousPipeline.running = false;
-      continuousPipeline.exitReason = "aloha_emergency_stability";
-      if (continuousPipeline.intervalId) {
-        clearInterval(continuousPipeline.intervalId);
-        continuousPipeline.intervalId = null;
-      }
-      if (storyDriver) {
-        storyDriver.ingestSystemEvent({
-          type: "PIPELINE_EMERGENCY_SHUTDOWN",
-          refs: { reason: "aloha_emergency_stability", crashCount: recentCrashes.length },
-          source: "aloha_protocol",
-        });
-      }
-    }
-    if (mcGlobal && typeof mcGlobal.stopAutoRun === 'function') {
-      try { mcGlobal.stopAutoRun(); } catch (e) { /* safe */ }
-    }
-    if (improvementScheduler && typeof improvementScheduler.pause === 'function') {
-      try { improvementScheduler.pause(); } catch (e) { /* safe */ }
-    }
-    if (patternEngine && typeof patternEngine.pause === 'function') {
-      try { patternEngine.pause(); } catch (e) { /* safe */ }
-    }
-  }
-
-  res.json({
-    ok: true,
-    report,
-    diagnosticMode: true,
-    emergencyMode: emergencyActivated,
-    recentCrashCount: recentCrashes.length,
-    checklist: stabilityFirst?.crash_response?.diagnostic_mode?.checks || [],
-    message: emergencyActivated
-      ? "Emergency stability mode activated. All non-essential services paused."
-      : "Stability Diagnostic Mode activated. Follow the checklist.",
-  });
-});
-
-/**
- * @swagger
- * /api/aloha/de-opt-check:
- *   post:
- *     summary: Run de-optimization check
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               suggestion:
- *                 type: string
- *               context:
- *                 type: string
- *     responses:
- *       200:
- *         description: De-optimization check result
- */
-app.post("/api/aloha/de-opt-check", (req, res) => {
-  const { suggestion, context } = req.body;
-  alohaState.deOptChecks++;
-
-  const result = {
-    checkNumber: alohaState.deOptChecks,
-    suggestion: suggestion || "unnamed",
-    context: context || "general",
-    questions: deOptProtocol ? deOptProtocol.checklist.steps : [],
-    recommendation: "Prefer the simpler alternative unless measured need exists",
-    ts: new Date().toISOString(),
-  };
-
-  res.json({ ok: true, ...result });
-});
-
-/**
- * @swagger
- * /api/aloha/web-baseline:
- *   get:
- *     summary: Get web baseline
- *     responses:
- *       200:
- *         description: Web baseline
- */
-app.get("/api/aloha/web-baseline", (req, res) => {
-  if (!alohaProtocol) return res.status(404).json({ error: "Aloha protocol not found" });
-  res.json({
-    ok: true,
-    non_negotiable: true,
-    requirements: alohaProtocol.web_baseline,
-    message: "Websites must be fully functional as baseline. This is the easy thing to do.",
-    ts: new Date().toISOString(),
-  });
-});
-
-// ─── Access Point Configuration Loader ────────────────────────────────
-const accessConfig = yaml.load(fs.readFileSync('./configs/access-points.yaml', 'utf8'));
-
-app.use('/api/access-points', (req, res) => {
-  res.json(accessConfig);
-});
-
-try {
-  const headybuddyConfigRouter = require('./src/routes/headybuddy-config');
-  app.use('/api/headybuddy-config', headybuddyConfigRouter);
-  console.log("  \u221e HeadyBuddy Config Routes: LOADED");
-} catch (err) {
-  console.warn(`  \u26a0 HeadyBuddy Config routes not loaded: ${err.message}`);
-}
-
-try {
-  const authRoutes = require('./src/routes/auth-routes');
-  app.use('/api/auth', authRoutes);
-  console.log("  \u221e Auth Routes: LOADED");
-} catch (err) {
-  console.warn(`  \u26a0 Auth routes not loaded: ${err.message}`);
-}
-
-try {
-  const budgetRouter = require('./src/routes/budget-router');
-  app.use('/api/budget', budgetRouter);
-  console.log("  \u221e Budget Router (FinOps): LOADED — /api/budget/route, /api/budget/models");
-} catch (err) {
-  console.warn(`  \u26a0 Budget Router not loaded: ${err.message}`);
-}
-
-try {
-  const resilienceRoutes = require('./src/routes/resilience-routes');
-  app.use('/api/resilience', resilienceRoutes);
-  console.log("  ∞ Resilience Routes: LOADED — /api/resilience/status, /breakers, /caches, /pools");
-} catch (err) {
-  console.warn(`  ⚠ Resilience routes not loaded: ${err.message}`);
-}
-
-// (Layer management routes already registered above at /api/layer)
-
-// ─── Health Routes (production probes) ─────────────────────────────
-try {
-  const healthRoutes = require('./src/routes/health-routes');
-  app.use('/health', healthRoutes);
-  console.log('  ∞ Health Routes: LOADED — /health/live, /health/ready, /health/full');
-} catch (err) { console.warn(`  ⚠ Health routes not loaded: ${err.message}`); }
-
-// ─── SPA Fallback ───────────────────────────────────────────────────
-app.get("*", (req, res) => {
-  const indexPath = path.join(frontendBuildPath, "index.html");
-  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
-  res.status(404).json({ error: "Not found" });
-});
-
-// ─── Standardized Error Handler ─────────────────────────────────────
-try {
-  const { errorHandler } = require('./src/middleware/error-handler');
-  app.use(errorHandler);
-  console.log('  ∞ Error Handler: LOADED (standardized AppError responses)');
-} catch (err) {
-  // Fallback error handler if module fails to load
-  app.use((err, req, res, _next) => {
-    console.error('HeadyManager Error:', err);
-    res.status(500).json({ error: 'Internal server error', ts: new Date().toISOString() });
-  });
-}
-
-// Main health endpoint
-app.get("/api/health", (req, res) => {
-  const mem = process.memoryUsage();
-  const osLib = require("os");
-  const uptime = process.uptime();
-
-  res.json({
-    status: "healthy",
-    service: "heady-manager",
-    version: "3.0.0",
-    uptime: Math.floor(uptime),
-    memory: {
-      used: Math.round(mem.heapUsed / 1024 / 1024),
-      total: Math.round(mem.heapTotal / 1024 / 1024),
-      external: Math.round(mem.external / 1024 / 1024)
-    },
-    system: {
-      platform: osLib.platform(),
-      arch: osLib.arch(),
-      cpus: osLib.cpus().length,
-      totalmem: Math.round(osLib.totalmem() / 1024 / 1024),
-      freemem: Math.round(osLib.freemem() / 1024 / 1024)
-    },
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: "/api/health",
-      registry: "/api/registry",
-      brain: "/api/brain/health",
-      orchestrator: "/api/orchestrator/health",
-      resources: "/api/resources/health",
-      buddy: "/api/buddy/health"
-    }
-  });
-});
-
-// Root health endpoint
-app.get("/health", (req, res) => {
-  res.redirect("/api/health");
-});
-
 // ─── Voice Relay WebSocket System ─────────────────────────────────────
 // Cross-device voice-to-text relay: phone dictates → mini computer receives
 const voiceSessions = new Map(); // sessionId → { sender: ws, receivers: Set<ws>, created, lastActivity }
@@ -3213,7 +2236,7 @@ voiceWss.on('connection', (ws, request, sessionId) => {
 
   if (role === 'sender') {
     session.sender = ws;
-    console.log(`[VoiceRelay] Sender connected to session ${sessionId}`);
+    logger.logNodeActivity("CONDUCTOR", `[VoiceRelay] Sender connected to session ${sessionId}`);
     // Notify receivers that sender connected
     session.receivers.forEach(r => {
       if (r.readyState === WebSocket.OPEN) {
@@ -3222,7 +2245,7 @@ voiceWss.on('connection', (ws, request, sessionId) => {
     });
   } else {
     session.receivers.add(ws);
-    console.log(`[VoiceRelay] Receiver connected to session ${sessionId} (${session.receivers.size} total)`);
+    logger.logNodeActivity("CONDUCTOR", `[VoiceRelay] Receiver connected to session ${sessionId} (${session.receivers.size} total)`);
     // Tell receiver if sender is already present
     if (session.sender && session.sender.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'sender_connected' }));
@@ -3251,7 +2274,7 @@ voiceWss.on('connection', (ws, request, sessionId) => {
   ws.on('close', () => {
     if (role === 'sender') {
       session.sender = null;
-      console.log(`[VoiceRelay] Sender disconnected from session ${sessionId}`);
+      logger.logNodeActivity("CONDUCTOR", `[VoiceRelay] Sender disconnected from session ${sessionId}`);
       session.receivers.forEach(r => {
         if (r.readyState === WebSocket.OPEN) {
           r.send(JSON.stringify({ type: 'sender_disconnected' }));
@@ -3259,7 +2282,7 @@ voiceWss.on('connection', (ws, request, sessionId) => {
       });
     } else {
       session.receivers.delete(ws);
-      console.log(`[VoiceRelay] Receiver disconnected from session ${sessionId} (${session.receivers.size} remain)`);
+      logger.logNodeActivity("CONDUCTOR", `[VoiceRelay] Receiver disconnected from session ${sessionId} (${session.receivers.size} remain)`);
     }
     // Clean up empty sessions
     if (!session.sender && session.receivers.size === 0) {
@@ -3268,15 +2291,23 @@ voiceWss.on('connection', (ws, request, sessionId) => {
   });
 
   ws.on('error', (err) => {
-    console.warn(`[VoiceRelay] WebSocket error in session ${sessionId}:`, err.message);
+    logger.logNodeActivity("CONDUCTOR", `[VoiceRelay] WebSocket error in session ${sessionId}:`, err.message);
   });
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  console.log(`  ∞ Health: https://headysystems.com/api/health (port ${PORT})`);
-  console.log(`  ∞ Voice Relay: ws://0.0.0.0:${PORT}/ws/voice/:sessionId`);
-  console.log(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
+  const c = { reset: "\x1b[0m", bold: "\x1b[1m", cyan: "\x1b[36m", blue: "\x1b[34m", purple: "\x1b[35m", green: "\x1b[32m", yellow: "\x1b[33m", dim: "\x1b[2m" };
+
+  logger.logNodeActivity("CONDUCTOR", `\n${c.bold}${c.purple}╭────────────────────────────────────────────────────────╮${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.cyan}⚡ HEADY SYSTEMS CORE — OS V3.0${c.reset}                         ${c.bold}${c.purple}│${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}├────────────────────────────────────────────────────────┤${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Environment:${c.reset}  ${c.yellow}${process.env.NODE_ENV || "development"}${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Core Node:${c.reset}    ${c.green}Online (PID: ${process.pid})${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Gateway:${c.reset}      ${c.bold}${c.cyan}http://0.0.0.0:${PORT}${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Voice Relay:${c.reset}  ${c.purple}ws://0.0.0.0:${PORT}/ws/voice/:sessionId${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}API Docs:${c.reset}     ${c.blue}http://0.0.0.0:${PORT}/api-docs${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Health/Pulse:${c.reset} ${c.green}/api/health | /api/pulse${c.reset}`);
+  logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}╰────────────────────────────────────────────────────────╯${c.reset}\n`);
 });
 
 try {
@@ -3284,10 +2315,10 @@ try {
   startBrandingMonitor();
   app.get('/api/introspection', (req, res) => res.json(getSystemIntrospection()));
   app.get('/api/branding', (req, res) => res.json(getBrandingReport()));
-  console.log("  ∞ Branding Monitor: STARTED");
-  console.log("  ∞ Introspection: /api/introspection + /api/branding");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Branding Monitor: STARTED");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Introspection: /api/introspection + /api/branding");
 } catch (err) {
-  console.warn(`  ⚠ Branding Monitor not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Branding Monitor not loaded: ${err.message}`);
 }
 
 try {
@@ -3302,7 +2333,166 @@ try {
     fibonacci: hp.FIB.slice(0, 13),
     vinci: { role: 'Biomimicry node — studies patterns in nature for system optimization', patterns: ['golden_ratio', 'fibonacci_spirals', 'fractal_branching', 'swarm_intelligence', 'ant_colony_optimization', 'neural_pathway_efficiency', 'phyllotaxis', 'l_systems'] },
   }));
-  console.log("  ∞ Heady Principles: /api/principles (φ=" + hp.PHI.toFixed(3) + ")");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Heady Principles: /api/principles (φ=" + hp.PHI.toFixed(3) + ")");
 } catch (err) {
-  console.warn(`  ⚠ Heady Principles not loaded: ${err.message}`);
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Principles not loaded: ${err.message}`);
+}
+
+// ── Heady Models API ─────────────────────────────────────────────────
+try {
+  const { listModels, getModelConfig, getFineTunePricing, isPremium, getArenaConfig } = require('./src/models/heady-models');
+
+  // OpenAI-compatible: GET /api/v1/models
+  app.get('/api/v1/models', (req, res) => {
+    res.json({ object: 'list', data: listModels() });
+  });
+
+  // Heady-native: GET /api/models (same data, friendlier format)
+  app.get('/api/models', (req, res) => {
+    const models = listModels();
+    res.json({
+      models,
+      default: 'heady-flash',
+      premium: models.filter(m => m.tier === 'premium' || m.tier === 'pro').map(m => m.id),
+      fine_tunable: ['heady-flash', 'heady-buddy', 'heady-battle-v1'],
+      _links: {
+        chat: '/api/v1/chat/completions',
+        fine_tune: '/api/v1/fine-tune',
+      },
+    });
+  });
+
+  // OpenAI-compatible: POST /api/v1/chat/completions
+  app.post('/api/v1/chat/completions', async (req, res) => {
+    const { model = 'heady-flash', messages = [], temperature = 0.7, max_tokens, stream = false } = req.body;
+    const config = getModelConfig(model);
+
+    // Premium gating
+    if (isPremium(model)) {
+      const apiKey = req.headers['authorization']?.replace('Bearer ', '');
+      if (!apiKey) {
+        return res.status(401).json({
+          error: { message: `Model '${model}' requires authentication. Get an API key at https://headyio.com.`, type: 'authentication_error', code: 'api_key_required' },
+        });
+      }
+    }
+
+    const startTime = Date.now();
+    const arena = getArenaConfig(model);
+
+    try {
+      // Route to internal brain chat with arena config
+      const brainUrl = process.env.HEADY_BRAIN_URL || 'http://localhost:3301';
+      const lastMessage = messages[messages.length - 1]?.content || '';
+
+      // For now, use the local brain endpoint with model metadata
+      const brainRes = await fetch(`${brainUrl}/api/brain/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: lastMessage,
+          model: model,
+          arena_config: arena,
+          temperature,
+          max_tokens: max_tokens || config.max_output,
+        }),
+        signal: AbortSignal.timeout(arena.max_timeout_ms),
+      });
+
+      const data = await brainRes.json();
+      const latency = Date.now() - startTime;
+
+      res.json({
+        id: 'chatcmpl-heady-' + Date.now().toString(36),
+        object: 'chat.completion',
+        created: Math.floor(Date.now() / 1000),
+        model: model,
+        choices: [{
+          index: 0,
+          message: { role: 'assistant', content: data.reply || data.response || data.message || '' },
+          finish_reason: 'stop',
+        }],
+        usage: {
+          prompt_tokens: Math.ceil(lastMessage.length / 4),
+          completion_tokens: Math.ceil((data.reply || data.response || '').length / 4),
+          total_tokens: Math.ceil(lastMessage.length / 4) + Math.ceil((data.reply || data.response || '').length / 4),
+        },
+        // Heady extensions
+        heady: {
+          model_badge: config.badge,
+          arena_nodes: arena.nodes === 'all' ? 20 : arena.nodes?.length || 1,
+          latency_ms: latency,
+          tier: config.tier,
+        },
+      });
+    } catch (err) {
+      res.status(502).json({
+        error: { message: 'Model inference failed: ' + err.message, type: 'server_error', code: 'inference_error' },
+      });
+    }
+  });
+
+  // Fine-Tuning: POST /api/v1/fine-tune
+  app.post('/api/v1/fine-tune', (req, res) => {
+    const { model = 'heady-flash', training_data, name } = req.body;
+    const pricing = getFineTunePricing(model);
+
+    if (!pricing) {
+      return res.status(400).json({
+        error: { message: `Model '${model}' does not support fine-tuning. Available: heady-flash, heady-buddy, heady-battle-v1`, type: 'invalid_request' },
+      });
+    }
+
+    const exampleCount = Array.isArray(training_data) ? training_data.length : 0;
+    if (exampleCount < pricing.min_examples) {
+      return res.status(400).json({
+        error: { message: `Minimum ${pricing.min_examples} training examples required. Got ${exampleCount}.`, type: 'invalid_request' },
+      });
+    }
+
+    const estimatedMinutes = Math.ceil((exampleCount / 1000) * pricing.estimated_time_per_1k);
+    const estimatedHours = Math.ceil(estimatedMinutes / 60 * 10) / 10;
+    const estimatedCost = (estimatedHours * pricing.training_per_hour).toFixed(2);
+
+    res.json({
+      id: 'ft-heady-' + Date.now().toString(36),
+      object: 'fine_tuning.job',
+      model: model,
+      status: 'pending',
+      name: name || `${model}-custom-${Date.now().toString(36)}`,
+      training_examples: exampleCount,
+      estimated_duration: {
+        minutes: estimatedMinutes,
+        hours: estimatedHours,
+      },
+      estimated_cost: {
+        training: `$${estimatedCost}`,
+        hosting_per_hour: `$${pricing.hosting_per_hour.toFixed(2)}/hr`,
+        currency: 'USD',
+      },
+      pricing: {
+        training_rate: `$${pricing.training_per_hour.toFixed(2)}/hr`,
+        hosting_rate: `$${pricing.hosting_per_hour.toFixed(2)}/hr`,
+      },
+      _note: 'Fine-tuning job queued. Payment required before training begins.',
+    });
+  });
+
+  // Fine-Tune Pricing: GET /api/v1/fine-tune/pricing
+  app.get('/api/v1/fine-tune/pricing', (req, res) => {
+    const { getFineTunePricing: getFTP } = require('./src/models/heady-models');
+    res.json({
+      models: {
+        'heady-flash': getFTP('heady-flash'),
+        'heady-buddy': getFTP('heady-buddy'),
+        'heady-battle-v1': getFTP('heady-battle-v1'),
+      },
+      _note: 'All prices in USD. Training billed per hour. Hosting billed per hour while model is active.',
+    });
+  });
+
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Heady Models: /api/models | /api/v1/chat/completions | /api/v1/fine-tune");
+  logger.logNodeActivity("CONDUCTOR", "  ∞ Models: heady-battle-v1, heady-flash, heady-reason, heady-edge, heady-buddy");
+} catch (err) {
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Models not loaded: ${err.message}`);
 }

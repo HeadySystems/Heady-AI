@@ -1,9 +1,9 @@
+#!/usr/bin/env node
 /*
  * © 2026 Heady Systems LLC.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
-#!/usr/bin/env node
 /**
  * HeadyLens Telemetry Feeder
  * Continuously collects system metrics and pushes to HeadyLens /api/lens/observe
