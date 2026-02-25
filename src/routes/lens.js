@@ -327,30 +327,42 @@ router.get("/health", (req, res) => {
 });
 
 router.get("/source-of-truth", async (req, res) => {
-    const refresh = req.query.refresh === "1" || req.query.refresh === "true";
-    const includeRawData = req.query.raw === "1" || req.query.raw === "true";
+    try {
+        const refresh = req.query.refresh === "1" || req.query.refresh === "true";
+        const includeRawData = req.query.raw === "1" || req.query.raw === "true";
 
-    if (refresh || !lastRealtimePoll) {
-        await pollRealtimeSourceOfTruth(refresh ? "manual-refresh" : "first-read");
+        if (refresh || !lastRealtimePoll) {
+            await pollRealtimeSourceOfTruth(refresh ? "manual-refresh" : "first-read");
+        }
+
+        res.json(buildSourceOfTruthResponse(includeRawData));
+    } catch (err) {
+        res.status(502).json({ ok: false, service: "heady-lens", error: err.message });
     }
-
-    res.json(buildSourceOfTruthResponse(includeRawData));
 });
 
 router.get("/realtime", async (req, res) => {
-    const refresh = req.query.refresh === "1" || req.query.refresh === "true";
-    const includeRawData = req.query.raw === "1" || req.query.raw === "true";
+    try {
+        const refresh = req.query.refresh === "1" || req.query.refresh === "true";
+        const includeRawData = req.query.raw === "1" || req.query.raw === "true";
 
-    if (refresh || !lastRealtimePoll) {
-        await pollRealtimeSourceOfTruth(refresh ? "manual-realtime-refresh" : "first-realtime-read");
+        if (refresh || !lastRealtimePoll) {
+            await pollRealtimeSourceOfTruth(refresh ? "manual-realtime-refresh" : "first-realtime-read");
+        }
+
+        res.json(buildSourceOfTruthResponse(includeRawData));
+    } catch (err) {
+        res.status(502).json({ ok: false, service: "heady-lens", error: err.message });
     }
-
-    res.json(buildSourceOfTruthResponse(includeRawData));
 });
 
 router.post("/realtime/poll", async (req, res) => {
-    const response = await pollRealtimeSourceOfTruth("manual-api");
-    res.json({ ...response, action: "realtime-poll" });
+    try {
+        const response = await pollRealtimeSourceOfTruth("manual-api");
+        res.json({ ...response, action: "realtime-poll" });
+    } catch (err) {
+        res.status(502).json({ ok: false, service: "heady-lens", error: err.message });
+    }
 });
 
 // Capture a differential from any system component
@@ -400,14 +412,16 @@ router.post("/observe", (req, res) => {
 
 // Full system differential analysis or Image Analysis
 router.post("/analyze", async (req, res) => {
-    const { focus, depth, timeRange, action, image_url, prompt } = req.body;
+    const { focus, depth, timeRange, action, image_url } = req.body;
     
     // Check if this is an image analysis request (from CLI)
-    if (action === "analyze" && image_url) {
+    if (action === "analyze" && typeof image_url === "string" && image_url.trim()) {
         return handleImageAnalysis(req, res, "analyze");
     }
 
-    const cutoffMs = (timeRange || 300) * 1000;
+    const requestedRange = Number.parseInt(timeRange, 10);
+    const rangeSeconds = Number.isFinite(requestedRange) ? Math.min(Math.max(requestedRange, 1), 86400) : 300;
+    const cutoffMs = rangeSeconds * 1000;
     const cutoff = new Date(Date.now() - cutoffMs).toISOString();
 
     const recent = differentials.filter(d => d.ts >= cutoff);
@@ -418,7 +432,7 @@ router.post("/analyze", async (req, res) => {
     }
 
     const analysis = {
-        timeRange: `${timeRange || 300}s`,
+        timeRange: `${rangeSeconds}s`,
         totalObservations: recent.length,
         sources: Object.keys(bySources).length,
         bySource: {},
@@ -453,7 +467,13 @@ const ACTION_PROMPTS = {
 
 async function handleImageAnalysis(req, res, actionType) {
     const { image_url, prompt } = req.body;
-    const systemPrompt = prompt || ACTION_PROMPTS[actionType] || ACTION_PROMPTS.analyze;
+    const imageRef = typeof image_url === "string" ? image_url.trim() : "";
+    if (!imageRef) {
+        return res.status(400).json({ ok: false, service: "heady-lens", error: "image_url is required" });
+    }
+
+    const customPrompt = typeof prompt === "string" ? prompt.trim() : "";
+    const systemPrompt = customPrompt || ACTION_PROMPTS[actionType] || ACTION_PROMPTS.analyze;
     let provider = "none";
 
     try {
@@ -470,9 +490,9 @@ async function handleImageAnalysis(req, res, actionType) {
                 let parts = [{ text: systemPrompt }];
 
                 // If image_url is a local file path, read and inline it
-                const resolvedPath = path.isAbsolute(image_url)
-                    ? image_url
-                    : path.join(__dirname, "..", "..", image_url);
+                const resolvedPath = path.isAbsolute(imageRef)
+                    ? imageRef
+                    : path.join(__dirname, "..", "..", imageRef);
 
                 if (fs.existsSync(resolvedPath)) {
                     const imageData = fs.readFileSync(resolvedPath);
@@ -484,18 +504,18 @@ async function handleImageAnalysis(req, res, actionType) {
                             data: imageData.toString("base64"),
                         },
                     });
-                } else if (image_url.startsWith("http")) {
+                } else if (imageRef.startsWith("http")) {
                     // For remote URLs, pass as file data via fetch
-                    const imgRes = await fetch(image_url, { signal: AbortSignal.timeout(10000) });
+                    const imgRes = await fetch(imageRef, { signal: AbortSignal.timeout(10000) });
                     if (imgRes.ok) {
                         const buf = Buffer.from(await imgRes.arrayBuffer());
                         const ct = imgRes.headers.get("content-type") || "image/png";
                         parts.push({ inlineData: { mimeType: ct, data: buf.toString("base64") } });
                     } else {
-                        parts = [{ text: `${systemPrompt}\n\nImage URL: ${image_url}` }];
+                        parts = [{ text: `${systemPrompt}\n\nImage URL: ${imageRef}` }];
                     }
                 } else {
-                    parts = [{ text: `${systemPrompt}\n\nImage reference: ${image_url}` }];
+                    parts = [{ text: `${systemPrompt}\n\nImage reference: ${imageRef}` }];
                 }
 
                 const result = await model.generateContent(parts);
@@ -512,9 +532,9 @@ async function handleImageAnalysis(req, res, actionType) {
                 provider = "openai-vision";
                 const messages = [{ role: "user", content: [{ type: "text", text: systemPrompt }] }];
 
-                const resolvedPath = path.isAbsolute(image_url)
-                    ? image_url
-                    : path.join(__dirname, "..", "..", image_url);
+                const resolvedPath = path.isAbsolute(imageRef)
+                    ? imageRef
+                    : path.join(__dirname, "..", "..", imageRef);
 
                 if (fs.existsSync(resolvedPath)) {
                     const imageData = fs.readFileSync(resolvedPath);
@@ -522,8 +542,8 @@ async function handleImageAnalysis(req, res, actionType) {
                     const mimeMap = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", webp: "image/webp" };
                     const dataUrl = `data:${mimeMap[ext] || "image/png"};base64,${imageData.toString("base64")}`;
                     messages[0].content.push({ type: "image_url", image_url: { url: dataUrl } });
-                } else if (image_url.startsWith("http")) {
-                    messages[0].content.push({ type: "image_url", image_url: { url: image_url } });
+                } else if (imageRef.startsWith("http")) {
+                    messages[0].content.push({ type: "image_url", image_url: { url: imageRef } });
                 }
 
                 const oaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -553,7 +573,7 @@ async function handleImageAnalysis(req, res, actionType) {
             source: "heady-lens-vision",
             metric: actionType,
             value: analysisText.substring(0, 500),
-            context: image_url,
+            context: imageRef,
             significance: 0.8,
             ts: new Date().toISOString(),
         };
@@ -564,7 +584,7 @@ async function handleImageAnalysis(req, res, actionType) {
             service: "heady-lens",
             action: actionType,
             provider,
-            target: image_url,
+            target: imageRef,
             result: {
                 analysis: analysisText,
                 confidence: analysisText && provider !== "none" ? 0.95 : 0.0,
@@ -588,7 +608,8 @@ router.get("/snapshots", (req, res) => {
 
 // Get differential history
 router.get("/differentials", (req, res) => {
-    const limit = parseInt(req.query.limit) || 50;
+    const parsedLimit = Number.parseInt(req.query.limit, 10);
+    const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 500) : 50;
     res.json({ ok: true, differentials: differentials.slice(-limit), total: differentials.length });
 });
 

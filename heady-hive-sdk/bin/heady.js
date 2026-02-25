@@ -130,26 +130,44 @@ const COMMANDS = {
     // ── Lens (Visual Analysis) ──
     async lens() {
         const sub = args[1];
-        const target = args.slice(2).join(" ") || args[1];
-        if (!sub) return console.log("Usage: heady lens <analyze|detect|process> <image_path_or_url>\n       heady lens analyze photo.jpg\n       heady lens detect https://example.com/image.png");
+        const actions = new Set(["analyze", "detect", "process"]);
+        const action = actions.has(sub) ? sub : "analyze";
+        const input = actions.has(sub)
+            ? args.slice(2).join(" ").trim()
+            : args.slice(1).join(" ").trim();
 
-        const action = ["analyze", "detect", "process"].includes(sub) ? sub : "analyze";
-        const input = action === sub ? target : args.slice(1).join(" ");
+        if (!input) {
+            return console.log("Usage: heady lens <analyze|detect|process> <image_path_or_url>\n       heady lens analyze photo.jpg\n       heady lens detect https://example.com/image.png");
+        }
 
-        console.log(`\ud83d\udd0d HeadyLens — ${action}: ${input}`);
+        console.log(`🔍 HeadyLens — ${action}: ${input}`);
         try {
-            const https = require("https");
-            const body = JSON.stringify({ action, image_url: input, prompt: input });
             const url = new URL(heady.baseUrl);
-            const req = https.request({
-                hostname: url.hostname === "headyme.com" ? "127.0.0.1" : url.hostname,
-                port: url.port || 3301,
-                path: "/api/lens/" + action,
+            const host = url.hostname === "headyme.com" ? "127.0.0.1" : url.hostname;
+            const isLocalTarget = host === "127.0.0.1" || host === "localhost";
+            const useHttps = url.protocol === "https:" && !isLocalTarget;
+            const transport = useHttps ? require("https") : require("http");
+            const port = url.port || (isLocalTarget ? 3301 : (useHttps ? 443 : 80));
+
+            const body = JSON.stringify({ action, image_url: input });
+            const headers = {
+                "Content-Type": "application/json",
+                "Content-Length": Buffer.byteLength(body),
+            };
+            if (process.env.HEADY_API_KEY) headers["x-api-key"] = process.env.HEADY_API_KEY;
+
+            const requestOptions = {
+                hostname: host,
+                port,
+                path: `/api/lens/${action}`,
                 method: "POST",
-                headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
+                headers,
                 timeout: 30000,
-                rejectUnauthorized: false,
-            }, (res) => {
+            };
+
+            if (useHttps) requestOptions.rejectUnauthorized = true;
+
+            const req = transport.request(requestOptions, (res) => {
                 let data = "";
                 res.on("data", c => data += c);
                 res.on("end", () => {

@@ -263,7 +263,7 @@ function deriveDecision(action, model) {
 function identifyBlindSpots(model, lensData) {
     const spots = [];
     if (!model.lastPoll) spots.push("Conductor has not polled yet");
-    if (!lensData?.memory) spots.push("Lens memory unavailable for comparison");
+    if (!lensData?.realtime) spots.push("Lens source-of-truth unavailable for comparison");
     if (Object.values(model.services).some(s => !s.healthy)) {
         const down = Object.entries(model.services).filter(([, s]) => !s.healthy).map(([n]) => n);
         spots.push(`Services down: ${down.join(", ")}`);

@@ -17,19 +17,19 @@
 
 services:
   - name: HeadyBrain
-    endpoint: https://headyio.com/api/brain
+    endpoint: https://api.headyme.com/api/brain
     weight: 1.0
   - name: HeadyBrainFallback
-    endpoint: https://headyio.com/api
+    endpoint: https://api.headyme.com/api
     weight: 0.1
   - name: HeadyMCP
-    endpoint: https://headyio.com/mcp
+    endpoint: https://tools.headyme.com/mcp
     weight: 0.8
   - name: HeadyRender
-    endpoint: https://headyio.com/render
+    endpoint: https://api.headyme.com/render
     weight: 0.7
   - name: HeadyLens
-    endpoint: https://headyio.com/api/lens
+    endpoint: https://api.headyme.com/api/lens
     weight: 0.9
     providers:
       - google-gemini

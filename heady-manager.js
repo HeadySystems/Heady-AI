@@ -759,307 +759,6 @@ app.get("/api/edge/status", async (req, res) => {
   }
 });
 
-// ─── Registry ───────────────────────────────────────────────────────
-const REGISTRY_PATH = path.join(__dirname, ".heady", "registry.json");
-
-function loadRegistry() {
-  return readJsonSafe(REGISTRY_PATH) || { nodes: {}, tools: {}, workflows: {}, services: {}, skills: {}, metadata: {} };
-}
-
-function saveRegistry(data) {
-  fs.mkdirSync(path.dirname(REGISTRY_PATH), { recursive: true });
-  fs.writeFileSync(REGISTRY_PATH, JSON.stringify(data, null, 2), "utf8");
-}
-
-/**
- * @swagger
- * /api/registry:
- *   get:
- *     summary: Get registry data
- *     responses:
- *       200:
- *         description: Registry data
- */
-app.get("/api/registry", (req, res) => {
-  const registryPath = path.join(__dirname, "heady-registry.json");
-  const registry = readJsonSafe(registryPath);
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json(registry);
-});
-
-/**
- * @swagger
- * /api/registry/component/{id}:
- *   get:
- *     summary: Get component data
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Component data
- */
-app.get("/api/registry/component/:id", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  const comp = (registry.components || []).find(c => c.id === req.params.id);
-  if (!comp) return res.status(404).json({ error: `Component '${req.params.id}' not found` });
-  res.json(comp);
-});
-
-/**
- * @swagger
- * /api/registry/environments:
- *   get:
- *     summary: Get environments data
- *     responses:
- *       200:
- *         description: Environments data
- */
-app.get("/api/registry/environments", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json({ environments: registry.environments || [], ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/registry/docs:
- *   get:
- *     summary: Get docs data
- *     responses:
- *       200:
- *         description: Docs data
- */
-app.get("/api/registry/docs", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json({ docs: registry.docs || [], ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/registry/notebooks:
- *   get:
- *     summary: Get notebooks data
- *     responses:
- *       200:
- *         description: Notebooks data
- */
-app.get("/api/registry/notebooks", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json({ notebooks: registry.notebooks || [], ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/registry/patterns:
- *   get:
- *     summary: Get patterns data
- *     responses:
- *       200:
- *         description: Patterns data
- */
-app.get("/api/registry/patterns", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json({ patterns: registry.patterns || [], ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/registry/workflows:
- *   get:
- *     summary: Get workflows data
- *     responses:
- *       200:
- *         description: Workflows data
- */
-app.get("/api/registry/workflows", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json({ workflows: registry.workflows || [], ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/registry/ai-nodes:
- *   get:
- *     summary: Get AI nodes data
- *     responses:
- *       200:
- *         description: AI nodes data
- */
-app.get("/api/registry/ai-nodes", (req, res) => {
-  const registry = readJsonSafe(path.join(__dirname, "heady-registry.json"));
-  if (!registry) return res.status(404).json({ error: "Registry not found" });
-  res.json({ aiNodes: registry.aiNodes || [], ts: new Date().toISOString() });
-});
-
-// ─── Node Management ────────────────────────────────────────────────
-/**
- * @swagger
- * /api/nodes:
- *   get:
- *     summary: Get nodes data
- *     responses:
- *       200:
- *         description: Nodes data
- */
-app.get("/api/nodes", (req, res) => {
-  const reg = loadRegistry();
-  const nodes = Object.entries(reg.nodes || {}).map(([id, n]) => ({ id, ...n }));
-  res.json({ total: nodes.length, active: nodes.filter(n => n.status === "active").length, nodes, ts: new Date().toISOString() });
-});
-
-/**
- * @swagger
- * /api/nodes/{nodeId}:
- *   get:
- *     summary: Get node data
- *     parameters:
- *       - in: path
- *         name: nodeId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Node data
- */
-app.get("/api/nodes/:nodeId", (req, res) => {
-  const reg = loadRegistry();
-  const node = reg.nodes[req.params.nodeId.toUpperCase()];
-  if (!node) return res.status(404).json({ error: `Node '${req.params.nodeId}' not found` });
-  res.json({ id: req.params.nodeId.toUpperCase(), ...node });
-});
-
-/**
- * @swagger
- * /api/nodes/{nodeId}/activate:
- *   post:
- *     summary: Activate node
- *     parameters:
- *       - in: path
- *         name: nodeId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Node activated
- */
-app.post("/api/nodes/:nodeId/activate", (req, res) => {
-  const reg = loadRegistry();
-  const id = req.params.nodeId.toUpperCase();
-  if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
-  reg.nodes[id].status = "active";
-  reg.nodes[id].last_invoked = new Date().toISOString();
-  saveRegistry(reg);
-  res.json({ success: true, node: id, status: "active" });
-});
-
-/**
- * @swagger
- * /api/nodes/{nodeId}/deactivate:
- *   post:
- *     summary: Deactivate node
- *     parameters:
- *       - in: path
- *         name: nodeId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Node deactivated
- */
-app.post("/api/nodes/:nodeId/deactivate", (req, res) => {
-  const reg = loadRegistry();
-  const id = req.params.nodeId.toUpperCase();
-  if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
-  reg.nodes[id].status = "available";
-  saveRegistry(reg);
-  res.json({ success: true, node: id, status: "available" });
-});
-
-// ─── System Status & Production Activation ──────────────────────────
-/**
- * @swagger
- * /api/system/status:
- *   get:
- *     summary: Get system status
- *     responses:
- *       200:
- *         description: System status
- */
-app.get("/api/system/status", (req, res) => {
-  const reg = loadRegistry();
-  const nodeList = Object.entries(reg.nodes || {});
-  const activeNodes = nodeList.filter(([, n]) => n.status === "active").length;
-
-  res.json({
-    system: "Heady Systems",
-    version: "3.0.0",
-    environment: (reg.metadata || {}).environment || "development",
-    production_ready: activeNodes === nodeList.length && nodeList.length > 0,
-    uptime: process.uptime(),
-    memory: process.memoryUsage(),
-    capabilities: {
-      nodes: { total: nodeList.length, active: activeNodes },
-      tools: { total: Object.keys(reg.tools || {}).length },
-      workflows: { total: Object.keys(reg.workflows || {}).length },
-      services: { total: Object.keys(reg.services || {}).length },
-    },
-    sacred_geometry: { architecture: "active", organic_systems: activeNodes === nodeList.length },
-    ts: new Date().toISOString(),
-  });
-});
-
-/**
- * @swagger
- * /api/system/production:
- *   post:
- *     summary: Activate production
- *     responses:
- *       200:
- *         description: Production activated
- */
-app.post("/api/system/production", (req, res) => {
-  const reg = loadRegistry();
-  const ts = new Date().toISOString();
-  const report = { nodes: [], tools: [], workflows: [], services: [] };
-
-  for (const [name, node] of Object.entries(reg.nodes || {})) {
-    node.status = "active"; node.last_invoked = ts; report.nodes.push(name);
-  }
-  for (const [name, tool] of Object.entries(reg.tools || {})) {
-    tool.status = "active"; report.tools.push(name);
-  }
-  for (const [name, wf] of Object.entries(reg.workflows || {})) {
-    wf.status = "active"; report.workflows.push(name);
-  }
-  for (const [name, svc] of Object.entries(reg.services || {})) {
-    svc.status = name === "heady-manager" ? "healthy" : "active"; report.services.push(name);
-  }
-  for (const [, sk] of Object.entries(reg.skills || {})) { sk.status = "active"; }
-
-  reg.metadata = { ...reg.metadata, last_updated: ts, version: "3.0.0-production", environment: "production", all_nodes_active: true, production_activated_at: ts };
-  saveRegistry(reg);
-
-  res.json({
-    success: true,
-    environment: "production",
-    activated: { nodes: report.nodes.length, tools: report.tools.length, workflows: report.workflows.length, services: report.services.length },
-    sacred_geometry: "FULLY_ACTIVATED",
-    ts,
-  });
-});
-
 // ─── Pipeline Engine (wired to src/hc_pipeline.js) ──────────────────
 let pipeline = null;
 let pipelineError = null;
@@ -1363,8 +1062,21 @@ try {
   logger.logNodeActivity("CONDUCTOR", `  ⚠ Resource Manager not loaded: ${err.message}`);
 
   // Fallback inline resource health endpoint
-  app.get("/api/resources/health", (req, res) => {
-    const mem = process.memoryUsage();
+  app.post("/api/system/production", (req, res) => {
+    const expectedAdminToken = process.env.ADMIN_TOKEN || process.env.HEADY_ADMIN_TOKEN || "";
+    if (expectedAdminToken) {
+      const authHeader = req.headers.authorization || "";
+      const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+      const providedToken = req.headers["x-admin-token"] || bearerToken;
+      if (providedToken !== expectedAdminToken) {
+        return res.status(401).json({ success: false, error: "Unauthorized" });
+      }
+    }
+
+    const reg = loadRegistry();
+    const ts = new Date().toISOString();
+    const report = { nodes: [], tools: [], workflows: [], services: [] };
+
     const osLib = require("os");
     const totalMem = osLib.totalmem();
     const freeMem = osLib.freemem();
@@ -2015,10 +1727,11 @@ try {
 }
 
 // Wave 4 real routers
-for (const [name, file] of [["ops", "ops"], ["maintenance", "maintenance"], ["lens", "lens"], ["vinci", "vinci"], ["conductor", "conductor"], ["memory", "memory"]]) {
+for (const [name, file] of [["ops", "ops"], ["maintenance", "maintenance"], ["lens", "lens"], ["vinci", "vinci"], ["conductor", "conductor"], ["memory", "memory"], ["registry", "registry"], ["nodes", "nodes"], ["system", "system"]]) {
   try {
     const r = require(`./src/routes/${file}`);
-    app.use(`/api/${name}`, r);
+    const routerPath = name === "registry" || name === "nodes" || name === "system" ? `/api/${name}` : `/api/${name}`;
+    app.use(routerPath, r.router || r);
     logger.logNodeActivity("CONDUCTOR", `  ∞ Heady${name.charAt(0).toUpperCase() + name.slice(1)}: LOADED (real router) → /api/${name}/*`);
   } catch (err) {
     logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady${name} router not loaded: ${err.message}`);

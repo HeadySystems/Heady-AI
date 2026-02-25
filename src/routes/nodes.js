@@ -39,7 +39,8 @@ router.get("/", (req, res) => {
  */
 router.get("/:nodeId", (req, res) => {
     const reg = loadRegistry();
-    const node = reg.nodes[req.params.nodeId.toUpperCase()];
+    const nodes = reg.nodes || {};
+    const node = nodes[req.params.nodeId.toUpperCase()];
     if (!node) return res.status(404).json({ error: `Node '${req.params.nodeId}' not found` });
     res.json({ id: req.params.nodeId.toUpperCase(), ...node });
 });
@@ -52,6 +53,7 @@ router.get("/:nodeId", (req, res) => {
  */
 router.post("/:nodeId/activate", (req, res) => {
     const reg = loadRegistry();
+    reg.nodes = reg.nodes || {};
     const id = req.params.nodeId.toUpperCase();
     if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
     reg.nodes[id].status = "active";
@@ -68,6 +70,7 @@ router.post("/:nodeId/activate", (req, res) => {
  */
 router.post("/:nodeId/deactivate", (req, res) => {
     const reg = loadRegistry();
+    reg.nodes = reg.nodes || {};
     const id = req.params.nodeId.toUpperCase();
     if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
     reg.nodes[id].status = "available";

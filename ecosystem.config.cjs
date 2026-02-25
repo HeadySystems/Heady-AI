@@ -12,7 +12,7 @@ module.exports = {
             env: {
                 NODE_ENV: 'production',
                 PORT: 3301,
-                HF_TOKEN: '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',
+                HF_TOKEN: process.env.HF_TOKEN || '',
             },
             max_memory_restart: '512M',
             min_uptime: '10s',

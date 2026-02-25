@@ -1,32 +1,5 @@
 [
   {
-    "id": "03b81bac-62d5-4a94-a10b-cf76f2d010be",
-    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
-    "notStored": "1440 chars of extended content trimmed from vector index",
-    "method": "vector-db",
-    "fallbackUsed": false,
-    "priorityFix": null,
-    "ts": "2026-02-24T08:45:10.688Z"
-  },
-  {
-    "id": "ef968bea-33dc-47cd-8b22-6f37c2c5310d",
-    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
-    "notStored": "1440 chars of extended content trimmed from vector index",
-    "method": "vector-db",
-    "fallbackUsed": false,
-    "priorityFix": null,
-    "ts": "2026-02-24T08:45:41.980Z"
-  },
-  {
-    "id": "36516261-a25f-477c-a9d1-28ba7b3c38f0",
-    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nBrain response: \n\nAs HeadyBrain, an expert AI system ...\" (1940 chars, type: brain_chat)",
-    "notStored": "1440 chars of extended content trimmed from vector index",
-    "method": "vector-db",
-    "fallbackUsed": false,
-    "priorityFix": null,
-    "ts": "2026-02-24T08:46:13.344Z"
-  },
-  {
     "id": "fd6f17d6-b970-43c0-9791-fb76ab771aba",
     "stored": "Stored in vector DB: \"Brain response: \n\nHere's a concise, actionable guide for implementing Cloudflare Workers as intelligent edge routers wit...\" (516 chars, type: brain_response)",
     "notStored": "16 chars of extended content trimmed from vector index",
@@ -8998,5 +8971,32 @@
     "fallbackUsed": false,
     "priorityFix": null,
     "ts": "2026-02-25T11:11:07.046Z"
+  },
+  {
+    "id": "fc34faab-088b-4e7b-a7ee-bbef0f5cde44",
+    "stored": "Stored in vector DB: \"Chat interaction: [HeadyBrain Context — 3 relevant memories found]\nChat interaction: [HeadyBrain Context — 1 relevant me...\" (370 chars, type: brain_chat)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-25T11:22:12.318Z"
+  },
+  {
+    "id": "b8bbbda8-676d-46f7-b72f-6a66162d5bfd",
+    "stored": "Stored in vector DB: \"Brain response: \n\npong...\" (22 chars, type: brain_response)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-25T11:22:12.470Z"
+  },
+  {
+    "id": "35bf4d63-1b42-4d49-a8bf-d96092bb8f3e",
+    "stored": "Stored in vector DB: \"Code analysis (general): [HeadyBrain Context — 3 relevant memories found]\nCode analysis (general): test\n---\nChat interac...\" (225 chars, type: brain_analyze)",
+    "notStored": "Full content stored — nothing omitted",
+    "method": "vector-db",
+    "fallbackUsed": false,
+    "priorityFix": null,
+    "ts": "2026-02-25T11:22:12.526Z"
   }
 ]

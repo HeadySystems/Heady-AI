@@ -51,6 +51,16 @@ router.get("/status", (req, res) => {
  *     summary: Activate production mode
  */
 router.post("/production", (req, res) => {
+  const expectedAdminToken = process.env.ADMIN_TOKEN || process.env.HEADY_ADMIN_TOKEN || "";
+  if (expectedAdminToken) {
+    const authHeader = req.headers.authorization || "";
+    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    const providedToken = req.headers["x-admin-token"] || bearerToken;
+    if (providedToken !== expectedAdminToken) {
+      return res.status(401).json({ success: false, error: "Unauthorized" });
+    }
+  }
+
   const reg = loadRegistry();
   const ts = new Date().toISOString();
   const report = { nodes: [], tools: [], workflows: [], services: [] };
