@@ -103,9 +103,9 @@ function initializeSubsystems(configs = {}) {
 async function ingestNewsFeeds(context) {
   return {
     task: "ingest_news_feeds",
-    status: "completed",
-    result: "News feed ingestion cycle complete",
-    sources: ["algolia-hn", "tech-feeds"],
+    status: "skipped",
+    result: "News feed ingestion not configured — no active feed sources",
+    sources: [],
     itemsIngested: 0,
   };
 }
@@ -236,11 +236,17 @@ async function monitorAgentExecution(context) {
 }
 
 async function collectAgentResults(context) {
-  return {
-    task: "collect_agent_results",
-    status: "completed",
-    result: "Agent results collected and aggregated",
-  };
+  if (supervisor) {
+    const status = supervisor.getStatus();
+    return {
+      task: "collect_agent_results",
+      status: "completed",
+      result: `Collected results from ${status.agentCount || 0} agents, ${status.recentRuns?.length || 0} recent runs`,
+      agentCount: status.agentCount || 0,
+      recentRuns: status.recentRuns?.length || 0,
+    };
+  }
+  return { task: "collect_agent_results", status: "skipped", result: "Supervisor not initialized — no agent results to collect" };
 }
 
 // ─── RECOVER STAGE HANDLERS ──────────────────────────────────────────────
@@ -257,25 +263,43 @@ async function evaluateFailures(context) {
 }
 
 async function applyCompensation(context) {
-  return { task: "apply_compensation", status: "completed", result: "Saga compensation applied where needed" };
+  return { task: "apply_compensation", status: "skipped", result: "Saga compensation engine not yet implemented" };
 }
 
 async function retryRecoverable(context) {
-  return { task: "retry_recoverable", status: "completed", result: "Recoverable tasks retried" };
+  return { task: "retry_recoverable", status: "skipped", result: "Retry engine not yet implemented" };
 }
 
 async function escalateUnrecoverable(context) {
-  return { task: "escalate_unrecoverable", status: "completed", result: "Unrecoverable issues logged for escalation" };
+  return { task: "escalate_unrecoverable", status: "skipped", result: "Escalation engine not yet implemented" };
 }
 
 // ─── FINALIZE STAGE HANDLERS ─────────────────────────────────────────────
 
 async function persistResults(context) {
-  return { task: "persist_results", status: "completed", result: "Results persisted to data store" };
+  const fs = require("fs");
+  const runDir = path.join(__dirname, "..", "..", "data", "pipeline-runs");
+  try {
+    fs.mkdirSync(runDir, { recursive: true });
+    const entry = {
+      runId: context.runId || "unknown",
+      ts: new Date().toISOString(),
+      stageId: context.stageId || "finalize",
+      taskCount: Object.keys(context.results || {}).length,
+    };
+    fs.appendFileSync(path.join(runDir, "runs.jsonl"), JSON.stringify(entry) + "\n");
+    return { task: "persist_results", status: "completed", result: `Run ${entry.runId} persisted to ${runDir}/runs.jsonl` };
+  } catch (err) {
+    return { task: "persist_results", status: "failed", result: `Persistence error: ${err.message}` };
+  }
 }
 
 async function updateConceptIndex(context) {
-  return { task: "update_concept_index", status: "completed", result: "Concept index updated with new patterns" };
+  if (brain && typeof brain.updateConceptFromRun === "function") {
+    brain.updateConceptFromRun(context.runId, context.results || {});
+    return { task: "update_concept_index", status: "completed", result: "Concept index updated from run results" };
+  }
+  return { task: "update_concept_index", status: "skipped", result: "Brain not loaded — concept index update deferred" };
 }
 
 async function computeReadinessScore(context) {
@@ -294,7 +318,7 @@ async function computeReadinessScore(context) {
       return { task: "compute_readiness_score", status: "completed", result: `Readiness evaluation error: ${err.message}`, score: 75 };
     }
   }
-  return { task: "compute_readiness_score", status: "completed", result: "Readiness evaluator not initialized", score: 100 };
+  return { task: "compute_readiness_score", status: "skipped", result: "Readiness evaluator not initialized — cannot determine readiness", score: 0 };
 }
 
 async function sendCheckpointEmail(context) {
