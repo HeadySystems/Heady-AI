@@ -25,6 +25,7 @@ router.get('/', (req, res) => {
             taskQueue: true,
             exportChat: true,
             keyboardShortcuts: true,
+            outputFormatSwitching: true,
         },
         providers: {
             'heady-brain': { label: 'Heady Brain', icon: '🧠', color: '#34d399' },
@@ -48,8 +49,79 @@ router.get('/', (req, res) => {
             theme: 'dark',
             accentColor: '#8b5cf6',
             brandName: 'HeadyBuddy',
-            tagline: 'Your AI Companion',
+            tagline: 'Type anything. Heady intelligently processes it and delivers in your chosen format — instantly.',
         },
+        outputFormats: [
+            { id: 'raw', label: 'Raw Data', icon: '📊' },
+            { id: 'text', label: 'Plain Text', icon: '📝' },
+            { id: 'markdown', label: 'Markdown', icon: '📋' },
+            { id: 'pretty', label: 'Pretty Print', icon: '✨' },
+            { id: 'branded', label: 'Heady Branded', icon: '🎨' },
+            { id: 'infographic', label: 'Infographic', icon: '📈' },
+            { id: 'animated', label: 'Animated Visual', icon: '🎬' },
+            { id: 'dashboard', label: 'Dashboard View', icon: '📱' },
+            { id: 'presentation', label: 'Slide Deck', icon: '🖥️' },
+            { id: 'report', label: 'Formal Report', icon: '📑' },
+            { id: 'conversational', label: 'Chat Style', icon: '💬' },
+            { id: 'technical', label: 'Technical Spec', icon: '⚙️' },
+            { id: 'audience', label: 'Audience-Adapted', icon: '👥' },
+            { id: 'csv', label: 'CSV Export', icon: '📊' },
+            { id: 'api', label: 'API Response', icon: '🔌' },
+        ],
+        capabilities: {
+            description: 'HeadyBuddy intelligently processes ANY freeform input. Type anything — a question, a task, a creative brief, raw data — and Heady analyzes intent, routes to optimal AI nodes, and delivers results in your chosen format. Switch output formats on-the-fly at any time.',
+            inputExamples: [
+                'super random stuff for buddy',
+                'analyze my nonprofit fundraising data and make it pretty',
+                'build me a dashboard showing KPIs for Q1',
+                'create a branded infographic for our annual report',
+                'give me raw JSON of all active services',
+            ],
+        },
+        suggestedCombos: [
+            {
+                id: 'live-service-monitor',
+                label: '🌊 Live Service Monitor',
+                desc: 'Super pretty non-technical display with real-time visual representations of all active services during operation',
+                formats: ['pretty', 'animated', 'dashboard'],
+                prompt: 'Show me all active Heady services with pretty visuals and real-time status — make it beautiful and non-technical'
+            },
+            {
+                id: 'executive-brief',
+                label: '📊 Executive Brief',
+                desc: 'Branded summary with KPI cards, charts, and a one-page executive takeaway',
+                formats: ['branded', 'report', 'infographic'],
+                prompt: 'Give me a branded executive summary with charts and key metrics'
+            },
+            {
+                id: 'developer-deep-dive',
+                label: '⚙️ Developer Deep Dive',
+                desc: 'Technical spec with code samples, architecture diagrams, and raw API data',
+                formats: ['technical', 'raw', 'markdown'],
+                prompt: 'Show me the technical details with code, diagrams, and raw data'
+            },
+            {
+                id: 'stakeholder-showcase',
+                label: '🎨 Stakeholder Showcase',
+                desc: 'Presentation-ready branded slides with audience-adapted messaging and infographics',
+                formats: ['presentation', 'branded', 'audience'],
+                prompt: 'Create a branded presentation for stakeholders with adapted messaging'
+            },
+            {
+                id: 'data-export-bundle',
+                label: '📦 Data Export Bundle',
+                desc: 'Full data export in CSV, raw JSON, and formatted tables — ready for any tool',
+                formats: ['csv', 'raw', 'api'],
+                prompt: 'Export all data in CSV, JSON, and formatted tables'
+            },
+            {
+                id: 'quick-chat-helper',
+                label: '💬 Quick Chat',
+                desc: 'Fast conversational answer with plain text — no frills, just answers',
+                formats: ['conversational', 'text'],
+                prompt: 'Just give me a quick plain answer'
+            },
+        ],
     });
 });
 
@@ -57,7 +129,7 @@ router.get('/', (req, res) => {
 router.get('/services', async (req, res) => {
     const checks = {};
     try {
-        const pulse = await fetch('http://127.0.0.1:3301/api/pulse', { signal: AbortSignal.timeout(2000) });
+        const pulse = await fetch('https://127.0.0.1:3301/api/pulse', { signal: AbortSignal.timeout(2000) });
         checks.manager = pulse.ok ? 'connected' : 'degraded';
     } catch { checks.manager = 'disconnected'; }
 

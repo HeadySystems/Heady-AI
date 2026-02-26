@@ -51,6 +51,45 @@ const AGENT_SKILLS = [
   "debugging",
   "concept-extraction",
   "documentation",
+  "unit-testing",
+  "integration-testing",
+  "e2e-testing",
+  "test-coverage",
+  "api-design",
+  "rest-endpoint",
+  "graphql-schema",
+  "websocket-handler",
+  "database-schema",
+  "migration-gen",
+  "query-optimize",
+  "orm-model",
+  "auth-implement",
+  "jwt-session",
+  "rbac-policy",
+  "oauth-flow",
+  "error-handling",
+  "logging-strategy",
+  "monitoring-hook",
+  "perf-profile",
+  "memory-leak-detect",
+  "concurrency-fix",
+  "race-condition",
+  "design-pattern",
+  "solid-principle",
+  "dependency-inject",
+  "event-driven",
+  "microservice-decompose",
+  "monolith-refactor",
+  "ci-config",
+  "github-actions",
+  "docker-compose",
+  "env-config",
+  "dependency-update",
+  "security-patch",
+  "code-review",
+  "pr-summary",
+  "type-safety",
+  "schema-validate",
 ];
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
@@ -131,89 +170,60 @@ class ClaudeCodeAgent {
 
   /**
    * Build a structured prompt for HeadyJules Code based on task type.
+   * Utilizes the Universal Heady Prompt Architecture.
    */
   _buildPrompt(request, metadata) {
-    const context = [
-      `Project: HeadyMonorepo (HCFullPipeline)`,
-      `Stage: ${metadata?.requestType || "unknown"}`,
-      `Run ID: ${request.runId || request.id || "N/A"}`,
-    ];
+    const contextDetails = [
+      `project: HeadyMonorepo (HCFullPipeline)`,
+      `stage: ${metadata?.requestType || "unknown"}`,
+      `run_id: ${request.runId || request.id || "N/A"}`,
+      `target: ${request.target || "unspecified"}`
+    ].join('\\n');
+
+    const baseArchitecture = (roleAndGoal, steps, output, constraints) => {
+      return [
+        `<ROLE_AND_GOAL>\\n${roleAndGoal}\\n</ROLE_AND_GOAL>`,
+        `<CONTEXT>\\n${contextDetails}\\n${request.description || request.prompt || ""}\\n</CONTEXT>`,
+        `<STEPS>\\n${steps}\\n</STEPS>`,
+        `<CONSTRAINTS>\\nNo unverified parallel threads.\\nEnsure all commits map to Master Architecture.\\nFollow HEADY_BRAND header convention.\\nUse CommonJS require.\\n${constraints}\\n</CONSTRAINTS>`,
+        `<OUTPUT>\\nUse structured markdown/dynamic tables for visual output.\\n${output}\\n</OUTPUT>`,
+        `<FEW_SHOT_EXAMPLES>\\n[See internal repository patterns for Heady Swarm node creation and HCFP routing standards]\\n</FEW_SHOT_EXAMPLES>`,
+        `<RECAP>\\nConfirm understanding of strict telemetry, formatting, and specific task requirements before proceeding.\\n</RECAP>`
+      ].join('\\n\\n');
+    };
 
     switch (request.taskType) {
       case "code-generation":
-        return [
-          ...context,
-          `Task: Generate code`,
-          `Target: ${request.target || "unspecified"}`,
-          `Requirements: ${request.requirements || request.description || "See request"}`,
-          `Constraints: Follow HEADY_BRAND header convention. Use CommonJS require. Write production-quality code.`,
-          ``,
-          request.prompt || request.description || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Master Coding Agent: Generate robust, enterprise-grade production software.",
+          "1. Analyze requirements recursively.\\n2. Perform sequential code audits.\\n3. Generate implementation mapped to master architecture.",
+          "Write production-quality code. Provide a markdown summary of added features.",
+          "Only use allowed toolsets. Must be strictly typed."
+        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
 
       case "code-analysis":
-        return [
-          ...context,
-          `Task: Analyze code quality, performance, and architecture`,
-          `Files: ${(request.files || []).join(", ") || "project-wide"}`,
-          `Focus: ${request.focus || "general quality, security, performance"}`,
-          `Output: Structured findings with severity, location, and recommendations`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Master Code Auditor: Analyze quality, performance, and architecture.",
+          "1. Scan required files sequentially.\\n2. Cross-reference patterns.\\n3. Identify severe vulnerabilities or complexity.",
+          "Structured findings with severity, location, and recommendations.",
+          "Focus on: " + (request.focus || "general quality, security, performance")
+        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
 
       case "refactoring":
-        return [
-          ...context,
-          `Task: Refactor code`,
-          `Target: ${request.target || "unspecified"}`,
-          `Goal: ${request.goal || "improve clarity, reduce complexity, maintain behavior"}`,
-          `Constraints: No functional changes unless explicitly requested. Preserve tests.`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
-
-      case "architecture":
-        return [
-          ...context,
-          `Task: Architecture review/design`,
-          `Scope: ${request.scope || "full system"}`,
-          `Question: ${request.question || request.description || ""}`,
-          `Configs available: configs/hcfullpipeline.yaml, configs/service-catalog.yaml, configs/system-components.yaml`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
-
-      case "debugging":
-        return [
-          ...context,
-          `Task: Debug issue`,
-          `Error: ${request.error || "unspecified"}`,
-          `Logs: ${request.logs || "see hc_pipeline.log"}`,
-          `Steps to reproduce: ${request.steps || "unknown"}`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
-
-      case "concept-extraction":
-        return [
-          ...context,
-          `Task: Extract concepts and patterns from provided content`,
-          `Source: ${request.source || "provided text"}`,
-          `Output: Structured concepts with name, category, description, applicability`,
-          `Reference: configs/concepts-index.yaml for existing concepts`,
-          ``,
-          request.content || request.prompt || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Master Refactoring Agent: Restructure existing code without modifying external behavior.",
+          "1. Establish pre-refactor state.\\n2. Apply AST-aware modifications.\\n3. Validate internal logic correctness.",
+          "Refactored code and an impact summary table.",
+          "No functional changes unless explicitly requested. Preserve all existing tests. Goal: " + (request.goal || "improve clarity")
+        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
 
       default:
-        return [
-          ...context,
-          `Task: ${request.taskType || "general"}`,
-          `Description: ${request.description || request.prompt || ""}`,
-          ``,
-          request.prompt || request.description || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Heady Swarm Node: Execute general AI operations.",
+          "1. Parse the request.\\n2. Decompose necessary steps.\\n3. Execute optimally.",
+          "Result of operations.",
+          "None specific."
+        ) + `\\n\\nTask: ${request.taskType || "general"}\\nPrompt: ${request.prompt || ""}`;
     }
   }
 

@@ -852,5 +852,47 @@
     "healthyCount": 0,
     "totalCount": 19,
     "ts": "2026-02-25T11:16:32.192Z"
+  },
+  {
+    "scanId": "deep-scan-1772051964252",
+    "overallScore": 0.07,
+    "healthyCount": 0,
+    "totalCount": 19,
+    "ts": "2026-02-25T20:39:24.320Z"
+  },
+  {
+    "scanId": "deep-scan-1772052076591",
+    "overallScore": 0.07,
+    "healthyCount": 0,
+    "totalCount": 19,
+    "ts": "2026-02-25T20:41:16.636Z"
+  },
+  {
+    "scanId": "deep-scan-1772053917244",
+    "overallScore": 0.07,
+    "healthyCount": 0,
+    "totalCount": 19,
+    "ts": "2026-02-25T21:11:57.266Z"
+  },
+  {
+    "scanId": "deep-scan-1772057944176",
+    "overallScore": 0.07,
+    "healthyCount": 0,
+    "totalCount": 19,
+    "ts": "2026-02-25T22:19:04.180Z"
+  },
+  {
+    "scanId": "deep-scan-1772058016021",
+    "overallScore": 0.07,
+    "healthyCount": 0,
+    "totalCount": 19,
+    "ts": "2026-02-25T22:20:16.024Z"
+  },
+  {
+    "scanId": "deep-scan-1772060383286",
+    "overallScore": 0.07,
+    "healthyCount": 0,
+    "totalCount": 19,
+    "ts": "2026-02-25T22:59:43.289Z"
   }
 ]

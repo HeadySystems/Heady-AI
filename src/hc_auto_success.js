@@ -51,9 +51,15 @@ const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
 
 // ─── TASK CATALOG (135 tasks × 9 categories) ────────────────────────────────
 let extraTasks = [];
-try { extraTasks = require('./auto-flow-200-tasks.json'); } catch(e){}
+try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { }
+let nonprofitTasks = [];
+try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { }
+let buddyTasks = [];
+try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { }
 const TASK_CATALOG = [
     ...extraTasks,
+    ...nonprofitTasks,
+    ...buddyTasks,
     // ═══ LEARNING (20) — Targeted system learning ═══════════════════════════
     {
         id: "learn-001", name: "Analyze config drift patterns", cat: "learning", pool: "warm", w: 3,

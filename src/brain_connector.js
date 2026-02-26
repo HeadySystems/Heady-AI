@@ -18,7 +18,7 @@ class BrainConnector extends EventEmitter {
         this.circuitBreakers = new Map();
 
         // Register default local endpoint
-        this._registerEndpoint("local-brain", { url: "http://127.0.0.1:3301/api/brain", priority: 1 });
+        this._registerEndpoint("local-brain", { url: "https://127.0.0.1:3301/api/brain", priority: 1 });
 
         // Start health checker
         this._healthInterval = setInterval(() => this._runHealthChecks(), this.healthCheckInterval);

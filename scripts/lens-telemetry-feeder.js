@@ -10,17 +10,18 @@
  * Runs as a PM2 process alongside the rest of the ecosystem.
  */
 
-const http = require('http');
+const https = require('https');
 const { execSync } = require('child_process');
 const os = require('os');
 
-const LENS_URL = 'http://localhost:3301/api/lens/observe';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const LENS_URL = 'https://localhost:3301/api/lens/observe';
 const INTERVAL_MS = 15000; // every 15 seconds
 
 function post(data) {
     return new Promise((resolve) => {
         const body = JSON.stringify(data);
-        const req = http.request(LENS_URL, {
+        const req = https.request(LENS_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Content-Length': body.length },
             timeout: 3000,

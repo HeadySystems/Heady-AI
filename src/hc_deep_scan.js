@@ -14,7 +14,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const MANAGER_URL = "http://127.0.0.1:3301";
+const MANAGER_URL = "https://127.0.0.1:3301";
 const HEADY_DIR = path.join(__dirname, "..");
 const REGISTRY_PATH = path.join(HEADY_DIR, "heady-registry.json");
 const SCAN_HISTORY_PATH = path.join(HEADY_DIR, "data", "deep-scan-history.json");

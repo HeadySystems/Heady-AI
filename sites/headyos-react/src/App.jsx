@@ -12,9 +12,7 @@ import NetworkTunnels from './pages/NetworkTunnels';
 import SecurityPanel from './pages/SecurityPanel';
 import BillingPanel from './pages/BillingPanel';
 import PackageBuilder from './pages/PackageBuilder';
-
-// Mock empty pages for remaining incomplete views
-const IpCompliance = () => <div className="fade-in-up text-white"><h2>IP Compliance</h2><p className="text-slate-400">Trade secret classification and heatmap.</p></div>;
+import IpCompliance from './pages/IpCompliance';
 
 export default function App() {
   return (

@@ -105,9 +105,9 @@ const FLOWER_FIELD = [
         prompt: "An AI API gateway races 5 providers in parallel and returns the fastest response. Average latency is 777ms. What techniques can reduce this to under 500ms? Consider connection pooling, warm-up requests, edge caching, and pre-computation.",
     },
     {
-        id: "perf-002", name: "Static Site Serving Optimization",
-        category: "performance", priority: 5, role: "forager",
-        prompt: "18 PM2 processes each run http-server to serve static files. Each site has identical admin UI files. What's the optimal architecture to serve 7+ domains with static content behind Cloudflare? Consider consolidation, CDN strategies, and cache headers.",
+        id: "perf-002", name: "Interactive Site Optimization",
+        category: "performance", priority: 8, role: "forager",
+        prompt: "Multiple PM2 processes each run full-stack interactive web apps (Node.js/Express) serving dynamic routes and websockets. What's the optimal architecture to serve 7+ interactive domains behind Cloudflare without breaking real-time features or SSR performance?",
     },
 
     // ── Creative & Content (forager bees) ──

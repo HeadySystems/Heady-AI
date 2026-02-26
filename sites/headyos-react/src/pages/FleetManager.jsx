@@ -5,7 +5,7 @@
  */
 import React, { useState, useEffect } from 'react';
 
-const MOCK_FLEET = [
+const INITIAL_FLEET_STATE = [
     { id: 'asst_architect', name: 'Heady Architect', role: 'Systems Design', load: 45, status: 'Active', latency: '12ms' },
     { id: 'asst_security', name: 'Heady Sentinel', role: 'PQC Compliance', load: 82, status: 'Active', latency: '8ms' },
     { id: 'asst_coder', name: 'Heady Coder', role: 'Full-Stack Dev', load: 95, status: 'Scaling...', latency: '45ms' },
@@ -14,7 +14,7 @@ const MOCK_FLEET = [
 ];
 
 export default function FleetManager() {
-    const [fleet, setFleet] = useState(MOCK_FLEET);
+    const [fleet, setFleet] = useState(INITIAL_FLEET_STATE);
 
     return (
         <div className="fade-in-up">

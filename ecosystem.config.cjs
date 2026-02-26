@@ -11,6 +11,7 @@ module.exports = {
             exec_mode: 'fork',
             env: {
                 NODE_ENV: 'production',
+                NODE_TLS_REJECT_UNAUTHORIZED: '0',
                 PORT: 3301,
                 HF_TOKEN: process.env.HF_TOKEN || '',
             },
@@ -49,6 +50,7 @@ module.exports = {
         // ── Site Servers ──
         // Each site runs a static file server on its assigned port
         ...[
+            // ── Primary Sites ──
             { name: 'headybuddy', port: 9000 },
             { name: 'headysystems', port: 9001 },
             { name: 'headyconnection', port: 9002 },
@@ -69,7 +71,34 @@ module.exports = {
             { name: 'admin-ui', port: 9017 },
             { name: 'instant', port: 9018 },
             { name: 'headydocs', port: 9019 },
+            { name: 'heady-discord-connection', port: 9020 },
             { name: 'headyweb', port: 3000 },
+            // ── Vertical Node Sites (26 sites) ──
+            { name: 'heady-buddy-portal', port: 9100 },
+            { name: 'heady-maestro', port: 9101 },
+            { name: 'heady-jules', port: 9102 },
+            { name: 'heady-observer', port: 9103 },
+            { name: 'heady-builder', port: 9104 },
+            { name: 'heady-atlas', port: 9105 },
+            { name: 'heady-pythia', port: 9106 },
+            { name: 'heady-montecarlo', port: 9107 },
+            { name: 'heady-patterns', port: 9108 },
+            { name: 'heady-critique', port: 9109 },
+            { name: 'heady-imagine', port: 9110 },
+            { name: 'heady-stories', port: 9111 },
+            { name: 'heady-sentinel', port: 9112 },
+            { name: 'heady-vinci', port: 9113 },
+            { name: 'heady-kinetics', port: 9114 },
+            { name: 'heady-metrics', port: 9115 },
+            { name: 'heady-logs', port: 9116 },
+            { name: 'heady-traces', port: 9117 },
+            { name: 'heady-desktop', port: 9118 },
+            { name: 'heady-mobile', port: 9119 },
+            { name: 'heady-chrome', port: 9120 },
+            { name: 'heady-vscode', port: 9121 },
+            { name: 'heady-jetbrains', port: 9122 },
+            { name: 'heady-slack', port: 9123 },
+            { name: 'heady-github-integration', port: 9124 },
         ].map(site => ({
             name: `site-${site.name}`,
             script: 'npx',

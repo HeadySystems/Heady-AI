@@ -2054,5 +2054,85 @@
     "pool": "hot",
     "w": 5,
     "desc": "Measure SSL/mTLS overhead added by PQC encapsulation phase (Task ID Alpha-8574)"
+  },
+  {
+    "id": "master-config-001",
+    "name": "Instrument OpenTelemetry Tracing",
+    "cat": "telemetry",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Phase 1A: Deploy OpenTelemetry distributed tracing across all 14 service groups from L1 Edge to L6 Vault."
+  },
+  {
+    "id": "master-config-002",
+    "name": "Construct the HeadyLens Composable UI",
+    "cat": "ui",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Phase 1B: Build HeadyLens as a user-defined observability platform natively querying GraphQL/JSON telemetry logs."
+  },
+  {
+    "id": "master-config-003",
+    "name": "Contextual Knowledge Graphing & Battle Alerts",
+    "cat": "intelligence",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Phase 1C: Connect HeadyLens to L6 Persistence Layer to visualize AI reasoning chains as dynamic node graphs and trigger alerts on drift."
+  },
+  {
+    "id": "master-config-004",
+    "name": "Activate L2 Liquid Gateway Racing",
+    "cat": "liquid-federation",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Phase 2A: Hardcode routing logic at L2 Gateway to enforce concurrent multi-provider AI model racing for high availability and cost optimization."
+  },
+  {
+    "id": "master-config-005",
+    "name": "Formalize IAM via HeadyConnection.org",
+    "cat": "governance",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Phase 2B: Architect headyconnection.org as master IAM hub, mapping human executive permissions to AI agent Execution Rights."
+  },
+  {
+    "id": "master-config-006",
+    "name": "Open-Source the Telemetry Schema",
+    "cat": "governance",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Phase 2C: Sanitize core specifications of Schema-Driven Agentic Reasoning framework and publish PR to HeadyMe GitHub."
+  },
+  {
+    "id": "master-config-007",
+    "name": "Edge-Native Proof of Prospecting Migration",
+    "cat": "enterprise",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Phase 3A: Containerize custom Node.js IRS 990 XML parser as Edge AI function on L1 Edge Layer."
+  },
+  {
+    "id": "master-config-008",
+    "name": "AI-Driven Implicit Evaluation",
+    "cat": "intelligence",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Phase 3B: Rebuild legacy metrics in L4 Intelligence layer using vector similarity matching in L6 Embedding Store."
+  },
+  {
+    "id": "master-config-009",
+    "name": "Enterprise Dashboard UI Componentization",
+    "cat": "ui",
+    "pool": "warm",
+    "w": 4,
+    "desc": "Phase 3C: Implement scalable card-based interface metaphor into HeadyOS frontend component library."
+  },
+  {
+    "id": "master-config-010",
+    "name": "HCFP Continuous Improvement Daemon",
+    "cat": "orchestration",
+    "pool": "hot",
+    "w": 5,
+    "desc": "Module 4: Continuously scan telemetry for inefficiencies, predict architectural fixes, and drop tasks into Auto-Success Engine."
   }
 ]

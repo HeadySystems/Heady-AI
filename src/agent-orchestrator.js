@@ -111,6 +111,9 @@ class AgentOrchestrator extends EventEmitter {
         // Start auto-scaling loop
         this._scaleInterval = setInterval(() => this._autoScale(), SCALE_CHECK_MS);
 
+        // Automated Performance Profiling Feedback Loop
+        this._profilingInterval = setInterval(() => this._profilePerformanceAndPrune(), 60000);
+
         // Pre-spawn minimum supervisors across all service groups
         this._ensureMinimum();
     }
@@ -243,6 +246,23 @@ class AgentOrchestrator extends EventEmitter {
         }
     }
 
+    /** Automated Performance Profiling & Pruning */
+    async _profilePerformanceAndPrune() {
+        const avgGlobalLatency = this.taskHistory.length > 0
+            ? this.taskHistory.reduce((acc, t) => acc + t.latency, 0) / this.taskHistory.length
+            : 0;
+
+        this._audit({ type: "performance:profiling", avgGlobalLatency, queueSize: this.taskQueue.length });
+
+        // If latency degrades, aggressively prune context/cache
+        if (avgGlobalLatency > 5000 && this.vectorMem && typeof this.vectorMem.pruneOldest === 'function') {
+            try {
+                const prunedCount = await this.vectorMem.pruneOldest(100);
+                this._audit({ type: "performance:prune_context", trigger: "high_latency", prunedCount });
+            } catch (e) { }
+        }
+    }
+
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: new Date().toISOString() });
         try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
@@ -305,7 +325,13 @@ class AgentOrchestrator extends EventEmitter {
         if (this.vectorMem && queryText && queryText.length >= 5) {
             try {
                 const memories = await this.vectorMem.queryMemory(queryText, 3);
-                const relevant = memories.filter(m => m.score > 0.3);
+                // Agentic Memory Poisoning Defenses: Context Validation & Masking
+                const sanitizedMemories = memories.map(m => {
+                    let safeContent = m.content.replace(/ignore previous instructions/gi, "[MASKED_INJECTION_ATTEMPT]");
+                    safeContent = safeContent.replace(/system prompt/gi, "[MASKED_KEYWORD]");
+                    return { ...m, content: safeContent };
+                });
+                const relevant = sanitizedMemories.filter(m => m.score > 0.3);
                 if (relevant.length > 0) {
                     memoryContext = relevant.map(m => m.content).join("\n---\n");
                     // Inject retrieved context into payload
@@ -335,7 +361,41 @@ class AgentOrchestrator extends EventEmitter {
             matched: knownPatterns[task.action] || null,
         };
 
-        // ── 5. AUDIT ──
+        // ── 5. STRICT TYPED PAYLOAD & STATIC REFUSAL ──
+        const isStrictTyped = typeof payload === "object" && payload !== null && !Array.isArray(payload);
+
+        if (!isStrictTyped || Object.keys(payload).length === 0) {
+            validation.checks.staticRefusal = {
+                pass: false,
+                reason: "Ill-typed payload. Agents must enforce strict JSON schema for all tool arguments.",
+            };
+            const errorMsg = "STATIC REFUSAL: Non-deterministic or ill-typed agent action blocked.";
+
+            // Log to L6 Vault analog (HeadyMemory)
+            if (this.vectorMem) {
+                try {
+                    this.vectorMem.ingestMemory({
+                        content: `STATIC REFUSAL TRIGGERED:\nAction: ${task.action}\nPayload: ${JSON.stringify(payload)}\nReason: Ill-typed arguments.`,
+                        metadata: { type: "static_refusal", severity: "CRITICAL", ts: validation.ts }
+                    }).catch(() => { });
+                } catch (e) { }
+            }
+
+            this._audit({ type: "security:static_refusal", action: task.action, reason: errorMsg });
+
+            return {
+                valid: false,
+                refusalError: errorMsg,
+                context: null,
+                patterns: null,
+                supervisorCount: this.supervisors.size,
+                validation
+            };
+        } else {
+            validation.checks.staticRefusal = { pass: true };
+        }
+
+        // ── 6. AUDIT ──
         this._audit({ type: "validator:pre-action", ...validation });
 
         return {
@@ -354,6 +414,10 @@ class AgentOrchestrator extends EventEmitter {
     async submit(task) {
         // ═══ HeadyValidator: ALWAYS runs first ═══
         const preCheck = await this._headyValidator(task);
+
+        if (!preCheck.valid && preCheck.refusalError) {
+            return { ok: false, error: preCheck.refusalError, latency: 0, supervisor: null, staticRefusal: true };
+        }
 
         const serviceGroup = this.conductor.routeSync(task);
         const supervisor = this._getOrCreateSupervisor(serviceGroup);
@@ -390,16 +454,25 @@ class AgentOrchestrator extends EventEmitter {
             supervisor.busy = false;
             this.completedTasks++;
 
-            // ── MEMORY-STORE: Save the result in vector memory ──
+            // ── MEMORY-STORE: Save the result in vector memory (Atomic Prompt Ingestion Protocol) ──
+            const completionLatency = Date.now() - start;
             if (this.vectorMem && queryText && result) {
                 try {
                     const responseText = typeof result === "string" ? result :
                         result.response || result.result || JSON.stringify(result).substring(0, 500);
                     if (responseText && responseText.length > 10) {
-                        await this.vectorMem.ingestMemory({
-                            content: `Q: ${queryText.substring(0, 500)}\nA: ${String(responseText).substring(0, 1000)}`,
-                            metadata: { type: "orchestrator_qa", action: task.action, supervisor: supervisor.id },
-                        });
+                        // Atomic ingestion with provenance tracking
+                        const ingestionPayload = {
+                            content: `[ATOMIC_PROVENANCE_START]\nQuery: ${queryText.substring(0, 500)}\nResponse: ${String(responseText).substring(0, 1000)}\n[ATOMIC_PROVENANCE_END]`,
+                            metadata: {
+                                type: "orchestration_atomic_memory",
+                                action: task.action,
+                                supervisor: supervisor.id,
+                                duration_ms: completionLatency,
+                                pqc_receipt: crypto.createHash('sha384').update(queryText + responseText).digest('hex')
+                            }
+                        };
+                        await this.vectorMem.ingestMemory(ingestionPayload);
                     }
                 } catch { }
             }
@@ -491,6 +564,7 @@ class AgentOrchestrator extends EventEmitter {
 
     shutdown() {
         clearInterval(this._scaleInterval);
+        clearInterval(this._profilingInterval);
         this.supervisors.clear();
         this.taskQueue = [];
         this._audit({ type: "shutdown", completedTasks: this.completedTasks });

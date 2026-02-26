@@ -1,3 +1,5 @@
+// Allow self-signed certs for internal HTTPS self-calls (manager runs mTLS)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const logger = require("./src/utils/logger");
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -427,7 +429,7 @@ logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyCorrections: LOADED (behavior an
 
 // ─── Dynamic Agent Orchestrator ─────────────────────────────────────
 const { getOrchestrator } = require("./src/agent-orchestrator");
-const orchestrator = getOrchestrator({ baseUrl: "http://127.0.0.1:" + PORT, apiKey: process.env.HEADY_API_KEY });
+const orchestrator = getOrchestrator({ baseUrl: "https://127.0.0.1:" + PORT, apiKey: process.env.HEADY_API_KEY });
 orchestrator.registerRoutes(app);
 orchestrator.on("supervisor:spawned", (d) => logger.logNodeActivity("CONDUCTOR", `  ∞ HeadySupervisor spawned: ${d.id} (${d.serviceGroup})`));
 orchestrator.on("task:complete", (d) => { /* silent */ });
@@ -574,7 +576,7 @@ app.get("/api/cloud/status", (req, res) => {
       "headydata.com": { tunnel: false, role: "data-analytics", status: "active", subdomains: ["ingest", "analyze", "visualize", "export"] },
       "headyapi.com": { tunnel: false, role: "public-api", status: "active", subdomains: ["docs", "keys", "playground", "sdk"] },
     },
-    localGateway: "http://127.0.0.1:3301",
+    localGateway: "https://127.0.0.1:3301",
     ts: new Date().toISOString(),
   });
 });
@@ -1713,6 +1715,25 @@ try {
 } catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ HCFP router not loaded: ${err.message}`); }
 
 try {
+  const pipelineRunner = require("./src/hcfp/pipeline-runner");
+  app.post("/api/hcfp/ingest", async (req, res) => {
+    try {
+      const result = await pipelineRunner.runFull(req.body);
+      res.json(result);
+    } catch (err) { res.status(500).json({ ok: false, error: err.message }); }
+  });
+  app.get("/api/hcfp/manifests", (req, res) => res.json({ ok: true, manifests: pipelineRunner.listManifests() }));
+  app.get("/api/hcfp/manifest/:id", (req, res) => {
+    const m = pipelineRunner.getManifest(req.params.id);
+    res.json(m ? { ok: true, manifest: m } : { ok: false, error: "Not found" });
+  });
+  const cogTel = require("./src/telemetry/cognitive-telemetry");
+  app.get("/api/telemetry/audit", (req, res) => res.json({ ok: true, entries: cogTel.readAuditLog(parseInt(req.query.limit) || 50) }));
+  app.get("/api/telemetry/stats", (req, res) => res.json({ ok: true, stats: cogTel.getAuditStats() }));
+  logger.logNodeActivity("CONDUCTOR", "  ∞ HCFP Pipeline + Telemetry Audit: INSTALLED");
+} catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ Pipeline/Telemetry not loaded: ${err.message}`); }
+
+try {
   const budgetRouter = require("./src/routes/budget-router");
   app.use("/api/budget", budgetRouter);
   logger.logNodeActivity("CONDUCTOR", "  ∞ Budget Router: INSTALLED");
@@ -2119,7 +2140,7 @@ try {
 
     try {
       // Route to internal brain chat with arena config
-      const brainUrl = process.env.HEADY_BRAIN_URL || 'http://localhost:3301';
+      const brainUrl = process.env.HEADY_BRAIN_URL || 'https://localhost:3301';
       const lastMessage = messages[messages.length - 1]?.content || '';
 
       // For now, use the local brain endpoint with model metadata
@@ -2138,6 +2159,20 @@ try {
 
       const data = await brainRes.json();
       const latency = Date.now() - startTime;
+      const replyContent = data.reply || data.response || data.message || '';
+
+      // Cognitive Telemetry: Proof-of-Inference audit stamp
+      let audit_hash = null;
+      try {
+        const cogTel = require('./src/telemetry/cognitive-telemetry');
+        const audit = cogTel.createAuditedAction(
+          cogTel.ACTION_TYPES.CHAT_COMPLETION,
+          { model, messages: messages.slice(-2), temperature },
+          { reply: replyContent.slice(0, 500), tokens: Math.ceil(replyContent.length / 4) },
+          { model, provider: 'heady-brain', latency_ms: latency, tokens_in: Math.ceil(lastMessage.length / 4), tokens_out: Math.ceil(replyContent.length / 4), arena_nodes: arena.nodes === 'all' ? 20 : arena.nodes?.length || 1, tier: config.tier, source_endpoint: '/api/v1/chat/completions' }
+        );
+        audit_hash = audit.sha256_hash;
+      } catch { /* telemetry module not loaded */ }
 
       res.json({
         id: 'chatcmpl-heady-' + Date.now().toString(36),
@@ -2146,13 +2181,13 @@ try {
         model: model,
         choices: [{
           index: 0,
-          message: { role: 'assistant', content: data.reply || data.response || data.message || '' },
+          message: { role: 'assistant', content: replyContent },
           finish_reason: 'stop',
         }],
         usage: {
           prompt_tokens: Math.ceil(lastMessage.length / 4),
-          completion_tokens: Math.ceil((data.reply || data.response || '').length / 4),
-          total_tokens: Math.ceil(lastMessage.length / 4) + Math.ceil((data.reply || data.response || '').length / 4),
+          completion_tokens: Math.ceil(replyContent.length / 4),
+          total_tokens: Math.ceil(lastMessage.length / 4) + Math.ceil(replyContent.length / 4),
         },
         // Heady extensions
         heady: {
@@ -2160,6 +2195,7 @@ try {
           arena_nodes: arena.nodes === 'all' ? 20 : arena.nodes?.length || 1,
           latency_ms: latency,
           tier: config.tier,
+          audit_hash,
         },
       });
     } catch (err) {
