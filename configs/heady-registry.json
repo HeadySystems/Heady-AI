@@ -1,7 +1,7 @@
 {
   "_meta": {
     "name": "Heady Service Registry",
-    "version": "3.1.0",
+    "version": "3.2.3",
     "description": "Master registry for all Heady™ AI Platform domains, nodes, and infrastructure layers",
     "copyright": "© 2024-2026 HeadySystems Inc. All Rights Reserved.",
     "updatedAt": "2025-01-01T00:00:00Z"
@@ -137,7 +137,7 @@
   "nodes": {
     "HeadySoul": {
       "id": "soul",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "intelligence",
       "description": "Core soul intelligence — reasoning, analysis, and optimization",
       "capabilities": ["analyze", "optimize", "learn", "reason", "reflect"],
@@ -154,7 +154,7 @@
     },
     "HeadyBrains": {
       "id": "brains",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "reasoning",
       "description": "Advanced multi-step reasoning and problem decomposition",
       "capabilities": ["reason", "decompose", "plan", "evaluate", "chain-of-thought"],
@@ -170,7 +170,7 @@
     },
     "HeadyVinci": {
       "id": "vinci",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "pattern_recognition",
       "description": "Pattern learning, recognition, and prediction engine",
       "capabilities": ["learn", "predict", "recognize", "cluster", "classify"],
@@ -186,7 +186,7 @@
     },
     "HeadyMemory": {
       "id": "memory",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "vector_memory",
       "description": "Vector memory store — semantic search and episodic memory",
       "capabilities": ["store", "search", "embed", "retrieve", "forget"],
@@ -203,7 +203,7 @@
     },
     "HeadyConductor": {
       "id": "conductor",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "orchestrator",
       "description": "Central orchestration and task routing engine",
       "capabilities": ["route", "orchestrate", "prioritize", "balance", "monitor"],
@@ -220,7 +220,7 @@
     },
     "HeadyArena": {
       "id": "arena",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "evaluation",
       "description": "Battle arena — evaluates and ranks candidate solutions",
       "capabilities": ["battle", "rank", "score", "compare", "evaluate"],
@@ -236,7 +236,7 @@
     },
     "HeadyGovernance": {
       "id": "governance",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "policy",
       "description": "Safety, policy, and ethical governance validation",
       "capabilities": ["validate", "approve", "deny", "audit", "enforce"],
@@ -252,7 +252,7 @@
     },
     "HeadyBee": {
       "id": "bee",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "worker_agent",
       "description": "Spawnable worker agents for domain-specific tasks",
       "capabilities": ["spawn", "terminate", "monitor", "assign", "report"],
@@ -268,7 +268,7 @@
     },
     "HeadyAutobiographer": {
       "id": "autobiographer",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "narrative",
       "description": "Narrative event logger and system story generator",
       "capabilities": ["record", "narrate", "retrieve", "summarize", "audit"],
@@ -284,7 +284,7 @@
     },
     "HeadyBuddy": {
       "id": "buddy",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "companion",
       "description": "Always-on companion and proactive improvement system",
       "capabilities": ["chat", "suggest", "monitor", "greet", "route"],
@@ -300,7 +300,7 @@
     },
     "HeadyLens": {
       "id": "lens",
-      "version": "3.1.0",
+      "version": "3.2.3",
       "role": "ar_overlay",
       "description": "AR overlay intelligence — explains objects and contexts",
       "capabilities": ["explain", "identify", "annotate", "overlay", "enrich"],

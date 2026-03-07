@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     })
 
     // Average time to complete onboarding
-    const completionTimes = await prisma.$queryRaw`
+    const completionTimes = await prisma.$queryRaw<Array<{ avg_seconds: number }>>`
       SELECT 
         AVG(EXTRACT(EPOCH FROM (MAX("createdAt") - MIN("createdAt")))) as avg_seconds
       FROM "OnboardingLog"
@@ -49,11 +49,11 @@ export async function GET(req: NextRequest) {
       overview: {
         totalUsers,
         completedOnboarding,
-        completionRate: ((completedOnboarding / totalUsers) * 100).toFixed(1),
+        completionRate: totalUsers > 0 ? ((completedOnboarding / totalUsers) * 100).toFixed(1) : "0",
         apiUsage7d: apiUsage
       },
       stepBreakdown,
-      avgCompletionTime: completionTimes[0]?.avg_seconds || 0
+      avgCompletionTime: completionTimes?.[0]?.avg_seconds || 0
     })
 
   } catch (error) {

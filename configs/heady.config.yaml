@@ -7,7 +7,7 @@
 # Changes to platform-wide behavior should start HERE.
 # ═══════════════════════════════════════════════════════════════════════════════
 
-version: "3.2.2"
+version: "3.2.3"
 platform: heady-os
 license: proprietary
 

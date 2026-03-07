@@ -1,67 +1,104 @@
-# ═══════════════════════════════════════════════════════════════
-# Heady™ HeadyWeb Production Dockerfile
-# Zero-friction dynamic deployment: `gcloud run deploy --source .`
-# All 9 domains served from a single Cloud Run container.
-# © 2026 Heady Systems LLC. All Rights Reserved.
-# ═══════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
+# Heady™ Production Dockerfile — Multi-Stage Build
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Three stages: deps → build → production
+# Node 22 Alpine, tini for proper PID 1, non-root heady user,
+# production tuning, pruned node_modules, health check baked in.
+#
+# © HeadySystems Inc.
 
-# ── Stage 1: Builder ──────────────────────────────────────────
-FROM node:20-slim AS builder
+# ─── Stage 1: Dependencies ────────────────────────────────────────────────────
 
-WORKDIR /build
-
-# Copy package files and install deps
-COPY package*.json ./
-RUN npm ci --ignore-scripts || npm install --ignore-scripts
-
-# Copy everything needed for production
-COPY src/ ./src/
-COPY configs/ ./configs/
-COPY scripts/ ./scripts/
-COPY docs/ ./docs/
-
-# Prune devDependencies for production
-RUN npm prune --production 2>/dev/null || true
-
-# ── Stage 2: Production ──────────────────────────────────────
-FROM node:20-slim AS production
-
-# Security: non-root user
-RUN groupadd -r heady && useradd -r -g heady -m -s /bin/false heady
+FROM node:22-alpine AS deps
 
 WORKDIR /app
 
-# Copy production node_modules from builder
-COPY --from=builder /build/node_modules ./node_modules/
-COPY --from=builder /build/package.json ./
+# Install build essentials for native addons
+RUN apk add --no-cache python3 make g++ git
 
-# Copy application code
-COPY --from=builder /build/src/ ./src/
-COPY --from=builder /build/configs/ ./configs/
-COPY --from=builder /build/scripts/ ./scripts/
-COPY --from=builder /build/docs/ ./docs/
+# Copy package files
+COPY package.json pnpm-lock.yaml* package-lock.json* yarn.lock* ./
 
-# Copy root-level files needed at runtime
-COPY heady-manager.js ./
-COPY heady-hive-sdk/ ./heady-hive-sdk/
+# Install with preferred package manager
+RUN if [ -f pnpm-lock.yaml ]; then \
+      corepack enable && pnpm install --frozen-lockfile --prod; \
+    elif [ -f yarn.lock ]; then \
+      yarn install --production --frozen-lockfile; \
+    else \
+      npm ci --omit=dev; \
+    fi
 
-# NOTE: .env is NOT copied — use Cloud Run env vars or Secret Manager
+# ─── Stage 2: Build ──────────────────────────────────────────────────────────
 
-# Create data dirs owned by heady user
-RUN mkdir -p data/vector-shards data/telemetry data/audio && \
-    chown -R heady:heady /app
+FROM node:22-alpine AS build
+
+WORKDIR /app
+
+# Copy deps from stage 1
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source
+COPY . .
+
+# Run build if build script exists
+RUN if grep -q '"build"' package.json; then \
+      npm run build 2>/dev/null || true; \
+    fi
+
+# Prune dev dependencies
+RUN if [ -f pnpm-lock.yaml ]; then \
+      corepack enable && pnpm prune --prod; \
+    else \
+      npm prune --omit=dev 2>/dev/null || true; \
+    fi
+
+# ─── Stage 3: Production ─────────────────────────────────────────────────────
+
+FROM node:22-alpine AS production
+
+# Install tini for proper PID 1 signal handling (SIGTERM → graceful shutdown)
+RUN apk add --no-cache tini curl
+
+# Create non-root heady user
+RUN addgroup -g 1001 -S heady && \
+    adduser -S heady -u 1001 -G heady
+
+WORKDIR /app
+
+# Copy production artifacts
+COPY --from=build --chown=heady:heady /app/node_modules ./node_modules
+COPY --from=build --chown=heady:heady /app/src ./src
+COPY --from=build --chown=heady:heady /app/shared ./shared
+COPY --from=build --chown=heady:heady /app/configs ./configs
+COPY --from=build --chown=heady:heady /app/scripts ./scripts
+COPY --from=build --chown=heady:heady /app/docs ./docs
+COPY --from=build --chown=heady:heady /app/package.json ./
+COPY --from=build --chown=heady:heady /app/heady-manager.js ./
+
+# Copy heady-hive-sdk if it exists
+COPY --from=build --chown=heady:heady /app/heady-hive-sdk ./heady-hive-sdk 2>/dev/null || true
+
+# Switch to non-root
+USER heady
 
 # Environment
 ENV NODE_ENV=production
-ENV PORT=8080
+ENV HEADY_ENV=production
+ENV PORT=3301
 
-# Switch to non-root user
-USER heady
+# V8 tuning: 512MB heap, optimized for server workload
+ENV NODE_OPTIONS="--max-old-space-size=512 --optimize-for-size"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-    CMD node -e "const http=require('http');const r=http.get('http://localhost:8080/health',res=>{process.exit(res.statusCode===200?0:1)});r.on('error',()=>process.exit(1))"
+# Expose port
+EXPOSE 3301
 
-# Start HeadyWeb — the full Express server with all services
-EXPOSE 8080
+# Health check: liveness probe on /health/live
+HEALTHCHECK --interval=13s --timeout=5s --start-period=34s --retries=3 \
+  CMD curl -f http://localhost:3301/health/live || exit 1
+
+# Use tini as PID 1 for proper signal handling
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start Heady
 CMD ["node", "heady-manager.js"]

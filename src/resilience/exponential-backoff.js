@@ -1,105 +1,142 @@
 /**
- * © 2026 HeadySystems Inc..
- * PROPRIETARY AND CONFIDENTIAL.
- * Unauthorized copying, modification, or distribution is strictly prohibited.
- */
-/**
- * ═══ Heady Exponential Backoff — φ-Scaled Resilience ═══
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * Heady™ Exponential Backoff — src/resilience/exponential-backoff.js
+ * ═══════════════════════════════════════════════════════════════════════════════
  *
- * Unlike traditional base-2 exponential backoff (1s, 2s, 4s, 8s...),
- * Heady uses the Golden Ratio (φ = 1.618...) for delay scaling.
+ * Phi-scaled exponential backoff with configurable jitter, retries, and
+ * abort support. Wraps any async function with resilient retry behavior.
+ *
+ * © HeadySystems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
-const PHI = 1.6180339887;
+'use strict';
 
-function normalizePositiveNumber(value, fallback) {
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
-    return parsed;
-}
+const { PHI, PSI, fib, phiBackoff, PSI_POWERS } = require('../../shared/phi-math');
 
 /**
- * Calculate a φ-scaled delay with randomized jitter.
+ * Retry an async function with phi-exponential backoff.
  *
- * @param {number} attempt - Current retry attempt (0-indexed)
- * @param {number} baseMs - Base delay in milliseconds (default: 1000)
- * @param {number} maxMs - Maximum delay cap (default: 30000)
- * @param {number} jitterFactor - Jitter range as fraction of delay (default: 0.25)
- * @returns {number} Delay in milliseconds
+ * @param {Function} fn - Async function to retry
+ * @param {object} [opts]
+ * @param {number} [opts.maxRetries] - Maximum retries (default fib(5)=5)
+ * @param {number} [opts.baseMs] - Base delay (default 1000)
+ * @param {number} [opts.maxDelayMs] - Maximum delay cap (default 60000)
+ * @param {boolean} [opts.jitter] - Apply ±ψ² jitter (default true)
+ * @param {Function} [opts.shouldRetry] - Predicate(error, attempt) → boolean
+ * @param {Function} [opts.onRetry] - Callback(error, attempt, delayMs)
+ * @param {AbortSignal} [opts.signal] - AbortSignal for cancellation
+ * @returns {Promise<*>}
  */
-function phiDelay(attempt, baseMs = 1000, maxMs = 30000, jitterFactor = 0.25) {
-    const safeAttempt = Math.max(0, Math.floor(Number(attempt) || 0));
-    const safeBaseMs = normalizePositiveNumber(baseMs, 1000);
-    const safeMaxMs = Math.max(1, Math.floor(normalizePositiveNumber(maxMs, 30000)));
-    const safeJitter = Math.min(1, Math.max(0, Number(jitterFactor) || 0));
-
-    const raw = safeBaseMs * Math.pow(PHI, safeAttempt);
-    const jitter = raw * safeJitter * (2 * Math.random() - 1);
-    const delayed = Math.round(raw + jitter);
-
-    return Math.max(1, Math.min(delayed, safeMaxMs));
-}
-
 async function withBackoff(fn, opts = {}) {
-    const {
-        maxRetries = 5,
-        baseMs = 1000,
-        maxDelayMs = 30000,
-        jitterFactor = 0.25,
-        onRetry = null,
-        shouldRetry = () => true,
-        onGiveUp = null,
-    } = opts;
+  const maxRetries = opts.maxRetries ?? fib(5);        // 5
+  const baseMs     = opts.baseMs ?? 1000;
+  const maxDelayMs = opts.maxDelayMs ?? 60000;
+  const jitter     = opts.jitter ?? true;
+  const shouldRetry = opts.shouldRetry || defaultShouldRetry;
+  const onRetry    = opts.onRetry || (() => {});
+  const signal     = opts.signal;
 
-    const safeRetries = Math.max(0, Math.floor(Number(maxRetries) || 0));
-    let lastError;
+  let lastError;
 
-    for (let attempt = 0; attempt <= safeRetries; attempt++) {
-        try {
-            return await fn(attempt);
-        } catch (err) {
-            lastError = err;
-
-            if (!shouldRetry(err)) throw err;
-            if (attempt >= safeRetries) break;
-
-            const delay = phiDelay(attempt, baseMs, maxDelayMs, jitterFactor);
-
-            if (onRetry) onRetry(attempt + 1, delay, err);
-
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    if (signal?.aborted) {
+      throw new BackoffAbortedError('Backoff aborted by signal');
     }
 
-    if (onGiveUp) onGiveUp(lastError, safeRetries + 1);
-    throw lastError;
-}
+    try {
+      return await fn(attempt);
+    } catch (err) {
+      lastError = err;
 
-function createResilientFn(fn, opts = {}) {
-    return (...args) => withBackoff(() => fn(...args), opts);
-}
+      if (attempt >= maxRetries || !shouldRetry(err, attempt)) {
+        throw err;
+      }
 
-function delayTable(maxAttempts = 8, baseMs = 1000) {
-    const safeAttempts = Math.max(0, Math.floor(Number(maxAttempts) || 0));
-    const safeBaseMs = normalizePositiveNumber(baseMs, 1000);
+      const delayMs = phiBackoff(attempt, baseMs, maxDelayMs, jitter);
+      onRetry(err, attempt, delayMs);
 
-    const table = [];
-    for (let i = 0; i < safeAttempts; i++) {
-        const raw = Math.round(safeBaseMs * Math.pow(PHI, i));
-        table.push({
-            attempt: i,
-            delayMs: raw,
-            delaySec: +(raw / 1000).toFixed(2),
-            formula: `${safeBaseMs} × φ^${i}`,
-        });
+      await sleep(delayMs, signal);
     }
-    return table;
+  }
+
+  throw lastError;
+}
+
+/**
+ * Default retry predicate: retry on network/timeout errors, not on 4xx.
+ * @param {Error} error
+ * @returns {boolean}
+ */
+function defaultShouldRetry(error) {
+  // Don't retry client errors
+  if (error.statusCode && error.statusCode >= 400 && error.statusCode < 500) {
+    return false;
+  }
+  // Don't retry validation errors
+  if (error.name === 'ValidationError' || error.name === 'TypeError') {
+    return false;
+  }
+  // Retry everything else (network, timeout, 5xx)
+  return true;
+}
+
+/**
+ * Sleep with abort support.
+ * @param {number} ms
+ * @param {AbortSignal} [signal]
+ * @returns {Promise<void>}
+ */
+function sleep(ms, signal) {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) return reject(new BackoffAbortedError('Aborted'));
+
+    const timer = setTimeout(resolve, ms);
+
+    if (signal) {
+      const onAbort = () => {
+        clearTimeout(timer);
+        reject(new BackoffAbortedError('Aborted during backoff'));
+      };
+      signal.addEventListener('abort', onAbort, { once: true });
+    }
+  });
+}
+
+/**
+ * Create a retry wrapper with pre-configured options.
+ * @param {object} defaults
+ * @returns {Function} (fn, overrides?) → Promise
+ */
+function createRetrier(defaults = {}) {
+  return (fn, overrides = {}) => withBackoff(fn, { ...defaults, ...overrides });
+}
+
+/**
+ * Commonly used retriers.
+ */
+const retriers = {
+  /** Quick retry for latency-sensitive operations: 3 retries, 500ms base */
+  fast: createRetrier({ maxRetries: fib(4), baseMs: 500, maxDelayMs: 5000 }),
+
+  /** Standard retry for API calls: 5 retries, 1s base */
+  standard: createRetrier({ maxRetries: fib(5), baseMs: 1000, maxDelayMs: 60000 }),
+
+  /** Patient retry for external services: 8 retries, 2s base */
+  patient: createRetrier({ maxRetries: fib(6), baseMs: 2000, maxDelayMs: 120000 }),
+
+  /** Persistent retry for critical operations: 13 retries, 1s base */
+  persistent: createRetrier({ maxRetries: fib(7), baseMs: 1000, maxDelayMs: 300000 }),
+};
+
+class BackoffAbortedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'BackoffAbortedError';
+  }
 }
 
 module.exports = {
-    PHI,
-    phiDelay,
-    withBackoff,
-    createResilientFn,
-    delayTable,
+  withBackoff, createRetrier, retriers,
+  sleep, defaultShouldRetry,
+  BackoffAbortedError,
 };

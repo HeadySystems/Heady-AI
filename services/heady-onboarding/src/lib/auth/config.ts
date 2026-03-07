@@ -2,33 +2,12 @@ import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import type { NextAuthConfig } from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import bcrypt from "bcryptjs"
 
-// Import all providers
+// Import OAuth providers (enabled when env vars are set)
 import Google from "next-auth/providers/google"
 import GitHub from "next-auth/providers/github"
-import Microsoft from "next-auth/providers/microsoft"
-import Apple from "next-auth/providers/apple"
-import Discord from "next-auth/providers/discord"
-import Twitter from "next-auth/providers/twitter"
-import LinkedIn from "next-auth/providers/linkedin"
-import Auth0 from "next-auth/providers/auth0"
-import Okta from "next-auth/providers/okta"
-import Slack from "next-auth/providers/slack"
-import Spotify from "next-auth/providers/spotify"
-import GitLab from "next-auth/providers/gitlab"
-import Bitbucket from "next-auth/providers/bitbucket"
-import Facebook from "next-auth/providers/facebook"
-import Reddit from "next-auth/providers/reddit"
-import Twitch from "next-auth/providers/twitch"
-import Dropbox from "next-auth/providers/dropbox"
-import Atlassian from "next-auth/providers/atlassian"
-import Keycloak from "next-auth/providers/keycloak"
-import Azure from "next-auth/providers/azure-ad"
-import Salesforce from "next-auth/providers/salesforce"
-import Notion from "next-auth/providers/notion"
-import Trello from "next-auth/providers/trello"
-import Zoom from "next-auth/providers/zoom"
-import Box from "next-auth/providers/box"
 
 // Custom HuggingFace provider
 const HuggingFace = {
@@ -53,65 +32,73 @@ const HuggingFace = {
   },
 }
 
+// Build providers dynamically based on available env vars
+const oauthProviders: any[] = []
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  oauthProviders.push(Google({ clientId: process.env.GOOGLE_CLIENT_ID, clientSecret: process.env.GOOGLE_CLIENT_SECRET }))
+}
+if (process.env.GITHUB_ID && process.env.GITHUB_SECRET) {
+  oauthProviders.push(GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }))
+}
+
 export const authConfig = {
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma) as any,
+  session: { strategy: "jwt" as const },
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    // Credentials provider — direct email/password sign-in
+    Credentials({
+      name: "HeadyMe",
+      credentials: {
+        email: { label: "Email", type: "email", placeholder: "you@example.com" },
+        password: { label: "Password", type: "password" },
+        action: { label: "Action", type: "text" }, // "signup" or "signin"
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null
+        const email = (credentials.email as string).toLowerCase()
+        const password = credentials.password as string
+        const action = credentials.action as string
+
+        if (action === "signup") {
+          // Create new user
+          const existing = await prisma.user.findUnique({ where: { email } })
+          if (existing) throw new Error("Email already registered")
+          const hashed = await bcrypt.hash(password, 12)
+          const user = await prisma.user.create({
+            data: {
+              email,
+              name: email.split("@")[0],
+              image: null,
+              emailVerified: new Date(),
+            }
+          })
+          // Store hashed password in account record
+          await prisma.account.create({
+            data: {
+              userId: user.id,
+              type: "credentials",
+              provider: "credentials",
+              providerAccountId: user.id,
+              access_token: hashed, // store hash here
+            }
+          })
+          return { id: user.id, email: user.email, name: user.name }
+        }
+
+        // Sign in
+        const user = await prisma.user.findUnique({ where: { email } })
+        if (!user) throw new Error("No account found with this email")
+        const account = await prisma.account.findFirst({
+          where: { userId: user.id, provider: "credentials" }
+        })
+        if (!account?.access_token) throw new Error("Please sign in with your OAuth provider")
+        const valid = await bcrypt.compare(password, account.access_token)
+        if (!valid) throw new Error("Invalid password")
+        return { id: user.id, email: user.email, name: user.name }
+      }
     }),
-    GitHub({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    HuggingFace,
-    Microsoft({
-      clientId: process.env.MICROSOFT_CLIENT_ID!,
-      clientSecret: process.env.MICROSOFT_CLIENT_SECRET!,
-    }),
-    Apple({
-      clientId: process.env.APPLE_ID!,
-      clientSecret: process.env.APPLE_SECRET!,
-    }),
-    Discord({
-      clientId: process.env.DISCORD_CLIENT_ID!,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-    }),
-    Twitter({
-      clientId: process.env.TWITTER_CLIENT_ID!,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-    }),
-    LinkedIn({
-      clientId: process.env.LINKEDIN_CLIENT_ID!,
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
-    }),
-    Auth0({
-      clientId: process.env.AUTH0_CLIENT_ID!,
-      clientSecret: process.env.AUTH0_CLIENT_SECRET!,
-      issuer: process.env.AUTH0_ISSUER!,
-    }),
-    Okta({
-      clientId: process.env.OKTA_CLIENT_ID!,
-      clientSecret: process.env.OKTA_CLIENT_SECRET!,
-      issuer: process.env.OKTA_ISSUER!,
-    }),
-    Slack({ clientId: process.env.SLACK_CLIENT_ID!, clientSecret: process.env.SLACK_CLIENT_SECRET! }),
-    Spotify({ clientId: process.env.SPOTIFY_CLIENT_ID!, clientSecret: process.env.SPOTIFY_CLIENT_SECRET! }),
-    GitLab({ clientId: process.env.GITLAB_ID!, clientSecret: process.env.GITLAB_SECRET! }),
-    Bitbucket({ clientId: process.env.BITBUCKET_ID!, clientSecret: process.env.BITBUCKET_SECRET! }),
-    Facebook({ clientId: process.env.FACEBOOK_ID!, clientSecret: process.env.FACEBOOK_SECRET! }),
-    Reddit({ clientId: process.env.REDDIT_ID!, clientSecret: process.env.REDDIT_SECRET! }),
-    Twitch({ clientId: process.env.TWITCH_ID!, clientSecret: process.env.TWITCH_SECRET! }),
-    Dropbox({ clientId: process.env.DROPBOX_ID!, clientSecret: process.env.DROPBOX_SECRET! }),
-    Atlassian({ clientId: process.env.ATLASSIAN_ID!, clientSecret: process.env.ATLASSIAN_SECRET! }),
-    Keycloak({ clientId: process.env.KEYCLOAK_ID!, clientSecret: process.env.KEYCLOAK_SECRET!, issuer: process.env.KEYCLOAK_ISSUER! }),
-    Azure({ clientId: process.env.AZURE_AD_CLIENT_ID!, clientSecret: process.env.AZURE_AD_CLIENT_SECRET!, tenantId: process.env.AZURE_AD_TENANT_ID! }),
-    Salesforce({ clientId: process.env.SALESFORCE_ID!, clientSecret: process.env.SALESFORCE_SECRET! }),
-    Notion({ clientId: process.env.NOTION_ID!, clientSecret: process.env.NOTION_SECRET! }),
-    Trello({ clientId: process.env.TRELLO_ID!, clientSecret: process.env.TRELLO_SECRET! }),
-    Zoom({ clientId: process.env.ZOOM_CLIENT_ID!, clientSecret: process.env.ZOOM_CLIENT_SECRET! }),
-    Box({ clientId: process.env.BOX_CLIENT_ID!, clientSecret: process.env.BOX_CLIENT_SECRET! }),
-    // Add more providers as needed - Auth.js supports 80+
+    // OAuth providers (only added when env vars are configured)
+    ...oauthProviders,
   ],
   pages: {
     signIn: "/login",
@@ -119,41 +106,47 @@ export const authConfig = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Allow sign in
       return true
     },
     async redirect({ url, baseUrl }) {
-      // Check if user needs onboarding
-      const session = await auth()
-      if (session?.user?.id) {
-        const user = await prisma.user.findUnique({
-          where: { id: session.user.id },
-          select: { onboardingComplete: true, onboardingStep: true }
+      // Default redirect to onboarding
+      if (url.startsWith(baseUrl)) return url
+      return baseUrl + "/onboarding/create-account"
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      // Refresh onboarding state from DB on every request
+      if (token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: {
+            onboardingComplete: true,
+            onboardingStep: true,
+            headyUsername: true,
+            headyEmail: true,
+            apiKey: true,
+          }
         })
-
-        if (!user?.onboardingComplete) {
-          // Redirect to appropriate onboarding step
-          const stepRoutes = [
-            "/onboarding/create-account",
-            "/onboarding/email-config",
-            "/onboarding/permissions",
-            "/onboarding/buddy"
-          ]
-          return stepRoutes[user?.onboardingStep || 0] || "/onboarding/create-account"
+        if (dbUser) {
+          token.onboardingComplete = dbUser.onboardingComplete
+          token.onboardingStep = dbUser.onboardingStep
+          token.headyUsername = dbUser.headyUsername
+          token.headyEmail = dbUser.headyEmail
+          token.apiKey = dbUser.apiKey
         }
       }
-
-      // Default redirect to dashboard
-      return url.startsWith(baseUrl) ? url : baseUrl + "/dashboard"
+      return token
     },
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
-        session.user.onboardingComplete = user.onboardingComplete
-        session.user.onboardingStep = user.onboardingStep
-        session.user.headyUsername = user.headyUsername
-        session.user.headyEmail = user.headyEmail
-        session.user.apiKey = user.apiKey
+    async session({ session, token }) {
+      if (session.user && token) {
+        session.user.id = token.id as string
+        session.user.onboardingComplete = token.onboardingComplete as boolean
+        session.user.onboardingStep = token.onboardingStep as number
+        session.user.headyUsername = token.headyUsername as string
+        session.user.headyEmail = token.headyEmail as string
+        session.user.apiKey = token.apiKey as string
       }
       return session
     },
@@ -176,6 +169,6 @@ export const authConfig = {
       }
     }
   }
-} satisfies NextAuthConfig
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig)

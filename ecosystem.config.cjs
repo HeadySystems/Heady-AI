@@ -57,7 +57,7 @@ module.exports = {
             env: {
                 NODE_ENV: 'production',
                 PORT: 9016,
-                API_TARGET: 'https://127.0.0.1:3301',
+                API_TARGET: 'https://manager.headysystems.com',
             },
             max_memory_restart: '128M',
             min_uptime: '5s',

@@ -31,12 +31,12 @@ COPY package.json package-lock.json* pnpm-lock.yaml* ./
 
 # Install ALL deps (including devDependencies for build step)
 RUN if [ -f pnpm-lock.yaml ]; then \
-      corepack enable && pnpm install --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then \
-      npm ci; \
-    else \
-      npm install; \
-    fi
+  corepack enable && pnpm install --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then \
+  npm ci; \
+  else \
+  npm install; \
+  fi
 
 # ═════════════════════════════════════════════════════════════════════════════
 # Stage 2: BUILD — compile, generate, test, prune
@@ -62,14 +62,14 @@ RUN npm run build 2>/dev/null || echo "No build script — skipping"
 
 # Prune devDependencies for production image
 RUN npm prune --production 2>/dev/null || \
-    (rm -rf node_modules && npm install --omit=dev) || true
+  (rm -rf node_modules && npm install --omit=dev) || true
 
 # Remove unnecessary files from node_modules
 RUN find node_modules -type f \( \
-      -name "*.md" -o -name "*.ts" -o -name "*.map" \
-      -o -name "CHANGELOG*" -o -name "LICENSE*" \
-      -o -name ".npmignore" -o -name ".eslintrc*" \
-    \) -delete 2>/dev/null || true
+  -name "*.md" -o -name "*.ts" -o -name "*.map" \
+  -o -name "CHANGELOG*" -o -name "LICENSE*" \
+  -o -name ".npmignore" -o -name ".eslintrc*" \
+  \) -delete 2>/dev/null || true
 
 # ═════════════════════════════════════════════════════════════════════════════
 # Stage 3: PRODUCTION — minimal runtime image
@@ -80,7 +80,7 @@ FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS production
 LABEL maintainer="HeadySystems Inc. <eric@headysystems.com>"
 LABEL org.opencontainers.image.title="heady-manager"
 LABEL org.opencontainers.image.description="Heady Autonomous Multi-Agent AI Platform"
-LABEL org.opencontainers.image.version="3.1.0"
+LABEL org.opencontainers.image.version="3.2.3"
 LABEL org.opencontainers.image.vendor="HeadySystems Inc."
 LABEL org.opencontainers.image.source="https://github.com/HeadyMe/Heady"
 
@@ -89,7 +89,7 @@ RUN apk add --no-cache curl tini
 
 # Security: non-root user with no login shell
 RUN addgroup -g 1001 -S heady && \
-    adduser  -u 1001 -S heady -G heady -s /sbin/nologin
+  adduser  -u 1001 -S heady -G heady -s /sbin/nologin
 
 WORKDIR /app
 
@@ -105,16 +105,16 @@ COPY --from=build --chown=heady:heady /build/heady-hive-sdk/  ./heady-hive-sdk/
 
 # Create data directories (vector shards, telemetry, audio, tmp)
 RUN mkdir -p data/vector-shards data/telemetry data/audio tmp && \
-    chown -R heady:heady /app
+  chown -R heady:heady /app
 
 # ── Environment ───────────────────────────────────────────────────────────────
 ENV NODE_ENV=production
 ENV PORT=8080
 ENV HEADY_SERVICE_NAME=heady-manager
-ENV HEADY_VERSION=3.1.0
+ENV HEADY_VERSION=3.2.2
 
 # Node.js production tuning
-ENV NODE_OPTIONS="--max-old-space-size=512 --dns-result-order=ipv4first"
+ENV NODE_OPTIONS="--max-old-space-size=1024 --dns-result-order=ipv4first"
 
 # Disable npm update checks in production
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
@@ -126,7 +126,7 @@ USER heady
 # Cloud Run uses HTTP probes (configured in service YAML), but Docker
 # HEALTHCHECK provides local dev parity and docker-compose support.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
-    CMD curl -sf http://localhost:8080/health/live || exit 1
+  CMD curl -sf http://localhost:8080/health/live || exit 1
 
 # ── Expose & Run ──────────────────────────────────────────────────────────────
 EXPOSE 8080

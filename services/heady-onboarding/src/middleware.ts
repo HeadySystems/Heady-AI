@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { auth } from "@/lib/auth"
+import { getToken } from "next-auth/jwt"
 
 // Routes that don't require authentication
 const publicRoutes = ["/", "/login", "/signup", "/api/auth"]
@@ -8,7 +8,7 @@ const publicRoutes = ["/", "/login", "/signup", "/api/auth"]
 // Onboarding routes in order
 const onboardingRoutes = [
   "/onboarding/create-account",
-  "/onboarding/email-config", 
+  "/onboarding/email-config",
   "/onboarding/permissions",
   "/onboarding/buddy"
 ]
@@ -21,19 +21,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Check authentication
-  const session = await auth()
+  // Allow API routes (handled by their own auth)
+  if (path.startsWith("/api/")) {
+    return NextResponse.next()
+  }
 
-  if (!session?.user) {
-    // Redirect to login
+  // Check authentication via JWT
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+
+  if (!token) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
 
   // Check onboarding status
-  const user = session.user
-
-  if (!user.onboardingComplete) {
-    const currentStep = user.onboardingStep || 0
+  if (!token.onboardingComplete) {
+    const currentStep = (token.onboardingStep as number) || 0
     const expectedRoute = onboardingRoutes[currentStep]
 
     // If user is on the correct onboarding route, allow
@@ -47,7 +49,6 @@ export async function middleware(request: NextRequest) {
       if (requestedStep > currentStep) {
         return NextResponse.redirect(new URL(expectedRoute, request.url))
       }
-      // Allow going back to previous steps
       return NextResponse.next()
     }
 
@@ -55,20 +56,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(expectedRoute, request.url))
   }
 
-  // User is authenticated and onboarded, allow access
   return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - api routes (handled separately)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|public|api).*)",
+    "/((?!_next/static|_next/image|favicon.ico|public).*)",
   ],
 }

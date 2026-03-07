@@ -1,318 +1,250 @@
-# Heady™ Projection System — Architecture
+# Heady™ Architecture Reference
 
-> © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
-
----
-
-## Overview
-
-The Heady™ Projection System is the real-time state observation layer of the Heady AI Platform. It maintains six continuously-updated domain projections that any service in the platform can query to understand the current state of the swarm.
-
-**Core principles:**
-- **Event-driven** — projections push updates via SSE to interested consumers
-- **Golden ratio timing** — all intervals are derived from PHI (1.6180339887) to stagger polling and avoid thundering-herd effects
-- **Domain isolation** — each projection domain is owned by a dedicated HeadyBee
-- **Eventual consistency** — projections converge on truth as bees complete their work cycles
+> Version 3.2.2 — Codename: Aether
+> © HeadySystems Inc.
 
 ---
 
-## Component Diagram
+## System Overview
+
+Heady is a multi-agent AI operating system with 20 specialized intelligence nodes,
+federated liquid routing, Sacred Geometry orchestration, and self-healing resilience.
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Heady™ AI Platform                               │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  HeadyConductor (port 3848)                                  │  │
-│  │  Orchestrates bee assignments, health aggregation            │  │
-│  └───────────────────────┬──────────────────────────────────────┘  │
-│                           │  register / heartbeat                  │
-│                           ▼                                         │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  Projection Service (port 3849)                              │  │
-│  │                                                              │  │
-│  │  ┌─────────────────┐   ┌────────────────────────────────┐   │  │
-│  │  │ ProjectionManager│   │        ProjectionSwarm         │   │  │
-│  │  │                 │◄──┤                                │   │  │
-│  │  │  Map<domain,    │   │  ┌──────────────────────────┐  │   │  │
-│  │  │   state>        │   │  │  vector-memory-bee  φ×8s │  │   │  │
-│  │  │                 │   │  │  config-bee         10s  │  │   │  │
-│  │  │  emits:         │   │  │  health-bee         φ×6s │  │   │  │
-│  │  │  'projection'   │   │  │  telemetry-bee      4s   │  │   │  │
-│  │  └────────┬────────┘   │  │  topology-bee       15s  │  │   │  │
-│  │           │            │  │  task-queue-bee     5s   │  │   │  │
-│  │           │            │  └──────────────────────────┘  │   │  │
-│  │           ▼            └────────────────────────────────┘   │  │
-│  │  ┌─────────────────┐                                         │  │
-│  │  │  SSEBroadcaster │   GET /api/projections/sse              │  │
-│  │  │  n clients ────►├──────────────────────────────────────► │  │
-│  │  └─────────────────┘                                         │  │
-│  │                                                              │  │
-│  │  GET /api/projections        (snapshot all)                  │  │
-│  │  GET /api/projections/:domain (snapshot one)                 │  │
-│  │  GET /health                  (service health)               │  │
-│  │  GET /api/swarm               (swarm stats)                  │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                           │                                         │
-│                           │  HTTP proxy /api/*                     │
-│                           ▼                                         │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  Dashboard Server (port 3850)                                │  │
-│  │                                                              │  │
-│  │  Serves index.html (SPA)                                     │  │
-│  │  Proxies /api/* → Projection Service                         │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                           │                                         │
-│                           │  Browser SSE                           │
-│                           ▼                                         │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │  Dashboard SPA (browser)                                     │  │
-│  │                                                              │  │
-│  │  6 projection cards — auto-updates via SSE                   │  │
-│  │  PHI-backoff reconnect on disconnect                         │  │
-│  │  Mock data fallback for offline preview                      │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  Redis (port 6379)   — optional caching layer               │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-│                                                                     │
-│  ┌─────────────────────────────────────────────────────────────┐   │
-│  │  PostgreSQL           — projection persistence + history    │   │
-│  └─────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    HEADY PLATFORM v3.2.2                │
+├─────────────────┬───────────────────┬───────────────────┤
+│   Cloud Run     │  Cloudflare Edge  │  HuggingFace      │
+│   heady-manager │  heady-edge-proxy │  heady-ai          │
+│   heady-mcp     │  heady-edge-node  │  heady-demo        │
+├─────────────────┴───────────────────┴───────────────────┤
+│                 SHARED FOUNDATION                       │
+│   phi-math.js │ csl-engine.js │ sacred-geometry.js      │
+├─────────────────────────────────────────────────────────┤
+│                 ORCHESTRATION                           │
+│   conductor.js │ bee-factory.js │ backpressure.js       │
+├─────────────────────────────────────────────────────────┤
+│                 RESILIENCE LAYER                        │
+│   circuit-breaker.js │ exponential-backoff.js           │
+│   bulkhead-isolation.js │ graceful-shutdown.js          │
+├─────────────────────────────────────────────────────────┤
+│                 MEMORY & CONTEXT                        │
+│   vector-memory.js │ embedding-router.js                │
+│   context-window-manager.js                             │
+├─────────────────────────────────────────────────────────┤
+│                 OBSERVABILITY                           │
+│   structured-logger.js │ health-registry.js             │
+│   coherence-monitor.js                                  │
+├─────────────────────────────────────────────────────────┤
+│              20 AI NODES (Cognitive Layer)              │
+│   Arranged in Sacred Geometry ring topology:            │
+│   Central: HeadySoul                                    │
+│   Inner: HeadyBrains, HeadyConductor, HeadyVinci       │
+│   Middle: JULES, BUILDER, ATLAS, NOVA, Lens, Story     │
+│   Outer: Scientist, MC, Pattern, Critique, SASHA...    │
+│   Governance: HeadyQA, HeadyCheck, HeadyRisk           │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Data Flow
+## Foundation Layer (shared/)
 
-```
-Bee Poll Loop (every φ×N ms)
-         │
-         ▼
- worker functions run in parallel (maxConcurrent = 6)
-         │
-         ▼
- ProjectionManager.update(domain, state)
-   ├── version++
-   ├── stores in Map<domain, ProjectionState>
-   └── emits 'projection' event
-                │
-                ├── SSEBroadcaster.broadcast(projection)
-                │       └── sends event frame to all SSE clients
-                │
-                └── (optional) PostgreSQL upsert via upsert_projection()
-                        └── appends to projection_history
-```
+### phi-math.js — The "No Magic Numbers" Module
 
----
+Every constant in the system derives from φ = (1+√5)/2 ≈ 1.618.
 
-## PHI-Scaled Timing
+| Function | Purpose |
+|---|---|
+| `fib(n)` | Fibonacci number with memoization |
+| `phiThreshold(level)` | CSL gate thresholds: MINIMUM→CRITICAL |
+| `phiBackoff(attempt)` | φ-exponential retry delays with ψ² jitter |
+| `phiFusionWeights(n)` | N-factor scoring weights summing to 1 |
+| `poolAllocation(total)` | Fibonacci-ratio 5-pool resource split |
+| `phiTokenBudgets(base)` | Tiered context window token budgets |
+| `cslGate(value, cos)` | Sigmoid soft gate on cosine alignment |
+| `pressureLevel(value)` | Map utilization → NOMINAL/ELEVATED/HIGH/CRITICAL |
 
-All bee polling intervals derive from PHI to stagger load:
+### csl-engine.js — Continuous Semantic Logic
 
-| Bee             | Interval         | Formula              |
-|-----------------|------------------|----------------------|
-| vector-memory   | ~8,090 ms        | 5000 × φ¹            |
-| config          | 10,000 ms        | fixed                |
-| health          | ~6,180 ms        | φ⁶ × 1000            |
-| telemetry       | 4,000 ms         | fixed                |
-| topology        | 15,000 ms        | fixed                |
-| task-queue      | 5,000 ms         | fixed                |
-| SSE heartbeat   | ~10,000 ms       | fixed                |
-| Circuit breaker recovery | ~16,180 ms | φ⁵ × 10000    |
+Geometric AI gates replacing discrete boolean logic. All operations work on
+unit vectors in ℝ³⁸⁴.
 
-PHI backoff sequence (base=500ms): 809ms → 1309ms → 2118ms → 3427ms → 5545ms → …
+| Gate | Formula | Interpretation |
+|---|---|---|
+| AND | cos(a,b) | Semantic alignment |
+| OR | normalize(a+b) | Soft semantic union |
+| NOT | a - proj_b(a) | Orthogonal negation |
+| IMPLY | proj_b(a) | Component in direction of b |
+| XOR | exclusive components | What's unique to each |
+| CONSENSUS | Σ(wᵢ·vᵢ) normalized | Weighted agent agreement |
+| GATE | value × σ((cos-τ)/T) | Soft sigmoid gating |
 
----
+Also includes HDC/VSA operations (BIND, BUNDLE, PERMUTE) and
+cosine-similarity MoE routing.
 
-## Monorepo Structure
+### sacred-geometry.js — Orchestration Topology
 
-```
-heady-projection/
-├── package.json              # Workspace root (npm workspaces)
-├── turbo.json                # Turborepo pipeline config
-├── tsconfig.json             # Root TS config + @heady/* path aliases
-├── Dockerfile                # Multi-stage production image
-├── docker-compose.yml        # Local dev: service + dashboard + redis
-│
-├── apps/
-│   ├── projection-service/   # Core projection service (port 3849)
-│   │   └── index.js          # Entry point: Express + Swarm + SSE
-│   └── dashboard/            # Dashboard server (port 3850)
-│       ├── index.html        # SPA — all CSS/JS embedded
-│       └── server.js         # Express proxy + static serve
-│
-├── packages/
-│   ├── shared-types/         # @heady/shared-types
-│   │   └── src/index.js      # Enums, JSDoc types, constants
-│   └── shared-utils/         # @heady/shared-utils
-│       └── src/index.js      # debounce, throttle, phiInterval, etc.
-│
-├── scripts/
-│   ├── scaffold-cli.js       # node scripts/scaffold-cli.js --type app --name my-app
-│   └── generate-bee.js       # node scripts/generate-bee.js --domain my-domain
-│
-├── configs/
-│   └── projection-config.yaml
-│
-├── migrations/
-│   └── 001_projection_tables.sql
-│
-├── docs/
-│   ├── ARCHITECTURE.md       # This file
-│   └── PROJECTION-TYPES.md   # Per-domain schema & examples
-│
-└── .github/workflows/
-    ├── ci.yml                # Lint → Test → Build
-    └── deploy-cloud-run.yml  # Build Docker → Push → Deploy
-```
+Defines the 5-ring node topology, coherence scoring, pool scheduling,
+UI aesthetic constants (typography, spacing, colors, timing), and
+bee worker limits — all derived from φ.
 
 ---
 
-## API Reference
+## Resilience Layer (src/resilience/)
 
-### Projection Service (port 3849)
+### circuit-breaker.js
 
-| Method | Path                        | Description                                    |
-|--------|-----------------------------|------------------------------------------------|
-| GET    | `/health`                   | Service health including swarm stats           |
-| GET    | `/api/projections`          | Snapshot of all current projections            |
-| GET    | `/api/projections/:domain`  | Snapshot of a single domain                    |
-| GET    | `/api/projections/sse`      | SSE stream — receives events as bees update    |
-| GET    | `/api/swarm`                | Swarm health: run counts, error ratios         |
+Three-state circuit breaker: CLOSED → OPEN → HALF_OPEN
 
-#### SSE Event Format
+- Phi-backoff between reset attempts (1s → 1.618s → 2.618s → ...)
+- Google SRE adaptive throttling (K = φ multiplier)
+- CSL-gated error rate threshold (trips at ψ ≈ 0.618 error rate)
+- Fibonacci-sized sliding window (fib(9) = 34 seconds)
 
-```
-event: vector-memory
-data: {"domain":"vector-memory","version":42,"state":{...},"updatedAt":1710000000000}
+### exponential-backoff.js
 
-event: heartbeat
-data: {"ts":1710000000000}
+- Pre-built retriers: `fast` (3×500ms), `standard` (5×1s), `patient` (8×2s), `persistent` (13×1s)
+- AbortSignal support for cancellation
+- Configurable retry predicates
 
-event: connected
-data: {"ts":1710000000000,"phi":1.6180339887}
-```
+### bulkhead-isolation.js
 
-#### ProjectionState Shape
-
-```json
-{
-  "domain":    "health",
-  "version":   17,
-  "state":     { ...domain-specific fields... },
-  "prev":      { ...previous state or null... },
-  "updatedAt": 1710000000000
-}
-```
-
-### Dashboard Server (port 3850)
-
-| Method | Path         | Description                                |
-|--------|--------------|--------------------------------------------|
-| GET    | `/`          | Serves dashboard SPA (index.html)          |
-| GET    | `/_health`   | Dashboard server health check              |
-| ANY    | `/api/*`     | Proxied to Projection Service              |
+- Concurrency-limited execution pools (fib(8) = 21 default)
+- Queued overflow with timeout (fib(13) = 233 queue depth)
+- Phi-scaled pressure reporting (NOMINAL/ELEVATED/HIGH/CRITICAL)
+- BulkheadRegistry for managing multiple named bulkheads
 
 ---
 
-## Configuration Reference
+## Memory & Context (src/memory/, src/context/)
 
-See `configs/projection-config.yaml` for the full annotated configuration.
+### vector-memory.js — RAM-First 384D Vector Memory
 
-Key settings:
+- Capacity: fib(20) = 6,765 entries in RAM
+- Semantic search via cosine similarity (CSL AND gate)
+- Phi-weighted eviction scoring (importance 0.486, recency 0.300, relevance 0.214)
+- Semantic deduplication above CSL_THRESHOLDS.DEDUP (≈ 0.955)
+- Optional pgvector persistence fallback
 
-| Key                            | Default        | Description                          |
-|-------------------------------|----------------|--------------------------------------|
-| `phi`                          | 1.6180339887   | Golden ratio constant                |
-| `swarm.max_concurrent`         | 6              | Max parallel bee workers             |
-| `swarm.error_threshold`        | 0.3            | Circuit breaker trip ratio           |
-| `sse.heartbeat_interval_ms`    | 10000          | Heartbeat ping frequency             |
-| `sse.max_clients`              | 100            | Max concurrent SSE connections       |
-| `cloud.pubsub.enabled`         | false          | Enable GCP Pub/Sub broadcast         |
-| `features.drift_detection`     | true           | Enable config drift detection        |
+### embedding-router.js — Multi-Provider Routing
 
----
+- Supports Nomic, Jina, Cohere, Voyage, OpenAI, local Ollama
+- Circuit breaker per provider with failover
+- LRU cache: fib(20) = 6,765 entries, 1-hour TTL
+- Phi-weighted provider scoring: success rate (0.486) × latency (0.300) × cost (0.214)
+- MRL truncation for dimensionality reduction
 
-## Deployment Guide
+### context-window-manager.js — Tiered Context
 
-### Local Development
+| Tier | Budget | Purpose |
+|---|---|---|
+| working | 8,192 tokens | Immediate task context |
+| session | ~21,450 tokens | Current conversation |
+| memory | ~56,131 tokens | Long-term memory |
+| artifacts | ~146,920 tokens | Documents and files |
 
-```bash
-# Install dependencies
-npm install
-
-# Start projection service + dashboard
-npm run projection:dev
-npm run dashboard
-
-# Or with Docker Compose
-docker compose up --build
-```
-
-Access the dashboard at: http://localhost:3850
-
-### Cloud Run
-
-1. Set GitHub secrets:
-   - `WIF_PROVIDER` — Workload Identity Federation provider
-   - `WIF_SERVICE_ACCOUNT` — WIF service account email
-
-2. Set GitHub variables:
-   - `GCP_PROJECT_ID` — GCP project ID
-   - `GCP_REGION` — deployment region (default: `us-central1`)
-
-3. Push to `main` — CI runs lint/test/build, then deploys on success.
-
-Deployment pipeline: `.github/workflows/ci.yml` → `.github/workflows/deploy-cloud-run.yml`
-
-### Scaffold a new package
-
-```bash
-node scripts/scaffold-cli.js --type package --name my-analyzer
-node scripts/scaffold-cli.js --type app --name my-service
-```
-
-### Generate a new bee
-
-```bash
-node scripts/generate-bee.js --domain logs --description "Monitors application logs" --priority 0.6 --category monitor
-node scripts/generate-bee.js --domain logs --template monitor
-```
+- Automatic LLM compression when tier exceeds ψ (61.8%) utilization
+- Context capsules for inter-agent transfer
+- Phi-weighted eviction scoring
 
 ---
 
-## Database
+## Orchestration (src/orchestration/)
 
-Run migrations:
+### conductor.js — Central Task Dispatch
 
-```bash
-psql -d heady_db -f migrations/001_projection_tables.sql
-```
+Routes tasks to the best AI node using CSL cosine scoring against
+node capability embeddings. Manages Hot/Warm/Cold pool scheduling.
 
-Useful queries:
+- Concurrency: fib(9) = 34 parallel tasks
+- Queue: fib(14) = 377 pending tasks
+- CSL-based node selection (embed task description → cosine against capabilities)
+- Automatic retry with phi-backoff
 
-```sql
--- Current state of all projections
-SELECT type, version, state, updated_at FROM latest_projections;
+### bee-factory.js — Dynamic Worker Spawning
 
--- Health projection history (last 24h)
-SELECT version, state->>'overallScore' AS score, snapshot_at
-FROM projection_history
-WHERE type = 'health'
-  AND snapshot_at > NOW() - INTERVAL '24 hours'
-ORDER BY snapshot_at DESC;
+Ephemeral workers with lifecycle: spawn → init → execute → report → terminate
 
--- CPU metric trend
-SELECT value, recorded_at
-FROM projection_metrics
-WHERE type = 'telemetry' AND metric_name = 'cpu_percent'
-ORDER BY recorded_at DESC
-LIMIT 100;
-```
+- Max concurrent: fib(8) = 21 bees
+- Queue depth: fib(13) = 233 pending spawns
+- Per-bee timeout: fib(9) × 1000 = 34 seconds
+- Priority-sorted queue with type instance limits
+- Registry capacity: fib(10) = 55 bee types
+
+### backpressure.js — Overload Management
+
+- Google SRE adaptive throttling (K = φ)
+- Semantic deduplication via cosine similarity
+- Phi-weighted priority scoring (criticality × urgency × recency)
+- Criticality-based load shedding (drops low-priority items under HIGH/CRITICAL pressure)
+- Upstream backpressure signal propagation
 
 ---
 
-*PHI = 1.6180339887 — the golden ratio governs all timing in this system.*
+## Observability (src/observability/)
+
+### structured-logger.js
+
+- JSON structured logging for Cloud Run / GCP Cloud Logging
+- Correlation IDs, trace context (OpenTelemetry compatible)
+- Ring buffer: fib(17) = 1,597 entries in memory
+- Child loggers with inherited context
+- GCP severity mapping (TRACE→DEBUG, WARN→WARNING, FATAL→CRITICAL)
+
+### health-registry.js
+
+- K8s-compatible probes: liveness, readiness, startup
+- Weighted health aggregation (critical components can veto)
+- Express route handlers included
+- Auto-check interval: φ³ × 1000 ≈ 4,236ms
+
+### coherence-monitor.js
+
+- Continuous drift detection across 20-node topology
+- Drift/recovery event callbacks for self-healing integration
+- Trend analysis (IMPROVING/STABLE/DECLINING)
+- History: fib(10) = 55 snapshots
+
+---
+
+## Lifecycle (src/lifecycle/)
+
+### graceful-shutdown.js
+
+LIFO cleanup stack. Components register in boot order; shutdown
+executes in reverse.
+
+- Force-kill timeout: fib(9) × 1000 = 34 seconds
+- Auto-registers SIGTERM, SIGINT, uncaughtException, unhandledRejection
+- Per-handler timeout with critical flag
+- Deterministic, auditable shutdown sequence
+
+---
+
+## Configuration (configs/)
+
+Three consolidated YAML files replace 90+ scattered configs:
+
+| File | Purpose |
+|---|---|
+| `system.yaml` | All runtime, resilience, memory, observability, security |
+| `domains.yaml` | Complete domain routing, Cloud Run, Cloudflare, HuggingFace |
+| `sacred-geometry.yaml` | Node topology, capabilities, UI aesthetics, coherence |
+
+---
+
+## Design Principles
+
+1. **No Magic Numbers** — Every constant derives from φ
+2. **CSL > Boolean** — Continuous gates replace if/else
+3. **RAM-First Memory** — Vector memory in RAM, database is backup
+4. **Zero Localhost** — Everything uses branded Heady domains
+5. **Determinism** — Every action is reproducible and auditable
+6. **Self-Healing** — Drift detection triggers automatic recovery
+7. **Sacred Geometry** — Ring topology governs node placement and resource allocation
+
+---
+
+> ⚡ Made with 💜 Love by the HeadySystems™ & HeadyConnection™ Team
+> Sacred Geometry :: Organic Systems :: Breathing Interfaces
