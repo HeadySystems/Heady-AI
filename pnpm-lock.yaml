@@ -585,6 +585,24 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.19.15)
 
+  services/heady-maintenance:
+    dependencies:
+      '@heady-ai/contract-types':
+        specifier: workspace:*
+        version: link:../../packages/contract-types
+      '@heady-ai/csl-gate':
+        specifier: workspace:*
+        version: link:../../packages/csl-gate
+      '@heady-ai/observability-client':
+        specifier: workspace:*
+        version: link:../../packages/observability-client
+      '@heady-ai/phi-math-foundation':
+        specifier: workspace:*
+        version: link:../../packages/phi-math-foundation
+      '@heady-ai/service-runtime':
+        specifier: workspace:*
+        version: link:../../packages/service-runtime
+
   services/heady-memory:
     dependencies:
       '@heady-ai/contract-types':
@@ -605,6 +623,9 @@ importers:
       '@auth/prisma-adapter':
         specifier: ^2.0.0
         version: 2.11.1(@prisma/client@5.22.0(prisma@5.22.0))(nodemailer@6.10.1)
+      '@prisma/client':
+        specifier: ^5.22.0
+        version: 5.22.0(prisma@5.22.0)
       '@radix-ui/react-checkbox':
         specifier: ^1.0.4
         version: 1.3.3(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -663,9 +684,6 @@ importers:
         specifier: ^3.23.0
         version: 3.25.76
     devDependencies:
-      '@prisma/client':
-        specifier: ^5.22.0
-        version: 5.22.0(prisma@5.22.0)
       '@testing-library/jest-dom':
         specifier: ^6.1.0
         version: 6.9.1
