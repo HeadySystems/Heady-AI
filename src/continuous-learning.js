@@ -19,13 +19,41 @@
  */
 
 const crypto = require('crypto');
-const { createLogger } = require('./utils/logger');
+const logger = require('./utils/logger');
 const { VectorMemory } = require('./vector-memory');
-const { createEmbeddingProvider } = require('./embedding-provider');
+let createEmbeddingProvider;
+try {
+  const ep = require('./embedding-provider');
+  createEmbeddingProvider = ep.createEmbeddingProvider || ep.create ||
+    (typeof ep === 'function' ? ep : null);
+} catch (_) { /* graceful degradation */ }
+
+if (!createEmbeddingProvider) {
+  // Fallback: lightweight keyword-hash embedding (no external API needed)
+  createEmbeddingProvider = () => ({
+    generateEmbedding: async (text) => {
+      const dim = 384;
+      const vector = new Float64Array(dim);
+      const words = (text || '').toLowerCase().split(/[\s\W]+/).filter(w => w.length > 2);
+      const PHI = 1.618033988749895;
+      for (const word of words) {
+        let h = 0;
+        for (let i = 0; i < word.length; i++) h = ((h << 5) - h + word.charCodeAt(i)) | 0;
+        for (let i = 0; i < 3; i++) vector[Math.abs((h + i * 127) % dim)] += 1 / (1 + i * PHI);
+      }
+      let norm = 0;
+      for (let i = 0; i < dim; i++) norm += vector[i] * vector[i];
+      norm = Math.sqrt(norm) || 1;
+      for (let i = 0; i < dim; i++) vector[i] /= norm;
+      return { vector: Array.from(vector), provider: 'fallback-hash' };
+    },
+    stats: () => ({ provider: 'fallback-hash', calls: 0 }),
+  });
+}
 const { defaultEngine: patternEngine } = require('./patterns/pattern-engine');
 const { centroid } = require('./vector-space-ops');
 
-const logger = createLogger('continuous-learning');
+// logger already imported above
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -513,9 +541,8 @@ class ContinuousLearning {
       return {
         id: `insight-clusters-${Date.now()}`,
         title: cohesive ? 'Cohesive Knowledge Base' : 'Diverse Knowledge Base',
-        description: `${vectors.length}-experience sample has avg centroid similarity ${avgSim.toFixed(3)}. ${
-          cohesive ? 'Knowledge is focused/cohesive.' : 'Knowledge is broad/diverse.'
-        }`,
+        description: `${vectors.length}-experience sample has avg centroid similarity ${avgSim.toFixed(3)}. ${cohesive ? 'Knowledge is focused/cohesive.' : 'Knowledge is broad/diverse.'
+          }`,
         type: 'cluster',
         confidence: 0.7,
         supportingExperienceIds: sample.slice(0, 5).map((e) => e.id),

@@ -18,7 +18,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const { fib, CSL_THRESHOLDS, cslGate, phiFusionWeights } = require('../../shared/phi-math');
+const { fib, CSL_THRESHOLDS, cslGate, phiFusionWeights } = require('./shared/phi-math');
 const { CAPABILITIES } = require('./zero-trust-sandbox');
 
 // ── Role Definitions ────────────────────────────────────────────────────────

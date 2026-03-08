@@ -14,7 +14,7 @@
 
 'use strict';
 
-const { fib, CSL_THRESHOLDS, PHI, PSI, phiBackoff } = require('../../shared/phi-math');
+const { fib, CSL_THRESHOLDS, PHI, PSI, phiBackoff } = require('./shared/phi-math');
 
 // ── Capability Bitmask Definitions ──────────────────────────────────────────
 const CAPABILITIES = Object.freeze({

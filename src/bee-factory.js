@@ -32,7 +32,7 @@ const { PHI_TIMING } = require('./shared/phi-math');
 const path = require('path');
 const crypto = require('crypto');
 const logger = require('../utils/logger').child('bee-factory');
-const CSL = require('../core/semantic-logic');
+const CSL = require('./core/semantic-logic');
 const PHI = (1 + Math.sqrt(5)) / 2;
 const INV_PHI = 1 / PHI; // ≈ 0.618
 

@@ -16,7 +16,7 @@
 const { EventEmitter } = require('events');
 const {
   PHI, PSI, fib, phiBackoff, phiAdaptiveInterval, CSL_THRESHOLDS,
-} = require('../../shared/phi-math');
+} = require('./shared/phi-math');
 
 // ── Transport Adapters ──────────────────────────────────────────────────────
 class TransportAdapter {

@@ -18,14 +18,14 @@ const { EventEmitter } = require('events');
 const {
   PHI, PSI, fib, CSL_THRESHOLDS, phiBackoff, cosineSimilarity,
   cslGate, phiFusionWeights, phiAdaptiveInterval,
-} = require('../../shared/phi-math');
+} = require('./shared/phi-math');
 
-const { SemanticRateLimiter } = require('../security/rate-limiter');
-const { ZeroTrustSandbox }    = require('../security/zero-trust-sandbox');
-const { AuditLogger }         = require('../security/audit-logger');
-const { OutputScanner }       = require('../security/output-scanner');
-const { InputValidator }      = require('../security/input-validator');
-const { RBACManager }         = require('../security/rbac-manager');
+const { SemanticRateLimiter } = require('./security/rate-limiter');
+const { ZeroTrustSandbox }    = require('./security/zero-trust-sandbox');
+const { AuditLogger }         = require('./security/audit-logger');
+const { OutputScanner }       = require('./security/output-scanner');
+const { InputValidator }      = require('./security/input-validator');
+const { RBACManager }         = require('./security/rbac-manager');
 const { ConnectionPoolManager } = require('./connection-pool');
 
 // ── CSL-Gated Tool Router ───────────────────────────────────────────────────
