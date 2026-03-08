@@ -661,21 +661,25 @@ const commands = {
             return;
         }
 
-        info(`Council prompt: "${prompt.slice(0, 100)}"`);
+        info(`Council prompt: "${theme.purple(prompt.slice(0, 100))}"`);
 
         try {
             const gateway = createGateway();
             const available = gateway.getAvailable();
 
             if (available.length === 0) {
-                warn('No AI providers configured. Set API keys in .env');
+                warn('No AI providers configured. Run: heady login');
                 return;
             }
 
-            info(`Available providers: ${available.join(', ')}`);
+            info(`Available providers: ${available.map(p => theme.teal(p)).join(', ')}`);
             console.log('');
 
-            // Send to all providers in parallel
+            // Agent tracker for parallel visualization
+            const tracker = new theme.AgentTracker();
+            available.forEach(p => tracker.addAgent(p, `Council [${p}]`, { status: 'generating...' }));
+            tracker.start();
+
             const messages = [
                 { role: 'system', content: 'Provide your best, most detailed response. This is a competitive evaluation.' },
                 { role: 'user', content: prompt },
@@ -684,10 +688,16 @@ const commands = {
             const results = await Promise.allSettled(
                 available.map(async (provider) => {
                     const start = Date.now();
+                    tracker.updateAgent(provider, 'generating...');
                     const result = await gateway.complete(messages, { provider });
-                    return { provider, ...result, totalMs: Date.now() - start };
+                    const totalMs = Date.now() - start;
+                    tracker.completeAgent(provider, `${totalMs}ms`, true);
+                    return { provider, ...result, totalMs };
                 })
             );
+
+            tracker.stop();
+            console.log('');
 
             let bestScore = 0;
             let winner = null;
@@ -699,23 +709,24 @@ const commands = {
                     const score = Math.min(1, (v.content.length / 1500) * 0.7 + Math.max(0, 1 - v.totalMs / 20000) * 0.3);
                     outputs.push({ ...v, score });
 
-                    console.log(`  ◆ ${v.provider.toUpperCase()} (${v.model})`);
-                    console.log(`  ${'─'.repeat(40)}`);
-                    console.log(`  ${v.content.slice(0, 500).split('\n').join('\n  ')}`);
-                    console.log(`  ℹ Latency: ${v.totalMs}ms | Score: ${score.toFixed(3)}`);
+                    theme.section(`${v.provider.toUpperCase()} (${v.model})`);
+                    console.log(theme.renderMarkdown(v.content.slice(0, 500)));
+                    info(`Latency: ${theme.gold(v.totalMs + 'ms')} ${theme.dim('|')} Score: ${theme.teal(score.toFixed(3))}`);
                     console.log('');
 
                     if (score > bestScore) { bestScore = score; winner = v; }
                 } else {
                     const errMsg = r.reason?.message || r.value?.error || 'unknown';
-                    console.log(`  ✗ ${r.value?.provider || 'unknown'}: ${errMsg}`);
+                    errorMsg(`${r.value?.provider || 'unknown'}: ${errMsg}`);
                     console.log('');
                 }
             }
 
             if (winner) {
-                console.log(`  🏆 Winner: ${winner.provider} (${winner.model})`);
-                console.log(`  ℹ Score: ${bestScore.toFixed(3)} | ${outputs.length} providers competed`);
+                console.log(theme.box('WINNER', [
+                    `  ${theme.gold('\u{1F3C6}')} ${theme.bold(winner.provider.toUpperCase())} (${winner.model})`,
+                    `  Score: ${theme.teal(bestScore.toFixed(3))} ${theme.dim('|')} ${outputs.length} providers competed`,
+                ], { color: theme.FG.gold }));
             }
         } catch (err) {
             errorMsg(`Council failed: ${err.message}`);
@@ -723,7 +734,7 @@ const commands = {
     },
 
     async battle(...args) {
-        heading('Battle Arena — Provider Competition');
+        heading('Battle Arena \u2014 Provider Competition');
         const prompt = args.join(' ') || flagInput;
         if (!prompt) {
             warn('Usage: heady battle "your prompt here"');
@@ -735,29 +746,43 @@ const commands = {
             const gateway = createGateway();
             const battle = new HeadyBattleService({ gateway });
 
-            info(`Battle prompt: "${prompt.slice(0, 100)}"`);
+            info(`Battle prompt: "${theme.purple(prompt.slice(0, 100))}"`);
+
+            // Live agent tracker
+            const tracker = new theme.AgentTracker();
+            const available = gateway.getAvailable();
+            available.forEach(p => tracker.addAgent(p, `Battle [${p}]`, { status: 'competing...' }));
+            tracker.start();
+
             const result = await battle.battle(prompt);
+            tracker.stop();
 
             if (!result.ok) {
                 warn(result.error);
                 return;
             }
 
-            for (const c of result.contestants) {
-                console.log(`  ${c.provider === result.winner?.provider ? '🏆' : '  '} ${c.provider.toUpperCase()} (${c.model})`);
-                console.log(`    Score: ${c.battleScore.toFixed(3)} | Latency: ${c.latencyMs}ms | Length: ${c.contentLength}`);
-                console.log(`    Hash: ${c.contentHash}`);
-                console.log('');
-            }
+            console.log('');
+
+            // Results table
+            const rows = result.contestants.map(c => [
+                c.provider === result.winner?.provider ? `${theme.gold('\u{1F3C6}')} ${theme.bold(c.provider)}` : `   ${c.provider}`,
+                theme.teal(c.battleScore.toFixed(3)),
+                theme.gold(c.latencyMs + 'ms'),
+                String(c.contentLength),
+                theme.dim(c.contentHash.slice(0, 12)),
+            ]);
+            console.log(theme.table(['Provider', 'Score', 'Latency', 'Length', 'Hash'], rows));
 
             if (result.failed?.length > 0) {
-                for (const f of result.failed) {
-                    console.log(`  ✗ ${f.provider}: ${f.error}`);
-                }
                 console.log('');
+                for (const f of result.failed) {
+                    errorMsg(`${f.provider}: ${f.error}`);
+                }
             }
 
-            success(`Winner: ${result.winner?.provider} | Total: ${result.totalMs}ms`);
+            console.log('');
+            success(`Winner: ${theme.bold(theme.gold(result.winner?.provider))} ${theme.dim('|')} Total: ${theme.teal(result.totalMs + 'ms')}`);
         } catch (err) {
             errorMsg(`Battle failed: ${err.message}`);
         }
@@ -992,81 +1017,117 @@ const commands = {
 
     status() {
         heading('System Status');
-        info(`Root: ${ROOT}`);
-        info(`Time: ${new Date().toISOString()}`);
-        info(`CLI:  v${VERSION}`);
+        console.log('');
 
-        // Domain count
-        const registryPath = path.join(ROOT, 'configs', 'domains.json');
-        if (fs.existsSync(registryPath)) {
-            const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
-            const domains = registry.domains || [];
-            const active = domains.filter(d => d.status === 'active').length;
-            const planned = domains.filter(d => d.status === 'planned').length;
-            info(`Domains: ${domains.length} total (${active} active, ${planned} planned)`);
+        // Gather metrics for visual dashboard
+        const metrics = {};
+
+        // Provider detection
+        const providers = auth.detectProviders();
+        const provOnline = Object.values(providers).filter(p => p.configured).length;
+        const provTotal = Object.keys(providers).length;
+        metrics['Providers'] = { current: provOnline, total: provTotal, unit: `${provOnline}/${provTotal} online`, color: provOnline > 3 ? theme.FG.green : provOnline > 0 ? theme.FG.gold : theme.FG.red };
+
+        // Module check
+        const moduleFiles = [
+            'services/inference-gateway.js', 'services/heady-auto-context.js',
+            'services/HeadyBattle-service.js', 'orchestration/heady-conductor.js',
+            'mcp/heady-mcp-server.js', 'core/phi-scales.js',
+            'core/semantic-logic.js', 'continuous-learning.js',
+            'orchestration/cognitive-runtime-governor.js',
+        ];
+        let modulesOk = 0;
+        for (const f of moduleFiles) {
+            if (fs.existsSync(path.join(SRC, f))) modulesOk++;
         }
+        metrics['Services'] = { current: modulesOk, total: moduleFiles.length, unit: `${modulesOk}/${moduleFiles.length} modules`, color: modulesOk === moduleFiles.length ? theme.FG.green : theme.FG.gold };
 
-        // Content file count
+        // Content files
         const contentDir = path.join(ROOT, 'content');
-        if (fs.existsSync(contentDir)) {
-            const count = runCapture(`find ${contentDir} -type f | wc -l`) || '0';
-            info(`Content files: ${count.trim()}`);
-        }
+        const contentCount = parseInt(runCapture(`find ${contentDir} -type f 2>/dev/null | wc -l`) || '0');
+        metrics['Content'] = { current: Math.min(contentCount, 500), total: 500, unit: `${contentCount} files`, color: theme.FG.teal };
 
-        // Source file count
-        const counts = {};
-        function countDir(dir) {
-            if (!fs.existsSync(dir)) return;
-            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-                if (entry.name === 'node_modules' || entry.name === '.git') continue;
-                const full = path.join(dir, entry.name);
-                if (entry.isDirectory()) countDir(full);
-                else { const ext = path.extname(entry.name) || '(none)'; counts[ext] = (counts[ext] || 0) + 1; }
-            }
+        // Domains
+        const registryPath = path.join(ROOT, 'configs', 'domains.json');
+        let domainCount = 0, activeCount = 0;
+        if (fs.existsSync(registryPath)) {
+            const reg = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+            domainCount = (reg.domains || []).length;
+            activeCount = (reg.domains || []).filter(d => d.status === 'active').length;
         }
-        countDir(SRC);
-        info('Source files by type:');
-        for (const [ext, n] of Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10)) {
-            console.log(`    ${ext}: ${n}`);
+        metrics['Domains'] = { current: activeCount, total: domainCount || 1, unit: `${activeCount}/${domainCount} active`, color: theme.FG.azure };
+
+        // Source files
+        const srcCount = parseInt(runCapture(`find ${SRC} -name '*.js' -o -name '*.ts' 2>/dev/null | wc -l`) || '0');
+        metrics['Source'] = { current: Math.min(srcCount, 300), total: 300, unit: `${srcCount} files`, color: theme.FG.purple };
+
+        console.log(theme.systemDashboard(metrics));
+        console.log('');
+
+        // Provider matrix
+        theme.section('Provider Matrix');
+        auth.showProviderStatus();
+
+        // System info
+        console.log('');
+        theme.section('Environment');
+        console.log(theme.keyValue('Node.js', process.version));
+        console.log(theme.keyValue('CLI', `v${VERSION}`));
+        console.log(theme.keyValue('Root', ROOT));
+        console.log(theme.keyValue('Platform', `${process.platform} ${process.arch}`));
+        console.log(theme.keyValue('Time', new Date().toISOString()));
+        if (_injectedKeys > 0) {
+            console.log(theme.keyValue('Injected Keys', theme.teal(`${_injectedKeys} from ~/.heady/credentials.json`)));
         }
+        console.log('');
         success('Status complete');
     },
 
     help() {
-        console.log(BANNER);
-        console.log('  Usage:');
-        console.log('    heady "your question or task"     Intelligent processing (default)');
+        theme.printLogo(VERSION);
+        console.log(`  ${theme.bold('Usage:')}`);
+        console.log(`    ${theme.purple('heady')}                              Interactive REPL mode`);
+        console.log(`    ${theme.purple('heady')} ${theme.dim('"your question"')}             Intelligent processing`);
         console.log('');
-        console.log('  Commands:');
-        console.log('    init          Initialize workspace');
-        console.log('    start         Start all services');
-        console.log('    dev           Dev mode with hot reload');
-        console.log('    build         Build all packages');
-        console.log('    deploy        Deploy to Cloud Run + Cloudflare');
-        console.log('    test          Run test suite');
-        console.log('    doctor        Health check');
-        console.log('    rotate-keys   Rotate credentials');
-        console.log('    migrate       Run DB migrations');
-        console.log('    projection    Manage projections');
-        console.log('    status        System status');
-        console.log('    validate      Validate content kit');
-        console.log('    scaffold      Scaffold a new domain');
-        console.log('    council       Multi-model competitive council');
-        console.log('    battle        Provider battle arena');
-        console.log('    determinism   Monte Carlo determinism test');
-        console.log('    learn         Parallel build learning engine');
-        console.log('    help          Show this help');
+        console.log(`  ${theme.bold(theme.gold('Authentication:'))}`);
+        console.log(`    ${theme.teal('login')}         Authenticate (OAuth/API key/env import)`);
+        console.log(`    ${theme.teal('logout')}        Clear stored credentials`);
+        console.log(`    ${theme.teal('whoami')}        Show authentication status`);
         console.log('');
-        console.log('  Examples:');
-        console.log('    heady "check my system health"');
-        console.log('    heady "what domains do I have?"');
-        console.log('    heady doctor');
-        console.log('    heady council "build a login component"');
-        console.log('    heady battle "write fibonacci in JS"');
-        console.log('    heady determinism "return the sum of 2+2"');
-        console.log('    heady scaffold foo.com foo FooBrand');
+        console.log(`  ${theme.bold(theme.gold('AI Commands:'))}`);
+        console.log(`    ${theme.teal('council')}       Multi-model competitive council`);
+        console.log(`    ${theme.teal('battle')}        Provider battle arena`);
+        console.log(`    ${theme.teal('determinism')}   Monte Carlo determinism test`);
+        console.log(`    ${theme.teal('learn')}         Parallel build learning engine`);
+        console.log(`    ${theme.teal('context')}       AutoContext management`);
+        console.log('');
+        console.log(`  ${theme.bold(theme.gold('System:'))}`);
+        console.log(`    ${theme.teal('init')}          Initialize workspace`);
+        console.log(`    ${theme.teal('start')}         Start all services`);
+        console.log(`    ${theme.teal('dev')}           Dev mode with hot reload`);
+        console.log(`    ${theme.teal('build')}         Build all packages`);
+        console.log(`    ${theme.teal('deploy')}        Deploy to Cloud Run + Cloudflare`);
+        console.log(`    ${theme.teal('test')}          Run test suite`);
+        console.log(`    ${theme.teal('doctor')}        Health check`);
+        console.log(`    ${theme.teal('rotate-keys')}   Rotate credentials`);
+        console.log(`    ${theme.teal('migrate')}       Run DB migrations`);
+        console.log(`    ${theme.teal('status')}        Visual system dashboard`);
+        console.log(`    ${theme.teal('validate')}      Validate content kit`);
+        console.log(`    ${theme.teal('scaffold')}      Scaffold a new domain`);
+        console.log('');
+        console.log(`  ${theme.bold('Examples:')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady')} ${theme.dim('"check my system health"')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady login')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady status')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady battle')} ${theme.dim('"write fibonacci in JS"')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady council')} ${theme.dim('"design a login component"')}`);
         console.log('');
     },
+
+    // Auth commands
+    async login(...args) { await auth.login({ token: args[0] }); },
+    logout() { auth.logout(); },
+    whoami() { auth.whoami(); },
 };
 
 // ─── Entry Point ──────────────────────────────────────────────────
@@ -1096,12 +1157,125 @@ const { args: parsedArgs, input: flagInput } = parseInput(allArgs);
 const firstArg = parsedArgs[0];
 const restArgs = parsedArgs.slice(1);
 
+// ─── Interactive REPL Mode ─────────────────────────────────────────
+async function startREPL() {
+    const readline = require('readline');
+
+    theme.printLogo(VERSION);
+
+    // Show quick status
+    const providers = auth.detectProviders();
+    const online = Object.values(providers).filter(p => p.configured);
+    if (online.length > 0) {
+        console.log(`  ${theme.green('●')} Authenticated ${theme.dim(`(${online.length} providers)`)}`);
+    } else {
+        console.log(`  ${theme.yellow('○')} Not authenticated ${theme.dim('— run /login or heady login')}`);
+    }
+    console.log(`  ${theme.dim('Type /help for commands, Ctrl+C to exit')}`);
+    console.log('');
+
+    // Load history
+    const historyFile = auth.HISTORY_FILE;
+    let history = [];
+    try {
+        if (fs.existsSync(historyFile)) {
+            history = fs.readFileSync(historyFile, 'utf8').split('\n').filter(Boolean);
+        }
+    } catch (_) { }
+
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        prompt: `  ${theme.FG.purple}❯${theme.RESET} `,
+        historySize: 500,
+        completer: (line) => {
+            const completions = ['/help', '/status', '/battle', '/council', '/login', '/logout', '/whoami', '/doctor', '/exit', '/quit', ...KNOWN_COMMANDS.map(c => '/' + c)];
+            const hits = completions.filter(c => c.startsWith(line.toLowerCase()));
+            return [hits.length ? hits : completions, line];
+        },
+    });
+
+    // Apply loaded history
+    for (const h of history.slice(-200)) {
+        rl.history.push(h);
+    }
+
+    rl.prompt();
+
+    rl.on('line', async (line) => {
+        const input = line.trim();
+        if (!input) { rl.prompt(); return; }
+
+        // Save to history
+        try {
+            const dir = path.dirname(historyFile);
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+            fs.appendFileSync(historyFile, input + '\n');
+        } catch (_) { }
+
+        // Handle / commands
+        if (input.startsWith('/')) {
+            const parts = input.slice(1).split(/\s+/);
+            const cmd = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            if (cmd === 'exit' || cmd === 'quit' || cmd === 'q') {
+                console.log(`\n  ${theme.purple('Goodbye!')} ${theme.dim('Sacred Geometry awaits...')}\n`);
+                rl.close();
+                process.exit(0);
+            }
+
+            if (cmd === 'clear') {
+                process.stdout.write('\x1b[2J\x1b[H');
+                theme.printLogo(VERSION);
+                rl.prompt();
+                return;
+            }
+
+            if (KNOWN_COMMANDS.includes(cmd)) {
+                try {
+                    await Promise.resolve(commands[cmd](...args));
+                } catch (err) {
+                    errorMsg(err.message);
+                }
+                console.log('');
+                rl.prompt();
+                return;
+            }
+
+            warn(`Unknown command: /${cmd}. Type /help for available commands.`);
+            rl.prompt();
+            return;
+        }
+
+        // Natural language input → intelligent processing
+        try {
+            await processIntelligently(input);
+        } catch (err) {
+            errorMsg(`Processing failed: ${err.message}`);
+        }
+        console.log('');
+        rl.prompt();
+    });
+
+    rl.on('close', () => {
+        console.log(`\n  ${theme.purple('Goodbye!')} ${theme.dim('Sacred Geometry awaits...')}\n`);
+        process.exit(0);
+    });
+
+    rl.on('SIGINT', () => {
+        console.log(`\n  ${theme.dim('(Press Ctrl+C again or type /exit to quit)')}`);
+        rl.prompt();
+    });
+}
+
+// ─── Route ────────────────────────────────────────────────────────
 if (!firstArg && !flagInput) {
-    // No args at all → show help
-    commands.help();
+    // No args → Interactive REPL mode (Claude Code-style)
+    startREPL();
 } else if (!firstArg && flagInput) {
     // heady --input "text" → intelligent processing
-    console.log(BANNER);
+    theme.printLogo(VERSION);
     processIntelligently(flagInput).catch(err => {
         errorMsg(`Processing failed: ${err.message}`);
         process.exit(1);
@@ -1110,9 +1284,8 @@ if (!firstArg && !flagInput) {
     commands.help();
 } else if (KNOWN_COMMANDS.includes(firstArg)) {
     // Explicit command with optional --input
-    console.log(BANNER);
+    theme.printLogo(VERSION);
     if (flagInput) {
-        // Run command first, then process input intelligently
         Promise.resolve(commands[firstArg](...restArgs)).then(() => {
             console.log('');
             return processIntelligently(flagInput);
@@ -1129,7 +1302,7 @@ if (!firstArg && !flagInput) {
 } else {
     // Not a known command → intelligent processing (default)
     const input = allArgs.join(' ');
-    console.log(BANNER);
+    theme.printLogo(VERSION);
     processIntelligently(input).catch(err => {
         errorMsg(`Processing failed: ${err.message}`);
         process.exit(1);
