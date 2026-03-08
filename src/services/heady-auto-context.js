@@ -25,7 +25,7 @@
  *
  * Flow:
  *   Request → AutoContext.enrich() → [workspace scan, vector search,
- *     pattern match, token budget, CSL relevance gate] → Enriched Prompt
+ *     pattern match, CSL relevance gate] → Enriched Prompt
  *
  * @module HeadyAutoContext
  */
@@ -56,22 +56,13 @@ const PHI = 1.618033988749895;
 const PSI = 1 / PHI;  // ≈ 0.618
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
 
-/** Token budgets — φ-scaled tiers */
-const TOKEN_BUDGETS = {
-    minimal: FIB[10] * 8,   // 712 tokens — quick lookups
-    standard: FIB[13],        // 377 tokens × 21.77 ≈ 8,192 tokens
-    deep: FIB[13] * 34,   // 12,818 tokens — complex coding
-    battle: FIB[13] * 55,   // 20,735 tokens — battle mode (all context)
-};
-TOKEN_BUDGETS.standard = 8192;  // Override for clean number
-TOKEN_BUDGETS.deep = 16384;
-TOKEN_BUDGETS.battle = 24576;
+/** No token budget — inject ALL relevant context for maximum intelligence */
 
 /** Relevance thresholds — CSL gates at φ intervals */
 const CSL_GATES = {
     include: PSI * PSI,     // ≈ 0.382 — minimum to include in context
-    boost: PSI,           // ≈ 0.618 — gets extra token allocation
-    critical: PSI + 0.1,    // ≈ 0.718 — always included regardless of budget
+    boost: PSI,             // ≈ 0.618 — high relevance
+    critical: PSI + 0.1,    // ≈ 0.718 — always included
 };
 
 /** File extensions to scan */
@@ -128,7 +119,6 @@ class HeadyAutoContext extends EventEmitter {
      * @param {string} opts.workspaceRoot - Project root directory
      * @param {Object} [opts.gateway] - InferenceGateway instance
      * @param {Object} [opts.vectorMemory] - VectorMemory instance (for latent space search)
-     * @param {number} [opts.tokenBudget] - Default token budget
      * @param {string} [opts.patternsDir] - Build learning patterns directory
      * @param {boolean} [opts.alwaysOn=true] - Enable background indexer
      * @param {string} [opts.vectorPersistPath] - Path for vector persistence
@@ -139,7 +129,7 @@ class HeadyAutoContext extends EventEmitter {
 
         this._root = opts.workspaceRoot;
         this._gateway = opts.gateway || null;
-        this._tokenBudget = opts.tokenBudget || TOKEN_BUDGETS.standard;
+
         this._patternsDir = opts.patternsDir || path.join(this._root, '.heady', 'build-learning');
 
         // ── Vector Memory (latent space) ─────────────────────────────────
@@ -205,8 +195,6 @@ class HeadyAutoContext extends EventEmitter {
      * @returns {Object} { systemContext, enrichedPrompt, sources, stats }
      */
     async enrich(task, opts = {}) {
-        const budget = opts.tokenBudget || (opts.deep ? TOKEN_BUDGETS.deep :
-            opts.domain === 'battle' ? TOKEN_BUDGETS.battle : this._tokenBudget);
         const startMs = Date.now();
 
         // ── 1: Ensure index is current ───────────────────────────────────
@@ -248,8 +236,8 @@ class HeadyAutoContext extends EventEmitter {
         // ── 4: CSL-gated relevance filter ────────────────────────────────
         const gated = deduped.filter(s => s.relevance >= CSL_GATES.include);
 
-        // ── 5: Rank and pack into token budget ───────────────────────────
-        const packed = this._packIntoBudget(gated, budget);
+        // ── 5: Rank by relevance (include ALL gated sources) ────────────
+        const packed = this._rankByRelevance(gated);
 
         // ── 6: Build context injection block ─────────────────────────────
         const systemContext = this._buildContextBlock(packed);
@@ -270,7 +258,6 @@ class HeadyAutoContext extends EventEmitter {
             sourcesGated: gated.length,
             sourcesIncluded: packed.length,
             tokensUsed,
-            tokenBudget: budget,
             scanTimeMs: enrichTimeMs,
             vectorHits: sources.filter(s => s.type === 'vector').length,
         };
@@ -359,12 +346,11 @@ class HeadyAutoContext extends EventEmitter {
 
     /**
      * Enrich context for a HeadyBattle round.
-     * Uses battle-mode token budget (larger) and includes all relevant sources.
+     * Includes all relevant sources — no budget cap.
      */
     async enrichForBattle(task, battleConfig = {}) {
         return this.enrich(task, {
             domain: 'battle',
-            tokenBudget: TOKEN_BUDGETS.battle,
             deep: true,
             vectorSearch: true,
             focusFiles: battleConfig.focusFiles,
@@ -851,43 +837,15 @@ class HeadyAutoContext extends EventEmitter {
         });
     }
 
-    _packIntoBudget(sources, budget) {
-        // Critical sources always included (above CSL critical gate)
+    /**
+     * Rank all sources by relevance — NO budget cap.
+     * Critical sources first, then by descending relevance.
+     */
+    _rankByRelevance(sources) {
         const critical = sources.filter(s => s.relevance >= CSL_GATES.critical);
         const rest = sources.filter(s => s.relevance < CSL_GATES.critical)
             .sort((a, b) => b.relevance - a.relevance);
-
-        const packed = [];
-        let tokensUsed = 0;
-
-        // Include critical first
-        for (const source of critical) {
-            if (tokensUsed + source.tokens <= budget * 1.1) { // 10% overflow allowed for critical
-                packed.push(source);
-                tokensUsed += source.tokens;
-            }
-        }
-
-        // Fill remaining budget
-        for (const source of rest) {
-            if (tokensUsed + source.tokens > budget) {
-                const remaining = budget - tokensUsed;
-                if (remaining > 100) {
-                    const truncChars = remaining * 4;
-                    packed.push(new ContextSource({
-                        ...source,
-                        content: source.content.slice(0, truncChars) + '\n... [truncated]',
-                        tokens: remaining,
-                    }));
-                    tokensUsed += remaining;
-                }
-                break;
-            }
-            packed.push(source);
-            tokensUsed += source.tokens;
-        }
-
-        return packed;
+        return [...critical, ...rest];
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -1078,6 +1036,5 @@ module.exports = {
     ContextSource,
     getAutoContext,
     wireGateway,
-    TOKEN_BUDGETS,
     CSL_GATES,
 };
