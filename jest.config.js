@@ -34,7 +34,7 @@ const testTimeout = Math.round(PHI_TIMEOUT_BASE * PHI);
 
 module.exports = {
     testEnvironment: 'node',
-    roots: ['<rootDir>/src', '<rootDir>/tests'],
+    roots: ['<rootDir>/src', '<rootDir>/test', '<rootDir>/tests'],
     testMatch: [
         '**/__tests__/**/*.test.{js,ts}',
         '**/tests/**/*.test.{js,ts}',

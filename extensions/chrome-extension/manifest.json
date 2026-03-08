@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "HeadyBuddy — Your AI Companion",
     "short_name": "HeadyBuddy",
-    "version": "3.0.0",
+    "version": "3.2.3",
     "description": "HeadyBuddy — your branded AI companion sidebar. See Buddy's output beautifully rendered with Sacred Geometry visuals and pretty-printed text.",
     "icons": {
         "16": "icons/icon-16.png",
@@ -31,6 +31,8 @@
     ],
     "host_permissions": [
         "https://manager.headysystems.com/*",
-        "https://api.headysystems.com/*"
+        "https://api.headysystems.com/*",
+        "https://mcp.headymcp.com/*",
+        "https://heady.headyme.com/*"
     ]
 }

@@ -81,23 +81,39 @@ class HeadyMCPServer {
 
   /**
    * Execute a skill with the given arguments
-   * Routes to the appropriate skill handler based on category
+   * Routes to actual tool handler if available, otherwise returns stub
    */
   async executeSkill(service, args) {
-    const skillPath = `../../.agents/skills/${service.tool.replace(/_/g, '-')}/SKILL.md`;
+    const toolName = service.tool;
 
+    // Try to load from tools/ directory (new modular handlers)
+    try {
+      const toolModule = require(`./tools/${toolName.replace(/_/g, '-')}-tool`);
+      if (toolModule.handler) {
+        return await toolModule.handler(args || {});
+      }
+    } catch { /* no dedicated tool file — fall through */ }
+
+    // Try to find in mcp-tools.js handlers
+    try {
+      const toolsDefs = require('./mcp-tools');
+      const toolDef = (Array.isArray(toolsDefs) ? toolsDefs : toolsDefs.TOOLS || [])
+        .find(t => t.name === toolName);
+      if (toolDef && toolDef.handler) {
+        return await toolDef.handler(args || {});
+      }
+    } catch { /* no mcp-tools match — fall through */ }
+
+    // Fallback stub
     return {
-      tool: service.tool,
-      status: 'executed',
+      tool: toolName,
+      status: 'stub',
       category: service.category,
       priority: service.priority,
       phiTier: Math.log(service.priority) / Math.log(PHI),
       input: args,
       timestamp: new Date().toISOString(),
-      execution: {
-        skillPath,
-        latency: `${Math.round(Math.random() * 100 * PHI)}ms`,
-      },
+      note: 'Handler not yet implemented — connect a tool module',
     };
   }
 

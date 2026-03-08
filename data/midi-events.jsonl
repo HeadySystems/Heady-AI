@@ -52,3 +52,13 @@
 {"bytes":[144,36,127],"channel":0,"ts":"2026-02-27T16:23:45.037Z","task":"UMP-UDP-Init"}
 {"bytes":[128,48,0],"channel":0,"ts":"2026-02-27T16:23:45.038Z","task":"UMP-UDP-Init"}
 {"bytes":[144,49,127],"channel":0,"ts":"2026-02-27T16:23:45.229Z","task":"DAW-MCP-Init"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:48:01.296Z","agent":"HeadyBot"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:48:01.318Z","agent":"HeadySims"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:48:14.313Z","agent":"HeadyBot"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:48:14.319Z","agent":"HeadySims"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:49:06.077Z","agent":"HeadyBattle"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:49:06.078Z","agent":"HeadySims"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:49:36.471Z","agent":"HeadyBattle"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T00:49:36.474Z","agent":"HeadySims"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T03:06:11.995Z","agent":"HeadyBattle"}
+{"bytes":[146,60,127],"channel":2,"ts":"2026-03-08T03:06:11.996Z","agent":"HeadySims"}

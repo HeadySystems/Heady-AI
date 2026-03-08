@@ -492,6 +492,83 @@ const MCP_SERVICES = {
             target: { type: 'string', description: 'Package to build' },
         },
     },
+
+    // ═══════════════════════════════════════════════════════════
+    // TIER 5 — PROMPT-DRIVEN SERVICES (φ^1.25 priority)
+    // ═══════════════════════════════════════════════════════════
+
+    heady_prompt_executor: {
+        tool: 'heady_prompt_executor',
+        description: 'Deterministic prompt execution — 64 prompts × 8 domains with CSL confidence gating',
+        category: 'intelligence',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['execute', 'list', 'replay', 'report'] },
+            prompt_id: { type: 'string', description: 'Prompt ID (e.g. code-001)' },
+            variables: { type: 'object', description: 'Template variables' },
+            domain: { type: 'string', description: 'Filter by domain' },
+        },
+    },
+
+    heady_battle_sim_pipeline: {
+        tool: 'heady_battle_sim_pipeline',
+        description: '9-stage battle-sim orchestration: Task → Sim → CSL → Battle/MC → Bee → Swarm → Result → Drift → Audit',
+        category: 'orchestration',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['execute', 'compare', 'report', 'stages'] },
+            task: { type: 'object', description: 'Task to execute' },
+            external_output: { type: 'string', description: 'External output for comparison' },
+        },
+    },
+
+    heady_drift_analyzer: {
+        tool: 'heady_drift_analyzer',
+        description: 'Continuous action recording + drift detection — track, detect divergence, auto-reconfigure',
+        category: 'intelligence',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['record', 'check', 'track', 'reconfigure', 'learn', 'stats'] },
+            domain: { type: 'string', description: 'Task domain' },
+            output_hash: { type: 'string', description: 'Output hash for drift tracking' },
+        },
+    },
+
+    heady_creative_engine: {
+        tool: 'heady_creative_engine',
+        description: 'Creative domain — brand voice, naming, narrative, visual, pitch, campaign, UX copy, storyboard',
+        category: 'creative',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['list', 'generate'] },
+            prompt_type: { type: 'string', description: 'Creative prompt type' },
+            variables: { type: 'object', description: 'Template variables' },
+        },
+    },
+
+    heady_trading_intelligence: {
+        tool: 'heady_trading_intelligence',
+        description: 'Trading intelligence — signal, risk, backtest, portfolio, sentiment, options, macro, execution',
+        category: 'intelligence',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['list', 'analyze'] },
+            prompt_type: { type: 'string', description: 'Trading prompt type' },
+            variables: { type: 'object', description: 'Template variables' },
+        },
+    },
+
+    heady_regenerative_bootstrap: {
+        tool: 'heady_regenerative_bootstrap',
+        description: 'Cold-start bootstrap — generate, validate, execute regenerative prompts for service init',
+        category: 'orchestration',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['generate', 'bootstrap', 'validate', 'serialize', 'list'] },
+            config: { type: 'object', description: 'Prompt configuration' },
+            prompt_id: { type: 'string', description: 'Prompt ID' },
+        },
+    },
 };
 
 // ═══════════════════════════════════════════════════════════

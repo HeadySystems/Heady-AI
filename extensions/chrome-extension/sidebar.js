@@ -226,40 +226,62 @@ function handleSend() {
     // Show user message
     A2UI.render([
         { type: "text", label: "You", content: text, timestamp: Date.now() },
-        { type: "thinking", content: "Buddy is processing your request…" },
+        { type: "thinking", content: "Buddy is on it…" },
     ]);
 
-    // Send to Buddy via manager API
-    chrome.runtime.sendMessage(
-        { action: "fetchBuddy", apiBase: API_BASE },
-        (response) => {
-            // Remove thinking indicator
-            const thinkingEls = $content.querySelectorAll(".thinking-indicator");
-            thinkingEls.forEach((el) => el.remove());
+    // Get API key from storage if available
+    chrome.storage.local.get(["apiKey", "apiBase"], (items) => {
+        const apiBase = items.apiBase || API_BASE;
+        const apiKey = items.apiKey || "";
 
-            if (response?.ok && response.data) {
-                const health = response.data;
-                A2UI.render([
-                    {
-                        type: "text",
-                        label: "Buddy",
-                        content: `System is **${health.status || "online"}**. Uptime: \`${formatUptime(health.uptime || health.uptimeMs)}\`. ${health.version ? `Running v${health.version}` : ""}`,
-                        timestamp: Date.now(),
-                    },
-                    { type: "image", src: "buddy-complete", caption: "Sacred Geometry — Resonance Achieved" },
-                ]);
-            } else {
-                A2UI.render([
-                    {
-                        type: "text",
-                        label: "Buddy",
-                        content: "I'm having trouble reaching the manager right now. The Sacred Geometry network may be recalibrating. Try again in a moment.",
-                        timestamp: Date.now(),
-                    },
-                ]);
+        // Send to Buddy via real AI chat endpoint
+        chrome.runtime.sendMessage(
+            { action: "fetchChat", apiBase, apiKey, message: text, model: "heady-buddy" },
+            (response) => {
+                // Remove thinking indicator
+                const thinkingEls = $content.querySelectorAll(".thinking-indicator");
+                thinkingEls.forEach((el) => el.remove());
+
+                if (response?.ok && response.data) {
+                    A2UI.render([
+                        {
+                            type: "text",
+                            label: "Buddy",
+                            content: response.data.content,
+                            timestamp: Date.now(),
+                        },
+                    ]);
+                } else {
+                    // Fallback: try health check if chat endpoint isn't available
+                    chrome.runtime.sendMessage(
+                        { action: "fetchBuddy", apiBase, apiKey },
+                        (fallbackResponse) => {
+                            if (fallbackResponse?.ok && fallbackResponse.data) {
+                                const health = fallbackResponse.data;
+                                A2UI.render([
+                                    {
+                                        type: "text",
+                                        label: "Buddy",
+                                        content: `I heard you! The chat endpoint isn't responding right now, but I can confirm the system is **${health.status || "online"}**. Uptime: \`${formatUptime(health.uptime || health.uptimeMs)}\`. ${health.version ? `Running v${health.version}.` : ""} Try again in a moment — the AI models may be warming up.`,
+                                        timestamp: Date.now(),
+                                    },
+                                ]);
+                            } else {
+                                A2UI.render([
+                                    {
+                                        type: "text",
+                                        label: "Buddy",
+                                        content: "I'm having trouble reaching the Heady network right now. Check your connection or API key, then try again.",
+                                        timestamp: Date.now(),
+                                    },
+                                ]);
+                            }
+                        }
+                    );
+                }
             }
-        }
-    );
+        );
+    });
 }
 
 $sendBtn.addEventListener("click", handleSend);

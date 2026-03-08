@@ -24,7 +24,7 @@ let currentModel = 'heady-flash';
 let modelStatusBar;
 
 function getApiUrl() {
-    return vscode.workspace.getConfiguration("heady").get("apiUrl") || "http://api.headysystems.com";
+    return vscode.workspace.getConfiguration("heady").get("apiUrl") || "https://manager.headysystems.com";
 }
 
 function getModel() {

@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 HeadySystems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * AI Inference Gateway — Multi-provider, credit-aware, latency-optimized.
+ * AI Inference Gateway — CSL-Gated, Multi-provider, Phi-Optimized.
  *
- * Routes requests to the optimal AI provider based on:
- *   1. Task complexity & context window needs
+ * Routes requests via Continuous Semantic Logic (CSL) confidence gates:
+ *   1. CSL health scoring per provider (φ-weighted penalty/recovery)
  *   2. Credit balance / cost optimization
  *   3. Latency requirements
  *   4. Provider availability

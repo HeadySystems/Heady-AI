@@ -58,6 +58,18 @@ const SUB_AGENTS = {
         capabilities: ["chat", "analyze", "code", "reasoning", "buddy"],
         keywords: ["failover", "cloudrun", "gcloud", "liquid", "backup"],
     },
+    "heady-battle": {
+        name: "HeadyBattle",
+        endpoint: process.env.HEADY_BATTLE_URL || "https://heady-battle.headyme.com/api",
+        capabilities: ["battle", "race", "compare", "tournament", "evaluate", "contest"],
+        keywords: ["battle", "race", "compare", "tournament", "evaluate", "contest", "arena", "compete", "versus", "benchmark", "leaderboard"],
+    },
+    "heady-sims": {
+        name: "HeadySims",
+        endpoint: process.env.HEADY_SIMS_URL || "https://heady-sims.headyme.com/api",
+        capabilities: ["simulate", "predict", "model", "optimize", "forecast"],
+        keywords: ["simulate", "sim", "predict", "forecast", "model", "optimize", "resource", "estimate", "preflight", "pre-flight"],
+    },
     "core": {
         name: "Core Platform",
         endpoint: process.env.HEADY_BRAIN_URL || "https://127.0.0.1:3301/api/brain/chat",
