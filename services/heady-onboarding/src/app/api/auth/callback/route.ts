@@ -13,7 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { OnboardingStage } from '../../../middleware/onboarding-guard';
+import { OnboardingStage } from '../../../../middleware/onboarding-guard';
 
 const SESSION_COOKIE = 'heady_session';
 const ONBOARDING_COOKIE = 'heady_onboarding_stage';
