@@ -319,6 +319,29 @@ body {
   box-shadow: none;
 }
 
+/* Show more/less toggle */
+.auth-showmore {
+  width: 100%;
+  padding: 0.45rem;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.02em;
+}
+
+.auth-showmore:hover {
+  border-color: var(--heady-teal-dim);
+  color: var(--heady-teal);
+  background: rgba(0, 212, 170, 0.04);
+}
+
 /* Footer */
 .auth-footer {
   margin-top: 1rem;

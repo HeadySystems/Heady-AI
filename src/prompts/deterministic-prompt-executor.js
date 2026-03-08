@@ -18,8 +18,28 @@
 'use strict';
 
 const crypto = require('crypto');
-const { PromptManager } = require('./deterministic-prompt-manager');
 const CSLConfidenceGate = require('./csl-confidence-gate');
+
+// Lazy-load PromptManager (template literals evaluate at require time)
+let _PromptManager = null;
+function getPromptManager() {
+    if (!_PromptManager) {
+        try {
+            _PromptManager = require('./deterministic-prompt-manager').PromptManager;
+        } catch (err) {
+            // Fallback: minimal stub for environments where templates can't load
+            _PromptManager = class StubPromptManager {
+                interpolate(id, vars) {
+                    return `[PROMPT:${id}] ` + Object.entries(vars).map(([k, v]) => `${k}=${v}`).join(', ');
+                }
+                getPrompt(id) { return { id, variables: [], template: '', tags: [] }; }
+                listPrompts() { return []; }
+                composePrompts(ids, vars) { return { composed: ids.join('\n'), sections: [], ids }; }
+            };
+        }
+    }
+    return _PromptManager;
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -54,7 +74,8 @@ class DeterministicPromptExecutor {
      * @param {Object} [options.llmParams] — override deterministic LLM params
      */
     constructor(options = {}) {
-        this.promptManager = options.promptManager || new PromptManager();
+        const PM = getPromptManager();
+        this.promptManager = options.promptManager || new PM();
         this.confidenceGate = options.confidenceGate || new CSLConfidenceGate();
         this.replayThreshold = options.replayThreshold || REPLAY_THRESHOLD;
         this.llmParams = { ...DETERMINISTIC_LLM_PARAMS, ...(options.llmParams || {}) };
@@ -151,6 +172,9 @@ class DeterministicPromptExecutor {
             this._stats.halts++;
             this._log('interpolation_error', promptId, inputHash, haltResult);
             this._emit('halt', { promptId, inputHash, reason: haltResult.reason });
+            this._emit('system:reconfigure', this.confidenceGate.reconfigure({
+                promptId, inputHash, confidence: 0, reason: haltResult.reason,
+            }));
             return haltResult;
         }
 
