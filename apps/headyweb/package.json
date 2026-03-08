@@ -20,6 +20,7 @@
     "clean": "rm -rf dist/"
   },
   "dependencies": {
+    "express": "^4.22.1",
     "three": "^0.163.0"
   },
   "devDependencies": {
@@ -39,8 +40,12 @@
   "turbo": {
     "pipeline": {
       "build": {
-        "dependsOn": ["^build"],
-        "outputs": ["dist/**"]
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**"
+        ]
       }
     }
   }
