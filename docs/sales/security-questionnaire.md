@@ -1,4 +1,4 @@
-# HeadyOS — Security Questionnaire (SIG Lite / CAIQ Format)
+# Heady™OS — Security Questionnaire (SIG Lite / CAIQ Format)
 
 **Vendor**: HeadySystems Inc. (DBA Heady™)  
 **Product**: HeadyOS  

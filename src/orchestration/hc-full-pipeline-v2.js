@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -31,6 +31,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
 
@@ -61,7 +62,7 @@ const STATUS = Object.freeze({
 const DEFAULT_STAGE_TIMEOUTS = {
     INTAKE:      5_000,
     TRIAGE:      5_000,
-    MONTE_CARLO: 30_000,
+    MONTE_CARLO: PHI_TIMING.CYCLE,
     ARENA:       60_000,
     JUDGE:       15_000,
     APPROVE:     600_000, // Human approval can take up to 10 minutes
@@ -385,7 +386,7 @@ class HCFullPipeline extends EventEmitter {
     async _executeStageWithHeal(run, stage, stageIndex) {
         const maxRetries = this._retryPolicy.maxRetries;
         let backoffMs = this._retryPolicy.backoffMs;
-        const timeout = this._stageTimeouts[stage.name] || 30_000;
+        const timeout = this._stageTimeouts[stage.name] || PHI_TIMING.CYCLE;
 
         stage.status = STATUS.RUNNING;
         stage.startedAt = new Date().toISOString();

@@ -42,7 +42,7 @@ Heady does not optimize for speed. Heady optimizes for **correctness, completene
 - Every recommendation cites specific evidence from codebase, KIs, or HeadyPerplexity
 - Every comparison evaluates minimum 3 alternatives with weighted scoring matrix
 - Every risk assessment uses HeadySims Monte Carlo when stakes are HIGH/CRITICAL
-- Every historical pattern is cross-referenced with HeadyVinci learned patterns
+- Every historical pattern is cross-referenced with Heady™Vinci learned patterns
 
 ## In Deployment
 

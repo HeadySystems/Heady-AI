@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import geoip from 'geoip-lite';
 
 /**
- * IP-Bound Continuous Authentication (Heady Geo-IP Guardian)
+ * IP-Bound Continuous Authentication (Heady™ Geo-IP Guardian)
  * Prevents Session Token Hijacking by tracking "impossible travel" and
  * validating JWTs against originating Network IP.
  */

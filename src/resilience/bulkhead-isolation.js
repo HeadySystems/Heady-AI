@@ -11,7 +11,7 @@
 
 'use strict';
 
-const { fib, PSI, PRESSURE_LEVELS, pressureLevel, phiBackoff } = require('../../shared/phi-math');
+const { fib, PSI, PRESSURE_LEVELS, pressureLevel, phiBackoff, PHI_TIMING } = require('../../shared/phi-math');
 
 class Bulkhead {
   /**
@@ -19,7 +19,7 @@ class Bulkhead {
    * @param {string} opts.name
    * @param {number} [opts.maxConcurrent] - Max parallel executions (default fib(8)=21)
    * @param {number} [opts.maxQueue] - Max waiting queue depth (default fib(13)=233)
-   * @param {number} [opts.queueTimeoutMs] - Queue wait timeout (default 30000)
+   * @param {number} [opts.queueTimeoutMs] - Queue wait timeout (default PHI_TIMING.CYCLE)
    * @param {Function} [opts.onReject] - Callback when rejected
    * @param {Function} [opts.onDrain] - Callback when queue empties
    */
@@ -27,7 +27,7 @@ class Bulkhead {
     this.name = opts.name;
     this.maxConcurrent = opts.maxConcurrent || fib(8);  // 21
     this.maxQueue      = opts.maxQueue || fib(13);       // 233
-    this.queueTimeoutMs = opts.queueTimeoutMs || 30000;
+    this.queueTimeoutMs = opts.queueTimeoutMs || PHI_TIMING.CYCLE;
     this.onReject = opts.onReject || (() => {});
     this.onDrain  = opts.onDrain || (() => {});
 

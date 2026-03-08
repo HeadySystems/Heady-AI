@@ -1,6 +1,6 @@
 /*
  * Projection Monitor — Real-Time Sync & Projection Status
- * Micro-frontend for HeadyWeb Universal Shell
+ * Micro-frontend for Heady™Web Universal Shell
  */
 const APP_CONFIG = {
   id: 'projection-monitor',

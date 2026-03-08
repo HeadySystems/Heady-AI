@@ -1,6 +1,6 @@
 /**
- * Heady API Gateway — Cloudflare Worker
- * Request routing + rate limiting for all Heady domains.
+ * Heady™ API Gateway — Cloudflare Worker
+ * Request routing + rate limiting for all Heady™ domains.
  */
 
 export interface Env {
@@ -17,7 +17,7 @@ const DOMAIN_ROUTES: Record<string, string> = {
     'headybuddy.org': '/app/heady-buddy',
     'headybot.com': '/app/heady-bot',
     'headyapi.com': '/app/heady-api',
-    'headyai.com': '/app/heady-ai',
+    'heady-ai.com': '/app/heady-ai',
 };
 
 export default {

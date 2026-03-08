@@ -1,4 +1,4 @@
-# Post-Quantum Cryptography Integration for HeadySystems
+# Post-Quantum Cryptography Integration for Heady™Systems
 
 ## Overview
 
@@ -22,11 +22,11 @@ HeadySystems semantic logic gates are now quantum-resistant using NIST-standardi
 
 ## Architecture Integration
 
-### HeadyConnection Quantum-Resistant Communication
+### Heady™Connection Quantum-Resistant Communication
 
 ```typescript
-import { KyberTruthValue, PQCGate } from '@headysystems/semantic-logic/pqc/kyber-gates';
-import { SignedGate } from '@headysystems/semantic-logic/pqc/dilithium-signatures';
+import { KyberTruthValue, PQCGate } from '@heady-ai/semantic-logic/pqc/kyber-gates';
+import { SignedGate } from '@heady-ai/semantic-logic/pqc/dilithium-signatures';
 
 // Create quantum-resistant semantic gate
 const cpuGate = new KyberTruthValue(0.75, 768, 'cpu_usage');
@@ -46,10 +46,10 @@ const { ciphertext, sharedSecret } = healthGate.encapsulate();
 const receivedGate = KyberTruthValue.decapsulate(ciphertext, 768);
 ```
 
-### HeadyBrain Post-Quantum Decision Making
+### Heady™Brain Post-Quantum Decision Making
 
 ```typescript
-import { PQCGate } from '@headysystems/semantic-logic/pqc/kyber-gates';
+import { PQCGate } from '@heady-ai/semantic-logic/pqc/kyber-gates';
 
 const brainInputs = [
   new KyberTruthValue(0.9, 1024, 'confidence'),
@@ -66,7 +66,7 @@ const decision = PQCGate.KYBER_WEIGHTED_AND(
 console.log(`PQC Decision: ${decision.value} (${decision.securityBits}-bit secure)`);
 ```
 
-### HeadyConductor Signed Task Orchestration
+### Heady™Conductor Signed Task Orchestration
 
 ```python
 from kyber_gates import KyberTruthValue, PQCGate
@@ -83,7 +83,7 @@ if signed_task.verify():
     conductor.execute_task(signed_task.get_gate())
 ```
 
-## Why Post-Quantum for HeadySystems?
+## Why Post-Quantum for Heady™Systems?
 
 ### Quantum Threat Timeline
 - **2030-2035**: Large-scale quantum computers expected (NIST estimate)
@@ -142,7 +142,7 @@ const pqcGate = new KyberTruthValue(
 Use dynamic nibble assignment to optimize PQC performance:
 
 ```typescript
-import { DynamicNibbleManager } from '@headysystems/semantic-logic/core/dynamic-nibble';
+import { DynamicNibbleManager } from '@heady-ai/semantic-logic/core/dynamic-nibble';
 
 // Auto-select bit depth for PQC operations
 const bitDepth = DynamicNibbleManager.selectOptimalBitDepth({

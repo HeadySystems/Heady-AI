@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -8,7 +8,7 @@
  * Formal JSON schema for task manifests ingested by the HCFP Auto-Flow-Success Pipeline.
  * Every strategic objective must be wrapped in this schema for deterministic execution.
  *
- * Heady AI Nodes: CONDUCTOR, MAESTRO
+ * Heady™ AI Nodes: CONDUCTOR, MAESTRO
  */
 
 /**

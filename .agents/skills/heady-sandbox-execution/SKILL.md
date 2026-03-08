@@ -1,12 +1,12 @@
 ---
 name: heady-sandbox-execution
-description: Use when implementing sandboxed code execution, WASM isolation, event streaming systems, or safe computation in multi-tenant environments for the Heady ecosystem. Keywords include sandbox, WASM, isolation, code execution, event stream, multi-tenant, safe execution, and compute sandbox.
+description: Use when implementing sandboxed code execution, WASM isolation, event streaming systems, or safe computation in multi-tenant environments for the Heady™ ecosystem. Keywords include sandbox, WASM, isolation, code execution, event stream, multi-tenant, safe execution, and compute sandbox.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Sandbox Execution
+# Heady™ Sandbox Execution
 
 ## When to Use This Skill
 

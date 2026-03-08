@@ -1,7 +1,7 @@
-# HeadyStack Architecture
+# Heady™Stack Architecture
 
 **Version:** 3.0.1 "Aether"  
-**© 2026 HeadySystems Inc.**
+**© 2026 Heady™Systems Inc.**
 
 ---
 

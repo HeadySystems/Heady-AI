@@ -8,7 +8,7 @@
  *   node scripts/generate-api-key.js --list
  *   node scripts/generate-api-key.js --revoke <key-prefix>
  *
- * ⚡ Made with 💜 by HeadySystems™
+ * ⚡ Made with 💜 by Heady™Systems™
  */
 
 'use strict';
@@ -76,7 +76,7 @@ function createKey(name = 'buddy') {
   ⚠️  Save this key — it won't be shown again!
   
   Your buddy configures it in VS Code:
-    Settings → Extensions → Heady AI → API Key → paste key
+    Settings → Extensions → Heady™ AI → API Key → paste key
 
   Or in code:
     const client = new HeadyClient('${key}');

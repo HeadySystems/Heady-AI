@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * circuit-breaker-v2.js — Enhanced Circuit Breaker
  *
@@ -109,7 +110,7 @@ class CircuitBreaker extends EventEmitter {
      * @param {number} [opts.errorRateThreshold=0.5]   - Error rate (0-1) that trips the breaker
      * @param {number} [opts.windowSizeMs=10000]        - Sliding window size in ms
      * @param {number} [opts.minCalls=10]               - Min calls before tripping
-     * @param {number} [opts.openDurationMs=30000]      - How long the circuit stays OPEN
+     * @param {number} [opts.openDurationMs=PHI_TIMING.CYCLE]      - How long the circuit stays OPEN
      * @param {number} [opts.successThreshold=3]        - Successes in HALF_OPEN to close
      * @param {number} [opts.latencySlaMs=null]         - If p99 exceeds this, trip the circuit
      * @param {BreakerRegistry} [opts.registry]         - Optional registry for cascade detection
@@ -121,7 +122,7 @@ class CircuitBreaker extends EventEmitter {
 
         // Configuration
         this.errorRateThreshold  = opts.errorRateThreshold ?? 0.5;
-        this.openDurationMs      = opts.openDurationMs     ?? 30_000;
+        this.openDurationMs      = opts.openDurationMs     ?? PHI_TIMING.CYCLE;
         this.successThreshold    = opts.successThreshold   ?? 3;
         this.latencySlaMs        = opts.latencySlaMs       ?? null;
 
@@ -422,13 +423,13 @@ class BreakerRegistry extends EventEmitter {
     /**
      * @param {object} [opts]
      * @param {number} [opts.cascadeThreshold=3]    - Number of open breakers that triggers cascade alert
-     * @param {number} [opts.cascadeWindowMs=30000] - Time window for cascade detection
+     * @param {number} [opts.cascadeWindowMs=PHI_TIMING.CYCLE] - Time window for cascade detection
      */
     constructor(opts = {}) {
         super();
         this._breakers           = new Map();
         this.cascadeThreshold    = opts.cascadeThreshold  ?? 3;
-        this.cascadeWindowMs     = opts.cascadeWindowMs   ?? 30_000;
+        this.cascadeWindowMs     = opts.cascadeWindowMs   ?? PHI_TIMING.CYCLE;
         this._recentOpenings     = []; // { name, ts }
         this._cascadeAlertActive = false;
     }

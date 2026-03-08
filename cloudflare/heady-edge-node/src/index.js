@@ -3,10 +3,10 @@ import { Hono } from 'hono'
 const app = new Hono()
 
 // ═══════════════════════════════════════════════════════════════
-// MCP Tool Registry — All Heady tools available at the edge
+// MCP Tool Registry — All Heady™ tools available at the edge
 // ═══════════════════════════════════════════════════════════════
 const HEADY_TOOLS = [
-    { name: 'heady_chat', description: 'Chat with Heady Brain via edge AI.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, system: { type: 'string' }, temperature: { type: 'number', default: 0.7 }, max_tokens: { type: 'integer', default: 4096 } }, required: ['message'] } },
+    { name: 'heady_chat', description: 'Chat with Heady™ Brain via edge AI.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, system: { type: 'string' }, temperature: { type: 'number', default: 0.7 }, max_tokens: { type: 'integer', default: 4096 } }, required: ['message'] } },
     { name: 'heady_analyze', description: 'Analyze code/text via edge AI.', inputSchema: { type: 'object', properties: { content: { type: 'string' }, type: { type: 'string', enum: ['code', 'text', 'security', 'performance', 'architecture', 'general'] }, language: { type: 'string' } }, required: ['content'] } },
     { name: 'heady_embed', description: 'Generate embeddings via edge AI.', inputSchema: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'] } },
     { name: 'heady_memory', description: 'Search 3D vector memory (Vectorize).', inputSchema: { type: 'object', properties: { query: { type: 'string' }, limit: { type: 'integer', default: 5 } }, required: ['query'] } },

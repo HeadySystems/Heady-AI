@@ -61,14 +61,14 @@ const CONSENT_STATUS = Object.freeze({
 const PURPOSE_METADATA = {
   [PURPOSES.ANALYTICS]: {
     label: 'Usage Analytics',
-    description: 'Allow Heady to analyze how you use the platform to improve services.',
+    description: 'Allow Heady™ to analyze how you use the platform to improve services.',
     legalBasis: 'Art. 6(1)(a) GDPR — Consent',
     retentionDays: fib(11), // 89 days
     canWithdraw: true,
   },
   [PURPOSES.AI_TRAINING]: {
     label: 'AI Model Training',
-    description: 'Allow Heady to use your AI interactions (anonymized) to improve model quality.',
+    description: 'Allow Heady™ to use your AI interactions (anonymized) to improve model quality.',
     legalBasis: 'Art. 6(1)(a) GDPR — Consent',
     retentionDays: fib(13), // 233 days
     canWithdraw: true,

@@ -1,8 +1,8 @@
 /**
  * =============================================================================
- * Heady Edge Router — Cloudflare Worker
+ * Heady™ Edge Router — Cloudflare Worker
  * =============================================================================
- * Routes all 9 Heady domains to the single Cloud Run origin, adding:
+ * Routes all 17 Heady™ domains to the single Cloud Run origin, adding:
  *  - Path-prefix routing per domain
  *  - Comprehensive security headers (HSTS, CSP, X-Frame-Options, etc.)
  *  - Edge-level rate limiting via Cloudflare KV
@@ -11,16 +11,24 @@
  *  - WebSocket upgrade passthrough for real-time features
  *  - Optional geographic routing / geo-block
  *
- * Domain → path mapping:
+ * Domain → path mapping (17 domains):
  *  headyme.com            → /app
  *  headysystems.com       → /systems
  *  headyconnection.org    → /connection
+ *  headyconnection.com    → /connection-com
  *  headybuddy.org         → /buddy
  *  headymcp.com           → /mcp
  *  headyio.com            → /io
  *  headybot.com           → /bot
  *  headyapi.com           → /api
- *  heady-ai.com            → /ai
+ *  heady-ai.com           → /ai
+ *  headyos.com            → /os
+ *  headycloud.com         → /cloud
+ *  headyweb.com           → /web
+ *  headyfinance.com       → /finance
+ *  headymusic.com         → /music
+ *  headystore.com         → /store
+ *  headyex.com            → /ex
  *
  * Environment variables (set in wrangler.toml or Cloudflare dashboard):
  *  CLOUD_RUN_ORIGIN    — Full Cloud Run service URL (https://heady-production-uc.a.run.app)
@@ -37,24 +45,48 @@
 // Domain → Cloud Run path prefix mapping
 // =============================================================================
 const DOMAIN_ROUTES = new Map([
-  ['headyme.com',         '/app'],
-  ['www.headyme.com',     '/app'],
-  ['headysystems.com',    '/systems'],
-  ['www.headysystems.com','/systems'],
-  ['headyconnection.org', '/connection'],
-  ['www.headyconnection.org', '/connection'],
-  ['headybuddy.org',      '/buddy'],
-  ['www.headybuddy.org',  '/buddy'],
-  ['headymcp.com',        '/mcp'],
-  ['www.headymcp.com',    '/mcp'],
-  ['headyio.com',         '/io'],
-  ['www.headyio.com',     '/io'],
-  ['headybot.com',        '/bot'],
-  ['www.headybot.com',    '/bot'],
-  ['headyapi.com',        '/api'],
-  ['www.headyapi.com',    '/api'],
-  ['heady-ai.com',         '/ai'],
-  ['www.heady-ai.com',     '/ai'],
+  // ── Core Platform ──────────────────────────────────────────────────────
+  ['headyme.com',              '/app'],
+  ['www.headyme.com',          '/app'],
+  ['headysystems.com',         '/systems'],
+  ['www.headysystems.com',     '/systems'],
+  // ── Community & Connection ─────────────────────────────────────────────
+  ['headyconnection.org',      '/connection'],
+  ['www.headyconnection.org',  '/connection'],
+  ['headyconnection.com',      '/connection-com'],
+  ['www.headyconnection.com',  '/connection-com'],
+  // ── Companion ──────────────────────────────────────────────────────────
+  ['headybuddy.org',           '/buddy'],
+  ['www.headybuddy.org',       '/buddy'],
+  ['headybot.com',             '/bot'],
+  ['www.headybot.com',         '/bot'],
+  // ── Developer & API ────────────────────────────────────────────────────
+  ['headymcp.com',             '/mcp'],
+  ['www.headymcp.com',         '/mcp'],
+  ['headyio.com',              '/io'],
+  ['www.headyio.com',          '/io'],
+  ['headyapi.com',             '/api'],
+  ['www.headyapi.com',         '/api'],
+  // ── Research & OS ──────────────────────────────────────────────────────
+  ['heady-ai.com',             '/ai'],
+  ['www.heady-ai.com',         '/ai'],
+  ['headyos.com',              '/os'],
+  ['www.headyos.com',          '/os'],
+  // ── Infrastructure ─────────────────────────────────────────────────────
+  ['headycloud.com',           '/cloud'],
+  ['www.headycloud.com',       '/cloud'],
+  ['headyweb.com',             '/web'],
+  ['www.headyweb.com',         '/web'],
+  // ── Verticals ──────────────────────────────────────────────────────────
+  ['headyfinance.com',         '/finance'],
+  ['www.headyfinance.com',     '/finance'],
+  ['headymusic.com',           '/music'],
+  ['www.headymusic.com',       '/music'],
+  // ── Marketplace & Exchange ─────────────────────────────────────────────
+  ['headystore.com',           '/store'],
+  ['www.headystore.com',       '/store'],
+  ['headyex.com',              '/ex'],
+  ['www.headyex.com',          '/ex'],
 ]);
 
 // =============================================================================
@@ -580,7 +612,7 @@ function originDownPage() {
 <body>
   <div class="card">
     <h1>503</h1>
-    <p>The Heady platform is temporarily unreachable. Self-healing is in progress.</p>
+    <p>The Heady™ platform is temporarily unreachable. Self-healing is in progress.</p>
     <p style="margin-top: 2rem; font-size: 0.85rem; opacity: 0.6;">
       Please try again in a moment.
     </p>

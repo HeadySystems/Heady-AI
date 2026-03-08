@@ -1,5 +1,5 @@
 # Claim-to-Code Mapping
-## Heady Latent OS — Reduction-to-Practice Evidence
+## Heady™ Latent OS — Reduction-to-Practice Evidence
 ### Version 1.0 | March 2026
 
 > **DISCLAIMER**: This document maps patent claim elements to source code files for purposes of establishing reduction-to-practice evidence under 35 U.S.C. §§ 101–103 and 112. It is for internal strategic use only and does not constitute legal advice. This mapping does not create attorney-client privilege. Code files referenced should be maintained in a version-controlled repository with timestamped commit history to establish dates of conception and reduction to practice.
@@ -540,6 +540,6 @@ To ensure these code mappings serve as valid reduction-to-practice evidence:
 
 ---
 
-*Document Version 1.0 | March 2026 | Heady Connection, Inc.*
+*Document Version 1.0 | March 2026 | Heady™ Connection, Inc.*
 *This document is for internal strategic use only and does not constitute legal advice.*
 *Maintain this document as code evolves — update mappings when refactoring changes file paths.*

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * HCResourceManager — System resource monitoring with φ-scaled polling.
  * Tracks CPU, RAM, disk, GPU utilization and emits events for cross-wiring.
  */

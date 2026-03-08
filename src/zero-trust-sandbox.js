@@ -1,5 +1,5 @@
 /**
- * Heady Zero-Trust MCP Execution Sandbox
+ * Heady™ Zero-Trust MCP Execution Sandbox
  * =======================================
  * Capability-based ACL for MCP tool execution with:
  * - Bitmask capability model (FILE_READ, NETWORK, DATABASE_READ, etc.)

@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * 🎮 Heady Arena Mode Service - 100% Uptime Continuous Competitive Selection
+ * 🎮 Heady™ Arena Mode Service - 100% Uptime Continuous Competitive Selection
  * 
  * This service runs continuously, managing competitive pattern selection
  * and tournament-based optimization for all system strategies.
@@ -12,6 +12,7 @@
  */
 
 const fs = require('fs');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const EventEmitter = require('events');
 const logger = require("../utils/logger");
@@ -102,7 +103,7 @@ class ArenaModeService extends EventEmitter {
     // Start performance analysis
     this.analysisLoop = setInterval(() => {
       this.analyzePerformance();
-    }, 30000); // Analyze every 30 seconds
+    }, PHI_TIMING.CYCLE); // Analyze every 30 seconds
     
     // Start champion monitoring
     this.championLoop = setInterval(() => {

@@ -3,7 +3,7 @@
 /**
  * pipeline-validation.test.js
  * ──────────────────────────────────────────────────────────────────────────────
- * Comprehensive validation test suite for the Heady 10/10 ecosystem.
+ * Comprehensive validation test suite for the Heady™ 10/10 ecosystem.
  * Validates internal consistency of all pipeline configuration files and
  * confirms compliance with φ-derived constants throughout.
  *
@@ -23,7 +23,7 @@ const PSI = 0.6180339887;
 const PHI_POWERS = { 3: 4236, 4: 6854, 5: 11090, 6: 17944, 7: 29034, 8: 46979, 9: 76013 };
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
 
-// ─── Known Heady Nodes ────────────────────────────────────────────────────────
+// ─── Known Heady™ Nodes ────────────────────────────────────────────────────────
 const KNOWN_NODES = new Set([
   'HeadyConductor', 'HeadySoul', 'HeadyBrains', 'HeadyVinci', 'HeadyMemory',
   'HeadyArena', 'HeadyBee', 'HeadyGovernance', 'HeadyGuard', 'HeadyHealth',

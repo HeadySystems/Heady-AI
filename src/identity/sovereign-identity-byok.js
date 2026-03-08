@@ -1,11 +1,12 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 // RTP: Sovereign Identity with BYOK Model Access
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 
 const PHI = 1.6180339887;
@@ -391,7 +392,7 @@ class ModelAccessRouter {
    */
   constructor(vault, opts = {}) {
     this._vault = vault;
-    this._timeout = opts.timeout || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ 29034ms
+    this._timeout = opts.timeout || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
     this._fallbacks = opts.fallbacks || [];
     this._stats = new Map();
   }

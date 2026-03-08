@@ -1,12 +1,13 @@
 /**
  * external-api-breakers.js
  * Master registry — creates and manages circuit breakers for ALL external services
- * in the Heady platform (heady-systems v3.1.0).
+ * in the Heady™ platform (heady-systems v3.1.0).
  *
  * @module enterprise-hardening/circuit-breaker/external-api-breakers
  */
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const { CircuitBreaker, STATES } = require('../../circuit-breaker');
 const { EventEmitter } = require('events');
 
@@ -24,27 +25,27 @@ const PHI = 1.618;
 const SERVICE_CONFIGS = {
   'openai': {
     failureThreshold: 5,
-    recoveryTimeout: 30_000,
+    recoveryTimeout: PHI_TIMING.CYCLE,
     halfOpenMaxCalls: 3,
     baseUrl: 'https://api.openai.com/v1',
     healthPath: '/models',
-    timeoutMs: 30_000,
+    timeoutMs: PHI_TIMING.CYCLE,
   },
   'anthropic': {
     failureThreshold: 5,
-    recoveryTimeout: 30_000,
+    recoveryTimeout: PHI_TIMING.CYCLE,
     halfOpenMaxCalls: 3,
     baseUrl: 'https://api.anthropic.com/v1',
     healthPath: '/models',
-    timeoutMs: 30_000,
+    timeoutMs: PHI_TIMING.CYCLE,
   },
   'google-genai': {
     failureThreshold: 5,
-    recoveryTimeout: 30_000,
+    recoveryTimeout: PHI_TIMING.CYCLE,
     halfOpenMaxCalls: 3,
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     healthPath: '/models',
-    timeoutMs: 30_000,
+    timeoutMs: PHI_TIMING.CYCLE,
   },
   'groq': {
     failureThreshold: 3,
@@ -96,7 +97,7 @@ const SERVICE_CONFIGS = {
   },
   'mcp-sdk': {
     failureThreshold: 5,
-    recoveryTimeout: 30_000,
+    recoveryTimeout: PHI_TIMING.CYCLE,
     halfOpenMaxCalls: 3,
     baseUrl: null,
     healthPath: null,

@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module analytics-ingestion
- * @description Usage analytics ingestion pipeline for HeadySystems
+ * @description Usage analytics ingestion pipeline for Heady™Systems
  *
  * Flow:
  *   POST /analytics/events

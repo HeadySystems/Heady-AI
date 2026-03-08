@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -7,7 +7,7 @@
 /**
  * ─── HeadyConductor — Unified Orchestration API ────────────────
  *
- * Central traffic controller for Heady's multi-agent swarm.
+ * Central traffic controller for Heady™'s multi-agent swarm.
  * Routes tasks to bees, manages heartbeats, tracks execution state,
  * and bridges local swarm to edge/cloud nodes.
  *

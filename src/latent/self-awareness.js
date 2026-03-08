@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Self-Awareness — System Self-Model and Coherence Tracking
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module self-awareness
  * @description Maintains the platform's self-model: a live 384D "self-vector"
@@ -55,7 +55,7 @@ const EXPONENTIAL_SMOOTHING_ALPHA = 0.3; // EMA weight for self-vector updates
 // ---------------------------------------------------------------------------
 
 /**
- * SelfAwareness is Heady's introspective module. It:
+ * SelfAwareness is Heady™'s introspective module. It:
  * - Maintains a registry of all active system components and their embeddings.
  * - Aggregates component state into a single 384D self-vector.
  * - Computes coherence against an "intended state" vector.
@@ -86,7 +86,7 @@ class SelfAwareness extends EventEmitter {
     this.driftThreshold = options.driftThreshold || COHERENCE_DRIFT_THRESHOLD;
     this.warningThreshold = options.warningThreshold || COHERENCE_WARNING_THRESHOLD;
 
-    // The intended/target state — what "healthy Heady" looks like.
+    // The intended/target state — what "healthy Heady™" looks like.
     // Can be set to a trained reference vector in production.
     this.intendedVector = options.intendedVector || this._buildIntendedVector();
 

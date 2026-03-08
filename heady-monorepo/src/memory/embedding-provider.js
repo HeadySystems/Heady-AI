@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -30,7 +30,7 @@ class EmbeddingProvider {
             },
             headycompute: {
                 enabled: opts.openaiEnabled || false,
-                endpoint: "https://api.headycompute.com/v1/embeddings",
+                endpoint: "https://api.headycloud.com/v1/embeddings",
                 model: opts.openaiModel || "text-embedding-3-small",
                 dims: 1536,
                 apiKey: opts.openaiApiKey || process.env.HEADY_COMPUTE_KEY || null,

@@ -122,9 +122,9 @@
     "@heady-ai/sdk": 55000,
     "@heady-ai/shared": 21000,
     "@heady-ai/vector-memory": 34000,
-    "@headysystems/semantic-logic": 13000,
-    "@headysystems/types": 8000,
-    "@headysystems/redis": 5000,
+    "@heady-ai/semantic-logic": 13000,
+    "@heady-ai/types": 8000,
+    "@heady-ai/redis": 5000,
     "heady-manager": 21000,
     "_phi_note": "All sizes approximate Fibonacci KB values: 5,8,13,21,34,55,89,144 KB"
   },

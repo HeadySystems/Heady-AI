@@ -1,4 +1,4 @@
-import { MCPServer, MCPRequest } from '@heady/mcp-server';
+import { MCPServer, MCPRequest } from '@heady-ai/mcp-server';
 
 export default {
   async fetch(request: Request): Promise<Response> {

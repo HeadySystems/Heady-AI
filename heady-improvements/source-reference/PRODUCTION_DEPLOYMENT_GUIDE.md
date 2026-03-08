@@ -1,4 +1,4 @@
-# Heady Sovereign AI Platform — Master Production Deployment Guide
+# Heady™ Sovereign AI Platform — Master Production Deployment Guide
 
 > **Maintainer:** eric@headyconnection.org  
 > **Repository:** github.com/HeadyMe/Heady-pre-production-9f2f0642  
@@ -314,7 +314,7 @@ ingress:
     service: https://heady-production-uc.a.run.app
   - hostname: headybot.com
     service: https://heady-production-uc.a.run.app
-  - hostname: headyai.com
+  - hostname: heady-ai.com
     service: https://heady-production-uc.a.run.app
   - service: http_status:404
 EOF
@@ -375,7 +375,7 @@ curl -I https://headyme.com/health
 Create a `Dockerfile` in the project root if not already present:
 
 ```dockerfile
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 WORKDIR /app
 
 FROM base AS deps
@@ -422,7 +422,7 @@ gcloud artifacts docker images list us-central1-docker.pkg.dev/YOUR_PROJECT/head
 ```bash
 # Create dedicated service account
 gcloud iam service-accounts create heady-cloudrun \
-  --display-name="Heady Cloud Run Service Account"
+  --display-name="Heady™ Cloud Run Service Account"
 
 # Grant Cloud SQL access
 gcloud projects add-iam-policy-binding YOUR_PROJECT \
@@ -757,7 +757,7 @@ All 9 domains are routed through the Cloudflare Worker (`cloudflare/worker.js`) 
 | `headymcp.com` | Model Context Protocol endpoint | `/mcp`, `/mcp/tools`, `/mcp/resources` |
 | `headyio.com` | I/O integrations hub (connectors) | `/integrations/*`, `/webhooks/*`, `/sync/*` |
 | `headybot.com` | Chatbot / messaging channel integrations | `/bot/*`, `/slack`, `/discord`, `/telegram` |
-| `headyai.com` | AI model gateway + inference proxy | `/inference/*`, `/embeddings`, `/completions` |
+| `heady-ai.com` | AI model gateway + inference proxy | `/inference/*`, `/embeddings`, `/completions` |
 
 ### Edge Routing Logic (cloudflare/worker.js)
 

@@ -15,6 +15,7 @@
  */
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const { EventEmitter } = require('events');
 const { registry, EnhancedCircuitBreaker, PHI } = require('./external-api-breakers');
 const { STATES } = require('../../circuit-breaker');
@@ -55,9 +56,9 @@ const TOOL_REGISTRY = [
   { name: 'heady.memory.list',       timeoutMs: 5_000,  critical: false, description: 'List memory entries' },
 
   // LLM / model tools
-  { name: 'heady.llm.generate',      timeoutMs: 30_000, critical: true,  description: 'LLM text generation' },
+  { name: 'heady.llm.generate',      timeoutMs: PHI_TIMING.CYCLE, critical: true,  description: 'LLM text generation' },
   { name: 'heady.llm.embed',         timeoutMs: 15_000, critical: false, description: 'Generate embeddings' },
-  { name: 'heady.llm.stream',        timeoutMs: 30_000, critical: false, description: 'Streaming generation' },
+  { name: 'heady.llm.stream',        timeoutMs: PHI_TIMING.CYCLE, critical: false, description: 'Streaming generation' },
 
   // File / storage tools
   { name: 'heady.file.read',         timeoutMs: 10_000, critical: true,  description: 'Read file' },
@@ -68,14 +69,14 @@ const TOOL_REGISTRY = [
   // Web / search tools
   { name: 'heady.web.fetch',         timeoutMs: 15_000, critical: false, description: 'Fetch URL' },
   { name: 'heady.web.search',        timeoutMs: 15_000, critical: false, description: 'Web search' },
-  { name: 'heady.web.screenshot',    timeoutMs: 30_000, critical: false, description: 'Screenshot URL' },
+  { name: 'heady.web.screenshot',    timeoutMs: PHI_TIMING.CYCLE, critical: false, description: 'Screenshot URL' },
 
   // Code tools
-  { name: 'heady.code.run',          timeoutMs: 30_000, critical: false, description: 'Execute code' },
+  { name: 'heady.code.run',          timeoutMs: PHI_TIMING.CYCLE, critical: false, description: 'Execute code' },
   { name: 'heady.code.lint',         timeoutMs: 10_000, critical: false, description: 'Lint code' },
 
   // Data tools
-  { name: 'heady.data.query',        timeoutMs: 30_000, critical: false, description: 'Database query' },
+  { name: 'heady.data.query',        timeoutMs: PHI_TIMING.CYCLE, critical: false, description: 'Database query' },
   { name: 'heady.data.transform',    timeoutMs: 15_000, critical: false, description: 'Transform data' },
 
   // Workflow tools
@@ -189,7 +190,7 @@ class MCPToolBreaker extends EventEmitter {
 
     const breaker = new EnhancedCircuitBreaker(`mcp:${name}`, {
       failureThreshold: 5,
-      recoveryTimeout:  30_000,
+      recoveryTimeout:  PHI_TIMING.CYCLE,
       halfOpenMaxCalls: 3,
       timeoutMs: timeoutMs || this._defaultTimeout,
     });

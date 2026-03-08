@@ -1,5 +1,5 @@
 /**
- * @fileoverview Main exports for Heady VSA Integration
+ * @fileoverview Main exports for Heady™ VSA Integration
  * @version 1.0.0
  */
 

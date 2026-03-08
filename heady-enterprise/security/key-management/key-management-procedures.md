@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Key Management Procedures
+# Heady™Systems v3.2.2 — Key Management Procedures
 
 **Version:** 3.2.2  
 **Owner:** Eric Headington (eric@headyconnection.org)  
@@ -232,7 +232,7 @@ spec:
     - heady.exchange
     - heady.investments
     - headysystems.com
-    - headyai.com
+    - heady-ai.com
 ```
 
 **Alert trigger:** `CertificateExpiringSoon` Prometheus alert fires at fib(8)=21 days.  

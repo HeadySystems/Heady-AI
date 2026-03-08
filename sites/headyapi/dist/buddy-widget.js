@@ -1,6 +1,6 @@
 /**
  * HeadyBuddy Universal Widget v2.0
- * Drop-in overlay for ALL Heady sites — auth, chat, vector memory
+ * Drop-in overlay for ALL Heady™ sites — auth, chat, vector memory
  * Include via: <script src="/buddy-widget.js"></script>
  */
 (function () {
@@ -72,7 +72,7 @@
       <div class="hb-user" id="hb-user-info"></div>
     </div>
     <div class="hb-messages" id="hb-messages">
-      <div class="hb-msg system">Welcome! Ask me anything about Heady.</div>
+      <div class="hb-msg system">Welcome! Ask me anything about Heady™.</div>
     </div>
     <div class="hb-input-row">
       <input class="hb-input" id="hb-input" placeholder="Ask HeadyBuddy..." />

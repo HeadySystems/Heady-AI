@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('./shared/phi-math');
 /**
  * CrossDeviceSyncHub — Synchronizes state (buddy sessions, user preferences,
  * config snapshots) across multiple devices for the same user.
@@ -170,7 +171,7 @@ class CrossDeviceSyncHub extends EventEmitter {
   /**
    * Long-poll: wait for new events (resolved when events arrive or timeout).
    */
-  async waitForEvents(deviceId, timeoutMs = Math.round(PHI ** 7 * 1000)) { // φ⁷×1000 ≈ 29034ms
+  async waitForEvents(deviceId, timeoutMs = Math.round(PHI ** 7 * 1000)) { // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
     const existing = this.getPendingEvents(deviceId);
     if (existing.length > 0) return existing;
 

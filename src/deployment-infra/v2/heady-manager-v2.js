@@ -1,5 +1,5 @@
 /**
- * ∞ Heady Conductor v2 — Thin Orchestrator Shell with Graceful Shutdown
+ * ∞ Heady™ Conductor v2 — Thin Orchestrator Shell with Graceful Shutdown
  *
  * CHANGES from heady-manager.js:
  *   [CRITICAL] Added SIGTERM/SIGINT handlers with connection draining
@@ -17,7 +17,7 @@
  *   [OPS]      Added /health/startup endpoint (Cloud Run startup probe)
  *   [OPS]      Startup timer for observability — reports total boot time
  *
- * © 2026 HeadySystems Inc. — Proprietary
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';

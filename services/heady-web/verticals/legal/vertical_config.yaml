@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Vertical Config — Legal
+# Heady™Systems Vertical Config — Legal
 # Domain: legal.headyme.com
 # =============================================================================
 
@@ -12,7 +12,7 @@ routing:
     - law.headyme.com
 
 brand:
-  name: "Heady Legal"
+  name: "Heady™ Legal"
   tagline: "AI Orchestration for Legal Practice"
   accent_color: "#a855f7"
   logo_variant: legal
@@ -130,7 +130,7 @@ content:
     author: "Managing Partner, AmLaw 200 Firm (placeholder)"
 
 meta:
-  title: "Heady Legal — AI Orchestration for Law Firms"
+  title: "Heady™ Legal — AI Orchestration for Law Firms"
   description: "AI agent workflows for legal practice. Contract analysis, case law research, compliance monitoring, and document processing — automated and auditable."
   keywords:
     - "legal AI platform"

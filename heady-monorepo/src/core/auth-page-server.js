@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Universal Auth Page ═══
  *
- * Single auth page used across ALL Heady sites.
+ * Single auth page used across ALL Heady™ sites.
  * 25+ providers: OAuth social + AI API key providers.
  * Designed for Colab Flask runtime via ngrok.
  * Embeddable in HF Spaces, Cloud Run, landing page.

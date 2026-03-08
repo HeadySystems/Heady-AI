@@ -1,7 +1,7 @@
 /**
  * HeadyBattle Service
  * Validation engine for competitive selection and battle-arena mode.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

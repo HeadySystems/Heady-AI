@@ -16,7 +16,7 @@
 
 ## Five Unimplemented Opportunities
 
-### Alpha: Contextual Crawler Engine for HeadyMCP
+### Alpha: Contextual Crawler Engine for Heady™MCP
 
 - Resurrect multi-signal aggregation from heady.me/bitcoin (2013)
 - Autonomous daemon crawlers polling cross-domain telemetry
@@ -42,7 +42,7 @@
 
 ### Delta: IoT & Hardware Native Connectors
 
-- Revive python-rtmidi C++ bindings for HeadyMCP
+- Revive python-rtmidi C++ bindings for Heady™MCP
 - Physical telemetry → digital intents (sensors, sliders, environmental triggers)
 - Digital events → physical responses via ALSA/JACK/CoreMIDI timing precision
 - **Bridges digital Architecture of Intelligence with physical workspace**

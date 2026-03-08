@@ -25,13 +25,13 @@ search → evaluate → absorb → integrate → propose
 
 - Sources: npm trending, GitHub trending, Hacker News
 - Focus: Node.js ecosystem, AI/ML tooling, DevOps utilities
-- Max daily queries: **fib(7) = 13** via HeadyPerplexity (Sonar Pro)
+- Max daily queries: **fib(7) = 13** via Heady™Perplexity (Sonar Pro)
 
 ### 2. AI Research Papers
 
 - Sources: arxiv.org, Papers with Code, Semantic Scholar
 - Focus: Multi-agent systems, vector databases, LLM optimization, CSL-adjacent math
-- Max daily: **fib(5) = 5** deep research queries via HeadyResearch
+- Max daily: **fib(5) = 5** deep research queries via Heady™Research
 
 ### 3. Competitor Innovations
 

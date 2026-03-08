@@ -2,7 +2,7 @@
 
 /**
  * HeadyChain HTTP Server
- * Express + helmet + cors + compression, compatible with existing Heady architecture.
+ * Express + helmet + cors + compression, compatible with existing Heady™ architecture.
  */
 
 const express = require('express');

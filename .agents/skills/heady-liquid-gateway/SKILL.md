@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Liquid Gateway
+# Heady™ Liquid Gateway
 
 ## When to Use This Skill
 

@@ -25,5 +25,5 @@ Ask this notebook anything — how does Heady's vector memory work? What's the s
 
 ---
 
-*Built by HeadyConnection Inc. · Fort Collins, Colorado · © 2026*
-*Heady™ is a trademark of HeadyConnection Inc.*
+*Built by Heady™Connection Inc. · Fort Collins, Colorado · © 2026*
+*Heady™ is a trademark of Heady™Connection Inc.*

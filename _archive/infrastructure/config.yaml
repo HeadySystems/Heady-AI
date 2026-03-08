@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# HeadySystems — LiteLLM Routing Configuration
+# Heady™Systems — LiteLLM Routing Configuration
 # Primary: Colab Pro+ nodes via CF Tunnel
 # Fallback: Groq (fast, cheap) → OpenAI (reliable)
 # ═══════════════════════════════════════════════════════════════

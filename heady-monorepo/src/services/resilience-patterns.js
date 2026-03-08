@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Enterprise Resilience Patterns — Phase 4 System Resilience
  *

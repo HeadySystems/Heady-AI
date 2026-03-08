@@ -14,9 +14,9 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
-# HeadyConnection VM Configuration
+# Heady™Connection VM Configuration
 # VMware VM running Parrot OS 7 Security
-# Fully managed by Heady Systems
+# Fully managed by Heady™ Systems
 
 vm:
   name: "HeadyConnection"
@@ -52,12 +52,12 @@ packages:
     enabled: true
     compose: true
 
-# Heady Services Configuration
+# Heady™ Services Configuration
 services:
   heady-manager:
     enabled: true
     port: 3300
-    repo: "https://github.com/HeadySystems/Heady.git"
+    repo: "https://github.com/HeadyMe/Heady.git"
     path: "/home/heady/Heady"
     startup: true
     
@@ -74,38 +74,38 @@ services:
     
   python-worker:
     enabled: true
-    repo: "https://github.com/HeadySystems/Heady.git"
+    repo: "https://github.com/HeadyMe/Heady.git"
     path: "/home/heady/Heady/python_worker"
     
   mcp-server:
     enabled: true
     port: 3001
-    repo: "https://github.com/HeadySystems/Heady.git"
+    repo: "https://github.com/HeadyMe/Heady.git"
     path: "/home/heady/Heady/mcp-servers"
 
 # Repository Configuration
 repositories:
   primary:
-    name: "Heady"
-    url: "https://github.com/HeadySystems/Heady.git"
+    name: "Heady™"
+    url: "https://github.com/HeadyMe/Heady.git"
     branch: "main"
     path: "/home/heady/Heady"
     
   connection:
     name: "HeadyConnection"
-    url: "https://github.com/HeadySystems/HeadyConnection.git"
+    url: "https://github.com/HeadyMe/HeadyConnection.git"
     branch: "main"
     path: "/home/heady/HeadyConnection"
     
   me:
     name: "HeadyMe"
-    url: "https://github.com/HeadySystems/HeadyMe.git"
+    url: "https://github.com/HeadyMe/HeadyMe.git"
     branch: "main"
     path: "/home/heady/HeadyMe"
     
   sandbox:
     name: "sandbox"
-    url: "https://github.com/HeadySystems/sandbox.git"
+    url: "https://github.com/HeadyMe/sandbox.git"
     branch: "main"
     path: "/home/heady/sandbox"
 

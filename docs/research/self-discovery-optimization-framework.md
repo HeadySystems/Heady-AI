@@ -2,8 +2,8 @@
 
 > **Source:** Gemini conversation export (Eric Haywood)
 > **Date:** Pre-2026 research
-> **Status:** Reference / Foundational Theory for Heady Buddy EOD Protocol
-> **Relevance:** Core IP — underpins the Heady self-optimization and directed-energy features
+> **Status:** Reference / Foundational Theory for Heady™ Buddy EOD Protocol
+> **Relevance:** Core IP — underpins the Heady™ self-optimization and directed-energy features
 
 ---
 

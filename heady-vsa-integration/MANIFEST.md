@@ -1,4 +1,4 @@
-# Heady VSA Integration - Installation Manifest
+# Heady™ VSA Integration - Installation Manifest
 
 ## Package Contents
 
@@ -155,6 +155,6 @@ Future enhancements:
 
 ---
 
-**Built with research-backed VSA technology for Heady's continuous semantic logic.**
+**Built with research-backed VSA technology for Heady™'s continuous semantic logic.**
 
 Generated: 2026-03-07

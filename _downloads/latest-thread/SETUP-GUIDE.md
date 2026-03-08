@@ -1,4 +1,4 @@
-# Heady Security Task Pack - Quick Setup
+# Heady™ Security Task Pack - Quick Setup
 
 ## What This Creates
 

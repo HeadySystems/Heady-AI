@@ -3,7 +3,7 @@
     "name": "HCFullPipeline",
     "version": "3.1.0",
     "description": "Heady™ AI Platform Full Pipeline — stage definitions, pool allocations, and execution config",
-    "copyright": "© 2024-2026 HeadySystems Inc. All Rights Reserved.",
+    "copyright": "© 2026-2026 HeadySystems Inc. All Rights Reserved.",
     "updatedAt": "2025-01-01T00:00:00Z"
   },
 
@@ -11,8 +11,8 @@
     "id": "hcfullpipeline",
     "displayName": "HCFullPipeline",
     "mode": "sequential_with_parallel_stages",
-    "maxDuration": 300000,
-    "defaultTimeout": 30000,
+    "maxDuration": 290340,
+    "defaultTimeout": 29034,
     "retryPolicy": {
       "maxRetries": 3,
       "backoffMs": 1000,
@@ -258,7 +258,7 @@
       "byStage": {
         "stage_intake":      2000,
         "stage_routing":     3000,
-        "stage_execution":   30000,
+        "stage_execution":   29034,
         "stage_evaluation":  10000,
         "stage_learning":    5000
       }
@@ -291,8 +291,8 @@
   },
 
   "timeouts": {
-    "total_pipeline": 300000,
-    "per_stage_default": 30000,
+    "total_pipeline": 290340,
+    "per_stage_default": 29034,
     "per_step_default": 15000,
     "llm_call": 60000,
     "embedding": 10000,

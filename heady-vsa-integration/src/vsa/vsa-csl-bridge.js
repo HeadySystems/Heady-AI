@@ -1,5 +1,5 @@
 /**
- * @fileoverview VSA-CSL Integration Bridge for Heady
+ * @fileoverview VSA-CSL Integration Bridge for Heady™
  * @description Bridges Vector Symbolic Architectures with Continuous Semantic Logic
  * @version 1.0.0
  */

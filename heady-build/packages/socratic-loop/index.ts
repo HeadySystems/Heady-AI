@@ -1,10 +1,10 @@
 /**
  * @file socratic-loop/index.ts
- * @package @heady/socratic-loop
+ * @package @heady-ai/socratic-loop
  * @version 1.0.0
  *
  * SocraticLoop — validates reasoning BEFORE code projection in the
- * Heady Liquid Latent OS.
+ * Heady™ Liquid Latent OS.
  *
  * The loop runs up to fib(5)=5 iterative refinement passes, each composed
  * of four Socratic checks:

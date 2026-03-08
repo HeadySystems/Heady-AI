@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * ═══ Latent Space Battle Builder ═══
  *
  * Generates all 9 model rebuild implementations IN MEMORY (latent space),
@@ -58,7 +58,7 @@ function buildClaude() {
     return {
         'package.json': JSON.stringify({
             name: 'heady-rebuild-claude', version: '1.0.0',
-            description: 'Heady rebuild by Claude Opus — architecture-first approach',
+            description: 'Heady™ rebuild by Claude Opus — architecture-first approach',
             main: 'src/heady-manager.js',
             scripts: { start: 'node src/heady-manager.js', dev: 'nodemon src/heady-manager.js', test: 'jest' },
             dependencies: { express: '^5.2.1', pg: '^8.18.0', cors: '^2.8.5', helmet: '^8.1.0', pino: '^9.0.0', dotenv: '^17.3.1', ioredis: '^5.4.0', uuid: '^11.1.0', jsonwebtoken: '^9.0.3' },
@@ -66,7 +66,7 @@ function buildClaude() {
         }, null, 2),
 
         'src/heady-manager.js': `/*
- * Heady Manager — Claude Opus Architecture
+ * Heady™ Manager — Claude Opus Architecture
  * PRINCIPLE: Dependency Injection + Clean Separation
  * Every service is a first-class citizen with explicit lifecycle.
  */
@@ -160,9 +160,9 @@ const DOMAIN_MAP = new Map([
     ['headysystems.com', 'systems-portal'], ['www.headysystems.com', 'systems-portal'],
     ['headyme.com', 'personal-hub'], ['www.headyme.com', 'personal-hub'],
     ['headyapi.com', 'api-docs'], ['headyio.com', 'io-platform'],
-    ['headytrader.com', 'trading-desk'], ['headymusic.com', 'music-studio'],
-    ['headyfoundation.org', 'foundation-portal'], ['headyconnection.org', 'connection-hub'],
-    ['myheady.ai', 'ai-assistant'], ['heady.headyme.com', 'edge-mcp'],
+    ['headyfinance.com', 'trading-desk'], ['headymusic.com', 'music-studio'],
+    ['headyconnection.org', 'foundation-portal'], ['headyconnection.org', 'connection-hub'],
+    ['myheady-ai.com', 'ai-assistant'], ['heady.headyme.com', 'edge-mcp'],
 ]);
 
 class DomainRouter {
@@ -293,13 +293,13 @@ const logger = pino({ level: process.env.LOG_LEVEL || 'info', name: 'heady' });
 module.exports = { info: (...a) => logger.info(...a), error: (...a) => logger.error(...a), warn: (...a) => logger.warn(...a) };
 `,
 
-        'Dockerfile': `FROM node:20-slim AS builder
+        'Dockerfile': `FROM node:22-slim AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --production
 COPY . .
 
-FROM node:20-slim
+FROM node:22-slim
 RUN groupadd -r heady && useradd -r -g heady heady
 WORKDIR /app
 COPY --from=builder /app .
@@ -398,10 +398,10 @@ export class FunctionRegistry {
 
         'src/functions/domain-router.js': `export const domainRouter = {
     name: 'resolve_domain',
-    description: 'Maps a hostname to a Heady UI module',
+    description: 'Maps a hostname to a Heady™ UI module',
     parameters: { type: 'object', properties: { hostname: { type: 'string' } }, required: ['hostname'] },
     execute({ hostname }) {
-        const map = { 'headymcp.com': 'mcp-dashboard', 'headysystems.com': 'systems-portal', 'headyme.com': 'personal-hub', 'headyapi.com': 'api-docs', 'headyio.com': 'io-platform', 'headytrader.com': 'trading-desk', 'headymusic.com': 'music-studio', 'headyfoundation.org': 'foundation-portal', 'myheady.ai': 'ai-assistant' };
+        const map = { 'headymcp.com': 'mcp-dashboard', 'headysystems.com': 'systems-portal', 'headyme.com': 'personal-hub', 'headyapi.com': 'api-docs', 'headyio.com': 'io-platform', 'headyfinance.com': 'trading-desk', 'headymusic.com': 'music-studio', 'headyconnection.org': 'foundation-portal', 'myheady-ai.com': 'ai-assistant' };
         return { module: map[hostname] || 'personal-hub', hostname };
     }
 };
@@ -544,7 +544,7 @@ module.exports = {
 };
 `,
 
-        'src/modules/domains.js': `const MAP = { 'headymcp.com': 'mcp', 'headysystems.com': 'systems', 'headyme.com': 'hub', 'headyapi.com': 'api', 'headyio.com': 'io', 'headytrader.com': 'trader', 'headymusic.com': 'music', 'headyfoundation.org': 'foundation', 'myheady.ai': 'ai' };
+        'src/modules/domains.js': `const MAP = { 'headymcp.com': 'mcp', 'headysystems.com': 'systems', 'headyme.com': 'hub', 'headyapi.com': 'api', 'headyio.com': 'io', 'headyfinance.com': 'trader', 'headymusic.com': 'music', 'headyconnection.org': 'foundation', 'myheady-ai.com': 'ai' };
 module.exports = { resolve: h => MAP[h] || 'hub', routes: app => { app.use((r, s, n) => { r.module = MAP[r.hostname] || 'hub'; n(); }); } };
 `,
 
@@ -564,7 +564,7 @@ function buildGroq() {
         'package.json': JSON.stringify({ name: 'heady-rebuild-groq', version: '1.0.0', scripts: { start: 'node index.js' }, dependencies: { express: '^5.2.1' } }, null, 2),
         'index.js': `/* Groq: SPEED FIRST — single file, zero dependencies beyond Express, sub-100ms boot */
 const app = require('express')();
-const D = { 'headymcp.com':'mcp','headysystems.com':'sys','headyme.com':'hub','headyapi.com':'api','headyio.com':'io','headytrader.com':'trade','headymusic.com':'music','headyfoundation.org':'fdn','myheady.ai':'ai' };
+const D = { 'headymcp.com':'mcp','headysystems.com':'sys','headyme.com':'hub','headyapi.com':'api','headyio.com':'io','headyfinance.com':'trade','headymusic.com':'music','headyconnection.org':'fdn','myheady-ai.com':'ai' };
 app.use(require('express').json());
 app.get('/health/live', (r,s) => s.json({ok:1,up:process.uptime()|0}));
 app.use((r,s,n) => { r.mod = D[r.hostname] || 'hub'; n(); });
@@ -594,7 +594,7 @@ app.listen(process.env.PORT || 3301);
 `,
         'src/routes/domains.js': `const { Router } = require('express');
 const router = Router();
-const DOMAINS = { 'headymcp.com':'mcp','headysystems.com':'systems','headyme.com':'hub','headyapi.com':'api','headyio.com':'io','headytrader.com':'trader','headymusic.com':'music','headyfoundation.org':'foundation','myheady.ai':'ai' };
+const DOMAINS = { 'headymcp.com':'mcp','headysystems.com':'systems','headyme.com':'hub','headyapi.com':'api','headyio.com':'io','headyfinance.com':'trader','headymusic.com':'music','headyconnection.org':'foundation','myheady-ai.com':'ai' };
 router.get('/resolve/:host', (r,s) => s.json({ module: DOMAINS[r.params.host] || 'hub' }));
 module.exports = { router };
 `,
@@ -626,7 +626,7 @@ app.use('/health', createHealthRoutes());
 app.listen(process.env.PORT || 3301);
 module.exports = app; // Export for testing
 `,
-        'src/middleware/domain.js': `const DOMAINS = new Map([['headymcp.com','mcp'],['headysystems.com','systems'],['headyme.com','hub'],['headyapi.com','api'],['headyio.com','io'],['headytrader.com','trader'],['headymusic.com','music'],['headyfoundation.org','foundation'],['myheady.ai','ai']]);
+        'src/middleware/domain.js': `const DOMAINS = new Map([['headymcp.com','mcp'],['headysystems.com','systems'],['headyme.com','hub'],['headyapi.com','api'],['headyio.com','io'],['headyfinance.com','trader'],['headymusic.com','music'],['headyconnection.org','foundation'],['myheady-ai.com','ai']]);
 function createDomainMiddleware() { return (req,res,next) => { req.headyModule = DOMAINS.get(req.hostname) || 'hub'; next(); }; }
 module.exports = { createDomainMiddleware, DOMAINS };
 `,

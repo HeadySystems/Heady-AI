@@ -227,7 +227,7 @@ export class HeadyHttpClient {
       } catch (err) {
         lastError = err;
 
-        // Transform axios errors to Heady errors
+        // Transform axios errors to Heady™ errors
         const headyErr = this.transformError(err);
 
         // Handle token expiry

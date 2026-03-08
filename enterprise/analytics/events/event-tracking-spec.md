@@ -1,4 +1,4 @@
-# HeadySystems — Product Analytics Event Specification
+# Heady™Systems — Product Analytics Event Specification
 
 **Version:** 1.0.0  
 **φ-revision:** 1.618  
@@ -9,7 +9,7 @@
 
 ## Overview
 
-This specification defines all product analytics events tracked by the HeadySystems platform. Events are emitted by frontend, backend, and agent subsystems, ingested via `POST /analytics/events`, batched (fib(12)=144), and forwarded to BigQuery/DuckDB.
+This specification defines all product analytics events tracked by the Heady™Systems platform. Events are emitted by frontend, backend, and agent subsystems, ingested via `POST /analytics/events`, batched (fib(12)=144), and forwarded to BigQuery/DuckDB.
 
 All events follow a common envelope schema with event-specific property payloads.
 

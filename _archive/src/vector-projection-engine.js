@@ -1,12 +1,12 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Vector Space Projection Engine ────────────────────────
+ * ─── Heady™ Vector Space Projection Engine ────────────────────────
  *
- * CORE PRINCIPLE: Everything in Heady operates in 3D vector space.
+ * CORE PRINCIPLE: Everything in Heady™ operates in 3D vector space.
  * External systems (GitHub, HF Spaces, Cloud Run, Cloudflare) are
  * PROJECTIONS from this space — outbound representations of the
  * system's internal state.
@@ -75,7 +75,7 @@ const PROJECTION_TARGETS = [
         id: 'hf-systems',
         name: 'HF Space — HeadySystems',
         type: 'frontend-projection',
-        url: 'https://huggingface.co/spaces/HeadySystems/heady-systems',
+        url: 'https://huggingface.co/spaces/HeadyMe/heady-systems',
         org: 'HeadySystems',
         repo: 'heady-systems',
         tier: 2,

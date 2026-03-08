@@ -9,7 +9,7 @@ export class HeadyCloudOrchestrator extends EventEmitter<[never]> {
     /** Start the orchestrator — spin up all worker nodes */
     start(): number | undefined;
     /**
-     * Run a full autonomous cycle — the Heady Intelligence Pipeline:
+     * Run a full autonomous cycle — the Heady™ Intelligence Pipeline:
      *
      *   Phase 1: RESEARCH — HeadyResearch gathers best practices, competitive intel, context
      *   Phase 2: DECOMPOSE — HeadyDecomp analyzes architecture, identifies improvement targets

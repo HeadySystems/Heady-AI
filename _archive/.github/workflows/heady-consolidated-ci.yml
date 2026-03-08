@@ -1,11 +1,11 @@
-# © 2026 Heady Systems LLC.
+# © 2026 Heady™Systems Inc.
 # GitHub Actions — Consolidated CI Pipeline
 # Tasks: enterprise-002, urgent-002, urgent-004, urgent-005, deepscan-006, MNT-002
 #
 # Replaces duplicate build workflows with a single parameterized pipeline.
 # Includes: lint, security scan, test, build, smoke test, deploy.
 
-name: Heady CI/CD Pipeline
+name: Heady™ CI/CD Pipeline
 
 on:
   push:

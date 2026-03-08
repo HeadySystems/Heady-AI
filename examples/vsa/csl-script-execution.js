@@ -8,7 +8,7 @@ const { VSASemanticGates, CSLInterpreter } = require('../src/vsa/vsa-csl-bridge'
 
 console.log('=== Heady CSL Script Execution Example ===\n');
 
-// Create Heady codebook
+// Create Heady™ codebook
 const codebook = VSACodebook.createHeadyCodebook(4096);
 console.log(`Loaded Heady codebook with ${codebook.concepts.size} concepts\n`);
 

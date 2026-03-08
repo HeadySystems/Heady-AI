@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Agent Orchestration
+# Heady™ Agent Orchestration
 
 ## When to Use This Skill
 

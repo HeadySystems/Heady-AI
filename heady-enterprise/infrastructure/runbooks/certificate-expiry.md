@@ -31,7 +31,7 @@ cert-manager auto-renews 30 days before expiry
 | heady.exchange | tls-heady-exchange | Let's Encrypt |
 | heady.investments | tls-heady-investments | Let's Encrypt |
 | headysystems.com | tls-headysystems-com | Let's Encrypt |
-| headyai.com | tls-headyai-com | Let's Encrypt |
+| heady-ai.com | tls-headyai-com | Let's Encrypt |
 | admin.headyme.com | tls-admin-headyme-com | Let's Encrypt |
 
 ---
@@ -121,7 +121,7 @@ echo | openssl s_client -connect headyme.com:443 -servername headyme.com 2>/dev/
   openssl x509 -noout -dates -subject
 
 # Check all 9 domains in parallel
-for domain in headyme.com headyconnection.com headyconnection.org headyos.com heady.exchange heady.investments headysystems.com headyai.com admin.headyme.com; do
+for domain in headyme.com headyconnection.com headyconnection.org headyos.com heady.exchange heady.investments headysystems.com heady-ai.com admin.headyme.com; do
   echo -n "$domain: "
   echo | timeout 5 openssl s_client -connect $domain:443 -servername $domain 2>/dev/null | \
     openssl x509 -noout -enddate 2>/dev/null || echo "UNREACHABLE"

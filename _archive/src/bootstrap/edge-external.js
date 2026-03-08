@@ -59,7 +59,7 @@ function registerEdgeAndExternalRoutes(app, deps = {}) {
         }
     }
 
-    // Heady Principles
+    // Heady™ Principles
     try {
         const hp = require('../heady-principles');
         app.get('/api/principles', (_req, res) => res.json({

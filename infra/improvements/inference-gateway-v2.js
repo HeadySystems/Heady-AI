@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. — Proprietary and Confidential.
+ * © 2026 Heady™Systems Inc. — Proprietary and Confidential.
  *
  * AI Inference Gateway v2 — Circuit breaking, provider racing, health-aware routing.
  *

@@ -1,7 +1,7 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * HeadySystems — Standalone Server
- * Projected from the Heady Latent OS
+ * Projected from the Heady™ Latent OS
  */
 const express = require('express');
 const app = express();

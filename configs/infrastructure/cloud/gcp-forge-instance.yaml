@@ -6,7 +6,7 @@ apiVersion: compute.googleapis.com/v1
 kind: InstanceTemplate
 metadata:
   name: heady-forge-a100
-  description: GPU instance for Heady model fine-tuning
+  description: GPU instance for Heady™ model fine-tuning
   labels:
     app: heady
     component: forge

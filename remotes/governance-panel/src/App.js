@@ -1,6 +1,6 @@
 /*
  * Governance Panel — Decentralized Governance Controls
- * Micro-frontend for HeadyWeb Universal Shell
+ * Micro-frontend for Heady™Web Universal Shell
  */
 const APP_CONFIG = {
   id: 'governance-panel',

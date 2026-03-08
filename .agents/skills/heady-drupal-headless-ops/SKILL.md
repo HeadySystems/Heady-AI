@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Drupal Headless Ops
+# Heady™ Drupal Headless Ops
 
 ## When to Use This Skill
 

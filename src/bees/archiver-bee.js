@@ -3,7 +3,7 @@
 /**
  * ArchiverBee — Archive management, data retention, and backup lifecycle.
  * φ-compliant: all sizing, timing, and thresholds derived from golden ratio / Fibonacci.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;   // golden ratio

@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module connection-draining
- * @description Graceful shutdown and connection draining for HeadySystems services
+ * @description Graceful shutdown and connection draining for Heady™Systems services
  *
  * SIGTERM handler with fib(8)=21 second grace period.
  * LIFO cleanup order:

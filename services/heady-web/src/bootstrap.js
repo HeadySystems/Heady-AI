@@ -9,7 +9,7 @@
  *  2. Auto-mounts if a #heady-root container exists in the DOM
  *  3. Exposes the mount/unmount API on window.__heady_app__ for host shells
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module bootstrap
  */

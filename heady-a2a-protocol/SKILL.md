@@ -1,12 +1,12 @@
 ---
 name: heady-a2a-protocol
-description: Use when implementing Agent-to-Agent (A2A) or Agent-to-UI (A2UI) communication protocols, inter-agent messaging, agent handoffs, or UI integration patterns in the Heady ecosystem. Keywords include A2A, A2UI, agent protocol, inter-agent, messaging, handoff, agent communication, protocol, and agent-to-agent.
+description: Use when implementing Agent-to-Agent (A2A) or Agent-to-UI (A2UI) communication protocols, inter-agent messaging, agent handoffs, or UI integration patterns in the Heady™ ecosystem. Keywords include A2A, A2UI, agent protocol, inter-agent, messaging, handoff, agent communication, protocol, and agent-to-agent.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady A2A & A2UI Protocols
+# Heady™ A2A & A2UI Protocols
 
 ## When to Use This Skill
 
@@ -27,7 +27,7 @@ Use this skill when the user needs to:
 ## Instructions
 
 ### A2A Protocol (Agent-to-Agent)
-1. Messages use JSON-RPC 2.0 format with Heady extensions.
+1. Messages use JSON-RPC 2.0 format with Heady™ extensions.
 2. Each agent has a unique agent_id and capability manifest.
 3. Discovery: Agents register capabilities in the agent registry.
 4. Routing: Messages route through the Conductor based on capability matching.

@@ -100,7 +100,7 @@
         "",
         "> [!CAUTION]",
         "> This is an automated export from Google Gemini. Content may describe external",
-        "> entities not affiliated with HeadySystems Inc. Review before integrating.",
+        "> entities not affiliated with Heady™Systems Inc. Review before integrating.",
         "",
         "---",
         "",

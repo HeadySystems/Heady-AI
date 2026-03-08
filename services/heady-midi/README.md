@@ -1,4 +1,4 @@
-# HeadyMIDI — MIDI Transfer Schema for the Heady Latent OS
+# Heady™MIDI — MIDI Transfer Schema for the Heady™ Latent OS
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/license-Proprietary-red)
@@ -9,7 +9,7 @@
 
 ## What Is This?
 
-HeadyMIDI is a **MIDI transfer schema** that turns the MIDI protocol into a universal sub-millisecond event bus for the Heady Latent OS. Instead of just carrying music, MIDI carries **system events, metrics, task lifecycle signals, and AI orchestration commands** — all at sub-ms latency with zero HTTP in the hot path.
+HeadyMIDI is a **MIDI transfer schema** that turns the MIDI protocol into a universal sub-millisecond event bus for the Heady™ Latent OS. Instead of just carrying music, MIDI carries **system events, metrics, task lifecycle signals, and AI orchestration commands** — all at sub-ms latency with zero HTTP in the hot path.
 
 Every constant in the system derives from **φ ≈ 1.618** or the **Fibonacci sequence**. No magic numbers. Sacred geometry from the ground up.
 
@@ -108,7 +108,7 @@ HeadyMIDI/
 
 ```bash
 # Clone the repository
-git clone https://github.com/HeadySystems/HeadyMIDI.git
+git clone https://github.com/HeadyMe/HeadyMIDI.git
 cd HeadyMIDI
 
 # No install needed for core — zero external dependencies
@@ -252,4 +252,4 @@ Proprietary — HeadySystems™ & HeadyConnection™. All rights reserved.
 
 ---
 
-> ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™ — Sacred Geometry :: Organic Systems :: Breathing Interfaces
+> ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™ — Sacred Geometry :: Organic Systems :: Breathing Interfaces

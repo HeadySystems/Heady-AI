@@ -1,5 +1,5 @@
 # Data Protection Impact Assessment (DPIA)
-## HeadyMe Platform — AI Processing Activities
+## Heady™Me Platform — AI Processing Activities
 
 **Template Version:** 1.0  
 **Regulation Reference:** GDPR Art. 35 — Data Protection Impact Assessment  

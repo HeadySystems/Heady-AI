@@ -1,5 +1,5 @@
 /**
- * Heady Connection Pool — Bounded concurrent request management
+ * Heady™ Connection Pool — Bounded concurrent request management
  * Prevents thundering herds and enforces max concurrency per target.
  * Addresses registry bestPracticeScores.pooling = 0.
  */

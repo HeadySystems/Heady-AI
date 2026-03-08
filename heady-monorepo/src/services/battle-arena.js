@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Battle Arena — 10-Model Full Project Rebuild ═══
  *
- * Dispatches the complete Heady project specification to 10 AI models,
+ * Dispatches the complete Heady™ project specification to 10 AI models,
  * each rebuilding the entire system from scratch in separate repos.
  * Monitors progress, compares results, and integrates improvements.
  *
@@ -17,7 +17,7 @@
  *   6. Codex        (OpenAI Coding Agent)   — Code-specialized agent
  *   7. HeadyResearch (Perplexity Sonar)    — Research + real-time web
  *   8. HFModels     (HuggingFace)          — Open-source models
- *   9. HeadyCoder   (Heady's own engine)   — Multi-model code gen
+ *   9. HeadyCoder   (Heady™'s own engine)   — Multi-model code gen
  *  10. HeadyBuddy   (Synthesizer/Judge)    — Evaluates + integrates best parts
  */
 
@@ -174,7 +174,7 @@ function generateBlueprint() {
             name: 'Heady™ Latent Operating System',
             vision: 'A 46-year autonomous AI operating system that stores executable potential as AST nodes in pgvector, materializes code on-demand, and operates as a self-healing multi-swarm civilization.',
             architecture: 'Zero-Repo Liquid Architecture — code only exists during compilation. 18 swarms, 31+ bees, 742 aspirational tasks.',
-            domains: ['headymcp.com', 'headyapi.com', 'headyio.com', 'headyme.com', 'headytrader.com', 'headymusic.com', 'headyfoundation.org', 'headysystems.com', 'myheady.ai'],
+            domains: ['headymcp.com', 'headyapi.com', 'headyio.com', 'headyme.com', 'headyfinance.com', 'headymusic.com', 'headyconnection.org', 'headysystems.com', 'myheady-ai.com'],
         },
 
         // ── Core Architecture Requirements ─────────────────────────
@@ -227,7 +227,7 @@ function generateBlueprint() {
             compute: 'Google Cloud Run (heady-manager service)',
             gpu: 'Google Colab Pro+ (ML training, batch inference)',
             cicd: 'GitHub Actions (5-phase: security → validate → Cloud Run → HF → Edge)',
-            containerization: 'Docker multi-stage (node:20-slim)',
+            containerization: 'Docker multi-stage (node:22-slim)',
             ai: 'Multi-model: Claude, GPT-5.4, Gemini, Groq, Perplexity, HuggingFace',
             protocols: 'MCP (Model Context Protocol) for tool exposure',
         },

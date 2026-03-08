@@ -1,12 +1,12 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
  * ═══ HeadyBuddy Companion Protocol Routes ═══
  * Phase 4: HeadyBuddy Silversertile Orchestrator API
  *
- * Implements the operational directives from the HeadyBuddy architectural analysis:
+ * Implements the operational directives from the Heady™Buddy architectural analysis:
  *   - Directive 1: Omnipresent Contextual Awareness
  *   - Directive 2: Instant App Generation Protocol (Card-Based UI)
  *   - Directive 3: Zero-Trust Auto-Sanitization

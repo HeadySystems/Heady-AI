@@ -1,6 +1,6 @@
 /**
- * Heady Latent OS — Feature Gate Module
- * HeadySystems, Inc.
+ * Heady™ Latent OS — Feature Gate Module
+ * HeadySystems Inc.
  *
  * Production-grade feature gating and access control:
  *  - Per-plan feature definitions (community → enterprise)
@@ -151,7 +151,7 @@ const FEATURE_DEFINITIONS = {
   },
   'mcp.tool_marketplace': {
     plans: ['team', 'enterprise'],
-    description: 'Access to Heady tool marketplace',
+    description: 'Access to Heady™ tool marketplace',
     ga: false, category: 'mcp',
   },
 
@@ -335,7 +335,7 @@ const EXPERIMENTS = {
 // ── FeatureGate Class ─────────────────────────────────────────────────────────
 
 /**
- * FeatureGate provides fine-grained access control for all Heady features.
+ * FeatureGate provides fine-grained access control for all Heady™ features.
  *
  * @example
  * const gate = new FeatureGate({ redis, db });

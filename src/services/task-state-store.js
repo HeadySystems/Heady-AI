@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * TaskStateStore — Persistent task state using vector memory.

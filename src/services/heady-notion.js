@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady → Notion Sync Service
+ * Heady™ → Notion Sync Service
  * Creates and maintains 3 synced notebooks + Knowledge Vault in Notion.
  * 
  * Notebooks:
@@ -15,6 +15,7 @@
  */
 
 const fs = require("fs");
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require("path");
 const https = require("https");
 const logger = require("../utils/logger");
@@ -39,7 +40,7 @@ function notionRequest(method, endpoint, body) {
                 "Content-Type": "application/json",
                 ...(payload ? { "Content-Length": Buffer.byteLength(payload) } : {}),
             },
-            timeout: 30000,
+            timeout: PHI_TIMING.CYCLE,
         };
 
         const req = https.request(options, (res) => {
@@ -206,7 +207,7 @@ function generateStatusContent() {
         }
     } catch { }
 
-    return `# Heady System Status & Updates
+    return `# Heady™ System Status & Updates
 > Last synced: ${ts}
 > Rolling window: 2 days
 
@@ -220,7 +221,7 @@ function generateStatusContent() {
 - **Memory Receipts**: ${memReceipts.total} total, ${memReceipts.fallback} using fallback
 
 ## Active Components
-- Heady Manager v3.0.0 — RUNNING (port 3301)
+- Heady™ Manager v3.0.0 — RUNNING (port 3301)
 - HeadyBrain — ACTIVE (chat, analyze, embed, search)
 - HeadySoul — ACTIVE (analyze, optimize)
 - HeadyBattle Engine — ACTIVE (validation)
@@ -328,7 +329,7 @@ GET  /api/brain/memory-receipts — View memory storage receipts
 
 ### Buddy Endpoints
 \`\`\`
-POST /api/buddy/chat         — Chat with HeadyBuddy
+POST /api/buddy/chat         — Chat with Heady™Buddy
 GET  /api/buddy/suggestions  — Get contextual suggestions
 GET  /api/buddy/orchestrator — System overview data
 POST /api/buddy/pipeline/continuous — Start/stop pipeline
@@ -354,10 +355,10 @@ POST /api/connectivity/scan     — Scan all services
 
 ## Quickstart — Non-Technical
 
-### Getting Started with Heady
+### Getting Started with Heady™
 1. Open your IDE (HeadyAI-IDE/VS Code)
 2. Type "heady" followed by any request in natural language
-3. All requests prefixed with "heady" are routed through Heady Brain
+3. All requests prefixed with "heady" are routed through Heady™ Brain
 4. Ask "heady help" for available commands
 
 ### Common Tasks
@@ -413,7 +414,7 @@ async function syncToNotion() {
     const results = { created: [], updated: [], errors: [] };
 
     try {
-        // Create or find the root "Heady Knowledge Vault" page
+        // Create or find the root "Heady™ Knowledge Vault" page
         let vaultId = state.pages.vault;
 
         if (!vaultId) {
@@ -421,7 +422,7 @@ async function syncToNotion() {
             const vault = await createPage(null, "🧠 Heady Knowledge Vault", "🧠", [
                 {
                     object: "block", type: "callout", callout: {
-                        rich_text: [{ type: "text", text: { content: "Central knowledge hub for the Heady Project. Auto-synced from the Heady system." } }],
+                        rich_text: [{ type: "text", text: { content: "Central knowledge hub for the Heady™ Project. Auto-synced from the Heady™ system." } }],
                         icon: { emoji: "🧠" },
                     }
                 },
@@ -483,7 +484,7 @@ async function syncToNotion() {
             {
                 key: "history", title: "📜 Project History & Timeline", icon: "📜", content: [
                     "# Project History & Timeline",
-                    "## Origins", "The Heady Project began as a vision for a self-sustaining AI ecosystem — a 'digital nervous system' that builds, deploys, and learns autonomously.",
+                    "## Origins", "The Heady™ Project began as a vision for a self-sustaining AI ecosystem — a 'digital nervous system' that builds, deploys, and learns autonomously.",
                     "## Key Milestones",
                     "- MCP Protocol integration (30 tools)",
                     "- HeadyBattle competitive validation engine",

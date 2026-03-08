@@ -1,13 +1,13 @@
 /**
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ═══ Heady Exponential Backoff — φ-Scaled Resilience ═══
+ * ═══ Heady™ Exponential Backoff — φ-Scaled Resilience ═══
  *
  * Unlike traditional base-2 exponential backoff (1s, 2s, 4s, 8s...),
- * Heady uses the Golden Ratio (φ = 1.618...) for delay scaling.
+ * Heady™ uses the Golden Ratio (φ = 1.618...) for delay scaling.
  */
 
 const PHI = 1.6180339887;

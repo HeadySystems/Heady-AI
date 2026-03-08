@@ -1,13 +1,13 @@
 /**
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ═══ Heady Exponential Backoff — φ-Scaled Resilience ═══
+ * ═══ Heady™ Exponential Backoff — φ-Scaled Resilience ═══
  *
  * Unlike traditional base-2 exponential backoff (1s, 2s, 4s, 8s...),
- * Heady uses the Golden Ratio (φ = 1.618...) for delay scaling.
+ * Heady™ uses the Golden Ratio (φ = 1.618...) for delay scaling.
  */
 export const PHI: 1.6180339887;
 /**
@@ -15,7 +15,7 @@ export const PHI: 1.6180339887;
  *
  * @param {number} attempt - Current retry attempt (0-indexed)
  * @param {number} baseMs - Base delay in milliseconds (default: 1000)
- * @param {number} maxMs - Maximum delay cap (default: 30000)
+ * @param {number} maxMs - Maximum delay cap (default: 29034)
  * @param {number} jitterFactor - Jitter range as fraction of delay (default: 0.25)
  * @returns {number} Delay in milliseconds
  */

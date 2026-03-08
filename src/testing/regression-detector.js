@@ -6,7 +6,7 @@
  * compares current results against that baseline, uses PhiDecay to
  * weight older baselines less, and exits with code 1 on regressions.
  *
- * Part of the Heady Auto-Testing Framework (Part C4)
+ * Part of the Heady™ Auto-Testing Framework (Part C4)
  */
 
 const fs   = require('fs');

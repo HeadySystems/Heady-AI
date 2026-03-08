@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Documentation Bee — Auto-generates and validates documentation
  * across README, API docs, architecture diagrams, and changelogs.
  */

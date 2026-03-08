@@ -1,5 +1,5 @@
 /**
- * Heady Admin Dashboard — Dynamic data loading
+ * Heady™ Admin Dashboard — Dynamic data loading
  */
 (function () {
     'use strict';

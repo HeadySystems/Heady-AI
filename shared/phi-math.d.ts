@@ -1,10 +1,10 @@
 /**
  * Heady™ Phi-Math Foundation — Sacred Geometry Constants & Utilities
- * The single source of truth for ALL scaling constants across the Heady ecosystem.
+ * The single source of truth for ALL scaling constants across the Heady™ ecosystem.
  *
  * NO MAGIC NUMBERS. Every constant derives from φ (golden ratio) or Fibonacci.
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 export declare const PHI = 1.618033988749895;
 export declare const PSI = 0.6180339887498949;

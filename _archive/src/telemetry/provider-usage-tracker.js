@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -16,7 +16,7 @@
  * Persists to JSONL for durability. Aggregates on-demand for dashboards.
  * Emits budget alerts at configurable thresholds.
  *
- * Heady AI Nodes: OBSERVER, SENTINEL, CONDUCTOR
+ * Heady™ AI Nodes: OBSERVER, SENTINEL, CONDUCTOR
  */
 
 const fs = require("fs");

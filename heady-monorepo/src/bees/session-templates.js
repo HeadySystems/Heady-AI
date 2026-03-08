@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Session Bee Templates ═══
  * 
@@ -227,7 +227,7 @@ const gcloudAuthAutomator = createBee('gcloud-auth-automator', {
                         execSync(`gcloud iam service-accounts describe ${saEmail} --project=${project} 2>/dev/null`, { encoding: 'utf8' });
                         logger.info(`gcloud-auth-automator: SA ${saEmail} already exists`);
                     } catch {
-                        execSync(`gcloud iam service-accounts create ${saName} --display-name="Heady Auto Deployer" --project=${project} --quiet`, { encoding: 'utf8' });
+                        execSync(`gcloud iam service-accounts create ${saName} --display-name="Heady™ Auto Deployer" --project=${project} --quiet`, { encoding: 'utf8' });
                     }
 
                     execSync(`gcloud projects add-iam-policy-binding ${project} --member="serviceAccount:${saEmail}" --role="roles/run.admin" --quiet 2>/dev/null`, { encoding: 'utf8' });

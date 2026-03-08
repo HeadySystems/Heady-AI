@@ -1,6 +1,6 @@
 # Heady™ Architecture, Design Patterns & Security Philosophy
 
-> © 2026 HeadySystems Inc.. All Rights Reserved.
+> © 2026 Heady™Systems Inc.. All Rights Reserved.
 
 ## Six-Layer Architecture Stack
 

@@ -1,5 +1,5 @@
 # Projection Upgrade Memo
-**Heady Systems LLC — Internal Engineering**
+**HeadySystems Inc — Internal Engineering**
 **Author:** eric@headyconnection.org
 **Date:** March 7, 2026
 **Scope:** Thin projected core repos → autonomous, production-grade services
@@ -316,7 +316,7 @@ Once the pipeline is running and each shell has Tier 0 scaffolding, promote each
 1. Personal dashboard routes (`GET /dashboard`, `GET /user/:id/context`)
 2. Vector memory CRUD via pgvector (`src/services/neon-db.js`)
 3. Cross-vertical sync endpoint (forwards context updates to other services via headyapi-core)
-4. Auth integration with HeadyAPI gateway
+4. Auth integration with Heady™API gateway
 
 **Remove `projected: true` when:** A user can authenticate, store a memory entry, and retrieve it across sessions.
 
@@ -327,8 +327,8 @@ Once the pipeline is running and each shell has Tier 0 scaffolding, promote each
 **Source:** `src/buddy/` + `src/agents/heady-buddy-agent.js`, `src/services/buddy-chat-contract.js`
 
 **What to implement:**
-1. Chat endpoint (`POST /v1/chat`) backed by `llm-router.js` via HeadyMCP
-2. Persistent memory integration (read/write via HeadyOS vector layer)
+1. Chat endpoint (`POST /v1/chat`) backed by `llm-router.js` via Heady™MCP
+2. Persistent memory integration (read/write via Heady™OS vector layer)
 3. Personality engine — system prompt management per user
 4. Creative suite endpoints (delegate image/music generation to HeadyMCP tools)
 
@@ -421,4 +421,4 @@ Before a vertical repo removes `"projected": true` from its `/health` response, 
 
 ---
 
-*This memo is based on direct inspection of all 9 thin projection repo file trees, the `repo_summary.json` and `repo_issues.csv` from the improvement package, the `Heady-pre-production-9f2f0642` monorepo architecture (`heady-manager.js`, `liquid-deploy.yml`, `autonomous-engine.js`, `heady-registry.json`, `src/services/`, `src/bees/`, `src/autonomy/`), and the Heady platform registry v3.0.1 (codename: Aether).*
+*This memo is based on direct inspection of all 9 thin projection repo file trees, the `repo_summary.json` and `repo_issues.csv` from the improvement package, the `Heady-pre-production-9f2f0642` monorepo architecture (`heady-manager.js`, `liquid-deploy.yml`, `autonomous-engine.js`, `heady-registry.json`, `src/services/`, `src/bees/`, `src/autonomy/`), and the Heady™ platform registry v3.0.1 (codename: Aether).*

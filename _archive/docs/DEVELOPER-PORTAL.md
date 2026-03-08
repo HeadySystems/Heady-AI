@@ -1,6 +1,6 @@
-# Heady Systems — Developer Portal
+# Heady™ Systems — Developer Portal
 
-> **Version**: 3.0.0-rc4 | **License**: UNLICENSED (Proprietary) | **Owner**: Heady Systems LLC
+> **Version**: 3.0.0-rc4 | **License**: UNLICENSED (Proprietary) | **Owner**: HeadySystems Inc
 
 ---
 
@@ -79,7 +79,7 @@ Boot Sequence:
 | `docs/` | Architecture docs, API specs, IP/patent strategy |
 | `sites/` | React apps (HeadyOS) |
 | `heady-buddy/` | Chrome/Kiwi browser extension |
-| `heady-hive-sdk/` | Official SDK for Heady AI services |
+| `heady-hive-sdk/` | Official SDK for Heady™ AI services |
 | `heady-ide-ui/` | VS Code-style IDE interface |
 | `midi_bridge/` | Python MIDI ↔ Heady bridge |
 | `oracle_service/` | Python oracle/prediction service |
@@ -110,7 +110,7 @@ Boot Sequence:
 | `/api/buddy-chat/request` | POST | Build 3D workspace chat request |
 | `/api/buddy-chat/workspace` | POST | Generate user-scoped workspace ID |
 
-### HeadyBee Templates
+### Heady™Bee Templates
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|

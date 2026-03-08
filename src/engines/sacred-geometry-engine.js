@@ -1,6 +1,6 @@
 /**
  * @file sacred-geometry-engine.js
- * @description The Sacred Geometry orchestration engine for Heady Latent OS.
+ * @description The Sacred Geometry orchestration engine for Heady™ Latent OS.
  *   Governs node placement, ring topology, coherence scoring, phi-scaling
  *   enforcement, Fibonacci resource allocation, and UI/typography spacing.
  *
@@ -41,7 +41,7 @@ const RING_INDEX = Object.freeze({
 
 /**
  * Canonical node assignments per ring.
- * These map directly to Heady Latent OS service identifiers.
+ * These map directly to Heady™ Latent OS service identifiers.
  *
  * @type {Readonly<Record<string, string[]>>}
  */
@@ -199,7 +199,7 @@ class NodeRecord {
 
 /**
  * @class SacredGeometryEngine
- * @description Governs the sacred-geometric topology of the Heady Latent OS.
+ * @description Governs the sacred-geometric topology of the Heady™ Latent OS.
  *   Manages ring-based node placement, coherence computation, phi resource
  *   allocation, Fibonacci UI spacing, and phi-compliance auditing.
  *

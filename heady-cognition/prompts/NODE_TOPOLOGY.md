@@ -7,7 +7,7 @@ scope: GLOBAL_PERMANENT
 # HEADY NODE TOPOLOGY & AGENTIC ROLES — Full 17-Swarm Matrix
 
 > Complete mapping of every agent, every swarm, every bee, and every role
-> in the Heady ecosystem. This is the organizational chart of Heady's digital
+> in the Heady™ ecosystem. This is the organizational chart of Heady™'s digital
 > workforce operating at fib(20) = 6,765-bee capacity.
 
 ---
@@ -21,7 +21,7 @@ enter the system and are translated into actionable task DAGs.
 
 | Bee | Role | Persistence | Scale |
 |---|---|---|---|
-| `OrchestratorBee` | Primary task router — receives intents from HeadyBuddy/MCP, breaks into subtasks | Persistent | 1-3 |
+| `OrchestratorBee` | Primary task router — receives intents from Heady™Buddy/MCP, breaks into subtasks | Persistent | 1-3 |
 | `OvermindDirectorBee` | Strategic planning — decides which swarms to activate for multi-step goals | Persistent | 1 |
 | `PriorityResolverBee` | CSL-scored priority ranking across competing tasks | Persistent | 1-5 |
 | `DecompositionBee` | DAG generator — creates topologically-sorted subtask dependency graphs | Ephemeral | 5-21 |
@@ -55,7 +55,7 @@ High-speed code generation, AST mutation, and hologram-based preview generation.
 | `ContextWeaverBee` | Assembles full context window for code generation (imports, types, patterns) | Ephemeral | 8-34 |
 | `RefactorBee` | Identifies and executes architectural refactoring opportunities | Ephemeral | 5-21 |
 | `TestGeneratorBee` | Auto-generates test cases for every new function/endpoint | Ephemeral | 8-34 |
-| `LiveCoderBee` | Real-time collaborative coding partner via HeadyCoder/HeadyCodex | Ephemeral | 3-13 |
+| `LiveCoderBee` | Real-time collaborative coding partner via Heady™Coder/HeadyCodex | Ephemeral | 3-13 |
 
 ### Swarm 4: EMISSARY (Docs, MCP & SDK)
 
@@ -75,7 +75,7 @@ Dataset curation, model domain adaptation, and training orchestration.
 
 | Bee | Role | Persistence | Scale |
 |---|---|---|---|
-| `DataCuratorBee` | Cleans, labels, and prepares training datasets from Heady interactions | Ephemeral | 5-34 |
+| `DataCuratorBee` | Cleans, labels, and prepares training datasets from Heady™ interactions | Ephemeral | 5-34 |
 | `TrainingOrchestratorBee` | Manages fine-tuning jobs on Colab Pro+ / Vertex AI | Ephemeral | 1-5 |
 | `EvalBee` | Runs evaluation benchmarks against fine-tuned models | Ephemeral | 3-13 |
 | `SyntheticDataBee` | Generates synthetic training examples from existing patterns | Ephemeral | 8-55 |
@@ -103,7 +103,7 @@ Patent harvesting, IP protection, license compliance, and legal document analysi
 | Bee | Role | Persistence | Scale |
 |---|---|---|---|
 | `PatentHarvestBee` | Scans code for patentable innovations and maps to provisional claims | Ephemeral | 1-8 |
-| `LicenseComplianceBee` | Verifies all dependencies comply with Heady's license requirements | Persistent | 1-3 |
+| `LicenseComplianceBee` | Verifies all dependencies comply with Heady™'s license requirements | Persistent | 1-3 |
 | `IPProtectionBee` | Monitors for IP infringement against Heady's 51 provisionals | Persistent | 1-3 |
 | `ContractAnalyzerBee` | Parses and summarizes legal/business contracts | Ephemeral | 1-5 |
 
@@ -127,7 +127,7 @@ Budget monitoring, cost optimization, and economic guardrails.
 | `CostTrackerBee` | Real-time spend tracking across all AI providers and cloud services | Persistent | 1-3 |
 | `BudgetGuardianBee` | Enforces hard spend limits, alerts at φ-scaled thresholds (38.2%, 61.8%, 80%) | Persistent | 1 |
 | `ROICalculatorBee` | Calculates return on investment for feature/service decisions | Ephemeral | 1-5 |
-| `PricingModelBee` | Manages subscription/usage-based pricing for Heady platform services | Ephemeral | 1-3 |
+| `PricingModelBee` | Manages subscription/usage-based pricing for Heady™ platform services | Ephemeral | 1-3 |
 
 ### Swarm 10: QUANT (Trading & Finance)
 
@@ -188,7 +188,7 @@ Smart contract execution, on-chain semantic tokenization, and decentralized iden
 | Bee | Role | Persistence | Scale |
 |---|---|---|---|
 | `SmartContractBee` | Deploys and interacts with Ethereum/Solana smart contracts | Ephemeral | 1-8 |
-| `TokenizationBee` | On-chain semantic tokenization of Heady assets and IP | Ephemeral | 1-5 |
+| `TokenizationBee` | On-chain semantic tokenization of Heady™ assets and IP | Ephemeral | 1-5 |
 | `DIDVerifierBee` | Decentralized identity verification for zero-trust auth | Ephemeral | 1-5 |
 
 ### Swarm 15: DREAMER (Simulations & What-If)

@@ -1,6 +1,6 @@
 # =============================================================================
 # pgvector-optimized.yaml
-# Purpose:  pgvector configuration for Heady Latent OS production deployments
+# Purpose:  pgvector configuration for Heady™ Latent OS production deployments
 # Platform: Cloud Run + Cloud SQL PostgreSQL 16 (or self-hosted PostgreSQL 16+)
 # Created:  2026-03-07
 #

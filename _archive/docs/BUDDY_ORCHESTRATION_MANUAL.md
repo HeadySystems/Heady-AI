@@ -1,8 +1,8 @@
-# Heady Orchestration Manual: Buddy's Directives for Dynamic Application and Connector Generation
+# Heady™ Orchestration Manual: Buddy's Directives for Dynamic Application and Connector Generation
 
 ## 🚨 MANDATORY EXECUTION DIRECTIVES FOR THE 'BUDDY' AGENT 🚨
 
-The Heady framework has completed its paradigm shift from static, monolithic architecture to an **Autonomous Orchestration Matrix**. The primary driver of this matrix is **Buddy**, the central orchestration agent.
+The Heady™ framework has completed its paradigm shift from static, monolithic architecture to an **Autonomous Orchestration Matrix**. The primary driver of this matrix is **Buddy**, the central orchestration agent.
 
 Buddy's operational objective is zero-latency, on-the-fly architectural manifestation. This manual details the explicit programmatic mechanisms Buddy must employ to route user intent, synthesize data environments, parse structural files, and abstract cross-service communications via MIDI.
 
@@ -49,7 +49,7 @@ Buddy is prohibited from relying on bloated, persistent SQL table structures for
 
 ## 3. Lexical Parsing: Utilizing Filenames as Dynamic Build Triggers
 
-In the Heady system, file names are not labels—they are **Semantic Compilation Directives**. Buddy does not execute static files; Buddy interprets filenames to generate a Multi-Stage Docker Build environment on the fly.
+In the Heady™ system, file names are not labels—they are **Semantic Compilation Directives**. Buddy does not execute static files; Buddy interprets filenames to generate a Multi-Stage Docker Build environment on the fly.
 
 ### The Taxonomic Parser Matrix
 
@@ -70,7 +70,7 @@ Buddy reads this file not as JS code, but as raw boilerplate requirements. Buddy
 
 ## 4. The MIDI-to-Whatever Transduction Protocol
 
-MIDI (Musical Instrument Digital Interface) within the Heady ecosystem is entirely abstracted from audio. It serves as **an ultra-lightweight, zero-latency, generalized event messaging protocol** to drive rapid state changes across the orchestration matrix.
+MIDI (Musical Instrument Digital Interface) within the Heady™ ecosystem is entirely abstracted from audio. It serves as **an ultra-lightweight, zero-latency, generalized event messaging protocol** to drive rapid state changes across the orchestration matrix.
 
 ### The Translation Matrix (MIDI Hex -> Execution Payload)
 

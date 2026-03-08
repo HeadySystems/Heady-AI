@@ -1,5 +1,5 @@
 # Business Associate Agreement (BAA)
-## Heady Platform — HIPAA Compliance Template
+## Heady™ Platform — HIPAA Compliance Template
 
 **Version:** 2.0  
 **Effective Date:** [EFFECTIVE_DATE]  
@@ -349,4 +349,4 @@ Date: __________________________
 
 ---
 
-*This template was last reviewed by HeadyMe Legal on [REVIEW_DATE]. This template does not constitute legal advice. Consult qualified healthcare counsel before executing.*
+*This template was last reviewed by Heady™Me Legal on [REVIEW_DATE]. This template does not constitute legal advice. Consult qualified healthcare counsel before executing.*

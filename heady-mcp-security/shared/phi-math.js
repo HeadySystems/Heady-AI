@@ -1,5 +1,5 @@
 /**
- * Heady Phi-Math Foundation Module
+ * Heady™ Phi-Math Foundation Module
  * ================================
  * Replaces all magic numbers with phi-derived constants.
  * Golden ratio (φ ≈ 1.618), conjugate (ψ ≈ 0.618), Fibonacci sequences.

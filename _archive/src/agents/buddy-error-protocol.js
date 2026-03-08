@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -16,7 +16,7 @@
  * Every error is not a fault to patch — it is an opportunity to
  * permanently move the system toward deterministic state.
  *
- * Heady AI Nodes: BUDDY, SENTINEL, OBSERVER, CONDUCTOR
+ * Heady™ AI Nodes: BUDDY, SENTINEL, OBSERVER, CONDUCTOR
  */
 
 const fs = require("fs");

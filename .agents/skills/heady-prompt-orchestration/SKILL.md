@@ -3,7 +3,7 @@ name: heady-prompt-orchestration
 description: Use when orchestrating the 64-prompt catalogue, composing multi-prompt pipelines, and interpreting CSL gate decisions for deterministic AI execution.
 ---
 
-# Heady Prompt Orchestration Skill
+# Heady™ Prompt Orchestration Skill
 
 ## Overview
 

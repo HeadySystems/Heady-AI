@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * BUDDY DEVICE BRIDGE — Cross-Device Communication & Control
@@ -95,7 +95,7 @@ const PLATFORMS = {
         icon: "💻",
         controlMethods: {
             nativeAgent: {
-                label: "Heady Desktop Agent",
+                label: "Heady™ Desktop Agent",
                 description: "Native agent with full OS-level control (inspired by Claude Desktop/NanoClaw)",
                 capabilities: ["shell_exec", "file_system", "process_manage", "screen_capture",
                     "screen_control", "keyboard_input", "mouse_control", "clipboard",

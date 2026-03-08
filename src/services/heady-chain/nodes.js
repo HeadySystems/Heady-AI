@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyChain Built-in Node Types
  * Each node type defines how it executes within the DAG engine.
@@ -85,7 +86,7 @@ function setPath(obj, path, value) {
 /**
  * Minimal fetch for Node 20 (built-in fetch available, but also support http module).
  */
-async function httpPost(url, body, timeoutMs = 30000) {
+async function httpPost(url, body, timeoutMs = PHI_TIMING.CYCLE) {
   const parsed = new URL(url);
   const isHttps = parsed.protocol === 'https:';
   const lib = isHttps ? https : http;

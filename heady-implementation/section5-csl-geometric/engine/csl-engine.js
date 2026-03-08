@@ -1,7 +1,7 @@
 /**
  * @fileoverview CSL Engine — Continuous Semantic Logic
  *
- * Heady Latent OS — Section 5: CSL & Geometric AI
+ * Heady™ Latent OS — Section 5: CSL & Geometric AI
  *
  * Core innovation: vector geometry as logical gates operating in 384-dimensional
  * (or 1536-dimensional) embedding space. All logic is geometric: alignment,
@@ -20,7 +20,7 @@
  *
  * @module csl-engine
  * @version 1.0.0
- * @patent Heady Connection — 60+ provisional patents on CSL techniques
+ * @patent Heady™ Connection — 60+ provisional patents on CSL techniques
  */
 
 import { PHI, PSI, PHI_TEMPERATURE, CSL_THRESHOLDS, phiThreshold, EPSILON as PHI_EPSILON, adaptiveTemperature } from '../../shared/phi-math.js';

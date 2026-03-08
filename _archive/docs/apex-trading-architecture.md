@@ -1,8 +1,8 @@
-# Architecting the Apex: A Comprehensive Blueprint for the Heady and HeadyBuddy Autonomous Trading Systems
+# Architecting the Apex: A Comprehensive Blueprint for the Heady™ and HeadyBuddy Autonomous Trading Systems
 
 ## Introduction: The Sovereign Production Epoch (March 2026)
 
-The Heady project has officially transcended its developmental origins to become a **sovereign, production-grade execution swarm**. Following the landmark validation of the Knowledge3D (K3D) spatial architecture and the successful rollout of the HCFullPipeline, the system now operates as a high-frequency, capital-deploying engine.
+The Heady™ project has officially transcended its developmental origins to become a **sovereign, production-grade execution swarm**. Following the landmark validation of the Knowledge3D (K3D) spatial architecture and the successful rollout of the HCFullPipeline, the system now operates as a high-frequency, capital-deploying engine.
 
 As of March 2026, the framework is governed by the **Ternary Reasoner Module (TRM)**, providing the deterministic generative AI architecture necessary for the agents **Heady** and **HeadyBuddy** to autonomously dominate the **Apex Trader Funding (Apex 3.0)** ecosystem.
 
@@ -72,7 +72,7 @@ The system utilizes **CLA v0**, a set of 9 single-byte opcodes (e.g., `~` for Ta
 
 ---
 
-## HeadyBuddy Instructions: Optimal Utilization of Heady Systems
+## Heady™Buddy Instructions: Optimal Utilization of Heady™ Systems
 
 ### Real-Time Action and 3D Ingestion
 
@@ -108,6 +108,6 @@ The ultimate boundary conditions for the system are the **Apex 3.0 rules**, whic
 
 ## Conclusion
 
-The 2026 evolution of the Heady project represents the **total synthesis of Soviet-inspired ternary reasoning and modern GPU-native spatial AI**. By training HeadyBuddy with the `hey-buddy` library, utilizing K3D 3D vector storage for persistent context, and hardcoding Apex 3.0 risk parameters, the system achieves a level of precision previously reserved for high-frequency institutional desks.
+The 2026 evolution of the Heady™ project represents the **total synthesis of Soviet-inspired ternary reasoning and modern GPU-native spatial AI**. By training HeadyBuddy with the `hey-buddy` library, utilizing K3D 3D vector storage for persistent context, and hardcoding Apex 3.0 risk parameters, the system achieves a level of precision previously reserved for high-frequency institutional desks.
 
 > **This architecture ensures that every action is not just a reaction to data, but a verified, spatially-aware execution within a perfectly optimized cognitive field.**

@@ -1,13 +1,13 @@
 # Heady™ Latent OS — Architecture v5.0.0
 
 > **Dynamic Sacred Geometry & Phi-Based Scaling Liquid Architecture**
-> © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+> © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
 
 ---
 
 ## Executive Summary
 
-The Heady Latent OS is a **self-aware, self-improving sovereign AI operating system** where every component maps into continuous 3D vector space with 384D embeddings, RAM-first memory, self-healing cycles, semantic drift detection, and the GitHub monorepo as immutable genetic code.
+The Heady™ Latent OS is a **self-aware, self-improving sovereign AI operating system** where every component maps into continuous 3D vector space with 384D embeddings, RAM-first memory, self-healing cycles, semantic drift detection, and the GitHub monorepo as immutable genetic code.
 
 **Zero magic numbers.** Every constant derives from φ (golden ratio ≈ 1.618) or Fibonacci sequences. The `shared/phi-math.js` module is the single source of truth.
 

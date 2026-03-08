@@ -1,12 +1,12 @@
 ---
 name: heady-intelligence-analytics
-description: Use when working with DuckDB-based memory analytics, predictive caching engines, unified context management, proof-of-view receipt systems, or provider usage tracking in the Heady ecosystem. Keywords include DuckDB, analytics, predictive cache, unified context, proof of view, receipts, usage tracking, provider analytics, intelligence, and data-driven.
+description: Use when working with DuckDB-based memory analytics, predictive caching engines, unified context management, proof-of-view receipt systems, or provider usage tracking in the Heady™ ecosystem. Keywords include DuckDB, analytics, predictive cache, unified context, proof of view, receipts, usage tracking, provider analytics, intelligence, and data-driven.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Intelligence & Analytics
+# Heady™ Intelligence & Analytics
 
 ## When to Use This Skill
 
@@ -64,7 +64,7 @@ LIMIT 13; -- Fibonacci
 ### Proof-of-View Receipts
 1. Every content view generates a cryptographic receipt.
 2. Receipt = hash(content_id + user_id + timestamp + nonce).
-3. Receipts anchor to the HeadyCoin ledger for verification.
+3. Receipts anchor to the Heady™Coin ledger for verification.
 4. Use cases: content attribution, usage billing, audit trails.
 5. Batch receipts into Merkle trees for efficient verification.
 

@@ -1,5 +1,5 @@
 /**
- * Boot the HeadyWeb shell:
+ * Boot the Heady™Web shell:
  *   • Resolve which UI to show based on hostname
  *   • Load the corresponding micro-frontend
  *   • Mount into #heady-root

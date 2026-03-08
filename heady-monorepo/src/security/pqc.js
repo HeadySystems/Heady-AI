@@ -1,9 +1,9 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════════╗
  * ║  PROPRIETARY AND CONFIDENTIAL — HEADYSYSTEMS INC.                  ║
- * ║  Copyright © 2024-2026 HeadySystems Inc. All Rights Reserved.      ║
+ * ║  Copyright © 2026-2026 HeadySystems Inc. All Rights Reserved.      ║
  * ║                                                                     ║
- * ║  This file contains trade secrets of HeadySystems Inc.              ║
+ * ║  This file contains trade secrets of Heady™Systems Inc.              ║
  * ║  Unauthorized copying, distribution, or use is strictly prohibited  ║
  * ║  and may result in civil and criminal penalties.                    ║
  * ║                                                                     ║
@@ -11,7 +11,7 @@
  * ╚══════════════════════════════════════════════════════════════════════╝
  *
  * @module heady/security/pqc
- * @description Post-Quantum Cryptography (PQC) module for Heady AI
+ * @description Post-Quantum Cryptography (PQC) module for Heady™ AI
  *
  * Implements NIST-standardized PQC algorithms:
  *   - ML-KEM (Kyber)   → Key Encapsulation Mechanism (FIPS 203)
@@ -49,7 +49,7 @@ const PQC_CONFIG = {
     keyRotationIntervalMs: 86400000,   // 24 hours
 };
 
-// ─── Heady PQC Key Store ──────────────────────────────────────────────
+// ─── Heady™ PQC Key Store ──────────────────────────────────────────────
 class HeadyPQCKeyStore {
     constructor() {
         this._keys = new Map();
@@ -59,7 +59,7 @@ class HeadyPQCKeyStore {
 
     /**
      * Generate a hybrid key pair (PQC + classical)
-     * @param {string} serviceId - The Heady service identifier
+     * @param {string} serviceId - The Heady™ service identifier
      * @returns {Object} { publicKey, privateKey, algorithm, created, fingerprint }
      */
     generateHybridKeyPair(serviceId) {

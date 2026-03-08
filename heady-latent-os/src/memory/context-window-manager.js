@@ -13,7 +13,7 @@
  *
  * Context capsules enable inter-agent transfer with compression and filtering.
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

@@ -9,7 +9,7 @@ export function getWork(ctx?: {}): (() => Promise<{
     sacredGeometry: any;
 }>)[];
 /**
- * Generates a full branded page for a Heady domain.
+ * Generates a full branded page for a Heady™ domain.
  * This is the core template that every site uses.
  *
  * @param {string} hostname - The domain to render (e.g., 'headysystems.com')

@@ -1,6 +1,6 @@
 /**
  * HeadyMCP — MCP tool aggregator client
- * Connects to the Heady MCP server AND upstream MCP servers.
+ * Connects to the Heady™ MCP server AND upstream MCP servers.
  */
 class HeadyMCP {
     constructor(client) {
@@ -40,7 +40,7 @@ class HeadyMCP {
         });
     }
 
-    /** Research via HeadyPerplexity MCP tool */
+    /** Research via Heady™Perplexity MCP tool */
     async research(query, opts = {}) {
         return this._c.post("/api/mcp/call", {
             tool: "heady_perplexity_research",

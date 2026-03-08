@@ -1,5 +1,5 @@
 /**
- * Heady Colab Runtime — GPU Vector Store and Ngrok tunnel utilities
+ * Heady™ Colab Runtime — GPU Vector Store and Ngrok tunnel utilities
  * Provides GPU-accelerated 3D vector space operations.
  */
 'use strict';

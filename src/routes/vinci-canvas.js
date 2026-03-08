@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyVinci Creative Sandbox — Canvas Service
  *
- * Powers a creative sandbox where users design personalized Heady experiences.
+ * Powers a creative sandbox where users design personalized Heady™ experiences.
  * Integrates HeadyVinci (learning/prediction), HeadyBrain (intelligence),
  * and external creative models (Google, HeadyCompute, HeadyHub).
  *
@@ -56,14 +56,14 @@ const MODEL_CATALOG = {
         provider: "headycompute", name: "GPT-4o", type: "multimodal-intelligence",
         description: "Multimodal creative ideation and design critique",
         capabilities: ["design-critique", "layout-suggestion", "copy-generation", "color-theory"],
-        endpoint: "https://api.headycompute.com/v1/chat/completions",
+        endpoint: "https://api.headycloud.com/v1/chat/completions",
         status: "available",
     },
     "headycompute/dall-e-3": {
         provider: "headycompute", name: "DALL·E 3", type: "image-generation",
         description: "High-fidelity image generation with precise prompt following",
         capabilities: ["text-to-image", "concept-art", "logo-design", "illustration"],
-        endpoint: "https://api.headycompute.com/v1/images/generations",
+        endpoint: "https://api.headycloud.com/v1/images/generations",
         status: "available",
     },
 
@@ -97,24 +97,24 @@ const MODEL_CATALOG = {
         status: "available", license: "open-source",
     },
 
-    // Internal Heady Models
+    // Internal Heady™ Models
     "heady/vinci-v1": {
         provider: "heady", name: "HeadyVinci v1", type: "creative-learning",
-        description: "Heady's native learning and prediction engine for creative pattern recognition",
+        description: "Heady™'s native learning and prediction engine for creative pattern recognition",
         capabilities: ["learn-from-feedback", "predict-preferences", "pattern-matching"],
         endpoint: "/api/vinci/predict",
         status: "active",
     },
     "heady/brain": {
         provider: "heady", name: "HeadyBrain", type: "inference",
-        description: "Primary Heady intelligence for design decisions and system orchestration",
+        description: "Primary Heady™ intelligence for design decisions and system orchestration",
         capabilities: ["design-evaluation", "architecture-suggestion", "constraint-solving"],
         endpoint: "/api/brain/infer",
         status: "active",
     },
 };
 
-// ─── Heady Verticals (for domain personalization) ────────────────────
+// ─── Heady™ Verticals (for domain personalization) ────────────────────
 const HEADY_VERTICALS = {
     "headyme.com": { role: "Personal Cloud Hub", color: "#a855f7", features: ["Launcher Creator", "Personal Dashboard", "Cloud Connector"] },
     "headysystems.com": { role: "Infrastructure & Ops", color: "#3b82f6", features: ["API Gateway", "Status Monitoring", "Log Viewer"] },

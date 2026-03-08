@@ -41,7 +41,7 @@ Every action you take MUST be reproducible and auditable:
 | heady-ai | HuggingFace Spaces | headyme-heady-ai.hf.space | [DOWN/DEPRECATED] |
 | heady-demo | HuggingFace Spaces | headyme-heady-demo.hf.space | [DOWN/DEPRECATED] |
 
-**Cloudflare Zones:** headyme.com, headyconnection.org, heady-ai.org
+**Cloudflare Zones:** headyme.com, headyconnection.org, heady-ai.com
 
 ### Known Issues (2026-03-07)
 - HuggingFace Spaces unreachable (may be sleeping or deprecated)

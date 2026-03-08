@@ -312,7 +312,7 @@ const CODE_QUALITY = {
   },
 
   /**
-   * Verifies pattern compliance config (e.g. custom lint rules or Heady-specific guidelines).
+   * Verifies pattern compliance config (e.g. custom lint rules or Heady™-specific guidelines).
    * @returns {Promise<object>}
    */
   async patternCompliance() {

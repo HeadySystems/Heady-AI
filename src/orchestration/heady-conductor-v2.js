@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -31,6 +31,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const crypto = require('crypto');
 const logger = require('../utils/logger');
@@ -230,7 +231,7 @@ class HeadyConductor extends EventEmitter {
      * @param {object} payload  - Task payload
      * @param {object} [opts]
      * @param {string} [opts.priority]   - PRIORITY_MODES.STANDARD|ADMIN|SYSTEM
-     * @param {number} [opts.timeout]    - Execution timeout ms (default 30000)
+     * @param {number} [opts.timeout]    - Execution timeout ms (default PHI_TIMING.CYCLE)
      * @param {string} [opts.beeId]      - Explicit bee target (bypasses scoring)
      * @param {string[]} [opts.skills]   - Required skill tags for routing
      * @returns {Promise<DispatchResult>}
@@ -292,7 +293,7 @@ class HeadyConductor extends EventEmitter {
         this._dispatchLatency.record(startTime - dispatchStartTs);
 
         try {
-            const timeout = opts.timeout || (isAdmin ? ADMIN_TIMEOUT_MS : 30_000);
+            const timeout = opts.timeout || (isAdmin ? ADMIN_TIMEOUT_MS : PHI_TIMING.CYCLE);
             const result = await Promise.race([
                 this._executeBee(entry.bee, payload),
                 new Promise((_, reject) =>

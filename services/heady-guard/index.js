@@ -107,7 +107,7 @@ function _isFastPath(text) {
 // ── Core check function ───────────────────────────────────────────────────────
 
 /**
- * Check a payload through the HeadyGuard pipeline.
+ * Check a payload through the Heady™Guard pipeline.
  *
  * @param {object} payload
  * @param {string} payload.text       — input text to check
@@ -356,7 +356,7 @@ function middleware(opts = {}) {
         if (typeof onBlock === 'function') return onBlock(req, res, result);
         return res.status(400).json({
           error:       'content_blocked',
-          message:     result.block_message || 'Content blocked by HeadyGuard.',
+          message:     result.block_message || 'Content blocked by Heady™Guard.',
           risk_score:  result.risk_score,
           blocked_by:  result.blocked_by,
           request_id:  result.requestId,

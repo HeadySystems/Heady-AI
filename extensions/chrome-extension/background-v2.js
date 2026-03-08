@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Chrome Extension — Background Service Worker v2.0
+ * Heady™ Chrome Extension — Background Service Worker v2.0
  * Handles API relay, context menus, status monitoring, and badge indicators.
  */
 
@@ -48,22 +48,22 @@ async function checkHealth() {
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "heady-ask",
-        title: "🐝 Ask Heady",
+        title: "🐝 Ask Heady™",
         contexts: ["selection"],
     });
     chrome.contextMenus.create({
         id: "heady-explain",
-        title: "🧠 Explain with Heady",
+        title: "🧠 Explain with Heady™",
         contexts: ["selection"],
     });
     chrome.contextMenus.create({
         id: "heady-code",
-        title: "⚡ Refactor with Heady",
+        title: "⚡ Refactor with Heady™",
         contexts: ["selection"],
     });
     chrome.contextMenus.create({
         id: "heady-battle",
-        title: "🏆 Battle-validate with Heady",
+        title: "🏆 Battle-validate with Heady™",
         contexts: ["selection"],
     });
 

@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Battle Arena Improvement Extractor ═══
  *
  * Analyzes all 9 model rebuild repos, extracts the best patterns,
- * and synthesizes improvements back into the main Heady project.
+ * and synthesizes improvements back into the main Heady™ project.
  *
  * Run: npm run battle:extract
  */

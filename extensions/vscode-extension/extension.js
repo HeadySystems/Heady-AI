@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady AI — VS Code Extension
- * Connects every editor action to the Heady Intelligence Layer.
+ * Heady™ AI — VS Code Extension
+ * Connects every editor action to the Heady™ Intelligence Layer.
  * Model-aware: supports heady-battle-v1, heady-flash, heady-reason, heady-edge, heady-buddy.
  */
 const vscode = require("vscode");
@@ -14,10 +14,10 @@ const https = require("https");
 
 const HEADY_MODELS = [
     { id: 'heady-flash', label: '⚡ Heady Flash', detail: 'Fast & free — 3 fastest nodes', tier: 'free' },
-    { id: 'heady-edge', label: '🌐 Heady Edge', detail: 'Sub-200ms edge inference', tier: 'free' },
-    { id: 'heady-buddy', label: '🤝 Heady Buddy', detail: 'Memory-aware companion', tier: 'pro' },
+    { id: 'heady-edge', label: '🌐 Heady™ Edge', detail: 'Sub-200ms edge inference', tier: 'free' },
+    { id: 'heady-buddy', label: '🤝 Heady™ Buddy', detail: 'Memory-aware companion', tier: 'pro' },
     { id: 'heady-reason', label: '🧠 Heady Reason', detail: 'Extended thinking — deep analysis', tier: 'premium' },
-    { id: 'heady-battle-v1', label: '🏆 Heady Battle v1', detail: 'Full 20-node arena — highest quality', tier: 'premium' },
+    { id: 'heady-battle-v1', label: '🏆 Heady™ Battle v1', detail: 'Full 20-node arena — highest quality', tier: 'premium' },
 ];
 
 let currentModel = 'heady-flash';
@@ -32,7 +32,7 @@ function getModel() {
 }
 
 /**
- * Call the OpenAI-compatible Heady models API
+ * Call the OpenAI-compatible Heady™ models API
  */
 async function callHeady(message, model) {
     const apiUrl = getApiUrl();
@@ -94,7 +94,7 @@ function activate(context) {
 
     // ── Main Status Bar ──
     const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBar.text = "$(hubot) Heady AI";
+    statusBar.text = "$(hubot) Heady™ AI";
     statusBar.tooltip = "Heady Intelligence Layer — Click to chat";
     statusBar.command = "heady.chat";
     statusBar.show();
@@ -119,7 +119,7 @@ function activate(context) {
                 description: m.tier === 'premium' ? '⭐ PREMIUM' : m.tier === 'pro' ? '✨ PRO' : '🆓 FREE',
             })), {
                 placeHolder: `Current: ${getModel()} — Select a Heady model`,
-                title: '🐝 Heady Model Selector',
+                title: '🐝 Heady™ Model Selector',
             });
             if (picked) {
                 currentModel = picked.id;
@@ -207,7 +207,7 @@ function activate(context) {
         })
     );
 
-    vscode.window.showInformationMessage(`🐝 Heady AI activated — Model: ${getModel()} | Ctrl+Shift+H to chat`);
+    vscode.window.showInformationMessage(`🐝 Heady™ AI activated — Model: ${getModel()} | Ctrl+Shift+H to chat`);
 }
 
 function updateModelStatusBar() {
@@ -233,7 +233,7 @@ function getSidebarHtml() {
     .typing{padding:4px 8px;font-size:11px;color:var(--vscode-descriptionForeground);min-height:16px;}
   </style></head><body>
     <div class="model-bar"><span class="model-name">🐝 ${model}</span></div>
-    <div class="msgs" id="msgs"><div class="msg bot">🐝 Heady AI ready (${model}). Type anything to chat.</div></div>
+    <div class="msgs" id="msgs"><div class="msg bot">🐝 Heady™ AI ready (${model}). Type anything to chat.</div></div>
     <div class="typing" id="typing"></div>
     <div class="input-area"><input id="input" placeholder="Ask Heady..." autofocus></div>
     <script>

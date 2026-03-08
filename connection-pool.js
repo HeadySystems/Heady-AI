@@ -1,5 +1,5 @@
 /**
- * Heady MCP Connection Pool Manager
+ * Heady™ MCP Connection Pool Manager
  * ==================================
  * Phi-scaled connection pooling across multiple MCP transports:
  * - Streamable HTTP (2025 spec)

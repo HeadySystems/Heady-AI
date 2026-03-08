@@ -13,7 +13,7 @@
  * Default vector dimensionality: 384 (VECTOR_DIMENSIONS from phi-math-foundation).
  *
  * @version 1.0.0
- * @author Heady AI Team
+ * @author Heady™ AI Team
  */
 
 import {

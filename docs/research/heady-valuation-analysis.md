@@ -27,7 +27,7 @@ Heady is a unified AI platform built on 4 foundational pillars (GitHub, Google C
 
 ---
 
-## Heady Asset Inventory
+## Heady™ Asset Inventory
 
 ### Intellectual Property
 

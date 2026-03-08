@@ -1,5 +1,5 @@
 /**
- * Heady Onboarding Guard Middleware
+ * Heady™ Onboarding Guard Middleware
  * 
  * ROOT CAUSE FIX: Intercepts post-OAuth callback and enforces the 5-stage
  * onboarding sequence instead of skipping directly to API key display.

@@ -23,7 +23,7 @@ const randomBytes = promisify(crypto.randomBytes);
 // ─── Custom Error Classes ────────────────────────────────────────────────────
 
 /**
- * Base error class for all Heady platform errors.
+ * Base error class for all Heady™ platform errors.
  */
 export class HeadyError extends Error {
   /**
@@ -110,7 +110,7 @@ const ARGON2_OPTIONS = {
 // ─── AuthProvider Class ──────────────────────────────────────────────────────
 
 /**
- * AuthProvider handles all authentication concerns for the Heady platform.
+ * AuthProvider handles all authentication concerns for the Heady™ platform.
  *
  * Usage:
  * ```js

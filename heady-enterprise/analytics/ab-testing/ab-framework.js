@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module ab-framework
- * @description A/B testing framework for HeadySystems
+ * @description A/B testing framework for Heady™Systems
  *
  * Features:
  *   - φ-weighted variant allocation (61.8% control / 38.2% variant)

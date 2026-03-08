@@ -1,6 +1,6 @@
 /**
  * @fileoverview SwarmCoordinator — Enhanced coordination layer for 17 autonomous
- * agent swarms in the Heady Latent OS platform.
+ * agent swarms in the Heady™ Latent OS platform.
  *
  * Architecture:
  *   - Hierarchical topology: strategic → tactical → operational layers
@@ -28,7 +28,7 @@
 
 const { EventEmitter } = require("events");
 const { createHash, randomUUID } = require("crypto");
-const { PHI, PSI, CSL_THRESHOLDS, DEDUP_THRESHOLD, phiResourceWeights, phiBackoff, phiFusionWeights, cslGate, cslBlend, PRESSURE_LEVELS, classifyPressure, phiAdaptiveInterval, fib, fibSequence, } = (function() { try { return require("../../shared/phi-math.js"); } catch(e) { return {}; } })();
+const { PHI, PSI, CSL_THRESHOLDS, DEDUP_THRESHOLD, phiResourceWeights, phiBackoff, phiFusionWeights, cslGate, cslBlend, PRESSURE_LEVELS, classifyPressure, phiAdaptiveInterval, fib, fibSequence, PHI_TIMING } = (function() { try { return require("../../shared/phi-math.js"); } catch(e) { return {}; } })();
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -209,7 +209,7 @@ function backoffDelay(attempt, baseMs = 100) {
   const base = baseMs * Math.pow(2, exp);
   // ψ² ≈ 0.382 — phi-derived jitter coefficient (was arbitrary 0.3)
   const jitter = Math.random() * base * Math.pow(PSI, 2);
-  return Math.min(base + jitter, 30_000);
+  return Math.min(base + jitter, PHI_TIMING.CYCLE);
 }
 
 // ─── SwarmInstance ─────────────────────────────────────────────────────────────
@@ -521,7 +521,7 @@ class SwarmMessageBus extends EventEmitter {
  * @class SwarmCoordinator
  * @extends EventEmitter
  *
- * Central coordination layer for the 17-swarm Heady Latent OS platform.
+ * Central coordination layer for the 17-swarm Heady™ Latent OS platform.
  *
  * Responsibilities:
  *  - Instantiate and track all 17 swarm instances
@@ -649,7 +649,7 @@ class SwarmCoordinator extends EventEmitter {
     clearInterval(this._metricsTimer);
 
     // Wait for active tasks to complete (max 30s)
-    const deadline = Date.now() + 30_000;
+    const deadline = Date.now() + PHI_TIMING.CYCLE;
     while (this._activeTotalCount() > 0 && Date.now() < deadline) {
       await new Promise(r => setTimeout(r, 500));
     }

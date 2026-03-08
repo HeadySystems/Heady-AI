@@ -1,12 +1,12 @@
 ---
 name: heady-middleware-armor
-description: Use when implementing model output armor, security headers middleware, CORS configuration, resilience middleware chains, or request pipeline protection in the Heady ecosystem. Keywords include middleware, armor, model armor, security headers, CORS, resilience middleware, request pipeline, output filtering, and middleware chain.
+description: Use when implementing model output armor, security headers middleware, CORS configuration, resilience middleware chains, or request pipeline protection in the Heady™ ecosystem. Keywords include middleware, armor, model armor, security headers, CORS, resilience middleware, request pipeline, output filtering, and middleware chain.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Middleware & Model Armor
+# Heady™ Middleware & Model Armor
 
 ## When to Use This Skill
 

@@ -21,6 +21,7 @@
  */
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const { EventEmitter } = require('events');
 const { registry, SERVICE_CONFIGS, EnhancedCircuitBreaker } = require('./external-api-breakers');
 const { modelBridgeBreaker }  = require('./model-bridge-breaker');
@@ -164,7 +165,7 @@ function circuitGuard(serviceMap = {}) {
     catch { return next(); }
 
     if (breaker.state === STATES.OPEN) {
-      const recoveryTimeout = SERVICE_CONFIGS[service]?.recoveryTimeout || 30_000;
+      const recoveryTimeout = SERVICE_CONFIGS[service]?.recoveryTimeout || PHI_TIMING.CYCLE;
       const retryAfterSecs  = Math.ceil(recoveryTimeout / 1000);
       res.setHeader('X-Circuit-State',   STATES.OPEN);
       res.setHeader('X-Circuit-Service', service);

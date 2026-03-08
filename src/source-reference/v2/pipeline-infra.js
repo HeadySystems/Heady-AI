@@ -1,10 +1,11 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Pipeline Infrastructure — CircuitBreaker, WorkerPool, TaskCache.
  * Extracted from hc_pipeline.js for maintainability.
  */
 
 const fs = require("fs");
+const { PHI_TIMING } = require('../../shared/phi-math');
 const path = require("path");
 const crypto = require("crypto");
 
@@ -24,7 +25,7 @@ class CircuitBreaker {
     constructor(config) {
         this.enabled = config.enabled !== false;
         this.failureThreshold = config.failureThreshold || 5;
-        this.resetTimeoutMs = config.resetTimeoutMs || 30000;
+        this.resetTimeoutMs = config.resetTimeoutMs || PHI_TIMING.CYCLE;
         this.halfOpenMax = config.halfOpenMaxRequests || 2;
         this.state = "closed"; // closed | open | half-open
         this.failures = 0;

@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * Tests: Shadow Memory Persistence (HS-052)
  * Covers all 6 patent claims.

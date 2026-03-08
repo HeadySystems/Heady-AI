@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Deploy Heady HuggingFace Spaces — Dynamic Delivery Pipeline
+ * Deploy Heady™ HuggingFace Spaces — Dynamic Delivery Pipeline
  * 
  * Usage:
  *   node scripts/deploy-hf-spaces.js              # Deploy all spaces

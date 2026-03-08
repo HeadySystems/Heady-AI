@@ -8,7 +8,7 @@ enforcement: ABSOLUTE
 
 # LAW 1: THOROUGHNESS OVER SPEED — COMPLETE OR FAILED
 
-Every task in the Heady system is binary: **fully complete** or **failed**. Partial completion is not a
+Every task in the Heady™ system is binary: **fully complete** or **failed**. Partial completion is not a
 valid terminal state. Speed optimizations apply exclusively to execution mechanics — parallelism,
 caching, routing — never to the elimination of verification, analysis, or self-critique stages.
 

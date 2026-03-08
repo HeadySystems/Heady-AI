@@ -30,7 +30,7 @@
  *   5. Full mutation history persisted permanently (no deletion)
  *
  * @author HeadyConnection <eric@headyconnection.org>
- * @copyright © 2026 HeadyConnection
+ * @copyright © 2026 Heady™Connection
  */
 
 import { PHI, PSI, phiBackoff, fib as _fib, cslGate } from '../shared/phi-math.js';

@@ -1,5 +1,5 @@
 /**
- * Heady Auto-Tuning Concurrency — Adaptive Pool Sizing
+ * Heady™ Auto-Tuning Concurrency — Adaptive Pool Sizing
  * Dynamically adjusts concurrency limits based on throughput,
  * latency, and error rates. Uses AIMD (Additive Increase,
  * Multiplicative Decrease) algorithm.

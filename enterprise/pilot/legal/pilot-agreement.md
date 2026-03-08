@@ -1,4 +1,4 @@
-# HeadyOS Founder's Pilot Agreement
+# Heady™OS Founder's Pilot Agreement
 
 **Document Version**: 1.0.0  
 **Effective Date**: [EFFECTIVE_DATE]  
@@ -20,7 +20,7 @@ HeadyOS and Participant are each a "**Party**" and together the "**Parties**."
 
 ## 1. DEFINITIONS
 
-1.1 **"Platform"** means the HeadyOS multi-agent AI orchestration system, including heady-brain, heady-conductor, heady-mcp, heady-vector, and all associated microservices, APIs, documentation, and web interfaces.
+1.1 **"Platform"** means the Heady™OS multi-agent AI orchestration system, including heady-brain, heady-conductor, heady-mcp, heady-vector, and all associated microservices, APIs, documentation, and web interfaces.
 
 1.2 **"Pilot Period"** means the ninety-one-day (91-day) period beginning on the Activation Date, consisting of: (a) eighty-nine (89) active pilot days [fib(11)] plus (b) a thirteen-day (13) [fib(7)] grace period with read-only access.
 
@@ -30,7 +30,7 @@ HeadyOS and Participant are each a "**Party**" and together the "**Parties**."
 
 1.5 **"User Data"** means all data, content, inputs, outputs, and documents that Participant submits to or generates through the Platform.
 
-1.6 **"Platform IP"** means the HeadyOS platform architecture, algorithms, sacred geometry topology, CSL gate logic, 51+ USPTO provisional patents (including all provisionals related to multi-agent orchestration, vector memory, MCP protocol, and zero-trust sandboxing), trade secrets, and proprietary methods developed by HeadySystems Inc.
+1.6 **"Platform IP"** means the Heady™OS platform architecture, algorithms, sacred geometry topology, CSL gate logic, 51+ USPTO provisional patents (including all provisionals related to multi-agent orchestration, vector memory, MCP protocol, and zero-trust sandboxing), trade secrets, and proprietary methods developed by Heady™Systems Inc.
 
 1.7 **"Feedback"** means any suggestions, enhancement requests, recommendations, corrections, or other feedback provided by Participant regarding the Platform.
 
@@ -84,7 +84,7 @@ Participant agrees to the following minimum feedback commitments during the Pilo
 
 5.2 **Feature Requests/Votes** (mandatory): Submit or vote on a minimum of fib(3)=2 feature requests per calendar month via the in-app feature voting system.
 
-5.3 **Use Case Documentation** (mandatory): Provide at least fib(3)=2 anonymized workflow examples or case study inputs by Day fib(11)=89. These may be used by HeadyOS in marketing materials with Participant's written consent.
+5.3 **Use Case Documentation** (mandatory): Provide at least fib(3)=2 anonymized workflow examples or case study inputs by Day fib(11)=89. These may be used by Heady™OS in marketing materials with Participant's written consent.
 
 5.4 **Weekly Check-In** (optional): Participate in optional weekly async video or Slack updates (15 minutes or less).
 
@@ -104,7 +104,7 @@ Participant agrees to the following minimum feedback commitments during the Pilo
 
 6.4 **Duration**: Confidentiality obligations survive for fib(9)=34 months after the end of the Pilot Period.
 
-6.5 **Participant may disclose**: That it participated in the HeadyOS Founder's Pilot Program, subject to accuracy requirements, after Day 89.
+6.5 **Participant may disclose**: That it participated in the Heady™OS Founder's Pilot Program, subject to accuracy requirements, after Day 89.
 
 ---
 
@@ -164,7 +164,7 @@ Participant shall not use the Platform to:
 
 10.2 **Termination by Participant**: Participant may terminate by providing fib(3)=2 business days written notice. Data export must occur before termination.
 
-10.3 **Termination by HeadyOS**: HeadyOS may terminate immediately for: (a) material breach of Acceptable Use (Section 9); (b) violation of IP obligations (Section 4); (c) Participant's insolvency; (d) security incident attributable to Participant's misuse.
+10.3 **Termination by Heady™OS**: HeadyOS may terminate immediately for: (a) material breach of Acceptable Use (Section 9); (b) violation of IP obligations (Section 4); (c) Participant's insolvency; (d) security incident attributable to Participant's misuse.
 
 10.4 **Effect of Termination**: Upon termination, Participant's access is revoked. User Data is retained for fib(5)=5 business days for export, then deleted per Section 7.4.
 
@@ -234,4 +234,4 @@ Date: ___________________________
 
 ---
 
-*HeadyOS™ is a trademark of HeadySystems Inc. Protected by 51+ USPTO provisional patents covering CSL gates, sacred geometry topology, zero-trust MCP protocol, vector-native state, and multi-agent orchestration. φ = 1.618033988749895.*
+*HeadyOS™ is a trademark of Heady™Systems Inc. Protected by 51+ USPTO provisional patents covering CSL gates, sacred geometry topology, zero-trust MCP protocol, vector-native state, and multi-agent orchestration. φ = 1.618033988749895.*

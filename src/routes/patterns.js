@@ -1,13 +1,14 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Patterns API — Exposes circuit breaker, auto-tuning pool,
+ * Heady™ Patterns API — Exposes circuit breaker, auto-tuning pool,
  * and hot/cold cache status + management endpoints.
  */
 const express = require('../core/heady-server');
+const { PHI_TIMING } = require('../shared/phi-math');
 const router = express.Router();
 
 const { getAllBreakers: getCBStatus, getBreaker } = require("../resilience/circuit-breaker");
@@ -16,7 +17,7 @@ const { getAllCacheStatus, getCache } = require("../patterns/hot-cold-cache");
 
 // Initialize default breakers for core services
 const defaultBreakers = ["heady-brain", "heady-soul", "heady-battle", "heady-hcfp", "notion-api"];
-defaultBreakers.forEach((name) => getBreaker(name, { failureThreshold: 5, resetTimeoutMs: 30000 }));
+defaultBreakers.forEach((name) => getBreaker(name, { failureThreshold: 5, resetTimeoutMs: PHI_TIMING.CYCLE }));
 
 // Initialize default pools
 const defaultPools = ["api-requests", "background-jobs", "ai-inference"];
@@ -24,7 +25,7 @@ defaultPools.forEach((name) => getPool(name, { min: 1, max: 16, initial: 4, late
 
 // Initialize default caches
 getCache("brain-responses", { hotMaxItems: 100, hotTtlMs: 60000, coldTtlMs: 300000 });
-getCache("api-results", { hotMaxItems: 200, hotTtlMs: 30000, coldTtlMs: 120000 });
+getCache("api-results", { hotMaxItems: 200, hotTtlMs: PHI_TIMING.CYCLE, coldTtlMs: 120000 });
 
 // ── Health / overview ──
 router.get("/health", (req, res) => {

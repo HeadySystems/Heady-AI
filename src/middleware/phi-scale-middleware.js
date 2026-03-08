@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Phi Scale Middleware
+ * Heady™ Phi Scale Middleware
  * ═══════════════════════════════════════════════════════════════════
  *
  * Express middleware that applies phi-scaled timeouts, rate limits,

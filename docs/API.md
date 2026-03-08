@@ -1,4 +1,4 @@
-# HeadyStack API Reference
+# Heady™Stack API Reference
 
 **Version:** 3.0.1 "Aether"  
 **Base URL:** `https://your-deployment.run.app`  

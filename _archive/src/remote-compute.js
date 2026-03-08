@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Remote Compute Dispatcher ─────────────────────────────
+ * ─── Heady™ Remote Compute Dispatcher ─────────────────────────────
  * Routes ALL compute to remote APIs, minimizes local resource use.
  * Every result is stored in 3D vector persistent storage.
  *
@@ -86,7 +86,7 @@ async function dispatchViaGateway(action, payload, vectorMem) {
 
     // chat / analyze / refactor / any
     const result = await gateway.chat(message, {
-        system: "You are HeadyBrain, the AI reasoning engine powering the Heady ecosystem.",
+        system: "You are HeadyBrain, the AI reasoning engine powering the Heady™ ecosystem.",
         temperature: payload.temperature,
         maxTokens: payload.maxTokens,
     });

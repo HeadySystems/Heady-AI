@@ -1,4 +1,4 @@
-# Heady Canonical Site Registry
+# Heady™ Canonical Site Registry
 # SINGLE SOURCE OF TRUTH — 24 web properties total
 # Last audited: 2026-02-25 01:48 MST
 # Rule: This file is the ONLY authority on what sites exist. Period.
@@ -7,6 +7,7 @@ sites:
   # ── Primary Branded Domains (8 public domains) ──
   - id: headysystems
     domain: headysystems.com
+    cloud_run_service: heady-manager
     port: 9000
     pm2: site-headysystems
     purpose: "Platform operations homepage"
@@ -14,6 +15,7 @@ sites:
 
   - id: headyme
     domain: headyme.com
+    cloud_run_service: heady-manager
     port: 9001
     pm2: site-headyme-com
     purpose: "Personal AI command center"
@@ -21,6 +23,7 @@ sites:
 
   - id: headyconnection
     domain: headyconnection.org
+    cloud_run_service: heady-manager
     port: 9002
     pm2: site-headyconnection-org
     purpose: "Nonprofit AI for social impact"
@@ -28,6 +31,7 @@ sites:
 
   - id: headybuddy
     domain: headybuddy.org
+    cloud_run_service: heady-manager
     port: 9003
     pm2: site-headybuddy-org
     purpose: "Personal AI assistant & guide"
@@ -35,6 +39,7 @@ sites:
 
   - id: headymcp
     domain: headymcp.com
+    cloud_run_service: heady-manager
     port: 9004
     pm2: site-headymcp
     purpose: "MCP protocol hub & marketplace"
@@ -42,6 +47,7 @@ sites:
 
   - id: headyio
     domain: headyio.com
+    cloud_run_service: heady-manager
     port: 9005
     pm2: site-headyio
     purpose: "Developer portal & SDK"
@@ -49,6 +55,7 @@ sites:
 
   - id: headyapi
     domain: headyapi.com
+    cloud_run_service: heady-manager
     port: 9006
     pm2: site-headyapi
     purpose: "Interactive API playground"
@@ -56,6 +63,7 @@ sites:
 
   - id: headyos
     domain: headyos.com
+    cloud_run_service: heady-manager
     port: 9007
     pm2: site-headyos
     purpose: "AI agent operating system dashboard"
@@ -63,7 +71,8 @@ sites:
 
   # ── Internal/Secondary Sites ──
   - id: headyweb
-    domain: null
+    domain: headycloud.com
+    cloud_run_service: heady-manager
     port: 3000
     pm2: site-headyweb
     purpose: "HeadyWeb AI search engine"
@@ -146,7 +155,7 @@ sites:
     deploy_script: scripts/deploy-hf-spaces.js
 
   - id: hf-systems
-    url: https://huggingface.co/spaces/HeadySystems/heady-systems
+    url: https://huggingface.co/spaces/HeadyMe/heady-systems
     dir: heady-hf-spaces/systems
     deploy_script: scripts/deploy-hf-spaces.js
 

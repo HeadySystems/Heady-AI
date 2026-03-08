@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * Tests: Monte Carlo Engine
  * Covers: runSimulation, distributions, confidence intervals, pipeline hooks,

@@ -1,6 +1,6 @@
-# Heady Max Potential Rebuild
+# Heady™ Max Potential Rebuild
 
-A clean-slate monorepo rebuild for the Heady ecosystem using the public HeadyMe repository layout as a foundation and upgrading it into a stronger operating model.
+A clean-slate monorepo rebuild for the Heady™ ecosystem using the public HeadyMe repository layout as a foundation and upgrading it into a stronger operating model.
 
 ## What this package gives you
 
@@ -8,7 +8,7 @@ A clean-slate monorepo rebuild for the Heady ecosystem using the public HeadyMe 
 - Projection manifests for the public core repos
 - A domain registry for product, service, and deployment coordination
 - Functional service stubs for API, MCP, OS, memory, systems, and bot layers
-- Frontend shells for HeadyMe, HeadyBuddy, and HeadyConnection
+- Frontend shells for Heady™Me, HeadyBuddy, and HeadyConnection
 - Deployment scaffolding for Docker, Cloudflare, and Render
 - Documentation for architecture, repo mapping, observability, and build order
 
@@ -49,7 +49,7 @@ services/
   headymcp/
   headyos/
   headymemory/
-  headysystems/
+  headyme/
   headybot/
 packages/
   heady-core/

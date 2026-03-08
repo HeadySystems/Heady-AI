@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Memory Knowledge OS
+# Heady™ Memory Knowledge OS
 
 ## When to Use This Skill
 

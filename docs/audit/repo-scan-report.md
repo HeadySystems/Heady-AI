@@ -1,4 +1,4 @@
-# HeadyMe GitHub Organization — Comprehensive Repo Scan Report
+# Heady™Me GitHub Organization — Comprehensive Repo Scan Report
 **Scan Date:** 2026-03-07  
 **Scanned by:** Autonomous research agent  
 **Sources:** GitHub REST API (api.github.com), github.com direct pages
@@ -26,7 +26,7 @@
    - [heady-manager.js — Entrypoint](#heady-managerjs--entrypoint)
    - [heady-registry.json — Key Findings](#heady-registryjson--key-findings)
 4. [heady-docs Repo](#4-heady-docs-repo)
-5. [HeadySystems/Heady Repo (Archived)](#5-headysystemsheady-repo-archived)
+5. [HeadyMe/Heady Repo (Archived)](#5-headysystemsheady-repo-archived)
 6. [Key Findings & Implementation State](#6-key-findings--implementation-state)
 7. [File Count Summary by Directory](#7-file-count-summary-by-directory)
 
@@ -51,9 +51,9 @@
 | `headyme-core` | Heady™ Personal Cloud Hub — your AI-powered command center. Projected from the Heady Latent OS. | JavaScript | Public |
 | `headyos-core` | Heady™ Operating System — the latent OS powering continuous AI reasoning. Projected from the Heady Latent OS. | JavaScript | Public |
 | `headysystems-core` | Heady™ AI Infrastructure Engine — self-healing infrastructure, Sacred Geometry orchestration. Projected from the Heady Latent OS. | JavaScript | Public |
-| `headysystems-production` | Live Projection: headysystems.com — Autonomous deployment target for HeadySystems Platform UI | HTML | Public |
+| `heady-production` | Live Projection: headysystems.com — Autonomous deployment target for HeadySystems Platform UI | HTML | Public |
 
-> **Note:** All `-core` repos are described as "Projected from the Heady Latent OS" — indicating they are auto-generated projection outputs from the monorepo, not independently developed repos.
+> **Note:** All `-core` repos are described as "Projected from the Heady™ Latent OS" — indicating they are auto-generated projection outputs from the monorepo, not independently developed repos.
 
 ---
 
@@ -64,7 +64,7 @@
 
 | Repo Name | Description | Notes |
 |---|---|---|
-| `Heady` | Heady Systems - Sacred Geometry Architecture v3.0.0 | **Archived Mar 4, 2026.** Read-only. 120 commits. Mostly Java (95.6%). |
+| `Heady` | Heady™ Systems - Sacred Geometry Architecture v3.0.0 | **Archived Mar 4, 2026.** Read-only. 120 commits. Mostly Java (95.6%). |
 | `Heady-pre-production` | Official HeadySystems Inc Repo | Pre-monorepo version |
 | `sandbox` | Heady Sandbox - Experimental Features | |
 | `sandbox-pre-production` | Area for Project Checkpoints and File Dumps | |
@@ -1063,7 +1063,7 @@ Phase 10: server-boot.js      → HTTP/HTTPS + WS + listen
 
 **Deployment Targets:**
 - Cloud Run: `heady-manager-609590223909.us-central1.run.app`
-- Cloudflare Edge: `heady.headyme.com` (zones: headyme.com, headyconnection.org, heady-ai.org)
+- Cloudflare Edge: `heady.headyme.com` (zones: headyme.com, headyconnection.org, heady-ai.com)
 - HuggingFace Spaces: org=HeadyMe (spaces: heady-ai, heady-demo, heady-systems, heady-connection)
 - GitHub Monorepo: source-of-truth
 
@@ -1126,9 +1126,9 @@ value-assessment-2026-q1.md   (4,379 bytes)
 
 ---
 
-## 5. HeadySystems/Heady Repo (Archived)
+## 5. HeadyMe/Heady Repo (Archived)
 
-**URL:** https://github.com/HeadySystems/Heady  
+**URL:** https://github.com/HeadyMe/Heady  
 **Status:** Archived by owner on March 4, 2026 (read-only)  
 **Commits:** 120  
 **Language Breakdown:** Java 95.6%, C 1.6%, PowerShell 0.9%, JavaScript 0.8%, C++ 0.5%  
@@ -1214,8 +1214,8 @@ The platform has replaced 30+ standard npm packages with internal implementation
 - SOC2 compliance matrix present
 
 ### Notable Files Not Found
-- `.windsurfrules` — not found at root of HeadyMe/Heady-pre-production-9f2f0642 (API returned 404); exists in archived HeadySystems/Heady repo
-- `.cursorrules` — not found at root of HeadyMe/Heady-pre-production-9f2f0642 (API returned 404)
+- `.windsurfrules` — not found at root of Heady™Me/Heady-pre-production-9f2f0642 (API returned 404); exists in archived HeadyMe/Heady repo
+- `.cursorrules` — not found at root of Heady™Me/Heady-pre-production-9f2f0642 (API returned 404)
 - Note: `.windsurfrules` may exist in `/configs/` or another subdirectory not yet checked
 
 ---

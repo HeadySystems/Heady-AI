@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * ═══ Heady MCP Server — Buddy Everywhere ═══
- * Standalone MCP server connecting any MCP client to the Heady Intelligence Layer.
+ * ═══ Heady™ MCP Server — Buddy Everywhere ═══
+ * Standalone MCP server connecting any MCP client to the Heady™ Intelligence Layer.
  *
  * Transports:
  *   - stdio     (default — IDE integration: Claude Desktop, Cursor, VS Code)
@@ -43,7 +43,7 @@ function validateSession(sessionId) {
     return session;
 }
 
-// ── Heady API Caller ──
+// ── Heady™ API Caller ──
 function callHeady(path, body) {
     const url = new URL(HEADY_API);
     return new Promise((resolve, reject) => {
@@ -132,7 +132,7 @@ if (TRANSPORT === "stdio") {
             }
         }
     });
-    process.stderr.write(`🐝 Heady MCP Server v2.0.0 (stdio) — ${TOOLS.length} tools | Device: ${DEVICE_NAME}\n`);
+    process.stderr.write(`🐝 Heady™ MCP Server v2.0.0 (stdio) — ${TOOLS.length} tools | Device: ${DEVICE_NAME}\n`);
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -245,7 +245,7 @@ if (TRANSPORT === "streamable-http") {
         res.writeHead(404); res.end("Not found");
     });
     server.listen(PORT, () => {
-        console.log(`🐝 Heady MCP Server v2.0.0 (Streamable HTTP) — ${TOOLS.length} tools on port ${PORT}`);
+        console.log(`🐝 Heady™ MCP Server v2.0.0 (Streamable HTTP) — ${TOOLS.length} tools on port ${PORT}`);
         console.log(`   Endpoint: http://localhost:${PORT}/mcp`);
         console.log(`   Device: ${DEVICE_NAME} (${DEVICE_ID})`);
     });
@@ -298,6 +298,6 @@ if (TRANSPORT === "sse") {
         res.writeHead(404); res.end("Not found");
     });
     server.listen(PORT, () => {
-        console.log(`🐝 Heady MCP Server v2.0.0 (SSE) — ${TOOLS.length} tools on port ${PORT}`);
+        console.log(`🐝 Heady™ MCP Server v2.0.0 (SSE) — ${TOOLS.length} tools on port ${PORT}`);
     });
 }

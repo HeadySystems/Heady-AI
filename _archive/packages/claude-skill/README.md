@@ -1,6 +1,6 @@
-# Heady AI — HeadyJules MCP Integration
+# Heady™ AI — HeadyJules MCP Integration
 
-## Setup for HeadyJules Desktop
+## Setup for Heady™Jules Desktop
 
 Add to `~/.config/headyjules/claude_desktop_config.json`:
 
@@ -20,12 +20,12 @@ Add to `~/.config/headyjules/claude_desktop_config.json`:
 
 Restart HeadyJules Desktop. You now have 10 Heady tools available in every conversation.
 
-## Setup for HeadyJules Projects
+## Setup for Heady™Jules Projects
 
 Create a Project with these instructions:
 
 ```
-You have access to the Heady Intelligence Layer via MCP tools. When the user
+You have access to the Heady™ Intelligence Layer via MCP tools. When the user
 asks questions, use the appropriate Heady service group:
 
 - heady_swarm — for broad research or multi-perspective tasks
@@ -56,7 +56,7 @@ Always use the most specific tool for the task.
 | `heady_analyze` | Code and text analysis |
 | `heady_health` | System health check |
 
-## HeadyJules Skill Usage
+## Heady™Jules Skill Usage
 
 In any HeadyJules conversation with MCP enabled:
 

@@ -48,7 +48,7 @@ You may use the Services for:
 - Developing AI-powered applications and workflows
 - Integrating HeadyOS capabilities into your products
 - Multi-agent orchestration for business automation
-- Research and development on the HeadyOS platform
+- Research and development on the Heady™OS platform
 
 ### 3.2 Prohibited Use
 You may **not** use the Services to:
@@ -76,7 +76,7 @@ Enterprise customers must:
 - Maintain API key security and rotate keys per policy
 - Implement appropriate access controls for user-facing applications
 - Report security vulnerabilities per our responsible disclosure policy
-- Not store Heady API keys in public repositories
+- Not store Heady™ API keys in public repositories
 
 ---
 
@@ -184,7 +184,7 @@ HEADYSYSTEMS' AGGREGATE LIABILITY ARISING OUT OF OR RELATED TO THESE TERMS SHALL
 
 ### 7.4 Exceptions
 The limitations above do not apply to:
-- Death or personal injury caused by Heady's gross negligence
+- Death or personal injury caused by Heady™'s gross negligence
 - Fraud or fraudulent misrepresentation
 - Any liability that cannot be excluded by applicable law
 - Indemnification obligations under Section 8

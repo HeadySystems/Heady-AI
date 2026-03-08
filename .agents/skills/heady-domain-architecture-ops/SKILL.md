@@ -1,12 +1,12 @@
 ---
 name: heady-domain-architecture-ops
-description: Design and operate canonical domain architecture, subdomain routing, OAuth callback normalization, redirect policy, and domain hygiene across the Heady ecosystem. Use when the user mentions domain mapping, Cloudflare routing, canonical domains, callback URLs, redirects, or eliminating wrong hostnames from user-facing surfaces.
+description: Design and operate canonical domain architecture, subdomain routing, OAuth callback normalization, redirect policy, and domain hygiene across the Heady™ ecosystem. Use when the user mentions domain mapping, Cloudflare routing, canonical domains, callback URLs, redirects, or eliminating wrong hostnames from user-facing surfaces.
 metadata:
   author: Perplexity Computer
   version: '1.0'
 ---
 
-# Heady Domain Architecture Ops
+# Heady™ Domain Architecture Ops
 
 ## When to Use This Skill
 

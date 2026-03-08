@@ -1,4 +1,4 @@
-# Heady Zero-Dependency Architecture
+# Heady™ Zero-Dependency Architecture
 ## Goal: Eliminate ALL External Dependencies, Run on 3x Colab Pro+
 
 ## External Dependencies Identified & Internal Replacements
@@ -20,7 +20,7 @@
 12. External LLM APIs → Keep as configurable (but internal router manages all)
 
 ### Dev Dependencies (eliminated)
-- ESLint/TypeScript-ESLint → Internal linting via HeadyCheck
+- ESLint/TypeScript-ESLint → Internal linting via Heady™Check
 - Jest → Internal test runner
 - Nodemon → Internal file watcher
 - Concurrently → Internal process manager

@@ -108,7 +108,7 @@ class EvictionEngine {
     this._aggressiveRatio = opts.aggressiveRatio || 0.25;
     this._simThreshold = opts.similarityThreshold || 0.9;
     this._matcher = opts.matcher || null;
-    this._analytics = null; // set by HeadyCache
+    this._analytics = null; // set by Heady™Cache
   }
 
   /**

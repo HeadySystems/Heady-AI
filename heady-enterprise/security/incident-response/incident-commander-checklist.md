@@ -1,4 +1,4 @@
-# HeadySystems — Incident Commander Checklist
+# Heady™Systems — Incident Commander Checklist
 
 **Use:** Print or display this checklist at the start of every incident.  
 **Version:** 3.2.2  
@@ -37,7 +37,7 @@
   - Other: _______________
 - [ ] Which of the 9 domains are down/degraded?
   - headyme.com / headyos.com / headyconnection.com/org?
-  - heady.exchange / heady.investments / headysystems.com / headyai.com?
+  - heady.exchange / heady.investments / headysystems.com / heady-ai.com?
 - [ ] Is user data potentially exposed? → If YES: notify Legal immediately
 - [ ] Is the attack **ongoing** (active threat actor) or **past** (already happened)?
 - [ ] Any signs of lateral movement or persistence mechanisms?

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Phi Telemetry Feed
+ * Heady™ Phi Telemetry Feed
  * ═══════════════════════════════════════════════════════════════════
  *
  * Comprehensive telemetry collector that feeds real-time system

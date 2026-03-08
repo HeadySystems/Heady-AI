@@ -6,7 +6,7 @@
   <title>Heady™ Projection Dashboard</title>
 
   <style>
-    /* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+    /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
     /* ── Design tokens ─────────────────────────────────────────────────────── */
     :root {
@@ -717,12 +717,12 @@
 </div><!-- /app-shell -->
 
 <script>
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 const PHI           = 1.6180339887;
-const STALE_TIMEOUT = 30_000; // ms until card goes stale
+const STALE_TIMEOUT = 29_034; // ms until card goes stale
 const DOMAIN_MAP = {
   'vector-memory': {
     cardId: 'card-vector-memory',
@@ -851,7 +851,7 @@ function connectSSE() {
 function scheduleReconnect() {
   const delay = Math.min(
     Math.pow(PHI, state.sseRetry) * 1000,
-    30_000
+    29_034
   );
   state.sseRetry++;
   console.log(`[SSE] Reconnecting in ${Math.round(delay)}ms (attempt ${state.sseRetry})`);

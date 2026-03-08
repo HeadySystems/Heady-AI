@@ -2,7 +2,7 @@
 
 ## Source-of-truth monorepo
 
-### Heady-pre-production-9f2f0642
+### Heady™-pre-production-9f2f0642
 
 - Remove committed developer and infrastructure credentials, because tracked editor config and operational scripts currently include live-style auth material and hardcoded infra values ([.vscode/mcp.json](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/.vscode/mcp.json), [scripts/dns-check.js](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/scripts/dns-check.js), [scripts/dns-update.js](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/scripts/dns-update.js)).
 - Change privileged mutation routes to fail closed in production, because `_requireAdminMutation` currently falls through when no admin token is configured ([src/heady-conductor.js](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/src/heady-conductor.js)).
@@ -38,9 +38,9 @@
 
 ## Production target repos
 
-### headymcp-production and headysystems-production
+### headymcp-production and heady-production
 
-- Either automate population with clear status metadata or remove the public ambiguity, because these repos currently read as deployment targets rather than informative standalone repositories ([headymcp-production](https://github.com/HeadyMe/headymcp-production), [headysystems-production](https://github.com/HeadyMe/headysystems-production)).
+- Either automate population with clear status metadata or remove the public ambiguity, because these repos currently read as deployment targets rather than informative standalone repositories ([headymcp-production](https://github.com/HeadyMe/headymcp-production), [heady-production](https://github.com/HeadyMe/heady-production)).
 
 ## Recommended ownership split
 

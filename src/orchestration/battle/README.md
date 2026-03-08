@@ -1,4 +1,4 @@
-# HeadyBattle Perplexity-Style Orchestration with Phi-Based Temperature Scaling
+# Heady™Battle Perplexity-Style Orchestration with Phi-Based Temperature Scaling
 
 **Generated:** March 7, 2026 12:58 PM MST  
 **Purpose:** Multi-model parallel orchestration with dynamic semantic temperature control
@@ -196,7 +196,7 @@ smoothed = (recent_avg × 0.618) + (target × 0.382)
 confidence = agreements / (agreements + disagreements)
 ```
 
-## 🎭 Integration with HeadyBattle
+## 🎭 Integration with Heady™Battle
 
 This orchestration system integrates into HeadyBattle's coding workflow:
 
@@ -286,5 +286,5 @@ console.log(flow2);
 
 ---
 
-**Built for HeadyBattle by HeadySystems Inc.**  
+**Built for Heady™Battle by Heady™Systems Inc.**  
 **Integrates into: Heady-pre-production monorepo**

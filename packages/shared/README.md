@@ -1,6 +1,6 @@
 # @heady-ai/shared
 
-Shared utilities, configuration, cryptography, embedding, and logging modules for the Heady AI Platform.
+Shared utilities, configuration, cryptography, embedding, and logging modules for the Heady™ AI Platform.
 
 ## Modules
 
@@ -33,4 +33,4 @@ logger.info({ event: 'boot' }, 'Service started');
 
 ## License
 
-UNLICENSED — © 2026 HeadySystems Inc.
+UNLICENSED — © 2026 Heady™Systems Inc.

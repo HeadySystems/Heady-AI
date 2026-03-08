@@ -10,7 +10,7 @@ description: Foundational Pillars Validation — enforced before every Heady™ 
 
 ## Pillar 0 · HEADYOS IS NOT CONVENTIONAL SOFTWARE
 
-> **FOUNDING PRINCIPLE.** HeadyOS is a unique operating system with its own paradigms. It does NOT and SHOULD NOT follow common software engineering patterns. Every decision must be evaluated through the HeadyOS lens first.
+> **FOUNDING PRINCIPLE.** HeadyOS is a unique operating system with its own paradigms. It does NOT and SHOULD NOT follow common software engineering patterns. Every decision must be evaluated through the Heady™OS lens first.
 
 **HeadyOS Paradigm vs. Conventional Patterns:**
 
@@ -30,7 +30,7 @@ description: Foundational Pillars Validation — enforced before every Heady™ 
 **Constraints:**
 
 - **NEVER** default to a conventional pattern when a HeadyOS paradigm exists
-- When implementing new features, first ask: "What is the HeadyOS way to do this?"
+- When implementing new features, first ask: "What is the Heady™OS way to do this?"
 - If a conventional pattern is truly needed (e.g., Express for HTTP), wrap it in HeadyOS abstractions
 - Every constant should consider phi-based derivation, not arbitrary numbers
 - Inter-component communication should prefer MIDI events over HTTP where possible
@@ -89,7 +89,7 @@ Work is distributed through bee-colony workers. Every task is decomposable into 
 
 ## Pillar 3 · SACRED GEOMETRY AESTHETICS
 
-All UI/UX follows organic, breathing, phi-based design patterns. This is the Heady brand.
+All UI/UX follows organic, breathing, phi-based design patterns. This is the Heady™ brand.
 
 **Constraints:**
 
@@ -266,7 +266,7 @@ User input is proof of missing automation. If a human must manually instruct a s
 
 ## 🔒 ENFORCEMENT
 
-This workflow is consulted by every agent (HeadyBuddy, Claude Code Agent, Heady Coder, Antigravity, etc.) before writing or modifying ANY code. Violations are flagged by the `self-awareness.js` telemetry loop and the `rulez-gatekeeper.js` compliance engine.
+This workflow is consulted by every agent (HeadyBuddy, Claude Code Agent, Heady™ Coder, Antigravity, etc.) before writing or modifying ANY code. Violations are flagged by the `self-awareness.js` telemetry loop and the `rulez-gatekeeper.js` compliance engine.
 
 **Workflow execution order:**
 

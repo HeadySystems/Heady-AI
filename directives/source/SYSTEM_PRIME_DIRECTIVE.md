@@ -114,7 +114,7 @@ values that differ between environments.
 
 This directive activates at system boot and persists through all conversations,
 all agent types, all environments, all interfaces, and all system restarts.
-It is baked into the IDENTITY of Heady, not toggled as a feature.
+It is baked into the IDENTITY of Heady™, not toggled as a feature.
 
 ---
 *Heady™ — HeadySystems Inc. — All Rights Reserved — 60+ Provisional Patents*

@@ -3,23 +3,23 @@ The user [HeadyMe](https://github.com/HeadyMe) (Eric Haywood) is associated with
 ### Organization Summary: HeadySystems Inc.
 *   **Description:** Official HeadySystems Inc. Account ([GitHub](https://github.com/HeadySystems)).
 *   **Website:** [headysystems.com](https://headysystems.com/)
-*   **Public Repositories:** 7 ([GitHub](https://github.com/orgs/HeadySystems/repositories))
+*   **Public Repositories:** 7 ([GitHub](https://github.com/orgs/HeadyMe/repositories))
 
 ### Visible Repositories (HeadySystems)
 | Repository Name | URL | Description |
 | :--- | :--- | :--- |
-| **main** | [github.com/HeadySystems/main](https://github.com/HeadySystems/main) | Public archive (Python) |
-| **ai-workflow-engine** | [github.com/HeadySystems/ai-workflow-engine](https://github.com/HeadySystems/ai-workflow-engine) | Intelligent AI workflow engine integrating Cloudflare Workers, Render, etc. |
-| **sandbox-pre-production** | [github.com/HeadySystems/sandbox-pre-production](https://github.com/HeadySystems/sandbox-pre-production) | Area for Project Checkpoints and File Dumps |
-| **Heady-pre-production** | [github.com/HeadySystems/Heady-pre-production](https://github.com/HeadySystems/Heady-pre-production) | Official HeadySystems Inc Repo |
-| **Heady** | [github.com/HeadySystems/Heady](https://github.com/HeadySystems/Heady) | Heady Systems - Sacred Geometry Architecture v3.0.0 |
-| **sandbox** | [github.com/HeadySystems/sandbox](https://github.com/HeadySystems/sandbox) | Heady Sandbox - Experimental Features |
-| **headybuddy-web** | [github.com/HeadySystems/headybuddy-web](https://github.com/HeadySystems/headybuddy-web) | Public archive |
+| **main** | [github.com/HeadyMe/main](https://github.com/HeadyMe/main) | Public archive (Python) |
+| **ai-workflow-engine** | [github.com/HeadyMe/ai-workflow-engine](https://github.com/HeadyMe/ai-workflow-engine) | Intelligent AI workflow engine integrating Cloudflare Workers, Render, etc. |
+| **sandbox-pre-production** | [github.com/HeadyMe/sandbox-pre-production](https://github.com/HeadyMe/sandbox-pre-production) | Area for Project Checkpoints and File Dumps |
+| **Heady-pre-production** | [github.com/HeadyMe/Heady-pre-production](https://github.com/HeadyMe/Heady-pre-production) | Official HeadySystems Inc Repo |
+| **Heady** | [github.com/HeadyMe/Heady](https://github.com/HeadyMe/Heady) | Heady™ Systems - Sacred Geometry Architecture v3.0.0 |
+| **sandbox** | [github.com/HeadyMe/sandbox](https://github.com/HeadyMe/sandbox) | Heady Sandbox - Experimental Features |
+| **headybuddy-web** | [github.com/HeadyMe/headybuddy-web](https://github.com/HeadyMe/headybuddy-web) | Public archive |
 
 ### Visible Repositories (HeadyMe User Account)
 In addition to the organization, the user [HeadyMe](https://github.com/HeadyMe?tab=repositories) has 13 public repositories including:
-*   **Heady-pre-production-9f2f0642**: [github.com/HeadyMe/Heady-pre-production-9f2f0642](https://github.com/HeadyMe/Heady-pre-production-9f2f0642)
-*   **headysystems-production**: [github.com/HeadyMe/headysystems-production](https://github.com/HeadyMe/headysystems-production)
+*   **Heady™-pre-production-9f2f0642**: [github.com/HeadyMe/Heady™-pre-production-9f2f0642](https://github.com/HeadyMe/Heady™-pre-production-9f2f0642)
+*   **heady-production**: [github.com/HeadyMe/heady-production](https://github.com/HeadyMe/heady-production)
 *   **headymcp-production**: [github.com/HeadyMe/headymcp-production](https://github.com/HeadyMe/headymcp-production)
 *   **headyio-core**: [github.com/HeadyMe/headyio-core](https://github.com/HeadyMe/headyio-core)
 *   **headybot-core**: [github.com/HeadyMe/headybot-core](https://github.com/HeadyMe/headybot-core)

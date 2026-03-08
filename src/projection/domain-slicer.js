@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Domain Slicer — Per-Domain File Extraction ═══
  *
- * Extracts a clean, standalone file set for each Heady domain
+ * Extracts a clean, standalone file set for each Heady™ domain
  * from the monorepo. Output is a flat { filePath: content } map
  * that can be pushed directly to a GitHub repository.
  *
@@ -43,7 +43,7 @@ const REPO_MAP = {
 
 function generatePackageJson(domain, siteConfig) {
     return JSON.stringify({
-        name: `@heady/${siteConfig.name.toLowerCase()}-core`,
+        name: `@heady-ai/${siteConfig.name.toLowerCase()}-core`,
         version: '1.0.0',
         description: siteConfig.description || `Heady™ ${siteConfig.name} — ${siteConfig.tagline}`,
         main: 'index.js',
@@ -107,17 +107,17 @@ ${(siteConfig.stats || []).map(s => `| ${s.label} | ${s.value} |`).join('\n')}
 
 ---
 
-**© 2026 HeadySystems Inc..** All Rights Reserved.
+**© 2026 Heady™Systems Inc..** All Rights Reserved.
 
-Built with Sacred Geometry · Powered by the Heady Latent OS
+Built with Sacred Geometry · Powered by the Heady™ Latent OS
 `;
 }
 
 function generateIndexJs(domain, siteConfig) {
     return `/*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * ${siteConfig.name} — Standalone Server
- * Projected from the Heady Latent OS
+ * Projected from the Heady™ Latent OS
  */
 
 const express = require('../core/heady-server');
@@ -156,13 +156,13 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(\`🐝 ${siteConfig.name} running at http://localhost:\${PORT}\`);
     console.log(\`   Domain: ${domain}\`);
-    console.log(\`   Projected from Heady Latent OS\`);
+    console.log(\`   Projected from Heady™ Latent OS\`);
 });
 `;
 }
 
 function generateDockerfile(siteConfig) {
-    return `FROM node:20-slim
+    return `FROM node:22-slim
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --production
@@ -224,10 +224,10 @@ jobs:
 function generateLicense() {
     return `PROPRIETARY LICENSE
 
-© 2026 HeadySystems Inc.. All Rights Reserved.
+© 2026 Heady™Systems Inc.. All Rights Reserved.
 
 This software and associated documentation files (the "Software") are the
-proprietary property of HeadySystems Inc.. You are granted a limited,
+proprietary property of Heady™Systems Inc.. You are granted a limited,
 non-exclusive, non-transferable license to use the Software for evaluation
 and development purposes only.
 

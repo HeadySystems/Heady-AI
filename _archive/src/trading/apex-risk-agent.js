@@ -1,8 +1,8 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * Apex 3.0 Risk Agent — Hardcoded risk parameters for HeadyBuddy
+ * Apex 3.0 Risk Agent — Hardcoded risk parameters for Heady™Buddy
  * autonomous trading on Apex Trader Funding platform.
  *
  * These rules are IMMUTABLE in production. Any modification requires

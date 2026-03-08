@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══════════════════════════════════════════════════════════════════
  * BuddyCore V2 — Enhanced Companion with Full Memory & Learning Loop

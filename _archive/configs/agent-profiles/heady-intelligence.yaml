@@ -5,7 +5,7 @@
 # ║  UPDATED: 20260221-045100                                       ║
 # ╚══════════════════════════════════════════════════════════════════╝
 #
-# This is THE source of truth for the Heady Intelligence Layer.
+# This is THE source of truth for the Heady™ Intelligence Layer.
 # Every agent, service, and tool reads this to understand:
 #   - Default reasoning mode (ensemble, not single-model)
 #   - Anti-template policy

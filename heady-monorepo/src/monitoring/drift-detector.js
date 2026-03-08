@@ -1,9 +1,9 @@
 /**
  * =============================================================================
- * Heady Drift Detector
+ * Heady™ Drift Detector
  * =============================================================================
  * Monitors embedding coherence across the 384-dimensional vector space used
- * by Heady's sovereign memory system. Detects semantic drift, structural drift,
+ * by Heady™'s sovereign memory system. Detects semantic drift, structural drift,
  * and mission-alignment drift relative to a calibrated baseline.
  *
  * Methodology:

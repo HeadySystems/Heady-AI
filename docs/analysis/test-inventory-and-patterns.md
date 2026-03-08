@@ -1,4 +1,4 @@
-# HeadyMe Test Infrastructure - Complete Inventory & Patterns
+# Heady™Me Test Infrastructure - Complete Inventory & Patterns
 
 ## Test Directory Structure
 

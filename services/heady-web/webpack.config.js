@@ -6,7 +6,7 @@
  *   Host build:   webpack --env host
  *   Remote build: webpack --env remote --env appName=<scopeName>
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
@@ -137,8 +137,8 @@ module.exports = (env = {}, argv = {}) => {
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
-        '@heady/shell': path.resolve(__dirname, 'src/shell'),
-        '@heady/services': path.resolve(__dirname, 'src/services'),
+        '@heady-ai/shell': path.resolve(__dirname, 'src/shell'),
+        '@heady-ai/services': path.resolve(__dirname, 'src/services'),
       },
     },
 

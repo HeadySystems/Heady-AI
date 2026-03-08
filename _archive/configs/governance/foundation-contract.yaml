@@ -17,9 +17,9 @@
 # HEADY SYSTEMS — Foundation Platform Contract
 # ═══════════════════════════════════════════════════════════════════════
 #
-# This file defines the minimal, frozen contract that the HeadyStack
+# This file defines the minimal, frozen contract that the Heady™Stack
 # foundation mono-repo MUST satisfy before any product repos (HeadyMe,
-# HeadyConnection, HeadyWeb, etc.) are built on top.
+# Heady™Connection, HeadyWeb, etc.) are built on top.
 #
 # Rule: nothing in a product repo may re-implement logic that belongs
 # in the foundation. Product repos consume the foundation via SDK/API.

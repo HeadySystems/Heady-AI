@@ -5,7 +5,7 @@
 **Version:** 3.0.0-rc4 · **Owner:** HeadyConnection Inc. · **Founded by:** Eric Haywood  
 **Trademark:** HEADY (USPTO Serial 99680540, filed March 3, 2026)  
 **License:** Proprietary · **Platform:** Node.js 20+ on Google Cloud Run  
-**Repository:** HeadySystems/Heady (GitHub)
+**Repository:** HeadyMe/Heady (GitHub)
 
 ---
 
@@ -29,7 +29,7 @@ Heady exposes 30+ tools via the Model Context Protocol (MCP) through 4 simultane
 
 ## 2. SYSTEM ARCHITECTURE OVERVIEW
 
-The Heady system is built as a layered architecture where each component serves a specific role in the intelligence stack. The entry point is `heady-manager.js`, which boots the entire system as a Node.js Express server running on port 3301.
+The Heady™ system is built as a layered architecture where each component serves a specific role in the intelligence stack. The entry point is `heady-manager.js`, which boots the entire system as a Node.js Express server running on port 3301.
 
 ### Architecture Layers
 
@@ -110,9 +110,9 @@ Heady operates across a federated network of 9 branded domains, each serving a s
 | Domain | Purpose | Role in Ecosystem |
 |---|---|---|
 | **headyme.com** | Personal Hub | User-facing portal, profile management, personal AI assistant |
-| **headysystems.com** | Corporate | The company website for Heady Systems LLC |
+| **headysystems.com** | Corporate | The company website for HeadySystems Inc |
 | **headyconnection.org** | Nonprofit | HeadyConnection Inc., the non-profit entity that owns the HEADY trademark |
-| **headybrain.com** | AI Engine | The intelligence layer — vector memory, deep research, metacognition |
+| **heady-ai.com** | AI Engine | The intelligence layer — vector memory, deep research, metacognition |
 | **headymcp.com** | MCP Protocol | Model Context Protocol integration hub |
 | **headyio.com** | Developer API | Developer-facing API documentation and access |
 | **headybot.com** | Chatbot | The conversational interface to Heady |
@@ -160,13 +160,13 @@ The MetacognitionEngine is Buddy's self-awareness module. It continuously:
 
 ### DeterministicErrorInterceptor
 
-Every error in the Heady system is intercepted deterministically — meaning no error is ever silently swallowed. The interceptor:
+Every error in the Heady™ system is intercepted deterministically — meaning no error is ever silently swallowed. The interceptor:
 
 - Catches errors at every layer of the stack
 - Maps errors to specific recovery strategies
 - Triggers circuit breakers when error rates exceed thresholds
 - Creates audit trails in vector memory for post-mortem analysis
-- Sends escalation events to the HeadyBees swarm for distributed remediation
+- Sends escalation events to the Heady™Bees swarm for distributed remediation
 
 ### Buddy Watchdog
 
@@ -217,7 +217,7 @@ This approach eliminates single-provider bias and creates a "wisdom of crowds" e
 
 ## 6. 3D SPATIAL VECTOR MEMORY
 
-The Vector Memory system is one of Heady's most innovative components. At 1,184 lines of code, it implements a 3D spatial sharded vector store with Graph RAG — a proprietary approach to AI memory that goes far beyond traditional vector databases.
+The Vector Memory system is one of Heady™'s most innovative components. At 1,184 lines of code, it implements a 3D spatial sharded vector store with Graph RAG — a proprietary approach to AI memory that goes far beyond traditional vector databases.
 
 ### How It Works
 
@@ -398,13 +398,13 @@ Heady implements the Model Context Protocol (MCP) as both a **client** (consumin
 
 ### The Colab MCP Bridge
 
-The `colab-mcp-bridge.js` (686 lines) is the heart of Heady's MCP implementation. It exposes all Heady tools via **4 simultaneous transports**:
+The `colab-mcp-bridge.js` (686 lines) is the heart of Heady™'s MCP implementation. It exposes all Heady tools via **4 simultaneous transports**:
 
-**Transport 1: stdio** — The fastest transport, used for local IDE integration. The IDE spawns the Heady MCP server as a child process and communicates via stdin/stdout. This is how Antigravity IDE connects to Heady locally.
+**Transport 1: stdio** — The fastest transport, used for local IDE integration. The IDE spawns the Heady™ MCP server as a child process and communicates via stdin/stdout. This is how Antigravity IDE connects to Heady locally.
 
 **Transport 2: SSE (Server-Sent Events)** — For remote connections. The client opens a persistent HTTP connection and receives events as they occur. Compatible with the Antigravity remote MCP standard.
 
-**Transport 3: HTTP REST/JSON-RPC** — The universal transport. Any HTTP client can send JSON-RPC 2.0 requests to the Heady MCP server. Used by browser extensions, mobile apps, and external services.
+**Transport 3: HTTP REST/JSON-RPC** — The universal transport. Any HTTP client can send JSON-RPC 2.0 requests to the Heady™ MCP server. Used by browser extensions, mobile apps, and external services.
 
 **Transport 4: WebSocket** — For real-time bidirectional communication. Used by the Cross-Device Sync Hub and real-time dashboards.
 
@@ -413,7 +413,7 @@ The `colab-mcp-bridge.js` (686 lines) is the heart of Heady's MCP implementation
 When the MCP bridge starts, it performs a comprehensive initialization:
 
 1. **GPU Vector Store Init** — Initializes the 3D spatial vector memory (384 dimensions)
-2. **Continuous Learner Init** — Seeds the knowledge base with Heady identity, directives, and preferences
+2. **Continuous Learner Init** — Seeds the knowledge base with Heady™ identity, directives, and preferences
 3. **Telemetry Init** — Starts the audit trail and optimization engine
 4. **Knowledge Seeding** — Injects foundational knowledge vectors:
    - Owner: HeadyConnection Inc. — Trademark serial 99680540
@@ -426,7 +426,7 @@ When the MCP bridge starts, it performs a comprehensive initialization:
 
 ### Key MCP Tools
 
-The 30+ tools exposed by Heady via MCP include:
+The 30+ tools exposed by Heady™ via MCP include:
 
 - **vector-search** — Query the 3D spatial vector memory
 - **vector-ingest** — Add new memories to the vector store
@@ -599,7 +599,7 @@ Heady has 10 CI/CD workflows:
 
 ### Patent Portfolio
 
-5 patent applications filed under Heady Systems:
+5 patent applications filed under Heady™ Systems:
 
 | Patent | Title | Coverage |
 |---|---|---|
@@ -656,7 +656,7 @@ Sacred geometry is not merely decorative in Heady — it is operational:
 
 ## 15. CORPORATE STRUCTURE AND OWNERSHIP
 
-### HeadyConnection Inc
+### Heady™Connection Inc
 
 - **Entity Type:** Non-profit corporation
 - **State of Organization:** Colorado
@@ -666,11 +666,11 @@ Sacred geometry is not merely decorative in Heady — it is operational:
 - **Founded by:** Eric Haywood
 - **Role:** Holds all IP including the HEADY trademark, governs the open research aspects of the project
 
-### Heady Systems LLC
+### Heady™Systems Inc
 
-- **Role:** The commercial operating entity for Heady software and services
+- **Role:** The commercial operating entity for Heady™ software and services
 - **License:** Proprietary and Confidential (all source code)
-- **Copyright:** © 2026 Heady Systems LLC
+- **Copyright:** © 2026 Heady™Systems Inc
 
 ---
 
@@ -742,7 +742,7 @@ Sacred geometry is not merely decorative in Heady — it is operational:
 | **CI/CD Workflows** | 10 GitHub Actions pipelines |
 | **Pipeline Stages** | 12 orchestration stages |
 | **Circuit Breakers** | 16 pre-registered services |
-| **Patent Filings** | 5 under Heady Systems |
+| **Patent Filings** | 5 under Heady™ Systems |
 | **Trademark Classes** | 2 (Software + SaaS) |
 | **npm Scripts** | 60+ automation scripts |
 
@@ -766,7 +766,7 @@ Heady represents a fundamentally new approach to AI systems — one where the AI
 
 ## 19. TEMPLATE AUTO-GENERATOR — HEADYBEES & HEADYSWARMS FROM EVERY TASK
 
-One of Heady's most powerful features is the Template Auto-Generator (`template-auto-gen.js`, 224 lines). This module is wired into the MCP bridge's `callTool()` pipeline and ensures that **every task Heady executes automatically generates reusable HeadyBees and HeadySwarms**.
+One of Heady™'s most powerful features is the Template Auto-Generator (`template-auto-gen.js`, 224 lines). This module is wired into the MCP bridge's `callTool()` pipeline and ensures that **every task Heady executes automatically generates reusable HeadyBees and HeadySwarms**.
 
 ### How It Works
 
@@ -798,7 +798,7 @@ After execution, the auto-generator creates reusable templates from the results:
 
 3. Caches the template keyed by `toolName:argsHash` for instant future re-injection
 
-### HeadySwarm Architecture
+### Heady™Swarm Architecture
 
 HeadySwarms extend beyond individual HeadyBees by coordinating **multiple bees working together** on complex, multi-step tasks:
 
@@ -825,8 +825,8 @@ Every tool call result is automatically enriched with template metadata:
   "_heady_template": {
     "injected": false,       // Was an existing template injected pre-call?
     "generated": true,       // Was a new template generated post-call?
-    "bees": 1,              // Number of HeadyBees created
-    "swarms": 0             // Number of HeadySwarms created
+    "bees": 1,              // Number of Heady™Bees created
+    "swarms": 0             // Number of Heady™Swarms created
   }
 }
 ```
@@ -875,7 +875,7 @@ When the MCP bridge starts, the Continuous Learner is seeded with foundational k
 🧠 Identity:
    - "Owner: HeadyConnection Inc. — Trademark serial 99680540, filed March 3 2026"
    - "42 patents filed across HeadySystems"
-   - "9 domains in the Heady ecosystem"
+   - "9 domains in the Heady™ ecosystem"
 
 📋 Directives:
    - "Full autonomy — no waiting for approval, execute everything"
@@ -900,7 +900,7 @@ When Heady needs to remember something, the `recall(query, topK)` function:
 
 ## 21. COMPREHENSIVE TELEMETRY — FULL AUDIT TRAIL + OPTIMIZATION ENGINE
 
-The HeadyTelemetry module (`heady-telemetry.js`, 332 lines) captures **everything** — every tool call, every error, every environmental metric — and stores it as both a persistent audit trail and semantically searchable vector memory.
+The Heady™Telemetry module (`heady-telemetry.js`, 332 lines) captures **everything** — every tool call, every error, every environmental metric — and stores it as both a persistent audit trail and semantically searchable vector memory.
 
 ### What Gets Captured
 
@@ -966,7 +966,7 @@ The telemetry module automatically sanitizes all logged data:
 
 ## 22. THE SACRED GEOMETRY TEMPLATE SYSTEM — IN DEPTH
 
-The Template Bee (`template-bee.js`, 258 lines) is the single source of truth for all site rendering across the Heady ecosystem. Every domain gets a unique sacred geometry-branded experience.
+The Template Bee (`template-bee.js`, 258 lines) is the single source of truth for all site rendering across the Heady™ ecosystem. Every domain gets a unique sacred geometry-branded experience.
 
 ### Site Registry
 
@@ -1032,7 +1032,7 @@ The active domain is highlighted with the site's accent color. This creates a co
 
 ### Process Overview
 
-On March 3, 2026 at 4:12 PM MT, Heady's Antigravity agent received the directive: *"deep-dive make me and upload to notebooklm a notebook that super comprehensively describes the Heady project and use a lot of visuals and images."*
+On March 3, 2026 at 4:12 PM MT, Heady's Antigravity agent received the directive: *"deep-dive make me and upload to notebooklm a notebook that super comprehensively describes the Heady™ project and use a lot of visuals and images."*
 
 The agent executed the following autonomous research pipeline:
 
@@ -1089,9 +1089,9 @@ All research was synthesized into this 23-section comprehensive notebook coverin
 | Config/Infra | README, package.json, workflows | ~300+ lines |
 | **Total** | **23+ files** | **5,300+ lines** |
 
-This notebook represents a complete snapshot of the Heady ecosystem as of March 3, 2026, capturing the technical architecture, philosophical foundations, corporate structure, and operational details in a format optimized for NotebookLM ingestion.
+This notebook represents a complete snapshot of the Heady™ ecosystem as of March 3, 2026, capturing the technical architecture, philosophical foundations, corporate structure, and operational details in a format optimized for NotebookLM ingestion.
 
 ---
 
-*© 2026 Heady Systems LLC. Proprietary and Confidential.*  
-*This document was generated on March 3, 2026 for NotebookLM ingestion as a comprehensive reference to the Heady project.*
+*© 2026 Heady™Systems Inc. Proprietary and Confidential.*  
+*This document was generated on March 3, 2026 for NotebookLM ingestion as a comprehensive reference to the Heady™ project.*

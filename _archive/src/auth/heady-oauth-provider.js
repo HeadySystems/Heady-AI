@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -267,7 +267,7 @@ class HeadyOAuthProvider {
     verifyAccessToken(token) {
         if (!token) return null;
 
-        // Also accept raw Heady API keys
+        // Also accept raw Heady™ API keys
         if (token === this.adminKey) {
             return { valid: true, tier: 'admin', scope: 'mcp:tools mcp:resources mcp:prompts mcp:read mcp:write', apiKey: token };
         }
@@ -453,7 +453,7 @@ function getConsentPageHtml({ clientName, scope, clientId, redirectUri, state, c
     <div class="card">
         <div class="logo">🐝</div>
         <h1>Authorize Access</h1>
-        <p class="subtitle"><span class="client-name">${clientName}</span> wants to access Heady MCP</p>
+        <p class="subtitle"><span class="client-name">${clientName}</span> wants to access Heady™ MCP</p>
 
         <div class="scope-list">
             ${scope.split(' ').map(s => `<div class="scope-item">${s.replace('mcp:', 'MCP ')}</div>`).join('')}
@@ -467,7 +467,7 @@ function getConsentPageHtml({ clientName, scope, clientId, redirectUri, state, c
             <input type="hidden" name="code_challenge" value="${codeChallenge}">
             <input type="hidden" name="code_challenge_method" value="${codeChallengeMethod}">
 
-            <label for="api_key">Your Heady API Key</label>
+            <label for="api_key">Your Heady™ API Key</label>
             <input type="password" id="api_key" name="api_key" placeholder="hdy_pro_..." required autocomplete="off">
 
             <button type="submit" class="btn btn-authorize">🔓 Authorize</button>
@@ -477,7 +477,7 @@ function getConsentPageHtml({ clientName, scope, clientId, redirectUri, state, c
             <button type="submit" class="btn btn-deny">Deny</button>
         </form>
 
-        <div class="footer">Heady Systems LLC — headyme.com</div>
+        <div class="footer">HeadySystems Inc — headyme.com</div>
     </div>
 </body>
 </html>`;

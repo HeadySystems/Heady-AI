@@ -1,5 +1,5 @@
 /**
- * Heady User API Route
+ * Heady™ User API Route
  * 
  * GET: Returns current user profile and onboarding state
  * PATCH: Updates user profile fields

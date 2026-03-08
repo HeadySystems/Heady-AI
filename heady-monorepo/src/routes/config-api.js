@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Config API Router — IDE spec, playbook, agentic, activation, public-domain

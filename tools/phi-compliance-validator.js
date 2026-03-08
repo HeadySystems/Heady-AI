@@ -3,7 +3,7 @@
 /**
  * @fileoverview phi-compliance-validator.js
  *
- * Audit tool that scores any Heady configuration or code file for phi compliance.
+ * Audit tool that scores any Heady™ configuration or code file for phi compliance.
  * Detects magic numbers, non-phi thresholds, non-Fibonacci sizes, and non-phi
  * backoff values across JSON, YAML, and JavaScript source files.
  *
@@ -521,7 +521,7 @@ class PhiAuditReport {
  */
 
 /**
- * PhiComplianceValidator — audits Heady config and JS source files for phi compliance.
+ * PhiComplianceValidator — audits Heady™ config and JS source files for phi compliance.
  *
  * Supports JSON, YAML (as plain object), and JavaScript source code.
  * Produces a `PhiAuditReport` per file, or a merged report for a whole directory.

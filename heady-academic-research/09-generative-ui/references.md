@@ -64,14 +64,14 @@
 
 ## Golden Ratio in Design
 
-### Heady's Sacred Geometry UI Principles:
+### Heady™'s Sacred Geometry UI Principles:
 - Layout grids based on golden ratio proportions (φ ≈ 1.618)
 - Typography scale: 1.618× between heading levels
 - Fibonacci spacing system: 1, 2, 3, 5, 8, 13, 21, 34 px base units
 - Color harmony: complementary angles at golden-ratio intervals
 - A/B testing split: 61.8% / 38.2% (phi proportions)
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - CSL-driven visibility scoring (continuous [0,1] vs binary show/hide) aligns with adaptive UI literature using DRL and continuous scoring
 - Phi-proportioned layouts (golden ratio) have established aesthetic and functional basis
 - Deterministic UI (same context → same layout hash) is a novel contribution enabling reproducible interface testing

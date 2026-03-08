@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: headysystems/heady-api-gateway:3.2.0
+        image: headyme/heady-api-gateway:3.2.0
         ports:
         - containerPort: 8000
         env:

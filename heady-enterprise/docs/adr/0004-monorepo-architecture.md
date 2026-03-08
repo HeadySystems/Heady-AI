@@ -9,7 +9,7 @@
 
 ## Context
 
-HeadySystems has 21 microservices, 3 package scopes (`@heady-ai/*`, `@headysystems/*`, `@heady/*`), 9 domain-specific web properties, and extensive shared infrastructure. The codebase is coordinated by a single founder-led team transitioning toward enterprise deployment.
+HeadySystems has 21 microservices, 3 package scopes (`@heady-ai/*`, `@heady-ai/*`, `@heady-ai/*`), 9 domain-specific web properties, and extensive shared infrastructure. The codebase is coordinated by a single founder-led team transitioning toward enterprise deployment.
 
 Two structural options were evaluated:
 1. **Polyrepo:** One git repository per service/package
@@ -21,7 +21,7 @@ Two structural options were evaluated:
 
 **Use a monorepo with Turborepo (v1.12+) as the build system.**
 
-The monorepo is the single source of truth at `github.com/headysystems/heady-systems`.
+The monorepo is the single source of truth at `github.com/headyme/heady-systems`.
 
 ---
 
@@ -56,8 +56,8 @@ A polyrepo would require:
 - Separate CI configurations per repository
 
 The monorepo allows:
-- **Direct imports:** `import { CSLGate } from '@headysystems/semantic-logic'`
-- **Type sharing:** `@headysystems/types` is a single source of truth
+- **Direct imports:** `import { CSLGate } from '@heady-ai/semantic-logic'`
+- **Type sharing:** `@heady-ai/types` is a single source of truth
 - **Atomic commits:** A feature touching the gateway, brain, and shared SDK is a single PR
 
 ### Atomic Commits
@@ -108,7 +108,7 @@ The existing 12 GitHub Actions workflows (ci.yml, deploy.yml, etc.) target the m
 
 The polyrepo model was rejected because:
 1. The team is small (founder-stage) — polyrepo coordination overhead is not justified
-2. Shared packages (`@headysystems/types`, `@headysystems/semantic-logic`) would require private npm registry management
+2. Shared packages (`@heady-ai/types`, `@heady-ai/semantic-logic`) would require private npm registry management
 3. Cross-service atomic changes (common in early-stage development) would require multi-repo PRs
 4. CI secrets and deployment configs would need duplication across 21+ repositories
 
@@ -120,7 +120,7 @@ For enterprise customers who require per-service repositories (e.g., for complia
 
 1. Services can be extracted using `git filter-repo --path packages/heady-brain`
 2. The monorepo remains the development source; individual repos are push-mirrored from CI
-3. The `@heady/*` scope is explicitly designed for projected repos (see context brief)
+3. The `@heady-ai/*` scope is explicitly designed for projected repos (see context brief)
 
 This hybrid approach is documented in `docs/operations/enterprise-repo-split.md`.
 

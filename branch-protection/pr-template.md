@@ -210,7 +210,7 @@ Closes #<!-- issue number -->
 
 <!-- 
   By submitting this PR you confirm:
-  - You have read and followed the HeadyMe Contributing Guidelines
+  - You have read and followed the Heady™Me Contributing Guidelines
   - All automated checks must pass before requesting review
   - This PR has been self-reviewed before requesting others' time
   - No secrets, credentials, or sensitive data are included

@@ -11,7 +11,7 @@
  *
  * Default retry budget: fib(4) = 3 attempts (initial call + 3 retries = 4 total).
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

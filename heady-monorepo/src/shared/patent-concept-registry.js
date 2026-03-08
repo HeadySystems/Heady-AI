@@ -1,11 +1,11 @@
 /**
- * ∞ Patent Concept Registry — Heady IP Tracking System
+ * ∞ Patent Concept Registry — Heady™ IP Tracking System
  *
  * Tracks patentable concepts, innovations, and intellectual property
- * developed within the Heady ecosystem. Provides registration,
+ * developed within the Heady™ ecosystem. Provides registration,
  * lookup, and prior-art analysis capabilities.
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const crypto = require('crypto');

@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Vector Space Ops — 384-Dimensional Vector Mathematics
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module vector-space-ops
  * @description Core mathematical operations for 384D embedding space.

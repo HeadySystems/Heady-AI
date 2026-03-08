@@ -33,7 +33,7 @@ The paradigm of artificial intelligence has permanently shifted from passive, pr
 
 ### The Current State: Conquering Agentic Sprawl via Enterprise Hardening
 
-Historically, the Heady-pre-production repository suffered from "Agentic Sprawl"—severe architectural fragmentation (over 90 root files, conflicting build scripts, and collapsed language boundaries).
+Historically, the Heady™-pre-production repository suffered from "Agentic Sprawl"—severe architectural fragmentation (over 90 root files, conflicting build scripts, and collapsed language boundaries).
 
 The latest repository commits demonstrate a systematic conquest of this sprawl:
 
@@ -168,7 +168,7 @@ Rather than serving static pages, the ecosystem projects data from 3D vector spa
 - **Central Projection:** User-centric view — data closest to user in vector space rendered largest/fastest
 - **Parallel Projection:** Admin dashboards — objective, undistorted system visualization
 
-### Template Injection via Headybees/Headyswarms
+### Template Injection via Heady™bees/Headyswarms
 
 All dynamic projections materialize into injectable, preconfigured `headybees` and `headyswarms` that assemble on demand based on user's real-time context.
 

@@ -1,9 +1,9 @@
 /**
- * Heady Neon — Postgres Pool Provider
+ * Heady™ Neon — Postgres Pool Provider
  *
  * Wraps the pg (node-postgres) Pool with Neon-specific configuration.
  * Falls back to the @neondatabase/serverless driver if available.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

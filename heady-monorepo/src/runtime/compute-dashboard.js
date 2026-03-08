@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Compute Dashboard ──────────────────────────────────────
+ * ─── Heady™ Compute Dashboard ──────────────────────────────────────
  * Real-time compute resource monitoring across local + remote nodes.
  * 
  * Tracks: CPU, memory, active agents, provider health, queue depth,

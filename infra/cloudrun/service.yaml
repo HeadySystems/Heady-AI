@@ -8,7 +8,7 @@
 # This declarative YAML controls the full Cloud Run service spec including
 # autoscaling, health probes, secrets, VPC connector, and traffic splitting.
 #
-# © 2026 HeadySystems Inc. — Proprietary
+# © 2026 Heady™Systems Inc. — Proprietary
 # ═══════════════════════════════════════════════════════════════════════════════
 
 apiVersion: serving.knative.dev/v1

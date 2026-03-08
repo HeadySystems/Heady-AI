@@ -1,4 +1,4 @@
-// Jest configuration for HeadySystems™
+// Jest configuration for Heady™Systems™
 // Coverage thresholds use phi-based dynamic scaling instead of fixed values
 // φ = 1.618033988749895 (golden ratio)
 
@@ -86,9 +86,9 @@ module.exports = {
     testTimeout,
     setupFilesAfterEnv: [],  // Add setup files here when needed
     moduleNameMapper: {
-        '^@heady/core$': '<rootDir>/packages/core/src',
-        '^@heady/gateway$': '<rootDir>/packages/gateway/src',
-        '^@heady/sdk$': '<rootDir>/packages/sdk/src',
+        '^@heady-ai/core$': '<rootDir>/packages/core/src',
+        '^@heady-ai/gateway$': '<rootDir>/packages/gateway/src',
+        '^@heady-ai/sdk$': '<rootDir>/packages/sdk/src',
     },
     // Enable ts-jest when TypeScript tests are added:
     // transform: { '^.+\\.ts$': 'ts-jest' },

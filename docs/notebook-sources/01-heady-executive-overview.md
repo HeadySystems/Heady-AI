@@ -1,6 +1,6 @@
 # Heady™ AI Platform — Executive Overview
 
-> © 2026 HeadySystems Inc.. All Rights Reserved.
+> © 2026 Heady™Systems Inc.. All Rights Reserved.
 
 ## What Is Heady?
 
@@ -34,7 +34,7 @@ Heady is built on three foundational principles:
 - **IP Portfolio**: 51+ provisional patent applications protecting core innovations (8 filed March 6, 2026)
 - **Engineering Investment**: ~4,800 refined engineering hours
 
-## The Heady Ecosystem
+## The Heady™ Ecosystem
 
 Heady operates across multiple domains:
 

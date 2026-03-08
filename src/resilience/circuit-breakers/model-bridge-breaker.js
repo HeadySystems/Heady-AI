@@ -18,6 +18,7 @@
  */
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const { EventEmitter } = require('events');
 const { registry, EnhancedCircuitBreaker, PHI, SERVICE_CONFIGS } = require('./external-api-breakers');
 
@@ -32,9 +33,9 @@ const PROVIDER_CHAIN = ['openai', 'anthropic', 'google-genai', 'groq', 'huggingf
  * Overridden by SERVICE_CONFIGS[provider].timeoutMs when present.
  */
 const PROVIDER_TIMEOUTS = {
-  openai:       30_000,
-  anthropic:    30_000,
-  'google-genai': 30_000,
+  openai:       PHI_TIMING.CYCLE,
+  anthropic:    PHI_TIMING.CYCLE,
+  'google-genai': PHI_TIMING.CYCLE,
   groq:         20_000,
   huggingface:  60_000,
 };
@@ -121,9 +122,9 @@ class ModelBreakerMap {
     if (!this._map.has(k)) {
       const cfg = SERVICE_CONFIGS[provider] || {
         failureThreshold: 5,
-        recoveryTimeout: 30_000,
+        recoveryTimeout: PHI_TIMING.CYCLE,
         halfOpenMaxCalls: 3,
-        timeoutMs: 30_000,
+        timeoutMs: PHI_TIMING.CYCLE,
       };
       const breaker = new EnhancedCircuitBreaker(`${k}`, cfg);
       this._map.set(k, breaker);
@@ -209,7 +210,7 @@ function withTimeout(promise, ms, label) {
 // exponentialBackoff helper (phi-ratio)
 // ---------------------------------------------------------------------------
 async function exponentialBackoff(attempt, baseMs = 200) {
-  const delay = Math.min(baseMs * Math.pow(PHI, attempt), 30_000);
+  const delay = Math.min(baseMs * Math.pow(PHI, attempt), PHI_TIMING.CYCLE);
   const jitter = Math.random() * delay * 0.2;
   await new Promise(r => setTimeout(r, delay + jitter));
 }
@@ -310,7 +311,7 @@ class ModelBridgeBreaker extends EventEmitter {
         continue;
       }
 
-      const timeoutMs = PROVIDER_TIMEOUTS[prov] || 30_000;
+      const timeoutMs = PROVIDER_TIMEOUTS[prov] || PHI_TIMING.CYCLE;
 
       for (let attempt = 0; attempt <= this._maxRetries; attempt++) {
         try {
@@ -375,7 +376,7 @@ class ModelBridgeBreaker extends EventEmitter {
       const modelBreaker = this._modelBreakers.getOrCreate(prov, model);
       if (provBreaker.state === 'open' || modelBreaker.state === 'open') continue;
 
-      const timeoutMs = PROVIDER_TIMEOUTS[prov] || 30_000;
+      const timeoutMs = PROVIDER_TIMEOUTS[prov] || PHI_TIMING.CYCLE;
 
       for (let attempt = 0; attempt <= this._maxRetries; attempt++) {
         try {
@@ -418,7 +419,7 @@ class ModelBridgeBreaker extends EventEmitter {
       const modelBreaker = this._modelBreakers.getOrCreate(prov, model);
       if (provBreaker.state === 'open' || modelBreaker.state === 'open') continue;
 
-      const timeoutMs = PROVIDER_TIMEOUTS[prov] || 30_000;
+      const timeoutMs = PROVIDER_TIMEOUTS[prov] || PHI_TIMING.CYCLE;
 
       try {
         // For streaming we wrap the iterator acquisition in a breaker, then

@@ -1,6 +1,6 @@
 /**
  * @file heady-system.js
- * @description Heady Zero-Dependency Master System Integration
+ * @description Heady™ Zero-Dependency Master System Integration
  *
  * The single entry point that wires all 13 layers together into one
  * cohesive system.  Provides:
@@ -163,7 +163,7 @@ const BRIDGE_PORT_MAP = {
 // ─── HeadySystem ──────────────────────────────────────────────────────────────
 
 /**
- * Master system orchestrator for the Heady Zero-Dep architecture.
+ * Master system orchestrator for the Heady™ Zero-Dep architecture.
  *
  * Instantiate via the static `boot()` factory method rather than
  * directly calling `new HeadySystem()`.
@@ -249,7 +249,7 @@ export class HeadySystem {
   // ─── Static Factory ──────────────────────────────────────────────────────────
 
   /**
-   * Boot the Heady system.
+   * Boot the Heady™ system.
    *
    * Reads HEADY_NODE_ROLE from the environment (or `role` parameter),
    * loads all appropriate layers, wires them together, and starts the
@@ -897,7 +897,7 @@ export class HeadySystem {
 // ─── Convenience Factory ──────────────────────────────────────────────────────
 
 /**
- * Boot the HeadySystem and return it.
+ * Boot the Heady™System and return it.
  * Equivalent to `HeadySystem.boot(role, opts)`.
  *
  * @param {string} [role]

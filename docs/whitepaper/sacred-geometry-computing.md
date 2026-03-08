@@ -217,5 +217,5 @@ The Heady™ Latent Operating System demonstrates that these principles are prac
 
 ---
 
-*© 2026 HeadySystems™ & HeadyConnection™. All rights reserved.*
+*© 2026 Heady™Systems™ & HeadyConnection™. All rights reserved.*
 *Sacred Geometry :: Organic Systems :: Breathing Interfaces*

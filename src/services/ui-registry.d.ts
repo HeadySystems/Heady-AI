@@ -1,6 +1,6 @@
 /**
  * Get the full UI manifest.
- * Used by HeadyWeb shell to discover available apps.
+ * Used by Heady™Web shell to discover available apps.
  */
 export function getUIManifest(options?: {}): {
     receipt: {

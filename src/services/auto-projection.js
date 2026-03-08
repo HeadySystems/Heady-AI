@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Auto-Projection — Zero-Middleman Site Deployment ═══
  *
  * On boot, this service:
- *   1. Pre-renders all 9 Heady sites from site-registry.json
+ *   1. Pre-renders all 9 Heady™ sites from site-registry.json
  *   2. Caches rendered HTML in RAM (instant serve from any liquid node)
  *   3. Pushes to Cloudflare KV for edge caching (if CF credentials available)
  *   4. Registers file-change watchers for instant re-projection

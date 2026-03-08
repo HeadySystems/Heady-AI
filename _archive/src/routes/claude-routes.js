@@ -1,14 +1,14 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
  * ═══ Claude Routes ═══
  *
- * Cloud-only Anthropic Claude API routes for the Heady reasoning tier.
+ * Cloud-only Anthropic Claude API routes for the Heady™ reasoning tier.
  * Proxies requests through HeadyJules node with cost tracking.
  *
- * Heady AI Nodes: JULES, CONDUCTOR
+ * Heady™ AI Nodes: JULES, CONDUCTOR
  */
 
 const express = require("express");

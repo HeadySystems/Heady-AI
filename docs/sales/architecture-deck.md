@@ -1,4 +1,4 @@
-# HeadyOS — Technical Architecture Overview
+# Heady™OS — Technical Architecture Overview
 
 **For Technical Buyers · Version 1.0 · φ = 1.618033988749895**  
 **Classification**: Confidential — Shared Under NDA
@@ -123,7 +123,7 @@ sequenceDiagram
 
 ## 3. Security Pipeline
 
-The HeadyOS security pipeline processes every API call through 8 layers. Each layer is independently configurable and auditable.
+The Heady™OS security pipeline processes every API call through 8 layers. Each layer is independently configurable and auditable.
 
 ```mermaid
 flowchart LR
@@ -410,7 +410,7 @@ graph LR
 
 ## 10. Patent-Protected Differentiators
 
-The following architectural components are protected by HeadySystems' 51+ USPTO provisional patents:
+The following architectural components are protected by Heady™Systems' 51+ USPTO provisional patents:
 
 | Component | Patent Category | Competitive Moat |
 |---|---|---|

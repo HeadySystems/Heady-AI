@@ -4,7 +4,7 @@
  * ║  Tiered Phi-Scaled Context Window Management                     ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc. All Rights Reserved.              ║
+ * ║  © 2026-2026 HeadySystems Inc. All Rights Reserved.              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * Four-tier phi-scaled context budget with compression-triggered eviction,

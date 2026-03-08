@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Reliability Orchestrator
+# Heady™ Reliability Orchestrator
 
 ## When to Use This Skill
 

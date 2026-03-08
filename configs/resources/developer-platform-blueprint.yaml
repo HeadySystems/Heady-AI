@@ -6,7 +6,7 @@ entrypoint:
   projection_mode: unified-liquid-fabric
 onboarding_flow:
   - id: auth-provider-select
-    title: Sign in with HeadySwarm identity bridge
+    title: Sign in with Heady™Swarm identity bridge
     templates:
       - headybee-auth-template
       - headyswarm-auth-template
@@ -31,7 +31,7 @@ onboarding_flow:
       - browser-extension-bridge
       - ide-connector
   - id: intent-customization
-    title: Generate custom Heady UI/UX projections from intent
+    title: Generate custom Heady™ UI/UX projections from intent
     outputs:
       - app-layout
       - connector-set

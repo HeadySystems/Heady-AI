@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -15,7 +15,7 @@
  *   90 days  → 10% APY
  *   365 days → 15% APY
  *
- * Heady AI Node: CONDUCTOR
+ * Heady™ AI Node: CONDUCTOR
  */
 
 const fs = require("fs");

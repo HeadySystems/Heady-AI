@@ -1,7 +1,7 @@
 /**
- * ═══ Heady Edge Worker — Cloudflare Worker Entry Point ═══
+ * ═══ Heady™ Edge Worker — Cloudflare Worker Entry Point ═══
  *
- * Dynamic edge gateway for the Heady Hive SDK.
+ * Dynamic edge gateway for the Heady™ Hive SDK.
  * Deployed as Cloudflare Worker with colab routing.
  * Handles: rate limiting, caching (KV), budget tracking,
  * provider routing, race auditing — all at the edge.

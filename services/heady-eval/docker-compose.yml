@@ -1,7 +1,7 @@
 version: "3.9"
 
 # ─── HeadyEval docker-compose ─────────────────────────────────────────────────
-# Development/local compose for the HeadyEval service and its dependencies.
+# Development/local compose for the Heady™Eval service and its dependencies.
 # PHI = 1.618 (Sacred Geometry scaling applied to resource limits)
 
 services:
@@ -58,7 +58,7 @@ services:
   # ─── Mock HeadyInfer (for local dev without full stack) ────────────────────
   # Comment out if running real HeadyInfer
   heady-infer-mock:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-infer-mock
     command: >
       sh -c "node -e \"
@@ -89,7 +89,7 @@ services:
 
   # ─── Mock HeadyEmbed ────────────────────────────────────────────────────────
   heady-embed-mock:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-embed-mock
     command: >
       sh -c "node -e \"
@@ -111,7 +111,7 @@ services:
 
   # ─── Mock HeadyGuard ────────────────────────────────────────────────────────
   heady-guard-mock:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-guard-mock
     command: >
       sh -c "node -e \"

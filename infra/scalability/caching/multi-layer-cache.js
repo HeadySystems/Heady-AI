@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module multi-layer-cache
- * @description Multi-layer caching implementation for HeadySystems
+ * @description Multi-layer caching implementation for Heady™Systems
  *
  * Architecture:
  *   L1 — In-memory LRU   : fib(16)=987 entries, TTL φ^5≈11.09s

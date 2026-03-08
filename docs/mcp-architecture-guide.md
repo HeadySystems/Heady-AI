@@ -1,8 +1,8 @@
-# Heady Latent OS — MCP Ecosystem Architecture Guide
+# Heady™ Latent OS — MCP Ecosystem Architecture Guide
 
 **Section 3: Model Context Protocol Ecosystem and Tool Routing**
 
-*Version 1.0 | March 2026 | Heady Connection*
+*Version 1.0 | March 2026 | Heady™ Connection*
 
 ---
 
@@ -19,7 +19,7 @@
 9. [Audit Logging and Compliance](#9-audit-logging-and-compliance)
 10. [Meta-Server Proxy Pattern](#10-meta-server-proxy-pattern)
 11. [Configuration Guide](#11-configuration-guide)
-12. [Integration with Heady Bee/Swarm Pattern](#12-integration-with-heady-beeswarm-pattern)
+12. [Integration with Heady™ Bee/Swarm Pattern](#12-integration-with-heady-beeswarm-pattern)
 13. [Deployment Guide](#13-deployment-guide)
 14. [Operations Runbook](#14-operations-runbook)
 
@@ -27,7 +27,7 @@
 
 ## 1. Overview
 
-The Heady MCP Ecosystem provides a production-grade Model Context Protocol (MCP) implementation for the Heady Latent OS. It enables agent bees and swarm workers to call external tools (GitHub, Slack, PostgreSQL, filesystem, web search, and Heady-internal services) through a unified, secured, and observable gateway.
+The Heady™ MCP Ecosystem provides a production-grade Model Context Protocol (MCP) implementation for the Heady™ Latent OS. It enables agent bees and swarm workers to call external tools (GitHub, Slack, PostgreSQL, filesystem, web search, and Heady-internal services) through a unified, secured, and observable gateway.
 
 ### Why MCP?
 
@@ -38,7 +38,7 @@ MCP (introduced by Anthropic, November 2024; donated to Agentic AI Foundation, D
 - **Protocol-level discovery**: Agents discover tools at runtime via `tools/list`
 - **10,000+ public servers**: Ready-to-deploy integrations for every major service
 
-### Heady MCP Stack
+### Heady™ MCP Stack
 
 ```
 Agent Bee / Swarm Worker
@@ -378,7 +378,7 @@ Route to github namespace server
 **CSL embedding function:**
 - Tokenizes tool name + description
 - Produces deterministic 128-dim L2-normalized vector
-- In production, replace with Heady vector service for higher accuracy
+- In production, replace with Heady™ vector service for higher accuracy
 
 **Debug routing decisions:**
 ```js
@@ -681,7 +681,7 @@ auth:
 
 ---
 
-## 12. Integration with Heady Bee/Swarm Pattern
+## 12. Integration with Heady™ Bee/Swarm Pattern
 
 ### mcp-bee.js Integration
 
@@ -874,6 +874,6 @@ console.log(metrics.totals); // { active, idle, total, waiting }
 
 ---
 
-*Architecture guide for Heady Latent OS Section 3: MCP Ecosystem.*
+*Architecture guide for Heady™ Latent OS Section 3: MCP Ecosystem.*
 *MCP specification references: [modelcontextprotocol.io](https://modelcontextprotocol.io)*
 *Security references: [MCP Security Best Practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)*

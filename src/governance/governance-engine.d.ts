@@ -1,5 +1,5 @@
 /**
- * GovernanceEngine — The Heady AI Platform policy enforcement and audit layer.
+ * GovernanceEngine — The Heady™ AI Platform policy enforcement and audit layer.
  *
  * Responsibilities:
  *   1. Validate every action against a multi-type policy set

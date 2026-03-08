@@ -1,4 +1,4 @@
-# Heady Prompt Management System — v1.0.0
+# Heady™ Prompt Management System — v1.0.0
 
 > **64 prompts** | **14 categories** | **168+ variables**
 > **Source:** [`configs/prompts/heady-prompt-library.json`](../configs/prompts/heady-prompt-library.json)
@@ -45,13 +45,13 @@ const rendered = interpolate(prompt, { CLAIM_TO_VALIDATE: "...", EXPERIMENT_BUDG
 {
   "id": "SYS-001",
   "category": "SYSTEM_IDENTITY",
-  "name": "Heady Core System Identity",
+  "name": "Heady™ Core System Identity",
   "description": "Root identity prompt...",
   "version": "1.0.0",
   "tags": ["identity", "determinism", "root"],
   "composability": ["SYS-002", "SYS-003", "GOV-001"],
   "variables": ["{{CURRENT_LAYER}}", "{{ACTIVE_NODES}}"],
-  "prompt": "You are the Heady Intelligence System..."
+  "prompt": "You are the Heady™ Intelligence System..."
 }
 ```
 
@@ -59,7 +59,7 @@ const rendered = interpolate(prompt, { CLAIM_TO_VALIDATE: "...", EXPERIMENT_BUDG
 
 | ID | Name | Composes With |
 |----|------|---------------|
-| SYS-001 | Heady Core System Identity | SYS-002, SYS-003, GOV-001 |
+| SYS-001 | Heady™ Core System Identity | SYS-002, SYS-003, GOV-001 |
 | SYS-002 | Determinism Enforcement | SYS-001, GOV-001, ERR-001 |
 | SYS-003 | Registry-Aware Context Loader | SYS-001 |
 | SYS-004 | Layer Awareness | SYS-001, SYS-003 |
@@ -126,4 +126,4 @@ const rendered = interpolate(prompt, { CLAIM_TO_VALIDATE: "...", EXPERIMENT_BUDG
 
 ---
 
-*© 2026 HeadySystems Inc. / HeadyConnection Inc.*
+*© 2026 Heady™Systems Inc. / HeadyConnection Inc.*

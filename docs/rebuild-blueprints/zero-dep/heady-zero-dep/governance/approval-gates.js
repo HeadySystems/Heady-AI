@@ -1,6 +1,6 @@
 /**
  * @file approval-gates.js
- * @description Approval workflow engine for Heady governance.
+ * @description Approval workflow engine for Heady™ governance.
  *
  * Features:
  * - Gate definitions with configurable conditions
@@ -597,7 +597,7 @@ function _sanitizeContext(ctx = {}) {
 // ─── Pre-built gates factory ──────────────────────────────────────────────────
 
 /**
- * Returns a set of standard Heady governance gates.
+ * Returns a set of standard Heady™ governance gates.
  * @returns {GateDefinition[]}
  */
 export function defaultGates() {

@@ -1,5 +1,5 @@
 ## =============================================================================
-## Heady Liquid Latent OS — Cloud Run Service Definition
+## Heady™ Liquid Latent OS — Cloud Run Service Definition
 ##
 ## Numeric constants derived from Fibonacci / φ where applicable:
 ##   min-instances: 1           = fib(2)   always-on, zero cold starts

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -7,7 +7,7 @@
  * HeadyQA — Live Quality Assurance Engine
  * ═══════════════════════════════════════════════════════════════
  *
- * Automated QA validation for the Heady ecosystem:
+ * Automated QA validation for the Heady™ ecosystem:
  *   1. Endpoint health probes (all registered API routes)
  *   2. Schema validation (registry, configs, data files)
  *   3. Regression detection (compare current vs baseline)

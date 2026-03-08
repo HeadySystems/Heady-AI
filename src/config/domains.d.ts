@@ -45,7 +45,7 @@ export type DomainConfig = {
     services: string[];
 };
 /**
- * @fileoverview Heady domain registry — all canonical domains, their roles,
+ * @fileoverview Heady™ domain registry — all canonical domains, their roles,
  * tunnel configurations, and health endpoint definitions.
  * @module src/config/domains
  */
@@ -71,7 +71,7 @@ export const HEADY_DOMAINS: DomainConfig[];
  */
 export const DOMAIN_MAP: Map<string, DomainConfig>;
 /**
- * All allowed CORS origins across every Heady domain, deduplicated.
+ * All allowed CORS origins across every Heady™ domain, deduplicated.
  * @type {string[]}
  */
 export const ALL_ALLOWED_ORIGINS: string[];

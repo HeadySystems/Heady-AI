@@ -1,6 +1,6 @@
 # Heady™ Latent OS — File Manifest v5.0.0
 
-> 35 files · @heady/latent-os · Zero magic numbers
+> 35 files · @heady-ai/latent-os · Zero magic numbers
 
 ---
 

@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Phi-Math Foundation
+# Heady™ Phi-Math Foundation
 
 ## When to Use This Skill
 
@@ -153,7 +153,7 @@ Maps to: Hot:34%, Warm:21%, Cold:13%, Reserve:8%, Governance:5%
 
 ## Reference Implementation
 
-The canonical implementation is `shared/phi-math.js` in the Heady repository, providing all functions listed above as ES module exports.
+The canonical implementation is `shared/phi-math.js` in the Heady™ repository, providing all functions listed above as ES module exports.
 
 ## Evidence Paths
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Production Smoke Test ═══
@@ -23,7 +23,7 @@ const http = require("http");
 // ── Configuration ───────────────────────────────────────────────
 const ENDPOINTS = [
     {
-        name: "Heady Manager API",
+        name: "Heady™ Manager API",
         url: "https://manager.headysystems.com/api/pulse",
         expectedStatus: [200],
         timeoutMs: 15000,
@@ -38,7 +38,7 @@ const ENDPOINTS = [
         },
     },
     {
-        name: "Heady Manager Health",
+        name: "Heady™ Manager Health",
         url: "https://manager.headysystems.com/api/health",
         expectedStatus: [200, 404],
         timeoutMs: 10000,

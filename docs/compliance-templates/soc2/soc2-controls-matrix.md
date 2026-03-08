@@ -1,5 +1,5 @@
 # SOC 2 Type II Controls Matrix
-## HeadyMe Platform — Trust Services Criteria Mapping
+## Heady™Me Platform — Trust Services Criteria Mapping
 
 **Version:** 1.0  
 **Audit Period:** [START_DATE] to [END_DATE]  

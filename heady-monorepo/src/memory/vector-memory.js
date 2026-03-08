@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady 3D Spatial Vector Memory ──────────────────────────────
+ * ─── Heady™ 3D Spatial Vector Memory ──────────────────────────────
  *
  * TRUE 3D ARCHITECTURE:
  *   - Every vector gets (x, y, z) coordinates via PCA-lite projection

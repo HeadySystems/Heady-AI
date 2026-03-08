@@ -9,7 +9,7 @@
  * Architecture:
  *   3D Vector Memory → Auth Swarm Orchestrator → Provider Bees → User Session
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const { PHI } = require('../../packages/heady-sacred-geometry-sdk');
@@ -489,7 +489,7 @@ const SWARM_TASKS = {
         },
     },
 
-    // Task 5: Create unified Heady session
+    // Task 5: Create unified Heady™ session
     'session-create': {
         name: 'Session Creation',
         description: 'Create unified HeadyAuth session from provider identity',

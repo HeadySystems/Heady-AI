@@ -1,16 +1,17 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Deep Scan — Comprehensive Internal + External System Scanner
+ * Heady™ Deep Scan — Comprehensive Internal + External System Scanner
  *
  * Scans all services, evaluates best-practice adherence, solidifies
  * HeadyRegistry and HeadyPatterns, and exposes a unified control API
  * for system-wide parameter modification.
  */
 const http = require("http");
+const { PHI_TIMING } = require('../shared/phi-math');
 const fs = require("fs");
 const path = require("path");
 const logger = require("./utils/logger");
@@ -374,7 +375,7 @@ function registerDeepScanRoutes(app) {
             "auto-success": {
                 "set-interval": (p) => {
                     if (global.__autoSuccessEngine) {
-                        global.__autoSuccessEngine.interval = p.intervalMs || 30000;
+                        global.__autoSuccessEngine.interval = p.intervalMs || PHI_TIMING.CYCLE;
                         return { applied: true, newInterval: global.__autoSuccessEngine.interval };
                     }
                     return { applied: false, reason: "Engine not available" };

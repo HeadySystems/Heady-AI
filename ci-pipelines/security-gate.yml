@@ -1,4 +1,4 @@
-# security-gate.yml — Heady Systems Security Gate for PR Merges
+# security-gate.yml — Heady™ Systems Security Gate for PR Merges
 # Blocks merge on critical/high SAST findings, secrets, CVEs (CVSS >= 7.0)
 # Posts summary comment on PR; supports manual override by security team
 # Version: 1.0.0

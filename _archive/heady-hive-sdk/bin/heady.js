@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * ═══ Heady CLI — Unified Interface to the Heady Hive SDK ═══
+ * ═══ Heady™ CLI — Unified Interface to the Heady™ Hive SDK ═══
  *
  * Smart Default: Just type `heady "anything"` — if the first word isn't a
- * recognized command, the entire input is auto-routed to Heady Brain chat.
+ * recognized command, the entire input is auto-routed to Heady™ Brain chat.
  * No command needed. Paste code, ask questions, dump scattered notes.
  *
  * Explicit commands:
@@ -12,7 +12,7 @@
  *   heady --version | -v       Show version
  */
 
-// Load .env from project root (Heady/)
+// Load .env from project root (Heady™/)
 try { require("dotenv").config({ path: require("path").resolve(__dirname, "../../.env") }); } catch { /* dotenv not installed — use system env */ }
 
 const { HeadyClient, HeadyGateway, createProviders } = require("../index");
@@ -254,7 +254,7 @@ const COMMANDS = {
 
     // ── System ──
     async health() {
-        banner("Heady System Health", `SDK v${pkg.version}`);
+        banner("Heady™ System Health", `SDK v${pkg.version}`);
         const info = await heady.info();
 
         section("Connection");
@@ -354,7 +354,7 @@ const COMMANDS = {
                 try { reg = JSON.parse(fs.readFileSync(p, "utf8")); break; } catch { /* next */ }
             }
             if (!reg) {
-                console.error("❌ Cannot read registry. Is Heady Manager running?");
+                console.error("❌ Cannot read registry. Is Heady™ Manager running?");
                 return;
             }
             nodes = reg.nodes || {};
@@ -503,9 +503,9 @@ const COMMANDS = {
 
   ${C.yellow}heady hf search "query"${C.reset}     Search HuggingFace models
   ${C.yellow}heady hf info <model-id>${C.reset}     Get model details (e.g. Qwen/Qwen3-235B-A22B)
-  ${C.yellow}heady hf infer "prompt"${C.reset}      Run inference via Heady's HF provider
+  ${C.yellow}heady hf infer "prompt"${C.reset}      Run inference via Heady™'s HF provider
   ${C.yellow}heady hf spaces${C.reset}              List Heady HuggingFace Spaces
-  ${C.yellow}heady hf demo${C.reset}                Open/deploy the Heady interactive demo Space
+  ${C.yellow}heady hf demo${C.reset}                Open/deploy the Heady™ interactive demo Space
 `);
             return;
         }
@@ -587,7 +587,7 @@ const COMMANDS = {
                 const result = await client.chatCompletion({
                     model: "Qwen/Qwen3-235B-A22B",
                     messages: [
-                        { role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem. Be concise and insightful." },
+                        { role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem. Be concise and insightful." },
                         { role: "user", content: target },
                     ],
                     temperature: 0.7, max_tokens: 2048,
@@ -615,7 +615,7 @@ const COMMANDS = {
         } else if (sub === "spaces") {
             banner("Heady HuggingFace Spaces");
             section("Active Spaces");
-            statusLine("heady-ai-demo", "active", "Interactive Heady Brain demo");
+            statusLine("heady-ai-demo", "active", "Interactive Heady™ Brain demo");
             console.log(`     ${C.dim}🔗 https://huggingface.co/spaces/HeadyAI/heady-demo${C.reset}`);
             statusLine("heady-service-explorer", "active", "77-service ecosystem explorer");
             console.log(`     ${C.dim}🔗 https://huggingface.co/spaces/HeadyAI/service-explorer${C.reset}`);
@@ -674,7 +674,7 @@ USAGE
   heady <service-group> "your task"
 
   Every command routes to a Heady service group. All processing happens within
-  the Heady Intelligence Layer. If you omit the group, Heady auto-routes your
+  the Heady™ Intelligence Layer. If you omit the group, Heady auto-routes your
   input to the best-matching group.
 
 SERVICE GROUPS
@@ -684,7 +684,7 @@ SERVICE GROUPS
                                  research or multi-perspective tasks.
 
   heady code "task"              Ensemble coding orchestrator — multi-node code
-                                 generation with HeadyBattle validation. Ideal
+                                 generation with Heady™Battle validation. Ideal
                                  for refactors, migrations, and test generation.
 
   heady battle "change"          Adversarial validation — catches regressions,

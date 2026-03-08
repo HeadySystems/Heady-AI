@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -15,6 +15,7 @@
  */
 
 const express = require('../core/heady-server');
+const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 const fetch = require('../core/heady-fetch');
 const logger = require('../utils/logger');
@@ -45,7 +46,7 @@ class McpSseTransport {
             if (verified) return verified;
         }
 
-        // Fallback: accept raw Heady API key
+        // Fallback: accept raw Heady™ API key
         if (token === this.apiKey) {
             return { valid: true, tier: 'admin', scope: 'mcp:tools mcp:resources mcp:prompts', apiKey: token };
         }
@@ -87,8 +88,8 @@ class McpSseTransport {
         } catch {
             // Fallback: return a subset inline
             return [
-                { name: 'heady_chat', description: 'Send a chat message to Heady Brain.', inputSchema: { type: 'object', properties: { message: { type: 'string' } }, required: ['message'] } },
-                { name: 'heady_analyze', description: 'Analyze code or text using Heady Brain.', inputSchema: { type: 'object', properties: { content: { type: 'string' }, type: { type: 'string' } }, required: ['content'] } },
+                { name: 'heady_chat', description: 'Send a chat message to Heady™ Brain.', inputSchema: { type: 'object', properties: { message: { type: 'string' } }, required: ['message'] } },
+                { name: 'heady_analyze', description: 'Analyze code or text using Heady™ Brain.', inputSchema: { type: 'object', properties: { content: { type: 'string' }, type: { type: 'string' } }, required: ['content'] } },
                 { name: 'heady_deep_scan', description: 'Deep scan a project directory.', inputSchema: { type: 'object', properties: { directory: { type: 'string' } }, required: ['directory'] } },
                 { name: 'heady_health', description: 'Check Heady service health.', inputSchema: { type: 'object', properties: { service: { type: 'string' } } } },
             ];
@@ -97,7 +98,7 @@ class McpSseTransport {
 
     // ── Tool Execution ───────────────────────────────────────────────
     async _executeTool(name, args, apiKey) {
-        // Route tool calls to existing Heady REST API endpoints
+        // Route tool calls to existing Heady™ REST API endpoints
         const TOOL_ROUTES = {
             heady_chat: { method: 'POST', path: '/api/brain/chat', mapArgs: (a) => ({ message: a.message, system: a.system, model: 'heady-brain', temperature: a.temperature ?? 0.7, max_tokens: a.max_tokens ?? 4096, source: 'heady-mcp-sse' }) },
             heady_deep_scan: { method: 'POST', path: '/api/edge/deep-scan', mapArgs: (a) => ({ directory: a.directory, include_vectors: true }) },
@@ -150,7 +151,7 @@ class McpSseTransport {
             const text = result.response || result.content || result.text || result.completion || JSON.stringify(result, null, 2);
             return { content: [{ type: 'text', text }] };
         } catch (err) {
-            return { content: [{ type: 'text', text: `Heady MCP Error: ${err.message}` }], isError: true };
+            return { content: [{ type: 'text', text: `Heady™ MCP Error: ${err.message}` }], isError: true };
         }
     }
 
@@ -183,7 +184,7 @@ class McpSseTransport {
                     result: {
                         resources: [
                             { uri: 'heady://services/catalog', name: 'Heady Service Catalog', mimeType: 'application/json' },
-                            { uri: 'heady://services/health', name: 'Heady Health Status', mimeType: 'application/json' },
+                            { uri: 'heady://services/health', name: 'Heady™ Health Status', mimeType: 'application/json' },
                         ],
                     },
                 };
@@ -202,9 +203,9 @@ class McpSseTransport {
                     jsonrpc: '2.0', id,
                     result: {
                         prompts: [
-                            { name: 'heady_code_review', description: 'Review code with Heady Brain' },
+                            { name: 'heady_code_review', description: 'Review code with Heady™ Brain' },
                             { name: 'heady_architect', description: 'Get architectural guidance' },
-                            { name: 'heady_debug', description: 'Debug with Heady Brain' },
+                            { name: 'heady_debug', description: 'Debug with Heady™ Brain' },
                         ],
                     },
                 };
@@ -249,7 +250,7 @@ class McpSseTransport {
             // Keepalive every 30s
             const keepalive = setInterval(() => {
                 try { res.write(': keepalive\n\n'); } catch { clearInterval(keepalive); }
-            }, 30000);
+            }, PHI_TIMING.CYCLE);
 
             // Cleanup on disconnect
             req.on('close', () => {

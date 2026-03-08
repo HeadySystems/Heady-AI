@@ -15,7 +15,7 @@
 # HEADY_BRAND:END
 
 version: "1.0.0"
-description: "Heady Browser — architecture, features, and build configuration"
+description: "Heady™ Browser — architecture, features, and build configuration"
 sourceOfTruth: "docs/HEADY_BROWSER_BUDDY_IDE_PROTOCOL.md"
 
 # ─── PLATFORMS ──────────────────────────────────────────────────────
@@ -103,7 +103,7 @@ layers:
       - contentRules: "User-defined rules for CSS injection, element hiding"
 
   ai:
-    description: "Heady Buddy integration layer"
+    description: "Heady™ Buddy integration layer"
     features:
       - sidebarChat: "Full Buddy chat in browser sidebar"
       - textSelectionActions:
@@ -130,13 +130,13 @@ layers:
     encryption: "AES-256 via SQLCipher"
     sync:
       default: disabled
-      protocol: "E2E encrypted via Heady sync API"
+      protocol: "E2E encrypted via Heady™ sync API"
       syncable: [bookmarks, tabs, notes, buddyMemory, workspaces]
       neverSync: [history, passwords]
 
 # ─── FEATURE FUSION (Best of All Browsers) ─────────────────────────
 featureFusion:
-  description: "Heady Browser combines the best features from all major browsers"
+  description: "Heady™ Browser combines the best features from all major browsers"
   sources:
     chrome: [speed, devtools, rendering-quality]
     firefox: [privacy, extensions, tracking-protection, reader-view]

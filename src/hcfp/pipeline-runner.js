@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -12,7 +12,7 @@
  *   4. VALIDATE — Check outputs against expected outcomes
  *   5. PERSIST — Log results, update status, feed L6 memory
  *
- * Heady AI Nodes: CONDUCTOR, MAESTRO, OBSERVER, SENTINEL
+ * Heady™ AI Nodes: CONDUCTOR, MAESTRO, OBSERVER, SENTINEL
  *
  * Wired Systems:
  *   - FinOps Budget Router → Cost-aware provider selection (simulated execution)

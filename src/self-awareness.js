@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('./shared/phi-math');
 /**
  * Self-Awareness Telemetry Loop.
  * Maintains a 384-dimensional system-state embedding, monitors coherence
@@ -25,11 +26,11 @@ class SelfAwareness {
   /**
    * @param {object} [opts]
    * @param {string} [opts.systemId='heady-system']  identifier for this system instance
-   * @param {number} [opts.defaultIntervalMs=29034]  default heartbeat interval (φ⁷×1000)
+   * @param {number} [opts.defaultIntervalMs=PHI_TIMING.CYCLE]  default heartbeat interval (φ⁷×1000)
    */
   constructor(opts = {}) {
     this._systemId = opts.systemId || 'heady-system';
-    this._defaultIntervalMs = opts.defaultIntervalMs || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ 29034ms
+    this._defaultIntervalMs = opts.defaultIntervalMs || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
     this._embeddingProvider = new EmbeddingProvider({ providerChain: ['local'] });
     this._monte = new MonteCarloEngine();
 

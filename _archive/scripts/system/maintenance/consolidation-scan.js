@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -21,13 +21,13 @@ const repositories = [
     branch: 'master'
   },
   {
-    name: 'Heady (CascadeProjects)',
+    name: 'Heady™ (CascadeProjects)',
     path: '/home/headyme/CascadeProjects/Heady',
     remote: 'git@github.com:HeadyMe/Heady.git',
     branch: 'master'
   },
   {
-    name: 'Heady (Root)',
+    name: 'Heady™ (Root)',
     path: '/home/headyme/Heady',
     remote: 'https://github.com/HeadyMe/Heady.git',
     branch: 'main'

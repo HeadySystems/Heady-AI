@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * HCStoryDriver — Narrative engine that ingests system events and builds operational "stories".
  */
 const logger = require('../utils/logger');

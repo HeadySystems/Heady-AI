@@ -4,7 +4,7 @@
  * PQCBee — Post-quantum cryptography key generation and rotation.
  * Implements Kyber-style lattice key schedules with phi-harmonic rotation intervals.
  * Uses Node.js crypto module for actual entropy; PQC algorithm is simulated structurally.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const crypto = require('crypto');

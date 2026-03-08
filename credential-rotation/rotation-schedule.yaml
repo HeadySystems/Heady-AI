@@ -1,4 +1,4 @@
-# rotation-schedule.yaml — Heady Systems Credential Rotation Schedule
+# rotation-schedule.yaml — Heady™ Systems Credential Rotation Schedule
 # Defines rotation policies, notification thresholds, and automation rules.
 # Consumed by: credential-audit.js, crontab-rotation.txt, CI workflows
 # Version: 1.0.0

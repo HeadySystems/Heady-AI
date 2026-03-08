@@ -1,14 +1,14 @@
 /**
  * ═══ HeadyBee — Autonomous Worker Agent ═══
  *
- * A single bee in the HeadySwarm. Models real bee behavior:
- *   - Forages (executes tasks via HeadyGateway)
+ * A single bee in the Heady™Swarm. Models real bee behavior:
+ *   - Forages (executes tasks via Heady™Gateway)
  *   - Returns nectar (AI results) to the honeycomb
  *   - Performs waggle dance (signals quality to recruit others)
  *   - Has energy (prevents overwork, recovers during idle)
  *   - Has a role (forager, scout, nurse, guard)
  *
- * Bees are managed by HeadySwarm but operate autonomously.
+ * Bees are managed by Heady™Swarm but operate autonomously.
  */
 
 const EventEmitter = require("events");
@@ -58,7 +58,7 @@ class HeadyBee extends EventEmitter {
     }
 
     /**
-     * Forage — execute a task through the HeadyGateway.
+     * Forage — execute a task through the Heady™Gateway.
      * This is the core work loop of a bee.
      *
      * @param {Object} task - { id, name, prompt, system, category, priority }
@@ -80,7 +80,7 @@ class HeadyBee extends EventEmitter {
         try {
             // The actual AI work — through the liquid gateway
             const result = await this.gateway.chat(task.prompt, {
-                system: task.system || `You are a Heady AI assistant performing a ${task.category} task. Be concise, actionable, and specific.`,
+                system: task.system || `You are a Heady™ AI assistant performing a ${task.category} task. Be concise, actionable, and specific.`,
                 priority: task.priority || "medium",
                 temperature: task.temperature || 0.7,
                 maxTokens: task.maxTokens || 1024,

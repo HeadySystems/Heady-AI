@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ExecutionSandbox — Isolated execution contexts for subtasks.
@@ -14,6 +14,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -91,7 +92,7 @@ class SandboxContext {
         try {
             return execSync(cmd, {
                 cwd: this.cwd,
-                timeout: 30_000,
+                timeout: PHI_TIMING.CYCLE,
                 encoding: 'utf-8',
                 stdio: 'pipe',
             });

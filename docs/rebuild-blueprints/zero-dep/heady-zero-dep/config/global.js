@@ -1,6 +1,6 @@
 /**
  * @file global.js
- * @description Global configuration for the Heady zero-dependency system.
+ * @description Global configuration for the Heady™ zero-dependency system.
  *
  * Sacred Geometry: PHI (φ=1.618…) and Fibonacci sequence govern all ratios.
  * Cluster: 3-node topology (BRAIN, CONDUCTOR, SENTINEL).

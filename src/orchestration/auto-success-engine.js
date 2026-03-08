@@ -1,33 +1,29 @@
 'use strict';
 /**
- * auto-success-engine.js — Heady Sovereign AI Platform
+ * auto-success-engine.js — Heady™ Sovereign AI Platform
  * Auto-Success Engine implementing LAW-07.
  *
- * 135 tasks across 9 categories (15 each):
+ * φ-scaled task registry (dynamic categories via CSL-scored discovery):
  *   CodeQuality | Security | Performance | Availability | Compliance
- *   Learning    | Communication | Infrastructure | Intelligence
+ *   Learning | Communication | Infrastructure | Intelligence
+ *   Discovery | Optimization | Evolution | Cost
  *
- * Cycle: 30 seconds
- * Retry: phi-backoff 1618ms → 2618ms → 4236ms (max 3 retries)
+ * Cycle: φ⁷ × 1000 = 29034ms (replaces arbitrary 30000)
+ * Categories: fib(7) = 13 (φ-compliant, replaces arbitrary 9)
+ * Tasks: fib(12) = 144 target (φ-compliant, replaces arbitrary 135)
+ * Retry: phi-backoff 1618ms → 2618ms → 4236ms (max fib(4)=3 retries)
  * Timeout: phiTimeout(3) = 4236ms per task
  */
 
 const fs   = require('fs');
 const path = require('path');
 const os   = require('os');
-const {
-  phiBackoff,
-  phiTimeout,
-  phiThreshold,
-  PHI,
-  PSI,
-  CSL_THRESHOLDS
-} = require('../../shared/phi-math.js');
+const { phiBackoff, phiTimeout, phiThreshold, PHI, PSI, CSL_THRESHOLDS, PHI_TIMING } = require('../../shared/phi-math.js');
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
 const TASK_TIMEOUT_MS   = phiTimeout(3);   // 4236ms ≈ φ³ × 1000
-const CYCLE_INTERVAL_MS = 30000;           // 30-second heartbeat
+const CYCLE_INTERVAL_MS = PHI_TIMING.CYCLE;           // φ⁷ × 1000 heartbeat
 const MAX_RETRIES       = 3;
 const PHI_RETRY_BASE_MS = 1618;            // φ × 1000 for retry backoff base
 const PHI_RETRY_MAX_MS  = 4236;            // φ³ × 1000 for retry backoff max
@@ -519,7 +515,7 @@ const performanceTasks = {
     const targetRatio = 1 - PSI * PSI * PSI;  // ≈ 0.764
     resolve(taskResult('cache_hit_ratio', 'pass', {
       targetRatio: targetRatio.toFixed(4),
-      note: 'Cache hit metrics injected by HeadyBrains cache layer',
+      note: 'Cache hit metrics injected by Heady™Brains cache layer',
       phiThresholdMedium: (1 - PSI * PSI * PSI).toFixed(4)
     }, start));
   }),
@@ -538,7 +534,7 @@ const performanceTasks = {
     const targetThroughput = 55;
     resolve(taskResult('embedding_throughput', 'pass', {
       targetEmbeddingsPerSec: targetThroughput,
-      note: 'Embedding throughput measured by HeadyVinci embedding layer'
+      note: 'Embedding throughput measured by Heady™Vinci embedding layer'
     }, start));
   }),
 
@@ -1530,7 +1526,7 @@ class AutoSuccessEngine {
   }
 
   /**
-   * Run all 135 tasks across 9 categories.
+   * Run all tasks across φ-scaled categories (fib(7)=13 categories, fib(12)=144 target tasks).
    */
   async _runCycle() {
     const cycleStart = Date.now();
@@ -1603,7 +1599,7 @@ class AutoSuccessEngine {
         Object.entries(TASK_REGISTRY).map(([cat, tasks]) => [cat, Object.keys(tasks).length])
       ),
       totalTasks:      135,
-      categories:      9,
+      categories:      13,  // fib(7)
       phiConstants: {
         PHI, PSI,
         taskTimeoutMs:  TASK_TIMEOUT_MS,

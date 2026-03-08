@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * continuous-conductor.js — Heady Continuous Conductor
+ * continuous-conductor.js — Heady™ Continuous Conductor
  *
  * Drop-in replacement for the discrete logic inside HeadyConductor.  Every
  * hard-coded switch/if-else decision point is replaced by a continuous

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Unified System Sync
- * Synchronizes runtime state across all Heady subsystems:
+ * Synchronizes runtime state across all Heady™ subsystems:
  *   - Vector projection configs
  *   - Template registry coherence
  *   - Autonomy snapshot freshness

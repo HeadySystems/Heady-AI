@@ -1,5 +1,5 @@
 /**
- * @file dashboard-api.js — Express routes for Heady dashboards
+ * @file dashboard-api.js — Express routes for Heady™ dashboards
  * Source: docs/ENTERPRISE-MANIFEST.md → pilot/dashboard/dashboard-api.js
  * 4 Express routes for dashboard data
  */

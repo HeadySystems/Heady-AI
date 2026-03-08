@@ -1,6 +1,6 @@
-# Heady AI — VS Code Extension
+# Heady™ AI — VS Code Extension
 
-AI assistant powered by the Heady Intelligence Layer. 5 branded models, 20 competing nodes, arena-validated responses.
+AI assistant powered by the Heady™ Intelligence Layer. 5 branded models, 20 competing nodes, arena-validated responses.
 
 ## Features
 
@@ -8,7 +8,7 @@ AI assistant powered by the Heady Intelligence Layer. 5 branded models, 20 compe
 - **Explain** — Right-click to explain any selection  
 - **Refactor** — AI-powered code refactoring
 - **Battle-Validate** — Arena-test any code selection across AI nodes
-- **Swarm** — Distribute tasks across the Heady swarm
+- **Swarm** — Distribute tasks across the Heady™ swarm
 - **Security Audit** — Scan code for vulnerabilities
 - **Monte Carlo Simulate** — Run probabilistic analysis
 
@@ -30,5 +30,5 @@ AI assistant powered by the Heady Intelligence Layer. 5 branded models, 20 compe
 
 ## License
 
-© 2026 HeadySystems Inc. Proprietary.
+© 2026 Heady™Systems Inc. Proprietary.
 

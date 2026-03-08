@@ -1,10 +1,10 @@
 /**
- * Heady Projection Monitor — App Component
+ * Heady™ Projection Monitor — App Component
  *
  * Deployment projection monitoring: target health, pipeline visualizer,
  * domain mapping table, sync mode, staleness budgets.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/projection-monitor/App
  */

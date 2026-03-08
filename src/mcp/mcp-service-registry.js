@@ -1,11 +1,11 @@
-// MCP Service Registry — All 42 Heady Skills as MCP-Compatible Services
+// MCP Service Registry — All 42 Heady™ Skills as MCP-Compatible Services
 // Generated: March 7, 2026
 // Each skill maps to an MCP tool endpoint with typed parameters
 
 const PHI = 1.618033988749895;
 
 /**
- * Heady MCP Service Registry
+ * Heady™ MCP Service Registry
  * Maps all 42 skills to MCP service definitions with:
  * - tool name (MCP-compatible snake_case)
  * - description
@@ -20,7 +20,7 @@ const MCP_SERVICES = {
 
     heady_deep_scan: {
         tool: 'heady_deep_scan',
-        description: 'Project-wide context mapping via HeadyDeepScan — maps entire workspace into 3D vector memory',
+        description: 'Project-wide context mapping via Heady™DeepScan — maps entire workspace into 3D vector memory',
         category: 'intelligence',
         priority: Math.pow(PHI, 0),
         parameters: {
@@ -67,7 +67,7 @@ const MCP_SERVICES = {
 
     heady_memory_ops: {
         tool: 'heady_memory_ops',
-        description: 'Persistent 3D vector memory — search, store, embed, learn via HeadyMemory',
+        description: 'Persistent 3D vector memory — search, store, embed, learn via Heady™Memory',
         category: 'memory',
         priority: Math.pow(PHI, 0),
         parameters: {
@@ -279,7 +279,7 @@ const MCP_SERVICES = {
 
     heady_deployment: {
         tool: 'heady_deployment',
-        description: 'Deploy, monitor, scale, and maintain services via HeadyDeploy and HeadyOps',
+        description: 'Deploy, monitor, scale, and maintain services via Heady™Deploy and HeadyOps',
         category: 'infrastructure',
         priority: Math.pow(PHI, 0.5),
         parameters: {
@@ -484,7 +484,7 @@ const MCP_SERVICES = {
 
     heady_installable_package: {
         tool: 'heady_installable_package',
-        description: 'Package, verify, and publish installable Heady surfaces',
+        description: 'Package, verify, and publish installable Heady™ surfaces',
         category: 'business',
         priority: Math.pow(PHI, 1),
         parameters: {

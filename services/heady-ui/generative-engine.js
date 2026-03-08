@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * UI-001: Generative UI Engine — CSL-Gated
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * AI-powered component generation from natural language descriptions.

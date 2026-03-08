@@ -1,5 +1,5 @@
 /**
- * Quality Gate Validator for HeadyBattle Coding Workflows
+ * Quality Gate Validator for Heady™Battle Coding Workflows
  * 
  * Implements automated quality checks during code generation:
  * - Security scanning

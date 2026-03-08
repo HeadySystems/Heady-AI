@@ -2,7 +2,7 @@
 
 > **Source:** Gemini conversation export (Eric Haywood)
 > **Date:** Pre-2026 research
-> **Status:** Reference / Design spec for Heady optimization engine
+> **Status:** Reference / Design spec for Heady™ optimization engine
 > **Relevance:** Core pattern for weighted random task selection + idle-time learning
 
 ---

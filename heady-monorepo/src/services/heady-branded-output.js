@@ -1,13 +1,13 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyBrandedOutput — Unified Response Formatting
  *
- * Transforms all Heady service output into branded, consistent format.
- * Used by HeadyManager, MCP tools, CLI, and all API endpoints.
+ * Transforms all Heady™ service output into branded, consistent format.
+ * Used by Heady™Manager, MCP tools, CLI, and all API endpoints.
  */
 
 const ANSI = {
@@ -25,7 +25,7 @@ const ANSI = {
 
 const BRAND = {
     logo: "⬡",
-    name: "Heady",
+    name: "Heady™",
     divider: "─".repeat(52),
     thinDivider: "·".repeat(52),
 };
@@ -60,7 +60,7 @@ function errorEnvelope(service, message, code = 500) {
 }
 
 /**
- * Format CLI/terminal output with Heady branding.
+ * Format CLI/terminal output with Heady™ branding.
  */
 function branded(service, message, level = "info") {
     const colors = { info: ANSI.cyan, success: ANSI.green, warn: ANSI.yellow, error: ANSI.red, debug: ANSI.gray };
@@ -100,7 +100,7 @@ function table(rows, columns) {
  * Express middleware: adds branded headers to all responses.
  */
 function brandedHeaders(req, res, next) {
-    res.setHeader("X-Powered-By", "HeadySystems/3.0");
+    res.setHeader("X-Powered-By", "HeadyMe/3.0");
     res.setHeader("X-Heady-Service", "HeadyBrain");
     res.setHeader("X-Heady-Request-Id", `hdy-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`);
     next();

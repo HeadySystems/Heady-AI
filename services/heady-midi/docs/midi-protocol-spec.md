@@ -1,4 +1,4 @@
-# Heady MIDI Transfer Schema — Protocol Specification v2.0
+# Heady™ MIDI Transfer Schema — Protocol Specification v2.0
 
 > **Version:** 2.0.0  
 > **Author:** HeadySystems™  
@@ -9,7 +9,7 @@
 
 ## 1. Overview
 
-The Heady MIDI Transfer Schema treats MIDI not as a music protocol, but as a **universal sub-millisecond event bus** — the latent operating system's nervous system. Every system event (task lifecycle, agent health, scaling decisions, financial operations) is encoded as a MIDI message and dispatched through a ring buffer at sub-ms latency.
+The Heady™ MIDI Transfer Schema treats MIDI not as a music protocol, but as a **universal sub-millisecond event bus** — the latent operating system's nervous system. Every system event (task lifecycle, agent health, scaling decisions, financial operations) is encoded as a MIDI message and dispatched through a ring buffer at sub-ms latency.
 
 **Core principles:**
 
@@ -279,7 +279,7 @@ All payload bytes **must** be 7-bit safe (< 0x80). For values exceeding 7 bits:
 
 ## 8. MIDI 2.0 UMP Support
 
-The Heady MIDI schema supports MIDI 2.0 Universal MIDI Packets (UMP) for higher resolution and richer messaging.
+The Heady™ MIDI schema supports MIDI 2.0 Universal MIDI Packets (UMP) for higher resolution and richer messaging.
 
 ### 8.1 UMP Message Types
 
@@ -310,7 +310,7 @@ The Heady MIDI schema supports MIDI 2.0 Universal MIDI Packets (UMP) for higher 
 | 0x20   | 0x20   | RPN              |
 | 0x30   | 0x30   | NRPN             |
 
-MIDI 2.0 provides 32-bit resolution for CC, velocity, and pitch bend — enabling higher-fidelity metric transport for Heady's telemetry channel.
+MIDI 2.0 provides 32-bit resolution for CC, velocity, and pitch bend — enabling higher-fidelity metric transport for Heady™'s telemetry channel.
 
 ---
 
@@ -445,4 +445,4 @@ Precision: ±2 in round-trip due to 8→7→8 bit resolution loss.
 
 ---
 
-> ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™ — Sacred Geometry :: Organic Systems :: Breathing Interfaces
+> ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™ — Sacred Geometry :: Organic Systems :: Breathing Interfaces

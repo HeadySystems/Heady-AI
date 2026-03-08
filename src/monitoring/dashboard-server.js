@@ -1,10 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Unified Observability Dashboard — Server
+ * Heady™ Unified Observability Dashboard — Server
  * ═══════════════════════════════════════════════════════════════════
  *
  * Express app serving the live observability dashboard on port 9090.
- * Collects metrics from all 7 Heady services, MCP router, bee factory,
+ * Collects metrics from all 7 Heady™ services, MCP router, bee factory,
  * skill router, CSL gate statistics, and phi scale values.
  *
  * Endpoints:
@@ -14,7 +14,7 @@
  *   GET  /stream   — SSE endpoint pushing real-time metrics every 2s
  *   GET  /         — Dashboard HTML
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * @module src/monitoring/dashboard-server
  */
 'use strict';

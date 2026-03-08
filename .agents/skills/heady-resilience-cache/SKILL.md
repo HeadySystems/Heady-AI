@@ -1,12 +1,12 @@
 ---
 name: heady-resilience-cache
-description: Use when implementing advanced caching strategies, retry logic with backoff, hot-cold cache patterns, auto-tuning connection pools, or cache optimization in the Heady ecosystem. Keywords include cache, caching, retry, hot-cold, auto-tuning, pool, connection pool, LRU, cache strategy, and resilience cache.
+description: Use when implementing advanced caching strategies, retry logic with backoff, hot-cold cache patterns, auto-tuning connection pools, or cache optimization in the Heady™ ecosystem. Keywords include cache, caching, retry, hot-cold, auto-tuning, pool, connection pool, LRU, cache strategy, and resilience cache.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Resilience & Cache Patterns
+# Heady™ Resilience & Cache Patterns
 
 ## When to Use This Skill
 

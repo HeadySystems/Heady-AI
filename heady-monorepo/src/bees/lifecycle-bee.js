@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Lifecycle Bee — Covers all lifecycle/bootstrap modules:
  * engine-wiring.js, service-routes.js, static-hosting.js,
  * error-pipeline-bridge.js, graceful-shutdown.js,

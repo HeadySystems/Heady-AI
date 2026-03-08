@@ -1,4 +1,4 @@
-# Heady Architecture & Orchestration Analysis
+# Heady™ Architecture & Orchestration Analysis
 **Date:** March 7, 2026  
 **Scope:** All repos under `/home/user/workspace/headyme-repos/`  
 **Primary Subject:** `Heady-pre-production-9f2f0642` (v3.1.0 — "Aether")  
@@ -40,7 +40,7 @@
 | `headyme-core` | HeadyMe dashboard product | Projected stub | Thin Express server; projected from monorepo |
 | `headyos-core` | HeadyOS product | Projected stub | Thin Express server; projected from monorepo |
 | `headysystems-core` | HeadySystems corporate | Projected stub | Thin Express server; projected from monorepo |
-| `headysystems-production` | HeadySystems production | Stub | Minimal |
+| `heady-production` | HeadySystems production | Stub | Minimal |
 
 ### Topology Pattern
 
@@ -173,7 +173,7 @@ cost_usd:           default $1.00 / max $10.00 per run
 
 ## 4. HeadyConductor & Buddy Orchestration
 
-### HeadyConductor
+### Heady™Conductor
 
 **Location:** `src/heady-conductor.js` (532 lines) — the authoritative singleton  
 **Also at:** `src/orchestration/heady-conductor.js` (276 lines) — a secondary/legacy copy (see Issues)
@@ -319,7 +319,7 @@ Layer 1: In-Process RAM (VectorMemory — src/vector-memory.js)
     JSON-lines persistence, drift detection at 0.75 threshold
     
 Layer 2: DuckDB V2 (src/intelligence/duckdb-memory.js)
-    Zone-aware routing for HeadyConductor
+    Zone-aware routing for Heady™Conductor
     3D spatial octant indexing
     
 Layer 3: Federation (src/memory/vector-federation.js)

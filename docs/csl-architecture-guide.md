@@ -499,7 +499,7 @@ function agentConsensus(agentOutputs, confidences) {
 
 ```javascript
 // Route through the Sacred Geometry topology
-// (Heady's 7-node flower-of-life expert arrangement)
+// (Heady™'s 7-node flower-of-life expert arrangement)
 function sacredGeometryRoute(input, experts) {
   const router = new MoECSLRouter({
     numExperts: 7,    // central + 6 petals
@@ -699,4 +699,4 @@ case 'priest_lp':
 
 ---
 
-*Architecture guide compiled: March 7, 2026. Heady Connection AI Platform.*
+*Architecture guide compiled: March 7, 2026. Heady™ Connection AI Platform.*

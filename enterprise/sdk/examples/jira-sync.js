@@ -2,11 +2,11 @@
 
 /**
  * @file jira-sync.js
- * @description Jira issue sync with Heady Conductor tasks.
- * Bidirectional sync: Jira issues → Heady tasks, Heady results → Jira comments.
+ * @description Jira issue sync with Heady™ Conductor tasks.
+ * Bidirectional sync: Jira issues → Heady™ tasks, Heady™ results → Jira comments.
  *
  * Features:
- * - Sync Jira issues to Heady Conductor tasks
+ * - Sync Jira issues to Heady™ Conductor tasks
  * - Post AI analysis results back to Jira comments
  * - Auto-label issues based on AI triage
  * - Webhook receiver for Jira events
@@ -88,7 +88,7 @@ const jiraRequest = async (method, path, body) => {
 };
 
 // ---------------------------------------------------------------------------
-// Jira ↔ Heady Sync Functions
+// Jira ↔ Heady™ Sync Functions
 // ---------------------------------------------------------------------------
 
 /**
@@ -137,7 +137,7 @@ const addJiraLabel = async (issueKey, label) => {
 };
 
 /**
- * Map Jira issue to a Heady Conductor task.
+ * Map Jira issue to a Heady™ Conductor task.
  */
 const jiraIssueToHeadyTask = (issue) => ({
   type: 'jira_issue_analysis',
@@ -170,14 +170,14 @@ const jiraIssueToHeadyTask = (issue) => ({
 });
 
 /**
- * Sync a single Jira issue to Heady and post results back.
+ * Sync a single Jira issue to Heady™ and post results back.
  */
 const syncJiraIssue = async (issue) => {
   const issueKey = issue.key;
   console.log(`[Jira] Syncing ${issueKey}: ${issue.fields.summary}`);
 
   try {
-    // Submit to Heady Conductor
+    // Submit to Heady™ Conductor
     const task = await heady.conductor.submitTask(jiraIssueToHeadyTask(issue));
     console.log(`[Jira] Task submitted for ${issueKey}: ${task.taskId}`);
 
@@ -210,7 +210,7 @@ const syncJiraIssue = async (issue) => {
 };
 
 /**
- * Batch sync Jira issues to Heady.
+ * Batch sync Jira issues to Heady™.
  */
 const batchSync = async (projectKey) => {
   console.log(`[Jira] Starting batch sync for project ${projectKey}`);

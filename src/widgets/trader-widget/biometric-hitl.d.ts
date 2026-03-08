@@ -5,7 +5,7 @@ declare class BiometricHITL {
     isSupported: boolean;
     /**
      * Initializes a robust swipe-to-execute check using an Assertion Challenge
-     * returned by the central Heady Manager.
+     * returned by the central Heady™ Manager.
      */
     requireSwipeValidation(tradeContext: any): Promise<boolean>;
     _base64UrlToBuffer(base64url: any): Uint8Array<any>;

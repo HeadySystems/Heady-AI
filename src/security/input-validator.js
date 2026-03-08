@@ -1,5 +1,5 @@
 /**
- * Heady MCP Input Validator
+ * Heady™ MCP Input Validator
  * =========================
  * Validates and sanitizes MCP tool call arguments against:
  * - SQL injection

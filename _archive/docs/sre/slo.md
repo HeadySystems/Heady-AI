@@ -1,6 +1,6 @@
 # SLOs: API Latency by Endpoint Class
 
-This document defines concrete latency objectives for Heady APIs and the CI/deploy performance gate that enforces them.
+This document defines concrete latency objectives for Heady™ APIs and the CI/deploy performance gate that enforces them.
 
 ## Endpoint classes and targets
 

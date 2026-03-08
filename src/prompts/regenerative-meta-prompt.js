@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * regenerative-meta-prompt.js — Heady Regenerative Meta-Prompt Engine
+ * regenerative-meta-prompt.js — Heady™ Regenerative Meta-Prompt Engine
  *
  * Enables stateless but context-aware cold-start orchestration. A
  * RegenerativePrompt is a self-contained document that carries semantic

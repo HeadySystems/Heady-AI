@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('./shared/phi-math');
 const PHI = (1 + Math.sqrt(5)) / 2;
 
 /**
@@ -30,7 +31,7 @@ class VectorFederation extends EventEmitter {
     this._peers = new Map();              // nodeId → PeerRecord
     this._localMemory = opts.vectorMemory || null;
     this._syncStrategy = opts.syncStrategy || SYNC_STRATEGIES.PUSH;
-    this._syncIntervalMs = opts.syncIntervalMs || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ 29034ms
+    this._syncIntervalMs = opts.syncIntervalMs || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
     this._vectorLog = [];                 // replication log
     this._maxLogSize = opts.maxLogSize || 6765; // fib(20)
     this._stats = { syncs: 0, pushes: 0, pulls: 0, errors: 0, vectors: 0 };

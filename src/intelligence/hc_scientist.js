@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -25,6 +25,7 @@
  */
 
 const EventEmitter = require("events");
+const { PHI_TIMING } = require('../shared/phi-math');
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -371,7 +372,7 @@ class HeadyScientist extends EventEmitter {
 
     _triggerScan(reason) {
         // Debounce: don't scan more than once per 30s
-        if (this._lastTriggerScan && Date.now() - this._lastTriggerScan < 30000) return;
+        if (this._lastTriggerScan && Date.now() - this._lastTriggerScan < PHI_TIMING.CYCLE) return;  // φ⁷ × 1000
         this._lastTriggerScan = Date.now();
         this.runConsistencyScan(reason);
     }

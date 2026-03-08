@@ -1,12 +1,12 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * ═══ HCFP Full Auto — HeadySwarm Bootstrap ═══
  *
- * Spins up the HeadySwarm bee colony for continuous, autonomous AI work.
+ * Spins up the Heady™Swarm bee colony for continuous, autonomous AI work.
  * Replaces the old crash-prone task dispatcher with bio-inspired swarm intelligence.
  *
  * The swarm manages everything: task selection, parallel execution,

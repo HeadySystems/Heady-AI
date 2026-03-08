@@ -22,7 +22,7 @@ const FIRST_PARTY_DOMAINS = [
   'headyme.com',
   'headysystems.com',
   'headymcp.com',
-  'headybuddy.com',
+  'headybuddy.org',
   'headyconnection.org',
   'headyapi.com',
   'headybot.com',

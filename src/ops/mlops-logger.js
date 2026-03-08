@@ -1,5 +1,5 @@
 /**
- * Heady Project - MLOps Telemetry & Drift Logger
+ * Heady™ Project - MLOps Telemetry & Drift Logger
  * 
  * Logs prompt inputs, model outputs, latency, and token consumption.
  * Triggers alerts when variance suggests model degradation.

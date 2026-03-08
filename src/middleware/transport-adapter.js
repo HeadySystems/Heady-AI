@@ -1,3 +1,4 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview MCP Multi-Transport Adapter
  *
@@ -401,7 +402,7 @@ export class StreamableHTTPTransport extends BaseTransport {
     const delay = this._reconnectDelayMs * Math.pow(1.618, this._reconnectAttempts++);
     setTimeout(() => {
       if (this._connected) this._openSSEChannel().catch(() => {});
-    }, Math.min(delay, 30_000));
+    }, Math.min(delay, PHI_TIMING.CYCLE));
   }
 
   /**

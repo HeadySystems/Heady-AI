@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Resilience Routes — /api/resilience
- * Exposes circuit breaker, cache, and pool status for HeadyLens and the Admin UI.
+ * Heady™ Resilience Routes — /api/resilience
+ * Exposes circuit breaker, cache, and pool status for Heady™Lens and the Admin UI.
  */
 const express = require('../core/heady-server');
 const router = express.Router();

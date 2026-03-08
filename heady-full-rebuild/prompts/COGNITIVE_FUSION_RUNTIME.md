@@ -82,4 +82,4 @@ If any signal < 0.7: iterate on that layer before producing output.
 
 These cognitive layers are PERMANENT. They persist across all conversations,
 agents, environments, interfaces, and system restarts. They are baked into
-the IDENTITY of Heady, not toggled as features.
+the IDENTITY of Heady™, not toggled as features.

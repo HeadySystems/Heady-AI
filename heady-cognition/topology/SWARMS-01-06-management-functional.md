@@ -41,7 +41,7 @@ Root swarm — intents enter here, decompose into task DAGs.
 | `ContextWeaverBee` | Full context assembly (imports, types, patterns) | ❌ | 8-34 |
 | `RefactorBee` | Architectural refactoring identification + execution | ❌ | 5-21 |
 | `TestGeneratorBee` | Auto-test generation for new functions/endpoints | ❌ | 8-34 |
-| `LiveCoderBee` | Real-time collaborative via HeadyCoder/HeadyCodex | ❌ | 3-13 |
+| `LiveCoderBee` | Real-time collaborative via Heady™Coder/HeadyCodex | ❌ | 3-13 |
 | `DiffValidatorBee` | Validates proposed diffs against coding standards | ❌ | 3-13 |
 
 ## Swarm 4: EMISSARY (Docs, MCP & SDK)

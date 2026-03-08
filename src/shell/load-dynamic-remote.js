@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  *
  * Loads a micro-frontend at runtime via Module Federation.
- * The HeadyWeb Universal Shell calls this to project UIs
+ * The Heady™Web Universal Shell calls this to project UIs
  * dynamically based on the domain-router or ui-registry.
  *
  * Usage:

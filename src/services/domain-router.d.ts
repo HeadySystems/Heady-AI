@@ -249,7 +249,7 @@ export const DOMAIN_PROJECTIONS: {
         module: string;
         category: string;
     };
-    'headybuddy.com': {
+    'headybuddy.org': {
         uiId: string;
         module: string;
         category: string;

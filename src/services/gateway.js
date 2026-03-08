@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * HeadyGateway — Unified API Gateway for all Heady Native Services
+ * HeadyGateway — Unified API Gateway for all Heady™ Native Services
  * Routes requests to the appropriate service based on path prefix.
  * Sacred Geometry Architecture v3.0.0
  */

@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -7,7 +7,7 @@
 /**
  * ─── HeadyConductor — Unified Orchestration API ────────────────
  *
- * Central traffic controller for Heady's multi-agent swarm.
+ * Central traffic controller for Heady™'s multi-agent swarm.
  * Routes tasks to bees, manages heartbeats, tracks execution state,
  * and bridges local swarm to edge/cloud nodes.
  *
@@ -20,6 +20,7 @@
  */
 
 const EventEmitter = require('events');
+const { PHI_TIMING } = require('../../shared/phi-math');
 const logger = require('../utils/logger');
 
 const PHI = (1 + Math.sqrt(5)) / 2;
@@ -118,7 +119,7 @@ class HeadyConductor extends EventEmitter {
         this.emit('task:dispatched', { executionId, beeId: targetBee, taskType });
 
         try {
-            const timeout = opts.timeout || 30000;
+            const timeout = opts.timeout || PHI_TIMING.CYCLE;
             const result = await Promise.race([
                 this._executeBee(entry.bee, payload),
                 new Promise((_, reject) => setTimeout(() => reject(new Error('Execution timeout')), timeout)),

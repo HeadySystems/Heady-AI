@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * 🎲 Heady HeadySims Service - 100% Uptime Continuous Task Processing
+ * 🎲 Heady™ HeadySims Service - 100% Uptime Continuous Task Processing
  * 
- * This service runs continuously, handling all tasks with HeadySims optimization.
+ * This service runs continuously, handling all tasks with Heady™Sims optimization.
  * Default behavior: Always on, always processing, always optimizing.
  */
 
@@ -233,7 +233,7 @@ class HeadySimsService extends EventEmitter {
     });
     
     try {
-      // Select optimal strategy using HeadySims
+      // Select optimal strategy using Heady™Sims
       const strategy = await this.selectOptimalStrategy(task);
       
       // Execute task with selected strategy

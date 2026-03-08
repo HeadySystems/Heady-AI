@@ -1,5 +1,5 @@
 /**
- * Heady Hive SDK — Official client library for the Heady AI ecosystem
+ * Heady™ Hive SDK — Official client library for the Heady™ AI ecosystem
  * 
  * Connect to Brain, Battle, Creative, MCP, and 40+ services through a
  * unified, zero-dependency SDK.

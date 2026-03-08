@@ -1,6 +1,7 @@
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * durable-agent-state.js
- * Heady Latent OS — Durable Agent State Object
+ * Heady™ Latent OS — Durable Agent State Object
  *
  * Cloudflare Durable Object providing persistent, stateful AI agent sessions.
  *
@@ -882,7 +883,7 @@ export class DurableAgentState {
    */
   async _scheduleSessionExpiryAlarm(attempt = 0) {
     // Apply phi-backoff jitter only for retries; base expiry is SESSION_EXPIRY_MS
-    const jitter = attempt > 0 ? _phiBackoff(attempt, 1000, 30_000) : 0;
+    const jitter = attempt > 0 ? _phiBackoff(attempt, 1000, PHI_TIMING.CYCLE) : 0;
     await this.state.storage.put('alarmIntent', ALARM_INTENT.SESSION_EXPIRY);
     await this.state.storage.setAlarm(Date.now() + SESSION_EXPIRY_MS + jitter);
   }

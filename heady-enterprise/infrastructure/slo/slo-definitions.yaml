@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Inc. — SLO/SLI Definitions
+# Heady™Systems Inc. — SLO/SLI Definitions
 # heady-systems v3.2.2
 # =============================================================================
 # φ = 1.618033988749895 (Golden Ratio)
@@ -31,7 +31,7 @@ slos:
   # ---------------------------------------------------------------------------
   - name: heady-pilot-availability
     tier: pilot
-    displayName: "Heady Pilot Availability"
+    displayName: "Heady™ Pilot Availability"
     description: "99.9% uptime SLO for Pilot tier subscribers"
     service: heady-web
 
@@ -126,7 +126,7 @@ slos:
   # ---------------------------------------------------------------------------
   - name: heady-enterprise-availability
     tier: enterprise
-    displayName: "Heady Enterprise Availability"
+    displayName: "Heady™ Enterprise Availability"
     description: "99.99% uptime SLO for Enterprise tier — fib(13)=233 nines"
     service: heady-web
 

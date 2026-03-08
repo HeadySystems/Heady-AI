@@ -1,6 +1,6 @@
 /**
- * ∞ Heady Server — Custom Express Wrapper + HeadyWebSocket
- * © 2026 HeadySystems Inc. — PROPRIETARY AND CONFIDENTIAL
+ * ∞ Heady™ Server — Custom Express Wrapper + HeadyWebSocket
+ * © 2026 Heady™Systems Inc. — PROPRIETARY AND CONFIDENTIAL
  *
  * Custom Express application factory with Sacred Geometry middleware hooks
  * and a HeadyWebSocket wrapper around the ws library.
@@ -115,29 +115,29 @@ function requestIdMiddleware() {
 }
 
 /**
- * Heady signature middleware — adds platform identification headers.
+ * Heady™ signature middleware — adds platform identification headers.
  */
 function headySignatureMiddleware(version = '3.1.0') {
     return function headySignature(req, res, next) {
-        res.setHeader('X-Heady-Platform', 'HeadySystems/3.x');
+        res.setHeader('X-Heady-Platform', 'HeadyMe/3.x');
         res.setHeader('X-Heady-Version', version);
         res.setHeader('X-Heady-Phi', PHI.toFixed(10));
         next();
     };
 }
 
-// ─── HeadyExpress — Express factory with Heady defaults ────────────────────
+// ─── HeadyExpress — Express factory with Heady™ defaults ────────────────────
 
 /**
- * Creates a pre-configured Express application with Heady defaults.
- * Includes Sacred Geometry middleware, request IDs, and Heady headers.
+ * Creates a pre-configured Express application with Heady™ defaults.
+ * Includes Sacred Geometry middleware, request IDs, and Heady™ headers.
  *
  * @param {Object} [opts]
  * @param {boolean} [opts.json=true] - Enable JSON body parser
  * @param {boolean} [opts.urlencoded=true] - Enable URL-encoded body parser
  * @param {boolean} [opts.sacredTiming=true] - Enable Sacred Geometry timing
  * @param {boolean} [opts.requestId=true] - Enable request ID middleware
- * @param {boolean} [opts.headySignature=true] - Enable Heady headers
+ * @param {boolean} [opts.headySignature=true] - Enable Heady™ headers
  * @param {string} [opts.version='3.1.0'] - Platform version
  * @returns {Express.Application}
  */
@@ -185,7 +185,7 @@ function createApp(opts = {}) {
     return app;
 }
 
-// ─── HeadyWebSocket — ws wrapper with Heady extensions ─────────────────────
+// ─── HeadyWebSocket — ws wrapper with Heady™ extensions ─────────────────────
 
 let ws;
 try {

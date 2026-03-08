@@ -156,7 +156,7 @@ const VERTICAL_EDGE_CONFIGS = {
     dataVertical:   'headyconnection',
     themeColor:     '#080f14',
     ogTitle:        'HeadyConnection — Community & Network',
-    ogDescription:  'Connect, collaborate, and create with the HeadySystems community.',
+    ogDescription:  'Connect, collaborate, and create with the Heady™Systems community.',
     twitterHandle:  '@headyconnection',
     analyticsId:    'G-HCN000005',
     gaEnabled:      true,
@@ -168,7 +168,7 @@ const VERTICAL_EDGE_CONFIGS = {
     dataVertical:   'exchange',
     themeColor:     '#0c0e08',
     ogTitle:        'HeadyEX — Digital Asset Trading',
-    ogDescription:  'Next-generation digital asset exchange powered by HeadySystems AI.',
+    ogDescription:  'Next-generation digital asset exchange powered by Heady™Systems AI.',
     twitterHandle:  '@headyexchange',
     analyticsId:    null,
     gaEnabled:      false,
@@ -191,7 +191,7 @@ const VERTICAL_EDGE_CONFIGS = {
     accentLight:    '#2dd4bf',
     dataVertical:   'health',
     themeColor:     '#060f14',
-    ogTitle:        'Heady Health — AI Health & Wellness',
+    ogTitle:        'Heady™ Health — AI Health & Wellness',
     ogDescription:  'HIPAA-compliant AI health platform for personalized wellness.',
     twitterHandle:  '@headyhealth',
     analyticsId:    'G-HHE000006',
@@ -215,7 +215,7 @@ const VERTICAL_EDGE_CONFIGS = {
     accentLight:    '#fbbf24',
     dataVertical:   'finance',
     themeColor:     '#0a0c06',
-    ogTitle:        'Heady Finance — AI Financial Intelligence',
+    ogTitle:        'Heady™ Finance — AI Financial Intelligence',
     ogDescription:  'Intelligent financial planning, expense tracking, and tax optimization.',
     twitterHandle:  '@headyfinance',
     analyticsId:    'G-HFI000008',
@@ -614,7 +614,7 @@ async function serveStaticAsset(request, url, env, verticalId) {
 
 /**
  * Forward a request to the configured origin server.
- * Strips Cloudflare-added headers, adds Heady routing headers.
+ * Strips Cloudflare-added headers, adds Heady™ routing headers.
  *
  * @param {Request} request
  * @param {Object} env

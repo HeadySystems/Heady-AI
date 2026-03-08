@@ -486,7 +486,7 @@ skills:
     
   workspace_integration:
     name: "Workspace Integration"
-    description: "Integrate Heady across multiple workspaces and IDEs"
+    description: "Integrate Heady™ across multiple workspaces and IDEs"
     category: "integration"
     tags: ["workspace", "ide", "integration", "multi-environment"]
     steps:

@@ -1,7 +1,7 @@
 # E16: MCP Enterprise Governance via GitOps
 # Defines allowed tools, resources, and policies per environment
 
-apiVersion: heady.io/v1
+apiVersion: headyio.com/v1
 kind: MCPGovernance
 
 metadata:

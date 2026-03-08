@@ -42,7 +42,7 @@ sites:
       brain: "https://brain.heady.systems"
     render_service: heady-manager-headysystems
     edge_worker: edge-proxy
-    repo: HeadySystems/Heady
+    repo: HeadyMe/Heady
     framework: react
     features:
       - admin-dashboard
@@ -67,7 +67,7 @@ sites:
       brain: "https://brain.heady.systems"
     render_service: heady-manager-headyme
     edge_worker: edge-proxy
-    repo: HeadySystems/HeadyMe
+    repo: HeadyMe/HeadyMe
     framework: nextjs
     features:
       - personal-dashboard
@@ -92,7 +92,7 @@ sites:
       brain: "https://brain.heady.systems"
     render_service: heady-manager-headyconnection
     edge_worker: edge-proxy
-    repo: HeadySystems/HeadyConnection
+    repo: HeadyMe/HeadyConnection
     framework: nextjs
     features:
       - community-dashboard
@@ -106,10 +106,10 @@ sites:
     pricing_profile: nonprofit-first
 
   headyweb:
-    domain: headyweb.com
-    aliases: [www.headyweb.com]
+    domain: headycloud.com
+    aliases: [www.headycloud.com]
     type: browser-platform
-    description: "Heady-powered browser and web tools"
+    description: "Heady™-powered browser and web tools"
     brain_profile: web-platform
     cloud_layer: production
     backend:
@@ -117,7 +117,7 @@ sites:
       manager: "https://manager.heady.systems"
     render_service: heady-manager-headyweb
     edge_worker: edge-proxy
-    repo: HeadySystems/HeadyWeb
+    repo: HeadyMe/HeadyWeb
     framework: react
     features:
       - web-browser
@@ -137,7 +137,7 @@ sites:
     cloud_layer: production
     backend:
       api: "https://api.heady.systems"
-    repo: HeadySystems/HeadyMCP
+    repo: HeadyMe/HeadyMCP
     framework: eleventy
     features:
       - mcp-server-directory
@@ -155,7 +155,7 @@ sites:
     backend:
       api: "https://api.heady.systems"
       buddy: "https://buddy.headysystems.com"
-    repo: HeadySystems/Heady
+    repo: HeadyMe/Heady
     framework: react
     platforms: [desktop-electron, mobile-android, browser-extension]
     env_overrides:

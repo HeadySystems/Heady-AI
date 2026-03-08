@@ -66,7 +66,7 @@ Confidence calibration accuracy, blind spot detection (counterfactual reasoning)
 
 ### 13. Evolution (11 tasks)
 
-Evolution candidate analysis, controlled mutation generation, mutation simulation via HeadySims, fitness measurement vs baseline, beneficial mutation selection, config promotion, evolution history recording, mutation strategy update, rollback monitoring, parameter drift detection, evolution velocity tracking
+Evolution candidate analysis, controlled mutation generation, mutation simulation via Heady™Sims, fitness measurement vs baseline, beneficial mutation selection, config promotion, evolution history recording, mutation strategy update, rollback monitoring, parameter drift detection, evolution velocity tracking
 
 ## Invariants
 

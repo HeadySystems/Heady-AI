@@ -1,6 +1,6 @@
 /**
- * Heady Latent OS — Stripe Integration Configuration
- * HeadySystems, Inc.
+ * Heady™ Latent OS — Stripe Integration Configuration
+ * HeadySystems Inc.
  *
  * Production-ready Stripe configuration for:
  *  - Subscription products and prices (all tiers)
@@ -92,7 +92,7 @@ const PRODUCT_METADATA = {
 // ── Product Definitions ───────────────────────────────────────────────────────
 
 /**
- * Stripe product catalog for all Heady plans.
+ * Stripe product catalog for all Heady™ plans.
  * Run `createProducts()` once to bootstrap in a new Stripe account.
  *
  * Annual pricing uses fib(8) = 21% discount:
@@ -101,13 +101,13 @@ const PRODUCT_METADATA = {
  */
 const PRODUCTS = {
   community: {
-    name: 'Heady Community',
+    name: 'Heady™ Community',
     description: 'Open-source sovereign AI runtime. Self-hosted. MIT licensed.',
     metadata: { ...PRODUCT_METADATA, tier: 'community' },
   },
 
   developer: {
-    name: 'Heady Developer',
+    name: 'Heady™ Developer',
     description: `Full cloud access for individual developers. 50K API calls/mo, 5 agents, 20GB vector storage. ${fib(7)}-day free trial.`,
     metadata: { ...PRODUCT_METADATA, tier: 'developer' },
     prices: {
@@ -128,7 +128,7 @@ const PRODUCTS = {
   },
 
   team: {
-    name: 'Heady Team',
+    name: 'Heady™ Team',
     description: 'Centralized team management. 200K API calls/seat, 20 agents, 100GB pooled storage, SSO, RBAC.',
     metadata: { ...PRODUCT_METADATA, tier: 'team' },
     prices: {
@@ -149,7 +149,7 @@ const PRODUCTS = {
   },
 
   enterprise: {
-    name: 'Heady Enterprise Sovereign',
+    name: 'Heady™ Enterprise Sovereign',
     description: 'Air-gapped/VPC/on-prem. Unlimited BYOM. SOC2+HIPAA+ISO27001. Custom pricing.',
     metadata: { ...PRODUCT_METADATA, tier: 'enterprise' },
     // Enterprise prices are created per-contract via Stripe custom pricing
@@ -164,7 +164,7 @@ const PRODUCTS = {
 
 const METERED_PRODUCTS = {
   api_calls: {
-    name: 'Heady API Calls (Overage)',
+    name: 'Heady™ API Calls (Overage)',
     unit_label: 'call',
     description: `Per API call beyond plan limit. Billed in ${fib(10)}-call blocks (fib(10)=55, nearest Fibonacci to 100).`,
     price: {
@@ -186,7 +186,7 @@ const METERED_PRODUCTS = {
   },
 
   vector_operations: {
-    name: 'Heady Vector Operations (Overage)',
+    name: 'Heady™ Vector Operations (Overage)',
     unit_label: 'operation',
     description: 'Per 10K vector read/write/search ops beyond plan limit.',
     price: {
@@ -207,9 +207,9 @@ const METERED_PRODUCTS = {
   },
 
   llm_tokens: {
-    name: 'Heady LLM Tokens (Managed Inference)',
+    name: 'Heady™ LLM Tokens (Managed Inference)',
     unit_label: 'token',
-    description: 'Per million tokens (input+output) via Heady-managed inference. BYOM users exempt.',
+    description: 'Per million tokens (input+output) via Heady™-managed inference. BYOM users exempt.',
     price: {
       unit_amount_decimal: '0.15',   // $1.50 per 1M tokens (in cents: 0.15 per 1K)
       currency: CURRENCY,
@@ -227,7 +227,7 @@ const METERED_PRODUCTS = {
   },
 
   agent_compute_hours: {
-    name: 'Heady Agent Compute Hours (Overage)',
+    name: 'Heady™ Agent Compute Hours (Overage)',
     unit_label: 'hour',
     description: 'Per agent compute hour beyond plan parallel agent limit.',
     price: {
@@ -245,7 +245,7 @@ const METERED_PRODUCTS = {
   },
 
   object_storage: {
-    name: 'Heady Object Storage',
+    name: 'Heady™ Object Storage',
     unit_label: 'GB',
     description: 'Per GB/month object storage for artifacts, logs, model weights.',
     price: {

@@ -1,7 +1,7 @@
 /**
  * @fileoverview MCP Gateway with CSL-Gated Routing — Phi-Continuous Edition
  *
- * Central gateway for the Heady Latent OS MCP ecosystem. Routes tool calls
+ * Central gateway for the Heady™ Latent OS MCP ecosystem. Routes tool calls
  * to upstream MCP servers using Contextual Semantic Lattice (CSL) cosine
  * similarity matching, namespace-prefix routing, load balancing, and
  * graceful failover.
@@ -134,7 +134,7 @@ function cosineSimilarity(vecA, vecB) {
 
 /**
  * Generates a lightweight bag-of-words embedding for a tool name/description.
- * In production this would call the Heady vector service; here we produce a
+ * In production this would call the Heady™ vector service; here we produce a
  * deterministic 128-dim pseudo-embedding suitable for unit-testing CSL routing.
  *
  * @param {string} text - Input text to embed
@@ -187,7 +187,7 @@ function pseudoEmbed(text) {
 // ─── MCPGateway ───────────────────────────────────────────────────────────────
 
 /**
- * Central MCP Gateway for the Heady Latent OS.
+ * Central MCP Gateway for the Heady™ Latent OS.
  *
  * Responsibilities:
  * - Maintain a registry of upstream MCP servers organized by namespace

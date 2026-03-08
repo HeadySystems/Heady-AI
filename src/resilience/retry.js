@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Retry — Exponential backoff with jitter
+ * Heady™ Retry — Exponential backoff with jitter
  * Use with circuit breakers for resilient external calls.
  */
 

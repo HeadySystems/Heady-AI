@@ -4,7 +4,7 @@
  * Formal JSON schema for task manifests ingested by the HCFP Auto-Flow-Success Pipeline.
  * Every strategic objective must be wrapped in this schema for deterministic execution.
  *
- * Heady AI Nodes: CONDUCTOR, MAESTRO
+ * Heady™ AI Nodes: CONDUCTOR, MAESTRO
  */
 /**
  * Validate a task manifest against the HCFP schema.

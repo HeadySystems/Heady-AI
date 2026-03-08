@@ -1,6 +1,6 @@
-# HeadyChain
+# Heady™Chain
 
-Native agent orchestration framework for the Heady AI platform. A production-ready replacement for LangChain/LangGraph with graph-based workflows, tool calling, memory, and Sacred Geometry (PHI=1.618) scaling.
+Native agent orchestration framework for the Heady™ AI platform. A production-ready replacement for LangChain/LangGraph with graph-based workflows, tool calling, memory, and Sacred Geometry (PHI=1.618) scaling.
 
 ---
 
@@ -225,7 +225,7 @@ const graph = chain.createGraph('retry-example')
 const { globalRegistry } = require('./tools');
 
 globalRegistry.register('database_query', {
-  description: 'Execute a SQL query against the Heady database',
+  description: 'Execute a SQL query against the Heady™ database',
   inputSchema: {
     type: 'object',
     required: ['sql'],
@@ -615,7 +615,7 @@ config.phiScale(100, 2) // 261.8
 
 ---
 
-## Integration with HeadyBees
+## Integration with Heady™Bees
 
 HeadyChain's `SupervisorAgent` maps directly to HeadyBees coordination:
 
@@ -652,4 +652,4 @@ Node-level errors emit `node:error` events and fail the workflow. Use `RetryNode
 
 ## License
 
-UNLICENSED — Private, Heady AI Platform internal use.
+UNLICENSED — Private, Heady™ AI Platform internal use.

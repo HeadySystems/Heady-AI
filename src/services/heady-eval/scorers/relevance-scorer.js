@@ -4,7 +4,7 @@
  * RelevanceScorer
  *
  * Evaluates how relevant the answer is to the question using:
- *  1. Semantic similarity via HeadyEmbed cosine similarity
+ *  1. Semantic similarity via Heady™Embed cosine similarity
  *  2. LLM-as-judge with a structured 1–5 rubric
  *
  * Sub-dimensions: topic_relevance, specificity, completeness

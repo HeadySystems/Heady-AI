@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Site Projection Renderer ═══════════════════════════════════════════
  *
@@ -20,7 +20,7 @@
  *  - Scroll animations, micro-interactions
  *  - Auth gate integration
  *
- * This is the ONLY file that produces HTML for Heady sites.
+ * This is the ONLY file that produces HTML for Heady™ sites.
  * Do not hand-edit HTML files in services/heady-web/sites/.
  */
 

@@ -1,16 +1,16 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * heady-observability.js
  * ════════════════════════════════════════════════════════════════════
  *
- * Unified Observability Layer for the Heady ecosystem.
+ * Unified Observability Layer for the Heady™ ecosystem.
  *
  * Addresses gaps identified in the architecture review:
  *
  *   1. No distributed trace IDs — requests cannot be correlated across
  *      buddy-core → hc-full-pipeline → heady-conductor → bee-factory.
- *      FIX: X-Heady-Trace-Id / X-Heady-Span-Id headers on every HTTP
+ *      FIX: X-Heady™-Trace-Id / X-Heady™-Span-Id headers on every HTTP
  *           call; trace context propagated via AsyncLocalStorage.
  *
  *   2. No Prometheus metrics export — self-awareness.js collects
@@ -49,10 +49,10 @@
  *
  * Propagation headers
  * ───────────────────
- *   X-Heady-Trace-Id   — UUID v4 created at entry point, propagated downstream
- *   X-Heady-Span-Id    — UUID v4 per span
- *   X-Heady-Parent-Id  — spanId of caller
- *   X-Heady-Service    — originating service name
+ *   X-Heady™-Trace-Id   — UUID v4 created at entry point, propagated downstream
+ *   X-Heady™-Span-Id    — UUID v4 per span
+ *   X-Heady™-Parent-Id  — spanId of caller
+ *   X-Heady™-Service    — originating service name
  *
  * Usage
  * ─────
@@ -89,7 +89,7 @@ const os              = require('os');
 // ─── Golden ratio (used for quantile calculation and ring sizing) ─────────────
 const PHI = 1.6180339887;
 
-// ─── Severity mapping: Heady level → Cloud Logging severity ──────────────────
+// ─── Severity mapping: Heady™ level → Cloud Logging severity ──────────────────
 const SEVERITY = Object.freeze({
   debug:    'DEBUG',
   info:     'INFO',
@@ -413,7 +413,7 @@ class HeadyMetricsRegistry {
   constructor({ service }) {
     this._service  = service;
     this._metrics  = new Map();
-    // Pre-register standard Heady metrics
+    // Pre-register standard Heady™ metrics
     this._registerStandardMetrics();
   }
 

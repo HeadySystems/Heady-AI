@@ -1,5 +1,5 @@
 /**
- * HeadyBrains — Computational Pre-Processor for the Heady AI Platform.
+ * HeadyBrains — Computational Pre-Processor for the Heady™ AI Platform.
  *
  * HeadyBrains assembles full, rich context before any task is routed or executed.
  * It gathers memory, patterns, session history, user state, and enriches with

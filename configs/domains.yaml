@@ -30,7 +30,7 @@ domains:
     role: "architecture-engine"
     description: "HeadySystems™ — core architecture and engineering"
     target: "cloudflare-pages"
-    project: "headysystems-production"
+    project: "heady-production"
     ssl: true
     subdomains:
       api: "Systems API"
@@ -106,7 +106,7 @@ domains:
       v2: "API v2"
 
   # Intelligence Hub
-  headyai.com:
+  heady-ai.com:
     role: "intelligence-hub"
     description: "HeadyAI™ — intelligence routing and inference"
     target: "cloudflare-workers"
@@ -114,9 +114,9 @@ domains:
     ssl: true
 
   # Additional domains
-  heady-ai.org:
+  heady-ai.com:
     role: "ai-research"
-    description: "Heady AI research and publications"
+    description: "Heady™ AI research and publications"
     target: "cloudflare-pages"
     ssl: true
 
@@ -147,16 +147,16 @@ cloudflare:
   zones:
     - headyme.com
     - headyconnection.org
-    - heady-ai.org
+    - heady-ai.com
   workers:
     heady-edge-proxy:
       route: "heady.headyme.com/*"
       purpose: "Edge proxy and routing"
     heady-edge-node:
-      route: "*.headyai.com/*"
+      route: "*.heady-ai.com/*"
       purpose: "AI inference at edge"
     heady-ai-router:
-      route: "headyai.com/*"
+      route: "heady-ai.com/*"
       purpose: "Intelligence routing"
 
 # ─── HuggingFace Spaces ──────────────────────────────────────────────────────

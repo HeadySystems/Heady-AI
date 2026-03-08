@@ -1,5 +1,5 @@
 /**
- * @headysystems/core
+ * @heady-ai/core
  * Core utilities and base classes
  */
 export * from './logger';

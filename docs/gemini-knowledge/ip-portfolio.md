@@ -1,4 +1,4 @@
-# Heady IP Portfolio (from Gemini Research)
+# Heady™ IP Portfolio (from Gemini Research)
 
 ## Patent Candidates
 1. **HeadyField** — [Patent Ideas: HeadyField and HeadyLegacy]

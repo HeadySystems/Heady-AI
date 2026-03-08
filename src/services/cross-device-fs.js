@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -7,7 +7,7 @@
 /**
  * ─── Cross-Device Filesystem Service ────────────────────────────
  *
- * Gives Heady and Buddy root-level filesystem access across devices
+ * Gives Heady™ and Buddy root-level filesystem access across devices
  * via SSH tunnels and local elevated ops. All credentials come from
  * the SecureKeyVault in vector space — never plaintext.
  *
@@ -27,6 +27,7 @@
  */
 
 const fs = require('fs');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const { execSync, spawn } = require('child_process');
 const vectorMemory = require('../vector-memory');
@@ -142,7 +143,7 @@ class CrossDeviceFS {
 
     async localExec(command, cwd = '/home/headyme') {
         try {
-            const output = execSync(command, { encoding: 'utf8', timeout: 30000, cwd });
+            const output = execSync(command, { encoding: 'utf8', timeout: PHI_TIMING.CYCLE, cwd });
             return { stdout: output, exitCode: 0 };
         } catch (err) {
             return { stdout: err.stdout || '', stderr: err.stderr || '', exitCode: err.status || 1 };
@@ -184,7 +185,7 @@ class CrossDeviceFS {
         const { args, keyPath } = await this._getSSHArgs(deviceName);
         try {
             const output = execSync(`ssh ${args.join(' ')} ${JSON.stringify(command)}`, {
-                encoding: 'utf8', timeout: 30000
+                encoding: 'utf8', timeout: PHI_TIMING.CYCLE
             });
             return { stdout: output, exitCode: 0 };
         } catch (err) {
@@ -205,7 +206,7 @@ class CrossDeviceFS {
         try {
             execSync(
                 `echo ${JSON.stringify(content)} | ssh ${args.join(' ')} "cat > ${filePath}"`,
-                { encoding: 'utf8', timeout: 30000 }
+                { encoding: 'utf8', timeout: PHI_TIMING.CYCLE }
             );
             return { written: filePath };
         } finally {

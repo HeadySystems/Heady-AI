@@ -3,7 +3,7 @@
 /**
  * CostTrackerBee — AI provider spend tracking, budget enforcement, phi-harmonic alert thresholds.
  * Tracks per-provider, per-session, and global token/dollar spend.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

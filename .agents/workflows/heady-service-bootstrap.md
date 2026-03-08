@@ -2,7 +2,7 @@
 description: Bootstrap a new service from cold start using regenerative meta-prompts
 ---
 
-# Heady Service Bootstrap Workflow
+# Heady™ Service Bootstrap Workflow
 
 Bootstrap a new Heady service from cold start using the RegenerativePrompt system. Creates self-contained prompt documents that carry everything a HeadyNode needs.
 
@@ -18,7 +18,7 @@ t.handler({
   config: {
     name: 'my-service',
     version: '1.0.0',
-    description: 'New Heady service',
+    description: 'New Heady™ service',
     targetNode: 'worker-1',
     tools: ['heady_memory_ops', 'heady_csl_engine'],
     prerequisites: ['shared/phi-math', 'shared/csl-engine']

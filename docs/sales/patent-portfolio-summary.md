@@ -1,4 +1,4 @@
-# HeadyOS Patent Portfolio Summary
+# Heady™OS Patent Portfolio Summary
 
 **Holder**: HeadySystems Inc. (DBA Heady™)  
 **Inventor**: Eric Headington  
@@ -11,7 +11,7 @@
 
 ## Executive IP Assessment
 
-HeadySystems holds the **broadest provisional patent portfolio in the enterprise AI orchestration space**. The 51+ filings span 7 categories, covering every major component of the HeadyOS architecture. Competitors (LangChain, AutoGen, CrewAI) are open-source with no IP protection. Microsoft's Semantic Kernel falls under Microsoft's enterprise IP — providing no protection to customers.
+HeadySystems holds the **broadest provisional patent portfolio in the enterprise AI orchestration space**. The 51+ filings span 7 categories, covering every major component of the Heady™OS architecture. Competitors (LangChain, AutoGen, CrewAI) are open-source with no IP protection. Microsoft's Semantic Kernel falls under Microsoft's enterprise IP — providing no protection to customers.
 
 **HeadyOS IP creates a three-layer moat**:
 1. **Defensive**: Protects HeadyOS's unique architectural innovations from copying
@@ -24,7 +24,7 @@ HeadySystems holds the **broadest provisional patent portfolio in the enterprise
 
 ### Category 1: CSL Gate System (fib(7)=13 provisionals)
 
-The Contextual Semantic Logic (CSL) gate system is the core routing intelligence of HeadyOS.
+The Contextual Semantic Logic (CSL) gate system is the core routing intelligence of Heady™OS.
 
 | # | Title | Key Claims | Competitive Moat |
 |---|---|---|---|

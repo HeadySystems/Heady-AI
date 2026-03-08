@@ -1,6 +1,6 @@
 # Heady™ Architecture Map
 
-> Source: Deep scan of HeadyMe/Heady-pre-production-9f2f0642 (v3.1.0)
+> Source: Deep scan of Heady™Me/Heady-pre-production-9f2f0642 (v3.1.0)
 
 ---
 

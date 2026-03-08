@@ -1,7 +1,7 @@
 /**
  * @heady-ai/semantic-logic
  * 
- * Continuous Semantic Logic Gate Engine for Heady AI.
+ * Continuous Semantic Logic Gate Engine for Heady™ AI.
  */
 
 export { SemanticTruthValue, truthValue } from './core/truth-value.js';

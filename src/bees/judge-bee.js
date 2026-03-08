@@ -3,7 +3,7 @@
 /**
  * JudgeBee — Quantitative multi-dimensional scoring with phi-harmonic gate.
  * Dimensions: correctness 34%, safety 21%, performance 21%, quality 13%, elegance 11%.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

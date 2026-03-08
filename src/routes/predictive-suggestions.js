@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 /**
- * Predictive Suggestion Engine for HeadyBuddy
+ * Predictive Suggestion Engine for Heady™Buddy
  *
  * Context-aware suggestion chips based on:
  *  - Time of day
@@ -50,7 +50,7 @@ const SUGGESTION_CATALOG = {
     universal: [
         { label: "❓ Help", prompt: "What can HeadyBuddy do?" },
         { label: "⚡ Quick status", prompt: "Give me a quick system status" },
-        { label: "🔍 Search docs", prompt: "Search the Heady documentation" },
+        { label: "🔍 Search docs", prompt: "Search the Heady™ documentation" },
     ],
 };
 

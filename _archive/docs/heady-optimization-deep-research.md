@@ -1,4 +1,4 @@
-# Heady Optimization Systems Deep Research
+# Heady™ Optimization Systems Deep Research
 
 > Saved from conversation on 2026-02-27. See task extraction in `task.md`.
 

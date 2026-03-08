@@ -1,5 +1,5 @@
 /**
- * ∞ Heady Conductor — Thin Orchestrator Shell
+ * ∞ Heady™ Conductor — Thin Orchestrator Shell
  * Re-crystallized from the 1870-line heady-manager.js God class.
  * 
  * This file is now ~80 lines. All logic lives in focused micro-modules:
@@ -12,7 +12,7 @@
  *   src/bootstrap/voice-relay.js         — WebSocket voice relay system
  *   src/bootstrap/server-boot.js         — HTTP/HTTPS + WS + listen
  * 
- * © 2026 HeadySystems Inc. — Proprietary
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 // Phase 0: Environment Validation (fail-fast if critical config missing)

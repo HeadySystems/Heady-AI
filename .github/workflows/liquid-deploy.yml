@@ -1,5 +1,5 @@
 # =============================================================================
-# Heady Liquid Deploy — Vertical Projection Pipeline
+# Heady™ Liquid Deploy — Vertical Projection Pipeline
 # Triggered on push to main when src/ changes.
 # Projects monorepo changes into each affected vertical repo via a
 # deterministic projection matrix. Monte Carlo validation runs before

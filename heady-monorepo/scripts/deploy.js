@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ heady deploy — One-Command Zero-Friction Cloud Deploy ═══
@@ -49,7 +49,7 @@ function run(cmd, opts = {}) {
 async function main() {
     console.log('');
     console.log('═══════════════════════════════════════════════════════');
-    console.log('  🐝 Heady Deploy — Zero-Friction Cloud Projection');
+    console.log('  🐝 Heady™ Deploy — Zero-Friction Cloud Projection');
     console.log('═══════════════════════════════════════════════════════');
     console.log('');
     console.log(`  Target:  ${target}`);
@@ -146,11 +146,11 @@ async function main() {
     console.log('     headyapi.com    → HeadyAPI (Developer Portal)');
     console.log('     headyio.com     → HeadyIO (Enterprise Connector)');
     console.log('     headyme.com     → HeadyMe (Personal Dashboard)');
-    console.log('     headytrader.com → HeadyTrader (Trading Suite)');
+    console.log('     headyfinance.com → HeadyTrader (Trading Suite)');
     console.log('     headymusic.com  → HeadyMusic (Studio)');
-    console.log('     headyfoundation.org → Heady Foundation');
+    console.log('     headyconnection.org → Heady Foundation');
     console.log('     headysystems.com    → Heady Systems');
-    console.log('     myheady.ai          → MyHeady.AI');
+    console.log('     myheady-ai.com          → MyHeady.AI');
     console.log('═══════════════════════════════════════════════════════');
     console.log('');
 }

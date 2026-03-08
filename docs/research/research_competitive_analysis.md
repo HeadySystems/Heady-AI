@@ -680,9 +680,9 @@ Based on cross-platform analysis, the following capabilities separate **genuine 
 
 ---
 
-## Heady Positioning: Where the Gap Is and How to Win
+## Heady™ Positioning: Where the Gap Is and How to Win
 
-### Heady's Architecture
+### Heady™'s Architecture
 - **Runtime:** Node.js + Express (backend) + Cloudflare Workers (edge)
 - **Compute:** Google Cloud Run (serverless containers)
 - **Data:** PostgreSQL + pgvector (sovereign vector storage)
@@ -702,7 +702,7 @@ Based on cross-platform analysis, the following capabilities separate **genuine 
 | Monte Carlo / swarm optimization | ❌ | ❌ | ❌ |
 | No $100K+ compliance floor | — | ❌ | — |
 
-### Heady's Differentiated Positioning
+### Heady™'s Differentiated Positioning
 
 **1. TypeScript-native sovereign AI platform**  
 Every competing orchestration framework is Python-first. The 27 million JavaScript/TypeScript developers represent an underserved market. Node.js/TypeScript teams building production APIs have no native multi-agent orchestration option — they're forced to adopt Python runtimes or use Vercel AI SDK (which only handles streaming UI, not orchestration).

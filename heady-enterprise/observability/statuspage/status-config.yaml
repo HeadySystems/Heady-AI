@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Status Page Configuration
+# Heady™Systems v3.2.2 — Status Page Configuration
 # Covers all 9 domains served from a single container.
 # Component groups: Core Platform, AI Services, Infrastructure.
 # All numeric parameters derived from φ=1.618033988749895 and Fibonacci sequences.
@@ -47,7 +47,7 @@ component_groups:
 
   - id: domain-services
     name: "Domain Services"
-    description: "All 9 public-facing domains served from the HeadySystems container."
+    description: "All 9 public-facing domains served from the Heady™Systems container."
     order: 4
     collapse: false
 
@@ -183,7 +183,7 @@ components:
 
   - id: domain-headyconnection-org
     name: "headyconnection.org"
-    description: "Organization portal for HeadyConnection."
+    description: "Organization portal for Heady™Connection."
     group: domain-services
     order: 3
     synthetic_check_id: domain-headyconnection-org
@@ -201,7 +201,7 @@ components:
 
   - id: domain-heady-exchange
     name: "heady.exchange"
-    description: "Heady Exchange platform."
+    description: "Heady™ Exchange platform."
     group: domain-services
     order: 5
     synthetic_check_id: domain-heady-exchange
@@ -210,7 +210,7 @@ components:
 
   - id: domain-heady-investments
     name: "heady.investments"
-    description: "Heady Investments platform."
+    description: "Heady™ Investments platform."
     group: domain-services
     order: 6
     synthetic_check_id: domain-heady-investments
@@ -227,7 +227,7 @@ components:
     showcase: true
 
   - id: domain-headyai
-    name: "headyai.com"
+    name: "heady-ai.com"
     description: "HeadyAI platform and documentation."
     group: domain-services
     order: 8

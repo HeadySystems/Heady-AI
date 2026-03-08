@@ -1,4 +1,4 @@
-# HeadyWeb App Stack
+# Heady™Web App Stack
 
 ## What this delivers
 

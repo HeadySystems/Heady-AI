@@ -96,7 +96,7 @@
 - **sentence-transformers/msmarco-MiniLM-L12-v3** — 384-dimensional for semantic search
   - https://huggingface.co/sentence-transformers/msmarco-MiniLM-L12-v3
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - Heady's 384D embedding space exactly matches sentence-transformers' all-MiniLM-L6-v2 dimension
 - VSA binding/bundling/permutation operations (10000-dim hypervectors) are validated by comprehensive academic literature
 - Shadow memory with CSL confidence decay (φ⁻¹ per session) aligns with RGMem's multi-scale evolutionary approach

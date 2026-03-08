@@ -17,7 +17,7 @@ You are hardening the Heady™ platform for production. This means CI/CD pipelin
 Create/update `.github/workflows/ci.yml`:
 
 ```yaml
-name: Heady CI/CD Pipeline
+name: Heady™ CI/CD Pipeline
 on:
   push:
     branches: [main, staging, develop]

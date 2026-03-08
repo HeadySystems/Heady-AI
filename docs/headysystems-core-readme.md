@@ -29,4 +29,4 @@ Autonomously projected from the [Heady Latent OS](https://github.com/HeadyMe/Hea
 
 ---
 
-**© 2026 Heady Systems LLC.** Built with Sacred Geometry · Powered by the Heady Latent OS
+**© 2026 Heady™Systems Inc.** Built with Sacred Geometry · Powered by the Heady™ Latent OS

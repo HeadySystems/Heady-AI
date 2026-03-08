@@ -1,6 +1,6 @@
 # Heady™ — The Master Apex Trader: Autonomous Trading Intelligence
 
-> © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+> © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
 
 ## Executive Summary
 

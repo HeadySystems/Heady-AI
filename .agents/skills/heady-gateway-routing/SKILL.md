@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Gateway Routing
+# Heady™ Gateway Routing
 
 ## When to Use This Skill
 

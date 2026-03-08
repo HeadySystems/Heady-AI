@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Enterprise Resilience Patterns — Phase 4 System Resilience
  *
@@ -8,6 +8,7 @@
  */
 
 const { getLogger } = require('./structured-logger');
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = getLogger('resilience');
 const crypto = require('crypto');
 
@@ -75,7 +76,7 @@ class SagaOrchestrator {
 // ═══════════════════════════════════════════════════════════════
 
 class BulkheadIsolation {
-    constructor(name, { maxConcurrent = 10, maxQueue = 50, timeoutMs = 30000 } = {}) {
+    constructor(name, { maxConcurrent = 10, maxQueue = 50, timeoutMs = PHI_TIMING.CYCLE } = {}) {
         this.name = name;
         this.maxConcurrent = maxConcurrent;
         this.maxQueue = maxQueue;
@@ -295,7 +296,7 @@ class CQRSBus {
 // ═══════════════════════════════════════════════════════════════
 
 class AutoTuner {
-    constructor(name, { sampleWindowMs = 60000, adjustIntervalMs = 30000 } = {}) {
+    constructor(name, { sampleWindowMs = 60000, adjustIntervalMs = PHI_TIMING.CYCLE } = {}) {
         this.name = name;
         this.sampleWindowMs = sampleWindowMs;
         this.adjustIntervalMs = adjustIntervalMs;

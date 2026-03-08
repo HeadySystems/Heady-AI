@@ -1,6 +1,6 @@
 /**
  * @fileoverview TaskDecompositionEngine — CSL-scored task decomposition and
- * parallel execution for the Heady Latent OS platform.
+ * parallel execution for the Heady™ Latent OS platform.
  *
  * Architecture:
  *   - LLM-based decomposition of complex tasks into typed subtasks
@@ -386,7 +386,7 @@ class DecompositionResult {
  * @extends EventEmitter
  *
  * Decomposes complex tasks into CSL-scored subtask graphs and executes them
- * using the Heady swarm coordinator.
+ * using the Heady™ swarm coordinator.
  *
  * @fires TaskDecompositionEngine#decomposed        After LLM decomposition
  * @fires TaskDecompositionEngine#dag:built         After dependency DAG is built

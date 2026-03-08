@@ -310,7 +310,7 @@ export class ProjectionManager {
     /**
      * PERCEPTION SCAN — what does the system look like externally?
      * Reads from git, filesystem, and package.json to build awareness
-     * of how users and external systems perceive Heady.
+     * of how users and external systems perceive Heady™.
      */
     scanPerception(): Promise<{
         ts: string;

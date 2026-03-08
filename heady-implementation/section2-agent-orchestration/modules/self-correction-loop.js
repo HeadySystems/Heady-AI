@@ -1,6 +1,6 @@
 /**
  * @fileoverview SelfCorrectionLoop — Execute-verify-correct cycle for autonomous
- * agents in the Heady Latent OS platform.
+ * agents in the Heady™ Latent OS platform.
  *
  * Architecture:
  *   - Execute-Verify-Correct (EVC) cycle with configurable max iterations

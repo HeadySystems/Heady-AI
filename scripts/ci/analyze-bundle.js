@@ -54,8 +54,8 @@ function parseArgs(argv) {
 
 // ─── Bundle discovery ─────────────────────────────────────────────────────────
 /**
- * Heady monorepo known package locations and their dist paths.
- * Organized by the @heady-ai/* and @headysystems/* scopes.
+ * Heady™ monorepo known package locations and their dist paths.
+ * Organized by the @heady-ai/* and @heady-ai/* scopes.
  */
 const PACKAGE_PATHS = [
   // Core platform packages
@@ -68,9 +68,9 @@ const PACKAGE_PATHS = [
   { name: '@heady-ai/shared',            dist: 'packages/shared/dist' },
   { name: '@heady-ai/vector-memory',     dist: 'packages/vector-memory/dist' },
   // System packages
-  { name: '@headysystems/semantic-logic', dist: 'packages/semantic-logic/dist' },
-  { name: '@headysystems/types',          dist: 'packages/types/dist' },
-  { name: '@headysystems/redis',          dist: 'packages/redis/dist' },
+  { name: '@heady-ai/semantic-logic', dist: 'packages/semantic-logic/dist' },
+  { name: '@heady-ai/types',          dist: 'packages/types/dist' },
+  { name: '@heady-ai/redis',          dist: 'packages/redis/dist' },
   // Entry point
   { name: 'heady-manager',               dist: 'heady-manager.js', isFile: true },
   // Microservices (check src/services/ or services/)

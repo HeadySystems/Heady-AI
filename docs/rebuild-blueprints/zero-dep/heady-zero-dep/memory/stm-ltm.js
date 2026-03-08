@@ -453,7 +453,7 @@ export class MemoryConsolidator extends EventEmitter {
  * @example
  * const mem = new STMLTM({ dataDir: './data/memory' });
  * await mem.init();
- * await mem.remember({ content: 'Heady processes tokens', importance: 0.9 });
+ * await mem.remember({ content: 'Heady™ processes tokens', importance: 0.9 });
  * const related = await mem.recall(queryVec, { from: 'both', k: 5 });
  */
 export class STMLTM {

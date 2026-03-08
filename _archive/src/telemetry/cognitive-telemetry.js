@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -14,7 +14,7 @@
  * SHA-256 cryptographic hashing of every AI action payload,
  * creating an immutable, verifiable audit trail.
  *
- * Heady AI Nodes: OBSERVER, SENTINEL
+ * Heady™ AI Nodes: OBSERVER, SENTINEL
  */
 
 const crypto = require("crypto");

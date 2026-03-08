@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module feature-flag-system
- * @description Feature flag system for HeadySystems
+ * @description Feature flag system for Heady™Systems
  *
  * Features:
  *   - Gradual rollout via Fibonacci percentages: 1→2→3→5→8→13→21→34→55→89→100

@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * ─── Neural Stream Telemetry ──────────────────────────────────────────────────
@@ -7,7 +7,7 @@
  * Patent Docket: HS-053
  * Title: SYSTEM AND METHOD FOR TRANSLATING AI REASONING STEPS INTO QUANTIFIABLE
  *        INFRASTRUCTURE STABILITY METRICS WITH CRYPTOGRAPHIC PROOF-OF-INFERENCE
- * Applicant: Heady Systems LLC  |  Inventor: Eric Haywood
+ * Applicant: HeadySystems Inc  |  Inventor: Eric Haywood
  * Related: HS-001, HS-024, HS-051
  *
  * Satisfies ALL 7 claims of HS-053.
@@ -18,7 +18,7 @@
 
 const crypto = require('crypto');
 
-// Golden ratio — consistent with HeadySystems implementations
+// Golden ratio — consistent with Heady™Systems implementations
 const PHI = 1.6180339887;
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -7,7 +7,7 @@
  *   node --test tests/resilience.test.js
  *   node --test --reporter spec tests/resilience.test.js
  *
- * © 2026 HeadySystems Inc. — Proprietary
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';

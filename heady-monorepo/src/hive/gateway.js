@@ -1,19 +1,19 @@
 /**
- * ∞ Heady Hive SDK — Gateway
+ * ∞ Heady™ Hive SDK — Gateway
  *
  * Unified LLM gateway for multi-provider model access.
- * Wraps the Heady model bridge with a standardized interface
+ * Wraps the Heady™ model bridge with a standardized interface
  * that mirrors the heady-hive-sdk/lib/gateway API.
  *
  * This module serves as the local stub for the heady-hive-sdk package,
  * used when the external SDK is not installed.
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const path = require('path');
 
-// Try to load the Heady model bridge for actual LLM calls
+// Try to load the Heady™ model bridge for actual LLM calls
 let modelBridge = null;
 try {
     modelBridge = require('../core/heady-model-bridge');

@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Vertical Config — Creative
+# Heady™Systems Vertical Config — Creative
 # Domain: creative.headyme.com
 # Key highlight: heady-midi service for sub-ms agent control
 # =============================================================================
@@ -14,7 +14,7 @@ routing:
     - studio.headyme.com
 
 brand:
-  name: "Heady Creative"
+  name: "Heady™ Creative"
   tagline: "MIDI Agent Control & Creative AI Orchestration"
   accent_color: "#ec4899"
   logo_variant: creative
@@ -154,7 +154,7 @@ content:
     author: "Electronic Music Producer (placeholder)"
 
 meta:
-  title: "Heady Creative — MIDI Agent Control & Creative AI"
+  title: "Heady™ Creative — MIDI Agent Control & Creative AI"
   description: "Sub-millisecond MIDI agent control via heady-midi. AI orchestration for creative workflows: content generation, DAW integration, design tools, and asset management."
   keywords:
     - "MIDI AI agents"

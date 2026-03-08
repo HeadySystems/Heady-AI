@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Sync Projection Bee ════════════════════════════════════════════
  *
- * RAM-first architecture: all Heady operations happen in memory
+ * RAM-first architecture: all Heady™ operations happen in memory
  * (vector space). External stores are PROJECTIONS that auto-sync
  * only when RAM state changes.
  *

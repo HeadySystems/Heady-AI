@@ -1,8 +1,8 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Vector Template Bee — Powers the 3D vector template instantiation swarm.
  *
- * This bee integrates the VectorTemplateEngine into the Heady bee swarm,
+ * This bee integrates the VectorTemplateEngine into the Heady™ bee swarm,
  * allowing any task to be matched against 3D-indexed artifact templates
  * and instantiated across all liquid nodes simultaneously.
  */

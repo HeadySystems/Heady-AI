@@ -207,7 +207,7 @@ function semverCompare(a, b) {
  * Bee & Service Registry.
  *
  * Manages registration, discovery, health monitoring, and version resolution
- * for all bees and services in the Heady cluster.
+ * for all bees and services in the Heady™ cluster.
  *
  * @extends EventEmitter
  *

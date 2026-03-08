@@ -236,7 +236,7 @@ class PhiSlidingWindow {
 // ─── CognitiveRuntimeGovernor ─────────────────────────────────────────────────
 
 /**
- * Central resource governance system for the Heady runtime.
+ * Central resource governance system for the Heady™ runtime.
  *
  * Enforces CPU/memory/GPU budgets, throttles tasks based on resource availability,
  * preempts lower-priority work, and applies graceful degradation.

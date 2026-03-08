@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -8,7 +8,7 @@
  * GitHub App-based token generation for VM/CI operations.
  * Issues short-lived installation tokens via GitHub App credentials.
  *
- * Heady AI Nodes: SENTINEL, CONDUCTOR
+ * Heady™ AI Nodes: SENTINEL, CONDUCTOR
  */
 
 const express = require("express");

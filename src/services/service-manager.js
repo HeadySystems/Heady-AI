@@ -1,16 +1,17 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * 🎛️ Heady Service Manager - 100% Uptime Continuous Service Orchestration
+ * 🎛️ Heady™ Service Manager - 100% Uptime Continuous Service Orchestration
  * 
- * This service manages all Heady services, ensuring they run continuously
+ * This service manages all Heady™ services, ensuring they run continuously
  * and coordinate properly. Default behavior: All services on, always monitoring.
  */
 
 const EventEmitter = require('events');
+const { PHI_TIMING } = require('../shared/phi-math');
 const { getHeadySimsService } = require('./HeadySims-service');
 const { getHeadyBattleService } = require('./HeadyBattle-service');
 const { getArenaModeService } = require('./arena-mode-service');
@@ -349,7 +350,7 @@ class ServiceManager extends EventEmitter {
       // Check for stale services
       if (status.state === 'running' && config.instance) {
         const metrics = this.healthMetrics.get(name);
-        if (metrics && (Date.now() - metrics.timestamp) > 30000) { // 30 seconds
+        if (metrics && (Date.now() - metrics.timestamp) > PHI_TIMING.CYCLE) { // 30 seconds
           logger.logSystem(`⚠️  Service ${name} appears stale (no recent metrics)`);
 
           if (config.critical && config.auto_restart) {
@@ -591,7 +592,7 @@ if (require.main === module) {
     setInterval(() => {
       const status = manager.getStatus();
       logger.logSystem(`📊 Service Status: ${status.summary.running}/${status.summary.total} running`);
-    }, 30000);
+    }, PHI_TIMING.CYCLE);
 
   }).catch(err => {
     logger.error('❌ Failed to start Service Manager:', err);

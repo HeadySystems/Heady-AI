@@ -1,6 +1,6 @@
 /*
  * Swarm Dashboard — HeadyBees Real-Time Monitoring
- * Micro-frontend for HeadyWeb Universal Shell
+ * Micro-frontend for Heady™Web Universal Shell
  */
 const APP_CONFIG = {
   id: 'swarm-dashboard',

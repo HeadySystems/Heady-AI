@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -25,6 +25,7 @@
 // manages checkpoints, stop rules, and circuit breakers.
 
 const fs = require("fs");
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require("path");
 const crypto = require("crypto");
 const yaml = require('core/heady-yaml');
@@ -280,7 +281,7 @@ class CircuitBreaker {
   constructor(config) {
     this.enabled = config.enabled !== false;
     this.failureThreshold = config.failureThreshold || 5;
-    this.resetTimeoutMs = config.resetTimeoutMs || 29034 /* φ⁷ × 1000 */;
+    this.resetTimeoutMs = config.resetTimeoutMs || PHI_TIMING.CYCLE /* φ⁷ × 1000 */;
     this.halfOpenMax = config.halfOpenMaxRequests || 2;
     this.state = "closed"; // closed | open | half-open
     this.failures = 0;
@@ -950,7 +951,7 @@ class HCFullPipeline extends EventEmitter {
         const m = this.state.metrics;
 
         if (m.errorRate > 0.05) weaknesses.push(`Error rate ${(m.errorRate * 100).toFixed(1)}% exceeds 5% target`);
-        if (m.elapsedMs > 29034 /* φ⁷ */) weaknesses.push(`Total pipeline elapsed ${m.elapsedMs}ms exceeds φ⁷ (29s) target`);
+        if (m.elapsedMs > PHI_TIMING.CYCLE /* φ⁷ */) weaknesses.push(`Total pipeline elapsed ${m.elapsedMs}ms exceeds φ⁷ (29s) target`);
         if (m.cachedTasks === 0 && m.completedTasks > 0) weaknesses.push("No tasks served from cache — cold run");
         if (m.failedTasks > 0) weaknesses.push(`${m.failedTasks} task(s) failed`);
 
@@ -971,7 +972,7 @@ class HCFullPipeline extends EventEmitter {
           suggestedImprovements: [
             m.cachedTasks === 0 ? "Seed task cache with warm-up run" : null,
             m.failedTasks > 0 ? "Add MC re-planning for failed tasks on next run" : null,
-            m.elapsedMs > 29034 /* φ⁷ */ ? "Increase parallelism or switch to fast_parallel strategy" : null,
+            m.elapsedMs > PHI_TIMING.CYCLE /* φ⁷ */ ? "Increase parallelism or switch to fast_parallel strategy" : null,
           ].filter(Boolean),
         });
 

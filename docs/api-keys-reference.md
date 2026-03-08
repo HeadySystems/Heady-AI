@@ -1,4 +1,4 @@
-# Heady Systems — API Services Reference
+# Heady™ Systems — API Services Reference
 
 > Last updated: 2026-03-07 | Source: GCP Secret Manager + `.env` (local only)
 
@@ -51,7 +51,7 @@
 
 `STRIPE_SECRET_KEY`
 
-### Heady Internal
+### Heady™ Internal
 
 `HEADY_API_KEY`, `ADMIN_TOKEN`
 

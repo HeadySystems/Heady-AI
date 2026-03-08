@@ -1,5 +1,5 @@
 /**
- * @fileoverview Hybrid Search Engine for Heady Latent OS
+ * @fileoverview Hybrid Search Engine for Heady™ Latent OS
  * @module hybrid-search
  *
  * Combines BM25 full-text search with dense vector similarity using

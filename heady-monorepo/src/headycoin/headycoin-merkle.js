@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -15,7 +15,7 @@
  *   - Proof verification
  *   - Batch anchoring trigger
  *
- * Heady AI Node: SENTINEL
+ * Heady™ AI Node: SENTINEL
  */
 
 const crypto = require("crypto");

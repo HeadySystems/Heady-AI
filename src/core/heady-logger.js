@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Logger — Structured colorful logger with levels, JSON mode, and component tagging
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 const { EventEmitter } = require("events");

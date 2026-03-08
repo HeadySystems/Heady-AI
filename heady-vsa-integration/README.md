@@ -1,8 +1,8 @@
-# Heady VSA Integration
+# Heady™ VSA Integration
 
 ## Vector Symbolic Architecture for Continuous Semantic Logic
 
-This package integrates **Vector Symbolic Architectures (VSA)** with Heady's **Continuous Semantic Logic (CSL)** system, eliminating traditional discrete logic gates in favor of continuous, semantic-aware computation.
+This package integrates **Vector Symbolic Architectures (VSA)** with Heady™'s **Continuous Semantic Logic (CSL)** system, eliminating traditional discrete logic gates in favor of continuous, semantic-aware computation.
 
 ---
 
@@ -37,7 +37,7 @@ npm install
 ```javascript
 const { VSACodebook } = require('./src/vsa/codebook');
 
-// Create Heady-specific codebook with semantic concepts
+// Create Heady™-specific codebook with semantic concepts
 const codebook = VSACodebook.createHeadyCodebook(4096);
 
 // Add custom concept
@@ -314,6 +314,6 @@ Apache-2.0 © HeadySystems Inc.
 
 ## 🤝 Contributing
 
-This is part of the Heady project. See main repository for contribution guidelines.
+This is part of the Heady™ project. See main repository for contribution guidelines.
 
 **Contact**: eric@headysystems.com

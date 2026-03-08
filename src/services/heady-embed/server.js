@@ -1,10 +1,11 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyEmbed HTTP Server
  *
- * Production Express server that wraps the HeadyEmbed service.
- * Uses Heady platform conventions: helmet, cors, compression, JSON body parsing.
+ * Production Express server that wraps the Heady™Embed service.
+ * Uses Heady™ platform conventions: helmet, cors, compression, JSON body parsing.
  */
 
 const express = require('express');
@@ -137,7 +138,7 @@ async function main() {
     setTimeout(() => {
       log.error('Graceful shutdown timed out. Forcing exit.');
       process.exit(1);
-    }, 30000).unref();
+    }, PHI_TIMING.CYCLE).unref();
   }
 
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));

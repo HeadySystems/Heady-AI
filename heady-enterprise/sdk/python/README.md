@@ -29,7 +29,7 @@ import asyncio
 from heady import HeadyClient, HeadyConfig, Message
 
 async def main():
-    async with HeadyClient(HeadyConfig(api_key="hdy_your_api_key")) as heady:
+    async with Heady™Client(HeadyConfig(api_key="hdy_your_api_key")) as heady:
         # Chat with AI
         response = await heady.brain.chat([
             Message(role="user", content="What is the golden ratio?")

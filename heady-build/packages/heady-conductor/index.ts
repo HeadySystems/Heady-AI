@@ -1,6 +1,6 @@
 /**
  * @module heady-conductor
- * @description Central orchestration engine for the Heady system.
+ * @description Central orchestration engine for the Heady™ system.
  *
  * All numeric constants derive from φ (phi = 1.618033988749895) or the
  * Fibonacci sequence.  Zero magic numbers are used anywhere in this file.
@@ -152,7 +152,7 @@ const PRIORITY_WEIGHT: Record<TaskPriority, number> = {
 export type RoutingStrategy = "best-of-n" | "round-robin" | "csl-scored";
 
 /**
- * Configuration for the HeadyConductor.
+ * Configuration for the Heady™Conductor.
  */
 export interface ConductorConfig {
   /** Maximum tasks processed concurrently. Defaults to fib(6) = 8. */
@@ -561,7 +561,7 @@ class PriorityQueue<T> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * HeadyConductor — Central orchestration engine for the Heady system.
+ * HeadyConductor — Central orchestration engine for the Heady™ system.
  *
  * Responsibilities:
  * - Maintain a registry of execution agents (Bees).

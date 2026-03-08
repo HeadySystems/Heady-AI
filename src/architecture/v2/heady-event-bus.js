@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * heady-event-bus.js
  * ════════════════════════════════════════════════════════════════════
@@ -49,7 +49,7 @@ const crypto = require('crypto');
 const TOPIC_REGEX = /^heady:[a-z0-9-]+:[a-z0-9-:*]+$/;
 
 /**
- * Canonical topic names for all Heady ecosystem events.
+ * Canonical topic names for all Heady™ ecosystem events.
  * Import and use these constants instead of raw strings to prevent typos.
  */
 const TOPICS = Object.freeze({
@@ -146,7 +146,7 @@ const TOPICS = Object.freeze({
 // ─── Event Envelope ──────────────────────────────────────────────────────────
 
 /**
- * Wrap a payload in the standard Heady event envelope.
+ * Wrap a payload in the standard Heady™ event envelope.
  * @param {string} topic
  * @param {object} payload
  * @param {object} [meta]

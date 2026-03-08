@@ -31,7 +31,7 @@ class TernaryIngestionEngine {
 
         // Parse frame directly into ternary values
         for (let i = 0; i < uint8Frame.length; i++) {
-            // Apply Heady Math: (byte mod 3) - 1 => generates proper -1, 0, 1 distribution
+            // Apply Heady™ Math: (byte mod 3) - 1 => generates proper -1, 0, 1 distribution
             this.marketMatrix[this.pointer++] = (uint8Frame[i] % 3) - 1;
         }
 

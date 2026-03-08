@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Kubernetes NetworkPolicy: Egress Filtering
+# Heady™Systems v3.2.2 — Kubernetes NetworkPolicy: Egress Filtering
 # ================================================================
 # Zero-trust egress: allow only explicitly required external destinations.
 # Deny all other egress by default.
@@ -24,7 +24,7 @@ metadata:
   labels:
     app.kubernetes.io/name: heady-systems
     app.kubernetes.io/version: "3.2.2"
-    security.heady.io/policy-type: default-deny
+    security.headyio.com/policy-type: default-deny
 spec:
   podSelector:
     matchLabels:
@@ -45,7 +45,7 @@ metadata:
   name: heady-allow-internal
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: internal-allow
+    security.headyio.com/policy-type: internal-allow
 spec:
   podSelector:
     matchLabels:
@@ -82,7 +82,7 @@ metadata:
   name: heady-allow-dns
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: dns-allow
+    security.headyio.com/policy-type: dns-allow
 spec:
   podSelector:
     matchLabels:
@@ -115,11 +115,11 @@ metadata:
   name: heady-allow-cloud-sql
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: database-allow
+    security.headyio.com/policy-type: database-allow
 spec:
   podSelector:
     matchExpressions:
-      - key: heady.io/needs-database
+      - key: headyio.com/needs-database
         operator: In
         values: ["true"]
   policyTypes:
@@ -154,7 +154,7 @@ metadata:
   name: heady-allow-redis
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: redis-allow
+    security.headyio.com/policy-type: redis-allow
 spec:
   podSelector:
     matchLabels:
@@ -183,11 +183,11 @@ metadata:
   name: heady-allow-cloudflare
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: cloudflare-allow
+    security.headyio.com/policy-type: cloudflare-allow
 spec:
   podSelector:
     matchLabels:
-      heady.io/cloudflare-access: "true"
+      headyio.com/cloudflare-access: "true"
   policyTypes:
     - Egress
   egress:
@@ -234,7 +234,7 @@ metadata:
   name: heady-allow-google-apis
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: google-apis-allow
+    security.headyio.com/policy-type: google-apis-allow
 spec:
   podSelector:
     matchLabels:
@@ -273,11 +273,11 @@ metadata:
   name: heady-allow-ai-apis
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: ai-api-allow
+    security.headyio.com/policy-type: ai-api-allow
 spec:
   podSelector:
     matchExpressions:
-      - key: heady.io/ai-api-access
+      - key: headyio.com/ai-api-access
         operator: In
         values: ["true"]
   policyTypes:
@@ -312,7 +312,7 @@ metadata:
   name: heady-allow-otel
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: otel-allow
+    security.headyio.com/policy-type: otel-allow
 spec:
   podSelector:
     matchLabels:
@@ -343,7 +343,7 @@ metadata:
   name: heady-allow-prometheus-scrape
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: monitoring-allow
+    security.headyio.com/policy-type: monitoring-allow
 spec:
   podSelector:
     matchLabels:
@@ -376,11 +376,11 @@ metadata:
   name: heady-mcp-sandbox-deny-egress
   namespace: heady-production
   labels:
-    security.heady.io/policy-type: sandbox-isolation
+    security.headyio.com/policy-type: sandbox-isolation
 spec:
   podSelector:
     matchLabels:
-      heady.io/zero-trust-sandbox: "true"
+      headyio.com/zero-trust-sandbox: "true"
   policyTypes:
     - Egress
   # Empty egress = deny all external network calls from sandbox pods

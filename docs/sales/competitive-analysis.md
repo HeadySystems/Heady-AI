@@ -1,4 +1,4 @@
-# HeadyOS — Competitive Analysis
+# Heady™OS — Competitive Analysis
 
 **Version**: 1.0.0 | **φ Reference**: 1.618033988749895  
 **Competitors**: LangChain · AutoGen · CrewAI · Semantic Kernel  
@@ -45,7 +45,7 @@ The enterprise AI orchestration market is crowded with frameworks built for rapi
 
 ## Detailed Competitive Analysis
 
-### HeadyOS vs. LangChain
+### Heady™OS vs. LangChain
 
 **LangChain** is the most widely deployed AI framework. It excels at rapid prototyping and has a massive ecosystem. However, it is a library, not an OS — it provides primitives but leaves security, scalability, and auditability to the developer.
 
@@ -71,7 +71,7 @@ The enterprise AI orchestration market is crowded with frameworks built for rapi
 
 ---
 
-### HeadyOS vs. AutoGen
+### Heady™OS vs. AutoGen
 
 **AutoGen** (Microsoft Research) is designed for conversational multi-agent workflows with a focus on academic research and rapid prototyping. Version 0.4 introduced a more production-oriented architecture, but its primary audience remains researchers and engineers building agentic demos.
 
@@ -97,7 +97,7 @@ The enterprise AI orchestration market is crowded with frameworks built for rapi
 
 ---
 
-### HeadyOS vs. CrewAI
+### Heady™OS vs. CrewAI
 
 **CrewAI** gained rapid adoption with its role-based 'crew' abstraction. It is developer-friendly and ships production capabilities faster than AutoGen. However, it lacks enterprise security, compliance, and a defensible IP position.
 
@@ -122,7 +122,7 @@ The enterprise AI orchestration market is crowded with frameworks built for rapi
 
 ---
 
-### HeadyOS vs. Semantic Kernel
+### Heady™OS vs. Semantic Kernel
 
 **Semantic Kernel** is Microsoft's enterprise-oriented AI SDK, positioned for Azure-native organizations. It integrates well with the Microsoft ecosystem (Azure OpenAI, Copilot, Teams) but creates deep vendor lock-in and doesn't offer multi-cloud or self-hosting with equivalent capabilities.
 
@@ -175,7 +175,7 @@ The enterprise AI orchestration market is crowded with frameworks built for rapi
 
 ---
 
-## HeadyOS Unique Differentiators (Not Replicable)
+## Heady™OS Unique Differentiators (Not Replicable)
 
 ### 1. Sacred Geometry Topology
 No competitor uses φ-derived clustering. This isn't aesthetics — it's a fundamentally different approach to agent network topology that produces measurable performance and reliability characteristics under patent protection.

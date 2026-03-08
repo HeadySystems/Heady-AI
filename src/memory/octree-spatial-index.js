@@ -1,11 +1,12 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 // RTP: 3D Vector Space Memory with Octree Indexing - HS-series
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 
 const PHI = 1.6180339887;
@@ -551,7 +552,7 @@ class STMtoLTM {
     this._threshold = opts.threshold || 0.4;
     this._stmCapacity = opts.stmCapacity || 1000;
     this._ltmCapacity = opts.ltmCapacity || 6765; // fib(20)
-    this._cycleMs = opts.cycleMs || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ 29034ms
+    this._cycleMs = opts.cycleMs || Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
     this._timer = null;
     this._callbacks = [];
   }

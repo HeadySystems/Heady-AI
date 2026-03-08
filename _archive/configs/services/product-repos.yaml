@@ -25,8 +25,8 @@ name: ProductRepos
 
 # ─── FOUNDATION REPO ──────────────────────────────────────────────────
 foundation:
-  name: Heady
-  repo: HeadySystems/Heady
+  name: Heady™
+  repo: HeadyMe/Heady
   description: >
     Single source of truth for all Heady services. Contains MCP gateway,
     API gateway, orchestrator, HeadyBrains, model router, billing, voice,
@@ -70,8 +70,8 @@ products:
     stack:
       framework: next.js
       styling: tailwind
-      ui_kit: "@heady/ui-kit"
-      sdk: "@heady/core-sdk"
+      ui_kit: "@heady-ai/ui-kit"
+      sdk: "@heady-ai/core-sdk"
     pages:
       - /           # Landing + personal dashboard
       - /coach      # Wellbeing coach chat
@@ -110,8 +110,8 @@ products:
     stack:
       framework: next.js
       styling: tailwind
-      ui_kit: "@heady/ui-kit"
-      sdk: "@heady/core-sdk"
+      ui_kit: "@heady-ai/ui-kit"
+      sdk: "@heady-ai/core-sdk"
     pages:
       - /               # Community landing
       - /teams          # Team workspace management
@@ -135,8 +135,8 @@ products:
           target: api.headyconnection.org
 
   HeadyWeb:
-    repo: HeadySystems/HeadyWeb
-    domain: headyweb.com
+    repo: HeadyMe/HeadyWeb
+    domain: headycloud.com
     type: marketing-site
     brain_profile: web-platform
     cloud_layer: production
@@ -146,8 +146,8 @@ products:
     stack:
       framework: next.js
       styling: tailwind
-      ui_kit: "@heady/ui-kit"
-      sdk: "@heady/core-sdk"
+      ui_kit: "@heady-ai/ui-kit"
+      sdk: "@heady-ai/core-sdk"
     pages:
       - /               # Marketing landing
       - /docs           # Documentation
@@ -156,17 +156,17 @@ products:
       - /about          # Mission and team
       - /blog           # Blog / updates
     env_vars:
-      CLOUD_HEADYWEB_URL: https://headyweb.com
+      CLOUD_HEADYWEB_URL: https://headycloud.com
       NEXT_PUBLIC_API_URL: https://api.heady.systems
       NEXT_PUBLIC_BRAIN_PROFILE: web-platform
     deploy:
       provider: cloudflare-pages
       project: heady-web
     dns:
-      cloudflare_zone: headyweb.com
+      cloudflare_zone: headycloud.com
 
   HeadySystems:
-    repo: HeadySystems/HeadySystems-Web
+    repo: HeadyMe/HeadySystems-Web
     domain: headysystems.com
     type: developer-portal
     brain_profile: sys-ops
@@ -176,8 +176,8 @@ products:
     stack:
       framework: next.js
       styling: tailwind
-      ui_kit: "@heady/ui-kit"
-      sdk: "@heady/core-sdk"
+      ui_kit: "@heady-ai/ui-kit"
+      sdk: "@heady-ai/core-sdk"
     pages:
       - /               # Developer landing
       - /admin          # System admin dashboard
@@ -195,7 +195,7 @@ products:
       cloudflare_zone: headysystems.com
 
   HeadyBuddy:
-    repo: HeadySystems/Heady
+    repo: HeadyMe/Heady
     domain: null
     type: desktop-app
     brain_profile: companion
@@ -206,8 +206,8 @@ products:
     stack:
       framework: electron + react
       styling: tailwind
-      ui_kit: "@heady/ui-kit"
-      sdk: "@heady/core-sdk"
+      ui_kit: "@heady-ai/ui-kit"
+      sdk: "@heady-ai/core-sdk"
     platforms:
       - windows (Electron)
       - linux (Electron)

@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Self-Healing Lifecycle
+# Heady™ Self-Healing Lifecycle
 
 ## When to Use This Skill
 

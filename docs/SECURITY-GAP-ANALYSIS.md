@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-The Heady platform's current security posture covers ~80% of enterprise-grade requirements.
+The Heady™ platform's current security posture covers ~80% of enterprise-grade requirements.
 The remaining 20% — concentrated in MCP Infrastructure (MCP-I) — represents a **$750K
 liability** that actively suppresses valuation in today's "Safe-AI" investment climate.
 

@@ -2,7 +2,7 @@
  * @file index.js
  * @description Governance layer: unified export + createGovernanceLayer() factory.
  *
- * Provides centralized governance for the Heady cluster:
+ * Provides centralized governance for the Heady™ cluster:
  * - Approval gates for high-risk operations
  * - Determinism validation
  * - Audit trail management
@@ -37,7 +37,7 @@ import { ApprovalGates  as _AG,
 // ─── GovernanceLayer class ────────────────────────────────────────────────────
 
 /**
- * Unified governance context for a Heady cluster node.
+ * Unified governance context for a Heady™ cluster node.
  *
  * Usage:
  *   const gov = createGovernanceLayer({ nodeId: 'SENTINEL' });
@@ -183,7 +183,7 @@ export function createGovernanceLayer(opts = {}) {
     audit:          opts.audit          ?? {},
   });
 
-  // Register default Heady gates
+  // Register default Heady™ gates
   if (opts.defaultGates !== false) {
     for (const gate of _defaultGates()) {
       approvalGates.defineGate(gate);

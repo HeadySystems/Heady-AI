@@ -1,5 +1,5 @@
 /**
- * Universal Heady Worker — Vector-First Deployment
+ * Universal Heady™ Worker — Vector-First Deployment
  * 
  * One Worker for ALL domains. Every request:
  * 1. Extract domain + path
@@ -8,7 +8,7 @@
  * 
  * Deploying = writing to vector memory. This Worker never changes.
  * 
- * Domains: headyme.com, headysystems.com, headyconnection.org, headymcp.com, heady.io
+ * Domains: headyme.com, headysystems.com, headyconnection.org, headymcp.com, headyio.com
  */
 
 const HEADY_MANAGER_URL = 'https://heady-manager-434867578931.us-central1.run.app';

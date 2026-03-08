@@ -13,7 +13,7 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady Service Domain Registry
+# Heady™ Service Domain Registry
 # 
 # This file maps all service domains for discovery, security, and observability.
 # All references use cloud domains — no api.headysystems.com/api.headysystems.com/local paths permitted.
@@ -27,7 +27,7 @@ root_domains:
   production: "internal.heady.systems"
 
 # ============================================================================
-# CORE SERVICES - Heady Manager & API Gateway
+# CORE SERVICES - Heady™ Manager & API Gateway
 # ============================================================================
 core_services:
   heady_manager:
@@ -168,7 +168,7 @@ data_services:
 # ============================================================================
 frontend_services:
   web_dashboard:
-    description: "Heady web dashboard (React)"
+    description: "Heady™ web dashboard (React)"
     ports:
       http: 3000
     domains:

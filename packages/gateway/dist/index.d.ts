@@ -1,7 +1,7 @@
 /**
- * @heady/gateway — API Gateway with Auth + Rate Limiting
+ * @heady-ai/gateway — API Gateway with Auth + Rate Limiting
  *
- * Routes requests across Heady services with:
+ * Routes requests across Heady™ services with:
  * - Cross-domain authentication (sign in once, roam all sites)
  * - Token-bucket rate limiting per tenant
  * - Request routing based on domain → service mapping

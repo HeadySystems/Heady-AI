@@ -1,6 +1,6 @@
 /**
  * @file ui-projection-engine.js
- * @description Dynamic UI generation engine for HeadyBuddy.
+ * @description Dynamic UI generation engine for Heady™Buddy.
  *   Produces optimal, Sacred-Geometry-aligned layout projections based on
  *   user preferences, device characteristics, role, subscription tier, and
  *   HeadyBee / HeadySwarm template configurations.

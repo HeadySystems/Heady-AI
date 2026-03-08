@@ -1,4 +1,4 @@
-# HeadySystems Bug Bounty Program
+# Heady™Systems Bug Bounty Program
 
 **Program Name:** HeadySystems Responsible Disclosure & Bug Bounty  
 **Program Version:** 3.2.2  
@@ -14,7 +14,7 @@ All reward amounts use Fibonacci numbers derived from φ=1.618033988749895.
 
 ## 1. Program Overview
 
-HeadySystems welcomes security researchers who identify vulnerabilities in our platform. We believe in responsible disclosure and reward researchers who help us improve security for our users. This program covers all public-facing components of HeadySystems v3.2.2.
+HeadySystems welcomes security researchers who identify vulnerabilities in our platform. We believe in responsible disclosure and reward researchers who help us improve security for our users. This program covers all public-facing components of Heady™Systems v3.2.2.
 
 ---
 
@@ -100,7 +100,7 @@ Rewards may be reduced or denied for:
 
 ### 4.1 Who May Participate
 
-Any individual security researcher not currently employed by or contracting with HeadySystems. HeadySystems employees and contractors are ineligible.
+Any individual security researcher not currently employed by or contracting with Heady™Systems. HeadySystems employees and contractors are ineligible.
 
 ### 4.2 Testing Rules
 

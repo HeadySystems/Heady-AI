@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Improvement Scheduler — Continuous pipeline auto-execution engine.
@@ -8,6 +8,7 @@
  */
 
 let logger = null; try { logger = require('./utils/logger'); } catch(e) { /* graceful */ }
+const { PHI_TIMING } = require('../shared/phi-math');
 
 class ImprovementScheduler {
     constructor(opts = {}) {
@@ -35,7 +36,7 @@ class ImprovementScheduler {
         this._timer = setTimeout(() => {
             this._runCycle();
             this._timer = setInterval(() => this._runCycle(), this.interval);
-        }, 29034); // φ⁷ × 1000
+        }, PHI_TIMING.CYCLE); // φ⁷ × 1000
     }
 
     stop() {

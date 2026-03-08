@@ -1,17 +1,17 @@
-# @heady/sdk
+# @heady-ai/sdk
 
 > TypeScript client SDK for the Heady™ AI Platform — MCP tool calls, vector memory, and health checks.
 
 ## Install
 
 ```bash
-npm install @heady/sdk
+npm install @heady-ai/sdk
 ```
 
 ## Quick Start
 
 ```ts
-import { HeadyClient } from '@heady/sdk';
+import { HeadyClient } from '@heady-ai/sdk';
 
 const client = new HeadyClient('your-api-key');
 
@@ -37,4 +37,4 @@ const health = await client.healthCheck();
 
 ## License
 
-Proprietary — © 2026 HeadySystems Inc.
+Proprietary — © 2026 Heady™Systems Inc.

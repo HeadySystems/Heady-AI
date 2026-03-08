@@ -30,7 +30,7 @@ const heady = new HeadyClient({
   tenantId: 'my-org', // Optional: for multi-tenant deployments
 });
 
-// Chat with HeadyOS AI
+// Chat with Heady™OS AI
 const response = await heady.brain.chat([
   { role: 'user', content: 'What is the golden ratio?' }
 ]);
@@ -43,7 +43,7 @@ Get your API key at [headyme.com/settings/api-keys](https://headyme.com/settings
 
 ## API Reference
 
-### HeadyClient Configuration
+### Heady™Client Configuration
 
 ```typescript
 const heady = new HeadyClient({
@@ -60,7 +60,7 @@ const heady = new HeadyClient({
 
 ### `client.brain.chat(messages, options?)`
 
-Send messages to the HeadyOS AI brain and receive a response.
+Send messages to the Heady™OS AI brain and receive a response.
 
 ```typescript
 const response = await heady.brain.chat(
@@ -183,7 +183,7 @@ if (!result.isError) {
 
 ### `client.conductor.submitTask(task)`
 
-Submit a multi-agent orchestration task to the Heady Conductor.
+Submit a multi-agent orchestration task to the Heady™ Conductor.
 
 ```typescript
 const task = await heady.conductor.submitTask({

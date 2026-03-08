@@ -1,7 +1,7 @@
 /**
  * HeadySims Service
- * Optimization engine for HeadyOS simulation and resource modeling.
- * © 2026 HeadySystems Inc.
+ * Optimization engine for Heady™OS simulation and resource modeling.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

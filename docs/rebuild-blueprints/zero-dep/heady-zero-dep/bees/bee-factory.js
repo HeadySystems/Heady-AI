@@ -5,7 +5,7 @@
  * Features:
  * - createBee(config) — create persistent bees with full lifecycle management
  * - spawnBee(config) — create ephemeral bees for one-shot tasks
- * - 24 domain templates covering all Heady functional areas
+ * - 24 domain templates covering all Heady™ functional areas
  * - Bee lifecycle: IDLE → ACTIVE → BUSY → COOLDOWN → IDLE
  * - Resource tracking per bee (CPU/memory budget, task count)
  * - Auto-scaling: spawn new bees when workload exceeds PHI threshold

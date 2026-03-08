@@ -11,6 +11,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 
 // ═══════════════════════════════════════════════════════════════════
@@ -35,7 +36,7 @@ class CircuitBreaker {
         this.failureCount = 0;
         this.successCount = 0;
         this.failureThreshold = options.failureThreshold || 5;
-        this.resetTimeout = options.resetTimeout || 29034 /* φ⁷ */;
+        this.resetTimeout = options.resetTimeout || PHI_TIMING.CYCLE /* φ⁷ */;
         this.halfOpenMax = options.halfOpenMax || 3;
         this.lastFailure = null;
         this._timer = null;

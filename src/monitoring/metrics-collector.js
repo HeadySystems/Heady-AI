@@ -1,13 +1,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Metrics Collector
+ * Heady™ Metrics Collector
  * ═══════════════════════════════════════════════════════════════════
  *
- * Polls all 7 Heady service health endpoints, MCP router, bee factory,
+ * Polls all 7 Heady™ service health endpoints, MCP router, bee factory,
  * skill router, CSL gate statistics, and phi scale values.
  * Uses phi-exponential backoff when services are unresponsive.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * @module src/monitoring/metrics-collector
  */
 'use strict';

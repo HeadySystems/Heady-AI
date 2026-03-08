@@ -1,5 +1,5 @@
 /**
- * HC Secrets Manager — Unified secret management for Heady platform.
+ * HC Secrets Manager — Unified secret management for Heady™ platform.
  * Supports Google Secret Manager, Vault, and local encrypted store.
  */
 'use strict';

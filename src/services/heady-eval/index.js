@@ -3,7 +3,7 @@
 /**
  * HeadyEval — LLM-as-Judge Evaluation Framework
  *
- * Production-ready evaluation framework for the Heady AI platform.
+ * Production-ready evaluation framework for the Heady™ AI platform.
  * Replaces external eval tools with custom scorers for relevance,
  * safety, faithfulness, coherence, and helpfulness.
  *
@@ -485,7 +485,7 @@ class HeadyEval extends EventEmitter {
               res.on('data', (c) => { data += c; });
               res.on('end', () => {
                 try { resolve(JSON.parse(data)); }
-                catch { reject(new Error(`Invalid JSON from HeadyGuard`)); }
+                catch { reject(new Error(`Invalid JSON from Heady™Guard`)); }
               });
             });
             req.setTimeout(5000, () => { req.destroy(); reject(new Error('HeadyGuard timeout')); });
@@ -510,7 +510,7 @@ class HeadyEval extends EventEmitter {
 // ─── Express service bootstrap ────────────────────────────────────────────────
 
 /**
- * Create and start the HeadyEval Express service.
+ * Create and start the Heady™Eval Express service.
  *
  * @param {object} [opts] - HeadyEval constructor options
  * @returns {Promise<{ app, server, eval: HeadyEval }>}

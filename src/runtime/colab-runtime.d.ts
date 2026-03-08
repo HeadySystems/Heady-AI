@@ -47,7 +47,7 @@ export class GPUVectorStore {
 }
 /**
  * Setup ngrok tunnel for Colab → internet access.
- * This makes the Heady API accessible from any device.
+ * This makes the Heady™ API accessible from any device.
  */
 export function setupNgrokTunnel(port: any): Promise<any>;
 //# sourceMappingURL=colab-runtime.d.ts.map

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Phi-Math Foundation — Continuous Sacred Geometry Scaling for the Heady Latent OS.
+ * @fileoverview Phi-Math Foundation — Continuous Sacred Geometry Scaling for the Heady™ Latent OS.
  *
  * This module replaces ALL arbitrary fixed constants across the platform with
  * mathematically-derived values rooted in φ (the golden ratio), the Fibonacci

@@ -1,4 +1,4 @@
-# HeadyBuddy — Ableton Live Remote Script
+# Heady™Buddy — Ableton Live Remote Script
 
 **Bridges Buddy ↔ Ableton Live** via TCP socket on port 11411.
 

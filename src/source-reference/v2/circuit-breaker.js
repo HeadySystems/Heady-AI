@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * Circuit Breaker — Resilience Pattern
  * Netflix Hystrix-inspired circuit breaker for service calls.
@@ -18,7 +19,7 @@ class CircuitBreaker {
         this.state = STATES.CLOSED;
         this.failureThreshold = opts.failureThreshold || 5;
         this.successThreshold = opts.successThreshold || 3;
-        this.timeout = opts.timeout || 30000;
+        this.timeout = opts.timeout || PHI_TIMING.CYCLE;
         this.failureCount = 0;
         this.successCount = 0;
         this.lastFailureTime = null;

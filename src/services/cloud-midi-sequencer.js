@@ -1,5 +1,5 @@
 /**
- * Heady Cloud-Native MIDI Sequencer — Master Clock
+ * Heady™ Cloud-Native MIDI Sequencer — Master Clock
  *
  * Headless cloud sequencer synchronizing tempo + user patterns as MIDI to
  * distributed browser-based DAW timelines. Central server acts as absolute
@@ -13,7 +13,7 @@
  *
  * Uses Sacred Geometry timing (φ-based swing, base-13 quantization).
  *
- * © 2026 HeadySystems Inc.. All rights reserved.
+ * © 2026 Heady™Systems Inc.. All rights reserved.
  */
 
 'use strict';

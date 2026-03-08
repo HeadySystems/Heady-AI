@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * ─── Vibe-Match Latency Delta Router ─────────────────────────────────────────
@@ -7,7 +7,7 @@
  * Patent Docket: HS-051
  * Title: SYSTEM AND METHOD FOR DYNAMIC COGNITIVE PARAMETER ADJUSTMENT BASED ON
  *        INFRASTRUCTURE THERMAL-LATENCY FEEDBACK
- * Applicant: Heady Systems LLC  |  Inventor: Eric Haywood
+ * Applicant: HeadySystems Inc  |  Inventor: Eric Haywood
  * Related: HS-001, HS-024, HS-053
  *
  * Satisfies ALL 6 claims of HS-051.

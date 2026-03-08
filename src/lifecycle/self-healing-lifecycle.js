@@ -3,7 +3,7 @@
 /**
  * self-healing-lifecycle.js
  *
- * Implements the complete self-healing lifecycle state machine for the Heady ecosystem.
+ * Implements the complete self-healing lifecycle state machine for the Heady™ ecosystem.
  * All numeric constants are derived from phi-math-v2.js — no magic numbers here.
  *
  * State machine:
@@ -86,7 +86,7 @@ const STATE = Object.freeze({
 });
 
 /**
- * Valid component types in the Heady ecosystem.
+ * Valid component types in the Heady™ ecosystem.
  * @enum {string}
  */
 const COMPONENT_TYPE = Object.freeze({
@@ -641,7 +641,7 @@ class ComponentState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * SelfHealingLifecycle is the top-level orchestrator for the Heady ecosystem's
+ * SelfHealingLifecycle is the top-level orchestrator for the Heady™ ecosystem's
  * self-healing state machine.
  *
  * Usage:

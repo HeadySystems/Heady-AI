@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * UI Registry — HeadyWeb Universal Shell
  *
- * Central registry for all Heady UIs and applications.
+ * Central registry for all Heady™ UIs and applications.
  * Serves a dynamic manifest so HeadyWeb can route users
  * to the correct UI projection from a single entry point.
  */
@@ -16,12 +16,12 @@ const crypto = require('crypto');
 
 const _uiApps = new Map();
 
-// Pre-register all known Heady UIs
+// Pre-register all known Heady™ UIs
 const BUILTIN_UIS = [
     {
         id: 'antigravity',
-        name: 'Heady Antigravity',
-        description: '3D collaborative workspace for Heady vector space visualization',
+        name: 'Heady™ Antigravity',
+        description: '3D collaborative workspace for Heady™ vector space visualization',
         category: 'core',
         entryPoint: '/src/ui/heady-antigravity-app/index.html',
         route: '/app/antigravity',
@@ -31,7 +31,7 @@ const BUILTIN_UIS = [
     },
     {
         id: 'landing',
-        name: 'Heady Landing Page',
+        name: 'Heady™ Landing Page',
         description: 'Premium glassmorphism landing page for headyme.com',
         category: 'marketing',
         entryPoint: '/src/landing/index.html',
@@ -108,7 +108,7 @@ for (const ui of BUILTIN_UIS) {
 
 /**
  * Get the full UI manifest.
- * Used by HeadyWeb shell to discover available apps.
+ * Used by Heady™Web shell to discover available apps.
  */
 function getUIManifest(options = {}) {
     const { category, status } = options;
@@ -125,7 +125,7 @@ function getUIManifest(options = {}) {
         shell: {
             name: 'HeadyWeb',
             version: '3.0.1',
-            description: 'Universal delivery shell for all Heady products',
+            description: 'Universal delivery shell for all Heady™ products',
             baseUrl: 'https://headyme.com',
         },
         totalApps: apps.length,

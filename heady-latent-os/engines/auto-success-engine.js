@@ -10,7 +10,7 @@
  *   7. Communication  8. Infrastructure 9. Intelligence
  *
  * @module auto-success-engine
- * @author Heady Ecosystem
+ * @author Heady™ Ecosystem
  * @version 1.0.0
  * @see LAW-07
  *

@@ -49,7 +49,7 @@ profiles:
       preference: HeadyBrain-only
       allowed: [HeadyBrain]
       privacy: strict
-      cost_limit_daily: 0.00  # Free with HeadyBrain
+      cost_limit_daily: 0.00  # Free with Heady™Brain
     rag:
       indices: [personal-docs, personal-notes]
       isolation: strict
@@ -248,7 +248,7 @@ routing:
     headyme.com: personal-wellbeing
     headyconnection.org: community-impact
     headysystems.com: sys-ops
-    headyweb.com: web-platform
+    headycloud.com: web-platform
     buddy.headysystems.com: companion
 
   workspace_type_to_brain:

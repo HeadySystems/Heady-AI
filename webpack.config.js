@@ -3,7 +3,7 @@
  * Webpack Module Federation Configuration
  * ═══════════════════════════════════════════════════════════════
  *
- * Enables the HeadyWeb Universal Shell to dynamically load
+ * Enables the Heady™Web Universal Shell to dynamically load
  * micro-frontend UIs at runtime. Each registered app in the
  * UI Registry can be independently built and deployed, then
  * loaded by the shell via Module Federation.

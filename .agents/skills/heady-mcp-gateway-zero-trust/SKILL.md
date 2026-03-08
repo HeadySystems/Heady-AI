@@ -6,13 +6,13 @@ description: >
   limiting, cryptographic audit logging, and meta-server aggregation. Covers the full MCP ecosystem
   for sovereign AI deployments with phi-scaled parameters.
   Keywords: MCP, Model Context Protocol, gateway, tool routing, zero trust, sandbox, rate limiter,
-  audit log, connection pool, meta-server, SSE, WebSocket, stdio, Heady MCP, tool execution.
+  audit log, connection pool, meta-server, SSE, WebSocket, stdio, Heady™ MCP, tool execution.
 metadata:
   author: eric-head
   version: '2.0'
 ---
 
-# Heady MCP Gateway with Zero-Trust Execution
+# Heady™ MCP Gateway with Zero-Trust Execution
 
 ## When to Use This Skill
 

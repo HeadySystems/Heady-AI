@@ -26,8 +26,8 @@ describe('vector projection orchestrator', () => {
 
     test('buildProjectionEntries publishes github channel metadata', () => {
         const { entries, axisWeights } = buildProjectionEntries([
-            { name: 'HeadySystems', url: 'https://github.com/HeadySystems/Heady', description: 'main' },
-            { name: 'HeadyWeb', url: 'https://github.com/HeadySystems/HeadyWeb', description: 'web' },
+            { name: 'HeadySystems', url: 'https://github.com/HeadyMe/Heady', description: 'main' },
+            { name: 'HeadyWeb', url: 'https://github.com/HeadyMe/HeadyWeb', description: 'web' },
         ]);
 
         expect(entries).toHaveLength(2);

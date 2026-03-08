@@ -2,7 +2,7 @@
 
 /**
  * @file github-webhook.js
- * @description GitHub webhook handler that triggers Heady agents on PR and push events.
+ * @description GitHub webhook handler that triggers Heady™ agents on PR and push events.
  *
  * Supported events:
  * - pull_request: opened, synchronize, ready_for_review → AI code review
@@ -90,7 +90,7 @@ const handlePullRequest = async (payload) => {
 
   console.log(`[GitHub] PR #${prInfo.number} ${action}: ${prInfo.title}`);
 
-  // Submit code review task to Heady Conductor
+  // Submit code review task to Heady™ Conductor
   const task = await heady.conductor.submitTask({
     type: 'code_review',
     title: `PR #${prInfo.number}: ${prInfo.title}`,

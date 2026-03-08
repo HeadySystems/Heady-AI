@@ -1,4 +1,4 @@
-# Heady VSA Resource Links
+# Heady™ VSA Resource Links
 
 ## Academic Papers & Surveys
 
@@ -96,7 +96,7 @@
     - Relevant for shadow memory consolidation
     - Memory decay and reinforcement patterns
 
-## Heady Project Resources
+## Heady™ Project Resources
 
 ### Your Repositories
 

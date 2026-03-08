@@ -114,7 +114,7 @@ SELECT * FROM (
 LIMIT 10;
 ```
 
-## Heady Integration Pattern
+## Heady™ Integration Pattern
 
 ```javascript
 class DuckDBVectorStore {
@@ -176,7 +176,7 @@ SET hnsw.ef_search = 64;  -- Query-time search depth
 | Quantization | ❌ Not yet | ✅ halfvec, binary |
 | Max Vector Size | ~10,000 dim | ~16,000 dim |
 
-## Best Practices for Heady
+## Best Practices for Heady™
 
 1. **Always use distance functions** (not similarity) in ORDER BY
 2. **Set hnsw.ef_search** based on recall needs (32-128 typical)

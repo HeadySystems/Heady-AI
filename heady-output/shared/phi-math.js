@@ -4,11 +4,11 @@
  * ║  Sacred Geometry Mathematical Constants & Functions               ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  SINGLE SOURCE OF TRUTH — All phi/Fibonacci constants            ║
- * ║  © 2024-2026 HeadySystems Inc. All Rights Reserved.              ║
+ * ║  © 2026-2026 HeadySystems Inc. All Rights Reserved.              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * NO MAGIC NUMBERS. Every constant derives from φ, ψ, or Fibonacci.
- * Import this module in every Heady service, config generator, and runtime.
+ * Import this module in every Heady™ service, config generator, and runtime.
  */
 
 // ─── CORE CONSTANTS ───────────────────────────────────────────────────────────
@@ -353,7 +353,7 @@ export function phiResourceWeights(n) {
 }
 
 /**
- * Standard Heady 5-pool resource allocation (Sacred Geometry pools).
+ * Standard Heady™ 5-pool resource allocation (Sacred Geometry pools).
  * Fibonacci-percentage based: 34 + 21 + 13 + 8 + 5 = 81% (normalized to 100%).
  */
 export const POOL_ALLOCATION = Object.freeze({
@@ -480,7 +480,7 @@ export function phiTimeoutTiers(baseMs, tiers = 5) {
 }
 
 /**
- * Standard Heady timeout tiers (ms).
+ * Standard Heady™ timeout tiers (ms).
  * Built from base = 1000ms, using Fibonacci × 1000 for predictable values.
  */
 export const TIMEOUT_TIERS = Object.freeze({

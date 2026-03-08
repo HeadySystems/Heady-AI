@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Vertical Config — Finance
+# Heady™Systems Vertical Config — Finance
 # Domain: finance.headyme.com
 # Apex module: Trading intelligence
 # =============================================================================
@@ -14,7 +14,7 @@ routing:
     - trading.headyme.com
 
 brand:
-  name: "Heady Finance"
+  name: "Heady™ Finance"
   tagline: "AI Orchestration for Financial Services — Powered by Apex"
   accent_color: "#10b981"
   logo_variant: finance
@@ -141,7 +141,7 @@ content:
     author: "Head of Technology, Quantitative Hedge Fund (placeholder)"
 
 meta:
-  title: "Heady Finance — AI Trading Intelligence & Risk Platform"
+  title: "Heady™ Finance — AI Trading Intelligence & Risk Platform"
   description: "Apex-powered AI orchestration for financial services. Sub-millisecond trading signal processing, risk analysis, SEC/FINRA compliance, and portfolio optimization."
   keywords:
     - "financial AI platform"

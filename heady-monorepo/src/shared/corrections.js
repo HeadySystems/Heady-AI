@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * ─── HeadyCorrections — Behavior Analysis Engine ──────────────────
- * 3D vector-powered behavior analysis for the Heady ecosystem.
+ * 3D vector-powered behavior analysis for the Heady™ ecosystem.
  * 
  * Core capabilities:
  *   1. Interaction pattern detection (tone, sentiment, conflict signals)

@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — GitHub Actions: Trivy Container Image Security Scanning
+# Heady™Systems v3.2.2 — GitHub Actions: Trivy Container Image Security Scanning
 # ================================================================================
 # Scans all container images for CVEs on every PR and push.
 # Fails the pipeline on CRITICAL or HIGH severity CVEs.

@@ -23,7 +23,7 @@ Pool size: fib(7)=13 connections
 
 ## Overview
 
-Redis is the primary data store for HeadySystems. All 21 microservices depend on it for:
+Redis is the primary data store for Heady™Systems. All 21 microservices depend on it for:
 - Session state and JWT cache
 - Rate limiting (4-layer system)
 - Agent queue depth tracking

@@ -1,6 +1,6 @@
 /**
  * @file pipeline-core.js
- * @description HCFullPipeline — 12-Stage Heady Cognitive Full Pipeline.
+ * @description HCFullPipeline — 12-Stage Heady™ Cognitive Full Pipeline.
  *
  * Stages (in order):
  * INTAKE → TRIAGE → PLAN → MONTE_CARLO → ARENA → JUDGE
@@ -176,7 +176,7 @@ const DEFAULT_GATES = {
 // ─── HCFullPipeline ───────────────────────────────────────────────────────────
 
 /**
- * The 12-Stage Heady Cognitive Full Pipeline (HCFullPipeline).
+ * The 12-Stage Heady™ Cognitive Full Pipeline (HCFullPipeline).
  *
  * @extends EventEmitter
  *

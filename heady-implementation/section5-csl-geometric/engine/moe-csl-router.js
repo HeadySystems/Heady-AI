@@ -1,7 +1,7 @@
 /**
  * @fileoverview MoE-CSL Router — Mixture-of-Experts routing via CSL gates
  *
- * Heady Latent OS — Section 5: CSL & Geometric AI
+ * Heady™ Latent OS — Section 5: CSL & Geometric AI
  *
  * Routes inputs to expert agents using cosine similarity gates. The router
  * uses semantic alignment (CSL AND) rather than learned linear weights to
@@ -27,7 +27,7 @@
  *
  * @module moe-csl-router
  * @version 1.0.0
- * @patent Heady Connection — 60+ provisional patents on CSL/routing techniques
+ * @patent Heady™ Connection — 60+ provisional patents on CSL/routing techniques
  */
 
 'use strict';

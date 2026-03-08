@@ -45,7 +45,7 @@ export class HeadyVinci extends EventEmitter<[never]> {
      * @param {string} task.id
      * @param {string} task.type
      * @param {object} task.payload
-     * @param {object} [context] - Assembled context from HeadyBrains
+     * @param {object} [context] - Assembled context from Heady™Brains
      * @returns {Promise<ExecutionPlan>}
      */
     plan(task: {

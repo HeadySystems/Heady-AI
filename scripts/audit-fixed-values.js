@@ -2,7 +2,7 @@
 'use strict';
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Phi Audit — Fixed Value Scanner
+ * Heady™ Phi Audit — Fixed Value Scanner
  * ═══════════════════════════════════════════════════════════════════
  *
  * Scans the codebase for every hardcoded numeric constant that should

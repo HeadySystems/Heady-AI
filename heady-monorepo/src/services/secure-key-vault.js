@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 
 /**
- * ─── Heady Secure Key Vault ─────────────────────────────────────
+ * ─── Heady™ Secure Key Vault ─────────────────────────────────────
  *
  * RAM-first encrypted credential store in 3D vector space.
  * All keys live encrypted in vector memory — never plaintext on disk.
@@ -49,8 +49,8 @@ const SALT_LENGTH = 32;
 
 // ── Credential Ownership ────────────────────────────────────────
 // personal = Eric's personal accounts (Gmail, personal SSH)
-// system   = Heady platform secrets (service accounts, deploy keys)
-// shared   = overlap (GitHub org tokens used personally AND by Heady)
+// system   = Heady™ platform secrets (service accounts, deploy keys)
+// shared   = overlap (GitHub org tokens used personally AND by Heady™)
 const OWNERS = ['personal', 'system', 'shared'];
 
 // ── Credential Domains ──────────────────────────────────────────

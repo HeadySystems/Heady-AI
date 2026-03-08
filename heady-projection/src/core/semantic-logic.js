@@ -1,4 +1,4 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
 /**
@@ -6,7 +6,7 @@
  * ══════════════════════════════════════
  *
  * Soft activation functions for intelligent bee dispatch, swarm candidate
- * scoring, and priority classification. Used throughout the Heady projection
+ * scoring, and priority classification. Used throughout the Heady™ projection
  * system for non-binary, gradient-based decision making.
  *
  * Gates:

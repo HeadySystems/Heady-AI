@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * UI-002: SandboxedComponent — Safe AI-generated UI execution
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Wraps AI-generated UI components in a sandboxed iframe with

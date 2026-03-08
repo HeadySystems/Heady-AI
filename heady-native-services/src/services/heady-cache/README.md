@@ -1,6 +1,6 @@
-# HeadyCache
+# Heady™Cache
 
-Intelligent semantic cache for the Heady AI platform. Eliminates redundant API calls by matching semantically similar queries instead of only exact matches.
+Intelligent semantic cache for the Heady™ AI platform. Eliminates redundant API calls by matching semantically similar queries instead of only exact matches.
 
 **Port:** `3105`  
 **Node:** `>=20.0.0`  
@@ -37,7 +37,7 @@ GET request ("What is the boiling point of water?")
      ├── 1. Hash match (SHA-256 of key)
      │        ↓ exact hit → return immediately
      │
-     ├── 2. Embed key via HeadyEmbed → 384-dim vector
+     ├── 2. Embed key via Heady™Embed → 384-dim vector
      │
      ├── 3. VP-tree ANN search (k=1) over indexed vectors
      │        ↓ similarity ≥ threshold → return cached result

@@ -50,7 +50,7 @@ system:
   name: "Heady™ Sovereign Phi-100"
   codename: "Aether"
   author: "Heady™ Core Engineering"
-  schema: "https://headysystems.io/schemas/system-config/3.2.3"
+  schema: "https://headysystems.com/schemas/system-config/3.2.3"
   created_at: "2026-03-08T00:00:00Z"
   updated_at: "2026-03-08T00:00:00Z"
 
@@ -409,7 +409,7 @@ vector_store:
 
 # ───────────────────────────────────────────────────────────────────────────────
 # MEMORY TIERS
-# Heady Elephant Memory layer — eviction weights and tier sizing.
+# Heady™ Elephant Memory layer — eviction weights and tier sizing.
 # ───────────────────────────────────────────────────────────────────────────────
 memory:
 

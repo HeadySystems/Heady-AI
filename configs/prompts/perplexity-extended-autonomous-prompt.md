@@ -121,7 +121,7 @@ Execute the following phases in order. After each phase, emit a checkpoint. If a
 Generate a final `SUMMARY_RECEIPT.md` containing:
 
 ```
-# Heady Autonomous Cycle — YYYY-MM-DD
+# Heady™ Autonomous Cycle — YYYY-MM-DD
 
 ## Completed Phases: [list]
 ## Total Findings: [count by severity: critical/warning/info]

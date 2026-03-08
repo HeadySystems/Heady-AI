@@ -4,7 +4,7 @@
  * heady-trading-intelligence-tool.js — MCP Tool Handler
  * Trading domain prompts: signal, risk, backtest, portfolio, sentiment,
  * options, macro, execution. All constants from φ.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const crypto = require('crypto');

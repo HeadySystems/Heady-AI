@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * CONN-002: Intelligent MCP Router
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Routes MCP tool calls to optimal providers using latency tracking,

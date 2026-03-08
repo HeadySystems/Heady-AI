@@ -2,7 +2,7 @@
 
 /**
  * HeadyEval Configuration
- * LLM-as-judge evaluation framework for the Heady AI platform.
+ * LLM-as-judge evaluation framework for the Heady™ AI platform.
  * Sacred Geometry scaling: PHI = 1.618
  */
 
@@ -22,7 +22,7 @@ const config = {
   phiSquared: PHI * PHI,
   phiInverse: 1 / PHI,
 
-  // Judge model (via HeadyInfer)
+  // Judge model (via Heady™Infer)
   judgeModel: process.env.HEADY_EVAL_JUDGE_MODEL || 'claude-3.5-sonnet',
   judgeTemperature: parseFloat(process.env.HEADY_EVAL_JUDGE_TEMPERATURE) || 0.0,
   judgeMaxTokens: parseInt(process.env.HEADY_EVAL_JUDGE_MAX_TOKENS, 10) || 1024,

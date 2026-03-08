@@ -21,7 +21,7 @@
     "registry:print": "node scripts/print-registry.mjs",
     "project:repos": "node scripts/project-verticals.mjs",
     "contracts:check": "node scripts/check-contracts.mjs",
-    "dev:control-plane": "pnpm --parallel --filter @heady/gateway-api --filter @heady/conductor --filter @heady/memory-service --filter @heady/mcp-gateway dev"
+    "dev:control-plane": "pnpm --parallel --filter @heady-ai/gateway-api --filter @heady-ai/conductor --filter @heady-ai/memory-service --filter @heady-ai/mcp-gateway dev"
   },
   "devDependencies": {
     "turbo": "^2.5.0",

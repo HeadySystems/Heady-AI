@@ -1,10 +1,10 @@
-# Heady VSA Reference Package - Complete Manifest
+# Heady™ VSA Reference Package - Complete Manifest
 
 ## Package Information
 
 - **Version:** 1.0
 - **Generated:** March 7, 2026
-- **Purpose:** Comprehensive reference for Heady Vector Memory + VSA implementation
+- **Purpose:** Comprehensive reference for Heady™ Vector Memory + VSA implementation
 - **Source:** Extracted from 06-vector-memory-vsa-shadow.md specification
 
 ## Contents Overview
@@ -17,7 +17,7 @@
 ### 02-implementation-references/ (Technical Guides)
 - `torchhd-operations-guide.md` - Map Torchhd Python → JavaScript
 - `duckdb-vss-semantics.md` - DuckDB vector search patterns
-- `sentence-transformers-models.md` - Embedding models for Heady
+- `sentence-transformers-models.md` - Embedding models for Heady™
 
 ### 03-heady-spec-extraction/ (Tasks & Tests)
 - `task-checklist.md` - Actionable implementation tasks with acceptance criteria
@@ -90,7 +90,7 @@ For questions or issues:
 
 ## License
 
-© 2026 HeadySystems Inc.  
+© 2026 Heady™Systems Inc.  
 Sacred Geometry :: Organic Systems :: Breathing Interfaces
 
 ---

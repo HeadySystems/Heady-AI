@@ -1,5 +1,5 @@
 /**
- * Heady Project - RBAC Token Vendor (Principle of Least Privilege)
+ * Heady™ Project - RBAC Token Vendor (Principle of Least Privilege)
  *
  * Grants narrowly scoped, temporary execution tokens to AI agents 
  * to interface with enterprise databases, APIs, or MCP endpoints.

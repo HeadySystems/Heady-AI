@@ -41,11 +41,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// ── Heady API Key Auth (optional — validates X-Heady-Key header) ──
+// ── Heady™ API Key Auth (optional — validates X-Heady™-Key header) ──
 app.use((req, res, next) => {
     const key = req.headers['x-heady-key'];
     if (key && AUTHORIZED_HEADY_KEYS.size > 0 && !AUTHORIZED_HEADY_KEYS.has(key)) {
-        return res.status(401).json({ error: 'Invalid Heady API key' });
+        return res.status(401).json({ error: 'Invalid Heady™ API key' });
     }
     next();
 });

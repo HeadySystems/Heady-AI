@@ -1,4 +1,4 @@
-# HeadyOS latent runtime bundle
+# Heady™OS latent runtime bundle
 
 This bundle reframes the requested "backend runtime" as a latent OS runtime organized around vector-state transitions, spatial eventing, and cryptographic agent identity.
 

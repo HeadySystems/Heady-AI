@@ -3,8 +3,8 @@
 /**
  * @fileoverview heady-service-mesh.js
  *
- * Heady Service Mesh — dynamic service registry, health-aware routing,
- * load balancing, and circuit-breaker management for all nine Heady
+ * Heady™ Service Mesh — dynamic service registry, health-aware routing,
+ * load balancing, and circuit-breaker management for all nine Heady™
  * domains and the ten core repositories.
  *
  * Replaces the static heady-registry.json + every scattered hard-coded URL
@@ -35,7 +35,7 @@
  *   mesh.register({ name: 'headyapi', url: 'https://worker.headyapi.com',
  *                   weight: 0.5, tags: ['edge'] });
  *
- * © 2026 HeadySystems Inc.  PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.  PROPRIETARY AND CONFIDENTIAL.
  */
 
 const EventEmitter = require('events');
@@ -166,10 +166,10 @@ const SEED_SERVICES = [
   },
   {
     name: 'headyai',
-    domain: 'headyai.com',
+    domain: 'heady-ai.com',
     instances: [
       { url: 'http://localhost:3309', weight: 1.0, tags: ['local'] },
-      { url: 'https://headyai.com', weight: PHI, tags: ['production'] },
+      { url: 'https://heady-ai.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
     version: '1.0.0',

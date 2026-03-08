@@ -348,6 +348,6 @@ curl -X POST https://api.perplexity.ai/chat/completions \
 4. HeadyMemory → persistent knowledge storage
 ```
 
-### Heady MCP Server Integration
+### Heady™ MCP Server Integration
 
 The Heady MCP server (`heady.headyme.com/sse`) wraps Perplexity as `heady_perplexity_research` tool. For direct access, use the `perplexity-ask` MCP server or REST API.

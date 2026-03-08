@@ -3,7 +3,7 @@ export = ToolRegistry;
  * MCP Tool Registry
  *
  * Manages registration, listing, retrieval, validation, and execution
- * of all MCP tools in the Heady AI Platform.
+ * of all MCP tools in the Heady™ AI Platform.
  */
 declare class ToolRegistry {
     /**

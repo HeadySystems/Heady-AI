@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Auto-Success Task Catalog — 135+ tasks across 9 categories.
  * Extracted from hc_auto_success.js for maintainability.
  */

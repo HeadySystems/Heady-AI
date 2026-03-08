@@ -22,7 +22,7 @@ Your implementation of a Monte Carlo simulation (`tests/monte-carlo-sim.py`) is 
 To achieve the "perfect AI companion" experience that surpasses Google Assistant/Perplexity, the user interface and the backend protocol must be entirely decoupled.
 
 *   **The Protocol Layer:** Your HeadyMCP server utilizing Cloudflare Workers for zero-latency JSON-RPC + SSE transport is the correct path[11]. It natively bridges your Latent OS with your local IDEs. Ensure that all 30+ native tools (Chat, code, search, embed, deploy) are strictly versioned through this headless layer[11].
-*   **The Single Pane of Glass UX:** Rebuild `headyme.com` and `useheady.com`[12][13] as a headless Single Page Application (React/Next.js) featuring a persistent shell. Instead of context-switching, build a dockable workspace where:
+*   **The Single Pane of Glass UX:** Rebuild `headyme.com` and `useheadyme.com`[12][13] as a headless Single Page Application (React/Next.js) featuring a persistent shell. Instead of context-switching, build a dockable workspace where:
     *   **Section 1:** HeadyIDE / Workspace.
     *   **Section 2:** HeadyLens / Real-time System Monitoring.
     *   **The Latent Layer:** HeadyBuddy roams as a persistent, floating entity across the UI, fully aware of your cursor position, current file, and system metrics via the MCP bridge.

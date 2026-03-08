@@ -1,4 +1,4 @@
-# Heady Platform — Resilience & Security Audit
+# Heady™ Platform — Resilience & Security Audit
 
 **Date:** 2026-03-07  
 **Scope:** circuit-breaker.js, exponential-backoff.js, pool.js, auto-heal.js, saga.js,
@@ -12,7 +12,7 @@ worker-auth-service.js (stub)
 
 ## Executive Summary
 
-The Heady platform demonstrates a solid foundational architecture with a genuine investment in
+The Heady™ platform demonstrates a solid foundational architecture with a genuine investment in
 resilience (circuit breakers, bulkheads, connection pools, sagas) and governance (policy engine,
 audit trail, content safety). However, several **critical and high-severity gaps** were identified
 that could allow authentication bypass, distributed transaction data corruption, cascading failure

@@ -1,9 +1,10 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyCache Semantic Matcher
  *
- * Computes embeddings via HeadyEmbed, performs cosine/euclidean/dot similarity
+ * Computes embeddings via Heady™Embed, performs cosine/euclidean/dot similarity
  * search using a VP-tree (Vantage Point Tree) for sub-linear ANN lookups.
  * Falls back to exact hash match when the embedding service is unavailable.
  */
@@ -250,7 +251,7 @@ class SemanticMatcher {
 
     this._embedAvailable = true;
     this._lastEmbedCheck = 0;
-    this._embedCheckInterval = 30000; // recheck embed availability every 30s
+    this._embedCheckInterval = PHI_TIMING.CYCLE; // recheck embed availability every 30s
   }
 
   // -------------------------------------------------------------------------

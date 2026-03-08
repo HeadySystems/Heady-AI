@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══════════════════════════════════════════════════════════════════
  * VectorMemory V2 — Production-Grade RAM-First Vector Store

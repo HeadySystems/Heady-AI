@@ -1,8 +1,8 @@
 /**
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * ═══ Heady Provider Connector ═══
+ * ═══ Heady™ Provider Connector ═══
  *
  * Unified connector for ALL AI provider business seats and API keys.
  * Manages key rotation, failover, health tracking, and parallel fan-out

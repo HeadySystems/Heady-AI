@@ -3,7 +3,7 @@
 /**
  * MistakeAnalyzerBee — Root cause analysis, 5-whys traversal, prevention rule generation.
  * Stores fingerprinted mistake patterns to prevent regression.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

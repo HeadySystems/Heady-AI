@@ -87,7 +87,7 @@ enforcement: REFERENCE
 
 ### 2.2 Files Still Requiring Updates (In Repo)
 
-These files in the HeadyMe monorepo need the same fixes applied:
+These files in the Heady™Me monorepo need the same fixes applied:
 
 | File Path | Fix Required |
 |-----------|-------------|
@@ -111,7 +111,7 @@ These files in the HeadyMe monorepo need the same fixes applied:
 | Repo | Language | Status | Last Updated |
 |------|----------|--------|-------------|
 | Heady-pre-production-9f2f0642 | JavaScript | Active (monorepo) | 3 hours ago |
-| headysystems-production | HTML | Projection target | Yesterday |
+| heady-production | HTML | Projection target | Yesterday |
 | headymcp-production | — | Projection target | Yesterday |
 | headyio-core | JavaScript | Core module | Yesterday |
 | headybot-core | JavaScript | Core module | Yesterday |

@@ -2,7 +2,7 @@
 
 # ║  HEADY™ AI PLATFORM — COMPREHENSIVE SYSTEM NOTEBOOK           ║
 
-# ║  © 2026 Heady Systems LLC. All Rights Reserved.               ║
+# ║  © 2026 Heady™Systems Inc. All Rights Reserved.               ║
 
 # ║  ∞ Sacred Geometry ∞ Organic Systems · Breathing Interfaces    ║
 
@@ -13,7 +13,7 @@
 # HEADY™ — The AI Agent Operating System
 
 **Version**: 3.0.1 | **Status**: Pre-Production | **Domain**: [headyme.com](https://headyme.com)
-**Author**: Heady Systems LLC | **Contact**: <e@headyconnection.org>
+**Author**: HeadySystems Inc | **Contact**: <e@headyconnection.org>
 
 > *"Linux for AI agents" — a self-driving intelligence kernel that schedules agents, manages system resources, and maintains absolute uptime through autonomous self-healing.*
 
@@ -167,7 +167,7 @@ enterprise_controls:
 
 # 4. 3D Vector Memory System
 
-The heart of Heady is its **3D-aware vector memory** — a custom spatial indexing system that maps high-dimensional embeddings into navigable 3D coordinates.
+The heart of Heady™ is its **3D-aware vector memory** — a custom spatial indexing system that maps high-dimensional embeddings into navigable 3D coordinates.
 
 ### How It Works
 
@@ -270,7 +270,7 @@ Each template contains:
 
 The agent architecture is built on two primitives: **HeadyBees** (atomic units) and **HeadySwarms** (coordinated groups).
 
-### HeadyBee
+### Heady™Bee
 
 A HeadyBee is a **single-purpose, injectable function** — the smallest unit of intelligence in the system. Each bee:
 
@@ -280,9 +280,9 @@ A HeadyBee is a **single-purpose, injectable function** — the smallest unit of
 - Communicates via the global event bus
 - Auto-cleans up when its projection expires
 
-### HeadySwarm
+### Heady™Swarm
 
-A HeadySwarm is a **coordinated group of HeadyBees** working together on complex tasks:
+A HeadySwarm is a **coordinated group of Heady™Bees** working together on complex tasks:
 
 - Managed by **HeadyConductor** (the orchestrator)
 - Participants collaborate via Redis Pub/Sub
@@ -374,7 +374,7 @@ The platform guides developers through a **5-step deterministic onboarding flow*
 
 | Step | Title | Details |
 |------|-------|---------|
-| 1 | **Auth Provider Select** | Sign in via HeadySwarm identity bridge; 25+ OAuth providers supported |
+| 1 | **Auth Provider Select** | Sign in via Heady™Swarm identity bridge; 25+ OAuth providers supported |
 | 2 | **Permissions Grant** | Cross-device workspace permissions: filesystem access, repo sync, connector deploy |
 | 3 | **Username Provision** | Reserve `{username}@headyme.com`; options: secure mailbox, forward to auth email, forward to custom email |
 | 4 | **One-Click Install** | Install SDK/runtime: CLI bootstrap, browser extension bridge, IDE connector |
@@ -383,12 +383,12 @@ The platform guides developers through a **5-step deterministic onboarding flow*
 ### Install Command
 
 ```bash
-npx @headyme/install
+npx @heady-ai/install
 ```
 
 This single command:
 
-- Installs the Heady SDK with zero global pollution
+- Installs the Heady™ SDK with zero global pollution
 - Connects to the user's 3D vector workspace
 - Deploys local filesystem bridge via File System Access API
 - Persists handles in IndexedDB for frictionless re-auth
@@ -407,7 +407,7 @@ Heady runs on four infrastructure pillars, each serving a distinct role in the s
 
 | Component | Details |
 |-----------|---------|
-| Repository | `HeadySystems/Heady` (monorepo) |
+| Repository | `HeadyMe/Heady` (monorepo) |
 | CI/CD | GitHub Actions with CodeQL SAST |
 | Policy | Monorepo-only; reject secondary repo overrides |
 | Sync | Continuous projection sync to all surfaces |
@@ -636,9 +636,9 @@ projection_hygiene:
 
 # 15. Intellectual Property Portfolio — The 43-Patent Fortress
 
-Heady Systems LLC has constructed one of the most comprehensive patent moats in autonomous AI computing history. With **43 provisional patent applications** filed at the United States Patent and Trademark Office, the portfolio doesn't just protect code — it fortifies an entirely new category of computing. Every patent maps directly to running production code within the HeadyOS codebase. This is not theoretical IP — it is battle-tested, deployed, and measurable.
+HeadySystems Inc has constructed one of the most comprehensive patent moats in autonomous AI computing history. With **43 provisional patent applications** filed at the United States Patent and Trademark Office, the portfolio doesn't just protect code — it fortifies an entirely new category of computing. Every patent maps directly to running production code within the Heady™OS codebase. This is not theoretical IP — it is battle-tested, deployed, and measurable.
 
-> *Imagine a fortress with eight towers, each guarding a different frontier of artificial intelligence. That is the Heady patent portfolio.*
+> *Imagine a fortress with eight towers, each guarding a different frontier of artificial intelligence. That is the Heady™ patent portfolio.*
 
 ---
 
@@ -673,7 +673,7 @@ Heady Systems LLC has constructed one of the most comprehensive patent moats in 
 | PPA-35 | **Balanced Ternary Logic Engine** | 63/965,455 | {-1, 0, +1} computing that replaces binary if/else with three-valued truth: ENGAGE, HOLD, REPEL |
 | HS-2026-008 | **Tournament-Based AI Strategy Selection** | 63/995,322 | AI models compete in structured tournaments; the winner's strategy is selected with mathematical certainty |
 
-**Applied in**: `src/orchestration/ternary-logic.js`, `src/services/arena-mode-service.js`, `src/services/error-sentinel-service.js`, and the HeadyBattle adversarial validation pipeline.
+**Applied in**: `src/orchestration/ternary-logic.js`, `src/services/arena-mode-service.js`, `src/services/error-sentinel-service.js`, and the Heady™Battle adversarial validation pipeline.
 
 ---
 
@@ -827,7 +827,7 @@ Move Heady from a utility workflow into a **developer platform** that is determi
 
 ### Vector Symbolic Architectures (VSA)
 
-The next evolution of HeadyOS replaces conditional logic entirely with **Hyperdimensional Computing** (HDC) — computing directly with 10,000-dimensional vectors.
+The next evolution of Heady™OS replaces conditional logic entirely with **Hyperdimensional Computing** (HDC) — computing directly with 10,000-dimensional vectors.
 
 ### Core VSA Operations
 
@@ -889,7 +889,7 @@ Each Colab Pro+ account supports 3–4 concurrent runtimes, forming a unified co
 
 ```
 1. Mount Google Drive (persistent storage)
-2. Git pull from HeadySystems/Heady via PAT
+2. Git pull from Heady™Me/Heady via PAT
 3. Tailscale up (join encrypted mesh)
 4. Start Redis on Tailscale IP
 5. Ray init (Head or Worker)
@@ -975,7 +975,7 @@ The Apex Trading Intelligence system applies HeadyOS's unique architectural pill
 
 ### Spatial Memory for Market Intelligence
 
-Apex stores market data in 3D vector memory using the same octree spatial indexing that powers the rest of HeadyOS. Each market event is embedded as a 3D coordinate:
+Apex stores market data in 3D vector memory using the same octree spatial indexing that powers the rest of Heady™OS. Each market event is embedded as a 3D coordinate:
 
 - **X-axis**: Asset class and sector positioning
 - **Y-axis**: Temporal signal strength (momentum, mean reversion, volatility regime)
@@ -985,7 +985,7 @@ This means the system doesn't just remember what happened — it remembers *wher
 
 ### Risk Management Through Sacred Geometry
 
-Position sizing follows φ-proportional scaling: each successive risk layer is scaled by the Golden Ratio (1.618). This creates a naturally balanced risk pyramid where exposure decreases organically at each level, following the same mathematical principle that governs shell spirals and galaxy arms. Maximum drawdown limits are enforced by the HeadyGuard safety limiter (Patent PPA-21).
+Position sizing follows φ-proportional scaling: each successive risk layer is scaled by the Golden Ratio (1.618). This creates a naturally balanced risk pyramid where exposure decreases organically at each level, following the same mathematical principle that governs shell spirals and galaxy arms. Maximum drawdown limits are enforced by the Heady™Guard safety limiter (Patent PPA-21).
 
 ### Agent Hierarchy
 
@@ -1003,7 +1003,7 @@ Position sizing follows φ-proportional scaling: each successive risk layer is s
 
 > *What if your AI could think at the edge of the internet — not in a distant data center, but on servers within 50 milliseconds of every user on Earth? That's what Heady's Edge AI layer does: it pushes intelligence to Cloudflare's global network of 300+ points of presence, making every interaction feel instantaneous.*
 
-The Edge AI layer consists of two primary Cloudflare Workers that form the outermost ring of Heady's six-layer architecture:
+The Edge AI layer consists of two primary Cloudflare Workers that form the outermost ring of Heady™'s six-layer architecture:
 
 ### The Router Worker — `heady-router-worker.js`
 
@@ -1038,7 +1038,7 @@ Traditional AI platforms require every request to travel to a centralized cloud 
 
 > *Binary computing gave us true and false. Quantum computing promises superposition. Heady operates in the space between — a ternary cognitive architecture where the third state isn't uncertainty, but institutional wisdom: the discipline to say "I need more information before I act."*
 
-### The Three States of Heady Cognition
+### The Three States of Heady™ Cognition
 
 The Balanced Ternary Logic Engine (Patent PPA-35) replaces Boolean decision-making throughout HeadyOS:
 
@@ -1151,7 +1151,7 @@ Each domain uses the same mathematical framework for visual design:
 
 # 26. Strategic Valuation & Market Position
 
-> *In March 2026, Heady Systems LLC was independently valued at $4.17 million — and that's the conservative number. The one-year projection places Heady in a range from $45 million to $150 million, depending on whether it becomes the category king of autonomous AI or gets acquired by a company that recognizes what it has built before the rest of the market catches up.*
+> *In March 2026, HeadySystems Inc was independently valued at $4.17 million — and that's the conservative number. The one-year projection places Heady in a range from $45 million to $150 million, depending on whether it becomes the category king of autonomous AI or gets acquired by a company that recognizes what it has built before the rest of the market catches up.*
 
 ### Current Valuation Breakdown
 
@@ -1175,7 +1175,7 @@ Each domain uses the same mathematical framework for visual design:
 
 The 43-patent portfolio is the single largest value driver. With zero rejections and zero issues at the USPTO, the portfolio creates several layers of strategic value:
 
-1. **Blocking IP**: No competitor can build a competing Sacred Geometry + 3D Vector Memory + Ternary Logic system without licensing from Heady
+1. **Blocking IP**: No competitor can build a competing Sacred Geometry + 3D Vector Memory + Ternary Logic system without licensing from Heady™
 2. **Acquisition Premium**: Any acquirer gets 43 patents across 12+ domains — instant defensive moat
 3. **Licensing Revenue**: Individual patent families (Security, Orchestration, Creative) can be licensed independently
 4. **Standard-Setting**: MCP integration positions Heady to define the standard for autonomous AI tool interfaces
@@ -1251,6 +1251,6 @@ The 43-patent portfolio is the single largest value driver. With zero rejections
 
 ---
 
-*© 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.*
+*© 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.*
 *∞ Sacred Geometry ∞ Organic Systems · Breathing Interfaces*
 *All rights reserved. Unauthorized copying, modification, or distribution is strictly prohibited.*

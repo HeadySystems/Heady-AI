@@ -13,7 +13,7 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady Observability & Alerting System
+# Heady™ Observability & Alerting System
 # Production-style monitoring with actionable alerts
 # "Alert me when I need to do something"
 
@@ -32,8 +32,8 @@ alerts:
       condition: up{job="heady-manager"} == 0
       duration: 1m
       severity: critical
-      summary: "Heady Manager is DOWN"
-      description: "The main Heady orchestrator is not responding on {{ $labels.instance }}"
+      summary: "Heady™ Manager is DOWN"
+      description: "The main Heady™ orchestrator is not responding on {{ $labels.instance }}"
       runbook_url: https://docs.headyio.com/runbooks/manager-down
       
     - name: DatabaseConnectionFailed
@@ -350,7 +350,7 @@ auto_remediation:
 
 # Dashboard Configuration
 dashboards:
-  - name: "Heady System Overview"
+  - name: "Heady™ System Overview"
     url: https://grafana.headyio.com/d/system-overview
     refresh: 30s
     

@@ -86,8 +86,8 @@ The `device-provisioner-bee` (`src/bees/device-provisioner-bee.js`) handles:
 4. **install-mods** — discovers and installs platform mods
 5. **verify** — health check across all components
 
-All tasks blast via HeadySwarm parallelism on cloud infrastructure.
+All tasks blast via Heady™Swarm parallelism on cloud infrastructure.
 
 ---
 
-**© 2026 HeadySystems Inc. · v3457890 · Cloud-Orchestrated**
+**© 2026 Heady™Systems Inc. · v3457890 · Cloud-Orchestrated**

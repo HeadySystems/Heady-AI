@@ -1,4 +1,4 @@
-# HeadyStack Repository Roles
+# Heady™Stack Repository Roles
 
 **Version:** 3.0.1 "Aether"
 
@@ -36,7 +36,7 @@ All production code, configuration, migrations, documentation, and CI/CD pipelin
 
 ### heady-me (Product)
 
-- **Purpose:** The heady.me consumer product, powered by HeadyStack APIs
+- **Purpose:** The heady.me consumer product, powered by Heady™Stack APIs
 - **Relationship:** Consumes HeadyStack as a dependency/API, not a code fork
 - **Sync:** Pull upstream changes from `heady-sys/main` weekly via merge commit
 - **Deploy:** Render.com web service
@@ -64,7 +64,7 @@ All production code, configuration, migrations, documentation, and CI/CD pipelin
 | `HeadyStack.Me` | `~/HeadyStack.Me/` | `heady-me` | heady.me product development |
 | `HeadyStack.Conn` | `~/HeadyStack.Conn/` | `heady-conn` | headyconnection.org development |
 
-### HeadyStack (Primary Dev)
+### Heady™Stack (Primary Dev)
 
 ```bash
 # Standard workflow
@@ -91,7 +91,7 @@ git merge heady-sys/main --no-ff -m "sync: pull upstream from heady-sys v3.0.1"
 
 ## Data Drive Mirrors
 
-For disaster recovery, all Git repos are mirrored to the Heady data drive:
+For disaster recovery, all Git repos are mirrored to the Heady™ data drive:
 
 | Source | Mirror Path | Sync Frequency |
 |--------|-------------|----------------|

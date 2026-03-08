@@ -1,5 +1,5 @@
 /**
- * Heady Semantic Rate Limiter
+ * Heady™ Semantic Rate Limiter
  * ===========================
  * 4-layer rate limiting with semantic deduplication:
  *   Global → Per-Tool → Per-User → Per-Session

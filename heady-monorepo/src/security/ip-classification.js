@@ -1,9 +1,9 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════════╗
  * ║  PROPRIETARY AND CONFIDENTIAL — HEADYSYSTEMS INC.                  ║
- * ║  Copyright © 2024-2026 HeadySystems Inc. All Rights Reserved.      ║
+ * ║  Copyright © 2026-2026 HeadySystems Inc. All Rights Reserved.      ║
  * ║                                                                     ║
- * ║  This file contains trade secrets of HeadySystems Inc.              ║
+ * ║  This file contains trade secrets of Heady™Systems Inc.              ║
  * ║  Unauthorized copying, distribution, or use is strictly prohibited  ║
  * ║  and may result in civil and criminal penalties.                    ║
  * ║                                                                     ║
@@ -96,9 +96,9 @@ const DIR_CLASSIFICATIONS = [
 const PROPRIETARY_HEADER_JS = `/**
  * ╔══════════════════════════════════════════════════════════════════════╗
  * ║  PROPRIETARY AND CONFIDENTIAL — HEADYSYSTEMS INC.                  ║
- * ║  Copyright © 2024-2026 HeadySystems Inc. All Rights Reserved.      ║
+ * ║  Copyright © 2026-2026 HeadySystems Inc. All Rights Reserved.      ║
  * ║                                                                     ║
- * ║  This file contains trade secrets of HeadySystems Inc.              ║
+ * ║  This file contains trade secrets of Heady™Systems Inc.              ║
  * ║  Unauthorized copying, distribution, or use is strictly prohibited  ║
  * ║  and may result in civil and criminal penalties.                    ║
  * ║                                                                     ║

@@ -336,7 +336,7 @@ function createRouter(embedService) {
 
   /**
    * @route GET /metrics
-   * @returns Full metrics object from HeadyEmbed
+   * @returns Full metrics object from Heady™Embed
    */
   router.get('/metrics', (req, res) => {
     return res.json(embedService.getMetrics());

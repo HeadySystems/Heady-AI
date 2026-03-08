@@ -1,6 +1,6 @@
 # Heady™ Projection Types
 
-> © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
+> © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
 
 This document describes each of the six projection domains maintained by the Heady™ Projection Service. Each domain is computed by a dedicated HeadyBee on a PHI-scaled polling interval.
 
@@ -325,7 +325,7 @@ interface TelemetryState {
 
 ### What it measures
 
-The live agent graph of the Heady swarm. Discovers all registered agents, maps connection edges, and identifies orphan nodes (agents with no connections). Used by HeadyConductor for routing decisions and swarm rebalancing.
+The live agent graph of the Heady™ swarm. Discovers all registered agents, maps connection edges, and identifies orphan nodes (agents with no connections). Used by Heady™Conductor for routing decisions and swarm rebalancing.
 
 ### Update frequency
 

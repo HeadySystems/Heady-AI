@@ -1,5 +1,5 @@
 # T2: OpenTelemetry Observability Configuration
-# Heady AI-specific metrics and tracing setup
+# Heady™ AI-specific metrics and tracing setup
 
 service:
   name: heady-manager

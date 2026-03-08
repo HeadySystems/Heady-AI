@@ -1,5 +1,5 @@
 {
-  "name": "@heady/headyme-core",
+  "name": "@heady-ai/headyme-core",
   "version": "1.0.0",
   "description": "Your AI-powered personal cloud hub — the command center for your entire digital life.",
   "main": "index.js",
@@ -14,7 +14,7 @@
   "dependencies": {
     "express": "^4.21.0"
   },
-  "author": "Heady Systems LLC <eric@headysystems.com>",
+  "author": "HeadySystems Inc <eric@headysystems.com>",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",

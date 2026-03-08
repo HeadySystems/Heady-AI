@@ -11,7 +11,7 @@
  *   const choice = decide(candidates, queryVec);           // replaces: switch/case
  *   const agreed = consensus(agentVectors);                // replaces: majority vote
  *
- * © 2026 HeadySystems Inc. — Proprietary
+ * © 2026 Heady™Systems Inc. — Proprietary
  * @module csl-service-integration
  */
 

@@ -3,7 +3,7 @@
 /**
  * EvolutionBee — Controlled mutation generation and fitness-based population evolution.
  * Uses phi-scaled mutation rate, fib(6)=8 population size, fitness tournament selection.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

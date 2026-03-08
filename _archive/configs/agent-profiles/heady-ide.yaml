@@ -99,7 +99,7 @@ extensions:
 
 # ── Theme ───────────────────────────────────────────────────
 theme:
-  name: "Heady Sacred Geometry"
+  name: "Heady™ Sacred Geometry"
   type: dark
   colors:
     editor.background: "#0a0e17"
@@ -121,7 +121,7 @@ theme:
     terminal.ansiYellow: "#fbbf24"
     terminal.ansiMagenta: "#c084fc"
 
-# ── Integration with Heady Ecosystem ────────────────────────
+# ── Integration with Heady™ Ecosystem ────────────────────────
 integration:
   heady_manager:
     url: "http://api.headysystems.com:3300"

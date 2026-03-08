@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /**
- * Heady Onboarding Middleware
+ * Heady™ Onboarding Middleware
  * Purpose: Fix the "skips directly to API key" bug after OAuth
  * 
  * Flow:

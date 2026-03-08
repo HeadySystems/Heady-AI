@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * ═══ Heady Colab Runtime — GPU-Accelerated Operations ═══
+ * ═══ Heady™ Colab Runtime — GPU-Accelerated Operations ═══
  *
- * Runs the entire Heady system on Google Colab GPUs.
+ * Runs the entire Heady™ system on Google Colab GPUs.
  * Uses GPU RAM for vector memory, embeddings, and deep research.
  *
  * Architecture:
- *   - Node.js Heady Manager runs on Colab VM
+ *   - Node.js Heady™ Manager runs on Colab VM
  *   - Vector memory stored in GPU RAM via CUDA tensors (through onnxruntime-gpu)
  *   - Embeddings computed on GPU (sentence-transformers)
  *   - ngrok tunnel exposes the API for cross-device access
@@ -112,7 +112,7 @@ class GPUVectorStore {
 
 /**
  * Setup ngrok tunnel for Colab → internet access.
- * This makes the Heady API accessible from any device.
+ * This makes the Heady™ API accessible from any device.
  */
 async function setupNgrokTunnel(port) {
     if (!GPU_CONFIG.ngrokToken) {

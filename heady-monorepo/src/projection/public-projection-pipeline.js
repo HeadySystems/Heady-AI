@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Public Projection Pipeline ═══
  *
- * The bridge between the Heady Latent OS and the public open-source world.
+ * The bridge between the Heady™ Latent OS and the public open-source world.
  *
  * Flow:
  *   1. Eradication Protocol (prune stale files/vectors)

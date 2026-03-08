@@ -1,4 +1,4 @@
-# sast-pipeline.yml — Heady Systems SAST Pipeline
+# sast-pipeline.yml — Heady™ Systems SAST Pipeline
 # Static Application Security Testing: CodeQL, Semgrep, ESLint, npm audit, Gitleaks, SBOM
 # Triggers: push/PR to main, staging, dev
 # Version: 1.0.0
@@ -61,7 +61,7 @@ jobs:
           languages: ${{ matrix.language }}
           queries: +security-extended,security-and-quality
           config: |
-            name: "Heady CodeQL Config"
+            name: "Heady™ CodeQL Config"
             queries:
               - uses: security-extended
               - uses: security-and-quality

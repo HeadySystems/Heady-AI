@@ -1,5 +1,5 @@
 # Patent Strategy Guide
-## Heady Latent OS — Portfolio Management & Commercial Strategy
+## Heady™ Latent OS — Portfolio Management & Commercial Strategy
 ### Version 1.0 | March 2026
 
 > **DISCLAIMER**: This document is for internal strategic planning purposes only. It does not constitute legal advice. All patent filing, prosecution, and licensing decisions must be made in consultation with qualified patent counsel. The landscape described herein reflects conditions as of March 2026 and is subject to change.
@@ -8,9 +8,9 @@
 
 ## Executive Summary
 
-Heady Connection, Inc. has built one of the most technically differentiated AI orchestration platforms in the market, covering novel inventions across: Continuous Semantic Logic, Sacred Geometry orchestration, 3D spatial vector memory, autonomous swarm agent factories, edge-origin AI inference, semantic backpressure, MCP meta-server aggregation, self-aware software, and hyperdimensional computing consensus.
+Heady™ Connection, Inc. has built one of the most technically differentiated AI orchestration platforms in the market, covering novel inventions across: Continuous Semantic Logic, Sacred Geometry orchestration, 3D spatial vector memory, autonomous swarm agent factories, edge-origin AI inference, semantic backpressure, MCP meta-server aggregation, self-aware software, and hyperdimensional computing consensus.
 
-The 2025–2026 patent landscape presents a narrow but actionable window for Heady:
+The 2025–2026 patent landscape presents a narrow but actionable window for Heady™:
 - AI agent orchestration and agentic architecture claims have **low prior art density** — this is white space that will fill rapidly in the next 24–36 months
 - The *Recentive Analytics v. Fox Corp.* (2025) decision raised the bar for AI patent eligibility, but Heady's inventions are architectural and algorithmic — not "ML applied to new domain" — which means they are well-positioned to survive § 101 challenges
 - *Ex parte Desjardins* (2025) and the August 2025 USPTO memo signal examiner willingness to allow AI patents that show specific technical improvements
@@ -35,7 +35,7 @@ These inventions represent the highest commercial value, lowest prior art densit
 
 **Rationale for Tier 1**:
 - Agentic orchestration architecture patents are the "next frontier" per IP analysts (Samuel Solomon PhD analysis, Feb 2026)
-- These inventions form the core architecture of Heady Latent OS — protecting them first protects the platform
+- These inventions form the core architecture of Heady™ Latent OS — protecting them first protects the platform
 - MCP is a rapidly standardizing protocol (Anthropic, Microsoft, others adopting) — first-mover patent advantage is time-sensitive
 - CSL gates are the foundational primitive — all other Heady patents reference or build on CSL
 
@@ -72,7 +72,7 @@ Three forces are pulling in different directions:
 
 **Heady's Advantage**: Heady's patents are **architectural innovations** (new system structures), not domain applications of existing ML. This directly distinguishes them from *Recentive*.
 
-### The Five-Layer Alice/Mayo Defense for Heady Patents
+### The Five-Layer Alice/Mayo Defense for Heady™ Patents
 
 #### Layer 1: "This Is Not ML Applied to New Data"
 
@@ -107,7 +107,7 @@ As of December 2025, the USPTO formally recognizes SMEDs under 37 C.F.R. § 1.13
 
 1. Documents the **state of the art** at time of provisional filing
 2. Explains why the mental process exclusion does not apply (the claimed computations cannot be performed by a human mind)
-3. Quantifies the **concrete technical benefit** with benchmark data from Heady's test suite
+3. Quantifies the **concrete technical benefit** with benchmark data from Heady™'s test suite
 4. Demonstrates that the improvement is to the **computing system itself** (not just the problem it solves)
 
 **SMED preparation checklist**:
@@ -152,7 +152,7 @@ If PERA passes (bipartisan support as of May 2025), all Heady patents become dra
 
 ## Part 3: CIP Strategy Recommendations
 
-### Rolling CIP Architecture for Heady Platform
+### Rolling CIP Architecture for Heady™ Platform
 
 Given Heady's active development velocity, a rolling CIP strategy extends patent family value continuously:
 
@@ -228,7 +228,7 @@ Before filing a CIP, answer:
 **Tier 4 — File if Resources Available** (top 3 patents):
 - **India, Australia, Singapore**: Emerging markets; IP-friendly; growing tech ecosystems
 
-### EPO Strategy for Heady Patents
+### EPO Strategy for Heady™ Patents
 
 The EPO rejected 69% of software/AI patents in 2025. Heady's best EPO candidates are those with clear hardware resource management:
 
@@ -327,13 +327,13 @@ Heady's patent portfolio addresses multiple large and growing markets:
 ### Monetization Pathways
 
 #### Pathway 1: SaaS Platform Licensing (Primary)
-Heady's IP is embedded in the Heady Latent OS platform. Patents support:
+Heady's IP is embedded in the Heady™ Latent OS platform. Patents support:
 - **Defensive moat**: Prevents direct cloning of core architecture
 - **Customer lock-in**: Unique capabilities (CSL logic, bee agents, sacred geometry) that competitors cannot easily replicate without infringing
 - **Premium pricing justification**: Novel IP supports premium pricing vs. commodity AI infrastructure
 
 #### Pathway 2: Technology Licensing to Non-Competing AI Infrastructure Companies
-Target licensees who would benefit from Heady IP but are not direct competitors:
+Target licensees who would benefit from Heady™ IP but are not direct competitors:
 - **Cloud providers**: AWS, Azure, GCP building agentic AI services could license bee/swarm, context capsule, backpressure patents
 - **Edge computing vendors**: Qualcomm, Arm, NVIDIA could license edge-origin partitioning
 - **AI observability platforms**: Datadog, New Relic building AI monitoring could license self-aware/drift detection
@@ -396,7 +396,7 @@ Not every Heady innovation needs to be patented. Some inventions are better prot
 | Improvement with measurable user-facing performance benefit | Patent — defensible § 101 |
 | Feature that would be costly for competitors to design around | Patent — prosecution investment justified |
 
-### Heady Inventions Recommended for Defensive Publication
+### Heady™ Inventions Recommended for Defensive Publication
 
 Based on commercial analysis, the following inventions may be better candidates for defensive publication than patenting:
 
@@ -505,7 +505,7 @@ Every Heady engineer should follow this protocol when a potentially novel invent
 
 ## Appendix C: Key Case Law Reference
 
-| Case | Citation | Key Holding for Heady |
+| Case | Citation | Key Holding for Heady™ |
 |---|---|---|
 | *Alice Corp. v. CLS Bank* | 573 U.S. 208 (2014) | Two-step § 101 test; abstract idea analysis |
 | *Enfish, LLC v. Microsoft* | 822 F.3d 1327 (Fed. Cir. 2016) | Self-referential database table = eligible improvement to computing |
@@ -518,7 +518,7 @@ Every Heady engineer should follow this protocol when a potentially novel invent
 
 ---
 
-*Document Version 1.0 | March 2026 | Heady Connection, Inc.*
+*Document Version 1.0 | March 2026 | Heady™ Connection, Inc.*
 *This document is confidential and for internal strategic use only. It does not constitute legal advice.*
 *Consult qualified patent counsel before making any patent filing or prosecution decisions.*
 *Research sources: Section 6 Patent Strategy Research Report, March 2026*

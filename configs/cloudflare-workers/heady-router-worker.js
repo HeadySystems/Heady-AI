@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
-// Heady Dynamic Site Router — Cloudflare Worker
+// Heady™ Dynamic Site Router — Cloudflare Worker
 // Serves ALL 9 domains dynamically at the edge.
 // Zero middleware. Zero origin. Edge IS the server.
 //
-// © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+// © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
 // ═══════════════════════════════════════════════════════════════
 
 const PHI = 1.6180339887;
@@ -32,7 +32,7 @@ const SITES = {
   'headyio.com': { brand: 'HeadyIO', tagline: 'Developer Platform', sub: 'APIs, SDKs, and docs for building on the Heady layer.', color: '#ec4899', accent: '#f472b6', icon: '⚡', services: [{ i: '📖', n: 'API Docs', d: 'REST + WebSocket reference' }, { i: '📦', n: 'SDK', d: 'npm, Python, Go clients' }, { i: '🔑', n: 'API Keys', d: '9-tier subscriptions' }, { i: '🧪', n: 'Sandbox', d: 'Live API playground' }] },
   'headybot.com': { brand: 'HeadyBot', tagline: 'Autonomous Automation', sub: 'Self-driving engineering agents with battle-tested quality.', color: '#6366f1', accent: '#818cf8', icon: '🤖', services: [{ i: '🤖', n: 'Agents', d: 'Autonomous execution' }, { i: '⚔️', n: 'Battle Arena', d: 'AI-vs-AI QA' }, { i: '🧬', n: 'HeadyGoose', d: 'Self-governing agent' }, { i: '📊', n: 'Telemetry', d: 'Full audit trail' }] },
   'headyapi.com': { brand: 'HeadyAPI', tagline: 'Intelligence Interface', sub: 'Unified API gateway — 4+ providers, liquid failover.', color: '#14b8a6', accent: '#2dd4bf', icon: '🌊', services: [{ i: '🌊', n: 'Liquid Gateway', d: 'Race providers, fastest wins' }, { i: '🔀', n: 'Failover', d: 'Zero-downtime switching' }, { i: '📈', n: 'Analytics', d: 'Per-request cost/latency' }, { i: '🔐', n: 'Auth', d: 'Key + tier enforcement' }] },
-  'headylens.com': { brand: 'HeadyLens', tagline: 'Sovereign Sight', sub: 'Vision AI — screenshots, OCR, UI review, visual code analysis.', color: '#f97316', accent: '#fb923c', icon: '👁️', services: [{ i: '👁️', n: 'Vision', d: 'Image classification' }, { i: '📸', n: 'Screenshot', d: 'Visual QA' }, { i: '🔍', n: 'OCR', d: 'Text extraction' }, { i: '🎨', n: 'Design', d: 'UI/UX analysis' }] },
+  'headysense.com': { brand: 'HeadyLens', tagline: 'Sovereign Sight', sub: 'Vision AI — screenshots, OCR, UI review, visual code analysis.', color: '#f97316', accent: '#fb923c', icon: '👁️', services: [{ i: '👁️', n: 'Vision', d: 'Image classification' }, { i: '📸', n: 'Screenshot', d: 'Visual QA' }, { i: '🔍', n: 'OCR', d: 'Text extraction' }, { i: '🎨', n: 'Design', d: 'UI/UX analysis' }] },
 };
 
 // ── Auth Providers (25 total) ────────────────────────────────
@@ -353,7 +353,7 @@ function showOk(d,prov){
   document.getElementById('aK').textContent=d.key;
   document.getElementById('sO').classList.add('on');
   const n=document.querySelector('.nc');if(n){n.textContent='✓ Signed In';n.style.background='#10b981';}
-  addM('b','Welcome back, '+d.name+'! Session active on '+BRAND+'. Your Heady API key is ready.');
+  addM('b','Welcome back, '+d.name+'! Session active on '+BRAND+'. Your Heady™ API key is ready.');
 }
 
 // HeadyBuddy

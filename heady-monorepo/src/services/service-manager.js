@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * 🎛️ Heady Service Manager - 100% Uptime Continuous Service Orchestration
+ * 🎛️ Heady™ Service Manager - 100% Uptime Continuous Service Orchestration
  * 
- * This service manages all Heady services, ensuring they run continuously
+ * This service manages all Heady™ services, ensuring they run continuously
  * and coordinate properly. Default behavior: All services on, always monitoring.
  */
 

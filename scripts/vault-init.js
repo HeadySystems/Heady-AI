@@ -50,7 +50,7 @@ async function main() {
 
     const credentials = [];
 
-    // ── Shared (personal + Heady system) ───────────────────────
+    // ── Shared (personal + Heady™ system) ───────────────────────
     if (process.env.GITHUB_HEADYME_PAT) {
         credentials.push({
             name: 'headyme-pat', domain: 'github',
@@ -72,13 +72,13 @@ async function main() {
         });
     }
 
-    // ── System (Heady platform secrets) ────────────────────────
+    // ── System (Heady™ platform secrets) ────────────────────────
     if (process.env.CF_API_TOKEN) {
         credentials.push({
             name: 'heady-api-token', domain: 'cloudflare',
             value: process.env.CF_API_TOKEN,
             meta: {
-                label: 'Cloudflare API Token — Heady account', owner: 'system',
+                label: 'Cloudflare API Token — Heady™ account', owner: 'system',
                 scopes: ['workers', 'dns', 'zones', 'kv', 'r2', 'vectorize']
             },
         });

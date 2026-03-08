@@ -1,11 +1,12 @@
 /**
  * ∞ Heady™ LLM Router — Dynamic LLM Provider Routing
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 
 // ─────────────────────────────────────────────
@@ -105,7 +106,7 @@ const BUDGET_WARN_THRESHOLD = 0.85;
 
 /** Circuit breaker thresholds */
 const CB_FAILURE_THRESHOLD  = 5;    // consecutive failures before opening
-const CB_RECOVERY_TIMEOUT   = 30000; // ms before half-open probe
+const CB_RECOVERY_TIMEOUT   = PHI_TIMING.CYCLE; // ms before half-open probe
 
 // ─────────────────────────────────────────────
 // Provider Adapters
@@ -121,12 +122,12 @@ class BaseProviderAdapter {
    * @param {object} config
    * @param {string} config.apiKey
    * @param {string} [config.baseUrl]
-   * @param {number} [config.timeoutMs=30000]
+   * @param {number} [config.timeoutMs=PHI_TIMING.CYCLE]
    */
   constructor(providerId, config = {}) {
     this.providerId  = providerId;
     this.config      = config;
-    this.timeoutMs   = config.timeoutMs ?? 30000;
+    this.timeoutMs   = config.timeoutMs ?? PHI_TIMING.CYCLE;
   }
 
   /**

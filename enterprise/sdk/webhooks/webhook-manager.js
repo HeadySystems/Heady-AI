@@ -2,7 +2,7 @@
 
 /**
  * @module webhook-manager
- * @description Webhook management API for HeadyOS.
+ * @description Webhook management API for Heady™OS.
  * Handles webhook registration, delivery, monitoring, and reliability.
  *
  * Features:

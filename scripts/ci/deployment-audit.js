@@ -2,11 +2,11 @@
 /**
  * scripts/ci/deployment-audit.js
  *
- * Log deployment details to the existing Heady SHA-256 audit chain.
+ * Log deployment details to the existing Heady™ SHA-256 audit chain.
  * Each deployment creates a new audit entry that is cryptographically
  * linked to the previous entry via SHA-256 hash chaining.
  *
- * Audit chain format (matches Heady's existing security/audit architecture):
+ * Audit chain format (matches Heady™'s existing security/audit architecture):
  * {
  *   "id": "<SHA-256 of entry>",
  *   "previous": "<SHA-256 of previous entry>",
@@ -203,7 +203,7 @@ function getSystemInfo() {
 function main() {
   const args = parseArgs(process.argv);
 
-  console.log('=== Heady Deployment Audit ===');
+  console.log('=== Heady™ Deployment Audit ===');
   console.log(`φ = ${PHI}`);
   console.log(`Type:        ${args.type}`);
   console.log(`Version:     ${args.version}`);

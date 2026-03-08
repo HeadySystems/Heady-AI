@@ -9,7 +9,7 @@ export function discover(): number;
  *
  * @param {string} domain - The domain to get work for (e.g., 'brain-providers')
  * @param {Object} context - Context passed to the work functions
- * @returns {Function[]} Array of work functions for HeadyBees.blast()
+ * @returns {Function[]} Array of work functions for Heady™Bees.blast()
  */
 export function getWork(domain: string, context?: Object): Function[];
 /**

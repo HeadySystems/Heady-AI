@@ -1,6 +1,6 @@
 /**
  * @file swarm-intelligence.js
- * @description Swarm Coordination System for the 3-node Heady Colab cluster.
+ * @description Swarm Coordination System for the 3-node Heady™ Colab cluster.
  *
  * Features:
  * - computeSwarmAllocation() — resource allocation using Fibonacci ratios
@@ -379,7 +379,7 @@ export class EmergentBehaviorDetector {
 // ─── SwarmIntelligence ────────────────────────────────────────────────────────
 
 /**
- * Swarm coordination system for the 3-node Heady Colab cluster.
+ * Swarm coordination system for the 3-node Heady™ Colab cluster.
  *
  * Manages resource allocation, cluster health assessment, consensus coordination,
  * shared swarm memory, and emergent behavior detection.

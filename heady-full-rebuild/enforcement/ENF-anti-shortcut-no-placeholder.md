@@ -94,7 +94,7 @@ const brainUrl = 'http://127.0.0.1:8080';
 
 ## Protocol 4: CONTINUOUS EMBEDDING ENFORCEMENT
 
-### Embedding Standards for Heady Cognition Files
+### Embedding Standards for Heady™ Cognition Files
 
 - Every `.md` file in `heady-cognition/` has YAML frontmatter with `semantic_tags`
 - Tags are specific, technical, and non-redundant for optimal vector space separation

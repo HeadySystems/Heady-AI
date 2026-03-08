@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * VectorTemplateEngine — 3D Vector Storage → Bee Template Instantiation
  *
- * The bridge that makes Heady's bee swarm instantaneous:
+ * The bridge that makes Heady™'s bee swarm instantaneous:
  * 1. INGEST: Any artifact (site, JS, config, API, agent, pipeline) → embed → 3D zone → store
  * 2. MATCH:  Task query → embed → zone lookup → find nearest template
  * 3. INJECT: Retrieve vector data → inject into template workers as context

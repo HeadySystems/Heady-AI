@@ -1,4 +1,4 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
  * Heady™ Scaffold CLI
@@ -57,7 +57,7 @@ if (!/^[a-z][a-z0-9-]*$/.test(name)) {
 
 // ── Path helpers ──────────────────────────────────────────────────────────────
 const baseDir    = type === 'package' ? join(ROOT, 'packages', name) : join(ROOT, 'apps', name);
-const scopedName = `@heady/${name}`;
+const scopedName = `@heady-ai/${name}`;
 const srcDir     = join(baseDir, 'src');
 
 if (existsSync(baseDir)) {
@@ -91,7 +91,7 @@ function packageJson(isApp) {
 }
 
 function srcIndex(isApp) {
-  const header = `/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */\n`;
+  const header = `/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */\n`;
   if (isApp) {
     return `${header}
 /**
@@ -152,8 +152,8 @@ function tsconfigFor() {
 }
 
 function dockerfile() {
-  return `# © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
-FROM node:20-alpine AS base
+  return `# © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
+FROM node:22-alpine AS base
 WORKDIR /app
 
 COPY package.json .
@@ -194,7 +194,7 @@ npm run test
 
 ---
 
-*© 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.*
+*© 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.*
 `;
 }
 

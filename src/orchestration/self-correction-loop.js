@@ -1,6 +1,7 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview SelfCorrectionLoop — Execute-verify-correct cycle for autonomous
- * agents in the Heady Latent OS platform.
+ * agents in the Heady™ Latent OS platform.
  *
  * Architecture:
  *   - Execute-Verify-Correct (EVC) cycle with configurable max iterations
@@ -76,7 +77,7 @@ const VERIFY_RESULT = Object.freeze({
  */
 const DEFAULTS = Object.freeze({
   MAX_ITERATIONS:     4,
-  ITERATION_TIMEOUT:  30_000,   // ms per iteration
+  ITERATION_TIMEOUT:  PHI_TIMING.CYCLE,   // ms per iteration
   TOTAL_TIMEOUT:      120_000,  // ms for entire loop
   CIRCUIT_THRESHOLD:  3,        // consecutive failures to trip circuit
   CIRCUIT_RECOVERY:   60_000,   // ms before circuit tries to recover
@@ -402,7 +403,7 @@ class SelfCorrectionLoop extends EventEmitter {
    * @param {Function} [opts.llmJudgeFn]       - Async fn(output, task) → {pass, score, feedback}
    * @param {object[]} [opts.assertions]        - Array of { name, fn: async (output) → boolean }
    * @param {number}   [opts.maxIterations]     - Max correction iterations (default: 4)
-   * @param {number}   [opts.iterationTimeout]  - Ms per iteration (default: 30_000)
+   * @param {number}   [opts.iterationTimeout]  - Ms per iteration (default: PHI_TIMING.CYCLE)
    * @param {number}   [opts.totalTimeout]      - Ms for entire loop (default: 120_000)
    * @param {number}   [opts.circuitThreshold]  - Consecutive failures before circuit trip
    * @param {number}   [opts.minQualityScore]   - Minimum acceptable quality score [0,1]

@@ -1,8 +1,8 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
- * ═══ Heady Patent Implementation Registry ═══
+ * ═══ Heady™ Patent Implementation Registry ═══
  * Master index for all patent-backed modules.
  * Each module cites its USPTO patent docket for Reduction to Practice (RTP).
  */

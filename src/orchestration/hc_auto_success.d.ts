@@ -188,7 +188,7 @@ export class AutoSuccessEngine extends EventEmitter<[never]> {
     getHistory(limit?: number): any;
     /** Merge external tasks (from auto-flow-200-tasks.json) into the live catalog. */
     loadExternalTasks(externalTasks: any): number;
-    /** Summary for HeadyConductor integration. */
+    /** Summary for Heady™Conductor integration. */
     getConductorSummary(): {
         engine: string;
         running: boolean;

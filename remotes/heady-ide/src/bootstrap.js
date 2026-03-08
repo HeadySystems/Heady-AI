@@ -1,4 +1,4 @@
-// Bootstrap for HeadyAI-IDE micro-frontend
+// Bootstrap for Heady™AI-IDE micro-frontend
 const { createApp } = require('./App');
 
 // Standalone mode: mount if #heady-root exists

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Autonomous Health Loop ═══
@@ -268,7 +268,7 @@ async function runCheck() {
 
 // ── Lifecycle ───────────────────────────────────────────────────
 async function main() {
-    log("INFO", "═══ Heady Autonomous Health Loop starting ═══");
+    log("INFO", "═══ Heady™ Autonomous Health Loop starting ═══");
     log("INFO", `Interval: ${CONFIG.intervalMs / 1000}s | Warn after: ${CONFIG.warnAfterFailures} | Redeploy after: ${CONFIG.redeployAfterFailures}`);
     log("INFO", `Monitoring ${SERVICES.length} services: ${SERVICES.map((s) => s.name).join(", ")}`);
 

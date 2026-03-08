@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Hive SDK Backend ─────────────────────────────────────────
- * Dispatches through REAL Heady Brain intelligence.
- * No placeholders. No simulated responses. Every call hits Heady Brain.
+ * ─── Heady™ Hive SDK Backend ─────────────────────────────────────────
+ * Dispatches through REAL Heady™ Brain intelligence.
+ * No placeholders. No simulated responses. Every call hits Heady™ Brain.
  * 
  * Battle → validates via brain analysis
  * Creative → generates via brain chat
@@ -36,7 +36,7 @@ function brainChat(message, system, options = {}) {
     return new Promise((resolve, reject) => {
         const body = JSON.stringify({
             message,
-            system: system || "You are Heady Brain — the unified intelligence engine for the Heady ecosystem. Respond concisely and technically.",
+            system: system || "You are Heady™ Brain — the unified intelligence engine for the Heady™ ecosystem. Respond concisely and technically.",
             temperature: options.temperature || 0.7,
             max_tokens: options.max_tokens || 2048,
         });
@@ -53,7 +53,7 @@ function brainChat(message, system, options = {}) {
             });
         });
         req.on("error", reject);
-        req.on("timeout", () => { req.destroy(); reject(new Error("Heady Brain timeout")); });
+        req.on("timeout", () => { req.destroy(); reject(new Error("Heady™ Brain timeout")); });
         req.write(body);
         req.end();
     });
@@ -62,7 +62,7 @@ function brainChat(message, system, options = {}) {
 function brainAnalyze(content, focus, type = "general") {
     return brainChat(
         `Analyze the following ${type} content with focus on "${focus}":\n\n${content}`,
-        "You are Heady Brain performing deep analysis. Be thorough, technical, and actionable."
+        "You are Heady™ Brain performing deep analysis. Be thorough, technical, and actionable."
     );
 }
 
@@ -71,7 +71,7 @@ function broadcast(type, data) {
     sseEmitter.emit("broadcast", { type, data, ts: new Date().toISOString() });
 }
 
-// ═══ BATTLE ENDPOINTS — Real Heady Brain Validation ═══════════════
+// ═══ BATTLE ENDPOINTS — Real Heady™ Brain Validation ═══════════════
 
 router.post("/battle/validate", async (req, res) => {
     const { code, criteria, context } = req.body;
@@ -130,7 +130,7 @@ router.post("/battle/evaluate", async (req, res) => {
     }
 });
 
-// ═══ SIMS ENDPOINTS — Real Monte Carlo via Heady Brain ═════════════
+// ═══ SIMS ENDPOINTS — Real Monte Carlo via Heady™ Brain ═════════════
 
 router.post("/sims/simulate", async (req, res) => {
     const { scenario, iterations, variables } = req.body;
@@ -147,7 +147,7 @@ router.post("/sims/simulate", async (req, res) => {
     }
 });
 
-// ═══ CREATIVE ENDPOINTS — Real Generation via Heady Brain ══════════
+// ═══ CREATIVE ENDPOINTS — Real Generation via Heady™ Brain ══════════
 
 router.post("/creative/generate", async (req, res) => {
     const { prompt, outputType } = req.body;
@@ -235,7 +235,7 @@ router.post("/mcp/call", async (req, res) => {
     try {
         const result = await brainChat(
             `Execute MCP tool "${tool}" with arguments: ${JSON.stringify(args || {})}\n\nProvide the tool's output as if you were that tool executing.`,
-            `You are Heady MCP dispatching tool ${tool}. Execute the requested operation and return structured results.`
+            `You are Heady™ MCP dispatching tool ${tool}. Execute the requested operation and return structured results.`
         );
         broadcast("mcp:call", { tool });
         res.json({ ok: true, tool, result: result.response, source: "heady-brain", latency: result.latency });

@@ -44,7 +44,7 @@
     "area": "umbrella_brand",
     "redirect": "https://headysystems.com/"
   },
-  "headybrowser.com": {
+  "headyio.com": {
     "role": "product",
     "product": "browser",
     "routes": {
@@ -54,7 +54,7 @@
     },
     "canonical_target": "https://headymcp.com/servers/headybrowser"
   },
-  "headyweb.com": {
+  "headycloud.com": {
     "role": "product",
     "product": "web_shell",
     "routes": {
@@ -63,7 +63,7 @@
     },
     "canonical_target": "https://headymcp.com/app"
   },
-  "headymobile.com": {
+  "headyplus.com": {
     "role": "product",
     "product": "mobile_clients",
     "routes": {
@@ -72,7 +72,7 @@
       "/ios": "ios_future"
     }
   },
-  "headyide.com": {
+  "headyio.com": {
     "role": "product",
     "product": "ide_integrations",
     "routes": {
@@ -82,7 +82,7 @@
       "/codeserver": "codeserver_theia"
     }
   },
-  "headyhub.com": {
+  "headysystems.com": {
     "role": "product",
     "product": "user_hub",
     "routes": {
@@ -120,7 +120,7 @@
       "/orchestration": "orchestrator_overview"
     }
   },
-  "headylabs.com": {
+  "heady-ai.com": {
     "role": "platform",
     "area": "labs",
     "routes": {
@@ -129,7 +129,7 @@
       "/blog": "engineering_blog"
     }
   },
-  "headyops.com": {
+  "headysystems.com": {
     "role": "platform",
     "area": "ops",
     "routes": {
@@ -138,7 +138,7 @@
       "/runbooks": "runbooks"
     }
   },
-  "headysec.com": {
+  "headysecure.com": {
     "role": "platform",
     "area": "security",
     "routes": {
@@ -147,7 +147,7 @@
       "/responsible-disclosure": "responsible_disclosure"
     }
   },
-  "headydata.com": {
+  "headydb.com": {
     "role": "platform",
     "area": "data",
     "routes": {
@@ -166,7 +166,7 @@
     },
     "canonical_target": "https://headysystems.com/platform"
   },
-  "headyauto.com": {
+  "headysystems.com": {
     "role": "ai_capability",
     "capability": "automation_agents",
     "routes": {
@@ -185,7 +185,7 @@
       "/teams": "teams_bot"
     }
   },
-  "headyvoice.com": {
+  "headymusic.com": {
     "role": "ai_capability",
     "capability": "voice",
     "routes": {
@@ -194,7 +194,7 @@
       "/docs": "voice_docs"
     }
   },
-  "headyvision.com": {
+  "heady-ai.com": {
     "role": "ai_capability",
     "capability": "vision",
     "routes": {
@@ -203,84 +203,84 @@
       "/docs": "vision_docs"
     }
   },
-  "headypro.com": {
+  "headyplus.com": {
     "role": "plan",
     "plan_type": "pro",
     "redirect": "https://headysystems.com/pricing?plan=pro"
   },
-  "headyenterprise.com": {
+  "headysystems.com": {
     "role": "plan",
     "plan_type": "enterprise",
     "redirect": "https://headysystems.com/pricing?plan=enterprise"
   },
-  "headybusiness.com": {
+  "headysystems.com": {
     "role": "plan",
     "plan_type": "business",
     "redirect": "https://headysystems.com/pricing?segment=business"
   },
-  "headypersonal.com": {
+  "headyme.com": {
     "role": "plan",
     "plan_type": "personal",
     "redirect": "https://headysystems.com/pricing?segment=personal"
   },
-  "headyfamily.com": {
+  "headyconnection.com": {
     "role": "plan",
     "plan_type": "family",
     "redirect": "https://headysystems.com/pricing?segment=family"
   },
-  "headyglobal.com": {
+  "headysystems.com": {
     "role": "plan",
     "plan_type": "global",
     "redirect": "https://headyconnection.org/"
   },
-  "headyuniverse.com": {
+  "headyos.com": {
     "role": "plan",
     "plan_type": "universe",
     "routes": {
       "/": "brand_story_universe"
     }
   },
-  "headyi.com": {
+  "headyio.com": {
     "role": "campaign",
     "redirect": "https://headysystems.com/get-started"
   },
-  "aheady.com": {
+  "aheadyme.com": {
     "role": "campaign",
     "redirect": "https://headysystems.com/get-started"
   },
-  "beheady.com": {
+  "beheadyme.com": {
     "role": "campaign",
     "redirect": "https://headysystems.com/get-started"
   },
-  "headyup.com": {
+  "headyplus.com": {
     "role": "campaign",
     "redirect": "https://headysystems.com/get-started"
   },
-  "headyon.com": {
+  "headyplus.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/app"
   },
-  "headygo.com": {
+  "headyme.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/app"
   },
-  "headynow.com": {
+  "headyplus.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/app"
   },
-  "headyfast.com": {
+  "headycloud.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/pricing#performance"
   },
-  "headyquick.com": {
+  "headyplus.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/pricing#performance"
   },
-  "headyspeed.com": {
+  "headycloud.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/pricing#performance"
   },
-  "headyboost.com": {
+  "headyplus.com": {
     "role": "campaign",
     "redirect": "https://headymcp.com/pricing#performance"
   }

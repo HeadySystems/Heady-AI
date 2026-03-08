@@ -1,11 +1,11 @@
 apiVersion: v2
 name: heady-core
-description: Heady Orchestrator & AI Hub
+description: Heady™ Orchestrator & AI Hub
 type: application
 version: "1.0.0"
 appVersion: "1.0.0"
 
-# Managed automatically via release-please within the HeadyMonorepo.
+# Managed automatically via release-please within the Heady™Monorepo.
 dependencies:
   - name: redis
     version: "18.3.1"

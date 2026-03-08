@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Hot/Cold Path Separation — Cache Layer
+ * Heady™ Hot/Cold Path Separation — Cache Layer
  * Routes requests through fast cache (hot) or origin (cold).
  * Auto-promotes frequently accessed items to hot path.
  * Auto-demotes stale items to cold path.

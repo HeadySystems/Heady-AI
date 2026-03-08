@@ -1,9 +1,9 @@
 # Edge AI Architecture Guide
-## Heady Latent OS — Section 4: Edge AI and Cloudflare Workers
+## Heady™ Latent OS — Section 4: Edge AI and Cloudflare Workers
 
 **Version:** 1.0.0  
 **Date:** March 2026  
-**Owner:** Heady Engineering
+**Owner:** Heady™ Engineering
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## Overview
 
-The Heady Latent OS edge AI layer runs on Cloudflare's global network, serving AI inference from the nearest GPU-equipped Point of Presence (PoP) to each user. The architecture splits workloads across three tiers:
+The Heady™ Latent OS edge AI layer runs on Cloudflare's global network, serving AI inference from the nearest GPU-equipped Point of Presence (PoP) to each user. The architecture splits workloads across three tiers:
 
 | Tier | Runtime | Target Latency | Use Case |
 |---|---|---|---|
@@ -578,7 +578,7 @@ GDPR: EU users making PII-tagged requests are restricted to EU-region edge PoPs 
 
 ## Sacred Geometry Resource Allocation
 
-The Heady Latent OS applies Fibonacci ratios across all resource allocation decisions. This is not cosmetic — Fibonacci proportions approximate the golden ratio (φ ≈ 1.618) and appear naturally in optimal packing and distribution problems.
+The Heady™ Latent OS applies Fibonacci ratios across all resource allocation decisions. This is not cosmetic — Fibonacci proportions approximate the golden ratio (φ ≈ 1.618) and appear naturally in optimal packing and distribution problems.
 
 ### Resource Tier Ratios
 
@@ -687,7 +687,7 @@ npx wrangler cron trigger heady-edge-inference "*/5 * * * *"
 Or call the health endpoint to verify bindings:
 
 ```bash
-curl https://api.heady.ai/api/health \
+curl https://api.heady-ai.com/api/health \
   -H "Accept: application/json"
 ```
 
@@ -704,19 +704,19 @@ Expected response:
 
 ```bash
 # Embed
-curl -X POST https://api.heady.ai/api/embed \
+curl -X POST https://api.heady-ai.com/api/embed \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{"text": "Sacred geometry in nature"}'
 
 # Chat (non-streaming)
-curl -X POST https://api.heady.ai/api/chat \
+curl -X POST https://api.heady-ai.com/api/chat \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{"messages":[{"role":"user","content":"Hello"}], "stream":false, "temperature":0}'
 
 # Classify
-curl -X POST https://api.heady.ai/api/classify \
+curl -X POST https://api.heady-ai.com/api/classify \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{"text": "This product is amazing"}'
@@ -800,7 +800,7 @@ npx wrangler tail heady-edge-inference --format pretty
 ### Health Check Endpoint
 
 ```bash
-curl https://api.heady.ai/api/health | jq .
+curl https://api.heady-ai.com/api/health | jq .
 ```
 
 Monitors: AI binding availability, KV connectivity, Vectorize binding, DO binding.

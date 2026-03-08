@@ -1,7 +1,7 @@
 /**
- * Heady 3D Vector Space — 8-Octant Activity Visualizer v1.0
+ * Heady™ 3D Vector Space — 8-Octant Activity Visualizer v1.0
  * Renders an isometric 3D cube with 8 octants showing live system activity.
- * Each octant maps to a Heady service category.
+ * Each octant maps to a Heady™ service category.
  *
  * Usage: HeadyVectorSpace.init('vectorSpaceContainer');
  */

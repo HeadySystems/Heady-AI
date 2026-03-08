@@ -1,5 +1,5 @@
 /**
- * Smoke Test Suite for Heady Zero-Dependency System
+ * Smoke Test Suite for Heady™ Zero-Dependency System
  * Verifies all layers load and core functionality works.
  * Run: node tests/smoke-test.js
  */

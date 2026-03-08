@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -9,7 +9,7 @@
  * SDK Registration Endpoint — Roadmap Track A
  * ═══════════════════════════════════════════════════════════════
  *
- * Handles project registration from the Heady CLI and SDK
+ * Handles project registration from the Heady™ CLI and SDK
  * clients. Issues API keys, assigns projection targets,
  * and registers project intent for template generation.
  *

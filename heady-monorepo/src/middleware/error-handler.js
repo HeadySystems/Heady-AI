@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Error Handler — Standardized error responses
+ * Heady™ Error Handler — Standardized error responses
  * Catches all Express errors and returns consistent JSON error objects.
  * Masks internal details in production, logs full stack traces.
  */

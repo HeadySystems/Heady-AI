@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyOps Dynamic Scaler
- * Parses service group logic from HeadyConductor and drives
+ * Parses service group logic from Heady™Conductor and drives
  * horizontal scaling up/down via local Docker or K8s API.
  */
 const logger = require("../utils/logger");

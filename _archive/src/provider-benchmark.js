@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Provider Benchmark ─────────────────────────────────────
+ * ─── Heady™ Provider Benchmark ─────────────────────────────────────
  * Measures connection speed, latency, and throughput for each remote
  * provider. Results auto-tune the routing table in the orchestrator.
  *

@@ -1,11 +1,11 @@
 /**
  * @file cloudflare-worker.ts
- * @description Heady Liquid Latent OS — Cloudflare Worker Edge Script
+ * @description Heady™ Liquid Latent OS — Cloudflare Worker Edge Script
  *
  * Responsibilities:
  *  • Route all requests to the Cloud Run origin
  *  • Edge caching with Fibonacci-stepped TTLs (per content type)
- *  • CORS enforcement per Heady domain allowlist
+ *  • CORS enforcement per Heady™ domain allowlist
  *  • φ-scaled rate limiting (120 req/min base × φ per tier)
  *  • Health check passthrough (no caching, no rate limit)
  *  • CSP header injection on all HTML responses

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * 
- * ═══ Heady Patent Test Runner ═══
+ * ═══ Heady™ Patent Test Runner ═══
  * Runs all test suites for patent implementations.
  */
 
@@ -19,7 +19,7 @@ const testFiles = fs.readdirSync(testsDir)
 
 console.log('═══════════════════════════════════════════════════════');
 console.log('  Heady™ Patent Implementation Test Suite');
-console.log('  © 2026 HeadySystems Inc.');
+console.log('  © 2026 Heady™Systems Inc.');
 console.log('═══════════════════════════════════════════════════════');
 console.log(`\n  Found ${testFiles.length} test suites\n`);
 

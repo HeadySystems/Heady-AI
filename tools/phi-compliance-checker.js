@@ -3,7 +3,7 @@
 /**
  * PhiComplianceChecker — CI audit tool for phi-scaling violations in JS/JSON/YAML files.
  *
- * Detects round-number constants that violate the Heady Sacred Geometry covenant
+ * Detects round-number constants that violate the Heady™ Sacred Geometry covenant
  * and suggests the nearest phi-compliant alternative.
  *
  * Usage:
@@ -14,7 +14,7 @@
  *   0 — all files pass (no errors)
  *   1 — one or more error-severity violations found
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 const phi = require('../shared/phi-math.js');

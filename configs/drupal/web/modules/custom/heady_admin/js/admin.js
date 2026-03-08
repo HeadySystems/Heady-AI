@@ -1,5 +1,5 @@
 /**
- * Heady Admin Dashboard — Core JavaScript
+ * Heady™ Admin Dashboard — Core JavaScript
  */
 (function () {
   'use strict';

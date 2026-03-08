@@ -1,5 +1,5 @@
 # =============================================================================
-# Heady Latent OS — MCP Gateway Configuration
+# Heady™ Latent OS — MCP Gateway Configuration
 # =============================================================================
 # This file configures the MCPGateway, MCPConnectionPoolManager,
 # MCPTransportAdapter, ZeroTrustSandbox, SemanticRateLimiter, and MCPAuditLogger.
@@ -7,7 +7,7 @@
 # Environment variable substitution: ${ENV_VAR_NAME}
 # All secrets should be provided via environment variables, never hardcoded.
 #
-# Schema version: 1.0 (Heady MCP Ecosystem — March 2026)
+# Schema version: 1.0 (Heady™ MCP Ecosystem — March 2026)
 # MCP Protocol Version Target: 2025-11-25
 # =============================================================================
 
@@ -131,7 +131,7 @@ servers:
   # ── Heady Internal Tools ────────────────────────────────────────────────────
   - id: heady-internal
     namespace: heady
-    description: "Heady Latent OS internal tools — vectors, agents, CSL operations"
+    description: "Heady™ Latent OS internal tools — vectors, agents, CSL operations"
     transport: streamable-http
     url: ${HEADY_INTERNAL_MCP_URL:-http://localhost:3001/mcp}
     weight: 5
@@ -513,8 +513,8 @@ server_cards:
   enabled: true
   well_known_path: /.well-known/mcp.json
   card:
-    name: Heady MCP Gateway
-    description: "Heady Latent OS unified MCP gateway — aggregates GitHub, Slack, PostgreSQL, filesystem, search, and Heady internal tools"
+    name: Heady™ MCP Gateway
+    description: "Heady™ Latent OS unified MCP gateway — aggregates GitHub, Slack, PostgreSQL, filesystem, search, and Heady™ internal tools"
     version: "1.0.0"
     capabilities:
       - tools

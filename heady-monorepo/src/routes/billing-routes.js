@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Systems - Auth & Billing API Routes
+ * Heady™ Systems - Auth & Billing API Routes
  */
 const express = require('../core/heady-server');
 const { PaymentGateway, AuthMiddleware } = require('../api/payment-gateway');
@@ -42,7 +42,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 
 // Example protected route
 router.get('/pro-features', AuthMiddleware.requireProPlan, (req, res) => {
-    res.json({ message: "Welcome to the Heady Pro tier. Unlimited inference active." });
+    res.json({ message: "Welcome to the Heady™ Pro tier. Unlimited inference active." });
 });
 
 module.exports = router;

@@ -4,7 +4,7 @@
  * ║  Phi-Scaled Backpressure & Load Management for Agent Swarms      ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc. All Rights Reserved.              ║
+ * ║  © 2026-2026 HeadySystems Inc. All Rights Reserved.              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * SRE adaptive throttling with semantic deduplication, phi-derived

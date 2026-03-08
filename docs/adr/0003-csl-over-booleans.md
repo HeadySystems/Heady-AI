@@ -26,7 +26,7 @@ The question was: should we adapt boolean logic with degrees (e.g., fuzzy logic)
 
 **Replace boolean logic with Continuous Semantic Logic (CSL) across all HeadySystems systems. CSL represents all semantic values as floating-point numbers in [0.0, 1.0], with φ-derived threshold bands replacing discrete true/false.**
 
-CSL is implemented in `@headysystems/semantic-logic`.
+CSL is implemented in `@heady-ai/semantic-logic`.
 
 ---
 
@@ -136,7 +136,7 @@ The `@heady-ai/core` capability bitmask is multiplied by the CSL score before ch
 ## Implementation Pattern
 
 ```javascript
-// @headysystems/semantic-logic
+// @heady-ai/semantic-logic
 class CSLGate {
   static DORMANT   = 0.236;
   static LOW       = 0.382;
@@ -207,5 +207,5 @@ All new code MUST use CSL. Legacy boolean code is migrated using:
 
 - Zadeh, L.A. (1965). Fuzzy sets. *Information and Control.*
 - Goguen, J.A. (1967). L-fuzzy sets.
-- HeadySystems `@headysystems/semantic-logic` — CSL implementation.
+- HeadySystems `@heady-ai/semantic-logic` — CSL implementation.
 - ADR 0002: φ scaling provides the threshold values.

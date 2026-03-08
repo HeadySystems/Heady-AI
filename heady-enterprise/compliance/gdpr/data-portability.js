@@ -158,7 +158,7 @@ const gatherInteractionHistory = async (userId, pgClient, dateRange) => {
 };
 
 /**
- * Gather Heady Conductor task history.
+ * Gather Heady™ Conductor task history.
  */
 const gatherConductorTasks = async (userId, pgClient, dateRange) => {
   let query = `
@@ -310,7 +310,7 @@ const formatAsPDF = (userId, data) => {
         title: 'Cover Page',
         content: [
           { type: 'heading', text: 'Personal Data Export' },
-          { type: 'text', text: `This document contains all personal data held by HeadySystems Inc. for user: ${userId}` },
+          { type: 'text', text: `This document contains all personal data held by Heady™Systems Inc. for user: ${userId}` },
           { type: 'text', text: `Export Date: ${new Date().toLocaleDateString()}` },
           { type: 'text', text: 'Legal Basis: GDPR Article 20 — Right to Data Portability' },
         ],

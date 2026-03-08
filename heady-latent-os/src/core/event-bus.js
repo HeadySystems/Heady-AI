@@ -8,7 +8,7 @@
  *   - Ring buffer of fib(12)=144 events for history replay
  *   - Phi-weighted priority queue for processing order
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 
 'use strict';

@@ -1,6 +1,6 @@
 /**
  * @fileoverview SemanticBackpressureMonitor — Intelligent backpressure management
- * for the 17-swarm Heady Latent OS platform.
+ * for the 17-swarm Heady™ Latent OS platform.
  *
  * Architecture:
  *   - Per-agent/swarm queue depth monitoring with sliding-window metrics
@@ -603,7 +603,7 @@ class AgentBackpressureState {
  * @class SemanticBackpressureMonitor
  * @extends EventEmitter
  *
- * Platform-wide backpressure monitor for the 17-swarm Heady Latent OS.
+ * Platform-wide backpressure monitor for the 17-swarm Heady™ Latent OS.
  *
  * Responsibilities:
  *  - Track per-agent/swarm queue depth and derive pressure levels
@@ -1096,7 +1096,7 @@ class SemanticBackpressureMonitor extends EventEmitter {
 // ─── Factory Helpers ──────────────────────────────────────────────────────────
 
 /**
- * Create a SemanticBackpressureMonitor pre-configured for the 17-swarm Heady platform.
+ * Create a SemanticBackpressureMonitor pre-configured for the 17-swarm Heady™ platform.
  *
  * Phi-derived defaults applied:
  *   maxQueueDepth:        fib(13) = 233     (was 500)

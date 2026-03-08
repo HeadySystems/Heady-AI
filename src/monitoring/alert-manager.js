@@ -1,17 +1,18 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Alert Manager
+ * Heady™ Alert Manager
  * ═══════════════════════════════════════════════════════════════════
  *
  * Configurable alert rules with CSL risk_gate severity scoring
  * and PhiBackoff cooldown periods. Supports FIRING, PENDING,
  * RESOLVED states with hysteresis to prevent flapping.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * @module src/monitoring/alert-manager
  */
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
@@ -62,7 +63,7 @@ class AlertManager extends EventEmitter {
             { id: 'csl-low-resonance', group: 'csl_coherence', metric: 'cslStats.avgResonanceScore', condition: 'lt', value: 0.3, severity: 0.6, cooldownBase: 20000, hysteresis: 5 },
 
             // Phi deviation alerts
-            { id: 'phi-timeout-drift', group: 'phi_deviation', metric: 'phiScales.timeout.phiDeviation', condition: 'gt', value: 0.5, severity: 0.5, cooldownBase: 30000, hysteresis: 5 },
+            { id: 'phi-timeout-drift', group: 'phi_deviation', metric: 'phiScales.timeout.phiDeviation', condition: 'gt', value: 0.5, severity: 0.5, cooldownBase: PHI_TIMING.CYCLE, hysteresis: 5 },
             { id: 'phi-confidence-drift', group: 'phi_deviation', metric: 'phiScales.confidence.phiDeviation', condition: 'gt', value: 0.3, severity: 0.6, cooldownBase: 25000, hysteresis: 4 },
         ];
 

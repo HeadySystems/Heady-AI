@@ -1,12 +1,12 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyLiquid — Dynamic Component Allocation Engine
  *
- * Makes the entire Heady system "liquid": every component is dynamically
+ * Makes the entire Heady™ system "liquid": every component is dynamically
  * allocatable, exists in all sensible places, and is intelligently routed
  * to the best context for any given situation.
  *
@@ -312,7 +312,7 @@ const STORAGE_TOPOLOGY = {
 const HF_SPACES_TOPOLOGY = {
     "main": {
         slug: "HeadyMe/heady-ai-brain",
-        title: "Heady AI — Brain Demo",
+        title: "Heady™ AI — Brain Demo",
         role: "Full-stack demo hub — live chat, code editor, gateway dashboard",
         providers: {
             chat: { service: "hf-biz", model: "Qwen/Qwen3-235B-A22B", cost: "biz-seat", latency: "800ms" },

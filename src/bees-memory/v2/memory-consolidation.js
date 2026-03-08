@@ -62,7 +62,7 @@ const DEFAULT_TTL_MS = {
 /** Max rows in DuckDB memories table before forced eviction */
 const DEFAULT_MAX_ROWS = 250_000;
 
-/** DuckDB table names used by HeadyEmbeddedDuckDB */
+/** DuckDB table names used by Heady™EmbeddedDuckDB */
 const TABLES = {
   memories:  'memories',
   archive:   'memories_archive',

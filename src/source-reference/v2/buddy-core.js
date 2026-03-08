@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * BUDDY-CORE — The Central Intelligence Node
  * ═══════════════════════════════════════════════════════════════
  *
  * Buddy is the sovereign orchestrator of the Sacred Geometry network.
- * It sits at the nexus of HeadyConductor + HCFullPipeline with:
+ * It sits at the nexus of Heady™Conductor + HCFullPipeline with:
  *   1. Unique cryptographic agent identity
  *   2. MCP dual-role (Client for vector DB, Server for sub-agent directives)
  *   3. Metacognitive self-awareness (queries own error history before decisions)
@@ -21,6 +21,7 @@
 
 "use strict";
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const crypto = require("crypto");
 const EventEmitter = require("events");
 const path = require("path");
@@ -459,7 +460,7 @@ class TaskLockManager {
      * @param {string} taskId - The task to lock
      * @param {number} ttlMs - Lock TTL in ms (default: 30s)
      */
-    async acquire(agentId, taskId, ttlMs = 30000) {
+    async acquire(agentId, taskId, ttlMs = PHI_TIMING.CYCLE) {
         const lockKey = `task:status:${taskId}`;
         const lockValue = JSON.stringify({
             agentId,

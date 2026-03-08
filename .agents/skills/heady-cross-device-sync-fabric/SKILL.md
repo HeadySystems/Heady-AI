@@ -1,12 +1,12 @@
 ---
 name: heady-cross-device-sync-fabric
-description: Operate, design, or troubleshoot Heady-style cross-device state sync, session handoff, shared context broadcast, device presence, and real-time WebSocket event relay. Use when the user mentions Buddy everywhere, device handoff, shared context, presence tracking, realtime sync, or cross-device orchestration.
+description: Operate, design, or troubleshoot Heady™-style cross-device state sync, session handoff, shared context broadcast, device presence, and real-time WebSocket event relay. Use when the user mentions Buddy everywhere, device handoff, shared context, presence tracking, realtime sync, or cross-device orchestration.
 metadata:
   author: Perplexity Computer
   version: '1.0'
 ---
 
-# Heady Cross-Device Sync Fabric
+# Heady™ Cross-Device Sync Fabric
 
 ## When to Use This Skill
 

@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Projection Engine — Dynamic Projection Management
  *
@@ -9,6 +9,7 @@
  */
 
 const fs = require('fs');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const crypto = require('crypto');
 
@@ -31,7 +32,7 @@ const PROJECTION_TARGETS = {
         type: 'worker',
         endpoint: 'https://heady.headyme.com',
         healthPath: '/health',
-        stalenessBudgetMs: 30000, // 30 seconds (edge cache)
+        stalenessBudgetMs: PHI_TIMING.CYCLE, // 30 seconds (edge cache)
         status: 'active',
     },
     'huggingface-spaces': {

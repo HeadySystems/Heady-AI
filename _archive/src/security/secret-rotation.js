@@ -1,16 +1,16 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════════╗
  * ║  PROPRIETARY AND CONFIDENTIAL — HEADYSYSTEMS INC.                  ║
- * ║  Copyright © 2024-2026 HeadySystems Inc. All Rights Reserved.      ║
+ * ║  Copyright © 2026-2026 HeadySystems Inc. All Rights Reserved.      ║
  * ║                                                                     ║
- * ║  This file contains trade secrets of HeadySystems Inc.              ║
+ * ║  This file contains trade secrets of Heady™Systems Inc.              ║
  * ║  Unauthorized copying, distribution, or use is strictly prohibited  ║
  * ║  and may result in civil and criminal penalties.                    ║
  * ║                                                                     ║
  * ║  Protected under the Defend Trade Secrets Act (18 U.S.C. § 1836)  ║
  * ╚══════════════════════════════════════════════════════════════════════╝
  *
- * Heady Secret Rotation — Automated credential lifecycle management
+ * Heady™ Secret Rotation — Automated credential lifecycle management
  * Tracks secret age, warns on expiry, and provides rotation helpers.
  */
 

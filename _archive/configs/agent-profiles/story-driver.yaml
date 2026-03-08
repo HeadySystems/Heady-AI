@@ -102,7 +102,7 @@ eventSources:
       - SCHEMA_MIGRATED
 
   - id: buddy_conversations
-    description: High-level directives and user decisions from HeadyBuddy
+    description: High-level directives and user decisions from Heady™Buddy
     eventTypes:
       - USER_DIRECTIVE
       - USER_DECISION

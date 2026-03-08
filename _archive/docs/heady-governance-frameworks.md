@@ -1,4 +1,4 @@
-# Systems Architecture and Governance Frameworks of the Heady Ecosystem
+# Systems Architecture and Governance Frameworks of the Heady™ Ecosystem
 
 ## Multi-Agent Orchestration and Long-Term Digital Persistence
 

@@ -1,5 +1,5 @@
 # Prior Art Search Report Template
-## Heady Latent OS — Patent Portfolio
+## Heady™ Latent OS — Patent Portfolio
 ### Version 1.0 | March 2026
 
 > **DISCLAIMER**: This template is for internal strategic planning only. It does not constitute a formal patentability opinion or freedom-to-operate (FTO) analysis. A formal prior art search should be conducted by or under the supervision of a registered patent attorney or agent. Prior art search results are not exhaustive; the absence of prior art identified in this template does not guarantee patentability.
@@ -284,7 +284,7 @@ Complete one row per identified prior art document:
 [Describe which claim elements it reads on]
 
 **Proposed Differentiation**:
-[Describe how the Heady invention differs; which elements are not disclosed]
+[Describe how the Heady™ invention differs; which elements are not disclosed]
 
 **Amended Claim Strategy**:
 [Describe how independent claim should be narrowed or restructured to avoid the reference]
@@ -426,6 +426,6 @@ Use the appropriate pre-filled CPC code set for each Heady patent:
 
 ---
 
-*Template Version 1.0 | March 2026 | Heady Connection, Inc.*
+*Template Version 1.0 | March 2026 | Heady™ Connection, Inc.*
 *This document is for internal strategic use only and does not constitute legal advice.*
 *All cited prior art references must be disclosed to the USPTO in a timely IDS filing.*

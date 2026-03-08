@@ -7,7 +7,7 @@
  * narrative design, visual direction, pitch deck, campaign strategy,
  * UX copy, storyboard.
  *
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const crypto = require('crypto');

@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
@@ -84,7 +84,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: 'heady_conductor_route',
-    description: 'Route a task through the HeadyConductor orchestration layer to the optimal node.',
+    description: 'Route a task through the Heady™Conductor orchestration layer to the optimal node.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -160,7 +160,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: 'heady_nodes',
-    description: 'List all active nodes in the Heady network with their current status and capabilities.',
+    description: 'List all active nodes in the Heady™ network with their current status and capabilities.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -282,7 +282,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: 'heady_patterns',
-    description: 'Detect patterns, trends, and structures in data using HeadyVinci pattern engine.',
+    description: 'Detect patterns, trends, and structures in data using Heady™Vinci pattern engine.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -370,7 +370,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: 'heady_story',
-    description: 'Log an event to the HeadyAutobiographer for narrative tracking and historical record.',
+    description: 'Log an event to the Heady™Autobiographer for narrative tracking and historical record.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -426,7 +426,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: 'heady_config',
-    description: 'Get or set configuration values for the Heady platform.',
+    description: 'Get or set configuration values for the Heady™ platform.',
     inputSchema: {
       type: 'object',
       properties: {

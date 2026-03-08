@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Knowledge Ingestion Briefing
+# Heady™ Knowledge Ingestion Briefing
 
 ## When to Use This Skill
 

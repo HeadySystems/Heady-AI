@@ -2,7 +2,7 @@
 
 ## 1. The Tech Stack Blueprint
 
-To guarantee zero latency, absolute mathematical precision, and ruthless institutional risk management, the HeadyOS infrastructure must immediately pivot to the following Apex FinTech Stack:
+To guarantee zero latency, absolute mathematical precision, and ruthless institutional risk management, the Heady™OS infrastructure must immediately pivot to the following Apex FinTech Stack:
 
 * **Core Orchestration & Gateway**: Node.js (`heady-manager`) wrapped in PM2, utilizing Cloudflare Workers at the edge for sub-10ms global routing.
 * **Quantitative Modeling Engine**: Python 3.12+ explicitly leveraging `PyTorch` for deep learning architectures (TFTs, LSTMs) and `pandas-ta` for vectorized technical indicators.
@@ -16,8 +16,8 @@ To achieve SEC Rule 17a-4, FINRA, and MiFID II compliance, we employ the **Heady
 
 1. **Cognitive Telemetry Generation**: Every decision tree (e.g., executing a mean-reverting statistical arbitrage trade) is encapsulated in a strict JSON schema (`Cognitive_Telemetry_Payload`) encompassing the context inputs, the agent's intent, and the exact tools selected.
 2. **Pre-Execution Cryptographic Hashing**: Before the action is executed or the order is routed to an exchange, the JSON payload is hashed deterministically using SHA-256. This forms the `intent_hash`.
-3. **The Crypto-Stamp (L2 Anchoring)**: The Heady API instantly pushes this metadata hash via a smart contract to an EVM-compatible Layer-2 (Base or Arbitrum).
-4. **Zero-Knowledge Integrity**: Auditors can query the HeadyLens dashboard to view the logical pathing of a trade, while the system utilizes zk-SNARKs (under future development) to prove the trade adhered strictly to VaR and CVaR constraints without exposing the proprietary alpha parameters.
+3. **The Crypto-Stamp (L2 Anchoring)**: The Heady™ API instantly pushes this metadata hash via a smart contract to an EVM-compatible Layer-2 (Base or Arbitrum).
+4. **Zero-Knowledge Integrity**: Auditors can query the Heady™Lens dashboard to view the logical pathing of a trade, while the system utilizes zk-SNARKs (under future development) to prove the trade adhered strictly to VaR and CVaR constraints without exposing the proprietary alpha parameters.
 
 ## 3. Your First Code Delivery
 

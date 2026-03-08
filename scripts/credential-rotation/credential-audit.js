@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// credential-audit.js — Heady Systems Credential Audit Tool
+// credential-audit.js — Heady™ Systems Credential Audit Tool
 // Scans for hardcoded secrets, checks key ages, reports compliance status.
 // Usage: node credential-audit.js [--output <file>] [--fix] [--verbose]
 // Version: 1.0.0
@@ -55,7 +55,7 @@ const SECRET_PATTERNS = [
   { name: 'Stripe Secret Key',     pattern: /\bsk_(live|test)_[A-Za-z0-9]{24,100}\b/g,          service: 'stripe' },
   { name: 'JWT Secret (long)',     pattern: /(?:jwt[_-]?secret|JWT_SECRET)\s*[=:]\s*["']?([A-Za-z0-9+/=]{32,})/gi, service: 'jwt_secret', groupIndex: 1 },
   { name: 'Generic High-Entropy', pattern: /(?:api[_-]?key|secret|password|token|passwd)\s*[=:]\s*["']([A-Za-z0-9+/=_-]{32,})["']/gi, service: 'generic', groupIndex: 1 },
-  // Heady-specific prefixes
+  // Heady™-specific prefixes
   { name: 'Heady Internal Key',    pattern: /\bheady_[a-z0-9_]{8,}_[A-Za-z0-9]{16,}\b/g,       service: 'heady_internal' },
 ];
 

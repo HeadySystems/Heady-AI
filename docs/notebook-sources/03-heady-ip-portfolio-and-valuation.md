@@ -1,6 +1,6 @@
 # Heady™ Intellectual Property Portfolio & Strategic Valuation
 
-> © 2026 HeadySystems Inc.. All Rights Reserved.
+> © 2026 Heady™Systems Inc.. All Rights Reserved.
 
 ## Patent Portfolio Overview
 

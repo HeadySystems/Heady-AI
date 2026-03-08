@@ -1,4 +1,4 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
  * HeadyBee Generator CLI
@@ -223,7 +223,7 @@ function genBeeFile(domain, description, priority, category, template) {
   const className = domain.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
   const workers  = (TEMPLATES[template] || TEMPLATES['default'])(domain);
 
-  return `/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+  return `/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
  * @module ${domain}-bee
@@ -267,7 +267,7 @@ export function getWork() {
 // ── Dynamic registration (optional) ──────────────────────────────────────────
 // If using bee-factory for dynamic registration, uncomment below:
 //
-// import { createBee } from '@heady/bee-factory';
+// import { createBee } from '@heady-ai/bee-factory';
 // export const ${className}Bee = createBee({
 //   domain,
 //   description,
@@ -289,7 +289,7 @@ export default {
 
 // ── Test file template ────────────────────────────────────────────────────────
 function genTestFile(domain, description) {
-  return `/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+  return `/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
  * Tests for ${domain}-bee

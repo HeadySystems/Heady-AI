@@ -10,7 +10,7 @@
  * Provider priority order: nomic → jina → local
  * Fallback strategy: round-robin next healthy provider on CircuitOpenError.
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

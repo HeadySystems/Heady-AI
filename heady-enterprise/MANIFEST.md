@@ -1,4 +1,4 @@
-# HeadySystems Enterprise Package — MANIFEST
+# Heady™Systems Enterprise Package — MANIFEST
 
 > **Version**: 3.2.2-enterprise
 > **Generated**: March 7, 2026
@@ -323,4 +323,4 @@ Pressure Levels: NOMINAL(0–0.382), ELEVATED(0.382–0.618), HIGH(0.618–0.854
 
 ---
 
-© 2026 HeadySystems Inc. All rights reserved.
+© 2026 Heady™Systems Inc. All rights reserved.

@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Inference Gateway — Unified Inference Interface
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';

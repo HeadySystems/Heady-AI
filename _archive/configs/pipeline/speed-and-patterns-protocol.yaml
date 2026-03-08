@@ -25,7 +25,7 @@ name: SpeedAndPatternsProtocol
 # ─── STANDING DIRECTIVE: SPEED ────────────────────────────────────────────
 speedDirective:
   description: >
-    Every agent, service, and pipeline in the Heady ecosystem must treat
+    Every agent, service, and pipeline in the Heady™ ecosystem must treat
     end-to-end latency and time-to-completion as primary optimization targets,
     on par with correctness and safety. Any task that could reasonably be
     faster but isn't should be treated as a performance bug.

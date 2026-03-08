@@ -1,17 +1,17 @@
-# @heady/orchestrator
+# @heady-ai/orchestrator
 
 > Service orchestration engine with Monte Carlo scheduling for the Heady™ AI Platform.
 
 ## Install
 
 ```bash
-npm install @heady/orchestrator
+npm install @heady-ai/orchestrator
 ```
 
 ## Quick Start
 
 ```ts
-import { createOrchestrator } from '@heady/orchestrator';
+import { createOrchestrator } from '@heady-ai/orchestrator';
 
 const orch = createOrchestrator();
 
@@ -45,4 +45,4 @@ console.log(result);
 
 ## License
 
-Proprietary — © 2026 HeadySystems Inc.
+Proprietary — © 2026 Heady™Systems Inc.

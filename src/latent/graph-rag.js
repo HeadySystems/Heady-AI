@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Graph RAG — Knowledge Graph + Retrieval Augmented Generation
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module graph-rag
  * @description Combines vector similarity search with graph traversal for

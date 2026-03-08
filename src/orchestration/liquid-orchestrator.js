@@ -1,7 +1,7 @@
 'use strict';
 /**
  * liquid-orchestrator.js — LiquidOrchestrator
- * Dynamic liquid architecture engine for the Heady Sovereign AI Platform.
+ * Dynamic liquid architecture engine for the Heady™ Sovereign AI Platform.
  *
  * Responsibilities:
  *   1. Dynamic bee creation with Fibonacci pool pre-warming

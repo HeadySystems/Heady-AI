@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Embedding Router
+# Heady™ Embedding Router
 
 ## When to Use This Skill
 

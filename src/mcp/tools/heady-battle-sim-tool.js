@@ -7,7 +7,7 @@
  *   Task → Sim → CSL Gate → Battle/MC → Bee → Swarm → Result → Drift → Audit
  *
  * Derived from the comparison prompt's architecture specification.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const crypto = require('crypto');

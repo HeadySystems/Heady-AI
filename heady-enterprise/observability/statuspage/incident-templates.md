@@ -1,4 +1,4 @@
-# HeadySystems Incident Communication Templates
+# Heady™Systems Incident Communication Templates
 
 **Version:** 3.2.2  
 **Owner:** Communications Lead (Incident Response Team)  

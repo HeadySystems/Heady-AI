@@ -1,7 +1,7 @@
 {
   "Version": "2.0.0",
   "PrimaryCloud": "HeadyMe",
-  "SandboxCloud": "HeadySystems/Sandbox",
+  "SandboxCloud": "HeadyMe/Sandbox",
   "ProductionCloud": "HeadySystems",
   "CloudEndpoints": {
     "HeadyMe": "https://headyio.com",

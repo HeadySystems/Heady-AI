@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -296,7 +296,7 @@ class AutonomousEngine extends EventEmitter {
   }
 
   _schedulerSetup() {
-    // Register recurring self-improvement cycle with HeadyScheduler
+    // Register recurring self-improvement cycle with Heady™Scheduler
     try {
       this._scheduler.schedule('autonomous-improvement-cycle', {
         cronExpression: '*/15 * * * *',  // every 15 min

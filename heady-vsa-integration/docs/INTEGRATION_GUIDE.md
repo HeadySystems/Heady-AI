@@ -1,4 +1,4 @@
-# Heady VSA Integration Guide
+# Heady™ VSA Integration Guide
 
 ## Step-by-Step Integration into Existing Heady Project
 
@@ -18,7 +18,7 @@ Add dependency reference:
 ```json
 {
   "dependencies": {
-    "@headysystems/vsa-core": "file:./src/vsa"
+    "@heady-ai/vsa-core": "file:./src/vsa"
   }
 }
 ```
@@ -221,7 +221,7 @@ module.exports = { HeadyOrchestrator };
 
 #### 4.2 HeadyConductor Enhancement
 
-Similar pattern for HeadyConductor with semantic state management.
+Similar pattern for Heady™Conductor with semantic state management.
 
 ### Phase 5: Testing & Validation (Week 3-4)
 

@@ -1,5 +1,5 @@
 /**
- * Shared utilities for Heady Hive SDK
+ * Shared utilities for Heady™ Hive SDK
  */
 
 /** Retry with exponential backoff */

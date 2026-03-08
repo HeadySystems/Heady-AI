@@ -1,5 +1,5 @@
 # =============================================================================
-# Heady Liquid Latent OS — Canary Deployment Configuration
+# Heady™ Liquid Latent OS — Canary Deployment Configuration
 #
 # Progressive delivery definition for the 4-stage canary rollout.
 # Auto-rollback is triggered by any of the following threshold breaches.

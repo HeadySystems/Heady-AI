@@ -1,4 +1,4 @@
-# Heady 10/10 Ecosystem Health — Fix Package
+# Heady™ 10/10 Ecosystem Health — Fix Package
 
 **Version**: 3.0.0  
 **Generated**: 2026-03-08  

@@ -19,17 +19,27 @@ compatibility_flags = ["nodejs_compat"]
 # ── Routes ────────────────────────────────────────────────────────────────────
 # Each domain routes through this single Worker
 routes = [
+  # ── Primary product domains (verified Cloudflare zones) ──
   { pattern = "headyme.com/*", zone_name = "headyme.com" },
   { pattern = "www.headyme.com/*", zone_name = "headyme.com" },
   { pattern = "headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "www.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "www.headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "headyconnection.com/*", zone_name = "headyconnection.com" },
   { pattern = "headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "www.headybuddy.org/*", zone_name = "headybuddy.org" },
   { pattern = "headymcp.com/*", zone_name = "headymcp.com" },
   { pattern = "headyio.com/*", zone_name = "headyio.com" },
   { pattern = "headybot.com/*", zone_name = "headybot.com" },
   { pattern = "headyapi.com/*", zone_name = "headyapi.com" },
-  { pattern = "headyai.com/*", zone_name = "headyai.com" },
+  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
+  { pattern = "headyos.com/*", zone_name = "headyos.com" },
+  { pattern = "headyfinance.com/*", zone_name = "headyfinance.com" },
+  { pattern = "headymusic.com/*", zone_name = "headymusic.com" },
+  { pattern = "headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "headystore.com/*", zone_name = "headystore.com" },
+  { pattern = "headyex.com/*", zone_name = "headyex.com" },
 ]
 
 # ── Environment: Production ───────────────────────────────────────────────────
@@ -39,13 +49,23 @@ routes = [
   { pattern = "headyme.com/*", zone_name = "headyme.com" },
   { pattern = "www.headyme.com/*", zone_name = "headyme.com" },
   { pattern = "headysystems.com/*", zone_name = "headysystems.com" },
+  { pattern = "www.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "www.headyconnection.org/*", zone_name = "headyconnection.org" },
+  { pattern = "headyconnection.com/*", zone_name = "headyconnection.com" },
   { pattern = "headybuddy.org/*", zone_name = "headybuddy.org" },
+  { pattern = "www.headybuddy.org/*", zone_name = "headybuddy.org" },
   { pattern = "headymcp.com/*", zone_name = "headymcp.com" },
   { pattern = "headyio.com/*", zone_name = "headyio.com" },
   { pattern = "headybot.com/*", zone_name = "headybot.com" },
   { pattern = "headyapi.com/*", zone_name = "headyapi.com" },
-  { pattern = "headyai.com/*", zone_name = "headyai.com" },
+  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
+  { pattern = "headyos.com/*", zone_name = "headyos.com" },
+  { pattern = "headyfinance.com/*", zone_name = "headyfinance.com" },
+  { pattern = "headymusic.com/*", zone_name = "headymusic.com" },
+  { pattern = "headycloud.com/*", zone_name = "headycloud.com" },
+  { pattern = "headystore.com/*", zone_name = "headystore.com" },
+  { pattern = "headyex.com/*", zone_name = "headyex.com" },
 ]
 
 # ── Environment: Staging ──────────────────────────────────────────────────────
@@ -59,7 +79,7 @@ routes = [
 [vars]
 ENVIRONMENT = "production"
 HEADY_VERSION = "3.1.0"
-CLOUD_RUN_ORIGIN = "https://heady-manager-xxxxxxxxxx-uc.a.run.app"
+CLOUD_RUN_ORIGIN = "https://heady-manager-609590223909.us-central1.run.app"
 
 # ── Secrets (set via: wrangler secret put SECRET_NAME) ────────────────────────
 # Required secrets:

@@ -1,6 +1,6 @@
 /**
  * @file swarm-consensus.js
- * @description Raft-like Distributed Consensus for the 3-node Heady Colab cluster.
+ * @description Raft-like Distributed Consensus for the 3-node Heady™ Colab cluster.
  *
  * Implements a simplified Raft consensus algorithm adapted for the 3-node
  * BRAIN / CONDUCTOR / SENTINEL cluster topology:
@@ -211,7 +211,7 @@ export class RaftLog {
 // ─── SwarmConsensus (Raft Node) ───────────────────────────────────────────────
 
 /**
- * Raft consensus node for the Heady 3-node cluster.
+ * Raft consensus node for the Heady™ 3-node cluster.
  *
  * Use with an EventBus or direct message injection for unit tests.
  * For multi-machine Colab: forward messages over EventBridgeServer WebSocket mesh.

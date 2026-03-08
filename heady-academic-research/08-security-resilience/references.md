@@ -64,7 +64,7 @@
 
 ## OWASP & Security Best Practices
 
-### Heady's security-hardening.js implements all OWASP Top 10 protections:
+### Heady™'s security-hardening.js implements all OWASP Top 10 protections:
 1. CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy
 2. Path traversal prevention, null-byte injection, oversized payloads
 3. Multi-layer prompt injection detection
@@ -74,7 +74,7 @@
 7. Correlation ID injection (X-Request-ID)
 8. Structured security event logging
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - CSL confidence-gated access control (ALLOW > φ⁻¹, CHALLENGE ∈ [φ⁻², φ⁻¹), DENY < φ⁻²) is a novel approach replacing boolean security checks
 - Recent papers on memory poisoning (MemoryGraft, Zombie Agents) validate the need for CSL-gated memory operations
 - Circuit breaker with phi-scaled recovery provides principled thresholds unlike arbitrary values

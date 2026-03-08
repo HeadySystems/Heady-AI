@@ -2,7 +2,7 @@
 
 > **A Mathematical Framework for Self-Balancing Autonomous Systems**
 
-**Authors**: Heady Systems LLC
+**Authors**: HeadySystems Inc
 **Date**: March 2026
 **Classification**: Public Whitepaper — Companion to Patent Claims #9–10
 
@@ -289,7 +289,7 @@ The Fibonacci sequence **emerges naturally** from applying φ-scaling to a base-
 
 ### 10.1 Reference Implementation
 
-The complete framework is implemented in the `@headyme/sacred-geometry-sdk` package:
+The complete framework is implemented in the `@heady-ai/sacred-geometry-sdk` package:
 
 - `lib/principles.js` — Core constants and utility functions
 - `lib/spatial-embedder.js` — 3D coordinate embedding engine
@@ -299,7 +299,7 @@ The complete framework is implemented in the `@headyme/sacred-geometry-sdk` pack
 
 ### 10.2 Production Deployment
 
-The framework powers the Heady autonomous AI operating system (v3.0.0-rc4):
+The framework powers the Heady™ autonomous AI operating system (v3.0.0-rc4):
 
 - **33 autonomous bee agents** coordinated via Sacred Geometry
 - **20 pre-configured templates** covering 20 predicted situations
@@ -332,4 +332,4 @@ In the 2026 landscape of AI coordination, explainability is worth more than perf
 
 ---
 
-*© 2026 Heady Systems LLC. All rights reserved.*
+*© 2026 Heady™Systems Inc. All rights reserved.*

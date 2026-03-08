@@ -1,17 +1,17 @@
 ---
 name: heady-midi-creative
-description: Use when working with MIDI music integration, event bus systems, creative content generation, edge-side image diffusion, or artistic AI capabilities in the Heady ecosystem. Keywords include MIDI, music, creative, diffusion, generative art, event bus, audio, Ableton, HeadyBuddy creative, and artistic AI.
+description: Use when working with MIDI music integration, event bus systems, creative content generation, edge-side image diffusion, or artistic AI capabilities in the Heady™ ecosystem. Keywords include MIDI, music, creative, diffusion, generative art, event bus, audio, Ableton, HeadyBuddy creative, and artistic AI.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady MIDI & Creative Engine
+# Heady™ MIDI & Creative Engine
 
 ## When to Use This Skill
 
 Use this skill when the user needs to:
-- Integrate MIDI hardware/software with Heady
+- Integrate MIDI hardware/software with Heady™
 - Work with the MIDI event bus for music processing
 - Generate creative content (images, music, text) via the creative-bee
 - Configure edge-side diffusion for AI art generation

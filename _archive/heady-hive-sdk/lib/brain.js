@@ -4,7 +4,7 @@
 class HeadyBrain {
     constructor(client) { this._c = client; }
 
-    /** Chat with HeadyBrain (via HeadyManager or direct gateway) */
+    /** Chat with Heady™Brain (via Heady™Manager or direct gateway) */
     async chat(prompt, opts = {}) {
         // Try gateway-direct first if available
         if (this._c.gateway) {

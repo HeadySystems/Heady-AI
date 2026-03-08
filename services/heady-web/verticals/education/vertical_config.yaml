@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Vertical Config — Education
+# Heady™Systems Vertical Config — Education
 # Domain: education.headyme.com
 # =============================================================================
 
@@ -13,7 +13,7 @@ routing:
     - edu.headyme.com
 
 brand:
-  name: "Heady Education"
+  name: "Heady™ Education"
   tagline: "Adaptive AI Orchestration for Education"
   accent_color: "#f59e0b"
   logo_variant: education
@@ -134,7 +134,7 @@ content:
     author: "Superintendent, K-12 District (placeholder)"
 
 meta:
-  title: "Heady Education — FERPA-Compliant Adaptive Learning AI"
+  title: "Heady™ Education — FERPA-Compliant Adaptive Learning AI"
   description: "FERPA-compliant AI orchestration for education. Adaptive tutoring, curriculum generation, student assessment, and LMS integration."
   keywords:
     - "education AI platform"

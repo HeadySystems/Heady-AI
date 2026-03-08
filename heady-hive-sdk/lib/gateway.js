@@ -3,11 +3,11 @@
  * Connects to all HeadyStack API endpoints.
  *
  * Usage:
- *   const { HeadyGateway } = require('@headysystems/heady-hive-sdk');
- *   const heady = new HeadyGateway({ baseUrl: 'https://api.headysystems.ai', apiKey: 'hdy_live_...' });
+ *   const { HeadyGateway } = require('@heady-ai/heady-hive-sdk');
+ *   const heady = new HeadyGateway({ baseUrl: 'https://api.headysystems.com', apiKey: 'hdy_live_...' });
  *   const result = await heady.chat.send({ message: 'Hello!' });
  *
- * © 2026 HeadySystems Inc. — Proprietary
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
@@ -16,7 +16,7 @@ class HeadyGateway {
     /**
      * @param {Object} options
      * @param {string} options.baseUrl - HeadyStack API base URL
-     * @param {string} [options.apiKey] - API key (X-Heady-Key header)
+     * @param {string} [options.apiKey] - API key (X-Heady™-Key header)
      * @param {string} [options.accessToken] - Bearer access token
      * @param {number} [options.timeout] - Request timeout in ms (default: 30000)
      * @param {boolean} [options.debug] - Enable debug logging

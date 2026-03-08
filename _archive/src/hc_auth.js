@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -751,7 +751,7 @@ function registerAuthRoutes(app, authEngine) {
         res.json({
             step: 1,
             title: 'Choose how to sign in',
-            description: 'Pick any auth provider — they all lead to full Heady access',
+            description: 'Pick any auth provider — they all lead to full Heady™ access',
             providers,
             totalProviders: providers.length,
         });
@@ -827,7 +827,7 @@ function registerAuthRoutes(app, authEngine) {
         res.json({
             step: 2,
             title: 'Grant Permissions',
-            description: 'Choose what Heady can access — all ops run on cloud bees',
+            description: 'Choose what Heady™ can access — all ops run on cloud bees',
             userId: verified.userId,
             tier: verified.tier,
             availablePermissions: permissions,

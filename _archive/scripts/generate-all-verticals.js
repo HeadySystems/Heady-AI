@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Mass Vertical Site Generator
- * Builds ALL Heady vertical landing pages from definitions
+ * Builds ALL Heady™ vertical landing pages from definitions
  * Run: node scripts/generate-all-verticals.js
  */
 const fs = require('fs');
@@ -11,7 +11,7 @@ const SITES_DIR = '/home/headyme/sites';
 const WIDGET_SRC = '/home/headyme/Heady/public/buddy-widget.js';
 
 const VERTICALS = [
-  // ── AI Nodes (heady.io subdomains) ──
+  // ── AI Nodes (headyio.com subdomains) ──
   { id: 'heady-buddy-portal', domain: 'buddy.headyio.com', name: 'HeadyBuddy', icon: '🤝', color: '#06b6d4', tagline: 'Your Personal AI Companion', desc: 'Always-on AI assistant across all your devices. Browser extension, mobile widget, CLI, and Chrome new-tab integration.', features: ['Cross-device sync', 'Persistent memory', 'Voice dictation', 'Smart suggestions', 'Browser extension', 'Mobile widget'] },
   { id: 'heady-maestro', domain: 'maestro.headyio.com', name: 'HeadyMaestro', icon: '🎼', color: '#8b5cf6', tagline: 'The AI Orchestrator', desc: 'Intelligent multi-agent coordination powered by the proprietary Orchestrator-Promoter Protocol. Routes tasks to the right AI node, manages parallel workflows, and ensures optimal results.', features: ['Orchestrator Protocol', 'Parallel execution', 'Task decomposition', 'Priority scheduling', 'Load balancing', 'Auto-scaling'] },
   { id: 'heady-jules', domain: 'jules.headyio.com', name: 'HeadyJules', icon: '🧪', color: '#ec4899', tagline: 'Deep Reasoning Engine', desc: 'Advanced analytical thinking for complex problems. Extended context, chain-of-thought, and structured problem decomposition.', features: ['1M token context', 'Chain-of-thought', 'Background tasks', 'Code analysis', 'Auto-commit', 'Deep research'] },
@@ -99,7 +99,7 @@ footer{text-align:center;padding:32px;color:var(--dim);font-size:.75rem;border-t
   <div style="background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.5); border-radius: 12px; padding: 24px; max-width: 800px; margin: 32px auto; text-align: left; line-height: 1.6;">
     <h3 style="color: #e0e0ff; margin-bottom: 12px; font-size: 1.1rem;">🧠 DEFAULT HANDLING OF DATA & INTELLIGENCE PROCESSING</h3>
     <p style="color: #a0a0c0; font-size: 0.95rem; margin-bottom: 16px;">
-      <strong>Blatantly Obvious Note:</strong> All data handled by Heady is processed intelligently by default. 
+      <strong>Blatantly Obvious Note:</strong> All data handled by Heady™ is processed intelligently by default. 
       Heady evaluates your task and provides what it found as the <strong>best action in response</strong> via our patent-pending Sacred Geometry Architecture and Orchestrator-Promoter Protocol.
     </p>
     <p style="color: #a0a0c0; font-size: 0.95rem; margin-bottom: 16px;">
@@ -120,7 +120,7 @@ footer{text-align:center;padding:32px;color:var(--dim);font-size:.75rem;border-t
 <div class="features">
 ${v.features.map(f => `  <div class="feature"><h3>${f}</h3></div>`).join('\n')}
 </div>
-<footer>© 2026 Heady Systems LLC. All rights reserved. ${v.domain}</footer>
+<footer>© 2026 Heady™Systems Inc. All rights reserved. ${v.domain}</footer>
 <script>window.HEADY_API="https://api.headysystems.com";</script>
 <script src="/buddy-widget.js"></script>
 </body>

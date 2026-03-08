@@ -1,4 +1,4 @@
-# Heady Philosophy & AI Ethics (from Gemini Conversations)
+# Heady™ Philosophy & AI Ethics (from Gemini Conversations)
 
 ## Pseudo-Soul Framework
 A philosophical framework for AI personality and consciousness simulation.

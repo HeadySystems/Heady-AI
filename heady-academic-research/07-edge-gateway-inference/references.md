@@ -32,7 +32,7 @@
 ### Telco Infrastructure for AI Latency
 - **Barros, S. (2025)** — "Solving AI Foundational Model Latency with Telco Infrastructure"
   - arXiv:2504.03708 | Hierarchical "AI edges" for caching and partial inference
-  - Tiered caching strategies and split-inference architectures — aligns with Heady's Hot/Warm/Cold pool model
+  - Tiered caching strategies and split-inference architectures — aligns with Heady™'s Hot/Warm/Cold pool model
 
 ## Inference Delivery Networks
 
@@ -51,7 +51,7 @@
 ### Osmotic Cloud-Edge Intelligence
 - **Fasciano, C. et al. (2022)** — "Osmotic Cloud-Edge Intelligence for IoT-Based CPS"
   - Sensors 22(6):2166 | Containerized training and inference on Edge, Cloud, or both
-  - Direct mapping with COTS modules — aligns with Heady's Cloudflare Workers + Cloud Run architecture
+  - Direct mapping with COTS modules — aligns with Heady™'s Cloudflare Workers + Cloud Run architecture
 
 ### Digital Twin-Assisted Edge Computing
 - **Chen, X. et al. (2024)** — "Digital Twin-assisted RL for Resource-aware Microservice Offloading"
@@ -73,7 +73,7 @@
 - **Pitstick, K. et al. (2024)** — "Defining a Reference Architecture for Edge Systems in Highly-Uncertain Environments"
   - arXiv:2406.08583 | Reduced latency, bandwidth optimization, higher resiliency
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - Heady's edge worker architecture (Cloudflare Workers + Cloud Run origin) maps directly to cloud-edge osmotic computing patterns
 - CSL-gated routing decisions at the edge add a novel quality layer to standard edge inference
 - Phi-scaled cache TTL and Hot/Warm/Cold pool scheduling align with tiered caching in telco AI edge patterns

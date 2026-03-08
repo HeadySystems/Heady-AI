@@ -1,17 +1,17 @@
-# @heady/gateway
+# @heady-ai/gateway
 
 > API gateway with cross-domain auth, rate limiting, and service routing for the Heady™ AI Platform.
 
 ## Install
 
 ```bash
-npm install @heady/gateway
+npm install @heady-ai/gateway
 ```
 
 ## Quick Start
 
 ```ts
-import { createGateway } from '@heady/gateway';
+import { createGateway } from '@heady-ai/gateway';
 
 const gw = createGateway({ rateLimitRpm: 600 });
 
@@ -37,4 +37,4 @@ const status = gw.getStatus();
 
 ## License
 
-Proprietary — © 2026 HeadySystems Inc.
+Proprietary — © 2026 Heady™Systems Inc.

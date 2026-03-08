@@ -4,7 +4,7 @@ export = _exports;
  * HeadyAPI WASM Sandbox Controller
  * Isolates user-submitted Javascript in the live API playground
  * inside a secure WebAssembly container to prevent prototype pollution
- * or RCE attacks against the HeadyConductor node.
+ * or RCE attacks against the Heady™Conductor node.
  */
 declare class WasmSandbox {
     isolateConfig: {

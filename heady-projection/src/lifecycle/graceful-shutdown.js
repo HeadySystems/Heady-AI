@@ -1,8 +1,8 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
 /**
- * Heady Graceful Shutdown — Clean lifecycle management.
+ * Heady™ Graceful Shutdown — Clean lifecycle management.
  * Handles SIGTERM, SIGINT, uncaught exceptions, and unhandled rejections.
  * Drains connections, flushes caches, and logs cleanly before exit.
  *

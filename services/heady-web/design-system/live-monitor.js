@@ -1,6 +1,6 @@
 /**
  * HeadyMonitor — Live Real-Time Monitoring Widget v1.0
- * Injects a floating system health dashboard into any Heady site
+ * Injects a floating system health dashboard into any Heady™ site
  * Usage: HeadyMonitor.init({ position: 'bottom-right' });
  */
 const HeadyMonitor = (() => {

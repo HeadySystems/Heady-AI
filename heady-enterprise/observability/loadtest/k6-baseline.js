@@ -131,7 +131,7 @@ const CHAT_PROMPTS = [
   "What Fibonacci value represents the MCP connection pool maximum?",
   "Describe the Sacred Geometry Consciousness Level framework.",
   "How does the zero-trust sandbox protect MCP tool execution?",
-  "What is the WebAuthn authentication flow for HeadyOS?",
+  "What is the WebAuthn authentication flow for Heady™OS?",
   "Explain octree partitioning in the vector memory space.",
 ];
 

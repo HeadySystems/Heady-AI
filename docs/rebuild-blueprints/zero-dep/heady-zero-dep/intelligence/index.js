@@ -2,7 +2,7 @@
  * @file index.js
  * @description Intelligence layer: unified export + createIntelligenceLayer() factory.
  *
- * Provides a single cohesive intelligence system for the Heady cluster,
+ * Provides a single cohesive intelligence system for the Heady™ cluster,
  * integrating Monte Carlo simulation, columnar analytics, and pattern detection.
  *
  * Sacred Geometry: PHI ratios throughout.
@@ -55,7 +55,7 @@ import { PatternEngine    as _PE }    from './pattern-engine.js';
 // ─── IntelligenceLayer class ──────────────────────────────────────────────────
 
 /**
- * Unified intelligence context for a Heady cluster node.
+ * Unified intelligence context for a Heady™ cluster node.
  *
  * Wires together:
  * - Monte Carlo engine: simulation and strategy optimization

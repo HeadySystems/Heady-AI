@@ -1,6 +1,6 @@
 /**
  * @file onboarding-controller.js
- * @description Master onboarding orchestrator for HeadyBuddy.
+ * @description Master onboarding orchestrator for Heady™Buddy.
  *   Manages the full multi-step onboarding flow for headyme.com users from
  *   first landing through companion configuration. Progress is persisted in
  *   Redis so users can resume across sessions and devices.

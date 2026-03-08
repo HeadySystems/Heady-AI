@@ -83,5 +83,5 @@ A system and method for translating opaque AI inference operations into quantifi
 
 ---
 
-*© 2026 HeadySystems Inc.. All rights reserved.*
+*© 2026 Heady™Systems Inc.. All rights reserved.*
 *Attorney Docket No.: HS-053*

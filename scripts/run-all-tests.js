@@ -2,7 +2,7 @@
 
 /**
  * run-all-tests.js
- * Master test runner for the Heady Auto-Testing Framework.
+ * Master test runner for the Heady™ Auto-Testing Framework.
  * Orchestrates: existing Jest tests, auto-generated tests, integration tests,
  * CSL coherence suite, phi-scale tests, and regression detection.
  *
@@ -13,7 +13,7 @@
  *
  * Exit code 0 = all pass, 1 = failures or regressions detected
  *
- * Part of the Heady Auto-Testing Framework (Part C5)
+ * Part of the Heady™ Auto-Testing Framework (Part C5)
  */
 
 const { execSync, spawnSync } = require('child_process');

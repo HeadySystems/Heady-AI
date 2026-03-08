@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * rebuild-unified-autonomy.js — Validates the merged unified autonomy topology.
  */

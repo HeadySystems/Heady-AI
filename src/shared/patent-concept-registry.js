@@ -1,7 +1,7 @@
 /**
  * ─── Patent Concept Registry ──────────────────────────────────
  * 
- * The definitive IP registry for Heady Systems' 50-patent portfolio.
+ * The definitive IP registry for Heady™ Systems' 50-patent portfolio.
  * Lives in vector memory — queryable by any system component.
  * 
  * Usage:

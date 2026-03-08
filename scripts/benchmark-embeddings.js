@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * @fileoverview Embedding Model Benchmark Script for Heady Latent OS
+ * @fileoverview Embedding Model Benchmark Script for Heady™ Latent OS
  * @module benchmark-embeddings
  *
  * Compares embedding model providers on:

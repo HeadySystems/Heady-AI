@@ -1,12 +1,13 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
- * BrainConnector — Connection pool with circuit breaker for HeadyBrain endpoints.
+ * BrainConnector — Connection pool with circuit breaker for Heady™Brain endpoints.
  * Provides 100% uptime guarantee through failover and health monitoring.
  */
 const EventEmitter = require("events");
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = require("./utils/logger");
 
 class BrainConnector extends EventEmitter {
@@ -51,7 +52,7 @@ class BrainConnector extends EventEmitter {
                 const fails = (this.failures.get(id) || 0) + 1;
                 this.failures.set(id, fails);
                 if (fails >= 3 && !this.circuitBreakers.get(id)?.open) {
-                    this.circuitBreakers.set(id, { open: true, openedAt: Date.now(), halfOpenAt: Date.now() + Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000) }); // φ⁷×1000 ≈ 29034ms
+                    this.circuitBreakers.set(id, { open: true, openedAt: Date.now(), halfOpenAt: Date.now() + Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000) }); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
                     this.emit("circuitBreakerOpen", { endpointId: id, failures: fails });
                 }
                 results.set(id, { status: "unhealthy" });

@@ -1,18 +1,18 @@
 /**
- * @fileoverview Heady SysEx Protocol V2 — Max for Live JavaScript Device
+ * @fileoverview Heady™ SysEx Protocol V2 — Max for Live JavaScript Device
  * Receives and dispatches all 32 SysEx commands on manufacturer ID 0x7D.
  * Handles version negotiation, Ableton Live API integration, AI arrangement
  * execution, and bidirectional SysEx query/response flow.
  *
  * In M4L context: uses `inlets`, `outlets`, and the Max API (`LiveAPI`).
- * The HeadySysExHandler class is exported for external testing.
+ * The Heady™SysExHandler class is exported for external testing.
  *
  * @module edge/heady-sysex-protocol-v2
  * @version 2.0.0
  * @author HeadySystems™
  * @license Proprietary — HeadySystems™ & HeadyConnection™
  *
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
@@ -316,7 +316,7 @@ class AbletonLiveProxy {
 // ─── SysEx Handler ────────────────────────────────────────────────
 
 /**
- * HeadySysExHandler — Core dispatch engine for all 32 Heady SysEx commands.
+ * HeadySysExHandler — Core dispatch engine for all 32 Heady™ SysEx commands.
  * Parses incoming SysEx frames on manufacturer ID 0x7D and routes each
  * command to the appropriate Ableton Live API call.
  *

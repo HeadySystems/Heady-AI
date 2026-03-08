@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -52,7 +52,7 @@ const SoulState = Object.freeze({
 });
 
 /**
- * HeadySoul — The coherence guardian and values arbiter of the Heady AI Platform.
+ * HeadySoul — The coherence guardian and values arbiter of the Heady™ AI Platform.
  *
  * HeadySoul maintains the mission-aligned identity of the system by:
  *   1. Enforcing Structural Integrity across all components

@@ -1,5 +1,5 @@
 /**
- * deploy-commands.js — Register Heady slash commands with Discord API
+ * deploy-commands.js — Register Heady™ slash commands with Discord API
  *
  * Usage: DISCORD_BOT_TOKEN=... DISCORD_CLIENT_ID=... node deploy-commands.js
  */

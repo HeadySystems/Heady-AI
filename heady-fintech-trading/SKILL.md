@@ -1,23 +1,23 @@
 ---
 name: heady-fintech-trading
-description: Use when working with HeadyCoin token economics, Apex trading risk management, FinOps budget routing, subscription tier management, or financial technology integrations in the Heady ecosystem. Keywords include HeadyCoin, trading, fintech, staking, wallet, ledger, Merkle, budget, FinOps, subscription, Apex, risk agent, and financial operations.
+description: Use when working with Heady™Coin token economics, Apex trading risk management, FinOps budget routing, subscription tier management, or financial technology integrations in the Heady™ ecosystem. Keywords include HeadyCoin, trading, fintech, staking, wallet, ledger, Merkle, budget, FinOps, subscription, Apex, risk agent, and financial operations.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady FinTech & Trading Operations
+# Heady™ FinTech & Trading Operations
 
 ## When to Use This Skill
 
 Use this skill when the user needs to:
-- Work with HeadyCoin token system (minting, staking, transfers)
+- Work with Heady™Coin token system (minting, staking, transfers)
 - Implement or debug the Apex trading risk agent
 - Configure FinOps budget routing and cost optimization
 - Manage subscription tiers and billing logic
 - Handle financial transaction ledgers or Merkle verification
 
-## HeadyCoin Architecture
+## Heady™Coin Architecture
 
 | Module | Path | Role |
 |---|---|---|
@@ -29,7 +29,7 @@ Use this skill when the user needs to:
 
 ## Instructions
 
-### HeadyCoin Operations
+### Heady™Coin Operations
 1. All token operations go through headycoin-core.js.
 2. Every transaction is logged to the JSONL ledger at data/headycoin-ledger.jsonl.
 3. Merkle roots are computed after every N transactions (N = Fibonacci number).

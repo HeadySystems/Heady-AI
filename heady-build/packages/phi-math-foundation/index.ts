@@ -8,7 +8,7 @@
  * this self-referential property. PSI (ψ = 1/φ = φ - 1) is its reciprocal.
  *
  * @version 1.0.0
- * @author Heady AI Team
+ * @author Heady™ AI Team
  */
 
 // ---------------------------------------------------------------------------

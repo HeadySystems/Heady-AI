@@ -3,7 +3,7 @@
 ## Observed public surfaces
 - HeadyMe public org: https://github.com/HeadyMe
 - HeadySystems public org: https://github.com/HeadySystems
-- Public archived repo example: https://github.com/HeadySystems/Heady
+- Public archived repo example: https://github.com/HeadyMe/Heady
 
 ## Immediate actions
 1. Inventory every public repo and archive under HeadyMe, HeadySystems, and related orgs.

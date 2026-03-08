@@ -13,7 +13,7 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady Device Management (MDM) Configuration
+# Heady™ Device Management (MDM) Configuration
 # Cross-platform device management for seamless multi-device experience
 # Platforms: Windows, macOS, Linux, iOS, Android
 
@@ -250,8 +250,8 @@ security:
   network:
     firewall: enabled
     allowed_ports:
-      - 3300  # Heady Manager
-      - 3301  # Heady Buddy
+      - 3300  # Heady™ Manager
+      - 3301  # Heady™ Buddy
       - 3000  # Web Dev
       - 8080  # RAG
       - 11434 # Ollama

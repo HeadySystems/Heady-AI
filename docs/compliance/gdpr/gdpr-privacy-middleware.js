@@ -120,7 +120,7 @@ function pseudonymizeIP(ip, salt) {
 // ─── Cookie Consent Enforcement ──────────────────────────────────────────────
 
 /**
- * Parse the Heady consent cookie.
+ * Parse the Heady™ consent cookie.
  * Expected cookie format: base64(JSON({ v: version, s: { analytics: 1, marketing: 0, ... }, ts: timestamp }))
  *
  * @param {string} cookieValue

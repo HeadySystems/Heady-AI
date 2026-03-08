@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -30,7 +30,7 @@ const PolicyType = Object.freeze({
 });
 
 /**
- * GovernanceEngine — The Heady AI Platform policy enforcement and audit layer.
+ * GovernanceEngine — The Heady™ AI Platform policy enforcement and audit layer.
  *
  * Responsibilities:
  *   1. Validate every action against a multi-type policy set

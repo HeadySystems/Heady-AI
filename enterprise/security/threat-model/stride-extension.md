@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Extended STRIDE Threat Model
+# Heady™Systems v3.2.2 — Extended STRIDE Threat Model
 
 **Version:** 3.2.2  
 **Extends:** `docs/threat-model.md` (existing STRIDE baseline)  
@@ -6,7 +6,7 @@
 **Last Updated:** 2026-03-07  
 **Classification:** CONFIDENTIAL — Security Team  
 
-This document extends the existing `docs/threat-model.md` to cover **novel attack surfaces** introduced by HeadySystems' AI-specific architecture. The baseline STRIDE (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) framework is applied to:
+This document extends the existing `docs/threat-model.md` to cover **novel attack surfaces** introduced by Heady™Systems' AI-specific architecture. The baseline STRIDE (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) framework is applied to:
 
 1. MCP Tool Injection
 2. Agent Prompt Injection
@@ -38,7 +38,7 @@ This document extends the existing `docs/threat-model.md` to cover **novel attac
 
 ### 1.1 Attack Surface
 
-The HeadyMCP gateway exposes a tool execution API (`/api/mcp/tools/execute`). Tools are functions callable by AI agents (heady-brain/heady-conductor) with parameters provided as JSON. The zero-trust sandbox isolates tool execution, but the injection surface exists before the sandbox boundary.
+The Heady™MCP gateway exposes a tool execution API (`/api/mcp/tools/execute`). Tools are functions callable by AI agents (heady-brain/heady-conductor) with parameters provided as JSON. The zero-trust sandbox isolates tool execution, but the injection surface exists before the sandbox boundary.
 
 **Trust boundary:** User input → Input Validator → CSL Router → MCP Gateway → Zero-Trust Sandbox
 

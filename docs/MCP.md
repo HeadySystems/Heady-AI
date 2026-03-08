@@ -1,4 +1,4 @@
-# HeadyStack MCP Server Documentation
+# Heady™Stack MCP Server Documentation
 
 **Protocol:** Model Context Protocol (MCP)  
 **Transport:** HTTP (Streamable HTTP) + stdio  
@@ -578,7 +578,7 @@ Add to `claude_desktop_config.json`:
   "mcpServers": {
     "headystack": {
       "command": "npx",
-      "args": ["@headysystems/heady-mcp-proxy", "https://your-deployment/mcp"],
+      "args": ["@heady-ai/heady-mcp-proxy", "https://your-deployment/mcp"],
       "env": {
         "HEADY_API_KEY": "hdy_live_xxxxxx"
       }

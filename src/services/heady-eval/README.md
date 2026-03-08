@@ -1,6 +1,6 @@
-# HeadyEval
+# Heady™Eval
 
-LLM-as-judge evaluation framework for the Heady AI platform. Replaces external eval tools (RAGAS, DeepEval, etc.) with first-party scorers for relevance, faithfulness, safety, coherence, and helpfulness — running entirely within the Heady service mesh.
+LLM-as-judge evaluation framework for the Heady™ AI platform. Replaces external eval tools (RAGAS, DeepEval, etc.) with first-party scorers for relevance, faithfulness, safety, coherence, and helpfulness — running entirely within the Heady™ service mesh.
 
 ---
 
@@ -90,7 +90,7 @@ All configuration is via environment variables:
 
 Evaluates how relevant the answer is to the question.
 
-- **Method:** Hybrid (cosine similarity via HeadyEmbed + LLM judge, 30/70 blend)
+- **Method:** Hybrid (cosine similarity via Heady™Embed + LLM judge, 30/70 blend)
 - **Dimensions:** `topic_relevance`, `specificity`, `completeness`
 - **Rubric:** 5 = directly addresses all aspects; 1 = completely off-topic
 - **Requires:** `input`, `output`

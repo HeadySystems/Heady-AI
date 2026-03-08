@@ -1,12 +1,12 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
 /**
- * Heady Logger — Structured logging with child logger support.
+ * Heady™ Logger — Structured logging with child logger support.
  * Compatible with the projection system's logger.child('component') pattern.
  *
  * In production, replace with pino or winston. This stub mirrors the
- * interface used across the HeadyMe/Heady codebase.
+ * interface used across the Heady™Me/Heady™ codebase.
  */
 
 const PHI = 1.6180339887;

@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Companion Memory
+# Heady™ Companion Memory
 
 ## When to Use This Skill
 

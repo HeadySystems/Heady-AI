@@ -24,7 +24,7 @@ export function errorEnvelope(service: any, message: any, code?: number): {
     ts: string;
 };
 /**
- * Format CLI/terminal output with Heady branding.
+ * Format CLI/terminal output with Heady™ branding.
  */
 export function branded(service: any, message: any, level?: string): string;
 /**

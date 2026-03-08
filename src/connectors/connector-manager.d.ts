@@ -3,7 +3,7 @@ export class ConnectorManager extends EventEmitter<[never]> {
      * @param {object} opts
      * @param {object}  [opts.kv]           - HeadyKV for state caching
      * @param {boolean} [opts.autoConnect=true]
-     * @param {number}  [opts.healthIntervalMs=30000]
+     * @param {number}  [opts.healthIntervalMs=29034]
      */
     constructor(opts?: {
         kv?: object | undefined;
@@ -145,7 +145,7 @@ export function buildPostgresConnector(opts?: object): {
     getClient(): any;
 };
 /**
- * Build a Redis connector via HeadyKV.
+ * Build a Redis connector via Heady™KV.
  * @param {object} opts - { url }
  */
 export function buildRedisConnector(opts?: object): {

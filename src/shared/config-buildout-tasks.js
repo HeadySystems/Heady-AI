@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * Config Build-Out Tasks — Auto-Success tasks to wire every
  * aspirational config into live, production code.

@@ -1,8 +1,8 @@
-# HeadyInfer
+# Heady™Infer
 
-**Production-ready multi-model inference gateway for the Heady AI platform.**
+**Production-ready multi-model inference gateway for the Heady™ AI platform.**
 
-HeadyInfer replaces direct provider SDK usage with a unified gateway featuring provider racing, automatic failover, response caching, and cost optimization. It integrates seamlessly with the Heady architecture (CommonJS, Express, Sacred Geometry PHI scaling, Docker/Cloud Run).
+HeadyInfer replaces direct provider SDK usage with a unified gateway featuring provider racing, automatic failover, response caching, and cost optimization. It integrates seamlessly with the Heady™ architecture (CommonJS, Express, Sacred Geometry PHI scaling, Docker/Cloud Run).
 
 ---
 
@@ -506,7 +506,7 @@ heady-infer/
 
 ---
 
-## Integration with Heady
+## Integration with Heady™
 
 Mount HeadyInfer in your existing Heady Express app:
 
@@ -533,7 +533,7 @@ async function getCompletion(prompt, taskType = 'general') {
 
 ## Sacred Geometry Scaling
 
-HeadyInfer honors the Heady platform's PHI (1.618) scaling principle throughout:
+HeadyInfer honors the Heady™ platform's PHI (1.618) scaling principle throughout:
 
 - **Circuit breaker backoff:** Each recovery wait = `base × PHI^n`
 - **Progressive fallback timeouts:** Each fallback attempt gets `prev × PHI` more time
@@ -541,4 +541,4 @@ HeadyInfer honors the Heady platform's PHI (1.618) scaling principle throughout:
 
 ---
 
-*HeadyInfer v1.0.0 — Built for the Heady AI Platform*
+*HeadyInfer v1.0.0 — Built for the Heady™ AI Platform*

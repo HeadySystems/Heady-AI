@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * JIT Secrets Manager — fetches credentials on-demand, never in LLM context.
@@ -8,6 +8,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { execSync } = require('child_process');
 const logger = require('../utils/logger');
 
@@ -62,7 +63,7 @@ function runWithSecrets(command, envFile) {
         const result = execSync(`op run --env-file="${envFile}" -- ${command}`, {
             env: { ...process.env, OP_ACCOUNT: process.env.OP_ACCOUNT || 'headysystems.1password.com' },
             encoding: 'utf8',
-            timeout: 30000,
+            timeout: PHI_TIMING.CYCLE,
         });
         logAccess('op-run', 'success');
         return scrubSecrets(result);

@@ -1,5 +1,5 @@
 /**
- * Heady Runtime — Dynamic Config & Live Status for HF Spaces
+ * Heady™ Runtime — Dynamic Config & Live Status for HF Spaces
  * Injected into all HF Spaces at deploy time.
  * Reads config from window.HEADY_CONFIG (set by deploy script).
  */
@@ -42,7 +42,7 @@
             backdrop-filter:blur(12px);color:#e0e0f0;cursor:pointer;
             transition:all 0.3s;box-shadow:0 2px 12px rgba(0,0,0,0.3);
         `;
-        badge.title = 'Heady System Status';
+        badge.title = 'Heady™ System Status';
 
         const dot = document.createElement('span');
         dot.id = 'heady-status-dot';

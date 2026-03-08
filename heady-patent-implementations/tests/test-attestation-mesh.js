@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * ─── Test Suite: HS-059 Self-Healing Attestation Mesh ─────────────────────────

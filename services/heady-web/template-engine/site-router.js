@@ -213,7 +213,7 @@ class VerticalResolver extends EventEmitter {
 
   /**
    * Map known industry subdomains to their vertical_id.
-   * These subdomains represent Heady's industry verticals.
+   * These subdomains represent Heady™'s industry verticals.
    *
    * @param {string} subdomain — e.g. "health", "legal"
    * @param {string} _parentVerticalId — parent domain's vertical (unused currently)

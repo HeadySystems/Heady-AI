@@ -1,13 +1,13 @@
 /**
  * @module @heady-ai/observability-kernel
  * @description Structured observability: logging, metrics, distributed tracing,
- * health checks, and a health registry for all 17 Heady swarms.
+ * health checks, and a health registry for all 17 Heady™ swarms.
  *
  * All numeric constants derive from φ (1.6180339887498948) or the Fibonacci
  * sequence. Zero magic numbers.
  *
  * @version 1.0.0
- * @author Heady AI Team
+ * @author Heady™ AI Team
  */
 
 import { randomUUID } from 'crypto';
@@ -898,7 +898,7 @@ const HEADY_SWARMS: readonly string[] = [
 ] as const;
 
 /**
- * Service health registry for all 17 Heady swarms.
+ * Service health registry for all 17 Heady™ swarms.
  *
  * Provides per-service and per-swarm health aggregation.
  *
@@ -906,7 +906,7 @@ const HEADY_SWARMS: readonly string[] = [
  * ```ts
  * const registry = new HealthRegistry();
  * registry.registerService('conductor-primary', {
- *   displayName: 'Heady Conductor (Primary)',
+ *   displayName: 'Heady™ Conductor (Primary)',
  *   swarmId: 'heady-conductor',
  *   healthUrl: 'https://conductor.heady.internal/health',
  *   maxLatencyMs: 500,

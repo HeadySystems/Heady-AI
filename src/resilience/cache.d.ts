@@ -1,5 +1,5 @@
 /**
- * Heady Cache — Hot/cold caching layer
+ * Heady™ Cache — Hot/cold caching layer
  * LRU in-memory cache with TTL, hit/miss tracking, and namespace isolation.
  * Addresses registry bestPracticeScores.caching = 0.
  */

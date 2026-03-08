@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Vertical Config — Healthcare
+# Heady™Systems Vertical Config — Healthcare
 # Domain: health.headyme.com
 # =============================================================================
 
@@ -13,7 +13,7 @@ routing:
     - hipaa.headyme.com
 
 brand:
-  name: "Heady Healthcare"
+  name: "Heady™ Healthcare"
   tagline: "HIPAA-Compliant AI Orchestration for Healthcare"
   accent_color: "#06b6d4"
   logo_variant: healthcare
@@ -131,7 +131,7 @@ content:
     author: "CIO, Regional Hospital Network (placeholder)"
 
 meta:
-  title: "Heady Healthcare — HIPAA-Compliant AI Platform"
+  title: "Heady™ Healthcare — HIPAA-Compliant AI Platform"
   description: "HIPAA-compliant AI agent orchestration for healthcare. Automate patient intake, claims processing, clinical workflows, and EHR integration."
   keywords:
     - "HIPAA AI platform"

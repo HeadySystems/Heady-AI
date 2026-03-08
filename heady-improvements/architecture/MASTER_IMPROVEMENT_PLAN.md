@@ -29,7 +29,7 @@
 
 ## 1. Executive Summary
 
-The Heady ecosystem has reached an impressive architectural maturity with v3.1.0 — implementing sacred geometry orchestration, 3D vector memory, self-awareness telemetry, the 5-phase deterministic error interceptor, and a 9-stage HCFullPipeline. However, the codebase exhibits several critical gaps that must be addressed before the ecosystem can scale from a unified monorepo to a true multi-repo distributed platform.
+The Heady™ ecosystem has reached an impressive architectural maturity with v3.1.0 — implementing sacred geometry orchestration, 3D vector memory, self-awareness telemetry, the 5-phase deterministic error interceptor, and a 9-stage HCFullPipeline. However, the codebase exhibits several critical gaps that must be addressed before the ecosystem can scale from a unified monorepo to a true multi-repo distributed platform.
 
 **Critical findings:**
 
@@ -65,7 +65,7 @@ When the system splits into multiple repos/services, these mechanisms break enti
 **Fix:** Implement `heady-event-bus.js` (provided in this deliverable) as the single cross-service event backbone. Wire all three mechanisms to it.
 
 **Specific code locations:**
-- `heady-conductor.js:22` — Replace `const EventEmitter = require('events')` with HeadyEventBus
+- `heady-conductor.js:22` — Replace `const EventEmitter = require('events')` with Heady™EventBus
 - `buddy-core.js:340-341` — `global.eventBus.emit('bee:alerts', ...)` uses global as bus
 - `self-awareness.js:312` — `process.on('heady:circuit', ...)` — process-local, breaks in multi-process
 - `hc-full-pipeline.js:71-114` — `_wireAutoTelemetry()` wires to selfAwareness via callback, not events
@@ -265,12 +265,12 @@ The pipeline emits stage events via EventEmitter, but there's no Server-Sent Eve
 
 **Fix:** Add `/api/pipeline/stream/:runId` SSE endpoint that subscribes to HCFullPipeline events for a specific run.
 
-### 3.3 headyai.com Has No Inference Implementation
+### 3.3 heady-ai.com Has No Inference Implementation
 
 **From PRODUCTION_DEPLOYMENT_GUIDE.md line 760:**
-> `headyai.com` — AI model gateway + inference proxy — `/inference/*`, `/embeddings`, `/completions`
+> `heady-ai.com` — AI model gateway + inference proxy — `/inference/*`, `/embeddings`, `/completions`
 
-The inference gateway routes exist in the domain routing table but `inference-gateway.js` in the scan is not wired to `headyai.com` responses. The LLM router (`src/services/llm-router.js`) handles model selection but doesn't expose a public completions API.
+The inference gateway routes exist in the domain routing table but `inference-gateway.js` in the scan is not wired to `heady-ai.com` responses. The LLM router (`src/services/llm-router.js`) handles model selection but doesn't expose a public completions API.
 
 ### 3.4 No Cross-Core Authentication Federation
 
@@ -469,15 +469,15 @@ Multiple files reference domain configurations from `domains.json` (present in d
 
 ## 5. Naming Inconsistencies
 
-### 5.1 Company Name: "HeadySystems Inc." vs "Heady Systems LLC" vs "HeadyConnection Inc."
+### 5.1 Company Name: "HeadySystems Inc." vs "HeadySystems Inc" vs "HeadyConnection Inc."
 
 | File | Entity Name |
 |---|---|
 | `package.json:7` | `"HeadyMe"` (author.name) |
 | `README.md:133` | `© 2026 Heady™ — HeadySystems Inc.` |
-| `README.md:135` | `Heady™ is a trademark of HeadyConnection Inc.` |
-| `headysystems-core-package.json` | `Heady Systems LLC` |
-| `headyapi-core-package.json` | `Heady Systems LLC` |
+| `README.md:135` | `Heady™ is a trademark of Heady™Connection Inc.` |
+| `headysystems-core-package.json` | `HeadySystems Inc` |
+| `headyapi-core-package.json` | `HeadySystems Inc` |
 | `alive-software-architecture.md:3` | `HeadySystems Inc.` |
 
 **Resolution:** Standardize on **HeadySystems Inc.** for legal entity, **Heady™** for brand, per USPTO registration (Serial No. 99680540).
@@ -563,18 +563,18 @@ The split is architecturally planned but not executed.
 
 ```json
 "secondary_sources": [
-    "https://github.com/HeadySystems/Heady-pre-production",
+    "https://github.com/HeadyMe/Heady-pre-production",
     "https://github.com/HeadyMe/headyme-core",
     "https://github.com/HeadyMe/headymcp-core",
     ...
 ]
 ```
 
-The `HeadySystems/Heady-pre-production` (note: HeadySystems org, not HeadyMe org) is referenced but its relationship to the primary `HeadyMe/Heady-pre-production-9f2f0642` is not documented. Two separate GitHub organizations maintaining the same codebase creates confusion.
+The `HeadyMe/Heady-pre-production` (note: HeadySystems org, not HeadyMe org) is referenced but its relationship to the primary `HeadyMe/Heady-pre-production-9f2f0642` is not documented. Two separate GitHub organizations maintaining the same codebase creates confusion.
 
-### 6.4 No Shared Package (`@heady/shared`) for Common Utilities
+### 6.4 No Shared Package (`@heady-ai/shared`) for Common Utilities
 
-All 9 core repos will need: PHI constant, logger, circuit breaker, exponential backoff, error handling. Currently these are duplicated or missing from the core repos. A `@heady/shared` npm package should contain:
+All 9 core repos will need: PHI constant, logger, circuit breaker, exponential backoff, error handling. Currently these are duplicated or missing from the core repos. A `@heady-ai/shared` npm package should contain:
 - `phi.js` — PHI constant and phi-based utilities
 - `logger.js` — Structured logger
 - `circuit-breaker.js` — The existing circuit breaker
@@ -644,11 +644,11 @@ Add Server-Sent Events endpoint at `/api/pipeline/stream/:runId` that streams st
 - **Scheduler** — Wrap `autonomous-scheduler.js` with a proper cron API
 - **IPC Bus** — The `heady-event-bus.js` provided is the foundation
 
-### 8.3 `@heady/sdk` Public NPM Package
+### 8.3 `@heady-ai/sdk` Public NPM Package
 
-`alive-software-architecture.md:154-158` mentions `npx heady init` but this doesn't exist on npm. Publish `@heady/sdk` with:
+`alive-software-architecture.md:154-158` mentions `npx heady init` but this doesn't exist on npm. Publish `@heady-ai/sdk` with:
 - CLI (`npx heady init`)
-- TypeScript types for all Heady APIs
+- TypeScript types for all Heady™ APIs
 - Browser client for vector memory queries
 - WebSocket client for pipeline streaming
 
@@ -849,9 +849,9 @@ For a sovereign AI platform, single-region deployment is a reliability risk. Rec
 
 `PRODUCTION_DEPLOYMENT_GUIDE.md:738` references `liquid-deploy.yml` for blue/green deployment, but no such file is present in the scan. The workflow must be created.
 
-### 11.3 `node:22-alpine` vs `node:20-alpine` Inconsistency
+### 11.3 `node:22-alpine` vs `node:22-alpine` Inconsistency
 
-**Files:** `README.md:118` (`node:22-alpine`) vs `PRODUCTION_DEPLOYMENT_GUIDE.md:378` (`node:20-alpine`)
+**Files:** `README.md:118` (`node:22-alpine`) vs `PRODUCTION_DEPLOYMENT_GUIDE.md:378` (`node:22-alpine`)
 
 These should be synchronized.
 
@@ -926,7 +926,7 @@ Each core repo MUST include:
 | 3.2 | Build `headyapi-core` as production API gateway | Public API surface |
 | 3.3 | Build `headyos-core` kernel services | Platform foundation |
 | 3.4 | Build `headyme-core` + `headybuddy-core` | Consumer product |
-| 3.5 | Add `@heady/shared` npm package | Reusable utilities |
+| 3.5 | Add `@heady-ai/shared` npm package | Reusable utilities |
 | 3.6 | Add cross-domain auth federation | SSO across all domains |
 
 ### Phase 4: Production Hardening (Weeks 9-12)
@@ -944,7 +944,7 @@ Each core repo MUST include:
 
 | # | Task | Impact |
 |---|---|---|
-| 5.1 | `@heady/sdk` public npm package | Developer ecosystem |
+| 5.1 | `@heady-ai/sdk` public npm package | Developer ecosystem |
 | 5.2 | Multi-tenant namespace isolation | Enterprise readiness |
 | 5.3 | Heady Intelligence Feed (RSS→vectors) | Autonomous knowledge |
 | 5.4 | Cross-domain federated search | Power user feature |
@@ -972,7 +972,7 @@ This section provides a specific change map linking every improvement to a file 
 | `vector-memory.js` | 49-52 | Downgrade to Float32Array for 2x memory efficiency | 1 |
 | `self-awareness.js` | 33-34 | Fix vectorMemory require to use instance, not class | 1 |
 | `self-awareness.js` | 164-170 | Replace 4x O(n) filter with rolling counters | 1 |
-| `self-awareness.js` | 312 | Replace `process.on()` with HeadyEventBus | 1 |
+| `self-awareness.js` | 312 | Replace `process.on()` with Heady™EventBus | 1 |
 | `buddy-core.js` | 139 | Convert `learnedRules` Array to Map for O(1) lookup | 1 |
 | `buddy-core.js` | 1069 | Replace `appendFileSync` with async audit queue | 2 |
 | `buddy-core.js` | 397-399 | Add fuzzy matching to `checkPreemptive()` | 3 |
@@ -989,17 +989,17 @@ This section provides a specific change map linking every improvement to a file 
 |---|---|---|---|
 | `heady-registry.json` | 4 | Align version with `package.json` (3.0.1 → 3.1.0) | 1 |
 | `heady-registry.json` | 151-155 | Add all 9 domains to Cloudflare zones | 2 |
-| `buddy-core.js` | 340-341 | Replace `global.eventBus.emit()` with HeadyEventBus | 1 |
+| `buddy-core.js` | 340-341 | Replace `global.eventBus.emit()` with Heady™EventBus | 1 |
 | `hc-full-pipeline.js` | 67-114 | Wire `_wireAutoTelemetry()` to HeadyEventBus | 1 |
 | `heady-conductor.js` | 22 | Import HeadyEventBus, not Node EventEmitter | 1 |
 | All `*-core-package.json` | `author.email` | Standardize to `eric@headyconnection.org` | 1 |
 | New file | — | `PgVectorAdapter` class | 1 |
-| New file | — | `@heady/shared` package | 2 |
+| New file | — | `@heady-ai/shared` package | 2 |
 | New file | — | `heady-webhook-dispatcher.js` | 2 |
 | New file | — | `/api/pipeline/stream/:runId` SSE handler | 2 |
 
 ---
 
-*© 2026 HeadySystems Inc. — Proprietary and Confidential*  
-*Architecture review by Heady AI Platform Team*  
+*© 2026 Heady™Systems Inc. — Proprietary and Confidential*  
+*Architecture review by Heady™ AI Platform Team*  
 *Next review date: 2026-04-01*

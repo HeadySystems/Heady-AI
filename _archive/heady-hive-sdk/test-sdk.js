@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ═══ Heady Hive SDK — Deterministic Smoke Test ═══
+ * ═══ Heady™ Hive SDK — Deterministic Smoke Test ═══
  *
  * Verifies every layer of the SDK actually works.
  * Run: node heady-hive-sdk/test-sdk.js

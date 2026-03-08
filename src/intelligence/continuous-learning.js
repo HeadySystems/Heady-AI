@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Continuous Learning Engine ────────────────────────────
+ * ─── Heady™ Continuous Learning Engine ────────────────────────────
  *
  * ACTIVE LEARNING — calls real AI providers every cycle:
  *

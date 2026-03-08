@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Security Incident Response Plan
+# Heady™Systems v3.2.2 — Security Incident Response Plan
 
 **Version:** 3.2.2  
 **Owner:** Eric Headington, CEO (eric@headyconnection.org)  
@@ -12,7 +12,7 @@ All time values derive from φ=1.618033988749895 and Fibonacci sequences.
 
 ## 1. Purpose and Scope
 
-This plan governs HeadySystems' response to security incidents affecting any component of HeadySystems v3.2.2: 9 public domains, 21 microservices, user data, infrastructure, and third-party integrations. It defines roles, phases, communication procedures, and escalation timers.
+This plan governs HeadySystems' response to security incidents affecting any component of Heady™Systems v3.2.2: 9 public domains, 21 microservices, user data, infrastructure, and third-party integrations. It defines roles, phases, communication procedures, and escalation timers.
 
 ---
 

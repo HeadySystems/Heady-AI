@@ -1,8 +1,8 @@
 /**
  * ═══ HeadySwarm — Bio-Inspired Colony Orchestrator ═══
  *
- * Manages a colony of HeadyBee workers that continuously forage
- * for AI results through the HeadyGateway. Models real bee behavior:
+ * Manages a colony of Heady™Bee workers that continuously forage
+ * for AI results through the Heady™Gateway. Models real bee behavior:
  *
  *   - Flower Field: prioritized task queue (the work to be done)
  *   - Waggle Dance: successful bees recruit others to high-yield categories
@@ -114,7 +114,7 @@ const FLOWER_FIELD = [
     {
         id: "create-001", name: "Landing Page Copy",
         category: "creative", priority: 4, role: "forager",
-        prompt: "Write a compelling hero section for HeadyMe.com — an AI-powered personal intelligence platform. The aesthetic is cyberpunk wireframe (dark black, neon pink). Include headline, subheadline, and CTA button text. Tone: bold, futuristic, personal.",
+        prompt: "Write a compelling hero section for Heady™Me.com — an AI-powered personal intelligence platform. The aesthetic is cyberpunk wireframe (dark black, neon pink). Include headline, subheadline, and CTA button text. Tone: bold, futuristic, personal.",
     },
     {
         id: "create-002", name: "Documentation Outline",

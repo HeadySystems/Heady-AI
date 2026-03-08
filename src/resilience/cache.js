@@ -1,10 +1,11 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Cache — Hot/cold caching layer
+ * Heady™ Cache — Hot/cold caching layer
  * LRU in-memory cache with TTL, hit/miss tracking, and namespace isolation.
  * Addresses registry bestPracticeScores.caching = 0.
  */
@@ -110,7 +111,7 @@ class HeadyCache {
 // As recommended by registry: conductor-polls, registry-lookups, pattern-evaluations
 const caches = {
     conductor: new HeadyCache({ maxSize: 200, defaultTTLMs: 5000 }),    // 5s — fast polls
-    registry: new HeadyCache({ maxSize: 100, defaultTTLMs: 30000 }),   // 30s — registry rarely changes
+    registry: new HeadyCache({ maxSize: 100, defaultTTLMs: PHI_TIMING.CYCLE }),   // 30s — registry rarely changes
     patterns: new HeadyCache({ maxSize: 300, defaultTTLMs: 120000 }),  // 2min — patterns are stable
     ai: new HeadyCache({ maxSize: 50, defaultTTLMs: 10000 }),   // 10s — AI response dedup
     health: new HeadyCache({ maxSize: 50, defaultTTLMs: 15000 }),   // 15s — health check results

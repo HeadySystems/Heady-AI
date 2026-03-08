@@ -1,10 +1,11 @@
 /**
  * ∞ Heady™ EventBus — Enhanced EventEmitter with wildcard support, async handlers, and ring buffer
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 const { EventEmitter } = require("events");
+const { PHI_TIMING } = require('../shared/phi-math');
 
 /**
  * @typedef {object} EventRecord
@@ -18,7 +19,7 @@ const { EventEmitter } = require("events");
  * @class HeadyEventBus
  * @extends EventEmitter
  *
- * Enhanced event bus for the Heady platform with:
+ * Enhanced event bus for the Heady™ platform with:
  * - Wildcard pattern matching (e.g. 'vector:*', '*.error')
  * - Async handler support with Promise.allSettled
  * - Error isolation (one bad handler never breaks others)
@@ -225,10 +226,10 @@ class HeadyEventBus extends EventEmitter {
   /**
    * Returns a promise that resolves on the next emission of event
    * @param {string} event
-   * @param {number} [timeout=30000]
+   * @param {number} [timeout=PHI_TIMING.CYCLE]
    * @returns {Promise<unknown[]>}
    */
-  once_async(event, timeout = 30000) {
+  once_async(event, timeout = PHI_TIMING.CYCLE) {
     return new Promise((resolve, reject) => {
       const timer = timeout > 0
         ? setTimeout(() => {

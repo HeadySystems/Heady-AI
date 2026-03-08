@@ -196,7 +196,7 @@ heady-apps/
 # heady.config.yaml — THE canonical configuration
 version: "5.0.0"
 identity:
-  name: "Heady"
+  name: "Heady™"
   owner: "HeadySystems Inc."
   nonprofit: "HeadyConnection Inc."
 
@@ -268,11 +268,11 @@ applications:
     domains: ["headysystems.com", "headyconnection.org"]
   heady-ide:
     enabled: true
-    domain: "heady-ai-ide.com"
+    domain: "heady-ai.com"
     arena_mode: true
   heady-lens:
     enabled: true
-    domain: "headylens.com"
+    domain: "headysense.com"
     probe_interval_ms: 30000
   heady-mcp:
     enabled: true
@@ -285,7 +285,7 @@ infrastructure:
     gpu: "google-colab"
     storage: "aws-s3"
   docker:
-    base_image: "node:20-alpine"
+    base_image: "node:22-alpine"
     registry: "ghcr.io/headyme"
   ci_cd:
     provider: "github-actions"
@@ -295,7 +295,7 @@ infrastructure:
       staging: "staging"
       
 branding:
-  footer: "⚡ Made with 💜 Love by the HeadySystems™ & HeadyConnection™ Team"
+  footer: "⚡ Made with 💜 Love by the Heady™Systems™ & HeadyConnection™ Team"
   logo: "assets/merkaba-logo.svg"
   theme: "sacred-geometry-dark"
 ```
@@ -647,11 +647,11 @@ Based on your vision of "one window with sub-windows"[17]:
 │         │   └─────────────────────────────┘     │   input]  │
 │         │                                       │           │
 ├─────────┴───────────────────────────────────────┴───────────┤
-│  ⚡ Made with 💜 Love by HeadySystems™ & HeadyConnection™   │
+│  ⚡ Made with 💜 Love by Heady™Systems™ & HeadyConnection™   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Implementation**: React + Next.js SPA with lazy-loaded feature modules. Each section (IDE, Lens, Brain) is an independent module that communicates through the Heady SDK. The Buddy floats and follows across all sections.
+**Implementation**: React + Next.js SPA with lazy-loaded feature modules. Each section (IDE, Lens, Brain) is an independent module that communicates through the Heady™ SDK. The Buddy floats and follows across all sections.
 
 ### System 11: CI/CD Pipeline (HCFP v2)
 
@@ -715,7 +715,7 @@ Per your earlier vision[6]:
 | Repo | Purpose | Location |
 |------|---------|----------|
 | `HeadyMe/HeadyStack` | Canonical monorepo (kernel + SDK + apps) | GitHub (source of truth) |
-| `HeadySystems/heady-production` | Production deployment mirror | GitHub → Render/Cloudflare |
+| `HeadyMe/heady-production` | Production deployment mirror | GitHub → Render/Cloudflare |
 | `HeadyConnection/heady-community` | Open-source components, docs, nonprofit | GitHub → Public |
 
 All three stay in sync via automated GitHub Actions. Push to `HeadyStack` → auto-propagate to the other two with appropriate filtering.
@@ -783,5 +783,5 @@ When all 12 systems are operational, Heady achieves:
 
 This is the system you've been building toward. The architecture is sound. The gap is between concept and implementation discipline. This blueprint closes that gap.
 
-> ⚡ Made with 💜 Love by the HeadySystems™ & HeadyConnection™ Team
+> ⚡ Made with 💜 Love by the Heady™Systems™ & HeadyConnection™ Team
 > *Sacred Geometry :: Organic Systems :: Breathing Interfaces*

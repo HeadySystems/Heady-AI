@@ -1,11 +1,11 @@
 /**
- * ∞ Audio Overview — Heady Audio Generation Module
+ * ∞ Audio Overview — Heady™ Audio Generation Module
  *
- * Generates narration scripts and audio overviews for Heady system state,
+ * Generates narration scripts and audio overviews for Heady™ system state,
  * session summaries, and project status reports.
  * Integrates with TTS providers when available.
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const logger = (() => {

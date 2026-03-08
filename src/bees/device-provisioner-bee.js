@@ -7,7 +7,7 @@
  * HeadySwarm blasts these tasks in parallel per device:
  *   - detect-platform → fs-authorize → install-core → install-mods → verify
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const fs = require('fs');

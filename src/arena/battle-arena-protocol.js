@@ -1,11 +1,12 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 // RTP: Battle Arena Competitive Evaluation Protocol
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 
 const PHI = 1.6180339887;
@@ -90,7 +91,7 @@ class Contestant {
         });
       });
       req.on('error', reject);
-      req.setTimeout(Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000), () => { req.destroy(); reject(new Error('Contestant API timeout')); }); // φ⁷×1000 ≈ 29034ms
+      req.setTimeout(Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000), () => { req.destroy(); reject(new Error('Contestant API timeout')); }); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
       req.write(bodyStr);
       req.end();
     });

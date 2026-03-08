@@ -1,4 +1,4 @@
-# Heady Agent Platform v1.0 - Complete Build Package
+# Heady™ Agent Platform v1.0 - Complete Build Package
 
 ## 🎯 What's Included
 

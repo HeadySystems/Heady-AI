@@ -1,12 +1,12 @@
 /**
- * @fileoverview Comprehensive test suite for the Heady MIDI Transfer Schema.
+ * @fileoverview Comprehensive test suite for the Heady™ MIDI Transfer Schema.
  * Runnable with: node tests/midi-transfer-schema.test.js
  * Uses Node.js built-in assert — no external test framework required.
  *
  * @version 2.0.0
  * @author HeadySystems™
  *
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 

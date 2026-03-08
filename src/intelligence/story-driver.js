@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Story Driver — HeadyAutobiographer Narrative Engine
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
@@ -259,7 +259,7 @@ class StoryStore {
  * HeadyAutobiographer — records all system events as narrative entries,
  * generates human-readable stories, and provides timeline + semantic search.
  *
- * All modules in the Heady platform emit events which the StoryDriver
+ * All modules in the Heady™ platform emit events which the StoryDriver
  * subscribes to, converts into narrative form, and stores chronologically.
  *
  * @extends EventEmitter

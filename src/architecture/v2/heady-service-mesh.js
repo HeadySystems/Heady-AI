@@ -1,10 +1,11 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * @fileoverview heady-service-mesh.js
  *
- * Heady Service Mesh — dynamic service registry, health-aware routing,
- * load balancing, and circuit-breaker management for all nine Heady
+ * Heady™ Service Mesh — dynamic service registry, health-aware routing,
+ * load balancing, and circuit-breaker management for all nine Heady™
  * domains and the ten core repositories.
  *
  * Replaces the static heady-registry.json + every scattered hard-coded URL
@@ -35,7 +36,7 @@
  *   mesh.register({ name: 'headyapi', url: 'https://worker.headyapi.com',
  *                   weight: 0.5, tags: ['edge'] });
  *
- * © 2026 HeadySystems Inc.  PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.  PROPRIETARY AND CONFIDENTIAL.
  */
 
 const EventEmitter = require('events');
@@ -63,7 +64,7 @@ const LB_STRATEGY = Object.freeze({
 
 // ─── Default configuration ────────────────────────────────────────────────────
 const DEFAULT_CONFIG = {
-  healthCheckIntervalMs:  Math.round(30_000 / PHI),  // ~18 500 ms
+  healthCheckIntervalMs:  Math.round(PHI_TIMING.CYCLE / PHI),  // ~18 500 ms
   healthCheckTimeoutMs:   5_000,
   healthCheckPath:        '/healthz',
   circuitBreakerThreshold: 5,        // failures before OPEN

@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Security Headers Middleware
+ * Heady™ Security Headers Middleware
  * Sets security headers on every response to prevent common web attacks.
  */
 

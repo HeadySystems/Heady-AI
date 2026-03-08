@@ -1,4 +1,4 @@
-# HeadyMe Pilot Deployment Guide
+# Heady™Me Pilot Deployment Guide
 
 ## Pre-Deployment Checklist
 

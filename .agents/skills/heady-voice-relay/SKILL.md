@@ -1,17 +1,17 @@
 ---
 name: heady-voice-relay
-description: Use when working with voice relay systems, speech-to-text, text-to-speech, audio processing, or HeadyBuddy conversational voice interfaces in the Heady ecosystem. Keywords include voice, speech, TTS, STT, audio, voice relay, conversational, HeadyBuddy voice, and speech processing.
+description: Use when working with voice relay systems, speech-to-text, text-to-speech, audio processing, or HeadyBuddy conversational voice interfaces in the Heady™ ecosystem. Keywords include voice, speech, TTS, STT, audio, voice relay, conversational, HeadyBuddy voice, and speech processing.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Voice Relay
+# Heady™ Voice Relay
 
 ## When to Use This Skill
 
 Use this skill when the user needs to:
-- Configure voice relay for HeadyBuddy
+- Configure voice relay for Heady™Buddy
 - Implement speech-to-text (STT) or text-to-speech (TTS)
 - Set up real-time audio streaming between devices
 - Optimize voice latency for conversational AI

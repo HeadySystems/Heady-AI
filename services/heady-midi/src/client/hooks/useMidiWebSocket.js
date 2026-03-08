@@ -8,7 +8,7 @@
  * @author HeadySystems™
  * @license Proprietary — HeadySystems™ & HeadyConnection™
  *
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
@@ -44,7 +44,7 @@ function createChannelState() {
 }
 
 /**
- * Build the initial channels map — one entry per Heady channel (0-7).
+ * Build the initial channels map — one entry per Heady™ channel (0-7).
  * @returns {Object.<number, Object>}
  */
 function buildInitialChannels() {
@@ -58,7 +58,7 @@ function buildInitialChannels() {
 /**
  * Custom React hook for MIDI WebSocket connectivity.
  *
- * Maintains a persistent WebSocket connection to the Heady MIDI event bus,
+ * Maintains a persistent WebSocket connection to the Heady™ MIDI event bus,
  * with φ-exponential reconnection backoff, a Fibonacci-sized ring buffer for
  * incoming events, per-channel CC tracking, and periodic ping/pong latency
  * measurements.

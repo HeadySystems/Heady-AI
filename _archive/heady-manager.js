@@ -119,7 +119,7 @@ try {
   // Register non-Cloudflare secrets from manifest
   const manifestSecrets = [
     { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
-    { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
+    { id: "heady_api_key", name: "Heady™ API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
     { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
     { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
     { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
@@ -170,7 +170,7 @@ app.use(cors({
   credentials: true,
 }));
 
-// ─── Heady Production Middleware ────────────────────────────────────
+// ─── Heady™ Production Middleware ────────────────────────────────────
 try {
   const { requestId } = require('./src/middleware/request-id');
   app.use(requestId());
@@ -229,7 +229,7 @@ app.use((req, res, next) => {
 });
 
 // ─── Fluid Rate Management (Pillar 0: no artificial batch limits) ──────────
-// Instead of fixed rate limits, Heady self-regulates via vector-space-ops.
+// Instead of fixed rate limits, Heady™ self-regulates via vector-space-ops.
 // Only apply rate limiting as DDoS shield for truly external unknown traffic.
 app.use("/api/", rateLimit({
   windowMs: 60 * 1000,  // 1-minute sliding window (not 15 min)
@@ -264,7 +264,7 @@ try {
   const swaggerDocument = yaml.load(fs.readFileSync('./docs/api/openapi.yaml', 'utf8'));
   const swaggerOptions = {
     customCssUrl: '/css/heady-swagger.css',
-    customSiteTitle: 'Heady Systems API — Developer Platform',
+    customSiteTitle: 'Heady™ Systems API — Developer Platform',
     customfavIcon: '/favicon.ico',
   };
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
@@ -352,7 +352,7 @@ app.post('/api/vm/revoke', async (req, res) => {
   }
 });
 
-// ─── Heady Authorization & Session Engine ────────────────────────────
+// ─── Heady™ Authorization & Session Engine ────────────────────────────
 let authEngine = null;
 try {
   const { HeadyAuth, registerAuthRoutes } = require("./src/hc_auth");
@@ -494,7 +494,7 @@ try {
 }
 
 // ─── Antigravity Runtime — 3D Vector Workspace Enforcement ─────────────────
-// All owner-initiated antigravity operations route through Heady in 3D vector mode.
+// All owner-initiated antigravity operations route through Heady™ in 3D vector mode.
 // This loads configs/services/antigravity-heady-runtime-policy.json and enforces
 // gateway=heady, workspaceMode=3d-vector for all downstream autonomous ops.
 try {
@@ -624,7 +624,7 @@ try {
   logger.logNodeActivity("CONDUCTOR", `  ⚠ BuddySystem not loaded: ${err.message}`);
 }
 
-// ─── Heady Autonomy (core autonomy orchestration) ─────────────────────────
+// ─── Heady™ Autonomy (core autonomy orchestration) ─────────────────────────
 try {
   const headyAutonomy = require("./src/services/heady-autonomy");
   if (headyAutonomy.registerRoutes) headyAutonomy.registerRoutes(app);
@@ -737,7 +737,7 @@ const { AutoHeal } = require("./src/resilience/auto-heal");
 const Handshake = require("./src/security/handshake");
 
 // ─── Code Governance Auth Gate ──────────────────────────────────────
-// ALL code changes must go through Heady auth schema.
+// ALL code changes must go through Heady™ auth schema.
 // No third-party gateway allowed without explicit owner approval.
 try {
   const codeGovernance = require("./src/security/code-governance");
@@ -1652,7 +1652,7 @@ try {
   logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Principles not loaded: ${err.message}`);
 }
 
-// ── Heady Models API (Phase 2 Liquid — extracted to router) ──────────
+// ── Heady™ Models API (Phase 2 Liquid — extracted to router) ──────────
 try {
   const modelsApiRouter = require('./src/routes/models-api');
   app.use('/api', modelsApiRouter);

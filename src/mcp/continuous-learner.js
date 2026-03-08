@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * Continuous Learning Module — Real-Time Interaction → 3D Vector Space
  *

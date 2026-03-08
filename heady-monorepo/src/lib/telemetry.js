@@ -1,5 +1,5 @@
 /**
- * E1: OTel Tracing — OpenTelemetry instrumentation for Heady
+ * E1: OTel Tracing — OpenTelemetry instrumentation for Heady™
  * @module src/lib/telemetry
  */
 'use strict';

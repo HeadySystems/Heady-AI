@@ -12,7 +12,7 @@
  *   4. profile-vectorize — Embed user profile in 3D space
  *   5. session-create — Create unified HeadyAuth session
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const crypto = require('crypto');

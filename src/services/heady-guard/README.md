@@ -1,6 +1,6 @@
-# HeadyGuard
+# Heady™Guard
 
-Self-hosted prompt security and content filtering pipeline for the Heady AI platform. Replaces external moderation APIs (OpenAI moderation, etc.) with a zero-latency, zero-egress, fully configurable filter pipeline.
+Self-hosted prompt security and content filtering pipeline for the Heady™ AI platform. Replaces external moderation APIs (OpenAI moderation, etc.) with a zero-latency, zero-egress, fully configurable filter pipeline.
 
 **Service port:** `3106` | **PHI scale factor:** `1.618`
 
@@ -528,4 +528,4 @@ gcloud run deploy heady-guard \
 
 ## License
 
-MIT — Heady Platform, 2026.
+MIT — Heady™ Platform, 2026.

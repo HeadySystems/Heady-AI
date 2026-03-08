@@ -1,4 +1,4 @@
-# © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
+# © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
 #
 # Heady™ Projection Service Configuration
 # ─────────────────────────────────────────────────────────────────────────────
@@ -100,7 +100,7 @@ sse:
   cors_origins:
     - "http://localhost:3850"
     - "http://localhost:3000"
-    - "https://*.heady.ai"
+    - "https://*.heady-ai.com"
 
 # ── Cloud Settings ───────────────────────────────────────────────────────────────
 cloud:

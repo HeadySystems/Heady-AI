@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════════════════════════
-// HeadyBuddy Widget — Context-Aware AI Assistant for Heady Ecosystem
-// Drop this script on any Heady site for an instant floating assistant.
+// HeadyBuddy Widget — Context-Aware AI Assistant for Heady™ Ecosystem
+// Drop this script on any Heady™ site for an instant floating assistant.
 // ══════════════════════════════════════════════════════════════════
 (function () {
     'use strict';
@@ -10,7 +10,7 @@
         headysystems: {
             name: 'HeadySystems', tagline: 'The Architecture of Intelligence',
             color: '#3b82f6', url: 'https://headysystems.com', icon: '🏗️',
-            greeting: "You're on HeadySystems — the foundational backbone of the Heady ecosystem. I can help with system orchestration, HCFP policies, security, and infrastructure.",
+            greeting: "You're on HeadySystems — the foundational backbone of the Heady™ ecosystem. I can help with system orchestration, HCFP policies, security, and infrastructure.",
             tips: ['View all 6 services and their status', 'Check HCFP auto-success policies', "Explore the Metatron's Cube architecture", 'Review system orchestration details'],
             chips: ['System Status', 'HCFP Policies', 'Service Mesh', 'Architecture'],
             knowledge: {
@@ -24,13 +24,13 @@
         headyme: {
             name: 'HeadyMe', tagline: 'Your Personal AI Companion',
             color: '#d97706', url: 'https://headyme.com', icon: '🧠',
-            greeting: "Welcome to HeadyMe — your personal AI companion. I can help you personalize your experience, manage preferences, and explore your identity within the Heady ecosystem.",
+            greeting: "Welcome to HeadyMe — your personal AI companion. I can help you personalize your experience, manage preferences, and explore your identity within the Heady™ ecosystem.",
             tips: ['Personalize your AI preferences', 'Review your interaction history', 'Customize notification settings', 'Explore identity & privacy controls'],
             chips: ['My Profile', 'Preferences', 'Privacy', 'History'],
             knowledge: {
                 'profile': 'HeadyMe stores your personal AI profile — your preferences, interaction patterns, and customized settings. Your profile syncs across all Heady services for a personalized experience.',
-                'preferences': 'You can customize notification frequency, AI response style, theme preferences, and which Heady services you interact with most. All settings sync via HeadyIO.',
-                'privacy': 'HeadyMe implements privacy-first design. Your data stays within the Heady ecosystem, encrypted at rest and in transit. You control what personal information is shared across services.',
+                'preferences': 'You can customize notification frequency, AI response style, theme preferences, and which Heady services you interact with most. All settings sync via Heady™IO.',
+                'privacy': 'HeadyMe implements privacy-first design. Your data stays within the Heady™ ecosystem, encrypted at rest and in transit. You control what personal information is shared across services.',
                 'history': 'Your interaction history is stored securely and used to improve AI responses. You can view, export, or clear your history at any time.',
                 'flower of life': "HeadyMe is built on the Flower of Life Sacred Geometry pattern — representing the interconnected nature of personal growth and universal intelligence."
             }
@@ -42,8 +42,8 @@
             tips: ['Discover collaboration tools', 'Browse the knowledge graph', 'Explore Sri Yantra network topology', 'Connect with ecosystem services'],
             chips: ['Collaborate', 'Knowledge Graph', 'Network', 'Connect'],
             knowledge: {
-                'collaboration': 'HeadyConnection provides real-time collaboration tools for teams working within the Heady ecosystem. Share insights, coordinate projects, and build knowledge together.',
-                'knowledge graph': 'The knowledge graph maps relationships between concepts, services, and users across the entire Heady ecosystem. It grows organically as you interact with Heady services.',
+                'collaboration': 'HeadyConnection provides real-time collaboration tools for teams working within the Heady™ ecosystem. Share insights, coordinate projects, and build knowledge together.',
+                'knowledge graph': 'The knowledge graph maps relationships between concepts, services, and users across the entire Heady ecosystem. It grows organically as you interact with Heady™ services.',
                 'network': "HeadyConnection uses Sri Yantra Sacred Geometry to model network topology — nested triangles representing the harmonic intersection of different intelligence layers.",
                 'community': 'Connect with other users, share discoveries, and learn from the community. HeadyConnection bridges the gap between individual AI and collective intelligence.'
             }
@@ -269,7 +269,7 @@
     })();
 
     // ── AI Response Engine ──────────────────────────────────────
-    // Cascading: Local Knowledge → Heady Brain API → Fallback
+    // Cascading: Local Knowledge → Heady™ Brain API → Fallback
     const HEADY_BRAIN_API = 'https://manager.headysystems.com';
     const HEADY_SYSTEM_PROMPT = `You are HeadyBuddy, the AI assistant for the Heady Ecosystem — a unified platform of 6 interconnected services built on Sacred Geometry principles.
 
@@ -282,10 +282,10 @@ SERVICES:
 6. HeadyMCP (headymcp.com) — Integrations & protocols. Sacred Geometry: Vesica Piscis. Model Context Protocol server, tool orchestration, external service connectors.
 
 CORE SYSTEMS:
-- HCFP (Heady Core Functionality Platform): The central governance and policy engine. Runs in full-auto mode. Enforces production_domains_only policy — all localhost/non-custom-domain references are violations. Tracks violations per domain.
+- HCFP (Heady™ Core Functionality Platform): The central governance and policy engine. Runs in full-auto mode. Enforces production_domains_only policy — all localhost/non-custom-domain references are violations. Tracks violations per domain.
 - HeadyBattle: The critical thinking and adversarial intelligence engine. Intercepts and challenges all system decisions with Socratic questions. Operates in "enforced" mode. Creates stronger, more resilient outputs through intellectual challenge.
-- HeadySoul: The ethical oversight layer. Reviews escalated decisions. Has 24h approval window for major changes. Ensures alignment with Heady values.
-- Heady Brain: AI processing backend (Heady proprietary routing). Powers HeadyBuddy responses.
+- HeadySoul: The ethical oversight layer. Reviews escalated decisions. Has 24h approval window for major changes. Ensures alignment with Heady™ values.
+- Heady™ Brain: AI processing backend (Heady proprietary routing). Powers HeadyBuddy responses.
 - Communication Chain: Channel→Promoter (120ms) → Brain (80ms) → HeadySoul (450ms) → Approval (24h max).
 - HeadyLens: Real-time monitoring dashboard. CPU, memory, response time charts. WebSocket-based live updates.
 
@@ -313,7 +313,7 @@ PERSONALITY: Warm, intelligent, technically precise. Use Sacred Geometry metapho
     }
 
     // ── HeadyConductor: Distributed Dynamic Resource Allocation ──
-    // Routes 100% through Heady Brain API — no direct Ollama exposure
+    // Routes 100% through Heady™ Brain API — no direct Ollama exposure
     const HEADY_NODES = {
         primary: { name: 'Heady-Brain', url: HEADY_BRAIN_API, model: 'heady-brain', type: 'api' },
         code: { name: 'Heady-Brain-Code', url: HEADY_BRAIN_API, model: 'heady-brain', type: 'api', focus: 'code' },
@@ -334,7 +334,7 @@ PERSONALITY: Warm, intelligent, technically precise. Use Sacred Geometry metapho
         const tmout = setTimeout(() => ctrl.abort(), 15000);
         try {
             const recentConvo = HeadyMemory.getRecentContext(3).map(c => ({ role: 'user', content: c.q }));
-            // Route through Heady Brain API
+            // Route through Heady™ Brain API
             const resp = await fetch(node.url + '/api/brain/chat', {
                 method: 'POST', signal: ctrl.signal,
                 headers: {
@@ -370,7 +370,7 @@ PERSONALITY: Warm, intelligent, technically precise. Use Sacred Geometry metapho
         const isVision = /\b(image|picture|photo|look at|see)\b/.test(lower);
         const isAnalysis = /\b(analyze|summarize|extract|data|metrics|report)\b/.test(lower);
 
-        // All routes go through Heady Brain API — intelligent routing happens server-side
+        // All routes go through Heady™ Brain API — intelligent routing happens server-side
         let routeChain = [];
         if (isCode) {
             routeChain = [HEADY_NODES.code, HEADY_NODES.primary];
@@ -391,7 +391,7 @@ PERSONALITY: Warm, intelligent, technically precise. Use Sacred Geometry metapho
             );
         }
 
-        // 3. Execute through Heady Brain (primary route)
+        // 3. Execute through Heady™ Brain (primary route)
         let finalResult = null;
         for (const node of routeChain) {
             finalResult = await queryNode(node, message, sysPrompt);
@@ -417,7 +417,7 @@ PERSONALITY: Warm, intelligent, technically precise. Use Sacred Geometry metapho
         let source = result.source;
 
         if (!answer) {
-            answer = "⚠️ I'm experiencing connectivity issues with the Heady Intelligence Stack. All distributed nodes are currently unreachable or locked up. Please check Docker container health.";
+            answer = "⚠️ I'm experiencing connectivity issues with the Heady™ Intelligence Stack. All distributed nodes are currently unreachable or locked up. Please check Docker container health.";
             source = 'fallback';
         }
 
@@ -694,7 +694,7 @@ PERSONALITY: Warm, intelligent, technically precise. Use Sacred Geometry metapho
             </div>
             <div class="buddy-messages" id="buddy-messages"></div>
             <div class="buddy-eco">
-                <div class="buddy-eco-label">Heady Ecosystem</div>
+                <div class="buddy-eco-label">Heady™ Ecosystem</div>
                 <div class="buddy-eco-links">${ecoLinks}</div>
             </div>
             <div class="buddy-input-row">

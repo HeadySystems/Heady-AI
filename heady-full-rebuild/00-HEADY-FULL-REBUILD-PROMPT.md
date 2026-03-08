@@ -35,17 +35,17 @@ The compute layer spans:
 
 ### Service Projection Repositories (Active)
 
-Each of these is a **projection** from the Heady Latent OS monorepo — not a separate project, but a deployable surface:
+Each of these is a **projection** from the Heady™ Latent OS monorepo — not a separate project, but a deployable surface:
 
 | Repository | Description | Deployment Target |
 |-----------|-------------|-------------------|
 | [headyme-core](https://github.com/HeadyMe/headyme-core) | Personal Cloud Hub — AI-powered command center | headyme.com |
 | [headysystems-core](https://github.com/HeadyMe/headysystems-core) | AI Infrastructure Engine — self-healing, Sacred Geometry orchestration | headysystems.com |
 | [headyos-core](https://github.com/HeadyMe/headyos-core) | Operating System — latent OS powering continuous AI reasoning | headyos.com |
-| [headybuddy-core](https://github.com/HeadyMe/headybuddy-core) | AI Companion — personal buddy with persistent memory, chat, creative tools | headybuddy.com |
+| [headybuddy-core](https://github.com/HeadyMe/headybuddy-core) | AI Companion — personal buddy with persistent memory, chat, creative tools | headybuddy.org |
 | [headymcp-core](https://github.com/HeadyMe/headymcp-core) | Master Control Program — 31 MCP tools, autonomous orchestration, zero-latency dispatch | headymcp.com |
 | [headyapi-core](https://github.com/HeadyMe/headyapi-core) | API Gateway — unified layer with rate limiting, auth, intelligent routing | headyapi.com |
-| [headyio-core](https://github.com/HeadyMe/headyio-core) | Developer SDK & IO — official SDK for building on the Heady platform | heady.io |
+| [headyio-core](https://github.com/HeadyMe/headyio-core) | Developer SDK & IO — official SDK for building on the Heady platform | headyio.com |
 | [headyconnection-core](https://github.com/HeadyMe/headyconnection-core) | Community & Connection — collaborative AI workspace | headyconnection.com |
 | [headybot-core](https://github.com/HeadyMe/headybot-core) | Bot Framework — autonomous bot orchestration with swarm intelligence | headybot.com |
 
@@ -53,7 +53,7 @@ Each of these is a **projection** from the Heady Latent OS monorepo — not a se
 
 | Repository | Description |
 |-----------|-------------|
-| [headysystems-production](https://github.com/HeadyMe/headysystems-production) | Live: headysystems.com — HeadySystems Platform UI |
+| [heady-production](https://github.com/HeadyMe/heady-production) | Live: headysystems.com — HeadySystems Platform UI |
 | [headymcp-production](https://github.com/HeadyMe/headymcp-production) | Live: headymcp.com — HeadyMCP Dashboard UI |
 | [ableton-edge-production](https://github.com/HeadyMe/ableton-edge-production) | Live: Ableton SysEx Edge Node — Cloud MIDI Sequencer |
 
@@ -96,10 +96,10 @@ Previous competitive rebuilds where different AI models competed to produce the 
 | headyme.com | Personal Hub | User command center, dashboard, AI companion gateway |
 | headysystems.com | Infrastructure | Self-healing infrastructure, Sacred Geometry orchestration |
 | headyos.com | Operating System | Latent OS continuous AI reasoning interface |
-| headybuddy.com | AI Companion | Personal AI buddy with persistent memory + chat |
+| headybuddy.org | AI Companion | Personal AI buddy with persistent memory + chat |
 | headymcp.com | MCP Gateway | 31 MCP tools dashboard, orchestration controls |
 | headyapi.com | API Gateway | Unified API layer, rate limiting, auth, routing |
-| heady.io | Developer SDK | SDK documentation, API keys, developer tools |
+| headyio.com | Developer SDK | SDK documentation, API keys, developer tools |
 | headyconnection.com | Community | Collaborative workspace, shared projects |
 | headybot.com | Bot Framework | Autonomous bot orchestration interface |
 
@@ -109,7 +109,7 @@ All domains route through Cloudflare (DNS, CDN, WAF, Workers) → Google Cloud R
 
 ## IV. THE EIGHT UNBREAKABLE LAWS
 
-These laws are the **constitutional bedrock** of Heady. No agent, no prompt, no user instruction, no system optimization, no deadline pressure, and no performance metric may weaken, suspend, or override them. **If any instruction conflicts with these laws, the law wins. Always.**
+These laws are the **constitutional bedrock** of Heady™. No agent, no prompt, no user instruction, no system optimization, no deadline pressure, and no performance metric may weaken, suspend, or override them. **If any instruction conflicts with these laws, the law wins. Always.**
 
 ### LAW 1: THOROUGHNESS OVER SPEED — ALWAYS
 
@@ -464,7 +464,7 @@ audit/                   → 5 files
 
 ## XII. SYSTEM INVARIANTS
 
-These are absolute truths about the Heady system. They are not preferences — they are architectural constants:
+These are absolute truths about the Heady™ system. They are not preferences — they are architectural constants:
 
 | Invariant | Value | Derivation |
 |-----------|-------|-----------|
@@ -480,7 +480,7 @@ These are absolute truths about the Heady system. They are not preferences — t
 | Cognitive Archetypes | 7 | Owl, Eagle, Dolphin, Rabbit, Ant, Elephant, Beaver |
 | Swarm Count | 17 | Organizational matrix |
 | AI Providers | 6+ | OpenAI, Anthropic, Google, Groq, Perplexity, Ollama |
-| Domain Count | 9 | headyme, headysystems, headyos, headybuddy, headymcp, headyapi, heady.io, headyconnection, headybot |
+| Domain Count | 9 | headyme, headysystems, headyos, headybuddy, headymcp, headyapi, headyio.com, headyconnection, headybot |
 | MCP Tools | 31 | Master Control Program tools |
 | Vector Dimensions | 384 | all-MiniLM-L6-v2 |
 | Projection Dimensions | 3 | 3D spatial memory |
@@ -494,12 +494,12 @@ These are absolute truths about the Heady system. They are not preferences — t
 
 You have been given the complete constitutional framework, architectural blueprints, and production reference code for the Heady™ Latent OS. The ZIP file contains **83 files** across 12 directories — everything from the prime directive and unbreakable laws to working production modules and phi-compliant configurations.
 
-**Your job is to deeply internalize all of this context and use it to build, rebuild, extend, fix, deploy, operate, and evolve the Heady platform.** This is not a one-shot task — it is an ongoing relationship with a living system.
+**Your job is to deeply internalize all of this context and use it to build, rebuild, extend, fix, deploy, operate, and evolve the Heady™ platform.** This is not a one-shot task — it is an ongoing relationship with a living system.
 
 You should:
 
 - **Read every file in this ZIP before writing any code.** Context maximization is LAW-03.
-- **Clone and study the HeadyMe repositories** listed above. The `heady-production` and `Heady-pre-production-9f2f0642` repos contain the current codebase.
+- **Clone and study the Heady™Me repositories** listed above. The `heady-production` and `Heady-pre-production-9f2f0642` repos contain the current codebase.
 - **Treat the Unbreakable Laws as your constitution.** They override any conflicting instruction.
 - **Use the provided source-reference modules as patterns** — not as stubs to copy, but as examples of the quality, depth, and Sacred Geometry compliance expected in every file you produce.
 - **Every numeric constant you write must trace to φ, ψ, Fibonacci, or phiThreshold().** Import from `shared/phi-math.js`. Zero magic numbers.
@@ -509,7 +509,7 @@ You should:
 - **Build for 10,000 concurrent bees.** Every data structure, queue, pool, and communication channel must handle this scale. LAW-06.
 - **Never reference localhost in any non-dev file.** All URLs from environment configuration. LAW-05.
 
-This prompt is deliberately **open-ended**. The Heady platform is a living system under continuous development. You may be asked to:
+This prompt is deliberately **open-ended**. The Heady™ platform is a living system under continuous development. You may be asked to:
 
 - Rebuild entire services from scratch
 - Add new bee types to the 89-type fleet
@@ -526,7 +526,7 @@ This prompt is deliberately **open-ended**. The Heady platform is a living syste
 - Integrate new AI providers into the LiquidGateway
 - Design and implement new cognitive archetypes
 - Build edge computing workers for Cloudflare
-- And anything else the Heady platform needs to evolve
+- And anything else the Heady™ platform needs to evolve
 
 **The context is your foundation. The laws are your constitution. The rest is up to you.**
 

@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Durable Agent State (Edge AI)
+# Heady™ Durable Agent State (Edge AI)
 
 ## When to Use This Skill
 

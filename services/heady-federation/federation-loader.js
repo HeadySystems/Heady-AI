@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * EDGE-002/003: Module Federation JIT Component Loader
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Dynamic micro-frontend loading using Webpack Module Federation

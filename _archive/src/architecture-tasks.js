@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * Architecture Tasks — Extracted from Autonomous Continuity,
  * VEnOM/K3D, ACC/Memory-R1, GraphRAG, Sacred Geometry,

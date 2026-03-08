@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * Bee Worker Registry — Auto-discovers and registers all
  * blast-compatible worker modules in src/bees/.
@@ -74,7 +74,7 @@ function discover() {
  *
  * @param {string} domain - The domain to get work for (e.g., 'brain-providers')
  * @param {Object} context - Context passed to the work functions
- * @returns {Function[]} Array of work functions for HeadyBees.blast()
+ * @returns {Function[]} Array of work functions for Heady™Bees.blast()
  */
 function getWork(domain, context = {}) {
     const entry = _registry.get(domain);
@@ -134,7 +134,7 @@ function getHealth() {
 }
 
 // ─── DYNAMIC BEE FACTORY ────────────────────────────────────────────────
-// Heady can create any type of bee on the fly — no pre-definition needed
+// Heady™ can create any type of bee on the fly — no pre-definition needed
 const factory = require('./bee-factory');
 
 module.exports = {

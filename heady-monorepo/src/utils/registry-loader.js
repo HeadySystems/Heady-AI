@@ -1,7 +1,7 @@
 /**
  * Registry Loader
- * Loads Heady node/service registry data from config files.
- * © 2026 HeadySystems Inc.
+ * Loads Heady™ node/service registry data from config files.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

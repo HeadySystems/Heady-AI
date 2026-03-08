@@ -1,9 +1,9 @@
 <!--
-  © 2026 Heady Systems LLC.
+  © 2026 Heady™Systems Inc.
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# 🚀 Heady AI Platform — Quick Start Guide
+# 🚀 Heady™ AI Platform — Quick Start Guide
 
 > Last updated: February 2026
 
@@ -63,7 +63,7 @@ All 23 services start automatically from `ecosystem.config.cjs`. No manual setup
 ## PM2 Services
 
 > **🧠 DEFAULT INTELLIGENCE PROCESSING:**
-> **Blatantly Obvious Note:** All data handled by Heady is processed intelligently by default. Heady evaluates your task and provides what it found as the **best action in response**.
+> **Blatantly Obvious Note:** All data handled by Heady™ is processed intelligently by default. Heady evaluates your task and provides what it found as the **best action in response**.
 >
 > You can trigger this explicitly by providing Heady with: `"stuff for heady to intelligently process"`
 > Or by using the shortcut: `"heady's intelligence processing shortcut"`

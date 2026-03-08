@@ -1,4 +1,4 @@
-# HeadyBuddy Service Expansion and Integration Research Report
+# Heady™Buddy Service Expansion and Integration Research Report
 
 ## Information Needs and Research Method
 
@@ -25,12 +25,12 @@
 HeadyMe/Heady-pre-production-9f2f0642
 HeadyMe/HeadyConnection
 HeadyMe/Heady-1
-HeadySystems/HeadyMe
-HeadySystems/HeadyMonorepo
-HeadySystems/main
-HeadySystems/Projects
-HeadySystems/sandbox
-HeadySystems/sandbox-pre-production
+HeadyMe/HeadyMe
+HeadyMe/HeadyMonorepo
+HeadyMe/main
+HeadyMe/Projects
+HeadyMe/sandbox
+HeadyMe/sandbox-pre-production
 ```
 
 ### Service Enumeration Rules of Evidence

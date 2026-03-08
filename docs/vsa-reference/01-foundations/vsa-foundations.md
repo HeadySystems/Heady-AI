@@ -100,7 +100,7 @@ function similarity(vecA, vecB) {
 }
 ```
 
-## Heady's 10,000-Dimensional VSA
+## Heady™'s 10,000-Dimensional VSA
 
 Your spec defines:
 

@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const logger = require('../../utils/logger');
 const CircuitBreaker = require('../../resilience/circuit-breaker');
@@ -20,7 +21,7 @@ const CONNECTOR_STATUS = Object.freeze({
   ERROR:        'error',
 });
 
-const RECONNECT_DELAYS = [1000, 2000, 5000, 10000, 30000]; // Backoff sequence
+const RECONNECT_DELAYS = [1000, 2000, 5000, 10000, PHI_TIMING.CYCLE]; // Backoff sequence
 
 // ─── ConnectorManager ────────────────────────────────────────────────────────
 
@@ -29,14 +30,14 @@ class ConnectorManager extends EventEmitter {
    * @param {object} opts
    * @param {object}  [opts.kv]           - HeadyKV for state caching
    * @param {boolean} [opts.autoConnect=true]
-   * @param {number}  [opts.healthIntervalMs=30000]
+   * @param {number}  [opts.healthIntervalMs=PHI_TIMING.CYCLE]
    */
   constructor(opts = {}) {
     super();
 
     this._kv = opts.kv || new HeadyKV({ namespace: 'connectors' });
     this.autoConnect = opts.autoConnect !== false;
-    this.healthIntervalMs = opts.healthIntervalMs ?? 30_000;
+    this.healthIntervalMs = opts.healthIntervalMs ?? PHI_TIMING.CYCLE;
 
     /** @type {Map<string, ConnectorEntry>} */
     this._connectors = new Map();
@@ -105,7 +106,7 @@ class ConnectorManager extends EventEmitter {
     this._breakers.set(name, new CircuitBreaker({
       name: `connector:${name}`,
       failureThreshold: connector.failureThreshold ?? 3,
-      recoveryTimeMs: connector.recoveryTimeMs ?? 30_000,
+      recoveryTimeMs: connector.recoveryTimeMs ?? PHI_TIMING.CYCLE,
     }));
 
     logger.info('[ConnectorManager] connector registered', { name });
@@ -391,7 +392,7 @@ function buildPostgresConnector(opts = {}) {
 }
 
 /**
- * Build a Redis connector via HeadyKV.
+ * Build a Redis connector via Heady™KV.
  * @param {object} opts - { url }
  */
 function buildRedisConnector(opts = {}) {

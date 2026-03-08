@@ -67,7 +67,7 @@
 - SSE (Server-Sent Events) for streaming responses
 - Heady's deterministic SSE with sequence numbers adds ordering guarantees on top
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - MCP is the dominant emerging standard for AI tool integration — Heady's unified MCP server approach is well-positioned
 - CSL confidence gate on every tool invocation (confidence > φ⁻¹) adds a novel quality layer absent from standard MCP
 - Circuit breaker integration via mcp-breaker.js aligns with microservices resilience best practices

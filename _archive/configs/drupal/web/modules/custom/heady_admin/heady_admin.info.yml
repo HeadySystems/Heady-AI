@@ -1,8 +1,8 @@
-name: 'Heady Systems Admin'
+name: 'Heady™ Systems Admin'
 type: module
-description: 'Comprehensive admin interface for the Heady AI Ecosystem — services, HCFP, HeadyLens, permissions, customization'
+description: 'Comprehensive admin interface for the Heady™ AI Ecosystem — services, HCFP, HeadyLens, permissions, customization'
 core_version_requirement: ^11
-package: 'Heady Systems'
+package: 'Heady™ Systems'
 
 dependencies:
   - drupal:system

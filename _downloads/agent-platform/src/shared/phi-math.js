@@ -1,5 +1,5 @@
 /**
- * @fileoverview Phi-Math Library - Golden Ratio Mathematics for Heady Platform
+ * @fileoverview Phi-Math Library - Golden Ratio Mathematics for Heady™ Platform
  * All system parameters derived from φ = (1 + √5) / 2 ≈ 1.618033988749895
  */
 

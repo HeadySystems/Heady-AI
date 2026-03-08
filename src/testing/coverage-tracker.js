@@ -6,7 +6,7 @@
  * HTML + JSON reports. Uses CSL.resonance_gate to score test-description
  * alignment with source intent.
  *
- * Part of the Heady Auto-Testing Framework (Part C2)
+ * Part of the Heady™ Auto-Testing Framework (Part C2)
  */
 
 const fs   = require('fs');
@@ -320,7 +320,7 @@ class CoverageTracker {
   </style>
 </head>
 <body>
-  <h1>Heady Auto-Testing Framework — Coverage Report</h1>
+  <h1>Heady™ Auto-Testing Framework — Coverage Report</h1>
   <p>Generated: ${new Date().toISOString()}</p>
 
   <div class="summary">

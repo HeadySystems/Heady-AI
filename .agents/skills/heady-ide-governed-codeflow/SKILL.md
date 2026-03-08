@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady IDE Governed Codeflow
+# Heady™ IDE Governed Codeflow
 
 ## When to Use This Skill
 

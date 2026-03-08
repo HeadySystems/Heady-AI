@@ -1,9 +1,9 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Voice Relay API Routes
- * REST API for HeadyBuddy voice relay services (TTS/STT).
+ * REST API for Heady™Buddy voice relay services (TTS/STT).
  * WebSocket relay is handled separately in bootstrap/voice-relay.js.
  * Skill: heady-voice-relay
  */

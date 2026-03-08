@@ -8,7 +8,7 @@ HeadySystems is positioned as a self-aware, self-correcting intelligence infrast
 To achieve **Max Potential**—where HeadySoul orchestrates multi-cloud layers with near-instantaneous execution—the system must eliminate external dependency bloat, aggressively eliminate idle time, and consolidate into a single deployable artifact capable of morphing based on real-time signals.
 
 ### 2. Deep Scan Findings: Architectural Bottlenecks
-An analysis of the `HeadyMe` core repos (`headyme-core`, `headymcp-core`, `headysystems-production`) reveals several critical bottlenecks hindering optimal performance:
+An analysis of the `HeadyMe` core repos (`headyme-core`, `headymcp-core`, `heady-production`) reveals several critical bottlenecks hindering optimal performance:
 
 *   **Monolithic Constraints & Redundancy:** The 78KB `heady-manager.js` file is acting as an overloaded bootstrap area. Coupled with 90+ redundant YAML/JSON configuration files, this causes non-deterministic builds and slow task execution.
 *   **External Dependency Sprawl:** Reliance on external packages (like `@modelcontextprotocol/sdk` or `@octokit/rest`) creates dependency drift and limits the platform's ability to run as a fluid, self-contained entity.

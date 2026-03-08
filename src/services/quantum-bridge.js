@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Quantum Bridge (Long-814 Spec)
@@ -10,6 +10,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { HeadyWebSocket: WebSocket } = require('../core/heady-server'); // HeadyServer built-in WS
 const crypto = require('crypto');
 const logger = require('../utils/logger');
@@ -193,7 +194,7 @@ class QuantumBridge {
                 ws.isAlive = false;
                 ws.ping();
             });
-        }, 30000);
+        }, PHI_TIMING.CYCLE);
     }
 
     stopHeartbeat() {

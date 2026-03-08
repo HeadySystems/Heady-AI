@@ -2,7 +2,7 @@
 
 ## Overview
 
-Convert MIDI controller messages to UDP packets for HeadyOS real-time data transfer.
+Convert MIDI controller messages to UDP packets for Heady™OS real-time data transfer.
 
 ## Architecture
 
@@ -117,7 +117,7 @@ const bridge = new MIDItoUDP({
 });
 ```
 
-### HeadyOS UDP Receiver
+### Heady™OS UDP Receiver
 
 ```javascript
 const dgram = require('dgram');
@@ -188,7 +188,7 @@ receiver.on('CONTROL_CHANGE', (packet) => {
 });
 ```
 
-## Integration with Heady Vector Memory
+## Integration with Heady™ Vector Memory
 
 Map MIDI gestures to memory queries:
 

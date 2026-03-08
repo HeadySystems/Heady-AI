@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -81,7 +81,7 @@ const TIERS = {
         badge: "👥",
     },
     "max": {
-        name: "Heady Max",
+        name: "Heady™ Max",
         price: 99,
         billing: "monthly",
         seats: 1,
@@ -401,7 +401,7 @@ function sendInvitationEmail(invite) {
     return {
         to: invite.email,
         from: "noreply@headysystems.com",
-        subject: `🐝 You're invited to Heady AI — ${TIERS[invite.tier]?.name || "Pro"} Access`,
+        subject: `🐝 You're invited to Heady™ AI — ${TIERS[invite.tier]?.name || "Pro"} Access`,
         html: `
 <!DOCTYPE html>
 <html><head><style>
@@ -416,8 +416,8 @@ function sendInvitationEmail(invite) {
   .footer { margin-top: 30px; font-size: 12px; color: #8888aa; }
 </style></head><body>
 <div class="container">
-  <h1>🐝 Welcome to Heady AI</h1>
-  <p>You've been invited to join the Heady AI platform with <span class="tier-badge">${TIERS[invite.tier]?.badge || "⚡"} ${TIERS[invite.tier]?.name || "Pro"} Access</span></p>
+  <h1>🐝 Welcome to Heady™ AI</h1>
+  <p>You've been invited to join the Heady™ AI platform with <span class="tier-badge">${TIERS[invite.tier]?.badge || "⚡"} ${TIERS[invite.tier]?.name || "Pro"} Access</span></p>
   ${invite.message ? `<p style="color:#8888aa;font-style:italic;">"${invite.message}"</p>` : ""}
   <p>Your ${TIERS[invite.tier]?.name} tier includes:</p>
   <ul class="features">
@@ -544,7 +544,7 @@ function registerTierRoutes(app) {
             // Redirect to a success page or return the API key
             res.json({
                 ok: true,
-                message: `Welcome to Heady AI! Your ${result.tier} API key is ready.`,
+                message: `Welcome to Heady™ AI! Your ${result.tier} API key is ready.`,
                 apiKey: result.apiKey,
                 tier: result.tier,
                 dashboard: "https://manager.headysystems.com/api/tiers",

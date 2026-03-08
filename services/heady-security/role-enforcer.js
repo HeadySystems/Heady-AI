@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * SEC-002: Role Isolation Enforcer
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Zero-trust role-based access control with permission scoping,

@@ -21,7 +21,7 @@
  * @author HeadySystems™
  * @license Proprietary — HeadySystems™ & HeadyConnection™
  *
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 

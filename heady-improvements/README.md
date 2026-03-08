@@ -1,4 +1,4 @@
-# Heady Project Deep Scan & Improvement Package
+# Heady™ Project Deep Scan & Improvement Package
 
 ## Generated: March 7, 2026
 ## Source: HeadyMe/Heady-pre-production + all projected core repos
@@ -67,7 +67,7 @@ heady-improvements/
 │   └── ci-cd-pipeline.yml            ← GitHub Actions workflow
 │
 └── source-reference/                  ← Original scanned source (reference)
-    └── [102 files from HeadyMe repos]
+    └── [102 files from Heady™Me repos]
 ```
 
 ---
@@ -134,4 +134,4 @@ heady-improvements/
 - github.com/HeadyMe/headysystems-core
 - github.com/HeadyMe/headyme-core
 - github.com/HeadyMe/headyconnection-core
-- github.com/HeadySystems/* (archived repos)
+- github.com/HeadyMe/* (archived repos)

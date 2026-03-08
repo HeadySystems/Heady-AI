@@ -5,7 +5,7 @@
 ```
 /home/headyme/
 ├── HeadyConnection/           # HeadyConnection Inc. repositories
-├── HeadySystems/              # HeadySystems Inc. repositories  
+├── HeadyMe/              # HeadySystems Inc. repositories  
 ├── HeadyMe/                   # Personal repositories
 └── Shared/                    # Shared configurations and scripts
 ```

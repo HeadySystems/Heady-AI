@@ -1,6 +1,6 @@
 /**
- * @fileoverview Complete Heady Integration Example
- * @description Shows VSA integration with Heady orchestration system
+ * @fileoverview Complete Heady™ Integration Example
+ * @description Shows VSA integration with Heady™ orchestration system
  */
 
 const { VSACodebook } = require('../src/vsa/codebook');
@@ -9,7 +9,7 @@ const { Hypervector } = require('../src/vsa/hypervector');
 
 console.log('=== Heady VSA Full Integration Example ===\n');
 
-// 1. Initialize Heady Codebook
+// 1. Initialize Heady™ Codebook
 console.log('1. Initializing Heady Semantic Codebook...');
 const codebook = VSACodebook.createHeadyCodebook(4096);
 

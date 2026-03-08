@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Continuous Self-Optimization Engine ────────────────────
+ * ─── Heady™ Continuous Self-Optimization Engine ────────────────────
  *
  * TRULY CONTINUOUS — with observable heartbeat:
  *

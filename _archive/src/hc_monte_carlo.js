@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * HeadySims (Monte Carlo) — Plan scheduling with drift detection + global simulation runner.
  */
 const { EventEmitter } = require("events");

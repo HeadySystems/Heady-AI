@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>HeadyMe — AI-Powered Search</title>
-    <meta name="description" content="HeadyMe: AI-powered search enriched by Heady's knowledge base.">
+    <meta name="description" content="HeadyMe: AI-powered search enriched by Heady™'s knowledge base.">
     <link rel="canonical" href="https://headyme.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
@@ -346,18 +346,18 @@
     </div>
     <section class="sh">
         <h1>Search <em>Smarter</em></h1>
-        <p class="tl">AI-powered search enriched by Heady's knowledge base</p>
+        <p class="tl">AI-powered search enriched by Heady™'s knowledge base</p>
         <div class="sb"><input type="text" id="si" placeholder="Ask anything…" autofocus autocomplete="off"><button
                 onclick="ds()" id="sbtn">→</button></div>
         <div class="sc">
             <div onclick="qs('How does HeadyBuddy memory work?')">🧠 Memory</div>
             <div onclick="qs('What AI models does Heady use?')">🤖 AI Models</div>
             <div onclick="qs('HeadyOS architecture overview')">🖥️ HeadyOS</div>
-            <div onclick="qs('Getting started with HeadyAPI')">⚡ API</div>
+            <div onclick="qs('Getting started with Heady™API')">⚡ API</div>
         </div>
         <div class="aa" id="aa">
             <div class="ac">
-                <div class="hd">✨ Heady AI Answer</div>
+                <div class="hd">✨ Heady™ AI Answer</div>
                 <div class="an" id="at"></div>
             </div>
         </div>
@@ -387,13 +387,13 @@
         </div>
     </section>
     <footer>
-        <p>© 2026 Heady Systems LLC · <a href="https://headysystems.com">HeadySystems</a><a href="#">Privacy</a></p>
+        <p>© 2026 HeadySystems Inc · <a href="https://headysystems.com">HeadySystems</a><a href="#">Privacy</a></p>
     </footer>
     <script>
         const AB = 'https://api.headysystems.com', inp = document.getElementById('si');
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') ds() });
         function qs(q) { inp.value = q; ds() }
-        async function ds() { const q = inp.value.trim(); if (!q) return; const ad = document.getElementById('aa'), at = document.getElementById('at'); ad.classList.add('on'); at.textContent = ''; const ts = document.createElement('span'); ts.className = 'tp'; ts.textContent = 'Thinking'; at.appendChild(ts); try { const r = await fetch(AB + '/api/brain/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: q }) }); const d = await r.json(); const a = d.response || d.reply || d.message || d.text || JSON.stringify(d); tw(at, a) } catch (e) { at.textContent = ''; const es = document.createElement('span'); es.style.color = 'var(--dim)'; es.textContent = 'Heady AI is starting up — try again in a moment.'; at.appendChild(es) } }
+        async function ds() { const q = inp.value.trim(); if (!q) return; const ad = document.getElementById('aa'), at = document.getElementById('at'); ad.classList.add('on'); at.textContent = ''; const ts = document.createElement('span'); ts.className = 'tp'; ts.textContent = 'Thinking'; at.appendChild(ts); try { const r = await fetch(AB + '/api/brain/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: q }) }); const d = await r.json(); const a = d.response || d.reply || d.message || d.text || JSON.stringify(d); tw(at, a) } catch (e) { at.textContent = ''; const es = document.createElement('span'); es.style.color = 'var(--dim)'; es.textContent = 'Heady™ AI is starting up — try again in a moment.'; at.appendChild(es) } }
         function tw(el, t, i = 0) { if (i === 0) el.textContent = ''; if (i < t.length) { el.textContent += t[i]; setTimeout(() => tw(el, t, i + 1), 8) } }
     </script>
 </body>

@@ -13,7 +13,7 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady Service Discovery & Domain Architecture
+# Heady™ Service Discovery & Domain Architecture
 # Replaces all api.headysystems.com references with branded domains
 # Root Domain: headysystems.com
 
@@ -21,7 +21,7 @@ root_domain: internal.headyio.com
 environment: dev  # dev, staging, prod
 region: local
 
-# Core Heady Services - Primary Nodes
+# Core Heady™ Services - Primary Nodes
 services:
   # Manager/Orchestrator
   manager:
@@ -163,21 +163,21 @@ discovery:
 integrations:
   # Cloud Render deployments
   render-me:
-    host: cloud-me.heady.io
+    host: cloud-me.headyio.com
     port: 443
     protocol: https
     purpose: HeadyMe cloud deployment
     security_level: external-cloud
     
   render-sys:
-    host: cloud-sys.heady.io
+    host: cloud-sys.headyio.com
     port: 443
     protocol: https
     purpose: HeadySystems cloud deployment
     security_level: external-cloud
     
   render-conn:
-    host: cloud-conn.heady.io
+    host: cloud-conn.headyio.com
     port: 443
     protocol: https
     purpose: HeadyConnection cloud deployment
@@ -249,12 +249,12 @@ environments:
     auth: basic
     
   staging:
-    suffix: staging.heady.io
+    suffix: staging.headyio.com
     tls: true
     auth: mtls
     
   prod:
-    suffix: prod.heady.io
+    suffix: prod.headyio.com
     tls: true
     auth: mtls+oauth
     

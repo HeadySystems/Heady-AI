@@ -1,4 +1,4 @@
-# HeadySystems Inc. — Complete Package Manifest
+# Heady™Systems Inc. — Complete Package Manifest
 
 > **Generated:** March 7, 2026  
 > **Version:** 1.0.0  
@@ -41,7 +41,7 @@
 |------|----------|--------|-------------|
 | `A2-websites/headyme/index.html` | A2 | headyme.com | Consumer portal. Hero, features, pricing, developer section, newsletter. |
 | `A2-websites/headyos/index.html` | A2 | headyos.com | Developer platform. Architecture viz, docs hub, interactive playground, tech stack. |
-| `A2-websites/headysystems/index.html` | A2 | headysystems.com | Enterprise B2B. Value proposition, ROI calculator, security posture, case studies, contact form. |
+| `A2-websites/headyme/index.html` | A2 | headysystems.com | Enterprise B2B. Value proposition, ROI calculator, security posture, case studies, contact form. |
 | `A2-websites/heady-ai/index.html` | A2 | heady-ai.com | AI research showcase. Research papers, patent timeline, 20 AI nodes, technical blog. |
 | `A2-websites/headyconnection-com/index.html` | A2 | headyconnection.com | Community portal. Forum, events, marketplace, HeadyCoin tokenomics, partners. |
 | `A2-websites/headyconnection-org/index.html` | A2 | headyconnection.org | Non-profit. Mission, grant writing pilot, impact metrics, partner application, success stories. |
@@ -104,7 +104,7 @@
 | `B3-data-room/market-analysis/market-overview.md` | B3 | TAM/SAM/SOM analysis, $182B market, enterprise trends, comparable valuations. |
 | `B3-data-room/market-analysis/competitive-matrix.md` | B3 | 18-dimension comparison vs. LangChain, CrewAI, Azure AI, AWS Bedrock. |
 | `B3-data-room/legal-templates/safe-note-template.md` | B3 | Y Combinator post-money SAFE, $10M-$15M cap, 20% discount, pro rata, MFN. |
-| `B3-data-room/legal-templates/nda-template.md` | B3 | Mutual NDA with HeadySystems-specific IP language. |
+| `B3-data-room/legal-templates/nda-template.md` | B3 | Mutual NDA with Heady™Systems-specific IP language. |
 | `B3-data-room/financial-templates/use-of-funds.md` | B3 | Detailed use of funds for $1.5M and $3M scenarios, milestone projections. |
 | `B3-data-room/team/founder-bio.md` | B3 | Eric Haywood profile, competency matrix, technical vision. |
 

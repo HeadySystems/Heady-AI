@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ MCP Server — Model Context Protocol Server
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
@@ -99,11 +99,11 @@ class ToolRegistry {
 }
 
 // ─────────────────────────────────────────────
-// Built-in Heady Tools (31 tools)
+// Built-in Heady™ Tools (31 tools)
 // ─────────────────────────────────────────────
 
 /**
- * Build and return all 31 built-in Heady MCP tools.
+ * Build and return all 31 built-in Heady™ MCP tools.
  * Handlers are stubs that emit semantic responses —
  * real implementations are injected via setDependencies().
  *
@@ -121,7 +121,7 @@ function buildBuiltinTools(deps = {}) {
     // ── Memory Tools ──────────────────────────────
     {
       name:        'memory_store',
-      description: 'Store a key-value pair in Heady vector memory with optional namespace.',
+      description: 'Store a key-value pair in Heady™ vector memory with optional namespace.',
       category:    TOOL_CATEGORIES.MEMORY,
       inputSchema: {
         type: 'object',
@@ -157,7 +157,7 @@ function buildBuiltinTools(deps = {}) {
     },
     {
       name:        'memory_search',
-      description: 'Semantic search through Heady vector memory.',
+      description: 'Semantic search through Heady™ vector memory.',
       category:    TOOL_CATEGORIES.MEMORY,
       inputSchema: {
         type: 'object',
@@ -207,7 +207,7 @@ function buildBuiltinTools(deps = {}) {
     // ── Orchestration Tools ───────────────────────
     {
       name:        'pipeline_run',
-      description: 'Trigger a Heady pipeline by name with optional parameters.',
+      description: 'Trigger a Heady™ pipeline by name with optional parameters.',
       category:    TOOL_CATEGORIES.ORCHESTRATION,
       inputSchema: {
         type: 'object',
@@ -251,7 +251,7 @@ function buildBuiltinTools(deps = {}) {
     },
     {
       name:        'bee_spawn',
-      description: 'Spawn an ephemeral Heady Bee agent for a specific task.',
+      description: 'Spawn an ephemeral Heady™ Bee agent for a specific task.',
       category:    TOOL_CATEGORIES.ORCHESTRATION,
       inputSchema: {
         type: 'object',
@@ -274,7 +274,7 @@ function buildBuiltinTools(deps = {}) {
     },
     {
       name:        'bee_list',
-      description: 'List all active Heady Bee agents.',
+      description: 'List all active Heady™ Bee agents.',
       category:    TOOL_CATEGORIES.ORCHESTRATION,
       inputSchema: {
         type: 'object',
@@ -289,7 +289,7 @@ function buildBuiltinTools(deps = {}) {
     // ── Deployment Tools ──────────────────────────
     {
       name:        'deploy_service',
-      description: 'Deploy a Heady service to its target environment.',
+      description: 'Deploy a Heady™ service to its target environment.',
       category:    TOOL_CATEGORIES.DEPLOYMENT,
       inputSchema: {
         type: 'object',
@@ -348,7 +348,7 @@ function buildBuiltinTools(deps = {}) {
     // ── Health Tools ──────────────────────────────
     {
       name:        'health_check',
-      description: 'Run a health check across all Heady services.',
+      description: 'Run a health check across all Heady™ services.',
       category:    TOOL_CATEGORIES.HEALTH,
       inputSchema: { type: 'object', properties: { service: { type: 'string' } } },
       async handler(args) {
@@ -481,7 +481,7 @@ function buildBuiltinTools(deps = {}) {
     },
     {
       name:        'story_timeline',
-      description: 'Get the HeadyAutobiographer system event timeline.',
+      description: 'Get the Heady™Autobiographer system event timeline.',
       category:    TOOL_CATEGORIES.RESEARCH,
       inputSchema: {
         type: 'object',
@@ -731,7 +731,7 @@ const JSONRPC_ERRORS = {
  */
 
 /**
- * Heady MCP Server.
+ * Heady™ MCP Server.
  *
  * Implements the Model Context Protocol (MCP) spec v2024-11-05.
  * Exposes 31 tools across 7 categories via stdio and SSE transports.

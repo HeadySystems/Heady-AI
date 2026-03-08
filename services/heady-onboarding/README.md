@@ -1,6 +1,6 @@
-# HeadyMe Pilot - Authentication & Onboarding System
+# Heady™Me Pilot - Authentication & Onboarding System
 
-Complete authentication and onboarding system for HeadyMe pilot testing with 25+ OAuth providers, email configuration, permissions, and HeadyBuddy setup.
+Complete authentication and onboarding system for Heady™Me pilot testing with 25+ OAuth providers, email configuration, permissions, and HeadyBuddy setup.
 
 ## 🚀 Quick Start
 

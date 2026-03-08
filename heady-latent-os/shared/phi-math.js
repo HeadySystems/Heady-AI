@@ -1,11 +1,11 @@
 /**
  * Heady™ Phi-Math Foundation — Sacred Geometry Constants & Utilities
- * The SINGLE SOURCE OF TRUTH for ALL scaling constants across the Heady ecosystem.
+ * The SINGLE SOURCE OF TRUTH for ALL scaling constants across the Heady™ ecosystem.
  * 
  * ZERO MAGIC NUMBERS. Every constant derives from φ (golden ratio) or Fibonacci.
  * Import this module everywhere. Never hardcode a number.
  * 
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 
 'use strict';

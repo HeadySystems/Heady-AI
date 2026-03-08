@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Spatial Mapper — 3D Sacred Geometry Topology for 384D Space
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module spatial-mapper
  * @description Projects 384D embedding vectors to 3D coordinates for real-time

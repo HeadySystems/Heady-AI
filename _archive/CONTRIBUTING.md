@@ -1,8 +1,8 @@
-# Contributing to the Heady Project
+# Contributing to the Heady™ Project
 
-Welcome to the Heady Project – the foundation for hyperautomated orchestration! We are thrilled to have you contribute.
+Welcome to the Heady™ Project – the foundation for hyperautomated orchestration! We are thrilled to have you contribute.
 
-This document outlines our process to help potential contributors understand how to interface with Heady subsystems.
+This document outlines our process to help potential contributors understand how to interface with Heady™ subsystems.
 
 ## Pre-requisites
 

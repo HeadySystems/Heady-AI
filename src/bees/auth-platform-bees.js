@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Auth Flow Bee ═══
  *
@@ -9,9 +9,9 @@
  *
  * ═══ Platform Onboarding Analyzer Bee ═══
  *
- * Analyzes which platforms make Heady easiest to onboard for
+ * Analyzes which platforms make Heady™ easiest to onboard for
  * developers, using vector similarity to match platform capabilities
- * against Heady's requirements.
+ * against Heady™'s requirements.
  */
 
 const { createBee } = require('./bee-factory');
@@ -90,10 +90,10 @@ const authFlowBee = createBee('auth-flow', {
 
 // ═══════════════════════════════════════════════════════════════
 // HeadyBee: platform-onboarding-analyzer
-// Analyzes best platforms for easy Heady onboarding
+// Analyzes best platforms for easy Heady™ onboarding
 // ═══════════════════════════════════════════════════════════════
 const platformOnboardingAnalyzer = createBee('platform-onboarding-analyzer', {
-    description: 'Analyze platforms for easy Heady developer onboarding, dispatched from 3D vector space',
+    description: 'Analyze platforms for easy Heady™ developer onboarding, dispatched from 3D vector space',
     category: 'research',
     priority: 0.9,
     workers: [{
@@ -101,7 +101,7 @@ const platformOnboardingAnalyzer = createBee('platform-onboarding-analyzer', {
         fn: async (ctx = {}) => {
             logger.info('platform-onboarding-analyzer: analyzing onboarding platforms');
 
-            // Platform analysis — which platforms make Heady easiest to adopt
+            // Platform analysis — which platforms make Heady™ easiest to adopt
             const platforms = [
                 {
                     name: 'npm Registry',

@@ -1,14 +1,14 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
- * ═══ Heady Secrets Manager ═══
+ * ═══ Heady™ Secrets Manager ═══
  *
  * Manages secrets lifecycle: registration, rotation tracking, audit, and state persistence.
  * Cloud-only — secrets sourced from environment variables and Cloudflare KV.
  *
- * Heady AI Nodes: SENTINEL, CONDUCTOR
+ * Heady™ AI Nodes: SENTINEL, CONDUCTOR
  */
 
 const fs = require("fs");

@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * ORCH-004: PDCA Self-Healing Loop for HeadyBrain
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * ORCH-004: PDCA Self-Healing Loop for Heady™Brain
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Implements Plan-Do-Check-Act cycle for autonomous fix generation.

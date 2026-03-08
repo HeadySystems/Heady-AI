@@ -10,7 +10,7 @@
  *   - Learns optimal LLM params from execution history
  *   - Emits action:learned / action:drift / action:reconfig events
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';

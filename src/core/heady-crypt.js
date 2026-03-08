@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -10,7 +10,7 @@
  * crypto module. Replaces the bcrypt/bcryptjs packages.
  *
  * Algorithm: PBKDF2 with SHA-512, salt stretching, and a format compatible
- * with the Heady platform (not wire-compatible with bcrypt — use for new
+ * with the Heady™ platform (not wire-compatible with bcrypt — use for new
  * credential stores only).
  *
  * Hash format: $heady$v1$<rounds>$<salt_b64>$<hash_b64>
@@ -44,7 +44,7 @@ function _roundsToIterations(rounds) {
  *
  * @param {string} password - The plaintext password
  * @param {number} [rounds=12] - Cost factor (4-31). Higher = slower/more secure.
- * @returns {Promise<string>} Hash string in Heady format
+ * @returns {Promise<string>} Hash string in Heady™ format
  */
 function hash(password, rounds = DEFAULT_ROUNDS) {
   return new Promise((resolve, reject) => {
@@ -90,7 +90,7 @@ function hashSync(password, rounds = DEFAULT_ROUNDS) {
 }
 
 /**
- * Parses a Heady hash string into its components.
+ * Parses a Heady™ hash string into its components.
  * @param {string} hashStr
  * @returns {{ rounds: number, salt: Buffer, hash: Buffer }}
  * @throws {Error} If the hash format is unrecognised
@@ -111,7 +111,7 @@ function _parseHash(hashStr) {
 }
 
 /**
- * Verifies a plaintext password against a stored Heady hash.
+ * Verifies a plaintext password against a stored Heady™ hash.
  * Uses timing-safe comparison to prevent timing attacks.
  *
  * @param {string} password - Plaintext to verify
@@ -183,7 +183,7 @@ function generateToken(bytes = 32) {
 }
 
 /**
- * Generates a cryptographically random API key in Heady format.
+ * Generates a cryptographically random API key in Heady™ format.
  * Format: hk_<32 bytes hex>
  * @returns {string}
  */

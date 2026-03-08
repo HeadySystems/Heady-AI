@@ -1,7 +1,7 @@
 /**
- * Heady Email Service
- * IMAP/SMTP email fetching and sending for HeadyBuddy and other services
- * © 2026 HeadySystems Inc.
+ * Heady™ Email Service
+ * IMAP/SMTP email fetching and sending for Heady™Buddy and other services
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

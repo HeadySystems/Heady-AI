@@ -1,4 +1,4 @@
-# HeadyOS Case Study Template
+# Heady™OS Case Study Template
 
 **Template Version**: 1.0  
 **Pre-filled scenario**: Non-profit Grant Writing Pilot  
@@ -6,7 +6,7 @@
 
 ---
 
-# [ORGANIZATION NAME] Automates Grant Writing with HeadyOS, Submitting [X] Grants in 89 Days
+# [ORGANIZATION NAME] Automates Grant Writing with Heady™OS, Submitting [X] Grants in 89 Days
 
 **Organization**: [ORGANIZATION NAME]  
 **Type**: Non-profit / 501(c)(3)  
@@ -150,4 +150,4 @@ The team loaded fib(5)=5 past winning grant applications into vector memory duri
 
 ---
 
-*This case study was produced with participant consent. Company name and figures may be anonymized upon request. HeadyOS™ is a trademark of HeadySystems Inc. Protected by 51+ USPTO provisional patents.*
+*This case study was produced with participant consent. Company name and figures may be anonymized upon request. HeadyOS™ is a trademark of Heady™Systems Inc. Protected by 51+ USPTO provisional patents.*

@@ -61,11 +61,11 @@ const DOMAINS = [
     subdomains: ['server.headymcp.com', 'mcp.headymcp.com'],
   },
   {
-    domain: 'headyai.com',
+    domain: 'heady-ai.com',
     role: 'Intelligence Routing Hub',
     expectedTitle: null,
     healthPath: '/health',
-    subdomains: ['router.headyai.com', 'inference.headyai.com', 'models.headyai.com'],
+    subdomains: ['router.heady-ai.com', 'inference.heady-ai.com', 'models.heady-ai.com'],
   },
   {
     domain: 'headyio.com',
@@ -99,7 +99,7 @@ const DOMAINS = [
     knownIssue: '403 — WAF/Access blocking',
   },
   {
-    domain: 'heady-ai.org',
+    domain: 'heady-ai.com',
     role: 'AI Research Portal',
     expectedTitle: null,
     healthPath: '/health',

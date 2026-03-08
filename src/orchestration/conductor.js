@@ -1,7 +1,7 @@
 'use strict';
 /**
  * conductor.js — HeadyConductor
- * Central orchestration authority for the Heady Sovereign AI Platform.
+ * Central orchestration authority for the Heady™ Sovereign AI Platform.
  *
  * Responsibilities:
  *   - CSL-gated domain classification (12 domains)

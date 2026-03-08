@@ -3,7 +3,7 @@ name: heady-continuous-action
 description: Use when implementing continuous action recording, output drift detection, pattern learning from execution history, and auto-reconfiguration when determinism degrades.
 ---
 
-# Heady Continuous Action Skill
+# Heady™ Continuous Action Skill
 
 ## Overview
 

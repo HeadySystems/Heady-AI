@@ -14,7 +14,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady CSL Engine (Continuous Semantic Logic)
+# Heady™ CSL Engine (Continuous Semantic Logic)
 
 ## When to Use This Skill
 

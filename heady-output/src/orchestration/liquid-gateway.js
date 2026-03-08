@@ -4,7 +4,7 @@
  * ║  Dynamic Multi-Provider AI Gateway with Liquid Failover          ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc. All Rights Reserved.              ║
+ * ║  © 2026-2026 HeadySystems Inc. All Rights Reserved.              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * Race-based multi-provider routing: top-2 providers fire in parallel,

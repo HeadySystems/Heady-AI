@@ -1,6 +1,6 @@
 /**
  * Submit a code modification proposal.
- * This is the primary entry point for HeadyAI-IDE interactions.
+ * This is the primary entry point for Heady™AI-IDE interactions.
  *
  * @param {Object} proposal
  * @param {string} proposal.intent - Natural language description of the change

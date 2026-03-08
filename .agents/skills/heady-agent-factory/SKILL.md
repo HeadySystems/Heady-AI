@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Agent Factory
+# Heady™ Agent Factory
 
 ## When to Use This Skill
 

@@ -1,5 +1,5 @@
 # SOC 2 Incident Response Plan
-## HeadyMe Platform — Security Incident Management
+## Heady™Me Platform — Security Incident Management
 
 **Version:** 2.0  
 **Effective Date:** [DATE]  
@@ -11,7 +11,7 @@
 
 ## 1. PURPOSE AND SCOPE
 
-This Incident Response Plan (IRP) defines HeadyMe's process for detecting, analyzing, containing, eradicating, recovering from, and learning from security incidents. It applies to all systems within the Heady platform scope, including all 13 core repositories and associated infrastructure.
+This Incident Response Plan (IRP) defines HeadyMe's process for detecting, analyzing, containing, eradicating, recovering from, and learning from security incidents. It applies to all systems within the Heady™ platform scope, including all 13 core repositories and associated infrastructure.
 
 **Scope includes:**
 - All production systems across all Heady* domains
@@ -333,7 +333,7 @@ Incident reference: [INC-ID]
 ```
 Dear [CUSTOMER_NAME],
 
-We are writing to inform you of a security incident that may have affected your organization's data on the Heady platform.
+We are writing to inform you of a security incident that may have affected your organization's data on the Heady™ platform.
 
 WHAT HAPPENED
 On [DATE], we discovered [BRIEF_DESCRIPTION_OF_INCIDENT]. We immediately activated our incident response procedures.

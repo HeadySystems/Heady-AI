@@ -1,6 +1,6 @@
 # Heady™ Patent-to-Code Claim Map
 
-> © 2026 HeadySystems Inc. All Rights Reserved.
+> © 2026 Heady™Systems Inc. All Rights Reserved.
 > This document maps every USPTO patent claim to its code implementation for Reduction to Practice (RTP).
 
 ## HS-058: Continuous Semantic Logic Gates (63/998,721) — 10 Claims

@@ -268,11 +268,11 @@ applications:
     domains: ["headysystems.com", "headyconnection.org"]
   heady-ide:
     enabled: true
-    domain: "headyai-ide.com"
+    domain: "heady-ai.com"
     arena_mode: true
   heady-lens:
     enabled: true
-    domain: "headylens.com"
+    domain: "headysense.com"
     probe_interval_ms: 30000
   heady-mcp:
     enabled: true
@@ -285,7 +285,7 @@ infrastructure:
     gpu: "google-colab"
     storage: "aws-s3"
   docker:
-    base_image: "node:20-alpine"
+    base_image: "node:22-alpine"
     registry: "ghcr.io/headyme"
   ci_cd:
     provider: "github-actions"
@@ -715,7 +715,7 @@ Per your earlier vision[6]:
 | Repo | Purpose | Location |
 |------|---------|----------|
 | `HeadyMe/HeadyStack` | Canonical monorepo (kernel + SDK + apps) | GitHub (source of truth) |
-| `HeadySystems/heady-production` | Production deployment mirror | GitHub → Render/Cloudflare |
+| `HeadyMe/heady-production` | Production deployment mirror | GitHub → Render/Cloudflare |
 | `HeadyConnection/heady-community` | Open-source components, docs, nonprofit | GitHub → Public |
 
 All three stay in sync via automated GitHub Actions. Push to `HeadyStack` → auto-propagate to the other two with appropriate filtering.

@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const logger = require('../utils/logger');
 const { POOL_TIMEOUTS, PHI } = require('./heady-conductor');
@@ -140,7 +141,7 @@ class HeadyOrchestrator extends EventEmitter {
     if (this._poolActive[pool] > 0) this._poolActive[pool]--;
   }
 
-  async _waitForPoolSlot(pool, timeoutMs = 30_000) {
+  async _waitForPoolSlot(pool, timeoutMs = PHI_TIMING.CYCLE) {
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
       if (this._acquirePoolSlot(pool)) return true;

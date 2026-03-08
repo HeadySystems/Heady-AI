@@ -54,4 +54,4 @@ app.get("/stats", (req, res) => {
 });
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`⚡ Heady Gateway listening on :${PORT}`));
+app.listen(PORT, () => console.log(`⚡ Heady™ Gateway listening on :${PORT}`));

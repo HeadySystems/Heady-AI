@@ -1,4 +1,4 @@
-# HeadySystems API Versioning Strategy
+# Heady™Systems API Versioning Strategy
 
 **Version:** 1.0.0  
 **φ-revision:** 1.618  

@@ -1,7 +1,7 @@
 /**
  * ∞ HeadyCloudflare — Cloudflare API Manager
  * Manages DNS records, Workers, Pages, Tunnels, and edge configuration.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const logger = require('./utils/logger');

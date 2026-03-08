@@ -1,27 +1,27 @@
-# Drupal permissions for the Heady Admin module
+# Drupal permissions for the Heady™ Admin module
 'administer heady ecosystem':
-  title: 'Administer Heady Ecosystem'
+  title: 'Administer Heady™ Ecosystem'
   description: 'Full admin access: manage services, HCFP policies, HeadyLens monitoring, and system settings'
   restrict access: true
 
 'manage heady services':
-  title: 'Manage Heady Services'
-  description: 'Start, stop, restart, and configure individual Heady services'
+  title: 'Manage Heady™ Services'
+  description: 'Start, stop, restart, and configure individual Heady™ services'
 
 'view heady dashboard':
-  title: 'View Heady Dashboard'
-  description: 'View the Heady Admin dashboard and service status'
+  title: 'View Heady™ Dashboard'
+  description: 'View the Heady™ Admin dashboard and service status'
 
 'access heady lens':
   title: 'Access HeadyLens Monitoring'
-  description: 'View real-time system monitoring via HeadyLens'
+  description: 'View real-time system monitoring via Heady™Lens'
 
 'manage hcfp policies':
   title: 'Manage HCFP Policies'
   description: 'Configure HCFP auto-success policies, HeadyBattle rules, and enforcement settings'
 
 'customize heady system':
-  title: 'Customize Heady System'
+  title: 'Customize Heady™ System'
   description: 'Change themes, widget settings, notification preferences, and UI layout'
 
 'manage user access':

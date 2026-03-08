@@ -1,10 +1,10 @@
 /**
  * ∞ Heady™ Vector Memory — RAM-First 384D Sovereign Memory Brain
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module vector-memory
- * @description The central memory brain of Heady. All memories are 384D
+ * @description The central memory brain of Heady™. All memories are 384D
  *   Float32Array vectors held in RAM, organised into Fibonacci shards,
  *   and scored by an importance function I(m) = recency * frequency * relevance.
  *   Short-term memories (STM) with high importance are promoted to long-term
@@ -92,7 +92,7 @@ function computeImportance(entry, now, maxFrequency = 1, queryVector = null) {
 // ---------------------------------------------------------------------------
 
 /**
- * VectorMemory is the RAM-first sovereign memory brain for the Heady platform.
+ * VectorMemory is the RAM-first sovereign memory brain for the Heady™ platform.
  *
  * Architecture:
  * - **Shards**: memories are distributed across `numShards` Map instances,

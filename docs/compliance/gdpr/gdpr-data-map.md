@@ -1,5 +1,5 @@
 # GDPR Article 30 — Record of Processing Activities
-## HeadyMe Platform — Data Processing Register
+## Heady™Me Platform — Data Processing Register
 
 **Controller:** HeadyMe Systems, Inc.  
 **DPO Contact:** [DPO_NAME], [DPO_EMAIL]  
@@ -62,7 +62,7 @@
 | **Special Category Legal Basis** | Art. 9(2)(a) — explicit consent |
 | **Data Subjects** | Registered users, enterprise tenant end-users |
 | **Data Categories** | Conversation content and messages, AI agent responses, user preferences/settings, document content uploaded by user, function call logs, session metadata |
-| **Data Sources** | User input via Heady API endpoints |
+| **Data Sources** | User input via Heady™ API endpoints |
 | **Recipients** | LLM API providers (OpenAI, Anthropic, Google, Groq, HuggingFace, Cloudflare) — under data processing agreements |
 | **Third Country Transfers?** | Yes — US-based LLM providers. Basis: EU Standard Contractual Clauses (SCCs) |
 | **Retention Period** | Conversation history: per user settings (default 90 days, configurable 0–730 days); Model training data: consent-gated |
@@ -228,4 +228,4 @@
 
 ---
 
-*This document is maintained by HeadyMe's Data Protection Officer. Last review: [DATE]. Approved by: [NAME, TITLE].*
+*This document is maintained by Heady™Me's Data Protection Officer. Last review: [DATE]. Approved by: [NAME, TITLE].*

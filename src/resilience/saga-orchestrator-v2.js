@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * saga-orchestrator-v2.js — Enhanced Saga Orchestrator
  *
@@ -143,7 +144,7 @@ class Saga extends EventEmitter {
     /**
      * @param {string} name - Unique saga name
      * @param {object} [opts]
-     * @param {number}     [opts.stepTimeoutMs=30000]        - Default per-step timeout
+     * @param {number}     [opts.stepTimeoutMs=PHI_TIMING.CYCLE]        - Default per-step timeout
      * @param {number}     [opts.compensationTimeoutMs=10000]- Default per-compensation timeout
      * @param {number}     [opts.compensationMaxRetries=3]   - Default compensation max retries
      * @param {SagaStore}  [opts.store]                      - Persistent saga state store
@@ -154,7 +155,7 @@ class Saga extends EventEmitter {
         this.sagaId        = `saga-${name}-${crypto.randomBytes(8).toString('hex')}`;
 
         // Configuration
-        this.stepTimeoutMs          = opts.stepTimeoutMs          ?? 30_000;
+        this.stepTimeoutMs          = opts.stepTimeoutMs          ?? PHI_TIMING.CYCLE;
         this.compensationTimeoutMs  = opts.compensationTimeoutMs  ?? 10_000;
         this.compensationMaxRetries = opts.compensationMaxRetries ?? 3;
 

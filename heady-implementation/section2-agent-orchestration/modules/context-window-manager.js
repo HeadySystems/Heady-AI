@@ -1,6 +1,6 @@
 /**
  * @fileoverview ContextWindowManager — Tiered context window management for
- * autonomous agents in the Heady Latent OS platform.
+ * autonomous agents in the Heady™ Latent OS platform.
  *
  * Architecture:
  *   ┌────────────────────────────────────────────────────┐

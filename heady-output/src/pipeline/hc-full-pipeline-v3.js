@@ -4,8 +4,8 @@
  * ║               21-Stage Phi-Compliant Orchestration Engine                  ║
  * ║                                                                            ║
  * ║  Version   : 3.0.0                                                         ║
- * ║  License   : Proprietary — Heady Connection LLC                            ║
- * ║  Author    : Heady Engineering                                              ║
+ * ║  License   : Proprietary — Heady™ Connection LLC                            ║
+ * ║  Author    : Heady™ Engineering                                              ║
  * ║  Contact   : eric@headyconnection.org                                      ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
@@ -379,7 +379,7 @@ async function handleApprove(ctx) {
 }
 
 async function handleExecute(ctx) {
-  // Metacognitive gate: confidence ≥ ψ (0.618) via HeadyBuddy
+  // Metacognitive gate: confidence ≥ ψ (0.618) via Heady™Buddy
   const composite = ctx.shared.judgeVerdict?.composite ?? PSI;
   if (composite < CSL_GATE) {
     throw new Error(
@@ -756,7 +756,7 @@ function withTimeout(promise, ms, label) {
 // ─── HCFullPipelineV3 ────────────────────────────────────────────────────────
 
 /**
- * The Heady Connection 21-stage phi-compliant orchestration pipeline (V3).
+ * The Heady™ Connection 21-stage phi-compliant orchestration pipeline (V3).
  *
  * @fires HCFullPipelineV3#pipeline:start
  * @fires HCFullPipelineV3#pipeline:complete

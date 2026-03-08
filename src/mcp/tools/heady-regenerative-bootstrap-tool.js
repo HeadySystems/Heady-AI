@@ -5,7 +5,7 @@
  *
  * Cold-start bootstrap via RegenerativePrompt. Enables stateless but
  * context-aware service initialization from serialized prompt documents.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const crypto = require('crypto');

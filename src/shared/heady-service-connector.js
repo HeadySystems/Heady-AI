@@ -1,7 +1,7 @@
 /**
  * Heady™ Service Connector — Dynamic Service Discovery & Connection
  * 
- * Automatically discovers, health-checks, and connects to all Heady services.
+ * Automatically discovers, health-checks, and connects to all Heady™ services.
  * Used by VS Code extension, Chrome extension, SDK, and standalone scripts.
  *
  * Features:
@@ -23,7 +23,7 @@
  * @author HeadySystems™
  * @license Proprietary
  *
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  */
 
 'use strict';
@@ -34,7 +34,7 @@ const PHI = 1.618033988749895;
 
 const DEFAULT_SERVICES = {
     manager: {
-        name: 'Heady Manager',
+        name: 'Heady™ Manager',
         url: 'https://manager.headysystems.com',
         healthPath: '/api/health',
         chatPath: '/api/v1/chat/completions',
@@ -43,21 +43,21 @@ const DEFAULT_SERVICES = {
         role: 'primary',
     },
     edge: {
-        name: 'Heady Edge',
+        name: 'Heady™ Edge',
         url: 'https://heady.headyme.com',
         healthPath: '/api/health',
         chatPath: '/api/v1/chat/completions',
         role: 'edge',
     },
     mcp: {
-        name: 'Heady MCP',
+        name: 'Heady™ MCP',
         url: 'https://mcp.headymcp.com',
         healthPath: '/health',
         mcpPath: '/',
         role: 'mcp',
     },
     api: {
-        name: 'Heady API',
+        name: 'Heady™ API',
         url: 'https://api.headysystems.com',
         healthPath: '/api/health',
         chatPath: '/api/v1/chat/completions',
@@ -67,10 +67,10 @@ const DEFAULT_SERVICES = {
 
 const MODELS = [
     { id: 'heady-flash', name: 'Heady Flash', speed: 'fast', tier: 'free', emoji: '⚡' },
-    { id: 'heady-edge', name: 'Heady Edge', speed: 'ultra', tier: 'free', emoji: '🌐' },
-    { id: 'heady-buddy', name: 'Heady Buddy', speed: 'medium', tier: 'pro', emoji: '🤝' },
+    { id: 'heady-edge', name: 'Heady™ Edge', speed: 'ultra', tier: 'free', emoji: '🌐' },
+    { id: 'heady-buddy', name: 'Heady™ Buddy', speed: 'medium', tier: 'pro', emoji: '🤝' },
     { id: 'heady-reason', name: 'Heady Reason', speed: 'slow', tier: 'premium', emoji: '🧠' },
-    { id: 'heady-battle-v1', name: 'Heady Battle', speed: 'slow', tier: 'premium', emoji: '🏆' },
+    { id: 'heady-battle-v1', name: 'Heady™ Battle', speed: 'slow', tier: 'premium', emoji: '🏆' },
 ];
 
 // ─── Service Connector Class ──────────────────────────────────────

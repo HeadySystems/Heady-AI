@@ -1,5 +1,5 @@
 /**
- * Heady MCP Zero-Trust Gateway
+ * Heady™ MCP Zero-Trust Gateway
  * ============================
  * Central gateway that routes MCP tool calls through the full security pipeline:
  *   Rate Limiter → CSL Router → Connection Pool → Zero-Trust Sandbox →

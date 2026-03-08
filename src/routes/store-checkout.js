@@ -1,6 +1,6 @@
 /**
  * HeadyStore Checkout Route — /api/store/checkout
- * Creates Stripe Checkout sessions for HeadyStore purchases
+ * Creates Stripe Checkout sessions for Heady™Store purchases
  * Uses test keys in sandbox mode, live keys in production
  */
 
@@ -22,7 +22,7 @@ async function storeCheckoutHandler(req, res) {
             return res.status(400).json({ error: 'product_name and price are required' });
         }
 
-        // Use test key for HeadyStore, fall back to live key
+        // Use test key for Heady™Store, fall back to live key
         const stripeKey = process.env.STRIPE_TEST_SECRET_KEY || process.env.STRIPE_SECRET_KEY;
         if (!stripeKey) {
             return res.status(503).json({ error: 'Stripe not configured' });

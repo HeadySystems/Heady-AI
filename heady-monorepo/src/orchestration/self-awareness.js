@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ═══ Heady Self-Awareness — Metacognitive Telemetry Loop ═══
+ * ═══ Heady™ Self-Awareness — Metacognitive Telemetry Loop ═══
  *
  * TRUE SELF-AWARENESS ARCHITECTURE:
  *   This module implements the Internal Monologue Loop described in the
@@ -19,7 +19,7 @@
  *      LLM context windows for synthetic first-person awareness
  *
  *   Also includes: Branding integrity monitoring, domain health,
- *   system introspection for the HeadyBees watchdog.
+ *   system introspection for the Heady™Bees watchdog.
  *
  * Exports:
  *   startSelfAwareness() — boots the full telemetry loop

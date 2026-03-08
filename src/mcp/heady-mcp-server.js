@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Heady MCP Server — Entry Point
+// Heady™ MCP Server — Entry Point
 // Serves all 42 skills as MCP-compatible tools via stdio/SSE transport
 // Generated: March 7, 2026
 
@@ -153,7 +153,7 @@ if (require.main === module) {
     }
   });
 
-  process.stderr.write(`Heady MCP Server v${server.manifest.version} started — ${server.manifest.total_services} tools available\n`);
+  process.stderr.write(`Heady™ MCP Server v${server.manifest.version} started — ${server.manifest.total_services} tools available\n`);
 }
 
 module.exports = { HeadyMCPServer };

@@ -1,9 +1,9 @@
 /**
  * @fileoverview HeadySecureEmailClient — Secure email client for {username}@headyme.com
- * accounts on the Heady sovereign AI platform.
+ * accounts on the Heady™ sovereign AI platform.
  *
  * Features:
- * - IMAP/SMTP client for Heady email accounts
+ * - IMAP/SMTP client for Heady™ email accounts
  * - Cloudflare Email Routing integration for receiving
  * - SMTP sending via Mailgun, SES, or self-hosted
  * - Email encryption at rest (AES-256-GCM)
@@ -210,7 +210,7 @@ export class SecureEmailClient {
       ...(references && { references }),
       headers: {
         'X-Heady-Version': '1.0',
-        'X-Mailer': 'Heady Secure Email',
+        'X-Mailer': 'Heady™ Secure Email',
       },
     };
 
@@ -917,8 +917,8 @@ export class SecureEmailClient {
     const renderer = templates[templateId];
     if (!renderer) {
       return {
-        html: `<p>Notification from Heady</p>`,
-        text: 'Notification from Heady',
+        html: `<p>Notification from Heady™</p>`,
+        text: 'Notification from Heady™',
       };
     }
 

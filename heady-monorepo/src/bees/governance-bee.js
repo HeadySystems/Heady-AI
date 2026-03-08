@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Governance Bee — Active governance operations + module wiring:
  *   - Protected path enforcement audit
  *   - Version alignment verification

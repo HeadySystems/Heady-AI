@@ -2,7 +2,7 @@
 
 ## Overview
 
-Every AI action in the Heady ecosystem is wrapped in a **Cognitive Telemetry Payload** — a machine-readable JSON schema that causally links intention, inputs, tool selection, and output. Each payload is SHA-256 hashed to create an immutable **Proof-of-Inference** audit trail.
+Every AI action in the Heady™ ecosystem is wrapped in a **Cognitive Telemetry Payload** — a machine-readable JSON schema that causally links intention, inputs, tool selection, and output. Each payload is SHA-256 hashed to create an immutable **Proof-of-Inference** audit trail.
 
 ## Schema v1.0.0
 

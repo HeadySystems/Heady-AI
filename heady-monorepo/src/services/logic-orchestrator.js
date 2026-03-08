@@ -201,7 +201,7 @@ class LogicOrchestrator extends EventEmitter {
             }
         }
 
-        // Heady Principles
+        // Heady™ Principles
         try {
             const hp = require('../shared/heady-principles');
             app.get('/api/principles', (req, res) => res.json({

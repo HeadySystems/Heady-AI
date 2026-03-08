@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -10,7 +10,7 @@
  * Every transaction links to the previous via prevHash,
  * forming a tamper-evident blockchain-style chain.
  *
- * Heady AI Node: SENTINEL
+ * Heady™ AI Node: SENTINEL
  */
 
 const crypto = require("crypto");
@@ -24,7 +24,7 @@ const GENESIS_HASH = "0".repeat(64);
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 /**
- * Transaction types in the HeadyCoin system.
+ * Transaction types in the Heady™Coin system.
  */
 const TX_TYPES = Object.freeze({
     MINT: "MINT",

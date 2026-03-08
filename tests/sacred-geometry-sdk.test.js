@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * Tests for packages/heady-sacred-geometry-sdk
  */
 

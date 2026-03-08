@@ -1,5 +1,5 @@
 /**
- * Heady Output Scanner
+ * Heady™ Output Scanner
  * ====================
  * Scans MCP tool execution output for sensitive data and redacts it.
  *

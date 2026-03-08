@@ -1,4 +1,4 @@
-# Heady File-by-File Remediation Plan
+# Heady™ File-by-File Remediation Plan
 
 Generated: 2026-03-07
 
@@ -21,7 +21,7 @@ Generated: 2026-03-07
 | Heady-pre-production-9f2f0642/configs/_domains/service-domains.yaml | Malformed or inconsistent hostnames | Can break routing assumptions and undermine policy, cookie, and origin integrity | Normalize domain registry, verify canonical hosts, and run config validation before deploy | https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/configs/_domains/service-domains.yaml |
 | Heady-pre-production-9f2f0642/.env.example | Broad service inventory and sensitive capability references | Helpful internally, but should be reviewed so public examples stay least-revealing | Keep public examples minimal, move internal-only flags to private docs, and separate demo vs production configuration guidance | https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/.env.example |
 | Heady-pre-production-9f2f0642/SECURITY.md | Public security page must match actual operations | Incorrect or stale claims can create trust and legal risk | Confirm addresses, response windows, scope claims, and architecture statements before relying on them publicly | https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/SECURITY.md |
-| Public archived repos under HeadySystems | Historical implementation detail remains visible | Older repos may preserve stale secrets patterns, internal assumptions, or deprecated architecture details | Inventory every public archive, remove or privatize where possible, and sanitize docs/config where retention is necessary | https://github.com/HeadySystems/Heady |
+| Public archived repos under HeadySystems | Historical implementation detail remains visible | Older repos may preserve stale secrets patterns, internal assumptions, or deprecated architecture details | Inventory every public archive, remove or privatize where possible, and sanitize docs/config where retention is necessary | https://github.com/HeadyMe/Heady |
 
 ## Evidence basis
 - HeadyMe public org review: https://github.com/HeadyMe

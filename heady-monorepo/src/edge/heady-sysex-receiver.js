@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * Heady SysEx Receiver — Max for Live Device
+ * Heady™ SysEx Receiver — Max for Live Device
  * ═══════════════════════════════════════════════════════════════
  *
  * Max for Live JavaScript (M4L JSUI / js object) that listens
  * for MIDI SysEx messages on manufacturer ID 0x7D (non-commercial),
- * parses the Heady command protocol, and routes to the
+ * parses the Heady™ command protocol, and routes to the
  * Live Object Model (LOM) for real-time Ableton control.
  *
  * Protocol:
@@ -17,7 +17,7 @@
  *   0x03 = Trigger clip (payload = track:byte, scene:byte)
  *   0x04 = Set device param (payload = track:byte, device:byte, param:byte, value:byte)
  *   0x05 = Transport control (payload = 0=stop, 1=play, 2=record)
- *   0x10 = Heady status request (responds with current state)
+ *   0x10 = Heady™ status request (responds with current state)
  *   0x20 = AI-generated arrangement (payload = JSON arrangement data)
  *
  * Installation:
@@ -209,6 +209,6 @@ function handleAIArrangement(payload) {
 
 function loadbang() {
     post('  🎵 Heady SysEx Receiver loaded (manufacturer: 0x7D)\n');
-    post('  📡 Listening for Heady AI commands...\n');
+    post('  📡 Listening for Heady™ AI commands...\n');
     outlet(3, 'heady_sysex_ready');
 }

@@ -1,4 +1,4 @@
-# Changelog — Heady System Fix Package
+# Changelog — Heady™ System Fix Package
 
 ## v4.0.0 (2026-03-08)
 

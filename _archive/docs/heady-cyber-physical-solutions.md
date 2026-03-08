@@ -1,4 +1,4 @@
-# Heady Cyber-Physical Solutions Framework
+# Heady™ Cyber-Physical Solutions Framework
 
 ## Advanced Technological and IP Architectures → Client Deployment Playbooks
 
@@ -38,7 +38,7 @@ MIDI is not just music. It's a **universal sequential control protocol**. When H
 
 - Control physical hardware (lighting, HVAC, robotics, kiosks)
 - Interface with DAWs, creative tools, industrial systems
-- Send structured commands from natural language via HeadyBuddy
+- Send structured commands from natural language via Heady™Buddy
 
 ## Architecture
 
@@ -63,7 +63,7 @@ The original doc flags a critical issue: `python-rtmidi` caps SysEx at 1024 byte
 
 ## Edge Compute for MIDI: The ESP32/RP2040 Pattern
 
-Heady already decentralizes compute via HeadyEdge (Cloudflare Workers). The same pattern applies to physical edge nodes:
+Heady already decentralizes compute via Heady™Edge (Cloudflare Workers). The same pattern applies to physical edge nodes:
 
 | Device | Role | Heady Parallel |
 |--------|------|---------------|
@@ -323,7 +323,7 @@ Level 4: Interactive Controls (HITL approve/reject)
 | **Tab Bar** | 3–5 tabs: Overview, Technical, Logs, Actions | Context-dependent |
 | **Rubric Table** | Structured rows with metric/value/description | Pipeline + swarm metrics |
 | **Action Card** | Approve/Reject/Modify buttons | HITL staging queue |
-| **Sparkline** | Inline activity trend (SVG) | Time-series from HeadyObserver |
+| **Sparkline** | Inline activity trend (SVG) | Time-series from Heady™Observer |
 
 This maps directly to how the admin UI structures its Intelligence tabs — the same component library powers both the dashboard and Buddy's output.
 
@@ -364,6 +364,6 @@ Per USPTO guidance on AI-assisted inventions:
 | 🟡 P1 | White-label admin UI config system | 3–4 hours | Client deployments |
 | 🟢 P2 | Neural fingerprinting at generation point | 4–6 hours | IP protection |
 | 🟢 P2 | ESP32/RP2040 MicroPython edge node template | 3–4 hours | IoT hardware |
-| 🔵 P3 | VLM gesture-to-MIDI integration via HeadyLens | 6–8 hours | Creative studios |
+| 🔵 P3 | VLM gesture-to-MIDI integration via Heady™Lens | 6–8 hours | Creative studios |
 | 🔵 P3 | Biometric affective tonality engine | 8–12 hours | Healthcare/wellness |
 | ⚪ P4 | Patent application drafts for 6 concepts | Legal review | Long-term IP value |

@@ -7,7 +7,7 @@
  * ALL constants derived from phi-math-foundation. Zero magic numbers.
  * Treats errors as learning events (HeadyVinci pattern).
  * 
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 
 import {

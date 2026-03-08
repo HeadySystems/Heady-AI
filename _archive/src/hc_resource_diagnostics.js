@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * HCResourceDiagnostics — Cross-references resource + scheduler state for diagnostics.
  */
 const logger = require("./utils/logger");

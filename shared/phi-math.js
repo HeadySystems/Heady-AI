@@ -1,11 +1,11 @@
 "use strict";
 /**
  * Heady™ Phi-Math Foundation — Sacred Geometry Constants & Utilities
- * The single source of truth for ALL scaling constants across the Heady ecosystem.
+ * The single source of truth for ALL scaling constants across the Heady™ ecosystem.
  *
  * NO MAGIC NUMBERS. Every constant derives from φ (golden ratio) or Fibonacci.
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VECTOR = exports.COST_WEIGHTS = exports.JUDGE_WEIGHTS = exports.RESOURCE_POOLS = exports.BEE_SCALING = exports.PIPELINE = exports.AUTO_SUCCESS = exports.ALERT_THRESHOLDS = exports.PRESSURE_LEVELS = exports.PHI_BACKOFF_SEQUENCE = exports.CSL_THRESHOLDS = exports.PHI_TIMING = exports.FIB = exports.PHI_CUBED = exports.PHI_SQ = exports.PSI = exports.PHI = void 0;

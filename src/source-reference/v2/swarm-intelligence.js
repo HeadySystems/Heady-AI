@@ -1,10 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 "use strict";
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
 }
@@ -48,7 +49,7 @@ function evaluateLiveCloudStatus(input = {}) {
     const serviceHealth = clamp(Number(input.serviceHealth) || 0, 0, 1);
 
     const hasCloudUrl = cloudUrl.startsWith("https://");
-    const heartbeatHealthy = heartbeatAgeMs <= 30_000;
+    const heartbeatHealthy = heartbeatAgeMs <= PHI_TIMING.CYCLE;
     const servicesHealthy = serviceHealth >= 0.9;
 
     return {

@@ -1,13 +1,13 @@
-# Heady Phi Scale Architecture
+# Heady™ Phi Scale Architecture
 
-> © 2026 HeadySystems Inc. All rights reserved.
+> © 2026 Heady™Systems Inc. All rights reserved.
 > Provisional Patent Application #52 — Continuous Semantic Logic Gates
 
 ---
 
 ## Executive Summary
 
-The Heady Phi Scale system replaces every hardcoded numeric constant in the AI orchestration platform with a continuously self-adjusting value bounded by mathematics derived from the golden ratio (φ ≈ 1.618). Rather than accepting the performance degradation that comes from static values drifting away from optimality as traffic patterns shift, every one of the system's 30 dynamic constants — from timeout windows and batch sizes to CSL gate thresholds and pool allocations — lives inside a `PhiScale` wrapper that ingests real-time telemetry, applies momentum-smoothed gradient steps, and converges toward the current operating optimum without manual intervention, arbitrary constants, or re-deployment.
+The Heady™ Phi Scale system replaces every hardcoded numeric constant in the AI orchestration platform with a continuously self-adjusting value bounded by mathematics derived from the golden ratio (φ ≈ 1.618). Rather than accepting the performance degradation that comes from static values drifting away from optimality as traffic patterns shift, every one of the system's 30 dynamic constants — from timeout windows and batch sizes to CSL gate thresholds and pool allocations — lives inside a `PhiScale` wrapper that ingests real-time telemetry, applies momentum-smoothed gradient steps, and converges toward the current operating optimum without manual intervention, arbitrary constants, or re-deployment.
 
 ---
 
@@ -503,7 +503,7 @@ The decay value itself is a dynamic parameter (`momentum_decay`) that self-adjus
 ### phiMiddleware Usage and Options
 
 ```typescript
-import { phiMiddleware } from '@heady/phi-scales';
+import { phiMiddleware } from '@heady-ai/phi-scales';
 
 app.use(phiMiddleware({
   scales: phiScaleRegistry,           // Required: registry of all PhiScale instances
@@ -558,7 +558,7 @@ phi_momentum{name="timeout"} 0.0023
 The Phi Scale package ships with a static analysis CLI that scans source files for numeric literals that should be phi-scaled:
 
 ```bash
-npx @heady/phi-scales audit \
+npx @heady-ai/phi-scales audit \
   --src ./src \
   --config ./configs/phi-scales.yaml \
   --output ./reports/phi-audit.json \
@@ -596,14 +596,14 @@ The JSON report groups findings by severity:
 
 **Step 1 — Run the audit** to identify all hardcoded constants:
 ```bash
-npx @heady/phi-scales audit --src ./src --output ./reports/audit.json
+npx @heady-ai/phi-scales audit --src ./src --output ./reports/audit.json
 ```
 
 **Step 2 — Register new scales** in `configs/phi-scales.yaml` for any flagged constants not yet covered, following the schema for existing entries.
 
 **Step 3 — Replace literals with scale lookups** in code, using the generated migration patch if confidence ≥ 0.9:
 ```bash
-npx @heady/phi-scales migrate --report ./reports/audit.json --apply --min-confidence 0.9
+npx @heady-ai/phi-scales migrate --report ./reports/audit.json --apply --min-confidence 0.9
 ```
 
 **Step 4 — Validate in staging** by running the system for at least 10 adjustment cycles (50 seconds) and verifying that scale values converge to reasonable ranges under synthetic load before promoting to production.
@@ -894,7 +894,7 @@ declare function phiMiddleware(options: PhiMiddlewareOptions): RequestHandler;
 
 ## Conclusion
 
-The Phi Scale architecture represents a fundamental shift from configuration-as-code to configuration-as-living-system. By grounding every dynamic constant in the mathematics of the golden ratio — using φ for bounds, φ⁻¹ for default positions, Fibonacci numbers for discrete partitions, phi-exponential curves for backoff, and golden spiral decay for cache freshness — the Heady orchestration platform achieves a state of continuous self-optimisation that static configuration can never approach.
+The Phi Scale architecture represents a fundamental shift from configuration-as-code to configuration-as-living-system. By grounding every dynamic constant in the mathematics of the golden ratio — using φ for bounds, φ⁻¹ for default positions, Fibonacci numbers for discrete partitions, phi-exponential curves for backoff, and golden spiral decay for cache freshness — the Heady™ orchestration platform achieves a state of continuous self-optimisation that static configuration can never approach.
 
 The system's 30 dynamic constants are not merely tuneable knobs. They are autonomous agents in their own right: each one observes its environment through telemetry, applies mathematically principled adjustments, and converges toward the operating point that minimises waste and maximises throughput — without human intervention, without re-deployment, and without arbitrary magic numbers scattered across the codebase.
 
@@ -904,14 +904,14 @@ The result is a platform that heals itself under load, adapts gracefully to degr
 
 ## Patent Notice
 
-© 2026 HeadySystems Inc. All rights reserved.
+© 2026 Heady™Systems Inc. All rights reserved.
 
 This document describes systems and methods protected under:
 
 **Provisional Patent Application #52 — Continuous Semantic Logic Gates**
 
-The Phi Scale architecture, including but not limited to: phi-bounded dynamic parameter adjustment, golden spiral cache decay, phi-exponential backoff, Fibonacci work partitioning, phi-normalised priority weighting, and the integration of CSL gate thresholds with telemetry-driven PhiScale instances, constitutes proprietary intellectual property of HeadySystems Inc.
+The Phi Scale architecture, including but not limited to: phi-bounded dynamic parameter adjustment, golden spiral cache decay, phi-exponential backoff, Fibonacci work partitioning, phi-normalised priority weighting, and the integration of CSL gate thresholds with telemetry-driven PhiScale instances, constitutes proprietary intellectual property of Heady™Systems Inc.
 
-Unauthorised reproduction, implementation, or distribution of these systems or methods without explicit written permission from HeadySystems Inc. is prohibited under applicable intellectual property law.
+Unauthorised reproduction, implementation, or distribution of these systems or methods without explicit written permission from Heady™Systems Inc. is prohibited under applicable intellectual property law.
 
-Contact: legal@headysystems.io
+Contact: legal@headysystems.com

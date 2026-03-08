@@ -1,13 +1,13 @@
 /**
  * HeadyWeb Universal Shell — Entry Point
  *
- * Boots the Heady platform by:
+ * Boots the Heady™ platform by:
  *  1. Preloading frequently-used remotes
  *  2. Resolving the current domain to a projection
  *  3. Looking up the corresponding remote in REMOTE_REGISTRY
  *  4. Dynamically loading and mounting the micro-frontend via Module Federation
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module shell/index
  */
@@ -15,6 +15,8 @@
 'use strict';
 
 import { loadDynamicRemote, mountRemote, preloadRemote } from './load-dynamic-remote';
+import { renderIntegratedWorkspace } from './integrated-workspace';
+import './integrated-workspace.css';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -46,13 +48,13 @@ const REMOTE_REGISTRY = {
     url: '/remotes/landing/remoteEntry.js',
     scope: 'headyLanding',
     module: './App',
-    description: 'Marketing landing page for HeadySystems',
+    description: 'Marketing landing page for Heady™Systems',
   },
   'heady-ide': {
     url: '/remotes/heady-ide/remoteEntry.js',
     scope: 'headyIDE',
     module: './App',
-    description: 'Code editor and IDE interface with HeadyBuddy AI',
+    description: 'Code editor and IDE interface with Heady™Buddy AI',
   },
   'swarm-dashboard': {
     url: '/remotes/swarm-dashboard/remoteEntry.js',
@@ -70,7 +72,7 @@ const REMOTE_REGISTRY = {
     url: '/remotes/projections/remoteEntry.js',
     scope: 'projectionMonitor',
     module: './App',
-    description: 'Deployment projection monitoring for Heady domains',
+    description: 'Deployment projection monitoring for Heady™ domains',
   },
   'vector-explorer': {
     url: '/remotes/vectors/remoteEntry.js',
@@ -111,29 +113,9 @@ function renderFallbackUI(projection) {
   const root = document.getElementById('heady-root');
   if (!root) return;
 
-  root.innerHTML = `
-    <div style="
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      min-height:100vh; gap:16px; padding:32px; text-align:center;
-      font-family:'Inter',system-ui,sans-serif; color:#e8eaf0;
-    ">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <path d="M24 4L43.05 14.5V35.5L24 46L4.95 35.5V14.5L24 4Z"
-          stroke="#F5A623" stroke-width="1.5" fill="none"/>
-        <circle cx="24" cy="24" r="6" fill="#F5A623" opacity="0.6"/>
-      </svg>
-      <div style="font-size:18px;font-weight:600;">No Remote Found</div>
-      <div style="font-size:13px;color:#6b7280;font-family:'JetBrains Mono',monospace;max-width:380px;">
-        ${projection
-          ? `Projection "${projection}" is not registered in REMOTE_REGISTRY.`
-          : 'Domain resolution returned no projection mapping.'}
-      </div>
-      <a href="/" style="
-        margin-top:8px; padding:10px 24px; background:#7B61FF; color:#fff;
-        border-radius:6px; font-size:14px; font-weight:500; text-decoration:none;
-      ">Go to Landing</a>
-    </div>
-  `;
+  setLoaderStatus('Mounting integrated workspace fallback…');
+  console.info(`[HeadyShell] No remote for "${projection || 'unknown'}" — loading integrated workspace.`);
+  renderIntegratedWorkspace(root, { projection });
 }
 
 /**
@@ -189,7 +171,7 @@ function preloadFrequentRemotes() {
 }
 
 /**
- * Boot the HeadyWeb shell:
+ * Boot the Heady™Web shell:
  *  1. Fetch the domain API to get the current projection
  *  2. Look up the remote in REMOTE_REGISTRY
  *  3. Mount the remote into #heady-root

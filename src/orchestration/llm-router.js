@@ -4,7 +4,7 @@
  * ║  Dynamic LLM Provider Routing with Task-Aware Model Selection    ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc. All Rights Reserved.              ║
+ * ║  © 2026-2026 HeadySystems Inc. All Rights Reserved.              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * Routes LLM requests by task type using CSL cosine similarity, with

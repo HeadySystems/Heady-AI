@@ -3,7 +3,7 @@
 /**
  * HeadyInfer Standalone Server
  *
- * Starts the Express app with all middleware, mounts the HeadyInfer router,
+ * Starts the Express app with all middleware, mounts the Heady™Infer router,
  * and handles graceful shutdown.
  *
  * Can also be required as a module from a parent service for embedding.

@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module customer-segments
- * @description Customer segmentation engine for HeadySystems
+ * @description Customer segmentation engine for Heady™Systems
  *
  * Segments:
  *   Champion  — High usage, high engagement, recent activity

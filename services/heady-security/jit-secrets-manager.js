@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * SEC-001: JIT Secrets Manager
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Just-In-Time secrets injection — loads secrets only when needed,

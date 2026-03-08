@@ -1,8 +1,8 @@
-# HeadySystems™ API Reference
+# Heady™Systems™ API Reference
 
 ## Service Endpoints
 
-### HeadyBrain (:3001)
+### Heady™Brain (:3001)
 
 #### `POST /chat`
 
@@ -38,7 +38,7 @@ Run deep analysis on content.
 
 ---
 
-### HeadyConductor (:3002)
+### Heady™Conductor (:3002)
 
 #### `POST /tasks`
 
@@ -64,7 +64,7 @@ Response:
 
 ---
 
-### HeadyMCP (:3003)
+### Heady™MCP (:3003)
 
 #### MCP Protocol (JSON-RPC 2.0 over stdio/SSE)
 
@@ -126,7 +126,7 @@ const nearby = await index.nearby({ x: 10, y: 20, z: 5 }, 50); // radius 50
 const collisions = await index.detectCollisions('agent-1');
 ```
 
-## HeadyRedisPool API
+## Heady™RedisPool API
 
 ```javascript
 const { HeadyRedisPool } = require('./src/services/heady-redis-pool');

@@ -1,5 +1,5 @@
 /**
- * Heady MCP Secret Rotation Manager
+ * Heady™ MCP Secret Rotation Manager
  * ==================================
  * Automated credential rotation for MCP server connections.
  *

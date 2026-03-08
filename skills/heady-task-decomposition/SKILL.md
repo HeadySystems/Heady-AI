@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Task Decomposition Engine
+# Heady™ Task Decomposition Engine
 
 ## When to Use This Skill
 

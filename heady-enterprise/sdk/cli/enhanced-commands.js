@@ -3,7 +3,7 @@
 
 /**
  * @file enhanced-commands.js
- * @description CLI enhancements for HeadyOS. Extends bin/heady-cli.js.
+ * @description CLI enhancements for Heady™OS. Extends bin/heady-cli.js.
  *
  * Commands:
  *   heady init              — Initialize a new HeadyOS project

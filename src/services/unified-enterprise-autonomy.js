@@ -1,10 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 
 const fs = require('fs');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
@@ -161,7 +162,7 @@ class UnifiedEnterpriseAutonomyService {
             sourceOfTruth: null,
             projectionHygiene: null,
             refreshedAt: 0,
-            ttlMs: 30000,
+            ttlMs: PHI_TIMING.CYCLE,
         };
     }
 

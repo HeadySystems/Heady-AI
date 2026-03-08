@@ -1,10 +1,10 @@
 /**
- * Heady IDE — App Component
+ * Heady™ IDE — App Component
  *
  * VS Code-inspired code editor with AI HeadyBuddy sidebar.
  * Dark theme, blue accents, syntax highlighting, file tree.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/heady-ide/App
  */
@@ -43,7 +43,7 @@ const FILE_TREE = [
 const CODE_LINES = [
   { t: 'cmt', v: '/**' },
   { t: 'cmt', v: ' * HeadyManager — Autonomous Agent Orchestrator' },
-  { t: 'cmt', v: ' * © 2026 HeadySystems Inc.' },
+  { t: 'cmt', v: ' * © 2026 Heady™Systems Inc.' },
   { t: 'cmt', v: ' */' },
   { t: '', v: '' },
   { t: 'kw', v: "'use strict';" },

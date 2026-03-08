@@ -584,7 +584,7 @@ class AgentRegistry {
 // ---------------------------------------------------------------------------
 
 /**
- * ML-informed skill router for the Heady agent platform.
+ * ML-informed skill router for the Heady™ agent platform.
  *
  * @extends EventEmitter
  */

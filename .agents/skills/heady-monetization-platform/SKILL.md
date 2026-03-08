@@ -1,7 +1,7 @@
 ---
 name: heady-monetization-platform
 description: >
-  Use when building monetization infrastructure for the Heady platform. Covers Stripe integration
+  Use when building monetization infrastructure for the Heady™ platform. Covers Stripe integration
   with subscription and usage-based billing, phi-scaled usage metering, CSL-gated feature gates,
   A/B testing with phi-weighted variants, Fibonacci-stepped gradual rollouts, SOC 2 Type II
   compliance checklist, and revenue modeling. Pricing follows sovereign AI platform patterns.
@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Monetization Platform
+# Heady™ Monetization Platform
 
 ## When to Use This Skill
 

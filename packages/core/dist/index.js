@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @headysystems/core
+ * @heady-ai/core
  * Core utilities and base classes
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {

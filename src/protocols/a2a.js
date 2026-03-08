@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Agent-to-Agent (A2A) Protocol — Decentralized Agent Discovery & Communication
  *
- * Implements the A2A protocol for the Heady swarm:
+ * Implements the A2A protocol for the Heady™ swarm:
  * - .well-known/agent.json discovery cards
  * - Agent capability advertisement
  * - Inter-agent task delegation via JSON-RPC 2.0
@@ -13,6 +13,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const logger = require('../utils/logger');
 
@@ -21,9 +22,9 @@ function createAgentCard(opts = {}) {
     return {
         schema: 'https://a2a.heady.systems/v1/agent-card',
         name: opts.name || 'heady-agent',
-        displayName: opts.displayName || 'Heady Agent',
+        displayName: opts.displayName || 'Heady™ Agent',
         version: opts.version || '3.0.0',
-        description: opts.description || 'Heady multi-agent orchestration node',
+        description: opts.description || 'Heady™ multi-agent orchestration node',
         url: opts.url || 'https://manager.headysystems.com',
         capabilities: {
             streaming: opts.streaming !== false,
@@ -101,7 +102,7 @@ class A2AProtocol extends EventEmitter {
                 skill: params.skill,
                 input: params.input || {},
                 priority: params.priority || 'normal',
-                timeout: params.timeout || Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000), // φ⁷×1000 ≈ 29034ms
+                timeout: params.timeout || Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000), // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
                 createdAt: new Date().toISOString(),
             },
             status: 'pending',

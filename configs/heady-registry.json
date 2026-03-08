@@ -3,7 +3,7 @@
     "name": "Heady Service Registry",
     "version": "3.2.3",
     "description": "Master registry for all Heady™ AI Platform domains, nodes, and infrastructure layers",
-    "copyright": "© 2024-2026 HeadySystems Inc. All Rights Reserved.",
+    "copyright": "© 2026-2026 HeadySystems Inc. All Rights Reserved.",
     "updatedAt": "2025-01-01T00:00:00Z"
   },
 
@@ -92,42 +92,42 @@
         }
       }
     },
-    "headylens.ai": {
+    "heady-ai.com": {
       "role": "ar_overlay",
       "description": "HeadyLens AR overlay intelligence",
       "subdomains": {
         "root": {
-          "url": "https://headylens.ai",
+          "url": "https://heady-ai.com",
           "description": "AR overlay and object explanation"
         }
       }
     },
-    "headyarena.io": {
+    "headyex.com": {
       "role": "evaluation",
       "description": "HeadyArena battle evaluation platform",
       "subdomains": {
         "root": {
-          "url": "https://headyarena.io",
+          "url": "https://headyex.com",
           "description": "Model and solution battle arena"
         }
       }
     },
-    "headyvinci.com": {
+    "heady-ai.com": {
       "role": "pattern_engine",
       "description": "HeadyVinci pattern recognition platform",
       "subdomains": {
         "root": {
-          "url": "https://headyvinci.com",
+          "url": "https://heady-ai.com",
           "description": "Pattern learning and prediction"
         }
       }
     },
-    "headysoul.ai": {
+    "heady-ai.com": {
       "role": "intelligence",
       "description": "HeadySoul intelligence engine domain",
       "subdomains": {
         "root": {
-          "url": "https://headysoul.ai",
+          "url": "https://heady-ai.com",
           "description": "Soul intelligence and reasoning"
         }
       }

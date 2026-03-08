@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
@@ -214,7 +214,7 @@ class StoryDriver extends EventEmitter {
       ? `${new Date(events[0].timestamp || Date.now()).toLocaleString()} → ${new Date(events[events.length - 1].timestamp || Date.now()).toLocaleString()}`
       : 'unknown timespan';
 
-    lines.push(`# Heady System Narrative`);
+    lines.push(`# Heady™ System Narrative`);
     lines.push(`**Period:** ${timespan}`);
     lines.push(`**Events:** ${events.length}`);
     lines.push('');

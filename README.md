@@ -1,4 +1,4 @@
-# Heady Liquid Latent OS Bundle
+# Heady™ Liquid Latent OS Bundle
 
 This bundle turns the attached Heady directives and configuration seeds into a production-oriented monorepo with Cloudflare edge workers, Cloud Run services, shared runtime packages, pgvector migrations, deployment workflows, and operational runbooks. Internal source material comes from the attached workspace directives, HCFullPipeline definitions, and cognitive configuration.
 

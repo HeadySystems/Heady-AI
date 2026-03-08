@@ -1,6 +1,6 @@
 /**
- * HCFP (Heady Communication Flow Protocol) service — stub for admin-ui server.
- * Full implementation lives in the main Heady Manager.
+ * HCFP (Heady™ Communication Flow Protocol) service — stub for admin-ui server.
+ * Full implementation lives in the main Heady™ Manager.
  */
 
 import fs from 'fs-extra';

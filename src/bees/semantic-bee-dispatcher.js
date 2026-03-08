@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * semantic-bee-dispatcher.js — Heady Semantic Bee Dispatcher
+ * semantic-bee-dispatcher.js — Heady™ Semantic Bee Dispatcher
  *
  * Replaces discrete bee type matching (if/switch on bee.type) with continuous
  * semantic dispatch.  Every bee registers its capabilities as natural language

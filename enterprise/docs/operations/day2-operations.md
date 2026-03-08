@@ -227,7 +227,7 @@ pnpm dlx changelogen
 ### Node.js Runtime Updates
 
 Cloud Run uses the container's Node.js version. Update by:
-1. Changing `FROM node:20-alpine` in Dockerfile(s)
+1. Changing `FROM node:22-alpine` in Dockerfile(s)
 2. Testing in staging
 3. Deploying via blue-green deploy
 

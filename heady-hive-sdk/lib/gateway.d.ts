@@ -2,7 +2,7 @@ export class HeadyGateway {
     /**
      * @param {Object} options
      * @param {string} options.baseUrl - HeadyStack API base URL
-     * @param {string} [options.apiKey] - API key (X-Heady-Key header)
+     * @param {string} [options.apiKey] - API key (X-Heady™-Key header)
      * @param {string} [options.accessToken] - Bearer access token
      * @param {number} [options.timeout] - Request timeout in ms (default: 30000)
      * @param {boolean} [options.debug] - Enable debug logging

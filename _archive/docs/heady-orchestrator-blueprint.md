@@ -1,4 +1,4 @@
-# Architectural Blueprint: Heady AI Orchestrator
+# Architectural Blueprint: Heady™ AI Orchestrator
 
 > Saved from conversation on 2026-02-27. See task extraction in `task.md`.
 

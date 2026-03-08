@@ -8,7 +8,7 @@
 # Processors: Batch, Memory limiter, Attribute enrichment
 # Exporters:  Google Cloud (prod), Jaeger (dev), Console (debug)
 #
-# © 2026 HeadySystems Inc.
+# © 2026 Heady™Systems Inc.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 receivers:
@@ -41,7 +41,7 @@ processors:
     limit_mib: 256
     spike_limit_mib: 64
 
-  # Enrich with Heady-specific attributes
+  # Enrich with Heady™-specific attributes
   attributes:
     actions:
       - key: heady.service

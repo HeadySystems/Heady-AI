@@ -1,6 +1,6 @@
 /**
  * @file index.js
- * @description Heady Bees Layer — Unified Exports.
+ * @description Heady™ Bees Layer — Unified Exports.
  *
  * Combines:
  * - BeeFactory: Dynamic agent worker factory (createBee, spawnBee, auto-scale)

@@ -1,4 +1,4 @@
-# Heady Deployment & Infrastructure Analysis
+# Heady™ Deployment & Infrastructure Analysis
 **Author:** Infrastructure Analysis Agent  
 **Date:** 2026-03-07  
 **Scope:** Docker, CI/CD, canary, health checks, provider gateway, IaC, monitoring  
@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-The Heady platform has a sophisticated multi-provider AI gateway, a rich PM2 ecosystem, and a well-documented production deployment guide. The core architecture is sound (multi-stage Dockerfile, non-root user, Cloud Run target), but several critical gaps exist that would cause production incidents. This report documents every finding, ranks them by severity, and provides concrete remediation — all implemented in the companion files.
+The Heady™ platform has a sophisticated multi-provider AI gateway, a rich PM2 ecosystem, and a well-documented production deployment guide. The core architecture is sound (multi-stage Dockerfile, non-root user, Cloud Run target), but several critical gaps exist that would cause production incidents. This report documents every finding, ranks them by severity, and provides concrete remediation — all implemented in the companion files.
 
 | Severity | Count | Examples |
 |---|---|---|
@@ -23,12 +23,12 @@ The Heady platform has a sophisticated multi-provider AI gateway, a rich PM2 eco
 ### 1.1 Current State (`Dockerfile`)
 
 ```
-Stage 1 (builder): node:20-slim
+Stage 1 (builder): node:22-slim
   COPY package*.json → npm ci --ignore-scripts
   COPY src/ configs/ scripts/ docs/
   npm prune --production
 
-Stage 2 (production): node:20-slim
+Stage 2 (production): node:22-slim
   Non-root user: heady ✅
   EXPOSE 8080 ✅
   HEALTHCHECK: HTTP /health ✅
@@ -45,7 +45,7 @@ Stage 2 (production): node:20-slim
 
 | # | Gap | Impact |
 |---|---|---|
-| 1 | Base image `node:20-slim` — not pinned to digest | Silent upstream CVE injection |
+| 1 | Base image `node:22-slim` — not pinned to digest | Silent upstream CVE injection |
 | 2 | `docs/` copied into production image | ~5-20 MB unnecessary layer |
 | 3 | `scripts/` copied wholesale — includes dev tooling | Increases attack surface |
 | 4 | No `.dockerignore` visible — likely copies `node_modules`, `.git`, `.env.*` | Image bloat + secret exposure |
@@ -57,7 +57,7 @@ Stage 2 (production): node:20-slim
 ### 1.2 Optimized Dockerfile (see `Dockerfile.optimized`)
 
 Key improvements:
-- Pin base image to digest (`node:20-slim@sha256:...`)
+- Pin base image to digest (`node:22-slim@sha256:...`)
 - Add comprehensive `.dockerignore` guidance
 - Use `tini` as PID 1 for proper signal propagation
 - Remove `docs/` from production image

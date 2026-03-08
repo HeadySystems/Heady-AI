@@ -4,7 +4,7 @@
  * HeadyEval Judges
  *
  * Manages LLM judge configuration:
- *  - Single judge via HeadyInfer
+ *  - Single judge via Heady™Infer
  *  - Multi-judge consensus
  *  - Judge calibration
  *  - Self-consistency checking
@@ -47,7 +47,7 @@ class TokenBucket {
   }
 }
 
-// ─── HTTP client for HeadyInfer ───────────────────────────────────────────────
+// ─── HTTP client for Heady™Infer ───────────────────────────────────────────────
 
 function makeRequest(url, body, timeoutMs) {
   return new Promise((resolve, reject) => {
@@ -73,7 +73,7 @@ function makeRequest(url, body, timeoutMs) {
         res.on('end', () => {
           if (res.statusCode >= 200 && res.statusCode < 300) {
             try { resolve(JSON.parse(data)); }
-            catch { reject(new Error(`Invalid JSON from HeadyInfer: ${data.slice(0, 200)}`)); }
+            catch { reject(new Error(`Invalid JSON from Heady™Infer: ${data.slice(0, 200)}`)); }
           } else {
             reject(new Error(`HeadyInfer error ${res.statusCode}: ${data.slice(0, 200)}`));
           }

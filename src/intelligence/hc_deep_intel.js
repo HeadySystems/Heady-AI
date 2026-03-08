@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -212,7 +212,7 @@ class DeepIntelEngine extends EventEmitter {
             }
         }
 
-        // Invoke relevant Heady nodes
+        // Invoke relevant Heady™ nodes
         for (const [nodeName, nodeConfig] of Object.entries(NODE_ROLES)) {
             const shouldInvoke = nodeConfig.triggers.includes("all") ||
                 nodeConfig.triggers.some(t => scan.perspectives[t]?.score > 0);
@@ -252,13 +252,13 @@ class DeepIntelEngine extends EventEmitter {
         // Structural analysis
         perspectives.structural = await this._analyzeStructure(componentPath);
 
-        // Best-practice recon via HeadyResearch
+        // Best-practice recon via Heady™Research
         perspectives.competitive = await this._reconBestPractice(componentType);
 
-        // Battle test via HeadyBattle
+        // Battle test via Heady™Battle
         perspectives.battlefield = await this._battleTest(componentPath, componentType);
 
-        // Simulation via HeadySims
+        // Simulation via Heady™Sims
         perspectives.simulation = await this._simulate(componentPath);
 
         // Store all perspectives

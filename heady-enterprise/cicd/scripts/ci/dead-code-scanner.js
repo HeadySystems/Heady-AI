@@ -2,7 +2,7 @@
 /**
  * scripts/ci/dead-code-scanner.js
  *
- * Scan the Heady monorepo for dead code:
+ * Scan the Heady™ monorepo for dead code:
  *   - Unused exported symbols (via static AST analysis)
  *   - Unreachable code patterns (after return/throw/break/continue)
  *   - Empty exported functions/classes

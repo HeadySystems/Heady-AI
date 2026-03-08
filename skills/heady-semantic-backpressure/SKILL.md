@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Semantic Backpressure
+# Heady™ Semantic Backpressure
 
 ## When to Use This Skill
 

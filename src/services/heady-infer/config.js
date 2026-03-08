@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyInfer — Configuration
  * Centralizes all env-var driven configuration for the inference gateway.
@@ -20,7 +21,7 @@ const config = {
       apiKey:    process.env.ANTHROPIC_API_KEY || '',
       baseUrl:   process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com',
       enabled:   !!process.env.ANTHROPIC_API_KEY,
-      timeout:   parseInt(process.env.ANTHROPIC_TIMEOUT || '30000', 10),
+      timeout:   parseInt(process.env.ANTHROPIC_TIMEOUT || String(PHI_TIMING.CYCLE), 10),
       models: {
         default:  'claude-3-5-sonnet-20241022',
         fast:     'claude-3-haiku-20240307',
@@ -42,7 +43,7 @@ const config = {
       baseUrl:   process.env.OPENAI_BASE_URL || 'https://api.openai.com',
       orgId:     process.env.OPENAI_ORG_ID || '',
       enabled:   !!process.env.OPENAI_API_KEY,
-      timeout:   parseInt(process.env.OPENAI_TIMEOUT || '30000', 10),
+      timeout:   parseInt(process.env.OPENAI_TIMEOUT || String(PHI_TIMING.CYCLE), 10),
       models: {
         default:  'gpt-4o',
         fast:     'gpt-4o-mini',
@@ -62,7 +63,7 @@ const config = {
       apiKey:    process.env.GOOGLE_AI_API_KEY || '',
       baseUrl:   process.env.GOOGLE_AI_BASE_URL || 'https://generativelanguage.googleapis.com',
       enabled:   !!process.env.GOOGLE_AI_API_KEY,
-      timeout:   parseInt(process.env.GOOGLE_TIMEOUT || '30000', 10),
+      timeout:   parseInt(process.env.GOOGLE_TIMEOUT || String(PHI_TIMING.CYCLE), 10),
       models: {
         default: 'gemini-2.0-flash',
         fast:    'gemini-2.0-flash',
@@ -162,7 +163,7 @@ const config = {
 
   // ─── Timeouts ─────────────────────────────────────────────────────────────
   timeouts: {
-    default:   parseInt(process.env.DEFAULT_TIMEOUT || '30000', 10),
+    default:   parseInt(process.env.DEFAULT_TIMEOUT || String(PHI_TIMING.CYCLE), 10),
     stream:    parseInt(process.env.STREAM_TIMEOUT  || '120000', 10),
     health:    parseInt(process.env.HEALTH_TIMEOUT  || '5000', 10),
   },

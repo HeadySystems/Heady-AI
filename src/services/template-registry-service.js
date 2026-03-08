@@ -1,9 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 const EventEmitter = require('events');
+const { PHI_TIMING } = require('../shared/phi-math');
 const beeRegistry = require('../bees/registry');
 const vectorTemplateEngine = require('../vector-template-engine');
 const {
@@ -19,7 +20,7 @@ class TemplateRegistryService extends EventEmitter {
         super();
         this.config = {
             enabled: true,
-            auditIntervalMs: 30000,
+            auditIntervalMs: PHI_TIMING.CYCLE,
             autoIndexScenarios: true,
             ...config,
         };

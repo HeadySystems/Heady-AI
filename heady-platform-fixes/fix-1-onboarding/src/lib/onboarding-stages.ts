@@ -1,5 +1,5 @@
 /**
- * Heady Onboarding Stage Definitions
+ * Heady™ Onboarding Stage Definitions
  * 
  * Each stage has validation rules, API endpoints, and phi-scaled timing.
  * The flow enforces sequential completion — no skipping to API key.
@@ -23,7 +23,7 @@ export const ONBOARDING_STAGES: StageConfig[] = [
   {
     id: 'create-account',
     index: 0,
-    title: 'Create Your Heady Account',
+    title: 'Create Your Heady™ Account',
     description: 'Choose your username to get your @headyme.com identity',
     path: '/onboarding/create-account',
     apiEndpoint: '/api/onboarding/create-account',
@@ -46,7 +46,7 @@ export const ONBOARDING_STAGES: StageConfig[] = [
     id: 'permissions',
     index: 2,
     title: 'Permissions & Runtime',
-    description: 'Choose how Heady operates — cloud-only or hybrid with your filesystem',
+    description: 'Choose how Heady™ operates — cloud-only or hybrid with your filesystem',
     path: '/onboarding/permissions',
     apiEndpoint: '/api/onboarding/permissions',
     requiredFields: ['runtimeMode'],
@@ -67,7 +67,7 @@ export const ONBOARDING_STAGES: StageConfig[] = [
   {
     id: 'complete',
     index: 4,
-    title: 'Welcome to Heady',
+    title: 'Welcome to Heady™',
     description: 'Your workspace is ready — API key available in Settings',
     path: '/onboarding/complete',
     apiEndpoint: '/api/onboarding/complete',

@@ -12,7 +12,7 @@ declare class ErrorPipelineBridge extends EventEmitter<[never]> {
         flushed: number;
     };
     /**
-     * Connect to the HeadySwarm instance.
+     * Connect to the Heady™Swarm instance.
      * Must be called after the swarm is initialized.
      */
     connectSwarm(swarm: any): void;

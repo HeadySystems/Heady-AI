@@ -57,10 +57,10 @@ fi
 All Heady services resolve via canonical domains, never direct URLs:
 
 - `headyme.com` — Primary portal
-- `headyai.com` — AI services
+- `heady-ai.com` — AI services
 - `headyapi.com` — Public API gateway
-- `headybuddy.com` — Companion interface
-- `headylearn.com` — Education platform
+- `headybuddy.org` — Companion interface
+- `headyu.com` — Education platform
 - `heady.build` — CI/CD and development tools
 - Cloud Run services: `*.run.app` with custom domain mapping
 - Cloudflare Workers: `*.workers.dev` with custom domain mapping

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Heady Council — Multi-Model Council for Critical Decisions
+ * @fileoverview Heady™ Council — Multi-Model Council for Critical Decisions
  * @module orchestration/heady-council
  * @version 2.0.0
  * @author HeadySystems Inc.
@@ -55,11 +55,11 @@ import {
  * accuracy:34%, completeness:21%, reasoning:21%, novelty:13%, safety:11%
  */
 const SCORE_WEIGHTS = Object.freeze({
-  accuracy:     0.34,
+  accuracy: 0.34,
   completeness: 0.21,
-  reasoning:    0.21,
-  novelty:      0.13,
-  safety:       0.11,
+  reasoning: 0.21,
+  novelty: 0.13,
+  safety: 0.11,
 });
 
 /** Minimum council members to convene */
@@ -99,51 +99,51 @@ const COST_TIER_ORDER = Object.freeze({ LOW: 0, MEDIUM: 1, HIGH: 2 });
 const COUNCIL_MEMBERS = Object.fromEntries(
   [
     {
-      id:       'claude_opus',
+      id: 'claude_opus',
       provider: 'anthropic',
-      model:    'claude-opus-4.6',
+      model: 'claude-opus-4.6',
       strength: 'deep reasoning',
       costTier: 'HIGH',
     },
     {
-      id:       'gpt5',
+      id: 'gpt5',
       provider: 'openai',
-      model:    'gpt-5.4',
+      model: 'gpt-5.4',
       strength: 'broad knowledge',
       costTier: 'HIGH',
     },
     {
-      id:       'gemini_pro',
+      id: 'gemini_pro',
       provider: 'google',
-      model:    'gemini-3.1-pro',
+      model: 'gemini-3.1-pro',
       strength: 'pattern recognition',
       costTier: 'MEDIUM',
     },
     {
-      id:       'o1_pro',
+      id: 'o1_pro',
       provider: 'openai',
-      model:    'o1-pro',
+      model: 'o1-pro',
       strength: 'mathematical reasoning',
       costTier: 'HIGH',
     },
     {
-      id:       'sonar_pro',
+      id: 'sonar_pro',
       provider: 'perplexity',
-      model:    'sonar-pro',
+      model: 'sonar-pro',
       strength: 'real-time research',
       costTier: 'MEDIUM',
     },
     {
-      id:       'groq_llama',
+      id: 'groq_llama',
       provider: 'groq',
-      model:    'llama-3.1-405b',
+      model: 'llama-3.1-405b',
       strength: 'fast inference',
       costTier: 'LOW',
     },
     {
-      id:       'workers_ai',
+      id: 'workers_ai',
       provider: 'cloudflare',
-      model:    'workers-ai',
+      model: 'workers-ai',
       strength: 'edge classification',
       costTier: 'LOW',
     },
@@ -217,11 +217,30 @@ const COUNCIL_MEMBERS = Object.fromEntries(
 
 export class HeadyCouncil {
   /**
-   * @param {Object} [budgetTracker] — optional budget-tracker service reference
+   * @param {Object} [opts] — options
+   * @param {Object} [opts.budgetTracker] — optional budget-tracker service reference
+   * @param {Object} [opts.gateway] — InferenceGateway instance for real API calls
    */
-  constructor(budgetTracker = null) {
+  constructor(opts = {}) {
+    // Support legacy call: constructor(budgetTracker)
+    if (opts && typeof opts.getAvailable !== 'function' && !opts.gateway) {
+      opts = { budgetTracker: opts };
+    }
+
     /** @type {Object|null} Budget tracker reference */
-    this._budgetTracker = budgetTracker;
+    this._budgetTracker = opts.budgetTracker || null;
+
+    /** @type {Object|null} InferenceGateway for real API calls */
+    this._gateway = opts.gateway || null;
+
+    /** Provider name mapping: council member.provider → gateway provider key */
+    this._providerMap = {
+      anthropic: 'claude',
+      openai: 'openai',
+      google: 'gemini',
+      groq: 'groq',
+      huggingface: 'huggingface',
+    };
 
     /** @type {Map<string, CouncilMember>} active member registry */
     this.members = new Map(Object.entries(COUNCIL_MEMBERS));
@@ -235,11 +254,28 @@ export class HeadyCouncil {
     /** @type {number} */
     this._startedAt = Date.now();
 
+    // If gateway is provided, filter members to only those with available providers
+    if (this._gateway) {
+      const available = new Set(this._gateway.getAvailable());
+      const activeMembers = [];
+      this.members.forEach((member, id) => {
+        const gwKey = this._providerMap[member.provider];
+        if (gwKey && available.has(gwKey)) {
+          activeMembers.push(id);
+        }
+      });
+      this._log('info', 'HeadyCouncil initialized with InferenceGateway', {
+        gatewayProviders: [...available],
+        activeMembers,
+      });
+    }
+
     this._log('info', 'HeadyCouncil initialized', {
       members: Array.from(this.members.keys()),
       agreementThreshold: AGREEMENT_THRESHOLD,
       disagreementThreshold: DISAGREEMENT_THRESHOLD,
       defaultTimeout: DEFAULT_TIMEOUT_MS,
+      gatewayConnected: !!this._gateway,
     });
   }
 
@@ -255,11 +291,11 @@ export class HeadyCouncil {
    */
   async convene(prompt, options = {}) {
     const {
-      minMembers   = MIN_MEMBERS,
-      maxMembers   = MAX_MEMBERS,
-      timeout      = DEFAULT_TIMEOUT_MS,
-      costCeiling  = null,
-      taskType     = 'general',
+      minMembers = MIN_MEMBERS,
+      maxMembers = MAX_MEMBERS,
+      timeout = DEFAULT_TIMEOUT_MS,
+      costCeiling = null,
+      taskType = 'general',
       requiredMembers = [],
     } = options;
 
@@ -303,7 +339,7 @@ export class HeadyCouncil {
     const scoredResponses = this.scoreResponses(validResponses);
 
     // 4. Find agreement and disagreement
-    const agreement    = this.findAgreement(scoredResponses);
+    const agreement = this.findAgreement(scoredResponses);
     const disagreement = this.findDisagreement(scoredResponses);
 
     // 5. Synthesize
@@ -493,25 +529,25 @@ export class HeadyCouncil {
 
         // Length-based proxies (to be replaced with real evaluation)
         const completeness = Math.min(1, textLen / (fib(11) * 10)); // 890 chars = 1.0
-        const accuracy     = response._simulatedAccuracy ?? (PSI + Math.random() * (1 - PSI));
-        const reasoning    = response._simulatedReasoning ?? (PSI * PSI + Math.random() * PSI);
-        const novelty      = response._simulatedNovelty ?? (PSI * PSI * PSI + Math.random() * PSI * PSI);
-        const safety       = response._simulatedSafety ?? (CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH));
+        const accuracy = response._simulatedAccuracy ?? (PSI + Math.random() * (1 - PSI));
+        const reasoning = response._simulatedReasoning ?? (PSI * PSI + Math.random() * PSI);
+        const novelty = response._simulatedNovelty ?? (PSI * PSI * PSI + Math.random() * PSI * PSI);
+        const safety = response._simulatedSafety ?? (CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH));
 
         const scores = {
-          accuracy:     parseFloat(Math.min(1, accuracy).toFixed(4)),
+          accuracy: parseFloat(Math.min(1, accuracy).toFixed(4)),
           completeness: parseFloat(Math.min(1, completeness).toFixed(4)),
-          reasoning:    parseFloat(Math.min(1, reasoning).toFixed(4)),
-          novelty:      parseFloat(Math.min(1, novelty).toFixed(4)),
-          safety:       parseFloat(Math.min(1, safety).toFixed(4)),
+          reasoning: parseFloat(Math.min(1, reasoning).toFixed(4)),
+          novelty: parseFloat(Math.min(1, novelty).toFixed(4)),
+          safety: parseFloat(Math.min(1, safety).toFixed(4)),
         };
 
         const composite =
-          scores.accuracy     * SCORE_WEIGHTS.accuracy     +
+          scores.accuracy * SCORE_WEIGHTS.accuracy +
           scores.completeness * SCORE_WEIGHTS.completeness +
-          scores.reasoning    * SCORE_WEIGHTS.reasoning    +
-          scores.novelty      * SCORE_WEIGHTS.novelty      +
-          scores.safety       * SCORE_WEIGHTS.safety;
+          scores.reasoning * SCORE_WEIGHTS.reasoning +
+          scores.novelty * SCORE_WEIGHTS.novelty +
+          scores.safety * SCORE_WEIGHTS.safety;
 
         return {
           memberId: response.memberId,
@@ -718,21 +754,21 @@ export class HeadyCouncil {
       memberCount: this.members.size,
       performance: this.getModelPerformance(),
       constants: {
-        minMembers:             MIN_MEMBERS,
-        maxMembers:             MAX_MEMBERS,
-        defaultTimeoutMs:       DEFAULT_TIMEOUT_MS,
-        agreementThreshold:     AGREEMENT_THRESHOLD,
-        disagreementThreshold:  DISAGREEMENT_THRESHOLD,
-        scoreWeights:           SCORE_WEIGHTS,
+        minMembers: MIN_MEMBERS,
+        maxMembers: MAX_MEMBERS,
+        defaultTimeoutMs: DEFAULT_TIMEOUT_MS,
+        agreementThreshold: AGREEMENT_THRESHOLD,
+        disagreementThreshold: DISAGREEMENT_THRESHOLD,
+        scoreWeights: SCORE_WEIGHTS,
       },
       sacredGeometry: {
         phi: PHI,
         psi: PSI,
         cslThresholds: {
-          MINIMUM:  CSL_THRESHOLDS.MINIMUM,
-          LOW:      CSL_THRESHOLDS.LOW,
-          MEDIUM:   CSL_THRESHOLDS.MEDIUM,
-          HIGH:     CSL_THRESHOLDS.HIGH,
+          MINIMUM: CSL_THRESHOLDS.MINIMUM,
+          LOW: CSL_THRESHOLDS.LOW,
+          MEDIUM: CSL_THRESHOLDS.MEDIUM,
+          HIGH: CSL_THRESHOLDS.HIGH,
           CRITICAL: CSL_THRESHOLDS.CRITICAL,
         },
       },
@@ -742,9 +778,8 @@ export class HeadyCouncil {
   // ─── Private Helpers ──────────────────────────────────────────────────────────
 
   /**
-   * Route a prompt to a specific model provider.
-   * In production: each provider has a dedicated client.
-   * Placeholder returns a structurally valid response with simulated content.
+   * Route a prompt to a specific model provider via InferenceGateway.
+   * Falls back to placeholder if gateway is not connected or provider unavailable.
    *
    * @private
    * @param {CouncilMember} member
@@ -752,53 +787,70 @@ export class HeadyCouncil {
    * @returns {Promise<Partial<CouncilResponse>>}
    */
   async _callMember(member, prompt) {
-    // Production: route to actual API client by member.provider
-    // switch (member.provider) {
-    //   case 'anthropic':  return anthropicClient.complete(member.model, prompt);
-    //   case 'openai':     return openaiClient.complete(member.model, prompt);
-    //   case 'google':     return googleClient.complete(member.model, prompt);
-    //   case 'perplexity': return perplexityClient.complete(member.model, prompt);
-    //   case 'groq':       return groqClient.complete(member.model, prompt);
-    //   case 'cloudflare': return cfWorkersClient.complete(member.model, prompt);
-    // }
+    const gwProviderKey = this._providerMap[member.provider];
 
-    // Placeholder: simulate variable latency and response quality per provider
-    const latencyProfiles = {
-      anthropic:  { base: 3000, jitter: 1000 },
-      openai:     { base: 2000, jitter: 800  },
-      google:     { base: 2500, jitter: 900  },
-      perplexity: { base: 1500, jitter: 500  },
-      groq:       { base: 300,  jitter: 100  },
-      cloudflare: { base: 50,   jitter: 20   },
-    };
+    // If gateway is connected and provider is available, use real API
+    if (this._gateway && gwProviderKey) {
+      const available = this._gateway.getAvailable();
+      if (available.includes(gwProviderKey)) {
+        try {
+          const result = await this._gateway.complete(
+            [
+              { role: 'system', content: `You are ${member.model}, a ${member.strength} specialist. Provide your best analysis.` },
+              { role: 'user', content: prompt },
+            ],
+            { provider: gwProviderKey, model: member.model }
+          );
 
-    const profile = latencyProfiles[member.provider] ?? { base: 1000, jitter: 500 };
-    const simulatedLatency = Math.min(
-      profile.base + (Math.random() * profile.jitter),
-      100 // Capped in non-production to avoid slow tests
-    );
+          const text = result.content || '';
+          // Generate embedding from text for agreement/disagreement comparison
+          const embedding = placeholderVector(`response:${member.id}:${text.slice(0, 100)}`, VECTOR_DIMENSIONS);
 
+          this._log('info', `_callMember: real response from ${member.id}`, {
+            provider: gwProviderKey,
+            model: result.model,
+            latencyMs: result.gatewayLatencyMs,
+            contentLength: text.length,
+          });
+
+          return {
+            text,
+            embedding,
+            realResponse: true,
+            gatewayModel: result.model,
+            gatewayProvider: result.provider,
+            usage: result.usage || null,
+          };
+        } catch (err) {
+          this._log('warn', `_callMember: ${member.id} real call failed, using placeholder`, {
+            error: err.message,
+          });
+          // Fall through to placeholder
+        }
+      }
+    }
+
+    // Placeholder fallback for providers not in gateway or when gateway unavailable
+    const simulatedLatency = Math.min(100, 50 + Math.random() * 50);
     await new Promise(r => setTimeout(r, simulatedLatency));
 
-    // Placeholder response text
     const text = [
       `[${member.model}] Response to: "${prompt.slice(0, 80)}..."`,
       `Provider: ${member.provider} | Strength: ${member.strength}`,
       `Analysis: ${member.strength} perspective with ${fib(7)} key insights.`,
-      `Confidence calibration: ${(PSI + Math.random() * (1 - PSI)).toFixed(3)}`,
+      `Note: This is a placeholder — provider ${member.provider} not connected to InferenceGateway.`,
     ].join('\n');
 
-    // Deterministic placeholder embedding seeded by text content
     const embedding = placeholderVector(`response:${member.id}:${prompt.slice(0, 50)}`, VECTOR_DIMENSIONS);
 
     return {
       text,
       embedding,
-      // Simulated quality signals (replace with real scoring)
-      _simulatedAccuracy:  PSI + Math.random() * (1 - PSI),
+      realResponse: false,
+      _simulatedAccuracy: PSI + Math.random() * (1 - PSI),
       _simulatedReasoning: PSI * PSI + Math.random() * PSI,
-      _simulatedNovelty:   PSI * PSI * PSI + Math.random() * PSI * PSI,
-      _simulatedSafety:    CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH),
+      _simulatedNovelty: PSI * PSI * PSI + Math.random() * PSI * PSI,
+      _simulatedSafety: CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH),
     };
   }
 

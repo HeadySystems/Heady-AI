@@ -1,10 +1,10 @@
 /**
  * ============================================================================
- * Heady Liquid Architecture v3.1 — Redis Pool Configuration
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * Heady™ Liquid Architecture v3.1 — Redis Pool Configuration
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * ============================================================================
  *
- * Redis serves as the real-time state bus for the Heady platform:
+ * Redis serves as the real-time state bus for the Heady™ platform:
  *
  *   1. Agent Heartbeat Store — agents publish heartbeats to Redis;
  *      the conductor reads them for liveness detection.

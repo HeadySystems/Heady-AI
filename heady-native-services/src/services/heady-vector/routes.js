@@ -51,7 +51,7 @@ function requireFields(body, fields) {
 // ─── Router factory ───────────────────────────────────────────────────────────
 
 /**
- * Create and return the Express router for HeadyVector.
+ * Create and return the Express router for Heady™Vector.
  * @param {import('./index').HeadyVector} hv - initialized HeadyVector instance
  * @returns {Router}
  */

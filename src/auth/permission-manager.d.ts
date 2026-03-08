@@ -219,7 +219,7 @@ export namespace RATE_LIMITS {
 }
 /**
  * PermissionManager enforces RBAC and resource-level access control
- * across the entire Heady platform.
+ * across the entire Heady™ platform.
  *
  * Usage:
  * ```js
@@ -317,7 +317,7 @@ export class PermissionManager {
         targetId?: string | undefined;
     }): Promise<object>;
     /**
-     * Filesystem requests are self-approved — the user is granting Heady access
+     * Filesystem requests are self-approved — the user is granting Heady™ access
      * to their own files. This is the explicit consent model.
      * @private
      */

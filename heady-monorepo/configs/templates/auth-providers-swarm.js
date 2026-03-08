@@ -1,7 +1,7 @@
 /**
  * Auth Providers Swarm Configuration
  * Defines OAuth/Auth providers and swarm tasks for auth-provider-bee
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

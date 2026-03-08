@@ -1,4 +1,4 @@
-# Heady + HeadyMe Cognitive Memory Research & Implementation Plan
+# Heady™ + HeadyMe Cognitive Memory Research & Implementation Plan
 
 ## Purpose
 

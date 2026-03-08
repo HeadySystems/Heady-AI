@@ -73,7 +73,7 @@ export class HeadyWebSocketClient {
   // ---------------------------------------------------------------------------
 
   /**
-   * Connect to the HeadyOS WebSocket server.
+   * Connect to the Heady™OS WebSocket server.
    */
   connect(): Promise<void> {
     return new Promise((resolve, reject) => {

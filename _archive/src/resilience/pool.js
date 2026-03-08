@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Connection Pool — Bounded concurrent request management
+ * Heady™ Connection Pool — Bounded concurrent request management
  * Prevents thundering herds and enforces max concurrency per target.
  * Addresses registry bestPracticeScores.pooling = 0.
  */

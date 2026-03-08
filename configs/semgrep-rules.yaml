@@ -1,10 +1,10 @@
-# semgrep-rules.yaml — Heady Systems Custom Semgrep Rules
+# semgrep-rules.yaml — Heady™ Systems Custom Semgrep Rules
 # Detects Heady-specific security patterns across the codebase.
 # Usage: semgrep --config ci-pipelines/semgrep-rules.yaml .
 # Version: 1.0.0
 
 rules:
-  # ─── Hardcoded API Keys with Heady Prefixes ──────────────────────────────────
+  # ─── Hardcoded API Keys with Heady™ Prefixes ──────────────────────────────────
 
   - id: heady-hardcoded-api-key-openai
     message: |

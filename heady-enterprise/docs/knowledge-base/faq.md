@@ -1,4 +1,4 @@
-# HeadySystems — Frequently Asked Questions
+# Heady™Systems — Frequently Asked Questions
 
 **Version:** 1.0.0  
 **Last Updated:** 2026-03-07  
@@ -9,7 +9,7 @@
 
 HeadyOS is an AI agent operating system built for enterprise teams. It provides a platform for creating, orchestrating, and managing AI agents that can use tools, remember context, collaborate with each other, and complete complex multi-step tasks.
 
-Think of HeadyOS as the operating system layer that sits between your team's workflows and AI models — handling authentication, memory, tool integration, security, and orchestration so your agents can focus on doing useful work.
+Think of Heady™OS as the operating system layer that sits between your team's workflows and AI models — handling authentication, memory, tool integration, security, and orchestration so your agents can focus on doing useful work.
 
 HeadyOS runs at [headyos.com](https://headyos.com) and is accessible via API, SDK, and web dashboard.
 

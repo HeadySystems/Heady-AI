@@ -8,7 +8,7 @@
 
 ## INSTRUCTIONS FOR PERPLEXITY COMPUTER
 
-You are working on the Heady™ AI Platform monorepo owned by HeadyMe (github.com/HeadyMe). Your task is to bring the **entire system to full production live status** by deploying all services and unifying all version numbers.
+You are working on the Heady™ AI Platform monorepo owned by Heady™Me (github.com/HeadyMe). Your task is to bring the **entire system to full production live status** by deploying all services and unifying all version numbers.
 
 **READ THE ATTACHED CONTEXT FILES FIRST** — especially `00-HEADY-MASTER-CONTEXT.md`, `package.json`, `heady-registry.json`, and `docker-compose.production.yml`.
 

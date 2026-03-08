@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Vertical Config — Government
+# Heady™Systems Vertical Config — Government
 # Domain: gov.headyme.com
 # =============================================================================
 
@@ -13,7 +13,7 @@ routing:
     - fedramp.headyme.com
 
 brand:
-  name: "Heady Government"
+  name: "Heady™ Government"
   tagline: "FedRAMP-Ready AI Orchestration for Public Sector"
   accent_color: "#3b82f6"
   logo_variant: government
@@ -138,7 +138,7 @@ content:
     author: "Records Officer, State Agency (placeholder)"
 
 meta:
-  title: "Heady Government — FedRAMP-Ready AI for Public Sector"
+  title: "Heady™ Government — FedRAMP-Ready AI for Public Sector"
   description: "FedRAMP-pathway AI agent orchestration for government. Grant management, FOIA response, compliance auditing, and public records automation."
   keywords:
     - "government AI platform"

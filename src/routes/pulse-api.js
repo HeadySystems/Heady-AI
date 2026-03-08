@@ -1,5 +1,5 @@
 /**
- * Heady Project - System Pulse & Proof API
+ * Heady™ Project - System Pulse & Proof API
  * 
  * Serves live telemetry, Arena Merge scores, and Immutable Receipts 
  * directly to the frontend applications (headysystems.com, headyos.com).
@@ -36,7 +36,7 @@ router.get('/pulse', (req, res) => {
 
 // ── 2. Arena Merge (For headyos.com) ──
 router.get('/arena/consensus', (req, res) => {
-    // Exposes the HeadyBattle consensus results for Proof-View UX
+    // Exposes the Heady™Battle consensus results for Proof-View UX
     res.json({
         ok: true,
         modelsCompeted: ['Claude-4', 'GPT-4o', 'Ollama-Local'],

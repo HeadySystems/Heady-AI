@@ -1,14 +1,14 @@
 /**
- * Heady-AI.org Edge Worker
+ * Heady™-AI.org Edge Worker
  * 
- * FIX: heady-ai.org returns connection refused (HTTP 000) — DNS zone
+ * FIX: heady-ai.com returns connection refused (HTTP 000) — DNS zone
  * either doesn't exist in Cloudflare or has no origin configured.
  * 
  * This Worker provides the origin + landing page.
  * Run dns/setup-zone.sh first to create the Cloudflare zone,
  * then deploy this Worker.
  * 
- * Purpose: heady-ai.org is the open/research-facing AI portal.
+ * Purpose: heady-ai.com is the open/research-facing AI portal.
  */
 
 const CLOUD_RUN_ORIGIN = 'https://heady-manager-609590223909.us-central1.run.app';
@@ -33,7 +33,7 @@ export default {
         status: 'online',
         service: 'heady-ai-org',
         version: '2.0.0',
-        domain: 'heady-ai.org',
+        domain: 'heady-ai.com',
         role: 'AI Research Portal',
         region: request.cf?.colo ?? 'unknown',
         timestamp: new Date().toISOString(),
@@ -69,8 +69,8 @@ const LANDING_HTML = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heady AI — Open Intelligence Research</title>
-  <meta name="description" content="Heady AI: Open research in Continuous Semantic Logic, Sacred Geometry orchestration, and multi-agent intelligence.">
+  <title>Heady™ AI — Open Intelligence Research</title>
+  <meta name="description" content="Heady™ AI: Open research in Continuous Semantic Logic, Sacred Geometry orchestration, and multi-agent intelligence.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -92,7 +92,7 @@ const LANDING_HTML = `<!DOCTYPE html>
 <body>
   <div class="bg-grid"></div>
   <div class="container">
-    <h1>Heady AI</h1>
+    <h1>Heady™ AI</h1>
     <p class="subtitle">Open intelligence research. Continuous Semantic Logic, Sacred Geometry orchestration, and autonomous multi-agent systems.</p>
     <div class="research-areas">
       <div class="area">

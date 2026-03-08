@@ -3,7 +3,7 @@
 /**
  * GraphRAGBee — Knowledge graph construction and multi-hop retrieval.
  * Builds entity-relation graphs, scores paths via phi-weighted traversal.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

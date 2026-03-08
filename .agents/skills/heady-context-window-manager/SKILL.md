@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Context Window Manager
+# Heady™ Context Window Manager
 
 ## When to Use This Skill
 

@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ CognitiveRuntime — Cognitive Processing Engine
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
@@ -26,7 +26,7 @@ const LOAD_THRESHOLD = 0.85;
 // ─── CognitiveRuntime ─────────────────────────────────────────────────────────
 
 /**
- * CognitiveRuntime is the cognitive processing engine for HeadySystems.
+ * CognitiveRuntime is the cognitive processing engine for Heady™Systems.
  *
  * It manages:
  * - **Context Assembly**: Combines vector memory retrievals + graph RAG results

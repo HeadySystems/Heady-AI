@@ -1,7 +1,7 @@
 /**
  * @fileoverview HDC Operations — Hyperdimensional Computing
  *
- * Heady Latent OS — Section 5: CSL & Geometric AI
+ * Heady™ Latent OS — Section 5: CSL & Geometric AI
  *
  * Implements the Vector Symbolic Architecture (VSA) algebra for distributed
  * representation and reasoning. HDC operations form the substrate for encoding
@@ -28,7 +28,7 @@
  *
  * @module hdc-operations
  * @version 1.0.0
- * @patent Heady Connection — 60+ provisional patents on CSL/HDC techniques
+ * @patent Heady™ Connection — 60+ provisional patents on CSL/HDC techniques
  */
 
 'use strict';

@@ -1,6 +1,6 @@
 /**
  * Auto-generated test stub for logic-orchestrator
- * Generated: 2026-03-07 by Heady Autonomous Cycle
+ * Generated: 2026-03-07 by Heady™ Autonomous Cycle
  * 
  * Service: src/services/logic-orchestrator.js
  * Requires manual review and expansion of test cases.
@@ -32,7 +32,7 @@ describe("logic-orchestrator", () => {
   });
 
   test("should have expected interface", () => {
-    // Common patterns in Heady services:
+    // Common patterns in Heady™ services:
     const hasRoutes = typeof service.registerRoutes === "function" 
       || typeof service.router !== "undefined"
       || typeof service === "function";

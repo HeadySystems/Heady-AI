@@ -1,6 +1,6 @@
-# Heady Cognitive Architecture v2.0
+# Heady™ Cognitive Architecture v2.0
 
-> 7-Archetype AI Reasoning System for the Heady Ecosystem
+> 7-Archetype AI Reasoning System for the Heady™ Ecosystem
 
 | Field | Value |
 |---|---|

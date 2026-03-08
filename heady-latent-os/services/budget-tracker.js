@@ -1,6 +1,6 @@
 /**
  * @fileoverview BudgetTracker — Real-time AI provider cost tracking with phi-scaled
- * alert thresholds and auto-downgrade logic for the Heady Latent OS.
+ * alert thresholds and auto-downgrade logic for the Heady™ Latent OS.
  *
  * All alert thresholds are derived from ALERT_THRESHOLDS in shared/phi-math.js.
  * Rolling spend history uses a Fibonacci-sized window (fib(9)=34 days).

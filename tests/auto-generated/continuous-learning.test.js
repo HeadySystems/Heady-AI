@@ -1,6 +1,6 @@
 /**
  * Auto-generated test stub for continuous-learning
- * Generated: 2026-03-07 by Heady Autonomous Cycle
+ * Generated: 2026-03-07 by Heady™ Autonomous Cycle
  * 
  * Service: src/services/continuous-learning.js
  * Requires manual review and expansion of test cases.
@@ -32,7 +32,7 @@ describe("continuous-learning", () => {
   });
 
   test("should have expected interface", () => {
-    // Common patterns in Heady services:
+    // Common patterns in Heady™ services:
     const hasRoutes = typeof service.registerRoutes === "function" 
       || typeof service.router !== "undefined"
       || typeof service === "function";

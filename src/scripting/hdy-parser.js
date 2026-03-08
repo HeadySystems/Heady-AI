@@ -3,7 +3,7 @@
 /**
  * ─── HDY Parser ──────────────────────────────────────────────────────────────
  *
- * Parses .hdy (Heady Semantic Logic) files — a declarative scripting format
+ * Parses .hdy (Heady™ Semantic Logic) files — a declarative scripting format
  * where control flow is defined as continuous semantic evaluation.
  *
  * The .hdy format is a YAML-like indentation-based document. This parser

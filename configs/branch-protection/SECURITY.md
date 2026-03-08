@@ -15,7 +15,7 @@ We actively maintain and provide security patches for the following versions:
 | Repository | Supported Versions | Status |
 |---|---|---|
 | Heady-pre-production-9f2f0642 | `main` branch (v3.x) | ✅ Active |
-| headysystems-production | `main` branch (current) | ✅ Active |
+| heady-production | `main` branch (current) | ✅ Active |
 | headymcp-production | `main` branch (current) | ✅ Active |
 | headyio-core | `main` branch | ✅ Active |
 | headybot-core | `main` branch | ✅ Active |
@@ -29,7 +29,7 @@ We actively maintain and provide security patches for the following versions:
 | heady-docs | `main` branch | ✅ Active |
 
 **Unsupported versions** (no longer receive security patches):
-- Any version prior to v3.0.0 of Heady-pre-production-9f2f0642
+- Any version prior to v3.0.0 of Heady™-pre-production-9f2f0642
 - Any non-`main` branch (dev, staging, feature branches)
 
 ---

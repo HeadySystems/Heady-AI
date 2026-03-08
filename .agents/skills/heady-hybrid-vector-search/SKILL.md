@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Hybrid Vector Search
+# Heady™ Hybrid Vector Search
 
 ## When to Use This Skill
 

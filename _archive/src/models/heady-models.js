@@ -1,11 +1,11 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 
 /**
- * Heady Models Registry — Branded AI Model Lineup
+ * Heady™ Models Registry — Branded AI Model Lineup
  * 
  * Each model maps to a specific arena configuration
  * controlling which nodes compete, timeouts, and scoring weights.
@@ -25,7 +25,7 @@
 const HEADY_MODELS = {
     'heady-battle-v1': {
         id: 'heady-battle-v1',
-        name: 'Heady Battle v1',
+        name: 'Heady™ Battle v1',
         description: 'Full 20-node arena competition. Gemini 3.1 Pro + Claude Opus 4.6 + GPT-5.x compete at million-token scale. Highest quality, arena-validated.',
         tier: 'premium',
         context_window: 1048576,  // 1M tokens (Gemini 3.1 Pro)
@@ -49,7 +49,7 @@ const HEADY_MODELS = {
 
     'heady-flash': {
         id: 'heady-flash',
-        name: 'Heady Flash',
+        name: 'Heady™ Flash',
         description: 'Ultra-fast responses from the 3 fastest nodes. Gemini 3 Flash + Groq at the speed tier.',
         tier: 'free',
         context_window: 1048576,  // 1M tokens (Gemini 3 Flash)
@@ -72,7 +72,7 @@ const HEADY_MODELS = {
 
     'heady-reason': {
         id: 'heady-reason',
-        name: 'Heady Reason',
+        name: 'Heady™ Reason',
         description: 'Extended thinking mode. Claude Opus 4.6 + Gemini 3.1 Pro DeepThink collaborate on complex reasoning chains.',
         tier: 'premium',
         context_window: 1048576,  // 1M tokens (Gemini 3.1 Pro DeepThink)
@@ -97,7 +97,7 @@ const HEADY_MODELS = {
 
     'heady-edge': {
         id: 'heady-edge',
-        name: 'Heady Edge',
+        name: 'Heady™ Edge',
         description: 'Cloudflare Workers AI inference. Sub-200ms latency, runs at the edge nearest to the user.',
         tier: 'free',
         context_window: 32768,   // Workers AI Llama 3.3
@@ -120,7 +120,7 @@ const HEADY_MODELS = {
 
     'heady-buddy': {
         id: 'heady-buddy',
-        name: 'Heady Buddy',
+        name: 'Heady™ Buddy',
         description: 'Conversational AI with persistent memory. Claude Sonnet 4.6 with session awareness.',
         tier: 'pro',
         context_window: 200000,  // 200K tokens (Claude Sonnet 4.6)
@@ -196,7 +196,7 @@ function listModels() {
         permission: [],
         root: m.id,
         parent: null,
-        // Heady extensions
+        // Heady™ extensions
         tier: m.tier,
         badge: m.badge,
         description: m.description,

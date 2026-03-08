@@ -1,7 +1,7 @@
 /**
  * external-api-breakers.js
  * Master registry — creates and manages circuit breakers for ALL external services
- * in the Heady platform (heady-systems v3.1.0).
+ * in the Heady™ platform (heady-systems v3.1.0).
  *
  * @module enterprise-hardening/circuit-breaker/external-api-breakers
  */

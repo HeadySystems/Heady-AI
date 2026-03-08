@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -71,7 +71,7 @@ const MODEL_CATALOG = {
     "gpt-4o": { provider: "headycompute", caps: ["text→text", "image→text", "text→code", "analysis"], quality: "reasoning", speed: "fast" },
     "headypythia-pro": { provider: "google", caps: ["text→text", "image→text", "multimodal"], quality: "balanced", speed: "fast" },
     "headyjules-opus": { provider: "headynexus", caps: ["text→text", "text→code", "analysis"], quality: "precise", speed: "medium" },
-    // Heady Custom
+    // Heady™ Custom
     "heady-brain": { provider: "heady", caps: ["text→text", "orchestration", "routing"], quality: "system", speed: "fast" },
     "heady-vinci": { provider: "heady", caps: ["pattern-learning", "design-eval", "style-prediction"], quality: "adaptive", speed: "fast" },
 };
@@ -390,7 +390,7 @@ class HeadyCreativeEngine extends EventEmitter {
     }
 
     async _executeModel(route, input) {
-        // Instantaneous — no artificial delays. Heady operates in real-time.
+        // Instantaneous — no artificial delays. Heady™ operates in real-time.
         const model = MODEL_CATALOG[route.model] || {};
 
         // SSE broadcast

@@ -1,5 +1,5 @@
 /**
- * Heady Infrastructure Health Monitor
+ * Heady™ Infrastructure Health Monitor
  *
  * NEW FILE — implements the infrastructure monitoring and alerting layer
  * described in PRODUCTION_DEPLOYMENT_GUIDE.md §11 but not implemented in code.
@@ -33,7 +33,7 @@
  *   HEALTH_SCORE_CRITICAL    Score below this triggers PagerDuty (default: 50)
  *   HEALTH_SCORE_DEGRADED    Score below this triggers Slack warning (default: 80)
  *
- * © 2026 HeadySystems Inc. — Proprietary and Confidential.
+ * © 2026 Heady™Systems Inc. — Proprietary and Confidential.
  */
 
 'use strict';

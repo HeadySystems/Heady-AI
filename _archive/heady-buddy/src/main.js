@@ -3,7 +3,7 @@ const path = require('path');
 const http = require('http');
 const { spawn } = require('child_process');
 
-console.log('Starting Heady Buddy Web App...');
+console.log('Starting Heady™ Buddy Web App...');
 
 // Create a simple HTTP server to serve the app
 const server = http.createServer((req, res) => {
@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
       res.end('Not Found');
     }
   } else if (req.url.startsWith('/api/')) {
-    // Proxy to Heady services
+    // Proxy to Heady™ services
     proxyRequest(req, res);
   } else {
     // Serve static files
@@ -127,7 +127,7 @@ if (require.main === module) {
   const port = process.env.PORT || 5175;
 
   server.listen(port, () => {
-    console.log(`Heady Buddy running on http://localhost:${port}`);
+    console.log(`Heady™ Buddy running on http://localhost:${port}`);
     console.log('Opening browser...');
 
     // Open browser

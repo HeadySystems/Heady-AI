@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -232,7 +232,7 @@ function createSpan(operationName, parentSpanId, attributes = {}) {
         operationName,
         startTime,
         status: 'UNSET',
-        attributes: { 'heady.component': 'pipeline', ...attributes },
+        attributes: { 'headyme.component': 'pipeline', ...attributes },
 
         /** End the span and return a complete OTLP-like span record. */
         endSpan(status = 'OK', extraAttributes = {}) {

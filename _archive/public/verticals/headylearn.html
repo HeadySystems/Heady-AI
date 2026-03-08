@@ -64,9 +64,9 @@ footer{text-align:center;padding:3rem;color:rgba(255,255,255,.3);font-size:.75re
 <div class="stats"><div class="stat"><div class="stat-val">24/7</div><div class="stat-lbl">Available</div></div><div class="stat"><div class="stat-val">∞</div><div class="stat-lbl">Context</div></div><div class="stat"><div class="stat-val">Fast</div><div class="stat-lbl">Response</div></div><div class="stat"><div class="stat-val">Smart</div><div class="stat-lbl">AI Models</div></div></div>
 </section>
 <div class="cards"><div class="card"><div class="ci">✦</div><h3>AI Tutor</h3><p>One-on-one tutoring that adapts to your pace</p></div><div class="card"><div class="ci">✦</div><h3>Interactive Courses</h3><p>Hands-on lessons with real-time feedback</p></div><div class="card"><div class="ci">✦</div><h3>Skill Tracking</h3><p>Visual progress and skill tree visualization</p></div><div class="card"><div class="ci">✦</div><h3>Certifications</h3><p>Earn Heady certifications for completed tracks</p></div></div>
-<footer>© 2026 HeadyLearn — Powered by HCFP Auto-Success 135</footer>
+<footer>© 2026 Heady™Learn — Powered by HCFP Auto-Success 135</footer>
 </div>
-<button class="fab" onclick="toggleHeadyChat()" title="Chat with HeadyLearn">✦</button>
+<button class="fab" onclick="toggleHeadyChat()" title="Chat with Heady™Learn">✦</button>
 <style>
 #heady-chat-panel{display:none;position:fixed;bottom:80px;right:16px;width:380px;max-height:min(520px,70vh);background:rgba(10,10,25,0.75);border:1px solid rgba(139,92,246,0.25);border-radius:20px;z-index:10000;font-family:Inter,system-ui,-apple-system,sans-serif;box-shadow:0 24px 80px rgba(0,0,0,0.6),0 0 40px rgba(139,92,246,0.1);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);flex-direction:column;overflow:hidden;animation:chatSlideIn 0.3s ease-out;}
 #heady-chat-panel.open{display:flex;}
@@ -123,7 +123,7 @@ function historyKey(){var t=localStorage.getItem(TK)||'anon';return HK+':'+t.sli
 function loadHistory(){try{return JSON.parse(localStorage.getItem(historyKey())||'[]');}catch{return [];}}
 function saveHistory(items){localStorage.setItem(historyKey(),JSON.stringify(items.slice(-40)));}
 function toggleHeadyChat(){var p=document.getElementById('heady-chat-panel');if(p.classList.contains('open')){p.classList.remove('open');p.style.display='none';}else{p.classList.add('open');p.style.display='flex';document.getElementById('heady-chat-input').focus();var m=document.getElementById('heady-chat-messages');m.scrollTop=m.scrollHeight;}}
-async function sendHeadyChat(){var input=document.getElementById('heady-chat-input');var msg=input.value.trim();if(!msg)return;input.value='';var container=document.getElementById('heady-chat-messages');container.innerHTML+='<div class="hc-msg user"><div class="hc-bubble">'+msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div></div>';container.innerHTML+='<div class="hc-msg bot" id="heady-typing-msg"><div class="hc-typing"><span>.</span><span>.</span><span>.</span></div></div>';container.scrollTop=container.scrollHeight;try{var r=await fetch((window.location.origin)+'/api/brain/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,context:{vertical:'headylearn.com'}})});var d=await r.json();var reply=(d.response||d.message||d.text||'Processing via HeadyLearn...').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');var t=document.getElementById('heady-typing-msg');if(t)t.remove();container.innerHTML+='<div class="hc-msg bot"><div class="hc-bubble">'+reply+'</div></div>';container.scrollTop=container.scrollHeight;}catch(e){var t=document.getElementById('heady-typing-msg');if(t)t.remove();container.innerHTML+='<div class="hc-msg bot"><div class="hc-bubble">Connected to HeadyLearn ecosystem. Full context active! ✨</div></div>';container.scrollTop=container.scrollHeight;}}
+async function sendHeadyChat(){var input=document.getElementById('heady-chat-input');var msg=input.value.trim();if(!msg)return;input.value='';var container=document.getElementById('heady-chat-messages');container.innerHTML+='<div class="hc-msg user"><div class="hc-bubble">'+msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div></div>';container.innerHTML+='<div class="hc-msg bot" id="heady-typing-msg"><div class="hc-typing"><span>.</span><span>.</span><span>.</span></div></div>';container.scrollTop=container.scrollHeight;try{var r=await fetch((window.location.origin)+'/api/brain/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,context:{vertical:'headyu.com'}})});var d=await r.json();var reply=(d.response||d.message||d.text||'Processing via HeadyLearn...').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');var t=document.getElementById('heady-typing-msg');if(t)t.remove();container.innerHTML+='<div class="hc-msg bot"><div class="hc-bubble">'+reply+'</div></div>';container.scrollTop=container.scrollHeight;}catch(e){var t=document.getElementById('heady-typing-msg');if(t)t.remove();container.innerHTML+='<div class="hc-msg bot"><div class="hc-bubble">Connected to HeadyLearn ecosystem. Full context active! ✨</div></div>';container.scrollTop=container.scrollHeight;}}
 </script>
 
 <script>
@@ -295,7 +295,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
   let tok = localStorage.getItem(TK);
   try { if(tok && JSON.parse(atob(tok)).exp < Date.now()) tok = null; } catch{ tok=null; }
   if(!tok) {
-    tok = btoa(JSON.stringify({sub:localStorage.getItem(DK),iat:Date.now(),exp:Date.now()+maxAge,ver:'headylearn.com',warp}));
+    tok = btoa(JSON.stringify({sub:localStorage.getItem(DK),iat:Date.now(),exp:Date.now()+maxAge,ver:'headyu.com',warp}));
     localStorage.setItem(TK, tok);
   }
   console.log('🔐', warp?'WARP 365d':'Standard 90d', '| device:', localStorage.getItem(DK).slice(0,8));
@@ -353,7 +353,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
       sub:localStorage.getItem(DK),
       iat:Date.now(),
       exp:Date.now()+maxAge,
-      ver:'headylearn.com',
+      ver:'headyu.com',
       warp,
       pwa:window.matchMedia('(display-mode:standalone)').matches,
       device:navigator.userAgent.includes('Mobile')?'mobile':'desktop'

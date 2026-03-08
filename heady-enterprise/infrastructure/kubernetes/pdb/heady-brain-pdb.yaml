@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Inc. — PodDisruptionBudget: heady-brain
+# Heady™Systems Inc. — PodDisruptionBudget: heady-brain
 # heady-systems v3.2.2
 # =============================================================================
 # maxUnavailable: fib(2)=1 — never lose more than 1 brain pod during disruption

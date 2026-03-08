@@ -2,7 +2,7 @@ export class SelfAwareness {
     /**
      * @param {object} [opts]
      * @param {string} [opts.systemId='heady-system']  identifier for this system instance
-     * @param {number} [opts.defaultIntervalMs=30000]  default heartbeat interval
+     * @param {number} [opts.defaultIntervalMs=29034]  default heartbeat interval
      */
     constructor(opts?: {
         systemId?: string | undefined;

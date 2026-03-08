@@ -67,7 +67,7 @@ A bypass without a matching `wisdom.json` entry at or above 0.927 confidence is 
 equivalent to skipping the ARENA stage (9) entirely. It is detected by SELF_CRITIQUE (stage 15)
 and triggers rollback of the affected output.
 
-## HeadyVinci Pattern Learning Integration
+## Heady™Vinci Pattern Learning Integration
 
 Every Arena run, win or lose, produces structured training data:
 

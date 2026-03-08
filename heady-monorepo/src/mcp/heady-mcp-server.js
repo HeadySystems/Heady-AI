@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * ╔══════════════════════════════════════════════════════════════════════╗
  * ║  HEADY MCP SERVER — HeadyAI-IDE Integration Gateway                ║
- * ║  Exposes all 30 Heady Services via Model Context Protocol v1.26.0  ║
+ * ║  Exposes all 30 Heady™ Services via Model Context Protocol v1.26.0  ║
  * ║  Routes 100% through HeadyBrain / HeadyBattle / headyio.com        ║
  * ║  Sacred Geometry · Ensemble Intelligence · Anti-Template Policy    ║
  * ╚══════════════════════════════════════════════════════════════════════╝
@@ -48,7 +48,7 @@ async function headyPost(path, body) {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => res.statusText);
-    throw new Error(`Heady API ${res.status}: ${text}`);
+    throw new Error(`Heady™ API ${res.status}: ${text}`);
   }
   return res.json();
 }
@@ -60,7 +60,7 @@ async function headyGet(path) {
     headers,
     signal: AbortSignal.timeout(10000),
   });
-  if (!res.ok) throw new Error(`Heady API ${res.status}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`Heady™ API ${res.status}: ${res.statusText}`);
   return res.json();
 }
 
@@ -97,7 +97,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_chat',
-    description: 'Send a chat message to Heady Brain. Routes 100% through Heady AI services.',
+    description: 'Send a chat message to Heady™ Brain. Routes 100% through Heady™ AI services.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -113,7 +113,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_complete',
-    description: 'Generate a code or text completion via Heady Brain.',
+    description: 'Generate a code or text completion via Heady™ Brain.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -128,7 +128,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_analyze',
-    description: 'Unified Heady analysis engine — code analysis, project deep-scan, web research (Perplexity Sonar Pro), architecture review, security audit, and performance profiling. All analysis flows through this single tool.',
+    description: 'Unified Heady™ analysis engine — code analysis, project deep-scan, web research (Perplexity Sonar Pro), architecture review, security audit, and performance profiling. All analysis flows through this single tool.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -151,7 +151,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_embed',
-    description: 'Generate vector embeddings for text using Heady embedding service.',
+    description: 'Generate vector embeddings for text using Heady™ embedding service.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -163,7 +163,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_health',
-    description: 'Check the health and status of all Heady services.',
+    description: 'Check the health and status of all Heady™ services.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -178,7 +178,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_deploy',
-    description: 'Trigger a deployment or service action via Heady Manager.',
+    description: 'Trigger a deployment or service action via Heady™ Manager.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -195,7 +195,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_search',
-    description: 'Search Heady knowledge base, registry, and service catalog.',
+    description: 'Search Heady™ knowledge base, registry, and service catalog.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -225,7 +225,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_refactor',
-    description: 'Request code refactoring suggestions from Heady Brain.',
+    description: 'Request code refactoring suggestions from Heady™ Brain.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -258,7 +258,7 @@ const HEADY_TOOLS = [
   // heady_perplexity_research merged into heady_analyze (type: 'research'|'academic'|'news')
   {
     name: 'heady_huggingface_model',
-    description: 'Search or interact with HeadyHub models via HeadyHuggingFace.',
+    description: 'Search or interact with Heady™Hub models via Heady™HuggingFace.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -272,7 +272,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_soul',
-    description: 'Interact with HeadySoul — intelligence, consciousness, and learning layer.',
+    description: 'Interact with Heady™Soul — intelligence, consciousness, and learning layer.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -284,7 +284,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_hcfp_status',
-    description: 'Get HCFP (Heady Core Functionality Platform) auto-success engine status and metrics.',
+    description: 'Get HCFP (Heady™ Core Functionality Platform) auto-success engine status and metrics.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -294,7 +294,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_orchestrator',
-    description: 'Send messages and manage wavelength alignment via HeadyOrchestrator — trinity communication.',
+    description: 'Send messages and manage wavelength alignment via Heady™Orchestrator — trinity communication.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -323,7 +323,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_patterns',
-    description: 'Detect design patterns and perform deep code analysis via HeadyPatterns.',
+    description: 'Detect design patterns and perform deep code analysis via Heady™Patterns.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -336,7 +336,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_risks',
-    description: 'Assess risks, scan vulnerabilities, and generate mitigation plans via HeadyRisks.',
+    description: 'Assess risks, scan vulnerabilities, and generate mitigation plans via Heady™Risks.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -349,7 +349,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_coder',
-    description: 'Generate code and orchestrate multi-assistant workflows via HeadyCoder.',
+    description: 'Generate code and orchestrate multi-assistant workflows via Heady™Coder.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -363,11 +363,11 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_claude',
-    description: 'Advanced reasoning and deep analysis via HeadyJules (HeadyJules Opus 4.6 Thinking Fast 1M).',
+    description: 'Advanced reasoning and deep analysis via Heady™Jules (HeadyJules Opus 4.6 Thinking Fast 1M).',
     inputSchema: {
       type: 'object',
       properties: {
-        message: { type: 'string', description: 'Message or prompt for HeadyJules' },
+        message: { type: 'string', description: 'Message or prompt for Heady™Jules' },
         action: { type: 'string', enum: ['chat', 'think', 'analyze'], default: 'chat' },
         system: { type: 'string', description: 'Optional system prompt' },
         thinkingBudget: { type: 'integer', description: 'Thinking token budget', default: 32768 },
@@ -377,11 +377,11 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_openai',
-    description: 'Chat and completions via HeadyCompute (GPT integration with function calling).',
+    description: 'Chat and completions via Heady™Compute (GPT integration with function calling).',
     inputSchema: {
       type: 'object',
       properties: {
-        message: { type: 'string', description: 'Message or prompt for HeadyCompute' },
+        message: { type: 'string', description: 'Message or prompt for Heady™Compute' },
         action: { type: 'string', enum: ['chat', 'complete'], default: 'chat' },
         model: { type: 'string', description: 'Model override', default: 'gpt-4o' },
       },
@@ -390,11 +390,11 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_gemini',
-    description: 'Multimodal AI generation and analysis via HeadyPythia.',
+    description: 'Multimodal AI generation and analysis via Heady™Pythia.',
     inputSchema: {
       type: 'object',
       properties: {
-        prompt: { type: 'string', description: 'Prompt for HeadyPythia' },
+        prompt: { type: 'string', description: 'Prompt for Heady™Pythia' },
         action: { type: 'string', enum: ['generate', 'analyze'], default: 'generate' },
         model: { type: 'string', description: 'Model override', default: 'headypythia-3.1-pro-preview' },
       },
@@ -403,7 +403,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_groq',
-    description: 'Ultra-fast inference and chat via HeadyFast.',
+    description: 'Ultra-fast inference and chat via Heady™Fast.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -416,7 +416,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_codex',
-    description: 'Code generation and transformation via HeadyBuilder (GPT-Codex).',
+    description: 'Code generation and transformation via Heady™Builder (GPT-Codex).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -429,7 +429,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_copilot',
-    description: 'Inline code suggestions and context-aware completions via HeadyCopilot.',
+    description: 'Inline code suggestions and context-aware completions via Heady™Copilot.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -443,7 +443,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_ops',
-    description: 'Deployment automation, infrastructure management, and DevOps via HeadyOps.',
+    description: 'Deployment automation, infrastructure management, and DevOps via Heady™Ops.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -456,7 +456,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_maid',
-    description: 'System cleanup, scheduling, and housekeeping via HeadyMaid.',
+    description: 'System cleanup, scheduling, and housekeeping via Heady™Maid.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -469,7 +469,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_maintenance',
-    description: 'Continuous health monitoring, updates, and backups via HeadyMaintenance.',
+    description: 'Continuous health monitoring, updates, and backups via Heady™Maintenance.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -481,7 +481,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_lens',
-    description: 'Visual analysis, image processing, and GPU-accelerated vision via HeadyLens.',
+    description: 'Visual analysis, image processing, and GPU-accelerated vision via Heady™Lens.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -494,7 +494,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_vinci',
-    description: 'Advanced pattern recognition, continuous learning, and prediction via HeadyVinci.',
+    description: 'Advanced pattern recognition, continuous learning, and prediction via Heady™Vinci.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -507,11 +507,11 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_buddy',
-    description: 'Chat with HeadyBuddy — your multi-provider personal AI assistant with persistent memory and skills.',
+    description: 'Chat with Heady™Buddy — your multi-provider personal AI assistant with persistent memory and skills.',
     inputSchema: {
       type: 'object',
       properties: {
-        message: { type: 'string', description: 'Message for HeadyBuddy' },
+        message: { type: 'string', description: 'Message for Heady™Buddy' },
         action: { type: 'string', enum: ['chat', 'memory', 'skills', 'tasks', 'providers'], default: 'chat' },
         provider: { type: 'string', enum: ['headypythia', 'headyjules', 'headylocal', 'auto'], default: 'auto', description: 'AI provider' },
       },
@@ -520,7 +520,7 @@ const HEADY_TOOLS = [
   },
   {
     name: 'heady_notion',
-    description: 'Sync Heady Knowledge Vault and notebooks to Notion. Manages 11 organized pages.',
+    description: 'Sync Heady™ Knowledge Vault and notebooks to Notion. Manages 11 organized pages.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -783,7 +783,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const adminToken = process.env.ADMIN_TOKEN;
         const requestedToken = args.context?.token || process.env.HEADY_API_KEY; // Assume HEADY_API_KEY implies Admin context by default locally, but verify against env
 
-        // Simple auth check for HeadyBattle 
+        // Simple auth check for Heady™Battle 
         if (!adminToken || requestedToken !== adminToken) {
           return { content: [{ type: 'text', text: JSON.stringify({ error: "Unauthorized. HeadyBattle is restricted to administrators.", code: 403 }) }] };
         }
@@ -1033,17 +1033,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
   } catch (err) {
     return {
-      content: [{ type: 'text', text: `Heady MCP Error: ${err.message}` }],
+      content: [{ type: 'text', text: `Heady™ MCP Error: ${err.message}` }],
       isError: true,
     };
   }
 });
 
-// ── Resources: Heady service catalog ─────────────────────────────────────────
+// ── Resources: Heady™ service catalog ─────────────────────────────────────────
 server.setRequestHandler(ListResourcesRequestSchema, async () => ({
   resources: [
     { uri: 'heady://services/catalog', name: 'Heady Service Catalog', mimeType: 'application/json', description: 'All registered Heady services' },
-    { uri: 'heady://services/health', name: 'Heady Health Status', mimeType: 'application/json', description: 'Live health of all services' },
+    { uri: 'heady://services/health', name: 'Heady™ Health Status', mimeType: 'application/json', description: 'Live health of all services' },
     { uri: 'heady://hcfp/status', name: 'HCFP Auto-Success Status', mimeType: 'application/json', description: 'HCFP pipeline ORS and mode' },
     { uri: 'heady://domains/list', name: 'Heady Production Domains', mimeType: 'application/json', description: 'All 6 production domains' },
   ],
@@ -1111,11 +1111,11 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 // ── Prompts ───────────────────────────────────────────────────────────────────
 server.setRequestHandler(ListPromptsRequestSchema, async () => ({
   prompts: [
-    { name: 'heady_code_review', description: 'Review code using Heady Brain — security, performance, best practices' },
-    { name: 'heady_architect', description: 'Get architectural guidance from Heady for system design' },
-    { name: 'heady_debug', description: 'Debug an issue with Heady Brain full context analysis' },
-    { name: 'heady_write_tests', description: 'Generate comprehensive tests via Heady Brain' },
-    { name: 'heady_explain', description: 'Explain complex code or concepts via Heady Brain' },
+    { name: 'heady_code_review', description: 'Review code using Heady™ Brain — security, performance, best practices' },
+    { name: 'heady_architect', description: 'Get architectural guidance from Heady™ for system design' },
+    { name: 'heady_debug', description: 'Debug an issue with Heady™ Brain full context analysis' },
+    { name: 'heady_write_tests', description: 'Generate comprehensive tests via Heady™ Brain' },
+    { name: 'heady_explain', description: 'Explain complex code or concepts via Heady™ Brain' },
   ],
 }));
 
@@ -1124,47 +1124,47 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 
   const prompts = {
     heady_code_review: {
-      description: 'Heady Brain code review',
+      description: 'Heady™ Brain code review',
       messages: [{
         role: 'user', content: {
           type: 'text', text:
-            `Please review this code using Heady Brain:\n\n\`\`\`${args?.language || ''}\n${args?.code || '[paste code here]'}\n\`\`\`\n\nFocus on: security, performance, readability, and best practices.`
+            `Please review this code using Heady™ Brain:\n\n\`\`\`${args?.language || ''}\n${args?.code || '[paste code here]'}\n\`\`\`\n\nFocus on: security, performance, readability, and best practices.`
         }
       }],
     },
     heady_architect: {
-      description: 'Heady architectural guidance',
+      description: 'Heady™ architectural guidance',
       messages: [{
         role: 'user', content: {
           type: 'text', text:
-            `As Heady Brain, provide architectural guidance for: ${args?.description || '[describe your system]'}\n\nConsider: scalability, maintainability, Heady ecosystem integration.`
+            `As Heady™ Brain, provide architectural guidance for: ${args?.description || '[describe your system]'}\n\nConsider: scalability, maintainability, Heady ecosystem integration.`
         }
       }],
     },
     heady_debug: {
-      description: 'Heady debug analysis',
+      description: 'Heady™ debug analysis',
       messages: [{
         role: 'user', content: {
           type: 'text', text:
-            `Debug this issue using Heady Brain:\n\nError: ${args?.error || '[paste error]'}\n\nCode:\n\`\`\`\n${args?.code || '[paste code]'}\n\`\`\``
+            `Debug this issue using Heady™ Brain:\n\nError: ${args?.error || '[paste error]'}\n\nCode:\n\`\`\`\n${args?.code || '[paste code]'}\n\`\`\``
         }
       }],
     },
     heady_write_tests: {
-      description: 'Heady test generation',
+      description: 'Heady™ test generation',
       messages: [{
         role: 'user', content: {
           type: 'text', text:
-            `Generate comprehensive tests for this code using Heady Brain:\n\n\`\`\`${args?.language || ''}\n${args?.code || '[paste code]'}\n\`\`\``
+            `Generate comprehensive tests for this code using Heady™ Brain:\n\n\`\`\`${args?.language || ''}\n${args?.code || '[paste code]'}\n\`\`\``
         }
       }],
     },
     heady_explain: {
-      description: 'Heady explanation',
+      description: 'Heady™ explanation',
       messages: [{
         role: 'user', content: {
           type: 'text', text:
-            `Explain this clearly using Heady Brain:\n\n${args?.content || '[paste code or concept]'}`
+            `Explain this clearly using Heady™ Brain:\n\n${args?.content || '[paste code or concept]'}`
         }
       }],
     },
@@ -1179,7 +1179,7 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  process.stderr.write('[Heady MCP] Server started — routing 100% through Heady Services\n');
+  process.stderr.write('[Heady™ MCP] Server started — routing 100% through Heady™ Services\n');
 }
 
 // Export server instance for programmatic use
@@ -1187,7 +1187,7 @@ if (require.main !== module) {
   module.exports = { server };
 } else {
   main().catch((err) => {
-    process.stderr.write(`[Heady MCP] Fatal: ${err.message}\n`);
+    process.stderr.write(`[Heady™ MCP] Fatal: ${err.message}\n`);
     process.exit(1);
   });
 }

@@ -1,6 +1,6 @@
 /**
  * @file headyswarm-ui-configs.js
- * @description HeadySwarm UI configurations that orchestrate groups of HeadyBee
+ * @description HeadySwarm UI configurations that orchestrate groups of Heady™Bee
  *   UI templates using a Fibonacci-based resource allocation model. Each swarm
  *   is an autonomous coordination unit that manages a designated slice of the
  *   headyme.com workspace, communicates with peer swarms via defined channels,

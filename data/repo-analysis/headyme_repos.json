@@ -170,10 +170,10 @@
       "topics": []
     },
     {
-      "name": "headysystems-production",
-      "full_name": "HeadyMe/headysystems-production",
+      "name": "heady-production",
+      "full_name": "HeadyMe/heady-production",
       "private": false,
-      "html_url": "https://github.com/HeadyMe/headysystems-production",
+      "html_url": "https://github.com/HeadyMe/heady-production",
       "description": "Live Projection: headysystems.com \u2014 Autonomous deployment target for HeadySystems Platform UI",
       "language": "HTML",
       "default_branch": "main",

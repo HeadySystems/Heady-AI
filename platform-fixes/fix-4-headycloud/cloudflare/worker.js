@@ -71,7 +71,7 @@ const LANDING_HTML = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HeadyCloud — Cloud Orchestration</title>
-  <meta name="description" content="HeadyCloud: Multi-cloud orchestration, deployment automation, and infrastructure management for the Heady AI platform.">
+  <meta name="description" content="HeadyCloud: Multi-cloud orchestration, deployment automation, and infrastructure management for the Heady™ AI platform.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -95,7 +95,7 @@ const LANDING_HTML = `<!DOCTYPE html>
   <div class="bg-grid"></div>
   <div class="container">
     <h1>HeadyCloud</h1>
-    <p class="subtitle">Multi-cloud orchestration for the Heady AI platform. Deploy, scale, and monitor across Cloudflare, Google Cloud, and beyond.</p>
+    <p class="subtitle">Multi-cloud orchestration for the Heady™ AI platform. Deploy, scale, and monitor across Cloudflare, Google Cloud, and beyond.</p>
     <div class="services">
       <div class="svc">
         <h3>Orchestrator</h3>

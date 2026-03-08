@@ -3,7 +3,7 @@
 /**
  * @file custom-mcp-tool.js
  * @description How to create and register a custom MCP (Model Context Protocol) tool
- * with HeadyOS. Custom tools extend what HeadyOS agents can do.
+ * with Heady™OS. Custom tools extend what HeadyOS agents can do.
  *
  * This example creates three custom tools:
  * 1. `company_lookup` — Look up internal company data
@@ -294,13 +294,13 @@ const initializeTools = async () => {
     registerTool(tool);
   }
 
-  // Register with HeadyOS MCP server
+  // Register with Heady™OS MCP server
   for (const tool of tools) {
     try {
       const result = await heady.mcp.registerTool(tool.toRegistrationPayload());
-      console.log(`[MCP] Registered with HeadyOS: ${tool.name} → ID: ${result.toolId}`);
+      console.log(`[MCP] Registered with Heady™OS: ${tool.name} → ID: ${result.toolId}`);
     } catch (err) {
-      console.error(`[MCP] Failed to register ${tool.name} with HeadyOS:`, err.message);
+      console.error(`[MCP] Failed to register ${tool.name} with Heady™OS:`, err.message);
     }
   }
 
@@ -357,7 +357,7 @@ app.post('/mcp/execute/:toolName', async (req, res) => {
 
 /**
  * GET /mcp/tools
- * List all registered tools (for HeadyOS discovery).
+ * List all registered tools (for Heady™OS discovery).
  */
 app.get('/mcp/tools', (req, res) => {
   const tools = Array.from(REGISTERED_TOOLS.values()).map(t => t.toRegistrationPayload());

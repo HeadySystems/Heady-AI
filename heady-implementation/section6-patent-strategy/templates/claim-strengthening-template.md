@@ -1,5 +1,5 @@
 # Patent Claim Strengthening Template
-## Heady Latent OS — 15 Core Inventions
+## Heady™ Latent OS — 15 Core Inventions
 ### Version 1.0 | March 2026
 
 > **DISCLAIMER**: This document is prepared for internal strategic planning purposes only. It does not constitute legal advice. All patent claims must be reviewed and filed by a qualified registered patent attorney or agent. USPTO registration is required for legal representation before the USPTO.

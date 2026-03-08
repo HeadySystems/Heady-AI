@@ -1,0 +1,17 @@
+{
+    "name": "@heady-ai/content-engine",
+    "version": "1.0.0",
+    "description": "Content loading, domain resolution, SEO generation, and sitemap building for the Heady ecosystem",
+    "main": "src/index.ts",
+    "scripts": {
+        "build": "tsc",
+        "lint": "eslint src/"
+    },
+    "dependencies": {},
+    "keywords": [
+        "heady",
+        "content-engine",
+        "domain-resolver",
+        "seo"
+    ]
+}

@@ -1,5 +1,5 @@
 /**
- * Core API Router — Heady Manager
+ * Core API Router — Heady™ Manager
  * Provides foundational API endpoints used by multiple services.
  */
 const express = require('express');

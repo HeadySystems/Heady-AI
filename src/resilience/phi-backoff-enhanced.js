@@ -1,11 +1,12 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 // RTP: Phi-Exponential Backoff with Sacred Geometry Timing
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const PHI = 1.6180339887;
 
 // Sacred geometry interval multipliers
@@ -33,7 +34,7 @@ class CircuitBreaker {
   constructor(opts = {}) {
     this._failureThreshold  = opts.failureThreshold  || 5;
     this._successThreshold  = opts.successThreshold  || 2;
-    this._halfOpenTimeout   = opts.halfOpenTimeoutMs  || 30000;
+    this._halfOpenTimeout   = opts.halfOpenTimeoutMs  || PHI_TIMING.CYCLE;
     this._state             = CB_CLOSED;
     this._failures          = 0;
     this._successes         = 0;
@@ -273,10 +274,10 @@ function normalizePositiveNumber(value, fallback) {
  * @param {number} jitterFactor - randomness fraction
  * @param {string} geometry - which sacred multiplier to use ('phi' default)
  */
-function phiDelay(attempt, baseMs = 1000, maxMs = 30000, jitterFactor = 0.25, geometry = 'phi') {
+function phiDelay(attempt, baseMs = 1000, maxMs = PHI_TIMING.CYCLE, jitterFactor = 0.25, geometry = 'phi') {
   const safeAttempt   = Math.max(0, Math.floor(Number(attempt) || 0));
   const safeBaseMs    = normalizePositiveNumber(baseMs, 1000);
-  const safeMaxMs     = Math.max(1, Math.floor(normalizePositiveNumber(maxMs, 30000)));
+  const safeMaxMs     = Math.max(1, Math.floor(normalizePositiveNumber(maxMs, PHI_TIMING.CYCLE)));
   const safeJitter    = Math.min(1, Math.max(0, Number(jitterFactor) || 0));
   const multiplier    = SACRED_MULTIPLIERS[geometry] || PHI;
 
@@ -302,7 +303,7 @@ function thunderingHerdJitter(baseDelayMs, windowMs = 1000) {
 class EnhancedBackoff {
   constructor(opts = {}) {
     this._baseMs          = opts.baseMs           || 1000;
-    this._maxMs           = opts.maxDelayMs        || 30000;
+    this._maxMs           = opts.maxDelayMs        || PHI_TIMING.CYCLE;
     this._maxRetries      = opts.maxRetries         || 5;
     this._jitterFactor    = opts.jitterFactor       || 0.25;
     this._geometry        = opts.geometry           || 'phi';

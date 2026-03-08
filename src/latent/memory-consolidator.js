@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Memory Consolidator — STM→LTM Consolidation Engine
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module memory-consolidator
  * @description Runs periodic STM→LTM consolidation passes over a VectorMemory

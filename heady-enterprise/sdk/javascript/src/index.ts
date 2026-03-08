@@ -1,6 +1,6 @@
 /**
  * @file index.ts
- * @description @heady-ai/sdk — Official JavaScript/TypeScript SDK for HeadyOS & HeadyMe AI
+ * @description @heady-ai/sdk — Official JavaScript/TypeScript SDK for Heady™OS & HeadyMe AI
  *
  * HeadySystems Inc. | https://headyme.com | sdk@headyme.com
  *
@@ -108,7 +108,7 @@ class BrainAPI {
   }
 
   /**
-   * Analyze input text with HeadyOS AI inference.
+   * Analyze input text with Heady™OS AI inference.
    * Supports sentiment analysis, summarization, classification, and more.
    *
    * @example
@@ -308,7 +308,7 @@ class ConductorAPI {
   constructor(private readonly http: HeadyHttpClient) {}
 
   /**
-   * Submit an orchestration task to the Heady Conductor.
+   * Submit an orchestration task to the Heady™ Conductor.
    * The Conductor manages multi-agent, multi-step workflows.
    *
    * @example

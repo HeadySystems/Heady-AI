@@ -1,4 +1,4 @@
-# HeadyOS — Sales Battlecard
+# Heady™OS — Sales Battlecard
 
 **For**: Account Executives, Sales Engineers, Founders  
 **Last Updated**: 2026-03  
@@ -189,4 +189,4 @@ The 89-day Founder Pilot is designed exactly to address this concern — evaluat
 
 ---
 
-*HeadyOS™ is a trademark of HeadySystems Inc. Protected by 51+ USPTO provisional patents. φ = 1.618033988749895.*
+*HeadyOS™ is a trademark of Heady™Systems Inc. Protected by 51+ USPTO provisional patents. φ = 1.618033988749895.*

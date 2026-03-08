@@ -1,4 +1,4 @@
-# Heady Framework Manifest
+# Heady™ Framework Manifest
 
 ## Package Contents
 

@@ -1,6 +1,6 @@
 /**
  * HeadyTooltips — Global Knowledge Hover System
- * Include on any Heady website. Automatically enriches elements with
+ * Include on any Heady™ website. Automatically enriches elements with
  * data-tip attributes into beautiful branded hover popups.
  *
  * Usage: <span data-tip="Title|Description text here">Hover me</span>
@@ -94,7 +94,7 @@
     `;
     document.head.appendChild(style);
 
-    // ── Heady knowledge base for auto-enrichment ──
+    // ── Heady™ knowledge base for auto-enrichment ──
     const KNOWLEDGE = {
         'hcfp': 'Heady Continuous Full Pipeline — the auto-success engine that validates all changes through HeadySims simulation, HeadyBattle interrogation, and Arena Mode competitive selection before deployment.',
         'headysims': 'Monte Carlo simulation engine using UCB1 algorithm. Runs 1000+ simulations across 7 strategies (fast_serial, fast_parallel, balanced, thorough, cached_fast, probe_then_commit, monte_carlo_optimal) to find optimal execution paths.',
@@ -103,17 +103,17 @@
         'headybrain': 'Central AI intelligence hub. Fires requests to all AI providers simultaneously via Parallel Race Buffer — Claude, OpenAI, Gemini, Ollama — and returns the fastest quality response.',
         'parallel race buffer': 'Concurrent request strategy that fires identical prompts to all configured AI providers simultaneously. The first response meeting quality thresholds wins, dramatically reducing latency.',
         'sacred geometry': 'Design philosophy inspired by Metatron\'s Cube — a geometric figure composed of 13 equal circles with lines from the center connecting them. Ensures balanced, fault-tolerant system architecture.',
-        'metatron\'s cube': 'Sacred geometric pattern used as the architectural blueprint for HeadySystems. Each circle represents a service node, with connecting lines representing data flow paths.',
+        'metatron\'s cube': 'Sacred geometric pattern used as the architectural blueprint for Heady™Systems. Each circle represents a service node, with connecting lines representing data flow paths.',
         'headyliquid': 'Dynamic component allocation engine. Every Heady component is "liquid" — intelligently routed to where it\'s needed based on context analysis, affinity scoring, and resource availability.',
         'api key': 'Bearer token for server-to-server authentication. Format: heady_api_key_NNN. Include in Authorization header. Tiers: Admin (unlimited), Premium (100/min), Core (30/min), Guest (5/min).',
         'oauth': 'Google OAuth 2.0 redirect flow. Users are redirected to Google consent screen, then returned to /auth/google/callback with a JWT token valid for 180 days.',
-        'device token': 'Silent authentication for desktop and mobile apps. Auto-generated per device UUID, valid for 90 days. No user interaction required — ideal for HeadyBuddy and editors.',
+        'device token': 'Silent authentication for desktop and mobile apps. Auto-generated per device UUID, valid for 90 days. No user interaction required — ideal for Heady™Buddy and editors.',
         'warp': 'Cloudflare WARP tunnel authentication. Devices connected through WARP are auto-detected and granted premium tier access for 365 days with zero-trust encryption.',
         'vector memory': '3D vector storage system using nomic-embed-text embeddings. Every interaction is embedded and stored for semantic search, context recall, and continuous learning.',
         'headybuddy': 'AI companion available as a desktop app (Electron), browser extension, and embeddable widget. Connects to HeadyBrain for chat, code assistance, and system management.',
         'headymcp': 'Model Context Protocol server implementation. Exposes Heady\'s 20+ AI tools as MCP resources for integration with any MCP-compatible IDE or agent.',
         'headyweb': 'Search-first web application. Features AI-powered search with knowledge base integration, user accounts via Firebase, and Stripe subscription management.',
-        'headyconnection': 'Partnership and connector hub. Provides integration guides, webhook endpoints, and SDK documentation for third-party developers building on the Heady platform.',
+        'headyconnection': 'Partnership and connector hub. Provides integration guides, webhook endpoints, and SDK documentation for third-party developers building on the Heady™ platform.',
         'headyme': 'Personal AI assistant workspace. Manages individual preferences, search history, and personalized AI responses through 3D vector memory profiles.',
         'headyio': 'Developer SDK and integration platform. Provides JavaScript, Python, and cURL APIs for programmatic access to all HeadyBrain capabilities.',
         'ors': 'Operational Readiness Score — a 0-100% metric that represents overall system health. Combines uptime, response latency, error rate, and capacity metrics.'

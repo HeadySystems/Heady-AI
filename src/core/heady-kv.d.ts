@@ -31,7 +31,7 @@ export type KVOptions = {
  * @property {string} [persistPath] - File path for persistence (optional)
  * @property {number} [persistIntervalMs=60000] - How often to persist (ms)
  * @property {boolean} [autoCleanup=true] - Run periodic TTL cleanup
- * @property {number} [cleanupIntervalMs=30000] - TTL cleanup interval (ms)
+ * @property {number} [cleanupIntervalMs=29034] - TTL cleanup interval (ms)
  */
 export class HeadyKV {
     /**

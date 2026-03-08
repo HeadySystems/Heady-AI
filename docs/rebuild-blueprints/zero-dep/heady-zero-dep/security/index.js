@@ -4,7 +4,7 @@
  *
  * Wires together post-quantum cryptography, node-to-node handshake,
  * RBAC, and environment validation into a single cohesive security system
- * for the 3-node Heady cluster.
+ * for the 3-node Heady™ cluster.
  *
  * Sacred Geometry: PHI ratios for timing and sizing.
  * Zero external dependencies (crypto, events only).
@@ -58,7 +58,7 @@ import { EnvValidator as _EnvValidator }      from './env-validator.js';
 // ─── SecurityLayer class ──────────────────────────────────────────────────────
 
 /**
- * Unified security context for a Heady cluster node.
+ * Unified security context for a Heady™ cluster node.
  *
  * Usage:
  *   const security = createSecurityLayer({ nodeId: 'SENTINEL', ... });
@@ -182,7 +182,7 @@ export class SecurityLayer extends EventEmitter {
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
 /**
- * Create a fully-wired security layer for a Heady cluster node.
+ * Create a fully-wired security layer for a Heady™ cluster node.
  *
  * @param {object} [opts]
  * @param {string}   [opts.nodeId]           Node identifier (default: random)
@@ -230,7 +230,7 @@ export function createSecurityLayer(opts = {}) {
 // ─── Default RBAC seed ────────────────────────────────────────────────────────
 
 /**
- * Bootstrap default Heady roles if not already present.
+ * Bootstrap default Heady™ roles if not already present.
  * Roles: supernode, conductor, sentinel, worker, observer
  */
 function _seedDefaultRoles(rbac) {

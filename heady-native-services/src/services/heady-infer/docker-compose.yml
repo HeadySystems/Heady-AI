@@ -1,7 +1,7 @@
 version: '3.9'
 
 # ──────────────────────────────────────────────────────────────────────────────
-# HeadyInfer — Docker Compose
+# Heady™Infer — Docker Compose
 # Starts the inference gateway with optional Ollama for local models.
 # ──────────────────────────────────────────────────────────────────────────────
 

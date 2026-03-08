@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * 🎮 Heady Arena Mode Service - 100% Uptime Continuous Competitive Selection
+ * 🎮 Heady™ Arena Mode Service - 100% Uptime Continuous Competitive Selection
  * 
  * This service runs continuously, managing competitive pattern selection
  * and tournament-based optimization for all system strategies.

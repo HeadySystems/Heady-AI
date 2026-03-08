@@ -85,4 +85,4 @@ For questions about this package or Heady implementation:
 - Reference Node.js constraint: All implementations must be Node.js compatible
 
 ---
-© 2026 HeadySystems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces
+© 2026 Heady™Systems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces

@@ -3,9 +3,9 @@ name: heady-memory-ops
 description: Persistent 3D vector memory operations — search, store, embed, and learn via Heady™Memory, HeadyEmbed, HeadySoul, and HeadyVinci.
 ---
 
-# Heady Memory Operations Skill
+# Heady™ Memory Operations Skill
 
-Use this skill whenever a task requires **persisting knowledge, retrieving past context, generating embeddings, or leveraging Heady's continuous learning layer**. Memory is the backbone of the Heady ecosystem — it's how the system remembers facts, workflows, and preferences across sessions.
+Use this skill whenever a task requires **persisting knowledge, retrieving past context, generating embeddings, or leveraging Heady's continuous learning layer**. Memory is the backbone of the Heady™ ecosystem — it's how the system remembers facts, workflows, and preferences across sessions.
 
 ## Tools Overview
 
@@ -18,7 +18,7 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 
 ## Tool Details
 
-### HeadyMemory — `mcp_Heady_heady_memory`
+### Heady™Memory — `mcp_Heady_heady_memory`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -28,14 +28,14 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 
 **Critical**: Always search memory **before** starting research or analysis. The answer may already exist.
 
-### HeadyEmbed — `mcp_Heady_heady_embed`
+### Heady™Embed — `mcp_Heady_heady_embed`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
 | `text` | string | **required** | Text to generate embeddings for |
 | `model` | string | `nomic-embed-text` | Embedding model |
 
-### HeadySoul — `mcp_Heady_heady_soul`
+### Heady™Soul — `mcp_Heady_heady_soul`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -44,7 +44,7 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 
 **Use `learn`** after completing tasks to feed the learning layer with new patterns.
 
-### HeadyVinci — `mcp_Heady_heady_vinci`
+### Heady™Vinci — `mcp_Heady_heady_vinci`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|

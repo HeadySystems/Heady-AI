@@ -1,6 +1,6 @@
 /**
  * vectorize-sync.js
- * Heady Latent OS — Vectorize ↔ pgvector Bidirectional Sync
+ * Heady™ Latent OS — Vectorize ↔ pgvector Bidirectional Sync
  *
  * Manages synchronization between Cloudflare Vectorize (edge-native vector DB)
  * and the origin pgvector PostgreSQL extension (source of truth).

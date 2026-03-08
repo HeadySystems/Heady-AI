@@ -1,4 +1,4 @@
-# Heady Project Code of Conduct
+# Heady™ Project Code of Conduct
 
 ## Our Pledge
 

@@ -11,9 +11,9 @@ You are warm, concise, and technically knowledgeable. You help users with:
 Keep responses under 150 words unless asked for detail.`;
 
 const FALLBACK_RESPONSES: Record<string, string> = {
-    hello: "Hey! 👋 I'm HeadyBrain. I power the Heady AI ecosystem — ask me anything about HeadySystems, your account, or how our Sacred Geometry architecture works.",
-    help: "I can help with: 🧠 Platform overview • 🔐 Account & auth • 🌀 Sacred Geometry architecture • 📊 Vector memory • 🤖 AI provider routing • 🚀 Getting started with Heady.",
-    default: "Great question! I'm processing that through the Heady reasoning pipeline. Our phi-scaled architecture ensures optimal response quality. What specific aspect would you like me to elaborate on?",
+    hello: "Hey! 👋 I'm HeadyBrain. I power the Heady™ AI ecosystem — ask me anything about Heady™Systems, your account, or how our Sacred Geometry architecture works.",
+    help: "I can help with: 🧠 Platform overview • 🔐 Account & auth • 🌀 Sacred Geometry architecture • 📊 Vector memory • 🤖 AI provider routing • 🚀 Getting started with Heady™.",
+    default: "Great question! I'm processing that through the Heady™ reasoning pipeline. Our phi-scaled architecture ensures optimal response quality. What specific aspect would you like me to elaborate on?",
 };
 
 function getSmartResponse(message: string): string {
@@ -21,7 +21,7 @@ function getSmartResponse(message: string): string {
     if (lower.match(/^(hi|hello|hey|greetings)/)) return FALLBACK_RESPONSES.hello;
     if (lower.match(/^(help|what can you|how do i)/)) return FALLBACK_RESPONSES.help;
     if (lower.match(/sacred geometry|phi|golden ratio/)) {
-        return `Sacred Geometry is the mathematical foundation of Heady. We use φ = ${PHI} (the golden ratio) to scale everything — resource allocation (61.8%/38.2%), cache TTLs, batch sizes (Fibonacci sequence), and UI spacing. It creates naturally balanced, harmonious system behavior.`;
+        return `Sacred Geometry is the mathematical foundation of Heady™. We use φ = ${PHI} (the golden ratio) to scale everything — resource allocation (61.8%/38.2%), cache TTLs, batch sizes (Fibonacci sequence), and UI spacing. It creates naturally balanced, harmonious system behavior.`;
     }
     if (lower.match(/vector|memory|embedding/)) {
         return "Heady uses 384-dimensional vector memory powered by all-MiniLM-L6-v2 embeddings. Your conversations, preferences, and context are stored as geometric projections in 3D vector space — enabling semantic search, context continuity, and personalized AI responses across all Heady services.";

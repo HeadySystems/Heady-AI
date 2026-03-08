@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ HF Space + Auth + 3D Injection Bee Templates ═══
  *
@@ -160,10 +160,10 @@ const dataInjector3D = createBee('data-injector-3d', {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// BEE 4: input-router — "just give input, Heady figures it out"
+// BEE 4: input-router — "just give input, Heady™ figures it out"
 // ═══════════════════════════════════════════════════════════════
 const inputRouter = createBee('input-router', {
-    description: 'Give any input → Heady routes to the right bee, executes, reports back',
+    description: 'Give any input → Heady™ routes to the right bee, executes, reports back',
     priority: 1.0,
     workers: [
         {

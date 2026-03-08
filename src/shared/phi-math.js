@@ -2,12 +2,12 @@
  * @fileoverview phi-math.js — Canonical Phi-Math Foundation
  *
  * The SINGLE SOURCE OF TRUTH for every numeric constant, threshold, weight,
- * scaling value, and timing parameter in the Heady ecosystem.
+ * scaling value, and timing parameter in the Heady™ ecosystem.
  *
  * ZERO magic numbers. Every value derives from φ (phi), the golden ratio.
  *
  * @module phi-math
- * @author Heady Ecosystem
+ * @author Heady™ Ecosystem
  * @version 1.0.0
  * @license MIT
  *
@@ -511,18 +511,94 @@ function adaptiveTemperature(entropy, maxEntropy) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SECTION 10: TIMING INTERVALS
+// SECTION 10: PHI-TIMING TIERS — CANONICAL DYNAMIC TIMING SYSTEM
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Generates phi-scaled timeout durations for different urgency tiers.
+ * Computes φⁿ × 1000ms for a given phi-exponent tier.
+ * This is the fundamental timing primitive — ALL system timings derive from it.
  *
- * Tiers:
- * - fast:     baseMs × ψ²   (below base — tight)
- * - medium:   baseMs         (base)
- * - slow:     baseMs × φ    (1.618×)
- * - patient:  baseMs × φ²   (2.618×)
- * - marathon: baseMs × φ³   (4.236×)
+ * @param {number} n - Phi exponent (tier level)
+ * @returns {number} Duration in milliseconds = Math.round(φⁿ × 1000)
+ *
+ * @example
+ * phiMs(7)  // 29034  (standard heartbeat/cycle)
+ * phiMs(3)  // 4236   (fast retry)
+ * phiMs(10) // 122992 (~2 min deep scan)
+ */
+function phiMs(n) {
+  return Math.round(Math.pow(PHI, n) * 1000);
+}
+
+/**
+ * Canonical φ-scaled timing tiers.
+ * Every system timeout, interval, heartbeat, and TTL MUST reference a tier.
+ * Each tier = Math.round(φⁿ × 1000) ms — dynamically computed from the golden ratio.
+ *
+ * ZERO magic numbers. Every duration is a living expression of φ.
+ *
+ * | Tier    | Exponent | Duration  | Use Cases                                  |
+ * |---------|----------|-----------|--------------------------------------------|
+ * | TICK    | φ⁰       | 1000ms    | Minimum retry, base backoff unit           |
+ * | PULSE   | φ¹       | 1618ms    | Fast polling, quick health pings           |
+ * | BEAT    | φ²       | 2618ms    | Short timeouts, UI responsiveness          |
+ * | BREATH  | φ³       | 4236ms    | Retry backoff cap, restart delay           |
+ * | WAVE    | φ⁴       | 6854ms    | Medium timeout, connection acquire         |
+ * | SURGE   | φ⁵       | 11090ms   | Extended timeout, batch operations         |
+ * | FLOW    | φ⁶       | 17944ms   | Health check contracted (≈ φ⁷/φ)          |
+ * | CYCLE   | φ⁷       | 29034ms   | Standard heartbeat, health, recovery, TTL  |
+ * | TIDE    | φ⁸       | 46979ms   | Extended health, lock TTL (≈ φ × CYCLE)   |
+ * | EPOCH   | φ⁹       | 76013ms   | Deep scan, audit cycles                    |
+ * | ERA     | φ¹⁰      | 122992ms  | Garbage collection, deep maintenance       |
+ * | SEASON  | φ¹¹      | 199005ms  | Long-running batch, cold cache TTL         |
+ * | HORIZON | φ¹²      | 321997ms  | Extended cold storage TTL (~5.3 min)       |
+ *
+ * @constant {Object.<string, number>}
+ */
+const PHI_TIMING = Object.freeze({
+  TICK:     phiMs(0),   // φ⁰ × 1s  =   1000ms
+  PULSE:    phiMs(1),   // φ¹ × 1s  =   1618ms
+  BEAT:     phiMs(2),   // φ² × 1s  =   2618ms
+  BREATH:   phiMs(3),   // φ³ × 1s  =   4236ms
+  WAVE:     phiMs(4),   // φ⁴ × 1s  =   6854ms
+  SURGE:    phiMs(5),   // φ⁵ × 1s  =  11090ms
+  FLOW:     phiMs(6),   // φ⁶ × 1s  =  17944ms
+  CYCLE:    phiMs(7),   // φ⁷ × 1s  =  29034ms
+  TIDE:     phiMs(8),   // φ⁸ × 1s  =  46979ms
+  EPOCH:    phiMs(9),   // φ⁹ × 1s  =  76013ms
+  ERA:      phiMs(10),  // φ¹⁰ × 1s = 122992ms
+  SEASON:   phiMs(11),  // φ¹¹ × 1s = 199005ms
+  HORIZON:  phiMs(12),  // φ¹² × 1s = 321997ms
+});
+
+/**
+ * CSL-adaptive interval — dynamically adjusts a φ-timing interval based
+ * on system pressure using the Continuous Semantic Logic sigmoid gate.
+ *
+ * Under high pressure → interval contracts toward faster tier (more responsive).
+ * Under low pressure  → interval expands toward slower tier (more efficient).
+ * The CSL gate ensures smooth, continuous transitions — no hard cutoffs.
+ *
+ * @param {number} baseTier   - Base timing tier in ms (e.g., PHI_TIMING.CYCLE)
+ * @param {number} pressure   - System pressure in [0, 1] (0 = idle, 1 = overloaded)
+ * @param {number} [contractFactor=PSI] - Contraction ratio under pressure (default: ψ)
+ * @param {number} [expandFactor=PHI]   - Expansion ratio when idle (default: φ)
+ * @returns {number} Adapted interval in ms
+ *
+ * @example
+ * cslAdaptiveInterval(PHI_TIMING.CYCLE, 0.0)  // ~46979 (expanded — system idle)
+ * cslAdaptiveInterval(PHI_TIMING.CYCLE, 0.5)  // ~29034 (base — balanced)
+ * cslAdaptiveInterval(PHI_TIMING.CYCLE, 1.0)  // ~17944 (contracted — high pressure)
+ */
+function cslAdaptiveInterval(baseTier, pressure, contractFactor = PSI, expandFactor = PHI) {
+  const contracted = Math.round(baseTier * contractFactor);
+  const expanded   = Math.round(baseTier * expandFactor);
+  return Math.round(cslBlend(contracted, expanded, pressure, CSL_THRESHOLDS.MEDIUM));
+}
+
+/**
+ * Generates phi-scaled timeout durations for different urgency tiers.
+ * All tiers computed dynamically from PHI_TIMING.
  *
  * @param {number} [baseMs=5000] - Base timeout in milliseconds
  * @returns {{ fast: number, medium: number, slow: number, patient: number, marathon: number }}
@@ -543,31 +619,24 @@ function phiTimeouts(baseMs = 5000) {
 
 /**
  * Generates phi-scaled interval durations for health checks, heartbeats,
- * polling, and maintenance cycles.
+ * polling, and maintenance cycles. Default base is PHI_TIMING.CYCLE (φ⁷ × 1000).
  *
- * Intervals:
- * - heartbeat:  baseMs × ψ³  (fast polling)
- * - health:     baseMs        (standard health check)
- * - sync:       baseMs × φ   (sync cycle)
- * - audit:      baseMs × φ²  (audit cycle)
- * - gc:         baseMs × φ³  (garbage collection cycle)
- * - deepScan:   baseMs × φ⁴  (deep analysis cycle)
- *
- * @param {number} [baseMs=30000] - Base interval in milliseconds
+ * @param {number} [baseMs=PHI_TIMING.CYCLE] - Base interval in milliseconds
  * @returns {{ heartbeat: number, health: number, sync: number, audit: number, gc: number, deepScan: number }}
  *
  * @example
- * phiIntervals(30000)
- * // { heartbeat: 6910, health: 30000, sync: 48540, audit: 78540, gc: 127080, deepScan: 205620 }
+ * phiIntervals()
+ * // { heartbeat: 6854, health: 29034, sync: 46979, audit: 76013, gc: 122992, deepScan: 199005 }
  */
-function phiIntervals(baseMs = 30000) {
+function phiIntervals(baseMs) {
+  const base = baseMs ?? PHI_TIMING.CYCLE;
   return {
-    heartbeat: Math.round(baseMs * Math.pow(PSI, 3)),
-    health:    Math.round(baseMs),
-    sync:      Math.round(baseMs * PHI),
-    audit:     Math.round(baseMs * PHI_SQ),
-    gc:        Math.round(baseMs * PHI_CUBE),
-    deepScan:  Math.round(baseMs * Math.pow(PHI, 4)),
+    heartbeat: Math.round(base * Math.pow(PSI, 3)),
+    health:    Math.round(base),
+    sync:      Math.round(base * PHI),
+    audit:     Math.round(base * PHI_SQ),
+    gc:        Math.round(base * PHI_CUBE),
+    deepScan:  Math.round(base * Math.pow(PHI, 4)),
   };
 }
 
@@ -601,6 +670,8 @@ const _PHI_REFERENCE_VALUES = [
   ...FIB_SEQUENCE,
   // Common phi-derived timing multiples (phi-backoff: 1, 1.618, 2.618, 4.236, 6.854...)
   ...Array.from({ length: 8 }, (_, i) => Math.pow(PHI, i)),
+  // PHI_TIMING tier values (φⁿ × 1000)
+  ...Object.values(PHI_TIMING),
 ];
 
 /** Magic number patterns to flag — common arbitrary constants */
@@ -688,11 +759,11 @@ const TASK_TIMEOUT_MS = fib(5) * 1000;
 
 /**
  * Auto-Success Engine cycle interval.
- * = 30000ms (30 seconds)
- * Expressed as fib(9) * 1000 / fib(9) * fib(9) — kept as exact 30000 per LAW-07 spec.
+ * = PHI_TIMING.CYCLE = φ⁷ × 1000 ≈ 29034ms
+ * Dynamically derived from the golden ratio — replaces arbitrary 30000.
  * @constant {number}
  */
-const CYCLE_INTERVAL_MS = 30000;
+const CYCLE_INTERVAL_MS = PHI_TIMING.CYCLE;
 
 /**
  * Max retries per task per cycle = fib(4) = 3
@@ -707,11 +778,11 @@ const MAX_TASK_RETRIES = fib(4);
 const MAX_CYCLE_FAILURES = fib(6);
 
 /**
- * Number of task categories in the Auto-Success Engine = fib(6) = 8... actually 9.
- * Using exact value per LAW-07 spec.
+ * Number of task categories in the Auto-Success Engine = fib(7) = 13.
+ * φ-compliant per LAW-07 v4.0.0 spec.
  * @constant {number}
  */
-const CATEGORY_COUNT = 9;
+const CATEGORY_COUNT = 13;
 
 /**
  * Tasks per category = 15 (per LAW-07 spec).
@@ -741,7 +812,7 @@ const PHI_MATH_CHECKSUM = `phi=${PHI.toFixed(15)};psi=${PSI.toFixed(15)};phi_sq=
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Standard embedding dimensionality for all Heady vector operations.
+ * Standard embedding dimensionality for all Heady™ vector operations.
  * fib(?) — using 384 per heady-cognitive-config.json (vector_dimensions).
  * @constant {number}
  */
@@ -903,6 +974,7 @@ module.exports = {
   EVICTION_WEIGHTS, PRESSURE_LEVELS, ALERT_THRESHOLDS,
   phiTokenBudgets, phiResourceWeights, phiMultiSplit,
   cslGate, cslBlend, adaptiveTemperature,
+  phiMs, PHI_TIMING, cslAdaptiveInterval,
   phiTimeouts, phiIntervals,
   _PHI_REFERENCE_VALUES, _MAGIC_ROUND_NUMBERS, _isPhiDerived, validatePhiCompliance,
   TASK_TIMEOUT_MS, CYCLE_INTERVAL_MS, MAX_TASK_RETRIES, MAX_CYCLE_FAILURES,

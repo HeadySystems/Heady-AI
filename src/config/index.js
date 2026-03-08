@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview Central configuration loader for the Heady™ AI Platform.
  * Reads all configuration from environment variables with the HEADY_ prefix.
@@ -107,7 +108,7 @@ const config = {
     version: '3.1.0',
     platform: 'Heady™ AI Platform',
     company: 'HeadySystems Inc.',
-    requestTimeout: envInt('HEADY_REQUEST_TIMEOUT_MS', Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000)), // φ⁷×1000 ≈ 29034ms
+    requestTimeout: envInt('HEADY_REQUEST_TIMEOUT_MS', Math.round(((1 + Math.sqrt(5)) / 2) ** 7 * 1000)), // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
     bodyLimit: envInt('HEADY_BODY_LIMIT_BYTES', 10 * 1024 * 1024), // 10 MB
     trustProxy: envBool('HEADY_TRUST_PROXY', false),
   },

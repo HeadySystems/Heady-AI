@@ -1,4 +1,4 @@
-# HeadyMe QA Analysis - Quick Reference Guide
+# Heady™Me QA Analysis - Quick Reference Guide
 
 ## 📁 Analysis Documents
 

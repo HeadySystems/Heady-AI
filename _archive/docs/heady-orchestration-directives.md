@@ -1,4 +1,4 @@
-# Architectural Analysis and Orchestration Directives for HeadyBuddy AI Companion
+# Architectural Analysis and Orchestration Directives for Heady™Buddy AI Companion
 
 ## The Silversertile Orchestrator Paradigm
 
@@ -63,7 +63,7 @@
 |--------|----------|--------|
 | MIDI → UDP | Real-time IoT, lighting, A/V sync | Raw MIDI bytes in UDP datagrams, fire-and-forget |
 | MIDI → TCP | Financial triggers, critical DB writes | Buffered + sequence ID, ACK monitoring, retry on failure |
-| MIDI → MCP | Physical gestures → LLM tool-calling | CC values (0-127) → JSON-RPC payload for HeadyMCP |
+| MIDI → MCP | Physical gestures → LLM tool-calling | CC values (0-127) → JSON-RPC payload for Heady™MCP |
 | MIDI → API | Third-party webhooks, Edge Gateway | SysEx → REST via Edge Proxy + Zero Trust (mTLS) |
 
 ---

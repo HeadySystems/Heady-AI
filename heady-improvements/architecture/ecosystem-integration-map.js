@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * ─── Heady Ecosystem Integration Map ────────────────────────────────────────
+ * ─── Heady™ Ecosystem Integration Map ────────────────────────────────────────
  *
  * Single source of truth for all services, repos, domains, and their
- * integration points across the entire Heady ecosystem.
+ * integration points across the entire Heady™ ecosystem.
  *
  * Usage:
  *   const map = require('./ecosystem-integration-map');
@@ -35,7 +35,7 @@ const SCHEMA_VERSION = '1.0.0';
 // ─── Service Definitions ────────────────────────────────────────────────────
 
 /**
- * All known Heady services, repos, and domains.
+ * All known Heady™ services, repos, and domains.
  * Each entry defines the service identity, deployment target,
  * public API surface, and internal capabilities.
  */
@@ -67,7 +67,7 @@ const SERVICES = {
       'headymcp.com',
       'headyio.com',
       'headybot.com',
-      'headyai.com',
+      'heady-ai.com',
     ],
     cloudRunEndpoint: 'https://heady-manager-609590223909.us-central1.run.app',
     status: 'active',
@@ -145,7 +145,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headymcp-core',
-    npmPackage: '@heady/headymcp-core',
+    npmPackage: '@heady-ai/headymcp-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -173,7 +173,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production', 'headyapi-core'],
     downstreamConsumers: ['headyme-core', 'headybuddy-core', 'headybot-core'],
-    sharedModulesNeeded: ['@heady/shared', '@modelcontextprotocol/sdk'],
+    sharedModulesNeeded: ['@heady-ai/shared', '@modelcontextprotocol/sdk'],
   },
 
   'headyos-core': {
@@ -182,7 +182,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headyos-core',
-    npmPackage: '@heady/headyos-core',
+    npmPackage: '@heady-ai/headyos-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -211,7 +211,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production'],
     downstreamConsumers: ['headysystems-core', 'headyme-core'],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headybuddy-core': {
@@ -220,7 +220,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headybuddy-core',
-    npmPackage: '@heady/headybuddy-core',
+    npmPackage: '@heady-ai/headybuddy-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -248,7 +248,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production', 'headymcp-core', 'headyapi-core'],
     downstreamConsumers: ['headyme-core'],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headyapi-core': {
@@ -257,7 +257,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headyapi-core',
-    npmPackage: '@heady/headyapi-core',
+    npmPackage: '@heady-ai/headyapi-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -286,7 +286,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production'],
     downstreamConsumers: ['all'],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headyio-core': {
@@ -295,7 +295,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headyio-core',
-    npmPackage: '@heady/headyio-core',
+    npmPackage: '@heady-ai/headyio-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -322,7 +322,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production', 'headyapi-core'],
     downstreamConsumers: ['headyme-core'],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headybot-core': {
@@ -331,7 +331,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headybot-core',
-    npmPackage: '@heady/headybot-core',
+    npmPackage: '@heady-ai/headybot-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -359,7 +359,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production', 'headymcp-core'],
     downstreamConsumers: [],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headysystems-core': {
@@ -368,7 +368,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headysystems-core',
-    npmPackage: '@heady/headysystems-core',
+    npmPackage: '@heady-ai/headysystems-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -395,7 +395,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production', 'headyos-core'],
     downstreamConsumers: [],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headyme-core': {
@@ -404,7 +404,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headyme-core',
-    npmPackage: '@heady/headyme-core',
+    npmPackage: '@heady-ai/headyme-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -438,7 +438,7 @@ const SERVICES = {
       'headyio-core',
     ],
     downstreamConsumers: [],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   'headyconnection-core': {
@@ -447,7 +447,7 @@ const SERVICES = {
     type: 'core-service',
     tier: 1,
     repo: 'https://github.com/HeadyMe/headyconnection-core',
-    npmPackage: '@heady/headyconnection-core',
+    npmPackage: '@heady-ai/headyconnection-core',
     version: '1.0.0',
     runtime: 'node:22-alpine',
     deployment: 'cloud-run',
@@ -474,7 +474,7 @@ const SERVICES = {
     ],
     upstreamDependencies: ['heady-pre-production', 'headyapi-core'],
     downstreamConsumers: [],
-    sharedModulesNeeded: ['@heady/shared'],
+    sharedModulesNeeded: ['@heady-ai/shared'],
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -838,7 +838,7 @@ const DOMAIN_MAP = {
   'headymcp.com':        { service: 'headymcp-core',         primaryPurpose: 'Model Context Protocol endpoint' },
   'headyio.com':         { service: 'headyio-core',          primaryPurpose: 'I/O integrations hub (connectors)' },
   'headybot.com':        { service: 'headybot-core',         primaryPurpose: 'Chatbot / messaging channel integrations' },
-  'headyai.com':         { service: 'heady-pre-production',  primaryPurpose: 'AI model gateway + inference proxy' },
+  'heady-ai.com':         { service: 'heady-pre-production',  primaryPurpose: 'AI model gateway + inference proxy' },
 };
 
 // ─── GCP Pub/Sub Topics ─────────────────────────────────────────────────────

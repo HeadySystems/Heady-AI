@@ -9,7 +9,7 @@ enforcement: MANDATORY
 # LAW 3: CONTEXT MAXIMIZATION — NO ACTION WITHOUT FULL AWARENESS
 
 No agent, service, or pipeline stage may execute a meaningful action without first loading the
-minimum required context. Context is the immune system of the Heady alive architecture: insufficient
+minimum required context. Context is the immune system of the Heady™ alive architecture: insufficient
 context produces incoherent decisions, breaks pattern learning, and violates Directive 1 (ecosystem
 state must be known before any mutation). This law is enforced at the INTAKE stage of every
 HCFullPipeline run.

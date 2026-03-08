@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * CONN-001: MCP Gateway with JIT Tool Loading
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Just-In-Time tool loading via intent detection + on-demand import.

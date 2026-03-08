@@ -1,4 +1,4 @@
-# Heady Optimization Testing & Adjustment Process
+# Heady™ Optimization Testing & Adjustment Process
 
 > **How the system proves optimal operating conditions and integrates adjustments when optimizations are absent**
 

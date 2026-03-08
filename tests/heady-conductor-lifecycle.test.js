@@ -4,7 +4,7 @@ const conductorModule = require("../src/heady-conductor");
 
 // Since the module exports getConductor (a singleton factory), we need to
 // test the instance methods. For isolated tests, we construct manually.
-// The HeadyConductor class is accessible via the module's internal structure.
+// The Heady™Conductor class is accessible via the module's internal structure.
 
 describe("HeadyConductor lifecycle controls", () => {
     let conductor;

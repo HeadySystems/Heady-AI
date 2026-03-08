@@ -1,10 +1,10 @@
 /**
- * Heady Governance Panel — App Component
+ * Heady™ Governance Panel — App Component
  *
  * Policy engine status, approval gates, rules editor, audit log, RBAC matrix.
  * Dark purple theme for policy and governance management.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/governance-panel/App
  */

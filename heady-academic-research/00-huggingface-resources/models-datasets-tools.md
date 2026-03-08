@@ -1,10 +1,10 @@
-# Hugging Face Resources for Heady Ecosystem
+# Hugging Face Resources for Heady™ Ecosystem
 
 ## Embedding Models (384D — Matching Heady's Embedding Space)
 
 ### sentence-transformers/all-MiniLM-L6-v2
 - **URL**: https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
-- **Dimensions**: 384 — exact match for Heady's 384D embedding space
+- **Dimensions**: 384 — exact match for Heady™'s 384D embedding space
 - **Based on**: MiniLM-L6-H384-uncased, fine-tuned on 1B sentence pairs
 - **Use**: Semantic search, clustering, similarity, paraphrase mining
 - **Key**: This is the de facto standard for 384D embeddings
@@ -74,7 +74,7 @@
 - Standard library for generating sentence/text embeddings
 - Supports all 384D models used in Heady's architecture
 
-## Heady Integration Map
+## Heady™ Integration Map
 
 | Heady Component | HF Resource | Connection |
 |---|---|---|

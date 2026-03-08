@@ -2,8 +2,8 @@
  * Site Renderer — Projected Domain Rendering Engine
  *
  * This is a projected copy of the site rendering engine.
- * It renders HTML pages for standalone Heady domain sites.
- * © 2026 HeadySystems Inc.
+ * It renders HTML pages for standalone Heady™ domain sites.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';
@@ -61,7 +61,7 @@ function renderSite(siteConfig, domain) {
   ${featureItems ? `<section class="features"><ul>${featureItems}</ul></section>` : ''}
   ${statsItems ? `<div class="stats">${statsItems}</div>` : ''}
   <footer>
-    <p>© 2026 HeadySystems Inc. · ${domain} · Projected from the Heady Latent OS</p>
+    <p>© 2026 Heady™Systems Inc. · ${domain} · Projected from the Heady™ Latent OS</p>
   </footer>
 </body>
 </html>`;

@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Cache — Hot/cold caching layer
+ * Heady™ Cache — Hot/cold caching layer
  * LRU in-memory cache with TTL, hit/miss tracking, and namespace isolation.
  * Addresses registry bestPracticeScores.caching = 0.
  */

@@ -13,7 +13,7 @@
  *    More precisely: DRIFT_THRESHOLD = 1 - PSI^PHI ≈ 0.750, derived below.
  *
  * @version 1.0.0
- * @author Heady AI Team
+ * @author Heady™ AI Team
  */
 
 import {

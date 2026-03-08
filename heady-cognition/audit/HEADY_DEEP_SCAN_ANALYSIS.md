@@ -8,7 +8,7 @@
 
 ## EXECUTIVE SUMMARY
 
-The Heady ecosystem is a massive, ambitious sovereign AI platform with 60+ production JavaScript modules, 77 bee workers, 47 orchestration modules, 32 resilience modules, and a 21-stage cognitive pipeline. After cross-referencing all 7 attached specification files against the live GitHub codebase, this report identifies **47 critical findings** across 8 analysis dimensions: specification-to-implementation gaps, config inconsistencies, architectural drift, missing phi-scaling, and concrete next actions.
+The Heady™ ecosystem is a massive, ambitious sovereign AI platform with 60+ production JavaScript modules, 77 bee workers, 47 orchestration modules, 32 resilience modules, and a 21-stage cognitive pipeline. After cross-referencing all 7 attached specification files against the live GitHub codebase, this report identifies **47 critical findings** across 8 analysis dimensions: specification-to-implementation gaps, config inconsistencies, architectural drift, missing phi-scaling, and concrete next actions.
 
 ---
 
@@ -103,7 +103,7 @@ The JSON and YAML versions of HCFullPipeline describe the **same conceptual pipe
 
 | JSON Stage | Purpose | YAML Equivalent |
 |---|---|---|
-| `stage_story` (order 8) | Narrative recording via HeadyAutobiographer | Embedded within `finalize` |
+| `stage_story` (order 8) | Narrative recording via Heady™Autobiographer | Embedded within `finalize` |
 | `stage_governance_post` (order 7) | Post-execution governance audit | Embedded within checkpoint protocol |
 
 ### 2.3 MASTER_DIRECTIVES 21-Stage vs Both Configs
@@ -389,7 +389,7 @@ Multiple v1/v2 implementations coexist without clear deprecation:
 
 ### 7.3 Missing .windsurfrules
 
-The attached MASTER_DIRECTIVES reference `.windsurfrules` for convention enforcement, but the file is **missing from the main repo root** (HeadyMe/Heady-pre-production-9f2f0642). It exists in the archived HeadySystems/Heady repo. This means Windsurf/Cursor AI agents working in the monorepo have no governance constraints loaded.
+The attached MASTER_DIRECTIVES reference `.windsurfrules` for convention enforcement, but the file is **missing from the main repo root** (HeadyMe/Heady-pre-production-9f2f0642). It exists in the archived HeadyMe/Heady repo. This means Windsurf/Cursor AI agents working in the monorepo have no governance constraints loaded.
 
 ### 7.4 Bee Count Gap
 
@@ -460,7 +460,7 @@ Three separate config directories plus 4 env files. The MASTER_DIRECTIVES specif
 | 3 | Designate YAML as canonical pipeline config; auto-generate JSON from it | hcfullpipeline.yaml → hcfullpipeline.json | MEDIUM |
 | 4 | Add JUDGE + APPROVE stages to YAML | hcfullpipeline.yaml | MEDIUM |
 | 5 | Verify pipeline-core.js implements all 21 stages | src/pipeline/pipeline-core.js | HIGH |
-| 6 | Add .windsurfrules to monorepo root | Root of Heady-pre-production-9f2f0642 | LOW |
+| 6 | Add .windsurfrules to monorepo root | Root of Heady™-pre-production-9f2f0642 | LOW |
 | 7 | Bump heady-registry.json to 3.2.3 | heady-registry.json | LOW |
 
 ### HIGH PRIORITY
@@ -514,6 +514,6 @@ Three separate config directories plus 4 env files. The MASTER_DIRECTIVES specif
 
 ---
 
-*Report generated: 2026-03-07 by Heady Deep Scan Analysis*
+*Report generated: 2026-03-07 by Heady™ Deep Scan Analysis*
 *Sources: 7 attached files + HeadyMe GitHub org scan + HeadySystems GitHub org scan*
 *Repo: https://github.com/HeadyMe/Heady-pre-production-9f2f0642*

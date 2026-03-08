@@ -1,5 +1,5 @@
 /**
- * Heady Project - Human-on-the-Loop Interstitial Gates
+ * Heady™ Project - Human-on-the-Loop Interstitial Gates
  * 
  * Manages approval queues for high-stakes AI actions (e.g. database mutations,
  * financial transactions, system modifications). Implements cryptographic receipt logic.

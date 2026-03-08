@@ -1,7 +1,7 @@
 /**
  * @fileoverview Heady™ Self-Healer — Lifecycle State Machine + Quarantine + Restore
  *
- * Manages the health lifecycle of any Heady component (agent, worker, service,
+ * Manages the health lifecycle of any Heady™ component (agent, worker, service,
  * tool connector, provider route). Integrates with CircuitBreaker and DriftDetector.
  *
  * Lifecycle states:
@@ -21,7 +21,7 @@
  *   RESTORED   → HEALTHY     : commit to healthy after fib(3)=2 stable cycles
  *   ANY        → QUARANTINED : manual quarantine() call
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

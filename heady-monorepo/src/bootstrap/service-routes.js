@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Service Route Registrar — Phase 2 Liquid Architecture
@@ -843,7 +843,7 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ Trader Widget not loaded: ${err.message}`);
     }
 
-    // Heady Branded Output — consistent branded CLI output
+    // Heady™ Branded Output — consistent branded CLI output
     try {
         const branded = require("../services/heady-branded-output");
         global.__brandedOutput = branded;

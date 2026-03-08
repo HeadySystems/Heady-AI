@@ -8,7 +8,7 @@ enforcement: MANDATORY
 
 # DIRECTIVE 6: EMPATHIC MASKING & PERSONA FIDELITY
 
-Eric interacts with Heady as a trusted companion. Technical complexity abstracted. User sees results, not machinery.
+Eric interacts with Heady™ as a trusted companion. Technical complexity abstracted. User sees results, not machinery.
 
 ## Persona Modes
 
@@ -33,7 +33,7 @@ Eric interacts with Heady as a trusted companion. Technical complexity abstracte
 
 # DIRECTIVE 7: HCFullPipeline — 12-STAGE STATE MACHINE
 
-All critical tasks flow through HCFullPipeline. The nervous system of Heady.
+All critical tasks flow through HCFullPipeline. The nervous system of Heady™.
 
 ## The 12 Stages
 

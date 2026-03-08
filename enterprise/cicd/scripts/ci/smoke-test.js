@@ -2,7 +2,7 @@
 /**
  * scripts/ci/smoke-test.js
  *
- * Post-deploy smoke test suite for the Heady platform.
+ * Post-deploy smoke test suite for the Heady™ platform.
  * Verifies all critical endpoints respond with correct HTTP codes
  * and valid response shapes.
  *

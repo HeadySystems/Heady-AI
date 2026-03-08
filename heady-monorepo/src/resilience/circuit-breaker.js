@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Circuit Breaker — Resilience primitive
+ * Heady™ Circuit Breaker — Resilience primitive
  * Prevents cascade failures by tracking error rates per service
  * and opening the circuit when thresholds are exceeded.
  *
@@ -98,7 +98,7 @@ class CircuitBreaker {
         if (newState === 'OPEN') this.metrics.trips++;
         if (newState === 'CLOSED') { this.failures = 0; this.successes = 0; }
         if (newState === 'HALF_OPEN') { this.halfOpenCalls = 0; this.successes = 0; }
-        // Emit for HeadyLens
+        // Emit for Heady™Lens
         if (typeof process !== 'undefined') {
             process.emit('heady:circuit', { breaker: this.name, from: old, to: newState, time: new Date().toISOString() });
         }

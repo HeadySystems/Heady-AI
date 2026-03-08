@@ -1,4 +1,4 @@
-# @headyme/sacred-geometry-sdk
+# @heady-ai/sacred-geometry-sdk
 
 > Sacred Geometry framework for autonomous multi-agent orchestration — Golden Ratio (φ) capacity allocation, Base-13 tier classification, Octree-indexed 3D vector memory, and Fibonacci-weighted template selection.
 
@@ -8,13 +8,13 @@
 ## Installation
 
 ```bash
-npm install @headyme/sacred-geometry-sdk
+npm install @heady-ai/sacred-geometry-sdk
 ```
 
 ## Quick Start
 
 ```javascript
-const sg = require('@headyme/sacred-geometry-sdk');
+const sg = require('@heady-ai/sacred-geometry-sdk');
 
 // ── Golden Ratio Constants ──
 console.log(sg.PHI);        // 1.6180339887498948
@@ -120,4 +120,4 @@ See whitepaper: [Sacred Geometry in Multi-Agent AI Coordination](../../docs/sacr
 
 ## License
 
-© 2026 HeadySystems Inc.. All rights reserved. Proprietary — see LICENSE for terms.
+© 2026 Heady™Systems Inc.. All rights reserved. Proprietary — see LICENSE for terms.

@@ -1,5 +1,5 @@
 /**
- * OTel Bootstrap — OpenTelemetry SDK Setup for Heady Systems
+ * OTel Bootstrap — OpenTelemetry SDK Setup for Heady™ Systems
  * Configures tracing, metrics, propagation, and auto-instrumentation.
  * Must be required FIRST before any other module (node -r ./otel-wrappers/otel-setup.js app.js)
  * @module otel-wrappers/otel-setup

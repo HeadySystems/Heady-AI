@@ -21,7 +21,7 @@ function fib(n) {
   return b;
 }
 
-// Key Fibonacci numbers used in Heady:
+// Key Fibonacci numbers used in Heady™:
 // fib(7)  = 13
 // fib(8)  = 21
 // fib(9)  = 34

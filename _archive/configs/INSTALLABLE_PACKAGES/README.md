@@ -1,4 +1,4 @@
-# 🚀 Heady Systems Installable Packages
+# 🚀 Heady™ Systems Installable Packages
 
 **Production-Ready Build Packages for All Heady Applications**
 
@@ -46,13 +46,13 @@ This will:
 ### Individual Package Deployment
 
 ```bash
-# HeadyBuddy — deploy to Cloudflare Pages or any static host
+# Heady™Buddy — deploy to Cloudflare Pages or any static host
 cd HeadyBuddy && npx wrangler pages deploy . --project-name=heady-buddy
 
-# HeadyAI-IDE
+# Heady™AI-IDE
 cd HeadyAI-IDE && npx wrangler pages deploy . --project-name=heady-ide
 
-# HeadyWeb
+# Heady™Web
 cd HeadyWeb && npx wrangler pages deploy . --project-name=heady-web
 ```
 
@@ -189,4 +189,4 @@ For deployment issues:
 
 **🎉 Ready for Maximum Global Happiness Impact!**
 
-*Heady Systems Installable Packages - Production-Ready Deployment*
+*Heady™ Systems Installable Packages - Production-Ready Deployment*

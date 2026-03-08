@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -9,7 +9,7 @@
  * REST endpoints for provider usage dashboards and budget monitoring.
  * Exposes aggregated provider/account/model analytics from the usage tracker.
  *
- * Heady AI Nodes: OBSERVER, SENTINEL
+ * Heady™ AI Nodes: OBSERVER, SENTINEL
  */
 
 const express = require("express");

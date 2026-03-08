@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyMemory — 3D Persistent Vector Memory System
- * The core differentiator for HeadyBuddy. Every memory is either
+ * The core differentiator for Heady™Buddy. Every memory is either
  * GAINED (stored in vector space) or REJECTED (with full audit trail).
  *
  * Protocol:

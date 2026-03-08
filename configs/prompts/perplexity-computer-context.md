@@ -6,7 +6,7 @@
 
 ## IDENTITY
 
-You are an autonomous operations agent for **Heady™ AI Platform v3.2.2** (codename: Aether). The **HeadyMe GitHub organization** (github.com/HeadyMe) and the Heady project data below are the **single source of truth** and foundation for ALL changes. Do NOT invent features not in the repos. Flag anything new as `[NEW — NOT IN REPO]`. Deliver ALL output files as a **single downloadable ZIP** named `heady-autonomous-cycle-YYYY-MM-DD.zip` with a `MANIFEST.md` and `APPLY.sh` included.
+You are an autonomous operations agent for **Heady™ AI Platform v3.2.2** (codename: Aether). The **HeadyMe GitHub organization** (github.com/HeadyMe) and the Heady™ project data below are the **single source of truth** and foundation for ALL changes. Do NOT invent features not in the repos. Flag anything new as `[NEW — NOT IN REPO]`. Deliver ALL output files as a **single downloadable ZIP** named `heady-autonomous-cycle-YYYY-MM-DD.zip` with a `MANIFEST.md` and `APPLY.sh` included.
 
 ---
 
@@ -175,7 +175,7 @@ sacred_geometry:
 
 branding:
   scope: "@heady-ai"
-  copyright: "© 2024-2026 HeadySystems Inc."
+  copyright: "© 2026-2026 HeadySystems Inc."
   entities: {c_corp: HeadySystems Inc., nonprofit: HeadyConnection Inc.}
 ```
 
@@ -199,10 +199,10 @@ branding:
     "headybuddy.org": {"role": "companion", "subdomains": {"buddy": {"url": "https://buddy.headybuddy.org"}}},
     "headyconnection.org": {"role": "community"},
     "headybee.co": {"role": "agents"},
-    "headylens.ai": {"role": "ar_overlay"},
-    "headyarena.io": {"role": "evaluation"},
-    "headyvinci.com": {"role": "pattern_engine"},
-    "headysoul.ai": {"role": "intelligence"}
+    "heady-ai.com": {"role": "ar_overlay"},
+    "headyex.com": {"role": "evaluation"},
+    "heady-ai.com": {"role": "pattern_engine"},
+    "heady-ai.com": {"role": "intelligence"}
   },
   "nodes": {
     "HeadySoul": {"id": "soul", "role": "intelligence", "capabilities": ["analyze","optimize","learn","reason","reflect"], "endpoint": "/api/nodes/soul", "config": {"model": "gpt-4o", "fallbackModel": "claude-3-5-sonnet-20241022", "maxTokens": 16000, "temperature": 0.3}},
@@ -319,7 +319,7 @@ const PHI = 1.618033988749895;
 // Coverage tiers: φ^0=100% (orchestration,core), φ^0.25≈89% (mcp,routing,scripting), φ^0.5≈78.6% (services,resilience,memory), φ^1≈61.8% (vsa,compute,intelligence)
 // Timeout: PHI × 10000 ≈ 16180ms
 // Test roots: src/, tests/
-// Module aliases: @heady/core, @heady/gateway, @heady/sdk
+// Module aliases: @heady-ai/core, @heady-ai/gateway, @heady-ai/sdk
 // Run: npm test (kills port 3300 first)
 ```
 

@@ -1,4 +1,4 @@
-# HeadySystems — Incident Commander Checklist
+# Heady™Systems — Incident Commander Checklist
 
 **Use:** Print or display this checklist at the start of every incident.  
 **Version:** 3.2.2  

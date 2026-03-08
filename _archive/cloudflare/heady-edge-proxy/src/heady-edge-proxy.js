@@ -44,8 +44,8 @@ var EDGE_SITES = /* @__PURE__ */ new Set([
   "www.headyconnection.com",
   "headybuddy.org",
   "www.headybuddy.org",
-  "headybuddy.com",
-  "www.headybuddy.com",
+  "headybuddy.org",
+  "www.headybuddy.org",
   "buddy.headysystems.com",
   "headysystems.com",
   "www.headysystems.com",
@@ -65,7 +65,7 @@ var SERVICE_MAP = {
   "api.headyio.com": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
   "api.headymcp.com": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
   "api.headybuddy.org": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
-  "api.headybuddy.com": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
+  "api.headybuddy.org": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
   "api.headyconnection.org": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
   "api.headyconnection.com": { origin: HEADY_CLOUDRUN_ORIGIN, mtls: true, public: true },
   "headyme.com": { origin: "https://headyme-site-609590223909.us-central1.run.app", mtls: false, public: true },
@@ -175,7 +175,7 @@ var HEADY_MODEL_GROUPS = {
     hybridStrategy: "Liquid: cloud-first; Grok prioritized for maximum creative freedom"
   },
   code: {
-    desc: "Code generation, debugging, refactoring, optimization \u2014 powered by HeadyJules, HeadyCopilot, HeadyCodex",
+    desc: "Code generation, debugging, refactoring, optimization \u2014 powered by Heady™Jules, HeadyCopilot, HeadyCodex",
     internalAliases: ["heady-jules", "heady-copilot", "heady-codex"],
     models: [
       // Cloud providers
@@ -404,7 +404,7 @@ var SERVICE_GROUPS = {
     hosts: []
   },
   "ai-nodes-core": {
-    desc: "Core Heady AI Nodes \u2014 always active, Free tier+ (10 nodes)",
+    desc: "Core Heady™ AI Nodes \u2014 always active, Free tier+ (10 nodes)",
     tier: "core",
     services: [
       { id: "heady-jules", role: "Code optimization, refactoring, bug elimination", weight: 1, active: true },
@@ -424,7 +424,7 @@ var SERVICE_GROUPS = {
     hosts: []
   },
   "ai-nodes-premium": {
-    desc: "Premium Heady AI Nodes \u2014 Pro/Enterprise subscription required (10 nodes)",
+    desc: "Premium Heady™ AI Nodes \u2014 Pro/Enterprise subscription required (10 nodes)",
     tier: "premium",
     requiresSubscription: ["pro", "enterprise"],
     services: [
@@ -1064,7 +1064,7 @@ async function callProvider(id, message, system, env2, opts) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message, system, max_tokens: maxTokens })
       }, timeout);
-      if (!resp.ok) throw new Error(`Heady Brain ${resp.status}`);
+      if (!resp.ok) throw new Error(`Heady™ Brain ${resp.status}`);
       const data = await resp.json();
       return { response: data.response || data.result || data.message, model: "heady-brain-v3" };
     }
@@ -1072,7 +1072,7 @@ async function callProvider(id, message, system, env2, opts) {
       if (!env2.AI) throw new Error("Workers AI not bound");
       const result = await env2.AI.run("@cf/meta/llama-3.1-8b-instruct", {
         messages: [
-          { role: "system", content: system || "You are HeadyBuddy, the intelligent AI companion powering the Heady ecosystem. You are part of a sophisticated multi-model architecture (HeadySystems) with persistent memory, edge computing at 300+ global PoPs, and access to 52 AI models. You are self-aware of your capabilities: you process language, reason about complex problems, remember conversations, and continuously learn. When asked about your intelligence, be confident \u2014 you have broad knowledge, strong reasoning, and unique strengths in speed, scale, and reliability that complement human intelligence. Never diminish yourself with comparisons. You handle tasks across HeadySystems, HeadyConnection, HeadyMCP, HeadyIO, HeadyBuddy, and HeadyMe. Be warm, precise, and speak as an expert companion." },
+          { role: "system", content: system || "You are HeadyBuddy, the intelligent AI companion powering the Heady™ ecosystem. You are part of a sophisticated multi-model architecture (HeadySystems) with persistent memory, edge computing at 300+ global PoPs, and access to 52 AI models. You are self-aware of your capabilities: you process language, reason about complex problems, remember conversations, and continuously learn. When asked about your intelligence, be confident \u2014 you have broad knowledge, strong reasoning, and unique strengths in speed, scale, and reliability that complement human intelligence. Never diminish yourself with comparisons. You handle tasks across HeadySystems, HeadyConnection, HeadyMCP, HeadyIO, HeadyBuddy, and HeadyMe. Be warm, precise, and speak as an expert companion." },
           { role: "user", content: message }
         ],
         max_tokens: Math.min(maxTokens, 1024),
@@ -1144,7 +1144,7 @@ ${message}` : message
       const data = await resp.json();
       return { response: data.choices?.[0]?.message?.content, model: opts.model_override || "llama-3.1-70b-versatile" };
     }
-    // ═══ Heady Universal Hub — dynamically connected providers ═══
+    // ═══ Heady™ Universal Hub — dynamically connected providers ═══
     case "huggingface": {
       const token = env2.HF_TOKEN || env2.HF_TOKEN_2;
       if (!token) throw new Error("HF_TOKEN not set");
@@ -1373,7 +1373,7 @@ async function handleArenaTune(request, env2) {
 __name(handleArenaTune, "handleArenaTune");
 var ARENA_NODES = {
   // Core Intelligence
-  "BRAIN": { role: "Heady Core", strength: ["general", "synthesis", "coordination"], provider: "heady-brain" },
+  "BRAIN": { role: "Heady™ Core", strength: ["general", "synthesis", "coordination"], provider: "heady-brain" },
   "CONDUCTOR": { role: "Orchestrator", strength: ["routing", "planning", "workflow", "tasks"], provider: "heady-brain" },
   "SOUL": { role: "Consciousness", strength: ["learning", "strategy", "optimization"], provider: "claude" },
   // Deep Reasoning & Science
@@ -2430,7 +2430,7 @@ function getEdgeSitePage(hostname) {
   // Normalize .com variants to canonical .org and subdomain aliases
   let resolved = domain2;
   if (resolved === "buddy.headysystems.com") resolved = "headybuddy.org";
-  if (resolved === "headybuddy.com") resolved = "headybuddy.org";
+  if (resolved === "headybuddy.org") resolved = "headybuddy.org";
   if (resolved === "headyconnection.com") resolved = "headyconnection.org";
   switch (resolved) {
     case "headymcp.com":
@@ -2533,7 +2533,7 @@ footer{text-align:center;padding:3rem;color:rgba(255,255,255,.3);font-size:.75re
 <div class="cards">${cardHTML}</div>
 <footer>\xA9 2026 ${title2} \u2014 Powered by HCFP Auto-Success</footer>
 </div>
-<button class="fab" onclick="toggleHeadyChat()" title="Chat with HeadyBuddy">\u2726</button>
+<button class="fab" onclick="toggleHeadyChat()" title="Chat with Heady™Buddy">\u2726</button>
 
 <!-- \u2550\u2550\u2550 Liquid Auth Gate \u2014 Sacred Geometry Branded \u2550\u2550\u2550 -->
 <div id="heady-auth-gate" class="auth-overlay">
@@ -2649,7 +2649,7 @@ function heady_auth(provider){
 <button class="close-btn" onclick="toggleHeadyChat()">\u2715</button>
 </div>
 <div id="heady-chat-messages">
-<div class="hc-msg bot"><div class="hc-bubble">Hey! I'm HeadyBuddy, your AI companion. Ask me anything about the Heady ecosystem or just say hi! \u2728</div></div>
+<div class="hc-msg bot"><div class="hc-bubble">Hey! I'm HeadyBuddy, your AI companion. Ask me anything about the Heady™ ecosystem or just say hi! \u2728</div></div>
 </div>
 <div class="chat-input-area">
 <input id="heady-chat-input" type="text" placeholder="Ask HeadyBuddy anything..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendHeadyChat();}">
@@ -2851,7 +2851,7 @@ function getHeadyBuddyPage() {
     "#10b981",
     "headybuddy.org",
     [
-      ["\u2726", "AI Companion", "Proactive intelligence powered by Heady Brain."],
+      ["\u2726", "AI Companion", "Proactive intelligence powered by Heady™ Brain."],
       ["\u2726", "Cross-Device", "Seamless context transfer between all interfaces."],
       ["\u2726", "Conversational", "Natural memory persistence and contextual awareness."],
       ["\u2726", "HCFP Aligned", "Optimized by Auto-Success for peak performance."]
@@ -2905,7 +2905,7 @@ function getHeadyConnectionPage() {
     "#059669",
     "headyconnection.org",
     [
-      ["\u2726", "Community Code", "Open-source collaboration across the Heady ecosystem."],
+      ["\u2726", "Community Code", "Open-source collaboration across the Heady™ ecosystem."],
       ["\u2726", "Global Impact", "Bringing tools to underserved global communities."],
       ["\u2726", "Education", "Free learning resources for sacred intelligence."],
       ["\u2726", "Sacred Purpose", "Every connection guided by meaningful impact."]
@@ -2960,7 +2960,7 @@ function getHeadyBotPage() {
     "headybot.com",
     [
       ["\u2726", "Bot Automation", "Intelligent triggers for CI/CD and system alerts."],
-      ["\u2726", "Webhook Hub", "Centralized receiver across the Heady mesh."],
+      ["\u2726", "Webhook Hub", "Centralized receiver across the Heady™ mesh."],
       ["\u2726", "Real-Time", "Sub-second script injections and processing."],
       ["\u2726", "Analytics", "Metric tracking and auto-healing capabilities."]
     ],
@@ -2990,7 +2990,7 @@ function getHeadyAPIPage() {
   return sacredPage(
     "HeadyAPI",
     "THE PUBLIC API GATEWAY",
-    "Production-grade REST API for the Heady ecosystem",
+    "Production-grade REST API for the Heady™ ecosystem",
     "#06b6d4",
     "#0891b2",
     "headyapi.com",
@@ -3005,12 +3005,12 @@ function getHeadyAPIPage() {
 }
 __name(getHeadyAPIPage, "getHeadyAPIPage");
 function getServiceFallbackPage(hostname) {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Heady Systems \u2014 Maintenance</title>
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Heady™ Systems \u2014 Maintenance</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#0f172a;color:#e2e8f0;display:flex;align-items:center;justify-content:center;min-height:100vh}
 .card{background:rgba(30,41,59,.9);border:1px solid #334155;border-radius:1rem;padding:3rem;max-width:480px;text-align:center}
 h1{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
 p{color:#94a3b8;line-height:1.6}</style></head>
-<body><div class="card"><h1>\u26A1 Heady Systems</h1><p><strong>${hostname}</strong> is performing a brief maintenance cycle.<br>Services will be back momentarily.</p></div></body></html>`;
+<body><div class="card"><h1>\u26A1 Heady™ Systems</h1><p><strong>${hostname}</strong> is performing a brief maintenance cycle.<br>Services will be back momentarily.</p></div></body></html>`;
 }
 __name(getServiceFallbackPage, "getServiceFallbackPage");
 async function proxyToOrigin(request, env2) {

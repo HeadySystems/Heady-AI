@@ -1,8 +1,8 @@
 /**
  * =============================================================================
- * Heady Health Monitor
+ * Heady™ Health Monitor
  * =============================================================================
- * Comprehensive health monitoring for the Heady sovereign AI platform.
+ * Comprehensive health monitoring for the Heady™ sovereign AI platform.
  *
  * Architecture:
  *  - HealthMonitor class orchestrates all checks in parallel
@@ -23,6 +23,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const os = require('os');
 const { promisify } = require('util');
@@ -626,7 +627,7 @@ class HealthMonitor extends EventEmitter {
       }
     } finally {
       // Release lock after 30s cooldown to avoid healing storm
-      setTimeout(() => { this._healingLock = false; }, 30_000);
+      setTimeout(() => { this._healingLock = false; }, PHI_TIMING.CYCLE);  // φ⁷ × 1000
     }
   }
 
@@ -636,7 +637,7 @@ class HealthMonitor extends EventEmitter {
 
   async _sendAlert({ level, message, result }) {
     const payload = {
-      text: `[Heady HealthMonitor] ${level.toUpperCase()}: ${message}`,
+      text: `[Heady™ HealthMonitor] ${level.toUpperCase()}: ${message}`,
       score:     result?.score,
       timestamp: new Date().toISOString(),
       version:   result?.version,

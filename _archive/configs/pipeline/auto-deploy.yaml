@@ -38,7 +38,7 @@ targets:
     redundancy: 1
 
   # HeadySystems (PRODUCTION — only after 100% gate)
-  - name: "headysystems-production"
+  - name: "heady-production"
     type: "cloud"
     git_remote: "origin"
     cloud_url: "https://api.headysystems.com"

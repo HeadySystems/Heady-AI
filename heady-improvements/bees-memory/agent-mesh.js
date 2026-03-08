@@ -38,7 +38,7 @@ const EventEmitter = require('events');
 // Known agents — sourced from agent-orchestrator.js KNOWN_AGENTS array
 // ---------------------------------------------------------------------------
 
-/** @type {string[]} All recognised agent IDs in the Heady platform */
+/** @type {string[]} All recognised agent IDs in the Heady™ platform */
 const KNOWN_AGENTS = [
   'JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS',
   'PYTHIA', 'BRIDGE', 'MUSE', 'SENTINEL', 'NOVA',
@@ -551,7 +551,7 @@ class SubscriptionRegistry {
 // ---------------------------------------------------------------------------
 
 /**
- * Agent Mesh Network — the central communication fabric for all Heady agents.
+ * Agent Mesh Network — the central communication fabric for all Heady™ agents.
  *
  * @extends EventEmitter
  *

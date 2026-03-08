@@ -13,14 +13,14 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# HeadyVM Migration Configuration
+# Heady™VM Migration Configuration
 # Auto-generated for seamless migration to HeadyVM
 
 version: "3.8"
 services:
   # HeadyVM Core Services
   heady-vm-core:
-    image: headysystems/heady-vm-core:latest
+    image: headyme/heady-vm-core:latest
     container_name: heady-vm-core
     environment:
       - NODE_ENV=production
@@ -42,7 +42,7 @@ services:
 
   # HeadyVM Service Mesh
   heady-vm-mesh:
-    image: headysystems/heady-vm-mesh:latest
+    image: headyme/heady-vm-mesh:latest
     container_name: heady-vm-mesh
     environment:
       - VM_CORE_URL=http://heady-vm-core:3400
@@ -55,7 +55,7 @@ services:
 
   # HeadyVM Storage Controller
   heady-vm-storage:
-    image: headysystems/heady-vm-storage:latest
+    image: headyme/heady-vm-storage:latest
     container_name: heady-vm-storage
     environment:
       - STORAGE_MODE=cloud

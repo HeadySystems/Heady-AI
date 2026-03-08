@@ -1,5 +1,5 @@
 /**
- * Transaction types in the HeadyCoin system.
+ * Transaction types in the Heady™Coin system.
  */
 export const TX_TYPES: Readonly<{
     MINT: "MINT";

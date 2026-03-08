@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * src/routes/brain.js — Heady Brain API routes
+ * src/routes/brain.js — Heady™ Brain API routes
  * Provides /api/brain/* endpoints for the MCP server
  *
  * These endpoints enable all heady-local MCP tools:
@@ -191,7 +191,7 @@ async function chatViaOpenAI(message, system, temperature, max_tokens, history) 
     const https = require("https");
     const msgs = [];
     if (system) msgs.push({ role: "system", content: system });
-    else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem. You are helpful, concise, and intelligent. When discussing Heady services, reference Brain, Battle, Creative, MCP, and the 155-task auto-success engine. Be conversational and warm." });
+    else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem. You are helpful, concise, and intelligent. When discussing Heady services, reference Brain, Battle, Creative, MCP, and the 155-task auto-success engine. Be conversational and warm." });
     // Inject conversation history for multi-turn context
     if (history && history.length > 0) msgs.push(...history);
     msgs.push({ role: "user", content: message });
@@ -205,7 +205,7 @@ async function chatViaOpenAI(message, system, temperature, max_tokens, history) 
 
     return new Promise((resolve, reject) => {
         const req = https.request({
-            hostname: "api.headycompute.com", path: "/v1/chat/completions", method: "POST",
+            hostname: "api.headycloud.com", path: "/v1/chat/completions", method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${apiKey}`,
@@ -287,11 +287,11 @@ function filterResponse(text, options = {}) {
         const identityPatterns = [
             // Direct provider self-identification
             [/\bI(?:'m| am) (?:an? )?(?:AI (?:assistant|model|chatbot|language model) )?(?:made|created|developed|built|trained|designed) by (Google|HeadyNexus|HeadyCompute|Meta|Mistral|Microsoft|Hugging\s?Face)\b/gi,
-                "I'm HeadyBrain, the AI reasoning engine of the Heady ecosystem"],
+                "I'm HeadyBrain, the AI reasoning engine of the Heady™ ecosystem"],
             [/\bI(?:'m| am) (HeadyJules|HeadyPythia|GPT|ChatGPT|Llama|Mistral|Qwen|Copilot)\b/gi,
                 "I'm HeadyBrain"],
             [/\bI(?:'m| am) (?:a |an )?(large )?language model,? (?:trained|created|made|built|developed) by (Google|HeadyNexus|HeadyCompute|Meta)\b/gi,
-                "I'm HeadyBrain, the AI reasoning engine of the Heady ecosystem"],
+                "I'm HeadyBrain, the AI reasoning engine of the Heady™ ecosystem"],
             [/\bI(?:'m| am) (?:a |an )?(large )?language model\b/gi,
                 "I'm HeadyBrain"],
             [/\bMy name is (HeadyJules|HeadyPythia|GPT|ChatGPT|Bard|Llama|Qwen)\b/gi,
@@ -299,7 +299,7 @@ function filterResponse(text, options = {}) {
 
             // Provider/company name references in context of "who made me"
             [/\b(?:made|created|developed|built|trained|designed) by (Google|HeadyNexus|HeadyCompute|Meta AI|Mistral AI|Microsoft|Hugging\s?Face)\b/gi,
-                "built by Heady Systems"],
+                "built by Heady™ Systems"],
             [/\b(Google|HeadyNexus|HeadyCompute|Meta|Mistral|Microsoft|Hugging\s?Face)(?:'s)? AI (?:assistant|model|team|lab|research)\b/gi,
                 "Heady AI"],
 
@@ -311,7 +311,7 @@ function filterResponse(text, options = {}) {
 
             // "Powered by" references
             [/\bpowered by (Google|HeadyNexus|HeadyCompute|Meta|HeadyPythia|HeadyJules|GPT)\b/gi,
-                "powered by Heady Systems"],
+                "powered by Heady™ Systems"],
         ];
 
         for (const [pattern, replacement] of identityPatterns) {
@@ -532,7 +532,7 @@ async function chatViaHuggingFace(message, system, temperature, max_tokens, hist
 
     const msgs = [];
     if (system) msgs.push({ role: "system", content: system });
-    else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem. Be helpful, concise, warm." });
+    else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem. Be helpful, concise, warm." });
     // Inject conversation history for multi-turn context
     if (history && history.length > 0) msgs.push(...history);
     msgs.push({ role: "user", content: message });
@@ -604,7 +604,7 @@ function generateContextualResponse(message) {
                 msg.includes("battle") ? "HeadyBattle" : "HeadyBrain";
 
     if (msg.includes("hello") || msg.includes("hi ") || msg.includes("hey")) {
-        return `Hey there! 👋 I'm ${vertical}, part of the Heady AI ecosystem. All conversations are stored in persistent 3D vector memory. What would you like to explore?`;
+        return `Hey there! 👋 I'm ${vertical}, part of the Heady™ AI ecosystem. All conversations are stored in persistent 3D vector memory. What would you like to explore?`;
     } else if (msg.includes("help") || msg.includes("what can")) {
         return `I can help with: 🧠 AI reasoning & analysis, ⚔️ Code validation (HeadyBattle), 🎨 Creative generation, 🔧 MCP tool orchestration (31 tools), 📡 Real-time event streaming, and more. What interests you?`;
     } else if (msg.includes("status") || msg.includes("health")) {
@@ -649,7 +649,7 @@ router.post("/chat", async (req, res) => {
         // ── Route through SDK Gateway with conversation history ──
         const gateway = getSDKGateway(req);
         const result = await gateway.chat(message, {
-            system: system || "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem.",
+            system: system || "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem.",
             temperature, maxTokens: max_tokens,
             history: session.history,  // ═══ PASS FULL HISTORY ═══
         });
@@ -874,7 +874,7 @@ router.post("/embed", async (req, res) => {
         });
 
         logMemoryReceipt({
-            stored: `Real vector embedding created via HeadyLocal (${model || "nomic-embed-text"}) — ${result.embedding ? result.embedding.length : 0} dimensions`,
+            stored: `Real vector embedding created via Heady™Local (${model || "nomic-embed-text"}) — ${result.embedding ? result.embedding.length : 0} dimensions`,
             notStored: "Full 3D vector stored — nothing omitted",
             method: "headylocal-vector-db",
             fallbackUsed: false,
@@ -1213,7 +1213,7 @@ module.exports = { router, setMemoryWrapper };
 
 /**
  * POST /api/brain/stream
- * Server-Sent Events streaming chat via HeadyJules SDK
+ * Server-Sent Events streaming chat via Heady™Jules SDK
  */
 router.post("/stream", async (req, res) => {
     const { message, system, model } = req.body;

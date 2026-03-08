@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * 🤔 Heady HeadyBattle Service - 100% Uptime Continuous Ethical Validation
+ * 🤔 Heady™ HeadyBattle Service - 100% Uptime Continuous Ethical Validation
  * 
  * This service runs continuously, providing HeadyBattle interrogation
  * for all system decisions, changes, and operations.
@@ -12,6 +12,7 @@
  */
 
 const fs = require('fs');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const EventEmitter = require('events');
 const logger = require("../utils/logger");
@@ -234,7 +235,7 @@ class HeadyBattleService extends EventEmitter {
     // Start learning integration
     this.learningLoop = setInterval(() => {
       this.learningIntegration();
-    }, 30000); // Learn every 30 seconds
+    }, PHI_TIMING.CYCLE); // Learn every 30 seconds
     
     // Start ethical monitoring
     this.ethicalLoop = setInterval(() => {

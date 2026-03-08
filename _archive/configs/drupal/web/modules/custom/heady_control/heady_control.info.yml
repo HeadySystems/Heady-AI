@@ -1,6 +1,6 @@
-name: 'Heady System Control'
+name: 'Heady™ System Control'
 type: module
-description: 'Complete system monitoring and control for Heady ecosystem'
+description: 'Complete system monitoring and control for Heady™ ecosystem'
 core_version_requirement: ^11
 package: 'Heady'
 dependencies:

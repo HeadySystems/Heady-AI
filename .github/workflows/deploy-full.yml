@@ -1,8 +1,8 @@
-name: Heady Autonomous Projections
+name: Heady™ Autonomous Projections
 
 # Full-throttle: auto-deploy on every push to main.
 # All deployments are projections from the monorepo source of truth,
-# which is itself a projection from Heady's 3D vector space.
+# which is itself a projection from Heady™'s 3D vector space.
 
 on:
   push:
@@ -307,7 +307,7 @@ jobs:
     steps:
       - name: Health Probes
         run: |
-          echo "🐝 Heady Autonomous Projections — FULL THROTTLE"
+          echo "🐝 Heady™ Autonomous Projections — FULL THROTTLE"
           echo ""
           PASS=0
           TOTAL=0

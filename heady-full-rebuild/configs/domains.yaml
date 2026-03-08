@@ -85,7 +85,7 @@ domains:
     role: "Command Center"
     description: >
       Primary user-facing dashboard and sovereign command interface.
-      Routes all user intent into the Heady™ pipeline. Hosts the HeadySoul
+      Routes all user intent into the Heady™ pipeline. Hosts the Heady™Soul
       control plane and real-time swarm observability UI.
     platform:
       primary: "Cloudflare Pages"
@@ -106,7 +106,7 @@ domains:
       allowed_origins:
         - "https://headyme.com"
         - "https://headysystems.com"
-        - "https://headyai.com"
+        - "https://heady-ai.com"
         - "https://headyapi.com"
       allowed_methods: [GET, POST, PUT, DELETE, OPTIONS]
       allowed_headers: [Authorization, Content-Type, X-Heady-Version, X-Heady-Signature]
@@ -138,7 +138,7 @@ domains:
 
     connected_services:
       - headysystems.com          # Core Architecture Engine — pipeline orchestration
-      - headyai.com               # Intelligence Routing Hub — LLM routing
+      - heady-ai.com               # Intelligence Routing Hub — LLM routing
       - headyapi.com              # Public Intelligence Interface — structured queries
       - headyconnection.org       # Nonprofit & Community — identity federation
       - headymcp.com              # MCP Layer — tool-call protocol
@@ -179,7 +179,7 @@ domains:
     cors:
       allowed_origins:
         - "https://headyme.com"
-        - "https://headyai.com"
+        - "https://heady-ai.com"
         - "https://headyapi.com"
         - "https://headyio.com"
         - "https://headymcp.com"
@@ -214,7 +214,7 @@ domains:
       reset_timeout_ms: 29034     # PHI⁷ × 1000 ms
 
     connected_services:
-      - headyai.com               # Intelligence Routing Hub
+      - heady-ai.com               # Intelligence Routing Hub
       - headyapi.com              # Public Intelligence Interface
       - headymcp.com              # MCP Layer
       - headyio.com               # Developer Platform
@@ -319,7 +319,7 @@ domains:
         - "https://headybuddy.org"
         - "https://headyme.com"
         - "https://headyconnection.org"
-        - "https://headyai.com"
+        - "https://heady-ai.com"
       allowed_methods: [GET, POST, PUT, DELETE, OPTIONS]
       allowed_headers: [Authorization, Content-Type, X-Heady-Version, X-Heady-Signature, X-Session-Id]
       max_age_ms: 46979
@@ -348,7 +348,7 @@ domains:
       max_concurrent: 21          # fib(8) = 21 companion sessions per instance
 
     connected_services:
-      - headyai.com               # Intelligence Routing Hub — LLM routing
+      - heady-ai.com               # Intelligence Routing Hub — LLM routing
       - headysystems.com          # Core Architecture Engine — memory & pipeline
       - headyapi.com              # Public Intelligence Interface
       - headymcp.com              # MCP Layer — tool access
@@ -394,7 +394,7 @@ domains:
         - "https://headybot.com"
         - "https://headyio.com"
         - "https://headyapi.com"
-        - "https://headyai.com"
+        - "https://heady-ai.com"
       allowed_methods: [GET, POST, PUT, DELETE, OPTIONS]
       allowed_headers: [Authorization, Content-Type, X-Heady-Version, X-Heady-Signature, X-MCP-Tool-Id]
       max_age_ms: 46979
@@ -519,7 +519,7 @@ domains:
       - headyapi.com              # Public Intelligence Interface
       - headymcp.com              # MCP Layer — tool publishing
       - headybot.com              # Automation & Agents
-      - headyai.com               # Intelligence Routing Hub
+      - heady-ai.com               # Intelligence Routing Hub
 
     cache:
       cdn_ttl_ms: 11090           # PHI⁵ × 1000 ms — docs semi-static
@@ -604,7 +604,7 @@ domains:
       - headymcp.com              # MCP Layer — tool access for agents
       - headyapi.com              # Public Intelligence Interface — agent queries
       - headyio.com               # Developer Platform — job configuration
-      - headyai.com               # Intelligence Routing Hub — LLM for agents
+      - heady-ai.com               # Intelligence Routing Hub — LLM for agents
 
     cache:
       cdn_ttl_ms: 1618            # PHI¹ × 1000 ms — job state is live
@@ -649,7 +649,7 @@ domains:
         - "https://headybot.com"
         - "https://headyio.com"
         - "https://headymcp.com"
-        - "https://headyai.com"
+        - "https://heady-ai.com"
         - "https://headyconnection.org"
       allowed_methods: [GET, POST, OPTIONS]
       allowed_headers: [Authorization, Content-Type, X-Heady-Version, X-Heady-Signature, X-API-Key]
@@ -693,7 +693,7 @@ domains:
 
     connected_services:
       - headysystems.com          # Core Architecture Engine — pipeline dispatch
-      - headyai.com               # Intelligence Routing Hub — LLM selection
+      - heady-ai.com               # Intelligence Routing Hub — LLM selection
       - headymcp.com              # MCP Layer — tool-augmented responses
       - headyio.com               # Developer Platform — API key validation
 
@@ -703,7 +703,7 @@ domains:
 
   # ── 9. HEADYAI.COM ────────────────────────────────────────────────────────
   - id: headyai
-    url: "https://headyai.com"
+    url: "https://heady-ai.com"
     role: "Intelligence Routing Hub"
     description: >
       The sovereign LLM router and intelligence routing hub. Runs entirely
@@ -716,8 +716,8 @@ domains:
       # No Cloud Run — pure edge routing for ultra-low latency model dispatch
     environment: production
 
-    health_endpoint: "https://headyai.com/health"
-    ready_endpoint:  "https://headyai.com/ready"
+    health_endpoint: "https://heady-ai.com/health"
+    ready_endpoint:  "https://heady-ai.com/ready"
 
     ssl:
       provider: cloudflare
@@ -798,18 +798,18 @@ domains:
 topology:
   total_domains: 9               # fib(6)+1 — 8+1 — intentional count
   cloudflare_pages_count: 2      # headyme.com, headyconnection.org
-  cloudflare_workers_count: 1    # headyai.com (pure edge)
+  cloudflare_workers_count: 1    # heady-ai.com (pure edge)
   cloud_run_count: 5             # headysystems, headybuddy, headymcp, headyio, headybot, headyapi
   hybrid_count: 2                # headyme.com (Pages+Workers), headybuddy.org (Run+Workers)
 
   # Connection matrix — services each domain depends on (downstream calls)
   dependency_depth:
-    headyme.com:          [headysystems.com, headyai.com, headyapi.com, headyconnection.org, headymcp.com]
-    headysystems.com:     [headyai.com, headyapi.com, headymcp.com, headyio.com, headybot.com]
+    headyme.com:          [headysystems.com, heady-ai.com, headyapi.com, headyconnection.org, headymcp.com]
+    headysystems.com:     [heady-ai.com, headyapi.com, headymcp.com, headyio.com, headybot.com]
     headyconnection.org:  [headyme.com, headybuddy.org]
-    headybuddy.org:       [headyai.com, headysystems.com, headyapi.com, headymcp.com, headyconnection.org]
+    headybuddy.org:       [heady-ai.com, headysystems.com, headyapi.com, headymcp.com, headyconnection.org]
     headymcp.com:         [headysystems.com, headybot.com, headyapi.com, headyio.com]
-    headyio.com:          [headysystems.com, headyapi.com, headymcp.com, headybot.com, headyai.com]
-    headybot.com:         [headysystems.com, headymcp.com, headyapi.com, headyio.com, headyai.com]
-    headyapi.com:         [headysystems.com, headyai.com, headymcp.com, headyio.com]
-    headyai.com:          [headysystems.com, headyapi.com, headymcp.com, headybuddy.org, headybot.com, headyio.com]
+    headyio.com:          [headysystems.com, headyapi.com, headymcp.com, headybot.com, heady-ai.com]
+    headybot.com:         [headysystems.com, headymcp.com, headyapi.com, headyio.com, heady-ai.com]
+    headyapi.com:         [headysystems.com, heady-ai.com, headymcp.com, headyio.com]
+    heady-ai.com:          [headysystems.com, headyapi.com, headymcp.com, headybuddy.org, headybot.com, headyio.com]

@@ -2,7 +2,7 @@
 description: Execute deterministic prompts through the MCP prompt executor with CSL confidence gating
 ---
 
-# Heady Prompt Pipeline Workflow
+# Heady™ Prompt Pipeline Workflow
 
 Execute any of the 64 master prompts (8 domains × 8 prompts) through the deterministic prompt system with CSL confidence gating.
 

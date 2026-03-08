@@ -2,7 +2,7 @@
 
 > **Date:** March 6, 2026
 > **Valuation Model:** Asset-Based (Now) vs. Market-Multiple (Projected)
-> © 2026 HeadySystems Inc.. All Rights Reserved.
+> © 2026 Heady™Systems Inc.. All Rights Reserved.
 
 ---
 

@@ -1,4 +1,4 @@
-# Heady Full Rebuild Workflow
+# Heady™ Full Rebuild Workflow
 
 This workflow packages the current repository into a distributable ZIP and runs a naming-consistency audit.
 

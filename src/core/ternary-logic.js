@@ -1,7 +1,7 @@
 /**
  * @fileoverview Ternary Logic Engine
  *
- * Heady Latent OS — Section 5: CSL & Geometric AI
+ * Heady™ Latent OS — Section 5: CSL & Geometric AI
  *
  * Implements ternary logic for uncertainty representation in CSL systems.
  * Cosine similarity's native range [-1, +1] maps perfectly to the ternary
@@ -28,7 +28,7 @@
  *
  * @module ternary-logic
  * @version 1.0.0
- * @patent Heady Connection — 60+ provisional patents on CSL/ternary techniques
+ * @patent Heady™ Connection — 60+ provisional patents on CSL/ternary techniques
  */
 
 'use strict';

@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Inc. — NetworkPolicy: Redis
+# Heady™Systems Inc. — NetworkPolicy: Redis
 # heady-systems v3.2.2
 # =============================================================================
 # Allow ingress to Redis ONLY from heady-* services

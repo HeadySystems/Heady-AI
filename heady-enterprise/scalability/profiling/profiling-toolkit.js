@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module profiling-toolkit
- * @description Performance profiling toolkit for HeadySystems
+ * @description Performance profiling toolkit for Heady™Systems
  *
  * Features:
  *   - CPU flame graph capture via V8 --prof

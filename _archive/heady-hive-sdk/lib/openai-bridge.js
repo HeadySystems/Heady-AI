@@ -1,6 +1,6 @@
 /**
  * OpenAI Bridge — Assistants API, Embeddings, Batch processing
- * Wraps OpenAI APIs to integrate with Heady ecosystem.
+ * Wraps OpenAI APIs to integrate with Heady™ ecosystem.
  */
 
 const https = require("https");

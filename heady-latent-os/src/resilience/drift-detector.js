@@ -11,7 +11,7 @@
  * Sliding window: fib(9) = 34 measurements.
  * Baseline can be set explicitly or inferred from the first N measurements.
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

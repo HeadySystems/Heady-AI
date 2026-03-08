@@ -3,7 +3,7 @@
 /**
  * HeadyGuard — Standalone Express Server
  *
- * Starts the HeadyGuard service on HEADY_GUARD_PORT (default: 3106).
+ * Starts the Heady™Guard service on HEADY_GUARD_PORT (default: 3106).
  * Suitable for direct node execution, Docker, or Cloud Run.
  */
 

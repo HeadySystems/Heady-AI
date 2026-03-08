@@ -1,4 +1,4 @@
-# @heady/mcp-security — MCP-I Security Gap Closure
+# @heady-ai/mcp-security — MCP-I Security Gap Closure
 
 > **Closing the 20% security gap to unlock 200% valuation uplift**
 > HeadySystems Inc. — Production-Ready MCP Infrastructure Security
@@ -44,7 +44,7 @@ Client Request
 ## Quick Start
 
 ```javascript
-const { MCPGateway } = require('@heady/mcp-security');
+const { MCPGateway } = require('@heady-ai/mcp-security');
 
 const gateway = new MCPGateway({
   serverRegistry: {

@@ -7,7 +7,7 @@
  * @module TestCSLGlobalFinance
  * @version 2.0.0
  * @author HeadySystems Inc.
- * @copyright © 2026 HeadySystems Inc. All rights reserved.
+ * @copyright © 2026 Heady™Systems Inc. All rights reserved.
  *
  * @patent US-PENDING-2026-HSI-001 — Phi-Harmonic Semantic Gate Architecture
  *

@@ -122,7 +122,7 @@ const headers = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CHAT_PROMPTS = [
-  "Tell me about HeadySystems reliability metrics.",
+  "Tell me about Heady™Systems reliability metrics.",
   "What is the current phi-drift in vector space?",
   "List active agents and their memory consumption.",
   "How does the soak test validate memory leak absence?",

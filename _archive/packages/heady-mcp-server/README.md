@@ -1,6 +1,6 @@
-# Heady MCP Server
+# Heady™ MCP Server
 
-> Connect any MCP client to the Heady Intelligence Layer — 60+ AI tools across 9 service groups.
+> Connect any MCP client to the Heady™ Intelligence Layer — 60+ AI tools across 9 service groups.
 
 ## Quick Install
 
@@ -14,7 +14,7 @@ docker run -d -p 3302:3302 heady-ai/mcp-server
 # Add to your MCP config (HeadyJules Desktop, Cursor, etc.)
 ```
 
-### HeadyJules Desktop / Cursor / HeadyAI-IDE
+### Heady™Jules Desktop / Cursor / HeadyAI-IDE
 
 Add to `~/.config/headyjules/claude_desktop_config.json`:
 

@@ -1,5 +1,5 @@
 /**
- * Heady Phi Utilities
+ * Heady™ Phi Utilities
  * 
  * Golden ratio constants and helpers used across the platform.
  * No magic numbers — everything derives from φ.

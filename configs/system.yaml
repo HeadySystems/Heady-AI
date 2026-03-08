@@ -184,7 +184,7 @@ security:
       - "https://headyio.com"
       - "https://headybot.com"
       - "https://headyapi.com"
-      - "https://headyai.com"
+      - "https://heady-ai.com"
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     credentials: true
 

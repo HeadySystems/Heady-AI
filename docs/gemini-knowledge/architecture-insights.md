@@ -1,7 +1,7 @@
 # Architecture Insights (from Gemini Conversations)
 
 ## Hive Architecture
-**Sources:** Hive Build Final, Hive, Hive Functionality, Nature-Optimized Heady System Plan
+**Sources:** Hive Build Final, Hive, Hive Functionality, Nature-Optimized Heady™ System Plan
 
 - Hive = distributed swarm processing layer
 - Nature-optimized = biomimetic system design (ant colony, neural networks)

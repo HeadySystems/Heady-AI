@@ -1,4 +1,4 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
  * Heady™ Projection Service — Main Entry Point
@@ -344,7 +344,7 @@ class HeadyConductorClient {
         signal:  AbortSignal.timeout(2000),
       });
       this.connected = res.ok;
-      if (res.ok) log('info', `Registered with HeadyConductor at ${this.url}`);
+      if (res.ok) log('info', `Registered with Heady™Conductor at ${this.url}`);
     } catch {
       log('warn', `HeadyConductor not available at ${this.url} — continuing without it`);
     }

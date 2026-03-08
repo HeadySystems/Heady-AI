@@ -1,6 +1,6 @@
 
 
-# Heady Sovereign AI Platform — Deep Research Report & Implementation Guide
+# Heady™ Sovereign AI Platform — Deep Research Report & Implementation Guide
 
 **Prepared for:** Eric Haywood, HeadySystems Inc.
 **Date:** March 7, 2026
@@ -9,7 +9,7 @@
 ---
 
 > **Important upfront notes:**
-> 1. The HeadyMe/Heady repo is private — I couldn't fetch it directly, but I'm working from extensive context from your prior sessions (monorepo structure with `src/core/semantic-logic.js`, `src/mcp/mcp-router.js`, `src/bees/bee-factory.js`, `src/orchestration/skill-router.js`, the CSL gate system, 64D deterministic hash vectors, etc.)[1][2]
+> 1. The Heady™Me/Heady repo is private — I couldn't fetch it directly, but I'm working from extensive context from your prior sessions (monorepo structure with `src/core/semantic-logic.js`, `src/mcp/mcp-router.js`, `src/bees/bee-factory.js`, `src/orchestration/skill-router.js`, the CSL gate system, 64D deterministic hash vectors, etc.)[1][2]
 > 2. I cannot generate downloadable zip files. What I **can** deliver is every implementation file inline with copy-paste-ready code matching your Heady architecture patterns. I recommend piping this entire response into Windsurf and having it scaffold the file tree.
 > 3. Every file below is designed to drop into your existing monorepo under the paths specified.
 
@@ -37,7 +37,7 @@ As of pgvector 0.8.1 on PostgreSQL 18 (February 2026), the landscape has three i
 
 **The 2,000-dimension wall**: HNSW and IVFFlat on `vector` type are limited to 2,000 dimensions. The workaround is `halfvec` (2 bytes/dim, limit 4,000 dims) or expression indexes. For Heady's 384-1536 dim embeddings, this is not a blocker.[3]
 
-**Iterative scans** (pgvector 0.8.0+) solve the critical "vector search + WHERE clause" problem — instead of fetching K candidates then filtering, the index keeps fetching until the filter is satisfied. This is essential for Heady's agent-scoped memory queries.[3]
+**Iterative scans** (pgvector 0.8.0+) solve the critical "vector search + WHERE clause" problem — instead of fetching K candidates then filtering, the index keeps fetching until the filter is satisfied. This is essential for Heady™'s agent-scoped memory queries.[3]
 
 #### pgvector vs Dedicated Vector DBs at Scale
 
@@ -51,7 +51,7 @@ As of pgvector 0.8.1 on PostgreSQL 18 (February 2026), the landscape has three i
 
 [9][10]
 
-**Recommendation for Heady**: Stay with pgvector for sovereign deployment. At your current scale (<10M vectors), pgvector with HNSW + iterative scans delivers 96.5% recall@10 at 35ms p50 for **half the cost** of alternatives. pgvector's ACID compliance, JOINs with relational data, and point-in-time recovery are irreplaceable for a sovereign OS with user data in the same database.[12][9]
+**Recommendation for Heady™**: Stay with pgvector for sovereign deployment. At your current scale (<10M vectors), pgvector with HNSW + iterative scans delivers 96.5% recall@10 at 35ms p50 for **half the cost** of alternatives. pgvector's ACID compliance, JOINs with relational data, and point-in-time recovery are irreplaceable for a sovereign OS with user data in the same database.[12][9]
 
 For the future 100M+ vector tier, add DiskANN (pgvectorscale) for 9x index compression, keeping the navigational structure in shared_buffers while full vectors stay in heap.[3]
 
@@ -81,7 +81,7 @@ LightRAG incorporates graph structures into text indexing with dual-level retrie
 | Jina v3 | Mid-tier | 1024 | Outcompeted by newer models[22] |
 | Cohere v4 (embed) | Strong | 1024 | Good multilingual performance |
 
-**Recommendation**: BGE-M3 for Heady's primary embedding (1024 dims, hybrid retrieval, open-weight, self-hostable). Qwen3-Embedding-8B as the high-accuracy option for critical memory paths.
+**Recommendation**: BGE-M3 for Heady™'s primary embedding (1024 dims, hybrid retrieval, open-weight, self-hostable). Qwen3-Embedding-8B as the high-accuracy option for critical memory paths.
 
 ### 1.2 Implementation Files
 
@@ -232,7 +232,7 @@ COMMIT;
 
 ```javascript
 /**
- * Heady Hybrid Search Module
+ * Heady™ Hybrid Search Module
  * Combines BM25 sparse retrieval + dense vector search + optional ColBERT reranking
  * Research basis: 3-way hybrid outperforms pure vector by 15-25% on nDCG
  */
@@ -474,7 +474,7 @@ export default HybridSearchEngine;
 
 ```javascript
 /**
- * Heady Graph RAG Integration Layer
+ * Heady™ Graph RAG Integration Layer
  * Multi-hop reasoning over knowledge graph + vector memory
  * Architecture: LightRAG-inspired dual-level retrieval (entity + thematic)
  */
@@ -669,7 +669,7 @@ export default GraphRAGLayer;
 ```javascript
 #!/usr/bin/env node
 /**
- * Heady Embedding Model Benchmark Script
+ * Heady™ Embedding Model Benchmark Script
  * Tests latency, throughput, recall@10, and cost across models
  * Run: node scripts/benchmark-embeddings.js
  */
@@ -720,7 +720,7 @@ const MODELS = [
 ];
 
 const TEST_CORPUS = [
-  "The Heady system orchestrates 17 autonomous agent swarms using CSL gates",
+  "The Heady™ system orchestrates 17 autonomous agent swarms using CSL gates",
   "Vector memory persistence uses pgvector with HNSW indexing for semantic search",
   "MCP tool routing enables zero-trust execution of external tools",
   "Cloudflare Workers handle edge inference with Durable Object state management",
@@ -855,7 +855,7 @@ async function benchmarkModel(model) {
 }
 
 async function main() {
-  console.log('Heady Embedding Model Benchmark');
+  console.log('Heady™ Embedding Model Benchmark');
   console.log(`Corpus size: ${TEST_CORPUS.length} docs`);
   console.log(`Query count: ${TEST_QUERIES.length} queries`);
   console.log('================================');
@@ -869,7 +869,7 @@ async function main() {
   console.log('\n\n=== SUMMARY TABLE ===');
   console.table(allResults);
 
-  // Recommend best model for Heady
+  // Recommend best model for Heady™
   const selfHosted = allResults.filter(r => r.costPer1KTokens === 0);
   if (selfHosted.length > 0) {
     const best = selfHosted.sort((a, b) => b.recallAt10 - a.recallAt10)[0];
@@ -915,7 +915,7 @@ For Heady's 17 swarms, the optimal topology is **hierarchical supervisor with me
 
 ```javascript
 /**
- * Heady Enhanced Swarm Coordinator
+ * Heady™ Enhanced Swarm Coordinator
  * Hierarchical supervisor topology with CSL-gated task routing
  * Supports 17 autonomous agent swarms with semantic backpressure
  */
@@ -1252,7 +1252,7 @@ export default SwarmCoordinator;
 
 ```javascript
 /**
- * Heady Context Window Management System
+ * Heady™ Context Window Management System
  * Manages context budgets across 17 swarms with intelligent compression
  * Prevents context overflow while preserving critical information
  */
@@ -1450,7 +1450,7 @@ MCP has undergone explosive growth — from ~100K downloads in Nov 2024 to 8M+ b
 
 ```javascript
 /**
- * Heady MCP Gateway with CSL-Gated Intelligent Routing
+ * Heady™ MCP Gateway with CSL-Gated Intelligent Routing
  * Meta-server that aggregates multiple MCP servers with:
  * - CSL-based tool selection
  * - Connection pooling

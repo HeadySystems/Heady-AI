@@ -1,4 +1,5 @@
 'use strict';
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview Auto-Success Engine — Production Implementation
  *
@@ -46,7 +47,7 @@ const PHI_BACKOFF_MS = [1000, 1618, 2618]; // max 3 retries per cycle
 const TASK_TIMEOUT_MS = 5000;
 
 /** Cycle interval (ms) */
-const CYCLE_INTERVAL_MS = 30000;
+const CYCLE_INTERVAL_MS = PHI_TIMING.CYCLE;  // φ⁷ × 1000
 
 /** Max cumulative failures before incident escalation */
 const MAX_CUMULATIVE_FAILURES = 8; // fib(6)
@@ -312,7 +313,7 @@ const CODE_QUALITY = {
   },
 
   /**
-   * Verifies pattern compliance config (e.g. custom lint rules or Heady-specific guidelines).
+   * Verifies pattern compliance config (e.g. custom lint rules or Heady™-specific guidelines).
    * @returns {Promise<object>}
    */
   async patternCompliance() {
@@ -2411,7 +2412,7 @@ const INTELLIGENCE = {
 // ─── Task Registry ────────────────────────────────────────────────────────────
 
 /**
- * Canonical 9×15 = 135 task registry per LAW-07.
+ * φ-scaled task registry per LAW-07 v4.0.0 (fib(7)=13 categories, fib(12)=144 target tasks).
  * Each entry is { category, fn } keyed by task name.
  * @type {Map<string, {category:string, fn:function():Promise<object>}>}
  */
@@ -2441,7 +2442,7 @@ registerCategory('INTELLIGENCE',   INTELLIGENCE);
  * @extends EventEmitter
  *
  * Production implementation of the LAW-07 135-task heartbeat engine.
- * Runs all 135 tasks concurrently every 30 seconds, applies phi-backoff
+ * Runs all tasks concurrently every φ⁷×1000=29034ms, applies phi-backoff
  * retry on failures, enforces per-task 5-second timeouts, and emits
  * cycle metrics for observability-kernel integration.
  *
@@ -2457,7 +2458,7 @@ class AutoSuccessEngine extends EventEmitter {
    * @param {boolean} [config.enableMonteCarlo=false]      - Emit monte-carlo events
    * @param {boolean} [config.enableLiquidScaling=false]   - Enable liquid resource scaling hooks
    * @param {boolean} [config.verbose=false]               - Verbose per-task logging
-   * @param {number}  [config.cycleIntervalMs=30000]       - Override cycle interval (testing only)
+   * @param {number}  [config.cycleIntervalMs=PHI_TIMING.CYCLE]       - Override cycle interval (testing only)
    * @param {string[]} [config.disabledCategories=[]]      - Categories to skip (e.g. during testing)
    */
   constructor(config = {}) {
@@ -2548,7 +2549,7 @@ class AutoSuccessEngine extends EventEmitter {
   // ── Core Cycle ─────────────────────────────────────────────────────────────
 
   /**
-   * Executes a single 30-second cycle over all 135 tasks.
+   * Executes a single φ⁷-second cycle over all dynamically φ-scaled tasks.
    * All tasks run concurrently within their category batches.
    * Failed tasks are retried with phi-backoff (max 3 per cycle).
    *

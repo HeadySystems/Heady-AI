@@ -1,4 +1,4 @@
-# HeadySystems CSL Global Finance + Apex Trading Intelligence
+# Heady™Systems CSL Global Finance + Apex Trading Intelligence
 
 Complete implementation resource pack for CSL (Continuous Semantic Logic) integration
 into Apex Trading Intelligence system.
@@ -59,4 +59,4 @@ into Apex Trading Intelligence system.
 - Datasets: 5 financial datasets
 - Papers: 7 arXiv + Wiley references
 
-© 2026 HeadySystems Inc.
+© 2026 Heady™Systems Inc.

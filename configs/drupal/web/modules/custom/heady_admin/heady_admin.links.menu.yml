@@ -1,7 +1,7 @@
 heady_admin.admin:
-  title: 'Heady Ecosystem'
+  title: 'Heady™ Ecosystem'
   route_name: heady_admin.dashboard
-  description: 'Manage the Heady AI Ecosystem'
+  description: 'Manage the Heady™ AI Ecosystem'
   parent: system.admin
   weight: -20
 

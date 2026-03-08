@@ -2,7 +2,7 @@
 
 /**
  * @file slack-bot.js
- * @description Slack bot integration example using HeadyOS for AI responses.
+ * @description Slack bot integration example using Heady™OS for AI responses.
  * Uses @slack/bolt for Slack platform integration and @heady-ai/sdk for AI.
  *
  * Features:
@@ -94,7 +94,7 @@ const heady = HeadyClient;
 // ---------------------------------------------------------------------------
 
 /**
- * Retrieve relevant conversation context from HeadyOS vector memory.
+ * Retrieve relevant conversation context from Heady™OS vector memory.
  */
 const getConversationContext = async (userId, channelId, currentMessage) => {
   const namespace = `${BOT_CONSTANTS.MEMORY_NAMESPACE}:${channelId}:${userId}`;
@@ -130,7 +130,7 @@ const buildMessages = (userMessage, context, agentSystemPrompt) => {
   const messages = [
     {
       role: 'system',
-      content: agentSystemPrompt || `You are a helpful AI assistant powered by HeadyOS.
+      content: agentSystemPrompt || `You are a helpful AI assistant powered by Heady™OS.
 You are integrated with a Slack workspace. Keep responses concise and well-formatted for Slack.
 Use *bold*, _italic_, and \`code\` Slack formatting where appropriate.
 ${context ? `\nConversation context:\n${context}` : ''}`,
@@ -157,7 +157,7 @@ app.event('app_mention', async ({ event, client, say }) => {
   const userMessage = event.text.replace(/<@[A-Z0-9]+>/g, '').trim();
 
   if (!userMessage) {
-    await say({ text: 'Hi! Ask me anything. Powered by HeadyOS 🤖', thread_ts: event.ts });
+    await say({ text: 'Hi! Ask me anything. Powered by Heady™OS 🤖', thread_ts: event.ts });
     return;
   }
 
@@ -251,7 +251,7 @@ app.command('/heady-ask', async ({ command, ack, respond }) => {
 
   try {
     const response = await heady.brain.chat([
-      { role: 'system', content: 'You are a helpful AI assistant powered by HeadyOS. Be concise.' },
+      { role: 'system', content: 'You are a helpful AI assistant powered by Heady™OS. Be concise.' },
       { role: 'user', content: question },
     ], { temperature: BOT_CONSTANTS.DEFAULT_TEMPERATURE });
 
@@ -267,7 +267,7 @@ app.command('/heady-ask', async ({ command, ack, respond }) => {
 
 /**
  * /heady-research <topic>
- * Submit a research task to the Heady Conductor for deep analysis.
+ * Submit a research task to the Heady™ Conductor for deep analysis.
  */
 app.command('/heady-research', async ({ command, ack, respond }) => {
   await ack();

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -170,7 +170,7 @@ function validateTemplateCoverage(templates = TEMPLATE_REGISTRY) {
 
 function buildGithubSourceOfTruthProjection(options = {}) {
     const now = new Date().toISOString();
-    const repository = options.repository || "https://github.com/HeadySystems/Heady";
+    const repository = options.repository || "https://github.com/HeadyMe/Heady";
     const branch = options.branch || "main";
     const commitSha = options.commitSha || "unknown";
     const coverage = validateTemplateCoverage();

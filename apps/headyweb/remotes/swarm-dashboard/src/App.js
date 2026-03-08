@@ -1,10 +1,10 @@
 /**
- * Heady Swarm Dashboard — App Component
+ * Heady™ Swarm Dashboard — App Component
  *
  * Real-time agent swarm monitoring dashboard.
  * Shows 6 agent cards, swarm topology graph, task queue, and live metrics.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/swarm-dashboard/App
  */

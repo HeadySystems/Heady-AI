@@ -4,7 +4,7 @@
  * ║  Geometric vector operations as logical gates                    ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc.                                   ║
+ * ║  © 2026-2026 HeadySystems Inc.                                   ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * Domain: Unit vectors in ℝᴰ, D ∈ {384, 1536}

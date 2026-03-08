@@ -1,8 +1,8 @@
-# HeadyNativeServices
+# Heady™NativeServices
 
 **Sacred Geometry Architecture v3.0.0 — Zero External AI Dependencies**
 
-Seven production-ready, self-hosted services that replace every external AI provider dependency in the Heady ecosystem. Built for sovereignty, performance, and cost optimization.
+Seven production-ready, self-hosted services that replace every external AI provider dependency in the Heady™ ecosystem. Built for sovereignty, performance, and cost optimization.
 
 ## Architecture
 
@@ -50,7 +50,7 @@ Seven production-ready, self-hosted services that replace every external AI prov
 
 ```bash
 cp .env.example .env
-# Edit .env with your API keys (only needed for HeadyInfer provider adapters)
+# Edit .env with your API keys (only needed for Heady™Infer provider adapters)
 npm install
 ```
 
@@ -97,7 +97,7 @@ npm run test:infer    # HeadyInfer tests
 
 ## API Quick Reference
 
-### HeadyEmbed — Embeddings
+### Heady™Embed — Embeddings
 ```bash
 # Generate embeddings
 curl -X POST http://localhost:3101/embed \
@@ -115,7 +115,7 @@ curl -X POST http://localhost:3101/embed/similarity \
   -d '{"text1": "cat", "text2": "kitten"}'
 ```
 
-### HeadyInfer — Inference
+### Heady™Infer — Inference
 ```bash
 # Generate completion
 curl -X POST http://localhost:3102/infer \
@@ -138,7 +138,7 @@ curl -X POST http://localhost:3102/infer/race \
 curl http://localhost:3102/costs/report
 ```
 
-### HeadyVector — Vector Search
+### Heady™Vector — Vector Search
 ```bash
 # Create collection
 curl -X POST http://localhost:3103/collections \
@@ -170,7 +170,7 @@ curl -X POST http://localhost:3103/vectors/search \
   }'
 ```
 
-### HeadyChain — Workflows
+### Heady™Chain — Workflows
 ```bash
 # Execute ReAct agent
 curl -X POST http://localhost:3104/agents/react \
@@ -190,7 +190,7 @@ curl -X POST http://localhost:3104/chain/execute \
   }'
 ```
 
-### HeadyCache — Semantic Caching
+### Heady™Cache — Semantic Caching
 ```bash
 # Set cache entry
 curl -X POST http://localhost:3105/cache/set \
@@ -203,7 +203,7 @@ curl -X POST http://localhost:3105/cache/get \
   -d '{"key": "Explain Sacred Geometry to me", "namespace": "qa"}'
 ```
 
-### HeadyGuard — Content Security
+### Heady™Guard — Content Security
 ```bash
 # Check content
 curl -X POST http://localhost:3106/guard/check \
@@ -216,7 +216,7 @@ curl -X POST http://localhost:3106/guard/redact \
   -d '{"text": "My email is john@example.com and SSN is 123-45-6789"}'
 ```
 
-### HeadyEval — Evaluation
+### Heady™Eval — Evaluation
 ```bash
 # Evaluate a single response
 curl -X POST http://localhost:3107/eval/score \

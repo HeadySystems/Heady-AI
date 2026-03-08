@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module analytics-transformation
- * @description Data transformation layer for HeadySystems analytics
+ * @description Data transformation layer for Heady™Systems analytics
  *
  * Responsibilities:
  *   - Aggregate raw events → DAU, WAU, MAU, session duration, feature usage

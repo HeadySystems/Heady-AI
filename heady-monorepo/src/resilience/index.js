@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Resilience — Unified export
+ * Heady™ Resilience — Unified export
  * Combines circuit breaker, cache, connection pool, rate limiter, and retry
  * into a single require('src/resilience') import.
  */

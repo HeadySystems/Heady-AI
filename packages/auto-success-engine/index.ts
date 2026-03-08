@@ -10,7 +10,7 @@
  * sequence. Zero magic numbers.
  *
  * @version 1.0.0
- * @author Heady AI Team
+ * @author Heady™ AI Team
  */
 
 import * as os from 'os';

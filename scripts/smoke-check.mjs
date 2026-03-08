@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { deterministicEmbedding, cosineSimilarity } from '@heady/shared/src/embedding.mjs';
+import { deterministicEmbedding, cosineSimilarity } from '@heady-ai/shared/src/embedding.mjs';
 
 const a = deterministicEmbedding('heady memory test');
 const b = deterministicEmbedding('heady memory test');

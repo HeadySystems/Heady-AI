@@ -4,7 +4,7 @@
  * FIX: headyos.com returns 530 (origin error) because Cloudflare has the zone
  * but no origin is configured. This Worker provides the origin.
  * 
- * Purpose: HeadyOS is the runtime layer of the Heady ecosystem.
+ * Purpose: HeadyOS is the runtime layer of the Heady™ ecosystem.
  * Routes /api/* to Cloud Run heady-manager, serves static pages otherwise.
  * 
  * Deploy: wrangler deploy --name heady-os-worker
@@ -112,7 +112,7 @@ const LANDING_HTML = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HeadyOS — The Runtime Layer</title>
-  <meta name="description" content="HeadyOS: Kernel, runtime, scheduler, and memory management for the Heady AI platform.">
+  <meta name="description" content="HeadyOS: Kernel, runtime, scheduler, and memory management for the Heady™ AI platform.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -139,7 +139,7 @@ const LANDING_HTML = `<!DOCTYPE html>
   <div class="bg-grid"></div>
   <div class="container">
     <h1>HeadyOS</h1>
-    <p class="subtitle">The runtime layer for the Heady AI platform. Kernel services, process scheduling, memory management, and device-to-cloud orchestration.</p>
+    <p class="subtitle">The runtime layer for the Heady™ AI platform. Kernel services, process scheduling, memory management, and device-to-cloud orchestration.</p>
     <div class="capabilities">
       <div class="cap-card">
         <h3>Kernel</h3>

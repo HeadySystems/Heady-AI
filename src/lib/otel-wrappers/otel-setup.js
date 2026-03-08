@@ -1,11 +1,12 @@
 /**
- * OTel Bootstrap — OpenTelemetry SDK Setup for Heady Systems
+ * OTel Bootstrap — OpenTelemetry SDK Setup for Heady™ Systems
  * Configures tracing, metrics, propagation, and auto-instrumentation.
  * Must be required FIRST before any other module (node -r ./otel-wrappers/otel-setup.js app.js)
  * @module otel-wrappers/otel-setup
  */
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const { NodeSDK } = require('@opentelemetry/sdk-node');
 const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-grpc');
 const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-grpc');
@@ -37,7 +38,7 @@ const OTLP_ENDPOINT   = process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://local
 const BATCH_SIZE      = parseInt(process.env.OTEL_BATCH_SIZE || '512', 10);
 const BATCH_TIMEOUT   = parseInt(process.env.OTEL_BATCH_TIMEOUT_MS || '5000', 10);
 const PROMETHEUS_PORT = parseInt(process.env.PROMETHEUS_PORT || '9464', 10);
-const METRICS_INTERVAL_MS = parseInt(process.env.OTEL_METRICS_INTERVAL_MS || '30000', 10);
+const METRICS_INTERVAL_MS = parseInt(process.env.OTEL_METRICS_INTERVAL_MS || String(PHI_TIMING.CYCLE), 10);
 
 // ─── Resource ─────────────────────────────────────────────────────────────────
 const resource = new Resource({

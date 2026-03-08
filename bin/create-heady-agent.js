@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * create-heady-agent — Scaffolding CLI for HeadyMCP agent development.
+ * create-heady-agent — Scaffolding CLI for Heady™MCP agent development.
  *
  * Usage:
  *   npx create-heady-agent my-custom-agent
@@ -212,7 +212,7 @@ ${TEMPLATES[template].tools.map(t => `- \`${t}\` — TODO: Implement`).join('\n'
 npm test
 \`\`\`
 
-## Registering with HeadyConnection
+## Registering with Heady™Connection
 
 \`\`\`bash
 heady agent register .
@@ -300,7 +300,7 @@ function main() {
     cd ${agentName}
     npm run dev
 
-  Register with HeadyConnection:
+  Register with Heady™Connection:
     heady agent register .
 `);
 }

@@ -1,7 +1,7 @@
 /**
  * @fileoverview Vector Symbolic Architecture (VSA) Hypervector Implementation
  * @description Implements FHRR-style (Fourier Holographic Reduced Representation)
- *              hypervectors for Heady's semantic logic operations
+ *              hypervectors for Heady™'s semantic logic operations
  * @version 1.0.0
  * @license Apache-2.0
  */

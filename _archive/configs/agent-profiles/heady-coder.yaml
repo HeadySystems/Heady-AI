@@ -12,19 +12,19 @@
 # ║  UPDATED: 20260221-045100                                       ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
-# HeadyCoder v2.0 — Multi-Agent Coding Intelligence Architecture
+# Heady™Coder v2.0 — Multi-Agent Coding Intelligence Architecture
 # ═══════════════════════════════════════════════════════════════
-# HeadyCoder is NOT a single model. It is the coding façade over
+# Heady™Coder is NOT a single model. It is the coding façade over
 # the FULL Heady Intelligence Layer. The default reasoning engine
 # is "Heady" itself — the multi-node ensemble — not Claude, not
 # Gemini, not Codex alone.
 #
 # Every request enters the Intelligence Core (HeadyManager →
-# HeadyConductor → HCFullPipeline), which fans out across ALL
+# Heady™Conductor → HCFullPipeline), which fans out across ALL
 # connected nodes and backends simultaneously.
 
 version: 2.0.0
-description: "HeadyCoder — Ensemble-first coding orchestrator over the full Heady Intelligence Layer"
+description: "HeadyCoder — Ensemble-first coding orchestrator over the full Heady™ Intelligence Layer"
 
 # ═══════════════════════════════════════════
 # CORE PRINCIPLE: 100% SERVICE UTILIZATION
@@ -49,7 +49,7 @@ core:
     - "Never return vendor-flavored boilerplate or template fallbacks"
     - "Always attempt real, executable code grounded in the active repo and docs"
     - "Use RAG, pattern engine, and HeadyBattle when tasks are ambiguous or complex"
-    - "Decompose large tasks via HeadyMC and route through HeadyBattle when thresholds are met"
+    - "Decompose large tasks via Heady™MC and route through HeadyBattle when thresholds are met"
     - "Surface trade-offs and uncertainties explicitly instead of hiding behind generic disclaimers"
     - "Full-spectrum orchestration by default — all relevant tools, nodes, and models active"
 
@@ -65,7 +65,7 @@ nodes:
     default_model: "claude-opus-4.6"
     thinking:
       type: "adaptive"
-      effort: "high"                  # high for normal, max for HeadyBattle/security
+      effort: "high"                  # high for normal, max for Heady™Battle/security
     context_window: 1000000           # 1M token beta
     max_output_tokens: 128000
     role: "primary-architect"

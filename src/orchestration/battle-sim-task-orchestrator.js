@@ -6,7 +6,7 @@
  *
  * Pipeline:  Task → Sim → CSL Gate → Battle/MC → Bee → Swarm → Result → Drift → Audit
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
@@ -53,6 +53,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
         this.arena = opts.arena || null;
         this.confidenceGate = opts.confidenceGate || null;
         this.actionAnalyzer = opts.actionAnalyzer || null;
+        this._gateway = opts.gateway || null;
         this.mcIterations = opts.mcIterations || 5;
         this.simConfidenceThreshold = opts.simConfidenceThreshold || PSI;
         this._auditLog = [];
@@ -67,6 +68,14 @@ class BattleSimTaskOrchestrator extends EventEmitter {
             halts: 0,
             driftAlerts: 0,
         };
+
+        // Auto-create battle service with gateway if not provided
+        if (!this.battleService && this._gateway) {
+            try {
+                const { HeadyBattleService } = require('../services/HeadyBattle-service.js');
+                this.battleService = new HeadyBattleService({ gateway: this._gateway });
+            } catch (_) { }
+        }
     }
 
     // ─── Main Pipeline ────────────────────────────────────────────────────────
@@ -267,8 +276,35 @@ class BattleSimTaskOrchestrator extends EventEmitter {
     }
 
     /** HeadyMC: Monte Carlo sampling — measure determinism across N iterations */
-    _mcSampling(task, battleResult) {
-        // Hash the task N times with slight perturbations to find determinism boundary
+    async _mcSampling(task, battleResult) {
+        // If we have a real battle service with gateway, use real determinism test
+        if (this.battleService && this.battleService._gateway) {
+            try {
+                const result = await this.battleService.determinismTest(
+                    task.prompt || JSON.stringify(task),
+                    { iterations: this.mcIterations, temperature: 0 }
+                );
+                if (result.ok) {
+                    // Find best provider determinism score
+                    const scores = Object.values(result.providers).map(p => p.determinismScore);
+                    const avgScore = scores.length > 0
+                        ? scores.reduce((s, v) => s + v, 0) / scores.length : 0;
+                    return {
+                        iterations: this.mcIterations,
+                        realMC: true,
+                        providerResults: result.providers,
+                        determinismScore: +avgScore.toFixed(4),
+                        overallDeterminism: result.overallDeterminism,
+                        prediction: avgScore >= PSI ? 'deterministic' :
+                            avgScore >= PSI_SQ ? 'marginal' : 'non_deterministic',
+                    };
+                }
+            } catch (_) {
+                // Fall through to local hash-based MC
+            }
+        }
+
+        // Fallback: structural hash-based MC (no real AI calls)
         const hashes = new Set();
         const baseInput = JSON.stringify({
             prompt: task.prompt,
@@ -277,7 +313,6 @@ class BattleSimTaskOrchestrator extends EventEmitter {
         });
 
         for (let i = 0; i < this.mcIterations; i++) {
-            // Deterministic hash: same input always → same hash
             const hash = crypto.createHash('sha256')
                 .update(baseInput + `|iter=${i}|seed=42`)
                 .digest('hex')
@@ -285,15 +320,12 @@ class BattleSimTaskOrchestrator extends EventEmitter {
             hashes.add(hash);
         }
 
-        // Determinism score = 1 / unique_hashes (perfect = 1.0 when all same)
-        const uniqueRatio = hashes.size / this.mcIterations;
-        // With seed=42 deterministic hashing: each iteration produces unique hash by design
-        // Real MC would call LLM N times — here we measure structural determinism
         const determinismScore = 1.0 - ((hashes.size - 1) / this.mcIterations);
-        const boundary = Math.floor(this.mcIterations * PSI); // φ⁻¹ boundary
+        const boundary = Math.floor(this.mcIterations * PSI);
 
         return {
             iterations: this.mcIterations,
+            realMC: false,
             uniqueHashes: hashes.size,
             determinismScore: +Math.max(0, determinismScore).toFixed(4),
             boundary,
@@ -370,7 +402,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
     // ─── Comparison Framework ───────────────────────────────────────────────
 
     /**
-     * Compare Heady output against external output (e.g., Perplexity Computer)
+     * Compare Heady™ output against external output (e.g., Perplexity Computer)
      * Measures determinism divergence between two systems on the same task.
      *
      * @param {Object} headyResult - Result from this.execute()

@@ -6,7 +6,7 @@
  *
  * Pipeline:  Task → Sim → CSL Gate → Battle/MC → Bee → Swarm → Result → Drift → Audit
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
@@ -370,7 +370,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
     // ─── Comparison Framework ───────────────────────────────────────────────
 
     /**
-     * Compare Heady output against external output (e.g., Perplexity Computer)
+     * Compare Heady™ output against external output (e.g., Perplexity Computer)
      * Measures determinism divergence between two systems on the same task.
      *
      * @param {Object} headyResult - Result from this.execute()

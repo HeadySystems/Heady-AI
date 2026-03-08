@@ -3,7 +3,7 @@
 **Heady Latent OS — Section 5: CSL & Geometric AI**  
 **Module:** Continuous Semantic Logic  
 **Date:** March 7, 2026  
-**Status:** Provisional Patent Pending (60+ patents, Heady Connection)
+**Status:** Provisional Patent Pending (60+ patents, Heady™ Connection)
 
 ---
 
@@ -450,4 +450,4 @@ This is exactly CSL IMPLY (normalized): after "measuring" whether **a** implies 
 
 ---
 
-*Document compiled: March 7, 2026. Heady Connection AI Platform — Provisional Patent Pending.*
+*Document compiled: March 7, 2026. Heady™ Connection AI Platform — Provisional Patent Pending.*

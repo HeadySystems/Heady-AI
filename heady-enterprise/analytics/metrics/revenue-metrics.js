@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module revenue-metrics
- * @description Revenue metrics calculator for HeadySystems
+ * @description Revenue metrics calculator for Heady™Systems
  *
  * Metrics:
  *   - MRR / ARR (from subscription data)
@@ -255,7 +255,7 @@ function calculateLTVtoCAC(ltv, cac) {
  *
  * NRR = (starting_MRR + expansion - contraction - churn) / starting_MRR
  * Target: > 115% (industry SaaS benchmark)
- * Heady target: > φ × 100 = 161.8% (ambitious)
+ * Heady™ target: > φ × 100 = 161.8% (ambitious)
  *
  * @param {Object} opts
  * @param {number} opts.startingMRR     - MRR at start of period

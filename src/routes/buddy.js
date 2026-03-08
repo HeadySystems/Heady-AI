@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -7,6 +7,7 @@
  * Handles: /api/buddy/health, /chat, /suggestions, /orchestrator, /pipeline/continuous, /state, /sync-events
  */
 const express = require('../core/heady-server');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require("path");
 const fs = require("fs");
 const logger = require("../utils/logger");
@@ -244,7 +245,7 @@ module.exports = function mountBuddyRoutes(app, deps = {}) {
 
         runCycle();
         if (continuousPipeline.running) {
-            continuousPipeline.intervalId = setInterval(runCycle, req.body.intervalMs || 30000);
+            continuousPipeline.intervalId = setInterval(runCycle, req.body.intervalMs || PHI_TIMING.CYCLE);
         }
 
         res.json({

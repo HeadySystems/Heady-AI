@@ -1,4 +1,4 @@
-# HeadyBuddy AI Companion System — Orchestrator Architecture
+# Heady™Buddy AI Companion System — Orchestrator Architecture
 
 > **Status**: Canonical Architecture Reference — Companion to `headybuddy-system-directive.md`
 > **Date**: 2026-02-26
@@ -126,7 +126,7 @@ HeadyBuddy is a **"silversertile" orchestrator** — an AI companion functioning
 
 ---
 
-## HeadyBuddy Triple-Persona Model
+## Heady™Buddy Triple-Persona Model
 
 ### 🤝 The Empathic Safe Space
 

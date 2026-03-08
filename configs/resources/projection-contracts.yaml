@@ -86,7 +86,7 @@ contracts:
             required: [workerId, queue, weight]
 
   ide-proposal:
-    description: "Schema for HeadyAI-IDE code modification proposals"
+    description: "Schema for Heady™AI-IDE code modification proposals"
     source: "ide-bridge.js → submitProposal()"
     schema:
       type: object
@@ -122,7 +122,7 @@ contracts:
             approvedAt: { type: string, format: date-time }
 
   ui-manifest:
-    description: "Schema for HeadyWeb UI registry manifest responses"
+    description: "Schema for Heady™Web UI registry manifest responses"
     source: "ui-registry.js → getUIManifest()"
     schema:
       type: object

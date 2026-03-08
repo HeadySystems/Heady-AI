@@ -1,5 +1,5 @@
 /**
- * Heady Auth Library
+ * Heady™ Auth Library
  * 
  * Supports 25+ OAuth providers via Firebase Auth.
  * After OAuth callback, user is routed to onboarding — NOT to API key display.

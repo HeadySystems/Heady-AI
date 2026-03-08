@@ -1,6 +1,6 @@
-# HeadyEmbed
+# Heady™Embed
 
-Production-quality local embedding service for the Heady AI platform. Replaces OpenAI embeddings with fully offline transformer models running via ONNX Runtime — zero external API calls, zero per-token costs.
+Production-quality local embedding service for the Heady™ AI platform. Replaces OpenAI embeddings with fully offline transformer models running via ONNX Runtime — zero external API calls, zero per-token costs.
 
 ---
 
@@ -104,7 +104,7 @@ docker compose down
 ```bash
 curl -X POST http://localhost:3101/embed \
   -H 'Content-Type: application/json' \
-  -d '{"texts": "Sacred geometry powers the Heady AI platform"}'
+  -d '{"texts": "Sacred geometry powers the Heady™ AI platform"}'
 ```
 
 Response:
@@ -637,7 +637,7 @@ heady-embed/
 
 ## Sacred Geometry
 
-HeadyEmbed honors the Heady AI platform's Sacred Geometry conventions:
+HeadyEmbed honors the Heady™ AI platform's Sacred Geometry conventions:
 
 - **PHI = 1.618033988749895** — used in retry backoff scaling
 - **Retry sequence** (PHI^n × base_ms): 1000ms, 1618ms, 2618ms, 4236ms

@@ -1,12 +1,12 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
 /**
- * @fileoverview Heady domain registry — all canonical domains, their roles,
+ * @fileoverview Heady™ domain registry — all canonical domains, their roles,
  * tunnel configurations, and health endpoint definitions.
  * @module src/config/domains
  */
@@ -33,7 +33,7 @@ const HEADY_DOMAINS = [
     domain: 'headyme.com',
     baseUrl: 'https://headyme.com',
     role: 'primary-platform',
-    description: 'Primary Heady AI Platform interface and dashboard',
+    description: 'Primary Heady™ AI Platform interface and dashboard',
     allowedOrigins: [
       'https://headyme.com',
       'https://www.headyme.com',
@@ -85,7 +85,7 @@ const HEADY_DOMAINS = [
     domain: 'headyconnection.org',
     baseUrl: 'https://headyconnection.org',
     role: 'community-hub',
-    description: 'Heady community, connections, and social orchestration',
+    description: 'Heady™ community, connections, and social orchestration',
     allowedOrigins: [
       'https://headyconnection.org',
       'https://www.headyconnection.org',
@@ -187,7 +187,7 @@ const HEADY_DOMAINS = [
     domain: 'headybuddy.org',
     baseUrl: 'https://headybuddy.org',
     role: 'companion-ai',
-    description: 'Heady Buddy — personal AI companion and assistant interface',
+    description: 'Heady™ Buddy — personal AI companion and assistant interface',
     allowedOrigins: [
       'https://headybuddy.org',
       'https://www.headybuddy.org',
@@ -212,7 +212,7 @@ const HEADY_DOMAINS = [
     domain: 'headybot.com',
     baseUrl: 'https://headybot.com',
     role: 'bot-platform',
-    description: 'Heady Bot — automated agent deployment and orchestration',
+    description: 'Heady™ Bot — automated agent deployment and orchestration',
     allowedOrigins: [
       'https://headybot.com',
       'https://www.headybot.com',
@@ -237,7 +237,7 @@ const HEADY_DOMAINS = [
     domain: 'heady-ai.com',
     baseUrl: 'https://heady-ai.com',
     role: 'ai-research',
-    description: 'Heady AI research portal and model experimentation hub',
+    description: 'Heady™ AI research portal and model experimentation hub',
     allowedOrigins: [
       'https://heady-ai.com',
       'https://www.heady-ai.com',
@@ -270,7 +270,7 @@ const HEADY_DOMAINS = [
 const DOMAIN_MAP = new Map(HEADY_DOMAINS.map((d) => [d.domain, d]));
 
 /**
- * All allowed CORS origins across every Heady domain, deduplicated.
+ * All allowed CORS origins across every Heady™ domain, deduplicated.
  * @type {string[]}
  */
 const ALL_ALLOWED_ORIGINS = [...new Set(

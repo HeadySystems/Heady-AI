@@ -1,12 +1,12 @@
 ---
 name: heady-digital-presence
-description: Use when managing digital presence control plane, maintenance automation, deterministic embedding orchestration, or autonomous operations in the Heady ecosystem. Keywords include digital presence, maintenance, automation, deterministic embedding, autonomy, autonomous operations, control plane, and presence management.
+description: Use when managing digital presence control plane, maintenance automation, deterministic embedding orchestration, or autonomous operations in the Heady™ ecosystem. Keywords include digital presence, maintenance, automation, deterministic embedding, autonomy, autonomous operations, control plane, and presence management.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Digital Presence & Autonomy
+# Heady™ Digital Presence & Autonomy
 
 ## When to Use This Skill
 
@@ -47,7 +47,7 @@ Use this skill when the user needs to:
 | headyio.com | Developer SDK/API |
 | headybot.com | Bot framework |
 | headyapi.com | Public API |
-| headyai.com | Intelligence hub |
+| heady-ai.com | Intelligence hub |
 
 ### Maintenance Automation
 1. Scheduled tasks: dependency updates, certificate renewal, cache clearing.

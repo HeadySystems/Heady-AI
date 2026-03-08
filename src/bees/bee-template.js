@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
 const logger = require('../utils/logger');
@@ -20,7 +21,7 @@ const LIFECYCLE = {
   TERMINATED: 'TERMINATED',
 };
 
-const DEFAULT_HEARTBEAT_INTERVAL_MS = 30_000;
+const DEFAULT_HEARTBEAT_INTERVAL_MS = PHI_TIMING.CYCLE;
 const DEFAULT_TASK_TIMEOUT_MS       = 120_000;
 const MAX_QUEUE_SIZE                = 500;
 

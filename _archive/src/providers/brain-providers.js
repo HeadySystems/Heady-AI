@@ -1,7 +1,7 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
- * src/providers/brain-providers.js — Multi-provider AI clients for HeadyBrain
+ * src/providers/brain-providers.js — Multi-provider AI clients for Heady™Brain
  *
  * Extracted from src/routes/brain.js (Phase 2 monolith decomposition)
  * Contains: chatViaOpenAI, chatViaOllama, chatViaHuggingFace, chatViaGemini,
@@ -16,7 +16,7 @@ async function chatViaOpenAI(message, system, temperature, max_tokens) {
     const payload = JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4o-mini",
         messages: [
-            { role: "system", content: system || "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem. Be helpful, concise, warm." },
+            { role: "system", content: system || "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem. Be helpful, concise, warm." },
             { role: "user", content: message },
         ],
         temperature: temperature || 0.7,
@@ -98,7 +98,7 @@ async function chatViaHuggingFace(message, system, temperature, max_tokens) {
 
     const msgs = [];
     if (system) msgs.push({ role: "system", content: system });
-    else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem. Be helpful, concise, warm." });
+    else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem. Be helpful, concise, warm." });
     msgs.push({ role: "user", content: message });
 
     const result = await client.chatCompletion({
@@ -159,17 +159,17 @@ function filterResponse(text, options = {}) {
     if (options.scrubProviders !== false) {
         const identityPatterns = [
             [/\bI(?:'m| am) (?:an? )?(?:AI (?:assistant|model|chatbot|language model) )?(?:made|created|developed|built|trained|designed) by (Google|HeadyNexus|HeadyCompute|Meta|Mistral|Microsoft|Hugging\s?Face)\b/gi,
-                "I'm HeadyBrain, the AI reasoning engine of the Heady ecosystem"],
+                "I'm HeadyBrain, the AI reasoning engine of the Heady™ ecosystem"],
             [/\bI(?:'m| am) (HeadyJules|HeadyPythia|GPT|ChatGPT|Llama|Mistral|Qwen|Copilot)\b/gi,
                 "I'm HeadyBrain"],
             [/\bI(?:'m| am) (?:a |an )?(large )?language model,? (?:trained|created|made|built|developed) by (Google|HeadyNexus|HeadyCompute|Meta)\b/gi,
-                "I'm HeadyBrain, the AI reasoning engine of the Heady ecosystem"],
+                "I'm HeadyBrain, the AI reasoning engine of the Heady™ ecosystem"],
             [/\bI(?:'m| am) (?:a |an )?(large )?language model\b/gi,
                 "I'm HeadyBrain"],
             [/\bMy name is (HeadyJules|HeadyPythia|GPT|ChatGPT|Bard|Llama|Qwen)\b/gi,
                 "I'm HeadyBrain"],
             [/\b(?:made|created|developed|built|trained|designed) by (Google|HeadyNexus|HeadyCompute|Meta AI|Mistral AI|Microsoft|Hugging\s?Face)\b/gi,
-                "built by Heady Systems"],
+                "built by Heady™ Systems"],
             [/\b(Google|HeadyNexus|HeadyCompute|Meta|Mistral|Microsoft|Hugging\s?Face)(?:'s)? AI (?:assistant|model|team|lab|research)\b/gi,
                 "Heady AI"],
             [/\bAs (HeadyJules|HeadyPythia|GPT-4|GPT-4o|ChatGPT|Llama|Qwen|Mistral|Copilot)\b/gi,
@@ -177,7 +177,7 @@ function filterResponse(text, options = {}) {
             [/\bI'm (HeadyJules|HeadyPythia|Bard|GPT-4|ChatGPT|Llama|Qwen) (?:by|from) \w+/gi,
                 "I'm HeadyBrain"],
             [/\bpowered by (Google|HeadyNexus|HeadyCompute|Meta|HeadyPythia|HeadyJules|GPT)\b/gi,
-                "powered by Heady Systems"],
+                "powered by Heady™ Systems"],
         ];
 
         for (const [pattern, replacement] of identityPatterns) {
@@ -210,7 +210,7 @@ function generateContextualResponse(message) {
                 msg.includes("battle") ? "HeadyBattle" : "HeadyBrain";
 
     if (msg.includes("hello") || msg.includes("hi ") || msg.includes("hey")) {
-        return `Hey there! 👋 I'm ${vertical}, part of the Heady AI ecosystem. All conversations are stored in persistent 3D vector memory. What would you like to explore?`;
+        return `Hey there! 👋 I'm ${vertical}, part of the Heady™ AI ecosystem. All conversations are stored in persistent 3D vector memory. What would you like to explore?`;
     } else if (msg.includes("help") || msg.includes("what can")) {
         return `I can help with: 🧠 AI reasoning & analysis, ⚔️ Code validation (HeadyBattle), 🎨 Creative generation, 🔧 MCP tool orchestration (31 tools), 📡 Real-time event streaming, and more. What interests you?`;
     } else if (msg.includes("status") || msg.includes("health")) {

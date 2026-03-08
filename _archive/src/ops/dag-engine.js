@@ -1,5 +1,5 @@
 /**
- * Heady Project - DAG Engine (Directed Acyclic Graph)
+ * Heady™ Project - DAG Engine (Directed Acyclic Graph)
  * 
  * Orchestrates multi-agent AI tasks into verifiable, parallel, 
  * and conditional steps. Integrates with Redis for stateful persistence.

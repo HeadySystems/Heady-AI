@@ -4,7 +4,7 @@
     {
       "path": "jest.config.js",
       "url": "https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/jest.config.js",
-      "summary": "Jest configuration using phi-based (golden ratio φ=1.618) dynamic coverage thresholds instead of arbitrary fixed values. Implements tiered coverage requirements: Tier 1 (Critical) 100%, Tier 2 (Important) ~89%, Tier 3 (Standard) ~78.6%, Tier 4 (Emerging) ~61.8%. Timeout scales with phi (base 10s * φ ≈ 16.18s). Covers multiple source directories including orchestration, MCP, services, core, routing, resilience, VSA, and intelligence modules. Includes module name mapping for @heady/* packages."
+      "summary": "Jest configuration using phi-based (golden ratio φ=1.618) dynamic coverage thresholds instead of arbitrary fixed values. Implements tiered coverage requirements: Tier 1 (Critical) 100%, Tier 2 (Important) ~89%, Tier 3 (Standard) ~78.6%, Tier 4 (Emerging) ~61.8%. Timeout scales with phi (base 10s * φ ≈ 16.18s). Covers multiple source directories including orchestration, MCP, services, core, routing, resilience, VSA, and intelligence modules. Includes module name mapping for @heady-ai/* packages."
     },
     {
       "path": "package.json",

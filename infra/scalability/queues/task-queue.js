@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module task-queue
- * @description Queue-based workload management for HeadySystems
+ * @description Queue-based workload management for Heady™Systems
  *
  * Features:
  *   - Priority queue with Fibonacci-scaled priorities: 1,1,2,3,5,8,13,21

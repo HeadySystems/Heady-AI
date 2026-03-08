@@ -1,5 +1,5 @@
 /**
- * Heady Edge Proxy - Cloudflare Workers
+ * Heady™ Edge Proxy - Cloudflare Workers
  * Implements streaming, service bindings, and best practices
  */
 
@@ -41,7 +41,7 @@ export default {
       return handleQueuedTask(request, env, ctx);
     }
 
-    return new Response('Heady Edge Proxy', {
+    return new Response('Heady™ Edge Proxy', {
       headers: { 'x-heady-version': '3.2.3' }
     });
   }

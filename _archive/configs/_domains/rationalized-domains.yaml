@@ -336,17 +336,17 @@ discovery:
 # ═══════════════════════════════════════════════════════════════════════════════
 cloud:
   me:
-    domain: me.heady.io
+    domain: me.headyio.com
     port: 443
     layer: cyan
     
   sys:
-    domain: sys.heady.io
+    domain: sys.headyio.com
     port: 443
     layer: magenta
     
   conn:
-    domain: conn.heady.io
+    domain: conn.headyio.com
     port: 443
     layer: yellow
 

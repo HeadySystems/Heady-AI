@@ -11,7 +11,7 @@
  *
  * This file is the process entry point: node src/bootstrap/heady-manager.js
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 
 'use strict';
@@ -123,7 +123,7 @@ app.post('/mcp', (req, res) => {
 
 app.get('/', (_req, res) => {
   res.json({
-    name:    'Heady Latent OS',
+    name:    'Heady™ Latent OS',
     version: process.env.HEADY_VERSION || '1.0.0',
     env:     process.env.HEADY_ENV     || 'development',
     phi:     PHI,
@@ -162,7 +162,7 @@ async function startServer() {
   return new Promise((resolve, reject) => {
     const server = app.listen(DEFAULT_PORT, (err) => {
       if (err) return reject(err);
-      log.info('Heady Manager listening', {
+      log.info('Heady™ Manager listening', {
         port: DEFAULT_PORT,
         env:  process.env.HEADY_ENV,
         phi:  PHI,

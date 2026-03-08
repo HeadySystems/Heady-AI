@@ -1,6 +1,6 @@
 /**
  * @file self-awareness.js
- * @description Heady System Self-Monitoring — HeadyAutobiographer.
+ * @description Heady™ System Self-Monitoring — HeadyAutobiographer.
  *
  * Features:
  * - Continuous embedding of system state as 384-dimensional vectors
@@ -283,7 +283,7 @@ export class CoherenceScorer {
 // ─── SelfAwareness ────────────────────────────────────────────────────────────
 
 /**
- * Heady system self-monitoring.
+ * Heady™ system self-monitoring.
  *
  * Continuously observes system state, computes embeddings, detects drift,
  * scores coherence, and writes a narrative log.

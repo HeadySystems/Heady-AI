@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Dynamic Multi-Domain Site Server ═══
  *
- * Single server that renders ALL Heady sites dynamically.
+ * Single server that renders ALL Heady™ sites dynamically.
  * Reads Host header → returns the correct branded page.
  * Embeds 25+ auth providers, HeadyBuddy widget, and API proxy.
  *
@@ -102,7 +102,7 @@ const SITES = {
   'headyio.com': {
     brand: 'HeadyIO',
     tagline: 'Developer Platform',
-    subtitle: 'APIs, SDKs, and documentation for building on the Heady intelligence layer.',
+    subtitle: 'APIs, SDKs, and documentation for building on the Heady™ intelligence layer.',
     color: '#ec4899',
     accent: '#f472b6',
     icon: 'I',
@@ -144,7 +144,7 @@ const SITES = {
     ],
     showAuth: true,
   },
-  'headylens.com': {
+  'headysense.com': {
     brand: 'HeadyLens',
     tagline: 'Sovereign Sight',
     subtitle: 'Vision AI for screenshots, UI review, OCR, and visual code analysis.',
@@ -159,7 +159,7 @@ const SITES = {
     ],
     showAuth: false,
   },
-  'headyai.com': {
+  'heady-ai.com': {
     brand: 'HeadyAI',
     tagline: 'The Intelligence Hub',
     subtitle: 'Multi-model AI playground — route tasks to Claude, Gemini, GPT-4o, Groq, and Perplexity through one unified interface.',
@@ -431,7 +431,7 @@ function renderSite(site, host) {
     <div class="domain-bar">${allDomains}</div>
 
     <footer>
-      © 2026 HeadySystems Inc. · All rights reserved ·
+      © 2026 Heady™Systems Inc. · All rights reserved ·
       <a href="https://headyme.com">headyme.com</a> ·
       25+ Auth Providers · Sacred Geometry v3
     </footer>
@@ -718,7 +718,7 @@ const server = http.createServer((req, res) => {
             ? `Got it, ${identity}. I've noted your authorization request. This requires admin-level action — I'll route it through the governance module.`
             : 'You need to be signed in to manage authorizations.';
         } else if (lower.includes('how') && lower.includes('work')) {
-          response = `I'm HeadyBuddy, the AI companion embedded in ${siteName || 'Heady'}. I run on the Sacred Geometry mesh with 4+ AI providers, self-healing nodes, and 3D vector memory. I know who you are (${identity}) and can help with anything across the Heady ecosystem.`;
+          response = `I'm HeadyBuddy, the AI companion embedded in ${siteName || 'Heady'}. I run on the Sacred Geometry mesh with 4+ AI providers, self-healing nodes, and 3D vector memory. I know who you are (${identity}) and can help with anything across the Heady™ ecosystem.`;
         } else if (lower.includes('health') || lower.includes('status') || lower.includes('diagnos')) {
           response = `System status: ✅ Healthy.\n• ${Object.keys(SITES).length} domains active\n• 25 auth providers configured\n• Self-healing mesh: online\n• Sacred Geometry v3: φ-weighted\n• Identity: ${identity}`;
         } else {

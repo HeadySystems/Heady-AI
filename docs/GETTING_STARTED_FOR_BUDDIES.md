@@ -1,6 +1,6 @@
 # 🧠 Heady™ — Getting Started
 
-> Welcome to the Heady Intelligence Layer. This guide gets you up and running in under 5 minutes.
+> Welcome to the Heady™ Intelligence Layer. This guide gets you up and running in under 5 minutes.
 
 ---
 
@@ -25,7 +25,7 @@ code --install-extension heady-ai-1.1.0.vsix
 
 ### Option B: VS Code Marketplace
 
-Search **"Heady AI"** in the Extensions panel (`Ctrl+Shift+X`).
+Search **"Heady™ AI"** in the Extensions panel (`Ctrl+Shift+X`).
 
 ### Configure
 
@@ -53,7 +53,7 @@ Search **"Heady AI"** in the Extensions panel (`Ctrl+Shift+X`).
 
 ### Option B: Chrome Web Store
 
-Search **"Heady AI"** (when published).
+Search **"Heady™ AI"** (when published).
 
 ---
 
@@ -68,7 +68,7 @@ const { HeadyClient } = require('@heady-ai/sdk');
 
 const heady = new HeadyClient('hdy_YOUR_API_KEY');
 
-// Call any Heady AI tool
+// Call any Heady™ AI tool
 const result = await heady.callTool('memory.store', {
   userId: 'buddy-1',
   x: 0.5, y: 0.3, z: 0.8,
@@ -146,4 +146,4 @@ Your API key looks like: `hdy_xxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
 ---
 
-*© 2026 HeadySystems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces*
+*© 2026 Heady™Systems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces*

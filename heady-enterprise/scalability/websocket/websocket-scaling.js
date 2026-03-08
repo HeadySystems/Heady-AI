@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module websocket-scaling
- * @description WebSocket scaling for HeadySystems with Redis-backed session store
+ * @description WebSocket scaling for Heady™Systems with Redis-backed session store
  *
  * Features:
  *   - Sticky sessions via Redis-backed session store

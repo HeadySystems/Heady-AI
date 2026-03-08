@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * =============================================================================
- * Heady Sovereign AI Platform — Database Migration Script
+ * Heady™ Sovereign AI Platform — Database Migration Script
  * =============================================================================
- * Monorepo: github.com/HeadyMe/Heady-pre-production-9f2f0642
+ * Monorepo: github.com/HeadyMe/Heady™-pre-production-9f2f0642
  * Maintained by: eric@headyconnection.org
  *
  * Usage:

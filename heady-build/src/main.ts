@@ -1,6 +1,6 @@
 /**
  * @file main.ts
- * @description Heady Liquid Latent OS — Primary Orchestration Entry Point
+ * @description Heady™ Liquid Latent OS — Primary Orchestration Entry Point
  *
  * Implements the 12-phase boot sequence that wires all cognitive packages
  * into a unified production-grade HTTP service.  φ-resonant constants are

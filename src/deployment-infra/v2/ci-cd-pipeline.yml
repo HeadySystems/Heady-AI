@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# Heady CI/CD Pipeline — GitHub Actions
+# Heady™ CI/CD Pipeline — GitHub Actions
 #
 # NEW FILE — implements the 5-phase pipeline described in deploy-script.js comments
 # but not found as an actual workflow in the repository scan.
@@ -39,7 +39,7 @@
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
-name: Heady Production Pipeline
+name: Heady™ Production Pipeline
 
 on:
   push:
@@ -245,7 +245,7 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
           labels: |
-            org.opencontainers.image.title=Heady Manager
+            org.opencontainers.image.title=Heady™ Manager
             org.opencontainers.image.vendor=HeadySystems Inc.
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}

@@ -3,7 +3,7 @@
 /**
  * CacheOptimizerBee — Cache warming, phi-weighted eviction, Fibonacci-sized cache management.
  * Implements LRU with phi-harmonic size tiers and eviction scoring.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

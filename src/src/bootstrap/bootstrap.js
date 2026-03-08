@@ -8,7 +8,7 @@
  *   3. EventBus        — start spatial event bus
  *   4. VectorMemory    — initialise vector memory store
  *   5. CSLEngine       — start Coherence-Scoring Layer engine
- *   6. Conductor       — start Heady Conductor (orchestration)
+ *   6. Conductor       — start Heady™ Conductor (orchestration)
  *   7. Pipeline        — initialise processing pipeline
  *   8. AutoSuccess     — start Auto-Success Engine cycle loop
  *   9. HealthProbes    — register dependencies, mark startup complete
@@ -20,7 +20,7 @@
  *   - Phase failures trigger phi-backoff retry (max fib(4)=3 attempts)
  *   - Phase timing logged at DEBUG + INFO levels
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 
 'use strict';

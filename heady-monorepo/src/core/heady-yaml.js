@@ -1,6 +1,6 @@
 /**
- * ∞ Heady YAML — YAML Loader with Env Var Interpolation
- * © 2026 HeadySystems Inc. — PROPRIETARY AND CONFIDENTIAL
+ * ∞ Heady™ YAML — YAML Loader with Env Var Interpolation
+ * © 2026 Heady™Systems Inc. — PROPRIETARY AND CONFIDENTIAL
  *
  * Loads YAML files with ${VAR} / ${VAR:default} environment variable
  * interpolation baked in. Zero runtime dependencies — pure JS YAML parser.
@@ -34,7 +34,7 @@ function interpolateEnv(str) {
 }
 
 // ─── Minimal YAML Parser ──────────────────────────────────────────────────
-// Handles the subset of YAML used by Heady configs:
+// Handles the subset of YAML used by Heady™ configs:
 // - Key: value pairs
 // - Nested objects via indentation
 // - Arrays with - prefix

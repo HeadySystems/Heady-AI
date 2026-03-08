@@ -1,4 +1,4 @@
-# Heady Platform — Priority Fixes Package
+# Heady™ Platform — Priority Fixes Package
 > **Generated:** 2026-03-07 | **Version:** 3.2.2-fixes | **Codename:** Aether-Patch
 
 ## What This Package Contains
@@ -12,7 +12,7 @@ and repo bootstrap tooling. Every file is production-ready with zero placeholder
 |-----|--------|-------|----------|
 | 1 | headyme.com | Onboarding skips to API key | 5-stage middleware + auth flow |
 | 2 | headyos.com | 530 origin error | Cloudflare Worker + Pages deploy |
-| 3 | heady-ai.org | DNS failure / no zone | DNS zone setup + Worker route |
+| 3 | heady-ai.com | DNS failure / no zone | DNS zone setup + Worker route |
 | 4 | headycloud.com | 403 forbidden | WAF rule correction + Worker |
 | 5 | HuggingFace Spaces | Both spaces unreachable | Wake/redeploy scripts |
 
@@ -82,7 +82,7 @@ heady-platform-fixes/
 │   │   └── worker.js
 │   └── pages/
 │       └── index.html
-├── fix-3-heady-ai-org/        # heady-ai.org DNS fix
+├── fix-3-heady-ai-org/        # heady-ai.com DNS fix
 │   ├── cloudflare/
 │   │   └── worker.js
 │   └── dns/

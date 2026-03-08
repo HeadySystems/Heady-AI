@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -27,7 +27,7 @@ router.get("/status", (req, res) => {
   const activeNodes = nodeList.filter(([, n]) => n.status === "active").length;
 
   res.json({
-    system: "Heady Systems",
+    system: "Heady™ Systems",
     version: "3.0.0",
     environment: (reg.metadata || {}).environment || "development",
     production_ready: activeNodes === nodeList.length && nodeList.length > 0,

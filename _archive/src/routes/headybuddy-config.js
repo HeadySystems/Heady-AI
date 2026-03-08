@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
             outputFormatSwitching: true,
         },
         providers: {
-            'heady-brain': { label: 'Heady Brain', icon: '🧠', color: '#34d399' },
+            'heady-brain': { label: 'Heady™ Brain', icon: '🧠', color: '#34d399' },
             'headyjules-haiku': { label: 'HeadyJules Haiku', icon: '⚡', color: '#fbbf24' },
             'headyjules-sonnet': { label: 'HeadyJules Sonnet', icon: '⬡', color: '#fb923c' },
             'headyjules-opus': { label: 'HeadyJules Opus', icon: '🔮', color: '#f472b6' },
@@ -49,7 +49,7 @@ router.get('/', (req, res) => {
             theme: 'dark',
             accentColor: '#8b5cf6',
             brandName: 'HeadyBuddy',
-            tagline: 'Type anything. Heady intelligently processes it and delivers in your chosen format — instantly.',
+            tagline: 'Type anything. Heady™ intelligently processes it and delivers in your chosen format — instantly.',
         },
         outputFormats: [
             { id: 'raw', label: 'Raw Data', icon: '📊' },
@@ -69,7 +69,7 @@ router.get('/', (req, res) => {
             { id: 'api', label: 'API Response', icon: '🔌' },
         ],
         capabilities: {
-            description: 'HeadyBuddy intelligently processes ANY freeform input. Type anything — a question, a task, a creative brief, raw data — and Heady analyzes intent, routes to optimal AI nodes, and delivers results in your chosen format. Switch output formats on-the-fly at any time.',
+            description: 'HeadyBuddy intelligently processes ANY freeform input. Type anything — a question, a task, a creative brief, raw data — and Heady™ analyzes intent, routes to optimal AI nodes, and delivers results in your chosen format. Switch output formats on-the-fly at any time.',
             inputExamples: [
                 'super random stuff for buddy',
                 'analyze my nonprofit fundraising data and make it pretty',

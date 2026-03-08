@@ -544,7 +544,7 @@ router.post('/confirm', validateBody(confirmSchema), async (req, res) => {
     pilotDays: FIB[10],
     graceDays: FIB[6],
     resourceLimits: PILOT_LIMITS,
-    message: `Welcome to the HeadyOS Founder's Pilot! Check your email for getting started resources.`,
+    message: `Welcome to the Heady™OS Founder's Pilot! Check your email for getting started resources.`,
     emailSequenceStarted: true,
     npsSurveyDays: npsDays,
     officeHoursDays: [FIB[6], FIB[6]*2, FIB[6]*3, FIB[6]*4, FIB[6]*5, FIB[6]*6, FIB[10]],

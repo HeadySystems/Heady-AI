@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Input Task Extractor Bee ═══
  * 
@@ -246,7 +246,7 @@ function extractFromStrategicReport() {
 
     // Hardcoded extraction from the known strategic report
     const knownTasks = [
-        { text: 'Launch the Heady-Registry: Move MCP connectors to public-facing API (tool → platform = 3x valuation multiplier)', priority: 1.0, category: 'dev' },
+        { text: 'Launch the Heady™-Registry: Move MCP connectors to public-facing API (tool → platform = 3x valuation multiplier)', priority: 1.0, category: 'dev' },
         { text: 'Formalize the Sacred Geometry Whitepaper: Publish technical paper on mathematical efficiency to attract institutional interest', priority: 0.9, category: 'research' },
         { text: 'Unify versioning: Resolve v2.1.0 (package.json) vs v3.2.0 (README) conflict — consistency is a Trust Signal for investors', priority: 0.9, category: 'dev' },
         { text: 'Cease repository modifications before March 5th launch — system is in optimal state', priority: 1.0, category: 'ops' },

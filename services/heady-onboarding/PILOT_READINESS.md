@@ -1,4 +1,4 @@
-# HeadyMe Pilot Readiness Checklist
+# Heady™Me Pilot Readiness Checklist
 
 ## ✅ 100% Pilot Ready When All Items Completed
 

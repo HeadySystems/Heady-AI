@@ -1,4 +1,4 @@
-# Heady Ecosystem: Master Architectural Documentation
+# Heady™ Ecosystem: Master Architectural Documentation
 
 **Version:** 3.0.0
 **Context:** Centralized documentation consolidating all fragmented READMEs across the repository.
@@ -16,7 +16,7 @@
 
 ## 1. Introduction
 
-The Heady architecture represents a paradigm shift from linear LLM chaining to a distributed, multi-agent project-state. This documentation serves as the unified reference for deploying real-time collaborative environments, low-latency financial widgets, and secure administrative dashboards.
+The Heady™ architecture represents a paradigm shift from linear LLM chaining to a distributed, multi-agent project-state. This documentation serves as the unified reference for deploying real-time collaborative environments, low-latency financial widgets, and secure administrative dashboards.
 
 ## 2. Sacred Geometry & Ternary Logic
 

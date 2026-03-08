@@ -1,12 +1,12 @@
 ---
 name: heady-vsa-hyperdimensional-computing
-description: Apply Heady-style vector-symbolic architecture for state machines, associative memory, hypervector binding, bundling, permutation, and similarity-based retrieval. Use when the user mentions VSA, hyperdimensional computing, tensor-native state logic, codebook retrieval, or replacing branch-heavy logic with vector operations.
+description: Apply Heady™-style vector-symbolic architecture for state machines, associative memory, hypervector binding, bundling, permutation, and similarity-based retrieval. Use when the user mentions VSA, hyperdimensional computing, tensor-native state logic, codebook retrieval, or replacing branch-heavy logic with vector operations.
 metadata:
   author: Perplexity Computer
   version: '1.0'
 ---
 
-# Heady VSA Hyperdimensional Computing
+# Heady™ VSA Hyperdimensional Computing
 
 ## When to Use This Skill
 

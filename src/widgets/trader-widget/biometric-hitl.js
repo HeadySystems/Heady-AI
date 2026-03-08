@@ -15,7 +15,7 @@ class BiometricHITL {
 
     /**
      * Initializes a robust swipe-to-execute check using an Assertion Challenge
-     * returned by the central Heady Manager.
+     * returned by the central Heady™ Manager.
      */
     async requireSwipeValidation(tradeContext) {
         if (!this.isSupported) {
@@ -44,7 +44,7 @@ class BiometricHITL {
                 publicKey: options.publicKey
             });
 
-            // 4. Verify assertion back onto Heady Manager
+            // 4. Verify assertion back onto Heady™ Manager
             const verificationPayload = {
                 id: credential.id,
                 rawId: this._bufferToBase64Url(credential.rawId),

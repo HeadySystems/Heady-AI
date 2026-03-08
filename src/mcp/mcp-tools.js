@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @fileoverview All 31 MCP tool definitions for the HeadyStack MCP server.
+ * @fileoverview All 31 MCP tool definitions for the Heady™Stack MCP server.
  * Each tool has a name, description, category, inputSchema, and handler.
  * @module mcp/mcp-tools
  */
@@ -38,7 +38,7 @@ const TOOLS = [
   // ─── MEMORY ──────────────────────────────────────────────────────────────
   {
     name: 'heady_memory',
-    description: 'Search or store data in the HeadyStack vector memory system.',
+    description: 'Search or store data in the Heady™Stack vector memory system.',
     category: 'memory',
     inputSchema: {
       type: 'object',

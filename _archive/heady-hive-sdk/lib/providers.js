@@ -1,7 +1,7 @@
 /**
  * ═══ HeadyProviders — Provider Registry for Liquid Gateway ═══
  *
- * Factory functions that create provider objects for the HeadyGateway.
+ * Factory functions that create provider objects for the Heady™Gateway.
  * Each provider wraps a real API (Claude, Gemini, OpenAI, HuggingFace, Vertex AI)
  * behind the standard { chat, embed } interface.
  *
@@ -80,7 +80,7 @@ function createClaudeProvider(env = process.env) {
             const response = await client.messages.create({
                 model: "claude-sonnet-4-20250514",
                 max_tokens: useThinking ? Math.max(opts.max_tokens || 2048, 4096) : (opts.max_tokens || 2048),
-                system: system || "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem.",
+                system: system || "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem.",
                 messages,
                 ...(useThinking ? { thinking: { type: "enabled", budget_tokens: opts.thinkingBudget || 1024 } } : {}),
                 ...(!useThinking && opts.temperature ? { temperature: opts.temperature } : {}),
@@ -160,7 +160,7 @@ function createOpenAIProvider(env = process.env) {
         chat: async (message, system, opts = {}) => {
             const msgs = [];
             if (system) msgs.push({ role: "system", content: system });
-            else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem." });
+            else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem." });
             // Inject conversation history for multi-turn context
             if (opts.history && opts.history.length > 0) msgs.push(...opts.history);
             msgs.push({ role: "user", content: message });
@@ -204,7 +204,7 @@ function createHuggingFaceProvider(env = process.env) {
             const client = new InferenceClient(token);
             const msgs = [];
             if (system) msgs.push({ role: "system", content: system });
-            else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady ecosystem." });
+            else msgs.push({ role: "system", content: "You are HeadyBrain, the AI reasoning engine of the Heady™ ecosystem." });
             // Inject conversation history for multi-turn context
             if (opts.history && opts.history.length > 0) msgs.push(...opts.history);
             msgs.push({ role: "user", content: message });
@@ -300,7 +300,7 @@ function createOllamaProvider(env = process.env) {
 
 /**
  * Create all available providers from environment variables.
- * Returns array of provider objects ready for HeadyGateway.registerProvider().
+ * Returns array of provider objects ready for Heady™Gateway.registerProvider().
  *
  * Default priority order:
  *   1. Claude (heady-reasoning) — best quality

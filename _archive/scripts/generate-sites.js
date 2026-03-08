@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Site Generator v3 — SACRED GEOMETRY EDITION
+ * Heady™ Site Generator v3 — SACRED GEOMETRY EDITION
  * Produces visually-immense, breathing interfaces using cosmic starfields
  * and sacred geometric patterns as requested.
  */
@@ -31,7 +31,7 @@ const sites = [
     id: 'headyme', dir: 'headyme',
     title: 'HeadyMe — Your AI Command Center',
     tagline: 'One dashboard. Every device. Total intelligence.',
-    description: 'HeadyMe is the unified command center for the Heady AI ecosystem — 20 nodes, 7 domains, and all your data converge into a single, private-by-default dashboard powered by the HCFP auto-success engine.',
+    description: 'HeadyMe is the unified command center for the Heady™ AI ecosystem — 20 nodes, 7 domains, and all your data converge into a single, private-by-default dashboard powered by the HCFP auto-success engine.',
     gradient: ['#7C3AED', '#2563EB'], accent: '#818cf8', icon: '🧠',
     geoType: 'Flower of Life',
     buyer: 'Individual prosumer / power user',
@@ -85,7 +85,7 @@ const sites = [
     id: 'headymcp', dir: 'headymcp',
     title: 'HeadyMCP — The MCP Protocol Hub',
     tagline: 'Discover. Trust. Deploy.',
-    description: 'The verified registry for Model Context Protocol connectors — security-scanned, quality-scored, and one-click deployable into any Heady-powered IDE or app.',
+    description: 'The verified registry for Model Context Protocol connectors — security-scanned, quality-scored, and one-click deployable into any Heady™-powered IDE or app.',
     gradient: ['#7C3AED', '#EC4899'], accent: '#C084FC', icon: '🔌',
     geoType: 'Metatrons Cube',
     buyer: 'Developer building AI integrations',
@@ -103,7 +103,7 @@ const sites = [
     id: 'headyio', dir: 'headyio',
     title: 'HeadyIO — Developer Intelligence Hub',
     tagline: 'Build with 20 AI nodes. Ship in minutes.',
-    description: 'The developer portal for the Heady ecosystem — REST API docs, the Hive SDK, Arena Mode API, and everything you need to integrate 20 AI nodes into your stack.',
+    description: 'The developer portal for the Heady™ ecosystem — REST API docs, the Hive SDK, Arena Mode API, and everything you need to integrate 20 AI nodes into your stack.',
     gradient: ['#1E40AF', '#3B82F6'], accent: '#60A5FA', icon: '💻',
     geoType: 'Metatrons Cube',
     buyer: 'Developer / technical architect',
@@ -121,11 +121,11 @@ const sites = [
     id: 'headybuddy', dir: 'headybuddy',
     title: 'HeadyBuddy — Swarm Commander',
     tagline: 'Always learning. Always there. Always executing.',
-    description: 'HeadyBuddy is your personal AI Swarm Commander — voice-activated, cross-device, and equipped with HeadyBees, a fleet of headless browser agents ready to execute workflows on your behalf.',
+    description: 'HeadyBuddy is your personal AI Swarm Commander — voice-activated, cross-device, and equipped with Heady™Bees, a fleet of headless browser agents ready to execute workflows on your behalf.',
     gradient: ['#EC4899', '#8B5CF6'], accent: '#F472B6', icon: '🤖',
     geoType: 'Flower of Life',
     buyer: 'Knowledge worker / prosumer',
-    workflow: '"Hey Buddy, swarm the HeadyBees to research competitors, scrape the latest pricing, and generate a report"',
+    workflow: '"Hey Buddy, swarm the Heady™Bees to research competitors, scrape the latest pricing, and generate a report"',
     integrations: ['Email', 'Slack', 'DuckDB Vector Memory', 'Voice-to-Text Relay', 'HeadySwarm', 'HeadyBees'],
     features: [
       { icon: '🎤', title: 'Voice Activation', desc: 'Talk naturally on any device. HeadyBuddy transcribes, understands context, and acts.' },
@@ -153,11 +153,11 @@ sites.forEach(s => {
 allSites.push({
   id: 'instant', dir: 'instant',
   title: '1ime1 — Instant Everything', tagline: 'One prompt. Zero friction. Live in seconds.',
-  description: 'Instant access to the full Heady AI platform — generate, deploy, and iterate on websites, APIs, and creative assets in real-time with 20-node parallel execution.',
+  description: 'Instant access to the full Heady™ AI platform — generate, deploy, and iterate on websites, APIs, and creative assets in real-time with 20-node parallel execution.',
   gradient: ['#F59E0B', '#EF4444'], accent: '#FCD34D', icon: '⚡',
   geoType: 'Seed of Life',
   buyer: 'Speed-focused creator / founder', workflow: '"Build and deploy my idea in 60 seconds with AI-generated assets"',
-  integrations: ['Heady Edge Workers', 'Arena Mode', 'Creative AI Pipeline'],
+  integrations: ['Heady™ Edge Workers', 'Arena Mode', 'Creative AI Pipeline'],
   features: [
     { icon: '🚀', title: 'Instant Deploy', desc: 'Ship websites, APIs, and AI workflows in seconds — HeadyConductor routes to the fastest node.' },
     { icon: '🎨', title: 'AI Creative Engine', desc: 'Generate images, copy, code, and designs with one prompt. 20 nodes compete for the best output.' },
@@ -356,7 +356,7 @@ function generateSite(site) {
       </header>
 
       <section class="hero">
-        <div class="status"><span class="status-dot"></span> Heady Ecosystem Online</div>
+        <div class="status"><span class="status-dot"></span> Heady™ Ecosystem Online</div>
         <h1>${site.title.split('—')[0].trim()}</h1>
         <p class="hero-sub">${site.tagline.split('.')[0]}</p>
         <div class="sacred-badge">${site.geoType.toUpperCase()} · SACRED GEOMETRY v3</div>
@@ -374,7 +374,7 @@ function generateSite(site) {
         </div>
       </section>
 
-      <!-- Conditional Onboarding Flow for HeadyMe -->
+      <!-- Conditional Onboarding Flow for Heady™Me -->
       ${site.id === 'headyme' ? `
       <section class="onboarding-matrix" id="headyOnboarding" style="display:none; text-align:center; padding: 60px 40px; background: rgba(0,0,0,0.4); border: 1px solid var(--accent); border-radius: 30px; margin: 40px auto; max-width: 900px; backdrop-filter: blur(20px); box-shadow: 0 0 50px rgba(0,0,0,0.5);">
          <h2 style="font-size: 2.5rem; margin-bottom: 10px; font-weight: 300; tracking-wide;">Welcome to Heady. What are you building?</h2>
@@ -621,10 +621,10 @@ function generateSite(site) {
       <button onclick="window.headyBuddy.send()">Send</button>
     </div>
   </div>
-  <button class="buddy-fab" onclick="window.headyBuddy.toggle()" title="Chat with HeadyBuddy">💬</button>
+  <button class="buddy-fab" onclick="window.headyBuddy.toggle()" title="Chat with Heady™Buddy">💬</button>
 
   <script>
-  // ── Heady Context Switcher Logic ──────────────────────────────────
+  // ── Heady™ Context Switcher Logic ──────────────────────────────────
   window.headyContext = {
     open: false,
     items: [],
@@ -889,7 +889,7 @@ function generateSite(site) {
   };
   document.addEventListener('DOMContentLoaded', () => window.headyBuddy.init());
 
-  // ── Heady Auth System — Personal Persistence Connection ─────────
+  // ── Heady™ Auth System — Personal Persistence Connection ─────────
   window.headyAuth = {
     user: null,
     token: null,
@@ -897,7 +897,7 @@ function generateSite(site) {
     STORAGE_KEY: 'heady_session',
 
     init() {
-      // Auto-restore session from localStorage (syncs across all Heady UIs on same browser)
+      // Auto-restore session from localStorage (syncs across all Heady™ UIs on same browser)
       try {
         const saved = localStorage.getItem(this.STORAGE_KEY);
         if (saved) {
@@ -977,7 +977,7 @@ function generateSite(site) {
     handleAuthSuccess(data) {
       this.token = data.token;
       this.user = data.user;
-      // Persist session — syncs across all Heady domains via localStorage
+      // Persist session — syncs across all Heady™ domains via localStorage
       const session = {
         token: this.token,
         user: this.user,
@@ -1084,7 +1084,7 @@ function generateSite(site) {
     });
   });
 
-  // ── Heady UX Paradigms ──────────────────────────────────────────
+  // ── Heady™ UX Paradigms ──────────────────────────────────────────
   window.headyUX = {
     setMode(mode) {
       document.body.className = '';
@@ -1303,7 +1303,7 @@ function generateDownloadsPage() {
                   <div class="dl-icon">💻</div>
                   <div><span class="dl-title">VS Code Extension</span><span class="dl-version">v1.1.0</span></div>
                 </div>
-                <p class="dl-desc">Official Heady AI extension for VS Code. Chat, refactor, and battle-validate code using all 5 Heady models directly in your editor.</p>
+                <p class="dl-desc">Official Heady™ AI extension for VS Code. Chat, refactor, and battle-validate code using all 5 Heady models directly in your editor.</p>
               </div>
               <a href="https://manager.headysystems.com/dist/extensions/heady-ai-1.1.0.vsix" class="dl-btn">Download .vsix (Manual Install)</a>
             </div>
@@ -1313,7 +1313,7 @@ function generateDownloadsPage() {
                   <div class="dl-icon">🌐</div>
                   <div><span class="dl-title">Chrome Extension</span><span class="dl-version">v1.0.0</span></div>
                 </div>
-                <p class="dl-desc">Official Heady AI extension for Chrome. Context menu actions and side panel chat with model-per-action routing.</p>
+                <p class="dl-desc">Official Heady™ AI extension for Chrome. Context menu actions and side panel chat with model-per-action routing.</p>
               </div>
               <a href="https://manager.headysystems.com/dist/extensions/heady-chrome-1.0.0.zip" class="dl-btn">Download .zip (Load Unpacked)</a>
             </div>
@@ -1329,7 +1329,7 @@ function generateDownloadsPage() {
                   <div class="dl-icon">⚡</div>
                   <div><span class="dl-title">Heady CLI</span><span class="dl-version">v2.8.0</span></div>
                 </div>
-                <p class="dl-desc">The official command-line interface for Heady. Deploy configurations, manage edge workers, and interact with the Swarm.</p>
+                <p class="dl-desc">The official command-line interface for Heady™. Deploy configurations, manage edge workers, and interact with the Swarm.</p>
               </div>
               <a href="https://headyio.com/api-docs" class="dl-btn">npm install -g heady-cli</a>
             </div>
@@ -1341,7 +1341,7 @@ function generateDownloadsPage() {
                 </div>
                 <p class="dl-desc">Integrate 20-node federated routing and Proof View receipts into your JavaScript/TypeScript applications.</p>
               </div>
-              <a href="https://github.com/heady-systems/hive-sdk" class="dl-btn">npm install @heady/hive-sdk</a>
+              <a href="https://github.com/heady-systems/hive-sdk" class="dl-btn">npm install @heady-ai/hive-sdk</a>
             </div>
             <div class="dl-card">
               <div>
@@ -1349,7 +1349,7 @@ function generateDownloadsPage() {
                   <div class="dl-icon">🐍</div>
                   <div><span class="dl-title">Hive SDK (Python)</span><span class="dl-version">v1.2.0</span></div>
                 </div>
-                <p class="dl-desc">Python bindings for the Heady Brain API. Perfect for data science and AI pipeline integrations.</p>
+                <p class="dl-desc">Python bindings for the Heady™ Brain API. Perfect for data science and AI pipeline integrations.</p>
               </div>
               <a href="https://pypi.org/project/heady-hive/" class="dl-btn">pip install heady-hive</a>
             </div>
@@ -1384,7 +1384,7 @@ function generateDownloadsPage() {
       </section>
 
       <footer>
-        © 2026 Heady Systems LLC — ∞ SACRED GEOMETRY ∞ — Downloads Hub
+        © 2026 Heady™Systems Inc — ∞ SACRED GEOMETRY ∞ — Downloads Hub
       </footer>
     </div>
   </div>

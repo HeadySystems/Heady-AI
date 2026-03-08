@@ -8,7 +8,7 @@ method: Full filesystem deep scan + registry cross-reference
 
 # HEADY UNIMPLEMENTED SERVICES AUDIT
 
-> Produced by deep scanning the Heady monorepo, cross-referencing `heady-registry.json`
+> Produced by deep scanning the Heady™ monorepo, cross-referencing `heady-registry.json`
 > (which lists 21+ services as "active"), the `services/` directory (25 service dirs),
 > `src/services/` (168+ JS files), and `packages/` (21 packages). This audit identifies
 > services that are claimed but thin/stub, services that are planned but not built,
@@ -148,7 +148,7 @@ no corresponding substantial implementation found in the codebase.
 
 - **Source**: Skills describe hallucination detection
 - **Reality**: No implementation found
-- **Utility**: Critical for HeadyBuddy trust — detecting when AI output contradicts
+- **Utility**: Critical for Heady™Buddy trust — detecting when AI output contradicts
   known facts in vector memory.
 
 ### C5. Swarm Consensus Intelligence — 🟢 MEDIUM
@@ -193,8 +193,8 @@ no corresponding substantial implementation found in the codebase.
 
 ### D5. HeadyLearn — Educational Platform — 🟢 MEDIUM
 
-- Domain `headylearn.com` exists but is empty.
-- Interactive tutorials for Heady's architecture, CSL, and Sacred Geometry.
+- Domain `headyu.com` exists but is empty.
+- Interactive tutorials for Heady™'s architecture, CSL, and Sacred Geometry.
 - Onboarding for pilot partners and developers.
 
 ---

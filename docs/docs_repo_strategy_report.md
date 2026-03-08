@@ -1,4 +1,4 @@
-# Heady Repo Strategy Analysis
+# Heady™ Repo Strategy Analysis
 ## Documentation Quality, Repo Sprawl, Projection Strategy, Duplication, Ingestion Readiness & Information Architecture
 
 **Analyzed:** 13 repositories in `/home/user/workspace/headyme-repos/`  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The Heady ecosystem spans 13 cloned repositories (of a stated 18-repo total) organized around a central monorepo (`Heady-pre-production-9f2f0642`) that drives all other repositories via an autonomous projection pattern. The architecture is conceptually strong and the monorepo is well-documented relative to industry norms. However, the ecosystem suffers from five structural problems: **pervasive stub repos that mask real state**, **duplicated documentation living in two repos simultaneously**, **critical internal reference breakage**, **legal entity naming inconsistency across files**, and **projection target repos that are essentially empty shells with one-line READMEs**. These issues collectively reduce developer trust, impede AI-assisted ingestion, and inflate the apparent repo count without adding navigational or functional value.
+The Heady™ ecosystem spans 13 cloned repositories (of a stated 18-repo total) organized around a central monorepo (`Heady-pre-production-9f2f0642`) that drives all other repositories via an autonomous projection pattern. The architecture is conceptually strong and the monorepo is well-documented relative to industry norms. However, the ecosystem suffers from five structural problems: **pervasive stub repos that mask real state**, **duplicated documentation living in two repos simultaneously**, **critical internal reference breakage**, **legal entity naming inconsistency across files**, and **projection target repos that are essentially empty shells with one-line READMEs**. These issues collectively reduce developer trust, impede AI-assisted ingestion, and inflate the apparent repo count without adding navigational or functional value.
 
 ---
 
@@ -29,7 +29,7 @@ The Heady ecosystem spans 13 cloned repositories (of a stated 18-repo total) org
 | `headyio-core` | Projected Domain Stub | 36 | 20 | Stub |
 | `headyos-core` | Projected Domain Stub | 36 | 20 | Stub |
 | `headymcp-production` | Deployment Target | 30 | 18 | Near-empty |
-| `headysystems-production` | Deployment Target | 33 | 18 | Near-empty |
+| `heady-production` | Deployment Target | 33 | 18 | Near-empty |
 
 **Note:** The `LIVE_SURFACES.md` doc references an `heady-production` repo that is not present among the cloned set, and heady-docs claims 18 total repos; 5 repos from the stated ecosystem (template repos, battle-arena repos, product repos) are not present in this analysis set.
 
@@ -106,7 +106,7 @@ All nine `*-core` repos share the same structure:
 - **No `.github/workflows/` exists** in any `-core` repo. There is no CI/CD for these repos at all.
 - **LICENSE inconsistency.** 7 repos have a short 2-line proprietay license; 2 repos (`headyme-core`, `headysystems-core`) have a more detailed 16-line version with restrictions. No explanation for the difference.
 
-### 2.4 Production Target Repos (`headymcp-production`, `headysystems-production`) — Score: F
+### 2.4 Production Target Repos (`headymcp-production`, `heady-production`) — Score: F
 
 Both consist of a single file: a one-line `README.md` that reads:  
 > `Live Projection: headymcp.com — Autonomous deployment target for HeadyMCP Dashboard UI`
@@ -133,7 +133,7 @@ The 9 domain stubs are essentially one template instantiated 9 times. They infla
 
 The monorepo's projection strategy (code as vector ASTs → "projected" into GitHub repos at runtime) is architecturally intentional. The README for `headyme-core` explicitly says:
 
-> "This repository is **autonomously projected** from the Heady Latent OS."
+> "This repository is **autonomously projected** from the Heady™ Latent OS."
 
 This means the stubs are not just placeholder repos — they are the outputs of an automated system. The sprawl is by design. The problem is that the design does not yet have a corresponding **observability layer**: there is no index of what projection version each repo is at, no diff between the monorepo state and the projected state, and no mechanism for a human to know whether a given `-core` repo is in sync.
 
@@ -317,7 +317,7 @@ The projection model — where the monorepo is the sole source of truth and doma
 
 3. **Projection README template.** Each `-core` repo's README describes aspirational features, not current state. A projection template should distinguish between "live features" and "roadmap features" — or suppress feature claims for repos that are in stub state.
 
-4. **Production target repos are unverifiable.** `headymcp-production` and `headysystems-production` exist purely as targets with one-line READMEs. A developer landing on these repos has no idea what deployment process populates them, what branch strategy they use, or what monitoring is in place.
+4. **Production target repos are unverifiable.** `headymcp-production` and `heady-production` exist purely as targets with one-line READMEs. A developer landing on these repos has no idea what deployment process populates them, what branch strategy they use, or what monitoring is in place.
 
 ---
 
@@ -395,7 +395,7 @@ The projection model — where the monorepo is the sole source of truth and doma
 - Add a "Current Live Behavior" section that accurately describes what the stub actually does (serves a static landing page from `site-config.json`)
 
 **R13. Expand `-production` repo READMEs.**
-- `headymcp-production` and `headysystems-production` should have READMEs that explain:
+- `headymcp-production` and `heady-production` should have READMEs that explain:
   - What the repo is used for (deployment target for CI/CD pipeline)
   - What branch strategy governs it
   - How to check the live deployment status

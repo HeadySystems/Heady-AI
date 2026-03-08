@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * HIVE-002: MorphEngine — Hot Role Swapping
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Enables runtime transformation of any HeadyOS node into a different

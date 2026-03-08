@@ -1,4 +1,4 @@
-# Heady Canonical Site Registry
+# Heady™ Canonical Site Registry
 # SINGLE SOURCE OF TRUTH — 24 web properties total
 # Last audited: 2026-02-25 01:48 MST
 # Rule: This file is the ONLY authority on what sites exist. Period.
@@ -146,7 +146,7 @@ sites:
     deploy_script: scripts/deploy-hf-spaces.js
 
   - id: hf-systems
-    url: https://huggingface.co/spaces/HeadySystems/heady-systems
+    url: https://huggingface.co/spaces/HeadyMe/heady-systems
     dir: heady-hf-spaces/systems
     deploy_script: scripts/deploy-hf-spaces.js
 

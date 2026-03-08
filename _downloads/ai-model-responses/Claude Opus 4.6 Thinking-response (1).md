@@ -2,7 +2,7 @@
 
 # Heady Project Deep Analysis & Improvement Roadmap
 
-Based on accumulated deep scan data across the HeadyMe organization (13+ repos), prior architectural reviews, issue tracker findings, and the HeadySystems/Heady canonical repo, here is a consolidated analysis of where Heady stands and what it needs to reach max potential.
+Based on accumulated deep scan data across the HeadyMe organization (13+ repos), prior architectural reviews, issue tracker findings, and the HeadyMe/Heady canonical repo, here is a consolidated analysis of where Heady stands and what it needs to reach max potential.
 
 ---
 
@@ -20,7 +20,7 @@ The HeadyMe organization contains the following key repos, each with distinct ro
 | **headyapi-core** | API gateway layer | Incomplete contract enforcement |
 | **headybuddy-core** | AI companion frontend | Branding gaps |
 | **headyos-core** | Latent OS kernel abstractions | Needs modularization |
-| **headysystems-production** | Production deployment target | Config redundancy |
+| **heady-production** | Production deployment target | Config redundancy |
 | **headymcp-production** | MCP production deployment | Hardcoded env refs |
 | **heady-docs** | Documentation & API key refs | Stale, incomplete |
 | Additional projected repos | Various verticals | Inconsistent scaffolding |
@@ -282,4 +282,4 @@ For maximum force-multiplication, execute in this order:
 
 ---
 
-This analysis synthesizes findings from the Deep Scan Report in HeadySystems/Heady[9], Issue #41 on Heady-pre-production[2], prior compliance remediation work[7], the zero-dependency rebuild analysis[6], the Hive Architecture specification[10], and the conductor-split / kernel decomposition recommendations[4][5][3]. Each improvement is designed to be independently deployable — you don't have to do all of them at once, but the P0→P4 ordering gives you maximum compounding benefit.
+This analysis synthesizes findings from the Deep Scan Report in HeadyMe/Heady[9], Issue #41 on Heady-pre-production[2], prior compliance remediation work[7], the zero-dependency rebuild analysis[6], the Hive Architecture specification[10], and the conductor-split / kernel decomposition recommendations[4][5][3]. Each improvement is designed to be independently deployable — you don't have to do all of them at once, but the P0→P4 ordering gives you maximum compounding benefit.

@@ -1,6 +1,6 @@
 /**
  * HeadyClient — Main SDK entry point
- * Unified connection to any Heady instance with sub-clients for each service.
+ * Unified connection to any Heady™ instance with sub-clients for each service.
  */
 
 const https = require("https");
@@ -60,7 +60,7 @@ class HeadyClient {
         });
     }
 
-    /** Raw HTTP request to Heady Manager */
+    /** Raw HTTP request to Heady™ Manager */
     request(method, path, body) {
         return new Promise((resolve, reject) => {
             const payload = body ? JSON.stringify(body) : null;

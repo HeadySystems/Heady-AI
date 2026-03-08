@@ -1,6 +1,6 @@
 /**
- * @fileoverview Heady Memory System — Main Entry Point
- * Zero-dependency memory subsystem for the Heady AI platform.
+ * @fileoverview Heady™ Memory System — Main Entry Point
+ * Zero-dependency memory subsystem for the Heady™ AI platform.
  *
  * Replaces:
  *   - PostgreSQL / pgvector / Neon DB  → VectorDB (HNSW)
@@ -24,9 +24,9 @@
  * });
  *
  * // Store a memory
- * const vec = await memory.embedding.embed('Heady processes knowledge');
+ * const vec = await memory.embedding.embed('Heady™ processes knowledge');
  * await memory.vectorDb.insert('m1', vec, { type: 'concept' });
- * await memory.stmLtm.remember({ content: 'Heady processes knowledge', vector: vec, importance: 0.8 });
+ * await memory.stmLtm.remember({ content: 'Heady™ processes knowledge', vector: vec, importance: 0.8 });
  *
  * // Retrieve
  * const results = await memory.vectorDb.search(vec, { k: 5 });

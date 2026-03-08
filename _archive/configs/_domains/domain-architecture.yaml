@@ -13,12 +13,12 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady Systems Domain Architecture
+# Heady™ Systems Domain Architecture
 # Production-ready domain mapping and brand structure
 
 version: "2.0"
 created: "2025-02-08"
-purpose: "Canonical domain architecture for Heady ecosystem"
+purpose: "Canonical domain architecture for Heady™ ecosystem"
 
 # Core brand architecture
 brands:
@@ -36,7 +36,7 @@ brands:
     name: "HeadyBuddy"
     domain: "HeadyBuddy.org"
     description: "Peer support and buddy program"
-    relationship: "A program of HeadyConnection"
+    relationship: "A program of Heady™Connection"
     tagline: "Peer support for AI-powered social impact"
 
 # Domain hierarchy and routing
@@ -70,7 +70,7 @@ domains:
       purpose: "Peer support program site"
       ssl: "required"
       redirects: []
-      branding: "Powered by HeadyConnection"
+      branding: "Powered by Heady™Connection"
       
     - domain: "www.headybuddy.org"
       type: "redirect"
@@ -152,11 +152,11 @@ oauth_callbacks:
 redirects:
   # Legacy domains to redirect
   legacy:
-    - from: "heady.io"
+    - from: "headyio.com"
       to: "headysystems.com"
       type: "301"
       
-    - from: "heady.ai"
+    - from: "heady-ai.com"
       to: "headysystems.com"
       type: "301"
       

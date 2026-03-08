@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * ─── Vector-Native Security Scanner ──────────────────────────────────────────
@@ -8,7 +8,7 @@
  * Application Number: 63/998,767  |  Filing Date: March 6, 2026
  * Title: VECTOR-NATIVE THREAT DETECTION SYSTEM USING GEOMETRIC ANOMALY ANALYSIS
  *        IN HIGH-DIMENSIONAL EMBEDDING SPACES
- * Applicant: Heady Systems LLC  |  Inventor: Eric Haywood
+ * Applicant: HeadySystems Inc  |  Inventor: Eric Haywood
  * Related: HS-058 (Continuous Semantic Logic), HS-059 (Attestation Mesh)
  *
  * Satisfies ALL 7 claims of HS-062.

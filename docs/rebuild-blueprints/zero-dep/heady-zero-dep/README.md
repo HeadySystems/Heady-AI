@@ -1,4 +1,4 @@
-# Heady Zero-Dep
+# Heady™ Zero-Dep
 
 **A zero-dependency AI orchestration platform running across 3 Google Colab Pro+ instances.**
 
@@ -613,4 +613,4 @@ All contributions must maintain the zero-dependency constraint. Before submittin
 
 ## License
 
-MIT — Copyright (c) 2026 Heady Connection
+MIT — Copyright (c) 2026 Heady™ Connection

@@ -15,7 +15,7 @@ class AgentProtocolAdapter {
     getAgentCard() {
         return {
             name: this.agentId,
-            description: 'Heady Sovereign AI Agent',
+            description: 'Heady™ Sovereign AI Agent',
             url: process.env.AGENT_URL || `http://localhost:${process.env.PORT || 3000}`,
             version: this.protocolVersion,
             capabilities: {
@@ -29,7 +29,7 @@ class AgentProtocolAdapter {
         };
     }
 
-    // Convert between A2A task format and Heady internal format
+    // Convert between A2A task format and Heady™ internal format
     fromA2A(task) {
         return {
             id: task.id,
@@ -72,7 +72,7 @@ class AgentProtocolAdapter {
         router.get('/.well-known/agent.json', (req, res) => res.json(this.getAgentCard()));
         router.post('/a2a/tasks', async (req, res) => {
             const internal = this.fromA2A(req.body);
-            // Route to Heady conductor for processing
+            // Route to Heady™ conductor for processing
             res.json(this.toA2A({ id: internal.id, output: 'Agent processing initiated' }));
         });
         return router;

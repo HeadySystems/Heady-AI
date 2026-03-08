@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems — Horizontal Pod Autoscaling Policies
+# Heady™Systems — Horizontal Pod Autoscaling Policies
 # φ-scaled thresholds: CPU=61.8% (1/φ), Memory=76.4% (1-1/φ²)
 # Scale-up stabilization: fib(5)=5s | Scale-down stabilization: fib(9)=34s
 # =============================================================================
@@ -26,10 +26,10 @@ metadata:
     component: core
     phi-scaled: "true"
   annotations:
-    heady.ai/phi: "1.618033988749895"
-    heady.ai/fib-series: "1,1,2,3,5,8,13,21,34,55,89"
-    heady.ai/cpu-threshold: "61.8% (1/φ)"
-    heady.ai/mem-threshold: "76.4% (1-1/φ²)"
+    heady-ai.com/phi: "1.618033988749895"
+    heady-ai.com/fib-series: "1,1,2,3,5,8,13,21,34,55,89"
+    heady-ai.com/cpu-threshold: "61.8% (1/φ)"
+    heady-ai.com/mem-threshold: "76.4% (1-1/φ²)"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

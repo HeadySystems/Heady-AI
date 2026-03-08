@@ -4,7 +4,7 @@
  * Auto-success pattern: Extract → Analyze → Synthesize → Project
  * 
  * Extracts all 28 pinned Gemini chats via Google Takeout API trigger,
- * then processes them in parallel through the Heady pipeline.
+ * then processes them in parallel through the Heady™ pipeline.
  * 
  * Usage: node scripts/gemini-extract.js
  */
@@ -22,7 +22,7 @@ const PINNED_CHATS = [
     { title: 'Canonical Heady Overview 1', category: 'documentation', priority: 1 },
     { title: 'Heady Project: Strategic Enhancements', category: 'strategy', priority: 1 },
     { title: 'Heady Project: Deep Dive & Strategy', category: 'strategy', priority: 1 },
-    { title: 'Nature-Optimized Heady System Plan', category: 'architecture', priority: 1 },
+    { title: 'Nature-Optimized Heady™ System Plan', category: 'architecture', priority: 1 },
     { title: 'HeadyConnection System Nexus Design', category: 'architecture', priority: 1 },
     { title: 'Heady Project: MIDI, AI, HITL Integration', category: 'integration', priority: 1 },
     { title: 'Patent Ideas: HeadyField and HeadyLegacy', category: 'ip', priority: 1 },
@@ -100,7 +100,7 @@ function analyzePhase(extracted) {
     // Derive knowledge domains from chat titles
     const knowledgeDomains = {
         'liquid-architecture': {
-            chats: ['Hive Build Final', 'Hive', 'Hive Functionality', 'Nature-Optimized Heady System Plan'],
+            chats: ['Hive Build Final', 'Hive', 'Hive Functionality', 'Nature-Optimized Heady™ System Plan'],
             insights: [
                 'Hive = distributed swarm processing layer',
                 'Nature-optimized = biomimetic system design (ant colony, neural networks)',

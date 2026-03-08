@@ -1,7 +1,7 @@
 # ============================================================
-# HeadyStack v3.0.1 "Aether" — Remote Resources Configuration
+# Heady™Stack v3.0.1 "Aether" — Remote Resources Configuration
 # Defines all external service endpoints and connection settings.
-# © 2026 HeadySystems Inc. — Proprietary
+# © 2026 Heady™Systems Inc. — Proprietary
 # ============================================================
 
 version: "1.0"
@@ -103,7 +103,7 @@ services:
 
   # Heady Internal Services
   heady_sys:
-    url: "${HEADY_SYS_URL:-https://headysystems.ai/api}"
+    url: "${HEADY_SYS_URL:-https://headysystems.com/api}"
     timeout_ms: 10000
     retry_attempts: 3
     retry_backoff_ms: 1000

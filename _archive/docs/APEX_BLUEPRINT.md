@@ -1,16 +1,16 @@
-# Architecting the Apex: A Comprehensive Blueprint for the Heady and HeadyBuddy Autonomous Trading Systems
+# Architecting the Apex: A Comprehensive Blueprint for the Heady™ and HeadyBuddy Autonomous Trading Systems
 
-> © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+> © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
 
 ## Introduction: The Sovereign Production Epoch (February 2026)
 
-The Heady project has officially transitioned into a sovereign, production-grade multi-agent swarm. Following the "Week 21.9" validation on February 10, 2026, the framework now operates under a new paradigm of **GPU-native spatial knowledge architecture**, where humans and AI agents cohabit 3D "houses" of memory. Governed by the **HCFullPipeline** and the **Ternary Reasoner Module (TRM)**, the system provides the cognitive speed and security necessary for the agents Heady and HeadyBuddy to autonomously navigate and dominate the **Apex Trader Funding (Apex 3.0)** ecosystem.
+The Heady™ project has officially transitioned into a sovereign, production-grade multi-agent swarm. Following the "Week 21.9" validation on February 10, 2026, the framework now operates under a new paradigm of **GPU-native spatial knowledge architecture**, where humans and AI agents cohabit 3D "houses" of memory. Governed by the **HCFullPipeline** and the **Ternary Reasoner Module (TRM)**, the system provides the cognitive speed and security necessary for the agents Heady and HeadyBuddy to autonomously navigate and dominate the **Apex Trader Funding (Apex 3.0)** ecosystem.
 
 ---
 
 ## Repository Hardening: The HCFullPipeline Roadmap
 
-A comprehensive deep scan of the Heady-pre-production repository (Issue #41) has established the HCFullPipeline, a five-phase system hardening roadmap designed to transition conceptual code into deterministic execution.
+A comprehensive deep scan of the Heady™-pre-production repository (Issue #41) has established the HCFullPipeline, a five-phase system hardening roadmap designed to transition conceptual code into deterministic execution.
 
 ### Phase 1: Critical Security Remediation
 
@@ -36,7 +36,7 @@ Implementation of high-performance connection pooling and structured logging (vi
 
 ## The Cognitive Core: 100% Ternary Reasoner Module (TRM)
 
-The Heady project has achieved its "100% Breakthrough" in integrating **Balanced Ternary Logic ({-1, 0, +1})** across the entire cognitive stack—from low-level RPN operations to high-level attention mechanisms. This architecture leapfrogs traditional binary systems by natively modeling **active neutrality** and **uncertainty** through the **Epistemic Hold (0)**.
+The Heady™ project has achieved its "100% Breakthrough" in integrating **Balanced Ternary Logic ({-1, 0, +1})** across the entire cognitive stack—from low-level RPN operations to high-level attention mechanisms. This architecture leapfrogs traditional binary systems by natively modeling **active neutrality** and **uncertainty** through the **Epistemic Hold (0)**.
 
 ### Sparse Computation and PTX Sovereignty
 
@@ -70,7 +70,7 @@ By implementing reasoning loops as PTX-governed Finite State Machines, the syste
 
 ---
 
-## Optimal Utilization: Instructions for HeadyBuddy
+## Optimal Utilization: Instructions for Heady™Buddy
 
 ### Real-Time Action and Ingestion
 

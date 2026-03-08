@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -18,6 +18,7 @@
 
 const { execSync, exec } = require("child_process");
 const path = require("path");
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = require("./utils/logger");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
@@ -123,7 +124,7 @@ class AutoCommitDeploy {
 
     /** Synchronous exec helper */
     _exec(cmd) {
-        return execSync(cmd, { cwd: REPO_ROOT, encoding: "utf8", timeout: 30000 });
+        return execSync(cmd, { cwd: REPO_ROOT, encoding: "utf8", timeout: PHI_TIMING.CYCLE });
     }
 
     /** Get current status */

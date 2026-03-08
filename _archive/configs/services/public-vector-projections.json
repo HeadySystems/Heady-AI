@@ -80,7 +80,7 @@
             "id": "HeadyWeb",
             "type": "public-repository",
             "displayName": "HeadyWeb",
-            "endpoint": "https://github.com/HeadySystems/HeadyWeb",
+            "endpoint": "https://github.com/HeadyMe/HeadyWeb",
             "description": "Public marketing site, docs, demos, onboarding flows. Mostly static with dynamic API-powered sections.\n",
             "projection": {
                 "vector3": [
@@ -100,7 +100,7 @@
                 }
             },
             "outwardManifest": {
-                "githubUrl": "https://github.com/HeadySystems/HeadyWeb",
+                "githubUrl": "https://github.com/HeadyMe/HeadyWeb",
                 "channels": [
                     "github"
                 ]
@@ -111,7 +111,7 @@
             "id": "HeadySystems",
             "type": "public-repository",
             "displayName": "HeadySystems",
-            "endpoint": "https://github.com/HeadySystems/HeadySystems-Web",
+            "endpoint": "https://github.com/HeadyMe/HeadySystems-Web",
             "description": "Developer portal, API docs, system admin, infrastructure dashboard.\n",
             "projection": {
                 "vector3": [
@@ -131,7 +131,7 @@
                 }
             },
             "outwardManifest": {
-                "githubUrl": "https://github.com/HeadySystems/HeadySystems-Web",
+                "githubUrl": "https://github.com/HeadyMe/HeadySystems-Web",
                 "channels": [
                     "github"
                 ]
@@ -142,7 +142,7 @@
             "id": "HeadyBuddy",
             "type": "public-repository",
             "displayName": "HeadyBuddy",
-            "endpoint": "https://github.com/HeadySystems/Heady",
+            "endpoint": "https://github.com/HeadyMe/Heady",
             "description": "Always-on desktop/mobile companion. Ships as Electron (desktop) and React Native (mobile). Local-first with cloud sync.\n",
             "projection": {
                 "vector3": [
@@ -162,7 +162,7 @@
                 }
             },
             "outwardManifest": {
-                "githubUrl": "https://github.com/HeadySystems/Heady",
+                "githubUrl": "https://github.com/HeadyMe/Heady",
                 "channels": [
                     "github"
                 ]

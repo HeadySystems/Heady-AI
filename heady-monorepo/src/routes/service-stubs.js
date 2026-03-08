@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -34,7 +34,7 @@ function createServiceStub(name, endpoints) {
 
             res.json({
                 ok: true, service: name, endpoint: ep, requestId: entry.id,
-                message: `${name} received ${ep} request. Routed through Heady Manager.`,
+                message: `${name} received ${ep} request. Routed through Heady™ Manager.`,
                 input_received: true, stored: true, ts: entry.ts,
             });
         });

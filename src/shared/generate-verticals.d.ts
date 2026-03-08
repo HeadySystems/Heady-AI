@@ -67,7 +67,7 @@ export const THEMES: {
         color2: string;
         label: string;
     };
-    "headylearn.com": {
+    "headyu.com": {
         geo: string;
         color1: string;
         color2: string;
@@ -91,7 +91,7 @@ export const THEMES: {
         color2: string;
         label: string;
     };
-    "headydata.com": {
+    "headydb.com": {
         geo: string;
         color1: string;
         color2: string;

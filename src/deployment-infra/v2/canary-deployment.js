@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Heady Canary Deployment Engine
+ * Heady™ Canary Deployment Engine
  *
  * NEW FILE — implements the execution layer for canary.yml spec.
  *
@@ -28,7 +28,7 @@
  *   --rollback           Force immediate rollback
  *   --dry-run            Simulate all steps without applying changes
  *
- * © 2026 HeadySystems Inc. — Proprietary and Confidential.
+ * © 2026 Heady™Systems Inc. — Proprietary and Confidential.
  */
 
 'use strict';

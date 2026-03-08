@@ -209,7 +209,7 @@ paths:
       operationId: brainChat
       summary: Chat with AI brain
       description: |
-        Send messages to the HeadyOS AI brain (GPT-4o, Claude, Llama, etc.)
+        Send messages to the Heady™OS AI brain (GPT-4o, Claude, Llama, etc.)
         with optional MCP tool access and vector memory context.
         
         Default temperature: 1/φ ≈ 0.618 (HIGH CSL threshold)

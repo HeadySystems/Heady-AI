@@ -2,7 +2,7 @@
  * @file index.js
  * @description Resilience layer: unified export + createResilienceLayer() factory.
  *
- * Provides a single cohesive resilience system for the Heady cluster.
+ * Provides a single cohesive resilience system for the Heady™ cluster.
  *
  * @module HeadyResilience
  */

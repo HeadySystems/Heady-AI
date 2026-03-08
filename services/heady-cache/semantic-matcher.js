@@ -3,7 +3,7 @@
 /**
  * HeadyCache Semantic Matcher
  *
- * Computes embeddings via HeadyEmbed, performs cosine/euclidean/dot similarity
+ * Computes embeddings via Heady™Embed, performs cosine/euclidean/dot similarity
  * search using a VP-tree (Vantage Point Tree) for sub-linear ANN lookups.
  * Falls back to exact hash match when the embedding service is unavailable.
  */

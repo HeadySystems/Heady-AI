@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * ─── Continuous Semantic Logic Gates — Enhanced ───────────────────────────────
@@ -7,7 +7,7 @@
  * Patent Docket: HS-058
  * Title: SYSTEM AND METHOD FOR CONTINUOUS SEMANTIC LOGIC GATES USING GEOMETRIC
  *        OPERATIONS IN HIGH-DIMENSIONAL VECTOR SPACES
- * Applicant: Heady Systems LLC  |  Inventor: Eric Haywood
+ * Applicant: HeadySystems Inc  |  Inventor: Eric Haywood
  *
  * Satisfies ALL 10 claims of HS-058.
  *

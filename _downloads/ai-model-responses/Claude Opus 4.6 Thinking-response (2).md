@@ -35,7 +35,7 @@ heady/
 ├── deploy.sh                             # One-command deploy
 │
 ├── packages/
-│   ├── core/                             # @heady/core — shared kernel
+│   ├── core/                             # @heady-ai/core — shared kernel
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── src/
@@ -66,7 +66,7 @@ heady/
 │   │   │       ├── mcp.ts
 │   │   │       └── vector.ts
 │   │
-│   ├── vector-memory/                    # @heady/vector-memory — 3D persistence
+│   ├── vector-memory/                    # @heady-ai/vector-memory — 3D persistence
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── src/
@@ -79,7 +79,7 @@ heady/
 │   │   │   ├── user-context.ts           # Per-user persistent state
 │   │   │   └── security.ts               # Encrypted vector storage
 │   │
-│   ├── mcp-server/                       # @heady/mcp-server — protocol layer
+│   ├── mcp-server/                       # @heady-ai/mcp-server — protocol layer
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── wrangler.toml                 # Cloudflare Worker config
@@ -117,7 +117,7 @@ heady/
 │   │   │       ├── durable-object.ts
 │   │   │       └── session.ts
 │   │
-│   ├── orchestrator/                     # @heady/orchestrator — conductor + manager
+│   ├── orchestrator/                     # @heady-ai/orchestrator — conductor + manager
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── src/
@@ -149,7 +149,7 @@ heady/
 │   │   │       ├── ops.ts                # HeadyOps (deploy)
 │   │   │       └── maintenance.ts        # HeadyMaintenance
 │   │
-│   ├── gateway/                          # @heady/gateway — AI gateway + routing
+│   ├── gateway/                          # @heady-ai/gateway — AI gateway + routing
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   ├── src/
@@ -167,7 +167,7 @@ heady/
 │   │   │   ├── fallback.ts               # Auto-fallback chain
 │   │   │   └── cache.ts                  # Response caching
 │   │
-│   └── sdk/                              # @heady/sdk — client SDK
+│   └── sdk/                              # @heady-ai/sdk — client SDK
 │       ├── package.json
 │       ├── tsconfig.json
 │       ├── src/
@@ -438,7 +438,7 @@ HEADYSYSTEMS_URL=https://headysystems.com
 ### `packages/core/package.json`
 ```json
 {
-  "name": "@heady/core",
+  "name": "@heady-ai/core",
   "version": "3.2.0",
   "type": "module",
   "main": "dist/index.js",
@@ -721,8 +721,8 @@ export function validateCrossOriginSession(
   allowedDomains: string[] = [
     'headyme.com', 'headysystems.com', 'headyconnection.org',
     'headymcp.com', 'headyio.com', 'headybuddy.org', 'headybot.com',
-    'headyapi.com', 'headycloud.com', 'headydata.com', 'headyagent.com',
-    'headylearn.com', 'headystore.com', 'headystudio.com',
+    'headyapi.com', 'headycloud.com', 'headydb.com', 'headyagent.com',
+    'headyu.com', 'headystore.com', 'headystudio.com',
     'headycreator.com', 'headymusic.com', 'headytube.com',
   ]
 ): boolean {
@@ -1445,7 +1445,7 @@ export class Octree {
 ### `packages/vector-memory/src/engine.ts`
 ```typescript
 import { Octree, type VectorPoint, type Vector3D } from './octree.js';
-import { createLogger } from '@heady/core';
+import { createLogger } from '@heady-ai/core';
 
 const logger = createLogger('vector-memory');
 
@@ -1670,7 +1670,7 @@ export const vectorEngine = new VectorMemoryEngine();
 // Embedding generator — uses the gateway's model router to get embeddings
 // Falls back to local minihash if no provider available
 
-import { createLogger } from '@heady/core';
+import { createLogger } from '@heady-ai/core';
 
 const logger = createLogger('embeddings');
 
@@ -1804,7 +1804,7 @@ export const embeddingManager = new EmbeddingManager();
 import { vectorEngine, type MemoryRecord, type QueryResult } from './engine.js';
 import { embeddingManager } from './embeddings.js';
 import { randomUUID } from 'node:crypto';
-import { createLogger } from '@heady/core';
+import { createLogger } from '@heady-ai/core';
 
 const logger = createLogger('user-context');
 
@@ -1935,8 +1935,8 @@ export { getOrCreateUserContext, storeUserMemory, queryUserMemory, recordDomainS
 // HeadyMCP server — JSON-RPC 2.0 over Streamable HTTP + SSE
 // 30+ tools, cross-domain auth, persistent sessions
 
-import { createLogger, type JWTPayload } from '@heady/core';
-import { queryUserMemory, storeUserMemory } from '@heady/vector-memory';
+import { createLogger, type JWTPayload } from '@heady-ai/core';
+import { queryUserMemory, storeUserMemory } from '@heady-ai/vector-memory';
 
 const logger = createLogger('mcp-server');
 
@@ -2392,8 +2392,8 @@ export class HeadyMCPServer {
 // Single endpoint, bidirectional, auto-upgrades to SSE for streaming
 
 import { HeadyMCPServer, type MCPRequest, type MCPResponse } from '../server.js';
-import { verifyJWT, type JWTPayload, extractBearerToken } from '@heady/core';
-import { createLogger } from '@heady/core';
+import { verifyJWT, type JWTPayload, extractBearerToken } from '@heady-ai/core';
+import { createLogger } from '@heady-ai/core';
 
 const logger = createLogger('mcp-transport-http');
 
@@ -2514,8 +2514,8 @@ function corsHeaders(request: Request): Record<string, string> {
 // Cloudflare Worker entry — HeadyMCP edge deployment
 // Handles both Streamable HTTP and SSE transports at /mcp
 
-import { HeadyMCPServer } from '@heady/mcp-server/server';
-import { createStreamableHTTPHandler } from '@heady/mcp-server/transport/streamable-http';
+import { HeadyMCPServer } from '@heady-ai/mcp-server/server';
+import { createStreamableHTTPHandler } from '@heady-ai/mcp-server/transport/streamable-http';
 
 export interface Env {
   JWT_SECRET: string;
@@ -2604,7 +2604,7 @@ routes = [
 // Auto-Success Engine — 135 background tasks, 9 categories, every 30 seconds
 // Errors are learning events, not fatal failures
 
-import { globalBus, HeadyEvents, createLogger } from '@heady/core';
+import { globalBus, HeadyEvents, createLogger } from '@heady-ai/core';
 
 const logger = createLogger('auto-success');
 

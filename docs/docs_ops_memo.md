@@ -1,4 +1,4 @@
-# Heady Platform — Documentation, Service Health, Observability & Operational Improvements
+# Heady™ Platform — Documentation, Service Health, Observability & Operational Improvements
 
 **Prepared for:** eric@headyconnection.org  
 **Date:** 2026-03-07  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The Heady platform has strong architectural bones: a well-structured CI/CD pipeline, φ-weighted health scoring, vector-drift detection, a comprehensive production deployment guide, and an autonomous self-healing workflow. The gaps are concentrated in three areas: (1) **documentation consistency** across the two primary repos, (2) **observability connectivity** — configs that exist but lack confirmed backend wiring — and (3) **operational hygiene** items that could cause silent failures or on-call confusion during incidents.
+The Heady™ platform has strong architectural bones: a well-structured CI/CD pipeline, φ-weighted health scoring, vector-drift detection, a comprehensive production deployment guide, and an autonomous self-healing workflow. The gaps are concentrated in three areas: (1) **documentation consistency** across the two primary repos, (2) **observability connectivity** — configs that exist but lack confirmed backend wiring — and (3) **operational hygiene** items that could cause silent failures or on-call confusion during incidents.
 
 The table below scores each domain on current state and recommended target.
 

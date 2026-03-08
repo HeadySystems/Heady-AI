@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# HeadyBee Swarm Operations
+# Heady™Bee Swarm Operations
 
 ## When to Use This Skill
 
@@ -17,7 +17,7 @@ Use this skill when the user needs to:
 - Optimize swarm coordination across multiple bee types
 - Implement new bee types or extend existing ones
 
-## HeadyBee Type Registry
+## Heady™Bee Type Registry
 
 All bees follow the BaseHeadyBee interface with spawn(), execute(), report(), retire() lifecycle.
 

@@ -1,4 +1,4 @@
-# Heady improvement pack
+# Heady™ improvement pack
 
 ## What I analyzed
 

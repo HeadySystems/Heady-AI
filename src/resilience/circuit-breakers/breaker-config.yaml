@@ -19,13 +19,13 @@
 # ============================================================================
 defaults:
   failureThreshold: 5          # consecutive failures before transitioning CLOSED → OPEN
-  recoveryTimeout: 30000       # ms in OPEN before probing (transition to HALF_OPEN)
+  recoveryTimeout: 29034       # ms in OPEN before probing (transition to HALF_OPEN)
   halfOpenMaxCalls: 3          # probe calls allowed in HALF_OPEN before re-evaluating
-  timeoutMs: 30000             # per-call hard timeout
+  timeoutMs: 29034             # per-call hard timeout
   maxRetries: 2                # retries before counting a failure (phi-backoff between)
   phiBase: 1.618               # exponential backoff ratio (golden ratio)
   baseBackoffMs: 200           # initial backoff delay
-  maxBackoffMs: 30000          # cap on backoff delay
+  maxBackoffMs: 29034          # cap on backoff delay
   jitterFactor: 0.2            # ±20 % random jitter added to backoff delays
   healthCheckIntervalMs: 15000 # passive health ping interval
   alertOnOpen: true            # emit alert event when circuit transitions to OPEN
@@ -41,9 +41,9 @@ services:
   # --------------------------------------------------------------------------
   openai:
     failureThreshold: 5
-    recoveryTimeout: 30000
+    recoveryTimeout: 29034
     halfOpenMaxCalls: 3
-    timeoutMs: 30000
+    timeoutMs: 29034
     baseUrl: "https://api.openai.com/v1"
     healthPath: "/models"
     tokenBudgetPerMinute: 100000
@@ -53,9 +53,9 @@ services:
 
   anthropic:
     failureThreshold: 5
-    recoveryTimeout: 30000
+    recoveryTimeout: 29034
     halfOpenMaxCalls: 3
-    timeoutMs: 30000
+    timeoutMs: 29034
     baseUrl: "https://api.anthropic.com/v1"
     healthPath: "/models"
     tokenBudgetPerMinute: 100000
@@ -65,9 +65,9 @@ services:
 
   google-genai:
     failureThreshold: 5
-    recoveryTimeout: 30000
+    recoveryTimeout: 29034
     halfOpenMaxCalls: 3
-    timeoutMs: 30000
+    timeoutMs: 29034
     baseUrl: "https://generativelanguage.googleapis.com/v1beta"
     healthPath: "/models"
     tokenBudgetPerMinute: 60000
@@ -158,7 +158,7 @@ services:
     halfOpenMaxCalls: 2
     timeoutMs: 5000
     readTimeoutMs: 5000
-    writeTimeoutMs: 30000
+    writeTimeoutMs: 29034
     healthPingIntervalMs: 15000
     maxReconnectAttempts: 10
     baseReconnectDelayMs: 500
@@ -179,7 +179,7 @@ services:
   # --------------------------------------------------------------------------
   mcp-sdk:
     failureThreshold: 5
-    recoveryTimeout: 30000
+    recoveryTimeout: 29034
     halfOpenMaxCalls: 3
     timeoutMs: 10000
     useFallbacks: true
@@ -201,22 +201,22 @@ mcp_tools:
     timeoutMs: 5000
 
   "heady.llm.generate":
-    timeoutMs: 30000
+    timeoutMs: 29034
     failureThreshold: 3
 
   "heady.llm.stream":
-    timeoutMs: 30000
+    timeoutMs: 29034
     failureThreshold: 3
 
   "heady.llm.embed":
     timeoutMs: 15000
 
   "heady.code.run":
-    timeoutMs: 30000
+    timeoutMs: 29034
     failureThreshold: 3
 
   "heady.web.screenshot":
-    timeoutMs: 30000
+    timeoutMs: 29034
 
   "heady.workflow.trigger":
     timeoutMs: 10000
@@ -249,7 +249,7 @@ environments:
       recoveryTimeout: 5000      # recover quickly in dev
       halfOpenMaxCalls: 5
       timeoutMs: 60000           # longer timeout for debugging
-      healthCheckIntervalMs: 30000
+      healthCheckIntervalMs: 29034
       alertOnOpen: false         # suppress alerts in dev
       alertOnClose: false
 
@@ -275,7 +275,7 @@ environments:
       failureThreshold: 5
       recoveryTimeout: 15000     # half of production — faster iteration
       halfOpenMaxCalls: 3
-      timeoutMs: 30000
+      timeoutMs: 29034
       alertOnOpen: true
       alertOnClose: true
 
@@ -298,9 +298,9 @@ environments:
   production:
     defaults:
       failureThreshold: 5
-      recoveryTimeout: 30000
+      recoveryTimeout: 29034
       halfOpenMaxCalls: 3
-      timeoutMs: 30000
+      timeoutMs: 29034
       healthCheckIntervalMs: 15000
       alertOnOpen: true
       alertOnClose: true
@@ -312,7 +312,7 @@ environments:
         failureThreshold: 3
         recoveryTimeout: 10000
         readTimeoutMs: 5000
-        writeTimeoutMs: 30000
+        writeTimeoutMs: 29034
         maxReconnectAttempts: 10
       redis:
         failureThreshold: 3
@@ -321,15 +321,15 @@ environments:
         maxReconnectAttempts: 10
       openai:
         failureThreshold: 5
-        recoveryTimeout: 30000
+        recoveryTimeout: 29034
         tokenBudgetPerMinute: 100000
       anthropic:
         failureThreshold: 5
-        recoveryTimeout: 30000
+        recoveryTimeout: 29034
         tokenBudgetPerMinute: 100000
       google-genai:
         failureThreshold: 5
-        recoveryTimeout: 30000
+        recoveryTimeout: 29034
       groq:
         failureThreshold: 3
         recoveryTimeout: 15000
@@ -346,7 +346,7 @@ environments:
         rateLimitBuffer: 200      # more conservative in production
       mcp-sdk:
         failureThreshold: 5
-        recoveryTimeout: 30000
+        recoveryTimeout: 29034
         useFallbacks: true
 
 # ============================================================================

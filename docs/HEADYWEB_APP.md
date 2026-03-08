@@ -1,4 +1,4 @@
-# HeadyWeb App Capability Guide
+# Heady™Web App Capability Guide
 
 The gateway app now provides a full browser workflow for authenticated user access, persistent vector memory operations, and authenticated workspace file operations from the same interface.
 

@@ -1,4 +1,4 @@
-# Heady MIDI Hardware Mapping Guide
+# Heady™ MIDI Hardware Mapping Guide
 
 > **Version:** 2.0.0  
 > **Author:** HeadySystems™  
@@ -35,7 +35,7 @@ HeadyMIDI works with any class-compliant MIDI controller. Tested and recommended
 ### Connect in 4 Steps
 
 1. **Connect** your MIDI controller via USB (or enable Bluetooth MIDI).
-2. **Open** the HeadyMIDI Dashboard at `http://localhost:8089`.
+2. **Open** the Heady™MIDI Dashboard at `http://localhost:8089`.
 3. **Click** the "MIDI Learn" button next to any parameter.
 4. **Move** a knob, fader, or press a button on your controller — done.
 
@@ -300,7 +300,7 @@ Creative mapping for a DJ controller:
 | Controller not in device list | Check USB connection. Try a different port. |
 | Bluetooth MIDI not pairing | Open Audio MIDI Setup (macOS) → Bluetooth Configuration. |
 | Controller detected but no data | Ensure controller is sending on the correct channel (0–7). |
-| "No MIDI devices" error | Restart the HeadyMIDI server. Check `node` has MIDI permissions. |
+| "No MIDI devices" error | Restart the Heady™MIDI server. Check `node` has MIDI permissions. |
 
 ### MIDI Learn Not Working
 
@@ -338,4 +338,4 @@ Creative mapping for a DJ controller:
 
 ---
 
-> ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™ — Sacred Geometry :: Organic Systems :: Breathing Interfaces
+> ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™ — Sacred Geometry :: Organic Systems :: Breathing Interfaces

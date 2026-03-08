@@ -35,7 +35,7 @@ const NPS_SCHEDULE = [
     surveyIndex: 0,
     dayOffset:   FIB[5],   // 8
     title:       'First Impressions',
-    context:     'You\'ve been using HeadyOS for 8 days. How is it going so far?',
+    context:     'You\'ve been using Heady™OS for 8 days. How is it going so far?',
     followUpPromptPromoter:   'Glad you love it! What\'s been the most valuable part so far?',
     followUpPromptPassive:    'Thanks for the feedback! What would make HeadyOS a 9 or 10 for you?',
     followUpPromptDetractor:  'We\'re sorry to hear that. What\'s your biggest frustration?',

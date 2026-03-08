@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Auth Provider Federation
+# Heady™ Auth Provider Federation
 
 ## When to Use This Skill
 

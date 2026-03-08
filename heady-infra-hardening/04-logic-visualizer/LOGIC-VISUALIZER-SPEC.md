@@ -476,4 +476,4 @@ File: `src/visualizer/dashboard.html`
 - Decision replay with time scrubbing
 - CSL gate parameter tuning UI
 - Export decision chains as JSON for audit
-- Integration with HeadyPatterns for pattern violation alerts
+- Integration with Heady™Patterns for pattern violation alerts

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide maps Torchhd's PyTorch-based VSA operations to JavaScript implementations for Heady's Node.js runtime.
+This guide maps Torchhd's PyTorch-based VSA operations to JavaScript implementations for Heady™'s Node.js runtime.
 
 ## Torchhd API → JavaScript Mapping
 
@@ -143,7 +143,7 @@ function cosineSimilarity(vecA, vecB) {
 }
 ```
 
-## Complete VSA Class for Heady
+## Complete VSA Class for Heady™
 
 ```javascript
 class HeadyVSA {

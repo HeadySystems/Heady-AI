@@ -5,7 +5,7 @@
  * Runs 8 cross-service integration test scenarios in-process.
  * Each scenario records pass/fail, duration, CSL scores, and error context.
  *
- * Part of the Heady Auto-Testing Framework (Part C3)
+ * Part of the Heady™ Auto-Testing Framework (Part C3)
  */
 
 const logger = require('../utils/logger');

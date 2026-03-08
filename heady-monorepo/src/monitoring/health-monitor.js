@@ -1,8 +1,8 @@
 /**
  * =============================================================================
- * Heady Health Monitor
+ * Heady™ Health Monitor
  * =============================================================================
- * Comprehensive health monitoring for the Heady sovereign AI platform.
+ * Comprehensive health monitoring for the Heady™ sovereign AI platform.
  *
  * Architecture:
  *  - HealthMonitor class orchestrates all checks in parallel
@@ -636,7 +636,7 @@ class HealthMonitor extends EventEmitter {
 
   async _sendAlert({ level, message, result }) {
     const payload = {
-      text: `[Heady HealthMonitor] ${level.toUpperCase()}: ${message}`,
+      text: `[Heady™ HealthMonitor] ${level.toUpperCase()}: ${message}`,
       score:     result?.score,
       timestamp: new Date().toISOString(),
       version:   result?.version,

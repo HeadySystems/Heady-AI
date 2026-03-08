@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * @file agent-mesh.js
  * @description Agent Mesh Network — inter-agent pub/sub, broadcast, and topology-aware routing.
@@ -38,7 +39,7 @@ const EventEmitter = require('events');
 // Known agents — sourced from agent-orchestrator.js KNOWN_AGENTS array
 // ---------------------------------------------------------------------------
 
-/** @type {string[]} All recognised agent IDs in the Heady platform */
+/** @type {string[]} All recognised agent IDs in the Heady™ platform */
 const KNOWN_AGENTS = [
   'JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS',
   'PYTHIA', 'BRIDGE', 'MUSE', 'SENTINEL', 'NOVA',
@@ -295,7 +296,7 @@ class MessageBus extends EventEmitter {
    * @param {number} [opts.maxRetries=3]         max delivery attempts per subscriber
    * @param {number} [opts.retryBaseMs=200]      base backoff delay (doubles each retry)
    * @param {number} [opts.dedupWindowMs=5000]   dedup window in ms
-   * @param {number} [opts.defaultTtlMs=30000]   message TTL after which it is dropped
+   * @param {number} [opts.defaultTtlMs=PHI_TIMING.CYCLE]   message TTL after which it is dropped
    * @param {number} [opts.dlqMaxSize=500]        max dead-letter entries retained
    */
   constructor(opts = {}) {
@@ -303,7 +304,7 @@ class MessageBus extends EventEmitter {
     this._maxRetries    = opts.maxRetries    ?? 3;
     this._retryBaseMs   = opts.retryBaseMs   ?? 200;
     this._dedupWindowMs = opts.dedupWindowMs ?? 5_000;
-    this._defaultTtlMs  = opts.defaultTtlMs  ?? 30_000;
+    this._defaultTtlMs  = opts.defaultTtlMs  ?? PHI_TIMING.CYCLE;
     this._dlqMaxSize    = opts.dlqMaxSize    ?? 500;
 
     /** @type {Map<string, number>} msgId → deliveredAt for dedup */
@@ -551,7 +552,7 @@ class SubscriptionRegistry {
 // ---------------------------------------------------------------------------
 
 /**
- * Agent Mesh Network — the central communication fabric for all Heady agents.
+ * Agent Mesh Network — the central communication fabric for all Heady™ agents.
  *
  * @extends EventEmitter
  *
@@ -579,7 +580,7 @@ class AgentMesh extends EventEmitter {
    * @param {number} [opts.maxRetries=3]       message delivery retries
    * @param {number} [opts.retryBaseMs=200]    base backoff ms
    * @param {number} [opts.dedupWindowMs=5000] duplicate message window
-   * @param {number} [opts.defaultTtlMs=30000] message time-to-live
+   * @param {number} [opts.defaultTtlMs=PHI_TIMING.CYCLE] message time-to-live
    * @param {boolean} [opts.autoRegisterKnown=true] pre-register KNOWN_AGENTS on init
    */
   constructor(opts = {}) {

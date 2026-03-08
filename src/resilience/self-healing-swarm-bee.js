@@ -139,7 +139,7 @@ class SelfHealingSwarmBee extends EventEmitter {
 
   /**
    * Create a SelfHealingSwarmBee from a template configuration object.
-   * Mirrors the HeadyBee createFromTemplate pattern.
+   * Mirrors the Heady™Bee createFromTemplate pattern.
    *
    * @param {Object} template
    * @param {string}  [template.beeId]

@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -35,7 +35,7 @@ const LAYER_DEFINITIONS = {
   'cloud-sys': {
     id:          'cloud-sys',
     class:       'HeadyCloudSys',
-    description: 'Heady Systems managed cloud infrastructure',
+    description: 'Heady™ Systems managed cloud infrastructure',
     costTier:    'managed',
     latencyMs:   50,
     capabilities: ['inference', 'embedding', 'storage', 'scheduling', 'governance'],

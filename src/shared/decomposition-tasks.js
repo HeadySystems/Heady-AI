@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * God Class Decomposition Tasks — Auto-Success tasks to break
  * monolithic files into blast-compatible HeadyBees work units.
@@ -48,7 +48,7 @@ module.exports = [
     {
         id: "decomp-007", name: "Extract task scheduler into blast-driven scheduler",
         cat: "architecture", pool: "hot", w: 5,
-        desc: "Replace fixed-interval task scheduling in hc_auto_success.js with HeadyBees.blastAll() — swarm decides how many tasks to run per cycle based on resource availability"
+        desc: "Replace fixed-interval task scheduling in hc_auto_success.js with Heady™Bees.blastAll() — swarm decides how many tasks to run per cycle based on resource availability"
     },
     {
         id: "decomp-008", name: "Extract external task loader into blastable loader",

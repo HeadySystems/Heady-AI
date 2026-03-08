@@ -1,7 +1,7 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
- * @module @heady/shared-types
+ * @module @heady-ai/shared-types
  *
  * Shared type definitions, enums, and constants used across the Heady™ AI
  * Platform monorepo. Because the codebase uses plain ESM (no TypeScript build
@@ -100,7 +100,7 @@ export const ScalingStrategy = Object.freeze({
  * @property {string}   description - Human-readable description
  * @property {number}   priority    - Scheduling priority [0.0 – 1.0]
  * @property {number}   [intervalMs=8090] - Polling interval in ms
- * @property {CslVector} cslVector  - Routing vector for HeadyConductor
+ * @property {CslVector} cslVector  - Routing vector for Heady™Conductor
  * @property {Function} getWork     - Returns an array of async worker functions
  */
 

@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -399,7 +399,7 @@ class PolicyEngine extends EventEmitter {
   // ─── Built-in Policies ────────────────────────────────────────────────────────
 
   /**
-   * Default built-in policies for the Heady AI Platform.
+   * Default built-in policies for the Heady™ AI Platform.
    * @returns {object[]}
    */
   _defaultPolicies() {

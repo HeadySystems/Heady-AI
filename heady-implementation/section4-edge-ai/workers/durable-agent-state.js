@@ -1,6 +1,6 @@
 /**
  * durable-agent-state.js
- * Heady Latent OS — Durable Agent State Object
+ * Heady™ Latent OS — Durable Agent State Object
  *
  * Cloudflare Durable Object providing persistent, stateful AI agent sessions.
  *

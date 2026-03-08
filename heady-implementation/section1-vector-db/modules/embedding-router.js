@@ -1,5 +1,5 @@
 /**
- * @fileoverview Smart Embedding Model Router for Heady Latent OS
+ * @fileoverview Smart Embedding Model Router for Heady™ Latent OS
  * @module embedding-router
  *
  * Routes embedding requests to the optimal provider based on text length,

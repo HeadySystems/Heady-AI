@@ -1,5 +1,5 @@
 /**
- * @fileoverview SysEx Codec — Encode/decode all 32 Heady SysEx commands.
+ * @fileoverview SysEx Codec — Encode/decode all 32 Heady™ SysEx commands.
  * Manufacturer ID 0x7D. Protocol version 2.
  * All payloads use 7-bit safe encoding per MIDI spec (data bytes 0x00-0x7F).
  * 
@@ -7,7 +7,7 @@
  * @version 2.0.0
  * @author HeadySystems™
  * 
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 

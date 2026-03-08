@@ -1,4 +1,4 @@
-# Heady VSA Implementation Task Checklist
+# Heady™ VSA Implementation Task Checklist
 
 **Extracted from:** 06-vector-memory-vsa-shadow.md  
 **Date:** March 7, 2026

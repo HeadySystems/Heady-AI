@@ -1,8 +1,9 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyEval Configuration
- * LLM-as-judge evaluation framework for the Heady AI platform.
+ * LLM-as-judge evaluation framework for the Heady™ AI platform.
  * Sacred Geometry scaling: PHI = 1.618
  */
 
@@ -22,7 +23,7 @@ const config = {
   phiSquared: PHI * PHI,
   phiInverse: 1 / PHI,
 
-  // Judge model (via HeadyInfer)
+  // Judge model (via Heady™Infer)
   judgeModel: process.env.HEADY_EVAL_JUDGE_MODEL || 'claude-3.5-sonnet',
   judgeTemperature: parseFloat(process.env.HEADY_EVAL_JUDGE_TEMPERATURE) || 0.0,
   judgeMaxTokens: parseInt(process.env.HEADY_EVAL_JUDGE_MAX_TOKENS, 10) || 1024,
@@ -54,8 +55,8 @@ const config = {
   checkpointsDir: process.env.HEADY_EVAL_CHECKPOINTS_DIR || '/tmp/heady-eval/checkpoints',
 
   // Timeouts (ms) — scaled by PHI
-  requestTimeout: parseInt(process.env.HEADY_EVAL_REQUEST_TIMEOUT, 10) || 30000,
-  judgeTimeout: parseInt(process.env.HEADY_EVAL_JUDGE_TIMEOUT, 10) || Math.round(30000 * PHI),
+  requestTimeout: parseInt(process.env.HEADY_EVAL_REQUEST_TIMEOUT, 10) || PHI_TIMING.CYCLE,
+  judgeTimeout: parseInt(process.env.HEADY_EVAL_JUDGE_TIMEOUT, 10) || Math.round(PHI_TIMING.CYCLE * PHI),
 
   // Retry
   maxRetries: parseInt(process.env.HEADY_EVAL_MAX_RETRIES, 10) || 3,

@@ -7,7 +7,7 @@
  *   3. MC sampling determinism measurement
  *   4. Full pipeline: Sim → CSL → Battle → MC → Bee → Swarm → Result → Drift
  *   5. Continuous action analyzer drift detection and pattern learning
- *   6. Comparison framework (Heady vs external output)
+ *   6. Comparison framework (Heady™ vs external output)
  *   7. Task dispatcher routing to HeadyBattle/HeadySims
  *   8. Edge cases
  *

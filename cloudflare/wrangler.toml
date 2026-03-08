@@ -29,45 +29,59 @@ command = ""             # No build step needed — pure Worker JS
 cpu_ms = 50              # 50ms CPU budget per request (free plan: 10ms)
 
 # ---------------------------------------------------------------------------
-# Routes — all 9 Heady domains, www + apex
+# Routes — all 17 Heady domains, www + apex
 # All routes forward to the same Worker (heady-edge-router)
 # ---------------------------------------------------------------------------
 routes = [
-  # headyme.com
-  { pattern = "headyme.com/*",         zone_name = "headyme.com" },
-  { pattern = "www.headyme.com/*",     zone_name = "headyme.com" },
+  # ── Core Platform ───────────────────────────────────────────────────────
+  { pattern = "headyme.com/*",              zone_name = "headyme.com" },
+  { pattern = "www.headyme.com/*",          zone_name = "headyme.com" },
+  { pattern = "headysystems.com/*",         zone_name = "headysystems.com" },
+  { pattern = "www.headysystems.com/*",     zone_name = "headysystems.com" },
 
-  # headysystems.com
-  { pattern = "headysystems.com/*",    zone_name = "headysystems.com" },
-  { pattern = "www.headysystems.com/*",zone_name = "headysystems.com" },
+  # ── Community & Connection ─────────────────────────────────────────────
+  { pattern = "headyconnection.org/*",      zone_name = "headyconnection.org" },
+  { pattern = "www.headyconnection.org/*",  zone_name = "headyconnection.org" },
+  { pattern = "headyconnection.com/*",      zone_name = "headyconnection.com" },
+  { pattern = "www.headyconnection.com/*",  zone_name = "headyconnection.com" },
 
-  # headyconnection.org
-  { pattern = "headyconnection.org/*",     zone_name = "headyconnection.org" },
-  { pattern = "www.headyconnection.org/*", zone_name = "headyconnection.org" },
+  # ── Companion ─────────────────────────────────────────────────────────
+  { pattern = "headybuddy.org/*",           zone_name = "headybuddy.org" },
+  { pattern = "www.headybuddy.org/*",       zone_name = "headybuddy.org" },
+  { pattern = "headybot.com/*",             zone_name = "headybot.com" },
+  { pattern = "www.headybot.com/*",         zone_name = "headybot.com" },
 
-  # headybuddy.org
-  { pattern = "headybuddy.org/*",      zone_name = "headybuddy.org" },
-  { pattern = "www.headybuddy.org/*",  zone_name = "headybuddy.org" },
+  # ── Developer & API ───────────────────────────────────────────────────
+  { pattern = "headymcp.com/*",             zone_name = "headymcp.com" },
+  { pattern = "www.headymcp.com/*",         zone_name = "headymcp.com" },
+  { pattern = "headyio.com/*",              zone_name = "headyio.com" },
+  { pattern = "www.headyio.com/*",          zone_name = "headyio.com" },
+  { pattern = "headyapi.com/*",             zone_name = "headyapi.com" },
+  { pattern = "www.headyapi.com/*",         zone_name = "headyapi.com" },
 
-  # headymcp.com
-  { pattern = "headymcp.com/*",        zone_name = "headymcp.com" },
-  { pattern = "www.headymcp.com/*",    zone_name = "headymcp.com" },
+  # ── Research & OS ────────────────────────────────────────────────────
+  { pattern = "heady-ai.com/*",             zone_name = "heady-ai.com" },
+  { pattern = "www.heady-ai.com/*",         zone_name = "heady-ai.com" },
+  { pattern = "headyos.com/*",              zone_name = "headyos.com" },
+  { pattern = "www.headyos.com/*",          zone_name = "headyos.com" },
 
-  # headyio.com
-  { pattern = "headyio.com/*",         zone_name = "headyio.com" },
-  { pattern = "www.headyio.com/*",     zone_name = "headyio.com" },
+  # ── Infrastructure ───────────────────────────────────────────────────
+  { pattern = "headycloud.com/*",           zone_name = "headycloud.com" },
+  { pattern = "www.headycloud.com/*",       zone_name = "headycloud.com" },
+  { pattern = "headyweb.com/*",             zone_name = "headyweb.com" },
+  { pattern = "www.headyweb.com/*",         zone_name = "headyweb.com" },
 
-  # headybot.com
-  { pattern = "headybot.com/*",        zone_name = "headybot.com" },
-  { pattern = "www.headybot.com/*",    zone_name = "headybot.com" },
+  # ── Verticals ────────────────────────────────────────────────────────
+  { pattern = "headyfinance.com/*",         zone_name = "headyfinance.com" },
+  { pattern = "www.headyfinance.com/*",     zone_name = "headyfinance.com" },
+  { pattern = "headymusic.com/*",           zone_name = "headymusic.com" },
+  { pattern = "www.headymusic.com/*",       zone_name = "headymusic.com" },
 
-  # headyapi.com
-  { pattern = "headyapi.com/*",        zone_name = "headyapi.com" },
-  { pattern = "www.headyapi.com/*",    zone_name = "headyapi.com" },
-
-  # headyai.com
-  { pattern = "headyai.com/*",         zone_name = "headyai.com" },
-  { pattern = "www.headyai.com/*",     zone_name = "headyai.com" },
+  # ── Marketplace & Exchange ───────────────────────────────────────────
+  { pattern = "headystore.com/*",           zone_name = "headystore.com" },
+  { pattern = "www.headystore.com/*",       zone_name = "headystore.com" },
+  { pattern = "headyex.com/*",              zone_name = "headyex.com" },
+  { pattern = "www.headyex.com/*",          zone_name = "headyex.com" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -142,7 +156,15 @@ routes = [
   { pattern = "staging.headyio.com/*",        zone_name = "headyio.com" },
   { pattern = "staging.headybot.com/*",       zone_name = "headybot.com" },
   { pattern = "staging.headyapi.com/*",       zone_name = "headyapi.com" },
-  { pattern = "staging.headyai.com/*",        zone_name = "headyai.com" },
+  { pattern = "staging.heady-ai.com/*",        zone_name = "heady-ai.com" },
+  { pattern = "staging.headyconnection.com/*", zone_name = "headyconnection.com" },
+  { pattern = "staging.headyos.com/*",         zone_name = "headyos.com" },
+  { pattern = "staging.headycloud.com/*",      zone_name = "headycloud.com" },
+  { pattern = "staging.headyweb.com/*",        zone_name = "headyweb.com" },
+  { pattern = "staging.headyfinance.com/*",    zone_name = "headyfinance.com" },
+  { pattern = "staging.headymusic.com/*",      zone_name = "headymusic.com" },
+  { pattern = "staging.headystore.com/*",      zone_name = "headystore.com" },
+  { pattern = "staging.headyex.com/*",         zone_name = "headyex.com" },
 ]
 
 [env.staging.vars]

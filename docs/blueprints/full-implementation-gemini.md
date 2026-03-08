@@ -23,7 +23,7 @@ Recent advancements in **pgvector (v0.7.0+)** make it highly competitive with de
 -- Enable pgvector and optimize Postgres for parallel HNSW builds
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- System configurations for Heady memory nodes
+-- System configurations for Heady™ memory nodes
 SET shared_buffers = '64GB';
 SET maintenance_work_mem = '32GB';
 SET max_parallel_maintenance_workers = 16; -- Maximize parallel HNSW build [3]
@@ -215,7 +215,7 @@ export class HeadyMCPMetaRouter {
   }
 
   private verifyZeroTrustToken(token: any): boolean {
-    // Validate against Cloudflare Access / Heady auth layer
+    // Validate against Cloudflare Access / Heady™ auth layer
     return true; 
   }
   
@@ -278,7 +278,7 @@ export class HeadyEdgeAgent extends DurableObject {
       return new Response(null, { status: 101, webSocket: client });
     }
 
-    return new Response("Heady Edge Node Active");
+    return new Response("Heady™ Edge Node Active");
   }
 
   async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
@@ -349,7 +349,7 @@ class CSLGate:
 ### Research Report
 For an AI OS with "60+ provisional patents", the primary risk in 2026 is **35 U.S.C. § 101 (Alice/Mayo)**, which invalidates software patents deemed "abstract ideas." To survive Section 101, claims must focus on *specific technical improvements to computer functionality*. 
 
-**Strategy for Heady:**
+**Strategy for Heady™:**
 1.  **Do not patent the math:** CSL gates alone are abstract. Patent the *hardware-software integration*—e.g., "A method for reducing GPU memory allocation during multi-agent orchestration by utilizing continuous semantic logic gates to dynamically prune tool execution trees in a Model Context Protocol network."
 2.  **Continuation-in-Part (CIP):** File CIPs linking the 60 provisionals into cohesive system architectures (e.g., one parent patent for the Swarm OS, child patents for pgvector memory integration and Cloudflare edge-state fallback).
 
@@ -411,4 +411,4 @@ export async function headyBillingMiddleware(req: Request) {
 ```
 
 ---
-*End of Report. The above modules represent the core foundational files required to integrate pgvector 0.7+, Cloudflare Durable Objects, MCP routing, and CSL into the Heady architecture. Incorporate these into your GitHub CI/CD pipelines.*
+*End of Report. The above modules represent the core foundational files required to integrate pgvector 0.7+, Cloudflare Durable Objects, MCP routing, and CSL into the Heady™ architecture. Incorporate these into your GitHub CI/CD pipelines.*

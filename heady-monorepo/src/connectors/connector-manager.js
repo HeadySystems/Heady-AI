@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -391,7 +391,7 @@ function buildPostgresConnector(opts = {}) {
 }
 
 /**
- * Build a Redis connector via HeadyKV.
+ * Build a Redis connector via Heady™KV.
  * @param {object} opts - { url }
  */
 function buildRedisConnector(opts = {}) {

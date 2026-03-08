@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Agent-to-Agent (A2A) Protocol — Decentralized Agent Discovery & Communication
  *
- * Implements the A2A protocol for the Heady swarm:
+ * Implements the A2A protocol for the Heady™ swarm:
  * - .well-known/agent.json discovery cards
  * - Agent capability advertisement
  * - Inter-agent task delegation via JSON-RPC 2.0
@@ -21,9 +21,9 @@ function createAgentCard(opts = {}) {
     return {
         schema: 'https://a2a.heady.systems/v1/agent-card',
         name: opts.name || 'heady-agent',
-        displayName: opts.displayName || 'Heady Agent',
+        displayName: opts.displayName || 'Heady™ Agent',
         version: opts.version || '3.0.0',
-        description: opts.description || 'Heady multi-agent orchestration node',
+        description: opts.description || 'Heady™ multi-agent orchestration node',
         url: opts.url || 'https://manager.headysystems.com',
         capabilities: {
             streaming: opts.streaming !== false,

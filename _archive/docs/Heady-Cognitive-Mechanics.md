@@ -1,15 +1,15 @@
 <!--
-  © 2026 Heady Systems LLC.
+  © 2026 Heady™Systems Inc.
   PROPRIETARY AND CONFIDENTIAL.
   Unauthorized copying, modification, or distribution is strictly prohibited.
 -->
-# Heady AI — Cognitive Mechanics
+# Heady™ AI — Cognitive Mechanics
 
 > Last updated: February 2026
 
 ## Overview
 
-Heady AI operates on a **federated liquid routing** architecture. Unlike monolithic AI systems that funnel all requests through a single model, Heady decomposes intelligence into 20 specialized nodes that compete, collaborate, and self-heal across an edge-native mesh.
+Heady™ AI operates on a **federated liquid routing** architecture. Unlike monolithic AI systems that funnel all requests through a single model, Heady decomposes intelligence into 20 specialized nodes that compete, collaborate, and self-heal across an edge-native mesh.
 
 ## The Three Routing Layers
 
@@ -78,7 +78,7 @@ This creates a competitive pressure that continuously surfaces the best reasonin
 
 ## HCFP Auto-Success Pipeline
 
-The Heady Core Functionality Platform (HCFP) runs a 9-stage pipeline:
+The Heady™ Core Functionality Platform (HCFP) runs a 9-stage pipeline:
 
 1. **Channel Entry** — Request ingestion and classification
 2. **Ingest** — Payload validation and normalization

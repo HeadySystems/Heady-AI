@@ -1,4 +1,4 @@
-# HeadySystems Monorepo Workspace Configuration
+# Heady™Systems Monorepo Workspace Configuration
 packages:
   - "apps/*"
   - "packages/*"

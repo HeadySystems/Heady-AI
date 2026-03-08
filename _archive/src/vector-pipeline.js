@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Vector-Augmented Response Pipeline ─────────────────────
+ * ─── Heady™ Vector-Augmented Response Pipeline ─────────────────────
  * 
  * THE CRITICAL MISSING PIECE: Before ANY brain response is generated,
  * this middleware queries vector memory for relevant context and

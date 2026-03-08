@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Inc. — Helm Chart Metadata
+# Heady™Systems Inc. — Helm Chart Metadata
 # heady-platform v3.2.2
 # =============================================================================
 # φ = 1.618033988749895 (Golden Ratio)
@@ -39,7 +39,7 @@ keywords:
 
 home: https://headyme.com
 sources:
-  - https://github.com/headysystems/heady-systems
+  - https://github.com/headyme/heady-systems
 
 maintainers:
   - name: Eric Headington

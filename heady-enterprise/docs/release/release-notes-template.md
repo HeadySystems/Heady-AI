@@ -70,8 +70,8 @@ const result = await heady.{feature}.{method}({
 
 ## Bug Fixes [CSL LOW]
 
-- **Fixed** {description of what was broken and what was fixed} ([#{issue-number}](https://github.com/headysystems/heady-systems/issues/{number}))
-- **Fixed** {description} ([#{issue-number}](https://github.com/headysystems/heady-systems/issues/{number}))
+- **Fixed** {description of what was broken and what was fixed} ([#{issue-number}](https://github.com/headyme/heady-systems/issues/{number}))
+- **Fixed** {description} ([#{issue-number}](https://github.com/headyme/heady-systems/issues/{number}))
 - **Fixed** {description}
 
 ---
@@ -129,7 +129,7 @@ npx @heady-ai/sdk check-deprecated
 
 **Step 1: Update dependencies**
 ```bash
-pnpm update @heady-ai/sdk @headysystems/semantic-logic
+pnpm update @heady-ai/sdk @heady-ai/semantic-logic
 # or
 npm update @heady-ai/sdk
 ```
@@ -178,7 +178,7 @@ pnpm test
 ## Known Issues
 
 - {Description of known issue and workaround, if any}
-- **Tracking:** [#{issue}](https://github.com/headysystems/heady-systems/issues/{n}) — fix expected in v{PATCH+1}
+- **Tracking:** [#{issue}](https://github.com/headyme/heady-systems/issues/{n}) — fix expected in v{PATCH+1}
 
 ---
 
@@ -188,16 +188,16 @@ pnpm test
 |----------|----------|
 | Container image | `gcr.io/heady-production/heady-brain:v{VERSION}` |
 | NPM package | `@heady-ai/sdk@{VERSION}` |
-| GitHub Release | https://github.com/headysystems/heady-systems/releases/tag/v{VERSION} |
-| Docker Hub | `headysystems/heady-brain:{VERSION}` |
+| GitHub Release | https://github.com/headyme/heady-systems/releases/tag/v{VERSION} |
+| Docker Hub | `headyme/heady-brain:{VERSION}` |
 | Helm chart | `helm/heady-systems-{VERSION}.tgz` |
 
 ---
 
 ## Feedback
 
-- **Bug reports:** [GitHub Issues](https://github.com/headysystems/heady-systems/issues/new)
-- **Feature requests:** [GitHub Discussions](https://github.com/headysystems/heady-systems/discussions)
+- **Bug reports:** [GitHub Issues](https://github.com/headyme/heady-systems/issues/new)
+- **Feature requests:** [GitHub Discussions](https://github.com/headyme/heady-systems/discussions)
 - **Security vulnerabilities:** security@headyme.com (PGP key available)
 - **General questions:** support@headyme.com or [Discord](https://discord.gg/headysystems)
 

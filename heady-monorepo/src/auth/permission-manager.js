@@ -1,6 +1,6 @@
 /**
  * @fileoverview HeadyPermissionManager — Role-based access control and resource
- * permission system for the Heady sovereign AI platform.
+ * permission system for the Heady™ sovereign AI platform.
  *
  * Features:
  * - RBAC with roles: admin, enterprise, pro, user, guest
@@ -185,7 +185,7 @@ const DEFAULT_ROLE_PERMISSIONS = {
 
 /**
  * PermissionManager enforces RBAC and resource-level access control
- * across the entire Heady platform.
+ * across the entire Heady™ platform.
  *
  * Usage:
  * ```js
@@ -396,7 +396,7 @@ export class PermissionManager {
   }
 
   /**
-   * Filesystem requests are self-approved — the user is granting Heady access
+   * Filesystem requests are self-approved — the user is granting Heady™ access
    * to their own files. This is the explicit consent model.
    * @private
    */

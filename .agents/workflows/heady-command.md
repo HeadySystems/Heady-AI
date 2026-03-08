@@ -2,7 +2,7 @@
 description: Heady™ command routing — route "heady {command} input" to the matching Heady service, or use intelligent defaults for "heady input"
 ---
 
-# Heady Command Router
+# Heady™ Command Router
 
 > [!IMPORTANT]
 > **AUTO-EXECUTE RULE (ALWAYS ACTIVE):** When any research, audit, or task discovers beneficial improvements / fixes / optimizations, Antigravity MUST automatically implement ALL of them ASAP. Do NOT ask for permission. Do NOT stop to review. Just execute. Only pause if something **significant** blocks progress (breaking change to core architecture, security risk, data loss potential, or ambiguous user intent). This applies to ALL workflows, not just heady commands.
@@ -141,7 +141,7 @@ When the user says `heady "input"` without a specific command, Antigravity shoul
 
 ## Execution Rules
 
-1. **If the service has an API endpoint**: Use the Heady API endpoint programmatically (via `node -e` or `curl`)
+1. **If the service has an API endpoint**: Use the Heady™ API endpoint programmatically (via `node -e` or `curl`)
 2. **If the service is a module without an API**: Require it and call the relevant method directly
 3. **If the service is a workflow**: Run the corresponding `/workflow` slash command
 4. **Always show the user the service being invoked** before executing

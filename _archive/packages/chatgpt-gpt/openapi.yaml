@@ -1,18 +1,18 @@
 openapi: 3.1.0
 info:
-  title: Heady AI API
-  description: Access the Heady Intelligence Layer — 9 service groups, 77 AI nodes
+  title: Heady™ AI API
+  description: Access the Heady™ Intelligence Layer — 9 service groups, 77 AI nodes
   version: 1.0.0
 servers:
   - url: https://headyme.com/api
-    description: Heady Production API
+    description: Heady™ Production API
 
 paths:
   /brain/chat:
     post:
       operationId: headyChat
-      summary: Chat with HeadyBrain
-      description: Send a message to the Heady Intelligence Layer. Auto-routes to the best service group.
+      summary: Chat with Heady™Brain
+      description: Send a message to the Heady™ Intelligence Layer. Auto-routes to the best service group.
       requestBody:
         required: true
         content:
@@ -47,7 +47,7 @@ paths:
     post:
       operationId: headyAnalyze
       summary: Analyze content
-      description: Deep analysis of code, text, or data using the Heady AI ensemble.
+      description: Deep analysis of code, text, or data using the Heady™ AI ensemble.
       requestBody:
         required: true
         content:
@@ -74,7 +74,7 @@ paths:
     get:
       operationId: headyHealth
       summary: System health check
-      description: Returns Heady system status, uptime, and service availability.
+      description: Returns Heady™ system status, uptime, and service availability.
       responses:
         "200":
           description: Health status

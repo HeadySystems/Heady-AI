@@ -10,7 +10,7 @@
 | Objective | Success Metric |
 |-----------|---------------|
 | Validate MCP orchestration under real workloads | Zero critical failures over pilot duration |
-| Prove grant-writing scenario end-to-end | 3+ grants drafted via HeadyMCP pipeline |
+| Prove grant-writing scenario end-to-end | 3+ grants drafted via Heady™MCP pipeline |
 | Measure agent handoff latency | p95 < 5s for multi-agent task completion |
 | Validate Sacred Geometry decision quality | >85% user approval rate on AI decisions |
 | Stress-test circuit breakers + self-healing | Recovery from injected failures in <30s |
@@ -20,7 +20,7 @@
 
 ## 2. Partner Selection Criteria
 
-Target: 3-5 non-profit organizations via HeadyConnection
+Target: 3-5 non-profit organizations via Heady™Connection
 
 | Criteria | Requirement |
 |----------|-------------|
@@ -81,7 +81,7 @@ kind: Service
 metadata:
   name: heady-pilot
   annotations:
-    run.googleapis.com/description: "Heady Pilot Environment"
+    run.googleapis.com/description: "Heady™ Pilot Environment"
 spec:
   template:
     metadata:

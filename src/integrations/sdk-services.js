@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady SDK Services — Battle, Creative, MCP, Auth, Events ────
+ * ─── Heady™ SDK Services — Battle, Creative, MCP, Auth, Events ────
  * Completes the full heady-hive-sdk server-side contract.
  * 
  * All endpoints route through the agent orchestrator for intelligent
@@ -168,7 +168,7 @@ function registerRoutes(app, orchestrator) {
         res.json({
             ok: true,
             tools: [
-                { name: "heady_chat", service: "brain", description: "Chat with HeadyBrain" },
+                { name: "heady_chat", service: "brain", description: "Chat with Heady™Brain" },
                 { name: "heady_analyze", service: "brain", description: "Analyze code/text" },
                 { name: "heady_embed", service: "brain", description: "Generate embeddings" },
                 { name: "heady_search", service: "brain", description: "Semantic search" },

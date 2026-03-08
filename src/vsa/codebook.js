@@ -1,5 +1,5 @@
 /**
- * @fileoverview VSA Codebook Manager for Heady
+ * @fileoverview VSA Codebook Manager for Heady™
  * @description Manages collections of named hypervectors (semantic concepts)
  * @version 1.0.0
  */
@@ -279,7 +279,7 @@ class VSACodebook {
   }
 
   /**
-   * Create a default Heady codebook with semantic concepts
+   * Create a default Heady™ codebook with semantic concepts
    * @param {number} [dimensionality=4096]
    * @returns {VSACodebook}
    */

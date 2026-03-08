@@ -1,6 +1,6 @@
 /**
  * @file onboarding-routes.js
- * @description Express router providing all HTTP endpoints for the HeadyBuddy
+ * @description Express router providing all HTTP endpoints for the Heady™Buddy
  *   onboarding flow at headyme.com. Each route validates JWT auth, delegates
  *   to OnboardingController, and returns consistent JSON responses.
  *
@@ -635,7 +635,7 @@ export function createOnboardingRouter({ controller, projectionEngine, logger = 
 // ---------------------------------------------------------------------------
 
 /**
- * Builds the HeadyBuddy welcome introduction payload for the WELCOME step.
+ * Builds the Heady™Buddy welcome introduction payload for the WELCOME step.
  * @returns {object}
  */
 function buildHeadyBuddyIntro() {
@@ -644,7 +644,7 @@ function buildHeadyBuddyIntro() {
     description: 'I\'ll help you set up your personalised headyme.com workspace — ' +
                  'AI tools, secure communication, and a UI tuned exactly to how you work.',
     features: [
-      { icon: 'brain',     label: 'AI-Powered',    description: 'Multi-LLM routing via HeadyBee workers' },
+      { icon: 'brain',     label: 'AI-Powered',    description: 'Multi-LLM routing via Heady™Bee workers' },
       { icon: 'lock',      label: 'Secure Email',   description: 'End-to-end encrypted @headyme.com address' },
       { icon: 'layout',    label: 'Custom UI',      description: 'Sacred-Geometry-optimised dashboard layouts' },
       { icon: 'zap',       label: 'HeadySwarm',     description: 'Fibonacci-allocated worker swarms for peak performance' },
@@ -663,7 +663,7 @@ function buildNextAction(progress) {
   const stepMeta = {
     [Steps.WELCOME]: {
       title:  'Welcome to HeadyBuddy',
-      action: 'Learn about HeadyBuddy and continue to sign-in',
+      action: 'Learn about Heady™Buddy and continue to sign-in',
       route:  '/onboarding/start',
     },
     [Steps.AUTH]: {

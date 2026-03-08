@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -66,7 +66,7 @@ const DOMAIN_PROJECTIONS = {
     // HeadyBuddy — AI Assistant
     'headybuddy.org': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
     'www.headybuddy.org': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
-    'headybuddy.com': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
+    'headybuddy.org': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
 
     // Localhost development
     'localhost': { uiId: 'antigravity', module: 'Antigravity3D', category: 'dev' },

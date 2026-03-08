@@ -1,13 +1,14 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Global Node Network — Strategic Priority
  *
- * Federation layer for distributed Heady nodes across regions.
+ * Federation layer for distributed Heady™ nodes across regions.
  * Node discovery, heartbeat, cross-node routing, geo-awareness.
  */
 
 const { getLogger } = require('./structured-logger');
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = getLogger('global-nodes');
 const crypto = require('crypto');
 
@@ -19,7 +20,7 @@ const NODE_ROLES = {
 };
 
 class GlobalNodeNetwork {
-    constructor({ heartbeatIntervalMs = 30000, staleThresholdMs = 90000, maxNodes = 500 } = {}) {
+    constructor({ heartbeatIntervalMs = PHI_TIMING.CYCLE, staleThresholdMs = 90000, maxNodes = 500 } = {}) {
         this.heartbeatIntervalMs = heartbeatIntervalMs;
         this.staleThresholdMs = staleThresholdMs;
         this.maxNodes = maxNodes;

@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyVector Configuration
  * Sacred Geometry scaling: PHI = 1.618033988749895
@@ -21,9 +22,9 @@ const config = {
   database: {
     url: process.env.DATABASE_URL || 'postgresql://heady:heady@localhost:5432/heady_vector',
     poolSize: parseInt(process.env.PG_POOL_SIZE, 10) || Math.round(PHI * 10), // ~16
-    idleTimeoutMillis: parseInt(process.env.PG_IDLE_TIMEOUT, 10) || 30000,
+    idleTimeoutMillis: parseInt(process.env.PG_IDLE_TIMEOUT, 10) || PHI_TIMING.CYCLE,
     connectionTimeoutMillis: parseInt(process.env.PG_CONNECT_TIMEOUT, 10) || 5000,
-    statementTimeout: parseInt(process.env.PG_STATEMENT_TIMEOUT, 10) || 30000,
+    statementTimeout: parseInt(process.env.PG_STATEMENT_TIMEOUT, 10) || PHI_TIMING.CYCLE,
     ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : false,
   },
 

@@ -53,7 +53,7 @@ export function cosineSimiliarity(a, b) {
 }
 `,"configs/domain-architecture.yaml":`# Heady Domain Architecture
 domains:
-  headyweb.com:
+  headycloud.com:
     service: headyweb-latent-os
     projection: ide, dashboard, admin, docs
   headyapi.com:

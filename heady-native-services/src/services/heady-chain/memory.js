@@ -2,7 +2,7 @@
 
 /**
  * HeadyChain Memory System
- * Supports: buffer, summary, vector (via HeadyVector), entity, and working memory.
+ * Supports: buffer, summary, vector (via Heady™Vector), entity, and working memory.
  * All memory types are serializable for checkpointing.
  */
 
@@ -204,7 +204,7 @@ class SummaryMemory {
 // ─── Vector Memory ────────────────────────────────────────────────────────────
 
 /**
- * Long-term memory backed by HeadyVector for semantic retrieval.
+ * Long-term memory backed by Heady™Vector for semantic retrieval.
  */
 class VectorMemory {
   constructor({ namespace = 'default', vectorUrl, topK = 5 } = {}) {

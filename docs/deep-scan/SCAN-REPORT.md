@@ -6,12 +6,12 @@
 
 ## 1. Repository Inventory
 
-### HeadyMe Organization (13 Active Repos)
+### Heady™Me Organization (13 Active Repos)
 
 | Repository | Type | Language | Status |
 |------------|------|----------|--------|
 | Heady-pre-production-9f2f0642 | Monorepo (Source of Truth) | JavaScript/TS | Active |
-| headysystems-production | Projection (headysystems.com) | HTML | Active |
+| heady-production | Projection (headysystems.com) | HTML | Active |
 | headymcp-production | Projection (headymcp.com) | — | Active |
 | headyio-core | SDK/IO Platform | JavaScript | Projected |
 | headybot-core | Bot Framework | JavaScript | Projected |
@@ -24,7 +24,7 @@
 | headyme-core | Personal Cloud | JavaScript | Projected |
 | heady-docs | Documentation Hub | HTML/MD | Active |
 
-### HeadySystems Organization (7 Archived Repos)
+### Heady™Systems Organization (7 Archived Repos)
 
 | Repository | Status |
 |------------|--------|
@@ -185,7 +185,7 @@ Key bees for infrastructure:
 
 ## 5. Dependency Analysis
 
-### Production Dependencies (from Heady monorepo)
+### Production Dependencies (from Heady™ monorepo)
 
 | Package | Version | Risk |
 |---------|---------|------|

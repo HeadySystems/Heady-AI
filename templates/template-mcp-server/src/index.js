@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Heady™ MCP Server Template ═══
  *
  * JSON-RPC 2.0 + SSE transport for Model Context Protocol.
- * Used to expose internal Heady tools as MCP endpoints that
+ * Used to expose internal Heady™ tools as MCP endpoints that
  * any LLM client (Claude, GPT, Gemini) can discover and call.
  *
  * Deploy to Cloud Run or Cloudflare Workers.
@@ -51,7 +51,7 @@ mcp.tool(
 // Example: Vector query tool
 mcp.tool(
     'query_vector_space',
-    'Search the Heady 3D vector space for relevant AST nodes',
+    'Search the Heady™ 3D vector space for relevant AST nodes',
     {
         query: { type: 'string', description: 'Natural language search query' },
         limit: { type: 'number', description: 'Max results (default 10)' },

@@ -70,7 +70,7 @@ These operations allow:
 agent_state = bind(agent_id, task_id) + bundle(task_context, memory_context, csl_score)
 ```
 
-CSL scores (0.0–1.0) integrate naturally as vector weights, enabling "soft" state transitions that align with the HeadySystems CSL framework.
+CSL scores (0.0–1.0) integrate naturally as vector weights, enabling "soft" state transitions that align with the Heady™Systems CSL framework.
 
 #### 4. Alignment with φ-scaling
 

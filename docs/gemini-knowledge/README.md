@@ -9,7 +9,7 @@ Account: ehaywoodmail@gmail.com
 - Nature-optimized = biomimetic system design (ant colony, neural networks)
 - 3 Hive-related chats suggest deep architectural work on swarm coordination
 
-**Source chats:** `Hive Build Final`, `Hive`, `Hive Functionality`, `Nature-Optimized Heady System Plan`
+**Source chats:** `Hive Build Final`, `Hive`, `Hive Functionality`, `Nature-Optimized Heady™ System Plan`
 
 ---
 

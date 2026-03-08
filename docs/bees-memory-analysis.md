@@ -1,4 +1,4 @@
-# Heady Bee Factory & Memory Layer — Full Analysis & Prioritized Improvements
+# Heady™ Bee Factory & Memory Layer — Full Analysis & Prioritized Improvements
 
 > Analysis Date: 2026-03-07  
 > Platform: Heady™ v3.0.1 "Aether"  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The Heady bee factory and memory system demonstrate strong architectural intent — RAM-first philosophy, dynamic bee creation, metacognitive decision-making, and multi-provider learning. However, seven critical gaps prevent production-grade reliability:
+The Heady™ bee factory and memory system demonstrate strong architectural intent — RAM-first philosophy, dynamic bee creation, metacognitive decision-making, and multi-provider learning. However, seven critical gaps prevent production-grade reliability:
 
 1. **No lifecycle hooks** on bee create/start/stop — can't intercept or instrument bee events
 2. **No hot reload** — code changes require full process restart to pick up new/modified bees

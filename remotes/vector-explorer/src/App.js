@@ -1,6 +1,6 @@
 /*
  * Vector Explorer — Browse & Search Vector Memory
- * Micro-frontend for HeadyWeb Universal Shell
+ * Micro-frontend for Heady™Web Universal Shell
  */
 const APP_CONFIG = {
   id: 'vector-explorer',

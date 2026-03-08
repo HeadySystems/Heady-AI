@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * WebAuthn Biometric Signing Module
@@ -17,7 +17,7 @@ const logger = require('../utils/logger');
 // ─── WebAuthn Challenge Store ────────────────────────────────────────────────
 class WebAuthnService {
     constructor(opts = {}) {
-        this._rpName = opts.rpName || 'Heady Systems';
+        this._rpName = opts.rpName || 'Heady™ Systems';
         this._rpId = opts.rpId || 'headysystems.com';
         this._origin = opts.origin || 'https://manager.headysystems.com';
         this._challenges = new Map();    // sessionId → challenge

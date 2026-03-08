@@ -1,4 +1,4 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 'use strict';
 
@@ -7,7 +7,7 @@
  * ════════════════════════════════════════════════════════════════════════
  *
  * Registers the Autonomous Projection System as a first-class concern in
- * the HeadyConductor's routing table, lifecycle, and health subsystem.
+ * the Heady™Conductor's routing table, lifecycle, and health subsystem.
  *
  * Integration points:
  *   1. Routing table — 'project', 'projection_status', 'projection_update'
@@ -139,7 +139,7 @@ function _auditWrite(record) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * Wire the Projection System into the HeadyConductor.
+ * Wire the Projection System into the Heady™Conductor.
  *
  * @param {object} conductor      - HeadyConductor instance
  * @param {object} projectionManager - ProjectionManager (projection data source)

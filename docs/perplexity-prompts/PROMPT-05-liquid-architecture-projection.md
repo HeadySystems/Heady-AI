@@ -86,7 +86,7 @@ Create `configs/projection-map.json` that maps each external repo to its monorep
 ```json
 {
   "headysystems-core": {
-    "source_paths": ["services/heady-web/sites/headysystems/", "src/core/"],
+    "source_paths": ["services/heady-web/sites/headyme/", "src/core/"],
     "repo": "HeadyMe/headysystems-core",
     "deploy_target": "cloudflare-worker:headysystems-site"
   },

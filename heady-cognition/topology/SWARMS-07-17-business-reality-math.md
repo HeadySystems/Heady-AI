@@ -80,7 +80,7 @@ semantic_tags: [arbiter, diplomat, oracle, quant, fabricator, persona, sentinel,
 | Bee | Role | Persist | Scale |
 |---|---|---|---|
 | `SmartContractBee` | Ethereum/Solana smart contract deployment + interaction | ❌ | 1-8 |
-| `TokenizationBee` | On-chain semantic tokenization of Heady assets | ❌ | 1-5 |
+| `TokenizationBee` | On-chain semantic tokenization of Heady™ assets | ❌ | 1-5 |
 | `DIDVerifierBee` | Decentralized identity verification | ❌ | 1-5 |
 
 ## Swarm 15: DREAMER (Simulations)

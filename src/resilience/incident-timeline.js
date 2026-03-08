@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview IncidentTimeline — append-only chronological store for all
- * health events across the Heady Self-Healing Attestation Mesh.
+ * health events across the Heady™ Self-Healing Attestation Mesh.
  *
  * Every subsystem (HealthAttestor, QuarantineManager, RespawnController,
  * DriftDetector, CircuitBreakerOrchestrator) records events here.  The

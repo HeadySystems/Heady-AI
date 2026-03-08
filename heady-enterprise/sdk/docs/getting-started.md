@@ -7,9 +7,9 @@
 
 In this guide you'll:
 1. Get your API key from headyme.com
-2. Install the HeadyOS SDK
+2. Install the Heady™OS SDK
 3. Create your first AI agent
-4. Send your first task to the Heady Conductor
+4. Send your first task to the Heady™ Conductor
 5. Check results in real-time via WebSocket events
 
 **Time:** ~8 minutes | **Prerequisites:** Node.js 20+ or Python 3.11+
@@ -71,7 +71,7 @@ import asyncio
 from heady import HeadyClient, HeadyConfig
 
 async def main():
-    async with HeadyClient(HeadyConfig(api_key=os.environ['HEADY_API_KEY'])) as heady:
+    async with Heady™Client(HeadyConfig(api_key=os.environ['HEADY_API_KEY'])) as heady:
         health = await heady.health_check()
         print(f"Status: {health['status']}")  # 'healthy'
 
@@ -134,7 +134,7 @@ AGENT_ID = agent.id
 
 ## Step 5: Store Context in Vector Memory (1 minute)
 
-Give your agent persistent knowledge with HeadyOS Vector Memory:
+Give your agent persistent knowledge with Heady™OS Vector Memory:
 
 **JavaScript:**
 ```javascript

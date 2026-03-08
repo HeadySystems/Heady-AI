@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ═══ Heady System Monitor — OS-Level Watchdog ═══
+ * ═══ Heady™ System Monitor — OS-Level Watchdog ═══
  *
  * Monitors local system health: runaway processes, memory pressure,
  * swap thrashing, disk usage, and core dump accumulation.
@@ -15,12 +15,13 @@
 
 const { execSync } = require("child_process");
 const fs = require("fs");
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require("path");
 const logger = require("./utils/logger");
 
 // ── Configuration ───────────────────────────────────────────────
 const CONFIG = {
-    intervalMs: 30_000,               // scan every 30 seconds
+    intervalMs: PHI_TIMING.CYCLE,               // scan every 30 seconds
     cpu: {
         threshold: 95,                // % CPU to flag a process
         graceSeconds: 300,            // 5 min before auto-kill
@@ -424,7 +425,7 @@ function start(opts = {}) {
         Object.assign(CONFIG, opts.config);
     }
 
-    log("INFO", "═══ Heady System Monitor starting ═══");
+    log("INFO", "═══ Heady™ System Monitor starting ═══");
     log("INFO", `Interval: ${CONFIG.intervalMs / 1000}s | CPU threshold: ${CONFIG.cpu.threshold}% | ` +
         `Grace: ${CONFIG.cpu.graceSeconds}s | Min free RAM: ${CONFIG.memory.minFreeMB}MB`);
 
@@ -441,7 +442,7 @@ function stop() {
         clearInterval(intervalId);
         intervalId = null;
     }
-    log("INFO", "═══ Heady System Monitor stopped ═══");
+    log("INFO", "═══ Heady™ System Monitor stopped ═══");
 }
 
 function getStatus() {

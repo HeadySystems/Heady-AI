@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -185,7 +185,7 @@ async function initMCPServer() {
       tools: [
         {
           name: 'heady_pulse',
-          description: 'Returns the current pulse/heartbeat of the Heady AI Platform',
+          description: 'Returns the current pulse/heartbeat of the Heady™ AI Platform',
           inputSchema: { type: 'object', properties: {}, required: [] },
         },
         {
@@ -195,7 +195,7 @@ async function initMCPServer() {
         },
         {
           name: 'heady_conductor_route',
-          description: 'Routes a prompt to the optimal AI provider via HeadyConductor',
+          description: 'Routes a prompt to the optimal AI provider via Heady™Conductor',
           inputSchema: {
             type: 'object',
             properties: {

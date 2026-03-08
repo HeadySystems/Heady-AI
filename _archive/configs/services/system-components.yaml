@@ -98,7 +98,7 @@ services:
 
   - name: networking-client
     type: internal-module
-    role: Direct No-Proxy HTTP Client for Heady Internal
+    role: Direct No-Proxy HTTP Client for Heady™ Internal
     location: packages/networking/
     criticality: critical
     healthCheck: { method: module-loaded }

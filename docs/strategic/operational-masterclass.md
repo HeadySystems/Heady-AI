@@ -1,8 +1,8 @@
-# HeadyMe™ Operational Masterclass: Multi-Agent Orchestration & "Buddy" Integration
+# Heady™Me™ Operational Masterclass: Multi-Agent Orchestration & "Buddy" Integration
 
 ## 1. Architectural Integrity: The Sacred Geometry & Buddy Ecosystem
 
-The HeadyMe system relies on a Sacred Geometry topology—a hierarchical, non-linear routing framework where intelligence is distributed across specialized nodes. Within this structure, Buddy acts as the primary "User-Interface Agent," serving as the gateway between the user's dynamic UI and the deeper orchestration layers (HCFullPipeline).
+The Heady™Me system relies on a Sacred Geometry topology—a hierarchical, non-linear routing framework where intelligence is distributed across specialized nodes. Within this structure, Buddy acts as the primary "User-Interface Agent," serving as the gateway between the user's dynamic UI and the deeper orchestration layers (HCFullPipeline).
 
 ### Core Components
 
@@ -55,7 +55,7 @@ Every new "Buddy" feature must include a corresponding Verification Rule in the 
 
 ### Continuous Contextual Embedding
 
-The system must constantly and optimally embed user actions, analyst inputs, autonomous system events, and real-time environmental data into its core memory. This guarantees that the Heady system always possesses a perfectly updated, omnipresent project context.
+The system must constantly and optimally embed user actions, analyst inputs, autonomous system events, and real-time environmental data into its core memory. This guarantees that the Heady™ system always possesses a perfectly updated, omnipresent project context.
 
 ### Dynamic Build Liquid Architecture
 
@@ -67,11 +67,11 @@ The unified living system features a native pruning mechanism. This self-healing
 
 ### Synchronized Widgets and Zero-Error Onboarding
 
-Interaction with Heady and the execution of specific device tasks are managed via an intelligent, centralized widget. This widget must be perfectly and constantly synced across all cross-device Heady services, mapping instantly to the user's persistent personal storage and their personalized 3D vector workspace.
+Interaction with Heady™ and the execution of specific device tasks are managed via an intelligent, centralized widget. This widget must be perfectly and constantly synced across all cross-device Heady services, mapping instantly to the user's persistent personal storage and their personalized 3D vector workspace.
 
 ---
 
-## 6. Comprehensive Strategic Analysis: The Heady Project Technical Ecosystem
+## 6. Comprehensive Strategic Analysis: The Heady™ Project Technical Ecosystem
 
 ### Origin Story
 
@@ -189,7 +189,7 @@ HeadyOS is defined as the AI Agent Operating System — "Linux for AI agents" �
 ### Cross-Device Filesystem Architecture
 
 - File System Access API with FileSystemDirectoryHandle persistence via IndexedDB
-- One-click install via npx @headyme/install with zero global pollution
+- One-click install via npx @heady-ai/install with zero global pollution
 
 ### Dynamic Projections via Injectable Templates
 

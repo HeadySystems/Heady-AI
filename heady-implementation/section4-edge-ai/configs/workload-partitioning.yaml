@@ -1,5 +1,5 @@
 # workload-partitioning.yaml
-# Heady Latent OS — Edge ↔ Origin Workload Partitioning Configuration
+# Heady™ Latent OS — Edge ↔ Origin Workload Partitioning Configuration
 #
 # Defines which operations run at edge (Cloudflare Workers AI) vs origin
 # (Cloud Run), latency thresholds, model assignments, fallback chains,

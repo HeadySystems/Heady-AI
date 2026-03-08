@@ -1,4 +1,4 @@
-# Heady Complete Documentation Package
+# Heady™ Complete Documentation Package
 Generated: 2026-03-07 07:34:58 UTC
 
 ## Contents

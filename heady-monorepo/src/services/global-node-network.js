@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Global Node Network — Strategic Priority
  *
- * Federation layer for distributed Heady nodes across regions.
+ * Federation layer for distributed Heady™ nodes across regions.
  * Node discovery, heartbeat, cross-node routing, geo-awareness.
  */
 

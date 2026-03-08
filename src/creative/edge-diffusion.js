@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyEdge Multi-Modal Hub
- * Routes image generation requests to specialized models via HeadyEdge.
+ * Routes image generation requests to specialized models via Heady™Edge.
  */
 
 const logger = require("../utils/logger");

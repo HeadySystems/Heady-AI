@@ -4,7 +4,7 @@ description: >
   Use when implementing graph-based retrieval augmented generation (Graph RAG) for multi-hop reasoning
   over knowledge graphs combined with vector memory. Covers LightRAG-style incremental entity extraction,
   relationship graph construction, Louvain community detection, local/global/hybrid query modes, and
-  integration with Heady's 3D vector memory and pgvector. Phi-scaled parameters throughout.
+  integration with Heady™'s 3D vector memory and pgvector. Phi-scaled parameters throughout.
   Keywords: graph RAG, GraphRAG, LightRAG, knowledge graph, entity extraction, multi-hop reasoning,
   community detection, Louvain, graph traversal, vector memory, Heady memory, NER, relationship graph.
 metadata:
@@ -12,7 +12,7 @@ metadata:
   version: '2.0'
 ---
 
-# Heady Graph RAG Memory
+# Heady™ Graph RAG Memory
 
 ## When to Use This Skill
 
@@ -102,7 +102,7 @@ CREATE TABLE graph_rag_communities (
 - Entity-relationship questions: "What companies did X invest in that also worked with Y?"
 - LightRAG pattern: 26× cheaper indexing ($0.15 vs $4), incremental updates
 
-### 5. Integration with Heady Vector Memory
+### 5. Integration with Heady™ Vector Memory
 
 The graph RAG layer sits alongside the existing vector-memory.js:
 - Short-term memory (STM) → vector search (fast, recent)

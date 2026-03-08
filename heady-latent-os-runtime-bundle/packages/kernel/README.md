@@ -1,6 +1,6 @@
 # @heady-ai/kernel
 
-Unified latent runtime kernel for HeadyOS.
+Unified latent runtime kernel for Heady™OS.
 
 ## Highlights
 

@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
- * BrainConnector — Connection pool with circuit breaker for HeadyBrain endpoints.
+ * BrainConnector — Connection pool with circuit breaker for Heady™Brain endpoints.
  * Provides 100% uptime guarantee through failover and health monitoring.
  */
 const EventEmitter = require("events");

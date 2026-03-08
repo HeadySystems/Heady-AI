@@ -1,4 +1,4 @@
-# HeadyMe QA Architecture - Executive Summary
+# Heady™Me QA Architecture - Executive Summary
 
 **Analysis Date**: March 7, 2026  
 **Organization**: [HeadyMe](https://github.com/HeadyMe) / HeadySystems Inc.  
@@ -68,7 +68,7 @@
 | **headyme-core** | Personal Cloud Hub | https://github.com/HeadyMe/headyme-core |
 
 ### Deployment Repositories
-- **headysystems-production**: https://github.com/HeadyMe/headysystems-production
+- **heady-production**: https://github.com/HeadyMe/heady-production
 - **headymcp-production**: https://github.com/HeadyMe/headymcp-production
 
 ### Documentation
@@ -116,9 +116,9 @@ Global Baseline:      Φ^0.5  ≈ 78.6%
 ### Module Name Mapping
 ```javascript
 moduleNameMapper: {
-  '^@heady/core$': '<rootDir>/packages/core/src',
-  '^@heady/gateway$': '<rootDir>/packages/gateway/src',
-  '^@heady/sdk$': '<rootDir>/packages/sdk/src'
+  '^@heady-ai/core$': '<rootDir>/packages/core/src',
+  '^@heady-ai/gateway$': '<rootDir>/packages/gateway/src',
+  '^@heady-ai/sdk$': '<rootDir>/packages/sdk/src'
 }
 ```
 
@@ -337,7 +337,7 @@ This analysis includes three documents:
 
 ## Conclusion
 
-The HeadyMe organization demonstrates a **mature, production-grade AI platform** with sophisticated test infrastructure. The PHI-based coverage strategy is mathematically rigorous and the test suite is comprehensive. 
+The Heady™Me organization demonstrates a **mature, production-grade AI platform** with sophisticated test infrastructure. The PHI-based coverage strategy is mathematically rigorous and the test suite is comprehensive. 
 
 **Key Strengths:**
 ✅ Advanced testing patterns (resilience, swarm intelligence, vector memory)  

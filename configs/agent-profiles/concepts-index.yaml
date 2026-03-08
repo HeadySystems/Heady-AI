@@ -101,7 +101,7 @@ archivedConcepts:
 
   - id: direct-api-routing
     name: Direct API Calls (No-Proxy)
-    description: Bypass proxies for Heady internal service calls
+    description: Bypass proxies for Heady™ internal service calls
     previousLocation: packages/networking/
     status: archived
     reason: Package directory never created; concept absorbed into heady-manager.js

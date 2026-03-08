@@ -6,7 +6,7 @@
 
 ## 1. Codebase Modularization and Architectural Upgrades
 
-~~RESOLVED.~~ The monolithic `heady-manager.js` has been fully decomposed into modular services under `src/orchestration/`, `packages/core/`, and `services/`. Root directory reduced to 2 legitimate JS files. TypeScript packages (`@headysystems/core`, `@headysystems/types`, `@headysystems/redis`) provide typed foundations. VSA state machine implemented in `src/vsa/`.
+~~RESOLVED.~~ The monolithic `heady-manager.js` has been fully decomposed into modular services under `src/orchestration/`, `packages/core/`, and `services/`. Root directory reduced to 2 legitimate JS files. TypeScript packages (`@heady-ai/core`, `@heady-ai/types`, `@heady-ai/redis`) provide typed foundations. VSA state machine implemented in `src/vsa/`.
 
 ---
 
@@ -95,4 +95,4 @@ Scheduled state projection diffs to GitHub with rollback and receipt replay for 
 
 ---
 
-*© 2026 HeadySystems Inc.. All Rights Reserved.*
+*© 2026 Heady™Systems Inc.. All Rights Reserved.*

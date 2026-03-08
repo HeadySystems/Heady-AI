@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * heady-config-server.js
  * ════════════════════════════════════════════════════════════════════
  *
- * Centralized Configuration Management Server for the Heady ecosystem.
+ * Centralized Configuration Management Server for the Heady™ ecosystem.
  *
  * Eliminates every hardcoded constant scattered across the codebase:
  *   – self-awareness.js:42   DRIFT_THRESHOLD = 0.75
@@ -81,7 +81,7 @@ const DEFAULT_CONFIG_FILE = process.env.HEADY_CONFIG_FILE || '/etc/heady/config.
 
 // ─── LAYER 0: Default values ──────────────────────────────────────────────────
 //
-// Every configurable constant from the Heady codebase, keyed by dotted path.
+// Every configurable constant from the Heady™ codebase, keyed by dotted path.
 // Each entry includes: value, type, description, sourceFile, sourceLine, readonly.
 //
 const DEFAULTS = Object.freeze({

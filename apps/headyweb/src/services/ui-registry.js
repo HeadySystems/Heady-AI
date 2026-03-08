@@ -4,7 +4,7 @@
  * Maps domain hostnames to their corresponding UI IDs and configuration.
  * Used by the shell to determine which micro-frontend to load for a given domain.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module services/ui-registry
  */
@@ -77,7 +77,7 @@ const UI_REGISTRY = {
     uiId: 'heady-ide',
     scope: 'headyIDE',
     category: 'developer',
-    label: 'Heady IDE',
+    label: 'Heady™ IDE',
     description: 'Code editor and AI-assisted development environment',
     themeAccent: '#4c8fff',
     preload: false,
@@ -109,7 +109,7 @@ const UI_REGISTRY = {
     scope: 'vectorExplorer',
     category: 'platform',
     label: 'Vector Explorer',
-    description: 'Semantic vector memory exploration across the HeadyNetwork',
+    description: 'Semantic vector memory exploration across the Heady™Network',
     themeAccent: '#10B981',
     preload: false,
   },
@@ -118,7 +118,7 @@ const UI_REGISTRY = {
     scope: 'vectorExplorer',
     category: 'platform',
     label: 'Vector Explorer',
-    description: 'Semantic vector memory exploration across the HeadyNetwork',
+    description: 'Semantic vector memory exploration across the Heady™Network',
     themeAccent: '#10B981',
     preload: false,
   },

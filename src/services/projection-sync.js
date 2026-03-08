@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Projection Sync Automation — Platform Phase 3 Assessment Item
  *
@@ -10,6 +10,7 @@
  */
 
 const crypto = require('crypto');
+const { PHI_TIMING } = require('../shared/phi-math');
 const { execSync } = require('child_process');
 const path = require('path');
 const { getLogger } = require('./structured-logger');
@@ -104,7 +105,7 @@ class ProjectionSyncAutomation {
             const statusOutput = execSync('git status --porcelain', {
                 cwd: this.projectRoot,
                 encoding: 'utf-8',
-                timeout: 30_000,
+                timeout: PHI_TIMING.CYCLE,
             }).trim();
 
             if (!statusOutput) {
@@ -121,7 +122,7 @@ class ProjectionSyncAutomation {
             // Stage all changes
             execSync('git add -A', {
                 cwd: this.projectRoot,
-                timeout: 30_000,
+                timeout: PHI_TIMING.CYCLE,
             });
 
             // Commit with projection receipt
@@ -129,7 +130,7 @@ class ProjectionSyncAutomation {
             execSync(`git commit -m "${commitMsg}"`, {
                 cwd: this.projectRoot,
                 encoding: 'utf-8',
-                timeout: 30_000,
+                timeout: PHI_TIMING.CYCLE,
             });
 
             // Get the commit hash
@@ -334,7 +335,7 @@ class ProjectionSyncAutomation {
                 execSync(`git revert --no-commit ${entry.results.github.commitHash}`, {
                     cwd: this.projectRoot,
                     encoding: 'utf-8',
-                    timeout: 30_000,
+                    timeout: PHI_TIMING.CYCLE,
                 });
                 execSync(`git commit -m "[projection-sync] rollback receipt:${receiptHash}"`, {
                     cwd: this.projectRoot,

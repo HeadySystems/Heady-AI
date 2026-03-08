@@ -1,5 +1,5 @@
 /**
- * ═══ Heady Edge Gateway — Cloud Run Liquid Failover Node ═══
+ * ═══ Heady™ Edge Gateway — Cloud Run Liquid Failover Node ═══
  *
  * Production AI gateway on Google Cloud Run.
  * Mirrors the Cloudflare Worker edge gateway with full provider racing,
@@ -330,7 +330,7 @@ function simpleHash(str) {
 
 const server = http.createServer(handleRequest);
 server.listen(PORT, () => {
-    console.log(`⚡ Heady Edge Gateway (Cloud Run Liquid Node) listening on port ${PORT}`);
+    console.log(`⚡ Heady™ Edge Gateway (Cloud Run Liquid Node) listening on port ${PORT}`);
     console.log(`   Runtime: gcloud-cloudrun`);
     console.log(`   Providers: ${['GOOGLE_API_KEY', 'CLAUDE_API_KEY', 'OPENAI_API_KEY', 'HF_TOKEN', 'GROQ_API_KEY'].filter(k => !!process.env[k]).join(', ') || 'none configured'}`);
 });

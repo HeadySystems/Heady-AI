@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -18,6 +18,7 @@
  */
 
 const EventEmitter = require("events");
+const { PHI_TIMING } = require('../shared/phi-math');
 const fs = require("fs");
 const path = require("path");
 const logger = require("../utils/logger");
@@ -33,7 +34,7 @@ class HeadyAutonomy extends EventEmitter {
         super();
         this.mode = MODES.AUTONOMOUS;
         this.lastUserActivity = 0;
-        this.idleThresholdMs = opts.idleThresholdMs || 30000; // 30s
+        this.idleThresholdMs = opts.idleThresholdMs || PHI_TIMING.CYCLE; // 30s
         this.pivotLatencyTarget = 50; // ms
         this.started = false;
 
@@ -214,7 +215,7 @@ class HeadyAutonomy extends EventEmitter {
                 this._restoreLearnState();
                 this.emit("mode_changed", { mode: MODES.AUTONOMOUS });
             }, 60000);
-        }, 30000);
+        }, PHI_TIMING.CYCLE);
     }
 
     // ═══════════════════════════════════════════

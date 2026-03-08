@@ -1,6 +1,6 @@
 # Heady™ Projection System — Architecture
 
-> © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
+> © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL.
 
 ---
 
@@ -133,7 +133,7 @@ PHI backoff sequence (base=500ms): 809ms → 1309ms → 2118ms → 3427ms → 55
 heady-projection/
 ├── package.json              # Workspace root (npm workspaces)
 ├── turbo.json                # Turborepo pipeline config
-├── tsconfig.json             # Root TS config + @heady/* path aliases
+├── tsconfig.json             # Root TS config + @heady-ai/* path aliases
 ├── Dockerfile                # Multi-stage production image
 ├── docker-compose.yml        # Local dev: service + dashboard + redis
 │
@@ -145,9 +145,9 @@ heady-projection/
 │       └── server.js         # Express proxy + static serve
 │
 ├── packages/
-│   ├── shared-types/         # @heady/shared-types
+│   ├── shared-types/         # @heady-ai/shared-types
 │   │   └── src/index.js      # Enums, JSDoc types, constants
-│   └── shared-utils/         # @heady/shared-utils
+│   └── shared-utils/         # @heady-ai/shared-utils
 │       └── src/index.js      # debounce, throttle, phiInterval, etc.
 │
 ├── scripts/

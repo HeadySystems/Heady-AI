@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyEmbed Configuration
  * 
@@ -24,7 +25,7 @@ const config = {
   // Batch processing
   batchSize: parseInt(process.env.HEADY_EMBED_BATCH_SIZE, 10) || 32,
   maxConcurrentBatches: parseInt(process.env.HEADY_EMBED_MAX_CONCURRENT_BATCHES, 10) || 4,
-  batchTimeoutMs: parseInt(process.env.HEADY_EMBED_BATCH_TIMEOUT_MS, 10) || 30000,
+  batchTimeoutMs: parseInt(process.env.HEADY_EMBED_BATCH_TIMEOUT_MS, 10) || PHI_TIMING.CYCLE,
 
   // Cache settings
   cacheSize: parseInt(process.env.HEADY_EMBED_CACHE_SIZE, 10) || 10000,
@@ -51,7 +52,7 @@ const config = {
   warmupOnStart: process.env.HEADY_EMBED_WARMUP !== 'false',
   warmupTexts: [
     'Hello world',
-    'Sacred geometry powers the Heady AI platform',
+    'Sacred geometry powers the Heady™ AI platform',
     'Embedding warm-up for optimal latency',
   ],
 

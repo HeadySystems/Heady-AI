@@ -1,11 +1,12 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
  * ║               HEADY CONNECTION — HC FULL PIPELINE V3                       ║
  * ║               21-Stage Phi-Compliant Orchestration Engine                  ║
  * ║                                                                            ║
  * ║  Version   : 3.0.0                                                         ║
- * ║  License   : Proprietary — Heady Connection LLC                            ║
- * ║  Author    : Heady Engineering                                              ║
+ * ║  License   : Proprietary — Heady™ Connection LLC                            ║
+ * ║  Author    : Heady™ Engineering                                              ║
  * ║  Contact   : eric@headyconnection.org                                      ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
@@ -379,7 +380,7 @@ async function handleApprove(ctx) {
 }
 
 async function handleExecute(ctx) {
-  // Metacognitive gate: confidence ≥ ψ (0.618) via HeadyBuddy
+  // Metacognitive gate: confidence ≥ ψ (0.618) via Heady™Buddy
   const composite = ctx.shared.judgeVerdict?.composite ?? PSI;
   if (composite < CSL_GATE) {
     throw new Error(
@@ -620,7 +621,7 @@ export const STAGE_DEFINITIONS = Object.freeze([
   {
     id       : 11,
     name     : 'APPROVE',
-    timeout  : Math.round(PHI ** 7 * 1000), // φ⁷×1000 = 29034 ms — allow human time
+    timeout  : Math.round(PHI ** 7 * 1000), // φ⁷×1000 = PHI_TIMING.CYCLE ms — allow human time
     parallel : false,
     dependsOn: [10],
     pool     : 'GOVERNANCE',
@@ -756,7 +757,7 @@ function withTimeout(promise, ms, label) {
 // ─── HCFullPipelineV3 ────────────────────────────────────────────────────────
 
 /**
- * The Heady Connection 21-stage phi-compliant orchestration pipeline (V3).
+ * The Heady™ Connection 21-stage phi-compliant orchestration pipeline (V3).
  *
  * @fires HCFullPipelineV3#pipeline:start
  * @fires HCFullPipelineV3#pipeline:complete

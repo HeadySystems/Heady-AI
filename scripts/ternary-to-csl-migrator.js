@@ -3,7 +3,7 @@
  * @description
  *   TernaryToCSLMigrator — Automated migration tool that scans JavaScript source
  *   files for discrete/ternary conditional logic and replaces it with phi-grounded
- *   Continuous Scalar Logic (CSL) equivalents from the Heady CSL engine.
+ *   Continuous Scalar Logic (CSL) equivalents from the Heady™ CSL engine.
  *
  *   Migration types handled:
  *     TYPE_A — String equality routing (if/switch on string literals)
@@ -13,7 +13,7 @@
  *     TYPE_C — Guard clauses (if (!x) / if (err)) → PRESERVED, not migrated
  *     TYPE_D — Type checks (instanceof / typeof)  → PRESERVED, not migrated
  *
- * @copyright © 2026 HeadySystems Inc. All rights reserved.
+ * @copyright © 2026 Heady™Systems Inc. All rights reserved.
  *
  * @patent
  *   Protected under 60+ provisional patent applications filed with the USPTO covering

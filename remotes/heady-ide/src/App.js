@@ -1,6 +1,6 @@
 /*
  * HeadyAI-IDE — AI-Powered Development Environment
- * Micro-frontend for HeadyWeb Universal Shell
+ * Micro-frontend for Heady™Web Universal Shell
  */
 const APP_CONFIG = {
   id: 'heady-ide',
@@ -94,7 +94,7 @@ function createApp(container, props = {}) {
     <div class="mfe-body">
       <div class="ide-layout"><div class="ide-sidebar"><div class="ide-tree">📁 src/<br>  📁 services/<br>  📁 bees/<br>  📁 shell/<br>  📄 heady-manager.js</div></div>
       <div class="ide-editor"><div class="ide-tabs"><span class="active">heady-manager.js</span><span>llm-router.js</span></div>
-      <pre class="ide-code"><code>// Heady Manager v3.2
+      <pre class="ide-code"><code>// Heady™ Manager v3.2
 const { orchestrate } = require('./services');
 module.exports = { boot: () => orchestrate() };</code></pre></div></div>
     </div>

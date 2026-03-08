@@ -1,7 +1,7 @@
 /**
  * Eradication Protocol
  * Prunes stale files and vectors from the monorepo before public projection.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

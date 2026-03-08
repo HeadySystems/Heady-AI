@@ -3,7 +3,7 @@ name: heady-multi-model
 description: Heady™ cross-provider AI routing — access Claude, GPT-4o, Gemini, Groq, and HeadyBuddy through a unified interface with model-selection guidance.
 ---
 
-# Heady Multi-Model Routing Skill
+# Heady™ Multi-Model Routing Skill
 
 Use this skill when you need to **leverage specific AI models** for their strengths, **compare outputs** across providers, or **route to the optimal model** for a given task. All models are accessed through Heady's branded namespace with 100% Heady routing.
 
@@ -20,7 +20,7 @@ Use this skill when you need to **leverage specific AI models** for their streng
 
 ## Tool Details
 
-### HeadyJules (Claude) — `mcp_Heady_heady_claude`
+### Heady™Jules (Claude) — `mcp_Heady_heady_claude`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -31,7 +31,7 @@ Use this skill when you need to **leverage specific AI models** for their streng
 
 **Use `think` action** for problems requiring deep step-by-step reasoning.
 
-### HeadyCompute (GPT-4o) — `mcp_Heady_heady_openai`
+### Heady™Compute (GPT-4o) — `mcp_Heady_heady_openai`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -39,7 +39,7 @@ Use this skill when you need to **leverage specific AI models** for their streng
 | `action` | enum | `chat` | `chat`, `complete` |
 | `model` | string | `gpt-4o` | Model override |
 
-### HeadyPythia (Gemini) — `mcp_Heady_heady_gemini`
+### Heady™Pythia (Gemini) — `mcp_Heady_heady_gemini`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -49,7 +49,7 @@ Use this skill when you need to **leverage specific AI models** for their streng
 
 **Best for multimodal tasks** — image analysis, video understanding, very large contexts.
 
-### HeadyFast (Groq) — `mcp_Heady_heady_groq`
+### Heady™Fast (Groq) — `mcp_Heady_heady_groq`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -59,11 +59,11 @@ Use this skill when you need to **leverage specific AI models** for their streng
 
 **Use when speed matters more than depth** — quick lookups, simple transforms, batch processing.
 
-### HeadyBuddy — `mcp_Heady_heady_buddy`
+### Heady™Buddy — `mcp_Heady_heady_buddy`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
-| `message` | string | **required** | Message for HeadyBuddy |
+| `message` | string | **required** | Message for Heady™Buddy |
 | `action` | enum | `chat` | `chat`, `memory`, `skills`, `tasks`, `providers` |
 | `provider` | enum | `auto` | `headypythia`, `headyjules`, `headylocal`, `auto` |
 

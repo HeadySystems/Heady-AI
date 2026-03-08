@@ -1,7 +1,7 @@
 # HEADY MULTI-PERSONA SYSTEM - IMPLEMENTATION GUIDE
 
 ## Overview
-This guide explains how to implement and use the Heady multi-persona animal framework across your AI agents, IDEs, and orchestration system.
+This guide explains how to implement and use the Heady™ multi-persona animal framework across your AI agents, IDEs, and orchestration system.
 
 ## File Structure
 
@@ -80,9 +80,9 @@ const HEADY_CONTEXT = {
 Create `.github/PROMPTS.md` in each Heady repository:
 
 ```markdown
-# Heady Multi-Persona System Active
+# Heady™ Multi-Persona System Active
 
-This repository operates under the Heady multi-persona framework.
+This repository operates under the Heady™ multi-persona framework.
 
 ## For AI Assistants
 When working with this codebase, load and follow:
@@ -285,7 +285,7 @@ For issues with persona system implementation:
 
 ## Summary
 
-The Heady multi-persona system is now your permanent operating framework. Every task, no matter how small, should engage the relevant personas for comprehensive, thorough, production-ready solutions.
+The Heady™ multi-persona system is now your permanent operating framework. Every task, no matter how small, should engage the relevant personas for comprehensive, thorough, production-ready solutions.
 
 **Remember:**
 - 🦉 Owl keeps you strategic

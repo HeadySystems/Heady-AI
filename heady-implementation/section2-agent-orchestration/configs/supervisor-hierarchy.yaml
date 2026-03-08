@@ -1,6 +1,6 @@
 # =============================================================================
 # supervisor-hierarchy.yaml
-# Heady Latent OS — 17-Swarm Supervisor Hierarchy Configuration
+# Heady™ Latent OS — 17-Swarm Supervisor Hierarchy Configuration
 # =============================================================================
 #
 # ─── Phi-Math Integration ────────────────────────────────────────────────────
@@ -29,7 +29,7 @@
 #   Circuit breaker failures: fib(5) = 5        — same value, now Fibonacci-grounded
 #
 # Sacred Geometry Topology:
-#   HeadySoul (center) → Inner Ring (5 tactical) → Middle Ring (7 operational)
+#   Heady™Soul (center) → Inner Ring (5 tactical) → Middle Ring (7 operational)
 #     → Outer Ring (3 edge workers) + Governance Ring (1 policy)
 #
 # Resource Allocation: Fibonacci ratios (sum of first 17 terms = 1596)
@@ -71,7 +71,7 @@ rings:
   center:
     name: "HeadySoul Center"
     description: >
-      The singular central orchestrator embodying the HeadySoul consciousness.
+      The singular central orchestrator embodying the Heady™Soul consciousness.
       Receives all top-level tasks and distributes to inner ring coordinators.
       Maintains global state, cross-swarm consensus, and strategic intent.
     swarm_count: 1

@@ -3,9 +3,9 @@
  *
  * Resolves the current domain hostname to a projection configuration.
  * Used by the shell to determine which micro-frontend to activate for
- * any given Heady domain entry point.
+ * any given Heady™ domain entry point.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module services/domain-router
  */
@@ -51,7 +51,7 @@ const DOMAIN_MAP = {
     endpoint: 'https://headysystems.com',
     stalenessBudget: 3600,       // 1 hour
     syncMode: 'event-driven',
-    description: 'Marketing landing page for HeadySystems Inc.',
+    description: 'Marketing landing page for Heady™Systems Inc.',
   },
 
   'headymcp.com': {

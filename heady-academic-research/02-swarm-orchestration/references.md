@@ -10,7 +10,7 @@
 ### Orchestrated Distributed Intelligence
 - **Tallam, K. (2025)** — "From Autonomous Agents to Integrated Systems: Orchestrated Distributed Intelligence"
   - arXiv:2503.13754 | ODI paradigm — cohesive orchestrated networks with multi-loop feedback and high cognitive density
-  - Aligns with Heady's HeadyConductor dispatch pattern
+  - Aligns with Heady™'s HeadyConductor dispatch pattern
 
 ### Scaling Multi-Agent LLM Collaboration
 - **Qian, C. et al. (2025)** — "Scaling Large Language Model-based Multi-Agent Collaboration"
@@ -64,13 +64,13 @@
 ### Hierarchical Broadcast Control
 - **Yamada, K. et al. (2024)** — "Distributed Broadcast Control of Multi-Agent Systems Using Hierarchical Coordination"
   - Biomimetics 9(7):407 | Hierarchical BC with distributed sub-coordinators for larger multi-agent systems
-  - Aligns with Heady's strategic → tactical → operational layer hierarchy
+  - Aligns with Heady™'s strategic → tactical → operational layer hierarchy
 
 ### Distributed Task Allocation via Submodular Optimization
 - **Liu, J. et al. (2024)** — "Distributed Task Allocation for Multi-Agent Systems: A Submodular Optimization Approach"
   - arXiv:2412.02146
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - Heady's 17-swarm topology with Sacred Geometry ring placement (inner/middle/outer) is validated by hierarchical coordination patterns
 - Fibonacci resource allocation (34%/21%/13%/8%/5%) maps to Nature-published optimization approaches
 - Phi-scaled load balancing has academic precedent in golden-ratio optimization algorithms

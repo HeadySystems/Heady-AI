@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module cloudflare-config
- * @description Cloudflare configuration module for HeadySystems
+ * @description Cloudflare configuration module for Heady™Systems
  *
  * Covers:
  *   - Page rules for all 9 domains
@@ -40,7 +40,7 @@ const DOMAINS = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Standard security headers for all Heady properties.
+ * Standard security headers for all Heady™ properties.
  * HSTS max-age uses fib(14)=377 days × 86400s = 32,572,800s
  */
 const SECURITY_HEADERS = {
@@ -346,7 +346,7 @@ const GEO_ROUTING = {
  * Deployed as a Cloudflare Worker on api.headyme.com/v1/public/*
  */
 const EDGE_API_CACHE_WORKER = `
-// Heady Edge API Cache Worker
+// Heady™ Edge API Cache Worker
 // TTL: fib(10)=55s for public API endpoints
 const PHI = 1.618033988749895;
 const CACHE_TTL = 55; // fib(10)
@@ -399,7 +399,7 @@ export default {
  * Routes requests to nearest Cloud Run region based on CF-IPCountry.
  */
 const EDGE_GEO_ROUTING_WORKER = `
-// Heady Geolocation Routing Worker
+// Heady™ Geolocation Routing Worker
 const REGION_MAP = {
   // North America → us-central1
   US: 'https://us-central1-heady.run.app',
@@ -444,7 +444,7 @@ export default {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Cache-Tag builder for Heady resources.
+ * Cache-Tag builder for Heady™ resources.
  * Use these tags in Cache-Tag response headers and for targeted purging.
  */
 const CacheTagBuilder = {

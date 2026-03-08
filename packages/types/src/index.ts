@@ -1,5 +1,5 @@
 /**
- * @headysystems/types
+ * @heady-ai/types
  * Shared TypeScript types across all services
  */
 

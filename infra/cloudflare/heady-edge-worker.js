@@ -4,36 +4,47 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  *
  * Runs on Cloudflare's edge network (~300 PoPs worldwide).
- * Routes requests from 9+ Heady domains to the Cloud Run origin,
+ * Routes requests from 15+ Heady™ domains to the Cloud Run origin,
  * handles edge caching, security headers, rate limiting, and health checks.
  *
- * Domains served:
- *   headyme.com, headysystems.com, headyconnection.org, headybuddy.org,
- *   headymcp.com, headyio.com, headybot.com, headyapi.com, heady-ai.com
+ * Domains served (verified Cloudflare zones):
+ *   headyme.com, headysystems.com, headyconnection.org, headyconnection.com,
+ *   headybuddy.org, headymcp.com, headyio.com, headybot.com, headyapi.com,
+ *   heady-ai.com, headyos.com, headyfinance.com, headymusic.com,
+ *   headycloud.com, headystore.com, headyex.com
  *
  * Deploy:
  *   wrangler deploy infra/cloudflare/heady-edge-worker.js --name heady-edge
  *
- * © 2026 HeadySystems Inc. — Proprietary
+ * © 2026 Heady™Systems Inc. — Proprietary
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 // ── Configuration ────────────────────────────────────────────────────────────
 
-const CLOUD_RUN_ORIGIN = 'https://heady-manager-xxxxxxxxxx-uc.a.run.app';
+const CLOUD_RUN_ORIGIN = 'https://heady-manager-609590223909.us-central1.run.app';
 
 const DOMAIN_ROUTES = {
-  'headyme.com':           { service: 'heady-manager', pathPrefix: '/app' },
-  'www.headyme.com':       { service: 'heady-manager', pathPrefix: '/app' },
-  'headysystems.com':      { service: 'heady-manager', pathPrefix: '/systems' },
-  'www.headysystems.com':  { service: 'heady-manager', pathPrefix: '/systems' },
-  'headyconnection.org':   { service: 'heady-manager', pathPrefix: '/connection' },
-  'headybuddy.org':        { service: 'heady-manager', pathPrefix: '/buddy' },
-  'headymcp.com':          { service: 'heady-manager', pathPrefix: '/mcp' },
-  'headyio.com':           { service: 'heady-manager', pathPrefix: '/io' },
-  'headybot.com':          { service: 'heady-manager', pathPrefix: '/bot' },
-  'headyapi.com':          { service: 'heady-manager', pathPrefix: '/api' },
-  'heady-ai.com':           { service: 'heady-manager', pathPrefix: '/ai' },
+  'headyme.com': { service: 'heady-manager', pathPrefix: '/app' },
+  'www.headyme.com': { service: 'heady-manager', pathPrefix: '/app' },
+  'headysystems.com': { service: 'heady-manager', pathPrefix: '/systems' },
+  'www.headysystems.com': { service: 'heady-manager', pathPrefix: '/systems' },
+  'headyconnection.org': { service: 'heady-manager', pathPrefix: '/connection' },
+  'www.headyconnection.org': { service: 'heady-manager', pathPrefix: '/connection' },
+  'headyconnection.com': { service: 'heady-manager', pathPrefix: '/connection' },
+  'headybuddy.org': { service: 'heady-manager', pathPrefix: '/buddy' },
+  'www.headybuddy.org': { service: 'heady-manager', pathPrefix: '/buddy' },
+  'headymcp.com': { service: 'heady-manager', pathPrefix: '/mcp' },
+  'headyio.com': { service: 'heady-manager', pathPrefix: '/io' },
+  'headybot.com': { service: 'heady-manager', pathPrefix: '/bot' },
+  'headyapi.com': { service: 'heady-manager', pathPrefix: '/api' },
+  'heady-ai.com': { service: 'heady-manager', pathPrefix: '/ai' },
+  'headyos.com': { service: 'heady-manager', pathPrefix: '/os' },
+  'headyfinance.com': { service: 'heady-manager', pathPrefix: '/finance' },
+  'headymusic.com': { service: 'heady-manager', pathPrefix: '/music' },
+  'headycloud.com': { service: 'heady-manager', pathPrefix: '/cloud' },
+  'headystore.com': { service: 'heady-manager', pathPrefix: '/store' },
+  'headyex.com': { service: 'heady-manager', pathPrefix: '/ex' },
 };
 
 // Rate limiting config (per IP, per minute)
@@ -100,13 +111,23 @@ const ALLOWED_ORIGINS = new Set([
   'https://headyme.com',
   'https://www.headyme.com',
   'https://headysystems.com',
+  'https://www.headysystems.com',
   'https://headyconnection.org',
+  'https://www.headyconnection.org',
+  'https://headyconnection.com',
   'https://headybuddy.org',
+  'https://www.headybuddy.org',
   'https://headymcp.com',
   'https://headyio.com',
   'https://headybot.com',
   'https://headyapi.com',
   'https://heady-ai.com',
+  'https://headyos.com',
+  'https://headyfinance.com',
+  'https://headymusic.com',
+  'https://headycloud.com',
+  'https://headystore.com',
+  'https://headyex.com',
 ]);
 
 function getCorsHeaders(request) {
@@ -276,7 +297,7 @@ export default {
 
       return new Response(JSON.stringify({
         error: 'Origin unavailable',
-        message: 'The Heady platform is temporarily unavailable. Please retry.',
+        message: 'The Heady™ platform is temporarily unavailable. Please retry.',
         hostname,
         requestId,
         timestamp: new Date().toISOString(),

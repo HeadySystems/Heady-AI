@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Metrics Collector
+ * Heady™ Metrics Collector
  * ═══════════════════════════════════════════════════════════════════
  * 
  * Polls all service health endpoints and aggregates metrics using

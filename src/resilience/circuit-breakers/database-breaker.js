@@ -14,6 +14,7 @@
  */
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const { EventEmitter } = require('events');
 const { registry, PHI } = require('./external-api-breakers');
 const { STATES } = require('../../circuit-breaker');
@@ -22,7 +23,7 @@ const { STATES } = require('../../circuit-breaker');
 // Constants
 // ---------------------------------------------------------------------------
 const READ_TIMEOUT_MS  =  5_000;
-const WRITE_TIMEOUT_MS = 30_000;
+const WRITE_TIMEOUT_MS = PHI_TIMING.CYCLE;
 const HEALTH_PING_INTERVAL_MS = 15_000;
 const MAX_RECONNECT_ATTEMPTS  = 10;
 const BASE_RECONNECT_DELAY_MS = 500;
@@ -43,7 +44,7 @@ function jitter(ms) {
 }
 
 async function reconnectDelay(attempt) {
-  const base = Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), 30_000);
+  const base = Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), PHI_TIMING.CYCLE);
   await new Promise(r => setTimeout(r, jitter(base)));
 }
 
@@ -234,7 +235,7 @@ class PostgresBreaker extends EventEmitter {
     }
 
     const attempt = this._reconnectAttempt++;
-    const delay = Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), 30_000);
+    const delay = Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), PHI_TIMING.CYCLE);
     const delayWithJitter = jitter(delay);
 
     this._reconnectTimer = setTimeout(async () => {
@@ -387,7 +388,7 @@ class RedisBreaker extends EventEmitter {
       return;
     }
     const attempt = this._reconnectAttempt++;
-    const delay = jitter(Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), 30_000));
+    const delay = jitter(Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), PHI_TIMING.CYCLE));
 
     this._reconnectTimer = setTimeout(async () => {
       try {

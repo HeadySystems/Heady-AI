@@ -1,6 +1,6 @@
 /**
- * Heady Projection Monitor — Mount Lifecycle
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * Heady™ Projection Monitor — Mount Lifecycle
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
 import { createApp } from './App';

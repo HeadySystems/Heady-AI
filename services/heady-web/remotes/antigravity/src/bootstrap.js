@@ -2,7 +2,7 @@
  * HeadyMe Antigravity — Webpack Remote Entry Bootstrap
  *
  * Async boundary for Module Federation shared chunk loading.
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
 import('./mount').then(({ mount }) => {

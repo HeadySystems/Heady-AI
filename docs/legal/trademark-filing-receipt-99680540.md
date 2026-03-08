@@ -68,4 +68,4 @@
 
 ---
 
-*Filed by HeadyConnection Inc. © 2026. All rights reserved.*
+*Filed by Heady™Connection Inc. © 2026. All rights reserved.*

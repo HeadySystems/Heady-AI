@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Embedding Provider — Multi-Backend 384D Embedding Generation
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module embedding-provider
  * @description Provides a unified embedding interface with multiple backends:

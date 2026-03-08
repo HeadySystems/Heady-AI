@@ -1,12 +1,12 @@
 ---
 name: heady-vector-projection
-description: Use when working with the vector projection engine, vector serving, vector pipelines, or 3D spatial computing in the Heady ecosystem. Keywords include vector projection, vector serve, vector pipeline, 3D spatial, projection engine, vector template, spatial computing, and vector operations.
+description: Use when working with the vector projection engine, vector serving, vector pipelines, or 3D spatial computing in the Heady™ ecosystem. Keywords include vector projection, vector serve, vector pipeline, 3D spatial, projection engine, vector template, spatial computing, and vector operations.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Vector Projection Engine
+# Heady™ Vector Projection Engine
 
 ## When to Use This Skill
 

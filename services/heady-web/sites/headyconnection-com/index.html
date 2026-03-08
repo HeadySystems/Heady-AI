@@ -8,7 +8,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeadyConnection — The Heady Community Portal | HeadySystems Inc.</title>
+<title>HeadyConnection — The Heady™ Community Portal | HeadySystems Inc.</title>
 <meta name="description" content="Connect, collaborate, and build the future of autonomous AI together. The official HeadySystems community portal — forums, marketplace, events, and HeadyCoin tokenomics.">
 <meta name="keywords" content="HeadyConnection, HeadySystems community, AI community, HeadyCoin, agent marketplace, Eric Haywood">
 <link rel="canonical" href="https://headyconnection.com/">
@@ -16,14 +16,14 @@
 <!-- OpenGraph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://headyconnection.com/">
-<meta property="og:title" content="HeadyConnection — The Heady Community">
+<meta property="og:title" content="HeadyConnection — The Heady™ Community">
 <meta property="og:description" content="Connect, collaborate, and build the future of autonomous AI together.">
 <meta property="og:image" content="https://headyconnection.com/og-image.jpg">
 
 <!-- Twitter Cards -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@headysystems">
-<meta name="twitter:title" content="HeadyConnection — The Heady Community">
+<meta name="twitter:title" content="HeadyConnection — The Heady™ Community">
 <meta name="twitter:description" content="Connect, collaborate, and build the future of autonomous AI together.">
 <meta name="twitter:image" content="https://headyconnection.com/og-image.jpg">
 
@@ -34,7 +34,7 @@
   "@type": "WebSite",
   "name": "HeadyConnection",
   "url": "https://headyconnection.com",
-  "description": "Community portal for HeadySystems Inc. — forums, marketplace, events, and tokenomics",
+  "description": "Community portal for Heady™Systems Inc. — forums, marketplace, events, and tokenomics",
   "publisher": {"@type": "Organization", "name": "HeadySystems Inc.", "founder": {"@type": "Person", "name": "Eric Haywood"}},
   "creator": {"@type": "SoftwareApplication", "name": "HeadySystems Platform", "url": "https://headysystems.com"}
 }
@@ -309,6 +309,21 @@
   }
   @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
 </style>
+
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyBpPClFwr0VDxl_D1SLe2dtvq2MX05QL6g",
+      authDomain: "heady-ai.firebaseapp.com",
+      projectId: "heady-ai",
+      storageBucket: "heady-ai.firebasestorage.app",
+      messagingSenderId: "1003436179562",
+      appId: "1:1003436179562:web:1ab30825a7119a82578a13",
+      measurementId: "G-M1M5SZ6WFY"
+    });
+  </script>
 </head>
 <body>
 
@@ -345,7 +360,7 @@
   <canvas id="heroCanvas" aria-hidden="true"></canvas>
   <div class="hero-content">
     <div class="hero-badge">Community Portal — HeadySystems Inc.</div>
-    <h1 class="hero-title">The Heady Community</h1>
+    <h1 class="hero-title">The Heady™ Community</h1>
     <p class="hero-subtitle">Connect, collaborate, and build the future of autonomous AI together. Weekly sessions, monthly deep dives, and a growing marketplace.</p>
     <div class="hero-actions">
       <a href="#community" class="btn-primary">
@@ -366,7 +381,7 @@
     <div class="section-header fade-up">
       <span class="section-label">Community Hub</span>
       <h2 id="community-heading" class="section-title">Connect &amp; Collaborate</h2>
-      <p class="section-desc">Discuss, share, and grow with the HeadySystems developer community.</p>
+      <p class="section-desc">Discuss, share, and grow with the Heady™Systems developer community.</p>
     </div>
 
     <div class="community-layout">
@@ -388,7 +403,7 @@
         </div>
         <div class="forum-category" role="button" tabindex="0" aria-label="Agents forum">
           <div class="forum-cat-icon" aria-hidden="true">🤖</div>
-          <div class="forum-cat-info"><h4>Agents</h4><p>Building and deploying AI agents with HeadyOS</p></div>
+          <div class="forum-cat-info"><h4>Agents</h4><p>Building and deploying AI agents with Heady™OS</p></div>
           <div class="forum-cat-count">3.1k posts</div>
         </div>
         <div class="forum-category" role="button" tabindex="0" aria-label="Orchestration forum">
@@ -501,13 +516,13 @@
     <div class="section-header fade-up">
       <span class="section-label">HeadyCoin</span>
       <h2 id="token-heading" class="section-title">Community Token Economy</h2>
-      <p class="section-desc">HeadyCoin powers governance, compute credits, and marketplace transactions within the HeadyOS ecosystem.</p>
+      <p class="section-desc">HeadyCoin powers governance, compute credits, and marketplace transactions within the Heady™OS ecosystem.</p>
     </div>
 
     <div class="token-layout">
       <div class="token-utility fade-up">
         <h3>Token Utility</h3>
-        <p>HeadyCoin (HCN) is the native utility token of the HeadyOS ecosystem, enabling decentralized governance, compute credit allocation, and frictionless marketplace transactions.</p>
+        <p>HeadyCoin (HCN) is the native utility token of the Heady™OS ecosystem, enabling decentralized governance, compute credit allocation, and frictionless marketplace transactions.</p>
         <ul class="token-use-cases" aria-label="Token use cases">
           <li>Governance voting on protocol upgrades and parameter changes</li>
           <li>Compute credits for running HeadyOS agent workloads</li>
@@ -652,7 +667,7 @@
           </svg>
           <span style="margin-left:8px">HeadyConnection</span>
         </a>
-        <p>Community portal for HeadySystems Inc. — connecting builders, researchers, and AI enthusiasts worldwide.</p>
+        <p>Community portal for Heady™Systems Inc. — connecting builders, researchers, and AI enthusiasts worldwide.</p>
       </div>
       <div class="footer-col">
         <h5>Community</h5>
@@ -676,14 +691,14 @@
         <h5>HeadySystems</h5>
         <ul>
           <li><a href="https://headysystems.com">Home</a></li>
-          <li><a href="https://headyai.com">Research</a></li>
+          <li><a href="https://heady-ai.com">Research</a></li>
           <li><a href="https://headyconnection.org">Non-Profit</a></li>
           <li><a href="mailto:eric@headyconnection.org">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 HeadySystems Inc. All rights reserved.</p>
+      <p>© 2026 Heady™Systems Inc. All rights reserved.</p>
       <a href="https://headysystems.com" target="_blank" rel="noopener noreferrer">Created with HeadySystems Platform</a>
     </div>
   </div>
@@ -824,7 +839,7 @@
     { name: 'Jira', icon: '🔵', desc: 'Create and update tickets from agent outputs' },
     { name: 'Notion', icon: '📝', desc: 'Write agent outputs directly to Notion pages' },
     { name: 'Salesforce', icon: '☁️', desc: 'Sync AI insights with Salesforce CRM records' },
-    { name: 'HubSpot', icon: '🟠', desc: 'Automate HubSpot workflows with HeadyOS agents' },
+    { name: 'HubSpot', icon: '🟠', desc: 'Automate HubSpot workflows with Heady™OS agents' },
   ];
 
   const grid = document.getElementById('marketplaceGrid');
@@ -987,7 +1002,7 @@ function heady_auth(provider){
   <div class="cross-site-nav" id="crossSiteNav">
     <button class="csn-toggle" onclick="document.getElementById('crossSiteNav').classList.toggle('open')">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      Heady Network
+      Heady™ Network
     </button>
     <div class="csn-links"><a href="https://headyme.com" class="csn-link" target="_blank">HeadyMe</a><a href="https://headybuddy.org" class="csn-link" target="_blank">HeadyBuddy</a><a href="https://headysystems.com" class="csn-link" target="_blank">HeadySystems</a><a href="https://headyconnection.org" class="csn-link" target="_blank">HeadyConnection</a><a href="https://headymcp.com" class="csn-link" target="_blank">HeadyMCP</a><a href="https://headyio.com" class="csn-link" target="_blank">HeadyIO</a><a href="https://headybot.com" class="csn-link" target="_blank">HeadyBot</a><a href="https://headyos.com" class="csn-link" target="_blank">HeadyOS</a><a href="https://headyapi.com" class="csn-link" target="_blank">HeadyAPI</a></div>
   </div>

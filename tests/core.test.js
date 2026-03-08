@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Core module tests — heady-kv, heady-jwt, heady-crypt, heady-scheduler, heady-fetch
@@ -187,13 +187,13 @@ describe('heady-crypt', () => {
 
   test('compare() returns true for matching password', async () => {
     const h = await headyCrypt.hash('correct-horse', 4);
-    const match = await headyCrypt.compare('correct-horse', h);
+    const match = await headycrypt.compare('correct-horse', h);
     expect(match).toBe(true);
   });
 
   test('compare() returns false for wrong password', async () => {
     const h = await headyCrypt.hash('correct-horse', 4);
-    const match = await headyCrypt.compare('wrong-pony', h);
+    const match = await headycrypt.compare('wrong-pony', h);
     expect(match).toBe(false);
   });
 
@@ -222,8 +222,8 @@ describe('heady-crypt', () => {
 
   test('hashSync() and compareSync() work synchronously', () => {
     const h = headyCrypt.hashSync('sync-password', 4);
-    expect(headyCrypt.compareSync('sync-password', h)).toBe(true);
-    expect(headyCrypt.compareSync('wrong', h)).toBe(false);
+    expect(headycrypt.compareSync('sync-password', h)).toBe(true);
+    expect(headycrypt.compareSync('wrong', h)).toBe(false);
   });
 });
 

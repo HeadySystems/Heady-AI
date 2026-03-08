@@ -1,7 +1,7 @@
 # First-Year Revenue Model
-## Heady Latent OS — HeadySystems, Inc.
+## Heady™ Latent OS — HeadySystems Inc.
 
-> **Purpose:** Month-by-month financial projections for Year 1 of the Heady Latent OS commercial launch.
+> **Purpose:** Month-by-month financial projections for Year 1 of the Heady™ Latent OS commercial launch.
 >
 > **Prepared:** March 2026
 >

@@ -1,0 +1,21 @@
+{
+    "name": "@heady-ai/shared-ui",
+    "version": "1.0.0",
+    "description": "Shared UI component library for the Heady ecosystem — domain-aware navigation, theming, and branded components",
+    "main": "src/index.ts",
+    "scripts": {
+        "build": "tsc",
+        "lint": "eslint src/"
+    },
+    "dependencies": {},
+    "peerDependencies": {
+        "react": ">=18.0.0",
+        "react-dom": ">=18.0.0"
+    },
+    "keywords": [
+        "heady",
+        "shared-ui",
+        "domain-aware",
+        "sacred-geometry"
+    ]
+}

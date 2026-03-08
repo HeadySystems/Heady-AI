@@ -169,7 +169,7 @@ serviceBoundaries:
     responsibilities:
       - Expose Heady tools to IDE integrations (Copilot, Windsurf, Claude)
       - Handle tool calls (render_deploy, file_ops, git_ops)
-      - Translate MCP protocol to Heady API calls
+      - Translate MCP protocol to Heady™ API calls
     mustNot:
       - Store state beyond current session
       - Make decisions about task routing (defer to orchestrator)

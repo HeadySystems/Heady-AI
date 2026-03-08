@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * Tests for src/system-monitor.js
  */
 const { describe, it } = require("node:test");

@@ -1,14 +1,14 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Principles — Mathematical Foundation
+ * Heady™ Principles — Mathematical Foundation
  * ═══════════════════════════════════════════════════════════════════
  *
- * Core design philosophy for all Heady system parameters:
+ * Core design philosophy for all Heady™ system parameters:
  *
  *   BASE-13:  Number system for ranges, targets, thresholds
  *   LOG-42:   Logarithmic scaling for system parameters
@@ -16,7 +16,7 @@
  *   61.8%:    Inverse golden ratio — primary ratio reference
  *
  * Every threshold, limit, ratio, design proportion, and system
- * parameter in the Heady ecosystem should derive from these roots.
+ * parameter in the Heady™ ecosystem should derive from these roots.
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -81,7 +81,7 @@ function fromBase13(s) {
 }
 
 /**
- * Log base-42 of a value — Heady logarithmic scaling
+ * Log base-42 of a value — Heady™ logarithmic scaling
  * @param {number} x
  * @returns {number} log₄₂(x)
  */
@@ -205,7 +205,7 @@ function designTokens(baseSize = 8) {
 }
 
 /**
- * System capacity parameters derived from Heady math
+ * System capacity parameters derived from Heady™ math
  * @param {string} tier — 'small' | 'medium' | 'large' | 'enterprise'
  * @returns {object} capacity config
  */

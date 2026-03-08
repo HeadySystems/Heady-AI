@@ -79,8 +79,8 @@
 - **Fagin, Riegel, Gray (2024)** — "Foundations of reasoning with uncertainty" — PNAS
 - **Open Logic Project** — Three-valued Logics PDF
 
-## Heady Integration Opportunity
-These papers collectively validate CSL's approach of using continuous geometric operations on vectors as logical gates. Key differentiators for Heady's CSL:
+## Heady™ Integration Opportunity
+These papers collectively validate CSL's approach of using continuous geometric operations on vectors as logical gates. Key differentiators for Heady™'s CSL:
 1. CSL NOT achieves 100% semantic negation vs 32% for probabilistic NOT (internal benchmarks)
 2. CSL routing is 5× faster than LLM classification, 43% cheaper
 3. Phi-scaled thresholds (φ⁻¹ ≈ 0.618, φ⁻² ≈ 0.382) provide principled decision boundaries

@@ -1,8 +1,8 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * Heady Models Router — OpenAI-compatible model inference & fine-tuning API
+ * Heady™ Models Router — OpenAI-compatible model inference & fine-tuning API
  * Extracted from heady-manager.js monolith — Phase 2 Liquid Architecture.
  */
 
@@ -19,7 +19,7 @@ try {
         res.json({ object: 'list', data: listModels() });
     });
 
-    // Heady-native: GET /api/models (same data, friendlier format)
+    // Heady™-native: GET /api/models (same data, friendlier format)
     router.get('/models', (req, res) => {
         const models = listModels();
         res.json({

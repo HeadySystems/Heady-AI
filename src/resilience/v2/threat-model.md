@@ -1,4 +1,4 @@
-# Heady Platform — Threat Model
+# Heady™ Platform — Threat Model
 
 **Version:** 1.0  
 **Date:** 2026-03-07  
@@ -9,7 +9,7 @@
 
 ## 1. System Overview
 
-The Heady platform is an agentic AI orchestration system with the following trust boundaries:
+The Heady™ platform is an agentic AI orchestration system with the following trust boundaries:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐

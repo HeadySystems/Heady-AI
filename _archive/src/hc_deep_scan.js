@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Deep Scan — Comprehensive Internal + External System Scanner
+ * Heady™ Deep Scan — Comprehensive Internal + External System Scanner
  *
  * Scans all services, evaluates best-practice adherence, solidifies
  * HeadyRegistry and HeadyPatterns, and exposes a unified control API

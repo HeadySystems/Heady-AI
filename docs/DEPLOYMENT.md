@@ -1,4 +1,4 @@
-# HeadyStack Deployment Guide
+# Heady™Stack Deployment Guide
 
 **Version:** 3.0.1 "Aether"
 
@@ -194,7 +194,7 @@ gcloud run services describe headystack \
 # Map custom domain
 gcloud run domain-mappings create \
   --service headystack \
-  --domain api.headysystems.ai \
+  --domain api.headysystems.com \
   --region us-central1
 
 # Add DNS records as instructed by the output

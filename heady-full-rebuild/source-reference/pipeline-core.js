@@ -1,6 +1,6 @@
 'use strict';
 /**
- * pipeline-core.js — Heady Sovereign AI Platform
+ * pipeline-core.js — Heady™ Sovereign AI Platform
  * Canonical 21-stage HCFullPipeline implementation (MASTER_DIRECTIVES §7.4).
  *
  * Stages (in order):
@@ -612,7 +612,7 @@ const STAGE_DEFS = [
     async execute(context) {
       const start  = Date.now();
       const exec   = context.executionResult || {};
-      // Verify output via HeadyAssure pattern
+      // Verify output via Heady™Assure pattern
       const passed = exec.outcome === 'COMPLETED';
       const verificationScore = passed ? (1 - PSI * PSI * PSI) : PSI * PSI;  // 0.764 or 0.382
       const gated = parseFloat(cslGate(verificationScore, verificationScore, CSL_THRESHOLDS.MEDIUM, 0.1).toFixed(4));

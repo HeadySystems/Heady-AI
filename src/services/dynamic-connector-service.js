@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -7,7 +7,7 @@
  *
  * Autonomous API connector synthesis:
  *   1. Discovery — Fetch OpenAPI/Swagger/GraphQL specs
- *   2. Ontology Mapping — Constraint solver maps external → Heady schema
+ *   2. Ontology Mapping — Constraint solver maps external → Heady™ schema
  *   3. Code Generation — LLM generates connector code
  *   4. Sandbox & Lint — Static analysis + DLP validation
  *   5. Registry — Validated connectors registered for ecosystem use
@@ -19,6 +19,7 @@
 const EventEmitter = require("events");
 const crypto = require("crypto");
 const { midiBus, CHANNELS } = require("../engines/midi-event-bus");
+const { PHI_TIMING } = require("../shared/phi-math");
 
 const STATE = {
     DISCOVERING: "discovering", MAPPING: "mapping", GENERATING: "generating",
@@ -184,9 +185,9 @@ class DynamicConnectorService extends EventEmitter {
             const fn = (ep.operationId || `${ep.method.toLowerCase()}${ep.path}`).replace(/[^a-z0-9_]/gi, "_");
             exports.push(fn);
             if (ep.method === "GET") {
-                lines.push(`async function ${fn}(p={},creds={}){rlCheck();const q=new URLSearchParams(p).toString();return retry(()=>fetch(BASE+"${ep.path}"+(q?"?"+q:""),{method:"GET",headers:{...authHdr(creds)},signal:AbortSignal.timeout(30000)}).then(r=>r.json()));}`);
+                lines.push(`async function ${fn}(p={},creds={}){rlCheck();const q=new URLSearchParams(p).toString();return retry(()=>fetch(BASE+"${ep.path}"+(q?"?"+q:""),{method:"GET",headers:{...authHdr(creds)},signal:AbortSignal.timeout(${PHI_TIMING.CYCLE})}).then(r=>r.json()));}`);
             } else {
-                lines.push(`async function ${fn}(p={},creds={}){rlCheck();return retry(()=>fetch(BASE+"${ep.path}",{method:"${ep.method}",headers:{"Content-Type":"application/json",...authHdr(creds)},body:JSON.stringify(p),signal:AbortSignal.timeout(30000)}).then(r=>r.json()));}`);
+                lines.push(`async function ${fn}(p={},creds={}){rlCheck();return retry(()=>fetch(BASE+"${ep.path}",{method:"${ep.method}",headers:{"Content-Type":"application/json",...authHdr(creds)},body:JSON.stringify(p),signal:AbortSignal.timeout(${PHI_TIMING.CYCLE})}).then(r=>r.json()));}`);
             }
         }
         lines.push("", `module.exports={BASE,${exports.join(",")}};`);

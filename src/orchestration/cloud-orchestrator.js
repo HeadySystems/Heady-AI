@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * HEADY CLOUD ORCHESTRATOR
  * ════════════════════════════════════════════════════════════════════
- * The brain that makes Heady fully autonomous in the cloud.
+ * The brain that makes Heady™ fully autonomous in the cloud.
  *
  * Architecture:
  *   1. HeadyMC (Monte Carlo) + HeadySims → contest solutions in parallel
@@ -185,7 +185,7 @@ class CloudWorkerPool extends EventEmitter {
 }
 
 // ─── 3D VECTOR MERGE ENGINE ────────────────────────────────────────────────
-// Intelligent merge: takes competing outputs from HeadyMC + HeadySims,
+// Intelligent merge: takes competing outputs from Heady™MC + HeadySims,
 // scores them in 3D vector space, and produces the optimal merged result.
 class VectorMergeEngine {
     constructor() {
@@ -446,7 +446,7 @@ class HeadyCloudOrchestrator extends EventEmitter {
     }
 
     /**
-     * Run a full autonomous cycle — the Heady Intelligence Pipeline:
+     * Run a full autonomous cycle — the Heady™ Intelligence Pipeline:
      *
      *   Phase 1: RESEARCH — HeadyResearch gathers best practices, competitive intel, context
      *   Phase 2: DECOMPOSE — HeadyDecomp analyzes architecture, identifies improvement targets

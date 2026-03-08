@@ -2,7 +2,7 @@
 # Heady™ Latent OS — Domain Routing Configuration
 # Maps each Heady domain to its architectural role, projection repo, and services.
 #
-# © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+# © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 domains:
@@ -11,7 +11,7 @@ domains:
   headyme:
     url:             https://headyme.com
     role:            command_center
-    description:     "Primary user-facing dashboard — manages all Heady sessions, agents, and outputs"
+    description:     "Primary user-facing dashboard — manages all Heady™ sessions, agents, and outputs"
     projection_repo: headyme-projection
     services:
       - session-manager
@@ -25,7 +25,7 @@ domains:
   headysystems:
     url:             https://headysystems.com
     role:            architecture_engine
-    description:     "Core platform engineering — deploys and scales the Heady Latent OS"
+    description:     "Core platform engineering — deploys and scales the Heady™ Latent OS"
     projection_repo: headysystems-projection
     services:
       - infra-provisioner
@@ -81,7 +81,7 @@ domains:
   headyio:
     url:             https://headyio.com
     role:            developer_platform
-    description:     "SDK, CLI tools, and developer experience for the Heady ecosystem"
+    description:     "SDK, CLI tools, and developer experience for the Heady™ ecosystem"
     projection_repo: headyio-projection
     services:
       - sdk-registry
@@ -121,7 +121,7 @@ domains:
 
   # ─── Intelligence Hub ────────────────────────────────────────────────────────
   headyai:
-    url:             https://headyai.com
+    url:             https://heady-ai.com
     role:            intelligence_hub
     description:     "AI model orchestration — inference, fine-tuning, vector search, and learning loops"
     projection_repo: headyai-projection

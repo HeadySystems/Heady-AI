@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
@@ -10,7 +10,7 @@
  * MCP Tool Registry
  *
  * Manages registration, listing, retrieval, validation, and execution
- * of all MCP tools in the Heady AI Platform.
+ * of all MCP tools in the Heady™ AI Platform.
  */
 class ToolRegistry {
   /**

@@ -1,11 +1,11 @@
 /**
  * ∞ Heady™ Vector Pipeline — Staged Processing Pipeline for Vector Operations
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module vector-pipeline
  * @description A staged, back-pressure-aware pipeline for ingesting raw text
- *   into the Heady vector memory system. Stages:
+ *   into the Heady™ vector memory system. Stages:
  *     embed → normalize → shard → store → index → acknowledge
  *   Each stage can be individually monitored. Back-pressure pauses the intake
  *   queue when any internal stage is saturated. Batch processing reduces
@@ -114,7 +114,7 @@ class StageMetrics {
  * ```js
  * const pipeline = new VectorPipeline({ memory, embedProvider });
  * pipeline.start();
- * await pipeline.enqueue({ key: 'memory:1', text: 'Hello Heady', metadata: {} });
+ * await pipeline.enqueue({ key: 'memory:1', text: 'Hello Heady™', metadata: {} });
  * ```
  *
  * @extends EventEmitter

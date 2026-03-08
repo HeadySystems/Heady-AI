@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * ORCH-001: Monte Carlo Resource Scheduler
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Runs 10,000 simulations per deployment decision to find optimal

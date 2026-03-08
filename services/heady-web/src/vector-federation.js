@@ -5,7 +5,7 @@
  * Supports peer management, replication (push / pull / gossip),
  * federated semantic search, and Express route integration.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module vector-federation
  */

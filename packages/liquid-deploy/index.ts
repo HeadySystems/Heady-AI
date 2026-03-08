@@ -1,12 +1,12 @@
 /**
  * @file liquid-deploy/index.ts
- * @package @heady/liquid-deploy
+ * @package @heady-ai/liquid-deploy
  * @version 1.0.0
  *
- * LiquidDeploy — Projection engine for the Heady Liquid Latent OS.
+ * LiquidDeploy — Projection engine for the Heady™ Liquid Latent OS.
  * Projects latent-space AST manifests into physical file-system repos with
  * atomic, all-or-nothing semantics, rollback support, SHA-256 hash
- * verification, and the three Unbreakable Laws of Heady:
+ * verification, and the three Unbreakable Laws of Heady™:
  *
  *   Law 1 — Structural Integrity   : every projected file must have a valid path & non-empty hash
  *   Law 2 — Semantic Coherence     : the manifest id/source must be internally consistent

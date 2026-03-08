@@ -3,7 +3,7 @@
 /**
  * AnomalyDetectorBee — Statistical anomaly detection using phi-harmonic thresholds.
  * Implements z-score + IQR detection with phi-scaled alert levels.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;

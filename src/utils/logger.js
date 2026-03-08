@@ -2,7 +2,7 @@
 /**
  * logger.js — Minimal structured logger for csl-output package.
  * Delegates to console with structured JSON output.
- * Matches the API of the main Heady logger.
+ * Matches the API of the main Heady™ logger.
  */
 
 function _log(level, ...args) {

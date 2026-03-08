@@ -1,5 +1,5 @@
 /**
- * Heady Hot/Cold Path Separation — Cache Layer
+ * Heady™ Hot/Cold Path Separation — Cache Layer
  * Routes requests through fast cache (hot) or origin (cold).
  * Auto-promotes frequently accessed items to hot path.
  * Auto-demotes stale items to cold path.

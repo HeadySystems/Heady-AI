@@ -1,8 +1,8 @@
-# Heady Production — CI/CD Pipeline
+# Heady™ Production — CI/CD Pipeline
 # Matches the security gates from the context file:
 # TruffleHog → CodeQL SAST → npm audit → SBOM CycloneDX → Trivy Container Scan
 
-name: Heady CI/CD
+name: Heady™ CI/CD
 
 on:
   push:

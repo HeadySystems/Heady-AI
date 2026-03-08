@@ -2,7 +2,7 @@
 description: Run the 9-stage battle-sim orchestration pipeline for competitive AI evaluation
 ---
 
-# Heady Battle Sim Workflow
+# Heady™ Battle Sim Workflow
 
 Run the full 9-stage pipeline: Task → Sim → CSL Gate → Battle/MC → Bee → Swarm → Result → Drift → Audit.
 

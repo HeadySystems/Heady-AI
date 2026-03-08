@@ -16,7 +16,7 @@ This guide walks through setting up a new HeadySystems deployment from zero to p
 
 - [ ] Google Cloud Project created with billing enabled
 - [ ] Cloudflare account with 9 domains pointed to Cloudflare nameservers
-- [ ] GitHub repository access (`headysystems/heady-systems`)
+- [ ] GitHub repository access (`headyme/heady-systems`)
 - [ ] `gcloud` CLI authenticated: `gcloud auth login`
 - [ ] `pnpm` 8+ installed: `npm install -g pnpm`
 - [ ] `node` 20+ installed
@@ -28,7 +28,7 @@ This guide walks through setting up a new HeadySystems deployment from zero to p
 ### 1.1 Clone the Repository
 
 ```bash
-git clone https://github.com/headysystems/heady-systems.git
+git clone https://github.com/headyme/heady-systems.git
 cd heady-systems
 pnpm install
 ```
@@ -68,7 +68,7 @@ echo "✓ GCP APIs enabled"
 
 ```bash
 gcloud iam service-accounts create heady-platform \
-  --display-name="Heady Platform SA" \
+  --display-name="Heady™ Platform SA" \
   --project=$PROJECT_ID
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \

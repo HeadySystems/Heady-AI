@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview MCP transport layer — SSE + JSON-RPC 2.0 over HTTP.
  * Implements the MCP (Model Context Protocol) transport specification.
@@ -96,7 +97,7 @@ class MCPTransport extends EventEmitter {
         return;
       }
       this._sendRaw(client, 'ping', { ts: Date.now() });
-    }, 30000);
+    }, PHI_TIMING.CYCLE);
 
     // Cleanup on disconnect
     const cleanup = () => {

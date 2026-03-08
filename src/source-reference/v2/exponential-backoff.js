@@ -1,13 +1,14 @@
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ═══ Heady Exponential Backoff — φ-Scaled Resilience ═══
+ * ═══ Heady™ Exponential Backoff — φ-Scaled Resilience ═══
  *
  * Unlike traditional base-2 exponential backoff (1s, 2s, 4s, 8s...),
- * Heady uses the Golden Ratio (φ = 1.618...) for delay scaling.
+ * Heady™ uses the Golden Ratio (φ = 1.618...) for delay scaling.
  */
 
 const PHI = 1.6180339887;
@@ -23,14 +24,14 @@ function normalizePositiveNumber(value, fallback) {
  *
  * @param {number} attempt - Current retry attempt (0-indexed)
  * @param {number} baseMs - Base delay in milliseconds (default: 1000)
- * @param {number} maxMs - Maximum delay cap (default: 30000)
+ * @param {number} maxMs - Maximum delay cap (default: PHI_TIMING.CYCLE)
  * @param {number} jitterFactor - Jitter range as fraction of delay (default: 0.25)
  * @returns {number} Delay in milliseconds
  */
-function phiDelay(attempt, baseMs = 1000, maxMs = 30000, jitterFactor = 0.25) {
+function phiDelay(attempt, baseMs = 1000, maxMs = PHI_TIMING.CYCLE, jitterFactor = 0.25) {
     const safeAttempt = Math.max(0, Math.floor(Number(attempt) || 0));
     const safeBaseMs = normalizePositiveNumber(baseMs, 1000);
-    const safeMaxMs = Math.max(1, Math.floor(normalizePositiveNumber(maxMs, 30000)));
+    const safeMaxMs = Math.max(1, Math.floor(normalizePositiveNumber(maxMs, PHI_TIMING.CYCLE)));
     const safeJitter = Math.min(1, Math.max(0, Number(jitterFactor) || 0));
 
     const raw = safeBaseMs * Math.pow(PHI, safeAttempt);
@@ -44,7 +45,7 @@ async function withBackoff(fn, opts = {}) {
     const {
         maxRetries = 5,
         baseMs = 1000,
-        maxDelayMs = 30000,
+        maxDelayMs = PHI_TIMING.CYCLE,
         jitterFactor = 0.25,
         onRetry = null,
         shouldRetry = () => true,

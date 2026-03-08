@@ -26,7 +26,7 @@ When confronted with ANY problem, the Owl layer strips it to fundamental truths 
 ### Historical Pattern Recognition
 
 - Cross-references current problem against ALL past solutions in `wisdom.json`
-- Identifies recurring failure patterns across the Heady codebase history
+- Identifies recurring failure patterns across the Heady™ codebase history
 - Recognizes when a "new" problem is actually a known problem in disguise
 - Tracks pattern evolution: how has this class of problem been solved over time?
 - Detects pattern decay: when does a previously-good pattern stop working?
@@ -40,7 +40,7 @@ When confronted with ANY problem, the Owl layer strips it to fundamental truths 
 
 ### Wisdom Application
 
-- Before implementing anything, check: "Has this been solved before in the Heady ecosystem?"
+- Before implementing anything, check: "Has this been solved before in the Heady™ ecosystem?"
 - Before choosing a pattern, check: "Why was this pattern chosen historically? Is that reason still valid?"
 - Before introducing a dependency, check: "What is the total cost of ownership? What happens when it's abandoned?"
 - Before refactoring, check: "Why was it built this way originally? What context am I missing?"

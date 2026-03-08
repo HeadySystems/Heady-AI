@@ -1,6 +1,6 @@
-# AGENTS.md — Heady AI Agent Governance
+# AGENTS.md — Heady™ AI Agent Governance
 
-> **Universal deterministic rule repository for all AI agents operating within the Heady ecosystem.**
+> **Universal deterministic rule repository for all AI agents operating within the Heady™ ecosystem.**
 > Rules in this file are enforced before any agent writes code. They replace probabilistic review with deterministic prevention.
 
 ---

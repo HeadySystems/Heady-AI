@@ -1,4 +1,4 @@
-# HeadyMaintenance Service
+# Heady™Maintenance Service
 
 > Complete system update and maintenance cycle as a reusable service.
 

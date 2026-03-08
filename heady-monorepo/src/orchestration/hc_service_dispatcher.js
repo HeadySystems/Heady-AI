@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * HeadyServiceDispatcher — Unified Intelligent Service Router
  *
- * Single entry point for ALL Heady services. Accepts either:
+ * Single entry point for ALL Heady™ services. Accepts either:
  *   - Explicit service name → direct routing
  *   - Natural-language intent → Liquid Allocator selects best service
  *
@@ -152,7 +152,7 @@ class HeadyServiceDispatcher extends EventEmitter {
             if (best && best.confidence > 0.1) return best;
         }
 
-        // Fallback to chat (Heady Brain)
+        // Fallback to chat (Heady™ Brain)
         return { serviceName: "chat", entry: this.catalog.chat, confidence: 0.3 };
     }
 

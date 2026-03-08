@@ -2,7 +2,7 @@
 
 /**
  * phi-scales.js — Core Phi Scale Engine
- * Heady AI Orchestration Platform
+ * Heady™ AI Orchestration Platform
  *
  * Implements phi-harmonic (golden ratio) numeric scaling, decay, partitioning,
  * normalization, and spiral path generation. All classes integrate with the

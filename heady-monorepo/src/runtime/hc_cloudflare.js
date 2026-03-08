@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
@@ -8,7 +8,7 @@
  * Manages Cloudflare API interactions: zone management, DNS, tunnel status,
  * token validation, and KV operations. Cloud-only operations.
  *
- * Heady AI Nodes: SENTINEL, CONDUCTOR
+ * Heady™ AI Nodes: SENTINEL, CONDUCTOR
  */
 
 const fetch = require('node-fetch');

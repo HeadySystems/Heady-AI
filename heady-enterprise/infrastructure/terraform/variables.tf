@@ -232,7 +232,7 @@ variable "domains" {
     "heady.exchange",
     "heady.investments",
     "headysystems.com",
-    "headyai.com",
+    "heady-ai.com",
     "admin.headyme.com"
   ]
 }

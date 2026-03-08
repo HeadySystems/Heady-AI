@@ -9,7 +9,7 @@
  * Architecture:
  *   Device → WebSocket → Cloud Sync Bee → Vector Memory → All Other Devices
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const crypto = require('crypto');

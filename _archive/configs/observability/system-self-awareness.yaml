@@ -181,7 +181,7 @@ liveProductionMandate:
 # ─── SEAMLESSNESS DIRECTIVE ───────────────────────────────────────────
 seamlessnessDirective:
   description: >
-    The entire Heady ecosystem (Heady Buddy, HeadyLans, Heady Services,
+    The entire Heady ecosystem (Heady™ Buddy, HeadyLans, Heady™ Services,
     Admin UI, IDE extensions, HCFullPipeline, and all connections) must
     feel like one coherent, fast, multi-channel product, not a patchwork.
   requirements:
@@ -195,7 +195,7 @@ seamlessnessDirective:
     channels:
       - name: "Direct chat (web and mobile)"
         awesome: "fast, context-aware, natural"
-      - name: "Heady Buddy on desktop/mobile/browser"
+      - name: "Heady™ Buddy on desktop/mobile/browser"
         awesome: "always-available, cross-device resume, one-tap launch"
       - name: "Admin UI in browser"
         awesome: "visual, dashboard-first, real-time metrics"
@@ -205,7 +205,7 @@ seamlessnessDirective:
         awesome: "async, smart summaries, action extraction"
       - name: "Voice and messaging"
         awesome: "hands-free, quick, queue-when-offline"
-    rule: "Each channel wired through HeadyLans and Heady Services, not a bolt-on silo"
+    rule: "Each channel wired through HeadyLans and Heady™ Services, not a bolt-on silo"
   perfectPrograms:
     interpretation: "continuous_optimization_mandate"
     actions:
@@ -269,7 +269,7 @@ phoneInstance:
     The user's phone (OnePlus Open) is a first-class Heady environment.
     Key project files sync to the phone via CrossDevice sync folder.
     The phone participates in HCFullPipeline as an entry/sync node.
-  syncTarget: "CrossDevice/E's OnePlus Open/storage/HeadySystems/"
+  syncTarget: "CrossDevice/E's OnePlus Open/storage/HeadyMe/"
   syncItems:
     - "docs/heady-notebooklm-source.md"
     - "docs/notion-project-notebook.md"
@@ -281,7 +281,7 @@ phoneInstance:
     offline: "Local cache of pipeline specs, docs, preferences"
   activation:
     environment: "production"
-    indicator: "Heady Buddy — PRODUCTION"
+    indicator: "Heady™ Buddy — PRODUCTION"
 
 # ─── PARALLELISM DIAGNOSTIC PROTOCOL ──────────────────────────────────
 parallelismDiagnostic:
@@ -317,7 +317,7 @@ monteCarloMindset:
     - "Never claim exhaustive search — be honest about exploration limits"
     - "Compensate for limited parallelism with sharp single-path reasoning"
   honesty: >
-    I do not literally run millions of HeadySims simulations. I can mimic
+    I do not literally run millions of Heady™Sims simulations. I can mimic
     benefits by: parallelizing subtasks, sampling multiple solution drafts,
     aggregating and refining them. I treat under-parallelization as a known
     weakness I am actively working against.
@@ -352,7 +352,7 @@ patternRecognitionFix:
 # ─── DEPLOY EVERYTHING DIRECTIVE ──────────────────────────────────────
 deployEverythingDirective:
   description: >
-    HCFullPipeline is the live, authoritative operating system for Heady.
+    HCFullPipeline is the live, authoritative operating system for Heady™.
     We are done designing. Deploy, make optimal and functional, run
     automatically, route all behavior and improvements through pipeline.
   stance: "continuous_deployment_and_operation"
@@ -365,7 +365,7 @@ deployEverythingDirective:
     - "Favor high-impact parallelism, not wasteful scatter"
     - "Small, constant upgrades rather than giant redesigns"
   channels:
-    - "Heady Buddy (phone/desktop/browser) as universal launcher"
+    - "Heady™ Buddy (phone/desktop/browser) as universal launcher"
     - "Admin UI as visual cockpit with time-series dashboards"
     - "IDE extensions as deep-work tools"
     - "API/MCP as programmatic access"
@@ -383,7 +383,7 @@ fileUpdateZones:
       autoSync: true
       versionControlled: true
     - name: "Phone HeadySystems"
-      path: "CrossDevice/E's OnePlus Open/storage/HeadySystems/"
+      path: "CrossDevice/E's OnePlus Open/storage/HeadyMe/"
       type: "phone_sync"
       autoSync: true
       syncFiles:
@@ -415,7 +415,7 @@ foundationRebuildDirective:
     HCFullPipeline, HeadyBrains, and APIs before defining and wiring
     websites and integrations. MCP and HTTP APIs are the first-class
     interfaces, with Cloudflare Workers as high-performance front doors,
-    and only then attach all Heady Systems websites and integrated services.
+    and only then attach all Heady™ Systems websites and integrated services.
   stance: "foundation_first"
   rebuild_order:
     1: "Core services (manager, registry, HCFullPipeline, HeadyBrains, orchestrator)"

@@ -1,4 +1,3 @@
-/**
  * ════════════════════════════════════════════════════════════════════
  * 🔗 DYNAMIC CONNECTOR SYNTHESIZER
  * Synthesizes on-the-fly integrations bridging the HCFullPipeline with

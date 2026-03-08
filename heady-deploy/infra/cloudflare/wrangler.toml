@@ -29,7 +29,7 @@ routes = [
   { pattern = "headyio.com/*", zone_name = "headyio.com" },
   { pattern = "headybot.com/*", zone_name = "headybot.com" },
   { pattern = "headyapi.com/*", zone_name = "headyapi.com" },
-  { pattern = "headyai.com/*", zone_name = "headyai.com" },
+  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
 ]
 
 # ── Environment: Production ───────────────────────────────────────────────────
@@ -45,7 +45,7 @@ routes = [
   { pattern = "headyio.com/*", zone_name = "headyio.com" },
   { pattern = "headybot.com/*", zone_name = "headybot.com" },
   { pattern = "headyapi.com/*", zone_name = "headyapi.com" },
-  { pattern = "headyai.com/*", zone_name = "headyai.com" },
+  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
 ]
 
 # ── Environment: Staging ──────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ routes = [
 [vars]
 ENVIRONMENT = "production"
 HEADY_VERSION = "3.1.0"
-CLOUD_RUN_ORIGIN = "https://heady-manager-xxxxxxxxxx-uc.a.run.app"
+CLOUD_RUN_ORIGIN = "https://heady-manager-609590223909.us-central1.run.app"
 
 # ── Secrets (set via: wrangler secret put SECRET_NAME) ────────────────────────
 # Required secrets:

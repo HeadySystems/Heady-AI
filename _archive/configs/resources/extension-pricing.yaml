@@ -26,7 +26,7 @@ name: ExtensionPricing
 # ─── TIER DEFINITIONS ───────────────────────────────────────────────
 tiers:
   free:
-    name: "Heady Free"
+    name: "Heady™ Free"
     price: 0
     billing: null
     description: "Core tools for individual developers"
@@ -45,7 +45,7 @@ tiers:
     purpose: "Showcase value, drive word-of-mouth adoption"
 
   pro:
-    name: "Heady Pro"
+    name: "Heady™ Pro"
     price:
       monthly: 12
       annual: 120  # 2 months free
@@ -72,7 +72,7 @@ tiers:
     valueProposition: "One saved hour/month already pays for Pro"
 
   team:
-    name: "Heady Team"
+    name: "Heady™ Team"
     price:
       monthly: 35
       annual: 350
@@ -97,7 +97,7 @@ tiers:
       headyServices: "all"
 
   enterprise:
-    name: "Heady Enterprise"
+    name: "Heady™ Enterprise"
     price: "custom"
     billing: "annual_contract"
     description: "Full control for large organizations"
@@ -121,24 +121,24 @@ tiers:
 # ─── FAIR ACCESS (IMPACT MISSION) ──────────────────────────────────
 fairAccess:
   enabled: true
-  description: "Heady cares about wealth redistribution and impact"
+  description: "Heady™ cares about wealth redistribution and impact"
   programs:
     students:
-      name: "Heady for Students"
+      name: "Heady™ for Students"
       discount: 100  # percent — free
       verification: "edu_email_or_student_id"
       tier: "pro"
       description: "Full Pro features for verified students"
 
     nonprofits:
-      name: "Heady for Nonprofits"
+      name: "Heady™ for Nonprofits"
       discount: 75  # percent
       verification: "501c3_or_equivalent"
       tier: "team"
       description: "Team tier at 75% discount for registered nonprofits"
 
     lowIncomeRegions:
-      name: "Heady Impact Access"
+      name: "Heady™ Impact Access"
       discount: 50  # percent
       verification: "purchasing_power_parity"
       tier: "pro"

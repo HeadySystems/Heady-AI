@@ -1,12 +1,12 @@
 ---
 name: heady-drift-detection
-description: Use when implementing semantic drift detection, continuous learning loops, self-optimization engines, or maintaining system coherence in the Heady ecosystem. Keywords include drift, semantic drift, coherence, continuous learning, self-optimization, model drift, concept drift, alignment, and system coherence.
+description: Use when implementing semantic drift detection, continuous learning loops, self-optimization engines, or maintaining system coherence in the Heady™ ecosystem. Keywords include drift, semantic drift, coherence, continuous learning, self-optimization, model drift, concept drift, alignment, and system coherence.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Drift Detection & Continuous Learning
+# Heady™ Drift Detection & Continuous Learning
 
 ## When to Use This Skill
 

@@ -3,7 +3,7 @@
  * ==============================================================
  * @module @heady-ai/sacred-geometry-metrics
  *
- * Custom Prometheus metrics exporter for HeadySystems' Sacred Geometry
+ * Custom Prometheus metrics exporter for Heady™Systems' Sacred Geometry
  * (φ-ratio) health model. Exposes metrics on port 8889 (scraped by OTel
  * Collector and Prometheus directly).
  *

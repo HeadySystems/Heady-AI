@@ -1,4 +1,4 @@
-# HeadyOS Founder Tier Definition
+# Heady™OS Founder Tier Definition
 
 **Version**: 1.0.0  
 **Effective**: Cohort 1 Launch  
@@ -9,7 +9,7 @@
 
 ## Overview
 
-The **Founder Tier** is HeadyOS's inaugural access program, designed for organizations that exemplify the use cases our platform was built for: non-profits automating grant-writing workflows, early-stage AI startups, and university/commercial research teams. Founders shape the product roadmap, hold voting rights on feature prioritization, and receive direct access to the HeadySystems founding team.
+The **Founder Tier** is HeadyOS's inaugural access program, designed for organizations that exemplify the use cases our platform was built for: non-profits automating grant-writing workflows, early-stage AI startups, and university/commercial research teams. Founders shape the product roadmap, hold voting rights on feature prioritization, and receive direct access to the Heady™Systems founding team.
 
 All numeric parameters are derived from φ = 1.618033988749895 and the Fibonacci sequence. No magic numbers exist in the tier definition.
 
@@ -166,7 +166,7 @@ Pilot participants agree to the following feedback commitments:
 ### Non-Profit Grant Writing (Primary Pilot Target)
 **Success metrics from PILOT-PLAN.md**:
 - Zero critical failures during pilot
-- 3+ full grants drafted with HeadyOS
+- 3+ full grants drafted with Heady™OS
 - p95 latency < 5 seconds
 - Approval rate > 85% (agent task completion)
 - Recovery time < 30 seconds for any incident

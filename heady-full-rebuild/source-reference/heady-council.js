@@ -1,5 +1,5 @@
 /**
- * @fileoverview Heady Council — Multi-Model Council for Critical Decisions
+ * @fileoverview Heady™ Council — Multi-Model Council for Critical Decisions
  * @module orchestration/heady-council
  * @version 2.0.0
  * @author HeadySystems Inc.

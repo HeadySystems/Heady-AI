@@ -1,6 +1,6 @@
 /**
  * @module hcfullpipeline
- * @description 21-stage cognitive pipeline state machine for the Heady system.
+ * @description 21-stage cognitive pipeline state machine for the Heady™ system.
  *
  * All numeric constants derive from φ (phi = 1.618033988749895) or the
  * Fibonacci sequence.  Zero magic numbers are used anywhere in this file.

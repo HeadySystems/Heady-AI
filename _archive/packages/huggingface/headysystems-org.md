@@ -1,4 +1,4 @@
-# HeadySystems Inc. — Hugging Face Organization Profile
+# Heady™Systems Inc. — Hugging Face Organization Profile
 
 ## Tagline
 
@@ -6,7 +6,7 @@ High-fidelity engineering solutions for the next generation of AI-driven systems
 
 ## About Section
 
-HeadySystems Inc. is the commercial engine of the Heady ecosystem. We build high-efficiency AI orchestration infrastructure specializing in liquid gateway routing, multi-provider inference, and adversarial validation.
+HeadySystems Inc. is the commercial engine of the Heady™ ecosystem. We build high-efficiency AI orchestration infrastructure specializing in liquid gateway routing, multi-provider inference, and adversarial validation.
 
 Our work on Hugging Face showcases the capabilities of our proprietary technology. We focus on **Truth through Action** — delivering systems optimized for production environments and complex engineering workflows. For commercial licensing or enterprise integration of our patented technologies, visit [headysystems.com](https://headysystems.com).
 
@@ -19,7 +19,7 @@ Our work on Hugging Face showcases the capabilities of our proprietary technolog
 
 ---
 
-## Model Card Template (for HeadySystems repos)
+## Model Card Template (for Heady™Systems repos)
 
 ```yaml
 ---
@@ -38,7 +38,7 @@ metrics:
 
 ### Model Summary
 
-**[Model Name]** is a specialized [reasoning/code-generation/analysis] model developed by HeadySystems Inc. It utilizes a custom architecture optimized for [primary use case].
+**[Model Name]** is a specialized [reasoning/code-generation/analysis] model developed by Heady™Systems Inc. It utilizes a custom architecture optimized for [primary use case].
 
 ### Technical Specifications
 
@@ -65,7 +65,7 @@ metrics:
 
 ### Licensing & IP
 
-The weights in this repository are property of HeadySystems Inc.
+The weights in this repository are property of Heady™Systems Inc.
 
 - **Non-commercial use**: Permitted for research and evaluation
 - **Commercial use**: Requires a separate license agreement

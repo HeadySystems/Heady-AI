@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * Template Auto-Generator — HeadyBee & HeadySwarm Factory Directive
  *
- * DIRECTIVE: Every task Heady executes should check for and generate
+ * DIRECTIVE: Every task Heady™ executes should check for and generate
  * reusable template HeadyBees and HeadySwarms. This module provides:
  *   1. Auto-detection of templateable patterns in task output
  *   2. HeadyBee creation via bee-factory for single-unit tasks

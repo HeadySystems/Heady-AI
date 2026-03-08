@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Heady Endpoint Validation Script
+ * Heady™ Endpoint Validation Script
  * Verifies all documented endpoints are reachable and properly configured
  * Usage: node scripts/validate-endpoints.js
  */

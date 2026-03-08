@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * HeadyServices MAX BLASTER
- * Executes 100 heavy tasks concurrently across all 5 Heady Models to 100% max out the system.
+ * Executes 100 heavy tasks concurrently across all 5 Heady™ Models to 100% max out the system.
  */
 
 const http = require('http');

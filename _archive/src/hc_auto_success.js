@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -98,7 +98,7 @@ const PROBE_TARGETS = [
     { name: "headyme.com", url: "https://headyme.com", critical: false },
     { name: "admin", url: "https://admin.headysystems.com", critical: false },
 ];
-// No batch limits — Heady reacts instantaneously, no cycles, no polling
+// No batch limits — Heady™ reacts instantaneously, no cycles, no polling
 
 // ─── POOL PRIORITIES ────────────────────────────────────────────────────────
 const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
@@ -1462,7 +1462,7 @@ class AutoSuccessEngine extends EventEmitter {
         return added;
     }
 
-    /** Summary for HeadyConductor integration. */
+    /** Summary for Heady™Conductor integration. */
     getConductorSummary() {
         const byPool = { hot: 0, warm: 0, cold: 0 };
         const byCat = {};

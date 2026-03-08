@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * Heady Platform Health Check
+ * Heady™ Platform Health Check
  * Runs comprehensive checks on all services and sites.
  */
 const http = require('http');
@@ -48,7 +48,7 @@ function checkUrl(url, timeout = 3000) {
 
 async function main() {
     console.log('═══════════════════════════════════════════════');
-    console.log('  🏥 Heady Platform Health Check');
+    console.log('  🏥 Heady™ Platform Health Check');
     console.log('═══════════════════════════════════════════════\n');
 
     let total = 0, passing = 0;

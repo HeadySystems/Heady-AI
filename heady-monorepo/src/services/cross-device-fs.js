@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -7,7 +7,7 @@
 /**
  * ─── Cross-Device Filesystem Service ────────────────────────────
  *
- * Gives Heady and Buddy root-level filesystem access across devices
+ * Gives Heady™ and Buddy root-level filesystem access across devices
  * via SSH tunnels and local elevated ops. All credentials come from
  * the SecureKeyVault in vector space — never plaintext.
  *

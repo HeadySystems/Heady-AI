@@ -149,5 +149,5 @@ Filed individually via USPTO Patent Center. Full-text applications in Markdown f
 
 ---
 
-*© 2026 HeadySystems Inc.. All rights reserved.*
+*© 2026 Heady™Systems Inc.. All rights reserved.*
 *This document is confidential and proprietary.*

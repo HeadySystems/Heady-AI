@@ -2,7 +2,7 @@
 'use strict';
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Phi Scales — Comprehensive Test Suite
+ * Heady™ Phi Scales — Comprehensive Test Suite
  * ═══════════════════════════════════════════════════════════════════
  *
  * Tests every class and integration point of phi-scales + dynamic-

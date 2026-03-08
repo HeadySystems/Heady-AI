@@ -1,6 +1,6 @@
 /**
  * Heady™ Jest Configuration — 100% Core Orchestration Coverage
- * Drop into monorepo root: Heady-pre-production-9f2f0642/jest.config.js
+ * Drop into monorepo root: Heady™-pre-production-9f2f0642/jest.config.js
  */
 
 const PHI = 1.6180339887;

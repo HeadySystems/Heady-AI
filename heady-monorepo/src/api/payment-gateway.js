@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Systems - Auth & Payment Gateway Integration
+ * Heady™ Systems - Auth & Payment Gateway Integration
  * Wires Firebase Auth for identity and Stripe for subscription billing.
  */
 const Stripe = (()=>{try{return require('stripe')}catch(e){return class{constructor(){this.checkout={sessions:{create:async()=>({url:'#'})}}};}}})();

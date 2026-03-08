@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Perplexity Research Service — Real API Integration ═══
@@ -13,6 +13,7 @@
  */
 
 const _logger = require("../utils/logger");
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = {
     logNodeActivity: _logger.logNodeActivity?.bind(_logger) || ((_n, msg) => (_logger.info || console.log)(msg)),
     logError: _logger.logError?.bind(_logger) || ((_n, msg) => (_logger.error || console.error)(msg)),
@@ -81,7 +82,7 @@ class PerplexityResearchService {
                 max_tokens: config.maxTokens,
                 temperature: mode === "quick" ? 0.1 : 0.3,
             }),
-            signal: AbortSignal.timeout(mode === "deep" || mode === "academic" ? 90000 : 30000),
+            signal: AbortSignal.timeout(mode === "deep" || mode === "academic" ? 90000 : PHI_TIMING.CYCLE),
         });
 
         if (!response.ok) {

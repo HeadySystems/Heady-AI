@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -121,12 +121,12 @@ module.exports = {
   /** Hash a password (sync) */
   hashSync: headyCrypt.hashSync,
   /** Compare password to hash (async) */
-  compare: headyCrypt.compare,
+  compare: headycrypt.compare,
   /** Compare password to hash (sync) */
-  compareSync: headyCrypt.compareSync,
+  compareSync: headycrypt.compareSync,
   /** Generate a random hex token */
   generateToken: headyCrypt.generateToken,
-  /** Generate a Heady API key (hk_...) */
+  /** Generate a Heady™ API key (hk_...) */
   generateApiKey: headyCrypt.generateApiKey,
   /** Check if hash needs re-hashing */
   needsRehash: headyCrypt.needsRehash,

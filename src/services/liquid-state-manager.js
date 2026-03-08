@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -25,6 +25,7 @@
  */
 
 const { getLogger } = require('./structured-logger');
+const { PHI_TIMING } = require('../shared/phi-math');
 
 const log = getLogger('liquid-state');
 
@@ -52,7 +53,7 @@ const TRANSITIONS = {
 // Default staleness budgets per target type (ms)
 const STALENESS_BUDGETS = {
     'cloud-run': 60_000,       // 1 minute
-    'cloudflare-edge': 30_000,       // 30 seconds (edge should be fresh)
+    'cloudflare-edge': PHI_TIMING.CYCLE,       // 30 seconds (edge should be fresh)
     'github-monorepo': 3_600_000,    // 1 hour
     'huggingface-spaces': 7_200_000,   // 2 hours
     'colab-notebooks': 86_400_000,   // 24 hours

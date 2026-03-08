@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * Heady Edge Daemon
+ * Heady™ Edge Daemon
  * ═══════════════════════════════════════════════════════════════
  *
  * Persistent local process that provides a reliable tether between
- * the cloud-based Heady brain and local hardware:
+ * the cloud-based Heady™ brain and local hardware:
  *
- *   - WebSocket bridge to Heady Cloud (Cloud Run / Cloudflare)
+ *   - WebSocket bridge to Heady™ Cloud (Cloud Run / Cloudflare)
  *   - MIDI integration via easymidi (Ableton Live, hardware synths)
  *   - Local file system watch for real-time embedding triggers
  *   - Secure token authentication (EDGE_DAEMON_TOKEN)
@@ -80,14 +80,14 @@ function handleSysEx(msg) {
     state.eventsProcessed++;
     const data = msg.bytes || [];
 
-    // Heady SysEx prefix: 0xF0 0x7D (non-commercial manufacturer ID)
+    // Heady™ SysEx prefix: 0xF0 0x7D (non-commercial manufacturer ID)
     if (data[0] === 0xF0 && data[1] === 0x7D) {
         const commandByte = data[2];
         const payload = Buffer.from(data.slice(3, -1)).toString('utf8');
 
         console.log(`  🎵 SysEx command: 0x${commandByte.toString(16)} payload: ${payload}`);
 
-        // Route to Heady cloud
+        // Route to Heady™ cloud
         sendToCloud({
             type: 'sysex',
             command: commandByte,
@@ -259,7 +259,7 @@ function startServer() {
         state.running = true;
         state.startedAt = new Date().toISOString();
         console.log(`\n  ═══════════════════════════════════════════`);
-        console.log(`  ⚡ Heady Edge Daemon running on port ${PORT}`);
+        console.log(`  ⚡ Heady™ Edge Daemon running on port ${PORT}`);
         console.log(`  ═══════════════════════════════════════════`);
         console.log(`  Cloud:   ${HEADY_CLOUD_URL}`);
         console.log(`  Auth:    ${EDGE_DAEMON_TOKEN ? '✅ Token set' : '⚠️  No token'}`);
@@ -272,7 +272,7 @@ function startServer() {
 // ── Boot ─────────────────────────────────────────────────────────
 
 function boot() {
-    console.log('\n  🚀 Booting Heady Edge Daemon...\n');
+    console.log('\n  🚀 Booting Heady™ Edge Daemon...\n');
     initMIDI();
     initFileWatcher();
     startServer();

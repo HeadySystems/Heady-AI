@@ -218,7 +218,7 @@ export function createAuthRouter({
 
   /**
    * POST /auth/register
-   * Create a new Heady account with email/password.
+   * Create a new Heady™ account with email/password.
    *
    * Body: { username, email, password, displayName? }
    * Response: { user, accessToken, refreshToken, headyEmail, verificationToken }

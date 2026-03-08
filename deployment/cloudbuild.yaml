@@ -1,5 +1,5 @@
 # =============================================================================
-# Heady Liquid Latent OS — Google Cloud Build CI/CD Pipeline
+# Heady™ Liquid Latent OS — Google Cloud Build CI/CD Pipeline
 #
 # Stages:
 #   1  Security scan        TruffleHog secret scanning + npm audit

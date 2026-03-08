@@ -1,4 +1,4 @@
-# Heady Implementation Package v3.2.3
+# Heady™ Implementation Package v3.2.3
 
 ## 📦 Contents
 
@@ -134,7 +134,7 @@ npm run health
 
 2. **This Week**
    - Confirm HuggingFace Spaces strategy (migrate or deprecate)
-   - Add navigation links for HeadyAPI/HeadyLens/HeadyAI/PerfectTrader
+   - Add navigation links for Heady™API/HeadyLens/HeadyAI/PerfectTrader
    - Deploy optimized Workers configuration
    - Enable GitHub Actions workflow
 

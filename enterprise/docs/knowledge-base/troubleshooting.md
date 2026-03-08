@@ -1,4 +1,4 @@
-# HeadySystems — Troubleshooting Guide
+# Heady™Systems — Troubleshooting Guide
 
 **Version:** 1.0.0  
 **Last Updated:** 2026-03-07  
@@ -288,7 +288,7 @@ const ws = new WebSocket('wss://ws.headyme.com/api/v1/stream');
 
 ws.on('ping', () => ws.pong());  // Respond to heartbeat
 
-// Or use the HeadyWebSocket client with built-in reconnect:
+// Or use the Heady™WebSocket client with built-in reconnect:
 import { HeadyWebSocket } from '@heady-ai/sdk';
 const ws = new HeadyWebSocket('wss://ws.headyme.com/api/v1/stream', {
   autoReconnect: true,
@@ -448,4 +448,4 @@ If you see unexpected usage:
 - **Status page:** https://status.headyme.com
 - **Support email:** support@headyme.com (Pro/Enterprise: priority queue)
 - **Discord community:** https://discord.gg/headysystems
-- **GitHub issues:** https://github.com/headysystems/heady-systems/issues
+- **GitHub issues:** https://github.com/headyme/heady-systems/issues

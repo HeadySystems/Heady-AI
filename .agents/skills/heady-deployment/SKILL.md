@@ -3,7 +3,7 @@ name: heady-deployment
 description: Deploy, monitor, scale, and maintain services using Heady™Deploy, HeadyOps, HeadyHealth, HeadyMaid, and HeadyMaintenance.
 ---
 
-# Heady Deployment Skill
+# Heady™ Deployment Skill
 
 Use this skill for the **full service lifecycle** — deploying, monitoring, scaling, health-checking, and cleaning up Heady services.
 
@@ -19,7 +19,7 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 
 ## Tool Details
 
-### HeadyDeploy — `mcp_Heady_heady_deploy`
+### Heady™Deploy — `mcp_Heady_heady_deploy`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -27,7 +27,7 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 | `service` | string | optional | Target service name |
 | `config` | object | optional | Additional configuration |
 
-### HeadyOps — `mcp_Heady_heady_ops`
+### Heady™Ops — `mcp_Heady_heady_ops`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -35,13 +35,13 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 | `service` | string | optional | Target service |
 | `config` | object | optional | Deployment or infra configuration |
 
-### HeadyHealth — `mcp_Heady_heady_health`
+### Heady™Health — `mcp_Heady_heady_health`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
 | `service` | enum | `all` | `all`, `brain`, `manager`, `hcfp`, `mcp` |
 
-### HeadyMaid — `mcp_Heady_heady_maid`
+### Heady™Maid — `mcp_Heady_heady_maid`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -49,7 +49,7 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 | `target` | string | optional | Target directory, service, or resource |
 | `schedule` | string | optional | Cron expression |
 
-### HeadyMaintenance — `mcp_Heady_heady_maintenance`
+### Heady™Maintenance — `mcp_Heady_heady_maintenance`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|

@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Self-Critique & Optimization Engine — Records critiques and improvements for self-optimization.
  */
 const { EventEmitter } = require("events");

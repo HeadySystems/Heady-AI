@@ -1,9 +1,9 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Vector Space Internal Operations ═══════════════════════════
  *
- * PILLAR 0 ENFORCEMENT: Most Heady operations happen IN 3D vector space,
+ * PILLAR 0 ENFORCEMENT: Most Heady™ operations happen IN 3D vector space,
  * not through conventional deploy-test-verify cycles. This module runs
  * anti-sprawl, security, and maintenance directly as vector operations.
  *
@@ -353,7 +353,7 @@ class ProjectionManager {
     /**
      * PERCEPTION SCAN — what does the system look like externally?
      * Reads from git, filesystem, and package.json to build awareness
-     * of how users and external systems perceive Heady.
+     * of how users and external systems perceive Heady™.
      */
     async scanPerception() {
         const rootDir = path.join(__dirname, '..');

@@ -1,5 +1,5 @@
 # Security & CI Improvement Memo
-**To:** Heady Engineering  
+**To:** Heady™ Engineering  
 **From:** Security & Platform Review  
 **Date:** 2026-03-07  
 **Subject:** Secret Exposure, Deploy Gating, and Release Hardening — Findings and Remediation
@@ -132,7 +132,7 @@ The URL-policy enforcement hook (`pre-commit-url-check.sh`) exists but requires 
 ```
 Or use `husky` (already present in the `_archive`) to manage hooks declaratively. Also extend the hook to detect secret patterns (`ghp_`, `sk-`, `hdy_int_`, `AIzaSy`, `Bearer `) in staged files — this would have caught S-2 before commit.
 
-### 3.4 `heady-docs`, `headymcp-production`, `headysystems-production`, `main`, and `headybuddy-web` Have Zero CI Workflows
+### 3.4 `heady-docs`, `headymcp-production`, `heady-production`, `main`, and `headybuddy-web` Have Zero CI Workflows
 
 Five repos contain committed code (or Dockerfiles, in the case of `main`) with no automated checks whatsoever. `heady-docs` is the repo with two confirmed secret exposures and has no CI.
 

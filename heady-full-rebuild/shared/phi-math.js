@@ -2,12 +2,12 @@
  * @fileoverview phi-math.js — Canonical Phi-Math Foundation
  *
  * The SINGLE SOURCE OF TRUTH for every numeric constant, threshold, weight,
- * scaling value, and timing parameter in the Heady ecosystem.
+ * scaling value, and timing parameter in the Heady™ ecosystem.
  *
  * ZERO magic numbers. Every value derives from φ (phi), the golden ratio.
  *
  * @module phi-math
- * @author Heady Ecosystem
+ * @author Heady™ Ecosystem
  * @version 1.0.0
  * @license MIT
  *
@@ -741,7 +741,7 @@ const PHI_MATH_CHECKSUM = `phi=${PHI.toFixed(15)};psi=${PSI.toFixed(15)};phi_sq=
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Standard embedding dimensionality for all Heady vector operations.
+ * Standard embedding dimensionality for all Heady™ vector operations.
  * fib(?) — using 384 per heady-cognitive-config.json (vector_dimensions).
  * @constant {number}
  */

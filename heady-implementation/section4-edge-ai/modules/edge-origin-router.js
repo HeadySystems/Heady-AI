@@ -1,6 +1,6 @@
 /**
  * edge-origin-router.js
- * Heady Latent OS — Edge ↔ Origin Smart Router
+ * Heady™ Latent OS — Edge ↔ Origin Smart Router
  *
  * Routes AI inference requests between Cloudflare edge (Workers AI) and
  * origin (Cloud Run) based on complexity scoring, latency measurements,

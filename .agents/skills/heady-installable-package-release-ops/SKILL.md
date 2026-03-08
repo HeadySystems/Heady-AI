@@ -1,18 +1,18 @@
 ---
 name: heady-installable-package-release-ops
-description: Package, verify, and publish installable Heady surfaces such as HeadyBuddy, HeadyAI-IDE, and HeadyWeb across static hosting and distribution channels. Use when the user mentions installable packages, release bundles, static deployment, distribution packs, or production build verification.
+description: Package, verify, and publish installable Heady™ surfaces such as HeadyBuddy, HeadyAI-IDE, and HeadyWeb across static hosting and distribution channels. Use when the user mentions installable packages, release bundles, static deployment, distribution packs, or production build verification.
 metadata:
   author: Perplexity Computer
   version: '1.0'
 ---
 
-# Heady Installable Package Release Ops
+# Heady™ Installable Package Release Ops
 
 ## When to Use This Skill
 
 Use this skill when the user needs:
 
-- release packaging for Heady apps
+- release packaging for Heady™ apps
 - deployment of static build artifacts
 - verification of bundle contents and hosting readiness
 - a distribution plan for multiple app surfaces

@@ -1,17 +1,17 @@
-# @heady/mcp-server
+# @heady-ai/mcp-server
 
 > Model Context Protocol (MCP) server for the Heady™ AI Platform — tool registration, memory operations, and JSON-RPC 2.0 handling.
 
 ## Install
 
 ```bash
-npm install @heady/mcp-server
+npm install @heady-ai/mcp-server
 ```
 
 ## Quick Start
 
 ```ts
-import { MCPServer } from '@heady/mcp-server';
+import { MCPServer } from '@heady-ai/mcp-server';
 
 const server = new MCPServer();
 
@@ -38,4 +38,4 @@ const response = await server.handleRequest({
 
 ## License
 
-Proprietary — © 2026 HeadySystems Inc.
+Proprietary — © 2026 Heady™Systems Inc.

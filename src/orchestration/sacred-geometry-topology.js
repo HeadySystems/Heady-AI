@@ -4,7 +4,7 @@
  * for the Heady™ Sovereign AI Platform.
  *
  * All numeric constants are phi-derived. No round numbers.
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 const phi = require('../../shared/phi-math.js');

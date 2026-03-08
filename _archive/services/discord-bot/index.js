@@ -1,9 +1,9 @@
 /**
- * ═══ Heady Discord Bot — Service Group AI Gateway ═══
+ * ═══ Heady™ Discord Bot — Service Group AI Gateway ═══
  *
- * Routes Discord slash commands to the Heady Intelligence Layer.
+ * Routes Discord slash commands to the Heady™ Intelligence Layer.
  * Each /heady command maps to a service group (swarm, code, battle, etc.)
- * and processes through the HeadyBrain API.
+ * and processes through the Heady™Brain API.
  *
  * Setup:
  *   1. Create a bot at https://discord.com/developers/applications
@@ -49,7 +49,7 @@ const GROUPS = {
     decompose: { emoji: "🔀", color: 0x1ABC9C, name: "HeadyDecomp", tag: "[DECOMPOSE]" },
 };
 
-// ── Heady API Call ──
+// ── Heady™ API Call ──
 async function callHeady(message, group) {
     const tag = GROUPS[group]?.tag || "";
     const body = JSON.stringify({ message: `${tag} ${message}`, model: "auto" });
@@ -128,7 +128,7 @@ client.on("interactionCreate", async (interaction) => {
         const health = await getHealth();
         const embed = new EmbedBuilder()
             .setColor(health ? 0x57F287 : 0xED4245)
-            .setTitle("🐝 Heady System Status")
+            .setTitle("🐝 Heady™ System Status")
             .setDescription(health ? "All systems operational" : "⚠️ HeadyManager unreachable")
             .addFields(
                 { name: "API", value: `\`${HEADY_API}\``, inline: true },

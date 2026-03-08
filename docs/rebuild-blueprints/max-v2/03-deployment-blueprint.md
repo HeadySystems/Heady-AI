@@ -16,4 +16,4 @@ The source registry already points toward Cloud Run for core services and Cloudf
 - `connection` is the nonprofit and community layer.
 - `shared` is the multi-tenant user layer.
 
-This structure matches the layered environment concepts discussed throughout the Heady design material and keeps each layer policy-aware without needing a separate codebase ([latent OS blueprint](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/docs/strategic/latent-os-blueprint.md), [buddy orchestrator blueprint](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/docs/strategic/architectural-blueprint-buddy-orchestrator.md)).
+This structure matches the layered environment concepts discussed throughout the Heady™ design material and keeps each layer policy-aware without needing a separate codebase ([latent OS blueprint](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/docs/strategic/latent-os-blueprint.md), [buddy orchestrator blueprint](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/docs/strategic/architectural-blueprint-buddy-orchestrator.md)).

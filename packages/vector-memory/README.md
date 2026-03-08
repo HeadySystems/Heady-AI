@@ -1,17 +1,17 @@
-# @heady/vector-memory
+# @heady-ai/vector-memory
 
 > 3D vector memory store with cosine-similarity search for the Heady™ AI Platform.
 
 ## Install
 
 ```bash
-npm install @heady/vector-memory
+npm install @heady-ai/vector-memory
 ```
 
 ## API
 
 ```js
-const { VectorMemoryStore } = require('@heady/vector-memory');
+const { VectorMemoryStore } = require('@heady-ai/vector-memory');
 
 const store = new VectorMemoryStore();
 
@@ -39,4 +39,4 @@ const stats = store.getStats('user-1');
 
 ## License
 
-Proprietary — © 2026 HeadySystems Inc.
+Proprietary — © 2026 Heady™Systems Inc.

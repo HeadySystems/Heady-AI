@@ -1,11 +1,11 @@
 /**
- * ∞ Core API — Heady Central API Router
+ * ∞ Core API — Heady™ Central API Router
  *
- * Central Express router for core Heady API endpoints.
+ * Central Express router for core Heady™ API endpoints.
  * Provides health, status, version, and system-level endpoints
  * that are always available regardless of which services are loaded.
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const { Router } = (() => {

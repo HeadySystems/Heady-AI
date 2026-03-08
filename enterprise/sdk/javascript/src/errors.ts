@@ -6,7 +6,7 @@
 import type { HeadyErrorCode } from './types';
 
 /**
- * Base error class for all Heady SDK errors.
+ * Base error class for all Heady™ SDK errors.
  */
 export class HeadyError extends Error {
   readonly code: HeadyErrorCode;

@@ -1,4 +1,4 @@
-# © 2026 Heady Systems LLC.
+# © 2026 Heady™Systems Inc.
 # GitHub Actions — Autonomous Operations Pipeline
 # Runs on cron schedules to keep Heady alive 24/7 without human intervention.
 #
@@ -8,7 +8,7 @@
 #   daily-maintenance  — Daily 03:00 UTC: stale scans, log rotation, dep audit
 #   weekly-security    — Weekly Sun 06:00 UTC: full security sweep
 
-name: Heady Autonomous Ops
+name: Heady™ Autonomous Ops
 
 on:
   schedule:

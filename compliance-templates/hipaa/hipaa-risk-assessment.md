@@ -1,5 +1,5 @@
 # HIPAA Security Risk Assessment
-## HeadyMe Platform — Security Rule Compliance Checklist
+## Heady™Me Platform — Security Rule Compliance Checklist
 
 **Version:** 1.0  
 **Assessment Date:** [ASSESSMENT_DATE]  

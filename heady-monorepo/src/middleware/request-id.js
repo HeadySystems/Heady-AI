@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Request ID Middleware — Distributed tracing via X-Request-ID
+ * Heady™ Request ID Middleware — Distributed tracing via X-Request-ID
  * Generates or propagates request IDs for full-stack correlation.
  */
 

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * Auth Page Server — standalone dev server (native http, no Express needed).
  * Usage: node src/auth-page-server.js
  */
@@ -313,7 +313,7 @@ const AUTH_PAGE_HTML = `<!DOCTYPE html>
   <div class="session-bar" id="sessionBar"></div>
 
   <div class="footer">
-    <p>© 2026 Heady Systems LLC · <a href="https://headyme.com">headyme.com</a></p>
+    <p>© 2026 HeadySystems Inc · <a href="https://headyme.com">headyme.com</a></p>
     <p style="margin-top:4px;">6 auth methods · JWT tokens · 3D vector prereq scanning</p>
   </div>
 </div></div>

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -32,11 +32,11 @@ const THEMES = {
     "headymusic.com": { geo: "Torus", color1: "#a855f7", color2: "#9333ea", label: "CYMATICS · SOUND GEOMETRY" },
     "headytube.com": { geo: "Metatrons Cube", color1: "#ef4444", color2: "#dc2626", label: "MERKABA · VISUAL LIGHT" },
     "headycloud.com": { geo: "Flower of Life", color1: "#06b6d4", color2: "#0891b2", label: "TESSERACT · CLOUD DIMENSIONS" },
-    "headylearn.com": { geo: "Seed of Life", color1: "#22c55e", color2: "#16a34a", label: "TREE OF LIFE · KNOWLEDGE" },
+    "headyu.com": { geo: "Seed of Life", color1: "#22c55e", color2: "#16a34a", label: "TREE OF LIFE · KNOWLEDGE" },
     "headystore.com": { geo: "Torus", color1: "#f59e0b", color2: "#d97706", label: "HEXAGONAL GRID · COMMERCE" },
     "headystudio.com": { geo: "Flower of Life", color1: "#8b5cf6", color2: "#7c3aed", label: "FIBONACCI SPIRAL · PRODUCTION" },
     "headyagent.com": { geo: "Metatrons Cube", color1: "#78716c", color2: "#57534e", label: "ICOSAHEDRON · AGENT NETWORK" },
-    "headydata.com": { geo: "Seed of Life", color1: "#14b8a6", color2: "#0d9488", label: "TETRAHEDRON · DATA STRUCTURE" },
+    "headydb.com": { geo: "Seed of Life", color1: "#14b8a6", color2: "#0d9488", label: "TETRAHEDRON · DATA STRUCTURE" },
     "headyapi.com": { geo: "Torus", color1: "#0891b2", color2: "#0e7490", label: "DODECAHEDRON · API GATEWAY" },
 };
 

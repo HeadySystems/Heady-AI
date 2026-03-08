@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('./shared/phi-math');
 /**
  * Multi-provider embedding generation with LRU cache, circuit breakers,
  * and a deterministic hash-based local fallback.
@@ -51,7 +52,7 @@ class LRUCache {
 
 const CB_STATE = Object.freeze({ CLOSED: 'CLOSED', OPEN: 'OPEN', HALF_OPEN: 'HALF_OPEN' });
 const CB_FAILURE_THRESHOLD = 3;
-const CB_RESET_TIMEOUT_MS = Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ 29034ms
+const CB_RESET_TIMEOUT_MS = Math.round(PHI ** 7 * 1000); // φ⁷×1000 ≈ PHI_TIMING.CYCLEms
 
 class CircuitBreaker {
   constructor(name) {

@@ -13,7 +13,7 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady Cloud Environments Configuration
+# Heady™ Cloud Environments Configuration
 # Sacred Geometry v3.0
 #
 # Each environment maps to a cloud layer from cloud-layers.yaml,
@@ -90,14 +90,14 @@ environments:
   web:
     cloud_layer: production
     brain_profile: web-platform
-    domain: headyweb.com
+    domain: headycloud.com
     api_endpoint: https://api.heady.systems/web
     manager_endpoint: https://api.heady.systems/web
     registry_endpoint: https://api.heady.systems/web/registry
     brain_endpoint: null
     orchestrator_endpoint: https://api.heady.systems/web/orchestrator
-    edge_proxy: https://headyweb.com/api
-    cloud_origin: https://app.headyweb.com
+    edge_proxy: https://headycloud.com/api
+    cloud_origin: https://app.headycloud.com
     deployment_strategy: balanced
     resource_profile: standard
     scaling_policy: auto

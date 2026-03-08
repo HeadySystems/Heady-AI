@@ -4,7 +4,7 @@ export = headyFetch;
  * @property {string} [method='GET'] - HTTP method
  * @property {Object} [headers={}] - Request headers
  * @property {*} [body] - Request body (auto-serialised to JSON)
- * @property {number} [timeoutMs=30000] - Request timeout in ms
+ * @property {number} [timeoutMs=29034] - Request timeout in ms
  * @property {number} [retries=3] - Number of retry attempts
  * @property {number} [retryDelayMs=500] - Initial retry delay (doubles on each attempt)
  * @property {number[]} [retryOn=[408, 429, 500, 502, 503, 504]] - Status codes to retry on

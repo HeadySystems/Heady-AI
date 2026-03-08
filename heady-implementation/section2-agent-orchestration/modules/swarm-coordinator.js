@@ -1,6 +1,6 @@
 /**
  * @fileoverview SwarmCoordinator — Enhanced coordination layer for 17 autonomous
- * agent swarms in the Heady Latent OS platform.
+ * agent swarms in the Heady™ Latent OS platform.
  *
  * Architecture:
  *   - Hierarchical topology: strategic → tactical → operational layers
@@ -536,7 +536,7 @@ class SwarmMessageBus extends EventEmitter {
  * @class SwarmCoordinator
  * @extends EventEmitter
  *
- * Central coordination layer for the 17-swarm Heady Latent OS platform.
+ * Central coordination layer for the 17-swarm Heady™ Latent OS platform.
  *
  * Responsibilities:
  *  - Instantiate and track all 17 swarm instances

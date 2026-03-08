@@ -1,11 +1,12 @@
 /**
  * ∞ Heady™ Domain Router — Multi-Domain Request Routing
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const http         = require('http');
 const https        = require('https');
@@ -16,7 +17,7 @@ const { URL }      = require('url');
 // ─────────────────────────────────────────────
 
 /**
- * All Heady domains and their service configurations.
+ * All Heady™ domains and their service configurations.
  * SSL termination is handled entirely by Cloudflare — no localhost SSL.
  *
  * @type {Record<string, DomainConfig>}
@@ -118,9 +119,9 @@ const DOMAIN_REGISTRY = {
     rateLimit:   { windowMs: 60_000, max: 1000 },
     headers:     { 'X-Heady-Domain': 'headyapi', 'Access-Control-Allow-Origin': '*' },
   },
-  'headyai.com': {
-    domain:      'headyai.com',
-    aliases:     ['www.headyai.com', 'ai.headyme.com'],
+  'heady-ai.com': {
+    domain:      'heady-ai.com',
+    aliases:     ['www.heady-ai.com', 'ai.headyme.com'],
     role:        'ai_gateway',
     description: 'HeadyAI inference and model gateway',
     service:     'inference-gateway',
@@ -206,12 +207,12 @@ class RateLimiter {
 class HealthMonitor extends EventEmitter {
   /**
    * @param {object} [opts]
-   * @param {number} [opts.intervalMs=30000]   Poll interval
+   * @param {number} [opts.intervalMs=PHI_TIMING.CYCLE]   Poll interval
    * @param {number} [opts.timeoutMs=5000]     Health check timeout
    */
   constructor(opts = {}) {
     super();
-    this.intervalMs = opts.intervalMs ?? 30_000;
+    this.intervalMs = opts.intervalMs ?? PHI_TIMING.CYCLE;
     this.timeoutMs  = opts.timeoutMs  ?? 5_000;
 
     /** @type {Map<string, {status: HealthStatus, lastCheckedAt: number, latencyMs: number}>} */
@@ -496,7 +497,7 @@ class DomainRouter extends EventEmitter {
         upRes.on('end', resolve);
       });
       upReq.on('error', reject);
-      upReq.setTimeout(30_000, () => { upReq.destroy(); reject(new Error('upstream timeout')); });
+      upReq.setTimeout(PHI_TIMING.CYCLE, () => { upReq.destroy(); reject(new Error('upstream timeout')); });
       req.pipe(upReq, { end: true });
     });
   }

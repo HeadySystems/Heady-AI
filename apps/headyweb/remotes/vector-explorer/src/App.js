@@ -1,10 +1,10 @@
 /**
- * Heady Vector Explorer — App Component
+ * Heady™ Vector Explorer — App Component
  *
  * Semantic vector memory exploration with Three.js 3D scatter plot.
  * Features: search, 3D point cloud, vector details, federation status, replication log.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/vector-explorer/App
  */

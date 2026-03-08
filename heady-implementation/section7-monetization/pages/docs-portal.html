@@ -530,7 +530,7 @@
       <div class="search-result-item" onclick="navigateTo('installation')">
         <div class="search-result-section">Getting Started</div>
         <div class="search-result-title">Installation</div>
-        <div class="search-result-excerpt">Install the Heady Latent OS SDK via npm or pip</div>
+        <div class="search-result-excerpt">Install the Heady™ Latent OS SDK via npm or pip</div>
       </div>
       <div class="search-result-item" onclick="navigateTo('quickstart')">
         <div class="search-result-section">Getting Started</div>
@@ -674,7 +674,7 @@
             </div>
           </div>
           <pre><code class="language-bash"># Node.js (recommended)
-npm install @heady/latent-os
+npm install @heady-ai/latent-os
 
 # Python
 pip install heady-os
@@ -696,7 +696,7 @@ docker run -d -p 8080:8080 headyconnection/latent-os:latest</code></pre>
               </button>
             </div>
           </div>
-          <pre><code class="language-javascript">import { HeadyOS } from '@heady/latent-os';
+          <pre><code class="language-javascript">import { HeadyOS } from '@heady-ai/latent-os';
 
 // Option A: BYOM — use your own LLM (free, no token charges)
 const os = new HeadyOS({
@@ -705,7 +705,7 @@ const os = new HeadyOS({
   namespace: 'my-project',            // isolates your vector memory
 });
 
-// Option B: Heady Cloud managed inference
+// Option B: Heady™ Cloud managed inference
 const os = new HeadyOS({
   apiKey: process.env.HEADY_API_KEY,
   model: 'llama-3.3-70b',             // Heady-hosted model
@@ -888,7 +888,7 @@ const result = await os.agent.run({
               <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
             </thead>
             <tbody>
-              <tr><td><code>apiKey</code></td><td>string</td><td>Cloud only</td><td>Heady API key from dashboard. Not required for local self-hosted.</td></tr>
+              <tr><td><code>apiKey</code></td><td>string</td><td>Cloud only</td><td>Heady™ API key from dashboard. Not required for local self-hosted.</td></tr>
               <tr><td><code>endpoint</code></td><td>string</td><td>No</td><td>BYOM LLM endpoint URL (Ollama, vLLM, etc.). When set, Heady uses your model.</td></tr>
               <tr><td><code>model</code></td><td>string</td><td>No</td><td>Heady-managed model name (e.g., <code>llama-3.3-70b</code>). Used when <code>endpoint</code> not set.</td></tr>
               <tr><td><code>namespace</code></td><td>string</td><td>Yes</td><td>Logical namespace for vector memory isolation. Alphanumeric + dashes, max 64 chars.</td></tr>
@@ -972,7 +972,7 @@ const result = await os.agent.run({
     'vector-memory': { title: 'Vector Memory', desc: 'Persistent semantic memory for AI agents.' },
     'agent-swarms': { title: 'Agent Swarms', desc: 'Orchestrate parallel agents with shared memory.' },
     mcp: { title: 'MCP Protocol', desc: 'Register and use Model Context Protocol tools.' },
-    byom: { title: 'Bring Your Own Model', desc: 'Connect any LLM endpoint to the Heady runtime.' },
+    byom: { title: 'Bring Your Own Model', desc: 'Connect any LLM endpoint to the Heady™ runtime.' },
     'api-memory': { title: 'Memory API Reference', desc: 'Complete reference for store(), search(), delete() and namespaces.' },
     'api-agents': { title: 'Agent API Reference', desc: 'run(), stream(), status(), cancel() and more.' },
     'api-tools': { title: 'Tools API Reference', desc: 'register(), list(), invoke() for MCP tools.' },

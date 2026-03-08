@@ -4,7 +4,7 @@
 
 Sentence-Transformers provides pre-trained models for generating dense vector embeddings of sentences, paragraphs, and documents.
 
-## Recommended Models for Heady
+## Recommended Models for Heady™
 
 ### 1. all-MiniLM-L12-v2 (Primary Choice)
 
@@ -74,7 +74,7 @@ print(embeddings.shape)  # (2, 384)
 - Edge deployment
 - High-throughput scenarios
 
-## Integration with Heady Vector Memory
+## Integration with Heady™ Vector Memory
 
 ```javascript
 // Node.js integration via Python bridge or ONNX runtime
@@ -194,7 +194,7 @@ const embedding = await embedder('Sample text', { pooling: 'mean', normalize: tr
 - Retrieval accuracy on QA datasets
 - all-MiniLM-L12-v2: ~0.50 MRR@10 on MS MARCO
 
-## Fine-Tuning for Heady Domain
+## Fine-Tuning for Heady™ Domain
 
 If needed, you can fine-tune on domain-specific data:
 

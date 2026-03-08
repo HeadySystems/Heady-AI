@@ -4,7 +4,7 @@
  * Provides the Module Federation mount/unmount contract.
  * Called by the host shell to attach and detach this micro-frontend.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/antigravity/mount
  */

@@ -1,4 +1,4 @@
-# HeadySystems Inc. — Complete System Context Document
+# Heady™Systems Inc. — Complete System Context Document
 >
 > Upload this file alongside your prompt for maximum AI context.
 > Generated: March 7, 2026 | Version: 3.2.2
@@ -81,9 +81,9 @@ cloudbuild.yaml       # GCP Cloud Build config
 @heady-ai/sdk                 — Client SDK for external consumers
 @heady-ai/shared              — Cross-package utilities
 @heady-ai/vector-memory       — 3D vector space memory operations
-@headysystems/semantic-logic   — Continuous Semantic Logic (CSL) engine
-@headysystems/types            — TypeScript type definitions
-@headysystems/redis            — Redis connection pool (φ-scaled)
+@heady-ai/semantic-logic   — Continuous Semantic Logic (CSL) engine
+@heady-ai/types            — TypeScript type definitions
+@heady-ai/redis            — Redis connection pool (φ-scaled)
 heady-semantic-logic-python    — Python CSL implementation
 ```
 
@@ -282,7 +282,7 @@ Target: Non-profit partner program for grant-writing scenarios
 Success Metrics:
 
 - Zero critical failures over pilot duration
-- 3+ grants drafted via HeadyMCP pipeline
+- 3+ grants drafted via Heady™MCP pipeline
 - p95 < 5s for multi-agent task completion
 - >85% user approval rate on AI decisions
 - Recovery from injected failures in <30s
@@ -314,7 +314,7 @@ Client Request
 
 headyme.com, headyconnection.com, headyconnection.org,
 headyos.com, heady.exchange, heady.investments,
-headysystems.com, headyai.com, [admin portal]
+headysystems.com, heady-ai.com, [admin portal]
 
 ---
 

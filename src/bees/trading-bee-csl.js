@@ -9,7 +9,7 @@
  * @version 2.0.0
  * @since 1.0.0
  *
- * @copyright © 2026 HeadySystems Inc. All rights reserved.
+ * @copyright © 2026 Heady™Systems Inc. All rights reserved.
  * @license Proprietary — HeadyConnection Project, Apex Trading Intelligence
  *
  * @patent PROVISIONAL-2026-HEADY-001  Phi-Geometric Continuous Scoring Layer (CSL)

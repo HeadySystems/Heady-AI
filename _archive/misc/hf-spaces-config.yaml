@@ -1,4 +1,4 @@
-# Heady HuggingFace Spaces — Canonical Configuration
+# Heady™ HuggingFace Spaces — Canonical Configuration
 # Used by scripts/deploy-hf-spaces.js for dynamic delivery
 version: 1
 api_url_default: https://api.headysystems.com
@@ -8,7 +8,7 @@ spaces:
     org: HeadyMe
     repo: heady-ai
     source: heady-hf-spaces/main
-    title: "Heady AI — Brain Demo"
+    title: "Heady™ AI — Brain Demo"
     emoji: "🐝"
     sdk: static
     pinned: true

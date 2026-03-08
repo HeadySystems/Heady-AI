@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -7,7 +7,7 @@
  * ErrorPipelineBridge — Auto-Error → HCFP Pipeline Injection
  *
  * Singleton that receives errors from ALL sources and injects them
- * into the HeadySwarm flower field as high-priority error-recovery tasks.
+ * into the Heady™Swarm flower field as high-priority error-recovery tasks.
  *
  * Sources:
  *   - Express error middleware (HTTP 5xx/4xx)
@@ -50,7 +50,7 @@ class ErrorPipelineBridge extends EventEmitter {
     }
 
     /**
-     * Connect to the HeadySwarm instance.
+     * Connect to the Heady™Swarm instance.
      * Must be called after the swarm is initialized.
      */
     connectSwarm(swarm) {

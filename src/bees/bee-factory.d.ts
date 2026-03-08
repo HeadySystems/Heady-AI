@@ -54,7 +54,7 @@ export function createFromTemplate(template: string, config?: Object): Object;
  * @param {Object} policy - Orchestration policy
  * @param {string} policy.mode - 'parallel', 'sequential', or 'pipeline'
  * @param {boolean} policy.requireConsensus - If true, all bees must succeed
- * @param {number} policy.timeoutMs - Max execution time per bee (default: 30000)
+ * @param {number} policy.timeoutMs - Max execution time per bee (default: 29034)
  * @returns {Object} The swarm bee entry
  */
 export function createSwarm(name: string, beeConfigs?: any[], policy?: {

@@ -14,7 +14,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
-# HeadyBrain Dominance & Service Enforcement Policy
+# Heady™Brain Dominance & Service Enforcement Policy
 # 
 # This configuration ensures HeadyBrain is used 100% of the time and all Heady services
 # remain 100% functional unless explicitly directed otherwise.
@@ -248,12 +248,12 @@ validation:
       failure_action: "auto_recovery"
       
     - name: "brain_integration_check"
-      description: "Verify services are properly integrated with HeadyBrain"
+      description: "Verify services are properly integrated with Heady™Brain"
       frequency: "continuous"
       failure_action: "reconfigure_service"
       
     - name: "usage_compliance_check"
-      description: "Verify all operations use Heady services"
+      description: "Verify all operations use Heady™ services"
       frequency: "continuous"
       failure_action: "block_operation"
 

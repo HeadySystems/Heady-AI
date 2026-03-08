@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Vector Federation — Distributed Federated Memory Coordination
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module vector-federation
  * @description Coordinates multiple VectorMemory instances across a distributed
@@ -13,6 +13,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const { VectorMemory } = require('./vector-memory');
 const { cosineSimilarity, DIMS, isValidVector } = require('./vector-space-ops');
@@ -22,7 +23,7 @@ const { cosineSimilarity, DIMS, isValidVector } = require('./vector-space-ops');
 // ---------------------------------------------------------------------------
 
 const DEFAULT_REPLICATION_FACTOR = 2;
-const DEFAULT_HEALTH_INTERVAL_MS = 30_000; // 30 s
+const DEFAULT_HEALTH_INTERVAL_MS = PHI_TIMING.CYCLE; // φ⁷ × 1000
 const VIRTUAL_NODES_PER_NODE = 150; // Consistent hash ring density
 
 // ---------------------------------------------------------------------------
@@ -159,7 +160,7 @@ class FederatedMemory extends EventEmitter {
   /**
    * @param {Object} [options]
    * @param {number} [options.replicationFactor=2] - Write replicas.
-   * @param {number} [options.healthIntervalMs=30000] - Health check interval.
+   * @param {number} [options.healthIntervalMs=PHI_TIMING.CYCLE] - Health check interval.
    * @param {Object} [options.memoryOptions] - Options forwarded to each VectorMemory.
    */
   constructor(options = {}) {

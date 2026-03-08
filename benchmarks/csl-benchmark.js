@@ -1,7 +1,7 @@
 /**
  * @fileoverview CSL Benchmark Suite
  *
- * Heady Latent OS — Section 5: CSL & Geometric AI
+ * Heady™ Latent OS — Section 5: CSL & Geometric AI
  *
  * Comprehensive benchmarking of CSL gates against traditional classifiers on
  * four core tasks. Measures accuracy, latency (ops/sec), memory usage, and

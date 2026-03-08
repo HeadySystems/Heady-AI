@@ -3,7 +3,7 @@ name: heady-edge-ai
 description: Heady™ ultra-low latency AI inference on Cloudflare edge — embeddings, chat, classification, and vector operations with zero origin round-trip.
 ---
 
-# Heady Edge AI Skill
+# Heady™ Edge AI Skill
 
 Use this skill when you need **ultra-fast AI inference** running directly on Cloudflare's global edge network. No origin server round-trip — requests are processed at the nearest PoP for minimum latency.
 

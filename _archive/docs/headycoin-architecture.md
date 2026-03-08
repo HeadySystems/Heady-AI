@@ -1,4 +1,4 @@
-# HeadyCoin Architecture
+# Heady™Coin Architecture
 
 > **Symbol**: HDY · **Max Supply**: 21,000,000 · **Decimals**: 8  
 > **Mining**: Proof-of-Inference · **Anchoring**: EVM via Merkle Root  
@@ -8,7 +8,7 @@
 
 ## Overview
 
-HeadyCoin (HDY) is the utility token of the Heady AI ecosystem. Tokens are mined through **Proof-of-Inference** — every verified AI action (chat, battle, creative generation, trade thesis) mints HDY to the acting wallet. The supply follows a Bitcoin-inspired **halving schedule** with a hard cap of 21M tokens.
+HeadyCoin (HDY) is the utility token of the Heady™ AI ecosystem. Tokens are mined through **Proof-of-Inference** — every verified AI action (chat, battle, creative generation, trade thesis) mints HDY to the acting wallet. The supply follows a Bitcoin-inspired **halving schedule** with a hard cap of 21M tokens.
 
 ```
  Cognitive-Telemetry              HeadyCoin Engine                   EVM Chain

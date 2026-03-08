@@ -23,7 +23,7 @@ const logger = require('../utils/logger');
 
 /**
  * Minimal in-memory KV for local/single-node deployments.
- * Replace with HeadyKV (Redis/Cloudflare) for distributed operation.
+ * Replace with Heady™KV (Redis/Cloudflare) for distributed operation.
  */
 class LocalKV {
     constructor() {
@@ -229,10 +229,10 @@ function extractIdentity(req) {
     return `ip:${ip}`;
 }
 
-// ─── Standard Heady rate limit profiles ───────────────────────────────────────
+// ─── Standard Heady™ rate limit profiles ───────────────────────────────────────
 
 /**
- * Pre-built tier sets for common Heady routes.
+ * Pre-built tier sets for common Heady™ routes.
  */
 const LIMIT_PROFILES = {
     /** Default API endpoint: 120/min burst, 1000/hour sustained */

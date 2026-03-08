@@ -78,7 +78,7 @@ function getServiceDescription(domain) {
     'headyio': 'Developer Platform & Tools',
     'headyme': 'Personal Cloud & Identity'
   };
-  return descriptions[domain] || 'Heady Systems Service';
+  return descriptions[domain] || 'Heady™ Systems Service';
 }
 
 function getServiceFeatures(domain) {
@@ -111,8 +111,8 @@ function getStaticContent(domain, fqdn) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${domain} - Heady Systems</title>
-    <meta name="description" content="${getServiceDescription(domain)} - Part of the Heady Systems ecosystem">
+    <title>${domain} - Heady™ Systems</title>
+    <meta name="description" content="${getServiceDescription(domain)} - Part of the Heady™ Systems ecosystem">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -199,7 +199,7 @@ function getStaticContent(domain, fqdn) {
         <div class="card">
             <div class="status"><span class="pulse"></span>HCFP Auto-Deployed</div>
             <h2>Welcome to ${domain}</h2>
-            <p>This domain is part of the Heady Systems ecosystem, providing integrated AI-powered solutions with Sacred Geometry architecture.</p>
+            <p>This domain is part of the Heady™ Systems ecosystem, providing integrated AI-powered solutions with Sacred Geometry architecture.</p>
             <p>
                 <strong>Status:</strong> Production Ready<br>
                 <strong>Version:</strong> 1.0.0<br>

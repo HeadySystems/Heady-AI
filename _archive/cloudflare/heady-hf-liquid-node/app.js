@@ -1,10 +1,10 @@
 /**
- * © 2026 Heady Systems LLC.
- * ═══ Heady Liquid Node — Hugging Face Space Edition ═══
+ * © 2026 Heady™Systems Inc.
+ * ═══ Heady™ Liquid Node — Hugging Face Space Edition ═══
  * 
  * This is a dedicated Express Node deployed instantly to Hugging Face Spaces.
  * It acts as high-throughput Compute & Forwarding Endpoint that connects back
- * into the broader Heady "Liquid" architecture.
+ * into the broader Heady™ "Liquid" architecture.
  * Port: 7860 (Hugging Face default)
  */
 
@@ -20,8 +20,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Support larger payloads like vector embeddings
 
-// Heady Origin Authentication
-// Only requests from authorized Heady layers or authorized tokens can invoke this node.
+// Heady™ Origin Authentication
+// Only requests from authorized Heady™ layers or authorized tokens can invoke this node.
 const AUTHORIZED_TOKEN = process.env.HEADY_API_KEY || 'hf_local_dev';
 
 function authenticate(req, res, next) {

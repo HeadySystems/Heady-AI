@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -12,6 +12,7 @@
  */
 
 let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+const { PHI_TIMING } = require('../shared/phi-math');
 class EventStream {
     constructor() {
         this.clients = new Map();  // clientId → { res, filters }
@@ -56,7 +57,7 @@ class EventStream {
             const heartbeat = setInterval(() => {
                 try { res.write(`:heartbeat ${new Date().toISOString()}\n\n`); }
                 catch { clearInterval(heartbeat); }
-            }, 29034); // φ⁷ × 1000
+            }, PHI_TIMING.CYCLE); // φ⁷ × 1000
 
             // Cleanup on disconnect
             req.on("close", () => {

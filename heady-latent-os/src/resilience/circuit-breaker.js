@@ -13,7 +13,7 @@
  *   Health tracking:      sliding window of fib(8) = 21 measurements
  *   Backoff base:         PHI_TIMING.PHI_3 = 4,236ms
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

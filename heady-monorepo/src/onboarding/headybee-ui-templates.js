@@ -174,7 +174,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-command-center': {
     id:          'heady-command-center',
-    name:        'Heady Command Center',
+    name:        'Heady™ Command Center',
     description: 'Full-spectrum power-user dashboard with all available widgets, ' +
                  'real-time telemetry, multi-swarm monitoring, and universal quick-launch.',
     category:    'power',
@@ -235,7 +235,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-companion': {
     id:          'heady-companion',
-    name:        'Heady Companion',
+    name:        'Heady™ Companion',
     description: 'Minimalist chat-focused companion view. One primary chat interface, ' +
                  'memory panel, and a collapsible quick-tools tray. Distraction-free.',
     category:    'companion',
@@ -281,7 +281,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-developer-console': {
     id:          'heady-developer-console',
-    name:        'Heady Developer Console',
+    name:        'Heady™ Developer Console',
     description: 'IDE-inspired layout for developers: code editor, terminal, ' +
                  'MCP tool browser, git status, CI/CD pipeline, and log viewer.',
     category:    'developer',
@@ -335,7 +335,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-creative-studio': {
     id:          'heady-creative-studio',
-    name:        'Heady Creative Studio',
+    name:        'Heady™ Creative Studio',
     description: 'Music, art, and content creation workspace: canvas, sample library, ' +
                  'generative AI tools, inspiration board, content planner, and publish.',
     category:    'creative',
@@ -389,7 +389,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-trading-desk': {
     id:          'heady-trading-desk',
-    name:        'Heady Trading Desk',
+    name:        'Heady™ Trading Desk',
     description: 'Financial data and trading workspace: live price feeds, portfolio ' +
                  'tracker, AI sentiment analysis, order management, and P&L charts.',
     category:    'finance',
@@ -443,7 +443,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-enterprise-admin': {
     id:          'heady-enterprise-admin',
-    name:        'Heady Enterprise Admin',
+    name:        'Heady™ Enterprise Admin',
     description: 'Full-spectrum enterprise administration: user management, tenant ' +
                  'configuration, audit logs, compliance dashboards, billing, and SLA monitoring.',
     category:    'admin',
@@ -498,7 +498,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-community-hub': {
     id:          'heady-community-hub',
-    name:        'Heady Community Hub',
+    name:        'Heady™ Community Hub',
     description: 'HeadyConnection nonprofit and social workspace: community feed, ' +
                  'event calendar, project board, volunteer tools, and impact metrics.',
     category:    'community',
@@ -550,7 +550,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-research-lab': {
     id:          'heady-research-lab',
-    name:        'Heady Research Lab',
+    name:        'Heady™ Research Lab',
     description: 'Deep research and analysis workspace: multi-source search, ' +
                  'knowledge graph, citation manager, document analysis, and synthesis.',
     category:    'research',
@@ -603,7 +603,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-bot-manager': {
     id:          'heady-bot-manager',
-    name:        'Heady Bot Manager',
+    name:        'Heady™ Bot Manager',
     description: 'Bot and automation management: bot registry, workflow builder, ' +
                  'trigger editor, run history, A/B testing, and performance metrics.',
     category:    'automation',
@@ -655,7 +655,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-mcp-dashboard': {
     id:          'heady-mcp-dashboard',
-    name:        'Heady MCP Dashboard',
+    name:        'Heady™ MCP Dashboard',
     description: 'Model Context Protocol tools and server management: MCP server registry, ' +
                  'tool catalogue, request tracer, token usage, and latency heat-maps.',
     category:    'developer',
@@ -707,7 +707,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-onboarding-lite': {
     id:          'heady-onboarding-lite',
-    name:        'Heady Onboarding Lite',
+    name:        'Heady™ Onboarding Lite',
     description: 'Simplified starter template for new users. Companion chat front-and-center ' +
                  'with a guided task checklist and minimal tooling to avoid overwhelm.',
     category:    'starter',
@@ -755,7 +755,7 @@ export const HEADYBEE_TEMPLATES = {
 
   'heady-focus-mode': {
     id:          'heady-focus-mode',
-    name:        'Heady Focus Mode',
+    name:        'Heady™ Focus Mode',
     description: 'Single-task, distraction-free environment. One primary pane, ' +
                  'a minimal taskbar, Pomodoro timer, and zero decorative elements.',
     category:    'productivity',

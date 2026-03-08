@@ -3,7 +3,7 @@
  *
  * @param {string} password - The plaintext password
  * @param {number} [rounds=12] - Cost factor (4-31). Higher = slower/more secure.
- * @returns {Promise<string>} Hash string in Heady format
+ * @returns {Promise<string>} Hash string in Heady™ format
  */
 export function hash(password: string, rounds?: number): Promise<string>;
 /**
@@ -14,7 +14,7 @@ export function hash(password: string, rounds?: number): Promise<string>;
  */
 export function hashSync(password: string, rounds?: number): string;
 /**
- * Verifies a plaintext password against a stored Heady hash.
+ * Verifies a plaintext password against a stored Heady™ hash.
  * Uses timing-safe comparison to prevent timing attacks.
  *
  * @param {string} password - Plaintext to verify
@@ -36,7 +36,7 @@ export function compareSync(password: string, storedHash: string): boolean;
  */
 export function generateToken(bytes?: number): string;
 /**
- * Generates a cryptographically random API key in Heady format.
+ * Generates a cryptographically random API key in Heady™ format.
  * Format: hk_<32 bytes hex>
  * @returns {string}
  */

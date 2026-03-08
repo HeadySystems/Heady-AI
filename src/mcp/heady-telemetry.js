@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * Comprehensive Telemetry — Full Audit Trail + Optimization Engine
  *
@@ -17,6 +17,7 @@
  */
 
 const fs = require('fs');
+const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
@@ -164,7 +165,7 @@ class HeadyTelemetry {
                 errorsSinceLastCapture: this.errors.length,
             };
             this._appendLog(METRICS_FILE, snapshot);
-        }, 29034); // φ⁷ × 1000ms — Auto-Success heartbeat cycle
+        }, PHI_TIMING.CYCLE); // φ⁷ × 1000ms — Auto-Success heartbeat cycle
 
         // Don't block process exit
         if (this._metricsInterval.unref) this._metricsInterval.unref();

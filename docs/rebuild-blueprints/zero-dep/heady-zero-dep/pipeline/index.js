@@ -1,6 +1,6 @@
 /**
  * @file index.js
- * @description Heady Pipeline Layer — Unified Exports.
+ * @description Heady™ Pipeline Layer — Unified Exports.
  *
  * Combines:
  * - HCFullPipeline: 12-stage cognitive pipeline (INTAKE→…→LEARN)

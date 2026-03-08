@@ -16,7 +16,7 @@
 | [headyio-core](https://github.com/HeadyMe/headyio-core) | Projected site/app shell | Thin Express stub | Convert to explicit projection target or fold into unified sites repo |
 | [headyos-core](https://github.com/HeadyMe/headyos-core) | Projected site/app shell | Thin Express stub | Convert to explicit projection target or fold into unified sites repo |
 | [headymcp-production](https://github.com/HeadyMe/headymcp-production) | Production target repo | Near-empty | Either automate population and status metadata or remove public ambiguity |
-| [headysystems-production](https://github.com/HeadyMe/headysystems-production) | Production target repo | Near-empty | Either automate population and status metadata or remove public ambiguity |
+| [heady-production](https://github.com/HeadyMe/heady-production) | Production target repo | Near-empty | Either automate population and status metadata or remove public ambiguity |
 
 ## Suggested future manifest fields
 

@@ -1,9 +1,9 @@
 /**
- * @heady/orchestrator — Service Orchestration & Liquid Architecture
+ * @heady-ai/orchestrator — Service Orchestration & Liquid Architecture
  *
  * Manages dynamic resource allocation, Monte Carlo scheduling,
  * health probes, self-healing, and container morphing across
- * the Heady fleet (Colab + Cloud Run + Edge + Local).
+ * the Heady™ fleet (Colab + Cloud Run + Edge + Local).
  */
 export interface OrchestrationTask {
     id: string;

@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * ORCH-003: 5-Level Health Probe System
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Escalating health probes: ping → functional → e2e → visual → sweep

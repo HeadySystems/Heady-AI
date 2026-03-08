@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * OpenTelemetry (OTel) Core Instrumentation
  *
  * Provides distributed tracing, metrics, and context propagation
- * across the Heady multi-agent swarm and MCP boundaries.
+ * across the Heady™ multi-agent swarm and MCP boundaries.
  */
 
 'use strict';

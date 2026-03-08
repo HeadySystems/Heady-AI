@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Pattern Recognition Engine — Observes latency, success, error, and reliability patterns.
  * Emits events for cross-wiring into StoryDriver and SelfCritique.
  */

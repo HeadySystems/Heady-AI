@@ -1,11 +1,11 @@
 /**
- * @fileoverview Liquid Latent OS Orchestrator — The Nervous System of Heady
+ * @fileoverview Liquid Latent OS Orchestrator — The Nervous System of Heady™
  * @module orchestration/liquid-orchestrator
  * @version 2.0.0
  * @author HeadySystems Inc.
  *
  * The LiquidOrchestrator is the dynamic routing, scaling, healing, and adaptation
- * engine for the entire Heady ecosystem. It operates in real-time using CSL gates
+ * engine for the entire Heady™ ecosystem. It operates in real-time using CSL gates
  * and phi-scaled resource allocation across five pool tiers.
  *
  * Architecture:
@@ -75,7 +75,7 @@ const PRIORITY = Object.freeze({ CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1, SHEDDA
 // ─── Helper: Generate Capability Embedding for Swarm ──────────────────────────
 
 /**
- * Return the canonical 17 swarm definitions used across the Heady ecosystem.
+ * Return the canonical 17 swarm definitions used across the Heady™ ecosystem.
  * Each swarm has a capability embedding derived from its name (placeholder —
  * in production these would be trained 384-dim embeddings).
  * @returns {Map<string, SwarmDefinition>}

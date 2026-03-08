@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -23,7 +23,7 @@
  * Pipeline Task Handlers
  *
  * Registers concrete task handlers for HCFullPipeline stages.
- * Connects the Supervisor (with HeadyJules Code agent) to the pipeline engine.
+ * Connects the Supervisor (with Heady™Jules Code agent) to the pipeline engine.
  *
  * Each task in hcfullpipeline.yaml gets a handler here.
  * The execute-major-phase tasks route through the Supervisor for
@@ -652,7 +652,7 @@ async function autoResearchIngest(context) {
     "",
     "> [!CAUTION]",
     "> **AUTO-IMPORTED:** This document was automatically ingested from an external source.",
-    "> Content may describe entities not affiliated with HeadySystems Inc.",
+    "> Content may describe entities not affiliated with Heady™Systems Inc.",
     "> Review before integrating into project documentation.",
     "",
   ].join("\n");

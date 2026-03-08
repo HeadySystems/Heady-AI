@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * ─── Heady Federated Vector Router ──────────────────────────────
+ * ─── Heady™ Federated Vector Router ──────────────────────────────
  * 
  * Routes vector operations across distributed backends:
  *

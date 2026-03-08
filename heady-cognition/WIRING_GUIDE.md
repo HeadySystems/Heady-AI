@@ -1,6 +1,6 @@
-# Heady Cognitive Architecture — Wiring Guide
+# Heady™ Cognitive Architecture — Wiring Guide
 
-> How to deploy these files into the Heady ecosystem.
+> How to deploy these files into the Heady™ ecosystem.
 
 ## Step 1: Files Are Already in the Repo
 

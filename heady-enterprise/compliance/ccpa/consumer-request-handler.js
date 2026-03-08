@@ -504,7 +504,7 @@ const createCCPARouter = (deps) => {
 
   /**
    * GET /api/v1/ccpa/categories
-   * Return categories of PI Heady collects (for transparency pages).
+   * Return categories of PI Heady™ collects (for transparency pages).
    */
   router.get('/categories', (req, res) => {
     res.json({

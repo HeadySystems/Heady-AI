@@ -1,5 +1,5 @@
 /**
- * @fileoverview Graph RAG Engine for Heady Latent OS
+ * @fileoverview Graph RAG Engine for Heady™ Latent OS
  * @module graph-rag
  *
  * Implements LightRAG-style incremental knowledge graph retrieval augmented
@@ -179,7 +179,7 @@ Summary:`;
 /**
  * GraphRAGEngine — LightRAG-style incremental knowledge graph retrieval.
  *
- * Integrates with Heady's PostgreSQL vector store (pgvector) and supports
+ * Integrates with Heady™'s PostgreSQL vector store (pgvector) and supports
  * multi-hop reasoning over entity-relationship graphs stored in graph_rag_*
  * tables created by migration 002_graph_rag_schema.sql.
  */

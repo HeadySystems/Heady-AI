@@ -23,8 +23,8 @@ export class ClaudeCodeAgent {
         metadata: Object;
     }): Object;
     /**
-     * Build a structured prompt for HeadyJules Code based on task type.
-     * Utilizes the Universal Heady Prompt Architecture.
+     * Build a structured prompt for Heady™Jules Code based on task type.
+     * Utilizes the Universal Heady™ Prompt Architecture.
      */
     _buildPrompt(request: any, metadata: any): string;
     /**

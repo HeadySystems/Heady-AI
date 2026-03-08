@@ -1,5 +1,5 @@
 /**
- * ─── Heady Continuous Semantic Logic (CSL) ──────────────────────────
+ * ─── Heady™ Continuous Semantic Logic (CSL) ──────────────────────────
  *
  * BLUEPRINT: Universal Vector Gates v2.0
  * Replace ALL discrete logic (0, 1) with infinite geometric continuity.

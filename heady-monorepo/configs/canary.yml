@@ -1,5 +1,5 @@
 # Canary Deployment Configuration
-# Progressive rollout strategy for Heady AI Platform
+# Progressive rollout strategy for Heady™ AI Platform
 
 version: "1.0"
 service: "heady-systems"

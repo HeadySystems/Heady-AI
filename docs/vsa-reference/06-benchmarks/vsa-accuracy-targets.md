@@ -22,7 +22,7 @@
 | Permute | 10,000 | 1.3 | 769 ops/sec |
 | Similarity | 10,000 | 0.8 | 1250 ops/sec |
 
-### Heady Node.js Target Performance
+### Heady™ Node.js Target Performance
 
 **Target Hardware:** Modern CPU (Node.js single-threaded)
 

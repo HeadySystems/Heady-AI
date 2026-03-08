@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Dynamic Site Template Engine ═══════════════════════════════════════
  *
@@ -91,7 +91,7 @@ function injectCrossSiteNav(html) {
   <div class="cross-site-nav" id="crossSiteNav">
     <button class="csn-toggle" onclick="document.getElementById('crossSiteNav').classList.toggle('open')">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      Heady Network
+      Heady™ Network
     </button>
     <div class="csn-links">${navLinks}</div>
   </div>
@@ -289,7 +289,7 @@ if (require.main === module) {
 
   console.log('\nFeatures injected:');
   console.log('   ✓ Auth gate (Google/GitHub/Discord)');
-  console.log('   ✓ Cross-site navigation (Heady Network)');
+  console.log('   ✓ Cross-site navigation (Heady™ Network)');
   console.log('   ✓ HeadyBuddy widget');
   console.log(`\n   φ = ${PHI}`);
 }

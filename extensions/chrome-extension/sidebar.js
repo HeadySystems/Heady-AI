@@ -271,7 +271,7 @@ function handleSend() {
                                     {
                                         type: "text",
                                         label: "Buddy",
-                                        content: "I'm having trouble reaching the Heady network right now. Check your connection or API key, then try again.",
+                                        content: "I'm having trouble reaching the Heady™ network right now. Check your connection or API key, then try again.",
                                         timestamp: Date.now(),
                                     },
                                 ]);

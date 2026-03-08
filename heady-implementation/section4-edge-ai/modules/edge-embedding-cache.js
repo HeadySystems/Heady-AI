@@ -1,6 +1,6 @@
 /**
  * edge-embedding-cache.js
- * Heady Latent OS — Edge Embedding Cache
+ * Heady™ Latent OS — Edge Embedding Cache
  *
  * LRU cache with TTL for embedding vectors at the Cloudflare edge.
  * Reduces Workers AI inference cost by 60–80% for repeated queries.

@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview In-memory key-value store with TTL, LRU eviction, and
  * optional persistence to disk. Replaces node-cache and similar packages.
@@ -42,7 +43,7 @@ class LRUNode {
  * @property {string} [persistPath] - File path for persistence (optional)
  * @property {number} [persistIntervalMs=60000] - How often to persist (ms)
  * @property {boolean} [autoCleanup=true] - Run periodic TTL cleanup
- * @property {number} [cleanupIntervalMs=30000] - TTL cleanup interval (ms)
+ * @property {number} [cleanupIntervalMs=PHI_TIMING.CYCLE] - TTL cleanup interval (ms)
  */
 
 class HeadyKV {
@@ -56,7 +57,7 @@ class HeadyKV {
       persistPath = null,
       persistIntervalMs = 60000,
       autoCleanup = true,
-      cleanupIntervalMs = 30000,
+      cleanupIntervalMs = PHI_TIMING.CYCLE,
     } = options;
 
     this._maxSize = maxSize;

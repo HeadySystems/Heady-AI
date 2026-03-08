@@ -1,6 +1,6 @@
 # Heady™ Service Catalog & Platform Capabilities
 
-> © 2026 HeadySystems Inc.. All Rights Reserved.
+> © 2026 Heady™Systems Inc.. All Rights Reserved.
 
 ## Service Categories
 
@@ -70,16 +70,16 @@ Heady provides 30+ specialized tools organized into 7 service domains, all acces
 
 ## Agent Architecture: HeadyBees & HeadySwarms
 
-### HeadyBee (Atomic Agent Unit)
+### Heady™Bee (Atomic Agent Unit)
 
-A HeadyBee is the smallest unit of work in the Heady ecosystem. Each bee:
+A HeadyBee is the smallest unit of work in the Heady™ ecosystem. Each bee:
 
 - Has a single, focused domain (e.g., trading, memory, security)
 - Contains prioritized work items
 - Can be spawned independently or as part of a swarm
 - Reports status back to the hive
 
-### HeadySwarm (Coordinated Agent Group)
+### Heady™Swarm (Coordinated Agent Group)
 
 A HeadySwarm orchestrates multiple bees for complex tasks:
 

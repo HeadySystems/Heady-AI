@@ -33,12 +33,12 @@ export async function registerWithHeadyMCP(config: HeadyMCPConfig): Promise<void
     }
 
     const data = await response.json()
-    console.log(`✅ Registered with HeadyMCP:`, data)
+    console.log(`✅ Registered with Heady™MCP:`, data)
 
     return data
   } catch (error) {
     console.error("HeadyMCP registration error:", error)
-    throw new Error("Failed to register with HeadyMCP")
+    throw new Error("Failed to register with Heady™MCP")
   }
 }
 

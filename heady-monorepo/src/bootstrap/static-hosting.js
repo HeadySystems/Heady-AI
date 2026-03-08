@@ -1,10 +1,10 @@
 /**
- * ∞ Static Hosting — Heady Static File Middleware
+ * ∞ Static Hosting — Heady™ Static File Middleware
  *
  * Mounts per-domain static file hosting from the sites/ directory.
  * Serves public assets, favicon, and robots.txt for each registered domain.
  *
- * © 2026 HeadySystems Inc. All rights reserved.
+ * © 2026 Heady™Systems Inc. All rights reserved.
  */
 
 const path = require('path');

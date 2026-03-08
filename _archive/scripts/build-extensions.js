@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
- * Build script for Heady extensions — creates installable packages.
+ * © 2026 Heady™Systems Inc.
+ * Build script for Heady™ extensions — creates installable packages.
  * 
  * Outputs:
  *   dist/heady-ai-{version}.vsix   — VS Code extension
@@ -74,7 +74,7 @@ try {
     const chromeManifest = JSON.parse(fs.readFileSync(path.join(CHROME_DIR, 'manifest.json'), 'utf8'));
 
     info.packages['HeadyAI-VSCode'] = {
-        name: 'Heady AI — VS Code Extension',
+        name: 'Heady™ AI — VS Code Extension',
         version: vscPkg.version,
         description: vscPkg.description,
         file: `heady-ai-${vscPkg.version}.vsix`,
@@ -84,7 +84,7 @@ try {
     };
 
     info.packages['HeadyAI-Chrome'] = {
-        name: 'Heady AI — Chrome Extension',
+        name: 'Heady™ AI — Chrome Extension',
         version: chromeManifest.version,
         description: chromeManifest.description,
         file: `heady-chrome-${chromeManifest.version}.zip`,

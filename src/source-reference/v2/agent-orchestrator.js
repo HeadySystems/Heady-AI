@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const logger = require('../../utils/logger');
 const HeadyConductor = require('../../orchestration/heady-conductor');
 const CircuitBreaker = require('../../resilience/circuit-breaker');
@@ -44,13 +45,13 @@ class AgentOrchestrator {
   /**
    * @param {object} opts
    * @param {number}  [opts.maxConcurrentTasks=8]
-   * @param {number}  [opts.taskTimeoutMs=30000]
+   * @param {number}  [opts.taskTimeoutMs=PHI_TIMING.CYCLE]
    * @param {object}  [opts.kv]          - HeadyKV instance (injected or created)
    * @param {object}  [opts.conductor]   - HeadyConductor instance (injected or created)
    */
   constructor(opts = {}) {
     this.maxConcurrentTasks = opts.maxConcurrentTasks ?? 8;
-    this.taskTimeoutMs = opts.taskTimeoutMs ?? 30_000;
+    this.taskTimeoutMs = opts.taskTimeoutMs ?? PHI_TIMING.CYCLE;
 
     this._kv = opts.kv || new HeadyKV({ namespace: 'agent-orchestrator' });
     this._conductor = opts.conductor || new HeadyConductor();
@@ -147,7 +148,7 @@ class AgentOrchestrator {
     this._breakers.set(name, new CircuitBreaker({
       name: `agent:${name}`,
       failureThreshold: config.failureThreshold ?? 5,
-      recoveryTimeMs: config.recoveryTimeMs ?? 30_000,
+      recoveryTimeMs: config.recoveryTimeMs ?? PHI_TIMING.CYCLE,
     }));
 
     if (persist) {

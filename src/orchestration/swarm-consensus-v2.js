@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -41,15 +41,16 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const crypto = require('crypto');
 const logger = require('../utils/logger');
 
 const PHI = (1 + Math.sqrt(5)) / 2;
-const DEFAULT_LOCK_TTL_MS = Math.round(PHI * 30000);    // ~48.5s
+const DEFAULT_LOCK_TTL_MS = Math.round(PHI * PHI_TIMING.CYCLE);    // ~48.5s
 const HEARTBEAT_INTERVAL_MS = Math.round(PHI * 5000);   // ~8.09s
 const STALE_CHECK_INTERVAL_MS = Math.round(PHI * 10000);// ~16.18s
-const DEAD_OWNER_THRESHOLD_MS = 30_000;                  // lock owner is "dead" after 30s of silence
+const DEAD_OWNER_THRESHOLD_MS = PHI_TIMING.CYCLE;                  // lock owner is "dead" after 30s of silence
 const MAX_LOCK_GENEALOGY = 20;                           // max history entries per lock
 
 /** Priority tiers for wait queue ordering. Higher = served first. */
@@ -138,7 +139,7 @@ class SwarmConsensus extends EventEmitter {
      * @param {string} [opts.type]   - 'exclusive' | 'shared' | 'quorum' (default: exclusive)
      * @param {number} [opts.ttlMs]  - Custom TTL override
      * @param {boolean} [opts.wait]  - If true, queue and wait for release
-     * @param {number} [opts.waitTimeout] - Max wait time (ms, default 30000)
+     * @param {number} [opts.waitTimeout] - Max wait time (ms, default PHI_TIMING.CYCLE)
      * @param {string} [opts.priority]    - PRIORITY key for wait queue ordering
      * @returns {Promise<AcquireResult>}
      */
@@ -403,7 +404,7 @@ class SwarmConsensus extends EventEmitter {
      *
      * @private
      */
-    _enqueueWaiter(filePath, owner, type, ttlMs, priority, waitTimeoutMs = 30_000) {
+    _enqueueWaiter(filePath, owner, type, ttlMs, priority, waitTimeoutMs = PHI_TIMING.CYCLE) {
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 // Remove from queue on timeout

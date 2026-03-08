@@ -1,4 +1,4 @@
-// Bootstrap for HeadyWeb micro-frontend
+// Bootstrap for Heady™Web micro-frontend
 const { createApp } = require('./App');
 
 // Standalone mode: mount if #heady-root exists

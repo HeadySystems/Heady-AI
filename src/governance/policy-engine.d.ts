@@ -105,7 +105,7 @@ export class PolicyEngine extends EventEmitter<[never]> {
      */
     _rebuildPriorityOrder(): void;
     /**
-     * Default built-in policies for the Heady AI Platform.
+     * Default built-in policies for the Heady™ AI Platform.
      * @returns {object[]}
      */
     _defaultPolicies(): object[];

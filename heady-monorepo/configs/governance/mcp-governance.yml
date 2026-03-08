@@ -1,5 +1,5 @@
 # MCP Governance Policy Configuration
-# Heady MCP Server — Tool access control and rate limiting
+# Heady™ MCP Server — Tool access control and rate limiting
 
 version: "1.0"
 service: "heady-mcp"

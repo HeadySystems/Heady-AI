@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady IDE Control Plane
+# Heady™ IDE Control Plane
 
 ## When to Use This Skill
 
@@ -70,4 +70,4 @@ Use this skill when the user asks for:
 
 ## Provenance
 
-This skill is based on public Heady patterns around configuring editor environments to use approved Heady services, reflected in public HeadySystems repository themes at [GitHub](https://github.com/HeadySystems) and related issue themes around workspace routing in [HeadySystems/Heady-pre-production](https://github.com/HeadySystems/Heady-pre-production/issues/43).
+This skill is based on public Heady patterns around configuring editor environments to use approved Heady services, reflected in public HeadySystems repository themes at [GitHub](https://github.com/HeadySystems) and related issue themes around workspace routing in [HeadyMe/Heady-pre-production](https://github.com/HeadyMe/Heady-pre-production/issues/43).

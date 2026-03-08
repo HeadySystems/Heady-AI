@@ -1,7 +1,7 @@
 /**
  * HeadyDrupalFetch — Lightweight CMS Content Hydration
  * 
- * Include on any Heady site to pull content from Drupal 11 JSON:API.
+ * Include on any Heady™ site to pull content from Drupal 11 JSON:API.
  * Usage: <script src="heady-drupal-fetch.js" data-site="headysystems" data-drupal="https://cms.headysystems.com"></script>
  * 
  * DOM elements with data-drupal-section="hero" will be hydrated with
@@ -88,7 +88,7 @@
     }
 
     /**
-     * Fetch Heady system config from custom endpoint.
+     * Fetch Heady™ system config from custom endpoint.
      */
     async function fetchHeadyConfig() {
         try {

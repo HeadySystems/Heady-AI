@@ -1,4 +1,4 @@
-# Migration Guide: Heady System v3.x → v4.0.0
+# Migration Guide: Heady™ System v3.x → v4.0.0
 
 > **Date**: 2026-03-08
 > **Author**: HeadySystems Inc.

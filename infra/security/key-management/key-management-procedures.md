@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Key Management Procedures
+# Heady™Systems v3.2.2 — Key Management Procedures
 
 **Version:** 3.2.2  
 **Owner:** Eric Headington (eric@headyconnection.org)  

@@ -56,8 +56,8 @@ heady-projection/
 │   ├── projection-service/   # Main projection service (port 3849)
 │   └── dashboard/            # Real-time SSE dashboard (port 3850)
 ├── packages/
-│   ├── shared-types/         # @heady/shared-types — type definitions
-│   └── shared-utils/         # @heady/shared-utils — utility functions
+│   ├── shared-types/         # @heady-ai/shared-types — type definitions
+│   └── shared-utils/         # @heady-ai/shared-utils — utility functions
 ├── src/
 │   ├── bees/                 # Projection bee workers
 │   │   ├── vector-memory-projection-bee.js

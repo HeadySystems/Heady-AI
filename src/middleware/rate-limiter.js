@@ -9,7 +9,7 @@
  * - Burst allowance configuration
  * - Rate limit response headers (X-RateLimit-*)
  *
- * Used in the Heady Latent OS gateway layer to prevent runaway agent loops,
+ * Used in the Heady™ Latent OS gateway layer to prevent runaway agent loops,
  * protect downstream MCP servers, and surface fair-use limits to clients.
  *
  * ── Phi-Math Integration ────────────────────────────────────────────────────

@@ -1,12 +1,12 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * GitHub Action: Branding Enforcement CI
  * Fails any PR that contains competitor AI provider names in user-facing views.
  */
-name: Heady Branding Enforcement
+name: Heady™ Branding Enforcement
 
 on:
   pull_request:
@@ -46,7 +46,7 @@ jobs:
           if [ $VIOLATIONS -gt 0 ]; then
             echo ""
             echo "🚨 BRANDING CHECK FAILED"
-            echo "Replace competitor names with Heady service names:"
+            echo "Replace competitor names with Heady™ service names:"
             echo "  Claude/Gemini/OpenAI → HeadyBrain"
             echo "  HuggingFace → HeadyModels"
             echo "  Vertex AI → HeadyCloud"

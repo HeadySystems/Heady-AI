@@ -1,4 +1,4 @@
-# Heady Systems — 5 New Patent Application Specifications
+# Heady™ Systems — 5 New Patent Application Specifications
 
 > **Inventor**: Eric Haywood  
 > **Customer #**: 221639  
@@ -112,7 +112,7 @@ The Dynamic Connector Service operates as a state machine where each connector p
 - Rate limiting headers and policies
 - Supported protocols and transport options
 
-**Ontology Mapper**: Maps external API data structures to the Heady internal schema using field-level mapping with type coercion. Supports:
+**Ontology Mapper**: Maps external API data structures to the Heady™ internal schema using field-level mapping with type coercion. Supports:
 
 - Direct mapping (1:1 field correspondence)
 - Computed mapping (derived fields from multiple source fields)

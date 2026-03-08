@@ -1,10 +1,10 @@
 # Architectural Synthesis: Human-in-the-Loop Cryptographic Systems
 
-## Heady Intellectual Property Portfolio & Integration Directives
+## Heady™ Intellectual Property Portfolio & Integration Directives
 
 ### Executive Summary
 
-This document synthesizes the Heady IP portfolio — spanning network intrusion detection, adaptive-resistant digital signatures, proxy cryptography, and immutable hash chain ledgers — into a unified HITL (Human-in-the-Loop) cryptographic architecture.
+This document synthesizes the Heady™ IP portfolio — spanning network intrusion detection, adaptive-resistant digital signatures, proxy cryptography, and immutable hash chain ledgers — into a unified HITL (Human-in-the-Loop) cryptographic architecture.
 
 ### Patent Portfolio Matrix
 

@@ -1,5 +1,5 @@
 /**
- * Heady Infrastructure Health Monitor
+ * Heady™ Infrastructure Health Monitor
  *
  * NEW FILE — implements the infrastructure monitoring and alerting layer
  * described in PRODUCTION_DEPLOYMENT_GUIDE.md §11 but not implemented in code.
@@ -24,7 +24,7 @@
  *
  * Environment variables:
  *   MONITOR_TARGETS          Comma-separated URLs to monitor
- *   MONITOR_INTERVAL_MS      Poll interval (default: 30000)
+ *   MONITOR_INTERVAL_MS      Poll interval (default: PHI_TIMING.CYCLE ≈ 29034)
  *   MONITOR_PORT             HTTP server port (default: 8090)
  *   SLACK_WEBHOOK_URL        Slack alerts
  *   PAGERDUTY_ROUTING_KEY    PagerDuty incidents
@@ -33,11 +33,12 @@
  *   HEALTH_SCORE_CRITICAL    Score below this triggers PagerDuty (default: 50)
  *   HEALTH_SCORE_DEGRADED    Score below this triggers Slack warning (default: 80)
  *
- * © 2026 HeadySystems Inc. — Proprietary and Confidential.
+ * © 2026 Heady™Systems Inc. — Proprietary and Confidential.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const https = require('https');
 const http = require('http');
 const net = require('net');
@@ -64,7 +65,7 @@ const WEIGHTS = {
 };
 
 const DEFAULT_CONFIG = {
-  intervalMs: parseInt(process.env.MONITOR_INTERVAL_MS) || 30_000,
+  intervalMs: parseInt(process.env.MONITOR_INTERVAL_MS) || PHI_TIMING.CYCLE,
   port: parseInt(process.env.MONITOR_PORT) || 8090,
   alertCooldownMs: parseInt(process.env.ALERT_COOLDOWN_MS) || 300_000,
   healthScoreCritical: parseInt(process.env.HEALTH_SCORE_CRITICAL) || 50,

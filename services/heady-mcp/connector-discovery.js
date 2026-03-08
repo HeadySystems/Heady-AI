@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * CONN-003: MCP Connector Auto-Discovery
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
  * Scans the filesystem, npm registry, and running processes to

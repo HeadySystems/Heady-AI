@@ -1,6 +1,6 @@
 /**
- * ∞ Heady Env — .env File Loader
- * © 2026 HeadySystems Inc. — PROPRIETARY AND CONFIDENTIAL
+ * ∞ Heady™ Env — .env File Loader
+ * © 2026 Heady™Systems Inc. — PROPRIETARY AND CONFIDENTIAL
  *
  * dotenv wrapper with multi-file support.
  * Load order (each file can override the previous):

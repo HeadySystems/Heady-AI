@@ -1,6 +1,6 @@
 'use strict';
 /**
- * pipeline-core.js — Heady Sovereign AI Platform
+ * pipeline-core.js — Heady™ Sovereign AI Platform
  * Canonical 21-stage HCFullPipeline implementation (MASTER_DIRECTIVES §7.4).
  *
  * Stages (in order):
@@ -22,15 +22,7 @@
  * Retry: phi-backoff 1618ms → 2618ms → 4236ms, max 3 attempts
  */
 
-const {
-  phiBackoff,
-  phiTimeout,
-  phiThreshold,
-  cslGate,
-  PHI,
-  PSI,
-  CSL_THRESHOLDS
-} = require('../../shared/phi-math.js');
+const { phiBackoff, phiTimeout, phiThreshold, cslGate, PHI, PSI, CSL_THRESHOLDS, PHI_TIMING } = require('../../shared/phi-math.js');
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
@@ -564,7 +556,7 @@ const STAGE_DEFS = [
     id:       'EXECUTE',
     name:     'Execute',
     order:    12,
-    timeout:  phiTimeout(7),    // 29034ms — execution can be longer
+    timeout:  phiTimeout(7),    // PHI_TIMING.CYCLEms — execution can be longer
     parallel: false,
     required: true,
     gate:     CSL_THRESHOLDS.MEDIUM,  // 0.809
@@ -612,7 +604,7 @@ const STAGE_DEFS = [
     async execute(context) {
       const start  = Date.now();
       const exec   = context.executionResult || {};
-      // Verify output via HeadyAssure pattern
+      // Verify output via Heady™Assure pattern
       const passed = exec.outcome === 'COMPLETED';
       const verificationScore = passed ? (1 - PSI * PSI * PSI) : PSI * PSI;  // 0.764 or 0.382
       const gated = parseFloat(cslGate(verificationScore, verificationScore, CSL_THRESHOLDS.MEDIUM, 0.1).toFixed(4));

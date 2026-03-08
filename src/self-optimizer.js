@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * SelfOptimizer — Self-optimization engine for HeadyStack.
+ * SelfOptimizer — Self-optimization engine for Heady™Stack.
  * Analyzes performance metrics, LLM routing patterns, and budget data
  * to automatically tune the system and recommend/apply optimizations.
  */

@@ -23,7 +23,7 @@ Primary Service URL: https://headyme.com
 
 ## RECITALS
 
-WHEREAS, Controller wishes to use the HeadyOS platform, HeadyMe AI services, and associated microservices (collectively, "Services") provided by Processor;
+WHEREAS, Controller wishes to use the Heady™OS platform, HeadyMe AI services, and associated microservices (collectively, "Services") provided by Processor;
 
 WHEREAS, in the course of providing the Services, Processor may process Personal Data on behalf of Controller as a data processor within the meaning of the GDPR;
 
@@ -62,7 +62,7 @@ NOW THEREFORE, the parties agree to the following terms:
 ## 2. PROCESSING DETAILS
 
 ### 2.1 Subject Matter and Duration
-The subject matter of the processing is the provision of HeadyOS Services as described in the applicable Master Services Agreement. Processing shall occur for the duration of the Services and until completion of post-termination deletion obligations.
+The subject matter of the processing is the provision of Heady™OS Services as described in the applicable Master Services Agreement. Processing shall occur for the duration of the Services and until completion of post-termination deletion obligations.
 
 ### 2.2 Nature and Purpose of Processing
 Processor processes Personal Data for the following purposes:

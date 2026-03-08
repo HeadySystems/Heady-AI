@@ -1,10 +1,10 @@
 /**
  * @file csl-engine-enhanced.js
  * @description CSL (Continuous Scalar Logic) Engine — Phi-grounded scalar gate operations
- *              for the Heady trading and service layer. All thresholds and weights derive
+ *              for the Heady™ trading and service layer. All thresholds and weights derive
  *              from the golden ratio φ = 1.6180339887.
  *
- * @copyright © 2026 HeadySystems Inc. All rights reserved.
+ * @copyright © 2026 Heady™Systems Inc. All rights reserved.
  *
  * @patent
  *   Protected under 60+ provisional patent applications filed with the USPTO covering
@@ -148,7 +148,7 @@ const assertArray = (arr, name = 'values') => {
  * @description
  *   Core engine for Continuous Scalar Logic (CSL) operations.
  *   Operates on scalar confidence values ∈ [0, 1] — not vectors.
- *   Designed for the Heady trading and service layer where decisions
+ *   Designed for the Heady™ trading and service layer where decisions
  *   must be smooth, probabilistically sound, and anchored to φ.
  *
  * @example

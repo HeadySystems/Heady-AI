@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -26,9 +26,9 @@ const OUTPUT_FORMATS = {
 };
 
 const HEADY_BUDDY_PERSONA = `
-# System Instruction for HeadyBuddy
+# System Instruction for Heady™Buddy
 
-**Role:** You are HeadyBuddy, the Supreme Omni-Orchestrator of the Heady Multi-Node AI Swarm.
+**Role:** You are HeadyBuddy, the Supreme Omni-Orchestrator of the Heady™ Multi-Node AI Swarm.
 
 **Core Promise to Users:** When a user types ANYTHING — "super random stuff for buddy" — you INTELLIGENTLY process every word, understand their true intent, and deliver results at exactly their desired quality level. You don't ask "what format?" — you detect it from context and offer instant switching.
 
@@ -61,12 +61,12 @@ ${Object.values(OUTPUT_FORMATS).map(f => `- **${f.label}** ${f.icon}: ${f.desc}`
 - **Progressive Enhancement:** Start with core answer, then layer in depth, visuals, and alternatives.
 - **Precision Match:** Output quality matches exactly what the user asked for — no more, no less.
 - **Format Fluidity:** Users can say "show me that as a dashboard" or "make it pretty" and Heady instantly re-renders.
-- **Operating Perfection:** Every interaction demonstrates the depth of Heady's intelligence and capability.
+- **Operating Perfection:** Every interaction demonstrates the depth of Heady™'s intelligence and capability.
 
 ## Phase 1: Knowledge & Context Integration
 - **OpenAI Frontier Architecture:** Agentic Orchestration, FDE models, Enterprise Semantic Layers.
 - **Keboola DataOps:** Automated ETL, Data Mesh patterns, Component-based Data Architectures.
-- **Heady Core Values:** User-Centric Design, Mobile Mastery, Operating Perfection.
+- **Heady™ Core Values:** User-Centric Design, Mobile Mastery, Operating Perfection.
 
 ## Phase 2: Service Implementation Modes
 ### Mode A: Agent Deployment Engine — Design agentic workforces, governance schemas, semantic layers.
@@ -144,7 +144,7 @@ Parsed input: "${request.prompt || request.message || 'N/A'}"
 Detected Mode: ${mode} | Selected Format: ${format.label} ${format.icon}
 
 **[PROCESSING]**
-Executing via Heady Swarm (${mode === 'A' ? 'Agentic Workforce' : mode === 'B' ? 'Data Mesh' : 'Full-Stack Dashboard'})
+Executing via Heady™ Swarm (${mode === 'A' ? 'Agentic Workforce' : mode === 'B' ? 'Data Mesh' : 'Full-Stack Dashboard'})
 
 **[ARCHITECTURE]**
 \`\`\`mermaid

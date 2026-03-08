@@ -1,5 +1,5 @@
 /**
- * Heady Onboarding API Routes
+ * Heady™ Onboarding API Routes
  * 
  * Handles stage completion, data persistence, and stage advancement.
  * Each POST advances the user to the next onboarding stage.
@@ -166,7 +166,7 @@ async function processCreateAccount(
     };
   }
 
-  // Check availability via HeadyAPI
+  // Check availability via Heady™API
   try {
     const checkResponse = await fetch(
       `${process.env.HEADY_API_URL ?? 'https://api.headyapi.com'}/internal/check-username`,
@@ -266,7 +266,7 @@ async function processBuddySetup(
     return { success: false, error: 'Buddy name must be 1-30 characters', statusCode: 422 };
   }
 
-  // Register with HeadyBuddy service
+  // Register with Heady™Buddy service
   try {
     await fetch(
       `${process.env.HEADY_BUDDY_URL ?? 'https://buddy.headybuddy.org'}/api/configure`,

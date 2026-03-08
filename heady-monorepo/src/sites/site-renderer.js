@@ -1,5 +1,5 @@
 /**
- * Heady Site Renderer — Multi-domain site serving engine.
+ * Heady™ Site Renderer — Multi-domain site serving engine.
  * Maps hostnames to site configurations and renders appropriate content.
  */
 'use strict';
@@ -74,7 +74,7 @@ function generateFallbackHTML(site, opts = {}) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${name} — Heady AI Platform</title>
+  <title>${name} — Heady™ AI Platform</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

@@ -1,4 +1,4 @@
-# HeadyMe Pilot Onboarding System - File Manifest
+# Heady™Me Pilot Onboarding System - File Manifest
 
 ## Configuration Files (4)
 - package.json - Dependencies and scripts

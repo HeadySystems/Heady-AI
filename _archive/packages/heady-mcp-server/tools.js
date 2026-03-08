@@ -1,10 +1,10 @@
 /**
- * Heady MCP Tools — all service groups + deep research + device control
+ * Heady™ MCP Tools — all service groups + deep research + device control
  */
 module.exports = [
     {
         name: "heady_chat",
-        description: "Chat with HeadyBrain — routes through the liquid AI gateway for general questions, analysis, and conversation.",
+        description: "Chat with Heady™Brain — routes through the liquid AI gateway for general questions, analysis, and conversation.",
         inputSchema: { type: "object", properties: { message: { type: "string", description: "Your message or question" } }, required: ["message"] },
         handler: async (args, api) => { const r = await api("/api/brain/chat", { message: args.message, model: "auto" }); return r.response || r.text || JSON.stringify(r); },
     },
@@ -39,7 +39,7 @@ module.exports = [
     },
     {
         name: "heady_code",
-        description: "Ensemble coding orchestrator — multi-node code generation with HeadyBattle validation. Ideal for refactors, migrations, and test generation.",
+        description: "Ensemble coding orchestrator — multi-node code generation with Heady™Battle validation. Ideal for refactors, migrations, and test generation.",
         inputSchema: { type: "object", properties: { task: { type: "string", description: "Coding task description" }, language: { type: "string", description: "Programming language (optional)" } }, required: ["task"] },
         handler: async (args, api) => { const lang = args.language ? ` (language: ${args.language})` : ""; const r = await api("/api/brain/chat", { message: `[CODE TASK]${lang} ${args.task}`, model: "auto" }); return r.response || r.text || JSON.stringify(r); },
     },
@@ -75,7 +75,7 @@ module.exports = [
     },
     {
         name: "heady_analyze",
-        description: "Analyze code, text, or data using the Heady AI ensemble.",
+        description: "Analyze code, text, or data using the Heady™ AI ensemble.",
         inputSchema: { type: "object", properties: { content: { type: "string", description: "Content to analyze" }, focus: { type: "string", description: "Specific focus area (optional)" } }, required: ["content"] },
         handler: async (args, api) => { const focus = args.focus ? ` Focus: ${args.focus}` : ""; const r = await api("/api/brain/analyze", { content: args.content + focus }); return r.response || r.text || JSON.stringify(r); },
     },
@@ -131,7 +131,7 @@ module.exports = [
     },
     {
         name: "heady_health",
-        description: "Check Heady system health — service status, uptime, memory, and provider availability.",
+        description: "Check Heady™ system health — service status, uptime, memory, and provider availability.",
         inputSchema: { type: "object", properties: {} },
         handler: async (args, api) => {
             const http = require("http");

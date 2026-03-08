@@ -11,7 +11,7 @@
  *  - clearRemoteCache() → void
  *  - getLoadLog() → LoadLogEntry[]
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module shell/load-dynamic-remote
  */

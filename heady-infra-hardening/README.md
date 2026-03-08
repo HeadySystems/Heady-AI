@@ -36,7 +36,7 @@ All modules are independent and can be started in parallel. Recommended critical
 - **Legacy**: `HeadyMe/Heady` (v3.0.0 — reference only)
 - **Docs Hub**: `HeadyMe/heady-docs`
 - **Projected Repos**: 10 `-core` repos (headyme-core, headymcp-core, etc.)
-- **Archived**: HeadySystems/* (7 archived repos)
+- **Archived**: HeadyMe/* (7 archived repos)
 
 ## Key Metrics
 

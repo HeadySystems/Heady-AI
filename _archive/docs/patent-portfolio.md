@@ -1,4 +1,4 @@
-# Heady Systems — Complete Patent Portfolio
+# Heady™ Systems — Complete Patent Portfolio
 
 > **Owner**: Eric Haywood  
 > **USPTO Customer #**: 221639  

@@ -12,7 +12,7 @@
  * Compression triggers at 1-ψ⁴ ≈ 91.0% of tier budget.
  * Eviction scoring: importance×0.486 + recency×0.300 + relevance×0.214
  *
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const PHI  = 1.6180339887;   // golden ratio

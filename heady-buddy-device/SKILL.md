@@ -1,12 +1,12 @@
 ---
 name: heady-buddy-device
-description: Use when implementing cross-device HeadyBuddy bridge, computer-use agent capabilities, conversational agent patterns, or Claude coding agent integration in the Heady ecosystem. Keywords include buddy, device, bridge, cross-device, computer use, agent, conversational, Claude code agent, and HeadyBuddy device.
+description: Use when implementing cross-device HeadyBuddy bridge, computer-use agent capabilities, conversational agent patterns, or Claude coding agent integration in the Heady™ ecosystem. Keywords include buddy, device, bridge, cross-device, computer use, agent, conversational, Claude code agent, and HeadyBuddy device.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Buddy Device Bridge
+# Heady™ Buddy Device Bridge
 
 ## When to Use This Skill
 

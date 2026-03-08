@@ -15,7 +15,7 @@
 # HEADY_BRAND:END
 
 # Cloud-First Pipeline Configuration
-# HeadyMe/Sandbox as primary development cloud
+# Heady™Me/Sandbox as primary development cloud
 # Zero api.headysystems.com — all connections route through cloud endpoints
 
 pipeline:
@@ -42,7 +42,7 @@ clouds:
     name: "HeadyMe/Sandbox"
     description: "Testing/staging environment — validates before production"
     git_remote: "sandbox"
-    git_url: "git@github.com:HeadySystems/sandbox.git"
+    git_url: "git@github.com:HeadyMe/sandbox.git"
     role: staging
     auto_deploy: true
     connected_to: primary
@@ -51,7 +51,7 @@ clouds:
     name: "HeadySystems"
     description: "Production live — only receives 100% validated changes"
     git_remote: "origin"
-    git_url: "git@github.com:HeadySystems/Heady.git"
+    git_url: "git@github.com:HeadyMe/Heady.git"
     cloud_url: "https://api.headysystems.com"
     role: production
     auto_deploy: false

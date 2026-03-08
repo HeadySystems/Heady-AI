@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -35,7 +35,7 @@
  *
  * REQUIREMENTS:
  *   - `headyjules` CLI installed and authenticated (HEADY_NEXUS_KEY in env)
- *   - Or fallback to HeadyNexus HTTP API via @heady/networking
+ *   - Or fallback to HeadyNexus HTTP API via @heady-ai/networking
  */
 
 const { spawn } = require("child_process");
@@ -109,7 +109,7 @@ class ClaudeCodeAgent {
   }
 
   describe() {
-    return `HeadyJules Code Agent: AI-powered code generation, analysis, refactoring, architecture review, and debugging via HeadyJules CLI. Skills: ${this.skills.join(", ")}`;
+    return `HeadyJules Code Agent: AI-powered code generation, analysis, refactoring, architecture review, and debugging via Heady™Jules CLI. Skills: ${this.skills.join(", ")}`;
   }
 
   /**
@@ -169,8 +169,8 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Build a structured prompt for HeadyJules Code based on task type.
-   * Utilizes the Universal Heady Prompt Architecture.
+   * Build a structured prompt for Heady™Jules Code based on task type.
+   * Utilizes the Universal Heady™ Prompt Architecture.
    */
   _buildPrompt(request, metadata) {
     const contextDetails = [
@@ -187,7 +187,7 @@ class ClaudeCodeAgent {
         `<STEPS>\\n${steps}\\n</STEPS>`,
         `<CONSTRAINTS>\\nNo unverified parallel threads.\\nEnsure all commits map to Master Architecture.\\nFollow HEADY_BRAND header convention.\\nUse CommonJS require.\\n${constraints}\\n</CONSTRAINTS>`,
         `<OUTPUT>\\nUse structured markdown/dynamic tables for visual output.\\n${output}\\n</OUTPUT>`,
-        `<FEW_SHOT_EXAMPLES>\\n[See internal repository patterns for Heady Swarm node creation and HCFP routing standards]\\n</FEW_SHOT_EXAMPLES>`,
+        `<FEW_SHOT_EXAMPLES>\\n[See internal repository patterns for Heady™ Swarm node creation and HCFP routing standards]\\n</FEW_SHOT_EXAMPLES>`,
         `<RECAP>\\nConfirm understanding of strict telemetry, formatting, and specific task requirements before proceeding.\\n</RECAP>`
       ].join('\\n\\n');
     };
@@ -348,7 +348,7 @@ class ClaudeCodeAgent {
         for (const p of providers) gateway.registerProvider(p);
 
         const result = await gateway.chat(prompt, {
-          system: `You are a senior software engineer working on the Heady ecosystem. Task type: ${request.taskType || "general"}.`,
+          system: `You are a senior software engineer working on the Heady™ ecosystem. Task type: ${request.taskType || "general"}.`,
         });
         if (result.ok) {
           return {

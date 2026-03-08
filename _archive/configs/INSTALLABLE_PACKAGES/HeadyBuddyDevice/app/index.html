@@ -966,11 +966,11 @@
             // Simulate cloud-powered response
             setTimeout(() => {
                 if (text.toLowerCase().includes('root') || text.toLowerCase().includes('filesystem')) {
-                    addMessage('🔐 <strong>Root filesystem access</strong> is cloud-powered. All operations route through the HeadySystems cloud bee swarm:<br><br>1. Your device sends the operation request<br>2. Cloud bees <code>device-provisioner</code> + <code>ops</code> execute it<br>3. Results stream back in real-time<br><br>Your local device uses <strong>zero CPU/RAM</strong> for the heavy lifting. Want me to browse a directory?');
+                    addMessage('🔐 <strong>Root filesystem access</strong> is cloud-powered. All operations route through the Heady™Systems cloud bee swarm:<br><br>1. Your device sends the operation request<br>2. Cloud bees <code>device-provisioner</code> + <code>ops</code> execute it<br>3. Results stream back in real-time<br><br>Your local device uses <strong>zero CPU/RAM</strong> for the heavy lifting. Want me to browse a directory?');
                 } else if (text.toLowerCase().includes('mod')) {
                     addMessage('🧩 I found <strong>8 available mods</strong> for your device. Head to the <strong>Mods</strong> tab (🧩) to browse and install them. All mod processing runs on cloud infrastructure — your device just receives the results!');
                 } else if (text.toLowerCase().includes('bee') || text.toLowerCase().includes('swarm')) {
-                    addMessage('🐝 The HeadyBee swarm has <strong>35 active bees</strong> running on cloud infrastructure. They handle: deployment, security, memory, orchestration, MIDI, telemetry, and more. Check the <strong>Swarm</strong> tab (🐝) for real-time status.');
+                    addMessage('🐝 The Heady™Bee swarm has <strong>35 active bees</strong> running on cloud infrastructure. They handle: deployment, security, memory, orchestration, MIDI, telemetry, and more. Check the <strong>Swarm</strong> tab (🐝) for real-time status.');
                 } else {
                     addMessage(`I hear you! As HeadyBuddy ${VERSION}, I'm processing this through the cloud swarm. All 35 bees are standing by. What would you like me to help with?<br><br>💡 <em>Try: "show filesystem", "install mods", "blast swarm"</em>`);
                 }

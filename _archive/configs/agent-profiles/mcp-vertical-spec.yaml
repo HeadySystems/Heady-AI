@@ -13,7 +13,7 @@
 # ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
-# Heady MCP Web Vertical Specification
+# Heady™ MCP Web Vertical Specification
 # Version: 1.0.0
 # Last Updated: 2026-02-09
 
@@ -26,25 +26,25 @@ core_pillars:
 
 # Product Surfaces
 product_surfaces:
-  headybrowser.com: "Browser product marketing"
-  headyweb.com: "HeadyWeb web shell"
-  headymobile.com: "Mobile apps"
-  headyide.com: "IDE integrations"
+  headyio.com: "Browser product marketing"
+  headycloud.com: "HeadyWeb web shell"
+  headyplus.com: "Mobile apps"
+  headyio.com: "IDE integrations"
 
 # Platform/Infra/API
 platform_layer:
   headyapi.com: "Public API docs"
   headycloud.com: "Managed cloud offering"
   headycore.com: "Core platform narrative"
-  headylabs.com: "Labs/experimental"
+  heady-ai.com: "Labs/experimental"
 
 # AI Capability Brands
 ai_capabilities:
   heady-ai.com: "General AI marketing"
-  headyauto.com: "Automation/agents"
+  headysystems.com: "Automation/agents"
   headybot.com: "Bots"
-  headyvoice.com: "Voice AI"
-  headyvision.com: "Vision/multimodal"
+  headymusic.com: "Voice AI"
+  heady-ai.com: "Vision/multimodal"
 
 # Implementation Phases
 phases:

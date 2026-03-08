@@ -6,11 +6,11 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { WebSocketServer } from 'ws';
-import { getConfig } from '@heady/shared';
-import { logger } from '@heady/shared';
-import { signToken, verifyToken, hashPassword, verifyPassword, createApiKey, hashApiKey, apiKeyPrefix, randomId, nowIso } from '@heady/shared/src/crypto.mjs';
-import { createMemoryStore } from '@heady/vector-memory';
-import { createMcpRegistry, handleRpc } from '@heady/mcp';
+import { getConfig } from '@heady-ai/shared';
+import { logger } from '@heady-ai/shared';
+import { signToken, verifyToken, hashPassword, verifyPassword, createApiKey, hashApiKey, apiKeyPrefix, randomId, nowIso } from '@heady-ai/shared/src/crypto.mjs';
+import { createMemoryStore } from '@heady-ai/vector-memory';
+import { createMcpRegistry, handleRpc } from '@heady-ai/mcp';
 
 const config = getConfig(process.env);
 const app = express();

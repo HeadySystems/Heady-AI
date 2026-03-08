@@ -1,6 +1,6 @@
 /**
- * Heady Latent OS — Usage Metering Module
- * HeadySystems, Inc.
+ * Heady™ Latent OS — Usage Metering Module
+ * HeadySystems Inc.
  *
  * Production-grade usage tracking and billing for:
  *  - API calls, vector operations, LLM tokens, agent compute hours, storage
@@ -108,7 +108,7 @@ const STRIPE_FLUSH_INTERVAL_MS = fib(12) * 60 * 1000; // 144 min × 60s × 1000m
 // ── UsageMeter Class ──────────────────────────────────────────────────────────
 
 /**
- * UsageMeter tracks and enforces usage limits for all Heady platform resources.
+ * UsageMeter tracks and enforces usage limits for all Heady™ platform resources.
  *
  * @example
  * const meter = new UsageMeter({ redis, db, emailService });

@@ -5,7 +5,7 @@ This rebuild used the public HeadyMe and HeadySystems repositories as source mat
 ## What the public repos show
 
 - The newest HeadyMe pre-production repository presents the main architecture intent: HCFullPipeline, vector memory, buddy orchestration, MCP integration, resilience, and Cloud Run deployment.
-- The HeadyMe `headyme-core`, `headymcp-core`, `headyapi-core`, and related repos are minimal projection shells. They expose branding and domain intent but do not contain the full application logic.
+- The Heady™Me `headyme-core`, `headymcp-core`, `headyapi-core`, and related repos are minimal projection shells. They expose branding and domain intent but do not contain the full application logic.
 - The older HeadySystems pre-production repository contains useful operational ideas, including admin endpoints, SSE log streaming, and a dockerized MCP stack, but it also carries environment-specific assumptions.
 
 ## Breakpoints found during reconstruction
@@ -28,7 +28,7 @@ The new monorepo keeps the public architectural direction while replacing missin
 ## Public source URLs
 
 - https://github.com/HeadyMe/Heady-pre-production-9f2f0642
-- https://github.com/HeadySystems/Heady-pre-production
+- https://github.com/HeadyMe/Heady-pre-production
 - https://github.com/HeadyMe/headyme-core
 - https://github.com/HeadyMe/headymcp-core
 - https://github.com/HeadyMe/headyapi-core

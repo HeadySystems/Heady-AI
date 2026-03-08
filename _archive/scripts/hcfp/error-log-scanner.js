@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -8,7 +8,7 @@
  * HCFP Error Log Scanner — PM2 Log Tail → Auto Ingest Daemon
  *
  * Continuously tails PM2 error and output logs for error patterns,
- * deduplicates them, and POSTs unique errors to the HeadyManager
+ * deduplicates them, and POSTs unique errors to the Heady™Manager
  * /hcfp/swarm/ingest-error endpoint.
  *
  * Runs as a lightweight PM2 process on a 30s scan interval.
@@ -141,7 +141,7 @@ function scanLogFile(filePath, state) {
 }
 
 /**
- * POST an error to the HeadyManager ingest endpoint.
+ * POST an error to the Heady™Manager ingest endpoint.
  */
 function postError(error) {
     return new Promise((resolve) => {

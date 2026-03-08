@@ -1,6 +1,6 @@
 /**
  * Gemini AI service — stub for admin-ui server.
- * Full implementation lives in the main Heady Manager.
+ * Full implementation lives in the main Heady™ Manager.
  * These stubs let the admin server compile and start
  * even when run standalone without the manager backend.
  */
@@ -29,7 +29,7 @@ export async function geminiStatus() {
 
 export async function geminiChat({ model, messages, systemPrompt, temperature, maxTokens }) {
     return {
-        text: `[HeadyAI stub] Model: ${model}, Messages: ${messages.length}. Connect to Heady Manager for live AI.`,
+        text: `[HeadyAI stub] Model: ${model}, Messages: ${messages.length}. Connect to Heady™ Manager for live AI.`,
         usage: { promptTokens: 10, completionTokens: 20, totalTokens: 30 },
     };
 }

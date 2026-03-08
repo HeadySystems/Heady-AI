@@ -1,6 +1,6 @@
 /**
- * Heady Auth Service — Cloudflare Worker
- * Cross-domain authentication for all Heady sites.
+ * Heady™ Auth Service — Cloudflare Worker
+ * Cross-domain authentication for all Heady™ sites.
  */
 
 export interface Env {
@@ -12,7 +12,7 @@ export interface Env {
 const HEADY_DOMAINS = [
     'headyme.com', 'headysystems.com', 'headyconnection.org',
     'headybuddy.org', 'headymcp.com', 'headyio.com',
-    'headybot.com', 'headyapi.com', 'headyai.com',
+    'headybot.com', 'headyapi.com', 'heady-ai.com',
 ];
 
 export default {

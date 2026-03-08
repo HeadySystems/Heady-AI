@@ -14,7 +14,7 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
-# HeadyVM — Parrot OS 7 + Windsurf Complete Setup
+# Heady™VM — Parrot OS 7 + Windsurf Complete Setup
 
 > **Target:** Parrot OS 7 (Security/Home Edition) virtual machine  
 > **Purpose:** Linux-based Heady Project development node with Windsurf IDE  
@@ -241,11 +241,11 @@ cloudflared tunnel create heady-vm-tunnel
 ## Phase 8 — Heady Project Clone & Bootstrap
 
 ```bash
-git clone git@github.com:HeadySystems/Heady.git ~/Heady
+git clone git@github.com:HeadyMe/Heady.git ~/Heady
 cd ~/Heady
 
 git remote add heady-me git@github.com:HeadyMe/Heady.git
-git remote add heady-sys git@github.com:HeadySystems/Heady.git
+git remote add heady-sys git@github.com:HeadyMe/Heady.git
 
 cp .env.example .env
 sed -i 's|HEADY_PYTHON_BIN=python|HEADY_PYTHON_BIN=/home/erich/.heady-venv/bin/python|' .env
@@ -260,9 +260,9 @@ pip install -r requirements.txt
 **Git remotes (expected):**
 
 ```
-origin      git@github.com:HeadySystems/Heady.git
+origin      git@github.com:HeadyMe/Heady.git
 heady-me    git@github.com:HeadyMe/Heady.git
-heady-sys   git@github.com:HeadySystems/Heady.git
+heady-sys   git@github.com:HeadyMe/Heady.git
 ```
 
 **Cloud endpoints:**
@@ -278,8 +278,8 @@ Brain:           https://brain.headysystems.com
 
 | Port  | Service         |
 |-------|-----------------|
-| 3300  | Heady Manager   |
-| 3301  | Heady Buddy     |
+| 3300  | Heady™ Manager   |
+| 3301  | Heady™ Buddy     |
 | 3000  | Web Frontend    |
 | 8080  | RAG Service     |
 | 11434 | Ollama          |
@@ -292,9 +292,9 @@ Brain:           https://brain.headysystems.com
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow 22/tcp comment 'SSH'
-sudo ufw allow from 127.0.0.0/8 to any port 3300 proto tcp comment 'Heady Manager'
-sudo ufw allow from 127.0.0.0/8 to any port 3301 proto tcp comment 'Heady Buddy'
-sudo ufw allow from 127.0.0.0/8 to any port 3000 proto tcp comment 'Heady Web'
+sudo ufw allow from 127.0.0.0/8 to any port 3300 proto tcp comment 'Heady™ Manager'
+sudo ufw allow from 127.0.0.0/8 to any port 3301 proto tcp comment 'Heady™ Buddy'
+sudo ufw allow from 127.0.0.0/8 to any port 3000 proto tcp comment 'Heady™ Web'
 sudo ufw allow from 127.0.0.0/8 to any port 8080 proto tcp comment 'RAG'
 sudo ufw allow from 127.0.0.0/8 to any port 11434 proto tcp comment 'Ollama'
 sudo ufw allow from 172.16.0.0/12 to any comment 'Docker networks'
@@ -339,7 +339,7 @@ sudo sysctl --system
 
 ```ini
 [Unit]
-Description=Heady Manager (Node.js MCP Server)
+Description=Heady™ Manager (Node.js MCP Server)
 After=network-online.target docker.service
 Wants=network-online.target
 
@@ -366,7 +366,7 @@ WantedBy=multi-user.target
 
 ```ini
 [Unit]
-Description=Heady Cloudflared Tunnel
+Description=Heady™ Cloudflared Tunnel
 After=network-online.target
 
 [Service]
@@ -518,7 +518,7 @@ Volumes: `heady-data`, `heady-logs`, `heady-cache`, `heady-config`, `heady-plugi
 ├── package.json              # Node deps (Express, MCP SDK, Helmet, etc.)
 ├── requirements.txt          # Python deps (numpy, pandas, jupyter, etc.)
 ├── docker-compose.yml        # Docker stack
-├── Dockerfile                # node:20-alpine based
+├── Dockerfile                # node:22-alpine based
 ├── .env                      # Secrets (not committed)
 ├── configs/                  # All YAML configs
 ├── frontend/                 # React (Vite) web UI

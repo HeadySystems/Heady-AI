@@ -10,11 +10,11 @@
       "headyapi.com",
       "headyio.com",
       "headyme.com",
-      "headytrader.com",
+      "headyfinance.com",
       "headymusic.com",
-      "headyfoundation.org",
+      "headyconnection.org",
       "headysystems.com",
-      "myheady.ai"
+      "myheady-ai.com"
     ]
   },
   "coreModules": {
@@ -62,7 +62,7 @@
     "compute": "Google Cloud Run (heady-manager service)",
     "gpu": "Google Colab Pro+ (ML training, batch inference)",
     "cicd": "GitHub Actions (5-phase: security → validate → Cloud Run → HF → Edge)",
-    "containerization": "Docker multi-stage (node:20-slim)",
+    "containerization": "Docker multi-stage (node:22-slim)",
     "ai": "Multi-model: Claude, GPT-5.4, Gemini, Groq, Perplexity, HuggingFace",
     "protocols": "MCP (Model Context Protocol) for tool exposure"
   },

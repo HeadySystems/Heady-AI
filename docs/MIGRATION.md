@@ -10,10 +10,10 @@ This guide helps migrate existing HeadySystems services to the new modular monor
 
 Extract shared code into packages:
 
-1. **@headysystems/core** ← `utils/logger.ts`, `utils/errors.ts`
-2. **@headysystems/types** ← `types/**/*.ts`
-3. **@headysystems/redis** ← Redis connection logic
-4. **@headysystems/mcp** ← MCP protocol implementation
+1. **@heady-ai/core** ← `utils/logger.ts`, `utils/errors.ts`
+2. **@heady-ai/types** ← `types/**/*.ts`
+3. **@heady-ai/redis** ← Redis connection logic
+4. **@heady-ai/mcp** ← MCP protocol implementation
 
 ### Phase 2: Service Modularization (Weeks 3-4)
 
@@ -24,7 +24,7 @@ Convert services to use workspace packages:
 import { logger } from '../../utils/logger';
 
 # After
-import { HeadyLogger } from '@headysystems/core';
+import { HeadyLogger } from '@heady-ai/core';
 ```
 
 ### Phase 3: Build System Migration (Week 5)
@@ -58,9 +58,9 @@ jobs:
 
 | Old | New |
 |-----|-----|
-| `import { logger } from './logger'` | `import { HeadyLogger } from '@headysystems/core'` |
-| `import { Task } from './types'` | `import { Task } from '@headysystems/types'` |
-| `import Redis from 'ioredis'` | `import { HeadyRedisPool } from '@headysystems/redis'` |
+| `import { logger } from './logger'` | `import { HeadyLogger } from '@heady-ai/core'` |
+| `import { Task } from './types'` | `import { Task } from '@heady-ai/types'` |
+| `import Redis from 'ioredis'` | `import { HeadyRedisPool } from '@heady-ai/redis'` |
 
 ### Configuration
 
@@ -73,7 +73,7 @@ REDIS_URL=redis://localhost:6379
 
 New configuration (Zod validated):
 ```typescript
-import { loadConfig, BaseServiceConfigSchema } from '@headysystems/core';
+import { loadConfig, BaseServiceConfigSchema } from '@heady-ai/core';
 
 const config = loadConfig(BaseServiceConfigSchema);
 // Fully typed and validated!
@@ -88,7 +88,7 @@ throw new Error('Service unavailable');
 
 New:
 ```typescript
-import { ServiceUnavailableError } from '@headysystems/core';
+import { ServiceUnavailableError } from '@heady-ai/core';
 throw new ServiceUnavailableError('heady-brain');
 ```
 

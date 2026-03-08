@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * Integration Tests — P2 CI/CD Determinism Assessment Item
  *
  * Tests for swarm routing, sync handoff, edge failure recovery,

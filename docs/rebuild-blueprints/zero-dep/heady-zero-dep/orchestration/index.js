@@ -1,6 +1,6 @@
 /**
  * @file index.js
- * @description Heady Orchestration Layer — Unified Exports.
+ * @description Heady™ Orchestration Layer — Unified Exports.
  *
  * Combines all orchestration modules:
  * - HeadyConductor: Federated liquid routing hub
@@ -118,11 +118,11 @@ export const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 6
  * @property {string} [nodeId='orchestration'] - cluster node identifier
  * @property {string} [nodeRole='conductor'] - NodeRole
  * @property {boolean} [autoStart=true] - auto-start all subsystems
- * @property {object} [conductorOptions] - options for HeadyConductor
+ * @property {object} [conductorOptions] - options for Heady™Conductor
  * @property {object} [swarmOptions] - options for SwarmIntelligence
  * @property {object} [consensusOptions] - options for SwarmConsensus (requires peers)
  * @property {string[]} [consensusPeers=['brain','sentinel']] - Raft peer node IDs
- * @property {object} [buddyOptions] - options for HeadyBuddy
+ * @property {object} [buddyOptions] - options for Heady™Buddy
  * @property {object} [selfAwarenessOptions] - options for SelfAwareness
  * @property {object} [governorOptions] - options for CognitiveRuntimeGovernor
  */
@@ -230,7 +230,7 @@ export function createOrchestrationLayer(options = {}) {
   // ── Register buddy tools ───────────────────────────────────────────────
   buddy.registerGlobalTool({
     name: 'conductor_status',
-    description: 'Get the HeadyConductor routing hub status',
+    description: 'Get the Heady™Conductor routing hub status',
     inputSchema: { type: 'object', properties: {} },
     handler: async () => conductor.status,
   });

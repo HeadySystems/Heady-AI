@@ -17,7 +17,7 @@
         "core": {
             "heady-manager": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "deployment": "cloud-run"
             },
             "heady-edge": {
@@ -27,7 +27,7 @@
             },
             "heady-mcp": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "deployment": "cloud-run"
             },
             "vector-memory": {
@@ -40,37 +40,37 @@
             },
             "llm-router": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "type": "module",
                 "engine": "src/services/llm-router.js"
             },
             "autonomous-scheduler": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "type": "module",
                 "engine": "src/services/autonomous-scheduler.js"
             },
             "domain-router": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "type": "module",
                 "engine": "src/services/domain-router.js"
             },
             "budget-tracker": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "type": "module",
                 "engine": "src/services/budget-tracker.js"
             },
             "projection-governance": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "type": "module",
                 "engine": "src/services/projection-governance.js"
             },
             "sdk-registration": {
                 "version": "3.0.1",
-                "runtime": "node:20",
+                "runtime": "node:22",
                 "type": "module",
                 "engine": "src/services/sdk-registration.js"
             }
@@ -151,7 +151,7 @@
             "zones": [
                 "headyme.com",
                 "headyconnection.org",
-                "heady-ai.org"
+                "heady-ai.com"
             ],
             "workers": [
                 "heady-edge-proxy",

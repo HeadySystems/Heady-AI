@@ -84,5 +84,5 @@ A system and method for maintaining integrity in autonomous AI agent networks th
 
 ---
 
-*© 2026 HeadySystems Inc.. All rights reserved.*
+*© 2026 Heady™Systems Inc.. All rights reserved.*
 *Attorney Docket No.: HS-059*

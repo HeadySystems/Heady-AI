@@ -1,11 +1,12 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 
 /**
- * Heady Models Registry — Branded AI Model Lineup
+ * Heady™ Models Registry — Branded AI Model Lineup
  * 
  * Each model maps to a specific arena configuration
  * controlling which nodes compete, timeouts, and scoring weights.
@@ -16,7 +17,7 @@
 const HEADY_MODELS = {
     'heady-battle-v1': {
         id: 'heady-battle-v1',
-        name: 'Heady Battle v1',
+        name: 'Heady™ Battle v1',
         description: 'Full 20-node arena competition. Every node competes, best response wins. Highest quality, arena-validated.',
         tier: 'premium',
         context_window: 128000,
@@ -38,7 +39,7 @@ const HEADY_MODELS = {
 
     'heady-flash': {
         id: 'heady-flash',
-        name: 'Heady Flash',
+        name: 'Heady™ Flash',
         description: 'Ultra-fast responses from the 3 fastest nodes. Optimized for speed without sacrificing accuracy.',
         tier: 'free',
         context_window: 32000,
@@ -60,7 +61,7 @@ const HEADY_MODELS = {
 
     'heady-reason': {
         id: 'heady-reason',
-        name: 'Heady Reason',
+        name: 'Heady™ Reason',
         description: 'Extended thinking mode. HeadyJules + HeadyPythia + HeadyVinci collaborate on complex reasoning chains.',
         tier: 'premium',
         context_window: 200000,
@@ -73,7 +74,7 @@ const HEADY_MODELS = {
         arena: {
             nodes: ['HeadyJules', 'HeadyPythia', 'HeadyVinci', 'HeadyDecomp'],
             min_competitors: 2,
-            max_timeout_ms: 30000,
+            max_timeout_ms: PHI_TIMING.CYCLE,
             scoring: { quality: 0.4, speed: 0.05, relevance: 0.25, creativity: 0.3 },
             thinking_budget: 65536,
         },
@@ -83,7 +84,7 @@ const HEADY_MODELS = {
 
     'heady-edge': {
         id: 'heady-edge',
-        name: 'Heady Edge',
+        name: 'Heady™ Edge',
         description: 'Cloudflare Workers AI inference. Sub-200ms latency, runs at the edge nearest to the user.',
         tier: 'free',
         context_window: 8192,
@@ -105,7 +106,7 @@ const HEADY_MODELS = {
 
     'heady-buddy': {
         id: 'heady-buddy',
-        name: 'Heady Buddy',
+        name: 'Heady™ Buddy',
         description: 'Conversational AI with persistent memory. Remembers context across sessions, learns your preferences.',
         tier: 'pro',
         context_window: 64000,
@@ -169,7 +170,7 @@ function listModels() {
         permission: [],
         root: m.id,
         parent: null,
-        // Heady extensions
+        // Heady™ extensions
         tier: m.tier,
         badge: m.badge,
         description: m.description,

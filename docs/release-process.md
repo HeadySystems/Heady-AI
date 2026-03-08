@@ -1,4 +1,4 @@
-# HeadySystems Release Process
+# Heady™Systems Release Process
 
 **Version:** 1.0.0  
 **φ-revision:** 1.618  
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document defines the full release lifecycle for HeadySystems: branch strategy, versioning, changelog generation, release notes, and rollback procedure.
+This document defines the full release lifecycle for Heady™Systems: branch strategy, versioning, changelog generation, release notes, and rollback procedure.
 
 All releases follow semantic versioning and use φ-scaled timing for traffic rollouts.
 

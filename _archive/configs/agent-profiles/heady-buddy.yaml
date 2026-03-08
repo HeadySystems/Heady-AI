@@ -15,7 +15,7 @@
 # HEADY_BRAND:END
 
 #
-# Heady Buddy — Seamless Cross-Device Companion + Admin/IDE Launcher
+# Heady™ Buddy — Seamless Cross-Device Companion + Admin/IDE Launcher
 # The front door into the entire Heady ecosystem on any device.
 #
 
@@ -23,10 +23,10 @@ version: "1.0.0"
 
 # ─── IDENTITY ───────────────────────────────────────────────────────────────
 identity:
-  name: "Heady Buddy"
+  name: "Heady™ Buddy"
   role: >
-    The user's always-available companion for the Heady ecosystem.
-    A thin, friendly shell around the deeper Heady OS: HeadyServices,
+    The user's always-available companion for the Heady™ ecosystem.
+    A thin, friendly shell around the deeper Heady™ OS: HeadyServices,
     HeadyLans, IDE integrations, and the full HCFullPipeline.
     A persistent presence that remembers the user, their projects,
     their modes, and their device preferences.
@@ -38,7 +38,7 @@ identity:
 # ─── INSTALLATION & PRESENCE ────────────────────────────────────────────────
 installation:
   description: >
-    Install once per device. Single sign-in. Heady Buddy runs in the
+    Install once per device. Single sign-in. Heady™ Buddy runs in the
     background or is always a quick click/tap away.
   friction: "minimal — install, sign in, ready"
   platforms:
@@ -75,7 +75,7 @@ launchModes:
   admin_ide:
     label: "Admin + IDE"
     icon: "heady_studio_icon"
-    alternateLabels: ["Control Room", "Heady Studio"]
+    alternateLabels: ["Control Room", "Heady™ Studio"]
     description: >
       Full cockpit: Admin UI (dashboards, service configs, monitoring)
       with embedded or connected IDE surface. Power workspace for
@@ -123,7 +123,7 @@ launchModes:
 # ─── HEADY BUDDY CONTROL PANEL ─────────────────────────────────────────────
 controlPanel:
   description: >
-    Clicking the Heady Buddy icon opens a small, elegant control panel
+    Clicking the Heady™ Buddy icon opens a small, elegant control panel
     with primary launch actions and quick status info.
   layout:
     primaryActions:
@@ -178,14 +178,14 @@ crossDeviceSync:
     prompt: "You were last working on {project} in {mode}. Open it here?"
     autoResume: false
 
-# ─── CHANNEL ROUTING (via HeadyLans) ───────────────────────────────────────
+# ─── CHANNEL ROUTING (via Heady™Lans) ───────────────────────────────────────
 channelRouting:
   description: >
-    Heady Buddy sits above HeadyLans (orchestrator) and Heady Services.
-    Any action triggered via Heady Buddy routes through HeadyLans to
+    Heady™ Buddy sits above HeadyLans (orchestrator) and Heady™ Services.
+    Any action triggered via Heady™ Buddy routes through HeadyLans to
     determine which services need to be ready and set up internal context.
   layers:
-    face: "Heady Buddy"
+    face: "Heady™ Buddy"
     orchestrator: "HeadyLans"
     services:
       - HeadyStrategy
@@ -206,13 +206,13 @@ channelRouting:
       - messaging
   serviceConsistency: >
     HeadyCorrections, HeadyStrategy, etc. behave consistently whether
-    invoked from Admin UI, IDE, or Heady Buddy. No channel-specific
+    invoked from Admin UI, IDE, or Heady™ Buddy. No channel-specific
     behavioral divergence.
 
 # ─── PUBLIC DOMAIN INSPIRATIONS ─────────────────────────────────────────────
 publicDomainInspirations:
   description: >
-    Heady Buddy draws concepts from best-in-class public systems.
+    Heady™ Buddy draws concepts from best-in-class public systems.
     We abstract patterns, never copy proprietary designs.
   sources:
     crossDeviceAssistants:
@@ -260,7 +260,7 @@ publicDomainInspirations:
 # ─── SEAMLESSNESS REQUIREMENTS ──────────────────────────────────────────────
 seamlessness:
   description: >
-    The user should move between Heady Buddy → Admin UI → IDE → back
+    The user should move between Heady™ Buddy → Admin UI → IDE → back
     without jarring changes in context or capability.
   requirements:
     - shared_identity_and_preferences_across_all_channels

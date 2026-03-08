@@ -1,21 +1,21 @@
 ---
 name: heady-microfrontend-portal
-description: Use when working with HeadyWeb micro-frontend architecture, Webpack Module Federation, domain routing, the 7 remote micro-frontends (Antigravity, Swarm Dashboard, Governance Panel, Projection Monitor, Vector Explorer, HeadyIDE, Landing), or the command center application. Keywords include micro-frontend, Module Federation, HeadyWeb, remote, antigravity, swarm dashboard, governance panel, projection monitor, vector explorer, HeadyIDE, landing, webpack, and portal.
+description: Use when working with Heady™Web micro-frontend architecture, Webpack Module Federation, domain routing, the 7 remote micro-frontends (Antigravity, Swarm Dashboard, Governance Panel, Projection Monitor, Vector Explorer, HeadyIDE, Landing), or the command center application. Keywords include micro-frontend, Module Federation, HeadyWeb, remote, antigravity, swarm dashboard, governance panel, projection monitor, vector explorer, HeadyIDE, landing, webpack, and portal.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Micro-Frontend Portal
+# Heady™ Micro-Frontend Portal
 
 ## When to Use This Skill
 
 Use this skill when the user needs to:
-- Work with the HeadyWeb micro-frontend architecture
+- Work with the Heady™Web micro-frontend architecture
 - Configure Webpack Module Federation remotes
 - Add or modify micro-frontend applications
-- Set up domain routing for Heady portals
-- Deploy the HeadyWeb shell or any remote
+- Set up domain routing for Heady™ portals
+- Deploy the Heady™Web shell or any remote
 
 ## Architecture
 
@@ -26,7 +26,7 @@ HeadyWeb uses Webpack Module Federation with a host shell that dynamically loads
 |---|---|---|---|
 | antigravity | antigravity | /app/antigravity | Three.js Sacred Geometry 3D viewport |
 | landing | headyLanding | / | Marketing page with hero and pillars |
-| heady-ide | headyIDE | /app/ide | VS Code-style editor with HeadyBuddy |
+| heady-ide | headyIDE | /app/ide | VS Code-style editor with Heady™Buddy |
 | swarm-dashboard | swarmDashboard | /app/swarm | Agent monitoring, topology graph |
 | governance-panel | governancePanel | /app/governance | Policy engine, approval gates, RBAC |
 | projection-monitor | projectionMonitor | /app/projections | Deployment targets, pipeline, domain map |

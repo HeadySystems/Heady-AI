@@ -3,7 +3,7 @@ name: heady-trading-intelligence
 description: Use when analyzing trading signals, building risk models, designing backtests, constructing portfolios, or running sentiment/options/macro/execution analysis with phi-scaled constants.
 ---
 
-# Heady Trading Intelligence Skill
+# Heady™ Trading Intelligence Skill
 
 ## Overview
 

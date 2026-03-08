@@ -34,7 +34,7 @@ const EMAIL_SCHEDULE = [
  * @param {string} ctx.expiresAt
  */
 const welcomeEmail = (ctx) => ({
-  subject: `Welcome to the HeadyOS Founder's Pilot, ${ctx.firstName} 🌀`,
+  subject: `Welcome to the Heady™OS Founder's Pilot, ${ctx.firstName} 🌀`,
   preheader: `Your 89-day Founder's Pilot is now active. Here's how to get started.`,
   html: `
 <!DOCTYPE html>
@@ -280,7 +280,7 @@ p{color:#8b9cc8;font-size:15px;line-height:1.764;margin:0 0 16px}
 <div class="w">
   <div class="h"><h2>Day 5: Advanced Features</h2><p>HeadyOS Founder's Pilot — Tutorial Series</p></div>
   <div class="b">
-    <p>Hi ${ctx.firstName}, today we cover two of HeadyOS's most powerful differentiators: <strong style="color:#f0f4ff;">persistent vector memory</strong> and <strong style="color:#f0f4ff;">multi-agent coordination</strong> via heady-conductor.</p>
+    <p>Hi ${ctx.firstName}, today we cover two of Heady™OS's most powerful differentiators: <strong style="color:#f0f4ff;">persistent vector memory</strong> and <strong style="color:#f0f4ff;">multi-agent coordination</strong> via heady-conductor.</p>
 
     <div class="feature-box">
       <h3>⟁ Vector Memory (987 slots)</h3>
@@ -360,9 +360,9 @@ p{color:#8b9cc8;font-size:15px;line-height:1.764;margin:0 0 16px}
 
     <div class="oh-box">
       <h3>📅 Office Hours — Today</h3>
-      <p>Join Eric and the HeadyOS team for your first Founder's office hours. Bring use cases, blockers, and feature requests. This session shapes our roadmap.</p>
+      <p>Join Eric and the Heady™OS team for your first Founder's office hours. Bring use cases, blockers, and feature requests. This session shapes our roadmap.</p>
       <p><strong style="color:#f0f4ff;">Agenda:</strong> Your use case review (10 min) → Technical Q&A (15 min) → Feature voting (10 min) → Roadmap preview (10 min)</p>
-      <a href="${ctx.officeHoursUrl || 'https://cal.com/headysystems/office-hours'}" class="oh-btn">→ Join Office Hours</a>
+      <a href="${ctx.officeHoursUrl || 'https://cal.com/headyme/office-hours'}" class="oh-btn">→ Join Office Hours</a>
     </div>
 
     <p>Upcoming milestones:</p>
@@ -378,7 +378,7 @@ p{color:#8b9cc8;font-size:15px;line-height:1.764;margin:0 0 16px}
   <div class="f"><p>HeadySystems Inc. | <a href="https://headyme.com">headyme.com</a> | <a href="https://www.perplexity.ai/computer">Created with Perplexity Computer</a></p></div>
 </div>
 </body></html>`,
-  text: `Day 13 Check-In\n\nHi ${ctx.firstName},\n13 days in (fib(7)). 76 days remaining.\n\n1. Complete NPS survey: ${ctx.npsUrl || ctx.workspaceUrl + '/nps?day=13'}\n2. Join office hours today: ${ctx.officeHoursUrl || 'https://cal.com/headysystems/office-hours'}\n\nUpcoming: Day 21 NPS | Day 26 tech deep-dive | Day 55 NPS | Day 89 graduation\n\nEric — eric@headyconnection.org`,
+  text: `Day 13 Check-In\n\nHi ${ctx.firstName},\n13 days in (fib(7)). 76 days remaining.\n\n1. Complete NPS survey: ${ctx.npsUrl || ctx.workspaceUrl + '/nps?day=13'}\n2. Join office hours today: ${ctx.officeHoursUrl || 'https://cal.com/headyme/office-hours'}\n\nUpcoming: Day 21 NPS | Day 26 tech deep-dive | Day 55 NPS | Day 89 graduation\n\nEric — eric@headyconnection.org`,
 });
 
 /* ── Email Sequence Manager ─────────────────────────────────── */

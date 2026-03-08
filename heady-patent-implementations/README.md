@@ -1,11 +1,11 @@
 # Heady™ Patent Implementations
 
-> © 2026 HeadySystems Inc. All Rights Reserved.  
+> © 2026 Heady™Systems Inc. All Rights Reserved.  
 > PROPRIETARY AND CONFIDENTIAL.
 
 ## Overview
 
-Production-ready implementations of all **Heady Systems LLC** patent concepts, constituting **Reduction to Practice (RTP)** for 51+ USPTO provisional patent applications.
+Production-ready implementations of all **HeadySystems Inc** patent concepts, constituting **Reduction to Practice (RTP)** for 51+ USPTO provisional patent applications.
 
 Every module, method, and class includes inline citations to the specific patent claim it satisfies (`// RTP: HS-0XX Claim N`).
 
@@ -128,7 +128,7 @@ heady-patent-implementations/
 - **Every method cites its patent claim** with `// RTP: HS-0XX Claim N`
 - **Production-ready** — no stubs, no TODOs, no placeholders
 
-## Integration with Heady Manager
+## Integration with Heady™ Manager
 
 ```javascript
 const express = require('express');
@@ -145,4 +145,4 @@ app.use('/api/telemetry', heady.routes.telemetry);
 
 ## License
 
-UNLICENSED — Proprietary to Heady Systems LLC.
+UNLICENSED — Proprietary to HeadySystems Inc.

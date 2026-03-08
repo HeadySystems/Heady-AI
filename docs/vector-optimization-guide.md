@@ -858,7 +858,7 @@ At 1M embeddings/day:
 - **Local Ollama (CPU):** ~$100/day (+ infrastructure)
 - **Cohere/Voyage:** $120/day
 
-**Recommendation for Heady sovereign deployment:** Use local Ollama for high-volume routine embeddings; route complex/domain-specific queries to Voyage-3-large for maximum quality. Configure via `EmbeddingRouter` routing policy with `preferSovereign: true`.
+**Recommendation for Heady™ sovereign deployment:** Use local Ollama for high-volume routine embeddings; route complex/domain-specific queries to Voyage-3-large for maximum quality. Configure via `EmbeddingRouter` routing policy with `preferSovereign: true`.
 
 ---
 

@@ -1,8 +1,8 @@
-# HeadyWeb Universal Shell v3.1.0
+# Heady™Web Universal Shell v3.1.0
 
-> **© 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.**
+> **© 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.**
 
-HeadyWeb is the universal Webpack Module Federation shell for the Heady autonomous multi-agent AI platform. It dynamically loads 7 micro-frontend UIs at runtime, each corresponding to a different HeadyStack domain.
+HeadyWeb is the universal Webpack Module Federation shell for the Heady™ autonomous multi-agent AI platform. It dynamically loads 7 micro-frontend UIs at runtime, each corresponding to a different HeadyStack domain.
 
 ---
 
@@ -164,6 +164,22 @@ unmount();
 | `governance-panel`  | Purple                   | ✗        | Policy rules & audit log            |
 | `projection-monitor`| Cyan                     | ✗        | Deployment target health            |
 | `vector-explorer`   | Teal/green               | ✓        | Semantic vector memory explorer     |
+
+---
+
+## Integrated Workspace Fallback
+
+When no Module Federation remote matches the current domain projection, the shell
+automatically mounts a **self-contained integrated workspace** instead of showing
+a static error page. The workspace provides:
+
+- **Authentication** — local credential form with session persistence
+- **Persistent Vector Workspace** — add and search semantic memory notes
+- **HeadyAI-IDE** — in-browser file editor with create / read / save
+- **HeadyBuddy Chat** — command-mode chat (`@list`, `@open`, `@write`) with
+  optional API-backed responses
+
+All state persists to `localStorage` under the key `headyweb.workspace.v1`.
 
 ---
 

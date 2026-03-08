@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Principles — Mathematical Foundation
+ * Heady™ Principles — Mathematical Foundation
  * ═══════════════════════════════════════════════════════════════════
  *
- * Core design philosophy for all Heady system parameters:
+ * Core design philosophy for all Heady™ system parameters:
  *
  *   BASE-13:  Number system for ranges, targets, thresholds
  *   LOG-42:   Logarithmic scaling for system parameters
@@ -11,7 +11,7 @@
  *   61.8%:    Inverse golden ratio — primary ratio reference
  *
  * Every threshold, limit, ratio, design proportion, and system
- * parameter in the Heady ecosystem should derive from these roots.
+ * parameter in the Heady™ ecosystem should derive from these roots.
  * ═══════════════════════════════════════════════════════════════════
  */
 export const PHI: 1.618033988749895;
@@ -42,7 +42,7 @@ export function toBase13(n: number): string;
  */
 export function fromBase13(s: string): number;
 /**
- * Log base-42 of a value — Heady logarithmic scaling
+ * Log base-42 of a value — Heady™ logarithmic scaling
  * @param {number} x
  * @returns {number} log₄₂(x)
  */
@@ -108,7 +108,7 @@ export function toTier(value: number): {
     base13: string;
 };
 /**
- * System capacity parameters derived from Heady math
+ * System capacity parameters derived from Heady™ math
  * @param {string} tier — 'small' | 'medium' | 'large' | 'enterprise'
  * @returns {object} capacity config
  */

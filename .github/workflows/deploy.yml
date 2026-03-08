@@ -15,10 +15,10 @@
 #   CF_ACCOUNT_ID        - Cloudflare account ID
 #   HF_TOKEN             - Hugging Face token
 #
-# © 2026 HeadySystems Inc. — Proprietary
+# © 2026 Heady™Systems Inc. — Proprietary
 # ═══════════════════════════════════════════════════════════════════════════════
 
-name: Heady Production Deploy
+name: Heady™ Production Deploy
 
 on:
   push:
@@ -275,7 +275,7 @@ jobs:
     steps:
       - name: Verify All Domains
         run: |
-          DOMAINS="headyme.com headysystems.com headyconnection.org headybuddy.org headymcp.com headyio.com headybot.com headyapi.com heady-ai.com"
+          DOMAINS="headyme.com headysystems.com headyconnection.org headyconnection.com headybuddy.org headymcp.com headyio.com headybot.com headyapi.com heady-ai.com headyos.com headyfinance.com headymusic.com headycloud.com headystore.com headyex.com"
           FAILED=0
 
           for domain in $DOMAINS; do

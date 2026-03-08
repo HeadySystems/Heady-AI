@@ -69,8 +69,8 @@ const TIMEOUTS = {
   RESEARCH:   Math.round(Math.pow(PHI, 5) * 1000),   // 11090
   /** PHI^6 × 1000 ≈ 17944 ms — embedding batch timeout */
   EMBED:      Math.round(Math.pow(PHI, 6) * 1000),   // 17944
-  /** PHI^7 × 1000 ≈ 29034 ms — long creative / security audit */
-  LONG:       Math.round(Math.pow(PHI, 7) * 1000),   // 29034
+  /** PHI^7 × 1000 ≈ phiMath.PHI_TIMING.CYCLE ms — long creative / security audit */
+  LONG:       Math.round(Math.pow(PHI, 7) * 1000),   // phiMath.PHI_TIMING.CYCLE
   /** PHI^8 × 1000 ≈ 46979 ms — architecture / deep creative */
   MAX:        Math.round(Math.pow(PHI, 8) * 1000),   // 46979
 };
@@ -645,7 +645,7 @@ class BudgetTracker {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Heady LLM Router.
+ * Heady™ LLM Router.
  *
  * Orchestrates task-aware provider selection, liquid failover, circuit-breaking,
  * budget enforcement, phi-harmonic health scoring, and LRU response caching.
@@ -924,7 +924,7 @@ class LLMRouter {
           if (err.code === 'RATE_LIMITED') {
             if (rateLimitAttempt < RATE_LIMIT_MAX_RETRIES) {
               // Wait phi-backoff then retry
-              const wait = phiBackoff(rateLimitAttempt, 1000, 30000);
+              const wait = phiBackoff(rateLimitAttempt, 1000, phiMath.PHI_TIMING.CYCLE);
               await this._sleep(wait);
               rateLimitAttempt += 1;
               continue;

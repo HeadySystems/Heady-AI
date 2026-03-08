@@ -1,4 +1,4 @@
-# Heady Enterprise Optimization Plan
+# Heady™ Enterprise Optimization Plan
 
 ## 1) Stabilize the Control Plane
 

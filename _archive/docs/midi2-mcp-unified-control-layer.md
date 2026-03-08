@@ -1,6 +1,6 @@
 # Next-Generation System State Synchronization
 
-## Orchestrating the Model Context Protocol and MIDI 2.0 Universal MIDI Packets within the Heady Ecosystem
+## Orchestrating the Model Context Protocol and MIDI 2.0 Universal MIDI Packets within the Heady™ Ecosystem
 
 > **Status**: Game-Changer — Canonical Architecture Reference  
 > **Date**: 2026-02-25  
@@ -164,7 +164,7 @@ $$\mathcal{J} = T_{MCP}(\mathcal{U})$$
 
 ---
 
-## 7. Optimized Integrations for the Heady Ecosystem
+## 7. Optimized Integrations for the Heady™ Ecosystem
 
 ### 7.1 Real-Time UI Generation via Property Exchange
 

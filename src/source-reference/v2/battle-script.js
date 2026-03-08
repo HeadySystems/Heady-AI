@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ heady battle — 10-Model Arena Dispatcher ═══

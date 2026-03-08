@@ -69,7 +69,7 @@
 - **Zellinger, M. & Thomson, M. (2025)** — "Rational Tuning of LLM Cascades via Probabilistic Modeling"
   - arXiv:2501.09345 | Markov-copula model for tuning LLM cascade performance
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - Heady's deterministic prompt executor (SHA-256 hash matching, temp=0, seed=42) addresses a documented problem: "deterministic" LLM settings are often non-deterministic
 - Monte Carlo determinism boundary `D(n,v,d,c)` aligns with SMC steering and MCTS self-refine approaches
 - CSL confidence gates (EXECUTE > φ⁻¹, CAUTIOUS, HALT < φ⁻²) provide principled thresholds for reliability scoring

@@ -1,12 +1,12 @@
 ---
 name: heady-connector-vault
-description: Use when managing external connector vaults, secret management, dynamic connector synthesis, OAuth scope management, SDK service layers, or compute dashboards in the Heady ecosystem. Keywords include connector, vault, secret, OAuth, scope, SDK, compute dashboard, dynamic synthesis, service integration, and connector management.
+description: Use when managing external connector vaults, secret management, dynamic connector synthesis, OAuth scope management, SDK service layers, or compute dashboards in the Heady™ ecosystem. Keywords include connector, vault, secret, OAuth, scope, SDK, compute dashboard, dynamic synthesis, service integration, and connector management.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Connector Vault
+# Heady™ Connector Vault
 
 ## When to Use This Skill
 

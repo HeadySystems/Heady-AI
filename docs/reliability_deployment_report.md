@@ -1,14 +1,14 @@
-# Heady Reliability & Deployment Analysis Report
+# Heady™ Reliability & Deployment Analysis Report
 
 **Generated:** 2026-03-07  
 **Scope:** All repositories in `/home/user/workspace/headyme-repos`  
-**Repos analyzed:** Heady-pre-production-9f2f0642 (monorepo), headyapi-core, headybot-core, headybuddy-core, headyconnection-core, headyio-core, headymcp-core, headyme-core, headyos-core, headysystems-core, headymcp-production, headysystems-production, heady-docs
+**Repos analyzed:** Heady-pre-production-9f2f0642 (monorepo), headyapi-core, headybot-core, headybuddy-core, headyconnection-core, headyio-core, headymcp-core, headyme-core, headyos-core, headysystems-core, headymcp-production, heady-production, heady-docs
 
 ---
 
 ## Executive Summary
 
-The Heady ecosystem is a large Node.js monorepo with a sophisticated multi-layered deployment architecture: a single Cloud Run container serving 9 domains, a Cloudflare edge layer, HuggingFace Spaces, and a "liquid deploy" system that projects monorepo changes into 9 vertical satellite repos. The monorepo has a **strong foundation** — multi-stage Docker builds, non-root user enforcement, canary deployments, a self-healing workflow, circuit breakers, drift detection, OTEL instrumentation, and a governance engine. However, **seven critical-severity gaps** and **seventeen medium/low severity issues** were found that must be addressed before this system can be called production-hardened.
+The Heady™ ecosystem is a large Node.js monorepo with a sophisticated multi-layered deployment architecture: a single Cloud Run container serving 9 domains, a Cloudflare edge layer, HuggingFace Spaces, and a "liquid deploy" system that projects monorepo changes into 9 vertical satellite repos. The monorepo has a **strong foundation** — multi-stage Docker builds, non-root user enforcement, canary deployments, a self-healing workflow, circuit breakers, drift detection, OTEL instrumentation, and a governance engine. However, **seven critical-severity gaps** and **seventeen medium/low severity issues** were found that must be addressed before this system can be called production-hardened.
 
 The single most urgent issue is a **hardcoded Cloudflare API token and Zone ID** committed in plaintext to two scripts in the production repository. This is a live credential exposure.
 
@@ -29,7 +29,7 @@ The single most urgent issue is a **hardcoded Cloudflare API token and Zone ID**
 | headymcp-core | Vertical: MCP | deploy.yml (test only) | Single-stage, no HEALTHCHECK | Placeholder (`exit 0`) |
 | headyos-core | Vertical: OS | deploy.yml (test only) | Single-stage, no HEALTHCHECK | Placeholder (`exit 0`) |
 | headymcp-production | Production MCP | None | None | None |
-| headysystems-production | Production Systems | None | None | None |
+| heady-production | Production Systems | None | None | None |
 | heady-docs | Documentation | None | None | None |
 
 ---
@@ -269,7 +269,7 @@ gcloud run services update-traffic ${{ env.CLOUD_RUN_SERVICE_PRODUCTION }} \
 
 **Files:** `.github/workflows/ci.yml` (Node 20), `deploy.yml` (Node 22), `quality-gates.yml` (Node 22), `liquid-deploy.yml` (Node 20)
 
-Tests and lint run on Node 20; some deployment and quality gate jobs run on Node 22. This creates a version skew where tests pass on 20 but the deployed artifact runs on 22 (or vice versa). The Dockerfile uses `node:20-slim`.
+Tests and lint run on Node 20; some deployment and quality gate jobs run on Node 22. This creates a version skew where tests pass on 20 but the deployed artifact runs on 22 (or vice versa). The Dockerfile uses `node:22-slim`.
 
 **Fix:** Pin all workflows to Node 20 LTS (matching the Dockerfile) or upgrade Dockerfile to Node 22. Use a single `.nvmrc` or `engines.node` in `package.json` as the single source of truth, then reference it in all workflows with `node-version-file: '.nvmrc'`.
 
@@ -502,9 +502,9 @@ The Terraform config provisions a cold-archive GCS bucket labeled `disaster-reco
 
 ---
 
-#### L-1: `headymcp-production` and `headysystems-production` Are Empty Shells
+#### L-1: `headymcp-production` and `heady-production` Are Empty Shells
 
-Both production repos contain only a `README.md` (headymcp-production) or a static `index.html` with `_headers`/`_redirects` (headysystems-production). There are no deployment workflows, no Dockerfiles, no CI/CD. If these are intended as production environments they need the same treatment as the `*-core` repos.
+Both production repos contain only a `README.md` (headymcp-production) or a static `index.html` with `_headers`/`_redirects` (heady-production). There are no deployment workflows, no Dockerfiles, no CI/CD. If these are intended as production environments they need the same treatment as the `*-core` repos.
 
 ---
 
@@ -592,7 +592,7 @@ The SAML IDP metadata XML contains the entity ID `https://accounts.google.com/o/
 | M-7 | 🟡 Medium | Security | GPG key files committed to configs/keys/ | 1h |
 | M-8 | 🟡 Medium | Reliability | Single-region deployment only | 2-3d |
 | M-9 | 🟡 Medium | Data | No database backup automation | 1-2d |
-| L-1 | 🔵 Low | Deployment | headymcp-production and headysystems-production are empty | TBD |
+| L-1 | 🔵 Low | Deployment | headymcp-production and heady-production are empty | TBD |
 | L-2 | 🔵 Low | CI/CD | AI eval gate requires manual label | 1h |
 | L-3 | 🔵 Low | Deployment | Monte Carlo projection uses random numbers, not real data | 2d |
 | L-4 | 🔵 Low | Config | server-boot.js falls back to port 3301 | 15m |
@@ -666,7 +666,7 @@ The following patterns are solid and should be preserved:
 - **L-3**: Replace Monte Carlo random simulation with real file diff analysis
 - **L-2**: Auto-detect AI-change PRs via path filters
 - **M-8**: Implement and test multi-region failover
-- **L-1**: Properly build out headymcp-production and headysystems-production repos
+- **L-1**: Properly build out headymcp-production and heady-production repos
 - **L-6**: Move SAML metadata to config management
 
 ---

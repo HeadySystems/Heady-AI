@@ -6,7 +6,7 @@
  * Exposes the Deterministic Prompt System (64 prompts × 8 domains)
  * as an MCP-compatible tool with CSL confidence gating.
  *
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const crypto = require('crypto');

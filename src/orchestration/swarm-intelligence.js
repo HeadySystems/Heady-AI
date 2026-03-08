@@ -1,6 +1,7 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * Swarm Intelligence — Dynamic resource allocation for bee swarms.
  * Computes target bee counts, concurrency limits, and strategy
@@ -52,7 +53,7 @@ function evaluateLiveCloudStatus(input = {}) {
     const serviceHealth = clamp(Number(input.serviceHealth) || 0, 0, 1);
 
     const hasCloudUrl = cloudUrl.startsWith('https://');
-    const heartbeatHealthy = heartbeatAgeMs <= 30_000;
+    const heartbeatHealthy = heartbeatAgeMs <= PHI_TIMING.CYCLE;
     const servicesHealthy = serviceHealth >= 0.9;
 
     return {

@@ -1,4 +1,4 @@
-# dast-pipeline.yml — Heady Systems DAST Pipeline
+# dast-pipeline.yml — Heady™ Systems DAST Pipeline
 # Dynamic Application Security Testing: OWASP ZAP, Nuclei, header/SSL/CORS/rate-limit checks
 # Runs nightly and before production deploys
 # Version: 1.0.0
@@ -110,7 +110,7 @@ jobs:
           <configuration>
             <context>
               <name>HeadyMe</name>
-              <desc>Heady Systems main application</desc>
+              <desc>Heady™ Systems main application</desc>
               <inscope>true</inscope>
               <incregexes>${{ needs.setup.outputs.target_url }}.*</incregexes>
               <incregexes>${{ needs.setup.outputs.api_url }}.*</incregexes>

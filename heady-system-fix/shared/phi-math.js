@@ -1,5 +1,5 @@
 /**
- * Heady Phi-Math Foundation Module — v2.0.0
+ * Heady™ Phi-Math Foundation Module — v2.0.0
  * ==========================================
  * CANONICAL source for all phi-derived constants, thresholds, and utilities.
  * Replaces ALL magic numbers system-wide with Golden Ratio derivatives.

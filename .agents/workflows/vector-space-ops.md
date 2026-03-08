@@ -2,7 +2,7 @@
 description: how to operate through Heady™'s vector space, bees, and event system for all work
 ---
 
-# Heady Vector Space Operations
+# Heady™ Vector Space Operations
 
 // turbo-all
 

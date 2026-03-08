@@ -1,14 +1,14 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
- * @module @heady/shared-utils
+ * @module @heady-ai/shared-utils
  *
  * Shared utility functions for the Heady™ AI Platform.
  * All timing and concurrency primitives use PHI (golden ratio) for scaling.
  */
 
 import { createHash } from 'node:crypto';
-import { PHI } from '@heady/shared-types';
+import { PHI } from '@heady-ai/shared-types';
 
 export { PHI };
 

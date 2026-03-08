@@ -57,7 +57,7 @@ U' = T_UMP_inv(J')       # Tool call → UMP back to UI
 
 ---
 
-## Heady-Specific Integrations
+## Heady™-Specific Integrations
 
 ### 1. Dynamic UI via MIDI-CI Property Exchange
 

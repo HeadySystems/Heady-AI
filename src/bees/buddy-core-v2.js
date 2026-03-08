@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══════════════════════════════════════════════════════════════════
  * BuddyCore V2 — Enhanced Companion with Full Memory & Learning Loop
@@ -26,6 +26,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 const EventEmitter = require('events');
 const path = require('path');
@@ -652,7 +653,7 @@ class TaskLockManager {
 
   setRedisClient(client) { this._redisClient = client; }
 
-  async acquire(agentId, taskId, ttlMs = 30000) {
+  async acquire(agentId, taskId, ttlMs = PHI_TIMING.CYCLE) {
     const key = `task:status:${taskId}`;
     const val = JSON.stringify({ agentId, status: 'IN_PROGRESS', lockedAt: Date.now(), expiresAt: Date.now() + ttlMs });
     if (this._redisClient) {

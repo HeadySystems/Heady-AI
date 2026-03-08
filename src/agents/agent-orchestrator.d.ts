@@ -2,7 +2,7 @@ export class AgentOrchestrator {
     /**
      * @param {object} opts
      * @param {number}  [opts.maxConcurrentTasks=8]
-     * @param {number}  [opts.taskTimeoutMs=30000]
+     * @param {number}  [opts.taskTimeoutMs=29034]
      * @param {object}  [opts.kv]          - HeadyKV instance (injected or created)
      * @param {object}  [opts.conductor]   - HeadyConductor instance (injected or created)
      */

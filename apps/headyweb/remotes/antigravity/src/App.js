@@ -5,7 +5,7 @@
  * Features: rotating hex wireframes, particle field, orbit controls,
  * neural architecture matrix, live heuristic feed, swarm topology.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/antigravity/App
  */

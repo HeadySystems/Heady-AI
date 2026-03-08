@@ -6,7 +6,7 @@
  * for functions and classes — covering happy path, error handling, edge cases,
  * async behavior, and class methods.
  *
- * Part of the Heady Auto-Testing Framework (Part C1)
+ * Part of the Heady™ Auto-Testing Framework (Part C1)
  */
 
 const fs   = require('fs');

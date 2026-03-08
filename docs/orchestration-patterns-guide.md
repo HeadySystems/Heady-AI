@@ -1,4 +1,4 @@
-# Heady Latent OS — Orchestration Patterns Guide
+# Heady™ Latent OS — Orchestration Patterns Guide
 
 **Version:** 2.0.0  
 **Scope:** Section 2 — Autonomous Agent Orchestration  
@@ -19,7 +19,7 @@
 
 ## 1. Topology Decision Matrix
 
-The Heady platform uses a **layered topology**: hierarchical at platform level, with internal per-swarm topologies chosen based on the swarm's role.
+The Heady™ platform uses a **layered topology**: hierarchical at platform level, with internal per-swarm topologies chosen based on the swarm's role.
 
 ### 1.1 Topology Overview
 
@@ -48,7 +48,7 @@ Platform Level (Hierarchical):
 | **Partial Mesh** | High-availability critical paths | ~5 swarms | O(N²) connection cost |
 | **A2A Protocol** | Cross-vendor / cross-boundary swarms | Any | Protocol overhead |
 
-### 1.3 Heady Platform Topology Rules
+### 1.3 Heady™ Platform Topology Rules
 
 **Rule 1: HeadySoul owns top-level routing.**
 All external tasks enter through `heady-soul`. It applies multi-layer routing (deterministic → CSL → LLM → load balance) and dispatches to ring coordinators.

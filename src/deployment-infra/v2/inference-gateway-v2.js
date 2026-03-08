@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc. — Proprietary and Confidential.
+ * © 2026 Heady™Systems Inc. — Proprietary and Confidential.
  *
  * AI Inference Gateway v2 — Circuit breaking, provider racing, health-aware routing.
  *
@@ -25,6 +25,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter = require('events');
 
 // Try to load logger — fall back to console
@@ -99,7 +100,7 @@ const PROVIDERS = {
     costPerMTokInput: 0.075,
     costPerMTokOutput: 0.3,
     rateLimit: 'paid via GCloud credits',
-    defaultTimeoutMs: 30_000,
+    defaultTimeoutMs: PHI_TIMING.CYCLE,
     latencyMs: 300,
     maxContext: 1_000_000,
     envKey: 'GOOGLE_API_KEY',
@@ -205,7 +206,7 @@ const PROVIDERS = {
     costPerMTokInput: 2.5,
     costPerMTokOutput: 10.0,
     rateLimit: 'API key billing',
-    defaultTimeoutMs: 30_000,
+    defaultTimeoutMs: PHI_TIMING.CYCLE,
     latencyMs: 600,
     maxContext: 128_000,
     envKey: 'OPENAI_API_KEY',

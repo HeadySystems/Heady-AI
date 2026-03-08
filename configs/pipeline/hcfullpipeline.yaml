@@ -26,11 +26,11 @@ pipeline:
     self-optimizing, trial-and-error capable, continuously learning execution pipeline
     for all Heady workloads (local and remote). Integrates HeadySims plan selection,
     pattern recognition, self-critique, reconnaissance scanning, mistake analysis,
-    controlled evolution, multi-channel routing (Heady Buddy), public domain
+    controlled evolution, multi-channel routing (Heady™ Buddy), public domain
     inspiration mining, bottleneck diagnostics, optimization ops scanning,
     and continuous monitoring feedback loops.
     Treat this as the single source of truth for every idea, service, flow,
-    metric, integration, and improvement in the Heady ecosystem.
+    metric, integration, and improvement in the Heady™ ecosystem.
 
   # ─── GLOBAL RULES ───────────────────────────────────────────────────────
   global:
@@ -111,11 +111,11 @@ pipeline:
   #
   stages:
 
-    # ── STAGE 0: Channel Entry (Heady Buddy / Multi-Channel Gateway) ─────
+    # ── STAGE 0: Channel Entry (Heady™ Buddy / Multi-Channel Gateway) ─────
     - id: channel-entry
       name: Channel Entry
       description: >
-        Heady Buddy and multi-channel gateway. Receives requests from any
+        Heady™ Buddy and multi-channel gateway. Receives requests from any
         channel (IDE extension, web chat, mobile app, API/MCP, email, voice,
         messaging), resolves user identity, syncs cross-device context and
         preferences, and routes to the correct pipeline branch.
@@ -145,11 +145,11 @@ pipeline:
         launchModes:
           admin_ide:
             label: "Admin + IDE"
-            description: "Full cockpit: Admin UI + embedded IDE with Heady services"
+            description: "Full cockpit: Admin UI + embedded IDE with Heady™ services"
             includes: [admin_ui, ide_surface, heady_services, monitoring]
           ide_only:
             label: "IDE Only"
-            description: "Code workspace with Heady services quietly integrated"
+            description: "Code workspace with Heady™ services quietly integrated"
             includes: [ide_surface, heady_services]
         crossDeviceSync:
           enabled: true
@@ -473,7 +473,7 @@ pipeline:
       description: >
         Apply improvements discovered by self-critique, mistake analysis,
         optimization ops, and pattern engine. Mine public domain best practices
-        and adapt concepts for Heady. Cache invalidation on config drift.
+        and adapt concepts for Heady™. Cache invalidation on config drift.
         Dynamic concurrency adjustment.
       checkpoint: true
       parallel: true
@@ -522,7 +522,7 @@ pipeline:
               - alert_thresholds
         adaptationRule: >
           Do not copy proprietary designs. Abstract concepts and adapt them
-          for Heady's mission (wealth redistribution, impact, behavior change).
+          for Heady™'s mission (wealth redistribution, impact, behavior change).
           Make them more coherent, more mission-aligned, more owner-friendly.
 
     # ── STAGE 11: Continuous Search & Discovery ──────────────────────────

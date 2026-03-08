@@ -1,10 +1,10 @@
-# Heady Patent System - Academic Research Package
+# Heady™ Patent System - Academic Research Package
 
 Generated: 2026-03-07
 Total Papers: 30
 
 ## Purpose
-This package contains academic papers supporting the Heady IP auto-documentation system, specifically:
+This package contains academic papers supporting the Heady™ IP auto-documentation system, specifically:
 - Continuous Semantic Logic (CSL) engine theoretical foundations
 - Monte Carlo sampling for prior art detection
 - Phi-harmonic optimization research
@@ -44,7 +44,7 @@ Direct application to patent system goals
 - Prior art matching datasets
 
 ### 6. Deterministic AI Orchestration (2 papers)
-Architecture patterns for HeadyConductor/Orchestrator
+Architecture patterns for Heady™Conductor/Orchestrator
 - Platform architecture for autonomous systems
 - Repeatable AI outcomes
 - Context management strategies
@@ -114,7 +114,7 @@ Current research shows:
 See `heady_research_bibliography.json` for complete citation data in machine-readable format.
 
 ## License
-Papers are subject to their original licenses. This package is for research purposes supporting Heady Systems Inc. patent portfolio development.
+Papers are subject to their original licenses. This package is for research purposes supporting HeadySystems Inc. patent portfolio development.
 
 ---
-© 2026 HeadySystems Inc.
+© 2026 Heady™Systems Inc.

@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  *
  * ─── Self-Healing Attestation Mesh ────────────────────────────────────────────
@@ -7,7 +7,7 @@
  * Patent Docket: HS-059
  * Title: SELF-HEALING ATTESTATION MESH FOR AUTONOMOUS AI AGENT NETWORKS WITH
  *        GEOMETRIC HALLUCINATION DETECTION
- * Applicant: Heady Systems LLC  |  Inventor: Eric Haywood
+ * Applicant: HeadySystems Inc  |  Inventor: Eric Haywood
  * Related:   HS-058 (Continuous Semantic Logic)
  *
  * Satisfies ALL 7 claims of HS-059.

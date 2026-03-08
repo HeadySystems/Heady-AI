@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -25,10 +25,11 @@
  */
 
 const EventEmitter = require('events');
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = require('../utils/logger');
 
 const PHI = (1 + Math.sqrt(5)) / 2;
-const DEFAULT_LOCK_TTL_MS = Math.round(PHI * 30000); // ~48.5s
+const DEFAULT_LOCK_TTL_MS = Math.round(PHI * PHI_TIMING.CYCLE); // ~48.5s
 const HEARTBEAT_INTERVAL_MS = Math.round(PHI * 5000); // ~8.09s
 const STALE_CHECK_INTERVAL_MS = Math.round(PHI * 10000); // ~16.18s
 
@@ -80,7 +81,7 @@ class SwarmConsensus extends EventEmitter {
                     }
                     const timeout = setTimeout(() => {
                         reject(new Error(`Lock wait timeout for ${filePath}`));
-                    }, opts.waitTimeout || 30000);
+                    }, opts.waitTimeout || PHI_TIMING.CYCLE);
 
                     this.waitQueues.get(filePath).push({
                         owner,

@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Inc. — PodDisruptionBudget: heady-web
+# Heady™Systems Inc. — PodDisruptionBudget: heady-web
 # heady-systems v3.2.2
 # =============================================================================
 # maxUnavailable: fib(2)=1 — never lose more than 1 web pod during disruption

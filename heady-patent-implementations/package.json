@@ -1,7 +1,7 @@
 {
   "name": "heady-patent-implementations",
   "version": "1.0.0",
-  "description": "Production implementations of all Heady Systems LLC patent concepts (HS-051 through HS-062+ and beyond). Each module constitutes Reduction to Practice for its cited USPTO provisional patent application.",
+  "description": "Production implementations of all HeadySystems Inc patent concepts (HS-051 through HS-062+ and beyond). Each module constitutes Reduction to Practice for its cited USPTO provisional patent application.",
   "main": "index.js",
   "scripts": {
     "test": "node run-tests.js",

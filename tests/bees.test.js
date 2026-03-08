@@ -1,6 +1,6 @@
 /**
- * © 2026 HeadySystems Inc..
- * Tests for HeadyBee templates — validates the bee ecosystem after optimization.
+ * © 2026 Heady™Systems Inc..
+ * Tests for Heady™Bee templates — validates the bee ecosystem after optimization.
  */
 
 // Suppress console output during tests

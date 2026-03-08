@@ -8,7 +8,7 @@ enforcement: MANDATORY
 
 # LAW 6: TEN-THOUSAND BEE SCALE — THE SWARM MUST NOT FALTER
 
-The Heady system is architected to support **10,000 concurrent bee workers** without performance
+The Heady™ system is architected to support **10,000 concurrent bee workers** without performance
 degradation. Scale is not a future concern — it is a present design constraint. Every data
 structure, algorithm, queue, and connection pool must be chosen and sized with this ceiling in
 mind. The swarm operates on Fibonacci-stepped pool sizes and golden-ratio-derived scale triggers,

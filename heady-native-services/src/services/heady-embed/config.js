@@ -51,7 +51,7 @@ const config = {
   warmupOnStart: process.env.HEADY_EMBED_WARMUP !== 'false',
   warmupTexts: [
     'Hello world',
-    'Sacred geometry powers the Heady AI platform',
+    'Sacred geometry powers the Heady™ AI platform',
     'Embedding warm-up for optimal latency',
   ],
 

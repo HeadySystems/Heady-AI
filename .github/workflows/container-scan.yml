@@ -1,4 +1,4 @@
-# container-scan.yml — Heady Systems Docker Image Security
+# container-scan.yml — Heady™ Systems Docker Image Security
 # Trivy FS + image scans, hadolint, base image freshness, non-root user check
 # Version: 1.0.0
 
@@ -35,7 +35,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Registry prefix for Heady images
+  # Registry prefix for Heady™ images
   IMAGE_PREFIX: ghcr.io/headyme
 
 jobs:

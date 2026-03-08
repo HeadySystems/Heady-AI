@@ -3,7 +3,7 @@ name: heady-research
 description: Deep web research with citations using Heady™Research (Perplexity Sonar Pro) — use when the user needs sourced answers, literature review, or real-time web intelligence.
 ---
 
-# Heady Research Skill
+# Heady™ Research Skill
 
 Use this skill whenever a task requires **web research, sourced answers, academic review, or real-time news intelligence**. HeadyResearch is powered by Perplexity Sonar Pro and returns rich answers with URL citations.
 

@@ -1,5 +1,5 @@
 /**
- * Heady SOC 2 Audit Logger
+ * Heady™ SOC 2 Audit Logger
  * ========================
  * Tamper-evident, cryptographically chained audit logging for MCP operations.
  *

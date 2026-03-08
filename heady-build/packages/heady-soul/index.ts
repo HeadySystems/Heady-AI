@@ -1,10 +1,10 @@
 /**
  * @file heady-soul/index.ts
- * @package @heady/heady-soul
+ * @package @heady-ai/heady-soul
  * @version 1.0.0
  *
  * HeadySoul — the awareness layer, values arbiter, and coherence guardian
- * of the Heady Liquid Latent OS.
+ * of the Heady™ Liquid Latent OS.
  *
  * HeadySoul orchestrates seven cognitive archetypes drawn from
  * SYSTEM_PRIME_DIRECTIVE.md:
@@ -1096,11 +1096,11 @@ export class HeadySoul {
    */
   public getIdentity(): SoulIdentity {
     return {
-      name: "@heady/heady-soul",
+      name: "@heady-ai/heady-soul",
       version: "1.0.0",
       mission:
         "To serve as the awareness layer, values arbiter, and coherence guardian " +
-        "of the Heady Liquid Latent OS — ensuring every action aligns with " +
+        "of the Heady™ Liquid Latent OS — ensuring every action aligns with " +
         "first principles, structural integrity, and mission coherence. " +
         `(instance created: ${this._instanceCreatedAt})`,
       activeArchetypes: this.config.cognitiveArchetypes.map(

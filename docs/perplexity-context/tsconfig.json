@@ -25,28 +25,28 @@
         ],
         "baseUrl": ".",
         "paths": {
-            "@heady/config/*": [
+            "@heady-ai/config/*": [
                 "src/config/*"
             ],
-            "@heady/orchestration/*": [
+            "@heady-ai/orchestration/*": [
                 "src/orchestration/*"
             ],
-            "@heady/memory/*": [
+            "@heady-ai/memory/*": [
                 "src/memory/*"
             ],
-            "@heady/auth/*": [
+            "@heady-ai/auth/*": [
                 "src/auth/*"
             ],
-            "@heady/mcp/*": [
+            "@heady-ai/mcp/*": [
                 "src/mcp/*"
             ],
-            "@heady/agents/*": [
+            "@heady-ai/agents/*": [
                 "src/agents/*"
             ],
-            "@heady/observability/*": [
+            "@heady-ai/observability/*": [
                 "src/observability/*"
             ],
-            "@heady/shared/*": [
+            "@heady-ai/shared/*": [
                 "src/shared/*"
             ]
         }

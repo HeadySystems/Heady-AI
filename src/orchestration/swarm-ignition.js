@@ -1,9 +1,9 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
- * Swarm Ignition — Boot Sequence for the Heady Bee Swarm
+ * Swarm Ignition — Boot Sequence for the Heady™ Bee Swarm
  *
- * Registers all template bees with the HeadyConductor,
+ * Registers all template bees with the Heady™Conductor,
  * starts scheduled maintenance cycles, and wires the
  * autonomous heartbeat into the conductor loop.
  *

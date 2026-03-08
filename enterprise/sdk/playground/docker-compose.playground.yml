@@ -1,7 +1,7 @@
 version: "3.8"
 
 # ---------------------------------------------------------------------------
-# HeadyOS SDK Playground Environment
+# Heady™OS SDK Playground Environment
 # Docker-based code sandbox for trying the @heady-ai/sdk
 #
 # Usage:
@@ -43,7 +43,7 @@ services:
   # Playground UI — Interactive SDK explorer
   # ---------------------------------------------------------------------------
   playground-ui:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-playground-ui
     working_dir: /app
     volumes:
@@ -129,7 +129,7 @@ services:
   # Custom MCP Tool Server — Example custom tools
   # ---------------------------------------------------------------------------
   mcp-server:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-mcp-server
     working_dir: /app
     volumes:
@@ -158,7 +158,7 @@ services:
   # Webhook Listener — Receive HeadyOS webhook deliveries
   # ---------------------------------------------------------------------------
   webhook-listener:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-webhook-listener
     working_dir: /app
     volumes:
@@ -260,7 +260,7 @@ services:
   # SDK Test Runner — Run JavaScript SDK examples
   # ---------------------------------------------------------------------------
   sdk-examples:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: heady-sdk-examples
     working_dir: /app
     volumes:

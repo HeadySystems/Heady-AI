@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Heady Latent Boundary API
+  title: Heady™ Latent Boundary API
   version: 0.1.0
   description: External trust-boundary contract for ingress, workflows, tools, and streaming.
 servers:

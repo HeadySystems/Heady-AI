@@ -2,7 +2,7 @@
  * @fileoverview semantic-backpressure.js — Heady™ Sovereign Phi-100 Semantic Backpressure System
  * @version 3.2.3
  * @description
- *   Implements Heady's full Semantic Backpressure pipeline for agent and swarm
+ *   Implements Heady™'s full Semantic Backpressure pipeline for agent and swarm
  *   overload protection. Tasks flow through a seven-stage admission gauntlet:
  *
  *     Incoming Task
@@ -239,7 +239,7 @@ function ratioToPressureLevel(ratio) {
  * @extends EventEmitter
  *
  * @description
- *   Full semantic backpressure controller for Heady swarm pipelines.
+ *   Full semantic backpressure controller for Heady™ swarm pipelines.
  *   Combines semantic deduplication, phi-weighted priority scoring,
  *   Google SRE adaptive throttling, phi-scaled circuit breaking, and
  *   Fibonacci-bounded queue admission.

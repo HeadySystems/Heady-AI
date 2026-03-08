@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady Sovereign Identity BYOK
+# Heady™ Sovereign Identity BYOK
 
 ## When to Use This Skill
 

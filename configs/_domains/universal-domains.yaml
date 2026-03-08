@@ -560,21 +560,21 @@ discovery:
 # ═══════════════════════════════════════════════════════════════════════════════
 cloud:
   render-me:
-    domain: me.heady.io
+    domain: me.headyio.com
     alt_domains:
       - app.headysystems.com
     port: 443
     branding: "🌟 HeadyMe Cloud"
     
   render-sys:
-    domain: sys.heady.io
+    domain: sys.headyio.com
     alt_domains:
       - app.headysystems.com
     port: 443
     branding: "💜 HeadySystems Cloud"
     
   render-conn:
-    domain: conn.heady.io
+    domain: conn.headyio.com
     alt_domains:
       - app.headysystems.com
     port: 443

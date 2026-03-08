@@ -15,7 +15,7 @@
 # HEADY_BRAND:END
 
 version: "1.0.0"
-description: "Heady Buddy — always-on AI assistant behavior spec per platform"
+description: "Heady™ Buddy — always-on AI assistant behavior spec per platform"
 sourceOfTruth: "docs/HEADY_BROWSER_BUDDY_IDE_PROTOCOL.md"
 
 # ─── BUDDY BACKEND (Shared) ────────────────────────────────────────
@@ -89,11 +89,11 @@ android:
   serviceType: dataSync
   notificationChannel:
     id: heady_buddy_always_on
-    name: "Heady Buddy Always On"
+    name: "Heady™ Buddy Always On"
     importance: LOW # No sound, just persistent
     showBadge: false
   notification:
-    title: "Heady Buddy"
+    title: "Heady™ Buddy"
     text: "Always on — tap to open"
     actions:
       - label: "Chat"
@@ -105,9 +105,9 @@ android:
   batteryOptimization:
     requestExemption: true
     oneplusSpecific:
-      - "Settings → Battery → Battery Optimization → Heady Buddy → Don't Optimize"
-      - "Settings → Apps → Heady Buddy → Allow background activity"
-      - "Settings → Battery → Advanced → Optimized charging → exclude Heady Buddy"
+      - "Settings → Battery → Battery Optimization → Heady™ Buddy → Don't Optimize"
+      - "Settings → Apps → Heady™ Buddy → Allow background activity"
+      - "Settings → Battery → Advanced → Optimized charging → exclude Heady™ Buddy"
   floatingBubble:
     enabled: true
     requiresOverlayPermission: true
@@ -118,14 +118,14 @@ android:
     action: "android.intent.action.SEND"
   quickTile:
     enabled: true
-    label: "Ask Heady"
+    label: "Ask Heady™"
 
 # ─── WINDOWS ────────────────────────────────────────────────────────
 windows:
   persistenceModel: tray-app
   framework: tauri
   trayIcon:
-    tooltip: "Heady Buddy — Always On"
+    tooltip: "Heady™ Buddy — Always On"
     menuItems:
       - label: "Open Buddy"
         action: showWindow

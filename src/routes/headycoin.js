@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * ═══ HeadyCoin API Routes ═══
  *
- * REST endpoints for HeadyCoin token operations:
+ * REST endpoints for Heady™Coin token operations:
  *   - Token info & supply data
  *   - Wallet create/query
  *   - Transfer, mint (admin), burn
@@ -16,7 +16,7 @@
  *
  * Mount: app.use('/api/headycoin', headycoinRouter)
  *
- * Heady AI Nodes: CONDUCTOR, ATLAS, SENTINEL
+ * Heady™ AI Nodes: CONDUCTOR, ATLAS, SENTINEL
  */
 
 const express = require('../core/heady-server');

@@ -1,17 +1,17 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Hologram Router — Cloudflare Edge Worker ═══
  *
- * The edge worker that intercepts traffic to all 9 Heady domains,
+ * The edge worker that intercepts traffic to all 9 Heady™ domains,
  * checks the KV edge cache, and triggers the Colab compiler
  * if the UI isn't materialized. Serves holographic projections
  * from KV with strict TTL — files evaporate after 1 hour.
  *
  * Domains: headymcp.com, headysystems.com, headyconnection.org,
- *          headyme.com, headyapi.com, headyio.com, headytrader.com,
- *          headymusic.com, headyfoundation.org, myheady.ai
+ *          headyme.com, headyapi.com, headyio.com, headyfinance.com,
+ *          headymusic.com, headyconnection.org, myheady-ai.com
  */
 
 // Domain → UI module mapping
@@ -24,11 +24,11 @@ const DOMAIN_MODULES = {
     'www.headyme.com': 'personal-hub',
     'headyapi.com': 'api-docs',
     'headyio.com': 'io-platform',
-    'headytrader.com': 'trading-desk',
+    'headyfinance.com': 'trading-desk',
     'headymusic.com': 'music-studio',
-    'headyfoundation.org': 'foundation-portal',
+    'headyconnection.org': 'foundation-portal',
     'headyconnection.org': 'connection-hub',
-    'myheady.ai': 'ai-assistant',
+    'myheady-ai.com': 'ai-assistant',
     'heady.headyme.com': 'edge-mcp',
 };
 

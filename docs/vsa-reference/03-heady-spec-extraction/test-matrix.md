@@ -1,4 +1,4 @@
-# Heady VSA Test Matrix
+# Heady™ VSA Test Matrix
 
 ## Test Coverage Map
 

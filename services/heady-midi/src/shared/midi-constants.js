@@ -1,5 +1,5 @@
 /**
- * @fileoverview Heady MIDI Constants — Canonical reference for the entire MIDI transfer schema.
+ * @fileoverview Heady™ MIDI Constants — Canonical reference for the entire MIDI transfer schema.
  * Every constant derives from φ ≈ 1.618 or Fibonacci sequences. No magic numbers.
  * 
  * @module shared/midi-constants
@@ -7,7 +7,7 @@
  * @author HeadySystems™
  * @license Proprietary — HeadySystems™ & HeadyConnection™
  * 
- * ⚡ Made with 💜 by HeadySystems™ & HeadyConnection™
+ * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
@@ -56,7 +56,7 @@ const STATUS = Object.freeze({
   RESET:           0xFF,
 });
 
-// ─── Heady MIDI Channels ──────────────────────────────────────────
+// ─── Heady™ MIDI Channels ──────────────────────────────────────────
 /** @enum {number} Heady's 8 logical channels mapped to MIDI channels 0-7 */
 const CHANNEL = Object.freeze({
   PIPELINE:   0,
@@ -93,8 +93,8 @@ const CHANNEL_COLORS = Object.freeze({
   [CHANNEL.TELEMETRY]:  'hsl(300, 55%, 55%)',    // Magenta
 });
 
-// ─── CC Controllers (Heady Metrics) ──────────────────────────────
-/** @enum {number} Control Change numbers for Heady system metrics */
+// ─── CC Controllers (Heady™ Metrics) ──────────────────────────────
+/** @enum {number} Control Change numbers for Heady™ system metrics */
 const CC = Object.freeze({
   BUDGET_USAGE:     1,    // 0-127 normalized
   CPU_LOAD:         2,

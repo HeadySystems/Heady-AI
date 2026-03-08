@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Strategic Report Embedder & Task Projector ═══
  *
@@ -315,7 +315,7 @@ function generateInlineStrategicContent() {
     return `
 HeadyMe Operational Masterclass: Multi-Agent Orchestration & Buddy Integration
 
-The HeadyMe system relies on a Sacred Geometry topology — a hierarchical, non-linear routing framework
+The Heady™Me system relies on a Sacred Geometry topology — a hierarchical, non-linear routing framework
 where intelligence is distributed across specialized nodes. Buddy acts as the primary User-Interface Agent,
 serving as the gateway between the user's dynamic UI and the deeper orchestration layers.
 

@@ -14,7 +14,7 @@
 
 'use strict';
 
-const { fib, PHI, PSI, phiBackoff, phiInterval, CSL_THRESHOLDS } = require('../../shared/phi-math');
+const { fib, PHI, PSI, phiBackoff, phiInterval, CSL_THRESHOLDS, PHI_TIMING } = require('../../shared/phi-math');
 const { BEE_LIMITS } = require('../../shared/sacred-geometry');
 
 const BEE_STATES = Object.freeze({
@@ -168,7 +168,7 @@ class BeeFactory {
       if (instance.attempts < this.maxRetries) {
         instance.attempts++;
         instance.state = BEE_STATES.WORKING;
-        const delay = phiBackoff(instance.attempts, 1000, 30000);
+        const delay = phiBackoff(instance.attempts, 1000, PHI_TIMING.CYCLE);
         this.logger.warn?.(`[BeeFactory] ${beeId} failed, retrying in ${delay}ms`);
         await new Promise(r => setTimeout(r, delay));
         return this._spawn(type, definition, context, opts);

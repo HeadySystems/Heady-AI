@@ -1,9 +1,9 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
  * ║  HEADY™ SACRED GEOMETRY — Topology, Rings, & Coherence           ║
- * ║  The geometric backbone of the Heady orchestration architecture   ║
+ * ║  The geometric backbone of the Heady™ orchestration architecture   ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
- * ║  © 2024-2026 HeadySystems Inc. All Rights Reserved.              ║
+ * ║  © 2026-2026 HeadySystems Inc. All Rights Reserved.              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  */
 

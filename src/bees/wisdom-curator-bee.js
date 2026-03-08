@@ -3,7 +3,7 @@
 /**
  * WisdomCuratorBee — wisdom.json management, pattern scoring, anti-regression enforcement.
  * Maintains a phi-ranked store of learned insights, prevents high-regression patterns from recurring.
- * © 2024-2026 HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc.
  */
 
 const fs   = require('fs');

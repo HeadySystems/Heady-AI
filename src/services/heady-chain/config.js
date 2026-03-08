@@ -1,5 +1,6 @@
 'use strict';
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * HeadyChain Configuration
  * Sacred Geometry scaling with PHI = 1.618 for backoff, timeouts, and sizing
@@ -21,7 +22,7 @@ const config = {
 
   // Execution engine
   MAX_PARALLEL_NODES: parseInt(process.env.MAX_PARALLEL_NODES || '10', 10),
-  DEFAULT_NODE_TIMEOUT_MS: parseInt(process.env.DEFAULT_NODE_TIMEOUT_MS || '30000', 10),
+  DEFAULT_NODE_TIMEOUT_MS: parseInt(process.env.DEFAULT_NODE_TIMEOUT_MS || String(PHI_TIMING.CYCLE), 10),
   DEFAULT_WORKFLOW_TIMEOUT_MS: parseInt(process.env.DEFAULT_WORKFLOW_TIMEOUT_MS || '300000', 10),
   MAX_WORKFLOW_STEPS: parseInt(process.env.MAX_WORKFLOW_STEPS || '500', 10),
   MAX_RETRY_ATTEMPTS: parseInt(process.env.MAX_RETRY_ATTEMPTS || '5', 10),
@@ -90,7 +91,7 @@ const config = {
  */
 config.phiBackoff = function phiBackoff(attempt) {
   const delay = config.RETRY_BASE_MS * Math.pow(PHI, attempt);
-  return Math.min(delay, 30000);
+  return Math.min(delay, PHI_TIMING.CYCLE);
 };
 
 /**

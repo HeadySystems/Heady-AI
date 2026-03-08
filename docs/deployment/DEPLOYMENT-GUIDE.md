@@ -1,6 +1,6 @@
 # Heady™ Production Deployment Guide
 
-Complete step-by-step guide for deploying the Heady platform to production on Google Cloud Run with Cloudflare edge routing.
+Complete step-by-step guide for deploying the Heady™ platform to production on Google Cloud Run with Cloudflare edge routing.
 
 ---
 
@@ -488,4 +488,4 @@ heady-deploy/
 
 ---
 
-© 2026 HeadySystems Inc. — All Rights Reserved.
+© 2026 Heady™Systems Inc. — All Rights Reserved.

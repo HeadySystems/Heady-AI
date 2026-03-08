@@ -98,7 +98,7 @@ heady-manager.js                # Node.js MCP Server & API Gateway
 | **Caching** | In-memory TTL cache with hit/miss metrics |
 | **Graceful Shutdown** | SIGTERM/SIGINT handlers, LIFO cleanup, 5s timeout per handler |
 
-## HeadyBees (Agent Decomposition)
+## Heady™Bees (Agent Decomposition)
 
 24 domains · 197 workers · Dynamic factory for runtime bee creation.
 
@@ -132,4 +132,4 @@ const scanBee = spawnBee('port-scanner', async () => { /* work */ });
 
 © 2026 Heady™ — HeadySystems Inc. Proprietary and Confidential.
 
-Heady™ is a trademark of HeadyConnection Inc. USPTO Serial No. 99680540.
+Heady™ is a trademark of Heady™Connection Inc. USPTO Serial No. 99680540.

@@ -209,7 +209,7 @@ export class EnvValidator {
   }
 }
 
-// ─── Pre-built Heady Schema ───────────────────────────────────────────────────
+// ─── Pre-built Heady™ Schema ───────────────────────────────────────────────────
 
 export const HEADY_SCHEMA = {
   // Node identity
@@ -276,7 +276,7 @@ export const HEADY_SCHEMA = {
 };
 
 /**
- * Quick-validate the Heady env (call at startup).
+ * Quick-validate the Heady™ env (call at startup).
  */
 export function validateHeadyEnv(extra = {}) {
   const validator = new EnvValidator({ ...HEADY_SCHEMA, ...extra });

@@ -124,7 +124,7 @@ product_layers:
   HeadyWeb:
     layer: production
     brain_profile: web-platform
-    domain: headyweb.com
+    domain: headycloud.com
     render_service: heady-manager-headyweb
     description: "Public web platform — marketing, docs, onboarding"
 

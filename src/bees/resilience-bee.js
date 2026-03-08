@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Resilience Bee — Covers all src/resilience/ modules + patterns:
  * auto-heal, cache, circuit-breaker, pool, rate-limiter, retry,
  * auto-tuning-pool, hot-cold-cache

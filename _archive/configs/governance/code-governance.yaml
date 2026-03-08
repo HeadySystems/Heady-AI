@@ -54,7 +54,7 @@ approved_developers:
 approved_agents:
   - id: heady-brain
     type: internal-agent
-    description: Heady Brain — internal AI reasoning engine
+    description: Heady™ Brain — internal AI reasoning engine
     permissions:
       - read
       - write
@@ -158,7 +158,7 @@ approval_workflow:
 
 # ═══════════════════════════════════════════════════════════════
 # PATENT LOCK — Reduced to Practice (RTP) Evidence Registry
-# HeadySystems Inc. — Provisional Patent Portfolio (50 claims)
+# Heady™Systems Inc. — Provisional Patent Portfolio (50 claims)
 # ═══════════════════════════════════════════════════════════════
 patent_lock:
   enforcement: owner-only

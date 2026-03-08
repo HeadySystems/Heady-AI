@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The Heady Project actively supports security updates for the following versions:
+The Heady™ Project actively supports security updates for the following versions:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,7 +11,7 @@ The Heady Project actively supports security updates for the following versions:
 
 ## Reporting a Vulnerability
 
-Security is a core tenant of the Heady ecosystem. If you discover a vulnerability, **do not open a public issue.**
+Security is a core tenant of the Heady™ ecosystem. If you discover a vulnerability, **do not open a public issue.**
 
 Please email the security team at `security@headysystems.com` with a detailed report. We aim to respond within 24 hours.
 
@@ -21,7 +21,7 @@ We are committed to fair compensation for responsible disclosure. Vulnerabilitie
 
 ### Threat Models
 
-- P1: Arbitrary remote code/workflow execution via Heady Conductor.
+- P1: Arbitrary remote code/workflow execution via Heady™ Conductor.
 - P1: Exposure of API keys, telemetry endpoints, or Redis datastore credentials.
 - P2: Exfiltration of context boundary or memory graph (`headybuddy.org` context leakage).
 - P3: Denial of Service, causing failure loops in AI agents.

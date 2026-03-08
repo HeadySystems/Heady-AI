@@ -1,7 +1,7 @@
 # SOC 2 Type II Compliance Checklist
-## Heady Latent OS — HeadySystems, Inc.
+## Heady™ Latent OS — HeadySystems Inc.
 
-> **Purpose:** Structured compliance roadmap for achieving SOC 2 Type II certification for the Heady Latent OS sovereign AI platform running on Google Cloud Run + Cloudflare.
+> **Purpose:** Structured compliance roadmap for achieving SOC 2 Type II certification for the Heady™ Latent OS sovereign AI platform running on Google Cloud Run + Cloudflare.
 >
 > **Status:** Living document. Reviewed quarterly.
 >
@@ -45,7 +45,7 @@
 ### 1.1 System Description
 
 **System Name:** Heady Latent OS Cloud Platform
-**Entity:** HeadySystems, Inc.
+**Entity:** HeadySystems Inc.
 **Description:** A sovereign AI orchestration platform providing vector memory, agent swarm execution, MCP protocol support, and managed LLM inference. Hosted on Google Cloud Run (backend) and Cloudflare (edge/CDN).
 
 ### 1.2 Scope Boundary
@@ -675,6 +675,6 @@ The following policy documents must be written, approved, and published internal
 
 ---
 
-*Document maintained by: Compliance Lead, HeadySystems, Inc.*
+*Document maintained by: Compliance Lead, HeadySystems Inc.*
 *Questions: compliance@headysystems.com*
 *External auditor relationship managed via Compliance Lead.*

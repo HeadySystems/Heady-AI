@@ -1,5 +1,5 @@
 /**
- * Heady Rate Limiter — Per-IP and per-key throttling
+ * Heady™ Rate Limiter — Per-IP and per-key throttling
  * Prevents abuse of public endpoints and enforces fair usage.
  */
 export class RateLimiter {

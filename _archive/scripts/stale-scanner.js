@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Stale Reference Scanner
- * Finds lingering localhost, heady.io, CascadeProjects, and competitor references.
+ * Finds lingering localhost, headyio.com, CascadeProjects, and competitor references.
  */
 const { execSync } = require('child_process');
 
 const PATTERNS = [
-    { label: 'heady.io (should be headyio.com)', pattern: 'heady\\.io', exclude: 'archive|node_modules|\\.git|CHANGELOG' },
+    { label: 'headyio.com (should be headyio.com)', pattern: 'heady\\.io', exclude: 'archive|node_modules|\\.git|CHANGELOG' },
     { label: 'CascadeProjects', pattern: 'CascadeProjects', exclude: 'archive|node_modules|\\.git' },
     { label: 'windsurf-next', pattern: 'windsurf-next', exclude: 'archive|node_modules|\\.git' },
     { label: 'localhost (review needed)', pattern: 'localhost', exclude: 'node_modules|\\.git|healthcheck|domain-connectivity|ecosystem\\.config|stale-scanner|package\\.json' },

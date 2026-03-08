@@ -4,7 +4,7 @@
  * Full landing page with nav, hero, pillars, capabilities, and footer.
  * Dark blue/cyan theme with animated hexagon logo.
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module remotes/landing/App
  */
@@ -292,7 +292,7 @@ function buildFooter() {
         <circle cx="10" cy="10" r="2.5" fill="#4c8fff" opacity="0.8"/>
       </svg>
       <span class="ld-footer-wordmark">Heady<span>Systems</span></span>
-      <span class="ld-footer-copy">© 2026 HeadySystems Inc. All rights reserved.</span>
+      <span class="ld-footer-copy">© 2026 Heady™Systems Inc. All rights reserved.</span>
     </div>
     <nav class="ld-footer-links" aria-label="Footer links">
       <a href="https://github.com/HeadyMe/Heady-pre-production-9f2f0642"

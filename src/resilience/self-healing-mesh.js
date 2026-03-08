@@ -4,8 +4,8 @@
  * ║               Phi-Compliant Component Lifecycle Manager                    ║
  * ║                                                                            ║
  * ║  Version   : 1.0.0                                                         ║
- * ║  License   : Proprietary — Heady Connection LLC                            ║
- * ║  Author    : Heady Engineering                                              ║
+ * ║  License   : Proprietary — Heady™ Connection LLC                            ║
+ * ║  Author    : Heady™ Engineering                                              ║
  * ║  Contact   : eric@headyconnection.org                                      ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
@@ -157,7 +157,7 @@ class ComponentRecord {
 // ─── SelfHealingMesh ─────────────────────────────────────────────────────────
 
 /**
- * Self-healing lifecycle manager for the Heady Connection fleet.
+ * Self-healing lifecycle manager for the Heady™ Connection fleet.
  *
  * Maintains a registry of components (services, workers, agents, tool connectors,
  * provider routes) and autonomously monitors, quarantines, respawns, and attests

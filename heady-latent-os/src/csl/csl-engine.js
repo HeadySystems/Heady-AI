@@ -14,7 +14,7 @@
  *   Grand et al. (Nature 2022): semantic projection recovers human judgments
  *   Birkhoff & von Neumann (1936): quantum logic over Hilbert subspaces
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  */
 
 'use strict';

@@ -1,7 +1,7 @@
 /**
  * @fileoverview MCP Audit Logger
  *
- * Comprehensive audit logging for all MCP tool invocations in the Heady
+ * Comprehensive audit logging for all MCP tool invocations in the Heady™
  * Latent OS. Designed for SOC 2 / ISO 27001 / GDPR compliance.
  *
  * Features:

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Deployment Bee — Automated deployment orchestration across
  * Cloud Run, Cloudflare Workers, GitHub, and Hugging Face Spaces.
  *
@@ -22,12 +22,12 @@ const DEPLOY_TARGETS = {
     'cloud-run': { service: 'heady-manager', region: 'us-central1', project: 'heady-pre-production' },
     'cloudflare-worker': { name: 'heady-edge-proxy', account: '8b1fa38f282c691423c6399247d53323' },
     'github': { repo: 'HeadyMe/Heady-pre-production-9f2f0642', branch: 'main' },
-    'hf-spaces': ['HeadyMe/heady-ai', 'HeadySystems/heady-systems', 'HeadyConnection/heady-connection'],
+    'hf-spaces': ['HeadyMe/heady-ai', 'HeadyMe/heady-systems', 'HeadyConnection/heady-connection'],
 };
 
 const HF_SPACE_MAP = {
     main: 'HeadyMe/heady-ai',
-    systems: 'HeadySystems/heady-systems',
+    systems: 'HeadyMe/heady-systems',
     connection: 'HeadyConnection/heady-connection',
 };
 

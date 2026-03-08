@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * Heady Dynamic Constants
+ * Heady™ Dynamic Constants
  * ═══════════════════════════════════════════════════════════════════
  *
  * Replaces EVERY hardcoded constant in the orchestration platform with
@@ -19,6 +19,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { PhiScale, PHI, PHI_INVERSE } = require('./phi-scales');
 const logger = require('../utils/logger');
 
@@ -197,7 +198,7 @@ const DynamicTimeout = new PhiScale({
     name: 'Timeout',
     baseValue: 5000,
     min: 1000,
-    max: 30000,
+    max: PHI_TIMING.CYCLE,
     phiNormalized: false,
     sensitivity: 0.15,
     telemetryFeed: telemetryFeeds.timeout
@@ -394,7 +395,7 @@ const DynamicCircuitBreakerFailures = new PhiScale({
 
 const DynamicCircuitBreakerTimeout = new PhiScale({
     name: 'CircuitBreakerTimeout',
-    baseValue: 30000,
+    baseValue: PHI_TIMING.CYCLE,
     min: 5000,
     max: 120000,
     phiNormalized: false,

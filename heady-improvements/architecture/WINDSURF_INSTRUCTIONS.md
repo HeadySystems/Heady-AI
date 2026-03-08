@@ -1,4 +1,4 @@
-# Heady Ecosystem — Windsurf IDE Instructions
+# Heady™ Ecosystem — Windsurf IDE Instructions
 
 > **Maintained by:** eric@headyconnection.org | HeadySystems Inc.  
 > **Version:** 3.2.0 (architecture improvement release)  
@@ -179,7 +179,7 @@ async function bootstrap() {
 | `headymcp.com` | `headymcp` | `/mcp` | Yes |
 | `headyio.com` | `headyio` | `/io` | Yes |
 | `headybot.com` | `headybot` | `/bot` | Yes |
-| `headyai.com` | `headyai` | `/ai` | Yes |
+| `heady-ai.com` | `headyai` | `/ai` | Yes |
 
 **Note:** `headyos.com` is referenced in the codebase but absent from the routing table and Cloudflare config. This is a known gap — file an issue before adding any code that assumes headyos.com is live.
 
@@ -670,7 +670,7 @@ obs.logger.error('Stage failed', { stage: 'ARENA', error: err.message, stack: er
 
 ### `heady-api-gateway-v2.js`
 
-**What it is:** The single HTTP entry point for all Heady API traffic.
+**What it is:** The single HTTP entry point for all Heady™ API traffic.
 
 **Key API:**
 ```javascript
@@ -799,7 +799,7 @@ const key = JSON.stringify(Object.keys(input).sort().reduce((acc, k) => { acc[k]
 
 ```javascript
 // BUG: Returns fake URLs, never calls any real API
-return { url: 'https://placeholder.heady.ai/image.png' };
+return { url: 'https://placeholder.heady-ai.com/image.png' };
 
 // FIX: Call real HuggingFace endpoint (configured via config server):
 const endpoint = cfg.get('edgeDiffusion.realEndpoint');

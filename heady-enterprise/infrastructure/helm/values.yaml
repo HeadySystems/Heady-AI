@@ -1,5 +1,5 @@
 # =============================================================================
-# HeadySystems Inc. — Helm Values (Base)
+# Heady™Systems Inc. — Helm Values (Base)
 # heady-platform v3.2.2
 # =============================================================================
 # φ = 1.618033988749895 (Golden Ratio)
@@ -80,7 +80,7 @@ global:
       - heady.exchange
       - heady.investments
       - headysystems.com
-      - headyai.com
+      - heady-ai.com
       - admin.headyme.com
 
 # =============================================================================

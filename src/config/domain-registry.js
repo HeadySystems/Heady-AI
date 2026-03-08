@@ -1,11 +1,12 @@
 /**
  * ∞ Heady™ Domain Registry Config — Domain Configuration & Health Tracking
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 
 // ─────────────────────────────────────────────
@@ -32,7 +33,7 @@ const EventEmitter = require('events');
  */
 
 /**
- * All Heady domain definitions — the authoritative domain registry.
+ * All Heady™ domain definitions — the authoritative domain registry.
  * All SSL/TLS termination is handled by Cloudflare (no localhost SSL).
  * @type {DomainDefinition[]}
  */
@@ -50,7 +51,7 @@ const DOMAIN_DEFINITIONS = [
     routing: {
       type:    'proxy',
       sticky:  false,
-      timeout: 30_000,
+      timeout: PHI_TIMING.CYCLE,
     },
     tls: {
       mode:      'flexible',  // Cloudflare flexible (terminates at CF, HTTP to origin)
@@ -83,7 +84,7 @@ const DOMAIN_DEFINITIONS = [
     routing: {
       type:       'proxy',
       requireAuth: true,
-      timeout:    30_000,
+      timeout:    PHI_TIMING.CYCLE,
     },
     tls: {
       mode:       'full_strict',
@@ -163,7 +164,7 @@ const DOMAIN_DEFINITIONS = [
     healthPath:  '/health',
     ssl:         'cloudflare',
     features:    ['community_forums', 'networking', 'events', 'collective_ai'],
-    routing: { type: 'proxy', timeout: 30_000 },
+    routing: { type: 'proxy', timeout: PHI_TIMING.CYCLE },
     tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
     rateLimit: { windowMs: 60_000, max: 100, burstMax: 200 },
     allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -181,7 +182,7 @@ const DOMAIN_DEFINITIONS = [
     healthPath:  '/health',
     ssl:         'cloudflare',
     features:    ['rest_api', 'graphql', 'webhooks', 'developer_portal', 'sdk_docs'],
-    routing: { type: 'proxy', timeout: 30_000 },
+    routing: { type: 'proxy', timeout: PHI_TIMING.CYCLE },
     tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
     rateLimit: { windowMs: 60_000, max: 500, burstMax: 1000 },
     allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -221,7 +222,7 @@ const DOMAIN_DEFINITIONS = [
     healthPath:  '/health',
     ssl:         'cloudflare',
     features:    ['public_api', 'graphql', 'rest', 'versioning', 'api_keys', 'webhooks'],
-    routing: { type: 'proxy', timeout: 30_000 },
+    routing: { type: 'proxy', timeout: PHI_TIMING.CYCLE },
     tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
     rateLimit: { windowMs: 60_000, max: 1000, burstMax: 2000 },
     allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
@@ -234,8 +235,8 @@ const DOMAIN_DEFINITIONS = [
   },
 
   {
-    domain:      'headyai.com',
-    aliases:     ['www.headyai.com', 'ai.headyme.com', 'inference.headyme.com'],
+    domain:      'heady-ai.com',
+    aliases:     ['www.heady-ai.com', 'ai.headyme.com', 'inference.headyme.com'],
     role:        'ai_gateway',
     description: 'HeadyAI — inference gateway, model routing, embeddings, and AI capabilities',
     service:     'inference-gateway',
@@ -428,7 +429,7 @@ class DomainRegistry extends EventEmitter {
       upstream: `http://localhost:${def.upstreamPort}`,
       health:   this.getHealth(def.domain),
       options: {
-        timeout:      def.routing?.timeout ?? 30_000,
+        timeout:      def.routing?.timeout ?? PHI_TIMING.CYCLE,
         headers:      def.headers,
         rateLimit:    def.rateLimit,
         allowedMethods: def.allowedMethods,

@@ -2,7 +2,7 @@
 description: Monitor output drift continuously and auto-reconfigure when determinism degrades
 ---
 
-# Heady Drift Monitor Workflow
+# Heady™ Drift Monitor Workflow
 
 Continuous drift monitoring using the CSL confidence gate. Tracks output hashes, detects divergence past φ⁻² threshold, and auto-reconfigures.
 

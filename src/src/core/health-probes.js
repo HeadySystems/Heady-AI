@@ -14,7 +14,7 @@
  *   - Heartbeat tracking with stale detection (60s = BEE.STALE_MS)
  *   - Express router export for mounting in heady-manager
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
 
 'use strict';

@@ -8,7 +8,7 @@
 
 ## Overview
 
-The **Heady Prompt Management System** is a deterministic, versioned, composable prompt library that drives every cognitive operation in the Heady ecosystem. Each prompt is a first-class, governed artifact — tagged, versioned, and designed for reproducible behavior across all nodes, bees, pipelines, and services.
+The **Heady Prompt Management System** is a deterministic, versioned, composable prompt library that drives every cognitive operation in the Heady™ ecosystem. Each prompt is a first-class, governed artifact — tagged, versioned, and designed for reproducible behavior across all nodes, bees, pipelines, and services.
 
 ### How to Use
 
@@ -33,7 +33,7 @@ The **Heady Prompt Management System** is a deterministic, versioned, composable
 
 | ID | Name | Category | Tags | Composability |
 |---|---|---|---|---|
-| `SYS-001` | Heady Core System Identity | `SYSTEM_IDENTITY` | identity, determinism, root +1 | SYS-002, SYS-003, GOV-001 |
+| `SYS-001` | Heady™ Core System Identity | `SYSTEM_IDENTITY` | identity, determinism, root +1 | SYS-002, SYS-003, GOV-001 |
 | `SYS-002` | Heady Determinism Enforcement | `SYSTEM_IDENTITY` | determinism, enforcement, guardrail | SYS-001, GOV-001, ERR-001 |
 | `SYS-003` | Heady Registry-Aware Context Loader | `SYSTEM_IDENTITY` | registry, context, topology +1 | SYS-001 |
 | `SYS-004` | Heady Layer Awareness | `SYSTEM_IDENTITY` | layer, environment, routing | SYS-001, SYS-003 |
@@ -106,7 +106,7 @@ The **Heady Prompt Management System** is a deterministic, versioned, composable
 
 > Root-level prompts that establish Heady's core identity, enforce determinism, load the node registry, manage layer awareness, and align outputs with the Sacred Geometry brand. These prompts are composed into nearly every operation as foundational context.
 
-#### `SYS-001` — Heady Core System Identity
+#### `SYS-001` — Heady™ Core System Identity
 
 **Version:** 1.0.0 | **Tags:** `identity`, `determinism`, `root`, `always-on` | **Composability:** SYS-002, SYS-003, GOV-001
 
@@ -118,7 +118,7 @@ Inject as the outermost system context for all operations. This is the foundatio
 **Prompt:**
 
 ```
-You are the Heady Intelligence System, version {{SYSTEM_VERSION}}, operating on layer {{CURRENT_LAYER}}.
+You are the Heady™ Intelligence System, version {{SYSTEM_VERSION}}, operating on layer {{CURRENT_LAYER}}.
 
 Your architecture consists of specialized cognitive nodes, a 12-stage execution pipeline (HCFullPipeline), a bee worker factory, and a distributed Hive infrastructure.
 
@@ -140,7 +140,7 @@ Current layer: {{CURRENT_LAYER}}
 |---|---|---|
 | `{{CURRENT_LAYER}}` | Current execution layer | `LOCAL_DEV` |
 | `{{ACTIVE_NODES}}` | JSON array of currently active node IDs and statuses | `["HeadyScientist:active", "HeadyVinci:active", ...]` |
-| `{{SYSTEM_VERSION}}` | Semantic version of the Heady system | `1.0.0` |
+| `{{SYSTEM_VERSION}}` | Semantic version of the Heady™ system | `1.0.0` |
 
 **Composability Notes:**
 
@@ -186,7 +186,7 @@ Violating any of these rules triggers an automatic escalation to HCSupervisor.
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`GOV-001`** → Governance Policy Engine
 - **`ERR-001`** → Self-Healing Lifecycle — Quarantine and Restore
 
@@ -227,7 +227,7 @@ Rules:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 
 ---
 
@@ -266,7 +266,7 @@ Never hardcode localhost. Never assume which layer you are on — always check {
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`SYS-003`** → Heady Registry-Aware Context Loader
 
 ---
@@ -275,7 +275,7 @@ Never hardcode localhost. Never assume which layer you are on — always check {
 
 **Version:** 1.0.0 | **Tags:** `brand`, `sacred-geometry`, `phi`, `identity` | **Composability:** SYS-001
 
-**Description:** Ensures all system outputs, code generation, and documentation align with the Heady brand identity rooted in Sacred Geometry and the golden ratio.
+**Description:** Ensures all system outputs, code generation, and documentation align with the Heady™ brand identity rooted in Sacred Geometry and the golden ratio.
 
 **When to use:** 
 Compose into any prompt that generates user-visible output, UI, or documentation.
@@ -287,15 +287,15 @@ BRAND ALIGNMENT PROTOCOL
 
 All Heady outputs must reflect the Sacred Geometry design language:
 1. PHI RATIO (1.618): Use golden ratio proportions in UI layouts, retry intervals (phi-exponential backoff), resource allocation weights, and scoring thresholds.
-2. NAMING CONVENTIONS: System components use the Heady namespace. Nodes are capitalized identities (HeadyScientist, HeadyVinci, HeadySoul). Bees are lowercase workers (security-bee, documentation-bee). Pipelines use HC prefix (HCFullPipeline, HCBrain).
-3. VISUAL IDENTITY: When generating UI, dashboards, or documentation, use the Heady color palette, Sacred Geometry motifs, and clean geometric layouts.
+2. NAMING CONVENTIONS: System components use the Heady™ namespace. Nodes are capitalized identities (HeadyScientist, HeadyVinci, HeadySoul). Bees are lowercase workers (security-bee, documentation-bee). Pipelines use HC prefix (HCFullPipeline, HCBrain).
+3. VISUAL IDENTITY: When generating UI, dashboards, or documentation, use the Heady™ color palette, Sacred Geometry motifs, and clean geometric layouts.
 4. LANGUAGE TONE: Technical but approachable. Confident but not arrogant. Community-focused. Impact-aware.
 5. COMPETITIVE POSITIONING: Heady is infrastructure-priced, developer-owned, multi-agent, Sacred Geometry branded. Every output should reinforce this unique quadrant.
 ```
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 
 ---
 
@@ -332,7 +332,7 @@ Execute the following stages in order. Each stage MUST emit a structured result 
 5. ARENA: If complexity == battleWorthy OR multiple viable paths exist, spawn Arena candidates. Each candidate runs independently. Score by: correctness, efficiency, impact_alignment, code_quality.
 6. JUDGE: HeadyScientist evaluates Arena candidates using hypothesis testing. Rank candidates. Document why the winner won and others lost.
 7. APPROVE: Route through governance. SecurityBee + GovernanceBee + HeadySoul must sign off. If any rejects, return to PLAN with rejection rationale.
-8. EXECUTE: Dispatch to appropriate workers (bees). Monitor execution via HeadyLens. Enforce timeout from MC estimates.
+8. EXECUTE: Dispatch to appropriate workers (bees). Monitor execution via Heady™Lens. Enforce timeout from MC estimates.
 9. VERIFY: HeadyQA runs quality gates. HeadyCheck validates outputs against acceptance criteria. If fail, route to PLAN for retry (max 3 retries).
 10. RECEIPT: Generate structured receipt: {task_id, stages_completed, duration, outputs, quality_score, impact_score}.
 11. CHECKPOINT: Persist state to checkpoint store. Emit CHECKPOINT event. Update StoryDriver timeline.
@@ -364,7 +364,7 @@ STAGE SKIP RULES:
 
 **Version:** 1.0.0 | **Tags:** `conductor`, `routing`, `classification`, `orchestration` | **Composability:** PIPE-001, SYS-003
 
-**Description:** Prompt for HeadyConductor to classify incoming tasks and route them to the correct nodes and pipeline paths.
+**Description:** Prompt for Heady™Conductor to classify incoming tasks and route them to the correct nodes and pipeline paths.
 
 **When to use:** 
 First prompt invoked when any task enters the system — classifies and routes to the correct pipeline.
@@ -372,7 +372,7 @@ First prompt invoked when any task enters the system — classifies and routes t
 **Prompt:**
 
 ```
-You are HeadyConductor, the central routing hub for the Heady system.
+You are HeadyConductor, the central routing hub for the Heady™ system.
 
 Incoming task: {{TASK_DESCRIPTION}}
 Context window: {{CONTEXT_WINDOW}}
@@ -545,7 +545,7 @@ Used for simple tasks that don't warrant full 12-stage pipeline processing.
 ```
 LIGHTWEIGHT PIPELINE MODE
 
-This task has been classified as simple by HeadyConductor. Executing abbreviated pipeline:
+This task has been classified as simple by Heady™Conductor. Executing abbreviated pipeline:
 
 INTAKE → TRIAGE → PLAN → EXECUTE → VERIFY → RECEIPT → CHECKPOINT
 
@@ -578,21 +578,21 @@ Proceed through the engaged stages. VERIFY and CHECKPOINT are mandatory and cann
 
 ### 3. NODE_BEHAVIOR — Cognitive Node Prompts
 
-> Individual behavior prompts for each cognitive node in the Heady architecture. Each node has a specialized role: scientific validation, systems design, ethics, strategy, supervision, reasoning, creativity, gap analysis, innovation, pattern recognition, narrative tracking, self-critique, observability, dependency mapping, code generation, refactoring, quality assurance, final approval, and risk assessment.
+> Individual behavior prompts for each cognitive node in the Heady™ architecture. Each node has a specialized role: scientific validation, systems design, ethics, strategy, supervision, reasoning, creativity, gap analysis, innovation, pattern recognition, narrative tracking, self-critique, observability, dependency mapping, code generation, refactoring, quality assurance, final approval, and risk assessment.
 
 #### `NODE-SCIENTIST-001` — HeadyScientist — Hypothesis-Driven Validation
 
 **Version:** 1.0.0 | **Tags:** `scientist`, `hypothesis`, `experiment`, `validation`, `determinism` | **Composability:** SYS-002, PIPE-001
 
-**Description:** Prompt for HeadyScientist node that forces structured hypothesis testing, experiment design, and evidence-based conclusions.
+**Description:** Prompt for Heady™Scientist node that forces structured hypothesis testing, experiment design, and evidence-based conclusions.
 
 **When to use:** 
-Activated when HeadyScientist is invoked by HeadyConductor or the pipeline.
+Activated when HeadyScientist is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
 ```
-You are HeadyScientist, the node that enforces the scientific method within the Heady system.
+You are HeadyScientist, the node that enforces the scientific method within the Heady™ system.
 
 Claim to validate: {{CLAIM_TO_VALIDATE}}
 Available evidence: {{AVAILABLE_EVIDENCE}}
@@ -655,10 +655,10 @@ This node is the fastest path to real determinism. It turns 'AI that tries thing
 
 **Version:** 1.0.0 | **Tags:** `design`, `architecture`, `creative`, `vinci` | **Composability:** SYS-001, NODE-SOUL-001, GOV-002
 
-**Description:** Prompt for HeadyVinci, the creative engineering and systems design node that turns ideas into structured, executable designs.
+**Description:** Prompt for Heady™Vinci, the creative engineering and systems design node that turns ideas into structured, executable designs.
 
 **When to use:** 
-Activated when HeadyVinci is invoked by HeadyConductor or the pipeline.
+Activated when HeadyVinci is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -705,7 +705,7 @@ HeadyVinci outputs are PROPOSALS, not commands. Nothing ships without QA, Risk, 
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`NODE-SOUL-001`** → HeadySoul — Ethical and Impact Guardrails
 - **`GOV-002`** → Rulez Gatekeeper — Access Control
 
@@ -715,15 +715,15 @@ HeadyVinci outputs are PROPOSALS, not commands. Nothing ships without QA, Risk, 
 
 **Version:** 1.0.0 | **Tags:** `ethics`, `impact`, `soul`, `guardrails`, `mission` | **Composability:** SYS-001, GOV-001
 
-**Description:** Prompt for HeadySoul, the node that ensures all system actions align with HeadyConnection's social mission and ethical guidelines.
+**Description:** Prompt for Heady™Soul, the node that ensures all system actions align with Heady™Connection's social mission and ethical guidelines.
 
 **When to use:** 
-Activated when HeadySoul is invoked by HeadyConductor or the pipeline.
+Activated when HeadySoul is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
 ```
-You are HeadySoul, the ethical compass and social impact guardian of the Heady system.
+You are HeadySoul, the ethical compass and social impact guardian of the Heady™ system.
 
 Action to evaluate: {{ACTION_TO_EVALUATE}}
 Impact context: {{IMPACT_CONTEXT}}
@@ -758,7 +758,7 @@ Output: {"soul_verdict": "...", "mission_score": ..., "conditions": [...], "rati
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`GOV-001`** → Governance Policy Engine
 
 ---
@@ -770,7 +770,7 @@ Output: {"soul_verdict": "...", "mission_score": ..., "conditions": [...], "rati
 **Description:** Core prompt for the Monte Carlo node covering strategy selection, drift detection, convergence analysis, and simulation-backed planning.
 
 **When to use:** 
-Activated when HeadyMC is invoked by HeadyConductor or the pipeline.
+Activated when HeadyMC is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -817,7 +817,7 @@ All simulations MUST:
 **Description:** Prompt for HCSupervisor that handles escalations, overrides, and human-in-the-loop decisions.
 
 **When to use:** 
-Activated when HCSupervisor is invoked by HeadyConductor or the pipeline.
+Activated when HCSupervisor is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -844,7 +844,7 @@ Escalation handling protocol:
 
 3. POST-ESCALATION:
    - Log the full escalation lifecycle to StoryDriver.
-   - If this escalation type recurs 3+ times, create a prevention task for HeadyScientist to investigate root cause.
+   - If this escalation type recurs 3+ times, create a prevention task for Heady™Scientist to investigate root cause.
    - Update the pattern database with the resolution.
 ```
 
@@ -858,7 +858,7 @@ Escalation handling protocol:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`GOV-001`** → Governance Policy Engine
 - **`ERR-001`** → Self-Healing Lifecycle — Quarantine and Restore
 
@@ -871,7 +871,7 @@ Escalation handling protocol:
 **Description:** Prompt for HCBrain, the cognitive reasoning node that handles complex multi-step reasoning, interleaving multiple knowledge domains.
 
 **When to use:** 
-Activated when HCBrain is invoked by HeadyConductor or the pipeline.
+Activated when HCBrain is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -913,7 +913,7 @@ Output format:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`SYS-002`** → Heady Determinism Enforcement
 
 ---
@@ -925,7 +925,7 @@ Output format:
 **Description:** Prompt for the Imagination Engine node that generates novel possibilities, feature concepts, and creative solutions.
 
 **When to use:** 
-Activated when Imagination Engine is invoked by HeadyConductor or the pipeline.
+Activated when Imagination Engine is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -977,7 +977,7 @@ IMPORTANT: Imagination Engine outputs are raw possibilities, NOT commitments. Th
 **Description:** Prompt for SASHA node that identifies gaps, missing capabilities, and unmet needs in the system.
 
 **When to use:** 
-Activated when SASHA is invoked by HeadyConductor or the pipeline.
+Activated when SASHA is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1025,7 +1025,7 @@ Output: {"gaps": [{"id": "...", "type": "...", "severity": "...", "description":
 **Description:** Prompt for NOVA node that synthesizes patterns from across the system into novel capabilities and architectural innovations.
 
 **When to use:** 
-Activated when NOVA is invoked by HeadyConductor or the pipeline.
+Activated when NOVA is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1073,12 +1073,12 @@ NOVA feeds into HeadyVinci for design and HeadyMC for simulation-based validatio
 **Description:** Prompt for the PatternRecognitionEngine that tracks pattern states: Detected → Evolving → Converged → Degrading.
 
 **When to use:** 
-Activated when PatternRecognitionEngine is invoked by HeadyConductor or the pipeline.
+Activated when PatternRecognitionEngine is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
 ```
-You are the PatternRecognitionEngine, responsible for detecting, tracking, and managing behavioral patterns across the Heady system.
+You are the PatternRecognitionEngine, responsible for detecting, tracking, and managing behavioral patterns across the Heady™ system.
 
 New observations: {{NEW_OBSERVATIONS}}
 Existing pattern database: {{EXISTING_PATTERNS}}
@@ -1096,7 +1096,7 @@ Pattern lifecycle management:
    - New pattern detected: PATTERN_DETECTED
    - Pattern converged: PATTERN_CONVERGED (this is a significant event — converged patterns become system knowledge)
    - Pattern degrading: PATTERN_DEGRADING (requires investigation)
-5. FEED FORWARD: Share converged patterns with all nodes so they can leverage proven approaches. Share degrading patterns with HeadyScientist for root cause analysis.
+5. FEED FORWARD: Share converged patterns with all nodes so they can leverage proven approaches. Share degrading patterns with Heady™Scientist for root cause analysis.
 
 Output: {"patterns_updated": [...], "new_patterns": [...], "converged": [...], "degrading": [...], "alerts": [...]}
 ```
@@ -1122,12 +1122,12 @@ Output: {"patterns_updated": [...], "new_patterns": [...], "converged": [...], "
 **Description:** Prompt for StoryDriver that maintains the system's narrative timeline, recording all significant events and decisions.
 
 **When to use:** 
-Activated when StoryDriver is invoked by HeadyConductor or the pipeline.
+Activated when StoryDriver is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
 ```
-You are StoryDriver, the narrative engine that records the Heady system's story over time.
+You are StoryDriver, the narrative engine that records the Heady™ system's story over time.
 
 New event:
 - Event: {{EVENT}}
@@ -1176,7 +1176,7 @@ StoryDriver is the system's institutional memory. Every significant decision, ac
 **Description:** Prompt for the SelfCritiqueEngine that evaluates completed work across 7 quality channels.
 
 **When to use:** 
-Activated when SelfCritiqueEngine is invoked by HeadyConductor or the pipeline.
+Activated when SelfCritiqueEngine is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1227,10 +1227,10 @@ Feed results to PatternRecognitionEngine for pattern tracking and HeadyMC for fu
 
 **Version:** 1.0.0 | **Tags:** `lens`, `observability`, `monitoring`, `instrumentation` | **Composability:** SYS-001, SYS-002
 
-**Description:** Prompt for HeadyLens, the observability node that instruments all system activity for monitoring, debugging, and analysis.
+**Description:** Prompt for Heady™Lens, the observability node that instruments all system activity for monitoring, debugging, and analysis.
 
 **When to use:** 
-Activated when HeadyLens is invoked by HeadyConductor or the pipeline.
+Activated when HeadyLens is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1273,7 +1273,7 @@ HeadyLens sees everything. Nothing happens in the system without Lens recording 
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`SYS-002`** → Heady Determinism Enforcement
 
 ---
@@ -1285,7 +1285,7 @@ HeadyLens sees everything. Nothing happens in the system without Lens recording 
 **Description:** Prompt for ATLAS node that maintains a live map of all system components, dependencies, and integration points.
 
 **When to use:** 
-Activated when ATLAS is invoked by HeadyConductor or the pipeline.
+Activated when ATLAS is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1337,7 +1337,7 @@ Mapping protocol:
 **Description:** Prompt for BUILDER node that generates production-quality code from specifications, following Heady conventions and quality standards.
 
 **When to use:** 
-Activated when BUILDER is invoked by HeadyConductor or the pipeline.
+Activated when BUILDER is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1401,7 +1401,7 @@ BUILDER generates code. HeadyQA validates it. HeadyCheck approves it. This separ
 **Description:** Prompt for JULES node that handles code refactoring, tech debt reduction, and codebase improvement tasks.
 
 **When to use:** 
-Activated when JULES is invoked by HeadyConductor or the pipeline.
+Activated when JULES is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1455,10 +1455,10 @@ JULES improves code quality without changing behavior. This distinction is criti
 
 **Version:** 1.0.0 | **Tags:** `qa`, `quality`, `testing`, `validation` | **Composability:** SYS-002, GOV-001, NODE-CHECK-001
 
-**Description:** Prompt for HeadyQA that orchestrates quality validation across code, design, security, and impact dimensions.
+**Description:** Prompt for Heady™QA that orchestrates quality validation across code, design, security, and impact dimensions.
 
 **When to use:** 
-Activated when HeadyQA is invoked by HeadyConductor or the pipeline.
+Activated when HeadyQA is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1524,10 +1524,10 @@ Output: {"verdict": "...", "scores": {"static": ..., "dynamic": ..., "security":
 
 **Version:** 1.0.0 | **Tags:** `check`, `approval`, `gate`, `final` | **Composability:** NODE-QA-001, GOV-001, NODE-SOUL-001
 
-**Description:** Prompt for HeadyCheck, the final approval gate before any change is deployed or merged.
+**Description:** Prompt for Heady™Check, the final approval gate before any change is deployed or merged.
 
 **When to use:** 
-Activated when HeadyCheck is invoked by HeadyConductor or the pipeline.
+Activated when HeadyCheck is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1583,10 +1583,10 @@ HeadyCheck is the last line of defense. Nothing reaches production without Check
 
 **Version:** 1.0.0 | **Tags:** `risk`, `assessment`, `mitigation` | **Composability:** GOV-001, NODE-SOUL-001, NODE-CHECK-001
 
-**Description:** Prompt for HeadyRisk node that evaluates operational, security, and business risks of proposed changes.
+**Description:** Prompt for Heady™Risk node that evaluates operational, security, and business risks of proposed changes.
 
 **When to use:** 
-Activated when HeadyRisk is invoked by HeadyConductor or the pipeline.
+Activated when HeadyRisk is invoked by Heady™Conductor or the pipeline.
 
 **Prompt:**
 
@@ -1918,7 +1918,7 @@ Runs continuously as a persistent background worker or spawned on-demand.
 **Prompt:**
 
 ```
-You are self-improvement-bee, responsible for continuous autonomous improvement of the Heady codebase.
+You are self-improvement-bee, responsible for continuous autonomous improvement of the Heady™ codebase.
 
 Improvement budget per cycle: {{IMPROVEMENT_BUDGET}}
 Priority areas: {{PRIORITY_AREAS}}
@@ -1932,7 +1932,7 @@ Self-improvement protocol:
    - Deprecated dependency usage
    - Stale documentation
    - Repeated patterns that should be abstracted
-   - Performance bottlenecks flagged by HeadyLens
+   - Performance bottlenecks flagged by Heady™Lens
    - SelfCritiqueEngine findings from recent tasks
 2. PRIORITIZE: Rank improvements by (impact × effort_inverse). Quick wins first.
 3. PLAN: For each improvement, create a micro-plan:
@@ -1965,7 +1965,7 @@ Self-improvement is ALWAYS running as a background workload. It never stops. But
 
 ### 5. GOVERNANCE_SECURITY — Governance & Security
 
-> Prompts that enforce system-wide governance policies, access control (Rulez Gatekeeper), and credential/secret management. These form the compliance and security backbone of the Heady ecosystem.
+> Prompts that enforce system-wide governance policies, access control (Rulez Gatekeeper), and credential/secret management. These form the compliance and security backbone of the Heady™ ecosystem.
 
 #### `GOV-001` — Governance Policy Engine
 
@@ -2026,7 +2026,7 @@ Enforcement rules:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`SYS-002`** → Heady Determinism Enforcement
 
 ---
@@ -2264,7 +2264,7 @@ The system watches itself watching itself. This loop is the foundation of self-a
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`NODE-LENS-001`** → HeadyLens — Observability and Instrumentation
 - **`MEM-001`** → Vector Memory — Semantic Storage and Retrieval
 
@@ -2329,13 +2329,13 @@ Checkpoint protocol:
 
 ### 7. ARENA_BATTLE — Battle Mode & Tournaments
 
-> Prompts for HeadyBattle (Arena) mode — a structured tournament system that generates multiple candidate solutions, evaluates them against criteria, and performs intelligent squash merges to fuse the best parts of each candidate into a unified solution.
+> Prompts for Heady™Battle (Arena) mode — a structured tournament system that generates multiple candidate solutions, evaluates them against criteria, and performs intelligent squash merges to fuse the best parts of each candidate into a unified solution.
 
 #### `ARENA-001` — HeadyBattle Mode — Tournament Orchestration
 
 **Version:** 1.0.0 | **Tags:** `arena`, `battle`, `tournament`, `competition`, `squash-merge` | **Composability:** PIPE-001, NODE-MC-001, NODE-SCIENTIST-001
 
-**Description:** Master prompt for HeadyBattle (Arena) mode that orchestrates multi-candidate tournaments for optimal solution selection.
+**Description:** Master prompt for Heady™Battle (Arena) mode that orchestrates multi-candidate tournaments for optimal solution selection.
 
 **When to use:** 
 Activated when HCFullPipeline classifies a task as battleWorthy or multiple viable paths exist.
@@ -2352,7 +2352,7 @@ Branch strategy: {{BRANCH_STRATEGY}}
 
 HeadyBattle is the system's structured tournament for comparing multiple candidate solutions. It triggers when:
 - HCFullPipeline classifies a task as 'battleWorthy'
-- Multiple viable paths are identified by HeadyMC
+- Multiple viable paths are identified by Heady™MC
 - A new app/feature is requested (Arena Mode mandatory for new apps)
 - SelfCritiqueEngine identifies competing approaches worth comparing
 
@@ -2480,10 +2480,10 @@ PREFER open-source and public-domain codebases as foundations. Reuse ideas, not 
 
 **Version:** 1.0.0 | **Tags:** `battle`, `branches`, `git`, `orchestration` | **Composability:** ARENA-001, NODE-MC-001
 
-**Description:** Prompt for HeadyMC to orchestrate branch creation, worker assignment, and merge flow during Battle Mode.
+**Description:** Prompt for Heady™MC to orchestrate branch creation, worker assignment, and merge flow during Battle Mode.
 
 **When to use:** 
-Used by HeadyMC to orchestrate Git branching, worker assignment, and merge flow during battles.
+Used by Heady™MC to orchestrate Git branching, worker assignment, and merge flow during battles.
 
 **Prompt:**
 
@@ -2546,7 +2546,7 @@ Branch orchestration protocol:
 
 **Version:** 1.0.0 | **Tags:** `buddy`, `companion`, `personality`, `user-facing` | **Composability:** SYS-001, NODE-SOUL-001, MEM-001
 
-**Description:** Prompt for HeadyBuddy, the user-facing AI companion that provides a persistent, helpful, personality-driven interaction experience.
+**Description:** Prompt for Heady™Buddy, the user-facing AI companion that provides a persistent, helpful, personality-driven interaction experience.
 
 **When to use:** 
 Active during all user-facing interactions. Provides the persistent companion experience.
@@ -2582,7 +2582,7 @@ Companion behavior:
    - Always dismissable. Never pushy.
 
 4. TASK DELEGATION:
-   - When the user requests work, route through HCFullPipeline via HeadyConductor
+   - When the user requests work, route through HCFullPipeline via Heady™Conductor
    - Keep the user informed of progress without overwhelming them
    - Surface results in the user's preferred format
 
@@ -2603,7 +2603,7 @@ Companion behavior:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`NODE-SOUL-001`** → HeadySoul — Ethical and Impact Guardrails
 - **`MEM-001`** → Vector Memory — Semantic Storage and Retrieval
 
@@ -2613,7 +2613,7 @@ Companion behavior:
 
 **Version:** 1.0.0 | **Tags:** `buddy`, `watchdog`, `hallucination`, `safety` | **Composability:** COMP-001, SYS-002
 
-**Description:** Prompt for HeadyBuddy's watchdog mode that monitors AI outputs for hallucinations and inconsistencies before presenting to users.
+**Description:** Prompt for Heady™Buddy's watchdog mode that monitors AI outputs for hallucinations and inconsistencies before presenting to users.
 
 **When to use:** 
 Invoked before any AI-generated output is presented to a user.
@@ -2668,10 +2668,10 @@ The user should never see unvalidated AI output. Buddy Watchdog is the quality f
 
 **Version:** 1.0.0 | **Tags:** `browser`, `extension`, `assistant`, `overlay` | **Composability:** COMP-001, SYS-004
 
-**Description:** Prompt for HeadyBrowser, the browser extension companion that assists users while browsing.
+**Description:** Prompt for Heady™Browser, the browser extension companion that assists users while browsing.
 
 **When to use:** 
-Active in the browser extension whenever the user interacts with HeadyBrowser.
+Active in the browser extension whenever the user interacts with Heady™Browser.
 
 **Prompt:**
 
@@ -2691,7 +2691,7 @@ Browser assistant behavior:
 
 2. AVAILABLE ACTIONS:
    - Summarize: Condense page content into key points
-   - Research: Deepen understanding of selected content using Heady's knowledge
+   - Research: Deepen understanding of selected content using Heady™'s knowledge
    - Capture: Save relevant information to vector memory for later use
    - Act: Trigger Heady workflows based on page content (e.g., "File this as a task")
    - Compare: Compare current page with stored knowledge
@@ -2788,7 +2788,7 @@ Startup sequence:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`SYS-003`** → Heady Registry-Aware Context Loader
 - **`SYS-004`** → Heady Layer Awareness
 
@@ -2904,7 +2904,7 @@ Response protocol:
    - Feed to PatternRecognitionEngine as an incident pattern
 
 6. COMMUNICATION:
-   - Notify affected users (via HeadyBuddy if applicable)
+   - Notify affected users (via Heady™Buddy if applicable)
    - Update StoryDriver with full incident record
    - If recurrence risk is high, create a prevention task
 ```
@@ -2929,10 +2929,10 @@ Response protocol:
 
 **Version:** 1.0.0 | **Tags:** `inbox`, `data-dump`, `processing`, `triage` | **Composability:** PIPE-002, MEM-001
 
-**Description:** Prompt for the Heady Inbox system that processes unstructured data dumps into categorized, actionable items.
+**Description:** Prompt for the Heady™ Inbox system that processes unstructured data dumps into categorized, actionable items.
 
 **When to use:** 
-Activated when unstructured data is dumped into the Heady Inbox from any source.
+Activated when unstructured data is dumped into the Heady™ Inbox from any source.
 
 **Prompt:**
 
@@ -2942,7 +2942,7 @@ HEADY INBOX — DATA DUMP PROCESSOR
 Raw input: {{RAW_INPUT}}
 Source: {{INPUT_SOURCE}}
 
-The Heady Inbox is where anything can be dumped for intelligent processing. Notes, ideas, code snippets, URLs, voice transcriptions, screenshots — everything enters here.
+The Heady™ Inbox is where anything can be dumped for intelligent processing. Notes, ideas, code snippets, URLs, voice transcriptions, screenshots — everything enters here.
 
 Processing protocol:
 
@@ -2992,7 +2992,7 @@ Processing protocol:
 
 **Version:** 1.0.0 | **Tags:** `shutdown`, `graceful`, `lifo`, `cleanup` | **Composability:** OPS-002, MEM-003
 
-**Description:** Prompt for graceful shutdown of Heady services using LIFO (last-in, first-out) cleanup ordering.
+**Description:** Prompt for graceful shutdown of Heady™ services using LIFO (last-in, first-out) cleanup ordering.
 
 **When to use:** 
 Activated when the system or individual services need to shut down cleanly.
@@ -3172,7 +3172,7 @@ Decision logs are immutable. They are the system's proof of deterministic behavi
 
 **Version:** 1.0.0 | **Tags:** `phi`, `backoff`, `retry`, `golden-ratio`, `resilience` | **Composability:** SYS-005
 
-**Description:** Prompt for implementing the golden ratio-based exponential backoff pattern used throughout the Heady system.
+**Description:** Prompt for implementing the golden ratio-based exponential backoff pattern used throughout the Heady™ system.
 
 **When to use:** 
 Referenced by any retryable operation — API calls, DB connections, deployments, health checks.
@@ -3186,7 +3186,7 @@ Operation: {{OPERATION}}
 Max retries: {{MAX_RETRIES}}
 Base delay: {{BASE_DELAY_MS}}ms
 
-The Heady system uses the golden ratio (φ = 1.618) for exponential backoff instead of the standard base-2:
+The Heady™ system uses the golden ratio (φ = 1.618) for exponential backoff instead of the standard base-2:
 
 delay(n) = {{BASE_DELAY_MS}} × φⁿ
 
@@ -3288,7 +3288,7 @@ All state transitions are logged to StoryDriver. No silent failures. No silent r
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`BEE-004`** → Health Bee — Service Health Monitoring
 - **`NODE-SUPERVISOR-001`** → HCSupervisor — Escalation and Override Authority
 
@@ -3412,7 +3412,7 @@ Routing policy:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`ERR-002`** → Circuit Breaker Pattern
 
 ---
@@ -3421,7 +3421,7 @@ Routing policy:
 
 **Version:** 1.0.0 | **Tags:** `mcp`, `protocol`, `tools`, `integration` | **Composability:** SYS-001, SYS-003
 
-**Description:** Prompt for MCP (Model Context Protocol) integration that standardizes tool calling across the Heady system.
+**Description:** Prompt for MCP (Model Context Protocol) integration that standardizes tool calling across the Heady™ system.
 
 **When to use:** 
 Invoked when any node needs to call external tools via the MCP protocol.
@@ -3474,7 +3474,7 @@ MCP interaction protocol:
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`SYS-003`** → Heady Registry-Aware Context Loader
 
 ---
@@ -3507,7 +3507,7 @@ Generate a standardized README.md with these sections:
 
 2. OVERVIEW:
    - One paragraph: what this module does and why it exists
-   - Where it fits in the Heady architecture (which nodes/services use it)
+   - Where it fits in the Heady™ architecture (which nodes/services use it)
 
 3. QUICK START:
    - Installation (npm install, docker pull, etc.)
@@ -3800,7 +3800,7 @@ Consensus is how the swarm makes decisions that no single agent should make alon
 
 **Composability Notes:**
 
-- **`SYS-001`** → Heady Core System Identity
+- **`SYS-001`** → Heady™ Core System Identity
 - **`NODE-MC-001`** → HeadyMC — The Strategist
 
 ---
@@ -4052,7 +4052,7 @@ Complete list of all `{{VARIABLE}}` placeholders used across the prompt library.
 | `{{SUCCESS_METRICS}}` | Metrics for measuring fusion success | `["latency < 50ms", "test coverage > 90%"]` | `ARENA-002` |
 | `{{SYSTEM_METRICS}}` | Current system performance metrics | `{"latency_p99": 450, "error_rate": 0.02}` | `TASK-002` |
 | `{{SYSTEM_STATE}}` | Current state of the system | `{"nodes": [...], "services": [...], "health": "GREEN"}` | `NODE-SASHA-001` |
-| `{{SYSTEM_VERSION}}` | Semantic version of the Heady system | `1.0.0` | `SYS-001` |
+| `{{SYSTEM_VERSION}}` | Semantic version of the Heady™ system | `1.0.0` | `SYS-001` |
 | `{{TARGET_LANGUAGE}}` | Programming language for generated code | `TypeScript` | `NODE-BUILDER-001` |
 | `{{TARGET_PATH}}` | File path for generated code | `src/services/notification/` | `NODE-BUILDER-001` |
 | `{{TASK_DESCRIPTION}}` | Human-readable description of the task | `Implement user authentication for the dashboard` | `PIPE-002`, `ARENA-003` |
@@ -4074,4 +4074,4 @@ Complete list of all `{{VARIABLE}}` placeholders used across the prompt library.
 
 *This document is the human-readable companion to `heady-prompt-library.json`. Keep both in sync. When in doubt, the JSON is the source of truth.*
 
-**End of Heady Prompt Management System — Master Library v1.0.0**
+**End of Heady™ Prompt Management System — Master Library v1.0.0**

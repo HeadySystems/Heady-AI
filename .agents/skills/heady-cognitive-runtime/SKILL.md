@@ -1,12 +1,12 @@
 ---
 name: heady-cognitive-runtime
-description: Use when working with cognitive operations control, runtime governance, ternary logic operations, spatial mapping for 3D vector space, rulez gatekeeper enforcement, semantic contextualizer, or spatial context engine in the Heady ecosystem. Keywords include cognitive, runtime, governor, ternary logic, spatial mapping, rulez, gatekeeper, semantic context, cognitive controller, and intelligent process management.
+description: Use when working with cognitive operations control, runtime governance, ternary logic operations, spatial mapping for 3D vector space, rulez gatekeeper enforcement, semantic contextualizer, or spatial context engine in the Heady™ ecosystem. Keywords include cognitive, runtime, governor, ternary logic, spatial mapping, rulez, gatekeeper, semantic context, cognitive controller, and intelligent process management.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Cognitive Runtime
+# Heady™ Cognitive Runtime
 
 ## When to Use This Skill
 

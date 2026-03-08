@@ -14,6 +14,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 
 const PHI = 1.618033988749895;
@@ -27,14 +28,14 @@ class HeadyRedisPool {
      * @param {Object} opts
      * @param {Function} opts.createClient — factory: () => RedisClient
      * @param {number} opts.poolSize — max connections (default: auto-calculated)
-     * @param {number} opts.healthCheckInterval — ms between health checks (default: 30000)
+     * @param {number} opts.healthCheckInterval — ms between health checks (default: PHI_TIMING.CYCLE)
      * @param {number} opts.maxRetries — connection retry count (default: 3)
      * @param {number} opts.retryBaseMs — base retry delay (default: 100)
      */
     constructor(opts = {}) {
         this.createClient = opts.createClient;
         this.poolSize = opts.poolSize || HeadyRedisPool.calculatePoolSize();
-        this.healthCheckInterval = opts.healthCheckInterval || 30000;
+        this.healthCheckInterval = opts.healthCheckInterval || PHI_TIMING.CYCLE;
         this.maxRetries = opts.maxRetries || 3;
         this.retryBaseMs = opts.retryBaseMs || 100;
 

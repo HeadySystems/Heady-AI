@@ -67,7 +67,7 @@ const CF_ACCOUNT_ID = '8b1fa38f282c691423c6399247d53323';
 /** Known HuggingFace spaces (from analysis) */
 const HF_SPACES = {
   'heady-ai':          'HeadyMe/heady-ai',
-  'heady-systems':     'HeadySystems/heady-systems',
+  'heady-systems':     'HeadyMe/heady-systems',
   'heady-connection':  'HeadyConnection/heady-connection',
 };
 

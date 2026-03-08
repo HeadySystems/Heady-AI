@@ -3,8 +3,8 @@
 /**
  * HeadyEmbed HTTP Server
  *
- * Production Express server that wraps the HeadyEmbed service.
- * Uses Heady platform conventions: helmet, cors, compression, JSON body parsing.
+ * Production Express server that wraps the Heady™Embed service.
+ * Uses Heady™ platform conventions: helmet, cors, compression, JSON body parsing.
  */
 
 const express = require('express');

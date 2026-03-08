@@ -1,4 +1,4 @@
-# Extracted Strategic Tasks for HeadySystems
+# Extracted Strategic Tasks for Heady™Systems
 ## From: Infrastructure Hardening & >80% Reliability Goals
 
 ### Context
@@ -17,7 +17,7 @@ Launch limited-access pilot with non-profit partners to validate MCP orchestrati
 
 ### Requirements
 - **Partner Selection**: 5-10 non-profit organizations
-- **Use Case**: AI-assisted grant writing using HeadyBuddy + HeadyMCP
+- **Use Case**: AI-assisted grant writing using Heady™Buddy + HeadyMCP
 - **Success Metrics**:
   - 70%+ reduction in grant writing time
   - 85%+ user satisfaction score
@@ -237,7 +237,7 @@ export const DecisionTreeView: React.FC<{ trace: LogicTrace }> = ({ trace }) => 
 };
 ```
 
-#### Step 3: Integration with HeadyBrain
+#### Step 3: Integration with Heady™Brain
 ```markdown
 - [ ] Add LogicTracer to HeadyBrain decision pipeline
 - [ ] Stream telemetry to Logic Visualizer via WebSocket
@@ -383,7 +383,7 @@ my-custom-agent/
 ├── __tests__/
 │   └── tools/my-tool.test.ts
 ├── .heady/
-│   ├── agent.yaml          # Metadata for HeadyConnection
+│   ├── agent.yaml          # Metadata for Heady™Connection
 │   └── manifest.json       # MCP manifest
 ├── package.json
 ├── tsconfig.json
@@ -471,7 +471,7 @@ export default class Create extends Command {
 - [ ] Create developer docs site (Docusaurus)
 - [ ] Write tutorials:
   - "Your First HeadyMCP Agent in 10 Minutes"
-  - "Integrating with HeadyBrain Decisions"
+  - "Integrating with Heady™Brain Decisions"
   - "Publishing to HeadyConnection Registry"
 - [ ] Record video walkthrough (YouTube)
 - [ ] Create Discord channel for community support

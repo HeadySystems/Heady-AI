@@ -3,7 +3,7 @@
 /**
  * security-hardening.js — OWASP Top 10 Security Middleware
  *
- * New file: comprehensive security middleware layer for the Heady platform.
+ * New file: comprehensive security middleware layer for the Heady™ platform.
  *
  * Protections implemented:
  *  1. Security headers (CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy)

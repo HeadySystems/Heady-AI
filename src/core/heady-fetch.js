@@ -1,10 +1,11 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview Built-in fetch wrapper for the Heady™ AI Platform.
  * Provides retry logic, configurable timeouts, and a circuit breaker
@@ -45,7 +46,7 @@ const _circuits = new Map();
 const CB_FAILURE_THRESHOLD = 5;
 
 /** Milliseconds to wait before allowing a probe request (HALF_OPEN). */
-const CB_RESET_TIMEOUT_MS = 30000;
+const CB_RESET_TIMEOUT_MS = PHI_TIMING.CYCLE;
 
 /** Number of successes in HALF_OPEN state needed to close the circuit. */
 const CB_SUCCESS_THRESHOLD = 2;
@@ -130,7 +131,7 @@ function _recordFailure(host) {
  * @param {string} [options.method='GET']
  * @param {Object} [options.headers={}]
  * @param {string|Buffer|null} [options.body=null]
- * @param {number} [options.timeoutMs=30000]
+ * @param {number} [options.timeoutMs=PHI_TIMING.CYCLE]
  * @param {boolean} [options.parseJson=true]
  * @returns {Promise<{ status: number, headers: Object, body: string, json: Function }>}
  */
@@ -140,7 +141,7 @@ function _request(url, options = {}) {
       method = 'GET',
       headers = {},
       body = null,
-      timeoutMs = 30000,
+      timeoutMs = PHI_TIMING.CYCLE,
     } = options;
 
     let parsed;
@@ -215,7 +216,7 @@ function _request(url, options = {}) {
  * @property {string} [method='GET'] - HTTP method
  * @property {Object} [headers={}] - Request headers
  * @property {*} [body] - Request body (auto-serialised to JSON)
- * @property {number} [timeoutMs=30000] - Request timeout in ms
+ * @property {number} [timeoutMs=PHI_TIMING.CYCLE] - Request timeout in ms
  * @property {number} [retries=3] - Number of retry attempts
  * @property {number} [retryDelayMs=500] - Initial retry delay (doubles on each attempt)
  * @property {number[]} [retryOn=[408, 429, 500, 502, 503, 504]] - Status codes to retry on
@@ -234,7 +235,7 @@ async function headyFetch(url, options = {}) {
     method = 'GET',
     headers = {},
     body = null,
-    timeoutMs = 30000,
+    timeoutMs = PHI_TIMING.CYCLE,
     retries = 3,
     retryDelayMs = 500,
     retryOn = [408, 429, 500, 502, 503, 504],

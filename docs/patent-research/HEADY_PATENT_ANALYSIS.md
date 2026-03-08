@@ -1,4 +1,4 @@
-# Heady Patent System - Task Analysis Report
+# Heady™ Patent System - Task Analysis Report
 Generated: 2026-03-07
 
 ## Executive Summary

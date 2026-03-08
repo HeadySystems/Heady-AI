@@ -23,8 +23,8 @@
 # The Full-Throttle Auto-Flow Success Pipeline runs continuously
 # from that point forward.
 #
-# This file is read by HeadyConductor, HCFP Auto-Success Engine,
-# and the HeadySwarm orchestrator.
+# This file is read by Heady™Conductor, HCFP Auto-Success Engine,
+# and the Heady™Swarm orchestrator.
 
 version: "2.0.0"
 name: FinalProductionRebuildDirective
@@ -58,7 +58,7 @@ phases:
     status: COMPLETE
     steps:
       - "All stale docs archived to docs/archive/"
-      - "All heady.io domain references fixed to headyio.com"
+      - "All headyio.com domain references fixed to headyio.com"
       - "User identity updated to HeadyMe (e@headyconnection.org)"
       - "Config files cleaned: user-secrets, observability, device-management, worker-alerts"
     gate: "All stale data archived — PASSED"
@@ -168,7 +168,7 @@ phases:
     steps:
       - "Domain connectivity check — all 8+ domains return 200"
       - "API health check — conductor, brain, billing endpoints healthy"
-      - "Site content audit — zero stale data, zero localhost, zero heady.io"
+      - "Site content audit — zero stale data, zero localhost, zero headyio.com"
       - "Security scan — no exposed secrets, PQC active"
       - "Git push to all remotes (HeadySystems, HeadyMe)"
       - "Log PRODUCTION-LIVE timestamp"
@@ -207,6 +207,6 @@ foundation_first:
   rule: >
     No product site may be deployed until the foundation (phases 1-5)
     is fully green. Product repos are thin consumers of the foundation
-    API/SDK served via HeadyConductor.
+    API/SDK served via Heady™Conductor.
   enforcement: "HeadyConductor checks phase gates"
   exceptions: "None — this rule has no exceptions"

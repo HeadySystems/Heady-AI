@@ -20,7 +20,7 @@ You are building out every planned/incomplete component in the Heady™ monorepo
 - No `localhost` references — all URLs point to Cloud Run or Cloudflare
 - Node.js 20+ with CommonJS (require/module.exports) unless package specifies ESM
 - Every service MUST have `/health/live` endpoint
-- Every file MUST have the HeadySystems Inc. copyright header
+- Every file MUST have the Heady™Systems Inc. copyright header
 
 ### BUILD 1: Complete the Thin Services
 
@@ -70,7 +70,7 @@ Build the pilot onboarding flow:
 
 #### `packages/core/` (currently empty)
 
-Build the Heady core package:
+Build the Heady™ core package:
 
 - Re-exports from phi-math, csl-router, kernel
 - Provides `createHeadyInstance()` factory

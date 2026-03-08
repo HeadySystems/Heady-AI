@@ -182,7 +182,7 @@ This enables **sparse computation** — algorithms skip -1 positions entirely, y
 
 ### 6.3 · Liquid Architecture & Liquid Neural Networks
 
-Standard neural networks operate on static, discrete-time architectures. The Heady system must be underpinned by **Liquid Neural Networks (LNNs)** using Liquid Time-Constant (LTC) dynamics, where each neuron's integration window changes in real-time to match evolving input statistics. **Closed-Form Continuous-time (CfC) Networks** replace expensive ODEs with analytical approximations, preserving temporal adaptability while eliminating step-by-step numerical integration.
+Standard neural networks operate on static, discrete-time architectures. The Heady™ system must be underpinned by **Liquid Neural Networks (LNNs)** using Liquid Time-Constant (LTC) dynamics, where each neuron's integration window changes in real-time to match evolving input statistics. **Closed-Form Continuous-time (CfC) Networks** replace expensive ODEs with analytical approximations, preserving temporal adaptability while eliminating step-by-step numerical integration.
 
 ### 6.4 · The Cathedral Architecture
 

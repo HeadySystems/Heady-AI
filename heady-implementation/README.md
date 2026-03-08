@@ -1,9 +1,9 @@
-# Heady Sovereign AI OS — Complete Research & Implementation Package
+# Heady™ Sovereign AI OS — Complete Research & Implementation Package
 
 ## Overview
 
 This package contains the complete output of a 7-section deep research and implementation effort
-for the Heady Latent OS platform. Every file uses **phi-continuous scaling** — no arbitrary
+for the Heady™ Latent OS platform. Every file uses **phi-continuous scaling** — no arbitrary
 fixed constants. All thresholds, weights, cache sizes, queue depths, timing, and ratios are
 derived from φ (golden ratio), Fibonacci sequences, and CSL (Continuous Semantic Logic) gates.
 

@@ -87,7 +87,7 @@ const PROVIDER_TOKEN_RATES = {
 const PROVIDER_PRIORITY = ['local', 'groq', 'perplexity', 'google', 'openai', 'anthropic'];
 
 /**
- * Millisecond timeout for HeadySoul override validity window.
+ * Millisecond timeout for Heady™Soul override validity window.
  * Uses phi-power × 1000 series: PHI^5 × 1000 ≈ 11090 ms.
  * @constant {number}
  */

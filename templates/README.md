@@ -1,4 +1,4 @@
-# Heady Template Pack
+# Heady™ Template Pack
 
 This pack consolidates the strongest reusable HeadyBee and HeadySwarm patterns I found across the public HeadyMe repositories into an integration-ready template system focused on full template functionality, optimized projection, deployment wiring, and autonomous setup.
 

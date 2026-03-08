@@ -1,6 +1,7 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @file ui-projection-engine.js
- * @description Dynamic UI generation engine for HeadyBuddy.
+ * @description Dynamic UI generation engine for Heady™Buddy.
  *   Produces optimal, Sacred-Geometry-aligned layout projections based on
  *   user preferences, device characteristics, role, subscription tier, and
  *   HeadyBee / HeadySwarm template configurations.
@@ -463,7 +464,7 @@ export class UIProjectionEngine {
           collapsible: w.collapsible ?? true,
           requiredTier: w.requiredTier || 'free',
           defaultVisible: w.defaultVisible ?? true,
-          refreshIntervalMs: w.refreshIntervalMs || 30_000,
+          refreshIntervalMs: w.refreshIntervalMs || PHI_TIMING.CYCLE,
         };
       });
   }

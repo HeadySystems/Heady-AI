@@ -1,7 +1,7 @@
 'use strict';
 /**
  * self-awareness.js — HeadySelfAwareness
- * Metacognition engine for the Heady Sovereign AI Platform.
+ * Metacognition engine for the Heady™ Sovereign AI Platform.
  * From MASTER_DIRECTIVES Stage 14.
  *
  * Capabilities:

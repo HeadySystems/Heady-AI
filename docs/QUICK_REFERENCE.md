@@ -1,4 +1,4 @@
-# Heady Improvements - Quick Reference
+# Heady™ Improvements - Quick Reference
 
 ## Top 10 Value Drivers ($18M+ Total)
 

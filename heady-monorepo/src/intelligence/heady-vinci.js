@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  */
 
@@ -112,7 +112,7 @@ class HeadyVinci extends EventEmitter {
    * @param {string} task.id
    * @param {string} task.type
    * @param {object} task.payload
-   * @param {object} [context] - Assembled context from HeadyBrains
+   * @param {object} [context] - Assembled context from Heady™Brains
    * @returns {Promise<ExecutionPlan>}
    */
   async plan(task, context = {}) {

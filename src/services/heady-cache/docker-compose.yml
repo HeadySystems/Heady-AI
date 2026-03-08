@@ -1,6 +1,6 @@
 version: "3.9"
 
-# HeadyCache Docker Compose
+# Heady™Cache Docker Compose
 # Usage:
 #   Memory backend (default):  docker compose up heady-cache
 #   File backend:               docker compose --profile file up

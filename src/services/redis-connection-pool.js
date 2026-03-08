@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Redis Connection Pool — Phase 5 Performance Hardening
  *
@@ -9,6 +9,7 @@
  */
 
 const { getLogger } = require('./structured-logger');
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = getLogger('redis-pool');
 
 // ── Pool Configuration ───────────────────────────────────────
@@ -20,7 +21,7 @@ const DEFAULT_CONFIG = {
     maxConnections: parseInt(process.env.REDIS_POOL_MAX || '20', 10),
     minConnections: parseInt(process.env.REDIS_POOL_MIN || '3', 10),
     acquireTimeoutMs: parseInt(process.env.REDIS_ACQUIRE_TIMEOUT || '5000', 10),
-    idleTimeoutMs: parseInt(process.env.REDIS_IDLE_TIMEOUT || '30000', 10),
+    idleTimeoutMs: parseInt(process.env.REDIS_IDLE_TIMEOUT || String(PHI_TIMING.CYCLE), 10),
     retryDelayMs: 1000,
     maxRetries: 3,
 };

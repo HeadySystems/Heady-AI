@@ -105,7 +105,7 @@ console.log('\n🔌 Generating dependency stubs...');
 
 const stubs = {
   'src/utils/logger.js': `'use strict';
-// STUB: Replace with actual logger from Heady repo
+// STUB: Replace with actual logger from Heady™ repo
 module.exports = {
   info: (...args) => console.log('[INFO]', ...args),
   warn: (...args) => console.warn('[WARN]', ...args),
@@ -300,7 +300,7 @@ console.log('✓ README.md');
 const packageJson = {
   name: 'heady-security-hardening',
   version: '1.0.0',
-  description: 'Heady Security Hardening Implementation - CSL Gates, Circuit Breakers, Web3 Ledger',
+  description: 'Heady™ Security Hardening Implementation - CSL Gates, Circuit Breakers, Web3 Ledger',
   main: 'src/resilience/security-hardening.js',
   scripts: {
     test: 'node tests/run-all-tests.js'

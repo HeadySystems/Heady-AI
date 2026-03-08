@@ -1,17 +1,18 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Pattern Recognition Engine — Observes latency, success, error, and reliability patterns.
  * Emits events for cross-wiring into StoryDriver and SelfCritique.
  */
 const { EventEmitter } = require("events");
 const logger = require("./utils/logger");
+const { PHI_TIMING } = require('../shared/phi-math');
 
 class PatternEngine extends EventEmitter {
     constructor() { super(); this._patterns = new Map(); this._timer = null; this._analysisCount = 0; }
 
     start() {
         if (this._timer) return;
-        this._timer = setInterval(() => this._analyze(), 30000);
+        this._timer = setInterval(() => this._analyze(), PHI_TIMING.CYCLE);
     }
 
     stop() { if (this._timer) { clearInterval(this._timer); this._timer = null; } }

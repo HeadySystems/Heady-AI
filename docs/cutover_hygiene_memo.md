@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-The Heady ecosystem currently has **20 local repos** across four generations of development.
+The Heady™ ecosystem currently has **20 local repos** across four generations of development.
 A single, clean cutover path exists: promote `Heady-pre-production-9f2f0642` (v3.1.0,
 2026-03-06) to `HeadyMe/heady-production`, then archive or retire every predecessor.
 This memo documents the full sequence — pre-flight gates, the cutover procedure, an
@@ -31,7 +31,7 @@ archive and retirement schedule, and standing hygiene rules for the resulting re
 | headybot-core | 2026-03-06 | 232 KB | ✅ Keep — Liquid Deploy vertical projection target |
 | headyapi-core | 2026-03-06 | 232 KB | ✅ Keep — Liquid Deploy vertical projection target |
 | headyos-core | 2026-03-06 | 232 KB | ✅ Keep — Liquid Deploy vertical projection target |
-| headysystems-production | 2026-03-06 | 224 KB | ✅ Keep — live HeadySystems landing page |
+| heady-production | 2026-03-06 | 224 KB | ✅ Keep — live HeadySystems landing page |
 | headymcp-production | 2026-03-06 | 200 KB | ⚠️ Review — only an initial commit; confirm purpose |
 | **Heady-pre-production** | 2026-02-06 (v2.0.0) | 7.2 MB | 🗄️ **Archive** — superseded by 9f2f0642 |
 | **sandbox-pre-production** | 2026-02-04 | 4.4 MB | 🗄️ **Archive** — staging scratch, pre-v3 |
@@ -137,7 +137,7 @@ gcloud run services update-traffic heady-production \
 
 After full-rollout:
 1. On GitHub: navigate to `HeadyMe/Heady-pre-production-9f2f0642` → Settings → Archive repository.
-2. Add a `ARCHIVED.md` to the root with date and pointer: `Superseded by HeadyMe/heady-production on YYYY-MM-DD`.
+2. Add a `ARCHIVED.md` to the root with date and pointer: `Superseded by Heady™Me/heady-production on YYYY-MM-DD`.
 3. Move `_archive/` (1,086 files) to a dedicated `HeadyMe/heady-archive` repo before archiving, preserving history.
 
 ---

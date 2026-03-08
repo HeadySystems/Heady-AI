@@ -8,7 +8,7 @@
  * Lifecycle: SPAWN → INITIALIZE → READY → ACTIVE → DRAINING → SHUTDOWN → DEAD
  *
  * @version 1.0.0
- * @author Heady AI Team
+ * @author Heady™ AI Team
  */
 
 import { EventEmitter } from 'events';

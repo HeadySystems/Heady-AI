@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -38,6 +38,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -232,7 +233,7 @@ function createSpan(operationName, parentSpanId, attributes = {}) {
         operationName,
         startTime,
         status: 'UNSET',
-        attributes: { 'heady.component': 'pipeline', ...attributes },
+        attributes: { 'headyme.component': 'pipeline', ...attributes },
 
         /** End the span and return a complete OTLP-like span record. */
         endSpan(status = 'OK', extraAttributes = {}) {
@@ -526,7 +527,7 @@ class PipelineTelemetry {
             const heartbeat = setInterval(() => {
                 try { res.write(`:heartbeat ${new Date().toISOString()}\n\n`); }
                 catch { clearInterval(heartbeat); }
-            }, 30_000);
+            }, PHI_TIMING.CYCLE);
 
             req.on('close', () => {
                 clearInterval(heartbeat);

@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * IDE Bridge — HeadyAI-IDE Integration Service
  *
@@ -51,7 +51,7 @@ const _proposalHistory = [];
 
 /**
  * Submit a code modification proposal.
- * This is the primary entry point for HeadyAI-IDE interactions.
+ * This is the primary entry point for Heady™AI-IDE interactions.
  *
  * @param {Object} proposal
  * @param {string} proposal.intent - Natural language description of the change

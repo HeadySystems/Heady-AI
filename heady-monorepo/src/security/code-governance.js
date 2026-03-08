@@ -1,11 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  */
 /**
- * ═══ Heady Code Governance — Auth Gate ═══
+ * ═══ Heady™ Code Governance — Auth Gate ═══
  *
- * Enforces that ALL codebase modifications pass through Heady's
+ * Enforces that ALL codebase modifications pass through Heady™'s
  * auth schema. No third-party gateway (Antigravity, Cursor, etc.)
  * may modify code unless explicitly approved by the owner.
  *
@@ -14,7 +14,7 @@
  *   - src/security/rbac-vendor.js (temporary execution tokens)
  *   - .husky/pre-commit (commit-time enforcement)
  *
- * Heady AI Nodes: CONDUCTOR, MAESTRO
+ * Heady™ AI Nodes: CONDUCTOR, MAESTRO
  */
 
 const fs = require("fs");
@@ -221,7 +221,7 @@ function authorize(opts = {}) {
     // All gates passed
     result.authorized = true;
     result.reason = opts.agentId
-        ? `Agent '${opts.agentId}' authorized via Heady auth schema`
+        ? `Agent '${opts.agentId}' authorized via Heady™ auth schema`
         : `Developer '${opts.email}' authorized`;
 
     audit({ action: "AUTH_GATE_APPROVED", ...opts });

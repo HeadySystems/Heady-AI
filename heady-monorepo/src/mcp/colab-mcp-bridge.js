@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * ═══ Heady MCP Multi-Transport Bridge ═══
+ * ═══ Heady™ MCP Multi-Transport Bridge ═══
  *
- * Exposes all 30+ Heady MCP tools via EVERY available transport:
+ * Exposes all 30+ Heady™ MCP tools via EVERY available transport:
  *   1. stdio  — direct pipe (fastest, local IDE)
  *   2. SSE    — Server-Sent Events (MCP native remote, Antigravity compatible)
  *   3. HTTP   — REST/JSON-RPC (universal, any client)
@@ -49,7 +49,7 @@ const telemetry = new HeadyTelemetry(vectorStore, learner);
     // Identity
     learner.learnIdentity('Owner: HeadyConnection Inc. — Trademark serial 99680540, filed March 3 2026');
     learner.learnIdentity('Domains: headyme.com, headysystems.com, headyconnection.org, headybuddy.org, headymcp.com, headyio.com, headybot.com, headyos.com, headyapi.com');
-    learner.learnIdentity('Platforms: GitHub HeadyMe org, HuggingFace HeadyMe/HeadySystems/HeadyConnection, Google Cloud, Cloudflare');
+    learner.learnIdentity('Platforms: GitHub HeadyMe org, HuggingFace HeadyMe/HeadyMe/HeadyConnection, Google Cloud, Cloudflare');
     learner.learnIdentity('Perplexity Enterprise Pro seat active');
 
     // Standing directives
@@ -57,7 +57,7 @@ const telemetry = new HeadyTelemetry(vectorStore, learner);
     learner.learnDirective('Never keep items pending — do all autonomously ASAP');
     learner.learnDirective('Build template HeadyBees and HeadySwarms always and whenever doing tasks');
     learner.learnDirective('Ask if there are useful templates and data that can be made available for injection');
-    learner.learnDirective('Speed is paramount when dealing with Heady — be quick');
+    learner.learnDirective('Speed is paramount when dealing with Heady™ — be quick');
     learner.learnDirective('Gather ALL possible data — user, project, environment — log for comprehensive audit trail and optimization');
 
     // Preferences
@@ -86,36 +86,36 @@ function loadMCPTools() {
     HEADY_TOOLS = [
         // heady_deep_scan merged into heady_analyze (type: 'deep-scan')
         { name: 'heady_auto_flow', description: 'Combined auto-flow: HeadyBattle + HeadyCoder + HeadyAnalyze + HeadyRisks + HeadyPatterns via HCFP.', inputSchema: { type: 'object', properties: { task: { type: 'string' }, code: { type: 'string' }, context: { type: 'string' } }, required: ['task'] } },
-        { name: 'heady_chat', description: 'Chat with Heady Brain. Routes 100% through Heady AI.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, system: { type: 'string' }, model: { type: 'string', default: 'heady-brain' }, temperature: { type: 'number', default: 0.7 }, max_tokens: { type: 'integer', default: 4096 } }, required: ['message'] } },
-        { name: 'heady_complete', description: 'Code/text completion via Heady Brain.', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, language: { type: 'string' }, max_tokens: { type: 'integer', default: 2048 } }, required: ['prompt'] } },
+        { name: 'heady_chat', description: 'Chat with Heady™ Brain. Routes 100% through Heady™ AI.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, system: { type: 'string' }, model: { type: 'string', default: 'heady-brain' }, temperature: { type: 'number', default: 0.7 }, max_tokens: { type: 'integer', default: 4096 } }, required: ['message'] } },
+        { name: 'heady_complete', description: 'Code/text completion via Heady™ Brain.', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, language: { type: 'string' }, max_tokens: { type: 'integer', default: 2048 } }, required: ['prompt'] } },
         { name: 'heady_analyze', description: 'Unified Heady analysis — code, deep-scan, web research (Perplexity Sonar Pro), architecture, security, performance. All analysis flows through this tool.', inputSchema: { type: 'object', properties: { content: { type: 'string' }, type: { type: 'string', enum: ['code', 'text', 'security', 'performance', 'architecture', 'general', 'deep-scan', 'research', 'academic', 'news'], default: 'general' }, language: { type: 'string' }, focus: { type: 'string' }, directory: { type: 'string' }, timeframe: { type: 'string', default: 'all' }, maxSources: { type: 'integer', default: 10 }, context: { type: 'string' } }, required: ['content'] } },
-        { name: 'heady_embed', description: 'Generate vector embeddings via Heady embedding service.', inputSchema: { type: 'object', properties: { text: { type: 'string' }, model: { type: 'string', default: 'nomic-embed-text' } }, required: ['text'] } },
+        { name: 'heady_embed', description: 'Generate vector embeddings via Heady™ embedding service.', inputSchema: { type: 'object', properties: { text: { type: 'string' }, model: { type: 'string', default: 'nomic-embed-text' } }, required: ['text'] } },
         { name: 'heady_health', description: 'Check health/status of all Heady services.', inputSchema: { type: 'object', properties: { service: { type: 'string', enum: ['all', 'brain', 'manager', 'hcfp', 'mcp'], default: 'all' } } } },
-        { name: 'heady_deploy', description: 'Trigger deployment/service action via Heady Manager.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['deploy', 'restart', 'status', 'logs', 'scale'] }, service: { type: 'string' }, config: { type: 'object' } }, required: ['action'] } },
+        { name: 'heady_deploy', description: 'Trigger deployment/service action via Heady™ Manager.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['deploy', 'restart', 'status', 'logs', 'scale'] }, service: { type: 'string' }, config: { type: 'object' } }, required: ['action'] } },
         { name: 'heady_search', description: 'Search Heady knowledge base and service catalog.', inputSchema: { type: 'object', properties: { query: { type: 'string' }, scope: { type: 'string', enum: ['all', 'registry', 'docs', 'services', 'knowledge'], default: 'all' }, limit: { type: 'integer', default: 10 } }, required: ['query'] } },
         { name: 'heady_memory', description: 'Search HeadyMemory (3D vector space) for persistent user facts.', inputSchema: { type: 'object', properties: { query: { type: 'string' }, limit: { type: 'integer', default: 5 }, minScore: { type: 'number', default: 0.6 } }, required: ['query'] } },
-        { name: 'heady_refactor', description: 'Code refactoring suggestions from Heady Brain.', inputSchema: { type: 'object', properties: { code: { type: 'string' }, language: { type: 'string' }, goals: { type: 'array', items: { type: 'string' } } }, required: ['code'] } },
+        { name: 'heady_refactor', description: 'Code refactoring suggestions from Heady™ Brain.', inputSchema: { type: 'object', properties: { code: { type: 'string' }, language: { type: 'string' }, goals: { type: 'array', items: { type: 'string' } } }, required: ['code'] } },
         { name: 'heady_jules_task', description: 'Dispatch async background coding task to HeadyJules agent.', inputSchema: { type: 'object', properties: { task: { type: 'string' }, repository: { type: 'string' }, priority: { type: 'string', enum: ['low', 'normal', 'high', 'critical'], default: 'normal' }, autoCommit: { type: 'boolean', default: false } }, required: ['task', 'repository'] } },
         // heady_perplexity_research merged into heady_analyze (type: 'research'|'academic'|'news')
-        { name: 'heady_huggingface_model', description: 'Search/interact with HeadyHub models via HuggingFace.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['search', 'info', 'inference'] }, modelId: { type: 'string' }, query: { type: 'string' } }, required: ['action'] } },
+        { name: 'heady_huggingface_model', description: 'Search/interact with Heady™Hub models via HuggingFace.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['search', 'info', 'inference'] }, modelId: { type: 'string' }, query: { type: 'string' } }, required: ['action'] } },
         { name: 'heady_soul', description: 'HeadySoul — intelligence, consciousness, and learning layer.', inputSchema: { type: 'object', properties: { content: { type: 'string' }, action: { type: 'string', enum: ['analyze', 'optimize', 'learn'], default: 'analyze' } }, required: ['content'] } },
         { name: 'heady_hcfp_status', description: 'HCFP auto-success engine status and metrics.', inputSchema: { type: 'object', properties: { detail: { type: 'string', enum: ['status', 'metrics', 'health'], default: 'status' } } } },
         { name: 'heady_orchestrator', description: 'HeadyOrchestrator — trinity communication and wavelength alignment.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['send', 'status', 'align'], default: 'send' }, target: { type: 'string' } }, required: ['message'] } },
         { name: 'heady_battle', description: 'HeadyBattle Arena — AI node competition, evaluation, leaderboard.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['session', 'evaluate', 'arena', 'leaderboard', 'compare'] }, task: { type: 'string' }, code: { type: 'string' }, nodes: { type: 'array', items: { type: 'string' } } }, required: ['action'] } },
         { name: 'heady_patterns', description: 'Design pattern detection and deep code analysis.', inputSchema: { type: 'object', properties: { code: { type: 'string' }, action: { type: 'string', enum: ['analyze', 'library', 'suggest'], default: 'analyze' }, language: { type: 'string' } }, required: ['code'] } },
         { name: 'heady_risks', description: 'Risk assessment, vulnerability scanning, mitigation plans.', inputSchema: { type: 'object', properties: { content: { type: 'string' }, action: { type: 'string', enum: ['assess', 'mitigate', 'scan'], default: 'assess' }, scope: { type: 'string', default: 'all' } }, required: ['content'] } },
-        { name: 'heady_coder', description: 'Code generation and multi-assistant workflows via HeadyCoder.', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, action: { type: 'string', enum: ['generate', 'orchestrate', 'scaffold'], default: 'generate' }, language: { type: 'string' }, framework: { type: 'string' } }, required: ['prompt'] } },
-        { name: 'heady_claude', description: 'Advanced reasoning via HeadyJules (Opus 4.6 Thinking 1M).', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'think', 'analyze'], default: 'chat' }, system: { type: 'string' }, thinkingBudget: { type: 'integer', default: 32768 } }, required: ['message'] } },
+        { name: 'heady_coder', description: 'Code generation and multi-assistant workflows via Heady™Coder.', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, action: { type: 'string', enum: ['generate', 'orchestrate', 'scaffold'], default: 'generate' }, language: { type: 'string' }, framework: { type: 'string' } }, required: ['prompt'] } },
+        { name: 'heady_claude', description: 'Advanced reasoning via Heady™Jules (Opus 4.6 Thinking 1M).', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'think', 'analyze'], default: 'chat' }, system: { type: 'string' }, thinkingBudget: { type: 'integer', default: 32768 } }, required: ['message'] } },
         { name: 'heady_openai', description: 'HeadyCompute (GPT integration with function calling).', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'complete'], default: 'chat' }, model: { type: 'string', default: 'gpt-4o' } }, required: ['message'] } },
-        { name: 'heady_gemini', description: 'Multimodal AI via HeadyPythia.', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, action: { type: 'string', enum: ['generate', 'analyze'], default: 'generate' } }, required: ['prompt'] } },
-        { name: 'heady_groq', description: 'Ultra-fast inference via HeadyFast.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'complete'], default: 'chat' } }, required: ['message'] } },
-        { name: 'heady_codex', description: 'Code generation/transformation via HeadyBuilder (GPT-Codex).', inputSchema: { type: 'object', properties: { code: { type: 'string' }, action: { type: 'string', enum: ['generate', 'transform', 'document'], default: 'generate' }, language: { type: 'string' } }, required: ['code'] } },
-        { name: 'heady_copilot', description: 'Inline code suggestions via HeadyCopilot.', inputSchema: { type: 'object', properties: { code: { type: 'string' }, action: { type: 'string', enum: ['suggest', 'complete'], default: 'suggest' }, language: { type: 'string' } }, required: ['code'] } },
-        { name: 'heady_ops', description: 'DevOps automation via HeadyOps.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['deploy', 'infrastructure', 'monitor', 'scale'] }, service: { type: 'string' }, config: { type: 'object' } }, required: ['action'] } },
-        { name: 'heady_maid', description: 'System cleanup and scheduling via HeadyMaid.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['clean', 'schedule', 'status'], default: 'status' }, target: { type: 'string' } }, required: ['action'] } },
-        { name: 'heady_maintenance', description: 'Health monitoring, backups, updates via HeadyMaintenance.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['status', 'backup', 'update', 'restore'], default: 'status' }, service: { type: 'string' } }, required: ['action'] } },
-        { name: 'heady_lens', description: 'Visual analysis, image processing via HeadyLens.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['analyze', 'process', 'detect'], default: 'analyze' }, image_url: { type: 'string' }, prompt: { type: 'string' } }, required: ['action'] } },
-        { name: 'heady_vinci', description: 'Pattern recognition and prediction via HeadyVinci.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['learn', 'predict', 'recognize'], default: 'predict' }, data: { type: 'string' } }, required: ['data'] } },
+        { name: 'heady_gemini', description: 'Multimodal AI via Heady™Pythia.', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, action: { type: 'string', enum: ['generate', 'analyze'], default: 'generate' } }, required: ['prompt'] } },
+        { name: 'heady_groq', description: 'Ultra-fast inference via Heady™Fast.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'complete'], default: 'chat' } }, required: ['message'] } },
+        { name: 'heady_codex', description: 'Code generation/transformation via Heady™Builder (GPT-Codex).', inputSchema: { type: 'object', properties: { code: { type: 'string' }, action: { type: 'string', enum: ['generate', 'transform', 'document'], default: 'generate' }, language: { type: 'string' } }, required: ['code'] } },
+        { name: 'heady_copilot', description: 'Inline code suggestions via Heady™Copilot.', inputSchema: { type: 'object', properties: { code: { type: 'string' }, action: { type: 'string', enum: ['suggest', 'complete'], default: 'suggest' }, language: { type: 'string' } }, required: ['code'] } },
+        { name: 'heady_ops', description: 'DevOps automation via Heady™Ops.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['deploy', 'infrastructure', 'monitor', 'scale'] }, service: { type: 'string' }, config: { type: 'object' } }, required: ['action'] } },
+        { name: 'heady_maid', description: 'System cleanup and scheduling via Heady™Maid.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['clean', 'schedule', 'status'], default: 'status' }, target: { type: 'string' } }, required: ['action'] } },
+        { name: 'heady_maintenance', description: 'Health monitoring, backups, updates via Heady™Maintenance.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['status', 'backup', 'update', 'restore'], default: 'status' }, service: { type: 'string' } }, required: ['action'] } },
+        { name: 'heady_lens', description: 'Visual analysis, image processing via Heady™Lens.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['analyze', 'process', 'detect'], default: 'analyze' }, image_url: { type: 'string' }, prompt: { type: 'string' } }, required: ['action'] } },
+        { name: 'heady_vinci', description: 'Pattern recognition and prediction via Heady™Vinci.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['learn', 'predict', 'recognize'], default: 'predict' }, data: { type: 'string' } }, required: ['data'] } },
         { name: 'heady_buddy', description: 'HeadyBuddy — multi-provider personal AI assistant.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'memory', 'skills', 'tasks', 'providers'], default: 'chat' }, provider: { type: 'string', default: 'auto' } }, required: ['message'] } },
         { name: 'heady_notion', description: 'Sync Heady Knowledge Vault to Notion (11 pages).', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
         { name: 'heady_edge_ai', description: 'Cloudflare edge AI — embeddings, chat, classification, vector search.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['embed', 'chat', 'classify', 'vectorize-insert', 'vectorize-query', 'queue'] }, text: { type: 'string' }, message: { type: 'string' }, model: { type: 'string' }, topK: { type: 'number' } }, required: ['action'] } },
@@ -225,7 +225,7 @@ async function callTool(name, args) {
         }
     }
 
-    // Route to Heady Manager via HTTP
+    // Route to Heady™ Manager via HTTP
     const HEADY_MANAGER_URL = process.env.HEADY_MANAGER_URL || 'https://manager.headysystems.com';
     const HEADY_BRAIN_URL = process.env.HEADY_BRAIN_URL || HEADY_MANAGER_URL;
     const HEADY_API_KEY = process.env.HEADY_API_KEY || '';
@@ -293,7 +293,7 @@ async function callTool(name, args) {
         const data = await res.json();
         return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
     } catch (err) {
-        return { content: [{ type: 'text', text: `Heady API Error: ${err.message}` }], isError: true };
+        return { content: [{ type: 'text', text: `Heady™ API Error: ${err.message}` }], isError: true };
     }
 }
 
@@ -321,7 +321,7 @@ function startStdioTransport() {
             }
         }
     });
-    process.stderr.write('[Heady MCP] stdio transport active\n');
+    process.stderr.write('[Heady™ MCP] stdio transport active\n');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -669,7 +669,7 @@ function startHTTPServer() {
     });
 
     server.listen(PORT, async () => {
-        console.log(`\n  🐝 Heady MCP Multi-Transport Bridge`);
+        console.log(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
         console.log(`  ════════════════════════════════════`);
         console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
         console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
@@ -708,7 +708,7 @@ async function main() {
 }
 
 main().catch(err => {
-    console.error(`[Heady MCP Bridge] Fatal: ${err.message}`);
+    console.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
     process.exit(1);
 });
 

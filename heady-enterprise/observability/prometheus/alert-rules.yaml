@@ -1,4 +1,4 @@
-# HeadySystems v3.2.2 — Prometheus Alert Rules
+# Heady™Systems v3.2.2 — Prometheus Alert Rules
 # ALL thresholds derive from φ=1.618033988749895 and Fibonacci sequences.
 # CSL gate levels: DORMANT(0-0.236), LOW(0.236-0.382), MODERATE(0.382-0.618),
 #                  HIGH(0.618-0.854), CRITICAL(0.854-1.0)

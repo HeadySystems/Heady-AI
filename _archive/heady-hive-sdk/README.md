@@ -1,6 +1,6 @@
-# Heady Hive SDK
+# Heady™ Hive SDK
 
-> The official SDK for the Heady AI ecosystem — connect to Brain, Battle, Creative, MCP, and 40+ services.
+> The official SDK for the Heady™ AI ecosystem — connect to Brain, Battle, Creative, MCP, and 40+ services.
 
 [![Version](https://img.shields.io/badge/version-1.0.0-6366f1)](https://headyio.com)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -36,7 +36,7 @@ cd ~/Heady && node -e "const sdk = require('./heady-hive-sdk'); console.log(sdk.
 ## CLI
 
 ```bash
-heady chat "Hello Brain!"         # Chat with HeadyBrain
+heady chat "Hello Brain!"         # Chat with Heady™Brain
 heady analyze "function foo(){}"  # Analyze code
 heady health                      # System health check
 heady status                      # Auto-success engine (155 tasks)
@@ -50,7 +50,7 @@ heady gcloud                      # Google Cloud bridge health
 
 ## SDK Modules
 
-### HeadyClient — Main Entry Point
+### Heady™Client — Main Entry Point
 
 ```javascript
 const heady = new HeadyClient({
@@ -64,7 +64,7 @@ await heady.autoSuccess(); // 155-task engine status
 await heady.info();        // Full system info
 ```
 
-### HeadyBrain — AI Reasoning
+### Heady™Brain — AI Reasoning
 
 ```javascript
 // Chat (multi-model, best picked automatically)
@@ -87,7 +87,7 @@ const results = await heady.brain.search("liquid architecture", { limit: 10 });
 const suggestions = await heady.brain.refactor(code, { goals: ["performance"] });
 ```
 
-### HeadyBattle — Competitive Validation
+### Heady™Battle — Competitive Validation
 
 ```javascript
 // Validate a change (must score > 0.80)
@@ -109,7 +109,7 @@ const sim = await heady.battle.simulate("Deploy new auth", { iterations: 1000 })
 const leaderboard = await heady.battle.leaderboard({ limit: 10 });
 ```
 
-### HeadyCreative — Creative Engine
+### Heady™Creative — Creative Engine
 
 ```javascript
 // Generate content
@@ -130,7 +130,7 @@ const pipelines = await heady.creative.pipelines();
 const canvas = await heady.creative.canvas("create", { width: 1920, height: 1080 });
 ```
 
-### HeadyMCP — MCP Protocol Hub
+### Heady™MCP — MCP Protocol Hub
 
 ```javascript
 // List all 30+ MCP tools
@@ -149,7 +149,7 @@ const research = await heady.mcp.research("MCP protocol best practices");
 heady.mcp.addUpstream("github", { url: "localhost:3002", transport: "stdio" });
 ```
 
-### HeadyAuth — Multi-Method Authentication
+### Heady™Auth — Multi-Method Authentication
 
 ```javascript
 // Standard login
@@ -175,7 +175,7 @@ console.log(heady.auth.isAuthenticated); // true
 console.log(heady.auth.tier);            // "admin"
 ```
 
-### HeadyEvents — Real-Time SSE Streaming
+### Heady™Events — Real-Time SSE Streaming
 
 ```javascript
 // Connect to event stream
@@ -199,7 +199,7 @@ const openai = new OpenAIBridge({ apiKey: process.env.OPENAI_API_KEY });
 
 // Create an assistant with file search
 const assistant = await openai.createAssistant("Heady Helper",
-  "You analyze the Heady codebase",
+  "You analyze the Heady™ codebase",
   { model: "gpt-4o" }
 );
 
@@ -286,4 +286,4 @@ Your App
 
 ## License
 
-MIT © 2026 Heady Project
+MIT © 2026 Heady™ Project

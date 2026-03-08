@@ -42,7 +42,7 @@ const PILOT_SUCCESS_CRITERIA = {
   grantsSubmitted: {
     target: 3,
     comparison: 'GTE',
-    description: 'Minimum 3 full grants drafted with HeadyOS',
+    description: 'Minimum 3 full grants drafted with Heady™OS',
     weight: PHI ** 3,   // 4.236
   },
   p95LatencyMs: {

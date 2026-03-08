@@ -1,5 +1,5 @@
 /**
- * Base error class for all Heady platform errors.
+ * Base error class for all Heady™ platform errors.
  */
 export class HeadyError extends Error {
     /**
@@ -17,7 +17,7 @@ export class AuthError extends HeadyError {
     constructor(message: any, code?: string, status?: number, meta?: {});
 }
 /**
- * AuthProvider handles all authentication concerns for the Heady platform.
+ * AuthProvider handles all authentication concerns for the Heady™ platform.
  *
  * Usage:
  * ```js

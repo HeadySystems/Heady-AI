@@ -1,11 +1,12 @@
 /**
  * ∞ Heady™ Config Loader — Unified Configuration Loading & Hot Reload
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const fs           = require('fs');
 const path         = require('path');
 const EventEmitter = require('events');
@@ -41,7 +42,7 @@ const DEFAULTS = {
   resilience: {
     circuitBreaker: {
       failureThreshold:  5,
-      recoveryTimeoutMs: 30_000,
+      recoveryTimeoutMs: PHI_TIMING.CYCLE,  // φ⁷ × 1000
     },
     retry: {
       maxRetries:    3,
@@ -77,14 +78,14 @@ const DEFAULTS = {
     ephemeralLifetimeMs: 300_000,
   },
   monitoring: {
-    healthIntervalMs:  30_000,
+    healthIntervalMs:  PHI_TIMING.CYCLE,  // φ⁷ × 1000
     metricsWindowMs:   3_600_000,
     alertCooldownMs:   300_000,
   },
   edge: {
     rateLimitWindowMs: 60_000,
     rateLimitMax:      100,
-    proxyTimeoutMs:    30_000,
+    proxyTimeoutMs:    PHI_TIMING.CYCLE,  // φ⁷ × 1000
   },
 };
 
@@ -128,7 +129,7 @@ const VALIDATORS = {
 // ─────────────────────────────────────────────
 
 /**
- * Parse a subset of YAML sufficient for Heady config files.
+ * Parse a subset of YAML sufficient for Heady™ config files.
  * Handles: scalars, sequences, mappings, comments, multiline strings.
  * For complex YAML, use the `js-yaml` npm package instead.
  *
@@ -228,7 +229,7 @@ function deepMerge(target, source) {
  */
 
 /**
- * Unified configuration loader for the HeadySystems™ platform.
+ * Unified configuration loader for the Heady™Systems™ platform.
  *
  * Priority (highest to lowest):
  *   1. Environment variables (HEADY_*)

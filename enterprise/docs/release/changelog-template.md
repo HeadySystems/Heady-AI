@@ -125,7 +125,7 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Added
 - [AGENT] VSA (Vector Symbolic Architecture) integration in heady-brain
-- [CSL] Continuous Semantic Logic framework in `@headysystems/semantic-logic`
+- [CSL] Continuous Semantic Logic framework in `@heady-ai/semantic-logic`
 - [MCP] MCP server supporting fib(8)=21 concurrent tool contexts
 - [API] Streaming task responses via WebSocket
 
@@ -136,8 +136,8 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ---
 
 <!-- LINK REFERENCES — add new version links at the bottom -->
-[Unreleased]: https://github.com/headysystems/heady-systems/compare/v3.2.2...HEAD
-[3.2.2]: https://github.com/headysystems/heady-systems/compare/v3.2.1...v3.2.2
-[3.2.1]: https://github.com/headysystems/heady-systems/compare/v3.2.0...v3.2.1
-[3.2.0]: https://github.com/headysystems/heady-systems/compare/v3.1.0...v3.2.0
-[3.1.0]: https://github.com/headysystems/heady-systems/releases/tag/v3.1.0
+[Unreleased]: https://github.com/headyme/heady-systems/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/headyme/heady-systems/compare/v3.2.1...v3.2.2
+[3.2.1]: https://github.com/headyme/heady-systems/compare/v3.2.0...v3.2.1
+[3.2.0]: https://github.com/headyme/heady-systems/compare/v3.1.0...v3.2.0
+[3.1.0]: https://github.com/headyme/heady-systems/releases/tag/v3.1.0

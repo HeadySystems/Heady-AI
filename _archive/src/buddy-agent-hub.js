@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * BUDDY AGENT HUB — Unified Cross-Device Agent Orchestrator
@@ -246,7 +246,7 @@ class BuddyAgentHub extends EventEmitter {
             status: "processing",
             type: "direct",
             intent,
-            message: "Task queued for processing by Heady swarm.",
+            message: "Task queued for processing by Heady™ swarm.",
         };
     }
 
@@ -314,7 +314,7 @@ class BuddyAgentHub extends EventEmitter {
             desktop: {
                 title: "Desktop Setup (Native Agent)",
                 steps: [
-                    "Download HeadyBuddy Desktop from HeadyMe.com/download",
+                    "Download HeadyBuddy Desktop from Heady™Me.com/download",
                     "Install and run — the agent starts automatically",
                     "Grant screen capture and accessibility permissions",
                     "Optional: Enable Docker sandbox for isolated task execution",
@@ -324,7 +324,7 @@ class BuddyAgentHub extends EventEmitter {
             web: {
                 title: "HeadyWeb Browser Extension",
                 steps: [
-                    "Install the HeadyWeb extension from your browser's extension store",
+                    "Install the Heady™Web extension from your browser's extension store",
                     "Sign in with your Heady account",
                     "The extension delivers the full Buddy UI in any browser",
                 ],

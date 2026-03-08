@@ -1,6 +1,6 @@
 /**
  * @fileoverview WisdomStore — Long-term memory of learned patterns, anti-regression
- * guards, and pipeline knowledge for the Heady Latent OS.
+ * guards, and pipeline knowledge for the Heady™ Latent OS.
  *
  * Data persisted to wisdom.json. All sizes use Fibonacci numbers; all confidence
  * thresholds use CSL phi-harmonic levels imported from shared/phi-math.js.

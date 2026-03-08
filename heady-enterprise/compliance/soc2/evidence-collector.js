@@ -2,7 +2,7 @@
 
 /**
  * @module evidence-collector
- * @description Automated SOC 2 evidence collection from HeadyOS audit chain.
+ * @description Automated SOC 2 evidence collection from Heady™OS audit chain.
  * Pulls audit logs, access reviews, change management records, and security events.
  * Exports evidence packages as JSON, CSV, and PDF for auditor delivery.
  *

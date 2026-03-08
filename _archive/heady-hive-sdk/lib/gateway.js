@@ -1,7 +1,7 @@
 /**
  * ═══ HeadyGateway — Liquid Unified LLM Router ═══
  *
- * Single liquidity point for ALL AI traffic in the Heady ecosystem.
+ * Single liquidity point for ALL AI traffic in the Heady™ ecosystem.
  * Handles: provider routing, rate limiting, budget caps, response caching,
  * health tracking, race auditing, and automatic failover.
  *
@@ -54,7 +54,7 @@ class HeadyGateway {
      * Register a provider with the gateway.
      * @param {Object} provider
      * @param {string} provider.name - Internal name (e.g., "claude", "gemini")
-     * @param {string} provider.serviceGroup - Heady service group name (e.g., "heady-reasoning")
+     * @param {string} provider.serviceGroup - Heady™ service group name (e.g., "heady-reasoning")
      * @param {Function} provider.chat - async (message, system, opts) => { response, model, usage }
      * @param {Function} [provider.embed] - async (text, opts) => { embedding, dimensions }
      * @param {Object} [provider.limits] - { rpm: 60, tpm: 100000 }

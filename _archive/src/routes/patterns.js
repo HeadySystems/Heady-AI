@@ -1,10 +1,10 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Patterns API — Exposes circuit breaker, auto-tuning pool,
+ * Heady™ Patterns API — Exposes circuit breaker, auto-tuning pool,
  * and hot/cold cache status + management endpoints.
  */
 const express = require("express");

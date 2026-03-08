@@ -1,6 +1,6 @@
 /*
- * HeadyWeb — Central Portal — All Heady Apps
- * Micro-frontend for HeadyWeb Universal Shell
+ * HeadyWeb — Central Portal — All Heady™ Apps
+ * Micro-frontend for Heady™Web Universal Shell
  */
 const APP_CONFIG = {
   id: 'landing',

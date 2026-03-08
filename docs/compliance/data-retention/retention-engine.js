@@ -2,7 +2,7 @@
 
 /**
  * @module retention-engine
- * @description Per-tenant configurable data retention engine for HeadyOS.
+ * @description Per-tenant configurable data retention engine for Heady™OS.
  * Enforces retention windows using Fibonacci-based periods, executes
  * soft-delete → hard-delete cycles, and supports tenant-level overrides.
  *

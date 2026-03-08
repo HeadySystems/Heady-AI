@@ -1,6 +1,6 @@
 /**
  * phi-math-foundation
- * Core mathematical foundation for Heady Systems
+ * Core mathematical foundation for Heady™ Systems
  * Based on golden ratio, Fibonacci sequences, and fractal patterns
  */
 
@@ -12,7 +12,7 @@ export class PhiMathCore {
 
   /**
    * Calculate resilience score treating errors as learning events
-   * Used by HeadyVinci and Auto-Success Engine
+   * Used by Heady™Vinci and Auto-Success Engine
    */
   static calculateResilience(tasks: number, errors: number): number {
     if (tasks === 0) return 1.0;
@@ -66,7 +66,7 @@ export class PhiMathCore {
 
   /**
    * Monte Carlo confidence interval
-   * Used by HeadySims for validation
+   * Used by Heady™Sims for validation
    */
   static monteCarloConfidence(samples: number[], confidenceLevel: number = 0.95): {
     mean: number;

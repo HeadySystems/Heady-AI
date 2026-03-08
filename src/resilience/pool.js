@@ -1,10 +1,11 @@
+const { PHI_TIMING } = require('../shared/phi-math');
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady Connection Pool — Bounded concurrent request management
+ * Heady™ Connection Pool — Bounded concurrent request management
  * Prevents thundering herds and enforces max concurrency per target.
  * Addresses registry bestPracticeScores.pooling = 0.
  */
@@ -14,7 +15,7 @@ class ConnectionPool {
         this.name = name;
         this.maxConcurrent = options.maxConcurrent || 10;
         this.queueLimit = options.queueLimit || 50;
-        this.timeoutMs = options.timeoutMs || 30000;
+        this.timeoutMs = options.timeoutMs || PHI_TIMING.CYCLE;
 
         this.active = 0;
         this.queue = [];
@@ -98,7 +99,7 @@ class PoolTimeoutError extends Error {
 // These are high-water marks, not throttles — system self-regulates via vector-ops.
 const PHI = 1.618;
 const pools = {
-    cloud: new ConnectionPool('cloud', { maxConcurrent: Math.round(PHI ** 4), queueLimit: 100, timeoutMs: 30000 }),  // ~7 → fluid
+    cloud: new ConnectionPool('cloud', { maxConcurrent: Math.round(PHI ** 4), queueLimit: 100, timeoutMs: 29034 }),  // ~7 → fluid
     file: new ConnectionPool('file', { maxConcurrent: Math.round(PHI ** 6), queueLimit: 200, timeoutMs: 10000 }),  // ~18 → disk-bound
     ai: new ConnectionPool('ai', { maxConcurrent: Math.round(PHI ** 5), queueLimit: 50, timeoutMs: 90000 }),  // ~11 → API-bound
     edge: new ConnectionPool('edge', { maxConcurrent: Math.round(PHI ** 6), queueLimit: 150, timeoutMs: 5000 }),   // ~18 → fast

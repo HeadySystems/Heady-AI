@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -14,7 +14,7 @@
  *   STAKING_POOL — Holds staked tokens
  *   BURN_ADDRESS — Tokens sent here are permanently destroyed
  *
- * Heady AI Node: ATLAS
+ * Heady™ AI Node: ATLAS
  */
 
 const crypto = require("crypto");

@@ -3,7 +3,7 @@
 /**
  * HeadyCache Express Server Entry Point
  *
- * Starts the HeadyCache HTTP service with:
+ * Starts the Heady™Cache HTTP service with:
  *   - helmet (security headers)
  *   - cors (cross-origin)
  *   - compression (gzip)

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Vector Memory Optimizer for Heady Latent OS
+ * @fileoverview Vector Memory Optimizer for Heady™ Latent OS
  * @module vector-memory-optimizer
  *
  * Automated optimization advisor and monitor for pgvector-backed memory stores.

@@ -69,7 +69,7 @@
   - DOI: 10.55041/ijsrem41289 | ML algorithms for faster patent reviews, predictive analytics
   - Discussion of AI-generated IP ownership rights and ethical concerns
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - Heady's patent-bee.js with CSL-scored concept registration provides a novel approach to automated novelty detection
 - MC sampling against patent registry for prior art detection aligns with DeepInnovation AI's cosine similarity approach
 - CSL uniqueness confidence threshold at φ⁻¹ provides principled novelty scoring

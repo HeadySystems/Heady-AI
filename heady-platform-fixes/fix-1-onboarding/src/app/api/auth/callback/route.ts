@@ -1,5 +1,5 @@
 /**
- * Heady Auth Callback API Route
+ * Heady™ Auth Callback API Route
  * 
  * POST: Receives Firebase ID token after OAuth, creates session,
  *       and sets onboarding state cookie.

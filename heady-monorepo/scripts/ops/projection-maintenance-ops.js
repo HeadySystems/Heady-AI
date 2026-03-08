@@ -1,7 +1,7 @@
 /**
  * Projection Maintenance Operations
  * Detects stale public projection candidates for the digital presence orchestrator.
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 'use strict';

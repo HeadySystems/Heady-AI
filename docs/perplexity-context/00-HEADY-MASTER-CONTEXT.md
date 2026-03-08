@@ -34,7 +34,7 @@
 | `headyio-core` | Developer SDK & IO — official SDK for building on Heady | Public |
 | `headybot-core` | Bot Framework — autonomous bot orchestration with swarm intelligence | Public |
 | `heady-docs` | Documentation Hub — Single Source of Truth | Public |
-| `headysystems-production` | Live site: headysystems.com | Public |
+| `heady-production` | Live site: headysystems.com | Public |
 | `headymcp-production` | Live site: headymcp.com | Public |
 | `latent-core-dev` | Synaptic Dev Repo — two-way mirror between pgvector and Antigravity | Private |
 | `ableton-edge-production` | Live Projection: Ableton SysEx Edge Node | Private |
@@ -305,7 +305,7 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/8b1fa38f282c691423c63
 
 ---
 
-## 12. 20 Heady AI Nodes
+## 12. 20 Heady™ AI Nodes
 
 HeadyBrain, HeadySwarm, HeadyCoder, HeadyCodex, HeadyCopilot, HeadyRefactor, HeadyBattle, HeadySims, HeadyMC, HeadyDecomp, HeadyMemory, HeadyEmbed, HeadySoul, HeadyVinci, HeadyDeploy, HeadyOps, HeadyHealth, HeadyMaid, HeadyMaintenance, HeadyResearch
 

@@ -2,7 +2,7 @@
 
 /**
  * AUTO-GENERATED — tests/auto-generated/core/semantic-logic.test.js
- * Tests for HeadySemanticLogic (CSL) — src/core/semantic-logic.js
+ * Tests for Heady™SemanticLogic (CSL) — src/core/semantic-logic.js
  * Covers all static gate methods, stats tracking, and edge-case handling.
  */
 

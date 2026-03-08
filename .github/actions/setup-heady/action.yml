@@ -14,7 +14,7 @@
 #   - pnpm store path uses fib(8)=21 depth resolution
 # ============================================================
 
-name: 'Setup Heady Environment'
+name: 'Setup Heady™ Environment'
 description: 'Composite action: checkout, Node 20, pnpm, deps, Turborepo remote cache'
 
 inputs:

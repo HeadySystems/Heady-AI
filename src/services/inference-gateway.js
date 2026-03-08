@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * AI Inference Gateway — CSL-Gated, Multi-provider, Phi-Optimized.
@@ -16,7 +16,7 @@
  * Supports parallel "race" mode for instantaneous response.
  */
 const EventEmitter = require('events');
-const logger = require('./utils/logger');
+const logger = require('../utils/logger');
 
 // ─── Provider Definitions ───────────────────────────────────────
 const PROVIDERS = {
@@ -66,9 +66,9 @@ const PROVIDERS = {
         maxContext: 1000000, // 1M context window
         envKey: 'GOOGLE_API_KEY',
         models: {
-            fast: 'gemini-2.0-flash',
-            quality: 'gemini-1.5-pro',
-            default: 'gemini-2.0-flash',
+            fast: 'gemini-3-flash-preview',
+            quality: 'gemini-3.1-pro-preview',
+            default: 'gemini-3.1-pro-preview',
         },
         async complete(messages, opts = {}) {
             const apiKey = process.env.GOOGLE_API_KEY;
@@ -111,9 +111,9 @@ const PROVIDERS = {
         maxContext: 200000,
         envKey: 'ANTHROPIC_API_KEY',
         models: {
-            fast: 'claude-3-haiku-20240307',
-            quality: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
-            default: process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514',
+            fast: 'claude-sonnet-4-6',
+            quality: process.env.CLAUDE_MODEL || 'claude-opus-4-6',
+            default: process.env.CLAUDE_MODEL || 'claude-opus-4-6',
         },
         async complete(messages, opts = {}) {
             // Try secondary key first to save primary for interactive
@@ -163,8 +163,8 @@ const PROVIDERS = {
         envKey: 'OPENAI_API_KEY',
         models: {
             fast: 'gpt-4o-mini',
-            quality: 'gpt-4o',
-            default: 'gpt-4o',
+            quality: 'gpt-5.4',
+            default: 'gpt-5.4',
         },
         async complete(messages, opts = {}) {
             const apiKey = process.env.OPENAI_API_KEY;

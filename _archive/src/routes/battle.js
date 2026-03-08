@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -9,7 +9,7 @@
  *
  * Arena Mode pits multiple AI nodes against each other on the same task,
  * scores them, and maintains a cumulative leaderboard — similar to
- * HeadyAI-IDE-Next arena but using the Heady AI node roster.
+ * HeadyAI-IDE-Next arena but using the Heady™ AI node roster.
  */
 const express = require("express");
 const router = express.Router();

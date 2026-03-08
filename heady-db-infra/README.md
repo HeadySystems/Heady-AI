@@ -1,8 +1,8 @@
-# Heady Database Infrastructure
+# Heady™ Database Infrastructure
 
 **Heady Liquid Architecture v3.1** — Complete PostgreSQL/pgvector database layer with multi-tenant RLS, Redis pooling, PgBouncer configuration, and Cloud SQL provisioning.
 
-© 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+© 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
 
 ---
 
@@ -56,7 +56,7 @@ heady-db-infra/
 ### Local Development (Docker Compose)
 
 ```bash
-# From the Heady project root (uses existing docker-compose.yml):
+# From the Heady™ project root (uses existing docker-compose.yml):
 docker compose up -d postgres redis pgbouncer
 
 # Run migrations + seed:

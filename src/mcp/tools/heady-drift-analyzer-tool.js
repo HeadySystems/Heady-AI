@@ -7,7 +7,7 @@
  * Wraps CSLConfidenceGate as MCP tool with execution recording,
  * drift detection, pattern learning, and auto-reconfiguration.
  *
- * © 2026 HeadySystems Inc.
+ * © 2026 Heady™Systems Inc.
  */
 
 const crypto = require('crypto');

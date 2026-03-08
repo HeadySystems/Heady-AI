@@ -46,23 +46,7 @@
 const { EventEmitter } = require('events');
 
 // ── Canonical phi-math imports (NO local PHI/PSI definitions) ─────────────────
-const {
-  PHI,
-  PSI,
-  fib,
-  PIPELINE_STAGES,
-  STAGE_TIMEOUTS,
-  CSL_THRESHOLDS,
-  phiBackoff,
-  JUDGE_WEIGHTS,
-  OPTIMIZATION_WEIGHTS,
-  EVOLUTION_FITNESS_WEIGHTS,
-  MISTAKE_COST_WEIGHTS,
-  cosineSimilarity,
-  phiFusionWeights,
-  phiPriorityScore,
-  sigmoid,
-} = require('../../shared/phi-math');
+const { PHI, PSI, fib, PIPELINE_STAGES, STAGE_TIMEOUTS, CSL_THRESHOLDS, phiBackoff, JUDGE_WEIGHTS, OPTIMIZATION_WEIGHTS, EVOLUTION_FITNESS_WEIGHTS, MISTAKE_COST_WEIGHTS, cosineSimilarity, phiFusionWeights, phiPriorityScore, sigmoid, PHI_TIMING } = require('../../shared/phi-math');
 
 // ── Module imports ────────────────────────────────────────────────────────────
 const { judgeArenaResults } = require('../scoring/csl-judge-scorer');
@@ -264,7 +248,7 @@ class HCFullPipeline extends EventEmitter {
   // ─────────────────────────────────────────────────────────────────────────
 
   async _runStage(stageIdx, stageName, state) {
-    const timeout = STAGE_TIMEOUTS[stageName] || 30000;
+    const timeout = STAGE_TIMEOUTS[stageName] || PHI_TIMING.CYCLE;
     const maxRetries = 3;  // max phi-backoff retries
 
     this.emit('stage:start', { runId: this.runId, stage: stageIdx, stageName });
@@ -310,7 +294,7 @@ class HCFullPipeline extends EventEmitter {
         this.emit('stage:error', { runId: this.runId, stage: stageIdx, stageName, attempt, error: err.message });
 
         if (attempt < maxRetries) {
-          const delay = phiBackoff(attempt, 500, 30000);
+          const delay = phiBackoff(attempt, 500, PHI_TIMING.CYCLE);
           this.emit('stage:retry', { runId: this.runId, stageName, attempt, delayMs: delay });
           await this._sleep(delay);
         }
@@ -1076,7 +1060,7 @@ class HCFullPipeline extends EventEmitter {
       .filter(([, r]) => r.durationMs != null)
       .map(([name, r]) => ({ name, ms: r.durationMs }));
 
-    const slowStages = stageTimings.filter(s => s.ms > (STAGE_TIMEOUTS[s.name] || 30000) * PSI);
+    const slowStages = stageTimings.filter(s => s.ms > (STAGE_TIMEOUTS[s.name] || PHI_TIMING.CYCLE) * PSI);
     if (slowStages.length > 0) {
       biasChecks.push({
         type: 'timing_skew',
@@ -1224,7 +1208,7 @@ class HCFullPipeline extends EventEmitter {
       .sort(([, a], [, b]) => (b.durationMs || 0) - (a.durationMs || 0));
 
     for (const [stageName, result] of stageCosts.slice(0, 5)) {
-      const wasteScore = (result.durationMs || 0) / (STAGE_TIMEOUTS[stageName] || 30000);
+      const wasteScore = (result.durationMs || 0) / (STAGE_TIMEOUTS[stageName] || PHI_TIMING.CYCLE);
       if (wasteScore > 0.5) {
         const cslRank = phiPriorityScore(
           OPTIMIZATION_WEIGHTS.cost,

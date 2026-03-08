@@ -1,8 +1,8 @@
 /*
- * © 2026 HeadySystems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
  * Template Bee — Centralized sacred-geometry site template engine.
- * Generates branded, themed pages for every Heady domain by injecting
+ * Generates branded, themed pages for every Heady™ domain by injecting
  * site-registry data dynamically. This is the single source of truth
  * for all site rendering across edge (Cloudflare) and origin (Cloud Run).
  *
@@ -11,7 +11,7 @@
  *  - Per-site accent colors and branding
  *  - Branded auth gate with all popular login providers
  *  - HeadyBuddy chat integration
- *  - Responsive nav linking all Heady domains
+ *  - Responsive nav linking all Heady™ domains
  *
  * Used by: heady-edge-proxy (Cloudflare Worker), site-renderer.js (Cloud Run)
  */
@@ -172,7 +172,7 @@ function heady_auth(provider){
 
 // ─── Full Page Template Generator ───────────────────────────────────
 /**
- * Generates a full branded page for a Heady domain.
+ * Generates a full branded page for a Heady™ domain.
  * This is the core template that every site uses.
  *
  * @param {string} hostname - The domain to render (e.g., 'headysystems.com')

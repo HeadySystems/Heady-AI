@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ PipelineHandlers — Stage Handler Implementations
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
 'use strict';
@@ -307,7 +307,7 @@ class MonteCarloHandler {
  * Carlo top results. Each candidate is scored on multiple dimensions and the
  * best solution is selected for judgement.
  *
- * This implements Heady's "battle mode" — candidates are evaluated against
+ * This implements Heady™'s "battle mode" — candidates are evaluated against
  * each other, not just against an absolute threshold.
  */
 class ArenaHandler {

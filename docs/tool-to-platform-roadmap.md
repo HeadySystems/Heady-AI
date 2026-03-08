@@ -7,7 +7,7 @@ Move Heady from a utility workflow into a developer platform that is:
 - deterministic and autonomous,
 - easy to onboard,
 - cloud-projected from a single GitHub monorepo source of truth,
-- driven by HeadyConductor + HeadyCloudConductor + HeadySwarm + HeadyBees.
+- driven by Heady™Conductor + HeadyCloudConductor + HeadySwarm + HeadyBees.
 
 ## Current Baseline in Repo
 

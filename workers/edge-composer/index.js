@@ -1,10 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * EDGE-001: Cloudflare Worker Edge Composer
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
- * Handles edge routing, caching, and rate limiting for all Heady
+ * Handles edge routing, caching, and rate limiting for all Heady™
  * domains. Runs on Cloudflare Workers for sub-50ms global latency.
  */
 

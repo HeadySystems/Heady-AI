@@ -1,5 +1,5 @@
 /**
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Cross-Device Sync Hub — Buddy Everywhere ═══
@@ -16,6 +16,7 @@
  */
 
 const crypto = require("crypto");
+const { PHI_TIMING } = require('../shared/phi-math');
 const logger = require("./utils/logger");
 const EventEmitter = require("events");
 const fs = require("fs");
@@ -27,7 +28,7 @@ class CrossDeviceSyncHub extends EventEmitter {
         this.devices = new Map();       // deviceId → { ws, name, platform, connectedAt, lastSeen }
         this.sessions = new Map();      // sessionId → { deviceId, context, startedAt }
         this.sharedContext = new Map();  // key → { value, updatedBy, updatedAt }
-        this.heartbeatInterval = opts.heartbeatInterval || 30000;
+        this.heartbeatInterval = opts.heartbeatInterval || PHI_TIMING.CYCLE;
         this.maxMessageBytes = opts.maxMessageBytes || 64 * 1024;
         this.maxMessagesPerMinute = opts.maxMessagesPerMinute || 300;
         this.requireAuthToken = opts.requireAuthToken || process.env.HEADY_SYNC_REQUIRE_TOKEN === "true";

@@ -1,7 +1,7 @@
 /**
  * ∞ Heady™ Drift Detector — Continuous Semantic Coherence Monitoring
- * Part of HeadySystems™ Sovereign AI Platform v4.0.0
- * © 2026 HeadySystems Inc. — Proprietary
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  *
  * @module drift-detector
  * @description Continuously monitors all registered component embeddings,
@@ -12,7 +12,7 @@
  *     CRITICAL (coherence < 0.75) — triggers self-healing
  *     EMERGENCY(coherence < 0.65) — triggers escalation
  *   Integrates with SelfAwareness (passive events) and reports drift
- *   patterns to the HeadyAutobiographer via an optional callback.
+ *   patterns to the Heady™Autobiographer via an optional callback.
  */
 
 'use strict';

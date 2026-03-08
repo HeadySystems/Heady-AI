@@ -1,12 +1,12 @@
 ---
 name: heady-nonprofit-ops
-description: Use when managing nonprofit agent operations, grant workflow automation, community program management, HeadyConnection operational patterns, or 501(c)(3) compliance in the Heady ecosystem. Keywords include nonprofit, agent, grant, community, HeadyConnection, 501c3, operations, program management, and nonprofit automation.
+description: Use when managing nonprofit agent operations, grant workflow automation, community program management, HeadyConnection operational patterns, or 501(c)(3) compliance in the Heady™ ecosystem. Keywords include nonprofit, agent, grant, community, HeadyConnection, 501c3, operations, program management, and nonprofit automation.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Nonprofit Operations
+# Heady™ Nonprofit Operations
 
 ## When to Use This Skill
 
@@ -31,7 +31,7 @@ Use this skill when the user needs to:
 1. The nonprofit-agent handles HeadyConnection operational tasks.
 2. Task types: grant writing, donor management, program reporting, compliance.
 3. Templates for common nonprofit documents.
-4. Integration with HeadyConnection.org domain operations.
+4. Integration with Heady™Connection.org domain operations.
 5. Compliance checking against 501(c)(3) requirements.
 
 ### Grant Workflow
@@ -57,7 +57,7 @@ Use this skill when the user needs to:
 - Donor acknowledgment automation.
 - State registration renewals.
 
-### Integration with HeadyConnection.org
+### Integration with Heady™Connection.org
 1. Website content updates via CMS integration.
 2. Donation processing and acknowledgment.
 3. Event management and promotion.

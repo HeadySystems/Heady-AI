@@ -1,5 +1,5 @@
 # =============================================================================
-# Heady Self-Healing Workflow
+# Heady™ Self-Healing Workflow
 # Runs every 15 minutes via cron. Checks all service health endpoints,
 # monitors vector memory coherence, certificate expiry, resource utilization,
 # and triggers auto-remediation on failure. Also runnable manually.

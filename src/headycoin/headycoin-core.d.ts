@@ -5,7 +5,7 @@ export class HeadyCoinEngine extends EventEmitter<[never]> {
     totalMinted: number;
     totalBurned: number;
     /**
-     * Initialize the HeadyCoin engine.
+     * Initialize the Heady™Coin engine.
      * Creates system wallets and performs genesis mint if needed.
      */
     initialize(): object;

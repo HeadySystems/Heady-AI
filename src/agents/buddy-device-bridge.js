@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * BUDDY DEVICE BRIDGE — Cross-Device Communication & Control
@@ -17,6 +17,7 @@
  */
 "use strict";
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require("crypto");
 const EventEmitter = require("events");
 
@@ -95,7 +96,7 @@ const PLATFORMS = {
         icon: "💻",
         controlMethods: {
             nativeAgent: {
-                label: "Heady Desktop Agent",
+                label: "Heady™ Desktop Agent",
                 description: "Native agent with full OS-level control (inspired by Claude Desktop/NanoClaw)",
                 capabilities: ["shell_exec", "file_system", "process_manage", "screen_capture",
                     "screen_control", "keyboard_input", "mouse_control", "clipboard",
@@ -147,7 +148,7 @@ class DeviceBridge extends EventEmitter {
         this.taskQueue = new Map(); // taskId → TaskRecord
         this.encryptionKey = opts.encryptionKey || crypto.randomBytes(32);
         this.maxDevicesPerUser = opts.maxDevicesPerUser || 20;
-        this.heartbeatInterval = opts.heartbeatInterval || 30000; // 30s
+        this.heartbeatInterval = opts.heartbeatInterval || PHI_TIMING.CYCLE; // φ⁷ × 1000
         this.metrics = { registered: 0, tasks_dispatched: 0, tasks_completed: 0, tasks_failed: 0 };
     }
 

@@ -1,4 +1,4 @@
-# Heady AI Platform — Deployment Pipeline
+# Heady™ AI Platform — Deployment Pipeline
 # Deploys to Google Cloud Run (backend) + Cloudflare Pages (edge/sites)
 
 name: Deploy

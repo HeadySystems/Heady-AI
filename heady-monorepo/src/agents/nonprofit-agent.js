@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -77,7 +77,7 @@ const NONPROFIT_SKILLS = [
  * NonprofitConsultantAgent
  *
  * Extends the system's BaseAgent pattern. To stay decoupled from the
- * specific BaseAgent import path (which may vary across Heady builds),
+ * specific BaseAgent import path (which may vary across Heady™ builds),
  * we implement the same interface: { id, skills, describe(), handle(), getStatus() }
  * and delegate to BaseAgent when available.
  */

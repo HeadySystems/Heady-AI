@@ -1,10 +1,10 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * heady-api-gateway-v2.js
  * ════════════════════════════════════════════════════════════════════
  *
- * Heady API Gateway v2 — unified edge for all nine Heady domains.
+ * Heady™ API Gateway v2 — unified edge for all nine Heady™ domains.
  *
  * What this replaces / improves
  * ──────────────────────────────
@@ -18,7 +18,7 @@
  *   ✓ API versioning  (/api/v1/* legacy, /api/v2/* current)
  *   ✓ JWT + API-key dual authentication
  *   ✓ Per-service, per-user rate limiting (sliding window, in-memory)
- *   ✓ CORS for all 9 Heady domains + localhost dev
+ *   ✓ CORS for all 9 Heady™ domains + localhost dev
  *   ✓ SSE (Server-Sent Events) endpoint for real-time pipeline updates
  *   ✓ Request validation middleware (JSON Schema via fast validator)
  *   ✓ Proxy routing through HeadyServiceMesh (circuit-breaking, LB)
@@ -35,15 +35,15 @@
  *   /api/v3/*  — Reserved for future breaking changes.
  *   /api/vN/*  — Unrecognised version → 404 with upgrade instructions.
  *
- * Nine Heady domains handled
+ * Nine Heady™ domains handled
  * ───────────────────────────
  *   headyme.com, headysystems.com, headyapi.com, headyconnection.org,
- *   headybuddy.org, headymcp.com, headyio.com, headybot.com, headyai.com
+ *   headybuddy.org, headymcp.com, headyio.com, headybot.com, heady-ai.com
  *
  * Auth schemes
  * ─────────────
  *   Bearer <JWT>   — HS256 signed with gateway.jwtSecret (config server)
- *   X-Heady-Key    — SHA-256 HMAC API key (issued per service/user)
+ *   X-Heady™-Key    — SHA-256 HMAC API key (issued per service/user)
  *   X-Admin-Token  — Admin HMAC token (heady-service-mesh compatible)
  *   Public routes  — explicitly whitelisted, no auth required
  *
@@ -83,7 +83,7 @@ const { pipeline } = require('stream');
 // ─── φ constant ───────────────────────────────────────────────────────────────
 const PHI = 1.6180339887;
 
-// ─── All 9 Heady domains + canonical www variants ─────────────────────────────
+// ─── All 9 Heady™ domains + canonical www variants ─────────────────────────────
 const HEADY_DOMAINS = Object.freeze([
   'headyme.com',       'www.headyme.com',
   'headysystems.com',  'www.headysystems.com',
@@ -93,7 +93,7 @@ const HEADY_DOMAINS = Object.freeze([
   'headymcp.com',      'www.headymcp.com',
   'headyio.com',       'www.headyio.com',
   'headybot.com',      'www.headybot.com',
-  'headyai.com',       'www.headyai.com',
+  'heady-ai.com',       'www.heady-ai.com',
   // Dev / local
   'localhost',
   '127.0.0.1',
@@ -355,7 +355,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
     app.get('/health', (_req, res) => res.json({ status: 'ok', service: this._opts.serviceName, ts: Date.now() }));
     app.get('/ready',  (_req, res) => res.json({ status: 'ready', service: this._opts.serviceName }));
     app.get('/',       (_req, res) => res.json({
-      name:     'Heady API Gateway',
+      name:     'Heady™ API Gateway',
       version:  CURRENT_VERSION,
       docs:     'https://headyapi.com/docs',
       github:   'https://github.com/heady-project/headyapi-core',
@@ -628,7 +628,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
     router.get('/health',  (_req, res) => res.json({ status: 'ok',    version: 'v2', ts: Date.now() }));
     router.get('/ready',   (_req, res) => res.json({ status: 'ready', version: 'v2' }));
     router.get('/version', (_req, res) => res.json({
-      name:     'Heady API Gateway',
+      name:     'Heady™ API Gateway',
       current:  CURRENT_VERSION,
       versions: SUPPORTED_VERSIONS,
       docs:     'https://headyapi.com/docs',
@@ -923,7 +923,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
       headyapi:     process.env.HEADY_API_URL     || 'https://heady-manager-609590223909.us-central1.run.app',
       headymcp:     process.env.HEADY_MCP_URL     || 'https://headymcp.com',
       headybuddy:   process.env.HEADY_BUDDY_URL   || 'https://headybuddy.org',
-      headyai:      process.env.HEADY_AI_URL      || 'https://headyai.com',
+      headyai:      process.env.HEADY_AI_URL      || 'https://heady-ai.com',
       headyio:      process.env.HEADY_IO_URL      || 'https://headyio.com',
       headybot:     process.env.HEADY_BOT_URL     || 'https://headybot.com',
       headysystems: process.env.HEADY_SYSTEMS_URL || 'https://headysystems.com',

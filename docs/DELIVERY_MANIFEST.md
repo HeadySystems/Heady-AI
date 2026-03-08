@@ -1,4 +1,4 @@
-# HeadyMe Improvement Package Delivery Manifest
+# Heady™Me Improvement Package Delivery Manifest
 
 Prepared for: eric@headyconnection.org
 Date: 2026-03-07

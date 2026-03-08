@@ -3,7 +3,7 @@
 > Autonomous multi-agent AI operating system with 20 specialized intelligence nodes,
 > federated liquid routing, and post-quantum security.
 
-**© 2026 HeadySystems Inc. — PROPRIETARY AND CONFIDENTIAL**
+**© 2026 Heady™Systems Inc. — PROPRIETARY AND CONFIDENTIAL**
 
 ---
 
@@ -342,5 +342,5 @@ cloudflared tunnel run heady
 
 ## License
 
-UNLICENSED — © 2026 HeadySystems Inc. All Rights Reserved.
+UNLICENSED — © 2026 Heady™Systems Inc. All Rights Reserved.
 Unauthorized copying, modification, or distribution is strictly prohibited.

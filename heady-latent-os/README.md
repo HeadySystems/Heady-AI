@@ -1,4 +1,4 @@
-# Heady Latent OS — 100% Phi-Compliant Build
+# Heady™ Latent OS — 100% Phi-Compliant Build
 
 **Version**: 1.0.0  
 **Date**: 2026-03-08  
@@ -113,7 +113,7 @@ Directive 6 compliant empathic interface with 5 persona modes.
 - **Transition smoothing**: Phi-eased persona shifts (no jarring switches)
 
 ### 8. `orchestration/liquid-orchestrator.js` — Core Routing
-The dynamic liquid architecture that routes all work across the Heady ecosystem.
+The dynamic liquid architecture that routes all work across the Heady™ ecosystem.
 
 - **17 swarms**: Research, Code, Security, Deploy, etc.
 - **5 pools**: Hot (34%), Warm (21%), Cold (13%), Reserve (8%), Governance (5%)
@@ -242,4 +242,4 @@ This package is designed to drop into `HeadyMe/Heady-pre-production-9f2f0642`:
 
 ---
 
-*Built for HeadySystems Inc. — Sovereign AI, Sacred Geometry, Zero Compromise.*
+*Built for Heady™Systems Inc. — Sovereign AI, Sacred Geometry, Zero Compromise.*

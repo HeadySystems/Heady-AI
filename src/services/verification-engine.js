@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * VerificationEngine — Contract-based verification with auto-retry and escalation.
@@ -12,11 +12,12 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const logger = require('../utils/logger');
 
-const TIMEOUT_MS = 30_000;
+const TIMEOUT_MS = PHI_TIMING.CYCLE;
 
 /**
  * Verification contract types:

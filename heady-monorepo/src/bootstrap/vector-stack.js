@@ -99,7 +99,7 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     try { require('../services/redis-sync-bridge').registerRoutes(app); } catch { }
     try { require('../services/buddy-system').registerRoutes(app); } catch { }
 
-    // Heady core services (registerRoutes pattern)
+    // Heady™ core services (registerRoutes pattern)
     const coreServices = [
         ['../services/heady-autonomy', 'HeadyAutonomy'],
         ['../services/service-manager', 'ServiceManager'],

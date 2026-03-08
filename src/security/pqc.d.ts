@@ -4,7 +4,7 @@ export class HeadyPQCKeyStore {
     _auditLog: any[];
     /**
      * Generate a hybrid key pair (PQC + classical)
-     * @param {string} serviceId - The Heady service identifier
+     * @param {string} serviceId - The Heady™ service identifier
      * @returns {Object} { publicKey, privateKey, algorithm, created, fingerprint }
      */
     generateHybridKeyPair(serviceId: string): Object;

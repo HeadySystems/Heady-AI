@@ -1,12 +1,12 @@
 /**
- * Heady MCP Security — Unified Entry Point
+ * Heady™ MCP Security — Unified Entry Point
  * ==========================================
  * Import all security modules from a single entry.
  *
  * Usage:
- *   const { MCPGateway, RBACManager, AuditLogger } = require('@heady/mcp-security');
+ *   const { MCPGateway, RBACManager, AuditLogger } = require('@heady-ai/mcp-security');
  *
- * @module @heady/mcp-security
+ * @module @heady-ai/mcp-security
  * @version 1.0.0
  */
 

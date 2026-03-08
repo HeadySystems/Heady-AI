@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * HEADY BEES — Liquid Atom Swarm Engine
@@ -7,7 +7,7 @@
  *
  * HeadyBees are not fixed workers. They are atoms in a liquid system.
  *
- * When Heady encounters ANY obstacle or task:
+ * When Heady™ encounters ANY obstacle or task:
  *   1. The swarm intelligence calculates the EXACT number of bees needed
  *   2. Bees materialize instantly from the liquid pool
  *   3. They execute in parallel — every bee hits simultaneously

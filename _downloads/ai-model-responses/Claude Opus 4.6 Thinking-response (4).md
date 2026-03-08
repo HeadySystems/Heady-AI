@@ -14,7 +14,7 @@ All files below go into a new package: `packages/heady-semantic-logic/` in your 
 
 ```json
 {
-  "name": "@headysystems/semantic-logic",
+  "name": "@heady-ai/semantic-logic",
   "version": "1.0.0",
   "description": "Continuous Semantic Logic Gate engine for HeadySystems — transforms boolean if/else logic into differentiable fuzzy gates",
   "main": "dist/index.js",
@@ -23,7 +23,7 @@ All files below go into a new package: `packages/heady-semantic-logic/` in your 
   "author": "Eric Haywood <eric@headysystems.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HeadySystems/heady-semantic-logic"
+    "url": "https://github.com/HeadyMe/heady-semantic-logic"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -57,7 +57,7 @@ All files below go into a new package: `packages/heady-semantic-logic/` in your 
     "@typescript-eslint/eslint-plugin": "^7.0.0"
   },
   "peerDependencies": {
-    "@headysystems/core": "workspace:*"
+    "@heady-ai/core": "workspace:*"
   },
   "exports": {
     ".": {
@@ -120,7 +120,7 @@ All files below go into a new package: `packages/heady-semantic-logic/` in your 
 
 ```typescript
 /**
- * @headysystems/semantic-logic
+ * @heady-ai/semantic-logic
  * 
  * Continuous Semantic Logic Gate Engine for HeadySystems.
  * Transforms traditional boolean if/else logic into differentiable
@@ -1446,7 +1446,7 @@ export class LogicMapper {
 
   private mapSingle(match: MatchResult): MappingResult {
     const imports: string[] = [
-      "import { SemanticTruthValue, truthValue } from '@headysystems/semantic-logic';",
+      "import { SemanticTruthValue, truthValue } from '@heady-ai/semantic-logic';",
     ];
     const helpers: string[] = [];
     let ir: SemanticIRNode;
@@ -1454,38 +1454,38 @@ export class LogicMapper {
     switch (match.canonicalForm) {
       case 'BINARY_BRANCH':
         ir = this.mapBinaryBranch(match);
-        imports.push("import { AND, OR } from '@headysystems/semantic-logic/gates';");
+        imports.push("import { AND, OR } from '@heady-ai/semantic-logic/gates';");
         break;
 
       case 'COMPOUND_AND':
         ir = this.mapCompoundAnd(match);
-        imports.push("import { AND } from '@headysystems/semantic-logic/gates';");
+        imports.push("import { AND } from '@heady-ai/semantic-logic/gates';");
         break;
 
       case 'COMPOUND_OR':
         ir = this.mapCompoundOr(match);
-        imports.push("import { OR } from '@headysystems/semantic-logic/gates';");
+        imports.push("import { OR } from '@heady-ai/semantic-logic/gates';");
         break;
 
       case 'MIXED_COMPOUND':
         ir = this.mapMixedCompound(match);
-        imports.push("import { AND, OR } from '@headysystems/semantic-logic/gates';");
+        imports.push("import { AND, OR } from '@heady-ai/semantic-logic/gates';");
         break;
 
       case 'NEGATED_CONDITION':
         ir = this.mapNegated(match);
-        imports.push("import { NOT } from '@headysystems/semantic-logic/gates';");
+        imports.push("import { NOT } from '@heady-ai/semantic-logic/gates';");
         break;
 
       case 'COMPARISON_THRESHOLD':
         ir = this.mapThreshold(match);
-        imports.push("import { sigmoid } from '@headysystems/semantic-logic';");
+        imports.push("import { sigmoid } from '@heady-ai/semantic-logic';");
         break;
 
       case 'RANGE_CHECK':
         ir = this.mapRangeCheck(match);
-        imports.push("import { AND } from '@headysystems/semantic-logic/gates';");
-        imports.push("import { sigmoid } from '@headysystems/semantic-logic';");
+        imports.push("import { AND } from '@heady-ai/semantic-logic/gates';");
+        imports.push("import { sigmoid } from '@heady-ai/semantic-logic';");
         break;
 
       case 'TERNARY_SELECT':
@@ -1494,13 +1494,13 @@ export class LogicMapper {
 
       case 'MULTI_BRANCH':
         ir = this.mapMultiBranch(match);
-        imports.push("import { WEIGHTED_OR } from '@headysystems/semantic-logic/gates';");
-        imports.push("import { Defuzzifier } from '@headysystems/semantic-logic';");
+        imports.push("import { WEIGHTED_OR } from '@heady-ai/semantic-logic/gates';");
+        imports.push("import { Defuzzifier } from '@heady-ai/semantic-logic';");
         break;
 
       case 'GUARD_CLAUSE':
         ir = this.mapGuardClause(match);
-        imports.push("import { sigmoid } from '@headysystems/semantic-logic';");
+        imports.push("import { sigmoid } from '@heady-ai/semantic-logic';");
         break;
 
       case 'NULL_CHECK':
@@ -1509,7 +1509,7 @@ export class LogicMapper {
 
       case 'EQUALITY_CHECK':
         ir = this.mapEqualityCheck(match);
-        imports.push("import { gaussian } from '@headysystems/semantic-logic';");
+        imports.push("import { gaussian } from '@heady-ai/semantic-logic';");
         break;
 
       default:
@@ -1683,7 +1683,7 @@ export class LogicMapper {
 ```typescript
 /**
  * Code Generator — converts the semantic IR into actual TypeScript source code
- * that uses the @headysystems/semantic-logic runtime.
+ * that uses the @heady-ai/semantic-logic runtime.
  */
 
 import type { MappingResult, SemanticIRNode } from './logic-mapper.js';

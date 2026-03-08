@@ -16,7 +16,7 @@
 #   gcloud builds submit --config cloudbuild.yaml \
 #     --substitutions=_DEPLOY_ENV=production,_CANARY_PERCENT=5
 #
-# © 2026 HeadySystems Inc. — Proprietary
+# © 2026 Heady™Systems Inc. — Proprietary
 # ═══════════════════════════════════════════════════════════════════════════════
 
 substitutions:

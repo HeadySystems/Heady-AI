@@ -1,13 +1,13 @@
 /**
  * HeadyWeb Universal Shell — Entry Point
  *
- * Boots the Heady platform by:
+ * Boots the Heady™ platform by:
  *  1. Preloading frequently-used remotes
  *  2. Resolving the current domain to a projection
  *  3. Looking up the corresponding remote in REMOTE_REGISTRY
  *  4. Dynamically loading and mounting the micro-frontend via Module Federation
  *
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * @module shell/index
  */
@@ -46,13 +46,13 @@ const REMOTE_REGISTRY = {
     url: '/remotes/landing/remoteEntry.js',
     scope: 'headyLanding',
     module: './App',
-    description: 'Marketing landing page for HeadySystems',
+    description: 'Marketing landing page for Heady™Systems',
   },
   'heady-ide': {
     url: '/remotes/heady-ide/remoteEntry.js',
     scope: 'headyIDE',
     module: './App',
-    description: 'Code editor and IDE interface with HeadyBuddy AI',
+    description: 'Code editor and IDE interface with Heady™Buddy AI',
   },
   'swarm-dashboard': {
     url: '/remotes/swarm-dashboard/remoteEntry.js',
@@ -70,7 +70,7 @@ const REMOTE_REGISTRY = {
     url: '/remotes/projections/remoteEntry.js',
     scope: 'projectionMonitor',
     module: './App',
-    description: 'Deployment projection monitoring for Heady domains',
+    description: 'Deployment projection monitoring for Heady™ domains',
   },
   'vector-explorer': {
     url: '/remotes/vectors/remoteEntry.js',
@@ -189,7 +189,7 @@ function preloadFrequentRemotes() {
 }
 
 /**
- * Boot the HeadyWeb shell:
+ * Boot the Heady™Web shell:
  *  1. Fetch the domain API to get the current projection
  *  2. Look up the remote in REMOTE_REGISTRY
  *  3. Mount the remote into #heady-root

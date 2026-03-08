@@ -1,5 +1,5 @@
 # International Filing Timeline
-## Heady Latent OS — PCT / EPO / WIPO Strategy
+## Heady™ Latent OS — PCT / EPO / WIPO Strategy
 ### Version 1.0 | March 2026
 
 > **DISCLAIMER**: This document is for internal planning purposes only and does not constitute legal advice. International patent filing is complex and jurisdiction-specific. All deadlines and filing decisions must be reviewed by qualified patent counsel with international filing experience. Missing international filing deadlines results in permanent loss of rights in those jurisdictions.
@@ -152,7 +152,7 @@ Heady's 60+ provisional patents cover inventions that are commercially valuable 
 │  CRITICAL: Different countries have different deadlines             │
 │  (see Part 3 for jurisdiction-by-jurisdiction deadlines)           │
 │                                                                     │
-│  At minimum for Heady: Enter U.S., EPO, China, Japan               │
+│  At minimum for Heady™: Enter U.S., EPO, China, Japan               │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -378,7 +378,7 @@ EPO annual renewal fees (paid to EPO before national validation, then to each na
 
 ## Part 7: CIP and Continuation Strategy for International Portfolio
 
-### Rolling CIP Architecture for Heady
+### Rolling CIP Architecture for Heady™
 
 Per the research in section6_patent_strategy.md, an ongoing CIP strategy keeps patent families alive for iterative AI platforms:
 
@@ -414,7 +414,7 @@ As of January 19, 2025, USPTO charges surcharges for continuing applications fil
 
 ---
 
-## Part 8: Filing Decision Matrix for Heady Patents
+## Part 8: Filing Decision Matrix for Heady™ Patents
 
 | Heady Patent | US | EPO | China | Japan | S. Korea | Canada | India | Rationale |
 |---|---|---|---|---|---|---|---|---|
@@ -439,7 +439,7 @@ As of January 19, 2025, USPTO charges surcharges for continuing applications fil
 
 ---
 
-*Document Version 1.0 | March 2026 | Heady Connection, Inc.*
+*Document Version 1.0 | March 2026 | Heady™ Connection, Inc.*
 *This document is for internal strategic use only and does not constitute legal advice.*
 *All deadlines must be confirmed with qualified patent counsel before any reliance.*
 *WIPO PCT fee calculator: https://www.wipo.int/pct/en/fees/calculator.jsf*

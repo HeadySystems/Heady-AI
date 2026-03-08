@@ -1,5 +1,5 @@
 # Non-Provisional Conversion Checklist
-## Heady Latent OS — Provisional-to-Non-Provisional Patent Filing
+## Heady™ Latent OS — Provisional-to-Non-Provisional Patent Filing
 ### Version 1.0 | March 2026
 
 > **DISCLAIMER**: This checklist is for internal planning purposes only. It does not constitute legal advice. All patent applications must be prepared and filed by or under the supervision of a registered patent attorney or patent agent authorized to practice before the USPTO. Filing deadlines are jurisdictional and missing them results in permanent loss of rights.
@@ -57,7 +57,7 @@ Month 12:  HARD DEADLINE — Non-provisional must be filed
   - **Micro entity** (37 C.F.R. § 1.29): Gross income ≤ $229,164 (2025 limit); ≤ 4 previous patent applications; no obligation to assign to large entity
   - **Small entity**: Independent inventor, small business (<500 employees), or non-profit
   - Entity type affects all USPTO fees — file Certification of Micro Entity Status (PTO/SB/15A or 15B)
-- [ ] Assignment documents prepared (if assigning to Heady Connection, Inc.)
+- [ ] Assignment documents prepared (if assigning to Heady™ Connection, Inc.)
   - Use USPTO Assignment Center: https://assignment.uspto.gov
   - Record assignment before or at filing to establish ownership
 - [ ] Power of Attorney executed (if filing through patent counsel)
@@ -222,7 +222,7 @@ For each independent claim, answer the following questions:
 
 ## SECTION 4: DRAWING REQUIREMENTS
 
-### 4.1 Required Drawing Types for Heady AI Patents
+### 4.1 Required Drawing Types for Heady™ AI Patents
 
 - [ ] **System architecture diagram**: Block diagram showing all claimed system components
   - Include: processors, memory, communication buses, external interfaces
@@ -432,6 +432,6 @@ Prepare the following for each patent before the first counsel meeting:
 
 ---
 
-*Checklist Version 1.0 | March 2026 | Heady Connection, Inc.*
+*Checklist Version 1.0 | March 2026 | Heady™ Connection, Inc.*
 *This document is for internal strategic use only and does not constitute legal advice.*
 *USPTO fee amounts are as of early 2026; verify current fees at https://www.uspto.gov/learning-and-resources/fees-and-payment/uspto-fee-schedule*

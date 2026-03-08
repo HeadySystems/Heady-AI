@@ -1,5 +1,5 @@
 /**
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * HeadyAutoComplete — Outcome-Driven Task Completion Engine
@@ -16,6 +16,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
 const logger = require('../utils/logger');
@@ -50,7 +51,7 @@ const SUBTASK_TYPE = Object.freeze({
 });
 
 const MAX_RETRIES = 3;
-const VERIFICATION_TIMEOUT_MS = 30_000;
+const VERIFICATION_TIMEOUT_MS = PHI_TIMING.CYCLE;
 const MAX_PARALLEL_SUBTASKS = Math.round(PHI ** 3); // φ³ ≈ 4
 
 // ─── HeadyAutoComplete ────────────────────────────────────────────────────────

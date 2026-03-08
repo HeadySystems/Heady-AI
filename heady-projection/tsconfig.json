@@ -17,10 +17,10 @@
     "composite": true,
     "incremental": true,
     "paths": {
-      "@heady/shared-types": ["./packages/shared-types/src/index.js"],
-      "@heady/shared-types/*": ["./packages/shared-types/src/*"],
-      "@heady/shared-utils": ["./packages/shared-utils/src/index.js"],
-      "@heady/shared-utils/*": ["./packages/shared-utils/src/*"]
+      "@heady-ai/shared-types": ["./packages/shared-types/src/index.js"],
+      "@heady-ai/shared-types/*": ["./packages/shared-types/src/*"],
+      "@heady-ai/shared-utils": ["./packages/shared-utils/src/index.js"],
+      "@heady-ai/shared-utils/*": ["./packages/shared-utils/src/*"]
     }
   },
   "include": [],

@@ -1,12 +1,12 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
  * ═══ HeadyCoin Core Token Engine ═══
  *
- * HDY — The utility token of the Heady AI ecosystem.
+ * HDY — The utility token of the Heady™ AI ecosystem.
  *
  * Symbol:   HDY
  * Decimals: 8 (smallest unit: 1 heady = 0.00000001 HDY)
@@ -16,7 +16,7 @@
  * Utility:  Swarm computation credits, tier upgrades, creative IP licensing
  * Anchoring: Merkle root batched to EVM via web3-ledger-anchor.js
  *
- * Heady AI Nodes: CONDUCTOR, ATLAS
+ * Heady™ AI Nodes: CONDUCTOR, ATLAS
  */
 
 const EventEmitter = require("events");
@@ -63,7 +63,7 @@ class HeadyCoinEngine extends EventEmitter {
     }
 
     /**
-     * Initialize the HeadyCoin engine.
+     * Initialize the Heady™Coin engine.
      * Creates system wallets and performs genesis mint if needed.
      */
     initialize() {

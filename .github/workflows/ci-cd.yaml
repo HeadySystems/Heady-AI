@@ -7,7 +7,7 @@
 #
 # © HeadySystems Inc.
 
-name: Heady CI/CD Pipeline
+name: Heady™ CI/CD Pipeline
 
 on:
   push:
@@ -270,7 +270,7 @@ jobs:
             "headyio.com"
             "headybot.com"
             "headyapi.com"
-            "headyai.com"
+            "heady-ai.com"
           )
 
           FAILED=0

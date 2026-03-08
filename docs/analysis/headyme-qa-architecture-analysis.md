@@ -1,8 +1,8 @@
-# HeadyMe GitHub Organization - QA Architecture Analysis
+# Heady™Me GitHub Organization - QA Architecture Analysis
 
 ## Executive Summary
 
-This analysis covers the HeadyMe GitHub organization, focusing on the main repository **Heady-pre-production-9f2f0642** (the primary production codebase) and related core repositories. The analysis identifies testing infrastructure, architectural patterns, and recommendations for Jest-based QA hardening.
+This analysis covers the Heady™Me GitHub organization, focusing on the main repository **Heady-pre-production-9f2f0642** (the primary production codebase) and related core repositories. The analysis identifies testing infrastructure, architectural patterns, and recommendations for Jest-based QA hardening.
 
 ---
 
@@ -82,10 +82,10 @@ This analysis covers the HeadyMe GitHub organization, focusing on the main repos
 - **URL**: https://github.com/HeadyMe/headyme-core
 
 ### 2.10 Deployment Targets
-**[headysystems-production](https://github.com/HeadyMe/headysystems-production)**
+**[heady-production](https://github.com/HeadyMe/heady-production)**
 - **Description**: Live Projection: headysystems.com — Autonomous deployment target for HeadySystems Platform UI
 - **Type**: HTML deployment (100% HTML)
-- **URL**: https://github.com/HeadyMe/headysystems-production
+- **URL**: https://github.com/HeadyMe/heady-production
 
 ### 2.11 Documentation
 **[heady-docs](https://github.com/HeadyMe/heady-docs)**
@@ -361,9 +361,9 @@ module.exports = {
   testTimeout: 30000, // 30 seconds
   setupFilesAfterEnv: [], // Add setup files here when needed
   moduleNameMapper: {
-    '^@heady/core$': '<rootDir>/packages/core/src',
-    '^@heady/gateway$': '<rootDir>/packages/gateway/src',
-    '^@heady/sdk$': '<rootDir>/packages/sdk/src'
+    '^@heady-ai/core$': '<rootDir>/packages/core/src',
+    '^@heady-ai/gateway$': '<rootDir>/packages/gateway/src',
+    '^@heady-ai/sdk$': '<rootDir>/packages/sdk/src'
   }
   // Enable ts-jest when TypeScript tests are added:
   // transform: { '^.+\\.ts$': 'ts-jest' }
@@ -477,7 +477,7 @@ Based on repository analysis, the following modules appear business-critical:
 
 ### 8.4 Deployment Targets
 - **Hugging Face Spaces**: `deploy:hf` script
-- **Autonomous Deployment**: Self-healing, zero-downtime deployments via HeadySystems infrastructure
+- **Autonomous Deployment**: Self-healing, zero-downtime deployments via Heady™Systems infrastructure
 
 ---
 
@@ -651,7 +651,7 @@ Based on repository analysis, the following modules appear business-critical:
 - **HeadyMe Core**: https://github.com/HeadyMe/headyme-core
 
 ### Deployment Repositories
-- **HeadySystems Production**: https://github.com/HeadyMe/headysystems-production
+- **HeadySystems Production**: https://github.com/HeadyMe/heady-production
 - **HeadyMCP Production**: https://github.com/HeadyMe/headymcp-production
 
 ### Documentation
@@ -668,7 +668,7 @@ Based on repository analysis, the following modules appear business-critical:
 
 ## 13. Conclusion
 
-The HeadyMe organization demonstrates a **sophisticated, production-grade AI platform** with:
+The Heady™Me organization demonstrates a **sophisticated, production-grade AI platform** with:
 
 ✅ **Comprehensive test infrastructure** with Jest 30.2.0  
 ✅ **Mathematical rigor** in coverage thresholds (PHI-based)  

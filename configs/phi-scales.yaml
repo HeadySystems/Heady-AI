@@ -1,10 +1,10 @@
 # =============================================================================
-# Heady AI Orchestration Platform — Phi Scale Configuration
+# Heady™ AI Orchestration Platform — Phi Scale Configuration
 # File: configs/phi-scales.yaml
-# © 2026 HeadySystems Inc. All rights reserved.
+# © 2026 Heady™Systems Inc. All rights reserved.
 # Provisional Patent Application #52 — Continuous Semantic Logic Gates
 #
-# This file maps every dynamic parameter in the Heady orchestration system to
+# This file maps every dynamic parameter in the Heady™ orchestration system to
 # its PhiScale bounds, telemetry feed source, and phi-normalized starting
 # position. Values self-adjust every adjustment_interval_ms milliseconds based
 # on incoming telemetry. All bounds are grounded in the golden ratio (φ ≈ 1.618)

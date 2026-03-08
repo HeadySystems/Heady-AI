@@ -1,5 +1,5 @@
 /**
- * Heady Models Registry — Branded AI Model Lineup
+ * Heady™ Models Registry — Branded AI Model Lineup
  *
  * Each model maps to a specific arena configuration
  * controlling which nodes compete, timeouts, and scoring weights.

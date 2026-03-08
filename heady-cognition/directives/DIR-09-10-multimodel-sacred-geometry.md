@@ -68,7 +68,7 @@ Golden ratio (φ ≈ 1.618) and Fibonacci: the foundational scaling constants sy
 - Fibonacci provides natural non-linear scaling (not too aggressive, not too conservative)
 - φ-thresholds empirically balance sensitivity and specificity
 - Consistent mathematical foundation eliminates "why is this 10?" questions
-- Sacred Geometry aligns with Heady brand identity and visual language
+- Sacred Geometry aligns with Heady™ brand identity and visual language
 - 60+ provisional patents reference φ-scaled parameters as inventive claims
 
 ## Forbidden Constants

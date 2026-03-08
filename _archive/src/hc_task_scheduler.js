@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady Systems LLC. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * HCTaskScheduler — Priority-based task scheduling with safe mode.
  */
 const { EventEmitter } = require("events");

@@ -25,7 +25,7 @@ const os = require('os');
 // CONSTANTS — All numeric values must trace to φ or Fibonacci
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Golden ratio — the fundamental design constant of HeadySystems */
+/** Golden ratio — the fundamental design constant of Heady™Systems */
 const PHI = 1.618033988749895;
 
 /** Fibonacci sequence for numeric parameters */

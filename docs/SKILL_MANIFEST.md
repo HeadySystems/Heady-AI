@@ -1,4 +1,4 @@
-# HeadyMe Repo-Derived Skill Suite
+# Heady™Me Repo-Derived Skill Suite
 
 Source repository analysis: HeadyMe/Heady (Heady Latent OS)
 

@@ -1,17 +1,17 @@
-# @heady/core
+# @heady-ai/core
 
 > Core utilities and shared primitives for the Heady™ AI Platform.
 
 ## Install
 
 ```bash
-npm install @heady/core
+npm install @heady-ai/core
 ```
 
 ## API
 
 ```js
-const { HeadyError, validateUserId, HEADY_VERSION } = require('@heady/core');
+const { HeadyError, validateUserId, HEADY_VERSION } = require('@heady-ai/core');
 
 // Validate user IDs
 validateUserId('my-user'); // true
@@ -31,4 +31,4 @@ throw new HeadyError('Something broke', 'MY_CODE');
 
 ## License
 
-Proprietary — © 2026 HeadySystems Inc.
+Proprietary — © 2026 Heady™Systems Inc.

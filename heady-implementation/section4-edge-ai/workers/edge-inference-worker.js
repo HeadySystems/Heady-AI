@@ -1,6 +1,6 @@
 /**
  * edge-inference-worker.js
- * Heady Latent OS — Edge Inference Worker
+ * Heady™ Latent OS — Edge Inference Worker
  *
  * Cloudflare Worker module handling AI inference at the edge.
  * Endpoints: /api/chat (SSE streaming), /api/embed, /api/classify, /api/rerank
@@ -100,8 +100,8 @@ const MODELS = {
 
 /** CORS allowed origins — tighten in production */
 const ALLOWED_ORIGINS = [
-  'https://heady.ai',
-  'https://app.heady.ai',
+  'https://heady-ai.com',
+  'https://app.heady-ai.com',
   'https://headyconnection.org',
   'http://localhost:3000',
   'http://localhost:5173',
@@ -350,7 +350,7 @@ async function handleChat(request, env, ctx) {
   // Complexity scoring → model selection
   const complexity = scoreChatComplexity(body);
 
-  // If complexity is 'complex', route to origin (caller should check X-Heady-Route)
+  // If complexity is 'complex', route to origin (caller should check X-Heady™-Route)
   if (complexity === 'complex') {
     const headers = corsHeaders(request);
     headers.set('X-Heady-Route', 'origin');

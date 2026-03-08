@@ -1,4 +1,4 @@
-# HeadyWeb Universal Shell + HeadyAI-IDE Runtime
+# Heady™Web Universal Shell + HeadyAI-IDE Runtime
 
 This app now includes a working hybrid runtime for:
 

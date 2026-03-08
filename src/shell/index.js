@@ -1,5 +1,5 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
@@ -9,8 +9,8 @@
  * HeadyWeb Universal Shell — Entry Point
  * ═══════════════════════════════════════════════════════════════
  *
- * The single entry point for ALL Heady web products.
- * DNS for every Heady domain routes to this shell, which:
+ * The single entry point for ALL Heady™ web products.
+ * DNS for every Heady™ domain routes to this shell, which:
  *   1. Reads the domain via domain-router.js
  *   2. Resolves the target UI from ui-registry.js
  *   3. Loads the micro-frontend via loadDynamicRemote()
@@ -65,7 +65,7 @@ const REMOTE_REGISTRY = {
 // ── Shell Boot ──────────────────────────────────────────────────
 
 /**
- * Boot the HeadyWeb shell:
+ * Boot the Heady™Web shell:
  *   • Resolve which UI to show based on hostname
  *   • Load the corresponding micro-frontend
  *   • Mount into #heady-root

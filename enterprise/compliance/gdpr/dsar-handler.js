@@ -236,7 +236,7 @@ const receiveDSAR = async (subjectId, requestType, metadata, store, notifier, au
 
 /**
  * Gather all Personal Data associated with a data subject.
- * Queries all Heady microservices for data belonging to subjectId.
+ * Queries all Heady™ microservices for data belonging to subjectId.
  *
  * @param {string} subjectId - Data subject identifier
  * @returns {Promise<Object>} Structured data export

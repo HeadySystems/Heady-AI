@@ -1,5 +1,5 @@
 /**
- * Heady RBAC Manager
+ * Heady™ RBAC Manager
  * ==================
  * Role-Based Access Control for MCP tool execution.
  *
@@ -112,7 +112,7 @@ const JWT_ADAPTERS = {
   }),
 
   /**
-   * Heady native: roles directly in `heady_roles`
+   * Heady™ native: roles directly in `heady_roles`
    */
   heady: (payload) => ({
     roles: payload.heady_roles || ['viewer'],

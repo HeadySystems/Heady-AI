@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { Pool } from 'pg';
-import { deterministicEmbedding, coordinatesFromEmbedding, cosineSimilarity } from '@heady/shared/src/embedding.mjs';
-import { randomId, nowIso } from '@heady/shared/src/crypto.mjs';
-import { logger } from '@heady/shared/src/logger.mjs';
+import { deterministicEmbedding, coordinatesFromEmbedding, cosineSimilarity } from '@heady-ai/shared/src/embedding.mjs';
+import { randomId, nowIso } from '@heady-ai/shared/src/crypto.mjs';
+import { logger } from '@heady-ai/shared/src/logger.mjs';
 
 class FileMemoryStore {
   constructor({ dataDir }) {

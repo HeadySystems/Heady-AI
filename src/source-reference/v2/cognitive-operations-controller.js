@@ -1,10 +1,11 @@
 /*
- * © 2026 HeadySystems Inc..
+ * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 "use strict";
 
+const { PHI_TIMING } = require('../../shared/phi-math');
 const crypto = require("crypto");
 const { TERMINAL_STATES } = require("../memory-receipts");
 
@@ -179,7 +180,7 @@ class CognitiveOperationsController {
 
     getHealth() {
         const activeRuns = Array.from(this.runs.values()).filter(r => r.status === "running");
-        const staleRuns = activeRuns.filter(r => (Date.now() - r.lastHeartbeatAt) > 30_000).length;
+        const staleRuns = activeRuns.filter(r => (Date.now() - r.lastHeartbeatAt) > PHI_TIMING.CYCLE).length;
         return {
             status: staleRuns > 0 ? "degraded" : "healthy",
             runStats: {

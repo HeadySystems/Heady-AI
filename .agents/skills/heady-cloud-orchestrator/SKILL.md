@@ -1,12 +1,12 @@
 ---
 name: heady-cloud-orchestrator
-description: Use when orchestrating cloud resources, managing XET storage, automating git commits, or handling remote compute in the Heady ecosystem. Keywords include cloud orchestrator, XET storage, auto-commit, remote compute, cloud resources, multi-cloud, resource orchestration, and compute management.
+description: Use when orchestrating cloud resources, managing XET storage, automating git commits, or handling remote compute in the Heady™ ecosystem. Keywords include cloud orchestrator, XET storage, auto-commit, remote compute, cloud resources, multi-cloud, resource orchestration, and compute management.
 metadata:
   author: HeadySystems
   version: '1.0'
 ---
 
-# Heady Cloud Orchestrator
+# Heady™ Cloud Orchestrator
 
 ## When to Use This Skill
 

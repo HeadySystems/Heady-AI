@@ -65,7 +65,7 @@
   - Deterministic shortest-path routing with automatic recovery — directly relevant to Heady's battle-sim pipeline
   - Reduces control-plane LLM calls by 93%
 
-## Heady Integration Opportunity
+## Heady™ Integration Opportunity
 - Heady's 9-stage battle-sim pipeline (Task → Sim → CSL Gate → Battle/MC → Bee → Swarm → Result → Drift → Audit) aligns with tournament-style evaluation and ensemble methods in literature
 - CSL-weighted consensus scoring maps to cosine-similarity-based MoE routing validated at scale (ERMoE, HiCL)
 - Multi-contestant racing with Perplexity Sonar, Claude, GPT-4, Gemini mirrors speculative ensemble and DeePEn approaches

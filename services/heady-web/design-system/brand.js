@@ -1,6 +1,6 @@
 /**
  * HeadySystems Brand Kit — v1.0
- * Shared brand components injected across all Heady sites
+ * Shared brand components injected across all Heady™ sites
  * 
  * Usage: <script src="../design-system/brand.js"></script>
  *        Then call HeadyBrand.init({ site: 'headyme', vertical: 'headyme' });
@@ -141,7 +141,7 @@ const HeadyBrand = (() => {
             <span style="font-family:var(--font-display);font-weight:700;font-size:1.25rem;">${config.name}</span>
           </div>
           <p style="font-size:0.875rem;color:var(--text-secondary,rgba(255,255,255,0.65));line-height:1.618;max-width:280px;">
-            ${config.tagline}. Built by HeadySystems Inc.
+            ${config.tagline}. Built by Heady™Systems Inc.
           </p>
           <p style="font-size:0.75rem;color:var(--text-muted,rgba(255,255,255,0.38));margin-top:8px;">
             © ${year} HeadySystems Inc. All rights reserved.

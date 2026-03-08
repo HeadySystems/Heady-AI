@@ -1,10 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * ORCH-002: Kubernetes HeadyApp CRD + Operator
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * ═══════════════════════════════════════════════════════════════
  *
- * Custom Resource Definition for HeadyApp workloads and a simple
+ * Custom Resource Definition for Heady™App workloads and a simple
  * operator that reconciles desired state.
  */
 

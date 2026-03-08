@@ -136,7 +136,7 @@ function buildMarkdown(title, turns, sourceFile) {
         "",
         "> [!CAUTION]",
         "> This document was auto-imported from a Google Takeout Gemini export.",
-        "> Content may describe external entities not affiliated with HeadySystems Inc.",
+        "> Content may describe external entities not affiliated with Heady™Systems Inc.",
         "> Review before integrating into project documentation.",
         "",
         `> **Source:** Google Takeout (${path.basename(sourceFile)})`,

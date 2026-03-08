@@ -1,6 +1,6 @@
 # Owl Wisdom Layer
 
-The Owl layer is the first-principles and long-horizon reasoning plane for Heady.
+The Owl layer is the first-principles and long-horizon reasoning plane for Heady™.
 
 ## Responsibilities
 

@@ -4,7 +4,7 @@
  * HeadyEmbed — Main Class
  *
  * Production-quality local embedding service using @xenova/transformers (ONNX Runtime).
- * Replaces OpenAI embeddings with local transformer models on Heady AI platform.
+ * Replaces OpenAI embeddings with local transformer models on Heady™ AI platform.
  *
  * Architecture:
  *   - Sacred Geometry scaling (PHI = 1.618) for retry backoff and dimension normalization

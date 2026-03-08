@@ -1,17 +1,17 @@
 /*
- * © 2026 HeadySystems Inc. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * heady-config-server.js
  * ════════════════════════════════════════════════════════════════════
  *
- * Centralized Configuration Management Server for the Heady ecosystem.
+ * Centralized Configuration Management Server for the Heady™ ecosystem.
  *
  * Eliminates every hardcoded constant scattered across the codebase:
  *   – self-awareness.js:42   DRIFT_THRESHOLD = 0.75
- *   – self-awareness.js:41   HEARTBEAT_INTERVAL_MS = 30_000
+ *   – self-awareness.js:41   HEARTBEAT_INTERVAL_MS = PHI_TIMING.CYCLE
  *   – self-awareness.js:46   TELEMETRY_RING_SIZE = 500
  *   – buddy-core.js:28       MAX_LOG = 200
- *   – buddy-core.js:26       TASK_LOCK_TTL_MS = 30_000
+ *   – buddy-core.js:26       TASK_LOCK_TTL_MS = PHI_TIMING.CYCLE
  *   – hc-full-pipeline.js:47 MAX_CONCURRENT_RUNS = 10
  *   – bee-factory.js:35      BEES_DIR (hardcoded __dirname)
  *   – heady-conductor.js:22  MAX_BEES = 50
@@ -59,6 +59,7 @@
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
 const fs           = require('fs');
 const path         = require('path');
@@ -81,7 +82,7 @@ const DEFAULT_CONFIG_FILE = process.env.HEADY_CONFIG_FILE || '/etc/heady/config.
 
 // ─── LAYER 0: Default values ──────────────────────────────────────────────────
 //
-// Every configurable constant from the Heady codebase, keyed by dotted path.
+// Every configurable constant from the Heady™ codebase, keyed by dotted path.
 // Each entry includes: value, type, description, sourceFile, sourceLine, readonly.
 //
 const DEFAULTS = Object.freeze({
@@ -151,7 +152,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 42,
   },
   'selfAwareness.heartbeatIntervalMs': {
-    value: 30_000,
+    value: PHI_TIMING.CYCLE,
     type: 'number',
     description: 'Self-awareness telemetry heartbeat cadence in ms.',
     sourceFile: 'self-awareness.js',
@@ -181,7 +182,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 28,
   },
   'buddy.taskLockTtlMs': {
-    value: 30_000,
+    value: PHI_TIMING.CYCLE,
     type: 'number',
     description: 'TTL for task locks in TaskLockManager.',
     sourceFile: 'buddy-core.js',
@@ -258,7 +259,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 40,
   },
   'creative.generationTimeoutMs': {
-    value: 30_000,
+    value: PHI_TIMING.CYCLE,
     type: 'number',
     description: 'Timeout for a single creative generation call.',
     sourceFile: 'creative-engine.js',

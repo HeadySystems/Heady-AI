@@ -1,12 +1,12 @@
 /*
- * © 2026 Heady Systems LLC.
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * BUDDY-CORE — The Central Intelligence Node
  * ═══════════════════════════════════════════════════════════════
  *
  * Buddy is the sovereign orchestrator of the Sacred Geometry network.
- * It sits at the nexus of HeadyConductor + HCFullPipeline with:
+ * It sits at the nexus of Heady™Conductor + HCFullPipeline with:
  *   1. Unique cryptographic agent identity
  *   2. MCP dual-role (Client for vector DB, Server for sub-agent directives)
  *   3. Metacognitive self-awareness (queries own error history before decisions)

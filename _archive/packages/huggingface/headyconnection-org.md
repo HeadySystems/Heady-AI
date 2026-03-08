@@ -1,4 +1,4 @@
-# HeadyConnection Inc. — Hugging Face Organization Profile
+# Heady™Connection Inc. — Hugging Face Organization Profile
 
 ## Tagline
 
@@ -16,7 +16,7 @@ Our repositories focus on open-weight models and datasets designed to support ed
 
 ### 🛠 Contributing to HeadyConnection Inc
 
-Thank you for your interest in the Heady Directive. We value actions over words. Please follow these standards.
+Thank you for your interest in the Heady™ Directive. We value actions over words. Please follow these standards.
 
 #### 1. Code Quality Standards
 
@@ -45,7 +45,7 @@ Thank you for your interest in the Heady Directive. We value actions over words.
 
 ---
 
-## Model Card Template (for HeadyConnection repos)
+## Model Card Template (for Heady™Connection repos)
 
 ```yaml
 ---
@@ -61,7 +61,7 @@ tags:
 
 ### Model Summary
 
-**[Model Name]** is an open-weight [reasoning/utility] model provided by HeadyConnection Inc. for community use. Derived from research supported by HeadySystems Inc.
+**[Model Name]** is an open-weight [reasoning/utility] model provided by Heady™Connection Inc. for community use. Derived from research supported by Heady™Systems Inc.
 
 ### Intended Use
 

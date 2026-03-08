@@ -1,8 +1,8 @@
-# Heady Cognitive Production Runbook
+# Heady™ Cognitive Production Runbook
 
 ## Objective
 
-Operationalize the Heady + HeadyMe cognitive memory plan in live cloud with deterministic controls.
+Operationalize the Heady™ + HeadyMe cognitive memory plan in live cloud with deterministic controls.
 
 ## Runtime Control Endpoints
 

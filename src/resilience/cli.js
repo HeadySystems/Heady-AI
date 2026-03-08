@@ -3,7 +3,7 @@
 
 /**
  * create-heady-agent CLI
- * Scaffolds a new HeadyBee agent module for the Heady ecosystem
+ * Scaffolds a new HeadyBee agent module for the Heady™ ecosystem
  * 
  * Usage:
  *   create-heady-agent my-bee
@@ -133,7 +133,7 @@ async function scaffold(config, options) {
 
 async function generatePackageJson(dir, name, template) {
   const pkg = {
-    name: `@heady/${name}`,
+    name: `@heady-ai/${name}`,
     version: '0.1.0',
     description: `HeadyBee agent: ${name}`,
     main: 'src/index.js',
@@ -453,7 +453,7 @@ jobs:
 }
 
 async function generateReadme(dir, name, template) {
-  const readme = `# @heady/${name}
+  const readme = `# @heady-ai/${name}
 
 A HeadyBee agent for the [Heady™ ecosystem](https://headyme.com).
 

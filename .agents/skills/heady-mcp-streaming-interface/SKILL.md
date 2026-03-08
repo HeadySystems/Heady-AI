@@ -6,7 +6,7 @@ metadata:
   version: '1.0'
 ---
 
-# Heady MCP Streaming Interface
+# Heady™ MCP Streaming Interface
 
 ## When to Use This Skill
 

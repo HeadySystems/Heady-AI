@@ -148,7 +148,7 @@ class CacheAnalytics {
     // Time-series snapshots
     this._timeSeries = [];
 
-    // Size tracking (updated by HeadyCache)
+    // Size tracking (updated by Heady™Cache)
     this._entryCount = 0;
     this._byteCount = 0;
 
@@ -163,7 +163,7 @@ class CacheAnalytics {
   }
 
   // -------------------------------------------------------------------------
-  // Recording methods (called by HeadyCache)
+  // Recording methods (called by Heady™Cache)
   // -------------------------------------------------------------------------
 
   recordHit(key, ns, latencyMs, semantic = false) {

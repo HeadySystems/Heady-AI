@@ -1,7 +1,8 @@
-/* © 2024-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
+/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 'use strict';
 
+const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * ProjectionSwarm — Coordinator Swarm for the Autonomous Projection System
  * ══════════════════════════════════════════════════════════════════════════
@@ -48,7 +49,7 @@ const AUDIT_PATH = path.join(__dirname, '..', '..', 'data', 'projection-swarm-au
 const PRIORITY_INTERVAL_MS = Math.round(PHI * PHI * 6180);    // ~16,178ms ≈ 16s
 const STANDARD_INTERVAL_MS = Math.round(PHI * PHI * PHI * 6180); // ~26,180ms ≈ 26s
 const SWARM_PULSE_INTERVAL_MS = Math.round(PHI * 15000);       // ~24,270ms
-const CIRCUIT_BREAKER_RESET_MS = Math.round(PHI * PHI * 30000); // ~78,540ms
+const CIRCUIT_BREAKER_RESET_MS = Math.round(PHI * PHI * PHI_TIMING.CYCLE); // ~78,540ms
 
 // ─── Circuit Breaker States ──────────────────────────────────────────────────
 const CB_STATE = { CLOSED: 'closed', OPEN: 'open', HALF_OPEN: 'half-open' };

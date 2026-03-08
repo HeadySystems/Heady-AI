@@ -1,4 +1,4 @@
-# HeadyOS Founder Community Portal — Configuration Specification
+# Heady™OS Founder Community Portal — Configuration Specification
 
 **Version**: 1.0.0  
 **Platform**: Discourse (self-hosted) or Circle.so  
@@ -9,7 +9,7 @@
 
 ## Community Overview
 
-The HeadyOS Founders Community is a private portal for Founder Tier pilot participants. It provides structured discussion categories, a shared product roadmap, feature voting, and access to the founding team.
+The Heady™OS Founders Community is a private portal for Founder Tier pilot participants. It provides structured discussion categories, a shared product roadmap, feature voting, and access to the founding team.
 
 **Access**: Invite-only. Provisioned automatically upon pilot onboarding confirmation.  
 **Cohort 1 capacity**: fib(7) = **13 organizations**
@@ -32,13 +32,13 @@ The HeadyOS Founders Community is a private portal for Founder Tier pilot partic
 
 ### 3. Use Cases & Workflows
 **Slug**: `use-cases`  
-**Description**: Share how you're using HeadyOS. Grant writing workflows, document automation, research synthesis, code review pipelines.  
+**Description**: Share how you're using Heady™OS. Grant writing workflows, document automation, research synthesis, code review pipelines.  
 **Featured**: Non-profit grant writing (primary Cohort 1 use case).  
 **Minimum**: Each org should post fib(3)=2 workflow examples before Day 55.
 
 ### 4. Feature Requests & Voting
 **Slug**: `features`  
-**Description**: Propose and vote on new features. Directly feeds the HeadyOS roadmap.  
+**Description**: Propose and vote on new features. Directly feeds the Heady™OS roadmap.  
 **Integration**: Linked to `pilot/feedback/feature-voting.js` API.  
 **Voting rules**:
   - Each org gets fib(5)=5 votes per month
@@ -109,7 +109,7 @@ Recording: Uploaded to #announcements within fib(3)=2 hours.
 
 ## Shared Roadmap
 
-The HeadyOS Founders Community has access to a **shared product roadmap** with Fibonacci-phased milestones.
+The Heady™OS Founders Community has access to a **shared product roadmap** with Fibonacci-phased milestones.
 
 ### Roadmap Visibility Levels
 | Level | Accessible to |

@@ -1,6 +1,6 @@
-# HeadyVector
+# Heady™Vector
 
-**Production-ready vector search service** for the Heady AI platform — a self-hosted replacement for Pinecone/Weaviate backed by **PostgreSQL + pgvector**.
+**Production-ready vector search service** for the Heady™ AI platform — a self-hosted replacement for Pinecone/Weaviate backed by **PostgreSQL + pgvector**.
 
 ---
 
@@ -484,4 +484,4 @@ heady-vector/
 
 ## License
 
-Heady AI Platform — Internal service. © 2026 Heady Connection.
+Heady™ AI Platform — Internal service. © 2026 Heady™ Connection.

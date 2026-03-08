@@ -4,7 +4,7 @@
 
 ## 1. Release Status: Propagation Phase (v3.0.1)
 
-The HeadyMe project has moved from "Gold" status into **Global Propagation**. Main branch updated to v3.0.1, incorporating final telemetry-driven performance patches.
+The Heady™Me project has moved from "Gold" status into **Global Propagation**. Main branch updated to v3.0.1, incorporating final telemetry-driven performance patches.
 
 ### Propagation Milestones
 
@@ -58,6 +58,6 @@ The transition from "Deep Scan" (90+ files) → "Clean Core" (28 files) → "Har
 
 ## 7. Recommendations for Maximum Equity Growth
 
-1. **Launch the Heady-Registry**: Move MCP connectors to public-facing API. Tool → Platform = 3x valuation multiplier.
+1. **Launch the Heady™-Registry**: Move MCP connectors to public-facing API. Tool → Platform = 3x valuation multiplier.
 2. **Formalize the "Geometric Whitepaper"**: Publish technical paper on Sacred Geometry's mathematical efficiency. Attracts institutional interest.
 3. **Unify Versioning**: Resolve v2.1.0 (package.json) vs v3.2.0 (README) conflict immediately. Consistency = "Trust Signal" for enterprise investors.

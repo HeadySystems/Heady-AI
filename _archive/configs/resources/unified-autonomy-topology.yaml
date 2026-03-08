@@ -143,7 +143,7 @@ microservice_policy:
 
 projection_governance:
   source_of_truth: github-monorepo
-  source_of_truth_url: https://github.com/HeadySystems/Heady
+  source_of_truth_url: https://github.com/HeadyMe/Heady
   source_of_truth_repo_marker: .git
   stray_path_patterns:
     - cloudflare-workers/
