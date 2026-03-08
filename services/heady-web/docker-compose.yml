@@ -17,7 +17,7 @@ services:
       - "443:443"
     environment:
       - NODE_ENV=production
-      - HEADY_VERSION=3.1.0
+      - HEADY_VERSION=4.0.0
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:

@@ -78,7 +78,7 @@ routes = [
 # ── Vars (non-secret config) ─────────────────────────────────────────────────
 [vars]
 ENVIRONMENT = "production"
-HEADY_VERSION = "3.1.0"
+HEADY_VERSION = "4.0.0"
 CLOUD_RUN_ORIGIN = "https://heady-manager-609590223909.us-central1.run.app"
 
 # ── Secrets (set via: wrangler secret put SECRET_NAME) ────────────────────────

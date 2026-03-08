@@ -80,7 +80,7 @@ FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS production
 LABEL maintainer="HeadySystems Inc. <eric@headysystems.com>"
 LABEL org.opencontainers.image.title="heady-manager"
 LABEL org.opencontainers.image.description="Heady Autonomous Multi-Agent AI Platform"
-LABEL org.opencontainers.image.version="3.2.3"
+LABEL org.opencontainers.image.version="4.0.0"
 LABEL org.opencontainers.image.vendor="HeadySystems Inc."
 LABEL org.opencontainers.image.source="https://github.com/HeadyMe/Heady"
 
@@ -111,7 +111,7 @@ RUN mkdir -p data/vector-shards data/telemetry data/audio tmp && \
 ENV NODE_ENV=production
 ENV PORT=8080
 ENV HEADY_SERVICE_NAME=heady-manager
-ENV HEADY_VERSION=3.2.2
+ENV HEADY_VERSION=4.0.0
 
 # Node.js production tuning
 ENV NODE_OPTIONS="--max-old-space-size=1024 --dns-result-order=ipv4first"
