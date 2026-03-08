@@ -15,7 +15,13 @@
     "predeploy": "node ./scripts/predeploy-check.mjs",
     "smoke": "node ./scripts/smoke-test.mjs",
     "validate:no-localhost": "node ./scripts/validate-no-localhost.mjs",
-    "generate:service-map": "node ./scripts/generate-service-manifests.mjs"
+    "generate:service-map": "node ./scripts/generate-service-manifests.mjs",
+    "test:shared-config": "node --test tests/shared-config.node.test.mjs",
+    "rebuild:bundle": "python3 scripts/rebuild_sacred_genesis.py",
+    "rebuild:zip": "python3 scripts/make_zip.py",
+    "rebuild:audit": "node scripts/audit-naming-conventions.js",
+    "rebuild:audit:strict": "node --experimental-vm-modules scripts/naming-convention-audit.mjs --strict",
+    "rebuild:all": "npm run rebuild:audit && npm run rebuild:bundle"
   },
   "devDependencies": {
     "@types/node": "^22.13.9",
