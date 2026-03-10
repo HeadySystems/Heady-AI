@@ -1,0 +1,78 @@
+# Heady .windsurfrules — Convention Enforcement for AI-Assisted Development
+# © 2026 HeadySystems Inc. — Sacred Geometry v4.0
+
+## Naming
+- All files: lowercase-kebab-case.js
+- All classes: PascalCase
+- All constants: UPPER_SNAKE_CASE
+- All variables/functions: camelCase
+- Module format: CommonJS (require/module.exports) — no ESM/CJS mixing
+
+## No Magic Numbers
+- Every threshold MUST use phi-math: phiThreshold(level), CSL_THRESHOLDS.*, PSI, PHI
+- Every collection size MUST use Fibonacci: fib(n)
+- Every timing MUST use phiBackoff() or phi-scaled intervals
+- Every weight MUST use phiFusionWeights(n) or phiResourceWeights(n)
+- BANNED: Hardcoded 0.5, 0.7, 0.8, 0.85, 0.9, 0.95, 100, 500, 1000, 5000
+- BANNED: Priority enums (CRITICAL, HIGH, MEDIUM, LOW) for work classification
+- USE INSTEAD: CSL-gated cosine similarity for relevance routing
+
+## No Localhost
+- BANNED: localhost, 127.0.0.1, hardcoded ports in production code
+- USE INSTEAD: process.env.PORT, process.env.HOST, domain-based routing
+- All URLs must use branded Heady domains (headyme.com, headyapi.com, etc.)
+
+## No Console.log
+- BANNED: console.log, console.warn, console.error in production
+- USE INSTEAD: createLogger(serviceName) from core/heady-logger.js
+- All logs MUST be structured JSON with correlation IDs
+
+## CORS Policy
+- BANNED: Access-Control-Allow-Origin: '*' in production
+- USE INSTEAD: Explicit origin whitelist from ALLOWED_ORIGINS env var
+
+## Health Endpoints
+- REQUIRED: Every service MUST expose /health or /healthz
+- REQUIRED: Health response includes service name, version, uptime, coherence score
+- REQUIRED: Dependency health checks (database, cache, upstream services)
+
+## Error Handling
+- BANNED: Empty catch blocks: catch (e) {}
+- BANNED: Generic error messages without context
+- REQUIRED: Typed AppError class with statusCode, code, details
+- REQUIRED: All async operations wrapped in try/catch
+
+## Code Completeness
+- BANNED: TODO, FIXME, HACK, XXX comments
+- BANNED: Placeholder implementations or stub functions
+- BANNED: "exercise for the reader" patterns
+- REQUIRED: Every function is complete and production-ready
+
+## Security
+- Secrets: ONLY from process.env or HeadySecretService — never hardcoded
+- Input: ALL user input validated and sanitized before use
+- Auth: JWT with short expiry + refresh mechanism
+- Cookies: httpOnly, Secure, SameSite=Strict
+- Rate limiting: Required on all public endpoints
+
+## Dependencies
+- Pin ALL dependencies to exact versions (no ^, no ~)
+- Maximum 3 runtime dependencies (prefer zero-dep implementations)
+- Audit: npm audit clean before merge
+
+## Testing
+- Critical paths MUST have tests
+- Health endpoints MUST have integration tests
+- Error paths MUST be tested
+
+## Bee Lifecycle
+- All bees MUST implement: spawn(), execute(), report(), retire()
+- All bees MUST emit telemetry via telemetry-bee channel
+- All bees MUST register with bee-factory on spawn
+- All bees MUST deregister on retire
+- All bee parameters MUST use phi-scaling
+
+## Shutdown
+- REQUIRED: Graceful shutdown on SIGTERM and SIGINT
+- REQUIRED: LIFO cleanup order for registered resources
+- REQUIRED: Connection draining before exit
