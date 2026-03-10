@@ -1,28 +1,69 @@
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { createRequire } from 'node:module';
 import { logger } from '../utils/logger.js';
 
-const require = createRequire(import.meta.url);
+// ── 384D Embedding Generation ────────────────────────────────────────────────
 
-// Lazy-load embedding provider (avoids circular deps and missing optional deps)
-let _embedder = null;
-function getEmbedder() {
-  if (!_embedder) {
-    try {
-      const { getDefaultProvider } = require('../latent/embedding-provider.js');
-      _embedder = getDefaultProvider();
-      logger.info('[MemoryStore] Embedding provider initialized');
-    } catch (err) {
-      logger.warn(`[MemoryStore] Embedding provider unavailable: ${err.message}`);
-      _embedder = null;
-    }
+const DIMS = 384;
+
+/**
+ * Deterministic local embedding: FNV-1a hash → 384D unit vector.
+ * Zero external dependencies, always available as fallback.
+ */
+function localEmbed(text) {
+  const vec = new Float32Array(DIMS);
+  let h = 0x811c9dc5; // FNV offset basis
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 0x01000193); // FNV prime
   }
-  return _embedder;
+  // LCG expansion to fill 384 dimensions
+  let s = h >>> 0;
+  for (let i = 0; i < DIMS; i++) {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    vec[i] = (s / 0xFFFFFFFF) * 2 - 1; // [-1, 1]
+  }
+  // L2 normalize
+  let mag = 0;
+  for (let i = 0; i < DIMS; i++) mag += vec[i] * vec[i];
+  mag = Math.sqrt(mag);
+  if (mag > 0) for (let i = 0; i < DIMS; i++) vec[i] /= mag;
+  return Array.from(vec);
 }
 
-// Cosine similarity for vector search
+/**
+ * OpenAI embedding via text-embedding-3-small (truncated to 384D).
+ * Returns null if API key unavailable or call fails.
+ */
+async function openaiEmbed(text) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const res = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input: text, model: 'text-embedding-3-small', dimensions: DIMS }),
+    });
+    if (!res.ok) return null;
+    const { data } = await res.json();
+    return data[0].embedding; // Already 384D from dimensions param
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Generate 384D embedding: tries OpenAI first, falls back to local deterministic.
+ */
+async function generateEmbedding(text) {
+  const vec = await openaiEmbed(text);
+  if (vec) return { embedding: vec, provider: 'openai' };
+  return { embedding: localEmbed(text), provider: 'local' };
+}
+
+// ── Cosine Similarity ────────────────────────────────────────────────────────
+
 function cosineSimilarity(a, b) {
   if (!a || !b || a.length !== b.length) return 0;
   let dot = 0, magA = 0, magB = 0;
@@ -35,7 +76,9 @@ function cosineSimilarity(a, b) {
   return denom === 0 ? 0 : dot / denom;
 }
 
-const PSI = 0.618033988749895; // Minimum relevance threshold
+const PSI = 0.618033988749895; // Minimum relevance gate
+
+// ── MemoryStore ──────────────────────────────────────────────────────────────
 
 class MemoryStore {
   constructor() {
@@ -70,78 +113,56 @@ class MemoryStore {
   }
 
   getStatus() {
-    const embedder = getEmbedder();
     return {
       memories: this.memories.length,
       storePath: this.storePath,
       maxEntries: parseInt(process.env.MEMORY_MAX_ENTRIES) || 100000,
-      embeddingsAvailable: !!embedder,
       embeddedCount: this.memories.filter(m => m.embedding).length,
-      ...(embedder ? { embeddingStats: embedder.stats() } : {}),
+      dimensions: DIMS,
     };
   }
 
   async ingest(content, metadata = {}) {
-    // Generate 384D embedding via multi-provider chain (Cloudflare → OpenAI → local fallback)
-    let embedding = null;
-    const embedder = getEmbedder();
-    if (embedder) {
-      try {
-        const vec = await embedder.embedOne(content);
-        embedding = Array.from(vec); // Float32Array → JSON-serializable array
-      } catch (err) {
-        logger.warn(`[MemoryStore] Embedding generation failed, storing without vector: ${err.message}`);
-      }
-    }
+    const { embedding, provider } = await generateEmbedding(content);
 
     const memory = {
       id: uuidv4(),
       content,
       metadata,
       embedding,
+      embeddingProvider: provider,
       createdAt: new Date().toISOString(),
     };
     this.memories.push(memory);
     this._saveToDisk();
-    logger.info(`[MemoryStore] Ingested memory ${memory.id} (embedding: ${embedding ? '384D' : 'none'})`);
-    return { success: true, id: memory.id, hasEmbedding: !!embedding };
+    logger.info(`[MemoryStore] Ingested memory ${memory.id} (${provider} ${DIMS}D)`);
+    return { success: true, id: memory.id, provider, dimensions: DIMS };
   }
 
   async query(queryText, limit = 10) {
-    const embedder = getEmbedder();
+    const { embedding: queryVec } = await generateEmbedding(queryText);
 
-    // If embeddings are available and memories have vectors, use cosine similarity search
-    if (embedder) {
-      try {
-        const queryVec = await embedder.embedOne(queryText);
-        const queryArr = Array.from(queryVec);
+    // Vector similarity search with CSL gate
+    const scored = this.memories
+      .filter(m => m.embedding)
+      .map(m => ({
+        ...m,
+        score: cosineSimilarity(queryVec, m.embedding),
+      }))
+      .filter(m => m.score >= PSI) // CSL gate: ψ ≈ 0.618 minimum relevance
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
 
-        // Score all memories that have embeddings
-        const scored = this.memories
-          .filter(m => m.embedding)
-          .map(m => ({
-            ...m,
-            score: cosineSimilarity(queryArr, m.embedding),
-          }))
-          .filter(m => m.score >= PSI) // CSL gate: only return relevant results
-          .sort((a, b) => b.score - a.score)
-          .slice(0, limit);
-
-        if (scored.length > 0) {
-          return scored;
-        }
-        // Fall through to text search if no vector matches
-      } catch (err) {
-        logger.warn(`[MemoryStore] Vector search failed, falling back to text: ${err.message}`);
-      }
+    if (scored.length > 0) {
+      // Strip embeddings from response (large arrays)
+      return scored.map(({ embedding, ...rest }) => rest);
     }
 
-    // Fallback: substring text search for memories without embeddings
-    const results = this.memories
+    // Fallback: text search if no vector matches above threshold
+    return this.memories
       .filter(m => m.content.toLowerCase().includes(queryText.toLowerCase()))
       .slice(0, limit)
-      .map(m => ({ ...m, score: null }));
-    return results;
+      .map(({ embedding, ...rest }) => ({ ...rest, score: null }));
   }
 }
 

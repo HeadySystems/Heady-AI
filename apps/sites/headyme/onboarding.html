@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Set up your HeadyMe AI Operating System — personalize your experience in 60 seconds.">
+    <meta property="og:title" content="HeadyMe — Onboarding">
+    <meta property="og:description" content="Configure your AI Operating System">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://headyme.com/onboarding.html">
+    <title>HeadyMe — Onboarding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../../packages/web-shared/css/heady-base.css">
+    <style>
+        :root {
+            --color-accent: #00d4aa;
+            --color-accent-dark: #00b891;
+            --color-accent-glow: rgba(0, 212, 170, 0.15);
+            --step-active: var(--color-accent);
+            --step-done: #22c55e;
+            --step-pending: rgba(255, 255, 255, 0.12);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Onboarding Container ── */
+        .onboarding-shell {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8) var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .onboarding-shell canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .onboarding-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 620px;
+            padding: var(--space-8);
+            border-radius: var(--radius-2xl);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 80px rgba(0, 212, 170, 0.06);
+        }
+
+        /* ── Progress Bar ── */
+        .progress-bar {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-8);
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--step-pending);
+            transition: background 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .progress-step.active {
+            background: var(--step-active);
+            box-shadow: 0 0 12px rgba(0, 212, 170, 0.4);
+        }
+
+        .progress-step.done {
+            background: var(--step-done);
+        }
+
+        .step-indicator {
+            text-align: center;
+            margin-bottom: var(--space-6);
+            font-size: var(--text-sm);
+            color: var(--color-text-faint);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ── Step Panels ── */
+        .step-panel {
+            display: none;
+            animation: fadeSlide 0.4s ease;
+        }
+
+        .step-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+            text-align: center;
+        }
+
+        .step-subtitle {
+            font-size: var(--text-base);
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-bottom: var(--space-6);
+            max-width: none;
+        }
+
+        /* ── Form Elements ── */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .form-group label {
+            display: block;
+            font-size: var(--text-sm);
+            font-weight: 500;
+            margin-bottom: var(--space-2);
+            color: var(--color-text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--color-text);
+            font-size: var(--text-base);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* ── Chip Select ── */
+        .chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .chip {
+            padding: var(--space-2) var(--space-4);
+            border-radius: 999px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .chip:hover {
+            border-color: var(--color-accent);
+            background: rgba(0, 212, 170, 0.08);
+        }
+
+        .chip.selected {
+            border-color: var(--color-accent);
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--color-accent);
+            font-weight: 500;
+            box-shadow: 0 0 8px rgba(0, 212, 170, 0.2);
+        }
+
+        /* ── Buttons ── */
+        .onboarding-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: space-between;
+            margin-top: var(--space-6);
+        }
+
+        .btn-back {
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            background: transparent;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            font-size: var(--text-base);
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            border-color: var(--color-text);
+            color: var(--color-text);
+        }
+
+        .btn-next {
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            border: none;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+            color: #fff;
+            font-weight: 600;
+            font-size: var(--text-base);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(0, 212, 170, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ── Plan Cards ── */
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+        }
+
+        .plan-card {
+            padding: var(--space-5);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.03);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .plan-card:hover {
+            border-color: var(--color-accent);
+        }
+
+        .plan-card.selected {
+            border-color: var(--color-accent);
+            background: rgba(0, 212, 170, 0.08);
+            box-shadow: 0 0 16px rgba(0, 212, 170, 0.15);
+        }
+
+        .plan-card .plan-name {
+            font-weight: 700;
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-1);
+        }
+
+        .plan-card .plan-price {
+            color: var(--color-accent);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+
+        .plan-card .plan-desc {
+            font-size: var(--text-sm);
+            color: var(--color-text-faint);
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: var(--color-accent);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: var(--space-2);
+        }
+
+        /* ── Success ── */
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-4);
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(34, 197, 94, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-links {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: var(--space-6);
+        }
+
+        @media (max-width: 640px) {
+            .plan-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .onboarding-card {
+                padding: var(--space-5);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="heady-nav" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-logo" aria-label="HeadyMe home">
+            <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                <circle cx="16" cy="16" r="8" stroke="var(--color-accent)" stroke-width="1.5" />
+                <circle cx="16" cy="16" r="3" fill="var(--color-accent)" />
+                <path d="M16 8 L16 2 M16 24 L16 30 M8 16 L2 16 M24 16 L30 16" stroke="var(--color-accent)"
+                    stroke-width="1" opacity="0.6" />
+            </svg>
+            <span>Heady<span class="logo-accent">Me</span></span>
+        </a>
+        <div class="nav-actions">
+            <button class="nav-theme-toggle" data-theme-toggle aria-label="Toggle theme">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <div class="onboarding-shell">
+        <canvas data-sacred-geometry="flower-of-life" data-accent="#00d4aa" aria-hidden="true"></canvas>
+        <div class="onboarding-card">
+            <!-- Progress -->
+            <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="5">
+                <div class="progress-step active" data-step="1"></div>
+                <div class="progress-step" data-step="2"></div>
+                <div class="progress-step" data-step="3"></div>
+                <div class="progress-step" data-step="4"></div>
+                <div class="progress-step" data-step="5"></div>
+            </div>
+            <div class="step-indicator"><span id="step-label">Step 1 of 5</span></div>
+
+            <!-- Step 1: Welcome / Profile -->
+            <div class="step-panel active" data-panel="1">
+                <h2 class="step-title">Welcome to HeadyMe</h2>
+                <p class="step-subtitle">Let's personalize your AI operating system. This takes about 60 seconds.</p>
+                <div class="form-group">
+                    <label for="display-name">What should we call you?</label>
+                    <input type="text" id="display-name" placeholder="Your name or alias" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="org-name">Organization (optional)</label>
+                    <input type="text" id="org-name" placeholder="Company, team, or project">
+                </div>
+                <div class="form-group">
+                    <label for="role-select">Your primary role</label>
+                    <select id="role-select">
+                        <option value="">Select your role…</option>
+                        <option value="developer">Developer / Engineer</option>
+                        <option value="founder">Founder / CEO</option>
+                        <option value="product">Product Manager</option>
+                        <option value="designer">Designer</option>
+                        <option value="data">Data Scientist / Analyst</option>
+                        <option value="researcher">Researcher</option>
+                        <option value="creative">Creative / Writer</option>
+                        <option value="operations">Operations / DevOps</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="onboarding-actions">
+                    <span></span>
+                    <button class="btn-next" onclick="goToStep(2)">Continue →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Interests -->
+            <div class="step-panel" data-panel="2">
+                <h2 class="step-title">What interests you most?</h2>
+                <p class="step-subtitle">Select the capabilities you want to explore first.</p>
+                <div class="chip-grid" id="interests-grid">
+                    <div class="chip" data-value="ai-orchestration">🤖 AI Orchestration</div>
+                    <div class="chip" data-value="vector-memory">🧠 3D Vector Memory</div>
+                    <div class="chip" data-value="code-generation">💻 Code Generation</div>
+                    <div class="chip" data-value="agent-swarms">🐝 Agent Swarms</div>
+                    <div class="chip" data-value="mcp-tools">🔧 MCP Tools</div>
+                    <div class="chip" data-value="security">🔒 Security & PQC</div>
+                    <div class="chip" data-value="trading">📈 Trading Intelligence</div>
+                    <div class="chip" data-value="research">🔬 Deep Research</div>
+                    <div class="chip" data-value="creative">🎨 Creative & MIDI</div>
+                    <div class="chip" data-value="deployment">☁️ Cloud Deployment</div>
+                    <div class="chip" data-value="nonprofits">💚 Nonprofit / HeadyConnection</div>
+                    <div class="chip" data-value="all">✦ Everything</div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn-back" onclick="goToStep(1)">← Back</button>
+                    <button class="btn-next" onclick="goToStep(3)">Continue →</button>
+                </div>
+            </div>
+
+            <!-- Step 3: HeadyBuddy Config -->
+            <div class="step-panel" data-panel="3">
+                <h2 class="step-title">Configure HeadyBuddy</h2>
+                <p class="step-subtitle">Your personal AI companion — how should it behave?</p>
+                <div class="form-group">
+                    <label for="buddy-name">Give your Buddy a name</label>
+                    <input type="text" id="buddy-name" placeholder="e.g. Heady, Atlas, Scout…" value="Heady">
+                </div>
+                <div class="form-group">
+                    <label>Communication style</label>
+                    <div class="chip-grid" id="style-grid">
+                        <div class="chip selected" data-value="concise">⚡ Concise</div>
+                        <div class="chip" data-value="detailed">📖 Detailed</div>
+                        <div class="chip" data-value="technical">🔧 Technical</div>
+                        <div class="chip" data-value="conversational">💬 Conversational</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="buddy-context">Anything Buddy should know about you?</label>
+                    <textarea id="buddy-context"
+                        placeholder="e.g. I work on web apps with React, I prefer dark mode, I'm interested in AI safety…"></textarea>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn-back" onclick="goToStep(2)">← Back</button>
+                    <button class="btn-next" onclick="goToStep(4)">Continue →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Choose Plan -->
+            <div class="step-panel" data-panel="4">
+                <h2 class="step-title">Choose your plan</h2>
+                <p class="step-subtitle">Start free and scale as you grow. All plans include full platform access.</p>
+                <div class="plan-grid" id="plan-grid">
+                    <div class="plan-card selected" data-plan="explorer">
+                        <div class="plan-name">Explorer</div>
+                        <div class="plan-price">Free</div>
+                        <div class="plan-desc">Personal use, 1K requests/day, community support</div>
+                    </div>
+                    <div class="plan-card" data-plan="builder">
+                        <span class="plan-badge">Popular</span>
+                        <div class="plan-name">Builder</div>
+                        <div class="plan-price">$29/mo</div>
+                        <div class="plan-desc">Teams, 50K requests/day, priority support, all nodes</div>
+                    </div>
+                    <div class="plan-card" data-plan="sovereign">
+                        <div class="plan-name">Sovereign</div>
+                        <div class="plan-price">Custom</div>
+                        <div class="plan-desc">Enterprise, unlimited, BYOK, mTLS, dedicated infra</div>
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="btn-back" onclick="goToStep(3)">← Back</button>
+                    <button class="btn-next" onclick="completeOnboarding()">Complete Setup ✦</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Success -->
+            <div class="step-panel" data-panel="5">
+                <div class="success-icon">✦</div>
+                <h2 class="step-title">You're all set!</h2>
+                <p class="step-subtitle">Your HeadyMe workspace is configured. Welcome to the Heady ecosystem.</p>
+                <div class="success-links">
+                    <a href="https://headyme.com" class="btn btn-primary btn-lg">Open HeadyMe →</a>
+                    <a href="https://admin.headysystems.com" class="btn btn-ghost btn-lg">Admin Dashboard</a>
+                    <a href="https://headyio.com" class="btn btn-ghost btn-lg">Documentation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="heady-footer" aria-label="Site footer" style="padding:var(--space-4) 0;">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:none;">
+                <p class="footer-copy">&copy; 2026 HeadySystems Inc. · headyme.com</p>
+                <nav class="footer-cross-nav" aria-label="Cross-site navigation"><a
+                        href="https://headyme.com">HeadyMe</a><a href="https://headysystems.com">HeadySystems</a><a
+                        href="https://headyos.com">HeadyOS</a><a href="https://admin.headysystems.com">Admin</a><a
+                        href="https://auth.headysystems.com">Auth</a></nav>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.__HEADY_SITE_META__ = {
+            slug: "headyme", domain: "headyme.com",
+            name: "HeadyMe", accent: "#00d4aa",
+            sacredGeometry: "Flower of Life"
+        };
+
+        const state = {
+            step: 1,
+            displayName: '',
+            organization: '',
+            role: '',
+            interests: [],
+            buddyName: 'Heady',
+            buddyStyle: 'concise',
+            buddyContext: '',
+            plan: 'explorer'
+        };
+
+        // ── Step Navigation ──
+        function goToStep(n) {
+            // Save current step data
+            if (state.step === 1) {
+                state.displayName = document.getElementById('display-name').value;
+                state.organization = document.getElementById('org-name').value;
+                state.role = document.getElementById('role-select').value;
+            }
+            if (state.step === 3) {
+                state.buddyName = document.getElementById('buddy-name').value;
+                state.buddyContext = document.getElementById('buddy-context').value;
+            }
+
+            state.step = n;
+
+            // Update panels
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-panel="${n}"]`).classList.add('active');
+
+            // Update progress bar
+            document.querySelectorAll('.progress-step').forEach(s => {
+                const sn = parseInt(s.dataset.step);
+                s.classList.remove('active', 'done');
+                if (sn < n) s.classList.add('done');
+                if (sn === n) s.classList.add('active');
+            });
+
+            document.getElementById('step-label').textContent = `Step ${n} of 5`;
+        }
+
+        // ── Chip Selection ──
+        document.querySelectorAll('.chip-grid').forEach(grid => {
+            grid.addEventListener('click', e => {
+                const chip = e.target.closest('.chip');
+                if (!chip) return;
+
+                const isRadio = grid.id === 'style-grid';
+                if (isRadio) {
+                    grid.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+                    chip.classList.add('selected');
+                    state.buddyStyle = chip.dataset.value;
+                } else {
+                    chip.classList.toggle('selected');
+                    const selected = [...grid.querySelectorAll('.chip.selected')].map(c => c.dataset.value);
+                    state.interests = selected;
+                }
+            });
+        });
+
+        // ── Plan Selection ──
+        document.getElementById('plan-grid').addEventListener('click', e => {
+            const card = e.target.closest('.plan-card');
+            if (!card) return;
+            document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            state.plan = card.dataset.plan;
+        });
+
+        // ── Complete Onboarding ──
+        async function completeOnboarding() {
+            // Save final state
+            state.buddyName = document.getElementById('buddy-name').value;
+            state.buddyContext = document.getElementById('buddy-context').value;
+
+            const payload = {
+                displayName: state.displayName,
+                organization: state.organization,
+                role: state.role,
+                interests: state.interests,
+                buddy: {
+                    name: state.buddyName,
+                    style: state.buddyStyle,
+                    context: state.buddyContext
+                },
+                plan: state.plan,
+                completedAt: new Date().toISOString(),
+                source: 'headyme.com'
+            };
+
+            // Try to POST to onboarding API
+            try {
+                const apiBase = window.__HEADY_ONBOARDING_API__ || 'https://api.headysystems.com/onboarding';
+                await fetch(`${apiBase}/complete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) {
+                // Onboarding data saved locally as fallback
+                localStorage.setItem('heady_onboarding', JSON.stringify(payload));
+            }
+
+            // Also try Drupal JSON:API if available
+            try {
+                const drupalBase = window.__HEADY_DRUPAL_API__ || 'https://admin.headysystems.com/jsonapi';
+                await fetch(`${drupalBase}/node/user_profile`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/vnd.api+json',
+                        'Accept': 'application/vnd.api+json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        data: {
+                            type: 'node--user_profile',
+                            attributes: {
+                                title: payload.displayName,
+                                field_organization: payload.organization,
+                                field_role: payload.role,
+                                field_interests: payload.interests.join(','),
+                                field_buddy_name: payload.buddy.name,
+                                field_buddy_style: payload.buddy.style,
+                                field_buddy_context: payload.buddy.context,
+                                field_plan: payload.plan
+                            }
+                        }
+                    })
+                });
+            } catch (e) {
+                // Drupal sync deferred — will sync on next admin visit
+            }
+
+            goToStep(5);
+        }
+    </script>
+    <script src="../../../packages/web-shared/js/heady-sacred-geometry.js"></script>
+    <script src="../../../packages/web-shared/js/heady-shared.js"></script>
+    <script>
+        if (window.HeadyAutoContext) window.HeadyAutoContext.init(window.__HEADY_SITE_META__);
+    </script>
+</body>
+
+</html>
