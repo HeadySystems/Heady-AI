@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/heady-chain",
+  "version": "4.0.0",
+  "description": "Task chain builder for DAG-based workflow composition and dependency resolution",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3327/health | jq ."
+  },
+  "keywords": ["heady", "orchestration", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}

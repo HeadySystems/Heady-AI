@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/heady-vector",
+  "version": "4.0.0",
+  "description": "Vector operations service for similarity search and spatial projections",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3317/health | jq ."
+  },
+  "keywords": ["heady", "memory", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}

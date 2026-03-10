@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/heady-hive",
+  "version": "4.0.0",
+  "description": "Central bee registry and swarm coordination with Fibonacci-stepped scaling",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3320/health | jq ."
+  },
+  "keywords": ["heady", "agents", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}

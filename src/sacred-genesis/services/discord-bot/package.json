@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/discord-bot",
+  "version": "4.0.0",
+  "description": "Discord bot for community engagement and notification delivery",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3354/health | jq ."
+  },
+  "keywords": ["heady", "integration", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}

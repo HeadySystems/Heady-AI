@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/heady-cache",
+  "version": "4.0.0",
+  "description": "Distributed caching layer with Fibonacci-sized LRU pools and phi-scaled TTLs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3343/health | jq ."
+  },
+  "keywords": ["heady", "data", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}

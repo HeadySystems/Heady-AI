@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/heady-embed",
+  "version": "4.0.0",
+  "description": "384-dimensional embedding generation with multi-provider routing",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3315/health | jq ."
+  },
+  "keywords": ["heady", "memory", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}

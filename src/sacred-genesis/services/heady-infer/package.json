@@ -1,0 +1,18 @@
+{
+  "name": "@heady-ai/heady-infer",
+  "version": "4.0.0",
+  "description": "Low-latency inference gateway with model-specific optimizations and caching",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3312/health | jq ."
+  },
+  "keywords": ["heady", "inference", "sacred-geometry", "phi-scaled"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" }
+}
