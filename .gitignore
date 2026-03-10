@@ -13,3 +13,4 @@ node_modules
 .turbo
 .vscode/settings.local.json
 .wrangler
+infrastructure/infrastructure/db_data/

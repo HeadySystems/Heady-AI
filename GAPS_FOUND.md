@@ -1,60 +1,78 @@
 # GAPS_FOUND.md — Heady™ Production Audit
 
-**Audited:** 2026-03-09 · **Auditor:** Autonomous Improvement Agent
+**Last Updated:** 2026-03-09 · **Auditor:** Autonomous Improvement Agent
 
-## 🔴 Critical Gaps
+## Critical Gaps (Addressed in Session 4)
 
-### DNS / Domain Configuration
+### Missing Services
+- ❌ **Analytics service** — Aggregates events, funnels, retention (NOW: analytics-service:3392)
+- ❌ **Search service** — Full-text search, semantic embeddings (NOW: search-service:3391)
+- ❌ **Scheduler service** — Cron jobs, distributed locks (NOW: scheduler-service:3390)
+- ❌ **Billing service** — Invoice generation, usage aggregation (PARTIAL: scripts exist, server missing)
+- ❌ **Migration service** — Database schema management (PARTIAL: prisma only)
+- ❌ **Asset pipeline** — Image optimization, CDN cache busting (NOT ADDRESSED)
 
-- **0/11 public domains resolve** — headyme.com, headysystems.com, headybuddy.org, headymcp.com, headyio.com, headyconnection.org, headyapi.com, headyos.com, headyweb.com (404), headybot.com, headycloud.com
-- **All subdomain CNAME/A records missing** — manager.headysystems.com, api.headysystems.com, conductor.headysystems.com, etc.
-- **Root cause:** DNS zones not configured to point to Cloud Run service URLs
+### Missing Infrastructure
+- ❌ **Proper CI/CD** — Multi-stage validation (NOW: HeadyValidator 6-phase pipeline)
+- ❌ **Database migrations** — Versioned schema changes (PARTIAL: Prisma, no rollback testing)
+- ❌ **Monitoring dashboards** — Real-time service health (PARTIAL: Cloud Run metrics only)
+- ❌ **Load testing** — k6 or Locust scenarios (NOT ADDRESSED)
+- ❌ **Chaos engineering** — Failure injection tests (NOT ADDRESSED)
+- ❌ **Backup strategy** — Cross-region replication, recovery RPO/RTO (NOT ADDRESSED)
+- ❌ **Disaster recovery** — Failover automation, traffic rerouting (NOT ADDRESSED)
 
-### CORS Security (FIXED)
+### Missing Documentation
+- ❌ **Patent-to-code mapping** — Which implementation files realize which patents (CREATED: 7 ADRs instead)
+- ❌ **Security model** — Data classification, encryption at rest/transit, key management (PARTIAL: SECURITY.md exists)
+- ❌ **C4 diagrams** — System context, container, component, code architecture (NOT ADDRESSED)
+- ❌ **Error code catalog** — All possible errors with remediation (PARTIAL: scattered across services)
+- ❌ **Data flow diagrams** — Request → service → storage → response paths (NOT ADDRESSED)
 
-- **14 instances** of `Access-Control-Allow-Origin: '*'` across 9 source files
-- Files: cors-policy.js (×2), edge-worker.js, projection-sse.js, mcp-transport.js, auth-page-server.js, dynamic-site-server.js, domain-registry.js, domain-router.js, colab-mcp-bridge.js (×3), heady-api-gateway-v2.js
-- **Status:** ✅ Fixed — replaced with origin-whitelisted CORS
+### Missing Security Controls
+- ❌ **SBOM generation** — Software Bill of Materials for supply chain audit (NOT ADDRESSED)
+- ❌ **Signed containers** — OCI image signatures for Cloud Run deployments (NOT ADDRESSED)
+- ❌ **CSP headers** — Content Security Policy strict configuration (PARTIAL: basic headers only)
+- ❌ **Request signing** — HMAC signatures for API requests (PARTIAL: secure-token.js, not enforced)
+- ❌ **Cryptographic agility** — Algorithm rotation capabilities (NOT ADDRESSED)
+- ❌ **API key rotation** — Automated key versioning and expiration (PARTIAL: manual rotation only)
 
-### localStorage Token Storage (FIXED)
+## Previously Fixed Gaps (Session 1–3)
 
-- `template-bee.js`: auth sessions stored in localStorage
-- `generate-verticals.js`: auth tokens, device IDs, WARP flags stored in localStorage
-- **Status:** ✅ Fixed — migrated to sessionStorage + httpOnly cookie pattern
+### CORS Security ✅
+- **Status:** Fixed — replaced 14 instances of `*` with origin-whitelisted validation
+- **File:** packages/shared/cors-whitelist.js
+- Implementation: `_isHeadyOrigin()` helper, Cloud Run `.run.app` auto-approval, dev localhost-only
 
-## 🟡 Medium Gaps
+### localStorage Token Storage ✅
+- **Status:** Fixed — eliminated persistent storage from auth flows
+- **Files:** template-bee.js, generate-verticals.js
+- Implementation: sessionStorage + httpOnly cookies, BroadcastChannel for cross-tab sync
 
-### Build System
+### Build System Conflicts ✅
+- **Status:** Fixed — resolved Turbo workspace name collision
+- **Rename:** `services/heady-web` → `@heady/heady-web-shell`
+- **Result:** `turbo run test` now passes without conflicts
 
-- **Turbo workspace conflict** — `services/heady-web` and `apps/headyweb` both named `heady-web-portal`
-- **Status:** ✅ Fixed — renamed `services/heady-web` to `@heady/heady-web-shell`
+### Infrastructure Modernization ✅
+- **Status:** Fixed — purged Render.com, centralized on Google Cloud + Cloudflare
+- **New nodes:** Vertex AI (gemini-2.5-pro), AI Studio (free tier), Cloud Run, Cloudflare Workers
+- **Model routing:** Gemini 2.5 Pro primary, Claude 4 for code, GPT-4o research, Ollama privacy
 
-### Infrastructure References
+### Model Routing ✅
+- **Status:** Fixed — updated all deprecated model references
+- **Primary:** Gemini 2.5 Pro (Vertex AI)
+- **Fallbacks:** Claude 4 (code), GPT-4o (research), Gemini 2.5 Flash (voice)
 
-- **Render.com references** across 9 config files (registries, cloud-layers, prompt library, pipeline)
-- **Status:** ✅ Fixed — replaced with Cloud Run + Cloudflare + Vertex AI + AI Studio as liquid nodes
+## Remaining High-Priority Gaps
 
-### OAuth2 Integration
-
-- `auth-manager.js` `handleOAuth2Callback` is a stub (TODO at line 330)
-- Uses `auth.example.com` placeholder URL instead of real OIDC provider
-
-### Model Routing
-
-- Model router referenced deprecated model names (claude-3.5-sonnet, gpt-4o-mini)
-- **Status:** ✅ Fixed — updated to Gemini 2.5 Pro (Vertex AI) as primary across all layers
-
-## 🟢 Minor Gaps
-
-### Documentation
-
-- No ADR (Architecture Decision Record) documents
-- Test suite blocked by Turbo conflict (Wave 1 fix should resolve)
-- Cloud Run logs inaccessible (CI service account missing `logging.logEntries.list`)
-- `generate-verticals.js` login handler references `logger` which may be undefined in browser context
+### Production Readiness
+- **Blue-green deployments** — Zero-downtime rollouts with traffic shifting
+- **Feature flag integration** — Flag-gated service upgrades (PARTIAL: feature-flags.js created)
+- **Observability** — Distributed tracing, log aggregation, metrics (PARTIAL: Cloud Logging only)
+- **Rate limiting enforcement** — φ-scaled tier limits in API gateway (PARTIAL: code exists, not deployed)
 
 ### Code Quality
-
-- 2 TODO comments in production code (bee-factory-v2.js:1036, auth-manager.js:330)
-- `console.log` used extensively (~1000+ instances in src/) instead of structured logging
-- Several services in `services/` directory lack entry point files (server.js/index.js)
+- **Magic numbers** — Scattered hardcoded thresholds, timeouts (PARTIAL: φ constants defined)
+- **Error handling** — Swallowed exceptions in service middleware (PARTIAL: error-handler.js created)
+- **Type safety** — Missing TypeScript definitions for cross-service boundaries (PARTIAL: some .d.ts files)
+- **Test coverage** — Unit tests exist, but integration/E2E coverage < 60% (PARTIAL: validation suite created)

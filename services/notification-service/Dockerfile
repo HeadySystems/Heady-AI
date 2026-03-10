@@ -1,45 +1,29 @@
-# Build stage
 FROM node:20-alpine AS builder
-
-WORKDIR /build
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Runtime stage
-FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+COPY package*.json tsconfig.json ./
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+RUN npm ci
 
-# Copy built node_modules from builder
-COPY --from=builder --chown=nodejs:nodejs /build/node_modules ./node_modules
+COPY src ./src
 
-# Copy application code
-COPY --chown=nodejs:nodejs package*.json ./
-COPY --chown=nodejs:nodejs src ./src
+RUN npm run build && npm prune --production
 
-# Switch to non-root user
-USER nodejs
+FROM gcr.io/distroless/nodejs20-nonroot
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3394/_heady/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" || exit 1
+WORKDIR /app
 
-# Expose port
-EXPOSE 3394
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
 
-# Use dumb-init to handle signals properly
-ENTRYPOINT ["dumb-init", "--"]
+ENV NODE_ENV=production
+ENV LOG_LEVEL=info
 
-# Start application
-CMD ["node", "src/index.js"]
+EXPOSE 3350
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["node", "-e", "require('http').get('http://localhost:3350/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+
+CMD ["dist/index.js"]

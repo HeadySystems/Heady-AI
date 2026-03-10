@@ -1,38 +1,35 @@
 {
   "name": "@heady/scheduler-service",
   "version": "1.0.0",
-  "description": "φ-scaled interval scheduler service for HEADY platform",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
-    "test": "jest",
-    "lint": "eslint src --ext .ts"
+  "description": "Fibonacci-scaled task scheduler service with φ-based intervals and exponential backoff",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20.0.0"
   },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "NODE_ENV=development node src/index.js",
+    "test": "jest",
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "scheduler",
+    "tasks",
+    "fibonacci",
+    "golden-ratio",
+    "webhooks"
+  ],
+  "author": "HeadySystems",
+  "license": "PROPRIETARY",
   "dependencies": {
-    "express": "^4.21.2",
-    "pg": "^8.10.0",
-    "pino": "^8.16.1",
-    "pino-http": "^8.4.1",
-    "dotenv": "^16.3.1",
-    "uuid": "^9.0.0"
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "node-cron": "^3.0.2"
   },
   "devDependencies": {
-    "@types/express": "^4.17.20",
-    "@types/node": "^20.8.0",
-    "@types/pg": "^8.10.7",
-    "@types/uuid": "^9.0.2",
-    "typescript": "^5.2.2",
-    "tsx": "^3.13.0",
-    "jest": "^29.7.0",
-    "@types/jest": "^29.5.5",
-    "ts-jest": "^29.1.1",
-    "eslint": "^8.51.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
   }
 }

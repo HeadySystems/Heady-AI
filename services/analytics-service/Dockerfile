@@ -1,26 +1,36 @@
-FROM node:20-alpine AS builder
+# HEADY™ Analytics Service Dockerfile
+# Multi-stage build for optimal image size
+# Copyright (c) HeadySystems Inc. Eric Haywood, founder. All rights reserved.
 
+# Stage 1: Dependencies
+FROM node:20-alpine AS dependencies
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Stage 2: Runtime
+FROM node:20-alpine
 WORKDIR /app
 
-COPY package*.json tsconfig.json ./
+# Security: run as non-root user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
-RUN npm ci
+# Copy production dependencies from builder
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=dependencies /app/package*.json ./
 
+# Copy application code
 COPY src ./src
 
-RUN npm run build && npm prune --production
+# Create data directory for event persistence
+RUN mkdir -p data && chown -R nodejs:nodejs /app
 
-FROM gcr.io/distroless/nodejs20-nonroot
+USER nodejs
 
-WORKDIR /app
+EXPOSE 3392
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3392/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-ENV NODE_ENV=production
-ENV LOG_LEVEL=info
-
-EXPOSE 3360
-
-CMD ["dist/index.js"]
+CMD ["node", "src/index.js"]
