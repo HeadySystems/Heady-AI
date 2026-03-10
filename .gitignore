@@ -32,3 +32,7 @@ audit_logs.jsonl
 .heady_deploy_log.jsonl
 *.jsonl
 >>>>>>> staging/fix-security-and-yaml-deps-9294985698471946789
+
+# Incoming zip processing folder
+in/
+*.crdownload
