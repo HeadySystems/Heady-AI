@@ -1,5 +1,8 @@
-const pino = require('pino');
-const logger = pino();
+import EventEmitter from 'events';
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+import { logger } from '../utils/logger.js';
 /**
  * ╔═══════════════════════════════════════════════════════════════════════╗
  * ║  PROPRIETARY AND CONFIDENTIAL — HEADYSYSTEMS INC.                   ║
@@ -32,25 +35,19 @@ const logger = pino();
  * @module HeadyAutoContext
  */
 
-'use strict';
-
-const EventEmitter = require('events');
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
-
 // ─── Safe Imports (graceful degradation) ────────────────────────────────────
 
-let logger;
-try { logger = require('../utils/logger'); } catch (_) {
-    logger = { info: logger.info, warn: logger.warn, error: logger.error, debug: () => { } };
-}
+let VectorMemory = null;
+try {
+    const mod = await import('../vector-memory.js');
+    VectorMemory = mod.VectorMemory;
+} catch (_) { /* graceful */ }
 
-let VectorMemory;
-try { ({ VectorMemory } = require('../vector-memory')); } catch (_) { VectorMemory = null; }
-
-let cosineSimilarity;
-try { ({ cosineSimilarity } = require('../vector-space-ops')); } catch (_) { cosineSimilarity = null; }
+let cosineSimilarity = null;
+try {
+    const mod = await import('../vector-space-ops.js');
+    cosineSimilarity = mod.cosineSimilarity;
+} catch (_) { /* graceful */ }
 
 // ─── Constants (φ-scaled) ───────────────────────────────────────────────────
 
@@ -366,7 +363,6 @@ class HeadyAutoContext extends EventEmitter {
     async enrichForCouncil(task, councilOpts = {}) {
         const { systemContext, sources, stats } = await this.enrich(task, {
             domain: 'council',
-            tokenBudget: TOKEN_BUDGETS.deep,
             deep: true,
             vectorSearch: true,
         });
@@ -394,7 +390,7 @@ class HeadyAutoContext extends EventEmitter {
     async enrichForMonteCarlo(scenario, signals = {}) {
         const { systemContext } = await this.enrich(
             `Monte Carlo simulation: ${scenario.name || 'unnamed'} — ${JSON.stringify(signals).slice(0, 200)}`,
-            { domain: 'config', tokenBudget: TOKEN_BUDGETS.minimal, vectorSearch: true }
+            { domain: 'config', vectorSearch: true }
         );
         return { systemContext };
     }
@@ -1033,10 +1029,4 @@ function wireGateway(gateway, autoContext) {
 
 // ─── Exports ─────────────────────────────────────────────────────────────────
 
-module.exports = {
-    HeadyAutoContext,
-    ContextSource,
-    getAutoContext,
-    wireGateway,
-    CSL_GATES,
-};
+export { HeadyAutoContext, ContextSource, getAutoContext, wireGateway, CSL_GATES };

@@ -18,6 +18,7 @@ import { setupAgentRoutes } from './src/agents/agent-router.js';
 import { setupMemoryRoutes } from './src/memory/memory-router.js';
 import { setupDashboardRoutes } from './src/gateway/dashboard-router.js';
 import { AutoSuccessEngine } from './src/services/auto-success.js';
+import { getAutoContext } from './src/services/heady-auto-context.js';
 import { errorHandler } from './src/gateway/error-handler.js';
 import { metricsMiddleware, metricsEndpoint } from './src/utils/metrics.js';
 
@@ -86,6 +87,31 @@ if (authRouter) {
   logger.info('[HeadyManager] Auth routes mounted at /api/auth');
 }
 
+// ── AutoContext continuous service ──
+const autoContext = getAutoContext({ workspaceRoot: __dirname, alwaysOn: true });
+
+app.post('/api/context/enrich', async (req, res, next) => {
+  try {
+    const { task, domain, focusFiles, deep, vectorSearch } = req.body;
+    if (!task) return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'task is required' } });
+    const result = await autoContext.enrich(task, { domain, focusFiles, deep, vectorSearch });
+    res.json(result);
+  } catch (err) { next(err); }
+});
+
+app.get('/api/context/status', (_req, res) => {
+  res.json(autoContext.getStats());
+});
+
+app.post('/api/context/index', async (_req, res, next) => {
+  try {
+    const indexed = await autoContext.indexWorkspace();
+    res.json({ indexed });
+  } catch (err) { next(err); }
+});
+
+logger.info('[HeadyManager] AutoContext continuous service started at /api/context/*');
+
 // ── Error handling (must be last) ──
 app.use(errorHandler);
 
@@ -108,6 +134,7 @@ autoSuccess.start().then(() => {
 const shutdown = async (signal) => {
   logger.info(`[HeadyManager] Received ${signal}. Shutting down gracefully...`);
   await autoSuccess.stop();
+  if (autoContext) autoContext.stop();
   server.close(() => {
     logger.info('[HeadyManager] Server closed.');
     process.exit(0);
