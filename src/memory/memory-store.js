@@ -8,22 +8,39 @@ import { logger } from '../utils/logger.js';
 const DIMS = 384;
 
 /**
- * Deterministic local embedding: FNV-1a hash → 384D unit vector.
+ * Deterministic local embedding: word-hashing → 384D bag-of-words vector.
+ * Each word hashes to multiple positions in the vector (multi-probe),
+ * giving meaningful cosine similarity for texts sharing vocabulary.
  * Zero external dependencies, always available as fallback.
  */
 function localEmbed(text) {
   const vec = new Float32Array(DIMS);
-  let h = 0x811c9dc5; // FNV offset basis
-  for (let i = 0; i < text.length; i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 0x01000193); // FNV prime
+  // Tokenize: lowercase, split on non-alphanumeric, filter stopwords/short
+  const STOP = new Set(['the','a','an','is','are','was','were','be','been','being','in','on','at','to','for','of','and','or','but','not','with','by','from','as','it','its','this','that','all','has','have','had']);
+  const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !STOP.has(w));
+  if (words.length === 0) words.push('empty');
+
+  // Also generate bigrams for phrase-level similarity
+  const tokens = [...words];
+  for (let i = 0; i < words.length - 1; i++) {
+    tokens.push(words[i] + '_' + words[i + 1]);
   }
-  // LCG expansion to fill 384 dimensions
-  let s = h >>> 0;
-  for (let i = 0; i < DIMS; i++) {
-    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
-    vec[i] = (s / 0xFFFFFFFF) * 2 - 1; // [-1, 1]
+
+  const weight = 1 / Math.sqrt(tokens.length);
+  for (const token of tokens) {
+    // FNV-1a hash of each token → multi-probe into 3 positions
+    let h = 0x811c9dc5;
+    for (let i = 0; i < token.length; i++) {
+      h ^= token.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    h = h >>> 0;
+    // 3 probes per token for spread
+    vec[h % DIMS] += weight;
+    vec[(h >>> 8) % DIMS] += weight * 0.7;
+    vec[(h >>> 16) % DIMS] += weight * 0.5;
   }
+
   // L2 normalize
   let mag = 0;
   for (let i = 0; i < DIMS; i++) mag += vec[i] * vec[i];
@@ -76,7 +93,8 @@ function cosineSimilarity(a, b) {
   return denom === 0 ? 0 : dot / denom;
 }
 
-const PSI = 0.618033988749895; // Minimum relevance gate
+const PSI = 0.618033988749895;
+const PSI_SQ = PSI * PSI; // ≈ 0.382 — local embedding threshold (sparser vectors)
 
 // ── MemoryStore ──────────────────────────────────────────────────────────────
 
@@ -149,7 +167,7 @@ class MemoryStore {
         ...m,
         score: cosineSimilarity(queryVec, m.embedding),
       }))
-      .filter(m => m.score >= PSI) // CSL gate: ψ ≈ 0.618 minimum relevance
+      .filter(m => m.score >= PSI_SQ) // CSL gate: ψ² ≈ 0.382 minimum relevance
       .sort((a, b) => b.score - a.score)
       .slice(0, limit);
 

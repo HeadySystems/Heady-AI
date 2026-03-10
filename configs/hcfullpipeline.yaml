@@ -602,7 +602,7 @@ pipeline:
 
   # ─── TASK BACKLOG (scanned from in/ 2026-03-10T07:30Z) ─────────────────────
   taskBacklog:
-    scanDate: "2026-03-10T16:34:00Z"
+    scanDate: "2026-03-10T21:22:00Z"
     source: "in/*.zip (24 unique packages extracted, 4 duplicates skipped: 11 Heady system bundles + 17 Jules session exports)"
     version: "8.0.0"
 
@@ -640,7 +640,7 @@ pipeline:
         source: "in/jules_session_139…014.zip"
         targets: [services/auth-session-server/]
         stage: execute-major-phase
-        status: open
+        status: done
         priority: critical
 
       - id: TB-004
@@ -676,7 +676,7 @@ pipeline:
         source: "in/jules_session_15849592285622860046.zip"
         targets: [services/auth-session-server/]
         stage: execute-major-phase
-        status: open
+        status: done
         priority: critical
 
       - id: TB-020
@@ -797,7 +797,7 @@ pipeline:
         source: "in/jules_session_15849592285622860046.zip"
         targets: [services/auth-session-server/src/index.js]
         stage: execute-major-phase
-        status: open
+        status: done
         priority: medium
 
       - id: TB-021

@@ -639,7 +639,7 @@
                 });
             } catch (e) {
                 // Onboarding data saved locally as fallback
-                localStorage.setItem('heady_onboarding', JSON.stringify(payload));
+                sessionStorage.setItem('heady_onboarding', JSON.stringify(payload));
             }
 
             // Also try Drupal JSON:API if available
