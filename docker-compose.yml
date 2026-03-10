@@ -246,6 +246,26 @@ services:
     networks:
       - heady-net
 
+  auth-session-server:
+    build:
+      context: ./services/auth-session-server
+      dockerfile: Dockerfile
+    environment:
+      PORT: 4309
+      NODE_ENV: production
+      FIREBASE_PROJECT_ID: gen-lang-client-0920560496
+    ports:
+      - "4309:4309"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4309/health || false"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - heady-net
+    restart: unless-stopped
+
 volumes:
   heady_postgres:
 
