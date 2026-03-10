@@ -9,7 +9,7 @@
     "test": "echo \"Tests pending\" && exit 0"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^5.2.1",
     "cors": "^2.8.5"
   }
 }
