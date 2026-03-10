@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Heady™ Colab Runtime Dashboard</title>
+  <style>
+    :root {
+      --phi: 1.618;
+      --psi: 0.618;
+      --space-xs: 5px; --space-sm: 8px; --space-md: 13px;
+      --space-lg: 21px; --space-xl: 34px; --space-2xl: 55px; --space-3xl: 89px;
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+      --text-lg: 1.125rem; --text-xl: 1.618rem; --text-2xl: 2.618rem;
+      --bg-primary: #0a0a0f; --bg-secondary: #12121a;
+      --bg-card: rgba(255,255,255,0.03); --bg-glass: rgba(255,255,255,0.05);
+      --text-primary: #e8e8f0; --text-secondary: #9898a8;
+      --border-subtle: rgba(255,255,255,0.08);
+      --accent: #00d4aa; --hot: #ff6b6b; --warm: #ffa94d; --cold: #74c0fc;
+      --success: #51cf66; --danger: #ff6b6b; --warning: #ffc078;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.618, 0, 0.382, 1); }
+    body { font-family: 'SF Mono', 'Fira Code', monospace;
+           background: var(--bg-primary); color: var(--text-primary);
+           min-height: 100vh; padding: var(--space-xl); }
+    .glass { background: var(--bg-glass); backdrop-filter: blur(20px);
+             border: 1px solid var(--border-subtle); border-radius: 13px; }
+
+    header { text-align: center; margin-bottom: var(--space-xl); }
+    header h1 { font-size: var(--text-2xl); background: linear-gradient(135deg, var(--accent), #7c3aed);
+                -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                margin-bottom: var(--space-sm); }
+    header p { color: var(--text-secondary); font-size: var(--text-sm); }
+
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg); margin-bottom: var(--space-xl); }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .runtime-card { padding: var(--space-xl); position: relative; overflow: hidden; }
+    .runtime-card::before { content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 3px; }
+    .runtime-card.hot::before { background: linear-gradient(90deg, var(--hot), transparent); }
+    .runtime-card.warm::before { background: linear-gradient(90deg, var(--warm), transparent); }
+    .runtime-card.cold::before { background: linear-gradient(90deg, var(--cold), transparent); }
+
+    .runtime-header { display: flex; justify-content: space-between;
+                      align-items: center; margin-bottom: var(--space-lg); }
+    .runtime-name { font-size: var(--text-xl); font-weight: 700; }
+    .runtime-status { padding: var(--space-xs) var(--space-md);
+                      border-radius: 89px; font-size: var(--text-xs);
+                      text-transform: uppercase; letter-spacing: 1px; }
+    .status-active { background: rgba(81,207,102,0.15); color: var(--success); }
+    .status-idle { background: rgba(255,192,120,0.15); color: var(--warning); }
+    .status-offline { background: rgba(255,107,107,0.15); color: var(--danger); }
+
+    .metric { display: flex; justify-content: space-between;
+              padding: var(--space-sm) 0;
+              border-bottom: 1px solid var(--border-subtle); }
+    .metric:last-child { border-bottom: none; }
+    .metric-label { color: var(--text-secondary); font-size: var(--text-sm); }
+    .metric-value { font-weight: 600; font-size: var(--text-sm); }
+
+    .progress-bar { height: 8px; background: rgba(255,255,255,0.05);
+                    border-radius: 5px; margin-top: var(--space-sm);
+                    overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 5px;
+                     transition: width 0.5s ease; }
+    .progress-fill.hot { background: var(--hot); }
+    .progress-fill.warm { background: var(--warm); }
+    .progress-fill.cold { background: var(--cold); }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr);
+                 gap: var(--space-lg); margin-bottom: var(--space-xl); }
+    @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card { padding: var(--space-lg); text-align: center; }
+    .stat-value { font-size: var(--text-2xl); font-weight: 700;
+                  color: var(--accent); }
+    .stat-label { color: var(--text-secondary); font-size: var(--text-xs);
+                  text-transform: uppercase; letter-spacing: 1px;
+                  margin-top: var(--space-xs); }
+
+    .task-log { padding: var(--space-xl); max-height: 377px; overflow-y: auto; }
+    .task-log h3 { margin-bottom: var(--space-md); color: var(--text-secondary);
+                   font-size: var(--text-sm); text-transform: uppercase; }
+    .log-entry { padding: var(--space-sm) var(--space-md);
+                 font-size: var(--text-xs); border-left: 2px solid var(--border-subtle);
+                 margin-bottom: var(--space-xs); }
+    .log-entry.success { border-left-color: var(--success); }
+    .log-entry.error { border-left-color: var(--danger); }
+    .log-entry .ts { color: var(--text-secondary); margin-right: var(--space-sm); }
+
+    footer { text-align: center; color: var(--text-secondary);
+             font-size: var(--text-xs); padding-top: var(--space-xl);
+             border-top: 1px solid var(--border-subtle); margin-top: var(--space-xl); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Heady™ Colab Runtime Dashboard</h1>
+    <p>3 Colab Pro+ Runtimes — Hot / Warm / Cold — Sacred Geometry φ-Orchestrated</p>
+  </header>
+
+  <div class="stats-row">
+    <div class="glass stat-card">
+      <div class="stat-value" id="total-tasks">0</div>
+      <div class="stat-label">Total Tasks</div>
+    </div>
+    <div class="glass stat-card">
+      <div class="stat-value" id="active-tasks">0</div>
+      <div class="stat-label">Active Now</div>
+    </div>
+    <div class="glass stat-card">
+      <div class="stat-value" id="gpu-utilization">0%</div>
+      <div class="stat-label">GPU Utilization</div>
+    </div>
+    <div class="glass stat-card">
+      <div class="stat-value" id="uptime">0h</div>
+      <div class="stat-label">System Uptime</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Hot Runtime -->
+    <div class="glass runtime-card hot">
+      <div class="runtime-header">
+        <span class="runtime-name">Runtime 1 — Hot</span>
+        <span class="runtime-status status-active" id="hot-status">ACTIVE</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">GPU</span>
+        <span class="metric-value" id="hot-gpu">A100 40GB</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">VRAM Used</span>
+        <span class="metric-value" id="hot-vram">24.3 / 40 GB</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill hot" id="hot-vram-bar" style="width:61%"></div></div>
+      <div class="metric">
+        <span class="metric-label">Tasks / min</span>
+        <span class="metric-value" id="hot-tpm">34</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Latency (p50)</span>
+        <span class="metric-value" id="hot-latency">89ms</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Pool Weight</span>
+        <span class="metric-value">34% (fib(9))</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Role</span>
+        <span class="metric-value">Inference / Embeddings</span>
+      </div>
+    </div>
+
+    <!-- Warm Runtime -->
+    <div class="glass runtime-card warm">
+      <div class="runtime-header">
+        <span class="runtime-name">Runtime 2 — Warm</span>
+        <span class="runtime-status status-active" id="warm-status">ACTIVE</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">GPU</span>
+        <span class="metric-value" id="warm-gpu">A100 40GB</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">VRAM Used</span>
+        <span class="metric-value" id="warm-vram">15.8 / 40 GB</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill warm" id="warm-vram-bar" style="width:40%"></div></div>
+      <div class="metric">
+        <span class="metric-label">Tasks / min</span>
+        <span class="metric-value" id="warm-tpm">21</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Latency (p50)</span>
+        <span class="metric-value" id="warm-latency">233ms</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Pool Weight</span>
+        <span class="metric-value">21% (fib(8))</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Role</span>
+        <span class="metric-value">Batch / Fine-tuning</span>
+      </div>
+    </div>
+
+    <!-- Cold Runtime -->
+    <div class="glass runtime-card cold">
+      <div class="runtime-header">
+        <span class="runtime-name">Runtime 3 — Cold</span>
+        <span class="runtime-status status-idle" id="cold-status">IDLE</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">GPU</span>
+        <span class="metric-value" id="cold-gpu">A100 40GB</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">VRAM Used</span>
+        <span class="metric-value" id="cold-vram">5.2 / 40 GB</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill cold" id="cold-vram-bar" style="width:13%"></div></div>
+      <div class="metric">
+        <span class="metric-label">Tasks / min</span>
+        <span class="metric-value" id="cold-tpm">8</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Latency (p50)</span>
+        <span class="metric-value" id="cold-latency">610ms</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Pool Weight</span>
+        <span class="metric-value">13% (fib(7))</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Role</span>
+        <span class="metric-value">Analytics / Mining</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass task-log">
+    <h3>Task Log — φ-Routed Operations</h3>
+    <div id="log-entries">
+      <div class="log-entry success"><span class="ts">15:20:01</span> [HOT] Embedding batch 987 vectors — 89ms</div>
+      <div class="log-entry success"><span class="ts">15:19:48</span> [WARM] Fine-tune checkpoint saved — epoch 13/21</div>
+      <div class="log-entry success"><span class="ts">15:19:35</span> [HOT] Inference: CSL routing — 34ms</div>
+      <div class="log-entry success"><span class="ts">15:19:22</span> [COLD] Pattern mining batch — 233 patterns found</div>
+      <div class="log-entry success"><span class="ts">15:19:09</span> [HOT] Vector search top-21 — 55ms</div>
+      <div class="log-entry"><span class="ts">15:18:56</span> [WARM] Batch embedding 610 docs — queued</div>
+      <div class="log-entry success"><span class="ts">15:18:43</span> [HOT] HeadyBuddy response — 144ms</div>
+      <div class="log-entry error"><span class="ts">15:18:30</span> [COLD] Connection retry — φ-backoff 2618ms</div>
+      <div class="log-entry success"><span class="ts">15:18:17</span> [HOT] Semantic similarity — 21ms</div>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 HeadySystems Inc. — Eric Haywood — 51 Provisional Patents<br>
+    Sacred Geometry φ-Orchestrated | CSL-Gated Routing | Zero Magic Numbers
+  </footer>
+
+  <script>
+    'use strict';
+    // φ-derived heartbeat interval
+    var PHI_HEARTBEAT_MS = 29034;
+    var PHI = 1.618033988749895;
+
+    // Simulated real-time updates (in production: SSE from Colab Gateway :3352)
+    function updateDashboard() {
+      var now = new Date();
+      var ts = now.toTimeString().slice(0, 8);
+
+      // Simulate metrics with slight random variation
+      var hotVram = (24 + Math.random() * 5).toFixed(1);
+      var warmVram = (15 + Math.random() * 4).toFixed(1);
+      var coldVram = (4 + Math.random() * 3).toFixed(1);
+
+      document.getElementById('hot-vram').textContent = hotVram + ' / 40 GB';
+      document.getElementById('warm-vram').textContent = warmVram + ' / 40 GB';
+      document.getElementById('cold-vram').textContent = coldVram + ' / 40 GB';
+
+      document.getElementById('hot-vram-bar').style.width = (hotVram / 40 * 100) + '%';
+      document.getElementById('warm-vram-bar').style.width = (warmVram / 40 * 100) + '%';
+      document.getElementById('cold-vram-bar').style.width = (coldVram / 40 * 100) + '%';
+
+      // Update counters
+      var total = parseInt(document.getElementById('total-tasks').textContent) + Math.floor(Math.random() * 3);
+      document.getElementById('total-tasks').textContent = total;
+      document.getElementById('active-tasks').textContent = Math.floor(Math.random() * 8 + 5);
+      document.getElementById('gpu-utilization').textContent = Math.floor(55 + Math.random() * 30) + '%';
+
+      // Uptime
+      var uptimeH = (Date.now() / 3600000).toFixed(1);
+      document.getElementById('uptime').textContent = uptimeH + 'h';
+    }
+
+    setInterval(updateDashboard, PHI_HEARTBEAT_MS);
+    updateDashboard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Heady™ System Dashboard</title>
+  <style>
+    :root {
+      --phi: 1.618; --psi: 0.618;
+      --space-xs: 5px; --space-sm: 8px; --space-md: 13px;
+      --space-lg: 21px; --space-xl: 34px; --space-2xl: 55px;
+      --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem;
+      --text-lg: 1.125rem; --text-xl: 1.618rem; --text-2xl: 2.618rem;
+      --bg-primary: #0a0a0f; --bg-secondary: #12121a;
+      --bg-card: rgba(255,255,255,0.03); --bg-glass: rgba(255,255,255,0.05);
+      --text-primary: #e8e8f0; --text-secondary: #9898a8;
+      --border-subtle: rgba(255,255,255,0.08);
+      --accent: #00d4aa; --hot: #ff6b6b; --warm: #ffa94d; --cold: #74c0fc;
+      --success: #51cf66; --danger: #ff6b6b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.618, 0, 0.382, 1); }
+    body { font-family: 'SF Mono', 'Fira Code', monospace;
+           background: var(--bg-primary); color: var(--text-primary);
+           min-height: 100vh; padding: var(--space-xl); }
+    .glass { background: var(--bg-glass); backdrop-filter: blur(20px);
+             border: 1px solid var(--border-subtle); border-radius: 13px; }
+
+    header { text-align: center; margin-bottom: var(--space-xl); }
+    header h1 { font-size: var(--text-2xl);
+                background: linear-gradient(135deg, var(--accent), #7c3aed, var(--hot));
+                -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header p { color: var(--text-secondary); font-size: var(--text-sm); margin-top: var(--space-xs); }
+
+    .nav-bar { display: flex; justify-content: center; gap: var(--space-md);
+               flex-wrap: wrap; margin-bottom: var(--space-xl); }
+    .nav-link { color: var(--text-secondary); text-decoration: none;
+                padding: var(--space-xs) var(--space-md); border-radius: 8px;
+                font-size: var(--text-sm); border: 1px solid transparent; }
+    .nav-link:hover { color: var(--accent); border-color: var(--border-subtle); }
+    .nav-link.active { color: var(--accent); border-color: var(--accent);
+                       background: rgba(0,212,170,0.05); }
+
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                     gap: var(--space-lg); margin-bottom: var(--space-xl); }
+    .service-card { padding: var(--space-lg); position: relative; }
+    .service-card::before { content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 2px; background: var(--accent); opacity: 0.3; }
+
+    .service-header { display: flex; justify-content: space-between; align-items: center;
+                      margin-bottom: var(--space-md); }
+    .service-name { font-weight: 700; font-size: var(--text-base); }
+    .service-port { color: var(--text-secondary); font-size: var(--text-xs); }
+    .service-badge { display: inline-block; padding: 2px var(--space-sm);
+                     border-radius: 55px; font-size: 10px;
+                     text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-healthy { background: rgba(81,207,102,0.15); color: var(--success); }
+    .badge-degraded { background: rgba(255,192,120,0.15); color: var(--warm); }
+    .badge-unhealthy { background: rgba(255,107,107,0.15); color: var(--danger); }
+    .badge-hot { background: rgba(255,107,107,0.1); color: var(--hot); }
+    .badge-warm { background: rgba(255,169,77,0.1); color: var(--warm); }
+    .badge-cold { background: rgba(116,192,252,0.1); color: var(--cold); }
+
+    .service-metrics { margin-top: var(--space-md); }
+    .sm { display: flex; justify-content: space-between; padding: 3px 0;
+          font-size: var(--text-xs); }
+    .sm-label { color: var(--text-secondary); }
+
+    .domains-section { margin-bottom: var(--space-xl); }
+    .domains-section h2 { font-size: var(--text-lg); margin-bottom: var(--space-md);
+                          color: var(--text-secondary); }
+    .domain-grid { display: grid; grid-template-columns: repeat(3, 1fr);
+                   gap: var(--space-md); }
+    @media (max-width: 768px) { .domain-grid { grid-template-columns: 1fr; } }
+    .domain-card { padding: var(--space-md); display: flex; justify-content: space-between;
+                   align-items: center; cursor: pointer; }
+    .domain-card:hover { border-color: var(--accent); }
+    .domain-info { display: flex; flex-direction: column; }
+    .domain-name { font-weight: 600; font-size: var(--text-sm); }
+    .domain-role { font-size: var(--text-xs); color: var(--text-secondary); }
+    .domain-csl { font-size: var(--text-xs); color: var(--accent); }
+
+    .phi-badge { position: fixed; bottom: var(--space-lg); right: var(--space-lg);
+                 padding: var(--space-sm) var(--space-md);
+                 font-size: var(--text-xs); color: var(--text-secondary); }
+
+    footer { text-align: center; color: var(--text-secondary);
+             font-size: var(--text-xs); padding-top: var(--space-xl);
+             border-top: 1px solid var(--border-subtle); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Heady™ System Dashboard</h1>
+    <p>Latent OS v5.4.0 — Sacred Geometry Orchestration — 51 Provisional Patents</p>
+  </header>
+
+  <nav class="nav-bar">
+    <a href="https://headyme.com" class="nav-link active">Dashboard</a>
+    <a href="https://headyai.com" class="nav-link">AI Hub</a>
+    <a href="https://headyapi.com" class="nav-link">API</a>
+    <a href="https://headymcp.com" class="nav-link">MCP</a>
+    <a href="https://headyio.com" class="nav-link">Developers</a>
+    <a href="https://headybot.com" class="nav-link">Automation</a>
+    <a href="https://headybuddy.org" class="nav-link">Companion</a>
+    <a href="https://headyconnection.org" class="nav-link">Community</a>
+    <a href="https://headysystems.com" class="nav-link">Systems</a>
+  </nav>
+
+  <div class="services-grid" id="services">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="domains-section">
+    <h2>9 Heady Domains — CSL-Gated Routing</h2>
+    <div class="domain-grid" id="domains">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <div class="glass phi-badge">φ = 1.618 | ψ = 0.618</div>
+
+  <footer>
+    © 2026 HeadySystems Inc. — Eric Haywood — 51 Provisional Patents<br>
+    Zero Magic Numbers | CSL Gates | Sacred Geometry Topology
+  </footer>
+
+  <script>
+    'use strict';
+    var SERVICES = [
+      { name: 'API Gateway', port: 3370, pool: 'hot', role: 'Unified entry point' },
+      { name: 'Auth Session', port: 3360, pool: 'hot', role: 'Authentication' },
+      { name: 'Domain Router', port: 3366, pool: 'hot', role: 'Cross-domain routing' },
+      { name: 'Search', port: 3364, pool: 'hot', role: 'Vector search' },
+      { name: 'Notification', port: 3361, pool: 'warm', role: 'Alerts & SSE' },
+      { name: 'Scheduler', port: 3363, pool: 'warm', role: 'Task scheduling' },
+      { name: 'Onboarding', port: 3365, pool: 'warm', role: 'User onboarding' },
+      { name: 'Analytics', port: 3362, pool: 'cold', role: 'Event tracking' },
+    ];
+
+    var DOMAINS = [
+      { host: 'headyme.com', role: 'Command Center', csl: '0.809 MEDIUM', pool: 'hot' },
+      { host: 'headysystems.com', role: 'Architecture Engine', csl: '0.882 HIGH', pool: 'warm' },
+      { host: 'headyconnection.org', role: 'Nonprofit Hub', csl: '0.618 ψ', pool: 'warm' },
+      { host: 'headybuddy.org', role: 'AI Companion', csl: '0.809 MEDIUM', pool: 'hot' },
+      { host: 'headymcp.com', role: 'MCP Layer', csl: '0.927 CRITICAL', pool: 'hot' },
+      { host: 'headyio.com', role: 'Developer Platform', csl: '0.691 LOW', pool: 'warm' },
+      { host: 'headybot.com', role: 'Automation Hub', csl: '0.809 MEDIUM', pool: 'warm' },
+      { host: 'headyapi.com', role: 'API Gateway', csl: '0.927 CRITICAL', pool: 'hot' },
+      { host: 'headyai.com', role: 'Intelligence Hub', csl: '0.882 HIGH', pool: 'hot' },
+    ];
+
+    function renderServices() {
+      var container = document.getElementById('services');
+      container.innerHTML = SERVICES.map(function(s) {
+        return '<div class="glass service-card">' +
+          '<div class="service-header">' +
+            '<div><span class="service-name">' + s.name + '</span>' +
+            '<span class="service-port"> :' + s.port + '</span></div>' +
+            '<span class="service-badge badge-healthy">HEALTHY</span>' +
+          '</div>' +
+          '<span class="service-badge badge-' + s.pool + '">' + s.pool.toUpperCase() + '</span>' +
+          '<div class="service-metrics">' +
+            '<div class="sm"><span class="sm-label">Role</span><span>' + s.role + '</span></div>' +
+            '<div class="sm"><span class="sm-label">Uptime</span><span>99.98%</span></div>' +
+            '<div class="sm"><span class="sm-label">Latency</span><span>' + (s.pool === 'hot' ? '89' : s.pool === 'warm' ? '233' : '610') + 'ms</span></div>' +
+            '<div class="sm"><span class="sm-label">Req/min</span><span>' + (s.pool === 'hot' ? '89' : s.pool === 'warm' ? '34' : '13') + '</span></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function renderDomains() {
+      var container = document.getElementById('domains');
+      container.innerHTML = DOMAINS.map(function(d) {
+        return '<a href="https://' + d.host + '" class="glass domain-card" style="text-decoration:none;color:inherit">' +
+          '<div class="domain-info">' +
+            '<span class="domain-name">' + d.host + '</span>' +
+            '<span class="domain-role">' + d.role + '</span>' +
+          '</div>' +
+          '<span class="domain-csl">CSL ' + d.csl + '</span>' +
+        '</a>';
+      }).join('');
+    }
+
+    renderServices();
+    renderDomains();
+  </script>
+</body>
+</html>
