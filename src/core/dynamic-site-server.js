@@ -716,6 +716,183 @@ function renderSite(site, host) {
 </html>`;
 }
 
+// ── Render Onboarding Page ──────────────────────────────────
+function renderOnboarding(site, host) {
+  const oauthBtns = AUTH_PROVIDERS.oauth.map(p =>
+    `<button class="auth-btn" style="--pcolor:${p.color}" onclick="selectProvider('${p.id}','oauth')">
+      <span class="auth-icon">${p.icon}</span><span>${p.name}</span>
+    </button>`).join('');
+  const apikeyBtns = AUTH_PROVIDERS.apikey.map(p =>
+    `<button class="auth-btn" style="--pcolor:${p.color}" onclick="selectProvider('${p.id}','apikey')">
+      <span class="auth-icon">${p.icon}</span><span>${p.name}</span>
+    </button>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Started — ${site.brand}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a1a;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08);--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--muted:#555577}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
+    .container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:4rem 1.5rem}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,26,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--text)}
+    .nav-logo{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--brand),var(--accent));font-size:16px;font-weight:900;color:white}
+    .nav-name{font-size:1.1rem;font-weight:700}
+    h1{font-size:2rem;font-weight:900;text-align:center;margin-bottom:.5rem;margin-top:3rem}
+    h1 .gradient{background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{text-align:center;color:var(--dim);margin-bottom:2.5rem}
+    .step{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;transition:all .3s}
+    .step.active{border-color:color-mix(in srgb,var(--brand) 40%,transparent);box-shadow:0 0 30px color-mix(in srgb,var(--brand) 10%,transparent)}
+    .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;cursor:pointer}
+    .step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);font-weight:800;font-size:.9rem;border:2px solid color-mix(in srgb,var(--brand) 25%,transparent);flex-shrink:0}
+    .step-num.done{background:var(--brand);color:white}
+    .step-title{font-weight:700;font-size:1.05rem}
+    .step-body{display:none;padding-top:.5rem}
+    .step.active .step-body{display:block}
+    .auth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+    .auth-btn{display:flex;align-items:center;gap:.4rem;padding:.5rem .6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.3);color:var(--text);font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s}
+    .auth-btn:hover{border-color:var(--pcolor);background:rgba(0,0,0,0.5);transform:translateY(-1px)}
+    .auth-btn.selected{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 15%,transparent)}
+    .auth-icon{font-size:1rem;flex-shrink:0}
+    .auth-section{font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:.75rem 0 .5rem;display:flex;align-items:center;gap:.5rem}
+    .auth-section::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
+    .provider-count{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:600;margin-left:.5rem}
+    .pref-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .pref-card{padding:1rem;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.2);cursor:pointer;transition:all .2s;text-align:center}
+    .pref-card:hover{border-color:color-mix(in srgb,var(--brand) 40%,transparent)}
+    .pref-card.selected{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 10%,transparent)}
+    .pref-icon{font-size:1.5rem;margin-bottom:.5rem}
+    .pref-label{font-weight:600;font-size:.85rem}
+    .pref-desc{color:var(--dim);font-size:.75rem;margin-top:.25rem}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:white;border:none;padding:.75rem 2rem;border-radius:10px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;width:100%;margin-top:1rem}
+    .btn-primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .selected-list{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}
+    .selected-tag{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:.25rem}
+    @media(max-width:600px){.auth-grid{grid-template-columns:repeat(2,1fr)}.pref-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <nav>
+    <a class="nav-brand" href="/">
+      <div class="nav-logo">${site.icon}</div>
+      <span class="nav-name">${site.brand}</span>
+    </a>
+  </nav>
+
+  <div class="container">
+    <h1><span class="gradient">Get Started</span></h1>
+    <p class="subtitle">Set up your ${site.brand} experience in 3 steps</p>
+
+    <div class="step active" id="step1">
+      <div class="step-header" onclick="showStep(1)">
+        <div class="step-num" id="step1num">1</div>
+        <div class="step-title">Choose Your Providers</div>
+      </div>
+      <div class="step-body">
+        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">Select which AI providers and authentication methods you want to use.</p>
+        <div class="auth-section">OAuth Sign-In <span class="provider-count">12</span></div>
+        <div class="auth-grid">${oauthBtns}</div>
+        <div class="auth-section">AI API Keys <span class="provider-count">13</span></div>
+        <div class="auth-grid">${apikeyBtns}</div>
+        <div class="selected-list" id="selectedProviders"></div>
+        <button class="btn-primary" id="step1btn" onclick="completeStep(1)" disabled>Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+      <div class="step-header" onclick="showStep(2)">
+        <div class="step-num" id="step2num">2</div>
+        <div class="step-title">Set Your Preferences</div>
+      </div>
+      <div class="step-body">
+        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">How do you want to use ${site.brand}?</p>
+        <div class="pref-grid">
+          <div class="pref-card" onclick="togglePref(this,'developer')"><div class="pref-icon">💻</div><div class="pref-label">Developer</div><div class="pref-desc">API access, SDKs, code generation</div></div>
+          <div class="pref-card" onclick="togglePref(this,'creative')"><div class="pref-icon">🎨</div><div class="pref-label">Creative</div><div class="pref-desc">Content, music, design</div></div>
+          <div class="pref-card" onclick="togglePref(this,'business')"><div class="pref-icon">📊</div><div class="pref-label">Business</div><div class="pref-desc">Analytics, reports, automation</div></div>
+          <div class="pref-card" onclick="togglePref(this,'research')"><div class="pref-icon">🔬</div><div class="pref-label">Research</div><div class="pref-desc">Deep search, citations, analysis</div></div>
+        </div>
+        <button class="btn-primary" onclick="completeStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step3">
+      <div class="step-header" onclick="showStep(3)">
+        <div class="step-num" id="step3num">3</div>
+        <div class="step-title">Launch Your Dashboard</div>
+      </div>
+      <div class="step-body">
+        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">You're all set! Here's what's ready for you:</p>
+        <div class="pref-grid">
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">🧠</div><div class="pref-label">HeadyBuddy</div><div class="pref-desc">AI chat companion</div></div>
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">🐝</div><div class="pref-label">Bee Swarm</div><div class="pref-desc">Task automation agents</div></div>
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">🔮</div><div class="pref-label">Vector Memory</div><div class="pref-desc">Persistent knowledge</div></div>
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">📊</div><div class="pref-label">Dashboard</div><div class="pref-desc">System overview</div></div>
+        </div>
+        <button class="btn-primary" onclick="launchDashboard()">Launch ${site.brand} →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const selected = new Set();
+    const prefs = new Set();
+
+    function selectProvider(id, type) {
+      const key = type + ':' + id;
+      const btns = document.querySelectorAll('.auth-btn');
+      btns.forEach(b => {
+        if (b.onclick.toString().includes("'" + id + "'")) b.classList.toggle('selected');
+      });
+      if (selected.has(key)) selected.delete(key); else selected.add(key);
+      document.getElementById('step1btn').disabled = selected.size === 0;
+      renderSelected();
+    }
+
+    function renderSelected() {
+      const el = document.getElementById('selectedProviders');
+      el.innerHTML = Array.from(selected).map(s => {
+        const name = s.split(':')[1];
+        return '<span class="selected-tag">' + name + ' ✓</span>';
+      }).join('');
+    }
+
+    function togglePref(el, pref) {
+      el.classList.toggle('selected');
+      if (prefs.has(pref)) prefs.delete(pref); else prefs.add(pref);
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+    }
+
+    function completeStep(n) {
+      document.getElementById('step' + n + 'num').classList.add('done');
+      document.getElementById('step' + n + 'num').textContent = '✓';
+      showStep(n + 1);
+    }
+
+    function launchDashboard() {
+      // Store selections and redirect
+      localStorage.setItem('heady_providers', JSON.stringify(Array.from(selected)));
+      localStorage.setItem('heady_prefs', JSON.stringify(Array.from(prefs)));
+      localStorage.setItem('heady_onboarded', 'true');
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>`;
+}
+
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
@@ -840,6 +1017,16 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ response, identity, site: siteName }));
       } catch { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Invalid request' })); }
     });
+    return;
+  }
+  // ── Onboarding Page ─────────────────────────────────────
+  if (url.pathname === '/onboarding') {
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'X-Heady-Site': site.brand,
+    });
+    res.end(renderOnboarding(site, host));
     return;
   }
 
