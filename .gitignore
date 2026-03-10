@@ -13,3 +13,5 @@ node_modules
 .turbo
 .vscode/settings.local.json
 .wrangler
+in/heady_bounded_security_pass*.zip
+config/secrets/

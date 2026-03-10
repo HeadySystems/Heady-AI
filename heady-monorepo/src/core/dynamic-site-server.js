@@ -145,12 +145,12 @@ const SITES = {
     showAuth: true,
   },
   'headysense.com': {
-    brand: 'HeadyLens',
+    brand: 'HeadySense',
     tagline: 'Sovereign Sight',
     subtitle: 'Vision AI for screenshots, UI review, OCR, and visual code analysis.',
     color: '#f97316',
     accent: '#fb923c',
-    icon: 'L',
+    icon: 'S',
     heroServices: [
       { icon: '👁️', name: 'Vision', desc: 'Image analysis and classification' },
       { icon: '📸', name: 'Screenshot', desc: 'Automated visual QA' },
@@ -174,9 +174,9 @@ const SITES = {
     ],
     showAuth: true,
   },
-  'perfecttrader.com': {
-    brand: 'PerfectTrader',
-    tagline: 'Algorithmic Intelligence',
+  'headyfinance.com': {
+    brand: 'HeadyFinance',
+    tagline: 'AI-Powered Trading Intelligence',
     subtitle: 'AI-powered trading signals, backtesting, and portfolio optimization with real-time market data.',
     color: '#22c55e',
     accent: '#86efac',

@@ -124,7 +124,7 @@ class PhiSampler {
 // ── Exporter ─────────────────────────────────────────────────────
 class SpanExporter {
   constructor(config = {}) {
-    this.endpoint = config.endpoint ?? 'http://localhost:4318/v1/traces';
+    this.endpoint = config.endpoint ?? process.env.OTEL_EXPORTER_ENDPOINT ?? 'http://otel-collector:4318/v1/traces';
     this.batchSize = config.batchSize ?? FIB[8]; // 21
     this.flushIntervalMs = config.flushIntervalMs ?? FIB[5] * 1000; // 5s
     this.buffer = [];
@@ -232,7 +232,7 @@ class DistributedTracer {
 
       // End span on response finish
       const originalEnd = res.end.bind(res);
-      res.end = function(...args) {
+      res.end = function (...args) {
         span.setAttribute('http.status_code', res.statusCode);
         span.setStatus(res.statusCode >= 500 ? 'ERROR' : 'OK');
         self.endSpan(span);

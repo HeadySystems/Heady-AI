@@ -41,19 +41,19 @@ function phiBackoff(attempt, baseMs = 1000, maxMs = 60000) {
 
 // ── Event Schemas ────────────────────────────────────────────────
 const EVENT_SUBJECTS = {
-  'heady.agent.spawned':       { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[16] },
-  'heady.agent.completed':     { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[16] },
-  'heady.agent.failed':        { retention: 'limits', maxAge: FIB[13] * 3600, maxMsgs: FIB[16] },
-  'heady.memory.stored':       { retention: 'limits', maxAge: FIB[12] * 3600, maxMsgs: FIB[16] },
-  'heady.memory.evicted':      { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[14] },
-  'heady.security.alert':      { retention: 'limits', maxAge: FIB[14] * 3600, maxMsgs: FIB[16] },
-  'heady.security.violation':  { retention: 'limits', maxAge: FIB[14] * 3600, maxMsgs: FIB[16] },
-  'heady.health.heartbeat':    { retention: 'limits', maxAge: FIB[9] * 3600, maxMsgs: FIB[14] },
-  'heady.health.drift':        { retention: 'limits', maxAge: FIB[12] * 3600, maxMsgs: FIB[16] },
-  'heady.deploy.started':      { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[14] },
-  'heady.deploy.completed':    { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[14] },
-  'heady.billing.event':       { retention: 'limits', maxAge: FIB[14] * 3600, maxMsgs: FIB[16] },
-  'heady.analytics.event':     { retention: 'limits', maxAge: FIB[12] * 3600, maxMsgs: FIB[16] },
+  'heady.agent.spawned': { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[16] },
+  'heady.agent.completed': { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[16] },
+  'heady.agent.failed': { retention: 'limits', maxAge: FIB[13] * 3600, maxMsgs: FIB[16] },
+  'heady.memory.stored': { retention: 'limits', maxAge: FIB[12] * 3600, maxMsgs: FIB[16] },
+  'heady.memory.evicted': { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[14] },
+  'heady.security.alert': { retention: 'limits', maxAge: FIB[14] * 3600, maxMsgs: FIB[16] },
+  'heady.security.violation': { retention: 'limits', maxAge: FIB[14] * 3600, maxMsgs: FIB[16] },
+  'heady.health.heartbeat': { retention: 'limits', maxAge: FIB[9] * 3600, maxMsgs: FIB[14] },
+  'heady.health.drift': { retention: 'limits', maxAge: FIB[12] * 3600, maxMsgs: FIB[16] },
+  'heady.deploy.started': { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[14] },
+  'heady.deploy.completed': { retention: 'limits', maxAge: FIB[11] * 3600, maxMsgs: FIB[14] },
+  'heady.billing.event': { retention: 'limits', maxAge: FIB[14] * 3600, maxMsgs: FIB[16] },
+  'heady.analytics.event': { retention: 'limits', maxAge: FIB[12] * 3600, maxMsgs: FIB[16] },
 };
 
 // ── In-Memory Message Store (NATS-compatible interface) ──────────
@@ -170,7 +170,7 @@ class Consumer {
 // ── Event Bus ────────────────────────────────────────────────────
 class EventBusNATS {
   constructor(config = {}) {
-    this.url = config.url ?? 'nats://localhost:4222';
+    this.url = config.url ?? process.env.NATS_URL ?? 'nats://nats:4222';
     this.streams = new Map();
     this.consumers = new Map();
     this.subscriptions = new Map();
