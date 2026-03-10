@@ -1,0 +1,28 @@
+{
+  "runtimes": [
+    {
+      "id": "colab-node-1",
+      "tier": "pro_plus",
+      "purpose": "latent_space_ops_alpha",
+      "capacity": "A100"
+    },
+    {
+      "id": "colab-node-2",
+      "tier": "pro_plus",
+      "purpose": "latent_space_ops_beta",
+      "capacity": "A100"
+    },
+    {
+      "id": "colab-node-3",
+      "tier": "pro_plus",
+      "purpose": "latent_space_ops_gamma",
+      "capacity": "V100"
+    }
+  ],
+  "concurrent_execution": true,
+  "mathematical_scaling": {
+    "base": "phi",
+    "phi": 1.618033988749895,
+    "psi": 0.618033988749895
+  }
+}
