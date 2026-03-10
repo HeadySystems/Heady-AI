@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-require('dotenv').config();
 
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
-let cookieParser;
-try { cookieParser = require('cookie-parser'); } catch { cookieParser = null; }
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
 import { logger } from './src/utils/logger.js';
 import { validateEnv } from './src/utils/env-validator.js';
@@ -19,19 +20,21 @@ import { setupDashboardRoutes } from './src/gateway/dashboard-router.js';
 import { AutoSuccessEngine } from './src/services/auto-success.js';
 import { errorHandler } from './src/gateway/error-handler.js';
 import { metricsMiddleware, metricsEndpoint } from './src/utils/metrics.js';
-import { createRequire } from 'node:module';
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const require = createRequire(import.meta.url);
-// Auth routes
+
+// Auth routes — dynamic import for cookie-parser (optional dep)
+let cookieParser;
+try { cookieParser = require('cookie-parser'); } catch { cookieParser = null; }
+
 let authRouter;
 try {
-  const authModule = require('./src/routes/auth-routes');
+  const authModule = await import('./src/routes/auth-routes.js');
   authRouter = authModule.router;
 } catch (err) {
-  console.warn('[HeadyManager] Auth routes not loaded:', err.message);
+  logger.warn(`[HeadyManager] Auth routes not loaded: ${err.message}`);
 }
 
 // ── Validate environment ──
@@ -69,7 +72,7 @@ app.get('/metrics', metricsEndpoint);
 // ── Auth routes ──
 if (authRouter) {
   app.use('/api/auth', authRouter);
-  logger.info('[HeadyManager] ✅ Auth routes mounted at /api/auth');
+  logger.info('[HeadyManager] Auth routes mounted at /api/auth');
 }
 
 // ── Error handling (must be last) ──
@@ -77,17 +80,17 @@ app.use(errorHandler);
 
 // ── Start server ──
 const server = app.listen(PORT, () => {
-  logger.info(`[HeadyManager] ✅ Running on port ${PORT}`);
-  logger.info(`[HeadyManager] ✅ Environment: ${process.env.NODE_ENV || 'development'}`);
-  logger.info(`[HeadyManager] ✅ Health: http://localhost:${PORT}/health`);
+  logger.info(`[HeadyManager] Running on port ${PORT}`);
+  logger.info(`[HeadyManager] Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`[HeadyManager] Health: http://localhost:${PORT}/health`);
 });
 
 // ── Auto-Success Engine ──
 const autoSuccess = new AutoSuccessEngine();
 autoSuccess.start().then(() => {
-  logger.info(`[HeadyManager] ✅ Auto-Success Engine started (${autoSuccess.taskCount} tasks)`);
+  logger.info(`[HeadyManager] Auto-Success Engine started (${autoSuccess.taskCount} tasks)`);
 }).catch(err => {
-  logger.error(`[HeadyManager] ⚠️ Auto-Success Engine error: ${err.message}`);
+  logger.error(`[HeadyManager] Auto-Success Engine error: ${err.message}`);
 });
 
 // ── Graceful shutdown ──

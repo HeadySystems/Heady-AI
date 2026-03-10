@@ -16,9 +16,9 @@
 
 import express from 'express';
 import crypto from 'crypto';
-import { createLogger } from '../../packages/structured-logger.js';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
+const { createLogger } = require('../../packages/structured-logger');
 const router = express.Router();
 const log = createLogger('auth', 'authentication');
 
