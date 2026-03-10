@@ -1,3 +1,5 @@
+const pino = require('pino');
+const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -35,9 +37,9 @@ const rateLimit = require("express-rate-limit");
 let imaginationRoutes = null;
 try {
   imaginationRoutes = require("./src/routes/imagination-routes");
-  console.log("  ∞ Imagination Engine: ROUTES LOADED");
+  logger.info("  ∞ Imagination Engine: ROUTES LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Imagination routes not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Imagination routes not loaded: ${err.message}`);
 }
 
 // ─── Secrets & Cloudflare Management ──────────────────────────────
@@ -65,10 +67,10 @@ try {
     secretsManager.register({ ...s, source: "env" });
   }
   secretsManager.restoreState();
-  console.log("  \u221e Secrets Manager: LOADED (" + secretsManager.getAll().length + " secrets tracked)");
-  console.log("  \u221e Cloudflare Manager: LOADED (token " + (cfManager.isTokenValid() ? "valid" : "needs refresh") + ")");
+  logger.info("  \u221e Secrets Manager: LOADED (" + secretsManager.getAll().length + " secrets tracked)");
+  logger.info("  \u221e Cloudflare Manager: LOADED (token " + (cfManager.isTokenValid() ? "valid" : "needs refresh") + ")");
 } catch (err) {
-  console.warn(`  \u26a0 Secrets/Cloudflare not loaded: ${err.message}`);
+  logger.warn(`  \u26a0 Secrets/Cloudflare not loaded: ${err.message}`);
 }
 
 const PORT = Number(process.env.PORT || 3300);
@@ -324,10 +326,10 @@ let pipelineError = null;
 try {
   const pipelineMod = require("./src/hc_pipeline");
   pipeline = pipelineMod.pipeline;
-  console.log("  ∞ Pipeline engine: LOADED");
+  logger.info("  ∞ Pipeline engine: LOADED");
 } catch (err) {
   pipelineError = err.message;
-  console.warn(`  ⚠ Pipeline engine not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Pipeline engine not loaded: ${err.message}`);
 }
 
 app.get("/api/pipeline/config", (req, res) => {
@@ -452,17 +454,17 @@ try {
 
   resourceManager.on("resource_event", (event) => {
     if (event.severity === "WARN_HARD" || event.severity === "CRITICAL") {
-      console.warn(`  ⚠ Resource ${event.severity}: ${event.resourceType} at ${event.currentUsagePercent}%`);
+      logger.warn(`  ⚠ Resource ${event.severity}: ${event.resourceType} at ${event.currentUsagePercent}%`);
     }
   });
 
   resourceManager.on("escalation_required", (data) => {
-    console.warn(`  ⚠ ESCALATION: ${data.event.resourceType} at ${data.event.currentUsagePercent}% — user prompt required`);
+    logger.warn(`  ⚠ ESCALATION: ${data.event.resourceType} at ${data.event.currentUsagePercent}% — user prompt required`);
   });
 
-  console.log("  ∞ Resource Manager: LOADED (polling every 5s)");
+  logger.info("  ∞ Resource Manager: LOADED (polling every 5s)");
 } catch (err) {
-  console.warn(`  ⚠ Resource Manager not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Resource Manager not loaded: ${err.message}`);
 
   // Fallback inline resource health endpoint
   app.get("/api/resources/health", (req, res) => {
@@ -507,9 +509,9 @@ try {
     });
   }
 
-  console.log("  ∞ Task Scheduler: LOADED");
+  logger.info("  ∞ Task Scheduler: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Task Scheduler not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Task Scheduler not loaded: ${err.message}`);
 }
 
 // ─── Resource Diagnostics ────────────────────────────────────────────
@@ -521,9 +523,9 @@ try {
     taskScheduler,
   });
   registerDiagnosticRoutes(app, resourceDiagnostics);
-  console.log("  ∞ Resource Diagnostics: LOADED");
+  logger.info("  ∞ Resource Diagnostics: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Resource Diagnostics not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Resource Diagnostics not loaded: ${err.message}`);
 }
 
 // ─── Monte Carlo Plan Scheduler ──────────────────────────────────────
@@ -537,7 +539,7 @@ try {
 
   // Wire MC plan scheduler drift alerts into pattern engine (loaded below)
   mcPlanScheduler.on("drift:detected", (alert) => {
-    console.warn(`  ⚠ MC Drift: ${alert.taskType}/${alert.strategyId} at ${alert.medianMs}ms (target ${alert.targetMs}ms)`);
+    logger.warn(`  ⚠ MC Drift: ${alert.taskType}/${alert.strategyId} at ${alert.medianMs}ms (target ${alert.targetMs}ms)`);
   });
 
   // Bind MC global to pipeline if available
@@ -551,10 +553,10 @@ try {
   // Default to speed_priority mode — speed is a first-class objective
   mcPlanScheduler.setSpeedMode("on");
 
-  console.log("  ∞ Monte Carlo Plan Scheduler: LOADED (speed_priority mode)");
-  console.log("  ∞ Monte Carlo Global: AUTO-RUN started (60s cycles)");
+  logger.info("  ∞ Monte Carlo Plan Scheduler: LOADED (speed_priority mode)");
+  logger.info("  ∞ Monte Carlo Global: AUTO-RUN started (60s cycles)");
 } catch (err) {
-  console.warn(`  ⚠ Monte Carlo not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Monte Carlo not loaded: ${err.message}`);
 }
 
 // ─── Pattern Recognition Engine ──────────────────────────────────────
@@ -610,9 +612,9 @@ try {
   // Start continuous pattern analysis
   patternEngine.start();
 
-  console.log("  ∞ Pattern Engine: LOADED (30s analysis cycles)");
+  logger.info("  ∞ Pattern Engine: LOADED (30s analysis cycles)");
 } catch (err) {
-  console.warn(`  ⚠ Pattern Engine not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Pattern Engine not loaded: ${err.message}`);
 }
 
 // ─── Story Driver ────────────────────────────────────────────────────
@@ -664,9 +666,9 @@ try {
     });
   }
 
-  console.log("  ∞ Story Driver: LOADED");
+  logger.info("  ∞ Story Driver: LOADED");
 } catch (err) {
-  console.warn(`  ⚠ Story Driver not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Story Driver not loaded: ${err.message}`);
 }
 
 // ─── Self-Critique & Optimization Engine ─────────────────────────────
@@ -699,10 +701,10 @@ try {
     });
   }
 
-  console.log("  ∞ Self-Critique Engine: LOADED");
-  console.log("    → Endpoints: /api/self/*, /api/pricing/*");
+  logger.info("  ∞ Self-Critique Engine: LOADED");
+  logger.info("    → Endpoints: /api/self/*, /api/pricing/*");
 } catch (err) {
-  console.warn(`  ⚠ Self-Critique Engine not loaded: ${err.message}`);
+  logger.warn(`  ⚠ Self-Critique Engine not loaded: ${err.message}`);
 }
 
 // ─── Bind Pipeline to External Systems ──────────────────────────────
@@ -714,9 +716,9 @@ try {
     patternEngine: patternEngine || null,
     selfCritique: selfCritiqueEngine || null,
   });
-  console.log("  ∞ Pipeline bound to MC + Patterns + Self-Critique");
+  logger.info("  ∞ Pipeline bound to MC + Patterns + Self-Critique");
 } catch (err) {
-  console.warn(`  ⚠ Pipeline bind failed: ${err.message}`);
+  logger.warn(`  ⚠ Pipeline bind failed: ${err.message}`);
 }
 
 // ─── HeadyBuddy API ─────────────────────────────────────────────────
@@ -1002,7 +1004,7 @@ try {
     registerCloudflareRoutes(app, cfManager);
   }
 } catch (err) {
-  console.warn(`  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
+  logger.warn(`  ⚠ Secrets/Cloudflare routes not registered: ${err.message}`);
 }
 
 // ─── Aloha Protocol System (Always-On) ───────────────────────────────
@@ -1023,9 +1025,9 @@ const alohaState = {
   deOptChecks: 0,
 };
 
-if (alohaProtocol) console.log("  \u221e Aloha Protocol: LOADED (always-on)");
-if (deOptProtocol) console.log("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
-if (stabilityFirst) console.log("  \u221e Stability First: LOADED (the canoe must not sink)");
+if (alohaProtocol) logger.info("  \u221e Aloha Protocol: LOADED (always-on)");
+if (deOptProtocol) logger.info("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
+if (stabilityFirst) logger.info("  \u221e Stability First: LOADED (the canoe must not sink)");
 
 app.get("/api/aloha/status", (req, res) => {
   res.json({
@@ -1152,7 +1154,7 @@ app.get("/api/aloha/web-baseline", (req, res) => {
 
 // ─── Error Handler ──────────────────────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error("HeadyManager Error:", err);
+  logger.error("HeadyManager Error:", err);
   res.status(500).json({
     error: "Internal server error",
     message: process.env.NODE_ENV === "development" ? err.message : "Something went wrong",
@@ -1169,7 +1171,7 @@ app.get("*", (req, res) => {
 
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  console.log(`  ∞ Health: http://localhost:${PORT}/api/health`);
-  console.log(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
+  logger.info(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
+  logger.info(`  ∞ Health: http://localhost:${PORT}/api/health`);
+  logger.info(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });

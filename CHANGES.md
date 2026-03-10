@@ -8,3 +8,6 @@
 - Cleaned the site generator so future auth surfaces do not reintroduce browser storage or alert-based OAuth placeholders.
 - Added a root documentation tree for architecture, ADRs, security posture, onboarding, runbooks, and error catalog material.
 - Added validation tests and a local validation script for auth, AutoContext, bundle structure, and storage-policy enforcement.
+
+- **Logging Modernization**: Replaced `console.log` and `console.error` with structured `pino` logger in `heady-manager.js` and `api-gateway.js` to support production-grade observability.
+- **Name Correction**: Fixed lingering erroneous references to "Eric Haywood" and typos like "Eric Haywoodington", unifying all references globally to "Eric Haywood".

@@ -58,3 +58,7 @@ Added 4 liquid nodes to `cloud-layers.yaml`:
 - 21-stage HCFullPipeline: 6/6 tests pass (full run, approval gate, skip stages, validation, status, self-awareness)
 - Cloud Run: 7/7 services live and healthy
 - MCP Bridge: v2.0.0 with 29 vectors, 384 dimensions, GPU enabled, 4 transports active
+
+### Additional Enhancements
+- Migrated core services (`heady-manager.js`, `api-gateway.js`) from unformatted `console.log` output to structured JSON logging using `pino`.
+- Updated documentation and presentation layer to correctly refer to founder "Eric Haywood".

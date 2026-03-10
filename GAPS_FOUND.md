@@ -58,3 +58,7 @@
 - 2 TODO comments in production code (bee-factory-v2.js:1036, auth-manager.js:330)
 - `console.log` used extensively (~1000+ instances in src/) instead of structured logging
 - Several services in `services/` directory lack entry point files (server.js/index.js)
+
+### Remaining Identified Gaps (Logged for Next Agent)
+- Need to expand the `pino` structured logging to the remaining ~8000 instances of `console.log` throughout the entire monorepo.
+- `localStorage` -> `httpOnly` secure migration needs a careful re-architecture of the client-side authentication checks.
