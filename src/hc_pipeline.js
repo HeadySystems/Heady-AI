@@ -416,12 +416,71 @@ function registerTaskHandler(taskName, handler) {
   taskHandlers.set(taskName, handler);
 }
 
+// ── Compute routing: GPU tasks → Colab cluster, distributed → swarms ──
+
+/** Tasks that benefit from GPU acceleration (route to Colab runtimes) */
+const GPU_TASKS = new Set([
+  'generate_embeddings', 'compute_embeddings', 'embedding_generation',
+  'model_inference', 'run_inference', 'vector_search', 'similarity_search',
+  'train_model', 'fine_tune', 'batch_inference', 'compute_vectors',
+  'latent_space_ops', 'vector_transform', 'embedding_index',
+]);
+
+/** Tasks that benefit from distributed swarm execution */
+const SWARM_TASKS = new Set([
+  'ingest_news_feeds', 'ingest_external_apis', 'ingest_repo_changes',
+  'ingest_health_metrics', 'ingest_channel_events', 'ingest_connection_health',
+  'ingest_public_domain_patterns', 'mine_public_domain_best_practices',
+  'check_public_domain_inspiration', 'run_meta_analysis',
+  'identify_improvement_candidates', 'check_all_connection_health',
+]);
+
+let _colabCluster = null;
+let _swarmCoordinator = null;
+
+/** Register external compute providers (called from subsystem-routes.js) */
+function registerComputeProviders({ colabCluster, swarmCoordinator } = {}) {
+  if (colabCluster) _colabCluster = colabCluster;
+  if (swarmCoordinator) _swarmCoordinator = swarmCoordinator;
+}
+
 async function executeTask(taskName, context) {
+  // 1. Check for registered handler (highest priority)
   const handler = taskHandlers.get(taskName);
   if (handler) {
     return await handler(context);
   }
-  // Default: simulated task execution with success
+
+  // 2. Route GPU-accelerated tasks to Colab cluster
+  if (GPU_TASKS.has(taskName) && _colabCluster) {
+    try {
+      const result = await _colabCluster.executeTask({
+        id: `${context.runId}-${taskName}`,
+        type: taskName,
+        data: context,
+      });
+      return { task: taskName, status: 'completed', routed: 'colab-cluster', ...result };
+    } catch (err) {
+      // Fall through to default if Colab unavailable
+      log.warn(`Colab routing failed for '${taskName}': ${err.message}, using default handler`);
+    }
+  }
+
+  // 3. Route distributed tasks to swarm coordinator
+  if (SWARM_TASKS.has(taskName) && _swarmCoordinator && typeof _swarmCoordinator.dispatch === 'function') {
+    try {
+      const result = await _swarmCoordinator.dispatch({
+        id: `${context.runId}-${taskName}`,
+        type: taskName,
+        data: context,
+      });
+      return { task: taskName, status: 'completed', routed: 'swarm', ...result };
+    } catch (err) {
+      log.warn(`Swarm routing failed for '${taskName}': ${err.message}, using default handler`);
+    }
+  }
+
+  // 4. Default: simulated task execution with success
   return {
     task: taskName,
     status: "completed",
@@ -1010,6 +1069,7 @@ module.exports = {
   HCFullPipeline,
   pipeline,
   registerTaskHandler,
+  registerComputeProviders,
   RunStatus,
   CircuitBreaker,
   WorkerPool,

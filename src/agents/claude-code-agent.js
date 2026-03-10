@@ -36,6 +36,7 @@
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const { buildCompactDirective, getPromptHash } = require("./universal-agent-prompt");
 
 const AGENT_ID = "claude-code";
 const AGENT_SKILLS = [
@@ -128,10 +129,21 @@ class ClaudeCodeAgent {
    * Build a structured prompt for Claude Code based on task type.
    */
   _buildPrompt(request, metadata) {
+    // Inject universal agent directives into every prompt
+    const universalDirective = buildCompactDirective({
+      id: this.id,
+      skills: this.skills,
+      pool: "hot",
+      ring: "middle",
+    });
+
     const context = [
+      universalDirective,
+      ``,
       `Project: HeadyMonorepo (HCFullPipeline)`,
       `Stage: ${metadata?.requestType || "unknown"}`,
       `Run ID: ${request.runId || request.id || "N/A"}`,
+      `Prompt Hash: ${getPromptHash()}`,
     ];
 
     switch (request.taskType) {
@@ -349,6 +361,7 @@ class ClaudeCodeAgent {
       id: this.id,
       skills: this.skills,
       model: this.model,
+      universalPromptHash: getPromptHash(),
       history: this.history.slice(-10),
       totalInvocations: this.history.length,
       successRate: this.history.length > 0

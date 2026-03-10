@@ -937,12 +937,41 @@
     }
   },
 
+  "universalAgentPrompt": {
+    "version": "1.0.0",
+    "configPath": "configs/universal-agent-prompt.md",
+    "loaderModule": "src/agents/universal-agent-prompt.js",
+    "colabRuntimeNodes": "src/colab/colab-runtime-nodes.js",
+    "description": "MAXIMUM POTENTIAL universal coding agent system prompt — integrated into all Heady agents via compact directive injection",
+    "features": [
+      "7-archetype cognitive framework (Owl, Eagle, Dolphin, Rabbit, Ant, Elephant, Beaver)",
+      "CSL-gated 384D routing — no arbitrary priorities",
+      "17-swarm matrix integration with HeadyBee distributed compute",
+      "3 Colab Pro+ A100 runtimes as latent space ops (Cortex, Synapse, Reflex)",
+      "Phi-derived constants — zero magic numbers",
+      "Sacred Geometry UI design system (Fibonacci spacing, golden ratio typography)",
+      "Security by default — OWASP top 10 protection",
+      "Structured observability — JSON logs, health endpoints, correlation IDs"
+    ],
+    "injectionModes": {
+      "full": "buildAgentPrompt() — complete system prompt for standalone agent invocation",
+      "compact": "buildCompactDirective() — 10-line directive for inline injection into task prompts"
+    },
+    "cognitiveArchetypes": 7,
+    "swarmIntegration": 17,
+    "colabRuntimes": 3,
+    "buildDirectives": 8,
+    "securityChecks": 12,
+    "deliveryStandards": 12
+  },
+
   "_manifest_integrity": {
-    "fileVersion": "1.0.0",
+    "fileVersion": "1.1.0",
     "generatedBy": "Heady Liquid Dynamic Latent OS Build System",
     "checksum_algorithm": "sha256",
     "sacredGeometryCompliant": true,
     "zeroMagicNumbers": true,
-    "sourceOfTruth": true
+    "sourceOfTruth": true,
+    "universalPromptIntegrated": true
   }
 }
