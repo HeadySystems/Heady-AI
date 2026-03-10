@@ -1,0 +1,27 @@
+{
+  "name": "@heady/shared",
+  "version": "4.0.0",
+  "description": "Heady\u2122 Shared Foundation Modules \u2014 \u03c6-math, logger, health, errors, config, types",
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./phi-math": "./dist/phi-math.js",
+    "./logger": "./dist/logger.js",
+    "./health": "./dist/health.js",
+    "./errors": "./dist/errors.js",
+    "./config": "./dist/config.js",
+    "./types": "./dist/types.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
