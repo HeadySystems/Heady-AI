@@ -8,6 +8,7 @@ import path from 'path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import { existsSync } from 'node:fs';
 
 import { logger } from './src/utils/logger.js';
 import { validateEnv } from './src/utils/env-validator.js';
@@ -46,7 +47,7 @@ if (!envOk && process.env.NODE_ENV === 'production') {
 }
 
 const app = express();
-const PORT = process.env.PORT || 3301;
+const PORT = process.env.PORT || 3300;
 
 // ── Global middleware ──
 app.use(helmet({
@@ -69,8 +70,9 @@ app.use(express.json({ limit: '10mb' }));
 if (cookieParser) app.use(cookieParser());
 app.use(metricsMiddleware);
 
-// ── Static files (public/) ──
+// ── Static files (public/ + frontend dist) ──
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/app', express.static(path.join(__dirname, 'frontend', 'dist')));
 
 // ── Routes ──
 setupHealthRoutes(app);
@@ -111,6 +113,13 @@ app.post('/api/context/index', async (_req, res, next) => {
 });
 
 logger.info('[HeadyManager] AutoContext continuous service started at /api/context/*');
+
+// ── SPA fallback for /app/* routes ──
+const frontendIndex = path.join(__dirname, 'frontend', 'dist', 'index.html');
+if (existsSync(frontendIndex)) {
+  app.get('/app/{*path}', (_req, res) => res.sendFile(frontendIndex));
+  logger.info('[HeadyManager] Frontend SPA served at /app');
+}
 
 // ── Error handling (must be last) ──
 app.use(errorHandler);
