@@ -38,21 +38,21 @@ const PORT = process.env.SERVICE_PORT || 3352;
 // φ-DERIVED CONSTANTS — ZERO MAGIC NUMBERS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const HEARTBEAT_MS       = PHI_TIMING.PHI_7;             // 29,034ms heartbeat cycle
-const RECONNECT_BASE_MS  = PHI_TIMING.PHI_1;             // 1,618ms base reconnect
-const MAX_RECONNECT_MS   = PHI_TIMING.PHI_8;             // 46,979ms max reconnect delay
-const TASK_TIMEOUT_MS    = PHI_TIMING.PHI_6;             // 17,944ms per task
-const HEALTH_CHECK_MS    = PHI_TIMING.PHI_3;             // 4,236ms health scan interval
-const DRAIN_TIMEOUT_MS   = PHI_TIMING.PHI_8;             // 46,979ms drain window
-const QUEUE_DEPTH        = fib(13);                      // 233 max queued tasks
-const BATCH_SIZES        = [fib(6), fib(7), fib(8), fib(9), fib(10)]; // [8, 13, 21, 34, 55]
+const HEARTBEAT_MS = PHI_TIMING.PHI_7;             // 29,034ms heartbeat cycle
+const RECONNECT_BASE_MS = PHI_TIMING.PHI_1;             // 1,618ms base reconnect
+const MAX_RECONNECT_MS = PHI_TIMING.PHI_8;             // 46,979ms max reconnect delay
+const TASK_TIMEOUT_MS = PHI_TIMING.PHI_6;             // 17,944ms per task
+const HEALTH_CHECK_MS = PHI_TIMING.PHI_3;             // 4,236ms health scan interval
+const DRAIN_TIMEOUT_MS = PHI_TIMING.PHI_8;             // 46,979ms drain window
+const QUEUE_DEPTH = fib(13);                      // 233 max queued tasks
+const BATCH_SIZES = [fib(6), fib(7), fib(8), fib(9), fib(10)]; // [8, 13, 21, 34, 55]
 const MAX_RECONNECT_ATTEMPTS = fib(8);                   // 21 attempts before giving up
-const WS_PING_INTERVAL   = PHI_TIMING.PHI_5;            // 11,090ms WebSocket ping
-const GPU_UTIL_HISTORY    = fib(8);                      // 21 samples for rolling average
-const TASK_ID_ENTROPY     = fib(6);                      // 8 chars random suffix
+const WS_PING_INTERVAL = PHI_TIMING.PHI_5;            // 11,090ms WebSocket ping
+const GPU_UTIL_HISTORY = fib(8);                      // 21 samples for rolling average
+const TASK_ID_ENTROPY = fib(6);                      // 8 chars random suffix
 
 const POOL_WEIGHTS = {
-  hot:  POOLS.HOT,        // 0.34 — user-facing, latency-critical
+  hot: POOLS.HOT,        // 0.34 — user-facing, latency-critical
   warm: POOLS.WARM,       // 0.21 — background batch processing
   cold: POOLS.COLD,       // 0.13 — analytics, experiments
 };
@@ -326,8 +326,8 @@ function routeTask(task) {
     const pressureLabel = runtime.pressureLevel.label;
     const pressurePenalty = pressureLabel === 'NOMINAL' ? 1
       : pressureLabel === 'ELEVATED' ? PSI
-      : pressureLabel === 'HIGH' ? PSI * PSI
-      : Math.pow(PSI, 3); // CRITICAL
+        : pressureLabel === 'HIGH' ? PSI * PSI
+          : Math.pow(PSI, 3); // CRITICAL
 
     // Composite routing score
     const compositeScore = affinityScore * loadPenalty * pressurePenalty * typeMatch;
@@ -672,6 +672,38 @@ setInterval(() => {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 app.use(express.json({ limit: `${fib(6)}mb` })); // 8mb
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// API KEY AUTHENTICATION MIDDLEWARE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const VALID_API_KEYS = new Set(
+  Object.entries(process.env)
+    .filter(([k, v]) => k.startsWith('HEADY_API_KEY') && v)
+    .map(([, v]) => v)
+);
+
+function requireApiKey(req, res, next) {
+  // Allow health + metrics endpoints without auth (monitoring probes)
+  if (req.path === '/health' || req.path === '/metrics') return next();
+
+  const key = req.headers['x-heady-api-key'] || req.query.apiKey;
+  if (!key || !VALID_API_KEYS.has(key)) {
+    log('warn', 'Unauthorized request', {
+      path: req.path,
+      ip: req.ip,
+      hasKey: !!key,
+    });
+    return res.status(401).json({
+      error: 'HEADY-COLAB-AUTH-001',
+      message: 'Valid HEADY_API_KEY required',
+    });
+  }
+  next();
+}
+
+app.use(requireApiKey);
+log('info', 'API key auth enabled', { validKeys: VALID_API_KEYS.size });
 
 // Health endpoint
 app.get('/health', (req, res) => {
