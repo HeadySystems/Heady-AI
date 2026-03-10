@@ -1,0 +1,542 @@
+{
+  "totalModules": 81,
+  "totalEdges": 160,
+  "graph": {
+    "agents/bee-factory": {
+      "file": "agents/bee-factory.js",
+      "imports": []
+    },
+    "agents/federation-manager": {
+      "file": "agents/federation-manager.js",
+      "imports": []
+    },
+    "agents/hive-coordinator": {
+      "file": "agents/hive-coordinator.js",
+      "imports": []
+    },
+    "auth/auth-gateway": {
+      "file": "auth/auth-gateway.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "config/environment-config": {
+      "file": "config/environment-config.js",
+      "imports": []
+    },
+    "config/heady-config": {
+      "file": "config/heady-config.js",
+      "imports": []
+    },
+    "config/pipeline-canonical": {
+      "file": "config/pipeline-canonical.js",
+      "imports": []
+    },
+    "core/auto-success-engine": {
+      "file": "core/auto-success-engine.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/budget-tracker": {
+      "file": "core/budget-tracker.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "core/council-mode": {
+      "file": "core/council-mode.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/evolution-engine": {
+      "file": "core/evolution-engine.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/heady-autobiographer": {
+      "file": "core/heady-autobiographer.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/heady-brains": {
+      "file": "core/heady-brains.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/heady-lens": {
+      "file": "core/heady-lens.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/sacred-geometry-v2.js"
+      ]
+    },
+    "core/heady-manager-kernel": {
+      "file": "core/heady-manager-kernel.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/persona-router": {
+      "file": "core/persona-router.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "core/wisdom-store": {
+      "file": "core/wisdom-store.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "deploy/cloud-run-deployer": {
+      "file": "deploy/cloud-run-deployer.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "deploy/cloudflare-deployer": {
+      "file": "deploy/cloudflare-deployer.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "deploy/universal-container": {
+      "file": "deploy/universal-container.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "index": {
+      "file": "index.js",
+      "imports": [
+        "./shared/phi-math-v2.js",
+        "./shared/csl-engine-v2.js",
+        "./shared/sacred-geometry-v2.js",
+        "./core/evolution-engine.js",
+        "./core/persona-router.js",
+        "./core/wisdom-store.js",
+        "./core/budget-tracker.js",
+        "./core/heady-lens.js",
+        "./core/council-mode.js",
+        "./core/auto-success-engine.js",
+        "./core/heady-brains.js",
+        "./core/heady-autobiographer.js",
+        "./core/heady-manager-kernel.js",
+        "./auth/auth-gateway.js",
+        "./agents/bee-factory.js",
+        "./agents/hive-coordinator.js",
+        "./agents/federation-manager.js",
+        "./memory/vector-store.js",
+        "./memory/embedding-pipeline.js",
+        "./memory/projection-engine.js",
+        "./memory/memory-cache.js",
+        "./services/service-registry.js",
+        "./services/service-mesh.js",
+        "./services/auth-session-server.js",
+        "./services/notification-service.js",
+        "./services/analytics-service.js",
+        "./services/billing-service.js",
+        "./services/search-service.js",
+        "./services/scheduler-service.js",
+        "./services/migration-service.js",
+        "./services/asset-pipeline.js",
+        "./security/rbac-engine.js",
+        "./security/crypto-audit-trail.js",
+        "./security/secret-manager.js",
+        "./security/csp-middleware.js",
+        "./security/prompt-injection-guard.js",
+        "./security/websocket-auth.js",
+        "./security/sbom-generator.js",
+        "./security/autonomy-guardrails.js",
+        "./security/owasp-ai-defense.js",
+        "./security/structured-logger.js",
+        "./security/request-signer.js",
+        "./security/cors-strict.js",
+        "./monitoring/health-probe-system.js",
+        "./monitoring/drift-detector.js",
+        "./monitoring/telemetry-collector.js",
+        "./monitoring/incident-responder.js",
+        "./scaling/auto-scaler.js",
+        "./scaling/resource-allocator.js",
+        "./scaling/jit-loader.js",
+        "./scaling/cqrs-manager.js",
+        "./scaling/saga-coordinator.js",
+        "./scaling/feature-flags.js",
+        "./scaling/dead-letter-queue.js",
+        "./scaling/api-contracts.js",
+        "./scaling/error-codes.js",
+        "./scaling/heady-services.proto.js",
+        "./scaling/event-bus-nats.js",
+        "./scaling/pgbouncer-pool.js",
+        "./scaling/hnsw-tuner.js",
+        "./scaling/cloud-run-optimizer.js",
+        "./scaling/grpc-bridge.js",
+        "./deploy/universal-container.js",
+        "./deploy/cloud-run-deployer.js",
+        "./deploy/cloudflare-deployer.js",
+        "./config/heady-config.js",
+        "./config/pipeline-canonical.js",
+        "./config/environment-config.js",
+        "./websites/website-registry.js",
+        "./orchestration/hcfp-runner.js",
+        "./orchestration/arena-mode-enhanced.js",
+        "./orchestration/swarm-definitions.js",
+        "./orchestration/socratic-loop.js"
+      ]
+    },
+    "memory/embedding-pipeline": {
+      "file": "memory/embedding-pipeline.js",
+      "imports": []
+    },
+    "memory/memory-cache": {
+      "file": "memory/memory-cache.js",
+      "imports": []
+    },
+    "memory/projection-engine": {
+      "file": "memory/projection-engine.js",
+      "imports": []
+    },
+    "memory/vector-store": {
+      "file": "memory/vector-store.js",
+      "imports": []
+    },
+    "monitoring/drift-detector": {
+      "file": "monitoring/drift-detector.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "monitoring/health-probe-system": {
+      "file": "monitoring/health-probe-system.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "monitoring/incident-responder": {
+      "file": "monitoring/incident-responder.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "monitoring/telemetry-collector": {
+      "file": "monitoring/telemetry-collector.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "orchestration/arena-mode-enhanced": {
+      "file": "orchestration/arena-mode-enhanced.js",
+      "imports": []
+    },
+    "orchestration/hcfp-runner": {
+      "file": "orchestration/hcfp-runner.js",
+      "imports": []
+    },
+    "orchestration/socratic-loop": {
+      "file": "orchestration/socratic-loop.js",
+      "imports": []
+    },
+    "orchestration/swarm-definitions": {
+      "file": "orchestration/swarm-definitions.js",
+      "imports": []
+    },
+    "scaling/api-contracts": {
+      "file": "scaling/api-contracts.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scaling/auto-scaler": {
+      "file": "scaling/auto-scaler.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "scaling/cloud-run-optimizer": {
+      "file": "scaling/cloud-run-optimizer.js",
+      "imports": []
+    },
+    "scaling/cqrs-manager": {
+      "file": "scaling/cqrs-manager.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scaling/dead-letter-queue": {
+      "file": "scaling/dead-letter-queue.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scaling/error-codes": {
+      "file": "scaling/error-codes.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scaling/event-bus-nats": {
+      "file": "scaling/event-bus-nats.js",
+      "imports": []
+    },
+    "scaling/feature-flags": {
+      "file": "scaling/feature-flags.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scaling/grpc-bridge": {
+      "file": "scaling/grpc-bridge.js",
+      "imports": []
+    },
+    "scaling/heady-services.proto": {
+      "file": "scaling/heady-services.proto.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scaling/hnsw-tuner": {
+      "file": "scaling/hnsw-tuner.js",
+      "imports": []
+    },
+    "scaling/jit-loader": {
+      "file": "scaling/jit-loader.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "scaling/pgbouncer-pool": {
+      "file": "scaling/pgbouncer-pool.js",
+      "imports": []
+    },
+    "scaling/resource-allocator": {
+      "file": "scaling/resource-allocator.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "scaling/saga-coordinator": {
+      "file": "scaling/saga-coordinator.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "scripts/generate-dependency-graph": {
+      "file": "scripts/generate-dependency-graph.js",
+      "imports": []
+    },
+    "security/autonomy-guardrails": {
+      "file": "security/autonomy-guardrails.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "security/cors-strict": {
+      "file": "security/cors-strict.js",
+      "imports": []
+    },
+    "security/crypto-audit-trail": {
+      "file": "security/crypto-audit-trail.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "security/csp-middleware": {
+      "file": "security/csp-middleware.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "security/owasp-ai-defense": {
+      "file": "security/owasp-ai-defense.js",
+      "imports": []
+    },
+    "security/prompt-injection-guard": {
+      "file": "security/prompt-injection-guard.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "security/rbac-engine": {
+      "file": "security/rbac-engine.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "security/request-signer": {
+      "file": "security/request-signer.js",
+      "imports": []
+    },
+    "security/sbom-generator": {
+      "file": "security/sbom-generator.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "security/secret-manager": {
+      "file": "security/secret-manager.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "security/structured-logger": {
+      "file": "security/structured-logger.js",
+      "imports": []
+    },
+    "security/websocket-auth": {
+      "file": "security/websocket-auth.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/analytics-service": {
+      "file": "services/analytics-service.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/asset-pipeline": {
+      "file": "services/asset-pipeline.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/auth-session-server": {
+      "file": "services/auth-session-server.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/billing-service": {
+      "file": "services/billing-service.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/migration-service": {
+      "file": "services/migration-service.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/notification-service": {
+      "file": "services/notification-service.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/scheduler-service": {
+      "file": "services/scheduler-service.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/search-service": {
+      "file": "services/search-service.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "services/service-mesh": {
+      "file": "services/service-mesh.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "services/service-registry": {
+      "file": "services/service-registry.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "shared/csl-engine-v2": {
+      "file": "shared/csl-engine-v2.js",
+      "imports": [
+        "./phi-math-v2.js"
+      ]
+    },
+    "shared/phi-math-v2": {
+      "file": "shared/phi-math-v2.js",
+      "imports": []
+    },
+    "shared/sacred-geometry-v2": {
+      "file": "shared/sacred-geometry-v2.js",
+      "imports": [
+        "./phi-math-v2.js"
+      ]
+    },
+    "tests/compliance.test": {
+      "file": "tests/compliance.test.js",
+      "imports": []
+    },
+    "tests/integration.test": {
+      "file": "tests/integration.test.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js"
+      ]
+    },
+    "tests/scaling.test": {
+      "file": "tests/scaling.test.js",
+      "imports": []
+    },
+    "tests/security.test": {
+      "file": "tests/security.test.js",
+      "imports": []
+    },
+    "tests/services.test": {
+      "file": "tests/services.test.js",
+      "imports": [
+        "../shared/phi-math-v2.js"
+      ]
+    },
+    "tests/shared.test": {
+      "file": "tests/shared.test.js",
+      "imports": [
+        "../shared/phi-math-v2.js",
+        "../shared/csl-engine-v2.js",
+        "../shared/sacred-geometry-v2.js"
+      ]
+    },
+    "websites/website-registry": {
+      "file": "websites/website-registry.js",
+      "imports": []
+    }
+  }
+}

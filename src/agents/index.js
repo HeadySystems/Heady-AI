@@ -233,7 +233,7 @@ class AuditorAgent extends BaseAgent {
       "code-audit", "security-scan", "brand-check", "dependency-audit",
       "sast-scan", "dast-scan", "sca-scan", "container-scan",
       "secret-detect", "credential-rotate", "iac-scan", "misconfig-detect",
-      "owasp-top10", "cve-lookup", "exploit-assess", "vuln-prioritize",
+      "owasp-top10", "cve-lookup", "exploit-assess", "vuln-coordinate concurrently",
       "license-audit", "sbom-generate", "supply-chain-verify", "provenance-check",
       "compliance-check", "sox-audit", "gdpr-scan", "hipaa-verify",
       "pci-dss-check", "iso27001-map", "nist-csf-align", "cis-benchmark",

@@ -1,26 +1,25 @@
-FROM node:20-alpine AS builder
+# ————————————————————————————————————————————
+# Heady™ Service Dockerfile — Multi-stage Distroless
+# © 2026 HeadySystems Inc. — Eric Haywood, Founder
+# ————————————————————————————————————————————
 
+# Stage 1: Build
+FROM node:22-slim AS builder
+WORKDIR /build
+COPY package.json ./
+RUN npm install --omit=dev --ignore-scripts
+COPY . .
+
+# Stage 2: Production (Distroless Node)
+FROM gcr.io/distroless/nodejs22-debian12:nonroot
 WORKDIR /app
+COPY --from=builder /build /app
 
-COPY package*.json tsconfig.json ./
+# Shared modules from monorepo root
+COPY --from=builder /build/../../shared /app/shared
 
-RUN npm ci
-
-COPY src ./src
-
-RUN npm run build && npm prune --production
-
-FROM gcr.io/distroless/nodejs20-nonroot
-
-WORKDIR /app
-
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
-
+EXPOSE 3394
 ENV NODE_ENV=production
-ENV LOG_LEVEL=info
+ENV SERVICE_PORT=3394
 
-EXPOSE 3360
-
-CMD ["dist/index.js"]
+CMD ["index.js"]

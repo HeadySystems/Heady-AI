@@ -173,7 +173,7 @@ class MeaningType {
 
   /**
    * Classify this MeaningType against a set of category MeaningTypes.
-   * Returns categories ranked by similarity (highest first).
+   * Returns categories evaluated as concurrent equals by similarity (highest first).
    *
    * @param {MeaningType[]} categories
    * @returns {Array<{ category: MeaningType, similarity: number, activation: number, rank: number }>}

@@ -1,0 +1,435 @@
+{
+  "info": {
+    "name": "Heady API — Sovereign AI Platform",
+    "description": "Complete API collection for the Heady Latent OS. All rate limits use Fibonacci numbers, all thresholds are φ-derived. Author: Eric Haywood — HeadySystems.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "4.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{heady_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3310",
+      "type": "string"
+    },
+    {
+      "key": "heady_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "phi",
+      "value": "1.6180339887",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "System",
+      "description": "Health, status, and system-level endpoints",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Returns system health with φ-scaled metrics"
+          }
+        },
+        {
+          "name": "System Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "status"
+              ]
+            },
+            "description": "Full system status including all 50 services"
+          }
+        },
+        {
+          "name": "Metrics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "metrics"
+              ]
+            },
+            "description": "Prometheus-compatible metrics export"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "description": "Auth endpoints — httpOnly cookies ONLY, NO localStorage",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secure_password\"\n}"
+            },
+            "description": "Authenticate and receive httpOnly session cookie"
+          }
+        },
+        {
+          "name": "Validate Session",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/auth/validate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "validate"
+              ]
+            },
+            "description": "Validate current session (reads httpOnly cookie)"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Destroy session and clear httpOnly cookie"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Memory",
+      "description": "3D Vector Memory — 384D embedding space",
+      "item": [
+        {
+          "name": "Search Memory",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/memory/search",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "memory",
+                "search"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"system architecture decisions\",\n  \"limit\": 8,\n  \"threshold\": 0.618\n}"
+            },
+            "description": "Semantic vector search with φ-derived similarity threshold"
+          }
+        },
+        {
+          "name": "Store Memory",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/memory/store",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "memory",
+                "store"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Architecture decision: using CSL gates for all routing\",\n  \"tags\": [\n    \"architecture\",\n    \"csl\"\n  ],\n  \"importance\": 0.882\n}"
+            },
+            "description": "Store new memory with 384D embedding"
+          }
+        },
+        {
+          "name": "Memory Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/memory/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "memory",
+                "stats"
+              ]
+            },
+            "description": "Vector memory statistics and coherence scores"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agents",
+      "description": "Multi-agent orchestration and node management",
+      "item": [
+        {
+          "name": "Agent Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/agents/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agents",
+                "status"
+              ]
+            },
+            "description": "Status of all agent nodes across Hot/Warm/Cold pools"
+          }
+        },
+        {
+          "name": "Dispatch Task",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/agents/dispatch",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agents",
+                "dispatch"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task\": \"Analyze security configuration\",\n  \"priority\": \"hot\",\n  \"nodes\": [\n    \"MURPHY\",\n    \"CIPHER\"\n  ]\n}"
+            },
+            "description": "Dispatch a task to specific agent nodes via HeadyConductor"
+          }
+        },
+        {
+          "name": "Pipeline Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/agents/pipeline",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agents",
+                "pipeline"
+              ]
+            },
+            "description": "HCFullPipeline execution status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSL Engine",
+      "description": "Continuous Semantic Logic gates and operations",
+      "item": [
+        {
+          "name": "CSL Gate",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/csl/gate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "csl",
+                "gate"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"input\": [\n    0.5,\n    0.3,\n    0.8\n  ],\n  \"gate\": [\n    0.9,\n    0.1,\n    0.7\n  ],\n  \"threshold\": 0.809,\n  \"temperature\": 0.236\n}"
+            },
+            "description": "Apply CSL sigmoid gate with φ-derived parameters"
+          }
+        },
+        {
+          "name": "CSL Cosine AND",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/csl/and",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "csl",
+                "and"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vectorA\": [\n    0.5,\n    0.3,\n    0.8\n  ],\n  \"vectorB\": [\n    0.9,\n    0.1,\n    0.7\n  ]\n}"
+            },
+            "description": "Compute CSL AND (cosine similarity)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Monitoring",
+      "description": "Self-healing, coherence, and drift detection",
+      "item": [
+        {
+          "name": "Coherence Score",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/monitoring/coherence",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "monitoring",
+                "coherence"
+              ]
+            },
+            "description": "Current system coherence score (cosine similarity of state vectors)"
+          }
+        },
+        {
+          "name": "Drift Alerts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/monitoring/drift",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "monitoring",
+                "drift"
+              ]
+            },
+            "description": "Active semantic drift alerts"
+          }
+        },
+        {
+          "name": "Self-Healing Log",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/monitoring/healing",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "monitoring",
+                "healing"
+              ]
+            },
+            "description": "Self-healing cycle history"
+          }
+        }
+      ]
+    }
+  ]
+}

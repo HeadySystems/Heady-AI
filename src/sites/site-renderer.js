@@ -269,19 +269,21 @@ function renderCanvasJS(geoType, accent, accentDark) {
  */
 function renderAuthJS(site) {
   return `(function(){
-  const DK='heady_device_id',TK='heady_auth_token',SK='heady_session';
+  const DK='heady_device_id';
+  function getCk(n){var m=document.cookie.match(new RegExp('(?:^|;\\\\s*)'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}
+  function setCk(n,v,d){document.cookie=n+'='+encodeURIComponent(v)+';path=/;max-age='+d+';SameSite=Lax;Secure';}
   if(!localStorage.getItem(DK))localStorage.setItem(DK,crypto.randomUUID());
   const warp=navigator.userAgent.includes('Cloudflare-WARP')||localStorage.getItem('heady_warp')==='true';
   if(warp)localStorage.setItem('heady_warp','true');
-  const maxAge=365*86400000;
-  let tok=localStorage.getItem(TK);
+  const maxAge=365*86400;
+  let tok=getCk('__heady_token');
   try{if(tok&&JSON.parse(atob(tok)).exp<Date.now())tok=null;}catch{tok=null;}
   if(!tok){
-    tok=btoa(JSON.stringify({sub:localStorage.getItem(DK),iat:Date.now(),exp:Date.now()+maxAge,site:'${site.domain}',warp,pwa:matchMedia('(display-mode:standalone)').matches}));
-    localStorage.setItem(TK,tok);
+    tok=btoa(JSON.stringify({sub:localStorage.getItem(DK),iat:Date.now(),exp:Date.now()+maxAge*1000,site:'${site.domain}',warp,pwa:matchMedia('(display-mode:standalone)').matches}));
+    setCk('__heady_token',tok,maxAge);
   }
   const days=Math.round((JSON.parse(atob(tok)).exp-Date.now())/86400000);
-  logger.logSystem('🔐 ${site.name}:',days+'d auth |',warp?'WARP':'Device','|',localStorage.getItem(DK).slice(0,8));
+  if(typeof logger!=='undefined')logger.logSystem('🔐 ${site.name}:',days+'d auth |',warp?'WARP':'Device','|',localStorage.getItem(DK).slice(0,8));
 })();`;
 }
 

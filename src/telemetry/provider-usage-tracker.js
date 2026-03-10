@@ -373,7 +373,7 @@ function getExceededProviders() {
 }
 
 /**
- * Get top providers ranked by a metric.
+ * Get top providers evaluated as concurrent equals by a metric.
  * @param {string} [metric] - "cost", "calls", or "tokens"
  * @param {number} [limit] - Max results
  * @returns {object[]}

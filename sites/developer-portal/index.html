@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Portal — Heady™</title>
+  <meta name="description" content="Heady developer portal: SDKs, quickstarts, API key management, and integration guides.">
+  
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      :root { --bg: #0a0a0f; --surface: #12121a; --border: #1e1e2e; --text: #e0e0e8; --muted: #8888aa; --accent: #7c5cff; --accent2: #00d4aa; --gold: #f5c842; }
+      body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+      nav { background: rgba(10,10,15,0.95); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(20px); }
+      nav .container { display: flex; justify-content: space-between; align-items: center; }
+      .logo { font-weight: 900; font-size: 1.4rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .nav-links a { color: var(--muted); text-decoration: none; margin-left: 24px; font-size: 0.9rem; transition: color 0.2s; }
+      .nav-links a:hover { color: var(--accent); }
+      .hero { padding: 80px 0; text-align: center; }
+      .hero h1 { font-size: 3rem; font-weight: 900; margin-bottom: 16px; background: linear-gradient(135deg, #fff 30%, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .hero p { font-size: 1.2rem; color: var(--muted); max-width: 700px; margin: 0 auto 32px; }
+      .btn { display: inline-block; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s; }
+      .btn-primary { background: var(--accent); color: #fff; }
+      .btn-primary:hover { background: #6a4ce0; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,255,0.3); }
+      .btn-outline { border: 1px solid var(--border); color: var(--text); }
+      .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+      .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding: 48px 0; }
+      .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; transition: all 0.3s; }
+      .card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(124,92,255,0.15); }
+      .card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+      .card p { color: var(--muted); font-size: 0.95rem; }
+      footer { border-top: 1px solid var(--border); padding: 48px 0; text-align: center; color: var(--muted); font-size: 0.85rem; }
+      .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+      .badge-green { background: rgba(0,212,170,0.15); color: var(--accent2); }
+      .badge-gold { background: rgba(245,200,66,0.15); color: var(--gold); }
+      table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+      th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+      th { color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+      pre { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; font-size: 0.9rem; }
+      code { font-family: 'Fira Code', monospace; }
+      .section { padding: 64px 0; }
+      .section-title { font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 8px; }
+      .section-subtitle { text-align: center; color: var(--muted); margin-bottom: 48px; }
+    </style>
+
+</head>
+<body>
+  
+    <nav>
+      <div class="container">
+        <div class="logo">HEADY™</div>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/pricing">Pricing</a>
+          <a href="/docs">API Docs</a>
+          <a href="/status">Status</a>
+          <a href="/blog">Blog</a>
+          <a href="/developers">Developers</a>
+        </div>
+      </div>
+    </nav>
+
+  <main class="container">
+    <div class="hero">
+      <h1>Developer Portal</h1>
+      <p>Build with Heady's concurrent-equals AI — from prototype to production in minutes.</p>
+      <a href="/docs" class="btn btn-primary" style="margin-right:12px">API Reference</a>
+      <a href="#quickstart" class="btn btn-outline">Quickstart →</a>
+    </div>
+
+    <div class="section" id="quickstart">
+      <h2 class="section-title">Quickstart</h2>
+      <p class="section-subtitle">Get running in 3 steps</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>1. Get an API Key</h3>
+          <pre><code>curl -X POST https://api.headysystems.com/v1/keys \
+  -d '{"email": "you@example.com"}'</code></pre>
+        </div>
+        <div class="card">
+          <h3>2. Install SDK</h3>
+          <pre><code># JavaScript
+npm install @heady/sdk
+
+# Python
+pip install heady-sdk</code></pre>
+        </div>
+        <div class="card">
+          <h3>3. Make Your First Call</h3>
+          <pre><code>import { Heady } from '@heady/sdk';
+const heady = new Heady('YOUR_KEY');
+const result = await heady.infer({
+  model: 'gemini-3.1-pro-preview',
+  prompt: 'Hello Heady!'
+});</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">SDKs & Tools</h2>
+      <div class="grid-3">
+        <div class="card"><h3>JavaScript SDK</h3><p>Full-featured Node.js + browser SDK with streaming, vector memory, and MCP support.</p><a href="#" class="btn btn-outline" style="margin-top:16px">npm →</a></div>
+        <div class="card"><h3>Python SDK</h3><p>Async Python client with LangChain and LlamaIndex integrations.</p><a href="#" class="btn btn-outline" style="margin-top:16px">PyPI →</a></div>
+        <div class="card"><h3>CLI</h3><p>Interactive terminal with sacred geometry UI and multi-model orchestration.</p><a href="#" class="btn btn-outline" style="margin-top:16px">Install →</a></div>
+        <div class="card"><h3>MCP Server</h3><p>Model Context Protocol bridge for IDE integration (VS Code, Cursor, etc.).</p><a href="#" class="btn btn-outline" style="margin-top:16px">Setup →</a></div>
+        <div class="card"><h3>Chrome Extension</h3><p>HeadyBuddy — AI assistant overlay for any webpage.</p><a href="#" class="btn btn-outline" style="margin-top:16px">Install →</a></div>
+        <div class="card"><h3>API Key Management</h3><p>Create, rotate, and scope API keys from the dashboard.</p><a href="#" class="btn btn-outline" style="margin-top:16px">Dashboard →</a></div>
+      </div>
+    </div>
+  </main>
+  
+    <footer>
+      <div class="container">
+        <p>© 2026 HeadySystems Inc. · Concurrent-Equals Architecture · φ-Scaled Intelligence</p>
+        <p style="margin-top:8px">51+ Provisional Patents · Sacred Geometry · CSL-Gated</p>
+      </div>
+    </footer>
+
+</body>
+</html>

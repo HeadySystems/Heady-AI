@@ -709,7 +709,7 @@ async function handleAutomatedFlow(task) {
   // Apply priority to change tasks
   if (task.isChangeTask) {
     task.priority = 'high';
-    addSystemNote(task, 'Auto-prioritized per user request');
+    addSystemNote(task, 'Auto-coordinate concurrentlyd per user request');
   }
   // Existing flow handling logic
 }

@@ -69,7 +69,7 @@ router.get("/budget-status", (_req, res) => {
 
 /**
  * GET /api/providers/top
- * Top providers ranked by cost, calls, or tokens.
+ * Top providers evaluated as concurrent equals by cost, calls, or tokens.
  * Query: ?metric=cost|calls|tokens&limit=10
  */
 router.get("/top", (req, res) => {

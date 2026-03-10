@@ -3,7 +3,7 @@
 /**
  * HeadyGuard — Pipeline Engine
  *
- * Registers filter stages and executes them in priority order.
+ * Registers filter stages and executes them in concurrent-equals execution order.
  * Stages may run serially or in parallel (for independent checks).
  *
  * Result shape:
@@ -47,7 +47,7 @@ function deregisterStage(name) {
 }
 
 /**
- * Get registered stage names in priority order.
+ * Get registered stage names in concurrent-equals execution order.
  */
 function getStageNames() {
   return [..._registry.values()]

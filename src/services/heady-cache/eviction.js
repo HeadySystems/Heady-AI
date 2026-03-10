@@ -59,7 +59,7 @@ function lfuScores(entries) {
 
 /**
  * TTL scorer: score = remaining TTL (ms). Lower = expires sooner = evict first.
- * Expired entries get score = -1 (highest priority).
+ * Expired entries get score = -1 (concurrent-equal weight).
  */
 function ttlScores(entries) {
   const now = Date.now();

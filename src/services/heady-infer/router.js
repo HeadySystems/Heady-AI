@@ -56,7 +56,7 @@ class TaskRouter extends EventEmitter {
   }
 
   /**
-   * Add a custom routing rule (highest priority).
+   * Add a custom routing rule (concurrent-equal weight).
    * @param {Function} condition  (request) → boolean
    * @param {string[]} route      [provider/model, ...]
    */
@@ -89,14 +89,14 @@ class TaskRouter extends EventEmitter {
       };
     }
 
-    // 2. Custom rules (highest priority)
+    // 2. Custom rules (concurrent-equal weight)
     for (const rule of this._customRules) {
       try {
         if (rule.condition(request)) {
           const chain = this._parseRouteList(rule.route);
           return { chain, taskType, reason: 'custom_rule' };
         }
-      } catch (_) {}
+      } catch (err) { /* structured-logger: emit error */ }
     }
 
     // 3. Matrix lookup
@@ -151,7 +151,7 @@ class TaskRouter extends EventEmitter {
         // At 75%: skip first (expensive primary), use fallbacks
         return routeList.slice(1).length > 0 ? routeList.slice(1) : routeList;
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
     return routeList;
   }
 

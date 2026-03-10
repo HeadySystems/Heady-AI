@@ -1,0 +1,31 @@
+# HEADY™ Google Cloud Build configuration
+steps:
+  # Build container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/heady-core:$COMMIT_SHA', '-f', 'deployment/docker/Dockerfile', '.']
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/heady-core:$COMMIT_SHA']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'heady-core'
+      - '--image=gcr.io/$PROJECT_ID/heady-core:$COMMIT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--min-instances=2'       # fib(3)
+      - '--max-instances=13'      # fib(7)
+      - '--concurrency=89'        # fib(11)
+      - '--timeout=34'            # fib(9) seconds
+      - '--memory=2Gi'
+      - '--cpu=2'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=NODE_ENV=production'
+
+images:
+  - 'gcr.io/$PROJECT_ID/heady-core:$COMMIT_SHA'

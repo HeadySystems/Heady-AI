@@ -5,13 +5,11 @@
  */
 const http = require('http');
 const path = require('path');
+const { HEADY_DOMAINS, CORS_ORIGINS } = require('../middleware/security-headers');
 const { HeadyAuth } = require('./hc_auth');
-const { HEADY_DOMAINS, CORS_ORIGINS } = require('../src/middleware/security-headers');
-const { createLogger } = require('../shared/logger');
+const { createLogger } = require('../../shared/logger');
 
-const log = createLogger({ service: 'auth-page-server' });
 const PORT = 3847;
-const COOKIE_MAX_AGE = 90 * 24 * 60 * 60; // 90 days in seconds
 
 // Boot auth engine
 const auth = new HeadyAuth({
@@ -28,22 +26,11 @@ function parseBody(req) {
   });
 }
 
-/** Set httpOnly session cookie on auth responses */
-function setSessionCookie(res, token) {
-  res.setHeader('Set-Cookie', [
-    `__heady_session=${token}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${COOKIE_MAX_AGE}`,
-  ]);
-}
-
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost:' + PORT}`);
 
-  // CORS — restrict to known Heady domains only
-  const origin = req.headers.origin;
-  if (origin && CORS_ORIGINS.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
+  // CORS
+  // CORS handled by securityHeaders middleware
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
@@ -71,8 +58,6 @@ const server = http.createServer(async (req, res) => {
         ip: req.socket.remoteAddress,
       });
       if (!session) return json(401, { error: 'Invalid credentials. Please check your username and password.' });
-      setSessionCookie(res, session.token);
-      log.info({ userId: session.userId, method: session.method }, 'login success');
       return json(200, {
         success: true,
         token: session.token,
@@ -98,8 +83,6 @@ const server = http.createServer(async (req, res) => {
         displayName: displayName || username,
       });
       if (!session) return json(500, { error: 'Registration failed. Please try again.' });
-      setSessionCookie(res, session.token);
-      log.info({ userId: session.userId, method: 'register' }, 'registration success');
       return json(201, {
         success: true,
         token: session.token,
@@ -119,8 +102,6 @@ const server = http.createServer(async (req, res) => {
         userAgent: req.headers['user-agent'],
         ip: req.socket.remoteAddress,
       });
-      setSessionCookie(res, session.token);
-      log.info({ method: 'device' }, 'device auth success');
       return json(200, {
         success: true,
         token: session.token,
@@ -154,12 +135,9 @@ const server = http.createServer(async (req, res) => {
         });
         // Redirect to onboarding with token
         if (req.method === 'GET') {
-          setSessionCookie(res, session.token);
-          res.writeHead(302, { 'Location': `/?method=google` });
+          res.writeHead(302, { 'Location': `/?token=${encodeURIComponent(session.token)}&method=google` });
           return res.end();
         }
-        setSessionCookie(res, session.token);
-        log.info({ userId: session.userId, method: 'google' }, 'google oauth success');
         return json(200, {
           success: true,
           token: session.token,
@@ -204,13 +182,13 @@ const server = http.createServer(async (req, res) => {
     json(404, { error: 'Not found' });
 
   } catch (err) {
-    log.error({ error: err.message }, 'route error');
+    console.error('[AuthPage] Route error:', err.message);
     json(500, { error: 'Internal server error', message: err.message });
   }
 });
 
 server.listen(PORT, () => {
-  log.info({ port: PORT }, 'Heady Auth Page live');
+  console.log(`\n  🔐 Heady Auth Page live at: http://${process.env.HEADY_AUTH_HOST || 'localhost'}:${PORT}\n`);
 });
 
 // ═════════════════════════════════════════════════════════════════
@@ -485,7 +463,9 @@ async function handleLogin(e) {
     if (!res.ok) throw new Error(data.error || 'Auth failed');
     showResult('success', formatSession(data));
     showSessionBar(data);
-    // httpOnly cookie set by server — no localStorage needed
+    // Store token and show onboarding link
+    document.cookie='__Host-heady_token='+encodeURIComponent(data.token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
+    document.cookie='__Host-heady_user='+encodeURIComponent, JSON.stringify({ userId: data.userId, tier: data.tier, method: data.method }));
     showOnboardingLink(data);
   } catch (err) { showResult('error', '<h3>⚠️ Error</h3><p>'+err.message+'</p>'); }
   finally { btn.classList.remove('loading'); btn.textContent = 'Sign In →'; }
@@ -509,7 +489,8 @@ async function handleRegister(e) {
     if (!res.ok) throw new Error(data.error || 'Registration failed');
     showResult('success', '<h3>🎉 Account Created!</h3>' + formatSession(data));
     showSessionBar(data);
-    // httpOnly cookie set by server — no localStorage needed
+    document.cookie='__Host-heady_token='+encodeURIComponent(data.token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
+    document.cookie='__Host-heady_user='+encodeURIComponent, JSON.stringify({ userId: data.userId, tier: data.tier, method: 'register' }));
     showOnboardingLink(data);
   } catch (err) { showResult('error', '<h3>⚠️ Error</h3><p>'+err.message+'</p>'); }
   finally { btn.classList.remove('loading'); btn.textContent = 'Create Account →'; }
@@ -523,7 +504,7 @@ async function handleDeviceAuth() {
     if (!res.ok) throw new Error(data.error);
     showResult('success', formatSession(data));
     showSessionBar(data);
-    // httpOnly cookie set by server — no localStorage needed
+    document.cookie='__Host-heady_token='+encodeURIComponent(data.token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
     showOnboardingLink(data);
   } catch (err) { showResult('error', '<h3>⚠️ Error</h3><p>'+err.message+'</p>'); }
 }
@@ -577,13 +558,16 @@ function showOnboardingLink(data) {
     '🚀 Continue to Setup Wizard →</a></div>';
 }
 
-// Check for Google OAuth callback in URL
+// Check for Google OAuth callback token in URL
 (function checkOAuthReturn() {
   const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
   const method = params.get('method');
-  if (method === 'google') {
+  if (token && method === 'google') {
+    document.cookie='__Host-heady_token='+encodeURIComponent(token)+';path=/;Secure;SameSite=Lax;max-age=2592000';
     showResult('success', '<h3>🎉 Google Sign-In Successful!</h3><p>Redirecting to setup...</p>');
-    showOnboardingLink({});
+    showSessionBar({ token });
+    showOnboardingLink({ token });
     window.history.replaceState({}, '', '/');
   }
 })();

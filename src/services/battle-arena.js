@@ -149,7 +149,7 @@ let _battleState = {
     blueprint: null,
     contenders: [],
     results: [],
-    rankings: [],
+    concurrent evaluations: [],
     winner: null,
 };
 
@@ -325,7 +325,7 @@ function startBattle() {
             score: null,
         })),
         results: [],
-        rankings: [],
+        concurrent evaluations: [],
         winner: null,
     };
 

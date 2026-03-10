@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady™ API Documentation</title>
+    <meta name="description"
+        content="Complete API reference for the Heady™ platform — Brain, Memory, Auth, MCP, and Swarm APIs.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e8;
+            --muted: #8888a0;
+            --accent: #6c5ce7;
+            --code-bg: #1a1a2e;
+            --get: #00d68f;
+            --post: #6c5ce7;
+            --put: #f0c040;
+            --delete: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .nav-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-group h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-group a {
+            display: block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all .15s;
+        }
+
+        .nav-group a:hover {
+            background: var(--border);
+        }
+
+        .content {
+            padding: 3rem;
+            max-width: 900px;
+        }
+
+        .content h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .content p {
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .endpoint {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-right: 8px;
+        }
+
+        .method-get {
+            background: rgba(0, 214, 143, 0.15);
+            color: var(--get);
+        }
+
+        .method-post {
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--post);
+        }
+
+        .method-put {
+            background: rgba(240, 192, 64, 0.15);
+            color: var(--put);
+        }
+
+        .method-delete {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--delete);
+        }
+
+        .path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .endpoint-desc {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .base-url {
+            background: var(--code-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <nav class="sidebar">
+            <h2>Heady™ API</h2>
+            <div class="nav-group">
+                <h3>Brain</h3><a href="#chat">Chat</a><a href="#embed">Embeddings</a><a href="#models">Models</a>
+            </div>
+            <div class="nav-group">
+                <h3>Memory</h3><a href="#memory-search">Search</a><a href="#memory-store">Store</a><a
+                    href="#memory-delete">Delete</a>
+            </div>
+            <div class="nav-group">
+                <h3>Auth</h3><a href="#auth-login">Login</a><a href="#auth-token">Token</a><a href="#oauth">OAuth</a>
+            </div>
+            <div class="nav-group">
+                <h3>MCP</h3><a href="#mcp-tools">Tools</a><a href="#mcp-execute">Execute</a>
+            </div>
+            <div class="nav-group">
+                <h3>Swarm</h3><a href="#swarm-dispatch">Dispatch</a><a href="#swarm-status">Status</a>
+            </div>
+            <div class="nav-group">
+                <h3>Health</h3><a href="#health">Health</a><a href="#metrics">Metrics</a>
+            </div>
+        </nav>
+        <main class="content">
+            <h1>API Reference</h1>
+            <p>The Heady™ API uses JSON over HTTPS. All endpoints require an API key via the
+                <code>Authorization: Bearer &lt;key&gt;</code> header or <code>X-API-Key</code> header.</p>
+            <div class="base-url">Base URL: <strong>https://headyapi.com/api/v2</strong></div>
+            <h2 id="chat">Brain — Chat</h2>
+            <div class="endpoint">
+                <span class="method method-post">POST</span><span class="path">/brain/chat</span>
+                <p class="endpoint-desc">Send a message and receive an AI response. Supports multi-model routing.</p>
+                <pre>{
+  "message": "Explain CSL gates",
+  "model": "auto",
+  "context": { "sessionId": "abc123" }
+}</pre>
+            </div>
+            <h2 id="embed">Brain — Embeddings</h2>
+            <div class="endpoint">
+                <span class="method method-post">POST</span><span class="path">/brain/embed</span>
+                <p class="endpoint-desc">Generate vector embeddings for text. Returns 1536-dimension vectors.</p>
+            </div>
+            <h2 id="memory-search">Memory — Search</h2>
+            <div class="endpoint">
+                <span class="method method-post">POST</span><span class="path">/memory/search</span>
+                <p class="endpoint-desc">Semantic search across stored memories using cosine similarity.</p>
+            </div>
+            <h2 id="memory-store">Memory — Store</h2>
+            <div class="endpoint">
+                <span class="method method-post">POST</span><span class="path">/memory/store</span>
+                <p class="endpoint-desc">Store a new memory with auto-generated embeddings.</p>
+            </div>
+            <h2 id="health">Health</h2>
+            <div class="endpoint">
+                <span class="method method-get">GET</span><span class="path">/health</span>
+                <p class="endpoint-desc">Quick liveness check. No external dependencies.</p>
+            </div>
+            <div class="endpoint">
+                <span class="method method-get">GET</span><span class="path">/health/detailed</span>
+                <p class="endpoint-desc">Full composite health check with φ-weighted scoring across all subsystems.</p>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

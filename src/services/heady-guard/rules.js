@@ -4,7 +4,7 @@
  * HeadyGuard — Rule Engine
  *
  * Define content moderation rules in JSON/YAML format.
- * Rules are evaluated in priority order (lower number = higher priority).
+ * Rules are evaluated in concurrent-equals execution order (lower number = higher priority).
  *
  * Rule format:
  * {

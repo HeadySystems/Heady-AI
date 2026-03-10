@@ -15,8 +15,8 @@ const { PHI_TIMING } = require('../shared/phi-math');
  * numbers — every numeric literal traces back to phi-math.js.
  */
 
-const { EventEmitter } = require('events');
-const {
+import { EventEmitter } from 'events';
+import {
   PHI,
   PSI,
   PSI_2,
@@ -29,8 +29,8 @@ const {
   phiFusionWeights,
   PRESSURE_LEVELS,
   POOL_PERCENT,
-} = require('../../shared/phi-math.js');
-const { CSLEngine } = require('../../shared/csl-engine.js');
+} from '../../shared/phi-math.js';
+import { CSLEngine } from '../../shared/csl-engine.js';
 
 // ─── Phi-derived numeric constants ──────────────────────────────────────────
 
@@ -99,13 +99,13 @@ const JUDGE_WEIGHTS_SPEC = {
 
 const ALL_STAGES = Object.freeze([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
 
-const PIPELINE_VARIANTS = Object.freeze({
+export const PIPELINE_VARIANTS = Object.freeze({
   FULL_PATH: ALL_STAGES,
 });
 
 // ─── Node Pool Configuration ─────────────────────────────────────────────────
 
-const NODE_POOLS = Object.freeze({
+export const NODE_POOLS = Object.freeze({
   HOT: { name: 'Hot', percent: POOL_PERCENT?.HOT ?? 34 },
   WARM: { name: 'Warm', percent: POOL_PERCENT?.WARM ?? 21 },
   COLD: { name: 'Cold', percent: POOL_PERCENT?.COLD ?? 13 },
@@ -115,7 +115,7 @@ const NODE_POOLS = Object.freeze({
 
 // ─── Priority Levels ─────────────────────────────────────────────────────────
 
-const PRIORITY = Object.freeze({
+export const PRIORITY = Object.freeze({
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH',
@@ -128,7 +128,7 @@ const PRIORITY = Object.freeze({
  * Carries mutable state as the pipeline progresses through stages.
  * One instance per pipeline run.
  */
-class PipelineContext {
+export class PipelineContext {
   /** @param {object} task  Original task descriptor */
   constructor(task) {
     this.task = task;
@@ -519,7 +519,7 @@ async function handleReceipt(ctx) {
 
 // ─── Stage Definitions ───────────────────────────────────────────────────────
 
-const STAGE_DEFINITIONS = Object.freeze([
+export const STAGE_DEFINITIONS = Object.freeze([
   {
     id: 0,
     name: 'CHANNEL_ENTRY',
@@ -769,7 +769,7 @@ function withTimeout(promise, ms, label) {
  * @fires HCFullPipelineV3#stage:fail
  * @fires HCFullPipelineV3#approval:required
  */
-class HCFullPipelineV3 extends EventEmitter {
+export class HCFullPipelineV3 extends EventEmitter {
   constructor() {
     super();
     /** @type {PipelineContext|null} */
@@ -945,11 +945,4 @@ function sleep(ms) {
 
 // ─── Default Export ──────────────────────────────────────────────────────────
 
-module.exports = {
-  HCFullPipelineV3,
-  PipelineContext,
-  STAGE_DEFINITIONS,
-  PIPELINE_VARIANTS,
-  NODE_POOLS,
-  PRIORITY,
-};
+export default HCFullPipelineV3;

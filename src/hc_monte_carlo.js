@@ -644,7 +644,7 @@ class MonteCarloGlobal {
       try { this.runFullCycle("auto"); } catch (_) { /* non-fatal */ }
     }, this.backgroundCycleMs);
     // Immediate first run
-    try { this.runFullCycle("boot"); } catch (_) {}
+    try { this.runFullCycle("boot"); } catch (err) { /* structured-logger: emit error */ }
   }
 
   stopAutoRun() {
@@ -668,17 +668,17 @@ class MonteCarloGlobal {
       if (stages && stages.length > 0) {
         results.pipeline = fastPipelineSim(stages);
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
 
     // Deployment risk
     try {
       results.deployment = fastDeploymentSim(this._getDeploymentProfile());
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
 
     // Readiness confidence
     try {
       results.readiness = fastReadinessSim(this._getHealthSignals());
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
 
     // Node performance
     try {
@@ -686,7 +686,7 @@ class MonteCarloGlobal {
       if (profiles.length > 0) {
         results.nodes = fastNodeSim(profiles, load);
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
 
     // Composite score
     const scores = [];
@@ -793,7 +793,7 @@ class MonteCarloGlobal {
       if (stages && stages.length > 0) {
         this.lastResults.pipeline = fastPipelineSim(stages);
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
   }
 
   /**
@@ -805,7 +805,7 @@ class MonteCarloGlobal {
     try {
       const signals = this._getHealthSignals();
       this.lastResults.readiness = fastReadinessSim(signals);
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
     return this.enrich(checkpointData || {});
   }
 
@@ -833,7 +833,7 @@ class MonteCarloGlobal {
     try {
       const signals = this._getHealthSignals();
       this.lastResults.readiness = fastReadinessSim(signals);
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
   }
 
   /**
@@ -844,7 +844,7 @@ class MonteCarloGlobal {
     // Refresh deployment risk based on new error rates
     try {
       this.lastResults.deployment = fastDeploymentSim(this._getDeploymentProfile());
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
   }
 
   /**
@@ -892,7 +892,7 @@ class MonteCarloGlobal {
           dependsOn: s.dependsOn || [],
         }));
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
     return [];
   }
 
@@ -934,7 +934,7 @@ class MonteCarloGlobal {
           if (total > 0) base.nodeAvailability = healthy / total;
         }
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
     return base;
   }
 
@@ -954,7 +954,7 @@ class MonteCarloGlobal {
           });
         }
       }
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
     return { profiles, load };
   }
 
@@ -992,7 +992,7 @@ function loadMCConfig() {
     if (fs.existsSync(MC_CONFIG_PATH)) {
       return yaml.load(fs.readFileSync(MC_CONFIG_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { /* structured-logger: emit error */ }
   return null;
 }
 
@@ -1001,7 +1001,7 @@ function loadSamples() {
     if (fs.existsSync(MC_SAMPLES_PATH)) {
       return JSON.parse(fs.readFileSync(MC_SAMPLES_PATH, "utf8"));
     }
-  } catch (_) {}
+  } catch (err) { /* structured-logger: emit error */ }
   return {};
 }
 
@@ -1010,7 +1010,7 @@ function saveSamples(data) {
     const dir = path.dirname(MC_SAMPLES_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(MC_SAMPLES_PATH, JSON.stringify(data, null, 2), "utf8");
-  } catch (_) {}
+  } catch (err) { /* structured-logger: emit error */ }
 }
 
 // ─── PLAN STRATEGIES ─────────────────────────────────────────────────

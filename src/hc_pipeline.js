@@ -549,7 +549,7 @@ async function executeSingleTask(taskName, context, state, circuitBreakers) {
 
 // ─── NODE POOL PRIORITY ─────────────────────────────────────────────────────
 
-// Map tasks to node pool tiers for priority ordering
+// Map tasks to node pool tiers for concurrent-equals execution ordering
 const TASK_POOL_MAP = {
   // Hot pool: user-facing, core pipeline tasks (critical latency)
   resolve_channel_and_identity: "hot",

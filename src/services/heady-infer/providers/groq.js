@@ -108,7 +108,7 @@ class GroqProvider extends BaseProvider {
                 promptTokens     = evt.x_groq.usage.prompt_tokens     || 0;
                 completionTokens = evt.x_groq.usage.completion_tokens || 0;
               }
-            } catch (_) {}
+            } catch (err) { /* structured-logger: emit error */ }
           }
         });
 

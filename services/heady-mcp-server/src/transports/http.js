@@ -6,9 +6,13 @@
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
 const { v4: uuidv4 } = require('uuid');
 const { RATE_LIMITS, PHI } = require('../config/phi-constants');
 const { getAllServiceEndpoints } = require('../config/services');
+const { createRateLimiter } = require('../middleware/rate-limiter');
+const { setupGracefulShutdown } = require('../middleware/graceful-shutdown');
 
 class HttpTransport {
   constructor(protocol, port) {
@@ -16,13 +20,15 @@ class HttpTransport {
     this.port = port;
     this.app = express();
     this.sseClients = new Map();
+    this.server = null;
+    this.gracefulShutdown = null;
     this._setup();
   }
 
   _setup() {
     const app = this.app;
 
-    // Middleware
+    // Middleware: CORS
     app.use(cors({
       origin: [
         /\.headysystems\.com$/,
@@ -37,7 +43,26 @@ class HttpTransport {
       ],
       credentials: true,
     }));
+
+    // Middleware: Security headers
+    app.use(helmet());
+
+    // Middleware: Response compression
+    app.use(compression());
+
+    // Middleware: JSON parsing
     app.use(express.json({ limit: '10mb' }));
+
+    // Middleware: Rate limiting (ANONYMOUS tier for public endpoints)
+    app.use(createRateLimiter('ANONYMOUS'));
+
+    // Middleware: Request ID tracking
+    app.use((req, res, next) => {
+      const requestId = req.headers['x-request-id'] || uuidv4();
+      req.id = requestId;
+      res.setHeader('X-Request-Id', requestId);
+      next();
+    });
 
     // ── Health endpoint ─────────────────────────────────────────────
     app.get('/health', (req, res) => {
@@ -204,7 +229,25 @@ ${this.protocol.registry.tools.map(t => `<div class="tool"><strong>${t.name}</st
   }
 
   start() {
-    this.app.listen(this.port, '0.0.0.0');
+    this.server = this.app.listen(this.port, '0.0.0.0');
+
+    // Setup graceful shutdown
+    this.gracefulShutdown = setupGracefulShutdown(this.server, {
+      timeout: Math.round(PHI * 13 * 1000), // ~21 seconds
+      sseClients: this.sseClients,
+      onShutdown: async () => {
+        // Any cleanup logic here
+      },
+    });
+
+    return this.server;
+  }
+
+  /**
+   * Get the server instance
+   */
+  getServer() {
+    return this.server;
   }
 }
 

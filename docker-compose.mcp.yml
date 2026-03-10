@@ -1,0 +1,131 @@
+version: '3.8'
+
+################################################################################
+# Heady™ MCP Server Docker Compose Configuration
+# Orchestrates the Master Control Program with Brain and Memory services
+################################################################################
+
+services:
+  ################################################################################
+  # Heady™ MCP Server
+  # Master Control Program with 42 tools, φ-scaled routing, CSL gates
+  ################################################################################
+  heady-mcp-server:
+    build:
+      context: ./services/heady-mcp-server
+      dockerfile: Dockerfile
+    image: heady-mcp-server:latest
+    container_name: heady-mcp-server
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    environment:
+      - NODE_ENV=production
+      - HEADY_ENV=docker
+      - PORT=3310
+      - HEADY_MCP_TRANSPORT=http
+      - HEADY_SERVICE_HOST=heady-mcp-server
+      - LOG_LEVEL=info
+      # Load from .env file
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_ORG_ID=${ANTHROPIC_ORG_ID:-}
+    networks:
+      - heady-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3310/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./logs/mcp:/app/logs
+      - /tmp/heady-cache:/tmp/heady-cache
+
+  ################################################################################
+  # Heady™ Brain Service (Placeholder)
+  # Cognitive reasoning and decision-making engine
+  ################################################################################
+  heady-brain:
+    image: node:20-alpine
+    container_name: heady-brain
+    restart: unless-stopped
+    ports:
+      - "3311:3311"
+    environment:
+      - NODE_ENV=production
+      - PORT=3311
+      - HEADY_SERVICE_HOST=heady-brain
+      - MCP_SERVER=http://heady-mcp-server:3310
+    networks:
+      - heady-net
+    command: sh -c 'echo "Heady Brain service placeholder" && sleep infinity'
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'OK'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      heady-mcp-server:
+        condition: service_healthy
+
+  ################################################################################
+  # Heady™ Memory Service (Placeholder)
+  # Distributed memory and context persistence engine
+  ################################################################################
+  heady-memory:
+    image: node:20-alpine
+    container_name: heady-memory
+    restart: unless-stopped
+    ports:
+      - "3312:3312"
+    environment:
+      - NODE_ENV=production
+      - PORT=3312
+      - HEADY_SERVICE_HOST=heady-memory
+      - MCP_SERVER=http://heady-mcp-server:3310
+    networks:
+      - heady-net
+    command: sh -c 'echo "Heady Memory service placeholder" && sleep infinity'
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'OK'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      heady-mcp-server:
+        condition: service_healthy
+
+################################################################################
+# Networks
+################################################################################
+networks:
+  heady-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    labels:
+      description: "Heady™ Service Network"
+
+################################################################################
+# Volumes
+# Persist data across container restarts
+################################################################################
+volumes:
+  heady_cache:
+    driver: local

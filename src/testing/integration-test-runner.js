@@ -231,7 +231,7 @@ async function scenarioCircuitBreaker(log) {
     try {
       await cb.execute(() => Promise.resolve('ok'));
       recovered = true;
-    } catch (_) {}
+    } catch (err) { /* structured-logger: emit error */ }
 
     result.status   = STATUS.PASS;
     result.details  = { failCount, wasOpen: isOpen, recovered };

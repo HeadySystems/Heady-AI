@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady™ Developer Portal</title>
+    <meta name="description"
+        content="Build with Heady™ — SDK docs, API references, quickstart guides, and integration patterns.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e8;
+            --muted: #8888a0;
+            --accent: #6c5ce7;
+            --glow: rgba(108, 92, 231, 0.2);
+            --code-bg: #1a1a2e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 1.5rem 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            max-width: 600px;
+            margin-inline: auto;
+        }
+
+        .search {
+            max-width: 500px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 14px 20px 14px 44px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--glow);
+        }
+
+        .search::before {
+            content: '🔍';
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px var(--glow);
+        }
+
+        .card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-sdk {
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--accent);
+        }
+
+        .badge-api {
+            background: rgba(0, 214, 143, 0.15);
+            color: #00d68f;
+        }
+
+        .badge-guide {
+            background: rgba(240, 192, 64, 0.15);
+            color: #f0c040;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .quickstart {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quickstart h2 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <h1>Developer Portal</h1>
+        <p>Everything you need to integrate Heady™ into your applications — SDKs, APIs, and architecture guides.</p>
+        <div class="search"><input type="text" placeholder="Search documentation..." id="devSearch"></div>
+    </div>
+    <div class="container">
+        <div class="quickstart">
+            <h2>⚡ Quickstart</h2>
+            <pre><code>npm install @heady/sdk
+import { HeadyClient } from '@heady/sdk';
+const heady = new HeadyClient({ apiKey: process.env.HEADY_API_KEY });
+const result = await heady.chat('Hello, Heady!');
+console.log(result.response);</code></pre>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>🧠 Brain API <span class="badge badge-api">API</span></h3>
+                <p>Chat completions, embeddings, and memory operations. Multi-model routing through a single endpoint.
+                </p>
+                <a href="https://headyapi.com/docs/brain">View Reference →</a>
+            </div>
+            <div class="card">
+                <h3>🔧 MCP Tools <span class="badge badge-sdk">SDK</span></h3>
+                <p>Model Context Protocol server for IDE integration. Connect your AI assistant to Heady's tool
+                    ecosystem.</p>
+                <a href="https://headymcp.com/docs">Integration Guide →</a>
+            </div>
+            <div class="card">
+                <h3>🐝 Bee Swarm API <span class="badge badge-api">API</span></h3>
+                <p>Orchestrate agent workers with the HeadyBee swarm engine. 30+ specialized bee types for any task.</p>
+                <a href="https://headyapi.com/docs/swarm">Swarm Docs →</a>
+            </div>
+            <div class="card">
+                <h3>📦 JavaScript SDK <span class="badge badge-sdk">SDK</span></h3>
+                <p>Full-featured client library for Node.js and browser. TypeScript-first with phi-derived defaults.</p>
+                <a href="https://headyapi.com/docs/sdk/js">SDK Reference →</a>
+            </div>
+            <div class="card">
+                <h3>🏗️ Architecture Guide <span class="badge badge-guide">Guide</span></h3>
+                <p>C4 diagrams, deployment patterns, and Sacred Geometry principles behind the Heady platform.</p>
+                <a href="/docs/architecture/c4-context">Architecture →</a>
+            </div>
+            <div class="card">
+                <h3>🔐 Auth & Security <span class="badge badge-guide">Guide</span></h3>
+                <p>OAuth flows, API key management, mTLS mesh configuration, and RBAC patterns.</p>
+                <a href="https://headyapi.com/docs/auth">Security Guide →</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

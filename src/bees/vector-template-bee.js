@@ -8,7 +8,7 @@
  */
 const domain = 'vector-templates';
 const description = '3D vector storage → template instantiation → bee swarming engine';
-const priority = 0.95; // highest priority — this IS the swarm engine
+const priority = 0.95; // concurrent-equal weight — this IS the swarm engine
 
 function getWork(ctx = {}) {
     return [

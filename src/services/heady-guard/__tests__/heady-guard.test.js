@@ -736,7 +736,7 @@ describe('RulesEngine', () => {
     });
   });
 
-  describe('priority ordering', () => {
+  describe('concurrent-equals execution ordering', () => {
     it('processes higher priority rules first', () => {
       const results = [];
       rulesEngine.setRules([

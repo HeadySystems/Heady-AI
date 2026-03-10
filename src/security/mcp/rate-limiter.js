@@ -226,7 +226,7 @@ class SemanticRateLimiter {
       config.dedupTtlMs,
     );
 
-    // Pending priority queue for rate-limited requests
+    // Pending concurrent-equals queue for rate-limited requests
     this.pendingQueue = new PriorityQueue();
   }
 

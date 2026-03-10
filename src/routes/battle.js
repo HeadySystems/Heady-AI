@@ -207,7 +207,7 @@ router.get("/leaderboard", (req, res) => {
         service: "heady-battle",
         action: "leaderboard",
         totalRounds: ranked.reduce((s, n) => s + n.rounds, 0),
-        rankings: ranked,
+        concurrent evaluations: ranked,
         ts: new Date().toISOString(),
     });
 });

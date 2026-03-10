@@ -1,0 +1,134 @@
+// ═══════════════════════════════════════════════════════════════
+// Heady™ Notifications Service — Protocol Buffer Definitions
+// © 2026 HeadySystems Inc.
+// ═══════════════════════════════════════════════════════════════
+
+syntax = "proto3";
+
+package heady.notifications.v2;
+
+option java_package = "com.headysystems.notifications.v2";
+option go_package = "github.com/HeadyMe/heady/proto/notifications/v2";
+
+// ─── Notification Service ────────────────────────────────────
+service NotificationService {
+  // Send a notification to a user
+  rpc Send(SendNotificationRequest) returns (SendNotificationResponse);
+
+  // Send to multiple users
+  rpc SendBatch(SendBatchRequest) returns (SendBatchResponse);
+
+  // Get user's notification preferences
+  rpc GetPreferences(GetPreferencesRequest) returns (NotificationPreferences);
+
+  // Update user's notification preferences
+  rpc UpdatePreferences(UpdatePreferencesRequest) returns (NotificationPreferences);
+
+  // Stream real-time notifications for a user
+  rpc Subscribe(SubscribeRequest) returns (stream Notification);
+}
+
+// ─── Enums ───────────────────────────────────────────────────
+enum NotificationChannel {
+  CHANNEL_UNSPECIFIED = 0;
+  CHANNEL_IN_APP = 1;
+  CHANNEL_EMAIL = 2;
+  CHANNEL_SLACK = 3;
+  CHANNEL_DISCORD = 4;
+  CHANNEL_WEBHOOK = 5;
+  CHANNEL_PUSH = 6;
+}
+
+enum NotificationPriority {
+  PRIORITY_UNSPECIFIED = 0;
+  PRIORITY_LOW = 1;
+  PRIORITY_MEDIUM = 2;
+  PRIORITY_HIGH = 3;
+  PRIORITY_CRITICAL = 4;
+}
+
+enum NotificationType {
+  TYPE_UNSPECIFIED = 0;
+  TYPE_SYSTEM = 1;          // Platform alerts
+  TYPE_AGENT = 2;           // Agent activity updates
+  TYPE_PIPELINE = 3;        // Pipeline stage completions
+  TYPE_HEALTH = 4;          // Health monitor alerts
+  TYPE_SECURITY = 5;        // Security events
+  TYPE_BILLING = 6;         // Billing/subscription events
+  TYPE_SOCIAL = 7;          // Community interactions
+}
+
+// ─── Messages ────────────────────────────────────────────────
+message Notification {
+  string id = 1;
+  string user_id = 2;
+  NotificationType type = 3;
+  NotificationPriority priority = 4;
+  string title = 5;
+  string body = 6;
+  map<string, string> data = 7;
+  string created_at = 8;    // ISO 8601
+  bool   read = 9;
+  string action_url = 10;
+}
+
+message SendNotificationRequest {
+  string user_id = 1;
+  NotificationType type = 2;
+  NotificationPriority priority = 3;
+  string title = 4;
+  string body = 5;
+  map<string, string> data = 6;
+  repeated NotificationChannel channels = 7;
+  string action_url = 8;
+}
+
+message SendNotificationResponse {
+  string notification_id = 1;
+  bool   sent = 2;
+  repeated ChannelResult channel_results = 3;
+}
+
+message ChannelResult {
+  NotificationChannel channel = 1;
+  bool   success = 2;
+  string error = 3;
+}
+
+message SendBatchRequest {
+  repeated SendNotificationRequest notifications = 1;
+}
+
+message SendBatchResponse {
+  int32 total = 1;
+  int32 sent = 2;
+  int32 failed = 3;
+  repeated SendNotificationResponse results = 4;
+}
+
+message GetPreferencesRequest {
+  string user_id = 1;
+}
+
+message UpdatePreferencesRequest {
+  string user_id = 1;
+  NotificationPreferences preferences = 2;
+}
+
+message NotificationPreferences {
+  string user_id = 1;
+  bool   email_enabled = 2;
+  bool   push_enabled = 3;
+  bool   slack_enabled = 4;
+  bool   discord_enabled = 5;
+  repeated NotificationType muted_types = 6;
+  string quiet_hours_start = 7;  // HH:MM format
+  string quiet_hours_end = 8;
+  string timezone = 9;
+}
+
+message SubscribeRequest {
+  string user_id = 1;
+  repeated NotificationType types = 2;  // empty = all types
+  NotificationPriority min_priority = 3;
+}

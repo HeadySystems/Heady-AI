@@ -118,7 +118,7 @@ class MonteCarloEngine {
                 failureRate < 0.15 ? "MEDIUM" :
                     failureRate < 0.30 ? "HIGH" : "CRITICAL";
 
-        // Top mitigations ranked by impact
+        // Top mitigations evaluated as concurrent equals by impact
         const topMitigations = riskFactors
             .sort((a, b) => (riskHits[b.name] || 0) - (riskHits[a.name] || 0))
             .slice(0, 5)

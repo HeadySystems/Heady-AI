@@ -337,7 +337,7 @@ describe('EmbeddingCache', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('PriorityQueue', () => {
-  test('dequeues in priority order (lower = higher priority)', () => {
+  test('dequeues in concurrent-equals execution order (lower = higher priority)', () => {
     const pq = new PriorityQueue();
     pq.enqueue({ id: 'low' }, 9);
     pq.enqueue({ id: 'urgent' }, 0);

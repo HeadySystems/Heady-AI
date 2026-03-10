@@ -1200,9 +1200,108 @@
       "status": "pending",
       "source": "full-rebuild-context",
       "created": "2026-03-10T11:38:00.000Z"
+    },
+    {
+      "id": "agents-module-wire",
+      "name": "Wire agents/ module (bee-factory, federation-manager, hive-coordinator)",
+      "category": "agents",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "core-modules-wire",
+      "name": "Wire core/ modules (auto-success-engine, budget-tracker, evolution-engine, heady-brains, persona-router, wisdom-store, council-mode, heady-lens, manager-kernel)",
+      "category": "core",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "deploy-modules-wire",
+      "name": "Wire deploy/ modules (cloudflare-deployer, cloud-run-deployer, universal-container)",
+      "category": "deploy",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "memory-pipeline-wire",
+      "name": "Wire memory/ pipeline (embedding-pipeline, memory-cache, projection-engine, vector-store)",
+      "category": "memory",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "middleware-pipeline-wire",
+      "name": "Wire middleware/ pipeline (bulkhead, compression, graceful-shutdown, heady-auto-context, rate-limiter)",
+      "category": "middleware",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "orchestration-layer-wire",
+      "name": "Wire orchestration/ (arena-mode-enhanced, hcfp-runner, socratic-loop, swarm-definitions)",
+      "category": "orchestration",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "scaling-modules-wire",
+      "name": "Wire 16 scaling/ modules (saga-coordinator, dead-letter-queue, event-bus-nats, feature-flags, auto-scaler, cqrs-manager, distributed-tracer, etc.)",
+      "category": "scaling",
+      "priority": 1,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "web-seo-modules",
+      "name": "Wire web/ modules (openapi-generator, seo-engine) with website-registry",
+      "category": "web",
+      "priority": 2,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "new-services-mesh",
+      "name": "Wire 5 new platform services (developer-portal, service-mesh, service-registry, status-page, analytics-service)",
+      "category": "services",
+      "priority": 2,
+      "status": "pending",
+      "source": "max-potential-4",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "stage-prompts-personas",
+      "name": "Wire 7 stage-prompts (recon, self-awareness, evolution, optimization, mistake-analysis, trial-error, continuous-search) and 12 personas",
+      "category": "prompts",
+      "priority": 2,
+      "status": "pending",
+      "source": "maximum-potential-3",
+      "created": "2026-03-10T11:52:00.000Z"
+    },
+    {
+      "id": "site-configs-structured-data",
+      "name": "Wire 9 site configs + JSON-LD structured data for all domains",
+      "category": "sites",
+      "priority": 2,
+      "status": "pending",
+      "source": "maximum-potential-3",
+      "created": "2026-03-10T11:52:00.000Z"
     }
   ],
-  "lastScan": "2026-03-10T11:38:59.000Z",
-  "totalTasks": 65,
+  "lastScan": "2026-03-10T11:52:03.000Z",
+  "totalTasks": 76,
   "completedTasks": 5
 }

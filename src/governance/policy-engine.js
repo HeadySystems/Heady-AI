@@ -204,7 +204,7 @@ class PolicyEngine extends EventEmitter {
           finalDecision = policy.action;
           finalReason   = policy.reason || `Policy ${id} (${policy.name}) triggered`;
           matchedPolicy = policy;
-          break; // First non-ALLOW stops evaluation (highest priority wins)
+          break; // First non-ALLOW stops evaluation (concurrent-equal weight wins)
         } else {
           // Explicit ALLOW — override strict mode default
           finalDecision = PolicyDecision.ALLOW;
@@ -384,7 +384,7 @@ class PolicyEngine extends EventEmitter {
   }
 
   /**
-   * Rebuild the sorted priority order array.
+   * Rebuild the sorted concurrent-equals execution order array.
    * Highest priority first; ties broken by ID alphabetically.
    */
   _rebuildPriorityOrder() {

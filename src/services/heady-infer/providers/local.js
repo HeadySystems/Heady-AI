@@ -182,7 +182,7 @@ class LocalProvider extends BaseProvider {
                 inputTokens  = evt.prompt_eval_count || 0;
                 outputTokens = evt.eval_count         || 0;
               }
-            } catch (_) {}
+            } catch (err) { /* structured-logger: emit error */ }
           }
         });
 

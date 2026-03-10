@@ -1,0 +1,197 @@
+# heady-hive Kubernetes + Istio mTLS Manifest
+# CSL routing — NO priority-based routing
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heady-hive
+  namespace: heady-system
+  labels:
+    app: heady-hive
+    heady.domain: "headybee-co"
+    version: "3.2.3"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: heady-hive
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: heady-hive
+        heady.domain: "headybee-co"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9464"
+    spec:
+      serviceAccountName: heady-hive-sa
+      containers:
+        - name: heady-hive
+          image: us-central1-docker.pkg.dev/heady-prod/heady-hive:3.2.3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3306
+              name: http
+            - containerPort: 9464
+              name: metrics
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: SERVICE_NAME
+              value: heady-hive
+            - name: SERVICE_VERSION
+              value: "3.2.3"
+            - name: HEADY_DOMAIN
+              value: headybee.co
+            - name: PORT
+              value: "3306"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://heady-collector.heady-system.svc.cluster.local:4317"
+            - name: CSL_CONFIDENCE
+              value: "0.618"
+            - name: MTLS_ENABLED
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: heady-hive-secrets
+                optional: true
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 7
+            timeoutSeconds: 4
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 7
+            timeoutSeconds: 4
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health/startup
+              port: http
+            failureThreshold: 13
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "89Mi"
+              cpu: "55m"
+            limits:
+              memory: "377Mi"
+              cpu: "233m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heady-hive
+  namespace: heady-system
+spec:
+  selector:
+    app: heady-hive
+  ports:
+    - name: http
+      port: 3306
+      targetPort: http
+    - name: metrics
+      port: 9464
+      targetPort: metrics
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: heady-hive-sa
+  namespace: heady-system
+---
+# mTLS — STRICT mode
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: heady-hive-peer-auth
+  namespace: heady-system
+spec:
+  selector:
+    matchLabels:
+      app: heady-hive
+  mtls:
+    mode: STRICT
+---
+# Zero-trust authorization
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: heady-hive-authz
+  namespace: heady-system
+spec:
+  selector:
+    matchLabels:
+      app: heady-hive
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["heady-system"]
+      to:
+        - operation:
+            ports: ["3306"]
+---
+# HPA — Fibonacci replicas, psi% CPU target
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: heady-hive-hpa
+  namespace: heady-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: heady-hive
+  minReplicas: 2
+  maxReplicas: 13
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 62
+---
+# VirtualService — CSL header routing, NO priority field
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: heady-hive-vs
+  namespace: heady-system
+spec:
+  hosts:
+    - heady-hive.heady-system.svc.cluster.local
+  http:
+    - match:
+        - headers:
+            x-heady-domain:
+              exact: headybee.co
+      route:
+        - destination:
+            host: heady-hive
+            port:
+              number: 3306
+      timeout: 11s
+      retries:
+        attempts: 3
+        perTryTimeout: 4s
+        retryOn: "5xx,reset,connect-failure"
+    - route:
+        - destination:
+            host: heady-hive
+            port:
+              number: 3306

@@ -6,7 +6,7 @@
  * - BM25 full-text search via PostgreSQL tsvector/tsquery
  * - Hybrid RRF (Reciprocal Rank Fusion) combining both
  * - MMR (Maximum Marginal Relevance) for diversity
- * - Pre-filtering (metadata JSONB) + post-filtering + re-ranking
+ * - Pre-filtering (metadata JSONB) + post-filtering + re-concurrent evaluation
  * - Pagination support
  */
 

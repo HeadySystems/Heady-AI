@@ -202,7 +202,7 @@ function loadPipeline(opts = {}) {
 }
 
 /**
- * Create a prioritized dispatch plan from the auto-flow pipeline.
+ * Create a coordinate concurrentlyd dispatch plan from the auto-flow pipeline.
  * @param {object} opts - { pool, minWeight, limit }
  * @returns {Array} Array of { task, dispatch } objects
  */

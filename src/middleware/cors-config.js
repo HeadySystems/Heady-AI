@@ -9,17 +9,28 @@
  */
 
 const ALLOWED_ORIGINS = [
-    // Production domains
+    // ─── All 16 Heady™ production domains ───
     'https://headyme.com', 'https://www.headyme.com',
     'https://headysystems.com', 'https://www.headysystems.com',
     'https://headyconnection.org', 'https://www.headyconnection.org',
     'https://headymcp.com', 'https://www.headymcp.com',
     'https://headyio.com', 'https://www.headyio.com',
     'https://headybuddy.org', 'https://www.headybuddy.org',
+    'https://headybot.com', 'https://www.headybot.com',
+    'https://headyapi.com', 'https://www.headyapi.com',
+    'https://heady-ai.com', 'https://www.heady-ai.com',
+    'https://headyos.com', 'https://www.headyos.com',
+    'https://headysense.com', 'https://www.headysense.com',
+    'https://headyex.com', 'https://www.headyex.com',
+    'https://headyfinance.com', 'https://www.headyfinance.com',
+    'https://headyconnection.com', 'https://www.headyconnection.com',
+    'https://perfecttrader.com', 'https://www.perfecttrader.com',
+    'https://headyai.me', 'https://www.headyai.me',
     'https://1ime1.com', 'https://www.1ime1.com',
-    // App subdomains
+    // ─── App subdomains ───
     'https://app.headyme.com',
     'https://app.headysystems.com',
+    'https://admin.headysystems.com',
     'https://dashboard.headysystems.com',
     'https://api.headysystems.com',
     // Development (only in non-production environments)
@@ -31,12 +42,20 @@ const ALLOWED_ORIGINS = [
     ] : []),
 ];
 
-// Dynamic origin matcher for wildcard subdomains
+// Dynamic origin matcher for wildcard subdomains (all 16 domains)
 const ALLOWED_PATTERNS = [
     /^https:\/\/.*\.headyme\.com$/,
     /^https:\/\/.*\.headysystems\.com$/,
     /^https:\/\/.*\.headyconnection\.org$/,
     /^https:\/\/.*\.headymcp\.com$/,
+    /^https:\/\/.*\.headyio\.com$/,
+    /^https:\/\/.*\.headybuddy\.org$/,
+    /^https:\/\/.*\.headybot\.com$/,
+    /^https:\/\/.*\.headyapi\.com$/,
+    /^https:\/\/.*\.heady-ai\.com$/,
+    /^https:\/\/.*\.headyos\.com$/,
+    /^https:\/\/.*\.headyfinance\.com$/,
+    /^https:\/\/.*\.perfecttrader\.com$/,
 ];
 
 function corsConfig() {

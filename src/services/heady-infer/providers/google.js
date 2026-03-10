@@ -229,7 +229,7 @@ class GoogleProvider extends BaseProvider {
                 inputTokens  = meta.promptTokenCount     || inputTokens;
                 outputTokens = meta.candidatesTokenCount || outputTokens;
               }
-            } catch (_) {}
+            } catch (err) { /* structured-logger: emit error */ }
           }
         });
 

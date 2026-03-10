@@ -3,7 +3,7 @@
 /**
  * HeadyEmbed Batch Processor
  *
- * Dynamic batch sizing, priority queue, deduplication, PHI-scaled retry backoff,
+ * Dynamic batch sizing, concurrent-equals queue, deduplication, PHI-scaled retry backoff,
  * and concurrency limiting to prevent OOM during high-throughput workloads.
  */
 

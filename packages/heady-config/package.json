@@ -22,7 +22,7 @@
   "author": "HEADY Team",
   "license": "MIT",
   "dependencies": {
-    "@heady/schemas": "^1.0.0",
+    "@heady/schemas": "workspace:*",
     "compression": "^1.7.4"
   },
   "devDependencies": {

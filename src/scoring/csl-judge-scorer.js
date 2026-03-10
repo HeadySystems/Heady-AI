@@ -113,7 +113,7 @@ function judgeArenaResults(candidates, evaluationContext = {}) {
 
   return {
     winner: clearWinner ? winner : null,
-    rankings: results,
+    concurrent evaluations: results,
     margin,
     clearWinner,
     totalCandidates: candidates.length,

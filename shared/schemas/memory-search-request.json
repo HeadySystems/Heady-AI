@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.headysystems.com/memory-search-request.json",
+  "title": "Memory Search Request",
+  "type": "object",
+  "required": [
+    "query"
+  ],
+  "properties": {
+    "query": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topK": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 55,
+      "default": 8
+    },
+    "threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.5
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "filter": {
+      "type": "object"
+    }
+  }
+}

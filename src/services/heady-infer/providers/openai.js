@@ -111,7 +111,7 @@ class OpenAIProvider extends BaseProvider {
                 promptTokens     = evt.usage.prompt_tokens     || 0;
                 completionTokens = evt.usage.completion_tokens || 0;
               }
-            } catch (_) {}
+            } catch (err) { /* structured-logger: emit error */ }
           }
         });
 

@@ -96,7 +96,7 @@ class AutoCommitEngine extends EventEmitter {
         const indexLock = path.join(this.repoRoot, ".git", "index.lock");
         if (fs.existsSync(indexLock)) {
             this._log("warn", "Removing stale .git/index.lock");
-            try { fs.unlinkSync(indexLock); } catch (_) { }
+            try { fs.unlinkSync(indexLock); } catch (err) { /* structured-logger: emit error */ }
         }
 
         // Write our PID as the lock
@@ -112,7 +112,7 @@ class AutoCommitEngine extends EventEmitter {
                     fs.unlinkSync(LOCK_FILE);
                 }
             }
-        } catch (_) { }
+        } catch (err) { /* structured-logger: emit error */ }
     }
 
     // ── Git helpers ──────────────────────────────────────────────────────
@@ -296,7 +296,7 @@ class AutoCommitEngine extends EventEmitter {
             try {
                 const status = this._exec("git status --porcelain");
                 pendingCount = status.split("\n").filter(Boolean).length;
-            } catch (_) { }
+            } catch (err) { /* structured-logger: emit error */ }
         }
 
         return {

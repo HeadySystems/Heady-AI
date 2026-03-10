@@ -24,7 +24,7 @@ function successPage(token, user) {
 h2{color:#818cf8;margin-bottom:8px}p{opacity:0.7;font-size:0.9rem}</style></head>
 <body><div class="box"><h2>✅ Connected to Heady</h2><p>This window will close automatically...</p></div>
 <script>
-try { window.opener.postMessage(${payload}, '*'); } catch(e) {}
+try { window.opener.postMessage(${payload}, '*'); } catch (err) { /* structured-logger: emit error */ }
 setTimeout(function(){ window.close(); }, 1500);
 </script></body></html>`;
 }

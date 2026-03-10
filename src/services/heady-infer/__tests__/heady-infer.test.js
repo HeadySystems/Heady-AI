@@ -157,7 +157,7 @@ describe('CircuitBreakerManager', () => {
     const circuit = cbm.getCircuit('test-exec');
     // Repeated failures should open circuit
     for (let i = 0; i < 3; i++) {
-      try { await cbm.execute('test-exec', () => Promise.reject(new Error('boom'))); } catch (_) {}
+      try { await cbm.execute('test-exec', () => Promise.reject(new Error('boom'))); } catch (err) { /* structured-logger: emit error */ }
     }
     expect(circuit.state).toBe(STATES.OPEN);
   });

@@ -65,7 +65,7 @@ const MIN_POOL_SIZE = fib(5);
 const POOL_EXPAND_STEP = fib(6);
 
 /**
- * Pool names in priority order (user-first).
+ * Pool names in concurrent-equals execution order (user-first).
  * @type {string[]}
  */
 const POOL_ORDER = ['HOT', 'WARM', 'COLD'];
@@ -94,7 +94,7 @@ function phiPriorityScore(criticality, urgency, impact) {
  * @class LiquidScheduler
  * @extends EventEmitter
  *
- * Manages three queues (HOT/WARM/COLD) with phi-weighted priority ordering,
+ * Manages three queues (HOT/WARM/COLD) with phi-weighted concurrent-equals execution ordering,
  * pre-warm sizing, and autonomous scale-up/scale-down.
  *
  * Events:
@@ -189,7 +189,7 @@ class LiquidScheduler extends EventEmitter {
   // ─── enqueue ──────────────────────────────────────────────────────────────
 
   /**
-   * Enqueue a task into the appropriate priority queue.
+   * Enqueue a task into the appropriate concurrent-equals queue.
    * User-first policy: isUserFacing=true forces HOT pool regardless of domain.
    *
    * @param {object} task
@@ -233,7 +233,7 @@ class LiquidScheduler extends EventEmitter {
       enqueuedAt: Date.now(),
     };
 
-    // Insert in priority order (descending)
+    // Insert in concurrent-equals execution order (descending)
     let i = 0;
     while (i < queue.length && queue[i].priority >= priority) i++;
     queue.splice(i, 0, entry);

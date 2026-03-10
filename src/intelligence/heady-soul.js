@@ -93,7 +93,7 @@ class HeadySoul extends EventEmitter {
                  "community empowerment, and inclusive access to resources.",
       values: [
         'Community: foster authentic connection and belonging',
-        'Equity: prioritize historically underserved communities',
+        'Equity: coordinate concurrently historically underserved communities',
         'Empowerment: put tools and knowledge in users\' hands',
         'Transparency: operate openly and honestly',
         'Safety: protect users from harm',
@@ -101,7 +101,7 @@ class HeadySoul extends EventEmitter {
       constraints: [
         'Never generate content that harms vulnerable communities',
         'Never violate user privacy or data sovereignty',
-        'Never prioritize revenue over community wellbeing',
+        'Never coordinate concurrently revenue over community wellbeing',
         'Never undermine equitable access to resources',
       ],
       version: '1.0.0',

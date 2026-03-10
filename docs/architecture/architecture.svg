@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-label="Heady architecture overview">
+  <rect width="1400" height="900" fill="#0b1020"/>
+  <text x="700" y="70" fill="#e5e7eb" font-family="Inter, Arial, sans-serif" font-size="32" text-anchor="middle">Heady platform architecture</text>
+  <g font-family="Inter, Arial, sans-serif" font-size="20" fill="#d1d5db">
+    <rect x="100" y="140" width="320" height="160" rx="24" fill="#132238" stroke="#22c55e"/>
+    <text x="260" y="190" text-anchor="middle">Web surfaces</text>
+    <text x="260" y="225" text-anchor="middle" font-size="16">core sites + support pages</text>
+
+    <rect x="540" y="140" width="320" height="160" rx="24" fill="#132238" stroke="#38bdf8"/>
+    <text x="700" y="190" text-anchor="middle">Shared browser packages</text>
+    <text x="700" y="225" text-anchor="middle" font-size="16">auth, context, design, geometry</text>
+
+    <rect x="980" y="140" width="320" height="160" rx="24" fill="#132238" stroke="#a78bfa"/>
+    <text x="1140" y="190" text-anchor="middle">Auth boundary</text>
+    <text x="1140" y="225" text-anchor="middle" font-size="16">heady-auth + auth-session-server</text>
+
+    <rect x="180" y="400" width="420" height="220" rx="24" fill="#101a30" stroke="#f59e0b"/>
+    <text x="390" y="450" text-anchor="middle">Platform foundation services</text>
+    <text x="390" y="490" text-anchor="middle" font-size="16">notifications · analytics · billing · search</text>
+    <text x="390" y="520" text-anchor="middle" font-size="16">scheduler · migrations · assets · sessions</text>
+
+    <rect x="720" y="400" width="500" height="220" rx="24" fill="#101a30" stroke="#22c55e"/>
+    <text x="970" y="450" text-anchor="middle">Core runtime services</text>
+    <text x="970" y="490" text-anchor="middle" font-size="16">AutoContext · memory · orchestration · gateway</text>
+    <text x="970" y="520" text-anchor="middle" font-size="16">monitoring · governance · external integrations</text>
+
+    <rect x="350" y="700" width="700" height="120" rx="24" fill="#132238" stroke="#f472b6"/>
+    <text x="700" y="750" text-anchor="middle">Infrastructure plane: Compose, Kubernetes, Envoy, Consul, OTel, NATS, PgBouncer</text>
+  </g>
+  <g stroke="#94a3b8" stroke-width="3" fill="none">
+    <path d="M420 220 H540"/>
+    <path d="M860 220 H980"/>
+    <path d="M260 300 V400"/>
+    <path d="M1140 300 V400"/>
+    <path d="M700 300 V400"/>
+    <path d="M390 620 V700"/>
+    <path d="M970 620 V700"/>
+  </g>
+</svg>

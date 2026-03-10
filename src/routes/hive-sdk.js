@@ -107,7 +107,7 @@ router.post("/battle/arena", async (req, res) => {
 router.get("/battle/leaderboard", async (req, res) => {
     try {
         const result = await brainChat(
-            "Generate the current HeadyBattle leaderboard based on recent validations and arena results. Include rankings, scores, and trends.",
+            "Generate the current HeadyBattle leaderboard based on recent validations and arena results. Include concurrent evaluations, scores, and trends.",
             "You are HeadyBattle tracking cumulative performance across code validation sessions."
         );
         res.json({ ok: true, analysis: result.response, source: "heady-brain" });

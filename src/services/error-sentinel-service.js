@@ -110,7 +110,7 @@ class HeadyErrorSentinel extends EventEmitter {
             timestamp: Date.now()
         };
 
-        // Broadcast to HeadyRisk, HeadyMC (to deprioritize failing strategies), and Self-Critique
+        // Broadcast to HeadyRisk, HeadyMC (to decoordinate concurrently failing strategies), and Self-Critique
         this.emit('aggregated_error_report', {
             summary,
             recentErrors

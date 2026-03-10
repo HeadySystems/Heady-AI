@@ -19,7 +19,7 @@
 const http = require('http');
 const crypto = require('crypto');
 
-const PORT = process.env.SITE_PORT || 3850;
+const PORT = process.env.PORT || process.env.SITE_PORT || 3850;
 const PHI = 1.6180339887;
 
 // ── Site Registry ───────────────────────────────────────────────
@@ -621,7 +621,7 @@ function renderSite(site, host) {
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
-  const host = req.headers.host || 'headyme.com';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
   res.setHeader('Access-Control-Allow-Origin', '*');

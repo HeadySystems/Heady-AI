@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.headysystems.com/session-create-request.json",
+  "title": "Session Create Request",
+  "type": "object",
+  "required": [
+    "firebaseIdToken"
+  ],
+  "properties": {
+    "firebaseIdToken": {
+      "type": "string",
+      "minLength": 5
+    }
+  }
+}

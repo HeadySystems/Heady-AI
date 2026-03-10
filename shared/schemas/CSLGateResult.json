@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.headysystems.com/schemas/CSLGateResult",
+  "type": "object",
+  "required": [
+    "score",
+    "gate",
+    "passed"
+  ],
+  "properties": {
+    "score": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "gate": {
+      "type": "string"
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "threshold": {
+      "type": "number"
+    }
+  }
+}

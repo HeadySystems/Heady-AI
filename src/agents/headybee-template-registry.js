@@ -48,7 +48,7 @@ const TEMPLATE_REGISTRY = [
         name: "HeadySwarm Task Router",
         domains: ["orchestration", "routing", "finops"],
         triggers: ["queue-pressure", "budget-threshold", "provider-failure"],
-        workflows: ["budget-check", "candidate-ranking", "parallel-execution", "telemetry"],
+        workflows: ["budget-check", "candidate-concurrent evaluation", "parallel-execution", "telemetry"],
         skills: ["provider-fallback", "cost-optimization", "latency-shaping"],
         nodes: ["CONDUCTOR", "ARENA", "JULES"],
         swarmTasks: ["rank", "route", "execute", "record"],

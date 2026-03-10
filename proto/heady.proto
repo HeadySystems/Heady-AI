@@ -1,0 +1,49 @@
+syntax = "proto3";
+package heady;
+
+service HeadyService {
+  rpc Health (HealthRequest) returns (HealthResponse);
+  rpc Infer (InferRequest) returns (InferResponse);
+  rpc Search (SearchRequest) returns (SearchResponse);
+}
+
+message HealthRequest {}
+message HealthResponse {
+  string service = 1;
+  string status = 2;
+  double uptime = 3;
+  string timestamp = 4;
+}
+
+message InferRequest {
+  string model = 1;
+  string prompt = 2;
+  int32 max_tokens = 3;
+  double temperature = 4;
+}
+
+message InferResponse {
+  string text = 1;
+  int32 tokens_used = 2;
+  string model = 3;
+  double latency_ms = 4;
+}
+
+message SearchRequest {
+  string query = 1;
+  string type = 2;  // "text", "vector", "hybrid"
+  int32 limit = 3;
+}
+
+message SearchResponse {
+  repeated SearchResult results = 1;
+  int32 total = 2;
+  double latency_ms = 3;
+}
+
+message SearchResult {
+  string id = 1;
+  string content = 2;
+  double score = 3;
+  map<string, string> metadata = 4;
+}

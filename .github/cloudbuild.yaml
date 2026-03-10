@@ -1,0 +1,39 @@
+# Heady Systems — Cloud Build
+# Eric Haywood — Sacred Geometry v4.0
+
+steps:
+  - name: 'node:20-alpine'
+    entrypoint: 'npm'
+    args: ['ci']
+    dir: 'services/api-gateway'
+
+  - name: 'node:20-alpine'
+    entrypoint: 'npm'
+    args: ['test']
+    dir: 'services/api-gateway'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-east1-docker.pkg.dev/$PROJECT_ID/heady/api-gateway:$COMMIT_SHA'
+      - 'services/api-gateway/'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/heady/api-gateway:$COMMIT_SHA']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'api-gateway'
+      - '--image=us-east1-docker.pkg.dev/$PROJECT_ID/heady/api-gateway:$COMMIT_SHA'
+      - '--region=us-east1'
+      - '--min-instances=1'
+      - '--max-instances=13'
+      - '--concurrency=89'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: '610s'
