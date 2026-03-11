@@ -48,7 +48,9 @@ const PORT = process.env.PORT || 3301;
 // ── Global middleware ──
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',').map(o => o.trim()).filter(Boolean) || [],
+  origin: process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
+    : (process.env.NODE_ENV === 'production' ? [] : '*'),
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -89,17 +91,21 @@ app.get('/api/colab/health', (req, res) => {
   res.json(liquidColab.getHealth());
 });
 
-app.post('/api/colab/execute/:component', async (req, res) => {
-  if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
-  const result = await liquidColab.execute(req.params.component, req.body || {});
-  if (!result.ok) return res.status(404).json(result);
-  res.json(result);
+app.post('/api/colab/execute/:component', async (req, res, next) => {
+  try {
+    if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
+    const result = await liquidColab.execute(req.params.component, req.body || {});
+    if (!result.ok) return res.status(404).json(result);
+    res.json(result);
+  } catch (err) { next(err); }
 });
 
-app.post('/api/colab/smart-execute', async (req, res) => {
-  if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
-  const result = await liquidColab.smartExecute(req.body || {});
-  res.json(result);
+app.post('/api/colab/smart-execute', async (req, res, next) => {
+  try {
+    if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
+    const result = await liquidColab.smartExecute(req.body || {});
+    res.json(result);
+  } catch (err) { next(err); }
 });
 
 // ── Error handling (must be last) ──
@@ -115,6 +121,7 @@ const server = app.listen(PORT, () => {
 // ── Subsystem Initialization (Colab Cluster, Bee Factory, Swarm Coordinator, Universal Prompt) ──
 initializeSubsystems().then((results) => {
   const loaded = Object.entries(results).filter(([, v]) => v).map(([k]) => k);
+  if (liquidColab) loaded.push('liquidColabEngine');
   logger.info(`[HeadyManager] ✅ Subsystems initialized: ${loaded.join(', ') || 'none'}`);
 }).catch(err => {
   logger.error(`[HeadyManager] ⚠️ Subsystem init error: ${err.message}`);
