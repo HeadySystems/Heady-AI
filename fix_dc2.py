@@ -36,4 +36,3 @@ for line in lines:
 
 with open('docker-compose.yml', 'w') as f:
     f.writelines(new_lines)
-

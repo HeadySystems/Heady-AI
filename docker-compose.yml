@@ -79,7 +79,175 @@ services:
     container_name: Heady
     command: python3 -m http.server 8000
     networks:
-      - heady-main-network
+      - heady-net
+    restart: unless-stopped
+
+  domain-router:
+    build:
+      context: .
+      dockerfile: services/domain-router/Dockerfile
+    environment:
+      PORT: 4301
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4311:4301"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  observability-kernel:
+    build:
+      context: .
+      dockerfile: services/observability-kernel/Dockerfile
+    environment:
+      PORT: 4302
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4302:4302"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  budget-tracker:
+    build:
+      context: .
+      dockerfile: services/budget-tracker/Dockerfile
+    environment:
+      PORT: 4303
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4303:4303"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  heady-memory:
+    build:
+      context: .
+      dockerfile: services/heady-memory/Dockerfile
+    environment:
+      PORT: 4304
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4304:4304"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  heady-health:
+    build:
+      context: .
+      dockerfile: services/heady-health/Dockerfile
+    environment:
+      PORT: 4305
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4305:4305"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  heady-conductor:
+    build:
+      context: .
+      dockerfile: services/heady-conductor/Dockerfile
+    environment:
+      PORT: 4306
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4306:4306"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  heady-brains:
+    build:
+      context: .
+      dockerfile: services/heady-brains/Dockerfile
+    environment:
+      PORT: 4307
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4307:4307"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  heady-soul:
+    build:
+      context: .
+      dockerfile: services/heady-soul/Dockerfile
+    environment:
+      PORT: 4308
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/heady
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "4308:4308"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - heady-net
+
+  auth-session-server:
+    build:
+      context: ./services/auth-session-server
+      dockerfile: Dockerfile
+    environment:
+      PORT: 4309
+      NODE_ENV: production
+      FIREBASE_PROJECT_ID: gen-lang-client-0920560496
+    ports:
+      - "4309:4309"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4309/health || false"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - heady-net
+    restart: unless-stopped
+
+volumes:
+  heady_postgres:
 
 networks:
   heady-main-network:
