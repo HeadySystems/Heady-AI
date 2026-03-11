@@ -1,270 +1,142 @@
-<<<<<<< HEAD
-# 🧠 Heady — Latent OS & Autonomous AI Platform
-=======
 <!-- HEADY_BRAND:BEGIN
-<!-- ╔══════════════════════════════════════════════════════════════════╗
-<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-<!-- ║                                                                  ║
-<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: README.md                                                    ║
-<!-- ║  LAYER: root                                                  ║
-<!-- ╚══════════════════════════════════════════════════════════════════╝
-<!-- HEADY_BRAND:END
--->
+╔══════════════════════════════════════════════════════════════════╗
+║  HeadyOS · Sacred Geometry · Organic Systems · Breathing Interfaces ║
+║  FILE: README.md  ·  LAYER: root                                ║
+╚══════════════════════════════════════════════════════════════════╝
+HEADY_BRAND:END -->
+
 # Heady Systems
 >>>>>>> staging/chore/formatting-fixes-2566957660382340048
 
-[![Node](https://img.shields.io/badge/node-20%2B-green.svg)]()
-[![License](https://img.shields.io/badge/license-Proprietary-blue.svg)]()
-[![MCP](https://img.shields.io/badge/MCP-compatible-purple.svg)]()
+> **Sacred Geometry · Organic Systems · Breathing Interfaces**
 
-<<<<<<< HEAD
-> **Heady** is a personal AI platform that functions as a fully autonomous digital company.
-> It orchestrates **20+ specialized AI agents** across reasoning, coding, research,
-> creative, operations, and personal-assistant domains — running 24/7 on self-healing infrastructure.
-=======
-## 🚀 System Status: 100% FULLY FUNCTIONAL
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
-
-**HeadySystems Inc.** (C-Corp) builds the platform. Revenue directly funds
-**HeadyConnection Inc.** (Nonprofit), which brings AI tools to underserved communities.
+HeadyOS is a **unified intelligent orchestration platform** for AI pipelines, distributed agents, and modern workloads. Every component self-monitors, self-corrects, and adapts in real time — a *living system*.
 
 ---
 
-<<<<<<< HEAD
-=======
-### 🎯 Quick Start (Cloud-First)
-
-```bash
-# Clone and auto-deploy
-git clone https://github.com/HeadySystems/Heady.git
-cd Heady
-./scripts/run-auto-deploy.ps1 -ForceProduction
-```
-
-**All services automatically deploy to HeadyCloud** - no local setup required.
-
-### 🧠 Intelligent Features
-
-- **100% HeadyBrain Dominance**: All operations routed through HeadyBrain
-- **Persistent Memory System**: Deep data scanning with pre-execution optimization
-- **Adaptive Complexity**: Intelligent orchestration based on task requirements
-- **Monte Carlo Optimization**: Real-time performance optimization
-- **Pattern Recognition**: Self-learning system with continuous improvement
-
-## Quickstart Guides
-
-Get started with Heady applications:
-
-- [HeadyBuddy](docs/quickstarts/HEADYBUDDY.md) - Android companion
-- [HeadyIDE](docs/quickstarts/HEADYIDE.md) - Desktop AI assistant
-- [HeadyBrowser](docs/quickstarts/HEADYBROWSER.md) - Web extension
-- [HeadyServices](docs/quickstarts/HEADYSERVICES.md) - Backend system
-- [Heady API](docs/quickstarts/HEADY_API_QUICKSTART.md) - Service interaction
-- [HeadyMCP](docs/quickstarts/HEADYMCP.md) - Manager Control Plane
-
-## Guides and References
-
-Deeper integration and API documentation:
-
-- [Service Integration](docs/guides/SERVICE_INTEGRATION.md) - How Heady services connect
-- [HeadyManager API](docs/api/HEADYMANAGER_API.md) - Service endpoints reference
-
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
 ## Quick Start
 
 ```bash
-git clone https://github.com/HeadyMe/Heady-8f71ffc8.git ~/Heady && cd ~/Heady
-bash scripts/setup.sh           # Checks prereqs, installs deps, creates .env
-# Edit .env with your API keys
-node heady-manager.js           # Starts on port 3301
-bash scripts/smoke-test.sh      # Verifies all systems
+git clone https://github.com/HeadySystems/Heady.git
+cd Heady
+npm install
+cp .env.example .env
+# Edit .env — set at minimum ANTHROPIC_API_KEY
+npm start
+curl localhost:3300/api/health
 ```
 
-<<<<<<< HEAD
-📖 **Full walkthrough:** [ONBOARDING.md](./ONBOARDING.md)
+Cloud deploy: Connect to [Render.com](https://render.com) — the included `render.yaml` provisions everything automatically.
 
 ---
 
 ## Architecture
 
 ```
-User Request → AI Gateway (auth + rate limit)
-    → HeadyBrain (reasoning)
-    → HeadySoul (alignment + veto)
-    → HeadyBattle (validation)
-    → HeadySims (Monte Carlo)
-    → Arena Mode (competing solutions)
-    → HeadyVinci (learns from outcome)
-    → Response
-=======
-## Architecture
-
-```
-heady-manager.js          # Node.js MCP Server & API Gateway (port 3300)
-├── src/                  # Core pipeline engine & agents
-├── backend/              # Python worker & MCP servers
-├── frontend/             # React UI (Vite + TailwindCSS)
-├── HeadyAcademy/         # AI Nodes & Tools (JULES, OBSERVER, BUILDER, ATLAS, PYTHIA)
-├── configs/              # YAML configuration (pipeline, resources, governance)
-├── scripts/              # Automation (Sync, Build, Deploy, Checkpoint)
-├── notebooks/            # Colab notebooks (quick-start, tutorials, examples)
-├── docs/                 # Documentation & Notion templates
-└── heady-registry.json   # HeadyRegistry — central catalog of the ecosystem
-├── HeadyAcademy/         # AI Nodes & Tools
-├── configs/              # YAML configuration
-├── scripts/              # Automation (Sync, Build, Deploy)
-└── workers/              # Edge workers
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
-```
-
-### Liquid Architecture
-Services scale dynamically to demand. The **Auto-Success Engine** runs **135 background tasks**
-across **9 categories** every 30 seconds. Errors become learning events, not failures.
-
-### Fractal Intelligence
-Same values at every scale — Fibonacci spacing, golden ratio rhythms, fractal self-similarity
-govern code, services, and the organization itself.
-
----
-
-## Agent Roster
-
-| Category | Agents | Mission |
-|---|---|---|
-| **Thinkers** | HeadyBrain, HeadySoul, HeadyVinci | Reasoning, alignment, pattern recognition |
-| **Builders** | HeadyCoder, HeadyCodex, HeadyCopilot, HeadyJules | Code orchestration, pair coding, PM |
-| **Researchers** | HeadyPerplexity, HeadyGrok, HeadyBattle, HeadySims | Research, red-team, validation, simulation |
-| **Creatives** | HeadyCreative, HeadyVinci Canvas | Content generation, design |
-| **Operations** | HeadyManager, HeadyConductor, HeadyLens, HeadyOps, HeadyMaintenance | Control plane, monitoring, deploy, health |
-| **Assistant** | HeadyBuddy | Browser-based assistant with memory |
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-<<<<<<< HEAD
-| Runtime | Node.js 20 (Express) |
-| Frontend | React + Vite |
-| Local AI | Ollama |
-| External AI | Claude, GPT, Gemini, Groq, Perplexity |
-| Infrastructure | Cloudflare (DNS, Tunnels, Workers, KV, Pages, Access) |
-| Cloud | Google Cloud (Vertex AI, Cloud Run, Storage) |
-| Protocol | MCP (Model Context Protocol) |
-| CI/CD | GitHub Actions |
-| Memory | File-based + vector embeddings |
-| Monitoring | Prometheus metrics, Winston logging |
-=======
-| `GET /api/health` | Health check |
-| `GET /api/pulse` | System pulse with layer info |
-| `GET /api/system/status` | Full system status |
-| `POST /api/pipeline/run` | Trigger pipeline run |
-| `GET /api/pipeline/state` | Current pipeline state |
-| `GET /api/nodes` | List all AI nodes |
-| `GET /api/registry` | Full HeadyRegistry catalog |
-| `GET /api/registry/component/:id` | Lookup a specific component |
-| `GET /api/registry/environments` | List all environments |
-| `GET /api/registry/docs` | List registered documents |
-| `GET /api/registry/notebooks` | List registered notebooks |
-| `GET /api/registry/patterns` | List architecture patterns |
-| `GET /api/registry/workflows` | List workflows |
-| `GET /api/registry/ai-nodes` | List AI nodes from registry |
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
-
----
-
-## Project Structure
-
-```
-Heady/
-├── heady-manager.js             # Entry point — control plane
-├── package.json
-├── .env.example
-├── src/
-│   ├── gateway/                 # AI gateway, auth, rate limiting, health
-│   ├── mcp/                     # MCP protocol server + tool registry
-│   ├── agents/                  # Agent manager + routing
-│   ├── memory/                  # Memory store + embeddings
-│   ├── services/                # Auto-success engine + service stubs
-│   ├── utils/                   # Logger, metrics, env validation
-│   └── web/                     # React + Vite frontend
-├── config/
-│   ├── agents.json              # Agent registry (19 agents)
-│   ├── providers.json           # AI provider routing config
-│   └── services.json            # Domain & service registry
-├── scripts/                     # setup.sh, smoke-test.sh, validate-env.js
-├── tests/                       # Unit, integration, e2e
-├── docs/                        # Architecture, API, ADRs, runbooks
-├── .github/                     # CI/CD, issue templates, PR template
-├── Dockerfile
-├── docker-compose.yml
-├── ONBOARDING.md
-├── CONTRIBUTING.md
-├── SECURITY.md
-└── CHANGELOG.md
+heady-manager.js           # Node.js API Gateway (port 3300)
+├── src/hc_pipeline.js     # HCFullPipeline engine
+├── src/agents/            # Builder, Researcher, Claude Code, Deployer
+├── packages/hc-supervisor # Multi-agent Supervisor (parallel fan-out)
+├── packages/hc-brain/     # HeadyBrain meta-controller
+├── packages/hc-health/    # Health checks + cron
+├── configs/               # YAML configs (source of truth)
+├── public/                # Static frontend (this site)
+│   ├── index.html         # Landing page
+│   ├── docs.html          # Documentation hub
+│   ├── products.html      # Product catalog
+│   ├── api-docs.html      # Interactive API docs
+│   ├── status.html        # System status
+│   └── verticals/         # Product vertical pages
+├── frontend/              # React admin IDE (Vite)
+├── scripts/               # Build, deploy, checkpoint automation
+├── docs/                  # Developer documentation
+└── heady-registry.json    # Central component catalog
 ```
 
 ---
 
-## Domains & Interfaces
+## HCFullPipeline
 
-| Domain | Purpose |
-|---|---|
-| [headyme.com](https://headyme.com) | Personal dashboard / Command Center |
-| [headysystems.com](https://headysystems.com) | Infrastructure hub |
-| [headyconnection.org](https://headyconnection.org) | Nonprofit community hub |
-| [headymcp.com](https://headymcp.com) | MCP Protocol portal |
-| [headyio.com](https://headyio.com) | Developer platform |
-| [headybuddy.org](https://headybuddy.org) | AI Assistant hub |
-| [ide.headyme.com](https://ide.headyme.com) | Browser-based IDE |
+Five-stage deterministic execution with deep checkpoints:
 
----
-
-## MCP Integration
-
-Heady exposes a full MCP-compatible tool gateway for IDE integration:
-
-```json
-{
-  "mcpServers": {
-    "heady": {
-      "url": "http://localhost:3301/mcp/v1",
-      "transport": "streamable-http",
-      "auth": { "type": "bearer", "token": "<MCP_BEARER_TOKEN>" }
-    }
-  }
-}
+```
+ingest → plan → execute-major-phase → recover → finalize
 ```
 
-Compatible with: **Windsurf**, **Cursor**, **VS Code + MCP extension**
+**Operational Readiness Score (ORS)** gates execution intensity:
+- **85–100**: Full parallelism, all optimisations enabled
+- **70–85**: Normal operation
+- **50–70**: Maintenance mode, no new large builds
+- **<50**: Recovery only — repair before building
 
-<<<<<<< HEAD
 ---
-=======
-- `requirements.txt` - Python dependencies
-- `NOTEBOOK_TEMPLATE.md` - Template for new notebooks
-- `COLAB_WORKFLOW.md` - Google Colab workflow guide
-- `.env.example` - Environment variables template
-| `POST /api/system/production` | Activate production mode |
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
+
+## Key API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/health` | GET | Health check |
+| `/api/system/status` | GET | Full system status |
+| `/api/pipeline/run` | POST | Trigger pipeline run |
+| `/api/pipeline/state` | GET | Current state |
+| `/api/supervisor/status` | GET | All agent statuses |
+| `/api/brain/status` | GET | Brain + ORS |
+| `/api/registry` | GET | Component registry |
+
+Full reference: `public/api-docs.html` or `/api-docs.html` on the running system.
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ANTHROPIC_API_KEY` | **Yes** | Claude API key |
+| `DATABASE_URL` | Recommended | PostgreSQL connection |
+| `HEADY_API_KEY` | Recommended | Auto-generated if not set |
+| `PORT` | Optional | Server port (default: 3300) |
+| `NODE_ENV` | Optional | `development` or `production` |
+
+---
+
+## Checkpoint Protocol
+
+At every checkpoint, 10-step deep analysis detects drift and syncs all files:
+
+```powershell
+.\scripts\checkpoint-sync.ps1              # Full sync
+.\scripts\checkpoint-sync.ps1 -Mode check  # Read-only drift detection
+.\scripts\checkpoint-sync.ps1 -Mode fix    # Auto-fix
+```
+
+Full protocol: `docs/CHECKPOINT_PROTOCOL.md`
+
+---
+
+## Key Documentation
+
+| Path | Purpose |
+|------|---------|
+| `public/docs.html` | **Documentation hub** |
+| `CLAUDE.md` | Claude Code integration protocol |
+| `docs/CHECKPOINT_PROTOCOL.md` | Sync protocol |
+| `docs/C4_ARCHITECTURE.md` | Architecture diagrams |
+| `configs/hcfullpipeline.yaml` | Pipeline definition (source of truth) |
+| `heady-registry.json` | Central component catalog |
+
+---
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). See [SECURITY.md](./SECURITY.md) for vulnerability reporting.
+```powershell
+.\commit_and_build.ps1   # Local build
+.\nexus_deploy.ps1       # Push to all remotes
+```
+
+Render.com blueprint: `render.yaml`
+
+---
 
 ## License
 
-<<<<<<< HEAD
-Copyright © 2024-2026 HeadySystems Inc. & HeadyConnection Inc. All rights reserved.
-=======
-Proprietary - Heady Systems
-
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
+Proprietary — Heady Systems

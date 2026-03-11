@@ -8,6 +8,9 @@
     "node": ">=20.0.0"
   },
   "scripts": {
+    "postinstall": "node scripts/link-packages.js",
+    "start:mcp": "node backend/app.js",
+    "cli": "python scripts/heady_cli.py",
     "start": "node heady-manager.js",
     "start:mcp": "node backend/app.js",
     "dev": "node --watch heady-manager.js",
