@@ -15,8 +15,8 @@ import {
   phiBackoff,
   classifyPressure,
   phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '../../../shared/phi-math.js';
+import { createLogger } from '../../../shared/logger.js';
 import { NODE_STATUS, PLATFORM } from './node-registry.js';
 
 const logger = createLogger('health-monitor');

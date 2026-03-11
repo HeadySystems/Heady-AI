@@ -16,8 +16,8 @@ import {
   PHI, PSI, fib,
   CSL_THRESHOLDS,
   classifyPressure,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '../../../shared/phi-math.js';
+import { createLogger } from '../../../shared/logger.js';
 
 const logger = createLogger('liquid-node-registry');
 

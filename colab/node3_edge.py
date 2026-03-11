@@ -28,7 +28,7 @@ from datetime import datetime, timezone
 import numpy as np
 
 # ── Configuration ────────────────────────────────────────────────
-NEON_DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://neondb_owner:npg_tEA7FfeWb5gZ@ep-cold-snow-aesmiwt9.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require")
+NEON_DATABASE_URL = os.environ["DATABASE_URL"]  # Required — set in Colab secrets
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 UPSTASH_REST_URL = os.environ.get("UPSTASH_REDIS_REST_URL", "")
 UPSTASH_REST_TOKEN = os.environ.get("UPSTASH_REDIS_REST_TOKEN", "")

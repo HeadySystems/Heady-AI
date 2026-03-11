@@ -333,6 +333,50 @@ function normalize(v) {
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// ALIASES & COMPATIBILITY (used by core/liquid-nodes)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** Alias for phiFusionWeights — resource allocation weights */
+const phiResourceWeights = phiFusionWeights;
+
+/** Alias for getPressureLevel */
+const classifyPressure = getPressureLevel;
+
+/** Alias for PRESSURE */
+const PRESSURE_LEVELS = PRESSURE;
+
+/** CSL AND gate — min of two continuous values */
+function cslAND(a, b) { return Math.min(a, b); }
+
+/** Phi-weighted fusion score — weighted sum of CSL signals */
+function phiFusionScore(signals) {
+  const weights = phiFusionWeights(signals.length);
+  return signals.reduce((sum, s, i) => sum + s * weights[i], 0);
+}
+
+/** Phi-adaptive interval — scales an interval based on load */
+function phiAdaptiveInterval(baseMs, load) {
+  return baseMs * (1 + (1 - load) * PSI);
+}
+
+/** Fibonacci sequence generator — returns first n+1 Fibonacci numbers */
+function fibSequence(n) {
+  const seq = [];
+  for (let i = 0; i <= n; i++) seq.push(fib(i));
+  return seq;
+}
+
+/** Dedup threshold — cosine similarity above this means duplicate */
+const DEDUP_THRESHOLD = CSL_THRESHOLDS.CRITICAL || 0.972;
+
+/** Resource allocation — pool sizing */
+const RESOURCE_ALLOCATION = Object.freeze({
+  HOT:     { ratio: PHI / (PHI + 1 + PSI), preWarm: fib(5) },
+  WARM:    { ratio: 1 / (PHI + 1 + PSI),   preWarm: fib(6) },
+  COLD:    { ratio: PSI / (PHI + 1 + PSI), preWarm: fib(4) },
+});
+
 module.exports = {
   // Core
   PHI, PSI, PHI_SQ, PHI_CUBED, SQRT5,
@@ -360,4 +404,8 @@ module.exports = {
   sigmoid, cslGate, cslBlend, adaptiveTemperature,
   // Vector math
   cosineSimilarity, normalize,
+  // Aliases & compatibility (core/liquid-nodes)
+  phiResourceWeights, classifyPressure, PRESSURE_LEVELS,
+  cslAND, phiFusionScore, phiAdaptiveInterval,
+  fibSequence, DEDUP_THRESHOLD, RESOURCE_ALLOCATION,
 };

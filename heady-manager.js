@@ -48,7 +48,7 @@ const PORT = process.env.PORT || 3301;
 // ── Global middleware ──
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || '*',
+  origin: process.env.CORS_ORIGINS?.split(',').map(o => o.trim()).filter(Boolean) || [],
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -109,7 +109,7 @@ app.use(errorHandler);
 const server = app.listen(PORT, () => {
   logger.info(`[HeadyManager] ✅ Running on port ${PORT}`);
   logger.info(`[HeadyManager] ✅ Environment: ${process.env.NODE_ENV || 'development'}`);
-  logger.info(`[HeadyManager] ✅ Health: http://localhost:${PORT}/health`);
+  logger.info(`[HeadyManager] ✅ Health: /health (port ${PORT})`);
 });
 
 // ── Subsystem Initialization (Colab Cluster, Bee Factory, Swarm Coordinator, Universal Prompt) ──

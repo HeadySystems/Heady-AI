@@ -16,8 +16,8 @@
 
 import {
   PHI, PSI, fib,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '../../../shared/phi-math.js';
+import { createLogger } from '../../../shared/logger.js';
 import { PLATFORM } from './node-registry.js';
 import { computeDistance } from './vector-router.js';
 

@@ -47,11 +47,26 @@ try {
   console.warn('[SubsystemRoutes] Pipeline compute registration not available:', err.message);
 }
 
+// ── Liquid Nodes (Core Vector Space Infrastructure) ──
+let LiquidNodeRegistry, VectorRouter, HealthMonitor, ColabRuntimeManager;
+const _liquidNodesReady = import('../core/liquid-nodes/index.js').then(mod => {
+  LiquidNodeRegistry = mod.LiquidNodeRegistry;
+  VectorRouter = mod.VectorRouter;
+  HealthMonitor = mod.HealthMonitor;
+  ColabRuntimeManager = mod.ColabRuntimeManager;
+}).catch(err => {
+  console.warn('[SubsystemRoutes] Liquid Nodes modules not loaded:', err.message);
+});
+
 // ── Subsystem Singletons ──
 
 let colabCluster = null;
 let beeFactory = null;
 let swarmCoordinator = null;
+let nodeRegistry = null;
+let vectorRouter = null;
+let healthMonitor = null;
+let colabRuntimeManager = null;
 
 /**
  * Initialize all subsystems. Called once at server startup.
@@ -107,10 +122,39 @@ async function initializeSubsystems() {
     console.warn('[SubsystemRoutes] Universal Prompt load failed:', err.message);
   }
 
-  // 5. Register compute providers with the pipeline task executor
+  // 5. Initialize Liquid Node Registry + Vector Router + Colab Runtime Manager
+  await _liquidNodesReady;
+  try {
+    if (LiquidNodeRegistry) {
+      nodeRegistry = new LiquidNodeRegistry();
+      nodeRegistry.initialize();
+      results.liquidNodes = true;
+      console.log(`[SubsystemRoutes] Liquid Node Registry initialized (${nodeRegistry.getAllNodes().length} nodes in 3D vector space)`);
+
+      if (VectorRouter) {
+        vectorRouter = new VectorRouter(nodeRegistry);
+        console.log('[SubsystemRoutes] Vector Router initialized (CSL-gated 3D routing)');
+      }
+
+      if (HealthMonitor) {
+        healthMonitor = new HealthMonitor(nodeRegistry);
+        console.log('[SubsystemRoutes] Health Monitor initialized (phi-scaled heartbeats)');
+      }
+
+      if (ColabRuntimeManager) {
+        colabRuntimeManager = new ColabRuntimeManager();
+        colabRuntimeManager.initialize();
+        console.log('[SubsystemRoutes] Colab Runtime Manager initialized (3 A100 runtimes as latent space ops)');
+      }
+    }
+  } catch (err) {
+    console.warn('[SubsystemRoutes] Liquid Nodes init failed:', err.message);
+  }
+
+  // 6. Register compute providers with the pipeline task executor
   if (registerComputeProviders && (colabCluster || swarmCoordinator)) {
-    registerComputeProviders({ colabCluster, swarmCoordinator });
-    console.log('[SubsystemRoutes] Pipeline compute providers registered (colab + swarms)');
+    registerComputeProviders({ colabCluster, swarmCoordinator, colabRuntimeManager });
+    console.log('[SubsystemRoutes] Pipeline compute providers registered (colab + swarms + liquid nodes)');
   }
 
   return results;
@@ -251,6 +295,131 @@ function setupSubsystemRoutes(app) {
   });
 
   // ═══════════════════════════════════════════════════════════════
+  // LIQUID NODES (3D Vector Space Infrastructure)
+  // ═══════════════════════════════════════════════════════════════
+
+  app.get('/api/liquid-nodes/registry', (req, res) => {
+    if (!nodeRegistry) {
+      return res.status(503).json({ error: 'Liquid node registry not initialized' });
+    }
+    res.json(nodeRegistry.toJSON());
+  });
+
+  app.get('/api/liquid-nodes/stats', (req, res) => {
+    if (!nodeRegistry) {
+      return res.status(503).json({ error: 'Liquid node registry not initialized' });
+    }
+    res.json(nodeRegistry.stats());
+  });
+
+  app.get('/api/liquid-nodes/platform/:platform', (req, res) => {
+    if (!nodeRegistry) {
+      return res.status(503).json({ error: 'Liquid node registry not initialized' });
+    }
+    const nodes = nodeRegistry.getNodesByPlatform(req.params.platform);
+    res.json({ platform: req.params.platform, nodes, count: nodes.length });
+  });
+
+  app.get('/api/liquid-nodes/:nodeId', (req, res) => {
+    if (!nodeRegistry) {
+      return res.status(503).json({ error: 'Liquid node registry not initialized' });
+    }
+    const node = nodeRegistry.getNode(req.params.nodeId);
+    if (!node) return res.status(404).json({ error: 'Node not found' });
+    res.json(node);
+  });
+
+  app.post('/api/liquid-nodes/route', async (req, res, next) => {
+    try {
+      if (!vectorRouter) {
+        return res.status(503).json({ error: 'Vector router not initialized' });
+      }
+      const { taskType, constraints } = req.body;
+      if (!taskType) return res.status(400).json({ error: 'Missing taskType' });
+
+      const taskVector = vectorRouter.getTaskVector(taskType);
+      const result = vectorRouter.selectOptimal(taskVector, taskType, constraints || {});
+      if (!result) return res.status(404).json({ error: 'No suitable node found' });
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.get('/api/liquid-nodes/routing/stats', (req, res) => {
+    if (!vectorRouter) {
+      return res.status(503).json({ error: 'Vector router not initialized' });
+    }
+    res.json(vectorRouter.getRoutingStats());
+  });
+
+  app.post('/api/liquid-nodes/rebalance', (req, res) => {
+    if (!vectorRouter) {
+      return res.status(503).json({ error: 'Vector router not initialized' });
+    }
+    const redistributions = vectorRouter.rebalance();
+    res.json({ redistributions: redistributions || [], timestamp: new Date().toISOString() });
+  });
+
+  // ── Colab Runtime Manager Routes ──
+
+  app.get('/api/liquid-nodes/colab/cluster', (req, res) => {
+    if (!colabRuntimeManager) {
+      return res.status(503).json({ error: 'Colab runtime manager not initialized' });
+    }
+    res.json(colabRuntimeManager.getClusterStatus());
+  });
+
+  app.get('/api/liquid-nodes/colab/:runtimeId/gpu', (req, res) => {
+    if (!colabRuntimeManager) {
+      return res.status(503).json({ error: 'Colab runtime manager not initialized' });
+    }
+    try {
+      res.json(colabRuntimeManager.getGpuMetrics(req.params.runtimeId));
+    } catch (err) {
+      res.status(404).json({ error: err.message });
+    }
+  });
+
+  app.post('/api/liquid-nodes/colab/:runtimeId/provision', async (req, res, next) => {
+    try {
+      if (!colabRuntimeManager) {
+        return res.status(503).json({ error: 'Colab runtime manager not initialized' });
+      }
+      const result = await colabRuntimeManager.provision(req.params.runtimeId);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post('/api/liquid-nodes/colab/execute', async (req, res, next) => {
+    try {
+      if (!colabRuntimeManager) {
+        return res.status(503).json({ error: 'Colab runtime manager not initialized' });
+      }
+      const { op, params } = req.body;
+      if (!op) return res.status(400).json({ error: 'Missing op (embed|search|cluster|train|transform)' });
+      const result = await colabRuntimeManager.executeLatentOp(op, params || {});
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post('/api/liquid-nodes/colab/:runtimeId/sync-memory', async (req, res, next) => {
+    try {
+      if (!colabRuntimeManager) {
+        return res.status(503).json({ error: 'Colab runtime manager not initialized' });
+      }
+      const result = await colabRuntimeManager.syncVectorMemory(req.params.runtimeId);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════
   // COMBINED SUBSYSTEM OVERVIEW
   // ═══════════════════════════════════════════════════════════════
 
@@ -262,6 +431,15 @@ function setupSubsystemRoutes(app) {
         : { status: 'offline' },
       beeFactory: beeFactory
         ? (typeof beeFactory.getStatus === 'function' ? beeFactory.getStatus() : { status: 'active' })
+        : { status: 'offline' },
+      liquidNodes: nodeRegistry
+        ? { status: 'active', ...nodeRegistry.stats() }
+        : { status: 'offline' },
+      vectorRouter: vectorRouter
+        ? { status: 'active', ...vectorRouter.getRoutingStats() }
+        : { status: 'offline' },
+      colabRuntimeManager: colabRuntimeManager
+        ? { status: 'active', ...colabRuntimeManager.getClusterStatus() }
         : { status: 'offline' },
       universalPrompt: {
         loaded: !!getPromptHash(),
@@ -281,6 +459,12 @@ function setupSubsystemRoutes(app) {
  * @returns {Promise<void>}
  */
 async function shutdownSubsystems() {
+  if (colabRuntimeManager) {
+    for (const rt of colabRuntimeManager.getAllRuntimes()) {
+      try { await colabRuntimeManager.terminate(rt.id); } catch { /* ignore */ }
+    }
+    console.log('[SubsystemRoutes] Colab runtime manager shut down');
+  }
   if (colabCluster) {
     await colabCluster.shutdown();
     console.log('[SubsystemRoutes] Colab cluster shut down');
@@ -302,4 +486,8 @@ export {
   colabCluster,
   beeFactory,
   swarmCoordinator,
+  nodeRegistry,
+  vectorRouter,
+  healthMonitor,
+  colabRuntimeManager,
 };
