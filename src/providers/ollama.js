@@ -2,7 +2,7 @@ import { Ollama } from 'ollama';
 
 export class OllamaProvider {
   constructor() {
-    this.client = new Ollama({ host: process.env.OLLAMA_BASE_URL || 'http://localhost:11434' });
+    this.client = new Ollama({ host: process.env.OLLAMA_HOST || 'http://ollama:11434' });
     this.name = 'ollama';
   }
 

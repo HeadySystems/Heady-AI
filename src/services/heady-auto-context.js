@@ -582,9 +582,9 @@ class HeadyAutoContext extends EventEmitter {
                         }
                     });
                     if (w.unref) w.unref();
-                } catch (_) { /* some dirs may not be watchable */ }
+                } catch (err) { logger.debug('[AutoContext] dir not watchable: ' + err.message); }
             }
-        } catch (_) { /* fs.watch not available */ }
+        } catch (err) { logger.debug('[AutoContext] fs.watch unavailable: ' + err.message); }
 
         logger.info('[AutoContext] Background indexer started (interval: ' + INDEX_INTERVAL_MS + 'ms)');
     }
@@ -613,7 +613,7 @@ class HeadyAutoContext extends EventEmitter {
 
             let entries;
             try { entries = fs.readdirSync(dir, { withFileTypes: true }); }
-            catch (_) { return; }
+            catch (err) { logger.debug('[AutoContext] cannot read dir: ' + dir); return; }
 
             for (const entry of entries) {
                 if (entry.name.startsWith('.') && entry.name !== '.env.example') continue;
@@ -775,7 +775,7 @@ class HeadyAutoContext extends EventEmitter {
                     }
                 }
             }
-        } catch (err) { /* structured-logger: emit error */ }
+        } catch (err) { logger.debug('[AutoContext] context gather error: ' + err.message); }
 
         return sources;
     }
@@ -817,7 +817,7 @@ class HeadyAutoContext extends EventEmitter {
                         }));
                     }
                 }
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (err) { logger.debug('[AutoContext] context gather error: ' + err.message); }
         }
 
         return sources;
@@ -921,7 +921,8 @@ class HeadyAutoContext extends EventEmitter {
             }
 
             return content;
-        } catch (_) {
+        } catch (err) {
+            logger.debug('[AutoContext] file read error: ' + err.message);
             return null;
         }
     }

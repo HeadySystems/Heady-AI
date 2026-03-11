@@ -114,7 +114,7 @@ class HeadyNatsClient {
               break;
           }
         }
-      })().catch(() => {});
+      })().catch((err) => { logger.error({ message: 'NATS status monitor failed', error: String(err) }); });
 
       // Get JetStream contexts
       this.js = this.nc.jetstream();

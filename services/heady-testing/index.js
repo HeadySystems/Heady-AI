@@ -19,12 +19,75 @@
 import express from 'express';
 import { randomUUID, createHash } from 'crypto';
 import { trace, SpanKind, SpanStatusCode } from '@opentelemetry/api';
-import {
-  PHI, PSI, PSI_SQ, fib, phiMs, phiBackoff, phiBackoffWithJitter,
-  PHI_TIMING, CSL_THRESHOLDS, VECTOR, BEE, POOLS, PIPELINE,
-  cosineSimilarity, normalize, placeholderVector, phiFusionWeights,
-} from '../../shared/phi-math.js';
-import { createLogger } from '../../shared/logger.js';
+import phiMath from '../../shared/phi-math.js';
+
+// Destructure available CJS exports
+const {
+  PHI, PSI, PHI_SQ, fib, phiThreshold, phiBackoff, phiFusionWeights,
+  PHI_TIMING, CSL_THRESHOLDS, PIPELINE,
+  VECTOR: VECTOR_RAW, BEE_SCALING, RESOURCE_POOLS, JUDGE_WEIGHTS,
+} = phiMath;
+
+// Derived constants (not exported by CJS phi-math)
+const PSI_SQ = PSI * PSI;
+function phiMs(n) { return Math.round(Math.pow(PHI, n) * 1000); }
+
+// Normalize naming to match the Heady v4 spec
+const VECTOR = {
+  DIMS: VECTOR_RAW?.DIMENSIONS ?? 384,
+  PROJ_DIMS: VECTOR_RAW?.PROJECTION_DIMS ?? 3,
+  DRIFT: VECTOR_RAW?.DRIFT_THRESHOLD ?? PSI,
+  DEDUP: VECTOR_RAW?.DEDUP_THRESHOLD ?? 0.972,
+  MIN_SCORE: PSI,
+};
+const BEE = {
+  TYPES: fib(11),       // 89
+  SWARMS: 17,
+  MAX_TOTAL: BEE_SCALING?.MAX_CONCURRENT ?? 10000,
+  PRE_WARM: BEE_SCALING?.PRE_WARM_POOLS ?? [5, 8, 13, 21],
+  SCALE_UP: PHI,
+  SCALE_DOWN: 1 - 1 / PHI,
+};
+const POOLS = RESOURCE_POOLS ?? { HOT: 0.34, WARM: 0.21, COLD: 0.13, RESERVE: 0.08, GOVERNANCE: 0.05 };
+
+// Vector math utilities (inline — not exported by CJS phi-math)
+function cosineSimilarity(a, b) {
+  if (a.length !== b.length) throw new Error('Vectors must have same dimension');
+  let dot = 0, magA = 0, magB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i]; magA += a[i] * a[i]; magB += b[i] * b[i];
+  }
+  const denom = Math.sqrt(magA) * Math.sqrt(magB);
+  return denom === 0 ? 0 : dot / denom;
+}
+function normalize(v) {
+  const mag = Math.sqrt(v.reduce((s, x) => s + x * x, 0));
+  return mag === 0 ? v : v.map(x => x / mag);
+}
+function placeholderVector(seed, dims = VECTOR.DIMS) {
+  let s = 0;
+  for (let i = 0; i < seed.length; i++) s += seed.charCodeAt(i);
+  const vec = new Array(dims);
+  for (let i = 0; i < dims; i++) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    vec[i] = (s / 0x7fffffff - PSI) * PHI;
+  }
+  return normalize(vec);
+}
+
+// Logger — inline structured logger (shared/logger.js may also be CJS)
+function createLogger(service) {
+  const emit = (level, msg, meta = {}) => {
+    process.stdout.write(JSON.stringify({ timestamp: new Date().toISOString(), level, service, message: msg, ...meta }) + '\n');
+  };
+  return {
+    info: (msg, meta) => emit('INFO', msg, meta),
+    warn: (msg, meta) => emit('WARN', msg, meta),
+    error: (msg, meta) => emit('ERROR', msg, meta),
+    debug: (msg, meta) => emit('DEBUG', msg, meta),
+    flush: () => {},
+  };
+}
 
 // ─── Service Config ───────────────────────────────────────────────────────────
 const SERVICE_NAME = 'heady-testing';

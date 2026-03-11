@@ -690,7 +690,7 @@ export class AccountProvisioner {
     const key = result.rows[0];
 
     // Update last_used asynchronously (non-blocking)
-    this.db.query('UPDATE api_keys SET last_used = NOW() WHERE id = $1', [key.id]).catch(() => {});
+    this.db.query('UPDATE api_keys SET last_used = NOW() WHERE id = $1', [key.id]).catch((err) => { console.warn('[AccountProvisioner] api_key last_used update failed:', err.message); });
 
     return {
       userId: key.user_id,

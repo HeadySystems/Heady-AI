@@ -205,7 +205,7 @@ const httpAdapter = {
 
   async send(encoded, endpoint) {
     return new Promise((resolve, reject) => {
-      const url = new URL(endpoint || process.env.HEADY_MANAGER_URL || 'http://localhost:3300');
+      const url = new URL(endpoint || process.env.HEADY_MANAGER_URL || 'http://heady-manager:3300');
       const options = {
         hostname: url.hostname,
         port: url.port || 80,
@@ -315,7 +315,7 @@ const udpAdapter = {
 
   async send(encoded, endpoint) {
     return new Promise((resolve, reject) => {
-      const [host, portStr] = (endpoint || process.env.HEADY_WS_HOST || 'localhost:4400').split(':');
+      const [host, portStr] = (endpoint || process.env.HEADY_TRANSLATOR_HOST || 'heady-manager:4400').split(':');
       const port = parseInt(portStr) || 4400;
       const client = dgram.createSocket('udp4');
       client.send(encoded, 0, encoded.length, port, host, (err) => {
@@ -463,7 +463,7 @@ const tcpAdapter = {
   async send(encoded, endpoint) {
     return new Promise((resolve, reject) => {
       const net = require('net');
-      const [host, portStr] = (endpoint || process.env.HEADY_UDP_HOST || 'localhost:4500').split(':');
+      const [host, portStr] = (endpoint || process.env.HEADY_TRANSLATOR_WS || 'heady-manager:4500').split(':');
       const port = parseInt(portStr) || 4500;
       const client = new net.Socket();
       client.connect(port, host, () => {

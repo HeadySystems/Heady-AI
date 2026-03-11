@@ -1148,7 +1148,7 @@ const AVAILABILITY = {
    */
   async healthProbeExecution() {
     const t0    = Date.now();
-    const probeUrl = process.env.HEALTH_PROBE_URL || 'http://localhost:3000/health';
+    const probeUrl = process.env.HEADY_HEALTH_URL || 'http://heady-manager:3000/health';
     try {
       const { statusCode, durationMs } = await withTimeout(httpGet(probeUrl, 3000), 3500);
       const status = statusCode === 200 ? 'pass' : statusCode < 500 ? 'warn' : 'fail';

@@ -220,7 +220,7 @@ class TernaryDecisionMatrix extends EventEmitter {
         if (this._redisCache && typeof this._redisCache.set === 'function') {
             const key = `ternary:ephemeral:${result.ts}`;
             this._redisCache.set(key, JSON.stringify(result.signal.data), 'EX', 300)
-                .catch(() => { }); // fire and forget
+                .catch((err) => { logger.warn('[TernaryLogic] Redis cache write failed', { error: err.message }); }); // fire and forget
         }
     }
 
