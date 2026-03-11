@@ -349,5 +349,5 @@
         version: BUDDY_VERSION,
     };
 
-    console.log(`🧠 HeadyBuddy v${BUDDY_VERSION} loaded • Alt+H to toggle`);
+    console.info(`HeadyBuddy v${BUDDY_VERSION} loaded | Alt+H to toggle`);
 })();
