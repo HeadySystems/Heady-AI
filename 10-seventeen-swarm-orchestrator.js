@@ -34,6 +34,37 @@ const SWARM_NAMES = [
   'Emergency',
 ];
 
+// CslRelevance levels: higher = more urgent
+const CSL_RELEVANCE = {
+  EMERGENCY:  100,
+  CRITICAL:    80,
+  HIGH:        60,
+  NORMAL:      40,
+  LOW:         20,
+  BACKGROUND:  10,
+};
+
+// Default priorities per swarm
+const SWARM_PRIORITIES = {
+  Emergency:     CSL_RELEVANCE.EMERGENCY,
+  Security:      CSL_RELEVANCE.CRITICAL,
+  Health:        CSL_RELEVANCE.CRITICAL,
+  Deploy:        CSL_RELEVANCE.HIGH,
+  Migration:     CSL_RELEVANCE.HIGH,
+  Monitoring:    CSL_RELEVANCE.HIGH,
+  Governance:    CSL_RELEVANCE.NORMAL,
+  Testing:       CSL_RELEVANCE.NORMAL,
+  Battle:        CSL_RELEVANCE.NORMAL,
+  Research:      CSL_RELEVANCE.NORMAL,
+  Memory:        CSL_RELEVANCE.NORMAL,
+  Trading:       CSL_RELEVANCE.NORMAL,
+  Creative:      CSL_RELEVANCE.LOW,
+  Documentation: CSL_RELEVANCE.LOW,
+  Analytics:     CSL_RELEVANCE.LOW,
+  Cleanup:       CSL_RELEVANCE.BACKGROUND,
+  Onboarding:    CSL_RELEVANCE.BACKGROUND,
+};
+
 const SWARM_STATUS = {
   IDLE:       'idle',
   ACTIVE:     'active',
@@ -59,7 +90,7 @@ class SwarmTask {
     this.id         = opts.id       || crypto.randomUUID();
     this.type       = opts.type     || 'generic';
     this.payload    = opts.payload  || {};
-
+    this.csl_relevance   = opts.csl_relevance || CSL_RELEVANCE.NORMAL;
     this.targetSwarm = opts.targetSwarm || null;
     this.sourceSwarm = opts.sourceSwarm || null;
     this.createdAt  = Date.now();
@@ -107,7 +138,7 @@ class SwarmMessage {
     this.to       = opts.to   || null; // null = broadcast
     this.payload  = opts.payload || {};
     this.ts       = Date.now();
-
+    this.csl_relevance = opts.csl_relevance || CSL_RELEVANCE.NORMAL;
   }
 }
 
@@ -197,7 +228,7 @@ class Swarm {
   constructor(name, opts = {}) {
     this.name       = name;
     this.id         = opts.id       || crypto.randomUUID();
-
+    this.csl_relevance   = opts.csl_relevance || SWARM_PRIORITIES[name] || CSL_RELEVANCE.NORMAL;
     this.status     = SWARM_STATUS.IDLE;
     this._bus       = null;
     this._handlers  = {};   // task type → async fn
@@ -207,7 +238,7 @@ class Swarm {
     this._maxConcurrency = opts.maxConcurrency || 5;
     this._maxQueue       = opts.maxQueue       || 100;
     this._stats          = { received: 0, completed: 0, failed: 0, escalated: 0 };
-    this._heartbeatMs = opts.heartbeatMs || 5000;
+    this._heartbeatMs    = opts.heartbeatMs || Math.round(5000 * (1 + (this.csl_relevance / 200)));
     this._heartbeatTimer = null;
     this._capabilities   = opts.capabilities || [name.toLowerCase()];
     this._callbacks      = { task: [], complete: [], error: [] };
@@ -234,14 +265,19 @@ class Swarm {
   submit(task) {
     const t = task instanceof SwarmTask ? task : new SwarmTask({ ...task, targetSwarm: this.name });
     if (this._queue.length >= this._maxQueue) {
-      // Evict task if new one comes in
-
-      const evicted = this._queue.shift();
-      evicted.fail(new Error('Queue overflow - evicted'));
+      // Evict lowest csl_relevance task if new one is higher
+      this._queue.sort((a, b) => a.csl_relevance - b.csl_relevance);
+      if (this._queue[0].csl_relevance < t.csl_relevance) {
+        const evicted = this._queue.shift();
+        evicted.fail(new Error('Queue overflow - evicted'));
+      } else {
+        t.fail(new Error('Swarm queue full'));
+        return t;
+      }
     }
     this._stats.received++;
     this._queue.push(t);
-
+    this._queue.sort((a, b) => b.csl_relevance - a.csl_relevance); // highest csl_relevance first
     this._drain();
     return t;
   }
@@ -268,15 +304,15 @@ class Swarm {
         this._emit('error', task);
         this._finishTask(task);
 
-        // Escalate to Emergency swarm
-        if (this._bus && task.type === 'emergency') {
+        // Escalate to Emergency swarm if critical
+        if (this._bus && task.csl_relevance >= CSL_RELEVANCE.HIGH) {
           this._stats.escalated++;
           this._bus.send({
             type:    MESSAGE_TYPE.ESCALATION,
             from:    this.name,
             to:      'Emergency',
-            payload: { taskId: task.id, error: task.error,  },
-
+            payload: { taskId: task.id, error: task.error, csl_relevance: task.csl_relevance },
+            csl_relevance: CSL_RELEVANCE.CRITICAL,
           });
         }
       });
@@ -307,7 +343,7 @@ class Swarm {
         from:    this.name,
         to:      task.sourceSwarm,
         payload: { taskId: task.id, status: task.status, result: task.result, error: task.error },
-
+        csl_relevance: task.csl_relevance,
       });
     }
     this._drain();
@@ -338,7 +374,7 @@ class Swarm {
           type:    MESSAGE_TYPE.HEARTBEAT,
           from:    this.name,
           payload: this.getStatus(),
-
+          csl_relevance: CSL_RELEVANCE.LOW,
         });
       }
     }, this._heartbeatMs);
@@ -359,7 +395,7 @@ class Swarm {
       name:        this.name,
       id:          this.id,
       status:      this.status,
-
+      csl_relevance:    this.csl_relevance,
       queue:       this._queue.length,
       active:      this._active.length,
       capabilities: this._capabilities,
@@ -425,8 +461,9 @@ class ConsensusManager {
     const tally = {};
     let totalWeight = 0;
     for (const [swarm, { decision, weight }] of proposal.votes) {
-
-      const effectiveWeight = weight * PHI;
+      // Weight by swarm csl_relevance
+      const csl_relevanceWeight = (SWARM_PRIORITIES[swarm] || CSL_RELEVANCE.NORMAL) / CSL_RELEVANCE.EMERGENCY;
+      const effectiveWeight = weight * csl_relevanceWeight * PHI;
       tally[decision] = (tally[decision] || 0) + effectiveWeight;
       totalWeight += effectiveWeight;
     }
@@ -469,7 +506,7 @@ class ConsensusManager {
 class SwarmOrchestrator {
   /**
    * Manages all 17 canonical swarms with inter-swarm comms,
-   * concurrent scheduling, and consensus support.
+   * csl_relevance-based scheduling, and consensus support.
    */
   constructor(opts = {}) {
     this._bus          = new SwarmBus();
@@ -490,7 +527,7 @@ class SwarmOrchestrator {
 
   _createSwarm(name, opts = {}) {
     const swarm = new Swarm(name, {
-
+      csl_relevance: SWARM_PRIORITIES[name] || CSL_RELEVANCE.NORMAL,
       ...opts,
     });
     swarm.connectBus(this._bus);
@@ -542,13 +579,13 @@ class SwarmOrchestrator {
 
       case 'Emergency':
         swarm.on('*', async (task) => {
-          this._audit('emergency', { taskId: task.id,  payload: task.payload });
+          this._audit('emergency', { taskId: task.id, csl_relevance: task.csl_relevance, payload: task.payload });
           // Broadcast emergency to all swarms
           this._bus.send({
             type:    MESSAGE_TYPE.BROADCAST,
             from:    'Emergency',
             payload: { emergency: true, taskId: task.id, payload: task.payload },
-
+            csl_relevance: CSL_RELEVANCE.EMERGENCY,
           });
           return { acknowledged: true, ts: Date.now() };
         });
@@ -605,7 +642,8 @@ class SwarmOrchestrator {
   }
 
   _schedulerTick() {
-        for (const [name, swarm] of this._swarms.entries()) {
+    // CslRelevance-based: check overloaded swarms, rebalance tasks
+    for (const [name, swarm] of this._swarms.entries()) {
       if (swarm.status === SWARM_STATUS.ERROR) swarm.status = SWARM_STATUS.IDLE;
       const qd = swarm.getQueueDepth();
       if (qd > 50) swarm.status = SWARM_STATUS.OVERLOADED;
@@ -643,8 +681,8 @@ class SwarmOrchestrator {
   /**
    * Broadcast to all swarms.
    */
-  broadcast(payload, type = MESSAGE_TYPE.BROADCAST) {
-    this._bus.send({ type, from: 'Orchestrator', payload });
+  broadcast(payload, type = MESSAGE_TYPE.BROADCAST, rel = CSL_RELEVANCE.NORMAL) {
+    this._bus.send({ type, from: 'Orchestrator', payload, csl_relevance: rel });
     return this;
   }
 
@@ -665,8 +703,8 @@ class SwarmOrchestrator {
         type:        'vote',
         targetSwarm: 'Governance',
         sourceSwarm: swarmName,
-        payload:     { proposalId, swarmName, decision: 'approve', weight: 1.0 },
-
+        payload:     { proposalId, swarmName, decision: 'approve', weight: swarm.csl_relevance / CSL_RELEVANCE.EMERGENCY },
+        csl_relevance:    CSL_RELEVANCE.HIGH,
       }));
     }
 
@@ -724,7 +762,8 @@ class SwarmOrchestrator {
 module.exports = {
   PHI,
   SWARM_NAMES,
-
+  CSL_RELEVANCE,
+  SWARM_PRIORITIES,
   SWARM_STATUS,
   MESSAGE_TYPE,
   SwarmTask,
