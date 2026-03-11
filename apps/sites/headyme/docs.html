@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Complete documentation for the Heady AI platform — Getting Started, API Reference, AI Nodes, MCP Gateway, Memory, Auth, Architecture, and Deployment.">
+    <title>Heady Documentation — Complete Platform Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --text-faint: #64748b;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.12);
+            --radius: 12px
+        }
+
+        body {
+            font-family: 'Inter', 'Space Grotesk', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-family: 'JetBrains Mono', monospace
+        }
+
+        /* Layout */
+        .docs-wrap {
+            display: grid;
+            grid-template-columns: 270px 1fr;
+            min-height: 100vh
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            border-right: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(14px)
+        }
+
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+            text-decoration: none;
+            margin-bottom: 1.5rem
+        }
+
+        .sidebar .logo svg {
+            flex-shrink: 0
+        }
+
+        .sidebar h4 {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-faint);
+            margin: 1.8rem 0 0.4rem;
+            font-weight: 600
+        }
+
+        .sidebar a.nav-link {
+            display: block;
+            padding: 0.35rem 0.8rem;
+            margin: 0.1rem 0;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: all 0.15s
+        }
+
+        .sidebar a.nav-link:hover {
+            background: var(--accent-glow);
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        .main {
+            padding: 2.5rem 3.5rem 5rem;
+            max-width: 920px
+        }
+
+        .main h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            background: linear-gradient(135deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .main>p:first-of-type {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem
+        }
+
+        .main h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 3.5rem 0 1rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border)
+        }
+
+        .main h2:first-of-type {
+            border-top: none;
+            margin-top: 2rem
+        }
+
+        .main h3 {
+            font-size: 1.08rem;
+            font-weight: 600;
+            margin: 2rem 0 0.5rem;
+            color: var(--accent)
+        }
+
+        .main p {
+            margin-bottom: 0.8rem
+        }
+
+        .main ul,
+        .main ol {
+            padding-left: 1.5rem;
+            margin: 0.5rem 0 1.2rem
+        }
+
+        .main li {
+            margin-bottom: 0.35rem;
+            color: var(--text-muted)
+        }
+
+        .main li strong {
+            color: var(--text)
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 1rem 1.4rem;
+            border-radius: var(--radius);
+            margin: 1.2rem 0;
+            border-left: 4px solid
+        }
+
+        .callout-tip {
+            background: var(--accent-glow);
+            border-color: var(--accent)
+        }
+
+        .callout-info {
+            background: rgba(96, 165, 250, 0.07);
+            border-color: #60a5fa
+        }
+
+        .callout-warn {
+            background: rgba(251, 191, 36, 0.07);
+            border-color: #fbbf24
+        }
+
+        .callout b {
+            display: block;
+            margin-bottom: 0.25rem
+        }
+
+        /* Code blocks */
+        pre.code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 1.2rem 1.5rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            line-height: 1.65;
+            color: #e2e8f0;
+            margin: 1rem 0 1.5rem
+        }
+
+        pre.code .c {
+            color: #64748b
+        }
+
+        pre.code .k {
+            color: #c084fc
+        }
+
+        pre.code .s {
+            color: #34d399
+        }
+
+        pre.code .f {
+            color: #60a5fa
+        }
+
+        pre.code .n {
+            color: #fbbf24
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0 1.5rem;
+            font-size: 0.9rem
+        }
+
+        th {
+            text-align: left;
+            padding: 0.55rem 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 2px solid var(--glass-border);
+            font-weight: 600;
+            color: var(--text)
+        }
+
+        td {
+            padding: 0.55rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-muted)
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.1rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            margin-right: 0.2rem
+        }
+
+        .bg {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399
+        }
+
+        .bp {
+            background: rgba(96, 165, 250, 0.12);
+            color: #60a5fa
+        }
+
+        .bd {
+            background: rgba(248, 113, 113, 0.12);
+            color: #f87171
+        }
+
+        /* Back link */
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.15s
+        }
+
+        .back:hover {
+            background: var(--accent-glow);
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        @media(max-width:800px) {
+            .docs-wrap {
+                grid-template-columns: 1fr
+            }
+
+            .sidebar {
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border)
+            }
+
+            .main {
+                padding: 1.5rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="docs-wrap">
+        <nav class="sidebar">
+            <a href="index.html" class="logo">
+                <svg viewBox="0 0 32 32" fill="none" width="26" height="26">
+                    <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                    <circle cx="16" cy="16" r="8" stroke="#00d4aa" stroke-width="1.5" />
+                    <circle cx="16" cy="16" r="3" fill="#00d4aa" />
+                </svg>
+                Heady Docs
+            </a>
+
+            <h4>Getting Started</h4>
+            <a href="#quickstart" class="nav-link">Quickstart</a>
+            <a href="#create-account" class="nav-link">Create Account</a>
+            <a href="#first-login" class="nav-link">First Login</a>
+
+            <h4>API Reference</h4>
+            <a href="#api-overview" class="nav-link">Overview</a>
+            <a href="#api-auth" class="nav-link">Authentication</a>
+            <a href="#api-endpoints" class="nav-link">Endpoints</a>
+            <a href="#api-errors" class="nav-link">Error Handling</a>
+
+            <h4>AI Nodes</h4>
+            <a href="#nodes-overview" class="nav-link">Node Architecture</a>
+            <a href="#nodes-list" class="nav-link">All 20 Nodes</a>
+            <a href="#nodes-routing" class="nav-link">Task Routing</a>
+
+            <h4>MCP Gateway</h4>
+            <a href="#mcp-setup" class="nav-link">IDE Setup</a>
+            <a href="#mcp-tools" class="nav-link">12 Tools</a>
+            <a href="#mcp-config" class="nav-link">Config Reference</a>
+
+            <h4>Memory System</h4>
+            <a href="#memory-overview" class="nav-link">3D Vector Space</a>
+            <a href="#memory-ops" class="nav-link">Operations</a>
+            <a href="#memory-drift" class="nav-link">Drift Detection</a>
+
+            <h4>Authentication</h4>
+            <a href="#auth-flow" class="nav-link">Session Flow</a>
+            <a href="#auth-cookies" class="nav-link">Cookie Policy</a>
+            <a href="#auth-relay" class="nav-link">Cross-Site Relay</a>
+
+            <h4>Architecture</h4>
+            <a href="#arch-layers" class="nav-link">Six-Layer Stack</a>
+            <a href="#arch-csl" class="nav-link">CSL Gates</a>
+            <a href="#arch-phi" class="nav-link">Phi-Math</a>
+
+            <h4>Deployment</h4>
+            <a href="#deploy-cloudrun" class="nav-link">Cloud Run</a>
+            <a href="#deploy-cf" class="nav-link">Cloudflare Pages</a>
+            <a href="#deploy-cicd" class="nav-link">CI/CD Pipeline</a>
+
+            <h4>Links</h4>
+            <a href="https://auth.headysystems.com" class="nav-link" target="_blank">Sign In →</a>
+            <a href="https://admin.headysystems.com" class="nav-link" target="_blank">Admin →</a>
+            <a href="https://headysystems.com" class="nav-link" target="_blank">HeadySystems →</a>
+        </nav>
+
+        <main class="main">
+            <a href="index.html" class="back">← Back to HeadyMe</a>
+            <h1 id="quickstart">Heady Platform Documentation</h1>
+            <p>Complete guide to understanding, configuring, and building with the Heady autonomous intelligence
+                platform. 51+ patents. 20 AI nodes. 21 microservices.</p>
+
+            <div class="callout callout-tip"><b>🚀 New here?</b> <a
+                    href="https://auth.headysystems.com?return=https://headyme.com">Create your account</a>, then follow
+                the <a href="onboarding.html">onboarding guide</a> to get running in under 5 minutes.</div>
+
+            <!-- ═══ GETTING STARTED ═══ -->
+            <h2 id="create-account">Creating Your Account</h2>
+            <ol>
+                <li>Navigate to <a href="https://auth.headysystems.com?return=https://headyme.com"
+                        target="_blank">auth.headysystems.com</a></li>
+                <li>Click <strong>"Create Account"</strong> — enter your name, email, and password (min 6 characters)
+                </li>
+                <li>Your identity is created across <strong>all Heady properties</strong> instantly — one account, full
+                    estate access</li>
+                <li>After registration, you're redirected back with an active session stored in httpOnly cookies</li>
+            </ol>
+
+            <h3 id="first-login">First Login Experience</h3>
+            <p>After creating your account, the <a href="onboarding.html">onboarding flow</a> walks you through:</p>
+            <ul>
+                <li><strong>Workspace setup</strong> — name your workspace, set timezone and preferences</li>
+                <li><strong>AI provider connection</strong> — bring your own API keys for Claude, GPT-4o, Gemini, Groq,
+                    or use the Heady gateway</li>
+                <li><strong>Memory initialization</strong> — your personal 3D vector space is provisioned with pgvector
+                </li>
+                <li><strong>Tool connection</strong> — install HeadyMCP in your IDE for direct AI assistance</li>
+            </ul>
+
+            <!-- ═══ API REFERENCE ═══ -->
+            <h2 id="api-overview">API Reference</h2>
+            <p>The Heady API runs on Cloud Run. All endpoints accept JSON and return JSON. Authentication uses httpOnly
+                session cookies or API key header.</p>
+
+            <h3 id="api-auth">Authentication Methods</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Mechanism</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Session Cookie</td>
+                        <td>Automatic with <code>credentials: 'include'</code></td>
+                        <td>Browser / frontend apps</td>
+                    </tr>
+                    <tr>
+                        <td>API Key</td>
+                        <td><code>x-api-key: YOUR_TOKEN</code> header</td>
+                        <td>Server-to-server, CLI, MCP</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="api-endpoints">Core Endpoints</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/health</code></td>
+                        <td>Health check — returns system status and uptime</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/auth/login</code></td>
+                        <td>Email/password login → sets httpOnly session cookie</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/auth/register</code></td>
+                        <td>Create new account → auto-login on success</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/auth/logout</code></td>
+                        <td>Clear session cookie</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/auth/me</code></td>
+                        <td>Get current user profile and session info</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/subsystems</code></td>
+                        <td>Status of all running subsystems (Colab, Swarm, Bees, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/colab/execute/:component</code></td>
+                        <td>Execute a task on a specific Colab runtime component</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/colab/smart-execute</code></td>
+                        <td>CSL-scored smart routing to best runtime lane</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/colab/cluster</code></td>
+                        <td>Colab cluster status and runtime metrics</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/swarm/status</code></td>
+                        <td>17-swarm coordinator status</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/gateway/route</code></td>
+                        <td>Route task through the multi-model AI gateway</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/memory/search?q=</code></td>
+                        <td>Semantic vector memory search</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/memory/store</code></td>
+                        <td>Store embedding in vector memory</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg">GET</span></td>
+                        <td><code>/api/bee/factory</code></td>
+                        <td>Bee factory status and active workers</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bp">POST</span></td>
+                        <td><code>/api/prompt/execute</code></td>
+                        <td>Execute a prompt from the 64-prompt catalogue</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Example: Login Request</h3>
+            <pre class="code"><span class="c">// Browser fetch — sets httpOnly cookie on success</span>
+<span class="k">const</span> response = <span class="k">await</span> <span class="f">fetch</span>(<span class="s">'https://your-api-url/api/auth/login'</span>, {
+  method: <span class="s">'POST'</span>,
+  headers: { <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span> },
+  credentials: <span class="s">'include'</span>,
+  body: <span class="f">JSON.stringify</span>({ email: <span class="s">'user@example.com'</span>, password: <span class="s">'secret'</span> })
+});
+<span class="k">const</span> data = <span class="k">await</span> response.<span class="f">json</span>();
+<span class="c">// → { user: { id, name, email, role }, sessionId: "..." }</span></pre>
+
+            <h3 id="api-errors">Error Handling</h3>
+            <p>All errors return a consistent JSON shape:</p>
+            <pre class="code">{
+  <span class="s">"error"</span>: <span class="s">"VALIDATION_ERROR"</span>,
+  <span class="s">"message"</span>: <span class="s">"Email is required"</span>,
+  <span class="s">"status"</span>: <span class="n">400</span>
+}</pre>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>400</code></td>
+                        <td>Bad request — validation error, missing fields</td>
+                    </tr>
+                    <tr>
+                        <td><code>401</code></td>
+                        <td>Unauthorized — no session or invalid API key</td>
+                    </tr>
+                    <tr>
+                        <td><code>409</code></td>
+                        <td>Conflict — email already registered</td>
+                    </tr>
+                    <tr>
+                        <td><code>429</code></td>
+                        <td>Rate limited — too many attempts (5/min for auth)</td>
+                    </tr>
+                    <tr>
+                        <td><code>500</code></td>
+                        <td>Server error — check <code>message</code> field for details</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ═══ AI NODES ═══ -->
+            <h2 id="nodes-overview">AI Nodes</h2>
+            <p>Heady runs 20 autonomous AI nodes, each specialized for a domain. Nodes are backed by multiple providers
+                (Claude, GPT-4o, Gemini, Groq) and routed through CSL-scored gating to find the best fit for each task.
+            </p>
+
+            <h3 id="nodes-list">All 20 Nodes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Node</th>
+                        <th>Domain</th>
+                        <th>Capability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>HeadyCoder</code></td>
+                        <td>Code Generation</td>
+                        <td>Multi-model code generation, refactoring, inline suggestions</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyResearch</code></td>
+                        <td>Web Research</td>
+                        <td>Deep research with citations via Perplexity Sonar Pro</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyDeploy</code></td>
+                        <td>Deployment</td>
+                        <td>Deploy, monitor, and scale services on Cloud Run / Cloudflare</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyBattle</code></td>
+                        <td>Evaluation</td>
+                        <td>Competitive multi-model arena — pit nodes against each other</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyAnalyze</code></td>
+                        <td>Analysis</td>
+                        <td>Security auditing, vulnerability scanning, risk assessment</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyMemory</code></td>
+                        <td>Memory</td>
+                        <td>3D vector memory — search, store, embed, and retrieve</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyEmbed</code></td>
+                        <td>Embeddings</td>
+                        <td>Multi-provider embedding: Nomic, Jina, Cohere, Voyage, Ollama</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyPatterns</code></td>
+                        <td>Patterns</td>
+                        <td>Code pattern detection, anti-pattern alerting, best practices</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyRisks</code></td>
+                        <td>Risk</td>
+                        <td>Risk modeling, threat assessment, compliance verification</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyOps</code></td>
+                        <td>Operations</td>
+                        <td>Health checks, drift detection, self-healing infrastructure</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyRefactor</code></td>
+                        <td>Refactoring</td>
+                        <td>Automated code restructuring with impact analysis</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyDeepScan</code></td>
+                        <td>Context</td>
+                        <td>Full workspace scanning into 3D vector memory space</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyMaid</code></td>
+                        <td>Cleanup</td>
+                        <td>Dead code removal, unused imports, file hygiene sweeps</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadySoul</code></td>
+                        <td>Identity</td>
+                        <td>Persistent personality, preference learning, anticipation</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyVinci</code></td>
+                        <td>Creative</td>
+                        <td>Image generation, UI design, creative content production</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyBuddy</code></td>
+                        <td>Assistant</td>
+                        <td>Conversational companion with long-term memory</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyHealth</code></td>
+                        <td>Monitoring</td>
+                        <td>System health dashboards, metrics, and alerting</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyMaintenance</code></td>
+                        <td>Maintenance</td>
+                        <td>Scheduled tasks, cache warming, resource cleanup</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyCodex</code></td>
+                        <td>Knowledge</td>
+                        <td>Codebase knowledge indexing and contextual retrieval</td>
+                    </tr>
+                    <tr>
+                        <td><code>HeadyCopilot</code></td>
+                        <td>Pair Coding</td>
+                        <td>Real-time pair programming with context-aware suggestions</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="nodes-routing">Task Routing with CSL</h3>
+            <p>When you submit a task, the gateway embeds it as a 384-dimensional vector and scores it against each
+                node's capability profile using <strong>Continuous Semantic Logic (CSL)</strong>:</p>
+            <pre class="code"><span class="c">// CSL AND gate — cosine similarity between task and node</span>
+<span class="k">const</span> score = <span class="f">cslAND</span>(taskVector, nodeCapabilityVector);
+
+<span class="c">// Route to the highest-scoring node above the threshold</span>
+<span class="k">if</span> (score >= CSL_THRESHOLDS.STRONG) {  <span class="c">// 0.82</span>
+  <span class="f">routeToNode</span>(node, task);
+} <span class="k">else if</span> (score >= CSL_THRESHOLDS.MODERATE) {  <span class="c">// 0.618 (1/φ)</span>
+  <span class="f">routeWithFallback</span>(node, task);
+}</pre>
+
+            <!-- ═══ MCP GATEWAY ═══ -->
+            <h2 id="mcp-setup">MCP Gateway</h2>
+            <p>HeadyMCP connects your IDE directly to the full Heady platform via the <strong>Model Context
+                    Protocol</strong>. 12 tools, 6 gateway endpoints, 3 core servers.</p>
+
+            <h3>IDE Quickstart — VS Code / Cursor / Windsurf</h3>
+            <p>Add this to your MCP settings file (<code>.vscode/mcp.json</code>, <code>.cursor/mcp.json</code>, or
+                Windsurf config):</p>
+            <pre class="code">{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"heady"</span>: {
+      <span class="s">"command"</span>: <span class="s">"npx"</span>,
+      <span class="s">"args"</span>: [<span class="s">"@heady-ai/mcp-server"</span>],
+      <span class="s">"env"</span>: {
+        <span class="s">"HEADY_API_KEY"</span>: <span class="s">"your-api-key-from-admin"</span>,
+        <span class="s">"HEADY_API_URL"</span>: <span class="s">"https://heady-manager-headyme.headysystems.com"</span>
+      }
+    }
+  }
+}</pre>
+            <div class="callout callout-info"><b>ℹ️ Get your API key</b> Log in to <a
+                    href="https://admin.headysystems.com" target="_blank">Admin</a> → Settings → API Keys → Generate.
+            </div>
+
+            <h3 id="mcp-tools">Available Tools (12)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tool</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>heady_ask</code></td>
+                        <td>Send a prompt to the best-fit AI node via CSL routing</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_code</code></td>
+                        <td>Generate, edit, or refactor code with HeadyCoder</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_research</code></td>
+                        <td>Web research with citations via Perplexity Sonar Pro</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_memory_search</code></td>
+                        <td>Semantic search across your 3D vector memory</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_memory_store</code></td>
+                        <td>Store context, code, or decisions in vector memory</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_deploy</code></td>
+                        <td>Deploy services to Cloud Run or Cloudflare Pages</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_battle</code></td>
+                        <td>Run competitive multi-model AI evaluation</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_analyze</code></td>
+                        <td>Security audit and code vulnerability scanning</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_health</code></td>
+                        <td>Overall system health check and status</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_scan</code></td>
+                        <td>Full workspace deep scan into vector memory</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_embed</code></td>
+                        <td>Generate embeddings for arbitrary text</td>
+                    </tr>
+                    <tr>
+                        <td><code>heady_status</code></td>
+                        <td>Subsystem status overview (Colab, Swarm, Bees)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="mcp-config">Environment Variables</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>HEADY_API_KEY</code></td>
+                        <td>Yes</td>
+                        <td>Your API key from Admin dashboard</td>
+                    </tr>
+                    <tr>
+                        <td><code>HEADY_API_URL</code></td>
+                        <td>No</td>
+                        <td>API base URL (auto-resolved if omitted)</td>
+                    </tr>
+                    <tr>
+                        <td><code>HEADY_MODEL</code></td>
+                        <td>No</td>
+                        <td>Preferred model: claude-4, gpt-4o, gemini-2.0</td>
+                    </tr>
+                    <tr>
+                        <td><code>HEADY_MEMORY_ENABLED</code></td>
+                        <td>No</td>
+                        <td>Enable auto-memory capture (default: true)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ═══ MEMORY SYSTEM ═══ -->
+            <h2 id="memory-overview">Memory System</h2>
+            <p>Heady uses a <strong>3D vector memory space</strong> powered by pgvector with HNSW indexing, octree
+                spatial partitioning, and semantic drift detection. Every interaction is stored as a 384-dimensional
+                embedding positioned in 3D space.</p>
+
+            <h3>How It Works</h3>
+            <ol>
+                <li><strong>Embed</strong> — text is converted to a 384-dim vector using multi-provider embeddings</li>
+                <li><strong>Position</strong> — the vector is assigned an (x, y, z) coordinate via octree partitioning
+                </li>
+                <li><strong>Index</strong> — HNSW index enables O(log n) approximate nearest neighbor search</li>
+                <li><strong>Retrieve</strong> — queries find semantically similar memories across any dimension</li>
+            </ol>
+
+            <h3 id="memory-ops">Operations</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Complexity</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Search</td>
+                        <td>O(log n)</td>
+                        <td>HNSW approximate nearest neighbor retrieval</td>
+                    </tr>
+                    <tr>
+                        <td>Insert</td>
+                        <td>O(log n)</td>
+                        <td>Add vector with automatic octree space assignment</td>
+                    </tr>
+                    <tr>
+                        <td>Batch Embed</td>
+                        <td>O(n)</td>
+                        <td>Embed and insert multiple texts in one API call</td>
+                    </tr>
+                    <tr>
+                        <td>Drift Detect</td>
+                        <td>O(1)</td>
+                        <td>Cosine distance between current and reference state</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="memory-drift">Drift Detection</h3>
+            <p>Semantic drift is monitored continuously. When cosine distance exceeds <strong>φ⁻¹ ≈ 0.618</strong>, the
+                system flags drift and can auto-reconfigure:</p>
+            <pre class="code"><span class="c">// Phi-scaled drift threshold</span>
+<span class="k">const</span> DRIFT_THRESHOLD = <span class="n">1</span> / PHI;  <span class="c">// ≈ 0.618</span>
+<span class="k">const</span> distance = <span class="f">cosineDist</span>(currentState, referenceState);
+<span class="k">if</span> (distance > DRIFT_THRESHOLD) {
+  <span class="f">emitDriftEvent</span>({ distance, threshold: DRIFT_THRESHOLD });
+  <span class="c">// Auto-reconfigure if determinism degrades</span>
+}</pre>
+
+            <!-- ═══ AUTHENTICATION ═══ -->
+            <h2 id="auth-flow">Authentication</h2>
+            <p>All Heady sites share a single identity domain at <a href="https://auth.headysystems.com"
+                    target="_blank">auth.headysystems.com</a>. Sessions use server-issued httpOnly cookies — <strong>no
+                    tokens are ever stored in browser localStorage</strong>.</p>
+
+            <h3>Auth Flow</h3>
+            <ol>
+                <li>User clicks "Sign In" on any Heady site → redirected to
+                    <code>auth.headysystems.com?return=ORIGIN</code></li>
+                <li>User enters credentials → <code>POST /api/auth/login</code></li>
+                <li>Server validates, creates session, sets httpOnly cookie</li>
+                <li>Redirect back to <code>?return=</code> URL (validated against allowlist)</li>
+                <li>All subsequent API calls include the cookie automatically</li>
+            </ol>
+
+            <h3 id="auth-cookies">Cookie Policy</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Value</th>
+                        <th>Why</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>httpOnly</code></td>
+                        <td>true</td>
+                        <td>JavaScript cannot read the cookie (XSS protection)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Secure</code></td>
+                        <td>true</td>
+                        <td>Only sent over HTTPS</td>
+                    </tr>
+                    <tr>
+                        <td><code>SameSite</code></td>
+                        <td>Strict</td>
+                        <td>No cross-site request forgery</td>
+                    </tr>
+                    <tr>
+                        <td><code>Path</code></td>
+                        <td>/</td>
+                        <td>Available to all routes</td>
+                    </tr>
+                    <tr>
+                        <td><code>Max-Age</code></td>
+                        <td>86400 (24h)</td>
+                        <td>Auto-expire after 24 hours</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="auth-relay">Cross-Site Relay</h3>
+            <p>Session sync between sites uses a controlled relay pattern. The <code>?return=</code> parameter is
+                validated server-side against an approved domain allowlist:</p>
+            <div class="callout callout-info"><b>ℹ️ Approved redirect domains</b> headyme.com, headysystems.com,
+                heady-ai.com, headyos.com, headyconnection.org, headyconnection.com, headyex.com, headyfinance.com,
+                admin.headysystems.com</div>
+
+            <!-- ═══ ARCHITECTURE ═══ -->
+            <h2 id="arch-layers">Architecture</h2>
+            <p>The Heady platform is organized into six layers, each building on the one below:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>Components</th>
+                        <th>Responsibility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Experience</strong></td>
+                        <td>9 Sites, HeadyBuddy, Admin UI, MCP</td>
+                        <td>User-facing surfaces and IDE tools</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Runtime</strong></td>
+                        <td>AutoContext, Bee Injector, Gateway</td>
+                        <td>Dynamic behavior, context enrichment, routing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trust</strong></td>
+                        <td>Auth, httpOnly cookies, relay, RBAC</td>
+                        <td>Identity, access control, session management</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orchestration</strong></td>
+                        <td>17 Swarms, 20 AI Nodes, Battle Arena</td>
+                        <td>Multi-agent coordination and task routing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memory</strong></td>
+                        <td>pgvector, HNSW, Octree, Drift Detector</td>
+                        <td>Persistent 3D vector context and retrieval</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Infrastructure</strong></td>
+                        <td>Cloud Run, Cloudflare, Neon Postgres</td>
+                        <td>Compute, storage, networking, edge delivery</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="arch-csl">Continuous Semantic Logic (CSL)</h3>
+            <p>CSL replaces boolean if/else chains with <strong>geometric operations on high-dimensional
+                    vectors</strong>. All decision-making uses continuous cosine scoring rather than discrete branching:
+            </p>
+            <ul>
+                <li><strong>CSL AND</strong> — cosine similarity → measures alignment between two vectors</li>
+                <li><strong>CSL OR</strong> — vector superposition → combines capability vectors</li>
+                <li><strong>CSL NOT</strong> — orthogonal projection → rejects matching patterns</li>
+                <li><strong>CSL GATE</strong> — threshold filter → only pass if score ≥ phi-derived threshold</li>
+                <li><strong>CSL XOR</strong> — difference of projections → detects exclusive patterns</li>
+                <li><strong>CSL CONSENSUS</strong> — multi-vector alignment → majority agreement scoring</li>
+            </ul>
+            <p>This approach enables 60+ provisional patents and eliminates the brittleness of traditional rule-based
+                systems.</p>
+
+            <h3 id="arch-phi">Phi-Math Foundation</h3>
+            <p>All system constants derive from the golden ratio <strong>φ ≈ 1.618</strong> and the Fibonacci sequence.
+                Zero magic numbers — every threshold, cache size, batch size, retry interval, and timeout is phi-scaled:
+            </p>
+            <pre class="code"><span class="k">const</span> PHI = <span class="n">1.618033988749895</span>;  <span class="c">// Golden ratio</span>
+<span class="k">const</span> PSI = <span class="n">0.618033988749895</span>;  <span class="c">// 1/φ — used as CSL threshold</span>
+
+<span class="c">// Fibonacci-sized resources</span>
+<span class="c">// Cache sizes:   fib(8)=21, fib(10)=55, fib(12)=144</span>
+<span class="c">// Batch sizes:   fib(5)=5,  fib(7)=13,  fib(9)=34</span>
+<span class="c">// Retry backoff: fib(3)=2s, fib(4)=3s,  fib(5)=5s</span>
+
+<span class="k">const</span> CSL_THRESHOLDS = {
+  STRONG:   <span class="n">0.82</span>,    <span class="c">// High-confidence routing</span>
+  MODERATE: <span class="n">0.618</span>,   <span class="c">// 1/φ — standard gate</span>
+  WEAK:     <span class="n">0.382</span>,   <span class="c">// 1/φ² — permissive gate</span>
+};</pre>
+
+            <!-- ═══ DEPLOYMENT ═══ -->
+            <h2 id="deploy-cloudrun">Deployment</h2>
+
+            <h3>Cloud Run (Backend)</h3>
+            <p>The Heady backend runs on Google Cloud Run with auto-scaling. Deploy from the repo root:</p>
+            <pre class="code"><span class="c"># Deploy heady-manager to Cloud Run</span>
+gcloud run deploy heady-manager \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars=<span class="s">"NODE_ENV=production,DATABASE_URL=$DATABASE_URL"</span></pre>
+
+            <h3 id="deploy-cf">Cloudflare Pages (Static Sites)</h3>
+            <p>Each site in the Heady estate is deployed individually:</p>
+            <pre class="code"><span class="c"># Deploy headyme.com</span>
+npx wrangler pages deploy apps/sites/headyme \
+  --project-name=headyme --branch=main
+
+<span class="c"># Deploy headysystems.com</span>
+npx wrangler pages deploy apps/sites/headysystems \
+  --project-name=headysystems --branch=main</pre>
+
+            <h3 id="deploy-cicd">CI/CD Pipeline</h3>
+            <p>The auto-commit pipeline runs every 5 minutes via cron:</p>
+            <ol>
+                <li><strong>Stage</strong> — <code>git add -A</code> detects all changes</li>
+                <li><strong>Commit</strong> — timestamped commit with file count</li>
+                <li><strong>Push staging</strong> — push to <code>HeadyMe/Heady-Staging</code></li>
+                <li><strong>Push production</strong> — push to <code>HeadyMe/heady-production</code></li>
+                <li><strong>GitHub Actions</strong> — on push, auto-deploy to Cloud Run</li>
+            </ol>
+
+            <div class="callout callout-warn"><b>⚠️ Required Environment Variables</b>
+                <code>DATABASE_URL</code> — Neon Postgres connection string<br>
+                <code>ADMIN_TOKEN</code> — Admin API authentication token<br>
+                <code>NODE_ENV</code> — Set to <code>production</code> in deployed environments<br>
+                <code>CORS_ORIGINS</code> — Comma-separated list of allowed origins
+            </div>
+
+            <div
+                style="margin-top:4rem;padding-top:2rem;border-top:1px solid var(--glass-border);color:var(--text-faint);font-size:0.85rem;">
+                <p>© 2026 HeadySystems Inc. · <a href="index.html">HeadyMe</a> · <a href="https://headysystems.com"
+                        target="_blank">HeadySystems</a> · <a href="https://auth.headysystems.com"
+                        target="_blank">Auth</a> · <a href="https://admin.headysystems.com" target="_blank">Admin</a>
+                </p>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
