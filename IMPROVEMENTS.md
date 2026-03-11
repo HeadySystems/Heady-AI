@@ -58,15 +58,9 @@ Added 4 liquid nodes to `cloud-layers.yaml`:
 - 21-stage HCFullPipeline: 6/6 tests pass (full run, approval gate, skip stages, validation, status, self-awareness)
 - Cloud Run: 7/7 services live and healthy
 - MCP Bridge: v2.0.0 with 29 vectors, 384 dimensions, GPU enabled, 4 transports active
-
-## Code Quality Hardening (2026-03-10)
-
-### Logging Standardization
-- Migrated manual `console.log` statements in `auto-success-engine.js` and `hc_autobuild.js` to `logger.info` instances configured for structured logging (via pino).
-
-### TODO Removals & Implementation Completeness
-- Updated the OAuth flow in `auth-manager.js` to perform actual HTTP `fetch` to provider token endpoints, removing the dummy/stub implementation.
-- Refactored `bee-factory-v2.js` logic to include a working implementation that utilizes `deps.vectorMemory.embed` instead of returning a stub response with `TODO: implement`.
-
-### Founder Representation
-- Normalized `Eric Haywood` in remaining documentation files and test environments (`HEADY_CONTEXT.md`, landing pages).
+- Added `auth-session-server` service configuration to `docker-compose.yml` to resolve dependency graph failures.
+- Renamed src/sites paths that were violating `.com` and `.org` conventions (converted to `-com` and `-org`).
+- Executed static site generators successfully across all apps and UIs with fixed BASE directory.
+- Created `ERROR_CODES.md` with centralized status catalog for 50 services.
+- Created `docs/adr/001-why-50-services.md` outlining the 50-service architecture decision.
+- Executed `npm run generate:service-map`.

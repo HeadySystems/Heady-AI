@@ -1,22 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--
-   ______                            __
-  / ____/___  ____ ___  ____  __  __/ /____  _____
- / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
-/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
-\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
-                    /_/
-        Created with Perplexity Computer
-        https://www.perplexity.ai/computer
--->
-
-<!-- Perplexity Computer Attribution — SEO Meta Tags -->
-<meta name="generator" content="Perplexity Computer">
-<meta name="author" content="Perplexity Computer">
-<meta property="og:see_also" content="https://www.perplexity.ai/computer">
-<link rel="author" href="https://www.perplexity.ai/computer">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HeadySystems Admin Portal — Internal Operations Dashboard</title>
@@ -29,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../packages/design-system/heady-design.css">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
   <style>
     :root {
       --accent: #06b6d4;
@@ -122,7 +106,7 @@
   <section class="section" style="padding: var(--space-21) 0;">
     <div class="container">
       <div class="stats-row">
-        
+
         <div class="stat">
           <div class="stat-num">50+</div>
           <div class="stat-label">Services</div>
@@ -151,7 +135,7 @@
         <p>Everything you need from HeadySystems Admin Portal — powered by Sacred Geometry and Continuous Semantic Logic.</p>
       </div>
       <div class="grid-3">
-        
+
         <div class="glass-card">
           <span class="feature-icon">📊</span>
           <h4>System Dashboard</h4>
@@ -160,7 +144,7 @@
         <div class="glass-card">
           <span class="feature-icon">🤖</span>
           <h4>Agent Monitor</h4>
-          <p>Live status of all 20 AI nodes with health telemetry signals, capability matrices, task throughput, and memory utilization. Vector memory visualization shows knowledge graph density.</p>
+          <p>Live status of all 20 AI nodes with health scores, capability matrices, task throughput, and memory utilization. Vector memory visualization shows knowledge graph density.</p>
         </div>
         <div class="glass-card">
           <span class="feature-icon">🚀</span>
@@ -184,7 +168,7 @@
         <p>A comprehensive look at what HeadySystems Admin Portal offers and how it works.</p>
       </div>
       <div class="deep-dive">
-        
+
 <h3>Operational Command Center</h3>
 <p>The HeadySystems Admin Portal is the internal operations dashboard used by the platform engineering team to monitor, manage, and maintain the entire Heady infrastructure. It provides real-time visibility into all 50+ microservices, 20 AI nodes, 17 swarms, and the interconnecting service mesh. This is where operational decisions are made and system health is ensured.</p>
 
@@ -194,7 +178,7 @@
 <p>All metrics are collected via OpenTelemetry and stored in time-series databases with φ-scaled retention (recent data at full resolution, older data aggregated at Fibonacci intervals). Alert thresholds use φ-scaled bands: a metric must exceed ψ (0.618) of its baseline for amber alerts and φ (1.618) of its baseline for red alerts. This eliminates alert fatigue from normal variance while catching genuine anomalies.</p>
 
 <h3>Agent Monitoring</h3>
-<p>The Agent Monitor displays the live status of all 20 AI processing nodes. Each node's tile shows its current task, health telemetry signal, throughput (tasks/minute), latency distribution, and vector memory utilization. A capability matrix shows which models and tools are available on each node, enabling operators to understand the system's overall capacity at a glance.</p>
+<p>The Agent Monitor displays the live status of all 20 AI processing nodes. Each node's tile shows its current task, health score, throughput (tasks/minute), latency distribution, and vector memory utilization. A capability matrix shows which models and tools are available on each node, enabling operators to understand the system's overall capacity at a glance.</p>
 
 <p>The vector memory visualization renders a 3D projection of the knowledge graph, showing cluster density, recent additions (highlighted in the site's accent color), and memory utilization percentage. Operators can drill into specific memory regions to inspect stored vectors, their metadata, and access patterns.</p>
 
@@ -214,50 +198,19 @@
 <h3>Access Control</h3>
 <p>The Admin Portal requires elevated authentication beyond standard Heady user accounts. Operators must authenticate through auth.headysystems.com with multi-factor authentication (WebAuthn/FIDO2 preferred, TOTP fallback). All admin sessions are time-limited and require re-authentication for sensitive operations like production deployments and secret rotation.</p>
 
-      
-<h3>Automation and Runbooks</h3>
-<p>The Admin Portal includes an automation engine that executes predefined runbooks in response to system events. When a service fails its health check, the corresponding runbook triggers automatically: quarantine the service, spin up a replacement, validate the replacement's health, redirect traffic, and alert the on-call engineer. Runbooks are version-controlled, tested in staging, and reviewed before production deployment.</p>
-
-<p>Operators can create custom runbooks for scenario-specific responses. The runbook editor supports conditional logic, parallel execution, approval gates, and integration with external systems (PagerDuty, Slack, Jira). All runbook executions are logged in the audit trail with full execution history, timing, and outcome documentation.</p>
-
-<h3>Capacity Planning and Cost Management</h3>
-<p>The Admin Portal provides capacity planning tools that use φ-scaled projections to forecast resource needs. Historical utilization data is analyzed to identify trends, seasonal patterns, and growth trajectories. Projections model both conservative (ψ-scaled growth) and optimistic (φ-scaled growth) scenarios, helping operators make informed scaling decisions.</p>
-
-<p>Cost management dashboards break down infrastructure spending by service, environment, and resource type. Anomaly detection flags unexpected cost increases, and budget alerts trigger when spending approaches thresholds. The system recommends optimization opportunities including right-sizing instances, consolidating underutilized services, and shifting workloads to more cost-effective tiers — all while maintaining performance and reliability standards.</p>
-
-<h3>Compliance and Audit Support</h3>
-<p>For organizations with regulatory compliance requirements, the Admin Portal provides comprehensive audit support. Immutable audit logs capture every operator action with cryptographic verification. Compliance dashboards track adherence to internal policies and external regulations. Export tools generate audit-ready reports for SOC 2, ISO 27001, GDPR, and other compliance frameworks.</p>
-
-</div>
+      </div>
     </div>
   </section>
 
   <!-- How It Works -->
-  
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2>Operations Depth</h2>
-        <p>How the admin surface supports recovery, accountability, and safe change across the full Heady system.</p>
-      </div>
-      <div class="deep-dive">
-        <p>The admin portal should feel like the place where platform reality is made legible. It is not only a dashboard for looking at numbers. It is where operators confirm whether the system is behaving coherently, whether deployments are recoverable, whether sessions and secrets are controlled properly, and whether the broader ecosystem can continue to function under stress. This added section gives the page more of that operational narrative. Metrics only become useful when the humans looking at them understand what action they enable.</p>
-        <p>One of the portal's most important jobs is to shorten the path from signal to decision. When a route family degrades, a worker becomes unstable, or an auth boundary behaves unexpectedly, operators need to understand not only the symptom but the surrounding context. They need a console that sits near runbooks, service families, deploy records, and structured logs. Long-form content helps frame the page as that kind of console rather than a visually rich but thin monitoring surface. It tells the reader what the portal is for and how it fits into the platform's operating discipline.</p>
-        <p>The admin portal is also where accountability becomes visible. Every deployment, secret rotation, restart action, and recovery step should leave a legible trail. The page therefore benefits from explaining not just monitoring but operator intent, governance boundaries, and system memory. The richer the narrative, the easier it is for future contributors and stakeholders to understand how operational trust is earned. That matters in a system where many services and many domains all need to stay aligned.</p>
-        <p>As the bundle grows, the admin portal can become the nerve center for validation, diagnosis, and service stewardship across every other surface. Adding depth now helps preserve that future role. It strengthens the portal as a true operating interface for the ecosystem.</p>
-      </div>
-    </div>
-  </section>
-
-
-    <section id="how-it-works" class="section">
+  <section id="how-it-works" class="section">
     <div class="container">
       <div class="section-header">
         <h2>How It Works</h2>
         <p>The HeadySystems Admin Portal workflow in four steps.</p>
       </div>
       <div class="how-steps">
-        
+
         <div class="how-step glass-card">
           <div class="how-step-num">01</div>
           <h4>Authenticate</h4>
@@ -301,7 +254,7 @@
         <p>Nine interconnected platforms. One unified intelligence layer.</p>
       </div>
       <div class="eco-map">
-        
+
         <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
           <span class="eco-icon">◎</span>
           <span class="eco-label">HeadyMe</span>
@@ -359,7 +312,7 @@
         <p>Real-world applications of HeadySystems Admin Portal.</p>
       </div>
       <div class="grid-3">
-        
+
         <div class="glass-card">
           <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🔍</span>
           <h4>Health Monitoring</h4>
@@ -402,14 +355,14 @@
         <p>Everything you need to know about HeadySystems Admin Portal.</p>
       </div>
       <div style="max-width:700px;margin:0 auto;">
-        
+
         <div class="faq-item" data-index="0">
           <button class="faq-question">Who has access to the Admin Portal?</button>
           <div class="faq-answer"><p>Only authorized platform engineers and operators with elevated privileges. Access requires multi-factor authentication and is logged in the audit trail.</p></div>
         </div>
         <div class="faq-item" data-index="1">
           <button class="faq-question">What metrics are monitored?</button>
-          <div class="faq-answer"><p>CPU, memory, GC frequency, event loop delay, request throughput, error rates, latency percentiles (p50/p95/p99), agent health telemetry signals, vector memory utilization, and swarm task throughput.</p></div>
+          <div class="faq-answer"><p>CPU, memory, GC frequency, event loop delay, request throughput, error rates, latency percentiles (p50/p95/p99), agent health scores, vector memory utilization, and swarm task throughput.</p></div>
         </div>
         <div class="faq-item" data-index="2">
           <button class="faq-question">How do alerts work?</button>
@@ -447,7 +400,7 @@
           <span class="nav-logo">HeadySystems Admin Portal</span>
           <p>System dashboard, agent monitoring, deploy controls, security console — the operational nerve center for HeadySystems infrastructure.</p>
         </div>
-        
+
         <div class="footer-col">
           <h4>Platform</h4>
           <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
@@ -481,11 +434,11 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="../../packages/sacred-geometry/sacred-geometry.js"></script>
-  <script src="../../packages/cross-nav/cross-nav.js"></script>
-  <script src="../../packages/auth-widget/auth-widget.js"></script>
-  <script src="../../packages/auto-context/auto-context-bridge.js"></script>
-  <script src="../../packages/bee-injectors/bee-injectors.js"></script>
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
   <script>
     // Initialize Sacred Geometry Canvas with site-specific settings
     new SacredGeometryCanvas('sacred-canvas', {

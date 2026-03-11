@@ -1,22 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!--
-   ______                            __
-  / ____/___  ____ ___  ____  __  __/ /____  _____
- / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
-/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
-\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
-                    /_/
-        Created with Perplexity Computer
-        https://www.perplexity.ai/computer
--->
-
-<!-- Perplexity Computer Attribution — SEO Meta Tags -->
-<meta name="generator" content="Perplexity Computer">
-<meta name="author" content="Perplexity Computer">
-<meta property="og:see_also" content="https://www.perplexity.ai/computer">
-<link rel="author" href="https://www.perplexity.ai/computer">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HeadyOS — The AI Operating System for Developers</title>
@@ -29,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../packages/design-system/heady-design.css">
+  <link rel="stylesheet" href="../packages/design-system/heady-design.css">
   <style>
     :root {
       --accent: #14b8a6;
@@ -122,7 +106,7 @@
   <section class="section" style="padding: var(--space-21) 0;">
     <div class="container">
       <div class="stats-row">
-        
+
         <div class="stat">
           <div class="stat-num">31</div>
           <div class="stat-label">MCP Tools</div>
@@ -151,7 +135,7 @@
         <p>Everything you need from HeadyOS — powered by Sacred Geometry and Continuous Semantic Logic.</p>
       </div>
       <div class="grid-3">
-        
+
         <div class="glass-card">
           <span class="feature-icon">◇</span>
           <h4>Agent Runtime</h4>
@@ -184,7 +168,7 @@
         <p>A comprehensive look at what HeadyOS offers and how it works.</p>
       </div>
       <div class="deep-dive">
-        
+
 <h3>An Operating System Built for AI</h3>
 <p>HeadyOS reimagines the operating system concept for the age of artificial intelligence. Traditional operating systems manage processes, files, and hardware. HeadyOS manages AI agents, vector memory, and intelligence. It provides the foundational runtime, primitives, and abstractions that autonomous agents need to execute tasks, communicate with each other, and persist learned knowledge.</p>
 
@@ -215,47 +199,19 @@
 
 <p>The HeadyOS IDE integration (via the Antigravity IDE) provides real-time agent monitoring, memory visualization, event stream inspection, and hot-reload triggers directly in the development environment. Developers can see their agents' vector memory evolve in real time as they test interactions.</p>
 
-      
-<h3>Security Model</h3>
-<p>HeadyOS implements defense-in-depth security for agent execution. WASM sandboxes provide process-level isolation, ensuring no agent can access system resources beyond its granted permissions. The permission model follows the principle of least privilege — agents request specific capabilities (file:read, network:http, memory:write) during registration, and the runtime enforces these boundaries at every system call.</p>
-
-<p>All agent-to-agent communication passes through the event bus with CSL-gated access control. An agent can only subscribe to topics within its declared domain, and cross-domain communication requires explicit permission grants from both parties. This prevents information leakage between agents handling sensitive data in different contexts.</p>
-
-<h3>Performance and Scalability</h3>
-<p>HeadyOS scales horizontally across Cloudflare's global edge network. Each agent instance runs as a Cloudflare Worker with Durable Object state persistence, enabling sub-millisecond cold starts and automatic geographic distribution. The unified memory layer uses pgvector with read replicas at edge locations, reducing memory query latency to single-digit milliseconds for cached vectors.</p>
-
-<p>The event bus scales through topic-based partitioning with φ-scaled partition counts. As event volume grows, partitions split at Fibonacci thresholds (8, 13, 21, 34 partitions) ensuring smooth scaling without the thundering herd effects of power-of-two partition schemes. Consumers scale independently per topic, and the backpressure system prevents any single hot topic from degrading overall bus performance.</p>
-
-</div>
+      </div>
     </div>
   </section>
 
   <!-- How It Works -->
-  
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2>Runtime Depth</h2>
-        <p>Why the operating-system layer matters for orchestration, safety, and cross-service continuity.</p>
-      </div>
-      <div class="deep-dive">
-        <p>HeadyOS needs to do more than present itself as a control surface. It has to explain how runtime structure shapes every experience across the ecosystem. This added section gives that explanation more room. An operating system layer is where services become dependable rather than merely available. It is where session boundaries, route conventions, telemetry, memory access, and controlled execution are made concrete. When users understand that role, the page reads less like a feature sheet and more like a real account of how the environment is held together.</p>
-        <p>The runtime layer is also where safety becomes operational instead of aspirational. Guardrails around cookies, request enrichment, service health, and structured logging are all operating-system concerns because they determine what every other surface can safely assume. If those guarantees are vague, the rest of the ecosystem becomes harder to trust. If they are explicit and consistently enforced, then product surfaces, developer tools, and support experiences can all build on stable ground. Long-form page content should therefore explain these guarantees clearly enough that builders and operators know what the runtime promises them.</p>
-        <p>Another useful perspective is that HeadyOS is the translation layer between platform ambition and daily execution. Ambition says the system should feel alive, interconnected, and continuously aware of context. Execution means defining the services, packages, and operational rules that make such a feeling possible. The operating-system layer hosts those rules. It turns abstract principles into routes, cookies, process boundaries, and deployable runtime behavior. Giving this page more depth helps communicate that translation, which in turn makes the broader architecture easier to understand.</p>
-        <p>As the bundle matures, this page can become the place where teams understand how new surfaces should inherit runtime behavior without inventing their own incompatible conventions. That is why additional narrative depth is useful. It prepares HeadyOS to serve as both an explanatory site and a reference model for future expansion.</p>
-      </div>
-    </div>
-  </section>
-
-
-    <section id="how-it-works" class="section">
+  <section id="how-it-works" class="section">
     <div class="container">
       <div class="section-header">
         <h2>How It Works</h2>
         <p>The HeadyOS workflow in four steps.</p>
       </div>
       <div class="how-steps">
-        
+
         <div class="how-step glass-card">
           <div class="how-step-num">01</div>
           <h4>Create Agent</h4>
@@ -299,7 +255,7 @@
         <p>Nine interconnected platforms. One unified intelligence layer.</p>
       </div>
       <div class="eco-map">
-        
+
         <a href="https://headyme.com" class="eco-node" style="--node-accent:#00d4aa" target="_blank" rel="noopener">
           <span class="eco-icon">◎</span>
           <span class="eco-label">HeadyMe</span>
@@ -357,7 +313,7 @@
         <p>Real-world applications of HeadyOS.</p>
       </div>
       <div class="grid-3">
-        
+
         <div class="glass-card">
           <span style="font-size:1.618rem;display:block;margin-bottom:0.8rem">🤖</span>
           <h4>Autonomous Research</h4>
@@ -400,7 +356,7 @@
         <p>Everything you need to know about HeadyOS.</p>
       </div>
       <div style="max-width:700px;margin:0 auto;">
-        
+
         <div class="faq-item" data-index="0">
           <button class="faq-question">What programming languages does HeadyOS support?</button>
           <div class="faq-answer"><p>The SDK supports JavaScript/TypeScript, Python, and Rust for agent development. WASM containment means any language that compiles to WebAssembly can run on HeadyOS. The MCP protocol is language-agnostic.</p></div>
@@ -445,7 +401,7 @@
           <span class="nav-logo">HeadyOS</span>
           <p>Agent runtime, unified memory, system primitives, and event bus — build and deploy AI agents on the operating system designed for intelligence.</p>
         </div>
-        
+
         <div class="footer-col">
           <h4>Platform</h4>
           <a href="https://headyme.com" target="_blank" rel="noopener">HeadyMe</a>
@@ -479,11 +435,11 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="../../packages/sacred-geometry/sacred-geometry.js"></script>
-  <script src="../../packages/cross-nav/cross-nav.js"></script>
-  <script src="../../packages/auth-widget/auth-widget.js"></script>
-  <script src="../../packages/auto-context/auto-context-bridge.js"></script>
-  <script src="../../packages/bee-injectors/bee-injectors.js"></script>
+  <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
+  <script src="../packages/cross-nav/cross-nav.js"></script>
+  <script src="../packages/auth-widget/auth-widget.js"></script>
+  <script src="../packages/auto-context/auto-context-bridge.js"></script>
+  <script src="../packages/bee-injectors/bee-injectors.js"></script>
   <script>
     // Initialize Sacred Geometry Canvas with site-specific settings
     new SacredGeometryCanvas('sacred-canvas', {
