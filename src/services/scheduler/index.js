@@ -133,7 +133,7 @@ function tick() {
     if (!job.enabled) continue;
     if (job.status === 'running') continue;
     if (now >= job.nextRun) {
-      job.execute().catch(() => {});
+      job.execute().catch(err => log('error', `Job ${id} execution failed: ${err.message}`, { jobId: id, error: err.message }));
     }
   }
 }

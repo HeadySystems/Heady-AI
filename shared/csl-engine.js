@@ -17,13 +17,13 @@
  *   -1 = antipodal (FALSE)
  */
 
-'use strict';
-
-const {
-  PHI, PSI, PSI2, PSI3, PSI4,
+import {
+  PHI, PSI, PSI_SQ as PSI2, PSI_CUBED as PSI3,
   CSL_THRESHOLDS, phiThreshold, phiFusionWeights,
   cslGate, adaptiveTemperature, fib,
-} = require('./phi-math.js');
+} from './phi-math.js';
+
+const PSI4 = Math.pow(PSI, 4);
 
 /**
  * Derived PSI powers not in phi-math.js.
