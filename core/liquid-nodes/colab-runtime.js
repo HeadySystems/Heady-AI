@@ -166,6 +166,46 @@ class ColabRuntimeManager extends EventEmitter {
   }
 
   /**
+   * Provision and warm all configured runtimes concurrently.
+   * Keeps one failed runtime from blocking the remaining cluster.
+   * @returns {Promise<object>} aggregate provisioning status
+   */
+  async provisionAll() {
+    const runtimeIds = Array.from(this._runtimes.keys());
+    const settled = await Promise.allSettled(runtimeIds.map(async (runtimeId) => {
+      await this.provision(runtimeId);
+      await this.warmUp(runtimeId);
+      return runtimeId;
+    }));
+
+    const provisioned = [];
+    const failed = [];
+
+    settled.forEach((result, index) => {
+      const runtimeId = runtimeIds[index];
+      if (result.status === 'fulfilled') {
+        provisioned.push(runtimeId);
+      } else {
+        failed.push({
+          runtimeId,
+          error: result.reason?.message || String(result.reason),
+        });
+      }
+    });
+
+    const status = {
+      total: runtimeIds.length,
+      provisioned,
+      failed,
+      successRate: runtimeIds.length > 0 ? provisioned.length / runtimeIds.length : 0,
+    };
+
+    this.emit('cluster:provisioned', status);
+    logger.info('Cluster provisioning complete', status);
+    return status;
+  }
+
+  /**
    * Provision a runtime — start the Colab session.
    * @param {string} runtimeId
    * @returns {Promise<object>}
@@ -268,6 +308,54 @@ class ColabRuntimeManager extends EventEmitter {
 
     logger.info('Dispatching latent op to optimal runtime', { op, runtimeId });
     return this.executeOnRuntime(runtimeId, op, params);
+  }
+
+  /**
+   * Execute a list of operations concurrently across the runtime mesh.
+   * Each payload may provide an explicit runtimeId; otherwise it is routed
+   * using vector-space optimal selection.
+   * @param {string} op
+   * @param {object[]} payloads
+   * @returns {Promise<object>} batch execution summary
+   */
+  async executeDistributed(op, payloads = []) {
+    if (!Array.isArray(payloads)) {
+      throw new Error('payloads must be an array');
+    }
+
+    const settled = await Promise.allSettled(payloads.map(async (payload, index) => {
+      const runtimeId = payload.runtimeId || this._selectRuntimeForDistributedTask(payload, index);
+      const result = await this.executeOnRuntime(runtimeId, op, payload);
+      return { runtimeId, result };
+    }));
+
+    const successes = [];
+    const failures = [];
+
+    settled.forEach((result, index) => {
+      const payload = payloads[index];
+      if (result.status === 'fulfilled') {
+        successes.push(result.value);
+      } else {
+        failures.push({
+          index,
+          payload,
+          error: result.reason?.message || String(result.reason),
+        });
+      }
+    });
+
+    const summary = {
+      op,
+      total: payloads.length,
+      succeeded: successes.length,
+      failed: failures.length,
+      successes,
+      failures,
+    };
+
+    this.emit('cluster:batch-completed', summary);
+    return summary;
   }
 
   /**
@@ -425,6 +513,26 @@ class ColabRuntimeManager extends EventEmitter {
     };
   }
 
+  /**
+   * Get normalized runtime health for orchestration decisions.
+   * @returns {object[]}
+   */
+  getHealthMatrix() {
+    return Array.from(this._runtimes.values()).map((runtime) => {
+      const utilization = runtime.activeOps.size / RUNTIME_LIMITS.maxConcurrentOps;
+      return {
+        runtimeId: runtime.id,
+        state: runtime.state,
+        utilization,
+        pressure: classifyPressure(utilization),
+        errorRate: runtime.metrics.opsExecuted > 0
+          ? runtime.metrics.errorCount / runtime.metrics.opsExecuted
+          : 0,
+        queueDepth: runtime.taskQueue.length,
+      };
+    });
+  }
+
   // ── Private Methods ──────────────────────────────────────────
 
   /**
@@ -555,10 +663,10 @@ class ColabRuntimeManager extends EventEmitter {
    */
   _getOpTargetVector(op) {
     const vectors = {
-      [LATENT_OPS.EMBED]:     { x: PSI, y: PHI, z: PSI2 },
-      [LATENT_OPS.SEARCH]:    { x: PHI, y: PSI, z: PHI },
-      [LATENT_OPS.CLUSTER]:   { x: 0.0, y: PHI * PHI, z: 0.0 },
-      [LATENT_OPS.TRAIN]:     { x: 0.0, y: PHI * PHI, z: 0.0 },
+      [LATENT_OPS.EMBED]: { x: PSI, y: PHI, z: PSI2 },
+      [LATENT_OPS.SEARCH]: { x: PHI, y: PSI, z: PHI },
+      [LATENT_OPS.CLUSTER]: { x: 0.0, y: PHI * PHI, z: 0.0 },
+      [LATENT_OPS.TRAIN]: { x: 0.0, y: PHI * PHI, z: 0.0 },
       [LATENT_OPS.TRANSFORM]: { x: PSI, y: PHI, z: PSI },
     };
     return vectors[op] || { x: PSI, y: PSI, z: PSI };
@@ -607,6 +715,37 @@ class ColabRuntimeManager extends EventEmitter {
     }
 
     return bestId;
+  }
+
+  /**
+   * Hybrid selector for high-volume distributed tasks.
+   * Favors low queue depth, then vector affinity fallback.
+   * @private
+   */
+  _selectRuntimeForDistributedTask(payload, index = 0) {
+    const available = Array.from(this._runtimes.values()).filter(r =>
+      r.state !== RUNTIME_STATE.TERMINATED &&
+      r.state !== RUNTIME_STATE.ERROR
+    );
+
+    if (available.length === 0) {
+      throw new Error('No available runtimes for distributed execution');
+    }
+
+    const healthy = available
+      .filter(runtime => runtime.taskQueue.length < RUNTIME_LIMITS.queueDepth)
+      .sort((a, b) => {
+        const aLoad = a.activeOps.size + a.taskQueue.length;
+        const bLoad = b.activeOps.size + b.taskQueue.length;
+        return aLoad - bLoad;
+      });
+
+    if (healthy.length > 0) {
+      return healthy[index % healthy.length].id;
+    }
+
+    const vector = payload.taskVector || this._getOpTargetVector(payload.op || LATENT_OPS.TRANSFORM);
+    return this._selectOptimalRuntime(vector);
   }
 }
 
