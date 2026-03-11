@@ -1169,7 +1169,7 @@ app.get("*", (req, res) => {
 
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  console.log(`  ∞ Health: http://localhost:${PORT}/api/health`);
-  console.log(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
+  logger.info(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
+  logger.info(`  ∞ Health: http://headyio.com:${PORT}/api/health`);
+  logger.info(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });

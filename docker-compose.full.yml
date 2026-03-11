@@ -54,7 +54,7 @@ services:
     environment:
       - POSTGRES_DB=heady
       - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=heady_secret
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     ports:
       - "5432:5432"
@@ -116,7 +116,7 @@ services:
       - POSTGRES_HOST=heady-postgres
       - POSTGRES_DB=heady
       - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=heady_secret
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - OLLAMA_HOST=heady-ollama
     volumes:
       - heady-rag:/app/data
@@ -229,8 +229,8 @@ services:
     ports:
       - "8080:80"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@heady.internal
-      - PGADMIN_DEFAULT_PASSWORD=heady_admin
+      - PGADMIN_DEFAULT_EMAIL=admin@internal.headyio.com
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
       - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
     volumes:
       - heady-pgadmin:/var/lib/pgadmin
@@ -260,7 +260,7 @@ services:
     ports:
       - "3002:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=heady_grafana
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     volumes:
       - heady-grafana:/var/lib/grafana

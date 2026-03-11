@@ -32,7 +32,7 @@ services:
 
   heady-ide:
     environment:
-      - PASSWORD=${HEADY_IDE_PASSWORD:-heady}
+      - PASSWORD=${HEADY_IDE_PASSWORD}
 
   model-runner:
     environment:

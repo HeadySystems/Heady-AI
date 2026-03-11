@@ -1,15 +1,21 @@
-/*
- * © 2026 Heady™Systems Inc..
- * PROPRIETARY AND CONFIDENTIAL.
- */
-/**
- * ═══ VM Token Routes ═══
- *
- * GitHub App-based token generation for VM/CI operations.
- * Issues short-lived installation tokens via GitHub App credentials.
- *
- * Heady™ AI Nodes: SENTINEL, CONDUCTOR
- */
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/routes/vm-token-routes.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
+const express = require('express');
+const router = express.Router();
+const { createAppAuth } = require('@octokit/auth-app');
 
 const express = require('../core/heady-server');
 const { createAppAuth } = require("@octokit/auth-app");

@@ -2,14 +2,39 @@
 artifacts/*-report.json
 artifacts/*.zip
 configs/secrets/
-coverage
-dist
-.DS_Store
-.env
-.env.*
-.idea
-node_modules
-# Rebuild artifacts
-.turbo
-.vscode/settings.local.json
-.wrangler
+config/secrets/
+.heady/memory.db
+.heady/*.db
+*.db
+.heady/.heady/
+
+# Files exceeding GitHub LFS 2GB per-file limit
+AndroidSDK/system-images/**/*.img
+
+# Deploy packages (temp build artifacts)
+deploy-package-*/
+offline-packages/
+
+# Local Netlify folder
+.netlify
+
+# Security — sensitive files
+.env.hybrid
+*.pid
+*.bak
+audit_logs.jsonl
+.heady_deploy_log.jsonl
+*.jsonl
+*.shit
+
+# In-folder (ingest zips - too large for GitHub)
+in/
+
+
+# Security — sensitive files (added by security-remediation)
+.env.hybrid
+*.pid
+*.bak
+audit_logs.jsonl
+.heady_deploy_log.jsonl
+*.jsonl
