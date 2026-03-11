@@ -1,0 +1,337 @@
+# Heady Prometheus Alert Rules — CSL Threshold-Based Alerting
+#
+# All thresholds derive from phi (φ ≈ 1.618):
+#   CRITICAL: phiThreshold(4) ≈ 0.927
+#   HIGH:     phiThreshold(3) ≈ 0.882
+#   MEDIUM:   phiThreshold(2) ≈ 0.809
+#   LOW:      phiThreshold(1) ≈ 0.691
+#   MINIMUM:  phiThreshold(0) ≈ 0.500
+#
+# Evaluation intervals: Fibonacci (5s, 8s, 13s, 21s, 34s, 55s, 89s)
+# Retention windows: Fibonacci minutes (5m, 8m, 13m, 21m, 34m, 55m, 89m)
+#
+# Author: Eric Haywood — HeadySystems Inc.
+
+groups:
+  # ─── Coherence & Self-Healing ───────────────────────────────────────────
+  - name: heady_coherence
+    interval: 13s  # fib(7)
+    rules:
+      - alert: CoherenceCriticalDrift
+        expr: heady_coherence_score < 0.691
+        for: 34s  # fib(9)
+        labels:
+          severity: critical
+          csl_threshold: "LOW (0.691)"
+        annotations:
+          summary: "Coherence dropped below LOW threshold (0.691)"
+          description: "Service {{ $labels.service }} coherence at {{ $value | humanize }} — below CSL LOW threshold. Self-healing cycle should activate."
+          runbook_url: "https://docs.headysystems.com/runbooks/coherence-drift"
+
+      - alert: CoherenceDegraded
+        expr: heady_coherence_score < 0.809 and heady_coherence_score >= 0.691
+        for: 89s  # fib(11)
+        labels:
+          severity: warning
+          csl_threshold: "MEDIUM (0.809)"
+        annotations:
+          summary: "Coherence below MEDIUM threshold (0.809)"
+          description: "Service {{ $labels.service }} coherence at {{ $value | humanize }} — degraded but above LOW."
+
+      - alert: SelfHealingFailed
+        expr: increase(heady_healing_failures_total[13m]) > 3
+        for: 21s  # fib(8)
+        labels:
+          severity: critical
+        annotations:
+          summary: "Self-healing failures detected"
+          description: "{{ $value }} healing failures in last 13 minutes for {{ $labels.service }}."
+
+  # ─── Service Health ─────────────────────────────────────────────────────
+  - name: heady_service_health
+    interval: 8s  # fib(6)
+    rules:
+      - alert: ServiceDown
+        expr: up == 0
+        for: 21s  # fib(8)
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "{{ $labels.instance }} has been unreachable for >21 seconds."
+
+      - alert: ServiceHighLatency
+        expr: histogram_quantile(0.927, rate(http_request_duration_seconds_bucket[5m])) > 2.618
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          csl_threshold: "CRITICAL p92.7"
+        annotations:
+          summary: "High p92.7 latency on {{ $labels.service }}"
+          description: "p92.7 latency at {{ $value | humanize }}s — exceeds φ² seconds (2.618s) threshold."
+
+      - alert: ServiceHighErrorRate
+        expr: |
+          rate(http_requests_total{status=~"5.."}[5m])
+          / rate(http_requests_total[5m]) > 0.118
+        for: 21s  # fib(8)
+        labels:
+          severity: critical
+          csl_threshold: "1-HIGH (0.118)"
+        annotations:
+          summary: "High error rate on {{ $labels.service }}"
+          description: "Error rate {{ $value | humanizePercentage }} exceeds 11.8% (1 - CSL HIGH threshold)."
+
+      - alert: ServiceHighErrorRateWarning
+        expr: |
+          rate(http_requests_total{status=~"5.."}[8m])
+          / rate(http_requests_total[8m]) > 0.073
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          csl_threshold: "1-CRITICAL (0.073)"
+        annotations:
+          summary: "Elevated error rate on {{ $labels.service }}"
+          description: "Error rate {{ $value | humanizePercentage }} exceeds 7.3% (1 - CSL CRITICAL threshold)."
+
+  # ─── Resource Utilization (phi-scaled) ──────────────────────────────────
+  - name: heady_resources
+    interval: 13s  # fib(7)
+    rules:
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / (1024 * 1024 * 1024) > 2.618
+        for: 55s  # fib(10)
+        labels:
+          severity: warning
+          phi_threshold: "φ² GB (2.618)"
+        annotations:
+          summary: "High memory usage on {{ $labels.service }}"
+          description: "Memory usage at {{ $value | humanize }}GB — exceeds φ² GB threshold."
+
+      - alert: CriticalMemoryUsage
+        expr: process_resident_memory_bytes / (1024 * 1024 * 1024) > 4.236
+        for: 21s  # fib(8)
+        labels:
+          severity: critical
+          phi_threshold: "φ³ GB (4.236)"
+        annotations:
+          summary: "Critical memory on {{ $labels.service }}"
+          description: "Memory at {{ $value | humanize }}GB — exceeds φ³ GB threshold."
+
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_seconds_total[5m]) > 0.882
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          csl_threshold: "HIGH (0.882)"
+        annotations:
+          summary: "High CPU on {{ $labels.service }}"
+          description: "CPU rate {{ $value | humanize }} exceeds CSL HIGH threshold (0.882)."
+
+      - alert: CriticalCPUUsage
+        expr: rate(process_cpu_seconds_total[5m]) > 0.927
+        for: 21s  # fib(8)
+        labels:
+          severity: critical
+          csl_threshold: "CRITICAL (0.927)"
+        annotations:
+          summary: "Critical CPU on {{ $labels.service }}"
+          description: "CPU rate {{ $value | humanize }} exceeds CSL CRITICAL threshold (0.927)."
+
+  # ─── Database & Vector Memory ───────────────────────────────────────────
+  - name: heady_database
+    interval: 21s  # fib(8)
+    rules:
+      - alert: PgPoolExhausted
+        expr: pgbouncer_pools_server_active / pgbouncer_pools_server_maxconn > 0.882
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          csl_threshold: "HIGH (0.882)"
+        annotations:
+          summary: "PgBouncer pool nearing capacity"
+          description: "Pool utilization at {{ $value | humanizePercentage }} — exceeds CSL HIGH threshold."
+
+      - alert: VectorSearchLatency
+        expr: histogram_quantile(0.882, rate(heady_vector_search_seconds_bucket[5m])) > 0.618
+        for: 21s  # fib(8)
+        labels:
+          severity: warning
+          phi_threshold: "ψ seconds (0.618)"
+        annotations:
+          summary: "Vector search latency high"
+          description: "p88.2 vector search latency at {{ $value | humanize }}s — exceeds ψ seconds threshold."
+
+      - alert: VectorMemoryDrift
+        expr: heady_vector_memory_drift_score > 0.309
+        for: 55s  # fib(10)
+        labels:
+          severity: warning
+          phi_threshold: "1-LOW (0.309)"
+        annotations:
+          summary: "Vector memory drift detected"
+          description: "Drift score {{ $value | humanize }} exceeds threshold. Embedding space may need reindexing."
+
+      - alert: DatabaseConnectionsFailing
+        expr: increase(pg_connection_errors_total[8m]) > 5
+        for: 13s  # fib(7)
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database connection failures"
+          description: "{{ $value }} connection failures in last 8 minutes."
+
+  # ─── Liquid Mesh & Orchestration ────────────────────────────────────────
+  - name: heady_orchestration
+    interval: 8s  # fib(6)
+    rules:
+      - alert: ConductorBackpressure
+        expr: heady_conductor_queue_depth > 89
+        for: 21s  # fib(8)
+        labels:
+          severity: warning
+          fib_threshold: "fib(11) = 89"
+        annotations:
+          summary: "Conductor queue depth exceeds fib(11)"
+          description: "Queue depth at {{ $value }} — exceeds Fibonacci threshold of 89."
+
+      - alert: ConductorCriticalBackpressure
+        expr: heady_conductor_queue_depth > 233
+        for: 8s  # fib(6)
+        labels:
+          severity: critical
+          fib_threshold: "fib(13) = 233"
+        annotations:
+          summary: "Conductor queue critical"
+          description: "Queue depth at {{ $value }} — exceeds Fibonacci threshold of 233. Load shedding recommended."
+
+      - alert: SwarmNodeUnhealthy
+        expr: heady_swarm_node_health < 0.691
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          csl_threshold: "LOW (0.691)"
+        annotations:
+          summary: "Swarm node {{ $labels.node_id }} degraded"
+          description: "Node health {{ $value | humanize }} below CSL LOW threshold."
+
+      - alert: LiquidMeshPartition
+        expr: heady_liquid_mesh_connected_nodes < heady_liquid_mesh_expected_nodes * 0.809
+        for: 21s  # fib(8)
+        labels:
+          severity: critical
+          csl_threshold: "MEDIUM (0.809)"
+        annotations:
+          summary: "Liquid mesh partition detected"
+          description: "Only {{ $value }} of expected nodes connected — below 80.9% threshold."
+
+  # ─── Rate Limiting & Security ───────────────────────────────────────────
+  - name: heady_security
+    interval: 5s  # fib(5)
+    rules:
+      - alert: RateLimitExceeded
+        expr: increase(heady_rate_limit_exceeded_total[5m]) > 55
+        for: 13s  # fib(7)
+        labels:
+          severity: warning
+          fib_threshold: "fib(10) = 55"
+        annotations:
+          summary: "High rate limit rejections"
+          description: "{{ $value }} rate limit rejections in 5 minutes from {{ $labels.source }}."
+
+      - alert: AuthenticationFailureSpike
+        expr: increase(heady_auth_failures_total[5m]) > 34
+        for: 8s  # fib(6)
+        labels:
+          severity: critical
+          fib_threshold: "fib(9) = 34"
+        annotations:
+          summary: "Authentication failure spike"
+          description: "{{ $value }} auth failures in 5 minutes — possible brute-force attack."
+
+      - alert: ZeroTrustViolation
+        expr: increase(heady_zero_trust_violations_total[8m]) > 1
+        for: 5s  # fib(5)
+        labels:
+          severity: critical
+        annotations:
+          summary: "Zero-trust policy violation"
+          description: "{{ $value }} zero-trust violations detected from {{ $labels.source }}."
+
+      - alert: TLSCertExpiringSoon
+        expr: heady_tls_cert_expiry_seconds < 1209600
+        for: 89s  # fib(11)
+        labels:
+          severity: warning
+        annotations:
+          summary: "TLS certificate expiring within 14 days"
+          description: "Certificate for {{ $labels.domain }} expires in {{ $value | humanizeDuration }}."
+
+  # ─── Colab Runtime ─────────────────────────────────────────────────────
+  - name: heady_colab
+    interval: 21s  # fib(8)
+    rules:
+      - alert: ColabRuntimeDisconnected
+        expr: heady_colab_runtime_connected == 0
+        for: 55s  # fib(10)
+        labels:
+          severity: warning
+        annotations:
+          summary: "Colab runtime {{ $labels.runtime_id }} disconnected"
+          description: "Runtime disconnected for >55 seconds. GPU inference may be unavailable."
+
+      - alert: ColabGPUUtilization
+        expr: heady_colab_gpu_utilization > 0.927
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          csl_threshold: "CRITICAL (0.927)"
+        annotations:
+          summary: "Colab GPU utilization critical"
+          description: "GPU utilization at {{ $value | humanizePercentage }} on {{ $labels.runtime_id }}."
+
+      - alert: ColabMemoryPressure
+        expr: heady_colab_memory_used / heady_colab_memory_total > 0.882
+        for: 21s  # fib(8)
+        labels:
+          severity: warning
+          csl_threshold: "HIGH (0.882)"
+        annotations:
+          summary: "Colab runtime memory pressure"
+          description: "Memory utilization {{ $value | humanizePercentage }} on {{ $labels.runtime_id }}."
+
+  # ─── Edge Worker ────────────────────────────────────────────────────────
+  - name: heady_edge
+    interval: 8s  # fib(6)
+    rules:
+      - alert: EdgeWorkerHighLatency
+        expr: histogram_quantile(0.882, rate(heady_edge_request_duration_seconds_bucket[5m])) > 0.382
+        for: 21s  # fib(8)
+        labels:
+          severity: warning
+          phi_threshold: "ψ² seconds (0.382)"
+        annotations:
+          summary: "Edge worker latency elevated"
+          description: "p88.2 edge latency at {{ $value | humanize }}s — exceeds ψ² seconds."
+
+      - alert: EdgeCacheMissRate
+        expr: |
+          rate(heady_edge_cache_miss_total[5m])
+          / rate(heady_edge_requests_total[5m]) > 0.618
+        for: 34s  # fib(9)
+        labels:
+          severity: warning
+          phi_threshold: "ψ (0.618)"
+        annotations:
+          summary: "Edge cache miss rate high"
+          description: "Cache miss rate {{ $value | humanizePercentage }} exceeds ψ threshold (61.8%)."
+
+      - alert: EdgeWorkerErrors
+        expr: increase(heady_edge_errors_total[5m]) > 13
+        for: 13s  # fib(7)
+        labels:
+          severity: warning
+          fib_threshold: "fib(7) = 13"
+        annotations:
+          summary: "Edge worker error count elevated"
+          description: "{{ $value }} errors in 5 minutes from edge worker."
