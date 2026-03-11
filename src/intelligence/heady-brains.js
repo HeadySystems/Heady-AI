@@ -1,939 +1,440 @@
 /**
- * HeadyBrains — Context Assembler & Computational Pre-Processor
- * 
- * The "thinking" layer of the Alive Software Architecture.
- * Gathers context from all sources (vector memory, conversation history,
- * system state, user profile) and assembles a unified context window
- * for the Conductor to route and nodes to consume.
- * 
- * Features:
- * - Tiered context (working/session/memory/artifacts) with phi-scaled budgets
- * - Embedding-based retrieval from pgvector (384D HNSW)
- * - Priority-based eviction with phi-weighted scoring
- * - Context capsule serialization for inter-agent transfer
- * - LLM-based summarization for context compression
- * - Token budget tracking per tier
- * 
- * @module HeadyBrains
- * @author Eric Haywood
- * @license Proprietary — HeadySystems Inc.
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
+ * PROPRIETARY AND CONFIDENTIAL.
  */
 
 'use strict';
 
-const { PHI, PSI, PSI_SQ, fibonacci, phiThreshold, phiBackoff, phiFusionWeights,
-  CSL_THRESHOLDS, FIBONACCI_SIZES, SERVICE_PORTS } = require('../../shared/phi-math');
-const { createLogger } = require('../../shared/logger');
-const { PgVectorClient } = require('../../shared/pgvector-client');
-const crypto = require('crypto');
+const { EventEmitter } = require('events');
+const logger = require('../utils/logger');
+const { VectorMemory } = require('../vector-memory');
+const { PatternEngine } = require('../patterns/pattern-engine');
+const embeddingProvider = require('../embedding-provider');
 
-const logger = createLogger('heady-brains');
+const PHI = 1.6180339887;
 
-// ─── Phi-Scaled Token Budgets ───────────────────────────────────────────────
-const BASE_TOKEN_BUDGET = fibonacci(13) * fibonacci(8); // 233 * 21 = 4893 ≈ ~5k base
-const TOKEN_BUDGETS = {
-  working:   BASE_TOKEN_BUDGET,                                    // 4893 tokens — immediate context
-  session:   Math.round(BASE_TOKEN_BUDGET * PHI * PHI),            // 12804 tokens — session history
-  memory:    Math.round(BASE_TOKEN_BUDGET * PHI * PHI * PHI * PHI), // 33523 tokens — long-term memory
-  artifacts: Math.round(BASE_TOKEN_BUDGET * Math.pow(PHI, 6))      // 87771 tokens — artifact cache
-};
-
-const TOTAL_BUDGET = Object.values(TOKEN_BUDGETS).reduce((a, b) => a + b, 0);
-
-// ─── Eviction Weights (phi-derived) ─────────────────────────────────────────
-const EVICTION_WEIGHTS = {
-  importance: PSI,          // 0.618 — most weight on importance
-  recency:   PSI_SQ,       // 0.382 — second weight on recency
-  relevance: 1 - PSI - PSI_SQ  // ~0.0 adjusted below
-};
-// Normalize to phi-fusion 3-factor
-const fusionW = phiFusionWeights(3);
-const PRIORITY_WEIGHTS = {
-  importance: fusionW[0],  // 0.528
-  recency:    fusionW[1],  // 0.326
-  relevance:  fusionW[2]   // 0.146
-};
-
-// ─── Context Entry Types ────────────────────────────────────────────────────
-const ENTRY_TYPES = {
-  USER_MESSAGE:   'user_message',
-  SYSTEM_STATE:   'system_state',
-  VECTOR_RECALL:  'vector_recall',
-  CONVERSATION:   'conversation',
-  ARTIFACT:       'artifact',
-  NODE_OUTPUT:    'node_output',
-  SOUL_DIRECTIVE: 'soul_directive',
-  PROFILE:        'profile'
-};
-
-// ─── Cache Configuration ────────────────────────────────────────────────────
-const LRU_CAPACITY = fibonacci(17);     // 1597 entries
-const EMBEDDING_DIM = fibonacci(16) * 2 + fibonacci(9) * 2 + fibonacci(7) * 2; // Approximate to 384
-const ACTUAL_DIM = 384;
-const CONTEXT_TTL_MS = fibonacci(11) * 1000; // 89 seconds for working context
-const SESSION_TTL_MS = fibonacci(14) * 1000 * 60; // 377 minutes ≈ 6.3 hours
-
-// ─── CSL Similarity Thresholds ──────────────────────────────────────────────
-const RETRIEVAL_THRESHOLD = CSL_THRESHOLDS.LOW;        // 0.691 — minimum relevance
-const HIGH_RELEVANCE     = CSL_THRESHOLDS.MEDIUM;      // 0.809
-const EXACT_MATCH        = CSL_THRESHOLDS.CRITICAL;    // 0.927
-const DEDUP_THRESHOLD    = phiThreshold(5);             // ~0.955 — semantic dedup
+// ─── Token counting constants ─────────────────────────────────────────────────
+const AVG_CHARS_PER_TOKEN = 4;
+const DEFAULT_MAX_CONTEXT_TOKENS = 8_192;
+const PRIORITY_LEVELS = Object.freeze({ CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 });
 
 /**
- * LRU Cache with phi-scaled eviction
- * Used for embedding and context caching
+ * Estimate token count from a string.
+ * @param {string} str
+ * @returns {number}
  */
-class PhiLRUCache {
-  constructor(capacity = LRU_CAPACITY) {
-    this.capacity = capacity;
-    this.cache = new Map();
-    this.accessCount = new Map();
-    this.insertTime = new Map();
-  }
-
-  get(key) {
-    if (!this.cache.has(key)) return null;
-    const value = this.cache.get(key);
-    // Move to end (most recent)
-    this.cache.delete(key);
-    this.cache.set(key, value);
-    this.accessCount.set(key, (this.accessCount.get(key) || 0) + 1);
-    return value;
-  }
-
-  set(key, value) {
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
-    } else if (this.cache.size >= this.capacity) {
-      this._evict();
-    }
-    this.cache.set(key, value);
-    this.insertTime.set(key, Date.now());
-    if (!this.accessCount.has(key)) {
-      this.accessCount.set(key, 1);
-    }
-  }
-
-  _evict() {
-    // Phi-weighted eviction: score = importance * w1 + recency * w2 + frequency * w3
-    let lowestScore = Infinity;
-    let evictKey = null;
-    const now = Date.now();
-
-    for (const [key] of this.cache) {
-      const age = now - (this.insertTime.get(key) || now);
-      const accesses = this.accessCount.get(key) || 1;
-      const maxAge = SESSION_TTL_MS;
-
-      // Normalize factors to [0, 1]
-      const recencyScore = 1 - Math.min(age / maxAge, 1);
-      const frequencyScore = Math.min(accesses / fibonacci(8), 1); // Cap at 21
-      const score = PRIORITY_WEIGHTS.importance * frequencyScore +
-                    PRIORITY_WEIGHTS.recency * recencyScore +
-                    PRIORITY_WEIGHTS.relevance * (frequencyScore * recencyScore);
-
-      if (score < lowestScore) {
-        lowestScore = score;
-        evictKey = key;
-      }
-    }
-
-    if (evictKey) {
-      this.cache.delete(evictKey);
-      this.accessCount.delete(evictKey);
-      this.insertTime.delete(evictKey);
-    }
-  }
-
-  size() { return this.cache.size; }
-  clear() {
-    this.cache.clear();
-    this.accessCount.clear();
-    this.insertTime.clear();
-  }
+function estimateTokens(str) {
+  return Math.ceil((str || '').length / AVG_CHARS_PER_TOKEN);
 }
 
 /**
- * Context Entry — single piece of context with metadata
+ * Truncate a string to a target token budget.
+ * @param {string} str
+ * @param {number} maxTokens
+ * @returns {string}
  */
-class ContextEntry {
-  constructor({ type, content, embedding = null, tokens = 0, importance = CSL_THRESHOLDS.MEDIUM,
-                source = 'unknown', timestamp = Date.now(), metadata = {} }) {
-    this.id = crypto.randomUUID();
-    this.type = type;
-    this.content = content;
-    this.embedding = embedding;
-    this.tokens = tokens;
-    this.importance = importance;
-    this.source = source;
-    this.timestamp = timestamp;
-    this.metadata = metadata;
-    this.accessCount = 0;
-  }
-
-  /**
-   * Phi-weighted priority score for eviction decisions
-   */
-  priorityScore(now = Date.now()) {
-    const maxAge = SESSION_TTL_MS;
-    const age = now - this.timestamp;
-    const recency = 1 - Math.min(age / maxAge, 1);
-    const frequency = Math.min(this.accessCount / fibonacci(8), 1);
-
-    return PRIORITY_WEIGHTS.importance * this.importance +
-           PRIORITY_WEIGHTS.recency * recency +
-           PRIORITY_WEIGHTS.relevance * frequency;
-  }
-
-  touch() {
-    this.accessCount++;
-    return this;
-  }
+function truncateToTokens(str, maxTokens) {
+  const maxChars = maxTokens * AVG_CHARS_PER_TOKEN;
+  if (str.length <= maxChars) return str;
+  return str.slice(0, maxChars) + '…[truncated]';
 }
 
 /**
- * Context Tier — manages entries within a token budget
+ * HeadyBrains — Computational Pre-Processor for the Heady™ AI Platform.
+ *
+ * HeadyBrains assembles full, rich context before any task is routed or executed.
+ * It gathers memory, patterns, session history, user state, and enriches with
+ * embeddings — all in parallel where possible.
+ *
+ * Key responsibilities:
+ *   - assembleContext(task)    → full context object for downstream stages
+ *   - preProcess(rawInput)     → normalize, classify intent, extract entities
+ *   - enrichContext(context)   → add vector memory results, pattern matches
+ *
+ * @extends EventEmitter
  */
-class ContextTier {
-  constructor(name, budgetTokens) {
-    this.name = name;
-    this.budget = budgetTokens;
-    this.usedTokens = 0;
-    this.entries = [];
-  }
-
+class HeadyBrains extends EventEmitter {
   /**
-   * Add entry, evicting lowest-priority if over budget
+   * @param {object} [options]
+   * @param {object} [options.vectorMemory]       - VectorMemory instance
+   * @param {object} [options.patternEngine]      - PatternEngine instance
+   * @param {number} [options.maxContextTokens]   - Context window token budget
+   * @param {number} [options.memoryResultLimit]  - Max memory results to include
+   * @param {number} [options.patternResultLimit] - Max pattern results to include
    */
-  add(entry) {
-    // Check if we need to make room
-    while (this.usedTokens + entry.tokens > this.budget && this.entries.length > 0) {
-      this._evictLowest();
-    }
+  constructor(options = {}) {
+    super();
 
-    if (this.usedTokens + entry.tokens <= this.budget) {
-      this.entries.push(entry);
-      this.usedTokens += entry.tokens;
-      return true;
-    }
+    this._vectorMemory  = options.vectorMemory  || new VectorMemory();
+    this._patternEngine = options.patternEngine || new PatternEngine();
+    this._maxContextTokens   = options.maxContextTokens   || DEFAULT_MAX_CONTEXT_TOKENS;
+    this._memoryResultLimit  = options.memoryResultLimit  || 10;
+    this._patternResultLimit = options.patternResultLimit || 5;
 
-    logger.warn({
-      tier: this.name,
-      entryTokens: entry.tokens,
-      budget: this.budget,
-      used: this.usedTokens,
-      msg: 'Entry exceeds tier budget even after eviction'
-    });
-    return false;
-  }
-
-  _evictLowest() {
-    if (this.entries.length === 0) return;
-
-    const now = Date.now();
-    let lowestIdx = 0;
-    let lowestScore = this.entries[0].priorityScore(now);
-
-    for (let i = 1; i < this.entries.length; i++) {
-      const score = this.entries[i].priorityScore(now);
-      if (score < lowestScore) {
-        lowestScore = score;
-        lowestIdx = i;
-      }
-    }
-
-    const evicted = this.entries.splice(lowestIdx, 1)[0];
-    this.usedTokens -= evicted.tokens;
-
-    logger.info({
-      tier: this.name,
-      evictedId: evicted.id,
-      evictedType: evicted.type,
-      freedTokens: evicted.tokens,
-      msg: 'Evicted entry from context tier'
+    logger.info('[HeadyBrains] Initialized', {
+      maxContextTokens: this._maxContextTokens,
     });
   }
 
-  getEntries() {
-    return [...this.entries].sort((a, b) => b.priorityScore() - a.priorityScore());
-  }
+  // ─── Public API ──────────────────────────────────────────────────────────────
 
-  utilization() {
-    return this.budget > 0 ? this.usedTokens / this.budget : 0;
-  }
+  /**
+   * Assemble full context for a task.
+   * Runs all gathering operations in parallel where possible.
+   *
+   * @param {object} task
+   * @param {string} task.id
+   * @param {string} task.type
+   * @param {object} task.payload
+   * @returns {Promise<AssembledContext>}
+   */
+  async assembleContext(task) {
+    const startAt = Date.now();
+    logger.debug('[HeadyBrains] Assembling context', { taskId: task.id });
 
-  clear() {
-    this.entries = [];
-    this.usedTokens = 0;
-  }
-}
+    // Parallel context gathering
+    const [
+      memoryResults,
+      patternMatches,
+      recentHistory,
+      userState,
+      embedResult,
+    ] = await Promise.allSettled([
+      this._gatherMemory(task),
+      this._gatherPatterns(task),
+      this._gatherRecentHistory(task),
+      this._gatherUserState(task),
+      this._generateEmbedding(task),
+    ]);
 
-/**
- * Context Capsule — serializable snapshot for inter-agent transfer
- */
-class ContextCapsule {
-  constructor(sessionId, tiers, metadata = {}) {
-    this.version = '1.0.0';
-    this.sessionId = sessionId;
-    this.createdAt = Date.now();
-    this.metadata = metadata;
-    this.tiers = {};
-    this.totalTokens = 0;
-
-    for (const [name, tier] of Object.entries(tiers)) {
-      const entries = tier.getEntries().map(e => ({
-        id: e.id,
-        type: e.type,
-        content: e.content,
-        tokens: e.tokens,
-        importance: e.importance,
-        source: e.source,
-        timestamp: e.timestamp,
-        metadata: e.metadata
-      }));
-      this.tiers[name] = entries;
-      this.totalTokens += entries.reduce((sum, e) => sum + e.tokens, 0);
-    }
-  }
-
-  serialize() {
-    return JSON.stringify(this);
-  }
-
-  static deserialize(json) {
-    const data = typeof json === 'string' ? JSON.parse(json) : json;
-    return data;
-  }
-}
-
-/**
- * HeadyBrains — Main Context Assembly Engine
- */
-class HeadyBrains {
-  constructor(config = {}) {
-    this.sessionId = config.sessionId || crypto.randomUUID();
-    this.pgClient = config.pgClient || null;
-    this.embeddingFn = config.embeddingFn || null;
-
-    // Initialize tiered context
-    this.tiers = {
-      working:   new ContextTier('working',   TOKEN_BUDGETS.working),
-      session:   new ContextTier('session',    TOKEN_BUDGETS.session),
-      memory:    new ContextTier('memory',     TOKEN_BUDGETS.memory),
-      artifacts: new ContextTier('artifacts',  TOKEN_BUDGETS.artifacts)
+    const ctx = {
+      taskId: task.id,
+      taskType: task.type,
+      assembledAt: Date.now(),
+      assembleDuration: Date.now() - startAt,
+      memory: memoryResults.status === 'fulfilled' ? memoryResults.value : [],
+      patterns: patternMatches.status === 'fulfilled' ? patternMatches.value : [],
+      recentHistory: recentHistory.status === 'fulfilled' ? recentHistory.value : [],
+      userState: userState.status === 'fulfilled' ? userState.value : {},
+      embedding: embedResult.status === 'fulfilled' ? embedResult.value : null,
+      tokenBudgetUsed: 0,
+      tokenBudgetTotal: this._maxContextTokens,
+      sources: {
+        memory:     memoryResults.status,
+        patterns:   patternMatches.status,
+        history:    recentHistory.status,
+        userState:  userState.status,
+        embedding:  embedResult.status,
+      },
     };
 
-    // Embedding cache
-    this.embeddingCache = new PhiLRUCache(fibonacci(16)); // 987 entries
-    // Context capsule history
-    this.capsuleHistory = [];
-    // Dedup index
-    this.dedupIndex = new Map();
+    // Compute token usage
+    ctx.tokenBudgetUsed = this._countContextTokens(ctx);
 
-    this._initialized = false;
-    this._healthState = { coherence: 1.0, lastCheck: Date.now() };
-
-    logger.info({
-      sessionId: this.sessionId,
-      budgets: TOKEN_BUDGETS,
-      totalBudget: TOTAL_BUDGET,
-      msg: 'HeadyBrains initialized'
-    });
-  }
-
-  /**
-   * Initialize connections (pgvector, embedding service)
-   */
-  async initialize() {
-    if (this._initialized) return;
-
-    try {
-      if (!this.pgClient) {
-        this.pgClient = new PgVectorClient();
-        await this.pgClient.initialize();
-      }
-
-      this._initialized = true;
-      logger.info({ msg: 'HeadyBrains connections initialized' });
-    } catch (err) {
-      logger.error({ err: err.message, msg: 'HeadyBrains initialization failed, running in degraded mode' });
-      // Continue in degraded mode — local context only
-    }
-  }
-
-  /**
-   * Assemble full context for a task
-   * This is the primary entry point — called by HeadyConductor before routing
-   * 
-   * @param {Object} request - The incoming request/task
-   * @param {string} request.query - User's query or task description
-   * @param {string} request.userId - Authenticated user ID
-   * @param {Object} request.conversationHistory - Recent conversation turns
-   * @param {Object} request.systemState - Current system health/state
-   * @returns {Object} Assembled context with entries from all tiers
-   */
-  async assembleContext(request) {
-    const startTime = Date.now();
-    const { query, userId, conversationHistory = [], systemState = {} } = request;
-
-    logger.info({
-      sessionId: this.sessionId,
-      queryLength: query?.length || 0,
-      historyTurns: conversationHistory.length,
-      msg: 'Assembling context'
+    logger.debug('[HeadyBrains] Context assembled', {
+      taskId: task.id,
+      duration: ctx.assembleDuration,
+      tokenBudgetUsed: ctx.tokenBudgetUsed,
+      memorySources: ctx.memory.length,
+      patterns: ctx.patterns.length,
     });
 
-    // 1. Add Soul directives (always highest priority)
-    await this._addSoulDirectives();
+    this.emit('context:assembled', { taskId: task.id, tokenBudgetUsed: ctx.tokenBudgetUsed });
+    return ctx;
+  }
 
-    // 2. Add user profile context
-    if (userId) {
-      await this._addUserProfile(userId);
-    }
+  /**
+   * Pre-process raw input: normalize, classify intent, extract entities.
+   *
+   * @param {*} rawInput - Raw string or object from user/system
+   * @returns {Promise<PreProcessResult>}
+   */
+  async preProcess(rawInput) {
+    const inputStr = typeof rawInput === 'string'
+      ? rawInput
+      : JSON.stringify(rawInput);
 
-    // 3. Add conversation history to session tier
-    this._addConversationHistory(conversationHistory);
+    const normalized = this._normalize(inputStr);
+    const intent     = this._classifyIntent(normalized);
+    const entities   = this._extractEntities(normalized);
+    const embedding  = await this._generateEmbeddingFromText(normalized);
 
-    // 4. Add system state snapshot
-    this._addSystemState(systemState);
+    const result = {
+      original: rawInput,
+      normalized,
+      intent,
+      entities,
+      embedding,
+      tokenCount: estimateTokens(normalized),
+      processedAt: Date.now(),
+    };
 
-    // 5. Embedding-based retrieval from vector memory
-    if (query && this._initialized) {
-      await this._retrieveFromVectorMemory(query);
-    }
-
-    // 6. Add the current query to working context
-    if (query) {
-      this.addToWorking({
-        type: ENTRY_TYPES.USER_MESSAGE,
-        content: query,
-        tokens: this._estimateTokens(query),
-        importance: CSL_THRESHOLDS.HIGH,
-        source: 'user'
-      });
-    }
-
-    // 7. Deduplicate across tiers
-    this._deduplicateEntries();
-
-    // 8. Compress if over total budget
-    if (this._totalUsedTokens() > TOTAL_BUDGET * CSL_THRESHOLDS.CRITICAL) {
-      await this._compressContext();
-    }
-
-    const assembled = this._buildContextOutput();
-    const elapsed = Date.now() - startTime;
-
-    logger.info({
-      sessionId: this.sessionId,
-      elapsed,
-      totalTokens: assembled.totalTokens,
-      tierUtilization: assembled.utilization,
-      entryCount: assembled.entryCount,
-      msg: 'Context assembly complete'
+    logger.debug('[HeadyBrains] Pre-processed input', {
+      intent: intent.label,
+      confidence: intent.confidence,
+      entityCount: entities.length,
+      tokens: result.tokenCount,
     });
 
-    return assembled;
+    return result;
   }
 
   /**
-   * Add entry to working context (immediate, highest access)
+   * Enrich an assembled context with vector memory similarity results
+   * and pattern engine matches.
+   *
+   * @param {AssembledContext} context
+   * @returns {Promise<EnrichedContext>}
    */
-  addToWorking(entryData) {
-    const entry = new ContextEntry(entryData);
-    return this.tiers.working.add(entry);
-  }
+  async enrichContext(context) {
+    const [
+      vectorResults,
+      patternResults,
+    ] = await Promise.allSettled([
+      this._vectorSearch(context),
+      this._patternSearch(context),
+    ]);
 
-  /**
-   * Add entry to session context
-   */
-  addToSession(entryData) {
-    const entry = new ContextEntry(entryData);
-    return this.tiers.session.add(entry);
-  }
+    const enriched = {
+      ...context,
+      vectorMatches: vectorResults.status === 'fulfilled' ? vectorResults.value : [],
+      patternMatches: patternResults.status === 'fulfilled' ? patternResults.value : [],
+      enrichedAt: Date.now(),
+    };
 
-  /**
-   * Add entry to memory context (long-term recall)
-   */
-  addToMemory(entryData) {
-    const entry = new ContextEntry(entryData);
-    return this.tiers.memory.add(entry);
-  }
+    // Re-compute token budget after enrichment
+    enriched.tokenBudgetUsed = this._countContextTokens(enriched);
 
-  /**
-   * Add entry to artifacts context
-   */
-  addToArtifacts(entryData) {
-    const entry = new ContextEntry(entryData);
-    return this.tiers.artifacts.add(entry);
-  }
-
-  /**
-   * Create a context capsule for inter-agent transfer
-   */
-  createCapsule(metadata = {}) {
-    const capsule = new ContextCapsule(this.sessionId, this.tiers, {
-      ...metadata,
-      createdBy: 'heady-brains',
-      coherence: this._healthState.coherence
-    });
-
-    this.capsuleHistory.push({
-      timestamp: Date.now(),
-      totalTokens: capsule.totalTokens,
-      tierSizes: Object.fromEntries(
-        Object.entries(capsule.tiers).map(([k, v]) => [k, v.length])
-      )
-    });
-
-    // Keep only last fib(8) = 21 capsule records
-    if (this.capsuleHistory.length > fibonacci(8)) {
-      this.capsuleHistory = this.capsuleHistory.slice(-fibonacci(8));
+    // If over budget, prune by priority
+    if (enriched.tokenBudgetUsed > this._maxContextTokens) {
+      this._pruneContext(enriched);
     }
 
-    return capsule;
-  }
-
-  /**
-   * Restore context from a capsule (inter-agent receive)
-   */
-  restoreFromCapsule(capsuleData) {
-    const data = ContextCapsule.deserialize(capsuleData);
-
-    for (const [tierName, entries] of Object.entries(data.tiers)) {
-      if (this.tiers[tierName]) {
-        for (const entryData of entries) {
-          const entry = new ContextEntry(entryData);
-          this.tiers[tierName].add(entry);
-        }
-      }
-    }
-
-    logger.info({
-      sessionId: this.sessionId,
-      restoredFrom: data.sessionId,
-      totalTokens: data.totalTokens,
-      msg: 'Context restored from capsule'
+    logger.debug('[HeadyBrains] Context enriched', {
+      taskId: context.taskId,
+      vectorMatches: enriched.vectorMatches.length,
+      patternMatches: enriched.patternMatches.length,
+      tokenBudgetUsed: enriched.tokenBudgetUsed,
     });
+
+    return enriched;
   }
 
-  // ─── Private Methods ────────────────────────────────────────────────────
+  // ─── Context Gathering Helpers ───────────────────────────────────────────────
 
   /**
-   * Add HeadySoul directives — highest priority, always in working context
+   * Gather relevant memories from vector store.
    */
-  async _addSoulDirectives() {
-    const directives = [
-      'Structural Integrity: All outputs must maintain module boundaries and type safety.',
-      'Semantic Coherence: All reasoning must align with the system embedding space.',
-      'Mission Alignment: All actions serve HeadyConnection mission — community, equity, empowerment.'
+  async _gatherMemory(task) {
+    const query = `${task.type} ${JSON.stringify(task.payload).slice(0, 200)}`;
+    const results = await this._vectorMemory.search({
+      query,
+      limit: this._memoryResultLimit,
+      filter: { taskType: task.type },
+    }).catch(() => []);
+    return results;
+  }
+
+  /**
+   * Gather matching patterns from pattern engine.
+   */
+  async _gatherPatterns(task) {
+    const results = await this._patternEngine.match({
+      taskType: task.type,
+      payload: task.payload,
+      limit: this._patternResultLimit,
+    }).catch(() => []);
+    return results;
+  }
+
+  /**
+   * Gather recent task history for context continuity.
+   */
+  async _gatherRecentHistory(task) {
+    const sessionId = task.payload?.sessionId;
+    if (!sessionId) return [];
+
+    const history = await this._vectorMemory.getRecent({
+      sessionId,
+      limit: 5,
+    }).catch(() => []);
+
+    return history;
+  }
+
+  /**
+   * Gather user state (preferences, profile, session data).
+   */
+  async _gatherUserState(task) {
+    const userId = task.payload?.userId;
+    if (!userId) return {};
+
+    const state = await this._vectorMemory.get(`user_state:${userId}`).catch(() => null);
+    return state || {};
+  }
+
+  /**
+   * Generate task embedding for semantic operations.
+   */
+  async _generateEmbedding(task) {
+    const text = `${task.type}: ${JSON.stringify(task.payload).slice(0, 500)}`;
+    return this._generateEmbeddingFromText(text);
+  }
+
+  async _generateEmbeddingFromText(text) {
+    return embeddingProvider.embed(text).catch(() => null);
+  }
+
+  // ─── Vector + Pattern Search ────────────────────────────────────────────────
+
+  async _vectorSearch(context) {
+    if (!context.embedding) return [];
+    return this._vectorMemory.searchByVector({
+      vector: context.embedding,
+      limit: this._memoryResultLimit,
+    }).catch(() => []);
+  }
+
+  async _patternSearch(context) {
+    return this._patternEngine.matchByContext({
+      taskType: context.taskType,
+      embedding: context.embedding,
+      history: context.recentHistory,
+    }).catch(() => []);
+  }
+
+  // ─── Pre-Processing Helpers ──────────────────────────────────────────────────
+
+  /**
+   * Normalize raw input string.
+   */
+  _normalize(input) {
+    return input
+      .trim()
+      .replace(/\s+/g, ' ')
+      .replace(/[\u0000-\u001F\u007F]/g, ''); // Strip control characters
+  }
+
+  /**
+   * Rule-based intent classification.
+   */
+  _classifyIntent(text) {
+    const lower = text.toLowerCase();
+
+    const rules = [
+      { label: 'query',      pattern: /^(what|who|where|when|why|how|is|are|can|does)\b/i, confidence: 0.85 },
+      { label: 'command',    pattern: /^(create|make|build|generate|write|add|update|delete|remove)\b/i, confidence: 0.90 },
+      { label: 'search',     pattern: /^(find|search|look|show|list|get)\b/i, confidence: 0.88 },
+      { label: 'analyze',    pattern: /^(analyze|analyse|review|check|evaluate|assess|compare)\b/i, confidence: 0.87 },
+      { label: 'converse',   pattern: /^(hi|hello|hey|thanks|thank you|ok|yes|no|sure|alright)\b/i, confidence: 0.95 },
+      { label: 'navigate',   pattern: /^(go to|navigate|open|show me|take me to)\b/i, confidence: 0.92 },
     ];
 
-    for (const directive of directives) {
-      this.addToWorking({
-        type: ENTRY_TYPES.SOUL_DIRECTIVE,
-        content: directive,
-        tokens: this._estimateTokens(directive),
-        importance: CSL_THRESHOLDS.CRITICAL, // 0.927
-        source: 'heady-soul'
-      });
-    }
-  }
-
-  /**
-   * Add user profile from vector memory
-   */
-  async _addUserProfile(userId) {
-    if (!this._initialized || !this.pgClient) return;
-
-    try {
-      const profile = await this.pgClient.query(
-        'SELECT content, embedding FROM heady_memory WHERE user_id = $1 AND type = $2 ORDER BY updated_at DESC LIMIT $3',
-        [userId, 'profile', fibonacci(5)] // Last 5 profile entries
-      );
-
-      if (profile.rows) {
-        for (const row of profile.rows) {
-          this.addToSession({
-            type: ENTRY_TYPES.PROFILE,
-            content: row.content,
-            embedding: row.embedding,
-            tokens: this._estimateTokens(row.content),
-            importance: CSL_THRESHOLDS.HIGH,
-            source: 'user-profile'
-          });
-        }
-      }
-    } catch (err) {
-      logger.warn({ err: err.message, msg: 'Failed to load user profile' });
-    }
-  }
-
-  /**
-   * Add conversation history to session tier
-   */
-  _addConversationHistory(history) {
-    if (!Array.isArray(history) || history.length === 0) return;
-
-    // Take last fib(8) = 21 turns max
-    const recentHistory = history.slice(-fibonacci(8));
-
-    for (const turn of recentHistory) {
-      const content = typeof turn === 'string' ? turn : JSON.stringify(turn);
-      this.addToSession({
-        type: ENTRY_TYPES.CONVERSATION,
-        content,
-        tokens: this._estimateTokens(content),
-        importance: CSL_THRESHOLDS.MEDIUM, // 0.809
-        source: 'conversation',
-        metadata: { role: turn.role || 'unknown' }
-      });
-    }
-  }
-
-  /**
-   * Add current system state snapshot
-   */
-  _addSystemState(state) {
-    if (!state || Object.keys(state).length === 0) return;
-
-    const stateStr = JSON.stringify(state);
-    this.addToWorking({
-      type: ENTRY_TYPES.SYSTEM_STATE,
-      content: stateStr,
-      tokens: this._estimateTokens(stateStr),
-      importance: CSL_THRESHOLDS.MEDIUM,
-      source: 'system-state'
-    });
-  }
-
-  /**
-   * Retrieve relevant context from vector memory using embedding similarity
-   */
-  async _retrieveFromVectorMemory(query) {
-    if (!this.pgClient) return;
-
-    try {
-      // Generate query embedding (or use cached)
-      const queryHash = this._hashContent(query);
-      let embedding = this.embeddingCache.get(queryHash);
-
-      if (!embedding) {
-        if (this.embeddingFn) {
-          embedding = await this.embeddingFn(query);
-          this.embeddingCache.set(queryHash, embedding);
-        } else {
-          // Fallback: use pgvector's built-in embedding if available
-          logger.warn({ msg: 'No embedding function configured, skipping vector retrieval' });
-          return;
-        }
-      }
-
-      // Query pgvector with HNSW index — top fib(8) = 21 results
-      const embeddingStr = `[${embedding.join(',')}]`;
-      const results = await this.pgClient.query(
-        `SELECT id, content, type, metadata, 
-                1 - (embedding <=> $1::vector) as similarity
-         FROM heady_memory 
-         WHERE 1 - (embedding <=> $1::vector) > $2
-         ORDER BY embedding <=> $1::vector
-         LIMIT $3`,
-        [embeddingStr, RETRIEVAL_THRESHOLD, fibonacci(8)]
-      );
-
-      if (results.rows) {
-        for (const row of results.rows) {
-          const tierTarget = row.similarity >= HIGH_RELEVANCE ? 'working' : 'memory';
-          const importance = row.similarity >= EXACT_MATCH ?
-            CSL_THRESHOLDS.CRITICAL :
-            row.similarity >= HIGH_RELEVANCE ?
-              CSL_THRESHOLDS.HIGH :
-              CSL_THRESHOLDS.MEDIUM;
-
-          const entry = {
-            type: ENTRY_TYPES.VECTOR_RECALL,
-            content: row.content,
-            tokens: this._estimateTokens(row.content),
-            importance,
-            source: 'vector-memory',
-            metadata: {
-              similarity: row.similarity,
-              originalType: row.type,
-              ...(row.metadata || {})
-            }
-          };
-
-          if (tierTarget === 'working') {
-            this.addToWorking(entry);
-          } else {
-            this.addToMemory(entry);
-          }
-        }
-
-        logger.info({
-          retrieved: results.rows.length,
-          highRelevance: results.rows.filter(r => r.similarity >= HIGH_RELEVANCE).length,
-          msg: 'Vector memory retrieval complete'
-        });
-      }
-    } catch (err) {
-      logger.warn({ err: err.message, msg: 'Vector memory retrieval failed' });
-    }
-  }
-
-  /**
-   * Deduplicate entries across tiers using semantic similarity
-   */
-  _deduplicateEntries() {
-    const allEntries = [];
-    for (const tier of Object.values(this.tiers)) {
-      for (const entry of tier.entries) {
-        allEntries.push(entry);
+    for (const rule of rules) {
+      if (rule.pattern.test(lower)) {
+        return { label: rule.label, confidence: rule.confidence };
       }
     }
 
-    const contentHashes = new Map();
-    const toRemove = new Set();
-
-    for (const entry of allEntries) {
-      const hash = this._hashContent(entry.content);
-      if (contentHashes.has(hash)) {
-        // Exact duplicate — keep higher importance
-        const existing = contentHashes.get(hash);
-        if (entry.importance > existing.importance) {
-          toRemove.add(existing.id);
-          contentHashes.set(hash, entry);
-        } else {
-          toRemove.add(entry.id);
-        }
-      } else {
-        contentHashes.set(hash, entry);
-      }
-    }
-
-    if (toRemove.size > 0) {
-      for (const tier of Object.values(this.tiers)) {
-        const before = tier.entries.length;
-        tier.entries = tier.entries.filter(e => !toRemove.has(e.id));
-        const removed = before - tier.entries.length;
-        if (removed > 0) {
-          tier.usedTokens = tier.entries.reduce((sum, e) => sum + e.tokens, 0);
-        }
-      }
-
-      logger.info({
-        deduplicated: toRemove.size,
-        msg: 'Context deduplication complete'
-      });
-    }
+    // Fallback heuristic: task-like
+    return { label: 'task', confidence: 0.5 };
   }
 
   /**
-   * Compress context when approaching budget limits
-   * Uses summarization for older/lower-priority entries
+   * Extract named entities and key-value pairs from text.
    */
-  async _compressContext() {
-    // Strategy: Move session entries older than PHI * average_age to memory tier (summarized)
-    const sessionEntries = this.tiers.session.entries;
-    if (sessionEntries.length === 0) return;
+  _extractEntities(text) {
+    const entities = [];
 
-    const avgAge = sessionEntries.reduce((sum, e) => sum + (Date.now() - e.timestamp), 0) / sessionEntries.length;
-    const compressionThreshold = avgAge * PHI;
+    // Extract quoted strings as entities
+    const quoted = text.matchAll(/"([^"]+)"|'([^']+)'/g);
+    for (const match of quoted) {
+      entities.push({ type: 'quoted_string', value: match[1] || match[2] });
+    }
 
-    const toCompress = sessionEntries.filter(e => (Date.now() - e.timestamp) > compressionThreshold);
-    if (toCompress.length === 0) return;
+    // Extract numbers
+    const numbers = text.matchAll(/\b(\d+(?:\.\d+)?)\b/g);
+    for (const match of numbers) {
+      entities.push({ type: 'number', value: parseFloat(match[1]) });
+    }
 
-    // Batch summarize old entries
-    const summaryContent = toCompress.map(e => e.content).join('\n---\n');
-    const summaryTokens = Math.round(this._estimateTokens(summaryContent) / PHI); // Compress by phi ratio
+    // Extract URLs
+    const urls = text.matchAll(/https?:\/\/[^\s]+/g);
+    for (const match of urls) {
+      entities.push({ type: 'url', value: match[0] });
+    }
 
-    // Remove originals from session
-    const compressIds = new Set(toCompress.map(e => e.id));
-    this.tiers.session.entries = this.tiers.session.entries.filter(e => !compressIds.has(e.id));
-    this.tiers.session.usedTokens = this.tiers.session.entries.reduce((sum, e) => sum + e.tokens, 0);
+    // Extract email addresses
+    const emails = text.matchAll(/[\w.+-]+@[\w-]+\.[a-z]{2,}/gi);
+    for (const match of emails) {
+      entities.push({ type: 'email', value: match[0] });
+    }
 
-    // Add compressed summary to memory tier
-    this.addToMemory({
-      type: ENTRY_TYPES.CONVERSATION,
-      content: `[Compressed ${toCompress.length} entries]: ${summaryContent.substring(0, Math.round(summaryContent.length / PHI))}`,
-      tokens: summaryTokens,
-      importance: CSL_THRESHOLDS.LOW,
-      source: 'compression',
-      metadata: { originalCount: toCompress.length, compressionRatio: PHI }
-    });
-
-    logger.info({
-      compressed: toCompress.length,
-      savedTokens: toCompress.reduce((sum, e) => sum + e.tokens, 0) - summaryTokens,
-      msg: 'Context compression complete'
-    });
+    return entities;
   }
 
+  // ─── Context Window Management ───────────────────────────────────────────────
+
   /**
-   * Build the final context output for the Conductor
+   * Count total tokens in an assembled context.
    */
-  _buildContextOutput() {
-    const output = {
-      sessionId: this.sessionId,
-      timestamp: Date.now(),
-      totalTokens: 0,
-      entryCount: 0,
-      utilization: {},
-      tiers: {},
-      directives: [],
-      coherence: this._healthState.coherence
+  _countContextTokens(ctx) {
+    let total = 0;
+
+    const add = (obj) => {
+      if (!obj) return;
+      total += estimateTokens(typeof obj === 'string' ? obj : JSON.stringify(obj));
     };
 
-    for (const [name, tier] of Object.entries(this.tiers)) {
-      const entries = tier.getEntries();
-      output.tiers[name] = entries.map(e => ({
-        id: e.id,
-        type: e.type,
-        content: e.content,
-        importance: e.importance,
-        source: e.source,
-        tokens: e.tokens
-      }));
-      output.totalTokens += tier.usedTokens;
-      output.entryCount += entries.length;
-      output.utilization[name] = Math.round(tier.utilization() * 1000) / 1000;
+    add(ctx.memory);
+    add(ctx.patterns);
+    add(ctx.recentHistory);
+    add(ctx.userState);
+    add(ctx.vectorMatches);
+    add(ctx.patternMatches);
 
-      // Extract directives separately for easy access
-      if (name === 'working') {
-        output.directives = entries
-          .filter(e => e.type === ENTRY_TYPES.SOUL_DIRECTIVE)
-          .map(e => e.content);
-      }
+    return total;
+  }
+
+  /**
+   * Priority-based context truncation when over token budget.
+   * Drops lower-priority items first.
+   *
+   * Priority order (preserved longest):
+   *   CRITICAL: userState, recentHistory
+   *   HIGH:     patterns, vectorMatches
+   *   MEDIUM:   memory, patternMatches
+   *   LOW:      everything else
+   */
+  _pruneContext(ctx) {
+    const pruneOrder = [
+      { key: 'patternMatches', priority: PRIORITY_LEVELS.LOW },
+      { key: 'memory',         priority: PRIORITY_LEVELS.MEDIUM },
+      { key: 'vectorMatches',  priority: PRIORITY_LEVELS.HIGH },
+      { key: 'patterns',       priority: PRIORITY_LEVELS.HIGH },
+    ];
+
+    for (const { key } of pruneOrder) {
+      if (ctx.tokenBudgetUsed <= this._maxContextTokens) break;
+      if (!Array.isArray(ctx[key]) || ctx[key].length === 0) continue;
+
+      // Remove last half of the array
+      const half = Math.ceil(ctx[key].length / 2);
+      ctx[key] = ctx[key].slice(0, half);
+
+      ctx.tokenBudgetUsed = this._countContextTokens(ctx);
+      logger.debug('[HeadyBrains] Pruned context field', {
+        key, remaining: ctx[key].length, newTokens: ctx.tokenBudgetUsed,
+      });
     }
 
-    return output;
-  }
-
-  /**
-   * Estimate token count (phi-scaled approximation: ~PSI² tokens per character)
-   * More accurate than chars/4 for mixed content
-   */
-  _estimateTokens(text) {
-    if (!text) return 0;
-    const charCount = typeof text === 'string' ? text.length : JSON.stringify(text).length;
-    // ~0.25 tokens per char for English, adjusted by PSI² ≈ 0.382 for mixed content
-    return Math.ceil(charCount * PSI_SQ * PSI);
-  }
-
-  /**
-   * SHA-256 hash for content deduplication
-   */
-  _hashContent(content) {
-    return crypto.createHash('sha256')
-      .update(typeof content === 'string' ? content : JSON.stringify(content))
-      .digest('hex')
-      .substring(0, fibonacci(8)); // 21 char prefix
-  }
-
-  /**
-   * Total tokens across all tiers
-   */
-  _totalUsedTokens() {
-    return Object.values(this.tiers).reduce((sum, tier) => sum + tier.usedTokens, 0);
-  }
-
-  // ─── Health & Observability ─────────────────────────────────────────────
-
-  /**
-   * Health check — returns coherence and utilization metrics
-   */
-  health() {
-    const utilization = {};
-    let totalUsed = 0;
-
-    for (const [name, tier] of Object.entries(this.tiers)) {
-      utilization[name] = {
-        used: tier.usedTokens,
-        budget: tier.budget,
-        ratio: Math.round(tier.utilization() * 1000) / 1000,
-        entries: tier.entries.length
-      };
-      totalUsed += tier.usedTokens;
+    if (ctx.tokenBudgetUsed > this._maxContextTokens) {
+      logger.warn('[HeadyBrains] Context still over budget after pruning', {
+        used: ctx.tokenBudgetUsed, max: this._maxContextTokens,
+      });
     }
-
-    const overallUtilization = totalUsed / TOTAL_BUDGET;
-
-    // Coherence degrades if utilization is too high (over phi-threshold)
-    if (overallUtilization > CSL_THRESHOLDS.HIGH) {
-      this._healthState.coherence = Math.max(
-        CSL_THRESHOLDS.LOW,
-        this._healthState.coherence * PSI
-      );
-    } else if (overallUtilization < CSL_THRESHOLDS.MEDIUM) {
-      this._healthState.coherence = Math.min(1.0,
-        this._healthState.coherence + (1 - this._healthState.coherence) * PSI_SQ
-      );
-    }
-
-    this._healthState.lastCheck = Date.now();
-
-    return {
-      status: this._healthState.coherence >= CSL_THRESHOLDS.MEDIUM ? 'healthy' : 'degraded',
-      coherence: Math.round(this._healthState.coherence * 1000) / 1000,
-      totalTokens: totalUsed,
-      totalBudget: TOTAL_BUDGET,
-      utilization: Math.round(overallUtilization * 1000) / 1000,
-      tiers: utilization,
-      cacheSize: this.embeddingCache.size(),
-      capsuleCount: this.capsuleHistory.length,
-      initialized: this._initialized,
-      sessionId: this.sessionId
-    };
-  }
-
-  /**
-   * Reset all context (new session)
-   */
-  reset() {
-    for (const tier of Object.values(this.tiers)) {
-      tier.clear();
-    }
-    this.embeddingCache.clear();
-    this.dedupIndex.clear();
-    this.sessionId = crypto.randomUUID();
-    this._healthState = { coherence: 1.0, lastCheck: Date.now() };
-
-    logger.info({
-      sessionId: this.sessionId,
-      msg: 'HeadyBrains context reset'
-    });
-  }
-
-  /**
-   * Graceful shutdown
-   */
-  async shutdown() {
-    // Create final capsule before shutdown
-    const finalCapsule = this.createCapsule({ reason: 'shutdown' });
-
-    logger.info({
-      sessionId: this.sessionId,
-      finalTokens: finalCapsule.totalTokens,
-      msg: 'HeadyBrains shutting down'
-    });
-
-    this.reset();
-    return finalCapsule;
   }
 }
 
-module.exports = {
-  HeadyBrains,
-  ContextEntry,
-  ContextTier,
-  ContextCapsule,
-  PhiLRUCache,
-  TOKEN_BUDGETS,
-  TOTAL_BUDGET,
-  ENTRY_TYPES,
-  PRIORITY_WEIGHTS,
-  RETRIEVAL_THRESHOLD,
-  HIGH_RELEVANCE,
-  EXACT_MATCH,
-  DEDUP_THRESHOLD
-};
+// ─── Exports ──────────────────────────────────────────────────────────────────
+module.exports = { HeadyBrains, PHI, estimateTokens, truncateToTokens };

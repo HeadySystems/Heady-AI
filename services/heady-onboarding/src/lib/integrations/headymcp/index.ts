@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 interface HeadyMCPConfig {
   userId: string
   apiKey: string
@@ -35,11 +33,11 @@ export async function registerWithHeadyMCP(config: HeadyMCPConfig): Promise<void
     }
 
     const data = await response.json()
-    logger.info(`✅ Registered with Heady™MCP:`, data)
+    console.log(`✅ Registered with Heady™MCP:`, data)
 
     return data
   } catch (error) {
-    logger.error("HeadyMCP registration error:", error)
+    console.error("HeadyMCP registration error:", error)
     throw new Error("Failed to register with Heady™MCP")
   }
 }
@@ -61,7 +59,7 @@ export async function getMCPServerConfig(userId: string): Promise<any> {
 
     return await response.json()
   } catch (error) {
-    logger.error("HeadyMCP config error:", error)
+    console.error("HeadyMCP config error:", error)
     return null
   }
 }

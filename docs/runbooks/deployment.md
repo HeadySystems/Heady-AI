@@ -1,16 +1,26 @@
-# Deployment
+# Runbook: Deployment
 
-## Pre-Deploy
-- [ ] Tests pass (`npm test`)
-- [ ] Audit clean (`npm audit`)
-- [ ] Env valid (`node scripts/validate-env.js`)
-- [ ] Changelog updated
+## Pre-deployment Checklist
+- [ ] All tests pass locally
+- [ ] CHANGES.md updated
+- [ ] No console.log in production paths
+- [ ] Health endpoint returns 200
 
-## Cloudflare Pages
-Auto-deployed on push to `main` via GitHub Actions.
+## Cloud Run Deploy (Single Service)
+```bash
+gcloud run deploy heady-<service> \
+  --source services/<service> \
+  --region us-central1 \
+  --project gen-lang-client-0920560496 \
+  --allow-unauthenticated
+```
 
-## Cloud Run
-Tag a release: `git tag v0.2.0 && git push origin v0.2.0`
+## Full Deploy (CI/CD)
+Push to `main` branch → GitHub Actions pipeline triggers → Docker build → Cloud Run deploy
 
 ## Rollback
-Cloudflare: Use dashboard. Cloud Run: `gcloud run services update-traffic heady --to-revisions=PREV=100`
+```bash
+gcloud run services update-traffic heady-<service> \
+  --to-revisions=<previous-revision>=100 \
+  --region us-central1
+```

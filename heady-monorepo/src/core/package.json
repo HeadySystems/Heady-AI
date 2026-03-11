@@ -1,0 +1,11 @@
+{
+    "name": "headyme-site",
+    "version": "4.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node dynamic-site-server.js"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}

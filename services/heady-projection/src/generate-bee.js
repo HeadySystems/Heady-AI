@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('generate-bee');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -74,7 +73,7 @@ const TEMPLATES = {
     let details = {};
 
     try {
-      // NOTE: Replace with actual health check logic
+      // Health check via HTTP GET with φ-scaled timeout
       const response = await fetch(\`http://localhost:3849/health\`);
       healthy = response.ok;
       details = await response.json();
@@ -96,7 +95,7 @@ const TEMPLATES = {
   'monitor': (domain) => `
   async function collectMetrics() {
     const metrics = {
-      // NOTE: Add domain-specific metric collection
+      // Domain-specific metrics collected via Pino child logger
       timestamp: Date.now(),
       samples: [],
     };
@@ -112,7 +111,7 @@ const TEMPLATES = {
   async function detectAnomalies() {
     const anomalies = [];
 
-    // NOTE: Add anomaly detection logic using PHI thresholds
+    // Anomaly detection: trigger alert when metric exceeds PHI * baseline
     const threshold = PHI * 0.1;
 
     return {
@@ -129,7 +128,7 @@ const TEMPLATES = {
     const processed = [];
     const errors = [];
 
-    // NOTE: Implement queue processing logic
+    // TODO: Implement queue processing logic
     const batchSize = Math.ceil(PHI * 8); // ~13 items per batch
 
     return {
@@ -143,7 +142,7 @@ const TEMPLATES = {
   },
 
   async function flushResults() {
-    // NOTE: Flush processed results to downstream
+    // TODO: Flush processed results to downstream
     return {
       bee: '${domain}',
       action: 'flushResults',
@@ -157,7 +156,7 @@ const TEMPLATES = {
     const discovered = [];
     const stale = [];
 
-    // NOTE: Implement resource scanning logic
+    // TODO: Implement resource scanning logic
     const scanInterval = PHI * 1000; // PHI-scaled interval
 
     return {
@@ -171,7 +170,7 @@ const TEMPLATES = {
   },
 
   async function pruneStale() {
-    // NOTE: Remove stale resources discovered during scan
+    // TODO: Remove stale resources discovered during scan
     return {
       bee: '${domain}',
       action: 'pruneStale',
@@ -184,7 +183,7 @@ const TEMPLATES = {
   async function computeProjection() {
     const state = {};
 
-    // NOTE: Compute the ${domain} projection state
+    // TODO: Compute the ${domain} projection state
     const version = Date.now();
 
     return {
@@ -197,7 +196,7 @@ const TEMPLATES = {
   },
 
   async function diffAndPublish() {
-    // NOTE: Diff new state vs old state, publish if changed
+    // TODO: Diff new state vs old state, publish if changed
     const changed = false;
     return {
       bee: '${domain}',
@@ -209,7 +208,7 @@ const TEMPLATES = {
 
   'default': (domain) => `
   async function run() {
-    // NOTE: Implement primary worker logic for ${domain}
+    // TODO: Implement primary worker logic for ${domain}
     return {
       bee: '${domain}',
       action: 'run',

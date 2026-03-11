@@ -1,13 +1,35 @@
 {
   "name": "@heady-ai/service-runtime",
-  "version": "0.1.0",
-  "type": "module",
+  "version": "4.0.0",
+  "description": "Shared service bootstrap and runtime for Heady microservices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsx src/index.ts",
-    "lint": "node -e \"console.log('lint service-runtime')\"",
-    "test": "vitest run"
-  }
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@heady-ai/contract-types": "workspace:*",
+    "express": "^5.2.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "pino": "^8.17.0",
+    "pino-http": "^9.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/cors": "^2.8.17",
+    "@types/compression": "^1.7.5",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0",
+    "vitest": "^1.2.0"
+  },
+  "license": "MIT",
+  "author": "HeadySystems Inc.",
+  "publishConfig": { "access": "public" },
+  "files": ["dist", "src"]
 }

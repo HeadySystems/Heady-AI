@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // AI Workflow Runner
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -12,7 +10,7 @@ class AIWorkflowRunner {
     }
     
     async runWorkflow(type, config) {
-        logger.info(`Running workflow: ${type}`);
+        console.log(`Running workflow: ${type}`);
         
         const startTime = Date.now();
         
@@ -43,7 +41,7 @@ class AIWorkflowRunner {
                 result
             });
             
-            logger.info(`Workflow ${type} completed in ${duration}ms`);
+            console.log(`Workflow ${type} completed in ${duration}ms`);
             return result;
             
         } catch (error) {
@@ -57,7 +55,7 @@ class AIWorkflowRunner {
                 error: error.message
             });
             
-            logger.error(`Workflow ${type} failed: ${error.message}`);
+            console.error(`Workflow ${type} failed: ${error.message}`);
             throw error;
         }
     }
@@ -86,7 +84,7 @@ class AIWorkflowRunner {
     saveResults() {
         const resultsPath = path.join(__dirname, '..', 'results', 'workflow-results.json');
         fs.writeFileSync(resultsPath, JSON.stringify(this.results, null, 2));
-        logger.info(`Results saved to ${resultsPath}`);
+        console.log(`Results saved to ${resultsPath}`);
     }
 }
 
@@ -96,13 +94,13 @@ if (require.main === module) {
     const [type, ...args] = process.argv.slice(2);
     
     if (!type) {
-        logger.error('Usage: node ai-workflow-runner.js <workflow-type> [options]');
+        console.error('Usage: node ai-workflow-runner.js <workflow-type> [options]');
         process.exit(1);
     }
     
     runner.runWorkflow(type, { args })
         .then(() => runner.saveResults())
-        .catch(logger.error);
+        .catch(console.error);
 }
 
 module.exports = AIWorkflowRunner;

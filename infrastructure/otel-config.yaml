@@ -1,0 +1,51 @@
+# OpenTelemetry Collector — Heady Systems
+# Eric Haywood — Sacred Geometry v4.0
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'heady-services'
+          scrape_interval: 21s
+          static_configs:
+            - targets: ['heady-brain:3310', 'heady-memory:3316', 'api-gateway:3345', 'heady-conductor:3323']
+
+processors:
+  batch:
+    send_batch_size: 233
+    timeout: 5s
+  memory_limiter:
+    check_interval: 8s
+    limit_mib: 610
+    spike_limit_mib: 233
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8888"
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+  otlp:
+    endpoint: "otel-collector:4317"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp]
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [loki]

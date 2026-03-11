@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Heady™ Council — Multi-Model Council for Critical Decisions
  * @module orchestration/heady-council
@@ -870,11 +868,11 @@ export class HeadyCouncil {
       ...meta,
     };
     if (level === 'error') {
-      logger.error(JSON.stringify(entry));
+      console.error(JSON.stringify(entry));
     } else if (level === 'warn') {
-      logger.warn(JSON.stringify(entry));
+      console.warn(JSON.stringify(entry));
     } else if (process.env.LOG_LEVEL === 'debug') {
-      logger.info(JSON.stringify(entry));
+      console.log(JSON.stringify(entry));
     }
   }
 }

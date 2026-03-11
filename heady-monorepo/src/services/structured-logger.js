@@ -3,7 +3,7 @@
  * PROPRIETARY AND CONFIDENTIAL.
  * Unified Structured Logger — P4 Observability Assessment Item
  *
- * Replaces all unstructured logger.info/warn/error with structured JSON output.
+ * Replaces all unstructured console.log/warn/error with structured JSON output.
  * Supports log levels, service tags, trace IDs, and metrics emission.
  */
 

@@ -25,7 +25,7 @@
 # 🚀 High-Performance: Fast DNS, CDN, SSL
 # ✨ Complete: All services covered
 # 🎯 Full-Stack: Frontend to backend
-# 💎 Production-Ready: No api.headysystems.com, no internal
+# 💎 Production-Ready: No localhost, no internal
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # CLOUDFLARE DOMAINS (User's Actual Zones)
@@ -326,7 +326,7 @@ deployment:
   cloudflare:
     dns_records:
       type: CNAME
-      target: app.headysystems.com
+      target: heady-manager-headysystems.onrender.com
       ttl: 1
       proxied: true
       
@@ -340,8 +340,8 @@ deployment:
           security_level: "high"
           
   load_balancing:
-    primary: app.headysystems.com
-    fallback: app.headysystems.com
+    primary: heady-manager-headysystems.onrender.com
+    fallback: heady-manager-headyme.onrender.com
     
   health_checks:
     path: /api/health
@@ -354,6 +354,6 @@ deployment:
 # ✅ High-Performance: Cloudflare CDN + SSL
 # ✅ Complete: 50+ domains covering all components
 # ✅ Full-Stack: Frontend to backend to data
-# ✅ Production-Ready: No api.headysystems.com, no internal, no .local
+# ✅ Production-Ready: No localhost, no internal, no .local
 #
 # Replace yourdomain.com and anotherdomain.org with your actual Cloudflare zones

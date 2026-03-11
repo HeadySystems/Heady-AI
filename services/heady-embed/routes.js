@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -116,7 +114,7 @@ function createRouter(embedService) {
    *             cached: number, latencyMs: number }
    */
   router.post('/embed', async (req, res) => {
-    const { texts, model, pooling, normalize, useCache, priority } = req.body || {}; const csl_relevance = priority;
+    const { texts, model, pooling, normalize, useCache, priority } = req.body || {};
 
     const validationErr = validateTexts(texts);
     if (validationErr) {
@@ -132,7 +130,7 @@ function createRouter(embedService) {
         poolingStrategy: pooling,
         normalize: normalize !== false,
         useCache: useCache !== false,
-        csl_relevance: typeof csl_relevance === 'number' ? csl_relevance : 5,
+        priority: typeof priority === 'number' ? priority : 5,
       });
 
       return res.json({
@@ -153,11 +151,11 @@ function createRouter(embedService) {
 
   /**
    * @route POST /embed/batch
-   * @body { texts: string[], model?: string, normalize?: boolean, csl_relevance?: number }
+   * @body { texts: string[], model?: string, normalize?: boolean, priority?: number }
    * @returns { jobId: string, status: 'pending', total: number }
    */
   router.post('/embed/batch', (req, res) => {
-    const { texts, model, normalize, priority } = req.body || {}; const csl_relevance = priority;
+    const { texts, model, normalize, priority } = req.body || {};
 
     const validationErr = validateTexts(texts);
     if (validationErr) {
@@ -169,7 +167,7 @@ function createRouter(embedService) {
       return res.status(400).json({ error: 'texts array is empty' });
     }
 
-    const job = createJob(textArr, { model, normalize, csl_relevance });
+    const job = createJob(textArr, { model, normalize, priority });
 
     // Run async (detached from request)
     setImmediate(() => {
@@ -180,7 +178,7 @@ function createRouter(embedService) {
         .embed(textArr, {
           modelId: model,
           normalize: normalize !== false,
-          csl_relevance: typeof csl_relevance === 'number' ? csl_relevance : 7, // batch = lower csl_relevance
+          priority: typeof priority === 'number' ? priority : 7, // batch = lower priority
           onProgress: (processed, total) => {
             job.progress = { processed, total };
           },
@@ -381,7 +379,7 @@ function createRouter(embedService) {
   // -------------------------------------------------------------------------
 
   router.use((err, req, res, next) => {
-    logger.error('[HeadyEmbed Router Error]', err);
+    console.error('[HeadyEmbed Router Error]', err);
     if (res.headersSent) return next(err);
     return res.status(422).json({ error: err.message || 'Internal error' });
   });

@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('infrastructure-monitor');
 /**
  * Heady™ Infrastructure Health Monitor
  *

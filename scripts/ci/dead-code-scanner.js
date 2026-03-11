@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/dead-code-scanner.js
@@ -297,14 +295,14 @@ function findEmptyExports(content, filepath) {
 async function main() {
   const args = parseArgs(process.argv);
 
-  logger.info('=== Heady Dead Code Scanner ===');
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Scanning: ${args.srcDirs.join(', ')}`);
-  logger.info('');
+  console.log('=== Heady Dead Code Scanner ===');
+  console.log(`φ = ${PHI}`);
+  console.log(`Scanning: ${args.srcDirs.join(', ')}`);
+  console.log('');
 
   // Collect files
   const allFiles = collectFiles(args.srcDirs, args.ignorePatterns);
-  logger.info(`Files to scan: ${allFiles.length}`);
+  console.log(`Files to scan: ${allFiles.length}`);
 
   const report = {
     metadata: {
@@ -399,24 +397,24 @@ async function main() {
   report.summary.warnings = totalIssues;
   report.summary.truncated = totalIssues >= MAX_TOTAL;
 
-  logger.info('\n=== Dead Code Report ===');
-  logger.info(`Unused exports:    ${report.issues.unusedExports.length}`);
-  logger.info(`Unreachable code:  ${report.issues.unreachableCode.length}`);
-  logger.info(`Empty exports:     ${report.issues.emptyExports.length}`);
-  logger.info(`Empty files:       ${report.issues.emptyFiles.length}`);
-  logger.info(`Total issues:      ${totalIssues}`);
+  console.log('\n=== Dead Code Report ===');
+  console.log(`Unused exports:    ${report.issues.unusedExports.length}`);
+  console.log(`Unreachable code:  ${report.issues.unreachableCode.length}`);
+  console.log(`Empty exports:     ${report.issues.emptyExports.length}`);
+  console.log(`Empty files:       ${report.issues.emptyFiles.length}`);
+  console.log(`Total issues:      ${totalIssues}`);
 
   if (report.issues.unusedExports.length > 0) {
-    logger.info('\nUnused exports (first 8):');
+    console.log('\nUnused exports (first 8):');
     report.issues.unusedExports.slice(0, FIB[6]).forEach(i => {
-      logger.info(`  ::warning file=${i.file}:: Unused export: ${i.symbol}`);
+      console.log(`  ::warning file=${i.file}:: Unused export: ${i.symbol}`);
     });
   }
 
   if (report.issues.unreachableCode.length > 0) {
-    logger.info('\nUnreachable code (first 5):');
+    console.log('\nUnreachable code (first 5):');
     report.issues.unreachableCode.slice(0, FIB[5]).forEach(i => {
-      logger.info(`  ::warning file=${i.file},line=${i.line}:: ${i.reason}`);
+      console.log(`  ::warning file=${i.file},line=${i.line}:: ${i.reason}`);
     });
   }
 
@@ -424,20 +422,20 @@ async function main() {
   const dir = path.dirname(args.output);
   if (dir && !fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(args.output, JSON.stringify(report, null, 2));
-  logger.info(`\nReport written to: ${args.output}`);
+  console.log(`\nReport written to: ${args.output}`);
 
   // Exit code
   if (args.failOnUnused && report.summary.hardFailures > 0) {
-    logger.error('\n❌ Dead code scan FAILED');
+    console.error('\n❌ Dead code scan FAILED');
     process.exit(1);
   } else {
     const icon = totalIssues > 0 ? '⚠️ ' : '✅';
-    logger.info(`\n${icon} Dead code scan complete — ${totalIssues} advisory issues`);
+    console.log(`\n${icon} Dead code scan complete — ${totalIssues} advisory issues`);
     process.exit(0);
   }
 }
 
 main().catch(err => {
-  logger.error('Fatal error in dead-code-scanner:', err);
+  console.error('Fatal error in dead-code-scanner:', err);
   process.exit(1);
 });

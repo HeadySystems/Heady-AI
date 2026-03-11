@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -93,7 +91,7 @@ class MigrationManager {
     this.pg    = pg;
     this.redis = redis;
     this.log   = (level, msg, meta = {}) => {
-      logger.info(JSON.stringify({
+      console.log(JSON.stringify({
         level,
         message: msg,
         service: 'migration-framework',
@@ -567,7 +565,7 @@ const createMigration = (name) => {
  * Migration: ${id}
  * φ = ${PHI}
  *
- * Description: NOTE
+ * Description: TODO
  *
  * Zero-downtime strategy:
  *   1. Add new column/table (additive — no lock)
@@ -582,7 +580,7 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597
 
 /** @param {import('pg').Client} client */
 exports.up = async (client, phi, fib) => {
-  // NOTE: Add your forward migration here
+  // TODO: Add your forward migration here
   // Use φ-scaled batch sizes: fib(9)=34 or fib(10)=55 rows per batch
   // Example:
   // await client.query(\`ALTER TABLE heady_agents ADD COLUMN IF NOT EXISTS csl_score NUMERIC(5,4)\`);
@@ -591,17 +589,17 @@ exports.up = async (client, phi, fib) => {
 
 /** @param {import('pg').Client} client */
 exports.down = async (client, phi, fib) => {
-  // NOTE: Add your rollback migration here
+  // TODO: Add your rollback migration here
   // Must be reversible (zero data loss)
   throw new Error('Rollback not implemented: ${id}');
 };
 
 exports.name        = '${name}';
-exports.description = 'NOTE: describe this migration';
+exports.description = 'TODO: describe this migration';
 `;
 
   fs.writeFileSync(filePath, content);
-  logger.info(`Created migration: ${filePath}`);
+  console.log(`Created migration: ${filePath}`);
   return filePath;
 };
 
@@ -626,33 +624,33 @@ if (require.main === module) {
       switch (command) {
         case 'up': {
           const result = await mgr.up();
-          logger.info(JSON.stringify(result, null, 2));
+          console.log(JSON.stringify(result, null, 2));
           process.exit(result.failed > 0 ? 1 : 0);
           break;
         }
         case 'down': {
           const count = parseInt(args[0] || '1', 10);  // default: fib(2)=1
           const result = await mgr.down(count);
-          logger.info(JSON.stringify(result, null, 2));
+          console.log(JSON.stringify(result, null, 2));
           break;
         }
         case 'status': {
           const status = await mgr.getStatus();
-          logger.info(JSON.stringify(status, null, 2));
+          console.log(JSON.stringify(status, null, 2));
           process.exit(status.pending > 0 ? 1 : 0);
           break;
         }
         case 'create': {
-          if (!args[0]) { logger.error('Usage: migration-framework create <name>'); process.exit(1); }
+          if (!args[0]) { console.error('Usage: migration-framework create <name>'); process.exit(1); }
           createMigration(args[0]);
           break;
         }
         default:
-          logger.info('Usage: migration-framework <up|down [n]|status|create <name>>');
+          console.log('Usage: migration-framework <up|down [n]|status|create <name>>');
           process.exit(1);
       }
     } catch (err) {
-      logger.error(JSON.stringify({ level: 'error', message: err.message, phi: PHI }));
+      console.error(JSON.stringify({ level: 'error', message: err.message, phi: PHI }));
       process.exit(1);
     } finally {
       await redis.disconnect().catch(() => {});

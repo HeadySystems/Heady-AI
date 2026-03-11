@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ============================================================================
  * Heady™ Liquid Architecture v3.1 — Redis Pool Configuration
@@ -61,7 +59,7 @@ const REDIS_CONFIG = {
   // Reconnection with phi-based exponential backoff
   retryStrategy(times) {
     if (times > 20) {
-      logger.error(`[Redis] Max reconnection attempts (${times}) reached. Giving up.`);
+      console.error(`[Redis] Max reconnection attempts (${times}) reached. Giving up.`);
       return null; // Stop retrying
     }
     // φ^attempt * 100ms, capped at 30s
@@ -69,7 +67,7 @@ const REDIS_CONFIG = {
       Math.round(Math.pow(PHI, times) * 100),
       30000
     );
-    logger.warn(`[Redis] Reconnecting in ${delay}ms (attempt ${times})`);
+    console.warn(`[Redis] Reconnecting in ${delay}ms (attempt ${times})`);
     return delay;
   },
 
@@ -158,17 +156,17 @@ class RedisPool {
 
     // Event handlers
     conn.on('connect', () => {
-      logger.info(`[Redis:${name}] Connected to ${REDIS_CONFIG.host}:${REDIS_CONFIG.port}`);
+      console.log(`[Redis:${name}] Connected to ${REDIS_CONFIG.host}:${REDIS_CONFIG.port}`);
     });
     conn.on('ready', () => {
-      logger.info(`[Redis:${name}] Ready`);
+      console.log(`[Redis:${name}] Ready`);
       this._isConnected = true;
     });
     conn.on('error', (err) => {
-      logger.error(`[Redis:${name}] Error:`, err.message);
+      console.error(`[Redis:${name}] Error:`, err.message);
     });
     conn.on('close', () => {
-      logger.warn(`[Redis:${name}] Connection closed`);
+      console.warn(`[Redis:${name}] Connection closed`);
       this._isConnected = false;
     });
 
@@ -212,7 +210,7 @@ class RedisPool {
     for (const [name, conn] of this._connections) {
       if (conn.status === 'wait') {
         promises.push(conn.connect().catch(err => {
-          logger.error(`[Redis:${name}] Failed to connect:`, err.message);
+          console.error(`[Redis:${name}] Failed to connect:`, err.message);
         }));
       }
     }
@@ -228,7 +226,7 @@ class RedisPool {
       promises.push(
         conn.quit()
           .catch(() => conn.disconnect())
-          .catch(err => logger.error(`[Redis:${name}] Disconnect error:`, err.message))
+          .catch(err => console.error(`[Redis:${name}] Disconnect error:`, err.message))
       );
     }
     await Promise.all(promises);
@@ -236,7 +234,7 @@ class RedisPool {
     this._subscriber = null;
     this._publisher = null;
     this._isConnected = false;
-    logger.info('[Redis] All connections closed');
+    console.log('[Redis] All connections closed');
   }
 
   /**

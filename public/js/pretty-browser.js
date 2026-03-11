@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══ Pretty Formatter — Browser-Side ═══
  * Drop-in script for admin dashboards. Auto-finds and transforms:
@@ -191,5 +189,5 @@ const logger = pino();
         autoTransform,
     };
 
-    logger.info("🎨 HeadyPretty loaded — auto-transforming structured data");
+    console.log("🎨 HeadyPretty loaded — auto-transforming structured data");
 })();

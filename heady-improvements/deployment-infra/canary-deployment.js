@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady™ Canary Deployment Engine
@@ -117,7 +115,7 @@ const STATE = Object.freeze({
 // ─── Utilities ─────────────────────────────────────────────────────────────────
 
 function log(level, msg, data = {}) {
-  logger.info(JSON.stringify({
+  console.log(JSON.stringify({
     level,
     ts: new Date().toISOString(),
     msg,
@@ -640,17 +638,17 @@ async function main() {
   if (args.includes('--status')) {
     const state = loadState();
     if (!state) {
-      logger.info('No active canary deployment');
+      console.log('No active canary deployment');
       process.exit(0);
     }
-    logger.info(JSON.stringify(state, null, 2));
+    console.log(JSON.stringify(state, null, 2));
     process.exit(0);
   }
 
   if (args.includes('--rollback')) {
     const state = loadState();
     if (!state) {
-      logger.error('No canary state found — nothing to roll back');
+      console.error('No canary state found — nothing to roll back');
       process.exit(1);
     }
     const engine = new CanaryDeployment({ imageTag: state.imageTag });
@@ -661,7 +659,7 @@ async function main() {
 
   const imageIdx = args.indexOf('--image');
   if (imageIdx === -1 || !args[imageIdx + 1]) {
-    logger.error('Usage: canary-deployment.js --image IMAGE_TAG [--dry-run]');
+    console.error('Usage: canary-deployment.js --image IMAGE_TAG [--dry-run]');
     process.exit(1);
   }
 

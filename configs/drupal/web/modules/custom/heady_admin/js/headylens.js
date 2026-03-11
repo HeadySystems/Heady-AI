@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyLens — Real-Time Monitoring JavaScript
  * Connects to WebSocket for live system metrics and renders charts.
@@ -79,7 +77,7 @@ const logger = pino();
             ws = new WebSocket(WS_URL);
             ws.onopen = () => {
                 if (statusEl) statusEl.innerHTML = '<span style="color:#22c55e;">● Connected</span>';
-                logger.info('🔭 HeadyLens WebSocket connected');
+                console.log('🔭 HeadyLens WebSocket connected');
             };
             ws.onmessage = (event) => {
                 try {

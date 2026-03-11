@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { Cloudflare } from "cloudflare"
 
 const cf = new Cloudflare({
@@ -29,9 +27,9 @@ export async function setupCloudflareEmail(
       priority: 0
     })
 
-    logger.info(`✅ Email forwarding configured: ${fromEmail} → ${toEmail}`)
+    console.log(`✅ Email forwarding configured: ${fromEmail} → ${toEmail}`)
   } catch (error) {
-    logger.error("Cloudflare email setup error:", error)
+    console.error("Cloudflare email setup error:", error)
     throw new Error("Failed to configure email forwarding")
   }
 }
@@ -50,10 +48,10 @@ export async function deleteEmailForwarding(fromEmail: string): Promise<void> {
 
     if (rule) {
       await cf.emailRouting.rules.delete(zoneId, rule.id)
-      logger.info(`✅ Email forwarding deleted for ${fromEmail}`)
+      console.log(`✅ Email forwarding deleted for ${fromEmail}`)
     }
   } catch (error) {
-    logger.error("Delete email forwarding error:", error)
+    console.error("Delete email forwarding error:", error)
     throw new Error("Failed to delete email forwarding")
   }
 }

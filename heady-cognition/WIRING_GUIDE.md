@@ -70,7 +70,7 @@ Add `UNBREAKABLE_LAWS.md` rules as automated gate checks in GitHub Actions:
 - name: Anti-Shortcut Check
   run: |
     # Check for forbidden patterns from UNBREAKABLE_LAWS.md
-    ! grep -rn "// NOTE\|// HACK\|// FIXME\|console\.log" --include="*.ts" --include="*.js" \
+    ! grep -rn "// TODO\|// HACK\|// FIXME\|console\.log" --include="*.ts" --include="*.js" \
       --exclude-dir=node_modules --exclude-dir=_archive src/ services/ packages/ || \
       (echo "BLOCKED: Forbidden shortcut patterns found" && exit 1)
 ```

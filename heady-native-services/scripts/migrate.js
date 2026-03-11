@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -12,45 +10,45 @@ const { Pool } = require('pg');
 const DATABASE_URL = process.env.DATABASE_URL || 'postgresql://heady:heady_sacred_geometry@localhost:5432/heady';
 
 async function runMigrations() {
-  logger.info('');
-  logger.info('╔══════════════════════════════════════════════════════════╗');
-  logger.info('║       HeadyNativeServices — Database Migrations         ║');
-  logger.info('╚══════════════════════════════════════════════════════════╝');
-  logger.info('');
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║       HeadyNativeServices — Database Migrations         ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log('');
 
   const pool = new Pool({ connectionString: DATABASE_URL });
 
   try {
     // Test connection
     const client = await pool.connect();
-    logger.info('  ✅ Connected to PostgreSQL');
+    console.log('  ✅ Connected to PostgreSQL');
 
     // Enable extensions
     await client.query('CREATE EXTENSION IF NOT EXISTS vector');
-    logger.info('  ✅ pgvector extension enabled');
+    console.log('  ✅ pgvector extension enabled');
 
     await client.query('CREATE EXTENSION IF NOT EXISTS pg_trgm');
-    logger.info('  ✅ pg_trgm extension enabled');
+    console.log('  ✅ pg_trgm extension enabled');
 
     await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
-    logger.info('  ✅ uuid-ossp extension enabled');
+    console.log('  ✅ uuid-ossp extension enabled');
 
     // Run HeadyVector migrations
     try {
       const migrations = require('../src/services/heady-vector/migrations');
       const vectorMigrator = new migrations({ connectionString: DATABASE_URL });
       await vectorMigrator.runAll();
-      logger.info('  ✅ HeadyVector migrations complete');
+      console.log('  ✅ HeadyVector migrations complete');
     } catch (e) {
-      logger.info(`  ⚠️  HeadyVector migrations: ${e.message}`);
+      console.log(`  ⚠️  HeadyVector migrations: ${e.message}`);
     }
 
     client.release();
-    logger.info('');
-    logger.info('  All migrations complete.');
-    logger.info('');
+    console.log('');
+    console.log('  All migrations complete.');
+    console.log('');
   } catch (err) {
-    logger.error(`  ❌ Migration failed: ${err.message}`);
+    console.error(`  ❌ Migration failed: ${err.message}`);
     process.exit(1);
   } finally {
     await pool.end();

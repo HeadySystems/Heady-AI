@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @module @heady-ai/observability-kernel
  * @description Structured observability: logging, metrics, distributed tracing,
@@ -914,7 +912,7 @@ const HEADY_SWARMS: readonly string[] = [
  *   maxLatencyMs: 500,
  * });
  * const matrix = await registry.checkAll();
- * logger.info(matrix.overall);
+ * console.log(matrix.overall);
  * ```
  */
 export class HealthRegistry {

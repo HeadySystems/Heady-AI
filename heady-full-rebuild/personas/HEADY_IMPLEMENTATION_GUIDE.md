@@ -198,7 +198,7 @@ Add to GitHub Actions workflow:
 
 Track these metrics to ensure persona system is working:
 
-1. **Completeness Score**: % of implementations with zero NOTEs/placeholders
+1. **Completeness Score**: % of implementations with zero TODOs/placeholders
 2. **Multi-Perspective Score**: % of decisions with input from 3+ personas
 3. **Strategic Alignment**: % of code that follows long-term architecture
 4. **Memory Consistency**: % of new code consistent with established patterns

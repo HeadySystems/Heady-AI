@@ -1,19 +1,19 @@
 {
-  "name": "@heady/domain-router",
-  "version": "1.0.0",
-  "description": "Domain-based request routing with CSL gate matching",
-  "main": "index.js",
+  "name": "@heady-ai/domain-router",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "test": "node --test test/"
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "lint": "node -e \"console.log('lint domain-router')\"",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "helmet": "^7.1.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "@heady-ai/service-runtime": "workspace:*",
+    "@heady-ai/contract-types": "workspace:*",
+    "@heady-ai/observability-client": "workspace:*",
+    "@heady-ai/config-core": "workspace:*"
   }
 }

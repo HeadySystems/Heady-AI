@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * edge-embedding-cache.js
  * Heady™ Latent OS — Edge Embedding Cache
@@ -288,7 +286,7 @@ export class EdgeEmbeddingCache {
         }
       } catch (err) {
         if (this.enableMetrics) this._metrics.errors++;
-        logger.warn('[EdgeEmbeddingCache] KV get error:', err.message);
+        console.warn('[EdgeEmbeddingCache] KV get error:', err.message);
       }
     }
 
@@ -327,7 +325,7 @@ export class EdgeEmbeddingCache {
     if (this.enableKv && this.kv) {
       this.kv.put(`${KV_PREFIX}${key}`, JSON.stringify(entry), { expirationTtl: ttl }).catch((err) => {
         if (this.enableMetrics) this._metrics.errors++;
-        logger.warn('[EdgeEmbeddingCache] KV put error:', err.message);
+        console.warn('[EdgeEmbeddingCache] KV put error:', err.message);
       });
     }
 
@@ -409,7 +407,7 @@ export class EdgeEmbeddingCache {
         }
       } catch (err) {
         errors += uncached.length;
-        logger.error('[EdgeEmbeddingCache] warming batch error:', err);
+        console.error('[EdgeEmbeddingCache] warming batch error:', err);
       }
     }
 
@@ -562,7 +560,7 @@ export function createCachedEmbedder(ai, cache, defaultModel = '@cf/baai/bge-bas
       results[idx] = embeddings[j] ?? null;
       if (embeddings[j]) {
         // Fire and forget cache write
-        cache.set(textArray[idx], model, embeddings[j]).catch(logger.error);
+        cache.set(textArray[idx], model, embeddings[j]).catch(console.error);
       }
     }
 

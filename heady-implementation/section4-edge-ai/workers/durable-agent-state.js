@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * durable-agent-state.js
  * Heady™ Latent OS — Durable Agent State Object
@@ -361,7 +359,7 @@ export class DurableAgentState {
     if (att?.socketId) {
       this.activeSockets.delete(att.socketId);
     }
-    logger.info(`[DurableAgentState] WebSocket closed: code=${code}, reason=${reason}`);
+    console.log(`[DurableAgentState] WebSocket closed: code=${code}, reason=${reason}`);
     if (this.activeSockets.size === 0) {
       await this._transitionLifecycle('idle');
     }
@@ -373,7 +371,7 @@ export class DurableAgentState {
    * @param {Error} error
    */
   async webSocketError(ws, error) {
-    logger.error('[DurableAgentState] WebSocket error:', error);
+    console.error('[DurableAgentState] WebSocket error:', error);
     const att = ws.deserializeAttachment();
     if (att?.socketId) {
       this.activeSockets.delete(att.socketId);
@@ -390,7 +388,7 @@ export class DurableAgentState {
    */
   async alarm() {
     const intent = await this.state.storage.get('alarmIntent') ?? ALARM_INTENT.IDLE_CHECK;
-    logger.info('[DurableAgentState] alarm fired, intent:', intent);
+    console.log('[DurableAgentState] alarm fired, intent:', intent);
 
     switch (intent) {
       case ALARM_INTENT.IDLE_CHECK: {
@@ -420,7 +418,7 @@ export class DurableAgentState {
       }
 
       default:
-        logger.warn('[DurableAgentState] unknown alarm intent:', intent);
+        console.warn('[DurableAgentState] unknown alarm intent:', intent);
     }
   }
 
@@ -449,8 +447,8 @@ export class DurableAgentState {
     this.state.acceptWebSocket(server);
     this.activeSockets.set(socketId, server);
 
-    this._transitionLifecycle('active').catch(logger.error);
-    this._scheduleIdleAlarm().catch(logger.error);
+    this._transitionLifecycle('active').catch(console.error);
+    this._scheduleIdleAlarm().catch(console.error);
 
     // Send initial state
     server.send(wsOut({
@@ -544,7 +542,7 @@ export class DurableAgentState {
 
       await this._transitionLifecycle('active');
     } catch (err) {
-      logger.error('[DurableAgentState] chat error:', err);
+      console.error('[DurableAgentState] chat error:', err);
       ws.send(wsOut({ type: 'error', content: 'Inference failed', requestId: msg.requestId }));
       await this._transitionLifecycle('active');
     }
@@ -682,7 +680,7 @@ export class DurableAgentState {
       this.state.storage.sql.exec(SCHEMA_SQL);
       this.dbInitialized = true;
     } catch (err) {
-      logger.error('[DurableAgentState] schema init error:', err);
+      console.error('[DurableAgentState] schema init error:', err);
     }
   }
 
@@ -753,7 +751,7 @@ export class DurableAgentState {
    */
   async _transitionLifecycle(to) {
     if (!canTransition(this.lifecycle, to)) {
-      logger.warn(`[DurableAgentState] invalid transition: ${this.lifecycle} → ${to}`);
+      console.warn(`[DurableAgentState] invalid transition: ${this.lifecycle} → ${to}`);
       return;
     }
     this.lifecycle = to;
@@ -900,7 +898,7 @@ export class DurableAgentState {
     const task = await this.state.storage.get('pendingTask');
     if (!task) return;
 
-    logger.info('[DurableAgentState] running proactive task:', task);
+    console.log('[DurableAgentState] running proactive task:', task);
 
     // Notify connected sockets
     const taskMsg = wsOut({ type: 'state', data: { event: 'proactive_task_start', task } });

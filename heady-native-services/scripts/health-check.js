@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -69,24 +67,24 @@ function checkService(service) {
 }
 
 async function main() {
-  logger.info('');
-  logger.info('╔══════════════════════════════════════════════════════════╗');
-  logger.info('║       HeadyNativeServices — Health Check Report         ║');
-  logger.info('║              Sacred Geometry v3.0.0                     ║');
-  logger.info('╚══════════════════════════════════════════════════════════╝');
-  logger.info('');
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║       HeadyNativeServices — Health Check Report         ║');
+  console.log('║              Sacred Geometry v3.0.0                     ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log('');
 
   const results = await Promise.all(SERVICES.map(checkService));
 
   const maxName = Math.max(...results.map(r => r.name.length));
   results.forEach(r => {
-    logger.info(`  ${r.name.padEnd(maxName + 2)} ${r.status.padEnd(14)} ${r.latency.padStart(8)}  ${r.details}`);
+    console.log(`  ${r.name.padEnd(maxName + 2)} ${r.status.padEnd(14)} ${r.latency.padStart(8)}  ${r.details}`);
   });
 
   const healthy = results.filter(r => r.status.includes('HEALTHY')).length;
-  logger.info('');
-  logger.info(`  Summary: ${healthy}/${results.length} services healthy`);
-  logger.info('');
+  console.log('');
+  console.log(`  Summary: ${healthy}/${results.length} services healthy`);
+  console.log('');
 
   process.exit(healthy === results.length ? 0 : 1);
 }

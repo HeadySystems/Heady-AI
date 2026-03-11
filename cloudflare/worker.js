@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * =============================================================================
  * Heady™ Edge Router — Cloudflare Worker
@@ -197,7 +195,7 @@ export default {
     try {
       return await handleRequest(request, env, ctx);
     } catch (err) {
-      logger.error('[HeadyEdgeRouter] Unhandled error:', err.message);
+      console.error('[HeadyEdgeRouter] Unhandled error:', err.message);
       return errorResponse(500, 'Internal edge router error');
     }
   },
@@ -305,7 +303,7 @@ async function handleRequest(request, env, ctx) {
       },
     });
   } catch (err) {
-    logger.error('[HeadyEdgeRouter] Origin fetch failed:', err.message);
+    console.error('[HeadyEdgeRouter] Origin fetch failed:', err.message);
     return originDownPage();
   }
 
@@ -332,7 +330,7 @@ async function handleRequest(request, env, ctx) {
 
       ctx.waitUntil(
         caches.default.put(cacheKey, responseToCache).catch(err =>
-          logger.error('[HeadyEdgeRouter] Cache put failed:', err.message)
+          console.error('[HeadyEdgeRouter] Cache put failed:', err.message)
         )
       );
     }
@@ -361,7 +359,7 @@ async function handleWebSocket(request, env, pathPrefix, pathname) {
     headers: buildOriginHeaders(request, url.hostname),
     cf: { resolveOverride: undefined },
   }).catch(err => {
-    logger.error('[HeadyEdgeRouter] WebSocket origin failed:', err.message);
+    console.error('[HeadyEdgeRouter] WebSocket origin failed:', err.message);
     return null;
   });
 
@@ -430,7 +428,7 @@ async function checkRateLimit(request, env, ctx) {
     return false;
   } catch (err) {
     // On KV error, allow the request through
-    logger.error('[HeadyEdgeRouter] Rate limit KV error:', err.message);
+    console.error('[HeadyEdgeRouter] Rate limit KV error:', err.message);
     return false;
   }
 }

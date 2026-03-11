@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyWeb — VectorFederation
  *
@@ -116,7 +114,7 @@ class VectorFederation {
 
     // Replicate to peers asynchronously (fire-and-forget)
     this._replicateToPeers('push', record).catch((err) => {
-      logger.warn(`[VectorFederation] Push replication failed for ${entry.id}:`, err.message);
+      console.warn(`[VectorFederation] Push replication failed for ${entry.id}:`, err.message);
     });
 
     return record;
@@ -302,7 +300,7 @@ class VectorFederation {
     if (this._gossipTimer) return;
     this._gossipTimer = setInterval(() => {
       this._gossipCycle().catch((err) => {
-        logger.warn('[VectorFederation] Gossip cycle error:', err.message);
+        console.warn('[VectorFederation] Gossip cycle error:', err.message);
       });
     }, this.gossipIntervalMs);
   }
@@ -515,7 +513,7 @@ class VectorFederation {
       await this.pullFromPeer(target.id);
       this._logReplication('gossip-pull', `from ${target.id}`);
     } catch (err) {
-      logger.warn(`[VectorFederation] Gossip pull failed from ${target.id}:`, err.message);
+      console.warn(`[VectorFederation] Gossip pull failed from ${target.id}:`, err.message);
     }
   }
 

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Vector-Serve: Deploy & Serve UIs from Vector Space
  * 
@@ -42,7 +40,7 @@ class VectorServe {
                 res.setHeader('Cache-Control', 'public, max-age=300');
                 res.send(result.content);
             } catch (err) {
-                this.logger.error?.(`[VectorServe] serve error: ${err.message}`) || logger.error(err);
+                this.logger.error?.(`[VectorServe] serve error: ${err.message}`) || console.error(err);
                 res.status(500).json({ error: 'vector-serve failed', detail: err.message });
             }
         });
@@ -58,7 +56,7 @@ class VectorServe {
                 const result = await this.deploy(domain, urlPath || '/', content, contentType);
                 res.json(result);
             } catch (err) {
-                this.logger.error?.(`[VectorServe] deploy error: ${err.message}`) || logger.error(err);
+                this.logger.error?.(`[VectorServe] deploy error: ${err.message}`) || console.error(err);
                 res.status(500).json({ error: 'deploy failed', detail: err.message });
             }
         });
@@ -110,7 +108,7 @@ class VectorServe {
         });
 
         this.logger.info?.(`[VectorServe] Routes wired: /api/vector-serve/*`) ||
-            logger.info('🌐 VectorServe: Routes wired');
+            console.log('🌐 VectorServe: Routes wired');
     }
 
     /**
@@ -192,7 +190,7 @@ class VectorServe {
         this.deployHistory.push(record);
 
         this.logger.info?.(`[VectorServe] Deployed ${domain}${path} (${content.length} bytes, v${metadata.version})`) ||
-            logger.info(`🌐 Deployed: ${domain}${path} (${content.length} bytes)`);
+            console.log(`🌐 Deployed: ${domain}${path} (${content.length} bytes)`);
 
         return record;
     }

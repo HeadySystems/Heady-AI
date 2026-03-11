@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { Request, Response, NextFunction } from 'express';
 
 /**
@@ -47,7 +45,7 @@ export const dlpExtractionDefense = (req: Request, res: Response, next: NextFunc
 
         // If prompts are too similar and too frequent, flag as extraction attempt
         if (recentHistory.length >= MAX_SIMILAR_PROMPTS_PER_MIN && variance > 0.8) {
-            logger.warn(`[SECURITY ALERT] Possible model extraction attack detected from User/IP: ${userId}`);
+            console.warn(`[SECURITY ALERT] Possible model extraction attack detected from User/IP: ${userId}`);
 
             // Silently shadow-ban the user by returning generic/degraded outputs
             // or inserting an invisible cryptographic watermark.

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file index.js
  * @description Governance layer: unified export + createGovernanceLayer() factory.
@@ -49,7 +47,7 @@ import { ApprovalGates  as _AG,
  *     await gov.gates.submit('deploy', { environment: 'production', version: '2.0' });
  *     // Proceed with deployment...
  *   } catch (err) {
- *     logger.error('Deployment blocked:', err.status, err.reason);
+ *     console.error('Deployment blocked:', err.status, err.reason);
  *   }
  *
  *   // Validate determinism

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file self-awareness.js
  * @description Heady™ System Self-Monitoring — HeadyAutobiographer.
@@ -294,8 +292,8 @@ export class CoherenceScorer {
  *
  * @example
  * const sa = new SelfAwareness({ nodeId: 'brain', logPath: '/tmp/heady-narrative.log' });
- * sa.on('drift.detected', ({ similarity }) => logger.info('Drift!', similarity));
- * sa.on('recommendation', ({ suggestions }) => logger.info(suggestions));
+ * sa.on('drift.detected', ({ similarity }) => console.log('Drift!', similarity));
+ * sa.on('recommendation', ({ suggestions }) => console.log(suggestions));
  * sa.start(() => ({ phase: 'active', queueSize: conductor.status.queueSize }));
  */
 export class SelfAwareness extends EventEmitter {

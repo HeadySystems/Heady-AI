@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * CONN-003: MCP Connector Auto-Discovery
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('connector-discovery');
 
 const fs = require('fs');
 const path = require('path');

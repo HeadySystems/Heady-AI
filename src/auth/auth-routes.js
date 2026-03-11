@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview HeadyAuthRoutes — Complete Express.js router for all
  * authentication, account management, permissions, and email endpoints.
@@ -202,7 +200,7 @@ export function createAuthRouter({
       });
     }
 
-    logger.error('[HeadyAuth] Unhandled error:', err);
+    console.error('[HeadyAuth] Unhandled error:', err);
     return res.status(500).json({
       error: 'An unexpected error occurred.',
       code: 'INTERNAL_ERROR',
@@ -452,7 +450,7 @@ export function createAuthRouter({
             : `${config.frontendUrl}/dashboard`
         );
       } catch (err) {
-        logger.error('[OAuth Callback Error]', err.message);
+        console.error('[OAuth Callback Error]', err.message);
         return res.redirect(
           `${config.frontendUrl}/auth/error?code=${encodeURIComponent(err.code || 'oauth_error')}`
         );
@@ -519,7 +517,7 @@ export function createAuthRouter({
             subject: 'Reset your Heady password',
             templateId: 'reset_password',
             variables: { resetUrl, displayName: result.user.display_name || result.user.username },
-          }).catch((e) => logger.error('[HeadyAuth] Failed to send reset email:', e.message));
+          }).catch((e) => console.error('[HeadyAuth] Failed to send reset email:', e.message));
         }
 
         // Always respond the same (timing-safe via constant message)

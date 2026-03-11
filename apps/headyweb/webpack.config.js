@@ -15,8 +15,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 
-const DEV_ALLOWED_ORIGIN = process.env.HEADY_DEV_ALLOWED_ORIGIN || 'https://headyme.com';
-
 /**
  * Registry of all micro-frontend remotes exposed by the shell.
  * Each entry maps a logical name to its Module Federation scope and exposed module.
@@ -227,8 +225,7 @@ module.exports = (env = {}, argv = {}) => {
             },
           ],
           headers: {
-            'Access-Control-Allow-Origin': DEV_ALLOWED_ORIGIN,
-            'Vary': 'Origin',
+            'Access-Control-Allow-Origin': '*',
           },
         }
       : undefined,

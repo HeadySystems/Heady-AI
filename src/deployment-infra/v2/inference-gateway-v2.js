@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc. — Proprietary and Confidential.
  *
@@ -36,10 +34,10 @@ try {
   logger = require('./utils/logger');
 } catch {
   logger = {
-    info: (...a) => logger.info(...a),
-    warn: (...a) => logger.warn(...a),
-    error: (...a) => logger.error(...a),
-    debug: (...a) => process.env.LOG_LEVEL === 'debug' && logger.info(...a),
+    info: (...a) => console.log(...a),
+    warn: (...a) => console.warn(...a),
+    error: (...a) => console.error(...a),
+    debug: (...a) => process.env.LOG_LEVEL === 'debug' && console.log(...a),
   };
 }
 

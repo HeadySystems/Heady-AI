@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file liquid-deploy/index.ts
  * @package @heady-ai/liquid-deploy
@@ -354,7 +352,7 @@ function formatUptime(startMs: number): string {
  * });
  *
  * const result = await deploy.project(manifest);
- * logger.info(`Projected ${result.filesCreated} files in ${result.totalDurationMs}ms`);
+ * console.log(`Projected ${result.filesCreated} files in ${result.totalDurationMs}ms`);
  * ```
  */
 export class LiquidDeploy {

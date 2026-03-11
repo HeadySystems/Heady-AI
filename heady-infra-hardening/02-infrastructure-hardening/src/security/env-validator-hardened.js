@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 'use strict';
 
 /**
@@ -30,7 +28,7 @@ const FORBIDDEN_PATTERNS = [
   { pattern: /0\.0\.0\.0/, message: 'wildcard bind address forbidden' },
   { pattern: /password123/i, message: 'weak password detected' },
   { pattern: /changeme/i, message: 'placeholder credential detected' },
-  { pattern: /NOTE|FIXME|HACK/i, message: 'unresolved marker in env' },
+  { pattern: /TODO|FIXME|HACK/i, message: 'unresolved marker in env' },
   { pattern: /sk-[a-zA-Z0-9]{20,}/, message: 'potential API key in non-key var' },
 ];
 
@@ -92,9 +90,9 @@ function validateEnvironment(env = process.env) {
 if (process.env.NODE_ENV === 'production') {
   const result = validateEnvironment();
   if (!result.valid) {
-    logger.error('[EnvValidator] ❌ CRITICAL: Environment validation failed');
+    console.error('[EnvValidator] ❌ CRITICAL: Environment validation failed');
     for (const err of result.errors) {
-      logger.error(`  - ${err.message}`);
+      console.error(`  - ${err.message}`);
     }
     process.exit(1);
   }

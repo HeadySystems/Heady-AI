@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -25,11 +23,11 @@ let passed = 0;
 let failed = 0;
 
 function test(name, fn) {
-  try { fn(); logger.info(`  ✓ ${name}`); passed++; }
-  catch (err) { logger.error(`  ✗ ${name}: ${err.message}`); failed++; }
+  try { fn(); console.log(`  ✓ ${name}`); passed++; }
+  catch (err) { console.error(`  ✗ ${name}: ${err.message}`); failed++; }
 }
 
-logger.info('\n=== Zero-Trust Sanitizer Tests ===\n');
+console.log('\n=== Zero-Trust Sanitizer Tests ===\n');
 
 test('PHI constant correct', () => { assert.strictEqual(PHI, 1.6180339887); });
 
@@ -424,5 +422,5 @@ test('SanitizationPipeline strips PII from output', () => {
   assert.ok(result.output && !result.output.includes('user@example.com'));
 });
 
-logger.info(`\nResults: ${passed} passed, ${failed} failed\n`);
+console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
 process.exit(failed > 0 ? 1 : 0);

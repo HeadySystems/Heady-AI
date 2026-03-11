@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file pipeline-core.js
  * @description HCFullPipeline — 12-Stage Heady™ Cognitive Full Pipeline.
@@ -194,7 +192,7 @@ const DEFAULT_GATES = {
  *   }
  * });
  *
- * pipeline.on('stage.completed', ({ stage, duration }) => logger.info(stage, duration + 'ms'));
+ * pipeline.on('stage.completed', ({ stage, duration }) => console.log(stage, duration + 'ms'));
  *
  * const runId = await pipeline.run({ query: 'what is PHI?' });
  */

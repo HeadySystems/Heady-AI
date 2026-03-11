@@ -14,9 +14,9 @@
 
 const _logger = require("../utils/logger");
 const logger = {
-    logNodeActivity: _logger.logNodeActivity?.bind(_logger) || ((_n, msg) => (_logger.info || logger.info)(msg)),
-    logError: _logger.logError?.bind(_logger) || ((_n, msg) => (_logger.error || logger.error)(msg)),
-    logSystem: _logger.logSystem?.bind(_logger) || ((msg) => (_logger.info || logger.info)(msg)),
+    logNodeActivity: _logger.logNodeActivity?.bind(_logger) || ((_n, msg) => (_logger.info || console.log)(msg)),
+    logError: _logger.logError?.bind(_logger) || ((_n, msg) => (_logger.error || console.error)(msg)),
+    logSystem: _logger.logSystem?.bind(_logger) || ((msg) => (_logger.info || console.log)(msg)),
 };
 
 const PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions";

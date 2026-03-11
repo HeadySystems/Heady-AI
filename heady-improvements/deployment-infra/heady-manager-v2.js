@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ∞ Heady™ Conductor v2 — Thin Orchestrator Shell with Graceful Shutdown
  *
@@ -46,7 +44,7 @@ const startupState = {
 // CHANGE: Added structured error logging before process exit.
 // Original had no uncaughtException handler — silent crashes with no log context.
 process.on('uncaughtException', (err, origin) => {
-  logger.error(JSON.stringify({
+  console.error(JSON.stringify({
     level: 'fatal',
     msg: 'Uncaught exception — process will exit',
     error: err.message,
@@ -60,7 +58,7 @@ process.on('uncaughtException', (err, origin) => {
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error(JSON.stringify({
+  console.error(JSON.stringify({
     level: 'error',
     msg: 'Unhandled promise rejection',
     reason: reason instanceof Error ? reason.message : String(reason),
@@ -75,7 +73,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // CHANGE: If bootstrap takes longer than BOOT_TIMEOUT_MS, exit with failure.
 // Cloud Run will then roll back to the previous revision automatically.
 const bootTimeoutHandle = setTimeout(() => {
-  logger.error(JSON.stringify({
+  console.error(JSON.stringify({
     level: 'fatal',
     msg: `Boot timeout after ${BOOT_TIMEOUT_MS}ms — last phase: ${startupState.phase}`,
     ts: new Date().toISOString(),

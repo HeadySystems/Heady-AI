@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 const embedder = require('../src/services/continuous-embedder');
 
 let passed = 0;
@@ -7,15 +5,15 @@ let failed = 0;
 const assert = (cond, msg) => {
     if (cond) {
         passed += 1;
-        logger.info(`  ✅ ${msg}`);
+        console.log(`  ✅ ${msg}`);
     } else {
         failed += 1;
-        logger.info(`  ❌ ${msg}`);
+        console.log(`  ❌ ${msg}`);
     }
 };
 
 async function run() {
-    logger.info('─── Continuous Embedder Enterprise Capture ───');
+    console.log('─── Continuous Embedder Enterprise Capture ───');
 
     const before = embedder.getStats().queueLength;
     const queueResult = embedder.queueForEmbed('hello world', { domain: 'manual' });
@@ -70,11 +68,11 @@ async function run() {
     assert(templates.ok === true, 'injectable templates returns ok');
     assert(templates.templateCount === 3, 'injectable templates count respects topK');
 
-    logger.info(`\nResults: ${passed} passed, ${failed} failed`);
+    console.log(`\nResults: ${passed} passed, ${failed} failed`);
     process.exit(failed === 0 ? 0 : 1);
 }
 
 run().catch((err) => {
-    logger.error(err);
+    console.error(err);
     process.exit(1);
 });

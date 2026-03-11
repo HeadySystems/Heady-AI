@@ -1,5 +1,4 @@
-import pino from 'pino';
-const logger = pino();
+const logger = require('../shared/logger')('evolution-engine');
 /**
  * @file evolution-engine.js
  * @module heady-latent-os/engines/evolution-engine

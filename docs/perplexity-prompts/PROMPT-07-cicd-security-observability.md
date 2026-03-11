@@ -125,7 +125,7 @@ Create `.githooks/pre-commit`:
 - Run ESLint on staged JS/TS files
 - Check for `localhost` references in staged files
 - Check for magic numbers (non-Fibonacci) in staged files
-- Check for placeholder/NOTE comments
+- Check for placeholder/TODO comments
 
 ### TASK 3: Security Hardening
 

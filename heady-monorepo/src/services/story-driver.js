@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -78,8 +76,8 @@ class StoryDriver extends EventEmitter {
   _defaultLogger() {
     return {
       info:  (...a) => {},  // Silent by default in story driver
-      warn:  (...a) => logger.error('[StoryDriver:WARN]',  ...a),
-      error: (...a) => logger.error('[StoryDriver:ERROR]', ...a),
+      warn:  (...a) => console.error('[StoryDriver:WARN]',  ...a),
+      error: (...a) => console.error('[StoryDriver:ERROR]', ...a),
     };
   }
 

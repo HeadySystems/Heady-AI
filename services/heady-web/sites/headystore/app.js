@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /* ═══════════════════════════════════════════════════════════════════════
    HeadyStore — app.js
    Reverse Marketplace • Patent #25 & #26
@@ -16,7 +14,7 @@ try {
     if (window.STRIPE_PK && window.Stripe) {
         stripeInstance = Stripe(window.STRIPE_PK);
     }
-} catch (e) { logger.warn('Stripe.js not available:', e.message); }
+} catch (e) { console.warn('Stripe.js not available:', e.message); }
 
 // ═══════════════════════════════════════════════════════════════════
 // VENDOR REGISTRY — only map vendors to what they ACTUALLY sell
@@ -185,7 +183,7 @@ async function searchProducts(query, budget, style) {
             if (parsed.products?.length > 0) return parsed;
         }
     } catch (err) {
-        logger.warn("HeadyAPI search failed:", err.message);
+        console.warn("HeadyAPI search failed:", err.message);
     }
 
     // Try backend store search (Perplexity-powered)
@@ -200,7 +198,7 @@ async function searchProducts(query, budget, style) {
             if (result.products?.length > 0) return result;
         }
     } catch (err) {
-        logger.warn("Store search endpoint also failed:", err.message);
+        console.warn("Store search endpoint also failed:", err.message);
     }
 
     // Honest fallback: category-intelligent vendor search links
@@ -372,7 +370,7 @@ async function handleBuyNow(index) {
                 return;
             }
         } catch (err) {
-            logger.warn('Stripe checkout failed, falling back to vendor:', err.message);
+            console.warn('Stripe checkout failed, falling back to vendor:', err.message);
         }
     }
 
@@ -475,7 +473,7 @@ async function handleSearch() {
         startTimer(900);
 
     } catch (err) {
-        logger.error("Search failed:", err);
+        console.error("Search failed:", err);
         showToast("Search failed — check your connection");
     } finally {
         btnText.style.display = 'inline';

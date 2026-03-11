@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * Swarm Dashboard — HeadyBees Real-Time Monitoring
  * Micro-frontend for Heady™Web Universal Shell
@@ -103,7 +101,7 @@ function createApp(container, props = {}) {
   container.appendChild(root);
 
   // Announce mount
-  logger.info('[MFE:swarm-dashboard] Mounted v' + APP_CONFIG.version);
+  console.log('[MFE:swarm-dashboard] Mounted v' + APP_CONFIG.version);
   return { unmount: () => { root.remove(); } };
 }
 

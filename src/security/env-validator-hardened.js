@@ -1,5 +1,4 @@
-import pino from 'pino';
-const logger = pino();
+const logger = require('../shared/logger')('env-validator-hardened');
 'use strict';
 
 /**
@@ -30,7 +29,7 @@ const FORBIDDEN_PATTERNS = [
   { pattern: /0\.0\.0\.0/, message: 'wildcard bind address forbidden' },
   { pattern: /password123/i, message: 'weak password detected' },
   { pattern: /changeme/i, message: 'placeholder credential detected' },
-  { pattern: /NOTE|FIXME|HACK/i, message: 'unresolved marker in env' },
+  { pattern: /TODO|FIXME|HACK/i, message: 'unresolved marker in env' },
   { pattern: /sk-[a-zA-Z0-9]{20,}/, message: 'potential API key in non-key var' },
 ];
 

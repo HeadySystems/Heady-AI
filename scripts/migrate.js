@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 #!/usr/bin/env node
 /**
  * =============================================================================
@@ -49,12 +47,12 @@ const VERBOSE    = process.argv.includes('--verbose') || process.env.LOG_LEVEL =
 // ─── Logging ──────────────────────────────────────────────────────────────────
 
 const log = {
-  info:  (...a) => logger.info('[migrate]', ...a),
-  ok:    (...a) => logger.info('[migrate] ✓', ...a),
-  warn:  (...a) => logger.warn('[migrate] ⚠', ...a),
-  error: (...a) => logger.error('[migrate] ✗', ...a),
-  debug: (...a) => VERBOSE && logger.info('[migrate:debug]', ...a),
-  sql:   (sql)  => VERBOSE && logger.info('[migrate:sql]\n', sql.trim(), '\n'),
+  info:  (...a) => console.log('[migrate]', ...a),
+  ok:    (...a) => console.log('[migrate] ✓', ...a),
+  warn:  (...a) => console.warn('[migrate] ⚠', ...a),
+  error: (...a) => console.error('[migrate] ✗', ...a),
+  debug: (...a) => VERBOSE && console.log('[migrate:debug]', ...a),
+  sql:   (sql)  => VERBOSE && console.log('[migrate:sql]\n', sql.trim(), '\n'),
 };
 
 // ─── Pool setup ───────────────────────────────────────────────────────────────
@@ -934,7 +932,7 @@ async function main() {
     process.exit(0);
   } catch (err) {
     log.error(`Migration failed: ${err.message}`);
-    if (VERBOSE) logger.error(err.stack);
+    if (VERBOSE) console.error(err.stack);
     process.exit(1);
   } finally {
     await pool.end();

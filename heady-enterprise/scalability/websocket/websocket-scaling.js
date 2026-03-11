@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 /**
  * @module websocket-scaling
@@ -654,7 +652,7 @@ class HeadyWebSocket {
       const msg = JSON.parse(e.data);
       if (msg.type === 'server:migrate') {
         const delay = msg.reconnectMs || HeadyWebSocket.PHI * 1000;
-        logger.info('[HeadyWS] Migration received — reconnecting in', delay, 'ms');
+        console.log('[HeadyWS] Migration received — reconnecting in', delay, 'ms');
         setTimeout(() => this._reconnect(), delay);
         return;
       }
@@ -666,11 +664,11 @@ class HeadyWebSocket {
 
   _reconnect() {
     if (this.attempt >= HeadyWebSocket.MAX_RETRIES) {
-      logger.error('[HeadyWS] Max reconnect attempts (fib6=8) reached');
+      console.error('[HeadyWS] Max reconnect attempts (fib6=8) reached');
       return;
     }
     const delayMs = Math.round(1000 * Math.pow(HeadyWebSocket.PHI, this.attempt));
-    logger.info('[HeadyWS] Reconnecting in', delayMs, 'ms (attempt', ++this.attempt, ')');
+    console.log('[HeadyWS] Reconnecting in', delayMs, 'ms (attempt', ++this.attempt, ')');
     setTimeout(() => this._connect(), delayMs);
   }
 

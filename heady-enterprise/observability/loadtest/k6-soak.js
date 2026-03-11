@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadySystems v3.2.2 — k6 Soak Test
  * =====================================
@@ -256,8 +254,8 @@ function pollSystemMetrics(data) {
         heapGrowthGauge.add(growthRatio);
 
         if (growthRatio > MAX_HEAP_GROWTH_RATIO) {
-          logger.warn(`⚠️ Heap growth ${(growthRatio * 100).toFixed(1)}% > threshold ${(MAX_HEAP_GROWTH_RATIO*100).toFixed(1)}% — possible memory leak!`);
-          logger.warn(`  Baseline: ${baselineHeapMiB.toFixed(1)} MiB, Current: ${heapMiB.toFixed(1)} MiB`);
+          console.warn(`⚠️ Heap growth ${(growthRatio * 100).toFixed(1)}% > threshold ${(MAX_HEAP_GROWTH_RATIO*100).toFixed(1)}% — possible memory leak!`);
+          console.warn(`  Baseline: ${baselineHeapMiB.toFixed(1)} MiB, Current: ${heapMiB.toFixed(1)} MiB`);
         }
       }
     } catch {}
@@ -276,7 +274,7 @@ function pollSystemMetrics(data) {
       poolUtilGauge.add(utilization);
 
       if (utilization > 0.854) { // CSL CRITICAL threshold
-        logger.error(`🔴 Redis pool utilization ${(utilization*100).toFixed(1)}% > CSL CRITICAL (85.4%)!`);
+        console.error(`🔴 Redis pool utilization ${(utilization*100).toFixed(1)}% > CSL CRITICAL (85.4%)!`);
       }
     } catch {}
   }
@@ -287,11 +285,11 @@ function pollSystemMetrics(data) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function setup() {
-  logger.info(`HeadySystems SOAK Test — φ=${PHI}`);
-  logger.info(`VUs: fib(8)=${SOAK_VUS}, duration: fib(13)=${FIB[12]} minutes (≈${(FIB[12]/60).toFixed(1)}h)`);
-  logger.info(`Memory leak threshold: ${(MAX_HEAP_GROWTH_RATIO*100).toFixed(1)}% heap growth (φ^2 × 10%)`);
-  logger.info(`Metrics polled every fib(7)=${FIB[6]} minutes via Prometheus`);
-  logger.info(`Base URL: ${BASE_URL}`);
+  console.log(`HeadySystems SOAK Test — φ=${PHI}`);
+  console.log(`VUs: fib(8)=${SOAK_VUS}, duration: fib(13)=${FIB[12]} minutes (≈${(FIB[12]/60).toFixed(1)}h)`);
+  console.log(`Memory leak threshold: ${(MAX_HEAP_GROWTH_RATIO*100).toFixed(1)}% heap growth (φ^2 × 10%)`);
+  console.log(`Metrics polled every fib(7)=${FIB[6]} minutes via Prometheus`);
+  console.log(`Base URL: ${BASE_URL}`);
 
   // Capture baseline heap
   try {
@@ -302,7 +300,7 @@ export function setup() {
       const body = JSON.parse(memRes.body);
       const heapBytes = parseFloat(body?.data?.result?.[0]?.value?.[1] || '0');
       baselineHeapMiB = heapBytes / (1024 * 1024);
-      logger.info(`Baseline heap: ${baselineHeapMiB.toFixed(1)} MiB`);
+      console.log(`Baseline heap: ${baselineHeapMiB.toFixed(1)} MiB`);
     }
   } catch {}
 
@@ -311,8 +309,8 @@ export function setup() {
 
 export function teardown(data) {
   const durationMin = Math.round((Date.now() - data.startTime) / 60000);
-  logger.info(`\nSoak test complete. Duration: ${durationMin} minutes`);
-  logger.info(`Fibonacci params: VUs=fib(8)=${SOAK_VUS}, soak=fib(13)=${FIB[12]}min`);
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Max heap growth threshold: φ^2 × 10% = ${(MAX_HEAP_GROWTH_RATIO*100).toFixed(1)}%`);
+  console.log(`\nSoak test complete. Duration: ${durationMin} minutes`);
+  console.log(`Fibonacci params: VUs=fib(8)=${SOAK_VUS}, soak=fib(13)=${FIB[12]}min`);
+  console.log(`φ = ${PHI}`);
+  console.log(`Max heap growth threshold: φ^2 × 10% = ${(MAX_HEAP_GROWTH_RATIO*100).toFixed(1)}%`);
 }

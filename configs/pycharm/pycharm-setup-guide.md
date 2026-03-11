@@ -14,8 +14,8 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
-# Heady Systems PyCharm Setup Guide
-# Production-ready PyCharm configuration for Heady development
+# Heady™ Systems PyCharm Setup Guide
+# Production-ready PyCharm configuration for Heady™ development
 
 ## Quick Setup
 
@@ -113,7 +113,7 @@ ssh-copy-id deploy@staging.headysystems.com
 2. Add remote log paths:
    - `/var/log/nginx/headysystems.com-access.log`
    - `/var/log/nginx/headysystems.com-error.log`
-   - `/var/log/headysystems/app.log`
+   - `/var/log/headyme/app.log`
 
 ### 3. Database Access
 1. Configure PyCharm Database tool window
@@ -140,7 +140,7 @@ ALLOWED_HOSTS=staging.headysystems.com,*.heady.local
 DATABASE_URL=sqlite:///./db.sqlite3
 SECRET_KEY=local-dev-secret-key
 DEBUG=True
-ALLOWED_HOSTS=*.heady.local,internal.headyio.com,internal.headyio.com
+ALLOWED_HOSTS=*.heady.local,localhost,127.0.0.1
 ```
 
 ## Performance Optimization
@@ -236,4 +236,4 @@ sudo systemctl restart gunicorn
 sudo systemctl reload nginx
 ```
 
-This setup provides a complete, production-ready PyCharm environment for Heady Systems development.
+This setup provides a complete, production-ready PyCharm environment for Heady™ Systems development.

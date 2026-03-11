@@ -13,7 +13,7 @@ enforcement: ABSOLUTE
 
 ```
 # These patterns trigger automatic PR rejection:
-//\s*(NOTE|HACK|FIXME|TEMP|XXX|KLUDGE)
+//\s*(TODO|HACK|FIXME|TEMP|XXX|KLUDGE)
 catch\s*\(\s*\w*\s*\)\s*\{\s*\}                    # empty catch
 console\.\s*(log|warn|error)                          # raw console in production
 any\s+                                                # TypeScript any type
@@ -43,7 +43,7 @@ innerHTML\s*=                                          # XSS-prone assignment
 
 - ❌ `"Lorem ipsum"` or any placeholder text
 - ❌ `"example.com"` / `"test@test.com"` / `"John Doe"` in non-test files
-- ❌ `"YOUR_API_KEY_HERE"` or `"<REPLACE>"` or `"NOTE_FILL"`
+- ❌ `"YOUR_API_KEY_HERE"` or `"<REPLACE>"` or `"TODO_FILL"`
 - ❌ Mock data that will never be replaced with real data
 - ❌ Simulated API responses that mask unimplemented backends
 - ❌ Hardcoded demo data that doesn't connect to real sources

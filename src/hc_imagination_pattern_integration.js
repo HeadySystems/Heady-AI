@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -30,7 +28,7 @@ try {
   const { patternStore } = require('./hc_pattern_engine');
   patternEngine = patternStore;
 } catch (e) {
-  logger.info('[Imagination-Pattern] Pattern engine not available');
+  console.log('[Imagination-Pattern] Pattern engine not available');
 }
 
 class ImaginationPatternIntegration {

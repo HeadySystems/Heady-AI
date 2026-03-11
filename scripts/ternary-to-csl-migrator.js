@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @file ternary-to-csl-migrator.js
  * @description
@@ -36,7 +34,7 @@ const logger = pino();
  *
  * const migrator = new TernaryToCSLMigrator({ dryRun: true });
  * const plan     = migrator.generateMigrationPlan(report);
- * logger.info(plan);
+ * console.log(plan);
  */
 
 'use strict';
@@ -271,7 +269,7 @@ function snippetAt(source, index) {
  * @example
  * const auditor  = new AuditDiscreteLogic();
  * const findings = auditor.scanFile('./services/router.js');
- * logger.info(findings.summary);
+ * console.log(findings.summary);
  */
 class AuditDiscreteLogic {
   /**
@@ -374,7 +372,7 @@ class AuditDiscreteLogic {
    * @example
    * const report = auditor.scanFile('./src/handler.js');
    * report.findings.filter(f => f.type === 'TYPE_B').forEach(f => {
-   *   logger.info(`Line ${f.line}: ${f.original}`);
+   *   console.log(`Line ${f.line}: ${f.original}`);
    * });
    */
   scanFile(filePath) {
@@ -577,7 +575,7 @@ class AuditDiscreteLogic {
  * const auditor  = new AuditDiscreteLogic();
  * const report   = auditor.scanFile('./src/router.js');
  * const result   = migrator.migrateFile('./src/router.js', report.findings);
- * logger.info(result.diff);
+ * console.log(result.diff);
  *
  * @example <caption>TYPE_A migration before/after</caption>
  * // BEFORE: if (cmd === 'deploy') { doDeployment(); }
@@ -771,7 +769,7 @@ class TernaryToCSLMigrator extends EventEmitter {
    *
    * @example
    * const report = migrator.scanFile('./src/service.js');
-   * logger.info(report.summary);
+   * console.log(report.summary);
    */
   scanFile(filePath) {
     return this._auditor.scanFile(filePath);
@@ -899,7 +897,7 @@ class TernaryToCSLMigrator extends EventEmitter {
    *
    * @example
    * const diff = migrator.generateDiff(originalSrc, migratedSrc, 'router.js');
-   * logger.info(diff);
+   * console.log(diff);
    * // --- a/router.js
    * // +++ b/router.js
    * // @@ -12,3 +12,5 @@
@@ -942,7 +940,7 @@ class TernaryToCSLMigrator extends EventEmitter {
    * @example
    * const reports = ['router.js', 'handler.js'].map(f => auditor.scanFile(f));
    * const plan = migrator.generateMigrationPlan(reports);
-   * plan.entries.forEach(e => logger.info(e.filePath, e.recommendation));
+   * plan.entries.forEach(e => console.log(e.filePath, e.recommendation));
    */
   generateMigrationPlan(auditReports) {
     const reports = Array.isArray(auditReports) ? auditReports : [auditReports];
@@ -1012,7 +1010,7 @@ class TernaryToCSLMigrator extends EventEmitter {
    *
    * @example
    * const progress = migrator.trackProgress(reports, ['/src/router.js']);
-   * logger.info(`${progress.percentComplete}% complete`);
+   * console.log(`${progress.percentComplete}% complete`);
    */
   trackProgress(auditReports, completedFiles = []) {
     const reports = Array.isArray(auditReports) ? auditReports : [auditReports];

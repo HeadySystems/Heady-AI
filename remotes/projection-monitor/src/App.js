@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * Projection Monitor — Real-Time Sync & Projection Status
  * Micro-frontend for Heady™Web Universal Shell
@@ -104,7 +102,7 @@ function createApp(container, props = {}) {
   container.appendChild(root);
 
   // Announce mount
-  logger.info('[MFE:projection-monitor] Mounted v' + APP_CONFIG.version);
+  console.log('[MFE:projection-monitor] Mounted v' + APP_CONFIG.version);
   return { unmount: () => { root.remove(); } };
 }
 

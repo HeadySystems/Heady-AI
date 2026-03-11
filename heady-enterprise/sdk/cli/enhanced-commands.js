@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 'use strict';
 
@@ -65,7 +63,7 @@ const getApiKey = () => process.env.HEADY_API_KEY || loadConfig().apiKey;
 const apiCall = async (method, path, body) => {
   const apiKey = getApiKey();
   if (!apiKey) {
-    logger.error('❌ No API key found. Run: heady config --set-key YOUR_API_KEY');
+    console.error('❌ No API key found. Run: heady config --set-key YOUR_API_KEY');
     process.exit(1);
   }
   const baseUrl = process.env.HEADY_BASE_URL || loadConfig().baseUrl || 'https://api.headyme.com/v1';
@@ -112,7 +110,7 @@ program
   .option('--name <name>', 'Project name')
   .option('--template <template>', 'Template: basic, multi-agent, research, slack-bot', 'basic')
   .action(async (options) => {
-    logger.info('🚀 Initializing HeadyOS project...\n');
+    console.log('🚀 Initializing HeadyOS project...\n');
 
     const name = options.name || await prompt('Project name: ');
     const template = options.template;
@@ -134,7 +132,7 @@ program
     };
 
     fs.writeFileSync('heady.config.json', JSON.stringify(projectConfig, null, 2));
-    logger.info(`✅ Created heady.config.json`);
+    console.log(`✅ Created heady.config.json`);
 
     // Create .env.example
     const envExample = [
@@ -144,17 +142,17 @@ program
       'HEADY_BASE_URL=https://api.headyme.com/v1',
     ].join('\n');
     fs.writeFileSync('.env.example', envExample);
-    logger.info('✅ Created .env.example');
+    console.log('✅ Created .env.example');
 
     if (!fs.existsSync('.gitignore')) {
       fs.writeFileSync('.gitignore', '.env\n.heady/\nnode_modules/\n');
     }
 
-    logger.info(`\n✅ HeadyOS project "${name}" initialized!`);
-    logger.info('\nNext steps:');
-    logger.info('  1. Copy .env.example to .env and add your API key');
-    logger.info('  2. Run: heady health');
-    logger.info('  3. Run: heady agent:create');
+    console.log(`\n✅ HeadyOS project "${name}" initialized!`);
+    console.log('\nNext steps:');
+    console.log('  1. Copy .env.example to .env and add your API key');
+    console.log('  2. Run: heady health');
+    console.log('  3. Run: heady agent:create');
   });
 
 // ---------------------------------------------------------------------------
@@ -168,20 +166,20 @@ program
   .option('--env <environment>', 'Target environment: production, staging', 'production')
   .option('--dry-run', 'Preview deployment without executing')
   .action(async (options) => {
-    logger.info(`\n🚀 Deploying to HeadyOS (${options.env})...\n`);
+    console.log(`\n🚀 Deploying to HeadyOS (${options.env})...\n`);
 
     let config;
     try {
       config = JSON.parse(fs.readFileSync(options.config, 'utf8'));
     } catch {
-      logger.error(`❌ Config file not found: ${options.config}`);
-      logger.error('Run: heady init');
+      console.error(`❌ Config file not found: ${options.config}`);
+      console.error('Run: heady init');
       process.exit(1);
     }
 
     if (options.dryRun) {
-      logger.info('DRY RUN — Would deploy:');
-      logger.info(JSON.stringify(config, null, 2));
+      console.log('DRY RUN — Would deploy:');
+      console.log(JSON.stringify(config, null, 2));
       return;
     }
 
@@ -190,12 +188,12 @@ program
         config,
         environment: options.env,
       });
-      logger.info(`✅ Deployed successfully!`);
-      logger.info(`   Deployment ID: ${result.deploymentId}`);
-      logger.info(`   Status: ${result.status}`);
-      logger.info(`   Dashboard: https://headyme.com/dashboard/${result.deploymentId}`);
+      console.log(`✅ Deployed successfully!`);
+      console.log(`   Deployment ID: ${result.deploymentId}`);
+      console.log(`   Status: ${result.status}`);
+      console.log(`   Dashboard: https://headyme.com/dashboard/${result.deploymentId}`);
     } catch (err) {
-      logger.error(`❌ Deploy failed: ${err.message}`);
+      console.error(`❌ Deploy failed: ${err.message}`);
       process.exit(1);
     }
   });
@@ -212,7 +210,7 @@ program
   .option('--level <level>', 'Log level: debug, info, warn, error', 'info')
   .option('--follow', 'Follow log output (like tail -f)', false)
   .action(async (options) => {
-    logger.info(`📋 Fetching logs${options.service ? ` for ${options.service}` : ''} (since ${options.since})...\n`);
+    console.log(`📋 Fetching logs${options.service ? ` for ${options.service}` : ''} (since ${options.since})...\n`);
 
     try {
       const params = new URLSearchParams({
@@ -225,26 +223,26 @@ program
       if (Array.isArray(logs.entries)) {
         for (const entry of logs.entries) {
           const color = entry.level === 'error' ? '\x1b[31m' : entry.level === 'warn' ? '\x1b[33m' : '\x1b[0m';
-          logger.info(`${color}[${entry.timestamp}] [${entry.service || 'system'}] [${entry.level.toUpperCase()}] ${entry.message}\x1b[0m`);
+          console.log(`${color}[${entry.timestamp}] [${entry.service || 'system'}] [${entry.level.toUpperCase()}] ${entry.message}\x1b[0m`);
         }
-        logger.info(`\n${logs.entries.length} log entries displayed.`);
+        console.log(`\n${logs.entries.length} log entries displayed.`);
       }
 
       if (options.follow) {
-        logger.info('\n📡 Following logs (Ctrl+C to stop)...');
+        console.log('\n📡 Following logs (Ctrl+C to stop)...');
         // In production: open WebSocket for real-time log streaming
         const interval = setInterval(async () => {
           const recent = await apiCall('GET', `/logs?since=5s&level=${options.level}${options.service ? `&service=${options.service}` : ''}`).catch(() => ({ entries: [] }));
           if (recent.entries?.length > 0) {
             for (const entry of recent.entries) {
-              logger.info(`[${entry.timestamp}] [${entry.level.toUpperCase()}] ${entry.message}`);
+              console.log(`[${entry.timestamp}] [${entry.level.toUpperCase()}] ${entry.message}`);
             }
           }
         }, Math.round(1000 * PHI)); // Refresh every φ seconds ≈ 1618ms
         process.on('SIGINT', () => { clearInterval(interval); process.exit(0); });
       }
     } catch (err) {
-      logger.error(`❌ Failed to fetch logs: ${err.message}`);
+      console.error(`❌ Failed to fetch logs: ${err.message}`);
       process.exit(1);
     }
   });
@@ -259,7 +257,7 @@ program
   .option('--name <name>', 'Agent name')
   .option('--file <file>', 'Create from JSON config file')
   .action(async (options) => {
-    logger.info('🤖 Creating new HeadyOS agent...\n');
+    console.log('🤖 Creating new HeadyOS agent...\n');
 
     let agentConfig;
 
@@ -284,19 +282,19 @@ program
       };
     }
 
-    logger.info('\nCreating agent:', agentConfig.name);
+    console.log('\nCreating agent:', agentConfig.name);
 
     try {
       const agent = await apiCall('POST', '/agents', agentConfig);
-      logger.info(`\n✅ Agent created!`);
-      logger.info(`   ID:     ${agent.id}`);
-      logger.info(`   Name:   ${agent.name}`);
-      logger.info(`   Status: ${agent.status}`);
+      console.log(`\n✅ Agent created!`);
+      console.log(`   ID:     ${agent.id}`);
+      console.log(`   Name:   ${agent.name}`);
+      console.log(`   Status: ${agent.status}`);
       if (program.opts().json) {
-        logger.info(JSON.stringify(agent, null, 2));
+        console.log(JSON.stringify(agent, null, 2));
       }
     } catch (err) {
-      logger.error(`❌ Failed to create agent: ${err.message}`);
+      console.error(`❌ Failed to create agent: ${err.message}`);
       process.exit(1);
     }
   });
@@ -312,8 +310,8 @@ program
   .option('--prompt <prompt>', 'Test prompt', 'What can you help me with today?')
   .option('--verbose', 'Show full response details')
   .action(async (agentId, options) => {
-    logger.info(`\n🧪 Testing agent ${agentId}...\n`);
-    logger.info(`Prompt: "${options.prompt}"\n`);
+    console.log(`\n🧪 Testing agent ${agentId}...\n`);
+    console.log(`Prompt: "${options.prompt}"\n`);
 
     try {
       const response = await apiCall('POST', '/brain/chat', {
@@ -322,19 +320,19 @@ program
         temperature: 1 / PHI, // ≈ 0.618
       });
 
-      logger.info(`📤 Response:`);
-      logger.info(response.message?.content || JSON.stringify(response));
+      console.log(`📤 Response:`);
+      console.log(response.message?.content || JSON.stringify(response));
 
       if (options.verbose) {
-        logger.info('\n📊 Stats:');
-        logger.info(`   Model:         ${response.model}`);
-        logger.info(`   Latency:       ${response.latencyMs}ms`);
-        logger.info(`   Tokens (in):   ${response.usage?.promptTokens}`);
-        logger.info(`   Tokens (out):  ${response.usage?.completionTokens}`);
-        logger.info(`   Finish Reason: ${response.finishReason}`);
+        console.log('\n📊 Stats:');
+        console.log(`   Model:         ${response.model}`);
+        console.log(`   Latency:       ${response.latencyMs}ms`);
+        console.log(`   Tokens (in):   ${response.usage?.promptTokens}`);
+        console.log(`   Tokens (out):  ${response.usage?.completionTokens}`);
+        console.log(`   Finish Reason: ${response.finishReason}`);
       }
     } catch (err) {
-      logger.error(`❌ Test failed: ${err.message}`);
+      console.error(`❌ Test failed: ${err.message}`);
       process.exit(1);
     }
   });
@@ -358,10 +356,10 @@ program
         namespace: options.namespace,
         ttlDays: parseInt(options.ttl, 10),
       });
-      logger.info(`✅ Stored: ${entry.key} → ${entry.namespace}`);
-      logger.info(`   ID: ${entry.id}`);
+      console.log(`✅ Stored: ${entry.key} → ${entry.namespace}`);
+      console.log(`   ID: ${entry.id}`);
     } catch (err) {
-      logger.error(`❌ Store failed: ${err.message}`);
+      console.error(`❌ Store failed: ${err.message}`);
       process.exit(1);
     }
   });
@@ -386,19 +384,19 @@ program
         minScore: parseFloat(options.minScore),
       });
 
-      logger.info(`\n🔍 Search results for: "${query}" (${results.totalFound} found)\n`);
+      console.log(`\n🔍 Search results for: "${query}" (${results.totalFound} found)\n`);
       if (!results.results?.length) {
-        logger.info('No results found above the minimum similarity threshold.');
+        console.log('No results found above the minimum similarity threshold.');
         return;
       }
       for (const entry of results.results) {
-        logger.info(`[${entry.score?.toFixed(3) || '?'}] ${entry.key}`);
-        logger.info(`       ${entry.value.substring(0, fib(9))}...`); // fib(9)=34 chars preview
-        logger.info();
+        console.log(`[${entry.score?.toFixed(3) || '?'}] ${entry.key}`);
+        console.log(`       ${entry.value.substring(0, fib(9))}...`); // fib(9)=34 chars preview
+        console.log();
       }
-      logger.info(`Latency: ${results.searchLatencyMs}ms`);
+      console.log(`Latency: ${results.searchLatencyMs}ms`);
     } catch (err) {
-      logger.error(`❌ Search failed: ${err.message}`);
+      console.error(`❌ Search failed: ${err.message}`);
       process.exit(1);
     }
   });
@@ -420,7 +418,7 @@ program
     try {
       input = options.input ? JSON.parse(options.input) : {};
     } catch {
-      logger.error('❌ Invalid JSON in --input');
+      console.error('❌ Invalid JSON in --input');
       process.exit(1);
     }
 
@@ -433,12 +431,12 @@ program
         maxSteps: fib(8), // 21
       });
 
-      logger.info(`✅ Task submitted!`);
-      logger.info(`   Task ID: ${task.taskId}`);
-      logger.info(`   Status:  ${task.status}`);
+      console.log(`✅ Task submitted!`);
+      console.log(`   Task ID: ${task.taskId}`);
+      console.log(`   Status:  ${task.status}`);
 
       if (options.wait) {
-        logger.info('\n⏳ Waiting for completion...');
+        console.log('\n⏳ Waiting for completion...');
         let status = task;
         let attempt = 0;
         while (!['completed', 'failed', 'cancelled'].includes(status.status)) {
@@ -447,13 +445,13 @@ program
           status = await apiCall('GET', `/conductor/tasks/${task.taskId}`);
           process.stdout.write(`\r   Status: ${status.status} (${Math.round((status.progress || 0) * 100)}%)  `);
         }
-        logger.info(`\n\n✅ Task ${status.status}!`);
+        console.log(`\n\n✅ Task ${status.status}!`);
         if (status.result) {
-          logger.info('Result:', typeof status.result === 'string' ? status.result : JSON.stringify(status.result, null, 2));
+          console.log('Result:', typeof status.result === 'string' ? status.result : JSON.stringify(status.result, null, 2));
         }
       }
     } catch (err) {
-      logger.error(`❌ Task submission failed: ${err.message}`);
+      console.error(`❌ Task submission failed: ${err.message}`);
       process.exit(1);
     }
   });
@@ -475,24 +473,24 @@ program
     if (options.setKey) {
       config.apiKey = options.setKey;
       saveConfig(config);
-      logger.info('✅ API key saved');
+      console.log('✅ API key saved');
     }
     if (options.setTenant) {
       config.tenantId = options.setTenant;
       saveConfig(config);
-      logger.info('✅ Tenant ID saved');
+      console.log('✅ Tenant ID saved');
     }
     if (options.setUrl) {
       config.baseUrl = options.setUrl;
       saveConfig(config);
-      logger.info('✅ Base URL saved');
+      console.log('✅ Base URL saved');
     }
     if (options.show || Object.keys(options).filter(k => k.startsWith('set')).every(k => !options[k])) {
-      logger.info('Current configuration:');
-      logger.info(`  Config file: ${CONFIG_FILE}`);
-      logger.info(`  API Key:     ${config.apiKey ? config.apiKey.substring(0, 8) + '...' : 'not set (use env: HEADY_API_KEY)'}`);
-      logger.info(`  Tenant ID:   ${config.tenantId || 'not set'}`);
-      logger.info(`  Base URL:    ${config.baseUrl || 'https://api.headyme.com/v1 (default)'}`);
+      console.log('Current configuration:');
+      console.log(`  Config file: ${CONFIG_FILE}`);
+      console.log(`  API Key:     ${config.apiKey ? config.apiKey.substring(0, 8) + '...' : 'not set (use env: HEADY_API_KEY)'}`);
+      console.log(`  Tenant ID:   ${config.tenantId || 'not set'}`);
+      console.log(`  Base URL:    ${config.baseUrl || 'https://api.headyme.com/v1 (default)'}`);
     }
   });
 
@@ -508,13 +506,13 @@ program
       const start = Date.now();
       const health = await apiCall('GET', '/health');
       const latency = Date.now() - start;
-      logger.info(`\n✅ HeadyOS API Health Check`);
-      logger.info(`   Status:  ${health.status}`);
-      logger.info(`   Version: ${health.version}`);
-      logger.info(`   Latency: ${latency}ms`);
-      logger.info(`   API Key: ${getApiKey() ? '✓ Set' : '✗ Not set'}`);
+      console.log(`\n✅ HeadyOS API Health Check`);
+      console.log(`   Status:  ${health.status}`);
+      console.log(`   Version: ${health.version}`);
+      console.log(`   Latency: ${latency}ms`);
+      console.log(`   API Key: ${getApiKey() ? '✓ Set' : '✗ Not set'}`);
     } catch (err) {
-      logger.error(`❌ Health check failed: ${err.message}`);
+      console.error(`❌ Health check failed: ${err.message}`);
       process.exit(1);
     }
   });

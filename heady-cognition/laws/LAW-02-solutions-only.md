@@ -37,7 +37,7 @@ Every implementation addresses ROOT CAUSE. If the root cause requires refactorin
 - `try/catch` with empty catch body or `catch(e) { /* ignore */ }`
 - Hardcoded values that should be phi-scaled or env-based configuration
 - "Temporary" files, routes, or services that become permanent fixtures
-- Comments: `// HACK`, `// FIXME`, `// NOTE: do this properly later`, `// TEMP`
+- Comments: `// HACK`, `// FIXME`, `// TODO: do this properly later`, `// TEMP`
 - Disabling tests that fail instead of fixing the code under test
 - Catching all errors and returning HTTP 200 with `{ success: true }`
 - `!important` in CSS to override specificity issues instead of fixing cascade
@@ -76,7 +76,7 @@ Every implementation addresses ROOT CAUSE. If the root cause requires refactorin
 | Disable CORS for convenience | Per-domain CORS via Cloudflare Access rules |
 | "Just restart when it hangs" | Circuit breaker + graceful recovery + root cause investigation |
 | Stub returning mock data permanently | Real implementation backed by actual data source |
-| `// NOTE: add validation later` | Zod schema validation NOW |
+| `// TODO: add validation later` | Zod schema validation NOW |
 | Inline `console.log` for debugging | Structured logging via `observability-kernel` with trace IDs |
 | Retry infinitely without backoff | Phi-exponential backoff with circuit breaker and dead letter queue |
 | Global mutable state for "convenience" | Scoped state with lifecycle management and cleanup |

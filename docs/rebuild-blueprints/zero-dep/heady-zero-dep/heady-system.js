@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file heady-system.js
  * @description Heady™ Zero-Dependency Master System Integration
@@ -32,7 +30,7 @@ const logger = pino();
  * // Start the full system for this node's role (from HEADY_NODE_ROLE env var)
  * import { HeadySystem } from './heady-system.js';
  * const system = await HeadySystem.boot();
- * logger.info(system.status);
+ * console.log(system.status);
  *
  * @example
  * // Start a specific role explicitly
@@ -45,7 +43,7 @@ const logger = pino();
 
 const [major] = process.versions.node.split('.').map(Number);
 if (major < 22) {
-  logger.error(`[HeadySystem] Node.js 22+ required. Found: ${process.version}`);
+  console.error(`[HeadySystem] Node.js 22+ required. Found: ${process.version}`);
   process.exit(1);
 }
 
@@ -295,13 +293,13 @@ export class HeadySystem {
    */
   async _boot(opts = {}) {
     const t0 = Date.now();
-    logger.info(`\n${'═'.repeat(60)}`);
-    logger.info(`  HEADY SYSTEM  ✦  ${this.role.toUpperCase()}  (v${VERSION})`);
-    logger.info(`  φ = ${PHI}  │  Zero Dependencies`);
-    logger.info(`${'═'.repeat(60)}\n`);
+    console.log(`\n${'═'.repeat(60)}`);
+    console.log(`  HEADY SYSTEM  ✦  ${this.role.toUpperCase()}  (v${VERSION})`);
+    console.log(`  φ = ${PHI}  │  Zero Dependencies`);
+    console.log(`${'═'.repeat(60)}\n`);
 
     const layers = ROLE_LAYERS[this.role];
-    logger.info(`[HeadySystem] Loading layers for role "${this.role}": ${layers.join(', ')}\n`);
+    console.log(`[HeadySystem] Loading layers for role "${this.role}": ${layers.join(', ')}\n`);
 
     // ── 1. Load all layer modules ──────────────────────────────────────────
     for (const layer of layers) {
@@ -384,11 +382,11 @@ export class HeadySystem {
     this._bootedAt = t0;
 
     const elapsed = Date.now() - t0;
-    logger.info(`\n[HeadySystem] ✓ Boot complete in ${elapsed}ms`);
-    logger.info(`[HeadySystem]   Role: ${this.role.toUpperCase()}`);
-    logger.info(`[HeadySystem]   Node: ${this.nodeId}`);
-    logger.info(`[HeadySystem]   Port: ${this.port}`);
-    logger.info(`[HeadySystem]   PHI-pulse: ${Math.floor(Math.pow(PHI, 5) * 1000)}ms\n`);
+    console.log(`\n[HeadySystem] ✓ Boot complete in ${elapsed}ms`);
+    console.log(`[HeadySystem]   Role: ${this.role.toUpperCase()}`);
+    console.log(`[HeadySystem]   Node: ${this.nodeId}`);
+    console.log(`[HeadySystem]   Port: ${this.port}`);
+    console.log(`[HeadySystem]   PHI-pulse: ${Math.floor(Math.pow(PHI, 5) * 1000)}ms\n`);
   }
 
   // ─── Layer Loaders ────────────────────────────────────────────────────────────
@@ -400,7 +398,7 @@ export class HeadySystem {
    */
   async _loadLayer(name) {
     const specifier = `./${name}/index.js`;
-    logger.info(`[HeadySystem]   ↓ ${name}`);
+    console.log(`[HeadySystem]   ↓ ${name}`);
     const mod = await importLayer(new URL(specifier, import.meta.url).pathname);
     this._layers.set(name, mod);
   }
@@ -410,7 +408,7 @@ export class HeadySystem {
   /** @private */
   async _initCore(opts) {
     const { Runtime, createClusterNode } = this._layers.get('core');
-    logger.info(`[HeadySystem] Starting Core Runtime on port ${this.port}…`);
+    console.log(`[HeadySystem] Starting Core Runtime on port ${this.port}…`);
 
     const runtime = createClusterNode(this.role === 'standalone' ? 'brain' : this.role, {
       port: this.port,
@@ -423,13 +421,13 @@ export class HeadySystem {
     const info = await runtime.start();
     this._runtime = runtime;
     this._started.push({ name: 'core-runtime', instance: runtime });
-    logger.info(`[HeadySystem]   ✓ Core Runtime: port=${info.port} nodeId=${info.nodeId}`);
+    console.log(`[HeadySystem]   ✓ Core Runtime: port=${info.port} nodeId=${info.nodeId}`);
   }
 
   /** @private */
   async _initMemory() {
     const { createMemorySystem } = this._layers.get('memory');
-    logger.info(`[HeadySystem] Starting Memory System…`);
+    console.log(`[HeadySystem] Starting Memory System…`);
 
     this._memory = await createMemorySystem({
       dataDir: `${this.dataDir}/memory`,
@@ -445,13 +443,13 @@ export class HeadySystem {
 
     this._started.push({ name: 'memory', instance: this._memory });
     const stats = this._memory.stats();
-    logger.info(`[HeadySystem]   ✓ Memory: vectorDb=${stats.vectorDb?.size ?? 0} vectors`);
+    console.log(`[HeadySystem]   ✓ Memory: vectorDb=${stats.vectorDb?.size ?? 0} vectors`);
   }
 
   /** @private */
   async _initOrchestration() {
     const { createOrchestrationLayer } = this._layers.get('orchestration');
-    logger.info(`[HeadySystem] Starting Orchestration Layer…`);
+    console.log(`[HeadySystem] Starting Orchestration Layer…`);
 
     this._orchestration = await createOrchestrationLayer({
       nodeId: this.nodeId,
@@ -461,13 +459,13 @@ export class HeadySystem {
 
     await this._orchestration.start?.();
     this._started.push({ name: 'orchestration', instance: this._orchestration });
-    logger.info(`[HeadySystem]   ✓ Orchestration: conductor + swarm + buddy`);
+    console.log(`[HeadySystem]   ✓ Orchestration: conductor + swarm + buddy`);
   }
 
   /** @private */
   async _initPipeline() {
     const pipelineMod = this._layers.get('pipeline');
-    logger.info(`[HeadySystem] Starting Pipeline…`);
+    console.log(`[HeadySystem] Starting Pipeline…`);
 
     // Pipeline core
     if (pipelineMod.PipelineCore) {
@@ -479,16 +477,16 @@ export class HeadySystem {
       });
       await this._pipeline.init?.();
       this._started.push({ name: 'pipeline', instance: this._pipeline });
-      logger.info(`[HeadySystem]   ✓ Pipeline: concurrency=${process.env.HEADY_PIPELINE_CONCURRENCY || 5}`);
+      console.log(`[HeadySystem]   ✓ Pipeline: concurrency=${process.env.HEADY_PIPELINE_CONCURRENCY || 5}`);
     } else {
-      logger.info(`[HeadySystem]   ℹ Pipeline module has no PipelineCore export — skipping`);
+      console.log(`[HeadySystem]   ℹ Pipeline module has no PipelineCore export — skipping`);
     }
   }
 
   /** @private */
   async _initBees() {
     const beesMod = this._layers.get('bees');
-    logger.info(`[HeadySystem] Starting Bee Factory…`);
+    console.log(`[HeadySystem] Starting Bee Factory…`);
 
     if (beesMod.BeeFactory) {
       this._bees = new beesMod.BeeFactory({
@@ -498,16 +496,16 @@ export class HeadySystem {
       });
       await this._bees.init?.();
       this._started.push({ name: 'bees', instance: this._bees });
-      logger.info(`[HeadySystem]   ✓ Bee Factory: max=${process.env.HEADY_MAX_BEES || 13} bees`);
+      console.log(`[HeadySystem]   ✓ Bee Factory: max=${process.env.HEADY_MAX_BEES || 13} bees`);
     } else {
-      logger.info(`[HeadySystem]   ℹ Bees module has no BeeFactory export — skipping`);
+      console.log(`[HeadySystem]   ℹ Bees module has no BeeFactory export — skipping`);
     }
   }
 
   /** @private */
   async _initResilience() {
     const { CircuitBreaker } = this._layers.get('resilience');
-    logger.info(`[HeadySystem] Starting Resilience Layer…`);
+    console.log(`[HeadySystem] Starting Resilience Layer…`);
 
     // Circuit breaker for each peer node
     const peerUrls = {
@@ -528,13 +526,13 @@ export class HeadySystem {
     }
 
     this._started.push({ name: 'resilience', instance: this._resilience });
-    logger.info(`[HeadySystem]   ✓ Resilience: circuit breakers for [${Object.keys(peerUrls).filter(k => peerUrls[k]).join(', ')}]`);
+    console.log(`[HeadySystem]   ✓ Resilience: circuit breakers for [${Object.keys(peerUrls).filter(k => peerUrls[k]).join(', ')}]`);
   }
 
   /** @private */
   async _initSecurity() {
     const secMod = this._layers.get('security');
-    logger.info(`[HeadySystem] Starting Security Layer…`);
+    console.log(`[HeadySystem] Starting Security Layer…`);
 
     const securityMode = process.env.HEADY_SECURITY_MODE || 'strict';
 
@@ -543,7 +541,7 @@ export class HeadySystem {
       const validator = new secMod.EnvValidator({ strict: securityMode === 'strict' });
       const issues = await validator.validate?.() ?? [];
       if (issues.length > 0) {
-        issues.forEach(i => logger.warn(`[HeadySystem]   ⚠ Security: ${i}`));
+        issues.forEach(i => console.warn(`[HeadySystem]   ⚠ Security: ${i}`));
       }
     }
 
@@ -556,38 +554,38 @@ export class HeadySystem {
     }
 
     this._started.push({ name: 'security', instance: this._security });
-    logger.info(`[HeadySystem]   ✓ Security: mode=${securityMode} pqc=${!!secMod.PQCHandshake}`);
+    console.log(`[HeadySystem]   ✓ Security: mode=${securityMode} pqc=${!!secMod.PQCHandshake}`);
   }
 
   /** @private */
   async _initIntelligence() {
     const intMod = this._layers.get('intelligence');
-    logger.info(`[HeadySystem] Starting Intelligence Layer…`);
+    console.log(`[HeadySystem] Starting Intelligence Layer…`);
 
     if (intMod.AnalyticsEngine) {
       this._intelligence = new intMod.AnalyticsEngine({ nodeId: this.nodeId });
       await this._intelligence.init?.();
       this._started.push({ name: 'intelligence', instance: this._intelligence });
-      logger.info(`[HeadySystem]   ✓ Intelligence: analytics + monte-carlo + patterns`);
+      console.log(`[HeadySystem]   ✓ Intelligence: analytics + monte-carlo + patterns`);
     } else {
-      logger.info(`[HeadySystem]   ℹ Intelligence: no AnalyticsEngine export`);
+      console.log(`[HeadySystem]   ℹ Intelligence: no AnalyticsEngine export`);
     }
   }
 
   /** @private */
   async _initGovernance() {
     const { createGovernanceLayer } = this._layers.get('governance');
-    logger.info(`[HeadySystem] Starting Governance Layer…`);
+    console.log(`[HeadySystem] Starting Governance Layer…`);
 
     this._governance = createGovernanceLayer({ nodeId: this.nodeId });
     this._started.push({ name: 'governance', instance: this._governance });
-    logger.info(`[HeadySystem]   ✓ Governance: approval gates + audit trail`);
+    console.log(`[HeadySystem]   ✓ Governance: approval gates + audit trail`);
   }
 
   /** @private */
   async _initTelemetry() {
     const telMod = this._layers.get('telemetry');
-    logger.info(`[HeadySystem] Starting Telemetry…`);
+    console.log(`[HeadySystem] Starting Telemetry…`);
 
     if (telMod.HeadyTelemetry) {
       this._telemetry = new telMod.HeadyTelemetry({
@@ -598,16 +596,16 @@ export class HeadySystem {
       });
       await this._telemetry.init?.();
       this._started.push({ name: 'telemetry', instance: this._telemetry });
-      logger.info(`[HeadySystem]   ✓ Telemetry: flush=${process.env.HEADY_TELEMETRY_FLUSH_S || 11}s`);
+      console.log(`[HeadySystem]   ✓ Telemetry: flush=${process.env.HEADY_TELEMETRY_FLUSH_S || 11}s`);
     } else {
-      logger.info(`[HeadySystem]   ℹ Telemetry: no HeadyTelemetry export`);
+      console.log(`[HeadySystem]   ℹ Telemetry: no HeadyTelemetry export`);
     }
   }
 
   /** @private */
   async _initServices() {
     const svcMod = this._layers.get('services');
-    logger.info(`[HeadySystem] Starting Services…`);
+    console.log(`[HeadySystem] Starting Services…`);
 
     // LLM Router
     if (svcMod.LLMRouter) {
@@ -629,13 +627,13 @@ export class HeadySystem {
 
     this._started.push({ name: 'services', instance: this._services });
     const svcNames = Object.keys(this._services || {}).join(', ');
-    logger.info(`[HeadySystem]   ✓ Services: ${svcNames || 'initialized'}`);
+    console.log(`[HeadySystem]   ✓ Services: ${svcNames || 'initialized'}`);
   }
 
   /** @private */
   async _initColabRuntime() {
     const rtMod = this._layers.get('runtime');
-    logger.info(`[HeadySystem] Starting Colab Runtime Layer…`);
+    console.log(`[HeadySystem] Starting Colab Runtime Layer…`);
 
     if (rtMod.ColabRuntime) {
       this._colabRuntime = new rtMod.ColabRuntime({
@@ -644,7 +642,7 @@ export class HeadySystem {
       });
       await this._colabRuntime.init?.();
       this._started.push({ name: 'runtime', instance: this._colabRuntime });
-      logger.info(`[HeadySystem]   ✓ Colab Runtime: edge-compatible service registry`);
+      console.log(`[HeadySystem]   ✓ Colab Runtime: edge-compatible service registry`);
     }
   }
 
@@ -663,7 +661,7 @@ export class HeadySystem {
       sentinel:  { url: process.env.HEADY_SENTINEL_URL,  port: 9103 },
     };
 
-    logger.info(`[HeadySystem] Wiring inter-node mesh…`);
+    console.log(`[HeadySystem] Wiring inter-node mesh…`);
     for (const [role, { url }] of Object.entries(peers)) {
       if (role === this.role || !url) continue;
       try {
@@ -671,9 +669,9 @@ export class HeadySystem {
         const bridgePortMap = { brain: 9101, conductor: 9102, sentinel: 9103 };
         const bridgePort = bridgePortMap[role] || 9100;
         await this._runtime.bridge.connect(parsed.hostname, bridgePort, role);
-        logger.info(`[HeadySystem]   ✓ Mesh: connected to ${role} at ${parsed.hostname}:${bridgePort}`);
+        console.log(`[HeadySystem]   ✓ Mesh: connected to ${role} at ${parsed.hostname}:${bridgePort}`);
       } catch (err) {
-        logger.warn(`[HeadySystem]   ⚠ Mesh: could not connect to ${role}: ${err.message}`);
+        console.warn(`[HeadySystem]   ⚠ Mesh: could not connect to ${role}: ${err.message}`);
       }
     }
   }
@@ -785,7 +783,7 @@ export class HeadySystem {
    */
   _registerShutdownHandlers() {
     const handler = async (signal) => {
-      logger.info(`\n[HeadySystem] Received ${signal} — initiating graceful shutdown…`);
+      console.log(`\n[HeadySystem] Received ${signal} — initiating graceful shutdown…`);
       await this.shutdown();
       process.exit(0);
     };
@@ -811,7 +809,7 @@ export class HeadySystem {
       this._healthTimer = null;
     }
 
-    logger.info(`[HeadySystem] Shutting down ${this.role.toUpperCase()} (${this._started.length} services, LIFO)…`);
+    console.log(`[HeadySystem] Shutting down ${this.role.toUpperCase()} (${this._started.length} services, LIFO)…`);
 
     // LIFO: reverse the start order
     const toStop = [...this._started].reverse();
@@ -820,14 +818,14 @@ export class HeadySystem {
         if (instance?.shutdown) await instance.shutdown();
         else if (instance?.close)    await instance.close();
         else if (instance?.stop)     await instance.stop();
-        logger.info(`[HeadySystem]   ✓ Stopped: ${name}`);
+        console.log(`[HeadySystem]   ✓ Stopped: ${name}`);
       } catch (err) {
-        logger.warn(`[HeadySystem]   ⚠ Error stopping ${name}: ${err.message}`);
+        console.warn(`[HeadySystem]   ⚠ Error stopping ${name}: ${err.message}`);
       }
     }
 
     this._started.length = 0;
-    logger.info(`[HeadySystem] Shutdown complete.\n`);
+    console.log(`[HeadySystem] Shutdown complete.\n`);
   }
 
   // ─── Public Accessors ─────────────────────────────────────────────────────────
@@ -966,10 +964,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const role = process.env.HEADY_NODE_ROLE || process.argv[2];
 
   HeadySystem.boot(role).then(system => {
-    logger.info(`[HeadySystem] Running as ${system.role.toUpperCase()} — press Ctrl+C to stop\n`);
+    console.log(`[HeadySystem] Running as ${system.role.toUpperCase()} — press Ctrl+C to stop\n`);
   }).catch(err => {
-    logger.error(`[HeadySystem] Boot failed: ${err.message}`);
-    logger.error(err.stack);
+    console.error(`[HeadySystem] Boot failed: ${err.message}`);
+    console.error(err.stack);
     process.exit(1);
   });
 }

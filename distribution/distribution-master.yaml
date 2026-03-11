@@ -38,15 +38,15 @@ headyos_forms:
     description: "Chromium-based browser with integrated HeadyOS"
     variants:
       local:
-        description: "Uses manager.dev.local.headysystems.com:3300 for all services"
-        default_endpoint: "http://manager.dev.local.headysystems.com:3300"
+        description: "Uses manager.dev.local.heady.internal:3300 for all services"
+        default_endpoint: "http://manager.dev.local.heady.internal:3300"
       hybrid:
         description: "Local orchestrator + remote models"
-        default_endpoint: "http://manager.dev.local.headysystems.com:3300"
-        fallback_endpoints: ["https://app.headysystems.com"]
+        default_endpoint: "http://manager.dev.local.heady.internal:3300"
+        fallback_endpoints: ["https://heady-manager-headysystems.onrender.com"]
       cloud:
         description: "Cloud-only mode"
-        default_endpoint: "https://app.headysystems.com"
+        default_endpoint: "https://heady-manager-headysystems.onrender.com"
     
   web_shell:
     name: "HeadyOS Web Shell"
@@ -68,12 +68,12 @@ browser_extensions:
   chrome:
     manifest_version: 3
     permissions: [storage, activeTab, sidePanel, scripting, tabs]
-    host_permissions: ["http://manager.dev.local.headysystems.com:3300/*", "https://*.headysystems.com/*"]
+    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.onrender.com/*"]
     
   edge:
     manifest_version: 3
     permissions: [storage, activeTab, sidePanel, scripting, tabs]
-    host_permissions: ["http://manager.dev.local.headysystems.com:3300/*", "https://*.headysystems.com/*"]
+    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.onrender.com/*"]
     
   firefox:
     manifest_version: 2
@@ -82,7 +82,7 @@ browser_extensions:
   safari:
     manifest_version: 3
     permissions: [storage, activeTab, tabs]
-    host_permissions: ["http://manager.dev.local.headysystems.com:3300/*", "https://*.headysystems.com/*"]
+    host_permissions: ["http://manager.dev.local.heady.internal:3300/*", "https://*.onrender.com/*"]
 
 # ============================================
 # IDE EXTENSIONS

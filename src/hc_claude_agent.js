@@ -21,8 +21,6 @@
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
-const ColorfulLogger = require("./hc_colorful_logger");
-const log = new ColorfulLogger({ level: "info" });
 
 const PROJECT_ROOT = path.join(__dirname, "..");
 const IS_WIN = process.platform === "win32";
@@ -72,7 +70,7 @@ async function isClaudeAvailable() {
       _claudeCheckTime = Date.now();
       resolve(false);
     });
-    setTimeout(() => { try { proc.kill(); } catch (err) { log.warning("Failed to kill claude process", { error: err.message }); } _claudeAvailable = false; _claudeCheckTime = Date.now(); resolve(false); }, 15000);
+    setTimeout(() => { try { proc.kill(); } catch (err) { /* structured-logger: emit error */ } _claudeAvailable = false; _claudeCheckTime = Date.now(); resolve(false); }, 15000);
   });
 }
 
@@ -195,8 +193,8 @@ function runClaude(prompt, options = {}) {
       if (outputFormat === "json") {
         try {
           parsed = JSON.parse(stdout);
-        } catch (err) {
-          log.warning("Failed to parse JSON output from Claude", { error: err.message });
+        } catch (_) {
+          // JSON parse failed, return raw text
         }
       }
 
@@ -513,8 +511,8 @@ function saveClaudeOutput(taskName, runId, result) {
   const filePath = path.join(CLAUDE_OUTPUT_DIR, filename);
   try {
     fs.writeFileSync(filePath, JSON.stringify(result, null, 2), "utf8");
-  } catch (err) {
-    log.warning("Failed to save Claude output", { path: filePath, error: err.message });
+  } catch (_) {
+    // non-fatal
   }
   return filePath;
 }

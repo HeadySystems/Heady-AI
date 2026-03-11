@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadySystems v3.2.2 — k6 Stress Test
  * =======================================
@@ -164,7 +162,7 @@ export default function () {
       breakingPointDetected = true;
       breakingPointVUCount  = __VU;
       breakingPointVUs.add(__VU);
-      logger.info(`Breaking point detected at ~${__VU} VUs (p99 latency: ${res.timings.duration}ms)`);
+      console.log(`Breaking point detected at ~${__VU} VUs (p99 latency: ${res.timings.duration}ms)`);
     }
   });
 
@@ -212,21 +210,21 @@ export default function () {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function setup() {
-  logger.info(`HeadySystems STRESS Test — φ=${PHI}`);
-  logger.info(`VU ramp: 0→fib(5)=5→fib(7)=13→fib(9)=34→fib(10)=55→fib(11)=89→fib(12)=144`);
-  logger.info(`Breaking point detection: p99 > 1000ms (φ^2 × 382ms)`);
-  logger.info(`Fibonacci stage durations: 2m, 2m, 3m, 3m, 3m, 3m, 5m, 3m`);
-  logger.info(`Base URL: ${BASE_URL}`);
+  console.log(`HeadySystems STRESS Test — φ=${PHI}`);
+  console.log(`VU ramp: 0→fib(5)=5→fib(7)=13→fib(9)=34→fib(10)=55→fib(11)=89→fib(12)=144`);
+  console.log(`Breaking point detection: p99 > 1000ms (φ^2 × 382ms)`);
+  console.log(`Fibonacci stage durations: 2m, 2m, 3m, 3m, 3m, 3m, 5m, 3m`);
+  console.log(`Base URL: ${BASE_URL}`);
   return { startTime: Date.now() };
 }
 
 export function teardown(data) {
   const durationS = Math.round((Date.now() - data.startTime) / 1000);
-  logger.info(`\nStress test complete. Duration: ${durationS}s`);
+  console.log(`\nStress test complete. Duration: ${durationS}s`);
   if (breakingPointDetected) {
-    logger.info(`⚠️ Breaking point detected at ~${breakingPointVUCount} VUs (p99 > 1000ms)`);
-    logger.info(`Fibonacci proximity: closest fib value = ${FIB.find(f => f >= breakingPointVUCount) || FIB[FIB.length-1]}`);
+    console.log(`⚠️ Breaking point detected at ~${breakingPointVUCount} VUs (p99 > 1000ms)`);
+    console.log(`Fibonacci proximity: closest fib value = ${FIB.find(f => f >= breakingPointVUCount) || FIB[FIB.length-1]}`);
   } else {
-    logger.info(`✓ No breaking point detected at fib(12)=${FIB[11]} VUs — system is robust!`);
+    console.log(`✓ No breaking point detected at fib(12)=${FIB[11]} VUs — system is robust!`);
   }
 }

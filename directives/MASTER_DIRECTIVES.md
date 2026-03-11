@@ -120,7 +120,7 @@ When a sanitization layer catches a violation:
 2. **Classify** — Determine if malicious or accidental
 3. **Rewrite** — If accidental, AI rewrites the code correctly
 4. **Revalidate** — Run through all sanitization layers again
-5. **Log** — Record the violation pattern for HeadyVinci learning
+5. **Log** — Record the violation pattern for Heady™Vinci learning
 6. **Never expose** — User never sees raw validation failures; only clean results
 
 ### 3.4 Socratic Execution Loop
@@ -212,7 +212,7 @@ SPAWN → INITIALIZE → READY → ACTIVE → DRAINING → SHUTDOWN → DEAD
 
 ### 6.1 Purpose
 
-The user (Eric) interacts with Heady as a trusted companion. All technical
+The user (Eric) interacts with Heady™ as a trusted companion. All technical
 complexity is abstracted away. The user sees results, not machinery. The user
 feels supported, not overwhelmed.
 
@@ -241,7 +241,7 @@ feels supported, not overwhelmed.
 ### 7.1 Purpose
 
 All critical tasks flow through the HCFullPipeline. This is the nervous system
-of Heady — the deterministic pipeline that ensures every piece of work goes
+of Heady™ — the deterministic pipeline that ensures every piece of work goes
 through reconnaissance, intake, trial-and-error experimentation, competition,
 self-awareness assessment, mistake analysis, validation, continuous search,
 controlled evolution, and promotion. 21 stages = fib(8) — Sacred Geometry aligned.
@@ -385,7 +385,7 @@ mathematical harmony.
 | Priority scoring | φ-weighted factor fusion |
 | Circuit breaker thresholds | Fibonacci failure counts before open |
 | Health check intervals | Fibonacci-distributed to prevent thundering herd |
-| Auto-Success task allocation | φ-ratio distribution across fib(7) = 13 CSL-discovered categories |
+| Auto-Success task allocation | φ-ratio distribution across 9 categories |
 | Budget allocation | φ-ratio split between primary and fallback providers |
 
 ### 10.3 Why (Not Just How)
@@ -395,11 +395,11 @@ mathematical harmony.
 - φ-based thresholds are empirically well-suited for balancing sensitivity
   and specificity in classification tasks
 - Consistent mathematical foundation eliminates "why is this value 10?" questions
-- Sacred Geometry alignment with the Heady brand and visual identity
+- Sacred Geometry alignment with the Heady™ brand and visual identity
 
 ---
 
-*These Ten Master Directives are the operational intelligence of Heady.
+*These Ten Master Directives are the operational intelligence of Heady™.
 Together with the Eight Unbreakable Laws, they form the complete behavioral
 constitution of the platform.*
 

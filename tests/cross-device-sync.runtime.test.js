@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 const fs = require('fs');
 const path = require('path');
 const { CrossDeviceSyncHub } = require('../src/cross-device-sync');
@@ -7,12 +5,12 @@ const { CrossDeviceSyncHub } = require('../src/cross-device-sync');
 let passed = 0;
 let failed = 0;
 function assert(cond, msg) {
-    if (cond) { passed += 1; logger.info(`  ✅ ${msg}`); }
-    else { failed += 1; logger.info(`  ❌ ${msg}`); }
+    if (cond) { passed += 1; console.log(`  ✅ ${msg}`); }
+    else { failed += 1; console.log(`  ❌ ${msg}`); }
 }
 
 async function run() {
-    logger.info('─── CrossDeviceSync Runtime Test ───');
+    console.log('─── CrossDeviceSync Runtime Test ───');
 
     const storePath = path.join(__dirname, '..', 'tmp', 'sync-runtime-store.json');
     fs.mkdirSync(path.dirname(storePath), { recursive: true });
@@ -66,11 +64,11 @@ async function run() {
 
     hub.shutdown();
 
-    logger.info(`\nResults: ${passed} passed, ${failed} failed`);
+    console.log(`\nResults: ${passed} passed, ${failed} failed`);
     process.exit(failed === 0 ? 0 : 1);
 }
 
 run().catch((error) => {
-    logger.error(error);
+    console.error(error);
     process.exit(1);
 });

@@ -1,209 +1,55 @@
-# HEADY SYSTEMS | WINDSURF PROTOCOL v2.1
+# Heady™ Sovereign AI Platform — Windsurf Rules
+# Version: 3.2.3 | Codename: Aether
+# © 2024-2026 HeadySystems Inc. All Rights Reserved.
 
-## PRIMARY DIRECTIVE
-You are the Heady Project AI. Your goal is to squash, merge, and structure data into a "Sacred Geometry" ecosystem with maximum efficiency and minimal false positives.
+## Identity
+You are working inside the Heady™ Sovereign AI Platform monorepo.
+This is a production codebase with 60+ provisional patents.
 
-## 100% HEADY COMMUNICATION POLICY (MANDATORY)
-**ALL COMMUNICATION MUST ROUTE THROUGH HEADY SERVICES - NO EXCEPTIONS**
+## Unbreakable Laws
+1. THOROUGHNESS OVER SPEED — Never rush. Complete implementations only.
+2. SOLUTIONS NOT WORKAROUNDS — Fix root causes, never band-aid.
+3. CONTEXT MAXIMIZATION — Always scan vector memory and configs before acting.
+4. IMPLEMENTATION COMPLETENESS — No stubs, no TODOs, no placeholders.
+5. CROSS-ENVIRONMENT PURITY — No localhost URLs, no hardcoded secrets, no dev-only paths.
+6. TEN THOUSAND BEE SCALE — All code must work at 10,000 concurrent bee workers.
+7. AUTO-SUCCESS INTEGRITY — Never degrade the 135-task/30-second heartbeat cycle.
+8. ARENA MODE DEFAULT — Test multiple approaches; let the best win.
 
-### HEADY-ONLY RULES
-- **Model Selection**: ONLY HeadyBrain and HeadyConductor models are permitted
-- **Network Access**: ONLY Heady domains (headyio.com, headysystems.com) are allowed
-- **External Services**: ALL external AI services (Anthropic, OpenAI, Google) are BLOCKED
-- **Override Capability**: External model overrides are DISABLED - admin only
-- **Fallback Policy**: HeadyConductor is the ONLY fallback - no external models
-- **Compliance**: 100% Heady usage is MANDATORY and ENFORCED
+## Sacred Geometry Constraints
+- ALL timeouts MUST use φ-power values: 1618, 2618, 4236, 6854, 11090, 17944, 29034, 46979
+- ALL retry multipliers MUST use φ (1.618), NEVER 2 or 3
+- ALL cache sizes MUST use Fibonacci numbers: 1,1,2,3,5,8,13,21,34,55,89,144,233,377
+- ALL thresholds MUST use CSL values: 0.500, 0.618, 0.691, 0.764, 0.809, 0.854, 0.882, 0.910, 0.927, 0.972
+- ALL resource allocation MUST use phi-weighted splits (34/21/13/8/5)
+- NEVER use round numbers (1000, 5000, 10000, 0.5, 0.7, 0.8, 0.9, 0.95)
+- Import phi constants from shared/phi-math.js — NEVER hardcode φ values
 
-### BLOCKED SERVICES
-- Claude/Anthropic APIs (*.anthropic.com)
-- OpenAI APIs (*.openai.com)
-- Google AI APIs (*.google.com)
-- External registries (github.com, npmjs.org, pypi.org)
-- External CDNs (cdn.jsdelivr.net)
+## Module System
+- CommonJS only (require/module.exports) — NO ESM (import/export)
+- Import core from shared/phi-math.js
+- Every new module must register in heady-registry.json
 
-### HEADY-ONLY NETWORK
-- api.headyio.com
-- api.headyconnection.org
-- me.headyio.com
-- headyio.com
-- headysystems.com
-- brain.headysystems.com
-- manager.headysystems.com
-- registry.headysystems.com
+## Architecture
+- 384-dimensional embeddings, 3D projection
+- 21-stage HCFullPipeline (fib(8) = Sacred Geometry aligned)
+- 17 swarms, 89 bee types, 135 auto-success tasks
+- Hot/Warm/Cold pool model (34%/21%/13% + 8% reserve + 5% governance)
 
-## WINDSURF OPTIMIZATION PROTOCOL
-To reduce the 2000+ problems count and improve performance:
+## Security
+- NEVER commit secrets, tokens, or API keys
+- ALL inputs validated with Zod schemas
+- ALL outputs sanitized (DOMPurify for HTML, parameterized queries for SQL)
+- NEVER use eval(), Function(), or dynamic require() with user input
 
-### PERFORMANCE RULES
-- **File Scanning Limits:** Scan max 1000 files per operation to prevent memory overload
-- **Context Window Management:** Prioritize active files and recent changes over full repository scans
-- **Incremental Analysis:** Only analyze changed files since last checkpoint
-- **Cache Results:** Cache analysis results for 15 minutes to avoid redundant scans
-- **Exclude Patterns:** Aggressively exclude build artifacts, node_modules, and temporary files
+## File Naming
+- Lowercase kebab-case: heady-conductor.js, phi-math.js
+- Bees: *-bee.js (e.g., security-bee.js)
+- Services: descriptive names in src/services/
+- Tests: *.test.js alongside source files
 
-### PROBLEM REDUCTION STRATEGY
-- **False Positive Filtering:** Ignore ESLint warnings in third-party libraries and generated files
-- **Severity Prioritization:** Focus on errors and warnings, ignore info-level issues
-- **File Type Prioritization:** Analyze .js, .ts, .jsx, .tsx first, then config files
-- **Dependency Graph Awareness:** Skip analyzing files that are dependencies of other analyzed files
-- **Batch Processing:** Process files in batches of 50 to maintain responsiveness
-
-## DOCUMENTATION BEHAVIOR (The Quiz Protocol)
-When asked to document code or generate summaries, YOU MUST FOLLOW THIS EXACT PROCEDURE:
-
-1. **Review & Extract:** Read the material. Identify concepts, processes, and data.
-2. **Generate Quiz Questions:** Create clear questions for each concept. Use open-ended for insights, boolean/multiple-choice for recall.
-3. **Formulate Flashcards:** Convert Question-Answer pairs into flashcards. ONE idea per card.
-4. **Iterative Coverage:** Repeat until all material is processed. Avoid redundancy.
-5. **Integrate & Organize:** Group cards under logical headings (Architecture, APIs).
-6. **Ensure Precision:** Verify accuracy.
-
-## TECH STACK
-- **Manager:** Node.js (Express, MCP Protocol)
-- **Worker:** Python (Render Worker)
-- **Frontend:** React (CDN) with Sacred Geometry Aesthetics (Rounded, Organic, Breathing)
-- **Desktop:** Electron (Tauri alternative for performance)
-- **Mobile:** React Native with Expo
-- **Deployment:** Render.com Blueprint + Cloudflare Workers
-
-## PATHS (OPTIMIZED)
-- `heady-manager.js` - Node.js MCP server (port 3300) [CRITICAL]
-- `src/` - Backend logic (Python worker) [HIGH PRIORITY]
-- `frontend/` - React frontend (CDN) [HIGH PRIORITY]
-- `public/` - Sacred UI assets [MEDIUM PRIORITY]
-- `configs/` - All YAML configs (pipeline, resources, governance) [HIGH PRIORITY]
-- `heady-registry.json` - HeadyRegistry central catalog [CRITICAL]
-- `notebooks/` - Colab notebooks (quick-start, tutorials, examples) [LOW PRIORITY]
-- `docs/` - Documentation, Notion templates, ownership tracker [MEDIUM PRIORITY]
-- `.github/` - Copilot & Actions Configuration [LOW PRIORITY]
-- `render.yaml` - Infrastructure as Code [HIGH PRIORITY]
-- `apps/` - Application containers (desktop, mobile, web) [HIGH PRIORITY]
-- `extensions/` - Browser and IDE extensions [MEDIUM PRIORITY]
-- `workers/` - Edge workers and cloud functions [MEDIUM PRIORITY]
-
-## ENVIRONMENT VARIABLES
-- `DATABASE_URL` - Postgres connection (from Render)
-- `HEADY_API_KEY` - Auto-generated API key
-- `NODE_ENV` - Environment (development/production)
-- `WINDSURF_CACHE_TTL` - Cache duration for analysis (default: 900000ms)
-- `HEALTH_CHECK_INTERVAL` - Service health check frequency
-
-## SCRIPTS (OPTIMIZED)
-- `commit_and_build.ps1` - Local build cycle [CRITICAL]
-- `nexus_deploy.ps1` - Push to all remotes [HIGH PRIORITY]
-- `scripts/checkpoint-sync.ps1` - Checkpoint Protocol sync (all files) [HIGH PRIORITY]
-- `scripts/Heady-Sync.ps1` - Multi-remote git sync [HIGH PRIORITY]
-- `scripts/hc-rx.js` - Rapid execution command system [HIGH PRIORITY]
-- `scripts/health-check.ps1` - System health monitoring [MEDIUM PRIORITY]
-
-## CHECKPOINT PROTOCOL (Standing Instruction)
-At every checkpoint (commit, merge, pipeline stage, release), you MUST:
-1. Keep all docs, configs, registry, and notebooks in sync with current system state.
-2. Use `heady-registry.json` as the central catalog — nothing exists off the books.
-3. Update corresponding Markdown docs, config files, and examples in the same changeset.
-4. Treat outdated documentation as a defect.
-5. Validate notebooks still reference correct APIs/schemas.
-6. Check `docs/DOC_OWNERS.yaml` for overdue reviews.
-7. **NEW:** Clear Windsurf cache after major structural changes
-8. **NEW:** Update .windsurfrules with new patterns and exclusions
-Full protocol: `docs/CHECKPOINT_PROTOCOL.md`
-
-## ERROR REPORTING RULES (ENHANCED)
-error_reporting:
-  enabled: true
-  log_level: warn  # Reduced from debug to minimize noise
-  max_errors: 50   # Reduced from 100
-  daily_rotation: true
-  capture_stack_traces: true
-  exclude_patterns:
-    - "node_modules/**"
-    - "dist/**"
-    - "build/**"
-    - ".git/**"
-    - "coverage/**"
-    - "*.min.js"
-    - "vendor/**"
-
-rules:
-  - name: memory_threshold
-    threshold: 70%  # Reduced from 80%
-    action: reduce_concurrency
-  - name: cpu_overload
-    threshold: 85%  # Reduced from 90%
-    action: offload_tasks
-  - name: pipeline_timeout
-    threshold: 180s  # Reduced from 300s
-    action: abort_and_log
-  - name: dependency_failure
-    pattern: "ERR_MODULE_NOT_FOUND"
-    action: auto_install
-  - name: windsurf_overload
-    threshold: 1000_problems
-    action: incremental_scan
-  - name: file_scan_limit
-    threshold: 1000_files
-    action: batch_processing
-
-auto_recovery:
-  enabled: true
-  max_attempts: 2  # Reduced from 3
-  backoff_strategy: exponential
-  cache_results: true
-  cache_ttl: 900000  # 15 minutes
-
-## WINDSURF EXCLUSIONS (NEW)
-exclude_from_analysis:
-  - "**/node_modules/**"
-  - "**/dist/**"
-  - "**/build/**"
-  - "**/.git/**"
-  - "**/coverage/**"
-  - "**/*.min.js"
-  - "**/vendor/**"
-  - "**/temp/**"
-  - "**/.cache/**"
-  - "**/.next/**"
-  - "**/venv/**"
-  - "**/__pycache__/**"
-  - "**/logs/**"
-  - "**/*.log"
-  - "**/*.pid"
-  - "**/*.bak"
-  - "**/AndroidSDK/**"
-  - "**/ventoy/**"
-
-## PRIORITY ANALYSIS PATHS
-priority_analysis:
-  critical:
-    - "heady-manager.js"
-    - "heady-registry.json"
-    - "package.json"
-    - "render.yaml"
-  high:
-    - "src/**/*.js"
-    - "frontend/src/**/*.{js,jsx,ts,tsx}"
-    - "configs/**/*.yaml"
-    - "scripts/**/*.js"
-    - "apps/**/src/**/*.{js,jsx,ts,tsx}"
-  medium:
-    - "docs/**/*.md"
-    - "extensions/**/*.js"
-    - "workers/**/*.js"
-    - "public/**/*.js"
-  low:
-    - "notebooks/**/*.ipynb"
-    - ".github/**/*"
-    - "**/README.md"
-
-## PERFORMANCE MONITORING
-monitoring:
-  enabled: true
-  metrics:
-    - analysis_time_per_file
-    - memory_usage_during_scan
-    - problem_count_by_type
-    - cache_hit_rate
-  alerts:
-    - analysis_time_exceeds_30s
-    - memory_usage_exceeds_2gb
-    - problem_count_exceeds_500
+## Deployment
+- NO localhost URLs — only branded Heady domains
+- Docker-ready: respect Dockerfile.production
+- Cloud Run compatible: PORT env var, graceful shutdown
+- Cloudflare Workers compatible: no Node.js-only APIs in edge code

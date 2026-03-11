@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady™ φ-Compliance Checker
@@ -76,16 +74,16 @@ const files = walkDir(path.join(root, 'src'));
 let total = 0;
 const bySeverity = { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0 };
 
-logger.info('╔══════════════════════════════════════════════════════════════╗');
-logger.info('║  Heady™ φ-Compliance Audit                                 ║');
-logger.info('╚══════════════════════════════════════════════════════════════╝\n');
+console.log('╔══════════════════════════════════════════════════════════════╗');
+console.log('║  Heady™ φ-Compliance Audit                                 ║');
+console.log('╚══════════════════════════════════════════════════════════════╝\n');
 
 for (const file of files) {
   const findings = scanFile(file);
   if (findings.length > 0) {
-    logger.info(`\n  ${path.relative(root, file)}`);
+    console.log(`\n  ${path.relative(root, file)}`);
     for (const f of findings) {
-      logger.info(`    L${f.line} [${f.severity}] ${f.match} → ${f.fix}`);
+      console.log(`    L${f.line} [${f.severity}] ${f.match} → ${f.fix}`);
       bySeverity[f.severity]++;
       total++;
     }
@@ -93,11 +91,11 @@ for (const file of files) {
 }
 
 const score = Math.max(0, 100 - bySeverity.CRITICAL * 10 - bySeverity.HIGH * 5 - bySeverity.MEDIUM * 2 - bySeverity.LOW * 1);
-logger.info(`\n${'═'.repeat(60)}`);
-logger.info(`  φ-Compliance Score: ${score}/100`);
-logger.info(`  Files scanned: ${files.length}`);
-logger.info(`  Total findings: ${total}`);
-logger.info(`  CRITICAL: ${bySeverity.CRITICAL} | HIGH: ${bySeverity.HIGH} | MEDIUM: ${bySeverity.MEDIUM} | LOW: ${bySeverity.LOW}`);
-logger.info(`${'═'.repeat(60)}\n`);
+console.log(`\n${'═'.repeat(60)}`);
+console.log(`  φ-Compliance Score: ${score}/100`);
+console.log(`  Files scanned: ${files.length}`);
+console.log(`  Total findings: ${total}`);
+console.log(`  CRITICAL: ${bySeverity.CRITICAL} | HIGH: ${bySeverity.HIGH} | MEDIUM: ${bySeverity.MEDIUM} | LOW: ${bySeverity.LOW}`);
+console.log(`${'═'.repeat(60)}\n`);
 
 process.exit(total > 0 && bySeverity.CRITICAL > 0 ? 1 : 0);

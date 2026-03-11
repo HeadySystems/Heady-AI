@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyStore Checkout Route — /api/store/checkout
  * Creates Stripe Checkout sessions for Heady™Store purchases
@@ -73,7 +71,7 @@ async function storeCheckoutHandler(req, res) {
         });
 
     } catch (err) {
-        logger.error('Stripe checkout error:', err);
+        console.error('Stripe checkout error:', err);
         res.status(500).json({ error: 'Checkout failed', message: err.message });
     }
 }

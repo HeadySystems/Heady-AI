@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file heady-conductor.js
  * @description Federated Liquid Routing Hub — Central Task Dispatcher.
@@ -406,7 +404,7 @@ class RoutingTable {
  * const conductor = new HeadyConductor({ nodeId: 'conductor-1' });
  * conductor.registerNode({ id: 'brain', role: 'brain', address: 'localhost:3001', capacity: 34 });
  * conductor.addRoute({ pattern: 'embed.*', targetNode: 'brain', targetZone: 'HOT' });
- * conductor.on('task.dispatched', ({ task, node }) => logger.info(task.id, '->', node.id));
+ * conductor.on('task.dispatched', ({ task, node }) => console.log(task.id, '->', node.id));
  *
  * await conductor.submit('embed.text', { text: 'hello' }, { priority: TaskPriority.HIGH });
  */

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Three.js 3D Projection Visual Debugger
  * Real-time visualization of agent trajectories, projection states,
@@ -320,7 +318,7 @@ class SpatialDebuggerServer {
         });
 
         server.listen(this.port, () => {
-            logger.info(`🧠 Heady Spatial Debugger → http://localhost:${this.port}`);
+            console.log(`🧠 Heady Spatial Debugger → http://localhost:${this.port}`);
         });
         this.server = server;
         this.wss = wss;

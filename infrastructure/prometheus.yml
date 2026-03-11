@@ -1,0 +1,25 @@
+# Prometheus — Heady Systems Monitoring
+# Scrape interval: 21s (Fibonacci fib(8))
+
+global:
+  scrape_interval: 21s
+  evaluation_interval: 34s
+
+scrape_configs:
+  - job_name: 'heady-services'
+    metrics_path: '/metrics'
+    scrape_interval: 21s
+    static_configs:
+      - targets: ['heady-brain:3310', 'heady-brains:3311', 'heady-infer:3312', 'ai-router:3313', 'model-gateway:3314', 'heady-embed:3315', 'heady-memory:3316', 'heady-vector:3317', 'heady-projection:3318', 'heady-bee-factory:3319', 'heady-hive:3320', 'heady-federation:3321', 'heady-soul:3322', 'heady-conductor:3323', 'heady-orchestration:3324', 'auto-success-engine:3325', 'hcfullpipeline-executor:3326', 'heady-chain:3327', 'prompt-manager:3328', 'heady-vinci:3329', 'heady-guard:3330', 'heady-security:3331', 'heady-governance:3332', 'secret-gateway:3333', 'heady-health:3334', 'heady-eval:3335', 'heady-maintenance:3336', 'heady-testing:3337', 'heady-web:3338', 'heady-buddy:3339', 'heady-ui:3340', 'heady-onboarding:3341', 'heady-pilot-onboarding:3342', 'heady-task-browser:3343', 'heady-cache:3344', 'api-gateway:3345', 'domain-router:3346', 'mcp-server:3347', 'google-mcp:3348', 'memory-mcp:3349', 'perplexity-mcp:3350', 'jules-mcp:3351', 'huggingface-gateway:3352', 'colab-gateway:3353', 'silicon-bridge:3354', 'discord-bot:3355', 'auth-relay:3356', 'heady-vinci-art:3357', 'heady-autobiographer:3358', 'heady-midi:3359', 'budget-tracker:3360', 'cli-service:3361', 'notification-service:3362', 'analytics-service:3363', 'billing-service:3364', 'search-service:3365', 'scheduler-service:3366', 'migration-service:3367', 'asset-pipeline:3368']
+
+  - job_name: 'pgvector'
+    static_configs:
+      - targets: ['pgvector:5432']
+
+  - job_name: 'nats'
+    static_configs:
+      - targets: ['nats:8222']
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']

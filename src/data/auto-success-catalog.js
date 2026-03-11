@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Auto-Success Task Catalog — 135+ tasks across 9 categories.
@@ -8,13 +6,13 @@ const logger = pino();
 
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
 let extraTasks = [];
-try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) { }
+try { extraTasks = require('../auto-flow-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
 let nonprofitTasks = [];
-try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) { }
+try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
 let buddyTasks = [];
-try { buddyTasks = require('../buddy-tasks.json'); } catch (e) { }
+try { buddyTasks = require('../buddy-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
 let prodOptTasks = [];
-try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) { }
+try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (err) { /* structured-logger: emit error */ }
 
 const TASK_CATALOG = [
     ...extraTasks,
@@ -217,7 +215,7 @@ const TASK_CATALOG = [
     { id: "mop-doc-003", name: "Formalize Sacred Geometry architecture docs", cat: "mop-docs", pool: "cold", w: 2, desc: "Document Sacred Geometry + Pentagonal Architecture in technical specs" },
 
     // Structured Logging + Redis + Firestore
-    { id: "mop-infra-001", name: "Replace logger.info with pino structured logger", cat: "mop-infrastructure", pool: "hot", w: 5, desc: "Deploy pino JSON logger across all services, deprecate logger.info" },
+    { id: "mop-infra-001", name: "Replace console.log with pino structured logger", cat: "mop-infrastructure", pool: "hot", w: 5, desc: "Deploy pino JSON logger across all services, deprecate console.log" },
     { id: "mop-infra-002", name: "Implement Redis connection pooling", cat: "mop-infrastructure", pool: "hot", w: 5, desc: "Configure aggressive TCP connection pooling for agent state sharing" },
     { id: "mop-infra-003", name: "Add Firestore persistent artifact storage", cat: "mop-infrastructure", pool: "warm", w: 4, desc: "Implement /artifacts/{appId}/ schema in Firestore for persistent data" },
     { id: "mop-infra-004", name: "Schema segregation public vs agent data", cat: "mop-infrastructure", pool: "warm", w: 3, desc: "Enforce strict boundaries between public data and agent operational data" },

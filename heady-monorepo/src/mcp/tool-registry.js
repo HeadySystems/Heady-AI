@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -29,9 +27,9 @@ class ToolRegistry {
 
   _defaultLogger() {
     return {
-      info:  (...a) => logger.error('[ToolRegistry:INFO]',  ...a),
-      warn:  (...a) => logger.error('[ToolRegistry:WARN]',  ...a),
-      error: (...a) => logger.error('[ToolRegistry:ERROR]', ...a),
+      info:  (...a) => console.error('[ToolRegistry:INFO]',  ...a),
+      warn:  (...a) => console.error('[ToolRegistry:WARN]',  ...a),
+      error: (...a) => console.error('[ToolRegistry:ERROR]', ...a),
     };
   }
 

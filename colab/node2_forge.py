@@ -24,7 +24,7 @@ import traceback
 from datetime import datetime, timezone
 
 # ── Configuration ────────────────────────────────────────────────
-NEON_DATABASE_URL = os.environ["DATABASE_URL"]  # Required — set in Colab secrets
+NEON_DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://neondb_owner:npg_tEA7FfeWb5gZ@ep-cold-snow-aesmiwt9.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "HeadyMe/Heady-pre-production-9f2f0642")

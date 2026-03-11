@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -21,7 +19,7 @@ const logger = pino();
 const http = require('http');
 const crypto = require('crypto');
 
-const PORT = process.env.SITE_PORT || 3850;
+const PORT = process.env.PORT || process.env.SITE_PORT || 3850;
 const PHI = 1.6180339887;
 
 // ── Site Registry ───────────────────────────────────────────────
@@ -147,12 +145,12 @@ const SITES = {
     showAuth: true,
   },
   'headysense.com': {
-    brand: 'HeadyLens',
+    brand: 'HeadySense',
     tagline: 'Sovereign Sight',
     subtitle: 'Vision AI for screenshots, UI review, OCR, and visual code analysis.',
     color: '#f97316',
     accent: '#fb923c',
-    icon: 'L',
+    icon: 'S',
     heroServices: [
       { icon: '👁️', name: 'Vision', desc: 'Image analysis and classification' },
       { icon: '📸', name: 'Screenshot', desc: 'Automated visual QA' },
@@ -176,9 +174,9 @@ const SITES = {
     ],
     showAuth: true,
   },
-  'perfecttrader.com': {
-    brand: 'PerfectTrader',
-    tagline: 'Algorithmic Intelligence',
+  'headyfinance.com': {
+    brand: 'HeadyFinance',
+    tagline: 'AI-Powered Trading Intelligence',
     subtitle: 'AI-powered trading signals, backtesting, and portfolio optimization with real-time market data.',
     color: '#22c55e',
     accent: '#86efac',
@@ -519,7 +517,7 @@ function renderSite(site, host) {
       if (window.huggingface && window.huggingface.variables) {
         const userId = window.huggingface.variables.SPACE_CREATOR_USER_ID;
         if (userId) {
-          logger.info('[HeadyBuddy] HF User detected:', userId);
+          console.log('[HeadyBuddy] HF User detected:', userId);
           addBuddyMsg('bot', 'I see you\\'re signed into Hugging Face (User: ' + userId.slice(0,8) + '...). I\\'ve linked your identity.');
         }
       }
@@ -623,7 +621,7 @@ function renderSite(site, host) {
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
-  const host = req.headers.host || 'headyme.com';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -744,15 +742,15 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  logger.info(`\n  ⚡ Heady Dynamic Sites — http://localhost:${PORT}`);
-  logger.info(`     ${Object.keys(SITES).length} domains registered`);
-  logger.info(`     ${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
-  logger.info(`     HeadyBuddy widget: embedded\n`);
-  logger.info('  Domains:');
+  console.log(`\n  ⚡ Heady Dynamic Sites — http://localhost:${PORT}`);
+  console.log(`     ${Object.keys(SITES).length} domains registered`);
+  console.log(`     ${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
+  console.log(`     HeadyBuddy widget: embedded\n`);
+  console.log('  Domains:');
   for (const [domain, site] of Object.entries(SITES)) {
-    logger.info(`    ${site.icon} ${domain} → ${site.brand}`);
+    console.log(`    ${site.icon} ${domain} → ${site.brand}`);
   }
-  logger.info('');
+  console.log('');
 });
 
 module.exports = { SITES, AUTH_PROVIDERS, server, resolveSite };

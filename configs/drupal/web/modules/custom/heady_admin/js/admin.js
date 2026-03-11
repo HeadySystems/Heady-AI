@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Admin Dashboard — Core JavaScript
  */
@@ -17,10 +15,10 @@ const logger = pino();
             el.offsetHeight; // trigger reflow
             el.style.animation = 'pulse-value 0.5s ease';
           });
-          logger.info('✅ Status refreshed:', data);
+          console.log('✅ Status refreshed:', data);
           alert('✅ All statuses refreshed successfully.');
         })
-        .catch(e => logger.error('Status refresh failed:', e));
+        .catch(e => console.error('Status refresh failed:', e));
     },
 
     // Deploy all sites

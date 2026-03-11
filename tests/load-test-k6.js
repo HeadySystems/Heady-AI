@@ -90,7 +90,7 @@ export default function () {
       'health: status 200': (r) => r.status === 200,
       'health: has status field': (r) => {
         try { return JSON.parse(r.body).status !== undefined; }
-        catch (_unused) { return false; }
+        catch { return false; }
       },
       [`health: latency < ${Math.round(1000 * PSI2)}ms`]: (r) => r.timings.duration < 1000 * PSI2,
     });

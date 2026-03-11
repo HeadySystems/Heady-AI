@@ -155,7 +155,7 @@ Closes #<!-- issue number -->
 - [ ] Code follows project conventions and style guide
 - [ ] No unnecessary code duplication (DRY)
 - [ ] Error handling is appropriate and complete
-- [ ] No debug logs, console.log, or NOTE left in critical paths
+- [ ] No debug logs, console.log, or TODO left in critical paths
 - [ ] Logging is structured and does not leak sensitive data
 
 ### Security Review

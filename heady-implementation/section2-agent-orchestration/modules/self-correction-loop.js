@@ -241,7 +241,7 @@ ${JSON.stringify(failedOutput, null, 2)}
 
 Please re-attempt the task and ensure:
   1. ALL required sections/fields are present
-  2. No sections are left as placeholders like "NOTE" or "..."
+  2. No sections are left as placeholders like "TODO" or "..."
   3. Your response fully addresses every part of the original task
   4. Minimum length requirements are met if specified
 

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Model Council - Multi-Model Parallel Execution
  * Based on Perplexity's Model Council feature
@@ -49,7 +47,7 @@ export class ModelCouncil {
   async queryCouncil(prompt: string, options: CouncilOptions = {}): Promise<CouncilResult> {
     const selectedModels = options.models || this.selectDefaultCouncil();
 
-    logger.info(`[ModelCouncil] Querying ${selectedModels.length} models in parallel`);
+    console.log(`[ModelCouncil] Querying ${selectedModels.length} models in parallel`);
 
     // Execute all models simultaneously
     const responses = await Promise.all(
@@ -95,7 +93,7 @@ export class ModelCouncil {
         latency: Date.now() - startTime
       };
     } catch (error) {
-      logger.error(`[ModelCouncil] Error querying ${modelName}:`, error);
+      console.error(`[ModelCouncil] Error querying ${modelName}:`, error);
       throw error;
     }
   }

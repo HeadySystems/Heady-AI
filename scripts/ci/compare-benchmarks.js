@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/compare-benchmarks.js
@@ -99,13 +97,13 @@ async function runEndpointBenchmark(url, samples = SAMPLE_COUNT, timeoutMs = TIM
   });
 
   // Warmup: fib(8)=21 requests (not measured)
-  logger.info(`  Warming up (${WARMUP_REQUESTS} requests)...`);
+  console.log(`  Warming up (${WARMUP_REQUESTS} requests)...`);
   for (let i = 0; i < WARMUP_REQUESTS; i++) {
     await measureOne();
   }
 
   // Measure: fib(10)=55 samples
-  logger.info(`  Measuring (${samples} samples)...`);
+  console.log(`  Measuring (${samples} samples)...`);
   for (let i = 0; i < samples; i++) {
     const lat = await measureOne();
     if (lat !== null) latencies.push(lat);
@@ -226,23 +224,23 @@ function formatTable(results) {
 async function main() {
   const args = parseArgs(process.argv);
 
-  logger.info('=== Heady Benchmark Comparison ===');
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Warn threshold: fib(5)=${args.warnPct}%`);
-  logger.info(`Fail threshold: fib(6)=${args.failPct}%`);
-  logger.info(`Samples: fib(10)=${SAMPLE_COUNT} per endpoint`);
-  logger.info(`Warmup:  fib(8)=${WARMUP_REQUESTS} per endpoint`);
-  logger.info('');
+  console.log('=== Heady Benchmark Comparison ===');
+  console.log(`φ = ${PHI}`);
+  console.log(`Warn threshold: fib(5)=${args.warnPct}%`);
+  console.log(`Fail threshold: fib(6)=${args.failPct}%`);
+  console.log(`Samples: fib(10)=${SAMPLE_COUNT} per endpoint`);
+  console.log(`Warmup:  fib(8)=${WARMUP_REQUESTS} per endpoint`);
+  console.log('');
 
   // ── Load baseline ──────────────────────────────────────────
   let baseline = null;
   if (fs.existsSync(args.baseline)) {
     baseline = JSON.parse(fs.readFileSync(args.baseline, 'utf8'));
-    logger.info(`Baseline loaded: ${args.baseline}`);
-    logger.info(`  Generated: ${baseline.metadata?.generatedAt || 'unknown'}`);
+    console.log(`Baseline loaded: ${args.baseline}`);
+    console.log(`  Generated: ${baseline.metadata?.generatedAt || 'unknown'}`);
   } else {
-    logger.warn(`::warning::No baseline found at ${args.baseline}`);
-    logger.warn('This appears to be the first run — generating initial baseline only');
+    console.warn(`::warning::No baseline found at ${args.baseline}`);
+    console.warn('This appears to be the first run — generating initial baseline only');
     // Exit code 2: first run, not a failure
     process.exitCode = 2;
   }
@@ -251,7 +249,7 @@ async function main() {
   let current = {};
   if (args.current && fs.existsSync(args.current)) {
     current = JSON.parse(fs.readFileSync(args.current, 'utf8'));
-    logger.info('Current benchmarks loaded from file');
+    console.log('Current benchmarks loaded from file');
   } else {
     // Run benchmarks inline against localhost
     const BASE_URL = process.env.BENCHMARK_BASE_URL || 'http://localhost:8080';
@@ -265,11 +263,11 @@ async function main() {
     current.endpoints = {};
     for (const url of endpoints) {
       const epKey = url.replace(BASE_URL, '');
-      logger.info(`Benchmarking: ${epKey}`);
+      console.log(`Benchmarking: ${epKey}`);
       try {
         current.endpoints[epKey] = await runEndpointBenchmark(url, SAMPLE_COUNT, TIMEOUTS[2]);
       } catch (err) {
-        logger.warn(`  Warning: ${err.message}`);
+        console.warn(`  Warning: ${err.message}`);
         current.endpoints[epKey] = { p50: 0, p95: 0, p99: 0, mean: 0, errors: 1 };
       }
     }
@@ -297,7 +295,7 @@ async function main() {
       const baselineMetrics = baseline.endpoints[endpoint] || null;
 
       if (!baselineMetrics) {
-        logger.info(`  ${endpoint}: no baseline — skipping comparison`);
+        console.log(`  ${endpoint}: no baseline — skipping comparison`);
         results.endpoints[endpoint] = {
           comparisons: {},
           overallStatus: 'no-baseline',
@@ -336,13 +334,13 @@ async function main() {
 
       const icon = endpointStatus === 'fail' ? '❌' :
                    endpointStatus === 'warn' ? '⚠️' : '✅';
-      logger.info(`  ${icon} ${endpoint}: ${endpointStatus} (p95: ${currentMetrics.p95}ms vs baseline ${baselineMetrics.p95}ms)`);
+      console.log(`  ${icon} ${endpoint}: ${endpointStatus} (p95: ${currentMetrics.p95}ms vs baseline ${baselineMetrics.p95}ms)`);
     }
   }
 
   // ── Print markdown table ───────────────────────────────────
   const table = formatTable(results);
-  logger.info('\n' + table);
+  console.log('\n' + table);
 
   // ── Write output ───────────────────────────────────────────
   const outputDir = path.dirname(args.output);
@@ -350,23 +348,23 @@ async function main() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
   fs.writeFileSync(args.output, JSON.stringify(results, null, 2), 'utf8');
-  logger.info(`\nResults written to: ${args.output}`);
+  console.log(`\nResults written to: ${args.output}`);
 
   // ── Exit with appropriate code ─────────────────────────────
   if (results.overallStatus === 'fail') {
-    logger.error(`\n❌ BENCHMARK FAIL: Regression exceeds fib(6)=${args.failPct}% threshold`);
+    console.error(`\n❌ BENCHMARK FAIL: Regression exceeds fib(6)=${args.failPct}% threshold`);
     process.exit(1);
   } else if (results.overallStatus === 'warn') {
-    logger.warn(`\n⚠️  BENCHMARK WARN: Regression exceeds fib(5)=${args.warnPct}% warning threshold`);
+    console.warn(`\n⚠️  BENCHMARK WARN: Regression exceeds fib(5)=${args.warnPct}% warning threshold`);
     // Warnings don't fail the build
     process.exit(0);
   } else {
-    logger.info('\n✅ BENCHMARK PASS: All metrics within φ-scaled thresholds');
+    console.log('\n✅ BENCHMARK PASS: All metrics within φ-scaled thresholds');
     process.exit(0);
   }
 }
 
 main().catch(err => {
-  logger.error('Fatal error in compare-benchmarks:', err);
+  console.error('Fatal error in compare-benchmarks:', err);
   process.exit(1);
 });

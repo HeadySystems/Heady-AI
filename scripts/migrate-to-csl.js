@@ -381,7 +381,7 @@ class MigrateToCSL {
       lines.push(
         `${indent}if (_activated_${anchors[0].id}.find(r => r.anchor === '${a.id}')) {`
       );
-      lines.push(`${indent}  // NOTE: original branch for '${a.literal}' goes here`);
+      lines.push(`${indent}  // TODO: original branch for '${a.literal}' goes here`);
       lines.push(`${indent}}`);
     }
 
@@ -431,7 +431,7 @@ class MigrateToCSL {
     lines.push(`${indent}const _activation_${varId} = CSL.soft_gate(${variable}, _phiScale_${varId}.value, 20);`);
     lines.push(`${indent}// _activation_${varId} is in [0, 1]  (was: ${variable} ${operator} ${threshold})`);
     lines.push(`${indent}if (_activation_${varId} > PHI_INVERSE) {`);
-    lines.push(`${indent}  // NOTE: original branch for (${variable} ${operator} ${threshold}) goes here`);
+    lines.push(`${indent}  // TODO: original branch for (${variable} ${operator} ${threshold}) goes here`);
     lines.push(`${indent}}`);
 
     return {

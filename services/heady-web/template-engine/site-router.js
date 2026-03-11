@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadySystems A1 Template Engine
  * site-router.js — Domain-Based Vertical Selection Middleware
@@ -50,6 +48,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('site-router');
 
 const path    = require('path');
 const fs      = require('fs');

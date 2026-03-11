@@ -23,7 +23,7 @@ chatRouter.post('/', async (req, res, next) => {
       model: data.model
     });
 
-    // NOTE: Implement actual chat logic with LLM
+    // TODO: Implement actual chat logic with LLM
     res.json({
       response: `Echo: ${data.message}`,
       model: data.model || 'gpt-4',

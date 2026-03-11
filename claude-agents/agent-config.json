@@ -1,0 +1,113 @@
+{
+  "name": "heady-agent-system",
+  "version": "5.0.0",
+  "description": "Heady™ Claude Agent System — 4 autonomous agents powered by 47 MCP tools",
+  "mcpServer": {
+    "name": "heady-mcp-server",
+    "command": "node",
+    "args": ["services/heady-mcp-server/src/index.js"],
+    "env": {
+      "HEADY_MCP_TRANSPORT": "stdio",
+      "HEADY_LOG_LEVEL": "info"
+    },
+    "transportOptions": {
+      "stdio": {
+        "command": "node",
+        "args": ["services/heady-mcp-server/src/index.js"],
+        "env": { "HEADY_MCP_TRANSPORT": "stdio" }
+      },
+      "http": {
+        "url": "http://localhost:3310/mcp",
+        "transport": "streamable-http"
+      },
+      "sse": {
+        "url": "http://localhost:3310/mcp/sse",
+        "transport": "sse"
+      }
+    }
+  },
+  "agents": [
+    {
+      "id": "heady-brain",
+      "name": "Heady Brain",
+      "description": "Central cognitive engine — full access to all 47 tools",
+      "systemPrompt": "claude-agents/heady-brain-agent.md",
+      "tools": "all",
+      "skills": [
+        "heady-intelligence",
+        "heady-memory",
+        "heady-orchestrator",
+        "heady-coder",
+        "heady-ops",
+        "heady-cms"
+      ],
+      "maxTokens": 8192,
+      "temperature": 0.618
+    },
+    {
+      "id": "heady-researcher",
+      "name": "Heady Researcher",
+      "description": "Autonomous research agent with memory persistence",
+      "systemPrompt": "claude-agents/heady-researcher-agent.md",
+      "tools": [
+        "heady_memory", "heady_learn", "heady_recall", "heady_embed",
+        "heady_deep_scan", "heady_analyze", "heady_patterns",
+        "heady_battle", "heady_chat", "heady_claude",
+        "heady_cms_search", "heady_search",
+        "heady_vector_search", "heady_vector_store"
+      ],
+      "skills": ["heady-intelligence", "heady-memory"],
+      "maxTokens": 8192,
+      "temperature": 0.382
+    },
+    {
+      "id": "heady-devops",
+      "name": "Heady DevOps",
+      "description": "Platform operations, deployment, and monitoring agent",
+      "systemPrompt": "claude-agents/heady-devops-agent.md",
+      "tools": [
+        "heady_health", "heady_deploy", "heady_ops",
+        "heady_maintenance", "heady_maid", "heady_telemetry",
+        "heady_edge_ai", "heady_search", "heady_learn",
+        "heady_memory", "heady_template_stats"
+      ],
+      "skills": ["heady-ops", "heady-memory"],
+      "maxTokens": 4096,
+      "temperature": 0.236
+    },
+    {
+      "id": "heady-content",
+      "name": "Heady Content",
+      "description": "Content management agent for 9 HEADY websites",
+      "systemPrompt": "claude-agents/heady-content-agent.md",
+      "tools": [
+        "heady_cms_content", "heady_cms_taxonomy", "heady_cms_media",
+        "heady_cms_views", "heady_cms_search",
+        "heady_analyze", "heady_memory", "heady_learn",
+        "heady_chat", "heady_claude"
+      ],
+      "skills": ["heady-cms", "heady-memory", "heady-intelligence"],
+      "maxTokens": 8192,
+      "temperature": 0.618
+    }
+  ],
+  "phi": {
+    "PHI": 1.618033988749895,
+    "PSI": 0.618033988749895,
+    "temperatureMap": {
+      "analytical": 0.236,
+      "operational": 0.382,
+      "creative": 0.618,
+      "exploratory": 0.718
+    }
+  },
+  "routing": {
+    "default": "heady-brain",
+    "patterns": {
+      "analyze|scan|risk|pattern|refactor|review": "heady-brain",
+      "research|investigate|find out|look into|study": "heady-researcher",
+      "deploy|health|monitor|status|maintenance|ops": "heady-devops",
+      "publish|content|article|blog|cms|website|drupal": "heady-content"
+    }
+  }
+}

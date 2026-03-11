@@ -4,9 +4,9 @@
   "mode": "hybrid",
   "description": "Chromium-based browser with HeadyOS — local preferred, cloud fallback",
   "api": {
-    "endpoint": "http://manager.dev.local.headysystems.com:3300",
+    "endpoint": "http://manager.dev.local.heady.internal:3300",
     "fallback": "https://api.heady.systems",
-    "model_runner": "https://api.headysystems.com",
+    "model_runner": "http://localhost:8000",
     "cloud_model_endpoint": "https://models.heady.systems"
   },
   "features": {

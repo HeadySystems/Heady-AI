@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file websocket.ts
  * @description WebSocket client for real-time HeadyOS event subscriptions.
@@ -253,7 +251,7 @@ export class HeadyWebSocketClient {
             try {
               callback(event);
             } catch (err) {
-              logger.error('[HeadyWS] Error in event callback:', err);
+              console.error('[HeadyWS] Error in event callback:', err);
             }
           }
         }
@@ -263,7 +261,7 @@ export class HeadyWebSocketClient {
         console.debug('[HeadyWS] Received:', { type: message.type, channel: message.channel });
       }
     } catch (err) {
-      logger.error('[HeadyWS] Failed to parse message:', err);
+      console.error('[HeadyWS] Failed to parse message:', err);
     }
   }
 
@@ -314,7 +312,7 @@ export class HeadyWebSocketClient {
 
   private handleError(err: Error): void {
     if (this.debug) {
-      logger.error('[HeadyWS] Error:', err.message);
+      console.error('[HeadyWS] Error:', err.message);
     }
   }
 
@@ -329,7 +327,7 @@ export class HeadyWebSocketClient {
   private scheduleReconnect(): void {
     if (this.reconnectAttempt >= WS_CONSTANTS.MAX_RECONNECT_ATTEMPTS) {
       this.state = 'disconnected';
-      logger.error('[HeadyWS] Max reconnect attempts reached. Giving up.');
+      console.error('[HeadyWS] Max reconnect attempts reached. Giving up.');
       return;
     }
 
@@ -362,7 +360,7 @@ export class HeadyWebSocketClient {
       if (this.ws?.readyState === WebSocket.OPEN) {
         this.ws.ping();
         this.heartbeatTimeoutTimer = setTimeout(() => {
-          logger.warn('[HeadyWS] Heartbeat timeout. Reconnecting...');
+          console.warn('[HeadyWS] Heartbeat timeout. Reconnecting...');
           this.ws?.terminate();
         }, WS_CONSTANTS.HEARTBEAT_TIMEOUT_MS);
       }

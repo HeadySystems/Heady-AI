@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview MCP Gateway with CSL-Gated Routing — Phi-Continuous Edition
  *
@@ -1090,8 +1088,8 @@ export class MCPGateway extends EventEmitter {
     };
     this.emit('log', entry);
     // eslint-disable-next-line no-console
-    if (level === 'error') logger.error(JSON.stringify(entry));
-    else if (level === 'warn') logger.warn(JSON.stringify(entry));
+    if (level === 'error') console.error(JSON.stringify(entry));
+    else if (level === 'warn') console.warn(JSON.stringify(entry));
     // info suppressed unless debug mode
   }
 

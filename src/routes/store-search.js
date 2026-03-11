@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyStore Search Route — /api/store/search
  * Cascades through available AI providers for REAL product search:
@@ -258,17 +256,17 @@ async function storeSearchHandler(req, res) {
 
         for (const provider of providers) {
             try {
-                logger.info(`[store-search] Trying ${provider.name}...`);
+                console.log(`[store-search] Trying ${provider.name}...`);
                 const result = await provider.fn(userMessage);
                 if (result?.products?.length > 0) {
-                    logger.info(`[store-search] ${provider.name} returned ${result.products.length} products`);
+                    console.log(`[store-search] ${provider.name} returned ${result.products.length} products`);
                     return res.json({
                         ...result,
                         _provider: provider.name,
                     });
                 }
             } catch (err) {
-                logger.warn(`[store-search] ${provider.name} failed:`, err.message);
+                console.warn(`[store-search] ${provider.name} failed:`, err.message);
             }
         }
 
@@ -296,7 +294,7 @@ async function storeSearchHandler(req, res) {
         });
 
     } catch (err) {
-        logger.error('Store search error:', err);
+        console.error('Store search error:', err);
         res.status(500).json({ error: 'Search failed', message: err.message });
     }
 }

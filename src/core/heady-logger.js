@@ -1,257 +1,278 @@
 /**
- * Heady™ Latent OS — Structured Logger
- * JSON-structured logger with phi-sized ring buffer and rotation triggers.
- *
- * Features:
- *   - Log levels: DEBUG < INFO < WARN < ERROR < FATAL
- *   - Ring buffer of fib(16)=987 entries per logger instance
- *   - Rotation trigger at buffer capacity × PSI (61.8%)
- *   - Structured JSON output: timestamp, level, module, message, metadata
- *   - Factory pattern: createLogger(moduleName)
- *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * ∞ Heady™ Logger — Structured colorful logger with levels, JSON mode, and component tagging
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
-'use strict';
+const { EventEmitter } = require("events");
 
-const { fib, PSI } = require('../../shared/phi-math');
+/** @type {Record<string, number>} Log level priorities */
+const LEVELS = {
+  trace: 10,
+  debug: 20,
+  info: 30,
+  warn: 40,
+  error: 50,
+  fatal: 60,
+  silent: 100,
+};
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+/** @type {Record<string, string>} ANSI color codes */
+const COLORS = {
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
+  trace: '\x1b[90m',      // gray
+  debug: '\x1b[36m',      // cyan
+  info: '\x1b[32m',       // green
+  warn: '\x1b[33m',       // yellow
+  error: '\x1b[31m',      // red
+  fatal: '\x1b[35m',      // magenta
+  component: '\x1b[34m',  // blue
+  time: '\x1b[90m',       // dark gray
+  symbol: '\x1b[96m',     // bright cyan
+};
 
-/** Ring buffer capacity: fib(16) = 987 */
-const LOG_BUFFER_CAPACITY = fib(16); // 987
+/** @type {Record<string, string>} Level symbols */
+const SYMBOLS = {
+  trace: '·',
+  debug: '◦',
+  info: '∞',
+  warn: '⚠',
+  error: '✗',
+  fatal: '☠',
+};
 
-/** Rotation trigger threshold: capacity × PSI = 987 × 0.618 ≈ 610 */
-const LOG_ROTATION_THRESHOLD = Math.floor(LOG_BUFFER_CAPACITY * PSI); // ~610
-
-/** Numeric level values for comparison */
-const LEVELS = Object.freeze({
-  DEBUG: 0,
-  INFO:  1,
-  WARN:  2,
-  ERROR: 3,
-  FATAL: 4,
-});
-
-/** Level labels for reverse lookup */
-const LEVEL_NAMES = Object.freeze(Object.fromEntries(
-  Object.entries(LEVELS).map(([k, v]) => [v, k])
-));
-
-// ─── Ring Buffer ──────────────────────────────────────────────────────────────
-
-class LogRingBuffer {
-  constructor(capacity) {
-    this._capacity = capacity;
-    this._buf      = new Array(capacity);
-    this._head     = 0;
-    this._size     = 0;
-    this._totalWritten = 0;
-  }
-
-  push(entry) {
-    this._buf[this._head] = entry;
-    this._head = (this._head + 1) % this._capacity;
-    if (this._size < this._capacity) this._size++;
-    this._totalWritten++;
-  }
-
-  toArray() {
-    if (this._size === 0) return [];
-    const start = this._size < this._capacity ? 0 : this._head;
-    const result = [];
-    for (let i = 0; i < this._size; i++) {
-      result.push(this._buf[(start + i) % this._capacity]);
-    }
-    return result;
-  }
-
-  get size()         { return this._size; }
-  get capacity()     { return this._capacity; }
-  get totalWritten() { return this._totalWritten; }
-}
-
-// ─── HeadyLogger Class ────────────────────────────────────────────────────────
+/** @type {Record<string, string>} Level labels (padded) */
+const LABELS = {
+  trace: 'TRACE',
+  debug: 'DEBUG',
+  info: ' INFO',
+  warn: ' WARN',
+  error: 'ERROR',
+  fatal: 'FATAL',
+};
 
 /**
- * Structured JSON logger for a named module.
- * Emits JSON lines to stdout; maintains an in-process ring buffer.
+ * Formats a Date to a compact ISO-like string
+ * @param {Date} date
+ * @returns {string}
  */
-class HeadyLogger {
-  /**
-   * @param {string} moduleName  identifies the source module in every log line
-   * @param {object} [opts]
-   * @param {string} [opts.level='INFO']  minimum level to emit
-   * @param {boolean} [opts.pretty=false] pretty-print JSON (dev only)
-   */
-  constructor(moduleName, opts = {}) {
-    this._module    = moduleName;
-    this._minLevel  = LEVELS[opts.level] !== undefined ? LEVELS[opts.level] : LEVELS.INFO;
-    this._pretty    = Boolean(opts.pretty);
-    this._buffer    = new LogRingBuffer(LOG_BUFFER_CAPACITY);
-    this._rotations = 0;
+function formatTime(date) {
+  return date.toISOString().replace('T', ' ').substring(0, 23);
+}
 
-    /** User-supplied rotation handler */
-    this._onRotate = null;
+/**
+ * Safely serializes a value for log output
+ * @param {unknown} value
+ * @returns {string}
+ */
+function serialize(value) {
+  if (value === undefined) return 'undefined';
+  if (value === null) return 'null';
+  if (value instanceof Error) {
+    return `${value.name}: ${value.message}${value.stack ? '\n' + value.stack : ''}`;
+  }
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value, null, 2);
+    } catch {
+      return '[Circular]';
+    }
+  }
+  return String(value);
+}
+
+/**
+ * @class HeadyLogger
+ * @extends EventEmitter
+ * Structured logger with ANSI color output, JSON mode, and child logger support.
+ */
+class HeadyLogger extends EventEmitter {
+  /**
+   * @param {object} [options]
+   * @param {string} [options.component] - Component/module name tag
+   * @param {string} [options.level='info'] - Minimum log level
+   * @param {boolean} [options.json=false] - Output as JSON (for log aggregators)
+   * @param {boolean} [options.color=true] - Enable ANSI colors
+   * @param {boolean} [options.timestamp=true] - Include timestamps
+   * @param {object} [options.context] - Additional context fields merged into every log
+   * @param {number} [options.historySize=100] - Ring buffer size for recent log entries
+   */
+  constructor(options = {}) {
+    super();
+    this.component = options.component || 'HeadyCore';
+    this.levelName = options.level || process.env.HEADY_LOG_LEVEL || 'info';
+    this.levelValue = LEVELS[this.levelName] ?? LEVELS.info;
+    this.json = options.json ?? (process.env.HEADY_LOG_FORMAT === 'json');
+    this.color = options.color ?? (process.env.NO_COLOR ? false : process.stdout.isTTY !== false);
+    this.timestamp = options.timestamp ?? true;
+    this.context = options.context || {};
+    this.historySize = options.historySize ?? 100;
+    /** @type {Array<object>} Ring buffer of recent log entries */
+    this._history = [];
+    this._seq = 0;
   }
 
-  // ─── Write Helpers ──────────────────────────────────────────────────────────
+  /**
+   * Creates a child logger with additional context
+   * @param {string} component - Sub-component name
+   * @param {object} [context] - Extra context fields
+   * @returns {HeadyLogger}
+   */
+  child(component, context = {}) {
+    return new HeadyLogger({
+      component: `${this.component}:${component}`,
+      level: this.levelName,
+      json: this.json,
+      color: this.color,
+      timestamp: this.timestamp,
+      context: { ...this.context, ...context },
+      historySize: this.historySize,
+    });
+  }
 
   /**
-   * Core write: assemble log entry, buffer it, and print to stdout.
-   * @private
+   * Core log method
+   * @param {string} levelName
+   * @param {string} message
+   * @param {object} [fields]
    */
-  _write(levelName, message, metadata) {
-    const levelNum = LEVELS[levelName];
-    if (levelNum < this._minLevel) return;
+  _log(levelName, message, fields = {}) {
+    const levelValue = LEVELS[levelName] ?? LEVELS.info;
+    if (levelValue < this.levelValue) return;
 
-    /** @type {LogEntry} */
+    const now = new Date();
     const entry = {
-      timestamp: new Date().toISOString(),
-      level:     levelName,
-      module:    this._module,
-      message:   String(message),
-      metadata:  metadata || {},
+      seq: ++this._seq,
+      time: now.toISOString(),
+      level: levelName,
+      component: this.component,
+      msg: message,
+      ...this.context,
+      ...fields,
     };
 
-    this._buffer.push(entry);
+    // Store in ring buffer
+    if (this._history.length >= this.historySize) this._history.shift();
+    this._history.push(entry);
 
-    // Rotation trigger: PSI × capacity
-    if (this._buffer.size >= LOG_ROTATION_THRESHOLD) {
-      this._triggerRotation();
+    // Emit for external listeners
+    this.emit('log', entry);
+    if (levelValue >= LEVELS.error) this.emit('error-log', entry);
+
+    if (this.json) {
+      process.stdout.write(JSON.stringify(entry) + '\n');
+      return;
     }
 
-    const line = this._pretty
-      ? JSON.stringify(entry, null, 2)
-      : JSON.stringify(entry);
-
-    process.stdout.write(line + '\n');
+    this._writeFormatted(levelName, now, message, fields);
   }
-
-  /** @private */
-  _triggerRotation() {
-    this._rotations++;
-    if (typeof this._onRotate === 'function') {
-      try {
-        this._onRotate({
-          module:    this._module,
-          rotation:  this._rotations,
-          bufSize:   this._buffer.size,
-          threshold: LOG_ROTATION_THRESHOLD,
-          ts:        Date.now(),
-        });
-      } catch (_) {
-        // rotation handler must not crash the logger
-      }
-    }
-  }
-
-  // ─── Public Level Methods ───────────────────────────────────────────────────
-
-  /** @param {string} message @param {object} [meta] */
-  debug(message, meta) { this._write('DEBUG', message, meta); }
-
-  /** @param {string} message @param {object} [meta] */
-  info(message, meta)  { this._write('INFO',  message, meta); }
-
-  /** @param {string} message @param {object} [meta] */
-  warn(message, meta)  { this._write('WARN',  message, meta); }
 
   /**
+   * Writes a human-formatted, colored log line
+   * @param {string} levelName
+   * @param {Date} time
    * @param {string} message
-   * @param {Error|object} [errorOrMeta]
+   * @param {object} fields
    */
-  error(message, errorOrMeta) {
-    let meta = {};
-    if (errorOrMeta instanceof Error) {
-      meta = { error: errorOrMeta.message, stack: errorOrMeta.stack };
-    } else if (errorOrMeta) {
-      meta = errorOrMeta;
+  _writeFormatted(levelName, time, message, fields) {
+    const c = this.color ? COLORS : {};
+    const reset = c.reset || '';
+
+    const timeStr = this.timestamp
+      ? `${c.time || ''}${formatTime(time)}${reset} `
+      : '';
+
+    const symbol = `${c.symbol || ''}${SYMBOLS[levelName] || '·'}${reset}`;
+    const label = `${c[levelName] || ''}${c.bold || ''}${LABELS[levelName]}${reset}`;
+    const comp = `${c.component || ''}[${this.component}]${reset}`;
+    const msg = `${c[levelName] || ''}${message}${reset}`;
+
+    let line = `${timeStr}${symbol} ${label} ${comp} ${msg}`;
+
+    const extraKeys = Object.keys(fields);
+    if (extraKeys.length > 0) {
+      const extras = extraKeys
+        .map(k => {
+          const v = fields[k];
+          const vs = v instanceof Error
+            ? `${v.message}`
+            : typeof v === 'object' ? JSON.stringify(v) : String(v);
+          return `${c.dim || ''}${k}=${reset}${vs}`;
+        })
+        .join(' ');
+      line += ` ${extras}`;
     }
-    this._write('ERROR', message, meta);
+
+    const stream = levelName === 'error' || levelName === 'fatal'
+      ? process.stderr
+      : process.stdout;
+    stream.write(line + '\n');
+  }
+
+  /** @param {string} msg @param {object} [fields] */
+  trace(msg, fields) { this._log('trace', msg, fields); }
+
+  /** @param {string} msg @param {object} [fields] */
+  debug(msg, fields) { this._log('debug', msg, fields); }
+
+  /** @param {string} msg @param {object} [fields] */
+  info(msg, fields) { this._log('info', msg, fields); }
+
+  /** @param {string} msg @param {object} [fields] */
+  warn(msg, fields) { this._log('warn', msg, fields); }
+
+  /** @param {string} msg @param {object} [fields] */
+  error(msg, fields) { this._log('error', msg, fields); }
+
+  /** @param {string} msg @param {object} [fields] */
+  fatal(msg, fields) { this._log('fatal', msg, fields); }
+
+  /**
+   * Returns recent log history
+   * @param {number} [n=20]
+   * @returns {Array<object>}
+   */
+  history(n = 20) {
+    return this._history.slice(-n);
   }
 
   /**
-   * @param {string} message
-   * @param {Error|object} [errorOrMeta]
+   * Sets the minimum log level at runtime
+   * @param {string} levelName
    */
-  fatal(message, errorOrMeta) {
-    let meta = {};
-    if (errorOrMeta instanceof Error) {
-      meta = { error: errorOrMeta.message, stack: errorOrMeta.stack };
-    } else if (errorOrMeta) {
-      meta = errorOrMeta;
-    }
-    this._write('FATAL', message, meta);
-  }
-
-  // ─── Configuration ──────────────────────────────────────────────────────────
-
-  /**
-   * Register a callback invoked when the ring buffer reaches rotation threshold.
-   * @param {Function} fn  receives { module, rotation, bufSize, threshold, ts }
-   */
-  onRotation(fn) {
-    this._onRotate = fn;
-    return this;
+  setLevel(levelName) {
+    if (!(levelName in LEVELS)) throw new Error(`Unknown level: ${levelName}`);
+    this.levelName = levelName;
+    this.levelValue = LEVELS[levelName];
   }
 
   /**
-   * Set the minimum log level dynamically.
-   * @param {'DEBUG'|'INFO'|'WARN'|'ERROR'|'FATAL'} level
+   * Starts a timer and returns a function to log the elapsed time
+   * @param {string} label
+   * @returns {function(string?, object?): void}
    */
-  setLevel(level) {
-    if (LEVELS[level] === undefined) {
-      throw new Error(`[HeadyLogger] Unknown level: ${level}`);
-    }
-    this._minLevel = LEVELS[level];
-  }
-
-  // ─── Buffer Access ──────────────────────────────────────────────────────────
-
-  /** Returns all buffered entries (oldest-first). */
-  dumpBuffer() {
-    return this._buffer.toArray();
-  }
-
-  /** Buffer diagnostics for health probes. */
-  bufferStats() {
-    return {
-      module:           this._module,
-      bufferSize:       this._buffer.size,
-      bufferCapacity:   this._buffer.capacity,   // fib(16) = 987
-      rotationThreshold: LOG_ROTATION_THRESHOLD, // capacity × PSI ≈ 610
-      totalWritten:     this._buffer.totalWritten,
-      rotations:        this._rotations,
-      psiRatio:         PSI,
+  time(label) {
+    const start = process.hrtime.bigint();
+    return (msg, fields = {}) => {
+      const elapsed = Number(process.hrtime.bigint() - start) / 1e6;
+      this._log('debug', msg || label, { ...fields, elapsed_ms: elapsed.toFixed(2) });
     };
   }
 }
 
-// ─── Factory ──────────────────────────────────────────────────────────────────
-
-/** Module-level registry so each module name returns the same instance */
-const _registry = new Map();
+/** Singleton root logger */
+const rootLogger = new HeadyLogger({ component: 'Heady' });
 
 /**
- * Factory: returns (or creates) a HeadyLogger for the given module name.
- *
- * @param {string} moduleName  e.g. 'auto-success-engine', 'bootstrap'
- * @param {object} [opts]      @see HeadyLogger constructor
+ * Creates a component-scoped child logger
+ * @param {string} component
+ * @param {object} [context]
  * @returns {HeadyLogger}
  */
-function createLogger(moduleName, opts = {}) {
-  if (_registry.has(moduleName)) return _registry.get(moduleName);
-  const logger = new HeadyLogger(moduleName, opts);
-  _registry.set(moduleName, logger);
-  return logger;
+function createLogger(component, context = {}) {
+  return rootLogger.child(component, context);
 }
 
-module.exports = {
-  HeadyLogger,
-  createLogger,
-  LEVELS,
-  LEVEL_NAMES,
-  LOG_BUFFER_CAPACITY,
-  LOG_ROTATION_THRESHOLD,
-};
+module.exports = HeadyLogger;

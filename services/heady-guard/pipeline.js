@@ -1,11 +1,9 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
  * HeadyGuard — Pipeline Engine
  *
- * Registers filter stages and executes them in csl_relevance order.
+ * Registers filter stages and executes them in priority order.
  * Stages may run serially or in parallel (for independent checks).
  *
  * Result shape:
@@ -21,24 +19,25 @@ const logger = pino();
  */
 
 const config = require('./config');
+const logger = require('../../shared/logger')('heady-guard');
 
 // ── Stage registry ────────────────────────────────────────────────────────────
 
-const _registry = new Map(); // stageName → { runner, csl_relevance, parallel }
+const _registry = new Map(); // stageName → { runner, priority, parallel }
 
 /**
  * Register a filter stage.
  *
  * @param {string}   name     — unique stage name (must match runner's STAGE_NAME)
  * @param {Function} runner   — async (payload, stageConfig) => stageResult
- * @param {number}   csl_relevance — lower number = runs first (default 50)
+ * @param {number}   priority — lower number = runs first (default 50)
  * @param {boolean}  parallel — can run in parallel with other parallel stages
  */
-function registerStage(name, runner, csl_relevance = 50, parallel = false) {
+function registerStage(name, runner, priority = 50, parallel = false) {
   if (typeof runner !== 'function') {
     throw new TypeError(`HeadyGuard: stage runner for "${name}" must be a function`);
   }
-  _registry.set(name, { name, runner, csl_relevance, parallel });
+  _registry.set(name, { name, runner, priority, parallel });
 }
 
 /**
@@ -49,16 +48,16 @@ function deregisterStage(name) {
 }
 
 /**
- * Get registered stage names in csl_relevance order.
+ * Get registered stage names in priority order.
  */
 function getStageNames() {
   return [..._registry.values()]
-    .sort((a, b) => a.csl_relevance - b.csl_relevance)
+    .sort((a, b) => a.priority - b.priority)
     .map(s => s.name);
 }
 
 // ── Score aggregation (Sacred Geometry weighting) ────────────────────────────
-// Later (higher-csl_relevance) stage results are weighted by PHI^(position/total)
+// Later (higher-priority) stage results are weighted by PHI^(position/total)
 // so that high-confidence detection near the end of the pipeline has more pull.
 
 const PHI = config.phi; // 1.618
@@ -66,15 +65,15 @@ const PHI = config.phi; // 1.618
 function _aggregateRiskScores(stageResults, stageOrder) {
   if (stageOrder.length === 0) return 0;
   const n = stageOrder.length;
-  let weightedSum  = 0;
-  let totalWeight  = 0;
+  let weightedSum = 0;
+  let totalWeight = 0;
 
   stageOrder.forEach((name, idx) => {
     const result = stageResults[name];
     if (!result) return;
     const baseWeight = 1 + (idx / n) * (PHI - 1); // 1.0 → 1.618 over the stages
-    weightedSum  += result.riskScore * baseWeight;
-    totalWeight  += baseWeight;
+    weightedSum += result.riskScore * baseWeight;
+    totalWeight += baseWeight;
   });
 
   if (totalWeight === 0) return 0;
@@ -86,7 +85,7 @@ function _aggregateRiskScores(stageResults, stageOrder) {
 /**
  * Run a single stage with a timeout.
  *
- * @param {object}   stageEntry   — { name, runner, csl_relevance }
+ * @param {object}   stageEntry   — { name, runner, priority }
  * @param {object}   payload
  * @param {object}   pipelineCfg
  * @returns {Promise<object>}     — stage result
@@ -95,11 +94,11 @@ async function _runStage(stageEntry, payload, pipelineCfg) {
   const timeoutMs = pipelineCfg.stageTimeoutMs || config.stageTimeoutMs;
   const stageConfig = {
     blockThreshold: pipelineCfg.blockThreshold || config.blockThreshold,
-    flagThreshold:  pipelineCfg.flagThreshold  || config.flagThreshold,
-    piiMode:        pipelineCfg.piiMode        || config.piiMode,
+    flagThreshold: pipelineCfg.flagThreshold || config.flagThreshold,
+    piiMode: pipelineCfg.piiMode || config.piiMode,
     piiRedactionStrategy: pipelineCfg.piiRedactionStrategy || config.piiRedactionStrategy,
-    toxicity:       pipelineCfg.toxicity       || config.toxicity,
-    rateLimit:      pipelineCfg.rateLimit      || config.rateLimit,
+    toxicity: pipelineCfg.toxicity || config.toxicity,
+    rateLimit: pipelineCfg.rateLimit || config.rateLimit,
     ...(pipelineCfg.stageOverrides?.[stageEntry.name] || {}),
   };
 
@@ -116,12 +115,12 @@ async function _runStage(stageEntry, payload, pipelineCfg) {
   } catch (err) {
     // Stage errors are non-fatal — treated as PASS with a warning
     return {
-      stage:     stageEntry.name,
-      action:    'PASS',
+      stage: stageEntry.name,
+      action: 'PASS',
       riskScore: 0,
       confidence: 0,
-      findings:  [],
-      meta:      { error: err.message, timedOut: err.message.includes('timed out') },
+      findings: [],
+      meta: { error: err.message, timedOut: err.message.includes('timed out') },
     };
   }
 }
@@ -144,21 +143,21 @@ async function run(payload, pipelineCfg = {}) {
 
   // Get ordered stages filtered to enabled
   const orderedStages = [..._registry.values()]
-    .sort((a, b) => a.csl_relevance - b.csl_relevance)
+    .sort((a, b) => a.priority - b.priority)
     .filter(s => enabledNames.includes(s.name));
 
   const stageResults = {};
-  const flags        = [];
-  let   blockedBy    = null;
-  let   redactedText = null;
+  const flags = [];
+  let blockedBy = null;
+  let redactedText = null;
 
   // Group into serial runs and parallel batches:
   // Parallel stages are collected, run together as a batch, then serial stages continue.
   // For simplicity, we run non-parallel stages serially; collect all parallel stages
   // into one concurrent batch that runs together.
 
-  const serialStages   = orderedStages.filter(s => !parallelNames.has(s.name));
-  const parallelStages = orderedStages.filter(s =>  parallelNames.has(s.name));
+  const serialStages = orderedStages.filter(s => !parallelNames.has(s.name));
+  const parallelStages = orderedStages.filter(s => parallelNames.has(s.name));
 
   // ── Parallel batch (independent checks) ────────────────────────────────────
   if (parallelStages.length > 0) {
@@ -198,7 +197,7 @@ async function run(payload, pipelineCfg = {}) {
 
   // ── Aggregate ──────────────────────────────────────────────────────────────
   const executedOrder = orderedStages.map(s => s.name).filter(n => n in stageResults);
-  const riskScore     = _aggregateRiskScores(stageResults, executedOrder);
+  const riskScore = _aggregateRiskScores(stageResults, executedOrder);
   const processingTime = Date.now() - start;
 
   // Final allow/block decision
@@ -207,12 +206,12 @@ async function run(payload, pipelineCfg = {}) {
 
   return {
     allowed,
-    risk_score:      riskScore,
-    flags:           [...new Set(flags)],
-    blocked_by:      blockedBy || null,
+    risk_score: riskScore,
+    flags: [...new Set(flags)],
+    blocked_by: blockedBy || null,
     processing_time: processingTime,
-    stage_results:   stageResults,
-    redactedText:    redactedText || null,
+    stage_results: stageResults,
+    redactedText: redactedText || null,
   };
 }
 
@@ -220,20 +219,20 @@ async function run(payload, pipelineCfg = {}) {
 
 function loadBuiltinStages() {
   const stages = [
-    { name: 'injection',       path: './filters/injection-detector', csl_relevance: 10, parallel: false },
-    { name: 'pii',             path: './filters/pii-detector',       csl_relevance: 20, parallel: false },
-    { name: 'rate_limit',      path: './filters/rate-limiter',       csl_relevance: 25, parallel: false },
-    { name: 'toxicity',        path: './filters/toxicity-scorer',    csl_relevance: 30, parallel: true  },
-    { name: 'topic',           path: './filters/topic-filter',       csl_relevance: 40, parallel: true  },
-    { name: 'output_validator',path: './filters/output-validator',   csl_relevance: 50, parallel: false },
+    { name: 'injection', path: './filters/injection-detector', priority: 10, parallel: false },
+    { name: 'pii', path: './filters/pii-detector', priority: 20, parallel: false },
+    { name: 'rate_limit', path: './filters/rate-limiter', priority: 25, parallel: false },
+    { name: 'toxicity', path: './filters/toxicity-scorer', priority: 30, parallel: true },
+    { name: 'topic', path: './filters/topic-filter', priority: 40, parallel: true },
+    { name: 'output_validator', path: './filters/output-validator', priority: 50, parallel: false },
   ];
 
-  for (const { name, path, csl_relevance, parallel } of stages) {
+  for (const { name, path, priority, parallel } of stages) {
     try {
       const mod = require(path);
-      registerStage(name, mod.run, csl_relevance, parallel);
+      registerStage(name, mod.run, priority, parallel);
     } catch (err) {
-      logger.error(`[HeadyGuard] Failed to load stage "${name}": ${err.message}`);
+      logger.error({ err, stage: name, msg: `Failed to load stage "${name}"` });
     }
   }
 }

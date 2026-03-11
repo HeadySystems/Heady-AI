@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady™ Site Generator & Deployer
@@ -393,13 +391,13 @@ function generateAll() {
         const file = path.join(dir, 'index.html');
         // Only generate if no existing file OR file is small/stale
         if (fs.existsSync(file) && fs.statSync(file).size > 10000) {
-            logger.info(`  ✓ ${domain} — already has content (${(fs.statSync(file).size / 1024).toFixed(0)}KB), skipping`);
+            console.log(`  ✓ ${domain} — already has content (${(fs.statSync(file).size / 1024).toFixed(0)}KB), skipping`);
             skipped++;
             continue;
         }
         fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(file, generateProductPage(domain, info));
-        logger.info(`  ⚡ ${domain} → ${info.dir}/index.html (product page)`);
+        console.log(`  ⚡ ${domain} → ${info.dir}/index.html (product page)`);
         generated++;
     }
 
@@ -408,7 +406,7 @@ function generateAll() {
         const file = path.join(dir, 'index.html');
         fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(file, generateToolPage(domain, info));
-        logger.info(`  🔧 ${domain} → ${path.basename(dir)}/index.html (tool UI)`);
+        console.log(`  🔧 ${domain} → ${path.basename(dir)}/index.html (tool UI)`);
         generated++;
     }
 
@@ -417,14 +415,14 @@ function generateAll() {
         const file = path.join(dir, 'index.html');
         fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(file, generateReservePage(domain, info));
-        logger.info(`  📌 ${domain} → ${path.basename(dir)}/index.html (reserve/redirect)`);
+        console.log(`  📌 ${domain} → ${path.basename(dir)}/index.html (reserve/redirect)`);
         generated++;
     }
 
-    logger.info(`\n✅ Generated: ${generated} | Skipped (existing): ${skipped} | Total dirs: ${generated + skipped}`);
+    console.log(`\n✅ Generated: ${generated} | Skipped (existing): ${skipped} | Total dirs: ${generated + skipped}`);
 }
 
-logger.info('═══════════════════════════════════════════════');
-logger.info('  Heady™ Site Generator — ALL 59 DOMAINS');
-logger.info('═══════════════════════════════════════════════\n');
+console.log('═══════════════════════════════════════════════');
+console.log('  Heady™ Site Generator — ALL 59 DOMAINS');
+console.log('═══════════════════════════════════════════════\n');
 generateAll();

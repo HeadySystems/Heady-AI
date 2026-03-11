@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 'use strict';
 /**
@@ -259,11 +257,11 @@ function main() {
     const scriptDir = __dirname;
 
     if (!quiet) {
-        logger.info(c(C.bold + C.cyan, '\n╔══════════════════════════════════════════════════╗'));
-        logger.info(c(C.bold + C.cyan, '║   Heady Phi Audit — Fixed Value Scanner          ║'));
-        logger.info(c(C.bold + C.cyan, '╚══════════════════════════════════════════════════╝\n'));
-        logger.info(c(C.gray, `Root: ${rootDir}`));
-        logger.info(c(C.gray, `PHI = ${PHI.toFixed(6)}   PHI⁻¹ = ${PHI_INVERSE.toFixed(6)}\n`));
+        console.log(c(C.bold + C.cyan, '\n╔══════════════════════════════════════════════════╗'));
+        console.log(c(C.bold + C.cyan, '║   Heady Phi Audit — Fixed Value Scanner          ║'));
+        console.log(c(C.bold + C.cyan, '╚══════════════════════════════════════════════════╝\n'));
+        console.log(c(C.gray, `Root: ${rootDir}`));
+        console.log(c(C.gray, `PHI = ${PHI.toFixed(6)}   PHI⁻¹ = ${PHI_INVERSE.toFixed(6)}\n`));
     }
 
     // Collect all files
@@ -273,7 +271,7 @@ function main() {
     }
 
     if (!quiet) {
-        logger.info(c(C.dim, `Scanning ${allFiles.length} file(s) across [${SCAN_DIRS.join(', ')}]...\n`));
+        console.log(c(C.dim, `Scanning ${allFiles.length} file(s) across [${SCAN_DIRS.join(', ')}]...\n`));
     }
 
     // Scan
@@ -295,25 +293,25 @@ function main() {
         const types = Object.keys(byType).sort();
         for (const type of types) {
             const group = byType[type];
-            logger.info(c(C.bold + C.yellow, `\n▶ ${type} (${group.length} finding${group.length !== 1 ? 's' : ''})`));
-            logger.info(c(C.gray, '─'.repeat(60)));
+            console.log(c(C.bold + C.yellow, `\n▶ ${type} (${group.length} finding${group.length !== 1 ? 's' : ''})`));
+            console.log(c(C.gray, '─'.repeat(60)));
 
             for (const f of group) {
                 const relPath = path.relative(rootDir, f.file);
-                logger.info(
+                console.log(
                     c(C.cyan,  `  ${relPath}`) +
                     c(C.gray,  ':') +
                     c(C.white, `${f.line}`) +
                     c(C.gray,  `  value=`) +
                     c(C.red,   `${f.value}`)
                 );
-                logger.info(c(C.gray, `    context: ${f.context}`));
-                logger.info(c(C.green, `    ✦ ${f.recommendation}`));
+                console.log(c(C.gray, `    context: ${f.context}`));
+                console.log(c(C.green, `    ✦ ${f.recommendation}`));
                 if (f.importLine) {
-                    logger.info(c(C.dim,   `    import:  ${f.importLine}`));
+                    console.log(c(C.dim,   `    import:  ${f.importLine}`));
                 }
-                logger.info(c(C.dim,   `    before:  ${f.before}`));
-                logger.info(c(C.green,  `    after:   ${f.after}`));
+                console.log(c(C.dim,   `    before:  ${f.before}`));
+                console.log(c(C.green,  `    after:   ${f.after}`));
             }
         }
 
@@ -321,19 +319,19 @@ function main() {
         const fileSet  = new Set(allFindings.map(f => f.file));
         const typeSet  = new Set(allFindings.map(f => f.type));
 
-        logger.info(c(C.bold + C.cyan, '\n╔══════════════════════════════════════════════════╗'));
-        logger.info(c(C.bold + C.cyan, '║   Summary                                        ║'));
-        logger.info(c(C.bold + C.cyan, '╚══════════════════════════════════════════════════╝'));
-        logger.info(`  Total findings : ${c(C.bold + (allFindings.length > 0 ? C.red : C.green), String(allFindings.length))}`);
-        logger.info(`  Files affected : ${c(C.yellow, String(fileSet.size))}`);
-        logger.info(`  Files scanned  : ${c(C.white,  String(allFiles.length))}`);
-        logger.info(`  Pattern types  : ${c(C.white,  String(typeSet.size))}`);
-        logger.info('');
-        logger.info(c(C.dim, '  By type:'));
+        console.log(c(C.bold + C.cyan, '\n╔══════════════════════════════════════════════════╗'));
+        console.log(c(C.bold + C.cyan, '║   Summary                                        ║'));
+        console.log(c(C.bold + C.cyan, '╚══════════════════════════════════════════════════╝'));
+        console.log(`  Total findings : ${c(C.bold + (allFindings.length > 0 ? C.red : C.green), String(allFindings.length))}`);
+        console.log(`  Files affected : ${c(C.yellow, String(fileSet.size))}`);
+        console.log(`  Files scanned  : ${c(C.white,  String(allFiles.length))}`);
+        console.log(`  Pattern types  : ${c(C.white,  String(typeSet.size))}`);
+        console.log('');
+        console.log(c(C.dim, '  By type:'));
         for (const [type, group] of Object.entries(byType).sort((a, b) => b[1].length - a[1].length)) {
-            logger.info(`    ${c(C.yellow, type.padEnd(22))} ${c(C.white, String(group.length).padStart(4))}`);
+            console.log(`    ${c(C.yellow, type.padEnd(22))} ${c(C.white, String(group.length).padStart(4))}`);
         }
-        logger.info('');
+        console.log('');
     }
 
     // ── CSV output ────────────────────────────────────────────────
@@ -353,7 +351,7 @@ function main() {
         csvLines.push(csvRow);
     }
     fs.writeFileSync(csvPath, csvLines.join('\n'), 'utf8');
-    if (!quiet) logger.info(c(C.green, `  CSV  → ${csvPath}`));
+    if (!quiet) console.log(c(C.green, `  CSV  → ${csvPath}`));
 
     // ── JSON output ───────────────────────────────────────────────
     const jsonPath = path.join(scriptDir, 'audit-results.json');
@@ -376,19 +374,19 @@ function main() {
         })),
     };
     fs.writeFileSync(jsonPath, JSON.stringify(jsonOut, null, 2), 'utf8');
-    if (!quiet) logger.info(c(C.green, `  JSON → ${jsonPath}\n`));
+    if (!quiet) console.log(c(C.green, `  JSON → ${jsonPath}\n`));
 
     // ── Exit code ─────────────────────────────────────────────────
     if (allFindings.length > 0) {
         if (!quiet) {
-            logger.info(c(C.bold + C.red,
+            console.log(c(C.bold + C.red,
                 `  ✖  ${allFindings.length} fixed value(s) found — replace with PhiScale dynamics.\n`
             ));
         }
         process.exit(1);
     } else {
         if (!quiet) {
-            logger.info(c(C.bold + C.green, '  ✔  No fixed values detected — codebase is phi-clean!\n'));
+            console.log(c(C.bold + C.green, '  ✔  No fixed values detected — codebase is phi-clean!\n'));
         }
         process.exit(0);
     }

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -369,8 +367,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    logger.info(`\n  🔐 Heady Universal Auth — http://localhost:${PORT}`);
-    logger.info(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
+    console.log(`\n  🔐 Heady Universal Auth — http://localhost:${PORT}`);
+    console.log(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
 });
 
 module.exports = { PROVIDERS, server };

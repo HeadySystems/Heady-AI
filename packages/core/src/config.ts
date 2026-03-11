@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { z } from 'zod';
 import dotenv from 'dotenv';
 
@@ -21,7 +19,7 @@ export function loadConfig<T extends z.ZodType>(schema: T): z.infer<T> {
   const result = schema.safeParse(process.env);
 
   if (!result.success) {
-    logger.error('❌ Invalid configuration:', result.error.format());
+    console.error('❌ Invalid configuration:', result.error.format());
     throw new Error('Configuration validation failed');
   }
 

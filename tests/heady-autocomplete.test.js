@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyAutoComplete Engine — Unit Tests
  * Tests the core task completion engine, DAG builder, verification engine,
@@ -51,7 +49,7 @@ async function testAsync(name, fn) {
 // 1. TaskDAGBuilder Tests
 // ═══════════════════════════════════════════════════════════════
 
-logger.info('\n📐 TaskDAGBuilder Tests');
+console.log('\n📐 TaskDAGBuilder Tests');
 
 test('DAGNode creates with correct properties', () => {
     const node = new DAGNode({
@@ -127,7 +125,7 @@ test('TaskDAG.maxParallelism calculates correctly', () => {
 // 2. VerificationEngine Tests
 // ═══════════════════════════════════════════════════════════════
 
-logger.info('\n🔍 VerificationEngine Tests');
+console.log('\n🔍 VerificationEngine Tests');
 
 const verifier = new VerificationEngine();
 
@@ -186,7 +184,7 @@ const verifier = new VerificationEngine();
     // 3. ExecutionSandbox Tests
     // ═══════════════════════════════════════════════════════════════
 
-    logger.info('\n📦 ExecutionSandbox Tests');
+    console.log('\n📦 ExecutionSandbox Tests');
 
     const sandbox = new ExecutionSandbox({
         baseDir: path.join(os.tmpdir(), 'heady-test-sandbox'),
@@ -225,7 +223,7 @@ const verifier = new VerificationEngine();
     // 4. TaskStateStore Tests
     // ═══════════════════════════════════════════════════════════════
 
-    logger.info('\n💾 TaskStateStore Tests');
+    console.log('\n💾 TaskStateStore Tests');
 
     const stateDir = path.join(os.tmpdir(), 'heady-test-state');
     const store = new TaskStateStore({ stateDir });
@@ -261,7 +259,7 @@ const verifier = new VerificationEngine();
     // 5. HeadyAutoComplete Integration Smoke Test
     // ═══════════════════════════════════════════════════════════════
 
-    logger.info('\n🚀 HeadyAutoComplete Smoke Tests');
+    console.log('\n🚀 HeadyAutoComplete Smoke Tests');
 
     test('HeadyAutoComplete instantiates with stats', () => {
         const engine = new HeadyAutoComplete({});
@@ -300,12 +298,12 @@ const verifier = new VerificationEngine();
 
     // ─── Results ────────────────────────────────────────────────────
 
-    logger.info('\n═══════════════════════════════════════');
-    logger.info('  HeadyAutoComplete Test Results');
-    logger.info('═══════════════════════════════════════');
-    results.forEach(r => logger.info(r));
-    logger.info(`\n  Total: ${passed + failed} | ✅ Passed: ${passed} | ❌ Failed: ${failed}`);
-    logger.info('═══════════════════════════════════════\n');
+    console.log('\n═══════════════════════════════════════');
+    console.log('  HeadyAutoComplete Test Results');
+    console.log('═══════════════════════════════════════');
+    results.forEach(r => console.log(r));
+    console.log(`\n  Total: ${passed + failed} | ✅ Passed: ${passed} | ❌ Failed: ${failed}`);
+    console.log('═══════════════════════════════════════\n');
 
     process.exit(failed > 0 ? 1 : 0);
 })();

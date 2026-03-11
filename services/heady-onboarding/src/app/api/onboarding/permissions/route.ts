@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
@@ -45,7 +43,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (error) {
-    logger.error("Permissions error:", error)
+    console.error("Permissions error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

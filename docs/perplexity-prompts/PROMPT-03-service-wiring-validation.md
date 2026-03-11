@@ -39,7 +39,7 @@ For every service, catalog ALL HTTP endpoints:
 
 Then verify each endpoint:
 
-- Has a route handler function that exists (not a stub/NOTE)
+- Has a route handler function that exists (not a stub/TODO)
 - Has proper error handling
 - Returns correct HTTP status codes
 - Has proper CORS headers for cross-service calls

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadyWeb Universal Shell — Entry Point
  *
@@ -186,7 +184,7 @@ function preloadFrequentRemotes() {
     );
   } catch (err) {
     // Preload failures are non-fatal
-    logger.warn('[HeadyShell] Preload warning:', err.message);
+    console.warn('[HeadyShell] Preload warning:', err.message);
   }
 }
 
@@ -201,7 +199,7 @@ function preloadFrequentRemotes() {
 async function bootShell() {
   const container = document.getElementById('heady-root');
   if (!container) {
-    logger.error('[HeadyShell] #heady-root not found in DOM');
+    console.error('[HeadyShell] #heady-root not found in DOM');
     return;
   }
 
@@ -222,7 +220,7 @@ async function bootShell() {
       }
     } catch (fetchErr) {
       // Domain API is optional — fall back to DEFAULT_REMOTE
-      logger.warn('[HeadyShell] Domain API unavailable, using default remote:', fetchErr.message);
+      console.warn('[HeadyShell] Domain API unavailable, using default remote:', fetchErr.message);
     }
 
     // ── Step 2: Look up remote ────────────────────────────────────────────
@@ -230,7 +228,7 @@ async function bootShell() {
 
     const remote = REMOTE_REGISTRY[projection];
     if (!remote) {
-      logger.warn(`[HeadyShell] No remote registered for projection "${projection}". Rendering fallback.`);
+      console.warn(`[HeadyShell] No remote registered for projection "${projection}". Rendering fallback.`);
       hideLoader();
       renderFallbackUI(projection);
       return;
@@ -253,10 +251,10 @@ async function bootShell() {
     });
 
     hideLoader();
-    logger.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
+    console.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
 
   } catch (err) {
-    logger.error('[HeadyShell] Boot failure:', err);
+    console.error('[HeadyShell] Boot failure:', err);
     hideLoader();
     renderErrorUI(err);
   }
@@ -265,7 +263,7 @@ async function bootShell() {
 // ── Entry Point ──────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  logger.info(`[HeadyShell] Starting up — shell v${SHELL_VERSION} | platform v3.1.0`);
+  console.info(`[HeadyShell] Starting up — shell v${SHELL_VERSION} | platform v3.1.0`);
   preloadFrequentRemotes();
   bootShell();
 });

@@ -1,24 +1,3 @@
-const pino = require('pino');
-const logger = pino();
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 /**
  * ═══ HeadyBuddy Universal — SPEC-6 ═══
  *
@@ -356,10 +335,10 @@ function removeCookie(name) {
     }
 
     // ─── Device ID ───────────────────────────────────────────────
-    state.deviceId = getCookie("heady-device-id");
+    state.deviceId = localStorage.getItem("heady-device-id");
     if (!state.deviceId) {
         state.deviceId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
-        setCookie("heady-device-id", state.deviceId, 7);
+        localStorage.setItem("heady-device-id", state.deviceId);
     }
 
     // ─── Expose global ──────────────────────────────────────────
@@ -370,5 +349,5 @@ function removeCookie(name) {
         version: BUDDY_VERSION,
     };
 
-    logger.info(`🧠 HeadyBuddy v${BUDDY_VERSION} loaded • Alt+H to toggle`);
+    console.log(`🧠 HeadyBuddy v${BUDDY_VERSION} loaded • Alt+H to toggle`);
 })();

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Latent OS — Stripe Integration Configuration
  * HeadySystems Inc.
@@ -29,6 +27,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../shared/logger')('stripe-config');
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
 import {

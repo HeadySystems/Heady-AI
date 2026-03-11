@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // AI Workflow Engine - Complete Setup and Integration
 // Generated via MCP Orchestration
 
@@ -299,7 +297,7 @@ jobs:
     
     // Initialize the workflow engine
     async initialize() {
-        logger.info("🚀 Initializing AI Workflow Engine...");
+        console.log("🚀 Initializing AI Workflow Engine...");
         
         // Setup Render services
         await this.setupRenderServices();
@@ -313,27 +311,27 @@ jobs:
         // Create workflow gists
         await this.createWorkflowGists();
         
-        logger.info("✅ AI Workflow Engine initialized successfully");
+        console.log("✅ AI Workflow Engine initialized successfully");
         return this.getStatus();
     },
     
     async setupRenderServices() {
-        logger.info("📦 Setting up Render services...");
+        console.log("📦 Setting up Render services...");
         // Implementation for Render service setup
     },
     
     async deployCloudflareWorkers() {
-        logger.info("⚡ Deploying Cloudflare Workers...");
+        console.log("⚡ Deploying Cloudflare Workers...");
         // Implementation for Cloudflare Worker deployment
     },
     
     async setupGitHubIntegration() {
-        logger.info("🐙 Setting up GitHub integration...");
+        console.log("🐙 Setting up GitHub integration...");
         // Implementation for GitHub App and Actions setup
     },
     
     async createWorkflowGists() {
-        logger.info("📝 Creating workflow gists...");
+        console.log("📝 Creating workflow gists...");
         // Implementation for Gist creation and management
     },
     
@@ -360,6 +358,6 @@ if (typeof module !== 'undefined' && module.exports) {
 // Auto-initialize if run directly
 if (typeof window === 'undefined' && require.main === module) {
     AIWorkflowEngine.initialize()
-        .then(status => logger.info("Status:", JSON.stringify(status, null, 2)))
-        .catch(error => logger.error("Initialization failed:", error));
+        .then(status => console.log("Status:", JSON.stringify(status, null, 2)))
+        .catch(error => console.error("Initialization failed:", error));
 }

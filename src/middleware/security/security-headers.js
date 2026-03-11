@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Security Headers Middleware — Comprehensive Production Implementation
  * @module security-middleware/security-headers
@@ -344,7 +342,7 @@ function cspViolationHandler(opts = {}) {
     }
 
     // Default: log to stderr
-    logger.warn('[CSP-VIOLATION]', JSON.stringify(violation));
+    console.warn('[CSP-VIOLATION]', JSON.stringify(violation));
 
     res.status(204).end();
   };
@@ -390,6 +388,6 @@ app.post('/.well-known/csp-violations',
 // Override frame options for specific embeddable page
 app.get('/embed/widget', frameOptions('SAMEORIGIN'), (req, res) => {
   // This page can be embedded in same-origin iframes
-  res.send(`<script nonce="${res.locals.cspNonce}">logger.info('widget')</script>`);
+  res.send(`<script nonce="${res.locals.cspNonce}">console.log('widget')</script>`);
 });
 */

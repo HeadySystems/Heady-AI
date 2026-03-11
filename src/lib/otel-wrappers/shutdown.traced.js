@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('shutdown.traced');
 /**
  * shutdown.traced.js — OpenTelemetry tracing wrapper
  * Drop-in replacement for src/lib/shutdown.js

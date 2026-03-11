@@ -116,31 +116,12 @@ footer{text-align:center;padding:3rem;color:rgba(255,255,255,.3);font-size:.75re
 </div>
 </div>
 <script>
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 const DK='heady_device_id', TK='heady_auth_token', HK='buddy_history_headydata';
-if(!getCookie(DK)){setCookie(DK, (crypto&&crypto.randomUUID, 7)?crypto.randomUUID():'heady-'+Date.now());}
+if(!localStorage.getItem(DK)){localStorage.setItem(DK,(crypto&&crypto.randomUUID)?crypto.randomUUID():'heady-'+Date.now());}
 function safe(v){return (v||'').toString().replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function historyKey(){var t=getCookie(TK)||'anon';return HK+':'+t.slice(0,16);}
-function loadHistory(){try{return JSON.parse(getCookie(historyKey())||'[]');}catch{return [];}}
-function saveHistory(items){setCookie(historyKey(), JSON.stringify(items.slice(-40, 7)));}
+function historyKey(){var t=localStorage.getItem(TK)||'anon';return HK+':'+t.slice(0,16);}
+function loadHistory(){try{return JSON.parse(localStorage.getItem(historyKey())||'[]');}catch{return [];}}
+function saveHistory(items){localStorage.setItem(historyKey(),JSON.stringify(items.slice(-40)));}
 function toggleHeadyChat(){var p=document.getElementById('heady-chat-panel');if(p.classList.contains('open')){p.classList.remove('open');p.style.display='none';}else{p.classList.add('open');p.style.display='flex';document.getElementById('heady-chat-input').focus();var m=document.getElementById('heady-chat-messages');m.scrollTop=m.scrollHeight;}}
 async function sendHeadyChat(){var input=document.getElementById('heady-chat-input');var msg=input.value.trim();if(!msg)return;input.value='';var container=document.getElementById('heady-chat-messages');container.innerHTML+='<div class="hc-msg user"><div class="hc-bubble">'+msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div></div>';container.innerHTML+='<div class="hc-msg bot" id="heady-typing-msg"><div class="hc-typing"><span>.</span><span>.</span><span>.</span></div></div>';container.scrollTop=container.scrollHeight;try{var r=await fetch((window.location.origin)+'/api/brain/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,context:{vertical:'headydb.com'}})});var d=await r.json();var reply=(d.response||d.message||d.text||'Processing via HeadyData...').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');var t=document.getElementById('heady-typing-msg');if(t)t.remove();container.innerHTML+='<div class="hc-msg bot"><div class="hc-bubble">'+reply+'</div></div>';container.scrollTop=container.scrollHeight;}catch(e){var t=document.getElementById('heady-typing-msg');if(t)t.remove();container.innerHTML+='<div class="hc-msg bot"><div class="hc-bubble">Connected to HeadyData ecosystem. Full context active! ✨</div></div>';container.scrollTop=container.scrollHeight;}}
 </script>
@@ -307,17 +288,17 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
 /* WARP Auth + persistent session */
 (function(){
   const DK='heady_device_id', TK='heady_auth_token', WK='heady_warp';
-  if(!getCookie(DK)) setCookie(DK, crypto.randomUUID(, 7));
-  const warp = navigator.userAgent.includes('Cloudflare-WARP') || getCookie(WK)==='true';
-  if(warp) setCookie(WK, 'true', 7);
+  if(!localStorage.getItem(DK)) localStorage.setItem(DK, crypto.randomUUID());
+  const warp = navigator.userAgent.includes('Cloudflare-WARP') || localStorage.getItem(WK)==='true';
+  if(warp) localStorage.setItem(WK,'true');
   const maxAge = warp ? 365*86400000 : 90*86400000;
-  let tok = getCookie(TK);
+  let tok = localStorage.getItem(TK);
   try { if(tok && JSON.parse(atob(tok)).exp < Date.now()) tok = null; } catch{ tok=null; }
   if(!tok) {
-    tok = btoa(JSON.stringify({sub:getCookie(DK),iat:Date.now(),exp:Date.now()+maxAge,ver:'headydb.com',warp}));
-    setCookie(TK, tok, 7);
+    tok = btoa(JSON.stringify({sub:localStorage.getItem(DK),iat:Date.now(),exp:Date.now()+maxAge,ver:'headydb.com',warp}));
+    localStorage.setItem(TK, tok);
   }
-  console.log('🔐', warp?'WARP 365d':'Standard 90d', '| device:', getCookie(DK).slice(0,8));
+  console.log('🔐', warp?'WARP 365d':'Standard 90d', '| device:', localStorage.getItem(DK).slice(0,8));
 })();
 </script>
 
@@ -359,17 +340,17 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
 /* ── Max-Duration Auth (WARP: 365d, Device: 365d, Standard: 180d) ── */
 (function(){
   const DK='heady_device_id',TK='heady_auth_token',WK='heady_warp',SK='heady_session_start';
-  if(!getCookie(DK))setCookie(DK, crypto.randomUUID(, 7));
-  if(!getCookie(SK))setCookie(SK, Date.now(, 7).toString());
-  const warp=navigator.userAgent.includes('Cloudflare-WARP')||getCookie(WK)==='true';
-  if(warp)setCookie(WK, 'true', 7);
+  if(!localStorage.getItem(DK))localStorage.setItem(DK,crypto.randomUUID());
+  if(!localStorage.getItem(SK))localStorage.setItem(SK,Date.now().toString());
+  const warp=navigator.userAgent.includes('Cloudflare-WARP')||localStorage.getItem(WK)==='true';
+  if(warp)localStorage.setItem(WK,'true');
   // Maximum secure durations: WARP=365d, Device=365d, Standard=180d
   const maxAge=warp?365*86400000:365*86400000;
-  let tok=getCookie(TK);
+  let tok=localStorage.getItem(TK);
   try{if(tok&&JSON.parse(atob(tok)).exp<Date.now())tok=null;}catch{tok=null;}
   if(!tok){
     tok=btoa(JSON.stringify({
-      sub:getCookie(DK),
+      sub:localStorage.getItem(DK),
       iat:Date.now(),
       exp:Date.now()+maxAge,
       ver:'headydb.com',
@@ -377,10 +358,10 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
       pwa:window.matchMedia('(display-mode:standalone)').matches,
       device:navigator.userAgent.includes('Mobile')?'mobile':'desktop'
     }));
-    setCookie(TK, tok, 7);
+    localStorage.setItem(TK,tok);
   }
   const days=Math.round((JSON.parse(atob(tok)).exp-Date.now())/86400000);
-  console.log('🔐 Auth: '+days+'d remaining |',warp?'WARP':'Device','| id:',getCookie(DK).slice(0,8));
+  console.log('🔐 Auth: '+days+'d remaining |',warp?'WARP':'Device','| id:',localStorage.getItem(DK).slice(0,8));
 })();
 </script>
 </body></html>

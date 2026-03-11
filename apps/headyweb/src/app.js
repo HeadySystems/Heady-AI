@@ -1,24 +1,5 @@
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 const state = {
-  token: getCookie('headywebToken') || '',
+  token: localStorage.getItem('headywebToken') || '',
   selectedFilePath: 'apps/headyweb/src/app.js'
 };
 
@@ -123,7 +104,7 @@ async function initializeSession() {
     await refreshVectors();
   } catch {
     state.token = '';
-    removeCookie('headywebToken');
+    localStorage.removeItem('headywebToken');
     setStatus('Session expired', 'warn');
   }
 }
@@ -141,7 +122,7 @@ function bindEvents() {
         headers: {}
       });
       state.token = result.token;
-      setCookie('headywebToken', state.token, 7);
+      localStorage.setItem('headywebToken', state.token);
       await initializeSession();
     } catch (error) {
       setStatus(error.message, 'error');

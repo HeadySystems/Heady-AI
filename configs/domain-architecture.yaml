@@ -80,47 +80,53 @@ domains:
   # API subdomains
   apis:
     - domain: "api.headysystems.com"
-      backend: "heady-manager.headysystems.com"
+      backend: "localhost:8000"
       purpose: "Main API endpoint"
       auth: "JWT"
       
     - domain: "app.headysystems.com"
-      backend: "heady-web.headysystems.com"
+      backend: "localhost:3000"
       purpose: "Web application frontend"
       
     - domain: "admin.headysystems.com"
-      backend: "heady-admin.headysystems.com"
+      backend: "localhost:3001"
       purpose: "Admin dashboard"
       auth: "Basic + JWT"
       
     - domain: "api.headyconnection.org"
-      backend: "heady-connection-api.headysystems.com"
+      backend: "localhost:8001"
       purpose: "Nonprofit API endpoints"
       auth: "API Key"
       
     - domain: "app.headyconnection.org"
-      backend: "heady-connection-web.headysystems.com"
+      backend: "localhost:3002"
       purpose: "Nonprofit application frontend"
 
   # Development and staging
   development:
     - domain: "dev.headysystems.com"
-      backend: "heady-dev.headysystems.com"
+      backend: "localhost:3000"
       purpose: "Development environment"
-      ssl: "required"
+      ssl: "self-signed"
       
     - domain: "staging.headysystems.com"
       backend: "staging-backend:8000"
       purpose: "Staging environment"
       ssl: "required"
 
-# All development uses cloud-hosted domains — no local domain mapping
-# Enforcement: configs/api.headysystems.com-elimination-protocol.yaml
+# Local development domains (mapped to 127.0.0.1)
+local_domains:
+  - "app.heady.local"
+  - "api.heady.local"
+  - "admin.heady.local"
+  - "buddy.heady.local"
+  - "connection.heady.local"
+  - "systems.heady.local"
 
 # Domain policies
 policies:
-  no_api.headysystems.com:
-    description: "Never expose api.headysystems.com or internal IPs in user-facing content"
+  no_localhost:
+    description: "Never expose localhost or internal IPs in user-facing content"
     applies_to: ["docs", "configs", "examples", "screenshots", "error_messages"]
     
   https_everywhere:
@@ -145,8 +151,8 @@ oauth_callbacks:
     - "https://headybuddy.org/oauth/callback"
     
   development:
-    - "https://dev.headysystems.com/oauth/callback"
-    - "https://dev.headyconnection.org/oauth/callback"
+    - "https://app.heady.local/oauth/callback"
+    - "https://api.heady.local/oauth/callback"
 
 # Redirect rules for legacy/unused domains
 redirects:
@@ -191,4 +197,3 @@ monitoring:
   - "status.headysystems.com"
   - "analytics.headyconnection.org"
   - "health.headybuddy.org"
-

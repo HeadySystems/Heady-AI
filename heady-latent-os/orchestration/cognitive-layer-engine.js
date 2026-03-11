@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Cognitive Layer Engine — 7-Animal Cognitive Architecture
  * @module orchestration/cognitive-layer-engine
@@ -614,11 +612,11 @@ export class CognitiveLayerEngine {
       ...meta,
     };
     if (level === 'error') {
-      logger.error(JSON.stringify(entry));
+      console.error(JSON.stringify(entry));
     } else if (level === 'warn') {
-      logger.warn(JSON.stringify(entry));
+      console.warn(JSON.stringify(entry));
     } else if (process.env.LOG_LEVEL === 'debug') {
-      logger.info(JSON.stringify(entry));
+      console.log(JSON.stringify(entry));
     }
   }
 

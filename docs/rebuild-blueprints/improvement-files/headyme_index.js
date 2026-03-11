@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc.
  * HeadyMe — Standalone Server
@@ -27,4 +25,4 @@ app.get('/', (req, res) => {
     res.send(`<html><head><title>${siteConfig.name}</title></head><body><h1>${siteConfig.name}</h1><p>${siteConfig.description}</p></body></html>`);
 });
 
-app.listen(PORT, () => logger.info(`🐝 HeadyMe running at http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🐝 HeadyMe running at http://localhost:${PORT}`));

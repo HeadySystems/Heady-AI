@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * Heady™ Edge Worker — Cloudflare Workers Proxy & Router
@@ -295,7 +293,7 @@ export default {
 
     } catch (error) {
       // ── Origin failure — return edge error page ────────────────────
-      logger.error(`Origin error for ${hostname}${pathname}: ${error.message}`);
+      console.error(`Origin error for ${hostname}${pathname}: ${error.message}`);
 
       return new Response(JSON.stringify({
         error: 'Origin unavailable',

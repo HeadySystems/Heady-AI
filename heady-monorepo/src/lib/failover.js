@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * E17 + T9: Multi-cloud failover + Edge agent runtime
  * @module src/lib/failover
@@ -21,7 +19,7 @@ class MultiCloudFailover {
             try {
                 return await this._fetch(this.primary, request);
             } catch (err) {
-                logger.error(`[FAILOVER] Primary (${this.primary.name}) failed:`, err.message);
+                console.error(`[FAILOVER] Primary (${this.primary.name}) failed:`, err.message);
                 this._primaryHealthy = false;
                 this._failoverCount++;
                 return this._fetch(this.fallback, request);
@@ -34,7 +32,7 @@ class MultiCloudFailover {
             try {
                 await this._healthCheck(this.primary);
                 this._primaryHealthy = true;
-                logger.info(`[FAILOVER] Primary recovered, routing restored`);
+                console.log(`[FAILOVER] Primary recovered, routing restored`);
                 return this._fetch(this.primary, request);
             } catch { /* still down */ }
         }

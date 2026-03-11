@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -68,14 +66,14 @@ const telemetry = new HeadyTelemetry(vectorStore, learner);
     learner.learnPreference('3D GPU vector space for all memory operations');
     learner.learnPreference('Comprehensive data gathering during and between interactions for optimization');
 
-    logger.info(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
-    logger.info(`  📊 Telemetry: audit trail + optimization engine active`);
+    console.log(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
+    console.log(`  📊 Telemetry: audit trail + optimization engine active`);
 })();
 
 // ── Project History Ingestion — Full codebase context on boot ────
 const { ProjectHistoryIngestor } = require('./project-history-ingestor');
 const historyIngestor = new ProjectHistoryIngestor(learner);
-historyIngestor.ingestAll().catch(e => logger.error(`  ⚠ History ingest error: ${e.message}`));
+historyIngestor.ingestAll().catch(e => console.error(`  ⚠ History ingest error: ${e.message}`));
 
 // ── Tool Registry ────────────────────────────────────────────────
 // Full 33-tool registry: 30 from heady-mcp-server.js + 3 vector space tools.
@@ -131,7 +129,7 @@ function loadMCPTools() {
         { name: 'heady_memory_stats', description: 'Get continuous learning stats (interactions, directives, categories, memory usage).', inputSchema: { type: 'object', properties: {} } },
         { name: 'heady_telemetry', description: 'Get comprehensive telemetry stats (audit trail, tool call analytics, optimizations, environment).', inputSchema: { type: 'object', properties: {} } },
     ];
-    logger.info(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
+    console.log(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
 }
 
 // ── Tool Handler ─────────────────────────────────────────────────
@@ -671,24 +669,24 @@ function startHTTPServer() {
     });
 
     server.listen(PORT, async () => {
-        logger.info(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
-        logger.info(`  ════════════════════════════════════`);
-        logger.info(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
-        logger.info(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
-        logger.info(`  📡 SSE       : http://localhost:${PORT}/sse`);
-        logger.info(`  📡 WebSocket : ws://localhost:${PORT}`);
-        logger.info(`  📡 Health    : http://localhost:${PORT}/health`);
-        logger.info(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
-        logger.info(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
+        console.log(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
+        console.log(`  ════════════════════════════════════`);
+        console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
+        console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
+        console.log(`  📡 SSE       : http://localhost:${PORT}/sse`);
+        console.log(`  📡 WebSocket : ws://localhost:${PORT}`);
+        console.log(`  📡 Health    : http://localhost:${PORT}/health`);
+        console.log(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
+        console.log(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
 
         // ngrok tunnel for Colab
         const ngrokUrl = await setupNgrokTunnel(PORT);
         if (ngrokUrl) {
-            logger.info(`  🌐 ngrok     : ${ngrokUrl}`);
-            logger.info(`  🌐 SSE       : ${ngrokUrl}/sse`);
+            console.log(`  🌐 ngrok     : ${ngrokUrl}`);
+            console.log(`  🌐 SSE       : ${ngrokUrl}/sse`);
         }
 
-        logger.info(`  ════════════════════════════════════\n`);
+        console.log(`  ════════════════════════════════════\n`);
     });
 }
 
@@ -710,7 +708,7 @@ async function main() {
 }
 
 main().catch(err => {
-    logger.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
+    console.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
     process.exit(1);
 });
 

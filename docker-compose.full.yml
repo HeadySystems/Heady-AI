@@ -20,10 +20,12 @@ services:
   heady-manager:
     build: .
     container_name: heady-manager
+    ports:
+      - "3300:3300"
     environment:
       - NODE_ENV=production
       - PORT=3300
-      - HEADY_TARGET=CloudOnly
+      - HEADY_TARGET=Docker
       - HEADY_VERSION=3.0.0
       - POSTGRES_HOST=heady-postgres
       - REDIS_HOST=heady-redis
@@ -39,7 +41,7 @@ services:
       - heady-redis
       - heady-ollama
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://manager.headysystems.comheadyio.com:3300/api/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -52,8 +54,10 @@ services:
     environment:
       - POSTGRES_DB=heady
       - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=heady_secret
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    ports:
+      - "5432:5432"
     volumes:
       - heady-postgres:/var/lib/postgresql/data
       - ./backend/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -69,6 +73,8 @@ services:
   heady-redis:
     image: redis:7-alpine
     container_name: heady-redis
+    ports:
+      - "6379:6379"
     volumes:
       - heady-redis:/data
     networks:
@@ -84,6 +90,8 @@ services:
   heady-ollama:
     image: ollama/ollama:latest
     container_name: heady-ollama
+    ports:
+      - "11434:11434"
     volumes:
       - heady-ollama:/root/.ollama
     networks:
@@ -91,28 +99,31 @@ services:
     environment:
       - OLLAMA_HOST=0.0.0.0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://heady-ollama:11434/api/tags"]
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
 
   heady-rag:
-    build:
+    build: 
       context: ./HeadyAcademy
       dockerfile: Dockerfile.rag
     container_name: heady-rag
+    ports:
+      - "8080:8080"
     environment:
       - POSTGRES_HOST=heady-postgres
       - POSTGRES_DB=heady
       - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=heady_secret
       - OLLAMA_HOST=heady-ollama
     volumes:
       - heady-rag:/app/data
     networks:
       - heady-net
     depends_on:
+      - heady-postgres
       - heady-ollama
     restart: unless-stopped
 
@@ -122,9 +133,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: heady-web
+    ports:
+      - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://manager.headysystems.comheadyio.com:3300
-      - REACT_APP_MCP_URL=http://mcp.headysystems.comheadyio.com:3001
+      - REACT_APP_API_URL=http://localhost:3300
+      - REACT_APP_MCP_URL=http://localhost:3001
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -140,8 +153,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile.mcp
     container_name: heady-mcp
+    ports:
+      - "3001:3001"
     environment:
-      - MANAGER_URL=http://manager.headysystems.comheadyio.com:3300
+      - MANAGER_URL=http://heady-manager:3300
       - OLLAMA_URL=http://heady-ollama:11434
     volumes:
       - ./backend:/app
@@ -159,8 +174,10 @@ services:
       context: ./headybuddy
       dockerfile: Dockerfile
     container_name: heady-buddy
+    ports:
+      - "3301:3301"
     environment:
-      - MANAGER_URL=http://manager.headysystems.comheadyio.com:3300
+      - MANAGER_URL=http://heady-manager:3300
     volumes:
       - ./headybuddy:/app
       - heady-buddy:/app/data
@@ -176,8 +193,10 @@ services:
       context: ./agents
       dockerfile: Dockerfile.bridge
     container_name: heady-browser-bridge
+    ports:
+      - "3302:3302"
     environment:
-      - MANAGER_URL=http://manager.headysystems.comheadyio.com:3300
+      - MANAGER_URL=http://heady-manager:3300
     networks:
       - heady-net
     depends_on:
@@ -190,8 +209,10 @@ services:
       context: ./workers
       dockerfile: Dockerfile.voice
     container_name: heady-voice
+    ports:
+      - "3303:3303"
     environment:
-      - MANAGER_URL=http://manager.headysystems.comheadyio.com:3300
+      - MANAGER_URL=http://heady-manager:3300
     volumes:
       - ./workers:/app
       - heady-voice:/app/data
@@ -205,31 +226,41 @@ services:
   heady-pgadmin:
     image: dpage/pgadmin4:latest
     container_name: heady-pgadmin
+    ports:
+      - "8080:80"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@internal.headyio.com
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_DEFAULT_EMAIL=admin@heady.internal
+      - PGADMIN_DEFAULT_PASSWORD=heady_admin
       - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
     volumes:
       - heady-pgadmin:/var/lib/pgadmin
     networks:
       - heady-net
+    depends_on:
+      - heady-postgres
     restart: unless-stopped
 
   heady-redis-commander:
     image: rediscommander/redis-commander:latest
     container_name: heady-redis-commander
+    ports:
+      - "8081:8081"
     environment:
       - REDIS_HOSTS=local:heady-redis:6379
     networks:
       - heady-net
+    depends_on:
+      - heady-redis
     restart: unless-stopped
 
   # Monitoring & Observability
   heady-grafana:
     image: grafana/grafana:latest
     container_name: heady-grafana
+    ports:
+      - "3002:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_SECURITY_ADMIN_PASSWORD=heady_grafana
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     volumes:
       - heady-grafana:/var/lib/grafana
@@ -241,6 +272,8 @@ services:
   heady-prometheus:
     image: prom/prometheus:latest
     container_name: heady-prometheus
+    ports:
+      - "9090:9090"
     volumes:
       - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - heady-prometheus:/prometheus
@@ -257,8 +290,11 @@ services:
 
   # Reverse Proxy / Gateway
   heady-nginx:
-    image: nginx:1.25.3-alpine
+    image: nginx:alpine
     container_name: heady-nginx
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
       - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./configs/nginx/ssl:/etc/nginx/ssl:ro
@@ -273,33 +309,17 @@ services:
 
   # Service Discovery (Consul)
   heady-consul:
-    image: consul:1.18.0
+    image: consul:latest
     container_name: heady-consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
     volumes:
       - heady-consul:/consul/data
       - ./configs/consul:/consul/config:ro
     command: agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
-    environment:
-      - CONSUL_BIND_INTERFACE=eth0
-      - CONSUL_CLIENT_INTERFACE=eth0
-      - CONSUL_UI_BETA=true
-      - CONSUL_LOCAL_CONFIG={"datacenter":"heady-dc","server":true,"ui":true,"log_level":"INFO","enable_script_checks":false,"enable_local_script_checks":true,"services":[{"name":"heady-manager","port":3300,"check":{"http":"http://manager.headysystems.comheadyio.com:3300/health","interval":"10s"}},{"name":"heady-web","port":3400,"check":{"http":"http://heady-web:3400","interval":"30s"}},{"name":"heady-mcp","port":3200,"check":{"http":"http://mcp.headysystems.comheadyio.com:3200/health","interval":"10s"}},{"name":"heady-postgres","port":5432,"check":{"tcp":"heady-postgres:5432","interval":"10s"}},{"name":"heady-redis","port":6379,"check":{"tcp":"heady-redis:6379","interval":"10s"}},{"name":"heady-ollama","port":11434,"check":{"http":"http://heady-ollama:11434/api/tags","interval":"30s"}},{"name":"heady-rag","port":8000},{"name":"heady-buddy","port":8001},{"name":"heady-voice","port":8002},{"name":"heady-nginx","port":80},{"name":"heady-grafana","port":3000},{"name":"heady-prometheus","port":9090}],"telemetry":{"prometheus_retention_time":"24h","disable_hostname":false}}
-      - CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN:-}
-    ports:
-      - "8500:8500"
-      - "8600:8600/udp"
-      - "8301:8301"
-      - "8301:8301/udp"
-      - "8302:8302"
-      - "8302:8302/udp"
     networks:
       - heady-net
-    healthcheck:
-      test: ["CMD", "consul", "members", "-http-addr=http://consul.headysystems.comheadyio.com:8500"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
     restart: unless-stopped
 
 volumes:
@@ -334,4 +354,6 @@ volumes:
 networks:
   heady-net:
     driver: bridge
-
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

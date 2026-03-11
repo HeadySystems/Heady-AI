@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -36,11 +34,11 @@ let failed = 0;
 function test(name, fn) {
   try {
     fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
@@ -48,18 +46,18 @@ function test(name, fn) {
 async function testAsync(name, fn) {
   try {
     await fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
 
 // ─── Constants & Helpers ──────────────────────────────────────────────────────
 
-logger.info('\n── Constants & Helpers ──────────────────────────────────────────');
+console.log('\n── Constants & Helpers ──────────────────────────────────────────');
 
 test('PHI equals 1.6180339887', () => {
   assert.strictEqual(PHI, 1.6180339887);
@@ -115,7 +113,7 @@ test('_embeddingDelta is 0 for identical embeddings', () => {
 
 // ─── Claim 1: VectorDatabase ──────────────────────────────────────────────────
 
-logger.info('\n── Claim 1: VectorDatabase (canonical state as embeddings) ──────');
+console.log('\n── Claim 1: VectorDatabase (canonical state as embeddings) ──────');
 
 test('VectorDatabase.upsert stores an entry', () => {
   const db  = new VectorDatabase();
@@ -177,7 +175,7 @@ test('VectorDatabase.stats reports correct tier counts', () => {
 
 // ─── Claim 1 + 2: ExhaleModule ────────────────────────────────────────────────
 
-logger.info('\n── Claims 1+2: ExhaleModule (state projection) ──────────────────');
+console.log('\n── Claims 1+2: ExhaleModule (state projection) ──────────────────');
 
 test('ExhaleModule.exhale persists to vectorDB', () => {
   const db   = new VectorDatabase();
@@ -222,7 +220,7 @@ test('ExhaleModule.drainOnDestruction preserves all pending state', () => {
 
 // ─── Claim 5: InhaleModule ────────────────────────────────────────────────────
 
-logger.info('\n── Claim 5: InhaleModule (cosine similarity reconstitution) ─────');
+console.log('\n── Claim 5: InhaleModule (cosine similarity reconstitution) ─────');
 
 test('InhaleModule.inhale returns K context entries', () => {
   const db  = new VectorDatabase();
@@ -263,7 +261,7 @@ test('InhaleModule.inhaleByEmbedding works with direct embedding', () => {
 
 // ─── Claim 3: ProjectionManager ───────────────────────────────────────────────
 
-logger.info('\n── Claim 3: ProjectionManager (canonical invariant) ─────────────');
+console.log('\n── Claim 3: ProjectionManager (canonical invariant) ─────────────');
 
 test('ProjectionManager.registerTarget adds a target', () => {
   const db = new VectorDatabase();
@@ -319,7 +317,7 @@ test('ProjectionManager.deregisterTarget removes target', () => {
 
 // ─── Claim 4: FibonacciShardManager ──────────────────────────────────────────
 
-logger.info('\n── Claim 4: FibonacciShardManager (Fibonacci sharding) ──────────');
+console.log('\n── Claim 4: FibonacciShardManager (Fibonacci sharding) ──────────');
 
 test('FibonacciShardManager.phiRatioReport includes PHI constant', () => {
   const db  = new VectorDatabase();
@@ -383,7 +381,7 @@ test('FibonacciShardManager.shardSummary includes PHI', () => {
 
 // ─── Claim 6: ShadowMemorySystem (full system) ───────────────────────────────
 
-logger.info('\n── Claim 6: ShadowMemorySystem (full system) ────────────────────');
+console.log('\n── Claim 6: ShadowMemorySystem (full system) ────────────────────');
 
 test('ShadowMemorySystem constructs all subsystems', () => {
   const sys = new ShadowMemorySystem();
@@ -414,10 +412,10 @@ test('ShadowMemorySystem.status returns phi and stats', () => {
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-logger.info(`\n── Results ──────────────────────────────────────────────────────`);
-logger.info(`   Passed: ${passed}`);
-logger.info(`   Failed: ${failed}`);
-logger.info(`   Total:  ${passed + failed}`);
+console.log(`\n── Results ──────────────────────────────────────────────────────`);
+console.log(`   Passed: ${passed}`);
+console.log(`   Failed: ${failed}`);
+console.log(`   Total:  ${passed + failed}`);
 
 if (failed > 0) {
   process.exit(1);

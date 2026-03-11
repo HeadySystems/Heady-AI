@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 #!/usr/bin/env node
 // credential-audit.js — Heady™ Systems Credential Audit Tool
 // Scans for hardcoded secrets, checks key ages, reports compliance status.
@@ -123,7 +121,7 @@ function entropy(str) {
 function log(level, ...args) {
   if (level === 'DEBUG' && !VERBOSE) return;
   const ts = new Date().toISOString();
-  logger.error(`[${ts}] [${level}]`, ...args);
+  console.error(`[${ts}] [${level}]`, ...args);
 }
 
 // ─── File discovery ───────────────────────────────────────────────────────────
@@ -475,34 +473,34 @@ async function main() {
   writeFileSync(AUDIT_OUTPUT, JSON.stringify(report, null, 2));
 
   // Print summary
-  logger.info('\n═══════════════════════════════════════════════════════════');
-  logger.info('  Heady Credential Audit Report');
-  logger.info('═══════════════════════════════════════════════════════════');
-  logger.info(`  Status:           ${report.compliance_status}`);
-  logger.info(`  Files Scanned:    ${filesScanned}`);
-  logger.info(`  Secrets Found:    ${report.summary.hardcoded_secrets_found}`);
-  logger.info(`    - Critical:     ${report.summary.critical_severity}`);
-  logger.info(`    - High:         ${report.summary.high_severity}`);
-  logger.info(`  Keys in 1P:       ${report.summary.keys_in_1password}`);
-  logger.info(`    - Compliant:    ${report.summary.keys_compliant}`);
-  logger.info(`    - Overdue:      ${report.summary.keys_overdue}`);
-  logger.info(`  Report:           ${AUDIT_OUTPUT}`);
-  logger.info('═══════════════════════════════════════════════════════════\n');
+  console.log('\n═══════════════════════════════════════════════════════════');
+  console.log('  Heady Credential Audit Report');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log(`  Status:           ${report.compliance_status}`);
+  console.log(`  Files Scanned:    ${filesScanned}`);
+  console.log(`  Secrets Found:    ${report.summary.hardcoded_secrets_found}`);
+  console.log(`    - Critical:     ${report.summary.critical_severity}`);
+  console.log(`    - High:         ${report.summary.high_severity}`);
+  console.log(`  Keys in 1P:       ${report.summary.keys_in_1password}`);
+  console.log(`    - Compliant:    ${report.summary.keys_compliant}`);
+  console.log(`    - Overdue:      ${report.summary.keys_overdue}`);
+  console.log(`  Report:           ${AUDIT_OUTPUT}`);
+  console.log('═══════════════════════════════════════════════════════════\n');
 
   if (report.summary.hardcoded_secrets_found > 0) {
-    logger.info('HARDCODED SECRETS DETECTED:');
+    console.log('HARDCODED SECRETS DETECTED:');
     for (const f of allFindings) {
-      logger.info(`  [${f.severity}] ${f.name} in ${f.file}:${f.line} [${f.masked_value}]`);
+      console.log(`  [${f.severity}] ${f.name} in ${f.file}:${f.line} [${f.masked_value}]`);
     }
-    logger.info('');
+    console.log('');
   }
 
   if (report.non_compliant_keys.length > 0) {
-    logger.info('OVERDUE ROTATIONS:');
+    console.log('OVERDUE ROTATIONS:');
     for (const k of report.non_compliant_keys) {
-      logger.info(`  [HIGH] ${k.title}: ${k.days_overdue} days overdue (policy: ${k.policy_days}d)`);
+      console.log(`  [HIGH] ${k.title}: ${k.days_overdue} days overdue (policy: ${k.policy_days}d)`);
     }
-    logger.info('');
+    console.log('');
   }
 
   // Exit code for CI integration
@@ -520,6 +518,6 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 main().catch(err => {
-  logger.error('[FATAL]', err.message);
+  console.error('[FATAL]', err.message);
   process.exit(2);
 });

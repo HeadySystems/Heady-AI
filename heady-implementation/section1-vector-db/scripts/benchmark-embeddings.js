@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 #!/usr/bin/env node
 /**
  * @fileoverview Embedding Model Benchmark Script for Heady™ Latent OS
@@ -200,20 +198,20 @@ class BenchmarkRunner {
    * @returns {Promise<BenchmarkSummary>}
    */
   async run() {
-    logger.info(`\n${'═'.repeat(70)}`);
-    logger.info(` Heady Latent OS — Embedding Model Benchmark`);
-    logger.info(` ${new Date().toISOString()}`);
-    logger.info(`${'═'.repeat(70)}\n`);
-    logger.info(` Providers:  ${this.providers.join(', ')}`);
-    logger.info(` Datasets:   ${this.datasets.join(', ')}`);
-    logger.info(` Runs/item:  ${this.runsPerItem} (+ ${this.warmupRuns} warmup)`);
-    logger.info(`${'─'.repeat(70)}\n`);
+    console.log(`\n${'═'.repeat(70)}`);
+    console.log(` Heady Latent OS — Embedding Model Benchmark`);
+    console.log(` ${new Date().toISOString()}`);
+    console.log(`${'═'.repeat(70)}\n`);
+    console.log(` Providers:  ${this.providers.join(', ')}`);
+    console.log(` Datasets:   ${this.datasets.join(', ')}`);
+    console.log(` Runs/item:  ${this.runsPerItem} (+ ${this.warmupRuns} warmup)`);
+    console.log(`${'─'.repeat(70)}\n`);
 
     for (const provider of this.providers) {
       this.results[provider] = {};
       for (const dataset of this.datasets) {
         const items = BUILT_IN_DATASETS[dataset];
-        if (!items) { logger.warn(`Unknown dataset: ${dataset}`); continue; }
+        if (!items) { console.warn(`Unknown dataset: ${dataset}`); continue; }
         this.results[provider][dataset] = await this._benchmarkProvider(provider, dataset, items);
       }
     }
@@ -232,11 +230,11 @@ class BenchmarkRunner {
     const apiKey = cfg.envKey ? process.env[cfg.envKey] : null;
 
     if (cfg.envKey && !apiKey && provider !== 'local') {
-      logger.info(`  ⚠  ${provider}: ${cfg.envKey} not set — skipping`);
+      console.log(`  ⚠  ${provider}: ${cfg.envKey} not set — skipping`);
       return { provider, dataset: datasetName, skipped: true, reason: `${cfg.envKey} not set` };
     }
 
-    logger.info(`  Benchmarking [${provider}] on [${datasetName}]...`);
+    console.log(`  Benchmarking [${provider}] on [${datasetName}]...`);
 
     const latencies      = [];
     const throughputSamples = [];
@@ -324,7 +322,7 @@ class BenchmarkRunner {
                  : errors > 0 ? '⚠ SOME_ERRORS'
                  : '✓';
 
-    logger.info(`    ${status} p50=${result.latencyMs.p50}ms p99=${result.latencyMs.p99}ms ` +
+    console.log(`    ${status} p50=${result.latencyMs.p50}ms p99=${result.latencyMs.p99}ms ` +
                 `throughput=${result.throughput.itemsPerSec} items/s recall@10=${recall.toFixed(3)} ` +
                 `errors=${errors}/${items.length * this.runsPerItem}`);
 
@@ -546,13 +544,13 @@ class BenchmarkRunner {
     if (this.formats.includes('json')) {
       const jsonPath = path.join(this.outputDir, `benchmark-${Date.now()}.json`);
       await fs.writeFile(jsonPath, JSON.stringify(summary, null, 2));
-      logger.info(`\n  → JSON results: ${jsonPath}`);
+      console.log(`\n  → JSON results: ${jsonPath}`);
     }
 
     if (this.formats.includes('md')) {
       const mdPath = path.join(this.outputDir, `benchmark-${Date.now()}.md`);
       await fs.writeFile(mdPath, this._buildMarkdown(summary));
-      logger.info(`  → Markdown:     ${mdPath}`);
+      console.log(`  → Markdown:     ${mdPath}`);
     }
   }
 
@@ -651,24 +649,24 @@ class BenchmarkRunner {
    * @private Print a quick markdown table to stdout.
    */
   _printMarkdownTable(summary) {
-    logger.info('\n' + '═'.repeat(70));
-    logger.info(' RESULTS SUMMARY');
-    logger.info('═'.repeat(70));
+    console.log('\n' + '═'.repeat(70));
+    console.log(' RESULTS SUMMARY');
+    console.log('═'.repeat(70));
 
     const header = ['Provider', 'Dataset', 'p50ms', 'p99ms', 'items/s', 'Recall@10', 'Cost/1M'];
     const colW    = [12, 12, 8, 8, 10, 11, 8];
     const row     = (cols) => '│ ' + cols.map((c, i) => String(c).padEnd(colW[i])).join(' │ ') + ' │';
 
-    logger.info(row(header));
-    logger.info('├' + colW.map(w => '─'.repeat(w + 2)).join('┼') + '┤');
+    console.log(row(header));
+    console.log('├' + colW.map(w => '─'.repeat(w + 2)).join('┼') + '┤');
 
     for (const [provider, datasets] of Object.entries(summary.results)) {
       for (const [dataset, res] of Object.entries(datasets)) {
         if (res.skipped) {
-          logger.info(row([provider, dataset, 'SKIPPED', '', '', '', '']));
+          console.log(row([provider, dataset, 'SKIPPED', '', '', '', '']));
           continue;
         }
-        logger.info(row([
+        console.log(row([
           provider,
           dataset,
           res.latencyMs.p50,
@@ -679,7 +677,7 @@ class BenchmarkRunner {
         ]));
       }
     }
-    logger.info('');
+    console.log('');
   }
 }
 
@@ -709,10 +707,10 @@ async function main() {
 
   try {
     const summary = await runner.run();
-    logger.info('\n  Benchmark complete.');
+    console.log('\n  Benchmark complete.');
     process.exit(0);
   } catch (err) {
-    logger.error('\n  Benchmark failed:', err.message);
+    console.error('\n  Benchmark failed:', err.message);
     process.exit(1);
   }
 }

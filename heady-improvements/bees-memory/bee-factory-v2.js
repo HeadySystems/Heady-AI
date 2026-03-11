@@ -1032,7 +1032,7 @@ ${workerNames.map(name => `        /**
          * @param {object} deps - Injected dependencies
          */
         async (ctx, deps) => {
-            // NOTE: implement ${name}
+            // TODO: implement ${name}
             return { bee: domain, action: '${name}', status: 'active', ts: Date.now() };
         },`).join('\n')}
     ];

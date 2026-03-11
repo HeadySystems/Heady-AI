@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview BudgetTracker — Real-time AI provider cost tracking with phi-scaled
  * alert thresholds and auto-downgrade logic for the Heady™ Latent OS.
@@ -506,7 +504,7 @@ export class BudgetTracker {
    */
   _log(msg, meta = {}) {
     if (this._verbose) {
-      logger.info(`[BudgetTracker] ${msg}`, meta);
+      console.log(`[BudgetTracker] ${msg}`, meta);
     }
   }
 }

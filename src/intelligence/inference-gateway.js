@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ∞ Heady™ Inference Gateway — Unified Inference Interface
  * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
@@ -9,7 +7,7 @@ const logger = pino();
 'use strict';
 
 const EventEmitter = require('events');
-const crypto = require('crypto');
+const crypto       = require('crypto');
 
 // ─────────────────────────────────────────────
 // Response Normalizer
@@ -27,18 +25,18 @@ function normalizeResponse(raw, providerId, requestId) {
   return {
     requestId,
     providerId,
-    model: raw.model ?? 'unknown',
-    text: raw.text ?? '',
-    citations: raw.citations ?? [],
+    model:      raw.model   ?? 'unknown',
+    text:       raw.text    ?? '',
+    citations:  raw.citations ?? [],
     usage: {
-      inputTokens: raw.usage?.inputTokens ?? 0,
+      inputTokens:  raw.usage?.inputTokens  ?? 0,
       outputTokens: raw.usage?.outputTokens ?? 0,
-      totalTokens: (raw.usage?.inputTokens ?? 0) + (raw.usage?.outputTokens ?? 0),
+      totalTokens:  (raw.usage?.inputTokens ?? 0) + (raw.usage?.outputTokens ?? 0),
     },
-    latencyMs: raw.latencyMs ?? 0,
+    latencyMs:    raw.latencyMs  ?? 0,
     attemptCount: raw.attemptCount ?? 1,
-    cached: false,
-    createdAt: Date.now(),
+    cached:       false,
+    createdAt:    Date.now(),
   };
 }
 
@@ -53,10 +51,10 @@ function normalizeEmbedding(raw, providerId, requestId) {
   return {
     requestId,
     providerId,
-    model: raw.model ?? 'unknown',
+    model:     raw.model     ?? 'unknown',
     embedding: raw.embedding ?? [],
     latencyMs: raw.latencyMs ?? 0,
-    cached: false,
+    cached:    false,
     createdAt: Date.now(),
   };
 }
@@ -73,10 +71,10 @@ class DedupeCache {
   /**
    * @param {object} [opts]
    * @param {number} [opts.ttlMs=60000]     Entry TTL in ms
-   * @param {number} [opts.maxEntries=987] Max entries before LRU eviction — fib(16)
+   * @param {number} [opts.maxEntries=1000] Max entries before LRU eviction
    */
   constructor(opts = {}) {
-    this.ttlMs = opts.ttlMs ?? 60_000;
+    this.ttlMs      = opts.ttlMs      ?? 60_000;
     this.maxEntries = opts.maxEntries ?? 1_000;
     /** @type {Map<string, {value: any, ts: number}>} */
     this._cache = new Map();
@@ -147,7 +145,7 @@ class DedupeCache {
 class UsageLogger {
   constructor() {
     /** @type {Array<UsageEvent>} */
-    this._log = [];
+    this._log  = [];
     this._maxLog = 10_000;
   }
 
@@ -169,9 +167,9 @@ class UsageLogger {
    */
   query(filter = {}) {
     return this._log.filter(e => {
-      if (filter.sessionId && e.sessionId !== filter.sessionId) return false;
-      if (filter.providerId && e.providerId !== filter.providerId) return false;
-      if (filter.since && e.ts < filter.since) return false;
+      if (filter.sessionId  && e.sessionId  !== filter.sessionId)  return false;
+      if (filter.providerId && e.providerId !== filter.providerId)  return false;
+      if (filter.since      && e.ts         <  filter.since)        return false;
       return true;
     });
   }
@@ -185,9 +183,9 @@ class UsageLogger {
     const events = this.query(filter);
     const totals = { requests: events.length, inputTokens: 0, outputTokens: 0, totalCostUsd: 0 };
     for (const e of events) {
-      totals.inputTokens += e.inputTokens ?? 0;
+      totals.inputTokens  += e.inputTokens  ?? 0;
       totals.outputTokens += e.outputTokens ?? 0;
-      totals.totalCostUsd += e.costUsd ?? 0;
+      totals.totalCostUsd += e.costUsd      ?? 0;
     }
     return totals;
   }
@@ -225,9 +223,9 @@ async function* streamToSSE(stream, requestId) {
             if (raw === '[DONE]') { yield { requestId, delta: '', done: true }; return; }
             try {
               const parsed = JSON.parse(raw);
-              const delta = parsed.choices?.[0]?.delta?.content
-                ?? parsed.candidates?.[0]?.content?.parts?.[0]?.text
-                ?? '';
+              const delta  = parsed.choices?.[0]?.delta?.content
+                          ?? parsed.candidates?.[0]?.content?.parts?.[0]?.text
+                          ?? '';
               if (delta) yield { requestId, delta, done: false };
             } catch { /* skip malformed */ }
           }
@@ -328,7 +326,7 @@ async function* streamToSSE(stream, requestId) {
  * @example
  * const gateway = new InferenceGateway({ router });
  * const response = await gateway.infer({ prompt: 'Hello', taskType: 'quick' });
- * logger.info(response.text);
+ * console.log(response.text);
  */
 class InferenceGateway extends EventEmitter {
   /**
@@ -337,12 +335,12 @@ class InferenceGateway extends EventEmitter {
   constructor(config) {
     super();
     if (!config.router) throw new Error('InferenceGateway: config.router is required');
-    this.router = config.router;
+    this.router     = config.router;
     this.dedupeEnabled = config.dedupe ?? true;
-    this.logEnabled = config.logUsage ?? true;
+    this.logEnabled    = config.logUsage ?? true;
 
-    this.cache = new DedupeCache({
-      ttlMs: config.dedupeTtlMs ?? 60_000,
+    this.cache  = new DedupeCache({
+      ttlMs:      config.dedupeTtlMs      ?? 60_000,
       maxEntries: config.dedupeMaxEntries ?? 1_000,
     });
 
@@ -350,7 +348,7 @@ class InferenceGateway extends EventEmitter {
 
     // Schedule cache eviction every minute
     this._evictTimer = setInterval(() => this.cache.evictExpired(), 60_000).unref?.() ??
-      setInterval(() => this.cache.evictExpired(), 60_000);
+                       setInterval(() => this.cache.evictExpired(), 60_000);
   }
 
   // ── Core Inference ──
@@ -365,11 +363,11 @@ class InferenceGateway extends EventEmitter {
     const {
       prompt,
       taskType,
-      sessionId = null,
-      attributionId = null,
-      opts = {},
-      critical = false,
-      bypassCache = false,
+      sessionId      = null,
+      attributionId  = null,
+      opts           = {},
+      critical       = false,
+      bypassCache    = false,
     } = req;
 
     // ─ Cache lookup ─
@@ -431,7 +429,7 @@ class InferenceGateway extends EventEmitter {
       raw = await this.router.route({
         taskType,
         prompt,
-        opts: { ...opts, stream: true },
+        opts:     { ...opts, stream: true },
         critical,
         sessionId,
       });
@@ -445,7 +443,7 @@ class InferenceGateway extends EventEmitter {
       yield* streamToSSE(raw._stream, requestId);
     } else {
       // Fallback: simulate streaming from complete response
-      const text = raw.text ?? '';
+      const text   = raw.text ?? '';
       const chunks = Math.ceil(text.length / 20);
       for (let i = 0; i < chunks; i++) {
         const delta = text.slice(i * 20, (i + 1) * 20);
@@ -469,7 +467,7 @@ class InferenceGateway extends EventEmitter {
    */
   async embed(text, opts = {}, sessionId = null) {
     const requestId = this._reqId();
-    const cacheKey = this.cache.keyFor(text, { type: 'embed', ...opts });
+    const cacheKey  = this.cache.keyFor(text, { type: 'embed', ...opts });
 
     if (this.dedupeEnabled) {
       const cached = this.cache.get(cacheKey);
@@ -479,7 +477,7 @@ class InferenceGateway extends EventEmitter {
       }
     }
 
-    const raw = await this.router.embed(text, opts);
+    const raw      = await this.router.embed(text, opts);
     const response = normalizeEmbedding(raw, raw.providerId, requestId);
 
     if (this.dedupeEnabled) this.cache.set(cacheKey, response);
@@ -499,8 +497,8 @@ class InferenceGateway extends EventEmitter {
    */
   async inferBatch(requests, opts = {}) {
     const concurrency = opts.concurrency ?? 4;
-    const results = new Array(requests.length);
-    let ptr = 0;
+    const results     = new Array(requests.length);
+    let   ptr         = 0;
 
     const worker = async () => {
       while (ptr < requests.length) {
@@ -543,9 +541,9 @@ class InferenceGateway extends EventEmitter {
    */
   status() {
     return {
-      cacheSize: this.cache.size,
-      usageLogSize: this.usageLog.length,
-      routerStatus: this.router.status?.() ?? null,
+      cacheSize:     this.cache.size,
+      usageLogSize:  this.usageLog.length,
+      routerStatus:  this.router.status?.() ?? null,
     };
   }
 
@@ -566,17 +564,17 @@ class InferenceGateway extends EventEmitter {
 
   _logUsage(response, sessionId, attributionId, taskType, cached) {
     this.usageLog.log({
-      requestId: response.requestId,
-      sessionId: sessionId ?? 'anonymous',
+      requestId:     response.requestId,
+      sessionId:     sessionId     ?? 'anonymous',
       attributionId: attributionId ?? 'unattributed',
-      providerId: response.providerId,
-      model: response.model,
-      taskType: taskType ?? 'unknown',
-      inputTokens: response.usage?.inputTokens ?? 0,
-      outputTokens: response.usage?.outputTokens ?? 0,
-      latencyMs: response.latencyMs,
+      providerId:    response.providerId,
+      model:         response.model,
+      taskType:      taskType ?? 'unknown',
+      inputTokens:   response.usage?.inputTokens  ?? 0,
+      outputTokens:  response.usage?.outputTokens ?? 0,
+      latencyMs:     response.latencyMs,
       cached,
-      costUsd: 0, // populated by budget tracker if needed
+      costUsd:       0, // populated by budget tracker if needed
     });
   }
 }

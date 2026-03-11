@@ -569,7 +569,7 @@ function phiAuditMiddleware(auditLogger) {
         },
         ip:        req.ip || req.headers['x-forwarded-for'],
         userAgent: req.headers['user-agent'],
-      }).catch(err => logger.error('[HIPAA-AUDIT] Log error:', err.message));
+      }).catch(err => console.error('[HIPAA-AUDIT] Log error:', err.message));
     });
 
     next();
@@ -637,7 +637,7 @@ app.get('/phi/patient/:id', async (req, res) => {
 
 // Breach detection handler
 logger._emitter.on('breach:detected', (breach) => {
-  logger.error('[BREACH DETECTED]', breach);
+  console.error('[BREACH DETECTED]', breach);
   // Send PagerDuty alert, email security@, create Jira ticket, etc.
 });
 
@@ -646,7 +646,7 @@ logger._emitter.on('breach:detected', (breach) => {
 setInterval(async () => {
   for (const tenantId of await getTenantIds()) {
     const result = await logger.enforceRetention(tenantId);
-    logger.info(`[RETENTION] Tenant ${tenantId}: purged ${result.purged} records`);
+    console.log(`[RETENTION] Tenant ${tenantId}: purged ${result.purged} records`);
   }
 }, 30 * 24 * 60 * 60 * 1000);
 
@@ -655,7 +655,7 @@ setInterval(async () => {
   for (const tenantId of await getTenantIds()) {
     const result = await logger.verifyLogIntegrity(tenantId);
     if (!result.valid) {
-      logger.error('[INTEGRITY FAILURE] Log chain broken!', result);
+      console.error('[INTEGRITY FAILURE] Log chain broken!', result);
       // Trigger incident
     }
   }

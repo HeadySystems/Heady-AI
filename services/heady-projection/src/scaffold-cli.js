@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('scaffold-cli');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**

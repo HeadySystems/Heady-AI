@@ -1,0 +1,1625 @@
+# Heady Production Docker Compose
+# 59 application services + 6 infrastructure services
+# All parameters derive from phi (1.6180339887) / Fibonacci
+version: "3.9"
+
+volumes:
+  pgdata:
+  redisdata:
+  promdata:
+  grafanadata:
+
+networks:
+  default:
+    name: heady-network
+    driver: bridge
+
+services:
+  # ── Infrastructure ──
+
+  heady-postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: heady
+      POSTGRES_USER: heady
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U heady"]
+      interval: 13s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  heady-redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 987mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 13s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  heady-prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./../../infrastructure/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./../../infrastructure/alert-rules.yml:/etc/prometheus/alert-rules.yml
+      - promdata:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=89d
+    restart: unless-stopped
+
+  heady-alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - ./../../infrastructure/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    ports:
+      - "9093:9093"
+    restart: unless-stopped
+
+  heady-grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./../../infrastructure/grafana-dashboards:/etc/grafana/provisioning/dashboards
+      - grafanadata:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    restart: unless-stopped
+
+  heady-otel-collector:
+    image: otel/opentelemetry-collector:latest
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    restart: unless-stopped
+
+  # ── Application Services (59 total) ──
+
+
+  ai-router:
+    build:
+      context: ./../../services/ai-router
+      dockerfile: Dockerfile
+    ports:
+      - "3310:3310"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: ai-router
+      PORT: "3310"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  analytics-service:
+    build:
+      context: ./../../services/analytics-service
+      dockerfile: Dockerfile
+    ports:
+      - "3311:3311"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: analytics-service
+      PORT: "3311"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  api-gateway:
+    build:
+      context: ./../../services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3312:3312"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: api-gateway
+      PORT: "3312"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  asset-pipeline:
+    build:
+      context: ./../../services/asset-pipeline
+      dockerfile: Dockerfile
+    ports:
+      - "3313:3313"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: asset-pipeline
+      PORT: "3313"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  auth-relay:
+    build:
+      context: ./../../services/auth-relay
+      dockerfile: Dockerfile
+    ports:
+      - "3314:3314"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: auth-relay
+      PORT: "3314"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  auto-success-engine:
+    build:
+      context: ./../../services/auto-success-engine
+      dockerfile: Dockerfile
+    ports:
+      - "3315:3315"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: auto-success-engine
+      PORT: "3315"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  billing-service:
+    build:
+      context: ./../../services/billing-service
+      dockerfile: Dockerfile
+    ports:
+      - "3316:3316"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: billing-service
+      PORT: "3316"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  budget-tracker:
+    build:
+      context: ./../../services/budget-tracker
+      dockerfile: Dockerfile
+    ports:
+      - "3317:3317"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: budget-tracker
+      PORT: "3317"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  cli-service:
+    build:
+      context: ./../../services/cli-service
+      dockerfile: Dockerfile
+    ports:
+      - "3318:3318"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: cli-service
+      PORT: "3318"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  colab-gateway:
+    build:
+      context: ./../../services/colab-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3319:3319"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: colab-gateway
+      PORT: "3319"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  discord-bot:
+    build:
+      context: ./../../services/discord-bot
+      dockerfile: Dockerfile
+    ports:
+      - "3320:3320"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: discord-bot
+      PORT: "3320"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  domain-router:
+    build:
+      context: ./../../services/domain-router
+      dockerfile: Dockerfile
+    ports:
+      - "3321:3321"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: domain-router
+      PORT: "3321"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  google-mcp:
+    build:
+      context: ./../../services/google-mcp
+      dockerfile: Dockerfile
+    ports:
+      - "3322:3322"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: google-mcp
+      PORT: "3322"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  hcfullpipeline-executor:
+    build:
+      context: ./../../services/hcfullpipeline-executor
+      dockerfile: Dockerfile
+    ports:
+      - "3323:3323"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: hcfullpipeline-executor
+      PORT: "3323"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-autobiographer:
+    build:
+      context: ./../../services/heady-autobiographer
+      dockerfile: Dockerfile
+    ports:
+      - "3324:3324"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-autobiographer
+      PORT: "3324"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-bee-factory:
+    build:
+      context: ./../../services/heady-bee-factory
+      dockerfile: Dockerfile
+    ports:
+      - "3325:3325"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-bee-factory
+      PORT: "3325"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-brain:
+    build:
+      context: ./../../services/heady-brain
+      dockerfile: Dockerfile
+    ports:
+      - "3326:3326"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-brain
+      PORT: "3326"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-brains:
+    build:
+      context: ./../../services/heady-brains
+      dockerfile: Dockerfile
+    ports:
+      - "3327:3327"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-brains
+      PORT: "3327"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-buddy:
+    build:
+      context: ./../../services/heady-buddy
+      dockerfile: Dockerfile
+    ports:
+      - "3328:3328"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-buddy
+      PORT: "3328"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-cache:
+    build:
+      context: ./../../services/heady-cache
+      dockerfile: Dockerfile
+    ports:
+      - "3329:3329"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-cache
+      PORT: "3329"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-chain:
+    build:
+      context: ./../../services/heady-chain
+      dockerfile: Dockerfile
+    ports:
+      - "3330:3330"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-chain
+      PORT: "3330"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-conductor:
+    build:
+      context: ./../../services/heady-conductor
+      dockerfile: Dockerfile
+    ports:
+      - "3331:3331"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-conductor
+      PORT: "3331"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-embed:
+    build:
+      context: ./../../services/heady-embed
+      dockerfile: Dockerfile
+    ports:
+      - "3332:3332"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-embed
+      PORT: "3332"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-eval:
+    build:
+      context: ./../../services/heady-eval
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-eval
+      PORT: "3333"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-federation:
+    build:
+      context: ./../../services/heady-federation
+      dockerfile: Dockerfile
+    ports:
+      - "3334:3334"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-federation
+      PORT: "3334"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-governance:
+    build:
+      context: ./../../services/heady-governance
+      dockerfile: Dockerfile
+    ports:
+      - "3335:3335"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-governance
+      PORT: "3335"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-guard:
+    build:
+      context: ./../../services/heady-guard
+      dockerfile: Dockerfile
+    ports:
+      - "3336:3336"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-guard
+      PORT: "3336"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-health:
+    build:
+      context: ./../../services/heady-health
+      dockerfile: Dockerfile
+    ports:
+      - "3337:3337"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-health
+      PORT: "3337"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-hive:
+    build:
+      context: ./../../services/heady-hive
+      dockerfile: Dockerfile
+    ports:
+      - "3338:3338"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-hive
+      PORT: "3338"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-infer:
+    build:
+      context: ./../../services/heady-infer
+      dockerfile: Dockerfile
+    ports:
+      - "3339:3339"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-infer
+      PORT: "3339"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-maintenance:
+    build:
+      context: ./../../services/heady-maintenance
+      dockerfile: Dockerfile
+    ports:
+      - "3340:3340"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-maintenance
+      PORT: "3340"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-memory:
+    build:
+      context: ./../../services/heady-memory
+      dockerfile: Dockerfile
+    ports:
+      - "3341:3341"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-memory
+      PORT: "3341"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-midi:
+    build:
+      context: ./../../services/heady-midi
+      dockerfile: Dockerfile
+    ports:
+      - "3342:3342"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-midi
+      PORT: "3342"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-onboarding:
+    build:
+      context: ./../../services/heady-onboarding
+      dockerfile: Dockerfile
+    ports:
+      - "3343:3343"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-onboarding
+      PORT: "3343"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-orchestration:
+    build:
+      context: ./../../services/heady-orchestration
+      dockerfile: Dockerfile
+    ports:
+      - "3344:3344"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-orchestration
+      PORT: "3344"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-pilot-onboarding:
+    build:
+      context: ./../../services/heady-pilot-onboarding
+      dockerfile: Dockerfile
+    ports:
+      - "3345:3345"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-pilot-onboarding
+      PORT: "3345"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-projection:
+    build:
+      context: ./../../services/heady-projection
+      dockerfile: Dockerfile
+    ports:
+      - "3346:3346"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-projection
+      PORT: "3346"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-security:
+    build:
+      context: ./../../services/heady-security
+      dockerfile: Dockerfile
+    ports:
+      - "3347:3347"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-security
+      PORT: "3347"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-soul:
+    build:
+      context: ./../../services/heady-soul
+      dockerfile: Dockerfile
+    ports:
+      - "3348:3348"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-soul
+      PORT: "3348"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-task-browser:
+    build:
+      context: ./../../services/heady-task-browser
+      dockerfile: Dockerfile
+    ports:
+      - "3349:3349"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-task-browser
+      PORT: "3349"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-testing:
+    build:
+      context: ./../../services/heady-testing
+      dockerfile: Dockerfile
+    ports:
+      - "3350:3350"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-testing
+      PORT: "3350"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-ui:
+    build:
+      context: ./../../services/heady-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3351:3351"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-ui
+      PORT: "3351"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-vector:
+    build:
+      context: ./../../services/heady-vector
+      dockerfile: Dockerfile
+    ports:
+      - "3352:3352"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-vector
+      PORT: "3352"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-vinci:
+    build:
+      context: ./../../services/heady-vinci
+      dockerfile: Dockerfile
+    ports:
+      - "3353:3353"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-vinci
+      PORT: "3353"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-vinci-art:
+    build:
+      context: ./../../services/heady-vinci-art
+      dockerfile: Dockerfile
+    ports:
+      - "3354:3354"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-vinci-art
+      PORT: "3354"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  heady-web:
+    build:
+      context: ./../../services/heady-web
+      dockerfile: Dockerfile
+    ports:
+      - "3355:3355"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: heady-web
+      PORT: "3355"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  huggingface-gateway:
+    build:
+      context: ./../../services/huggingface-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3356:3356"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: huggingface-gateway
+      PORT: "3356"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  jules-mcp:
+    build:
+      context: ./../../services/jules-mcp
+      dockerfile: Dockerfile
+    ports:
+      - "3357:3357"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: jules-mcp
+      PORT: "3357"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  mcp-server:
+    build:
+      context: ./../../services/mcp-server
+      dockerfile: Dockerfile
+    ports:
+      - "3358:3358"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: mcp-server
+      PORT: "3358"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  memory-mcp:
+    build:
+      context: ./../../services/memory-mcp
+      dockerfile: Dockerfile
+    ports:
+      - "3359:3359"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: memory-mcp
+      PORT: "3359"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  migration-service:
+    build:
+      context: ./../../services/migration-service
+      dockerfile: Dockerfile
+    ports:
+      - "3360:3360"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: migration-service
+      PORT: "3360"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  model-gateway:
+    build:
+      context: ./../../services/model-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3361:3361"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: model-gateway
+      PORT: "3361"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  notification-service:
+    build:
+      context: ./../../services/notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "3362:3362"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: notification-service
+      PORT: "3362"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  perplexity-mcp:
+    build:
+      context: ./../../services/perplexity-mcp
+      dockerfile: Dockerfile
+    ports:
+      - "3363:3363"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: perplexity-mcp
+      PORT: "3363"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  prompt-manager:
+    build:
+      context: ./../../services/prompt-manager
+      dockerfile: Dockerfile
+    ports:
+      - "3364:3364"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: prompt-manager
+      PORT: "3364"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  scheduler-service:
+    build:
+      context: ./../../services/scheduler-service
+      dockerfile: Dockerfile
+    ports:
+      - "3365:3365"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: scheduler-service
+      PORT: "3365"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  search-service:
+    build:
+      context: ./../../services/search-service
+      dockerfile: Dockerfile
+    ports:
+      - "3366:3366"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: search-service
+      PORT: "3366"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  secret-gateway:
+    build:
+      context: ./../../services/secret-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3367:3367"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: secret-gateway
+      PORT: "3367"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  silicon-bridge:
+    build:
+      context: ./../../services/silicon-bridge
+      dockerfile: Dockerfile
+    ports:
+      - "3368:3368"
+    environment:
+      NODE_ENV: production
+      SERVICE_NAME: silicon-bridge
+      PORT: "3368"
+      DATABASE_URL: postgresql://heady:${DB_PASSWORD}@heady-postgres:5432/heady
+      REDIS_URL: redis://heady-redis:6379/0
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://heady-otel-collector:4318
+    depends_on:
+      heady-postgres:
+        condition: service_healthy
+      heady-redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M

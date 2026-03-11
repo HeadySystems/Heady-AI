@@ -1,4 +1,19 @@
-const logger = require('../logger');
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/heady_story_driver.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
+
 /**
  * HeadyStoryDriver :: Deterministic Story Engine
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
@@ -19,13 +34,13 @@ const DECISION_ENGINE_CONFIG = Object.freeze({
   retryAttempts: 3,
   confidenceThreshold: 0.85,
   deterministicRules: {
-    confidenceOrdering: ['safety', 'compliance', 'performance', 'usability'],
+    priorityOrdering: ['safety', 'compliance', 'performance', 'usability'],
     fallbackStrategy: 'conservative',
     autoResolution: true,
   },
   storyRhythms: {
     checkIntervalMs: 1000,
-    batchSize: 55, // fib(10)
+    batchSize: 50,
     maxConcurrentStories: 5,
   },
 });
@@ -61,18 +76,18 @@ class StoryDriver {
     this.rootDir = options.rootDir || process.cwd();
     this.registry = options.registry || null;
     this.lens = options.lens || null;
-
+    
     this.activeStories = new Map();
     this.decisionHistory = [];
     this.eventQueue = [];
-
+    
     this.storyIdCounter = 0;
     this.decisionIdCounter = 0;
-
+    
     this.ensureDirectories();
     this.loadState();
-
-    logger.info('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
+    
+    console.log('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
   }
 
   ensureDirectories() {
@@ -93,7 +108,7 @@ class StoryDriver {
         this.decisionHistory = lines.slice(-DECISION_ENGINE_CONFIG.maxHistorySize).map(line => JSON.parse(line));
       }
     } catch (e) {
-      logger.warn('Could not load decision history:', e.message);
+      console.warn('Could not load decision history:', e.message);
     }
   }
 
@@ -118,7 +133,7 @@ class StoryDriver {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
-        confidence: options.confidence || 'normal',
+        priority: options.priority || 'normal',
         owner: options.owner || 'system',
         tags: options.tags || [],
       },
@@ -158,7 +173,7 @@ class StoryDriver {
 
     story.steps.push(stepNode);
     story.updatedAt = new Date().toISOString();
-
+    
     await this.persistStory(story);
     return stepNode;
   }
@@ -228,7 +243,7 @@ class StoryDriver {
 
     try {
       decision.reasoning.push('Analyzing input context...');
-
+      
       const context = options.context || {};
       const storyContext = options.story?.context || {};
       const combinedContext = { ...storyContext, ...context };
@@ -301,11 +316,11 @@ class StoryDriver {
     const rules = [];
 
     const ruleRegistry = [
-      { id: 'safety_first', confidence: 1, condition: () => context.safetyCritical !== false },
-      { id: 'compliance_check', confidence: 2, condition: () => context.requiresCompliance !== false },
-      { id: 'performance_optimize', confidence: 3, condition: () => context.performanceCritical !== false },
-      { id: 'usability_ensure', confidence: 4, condition: () => context.userFacing !== false },
-      { id: 'default_continue', confidence: 99, condition: () => true },
+      { id: 'safety_first', priority: 1, condition: () => context.safetyCritical !== false },
+      { id: 'compliance_check', priority: 2, condition: () => context.requiresCompliance !== false },
+      { id: 'performance_optimize', priority: 3, condition: () => context.performanceCritical !== false },
+      { id: 'usability_ensure', priority: 4, condition: () => context.userFacing !== false },
+      { id: 'default_continue', priority: 99, condition: () => true },
     ];
 
     for (const rule of ruleRegistry) {
@@ -314,7 +329,7 @@ class StoryDriver {
       }
     }
 
-    return rules.sort((a, b) => a.confidence - b.confidence);
+    return rules.sort((a, b) => a.priority - b.priority);
   }
 
   async applyRule(rule, options) {
@@ -323,31 +338,31 @@ class StoryDriver {
         success: true,
         action: 'safe_proceed',
         reason: 'Safety check passed',
-        confidence: 0.927, // phiThreshold(4) — CRITICAL
+        confidence: 0.95,
       }),
       compliance_check: async (opts) => ({
         success: true,
         action: 'compliant_proceed',
         reason: 'Compliance verified',
-        confidence: 0.882, // phiThreshold(3) — HIGH
+        confidence: 0.9,
       }),
       performance_optimize: async (opts) => ({
         success: true,
         action: 'optimize_performance',
         reason: 'Performance path selected',
-        confidence: 0.882, // phiThreshold(3) — HIGH
+        confidence: 0.85,
       }),
       usability_ensure: async (opts) => ({
         success: true,
         action: 'user_friendly',
         reason: 'Usability considered',
-        confidence: 0.809, // phiThreshold(2) — MEDIUM
+        confidence: 0.85,
       }),
       default_continue: async (opts) => ({
         success: true,
         action: 'continue',
         reason: 'Default action',
-        confidence: 0.809, // phiThreshold(2) — MEDIUM
+        confidence: 0.8,
       }),
     };
 
@@ -356,7 +371,7 @@ class StoryDriver {
       return await handler(options);
     }
 
-    return { success: true, action: 'continue', reason: 'No specific rule', confidence: 0.500 }; // phiThreshold(0) — MINIMUM
+    return { success: true, action: 'continue', reason: 'No specific rule', confidence: 0.5 };
   }
 
   async evaluateConditions(conditions, outcome) {
@@ -424,7 +439,7 @@ class StoryDriver {
 
   async listStories(filters = {}) {
     const stories = [];
-
+    
     for (const [id, story] of this.activeStories) {
       if (this.matchesFilters(story, filters)) {
         stories.push(story);
@@ -449,7 +464,7 @@ class StoryDriver {
   matchesFilters(story, filters) {
     if (filters.status && story.status !== filters.status) return false;
     if (filters.type && story.type !== filters.type) return false;
-    if (filters.confidence && story.metadata?.confidence !== filters.confidence) return false;
+    if (filters.priority && story.metadata?.priority !== filters.priority) return false;
     return true;
   }
 
@@ -458,7 +473,7 @@ class StoryDriver {
     const type = options.type;
 
     let history = this.decisionHistory;
-
+    
     if (type) {
       history = history.filter(d => d.type === type);
     }

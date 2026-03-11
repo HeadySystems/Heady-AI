@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @file apex-risk-agent-csl.js
  * @description Apex Trading Intelligence – Risk Agent with CSL (Continuous Scoring Layer)
@@ -234,7 +232,7 @@ const CONSTANTS_DIGEST = sha256({ PHI, PSI, EPSILON, PSI2, PSI3, PHI2, PHI3 });
  * const agent = new ApexRiskAgentCSL({ accountType: '100K' });
  * agent.startSession();
  * const result = agent.checkRiskCSL(100450, -200);
- * logger.info(result.signal.label); // 'ENGAGE' or 'CAUTIOUS' etc.
+ * console.log(result.signal.label); // 'ENGAGE' or 'CAUTIOUS' etc.
  */
 class ApexRiskAgentCSL extends EventEmitter {
 

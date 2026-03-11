@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -381,7 +379,7 @@ function createRouter(embedService) {
   // -------------------------------------------------------------------------
 
   router.use((err, req, res, next) => {
-    logger.error('[HeadyEmbed Router Error]', err);
+    console.error('[HeadyEmbed Router Error]', err);
     if (res.headersSent) return next(err);
     return res.status(422).json({ error: err.message || 'Internal error' });
   });

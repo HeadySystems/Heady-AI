@@ -1,0 +1,25 @@
+{
+  "name": "@heady/heady-auto-success",
+  "version": "3.2.3",
+  "description": "Auto-Success Engine \u2014 phi7-cycle 29034ms background tasks",
+  "type": "module",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@heady/platform": "workspace:*",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "private": true,
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED"
+}

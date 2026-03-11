@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @heady-ai/content-engine — Content Loader
  * 
@@ -30,7 +28,7 @@ function loadJson<T = any>(filePath: string): T | null {
     try {
         return JSON.parse(readFileSync(filePath, 'utf-8')) as T;
     } catch {
-        logger.warn(`[content-engine] Failed to parse: ${filePath}`);
+        console.warn(`[content-engine] Failed to parse: ${filePath}`);
         return null;
     }
 }
@@ -76,7 +74,7 @@ export function loadDomainContent(domain: string, config = DEFAULT_CONFIG) {
     const domainDir = join(config.contentRoot, 'domains', domain);
 
     if (!existsSync(domainDir)) {
-        logger.warn(`[content-engine] Domain directory not found: ${domainDir}`);
+        console.warn(`[content-engine] Domain directory not found: ${domainDir}`);
         return null;
     }
 

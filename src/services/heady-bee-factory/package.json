@@ -1,18 +1,25 @@
 {
-  "name": "@heady-ai/heady-bee-factory",
-  "version": "4.0.0",
-  "description": "Dynamic agent worker factory spawning up to 10000 concurrent bees across 17 swarms",
-  "main": "index.js",
+  "name": "@heady/heady-bee-factory",
+  "version": "3.2.3",
+  "description": "Bee factory \u2014 spawn/retire 10K bees, 89 types",
+  "type": "module",
+  "main": "./src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "test": "node --test",
-    "lint": "eslint .",
-    "health": "curl -s http://0.0.0.0:3319/health | jq ."
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "vitest run"
   },
-  "keywords": ["heady", "agents", "sacred-geometry", "phi-scaled"],
-  "author": "Eric Haywood <eric@headyconnection.org>",
-  "license": "UNLICENSED",
+  "dependencies": {
+    "@heady/platform": "workspace:*",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "private": true,
-  "engines": { "node": ">=20.0.0" }
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED"
 }

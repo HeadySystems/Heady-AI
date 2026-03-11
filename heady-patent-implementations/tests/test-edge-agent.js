@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -26,10 +24,10 @@ function test(name, fn) {
   queue.push(async () => {
     try {
       await fn();
-      logger.info(`  ✓ ${name}`);
+      console.log(`  ✓ ${name}`);
       passed++;
     } catch (err) {
-      logger.error(`  ✗ ${name}: ${err.message}`);
+      console.error(`  ✗ ${name}: ${err.message}`);
       failed++;
     }
   });
@@ -40,7 +38,7 @@ function asyncTest(name, fn) {
   test(name, fn);
 }
 
-logger.info('\n=== Edge Durable Agent Tests ===\n');
+console.log('\n=== Edge Durable Agent Tests ===\n');
 
 test('PHI constant is correct', () => {
   assert.strictEqual(PHI, 1.6180339887);
@@ -334,6 +332,6 @@ asyncTest('EdgeAgentRuntime migrateAgent returns migration info', async () => {
 // ─── Run all queued tests sequentially then exit ───────────────────────────────
 (async () => {
   for (const t of queue) await t();
-  logger.info(`\nResults: ${passed} passed, ${failed} failed\n`);
+  console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
   process.exit(failed > 0 ? 1 : 0);
 })();

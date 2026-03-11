@@ -136,7 +136,7 @@ heady-thread-task-pack/
 ```
 
 ### 6) Ops and packaging files
-You asked for “all files needed to accomplish tasks in this thread,” so the zip should also include operational glue: a manifest, NOTE map, setup script, and zip-builder script.[1]
+You asked for “all files needed to accomplish tasks in this thread,” so the zip should also include operational glue: a manifest, TODO map, setup script, and zip-builder script.[1]
 
 ```text
 heady-thread-task-pack/

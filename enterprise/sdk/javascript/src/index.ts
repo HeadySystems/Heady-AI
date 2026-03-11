@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file index.ts
  * @description @heady-ai/sdk — Official JavaScript/TypeScript SDK for Heady™OS & HeadyMe AI
@@ -412,7 +410,7 @@ class EventsAPI {
    *
    * @example
    * const sub = await client.events.subscribe('task:my-task-id', (event) => {
-   *   logger.info('Task update:', event.data);
+   *   console.log('Task update:', event.data);
    * });
    * // Later:
    * sub.unsubscribe();
@@ -475,7 +473,7 @@ class EventsAPI {
  *
  * // Subscribe to real-time events
  * const sub = await heady.events.subscribe(`task:${task.taskId}`, (event) => {
- *   logger.info('Task update:', event.data);
+ *   console.log('Task update:', event.data);
  * });
  * ```
  */

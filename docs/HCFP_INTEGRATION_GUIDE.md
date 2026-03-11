@@ -14,13 +14,13 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
-# HCFP Integration Guide - api.headysystems.com to Domains + Clean Builds + IDE Extensions
+# HCFP Integration Guide - Localhost to Domains + Clean Builds + IDE Extensions
 
 ## Overview
 
 This guide covers the complete HCFP (HCFullPipeline) integration that:
 
-1. **Replaces api.headysystems.com with internal domains** - Making services explicitly discoverable
+1. **Replaces localhost with internal domains** - Making services explicitly discoverable
 2. **Implements clean builds on every change** - With intelligent error handling
 3. **Integrates IDE extensions** - VS Code, JetBrains, and other editors
 4. **Creates PWA desktop apps** - For seamless desktop integration
@@ -28,23 +28,23 @@ This guide covers the complete HCFP (HCFullPipeline) integration that:
 
 ## Quick Start
 
-### 1. api.headysystems.com-to-Domain Migration
+### 1. Localhost-to-Domain Migration
 
 ```bash
 # Dry-run to see what will change
-node scripts/migrate-api.headysystems.com-to-domains.js --dry-run
+node scripts/migrate-localhost-to-domains.js --dry-run
 
 # Execute migration
-node scripts/migrate-api.headysystems.com-to-domains.js
+node scripts/migrate-localhost-to-domains.js
 
-# Verify no api.headysystems.com references remain
-node scripts/migrate-api.headysystems.com-to-domains.js --verify-only
+# Verify no localhost references remain
+node scripts/migrate-localhost-to-domains.js --verify-only
 ```
 
 **Domain Mapping:**
-- `api.headysystems.com:3300` → `manager.dev.local.headysystems.com:3300`
-- `api.headysystems.com:5432` → `db-postgres.dev.local.headysystems.com:5432`
-- `api.headysystems.com:6379` → `db-redis.dev.local.headysystems.com:6379`
+- `localhost:3300` → `manager.dev.local.heady.internal:3300`
+- `localhost:5432` → `db-postgres.dev.local.heady.internal:5432`
+- `localhost:6379` → `db-redis.dev.local.heady.internal:6379`
 - (and 12 more service mappings)
 
 ### 2. Setup PWA Desktop App
@@ -100,7 +100,7 @@ git push origin main  # Triggers GitHub Actions
 ```
 
 **What happens:**
-1. Pre-flight checks (api.headysystems.com validation, env vars)
+1. Pre-flight checks (localhost validation, env vars)
 2. Clean environment (remove all artifacts)
 3. Install dependencies (deterministic from lock file)
 4. Run tests
@@ -116,14 +116,14 @@ All services are now discoverable via internal domains:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Service Discovery: *.dev.local.headysystems.com              │
+│  Service Discovery: *.dev.local.heady.internal              │
 ├─────────────────────────────────────────────────────────────┤
-│  manager.dev.local.headysystems.com:3300  (API Gateway)       │
-│  app-web.dev.local.headysystems.com:3000  (Frontend)          │
-│  db-postgres.dev.local.headysystems.com:5432  (Database)      │
-│  db-redis.dev.local.headysystems.com:6379  (Cache)            │
-│  tools-mcp.dev.local.headysystems.com:3001  (MCP Gateway)     │
-│  ai-ollama.dev.local.headysystems.com:11434  (LLM)            │
+│  manager.dev.local.heady.internal:3300  (API Gateway)       │
+│  app-web.dev.local.heady.internal:3000  (Frontend)          │
+│  db-postgres.dev.local.heady.internal:5432  (Database)      │
+│  db-redis.dev.local.heady.internal:6379  (Cache)            │
+│  tools-mcp.dev.local.heady.internal:3001  (MCP Gateway)     │
+│  ai-ollama.dev.local.heady.internal:11434  (LLM)            │
 │  (and 8 more services)                                       │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -163,12 +163,12 @@ Commit → Pre-flight → Clean Build → Tests → Security Scan → Deploy
 ## Configuration Files
 
 ### Service Discovery
-- **File**: `configs/domains/service-discovery.yaml`
-- **Purpose**: Maps all api.headysystems.com references to internal domains
+- **File**: `configs/service-discovery.yaml`
+- **Purpose**: Maps all localhost references to internal domains
 - **Usage**: Referenced by all services for DNS resolution
 
 ### Clean Build CI
-- **File**: `configs/workflows/clean-build.yml`
+- **File**: `.github/workflows/clean-build.yml`
 - **Purpose**: Full clean build on every change
 - **Triggers**: Push, PR, nightly schedule
 
@@ -177,8 +177,8 @@ Commit → Pre-flight → Clean Build → Tests → Security Scan → Deploy
 - **Purpose**: Error classification and recovery procedures
 - **Usage**: Integrated into CI/CD pipeline
 
-### api.headysystems.com Migration
-- **File**: `.windsurf/workflows/hcfp-api.headysystems.com-domain-migration.md`
+### Localhost Migration
+- **File**: `.windsurf/workflows/hcfp-localhost-domain-migration.md`
 - **Purpose**: Step-by-step migration guide
 - **Usage**: Reference for domain replacement process
 
@@ -200,7 +200,7 @@ Commit → Pre-flight → Clean Build → Tests → Security Scan → Deploy
 **Settings**:
 ```json
 {
-  "heady.apiEndpoint": "http://manager.dev.local.headysystems.com:3300",
+  "heady.apiEndpoint": "http://manager.dev.local.heady.internal:3300",
   "heady.mode": "hybrid",
   "heady.inlineCompletions": true,
   "heady.voiceEnabled": false
@@ -257,16 +257,16 @@ Commit → Pre-flight → Clean Build → Tests → Security Scan → Deploy
 ```bash
 # 1. Setup hosts file (Windows)
 # C:\Windows\System32\drivers\etc\hosts
-api.headysystems.com manager.dev.local.headysystems.com
-api.headysystems.com app-web.dev.local.headysystems.com
-api.headysystems.com db-postgres.dev.local.headysystems.com
-api.headysystems.com db-redis.dev.local.headysystems.com
+127.0.0.1 manager.dev.local.heady.internal
+127.0.0.1 app-web.dev.local.heady.internal
+127.0.0.1 db-postgres.dev.local.heady.internal
+127.0.0.1 db-redis.dev.local.heady.internal
 
 # 2. Start services
 npm run dev
 
 # 3. Verify health
-curl http://manager.dev.local.headysystems.com:3300/api/health
+curl http://manager.dev.local.heady.internal:3300/api/health
 
 # 4. Open PWA
 # Click desktop shortcut or open in browser
@@ -305,13 +305,13 @@ curl https://staging.heady.systems/api/health
 
 ```bash
 # Manager health
-curl http://manager.dev.local.headysystems.com:3300/api/health
+curl http://manager.dev.local.heady.internal:3300/api/health
 
 # Service discovery
-curl http://discovery.dev.local.headysystems.com:8600/health
+curl http://discovery.dev.local.heady.internal:8600/health
 
 # Database
-curl http://admin-postgres.dev.local.headysystems.com:8080/health
+curl http://admin-postgres.dev.local.heady.internal:8080/health
 ```
 
 ### Metrics
@@ -351,18 +351,18 @@ curl http://admin-postgres.dev.local.headysystems.com:8080/health
 
 1. **Check DNS resolution**:
    ```bash
-   nslookup manager.dev.local.headysystems.com
+   nslookup manager.dev.local.heady.internal
    ```
 
 2. **Verify hosts file** (Windows):
    ```
    C:\Windows\System32\drivers\etc\hosts
-   api.headysystems.com manager.dev.local.headysystems.com
+   127.0.0.1 manager.dev.local.heady.internal
    ```
 
 3. **Check service is running**:
    ```bash
-   curl http://manager.dev.local.headysystems.com:3300/api/health
+   curl http://manager.dev.local.heady.internal:3300/api/health
    ```
 
 ### "Build failed" errors
@@ -385,19 +385,19 @@ curl http://admin-postgres.dev.local.headysystems.com:8080/health
 
 2. **Check extension settings**:
    - VS Code: Settings → Heady → API Endpoint
-   - Should be: `http://manager.dev.local.headysystems.com:3300`
+   - Should be: `http://manager.dev.local.heady.internal:3300`
 
 3. **Check firewall**: Allow local connections
 
 ## References
 
 - **Service Discovery**: `configs/service-discovery.yaml`
-- **Migration Script**: `scripts/migrate-api.headysystems.com-to-domains.js`
+- **Migration Script**: `scripts/migrate-localhost-to-domains.js`
 - **PWA Setup**: `scripts/setup-pwa-desktop.ps1`
 - **VS Code Extension**: `distribution/ide/vscode/`
 - **Clean Build Workflow**: `.github/workflows/clean-build.yml`
 - **Error Recovery**: `.windsurf/workflows/hcfp-error-recovery.md`
-- **Domain Migration**: `.windsurf/workflows/hcfp-api.headysystems.com-domain-migration.md`
+- **Domain Migration**: `.windsurf/workflows/hcfp-localhost-domain-migration.md`
 - **Registry**: `heady-registry.json`
 
 ## Support

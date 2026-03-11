@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 interface HeadyCloudConfig {
   mode: "cloud" | "hybrid"
   filesystemAccess: boolean
@@ -34,11 +32,11 @@ export async function setupHeadyCloudWorkspace(config: HeadyCloudConfig): Promis
     }
 
     const data = await response.json()
-    logger.info(`✅ HeadyCloud workspace created:`, data)
+    console.log(`✅ HeadyCloud workspace created:`, data)
 
     return data
   } catch (error) {
-    logger.error("HeadyCloud setup error:", error)
+    console.error("HeadyCloud setup error:", error)
     throw new Error("Failed to setup HeadyCloud workspace")
   }
 }
@@ -60,7 +58,7 @@ export async function getWorkspaceStatus(userId: string): Promise<any> {
 
     return await response.json()
   } catch (error) {
-    logger.error("HeadyCloud status error:", error)
+    console.error("HeadyCloud status error:", error)
     return null
   }
 }

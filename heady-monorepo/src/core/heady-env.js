@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ∞ Heady™ Env — .env File Loader
  * © 2026 Heady™Systems Inc. — PROPRIETARY AND CONFIDENTIAL
@@ -101,7 +99,7 @@ function loadEnv(opts = {}) {
             loadedCount++;
             totalVars += count;
             if (!silent) {
-                logger.info(`[heady-env] Loaded ${count} vars from ${path.basename(filePath)}`);
+                console.log(`[heady-env] Loaded ${count} vars from ${path.basename(filePath)}`);
             }
         }
     }

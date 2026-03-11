@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Heady™ SysEx Protocol V2 — Max for Live JavaScript Device
  * Receives and dispatches all 32 SysEx commands on manufacturer ID 0x7D.
@@ -57,7 +55,7 @@ const HEARTBEAT_INTERVAL_MS = FIB[13] * FIB[3]; // 377 × 2 = 754ms
  * In a non-M4L environment, methods gracefully no-op.
  */
 class AbletonLiveProxy {
-  /** @param {Function} logFn - Logging function (post in M4L, logger.info in Node) */
+  /** @param {Function} logFn - Logging function (post in M4L, console.log in Node) */
   constructor(logFn) {
     this._log = logFn;
     this._hasLiveAPI = typeof LiveAPI !== 'undefined';
@@ -324,7 +322,7 @@ class AbletonLiveProxy {
  *
  * @class
  * @example
- * const handler = new HeadySysExHandler({ log: logger.info, send: bytes => ... });
+ * const handler = new HeadySysExHandler({ log: console.log, send: bytes => ... });
  * handler.processSysEx([0xF0, 0x7D, 0x01, 0x06, 0x7A, 0xF7]); // SET_TEMPO 89.0
  */
 export class HeadySysExHandler {
@@ -333,7 +331,7 @@ export class HeadySysExHandler {
    * @param {Function} options.log - Log output function
    * @param {Function} options.send - Send SysEx response bytes (Uint8Array)
    */
-  constructor({ log = logger.info, send = () => {} } = {}) {
+  constructor({ log = console.log, send = () => {} } = {}) {
     /** @type {Function} */
     this._log = log;
 
@@ -936,7 +934,7 @@ export function initM4L() {
     outlets = OUTLET_COUNT;
   }
 
-  const logFn = typeof post !== 'undefined' ? (msg) => post(msg + '\n') : logger.info;
+  const logFn = typeof post !== 'undefined' ? (msg) => post(msg + '\n') : console.log;
   const sendFn = (bytes) => {
     if (typeof outlet !== 'undefined') {
       outlet(0, Array.from(bytes));

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * Antigravity — 3D Vector Space Visualization
  * Micro-frontend for Heady™Web Universal Shell
@@ -105,7 +103,7 @@ function createApp(container, props = {}) {
   container.appendChild(root);
 
   // Announce mount
-  logger.info('[MFE:antigravity] Mounted v' + APP_CONFIG.version);
+  console.log('[MFE:antigravity] Mounted v' + APP_CONFIG.version);
   return { unmount: () => { root.remove(); } };
 }
 

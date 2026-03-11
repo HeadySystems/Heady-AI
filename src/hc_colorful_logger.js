@@ -98,7 +98,7 @@ class ColorfulLogger {
     const emojiPart = this.useEmojis && emoji ? `${emoji} ` : '';
     const prefixPart = prefix ? `[${prefix}] ` : '';
     
-    logger.info(`${emojiPart}${prefixPart}${coloredMessage}`);
+    console.log(`${emojiPart}${prefixPart}${coloredMessage}`);
   }
 
   // 🌈 INFO LOG

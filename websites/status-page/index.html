@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HEADY Status Page - Real-time system status, uptime monitoring, and incident history for HeadySystems.com">
+    <meta name="keywords" content="status, uptime, monitoring, incidents, system status">
+    <meta property="og:title" content="HEADY System Status">
+    <meta property="og:description" content="Real-time system status and uptime monitoring for HEADY platform">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://status.headysystems.com">
+    <meta property="og:image" content="https://status.headysystems.com/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HEADY System Status">
+    <meta name="twitter:description" content="Real-time system status and uptime monitoring">
+    <meta name="twitter:image" content="https://status.headysystems.com/og-image.jpg">
+    <title>System Status - HEADY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 168, 67, 0.1);
+            padding: 2rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d4a843;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        .status-page-badge {
+            background: rgba(212, 168, 67, 0.1);
+            border: 1px solid #d4a843;
+            color: #d4a843;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        /* Overall Status Section */
+        .overall-status {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 16px;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .status-indicator {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            animation: pulse-operational 2s infinite;
+        }
+
+        .status-indicator.operational {
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.3), rgba(52, 211, 153, 0.05));
+            border: 2px solid #34d399;
+        }
+
+        .status-indicator.degraded {
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.3), rgba(251, 191, 36, 0.05));
+            border: 2px solid #fbbf24;
+            animation: pulse-degraded 2s infinite;
+        }
+
+        .status-indicator.outage {
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.05));
+            border: 2px solid #ef4444;
+            animation: pulse-outage 2s infinite;
+        }
+
+        @keyframes pulse-operational {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(52, 211, 153, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+            }
+        }
+
+        @keyframes pulse-degraded {
+            0% {
+                box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(251, 191, 36, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+            }
+        }
+
+        @keyframes pulse-outage {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .overall-status h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .overall-status p {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+        }
+
+        .uptime-stat {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d4a843;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+        }
+
+        /* Services Grid */
+        .services-section h2 {
+            font-size: 1.8rem;
+            margin: 3rem 0 2rem;
+            color: #ffffff;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: rgba(212, 168, 67, 0.5);
+            box-shadow: 0 10px 30px rgba(212, 168, 67, 0.08);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .service-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .service-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .service-status.operational {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .service-status.degraded {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .service-status.outage {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .service-status::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .service-description {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-uptime {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+        }
+
+        .uptime-item {
+            font-size: 0.85rem;
+        }
+
+        .uptime-label {
+            color: #b0b0b0;
+            margin-bottom: 0.25rem;
+        }
+
+        .uptime-value {
+            color: #34d399;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Uptime Chart */
+        .uptime-chart-section {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .uptime-chart-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-day {
+            flex: 1 1 calc(14.285% - 0.75rem);
+            min-width: 30px;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chart-day:hover {
+            transform: scaleY(1.1);
+            filter: brightness(1.2);
+        }
+
+        .chart-day.operational {
+            background-color: #34d399;
+        }
+
+        .chart-day.degraded {
+            background-color: #fbbf24;
+        }
+
+        .chart-day.outage {
+            background-color: #ef4444;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Incidents Section */
+        .incidents-section {
+            margin: 3rem 0;
+        }
+
+        .incidents-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: #ffffff;
+        }
+
+        .incidents-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .incident {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .incident:hover {
+            border-color: rgba(212, 168, 67, 0.5);
+        }
+
+        .incident-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .incident-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .incident-status {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .incident-status.resolved {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .incident-status.investigating {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .incident-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .incident-meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .incident-meta-label {
+            color: #999999;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .incident-meta-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .incident-description {
+            color: #b0b0b0;
+            margin: 1rem 0;
+            line-height: 1.7;
+        }
+
+        .incident-timeline {
+            background: rgba(212, 168, 67, 0.05);
+            border-left: 3px solid #d4a843;
+            padding: 1rem;
+            border-radius: 0 6px 6px 0;
+            margin-top: 1rem;
+        }
+
+        .timeline-entry {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .timeline-entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-time {
+            color: #d4a843;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .timeline-text {
+            color: #b0b0b0;
+        }
+
+        /* Subscribe Section */
+        .subscribe-section {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .subscribe-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .subscribe-section p {
+            color: #b0b0b0;
+            margin-bottom: 1.5rem;
+        }
+
+        .subscribe-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .subscribe-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .subscribe-input::placeholder {
+            color: #666666;
+        }
+
+        .subscribe-input:focus {
+            outline: none;
+            border-color: #d4a843;
+            background-color: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(212, 168, 67, 0.2);
+        }
+
+        .subscribe-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #d4a843;
+            color: #0a0a0f;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.05em;
+        }
+
+        .subscribe-button:hover {
+            background-color: #e6b84a;
+            transform: scale(1.02);
+        }
+
+        .subscribe-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000000;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #d4a843;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 0 1rem 2rem;
+            }
+
+            .overall-status {
+                padding: 2rem 1.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .uptime-stat {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .subscribe-form {
+                flex-direction: column;
+            }
+
+            .incident {
+                padding: 1.5rem;
+            }
+
+            .incident-meta {
+                gap: 1rem;
+            }
+
+            .chart-day {
+                flex: 1 1 calc(14.285% - 0.75rem);
+                min-width: 25px;
+            }
+
+            .chart-legend {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .status-page-badge {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .overall-status {
+                padding: 1.5rem;
+            }
+
+            .status-indicator {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .overall-status h1 {
+                font-size: 1.5rem;
+            }
+
+            .services-section h2,
+            .incidents-section h2 {
+                font-size: 1.3rem;
+            }
+
+            .uptime-chart-section {
+                padding: 1.5rem;
+            }
+
+            .chart-day {
+                flex: 1 1 calc(14.285% - 0.5rem);
+                min-width: 20px;
+            }
+
+            footer {
+                padding: 1.5rem 1rem;
+            }
+
+            .footer-links {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (prefers-contrast: more) {
+            .service-card,
+            .incident,
+            .uptime-chart-section {
+                border-width: 2px;
+            }
+        }
+
+        /* Focus styles */
+        button:focus-visible,
+        input:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #d4a843;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="https://headysystems.com" class="logo">HEADY</a>
+            <div class="status-page-badge">Status Page</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="overall-status">
+            <div class="status-indicator operational">🟢</div>
+            <h1>All Systems Operational</h1>
+            <p>Everything is running smoothly. Last update: 2 minutes ago</p>
+
+            <div class="uptime-stat">
+                <div class="stat-item">
+                    <div class="stat-value">99.97%</div>
+                    <div class="stat-label">Last 90 Days Uptime</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">28 days</div>
+                    <div class="stat-label">Current Uptime Streak</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Active Incidents</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="services-section">
+            <h2>Service Status</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Inference Engine</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">AI query processing and response generation</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.98%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">145ms avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Memory System</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">Context storage and retrieval services</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.99%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">89ms avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Agents Framework</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">Autonomous agent deployment and orchestration</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.96%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">267ms avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Orchestration Layer</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">Workflow coordination and task routing</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.97%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">112ms avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Security Module</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">Authentication and authorization services</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.99%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">76ms avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Web Platform</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">Dashboard and user interface services</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.98%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">234ms avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-header">
+                        <span class="service-name">Integration APIs</span>
+                        <span class="service-status operational">Operational</span>
+                    </div>
+                    <p class="service-description">Third-party integrations and webhooks</p>
+                    <div class="service-uptime">
+                        <div class="uptime-item">
+                            <div class="uptime-label">90-Day Uptime</div>
+                            <div class="uptime-value">99.95%</div>
+                        </div>
+                        <div class="uptime-item">
+                            <div class="uptime-label">Response Time</div>
+                            <div class="uptime-value">198ms avg</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="uptime-chart-section">
+            <h2>90-Day Uptime Chart</h2>
+            <div class="chart-container" id="uptimeChart">
+                <!-- Chart bars generated by JavaScript -->
+            </div>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #34d399;"></div>
+                    <span>Operational (99%+)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #fbbf24;"></div>
+                    <span>Degraded (95-99%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ef4444;"></div>
+                    <span>Outage (&lt;95%)</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="incidents-section">
+            <h2>Incident History</h2>
+            <div class="incidents-list">
+                <div class="incident">
+                    <div class="incident-header">
+                        <div>
+                            <div class="incident-title">Inference Engine Degradation</div>
+                            <div class="incident-meta">
+                                <div class="incident-meta-item">
+                                    <span class="incident-meta-label">Reported</span>
+                                    <span class="incident-meta-value">March 2, 2026</span>
+                                </div>
+                                <div class="incident-meta-item">
+                                    <span class="incident-meta-label">Duration</span>
+                                    <span class="incident-meta-value">47 minutes</span>
+                                </div>
+                                <div class="incident-meta-item">
+                                    <span class="incident-meta-label">Impact</span>
+                                    <span class="incident-meta-value">~2,400 users affected</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="incident-status resolved">Resolved</span>
+                    </div>
+
+                    <div class="incident-description">
+                        A spike in request volume to the Inference Engine resulted in delayed query processing. Response times increased from 145ms to 2.1 seconds during peak load. Our auto-scaling mechanisms engaged and the issue was fully resolved within 47 minutes.
+                    </div>
+
+                    <div class="incident-timeline">
+                        <div class="timeline-entry">
+                            <span class="timeline-time">14:23 UTC</span>
+                            <span class="timeline-text">Anomaly detected in inference response times</span>
+                        </div>
+                        <div class="timeline-entry">
+                            <span class="timeline-time">14:25 UTC</span>
+                            <span class="timeline-text">Incident escalated to Engineering team</span>
+                        </div>
+                        <div class="timeline-entry">
+                            <span class="timeline-time">14:31 UTC</span>
+                            <span class="timeline-text">Root cause identified: unexpected traffic spike</span>
+                        </div>
+                        <div class="timeline-entry">
+                            <span class="timeline-time">14:48 UTC</span>
+                            <span class="timeline-text">Auto-scaling distributed load across additional nodes</span>
+                        </div>
+                        <div class="timeline-entry">
+                            <span class="timeline-time">15:10 UTC</span>
+                            <span class="timeline-text">All metrics returned to normal. Incident resolved.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="subscribe-section">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to get notifications about system incidents and maintenance</p>
+            <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+                <input type="email" class="subscribe-input" placeholder="Enter your email" required aria-label="Email address for status updates">
+                <button type="submit" class="subscribe-button">Subscribe</button>
+            </form>
+            <p style="font-size: 0.8rem; margin-top: 1rem; color: #666666;">We'll never spam you. Incident updates only.</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://headysystems.com">Home</a>
+                <a href="https://headysystems.com/privacy">Privacy</a>
+                <a href="https://headysystems.com/terms">Terms</a>
+                <a href="https://headysystems.com/contact">Contact</a>
+            </div>
+            <p>&copy; 2026 HeadySystems Inc. — Eric Haywood, Founder</p>
+        </div>
+    </footer>
+
+    <script>
+        // Generate 90-day uptime chart
+        function generateUptimeChart() {
+            const chartContainer = document.getElementById('uptimeChart');
+            chartContainer.innerHTML = '';
+
+            // Simulated data: 90 days of uptime
+            const days = [];
+            for (let i = 0; i < 90; i++) {
+                const random = Math.random();
+                let status;
+                if (random > 0.98) {
+                    status = 'degraded';
+                } else if (random > 0.99) {
+                    status = 'outage';
+                } else {
+                    status = 'operational';
+                }
+                days.push(status);
+            }
+
+            // Create chart bars
+            days.forEach((status, index) => {
+                const bar = document.createElement('div');
+                bar.className = `chart-day ${status}`;
+                const dayNumber = 90 - index;
+                bar.title = `Day ${dayNumber}: ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+                bar.setAttribute('role', 'img');
+                bar.setAttribute('aria-label', `Day ${dayNumber}: ${status.charAt(0).toUpperCase() + status.slice(1)}`);
+                chartContainer.appendChild(bar);
+            });
+        }
+
+        // Handle email subscription
+        function handleSubscribe(event) {
+            event.preventDefault();
+            const form = event.target;
+            const email = form.querySelector('.subscribe-input').value;
+
+            // Show confirmation (simulated)
+            const button = form.querySelector('.subscribe-button');
+            const originalText = button.textContent;
+            button.textContent = 'Subscribed!';
+            button.disabled = true;
+
+            setTimeout(() => {
+                form.reset();
+                button.textContent = originalText;
+                button.disabled = false;
+            }, 3000);
+        }
+
+        // Initialize chart on page load
+        document.addEventListener('DOMContentLoaded', generateUptimeChart);
+    </script>
+</body>
+</html>

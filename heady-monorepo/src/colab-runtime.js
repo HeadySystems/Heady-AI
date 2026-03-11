@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Colab Runtime — GPU Vector Store and Ngrok tunnel utilities
  * Provides GPU-accelerated 3D vector space operations.
@@ -82,17 +80,17 @@ class GPUVectorStore {
 async function setupNgrokTunnel(port = 8420) {
   const token = process.env.NGROK_AUTH_TOKEN;
   if (!token) {
-    logger.warn('[colab-runtime] NGROK_AUTH_TOKEN not set, skipping tunnel setup');
+    console.warn('[colab-runtime] NGROK_AUTH_TOKEN not set, skipping tunnel setup');
     return null;
   }
   try {
     const ngrok = require('@ngrok/ngrok');
     const listener = await ngrok.connect({ addr: port, authtoken: token });
     const url = listener.url();
-    logger.info(`[colab-runtime] Ngrok tunnel: ${url}`);
+    console.log(`[colab-runtime] Ngrok tunnel: ${url}`);
     return { url, listener };
   } catch (err) {
-    logger.warn(`[colab-runtime] Ngrok setup failed: ${err.message}`);
+    console.warn(`[colab-runtime] Ngrok setup failed: ${err.message}`);
     return null;
   }
 }

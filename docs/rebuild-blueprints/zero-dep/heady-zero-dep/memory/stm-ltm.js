@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Short-Term / Long-Term Memory Consolidation
  * Biologically-inspired dual-memory system.
@@ -338,7 +336,7 @@ class LTM {
         this._store.set(m.id, m);
       }
     } catch (err) {
-      logger.error('[LTM] Load failed:', err.message);
+      console.error('[LTM] Load failed:', err.message);
     }
   }
 

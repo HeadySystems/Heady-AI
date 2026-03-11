@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('durable-agent-state');
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * durable-agent-state.js
@@ -450,8 +449,8 @@ export class DurableAgentState {
     this.state.acceptWebSocket(server);
     this.activeSockets.set(socketId, server);
 
-    this._transitionLifecycle('active').catch(logger.error);
-    this._scheduleIdleAlarm().catch(logger.error);
+    this._transitionLifecycle('active').catch(console.error);
+    this._scheduleIdleAlarm().catch(console.error);
 
     // Send initial state
     server.send(wsOut({

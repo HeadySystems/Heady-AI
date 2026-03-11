@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview HeadyOS Pilot — Automated Onboarding Router
  * @module pilot/onboarding/automated-onboarding
@@ -72,7 +70,7 @@ const emitAuditEvent = (eventType, data) => {
   onboardingEvents.emit(eventType, event);
 
   // Structured JSON log
-  logger.info(JSON.stringify({ level: 'info', ...event }));
+  console.log(JSON.stringify({ level: 'info', ...event }));
 };
 
 /* ── In-Memory State Store (swap for Redis in production) ───── */

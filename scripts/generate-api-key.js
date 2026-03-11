@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady™ API Key Generator
@@ -64,7 +62,7 @@ function createKey(name = 'buddy') {
     data.keys.push(entry);
     saveKeys(data);
 
-    logger.info(`
+    console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║  🔑 Heady™ API Key Generated                         ║
 ╚═══════════════════════════════════════════════════════╝
@@ -89,29 +87,29 @@ function createKey(name = 'buddy') {
 function listKeys() {
     const data = loadKeys();
     if (data.keys.length === 0) {
-        logger.info('  No API keys found. Run: node scripts/generate-api-key.js <name>');
+        console.log('  No API keys found. Run: node scripts/generate-api-key.js <name>');
         return;
     }
-    logger.info(`\n  🔑 Heady™ API Keys (${data.keys.length} total)\n`);
-    logger.info('  ' + '─'.repeat(60));
+    console.log(`\n  🔑 Heady™ API Keys (${data.keys.length} total)\n`);
+    console.log('  ' + '─'.repeat(60));
     for (const k of data.keys) {
         const status = k.active ? '✓ active' : '✗ revoked';
-        logger.info(`  ${k.prefix}  │ ${k.name.padEnd(15)} │ ${k.tier.padEnd(12)} │ ${status}`);
+        console.log(`  ${k.prefix}  │ ${k.name.padEnd(15)} │ ${k.tier.padEnd(12)} │ ${status}`);
     }
-    logger.info('  ' + '─'.repeat(60));
+    console.log('  ' + '─'.repeat(60));
 }
 
 function revokeKey(prefix) {
     const data = loadKeys();
     const key = data.keys.find(k => k.prefix.startsWith(prefix) || k.hash.startsWith(prefix));
     if (!key) {
-        logger.info(`  ✗ No key found matching: ${prefix}`);
+        console.log(`  ✗ No key found matching: ${prefix}`);
         return;
     }
     key.active = false;
     key.revokedAt = new Date().toISOString();
     saveKeys(data);
-    logger.info(`  ✓ Key revoked: ${key.prefix} (${key.name})`);
+    console.log(`  ✓ Key revoked: ${key.prefix} (${key.name})`);
 }
 
 // ─── Entry ────────────────────────────────────────────────────────
@@ -123,7 +121,7 @@ if (cmd === '--list' || cmd === 'list') {
 } else if (cmd === '--revoke' || cmd === 'revoke') {
     revokeKey(args[0] || '');
 } else if (cmd === '--help' || cmd === 'help') {
-    logger.info(`
+    console.log(`
   Usage:
     node scripts/generate-api-key.js [name]       Generate a key for buddy
     node scripts/generate-api-key.js --list        List all keys

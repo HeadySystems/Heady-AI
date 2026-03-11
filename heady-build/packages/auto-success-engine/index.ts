@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @module @heady-ai/auto-success-engine
  * @description Auto-Success Engine heartbeat system.
@@ -1523,7 +1521,7 @@ interface CategoryEntry {
  * @example
  * ```ts
  * const engine = new AutoSuccessEngine({ environment: 'production' });
- * engine.on('cycle:complete', (report) => logger.info(report.overallStatus));
+ * engine.on('cycle:complete', (report) => console.log(report.overallStatus));
  * await engine.start();
  * // ... later:
  * await engine.stop();

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * Schema Validation Utility
  *
@@ -92,9 +90,9 @@ export function compileSchema(schemaId: string, schema: any): ValidateFunction {
  * ```typescript
  * const result = validateSchema(userData, 'auth-session', sessionSchema);
  * if (result.valid) {
- *   logger.info(result.data); // Typed as Session
+ *   console.log(result.data); // Typed as Session
  * } else {
- *   logger.error(result.errors);
+ *   console.error(result.errors);
  * }
  * ```
  */

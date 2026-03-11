@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Vector Memory Optimizer for Heady™ Latent OS
  * @module vector-memory-optimizer
@@ -29,7 +27,7 @@ const logger = pino();
  *
  * // On-demand index check
  * const advice = await optimizer.getIndexRecommendation('vector_memories');
- * logger.info(advice.recommendation, advice.action);
+ * console.log(advice.recommendation, advice.action);
  */
 
 import { EventEmitter } from 'events';

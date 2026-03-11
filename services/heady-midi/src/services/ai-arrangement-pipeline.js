@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Cloud-to-Ableton Arrangement Pipeline — Transforms natural
  * language descriptions into structured arrangement JSON, encodes to SysEx
@@ -690,13 +688,13 @@ export function encodeArrangement(arrangement) {
  * @example
  * const pipeline = new ArrangementPipeline({ dispatch: sysexBytes => sendToAbleton(sysexBytes) });
  * const result = await pipeline.run('4-bar intro with pad swell, verse with drums and bass, build to chorus');
- * logger.info(result.commandCount); // Number of SysEx commands dispatched
+ * console.log(result.commandCount); // Number of SysEx commands dispatched
  */
 export class ArrangementPipeline extends EventEmitter {
   /**
    * @param {Object} [options]
    * @param {Function} [options.dispatch] - SysEx dispatch function (receives Uint8Array)
-   * @param {Function} [options.log=logger.info] - Log function
+   * @param {Function} [options.log=console.log] - Log function
    * @param {Function} [options.llmParser=parseNaturalLanguage] - Custom LLM parser
    * @param {boolean} [options.dryRun=false] - If true, encode but don't dispatch
    */
@@ -707,7 +705,7 @@ export class ArrangementPipeline extends EventEmitter {
     this._dispatch = options.dispatch ?? (() => {});
 
     /** @type {Function} */
-    this._log = options.log ?? logger.info;
+    this._log = options.log ?? console.log;
 
     /** @type {Function} */
     this._llmParser = options.llmParser ?? parseNaturalLanguage;

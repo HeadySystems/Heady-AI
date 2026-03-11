@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Common Express Middleware Stack
  *
@@ -220,7 +218,7 @@ export function createRequestLoggingMiddleware(
       headers: redactSensitiveFields(req.headers, redactFields),
     });
 
-    logger.info(formatLogEntry(requestLog));
+    console.log(formatLogEntry(requestLog));
 
     // Hook response finish event
     res.on('finish', () => {
@@ -237,7 +235,7 @@ export function createRequestLoggingMiddleware(
         contentLength: res.get('content-length'),
       });
 
-      logger.info(formatLogEntry(responseLog));
+      console.log(formatLogEntry(responseLog));
     });
 
     next();
@@ -334,7 +332,7 @@ export function createErrorHandlerMiddleware() {
       service: req.app?.locals?.serviceName,
     });
 
-    logger.error(formatLogEntry(errorLog));
+    console.error(formatLogEntry(errorLog));
 
     // Include stack trace in development
     if (process.env.NODE_ENV === 'development' && err.stack) {

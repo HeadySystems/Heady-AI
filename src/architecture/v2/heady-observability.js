@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -20,7 +18,7 @@ const logger = pino();
  *      FIX: /metrics endpoint in Prometheus text format (Counter,
  *           Gauge, Histogram, Summary with quantiles).
  *
- *   3. Structured logging is inconsistent — some files use logger.info,
+ *   3. Structured logging is inconsistent — some files use console.log,
  *      some use custom loggers, none emit JSON for Cloud Logging.
  *      FIX: JSON logger that emits Google Cloud Logging severity levels
  *           and includes trace context on every line.
@@ -916,9 +914,9 @@ if (require.main === module) {
     const traceId = obs.tracer.currentTraceId() || 'unknown';
     obs.logger.info('Trace complete', { traceId });
 
-    logger.info('\n=== Prometheus metrics sample ===');
+    console.log('\n=== Prometheus metrics sample ===');
     const output = obs.metrics.collect();
     // Print just the first 20 lines
-    logger.info(output.split('\n').slice(0, 20).join('\n') + '\n...');
-  })().catch(logger.error);
+    console.log(output.split('\n').slice(0, 20).join('\n') + '\n...');
+  })().catch(console.error);
 }

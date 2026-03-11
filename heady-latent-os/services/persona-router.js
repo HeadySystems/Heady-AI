@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview PersonaRouter — Implements Directive 6: Empathic Masking.
  *
@@ -540,7 +538,7 @@ export class PersonaRouter {
    */
   _log(msg, meta = {}) {
     if (this._verbose) {
-      logger.info(`[PersonaRouter] ${msg}`, meta);
+      console.log(`[PersonaRouter] ${msg}`, meta);
     }
   }
 }

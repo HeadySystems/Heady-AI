@@ -36,7 +36,7 @@ The Heady Drupal content sync operates via three primary channels:
 
 | Environment | Base URL | Auth Method |
 |---|---|---|
-| Local | http://drupal.internal | Basic Auth / Session |
+| Local | http://localhost | Basic Auth / Session |
 | Staging | https://staging.headyconnection.org | OAuth2 Bearer |
 | Production | https://headyconnection.org | OAuth2 Bearer (limited write scope) |
 

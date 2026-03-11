@@ -1,10 +1,8 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Enterprise Structured Logger
  * PR 7: JSON-formatted structured logging with correlation IDs
  * 
- * Replaces raw logger.info with deterministic, searchable log output.
+ * Replaces raw console.log with deterministic, searchable log output.
  * Every log line is valid JSON with timestamp, level, correlationId, and context.
  */
 

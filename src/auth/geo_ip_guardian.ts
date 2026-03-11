@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { Request, Response, NextFunction } from 'express';
 import geoip from 'geoip-lite';
 
@@ -47,7 +45,7 @@ export const geoIpGuardian = (req: Request, res: Response, next: NextFunction) =
     if (existingSession) {
         // IP Binding Check
         if (existingSession.ip !== currentIp) {
-            logger.warn(`[SECURITY] Session IP mismatch. Expected ${existingSession.ip}, got ${currentIp}. Checking geolocation...`);
+            console.warn(`[SECURITY] Session IP mismatch. Expected ${existingSession.ip}, got ${currentIp}. Checking geolocation...`);
 
             // Impossible Travel Check
             if (existingSession.geoLoc && currentLoc) {
@@ -60,7 +58,7 @@ export const geoIpGuardian = (req: Request, res: Response, next: NextFunction) =
                 const mph = distance / (hoursPassed || 0.001); // avoid div by 0
 
                 if (mph > 600) { // e.g., > 600 mph implies impossible travel
-                    logger.error(`[SOUL VETO] Impossible travel detected! Speed: ${mph} mph.`);
+                    console.error(`[SOUL VETO] Impossible travel detected! Speed: ${mph} mph.`);
                     return res.status(403).json({ error: "Heady SOUL Veto: Suspicious activity leading to instant session termination." });
                 }
             }

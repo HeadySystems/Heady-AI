@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../../shared/logger')('index');
 /**
  * Heady™ Task Browser Service
  * Headless browser automation with Puppeteer — screenshots, scraping,

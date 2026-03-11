@@ -106,7 +106,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://api:3300}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://manager.dev.local.heady.internal:3300}
     networks:
       - heady-network
     profiles:
@@ -114,8 +114,8 @@ services:
       - saas
       - full
 
-  # HeadyWeb
-  heady-web-app:
+  # Heady Browser
+  heady-browser:
     build:
       context: ../../..
       dockerfile: distribution/docker/base/browser.Dockerfile
@@ -136,7 +136,7 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-heady123}
       - POSTGRES_DB=heady
     volumes:
       - postgres-data:/var/lib/postgresql/data

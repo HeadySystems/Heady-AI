@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady™ Blog — Sovereign AI Insights</title>
+    <meta name="description"
+        content="Engineering insights, Sacred Geometry deep-dives, and platform updates from the Heady™ team.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e8;
+            --muted: #8888a0;
+            --accent: #6c5ce7;
+            --glow: rgba(108, 92, 231, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 3rem;
+        }
+
+        .post {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: transform .2s, box-shadow .2s;
+            cursor: pointer;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px var(--glow);
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .tag {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--accent);
+        }
+
+        .post h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .post p {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Blog</h1>
+        <p class="subtitle">Engineering insights &amp; platform updates</p>
+        <article class="post">
+            <div class="post-meta"><span class="tag">Architecture</span><time>March 9, 2026</time><span>8 min
+                    read</span></div>
+            <h2>Why We Built a 21-Stage Pipeline with Sacred Geometry</h2>
+            <p>How phi-derived constants, Fibonacci-sized pools, and CSL gates make HCFullPipeline deterministic and
+                self-optimizing. A deep dive into the math behind our orchestration engine.</p>
+        </article>
+        <article class="post">
+            <div class="post-meta"><span class="tag">Security</span><time>March 7, 2026</time><span>6 min read</span>
+            </div>
+            <h2>Zero-Trust Agent Mesh: mTLS for Inter-Agent Communication</h2>
+            <p>Every Heady agent talks to every other agent through TLS 1.3 with mutual certificate verification. Here's
+                how we implemented it and what we learned.</p>
+        </article>
+        <article class="post">
+            <div class="post-meta"><span class="tag">Product</span><time>March 5, 2026</time><span>4 min read</span>
+            </div>
+            <h2>Introducing Heady™ Multi-Model Routing</h2>
+            <p>One API, every model. Route between Claude, GPT-4o, Gemini, and Groq based on task type, latency, and
+                cost — automatically.</p>
+        </article>
+        <article class="post">
+            <div class="post-meta"><span class="tag">Engineering</span><time>March 3, 2026</time><span>10 min
+                    read</span></div>
+            <h2>3D Vector Memory: How We Store Knowledge in Geometric Space</h2>
+            <p>Heady's memory system uses pgvector, phi-weighted embeddings, and CSL cosine gates to create a living
+                knowledge graph that evolves with every interaction.</p>
+        </article>
+        <article class="post">
+            <div class="post-meta"><span class="tag">Open Source</span><time>March 1, 2026</time><span>3 min read</span>
+            </div>
+            <h2>HeadyBee: 30+ Specialized Agent Workers</h2>
+            <p>From brain-bee to deployment-bee, each HeadyBee is a phi-scaled worker optimized for a specific domain.
+                Meet the swarm.</p>
+        </article>
+    </div>
+</body>
+
+</html>

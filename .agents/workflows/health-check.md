@@ -27,6 +27,6 @@ description: Multi-domain health check — validates all 9 Heady™ sites + Clou
 3. **Validate branding** — Each site must contain:
    - `Heady` in page title
    - Sacred geometry canvas element
-   - No `localhost` or `NOTE` strings
+   - No `localhost` or `TODO` strings
 
 4. **Report** — Generate status table and emit telemetry event via `self-awareness.js`

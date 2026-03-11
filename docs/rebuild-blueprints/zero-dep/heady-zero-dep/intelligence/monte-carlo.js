@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file monte-carlo.js
  * @description Monte Carlo simulation engine with parallel worker_threads execution.
@@ -377,7 +375,7 @@ export class StrategyOptimizer extends EventEmitter {
  *     },
  *     { mean: 100, std: 15 }
  *   );
- *   logger.info(result.summary.mean, result.summary.ci95);
+ *   console.log(result.summary.mean, result.summary.ci95);
  */
 export class MonteCarloEngine extends EventEmitter {
   /**

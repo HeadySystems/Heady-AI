@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @module @heady-ai/vector-memory
  * @description 3-D vector memory system with PCA-like projection, cosine-similarity
@@ -272,7 +270,7 @@ function projectVector(matrix: number[][], v: number[]): number[] {
  * const mem = new VectorMemory({ dimensions: 384 });
  * await mem.store("concept:gravity", embeddingVector, { source: "physics" });
  * const results = await mem.search(queryVector, 5, 0.618);
- * logger.info(mem.getHealth());
+ * console.log(mem.getHealth());
  * ```
  */
 export class VectorMemory {

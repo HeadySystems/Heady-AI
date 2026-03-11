@@ -4,9 +4,9 @@
   "mode": "local",
   "description": "Chromium-based browser with HeadyOS — fully offline AI",
   "api": {
-    "endpoint": "http://manager.dev.local.headysystems.com:3300",
+    "endpoint": "http://manager.dev.local.heady.internal:3300",
     "fallback": null,
-    "model_runner": "https://api.headysystems.com"
+    "model_runner": "http://localhost:8000"
   },
   "features": {
     "side_panel": true,

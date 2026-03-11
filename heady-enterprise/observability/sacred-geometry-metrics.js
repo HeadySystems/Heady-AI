@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadySystems v3.2.2 — Sacred Geometry Health Metrics Exporter
  * ==============================================================
@@ -485,7 +483,7 @@ const collectAll = async () => {
 
     setMetric('heady_sacred_geometry_collection_duration_ms', {}, durationMs);
   } catch (err) {
-    logger.error('Collection error:', err.message);
+    console.error('Collection error:', err.message);
     setMetric('heady_sacred_geometry_collection_errors_total', {}, 1);
   }
 };
@@ -637,7 +635,7 @@ const server = http.createServer(async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 server.listen(METRICS_PORT, '0.0.0.0', async () => {
-  logger.info(JSON.stringify({
+  console.log(JSON.stringify({
     timestamp:   new Date().toISOString(),
     level:       'INFO',
     service:     'sacred-geometry-metrics',
@@ -664,7 +662,7 @@ server.listen(METRICS_PORT, '0.0.0.0', async () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const shutdown = () => {
-  logger.info('Sacred Geometry Metrics Exporter shutting down...');
+  console.log('Sacred Geometry Metrics Exporter shutting down...');
   server.close(() => process.exit(0));
 };
 

@@ -126,7 +126,7 @@ heady-patent-implementations/
 - **PHI = 1.6180339887** — Sacred Geometry constant used throughout
 - **CommonJS** (`module.exports`) for compatibility with existing Heady codebase
 - **Every method cites its patent claim** with `// RTP: HS-0XX Claim N`
-- **Production-ready** — no stubs, no NOTEs, no placeholders
+- **Production-ready** — no stubs, no TODOs, no placeholders
 
 ## Integration with Heady™ Manager
 

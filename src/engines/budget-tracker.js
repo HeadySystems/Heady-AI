@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview budget-tracker.js — Heady™ Sovereign Phi-100 Budget Tracker Engine
  * @version 3.2.3
@@ -16,6 +14,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('budget-tracker');
 
 const EventEmitter = require('events');
 const phiMath = require('../../shared/phi-math.js');
@@ -81,7 +80,7 @@ const PROVIDER_TOKEN_RATES = {
 };
 
 /**
- * Provider priority order for downgrade suggestions (ascending cost / quality).
+ * Provider concurrent-equals execution order for downgrade suggestions (ascending cost / quality).
  * When the primary provider is saturated, getCheapestAvailable() traverses this
  * order and returns the first provider with remaining daily headroom.
  * @constant {string[]}
@@ -276,7 +275,7 @@ class BudgetTracker extends EventEmitter {
   /**
    * Check whether a proposed spend is permitted under current budget state.
    *
-   * Decision logic (in priority order):
+   * Decision logic (in concurrent-equals execution order):
    * 1. If global monthly utilization ≥ ALERT_THRESHOLDS.exceeded and no
    *    HeadySoul override → hard block (globally exceeded).
    * 2. If provider daily utilization ≥ ALERT_THRESHOLDS.exceeded and no
@@ -393,7 +392,7 @@ class BudgetTracker extends EventEmitter {
 
     for (const provider of PROVIDER_PRIORITY) {
       const cap  = this._dailyCaps[provider];
-      if (!cap || cap === 0) continue; // skip free/local providers for ranking
+      if (!cap || cap === 0) continue; // skip free/local providers for concurrent evaluation
       const headroom = cap - this.getProviderSpend(provider);
       if (headroom > bestHeadroom) {
         bestHeadroom = headroom;

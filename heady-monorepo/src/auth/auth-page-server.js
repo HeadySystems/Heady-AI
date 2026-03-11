@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * Auth Page Server — standalone dev server (native http, no Express needed).
@@ -95,7 +93,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  logger.info(`\n  🔐 Heady Auth Page live at: http://localhost:${PORT}\n`);
+  console.log(`\n  🔐 Heady Auth Page live at: http://localhost:${PORT}\n`);
 });
 
 // ═════════════════════════════════════════════════════════════════

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview auto-success-engine.js — LAW-07 Auto-Success Engine
  *
@@ -19,7 +17,7 @@ const logger = pino();
  * @example
  * import { AutoSuccessEngine } from '../engines/auto-success-engine.js';
  * const engine = new AutoSuccessEngine();
- * engine.on('cycle:complete', (metrics) => logger.info(metrics));
+ * engine.on('cycle:complete', (metrics) => console.log(metrics));
  * await engine.start();
  */
 
@@ -2120,8 +2118,8 @@ const CATEGORY_CLASSES = [
  *
  * @example
  * const engine = new AutoSuccessEngine({ verbose: true });
- * engine.on('cycle:complete', (metrics) => logger.info('Cycle done:', metrics));
- * engine.on('incident:triggered', (info) => logger.error('INCIDENT:', info));
+ * engine.on('cycle:complete', (metrics) => console.log('Cycle done:', metrics));
+ * engine.on('incident:triggered', (info) => console.error('INCIDENT:', info));
  * await engine.start();
  * // ... later:
  * engine.stop();
@@ -2602,7 +2600,7 @@ export class AutoSuccessEngine extends EventEmitter {
         const precision = parseInt(placeholder.slice(2, -1), 10);
         return Number(a).toFixed(precision);
       });
-      logger.info(`[AutoSuccessEngine][${ts}] ${msg}`);
+      console.log(`[AutoSuccessEngine][${ts}] ${msg}`);
     }
   }
 }

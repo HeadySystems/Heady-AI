@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * SEC-001: JIT Secrets Manager
@@ -12,6 +10,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-security/jit-secrets-manager.js', '.js'));
 
 const crypto = require('crypto');
 

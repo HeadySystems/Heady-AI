@@ -1,5 +1,4 @@
-import pino from 'pino';
-const logger = pino();
+const logger = require('../shared/logger')('server');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**

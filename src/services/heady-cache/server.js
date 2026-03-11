@@ -1,6 +1,5 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
+const logger = require('../../shared/logger')('server');
 
 /**
  * HeadyCache Express Server Entry Point
@@ -38,7 +37,7 @@ const app = express();
 
 // Security & middleware
 app.use(helmet());
-app.use(cors());
+app.use(require('../../shared/security-headers').securityHeaders());
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 

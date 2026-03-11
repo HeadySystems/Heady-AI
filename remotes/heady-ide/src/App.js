@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * HeadyAI-IDE — AI-Powered Development Environment
  * Micro-frontend for Heady™Web Universal Shell
@@ -106,7 +104,7 @@ module.exports = { boot: () => orchestrate() };</code></pre></div></div>
   container.appendChild(root);
 
   // Announce mount
-  logger.info('[MFE:heady-ide] Mounted v' + APP_CONFIG.version);
+  console.log('[MFE:heady-ide] Mounted v' + APP_CONFIG.version);
   return { unmount: () => { root.remove(); } };
 }
 

@@ -1,19 +1,22 @@
-# billing-service — Heady™ Service Container
-# Multi-stage build, phi-scaled everything
-FROM node:22-alpine AS deps
+# billing-service — Stripe billing for HeadyEX marketplace
+# Multi-stage build with distroless base for <100MB images
+# Heady Systems Inc. — Eric Haywood
+
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package.json ./
-RUN npm ci --production
-
-FROM node:22-alpine AS runtime
-RUN apk add --no-cache tini
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+RUN npm ci --omit=dev && npm cache clean --force
 COPY . .
-ENV NODE_ENV=production PORT=3400
-EXPOSE 3400
-USER node
-HEALTHCHECK --interval=7s --timeout=4s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3400/healthz || exit 1
-ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["node", "index.js"]
+
+FROM gcr.io/distroless/nodejs20-debian12
+WORKDIR /app
+COPY --from=builder /app /app
+
+ENV NODE_ENV=production
+ENV SERVICE_HOST=0.0.0.0
+EXPOSE 3364
+
+HEALTHCHECK --interval=21s --timeout=3s --start-period=5s --retries=3 \
+  CMD ["/nodejs/bin/node", "-e", "const h=require('http');h.get('http://0.0.0.0:3364/health',r=>{let d='';r.on('data',c=>d+=c);r.on('end',()=>{const j=JSON.parse(d);process.exit(j.status==='healthy'?0:1)});}).on('error',()=>process.exit(1))"]
+
+CMD ["index.js"]

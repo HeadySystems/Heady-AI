@@ -1,18 +1,25 @@
 {
-  "name": "@heady-ai/heady-buddy",
-  "version": "4.0.0",
-  "description": "AI companion interface with persistent memory and conversational context",
-  "main": "index.js",
+  "name": "@heady/heady-buddy",
+  "version": "3.2.3",
+  "description": "HeadyBuddy \u2014 AI companion, persistent memory, 10 personas",
+  "type": "module",
+  "main": "./src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "test": "node --test",
-    "lint": "eslint .",
-    "health": "curl -s http://0.0.0.0:3338/health | jq ."
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "vitest run"
   },
-  "keywords": ["heady", "web", "sacred-geometry", "phi-scaled"],
-  "author": "Eric Haywood <eric@headyconnection.org>",
-  "license": "UNLICENSED",
+  "dependencies": {
+    "@heady/platform": "workspace:*",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "private": true,
-  "engines": { "node": ">=20.0.0" }
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED"
 }

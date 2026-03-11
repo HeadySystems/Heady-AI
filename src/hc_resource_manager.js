@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -28,8 +26,6 @@ const fs = require("fs");
 const path = require("path");
 const { EventEmitter } = require("events");
 const { execSync } = require("child_process");
-const ColorfulLogger = require("./hc_colorful_logger");
-const log = new ColorfulLogger({ level: "info" });
 
 // ─── RESOURCE TYPES & SEVERITY ─────────────────────────────────────────────
 
@@ -157,7 +153,7 @@ function collectDisk() {
         };
       }
     }
-  } catch (err) { log.warning("Failed to collect disk metrics", { error: err.message }); }
+  } catch (_) { /* fall through */ }
   return { currentPercent: 0, absoluteValue: 0, capacity: 0, unit: "GB" };
 }
 
@@ -177,8 +173,7 @@ function collectGPU() {
         unit: "MB",
       },
     };
-  } catch (err) {
-    log.warning("Failed to collect GPU metrics", { error: err.message });
+  } catch (_) {
     return null;
   }
 }
@@ -237,7 +232,7 @@ function detectTopContributors() {
         });
       }
     }
-  } catch (err) { log.warning("Failed to collect process contributors", { error: err.message }); }
+  } catch (_) { /* non-critical */ }
   return contributors;
 }
 
@@ -318,7 +313,7 @@ class HCResourceManager extends EventEmitter {
   }
 
   start() {
-    logger.info("[HCResourceManager] Starting resource monitoring (poll: %dms)", this.pollInterval);
+    console.log("[HCResourceManager] Starting resource monitoring (poll: %dms)", this.pollInterval);
     this._poll();
     this.timer = setInterval(() => this._poll(), this.pollInterval);
     return this;
@@ -326,7 +321,7 @@ class HCResourceManager extends EventEmitter {
 
   stop() {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }
-    logger.info("[HCResourceManager] Stopped.");
+    console.log("[HCResourceManager] Stopped.");
   }
 
   getSnapshot() {
@@ -425,7 +420,7 @@ class HCResourceManager extends EventEmitter {
       const dir = path.dirname(this.logFile);
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.appendFileSync(this.logFile, JSON.stringify(event) + "\n");
-    } catch (err) { log.warning("Failed to persist event", { path: this.logFile, error: err.message }); }
+    } catch (_) { /* non-critical */ }
   }
 }
 

@@ -1,25 +1,3 @@
-import { HeadyBee } from '../../core/swarm-engine/bee-lifecycle.js';
-
-// Ensure task execution utilizes HeadyBee and HeadySwarms
-export function wrapTaskWithHeadyBee(task: any) {
-  return async () => {
-    const swarmDomain = task.domain || 'general';
-    const bee = new HeadyBee({ domain: swarmDomain, ephemeral: true });
-
-
-    try {
-      // In a real system we'd assign this to the bee's task queue, but for synchronous wrapping:
-      return await task.execute();
-    } finally {
-
-      bee.emit('terminate');
-    }
-  };
-}
-
-import structuredLogger from '@heady/structured-logger';
-const { createLogger } = structuredLogger.default || structuredLogger;
-const logger = createLogger('auto-success-engine');
 /**
  * @module @heady-ai/auto-success-engine
  * @description Auto-Success Engine heartbeat system.
@@ -1543,7 +1521,7 @@ interface CategoryEntry {
  * @example
  * ```ts
  * const engine = new AutoSuccessEngine({ environment: 'production' });
- * engine.on('cycle:complete', (report) => logger.info(report.overallStatus));
+ * engine.on('cycle:complete', (report) => console.log(report.overallStatus));
  * await engine.start();
  * // ... later:
  * await engine.stop();

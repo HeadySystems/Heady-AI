@@ -371,7 +371,7 @@ function Main {
     
     # Browser Extensions
     if ($Browser -eq "all") {
-        @("chrome", "edge", "firefox", "brave") | ForEach-Object { -Parallel {
+        @("chrome", "edge", "firefox", "brave") | ForEach-Object {
             Install-BrowserExtensions -BrowserName $_
         }
     } else {

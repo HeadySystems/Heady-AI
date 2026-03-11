@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadyWeb Universal Shell — Entry Point
  *
@@ -15,6 +13,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('shared/logger')('index');
 
 import { loadDynamicRemote, mountRemote, preloadRemote } from './load-dynamic-remote';
 import { renderIntegratedWorkspace } from './integrated-workspace';
@@ -116,7 +115,7 @@ function renderFallbackUI(projection) {
   if (!root) return;
 
   setLoaderStatus('Mounting integrated workspace fallback…');
-  logger.info(`[HeadyShell] No remote for "${projection || 'unknown'}" — loading integrated workspace.`);
+  console.info(`[HeadyShell] No remote for "${projection || 'unknown'}" — loading integrated workspace.`);
   renderIntegratedWorkspace(root, { projection });
 }
 
@@ -235,7 +234,7 @@ async function bootShell() {
     });
 
     hideLoader();
-    logger.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
+    console.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
 
   } catch (err) {
     logger.error('[HeadyShell] Boot failure:', err);
@@ -247,7 +246,7 @@ async function bootShell() {
 // ── Entry Point ──────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  logger.info(`[HeadyShell] Starting up — shell v${SHELL_VERSION} | platform v3.1.0`);
+  console.info(`[HeadyShell] Starting up — shell v${SHELL_VERSION} | platform v3.1.0`);
   preloadFrequentRemotes();
   bootShell();
 });

@@ -1,11 +1,10 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * E3: Graceful Shutdown Manager
  * SIGTERM → drain connections → close DB pools → flush telemetry → exit
  * @module src/lib/shutdown
  */
 'use strict';
+const logger = require('../../shared/logger')('shutdown');
 
 const SHUTDOWN_TIMEOUT_MS = parseInt(process.env.SHUTDOWN_TIMEOUT_MS || '15000', 10);
 

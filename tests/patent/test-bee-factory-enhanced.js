@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -28,11 +26,11 @@ let failed = 0;
 function test(name, fn) {
   try {
     fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
@@ -40,18 +38,18 @@ function test(name, fn) {
 async function testAsync(name, fn) {
   try {
     await fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-logger.info('\n── Constants ─────────────────────────────────────────────────────');
+console.log('\n── Constants ─────────────────────────────────────────────────────');
 
 test('PHI equals 1.6180339887', () => {
   assert.strictEqual(PHI, 1.6180339887);
@@ -72,7 +70,7 @@ test('SWARM_POLICY_MODES includes parallel, sequential, pipeline', () => {
 
 // ─── Claim 1: Runtime Creation with SHA-256 Identity ─────────────────────────
 
-logger.info('\n── Claim 1: Runtime agent creation with SHA-256 identity ────────');
+console.log('\n── Claim 1: Runtime agent creation with SHA-256 identity ────────');
 
 test('createAgent returns an entry with id and domain', () => {
   const factory = new DynamicBeeFactory();
@@ -112,7 +110,7 @@ test('createAgent sets priority and description', () => {
 
 // ─── Claim 2: Template-Based Creation ────────────────────────────────────────
 
-logger.info('\n── Claim 2: Template-based creation ────────────────────────────');
+console.log('\n── Claim 2: Template-based creation ────────────────────────────');
 
 test('createFromTemplate("health-check") creates a health bee', () => {
   const factory = new DynamicBeeFactory();
@@ -153,7 +151,7 @@ test('createFromTemplate throws on unknown template', () => {
 
 // ─── Claim 3: Ephemeral Spawn ─────────────────────────────────────────────────
 
-logger.info('\n── Claim 3: Ephemeral spawn ──────────────────────────────────────');
+console.log('\n── Claim 3: Ephemeral spawn ──────────────────────────────────────');
 
 test('spawnEphemeral registers in ephemeral registry', () => {
   const factory = new DynamicBeeFactory();
@@ -180,7 +178,7 @@ test('spawnEphemeral with array of work functions', () => {
 
 // ─── Claim 4: Persistent to Disk ─────────────────────────────────────────────
 
-logger.info('\n── Claim 4: Persistent to disk ──────────────────────────────────');
+console.log('\n── Claim 4: Persistent to disk ──────────────────────────────────');
 
 test('createAgent with persist=false does NOT create a file', () => {
   const fs = require('fs');
@@ -209,7 +207,7 @@ test('createAgent with persist=true creates a bee file', () => {
 
 // ─── Claim 5 + 6: Swarm Formation ────────────────────────────────────────────
 
-logger.info('\n── Claims 5+6: Swarm formation and consensus ────────────────────');
+console.log('\n── Claims 5+6: Swarm formation and consensus ────────────────────');
 
 (async () => {
 
@@ -282,7 +280,7 @@ await testAsync('swarm timeout per agent is enforced', async () => {
 
 // ─── Claim 7: Dissolution Protocol ────────────────────────────────────────────
 
-logger.info('\n── Claim 7: Dissolution protocol ────────────────────────────────');
+console.log('\n── Claim 7: Dissolution protocol ────────────────────────────────');
 
 test('dissolve removes agent from registry', () => {
   const factory = new DynamicBeeFactory();
@@ -320,7 +318,7 @@ test('dissolveWhere removes all matching agents', () => {
 
 // ─── Claim 8: Work Injection ──────────────────────────────────────────────────
 
-logger.info('\n── Claim 8: Work function injection ─────────────────────────────');
+console.log('\n── Claim 8: Work function injection ─────────────────────────────');
 
 test('injectWork adds a work function to an existing agent', () => {
   const factory = new DynamicBeeFactory();
@@ -350,7 +348,7 @@ test('injectWork creates a new agent if domain does not exist', () => {
 
 // ─── Claim 9: Full System ─────────────────────────────────────────────────────
 
-logger.info('\n── Claim 9: Full system ──────────────────────────────────────────');
+console.log('\n── Claim 9: Full system ──────────────────────────────────────────');
 
 test('DynamicBeeFactory exposes all required subsystems', () => {
   const factory = new DynamicBeeFactory();
@@ -378,10 +376,10 @@ test('factory.status() includes phi and registry stats', () => {
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-logger.info(`\n── Results ──────────────────────────────────────────────────────`);
-logger.info(`   Passed: ${passed}`);
-logger.info(`   Failed: ${failed}`);
-logger.info(`   Total:  ${passed + failed}`);
+console.log(`\n── Results ──────────────────────────────────────────────────────`);
+console.log(`   Passed: ${passed}`);
+console.log(`   Failed: ${failed}`);
+console.log(`   Total:  ${passed + failed}`);
 
 if (failed > 0) process.exit(1);
 

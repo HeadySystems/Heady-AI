@@ -1,23 +1,14 @@
-FROM node:20-slim AS build
+FROM node:22-slim AS builder
+WORKDIR /build
+COPY package.json ./
+RUN npm install --omit=dev --ignore-scripts
+COPY . .
 
+FROM gcr.io/distroless/nodejs22-debian12:nonroot
 WORKDIR /app
-
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev && npm cache clean --force
-
-COPY src/ ./src/
-
-FROM gcr.io/distroless/nodejs20-debian12
-
-WORKDIR /app
-
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/src ./src
-COPY --from=build /app/package.json ./
-
+COPY --from=builder /build /app
+COPY --from=builder /build/../../shared /app/shared
+EXPOSE 3396
 ENV NODE_ENV=production
-ENV PORT=3384
-
-EXPOSE 3384
-
-CMD ["src/index.js"]
+ENV SERVICE_PORT=3396
+CMD ["index.js"]

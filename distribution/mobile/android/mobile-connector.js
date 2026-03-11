@@ -321,11 +321,11 @@ app.server = app.listen(PORT, '0.0.0.0', () => {
 ║  HEADY MOBILE CONNECTOR                                   ║
 ╚══════════════════════════════════════════════════════════╝
 
-🚀 Server running at http://api.headysystems.com:${PORT}
+🚀 Server running at http://localhost:${PORT}
 📱 Device: ${config.device_name}
 🖥️  Desktop: ${config.desktop_ip}:${config.desktop_port}
 
-Open browser to http://api.headysystems.com:${PORT} for UI
+Open browser to http://localhost:${PORT} for UI
     `);
     
     // Start desktop connection

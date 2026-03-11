@@ -31,7 +31,7 @@ def log_info(msg):
 def log_error(msg):
     logger.error(msg)
 
-def run_command(cmd, cwd=None, timeout=233):  # fib(13) = 233
+def run_command(cmd, cwd=None, timeout=300):
     """Execute command with timeout and error handling"""
     try:
         result = subprocess.run(

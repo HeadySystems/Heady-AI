@@ -4,11 +4,8 @@
  * ║  Geometric vector operations as logical gates                    ║
  * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
  * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc.                                   ║
+ * ║  © 2026-2026 HeadySystems Inc.                                   ║
  * ╚══════════════════════════════════════════════════════════════════╝
- *
- * @module csl-engine
- * @author Eric Haywood, HeadySystems Inc.
  *
  * Domain: Unit vectors in ℝᴰ, D ∈ {384, 1536}
  * Truth value: τ(a,b) = cos(θ) ∈ [-1, +1]
@@ -17,22 +14,7 @@
  *   -1 = antipodal (FALSE)
  */
 
-'use strict';
-
-const {
-  PHI, PSI, PSI2, PSI3, PSI4,
-  CSL_THRESHOLDS, phiThreshold, phiFusionWeights,
-  cslGate, adaptiveTemperature, fib,
-} = require('./phi-math.js');
-
-/**
- * Derived PSI powers not in phi-math.js.
- * ZERO magic numbers — all derived from PSI.
- * @constant {number}
- */
-const PSI5 = Math.pow(PSI, 5);   // ψ⁵ ≈ 0.0902
-const PSI8 = Math.pow(PSI, 8);   // ψ⁸ ≈ 0.0131
-const PSI9 = Math.pow(PSI, 9);   // ψ⁹ ≈ 0.0081
+const { PHI, PSI, PSI_2, PSI_3, PSI_4, PSI_5, PSI_8, PSI_9, CSL_THRESHOLDS, phiThreshold, phiFusionWeights, cslGate, adaptiveTemperature, fib, } = (function() { try { return require("./phi-math.js"); } catch(e) { return {}; } })();
 
 // ─── VECTOR OPERATIONS ───────────────────────────────────────────────────────
 
@@ -180,22 +162,17 @@ function cslCONSENSUS(vectors, weights) {
  * CSL GATE — Soft sigmoid gating.
  * GATE(value, cosScore, τ, temp) = value × σ((cosScore - τ) / temp)
  *
- * Re-exported from phi-math for convenience.
- *
  * @param {number} value - Value to gate
  * @param {number} cosScore - Cosine similarity score
  * @param {number} [tau=CSL_THRESHOLDS.MINIMUM] - Gate threshold
- * @param {number} [temperature=PSI3] - Temperature (ψ³ ≈ 0.236)
+ * @param {number} [temperature=PSI_3] - Temperature (ψ³ ≈ 0.236)
  * @returns {number}
  */
-const cslGATE = cslGate;
+export { cslGate as cslGATE } from './phi-math.js';
 
 // ─── TERNARY LOGIC ───────────────────────────────────────────────────────────
 
-/**
- * Ternary logic modes
- * @enum {string}
- */
+/** Ternary logic modes */
 const TERNARY_MODES = Object.freeze({
   KLEENE_K3:   'kleene_k3',
   LUKASIEWICZ: 'lukasiewicz',
@@ -217,8 +194,8 @@ const TERNARY_MODES = Object.freeze({
  * @returns {'TRUE'|'UNKNOWN'|'FALSE'}
  */
 function ternaryClassify(cosScore) {
-  if (cosScore >= PSI) return 'TRUE';
-  if (cosScore <= -PSI) return 'FALSE';
+  if (cosScore >= PSI) return 'TRUE';        // ≥ 0.618 (φ⁻¹)
+  if (cosScore <= -PSI) return 'FALSE';      // ≤ -0.618
   return 'UNKNOWN';
 }
 
@@ -236,7 +213,7 @@ function ternaryAND(a, b, mode = TERNARY_MODES.CSL) {
     case TERNARY_MODES.GODEL:       return Math.min(a, b);
     case TERNARY_MODES.PRODUCT:     return a * b;
     case TERNARY_MODES.CSL:
-    default:                         return a * b;
+    default:                         return a * b; // Geometric product
   }
 }
 
@@ -274,9 +251,9 @@ function ternaryNOT(a) {
  * Routes input to top-K experts using cosine similarity instead of learned weights.
  *
  * Configuration uses phi-math constants:
- *   - Temperature: PSI3 ≈ 0.236 (adaptive via entropy)
- *   - Anti-collapse weight: PSI8 ≈ 0.0131
- *   - Collapse detection: PSI9 ≈ 0.0081
+ *   - Temperature: PSI_3 ≈ 0.236 (adaptive via entropy)
+ *   - Anti-collapse weight: PSI_8 ≈ 0.0131
+ *   - Collapse detection: PSI_9 ≈ 0.0081
  *   - Top-K: fib(3) = 2
  */
 class CSLMoERouter {
@@ -287,11 +264,12 @@ class CSLMoERouter {
   constructor(numExperts, inputDim) {
     this.numExperts = numExperts;
     this.inputDim = inputDim;
-    this.topK = fib(3);
-    this.temperature = PSI3;
-    this.antiCollapseWeight = PSI8;
-    this.collapseThreshold = PSI9;
+    this.topK = fib(3); // 2
+    this.temperature = PSI_3;
+    this.antiCollapseWeight = PSI_8;
+    this.collapseThreshold = PSI_9;
 
+    // Initialize expert gate vectors with phi-scaled random values
     this.expertGates = Array.from({ length: numExperts }, () => {
       const gate = new Float64Array(inputDim);
       for (let i = 0; i < inputDim; i++) {
@@ -300,6 +278,7 @@ class CSLMoERouter {
       return normalize(gate);
     });
 
+    // Expert usage tracking for load balancing
     this.usageCounts = new Float64Array(numExperts);
   }
 
@@ -311,16 +290,20 @@ class CSLMoERouter {
    * @returns {{ expertIndices: number[], weights: number[], scores: number[] }}
    */
   route(input, entropy = 0, maxEntropy = 1) {
+    // Compute cosine similarity with each expert gate
     const scores = this.expertGates.map(gate => cslAND(input, gate));
 
+    // Adaptive temperature based on entropy
     const temp = entropy > 0
       ? adaptiveTemperature(entropy, maxEntropy)
       : this.temperature;
 
+    // Softmax with temperature
     const expScores = scores.map(s => Math.exp(s / temp));
     const expSum = expScores.reduce((a, b) => a + b, 0);
     const probs = expScores.map(s => s / expSum);
 
+    // Add anti-collapse regularization
     const minProb = Math.min(...probs);
     if (minProb < this.collapseThreshold) {
       const uniform = 1 / this.numExperts;
@@ -330,14 +313,17 @@ class CSLMoERouter {
       }
     }
 
+    // Select top-K experts
     const indexed = probs.map((p, i) => ({ prob: p, index: i, score: scores[i] }));
     indexed.sort((a, b) => b.prob - a.prob);
     const selected = indexed.slice(0, this.topK);
 
+    // Renormalize selected weights
     const selectedSum = selected.reduce((a, s) => a + s.prob, 0);
     const weights = selected.map(s => s.prob / selectedSum);
 
-    selected.forEach(s => { this.usageCounts[s.index]++; });
+    // Update usage tracking
+    selected.forEach(s => this.usageCounts[s.index]++);
 
     return {
       expertIndices: selected.map(s => s.index),
@@ -359,6 +345,11 @@ class CSLMoERouter {
 }
 
 // ─── HDC / VSA OPERATIONS ────────────────────────────────────────────────────
+
+/**
+ * Hyperdimensional Computing (HDC) / Vector Symbolic Architecture (VSA) operations.
+ * Supports Binary BSC, Bipolar MAP, and Real HRR vector families.
+ */
 
 /**
  * HDC BIND — Create compositional representation.
@@ -434,7 +425,10 @@ function isSemanticDuplicate(a, b, threshold = CSL_THRESHOLDS.CRITICAL) {
 
 /**
  * Multi-criteria CSL scoring with phi-weighted factors.
+ * Used by JUDGE stage, Arena Battle, and optimization concurrent evaluation.
+ *
  * Default weights (5 criteria): [0.387, 0.239, 0.148, 0.092, 0.057]
+ * Maps to: correctness (34%), safety (21%), performance (21%), quality (13%), elegance (11%)
  *
  * @param {Object} scores - Criteria scores
  * @param {number} scores.correctness
@@ -458,29 +452,27 @@ function cslCompositeScore(scores) {
 
 /**
  * CSL trial scoring weights (for trial-and-error stage).
- * @constant {Object}
+ * Matches hcfullpipeline.yaml cslScoringWeights.
  */
 const TRIAL_SCORING_WEIGHTS = Object.freeze({
-  correctness:         0.34,
-  performance:         0.21,
-  safety:              0.21,
-  elegance:            0.13,
-  resource_efficiency: 0.11,
+  correctness:         0.34,  // F(9)/100
+  performance:         0.21,  // F(8)/100
+  safety:              0.21,  // F(8)/100
+  elegance:            0.13,  // F(7)/100
+  resource_efficiency: 0.11,  // ~F(6.5)/100 → F(7)-F(3)=11
 });
 
 /**
- * CSL optimization scoring weights.
- * @constant {Object}
+ * CSL optimization scoring weights (for optimization ops stage).
  */
 const OPTIMIZATION_SCORING_WEIGHTS = Object.freeze({
-  cost:        PSI2,
-  performance: PSI2,
-  reliability: PSI3,
+  cost:        PSI_2,  // 0.382
+  performance: PSI_2,  // 0.382
+  reliability: PSI_3,  // 0.236
 });
 
 /**
  * CSL evolution fitness weights.
- * @constant {Object}
  */
 const EVOLUTION_FITNESS_WEIGHTS = Object.freeze({
   latency_improvement:     0.34,
@@ -490,17 +482,26 @@ const EVOLUTION_FITNESS_WEIGHTS = Object.freeze({
   elegance_improvement:    0.11,
 });
 
-// ─── MODULE EXPORTS (CommonJS) ───────────────────────────────────────────────
-
 module.exports = {
+  // Vector operations
   dot, norm, normalize,
+
+  // CSL gates
   cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS,
-  cslGATE, cslGate,
+
+  // Ternary logic
   TERNARY_MODES, ternaryClassify, ternaryAND, ternaryOR, ternaryNOT,
+
+  // MoE Router
   CSLMoERouter,
+
+  // HDC/VSA
   hdcBind, hdcBundle, hdcPermute, hdcCapacity,
+
+  // Deduplication
   isSemanticDuplicate,
+
+  // Scoring
   cslCompositeScore, TRIAL_SCORING_WEIGHTS,
   OPTIMIZATION_SCORING_WEIGHTS, EVOLUTION_FITNESS_WEIGHTS,
-  PSI5, PSI8, PSI9,
 };

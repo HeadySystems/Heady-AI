@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Advanced CORS Policy Middleware
  * @module security-middleware/cors-policy
@@ -218,7 +216,7 @@ function corsPolicy(opts = {}) {
 
     if (!allowed) {
       // Log blocked CORS attempt
-      logger.warn('[CORS] Blocked origin:', origin, 'path:', req.path);
+      console.warn('[CORS] Blocked origin:', origin, 'path:', req.path);
       if (req.method === 'OPTIONS') {
         return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
       }

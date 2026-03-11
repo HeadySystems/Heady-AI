@@ -1,5 +1,4 @@
-import pino from 'pino';
-const logger = pino();
+const logger = require('../../shared/logger')('vectorize-sync');
 /**
  * vectorize-sync.js
  * Heady™ Latent OS — Vectorize ↔ pgvector Bidirectional Sync

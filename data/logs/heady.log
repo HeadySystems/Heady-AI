@@ -1,0 +1,277 @@
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T20:50:47.149Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T20:50:47.152Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T20:50:47.152Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T20:50:47.152Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T20:50:47.152Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:50:47.153Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:50:47.153Z"}
+{"level":"error","message":"[EnvValidator] Missing or invalid: MCP_BEARER_TOKEN","timestamp":"2026-03-10T20:50:47.305Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T20:52:36.902Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T20:52:36.905Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T20:52:36.905Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T20:52:36.905Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T20:52:36.905Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:52:36.906Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:52:36.906Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T20:52:37.044Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T20:52:37.049Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T20:52:37.054Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T20:52:37.055Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T20:52:37.057Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T20:52:37.057Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T20:52:37.057Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T20:52:48.608Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T20:53:15.485Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T20:53:15.488Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T20:53:15.488Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T20:53:15.488Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T20:53:15.489Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:53:15.490Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:53:15.490Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T20:53:15.582Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T20:53:15.587Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T20:53:15.592Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T20:53:15.592Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T20:53:15.595Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T20:53:15.595Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T20:53:15.596Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T20:53:27.189Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T20:54:25.988Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T20:54:25.991Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T20:54:25.992Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T20:54:25.992Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T20:54:25.992Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:54:25.993Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:54:25.993Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T20:54:26.096Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T20:54:26.101Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T20:54:26.105Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T20:54:26.106Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T20:54:26.108Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T20:54:26.108Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T20:54:26.108Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T20:56:11.576Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T20:56:11.578Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T20:56:11.579Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T20:56:11.579Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T20:56:11.579Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:56:11.580Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:56:11.580Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T20:56:11.676Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T20:56:11.682Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T20:56:11.687Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T20:56:11.687Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T20:56:11.689Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T20:56:11.689Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T20:56:11.689Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T20:56:23.103Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T20:56:23.106Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T20:56:23.106Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T20:56:23.106Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T20:56:23.106Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:56:23.107Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T20:56:23.107Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T20:56:23.196Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T20:56:23.201Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T20:56:23.205Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T20:56:23.206Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T20:56:23.207Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T20:56:23.208Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T20:56:23.208Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T20:59:34.415Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:01:53.588Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:01:53.591Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:01:53.591Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:01:53.592Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:01:53.592Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:01:53.592Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:01:53.593Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:08:07.952Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:08:07.954Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:08:07.954Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:08:07.954Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:08:07.954Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:08:07.955Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:08:07.955Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:08:08.052Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:08:08.057Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:08:08.062Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:08:08.063Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:08:08.064Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:08:08.064Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:08:08.064Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:08:17.680Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:08:51.174Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:08:51.177Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:08:51.177Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:08:51.178Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:08:51.178Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:08:51.178Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:08:51.179Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:08:51.265Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:08:51.271Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:08:51.278Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:08:51.278Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:08:51.280Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:08:51.281Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:08:51.281Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:08:58.892Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:09:27.878Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:09:27.881Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:09:27.881Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:09:27.881Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:09:27.882Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:09:27.883Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:09:27.883Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:09:27.966Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:09:27.971Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:09:27.977Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:09:27.978Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:09:27.979Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:09:27.979Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:09:27.979Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:14:48.811Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:14:48.811Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:14:48.811Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:14:50.128Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:14:50.132Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:14:50.132Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:14:50.132Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:14:50.133Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:14:50.133Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:14:50.133Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:14:50.245Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:14:50.252Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:14:50.260Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:14:50.261Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:14:50.264Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:14:50.264Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:14:50.264Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:17:55.036Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:17:55.040Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:17:55.040Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:17:55.040Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:17:55.041Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:17:55.042Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:17:55.043Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:17:55.182Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:17:55.189Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:17:55.196Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:17:55.198Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:17:55.201Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:17:55.201Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:17:55.202Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: require is not defined","timestamp":"2026-03-10T21:17:57.598Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory 942899cf-967c-4df6-9545-daa7924c334b (embedding: none)","timestamp":"2026-03-10T21:17:57.600Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:17:57.635Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory db4cba99-7054-4220-93fa-52d8014c90c7 (embedding: none)","timestamp":"2026-03-10T21:17:57.635Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:17:57.688Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:17:57.736Z"}
+{"level":"info","message":"[MemoryStore] Loaded 2 memories from disk","timestamp":"2026-03-10T21:19:22.830Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:19:22.835Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:19:22.835Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:19:22.835Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:19:22.836Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:19:22.836Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:19:22.837Z"}
+{"level":"info","message":"[MemoryStore] Loaded 2 memories from disk","timestamp":"2026-03-10T21:19:22.837Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:19:22.838Z"}
+{"level":"info","message":"[MemoryStore] Loaded 2 memories from disk","timestamp":"2026-03-10T21:19:22.838Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:19:22.968Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:19:22.975Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:19:22.983Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:19:22.984Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:19:22.986Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:19:22.986Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:19:22.986Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:19:25.452Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory 6cb06a3d-c890-4fe1-8f55-e967e648caab (embedding: none)","timestamp":"2026-03-10T21:19:25.453Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:19:25.469Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory d79397f6-77be-4b89-9f8c-555dbf99a449 (embedding: none)","timestamp":"2026-03-10T21:19:25.469Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:19:25.485Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory d070990c-89e3-4c21-8c3f-b0fe62b8f45f (embedding: none)","timestamp":"2026-03-10T21:19:25.486Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:19:25.501Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:19:25.517Z"}
+{"level":"warn","message":"[MemoryStore] Embedding provider unavailable: Cannot require() ES Module /home/headyme/Heady/src/latent/embedding-provider.js in a cycle. (from /home/headyme/Heady/src/memory/memory-store.js)","timestamp":"2026-03-10T21:19:25.532Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:19:25.536Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:20:10.863Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:20:17.318Z"}
+{"level":"info","message":"[AutoSuccess] Stopped. Stats: {\"cycles\":11,\"successes\":1485,\"failures\":0,\"learnings\":0}","timestamp":"2026-03-10T21:20:17.320Z"}
+{"level":"info","message":"[MemoryStore] Loaded 5 memories from disk","timestamp":"2026-03-10T21:20:38.134Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:20:38.138Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:20:38.138Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:20:38.139Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:20:38.139Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:20:38.139Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:20:38.139Z"}
+{"level":"info","message":"[MemoryStore] Loaded 5 memories from disk","timestamp":"2026-03-10T21:20:38.140Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:20:38.140Z"}
+{"level":"info","message":"[MemoryStore] Loaded 5 memories from disk","timestamp":"2026-03-10T21:20:38.140Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:20:38.261Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:20:38.268Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:20:38.275Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:20:38.276Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:20:38.279Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:20:38.279Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:20:38.279Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory b85f650d-bf2d-435f-9fd5-5bebc060c766 (local 384D)","timestamp":"2026-03-10T21:20:47.943Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory 28e73e4d-5872-411d-b5c6-62546570f74b (local 384D)","timestamp":"2026-03-10T21:21:25.826Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory fc04def7-56d7-4231-ba89-1130e860bfb1 (local 384D)","timestamp":"2026-03-10T21:21:25.958Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory 92006ad3-f765-491b-a0e2-178f6f36f4ac (local 384D)","timestamp":"2026-03-10T21:21:26.068Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:22:14.774Z"}
+{"level":"info","message":"[MemoryStore] Loaded 9 memories from disk","timestamp":"2026-03-10T21:22:24.582Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:22:24.586Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:22:24.587Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:22:24.587Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:22:24.588Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:22:24.588Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:22:24.589Z"}
+{"level":"info","message":"[MemoryStore] Loaded 9 memories from disk","timestamp":"2026-03-10T21:22:24.589Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:22:24.590Z"}
+{"level":"info","message":"[MemoryStore] Loaded 9 memories from disk","timestamp":"2026-03-10T21:22:24.590Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:22:24.728Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:22:24.736Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:22:24.743Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:22:24.745Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:22:24.753Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:22:24.753Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:22:24.754Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory cb355ad5-c742-4cb1-822b-d1c25520959d (local 384D)","timestamp":"2026-03-10T21:22:47.553Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory f17ba97d-ec2e-4a72-9cc5-22af7cd96fb2 (local 384D)","timestamp":"2026-03-10T21:22:51.264Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory be474dca-d169-4d96-9397-54953ec6fa62 (local 384D)","timestamp":"2026-03-10T21:22:52.148Z"}
+{"level":"info","message":"[MemoryStore] Ingested memory 069aff1d-7c52-49d4-9140-ba4e138e1bc0 (local 384D)","timestamp":"2026-03-10T21:22:53.375Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:28:12.621Z"}
+{"level":"info","message":"[AutoSuccess] Stopped. Stats: {\"cycles\":12,\"successes\":1620,\"failures\":0,\"learnings\":0}","timestamp":"2026-03-10T21:28:12.621Z"}
+{"level":"info","message":"[MemoryStore] Loaded 13 memories from disk","timestamp":"2026-03-10T21:34:49.612Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_ingest","timestamp":"2026-03-10T21:34:49.615Z"}
+{"level":"info","message":"[ToolRegistry] Registered: memory_query","timestamp":"2026-03-10T21:34:49.615Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_list","timestamp":"2026-03-10T21:34:49.615Z"}
+{"level":"info","message":"[ToolRegistry] Registered: agent_status","timestamp":"2026-03-10T21:34:49.616Z"}
+{"level":"info","message":"[ToolRegistry] Registered: health_check","timestamp":"2026-03-10T21:34:49.616Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:34:49.616Z"}
+{"level":"info","message":"[MemoryStore] Loaded 13 memories from disk","timestamp":"2026-03-10T21:34:49.617Z"}
+{"level":"info","message":"[AgentManager] Loaded 19 agents","timestamp":"2026-03-10T21:34:49.617Z"}
+{"level":"info","message":"[MemoryStore] Loaded 13 memories from disk","timestamp":"2026-03-10T21:34:49.617Z"}
+{"level":"info","message":"[EnvValidator] All required environment variables validated","timestamp":"2026-03-10T21:34:49.714Z"}
+{"level":"info","message":"[HeadyManager] Auth routes mounted at /api/auth","timestamp":"2026-03-10T21:34:49.719Z"}
+{"level":"info","message":"[AutoContext] Background indexer started (interval: 21000ms)","timestamp":"2026-03-10T21:34:49.720Z"}
+{"alwaysOn":true,"level":"info","message":"[AutoContext] Initialized","timestamp":"2026-03-10T21:34:49.721Z","vectorMemory":false,"workspaceRoot":"/home/headyme/Heady"}
+{"level":"info","message":"[HeadyManager] AutoContext continuous service started at /api/context/*","timestamp":"2026-03-10T21:34:49.721Z"}
+{"level":"info","message":"[AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle","timestamp":"2026-03-10T21:34:49.726Z"}
+{"level":"info","message":"[HeadyManager] Auto-Success Engine started (135 tasks)","timestamp":"2026-03-10T21:34:49.727Z"}
+{"level":"info","message":"[HeadyManager] Running on port 3300","timestamp":"2026-03-10T21:34:49.729Z"}
+{"level":"info","message":"[HeadyManager] Environment: production","timestamp":"2026-03-10T21:34:49.729Z"}
+{"level":"info","message":"[HeadyManager] Health: http://localhost:3300/health","timestamp":"2026-03-10T21:34:49.729Z"}
+{"level":"info","message":"[HeadyManager] Received SIGTERM. Shutting down gracefully...","timestamp":"2026-03-10T21:35:04.281Z"}
+[32minfo[39m: [MemoryStore] Loaded 13 memories from disk {"timestamp":"2026-03-11T06:36:41.688Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_ingest {"timestamp":"2026-03-11T06:36:41.693Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_query {"timestamp":"2026-03-11T06:36:41.693Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_list {"timestamp":"2026-03-11T06:36:41.694Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_status {"timestamp":"2026-03-11T06:36:41.694Z"}
+[32minfo[39m: [ToolRegistry] Registered: health_check {"timestamp":"2026-03-11T06:36:41.694Z"}
+[32minfo[39m: [MemoryStore] Loaded 13 memories from disk {"timestamp":"2026-03-11T06:44:00.375Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_ingest {"timestamp":"2026-03-11T06:44:00.379Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_query {"timestamp":"2026-03-11T06:44:00.379Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_list {"timestamp":"2026-03-11T06:44:00.380Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_status {"timestamp":"2026-03-11T06:44:00.380Z"}
+[32minfo[39m: [ToolRegistry] Registered: health_check {"timestamp":"2026-03-11T06:44:00.380Z"}

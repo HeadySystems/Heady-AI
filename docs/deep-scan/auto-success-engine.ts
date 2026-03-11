@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadyConductor — Auto-Success Engine (φ-Scaled)
  * 
@@ -75,7 +73,7 @@ export class AutoSuccessEngine {
   constructor(private config: AutoSuccessConfig) {}
 
   public async start(): Promise<void> {
-    logger.info('[AutoSuccessEngine] Starting with φ-scaled configuration:', {
+    console.log('[AutoSuccessEngine] Starting with φ-scaled configuration:', {
       cycleIntervalMs: this.cycleInterval,
       categories: this.categoryCount,
       totalTasks: this.totalTasks,
@@ -102,7 +100,7 @@ export class AutoSuccessEngine {
       clearInterval(this.intervalHandle);
       this.intervalHandle = undefined;
     }
-    logger.info('[AutoSuccessEngine] Graceful shutdown complete', {
+    console.log('[AutoSuccessEngine] Graceful shutdown complete', {
       totalCycles: this.cycleCount,
       totalFailures: this.totalFailures,
     });
@@ -120,7 +118,7 @@ export class AutoSuccessEngine {
       tasksPerCategory: AUTO_SUCCESS.TASKS_PER_CATEGORY,
     };
 
-    logger.info(`[AutoSuccessEngine] Cycle #${this.cycleCount} starting...`);
+    console.log(`[AutoSuccessEngine] Cycle #${this.cycleCount} starting...`);
 
     for (const category of TASK_CATEGORIES) {
       let retries = 0;
@@ -147,7 +145,7 @@ export class AutoSuccessEngine {
           } else {
             // φ-backoff before retry
             const backoffMs = phiBackoff(retries);
-            logger.info(`[AutoSuccess] Retry ${retries}/${this.maxRetriesPerCycle} for ${category} in ${backoffMs}ms`);
+            console.log(`[AutoSuccess] Retry ${retries}/${this.maxRetriesPerCycle} for ${category} in ${backoffMs}ms`);
             await this.sleep(backoffMs);
           }
         }
@@ -158,14 +156,14 @@ export class AutoSuccessEngine {
 
     // INVARIANT: Total cycle time MUST remain ≤ cycle interval
     if (result.durationMs > this.cycleInterval) {
-      logger.warn('[AutoSuccessEngine] CYCLE OVERRUN — optimize categories', {
+      console.warn('[AutoSuccessEngine] CYCLE OVERRUN — optimize categories', {
         durationMs: result.durationMs,
         budgetMs: this.cycleInterval,
         overrunMs: result.durationMs - this.cycleInterval,
       });
     }
 
-    logger.info('[AutoSuccessEngine] Cycle complete:', {
+    console.log('[AutoSuccessEngine] Cycle complete:', {
       cycle: this.cycleCount,
       duration: `${result.durationMs}ms`,
       budget: `${this.cycleInterval}ms`,
@@ -249,33 +247,33 @@ export class AutoSuccessEngine {
     // 11 tasks: ESLint, TS validation, dead code, import cycles, complexity,
     // duplication, pattern compliance, naming, deprecated API, bundle size,
     // test coverage
-    logger.info('[AutoSuccess:CodeQuality] Running code quality checks');
+    console.log('[AutoSuccess:CodeQuality] Running code quality checks');
   }
 
   private async runSecurityScans(): Promise<void> {
     // 11 tasks: Vuln scanning, secret detection, CORS, CSP, auth tokens,
     // SSL certs, CVE, SQLi, XSS, SSRF, path traversal
-    logger.info('[AutoSuccess:Security] Running security scans');
+    console.log('[AutoSuccess:Security] Running security scans');
   }
 
   private async monitorPerformance(): Promise<void> {
     // 11 tasks: P50/P95/P99, memory, CPU, queue depth, event loop lag,
     // GC frequency, connection pools, cache hit ratio, DB latency,
     // embedding throughput, API throughput
-    logger.info('[AutoSuccess:Performance] Monitoring performance metrics');
+    console.log('[AutoSuccess:Performance] Monitoring performance metrics');
   }
 
   private async runAvailabilityChecks(): Promise<void> {
     // 11 tasks: Health probes, uptime, circuit breakers, dependency health,
     // DNS, CDN, edge workers, DB connections, Redis, MCP, webhooks
-    logger.info('[AutoSuccess:Availability] Running availability checks');
+    console.log('[AutoSuccess:Availability] Running availability checks');
   }
 
   private async runComplianceChecks(): Promise<void> {
     // 11 tasks: License, patent zones, IP protection, GDPR, API versioning,
     // SLA, data retention, backup verification, DR readiness, audit logs,
     // regulatory monitoring
-    logger.info('[AutoSuccess:Compliance] Running compliance checks');
+    console.log('[AutoSuccess:Compliance] Running compliance checks');
   }
 
   private async processLearningEvents(): Promise<void> {
@@ -283,21 +281,21 @@ export class AutoSuccessEngine {
     // embedding freshness, knowledge gaps, user preferences, error catalog,
     // optimization catalog, pattern reinforcement, cross-swarm correlation,
     // fine-tuning data prep
-    logger.info('[AutoSuccess:Learning] Processing learning events');
+    console.log('[AutoSuccess:Learning] Processing learning events');
   }
 
   private async runCommunicationChecks(): Promise<void> {
     // 11 tasks: Notification delivery, webhook health, MCP connectivity,
     // email queue, integration health, API doc freshness, changelog trigger,
     // status page, incident readiness, HeadyBuddy quality, dedup check
-    logger.info('[AutoSuccess:Communication] Running communication checks');
+    console.log('[AutoSuccess:Communication] Running communication checks');
   }
 
   private async runInfrastructureChecks(): Promise<void> {
     // 11 tasks: DNS records, SSL expiry, container freshness, pod health,
     // Cloud Run revisions, Worker deployment, migration status, storage quota,
     // log rotation, backup completion, CDN cache
-    logger.info('[AutoSuccess:Infrastructure] Running infrastructure checks');
+    console.log('[AutoSuccess:Infrastructure] Running infrastructure checks');
   }
 
   private async runIntelligenceChecks(): Promise<void> {
@@ -305,7 +303,7 @@ export class AutoSuccessEngine {
     // routing accuracy, response quality, hallucination detection, context
     // retrieval relevance, multi-model agreement, prompt effectiveness,
     // knowledge completeness, Graph RAG freshness
-    logger.info('[AutoSuccess:Intelligence] Running intelligence checks');
+    console.log('[AutoSuccess:Intelligence] Running intelligence checks');
   }
 
   private async syncData(): Promise<void> {
@@ -313,7 +311,7 @@ export class AutoSuccessEngine {
     // data consistency, event sourcing replay, state machine integrity,
     // vector memory sync, graph RAG sync, cache warmth, checkpoint validation,
     // cross-device sync
-    logger.info('[AutoSuccess:DataSync] Syncing data across services');
+    console.log('[AutoSuccess:DataSync] Syncing data across services');
   }
 
   private async optimizeCosts(): Promise<void> {
@@ -321,7 +319,7 @@ export class AutoSuccessEngine {
     // over-provisioned instances, under-utilized workers, redundant data,
     // stale embeddings, orphaned resources, cost trajectory, provider
     // cost comparison, optimization recommendations
-    logger.info('[AutoSuccess:CostOptimization] Analyzing and optimizing costs');
+    console.log('[AutoSuccess:CostOptimization] Analyzing and optimizing costs');
   }
 
   private async runSelfAwarenessCategory(): Promise<void> {
@@ -329,7 +327,7 @@ export class AutoSuccessEngine {
     // assumption validity, prediction accuracy, confirmation bias check,
     // anchoring bias, availability bias, survivorship bias, knowledge
     // boundaries, self-awareness report
-    logger.info('[AutoSuccess:SelfAwareness] Running self-awareness assessment');
+    console.log('[AutoSuccess:SelfAwareness] Running self-awareness assessment');
   }
 
   private async runEvolutionCategory(): Promise<void> {
@@ -337,29 +335,29 @@ export class AutoSuccessEngine {
     // fitness measurement, selection, promotion, history recording,
     // strategy update, rollback monitoring, parameter drift detection,
     // evolution velocity tracking
-    logger.info('[AutoSuccess:Evolution] Running evolution cycle');
+    console.log('[AutoSuccess:Evolution] Running evolution cycle');
   }
 
   // ─── DEPENDENT SYSTEMS ────────────────────────────────────────────────────
 
   private async triggerMonteCarloSimulations(): Promise<void> {
-    logger.info('[HeadySims] Running Monte Carlo validation simulations');
+    console.log('[HeadySims] Running Monte Carlo validation simulations');
   }
 
   private async optimizeResourceAllocation(): Promise<void> {
-    logger.info('[HeadyVinci] Liquid scaling active — optimizing allocation');
+    console.log('[HeadyVinci] Liquid scaling active — optimizing allocation');
   }
 
   private async runSelfAwarenessCheck(): Promise<void> {
-    logger.info('[HeadySoul] Self-awareness check — confidence calibration');
+    console.log('[HeadySoul] Self-awareness check — confidence calibration');
   }
 
   private async runEvolutionCycle(): Promise<void> {
-    logger.info('[HeadyEvolution] Controlled mutation cycle');
+    console.log('[HeadyEvolution] Controlled mutation cycle');
   }
 
   private async recordLearningEvent(category: TaskCategory, error: any): Promise<void> {
-    logger.info('[HeadyVinci] Learning event recorded:', {
+    console.log('[HeadyVinci] Learning event recorded:', {
       category,
       error: error?.message || String(error),
       timestamp: new Date().toISOString(),
@@ -368,7 +366,7 @@ export class AutoSuccessEngine {
   }
 
   private async escalateToHeadyBuddy(category: TaskCategory, error: any): Promise<void> {
-    logger.warn('[HeadyBuddy] ESCALATION — Max failures reached:', {
+    console.warn('[HeadyBuddy] ESCALATION — Max failures reached:', {
       category,
       error: error?.message || String(error),
       threshold: this.maxRetriesTotal,
@@ -401,7 +399,7 @@ async function main(): Promise<void> {
 }
 
 if (require.main === module) {
-  main().catch(logger.error);
+  main().catch(console.error);
 }
 
 export default AutoSuccessEngine;

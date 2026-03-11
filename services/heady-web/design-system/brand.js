@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadySystems Brand Kit — v1.0
  * Shared brand components injected across all Heady™ sites
@@ -80,7 +78,7 @@ const HeadyBrand = (() => {
         // Add favicon
         injectFavicon(config);
 
-        logger.info(`[HeadyBrand] ${config.name} initialized — ${config.domain}`);
+        console.log(`[HeadyBrand] ${config.name} initialized — ${config.domain}`);
     }
 
     function removePerplexityBranding() {

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Fix Determinism Issues
@@ -13,7 +11,7 @@ function fixServiceCount() {
   const servicesDir = path.join(process.cwd(), 'services');
 
   if (!fs.existsSync(servicesDir)) {
-    logger.info('⚠️  Services directory not found');
+    console.log('⚠️  Services directory not found');
     return 0;
   }
 
@@ -23,7 +21,7 @@ function fixServiceCount() {
       return stat.isDirectory() && dir.startsWith('heady-');
     });
 
-  logger.info(`✅ Found ${services.length} service directories`);
+  console.log(`✅ Found ${services.length} service directories`);
   return services.length;
 }
 
@@ -31,7 +29,7 @@ function fixPromptCount() {
   const promptLibPath = path.join(process.cwd(), 'configs/prompts/heady-prompt-library.json');
 
   if (!fs.existsSync(promptLibPath)) {
-    logger.info('⚠️  Prompt library not found');
+    console.log('⚠️  Prompt library not found');
     return { total: 0, categories: 0 };
   }
 
@@ -39,7 +37,7 @@ function fixPromptCount() {
   const categories = Object.keys(promptLib);
   const total = categories.reduce((sum, cat) => sum + promptLib[cat].length, 0);
 
-  logger.info(`✅ Found ${total} prompts across ${categories.length} categories`);
+  console.log(`✅ Found ${total} prompts across ${categories.length} categories`);
   return { total, categories: categories.length };
 }
 
@@ -47,7 +45,7 @@ function updateContextFile(serviceCount, promptData) {
   const contextPath = path.join(process.cwd(), 'docs/heady-context.md');
 
   if (!fs.existsSync(contextPath)) {
-    logger.info('⚠️  Context file not found');
+    console.log('⚠️  Context file not found');
     return;
   }
 
@@ -66,11 +64,11 @@ function updateContextFile(serviceCount, promptData) {
   );
 
   fs.writeFileSync(contextPath, content, 'utf8');
-  logger.info('✅ Context file updated with correct counts');
+  console.log('✅ Context file updated with correct counts');
 }
 
-logger.info('🔧 Fixing Determinism Issues\n');
+console.log('🔧 Fixing Determinism Issues\n');
 const serviceCount = fixServiceCount();
 const promptData = fixPromptCount();
 updateContextFile(serviceCount, promptData);
-logger.info('\n✅ Determinism fixes complete!');
+console.log('\n✅ Determinism fixes complete!');

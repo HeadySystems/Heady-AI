@@ -1,41 +1,17 @@
-node_modules/
-.env
-.env.local
-.env.production
-data/
-!data/.gitkeep
-dist/
-build/
-.vscode/
-.idea/
-*.swp
+
+artifacts/*-report.json
+artifacts/*.zip
+configs/secrets/
+coverage
+dist
 .DS_Store
-Thumbs.db
-*.log
-coverage/
-.nyc_output/
-tmp/
-.shit
-*.shit
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-# In-folder (ingest zips - too large for GitHub)
-in/
-
-
-# Security — sensitive files (added by security-remediation)
-.env.hybrid
-*.pid
-*.bak
-audit_logs.jsonl
-.heady_deploy_log.jsonl
-*.jsonl
->>>>>>> staging/fix-security-and-yaml-deps-9294985698471946789
-
-# Incoming zip processing folder
-in/
-*.crdownload
-=======
->>>>>>> ff90ed86a9ef62b7f4c0a1859df317b5a404ae63
+.env
+.env.*
+.idea
+node_modules
+# Rebuild artifacts
+.turbo
+.vscode/settings.local.json
+.wrangler
+in/heady_bounded_security_pass*.zip
+config/secrets/

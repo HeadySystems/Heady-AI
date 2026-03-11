@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview WisdomStore — Long-term memory of learned patterns, anti-regression
  * guards, and pipeline knowledge for the Heady™ Latent OS.
@@ -371,7 +369,7 @@ export class WisdomStore {
   }
 
   /**
-   * Return the top-N optimizations ranked by CSL impact score.
+   * Return the top-N optimizations evaluated as concurrent equals by CSL impact score.
    *
    * @param {number} [n=DEFAULT_TOP_N] - Number of results to return (default fib(6)=8).
    * @returns {Optimization[]}
@@ -599,7 +597,7 @@ export class WisdomStore {
    */
   _log(msg, meta = {}) {
     if (this._verbose) {
-      logger.info(`[WisdomStore] ${msg}`, meta);
+      console.log(`[WisdomStore] ${msg}`, meta);
     }
   }
 }

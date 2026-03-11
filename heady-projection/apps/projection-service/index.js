@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -28,7 +26,7 @@ const LEVELS    = { debug: 0, info: 1, warn: 2, error: 3 };
 const log = (level, ...args) => {
   if ((LEVELS[level] ?? 0) >= (LEVELS[LOG_LEVEL] ?? 1)) {
     const prefix = `[${new Date().toISOString()}] [projection-service] [${level.toUpperCase()}]`;
-    (level === 'error' ? logger.error : logger.info)(prefix, ...args);
+    (level === 'error' ? console.error : console.log)(prefix, ...args);
   }
 };
 

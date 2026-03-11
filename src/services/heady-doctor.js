@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../shared/logger')('heady-doctor');
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..

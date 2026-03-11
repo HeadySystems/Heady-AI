@@ -1,19 +1,8 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
-COPY tsconfig.json ./
-COPY src/ ./src/
-RUN npx tsc
-
-FROM node:20-alpine
-RUN addgroup -g 1001 heady && adduser -u 1001 -G heady -s /bin/sh -D heady
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
-USER heady
-EXPOSE 3365
-HEALTHCHECK --interval=8s --timeout=5s --retries=5 --start-period=13s \
-  CMD wget -qO- http://127.0.0.1:3365/health || exit 1
-CMD ["node", "dist/index.js"]
+RUN npm ci --omit=dev
+COPY . .
+EXPOSE 3417
+ENV PORT=3417
+CMD ["node", "server.js"]

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -563,7 +561,7 @@ class SubscriptionRegistry {
  * mesh.registerAgent('MUSE',  { capabilities: ['create', 'content'] });
  *
  * mesh.subscribe('JULES', 'code.review.requested', async (msg) => {
- *   logger.info('JULES got review request:', msg.payload);
+ *   console.log('JULES got review request:', msg.payload);
  * });
  *
  * // MUSE requests a code review without knowing JULES exists

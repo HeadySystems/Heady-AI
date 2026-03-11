@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ∞ Heady™ Embedding Provider — Multi-Backend 384D Embedding Generation
  * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
@@ -27,7 +25,7 @@ const {
 // ---------------------------------------------------------------------------
 
 /** Cache capacity (number of unique texts). */
-const DEFAULT_CACHE_SIZE = 2584; // fib(18) = 2584
+const DEFAULT_CACHE_SIZE = 2048;
 
 /** Default retry attempts per backend. */
 const DEFAULT_RETRIES = 2;
@@ -246,7 +244,7 @@ class EmbeddingProvider {
    * @param {Object} [options]
    * @param {Object} [options.cloudflare] - Cloudflare config { accountId, apiToken, model }.
    * @param {Object} [options.openai] - OpenAI config { apiKey, model, dimensions }.
-   * @param {number} [options.cacheSize=2584] - LRU cache capacity (fib(18)).
+   * @param {number} [options.cacheSize=2048] - LRU cache capacity.
    * @param {number} [options.retries=2] - Retry attempts per backend.
    * @param {number} [options.retryDelayMs=250] - Delay between retries (ms).
    * @param {string[]} [options.backendOrder] - Ordered backend names to try.
@@ -262,7 +260,7 @@ class EmbeddingProvider {
     this.retryDelayMs = options.retryDelayMs || RETRY_DELAY_MS;
     this.alwaysLocal = options.alwaysLocal || false;
 
-    // Backend priority order.
+    // Backend concurrent-equals execution order.
     this.backendOrder = options.backendOrder || [
       Backend.CLOUDFLARE,
       Backend.OPENAI,
@@ -419,7 +417,7 @@ class EmbeddingProvider {
         this._stats.failures += 1;
         // Log and try next backend.
         if (process.env.NODE_ENV !== 'test') {
-          logger.warn(`[EmbeddingProvider] Backend "${backend}" failed: ${err.message}. Falling back.`);
+          console.warn(`[EmbeddingProvider] Backend "${backend}" failed: ${err.message}. Falling back.`);
         }
       }
     }

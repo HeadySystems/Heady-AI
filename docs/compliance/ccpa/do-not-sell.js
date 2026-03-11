@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -85,7 +83,7 @@ const gpcMiddleware = async (req, res, next) => {
         req.app.locals.redisClient, req.app.locals.pgClient, req.app.locals.auditLogger);
     } catch (err) {
       // GPC errors should not block the request
-      logger.error('[GPC] Failed to auto-honor GPC signal:', err.message);
+      console.error('[GPC] Failed to auto-honor GPC signal:', err.message);
     }
   }
 

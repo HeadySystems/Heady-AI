@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -38,7 +36,7 @@ class ProjectHistoryIngestor {
         this._ingestPatterns();
         this._ingestBranches();
         const duration = Date.now() - start;
-        logger.info(`  📚 Project history: ${this.stats.commits} commits, ${this.stats.files} files, ${this.stats.docs} docs, ${this.stats.patterns} patterns (${duration}ms)`);
+        console.log(`  📚 Project history: ${this.stats.commits} commits, ${this.stats.files} files, ${this.stats.docs} docs, ${this.stats.patterns} patterns (${duration}ms)`);
         return this.stats;
     }
 
@@ -69,7 +67,7 @@ class ProjectHistoryIngestor {
                 this.stats.commits += batch.length;
             }
         } catch (err) {
-            logger.error(`  ⚠ Git commit ingest failed: ${err.message}`);
+            console.error(`  ⚠ Git commit ingest failed: ${err.message}`);
         }
     }
 

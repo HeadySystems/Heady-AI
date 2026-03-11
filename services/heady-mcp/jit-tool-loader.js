@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * CONN-001: MCP Gateway with JIT Tool Loading
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('jit-tool-loader');
 
 class JITToolLoader {
     constructor(options = {}) {

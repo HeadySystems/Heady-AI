@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Quality Gate Validator for Heady™Battle Coding Workflows
  * 
@@ -66,7 +64,7 @@ export class QualityGateValidator {
    * Runs all quality gates and determines pass/fail
    */
   async validate(code: string): Promise<ValidationResult> {
-    logger.info('[QualityGate] Starting validation with ${this.rules.length} rules');
+    console.log('[QualityGate] Starting validation with ${this.rules.length} rules');
     const startTime = Date.now();
 
     const results: RuleResult[] = [];
@@ -94,7 +92,7 @@ export class QualityGateValidator {
 
         return result;
       } catch (error) {
-        logger.error(`[QualityGate] Rule ${rule.name} failed:`, error);
+        console.error(`[QualityGate] Rule ${rule.name} failed:`, error);
         return {
           passed: false,
           score: 0,
@@ -128,7 +126,7 @@ export class QualityGateValidator {
       autoFixable: allViolations.filter(v => v.autoFixable).length
     };
 
-    logger.info(`[QualityGate] Validation ${passed ? 'PASSED' : 'FAILED'} (score: ${overallScore.toFixed(2)})`);
+    console.log(`[QualityGate] Validation ${passed ? 'PASSED' : 'FAILED'} (score: ${overallScore.toFixed(2)})`);
 
     return {
       passed,

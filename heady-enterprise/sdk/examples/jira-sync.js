@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -176,12 +174,12 @@ const jiraIssueToHeadyTask = (issue) => ({
  */
 const syncJiraIssue = async (issue) => {
   const issueKey = issue.key;
-  logger.info(`[Jira] Syncing ${issueKey}: ${issue.fields.summary}`);
+  console.log(`[Jira] Syncing ${issueKey}: ${issue.fields.summary}`);
 
   try {
     // Submit to Heady™ Conductor
     const task = await heady.conductor.submitTask(jiraIssueToHeadyTask(issue));
-    logger.info(`[Jira] Task submitted for ${issueKey}: ${task.taskId}`);
+    console.log(`[Jira] Task submitted for ${issueKey}: ${task.taskId}`);
 
     // Store mapping in HeadyOS memory
     await heady.memory.store(
@@ -201,12 +199,12 @@ const syncJiraIssue = async (issue) => {
 
       await postJiraComment(issueKey, analysisText);
       await addJiraLabel(issueKey, 'heady-analyzed');
-      logger.info(`[Jira] Analysis posted back to ${issueKey}`);
+      console.log(`[Jira] Analysis posted back to ${issueKey}`);
     }
 
     return { issueKey, taskId: task.taskId, status: completed.status };
   } catch (err) {
-    logger.error(`[Jira] Error syncing ${issueKey}:`, err.message);
+    console.error(`[Jira] Error syncing ${issueKey}:`, err.message);
     return { issueKey, error: err.message };
   }
 };
@@ -215,9 +213,9 @@ const syncJiraIssue = async (issue) => {
  * Batch sync Jira issues to Heady™.
  */
 const batchSync = async (projectKey) => {
-  logger.info(`[Jira] Starting batch sync for project ${projectKey}`);
+  console.log(`[Jira] Starting batch sync for project ${projectKey}`);
   const issues = await fetchJiraIssues(projectKey);
-  logger.info(`[Jira] Found ${issues.length} issues to sync`);
+  console.log(`[Jira] Found ${issues.length} issues to sync`);
 
   // Process in Fibonacci-sized batches to avoid overwhelming APIs
   const results = [];
@@ -247,7 +245,7 @@ app.post('/webhooks/jira', async (req, res) => {
   const event = req.body;
   const webhookEvent = event.webhookEvent;
 
-  logger.info(`[Jira] Webhook received: ${webhookEvent}`);
+  console.log(`[Jira] Webhook received: ${webhookEvent}`);
 
   try {
     let result = null;
@@ -260,12 +258,12 @@ app.post('/webhooks/jira', async (req, res) => {
         }
         break;
       default:
-        logger.info(`[Jira] Unhandled webhook event: ${webhookEvent}`);
+        console.log(`[Jira] Unhandled webhook event: ${webhookEvent}`);
     }
 
     res.json({ success: true, event: webhookEvent, result: result || 'acknowledged' });
   } catch (err) {
-    logger.error('[Jira] Webhook error:', err);
+    console.error('[Jira] Webhook error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -293,20 +291,20 @@ if (process.env.ENABLE_POLLING === 'true') {
   const runScheduledSync = async () => {
     try {
       const results = await batchSync(JIRA_CONFIG.projectKey);
-      logger.info('[Jira] Scheduled sync complete:', results);
+      console.log('[Jira] Scheduled sync complete:', results);
     } catch (err) {
-      logger.error('[Jira] Scheduled sync error:', err);
+      console.error('[Jira] Scheduled sync error:', err);
     }
     // Re-schedule with fib(7)=13-minute interval
     setTimeout(runScheduledSync, JIRA_CONFIG.SYNC_INTERVAL_MS);
   };
   setTimeout(runScheduledSync, fib(5) * 1000); // Start after fib(5)=5 seconds
-  logger.info(`[Jira] Scheduled sync enabled (every ${fib(7)} minutes)`);
+  console.log(`[Jira] Scheduled sync enabled (every ${fib(7)} minutes)`);
 }
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
-  logger.info(`[Jira] Heady-Jira sync service running on port ${PORT}`);
+  console.log(`[Jira] Heady-Jira sync service running on port ${PORT}`);
 });
 
 module.exports = { app, batchSync, syncJiraIssue, jiraIssueToHeadyTask };

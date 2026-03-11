@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -17,7 +15,7 @@ const logger = pino();
  *   – hc-full-pipeline.js:47 MAX_CONCURRENT_RUNS = 10
  *   – bee-factory.js:35      BEES_DIR (hardcoded __dirname)
  *   – heady-conductor.js:22  MAX_BEES = 50
- *   – ternary-logic.js:8     PHI = 1.6180339887 (sacred constant — CSL Cognitive Filter)
+ *   – ternary-logic.js:8     PHI = 1.6180339887 (sacred constant — read-only)
  *
  * Architecture
  * ────────────
@@ -60,14 +58,15 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('heady-config-server');
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-const http = require('http');
-const https = require('https');
+const fs           = require('fs');
+const path         = require('path');
+const crypto       = require('crypto');
+const http         = require('http');
+const https        = require('https');
 
 // ─── Golden ratio — sacred, immutable, cannot be overridden at runtime ────────
 const PHI = 1.6180339887;
@@ -76,7 +75,7 @@ const PHI = 1.6180339887;
 const GCP_POLL_INTERVAL_MS = Math.round(PHI * 60_000);
 
 // ─── Secret Manager project config ───────────────────────────────────────────
-const GCP_PROJECT = process.env.GCP_PROJECT || 'heady-prod-609590223909';
+const GCP_PROJECT    = process.env.GCP_PROJECT    || 'heady-prod-609590223909';
 const GCP_SECRET_IDS = (process.env.HEADY_SECRETS || '').split(',').filter(Boolean);
 
 // ─── Default config file path ─────────────────────────────────────────────────
@@ -95,7 +94,7 @@ const DEFAULTS = Object.freeze({
     type: 'number',
     readonly: true,
     description: 'Golden ratio φ — used for timing, routing, and load-balancing.',
-    sourceFile: 'ternary-logic.js (CSLCognitiveFilter)',
+    sourceFile: 'ternary-logic.js',
     sourceLine: 8,
   },
 
@@ -284,12 +283,12 @@ const DEFAULTS = Object.freeze({
     sourceLine: 20,
   },
 
-  // ── ternary-logic.js (CSLCognitiveFilter) ─────────────────────────────────────────────
+  // ── ternary-logic.js ─────────────────────────────────────────────────────────
   'ternaryLogic.shadowIndexTtlMs': {
     value: 300_000,   // 5 minutes
     type: 'number',
     description: 'TTL for shadow index entries (fixes JSON.stringify comparison leak).',
-    sourceFile: 'ternary-logic.js (CSLCognitiveFilter)',
+    sourceFile: 'ternary-logic.js',
     sourceLine: 60,
   },
 
@@ -428,10 +427,10 @@ const DEFAULTS = Object.freeze({
 function coerce(raw, type) {
   if (raw === undefined || raw === null) return raw;
   switch (type) {
-    case 'number': return Number(raw);
+    case 'number':  return Number(raw);
     case 'boolean': return raw === 'true' || raw === true || raw === 1;
-    case 'string': return String(raw);
-    default: return raw;
+    case 'string':  return String(raw);
+    default:        return raw;
   }
 }
 
@@ -480,12 +479,12 @@ class ConfigServer extends EventEmitter {
     this.setMaxListeners(100);
 
     this._opts = {
-      configFile: opts.configFile ?? DEFAULT_CONFIG_FILE,
-      gcpProject: opts.gcpProject ?? GCP_PROJECT,
-      gcpSecretIds: opts.gcpSecretIds ?? GCP_SECRET_IDS,
+      configFile:     opts.configFile     ?? DEFAULT_CONFIG_FILE,
+      gcpProject:     opts.gcpProject     ?? GCP_PROJECT,
+      gcpSecretIds:   opts.gcpSecretIds   ?? GCP_SECRET_IDS,
       pollIntervalMs: opts.pollIntervalMs ?? GCP_POLL_INTERVAL_MS,
       enableFileWatch: opts.enableFileWatch !== false,
-      enableGcpPoll: opts.enableGcpPoll !== false,
+      enableGcpPoll:   opts.enableGcpPoll  !== false,
     };
 
     // Resolved config cache — merged across all layers
@@ -523,15 +522,15 @@ class ConfigServer extends EventEmitter {
     this._rebuildCache();
 
     if (this._opts.enableFileWatch) this._startFileWatch();
-    if (this._opts.enableGcpPoll) this._startGcpPoll();
+    if (this._opts.enableGcpPoll)   this._startGcpPoll();
 
     this.emit('config:ready', { keys: Object.keys(this._cache).length });
     return this;
   }
 
   stop() {
-    if (this._fsWatcher) { this._fsWatcher.close(); this._fsWatcher = null; }
-    if (this._gcpPollTimer) { clearInterval(this._gcpPollTimer); this._gcpPollTimer = null; }
+    if (this._fsWatcher)   { this._fsWatcher.close();        this._fsWatcher   = null; }
+    if (this._gcpPollTimer){ clearInterval(this._gcpPollTimer); this._gcpPollTimer = null; }
     this._started = false;
     this.emit('config:stopped');
   }
@@ -670,7 +669,7 @@ class ConfigServer extends EventEmitter {
    */
   diff() {
     const effective = this.getAll({ includeSecrets: false });
-    const defaults = {};
+    const defaults  = {};
     for (const [k, meta] of Object.entries(DEFAULTS)) {
       defaults[k] = meta.secret ? '[REDACTED]' : meta.value;
     }
@@ -692,7 +691,7 @@ class ConfigServer extends EventEmitter {
   router() {
     // Lazy-require Express to avoid hard dependency at module load time
     const express = require('express');
-    const router = express.Router();
+    const router  = express.Router();
 
     // Health probe — no auth required
     router.get('/health', (_req, res) => {
@@ -956,5 +955,5 @@ if (require.main === module) {
 
     logger.info('Diff vs defaults     :', cfg.diff());
     cfg.stop();
-  })().catch(logger.error);
+  })().catch(console.error);
 }

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview CSL Benchmark Suite
  *
@@ -780,31 +778,31 @@ function runBenchmarks(options = {}) {
   const nBootstrap = options.nBootstrap || fib(12); // fib(12) = 144 (was 200)
   const verbose = options.verbose !== false;
 
-  if (verbose) logger.info('[CSL Benchmark] Starting benchmark suite...');
+  if (verbose) console.log('[CSL Benchmark] Starting benchmark suite...');
 
   const allResults = {};
 
-  if (verbose) logger.info('[CSL Benchmark] Task 1: Binary Classification...');
+  if (verbose) console.log('[CSL Benchmark] Task 1: Binary Classification...');
   allResults['Task 1: Binary Classification'] =
     benchmarkBinaryClassification(dim, nSamples, nBootstrap);
 
-  if (verbose) logger.info('[CSL Benchmark] Task 2: Multi-class Routing (8-class)...');
+  if (verbose) console.log('[CSL Benchmark] Task 2: Multi-class Routing (8-class)...');
   allResults['Task 2: Multi-class Routing'] =
     benchmarkMulticlassRouting(dim, nSamples * 2, nBootstrap);
 
-  if (verbose) logger.info('[CSL Benchmark] Task 3: Semantic Filtering...');
+  if (verbose) console.log('[CSL Benchmark] Task 3: Semantic Filtering...');
   allResults['Task 3: Semantic Filtering'] =
     benchmarkSemanticFiltering(dim, nSamples, nBootstrap);
 
-  if (verbose) logger.info('[CSL Benchmark] Task 4: Semantic Negation...');
+  if (verbose) console.log('[CSL Benchmark] Task 4: Semantic Negation...');
   allResults['Task 4: Semantic Negation'] =
     benchmarkSemanticNegation(dim, Math.floor(nSamples / 2), nBootstrap);
 
   const report = generateMarkdownReport(allResults);
 
   if (verbose) {
-    logger.info('\n[CSL Benchmark] Results:');
-    logger.info(report);
+    console.log('\n[CSL Benchmark] Results:');
+    console.log(report);
   }
 
   return { results: allResults, report };
@@ -852,5 +850,5 @@ if (require.main === module) {
   fs.writeFileSync(path.join(outDir, `benchmark_${ts}.json`), JSON.stringify(results, null, 2));
   fs.writeFileSync(path.join(outDir, `benchmark_${ts}.md`), report);
 
-  logger.info(`\nResults saved to benchmarks/results/benchmark_${ts}.{json,md}`);
+  console.log(`\nResults saved to benchmarks/results/benchmark_${ts}.{json,md}`);
 }

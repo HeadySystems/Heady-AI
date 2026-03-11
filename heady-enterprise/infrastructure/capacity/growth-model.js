@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -318,31 +316,31 @@ if (require.main === module) {
   const scenario = process.argv[2] || 'moderate';
   const plan = generateCapacityPlan(scenario);
 
-  logger.info('\n=== HeadySystems Capacity Plan ===');
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Scenario: ${scenario} (${(GROWTH_RATES[scenario] * 100).toFixed(2)}%/month)`);
-  logger.info(`Generated: ${plan.generatedAt}`);
-  logger.info('\nPlanning Horizons: fib(4)=3, fib(5)=5, fib(7)=13, fib(9)=34 months\n');
+  console.log('\n=== HeadySystems Capacity Plan ===');
+  console.log(`φ = ${PHI}`);
+  console.log(`Scenario: ${scenario} (${(GROWTH_RATES[scenario] * 100).toFixed(2)}%/month)`);
+  console.log(`Generated: ${plan.generatedAt}`);
+  console.log('\nPlanning Horizons: fib(4)=3, fib(5)=5, fib(7)=13, fib(9)=34 months\n');
 
   for (const [key, proj] of Object.entries(plan.projections)) {
     const months = parseInt(key.split('_')[1]);
-    logger.info(`--- ${months} Months (${proj.horizon}) ---`);
-    logger.info(`  MAU: ${proj.mau.toLocaleString()}`);
-    logger.info(`  Peak RPS: ${proj.peakRps}`);
-    logger.info(`  heady-brain instances: ${proj.resources.cloudRun.brain.min}–${proj.resources.cloudRun.brain.max}`);
-    logger.info(`  heady-web instances:   ${proj.resources.cloudRun.web.min}–${proj.resources.cloudRun.web.max}`);
-    logger.info(`  Redis memory:          ${proj.resources.redis.recommendedMb}MB`);
-    logger.info(`  Postgres storage:      ${proj.resources.postgres.totalGb}GB`);
-    logger.info(`  Max agents:            ${proj.resources.agents.fibMilestone}`);
-    logger.info(`  Est. monthly cost:     ~$${
+    console.log(`--- ${months} Months (${proj.horizon}) ---`);
+    console.log(`  MAU: ${proj.mau.toLocaleString()}`);
+    console.log(`  Peak RPS: ${proj.peakRps}`);
+    console.log(`  heady-brain instances: ${proj.resources.cloudRun.brain.min}–${proj.resources.cloudRun.brain.max}`);
+    console.log(`  heady-web instances:   ${proj.resources.cloudRun.web.min}–${proj.resources.cloudRun.web.max}`);
+    console.log(`  Redis memory:          ${proj.resources.redis.recommendedMb}MB`);
+    console.log(`  Postgres storage:      ${proj.resources.postgres.totalGb}GB`);
+    console.log(`  Max agents:            ${proj.resources.agents.fibMilestone}`);
+    console.log(`  Est. monthly cost:     ~$${
       Object.values(proj.estimatedMonthlyCostUsd).reduce((a, b) => a + b, 0).toFixed(0)
     }`);
-    logger.info();
+    console.log();
   }
 
   // Export as JSON for CI/CD capacity gates
   if (process.argv.includes('--json')) {
-    logger.info(JSON.stringify(plan, null, 2));
+    console.log(JSON.stringify(plan, null, 2));
   }
 }
 

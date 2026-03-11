@@ -134,7 +134,7 @@ correct scope of work.
 - `try/catch` that swallows errors silently (empty catch blocks)
 - Hardcoded values that should be phi-scaled configuration
 - "Temporary" files that become permanent fixtures
-- Comments like `// HACK`, `// FIXME`, `// NOTE: do this properly later`
+- Comments like `// HACK`, `// FIXME`, `// TODO: do this properly later`
 - Disabling tests that fail instead of fixing the code they test
 - Catching all errors and returning HTTP 200
 - Adding `!important` to CSS to override specificity issues
@@ -168,7 +168,7 @@ correct scope of work.
 | Disable CORS for convenience | Configure CORS properly per domain using Cloudflare Access rules |
 | "Just restart the service" when it hangs | Circuit breaker + graceful recovery + root cause investigation |
 | Stub that returns mock data permanently | Replace stub with real implementation backed by actual data source |
-| `// NOTE: add validation later` | Add validation NOW using Zod schemas |
+| `// TODO: add validation later` | Add validation NOW using Zod schemas |
 | Inline `console.log` for debugging | Structured logging via `observability-kernel` with correlation IDs |
 | Retry infinitely without backoff | Phi-exponential backoff with circuit breaker and dead letter queue |
 
@@ -280,7 +280,7 @@ errors, and it can be deployed to production within one CI/CD cycle.
 
 After every implementation:
 
-- No `// NOTE` comments remain
+- No `// TODO` comments remain
 - No empty function bodies exist
 - No unused imports are present
 - No commented-out code blocks survive

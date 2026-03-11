@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -388,7 +386,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
 
     this._started = true;
     this.emit('gateway:started', { port });
-    logger.info(`[HeadyApiGatewayV2] Listening on port ${port}`);
+    console.log(`[HeadyApiGatewayV2] Listening on port ${port}`);
     return this;
   }
 
@@ -997,11 +995,11 @@ if (require.main === module) {
 
     // Graceful shutdown
     const shutdown = async (sig) => {
-      logger.info(`[HeadyApiGatewayV2] ${sig} received — draining connections...`);
+      console.log(`[HeadyApiGatewayV2] ${sig} received — draining connections...`);
       await gw.stop();
       process.exit(0);
     };
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT',  () => shutdown('SIGINT'));
-  })().catch((err) => { logger.error(err); process.exit(1); });
+  })().catch((err) => { console.error(err); process.exit(1); });
 }

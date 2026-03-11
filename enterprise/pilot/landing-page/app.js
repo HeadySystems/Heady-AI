@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyOS Founder's Pilot — Landing Page Application
  * φ = 1.618033988749895
@@ -429,7 +427,7 @@ const API_ENDPOINT = 'https://api.headyme.com/pilot/signup';
       }
 
     } catch (err) {
-      logger.error('[HeadyOS] Form submission failed:', err);
+      console.error('[HeadyOS] Form submission failed:', err);
 
       // Show error on submit button, re-enable
       submitBtn.disabled = false;

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -675,13 +673,13 @@ class SelfHealingLifecycle extends EventEmitter {
     this._driftCheckIntervalMs = opts.driftCheckIntervalMs ?? DRIFT_CHECK_INTERVAL_MS;
 
     /**
-     * Logger function. Defaults to logger.info with ISO timestamp prefix.
+     * Logger function. Defaults to console.log with ISO timestamp prefix.
      * @type {Function}
      */
     this._log = opts.logger ?? ((level, msg, ctx) => {
       const ts = new Date().toISOString();
       const ctxStr = ctx ? ` ${JSON.stringify(ctx)}` : '';
-      logger.info(`[${ts}] [${level.toUpperCase()}] ${msg}${ctxStr}`);
+      console.log(`[${ts}] [${level.toUpperCase()}] ${msg}${ctxStr}`);
     });
 
     /** @type {Map<string, NodeJS.Timeout>} per-component drift check timers */

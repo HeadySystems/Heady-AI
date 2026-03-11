@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -159,7 +157,7 @@ describe('CircuitBreakerManager', () => {
     const circuit = cbm.getCircuit('test-exec');
     // Repeated failures should open circuit
     for (let i = 0; i < 3; i++) {
-      try { await cbm.execute('test-exec', () => Promise.reject(new Error('boom'))); } catch (_) {}
+      try { await cbm.execute('test-exec', () => Promise.reject(new Error('boom'))); } catch (err) { /* structured-logger: emit error */ }
     }
     expect(circuit.state).toBe(STATES.OPEN);
   });
@@ -753,6 +751,6 @@ describe('BaseProvider', () => {
 
 // ─── Polyfills for running outside Jest ───────────────────────────────────────
 if (typeof describe === 'undefined') {
-  logger.info('[HeadyInfer Tests] Run with: npx jest __tests__/heady-infer.test.js');
-  logger.info('[HeadyInfer Tests] Or: NODE_OPTIONS="--experimental-vm-modules" npx jest');
+  console.log('[HeadyInfer Tests] Run with: npx jest __tests__/heady-infer.test.js');
+  console.log('[HeadyInfer Tests] Or: NODE_OPTIONS="--experimental-vm-modules" npx jest');
 }

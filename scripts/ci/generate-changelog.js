@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/generate-changelog.js
@@ -89,7 +87,7 @@ function getCommitLog(from, to) {
     );
     return log.trim().split('\n').filter(Boolean);
   } catch (err) {
-    logger.error('Error fetching git log:', err.message);
+    console.error('Error fetching git log:', err.message);
     return [];
   }
 }
@@ -317,15 +315,15 @@ function main() {
   const args = parseArgs(process.argv);
 
   if (!args.from) {
-    logger.error('Error: --from <ref> is required');
+    console.error('Error: --from <ref> is required');
     process.exit(1);
   }
 
-  logger.info(`Generating changelog: ${args.from} → ${args.to}`);
+  console.log(`Generating changelog: ${args.from} → ${args.to}`);
 
   // Fetch commits
   const rawLines = getCommitLog(args.from, args.to);
-  logger.info(`Found ${rawLines.length} commits`);
+  console.log(`Found ${rawLines.length} commits`);
 
   // Parse commits
   const commits = rawLines
@@ -338,7 +336,7 @@ function main() {
   // Summarize groups
   for (const [type, list] of groups) {
     const typeDef = COMMIT_TYPES[type] || { label: type };
-    logger.info(`  ${typeDef.label}: ${list.length} commits`);
+    console.log(`  ${typeDef.label}: ${list.length} commits`);
   }
 
   // Generate output
@@ -355,13 +353,13 @@ function main() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
   fs.writeFileSync(args.output, output, 'utf8');
-  logger.info(`Changelog written to: ${args.output}`);
+  console.log(`Changelog written to: ${args.output}`);
 
   // Also print to stdout for CI capture
-  logger.info('\n--- CHANGELOG ---');
-  logger.info(output.substring(0, 2000));
+  console.log('\n--- CHANGELOG ---');
+  console.log(output.substring(0, 2000));
   if (output.length > 2000) {
-    logger.info(`... (${output.length - 2000} more chars)`);
+    console.log(`... (${output.length - 2000} more chars)`);
   }
 }
 

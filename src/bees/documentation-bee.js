@@ -30,11 +30,11 @@ function getWork(ctx = {}) {
             const content = fs.readFileSync(fullPath, 'utf8');
             const ageDays = (Date.now() - stats.mtimeMs) / 86400000;
             const wordCount = content.split(/\s+/).length;
-            const hasNOTEs = (content.match(/NOTE|FIXME|PLACEHOLDER/gi) || []).length;
+            const hasTODOs = (content.match(/TODO|FIXME|PLACEHOLDER/gi) || []).length;
             return {
                 bee: domain, action: `check-${doc.name}`,
-                exists: true, ageDays: +ageDays.toFixed(1), wordCount, hasNOTEs,
-                stale: ageDays > 30, needsUpdate: hasNOTEs > 0 || ageDays > 30,
+                exists: true, ageDays: +ageDays.toFixed(1), wordCount, hasTODOs,
+                stale: ageDays > 30, needsUpdate: hasTODOs > 0 || ageDays > 30,
             };
         } catch {
             return {

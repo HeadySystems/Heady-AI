@@ -223,25 +223,25 @@ function Start-CleanBuild {
     $pythonVersion = python --version 2>&1
     Write-Status "Python: $pythonVersion" "Green"
     
-    # Check for api.headysystems.com references
-    Write-Status "🔍 Scanning for api.headysystems.com references..." "Cyan"
-    $api.headysystems.comRefs = @()
+    # Check for localhost references
+    Write-Status "🔍 Scanning for localhost references..." "Cyan"
+    $localhostRefs = @()
     
     $jsFiles = Get-ChildItem -Path "src" -Filter "*.js" -Recurse -ErrorAction SilentlyContinue
     $tsFiles = Get-ChildItem -Path "src" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue
     
     foreach ($file in ($jsFiles + $tsFiles)) {
         $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
-        if ($content -match "api.headysystems.com|127\.0\.0\.1|0\.0\.0\.0") {
-            $api.headysystems.comRefs += $file.FullName
+        if ($content -match "localhost|127\.0\.0\.1|0\.0\.0\.0") {
+            $localhostRefs += $file.FullName
         }
     }
     
-    if ($api.headysystems.comRefs.Count -gt 0) {
-        Write-Status "⚠️  Found $($api.headysystems.comRefs.Count) files with api.headysystems.com references" "Yellow"
-        $api.headysystems.comRefs | ForEach-Object { Write-Status "  - $_" "Yellow" }
+    if ($localhostRefs.Count -gt 0) {
+        Write-Status "⚠️  Found $($localhostRefs.Count) files with localhost references" "Yellow"
+        $localhostRefs | ForEach-Object { Write-Status "  - $_" "Yellow" }
     } else {
-        Write-Status "✅ No api.headysystems.com references found in source code" "Green"
+        Write-Status "✅ No localhost references found in source code" "Green"
     }
     
     # Phase 2: Clean Dependencies
@@ -406,7 +406,7 @@ trap {
     # Alert the user
     Write-Host ""
     Write-Status "🔔 ALERT: Build requires manual intervention" "Magenta"
-    Write-Status "Check logs and fix the issue before retrying." "Yellow"
+    Write-Status "Check logs and fix the issue before retrying" "Yellow"
     
     exit 1
 }

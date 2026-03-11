@@ -24,8 +24,6 @@ const path = require("path");
 const crypto = require("crypto");
 const yaml = require("js-yaml");
 const EventEmitter = require("events");
-const ColorfulLogger = require("./hc_colorful_logger");
-const log = new ColorfulLogger({ level: "info" });
 
 const CONFIGS_DIR = path.join(__dirname, "..", "configs");
 const LOGS_DIR = path.join(__dirname, "..");
@@ -33,7 +31,7 @@ const PIPELINE_LOG = path.join(LOGS_DIR, "hc_pipeline.log");
 const CACHE_DIR = path.join(__dirname, "..", ".heady_cache");
 const TASK_CACHE_FILE = path.join(CACHE_DIR, "pipeline_task_cache.json");
 const CACHE_TTL_MS = 3600000; // 1 hour
-const CACHE_MAX_ENTRIES = 233; // fib(13) = 233
+const CACHE_MAX_ENTRIES = 200;
 
 // ─── CONFIG LOADER ──────────────────────────────────────────────────────────
 
@@ -60,16 +58,16 @@ function loadAllConfigs() {
     concepts: loadYaml("concepts-index.yaml"),
   };
   // Optional configs — new pipeline capabilities
-  try { configs.appReadiness = loadYaml("app-readiness.yaml"); } catch (err) { log.warning("Optional config not found: app-readiness.yaml", { error: err.message }); configs.appReadiness = {}; }
-  try { configs.headyAutoIDE = loadYaml("heady-auto-ide.yaml"); } catch (err) { log.warning("Optional config not found: heady-auto-ide.yaml", { error: err.message }); configs.headyAutoIDE = {}; }
-  try { configs.buildPlaybook = loadYaml("build-playbook.yaml"); } catch (err) { log.warning("Optional config not found: build-playbook.yaml", { error: err.message }); configs.buildPlaybook = {}; }
-  try { configs.agenticCoding = loadYaml("agentic-coding.yaml"); } catch (err) { log.warning("Optional config not found: agentic-coding.yaml", { error: err.message }); configs.agenticCoding = {}; }
-  try { configs.publicDomainIntegration = loadYaml("public-domain-integration.yaml"); } catch (err) { log.warning("Optional config not found: public-domain-integration.yaml", { error: err.message }); configs.publicDomainIntegration = {}; }
-  try { configs.activationManifest = loadYaml("activation-manifest.yaml"); } catch (err) { log.warning("Optional config not found: activation-manifest.yaml", { error: err.message }); configs.activationManifest = {}; }
-  try { configs.monteCarlo = loadYaml("monte-carlo-scheduler.yaml"); } catch (err) { log.warning("Optional config not found: monte-carlo-scheduler.yaml", { error: err.message }); configs.monteCarlo = {}; }
-  try { configs.selfAwareness = loadYaml("system-self-awareness.yaml"); } catch (err) { log.warning("Optional config not found: system-self-awareness.yaml", { error: err.message }); configs.selfAwareness = {}; }
-  try { configs.connectionIntegrity = loadYaml("connection-integrity.yaml"); } catch (err) { log.warning("Optional config not found: connection-integrity.yaml", { error: err.message }); configs.connectionIntegrity = {}; }
-  try { configs.extensionPricing = loadYaml("extension-pricing.yaml"); } catch (err) { log.warning("Optional config not found: extension-pricing.yaml", { error: err.message }); configs.extensionPricing = {}; }
+  try { configs.appReadiness = loadYaml("app-readiness.yaml"); } catch (_) { configs.appReadiness = {}; }
+  try { configs.headyAutoIDE = loadYaml("heady-auto-ide.yaml"); } catch (_) { configs.headyAutoIDE = {}; }
+  try { configs.buildPlaybook = loadYaml("build-playbook.yaml"); } catch (_) { configs.buildPlaybook = {}; }
+  try { configs.agenticCoding = loadYaml("agentic-coding.yaml"); } catch (_) { configs.agenticCoding = {}; }
+  try { configs.publicDomainIntegration = loadYaml("public-domain-integration.yaml"); } catch (_) { configs.publicDomainIntegration = {}; }
+  try { configs.activationManifest = loadYaml("activation-manifest.yaml"); } catch (_) { configs.activationManifest = {}; }
+  try { configs.monteCarlo = loadYaml("monte-carlo-scheduler.yaml"); } catch (_) { configs.monteCarlo = {}; }
+  try { configs.selfAwareness = loadYaml("system-self-awareness.yaml"); } catch (_) { configs.selfAwareness = {}; }
+  try { configs.connectionIntegrity = loadYaml("connection-integrity.yaml"); } catch (_) { configs.connectionIntegrity = {}; }
+  try { configs.extensionPricing = loadYaml("extension-pricing.yaml"); } catch (_) { configs.extensionPricing = {}; }
   try { configs.headyBuddy = loadYaml("heady-buddy.yaml"); } catch (_) { configs.headyBuddy = {}; }
   return configs;
 }
@@ -416,71 +414,12 @@ function registerTaskHandler(taskName, handler) {
   taskHandlers.set(taskName, handler);
 }
 
-// ── Compute routing: GPU tasks → Colab cluster, distributed → swarms ──
-
-/** Tasks that benefit from GPU acceleration (route to Colab runtimes) */
-const GPU_TASKS = new Set([
-  'generate_embeddings', 'compute_embeddings', 'embedding_generation',
-  'model_inference', 'run_inference', 'vector_search', 'similarity_search',
-  'train_model', 'fine_tune', 'batch_inference', 'compute_vectors',
-  'latent_space_ops', 'vector_transform', 'embedding_index',
-]);
-
-/** Tasks that benefit from distributed swarm execution */
-const SWARM_TASKS = new Set([
-  'ingest_news_feeds', 'ingest_external_apis', 'ingest_repo_changes',
-  'ingest_health_metrics', 'ingest_channel_events', 'ingest_connection_health',
-  'ingest_public_domain_patterns', 'mine_public_domain_best_practices',
-  'check_public_domain_inspiration', 'run_meta_analysis',
-  'identify_improvement_candidates', 'check_all_connection_health',
-]);
-
-let _colabCluster = null;
-let _swarmCoordinator = null;
-
-/** Register external compute providers (called from subsystem-routes.js) */
-function registerComputeProviders({ colabCluster, swarmCoordinator } = {}) {
-  if (colabCluster) _colabCluster = colabCluster;
-  if (swarmCoordinator) _swarmCoordinator = swarmCoordinator;
-}
-
 async function executeTask(taskName, context) {
-  // 1. Check for registered handler (highest priority)
   const handler = taskHandlers.get(taskName);
   if (handler) {
     return await handler(context);
   }
-
-  // 2. Route GPU-accelerated tasks to Colab cluster
-  if (GPU_TASKS.has(taskName) && _colabCluster) {
-    try {
-      const result = await _colabCluster.executeTask({
-        id: `${context.runId}-${taskName}`,
-        type: taskName,
-        data: context,
-      });
-      return { task: taskName, status: 'completed', routed: 'colab-cluster', ...result };
-    } catch (err) {
-      // Fall through to default if Colab unavailable
-      log.warn(`Colab routing failed for '${taskName}': ${err.message}, using default handler`);
-    }
-  }
-
-  // 3. Route distributed tasks to swarm coordinator
-  if (SWARM_TASKS.has(taskName) && _swarmCoordinator && typeof _swarmCoordinator.dispatch === 'function') {
-    try {
-      const result = await _swarmCoordinator.dispatch({
-        id: `${context.runId}-${taskName}`,
-        type: taskName,
-        data: context,
-      });
-      return { task: taskName, status: 'completed', routed: 'swarm', ...result };
-    } catch (err) {
-      log.warn(`Swarm routing failed for '${taskName}': ${err.message}, using default handler`);
-    }
-  }
-
-  // 4. Default: simulated task execution with success
+  // Default: simulated task execution with success
   return {
     task: taskName,
     status: "completed",
@@ -563,12 +502,6 @@ async function executeStage(stage, state, configs, circuitBreakers) {
 async function executeSingleTask(taskName, context, state, circuitBreakers) {
   state.metrics.totalTasks++;
 
-  // Auto-prioritize change-related tasks
-  if (taskName.includes('change_request') || taskName.includes('change')) {
-    taskName.priority = 'high';
-    taskName.tags.push('automated_priority');
-  }
-
   // Check circuit breaker for this task's endpoint category
   const breaker = circuitBreakers ? findBreakerForTask(taskName, circuitBreakers) : null;
   if (breaker && !breaker.canExecute()) {
@@ -616,7 +549,7 @@ async function executeSingleTask(taskName, context, state, circuitBreakers) {
 
 // ─── NODE POOL PRIORITY ─────────────────────────────────────────────────────
 
-// Map tasks to node pool tiers for priority ordering
+// Map tasks to node pool tiers for concurrent-equals execution ordering
 const TASK_POOL_MAP = {
   // Hot pool: user-facing, core pipeline tasks (critical latency)
   resolve_channel_and_identity: "hot",
@@ -1069,7 +1002,6 @@ module.exports = {
   HCFullPipeline,
   pipeline,
   registerTaskHandler,
-  registerComputeProviders,
   RunStatus,
   CircuitBreaker,
   WorkerPool,

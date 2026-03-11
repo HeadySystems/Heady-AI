@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * ORCH-001: Monte Carlo Resource Scheduler
@@ -13,6 +11,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('monte-carlo-scheduler');
 
 const PHI = 1.618033988749895;
 
@@ -158,9 +157,9 @@ function main() {
     const scheduler = new MonteCarloScheduler({ simulations: 10000 });
 
     const tasks = [
-        { name: 'API Request', requiresGPU: false, memoryRequired: 2, csl_relevance: 'high' },
-        { name: 'Embedding Generation', requiresGPU: true, memoryRequired: 8, csl_relevance: 'medium' },
-        { name: 'Code Analysis', requiresGPU: false, memoryRequired: 4, csl_relevance: 'low' },
+        { name: 'API Request', requiresGPU: false, memoryRequired: 2, priority: 'high' },
+        { name: 'Embedding Generation', requiresGPU: true, memoryRequired: 8, priority: 'medium' },
+        { name: 'Code Analysis', requiresGPU: false, memoryRequired: 4, priority: 'low' },
     ];
 
     logger.info('═══ Monte Carlo Resource Scheduler ═══');

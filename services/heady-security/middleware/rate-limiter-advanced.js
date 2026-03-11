@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Advanced Rate Limiter — Production Implementation
  * @module security-middleware/rate-limiter-advanced
@@ -17,6 +15,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('rate-limiter-advanced');
 
 const crypto = require('crypto');
 

@@ -1,91 +1,102 @@
 /**
- * Heady™ Structured JSON Logger v5.0
- * Zero console.log — ALL output is structured JSON
- * 
- * @author Eric Haywood — HeadySystems Inc.
- * @license Proprietary — HeadySystems Inc.
+ * Heady™ Shared Logger — Structured JSON via Pino
+ * Domain-tagged, request-id correlated, φ-scaled sampling
+ * © 2026 HeadySystems Inc. — Eric Haywood, Founder
  */
 
-// ESM is always strict mode
+'use strict';
 
-import { PHI, PSI, fib } from './phi-math.js';
+const pino = require('pino');
 
-const LOG_LEVELS = Object.freeze({
-  TRACE: 0,
-  DEBUG: 1,
-  INFO: 2,
-  WARN: 3,
-  ERROR: 4,
-  FATAL: 5,
-});
+const PHI = 1.618033988749895;
+const PSI = 1 / PHI; // ≈ 0.618
 
-const LOG_BUFFER_SIZE = fib(12); // 144 entries before flush
-const SAMPLE_RATE_DEFAULT = PSI; // Log ~61.8% of trace/debug in production
+/**
+ * Create a domain-tagged pino logger
+ * @param {object} opts
+ * @param {string} opts.service – Service name (e.g. 'analytics-service')
+ * @param {string} [opts.domain] – Heady domain tag (e.g. 'data', 'inference')
+ * @param {string} [opts.level] – Log level (default: 'info')
+ * @returns {import('pino').Logger}
+ */
+function createLogger({ service, domain = 'platform', level } = {}) {
+    const logLevel = level || process.env.LOG_LEVEL || 'info';
 
-class HeadyLogger {
-  constructor(service, options = {}) {
-    this.service = service;
-    this.level = LOG_LEVELS[options.level || 'INFO'];
-    this.buffer = [];
-    this.bufferSize = options.bufferSize || LOG_BUFFER_SIZE;
-    this.sampleRate = options.sampleRate || SAMPLE_RATE_DEFAULT;
-    this.output = options.output || process.stdout;
-    this.correlationId = options.correlationId || null;
-  }
-
-  _shouldLog(level) {
-    if (level < this.level) return false;
-    if (level <= LOG_LEVELS.DEBUG && Math.random() > this.sampleRate) return false;
-    return true;
-  }
-
-  _emit(level, message, meta = {}) {
-    const levelName = Object.keys(LOG_LEVELS).find(k => LOG_LEVELS[k] === level);
-    const entry = {
-      timestamp: new Date().toISOString(),
-      level: levelName,
-      service: this.service,
-      message,
-      ...meta,
-    };
-    if (this.correlationId) entry.correlationId = this.correlationId;
-
-    this.buffer.push(entry);
-    if (this.buffer.length >= this.bufferSize || level >= LOG_LEVELS.ERROR) {
-      this.flush();
-    }
-  }
-
-  flush() {
-    for (const entry of this.buffer) {
-      this.output.write(JSON.stringify(entry) + '\n');
-    }
-    this.buffer = [];
-  }
-
-  trace(msg, meta) { if (this._shouldLog(LOG_LEVELS.TRACE)) this._emit(LOG_LEVELS.TRACE, msg, meta); }
-  debug(msg, meta) { if (this._shouldLog(LOG_LEVELS.DEBUG)) this._emit(LOG_LEVELS.DEBUG, msg, meta); }
-  info(msg, meta) { if (this._shouldLog(LOG_LEVELS.INFO)) this._emit(LOG_LEVELS.INFO, msg, meta); }
-  warn(msg, meta) { if (this._shouldLog(LOG_LEVELS.WARN)) this._emit(LOG_LEVELS.WARN, msg, meta); }
-  error(msg, meta) { if (this._shouldLog(LOG_LEVELS.ERROR)) this._emit(LOG_LEVELS.ERROR, msg, meta); }
-  fatal(msg, meta) { if (this._shouldLog(LOG_LEVELS.FATAL)) this._emit(LOG_LEVELS.FATAL, msg, meta); }
-
-  child(overrides) {
-    return new HeadyLogger(this.service, {
-      level: Object.keys(LOG_LEVELS).find(k => LOG_LEVELS[k] === this.level),
-      bufferSize: this.bufferSize,
-      sampleRate: this.sampleRate,
-      output: this.output,
-      correlationId: overrides.correlationId || this.correlationId,
-      ...overrides,
+    return pino({
+        name: service,
+        level: logLevel,
+        base: {
+            service,
+            domain,
+            version: process.env.SERVICE_VERSION || '4.0.0',
+            env: process.env.NODE_ENV || 'development',
+        },
+        timestamp: pino.stdTimeFunctions.isoTime,
+        serializers: {
+            req: pino.stdSerializers.req,
+            res: pino.stdSerializers.res,
+            err: pino.stdSerializers.err,
+        },
+        ...(process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test' && (() => {
+            try { require.resolve('pino-pretty'); return true; } catch { return false; }
+        })() ? {
+            transport: {
+                target: 'pino-pretty',
+                options: { colorize: true, translateTime: 'SYS:HH:MM:ss.l' },
+            },
+        } : {}),
     });
-  }
 }
 
-function createLogger(service, options = {}) {
-  return new HeadyLogger(service, options);
+/**
+ * Express middleware to attach request-id and log requests
+ * @param {import('pino').Logger} logger
+ */
+function requestLogger(logger) {
+    return (req, res, next) => {
+        const requestId = req.headers['x-request-id'] || `req-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+        req.id = requestId;
+        req.log = logger.child({ requestId });
+
+        res.setHeader('X-Request-Id', requestId);
+
+        const startTime = process.hrtime.bigint();
+        res.on('finish', () => {
+            const durationMs = Number(process.hrtime.bigint() - startTime) / 1e6;
+            req.log.info({
+                msg: 'request completed',
+                method: req.method,
+                url: req.originalUrl || req.url,
+                statusCode: res.statusCode,
+                durationMs: +durationMs.toFixed(2),
+                contentLength: res.getHeader('content-length'),
+            });
+        });
+
+        next();
+    };
 }
 
-export { HeadyLogger, createLogger, LOG_LEVELS };
+/**
+ * φ-scaled retry delay calculator
+ * @param {number} attempt – Current attempt number (0-indexed)
+ * @param {number} baseMs – Base delay in ms (default: 1000)
+ * @returns {number} Delay in ms
+ */
+function phiBackoffMs(attempt, baseMs = 1000) {
+    return Math.round(baseMs * Math.pow(PHI, attempt));
+}
 
-export default { HeadyLogger, createLogger, LOG_LEVELS };
+/**
+ * Shorthand: require('shared/logger')('service-name')
+ * Returns a pino logger tagged with the given service name.
+ * @param {string} service
+ * @returns {import('pino').Logger}
+ */
+function loggerFactory(service) {
+    return createLogger({ service });
+}
+
+// Default export: shorthand factory
+// Named exports: createLogger, requestLogger, phiBackoffMs, PHI, PSI
+module.exports = Object.assign(loggerFactory, { createLogger, requestLogger, phiBackoffMs, PHI, PSI });

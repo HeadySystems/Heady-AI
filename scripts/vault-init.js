@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /*
  * Vault Initialization — stores credentials and registers devices.
@@ -30,25 +28,25 @@ const { crossDeviceFS } = require(path.join(ROOT, 'src', 'services', 'cross-devi
 async function main() {
     const passphrase = process.env.VAULT_PASS || process.argv[2];
     if (!passphrase) {
-        logger.error('Usage: VAULT_PASS=<passphrase> node scripts/vault-init.js');
-        logger.error('  Or: node scripts/vault-init.js <passphrase>');
+        console.error('Usage: VAULT_PASS=<passphrase> node scripts/vault-init.js');
+        console.error('  Or: node scripts/vault-init.js <passphrase>');
         process.exit(1);
     }
 
-    logger.info('─── Heady Vault Initialization ───');
-    logger.info('');
+    console.log('─── Heady Vault Initialization ───');
+    console.log('');
 
     // 1. Init vector memory
-    logger.info('[1/5] Initializing vector memory...');
+    console.log('[1/5] Initializing vector memory...');
     if (vectorMemory.init) await vectorMemory.init();
 
     // 2. Unlock vault
-    logger.info('[2/5] Unlocking vault...');
+    console.log('[2/5] Unlocking vault...');
     const unlockResult = await vault.unlock(passphrase);
-    logger.info(`  ✅ Vault unlocked — ${unlockResult.credentialCount} existing credentials`);
+    console.log(`  ✅ Vault unlocked — ${unlockResult.credentialCount} existing credentials`);
 
     // 3. Collect and store credentials from env vars
-    logger.info('[3/5] Storing credentials from environment...');
+    console.log('[3/5] Storing credentials from environment...');
 
     const credentials = [];
 
@@ -127,21 +125,21 @@ async function main() {
     }
 
     if (credentials.length === 0) {
-        logger.info('  ⚠ No credentials found in environment or local keys.');
-        logger.info('  Set env vars: GITHUB_HEADYME_PAT, GITHUB_HEADYCONN_PAT, CF_API_TOKEN');
+        console.log('  ⚠ No credentials found in environment or local keys.');
+        console.log('  Set env vars: GITHUB_HEADYME_PAT, GITHUB_HEADYCONN_PAT, CF_API_TOKEN');
     }
 
     for (const cred of credentials) {
         try {
             await vault.store(cred.name, cred.domain, cred.value, cred.meta);
-            logger.info(`  ✅ [${cred.meta.owner}] ${cred.domain}/${cred.name} — ${cred.meta.label}`);
+            console.log(`  ✅ [${cred.meta.owner}] ${cred.domain}/${cred.name} — ${cred.meta.label}`);
         } catch (err) {
-            logger.info(`  ❌ ${cred.domain}/${cred.name} — ${err.message}`);
+            console.log(`  ❌ ${cred.domain}/${cred.name} — ${err.message}`);
         }
     }
 
     // 4. Register this device
-    logger.info('[4/5] Registering local device...');
+    console.log('[4/5] Registering local device...');
     await crossDeviceFS.registerDevice('heady-workstation', {
         hostname: os.hostname(),
         user: os.userInfo().username,
@@ -149,40 +147,40 @@ async function main() {
         root: '/',
         capabilities: ['read', 'write', 'exec', 'sudo'],
     });
-    logger.info(`  ✅ Device: heady-workstation (${os.hostname()})`);
+    console.log(`  ✅ Device: heady-workstation (${os.hostname()})`);
 
     // 5. Verify round-trip
-    logger.info('[5/5] Verifying vault round-trip...');
+    console.log('[5/5] Verifying vault round-trip...');
     const creds = await vault.list();
     if (creds.length > 0) {
         const first = creds[0];
         const retrieved = await vault.get(first.name, first.domain);
         if (retrieved && retrieved.value) {
-            logger.info(`  ✅ Encrypt → store → retrieve → decrypt verified (${first.credentialId})`);
+            console.log(`  ✅ Encrypt → store → retrieve → decrypt verified (${first.credentialId})`);
         } else {
-            logger.info('  ❌ Round-trip verification failed');
+            console.log('  ❌ Round-trip verification failed');
         }
     }
 
     // Summary
     const health = vault.getHealth();
-    logger.info('');
-    logger.info('─── Vault Summary ───');
-    logger.info(`  Total credentials: ${health.totalCredentials}`);
-    logger.info(`  Ownership: ${JSON.stringify(health.ownershipBreakdown)}`);
-    logger.info(`  Domain coverage: ${JSON.stringify(health.domainCoverage)}`);
-    logger.info(`  Expired: ${health.expiredCredentials}`);
-    logger.info('');
-    logger.info('Done. Vault is unlocked and ready.');
+    console.log('');
+    console.log('─── Vault Summary ───');
+    console.log(`  Total credentials: ${health.totalCredentials}`);
+    console.log(`  Ownership: ${JSON.stringify(health.ownershipBreakdown)}`);
+    console.log(`  Domain coverage: ${JSON.stringify(health.domainCoverage)}`);
+    console.log(`  Expired: ${health.expiredCredentials}`);
+    console.log('');
+    console.log('Done. Vault is unlocked and ready.');
 
     // Persist
     if (vectorMemory.persistAllShards) {
         await vectorMemory.persistAllShards();
-        logger.info('  Vector memory persisted.');
+        console.log('  Vector memory persisted.');
     }
 }
 
 main().catch(err => {
-    logger.error('Fatal:', err);
+    console.error('Fatal:', err);
     process.exit(1);
 });

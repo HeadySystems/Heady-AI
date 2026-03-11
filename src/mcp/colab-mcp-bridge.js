@@ -1,17 +1,4 @@
-const pino = require('pino');
-const logger = pino();
-// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
-const HEADY_ALLOWED_ORIGINS = new Set([
-    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
-    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
-    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
-    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-    'https://headyfinance.com', 'https://admin.headysystems.com',
-    'https://auth.headysystems.com', 'https://api.headysystems.com',
-]);
-const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
-
+const logger = require('../shared/logger')('colab-mcp-bridge');
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -350,7 +337,7 @@ function handleSSE(req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+        'Access-Control-Allow-Origin': 'https://headyme.com',
     });
 
     // Send endpoint info
@@ -579,7 +566,7 @@ function parseBody(req) {
 function jsonRes(res, code, data) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+        'Access-Control-Allow-Origin': 'https://headyme.com',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     });
@@ -596,7 +583,7 @@ function startHTTPServer() {
         // CORS preflight
         if (req.method === 'OPTIONS') {
             res.writeHead(204, {
-                'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+                'Access-Control-Allow-Origin': 'https://headyme.com',
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             });

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadySystems Site Router
  * ============================================================================
@@ -67,7 +65,7 @@ async function loadRegistry() {
   try {
     raw = await fsPromises.readFile(VERTICAL_REGISTRY_PATH, 'utf8');
   } catch (err) {
-    logger.warn(`[site-router] No vertical registry at ${VERTICAL_REGISTRY_PATH}, using empty registry.`);
+    console.warn(`[site-router] No vertical registry at ${VERTICAL_REGISTRY_PATH}, using empty registry.`);
     raw = '{"verticals":[]}';
   }
 
@@ -111,7 +109,7 @@ async function loadRegistry() {
 function invalidateRegistry() {
   registryCache.del('index');
   htmlCache.flushAll();
-  logger.info('[site-router] Registry cache invalidated.');
+  console.info('[site-router] Registry cache invalidated.');
 }
 
 // ── Domain → Vertical resolution ─────────────────────────────────────────────
@@ -171,7 +169,7 @@ function getVerticalDir(vertical) {
   const legacyPath = path.join(SITES_DIR, 'A2-websites', vertical.id);
   if (fs.existsSync(legacyPath)) return legacyPath;
 
-  logger.warn(`[site-router] No site files found for vertical '${vertical.id}' — using fallback`);
+  console.warn(`[site-router] No site files found for vertical '${vertical.id}' — using fallback`);
   return path.join(SITES_DIR, 'A2-websites', 'headyme');
 }
 
@@ -456,7 +454,7 @@ const siteRouterMiddleware = createSiteRouter();
 if (NODE_ENV === 'development' && fs.existsSync(VERTICAL_REGISTRY_PATH)) {
   fs.watch(VERTICAL_REGISTRY_PATH, (eventType) => {
     if (eventType === 'change') {
-      logger.info('[site-router] Registry file changed — reloading...');
+      console.info('[site-router] Registry file changed — reloading...');
       invalidateRegistry();
     }
   });
@@ -465,7 +463,7 @@ if (NODE_ENV === 'development' && fs.existsSync(VERTICAL_REGISTRY_PATH)) {
 // ── Graceful shutdown ─────────────────────────────────────────────────────────
 
 process.on('SIGHUP', () => {
-  logger.info('[site-router] SIGHUP received — reloading registry...');
+  console.info('[site-router] SIGHUP received — reloading registry...');
   invalidateRegistry();
 });
 

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 'use strict';
 /**
@@ -375,7 +373,7 @@ class PhiComplianceChecker {
     if (this.verbose && violations.length > 0) {
       for (const v of violations) {
         const sev = v.severity === 'error' ? '[ERROR]' : '[WARN] ';
-        logger.info(`  ${sev} ${v.file}:${v.line}  ${v.rule}  ${v.current}  →  ${v.suggested}`);
+        console.log(`  ${sev} ${v.file}:${v.line}  ${v.rule}  ${v.current}  →  ${v.suggested}`);
       }
     }
 
@@ -470,21 +468,21 @@ function runCli() {
   const target = args[0];
 
   if (!target) {
-    logger.error('Usage: node tools/phi-compliance-checker.js <path>');
-    logger.error('  <path> can be a single file or a directory (scanned recursively)');
+    console.error('Usage: node tools/phi-compliance-checker.js <path>');
+    console.error('  <path> can be a single file or a directory (scanned recursively)');
     process.exit(2);
   }
 
   const resolvedTarget = path.resolve(target);
 
   if (!fs.existsSync(resolvedTarget)) {
-    logger.error(`Error: path not found: ${resolvedTarget}`);
+    console.error(`Error: path not found: ${resolvedTarget}`);
     process.exit(2);
   }
 
   const checker = new PhiComplianceChecker({ verbose: true });
   const report  = checker.checkPath(resolvedTarget);
-  logger.info(checker.formatReport(report));
+  console.log(checker.formatReport(report));
 
   // Exit 1 if any error-severity violations
   process.exit(report.passed ? 0 : 1);

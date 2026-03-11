@@ -47,7 +47,7 @@ function Load-Config {
     }
     
     # Parse YAML (using simple regex for this implementation)
-    $content = [System.IO.File]::ReadAllText($Path)
+    $content = Get-Content $Path -Raw
     
     # Extract extension lists
     $config = @{

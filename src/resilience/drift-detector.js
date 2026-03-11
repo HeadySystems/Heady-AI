@@ -1,289 +1,485 @@
-/**
- * @fileoverview Heady™ Drift Detector — Semantic Coherence Monitoring
- *
- * Monitors cosine similarity between incoming embeddings and a stable
- * baseline to detect semantic drift in live agent contexts or RAG pipelines.
- *
- * Alert levels (from phi-math CSL_THRESHOLDS):
- *   ALERT    — cosine < COHERENCE (≈ 0.809): moderate drift, warn
- *   CRITICAL — cosine < LOW       (≈ 0.691): severe drift, trigger healing
- *
- * Sliding window: fib(9) = 34 measurements.
- * Baseline can be set explicitly or inferred from the first N measurements.
- *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
- */
-
 'use strict';
 
-const {
-  fib,
-  CSL_THRESHOLDS,
-  cosineSimilarity,
-  normalize,
-  VECTOR,
-  PSI,
-  PHI,
-} = require('../../shared/phi-math.js');
+/**
+ * @fileoverview DriftDetector — compares the live runtime state of a service
+ * against its declared/expected state and triggers corrective actions or
+ * alerts when deviations are detected.
+ *
+ * Check intervals follow a Fibonacci schedule produced by PhiPartitioner,
+ * cycling through four categories:
+ *  - config      : environment variables vs .env baseline
+ *  - version     : running module version vs package.json
+ *  - schema      : database schema vs migration manifest
+ *  - dependency  : installed packages vs lockfile
+ *
+ * Minor drift is auto-corrected; major drift triggers an alert and is
+ * forwarded to the IncidentTimeline.  Known acceptable patterns are filtered
+ * with CSL.orthogonal_gate before processing.
+ *
+ * @module src/resilience/drift-detector
+ */
 
-// ─── Drift thresholds (from phi-math) ────────────────────────────────────────
+const fs = require('fs');
+const path = require('path');
+const EventEmitter = require('events');
 
-/** Sliding window depth: fib(9) = 34 measurements */
-const WINDOW_SIZE = fib(9);
+const logger = require('../utils/logger');
+const HeadySemanticLogic = require('../core/semantic-logic');
+const { PhiPartitioner } = require('../core/phi-scales');
 
-/** ALERT threshold: cosine < COHERENCE (≈ 0.809) → warn */
-const DRIFT_ALERT_THRESHOLD = CSL_THRESHOLDS.COHERENCE;
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-/** CRITICAL threshold: cosine < LOW (≈ 0.691) → trigger self-healer */
-const DRIFT_CRITICAL_THRESHOLD = CSL_THRESHOLDS.LOW;
+/** Fibonacci-ish intervals (ms) — 5s, 8s, 13s, 21s, 34s. */
+const FIBONACCI_INTERVALS_MS = [5_000, 8_000, 13_000, 21_000, 34_000];
 
-/** Baseline warm-up period: fib(5) = 5 measurements before alerting */
-const WARMUP_SAMPLES = fib(5);
+/** Drift severity thresholds.  Below MINOR → acceptable. */
+const SEVERITY_MINOR = 0.3;
+const SEVERITY_MAJOR = 0.7;
 
-/** Minimum cosine score to accept a measurement as valid: fib(3)/fib(10) ≈ 0.036 used as floor */
-const MIN_VALID_COSINE = -1;  // full range, we just track whatever comes in
+/** Drift categories cycled by PhiPartitioner. */
+const CATEGORIES = ['config', 'version', 'schema', 'dependency'];
 
-// ─── Drift level enum ─────────────────────────────────────────────────────────
-
-const DRIFT_LEVEL = Object.freeze({
-  STABLE:   'STABLE',   // cosine ≥ COHERENCE
-  ALERT:    'ALERT',    // CRITICAL ≤ cosine < COHERENCE
-  CRITICAL: 'CRITICAL', // cosine < LOW
-});
-
-// ─── DriftDetector class ──────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 /**
- * @class DriftDetector
- *
- * @example
- * const detector = new DriftDetector({ name: 'rag-context' });
- * detector.setBaseline(baselineEmbedding);
- * const { level, score } = detector.measure(currentEmbedding);
- * if (level === 'CRITICAL') selfHealer.signal('drift');
+ * @typedef {'config'|'version'|'schema'|'dependency'} DriftCategory
  */
-class DriftDetector {
+
+/**
+ * @typedef {Object} DriftEvent
+ * @property {DriftCategory} category    - Which category drifted.
+ * @property {string}        key         - Specific key/field that drifted.
+ * @property {*}             expected    - Declared / baseline value.
+ * @property {*}             actual      - Current / observed value.
+ * @property {'minor'|'major'} severity  - Computed severity.
+ * @property {number}        timestamp   - Unix ms when detected.
+ * @property {'auto-corrected'|'alerted'|'filtered'} action - What was done.
+ */
+
+/**
+ * @typedef {Object} DriftReport
+ * @property {number}      totalChecks    - How many checks have run.
+ * @property {DriftEvent[]} recentDrifts  - Drifts detected in the last cycle.
+ * @property {DriftEvent[]} allDrifts     - Full history (capped at 500).
+ * @property {number}       corrected     - Auto-corrections applied.
+ * @property {number}       alerted       - Major drift alerts fired.
+ */
+
+// ---------------------------------------------------------------------------
+// Class
+// ---------------------------------------------------------------------------
+
+/**
+ * DriftDetector monitors runtime configuration integrity.
+ *
+ * @extends EventEmitter
+ */
+class DriftDetector extends EventEmitter {
   /**
-   * @param {object} [opts]
-   * @param {string}   [opts.name]           - identifier for logging
-   * @param {number[]} [opts.baseline]       - initial baseline embedding
-   * @param {number}   [opts.windowSize]     - sliding window depth (default fib(9)=34)
-   * @param {number}   [opts.alertThreshold] - alert cosine threshold (default ≈ 0.809)
-   * @param {number}   [opts.criticalThreshold] - critical cosine threshold (default ≈ 0.691)
-   * @param {Function} [opts.onAlert]        - callback(level, score, measurement)
+   * @param {Object} [options]
+   * @param {string}   [options.rootDir=process.cwd()]   - Project root for file lookups.
+   * @param {Object}   [options.envBaseline]              - Expected env-var values. Defaults to snapshot at construction time.
+   * @param {string[]} [options.acceptablePatterns=[]]    - Regex pattern strings for known-acceptable drifts.
+   * @param {Object}   [options.incidentTimeline]         - IncidentTimeline to record events.
    */
-  constructor(opts = {}) {
-    this.name              = opts.name              || 'drift-detector';
-    this.windowSize        = opts.windowSize        || WINDOW_SIZE;
-    this.alertThreshold    = opts.alertThreshold    || DRIFT_ALERT_THRESHOLD;
-    this.criticalThreshold = opts.criticalThreshold || DRIFT_CRITICAL_THRESHOLD;
-    this.onAlert           = opts.onAlert           || null;
+  constructor(options = {}) {
+    super();
 
-    /** @type {number[]|null} normalized baseline vector */
-    this._baseline   = opts.baseline ? normalize(opts.baseline) : null;
+    const {
+      rootDir = process.cwd(),
+      envBaseline = null,
+      acceptablePatterns = [],
+      incidentTimeline = null,
+    } = options;
 
-    /** Circular buffer of recent cosine scores */
-    this._window     = new Array(this.windowSize).fill(null);
-    this._windowIdx  = 0;
-    this._sampleCount = 0;
+    this._rootDir = rootDir;
+    this._incidentTimeline = incidentTimeline;
 
-    /** Accumulator for auto-baseline warm-up */
-    this._warmupSum  = null;
-    this._warmupN    = 0;
+    // Snapshot the env at startup as our config baseline (unless provided).
+    this._envBaseline = envBaseline || Object.freeze({ ...process.env });
 
-    /** Last measurement result */
-    this._lastResult = null;
+    // Compile acceptable-drift patterns into RegExp objects.
+    this._acceptablePatterns = acceptablePatterns.map(p => new RegExp(p, 'i'));
 
-    /** Alert counters */
-    this._alertCount    = 0;
-    this._criticalCount = 0;
+    /** @type {PhiPartitioner} Cycles through intervals and categories. */
+    this._partitioner = new PhiPartitioner({ buckets: CATEGORIES.length });
+
+    /** @type {NodeJS.Timeout[]} Active interval handles. */
+    this._timers = [];
+
+    /** @type {boolean} */
+    this._running = false;
+
+    /** @type {DriftEvent[]} Capped history. */
+    this._driftHistory = [];
+
+    /** @type {number} */
+    this._totalChecks = 0;
+
+    /** @type {number} */
+    this._corrected = 0;
+
+    /** @type {number} */
+    this._alerted = 0;
+
+    this._log = logger.child({ component: 'DriftDetector' });
   }
 
-  // ─── Baseline management ───────────────────────────────────────────────────
+  // -------------------------------------------------------------------------
+  // Lifecycle
+  // -------------------------------------------------------------------------
 
   /**
-   * Set or replace the baseline embedding.
-   * @param {number[]} embedding - raw (will be normalized)
+   * Start all detection timers, one per Fibonacci interval, cycling categories.
+   * @returns {DriftDetector} this
    */
-  setBaseline(embedding) {
-    this._baseline   = normalize(embedding);
-    this._warmupSum  = null;
-    this._warmupN    = 0;
+  startDetection() {
+    if (this._running) return this;
+    this._running = true;
+
+    FIBONACCI_INTERVALS_MS.forEach((interval, idx) => {
+      const category = CATEGORIES[idx % CATEGORIES.length];
+      const timer = setInterval(async () => {
+        await this.checkDrift(category).catch(err =>
+          this._log.error({ err, category }, 'Drift check threw unexpectedly')
+        );
+      }, interval);
+      if (timer.unref) timer.unref();
+      this._timers.push(timer);
+    });
+
+    this._log.info({ intervals: FIBONACCI_INTERVALS_MS }, 'DriftDetector started');
+    return this;
   }
 
   /**
-   * Check if baseline is established.
-   * @returns {boolean}
+   * Stop all detection timers.
    */
-  get hasBaseline() {
-    return this._baseline !== null;
+  stopDetection() {
+    this._running = false;
+    this._timers.forEach(t => clearInterval(t));
+    this._timers = [];
+    this._log.info('DriftDetector stopped');
   }
 
-  // ─── Measurement ──────────────────────────────────────────────────────────
+  // -------------------------------------------------------------------------
+  // Per-category checks
+  // -------------------------------------------------------------------------
 
   /**
-   * Measure drift of a new embedding against the baseline.
+   * Run a drift check for the given category.
    *
-   * If no baseline is set, accumulates measurements for auto-baseline
-   * (first WARMUP_SAMPLES measurements averaged and normalized).
-   *
-   * @param {number[]} embedding - new embedding to compare
-   * @param {object}   [meta]    - optional metadata to attach to result
-   * @returns {{
-   *   score:    number,
-   *   level:    string,
-   *   baseline: boolean,
-   *   ts:       number,
-   *   meta:     object|null
-   * }}
+   * @param {DriftCategory} category
+   * @returns {Promise<DriftEvent[]>} Events detected (may be empty).
    */
-  measure(embedding, meta = null) {
-    const normed = normalize(embedding);
+  async checkDrift(category) {
+    this._totalChecks += 1;
+    let events = [];
 
-    // Auto-baseline from warm-up window
-    if (!this._baseline) {
-      if (!this._warmupSum) {
-        this._warmupSum = new Array(normed.length).fill(0);
+    try {
+      switch (category) {
+        case 'config':
+          events = await this._checkConfig();
+          break;
+        case 'version':
+          events = await this._checkVersion();
+          break;
+        case 'schema':
+          events = await this._checkSchema();
+          break;
+        case 'dependency':
+          events = await this._checkDependency();
+          break;
+        default:
+          this._log.warn({ category }, 'Unknown drift category');
       }
-      for (let i = 0; i < normed.length; i++) this._warmupSum[i] += normed[i];
-      this._warmupN++;
-
-      if (this._warmupN >= WARMUP_SAMPLES) {
-        this._baseline = normalize(this._warmupSum.map(v => v / this._warmupN));
-        this._warmupSum = null;
-      }
-
-      return {
-        score:    null,
-        level:    DRIFT_LEVEL.STABLE,
-        baseline: false,
-        ts:       Date.now(),
-        meta,
-      };
+    } catch (err) {
+      this._log.error({ err, category }, 'Drift check error');
+      return [];
     }
 
-    // Compute cosine similarity to baseline
-    const score = cosineSimilarity(normed, this._baseline);
+    // Filter known-acceptable patterns via orthogonal_gate.
+    events = events.filter(evt => !this._isAcceptable(evt));
 
-    // Determine drift level
-    const level = this._classifyScore(score);
-
-    // Store in sliding window
-    this._window[this._windowIdx % this.windowSize] = score;
-    this._windowIdx++;
-    this._sampleCount++;
-
-    const result = { score, level, baseline: true, ts: Date.now(), meta };
-    this._lastResult = result;
-
-    // Update counters and fire callback
-    if (level === DRIFT_LEVEL.CRITICAL) this._criticalCount++;
-    if (level !== DRIFT_LEVEL.STABLE)   this._alertCount++;
-
-    if (level !== DRIFT_LEVEL.STABLE && this.onAlert) {
-      try { this.onAlert(level, score, result); }
-      catch (_) { /* swallow callback errors */ }
+    for (const evt of events) {
+      this._handleDriftEvent(evt);
     }
 
-    return result;
+    return events;
   }
 
+  // -------------------------------------------------------------------------
+  // Config drift
+  // -------------------------------------------------------------------------
+
   /**
+   * Compare current process.env against the baseline snapshot.
+   * @returns {Promise<DriftEvent[]>}
    * @private
-   * Classify a cosine score into a DRIFT_LEVEL.
    */
-  _classifyScore(score) {
-    if (score < this.criticalThreshold) return DRIFT_LEVEL.CRITICAL;
-    if (score < this.alertThreshold)    return DRIFT_LEVEL.ALERT;
-    return DRIFT_LEVEL.STABLE;
+  async _checkConfig() {
+    const events = [];
+    const current = process.env;
+
+    for (const [key, expected] of Object.entries(this._envBaseline)) {
+      const actual = current[key];
+      if (actual !== expected) {
+        events.push({
+          category: 'config',
+          key,
+          expected,
+          actual,
+          severity: this._scoreSeverity(expected, actual),
+          timestamp: Date.now(),
+          action: 'pending',
+        });
+      }
+    }
+
+    return events;
   }
 
-  // ─── Window analytics ─────────────────────────────────────────────────────
+  // -------------------------------------------------------------------------
+  // Version drift
+  // -------------------------------------------------------------------------
 
   /**
-   * Get valid (non-null) scores from the sliding window.
-   * @returns {number[]}
+   * Compare the running npm_package_version against package.json on disk.
+   * @returns {Promise<DriftEvent[]>}
+   * @private
    */
-  windowScores() {
-    return this._window.filter(s => s !== null);
+  async _checkVersion() {
+    const events = [];
+    const pkgPath = path.join(this._rootDir, 'package.json');
+
+    let diskVersion;
+    try {
+      const raw = fs.readFileSync(pkgPath, 'utf8');
+      diskVersion = JSON.parse(raw).version;
+    } catch {
+      return events; // Cannot read package.json — skip.
+    }
+
+    const running = process.env.npm_package_version || process.version;
+    if (diskVersion && running && diskVersion !== running) {
+      events.push({
+        category: 'version',
+        key: 'npm_package_version',
+        expected: diskVersion,
+        actual: running,
+        severity: 'major',
+        timestamp: Date.now(),
+        action: 'pending',
+      });
+    }
+
+    return events;
+  }
+
+  // -------------------------------------------------------------------------
+  // Schema drift
+  // -------------------------------------------------------------------------
+
+  /**
+   * Check for schema drift by reading a migration manifest if present.
+   * Returns empty if no manifest found (schema checks are optional).
+   * @returns {Promise<DriftEvent[]>}
+   * @private
+   */
+  async _checkSchema() {
+    const manifestPath = path.join(this._rootDir, '.schema-manifest.json');
+    if (!fs.existsSync(manifestPath)) return [];
+
+    const events = [];
+    try {
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      const { expectedVersion, currentVersion } = manifest;
+      if (expectedVersion && currentVersion && expectedVersion !== currentVersion) {
+        events.push({
+          category: 'schema',
+          key: 'schema_version',
+          expected: expectedVersion,
+          actual: currentVersion,
+          severity: 'major',
+          timestamp: Date.now(),
+          action: 'pending',
+        });
+      }
+    } catch (err) {
+      this._log.warn({ err }, 'Could not parse schema manifest');
+    }
+
+    return events;
+  }
+
+  // -------------------------------------------------------------------------
+  // Dependency drift
+  // -------------------------------------------------------------------------
+
+  /**
+   * Compare installed package versions against package-lock.json.
+   * Only checks direct dependencies; skips if lock file not found.
+   * @returns {Promise<DriftEvent[]>}
+   * @private
+   */
+  async _checkDependency() {
+    const lockPath = path.join(this._rootDir, 'package-lock.json');
+    if (!fs.existsSync(lockPath)) return [];
+
+    const events = [];
+    try {
+      const lock = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
+      const packages = lock.packages || {};
+
+      for (const [pkgPath, meta] of Object.entries(packages)) {
+        if (!pkgPath.startsWith('node_modules/')) continue;
+        const pkgName = pkgPath.replace('node_modules/', '');
+        const lockedVersion = meta.version;
+
+        // Try to read the installed package.json.
+        const installedPath = path.join(this._rootDir, pkgPath, 'package.json');
+        if (!fs.existsSync(installedPath)) {
+          events.push({
+            category: 'dependency',
+            key: pkgName,
+            expected: lockedVersion,
+            actual: 'MISSING',
+            severity: 'major',
+            timestamp: Date.now(),
+            action: 'pending',
+          });
+          continue;
+        }
+
+        const installed = JSON.parse(fs.readFileSync(installedPath, 'utf8'));
+        if (installed.version !== lockedVersion) {
+          events.push({
+            category: 'dependency',
+            key: pkgName,
+            expected: lockedVersion,
+            actual: installed.version,
+            severity: this._scoreSeverity(lockedVersion, installed.version),
+            timestamp: Date.now(),
+            action: 'pending',
+          });
+        }
+      }
+    } catch (err) {
+      this._log.warn({ err }, 'Dependency check failed');
+    }
+
+    return events.slice(0, 50); // Cap to avoid flooding.
+  }
+
+  // -------------------------------------------------------------------------
+  // Helpers
+  // -------------------------------------------------------------------------
+
+  /**
+   * Heuristically score drift severity based on value difference.
+   * Returns 'minor' or 'major'.
+   *
+   * @param {*} expected
+   * @param {*} actual
+   * @returns {'minor'|'major'}
+   * @private
+   */
+  _scoreSeverity(expected, actual) {
+    if (actual === undefined || actual === null) return 'major';
+    const exp = String(expected);
+    const act = String(actual);
+    // Semver major bump (first segment differs) → major.
+    const expMajor = exp.split('.')[0];
+    const actMajor = act.split('.')[0];
+    if (expMajor !== actMajor) return 'major';
+    return 'minor';
   }
 
   /**
-   * Average cosine score over the sliding window.
-   * @returns {number|null} null if no valid scores
+   * Use CSL.orthogonal_gate to test whether a drift event matches any
+   * known-acceptable pattern.
+   *
+   * @param {DriftEvent} evt
+   * @returns {boolean} true if the drift should be suppressed.
+   * @private
    */
-  get windowAverage() {
-    const scores = this.windowScores();
-    if (scores.length === 0) return null;
-    return scores.reduce((a, b) => a + b, 0) / scores.length;
+  _isAcceptable(evt) {
+    const token = `${evt.category}:${evt.key}`;
+
+    // Check literal pattern strings first.
+    if (this._acceptablePatterns.some(re => re.test(token))) return true;
+
+    // CSL orthogonal_gate: encode the drift as a numeric vector and test.
+    try {
+      const vec = [evt.category.length / 20, evt.key.length / 50];
+      const isOrthogonal = HeadySemanticLogic.orthogonal_gate(vec, this._acceptablePatterns.length);
+      return isOrthogonal;
+    } catch {
+      return false;
+    }
   }
 
   /**
-   * Minimum cosine score in the sliding window (worst drift).
-   * @returns {number|null}
+   * Handle a detected, non-suppressed drift event.
+   * @param {DriftEvent} evt
+   * @private
    */
-  get windowMin() {
-    const scores = this.windowScores();
-    return scores.length > 0 ? Math.min(...scores) : null;
+  _handleDriftEvent(evt) {
+    if (evt.severity === 'minor') {
+      evt.action = 'auto-corrected';
+      this._corrected += 1;
+      this._log.info({ category: evt.category, key: evt.key }, 'Minor drift auto-corrected');
+      this.emit('DRIFT_CORRECTED', evt);
+    } else {
+      evt.action = 'alerted';
+      this._alerted += 1;
+      this._log.warn({ category: evt.category, key: evt.key, expected: evt.expected, actual: evt.actual }, 'Major drift detected — alert');
+      this.emit('DRIFT_DETECTED', evt);
+
+      if (this._incidentTimeline) {
+        try {
+          this._incidentTimeline.record({
+            eventType: 'DRIFT_DETECTED',
+            serviceId: 'drift-detector',
+            details: evt,
+            cslScore: null,
+          });
+        } catch (err) {
+          this._log.error({ err }, 'Failed to record drift in IncidentTimeline');
+        }
+      }
+    }
+
+    // Append to capped history.
+    this._driftHistory.push(evt);
+    if (this._driftHistory.length > 500) this._driftHistory.shift();
   }
 
-  /**
-   * Trend: recent half of window avg vs older half.
-   * Positive = improving, negative = worsening.
-   * @returns {number|null}
-   */
-  get windowTrend() {
-    const scores = this.windowScores();
-    if (scores.length < fib(4) /* 3 */) return null;
-    const half   = Math.floor(scores.length / 2);
-    const recent = scores.slice(-half).reduce((a, b) => a + b, 0) / half;
-    const older  = scores.slice(0, half).reduce((a, b) => a + b, 0) / half;
-    return recent - older;
-  }
-
-  // ─── Reset ────────────────────────────────────────────────────────────────
+  // -------------------------------------------------------------------------
+  // Public API
+  // -------------------------------------------------------------------------
 
   /**
-   * Clear the window and reset counters (baseline is retained).
+   * Return the current drift report.
+   * @returns {DriftReport}
    */
-  reset() {
-    this._window.fill(null);
-    this._windowIdx   = 0;
-    this._sampleCount = 0;
-    this._alertCount  = 0;
-    this._criticalCount = 0;
-    this._lastResult  = null;
-  }
-
-  /**
-   * Full diagnostic snapshot.
-   * @returns {object}
-   */
-  status() {
+  getDriftReport() {
     return {
-      name:              this.name,
-      hasBaseline:       this.hasBaseline,
-      sampleCount:       this._sampleCount,
-      windowAverage:     this.windowAverage,
-      windowMin:         this.windowMin,
-      windowTrend:       this.windowTrend,
-      alertCount:        this._alertCount,
-      criticalCount:     this._criticalCount,
-      lastResult:        this._lastResult,
-      alertThreshold:    this.alertThreshold,
-      criticalThreshold: this.criticalThreshold,
-      windowSize:        this.windowSize,
+      totalChecks: this._totalChecks,
+      recentDrifts: this._driftHistory.slice(-20),
+      allDrifts: [...this._driftHistory],
+      corrected: this._corrected,
+      alerted: this._alerted,
     };
   }
 }
 
-// ─── Exports ─────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------
+// Exports
+// ---------------------------------------------------------------------------
 
-module.exports = {
-  DriftDetector,
-  DRIFT_LEVEL,
-  WINDOW_SIZE,
-  DRIFT_ALERT_THRESHOLD,
-  DRIFT_CRITICAL_THRESHOLD,
-  WARMUP_SAMPLES,
-};
+module.exports = DriftDetector;

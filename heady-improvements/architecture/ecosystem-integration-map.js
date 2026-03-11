@@ -190,7 +190,7 @@ const SERVICES = {
     entrypoint: 'index.js',
     port: 3303,
     publicPort: 443,
-    domains: [], // NOTE: headyos.com not yet in domain table
+    domains: [], // TODO: headyos.com not yet in domain table
     status: 'projected',
     capabilities: [
       'latent-reasoning',

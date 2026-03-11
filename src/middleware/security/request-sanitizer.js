@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Request Sanitization Middleware — Production Implementation
  * @module security-middleware/request-sanitizer
@@ -103,15 +101,15 @@ const SSRF_BLOCKED_HOSTS = [
 
 // MIME type → allowed extensions + magic byte signatures
 const ALLOWED_FILE_TYPES = {
-  'image/jpeg': { exts: ['.jpg', '.jpeg'], magic: [Buffer.from([0xFF, 0xD8, 0xFF])] },
-  'image/png': { exts: ['.png'], magic: [Buffer.from([0x89, 0x50, 0x4E, 0x47])] },
-  'image/gif': { exts: ['.gif'], magic: [Buffer.from('GIF87a'), Buffer.from('GIF89a')] },
-  'image/webp': { exts: ['.webp'], magic: [Buffer.from('RIFF')] },
-  'image/svg+xml': { exts: ['.svg'], magic: [] },  // text-based; validated separately
-  'application/pdf': { exts: ['.pdf'], magic: [Buffer.from([0x25, 0x50, 0x44, 0x46])] }, // %PDF
-  'text/plain': { exts: ['.txt'], magic: [] },
-  'text/csv': { exts: ['.csv'], magic: [] },
-  'application/json': { exts: ['.json'], magic: [] },
+  'image/jpeg':      { exts: ['.jpg', '.jpeg'], magic: [Buffer.from([0xFF, 0xD8, 0xFF])] },
+  'image/png':       { exts: ['.png'],          magic: [Buffer.from([0x89, 0x50, 0x4E, 0x47])] },
+  'image/gif':       { exts: ['.gif'],          magic: [Buffer.from('GIF87a'), Buffer.from('GIF89a')] },
+  'image/webp':      { exts: ['.webp'],         magic: [Buffer.from('RIFF')] },
+  'image/svg+xml':   { exts: ['.svg'],          magic: [] },  // text-based; validated separately
+  'application/pdf': { exts: ['.pdf'],          magic: [Buffer.from([0x25, 0x50, 0x44, 0x46])] }, // %PDF
+  'text/plain':      { exts: ['.txt'],          magic: [] },
+  'text/csv':        { exts: ['.csv'],          magic: [] },
+  'application/json':{ exts: ['.json'],         magic: [] },
 };
 
 // ─── String Sanitisers ────────────────────────────────────────────────────────
@@ -201,13 +199,13 @@ function detectSSRF(value) {
  */
 function sanitizeObject(data, opts = {}) {
   const {
-    xss = true,
-    sqli = true,
-    nosql = true,
-    pathTraversal = true,
-    maxDepth = 20,
+    xss          = true,
+    sqli         = true,
+    nosql        = true,
+    pathTraversal= true,
+    maxDepth     = 20,
     currentDepth = 0,
-    path = '',
+    path         = '',
   } = opts;
 
   const violations = [];
@@ -382,15 +380,15 @@ function flattenHPP(obj, allowList = []) {
  */
 function requestSanitizer(opts = {}) {
   const {
-    xss = true,
-    sqli = true,
-    nosql = true,
-    pathTraversal = true,
-    hpp = true,
-    maxBodySize = 10 * 1024 * 1024, // 10MB
-    maxDepth = 20,
-    hppAllowList = [],
-    blockOnSQLi = false,
+    xss              = true,
+    sqli             = true,
+    nosql            = true,
+    pathTraversal    = true,
+    hpp              = true,
+    maxBodySize      = 10 * 1024 * 1024, // 10MB
+    maxDepth         = 20,
+    hppAllowList     = [],
+    blockOnSQLi      = false,
     blockOnPathTraversal = true,
     onViolation,
   } = opts;
@@ -400,9 +398,9 @@ function requestSanitizer(opts = {}) {
     const contentLength = parseInt(req.headers['content-length'] || '0', 10);
     if (contentLength > maxBodySize) {
       return res.status(413).json({
-        error: 'Request body too large',
-        code: 'BODY_TOO_LARGE',
-        limit: `${maxBodySize / 1024 / 1024}MB`,
+        error:  'Request body too large',
+        code:   'BODY_TOO_LARGE',
+        limit:  `${maxBodySize / 1024 / 1024}MB`,
       });
     }
 
@@ -418,11 +416,11 @@ function requestSanitizer(opts = {}) {
 
       if (allViolations.length > 0) {
         // Log all violations
-        logger.warn('[SANITIZER] Violations detected:', {
-          path: req.path,
-          method: req.method,
-          ip: req.ip,
-          requestId: req.id,
+        console.warn('[SANITIZER] Violations detected:', {
+          path:       req.path,
+          method:     req.method,
+          ip:         req.ip,
+          requestId:  req.id,
           violations: allViolations,
         });
 
@@ -433,18 +431,18 @@ function requestSanitizer(opts = {}) {
 
         // Block conditions
         const hasPathTraversal = allViolations.some(v => v.type === 'path_traversal');
-        const hasSQLi = allViolations.some(v => v.type === 'sqli_pattern');
-        const hasNoSQL = allViolations.some(v => v.type === 'nosql_injection');
+        const hasSQLi          = allViolations.some(v => v.type === 'sqli_pattern');
+        const hasNoSQL         = allViolations.some(v => v.type === 'nosql_injection');
         const hasDepthExceeded = allViolations.some(v => v.type === 'depth_exceeded');
 
         if ((blockOnPathTraversal && hasPathTraversal) ||
-          (blockOnSQLi && hasSQLi) ||
-          hasNoSQL ||
-          hasDepthExceeded) {
+            (blockOnSQLi && hasSQLi) ||
+            hasNoSQL ||
+            hasDepthExceeded) {
           return res.status(400).json({
-            error: 'Request rejected due to security policy',
-            code: 'SANITIZATION_BLOCKED',
-            types: [...new Set(allViolations.map(v => v.type))],
+            error:  'Request rejected due to security policy',
+            code:   'SANITIZATION_BLOCKED',
+            types:  [...new Set(allViolations.map(v => v.type))],
           });
         }
       }
@@ -465,7 +463,7 @@ function requestSanitizer(opts = {}) {
           if (pathTraversal && detectPathTraversal(value)) {
             return res.status(400).json({
               error: 'Invalid path parameter',
-              code: 'PATH_TRAVERSAL_IN_PARAM',
+              code:  'PATH_TRAVERSAL_IN_PARAM',
             });
           }
           req.params[key] = xss ? sanitizeXSS(value) : value;
@@ -489,8 +487,8 @@ function requestSanitizer(opts = {}) {
 function fileValidationMiddleware(opts = {}) {
   const {
     allowedTypes = ALLOWED_FILE_TYPES,
-    maxSize = 8 * 1024 * 1024, // fib(6) × 1MiB = 8MiB
-    maxFiles = 10,
+    maxSize      = 10 * 1024 * 1024,
+    maxFiles     = 10,
   } = opts;
 
   return (req, res, next) => {
@@ -516,9 +514,9 @@ function fileValidationMiddleware(opts = {}) {
       const result = validateFileType(file, allowedTypes);
       if (!result.valid) {
         return res.status(415).json({
-          error: result.reason,
-          code: 'INVALID_FILE_TYPE',
-          file: file.originalname,
+          error:  result.reason,
+          code:   'INVALID_FILE_TYPE',
+          file:   file.originalname,
         });
       }
     }

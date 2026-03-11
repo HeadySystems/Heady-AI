@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Key-Value Store — Redis/Upstash replacement
  * Zero-dependency in-process KV store with:
@@ -632,7 +630,7 @@ export class KVStore extends EventEmitter {
       await fs.promises.writeFile(snapshotPath, JSON.stringify(snap));
       this._wal?.truncate();
     } catch (err) {
-      logger.error('[KVStore] Snapshot failed:', err.message);
+      console.error('[KVStore] Snapshot failed:', err.message);
     }
   }
 
@@ -657,7 +655,7 @@ export class KVStore extends EventEmitter {
         this._zsets.set(key, ZSet.fromJSON(scores));
       }
     } catch (err) {
-      logger.error('[KVStore] Restore failed:', err.message);
+      console.error('[KVStore] Restore failed:', err.message);
     }
   }
 

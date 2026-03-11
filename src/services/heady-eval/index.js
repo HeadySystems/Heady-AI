@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('index');
 'use strict';
 
 /**
@@ -490,7 +489,7 @@ class HeadyEval extends EventEmitter {
                 catch { reject(new Error(`Invalid JSON from Heady™Guard`)); }
               });
             });
-            req.setTimeout(4236, () => { req.destroy(); reject(new Error('HeadyGuard timeout')); }); // φ³ × 1000
+            req.setTimeout(5000, () => { req.destroy(); reject(new Error('HeadyGuard timeout')); });
             req.on('error', reject);
             req.write(body);
             req.end();

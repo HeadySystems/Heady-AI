@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Request ID Propagation Middleware — Distributed Tracing
  * @module security-middleware/request-id-propagation
@@ -16,6 +14,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../../shared/logger')('request-id-propagation');
 
 const crypto = require('crypto');
 

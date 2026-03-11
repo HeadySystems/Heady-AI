@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -626,7 +624,7 @@ const server = http.createServer(async (req, res) => {
 
 if (require.main === module) {
   server.listen(PORT, () => {
-    logger.info(JSON.stringify({
+    console.log(JSON.stringify({
       level: 'info',
       message: `HeadySystems deep health check server listening on :${PORT}`,
       phi: PHI,

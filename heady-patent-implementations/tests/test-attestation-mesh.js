@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -32,11 +30,11 @@ let failed = 0;
 function test(name, fn) {
     try {
         fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
         failed++;
     }
 }
@@ -55,7 +53,7 @@ function noisyVec(ref, noise = 0.05) {
 // Claim 1: Attestation Protocol + Hallucination Detection + Quarantine
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 1: Agent Attestation Protocol ===');
+console.log('\n=== Claim 1: Agent Attestation Protocol ===');
 
 test('Claim 1: buildAttestation creates structured record', () => {
     const emb = randVec();
@@ -142,7 +140,7 @@ test('Claim 1(f): consensus recomputed after quarantine', () => {
 // Claim 2: Resonance Gate for Geometric Hallucination Detection
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 2: Resonance Gate Hallucination Detection ===');
+console.log('\n=== Claim 2: Resonance Gate Hallucination Detection ===');
 
 test('Claim 2: measureAlignment uses Resonance Gate (returns score + activation)', () => {
     const mesh = new AttestationMesh();
@@ -174,7 +172,7 @@ test('Claim 2: measureAlignment returns null when no consensus', () => {
 // Claim 3: Auto Un-Quarantine
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 3: Auto Un-Quarantine ===');
+console.log('\n=== Claim 3: Auto Un-Quarantine ===');
 
 test('Claim 3: agent un-quarantined after recovery streak', () => {
     const mesh = new AttestationMesh({
@@ -209,7 +207,7 @@ test('Claim 3: agent un-quarantined after recovery streak', () => {
 // Claim 4: Suspect Output Marking
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 4: Suspect Output Marking ===');
+console.log('\n=== Claim 4: Suspect Output Marking ===');
 
 test('Claim 4: quarantined agent has last N outputs marked suspect', () => {
     const mesh = new AttestationMesh({
@@ -238,7 +236,7 @@ test('Claim 4: quarantined agent has last N outputs marked suspect', () => {
 // Claim 5: PHI-Based Heartbeat Timing
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 5: PHI-Based Heartbeat Timing ===');
+console.log('\n=== Claim 5: PHI-Based Heartbeat Timing ===');
 
 test('Claim 5: computeHeartbeatInterval uses PHI multiplier', () => {
     const base     = 5000;
@@ -272,7 +270,7 @@ test('Claim 5: registered agent has phi-derived heartbeat interval', () => {
 // Claim 6: Consensus Reconstitution
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 6: Consensus Reconstitution ===');
+console.log('\n=== Claim 6: Consensus Reconstitution ===');
 
 test('Claim 6: consensus is normalized unit vector', () => {
     const mesh = new AttestationMesh();
@@ -308,7 +306,7 @@ test('Claim 6: mesh continues operating at reduced capacity after quarantine', (
 // Claim 7: Full System
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 7: Full AttestationMesh System ===');
+console.log('\n=== Claim 7: Full AttestationMesh System ===');
 
 test('Claim 7: getMeshStatus returns comprehensive report', () => {
     const mesh = new AttestationMesh();
@@ -390,8 +388,8 @@ test('Claim 7: getAuditLog returns all attestations', () => {
 // SUMMARY
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info(`\n─────────────────────────────────────────`);
-logger.info(`HS-059 Attestation Mesh: ${passed} passed, ${failed} failed`);
-logger.info(`─────────────────────────────────────────`);
+console.log(`\n─────────────────────────────────────────`);
+console.log(`HS-059 Attestation Mesh: ${passed} passed, ${failed} failed`);
+console.log(`─────────────────────────────────────────`);
 
 if (failed > 0) process.exit(1);

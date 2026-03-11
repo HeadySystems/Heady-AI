@@ -1,0 +1,197 @@
+# heady-budget-tracker Kubernetes + Istio mTLS Manifest
+# CSL routing — NO priority-based routing
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heady-budget-tracker
+  namespace: heady-system
+  labels:
+    app: heady-budget-tracker
+    heady.domain: "headysystems-com"
+    version: "3.2.3"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: heady-budget-tracker
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: heady-budget-tracker
+        heady.domain: "headysystems-com"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9464"
+    spec:
+      serviceAccountName: heady-budget-tracker-sa
+      containers:
+        - name: heady-budget-tracker
+          image: us-central1-docker.pkg.dev/heady-prod/heady-budget-tracker:3.2.3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3337
+              name: http
+            - containerPort: 9464
+              name: metrics
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: SERVICE_NAME
+              value: heady-budget-tracker
+            - name: SERVICE_VERSION
+              value: "3.2.3"
+            - name: HEADY_DOMAIN
+              value: headysystems.com
+            - name: PORT
+              value: "3337"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://heady-collector.heady-system.svc.cluster.local:4317"
+            - name: CSL_CONFIDENCE
+              value: "0.618"
+            - name: MTLS_ENABLED
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: heady-budget-tracker-secrets
+                optional: true
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 7
+            timeoutSeconds: 4
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 7
+            timeoutSeconds: 4
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health/startup
+              port: http
+            failureThreshold: 13
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "89Mi"
+              cpu: "55m"
+            limits:
+              memory: "377Mi"
+              cpu: "233m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: heady-budget-tracker
+  namespace: heady-system
+spec:
+  selector:
+    app: heady-budget-tracker
+  ports:
+    - name: http
+      port: 3337
+      targetPort: http
+    - name: metrics
+      port: 9464
+      targetPort: metrics
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: heady-budget-tracker-sa
+  namespace: heady-system
+---
+# mTLS — STRICT mode
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: heady-budget-tracker-peer-auth
+  namespace: heady-system
+spec:
+  selector:
+    matchLabels:
+      app: heady-budget-tracker
+  mtls:
+    mode: STRICT
+---
+# Zero-trust authorization
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: heady-budget-tracker-authz
+  namespace: heady-system
+spec:
+  selector:
+    matchLabels:
+      app: heady-budget-tracker
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["heady-system"]
+      to:
+        - operation:
+            ports: ["3337"]
+---
+# HPA — Fibonacci replicas, psi% CPU target
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: heady-budget-tracker-hpa
+  namespace: heady-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: heady-budget-tracker
+  minReplicas: 2
+  maxReplicas: 13
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 62
+---
+# VirtualService — CSL header routing, NO priority field
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: heady-budget-tracker-vs
+  namespace: heady-system
+spec:
+  hosts:
+    - heady-budget-tracker.heady-system.svc.cluster.local
+  http:
+    - match:
+        - headers:
+            x-heady-domain:
+              exact: headysystems.com
+      route:
+        - destination:
+            host: heady-budget-tracker
+            port:
+              number: 3337
+      timeout: 11s
+      retries:
+        attempts: 3
+        perTryTimeout: 4s
+        retryOn: "5xx,reset,connect-failure"
+    - route:
+        - destination:
+            host: heady-budget-tracker
+            port:
+              number: 3337

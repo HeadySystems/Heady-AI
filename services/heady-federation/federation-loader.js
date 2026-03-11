@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * EDGE-002/003: Module Federation JIT Component Loader
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('federation-loader');
 
 /**
  * Registry of available remote micro-frontends

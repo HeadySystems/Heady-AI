@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview HeadySecureEmailClient — Secure email client for {username}@headyme.com
  * accounts on the Heady™ sovereign AI platform.
@@ -143,7 +141,7 @@ export class SecureEmailClient {
       });
     } else {
       // Development / test mode — use ethereal
-      logger.warn('[HeadyEmail] No SMTP provider configured. Using test transport.');
+      console.warn('[HeadyEmail] No SMTP provider configured. Using test transport.');
       this._transport = createTransport({ jsonTransport: true });
     }
   }
@@ -640,7 +638,7 @@ export class SecureEmailClient {
         return await this._checkRspamd(emailData);
       }
     } catch (err) {
-      logger.error('[HeadyEmail] Spam check failed:', err.message);
+      console.error('[HeadyEmail] Spam check failed:', err.message);
     }
 
     return { isSpam: false, score: 0, reasons: [] };

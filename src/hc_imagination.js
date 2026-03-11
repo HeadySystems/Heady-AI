@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -29,8 +27,6 @@ const logger = pino();
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
-const ColorfulLogger = require('./hc_colorful_logger');
-const log = new ColorfulLogger({ level: 'info' });
 
 // ============================================================================
 // DATA STRUCTURES
@@ -206,7 +202,7 @@ class ImaginationEngine {
     try {
       await fs.mkdir(cacheDir, { recursive: true });
     } catch (e) {
-      log.warning("Failed to create imagination cache directory", { path: cacheDir, error: e.message });
+      // Directory may already exist
     }
     
     // Load persisted state
@@ -216,7 +212,7 @@ class ImaginationEngine {
     await this.loadIPPackages();
     
     this.initialized = true;
-    logger.info(`[Imagination] Initialized with ${this.primitives.size} primitives, ${this.concepts.size} concepts`);
+    console.log(`[Imagination] Initialized with ${this.primitives.size} primitives, ${this.concepts.size} concepts`);
   }
 
   async loadPrimitives() {
@@ -229,7 +225,7 @@ class ImaginationEngine {
         this.primitives.set(p.id, p);
       }
     } catch (e) {
-      log.warning("Failed to load primitives", { path: this.config.primitivesPath, error: e.message });
+      // No existing primitives
     }
   }
 
@@ -248,7 +244,7 @@ class ImaginationEngine {
         this.concepts.set(c.id, c);
       }
     } catch (e) {
-      log.warning("Failed to load concepts", { path: this.config.conceptsPath, error: e.message });
+      // No existing concepts
     }
   }
 
@@ -267,7 +263,7 @@ class ImaginationEngine {
         this.experiments.set(e.id, e);
       }
     } catch (e) {
-      log.warning("Failed to load experiments", { path: this.config.experimentsPath, error: e.message });
+      // No existing experiments
     }
   }
 
@@ -285,7 +281,7 @@ class ImaginationEngine {
         this.ipPackages.set(p.id, p);
       }
     } catch (e) {
-      log.warning("Failed to load IP packages", { path: this.config.ipPackagesPath, error: e.message });
+      // No existing IP packages
     }
   }
 
@@ -574,7 +570,7 @@ class ImaginationEngine {
     // Select primitives for recombination
     const primitives = this.selectPrimitives(this.config.maxPrimitivesPerConcept);
     if (primitives.length < this.config.minPrimitivesPerConcept) {
-      logger.info('[Imagination] Not enough primitives for recombination');
+      console.log('[Imagination] Not enough primitives for recombination');
       return [];
     }
     
@@ -631,7 +627,7 @@ class ImaginationEngine {
     await this.saveConcepts();
     await this.savePrimitives();
     
-    logger.info(`[Imagination] Generated ${newConcepts.length} new concepts`);
+    console.log(`[Imagination] Generated ${newConcepts.length} new concepts`);
     return newConcepts;
   }
 
@@ -856,7 +852,7 @@ class ImaginationEngine {
       
       if (isHot && concept.status === 'raw') {
         concept.status = 'hot';
-        logger.info(`[Imagination] Hot concept identified: ${concept.title}`);
+        console.log(`[Imagination] Hot concept identified: ${concept.title}`);
       }
     }
   }

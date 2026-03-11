@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
@@ -28,7 +26,7 @@ function inspect(file) {
   const text = buf.toString('utf8');
   for (const re of patterns) {
     if (re.test(text)) {
-      logger.error(`Secret pattern match: ${re} in ${path.relative(root, file)}`);
+      console.error(`Secret pattern match: ${re} in ${path.relative(root, file)}`);
       process.exitCode = 1;
       return;
     }
@@ -37,4 +35,4 @@ function inspect(file) {
 
 walk(root);
 if (process.exitCode) process.exit(1);
-logger.info('secret scan ok');
+console.log('secret scan ok');

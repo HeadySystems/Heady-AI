@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -406,7 +404,7 @@ class CSLGateEngine {
    *
    * @example
    * const { drifted, similarity, delta } = engine.detectDrift(currentEmb, baselineEmb);
-   * if (drifted) logger.info(`Drift detected: delta=${delta.toFixed(3)}`);
+   * if (drifted) console.log(`Drift detected: delta=${delta.toFixed(3)}`);
    */
   detectDrift(current, baseline, threshold = this.coherenceDriftThreshold) {
     const similarity = cosineSimilarity(current, baseline);

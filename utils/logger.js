@@ -1,6 +1,5 @@
-const pino = require('pino');
-const logger = pino({
-    level: process.env.LOG_LEVEL || 'info',
-    timestamp: pino.stdTimeFunctions.isoTime,
-});
-module.exports = logger;
+/**
+ * Re-export logger from src/utils/logger
+ * Bridge for modules that use require('../utils/logger') from src/ level
+ */
+module.exports = require('../src/utils/logger');

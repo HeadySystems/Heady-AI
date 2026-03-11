@@ -1,4 +1,4 @@
-const { logger } = require('./utils/logger');
+const logger = require('../shared/logger')('hc_skill_executor');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

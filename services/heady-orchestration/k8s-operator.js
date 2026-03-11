@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * ORCH-002: Kubernetes HeadyApp CRD + Operator
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('k8s-operator');
 
 /**
  * HeadyApp CRD Schema

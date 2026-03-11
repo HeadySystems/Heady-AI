@@ -1,0 +1,105 @@
+// ═══════════════════════════════════════════════════════════════
+// Heady™ Search Service — Protocol Buffer Definitions
+// © 2026 HeadySystems Inc.
+// ═══════════════════════════════════════════════════════════════
+
+syntax = "proto3";
+
+package heady.search.v2;
+
+option java_package = "com.headysystems.search.v2";
+option go_package = "github.com/HeadyMe/heady/proto/search/v2";
+
+// ─── Search Service ──────────────────────────────────────────
+service SearchService {
+  // Semantic search across vector memory
+  rpc SemanticSearch(SemanticSearchRequest) returns (SemanticSearchResponse);
+
+  // Full-text search with BM25 scoring
+  rpc TextSearch(TextSearchRequest) returns (TextSearchResponse);
+
+  // Hybrid search combining semantic + full-text with RRF fusion
+  rpc HybridSearch(HybridSearchRequest) returns (HybridSearchResponse);
+
+  // Index a document for search
+  rpc IndexDocument(IndexDocumentRequest) returns (IndexDocumentResponse);
+
+  // Delete a document from the index
+  rpc DeleteDocument(DeleteDocumentRequest) returns (DeleteDocumentResponse);
+}
+
+// ─── Messages ────────────────────────────────────────────────
+message SemanticSearchRequest {
+  string query = 1;
+  int32  top_k = 2;           // default: fib(8) = 21
+  float  min_score = 3;       // default: 1/φ ≈ 0.618
+  string namespace = 4;
+  map<string, string> filters = 5;
+}
+
+message SemanticSearchResponse {
+  repeated SearchResult results = 1;
+  float   query_time_ms = 2;
+  int32   total_matches = 3;
+}
+
+message TextSearchRequest {
+  string query = 1;
+  int32  top_k = 2;
+  string namespace = 3;
+  map<string, string> filters = 4;
+}
+
+message TextSearchResponse {
+  repeated SearchResult results = 1;
+  float   query_time_ms = 2;
+  int32   total_matches = 3;
+}
+
+message HybridSearchRequest {
+  string query = 1;
+  int32  top_k = 2;
+  float  semantic_weight = 3;  // default: φ/(1+φ) ≈ 0.618
+  float  text_weight = 4;     // default: 1/(1+φ) ≈ 0.382
+  string namespace = 5;
+  map<string, string> filters = 6;
+}
+
+message HybridSearchResponse {
+  repeated SearchResult results = 1;
+  float   query_time_ms = 2;
+  int32   total_matches = 3;
+  string  fusion_method = 4;  // "rrf" | "weighted"
+}
+
+message SearchResult {
+  string id = 1;
+  float  score = 2;
+  string content = 3;
+  map<string, string> metadata = 4;
+  string namespace = 5;
+  string source = 6;          // "semantic" | "text" | "hybrid"
+}
+
+message IndexDocumentRequest {
+  string id = 1;
+  string content = 2;
+  string namespace = 3;
+  map<string, string> metadata = 4;
+  bool   generate_embedding = 5;  // default: true
+}
+
+message IndexDocumentResponse {
+  string id = 1;
+  bool   indexed = 2;
+  int32  dimensions = 3;
+}
+
+message DeleteDocumentRequest {
+  string id = 1;
+  string namespace = 2;
+}
+
+message DeleteDocumentResponse {
+  bool deleted = 1;
+}

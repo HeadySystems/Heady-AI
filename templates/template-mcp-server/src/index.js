@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -106,10 +104,10 @@ app.get('/sse', async (c) => {
 
     transport.onClose = () => {
         activeSessions.delete(sessionId);
-        logger.info(`[MCP] Session ${sessionId} closed`);
+        console.log(`[MCP] Session ${sessionId} closed`);
     };
 
-    logger.info(`[MCP] New SSE session: ${sessionId}`);
+    console.log(`[MCP] New SSE session: ${sessionId}`);
     await mcp.connect(transport);
 });
 
@@ -126,7 +124,7 @@ app.post('/messages/:sessionId', async (c) => {
 
 // ── Start Server ────────────────────────────────────────────────
 serve({ fetch: app.fetch, port: PORT }, () => {
-    logger.info(`[MCP] Heady™ MCP Server projected on :${PORT}`);
-    logger.info(`[MCP] SSE endpoint: http://localhost:${PORT}/sse`);
-    logger.info(`[MCP] Health: http://localhost:${PORT}/health`);
+    console.log(`[MCP] Heady™ MCP Server projected on :${PORT}`);
+    console.log(`[MCP] SSE endpoint: http://localhost:${PORT}/sse`);
+    console.log(`[MCP] Health: http://localhost:${PORT}/health`);
 });

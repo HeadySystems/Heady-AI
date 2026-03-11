@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -109,8 +107,8 @@ class Corrections extends EventEmitter {
   _defaultLogger() {
     return {
       info:  () => {},
-      warn:  (...a) => logger.error('[Corrections:WARN]',  ...a),
-      error: (...a) => logger.error('[Corrections:ERROR]', ...a),
+      warn:  (...a) => console.error('[Corrections:WARN]',  ...a),
+      error: (...a) => console.error('[Corrections:ERROR]', ...a),
     };
   }
 

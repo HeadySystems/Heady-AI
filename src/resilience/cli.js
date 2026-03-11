@@ -1,7 +1,6 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 'use strict';
+const logger = require('../shared/logger')('cli');
 
 /**
  * create-heady-agent CLI
@@ -186,6 +185,7 @@ async function generateBee(dir, name, template, language) {
 
   const templates = {
     basic: `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const PHI = 1.6180339887;
 
@@ -249,6 +249,7 @@ class ${className} {
 module.exports = { ${className} };
 `,
     monitor: `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const PHI = 1.6180339887;
 const { EventEmitter } = require('events');
@@ -321,6 +322,7 @@ module.exports = { ${className} };
 
   // Index file
   const indexCode = `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const express = require('express');
 const { ${className} } = require('./bee');
@@ -338,7 +340,7 @@ async function main() {
   });
 }
 
-main().catch(logger.error);
+main().catch(console.error);
 
 process.on('SIGTERM', async () => {
   await bee.shutdown();
@@ -384,6 +386,7 @@ async function generateTests(dir, name, template) {
     .join('') + 'Bee';
 
   const testCode = `'use strict';
+const logger = require('../shared/logger')('cli');
 
 const { ${className} } = require('../src/bee');
 

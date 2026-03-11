@@ -1,22 +1,3 @@
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 /**
  * HeadyBuddy Universal Widget v3.0
  * Auth-aware + user-scoped persistent 3D vector workspace chat.
@@ -53,15 +34,15 @@ function removeCookie(name) {
   const sendBtn = panel.querySelector('#hb-send');
 
   function ensureDevice() {
-    const existing = getCookie(DK);
+    const existing = localStorage.getItem(DK);
     if (existing) return existing;
     const created = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : `heady-${Date.now()}`;
-    setCookie(DK, created, 7);
+    localStorage.setItem(DK, created);
     return created;
   }
 
   function userKey() {
-    const token = getCookie(TK) || 'anon';
+    const token = localStorage.getItem(TK) || 'anon';
     return `buddy_history:${location.hostname}:${token.slice(0, 16)}`;
   }
 
@@ -74,16 +55,16 @@ function removeCookie(name) {
   }
 
   function loadHistory() {
-    try { return JSON.parse(getCookie(userKey()) || '[]'); } catch { return []; }
+    try { return JSON.parse(localStorage.getItem(userKey()) || '[]'); } catch { return []; }
   }
 
   function saveHistory(items) {
-    setCookie(userKey(), JSON.stringify(items.slice(-40, 7)));
+    localStorage.setItem(userKey(), JSON.stringify(items.slice(-40)));
   }
 
   async function refreshAuth() {
-    const token = getCookie(TK);
-    const storedUser = getCookie(UK);
+    const token = localStorage.getItem(TK);
+    const storedUser = localStorage.getItem(UK);
     if (storedUser) {
       try { user = JSON.parse(storedUser); } catch { }
     }
@@ -97,8 +78,8 @@ function removeCookie(name) {
   authBtn.onclick = () => {
     if (user) {
       user = null;
-      removeCookie(UK);
-      removeCookie(TK);
+      localStorage.removeItem(UK);
+      localStorage.removeItem(TK);
       refreshAuth();
       return;
     }
@@ -120,7 +101,7 @@ function removeCookie(name) {
     if (!text) return;
     input.value = '';
     const safeText = text.replace(/[<>]/g, '');
-    const token = getCookie(TK) || '';
+    const token = localStorage.getItem(TK) || '';
     const device = ensureDevice();
     const workspaceId = `vw:${location.hostname}:${(token || 'anon').slice(0, 16)}:${device.slice(0, 16)}`;
 

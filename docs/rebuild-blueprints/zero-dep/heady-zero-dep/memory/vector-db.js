@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Vector Database with HNSW Index
  * Zero-dependency replacement for pgvector / Neon DB.
@@ -743,7 +741,7 @@ export class VectorDB {
         this._meta.set(id, { shard, createdAt: m.createdAt, updatedAt: m.updatedAt });
       }
     } catch (err) {
-      logger.error('[VectorDB] Failed to load from disk:', err.message);
+      console.error('[VectorDB] Failed to load from disk:', err.message);
     }
   }
 

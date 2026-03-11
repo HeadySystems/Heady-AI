@@ -127,8 +127,8 @@ Install with: bash install-all-android.sh
 - Health:      http://manager.dev.local.heady.internal:3300/api/health
 - API:         http://manager.dev.local.heady.internal:3300/api/
 - Web App:     http://app-web.dev.local.heady.internal:3000
-- IDE:         http://internal.headyio.com:8443 (code-server)
-- MCP Gateway: http://internal.headyio.com:4000
+- IDE:         http://localhost:8443 (code-server)
+- MCP Gateway: http://localhost:4000
 
 # 📝 Documentation
 
@@ -156,9 +156,9 @@ robocopy distribution/ E:/distribution /MIR
 # 🌐 Cloud Layers
 
 - local     → manager.dev.local.heady.internal:3300 [Green]
-- cloud-me  → app.headysystems.com [Cyan]
-- cloud-sys → app.headysystems.com [Magenta]
-- cloud-conn→ app.headysystems.com [Yellow]
+- cloud-me  → heady-manager-headyme.onrender.com [Cyan]
+- cloud-sys → heady-manager-headysystems.onrender.com [Magenta]
+- cloud-conn→ heady-manager-headyconnection.onrender.com [Yellow]
 - hybrid    → .env.hybrid mode [White]
 
 # 📞 Support

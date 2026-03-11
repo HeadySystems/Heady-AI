@@ -8,7 +8,7 @@
 
 ## INSTRUCTIONS FOR PERPLEXITY COMPUTER
 
-You are building out every planned/incomplete component in the Heady™ monorepo. Nothing should remain as a stub, placeholder, or NOTE. Everything must be real, functional, production code.
+You are building out every planned/incomplete component in the Heady™ monorepo. Nothing should remain as a stub, placeholder, or TODO. Everything must be real, functional, production code.
 
 **READ THE ATTACHED CONTEXT FILES FIRST** — especially `00-HEADY-MASTER-CONTEXT.md`, `package.json`, and `manifest.monorepo.json`.
 

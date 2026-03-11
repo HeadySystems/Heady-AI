@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview MIDI2 UMP WebSocket Proxy — Bridges UDP (port 5504) and
  * WebSocket clients for real-time, bidirectional MIDI 2.0 Universal MIDI
@@ -449,7 +447,7 @@ class WSClient {
  * @example
  * const proxy = new MidiWebSocketProxy({ wsPort: 8089, udpPort: 5504 });
  * proxy.start();
- * proxy.on('ump_received', (packet) => logger.info('UMP:', packet));
+ * proxy.on('ump_received', (packet) => console.log('UMP:', packet));
  */
 export class MidiWebSocketProxy extends EventEmitter {
   /**
@@ -459,7 +457,7 @@ export class MidiWebSocketProxy extends EventEmitter {
    * @param {string} [options.udpHost='0.0.0.0'] - UDP bind address
    * @param {number} [options.maxClients=MAX_WS_CLIENTS] - Max WebSocket clients
    * @param {number} [options.bufferSize=EVENT_BUFFER_SIZE] - Ring buffer size
-   * @param {Function} [options.log=logger.info] - Logging function
+   * @param {Function} [options.log=console.log] - Logging function
    */
   constructor(options = {}) {
     super();
@@ -477,7 +475,7 @@ export class MidiWebSocketProxy extends EventEmitter {
     this.maxClients = options.maxClients ?? MAX_WS_CLIENTS;
 
     /** @type {Function} */
-    this._log = options.log ?? logger.info;
+    this._log = options.log ?? console.log;
 
     /** @type {Map<string, WSClient>} Connected WebSocket clients */
     this._clients = new Map();

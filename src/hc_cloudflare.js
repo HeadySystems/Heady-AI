@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -68,7 +66,7 @@ class CloudflareManager {
   _loadFromWrangler() {
     this.configPath = getWranglerConfigPath();
     if (!this.configPath) {
-      logger.warn("  ⚠ Cloudflare: wrangler config not found");
+      console.warn("  ⚠ Cloudflare: wrangler config not found");
       return;
     }
 
@@ -83,7 +81,7 @@ class CloudflareManager {
         this.scopes = scopesLine[1].match(/"([^"]+)"/g)?.map(s => s.replace(/"/g, "")) || [];
       }
     } catch (err) {
-      logger.warn(`  ⚠ Cloudflare: Failed to read wrangler config: ${err.message}`);
+      console.warn(`  ⚠ Cloudflare: Failed to read wrangler config: ${err.message}`);
     }
   }
 
@@ -240,7 +238,7 @@ class CloudflareManager {
       }
       fs.writeFileSync(this.configPath, content, "utf8");
     } catch (err) {
-      logger.warn(`  ⚠ Cloudflare: Failed to save wrangler config: ${err.message}`);
+      console.warn(`  ⚠ Cloudflare: Failed to save wrangler config: ${err.message}`);
     }
   }
 

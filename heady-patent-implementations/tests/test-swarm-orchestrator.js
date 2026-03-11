@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -29,14 +27,14 @@ const _queue = [];
 
 function test(name, fn) {
   _queue.push(async () => {
-    try { await fn(); logger.info(`  ✓ ${name}`); passed++; }
-    catch (err) { logger.error(`  ✗ ${name}: ${err.message}`); failed++; }
+    try { await fn(); console.log(`  ✓ ${name}`); passed++; }
+    catch (err) { console.error(`  ✗ ${name}: ${err.message}`); failed++; }
   });
 }
 
 function asyncTest(name, fn) { test(name, fn); }
 
-logger.info('\n=== 17-Swarm Orchestrator Tests ===\n');
+console.log('\n=== 17-Swarm Orchestrator Tests ===\n');
 
 test('PHI constant correct', () => { assert.strictEqual(PHI, 1.6180339887); });
 
@@ -477,6 +475,6 @@ asyncTest('SwarmOrchestrator runConsensus reaches decision', async () => {
 
 (async () => {
   for (const t of _queue) await t();
-  logger.info(`\nResults: ${passed} passed, ${failed} failed\n`);
+  console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
   process.exit(failed > 0 ? 1 : 0);
 })();

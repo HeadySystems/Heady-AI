@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -23,9 +21,9 @@ const c = {
   green: '\x1b[32m', yellow: '\x1b[33m', blue: '\x1b[34m',
   cyan: '\x1b[36m', red: '\x1b[31m', magenta: '\x1b[35m',
 };
-const ok   = (m) => logger.info(`${c.green}✔${c.reset}  ${m}`);
-const info = (m) => logger.info(`${c.blue}▶${c.reset}  ${m}`);
-const err  = (m, exit) => { logger.error(`${c.red}✖${c.reset}  ${m}`); if (exit) process.exit(1); };
+const ok   = (m) => console.log(`${c.green}✔${c.reset}  ${m}`);
+const info = (m) => console.log(`${c.blue}▶${c.reset}  ${m}`);
+const err  = (m, exit) => { console.error(`${c.red}✖${c.reset}  ${m}`); if (exit) process.exit(1); };
 
 // ── Arg parsing ───────────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -74,7 +72,7 @@ const TEMPLATES = {
     let details = {};
 
     try {
-      // NOTE: Replace with actual health check logic
+      // TODO: Replace with actual health check logic
       const response = await fetch(\`http://localhost:3849/health\`);
       healthy = response.ok;
       details = await response.json();
@@ -96,7 +94,7 @@ const TEMPLATES = {
   'monitor': (domain) => `
   async function collectMetrics() {
     const metrics = {
-      // NOTE: Add domain-specific metric collection
+      // TODO: Add domain-specific metric collection
       timestamp: Date.now(),
       samples: [],
     };
@@ -112,7 +110,7 @@ const TEMPLATES = {
   async function detectAnomalies() {
     const anomalies = [];
 
-    // NOTE: Add anomaly detection logic using PHI thresholds
+    // TODO: Add anomaly detection logic using PHI thresholds
     const threshold = PHI * 0.1;
 
     return {
@@ -129,7 +127,7 @@ const TEMPLATES = {
     const processed = [];
     const errors = [];
 
-    // NOTE: Implement queue processing logic
+    // TODO: Implement queue processing logic
     const batchSize = Math.ceil(PHI * 8); // ~13 items per batch
 
     return {
@@ -143,7 +141,7 @@ const TEMPLATES = {
   },
 
   async function flushResults() {
-    // NOTE: Flush processed results to downstream
+    // TODO: Flush processed results to downstream
     return {
       bee: '${domain}',
       action: 'flushResults',
@@ -157,7 +155,7 @@ const TEMPLATES = {
     const discovered = [];
     const stale = [];
 
-    // NOTE: Implement resource scanning logic
+    // TODO: Implement resource scanning logic
     const scanInterval = PHI * 1000; // PHI-scaled interval
 
     return {
@@ -171,7 +169,7 @@ const TEMPLATES = {
   },
 
   async function pruneStale() {
-    // NOTE: Remove stale resources discovered during scan
+    // TODO: Remove stale resources discovered during scan
     return {
       bee: '${domain}',
       action: 'pruneStale',
@@ -184,7 +182,7 @@ const TEMPLATES = {
   async function computeProjection() {
     const state = {};
 
-    // NOTE: Compute the ${domain} projection state
+    // TODO: Compute the ${domain} projection state
     const version = Date.now();
 
     return {
@@ -197,7 +195,7 @@ const TEMPLATES = {
   },
 
   async function diffAndPublish() {
-    // NOTE: Diff new state vs old state, publish if changed
+    // TODO: Diff new state vs old state, publish if changed
     const changed = false;
     return {
       bee: '${domain}',
@@ -209,7 +207,7 @@ const TEMPLATES = {
 
   'default': (domain) => `
   async function run() {
-    // NOTE: Implement primary worker logic for ${domain}
+    // TODO: Implement primary worker logic for ${domain}
     return {
       bee: '${domain}',
       action: 'run',
@@ -377,12 +375,12 @@ const testContent = genTestFile(domain, description);
 await writeFile(beeFile,  beeContent,  'utf8');
 await writeFile(testFile, testContent, 'utf8');
 
-logger.info('');
-logger.info(`${c.bold}${c.magenta}  HeadyBee Generator${c.reset}`);
-logger.info(`${c.dim}  Domain: ${c.reset}${c.cyan}${domain}${c.reset}  ${c.dim}Template: ${template}  Priority: ${priority}  Category: ${category}${c.reset}`);
-logger.info('');
+console.log('');
+console.log(`${c.bold}${c.magenta}  HeadyBee Generator${c.reset}`);
+console.log(`${c.dim}  Domain: ${c.reset}${c.cyan}${domain}${c.reset}  ${c.dim}Template: ${template}  Priority: ${priority}  Category: ${category}${c.reset}`);
+console.log('');
 ok(`Created ${c.cyan}src/bees/${domain}-bee.js${c.reset}`);
 ok(`Created ${c.cyan}tests/bees/${domain}-bee.test.js${c.reset}`);
-logger.info('');
+console.log('');
 info(`Run tests: ${c.dim}node --test tests/bees/${domain}-bee.test.js${c.reset}`);
-logger.info('');
+console.log('');

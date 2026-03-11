@@ -1,40 +1,23 @@
 /**
- * ╔══════════════════════════════════════════════════════════════════╗
- * ║  HEADY™ CSL ENGINE — Continuous Semantic Logic                   ║
- * ║  Geometric vector operations as logical gates                    ║
- * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
- * ║  60+ Provisional Patents — All Rights Reserved                   ║
- * ║  © 2024-2026 HeadySystems Inc.                                   ║
- * ╚══════════════════════════════════════════════════════════════════╝
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * Heady™ CSL Engine — shared/csl-engine.js
+ * ═══════════════════════════════════════════════════════════════════════════════
  *
- * @module csl-engine
- * @author Eric Haywood, HeadySystems Inc.
+ * Continuous Semantic Logic: geometric AI gates replacing discrete boolean logic.
+ * All operations work on unit vectors in ℝᴰ (D ∈ {384, 1536}).
  *
- * Domain: Unit vectors in ℝᴰ, D ∈ {384, 1536}
- * Truth value: τ(a,b) = cos(θ) ∈ [-1, +1]
- *   +1 = aligned (TRUE)
- *    0 = orthogonal (UNKNOWN)
- *   -1 = antipodal (FALSE)
+ * Gates: AND, OR, NOT, IMPLY, XOR, CONSENSUS, GATE
+ * HDC/VSA: BIND, BUNDLE, PERMUTE for hyperdimensional computing
+ * MoE Router: Cosine-similarity based expert routing
+ *
+ * © HeadySystems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
-import {
-  PHI, PSI, PSI_SQ as PSI2, PSI_CUBED as PSI3,
-  CSL_THRESHOLDS, phiThreshold, phiFusionWeights,
-  cslGate, adaptiveTemperature, fib,
-} from './phi-math.js';
+'use strict';
 
-const PSI4 = Math.pow(PSI, 4);
+const { PHI, PSI, CSL_THRESHOLDS, PSI_POWERS, phiThreshold } = require('./phi-math');
 
-/**
- * Derived PSI powers not in phi-math.js.
- * ZERO magic numbers — all derived from PSI.
- * @constant {number}
- */
-const PSI5 = Math.pow(PSI, 5);   // ψ⁵ ≈ 0.0902
-const PSI8 = Math.pow(PSI, 8);   // ψ⁸ ≈ 0.0131
-const PSI9 = Math.pow(PSI, 9);   // ψ⁹ ≈ 0.0081
-
-// ─── VECTOR OPERATIONS ───────────────────────────────────────────────────────
+// ─── Vector Utilities ────────────────────────────────────────────────────────
 
 /**
  * Compute dot product of two vectors.
@@ -49,7 +32,7 @@ function dot(a, b) {
 }
 
 /**
- * Compute L2 norm (magnitude) of a vector.
+ * Compute L2 norm of a vector.
  * @param {Float64Array|number[]} v
  * @returns {number}
  */
@@ -70,17 +53,50 @@ function normalize(v) {
   return result;
 }
 
-// ─── CSL GATE OPERATIONS ─────────────────────────────────────────────────────
-
 /**
- * CSL AND — Cosine similarity (semantic alignment measure).
- * AND(a, b) = cos(θ) = (a·b) / (‖a‖·‖b‖)
- *
- * Properties: commutative, associative (in the limit)
- *
+ * Add two vectors.
  * @param {Float64Array|number[]} a
  * @param {Float64Array|number[]} b
- * @returns {number} Cosine similarity ∈ [-1, +1]
+ * @returns {Float64Array}
+ */
+function add(a, b) {
+  const result = new Float64Array(a.length);
+  for (let i = 0; i < a.length; i++) result[i] = a[i] + b[i];
+  return result;
+}
+
+/**
+ * Subtract vector b from a.
+ * @param {Float64Array|number[]} a
+ * @param {Float64Array|number[]} b
+ * @returns {Float64Array}
+ */
+function sub(a, b) {
+  const result = new Float64Array(a.length);
+  for (let i = 0; i < a.length; i++) result[i] = a[i] - b[i];
+  return result;
+}
+
+/**
+ * Scale a vector by a scalar.
+ * @param {Float64Array|number[]} v
+ * @param {number} s
+ * @returns {Float64Array}
+ */
+function scale(v, s) {
+  const result = new Float64Array(v.length);
+  for (let i = 0; i < v.length; i++) result[i] = v[i] * s;
+  return result;
+}
+
+// ─── CSL Gates ───────────────────────────────────────────────────────────────
+
+/**
+ * CSL AND: Cosine similarity — measures semantic alignment.
+ * τ(a,b) = cos(θ) = (a·b) / (‖a‖·‖b‖)
+ * @param {Float64Array|number[]} a
+ * @param {Float64Array|number[]} b
+ * @returns {number} Value in [-1, +1]
  */
 function cslAND(a, b) {
   const na = norm(a);
@@ -90,417 +106,253 @@ function cslAND(a, b) {
 }
 
 /**
- * CSL OR — Superposition (soft union).
- * OR(a, b) = normalize(a + b)
- *
+ * CSL OR: Superposition — soft semantic union.
+ * OR(a,b) = normalize(a + b)
  * @param {Float64Array|number[]} a
  * @param {Float64Array|number[]} b
- * @returns {Float64Array} Normalized superposition
+ * @returns {Float64Array} Unit vector
  */
 function cslOR(a, b) {
-  const result = new Float64Array(a.length);
-  for (let i = 0; i < a.length; i++) result[i] = a[i] + b[i];
-  return normalize(result);
+  return normalize(add(a, b));
 }
 
 /**
- * CSL NOT — Orthogonal projection (semantic negation).
- * NOT(a, b) = a - proj_b(a) = a - (a·b / ‖b‖²)·b
- *
- * Properties: idempotent (NOT(NOT(a,b),b) = NOT(a,b)), orthogonal (NOT(a,b)·b = 0)
- *
- * @param {Float64Array|number[]} a - Vector to negate relative to b
- * @param {Float64Array|number[]} b - Reference direction
- * @returns {Float64Array} Component of a orthogonal to b
+ * CSL NOT: Orthogonal projection — semantic negation.
+ * NOT(a,b) = a - proj_b(a) = a - (a·b / ‖b‖²)·b
+ * Property: NOT(a,b) · b = 0 (guaranteed orthogonality)
+ * @param {Float64Array|number[]} a
+ * @param {Float64Array|number[]} b
+ * @returns {Float64Array}
  */
 function cslNOT(a, b) {
-  const bb = dot(b, b);
-  if (bb === 0) return new Float64Array(a);
-  const scale = dot(a, b) / bb;
-  const result = new Float64Array(a.length);
-  for (let i = 0; i < a.length; i++) result[i] = a[i] - scale * b[i];
-  return result;
+  const bNormSq = dot(b, b);
+  if (bNormSq === 0) return new Float64Array(a);
+  const projCoeff = dot(a, b) / bNormSq;
+  return sub(a, scale(b, projCoeff));
 }
 
 /**
- * CSL IMPLY — Projection (component of a in direction of b).
- * IMPLY(a, b) = proj_b(a) = (a·b / ‖b‖²)·b
- *
+ * CSL IMPLY: Projection — component of a in direction of b.
+ * IMPLY(a,b) = proj_b(a) = (a·b / ‖b‖²)·b
  * @param {Float64Array|number[]} a
  * @param {Float64Array|number[]} b
  * @returns {Float64Array}
  */
 function cslIMPLY(a, b) {
-  const bb = dot(b, b);
-  if (bb === 0) return new Float64Array(a.length);
-  const scale = dot(a, b) / bb;
-  const result = new Float64Array(a.length);
-  for (let i = 0; i < a.length; i++) result[i] = scale * b[i];
-  return result;
+  const bNormSq = dot(b, b);
+  if (bNormSq === 0) return new Float64Array(a.length);
+  const projCoeff = dot(a, b) / bNormSq;
+  return scale(b, projCoeff);
 }
 
 /**
- * CSL XOR — Exclusive components (what's unique to each vector).
- * XOR(a, b) = normalize(a + b) - proj_mutual
- *
+ * CSL XOR: Exclusive semantic components.
+ * XOR(a,b) = normalize(a+b) - mutual projection
  * @param {Float64Array|number[]} a
  * @param {Float64Array|number[]} b
  * @returns {Float64Array}
  */
 function cslXOR(a, b) {
-  const union = cslOR(a, b);
-  const mutual = cslIMPLY(union, a.length === b.length ? a : b);
-  const result = new Float64Array(a.length);
-  for (let i = 0; i < a.length; i++) result[i] = union[i] - mutual[i];
-  return normalize(result);
+  const combined = normalize(add(a, b));
+  const aExclusive = cslNOT(a, b);
+  const bExclusive = cslNOT(b, a);
+  return normalize(add(aExclusive, bExclusive));
 }
 
 /**
- * CSL CONSENSUS — Weighted centroid (agent agreement).
- * CONSENSUS(vectors, weights) = Σ(wᵢ·vᵢ) / ‖Σ(wᵢ·vᵢ)‖
- *
- * @param {Array<Float64Array|number[]>} vectors - Agent opinion vectors
- * @param {number[]} [weights] - Agent weights (defaults to phiFusionWeights)
- * @returns {Float64Array} Consensus vector
+ * CSL CONSENSUS: Weighted centroid of multiple agent vectors.
+ * CONSENSUS(vᵢ, wᵢ) = normalize(Σ wᵢ·vᵢ)
+ * @param {Array<Float64Array|number[]>} vectors
+ * @param {number[]} [weights] - If omitted, uniform weights
+ * @returns {Float64Array}
  */
 function cslCONSENSUS(vectors, weights) {
   if (vectors.length === 0) return new Float64Array(0);
-  const w = weights || phiFusionWeights(vectors.length);
   const dim = vectors[0].length;
   const result = new Float64Array(dim);
-  for (let i = 0; i < vectors.length; i++) {
-    for (let j = 0; j < dim; j++) {
-      result[j] += w[i] * vectors[i][j];
+  const w = weights || vectors.map(() => 1 / vectors.length);
+  for (let v = 0; v < vectors.length; v++) {
+    for (let d = 0; d < dim; d++) {
+      result[d] += w[v] * vectors[v][d];
     }
   }
   return normalize(result);
 }
 
 /**
- * CSL GATE — Soft sigmoid gating.
- * GATE(value, cosScore, τ, temp) = value × σ((cosScore - τ) / temp)
- *
- * Re-exported from phi-math for convenience.
- *
- * @param {number} value - Value to gate
- * @param {number} cosScore - Cosine similarity score
- * @param {number} [tau=CSL_THRESHOLDS.MINIMUM] - Gate threshold
- * @param {number} [temperature=PSI3] - Temperature (ψ³ ≈ 0.236)
- * @returns {number}
- */
-const cslGATE = cslGate;
-
-// ─── TERNARY LOGIC ───────────────────────────────────────────────────────────
-
-/**
- * Ternary logic modes
- * @enum {string}
- */
-const TERNARY_MODES = Object.freeze({
-  KLEENE_K3:   'kleene_k3',
-  LUKASIEWICZ: 'lukasiewicz',
-  GODEL:       'godel',
-  PRODUCT:     'product',
-  CSL:         'csl_continuous',
-});
-
-/**
- * Ternary truth value classification.
- * Maps continuous cosine similarity to TRUE/UNKNOWN/FALSE.
- *
- * Phi-derived thresholds:
- *   cos ≥ ψ (0.618)  → TRUE
- *   cos ≤ -ψ (-0.618) → FALSE
- *   otherwise         → UNKNOWN
- *
+ * CSL GATE: Soft sigmoid gating on cosine alignment.
+ * GATE(value, cos, τ, temp) = value × σ((cos - τ) / temp)
+ * @param {number} value
  * @param {number} cosScore
- * @returns {'TRUE'|'UNKNOWN'|'FALSE'}
- */
-function ternaryClassify(cosScore) {
-  if (cosScore >= PSI) return 'TRUE';
-  if (cosScore <= -PSI) return 'FALSE';
-  return 'UNKNOWN';
-}
-
-/**
- * Ternary AND operation (Kleene K3 in continuous space).
- * @param {number} a - Truth value [-1, +1]
- * @param {number} b - Truth value [-1, +1]
- * @param {string} [mode='csl_continuous']
+ * @param {number} [tau=CSL_THRESHOLDS.MEDIUM]
+ * @param {number} [temp=PSI³]
  * @returns {number}
  */
-function ternaryAND(a, b, mode = TERNARY_MODES.CSL) {
-  switch (mode) {
-    case TERNARY_MODES.KLEENE_K3:   return Math.min(a, b);
-    case TERNARY_MODES.LUKASIEWICZ: return Math.max(-1, a + b - 1);
-    case TERNARY_MODES.GODEL:       return Math.min(a, b);
-    case TERNARY_MODES.PRODUCT:     return a * b;
-    case TERNARY_MODES.CSL:
-    default:                         return a * b;
-  }
+function cslGATE(value, cosScore, tau = CSL_THRESHOLDS.MEDIUM, temp = PSI_POWERS[3]) {
+  const sigmoid = 1 / (1 + Math.exp(-(cosScore - tau) / temp));
+  return value * sigmoid;
 }
 
+// ─── Multi-Vector Operations ─────────────────────────────────────────────────
+
 /**
- * Ternary OR operation.
- * @param {number} a
- * @param {number} b
- * @param {string} [mode='csl_continuous']
- * @returns {number}
+ * Batch cosine similarity of a query against multiple candidates.
+ * @param {Float64Array|number[]} query
+ * @param {Array<Float64Array|number[]>} candidates
+ * @returns {number[]} Similarity scores
  */
-function ternaryOR(a, b, mode = TERNARY_MODES.CSL) {
-  switch (mode) {
-    case TERNARY_MODES.KLEENE_K3:   return Math.max(a, b);
-    case TERNARY_MODES.LUKASIEWICZ: return Math.min(1, a + b + 1);
-    case TERNARY_MODES.GODEL:       return Math.max(a, b);
-    case TERNARY_MODES.PRODUCT:     return a + b - a * b;
-    case TERNARY_MODES.CSL:
-    default:                         return (a + b) / (1 + a * b || 1);
-  }
+function batchSimilarity(query, candidates) {
+  return candidates.map(c => cslAND(query, c));
 }
 
 /**
- * Ternary NOT operation.
- * @param {number} a
- * @returns {number}
+ * Top-K selection by cosine similarity.
+ * @param {Float64Array|number[]} query
+ * @param {Array<{id: string, vector: Float64Array|number[]}>} items
+ * @param {number} k
+ * @returns {Array<{id: string, score: number}>}
  */
-function ternaryNOT(a) {
-  return -a;
+function topK(query, items, k) {
+  const scored = items.map(item => ({
+    id: item.id,
+    score: cslAND(query, item.vector),
+  }));
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, k);
 }
 
-// ─── MIXTURE OF EXPERTS (CSL-BASED ROUTER) ───────────────────────────────────
+// ─── HDC/VSA Operations ──────────────────────────────────────────────────────
 
 /**
- * CSL-based Mixture of Experts router.
- * Routes input to top-K experts using cosine similarity instead of learned weights.
- *
- * Configuration uses phi-math constants:
- *   - Temperature: PSI3 ≈ 0.236 (adaptive via entropy)
- *   - Anti-collapse weight: PSI8 ≈ 0.0131
- *   - Collapse detection: PSI9 ≈ 0.0081
- *   - Top-K: fib(3) = 2
- */
-class CSLMoERouter {
-  /**
-   * @param {number} numExperts - Number of experts
-   * @param {number} inputDim - Input vector dimension
-   */
-  constructor(numExperts, inputDim) {
-    this.numExperts = numExperts;
-    this.inputDim = inputDim;
-    this.topK = fib(3);
-    this.temperature = PSI3;
-    this.antiCollapseWeight = PSI8;
-    this.collapseThreshold = PSI9;
-
-    this.expertGates = Array.from({ length: numExperts }, () => {
-      const gate = new Float64Array(inputDim);
-      for (let i = 0; i < inputDim; i++) {
-        gate[i] = (Math.random() - PSI) * PHI;
-      }
-      return normalize(gate);
-    });
-
-    this.usageCounts = new Float64Array(numExperts);
-  }
-
-  /**
-   * Route an input to the top-K experts.
-   * @param {Float64Array|number[]} input - Input vector
-   * @param {number} [entropy=0] - Current entropy for adaptive temperature
-   * @param {number} [maxEntropy=1] - Maximum entropy
-   * @returns {{ expertIndices: number[], weights: number[], scores: number[] }}
-   */
-  route(input, entropy = 0, maxEntropy = 1) {
-    const scores = this.expertGates.map(gate => cslAND(input, gate));
-
-    const temp = entropy > 0
-      ? adaptiveTemperature(entropy, maxEntropy)
-      : this.temperature;
-
-    const expScores = scores.map(s => Math.exp(s / temp));
-    const expSum = expScores.reduce((a, b) => a + b, 0);
-    const probs = expScores.map(s => s / expSum);
-
-    const minProb = Math.min(...probs);
-    if (minProb < this.collapseThreshold) {
-      const uniform = 1 / this.numExperts;
-      for (let i = 0; i < probs.length; i++) {
-        probs[i] = (1 - this.antiCollapseWeight) * probs[i] +
-                   this.antiCollapseWeight * uniform;
-      }
-    }
-
-    const indexed = probs.map((p, i) => ({ prob: p, index: i, score: scores[i] }));
-    indexed.sort((a, b) => b.prob - a.prob);
-    const selected = indexed.slice(0, this.topK);
-
-    const selectedSum = selected.reduce((a, s) => a + s.prob, 0);
-    const weights = selected.map(s => s.prob / selectedSum);
-
-    selected.forEach(s => { this.usageCounts[s.index]++; });
-
-    return {
-      expertIndices: selected.map(s => s.index),
-      weights,
-      scores: selected.map(s => s.score),
-    };
-  }
-
-  /**
-   * Get load balance score (lower = more balanced).
-   * @returns {number} Coefficient of variation of usage counts.
-   */
-  getLoadBalanceScore() {
-    const mean = this.usageCounts.reduce((a, b) => a + b, 0) / this.numExperts;
-    if (mean === 0) return 0;
-    const variance = this.usageCounts.reduce((a, c) => a + Math.pow(c - mean, 2), 0) / this.numExperts;
-    return Math.sqrt(variance) / mean;
-  }
-}
-
-// ─── HDC / VSA OPERATIONS ────────────────────────────────────────────────────
-
-/**
- * HDC BIND — Create compositional representation.
- * For real-valued vectors: element-wise multiplication.
+ * HDC BIND: Element-wise multiplication (real HRR style).
+ * Creates compositional representation (role-filler binding).
  * @param {Float64Array|number[]} a
  * @param {Float64Array|number[]} b
  * @returns {Float64Array}
  */
-function hdcBind(a, b) {
+function hdcBIND(a, b) {
   const result = new Float64Array(a.length);
   for (let i = 0; i < a.length; i++) result[i] = a[i] * b[i];
-  return result;
+  return normalize(result);
 }
 
 /**
- * HDC BUNDLE — Aggregate (consensus/similarity).
- * Element-wise sum + normalize.
+ * HDC BUNDLE: Aggregate multiple vectors (majority/superposition).
  * @param {Array<Float64Array|number[]>} vectors
  * @returns {Float64Array}
  */
-function hdcBundle(vectors) {
+function hdcBUNDLE(vectors) {
   if (vectors.length === 0) return new Float64Array(0);
   const dim = vectors[0].length;
   const result = new Float64Array(dim);
   for (const v of vectors) {
-    for (let i = 0; i < dim; i++) result[i] += v[i];
+    for (let d = 0; d < dim; d++) result[d] += v[d];
   }
   return normalize(result);
 }
 
 /**
- * HDC PERMUTE — Sequence encoding via cyclic shift.
+ * HDC PERMUTE: Cyclic shift for sequence encoding.
  * @param {Float64Array|number[]} v
- * @param {number} n - Shift amount
+ * @param {number} [n=1] - Number of positions to shift
  * @returns {Float64Array}
  */
-function hdcPermute(v, n) {
-  const dim = v.length;
-  const shift = ((n % dim) + dim) % dim;
-  const result = new Float64Array(dim);
-  for (let i = 0; i < dim; i++) {
-    result[(i + shift) % dim] = v[i];
+function hdcPERMUTE(v, n = 1) {
+  const len = v.length;
+  const shift = ((n % len) + len) % len;
+  const result = new Float64Array(len);
+  for (let i = 0; i < len; i++) {
+    result[(i + shift) % len] = v[i];
   }
   return result;
 }
 
+// ─── MoE Router (CSL-Based) ─────────────────────────────────────────────────
+
 /**
- * Estimated capacity at D dimensions.
- * Analytical estimate: ~D/4 items at D=384 → ~96.
- * @param {number} dim
+ * Cosine-similarity Mixture-of-Experts router.
+ * Routes input to top-K experts using CSL scoring instead of learned weights.
+ *
+ * @param {Float64Array|number[]} input - Input embedding
+ * @param {Array<{id: string, gate: Float64Array|number[]}>} experts
+ * @param {object} [opts]
+ * @param {number} [opts.k=2] - Top-K experts to select
+ * @param {number} [opts.temperature] - Softmax temperature (default ψ³)
+ * @param {number} [opts.antiCollapse] - Anti-collapse regularization (default ψ⁸)
+ * @returns {Array<{id: string, weight: number}>}
+ */
+function moeRoute(input, experts, opts = {}) {
+  const k = opts.k || 2;
+  const temperature = opts.temperature || PSI_POWERS[3]; // ψ³ ≈ 0.236
+  const antiCollapse = opts.antiCollapse || PSI_POWERS[8]; // ψ⁸ ≈ 0.013
+
+  // Score each expert
+  const scores = experts.map(e => ({
+    id: e.id,
+    raw: cslAND(input, e.gate),
+  }));
+
+  // Softmax with temperature
+  const maxScore = Math.max(...scores.map(s => s.raw));
+  const exps = scores.map(s => ({
+    id: s.id,
+    exp: Math.exp((s.raw - maxScore) / temperature) + antiCollapse,
+  }));
+  const sumExp = exps.reduce((s, e) => s + e.exp, 0);
+
+  // Normalize and select top-K
+  const probs = exps.map(e => ({ id: e.id, weight: e.exp / sumExp }));
+  probs.sort((a, b) => b.weight - a.weight);
+  const selected = probs.slice(0, k);
+
+  // Re-normalize selected weights
+  const selectedSum = selected.reduce((s, e) => s + e.weight, 0);
+  return selected.map(e => ({ id: e.id, weight: e.weight / selectedSum }));
+}
+
+// ─── Ternary Logic ───────────────────────────────────────────────────────────
+
+/**
+ * Map cosine similarity to ternary truth value.
+ * +1 ≈ TRUE, 0 ≈ UNKNOWN, -1 ≈ FALSE
+ * @param {number} cosScore
+ * @param {number} [threshold=CSL_THRESHOLDS.MINIMUM]
+ * @returns {'TRUE'|'UNKNOWN'|'FALSE'}
+ */
+function ternary(cosScore, threshold = CSL_THRESHOLDS.MINIMUM) {
+  if (cosScore >= threshold) return 'TRUE';
+  if (cosScore <= -threshold) return 'FALSE';
+  return 'UNKNOWN';
+}
+
+/**
+ * Ternary truth value as continuous number.
+ * Maps cos ∈ [-1,1] to truth ∈ [0,1] via (cos + 1) / 2.
+ * @param {number} cosScore
  * @returns {number}
  */
-function hdcCapacity(dim) {
-  return Math.floor(dim / 4);
+function truthValue(cosScore) {
+  return (cosScore + 1) / 2;
 }
 
-// ─── SEMANTIC DEDUPLICATION ──────────────────────────────────────────────────
-
-/**
- * Check if two vectors are semantically identical (duplicates).
- * Uses CSL_THRESHOLDS.CRITICAL (≈ 0.927) as the dedup threshold.
- *
- * @param {Float64Array|number[]} a
- * @param {Float64Array|number[]} b
- * @param {number} [threshold=CSL_THRESHOLDS.CRITICAL]
- * @returns {boolean}
- */
-function isSemanticDuplicate(a, b, threshold = CSL_THRESHOLDS.CRITICAL) {
-  return cslAND(a, b) >= threshold;
-}
-
-// ─── CSL SCORING UTILITIES ───────────────────────────────────────────────────
-
-/**
- * Multi-criteria CSL scoring with phi-weighted factors.
- * Default weights (5 criteria): [0.387, 0.239, 0.148, 0.092, 0.057]
- *
- * @param {Object} scores - Criteria scores
- * @param {number} scores.correctness
- * @param {number} scores.safety
- * @param {number} scores.performance
- * @param {number} scores.quality
- * @param {number} scores.elegance
- * @returns {number} Composite score
- */
-function cslCompositeScore(scores) {
-  const factors = [
-    scores.correctness || 0,
-    scores.safety || 0,
-    scores.performance || 0,
-    scores.quality || 0,
-    scores.elegance || 0,
-  ];
-  const weights = phiFusionWeights(5);
-  return factors.reduce((sum, f, i) => sum + f * weights[i], 0);
-}
-
-/**
- * CSL trial scoring weights (for trial-and-error stage).
- * @constant {Object}
- */
-const TRIAL_SCORING_WEIGHTS = Object.freeze({
-  correctness:         0.34,
-  performance:         0.21,
-  safety:              0.21,
-  elegance:            0.13,
-  resource_efficiency: 0.11,
-});
-
-/**
- * CSL optimization scoring weights.
- * @constant {Object}
- */
-const OPTIMIZATION_SCORING_WEIGHTS = Object.freeze({
-  cost:        PSI2,
-  performance: PSI2,
-  reliability: PSI3,
-});
-
-/**
- * CSL evolution fitness weights.
- * @constant {Object}
- */
-const EVOLUTION_FITNESS_WEIGHTS = Object.freeze({
-  latency_improvement:     0.34,
-  cost_reduction:          0.21,
-  quality_improvement:     0.21,
-  reliability_improvement: 0.13,
-  elegance_improvement:    0.11,
-});
-
-// ─── MODULE EXPORTS (CommonJS) ───────────────────────────────────────────────
+// ─── Exports ─────────────────────────────────────────────────────────────────
 
 module.exports = {
-  dot, norm, normalize,
-  cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS,
-  cslGATE, cslGate,
-  TERNARY_MODES, ternaryClassify, ternaryAND, ternaryOR, ternaryNOT,
-  CSLMoERouter,
-  hdcBind, hdcBundle, hdcPermute, hdcCapacity,
-  isSemanticDuplicate,
-  cslCompositeScore, TRIAL_SCORING_WEIGHTS,
-  OPTIMIZATION_SCORING_WEIGHTS, EVOLUTION_FITNESS_WEIGHTS,
-  PSI5, PSI8, PSI9,
+  // Vector utilities
+  dot, norm, normalize, add, sub, scale,
+
+  // CSL Gates
+  cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS, cslGATE,
+
+  // Multi-vector
+  batchSimilarity, topK,
+
+  // HDC/VSA
+  hdcBIND, hdcBUNDLE, hdcPERMUTE,
+
+  // MoE Router
+  moeRoute,
+
+  // Ternary Logic
+  ternary, truthValue,
 };

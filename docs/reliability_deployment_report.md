@@ -225,7 +225,7 @@ This means in-process auto-healing does nothing. The self-healing GitHub Actions
 **Fix:**
 1. For Cloud Run deployments, implement real-time healing by calling the Cloud Run API to redeploy or by sending a `SIGTERM` + restart via the service management interface.
 2. At minimum, integrate with the circuit breaker's `onOpen` callback to emit a PubSub event that triggers the Cloud Scheduler `self_healing_cycle` job immediately rather than waiting for the 15-minute cron.
-3. Remove or clearly mark the commented-out code as "NOTE" with an issue reference so it is not mistaken for functional code.
+3. Remove or clearly mark the commented-out code as "TODO" with an issue reference so it is not mistaken for functional code.
 
 ---
 

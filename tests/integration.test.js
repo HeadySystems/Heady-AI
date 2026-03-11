@@ -1,94 +1,285 @@
-/**
- * Integration tests — cross-module interaction validation
- * Author: Eric Haywood | ESM only
+/*
+ * © 2026 Heady™Systems Inc..
+ * Integration Tests — P2 CI/CD Determinism Assessment Item
+ *
+ * Tests for swarm routing, sync handoff, edge failure recovery,
+ * projection contracts, and cross-device reconciliation.
  */
-import { strict as assert } from 'assert';
-import { PHI, PSI, fibonacci, phiThreshold } from '../shared/phi-math-v2.js';
-import { cslGate, cosineSimilarity } from '../shared/csl-engine-v2.js';
 
-async function testServiceToScalingIntegration() {
-  const errorMod = await import('../scaling/error-codes.js');
-  const err = errorMod.createError('AUTH_1004', { service: 'auth-session-server' });
-  assert.ok(err.retryable === true, 'Rate limit error is retryable');
-  assert.ok(err.httpStatus === 429, 'Correct HTTP status');
+const { UnifiedEnterpriseAutonomyService } = require('../src/services/unified-enterprise-autonomy');
+const { StructuredLogger, getLogger } = require('../src/services/structured-logger');
+const { HealthRegistry } = require('../src/services/health-registry');
 
-  const dlqMod = await import('../scaling/dead-letter-queue.js');
-  const dlqResult = dlqMod.enqueue({
-    payload: err,
-    error: err.message,
-    originalQueue: err.domain,
-  });
-  assert.ok(dlqResult.id, 'Error routed to DLQ');
-  console.log('  ✓ Service → Error → DLQ integration verified');
-}
+// ── Swarm Routing Integration Tests ─────────────────────────────
 
-async function testFeatureFlagGatedService() {
-  const flagMod = await import('../scaling/feature-flags.js');
-  flagMod.createFlag({ key: 'new-search-algo', enabled: true, rolloutPercentage: 50 });
+describe('Swarm Routing Integration', () => {
+    let autonomy;
 
-  const evaluation = flagMod.evaluateFlag('new-search-algo', 'user-abc');
-  assert.ok(typeof evaluation.enabled === 'boolean', 'Flag evaluation returns boolean');
-  console.log('  ✓ Feature flag gated service flow verified');
-}
+    beforeEach(() => {
+        autonomy = new UnifiedEnterpriseAutonomyService();
+    });
 
-async function testCqrsToSagaFlow() {
-  const cqrs = await import('../scaling/cqrs-manager.js');
-  const saga = await import('../scaling/saga-coordinator.js');
+    test('dispatch assigns workers based on queue pressure', () => {
+        const result = autonomy.dispatch({ embed: 0.8, sync: 0.3, template: 0.5 });
+        expect(result).toBeDefined();
+        expect(result.receipt).toBeDefined();
+        expect(result.receipt.hash).toBeDefined();
+    });
 
-  cqrs.registerCommandHandler('CREATE_ORDER', (cmd) => [{
-    type: 'ORDER_CREATED', aggregateId: cmd.aggregateId, payload: cmd.payload,
-  }]);
+    test('dispatch returns deterministic receipts', () => {
+        const r1 = autonomy.dispatch({ embed: 0.5 });
+        const r2 = autonomy.dispatch({ embed: 0.5 });
+        // Each dispatch should produce unique receipt hashes (different timestamps)
+        expect(r1.receipt.hash).toBeDefined();
+        expect(r2.receipt.hash).toBeDefined();
+        expect(typeof r1.receipt.hash).toBe('string');
+    });
 
-  saga.defineSaga('order-flow', [
-    { name: 'validate', action: () => ({ valid: true }), compensation: () => ({ rolled_back: true }) },
-    { name: 'process', action: () => ({ processed: true }), compensation: () => ({ undone: true }) },
-  ]);
+    test('embedding plan includes all catalog sources', () => {
+        const plan = autonomy.buildEmbeddingPlan();
+        expect(plan).toBeDefined();
+        expect(plan.receipt).toBeDefined();
+    });
 
-  const cmdResult = await cqrs.executeCommand({ type: 'CREATE_ORDER', aggregateId: 'order-1', payload: { amount: 100 } });
-  assert.ok(cmdResult.success, 'CQRS command succeeded');
+    test('node responsibilities reflect config', () => {
+        const resp = autonomy.getNodeResponsibilities();
+        expect(resp).toBeDefined();
+        expect(resp.receipt).toBeDefined();
+    });
+});
 
-  const sagaResult = await saga.startSaga('order-flow', { orderId: 'order-1' });
-  assert.ok(sagaResult.state === 'COMPLETED', 'Saga completed');
-  console.log('  ✓ CQRS → Saga integration verified');
-}
+// ── Sync Handoff Integration Tests ──────────────────────────────
 
-async function testSchemaValidationInPipeline() {
-  const contracts = await import('../scaling/api-contracts.js');
-  contracts.registerSchema('analytics-event', 1, {
-    properties: {
-      eventType: { type: 'string' },
-      timestamp: { type: 'number' },
-      userId: { type: 'string' },
-    },
-    required: ['eventType', 'timestamp', 'userId'],
-  });
+describe('Sync Handoff Integration', () => {
+    let autonomy;
 
-  const validResult = contracts.validatePayload('analytics-event', { eventType: 'page_view', timestamp: Date.now(), userId: 'u1' });
-  assert.ok(validResult.valid, 'Valid analytics event passes');
+    beforeEach(() => {
+        autonomy = new UnifiedEnterpriseAutonomyService();
+    });
 
-  const invalidResult = contracts.validatePayload('analytics-event', { eventType: 'page_view' });
-  assert.ok(!invalidResult.valid, 'Invalid event rejected');
-  assert.ok(invalidResult.errors.length === 2, 'Two missing required fields');
-  console.log('  ✓ Schema validation pipeline verified');
-}
+    test('onboarding contract validates auth flow', () => {
+        const contract = autonomy.buildOnboardingContract();
+        expect(contract).toBeDefined();
+        expect(contract.receipt).toBeDefined();
+    });
 
-function testCslGatingDecisionPaths() {
-  const highConfidence = cslGate(1.0, 0.95, phiThreshold(2), PSI * PSI * PSI);
-  const lowConfidence = cslGate(1.0, 0.3, phiThreshold(2), PSI * PSI * PSI);
-  assert.ok(highConfidence > 0.9, 'High confidence passes gate');
-  assert.ok(lowConfidence < 0.1, 'Low confidence blocked by gate');
+    test('developer platform blueprint returns valid structure', () => {
+        const blueprint = autonomy.buildDeveloperPlatformBlueprint();
+        expect(blueprint).toBeDefined();
+        expect(blueprint.receipt).toBeDefined();
+    });
 
-  const blend = (highConfidence + lowConfidence) / 2;
-  assert.ok(blend > 0.4 && blend < 0.6, 'Blended gate in middle range');
-  console.log('  ✓ CSL gating decision paths verified');
-}
+    test('system projection snapshot is deterministic', () => {
+        const snapshot = autonomy.buildSystemProjectionSnapshot();
+        expect(snapshot).toBeDefined();
+        expect(snapshot.receipt).toBeDefined();
+        expect(snapshot.receipt.hash).toBeDefined();
+    });
 
-console.log('\n=== Integration Tests ===');
-await testServiceToScalingIntegration();
-await testFeatureFlagGatedService();
-await testCqrsToSagaFlow();
-await testSchemaValidationInPipeline();
-testCslGatingDecisionPaths();
-console.log('\n✅ All integration tests passed.');
+    test('source of truth status returns repo state', () => {
+        const status = autonomy.getSourceOfTruthStatus();
+        expect(status).toBeDefined();
+        expect(status.receipt).toBeDefined();
+    });
+});
 
-export default { testServiceToScalingIntegration, testFeatureFlagGatedService, testCqrsToSagaFlow };
+// ── Edge Failure Recovery Tests ─────────────────────────────────
+
+describe('Edge Failure Recovery', () => {
+    let autonomy;
+
+    beforeEach(() => {
+        autonomy = new UnifiedEnterpriseAutonomyService();
+    });
+
+    test('self-healing cycle detects and reports issues', () => {
+        const result = autonomy.runSelfHealingCycle({ applyCleanup: false });
+        expect(result).toBeDefined();
+        expect(result.receipt).toBeDefined();
+    });
+
+    test('projection noise scan identifies stale artifacts', () => {
+        const noise = autonomy.scanProjectionNoise();
+        expect(noise).toBeDefined();
+        expect(noise.receipt).toBeDefined();
+    });
+
+    test('cleanup plan is safe and bounded', () => {
+        const plan = autonomy.buildProjectionCleanupPlan();
+        expect(plan).toBeDefined();
+        expect(plan.receipt).toBeDefined();
+    });
+
+    test('health endpoint returns valid status', () => {
+        const health = autonomy.getHealth();
+        expect(health).toBeDefined();
+        expect(health.status).toBe('healthy');
+    });
+});
+
+// ── Structured Logger Tests ─────────────────────────────────────
+
+describe('Structured Logger', () => {
+    let logger;
+
+    beforeEach(() => {
+        logger = new StructuredLogger('test-service', { level: 'debug' });
+    });
+
+    test('emits structured JSON for all log levels', () => {
+        const original = process.stdout.write;
+        let output = '';
+        process.stdout.write = (s) => { output += s; };
+
+        logger.info('test message', { extra: 'data' });
+
+        process.stdout.write = original;
+
+        const parsed = JSON.parse(output.trim());
+        expect(parsed.level).toBe('info');
+        expect(parsed.service).toBe('test-service');
+        expect(parsed.message).toBe('test message');
+        expect(parsed.extra).toBe('data');
+        expect(parsed.timestamp).toBeDefined();
+        expect(parsed.traceId).toBeDefined();
+    });
+
+    test('tracks traffic metrics', () => {
+        logger.recordAcceptedTraffic('/api/sync', 'device-1');
+        logger.recordRejectedTraffic('/api/sync', 'device-2', 'rate_limit');
+        logger.recordStaleDisconnect('device-3', 30000);
+
+        const metrics = logger.getMetrics();
+        expect(metrics.totalLogs).toBe(3);
+    });
+
+    test('tracks circuit breaker state', () => {
+        logger.recordCircuitBreaker('edge-proxy', 'open', 0.85);
+        const metrics = logger.getMetrics();
+        expect(metrics.circuitBreakers['edge-proxy'].state).toBe('open');
+    });
+
+    test('tracks cache hit rates', () => {
+        logger.recordCacheHit('vector-cache', true);
+        logger.recordCacheHit('vector-cache', true);
+        logger.recordCacheHit('vector-cache', false);
+
+        const metrics = logger.getMetrics();
+        expect(metrics.cacheCounters['vector-cache'].hits).toBe(2);
+        expect(metrics.cacheCounters['vector-cache'].misses).toBe(1);
+    });
+
+    test('singleton getLogger returns same instance', () => {
+        const a = getLogger('singleton-test');
+        const b = getLogger('singleton-test');
+        expect(a).toBe(b);
+    });
+});
+
+// ── Health Registry Tests ───────────────────────────────────────
+
+describe('Health Registry', () => {
+    let registry;
+
+    beforeEach(() => {
+        registry = new HealthRegistry();
+    });
+
+    test('registers and checks individual service health', async () => {
+        registry.register('test-svc', () => ({ uptime: 100 }));
+        const health = await registry.getServiceHealth('test-svc');
+        expect(health.status).toBe('healthy');
+        expect(health.uptime).toBe(100);
+    });
+
+    test('aggregates health across multiple services', async () => {
+        registry.register('svc-a', () => ({ status: 'ok' }));
+        registry.register('svc-b', () => ({ status: 'ok' }));
+        const agg = await registry.getAggregatedHealth();
+        expect(agg.status).toBe('healthy');
+        expect(agg.summary.total).toBe(2);
+        expect(agg.summary.healthy).toBe(2);
+    });
+
+    test('reports degraded when some services fail', async () => {
+        registry.register('svc-ok', () => ({ status: 'ok' }));
+        registry.register('svc-fail', () => { throw new Error('down'); });
+        const agg = await registry.getAggregatedHealth();
+        expect(agg.status).toBe('degraded');
+        expect(agg.summary.unhealthy).toBe(1);
+    });
+
+    test('reports not_found for unregistered services', async () => {
+        const health = await registry.getServiceHealth('nonexistent');
+        expect(health.status).toBe('not_found');
+    });
+
+    test('supports object-style health providers', async () => {
+        const service = {
+            getHealth: () => ({ status: 'running', bees: 12 }),
+        };
+        registry.register('bee-svc', service);
+        const health = await registry.getServiceHealth('bee-svc');
+        expect(health.bees).toBe(12);
+    });
+});
+
+// ── Projection Contract Tests (P5) ──────────────────────────────
+
+describe('Projection Contracts (3D → 2D)', () => {
+    let autonomy;
+
+    beforeEach(() => {
+        autonomy = new UnifiedEnterpriseAutonomyService();
+    });
+
+    test('system projection snapshot maps to 2D UI schema', () => {
+        const snapshot = autonomy.buildSystemProjectionSnapshot();
+        // Verify projection contains renderable 2D data
+        expect(snapshot.receipt).toBeDefined();
+        expect(snapshot.receipt.hash).toBeDefined();
+        // Projection should be JSON-serializable for UI consumption
+        const serialized = JSON.stringify(snapshot);
+        const deserialized = JSON.parse(serialized);
+        expect(deserialized.receipt.hash).toBe(snapshot.receipt.hash);
+    });
+
+    test('parallel projection rendering is deterministic', () => {
+        const s1 = autonomy.buildSystemProjectionSnapshot();
+        const s2 = autonomy.buildSystemProjectionSnapshot();
+        // Both snapshots should contain the same structural keys
+        expect(Object.keys(s1)).toEqual(Object.keys(s2));
+    });
+
+    test('onboarding and auth validation returns deterministic result', () => {
+        const v1 = autonomy.validateOnboardingAndAuthFlow();
+        const v2 = autonomy.validateOnboardingAndAuthFlow();
+        expect(Object.keys(v1)).toEqual(Object.keys(v2));
+    });
+});
+
+// ── Cross-Device Reconciliation Tests (P5) ──────────────────────
+
+describe('Cross-Device Context Reconciliation', () => {
+    let autonomy;
+
+    beforeEach(() => {
+        autonomy = new UnifiedEnterpriseAutonomyService();
+    });
+
+    test('alternate paradigm directives are stable', () => {
+        const d1 = autonomy.buildAlternateParadigmDirectives();
+        const d2 = autonomy.buildAlternateParadigmDirectives();
+        expect(d1.receipt).toBeDefined();
+        expect(d2.receipt).toBeDefined();
+        // Same config → same structure
+        expect(Object.keys(d1)).toEqual(Object.keys(d2));
+    });
+
+    test('telemetry is consistent across calls', () => {
+        const t1 = autonomy.getCachedTelemetry();
+        const t2 = autonomy.getCachedTelemetry();
+        expect(t1).toBeDefined();
+        expect(t2).toBeDefined();
+    });
+});

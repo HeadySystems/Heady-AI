@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * PHI_TIMING Migration Script
@@ -261,8 +259,8 @@ function walkDir(dir) {
 
 // Main
 function main() {
-  logger.info(`PHI_TIMING Migration ${DRY_RUN ? '(DRY RUN)' : ''}`);
-  logger.info('='.repeat(60));
+  console.log(`PHI_TIMING Migration ${DRY_RUN ? '(DRY RUN)' : ''}`);
+  console.log('='.repeat(60));
 
   const allFiles = walkDir(SRC_DIR);
   let totalChanged = 0;
@@ -322,18 +320,18 @@ function main() {
         fs.writeFileSync(filePath, result.content, 'utf8');
       }
 
-      logger.info(`  ${DRY_RUN ? '[DRY]' : '[OK]'} ${relPath} (${result.changeCount} replacements, import: ${importInfo.type})`);
+      console.log(`  ${DRY_RUN ? '[DRY]' : '[OK]'} ${relPath} (${result.changeCount} replacements, import: ${importInfo.type})`);
     }
   }
 
-  logger.info();
-  logger.info('='.repeat(60));
-  logger.info(`Files modified: ${totalChanged}`);
-  logger.info(`Total replacements: ${totalReplacements}`);
-  logger.info();
+  console.log();
+  console.log('='.repeat(60));
+  console.log(`Files modified: ${totalChanged}`);
+  console.log(`Total replacements: ${totalReplacements}`);
+  console.log();
 
   if (DRY_RUN) {
-    logger.info('Re-run without --dry-run to apply changes.');
+    console.log('Re-run without --dry-run to apply changes.');
   }
 
   return { totalChanged, totalReplacements, report };

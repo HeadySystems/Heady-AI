@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 'use strict';
 
@@ -28,11 +26,11 @@ const DOCS_TO_COPY = [
   'Heady_Development_Deployment_Guide.docx'
 ];
 
-logger.info('🔧 Heady Security Task Pack Builder\n');
+console.log('🔧 Heady Security Task Pack Builder\n');
 
 // Clean and create output directory
 if (fs.existsSync(OUTPUT_DIR)) {
-  logger.info(`Cleaning ${OUTPUT_DIR}/...`);
+  console.log(`Cleaning ${OUTPUT_DIR}/...`);
   fs.rmSync(OUTPUT_DIR, { recursive: true });
 }
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -52,26 +50,26 @@ const dirs = [
 dirs.forEach(dir => {
   const fullPath = path.join(OUTPUT_DIR, dir);
   fs.mkdirSync(fullPath, { recursive: true });
-  logger.info(`✓ Created ${dir}/`);
+  console.log(`✓ Created ${dir}/`);
 });
 
 // Copy documentation files
-logger.info('\n📄 Copying documentation...');
+console.log('\n📄 Copying documentation...');
 DOCS_TO_COPY.forEach(file => {
   if (fs.existsSync(file)) {
     const dest = path.join(OUTPUT_DIR, '00-specs', file);
     fs.copyFileSync(file, dest);
-    logger.info(`✓ ${file}`);
+    console.log(`✓ ${file}`);
   } else {
-    logger.warn(`⚠️  ${file} not found, skipping`);
+    console.warn(`⚠️  ${file} not found, skipping`);
   }
 });
 
 // Extract code blocks from markdown
-logger.info('\n🔍 Extracting code from specification...');
+console.log('\n🔍 Extracting code from specification...');
 
 if (!fs.existsSync(SPEC_FILE)) {
-  logger.error(`❌ ${SPEC_FILE} not found. Place it in the current directory.`);
+  console.error(`❌ ${SPEC_FILE} not found. Place it in the current directory.`);
   process.exit(1);
 }
 
@@ -96,22 +94,22 @@ while ((match = codeBlockPattern.exec(markdown)) !== null) {
   
   // Write the code file
   fs.writeFileSync(outputPath, code.trimEnd() + '\n', 'utf8');
-  logger.info(`✓ Extracted: ${filePath}`);
+  console.log(`✓ Extracted: ${filePath}`);
   extractedCount++;
 }
 
-logger.info(`\n✅ Extracted ${extractedCount} code files`);
+console.log(`\n✅ Extracted ${extractedCount} code files`);
 
 // Generate minimal dependency stubs
-logger.info('\n🔌 Generating dependency stubs...');
+console.log('\n🔌 Generating dependency stubs...');
 
 const stubs = {
   'src/utils/logger.js': `'use strict';
 // STUB: Replace with actual logger from Heady™ repo
 module.exports = {
-  info: (...args) => logger.info('[INFO]', ...args),
-  warn: (...args) => logger.warn('[WARN]', ...args),
-  error: (...args) => logger.error('[ERROR]', ...args),
+  info: (...args) => console.log('[INFO]', ...args),
+  warn: (...args) => console.warn('[WARN]', ...args),
+  error: (...args) => console.error('[ERROR]', ...args),
   debug: (...args) => console.debug('[DEBUG]', ...args),
 };`,
 
@@ -166,11 +164,11 @@ Object.entries(stubs).forEach(([filePath, content]) => {
   }
   
   fs.writeFileSync(fullPath, content, 'utf8');
-  logger.info(`✓ Stub: ${filePath}`);
+  console.log(`✓ Stub: ${filePath}`);
 });
 
 // Generate task manifest
-logger.info('\n📋 Generating task manifest...');
+console.log('\n📋 Generating task manifest...');
 
 const manifest = `# Heady Security Hardening Task Pack
 
@@ -296,7 +294,7 @@ For questions or issues, refer to:
 `;
 
 fs.writeFileSync(path.join(OUTPUT_DIR, 'README.md'), manifest, 'utf8');
-logger.info('✓ README.md');
+console.log('✓ README.md');
 
 // Generate package.json
 const packageJson = {
@@ -320,7 +318,7 @@ fs.writeFileSync(
   JSON.stringify(packageJson, null, 2),
   'utf8'
 );
-logger.info('✓ package.json');
+console.log('✓ package.json');
 
 // Generate test runner
 const testRunner = `#!/usr/bin/env node
@@ -334,7 +332,7 @@ const testRunner = `#!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
 
-logger.info('🧪 Running Heady Security Test Suite\\n');
+console.log('🧪 Running Heady Security Test Suite\\n');
 
 const testDir = __dirname;
 const testFiles = fs.readdirSync(testDir)
@@ -344,21 +342,21 @@ let passed = 0;
 let failed = 0;
 
 testFiles.forEach(file => {
-  logger.info(\`\\n📝 Running \${file}...\`);
+  console.log(\`\\n📝 Running \${file}...\`);
   try {
     require(path.join(testDir, file));
-    logger.info(\`✅ \${file} passed\`);
+    console.log(\`✅ \${file} passed\`);
     passed++;
   } catch (err) {
-    logger.error(\`❌ \${file} failed:\`, err.message);
+    console.error(\`❌ \${file} failed:\`, err.message);
     failed++;
   }
 });
 
-logger.info(\`\\n${'='.repeat(50)}\`);
-logger.info(\`✅ Passed: \${passed}\`);
-logger.info(\`❌ Failed: \${failed}\`);
-logger.info(\`Total: \${passed + failed}\`);
+console.log(\`\\n${'='.repeat(50)}\`);
+console.log(\`✅ Passed: \${passed}\`);
+console.log(\`❌ Failed: \${failed}\`);
+console.log(\`Total: \${passed + failed}\`);
 
 process.exit(failed > 0 ? 1 : 0);
 `;
@@ -369,10 +367,10 @@ fs.writeFileSync(
   'utf8'
 );
 fs.chmodSync(path.join(OUTPUT_DIR, 'tests', 'run-all-tests.js'), '755');
-logger.info('✓ tests/run-all-tests.js');
+console.log('✓ tests/run-all-tests.js');
 
 // Create the zip file
-logger.info(`\n📦 Creating ${ZIP_NAME}...`);
+console.log(`\n📦 Creating ${ZIP_NAME}...`);
 
 try {
   // Use system zip command (cross-platform)
@@ -391,20 +389,20 @@ try {
   }
   
   const stats = fs.statSync(ZIP_NAME);
-  logger.info(`\n✅ Successfully created ${ZIP_NAME}`);
-  logger.info(`📊 Size: ${(stats.size / 1024).toFixed(2)} KB`);
-  logger.info(`📂 Location: ${path.resolve(ZIP_NAME)}`);
+  console.log(`\n✅ Successfully created ${ZIP_NAME}`);
+  console.log(`📊 Size: ${(stats.size / 1024).toFixed(2)} KB`);
+  console.log(`📂 Location: ${path.resolve(ZIP_NAME)}`);
   
 } catch (error) {
-  logger.error('❌ Failed to create zip:', error.message);
-  logger.info('\n💡 Manual zip creation:');
-  logger.info(`   cd ${OUTPUT_DIR}`);
-  logger.info(`   zip -r ../${ZIP_NAME} .`);
+  console.error('❌ Failed to create zip:', error.message);
+  console.log('\n💡 Manual zip creation:');
+  console.log(`   cd ${OUTPUT_DIR}`);
+  console.log(`   zip -r ../${ZIP_NAME} .`);
   process.exit(1);
 }
 
-logger.info('\n🎉 Done! Extract the zip and run:');
-logger.info(`   unzip ${ZIP_NAME}`);
-logger.info(`   cd ${OUTPUT_DIR}`);
-logger.info('   npm install');
-logger.info('   npm test');
+console.log('\n🎉 Done! Extract the zip and run:');
+console.log(`   unzip ${ZIP_NAME}`);
+console.log(`   cd ${OUTPUT_DIR}`);
+console.log('   npm install');
+console.log('   npm test');

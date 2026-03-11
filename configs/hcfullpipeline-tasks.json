@@ -1,0 +1,1396 @@
+{
+  "$schema": "heady://pipeline/task-queue",
+  "version": "5.6.0",
+  "pipeline": "hcfullpipeline",
+  "generatedAt": "2026-03-10T05:41:52Z",
+  "lastFineTuned": "2026-03-10T11:33:00Z",
+  "phi": 1.618033988749895,
+  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled (full-repo + production-scoped)",
+  "taskCount": 138,
+  "categories": {
+    "SECURITY": {
+      "priority_weight": 0.927,
+      "tasks": 20
+    },
+    "INFRASTRUCTURE": {
+      "priority_weight": 0.882,
+      "tasks": 22
+    },
+    "ARCHITECTURE": {
+      "priority_weight": 0.718,
+      "tasks": 20
+    },
+    "QUALITY": {
+      "priority_weight": 0.618,
+      "tasks": 25
+    },
+    "DOCUMENTATION": {
+      "priority_weight": 0.382,
+      "tasks": 17
+    },
+    "SCALING": {
+      "priority_weight": 0.618,
+      "tasks": 13
+    },
+    "FEATURES": {
+      "priority_weight": 0.382,
+      "tasks": 16
+    },
+    "REMEDIATION": {
+      "priority_weight": 0.718,
+      "tasks": 5
+    }
+  },
+  "tasks": [
+    {
+      "id": "SEC-001",
+      "category": "SECURITY",
+      "title": "Replace 96 permissive CORS instances with domain whitelist",
+      "description": "Replace all Access-Control-Allow-Origin: * with the shared/middleware/cors-whitelist.js across cloudflare workers, service middleware, API gateway, and edge router",
+      "files": [
+        "src/middleware/cors-policy.js",
+        "src/bootstrap/service-routes.js",
+        "heady-platform-fixes/*/cloudflare/worker.js",
+        "src/services/*/server.js"
+      ],
+      "status": "completed",
+      "completedAt": "2026-03-09T00:00:00Z",
+      "notes": "shared/middleware/cors-whitelist.js deployed. Validated via npm run security:audit:cors",
+      "csl_confidence": 0.927,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SEC-002",
+      "category": "SECURITY",
+      "title": "Migrate 1,417 localStorage references to httpOnly cookies",
+      "description": "Full-repo: 1,417 localStorage.setItem/getItem patterns (sacred-genesis scan 2026-03-10T05:51Z). Top offenders: verticals/*.html (19 each × 8 files). Replace with httpOnly session cookies via auth.headysystems.com relay",
+      "files": [
+        "src/bees/template-bee.js",
+        "src/sites/site-renderer.js",
+        "services/heady-buddy/widget/buddy-widget.js",
+        "apps/headyweb/src/app.js"
+      ],
+      "status": "in-progress",
+      "notes": "Architecture designed, auth relay pattern defined. Implementation in progress per GAPS_FOUND.md",
+      "csl_confidence": 0.927,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SEC-003",
+      "category": "SECURITY",
+      "title": "Add CSP headers to all 16 sites",
+      "description": "Deploy shared/middleware/security-headers.js to all site renderers and Cloudflare workers",
+      "status": "completed",
+      "completedAt": "2026-03-09T00:00:00Z",
+      "notes": "shared/middleware/security-headers.js deployed with CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-004",
+      "category": "SECURITY",
+      "title": "Implement prompt injection defense on all LLM endpoints",
+      "description": "Add parameterized prompt templates (not string concatenation), validate LLM outputs against JSON schema, sanitize HTML with DOMPurify",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 5
+    },
+    {
+      "id": "SEC-005",
+      "category": "SECURITY",
+      "title": "Replace env-var secrets with Google Secret Manager",
+      "description": "Migrate all API keys and credentials to Secret Manager with φ-scaled rotation (21 days for API keys, 89 days for certificates)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6
+    },
+    {
+      "id": "SEC-006",
+      "category": "SECURITY",
+      "title": "Add __Host- cookie prefix for session cookies",
+      "description": "Bind session tokens to domain (requires HTTPS, no subdomain override) + origin verification in relay iframe",
+      "status": "pending",
+      "notes": "Blocked by SEC-002 (httpOnly cookie migration). Implement after auth relay is complete",
+      "blockedBy": [
+        "SEC-002"
+      ],
+      "csl_confidence": 0.718,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-007",
+      "category": "SECURITY",
+      "title": "WebSocket per-frame authentication validation",
+      "description": "Re-validate auth on every WebSocket frame, not just upgrade request. Reject expired/invalid tokens immediately",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SEC-008",
+      "category": "SECURITY",
+      "title": "Generate SBOM for all Docker images",
+      "description": "Add syft/grype scanning to CI pipeline, use signed container images with binary attestation",
+      "status": "pending",
+      "notes": "CI pipeline exists (.github/workflows/ci.yml). Add syft step to existing workflow",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-009",
+      "category": "SECURITY",
+      "title": "Add rate limiting per-user/IP/API-key",
+      "description": "Deploy shared/middleware/rate-limiter with φ-scaled sliding windows: 34 req/min anon, 89 req/min auth, 233 req/min enterprise",
+      "status": "in-progress",
+      "notes": "shared/middleware/rate-limiter.js built with φ-scaled sliding windows. Needs rollout to all service endpoints",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SEC-010",
+      "category": "SECURITY",
+      "title": "Implement autonomy guardrails for agents",
+      "description": "Define operation whitelist: ALLOWED = deploy, update deps, run tests. FORBIDDEN = delete data, rotate prod secrets, modify auth. Git-versioned approval trail",
+      "status": "pending",
+      "notes": "core/agents/registry.js exists with 11 canonical agents. Add operation whitelist per agent",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SEC-011",
+      "category": "SECURITY",
+      "title": "Handle empty catch blocks across codebase",
+      "description": "Add structured error logging to all empty catch blocks using shared/logging/logger.js",
+      "status": "in-progress",
+      "notes": "shared/logging/logger.js is built and deployed. Need to systematically find+replace empty catch blocks",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SEC-012",
+      "category": "SECURITY",
+      "title": "Add SRI (Subresource Integrity) for all external scripts",
+      "description": "Generate integrity hashes for CDN-loaded scripts across all 9 sites",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-013",
+      "category": "SECURITY",
+      "title": "IP anomaly detection for anonymous auth abuse",
+      "description": "Detect spikes in anonymous Firebase signups from same ASN, implement per-user write quotas",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy NATS JetStream event bus",
+      "description": "Central async message broker for all service-to-service communication. Subjects: heady.memory.*, heady.inference.*, heady.agents.*. Dead letter queues for undeliverable messages",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8
+    },
+    {
+      "id": "INFRA-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Add PgBouncer connection pooling",
+      "description": "Pool mode=transaction, default_pool_size=34, max_client_conn=233 (Fibonacci). Deploy between all 57 services and pgvector",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Tune HNSW indexes for pgvector",
+      "description": "Set ef_construction=89, m=15, ef_search=21 (all Fibonacci). Create parallel indexes for cosine, inner product, L2. Target: recall>0.95 at <50ms for 384d vectors",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-004",
+      "category": "INFRASTRUCTURE",
+      "title": "Set up Grafana + Prometheus monitoring",
+      "description": "Dashboard for all 57 services: request count, latency histograms, error rates, circuit breaker states",
+      "status": "pending",
+      "notes": "Prometheus metrics export hooks exist in core. Need Grafana instance + dashboard definitions",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6
+    },
+    {
+      "id": "INFRA-005",
+      "category": "INFRASTRUCTURE",
+      "title": "Implement log aggregation pipeline",
+      "description": "Structured log pipeline: pino → Fluentd/Vector → BigQuery or Loki. Correlation IDs across all services",
+      "status": "pending",
+      "notes": "shared/logging/logger.js outputs structured JSON. Need Fluentd/Vector collector + storage backend",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5
+    },
+    {
+      "id": "INFRA-006",
+      "category": "INFRASTRUCTURE",
+      "title": "Create load testing scripts (k6)",
+      "description": "k6 scripts for every service endpoint. Fibonacci ramp: 1→2→3→5→8→13→21→34 VUs. Test φ-scaled circuit breakers",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-007",
+      "category": "INFRASTRUCTURE",
+      "title": "Build chaos engineering framework",
+      "description": "Failure injection scripts: kill service, spike latency, corrupt responses, exhaust connections. Validate circuit breakers and bulkheads recover",
+      "status": "pending",
+      "notes": "core/infrastructure/circuit-breaker.js exists with 3-state machine. Chaos framework validates it under stress",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5
+    },
+    {
+      "id": "INFRA-008",
+      "category": "INFRASTRUCTURE",
+      "title": "Automated pgvector backups",
+      "description": "Point-in-time recovery for vector data. φ-scaled schedule: full backup every fib(8)=21 days, incremental every fib(5)=5 hours",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-009",
+      "category": "INFRASTRUCTURE",
+      "title": "Feature flag system with φ-scaled rollout",
+      "description": "Cloudflare KV-backed flags. Rollout: 6.18%→38.2%→61.8%→100%. Each flag has CSL confidence gate + kill switch",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-010",
+      "category": "INFRASTRUCTURE",
+      "title": "Optimize Cloud Run instances",
+      "description": "min-instances=1 for critical services. concurrency=63 (fib(8)*fib(4)). CPU always-on for latency-sensitive. Distroless images <100MB",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-011",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy Redis/LRU response caching",
+      "description": "Fibonacci-sized LRU caches: fib(12)=144 entries per service. Gzip/brotli compression on all HTTP responses",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-012",
+      "category": "INFRASTRUCTURE",
+      "title": "Migrate internal APIs to gRPC",
+      "description": "Service-to-service calls from REST to gRPC for 30-40% latency reduction. Keep REST for external APIs. Generate Go/TS/Python clients from .proto files",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 12
+    },
+    {
+      "id": "INFRA-013",
+      "category": "INFRASTRUCTURE",
+      "title": "Build saga coordinator for distributed transactions",
+      "description": "Saga: signup→Firebase account→index profile→send notification→create Drupal account. Each step compensatable",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 6
+    },
+    {
+      "id": "ARCH-001",
+      "category": "ARCHITECTURE",
+      "title": "Refactor 23 priority/ranking violations to concurrent-equals",
+      "description": "Replace PRIORITY enum with CSL confidence weights in src/projection/. Replace priority queues with fair schedulers",
+      "files": [
+        "src/projection/projection-manager.js",
+        "src/projection/cloud-conductor-integration.js",
+        "src/projection/projection-swarm.js"
+      ],
+      "status": "in-progress",
+      "notes": "core/scheduler/auto-success.js implements concurrent-equals pattern. Need to migrate projection module to use it",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3
+    },
+    {
+      "id": "ARCH-002",
+      "category": "ARCHITECTURE",
+      "title": "Migrate 8,137 console.log to structured logging",
+      "description": "Replace all console.log/warn/error with shared/logging/logger.js pino-based structured JSON logging",
+      "status": "in-progress",
+      "notes": "Full-repo: 8,137 (sacred-genesis scan 2026-03-10T05:51Z) | Production-scoped: 1,868. Top offenders: heady-cli.js (154), heady.js (91), enhanced-commands.js (64), battle-script.js (58). api-gateway.js already migrated to structured logEvent(). shared/logging/logger.js built. Migration script ready",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "ARCH-003",
+      "category": "ARCHITECTURE",
+      "title": "Resolve 1,663 TODO/FIXME/PLACEHOLDER markers",
+      "description": "Full-repo: 1,663 (sacred-genesis scan 2026-03-10T05:51Z; now includes PLACEHOLDER) | Production-scoped: 54. Top offenders: MASTER-TASK-BOARD.md (55 × 4 copies), soc2-evidence-collector.js (16 × 4 copies). Production target: zero in services/",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 12
+    },
+    {
+      "id": "ARCH-004",
+      "category": "ARCHITECTURE",
+      "title": "Create shared JSON Schema registry",
+      "description": "shared/schemas/ with JSON Schema definitions for every inter-service API contract. Generate TypeScript types. Add Pact contract testing",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6
+    },
+    {
+      "id": "ARCH-005",
+      "category": "ARCHITECTURE",
+      "title": "Wire all legacy services to core/ unified engine",
+      "description": "Update imports in all 57 services to use core/ instead of scattered implementations",
+      "status": "in-progress",
+      "notes": "core/ module built: phi.js, circuit-breaker.js, worker-pool.js, engine.js, conductor.js, auto-success.js, registry.js, index.js (2,399 lines total). MCP core-bridge.js wired. Legacy services still using old imports",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "ARCH-006",
+      "category": "ARCHITECTURE",
+      "title": "Implement CQRS for vector memory",
+      "description": "Separate read/write models: writes→pgvector via heady-embed, reads→optimized read replicas with materialized views",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6
+    },
+    {
+      "id": "ARCH-007",
+      "category": "ARCHITECTURE",
+      "title": "Add Turborepo for monorepo build caching",
+      "description": "Only rebuild services affected by changes. Shared @heady/config package. Reduce build time from hours to minutes",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "ARCH-008",
+      "category": "ARCHITECTURE",
+      "title": "Set up Husky pre-commit hooks",
+      "description": "lint-staged: ESLint + Prettier + type-check. Conventional commit messages (feat:/fix:/chore:/docs:/perf:/security:)",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 2
+    },
+    {
+      "id": "ARCH-009",
+      "category": "ARCHITECTURE",
+      "title": "Auto-generate service dependency graph",
+      "description": "Build tool that produces SVG/PNG from package.json imports across 57 services. Include as ARCHITECTURE.svg",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 3
+    },
+    {
+      "id": "ARCH-010",
+      "category": "ARCHITECTURE",
+      "title": "Implement API versioning across all services",
+      "description": "Add x-heady-version header, support /v1/ and /v2/ prefixes, backward compatibility middleware",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 5
+    },
+    {
+      "id": "ARCH-011",
+      "category": "ARCHITECTURE",
+      "title": "Extract i18n strings for internationalization",
+      "description": "Extract all user-facing strings from 16 sites into translation files. Prepare for multi-language support",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 6
+    },
+    {
+      "id": "ARCH-012",
+      "category": "ARCHITECTURE",
+      "title": "Move hot data to Cloudflare KV/D1",
+      "description": "Frequently accessed config, user preferences, and cache data to edge KV for sub-10ms reads",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 5
+    },
+    {
+      "id": "ARCH-013",
+      "category": "ARCHITECTURE",
+      "title": "Build notification service",
+      "description": "Real-time notifications via WebSocket + SSE + push notifications. φ-scaled batching",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "QUAL-001",
+      "category": "QUALITY",
+      "title": "Achieve 80% test coverage for core/ module",
+      "description": "Unit tests for phi.js, circuit-breaker, worker-pool, pipeline engine, conductor, auto-success, agents, vector-ops",
+      "status": "in-progress",
+      "notes": "100+ test files exist in tests/ and tests/auto-generated/. Core modules phi-scales, semantic-logic covered. Need coverage measurement and gap filling",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8
+    },
+    {
+      "id": "QUAL-002",
+      "category": "QUALITY",
+      "title": "End-to-end auth flow testing",
+      "description": "Test: sign-in on one domain → session cookie → relay iframe → all 9 domains authenticated. httpOnly cookies working",
+      "status": "pending",
+      "notes": "Blocked by FEAT-001 (auth session server) and SEC-002 (httpOnly cookies)",
+      "blockedBy": [
+        "FEAT-001",
+        "SEC-002"
+      ],
+      "csl_confidence": 0.718,
+      "estimated_hours": 4
+    },
+    {
+      "id": "QUAL-003",
+      "category": "QUALITY",
+      "title": "Integration tests for all 47 MCP tools",
+      "description": "Each tool gets: valid input test, invalid input test, timeout test, circuit breaker test",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6
+    },
+    {
+      "id": "QUAL-004",
+      "category": "QUALITY",
+      "title": "Docker build validation for all 57 services",
+      "description": "Verify every Dockerfile builds successfully, health checks pass, ports are correct, multi-stage builds used",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5
+    },
+    {
+      "id": "QUAL-005",
+      "category": "QUALITY",
+      "title": "Drupal content type installation verification",
+      "description": "Verify all 13 content types install cleanly. Test VectorIndexer webhook fires on create/update/delete",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "QUAL-006",
+      "category": "QUALITY",
+      "title": "Validate all SKILL.md files",
+      "description": "Ensure triggers, examples, error handling, and tool references are correct in all Claude skills. Now 55+ skills in ecosystem",
+      "status": "pending",
+      "notes": "Skill count has grown from 14 to 55+ across .agents/skills/. Scope much larger than original estimate",
+      "csl_confidence": 0.382,
+      "estimated_hours": 5
+    },
+    {
+      "id": "QUAL-007",
+      "category": "QUALITY",
+      "title": "Accessibility audit (WCAG 2.1 AA) on all 9 sites",
+      "description": "Focus indicators, color contrast, screen reader labels, keyboard navigation, ARIA attributes",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6
+    },
+    {
+      "id": "QUAL-008",
+      "category": "QUALITY",
+      "title": "Responsive design validation across all sites",
+      "description": "Test mobile, tablet, desktop breakpoints. Touch-friendly interactions. No horizontal scroll",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "QUAL-009",
+      "category": "QUALITY",
+      "title": "SEO implementation on all 9 sites",
+      "description": "JSON-LD structured data, sitemap.xml, robots.txt, Open Graph + Twitter Card tags",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "QUAL-010",
+      "category": "QUALITY",
+      "title": "Performance benchmarks for vector operations",
+      "description": "Benchmark cosine similarity, HNSW search, embedding generation. Target: <50ms for 384d search over 1M vectors",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 3
+    },
+    {
+      "id": "QUAL-011",
+      "category": "QUALITY",
+      "title": "Validate liquid node provisioners",
+      "description": "Test Colab, Cloudflare, Cloud Run, AI Studio, Vertex AI, GitHub, Gist provisioners end-to-end",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "QUAL-012",
+      "category": "QUALITY",
+      "title": "Create Postman/Insomnia collection for all endpoints",
+      "description": "Every service endpoint documented with example request/response, auth headers, error cases",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 4
+    },
+    {
+      "id": "QUAL-013",
+      "category": "QUALITY",
+      "title": "Pipeline variant regression tests",
+      "description": "Test all 5 pipeline variants (FAST, STANDARD, FULL, ARENA, LEARNING) with known inputs/expected outputs",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4
+    },
+    {
+      "id": "DOC-001",
+      "category": "DOCUMENTATION",
+      "title": "Create Architecture Decision Records (ADRs)",
+      "description": "docs/adr/ with numbered ADRs: Why 57 services? Why Drupal? Why pgvector? Why Firebase? Why CSL? Why Sacred Geometry?",
+      "status": "pending",
+      "notes": "GAPS_FOUND.md tracks this as planned. Template needed at docs/adr/0000-template.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5
+    },
+    {
+      "id": "DOC-002",
+      "category": "DOCUMENTATION",
+      "title": "Create per-service runbooks",
+      "description": "Each of 57 services gets: how to deploy, scale, debug, rollback. Health check URLs. Known issues",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "DOC-003",
+      "category": "DOCUMENTATION",
+      "title": "Create per-service DEBUG.md files",
+      "description": "Common failure modes, log locations, debugger attachment, local test procedures",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6
+    },
+    {
+      "id": "DOC-004",
+      "category": "DOCUMENTATION",
+      "title": "Create incident playbooks",
+      "description": "docs/runbooks/ — for each critical service: symptoms→diagnosis→remediation→post-incident template",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 5
+    },
+    {
+      "id": "DOC-005",
+      "category": "DOCUMENTATION",
+      "title": "Developer onboarding guide",
+      "description": "Zero-to-running in <5 minutes. scripts/setup-dev.sh validates Node 20+, Docker, gcloud, .env, npm install, docker-compose up",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "DOC-006",
+      "category": "DOCUMENTATION",
+      "title": "Patent documentation linking",
+      "description": "Map each of 51 provisional patents to its code implementation with file references",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 5
+    },
+    {
+      "id": "DOC-007",
+      "category": "DOCUMENTATION",
+      "title": "Security model document",
+      "description": "Comprehensive: auth flow, mTLS, secret rotation, RBAC, CSP, CORS policy, session management",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4
+    },
+    {
+      "id": "DOC-008",
+      "category": "DOCUMENTATION",
+      "title": "API documentation (OpenAPI/Swagger)",
+      "description": "OpenAPI 3.0 spec for every service endpoint. Deploy to api.headysystems.com",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "DOC-009",
+      "category": "DOCUMENTATION",
+      "title": "C4 architecture diagrams (PlantUML)",
+      "description": "Level 1: System Context. Level 2: Containers (57 services). Level 3: Components (key services). Level 4: Code (CSL engine, φ-math)",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 5
+    },
+    {
+      "id": "DOC-010",
+      "category": "DOCUMENTATION",
+      "title": "Create developer portal",
+      "description": "SDK docs, quickstart guides, API key management, rate limit documentation",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 10
+    },
+    {
+      "id": "DOC-011",
+      "category": "DOCUMENTATION",
+      "title": "Build status page (status.headysystems.com)",
+      "description": "Uptime monitoring for all 57 services. Historical charts. Incident reporting",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6
+    },
+    {
+      "id": "DOC-012",
+      "category": "DOCUMENTATION",
+      "title": "Blog/changelog on headysystems.com",
+      "description": "Drupal content type for blog posts. RSS feed. Changelog entries linked to CHANGES.md",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 4
+    },
+    {
+      "id": "DOC-013",
+      "category": "DOCUMENTATION",
+      "title": "Pricing page on headysystems.com",
+      "description": "Tiers: Free/Pro/Enterprise. Feature comparison matrix. Stripe integration ready",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SCALE-001",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to Google Colab",
+      "description": "Use core/liquid/provisioners.js ColabProvisioner. GPU-accelerated embedding generation. Health check endpoint",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SCALE-002",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to Cloudflare Workers",
+      "description": "Edge compute across 300+ PoPs. KV cache for vectors. AI inference via Workers AI",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SCALE-003",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to Google Cloud Run",
+      "description": "Containerized services with auto-scaling. min-instances=1 for critical path",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SCALE-004",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to AI Studio",
+      "description": "Gemini model access with φ-scaled generation config. temperature=0.618, topK=21",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SCALE-005",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to Vertex AI",
+      "description": "ML pipelines for embedding generation and model tuning. Prediction endpoints",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5
+    },
+    {
+      "id": "SCALE-006",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to GitHub Actions",
+      "description": "CI/CD compute for testing and deployment workflows. Reusable workflow templates",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SCALE-007",
+      "category": "SCALING",
+      "title": "Deploy liquid nodes to GitHub Gists",
+      "description": "Versioned config/snippet storage. Pipeline configs, embedding snapshots, agent configs",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SCALE-008",
+      "category": "SCALING",
+      "title": "Build billing service for HeadyEX marketplace",
+      "description": "Stripe integration: subscriptions, metered billing, agent marketplace transactions",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 10
+    },
+    {
+      "id": "SCALE-009",
+      "category": "SCALING",
+      "title": "Build analytics service (self-hosted, privacy-first)",
+      "description": "Usage analytics, funnel tracking, conversion metrics. NOT Google Analytics. Plausible or custom",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6
+    },
+    {
+      "id": "SCALE-010",
+      "category": "SCALING",
+      "title": "Build asset pipeline",
+      "description": "Image optimization (sharp), CDN upload (Cloudflare R2), responsive image generation, WebP/AVIF conversion",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 5
+    },
+    {
+      "id": "SCALE-011",
+      "category": "SCALING",
+      "title": "Database migration framework",
+      "description": "Schema versioning for pgvector tables. Up/down migrations. Rollback support",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 4
+    },
+    {
+      "id": "FEAT-001",
+      "category": "FEATURES",
+      "title": "Build auth session server at auth.headysystems.com",
+      "description": "Firebase ID token validation → httpOnly __heady_session cookie. Cross-domain relay iframe + postMessage",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8
+    },
+    {
+      "id": "FEAT-002",
+      "category": "FEATURES",
+      "title": "Implement cross-domain SSO across all 16 sites",
+      "description": "Sign in on headysystems.com → authenticated on all 9 domains via relay iframe",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6
+    },
+    {
+      "id": "FEAT-003",
+      "category": "FEATURES",
+      "title": "Build HeadyEX agent marketplace",
+      "description": "Agent listing, discovery, purchase, deployment. Drupal agent_listing content type. Stripe checkout",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 12
+    },
+    {
+      "id": "FEAT-004",
+      "category": "FEATURES",
+      "title": "Build real-time notification system",
+      "description": "WebSocket + SSE + push notifications. φ-scaled batching. Per-user notification preferences",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "FEAT-005",
+      "category": "FEATURES",
+      "title": "Build HeadyFinance trading interface",
+      "description": "Real-time market data, portfolio tracking, φ-scaled risk analysis, automated trading strategies",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 15
+    },
+    {
+      "id": "FEAT-006",
+      "category": "FEATURES",
+      "title": "Build HeadyConnection grant discovery engine",
+      "description": "Automated grant searching for 501(c)(3). Match grants to organization profile. Application tracking",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 8
+    },
+    {
+      "id": "FEAT-007",
+      "category": "FEATURES",
+      "title": "Implement HeadyOS app launcher",
+      "description": "Desktop-like app launcher for all Heady services. Task switching, notifications, system tray",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 10
+    },
+    {
+      "id": "FEAT-008",
+      "category": "FEATURES",
+      "title": "Build HeadyBuddy chat widget v2",
+      "description": "Upgraded chat widget with multi-model support, file upload, code execution, memory-aware conversations",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 8
+    },
+    {
+      "id": "FEAT-009",
+      "category": "FEATURES",
+      "title": "Implement agent arena (Battle mode)",
+      "description": "Multiple AI models compete on the same task. Judge evaluates outputs. ELO ratings. φ-scaled tournament brackets",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8
+    },
+    {
+      "id": "FEAT-010",
+      "category": "FEATURES",
+      "title": "Build learning pipeline (self-improvement)",
+      "description": "LEARNING variant: analyze failures → extract patterns → generate improvements → test → deploy. φ-backoff between cycles",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 10
+    },
+    {
+      "id": "FEAT-011",
+      "category": "FEATURES",
+      "title": "Implement patent documentation engine",
+      "description": "Auto-generate patent documentation from code analysis. Map implementations to 51 provisional patents",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6
+    },
+    {
+      "id": "FEAT-012",
+      "category": "FEATURES",
+      "title": "Build admin dashboard (admin.headysystems.com)",
+      "description": "System health, service management, user management, billing overview, analytics dashboard",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 12
+    },
+    {
+      "id": "FEAT-013",
+      "category": "FEATURES",
+      "title": "Implement Drupal VectorIndexer webhook",
+      "description": "On content create/update/delete → auto-embed → store in pgvector. Real-time content vectorization",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-014",
+      "category": "INFRASTRUCTURE",
+      "title": "Build centralized error code catalog",
+      "description": "Create shared/errors/error-codes.js with every error code mapped to HTTP status, user message, resolution steps, and internal debug info. Reference in ERROR_CODES.md",
+      "files": [
+        "shared/errors/error-codes.js",
+        "ERROR_CODES.md"
+      ],
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "GAPS_FOUND.md — 'No Error Code Catalog' section"
+    },
+    {
+      "id": "INFRA-015",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire graceful shutdown middleware to all 57 services",
+      "description": "Deploy shared/middleware/graceful-shutdown.js across all Cloud Run and Docker services. Ensure SIGTERM drains in-flight requests, closes DB pools, and emits shutdown events",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "IMPROVEMENTS.md — graceful-shutdown.js exists but not wired globally"
+    },
+    {
+      "id": "INFRA-016",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy OpenTelemetry distributed tracing",
+      "description": "Add @opentelemetry/sdk-node to all services. Propagate trace IDs across HTTP, gRPC, WebSocket, and NATS. Export to Jaeger or Cloud Trace",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "CHANGES.md v5.0.0 mentions 'Distributed tracing support (OpenTelemetry)' but not deployed"
+    },
+    {
+      "id": "INFRA-017",
+      "category": "INFRASTRUCTURE",
+      "title": "Validate and audit Cloudflare Worker global routes",
+      "description": "Audit wrangler.toml routes against owned domains. Remove routes for unowned domains. Verify worker.js correctly proxies all 9+ sites through global edge worker",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Conversation 53e9874e — 'Wiring All Domains Globally'"
+    },
+    {
+      "id": "INFRA-018",
+      "category": "INFRASTRUCTURE",
+      "title": "Roll out env-validator schemas to all 57 services",
+      "description": "Create env.schema.js for every service in services/{service}/config/. Wire shared/config/env-validator.js into service bootstrap. Fail-fast on missing vars",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "IMPROVEMENTS.md — env-validator exists but schemas only partially rolled out"
+    },
+    {
+      "id": "SEC-014",
+      "category": "SECURITY",
+      "title": "Deploy mTLS for all service-to-service communication",
+      "description": "Generate per-service TLS certs, deploy mutual TLS verification on internal APIs. Reject unauthenticated internal traffic",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "GAPS_FOUND.md security model + PQC security skill"
+    },
+    {
+      "id": "SEC-015",
+      "category": "SECURITY",
+      "title": "Implement WebAuthn passwordless authentication",
+      "description": "Add passkey support via WebAuthn API on auth.headysystems.com. Support platform authenticators (Touch ID, Windows Hello) and roaming authenticators (YubiKey)",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 8,
+      "source": "PQC security skill — WebAuthn passwordless"
+    },
+    {
+      "id": "SEC-016",
+      "category": "SECURITY",
+      "title": "Roll out parameterized prompt templates across all LLM endpoints",
+      "description": "Replace string concatenation in all LLM calls with parameterized templates from shared/prompts/. Validate LLM outputs against JSON schema. Add DOMPurify for HTML output",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 5,
+      "source": "SEC-004 (prompt injection defense) needs this as implementation step"
+    },
+    {
+      "id": "ARCH-014",
+      "category": "ARCHITECTURE",
+      "title": "Remove all deprecated v4.x import paths",
+      "description": "Find and replace all imports from src/pipeline/*, services/compute/worker-pool, services/conductor/circuit-breaker with core/* equivalents. Remove deprecated shim files",
+      "files": [
+        "src/pipeline/basic-pipeline.js",
+        "src/pipeline/async-pipeline.js",
+        "services/compute/worker-pool.js",
+        "services/conductor/circuit-breaker.js"
+      ],
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "CHANGES.md — 'Deprecated Versions' section, planned for v6.0.0"
+    },
+    {
+      "id": "ARCH-015",
+      "category": "ARCHITECTURE",
+      "title": "Rebuild site source code from build artifacts",
+      "description": "Restore or rebuild source TypeScript/React code for all 16 sites. Currently sites/ contains only dist/ and public/ — no source. Create proper build pipeline with npm scripts",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 10,
+      "source": "GAPS_FOUND.md — 'Missing Source Code' section"
+    },
+    {
+      "id": "ARCH-016",
+      "category": "ARCHITECTURE",
+      "title": "Wire NATS JetStream subjects across all services",
+      "description": "After INFRA-001 deploys NATS, wire heady.memory.*, heady.inference.*, heady.agents.* subjects into each service's event handlers. Replace direct HTTP calls with pub/sub where appropriate",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "INFRA-001 (NATS deployment) follow-up integration task"
+    },
+    {
+      "id": "QUAL-014",
+      "category": "QUALITY",
+      "title": "Docker image size audit — all images under 100MB",
+      "description": "Audit all Dockerfiles for multi-stage builds, distroless base images, .dockerignore completeness. Target: every production image < 100MB. Report current sizes",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 4,
+      "source": "INFRA-010 mentions <100MB target but no audit task exists"
+    },
+    {
+      "id": "QUAL-015",
+      "category": "QUALITY",
+      "title": "Standardize health check endpoints across all services",
+      "description": "Every service exposes GET /health with standardized JSON response: {status, version, uptime, dependencies}. Wire into Grafana + Cloud Run health probes",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "Multiple audit reports reference health checks but no standardization task"
+    },
+    {
+      "id": "QUAL-016",
+      "category": "QUALITY",
+      "title": "Run automated pino migration script on production code",
+      "description": "Execute scripts/migrate-logging.js to replace production console.log with logger calls. Verify via npm run lint:no-console. Target: 0 console.log in services/",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "GAPS_FOUND.md — 8,137 console.log (sacred-genesis scan 2026-03-10T05:51Z); script exists but not run at scale"
+    },
+    {
+      "id": "QUAL-017",
+      "category": "QUALITY",
+      "title": "Auto-generate Postman collection from OpenAPI specs",
+      "description": "After DOC-008 creates OpenAPI specs, auto-generate Postman/Insomnia collection with pre-configured auth, variables, and example payloads",
+      "status": "pending",
+      "csl_confidence": 0.236,
+      "estimated_hours": 2,
+      "source": "QUAL-012 is manual; this adds automation after DOC-008"
+    },
+    {
+      "id": "DOC-014",
+      "category": "DOCUMENTATION",
+      "title": "Add CI/CD badges and status indicators to README",
+      "description": "Add build status, test coverage, security scan, and deployment badges to main README.md. Link to GitHub Actions workflows",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 1,
+      "source": "CI/CD pipeline exists (CHANGES.md v5.3.0) but no badges in README"
+    },
+    {
+      "id": "DOC-015",
+      "category": "DOCUMENTATION",
+      "title": "Create SITE_REGISTRY documentation and domain ownership matrix",
+      "description": "Document all owned domains, their Cloudflare zone IDs, DNS configuration, and routing targets. Include domain ownership verification status",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 2,
+      "source": "Conversation 53e9874e — domain wiring work needs documentation"
+    },
+    {
+      "id": "FEAT-014",
+      "category": "FEATURES",
+      "title": "Validate cross-domain SSO relay iframe on all 16 sites",
+      "description": "After FEAT-001/FEAT-002, validate the relay iframe + postMessage SSO flow works on all 16 production domains. Test cookie propagation, session expiry, and logout cascade",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "FEAT-001/002 build the auth server; this validates end-to-end"
+    },
+    {
+      "id": "FEAT-015",
+      "category": "FEATURES",
+      "title": "HeadyBuddy widget v2 — memory-aware conversations with persistence",
+      "description": "Upgrade buddy chat widget with conversation persistence via pgvector, context window from user's vector memory, and file upload support",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 8,
+      "source": "FEAT-008 is generic; this adds specific memory/persistence requirements"
+    },
+    {
+      "id": "FEAT-016",
+      "category": "FEATURES",
+      "title": "Build notification service webhooks and delivery engine",
+      "description": "Implement webhook delivery engine in notification-service: retry with φ-backoff, HMAC signature verification, delivery receipts, dead letter queue",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "GAPS_FOUND.md notification-service + FEAT-004 + ARCH-013 combined"
+    },
+    {
+      "id": "SCALE-012",
+      "category": "SCALING",
+      "title": "Migrate monorepo to Turborepo with shared @heady/* packages",
+      "description": "Set up Turborepo with workspaces. Create @heady/config, @heady/logging, @heady/middleware shared packages. Configure remote caching. Target: only rebuild changed services",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6,
+      "source": "ARCH-007 mentions Turborepo but is architecture; this is the scaling/build infrastructure task"
+    },
+    {
+      "id": "SCALE-013",
+      "category": "SCALING",
+      "title": "Deploy multi-region Cloud Run with traffic splitting",
+      "description": "Deploy critical services (API gateway, auth, buddy) to multiple GCP regions. Configure Cloudflare geo-routing to nearest region. φ-scaled traffic weights",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6,
+      "source": "Current deployment is single-region; multi-region needed for production SLA"
+    },
+    {
+      "id": "REM-001",
+      "category": "REMEDIATION",
+      "title": "Replace 2,793 localhost references with cloud URLs",
+      "description": "Full-repo: 2,793 (sacred-genesis scan 2026-03-10T05:51Z) | Production-scoped: 464. Top offenders: CLAUDE.md (37), simple-deploy.sh (31 × 2), heady-eval/README.md (21 × 4). Docker health checks acceptable. Focus on src/config/, src/core/, services/ runtime code. api-gateway.js already fixed (removed localhost from banner)",
+      "status": "pending",
+      "notes": "ban-localhost.sh script exists. validate-no-localhost.mjs exists. Production-scoped count (464) is the actionable target. Count dropped from 3,442 to 2,793 after api-gateway + rebuild script fixes",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "sacred-genesis scan 2026-03-10T05:51Z: 2,793 full-repo | previous max_potential scan: 464 production"
+    },
+    {
+      "id": "REM-002",
+      "category": "REMEDIATION",
+      "title": "Refactor 12,999 priority/ranking language instances to concurrent-equals",
+      "description": "Audit scan found 12,999 uses of priority/rank/highest/lowest language. Review each for concurrent-equals compliance per ARCH-001. Many are legitimate (CSS priority, npm priority). Filter to code-path violations only",
+      "status": "pending",
+      "notes": "Bulk count includes CSS, documentation, and config files. Estimate ~500 require actual refactoring in runtime code",
+      "csl_confidence": 0.382,
+      "estimated_hours": 6,
+      "source": "max_potential_rebuild_audit.py scan 2026-03-10 — priority_terms metric: 12,999"
+    },
+    {
+      "id": "REM-003",
+      "category": "REMEDIATION",
+      "title": "Fix 8 remaining Eric Head → Eric Haywood references",
+      "description": "Audit found 8 references to 'Eric Head' that should be 'Eric Haywood'. Files: heady-improvements.py (1), perplexity-space-instruction.md (2, × 2 copies), max_potential_rebuild_audit.py (2). HEADY_CONTEXT.md already corrected",
+      "status": "in-progress",
+      "notes": "HEADY_CONTEXT.md corrected in Session 5. 6 remaining refs in archive/skill files need cleanup",
+      "csl_confidence": 0.927,
+      "estimated_hours": 1,
+      "source": "max_potential_rebuild_audit.py scan 2026-03-10 — eric_head metric: 8"
+    },
+    {
+      "id": "SEC-017",
+      "category": "SECURITY",
+      "title": "Eliminate 282 eval() calls across codebase",
+      "description": "eval() enables arbitrary code execution and is a critical injection vector. Replace with JSON.parse(), Function constructor (where safe), or refactored logic. Exclude test fixtures that intentionally test eval scanning",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 6,
+      "source": "Codebase scan 2026-03-10 — grep eval usage: 282 matches (excl. heady-eval service name)"
+    },
+    {
+      "id": "SEC-018",
+      "category": "SECURITY",
+      "title": "Replace 251 insecure http:// URLs with https://",
+      "description": "251 non-localhost http:// URLs found across .js/.ts/.json files. Mixed content and unencrypted API calls. Excludes localhost, XML schema URIs, and W3C namespaces. Focus on runtime config, API endpoints, and documentation links",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Codebase scan 2026-03-10 — grep http:// (non-localhost): 251 matches"
+    },
+    {
+      "id": "QUAL-018",
+      "category": "QUALITY",
+      "title": "Add .catch() to 704 uncaught promise chains",
+      "description": "704 .then() calls without corresponding .catch() handlers. Uncaught promise rejections crash Node.js 15+. Add explicit error handling or convert to async/await with try/catch. Focus on services/ and src/ directories first",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Codebase scan 2026-03-10 — grep .then( without .catch(: 704 matches"
+    },
+    {
+      "id": "QUAL-019",
+      "category": "QUALITY",
+      "title": "Replace 1,094 process.exit() with graceful shutdown patterns",
+      "description": "1,094 process.exit() calls bypass cleanup handlers, leave connections open. Replace with shared/middleware/graceful-shutdown.js pattern. CLI scripts may keep process.exit; focus on service entrypoints and middleware",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Codebase scan 2026-03-10 — grep process.exit: 1,094 matches"
+    },
+    {
+      "id": "QUAL-020",
+      "category": "QUALITY",
+      "title": "Clean up 23 unused env vars in .env.example",
+      "description": "23 env vars defined in .env.example but never referenced in code: CF_ZONE_* (15 domains), CLOUDFLARE_ACCESS_AUDIENCE, CLOUDFLARE_VECTORIZE_INDEX, GCP_SERVICE_ACCOUNT_EMAIL, DEFAULT_REGION, JWT_ISSUER, JWT_AUDIENCE. Either wire them into services or remove from .env.example",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 1,
+      "source": "Codebase scan 2026-03-10 — .env.example cross-ref: 23 vars not found in code"
+    },
+    {
+      "id": "QUAL-021",
+      "category": "QUALITY",
+      "title": "Remove 10 stale package-lock.json files (consolidate to root)",
+      "description": "10 package-lock.json files found at various depths. Monorepo should use a single root lockfile. Stale locks cause dependency version drift and install conflicts",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 1,
+      "source": "Codebase scan 2026-03-10 — find package-lock.json: 10 files"
+    },
+    {
+      "id": "QUAL-022",
+      "category": "QUALITY",
+      "title": "Replace 4,614 sync FS operations with async equivalents in services",
+      "description": "4,614 calls to readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync. Sync FS blocks the event loop. Replace with fs.promises.* in service code. Build scripts and CLI tools may keep sync ops",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 10,
+      "source": "Codebase scan 2026-03-10 — grep fs.*Sync: 4,614 matches"
+    },
+    {
+      "id": "ARCH-017",
+      "category": "ARCHITECTURE",
+      "title": "Migrate 487 hardcoded ports to env-driven process.env.*_PORT",
+      "description": "487 hardcoded port references (3xxx, 8xxx) not reading from process.env. Centralize port assignments in config/ports.js or .env with fallback defaults. Prevents port conflicts when running services concurrently",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Codebase scan 2026-03-10 — grep hardcoded ports (3xxx/8xxx not env): 487 matches"
+    },
+    {
+      "id": "ARCH-018",
+      "category": "ARCHITECTURE",
+      "title": "Replace 171 magic-number setTimeout with φ-scaled constants",
+      "description": "171 setTimeout calls use arbitrary numeric literals (5000, 10000, 30000 etc.) instead of φ-derived constants. Import delay values from core/constants/phi.js: PHI_DELAY_SHORT=2584ms, PHI_DELAY_MEDIUM=6765ms, PHI_DELAY_LONG=17711ms (Fibonacci sequence)",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "Codebase scan 2026-03-10 — grep setTimeout with 4+ digit literals (non-phi): 171 matches"
+    },
+    {
+      "id": "ARCH-019",
+      "category": "ARCHITECTURE",
+      "title": "Deduplicate 7 conflicting package.json name fields",
+      "description": "7 duplicate package.json name values across the monorepo: create-heady-agent, @heady-ai/heady-hive-sdk, heady-backend, HeadyMe, heady-systems, heady-ui, HeadySystems Inc. Turborepo and npm workspaces require unique names. Rename duplicates with @heady/ scoped prefixes",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "Codebase scan 2026-03-10 — find package.json | grep name | uniq -d: 7 duplicates"
+    },
+    {
+      "id": "INFRA-019",
+      "category": "INFRASTRUCTURE",
+      "title": "Add entrypoints to 24 services missing index.js/server.js",
+      "description": "24 of 59 service directories have no index.js, server.js, or src/index.ts entrypoint: ai_router, cli_service, colab_gateway, google_mcp, heady-buddy, heady-federation, heady-hive, heady-mcp, heady-midi, heady-onboarding, heady-orchestration, heady-pilot-onboarding, heady-security, heady-testing, heady-ui, heady-web, huggingface_gateway, jules_mcp, memory_mcp, model_gateway, perplexity_mcp, prompt_manager, secret_gateway, silicon_bridge",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Codebase scan 2026-03-10 — service dirs missing index.js/server.js: 24 of 59"
+    },
+    {
+      "id": "INFRA-020",
+      "category": "INFRASTRUCTURE",
+      "title": "Create Dockerfiles for 19 services without containerization",
+      "description": "19 of 59 services lack a Dockerfile, blocking Cloud Run deployment. Create multi-stage node:22-alpine Dockerfiles with health check, non-root user, and .dockerignore. Reference existing patterns from services with Dockerfiles",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Codebase scan 2026-03-10 — service dirs without Dockerfile: 19 of 59"
+    },
+    {
+      "id": "DOC-016",
+      "category": "DOCUMENTATION",
+      "title": "Add LICENSE file to repository root",
+      "description": "No LICENSE file exists in the repository root. Required for open-source compliance, npm publishing, and enterprise procurement. Choose Apache 2.0 (preferred for patent grant) or proprietary. Add SPDX identifier to root package.json",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 0.5,
+      "source": "Codebase scan 2026-03-10 — no LICENSE file found in repo root"
+    },
+    {
+      "id": "SEC-019",
+      "category": "SECURITY",
+      "title": "Eliminate 144 remaining permissive CORS instances",
+      "description": "128 Access-Control-Allow-Origin: * headers + 16 bare cors() calls (no whitelist config) remain despite SEC-001 being marked complete. Enforce shared/middleware/cors-whitelist.js everywhere. Validate via grep for cors() without buildCorsPolicy/corsWhitelist args",
+      "status": "pending",
+      "notes": "SEC-001 marked complete but audit shows 144 residual permissive CORS instances",
+      "csl_confidence": 0.927,
+      "estimated_hours": 4,
+      "source": "Deep scan 2026-03-10 — 128 CORS * + 16 bare cors(): 144 total"
+    },
+    {
+      "id": "SEC-020",
+      "category": "SECURITY",
+      "title": "Centralize 802 hardcoded Cloud Run/API URLs to env config",
+      "description": "802 hardcoded Cloud Run (.run.app) and API URLs scattered across source. Move to shared/config/endpoints.js with process.env overrides. Prevents stale URLs when services redeploy to new regions or projects",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Deep scan 2026-03-10 — grep Cloud Run/API URLs: 802 matches"
+    },
+    {
+      "id": "QUAL-023",
+      "category": "QUALITY",
+      "title": "Deduplicate shared utilities (logger ×31, rate-limiter ×94, security-headers ×36)",
+      "description": "Critical code duplication: logger.js has 31 copies, rate-limiter has 94 copies, security-headers has 36 copies, env-validator has 28 copies, error-handler has 13 copies. Consolidate to single source in shared/ and import everywhere. Prevents drift when patching security utilities",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Deep scan 2026-03-10 — find duplicates: logger=31, rate-limiter=94, security-headers=36, env-validator=28, error-handler=13"
+    },
+    {
+      "id": "QUAL-024",
+      "category": "QUALITY",
+      "title": "Add test files to 43 services with zero test coverage",
+      "description": "Only 16 of 59 services have any test files. 43 services have zero .test.js/.spec.js files. Create at minimum smoke tests (health check, startup/shutdown) for each service. Priority: services with Cloud Run deployments first",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 16,
+      "source": "Deep scan 2026-03-10 — services with tests: 16/59"
+    },
+    {
+      "id": "QUAL-025",
+      "category": "QUALITY",
+      "title": "Migrate 1,247 console.error calls to structured error logging",
+      "description": "1,247 console.error calls across codebase. Convert to logger.error() with structured error objects, stack traces, and correlation IDs. Complements ARCH-002 (console.log) — this covers error-specific paths",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Deep scan 2026-03-10 — grep console.error: 1,247 matches"
+    },
+    {
+      "id": "ARCH-020",
+      "category": "ARCHITECTURE",
+      "title": "Enable TypeScript strict mode in 24 tsconfig.json files",
+      "description": "24 tsconfig.json files lack strict: true. Packages affected: vector-memory, mcp-server, orchestrator, gateway, sdk, heady-semantic-logic, csl-engine, liquid-gateway-worker. Enable strict incrementally — start with strictNullChecks, then noImplicitAny",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Deep scan 2026-03-10 — tsconfig.json without strict: 24 files"
+    },
+    {
+      "id": "INFRA-021",
+      "category": "INFRASTRUCTURE",
+      "title": "Add package.json to 20 apps directories",
+      "description": "20 of 22 app directories lack package.json: admin-portal, api-docs, auth, blog, command-center, demo-onboarding, developer-portal, heady-ai, headyconnection-com/org, headyex, headyfinance, heady-io-docs, heady-mcp-portal, headyme, headyos, headysystems, pricing, sites, status. Add package.json with name, version, scripts (dev/build/start)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Deep scan 2026-03-10 — apps/ dirs without package.json: 20 of 22"
+    },
+    {
+      "id": "INFRA-022",
+      "category": "INFRASTRUCTURE",
+      "title": "Add .dockerignore to 39 services with Dockerfiles",
+      "description": "39 services have Dockerfiles but no .dockerignore. Without it, node_modules, .git, and test files are copied into images, inflating size. Create shared .dockerignore template: node_modules, .git, *.test.js, .env, dist, coverage",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "Deep scan 2026-03-10 — services with Dockerfile but no .dockerignore: 39"
+    },
+    {
+      "id": "DOC-017",
+      "category": "DOCUMENTATION",
+      "title": "Add README.md to 3 services and 5 workers missing documentation",
+      "description": "3 services and 5 workers lack README.md files. Each README should cover: purpose, setup, API endpoints, env vars, deployment. Use existing service READMEs as template",
+      "status": "pending",
+      "csl_confidence": 0.382,
+      "estimated_hours": 3,
+      "source": "Deep scan 2026-03-10 — services without README: 3, workers without README: 5"
+    },
+    {
+      "id": "REM-004",
+      "category": "REMEDIATION",
+      "title": "Reopen SEC-001: 144 permissive CORS instances still present",
+      "description": "SEC-001 was marked completed but deep scan found 128 Access-Control-Allow-Origin: * + 16 bare cors() calls remain. Audit SEC-001 completion criteria and re-validate. May need to reopen or track separately via SEC-019",
+      "status": "pending",
+      "notes": "Cross-reference with SEC-019 — this is the tracking task for re-validation",
+      "csl_confidence": 0.927,
+      "estimated_hours": 1,
+      "source": "Deep scan 2026-03-10 — SEC-001 marked complete but 144 permissive instances remain"
+    },
+    {
+      "id": "REM-005",
+      "category": "REMEDIATION",
+      "title": "Quarantine or archive Heady-pre-production-9f2f0642-main duplicate tree",
+      "description": "The Heady-pre-production-9f2f0642-main/ directory is a full copy of the repo inflating all scan counts (TODOs, localhost, console.log, etc.). Move to _archive/ or remove entirely. This single action will reduce many scan metrics by ~40%",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Deep scan 2026-03-10 — duplicate tree inflating TODO, localhost, console.log counts"
+    }
+  ]
+}

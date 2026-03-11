@@ -53,7 +53,7 @@ function pushFile(repo, path, content, message) {
 // ═══════════════════════════════════════════════════════════════
 function buildClaude() {
     const repo = 'heady-rebuild-claude';
-    logger.info('🧠 [Claude] Building in latent space — deep architecture patterns...');
+    console.log('🧠 [Claude] Building in latent space — deep architecture patterns...');
 
     return {
         'package.json': JSON.stringify({
@@ -107,7 +107,7 @@ class HeadyManager {
     }
 }
 
-new HeadyManager().boot().catch(logger.error);
+new HeadyManager().boot().catch(console.error);
 `,
 
         'src/core/service-container.js': `/*
@@ -193,7 +193,7 @@ class VaultBoot {
     async init(container) {
         const vaultPath = path.join(__dirname, '../../configs/.vault.enc');
         if (!fs.existsSync(vaultPath)) {
-            logger.info('[Vault] No vault found — using env vars');
+            console.log('[Vault] No vault found — using env vars');
             return;
         }
         const key = crypto.scryptSync(process.env.HEADY_VAULT_KEY || 'dev-key', 'heady-salt', 32);
@@ -206,7 +206,7 @@ class VaultBoot {
         const plain = Buffer.concat([decipher.update(encrypted), decipher.final()]);
         this.decrypted = JSON.parse(plain.toString());
         Object.assign(process.env, this.decrypted);
-        logger.info('[Vault] Decrypted ' + Object.keys(this.decrypted).length + ' credentials');
+        console.log('[Vault] Decrypted ' + Object.keys(this.decrypted).length + ' credentials');
     }
 }
 module.exports = new VaultBoot();
@@ -314,7 +314,7 @@ CMD ["node", "src/heady-manager.js"]
 // MODEL 2: GPT-5.4 — Function Calling & Modern Patterns
 // ═══════════════════════════════════════════════════════════════
 function buildGPT54() {
-    logger.info('⚡ [GPT-5.4] Building in latent space — function calling patterns...');
+    console.log('⚡ [GPT-5.4] Building in latent space — function calling patterns...');
 
     return {
         'package.json': JSON.stringify({
@@ -361,7 +361,7 @@ app.post('/api/call/:functionName', async (req, res) => {
 app.get('/api/functions', (req, res) => res.json(registry.listFunctions()));
 app.get('/health/live', (req, res) => res.json({ status: 'OK', functions: registry.count() }));
 
-app.listen(process.env.PORT || 3301, () => logger.info('Heady™ GPT-5.4 build — function registry active'));
+app.listen(process.env.PORT || 3301, () => console.log('Heady™ GPT-5.4 build — function registry active'));
 `,
 
         'src/core/function-registry.js': `/*
@@ -448,7 +448,7 @@ CMD ["node", "src/index.js"]
 // MODEL 3: Gemini — Massive Context + Interconnected Modules
 // ═══════════════════════════════════════════════════════════════
 function buildGemini() {
-    logger.info('🔮 [Gemini] Building in latent space — interconnected module graph...');
+    console.log('🔮 [Gemini] Building in latent space — interconnected module graph...');
 
     return {
         'package.json': JSON.stringify({
@@ -484,7 +484,7 @@ graph.resolve().then(modules => {
     for (const [name, mod] of modules) {
         if (mod.routes) mod.routes(app);
     }
-    app.listen(process.env.PORT || 3301, () => logger.info('Heady Gemini build booted'));
+    app.listen(process.env.PORT || 3301, () => console.log('Heady Gemini build booted'));
 });
 `,
 
@@ -538,7 +538,7 @@ module.exports = { info: log.info.bind(log), error: log.error.bind(log), routes:
 
         'src/modules/vault.js': `const crypto = require('crypto');
 module.exports = {
-    init(deps) { logger.info('[Vault] Initialized'); },
+    init(deps) { console.log('[Vault] Initialized'); },
     decrypt(key, iv, data) { const d = crypto.createDecipheriv('aes-256-gcm', key, iv); return d.update(data); },
     routes: app => {}
 };
@@ -559,7 +559,7 @@ module.exports = { resolve: h => MAP[h] || 'hub', routes: app => { app.use((r, s
 // MODEL 4-9: Groq, Jules, Codex, Perplexity, HF, HeadyCoder
 // ═══════════════════════════════════════════════════════════════
 function buildGroq() {
-    logger.info('⚡ [Groq] Building in latent space — ultra-minimal fast boot...');
+    console.log('⚡ [Groq] Building in latent space — ultra-minimal fast boot...');
     return {
         'package.json': JSON.stringify({ name: 'heady-rebuild-groq', version: '1.0.0', scripts: { start: 'node index.js' }, dependencies: { express: '^5.2.1' } }, null, 2),
         'index.js': `/* Groq: SPEED FIRST — single file, zero dependencies beyond Express, sub-100ms boot */
@@ -569,7 +569,7 @@ app.use(require('express').json());
 app.get('/health/live', (r,s) => s.json({ok:1,up:process.uptime()|0}));
 app.use((r,s,n) => { r.mod = D[r.hostname] || 'hub'; n(); });
 app.get('/', (r,s) => s.send('<h1>Heady '+r.mod+'</h1>'));
-app.listen(process.env.PORT||3301, () => logger.info('Groq build: '+(Date.now()-global.__t)+'ms boot'));
+app.listen(process.env.PORT||3301, () => console.log('Groq build: '+(Date.now()-global.__t)+'ms boot'));
 global.__t = Date.now();
 `,
         'Dockerfile': `FROM node:22-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --production\nCOPY . .\nUSER 1000\nCMD ["node","index.js"]`,
@@ -577,7 +577,7 @@ global.__t = Date.now();
 }
 
 function buildJules() {
-    logger.info('🤖 [Jules] Building in latent space — autonomous multi-file coding...');
+    console.log('🤖 [Jules] Building in latent space — autonomous multi-file coding...');
     return {
         'package.json': JSON.stringify({ name: 'heady-rebuild-jules', version: '1.0.0', scripts: { start: 'node src/app.js' }, dependencies: { express: '^5.2.1', pg: '^8.18.0', dotenv: '^17.3.1' } }, null, 2),
         'src/app.js': `/* Jules: GitHub-native autonomous build — issue-driven development */
@@ -612,7 +612,7 @@ module.exports = { router };
 }
 
 function buildCodex() {
-    logger.info('🔧 [Codex] Building in latent space — code-specialized patterns...');
+    console.log('🔧 [Codex] Building in latent space — code-specialized patterns...');
     return {
         'package.json': JSON.stringify({ name: 'heady-rebuild-codex', version: '1.0.0', scripts: { start: 'node src/server.js', test: 'jest' }, dependencies: { express: '^5.2.1', pg: '^8.18.0' } }, null, 2),
         'src/server.js': `/* Codex: Test-driven, every module has a corresponding test */
@@ -643,7 +643,7 @@ test('resolves unknown to hub', () => { const mw = createDomainMiddleware(); con
 }
 
 function buildPerplexity() {
-    logger.info('🔍 [Perplexity] Building in latent space — research-backed best practices...');
+    console.log('🔍 [Perplexity] Building in latent space — research-backed best practices...');
     return {
         'package.json': JSON.stringify({ name: 'heady-rebuild-perplexity', version: '1.0.0', scripts: { start: 'node src/index.js' }, dependencies: { express: '^5.2.1', pg: '^8.18.0', helmet: '^8.1.0', 'express-rate-limit': '^8.2.1' } }, null, 2),
         'src/index.js': `/* Perplexity: Best-practice security + observability from web research */
@@ -656,7 +656,7 @@ app.use(rateLimit({ windowMs: 60000, max: 100 })); // Rate limiting per NIST gui
 app.use(express.json({ limit: '10mb' })); // Prevent payload attacks
 app.use((req, res, next) => { req.requestId = require('crypto').randomUUID(); next(); }); // Correlation IDs
 app.get('/health/live', (r,s) => s.json({ status: 'OK', requestId: r.requestId }));
-app.use((err,req,res,next) => { logger.error({ requestId: req.requestId, error: err.message }); res.status(500).json({ error: 'Internal error', requestId: req.requestId }); });
+app.use((err,req,res,next) => { console.error({ requestId: req.requestId, error: err.message }); res.status(500).json({ error: 'Internal error', requestId: req.requestId }); });
 app.listen(process.env.PORT || 3301);
 `,
         'SECURITY.md': `# Security Best Practices (Research-Backed)
@@ -670,7 +670,7 @@ app.listen(process.env.PORT || 3301);
 }
 
 function buildHuggingFace() {
-    logger.info('🤗 [HuggingFace] Building in latent space — open-source transparency...');
+    console.log('🤗 [HuggingFace] Building in latent space — open-source transparency...');
     return {
         'package.json': JSON.stringify({ name: 'heady-rebuild-huggingface', version: '1.0.0', scripts: { start: 'node src/index.js' }, dependencies: { express: '^5.2.1', '@huggingface/inference': '^4.13.12' } }, null, 2),
         'src/index.js': `/* HuggingFace: Open-source models for edge inference */
@@ -688,7 +688,7 @@ app.listen(process.env.PORT || 3301);
 }
 
 function buildHeadyCoder() {
-    logger.info('🐝 [HeadyCoder] Building in latent space — multi-model code engine...');
+    console.log('🐝 [HeadyCoder] Building in latent space — multi-model code engine...');
     return {
         'package.json': JSON.stringify({ name: 'heady-rebuild-headycoder', version: '1.0.0', scripts: { start: 'node src/index.js' }, dependencies: { express: '^5.2.1', '@anthropic-ai/sdk': '^0.78.0', openai: '^4.73.0', '@google/genai': '^1.42.0', 'groq-sdk': '^0.37.0' } }, null, 2),
         'src/index.js': `/* HeadyCoder: Multi-model code generation — routes to best model per task */
@@ -727,11 +727,11 @@ module.exports = { ModelRouter };
 // MAIN: Build all in latent space, then push
 // ═══════════════════════════════════════════════════════════════
 async function main() {
-    logger.info('');
-    logger.info('═══════════════════════════════════════════════════════════════');
-    logger.info('  🧪 LATENT SPACE BUILD — 9 Models, Zero Local Files');
-    logger.info('═══════════════════════════════════════════════════════════════');
-    logger.info('');
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('  🧪 LATENT SPACE BUILD — 9 Models, Zero Local Files');
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('');
 
     const builds = [
         { repo: 'heady-rebuild-claude', fn: buildClaude },
@@ -746,23 +746,23 @@ async function main() {
     ];
 
     // Phase 1: Build all in latent space (RAM)
-    logger.info('── Phase 1: Building in 3D Vector Latent Space ──');
+    console.log('── Phase 1: Building in 3D Vector Latent Space ──');
     for (const build of builds) {
         const files = build.fn();
         LATENT_BUILDS[build.repo] = files;
         const hash = governanceHash(JSON.stringify(files));
-        logger.info(`  ✅ ${build.repo}: ${Object.keys(files).length} files, governance: ${hash}`);
+        console.log(`  ✅ ${build.repo}: ${Object.keys(files).length} files, governance: ${hash}`);
     }
 
     const totalFiles = Object.values(LATENT_BUILDS).reduce((sum, b) => sum + Object.keys(b).length, 0);
-    logger.info(`\n  📊 Total: ${totalFiles} files across ${builds.length} repos — all in RAM\n`);
+    console.log(`\n  📊 Total: ${totalFiles} files across ${builds.length} repos — all in RAM\n`);
 
     // Phase 2: Push to HeadyMe repos
-    logger.info('── Phase 2: Projecting from Latent Space → GitHub ──');
+    console.log('── Phase 2: Projecting from Latent Space → GitHub ──');
     let pushed = 0, failed = 0;
 
     for (const [repo, files] of Object.entries(LATENT_BUILDS)) {
-        logger.info(`  📦 ${repo}:`);
+        console.log(`  📦 ${repo}:`);
         for (const [filePath, content] of Object.entries(files)) {
             const ok = pushFile(repo, filePath, content, `Latent space build: ${filePath}`);
             if (ok) { pushed++; process.stdout.write(`    ✅ ${filePath}\n`); }
@@ -770,10 +770,10 @@ async function main() {
         }
     }
 
-    logger.info(`\n══ BUILD COMPLETE ══`);
-    logger.info(`  Pushed: ${pushed}/${totalFiles} files`);
-    logger.info(`  Failed: ${failed}`);
-    logger.info('═══════════════════════════════════════════════════════════════\n');
+    console.log(`\n══ BUILD COMPLETE ══`);
+    console.log(`  Pushed: ${pushed}/${totalFiles} files`);
+    console.log(`  Failed: ${failed}`);
+    console.log('═══════════════════════════════════════════════════════════════\n');
 }
 
-main().catch(err => { logger.error('Build failed:', err.message); process.exit(1); });
+main().catch(err => { console.error('Build failed:', err.message); process.exit(1); });

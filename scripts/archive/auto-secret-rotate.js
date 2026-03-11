@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -7,15 +5,15 @@ const logger = pino();
  */
 const { SecretRotation } = require('../src/security/secret-rotation');
 
-logger.info("🛡️ [Heady-Pipeline] Initializing Automated Secret Rotation Daemon");
+console.log("🛡️ [Heady-Pipeline] Initializing Automated Secret Rotation Daemon");
 
 async function runRotationSweep() {
-    logger.info(`[${new Date().toISOString()}] Executing scheduled rotation...`);
+    console.log(`[${new Date().toISOString()}] Executing scheduled rotation...`);
     try {
         const status = await SecretRotation.auditSecrets();
-        logger.info("Rotation Status:", JSON.stringify(status, null, 2));
+        console.log("Rotation Status:", JSON.stringify(status, null, 2));
     } catch (err) {
-        logger.error("Rotation failure:", err.message);
+        console.error("Rotation failure:", err.message);
     }
 }
 
@@ -25,4 +23,4 @@ runRotationSweep();
 // Run every 12 hours
 setInterval(runRotationSweep, 12 * 60 * 60 * 1000);
 
-logger.info("✅ Secret Rotation Daemon is now active in background memory.");
+console.log("✅ Secret Rotation Daemon is now active in background memory.");

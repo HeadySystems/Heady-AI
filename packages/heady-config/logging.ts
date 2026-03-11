@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Structured JSON Logging Configuration
  *
@@ -53,7 +51,7 @@ export interface StructuredLogEntry {
  * @example
  * ```typescript
  * const entry = createLogEntry('info', 'User logged in', { userId: '123' });
- * logger.info(JSON.stringify(entry));
+ * console.log(JSON.stringify(entry));
  * ```
  */
 export function createLogEntry(

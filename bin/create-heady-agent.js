@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * create-heady-agent — Scaffolding CLI for Heady™MCP agent development.
@@ -99,7 +97,7 @@ server.setRequestHandler('tools/list', async () => ({
   tools: [
 ${tools.map(t => `    {
       name: '${t}',
-      description: 'NOTE: Implement ${t}',
+      description: 'TODO: Implement ${t}',
       inputSchema: { type: 'object', properties: {} },
     },`).join('\n')}
   ],
@@ -110,7 +108,7 @@ server.setRequestHandler('tools/call', async (request) => {
 
   switch (name) {
 ${tools.map(t => `    case '${t}':
-      return { content: [{ type: 'text', text: 'NOTE: Implement ${t}' }] };`).join('\n')}
+      return { content: [{ type: 'text', text: 'TODO: Implement ${t}' }] };`).join('\n')}
     default:
       throw new Error(\`Unknown tool: \${name}\`);
   }
@@ -147,10 +145,10 @@ server.setRequestHandler('resources/read', async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  logger.error(\`${agentName} MCP server running on stdio\`);
+  console.error(\`${agentName} MCP server running on stdio\`);
 }
 
-main().catch(logger.error);
+main().catch(console.error);
 `;
 }
 
@@ -206,7 +204,7 @@ npm run dev
 
 ## Tools
 
-${TEMPLATES[template].tools.map(t => `- \`${t}\` — NOTE: Implement`).join('\n')}
+${TEMPLATES[template].tools.map(t => `- \`${t}\` — TODO: Implement`).join('\n')}
 
 ## Testing
 
@@ -232,7 +230,7 @@ function main() {
     const args = process.argv.slice(2);
 
     if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
-        logger.info(`
+        console.log(`
   create-heady-agent — Scaffold a new HeadyMCP agent
 
   Usage:
@@ -260,13 +258,13 @@ function main() {
     else if (tShort >= 0 && args[tShort + 1]) template = args[tShort + 1];
 
     if (!TEMPLATES[template]) {
-        logger.error(`Unknown template: ${template}`);
-        logger.error(`Available: ${Object.keys(TEMPLATES).join(', ')}`);
+        console.error(`Unknown template: ${template}`);
+        console.error(`Available: ${Object.keys(TEMPLATES).join(', ')}`);
         process.exit(1);
     }
 
     const dir = path.resolve(agentName);
-    logger.info(`\n  ✨ Creating ${agentName} (${TEMPLATES[template].name})\n`);
+    console.log(`\n  ✨ Creating ${agentName} (${TEMPLATES[template].name})\n`);
 
     // Create directory structure
     const dirs = ['src', 'src/tools', 'src/resources', '__tests__', '.heady'];
@@ -284,18 +282,18 @@ function main() {
 
     for (const [filepath, content] of Object.entries(files)) {
         fs.writeFileSync(path.join(dir, filepath), content);
-        logger.info(`  📄 ${filepath}`);
+        console.log(`  📄 ${filepath}`);
     }
 
     // Install dependencies
-    logger.info('\n  📦 Installing dependencies...\n');
+    console.log('\n  📦 Installing dependencies...\n');
     try {
         execSync('npm install', { cwd: dir, stdio: 'inherit' });
     } catch (e) {
-        logger.info('  ⚠ npm install failed — run manually');
+        console.log('  ⚠ npm install failed — run manually');
     }
 
-    logger.info(`
+    console.log(`
   ✅ Done! Your HeadyMCP agent is ready.
 
   Next steps:

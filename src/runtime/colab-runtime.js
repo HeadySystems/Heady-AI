@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * © 2026 Heady™Systems Inc..
@@ -118,7 +116,7 @@ class GPUVectorStore {
  */
 async function setupNgrokTunnel(port) {
     if (!GPU_CONFIG.ngrokToken) {
-        logger.info("⚠ No NGROK_TOKEN — API only accessible within Colab");
+        console.log("⚠ No NGROK_TOKEN — API only accessible within Colab");
         return null;
     }
 
@@ -130,11 +128,11 @@ async function setupNgrokTunnel(port) {
             domain: GPU_CONFIG.ngrokDomain || undefined,
         });
         const url = listener.url();
-        logger.info(`🌐 Heady accessible at: ${url}`);
+        console.log(`🌐 Heady accessible at: ${url}`);
         return url;
     } catch (err) {
-        logger.info(`⚠ ngrok setup failed: ${err.message}`);
-        logger.info("  Install: pip install pyngrok && npm install @ngrok/ngrok");
+        console.log(`⚠ ngrok setup failed: ${err.message}`);
+        console.log("  Install: pip install pyngrok && npm install @ngrok/ngrok");
         return null;
     }
 }

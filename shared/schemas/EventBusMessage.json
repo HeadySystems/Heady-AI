@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.headysystems.com/schemas/EventBusMessage",
+  "type": "object",
+  "required": [
+    "data",
+    "metadata"
+  ],
+  "properties": {
+    "data": {
+      "type": "object"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "timestamp",
+        "subject"
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "integer"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -28,10 +26,10 @@ const DATA_DIR = path.join(__dirname, '..', 'data');
 
 // ── Phase 1: Ephemeral Workspace Wipe ──────────────────────────
 function obliterateWorkspace() {
-    logger.info('\n🧹 [Phase 1] Ephemeral Workspace Wipe');
+    console.log('\n🧹 [Phase 1] Ephemeral Workspace Wipe');
 
     if (!fs.existsSync(WORKSPACE_DIR)) {
-        logger.info(`   ✓ Workspace ${WORKSPACE_DIR} does not exist — clean state`);
+        console.log(`   ✓ Workspace ${WORKSPACE_DIR} does not exist — clean state`);
         return { wiped: false, reason: 'not-found' };
     }
 
@@ -45,27 +43,27 @@ function obliterateWorkspace() {
     }
     walk(WORKSPACE_DIR);
 
-    logger.info(`   Found ${files.length} ephemeral files`);
+    console.log(`   Found ${files.length} ephemeral files`);
 
     if (DRY_RUN) {
-        files.slice(0, 10).forEach(f => logger.info(`     [DRY] Would delete: ${path.relative(WORKSPACE_DIR, f)}`));
-        if (files.length > 10) logger.info(`     ... and ${files.length - 10} more`);
+        files.slice(0, 10).forEach(f => console.log(`     [DRY] Would delete: ${path.relative(WORKSPACE_DIR, f)}`));
+        if (files.length > 10) console.log(`     ... and ${files.length - 10} more`);
         return { wiped: false, fileCount: files.length, dryRun: true };
     }
 
     fs.rmSync(WORKSPACE_DIR, { recursive: true, force: true });
     fs.mkdirSync(WORKSPACE_DIR, { recursive: true });
-    logger.info(`   ✓ Workspace obliterated (${files.length} files removed)`);
+    console.log(`   ✓ Workspace obliterated (${files.length} files removed)`);
     return { wiped: true, fileCount: files.length };
 }
 
 // ── Phase 2: Latent Memory Pruning ─────────────────────────────
 async function pruneLatentMemory() {
-    logger.info('\n🧠 [Phase 2] Latent Memory Pruning');
+    console.log('\n🧠 [Phase 2] Latent Memory Pruning');
 
     const dbUrl = process.env.HEADY_POSTGRES_URL || process.env.DATABASE_URL;
     if (!dbUrl) {
-        logger.info('   ⚠ No DATABASE_URL — skipping pgvector pruning');
+        console.log('   ⚠ No DATABASE_URL — skipping pgvector pruning');
         return { pruned: 0, reason: 'no-database' };
     }
 
@@ -78,10 +76,10 @@ async function pruneLatentMemory() {
             "SELECT COUNT(*) as cnt FROM heady_latent_memory WHERE status = 'DEPRECATED'"
         );
         const deprecatedCount = parseInt(countResult.rows[0]?.cnt || 0);
-        logger.info(`   Found ${deprecatedCount} deprecated logic vectors`);
+        console.log(`   Found ${deprecatedCount} deprecated logic vectors`);
 
         if (DRY_RUN) {
-            logger.info(`   [DRY] Would delete ${deprecatedCount} deprecated vectors`);
+            console.log(`   [DRY] Would delete ${deprecatedCount} deprecated vectors`);
             await pool.end();
             return { pruned: 0, wouldPrune: deprecatedCount, dryRun: true };
         }
@@ -90,7 +88,7 @@ async function pruneLatentMemory() {
             const deleteResult = await pool.query(
                 "DELETE FROM heady_latent_memory WHERE status = 'DEPRECATED' RETURNING node_id"
             );
-            logger.info(`   ✓ ${deleteResult.rowCount} stale logic vectors eliminated`);
+            console.log(`   ✓ ${deleteResult.rowCount} stale logic vectors eliminated`);
             await pool.end();
             return { pruned: deleteResult.rowCount };
         }
@@ -98,14 +96,14 @@ async function pruneLatentMemory() {
         await pool.end();
         return { pruned: 0, reason: 'none-deprecated' };
     } catch (err) {
-        logger.info(`   ⚠ pgvector pruning failed: ${err.message}`);
+        console.log(`   ⚠ pgvector pruning failed: ${err.message}`);
         return { pruned: 0, error: err.message };
     }
 }
 
 // ── Phase 3: Stale Data File Cleanup ───────────────────────────
 function pruneStaleDataFiles() {
-    logger.info('\n📁 [Phase 3] Stale Data File Cleanup');
+    console.log('\n📁 [Phase 3] Stale Data File Cleanup');
 
     const stalePatterns = [
         'projection-state.json',
@@ -131,10 +129,10 @@ function pruneStaleDataFiles() {
         }
     }
 
-    logger.info(`   Found ${staleFiles.length} stale data files (>7 days, .stale)`);
+    console.log(`   Found ${staleFiles.length} stale data files (>7 days, .stale)`);
 
     if (DRY_RUN) {
-        staleFiles.forEach(f => logger.info(`     [DRY] Would delete: ${path.basename(f.path)}`));
+        staleFiles.forEach(f => console.log(`     [DRY] Would delete: ${path.basename(f.path)}`));
         return { deleted: 0, wouldDelete: staleFiles.length, dryRun: true };
     }
 
@@ -142,25 +140,25 @@ function pruneStaleDataFiles() {
         fs.unlinkSync(f.path);
     }
     if (staleFiles.length > 0) {
-        logger.info(`   ✓ ${staleFiles.length} stale files eliminated`);
+        console.log(`   ✓ ${staleFiles.length} stale files eliminated`);
     }
     return { deleted: staleFiles.length };
 }
 
 // ── Phase 4: Edge Cache Invalidation ───────────────────────────
 async function invalidateEdgeCache() {
-    logger.info('\n🌐 [Phase 4] Edge Cache Invalidation');
+    console.log('\n🌐 [Phase 4] Edge Cache Invalidation');
 
     const cfToken = process.env.CLOUDFLARE_API_TOKEN;
     const cfZone = process.env.CLOUDFLARE_ZONE_ID;
 
     if (!cfToken || !cfZone) {
-        logger.info('   ⚠ No Cloudflare credentials — skipping cache invalidation');
+        console.log('   ⚠ No Cloudflare credentials — skipping cache invalidation');
         return { invalidated: false, reason: 'no-credentials' };
     }
 
     if (DRY_RUN) {
-        logger.info(`   [DRY] Would purge all cache for zone ${cfZone}`);
+        console.log(`   [DRY] Would purge all cache for zone ${cfZone}`);
         return { invalidated: false, dryRun: true };
     }
 
@@ -174,20 +172,20 @@ async function invalidateEdgeCache() {
             body: JSON.stringify({ purge_everything: true }),
         });
         const data = await response.json();
-        logger.info(`   ✓ Cache purge: ${data.success ? 'SUCCESS' : 'FAILED'}`);
+        console.log(`   ✓ Cache purge: ${data.success ? 'SUCCESS' : 'FAILED'}`);
         return { invalidated: data.success };
     } catch (err) {
-        logger.info(`   ⚠ Cache invalidation failed: ${err.message}`);
+        console.log(`   ⚠ Cache invalidation failed: ${err.message}`);
         return { invalidated: false, error: err.message };
     }
 }
 
 // ── Main Execution ─────────────────────────────────────────────
 async function executeEradicationProtocol() {
-    logger.info('═══════════════════════════════════════════════════');
-    logger.info('  HEADY™ ERADICATION PROTOCOL' + (DRY_RUN ? ' [DRY RUN]' : ''));
-    logger.info('  Sterilizing system for fresh projection...');
-    logger.info('═══════════════════════════════════════════════════');
+    console.log('═══════════════════════════════════════════════════');
+    console.log('  HEADY™ ERADICATION PROTOCOL' + (DRY_RUN ? ' [DRY RUN]' : ''));
+    console.log('  Sterilizing system for fresh projection...');
+    console.log('═══════════════════════════════════════════════════');
 
     const results = {};
     results.workspace = obliterateWorkspace();
@@ -197,11 +195,11 @@ async function executeEradicationProtocol() {
     results.ts = new Date().toISOString();
     results.dryRun = DRY_RUN;
 
-    logger.info('\n═══════════════════════════════════════════════════');
+    console.log('\n═══════════════════════════════════════════════════');
     if (DRY_RUN) {
-        logger.info('  SYSTEM SCAN COMPLETE [DRY RUN — no changes made]');
+        console.log('  SYSTEM SCAN COMPLETE [DRY RUN — no changes made]');
     } else {
-        logger.info('  SYSTEM STERILIZED. READY FOR FRESH PROJECTION.');
+        console.log('  SYSTEM STERILIZED. READY FOR FRESH PROJECTION.');
 
         // Emit event for downstream consumers
         try {
@@ -210,7 +208,7 @@ async function executeEradicationProtocol() {
             }
         } catch { }
     }
-    logger.info('═══════════════════════════════════════════════════\n');
+    console.log('═══════════════════════════════════════════════════\n');
 
     return results;
 }
@@ -219,7 +217,7 @@ async function executeEradicationProtocol() {
 if (require.main === module) {
     executeEradicationProtocol()
         .then(r => { if (DRY_RUN) process.exit(0); else process.exit(0); })
-        .catch(err => { logger.error('Eradication failed:', err); process.exit(1); });
+        .catch(err => { console.error('Eradication failed:', err); process.exit(1); });
 }
 
 module.exports = { executeEradicationProtocol };

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * sync-versions.js — Global Version Sync for the Heady Monorepo
@@ -143,20 +141,20 @@ function main() {
     // Read root version
     const rootPkg = readJson(path.join(ROOT, 'package.json'));
     if (!rootPkg) {
-        logger.error('❌ Cannot read root package.json');
+        console.error('❌ Cannot read root package.json');
         process.exit(1);
     }
 
     const targetVersion = versionArg || rootPkg.version;
     const packages = findPackages();
 
-    logger.info(`\n  🔄 Heady Version Sync`);
-    logger.info(`  ─────────────────────`);
-    logger.info(`  Root version:  ${rootPkg.version}`);
-    logger.info(`  Target:        ${targetVersion}`);
-    logger.info(`  Packages:      ${packages.length}`);
-    logger.info(`  Mode:          ${dryRun ? 'DRY RUN' : reportOnly ? 'REPORT' : 'WRITE'}`);
-    logger.info('');
+    console.log(`\n  🔄 Heady Version Sync`);
+    console.log(`  ─────────────────────`);
+    console.log(`  Root version:  ${rootPkg.version}`);
+    console.log(`  Target:        ${targetVersion}`);
+    console.log(`  Packages:      ${packages.length}`);
+    console.log(`  Mode:          ${dryRun ? 'DRY RUN' : reportOnly ? 'REPORT' : 'WRITE'}`);
+    console.log('');
 
     if (reportOnly) {
         // Just show current state
@@ -169,11 +167,11 @@ function main() {
 
         for (const [ver, names] of Object.entries(versions).sort()) {
             const match = ver === targetVersion ? '✅' : '⚠️';
-            logger.info(`  ${match} v${ver} (${names.length} packages):`);
+            console.log(`  ${match} v${ver} (${names.length} packages):`);
             for (const n of names) {
-                logger.info(`     ${n}`);
+                console.log(`     ${n}`);
             }
-            logger.info('');
+            console.log('');
         }
         return;
     }
@@ -192,7 +190,7 @@ function main() {
 
         // 1. Sync version
         if (pkg.version !== targetVersion) {
-            logger.info(`  📦 ${pkg.name}  ${pkg.version} → ${targetVersion}  (${relDir})`);
+            console.log(`  📦 ${pkg.name}  ${pkg.version} → ${targetVersion}  (${relDir})`);
             pkg.version = targetVersion;
             changed = true;
         }
@@ -257,15 +255,15 @@ function main() {
         }
     }
 
-    logger.info('');
-    logger.info(`  ─────────────────────`);
-    logger.info(`  ✅ Updated:       ${updated}`);
-    logger.info(`  ⏭  Already synced: ${skipped}`);
-    logger.info(`  🔧 Metadata fixed: ${metadataFixed}`);
+    console.log('');
+    console.log(`  ─────────────────────`);
+    console.log(`  ✅ Updated:       ${updated}`);
+    console.log(`  ⏭  Already synced: ${skipped}`);
+    console.log(`  🔧 Metadata fixed: ${metadataFixed}`);
     if (dryRun) {
-        logger.info(`  ⚠️  DRY RUN — no files written`);
+        console.log(`  ⚠️  DRY RUN — no files written`);
     }
-    logger.info('');
+    console.log('');
 }
 
 main();

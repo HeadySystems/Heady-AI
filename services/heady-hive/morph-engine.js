@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * HIVE-002: MorphEngine — Hot Role Swapping
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('morph-engine');
 
 const EventEmitter = require('events');
 

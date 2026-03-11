@@ -152,17 +152,17 @@ class SelfHealer {
 
     if (this.onStateChange) {
       try { this.onStateChange(newState, prev, reason); }
-      catch (_) {}
+      catch (err) { this._logEvent('callback_error', { callback: 'onStateChange', error: err.message }); }
     }
 
     if (newState === HEALTH_STATE.QUARANTINED && this.onQuarantine) {
       try { this.onQuarantine(this.name, reason); }
-      catch (_) {}
+      catch (err) { this._logEvent('callback_error', { callback: 'onQuarantine', error: err.message }); }
     }
 
     if (newState === HEALTH_STATE.HEALTHY && this.onRestore) {
       try { this.onRestore(this.name); }
-      catch (_) {}
+      catch (err) { this._logEvent('callback_error', { callback: 'onRestore', error: err.message }); }
     }
   }
 

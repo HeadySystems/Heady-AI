@@ -1,22 +1,3 @@
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -288,19 +269,21 @@ function renderCanvasJS(geoType, accent, accentDark) {
  */
 function renderAuthJS(site) {
   return `(function(){
-  const DK='heady_device_id',TK='heady_auth_token',SK='heady_session';
-  if(!getCookie(DK))setCookie(DK, crypto.randomUUID(, 7));
-  const warp=navigator.userAgent.includes('Cloudflare-WARP')||getCookie('heady_warp')==='true';
-  if(warp)setCookie('heady_warp', 'true', 7);
-  const maxAge=365*86400000;
-  let tok=getCookie(TK);
+  const DK='heady_device_id';
+  function getCk(n){var m=document.cookie.match(new RegExp('(?:^|;\\\\s*)'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}
+  function setCk(n,v,d){document.cookie=n+'='+encodeURIComponent(v)+';path=/;max-age='+d+';SameSite=Lax;Secure';}
+  if(!localStorage.getItem(DK))localStorage.setItem(DK,crypto.randomUUID());
+  const warp=navigator.userAgent.includes('Cloudflare-WARP')||localStorage.getItem('heady_warp')==='true';
+  if(warp)localStorage.setItem('heady_warp','true');
+  const maxAge=365*86400;
+  let tok=getCk('__heady_token');
   try{if(tok&&JSON.parse(atob(tok)).exp<Date.now())tok=null;}catch{tok=null;}
   if(!tok){
-    tok=btoa(JSON.stringify({sub:getCookie(DK),iat:Date.now(),exp:Date.now()+maxAge,site:'${site.domain}',warp,pwa:matchMedia('(display-mode:standalone)').matches}));
-    setCookie(TK, tok, 7);
+    tok=btoa(JSON.stringify({sub:localStorage.getItem(DK),iat:Date.now(),exp:Date.now()+maxAge*1000,site:'${site.domain}',warp,pwa:matchMedia('(display-mode:standalone)').matches}));
+    setCk('__heady_token',tok,maxAge);
   }
   const days=Math.round((JSON.parse(atob(tok)).exp-Date.now())/86400000);
-  logger.logSystem('🔐 ${site.name}:',days+'d auth |',warp?'WARP':'Device','|',getCookie(DK).slice(0,8));
+  if(typeof logger!=='undefined')logger.logSystem('🔐 ${site.name}:',days+'d auth |',warp?'WARP':'Device','|',localStorage.getItem(DK).slice(0,8));
 })();`;
 }
 

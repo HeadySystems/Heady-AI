@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -42,7 +40,7 @@ function createRouter(cache) {
   }
 
   function handleError(res, err) {
-    logger.error('[heady-cache] route error:', err);
+    console.error('[heady-cache] route error:', err);
     res.status(500).json({ error: err.message || 'Internal error' });
   }
 

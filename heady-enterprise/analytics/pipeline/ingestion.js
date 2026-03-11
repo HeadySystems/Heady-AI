@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 /**
  * @module analytics-ingestion
@@ -164,7 +162,7 @@ class DuckDBWriter {
       await this._ensureTable();
     } catch (err) {
       // DuckDB optional — log and continue
-      logger.warn('[DuckDB] Not available:', err.message);
+      console.warn('[DuckDB] Not available:', err.message);
     }
   }
 
@@ -231,7 +229,7 @@ class DuckDBWriter {
       );
       return events.length;
     } catch (err) {
-      logger.error('[DuckDB] Batch write error:', err.message);
+      console.error('[DuckDB] Batch write error:', err.message);
       return 0;
     }
   }
@@ -269,7 +267,7 @@ class WarehouseForwarder {
         const { BigQuery } = require('@google-cloud/bigquery');
         this._client = new BigQuery({ projectId: this.config.projectId });
       } catch (_) {
-        logger.warn('[Warehouse] BigQuery client not available');
+        console.warn('[Warehouse] BigQuery client not available');
       }
     } else if (this.type === 'postgres') {
       try {
@@ -277,7 +275,7 @@ class WarehouseForwarder {
         this._client = new Pool(this.config);
         await this._ensurePostgresTable();
       } catch (_) {
-        logger.warn('[Warehouse] Postgres client not available');
+        console.warn('[Warehouse] Postgres client not available');
       }
     }
   }
@@ -339,7 +337,7 @@ class WarehouseForwarder {
       await table.insert(rows, { skipInvalidRows: false, ignoreUnknownValues: false });
       return rows.length;
     } catch (err) {
-      logger.error('[BigQuery] Insert error:', err.message);
+      console.error('[BigQuery] Insert error:', err.message);
       return 0;
     }
   }
@@ -364,7 +362,7 @@ class WarehouseForwarder {
       return inserted;
     } catch (err) {
       await client.query('ROLLBACK');
-      logger.error('[Postgres] Batch insert error:', err.message);
+      console.error('[Postgres] Batch insert error:', err.message);
       return 0;
     } finally {
       client.release();

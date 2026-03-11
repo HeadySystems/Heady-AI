@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -33,18 +31,18 @@ let failed = 0;
 function test(name, fn) {
   try {
     fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-logger.info('\n── Constants ─────────────────────────────────────────────────────');
+console.log('\n── Constants ─────────────────────────────────────────────────────');
 
 test('PHI equals 1.6180339887', () => {
   assert.strictEqual(PHI, 1.6180339887);
@@ -61,7 +59,7 @@ test('DEFAULT_RING_BUFFER_SIZE is 500', () => {
 
 // ─── Claim 5: TelemetryRingBuffer ────────────────────────────────────────────
 
-logger.info('\n── Claim 5: TelemetryRingBuffer (configurable, eviction) ────────');
+console.log('\n── Claim 5: TelemetryRingBuffer (configurable, eviction) ────────');
 
 test('TelemetryRingBuffer initialises with correct capacity', () => {
   const buf = new TelemetryRingBuffer(100);
@@ -137,7 +135,7 @@ test('TelemetryRingBuffer.stats returns utilisation percentage', () => {
 
 // ─── Claim 1: ErrorRateComputer ───────────────────────────────────────────────
 
-logger.info('\n── Claim 1: ErrorRateComputer (rolling error rates) ─────────────');
+console.log('\n── Claim 1: ErrorRateComputer (rolling error rates) ─────────────');
 
 test('ErrorRateComputer.compute returns 0 for empty window', () => {
   const buf  = new TelemetryRingBuffer(100);
@@ -179,7 +177,7 @@ test('ErrorRateComputer.countCritical counts only CRITICAL events', () => {
 
 // ─── Claims 2 + 4: StateAssessmentModule ─────────────────────────────────────
 
-logger.info('\n── Claims 2+4: StateAssessmentModule (formula + penalty) ────────');
+console.log('\n── Claims 2+4: StateAssessmentModule (formula + penalty) ────────');
 
 test('Claim 2: confidence = 1.0 - (er1m * w1) - (er5m * w2) with no errors', () => {
   const buf   = new TelemetryRingBuffer(100);
@@ -226,7 +224,7 @@ test('assessSystemState generates a non-empty contextString', () => {
 
 // ─── Claim 3: RecommendationEngine ───────────────────────────────────────────
 
-logger.info('\n── Claim 3: RecommendationEngine (recommendations) ──────────────');
+console.log('\n── Claim 3: RecommendationEngine (recommendations) ──────────────');
 
 test('Recommendation: PROCEED_NORMALLY when confidence is high', () => {
   const eng = new RecommendationEngine();
@@ -271,7 +269,7 @@ test('Recommendation: CRITICAL_EVENT_REVIEW when criticalCount > 0', () => {
 
 // ─── Claim 1(e): PromptInjectionModule ───────────────────────────────────────
 
-logger.info('\n── Claim 1(e): PromptInjectionModule (prompt injection) ─────────');
+console.log('\n── Claim 1(e): PromptInjectionModule (prompt injection) ─────────');
 
 test('buildContextBlock returns a string with confidence', () => {
   const buf   = new TelemetryRingBuffer(100);
@@ -310,7 +308,7 @@ test('buildSystemMessage returns { role, content }', () => {
 
 // ─── Claim 6: BrandingMonitor ────────────────────────────────────────────────
 
-logger.info('\n── Claim 6: BrandingMonitor (multi-domain branding) ─────────────');
+console.log('\n── Claim 6: BrandingMonitor (multi-domain branding) ─────────────');
 
 test('BrandingMonitor.registerDomain stores descriptor', () => {
   const bm = new BrandingMonitor();
@@ -338,7 +336,7 @@ test('BrandingMonitor.deregisterDomain removes it', () => {
 
 // ─── Claim 7: MetacognitiveLoop (full system) ─────────────────────────────────
 
-logger.info('\n── Claim 7: MetacognitiveLoop (full system) ──────────────────────');
+console.log('\n── Claim 7: MetacognitiveLoop (full system) ──────────────────────');
 
 test('MetacognitiveLoop constructs all subsystems', () => {
   const loop = new MetacognitiveLoop();
@@ -399,9 +397,9 @@ test('MetacognitiveLoop confidence degrades with errors', () => {
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-logger.info(`\n── Results ──────────────────────────────────────────────────────`);
-logger.info(`   Passed: ${passed}`);
-logger.info(`   Failed: ${failed}`);
-logger.info(`   Total:  ${passed + failed}`);
+console.log(`\n── Results ──────────────────────────────────────────────────────`);
+console.log(`   Passed: ${passed}`);
+console.log(`   Failed: ${failed}`);
+console.log(`   Total:  ${passed + failed}`);
 
 if (failed > 0) process.exit(1);

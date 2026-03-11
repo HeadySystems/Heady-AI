@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview pipeline-orchestrator.js — Heady™ Sovereign Phi-100 HCFullPipeline Orchestrator
  * @version 3.2.3
@@ -270,7 +268,7 @@ function buildStageIndex(stages) {
  * @example
  * const orchestrator = new PipelineOrchestrator();
  * orchestrator.on('stage:pass', ({ stage, duration }) =>
- *   logger.info(`${stage} passed in ${duration}ms`));
+ *   console.log(`${stage} passed in ${duration}ms`));
  * const result = await orchestrator.run({ type: 'code_generation', payload: {} });
  */
 class PipelineOrchestrator extends EventEmitter {
@@ -497,7 +495,7 @@ class PipelineOrchestrator extends EventEmitter {
   /**
    * Determine whether a stage should be skipped for the current context.
    *
-   * Skip conditions (in priority order):
+   * Skip conditions (in concurrent-equals execution order):
    *   1. Stage already in a terminal state (PASSED or SKIPPED).
    *   2. Stage is optional (required === false) AND the pipeline variant excludes it.
    *   3. Stage has a conditional `enabledWhen` / `requiredWhen` clause that

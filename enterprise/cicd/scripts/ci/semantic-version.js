@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/semantic-version.js
@@ -48,7 +46,7 @@ function parseSemver(tag) {
 
   if (!match) {
     // Can't parse — return 0.0.0
-    logger.error(`Warning: Could not parse semver from "${tag}", using 0.0.0`);
+    console.error(`Warning: Could not parse semver from "${tag}", using 0.0.0`);
     return { major: 0, minor: 0, patch: 0, pre: null };
   }
 
@@ -172,7 +170,7 @@ function getCommitMessages(from, to) {
     );
     return output.trim().split('\n').filter(Boolean);
   } catch (err) {
-    logger.error('Git log error:', err.message);
+    console.error('Git log error:', err.message);
     return [];
   }
 }
@@ -253,56 +251,56 @@ function main() {
   if (!baseRef || baseRef === 'HEAD') {
     // Auto-detect from latest git tag
     baseRef = resolveLatestTag('HEAD');
-    logger.error(`Auto-detected base version: ${baseRef}`);
+    console.error(`Auto-detected base version: ${baseRef}`);
   }
 
   // Ensure baseRef is a valid semver
   // If it's a SHA, try to find the tag for it
   if (!/^v?\d+\.\d+\.\d+/.test(baseRef)) {
     const tagAtRef = resolveLatestTag(baseRef);
-    logger.error(`Resolved ${baseRef.substring(0, 8)} → ${tagAtRef}`);
+    console.error(`Resolved ${baseRef.substring(0, 8)} → ${tagAtRef}`);
     baseRef = tagAtRef;
   }
 
   const currentVersion = parseSemver(baseRef);
-  logger.error(`Current version: ${formatSemver(currentVersion)}`);
+  console.error(`Current version: ${formatSemver(currentVersion)}`);
 
   // ── Get commits ────────────────────────────────────────────
   const commits = getCommitMessages(baseRef, args.to);
-  logger.error(`Commits analyzed: ${commits.length}`);
+  console.error(`Commits analyzed: ${commits.length}`);
 
   if (commits.length === 0) {
     // No commits — return current version unchanged
     const result = formatSemver(currentVersion);
-    logger.error(`No commits found — returning current: ${result}`);
+    console.error(`No commits found — returning current: ${result}`);
     process.stdout.write(result);
     return;
   }
 
   // ── Determine bump ─────────────────────────────────────────
   const bumpType = determineBump(commits);
-  logger.error(`Bump type: ${bumpType}`);
+  console.error(`Bump type: ${bumpType}`);
 
   // ── Calculate next version ─────────────────────────────────
   const nextVersion = applyBump(currentVersion, bumpType, args.pre);
   const result = formatSemver(nextVersion);
 
-  logger.error(`Next version: ${result}`);
+  console.error(`Next version: ${result}`);
 
   // Log bump reasoning
   if (bumpType === 'major') {
     const breakingCommits = commits.filter(m =>
       m.includes('BREAKING CHANGE') || /^\w+(\([^)]+\))?!:/.test(m)
     );
-    logger.error(`  Breaking changes (${breakingCommits.length}):`);
-    breakingCommits.slice(0, 3).forEach(m => logger.error(`    - ${m.substring(0, 80)}`));
+    console.error(`  Breaking changes (${breakingCommits.length}):`);
+    breakingCommits.slice(0, 3).forEach(m => console.error(`    - ${m.substring(0, 80)}`));
   } else if (bumpType === 'minor') {
     const feats = commits.filter(m => /^feat(\([^)]+\))?:/.test(m));
-    logger.error(`  New features (${feats.length}):`);
-    feats.slice(0, 3).forEach(m => logger.error(`    - ${m.substring(0, 80)}`));
+    console.error(`  New features (${feats.length}):`);
+    feats.slice(0, 3).forEach(m => console.error(`    - ${m.substring(0, 80)}`));
   } else if (bumpType === 'patch') {
     const fixes = commits.filter(m => /^(fix|perf|refactor)(\([^)]+\))?:/.test(m));
-    logger.error(`  Fixes/patches (${fixes.length})`);
+    console.error(`  Fixes/patches (${fixes.length})`);
   }
 
   // ── Output ─────────────────────────────────────────────────
@@ -310,7 +308,7 @@ function main() {
   process.stdout.write(result);
 
   if (args.dryRun) {
-    logger.error('\n(dry-run: no files written)');
+    console.error('\n(dry-run: no files written)');
   }
 }
 

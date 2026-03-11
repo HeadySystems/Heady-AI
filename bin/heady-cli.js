@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady CLI v3.0 — Production Terminal Interface for the Heady™ Latent OS
@@ -82,7 +80,7 @@ function run(cmd, opts = {}) {
         execSync(cmd, { ...defaults, ...opts });
         return true;
     } catch (err) {
-        if (!opts.silent) logger.error(`  ✗ Command failed: ${cmd}`);
+        if (!opts.silent) console.error(`  ✗ Command failed: ${cmd}`);
         return false;
     }
 }
@@ -129,7 +127,7 @@ const { heading, success, info, warn, errorMsg } = theme;
 
 async function processIntelligently(input) {
     heading('Heady™ Intelligent Processing');
-    logger.info(`  ${theme.dim('Input:')} "${theme.purple(input.slice(0, 100))}"\n`);
+    console.log(`  ${theme.dim('Input:')} "${theme.purple(input.slice(0, 100))}"\n`);
 
     // Classify the input intent
     const intent = classifyIntent(input);
@@ -247,8 +245,8 @@ async function handleSearch(input) {
     info(`Searching for: "${searchTerm}"`);
     const result = runCapture(`grep -rl "${searchTerm}" --include="*.js" --include="*.ts" --include="*.json" --include="*.md" src/ packages/ configs/ content/ 2>/dev/null | head -20`);
     if (result) {
-        logger.info('\n  Matches:');
-        result.split('\n').forEach(f => logger.info(`    📄 ${f}`));
+        console.log('\n  Matches:');
+        result.split('\n').forEach(f => console.log(`    📄 ${f}`));
     } else {
         info('No matches found');
     }
@@ -269,15 +267,15 @@ async function handleFileQuery(input) {
         if (stat.isFile()) {
             const content = fs.readFileSync(fullPath, 'utf8');
             const lines = content.split('\n');
-            logger.info(`\n  Lines: ${lines.length}`);
+            console.log(`\n  Lines: ${lines.length}`);
             // Show first 30 lines
             const preview = lines.slice(0, 30).map((l, i) => `  ${String(i + 1).padStart(4)} │ ${l}`).join('\n');
-            logger.info(preview);
-            if (lines.length > 30) logger.info(`  ... (${lines.length - 30} more lines)`);
+            console.log(preview);
+            if (lines.length > 30) console.log(`  ... (${lines.length - 30} more lines)`);
         } else {
             info('(directory)');
             const entries = fs.readdirSync(fullPath).slice(0, 20);
-            entries.forEach(e => logger.info(`    ${e}`));
+            entries.forEach(e => console.log(`    ${e}`));
         }
     } else {
         // Fuzzy search
@@ -285,8 +283,8 @@ async function handleFileQuery(input) {
         info('Searching for similar files...');
         const result = runCapture(`find . -maxdepth 4 -name "*${path.basename(target)}*" -not -path "*/node_modules/*" -not -path "*/.git/*" 2>/dev/null | head -10`);
         if (result) {
-            logger.info('  Did you mean:');
-            result.split('\n').forEach(f => logger.info(`    📄 ${f}`));
+            console.log('  Did you mean:');
+            result.split('\n').forEach(f => console.log(`    📄 ${f}`));
         }
     }
 }
@@ -304,21 +302,21 @@ async function handleDomainQuery(input) {
     const match = domains.find(d => lower.includes(d.domain) || lower.includes(d.siteId) || lower.includes(d.node.toLowerCase()));
 
     if (match) {
-        logger.info(`\n  🌐 ${match.domain}`);
-        logger.info(`     Brand:    ${match.node}`);
-        logger.info(`     Type:     ${match.type}`);
-        logger.info(`     Purpose:  ${match.purpose}`);
-        logger.info(`     Status:   ${match.status}`);
-        logger.info(`     Theme:    ${match.theme.primary} / ${match.theme.secondary}`);
-        logger.info(`     SEO:      ${match.seo.title}`);
-        logger.info(`     CTA:      ${match.primaryCta.label} → ${match.primaryCta.href}`);
-        logger.info(`     Content:  ${match.sitePath}/`);
+        console.log(`\n  🌐 ${match.domain}`);
+        console.log(`     Brand:    ${match.node}`);
+        console.log(`     Type:     ${match.type}`);
+        console.log(`     Purpose:  ${match.purpose}`);
+        console.log(`     Status:   ${match.status}`);
+        console.log(`     Theme:    ${match.theme.primary} / ${match.theme.secondary}`);
+        console.log(`     SEO:      ${match.seo.title}`);
+        console.log(`     CTA:      ${match.primaryCta.label} → ${match.primaryCta.href}`);
+        console.log(`     Content:  ${match.sitePath}/`);
 
         // Check content exists
         const contentDir = path.join(ROOT, match.sitePath);
         if (fs.existsSync(contentDir)) {
             const files = fs.readdirSync(contentDir);
-            logger.info(`     Files:    ${files.join(', ')}`);
+            console.log(`     Files:    ${files.join(', ')}`);
         } else {
             warn(`Content directory missing: ${contentDir}`);
         }
@@ -327,7 +325,7 @@ async function handleDomainQuery(input) {
         info(`${domains.length} domains registered:`);
         for (const d of domains) {
             const statusIcon = d.status === 'active' ? '🟢' : '🟡';
-            logger.info(`  ${statusIcon} ${d.domain.padEnd(25)} ${d.node.padEnd(18)} ${d.purpose.substring(0, 50)}`);
+            console.log(`  ${statusIcon} ${d.domain.padEnd(25)} ${d.node.padEnd(18)} ${d.purpose.substring(0, 50)}`);
         }
     }
 }
@@ -365,19 +363,19 @@ async function handleGeneralQuery(input) {
         if (available.length > 0) {
             heading('Heady™ AI Response');
             info(`Provider: ${theme.teal(available[0])} ${theme.dim(`(${available.length} available)`)}`);
-            logger.info('');
+            console.log('');
             try {
                 const result = await gateway.complete(messages, { temperature: 0.7 });
                 const text = result.text || result.content || result.choices?.[0]?.message?.content || JSON.stringify(result);
                 // Render AI response with markdown formatting
-                logger.info(theme.renderMarkdown(text));
-                logger.info('');
+                console.log(theme.renderMarkdown(text));
+                console.log('');
                 info(`Latency: ${theme.gold((result.gatewayLatencyMs || '?') + 'ms')} ${theme.dim('|')} Provider: ${theme.teal(result.provider || available[0])}`);
                 return;
             } catch (err) {
                 warn(`AI inference failed: ${err.message}`);
                 info('Falling back to local processing...');
-                logger.info('');
+                console.log('');
             }
         } else {
             // No providers have API keys configured — fall through to local
@@ -433,14 +431,14 @@ function buildSystemContext() {
 async function handleLocalProcessing(input, systemContext) {
     heading('Heady™ Local Processing');
     info(`Processing: "${input}"`);
-    logger.info('');
+    console.log('');
 
     // 1. Show system awareness
-    logger.info('  📊 System Context:');
+    console.log('  📊 System Context:');
     systemContext.split('\n').forEach(line => {
-        if (line.trim()) logger.info(`     ${line}`);
+        if (line.trim()) console.log(`     ${line}`);
     });
-    logger.info('');
+    console.log('');
 
     // 2. Search the codebase for relevant info
     const searchTerms = input.split(/\s+/).filter(w => w.length > 3 && !['what', 'where', 'when', 'does', 'have', 'with', 'this', 'that', 'from', 'your', 'about'].includes(w.toLowerCase()));
@@ -448,14 +446,14 @@ async function handleLocalProcessing(input, systemContext) {
         const searchQuery = searchTerms.slice(0, 3).join('|');
         const grepResult = runCapture(`grep -rl -E "${searchQuery}" --include="*.js" --include="*.ts" --include="*.json" --include="*.md" src/ packages/ configs/ content/ docs/ 2>/dev/null | head -10`);
         if (grepResult && grepResult.trim()) {
-            logger.info('  📁 Related files:');
-            grepResult.trim().split('\n').forEach(f => logger.info(`     ${f}`));
-            logger.info('');
+            console.log('  📁 Related files:');
+            grepResult.trim().split('\n').forEach(f => console.log(`     ${f}`));
+            console.log('');
         }
     }
 
     // 3. Show available AI providers so the user knows how to fix it
-    logger.info('  ⚡ AI Providers:');
+    console.log('  ⚡ AI Providers:');
     const providerEnvKeys = {
         'Groq': 'GROQ_API_KEY',
         'Gemini': 'GOOGLE_API_KEY',
@@ -467,15 +465,15 @@ async function handleLocalProcessing(input, systemContext) {
     for (const [name, envKey] of Object.entries(providerEnvKeys)) {
         const configured = !!process.env[envKey];
         if (configured) anyConfigured = true;
-        logger.info(`     ${configured ? '🟢' : '⚪'} ${name.padEnd(13)} ${configured ? 'configured' : `set ${envKey}`}`);
+        console.log(`     ${configured ? '🟢' : '⚪'} ${name.padEnd(13)} ${configured ? 'configured' : `set ${envKey}`}`);
     }
-    logger.info('');
+    console.log('');
 
     if (!anyConfigured) {
         info('No AI providers configured. Set any API key above for full AI responses:');
-        logger.info('     export GROQ_API_KEY="your-key"       # Free tier available');
-        logger.info('     export GOOGLE_API_KEY="your-key"     # From GCloud console');
-        logger.info('     export ANTHROPIC_API_KEY="your-key"  # From console.anthropic.com');
+        console.log('     export GROQ_API_KEY="your-key"       # Free tier available');
+        console.log('     export GOOGLE_API_KEY="your-key"     # From GCloud console');
+        console.log('     export ANTHROPIC_API_KEY="your-key"  # From console.anthropic.com');
     } else {
         warn('AI keys found but gateway failed to initialize. Run: heady doctor');
     }
@@ -488,20 +486,20 @@ function printWrapped(text, width = 80) {
     const lines = text.split('\n');
     for (const line of lines) {
         if (line.length <= width) {
-            logger.info(`  ${line}`);
+            console.log(`  ${line}`);
         } else {
             // Word wrap
             const words = line.split(' ');
             let current = '';
             for (const word of words) {
                 if ((current + ' ' + word).length > width) {
-                    logger.info(`  ${current}`);
+                    console.log(`  ${current}`);
                     current = word;
                 } else {
                     current = current ? current + ' ' + word : word;
                 }
             }
-            if (current) logger.info(`  ${current}`);
+            if (current) console.log(`  ${current}`);
         }
     }
 }
@@ -583,7 +581,7 @@ const commands = {
         const dirs = ['src', 'services', 'packages', 'configs', 'infra', 'migrations', 'content'];
         for (const d of dirs) {
             const exists = fs.existsSync(path.join(ROOT, d));
-            logger.info(`  ${exists ? '✓' : '✗'} ${d}/`);
+            console.log(`  ${exists ? '✓' : '✗'} ${d}/`);
         }
         const files = [
             'package.json', '.gitignore', 'tsconfig.json',
@@ -593,7 +591,7 @@ const commands = {
         ];
         for (const f of files) {
             const exists = fs.existsSync(path.join(ROOT, f));
-            logger.info(`  ${exists ? '✓' : '✗'} ${f}`);
+            console.log(`  ${exists ? '✓' : '✗'} ${f}`);
         }
 
         // Check domain content
@@ -602,7 +600,7 @@ const commands = {
             const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
             const domains = registry.domains || [];
             const active = domains.filter(d => d.status === 'active').length;
-            logger.info(`  ✓ ${domains.length} domains registered (${active} active)`);
+            console.log(`  ✓ ${domains.length} domains registered (${active} active)`);
         }
 
         success('Health check complete');
@@ -675,7 +673,7 @@ const commands = {
             }
 
             info(`Available providers: ${available.map(p => theme.teal(p)).join(', ')}`);
-            logger.info('');
+            console.log('');
 
             // Agent tracker for parallel visualization
             const tracker = new theme.AgentTracker();
@@ -699,7 +697,7 @@ const commands = {
             );
 
             tracker.stop();
-            logger.info('');
+            console.log('');
 
             let bestScore = 0;
             let winner = null;
@@ -712,20 +710,20 @@ const commands = {
                     outputs.push({ ...v, score });
 
                     theme.section(`${v.provider.toUpperCase()} (${v.model})`);
-                    logger.info(theme.renderMarkdown(v.content.slice(0, 500)));
+                    console.log(theme.renderMarkdown(v.content.slice(0, 500)));
                     info(`Latency: ${theme.gold(v.totalMs + 'ms')} ${theme.dim('|')} Score: ${theme.teal(score.toFixed(3))}`);
-                    logger.info('');
+                    console.log('');
 
                     if (score > bestScore) { bestScore = score; winner = v; }
                 } else {
                     const errMsg = r.reason?.message || r.value?.error || 'unknown';
                     errorMsg(`${r.value?.provider || 'unknown'}: ${errMsg}`);
-                    logger.info('');
+                    console.log('');
                 }
             }
 
             if (winner) {
-                logger.info(theme.box('WINNER', [
+                console.log(theme.box('WINNER', [
                     `  ${theme.gold('\u{1F3C6}')} ${theme.bold(winner.provider.toUpperCase())} (${winner.model})`,
                     `  Score: ${theme.teal(bestScore.toFixed(3))} ${theme.dim('|')} ${outputs.length} providers competed`,
                 ], { color: theme.FG.gold }));
@@ -764,7 +762,7 @@ const commands = {
                 return;
             }
 
-            logger.info('');
+            console.log('');
 
             // Results table
             const rows = result.contestants.map(c => [
@@ -774,16 +772,16 @@ const commands = {
                 String(c.contentLength),
                 theme.dim(c.contentHash.slice(0, 12)),
             ]);
-            logger.info(theme.table(['Provider', 'Score', 'Latency', 'Length', 'Hash'], rows));
+            console.log(theme.table(['Provider', 'Score', 'Latency', 'Length', 'Hash'], rows));
 
             if (result.failed?.length > 0) {
-                logger.info('');
+                console.log('');
                 for (const f of result.failed) {
                     errorMsg(`${f.provider}: ${f.error}`);
                 }
             }
 
-            logger.info('');
+            console.log('');
             success(`Winner: ${theme.bold(theme.gold(result.winner?.provider))} ${theme.dim('|')} Total: ${theme.teal(result.totalMs + 'ms')}`);
         } catch (err) {
             errorMsg(`Battle failed: ${err.message}`);
@@ -806,7 +804,7 @@ const commands = {
 
             info(`Determinism prompt: "${prompt.slice(0, 100)}"`);
             info('Running 5 iterations per provider at temperature=0...');
-            logger.info('');
+            console.log('');
 
             const result = await battle.determinismTest(prompt, {
                 iterations: 5,
@@ -821,20 +819,20 @@ const commands = {
             for (const [provider, data] of Object.entries(result.providers)) {
                 const bar = '█'.repeat(Math.round(data.determinismScore * 20));
                 const empty = '░'.repeat(20 - Math.round(data.determinismScore * 20));
-                logger.info(`  ◆ ${provider.toUpperCase()}`);
-                logger.info(`    Determinism: ${bar}${empty} ${(data.determinismScore * 100).toFixed(1)}%`);
-                logger.info(`    Unique outputs: ${data.uniqueOutputs}/${data.iterations}`);
-                logger.info(`    Avg latency: ${data.avgLatencyMs}ms`);
+                console.log(`  ◆ ${provider.toUpperCase()}`);
+                console.log(`    Determinism: ${bar}${empty} ${(data.determinismScore * 100).toFixed(1)}%`);
+                console.log(`    Unique outputs: ${data.uniqueOutputs}/${data.iterations}`);
+                console.log(`    Avg latency: ${data.avgLatencyMs}ms`);
                 for (const out of data.outputs) {
                     const mark = out.matchesCanonical ? '✓' : '✗';
-                    logger.info(`      ${mark} Run ${out.iteration}: ${out.hash || 'FAIL'} ${out.error ? `(${out.error})` : ''} ${out.latencyMs ? `${out.latencyMs}ms` : ''}`);
+                    console.log(`      ${mark} Run ${out.iteration}: ${out.hash || 'FAIL'} ${out.error ? `(${out.error})` : ''} ${out.latencyMs ? `${out.latencyMs}ms` : ''}`);
                 }
-                logger.info('');
+                console.log('');
             }
 
             const overall = result.overallDeterminism * 100;
-            logger.info(`  ═══ Overall Determinism: ${overall.toFixed(1)}% ═══`);
-            logger.info('');
+            console.log(`  ═══ Overall Determinism: ${overall.toFixed(1)}% ═══`);
+            console.log('');
 
             if (overall >= 90) success('High determinism — outputs are consistent');
             else if (overall >= 50) warn('Moderate determinism — some variance detected');
@@ -860,16 +858,16 @@ const commands = {
                     return;
                 }
 
-                logger.info(`  Total builds: ${report.builds}`);
-                logger.info(`  Avg subtasks: ${report.avgSubtasks}`);
-                logger.info(`  Avg parallel groups: ${report.avgParallelGroups}`);
-                logger.info(`  Avg build time: ${report.avgBuildMs}ms`);
+                console.log(`  Total builds: ${report.builds}`);
+                console.log(`  Avg subtasks: ${report.avgSubtasks}`);
+                console.log(`  Avg parallel groups: ${report.avgParallelGroups}`);
+                console.log(`  Avg build time: ${report.avgBuildMs}ms`);
                 if (report.avgDeterminism !== null) {
-                    logger.info(`  Avg determinism: ${(report.avgDeterminism * 100).toFixed(1)}%`);
+                    console.log(`  Avg determinism: ${(report.avgDeterminism * 100).toFixed(1)}%`);
                 }
-                logger.info('');
+                console.log('');
                 for (const b of report.recentBuilds) {
-                    logger.info(`  ◆ ${b.spec} — ${b.subtasks} subtasks, ${b.buildMs}ms`);
+                    console.log(`  ◆ ${b.spec} — ${b.subtasks} subtasks, ${b.buildMs}ms`);
                 }
                 return;
             } catch (err) {
@@ -901,7 +899,7 @@ const commands = {
 
             info(`Build spec: "${spec.slice(0, 100)}"`);
             info(`Runs: ${numRuns} | Providers: ${gateway.getAvailable().join(', ')}`);
-            logger.info('');
+            console.log('');
 
             // Listen to events for live output
             engine.on('build:decomposed', (e) => {
@@ -912,14 +910,14 @@ const commands = {
                 info(`Group ${e.groupIdx}: ${mode} — ${e.subtasks.join(', ')}`);
             });
             engine.on('build:subtask_complete', (e) => {
-                logger.info(`    ✓ ${e.subtaskId}: ${e.file} [${e.hash}]`);
+                console.log(`    ✓ ${e.subtaskId}: ${e.file} [${e.hash}]`);
             });
             engine.on('build:subtask_failed', (e) => {
-                logger.info(`    ✗ ${e.subtaskId}: ${e.error}`);
+                console.log(`    ✗ ${e.subtaskId}: ${e.error}`);
             });
             engine.on('build:run_complete', (e) => {
                 info(`Run ${e.run}/${e.total} complete`);
-                logger.info('');
+                console.log('');
             });
 
             const result = await engine.build(spec, { runs: numRuns });
@@ -930,41 +928,41 @@ const commands = {
             }
 
             // Print execution groups
-            logger.info('  ═══ Build Execution Plan ═══');
+            console.log('  ═══ Build Execution Plan ═══');
             for (const g of result.groups) {
                 const mode = g.parallel ? '▓ PARALLEL' : '░ SEQUENTIAL';
-                logger.info(`  ${mode} Group ${g.group}: ${g.subtasks.join(', ')}`);
+                console.log(`  ${mode} Group ${g.group}: ${g.subtasks.join(', ')}`);
             }
-            logger.info('');
+            console.log('');
 
             // Print run results
             for (const r of result.runs) {
-                logger.info(`  Run ${r.run}: ${r.files} files produced in ${r.totalMs}ms ${r.success ? '✓' : '✗'}`);
+                console.log(`  Run ${r.run}: ${r.files} files produced in ${r.totalMs}ms ${r.success ? '✓' : '✗'}`);
             }
 
             // Determinism results (if multiple runs)
             if (result.determinism) {
-                logger.info('');
+                console.log('');
                 const pct = result.determinism.overall * 100;
                 const bar = '█'.repeat(Math.round(pct / 5));
                 const empty = '░'.repeat(20 - Math.round(pct / 5));
-                logger.info(`  Determinism: ${bar}${empty} ${pct.toFixed(1)}%`);
-                logger.info(`  Deterministic files: ${result.determinism.deterministicFiles}/${result.determinism.totalFiles}`);
+                console.log(`  Determinism: ${bar}${empty} ${pct.toFixed(1)}%`);
+                console.log(`  Deterministic files: ${result.determinism.deterministicFiles}/${result.determinism.totalFiles}`);
 
                 // Per-file determinism
                 for (const [file, data] of Object.entries(result.determinism.perFile)) {
                     const mark = data.deterministic ? '✓' : '✗';
-                    logger.info(`    ${mark} ${file}: ${data.uniqueCount} unique (${(data.score * 100).toFixed(0)}%)`);
+                    console.log(`    ${mark} ${file}: ${data.uniqueCount} unique (${(data.score * 100).toFixed(0)}%)`);
                 }
             }
 
             // Learned patterns
             if (result.patterns) {
-                logger.info('');
-                logger.info(`  Patterns: ${result.patterns.maxParallelism} max parallel agents, ${result.patterns.recommendation}`);
+                console.log('');
+                console.log(`  Patterns: ${result.patterns.maxParallelism} max parallel agents, ${result.patterns.recommendation}`);
             }
 
-            logger.info('');
+            console.log('');
             success(`Build complete: ${result.subtasks.length} subtasks, ${result.groups.length} groups`);
         } catch (err) {
             errorMsg(`Learning build failed: ${err.message}`);
@@ -987,30 +985,30 @@ const commands = {
             const result = await autoContext.enrich(task);
 
             info('Task: "' + task.slice(0, 80) + '"');
-            logger.info('');
-            logger.info('  Sources scanned:  ' + result.stats.sourcesScanned);
-            logger.info('  Sources included: ' + result.stats.sourcesIncluded);
-            logger.info('  Tokens used:      ' + result.stats.tokensUsed + ' / ' + result.stats.tokenBudget);
-            logger.info('  Scan time:        ' + result.stats.scanTimeMs + 'ms');
-            logger.info('');
+            console.log('');
+            console.log('  Sources scanned:  ' + result.stats.sourcesScanned);
+            console.log('  Sources included: ' + result.stats.sourcesIncluded);
+            console.log('  Tokens used:      ' + result.stats.tokensUsed + ' / ' + result.stats.tokenBudget);
+            console.log('  Scan time:        ' + result.stats.scanTimeMs + 'ms');
+            console.log('');
 
             if (result.sources.length > 0) {
-                logger.info('  Included sources (by relevance):');
+                console.log('  Included sources (by relevance):');
                 for (const s of result.sources) {
                     const bar = '\u2588'.repeat(Math.round(s.relevance * 10));
-                    logger.info('    ' + bar + ' ' + s.relevance.toFixed(2) + ' | ' + s.type.padEnd(12) + ' | ' + (s.path || 'inline') + ' (' + s.tokens + ' tok)');
+                    console.log('    ' + bar + ' ' + s.relevance.toFixed(2) + ' | ' + s.type.padEnd(12) + ' | ' + (s.path || 'inline') + ' (' + s.tokens + ' tok)');
                 }
             } else {
                 info('No relevant sources found for this task.');
             }
 
             if (result.systemContext) {
-                logger.info('');
-                logger.info('  Context preview (first 500 chars):');
-                logger.info('  ' + result.systemContext.slice(0, 500).replace(/\n/g, '\n  '));
+                console.log('');
+                console.log('  Context preview (first 500 chars):');
+                console.log('  ' + result.systemContext.slice(0, 500).replace(/\n/g, '\n  '));
             }
 
-            logger.info('');
+            console.log('');
             success('Context scan complete');
         } catch (err) {
             errorMsg('Context scan failed: ' + err.message);
@@ -1019,7 +1017,7 @@ const commands = {
 
     status() {
         heading('System Status');
-        logger.info('');
+        console.log('');
 
         // Gather metrics for visual dashboard
         const metrics = {};
@@ -1063,67 +1061,67 @@ const commands = {
         const srcCount = parseInt(runCapture(`find ${SRC} -name '*.js' -o -name '*.ts' 2>/dev/null | wc -l`) || '0');
         metrics['Source'] = { current: Math.min(srcCount, 300), total: 300, unit: `${srcCount} files`, color: theme.FG.purple };
 
-        logger.info(theme.systemDashboard(metrics));
-        logger.info('');
+        console.log(theme.systemDashboard(metrics));
+        console.log('');
 
         // Provider matrix
         theme.section('Provider Matrix');
         auth.showProviderStatus();
 
         // System info
-        logger.info('');
+        console.log('');
         theme.section('Environment');
-        logger.info(theme.keyValue('Node.js', process.version));
-        logger.info(theme.keyValue('CLI', `v${VERSION}`));
-        logger.info(theme.keyValue('Root', ROOT));
-        logger.info(theme.keyValue('Platform', `${process.platform} ${process.arch}`));
-        logger.info(theme.keyValue('Time', new Date().toISOString()));
+        console.log(theme.keyValue('Node.js', process.version));
+        console.log(theme.keyValue('CLI', `v${VERSION}`));
+        console.log(theme.keyValue('Root', ROOT));
+        console.log(theme.keyValue('Platform', `${process.platform} ${process.arch}`));
+        console.log(theme.keyValue('Time', new Date().toISOString()));
         if (_injectedKeys > 0) {
-            logger.info(theme.keyValue('Injected Keys', theme.teal(`${_injectedKeys} from ~/.heady/credentials.json`)));
+            console.log(theme.keyValue('Injected Keys', theme.teal(`${_injectedKeys} from ~/.heady/credentials.json`)));
         }
-        logger.info('');
+        console.log('');
         success('Status complete');
     },
 
     help() {
         theme.printLogo(VERSION);
-        logger.info(`  ${theme.bold('Usage:')}`);
-        logger.info(`    ${theme.purple('heady')}                              Interactive REPL mode`);
-        logger.info(`    ${theme.purple('heady')} ${theme.dim('"your question"')}             Intelligent processing`);
-        logger.info('');
-        logger.info(`  ${theme.bold(theme.gold('Authentication:'))}`);
-        logger.info(`    ${theme.teal('login')}         Authenticate (OAuth/API key/env import)`);
-        logger.info(`    ${theme.teal('logout')}        Clear stored credentials`);
-        logger.info(`    ${theme.teal('whoami')}        Show authentication status`);
-        logger.info('');
-        logger.info(`  ${theme.bold(theme.gold('AI Commands:'))}`);
-        logger.info(`    ${theme.teal('council')}       Multi-model competitive council`);
-        logger.info(`    ${theme.teal('battle')}        Provider battle arena`);
-        logger.info(`    ${theme.teal('determinism')}   Monte Carlo determinism test`);
-        logger.info(`    ${theme.teal('learn')}         Parallel build learning engine`);
-        logger.info(`    ${theme.teal('context')}       AutoContext management`);
-        logger.info('');
-        logger.info(`  ${theme.bold(theme.gold('System:'))}`);
-        logger.info(`    ${theme.teal('init')}          Initialize workspace`);
-        logger.info(`    ${theme.teal('start')}         Start all services`);
-        logger.info(`    ${theme.teal('dev')}           Dev mode with hot reload`);
-        logger.info(`    ${theme.teal('build')}         Build all packages`);
-        logger.info(`    ${theme.teal('deploy')}        Deploy to Cloud Run + Cloudflare`);
-        logger.info(`    ${theme.teal('test')}          Run test suite`);
-        logger.info(`    ${theme.teal('doctor')}        Health check`);
-        logger.info(`    ${theme.teal('rotate-keys')}   Rotate credentials`);
-        logger.info(`    ${theme.teal('migrate')}       Run DB migrations`);
-        logger.info(`    ${theme.teal('status')}        Visual system dashboard`);
-        logger.info(`    ${theme.teal('validate')}      Validate content kit`);
-        logger.info(`    ${theme.teal('scaffold')}      Scaffold a new domain`);
-        logger.info('');
-        logger.info(`  ${theme.bold('Examples:')}`);
-        logger.info(`    ${theme.dim('$')} ${theme.purple('heady')} ${theme.dim('"check my system health"')}`);
-        logger.info(`    ${theme.dim('$')} ${theme.purple('heady login')}`);
-        logger.info(`    ${theme.dim('$')} ${theme.purple('heady status')}`);
-        logger.info(`    ${theme.dim('$')} ${theme.purple('heady battle')} ${theme.dim('"write fibonacci in JS"')}`);
-        logger.info(`    ${theme.dim('$')} ${theme.purple('heady council')} ${theme.dim('"design a login component"')}`);
-        logger.info('');
+        console.log(`  ${theme.bold('Usage:')}`);
+        console.log(`    ${theme.purple('heady')}                              Interactive REPL mode`);
+        console.log(`    ${theme.purple('heady')} ${theme.dim('"your question"')}             Intelligent processing`);
+        console.log('');
+        console.log(`  ${theme.bold(theme.gold('Authentication:'))}`);
+        console.log(`    ${theme.teal('login')}         Authenticate (OAuth/API key/env import)`);
+        console.log(`    ${theme.teal('logout')}        Clear stored credentials`);
+        console.log(`    ${theme.teal('whoami')}        Show authentication status`);
+        console.log('');
+        console.log(`  ${theme.bold(theme.gold('AI Commands:'))}`);
+        console.log(`    ${theme.teal('council')}       Multi-model competitive council`);
+        console.log(`    ${theme.teal('battle')}        Provider battle arena`);
+        console.log(`    ${theme.teal('determinism')}   Monte Carlo determinism test`);
+        console.log(`    ${theme.teal('learn')}         Parallel build learning engine`);
+        console.log(`    ${theme.teal('context')}       AutoContext management`);
+        console.log('');
+        console.log(`  ${theme.bold(theme.gold('System:'))}`);
+        console.log(`    ${theme.teal('init')}          Initialize workspace`);
+        console.log(`    ${theme.teal('start')}         Start all services`);
+        console.log(`    ${theme.teal('dev')}           Dev mode with hot reload`);
+        console.log(`    ${theme.teal('build')}         Build all packages`);
+        console.log(`    ${theme.teal('deploy')}        Deploy to Cloud Run + Cloudflare`);
+        console.log(`    ${theme.teal('test')}          Run test suite`);
+        console.log(`    ${theme.teal('doctor')}        Health check`);
+        console.log(`    ${theme.teal('rotate-keys')}   Rotate credentials`);
+        console.log(`    ${theme.teal('migrate')}       Run DB migrations`);
+        console.log(`    ${theme.teal('status')}        Visual system dashboard`);
+        console.log(`    ${theme.teal('validate')}      Validate content kit`);
+        console.log(`    ${theme.teal('scaffold')}      Scaffold a new domain`);
+        console.log('');
+        console.log(`  ${theme.bold('Examples:')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady')} ${theme.dim('"check my system health"')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady login')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady status')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady battle')} ${theme.dim('"write fibonacci in JS"')}`);
+        console.log(`    ${theme.dim('$')} ${theme.purple('heady council')} ${theme.dim('"design a login component"')}`);
+        console.log('');
     },
 
     // Auth commands
@@ -1169,12 +1167,12 @@ async function startREPL() {
     const providers = auth.detectProviders();
     const online = Object.values(providers).filter(p => p.configured);
     if (online.length > 0) {
-        logger.info(`  ${theme.green('●')} Authenticated ${theme.dim(`(${online.length} providers)`)}`);
+        console.log(`  ${theme.green('●')} Authenticated ${theme.dim(`(${online.length} providers)`)}`);
     } else {
-        logger.info(`  ${theme.yellow('○')} Not authenticated ${theme.dim('— run /login or heady login')}`);
+        console.log(`  ${theme.yellow('○')} Not authenticated ${theme.dim('— run /login or heady login')}`);
     }
-    logger.info(`  ${theme.dim('Type /help for commands, Ctrl+C to exit')}`);
-    logger.info('');
+    console.log(`  ${theme.dim('Type /help for commands, Ctrl+C to exit')}`);
+    console.log('');
 
     // Load history
     const historyFile = auth.HISTORY_FILE;
@@ -1222,7 +1220,7 @@ async function startREPL() {
             const args = parts.slice(1);
 
             if (cmd === 'exit' || cmd === 'quit' || cmd === 'q') {
-                logger.info(`\n  ${theme.purple('Goodbye!')} ${theme.dim('Sacred Geometry awaits...')}\n`);
+                console.log(`\n  ${theme.purple('Goodbye!')} ${theme.dim('Sacred Geometry awaits...')}\n`);
                 rl.close();
                 process.exit(0);
             }
@@ -1240,7 +1238,7 @@ async function startREPL() {
                 } catch (err) {
                     errorMsg(err.message);
                 }
-                logger.info('');
+                console.log('');
                 rl.prompt();
                 return;
             }
@@ -1256,17 +1254,17 @@ async function startREPL() {
         } catch (err) {
             errorMsg(`Processing failed: ${err.message}`);
         }
-        logger.info('');
+        console.log('');
         rl.prompt();
     });
 
     rl.on('close', () => {
-        logger.info(`\n  ${theme.purple('Goodbye!')} ${theme.dim('Sacred Geometry awaits...')}\n`);
+        console.log(`\n  ${theme.purple('Goodbye!')} ${theme.dim('Sacred Geometry awaits...')}\n`);
         process.exit(0);
     });
 
     rl.on('SIGINT', () => {
-        logger.info(`\n  ${theme.dim('(Press Ctrl+C again or type /exit to quit)')}`);
+        console.log(`\n  ${theme.dim('(Press Ctrl+C again or type /exit to quit)')}`);
         rl.prompt();
     });
 }
@@ -1289,7 +1287,7 @@ if (!firstArg && !flagInput) {
     theme.printLogo(VERSION);
     if (flagInput) {
         Promise.resolve(commands[firstArg](...restArgs)).then(() => {
-            logger.info('');
+            console.log('');
             return processIntelligently(flagInput);
         }).catch(err => {
             errorMsg(`Processing failed: ${err.message}`);

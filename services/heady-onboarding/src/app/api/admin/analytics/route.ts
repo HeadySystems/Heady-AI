@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
@@ -61,7 +59,7 @@ export async function GET(req: NextRequest) {
     })
 
   } catch (error) {
-    logger.error("Analytics error:", error)
+    console.error("Analytics error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

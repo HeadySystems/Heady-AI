@@ -83,7 +83,7 @@ Write-Section "1. Registry Validation"
 $registryPath = Join-Path $RepoRoot "heady-registry.json"
 if (Test-Path $registryPath) {
     try {
-        $registry = [System.IO.File]::ReadAllText($registryPath) | ConvertFrom-Json
+        $registry = Get-Content $registryPath -Raw | ConvertFrom-Json
         Write-Status "Registry loaded: v$($registry.registryVersion)"
         Write-Info "Components: $($registry.components.Count)"
         Write-Info "Workflows: $($registry.workflows.Count)"
@@ -140,7 +140,7 @@ if (Test-Path $docOwnersPath) {
     Write-Status "DOC_OWNERS.yaml found"
 
     # Simple YAML parsing for reviewBy dates (lightweight, no external deps)
-    $docOwnersContent = [System.IO.File]::ReadAllText($docOwnersPath)
+    $docOwnersContent = Get-Content $docOwnersPath -Raw
     $today = Get-Date
 
     # Find all reviewBy entries and check if overdue
@@ -197,12 +197,12 @@ Write-Section "4. Notebook Validation"
 
 $notebookDir = Join-Path $RepoRoot "notebooks"
 if (Test-Path $notebookDir) {
-    $notebooks = Get-ChildItem -Path $notebookDir -Filter "*.ipynb" -Recurse -Depth 5
+    $notebooks = Get-ChildItem -Path $notebookDir -Filter "*.ipynb" -Recurse
     Write-Status "Found $($notebooks.Count) notebook(s)"
     foreach ($nb in $notebooks) {
         $relPath = $nb.FullName.Replace($RepoRoot, '').TrimStart('\', '/')
         try {
-            $nbContent = [System.IO.File]::ReadAllText($nb.FullName) | ConvertFrom-Json
+            $nbContent = Get-Content $nb.FullName -Raw | ConvertFrom-Json
             $cellCount = $nbContent.cells.Count
             Write-Info "$relPath ($cellCount cells)"
         } catch {
@@ -293,7 +293,7 @@ if ($Mode -in @('full', 'fix')) {
     Write-Section "7. Registry Timestamp Update"
 
     if (Test-Path $registryPath) {
-        $regContent = [System.IO.File]::ReadAllText($registryPath)
+        $regContent = Get-Content $registryPath -Raw
         $newContent = $regContent -replace '"updatedAt":\s*"[^"]*"', "`"updatedAt`": `"$timestamp`""
         if ($regContent -ne $newContent) {
             Set-Content -Path $registryPath -Value $newContent -NoNewline

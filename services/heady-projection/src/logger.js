@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
@@ -32,10 +30,10 @@ function createLogger(component = 'heady') {
         const line = `${ts} ${level.toUpperCase().padEnd(5)} ${prefix} ${msg}`;
 
         switch (level) {
-            case 'error': logger.error(line); break;
-            case 'warn':  logger.warn(line);  break;
+            case 'error': console.error(line); break;
+            case 'warn':  console.warn(line);  break;
             case 'debug': if (process.env.HEADY_DEBUG) console.debug(line); break;
-            default:      logger.info(line);
+            default:      console.log(line);
         }
 
         // Emit telemetry if event bus is available

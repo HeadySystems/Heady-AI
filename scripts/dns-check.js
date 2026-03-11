@@ -1,8 +1,6 @@
-const pino = require('pino');
-const logger = pino();
-// const fetch = require('node-fetch'); // Not required in Node.js >= 18
-const token = process.env.CLOUDFLARE_API_TOKEN;
-const zoneId = process.env.CLOUDFLARE_ZONE_ID;
+const fetch = require('node-fetch');
+const token = "VGNo4jwin3V6eFO0HpGGYUyn2iWFM6JpkPfdIqUa";
+const zoneId = "d71262d0faa509f890fd5fea413c39bc";
 
 async function checkDNS() {
     const url = `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`;
@@ -13,7 +11,7 @@ async function checkDNS() {
         }
     });
     const data = await res.json();
-    logger.info(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data, null, 2));
 }
 
 checkDNS();

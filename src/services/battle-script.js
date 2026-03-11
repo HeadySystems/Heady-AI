@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
@@ -22,6 +20,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../shared/logger')('battle-script');
 
 const { execSync } = require('child_process');
 const fs = require('fs');

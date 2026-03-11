@@ -24,13 +24,13 @@ flagged as LAW-02 violations:
 | Hardcoded delays (`await sleep(2000)`, `Thread.sleep(500)`) | Workaround |
 | `catch` block with no body, or body is only a comment | Critical Violation |
 | `catch (e) {}` or `catch (e) { /* ignore */ }` | Critical Violation |
-| `NOTE` / `FIXME` / `HACK` comments in production branch | Tech Debt Trigger |
+| `TODO` / `FIXME` / `HACK` comments in production branch | Tech Debt Trigger |
 | Duplicate implementation of existing module functionality | Duplication Violation |
 | Copy-paste code block > 13 lines (fib(7)) | Extract-to-Module Required |
 
 ## Technical Debt Tracking
 
-Any `NOTE`, `FIXME`, or `HACK` comment merged into a production branch **automatically**:
+Any `TODO`, `FIXME`, or `HACK` comment merged into a production branch **automatically**:
 1. Creates a tracked entry in `wisdom.json` under the `tech_debt` key
 2. Assigns an expiry date of 13 days (fib(7)) from merge date
 3. Surfaces in the MISTAKE_ANALYSIS stage (16) on every subsequent pipeline run

@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-guard/index.js', '.js'));
 
 /**
  * HeadyGuard — Main Pipeline Entry Point
@@ -375,8 +376,6 @@ function middleware(opts = {}) {
 
 // ── Module exports ────────────────────────────────────────────────────────────
 
-const getHealth = () => ({ status: 'healthy', service: 'heady-guard', timestamp: new Date().toISOString() });
-
 module.exports = {
   initialize,
   shutdown,
@@ -389,5 +388,4 @@ module.exports = {
   pipeline,
   rules,
   config,
-  getHealth,
 };

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview Complete Heady™ Integration Example
  * @description Shows VSA integration with Heady™ orchestration system
@@ -9,10 +7,10 @@ const { VSACodebook } = require('../src/vsa/codebook');
 const { VSASemanticGates } = require('../src/vsa/vsa-csl-bridge');
 const { Hypervector } = require('../src/vsa/hypervector');
 
-logger.info('=== Heady VSA Full Integration Example ===\n');
+console.log('=== Heady VSA Full Integration Example ===\n');
 
 // 1. Initialize Heady™ Codebook
-logger.info('1. Initializing Heady Semantic Codebook...');
+console.log('1. Initializing Heady Semantic Codebook...');
 const codebook = VSACodebook.createHeadyCodebook(4096);
 
 // Add domain-specific concepts
@@ -27,15 +25,15 @@ for (const concept of additionalConcepts) {
   codebook.add(concept, null, { type: 'atomic', domain: 'orchestration' });
 }
 
-logger.info(`   Codebook now has ${codebook.concepts.size} concepts\n`);
+console.log(`   Codebook now has ${codebook.concepts.size} concepts\n`);
 
 // 2. Create Semantic Gates
-logger.info('2. Creating VSA Semantic Gates...');
+console.log('2. Creating VSA Semantic Gates...');
 const gates = new VSASemanticGates(codebook);
-logger.info('   ✅ Gates ready\n');
+console.log('   ✅ Gates ready\n');
 
 // 3. Simulate Task Orchestration
-logger.info('3. Task Orchestration Simulation\n');
+console.log('3. Task Orchestration Simulation\n');
 
 class Task {
   constructor(id, type, priority, confidence, load) {
@@ -69,17 +67,17 @@ const tasks = [
   new Task('T3', 'compute', 0.8, 0.9, 0.2)
 ];
 
-logger.info('   Created tasks:');
+console.log('   Created tasks:');
 for (const task of tasks) {
-  logger.info(`   - ${task.id}: ${task.type}, priority=${task.priority}, confidence=${task.confidence}, load=${task.load}`);
+  console.log(`   - ${task.id}: ${task.type}, priority=${task.priority}, confidence=${task.confidence}, load=${task.load}`);
 }
-logger.info();
+console.log();
 
 // 4. Orchestration Decision (NO if/else!)
-logger.info('4. Making orchestration decisions (continuous logic)...\n');
+console.log('4. Making orchestration decisions (continuous logic)...\n');
 
 for (const task of tasks) {
-  logger.info(`   Task ${task.id}:`);
+  console.log(`   Task ${task.id}:`);
 
   // Convert to hypervector
   const taskVec = task.toHypervector(codebook, gates);
@@ -95,14 +93,14 @@ for (const task of tasks) {
   const queueScore = gates.continuous_and(confGate, gates.continuous_not(prioGate));
   const rejectScore = gates.continuous_not(confGate);
 
-  logger.info(`      Confidence gate: ${confGate.toFixed(4)}`);
-  logger.info(`      Priority gate: ${prioGate.toFixed(4)}`);
-  logger.info(`      Load gate: ${loadGate.toFixed(4)}`);
-  logger.info(`      Decision scores:`);
-  logger.info(`        - Execute now: ${executeNow.toFixed(4)}`);
-  logger.info(`        - Execute later: ${executeLater.toFixed(4)}`);
-  logger.info(`        - Queue: ${queueScore.toFixed(4)}`);
-  logger.info(`        - Reject: ${rejectScore.toFixed(4)}`);
+  console.log(`      Confidence gate: ${confGate.toFixed(4)}`);
+  console.log(`      Priority gate: ${prioGate.toFixed(4)}`);
+  console.log(`      Load gate: ${loadGate.toFixed(4)}`);
+  console.log(`      Decision scores:`);
+  console.log(`        - Execute now: ${executeNow.toFixed(4)}`);
+  console.log(`        - Execute later: ${executeLater.toFixed(4)}`);
+  console.log(`        - Queue: ${queueScore.toFixed(4)}`);
+  console.log(`        - Reject: ${rejectScore.toFixed(4)}`);
 
   // Select highest score
   const decisions = {
@@ -116,11 +114,11 @@ for (const task of tasks) {
     curr[1] > best[1] ? curr : best
   );
 
-  logger.info(`      → Decision: ${bestDecision[0]} (score: ${bestDecision[1].toFixed(4)})\n`);
+  console.log(`      → Decision: ${bestDecision[0]} (score: ${bestDecision[1].toFixed(4)})\n`);
 }
 
 // 5. Agent Matching via Resonance
-logger.info('5. Agent matching via semantic resonance...\n');
+console.log('5. Agent matching via semantic resonance...\n');
 
 // Define agent specializations
 const agents = [
@@ -139,39 +137,39 @@ for (const agent of agents) {
 for (const task of tasks) {
   const taskVec = task.toHypervector(codebook, gates);
 
-  logger.info(`   Task ${task.id} (${task.type}):`);
+  console.log(`   Task ${task.id} (${task.type}):`);
 
   // Query for best agent match
   const matches = gates.query_gate(taskVec, 0.3, 3);
 
   for (const match of matches) {
     if (match.metadata && match.metadata.type === 'agent') {
-      logger.info(`      - ${match.name}: ${match.similarity.toFixed(4)}`);
+      console.log(`      - ${match.name}: ${match.similarity.toFixed(4)}`);
     }
   }
-  logger.info();
+  console.log();
 }
 
 // 6. State Tracking with Phi-Scales
-logger.info('6. State tracking with phi-scale values...\n');
+console.log('6. State tracking with phi-scale values...\n');
 
 const systemState = gates.superposition_gate('HEADY', 'ORCHESTRATOR', 'SEMANTIC');
 const phiValue = systemState.toPhiScale();
 const truthValue = systemState.toTruthValue();
 
-logger.info(`   System state hypervector:`);
-logger.info(`   - Phi-scale value: ${phiValue.toFixed(4)} (range: [0, ${((1 + Math.sqrt(5)) / 2).toFixed(4)}])`);
-logger.info(`   - Truth value: ${truthValue.toFixed(4)} (range: [0, 1])`);
-logger.info(`   - Dimensionality: ${systemState.dimensionality}\n`);
+console.log(`   System state hypervector:`);
+console.log(`   - Phi-scale value: ${phiValue.toFixed(4)} (range: [0, ${((1 + Math.sqrt(5)) / 2).toFixed(4)}])`);
+console.log(`   - Truth value: ${truthValue.toFixed(4)} (range: [0, 1])`);
+console.log(`   - Dimensionality: ${systemState.dimensionality}\n`);
 
 // 7. Performance Stats
-logger.info('7. Performance statistics...\n');
-logger.info(codebook.stats());
+console.log('7. Performance statistics...\n');
+console.log(codebook.stats());
 
-logger.info('\n=== Integration Example Complete ===');
-logger.info('\n✨ Key Takeaways:');
-logger.info('   • No if/else statements used in decision logic');
-logger.info('   • All decisions computed continuously');
-logger.info('   • Semantic matching via hypervector resonance');
-logger.info('   • Phi-scale integration for continuous values');
-logger.info('   • Instant pattern recognition via codebook queries');
+console.log('\n=== Integration Example Complete ===');
+console.log('\n✨ Key Takeaways:');
+console.log('   • No if/else statements used in decision logic');
+console.log('   • All decisions computed continuously');
+console.log('   • Semantic matching via hypervector resonance');
+console.log('   • Phi-scale integration for continuous values');
+console.log('   • Instant pattern recognition via codebook queries');

@@ -8,7 +8,7 @@ import { createHash } from 'crypto';
 function sha256(input) { return createHash('sha256').update(String(input)).digest('hex'); }
 
 function testNoLocalStorageUsage() {
-  console.log('  ✓ sessionStorage ban verified (enforced via code audit — no runtime API in Node.js)');
+  console.log('  ✓ localStorage ban verified (enforced via code audit — no runtime API in Node.js)');
 }
 
 function testHttpOnlyCookies() {
@@ -16,7 +16,7 @@ function testHttpOnlyCookies() {
   assert.ok(cookieHeader.includes('HttpOnly'), 'Cookie has HttpOnly flag');
   assert.ok(cookieHeader.includes('Secure'), 'Cookie has Secure flag');
   assert.ok(cookieHeader.includes('SameSite=Strict'), 'Cookie has SameSite=Strict');
-  assert.ok(!cookieHeader.includes('sessionStorage'), 'No sessionStorage reference');
+  assert.ok(!cookieHeader.includes('localStorage'), 'No localStorage reference');
   console.log('  ✓ httpOnly cookie format verified');
 }
 

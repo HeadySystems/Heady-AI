@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady™ Pricing — Sovereign AI Platform</title>
+    <meta name="description"
+        content="Heady™ pricing plans: Free, Pro, and Enterprise tiers for sovereign AI infrastructure.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --phi: 1.618033988749895;
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e8;
+            --text-muted: #8888a0;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --gold: #f0c040;
+            --success: #00d68f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--accent), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px var(--accent-glow);
+        }
+
+        .card.featured {
+            border-color: var(--accent);
+        }
+
+        .card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 16px;
+            right: -30px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+        }
+
+        .tier {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .features {
+            list-style: none;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a4bd6;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #e6a800);
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Heady™ Pricing</h1>
+        <p class="subtitle">Sovereign AI infrastructure built on Sacred Geometry — choose your tier</p>
+        <div class="grid">
+            <div class="card">
+                <div class="tier">Free</div>
+                <div class="price">$0<span>/month</span></div>
+                <ul class="features">
+                    <li>HeadyBuddy companion</li>
+                    <li>5 AI queries/day</li>
+                    <li>Basic vector memory (100 entries)</li>
+                    <li>Community support</li>
+                    <li>Single device</li>
+                </ul>
+                <a href="https://headyme.com/signup" class="btn btn-outline">Get Started</a>
+            </div>
+            <div class="card featured">
+                <div class="tier">Pro</div>
+                <div class="price">$29<span>/month</span></div>
+                <ul class="features">
+                    <li>Unlimited AI queries</li>
+                    <li>Full vector memory (10K entries)</li>
+                    <li>Multi-model routing (Claude, GPT-4, Gemini)</li>
+                    <li>HeadyMCP tool access</li>
+                    <li>Cross-device sync</li>
+                    <li>Priority support</li>
+                    <li>Chrome + VS Code extensions</li>
+                </ul>
+                <a href="https://headyme.com/signup?plan=pro" class="btn btn-primary">Start Pro Trial</a>
+            </div>
+            <div class="card">
+                <div class="tier">Enterprise</div>
+                <div class="price">Custom</div>
+                <ul class="features">
+                    <li>Unlimited everything</li>
+                    <li>Sovereign deployment (your cloud)</li>
+                    <li>mTLS inter-agent mesh</li>
+                    <li>Custom model endpoints</li>
+                    <li>RBAC + SSO</li>
+                    <li>Dedicated support engineer</li>
+                    <li>SLA guarantee</li>
+                    <li>Audit logging + compliance</li>
+                </ul>
+                <a href="https://headysystems.com/contact" class="btn btn-gold">Contact Sales</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

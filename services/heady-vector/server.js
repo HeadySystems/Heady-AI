@@ -1,6 +1,5 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-vector/server.js', '.js'));
 
 /**
  * HeadyVector Server Entry Point

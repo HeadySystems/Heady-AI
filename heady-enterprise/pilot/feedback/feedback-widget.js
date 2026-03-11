@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview HeadyOS Pilot — In-App Feedback Widget
  * @module pilot/feedback/feedback-widget
@@ -79,7 +77,7 @@ const emitEvent = (eventType, data) => {
     data,
   };
   event.hash = crypto.createHash('sha256').update(JSON.stringify(event)).digest('hex');
-  logger.info(JSON.stringify({ level: 'info', ...event }));
+  console.log(JSON.stringify({ level: 'info', ...event }));
   return event;
 };
 

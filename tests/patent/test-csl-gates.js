@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -45,11 +43,11 @@ let failed = 0;
 function test(name, fn) {
     try {
         fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
         failed++;
     }
 }
@@ -76,7 +74,7 @@ function randVec128() {
 // VECTOR MATH PRIMITIVES
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Vector Math Primitives ===');
+console.log('\n=== Vector Math Primitives ===');
 
 test('dot_product: [1,0]·[1,0] = 1', () => {
     assert.strictEqual(dot_product([1, 0], [1, 0]), 1);
@@ -116,7 +114,7 @@ test('cosine_similarity: empty vectors return 0', () => {
 // CLAIM 1: Resonance Gate
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 1: Resonance Gate ===');
+console.log('\n=== Claim 1: Resonance Gate ===');
 
 test('Claim 1: returns structured result with score and activation', () => {
     const a = randVec128();
@@ -162,7 +160,7 @@ test('Claim 1: throws on missing vector', () => {
 // CLAIM 2: Superposition Gate
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 2: Superposition Gate ===');
+console.log('\n=== Claim 2: Superposition Gate ===');
 
 test('Claim 2: result is a unit vector', () => {
     const a = randVec128();
@@ -192,7 +190,7 @@ test('Claim 2(d): returns a new hybrid semantic concept (Float32Array)', () => {
 // CLAIM 3: Orthogonal Gate
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 3: Orthogonal Gate ===');
+console.log('\n=== Claim 3: Orthogonal Gate ===');
 
 test('Claim 3: result is unit vector', () => {
     const t = randVec128();
@@ -220,7 +218,7 @@ test('Claim 3(c): result normalized to unit vector', () => {
 // CLAIM 4: Multi-Resonance
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 4: Multi-Resonance ===');
+console.log('\n=== Claim 4: Multi-Resonance ===');
 
 test('Claim 4: returns sorted array of results', () => {
     const target = randVec128();
@@ -261,7 +259,7 @@ test('Claim 4: empty candidates returns empty array', () => {
 // CLAIM 5: Weighted Superposition
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 5: Weighted Superposition ===');
+console.log('\n=== Claim 5: Weighted Superposition ===');
 
 test('Claim 5: alpha=1.0 returns direction of vec_a', () => {
     const a = normalize([1, 2, 3, 4]);
@@ -298,7 +296,7 @@ test('Claim 5: alpha out of range throws', () => {
 // CLAIM 6: Consensus Superposition
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 6: Consensus Superposition ===');
+console.log('\n=== Claim 6: Consensus Superposition ===');
 
 test('Claim 6: returns unit vector for N vectors', () => {
     const vectors = [randVec128(), randVec128(), randVec128(), randVec128()];
@@ -330,7 +328,7 @@ test('Claim 6: fusing 5 random 128-dim vectors produces unit vector', () => {
 // CLAIM 7: Batch Orthogonal
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 7: Batch Orthogonal ===');
+console.log('\n=== Claim 7: Batch Orthogonal ===');
 
 test('Claim 7: result is unit vector', () => {
     const t = randVec128();
@@ -363,7 +361,7 @@ test('Claim 7: single rejection matches orthogonal_gate', () => {
 // CLAIM 8: Configurable Sigmoid Steepness and Threshold
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 8: Configurable Sigmoid ===');
+console.log('\n=== Claim 8: Configurable Sigmoid ===');
 
 test('Claim 8: high steepness produces sharp transition (Δactivation > low steepness)', () => {
     const score = 0.6;
@@ -400,7 +398,7 @@ test('Claim 8: resonance_gate accepts threshold and steepness params', () => {
 // CLAIM 9: Statistics Module
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 9: Statistics Module ===');
+console.log('\n=== Claim 9: Statistics Module ===');
 
 test('Claim 9(d): getStats returns invocation counts', () => {
     resetStats();
@@ -436,7 +434,7 @@ test('Claim 9(d): resetStats clears all counters', () => {
 // CLAIM 9: CSLSystem (OOP API)
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 9: CSLSystem Class ===');
+console.log('\n=== Claim 9: CSLSystem Class ===');
 
 test('Claim 9: CSLSystem has all gate methods', () => {
     const csl = new CSLSystem();
@@ -467,7 +465,7 @@ test('Claim 9: defaultCSL instance is exported', () => {
 // CLAIM 10: Replacement Integration Points
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 10: Replacement Integration Points ===');
+console.log('\n=== Claim 10: Replacement Integration Points ===');
 
 test('Claim 10: vectorMemoryDensityGate returns isDuplicate + score', () => {
     const csl = new CSLSystem();
@@ -502,7 +500,7 @@ test('Claim 10: hallucinationDetectionGate works with identical vectors', () => 
 // PHI CONSTANT
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== PHI Constant ===');
+console.log('\n=== PHI Constant ===');
 
 test('PHI = 1.6180339887', () => {
     assert.strictEqual(PHI, 1.6180339887);
@@ -512,8 +510,8 @@ test('PHI = 1.6180339887', () => {
 // SUMMARY
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info(`\n─────────────────────────────────────────`);
-logger.info(`HS-058 CSL Gates: ${passed} passed, ${failed} failed`);
-logger.info(`─────────────────────────────────────────`);
+console.log(`\n─────────────────────────────────────────`);
+console.log(`HS-058 CSL Gates: ${passed} passed, ${failed} failed`);
+console.log(`─────────────────────────────────────────`);
 
 if (failed > 0) process.exit(1);

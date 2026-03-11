@@ -1,8 +1,6 @@
-const pino = require('pino');
-const logger = pino();
-// const fetch = require('node-fetch'); // Not required in Node.js >= 18
-const token = process.env.CLOUDFLARE_API_TOKEN;
-const zoneId = process.env.CLOUDFLARE_ZONE_ID;
+const fetch = require('node-fetch');
+const token = "VGNo4jwin3V6eFO0HpGGYUyn2iWFM6JpkPfdIqUa";
+const zoneId = "d71262d0faa509f890fd5fea413c39bc";
 const target = "heady-manager-609590223909.us-central1.run.app";
 
 async function updateDNS(id, name) {
@@ -22,7 +20,7 @@ async function updateDNS(id, name) {
         })
     });
     const data = await res.json();
-    logger.info(`Updated ${name}:`, data.success ? 'SUCCESS' : 'FAILED', JSON.stringify(data.errors));
+    console.log(`Updated ${name}:`, data.success ? 'SUCCESS' : 'FAILED', JSON.stringify(data.errors));
 }
 
 async function run() {

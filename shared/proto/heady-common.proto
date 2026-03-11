@@ -1,0 +1,216 @@
+// Heady™ gRPC Common Definitions — Inter-Service Communication
+// All services use these shared message types for internal gRPC calls
+// © 2026 HeadySystems Inc. All Rights Reserved.
+
+syntax = "proto3";
+package heady.common;
+
+option go_package = "github.com/HeadyMe/heady-platform/proto/common";
+
+// ─── Health Check (standardized across all 58 services) ─────────────────────
+service HealthService {
+  rpc Check(HealthRequest) returns (HealthResponse);
+  rpc Watch(HealthRequest) returns (stream HealthResponse);
+}
+
+message HealthRequest {
+  string service = 1;
+}
+
+message HealthResponse {
+  enum Status {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+  }
+  Status status = 1;
+  string service = 2;
+  string domain = 3;
+  int64 uptime_ms = 4;
+  string version = 5;
+  map<string, string> metadata = 6;
+}
+
+// ─── Vector Operations ──────────────────────────────────────────────────────
+service VectorService {
+  rpc Embed(EmbedRequest) returns (EmbedResponse);
+  rpc Search(VectorSearchRequest) returns (VectorSearchResponse);
+  rpc Store(VectorStoreRequest) returns (VectorStoreResponse);
+  rpc Delete(VectorDeleteRequest) returns (VectorDeleteResponse);
+}
+
+message EmbedRequest {
+  string text = 1;
+  string model = 2;
+  int32 dimensions = 3; // Default: 384
+}
+
+message EmbedResponse {
+  repeated float embedding = 1;
+  int32 dimensions = 2;
+  string model = 3;
+  double latency_ms = 4;
+}
+
+message VectorSearchRequest {
+  repeated float query_vector = 1;
+  int32 top_k = 2;           // Fibonacci: 5, 8, 13, 21
+  double threshold = 3;       // CSL gate: 0.382, 0.618, 0.718
+  string domain_filter = 4;
+  map<string, string> metadata_filter = 5;
+}
+
+message VectorSearchResponse {
+  repeated VectorResult results = 1;
+  double search_latency_ms = 2;
+  int32 total_candidates = 3;
+}
+
+message VectorResult {
+  string id = 1;
+  double score = 2;
+  string content = 3;
+  map<string, string> metadata = 4;
+  string domain = 5;
+}
+
+message VectorStoreRequest {
+  string id = 1;
+  repeated float embedding = 2;
+  string content = 3;
+  map<string, string> metadata = 4;
+  string domain = 5;
+}
+
+message VectorStoreResponse {
+  string id = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+message VectorDeleteRequest {
+  string id = 1;
+}
+
+message VectorDeleteResponse {
+  bool success = 1;
+}
+
+// ─── Inference / Brain Service ──────────────────────────────────────────────
+service InferenceService {
+  rpc Infer(InferRequest) returns (InferResponse);
+  rpc StreamInfer(InferRequest) returns (stream InferChunk);
+}
+
+message InferRequest {
+  string prompt = 1;
+  string system_prompt = 2;
+  string model = 3;
+  double temperature = 4;    // φ-scaled: PSI2=0.382 conservative, PSI=0.618 balanced
+  int32 max_tokens = 5;
+  map<string, string> context = 6;
+  string domain = 7;
+  string trace_id = 8;
+}
+
+message InferResponse {
+  string text = 1;
+  string model = 2;
+  int32 tokens_used = 3;
+  double latency_ms = 4;
+  double csl_confidence = 5;
+  string trace_id = 6;
+}
+
+message InferChunk {
+  string text = 1;
+  bool done = 2;
+  int32 index = 3;
+}
+
+// ─── Agent / Bee Operations ─────────────────────────────────────────────────
+service AgentService {
+  rpc SpawnBee(SpawnBeeRequest) returns (SpawnBeeResponse);
+  rpc ExecuteTask(TaskRequest) returns (TaskResponse);
+  rpc GetSwarmStatus(SwarmStatusRequest) returns (SwarmStatusResponse);
+}
+
+message SpawnBeeRequest {
+  string bee_type = 1;
+  map<string, string> config = 2;
+  string parent_trace_id = 3;
+}
+
+message SpawnBeeResponse {
+  string bee_id = 1;
+  string bee_type = 2;
+  string status = 3;
+}
+
+message TaskRequest {
+  string task_id = 1;
+  string description = 2;
+  string domain = 3;
+  map<string, string> parameters = 4;
+  string trace_id = 5;
+}
+
+message TaskResponse {
+  string task_id = 1;
+  string result = 2;
+  string status = 3;
+  double csl_confidence = 4;
+  double execution_ms = 5;
+}
+
+message SwarmStatusRequest {
+  string domain_filter = 1;
+}
+
+message SwarmStatusResponse {
+  int32 active_bees = 1;
+  int32 queued_tasks = 2;
+  repeated BeeStatus bees = 3;
+}
+
+message BeeStatus {
+  string bee_id = 1;
+  string bee_type = 2;
+  string status = 3;
+  int64 uptime_ms = 4;
+  int32 tasks_completed = 5;
+}
+
+// ─── Notification ───────────────────────────────────────────────────────────
+service NotificationService {
+  rpc Send(NotifyRequest) returns (NotifyResponse);
+  rpc StreamNotifications(StreamRequest) returns (stream Notification);
+}
+
+message NotifyRequest {
+  string user_id = 1;
+  string channel = 2;       // websocket, sse, webhook, push
+  string title = 3;
+  string body = 4;
+  string severity = 5;      // info, warning, critical
+  map<string, string> data = 6;
+}
+
+message NotifyResponse {
+  string notification_id = 1;
+  bool delivered = 2;
+}
+
+message StreamRequest {
+  string user_id = 1;
+  string channel = 2;
+}
+
+message Notification {
+  string id = 1;
+  string title = 2;
+  string body = 3;
+  string severity = 4;
+  int64 timestamp = 5;
+  map<string, string> data = 6;
+}

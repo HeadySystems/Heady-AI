@@ -1,17 +1,24 @@
 {
-  "name": "@heady/migration-service",
-  "version": "2.0.0",
-  "type": "module",
-  "description": "Schema migration service with φ-scaled versioning and CSL-gated rollback safety",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "migrate:up": "node src/index.js --direction=up",
-    "migrate:down": "node src/index.js --direction=down",
-    "migrate:status": "node src/index.js --status"
-  },
-  "dependencies": {
-    "@heady/phi-math-foundation": "workspace:*",
-    "@heady/structured-logger": "workspace:*"
-  }
+    "name": "@heady/migration-service",
+    "version": "4.0.0",
+    "private": true,
+    "description": "Heady™ Database Migration Runner — pgvector schema versioning with rollback",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node --watch index.js",
+        "start": "node index.js",
+        "test": "node --test __tests__/migration-service.test.js",
+        "lint": "eslint ."
+    },
+    "dependencies": {
+        "express": "^5.2.1",
+        "pg": "^8.13.0",
+        "pino": "^9.6.0"
+    },
+    "devDependencies": {
+        "pino-pretty": "^13.0.0"
+    },
+    "engines": {
+        "node": ">=20.0.0"
+    }
 }

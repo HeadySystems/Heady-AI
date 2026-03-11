@@ -1,80 +1,131 @@
-# HEADY_BRAND:BEGIN
-# ╔══════════════════════════════════════════════════════════════════╗
-# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-# ║                                                                  ║
-# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: docker-compose.mcp.yml                                                    ║
-# ║  LAYER: root                                                  ║
-# ╚══════════════════════════════════════════════════════════════════╝
-# HEADY_BRAND:END
 version: '3.8'
 
+################################################################################
+# Heady™ MCP Server Docker Compose Configuration
+# Orchestrates the Master Control Program with Brain and Memory services
+################################################################################
+
 services:
-  mcp-gateway:
-    image: node:18
-    working_dir: /app
-    volumes:
-      - ./:/app
+  ################################################################################
+  # Heady™ MCP Server
+  # Master Control Program with 42 tools, φ-scaled routing, CSL gates
+  ################################################################################
+  heady-mcp-server:
+    build:
+      context: ./services/heady-mcp-server
+      dockerfile: Dockerfile
+    image: heady-mcp-server:latest
+    container_name: heady-mcp-server
+    restart: unless-stopped
     ports:
-      - "4000:4000"
+      - "3310:3310"
     environment:
       - NODE_ENV=production
-      - MCP_GATEWAY_TOKEN=${MCP_GATEWAY_TOKEN}
-    command: npm run start:mcp
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-
-  admin-ui:
-    image: node:18
-    working_dir: /app/frontend
-    volumes:
-      - ./:/app
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-    command: npm run dev
-    depends_on:
-      - mcp-gateway
-      - redis
+      - HEADY_ENV=docker
+      - PORT=3310
+      - HEADY_MCP_TRANSPORT=http
+      - HEADY_SERVICE_HOST=heady-mcp-server
+      - LOG_LEVEL=info
+      # Load from .env file
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_ORG_ID=${ANTHROPIC_ORG_ID:-}
+    networks:
+      - heady-net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://admin-ui.headysystems.com:3000/health"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD", "curl", "-f", "http://localhost:3310/health"]
+      interval: 10s
+      timeout: 5s
       retries: 3
-      start_period: 20s
-    restart: unless-stopped
+      start_period: 30s
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
-        compress: "true"
-        labels: "service=admin-ui"
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    networks:
-      - heady-network
-    security_opt:
-      - no-new-privileges:true
-    read_only: false
-    tmpfs:
-      - /tmp:size=100M,mode=1777
+    volumes:
+      - ./logs/mcp:/app/logs
+      - /tmp/heady-cache:/tmp/heady-cache
 
+  ################################################################################
+  # Heady™ Brain Service (Placeholder)
+  # Cognitive reasoning and decision-making engine
+  ################################################################################
+  heady-brain:
+    image: node:20-alpine
+    container_name: heady-brain
+    restart: unless-stopped
+    ports:
+      - "3311:3311"
+    environment:
+      - NODE_ENV=production
+      - PORT=3311
+      - HEADY_SERVICE_HOST=heady-brain
+      - MCP_SERVER=http://heady-mcp-server:3310
+    networks:
+      - heady-net
+    command: sh -c 'echo "Heady Brain service placeholder" && sleep infinity'
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'OK'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      heady-mcp-server:
+        condition: service_healthy
+
+  ################################################################################
+  # Heady™ Memory Service (Placeholder)
+  # Distributed memory and context persistence engine
+  ################################################################################
+  heady-memory:
+    image: node:20-alpine
+    container_name: heady-memory
+    restart: unless-stopped
+    ports:
+      - "3312:3312"
+    environment:
+      - NODE_ENV=production
+      - PORT=3312
+      - HEADY_SERVICE_HOST=heady-memory
+      - MCP_SERVER=http://heady-mcp-server:3310
+    networks:
+      - heady-net
+    command: sh -c 'echo "Heady Memory service placeholder" && sleep infinity'
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo 'OK'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      heady-mcp-server:
+        condition: service_healthy
+
+################################################################################
+# Networks
+################################################################################
+networks:
+  heady-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    labels:
+      description: "Heady™ Service Network"
+
+################################################################################
+# Volumes
+# Persist data across container restarts
+################################################################################
+volumes:
+  heady_cache:
+    driver: local

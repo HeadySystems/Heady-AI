@@ -21,15 +21,13 @@
 import * as vscode from 'vscode';
 import axios from 'axios';
 
-const HEADY_MANAGER_ENDPOINT = 'http://manager.dev.local.headysystems.com:3300';
-
 let statusBarItem: vscode.StatusBarItem;
 let outputChannel: vscode.OutputChannel;
 let healthCheckInterval: NodeJS.Timeout | undefined;
 
 // API endpoints
 const API_ENDPOINTS = {
-  local: HEADY_MANAGER_ENDPOINT,
+  local: 'http://manager.dev.local.heady.internal:3300',
   'cloud-me': 'https://cloud-me.heady.io',
   'cloud-sys': 'https://cloud-sys.heady.io',
   'cloud-conn': 'https://cloud-conn.heady.io',
@@ -175,7 +173,7 @@ async function checkHealth() {
 // Switch active endpoint
 async function switchEndpoint() {
   const items = [
-    { label: 'Local Dev', description: 'manager.dev.local.headysystems.com:3300', endpoint: 'local' },
+    { label: 'Local Dev', description: 'manager.dev.local.heady.internal:3300', endpoint: 'local' },
     { label: 'Cloud - HeadyMe', description: 'cloud-me.heady.io', endpoint: 'cloud-me' },
     { label: 'Cloud - HeadySystems', description: 'cloud-sys.heady.io', endpoint: 'cloud-sys' },
     { label: 'Cloud - HeadyConnection', description: 'cloud-conn.heady.io', endpoint: 'cloud-conn' },
@@ -210,5 +208,5 @@ async function viewTasks() {
 // Get active endpoint from config
 function getActiveEndpoint(): string {
   const config = vscode.workspace.getConfiguration('heady');
-  return config.get('endpoint', HEADY_MANAGER_ENDPOINT);
+  return config.get('endpoint', API_ENDPOINTS.local);
 }

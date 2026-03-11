@@ -1,274 +1,311 @@
 /**
- * Heady™ Latent OS — Spatial Event Bus
- * Cross-swarm coordination with octant indexing and phi-weighted priority.
- *
- * Architecture:
- *   - Namespaced channels: task | lifecycle | health | drift | alert | learning
- *   - Octant indexing maps events to spatial coordinates (8 octants = 2³)
- *   - Ring buffer of fib(12)=144 events for history replay
- *   - Phi-weighted priority queue for processing order
- *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+ * ∞ Heady™ EventBus — Enhanced EventEmitter with wildcard support, async handlers, and ring buffer
+ * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
+ * © 2026 Heady™Systems Inc. — Proprietary
  */
 
-'use strict';
-
-const EventEmitter = require('events');
-const {
-  PHI, PSI, fib, phiFusionWeights,
-  PHI_TIMING, CSL_THRESHOLDS,
-} = require('../../shared/phi-math');
-
-// ─── Channel Definitions ──────────────────────────────────────────────────────
-
-/** All valid namespaced channels */
-const CHANNELS = Object.freeze([
-  'task',
-  'lifecycle',
-  'health',
-  'drift',
-  'alert',
-  'learning',
-]);
-
-/** Channel priority weights (phi-fusion across 6 channels) */
-const CHANNEL_WEIGHTS = Object.freeze(
-  CHANNELS.reduce((acc, ch, i) => {
-    const weights = phiFusionWeights(CHANNELS.length);
-    acc[ch] = weights[i];
-    return acc;
-  }, {})
-);
-
-// ─── Ring Buffer ──────────────────────────────────────────────────────────────
-
-/** Fixed-capacity ring buffer for event history */
-const HISTORY_CAPACITY = fib(12); // 144
-
-class RingBuffer {
-  constructor(capacity) {
-    this._capacity = capacity;
-    this._buf      = new Array(capacity);
-    this._head     = 0; // next write position
-    this._size     = 0;
-  }
-
-  push(item) {
-    this._buf[this._head] = item;
-    this._head = (this._head + 1) % this._capacity;
-    if (this._size < this._capacity) this._size++;
-  }
-
-  /** Returns events oldest-first */
-  toArray() {
-    if (this._size === 0) return [];
-    const start = this._size < this._capacity
-      ? 0
-      : this._head; // oldest slot when full
-    const result = [];
-    for (let i = 0; i < this._size; i++) {
-      result.push(this._buf[(start + i) % this._capacity]);
-    }
-    return result;
-  }
-
-  get size()     { return this._size; }
-  get capacity() { return this._capacity; }
-}
-
-// ─── Octant Indexing ──────────────────────────────────────────────────────────
+const { EventEmitter } = require("events");
+const { PHI_TIMING } = require('../shared/phi-math');
 
 /**
- * Map a 3-axis coherence vector to an octant index (0–7).
- * Axes represent: semantic alignment, temporal urgency, spatial proximity.
- * Each axis is quantised: >= PSI (0.618) → 1, else → 0.
- *
- * @param {number} semantic   0–1 semantic alignment score
- * @param {number} temporal   0–1 temporal urgency score
- * @param {number} spatial    0–1 spatial proximity score
- * @returns {number} octant index 0–7
+ * @typedef {object} EventRecord
+ * @property {string} event - The event name that was emitted
+ * @property {unknown[]} args - Arguments passed with the event
+ * @property {string} timestamp - ISO timestamp of emission
+ * @property {number} seq - Monotonically increasing sequence number
  */
-function octantIndex(semantic, temporal, spatial) {
-  const s = semantic >= PSI ? 1 : 0;
-  const t = temporal >= PSI ? 1 : 0;
-  const p = spatial  >= PSI ? 1 : 0;
-  return (s << 2) | (t << 1) | p;
-}
 
 /**
- * Compute phi-weighted priority from channel weight + coherence scores.
- * Higher score → processed first.
+ * @class HeadyEventBus
+ * @extends EventEmitter
  *
- * @param {string} channel   event channel name
- * @param {number} coherence 0–1 overall coherence
- * @returns {number} priority score
+ * Enhanced event bus for the Heady™ platform with:
+ * - Wildcard pattern matching (e.g. 'vector:*', '*.error')
+ * - Async handler support with Promise.allSettled
+ * - Error isolation (one bad handler never breaks others)
+ * - Ring buffer history for event replay and diagnostics
+ * - Middleware pipeline for event interception
+ * - Namespace-scoped sub-bus creation
  */
-function computePriority(channel, coherence) {
-  const channelW = CHANNEL_WEIGHTS[channel] || PSI;
-  return channelW * PHI + coherence * PSI;
-}
+class HeadyEventBus extends EventEmitter {
+  /**
+   * @param {object} [options]
+   * @param {number} [options.historySize=500] - Max events in ring buffer
+   * @param {string} [options.namespace] - Namespace prefix for scoped buses
+   * @param {boolean} [options.asyncMode=false] - Default to async handler dispatch
+   */
+  constructor(options = {}) {
+    super({ captureRejections: true });
+    this.setMaxListeners(200);
 
-// ─── EventBus Class ───────────────────────────────────────────────────────────
+    this._historySize = options.historySize ?? 500;
+    this._namespace = options.namespace || null;
+    this._asyncMode = options.asyncMode ?? false;
 
-/**
- * Spatial Event Bus — hub for all intra-OS cross-swarm events.
- *
- * @fires EventBus#task
- * @fires EventBus#lifecycle
- * @fires EventBus#health
- * @fires EventBus#drift
- * @fires EventBus#alert
- * @fires EventBus#learning
- */
-class EventBus extends EventEmitter {
-  constructor() {
-    super();
-    this.setMaxListeners(fib(10)); // 55 — enough for large swarms
+    /** @type {EventRecord[]} Ring buffer */
+    this._history = [];
+    this._seq = 0;
 
-    /** @type {RingBuffer} event history ring buffer */
-    this._history = new RingBuffer(HISTORY_CAPACITY);
+    /** @type {Map<string, Set<Function>>} Wildcard pattern -> handlers */
+    this._wildcardHandlers = new Map();
 
-    /** @type {number} total events processed since boot */
-    this._processed = 0;
+    /** @type {Array<Function>} Middleware functions */
+    this._middleware = [];
 
-    /** @type {Map<string,number>} per-channel event counts */
-    this._channelCounts = new Map(CHANNELS.map(ch => [ch, 0]));
-
-    /** @type {number} bus instantiation timestamp */
-    this._startedAt = Date.now();
+    // Capture unhandled errors from async handlers
+    this.on('error', (err) => {
+      if (process.listenerCount('uncaughtException') > 0) return;
+      // Silently swallow if no consumer — prevents process crash
+    });
   }
-
-  // ─── Core API ───────────────────────────────────────────────────────────────
 
   /**
-   * Emit a phi-prioritised event on a namespaced channel.
-   *
-   * @param {string} channel     one of CHANNELS
-   * @param {object} event       event payload
-   * @param {string} [event.id]
-   * @param {string} [event.type]
-   * @param {object} [event.data]
-   * @param {number} [event.semantic]  0–1 semantic alignment
-   * @param {number} [event.temporal]  0–1 temporal urgency
-   * @param {number} [event.spatial]   0–1 spatial proximity
-   * @returns {boolean} true if any listener received the event
+   * Registers a wildcard event listener.
+   * Patterns support '*' as a single-segment wildcard and '**' as multi-segment.
+   * @param {string} pattern - e.g. 'vector:*', 'pipeline:**', '*.error'
+   * @param {Function} handler
+   * @returns {this}
    */
-  emit(channel, event = {}) {
-    if (!CHANNELS.includes(channel)) {
-      throw new Error(`[EventBus] Unknown channel: "${channel}". Valid: ${CHANNELS.join(', ')}`);
+  onPattern(pattern, handler) {
+    if (!this._wildcardHandlers.has(pattern)) {
+      this._wildcardHandlers.set(pattern, new Set());
     }
+    this._wildcardHandlers.get(pattern).add(handler);
+    return this;
+  }
 
-    const semantic  = typeof event.semantic  === 'number' ? event.semantic  : PSI;
-    const temporal  = typeof event.temporal  === 'number' ? event.temporal  : PSI;
-    const spatial   = typeof event.spatial   === 'number' ? event.spatial   : PSI;
-    const coherence = (semantic + temporal + spatial) / 3;
+  /**
+   * Removes a wildcard listener
+   * @param {string} pattern
+   * @param {Function} handler
+   * @returns {this}
+   */
+  offPattern(pattern, handler) {
+    this._wildcardHandlers.get(pattern)?.delete(handler);
+    return this;
+  }
 
-    /** @type {EnrichedEvent} */
-    const enriched = {
-      id:        event.id   || `${channel}:${Date.now()}:${Math.random().toString(36).slice(2, 7)}`,
-      channel,
-      type:      event.type || channel,
-      data:      event.data || {},
-      semantic,
-      temporal,
-      spatial,
-      coherence,
-      octant:    octantIndex(semantic, temporal, spatial),
-      priority:  computePriority(channel, coherence),
-      ts:        Date.now(),
+  /**
+   * Adds a middleware function to the dispatch pipeline.
+   * Middleware receives (event, args, next) and must call next() to proceed.
+   * @param {Function} fn
+   * @returns {this}
+   */
+  use(fn) {
+    this._middleware.push(fn);
+    return this;
+  }
+
+  /**
+   * Checks if an event name matches a wildcard pattern
+   * @param {string} pattern
+   * @param {string} event
+   * @returns {boolean}
+   */
+  _matchesPattern(pattern, event) {
+    if (pattern === event) return true;
+    // Escape regex special chars except * and convert wildcards
+    const escaped = pattern.replace(/[.+^${}()|[\]\\]/g, '\\$&');
+    const regexStr = escaped
+      .replace(/\*\*/g, '§MULTI§')  // placeholder for **
+      .replace(/\*/g, '[^:]+')       // * = any single segment
+      .replace(/§MULTI§/g, '.*');    // ** = anything
+    try {
+      return new RegExp(`^${regexStr}$`).test(event);
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Runs middleware chain and then dispatches
+   * @param {string} event
+   * @param {unknown[]} args
+   * @returns {Promise<void>}
+   */
+  async _runMiddleware(event, args) {
+    let i = 0;
+    const next = async () => {
+      if (i < this._middleware.length) {
+        const mw = this._middleware[i++];
+        await mw(event, args, next);
+      }
     };
-
-    this._history.push(enriched);
-    this._processed++;
-    this._channelCounts.set(channel, (this._channelCounts.get(channel) || 0) + 1);
-
-    return super.emit(channel, enriched);
+    await next();
   }
 
   /**
-   * Register a persistent handler for a channel.
-   * @param {string}   channel
-   * @param {Function} handler  receives enriched event object
+   * Records event to ring buffer
+   * @param {string} event
+   * @param {unknown[]} args
    */
-  on(channel, handler) {
-    if (!CHANNELS.includes(channel)) {
-      throw new Error(`[EventBus] Cannot subscribe to unknown channel: "${channel}"`);
+  _record(event, args) {
+    if (this._history.length >= this._historySize) this._history.shift();
+    this._history.push({
+      event,
+      args: args.map(a => {
+        if (a instanceof Error) return { error: a.message, stack: a.stack };
+        if (typeof a === 'object' && a !== null) {
+          try { return JSON.parse(JSON.stringify(a)); } catch { return '[Circular]'; }
+        }
+        return a;
+      }),
+      timestamp: new Date().toISOString(),
+      seq: ++this._seq,
+    });
+  }
+
+  /**
+   * Dispatches to wildcard handlers matching the event
+   * @param {string} event
+   * @param {unknown[]} args
+   */
+  async _dispatchWildcards(event, args) {
+    for (const [pattern, handlers] of this._wildcardHandlers) {
+      if (this._matchesPattern(pattern, event)) {
+        for (const handler of handlers) {
+          try {
+            await handler(event, ...args);
+          } catch (err) {
+            this.emit('bus:handler-error', { pattern, event, err });
+          }
+        }
+      }
     }
-    return super.on(channel, handler);
   }
 
   /**
-   * Register a one-time handler for a channel.
-   * @param {string}   channel
-   * @param {Function} handler
+   * Emits an event synchronously (standard EventEmitter behavior + wildcards + history)
+   * @param {string} event
+   * @param {...unknown} args
+   * @returns {boolean}
    */
-  once(channel, handler) {
-    if (!CHANNELS.includes(channel)) {
-      throw new Error(`[EventBus] Cannot subscribe once to unknown channel: "${channel}"`);
+  emit(event, ...args) {
+    this._record(event, args);
+
+    // Run wildcard handlers asynchronously (fire-and-forget)
+    if (this._wildcardHandlers.size > 0) {
+      this._dispatchWildcards(event, args).catch(() => {});
     }
-    return super.once(channel, handler);
+
+    // Run middleware asynchronously if any
+    if (this._middleware.length > 0) {
+      this._runMiddleware(event, args).catch(() => {});
+    }
+
+    return super.emit(event, ...args);
   }
 
   /**
-   * Remove a handler from a channel.
-   * @param {string}   channel
-   * @param {Function} handler
+   * Emits an event and awaits all async handlers with error isolation
+   * @param {string} event
+   * @param {...unknown} args
+   * @returns {Promise<Array<PromiseSettledResult<unknown>>>}
    */
-  off(channel, handler) {
-    return super.removeListener(channel, handler);
+  async emitAsync(event, ...args) {
+    this._record(event, args);
+
+    const listeners = this.rawListeners(event);
+    const wildcardPromises = [];
+
+    for (const [pattern, handlers] of this._wildcardHandlers) {
+      if (this._matchesPattern(pattern, event)) {
+        for (const handler of handlers) {
+          wildcardPromises.push(Promise.resolve().then(() => handler(event, ...args)));
+        }
+      }
+    }
+
+    const listenerPromises = listeners.map(fn =>
+      Promise.resolve().then(() => fn(...args))
+    );
+
+    return Promise.allSettled([...listenerPromises, ...wildcardPromises]);
   }
 
-  // ─── Diagnostics ────────────────────────────────────────────────────────────
+  /**
+   * Returns a promise that resolves on the next emission of event
+   * @param {string} event
+   * @param {number} [timeout=PHI_TIMING.CYCLE]
+   * @returns {Promise<unknown[]>}
+   */
+  once_async(event, timeout = PHI_TIMING.CYCLE) {
+    return new Promise((resolve, reject) => {
+      const timer = timeout > 0
+        ? setTimeout(() => {
+          this.off(event, handler);
+          reject(new Error(`Timeout waiting for event: ${event}`));
+        }, timeout)
+        : null;
+
+      const handler = (...args) => {
+        if (timer) clearTimeout(timer);
+        resolve(args);
+      };
+      this.once(event, handler);
+    });
+  }
 
   /**
-   * Returns a snapshot of bus health and usage metrics.
+   * Creates a namespace-scoped sub-bus. Events are prefixed with namespace.
+   * @param {string} namespace
+   * @returns {{emit: Function, on: Function, off: Function, once: Function}}
+   */
+  scope(namespace) {
+    const bus = this;
+    const prefix = this._namespace ? `${this._namespace}:${namespace}` : namespace;
+    return {
+      emit: (event, ...args) => bus.emit(`${prefix}:${event}`, ...args),
+      emitAsync: (event, ...args) => bus.emitAsync(`${prefix}:${event}`, ...args),
+      on: (event, handler) => bus.on(`${prefix}:${event}`, handler),
+      off: (event, handler) => bus.off(`${prefix}:${event}`, handler),
+      once: (event, handler) => bus.once(`${prefix}:${event}`, handler),
+      onPattern: (pattern, handler) => bus.onPattern(`${prefix}:${pattern}`, handler),
+      namespace: prefix,
+    };
+  }
+
+  /**
+   * Returns recent event history
+   * @param {number} [n=50]
+   * @param {string} [eventFilter] - Optional event name filter (supports wildcards)
+   * @returns {EventRecord[]}
+   */
+  history(n = 50, eventFilter) {
+    let h = this._history.slice(-Math.min(n * 2, this._history.length));
+    if (eventFilter) {
+      h = h.filter(r => this._matchesPattern(eventFilter, r.event));
+    }
+    return h.slice(-n);
+  }
+
+  /**
+   * Returns diagnostic stats about the bus
    * @returns {object}
    */
   stats() {
-    const counts = {};
-    for (const [ch, n] of this._channelCounts) counts[ch] = n;
     return {
-      processed:       this._processed,
-      historySize:     this._history.size,
-      historyCapacity: this._history.capacity,
-      channelCounts:   counts,
-      uptimeMs:        Date.now() - this._startedAt,
-      phiCapacity:     HISTORY_CAPACITY,   // fib(12) = 144
-      coherenceGate:   CSL_THRESHOLDS.COHERENCE,
+      totalEvents: this._seq,
+      historyBuffered: this._history.length,
+      registeredEvents: this.eventNames().length,
+      wildcardPatterns: this._wildcardHandlers.size,
+      middlewareCount: this._middleware.length,
+      maxListeners: this.getMaxListeners(),
     };
   }
 
   /**
-   * Returns all buffered events (oldest-first).
-   * @returns {EnrichedEvent[]}
+   * Removes all listeners and resets state
    */
-  history() {
-    return this._history.toArray();
-  }
-
-  /**
-   * Returns recent events filtered by channel.
-   * @param {string} channel
-   * @returns {EnrichedEvent[]}
-   */
-  historyByChannel(channel) {
-    return this._history.toArray().filter(e => e.channel === channel);
+  destroy() {
+    this.removeAllListeners();
+    this._wildcardHandlers.clear();
+    this._middleware.length = 0;
+    this._history.length = 0;
   }
 }
 
-// ─── Singleton ────────────────────────────────────────────────────────────────
+/** Singleton global event bus */
+const globalEventBus = new HeadyEventBus({ historySize: 1000 });
 
-/** Module-level singleton — one bus per process */
-const _instance = new EventBus();
-
-module.exports = {
-  EventBus,
-  CHANNELS,
-  CHANNEL_WEIGHTS,
-  HISTORY_CAPACITY,
-  octantIndex,
-  computePriority,
-  RingBuffer,
-  /** @type {EventBus} Process-scoped singleton event bus */
-  bus: _instance,
-};
+module.exports = HeadyEventBus;

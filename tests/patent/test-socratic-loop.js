@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -34,11 +32,11 @@ let failed = 0;
 function test(name, fn) {
   try {
     fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
@@ -46,18 +44,18 @@ function test(name, fn) {
 async function testAsync(name, fn) {
   try {
     await fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-logger.info('\n── Constants ─────────────────────────────────────────────────────');
+console.log('\n── Constants ─────────────────────────────────────────────────────');
 
 test('PHI equals 1.6180339887', () => {
   assert.strictEqual(PHI, 1.6180339887);
@@ -92,7 +90,7 @@ test('All 3 laws have BLOCK severity', () => {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-logger.info('\n── Helper Functions ──────────────────────────────────────────────');
+console.log('\n── Helper Functions ──────────────────────────────────────────────');
 
 test('_semanticSimilarity returns 1.0 for identical strings', () => {
   const s = _semanticSimilarity('deploy the service', 'deploy the service');
@@ -123,7 +121,7 @@ test('_keywordScan returns found=false when no match', () => {
 
 // ─── Phase 1: Intent Verification ────────────────────────────────────────────
 
-logger.info('\n── Phase 1: Intent Verification ──────────────────────────────────');
+console.log('\n── Phase 1: Intent Verification ──────────────────────────────────');
 
 test('Phase 1 passes for clear, unambiguous intent', () => {
   const r = phaseIntentVerification('Deploy the staging environment to production', {});
@@ -164,7 +162,7 @@ test('Phase 1 checks allowed intent list', () => {
 
 // ─── Phase 2: Consequence Prediction ─────────────────────────────────────────
 
-logger.info('\n── Phase 2: Consequence Prediction ──────────────────────────────');
+console.log('\n── Phase 2: Consequence Prediction ──────────────────────────────');
 
 test('Phase 2 passes for reversible local action', () => {
   const r = phaseConsequencePrediction('update config', {
@@ -206,7 +204,7 @@ test('Phase 2 populates simulatedOutcomes', () => {
 
 // ─── Phase 3: Law Compliance ──────────────────────────────────────────────────
 
-logger.info('\n── Phase 3: Law Compliance (3 Unbreakable Laws) ─────────────────');
+console.log('\n── Phase 3: Law Compliance (3 Unbreakable Laws) ─────────────────');
 
 test('Phase 3 passes for a benign action', () => {
   const r = phaseLawCompliance('Read the configuration file', {});
@@ -263,7 +261,7 @@ test('Custom laws are checked', () => {
 
 // ─── Phase 4: Confidence Gate ─────────────────────────────────────────────────
 
-logger.info('\n── Phase 4: Confidence Gate ──────────────────────────────────────');
+console.log('\n── Phase 4: Confidence Gate ──────────────────────────────────────');
 
 test('Phase 4 GO when composite score above threshold', () => {
   const priorPhases = [
@@ -302,7 +300,7 @@ test('Phase 4 blends CSL confidence when provided', () => {
 
 // ─── SocraticLoop (full integration) ─────────────────────────────────────────
 
-logger.info('\n── SocraticLoop (full 4-phase validation) ────────────────────────');
+console.log('\n── SocraticLoop (full 4-phase validation) ────────────────────────');
 
 (async () => {
 
@@ -405,10 +403,10 @@ await testAsync('stats returns correct counts and phi', async () => {
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-logger.info(`\n── Results ──────────────────────────────────────────────────────`);
-logger.info(`   Passed: ${passed}`);
-logger.info(`   Failed: ${failed}`);
-logger.info(`   Total:  ${passed + failed}`);
+console.log(`\n── Results ──────────────────────────────────────────────────────`);
+console.log(`   Passed: ${passed}`);
+console.log(`   Failed: ${failed}`);
+console.log(`   Total:  ${passed + failed}`);
 
 if (failed > 0) process.exit(1);
 

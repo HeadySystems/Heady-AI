@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * © 2026 HeadySystems Inc. All Rights Reserved.
@@ -108,7 +106,7 @@ function detectProviders() {
  */
 async function login(opts = {}) {
     theme.heading('Heady™ Authentication');
-    logger.info('');
+    console.log('');
 
     // If --token flag provided, store directly
     if (opts.token) {
@@ -124,12 +122,12 @@ async function login(opts = {}) {
 
     const ask = (q) => new Promise(resolve => rl.question(q, resolve));
 
-    logger.info(`  ${theme.purple('Choose authentication method:')}`);
-    logger.info('');
-    logger.info(`  ${theme.bold('1.')} Enter API keys directly`);
-    logger.info(`  ${theme.bold('2.')} Browser-based login (OAuth)`);
-    logger.info(`  ${theme.bold('3.')} Import from .env file`);
-    logger.info('');
+    console.log(`  ${theme.purple('Choose authentication method:')}`);
+    console.log('');
+    console.log(`  ${theme.bold('1.')} Enter API keys directly`);
+    console.log(`  ${theme.bold('2.')} Browser-based login (OAuth)`);
+    console.log(`  ${theme.bold('3.')} Import from .env file`);
+    console.log('');
 
     const choice = await ask(`  ${theme.purple('❯')} Choice [1/2/3]: `);
 
@@ -144,9 +142,9 @@ async function login(opts = {}) {
     }
 
     // Direct API key entry
-    logger.info('');
+    console.log('');
     theme.info('Enter API keys (press Enter to skip):');
-    logger.info('');
+    console.log('');
 
     const creds = loadCredentials() || { providers: {} };
 
@@ -167,7 +165,7 @@ async function login(opts = {}) {
 
     // Save
     saveCredentials(creds);
-    logger.info('');
+    console.log('');
     theme.success('Credentials saved to ~/.heady/credentials.json');
     showProviderStatus();
 }
@@ -215,7 +213,7 @@ function loginFromEnv() {
 
 async function loginWithBrowser() {
     theme.info('Starting browser-based authentication...');
-    logger.info('');
+    console.log('');
 
     const port = 9876;
     const state = crypto.randomBytes(16).toString('hex');
@@ -271,10 +269,10 @@ async function loginWithBrowser() {
             const loginUrl = `http://localhost:${port}`;
             theme.info(`Listening on ${theme.teal(loginUrl)}`);
             theme.info('Opening browser for authentication...');
-            logger.info('');
-            logger.info(`  ${theme.dim('If browser does not open, visit:')}`);
-            logger.info(`  ${theme.azure(loginUrl)}`);
-            logger.info('');
+            console.log('');
+            console.log(`  ${theme.dim('If browser does not open, visit:')}`);
+            console.log(`  ${theme.azure(loginUrl)}`);
+            console.log('');
 
             // Try to open browser
             try {
@@ -312,7 +310,7 @@ function logout() {
 
 function whoami() {
     theme.heading('Heady™ Authentication Status');
-    logger.info('');
+    console.log('');
 
     const creds = loadCredentials();
 
@@ -324,11 +322,11 @@ function whoami() {
         theme.warn('Not authenticated. Run: heady login');
     }
 
-    logger.info('');
+    console.log('');
     showProviderStatus();
 
     if (creds?.savedAt) {
-        logger.info('');
+        console.log('');
         theme.info(`Credentials file: ${theme.dim(CRED_FILE)}`);
         theme.info(`Last updated: ${theme.dim(creds.savedAt)}`);
     }
@@ -350,7 +348,7 @@ function showProviderStatus() {
         return [` ${p.color}${p.name}${theme.RESET}`, status, source || preview];
     });
 
-    logger.info(theme.table(['Provider', 'Status', 'Source'], rows));
+    console.log(theme.table(['Provider', 'Status', 'Source'], rows));
 }
 
 /**

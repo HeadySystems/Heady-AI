@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview HeadyOS Pilot — In-App Onboarding Checklist API
  * @module pilot/onboarding/checklist
@@ -192,7 +190,7 @@ const emitAuditEvent = (eventType, data) => {
     .update(JSON.stringify({ eventType, timestamp: event.timestamp, data }))
     .digest('hex');
 
-  logger.info(JSON.stringify({ level: 'info', ...event }));
+  console.log(JSON.stringify({ level: 'info', ...event }));
   return event;
 };
 

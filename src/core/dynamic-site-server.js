@@ -1,15 +1,3 @@
-// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
-const HEADY_ALLOWED_ORIGINS = new Set([
-  'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
-  'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
-  'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
-  'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-  'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-  'https://headyfinance.com', 'https://admin.headysystems.com',
-  'https://auth.headysystems.com', 'https://api.headysystems.com',
-]);
-const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
-
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -494,7 +482,7 @@ function renderSite(site, host) {
       <h1><span class="gradient">${site.tagline}</span></h1>
       <p>${site.subtitle}</p>
       <div class="hero-actions">
-        <a class="btn-primary" href="/onboarding" style="text-decoration:none">Get Started</a>
+        <button class="btn-primary" onclick="openAuth()">Get Started</button>
         <button class="btn-secondary" onclick="window.open('https://headyio.com','_blank')">Documentation</button>
       </div>
     </section>
@@ -590,7 +578,7 @@ function renderSite(site, host) {
       if (window.huggingface && window.huggingface.variables) {
         const userId = window.huggingface.variables.SPACE_CREATOR_USER_ID;
         if (userId) {
-          logger.info('[HeadyBuddy] HF User detected:', userId);
+          console.log('[HeadyBuddy] HF User detected:', userId);
           addBuddyMsg('bot', 'I see you\\'re signed into Hugging Face (User: ' + userId.slice(0,8) + '...). I\\'ve linked your identity.');
         }
       }
@@ -601,22 +589,11 @@ function renderSite(site, host) {
     function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); }
 
     function oauthLogin(provider) {
-      // Try real OAuth redirect first, then fall back to demo signup
-      const authUrl = '/api/auth/' + provider + '?redirect=' + encodeURIComponent(window.location.href);
-      fetch(authUrl, { method: 'GET', redirect: 'manual' }).then(r => {
-        if (r.type === 'opaqueredirect' || r.status === 302 || r.status === 301) {
-          window.location.href = authUrl; // Real OAuth flow available
-        } else {
-          // Auth route not configured — fall back to demo signup
-          return fetch('/api/signup', {
-            method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
-          }).then(r2=>r2.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); });
-        }
-      }).catch(()=>{
-        // No auth backend — demo mode
-        showSuccess({user:{displayName:provider+' User',apiKey:'HY-demo-'+provider,tier:'spark'},token:'demo'},provider);
-      });
+      fetch('/api/signup', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
+      }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); })
+      .catch(()=>showSuccess({user:{displayName:provider+' User',apiKey:'HY-demo-'+provider,tier:'spark'},token:'demo'},provider));
     }
 
     function showKeyInput(provider,name,prefix) {
@@ -683,27 +660,13 @@ function renderSite(site, host) {
       if(!msg)return;
       input.value='';
       addBuddyMsg('user',msg);
-      // Try AI gateway first (Liquid Gateway routing), fall back to local /api/chat
-      const payload = JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST,model:'auto'});
-      const headers = {'Content-Type':'application/json'};
-      if(currentSession) headers['Authorization'] = 'Bearer '+currentSession;
-      fetch('/api/ai/chat',{
-        method:'POST', headers, body:payload
-      }).then(r=>{
-        if(!r.ok) throw new Error('AI gateway unavailable');
-        return r.json();
-      }).then(d=>{
-        addBuddyMsg('bot',d.response||d.choices?.[0]?.message?.content||d.error||'Thinking...');
+      fetch('/api/chat',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
+      }).then(r=>r.json()).then(d=>{
+        addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
       }).catch(()=>{
-        // Fallback to local chat endpoint
-        fetch('/api/chat',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
-        }).then(r=>r.json()).then(d=>{
-          addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
-        }).catch(()=>{
-          addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
-        });
+        addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
       });
     }
 
@@ -716,190 +679,13 @@ function renderSite(site, host) {
 </html>`;
 }
 
-// ── Render Onboarding Page ──────────────────────────────────
-function renderOnboarding(site, host) {
-  const oauthBtns = AUTH_PROVIDERS.oauth.map(p =>
-    `<button class="auth-btn" style="--pcolor:${p.color}" onclick="selectProvider('${p.id}','oauth')">
-      <span class="auth-icon">${p.icon}</span><span>${p.name}</span>
-    </button>`).join('');
-  const apikeyBtns = AUTH_PROVIDERS.apikey.map(p =>
-    `<button class="auth-btn" style="--pcolor:${p.color}" onclick="selectProvider('${p.id}','apikey')">
-      <span class="auth-icon">${p.icon}</span><span>${p.name}</span>
-    </button>`).join('');
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Get Started — ${site.brand}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{--bg:#0a0a1a;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08);--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--muted:#555577}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
-    .container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:4rem 1.5rem}
-    nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,26,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-    .nav-brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--text)}
-    .nav-logo{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--brand),var(--accent));font-size:16px;font-weight:900;color:white}
-    .nav-name{font-size:1.1rem;font-weight:700}
-    h1{font-size:2rem;font-weight:900;text-align:center;margin-bottom:.5rem;margin-top:3rem}
-    h1 .gradient{background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    .subtitle{text-align:center;color:var(--dim);margin-bottom:2.5rem}
-    .step{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;transition:all .3s}
-    .step.active{border-color:color-mix(in srgb,var(--brand) 40%,transparent);box-shadow:0 0 30px color-mix(in srgb,var(--brand) 10%,transparent)}
-    .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;cursor:pointer}
-    .step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);font-weight:800;font-size:.9rem;border:2px solid color-mix(in srgb,var(--brand) 25%,transparent);flex-shrink:0}
-    .step-num.done{background:var(--brand);color:white}
-    .step-title{font-weight:700;font-size:1.05rem}
-    .step-body{display:none;padding-top:.5rem}
-    .step.active .step-body{display:block}
-    .auth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
-    .auth-btn{display:flex;align-items:center;gap:.4rem;padding:.5rem .6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.3);color:var(--text);font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s}
-    .auth-btn:hover{border-color:var(--pcolor);background:rgba(0,0,0,0.5);transform:translateY(-1px)}
-    .auth-btn.selected{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 15%,transparent)}
-    .auth-icon{font-size:1rem;flex-shrink:0}
-    .auth-section{font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:.75rem 0 .5rem;display:flex;align-items:center;gap:.5rem}
-    .auth-section::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
-    .provider-count{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:600;margin-left:.5rem}
-    .pref-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .pref-card{padding:1rem;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.2);cursor:pointer;transition:all .2s;text-align:center}
-    .pref-card:hover{border-color:color-mix(in srgb,var(--brand) 40%,transparent)}
-    .pref-card.selected{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 10%,transparent)}
-    .pref-icon{font-size:1.5rem;margin-bottom:.5rem}
-    .pref-label{font-weight:600;font-size:.85rem}
-    .pref-desc{color:var(--dim);font-size:.75rem;margin-top:.25rem}
-    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:white;border:none;padding:.75rem 2rem;border-radius:10px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;width:100%;margin-top:1rem}
-    .btn-primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
-    .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
-    .selected-list{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}
-    .selected-tag{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:.25rem}
-    @media(max-width:600px){.auth-grid{grid-template-columns:repeat(2,1fr)}.pref-grid{grid-template-columns:1fr}}
-  </style>
-</head>
-<body>
-  <div class="bg-grid"></div>
-  <nav>
-    <a class="nav-brand" href="/">
-      <div class="nav-logo">${site.icon}</div>
-      <span class="nav-name">${site.brand}</span>
-    </a>
-  </nav>
-
-  <div class="container">
-    <h1><span class="gradient">Get Started</span></h1>
-    <p class="subtitle">Set up your ${site.brand} experience in 3 steps</p>
-
-    <div class="step active" id="step1">
-      <div class="step-header" onclick="showStep(1)">
-        <div class="step-num" id="step1num">1</div>
-        <div class="step-title">Choose Your Providers</div>
-      </div>
-      <div class="step-body">
-        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">Select which AI providers and authentication methods you want to use.</p>
-        <div class="auth-section">OAuth Sign-In <span class="provider-count">12</span></div>
-        <div class="auth-grid">${oauthBtns}</div>
-        <div class="auth-section">AI API Keys <span class="provider-count">13</span></div>
-        <div class="auth-grid">${apikeyBtns}</div>
-        <div class="selected-list" id="selectedProviders"></div>
-        <button class="btn-primary" id="step1btn" onclick="completeStep(1)" disabled>Continue →</button>
-      </div>
-    </div>
-
-    <div class="step" id="step2">
-      <div class="step-header" onclick="showStep(2)">
-        <div class="step-num" id="step2num">2</div>
-        <div class="step-title">Set Your Preferences</div>
-      </div>
-      <div class="step-body">
-        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">How do you want to use ${site.brand}?</p>
-        <div class="pref-grid">
-          <div class="pref-card" onclick="togglePref(this,'developer')"><div class="pref-icon">💻</div><div class="pref-label">Developer</div><div class="pref-desc">API access, SDKs, code generation</div></div>
-          <div class="pref-card" onclick="togglePref(this,'creative')"><div class="pref-icon">🎨</div><div class="pref-label">Creative</div><div class="pref-desc">Content, music, design</div></div>
-          <div class="pref-card" onclick="togglePref(this,'business')"><div class="pref-icon">📊</div><div class="pref-label">Business</div><div class="pref-desc">Analytics, reports, automation</div></div>
-          <div class="pref-card" onclick="togglePref(this,'research')"><div class="pref-icon">🔬</div><div class="pref-label">Research</div><div class="pref-desc">Deep search, citations, analysis</div></div>
-        </div>
-        <button class="btn-primary" onclick="completeStep(2)">Continue →</button>
-      </div>
-    </div>
-
-    <div class="step" id="step3">
-      <div class="step-header" onclick="showStep(3)">
-        <div class="step-num" id="step3num">3</div>
-        <div class="step-title">Launch Your Dashboard</div>
-      </div>
-      <div class="step-body">
-        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">You're all set! Here's what's ready for you:</p>
-        <div class="pref-grid">
-          <div class="pref-card" style="cursor:default"><div class="pref-icon">🧠</div><div class="pref-label">HeadyBuddy</div><div class="pref-desc">AI chat companion</div></div>
-          <div class="pref-card" style="cursor:default"><div class="pref-icon">🐝</div><div class="pref-label">Bee Swarm</div><div class="pref-desc">Task automation agents</div></div>
-          <div class="pref-card" style="cursor:default"><div class="pref-icon">🔮</div><div class="pref-label">Vector Memory</div><div class="pref-desc">Persistent knowledge</div></div>
-          <div class="pref-card" style="cursor:default"><div class="pref-icon">📊</div><div class="pref-label">Dashboard</div><div class="pref-desc">System overview</div></div>
-        </div>
-        <button class="btn-primary" onclick="launchDashboard()">Launch ${site.brand} →</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const selected = new Set();
-    const prefs = new Set();
-
-    function selectProvider(id, type) {
-      const key = type + ':' + id;
-      const btns = document.querySelectorAll('.auth-btn');
-      btns.forEach(b => {
-        if (b.onclick.toString().includes("'" + id + "'")) b.classList.toggle('selected');
-      });
-      if (selected.has(key)) selected.delete(key); else selected.add(key);
-      document.getElementById('step1btn').disabled = selected.size === 0;
-      renderSelected();
-    }
-
-    function renderSelected() {
-      const el = document.getElementById('selectedProviders');
-      el.innerHTML = Array.from(selected).map(s => {
-        const name = s.split(':')[1];
-        return '<span class="selected-tag">' + name + ' ✓</span>';
-      }).join('');
-    }
-
-    function togglePref(el, pref) {
-      el.classList.toggle('selected');
-      if (prefs.has(pref)) prefs.delete(pref); else prefs.add(pref);
-    }
-
-    function showStep(n) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + n).classList.add('active');
-    }
-
-    function completeStep(n) {
-      document.getElementById('step' + n + 'num').classList.add('done');
-      document.getElementById('step' + n + 'num').textContent = '✓';
-      showStep(n + 1);
-    }
-
-    function launchDashboard() {
-      // Store selections and redirect
-      localStorage.setItem('heady_providers', JSON.stringify(Array.from(selected)));
-      localStorage.setItem('heady_prefs', JSON.stringify(Array.from(prefs)));
-      localStorage.setItem('heady_onboarded', 'true');
-      window.location.href = '/';
-    }
-  </script>
-</body>
-</html>`;
-}
-
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost:' + PORT}`);
   const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
-  res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -1019,16 +805,6 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
-  // ── Onboarding Page ─────────────────────────────────────
-  if (url.pathname === '/onboarding') {
-    res.writeHead(200, {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'no-cache',
-      'X-Heady-Site': site.brand,
-    });
-    res.end(renderOnboarding(site, host));
-    return;
-  }
 
   // ── Serve dynamic page ──────────────────────────────────
   res.writeHead(200, {
@@ -1050,18 +826,21 @@ server.listen(PORT, () => {
   }
 });
 
-// ── Graceful Shutdown (Cloud Run sends SIGTERM) ─────────────
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received — draining connections');
-  server.close(() => {
-    logger.info('Server closed cleanly');
-    process.exit(0);
+// ── Graceful Shutdown (canonical module) ────────────────────
+try {
+  const { GracefulShutdown } = require('../lifecycle/graceful-shutdown');
+  new GracefulShutdown({ server, logger }).register();
+} catch {
+  // Fallback for standalone usage
+  process.on('SIGTERM', () => {
+    logger.info('SIGTERM received — draining connections');
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(1), 10_000);
   });
-  setTimeout(() => process.exit(1), 10_000); // force after 10s
-});
-process.on('SIGINT', () => {
-  logger.info('SIGINT received — shutting down');
-  server.close(() => process.exit(0));
-});
+  process.on('SIGINT', () => {
+    logger.info('SIGINT received — shutting down');
+    server.close(() => process.exit(0));
+  });
+}
 
 module.exports = { SITES, AUTH_PROVIDERS, server, resolveSite };

@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../shared/logger')('rate-limiter-advanced');
 /**
  * Advanced Rate Limiter — Production Implementation
  * @module security-middleware/rate-limiter-advanced

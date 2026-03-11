@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -522,7 +520,7 @@ function createRouter(hv) {
       err.message.includes('mismatch');
 
     const statusCode = isUserError ? 400 : 500;
-    logger.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
+    console.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
 
     return sendError(res, statusCode, err.message, {
       path: req.path,

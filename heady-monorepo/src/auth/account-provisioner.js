@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview HeadyAccountProvisioner — Complete account creation system for
  * the Heady sovereign AI platform (headyme.com).
@@ -349,12 +347,12 @@ export class AccountProvisioner {
     if (apiKeyResult.status === 'fulfilled') {
       apiKeys = apiKeyResult.value;
     } else {
-      logger.error('[AccountProvisioner] API key generation failed:', apiKeyResult.reason);
+      console.error('[AccountProvisioner] API key generation failed:', apiKeyResult.reason);
       // Retry synchronously — API keys are critical
       try {
         apiKeys = await this._generateApiKeyPair(userId);
       } catch (e) {
-        logger.error('[AccountProvisioner] API key retry failed:', e.message);
+        console.error('[AccountProvisioner] API key retry failed:', e.message);
       }
     }
 
@@ -362,7 +360,7 @@ export class AccountProvisioner {
     results.forEach((r, i) => {
       if (r.status === 'rejected' && i !== 2) {
         const tasks = ['vector-namespace', 'email-provisioning', 'api-keys', 'welcome-email'];
-        logger.error(`[AccountProvisioner] ${tasks[i]} failed:`, r.reason?.message);
+        console.error(`[AccountProvisioner] ${tasks[i]} failed:`, r.reason?.message);
       }
     });
 
@@ -415,7 +413,7 @@ export class AccountProvisioner {
       [userId, namespace, this.config.vectorDb?.provider || 'none']
     );
 
-    logger.info(`[AccountProvisioner] Vector namespace "${namespace}" created for user ${userId}`);
+    console.log(`[AccountProvisioner] Vector namespace "${namespace}" created for user ${userId}`);
     return namespace;
   }
 
@@ -500,7 +498,7 @@ export class AccountProvisioner {
       await this._provisionMailcowMailbox(username, headyEmail, userId);
     } else {
       // No email provider configured — store as placeholder
-      logger.warn('[AccountProvisioner] No email provider configured. Email routing skipped.');
+      console.warn('[AccountProvisioner] No email provider configured. Email routing skipped.');
     }
 
     // Store email provisioning record

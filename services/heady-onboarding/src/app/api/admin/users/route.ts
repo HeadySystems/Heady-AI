@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
@@ -38,7 +36,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ users, total: users.length })
 
   } catch (error) {
-    logger.error("Admin users list error:", error)
+    console.error("Admin users list error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

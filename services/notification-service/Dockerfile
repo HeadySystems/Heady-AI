@@ -1,23 +1,29 @@
-FROM node:20-slim AS build
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev && npm cache clean --force
+COPY package*.json tsconfig.json ./
 
-COPY src/ ./src/
+RUN npm ci
 
-FROM gcr.io/distroless/nodejs20-debian12
+COPY src ./src
+
+RUN npm run build && npm prune --production
+
+FROM gcr.io/distroless/nodejs20-nonroot
 
 WORKDIR /app
 
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/src ./src
-COPY --from=build /app/package.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
 
 ENV NODE_ENV=production
-ENV PORT=3381
+ENV LOG_LEVEL=info
 
-EXPOSE 3381
+EXPOSE 3350
 
-CMD ["src/index.js"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["node", "-e", "require('http').get('http://localhost:3350/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+
+CMD ["dist/index.js"]

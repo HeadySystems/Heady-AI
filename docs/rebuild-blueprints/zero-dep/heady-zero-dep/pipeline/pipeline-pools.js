@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file pipeline-pools.js
  * @description Pipeline Resource Pool Management — Hot/Warm/Cold pools.
@@ -343,7 +341,7 @@ export class Pool extends EventEmitter {
  *   permit.release();
  * }
  *
- * pm.on('pool.spill', ({ from, to }) => logger.info('Spill:', from, '->', to));
+ * pm.on('pool.spill', ({ from, to }) => console.log('Spill:', from, '->', to));
  */
 export class PoolManager extends EventEmitter {
   /**

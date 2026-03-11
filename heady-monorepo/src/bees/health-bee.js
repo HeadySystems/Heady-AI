@@ -34,7 +34,7 @@ function getWork(ctx = {}) {
             const html = await resp.text();
             const hasHeadyBrand = html.toLowerCase().includes('heady');
             const hasCanvas = html.includes('canvas') || html.includes('sacred');
-            const hasForbidden = ['localhost', 'NOTE', 'FIXME'].some(f => html.includes(f));
+            const hasForbidden = ['localhost', 'TODO', 'FIXME'].some(f => html.includes(f));
             return {
                 bee: domain, action: `check-${d}`,
                 status: resp.status, latency, healthy: resp.ok && hasHeadyBrand && !hasForbidden,

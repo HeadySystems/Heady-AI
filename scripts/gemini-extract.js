@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady™ Gemini Chat Extraction Pipeline
@@ -63,9 +61,9 @@ const GEMS = [
 // ═══════════════════════════════════════════════════════════
 
 function extractPhase() {
-    logger.info('\n╔═══════════════════════════════════════╗');
-    logger.info('║  STAGE 1: EXTRACT — Chat Inventory     ║');
-    logger.info('╚═══════════════════════════════════════╝\n');
+    console.log('\n╔═══════════════════════════════════════╗');
+    console.log('║  STAGE 1: EXTRACT — Chat Inventory     ║');
+    console.log('╚═══════════════════════════════════════╝\n');
 
     const categories = {};
     const ipChats = [];
@@ -81,11 +79,11 @@ function extractPhase() {
         if (chat.category === 'strategy') stratChats.push(chat);
     }
 
-    logger.info(`  📊 ${PINNED_CHATS.length} pinned chats across ${Object.keys(categories).length} categories`);
-    logger.info(`  🏗️  ${archChats.length} architecture chats`);
-    logger.info(`  📋 ${stratChats.length} strategy chats`);
-    logger.info(`  💡 ${ipChats.length} IP/patent chats`);
-    logger.info(`  💎 ${GEMS.length} custom Gems`);
+    console.log(`  📊 ${PINNED_CHATS.length} pinned chats across ${Object.keys(categories).length} categories`);
+    console.log(`  🏗️  ${archChats.length} architecture chats`);
+    console.log(`  📋 ${stratChats.length} strategy chats`);
+    console.log(`  💡 ${ipChats.length} IP/patent chats`);
+    console.log(`  💎 ${GEMS.length} custom Gems`);
 
     return { categories, ipChats, archChats, stratChats };
 }
@@ -95,9 +93,9 @@ function extractPhase() {
 // ═══════════════════════════════════════════════════════════
 
 function analyzePhase(extracted) {
-    logger.info('\n╔═══════════════════════════════════════╗');
-    logger.info('║  STAGE 2: ANALYZE — Knowledge Vectors  ║');
-    logger.info('╚═══════════════════════════════════════╝\n');
+    console.log('\n╔═══════════════════════════════════════╗');
+    console.log('║  STAGE 2: ANALYZE — Knowledge Vectors  ║');
+    console.log('╚═══════════════════════════════════════╝\n');
 
     // Derive knowledge domains from chat titles
     const knowledgeDomains = {
@@ -153,7 +151,7 @@ function analyzePhase(extracted) {
     };
 
     for (const [domain, data] of Object.entries(knowledgeDomains)) {
-        logger.info(`  🧠 ${domain}: ${data.chats.length} chats, ${data.insights.length} insights`);
+        console.log(`  🧠 ${domain}: ${data.chats.length} chats, ${data.insights.length} insights`);
     }
 
     return knowledgeDomains;
@@ -164,9 +162,9 @@ function analyzePhase(extracted) {
 // ═══════════════════════════════════════════════════════════
 
 function synthesizePhase(knowledgeDomains) {
-    logger.info('\n╔═══════════════════════════════════════╗');
-    logger.info('║  STAGE 3: SYNTHESIZE — Project Files    ║');
-    logger.info('╚═══════════════════════════════════════╝\n');
+    console.log('\n╔═══════════════════════════════════════╗');
+    console.log('║  STAGE 3: SYNTHESIZE — Project Files    ║');
+    console.log('╚═══════════════════════════════════════╝\n');
 
     const files = {};
 
@@ -258,9 +256,9 @@ ${knowledgeDomains.strategy.insights.map(i => `- ${i}`).join('\n')}
 - Technical differentiation
 `;
 
-    logger.info(`  📄 Generated ${Object.keys(files).length} knowledge files`);
+    console.log(`  📄 Generated ${Object.keys(files).length} knowledge files`);
     for (const f of Object.keys(files)) {
-        logger.info(`     → ${f}`);
+        console.log(`     → ${f}`);
     }
 
     return files;
@@ -271,9 +269,9 @@ ${knowledgeDomains.strategy.insights.map(i => `- ${i}`).join('\n')}
 // ═══════════════════════════════════════════════════════════
 
 function projectPhase(files) {
-    logger.info('\n╔═══════════════════════════════════════╗');
-    logger.info('║  STAGE 4: PROJECT — Push to GitHub      ║');
-    logger.info('╚═══════════════════════════════════════╝\n');
+    console.log('\n╔═══════════════════════════════════════╗');
+    console.log('║  STAGE 4: PROJECT — Push to GitHub      ║');
+    console.log('╚═══════════════════════════════════════╝\n');
 
     const fs = require('fs');
     const basePath = path.resolve(__dirname, '..');
@@ -287,7 +285,7 @@ function projectPhase(files) {
         }
 
         fs.writeFileSync(fullPath, content, 'utf-8');
-        logger.info(`  ✅ Wrote ${filePath} (${content.length} bytes)`);
+        console.log(`  ✅ Wrote ${filePath} (${content.length} bytes)`);
     }
 
     // Git add and commit
@@ -296,9 +294,9 @@ function projectPhase(files) {
         execSync('git commit -m "feat: extract Gemini knowledge base — 28 pinned chats → 5 domain files"', {
             cwd: basePath, stdio: 'pipe'
         });
-        logger.info('\n  ✅ Committed to git');
+        console.log('\n  ✅ Committed to git');
     } catch (e) {
-        logger.info(`\n  ⚠️  Git commit: ${e.message.split('\n')[0]}`);
+        console.log(`\n  ⚠️  Git commit: ${e.message.split('\n')[0]}`);
     }
 
     return Object.keys(files);
@@ -309,9 +307,9 @@ function projectPhase(files) {
 // ═══════════════════════════════════════════════════════════
 
 function reportPhase(extracted, knowledgeDomains, files) {
-    logger.info('\n╔═══════════════════════════════════════╗');
-    logger.info('║  STAGE 5: REPORT — Pipeline Complete    ║');
-    logger.info('╚═══════════════════════════════════════╝\n');
+    console.log('\n╔═══════════════════════════════════════╗');
+    console.log('║  STAGE 5: REPORT — Pipeline Complete    ║');
+    console.log('╚═══════════════════════════════════════╝\n');
 
     const report = {
         timestamp: new Date().toISOString(),
@@ -332,15 +330,15 @@ function reportPhase(extracted, knowledgeDomains, files) {
         status: 'SUCCESS',
     };
 
-    logger.info(`  📊 Pipeline: ${report.pipeline}`);
-    logger.info(`  📧 Account: ${report.account}`);
-    logger.info(`  💬 Chats processed: ${report.stats.pinnedChats}`);
-    logger.info(`  🧠 Domains identified: ${report.stats.knowledgeDomains}`);
-    logger.info(`  📄 Files generated: ${report.stats.filesGenerated}`);
-    logger.info(`  ✅ Status: ${report.status}`);
-    logger.info('\n═══════════════════════════════════════');
-    logger.info('  HEADY AUTO-SUCCESS PIPELINE COMPLETE');
-    logger.info('═══════════════════════════════════════\n');
+    console.log(`  📊 Pipeline: ${report.pipeline}`);
+    console.log(`  📧 Account: ${report.account}`);
+    console.log(`  💬 Chats processed: ${report.stats.pinnedChats}`);
+    console.log(`  🧠 Domains identified: ${report.stats.knowledgeDomains}`);
+    console.log(`  📄 Files generated: ${report.stats.filesGenerated}`);
+    console.log(`  ✅ Status: ${report.status}`);
+    console.log('\n═══════════════════════════════════════');
+    console.log('  HEADY AUTO-SUCCESS PIPELINE COMPLETE');
+    console.log('═══════════════════════════════════════\n');
 
     return report;
 }
@@ -350,10 +348,10 @@ function reportPhase(extracted, knowledgeDomains, files) {
 // ═══════════════════════════════════════════════════════════
 
 async function main() {
-    logger.info('═══════════════════════════════════════');
-    logger.info('  HEADY™ AUTO-SUCCESS PIPELINE');
-    logger.info('  Gemini Chat → Knowledge → Project');
-    logger.info('═══════════════════════════════════════');
+    console.log('═══════════════════════════════════════');
+    console.log('  HEADY™ AUTO-SUCCESS PIPELINE');
+    console.log('  Gemini Chat → Knowledge → Project');
+    console.log('═══════════════════════════════════════');
 
     const t0 = Date.now();
 
@@ -365,9 +363,9 @@ async function main() {
     const report = reportPhase(extracted, knowledgeDomains, projected);
 
     const elapsed = Date.now() - t0;
-    logger.info(`  ⏱️  Total pipeline time: ${elapsed}ms`);
+    console.log(`  ⏱️  Total pipeline time: ${elapsed}ms`);
 
     return report;
 }
 
-main().catch(logger.error);
+main().catch(console.error);

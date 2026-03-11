@@ -1,0 +1,539 @@
+{
+  "version": "4.0.0",
+  "environment": "production",
+  "domains": {
+    "headyme.com": {
+      "site": "headyme",
+      "port": 9001,
+      "cloudrunService": "headyme-web",
+      "cloudflareZone": "CF_ZONE_HEADYME"
+    },
+    "headysystems.com": {
+      "site": "headysystems",
+      "port": 9002,
+      "cloudrunService": "headysystems-web",
+      "cloudflareZone": "CF_ZONE_HEADYSYSTEMS"
+    },
+    "headybuddy.org": {
+      "site": "headybuddy",
+      "port": 9003,
+      "cloudrunService": "headybuddy-web",
+      "cloudflareZone": "CF_ZONE_HEADYBUDDY"
+    },
+    "headymcp.com": {
+      "site": "headymcp",
+      "port": 9004,
+      "cloudrunService": "headymcp-web",
+      "cloudflareZone": "CF_ZONE_HEADYMCP"
+    },
+    "headyio.com": {
+      "site": "headyio",
+      "port": 9005,
+      "cloudrunService": "headyio-web",
+      "cloudflareZone": "CF_ZONE_HEADYIO"
+    },
+    "headyconnection.org": {
+      "site": "headyconnection",
+      "port": 9006,
+      "cloudrunService": "headyconnection-web",
+      "cloudflareZone": "CF_ZONE_HEADYCONNECTION"
+    },
+    "headyapi.com": {
+      "site": "headyapi",
+      "port": 9007,
+      "cloudrunService": "headyapi-web",
+      "cloudflareZone": "CF_ZONE_HEADYAPI"
+    },
+    "headyos.com": {
+      "site": "headyos",
+      "port": 9008,
+      "cloudrunService": "headyos-web",
+      "cloudflareZone": "CF_ZONE_HEADYOS"
+    },
+    "headyweb.com": {
+      "site": "headyweb",
+      "port": 9009,
+      "cloudrunService": "headyweb",
+      "cloudflareZone": "CF_ZONE_HEADYWEB"
+    }
+  },
+  "services": {
+    "heady-manager": {
+      "port": 3300,
+      "healthPath": "/health/ready",
+      "role": "core"
+    },
+    "api-gateway": {
+      "port": 4301,
+      "healthPath": "/health/ready",
+      "role": "gateway"
+    },
+    "domain-router": {
+      "port": 4311,
+      "healthPath": "/health/ready",
+      "role": "routing"
+    },
+    "observability-kernel": {
+      "port": 4302,
+      "healthPath": "/health/ready",
+      "role": "observability"
+    },
+    "budget-tracker": {
+      "port": 4303,
+      "healthPath": "/health/ready",
+      "role": "operations"
+    },
+    "heady-memory": {
+      "port": 4304,
+      "healthPath": "/health/ready",
+      "role": "memory"
+    },
+    "heady-health": {
+      "port": 4305,
+      "healthPath": "/health/ready",
+      "role": "monitoring"
+    },
+    "heady-conductor": {
+      "port": 4306,
+      "healthPath": "/health/ready",
+      "role": "orchestration"
+    },
+    "heady-brains": {
+      "port": 4307,
+      "healthPath": "/health/ready",
+      "role": "intelligence"
+    },
+    "heady-soul": {
+      "port": 4308,
+      "healthPath": "/health/ready",
+      "role": "personality"
+    },
+    "heady-cache": {
+      "port": 4309,
+      "healthPath": "/health/ready",
+      "role": "caching"
+    },
+    "heady-infer": {
+      "port": 4310,
+      "healthPath": "/health/ready",
+      "role": "inference"
+    },
+    "heady-embed": {
+      "port": 4312,
+      "healthPath": "/health/ready",
+      "role": "embeddings"
+    },
+    "heady-vector": {
+      "port": 4313,
+      "healthPath": "/health/ready",
+      "role": "vector-search"
+    },
+    "heady-chain": {
+      "port": 4314,
+      "healthPath": "/health/ready",
+      "role": "langchain"
+    },
+    "heady-eval": {
+      "port": 4315,
+      "healthPath": "/health/ready",
+      "role": "evaluation"
+    },
+    "heady-guard": {
+      "port": 4316,
+      "healthPath": "/health/ready",
+      "role": "safety"
+    },
+    "heady-mcp": {
+      "port": 4317,
+      "healthPath": "/health/ready",
+      "role": "mcp-server"
+    },
+    "heady-buddy": {
+      "port": 4318,
+      "healthPath": "/health/ready",
+      "role": "companion"
+    },
+    "heady-bee-factory": {
+      "port": 4319,
+      "healthPath": "/health/ready",
+      "role": "swarm"
+    },
+    "heady-automation": {
+      "port": 4320,
+      "healthPath": "/health/ready",
+      "role": "auto-success"
+    },
+    "heady-governance": {
+      "port": 4321,
+      "healthPath": "/health/ready",
+      "role": "governance"
+    },
+    "heady-security": {
+      "port": 4322,
+      "healthPath": "/health/ready",
+      "role": "security"
+    },
+    "heady-vinci": {
+      "port": 4323,
+      "healthPath": "/health/ready",
+      "role": "creative"
+    },
+    "heady-hive": {
+      "port": 4324,
+      "healthPath": "/health/ready",
+      "role": "swarm-coordination"
+    },
+    "heady-brain": {
+      "port": 4325,
+      "healthPath": "/health/ready",
+      "role": "brain-state"
+    },
+    "heady-onboarding": {
+      "port": 4326,
+      "healthPath": "/health/ready",
+      "role": "onboarding"
+    },
+    "heady-federation": {
+      "port": 4327,
+      "healthPath": "/health/ready",
+      "role": "federation"
+    },
+    "heady-projection": {
+      "port": 4328,
+      "healthPath": "/health/ready",
+      "role": "projection"
+    },
+    "discord-bot": {
+      "port": 4329,
+      "healthPath": "/health/ready",
+      "role": "discord"
+    },
+    "hcfullpipeline-executor": {
+      "port": 4330,
+      "healthPath": "/health/ready",
+      "role": "pipeline"
+    },
+    "analytics-service": {
+      "port": 4331,
+      "healthPath": "/health/ready",
+      "role": "analytics"
+    },
+    "asset-pipeline": {
+      "port": 4332,
+      "healthPath": "/health/ready",
+      "role": "assets"
+    },
+    "auth-session-server": {
+      "port": 4333,
+      "healthPath": "/health/ready",
+      "role": "auth"
+    },
+    "auto-success-engine": {
+      "port": 4334,
+      "healthPath": "/health/ready",
+      "role": "auto-success"
+    },
+    "billing-service": {
+      "port": 4335,
+      "healthPath": "/health/ready",
+      "role": "billing"
+    },
+    "heady-autobiographer": {
+      "port": 4336,
+      "healthPath": "/health/ready",
+      "role": "narrative"
+    },
+    "heady-health": {
+      "port": 4337,
+      "healthPath": "/health/ready",
+      "role": "monitoring"
+    },
+    "heady-maintenance": {
+      "port": 4338,
+      "healthPath": "/health/ready",
+      "role": "maintenance"
+    },
+    "heady-mcp-server": {
+      "port": 4339,
+      "healthPath": "/health/ready",
+      "role": "mcp-bridge"
+    },
+    "heady-memory": {
+      "port": 4340,
+      "healthPath": "/health/ready",
+      "role": "memory"
+    },
+    "heady-orchestration": {
+      "port": 4341,
+      "healthPath": "/health/ready",
+      "role": "orchestration"
+    },
+    "heady-soul": {
+      "port": 4342,
+      "healthPath": "/health/ready",
+      "role": "intelligence"
+    },
+    "heady-web": {
+      "port": 4343,
+      "healthPath": "/health/ready",
+      "role": "web-dashboard"
+    },
+    "heady-onboarding": {
+      "port": 4344,
+      "healthPath": "/health/ready",
+      "role": "onboarding"
+    },
+    "migration-service": {
+      "port": 4345,
+      "healthPath": "/health/ready",
+      "role": "migrations"
+    },
+    "notification-service": {
+      "port": 4346,
+      "healthPath": "/health/ready",
+      "role": "notifications"
+    },
+    "scheduler-service": {
+      "port": 4347,
+      "healthPath": "/health/ready",
+      "role": "scheduling"
+    },
+    "search-service": {
+      "port": 4348,
+      "healthPath": "/health/ready",
+      "role": "search"
+    },
+    "heady-task-browser": {
+      "port": 4349,
+      "healthPath": "/health/ready",
+      "role": "task-browser"
+    },
+    "python-worker": {
+      "port": 5000,
+      "healthPath": "/health/ready",
+      "role": "ml-worker"
+    },
+    "ai-router": {
+      "port": 4350,
+      "healthPath": "/health/ready",
+      "role": "ai-routing"
+    },
+    "cli-service": {
+      "port": 4351,
+      "healthPath": "/health/ready",
+      "role": "cli"
+    },
+    "huggingface-gateway": {
+      "port": 4352,
+      "healthPath": "/health/ready",
+      "role": "huggingface"
+    },
+    "colab-gateway": {
+      "port": 4353,
+      "healthPath": "/health/ready",
+      "role": "colab"
+    },
+    "model-gateway": {
+      "port": 4354,
+      "healthPath": "/health/ready",
+      "role": "model-gateway"
+    },
+    "mcp-server": {
+      "port": 7000,
+      "healthPath": "/health/ready",
+      "role": "mcp-protocol"
+    },
+    "headybuddy-widget": {
+      "port": 3400,
+      "healthPath": "/health/ready",
+      "role": "buddy-widget"
+    },
+    "headybuddy-electron": {
+      "port": 0,
+      "healthPath": "process-alive",
+      "role": "buddy-desktop"
+    },
+    "headybuddy-docker-desktop": {
+      "port": 6080,
+      "healthPath": "/health/ready",
+      "role": "buddy-demo"
+    },
+    "heady-midi": {
+      "port": 4355,
+      "healthPath": "/health/ready",
+      "role": "midi"
+    },
+    "heady-testing": {
+      "port": 4356,
+      "healthPath": "/health/ready",
+      "role": "testing"
+    },
+    "heady-pilot-onboarding": {
+      "port": 4357,
+      "healthPath": "/health/ready",
+      "role": "pilot-onboarding"
+    },
+    "heady-ui": {
+      "port": 4358,
+      "healthPath": "/health/ready",
+      "role": "ui-components"
+    },
+    "silicon-bridge": {
+      "port": 4359,
+      "healthPath": "/health/ready",
+      "role": "hardware"
+    },
+    "secret-gateway": {
+      "port": 4360,
+      "healthPath": "/health/ready",
+      "role": "secrets"
+    },
+    "google-mcp": {
+      "port": 4361,
+      "healthPath": "/health/ready",
+      "role": "google-mcp"
+    },
+    "jules-mcp": {
+      "port": 4362,
+      "healthPath": "/health/ready",
+      "role": "jules-mcp"
+    },
+    "perplexity-mcp": {
+      "port": 4363,
+      "healthPath": "/health/ready",
+      "role": "perplexity-mcp"
+    },
+    "memory-mcp": {
+      "port": 4364,
+      "healthPath": "/health/ready",
+      "role": "memory-mcp"
+    },
+    "prompt-manager": {
+      "port": 4365,
+      "healthPath": "/health/ready",
+      "role": "prompts"
+    }
+  },
+  "workers": {
+    "edge-auth-worker": {
+      "domain": "auth.headysystems.com",
+      "routes": [
+        "*/api/auth/*"
+      ]
+    },
+    "heady-mcp-worker": {
+      "domain": "mcp.headysystems.com",
+      "routes": [
+        "*/mcp/*"
+      ]
+    },
+    "liquid-gateway-worker": {
+      "domain": "gateway.headysystems.com",
+      "routes": [
+        "*/api/*"
+      ]
+    },
+    "heady-buddy-worker": {
+      "domain": "buddy.headysystems.com",
+      "routes": [
+        "*/buddy/*"
+      ]
+    },
+    "edge-composer": {
+      "domain": "compose.headysystems.com",
+      "routes": [
+        "*/compose/*"
+      ]
+    },
+    "worker-ai-gateway": {
+      "domain": "ai.headysystems.com",
+      "routes": [
+        "*/ai/*"
+      ]
+    },
+    "worker-heady-router": {
+      "domain": "router.headysystems.com",
+      "routes": [
+        "*/*"
+      ]
+    },
+    "worker-mcp-telemetry": {
+      "domain": "telemetry.headysystems.com",
+      "routes": [
+        "*/telemetry/*"
+      ]
+    }
+  },
+  "infrastructure": {
+    "postgres": {
+      "port": 5432,
+      "extensions": [
+        "pgvector",
+        "pg_trgm"
+      ],
+      "version": "16"
+    },
+    "redis": {
+      "port": 6379,
+      "maxMemory": "256mb",
+      "version": "7"
+    },
+    "pgbouncer": {
+      "port": 6432
+    },
+    "otel-collector": {
+      "grpcPort": 4317,
+      "httpPort": 4318,
+      "metricsPort": 8889
+    }
+  },
+  "sitePortMap": {
+    "headyme": 9001,
+    "headyme-com": 9002,
+    "headysystems": 9003,
+    "headysystems-com": 9004,
+    "headybuddy": 9005,
+    "headybuddy-org": 9006,
+    "heady-buddy-portal": 9007,
+    "headymcp": 9008,
+    "headymcp-com": 9009,
+    "headyio": 9010,
+    "headyio-com": 9011,
+    "headyconnection": 9012,
+    "headyconnection-org": 9013,
+    "headyapi": 9014,
+    "headyos": 9015,
+    "headyweb": 9016,
+    "headydocs": 9017,
+    "admin-ui": 9018,
+    "1ime1": 9019,
+    "instant": 9020,
+    "heady-atlas": 9021,
+    "heady-builder": 9022,
+    "heady-chrome": 9023,
+    "heady-critique": 9024,
+    "heady-desktop": 9025,
+    "heady-discord": 9026,
+    "heady-discord-connection": 9027,
+    "heady-discord-connector": 9028,
+    "heady-github-integration": 9029,
+    "heady-imagine": 9030,
+    "heady-jetbrains": 9031,
+    "heady-jules": 9032,
+    "heady-kinetics": 9033,
+    "heady-logs": 9034,
+    "heady-maestro": 9035,
+    "heady-metrics": 9036,
+    "heady-mobile": 9037,
+    "heady-montecarlo": 9038,
+    "heady-observer": 9039,
+    "heady-patterns": 9040,
+    "heady-pythia": 9041,
+    "heady-sentinel": 9042,
+    "heady-slack": 9043,
+    "heady-stories": 9044,
+    "heady-traces": 9045,
+    "heady-vinci": 9046,
+    "heady-vscode": 9047
+  }
+}

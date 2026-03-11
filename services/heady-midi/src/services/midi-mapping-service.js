@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Hardware Mapping Service with MIDI Learn — Profile manager
  * for saving/loading/sharing CC-to-parameter mapping profiles. Supports
@@ -192,13 +190,13 @@ export function processCCValue(rawValue, mapping) {
  *
  * // Process incoming CC
  * const result = service.processCC('my-controller', 0, 1, 64);
- * logger.info(result.value); // Curve-mapped value
+ * console.log(result.value); // Curve-mapped value
  */
 export class MidiMappingService extends EventEmitter {
   /**
    * @param {Object} [options]
    * @param {string} [options.storagePath=DEFAULT_STORAGE_PATH] - JSON file path
-   * @param {Function} [options.log=logger.info] - Log function
+   * @param {Function} [options.log=console.log] - Log function
    * @param {boolean} [options.autoSave=true] - Auto-save on changes
    */
   constructor(options = {}) {
@@ -208,7 +206,7 @@ export class MidiMappingService extends EventEmitter {
     this._storagePath = resolve(options.storagePath ?? DEFAULT_STORAGE_PATH);
 
     /** @type {Function} */
-    this._log = options.log ?? logger.info;
+    this._log = options.log ?? console.log;
 
     /** @type {boolean} */
     this._autoSave = options.autoSave ?? true;

@@ -1,38 +1,36 @@
-# ─────────────────────────────────────────────────────────────
-# heady-brain — Production Dockerfile
-# Multi-stage build. Workspace-aware, container-ready, zero 127.0.0.1 references.
-# All runtime config from environment variables (Law #5).
-# ─────────────────────────────────────────────────────────────
+# HEADY_BRAND:BEGIN
+# HeadyBrain - Cognitive core service
+# HEADY_BRAND:END
 
-FROM node:22-alpine AS base
+FROM node:20-alpine AS builder
+
 WORKDIR /app
 
-# Install workspace dependencies for the shared platform and target service.
+# Install dependencies
 COPY package.json ./
-COPY packages/platform/package.json ./packages/platform/
-COPY services/heady-brain/package.json ./services/heady-brain/
-RUN npm install --workspace=packages/platform --workspace=services/heady-brain --omit=dev
+RUN npm install --production=false
 
-# Copy source into the same workspace layout used at runtime.
-FROM base AS build
-COPY packages/platform/src ./packages/platform/src
-COPY services/heady-brain/src ./services/heady-brain/src
+# Copy source and build
+COPY tsconfig.json ./
+COPY src/ ./src/
+RUN npm run build
 
 # Production image
-FROM base AS production
-COPY --from=build /app/packages/platform/src ./packages/platform/src
-COPY --from=build /app/services/heady-brain/src ./services/heady-brain/src
+FROM node:20-alpine
+
+WORKDIR /app
 
 ENV NODE_ENV=production
-ENV SERVICE_NAME=heady-brain
-ENV PORT=3304
+ENV PORT=4325
 
-EXPOSE 3304
-# Prometheus metrics
-EXPOSE 9464
+COPY package.json ./
+RUN npm install --production
 
-HEALTHCHECK --interval=7s --timeout=4s --start-period=30s --retries=3 \
-  CMD wget -qO- http://0.0.0.0:3304/health/live || exit 1
+COPY --from=builder /app/dist ./dist
 
-USER node
-CMD ["node", "services/heady-brain/src/index.js"]
+EXPOSE 4325
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4325/health/ready || exit 1
+
+CMD ["node", "dist/index.js"]

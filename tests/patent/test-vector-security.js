@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -37,11 +35,11 @@ let failed = 0;
 function test(name, fn) {
     try {
         fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
         failed++;
     }
 }
@@ -64,7 +62,7 @@ function unitVec(dim, idx) {
 // PHI Constants
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== PHI Constants ===');
+console.log('\n=== PHI Constants ===');
 
 test('PHI = 1.6180339887', () => {
     assert.strictEqual(PHI, 1.6180339887);
@@ -82,7 +80,7 @@ test('PHI_CUBED ≈ 4.236', () => {
 // Claim 1: Threat Pattern Registry + Outlier + Injection Detection
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 1: Threat Pattern Registry ===');
+console.log('\n=== Claim 1: Threat Pattern Registry ===');
 
 test('Claim 1(a): register threat pattern stores embedding vector', () => {
     const registry = new ThreatPatternRegistry();
@@ -169,7 +167,7 @@ test('Claim 1(d): InjectionDetector returns flagged=false for low-frequency vect
 // Claim 2: Poisoning Detection
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 2: Poisoning Detection ===');
+console.log('\n=== Claim 2: Poisoning Detection ===');
 
 test('Claim 2: baseline capture records zone memberships', () => {
     const detector = new PoisoningDetector();
@@ -216,7 +214,7 @@ test('Claim 2: no baseline returns empty result', () => {
 // Claim 3: φ²-Derived Outlier Threshold
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 3: φ²-Derived Outlier Threshold ===');
+console.log('\n=== Claim 3: φ²-Derived Outlier Threshold ===');
 
 test('Claim 3: OutlierDetector default stdMultiplier = PHI_SQUARED', () => {
     const detector = new OutlierDetector();
@@ -236,7 +234,7 @@ test('Claim 3: PHI_SQUARED ≈ 2.618 matches φ² property (φ+1=φ²)', () => {
 // Claim 4: Anti-Sprawl Detection
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 4: Anti-Sprawl Detection ===');
+console.log('\n=== Claim 4: Anti-Sprawl Detection ===');
 
 test('Claim 4: sprawl alert when zone density exceeds φ² × baseline', () => {
     const engine = new AntiSprawlEngine();
@@ -277,7 +275,7 @@ test('Claim 4: no baseline returns inactive result', () => {
 // Claim 5: Pre-Deployment Gate
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 5: Pre-Deployment Gate ===');
+console.log('\n=== Claim 5: Pre-Deployment Gate ===');
 
 test('Claim 5: clean deployment is allowed', () => {
     const gate = new PreDeployGate();
@@ -323,7 +321,7 @@ test('Claim 5: run log records each execution', () => {
 // Claim 6: Threat Pattern Registry — Novel Attack Detection
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 6: Novel Attack Pattern Registration ===');
+console.log('\n=== Claim 6: Novel Attack Pattern Registration ===');
 
 test('Claim 6: new threat pattern can be registered at runtime', () => {
     const registry = new ThreatPatternRegistry();
@@ -367,7 +365,7 @@ test('Claim 6: removing pattern stops detection', () => {
 // Claim 7: Full Vector-Native Security System
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 7: Full VectorNativeSecuritySystem ===');
+console.log('\n=== Claim 7: Full VectorNativeSecuritySystem ===');
 
 test('Claim 7: system instantiates all 6 components', () => {
     const sys = new VectorNativeSecuritySystem();
@@ -416,8 +414,8 @@ test('Claim 7(f): pre-deploy gate is accessible on system', () => {
 // SUMMARY
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info(`\n─────────────────────────────────────────`);
-logger.info(`HS-062 Vector Security: ${passed} passed, ${failed} failed`);
-logger.info(`─────────────────────────────────────────`);
+console.log(`\n─────────────────────────────────────────`);
+console.log(`HS-062 Vector Security: ${passed} passed, ${failed} failed`);
+console.log(`─────────────────────────────────────────`);
 
 if (failed > 0) process.exit(1);

@@ -41,7 +41,7 @@ function loadMTLSConfig(opts = {}) {
 
     if (!hasCert || !hasKey) {
         logger.warn?.('[mTLS] Certificates not found — running in non-mTLS mode') ||
-            logger.warn('[mTLS] Certificates not found');
+            console.warn('[mTLS] Certificates not found');
         return null;
     }
 
@@ -61,7 +61,7 @@ function loadMTLSConfig(opts = {}) {
     };
 
     logger.info?.('[mTLS] Configuration loaded — TLS 1.3 with mutual verification') ||
-        logger.info('[mTLS] Configuration loaded');
+        console.log('[mTLS] Configuration loaded');
 
     return config;
 }

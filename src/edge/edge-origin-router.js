@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * edge-origin-router.js
  * Heady™ Latent OS — Edge ↔ Origin Smart Router
@@ -252,7 +250,7 @@ export class EdgeOriginRouter {
         this._counters.origin++;
       }
     } catch (primaryErr) {
-      logger.warn(`[EdgeOriginRouter] primary route (${decision.primary}) failed:`, primaryErr.message);
+      console.warn(`[EdgeOriginRouter] primary route (${decision.primary}) failed:`, primaryErr.message);
 
       if (decision.fallback) {
         fallbackUsed = true;

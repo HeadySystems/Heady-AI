@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -90,7 +88,7 @@ const handlePullRequest = async (payload) => {
     diffUrl: pull_request.diff_url,
   };
 
-  logger.info(`[GitHub] PR #${prInfo.number} ${action}: ${prInfo.title}`);
+  console.log(`[GitHub] PR #${prInfo.number} ${action}: ${prInfo.title}`);
 
   // Submit code review task to Heady™ Conductor
   const task = await heady.conductor.submitTask({
@@ -151,7 +149,7 @@ const handlePush = async (payload) => {
     removedFiles: commits.flatMap(c => c.removed || []),
   };
 
-  logger.info(`[GitHub] Push to ${pushInfo.branch}: ${pushInfo.commitsCount} commits by ${pushInfo.pusher}`);
+  console.log(`[GitHub] Push to ${pushInfo.branch}: ${pushInfo.commitsCount} commits by ${pushInfo.pusher}`);
 
   // Run security scan on push
   const task = await heady.conductor.submitTask({
@@ -195,7 +193,7 @@ const handleIssue = async (payload) => {
     url: issue.html_url,
   };
 
-  logger.info(`[GitHub] Issue #${issueInfo.number} opened: ${issueInfo.title}`);
+  console.log(`[GitHub] Issue #${issueInfo.number} opened: ${issueInfo.title}`);
 
   // AI triage: classify, suggest labels, estimate severity
   const response = await heady.brain.chat([
@@ -249,11 +247,11 @@ app.post('/webhooks/github', async (req, res) => {
   // Verify signature
   const rawBody = JSON.stringify(req.body);
   if (!verifySignature(rawBody, signature)) {
-    logger.warn('[GitHub] Invalid webhook signature — rejected');
+    console.warn('[GitHub] Invalid webhook signature — rejected');
     return res.status(401).json({ error: 'Invalid signature' });
   }
 
-  logger.info(`[GitHub] Webhook received: ${event} (delivery: ${deliveryId})`);
+  console.log(`[GitHub] Webhook received: ${event} (delivery: ${deliveryId})`);
 
   try {
     let result = null;
@@ -269,7 +267,7 @@ app.post('/webhooks/github', async (req, res) => {
         result = await handleIssue(req.body);
         break;
       default:
-        logger.info(`[GitHub] Unhandled event: ${event}`);
+        console.log(`[GitHub] Unhandled event: ${event}`);
     }
 
     res.json({
@@ -281,7 +279,7 @@ app.post('/webhooks/github', async (req, res) => {
     });
 
   } catch (err) {
-    logger.error('[GitHub] Webhook error:', err);
+    console.error('[GitHub] Webhook error:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -291,8 +289,8 @@ app.get('/health', (req, res) => res.json({ status: 'healthy', service: 'heady-g
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  logger.info(`[GitHub] Heady GitHub webhook handler listening on port ${PORT}`);
-  logger.info(`[GitHub] Webhook URL: http://localhost:${PORT}/webhooks/github`);
+  console.log(`[GitHub] Heady GitHub webhook handler listening on port ${PORT}`);
+  console.log(`[GitHub] Webhook URL: http://localhost:${PORT}/webhooks/github`);
 });
 
 module.exports = { app, handlePullRequest, handlePush, handleIssue };

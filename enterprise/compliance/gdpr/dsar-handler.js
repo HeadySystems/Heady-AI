@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -544,7 +542,7 @@ const scheduleDeadlineReminder = async (requestId, email, deadline, notifier) =>
   // In production, push to a job queue (BullMQ/Redis)
   const delay = Math.max(0, reminderAt.getTime() - Date.now());
   setTimeout(async () => {
-    await notifier.sendDeadlineReminder({ requestId, email, deadline }).catch(logger.error);
+    await notifier.sendDeadlineReminder({ requestId, email, deadline }).catch(console.error);
   }, delay);
 };
 

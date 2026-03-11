@@ -1,445 +1,145 @@
-# Heady™ Platform — Complete System Reference
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: docs/heady-notebooklm-source.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
+# Heady Systems — Comprehensive Project Notebook (NotebookLM Source)
+**Version:** 3.0.0 | **Updated:** February 6, 2026 | **Owner:** Eric H. | **Status:** Live Production
 
-**Version**: 3.2.0 Orion Patch  
-**Updated**: 2026-03-10  
-**Founder**: Eric Haywood (eric-head / headyme)
-**Organization**: HeadyMe (GitHub: HeadyMe)  
-**Cloud**: Google Cloud Run (gen-lang-client-0920560496, us-central1)  
-**Edge**: Cloudflare Workers + DNS proxy (11 zones)  
-**Repository**: ~36,740 files across services, workers, scripts, docs, infra, and sacred-projections  
+## Mission
+Heady Systems builds an intelligent, parallel, dynamically distributed, self-aware, self-optimizing, and secure execution environment for AI workloads using Sacred Geometry design principles. Hybrid nonprofit/C-Corp for wealth redistribution and global wellbeing. The Sacred Geometry architecture is patented.
 
----
+## Core Values
+Organic Systems (natural growth), Breathing Interfaces (responsive Sacred Geometry aesthetics), Determinism (same inputs = same outputs), Self-Correction (checkpoints as upgrade moments), Non-Optimization Assumption (always seeking improvement), Speed as Priority (latency = defect), Live Production Mindset (deploy, run, improve continuously).
 
-## 1. Platform Overview
+## Repositories
+Primary: github.com/HeadySystems/Heady. Mirror: github.com/HeadyMe/Heady. Connection: github.com/HeadySystems/HeadyConnection. Sandbox: github.com/HeadySystems/sandbox.
 
-Heady™ is a sovereign AI platform built on Sacred Geometry principles (φ-ratio scaling, Fibonacci sequences, Continuous Semantic Logic). It operates as a Liquid Latent OS — a dynamic, self-healing, multi-agent system that routes AI workloads across providers (OpenAI, Anthropic, Google, Groq, Perplexity) with intelligent failover, caching, and cost optimization.
-
-### Core Philosophy
-
-- **Sovereign AI**: Users own their data, keys, and compute choices (BYOK)
-- **Sacred Geometry**: All parameters, thresholds, and scaling use φ (1.618) and Fibonacci
-- **Continuous Semantic Logic (CSL)**: Vector operations as logical gates — cosine AND, superposition OR, orthogonal NOT
-- **Liquid Architecture**: Services, agents, and routing adapt dynamically based on load, cost, and quality signals
-- **60+ provisional patents** covering CSL gates, geometric AI, and sovereign compute patterns
-
----
-
-## 2. Domain Architecture
-
-### Active Public Domains (12)
-
-All domains serve branded sites via a single Cloud Run service (`headyme-site`) with host-based routing through Cloudflare Workers (`liquid-gateway-worker`).
-
-| Domain | Brand | Tagline | Focus |
-|--------|-------|---------|-------|
-| headyme.com | HeadyMe | Your Sovereign AI | Primary platform / identity hub |
-| headysystems.com | HeadySystems | Enterprise AI Architecture | Enterprise infrastructure |
-| headyio.com | HeadyIO | Developer Platform | Developer APIs and tools |
-| headyapi.com | HeadyAPI | Gateway Intelligence | API gateway and routing |
-| headymcp.com | HeadyMCP | Tool Protocol | MCP server / tool protocol |
-| headyos.com | HeadyOS | Liquid Operating System | Latent OS runtime |
-| headyweb.com | HeadyWeb | Web Intelligence | Web-based AI interfaces |
-| heady-ai.com | HeadyAI | Artificial Intelligence | AI capabilities hub |
-| headybot.com | HeadyBot | Your AI Companion | Conversational agent |
-| headyfinance.com | HeadyFinance | Sovereign Finance | Trading / FinOps |
-| headylens.com | HeadyLens | Sovereign Sight | Vision AI / OCR / Design |
-| headyconnection.org | HeadyConnection | Community Platform | Nonprofit / community (501c3) |
-
-### Domain DNS Pattern
-
-- A record: `192.0.2.1` (Cloudflare proxy)
-- AAAA record: `100::` (Cloudflare proxy)
-- Worker route: `domain.com/*` → `liquid-gateway-worker`
-- Host header forwarding: `X-Forwarded-Host` → Cloud Run `dynamic-site-server.js`
+## Environments
+Local Dev (localhost:3300), Cloud HeadyMe (heady-manager-headyme.onrender.com), Cloud HeadySystems (heady-manager-headysystems.onrender.com), Cloud HeadyConnection (heady-manager-headyconnection.onrender.com), Hybrid Local+Cloud.
 
 ---
 
-## 3. Service Architecture
+## Architecture
+User Input (any channel) flows through Heady Buddy (cross-device launcher) to HeadyLans (orchestrator), invoking Heady Services through HCFullPipeline v3.0.0 (9-stage execution engine). Integrates Monte Carlo plan selection, pattern recognition, self-critique, AI Nodes (JULES, OBSERVER, BUILDER, ATLAS, PYTHIA), and circuit breakers. Results feed into monitoring and feedback loops.
 
-### Cloud Run Services
+## Tech Stack
+API Gateway: Node.js + Express + MCP Protocol (heady-manager.js, port 3300). Workers: Python 3.12+. Frontend: React + Vite + TailwindCSS. Pipeline: YAML configs + JS runtime. Database: PostgreSQL (Render). Deployment: Render.com Blueprint. Monte Carlo: UCB1 plan scheduler (src/hc_monte_carlo.js). Pattern Engine: Continuous recognition (src/hc_pattern_engine.js). Self-Critique: Bottleneck diagnostics (src/hc_self_critique.js). Task Scheduler: Priority queues (src/hc_task_scheduler.js). Resource Manager: CPU/RAM/GPU (src/hc_resource_manager.js). Story Driver: Narrative generation (src/hc_story_driver.js).
 
-- **headyme-site**: Dynamic site server (Node.js) — renders all 12 branded sites
-  - Host-based routing via `resolveSite(host)` function
-  - Documentation routes: `/docs`, `/api-docs`, `/mcp-docs`
-  - Auth providers: Google, GitHub, Anthropic, OpenAI, Groq, Perplexity, Hugging Face
-  - Health endpoint: `/api/health`
+## Core Components (HeadyRegistry v3.0.0)
+HeadyManager (API gateway, critical), HeadyConductor (task routing, critical), HCSupervisor (agent fan-out, critical), HCBrain (meta-controller, critical), HCCheckpoint (drift detection, critical), HCReadiness (health/SLO, critical), HCHealth (node checks, high), HeadyMaid (file scanning, high), HeadyLens (monitoring, high), StoryDriver (narrative, high), HeadyFrontend (Sacred Geometry UI, high), HeadyBuddy (cross-device launcher, high), MonteCarloPlScheduler (UCB1 optimizer, high), PatternRecognitionEngine (pattern detection, high), SelfCritiqueEngine (self-critique + pricing, high), HeadyAcademy (AI nodes, medium).
 
-### Backend Services
-
-| Service | Purpose |
-|---------|---------|
-| api-gateway | Central API routing, structured pino logging |
-| auth-session-server | Authentication sessions, cookie management |
-| notification-service | Webhook and notification delivery |
-| heady-onboarding | User onboarding, Firebase Auth integration |
-| hcfullpipeline-executor | Pipeline task execution engine |
-| heady-admin | Admin dashboard and management |
-| heady-buddy | AI companion / conversational agent |
-| heady-manager | Service orchestration with AutoContext |
-
-### Cloudflare Workers (16)
-
-| Worker | Purpose |
-|--------|---------|
-| liquid-gateway-worker | Main traffic routing for all domains |
-| api-gateway | Edge API routing |
-| auth-service | Edge authentication |
-| edge-auth-worker | Edge authorization |
-| edge-composer | Edge content composition |
-| edge-proxy | Edge reverse proxy |
-| gateway-worker | Gateway routing |
-| heady-buddy-worker | AI companion edge logic |
-| heady-mcp-worker | MCP protocol handler |
-| mcp-transport | MCP transport layer (SSE/WebSocket) |
-| secret-service | Secrets management |
-| user-secret-service | User secrets vault |
-| service-worker | Generic service worker |
-| heartbeat.js | Health monitoring |
+## AI Nodes
+JULES (The Hyper-Surgeon): goose tool, optimization triggers, code quality/security. OBSERVER (The Natural Observer): observer_daemon, monitoring, workspace analysis. BUILDER (The Constructor): hydrator, new_project, build optimization. ATLAS (The Auto-Archivist): auto_doc, documentation, knowledge base. PYTHIA (The Oracle): HuggingFace_Tool, predict/ask_oracle, LLM inference.
 
 ---
 
-## 4. Source Code Modules
+## HCFullPipeline v3.0.0 (9 Stages)
 
-### Core (`src/`)
+### Stage 0: Channel Entry (Heady Buddy)
+Multi-channel gateway. Resolves identity, syncs cross-device context, routes to pipeline branch. Channels: IDE extension, web chat, mobile app, API/MCP, email, voice, messaging. Launch Modes: Admin+IDE (full cockpit) and IDE Only (quiet integration). Cross-device sync of preferences, projects, workspace, theme, role.
 
-| Module | Purpose |
-|--------|---------|
-| heady_intelligence_verifier.js | AI output quality validation |
-| hc_autobuild.js | Automated build orchestration |
-| heady_story_driver.js | Story-driven AI generation |
-| heady_maid.js | Cleanup and maintenance automation |
-| hc_task_scheduler.js | Task scheduling with phi-scaled intervals |
-| recon.js | Codebase reconnaissance and scanning |
-| hc_billing.js | Billing and usage metering |
-| hc_cloudflare.js | Cloudflare API integration |
-| hc_integration_fabric.js | Service integration mesh |
-| hc_store_driver.js | Data store abstraction |
+### Stage 1: Ingest
+Raw data from all sources: news feeds, repo changes, external APIs, health metrics, channel events, connection health, public domain patterns.
 
-### Services (`src/services/`)
+### Stage 2: Plan (Monte Carlo Powered)
+Task graph with UCB1 plan selection for fastest viable strategy. 6 candidates per task, adaptive quality scoring, public domain pattern inspiration.
 
-- scanner-mcp-bridge.js — MCP tool interface for codebase scanner
-- scheduler/scheduler-service.js — Job scheduling
-- analytics/analytics-service.js — Usage analytics
-- notification/notification-service.js — Notification delivery
-- auth/auth-session-server.js — Auth session management
+### Stage 3: Execute Major Phase
+Fan out to agents via Supervisor (direct routing, no proxy, max 6 parallel). Records latency to MC. Pattern engine observes completions/failures.
 
-### Agents (`src/agents/`)
+### Stage 4: Recover
+Saga compensation, circuit breakers. On retry MC picks different strategy. Escalates unrecoverable failures.
 
-- claude-code-agent.js — Claude coding agent integration
-- pipeline-handlers.js — Pipeline stage handlers
+### Stage 5: Self-Critique
+Post-execution self-awareness. Records critiques, identifies weaknesses, bottleneck diagnostics, connection health checks, proposes improvements. Categories: hidden bottlenecks, fuzzy goals, bad sequencing, communication drag, under/over-utilization, process creep, cultural blockers.
 
-### Routes (`src/routes/`)
+### Stage 6: Optimize
+Applies pattern improvements, mines public domain best practices, adjusts MC weights, invalidates caches, adjusts concurrency, updates channel optimizations. Inspiration from Siri/Alexa/Copilot, GitHub Copilot/Cursor/Windsurf, LangGraph/CrewAI, Grafana/Datadog.
 
-- auth-routes.js, claude-routes.js, imagination-routes.js
-- notification-routes.js, swarm-routes.js, analytics-routes.js
-- vm-token-routes.js
+### Stage 7: Finalize
+Persists results, updates registries, syncs docs, computes readiness, records improvements, sends checkpoint email, logs config hash.
 
----
+### Stage 8: Monitor and Feedback
+Feeds timing to MC and patterns. Publishes metrics to Admin UI, IDE, Buddy, API. Checks seamlessness (shared identity, shared context, consistent behavior, no re-entry). Proposes micro-upgrades.
 
-## 5. Frontend Components
+### Global Rules
+Deterministic seed. Max 8 concurrent tasks, 3 retries (500/2000/8000ms backoff). $50/day budget. 120/min rate limit. MC, self-critique, patterns, public domain mining all enabled.
 
-### UI Components (`frontend/src/components/`)
+### Stop Rules
+Error rate >=15% enters recovery. Readiness <=60 enters recovery. Critical alarm pauses and escalates. Data integrity failure halts. Critical bottleneck pauses and escalates.
 
-| Component | Purpose |
-|-----------|---------|
-| Terminal.js | In-browser terminal emulator |
-| FileTree.js | File browser with tree navigation |
-| SettingsModal.js | User settings and preferences |
-
-### Frontend Utilities (`frontend/src/utils/`)
-
-- auth.js — Client-side authentication helpers, BroadcastChannel sync
+### Checkpoint Protocol
+Validates run state, compares 11 config hashes, reevaluates plan/health, checks concept alignment, applies patterns, syncs registry/docs, evaluates self-critique, checks MC drift, verifies channel health.
 
 ---
 
-## 6. HCFullPipeline — Master Pipeline
+## Monte Carlo Plan Scheduler
+Generates candidate plans using 6 strategies: fast_serial, fast_parallel, balanced, thorough, cached_fast, probe_then_commit. Selects via UCB1 (exploration constant 1.4). Speed priority modes: off (0.7 speed weight), on (0.8), max (0.9). Adaptive quality blends 60% historical + 40% base. Drift detection at 1.5x target. Convergence at CV < 0.05 over 20 samples. Persists to .heady_cache/mc_samples.json. Simulates every 60s.
 
-**Version**: 3.1.0  
-**Total Tasks**: 70 (TB-001 through TB-070)  
-**Stages**: ingest → plan → execute → optimize → self-critique → deploy  
-**Config**: `configs/hcfullpipeline.yaml`
-
-### Global Configuration
-
-- Max concurrent tasks: 8
-- Max retries: 3 (backoff: 500, 2000, 8000ms)
-- Daily cost budget: $50
-- Rate limit: 120 req/min
-- Monte Carlo plan selection: enabled
-- Self-critique loop: enabled
-- Pattern engine: enabled
-
-### Critical Priority Tasks
-
-| ID | Task |
-|----|------|
-| TB-054 | Wire Firebase Admin SDK for server-side token verification |
-| TB-057 | Implement session storage backend with httpOnly cookies |
-
-### Major Priority Tasks
-
-| ID | Task |
-|----|------|
-| TB-055 | Structured logging migration (50+ service files) |
-| TB-058 | Implement CSL engine core (AND/OR/NOT/GATE/IMPLY) |
-| TB-059 | Implement bee lifecycle, work-stealing, backpressure |
-| TB-060 | Add OWASP guards, rate limits, Cloud Run min-instances |
-| TB-068 | Complete OAuth token exchange for Google and GitHub |
-| TB-069 | Eliminate CORS wildcard Access-Control-Allow-Origin: '*' |
-
-### Minor Priority Tasks
-
-| ID | Task |
-|----|------|
-| TB-056 | Remove duplicate cors-policy file |
-| TB-061 | Create wrangler.toml for Cloudflare Workers CI/CD |
-| TB-062 | Wire pytest/vitest test suite into package.json |
-| TB-063 | Integrate HeadySystems v13 multi-site architecture |
-| TB-064 | Wire scanner-mcp-bridge into MCP server |
-| TB-065 | Deploy notification-service to Cloud Run |
-| TB-066 | Integrate intelligence verifier into pipeline |
-| TB-067 | Wire domain connectivity tests into CI |
-| TB-070 | Map Colab Pro+ memberships as latent space operators |
+Critical fix: fast strategies were previously filtered out because quality scored 60 (below 70 threshold). Adaptive quality scoring solved this by blending historical success into quality, not penalizing no-validation strategies.
 
 ---
 
-## 7. AI Provider Integration
-
-### Supported Providers
-
-| Provider | Models | Use Case |
-|----------|--------|----------|
-| OpenAI | gpt-5.4-xhigh-fast | Primary code generation, chat |
-| Anthropic | claude-opus-4.6-thinking | Deep reasoning, analysis |
-| Google | gemini-3.1-pro-preview, gemini-3-flash-preview | Fast inference, multimodal |
-| Groq | llama-3.3-70b-versatile | Ultra-low latency |
-| Perplexity | sonar-pro, sonar-deep-research | Web search, citations |
-| Hugging Face | Various | Embeddings, specialized models |
-
-### Routing Strategy
-
-- **fastest-wins**: Race providers, return first response
-- **race_and_failover**: Race top 2, failover to next on failure
-- **cost-optimized**: Route to cheapest provider meeting quality threshold
-- **CSL-gated**: Use cosine similarity scoring to select best provider per task
+## Pattern Recognition Engine
+Categories: Performance, Reliability, Usage, Success. Lifecycle: Detected, Evolving, Converged, Degrading. Stagnation = bug. Analysis cycle every 30s. Detects error bursts and correlated slowdowns. Creates improvement tasks on degradation. MC drift feeds in. Pipeline timing feeds in. Improvements feed into self-critique.
 
 ---
 
-## 8. Security Architecture
-
-### Authentication
-
-- Firebase Auth (client-side, server verification TODO)
-- OAuth: Google, GitHub (launch routes + signed flow cookies)
-- API Keys: OpenAI, Anthropic, Groq, Perplexity, Hugging Face (BYOK)
-- Session: httpOnly cookies (backend implementation in progress)
-
-### Edge Security
-
-- Cloudflare WAF + DDoS protection on all 12 domains
-- Workers-based request filtering
-- CORS: Migrating from wildcard `*` to explicit domain whitelist
-
-### Infrastructure
-
-- Cloud Run with containerized services
-- Docker Compose for local development
-- Envoy proxy for service mesh routing
-- Post-quantum cryptography (PQC) research in progress
+## Self-Critique Engine
+Core loop: Answer, Critique, Refine, Learn. Auto-records critique after every pipeline run. Bottleneck diagnostics from latency/error/utilization data. Connection health monitoring across 7 channels with per-channel targets (IDE 200ms, web 500ms, mobile 300ms, API 100ms, email 30min, voice 500ms, messaging 1000ms). Meta-analysis every 5 turns aggregates weaknesses and measures improvement effectiveness.
 
 ---
 
-## 9. Infrastructure
-
-### Google Cloud
-
-- **Project**: gen-lang-client-0920560496
-- **Region**: us-central1
-- **Services**: Cloud Run, Cloud Build, Artifact Registry
-- **Firebase**: Auth, Hosting, Firestore (planned)
-
-### Cloudflare
-
-- **Zones**: 12 active domains
-- **Workers**: 16 deployed workers
-- **DNS**: Proxied A/AAAA records for all domains
-- **Nameservers**: Cloudflare-managed (e.g., sunny.ns.cloudflare.com, vick.ns.cloudflare.com)
-
-### Git Remotes
-
-| Remote | Repository |
-|--------|-----------|
-| heady-testing | HeadyMe/Heady-Testing |
-| staging | HeadyMe/Heady-Staging |
-| production | HeadyMe/heady-production |
+## Heady Buddy
+Always-available companion. Thin shell around HeadyServices/HeadyLans/HCFullPipeline. Install once per device, single sign-in. Platforms: Desktop (Electron, system tray), Mobile (PWA/native), Browser (extension/PWA). Launch modes: Admin+IDE (full cockpit) and IDE Only (quiet). Cross-device sync of identity, preferences, projects, workspace. Channel routing through HeadyLans. Services: HeadyStrategy, HeadyCorrections, HeadyPrioritizer, HeadyImpact, HeadyFocusCoach, MC, Patterns, Self-Critique.
 
 ---
 
-## 10. Agent Skills (60+)
-
-The Heady ecosystem includes 60+ agent skills defined as structured instruction sets:
-
-### Core Skills
-
-- heady-deep-scan — Project-wide context mapping
-- heady-memory-ops — 3D vector memory operations
-- heady-code-generation — Multi-model code gen
-- heady-deployment — Deploy, monitor, scale services
-- heady-research — Web research with citations
-- heady-multi-model — Cross-provider AI routing
-- heady-security-audit — Vulnerability scanning
-
-### Architecture Skills
-
-- heady-liquid-gateway — Dynamic routing with provider racing
-- heady-edge-ai — Ultra-low latency inference on Cloudflare
-- heady-mcp-streaming-interface — MCP-compatible tool interface
-- heady-gateway-routing — Multi-provider AI gateway
-- heady-ide-control-plane — IDE as latent OS control plane
-
-### Memory & Knowledge
-
-- heady-companion-memory — Persistent long-term memory
-- heady-memory-knowledge-os — Knowledge layer architecture
-- heady-graph-rag-memory — Graph RAG for multi-hop reasoning
-- heady-hybrid-vector-search — BM25 + dense vector search
-- heady-embedding-router — Multi-provider embedding routing
-
-### Operations
-
-- heady-bee-swarm-ops — Worker lifecycle, 30+ bee types
-- heady-incident-ops — Incident response and governance
-- heady-reliability-orchestrator — Self-healing services
-- heady-self-healing-lifecycle — Failure detection + recovery
-- heady-drift-detection — Output drift monitoring
-
-### Security
-
-- heady-pqc-security — Post-quantum cryptography
-- heady-mcp-gateway-zero-trust — Zero-trust tool execution
-- heady-middleware-armor — Security headers, CORS, resilience
-
-### Specialized
-
-- heady-csl-engine — Continuous Semantic Logic implementation
-- heady-phi-math-foundation — Golden ratio scaling for all params
-- heady-battle-arena — Competitive AI evaluation
-- heady-trading-intelligence — Trading signals + risk models
-- heady-voice-relay — Speech-to-text, text-to-speech
-- heady-midi-creative — MIDI music + creative AI
-- heady-monetization-platform — Stripe billing, feature gates
+## Connection Integrity (7 Channels)
+IDE Extension: critical priority, 200ms target, always connected. Web Chat: high, 500ms, session-based. Mobile App: high, 300ms, push notifications. API/MCP: critical, 100ms, always available. Email: medium, 30min response, async. Voice: medium, 500ms, real-time. Messaging: medium, 1000ms, async with notifications. Smart gateway auto-routes. All channels share same service backends.
 
 ---
 
-## 11. Documentation Inventory
-
-### Architecture & Design (docs/)
-
-- ARCHITECTURE.md — System architecture overview
-- HEADY_CONTEXT.md — Full system context (58KB)
-- INFRASTRUCTURE_SETUP.md — Infrastructure setup guide
-- SECURITY_MODEL.md — Security architecture (23KB)
-- IDE_INTEGRATION.md — IDE integration protocol
-- IMAGINATION_ENGINE.md — Imagination engine design
-- HeadyAI-IDE-Fusion-Plan.md — IDE fusion architecture (34KB)
-- HEADY_AUTOIDE.md — Auto IDE design (52KB)
-
-### Operations
-
-- HCFP_INTEGRATION_GUIDE.md — Pipeline integration guide
-- HCFP_AUTO_DEPLOYMENT.md — Auto deployment guide
-- SYSTEM_STATUS_OVERVIEW.md — System status dashboard
-- heady-services-manual.md — Services operations manual (44KB)
-- SERVICE_DEBUG_GUIDE.md — Debug and troubleshooting
-- ERROR_REPORTING_RULES.md — Error handling standards (21KB)
-
-### Reference
-
-- heady-notebooklm-source.md — This document
-- skills-summary.md — All 60+ skills cataloged (42KB)
-- Pattern-Library.md — Design pattern library (17KB)
-- URL_DOMAIN_STYLE_GUIDE.md — Domain standards (15KB)
-- HEADY_NAMING_STANDARDS.md — Naming conventions (14KB)
-- PATENT_MAP.md — Patent portfolio map
-
-### Guides
-
-- ONBOARDING.md — New user onboarding
-- HeadyVM-Setup-Guide.md — VM setup instructions (17KB)
-- final-deployment-report.md — Deployment history (20KB)
-- Heady-Commands-Guide.md — CLI commands reference
-
-### ADRs (Architecture Decision Records)
-
-- 001-architecture-overview.md
-- 001-why-50-services.md
-- 0003-liquid-gateway.md
+## Extension Pricing
+Free ($0): 3 services, 50 actions/day, community support. Pro ($12/mo): All services, 500 actions/day, email support, basic analytics. Team ($35/seat/mo): Unlimited, priority support, shared workspaces, advanced analytics. Enterprise (custom): Dedicated infra, SLAs, custom integrations, on-premises. Fair access: Students free, nonprofits 75% off, PPP pricing, sponsored seats. Payments via Stripe.
 
 ---
 
-## 12. Testing & Validation
-
-### Test Files
-
-- tests/integration/domain-connectivity.test.js — Validates all 12 domains
-- tests/test-db-connection.js — Database connectivity check
-- training/hello-headystack.js — Stack training examples
-
-### Validation Scripts
-
-- scripts/validate-branding.js — Brand consistency checks
-- scripts/health-check-all.mjs — Multi-service health check
-- scripts/smoke-test.mjs — Post-deploy smoke tests
-- scripts/domain-connectivity-test.js — Domain resolution tests
-- scripts/phi-compliance-check.js — φ-ratio compliance validation
+## Operational Directives
+Live Production: Deploy, run automatically, continuously improve through HCFullPipeline. Seamlessness: One coherent multi-channel product; shared identity, context, and behavior across all channels. Optimal Resources: Minimize waste, maximize learning per interaction. Joint Problem-Solving: Collaborative stance, explicit assumptions, small reversible experiments. Continuous Improvement: Every interaction fuels refinement; micro-refactors are runtime behavior.
 
 ---
 
-## 13. Key Metrics & Status
-
-| Metric | Value |
-|--------|-------|
-| Total files | ~36,740 |
-| Active domains | 12 |
-| Cloud Run services | 1 (multi-site) |
-| Cloudflare Workers | 16 |
-| Pipeline tasks | 70 (TB-001–TB-070) |
-| Agent skills | 60+ |
-| Documentation files | 60+ |
-| Scripts | 250+ |
-| Provisional patents | 60+ |
-| AI providers | 6 (OpenAI, Anthropic, Google, Groq, Perplexity, HuggingFace) |
-| Git remotes | 3 (testing, staging, production) |
+## API Endpoints (Key)
+Core: GET /api/health, GET /api/pulse, GET /api/registry, GET/POST /api/layer. Pipeline: POST /api/pipeline/run, GET /api/pipeline/state, GET /api/pipeline/history, GET /api/pipeline/config. MC: POST /api/monte-carlo/plan, POST /api/monte-carlo/result, GET /api/monte-carlo/metrics, GET /api/monte-carlo/drift, POST /api/monte-carlo/simulate, GET/POST /api/monte-carlo/speed-mode. Patterns: POST /api/patterns/observe, GET /api/patterns/summary, GET /api/patterns/bottlenecks. Self-Critique: GET /api/self/status, GET /api/self/knowledge, POST /api/self/critique, GET /api/self/critiques, POST /api/self/improvement, GET /api/self/improvements, POST /api/self/diagnose, POST /api/self/connection-health, POST /api/self/meta-analysis. Pricing: GET /api/pricing/tiers, GET /api/pricing/fair-access. Buddy: POST /api/buddy/chat.
 
 ---
 
-## 14. Sacred Geometry Constants
-
-All system parameters derive from the golden ratio (φ ≈ 1.618033988749895):
-
-| Constant | Value | Usage |
-|----------|-------|-------|
-| φ (phi) | 1.618033988749895 | Base scaling factor |
-| 1/φ | 0.618033988749895 | Inverse scaling |
-| φ² | 2.618033988749895 | Squared scaling |
-| Fibonacci sequence | 1,1,2,3,5,8,13,21,34,55,89,144... | Cache sizes, batch sizes, queue depths |
-| Sacred seed | heady-sacred-geometry-seed | Deterministic randomness |
-| Bee capacity | 6765 (Fibonacci) | Max bee swarm size |
-| Pipeline stages | 21 (Fibonacci) | Pipeline stage count |
-| Auto-success cycle | 29034ms (φ-derived) | Base automation interval |
+## Decision Log (Chronological)
+2025-01: HCFullPipeline v2.0 with checkpoint protocol. Direct routing for internal calls. HeadyRegistry as central catalog. 2025-07: Checkpoint Protocol for all-file sync. Colab notebooks in Git. Doc ownership tracker. 2026-02: Monte Carlo Plan Scheduler (UCB1, drift, speed-first). Pattern Recognition Engine. Speed and Patterns Protocol. System Self-Awareness. Connection Integrity (7 channels). Extension Pricing (4 tiers + fair access). Self-Critique Engine. HCFullPipeline v3.0.0 (9 stages). Heady Buddy Config. Public Domain Inspiration Mining. Pipeline-MC-Patterns-Critique Binding. Seamlessness Directive. Live Production Mandate. Optimal Resource Use Directive.
 
 ---
 
-## 15. Brand Identity
+## Roadmap
+Completed: v1.0 Sacred Geometry UI, v2.0 Pipeline+Agents+Supervisor, v3.0 Modular packages+Brain+Readiness, Checkpoint Protocol, MC Scheduler, Pattern Engine, Self-Critique, Connection Integrity, Pricing, Speed Priority Modes, HCFullPipeline v3.0.0, Heady Buddy Config, Public Domain Mining, Pipeline Feedback Loops.
 
-- **Primary brand**: Heady™
-- **Founder**: Eric Haywood
-- **Tagline**: "Organic Systems · Breathing Interfaces"
-- **Version format**: v3.x.x · [Patch Name]
-- **Current version**: v3.2.0 · Orion Patch
-- **Brand header**: ASCII art banner with Sacred Geometry branding
-- **Color palette**: Dark theme with gradient accents per domain
+In Progress: Arena Mode (competitive pattern selection), HeadyBrowser, Notion live sync, CI notebook validation, Heady Buddy implementation (Electron/PWA/extension).
+
+Planned: Auto-generated API docs, Config-to-doc generators, Story Driver UI, Multi-cloud orchestration, Voice/messaging channels, Real-time monitoring dashboard.
 
 ---
 
-*This document is the canonical source for Google NotebookLM. Upload this file as a source to create an AI-powered notebook for the entire Heady™ platform.*
+## File Structure (Key)
+Root: heady-manager.js, heady-registry.json, package.json, render.yaml, CLAUDE.md, .windsurfrules. Source (src/): hc_pipeline.js, hc_monte_carlo.js, hc_pattern_engine.js, hc_self_critique.js, hc_task_scheduler.js, hc_resource_manager.js, hc_story_driver.js. Configs (configs/): hcfullpipeline.yaml, heady-buddy.yaml, monte-carlo-scheduler.yaml, speed-and-patterns-protocol.yaml, system-self-awareness.yaml, connection-integrity.yaml, extension-pricing.yaml, +15 more. Docs (docs/): CHECKPOINT_PROTOCOL.md, DOC_OWNERS.yaml, notion-project-notebook.md, heady-notebooklm-source.md, heady-services-manual.md. Scripts: Heady-Sync.ps1, checkpoint-sync.ps1, heady-layer.ps1. Workflows: monte-carlo-optimization.md, heady-full-system.md, hc-full-pipeline.md.

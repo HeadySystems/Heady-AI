@@ -1,18 +1,22 @@
-# heady-federation — Multi-stage production build
-# Heady™ Latent OS — Sacred Geometry v4.0
-# © 2026 HeadySystems Inc. — Eric Haywood, Founder
-
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS base
 WORKDIR /app
 COPY package.json ./
-RUN npm ci --omit=dev --ignore-scripts 2>/dev/null || npm install --omit=dev --ignore-scripts
-COPY . .
+COPY packages/platform/package.json ./packages/platform/
+RUN npm install --workspace=packages/platform --omit=dev
 
-FROM gcr.io/distroless/nodejs20-debian12:nonroot
-WORKDIR /app
-COPY --from=builder /app /app
+FROM base AS production
+COPY packages/platform/src ./packages/platform/src
+COPY services/heady-federation/src ./src
+
 ENV NODE_ENV=production
-ENV PORT=3321
-EXPOSE 3321
-USER nonroot
-CMD ["index.js"]
+ENV SERVICE_NAME=heady-federation
+ENV PORT=3344
+
+EXPOSE 3344
+EXPOSE 9464
+
+HEALTHCHECK --interval=7s --timeout=4s --start-period=30s --retries=3 \
+  CMD wget -qO- http://localhost:3344/health/live || exit 1
+
+USER node
+CMD ["node", "src/index.js"]

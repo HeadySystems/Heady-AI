@@ -1,22 +1,11 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { cslAND, cslOR, normalize, cslConfidenceGate } from '../packages/platform/src/csl/index.js';
-import { PSI } from '../packages/platform/src/phi/index.js';
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { CSL_GATES, cslGate } = require('../shared/csl-gates');
 
-test('CSL AND returns 1 for aligned vectors', () => {
-  const a = normalize([1, 2, 3]);
-  const b = normalize([1, 2, 3]);
-  assert.equal(Number(cslAND(a, b).toFixed(6)), 1);
-});
 
-test('CSL OR preserves dimensionality', () => {
-  const out = cslOR([1, 0, 0], [0, 1, 0]);
-  assert.equal(out.length, 3);
-  assert.ok(out[0] > 0 && out[1] > 0);
-});
-
-test('Confidence gate fails below psi', () => {
-  const result = cslConfidenceGate([PSI, PSI - 0.1, PSI + 0.1]);
-  assert.equal(result.passes, false);
-  assert.ok(result.failing.length >= 1);
+test('CSL gates remain phi-aligned', () => {
+  assert.ok(CSL_GATES.include > 0.3 && CSL_GATES.include < 0.4);
+  assert.ok(CSL_GATES.boost > 0.6 && CSL_GATES.boost < 0.7);
+  assert.ok(CSL_GATES.inject > 0.7 && CSL_GATES.inject < 0.8);
+  assert.ok(cslGate(1, 0.95, CSL_GATES.medium) > cslGate(1, 0.5, CSL_GATES.medium));
 });

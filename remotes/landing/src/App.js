@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * HeadyWeb — Central Portal — All Heady™ Apps
  * Micro-frontend for Heady™Web Universal Shell
@@ -104,7 +102,7 @@ function createApp(container, props = {}) {
   container.appendChild(root);
 
   // Announce mount
-  logger.info('[MFE:landing] Mounted v' + APP_CONFIG.version);
+  console.log('[MFE:landing] Mounted v' + APP_CONFIG.version);
   return { unmount: () => { root.remove(); } };
 }
 

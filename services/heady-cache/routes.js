@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -19,6 +17,7 @@ const logger = pino();
  */
 
 const express = require('express');
+const logger = require('../../shared/logger')('heady-cache');
 
 /**
  * @param {import('./index').HeadyCache} cache
@@ -42,7 +41,7 @@ function createRouter(cache) {
   }
 
   function handleError(res, err) {
-    logger.error('[heady-cache] route error:', err);
+    logger.error({ err, msg: 'route error' });
     res.status(500).json({ error: err.message || 'Internal error' });
   }
 

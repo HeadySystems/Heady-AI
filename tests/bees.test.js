@@ -1,20 +1,18 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc..
  * Tests for Heady™Bee templates — validates the bee ecosystem after optimization.
  */
 
 // Suppress console output during tests
-const originalLog = logger.info;
-const originalWarn = logger.warn;
+const originalLog = console.log;
+const originalWarn = console.warn;
 beforeAll(() => {
-    logger.info = jest.fn();
-    logger.warn = jest.fn();
+    console.log = jest.fn();
+    console.warn = jest.fn();
 });
 afterAll(() => {
-    logger.info = originalLog;
-    logger.warn = originalWarn;
+    console.log = originalLog;
+    console.warn = originalWarn;
 });
 
 describe('bee-factory', () => {

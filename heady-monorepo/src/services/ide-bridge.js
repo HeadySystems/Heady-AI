@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -143,9 +141,9 @@ function evaluateProposal(proposalId) {
     const hasCredentials = credentialPatterns.some(p => p.test(record.proposedDiff));
     checks.push({ name: 'credential_scan', passed: !hasCredentials, detail: hasCredentials ? 'POTENTIAL CREDENTIALS DETECTED' : 'Clean' });
 
-    // Check 4: No logger.info in production code (unless SDK CLI)
+    // Check 4: No console.log in production code (unless SDK CLI)
     const hasConsoleLog = /console\.log/.test(record.proposedDiff) && !record.targetFile.includes('quickstart');
-    checks.push({ name: 'logging_standard', passed: !hasConsoleLog, detail: hasConsoleLog ? 'Use structured-logger instead of logger.info' : 'OK' });
+    checks.push({ name: 'logging_standard', passed: !hasConsoleLog, detail: hasConsoleLog ? 'Use structured-logger instead of console.log' : 'OK' });
 
     // Aggregate result
     const allPassed = checks.every(c => c.passed);
@@ -501,7 +499,7 @@ function _applyMutationStrategy(diff, strategy, failedChecks) {
             break;
 
         case 'INJECT_OPTIMIZATION':
-            // Replace logger.info with structured logger
+            // Replace console.log with structured logger
             mutated = mutated.replace(/console\.log\(/g, "logger.info(");
             mutated = mutated.replace(/console\.error\(/g, "logger.error(");
             mutated = mutated.replace(/console\.warn\(/g, "logger.warn(");

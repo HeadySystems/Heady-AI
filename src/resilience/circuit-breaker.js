@@ -1,317 +1,232 @@
 /**
- * @fileoverview Heady™ Circuit Breaker — Phi-Harmonic Failure Isolation
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * Heady™ Circuit Breaker — src/resilience/circuit-breaker.js
+ * ═══════════════════════════════════════════════════════════════════════════════
  *
- * Implements a three-state circuit breaker with phi-scaled thresholds:
+ * Three-state circuit breaker (CLOSED → OPEN → HALF_OPEN) with phi-scaled
+ * thresholds, Google SRE adaptive throttling, and CSL-gated state transitions.
  *
- *   CLOSED    → normal operation, failures tracked
- *   OPEN      → failing fast, no calls through, phi-backoff recovery window
- *   HALF_OPEN → probing with fib(4)=3 test requests before restoring
- *
- * All numeric constants derive from phi-math:
- *   Failure threshold:    fib(5) = 5
- *   Recovery probe count: fib(4) = 3
- *   Health tracking:      sliding window of fib(8) = 21 measurements
- *   Backoff base:         PHI_TIMING.PHI_3 = 4,236ms
- *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © HeadySystems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
 'use strict';
 
 const {
-  fib,
-  PHI,
-  PSI,
-  phiBackoffWithJitter,
-  PHI_TIMING,
-  CSL_THRESHOLDS,
-  ALERTS,
-} = require('../../shared/phi-math.js');
+  PHI, PSI, fib, phiBackoff,
+  CSL_THRESHOLDS, ALERT_THRESHOLDS,
+  PSI_POWERS,
+} = require('../../shared/phi-math');
 
-// ─── Circuit breaker states ───────────────────────────────────────────────────
+const STATES = Object.freeze({ CLOSED: 'CLOSED', OPEN: 'OPEN', HALF_OPEN: 'HALF_OPEN' });
 
-const STATE = Object.freeze({
-  CLOSED:    'CLOSED',
-  OPEN:      'OPEN',
-  HALF_OPEN: 'HALF_OPEN',
-});
-
-// ─── Phi-derived thresholds ───────────────────────────────────────────────────
-
-/** Consecutive failures before tripping: fib(5) = 5 */
-const FAILURE_THRESHOLD  = fib(5);
-
-/** Successful probes needed to close from HALF_OPEN: fib(4) = 3 */
-const RECOVERY_PROBES    = fib(4);
-
-/** Health tracking window size: fib(8) = 21 measurements */
-const HEALTH_WINDOW_SIZE = fib(8);
-
-/** Base recovery timeout: PHI_TIMING.PHI_3 ≈ 4,236ms */
-const RECOVERY_BASE_MS   = PHI_TIMING.PHI_3;
-
-/** Max recovery timeout: PHI_TIMING.PHI_7 ≈ 29,034ms */
-const RECOVERY_MAX_MS    = PHI_TIMING.PHI_7;
-
-/**
- * Health percentage that triggers HALF_OPEN → CLOSED transition.
- * Uses CSL HIGH threshold ≈ 0.882.
- */
-const HEALTH_RESTORE_THRESHOLD = CSL_THRESHOLDS.HIGH;
-
-/**
- * Health percentage below which HALF_OPEN → OPEN reverts.
- * Uses CSL LOW threshold ≈ 0.691.
- */
-const HEALTH_REOPEN_THRESHOLD = CSL_THRESHOLDS.LOW;
-
-// ─── CircuitBreaker class ────────────────────────────────────────────────────
-
-/**
- * @class CircuitBreaker
- *
- * @example
- * const cb = new CircuitBreaker('embedding-api');
- * const result = await cb.execute(() => fetchEmbedding(text));
- */
 class CircuitBreaker {
   /**
-   * @param {string} name - identifier for logging
-   * @param {object} [opts]
-   * @param {number} [opts.failureThreshold]  - trips circuit (default fib(5)=5)
-   * @param {number} [opts.recoveryProbes]    - probes before close (default fib(4)=3)
-   * @param {number} [opts.recoveryBaseMs]    - base backoff ms (default PHI_TIMING.PHI_3)
-   * @param {number} [opts.recoveryMaxMs]     - max backoff ms (default PHI_TIMING.PHI_7)
-   * @param {Function} [opts.onStateChange]   - callback(newState, prevState, reason)
+   * @param {object} opts
+   * @param {string} opts.name - Service/resource name
+   * @param {number} [opts.failureThreshold] - Failures before opening (default fib(5)=5)
+   * @param {number} [opts.successThreshold] - Successes to close from half-open (default fib(4)=3)
+   * @param {number} [opts.resetTimeoutMs] - Base timeout before half-open probe (default 5000)
+   * @param {number} [opts.volumeThreshold] - Min requests in window before tripping (default fib(7)=13)
+   * @param {number} [opts.errorRateThreshold] - Error rate to trip (default PSI ≈ 0.618)
+   * @param {number} [opts.halfOpenMax] - Max concurrent in half-open (default fib(4)=3)
+   * @param {Function} [opts.onStateChange] - Callback(name, from, to)
    */
-  constructor(name, opts = {}) {
-    this.name             = name;
-    this.failureThreshold = opts.failureThreshold || FAILURE_THRESHOLD;
-    this.recoveryProbes   = opts.recoveryProbes   || RECOVERY_PROBES;
-    this.recoveryBaseMs   = opts.recoveryBaseMs   || RECOVERY_BASE_MS;
-    this.recoveryMaxMs    = opts.recoveryMaxMs    || RECOVERY_MAX_MS;
-    this.onStateChange    = opts.onStateChange    || null;
+  constructor(opts) {
+    this.name = opts.name;
+    this.failureThreshold = opts.failureThreshold || fib(5);     // 5
+    this.successThreshold = opts.successThreshold || fib(4);     // 3
+    this.resetTimeoutMs   = opts.resetTimeoutMs || 5000;
+    this.volumeThreshold  = opts.volumeThreshold || fib(7);      // 13
+    this.errorRateThreshold = opts.errorRateThreshold || PSI;    // ≈ 0.618
+    this.halfOpenMax      = opts.halfOpenMax || fib(4);          // 3
+    this.onStateChange    = opts.onStateChange || (() => {});
 
     // State
-    this._state           = STATE.CLOSED;
-    this._failureCount    = 0;
-    this._probeCount      = 0;
-    this._probeSuccesses  = 0;
-    this._recoveryAttempt = 0;
-    this._openedAt        = null;
-    this._nextProbeAt     = null;
+    this.state = STATES.CLOSED;
+    this.failures = 0;
+    this.successes = 0;
+    this.consecutiveFailures = 0;
+    this.halfOpenActive = 0;
+    this.openAttempt = 0;       // For phi-backoff on repeated opens
+    this.lastFailureAt = 0;
+    this.lastOpenAt = 0;
+    this.nextAttemptAt = 0;
 
-    // Health tracking: circular buffer of booleans (true=success, false=failure)
-    this._healthWindow  = new Array(HEALTH_WINDOW_SIZE).fill(true);
-    this._healthIdx     = 0;
-    this._totalCalls    = 0;
-    this._totalFailures = 0;
-  }
-
-  // ─── State accessors ───────────────────────────────────────────────────────
-
-  get state() { return this._state; }
-  get isOpen() { return this._state === STATE.OPEN; }
-  get isClosed() { return this._state === STATE.CLOSED; }
-  get isHalfOpen() { return this._state === STATE.HALF_OPEN; }
-
-  /**
-   * Health percentage over the sliding window (0–1).
-   * Uses HEALTH_WINDOW_SIZE = fib(8) = 21 most recent calls.
-   * @returns {number}
-   */
-  get healthPercent() {
-    const successes = this._healthWindow.filter(Boolean).length;
-    return successes / HEALTH_WINDOW_SIZE;
-  }
-
-  // ─── State transitions ─────────────────────────────────────────────────────
-
-  /**
-   * @private
-   * Transition to a new state with optional reason string.
-   */
-  _transition(newState, reason = '') {
-    const prev = this._state;
-    if (prev === newState) return;
-    this._state = newState;
-    if (this.onStateChange) {
-      try { this.onStateChange(newState, prev, reason); }
-      catch (_) { /* swallow callback errors */ }
-    }
+    // Sliding window for SRE adaptive throttling
+    this.windowMs = fib(9) * 1000;   // 34-second window
+    this.requests = [];               // { timestamp, success }
+    this.bucketCount = fib(6);        // 8 buckets
   }
 
   /**
-   * @private
-   * Open the circuit and schedule the first probe window.
-   */
-  _open() {
-    this._openedAt        = Date.now();
-    this._probeCount      = 0;
-    this._probeSuccesses  = 0;
-
-    // Phi-backoff delay for recovery attempt
-    const delay = phiBackoffWithJitter(this._recoveryAttempt, this.recoveryBaseMs, this.recoveryMaxMs);
-    this._nextProbeAt = this._openedAt + delay;
-
-    this._transition(STATE.OPEN, `failures=${this._failureCount}, delay=${delay}ms`);
-  }
-
-  /**
-   * @private
-   * Record outcome into the sliding health window.
-   */
-  _recordHealth(success) {
-    this._healthWindow[this._healthIdx % HEALTH_WINDOW_SIZE] = success;
-    this._healthIdx++;
-    this._totalCalls++;
-    if (!success) this._totalFailures++;
-  }
-
-  // ─── Core API ──────────────────────────────────────────────────────────────
-
-  /**
-   * Execute an async function through the circuit breaker.
-   * Throws CircuitOpenError when the circuit is OPEN and not ready to probe.
-   * @template T
-   * @param {function(): Promise<T>} fn - async function to guard
-   * @returns {Promise<T>}
-   * @throws {CircuitOpenError} when circuit is open
+   * Execute a function through the circuit breaker.
+   * @param {Function} fn - Async function to execute
+   * @returns {Promise<*>}
+   * @throws {Error} If circuit is open
    */
   async execute(fn) {
-    // OPEN state: check if probe window has elapsed
-    if (this._state === STATE.OPEN) {
-      if (Date.now() < this._nextProbeAt) {
-        throw new CircuitOpenError(this.name, this._nextProbeAt - Date.now());
+    this._pruneWindow();
+
+    if (this.state === STATES.OPEN) {
+      if (Date.now() < this.nextAttemptAt) {
+        throw new CircuitBreakerError(this.name, 'Circuit OPEN — request rejected');
       }
-      // Advance to HALF_OPEN for probing
-      this._transition(STATE.HALF_OPEN, 'probe window elapsed');
+      this._transition(STATES.HALF_OPEN);
     }
 
-    // Execute the function
+    if (this.state === STATES.HALF_OPEN) {
+      if (this.halfOpenActive >= this.halfOpenMax) {
+        throw new CircuitBreakerError(this.name, 'Circuit HALF_OPEN — probe limit reached');
+      }
+      this.halfOpenActive++;
+    }
+
+    // SRE adaptive throttling (even in CLOSED state)
+    if (this._shouldThrottle()) {
+      throw new CircuitBreakerError(this.name, 'Adaptive throttle — too many recent failures');
+    }
+
     try {
       const result = await fn();
       this._onSuccess();
       return result;
     } catch (err) {
-      this._onFailure(err);
+      this._onFailure();
       throw err;
     }
   }
 
-  /**
-   * @private
-   * Handle a successful call.
-   */
   _onSuccess() {
-    this._recordHealth(true);
-    this._failureCount = 0;
+    this.requests.push({ timestamp: Date.now(), success: true });
+    this.consecutiveFailures = 0;
 
-    if (this._state === STATE.HALF_OPEN) {
-      this._probeSuccesses++;
-      this._probeCount++;
-
-      if (this._probeSuccesses >= this.recoveryProbes ||
-          this.healthPercent >= HEALTH_RESTORE_THRESHOLD) {
-        // Fully recovered
-        this._recoveryAttempt = 0;
-        this._transition(STATE.CLOSED, `probes=${this._probeSuccesses}, health=${this.healthPercent.toFixed(3)}`);
+    if (this.state === STATES.HALF_OPEN) {
+      this.halfOpenActive--;
+      this.successes++;
+      if (this.successes >= this.successThreshold) {
+        this.openAttempt = 0; // Reset backoff on full recovery
+        this._transition(STATES.CLOSED);
       }
     }
   }
 
-  /**
-   * @private
-   * Handle a failed call.
-   * @param {Error} err
-   */
-  _onFailure(err) {
-    this._recordHealth(false);
-    this._failureCount++;
+  _onFailure() {
+    const now = Date.now();
+    this.requests.push({ timestamp: now, success: false });
+    this.failures++;
+    this.consecutiveFailures++;
+    this.lastFailureAt = now;
 
-    if (this._state === STATE.HALF_OPEN) {
-      this._probeCount++;
-      // Failed probe — reopen with incremented recovery attempt
-      this._recoveryAttempt++;
-      this._open();
+    if (this.state === STATES.HALF_OPEN) {
+      this.halfOpenActive--;
+      this._transition(STATES.OPEN);
       return;
     }
 
-    if (this._state === STATE.CLOSED &&
-        this._failureCount >= this.failureThreshold) {
-      this._recoveryAttempt++;
-      this._open();
+    if (this.state === STATES.CLOSED) {
+      const stats = this._windowStats();
+      const shouldTrip =
+        this.consecutiveFailures >= this.failureThreshold ||
+        (stats.total >= this.volumeThreshold && stats.errorRate >= this.errorRateThreshold);
+
+      if (shouldTrip) this._transition(STATES.OPEN);
     }
   }
 
-  /**
-   * Force-reset circuit to CLOSED state (for testing / manual override).
-   */
-  reset() {
-    this._state           = STATE.CLOSED;
-    this._failureCount    = 0;
-    this._probeCount      = 0;
-    this._probeSuccesses  = 0;
-    this._recoveryAttempt = 0;
-    this._openedAt        = null;
-    this._nextProbeAt     = null;
-    this._healthWindow.fill(true);
-    this._healthIdx = 0;
+  _transition(newState) {
+    const oldState = this.state;
+    if (oldState === newState) return;
+
+    this.state = newState;
+
+    switch (newState) {
+      case STATES.OPEN:
+        this.lastOpenAt = Date.now();
+        this.nextAttemptAt = Date.now() + phiBackoff(this.openAttempt, this.resetTimeoutMs);
+        this.openAttempt++;
+        this.successes = 0;
+        this.halfOpenActive = 0;
+        break;
+
+      case STATES.HALF_OPEN:
+        this.successes = 0;
+        this.halfOpenActive = 0;
+        break;
+
+      case STATES.CLOSED:
+        this.failures = 0;
+        this.consecutiveFailures = 0;
+        this.successes = 0;
+        this.halfOpenActive = 0;
+        break;
+    }
+
+    this.onStateChange(this.name, oldState, newState);
   }
 
   /**
-   * Snapshot of current circuit breaker status.
+   * Google SRE adaptive throttling.
+   * Rejection probability: max(0, (requests - K × accepts) / (requests + 1))
+   * K = 1/PSI ≈ 1.618 (φ multiplier for accepted requests)
+   */
+  _shouldThrottle() {
+    if (this.state !== STATES.CLOSED) return false;
+    const stats = this._windowStats();
+    if (stats.total < this.volumeThreshold) return false;
+
+    const K = PHI; // φ ≈ 1.618 multiplier
+    const rejectProb = Math.max(0, (stats.total - K * stats.successes) / (stats.total + 1));
+    return Math.random() < rejectProb;
+  }
+
+  _pruneWindow() {
+    const cutoff = Date.now() - this.windowMs;
+    this.requests = this.requests.filter(r => r.timestamp > cutoff);
+  }
+
+  _windowStats() {
+    const successes = this.requests.filter(r => r.success).length;
+    const total = this.requests.length;
+    return {
+      total,
+      successes,
+      failures: total - successes,
+      errorRate: total > 0 ? (total - successes) / total : 0,
+    };
+  }
+
+  /**
+   * Get current circuit breaker status.
    * @returns {object}
    */
   status() {
+    const stats = this._windowStats();
     return {
-      name:             this.name,
-      state:            this._state,
-      healthPercent:    this.healthPercent,
-      failureCount:     this._failureCount,
-      failureThreshold: this.failureThreshold,
-      probeCount:       this._probeCount,
-      probeSuccesses:   this._probeSuccesses,
-      recoveryAttempt:  this._recoveryAttempt,
-      nextProbeIn:      this._nextProbeAt
-        ? Math.max(0, this._nextProbeAt - Date.now())
-        : null,
-      totalCalls:       this._totalCalls,
-      totalFailures:    this._totalFailures,
+      name: this.name,
+      state: this.state,
+      consecutiveFailures: this.consecutiveFailures,
+      windowStats: stats,
+      openAttempt: this.openAttempt,
+      nextAttemptAt: this.state === STATES.OPEN ? new Date(this.nextAttemptAt).toISOString() : null,
     };
   }
-}
 
-// ─── Custom error ─────────────────────────────────────────────────────────────
-
-/**
- * Thrown when a call is made against an OPEN circuit breaker.
- */
-class CircuitOpenError extends Error {
   /**
-   * @param {string} name         - circuit breaker name
-   * @param {number} retryAfterMs - milliseconds until next probe
+   * Force-reset the circuit breaker to CLOSED.
    */
-  constructor(name, retryAfterMs) {
-    super(`Circuit "${name}" is OPEN — retry after ${Math.ceil(retryAfterMs)}ms`);
-    this.name         = 'CircuitOpenError';
-    this.circuit      = name;
-    this.retryAfterMs = retryAfterMs;
+  reset() {
+    this._transition(STATES.CLOSED);
+    this.openAttempt = 0;
+    this.requests = [];
   }
 }
 
-// ─── Exports ─────────────────────────────────────────────────────────────────
+class CircuitBreakerError extends Error {
+  constructor(name, message) {
+    super(`[CircuitBreaker:${name}] ${message}`);
+    this.name = 'CircuitBreakerError';
+    this.circuitName = name;
+  }
+}
 
-module.exports = {
-  CircuitBreaker,
-  CircuitOpenError,
-  STATE,
-  // Exposed constants for testing / introspection
-  FAILURE_THRESHOLD,
-  RECOVERY_PROBES,
-  HEALTH_WINDOW_SIZE,
-  RECOVERY_BASE_MS,
-  RECOVERY_MAX_MS,
-  HEALTH_RESTORE_THRESHOLD,
-  HEALTH_REOPEN_THRESHOLD,
-};
+module.exports = { CircuitBreaker, CircuitBreakerError, STATES };

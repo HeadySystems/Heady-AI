@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadySystems A1 Template Engine
  * cloudflare-worker.js — Edge Vertical Routing Worker
@@ -752,7 +750,7 @@ export default {
             );
           }
         }
-        logger.info(`[HeadySystems Worker] Warmed ${verticalIds.length} vertical configs`);
+        console.log(`[HeadySystems Worker] Warmed ${verticalIds.length} vertical configs`);
       })()
     );
   },

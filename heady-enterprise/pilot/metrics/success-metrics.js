@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview HeadyOS Pilot — Success Metrics Tracker
  * @module pilot/metrics/success-metrics
@@ -140,7 +138,7 @@ const auditLog = (eventType, data) => {
     data,
   };
   event.hash = crypto.createHash('sha256').update(JSON.stringify(event)).digest('hex');
-  logger.info(JSON.stringify({ level: 'info', ...event }));
+  console.log(JSON.stringify({ level: 'info', ...event }));
 };
 
 /* ── Metric Recording Functions ─────────────────────────────── */

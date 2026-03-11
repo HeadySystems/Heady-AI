@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyBattle Orchestrator
  * Inspired by Perplexity Computer's 19-model multi-agent coordination
@@ -60,7 +58,7 @@ export class HeadyBattleOrchestrator {
    * Decomposes task → spawns sub-agents → coordinates execution → validates results
    */
   async executeTask(task: Task): Promise<TaskResult> {
-    logger.info(`[Orchestrator] Starting task: ${task.id} (${task.type})`);
+    console.log(`[Orchestrator] Starting task: ${task.id} (${task.type})`);
 
     // Step 1: Optimize context for the task
     const optimizedContext = await this.contextOptimizer.optimize(task);
@@ -81,12 +79,12 @@ export class HeadyBattleOrchestrator {
     if (task.type === 'coding') {
       const validationResult = await this.qualityGate.validate(synthesized);
       if (!validationResult.passed) {
-        logger.info('[Orchestrator] Quality gate FAILED, spawning correction agents');
+        console.log('[Orchestrator] Quality gate FAILED, spawning correction agents');
         return await this.handleQualityFailure(task, validationResult);
       }
     }
 
-    logger.info(`[Orchestrator] Task ${task.id} completed successfully`);
+    console.log(`[Orchestrator] Task ${task.id} completed successfully`);
     return synthesized;
   }
 
@@ -137,7 +135,7 @@ Each sub-task should have a clear specialization (research, coding, validation, 
       return agent;
     });
 
-    logger.info(`[Orchestrator] Spawned ${agents.length} sub-agents`);
+    console.log(`[Orchestrator] Spawned ${agents.length} sub-agents`);
     return agents;
   }
 
@@ -164,7 +162,7 @@ Each sub-task should have a clear specialization (research, coding, validation, 
    * All sub-agents execute simultaneously, not sequentially
    */
   private async executeInParallel(agents: SubAgent[]): Promise<AgentResult[]> {
-    logger.info(`[Orchestrator] Executing ${agents.length} agents in parallel`);
+    console.log(`[Orchestrator] Executing ${agents.length} agents in parallel`);
 
     const executions = agents.map(agent => this.executeAgent(agent));
     const results = await Promise.allSettled(executions);
@@ -172,7 +170,7 @@ Each sub-task should have a clear specialization (research, coding, validation, 
     // Handle failures with auto-retry
     return results.map((result, idx) => {
       if (result.status === 'rejected') {
-        logger.error(`[Orchestrator] Agent ${agents[idx].id} failed:`, result.reason);
+        console.error(`[Orchestrator] Agent ${agents[idx].id} failed:`, result.reason);
         // Spawn recovery agent
         return this.handleAgentFailure(agents[idx]);
       }
@@ -249,7 +247,7 @@ For code, prioritize security and correctness over cleverness.
     task: Task,
     validation: ValidationResult
   ): Promise<TaskResult> {
-    logger.info('[Orchestrator] Spawning correction agents for quality failures');
+    console.log('[Orchestrator] Spawning correction agents for quality failures');
 
     // Create correction task with validation feedback
     const correctionTask: Task = {
@@ -282,7 +280,7 @@ For code, prioritize security and correctness over cleverness.
 
   private async handleAgentFailure(agent: SubAgent): Promise<AgentResult> {
     // Auto-retry with different model or prompt
-    logger.info(`[Orchestrator] Retrying failed agent ${agent.id} with fallback model`);
+    console.log(`[Orchestrator] Retrying failed agent ${agent.id} with fallback model`);
     return {} as AgentResult;
   }
 

@@ -235,7 +235,7 @@ const CODE_QUALITY = {
    */
   async deadCodeDetection() {
     const t0 = Date.now();
-    const markers = ['@deprecated', 'NOTE: remove', 'DEAD CODE', 'FIXME: dead'];
+    const markers = ['@deprecated', 'TODO: remove', 'DEAD CODE', 'FIXME: dead'];
     let count = 0;
     try {
       const srcContents = fs.readdirSync(SRC_DIR, { withFileTypes: true });
@@ -2448,7 +2448,7 @@ registerCategory('INTELLIGENCE',   INTELLIGENCE);
  * @example
  * const { AutoSuccessEngine } = require('./auto-success-engine');
  * const engine = new AutoSuccessEngine({ enableMonteCarlo: true });
- * engine.on('cycle:complete', (metrics) => logger.info(metrics));
+ * engine.on('cycle:complete', (metrics) => console.log(metrics));
  * await engine.start();
  */
 class AutoSuccessEngine extends EventEmitter {
@@ -2747,7 +2747,7 @@ class AutoSuccessEngine extends EventEmitter {
  * @example
  * // Synchronous creation
  * const engine = createEngine({ verbose: true });
- * engine.on('cycle:complete', (m) => logger.info(m.metrics));
+ * engine.on('cycle:complete', (m) => console.log(m.metrics));
  * await engine.start();
  *
  * @example

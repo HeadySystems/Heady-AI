@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 interface BuddyConfig {
   userId: string
   customUIs: Array<{
@@ -34,11 +32,11 @@ export async function syncBuddyConfig(config: BuddyConfig): Promise<void> {
     }
 
     const data = await response.json()
-    logger.info(`✅ HeadyBuddy config synced:`, data)
+    console.log(`✅ HeadyBuddy config synced:`, data)
 
     return data
   } catch (error) {
-    logger.error("HeadyBuddy sync error:", error)
+    console.error("HeadyBuddy sync error:", error)
     throw new Error("Failed to sync HeadyBuddy configuration")
   }
 }
@@ -60,7 +58,7 @@ export async function getBuddyStatus(userId: string): Promise<any> {
 
     return await response.json()
   } catch (error) {
-    logger.error("HeadyBuddy status error:", error)
+    console.error("HeadyBuddy status error:", error)
     return null
   }
 }
@@ -79,9 +77,9 @@ export async function updateBuddyContext(userId: string, contextId: string, acti
       body: JSON.stringify({ active })
     })
 
-    logger.info(`✅ HeadyBuddy context ${contextId} updated: ${active}`)
+    console.log(`✅ HeadyBuddy context ${contextId} updated: ${active}`)
   } catch (error) {
-    logger.error("HeadyBuddy context update error:", error)
+    console.error("HeadyBuddy context update error:", error)
     throw new Error("Failed to update HeadyBuddy context")
   }
 }

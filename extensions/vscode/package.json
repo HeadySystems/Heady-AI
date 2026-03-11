@@ -81,9 +81,9 @@
       "properties": {
         "heady.endpoint": {
           "type": "string",
-          "default": "http://manager.dev.local.headysystems.com:3300",
+          "default": "http://manager.dev.local.heady.internal:3300",
           "enum": [
-            "http://manager.dev.local.headysystems.com:3300",
+            "http://manager.dev.local.heady.internal:3300",
             "https://cloud-me.heady.io",
             "https://cloud-sys.heady.io",
             "https://cloud-conn.heady.io"
@@ -157,7 +157,7 @@
     "@vscode/vsce": "^2.19.0"
   },
   "dependencies": {
-    "axios": "^1.8.4"
+    "axios": "^1.6.0"
   },
   "repository": {
     "type": "git",

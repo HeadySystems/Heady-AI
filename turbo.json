@@ -1,58 +1,39 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env.*local",
-    "shared/**"
-  ],
-  "pipeline": {
+  "globalDependencies": [".env.production"],
+  "globalEnv": ["NODE_ENV", "HEADY_ENV", "HEADY_VERSION"],
+  "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "build/**"
-      ],
-      "cache": true
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "env": ["NODE_ENV"]
     },
-    "lint": {
-      "outputs": [],
-      "cache": true
-    },
-    "test": {
-      "dependsOn": [
-        "build"
-      ],
-      "outputs": [],
-      "cache": false
+    "build:production": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "env": ["NODE_ENV", "HEADY_VERSION"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "env": ["NODE_ENV"]
+    },
     "typecheck": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [],
-      "cache": true
+      "dependsOn": ["^typecheck"]
+    },
+    "clean": {
+      "cache": false
     },
     "deploy": {
-      "dependsOn": [
-        "build",
-        "test",
-        "lint"
-      ],
-      "outputs": [],
+      "dependsOn": ["build:production", "test", "lint"],
       "cache": false
     }
-  },
-  "globalEnv": [
-    "NODE_ENV",
-    "HEADY_DOMAIN",
-    "GCP_PROJECT",
-    "CLOUDFLARE_ACCOUNT_ID",
-    "FIREBASE_PROJECT_ID"
-  ]
+  }
 }

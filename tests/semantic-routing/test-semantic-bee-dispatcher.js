@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -144,12 +142,12 @@ let passed = 0, failed = 0;
 async function runTest(name, fn) {
     try {
         await fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
-        if (process.env.VERBOSE) logger.error(err.stack);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
+        if (process.env.VERBOSE) console.error(err.stack);
         failed++;
     }
 }
@@ -167,7 +165,7 @@ function resetForcedScores() { _forcedScores = null; }
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 async function runTests() {
-    logger.info('\n[test-semantic-bee-dispatcher]');
+    console.log('\n[test-semantic-bee-dispatcher]');
 
     // ── test_constructor ───────────────────────────────────────────────────
     await runTest('test_constructor', () => {
@@ -432,6 +430,6 @@ async function runTests() {
 }
 
 runTests().then(() => {
-    logger.info(`\nTests: ${passed} passed, ${failed} failed\n`);
+    console.log(`\nTests: ${passed} passed, ${failed} failed\n`);
     process.exitCode = failed > 0 ? 1 : 0;
 });

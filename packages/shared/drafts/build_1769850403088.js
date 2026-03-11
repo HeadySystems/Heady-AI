@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // Generated via MCP Orchestration - COMPLETED
 // Task: Collect project data from Gemini URLs and integrate into project
 
@@ -35,5 +33,5 @@ const taskSummary = {
 const outputPath = path.join(__dirname, '..', '_AI_CONTEXT', 'gemini', 'task_completion.json');
 fs.writeFileSync(outputPath, JSON.stringify(taskSummary, null, 2));
 
-logger.info("✅ Task 1769850403088 completed successfully");
-logger.info(`📄 Summary written to: ${outputPath}`);
+console.log("✅ Task 1769850403088 completed successfully");
+console.log(`📄 Summary written to: ${outputPath}`);

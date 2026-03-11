@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -79,7 +77,7 @@ app.use('/api', (req, res) => {
   });
 
   proxyReq.on('error', (e) => {
-    logger.error(`[Dashboard] Proxy error → ${targetUrl}: ${e.message}`);
+    console.error(`[Dashboard] Proxy error → ${targetUrl}: ${e.message}`);
     if (!res.headersSent) {
       res.status(502).json({
         error:   'Bad Gateway',
@@ -115,16 +113,16 @@ app.use((_req, res) => {
 // ── Start ─────────────────────────────────────────────────────────────────────
 const server = createServer(app);
 server.listen(PORT, () => {
-  logger.info(`[Heady Dashboard] ▶  http://localhost:${PORT}`);
-  logger.info(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
-  logger.info(`[Heady Dashboard] φ  PHI = ${PHI}`);
+  console.log(`[Heady Dashboard] ▶  http://localhost:${PORT}`);
+  console.log(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
+  console.log(`[Heady Dashboard] φ  PHI = ${PHI}`);
 });
 
 // ── Graceful shutdown ─────────────────────────────────────────────────────────
 function shutdown(signal) {
-  logger.info(`\n[Dashboard] ${signal} received — shutting down…`);
+  console.log(`\n[Dashboard] ${signal} received — shutting down…`);
   server.close(() => {
-    logger.info('[Dashboard] HTTP server closed.');
+    console.log('[Dashboard] HTTP server closed.');
     process.exit(0);
   });
   setTimeout(() => process.exit(1), Math.round(PHI * 3000));

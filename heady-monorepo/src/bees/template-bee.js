@@ -1,22 +1,3 @@
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -180,10 +161,10 @@ function heady_auth(provider){
   var g=document.getElementById('heady-auth-gate');
   g.style.opacity='0';
   setTimeout(function(){g.style.display='none';},500);
-  setCookie('heady_auth_session', JSON.stringify({ts:Date.now(, 7),site:'${domain}',provider:provider}));
+  localStorage.setItem('heady_auth_session',JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}));
 }
 (function(){
-  var s=getCookie('heady_auth_session');
+  var s=localStorage.getItem('heady_auth_session');
   if(s){try{var d=JSON.parse(s);if(Date.now()-d.ts<365*86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch(e){}}
 })();
 <\\/script>`;

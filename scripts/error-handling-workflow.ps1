@@ -34,11 +34,12 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-# Cloud-Only Configuration (NO LOCAL STORAGE)
-$HEADY_LOG_DIR = "https://headysystems.com/api/logs"
-$HEADY_STATE_DIR = "https://headysystems.com/api/state"
+$HEADY_LOG_DIR = "$env:USERPROFILE\.heady\logs"
+$HEADY_STATE_DIR = "$env:USERPROFILE\.heady\state"
 
-# Cloud paths - No local directory creation needed
+# Ensure directories exist
+New-Item -ItemType Directory -Force -Path $HEADY_LOG_DIR | Out-Null
+New-Item -ItemType Directory -Force -Path $HEADY_STATE_DIR | Out-Null
 
 # Error classification patterns
 $ERROR_PATTERNS = @{
@@ -194,10 +195,11 @@ function Invoke-Recovery {
     
     switch ($Strategy.action) {
         "cleanup" {
-            Write-Host "   Cleaning up cloud caches and temp data..." -ForegroundColor Gray
-            # Cloud-only cleanup - no local filesystem access
-            Invoke-RestMethod -TimeoutSec 10 -Uri "https://headysystems.com/api/cache/clear" -Method POST | Out-Null
-            Invoke-RestMethod -TimeoutSec 10 -Uri "https://headysystems.com/api/temp/clear" -Method POST | Out-Null
+            Write-Host "   Cleaning up temp files and caches..." -ForegroundColor Gray
+            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue `
+                "$env:TEMP\heady-*",
+                "$env:USERPROFILE\.heady\cache\*",
+                "$env:USERPROFILE\.npm\_cacache"
         }
         
         "reinstall_deps" {
@@ -316,7 +318,7 @@ function Send-Alert {
     Write-Host ""
     
     # Could integrate with Slack, PagerDuty, email here
-    # Invoke-RestMethod -TimeoutSec 10 -Uri $env:SLACK_WEBHOOK_URL -Method POST -Body $alertData
+    # Invoke-RestMethod -Uri $env:SLACK_WEBHOOK_URL -Method POST -Body $alertData
 }
 
 function Log-Recovery {
@@ -346,13 +348,13 @@ function Get-ErrorReport {
     if (Test-Path "$HEADY_LOG_DIR\recoveries.json") {
         $recoveries = Get-Content "$HEADY_LOG_DIR\recoveries.json" | 
             Where-Object { $_ } | 
-            ForEach-Object { -Parallel { $_ | ConvertFrom-Json }
+            ForEach-Object { $_ | ConvertFrom-Json }
     }
     
     if (Test-Path "$HEADY_LOG_DIR\alerts.json") {
         $alerts = Get-Content "$HEADY_LOG_DIR\alerts.json" | 
             Where-Object { $_ } | 
-            ForEach-Object { -Parallel { $_ | ConvertFrom-Json }
+            ForEach-Object { $_ | ConvertFrom-Json }
     }
     
     Write-Host ""
@@ -368,7 +370,7 @@ function Get-ErrorReport {
     if ($alerts.Count -gt 0) {
         Write-Host ""
         Write-Host "Recent Alerts:" -ForegroundColor Yellow
-        $alerts | Select-Object -Last 5 | ForEach-Object { -Parallel {
+        $alerts | Select-Object -Last 5 | ForEach-Object {
             Write-Host "  - $($_.timestamp): $($_.component) - $($_.category) [$($_.severity)]" -ForegroundColor Red
         }
     }
@@ -400,7 +402,7 @@ switch ($Action) {
             exit 1
         }
         
-        $content = [System.IO.File]::ReadAllText($ErrorLog)
+        $content = Get-Content $ErrorLog -Raw
         $category = Classify-Error -LogContent $content
         $strategy = Get-RecoveryStrategy -ErrorCategory $category
         
@@ -417,7 +419,7 @@ switch ($Action) {
             exit 1
         }
         
-        $content = [System.IO.File]::ReadAllText($ErrorLog)
+        $content = Get-Content $ErrorLog -Raw
         $category = Classify-Error -LogContent $content
         $strategy = Get-RecoveryStrategy -ErrorCategory $category
         

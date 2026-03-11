@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadyBattle Coding Workflow Integration
  * End-to-end pipeline with Perplexity-style orchestration + Phi temperature
@@ -29,7 +27,7 @@ export class HeadyBattleCodingWorkflow {
    * Execute full coding workflow with dynamic temperature and quality gates
    */
   async generateCode(request: CodingRequest): Promise<CodingResult> {
-    logger.info('[HeadyBattle] Starting coding workflow');
+    console.log('[HeadyBattle] Starting coding workflow');
 
     // Phase 1: Planning (high temperature, exploratory)
     const planTask = {
@@ -45,7 +43,7 @@ export class HeadyBattleCodingWorkflow {
     };
 
     const plan = await this.orchestrator.executeTask(planTask);
-    logger.info('[HeadyBattle] Planning complete');
+    console.log('[HeadyBattle] Planning complete');
 
     // Phase 2: Implementation (low temperature, precise)
     const implTask = {
@@ -62,7 +60,7 @@ export class HeadyBattleCodingWorkflow {
     };
 
     const implementation = await this.orchestrator.executeTask(implTask);
-    logger.info('[HeadyBattle] Implementation complete');
+    console.log('[HeadyBattle] Implementation complete');
 
     // Phase 3: Validation (deterministic temperature)
     const validationTask = {
@@ -78,7 +76,7 @@ export class HeadyBattleCodingWorkflow {
     };
 
     const validation = await this.orchestrator.executeTask(validationTask);
-    logger.info('[HeadyBattle] Validation complete');
+    console.log('[HeadyBattle] Validation complete');
 
     return {
       code: implementation.synthesis,

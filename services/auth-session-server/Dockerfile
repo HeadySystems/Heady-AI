@@ -1,23 +1,6 @@
-FROM node:20-slim AS build
-
+FROM node:22-bookworm-slim
 WORKDIR /app
-
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev && npm cache clean --force
-
-COPY src/ ./src/
-
-FROM gcr.io/distroless/nodejs20-debian12
-
-WORKDIR /app
-
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/src ./src
-COPY --from=build /app/package.json ./
-
-ENV NODE_ENV=production
-ENV PORT=3380
-
-EXPOSE 3380
-
-CMD ["src/index.js"]
+COPY . .
+RUN corepack enable && corepack prepare pnpm@10.6.0 --activate && pnpm install --frozen-lockfile=false
+RUN pnpm --filter @heady/auth-session-server build
+CMD ["pnpm", "--filter", "@heady/auth-session-server", "start"]

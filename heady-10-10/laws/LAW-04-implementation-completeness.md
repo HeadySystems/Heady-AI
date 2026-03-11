@@ -73,7 +73,7 @@ Stub implementations are defined as functions that:
 - Contain only `console.log` or `console.error` with no real logic
 - Return hardcoded values not derived from inputs
 - Throw `new Error('Not implemented')` or equivalent
-- Contain only `// NOTE: implement` with no body
+- Contain only `// TODO: implement` with no body
 
 Any of the above patterns in a production branch trigger an automatic APPROVE-stage (11) block.
 

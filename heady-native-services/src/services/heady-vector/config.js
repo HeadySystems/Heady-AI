@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -105,7 +103,7 @@ const config = {
 // Validate weights sum to ~1.0
 const weightSum = config.search.bm25Weight + config.search.semanticWeight;
 if (Math.abs(weightSum - 1.0) > 0.01) {
-  logger.warn(
+  console.warn(
     `[heady-vector] WARNING: BM25_WEIGHT(${config.search.bm25Weight}) + SEMANTIC_WEIGHT(${config.search.semanticWeight}) = ${weightSum} (should be 1.0)`
   );
 }

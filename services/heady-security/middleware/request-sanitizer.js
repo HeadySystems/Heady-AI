@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Request Sanitization Middleware — Production Implementation
  * @module security-middleware/request-sanitizer
@@ -418,7 +416,7 @@ function requestSanitizer(opts = {}) {
 
       if (allViolations.length > 0) {
         // Log all violations
-        logger.warn('[SANITIZER] Violations detected:', {
+        console.warn('[SANITIZER] Violations detected:', {
           path:       req.path,
           method:     req.method,
           ip:         req.ip,

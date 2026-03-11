@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HEADY Pricing - AI-powered solutions for teams. Choose from Free, Starter, Professional, or Enterprise plans. Flexible pricing with φ-scaled features.">
+    <meta name="keywords" content="pricing, AI, HEADY, headysystems, plans, features">
+    <meta property="og:title" content="HEADY Pricing">
+    <meta property="og:description" content="Flexible AI pricing plans for every team size. Start free, scale as you grow.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://headysystems.com/pricing">
+    <meta property="og:image" content="https://headysystems.com/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HEADY Pricing">
+    <meta name="twitter:description" content="Flexible AI pricing plans for every team size.">
+    <meta name="twitter:image" content="https://headysystems.com/og-image.jpg">
+    <title>Pricing - HEADY | AI-Powered Systems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #0a0a0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 168, 67, 0.1);
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d4a843;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: #d4a843;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero h1 .gold {
+            color: #d4a843;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #b0b0b0;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Toggle Section */
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .toggle-label {
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background-color: #1a1a20;
+            border: 2px solid #d4a843;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.active {
+            background-color: rgba(212, 168, 67, 0.2);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: #d4a843;
+            border-radius: 50%;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 31px;
+        }
+
+        .savings {
+            font-size: 0.9rem;
+            color: #d4a843;
+            font-weight: 600;
+        }
+
+        /* Pricing Cards Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            border-color: rgba(212, 168, 67, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(212, 168, 67, 0.1);
+        }
+
+        .pricing-card.popular {
+            border-color: #d4a843;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d11 100%);
+            box-shadow: 0 0 30px rgba(212, 168, 67, 0.15);
+            transform: scale(1.05);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #d4a843;
+            color: #0a0a0f;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            color: #ffffff;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #d4a843;
+            margin: 0.5rem 0;
+        }
+
+        .plan-price-period {
+            color: #b0b0b0;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .plan-description {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            margin: 1rem 0 2rem 0;
+            flex-grow: 1;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 2rem 0;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(212, 168, 67, 0.1);
+            font-size: 0.95rem;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li::before {
+            content: '✓ ';
+            color: #d4a843;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .cta-button {
+            background-color: #d4a843;
+            color: #0a0a0f;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-button:hover {
+            background-color: #e6b84a;
+            transform: scale(1.02);
+        }
+
+        .cta-button.secondary {
+            background-color: transparent;
+            color: #d4a843;
+            border: 2px solid #d4a843;
+        }
+
+        .cta-button.secondary:hover {
+            background-color: rgba(212, 168, 67, 0.1);
+        }
+
+        /* Comparison Table */
+        .comparison-section {
+            margin: 5rem 0;
+            padding: 4rem 0;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+            border-bottom: 1px solid rgba(212, 168, 67, 0.1);
+        }
+
+        .comparison-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #ffffff;
+        }
+
+        .comparison-section h2 .gold {
+            color: #d4a843;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(212, 168, 67, 0.1);
+        }
+
+        .comparison-table th {
+            background-color: rgba(212, 168, 67, 0.05);
+            color: #d4a843;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .comparison-table th:first-child {
+            text-align: left;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            color: #d4a843;
+            width: 30%;
+        }
+
+        .comparison-table tr:last-child th,
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table td {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .feature-yes {
+            color: #d4a843;
+            font-weight: 700;
+        }
+
+        .feature-no {
+            color: #666666;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin: 4rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .faq-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid rgba(212, 168, 67, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: linear-gradient(135deg, #1a1a20 0%, #0f0f14 100%);
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .faq-question:hover {
+            background-color: rgba(212, 168, 67, 0.05);
+        }
+
+        .faq-toggle {
+            color: #d4a843;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            background-color: rgba(212, 168, 67, 0.02);
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            color: #b0b0b0;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000000;
+            border-top: 1px solid rgba(212, 168, 67, 0.1);
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #d4a843;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+
+            .pricing-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav a {
+                margin-left: 0;
+                font-size: 0.85rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .plan-price {
+                font-size: 2rem;
+            }
+
+            .faq-section {
+                padding: 0;
+            }
+
+            .billing-toggle {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 2rem 0;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .pricing-grid {
+                gap: 1rem;
+            }
+
+            .pricing-card {
+                padding: 1.5rem;
+            }
+
+            .comparison-table {
+                font-size: 0.75rem;
+            }
+
+            footer {
+                padding: 2rem 1rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        @media (prefers-contrast: more) {
+            .pricing-card {
+                border-width: 2px;
+            }
+
+            .cta-button {
+                border-width: 2px;
+            }
+        }
+
+        /* Focus styles for keyboard navigation */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #d4a843;
+            outline-offset: 2px;
+        }
+
+        .toggle-switch:focus-visible {
+            outline: 2px solid #d4a843;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="https://headysystems.com" class="logo">HEADY</a>
+            <nav>
+                <a href="https://headysystems.com">Home</a>
+                <a href="https://headysystems.com/features">Features</a>
+                <a href="https://headysystems.com/pricing" aria-current="page">Pricing</a>
+                <a href="https://headysystems.com/docs">Documentation</a>
+                <a href="https://headysystems.com/contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Simple, <span class="gold">Predictable</span> Pricing</h1>
+            <p>Choose the perfect plan for your team. Upgrade or downgrade anytime—no contracts, no surprises.</p>
+
+            <div class="billing-toggle">
+                <span class="toggle-label">Monthly</span>
+                <div class="toggle-switch active" id="billingToggle" role="switch" aria-checked="true" aria-label="Toggle annual billing"></div>
+                <span class="toggle-label">Annual <span class="savings" id="savingsText">(Save 20%)</span></span>
+            </div>
+        </section>
+
+        <section class="pricing-grid" id="pricingGrid">
+            <!-- Cards will be inserted here -->
+        </section>
+
+        <section class="comparison-section">
+            <h2>Feature <span class="gold">Comparison</span></h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Free</th>
+                        <th>Starter</th>
+                        <th>Professional</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Queries per day</td>
+                        <td class="feature-yes">34</td>
+                        <td class="feature-yes">89</td>
+                        <td class="feature-yes">233</td>
+                        <td class="feature-yes">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Supported domains</td>
+                        <td class="feature-yes">1</td>
+                        <td class="feature-yes">5</td>
+                        <td class="feature-yes">21</td>
+                        <td class="feature-yes">~60</td>
+                    </tr>
+                    <tr>
+                        <td>Community support</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                    </tr>
+                    <tr>
+                        <td>Email support</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Priority support</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Dedicated support</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Basic analytics</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Full analytics</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>API access</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Custom integrations</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>SLA guarantee</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>On-premise option</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-no">–</td>
+                        <td class="feature-yes">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item active">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Can I change my plan anytime?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! You can upgrade or downgrade your plan at any time. Changes take effect at the start of your next billing cycle. If you upgrade mid-month, we'll prorate the difference.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What payment methods do you accept?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and ACH transfers for Enterprise customers. All payments are processed securely through industry-standard payment processors.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Do you offer discounts for annual billing?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! Annual billing provides a 20% discount compared to monthly billing. You'll also gain priority support and early access to new features across all paid plans.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Is there a free trial?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Absolutely! Our Free plan includes all core features with generous daily query limits. No credit card required to get started. Upgrade whenever you're ready to scale.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What's included in Enterprise support?</span>
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Enterprise customers receive dedicated account managers, 24/7 priority support, custom integrations, service level agreements (SLAs), and the option for on-premise deployment. We work closely with your team to ensure success.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://headysystems.com/privacy">Privacy Policy</a>
+                <a href="https://headysystems.com/terms">Terms of Service</a>
+                <a href="https://headysystems.com/security">Security</a>
+                <a href="https://headysystems.com/contact">Contact Sales</a>
+            </div>
+            <p>&copy; 2026 HeadySystems Inc. — Eric Haywood, Founder</p>
+        </div>
+    </footer>
+
+    <script>
+        // Pricing data with φ-scaled values
+        const pricingPlans = [
+            {
+                name: 'Free',
+                price: 0,
+                annualPrice: 0,
+                description: 'Perfect for getting started',
+                features: [
+                    'Personal AI companion',
+                    '34 queries/day',
+                    '1 domain',
+                    'Community support'
+                ],
+                cta: 'Get Started',
+                ctaClass: 'secondary',
+                popular: false
+            },
+            {
+                name: 'Starter',
+                price: 55,
+                annualPrice: 528,
+                description: 'For small teams',
+                features: [
+                    '89 queries/day',
+                    '5 domains',
+                    'Email support',
+                    'Basic analytics'
+                ],
+                cta: 'Start Free Trial',
+                ctaClass: 'primary',
+                popular: false
+            },
+            {
+                name: 'Professional',
+                price: 89,
+                annualPrice: 856,
+                description: 'For growing organizations',
+                features: [
+                    '233 queries/day',
+                    '21 domains',
+                    'Priority support',
+                    'Full analytics',
+                    'API access'
+                ],
+                cta: 'Start Free Trial',
+                ctaClass: 'primary',
+                popular: true
+            },
+            {
+                name: 'Enterprise',
+                price: 233,
+                annualPrice: 2234,
+                description: 'For large-scale operations',
+                features: [
+                    'Unlimited queries',
+                    '~60 domains',
+                    'Dedicated support',
+                    'Custom integrations',
+                    'SLA guarantee',
+                    'On-premise option'
+                ],
+                cta: 'Contact Sales',
+                ctaClass: 'primary',
+                popular: false
+            }
+        ];
+
+        let isAnnual = true;
+
+        function renderPricingCards() {
+            const grid = document.getElementById('pricingGrid');
+            grid.innerHTML = '';
+
+            pricingPlans.forEach((plan, index) => {
+                const price = isAnnual ? plan.annualPrice : plan.price;
+                const priceDisplay = plan.price === 0 ? 'Free' : `$${price}`;
+                const periodDisplay = plan.price === 0 ? '' : isAnnual ? '/year' : '/month';
+
+                const card = document.createElement('div');
+                card.className = `pricing-card ${plan.popular ? 'popular' : ''}`;
+
+                let popularBadge = '';
+                if (plan.popular) {
+                    popularBadge = '<div class="popular-badge">Most Popular</div>';
+                }
+
+                card.innerHTML = `
+                    ${popularBadge}
+                    <h3 class="plan-name">${plan.name}</h3>
+                    <div class="plan-price">${priceDisplay}<span class="plan-price-period">${periodDisplay}</span></div>
+                    <p class="plan-description">${plan.description}</p>
+                    <ul class="plan-features">
+                        ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <button class="cta-button ${plan.ctaClass}">${plan.cta}</button>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleBilling() {
+            const toggle = document.getElementById('billingToggle');
+            isAnnual = !isAnnual;
+            toggle.classList.toggle('active');
+            renderPricingCards();
+        }
+
+        function toggleFAQ(element) {
+            const faqItem = element.closest('.faq-item');
+            const isActive = faqItem.classList.contains('active');
+
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        // Event listener for billing toggle
+        document.getElementById('billingToggle').addEventListener('click', toggleBilling);
+
+        // Initial render
+        renderPricingCards();
+
+        // Keyboard navigation for toggle
+        document.getElementById('billingToggle').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleBilling();
+            }
+        });
+    </script>
+</body>
+</html>

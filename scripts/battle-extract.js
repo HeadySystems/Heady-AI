@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -94,31 +92,31 @@ const IMPROVEMENTS = {
 };
 
 async function extractImprovements() {
-    logger.info('');
-    logger.info('═══════════════════════════════════════════════════════════════');
-    logger.info('  🔬 IMPROVEMENT EXTRACTION — Synthesizing 9 Model Builds');
-    logger.info('═══════════════════════════════════════════════════════════════');
-    logger.info('');
+    console.log('');
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('  🔬 IMPROVEMENT EXTRACTION — Synthesizing 9 Model Builds');
+    console.log('═══════════════════════════════════════════════════════════════');
+    console.log('');
 
     // Phase 1: Audit all repos
-    logger.info('── Phase 1: Auditing Repos ──');
+    console.log('── Phase 1: Auditing Repos ──');
     for (const repo of REPOS) {
         const files = fetchRepoFiles(repo);
-        logger.info(`  📦 ${repo}: ${files.length} files`);
+        console.log(`  📦 ${repo}: ${files.length} files`);
     }
 
     // Phase 2: Extract improvements into main project
-    logger.info('\n── Phase 2: Extracting Improvements ──');
+    console.log('\n── Phase 2: Extracting Improvements ──');
     let extracted = 0;
     const projectRoot = path.join(__dirname, '..');
 
     for (const [name, imp] of Object.entries(IMPROVEMENTS)) {
-        logger.info(`\n  🔧 ${name}: ${imp.desc}`);
-        logger.info(`     Source: ${imp.source}/${imp.file}`);
+        console.log(`\n  🔧 ${name}: ${imp.desc}`);
+        console.log(`     Source: ${imp.source}/${imp.file}`);
 
         const content = fetchFileContent(imp.source, imp.file);
         if (!content) {
-            logger.info('     ⚠️ Could not fetch — skipping');
+            console.log('     ⚠️ Could not fetch — skipping');
             continue;
         }
 
@@ -131,15 +129,15 @@ async function extractImprovements() {
             const provenance = `/*\n * EXTRACTED from ${imp.source} — Battle Arena Improvement\n * ${imp.desc}\n * Governance Hash: ${require('crypto').createHash('sha256').update(content).digest('hex').slice(0, 16)}\n */\n`;
 
             fs.writeFileSync(targetPath, provenance + content);
-            logger.info(`     ✅ Written to ${imp.target}`);
+            console.log(`     ✅ Written to ${imp.target}`);
             extracted++;
         } else {
-            logger.info(`     ℹ️ Pattern extracted (apply manually to existing code)`);
+            console.log(`     ℹ️ Pattern extracted (apply manually to existing code)`);
         }
     }
 
     // Phase 3: Generate synthesis report
-    logger.info('\n── Phase 3: Synthesis Report ──');
+    console.log('\n── Phase 3: Synthesis Report ──');
     const report = {
         timestamp: new Date().toISOString(),
         repos_analyzed: REPOS.length,
@@ -167,12 +165,12 @@ async function extractImprovements() {
 
     const reportPath = path.join(projectRoot, 'battle-synthesis-report.json');
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    logger.info(`\n  📊 Synthesis report: battle-synthesis-report.json`);
-    logger.info(`  📥 ${extracted} improvements extracted into src/core/`);
+    console.log(`\n  📊 Synthesis report: battle-synthesis-report.json`);
+    console.log(`  📥 ${extracted} improvements extracted into src/core/`);
 
-    logger.info('\n═══════════════════════════════════════════════════════════════');
-    logger.info('  ✅ EXTRACTION COMPLETE');
-    logger.info('═══════════════════════════════════════════════════════════════\n');
+    console.log('\n═══════════════════════════════════════════════════════════════');
+    console.log('  ✅ EXTRACTION COMPLETE');
+    console.log('═══════════════════════════════════════════════════════════════\n');
 }
 
-extractImprovements().catch(logger.error);
+extractImprovements().catch(console.error);

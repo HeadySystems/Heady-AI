@@ -69,7 +69,7 @@ import Coinbase from "next-auth/providers/coinbase";
 import Pinterest from "next-auth/providers/pinterest";
 import TikTok from "next-auth/providers/tiktok";
 import Figma from "next-auth/providers/figma";
-import MasNOTEn from "next-auth/providers/masNOTEn";
+import Mastodon from "next-auth/providers/mastodon";
 
 import { prisma } from "@/lib/prisma";
 
@@ -126,7 +126,7 @@ export const authConfig: NextAuthConfig = {
     Pinterest({ clientId: process.env.PINTEREST_ID!, clientSecret: process.env.PINTEREST_SECRET! }),
     TikTok({ clientId: process.env.TIKTOK_ID!, clientSecret: process.env.TIKTOK_SECRET! }),
     Figma({ clientId: process.env.FIGMA_ID!, clientSecret: process.env.FIGMA_SECRET! }),
-    MasNOTEn({ clientId: process.env.MASNOTEN_ID!, clientSecret: process.env.MASNOTEN_SECRET!, issuer: process.env.MASNOTEN_ISSUER! }),
+    Mastodon({ clientId: process.env.MASTODON_ID!, clientSecret: process.env.MASTODON_SECRET!, issuer: process.env.MASTODON_ISSUER! }),
   ],
 
   pages: {
@@ -923,7 +923,7 @@ const PROVIDER_ICONS: Record<string, string> = {
   twitch: "📺", reddit: "🔴", atlassian: "🔺", auth0: "🔐",
   okta: "🛡️", keycloak: "🔑", notion: "📓", zoom: "📹",
   dropbox: "📦", bitbucket: "🪣", salesforce: "☁️", coinbase: "🪙",
-  pinterest: "📌", tiktok: "🎵", figma: "🎨", masNOTEn: "🐘",
+  pinterest: "📌", tiktok: "🎵", figma: "🎨", mastodon: "🐘",
 };
 
 export default function SignInPage() {
@@ -1829,9 +1829,9 @@ TIKTOK_ID=""
 TIKTOK_SECRET=""
 FIGMA_ID=""
 FIGMA_SECRET=""
-MASNOTEN_ID=""
-MASNOTEN_SECRET=""
-MASNOTEN_ISSUER=""
+MASTODON_ID=""
+MASTODON_SECRET=""
+MASTODON_ISSUER=""
 ```
 
 ---

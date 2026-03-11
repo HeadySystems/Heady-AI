@@ -1,18 +1,3 @@
-# HEADY_BRAND:BEGIN
-# ╔══════════════════════════════════════════════════════════════════╗
-# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-# ║                                                                  ║
-# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: drupal/docker-compose.yml                                                    ║
-# ║  LAYER: root                                                  ║
-# ╚══════════════════════════════════════════════════════════════════╝
-# HEADY_BRAND:END
 version: '3.8'
 
 services:
@@ -24,8 +9,24 @@ services:
       - ./:/var/www/html
       - ./settings.php:/sites/default/settings.php
     environment:
-      - DRUPAL_DATABASE_DRIVER=sqlite
-      - DRUPAL_DATABASE_FILE=/var/www/html/sites/default/files/.ht.sqlite
+      - DRUPAL_DATABASE_HOST=db.heady.internal
+      - DRUPAL_DATABASE_NAME=drupal
+      - DRUPAL_DATABASE_USER=admin
+      - DRUPAL_DATABASE_PASSWORD=admin
+    depends_on:
+      - db
+    networks:
+      - heady-network
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=drupal
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - drupal-db-data:/var/lib/mysql
     networks:
       - heady-network
 
@@ -33,3 +34,6 @@ networks:
   heady-network:
     driver: bridge
     name: heady-internal-network
+
+volumes:
+  drupal-db-data:

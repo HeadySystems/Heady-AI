@@ -158,7 +158,7 @@ serviceBoundaries:
       - headybuddy-widget (internal)
       - VNC server + noVNC
     healthPattern:
-      endpoint: http://api.headysystems.com:6080/
+      endpoint: http://localhost:6080/
       method: GET
       expectedStatus: 200
       interval: 30s
@@ -356,6 +356,7 @@ networkTopology:
     - heady-redis:6379
     - mcp-server:7000
     - python-worker:5000
+    - headybuddy-widget:3400
   rule: "Only expose API gateway and demo desktop externally. All other services communicate through internal Docker network."
 
 # ─── UPGRADE & MIGRATION CONTRACTS ────────────────────────────────────────────

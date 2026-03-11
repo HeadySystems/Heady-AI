@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -1128,7 +1126,7 @@ class MistakeReport {
  * @example
  * const engine = new MistakeAnalysisEngine(vectorMemory, wisdomStore);
  * const report = await engine.analyze(pipelineRun);
- * logger.info(report.toMarkdown());
+ * console.log(report.toMarkdown());
  */
 class MistakeAnalysisEngine extends EventEmitter {
   /**

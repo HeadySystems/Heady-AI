@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file swarm-intelligence.js
  * @description Swarm Coordination System for the 3-node Heady™ Colab cluster.
@@ -391,7 +389,7 @@ export class EmergentBehaviorDetector {
  * @example
  * const swarm = new SwarmIntelligence({ nodeId: 'conductor-swarm' });
  * swarm.registerAgent({ id: 'bee-1', type: 'EmbedBee', nodeRole: 'brain', capabilities: ['embed.*'] });
- * swarm.on('emergent.detected', ({ patterns }) => logger.info(patterns));
+ * swarm.on('emergent.detected', ({ patterns }) => console.log(patterns));
  *
  * const allocation = swarm.computeSwarmAllocation(1000);
  * const health = await swarm.evaluateLiveCloudStatus();

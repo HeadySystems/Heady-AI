@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-const { logger } = require('./utils/logger');
-=======
-const pino = require('pino');
-const logger = pino();
->>>>>>> staging/chore/formatting-fixes-2566957660382340048
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -44,7 +38,7 @@ class HeadyCloudConductor {
    * Initialize resource profiles for different workflow types and tiers
    */
   initializeResourceProfiles() {
-    // Impact tier - high priority, generous resources
+    // Impact tier - concurrent-equal weight, generous resources
     this.resourceProfiles.set('impact', {
       modelTiers: ['small', 'medium', 'large'],
       maxTokens: 32000,
@@ -345,7 +339,7 @@ class HeadyCloudConductor {
    * Trigger scale up for specific tier
    */
   triggerScaleUp(tier) {
-    logger.info(`Scaling up ${tier} tier due to high latency`);
+    console.log(`Scaling up ${tier} tier due to high latency`);
     // Implementation would call infrastructure APIs
   }
 
@@ -353,7 +347,7 @@ class HeadyCloudConductor {
    * Trigger scale down for specific tier
    */
   triggerScaleDown(tier) {
-    logger.info(`Scaling down ${tier} tier due to low load`);
+    console.log(`Scaling down ${tier} tier due to low load`);
     // Implementation would call infrastructure APIs
   }
 
@@ -378,7 +372,7 @@ class HeadyCloudConductor {
     const totalCost = allMetrics.reduce((sum, usage) => sum + usage.cost, 0);
     const totalWorkflows = allMetrics.reduce((sum, usage) => sum + usage.workflows, 0);
     
-    logger.info(`Telemetry Analysis - Tokens: ${totalTokens}, Cost: $${totalCost.toFixed(2)}, Workflows: ${totalWorkflows}`);
+    console.log(`Telemetry Analysis - Tokens: ${totalTokens}, Cost: $${totalCost.toFixed(2)}, Workflows: ${totalWorkflows}`);
     
     // Adjust policies based on usage patterns
     this.adjustPoliciesBasedOnUsage(totalTokens, totalCost, totalWorkflows);
@@ -392,7 +386,7 @@ class HeadyCloudConductor {
     const budget = this.policies.get('budget');
     
     if (cost < budget.dailyCostPerTenant * 0.5 && workflows > 10) {
-      logger.info('Usage is low, considering quota relaxation');
+      console.log('Usage is low, considering quota relaxation');
       // Implementation could adjust quotas dynamically
     }
   }

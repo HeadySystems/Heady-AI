@@ -1,0 +1,46 @@
+[32minfo[39m: [ToolRegistry] Registered: memory_ingest {"timestamp":"2026-03-10T21:59:05.234Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_query {"timestamp":"2026-03-10T21:59:05.237Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_list {"timestamp":"2026-03-10T21:59:05.238Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_status {"timestamp":"2026-03-10T21:59:05.238Z"}
+[32minfo[39m: [ToolRegistry] Registered: health_check {"timestamp":"2026-03-10T21:59:05.238Z"}
+[32minfo[39m: [AgentManager] Loaded 19 agents {"timestamp":"2026-03-10T21:59:05.239Z"}
+[32minfo[39m: [AgentManager] Loaded 19 agents {"timestamp":"2026-03-10T21:59:05.239Z"}
+[31merror[39m: [EnvValidator] Missing or invalid: JWT_SECRET, MCP_BEARER_TOKEN {"timestamp":"2026-03-10T21:59:05.319Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_ingest {"timestamp":"2026-03-10T21:59:13.769Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_query {"timestamp":"2026-03-10T21:59:13.772Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_list {"timestamp":"2026-03-10T21:59:13.772Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_status {"timestamp":"2026-03-10T21:59:13.773Z"}
+[32minfo[39m: [ToolRegistry] Registered: health_check {"timestamp":"2026-03-10T21:59:13.773Z"}
+[32minfo[39m: [AgentManager] Loaded 19 agents {"timestamp":"2026-03-10T21:59:13.773Z"}
+[32minfo[39m: [AgentManager] Loaded 19 agents {"timestamp":"2026-03-10T21:59:13.774Z"}
+[31merror[39m: [EnvValidator] Missing or invalid: JWT_SECRET, MCP_BEARER_TOKEN {"timestamp":"2026-03-10T21:59:13.853Z"}
+[32minfo[39m: [HeadyManager] Auth routes mounted at /api/auth {"timestamp":"2026-03-10T21:59:13.858Z"}
+[32minfo[39m: [AutoContext] Background indexer started (interval: 21000ms) {"timestamp":"2026-03-10T21:59:13.860Z"}
+[32minfo[39m: [AutoContext] Initialized {"alwaysOn":true,"timestamp":"2026-03-10T21:59:13.861Z","vectorMemory":false,"workspaceRoot":"/home/headyme/Heady"}
+[32minfo[39m: [HeadyManager] AutoContext continuous service started at /api/context/* {"timestamp":"2026-03-10T21:59:13.861Z"}
+[32minfo[39m: [HeadyManager] Frontend SPA served at /app {"timestamp":"2026-03-10T21:59:13.861Z"}
+[32minfo[39m: [AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle {"timestamp":"2026-03-10T21:59:13.866Z"}
+[32minfo[39m: [HeadyManager] Auto-Success Engine started (135 tasks) {"timestamp":"2026-03-10T21:59:13.866Z"}
+[32minfo[39m: [HeadyManager] Running on port 3301 {"timestamp":"2026-03-10T21:59:13.867Z"}
+[32minfo[39m: [HeadyManager] Environment: development {"timestamp":"2026-03-10T21:59:13.867Z"}
+[32minfo[39m: [HeadyManager] Health: http://localhost:3301/health {"timestamp":"2026-03-10T21:59:13.867Z"}
+[32minfo[39m: [HeadyManager] Received SIGTERM. Shutting down gracefully... {"timestamp":"2026-03-10T21:59:23.493Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_ingest {"timestamp":"2026-03-10T21:59:27.626Z"}
+[32minfo[39m: [ToolRegistry] Registered: memory_query {"timestamp":"2026-03-10T21:59:27.628Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_list {"timestamp":"2026-03-10T21:59:27.628Z"}
+[32minfo[39m: [ToolRegistry] Registered: agent_status {"timestamp":"2026-03-10T21:59:27.628Z"}
+[32minfo[39m: [ToolRegistry] Registered: health_check {"timestamp":"2026-03-10T21:59:27.629Z"}
+[32minfo[39m: [AgentManager] Loaded 19 agents {"timestamp":"2026-03-10T21:59:27.629Z"}
+[32minfo[39m: [AgentManager] Loaded 19 agents {"timestamp":"2026-03-10T21:59:27.629Z"}
+[31merror[39m: [EnvValidator] Missing or invalid: JWT_SECRET, MCP_BEARER_TOKEN {"timestamp":"2026-03-10T21:59:27.712Z"}
+[32minfo[39m: [HeadyManager] Auth routes mounted at /api/auth {"timestamp":"2026-03-10T21:59:27.717Z"}
+[32minfo[39m: [AutoContext] Background indexer started (interval: 21000ms) {"timestamp":"2026-03-10T21:59:27.719Z"}
+[32minfo[39m: [AutoContext] Initialized {"alwaysOn":true,"timestamp":"2026-03-10T21:59:27.719Z","vectorMemory":false,"workspaceRoot":"/home/headyme/Heady"}
+[32minfo[39m: [HeadyManager] AutoContext continuous service started at /api/context/* {"timestamp":"2026-03-10T21:59:27.719Z"}
+[32minfo[39m: [HeadyManager] Frontend SPA served at /app {"timestamp":"2026-03-10T21:59:27.720Z"}
+[32minfo[39m: [AutoSuccess] Starting engine: 135 tasks, 9 categories, 30000ms cycle {"timestamp":"2026-03-10T21:59:27.726Z"}
+[32minfo[39m: [HeadyManager] Auto-Success Engine started (135 tasks) {"timestamp":"2026-03-10T21:59:27.727Z"}
+[32minfo[39m: [HeadyManager] Running on port 3301 {"timestamp":"2026-03-10T21:59:27.728Z"}
+[32minfo[39m: [HeadyManager] Environment: development {"timestamp":"2026-03-10T21:59:27.728Z"}
+[32minfo[39m: [HeadyManager] Health: http://localhost:3301/health {"timestamp":"2026-03-10T21:59:27.729Z"}
+[32minfo[39m: [HeadyManager] Received SIGTERM. Shutting down gracefully... {"timestamp":"2026-03-10T21:59:35.349Z"}

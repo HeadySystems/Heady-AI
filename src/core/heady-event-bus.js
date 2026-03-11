@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -23,7 +21,7 @@ const logger = pino();
  *
  *   // Subscribe
  *   bus.subscribe('heady:pipeline:run:completed', (event) => {
- *     logger.info('Pipeline done:', event.runId);
+ *     console.log('Pipeline done:', event.runId);
  *   });
  *
  *   // Publish
@@ -244,7 +242,7 @@ class HeadyEventBus extends EventEmitter {
       this._stats.errors++;
       this._deadLetterEvent(topic, event, err.message);
       this._logger.error?.(`[EventBus] Delivery error on topic ${topic}: ${err.message}`) ||
-        logger.error(`[EventBus] Delivery error on topic ${topic}: ${err.message}`);
+        console.error(`[EventBus] Delivery error on topic ${topic}: ${err.message}`);
     }
 
     // Bridge to Redis (non-blocking)

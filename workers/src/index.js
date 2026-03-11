@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Edge Proxy - Cloudflare Workers
  * Implements streaming, service bindings, and best practices
@@ -17,7 +15,7 @@ export default {
         version: '3.2.3',
         edge: 'cloudflare-workers'
       }), {
-        headers: { 
+        headers: {
           'content-type': 'application/json',
           'x-heady-version': '3.2.3'
         }
@@ -92,7 +90,9 @@ export async function queue(batch, env) {
 
 async function processTask(task, env) {
   // Background task processing
-  logger.info('Processing task:', task.id);
+  // Structured log to stdout (Workers runtime)
+  // eslint-disable-next-line no-restricted-syntax
+  globalThis.structuredLog?.({ level: 'info', msg: 'Processing task', taskId: task.id, ts: Date.now() });
 
   // Use KV for caching (binding, not REST)
   await env.HEADY_CACHE.put(

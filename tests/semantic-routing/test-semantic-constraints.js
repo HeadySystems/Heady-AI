@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -359,15 +357,15 @@ async function runTests() {
   for (const test of tests) {
     try {
       await test();
-      logger.info(`  ✓ ${test.name}`);
+      console.log(`  ✓ ${test.name}`);
       passed++;
     } catch (err) {
-      logger.error(`  ✗ ${test.name}: ${err.message}`);
+      console.error(`  ✗ ${test.name}: ${err.message}`);
       failed++;
     }
   }
 
-  logger.info(`\nTests complete: ${passed} passed, ${failed} failed`);
+  console.log(`\nTests complete: ${passed} passed, ${failed} failed`);
   if (failed > 0) process.exitCode = 1;
 }
 

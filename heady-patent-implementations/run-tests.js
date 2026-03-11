@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
@@ -19,11 +17,11 @@ const testFiles = fs.readdirSync(testsDir)
     .filter(f => f.startsWith('test-') && f.endsWith('.js'))
     .sort();
 
-logger.info('═══════════════════════════════════════════════════════');
-logger.info('  Heady™ Patent Implementation Test Suite');
-logger.info('  © 2026 Heady™Systems Inc.');
-logger.info('═══════════════════════════════════════════════════════');
-logger.info(`\n  Found ${testFiles.length} test suites\n`);
+console.log('═══════════════════════════════════════════════════════');
+console.log('  Heady™ Patent Implementation Test Suite');
+console.log('  © 2026 Heady™Systems Inc.');
+console.log('═══════════════════════════════════════════════════════');
+console.log(`\n  Found ${testFiles.length} test suites\n`);
 
 let totalPassed = 0;
 let totalFailed = 0;
@@ -50,24 +48,24 @@ for (const file of testFiles) {
         totalFailed += failed;
         
         const status = failed === 0 ? '✓ PASS' : '✗ FAIL';
-        logger.info(`  ${status}  ${label.padEnd(30)} ${passed} passed, ${failed} failed`);
+        console.log(`  ${status}  ${label.padEnd(30)} ${passed} passed, ${failed} failed`);
         
         if (failed > 0) failedSuites.push(file);
     } catch (err) {
         totalFailed++;
         failedSuites.push(file);
-        logger.info(`  ✗ FAIL  ${label.padEnd(30)} ERROR: ${err.message.split('\n')[0]}`);
+        console.log(`  ✗ FAIL  ${label.padEnd(30)} ERROR: ${err.message.split('\n')[0]}`);
     }
 }
 
-logger.info('\n═══════════════════════════════════════════════════════');
-logger.info(`  TOTAL: ${totalPassed} passed, ${totalFailed} failed`);
-logger.info('═══════════════════════════════════════════════════════');
+console.log('\n═══════════════════════════════════════════════════════');
+console.log(`  TOTAL: ${totalPassed} passed, ${totalFailed} failed`);
+console.log('═══════════════════════════════════════════════════════');
 
 if (failedSuites.length > 0) {
-    logger.info(`\n  Failed suites: ${failedSuites.join(', ')}`);
+    console.log(`\n  Failed suites: ${failedSuites.join(', ')}`);
     process.exit(1);
 } else {
-    logger.info('\n  All tests passed. ✓');
+    console.log('\n  All tests passed. ✓');
     process.exit(0);
 }

@@ -1,16 +1,18 @@
-const logger = require('../logger');
+const logger = require('../shared/logger')('hc_autobuild');
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: src/hc_autobuild.js
-// LAYER: backend/src
-//
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V /
-//        |  _  || |___ / ___ \| |_| |  | |
-//        |_| |_||_____/_/   \_\____/   |_|
-//
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/hc_autobuild.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 const { execSync } = require('child_process');
@@ -19,7 +21,6 @@ const fs = require('fs');
 
 logger.info('\n🔨 Heady AutoBuild - Sacred Geometry Build System with Codemap Optimization\n');
 
-// Worktree base path (Windsurf worktree mode)
 const WORKTREE_BASE = (() => {
   const explicit = process.env.WINDSURF_WORKTREES || process.env.HEADY_WORKTREES;
   if (explicit && typeof explicit === 'string' && explicit.trim()) return explicit.trim();
@@ -65,18 +66,17 @@ function discoverWorktrees() {
   }))];
 }
 
-// Scan for sub-projects with package.json
 function findBuildableProjects(baseDir, depth = 2) {
   const projects = [];
-
+  
   function scan(dir, currentDepth) {
     if (currentDepth > depth) return;
-
+    
     const packageJson = path.join(dir, 'package.json');
     if (fs.existsSync(packageJson)) {
       projects.push(dir);
     }
-
+    
     // Scan subdirectories
     try {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -89,27 +89,36 @@ function findBuildableProjects(baseDir, depth = 2) {
       // Skip inaccessible directories
     }
   }
-
   scan(baseDir, 0);
   return projects;
 }
 
 function buildProject(projectPath) {
-  logger.info(`📦 Building: ${path.basename(projectPath)}`);
-
+  const packageJsonPath = path.join(projectPath, 'package.json');
+  
+  if (!fs.existsSync(packageJsonPath)) {
+    return { success: false, reason: 'No package.json' };
+  }
+  
+  logger.info(`📦 Building: ${projectPath}`);
+  
   try {
-    // Use pnpm for faster, more efficient installs
-    execSync('pnpm install', { cwd: projectPath, stdio: 'inherit' });
-
-    // Check for build script
-    const packageJson = path.join(projectPath, 'package.json');
-    const pkg = JSON.parse(fs.readFileSync(packageJson, 'utf8'));
-
+    // Read package.json to check for build scripts
+    const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    
+    // Install dependencies
+    execSync('pnpm install --frozen-lockfile 2>nul || pnpm install', { 
+      cwd: projectPath, 
+      stdio: 'inherit',
+      shell: true
+    });
+    
+    // Run build if available
     if (pkg.scripts && pkg.scripts.build) {
-      logger.info(`   🏗️  Running build script...`);
+      logger.info(`  🔧 Running build script...`);
       execSync('pnpm run build', { cwd: projectPath, stdio: 'inherit' });
     }
-
+    
     logger.info(`✅ ${path.basename(projectPath)} - Build complete\n`);
     return { success: true };
   } catch (error) {

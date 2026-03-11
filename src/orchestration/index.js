@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadySystems™ — Orchestration Module
  * Central hub for task routing, agent coordination, and workflow management.
@@ -162,7 +160,7 @@ class SagaOrchestrator {
                     try {
                         await completed.compensate(context);
                     } catch (compErr) {
-                        logger.error(`Compensation failed for ${completed.name}:`, compErr.message);
+                        console.error(`Compensation failed for ${completed.name}:`, compErr.message);
                     }
                 }
                 throw new Error(`Saga failed at step "${step.name}": ${err.message}`);

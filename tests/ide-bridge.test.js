@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 const {
     submitProposal,
     evaluateProposal,
@@ -65,17 +63,17 @@ describe("IDE Bridge — Proposal Lifecycle", () => {
         expect([PROPOSAL_STATES.GOVERNANCE_PENDING, PROPOSAL_STATES.VALIDATION_FAILED]).toContain(evaluation.state);
     });
 
-    test("auto-corrects logger.info to structured logger", () => {
+    test("auto-corrects console.log to structured logger", () => {
         const submit = submitProposal({
             intent: "Add logging",
             targetFile: "src/utils/test-logger.js",
-            proposedDiff: 'logger.info("hello world");',
+            proposedDiff: 'console.log("hello world");',
             submittedBy: "test",
         });
 
         const evaluation = evaluateProposal(submit.proposalId);
         expect(evaluation.success).toBe(true);
-        // Auto-correction should fix logger.info
+        // Auto-correction should fix console.log
         if (evaluation.state === PROPOSAL_STATES.GOVERNANCE_PENDING) {
             expect(evaluation.governanceResult.autoCorrected).toBe(true);
         }

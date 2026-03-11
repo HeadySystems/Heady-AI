@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../../shared/logger')('server');
 'use strict';
 
 const { PHI_TIMING } = require('../../shared/phi-math');

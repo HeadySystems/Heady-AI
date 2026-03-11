@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -255,7 +253,7 @@ const deliverWithRetry = async (webhook, eventType, eventData, pgClient, auditLo
         Math.round(WEBHOOK_CONSTANTS.RETRY_BASE_MS * Math.pow(PHI, attempt)),
         WEBHOOK_CONSTANTS.MAX_RETRY_DELAY_MS
       );
-      logger.warn(`[Webhook] Delivery failed for ${webhook.id} (${eventType}) — retry ${attempt + 1}/${maxRetries} in ${delay}ms`);
+      console.warn(`[Webhook] Delivery failed for ${webhook.id} (${eventType}) — retry ${attempt + 1}/${maxRetries} in ${delay}ms`);
       await new Promise(r => setTimeout(r, delay));
     }
   }
@@ -294,7 +292,7 @@ const sendToDLQ = async (webhook, eventType, eventData, pgClient, auditLogger) =
     expiresAt,
   });
 
-  logger.error(`[Webhook] Dead-lettered: ${webhook.id} for ${eventType} → DLQ ID: ${dlqId}`);
+  console.error(`[Webhook] Dead-lettered: ${webhook.id} for ${eventType} → DLQ ID: ${dlqId}`);
 };
 
 // ---------------------------------------------------------------------------

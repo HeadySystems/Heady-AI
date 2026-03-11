@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyWeb — VectorFederation
  *
@@ -13,6 +11,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../../shared/logger')('vector-federation');
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 

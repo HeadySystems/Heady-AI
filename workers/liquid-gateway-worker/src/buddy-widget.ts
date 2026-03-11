@@ -1,22 +1,3 @@
-
-function getCookie(name) {
-    let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-    return null;
-}
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/; secure; samesite=strict";
-}
-function removeCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/; secure; samesite=strict';
-}
-
 /**
  * HeadyBuddy Widget — Inline injection script
  * Injected into every HTML page served by the gateway.
@@ -30,13 +11,13 @@ var PHI=1.6180339887498949,PSI=0.6180339887498949;
 var API=location.origin+'/api/brain/chat';
 var host=location.hostname;
 var token=(document.cookie.match(/heady_token=([^;]+)/)||[])[1]||'';
-var deviceId=getCookie('heady_device_id');
-if(!deviceId){deviceId=crypto.randomUUID?crypto.randomUUID():Date.now().toString(36);setCookie('heady_device_id', deviceId, 7)}
+var deviceId=localStorage.getItem('heady_device_id');
+if(!deviceId){deviceId=crypto.randomUUID?crypto.randomUUID():Date.now().toString(36);localStorage.setItem('heady_device_id',deviceId)}
 var wsId='vw:'+host+':'+(token?token.slice(0,16):'anon')+':'+deviceId.slice(0,8);
 var histKey='buddy:'+host+':'+(token?token.slice(0,12):'anon');
-var history=JSON.parse(getCookie(histKey)||'[]').slice(-34);
+var history=JSON.parse(localStorage.getItem(histKey)||'[]').slice(-34);
 
-function save(){setCookie(histKey, JSON.stringify(history.slice(-34, 7)))}
+function save(){localStorage.setItem(histKey,JSON.stringify(history.slice(-34)))}
 
 var fab=document.createElement('div');
 fab.id='heady-buddy-fab';

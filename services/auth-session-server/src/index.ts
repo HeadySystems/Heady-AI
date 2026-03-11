@@ -1,441 +1,529 @@
-/**
- * Auth Session Server — HTTP Server Entry Point
- * Heady Liquid Latent OS — Port 3338
- * Author: Eric Haywood / HeadySystems Inc. — 51 Provisional Patents
- */
+import { createServiceApp } from '@heady-ai/service-runtime';
+import type { ServiceManifest } from '@heady-ai/contract-types';
+import { PHI, PHI_SQUARED, PHI_CUBED, fib, phiBackoff } from '@heady-ai/phi-math-foundation';
+import { z } from 'zod';
+import * as admin from 'firebase-admin';
 
-import http from 'http';
-import crypto from 'crypto';
-import {
-  PHI, PSI, FIB, CSL_THRESHOLD,
-  type AuthServerConfig, type AuthHealthStatus, type LoginRequest,
-  type LoginResponse, type CookieConfig, type Role
-} from './types.js';
-import {
-  SessionManager, PhiRateLimiter, PKCEValidator,
-  AuthorizationEngine, AuthEventPublisher, computeCoherenceScore,
-  type RedisLike, type PgPoolLike
-} from './service.js';
+// ---------------------------------------------------------------------------
+// Phi-derived constants (NO magic numbers)
+// ---------------------------------------------------------------------------
 
-// ═══════════════════════════════════════════════════════
-// Structured Logger (NO console.log)
-// ═══════════════════════════════════════════════════════
+/** Default port: 4320 (assigned by service catalog) */
+const DEFAULT_PORT = 4320;
 
-const log = (level: string, msg: string, meta?: Record<string, string | number | boolean>) => {
-  process.stdout.write(JSON.stringify({
-    level, service: 'auth-session-server', msg,
-    timestamp: new Date().toISOString(), version: '1.0.0', ...meta
-  }) + '\n');
-};
+/** Session cookie max age: fib(20) seconds = 6765s (~113 minutes) */
+const SESSION_MAX_AGE_S = fib(20);
 
-// ═══════════════════════════════════════════════════════
-// Configuration (env vars, NO hardcoded values)
-// ═══════════════════════════════════════════════════════
+/** Session cookie max age in milliseconds */
+const SESSION_MAX_AGE_MS = SESSION_MAX_AGE_S * 1000;
 
-const config: AuthServerConfig = {
-  port: parseInt(process.env.AUTH_PORT ?? '3338', 10),
-  host: process.env.AUTH_HOST ?? '0.0.0.0',
-  jwtAlgorithm: 'RS256',
-  jwtPublicKeyPath: process.env.JWT_PUBLIC_KEY_PATH ?? '/run/secrets/jwt-public.pem',
-  jwtPrivateKeyPath: process.env.JWT_PRIVATE_KEY_PATH ?? '/run/secrets/jwt-private.pem',
-  redisUrl: process.env.REDIS_URL ?? 'redis://redis:6379',
-  postgresUrl: process.env.DATABASE_URL ?? 'postgresql://heady:heady@pgbouncer:6432/heady_auth',
-  corsOrigins: (process.env.CORS_ORIGINS ?? '').split(',').filter(Boolean),
-  rateLimitWindowMs: FIB[8] * 1000,          // 21 seconds
-  rateLimitMaxRequests: FIB[10],              // 55 requests per window
-  sessionMaxAge: FIB[13] * 60,               // 233 minutes in seconds
-  refreshMaxAge: FIB[15] * 60,               // 610 minutes in seconds
-  logLevel: process.env.LOG_LEVEL ?? 'info'
-};
+/** Extended session: fib(25) seconds = 75025s (~20.8 hours) */
+const SESSION_EXTENDED_AGE_S = fib(25);
 
-// ═══════════════════════════════════════════════════════
-// Cookie Configuration (httpOnly ALWAYS)
-// ═══════════════════════════════════════════════════════
+/** Token verification clock tolerance: fib(8) seconds = 21s */
+const CLOCK_TOLERANCE_S = fib(8);
 
-const sessionCookie: CookieConfig = {
-  name: 'heady_session',
-  httpOnly: true,
-  secure: true,
-  sameSite: 'lax',
-  domain: process.env.COOKIE_DOMAIN ?? '.headysystems.com',
-  path: '/',
-  maxAge: config.sessionMaxAge
-};
+/** Relay iframe cache max-age: fib(12) seconds = 144s */
+const RELAY_CACHE_S = fib(12);
 
-const refreshCookie: CookieConfig = {
-  name: 'heady_refresh',
-  httpOnly: true,
-  secure: true,
-  sameSite: 'strict',
-  domain: process.env.COOKIE_DOMAIN ?? '.headysystems.com',
-  path: '/api/auth/refresh',
-  maxAge: config.refreshMaxAge
-};
+/** CORS max-age: fib(15) seconds = 610s (~10 minutes) */
+const CORS_MAX_AGE_S = fib(15);
 
-// ═══════════════════════════════════════════════════════
-// Helper: Set Cookie (httpOnly enforced)
-// ═══════════════════════════════════════════════════════
+/** Cookie name */
+const SESSION_COOKIE_NAME = '__heady_session';
 
-function setCookie(res: http.ServerResponse, cookieConfig: CookieConfig, value: string): void {
-  const parts = [
-    `${cookieConfig.name}=${value}`,
-    `HttpOnly`,
-    `Secure`,
-    `SameSite=${cookieConfig.sameSite}`,
-    `Domain=${cookieConfig.domain}`,
-    `Path=${cookieConfig.path}`,
-    `Max-Age=${cookieConfig.maxAge}`
-  ];
-  const existing = res.getHeader('Set-Cookie');
-  const cookies = existing
-    ? (Array.isArray(existing) ? [...existing, parts.join('; ')] : [String(existing), parts.join('; ')])
-    : [parts.join('; ')];
-  res.setHeader('Set-Cookie', cookies);
-}
+/** Cookie domain */
+const COOKIE_DOMAIN = '.headysystems.com';
 
-function parseCookies(cookieHeader: string | undefined): Record<string, string> {
-  if (!cookieHeader) return {};
-  return cookieHeader.split(';').reduce((acc, pair) => {
-    const [key, ...vals] = pair.trim().split('=');
-    if (key) acc[key.trim()] = vals.join('=').trim();
-    return acc;
-  }, {} as Record<string, string>);
-}
+// ---------------------------------------------------------------------------
+// All 9 Heady domains that require CORS
+// ---------------------------------------------------------------------------
+const ALLOWED_ORIGINS: string[] = [
+  'https://headysystems.com',
+  'https://headyme.com',
+  'https://headybuddy.org',
+  'https://headyagent.com',
+  'https://heady-ai.com',
+  'https://headyconnection.org',
+  'https://headyio.com',
+  'https://headycloud.com',
+  'https://headycreator.com',
+];
 
-function readBody(req: http.IncomingMessage): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    let size = 0;
-    const maxSize = FIB[12] * 1024; // 144KB max body
-    req.on('data', (chunk: Buffer) => {
-      size += chunk.length;
-      if (size > maxSize) { req.destroy(); reject(new Error('body_too_large')); return; }
-      chunks.push(chunk);
-    });
-    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
-    req.on('error', reject);
-  });
-}
+// Also allow www. variants
+const ALLOWED_ORIGINS_SET = new Set<string>(
+  ALLOWED_ORIGINS.flatMap((origin) => [origin, origin.replace('https://', 'https://www.')])
+);
 
-function jsonResponse(res: http.ServerResponse, status: number, body: Record<string, unknown>): void {
-  res.writeHead(status, {
-    'Content-Type': 'application/json',
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'X-XSS-Protection': '0',
-    'Strict-Transport-Security': `max-age=${FIB[16]}; includeSubDomains`,
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Cache-Control': 'no-store'
-  });
-  res.end(JSON.stringify(body));
-}
+// ---------------------------------------------------------------------------
+// Zod request schemas
+// ---------------------------------------------------------------------------
 
-// ═══════════════════════════════════════════════════════
-// In-memory Redis stub (replaced by real Redis in production)
-// ═══════════════════════════════════════════════════════
-
-class InMemoryRedis implements RedisLike {
-  private store = new Map<string, { value: string; expiresAt: number }>();
-
-  async get(key: string): Promise<string | null> {
-    const entry = this.store.get(key);
-    if (!entry) return null;
-    if (entry.expiresAt < Date.now()) { this.store.delete(key); return null; }
-    return entry.value;
-  }
-
-  async setEx(key: string, seconds: number, value: string): Promise<void> {
-    this.store.set(key, { value, expiresAt: Date.now() + seconds * 1000 });
-  }
-
-  async del(key: string): Promise<void> { this.store.delete(key); }
-
-  async keys(pattern: string): Promise<string[]> {
-    const prefix = pattern.replace('*', '');
-    return Array.from(this.store.keys()).filter(k => k.startsWith(prefix));
-  }
-}
-
-class InMemoryPg implements PgPoolLike {
-  async query(_text: string, _values?: ReadonlyArray<string | number | boolean | null>): Promise<{ rows: Record<string, unknown>[] }> {
-    return { rows: [] };
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// Server Startup
-// ═══════════════════════════════════════════════════════
-
-const redis = new InMemoryRedis();
-const pg = new InMemoryPg();
-const sessions = new SessionManager(redis, pg);
-const rateLimiter = new PhiRateLimiter(redis);
-const pkce = new PKCEValidator();
-const authEngine = new AuthorizationEngine();
-const startTime = Date.now();
-let requestCount = 0;
-let errorCount = 0;
-
-const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
-  const method = req.method ?? 'GET';
-  const path = url.pathname;
-  requestCount++;
-
-  try {
-    // Rate limiting
-    const clientIp = req.headers['x-forwarded-for']?.toString().split(',')[0]?.trim() ?? req.socket.remoteAddress ?? 'unknown';
-    const limitResult = await rateLimiter.checkLimit(clientIp);
-    if (!limitResult.allowed) {
-      res.setHeader('Retry-After', Math.ceil(limitResult.retryAfterMs / 1000).toString());
-      jsonResponse(res, 429, { error: 'rate_limited', retryAfterMs: limitResult.retryAfterMs });
-      return;
-    }
-
-    // Health endpoints
-    if (path === '/health' && method === 'GET') {
-      const health: AuthHealthStatus = {
-        status: 'healthy',
-        redisConnected: true,
-        postgresConnected: true,
-        activeSessionCount: requestCount,
-        uptime: (Date.now() - startTime) / 1000,
-        version: '1.0.0',
-        coherenceScore: computeCoherenceScore({
-          redisLatencyMs: FIB[2], pgLatencyMs: FIB[3],
-          activeSessionCount: requestCount, errorRate: requestCount > 0 ? errorCount / requestCount : 0,
-          uptime: (Date.now() - startTime) / 1000
-        })
-      };
-      jsonResponse(res, 200, health as unknown as Record<string, unknown>);
-      return;
-    }
-
-    if (path === '/ready' && method === 'GET') {
-      jsonResponse(res, 200, { ready: true, service: 'auth-session-server', port: config.port });
-      return;
-    }
-
-    // Login
-    if (path === '/api/auth/login' && method === 'POST') {
-      const body = await readBody(req);
-      const loginReq: LoginRequest = JSON.parse(body);
-
-      // In production: validate credentials against database
-      const user = {
-        userId: crypto.randomUUID(),
-        email: loginReq.email,
-        displayName: loginReq.email.split('@')[0] ?? 'user',
-        roles: ['viewer' as Role] as ReadonlyArray<Role>,
-        tenantId: loginReq.tenantId ?? 'default',
-        createdAt: new Date().toISOString(),
-        lastLoginAt: new Date().toISOString()
-      };
-
-      const session = await sessions.createSession(user, loginReq.fingerprint);
-
-      setCookie(res, sessionCookie, session.sessionId);
-      setCookie(res, refreshCookie, session.refreshTokenHash);
-
-      const response: LoginResponse = {
-        userId: user.userId,
-        displayName: user.displayName,
-        roles: user.roles,
-        expiresAt: session.expiresAt
-      };
-
-      log('info', 'login_success', { userId: user.userId, email: user.email });
-      jsonResponse(res, 200, response as unknown as Record<string, unknown>);
-      return;
-    }
-
-    // Validate session
-    if (path === '/api/auth/validate' && method === 'GET') {
-      const cookies = parseCookies(req.headers.cookie);
-      const sessionId = cookies[sessionCookie.name];
-      if (!sessionId) {
-        jsonResponse(res, 401, { error: 'no_session' });
-        return;
-      }
-
-      const session = await sessions.validateSession(sessionId);
-      if (!session) {
-        jsonResponse(res, 401, { error: 'invalid_session' });
-        return;
-      }
-
-      jsonResponse(res, 200, {
-        userId: session.userId,
-        roles: [...session.roles],
-        tenantId: session.tenantId,
-        expiresAt: session.expiresAt
-      });
-      return;
-    }
-
-    // Refresh token
-    if (path === '/api/auth/refresh' && method === 'POST') {
-      const cookies = parseCookies(req.headers.cookie);
-      const refreshTokenHash = cookies[refreshCookie.name];
-      const body = await readBody(req);
-      const { fingerprint } = JSON.parse(body);
-
-      if (!refreshTokenHash || !fingerprint) {
-        jsonResponse(res, 401, { error: 'missing_refresh_token' });
-        return;
-      }
-
-      const result = await sessions.rotateRefreshToken(refreshTokenHash, fingerprint);
-      if (!result) {
-        jsonResponse(res, 401, { error: 'invalid_refresh_token' });
-        return;
-      }
-
-      setCookie(res, sessionCookie, result.session.sessionId);
-      setCookie(res, refreshCookie, result.session.refreshTokenHash);
-
-      jsonResponse(res, 200, {
-        userId: result.session.userId,
-        roles: [...result.session.roles],
-        expiresAt: result.session.expiresAt
-      });
-      return;
-    }
-
-    // Logout
-    if (path === '/api/auth/logout' && method === 'POST') {
-      const cookies = parseCookies(req.headers.cookie);
-      const sessionId = cookies[sessionCookie.name];
-      if (sessionId) {
-        await sessions.revokeSession(sessionId);
-      }
-
-      setCookie(res, sessionCookie, '');
-      setCookie(res, refreshCookie, '');
-
-      jsonResponse(res, 200, { success: true });
-      return;
-    }
-
-    // Authorize (for inter-service auth checks)
-    if (path === '/api/auth/authorize' && method === 'POST') {
-      const body = await readBody(req);
-      const { roles, requiredRole, resource } = JSON.parse(body);
-      const result = authEngine.authorize(roles, requiredRole, resource);
-      jsonResponse(res, result.allowed ? 200 : 403, result as unknown as Record<string, unknown>);
-      return;
-    }
-
-    // OAuth2 PKCE authorize endpoint
-    if (path === '/api/oauth/authorize' && method === 'GET') {
-      const clientId = url.searchParams.get('client_id');
-      const redirectUri = url.searchParams.get('redirect_uri');
-      const codeChallenge = url.searchParams.get('code_challenge');
-      const state = url.searchParams.get('state');
-
-      if (!clientId || !redirectUri || !codeChallenge || !state) {
-        jsonResponse(res, 400, { error: 'missing_pkce_params' });
-        return;
-      }
-
-      const authCode = crypto.randomBytes(FIB[8]).toString('hex');
-      await redis.setEx(`oauth:code:${authCode}`, FIB[7], JSON.stringify({
-        codeChallenge,
-        codeChallengeMethod: 'S256',
-        clientId,
-        redirectUri,
-        scope: url.searchParams.get('scope') ?? 'read',
-        state,
-        createdAt: Date.now(),
-        expiresAt: Date.now() + FIB[7] * 1000
-      }));
-
-      const redirectUrl = new URL(redirectUri);
-      redirectUrl.searchParams.set('code', authCode);
-      redirectUrl.searchParams.set('state', state);
-
-      res.writeHead(302, { Location: redirectUrl.toString() });
-      res.end();
-      return;
-    }
-
-    // OAuth2 PKCE token exchange
-    if (path === '/api/oauth/token' && method === 'POST') {
-      const body = await readBody(req);
-      const { code, code_verifier, client_id } = JSON.parse(body);
-
-      if (!code || !code_verifier || !client_id) {
-        jsonResponse(res, 400, { error: 'missing_token_params' });
-        return;
-      }
-
-      const challengeData = await redis.get(`oauth:code:${code}`);
-      if (!challengeData) {
-        jsonResponse(res, 400, { error: 'invalid_code' });
-        return;
-      }
-
-      const challenge = JSON.parse(challengeData);
-      if (!pkce.verifyChallenge(code_verifier, challenge.codeChallenge)) {
-        jsonResponse(res, 400, { error: 'pkce_verification_failed' });
-        return;
-      }
-
-      await redis.del(`oauth:code:${code}`);
-
-      // Issue session via cookies
-      const user = {
-        userId: crypto.randomUUID(),
-        email: `${client_id}@oauth.heady`,
-        displayName: client_id,
-        roles: ['viewer' as Role] as ReadonlyArray<Role>,
-        tenantId: 'default',
-        createdAt: new Date().toISOString(),
-        lastLoginAt: new Date().toISOString()
-      };
-
-      const session = await sessions.createSession(user, 'oauth');
-      setCookie(res, sessionCookie, session.sessionId);
-
-      jsonResponse(res, 200, {
-        token_type: 'session',
-        expires_in: config.sessionMaxAge,
-        session_id: session.sessionId
-      });
-      return;
-    }
-
-    // 404
-    jsonResponse(res, 404, { error: 'not_found', path });
-
-  } catch (err) {
-    errorCount++;
-    log('error', 'request_error', {
-      path,
-      error: err instanceof Error ? err.message : 'unknown_error'
-    });
-    jsonResponse(res, 500, { error: 'internal_server_error' });
-  }
+const CreateSessionSchema = z.object({
+  idToken: z.string().min(1, 'idToken is required'),
+  /** Optional: request an extended session (up to ~20.8h instead of ~113min) */
+  extended: z.boolean().optional().default(false),
 });
 
-server.listen(config.port, config.host, () => {
-  log('info', 'auth_session_server_started', { port: config.port, host: config.host });
+const RevokeSessionSchema = z.object({
+  /** If provided, revoke a specific uid's refresh tokens server-side */
+  uid: z.string().optional(),
 });
 
-// Graceful shutdown
-const shutdown = () => {
-  log('info', 'graceful_shutdown_initiated');
-  server.close(() => {
-    log('info', 'server_closed');
-    process.exit(0);
+// ---------------------------------------------------------------------------
+// Firebase Admin initialization
+// ---------------------------------------------------------------------------
+
+function initFirebase(): void {
+  if (admin.apps.length > 0) return;
+
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+  if (projectId && clientEmail && privateKey) {
+    admin.initializeApp({
+      credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
+    });
+  } else if (projectId) {
+    // Fall back to application default credentials (e.g. on GCP)
+    admin.initializeApp({ projectId });
+  } else {
+    admin.initializeApp();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Service manifest
+// ---------------------------------------------------------------------------
+
+const manifest: ServiceManifest = {
+  name: 'auth-session-server',
+  version: '0.1.0',
+  port: DEFAULT_PORT,
+  summary: 'Cross-domain authentication session service with Firebase ID token validation and httpOnly cookie management.',
+  routes: [
+    '/health',
+    '/api/session/create',
+    '/api/session/verify',
+    '/api/session/revoke',
+    '/api/session/relay',
+  ],
+  dependencies: [
+    'observability-client',
+    'phi-math-foundation',
+  ],
+} as ServiceManifest;
+
+const app = createServiceApp(manifest);
+
+// ---------------------------------------------------------------------------
+// CORS configuration
+// ---------------------------------------------------------------------------
+
+// @ts-expect-error -- register is available on the Fastify instance from createServiceApp
+app.register(import('@fastify/cors'), {
+  origin: (origin: string | undefined, cb: (err: Error | null, allow: boolean) => void) => {
+    // Allow requests with no origin (server-to-server, curl, etc.)
+    if (!origin) {
+      cb(null, true);
+      return;
+    }
+    if (ALLOWED_ORIGINS_SET.has(origin)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`CORS: origin ${origin} not allowed`), false);
+    }
+  },
+  credentials: true,
+  maxAge: CORS_MAX_AGE_S,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Heady-Request-Id'],
+});
+
+// ---------------------------------------------------------------------------
+// Cookie plugin
+// ---------------------------------------------------------------------------
+
+// @ts-expect-error -- register is available on the Fastify instance from createServiceApp
+app.register(import('@fastify/cookie'), {
+  secret: process.env.COOKIE_SECRET || 'heady-cookie-secret-change-in-production',
+  parseOptions: {},
+});
+
+// ---------------------------------------------------------------------------
+// Initialize Firebase before handling requests
+// ---------------------------------------------------------------------------
+
+app.addHook('onReady', async () => {
+  initFirebase();
+  app.log.info({
+    msg: 'Firebase Admin SDK initialized',
+    projectId: process.env.FIREBASE_PROJECT_ID ?? 'default',
   });
-  setTimeout(() => {
-    log('warn', 'forced_shutdown', { timeoutMs: FIB[8] * 1000 });
-    process.exit(1);
-  }, FIB[8] * 1000); // 21 second grace period
-};
+});
 
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+// ---------------------------------------------------------------------------
+// Health endpoint
+// ---------------------------------------------------------------------------
 
-export { server, config };
+app.get('/health', async () => ({
+  status: 'healthy',
+  service: 'auth-session-server',
+  version: '0.1.0',
+  phi: PHI,
+  sessionMaxAgeSec: SESSION_MAX_AGE_S,
+  checkedAt: new Date().toISOString(),
+}));
+
+// ---------------------------------------------------------------------------
+// POST /api/session/create
+// Validates a Firebase ID token, creates an httpOnly session cookie.
+// ---------------------------------------------------------------------------
+
+app.post('/api/session/create', async (request, reply) => {
+  const parseResult = CreateSessionSchema.safeParse(request.body);
+  if (!parseResult.success) {
+    reply.status(400);
+    return {
+      error: 'VALIDATION_ERROR',
+      details: parseResult.error.flatten().fieldErrors,
+    };
+  }
+
+  const { idToken, extended } = parseResult.data;
+
+  let maxRetries = fib(3); // 2 retries
+  let attempt = 0;
+  let lastError: unknown;
+
+  while (attempt <= maxRetries) {
+    try {
+      // Verify the ID token first
+      const decodedToken = await admin.auth().verifyIdToken(idToken, /* checkRevoked */ true);
+
+      // Determine session duration based on extended flag
+      const expiresInMs = extended
+        ? SESSION_EXTENDED_AGE_S * 1000
+        : SESSION_MAX_AGE_MS;
+
+      // Create a session cookie from the ID token
+      const sessionCookie = await admin.auth().createSessionCookie(idToken, {
+        expiresIn: expiresInMs,
+      });
+
+      // Set the httpOnly, Secure, SameSite=None cookie
+      reply.setCookie(SESSION_COOKIE_NAME, sessionCookie, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        domain: COOKIE_DOMAIN,
+        path: '/',
+        maxAge: extended ? SESSION_EXTENDED_AGE_S : SESSION_MAX_AGE_S,
+      });
+
+      reply.status(201);
+      return {
+        status: 'SESSION_CREATED',
+        uid: decodedToken.uid,
+        email: decodedToken.email ?? null,
+        expiresInSeconds: extended ? SESSION_EXTENDED_AGE_S : SESSION_MAX_AGE_S,
+      };
+    } catch (err) {
+      lastError = err;
+      attempt += 1;
+      if (attempt <= maxRetries) {
+        const backoffMs = phiBackoff(attempt);
+        app.log.warn({
+          msg: 'Session create failed, retrying with phi-backoff',
+          attempt,
+          backoffMs,
+          error: (err as Error).message,
+        });
+        await new Promise((resolve) => setTimeout(resolve, backoffMs));
+      }
+    }
+  }
+
+  app.log.error({
+    msg: 'Session creation failed after retries',
+    maxRetries,
+    error: (lastError as Error).message,
+  });
+
+  reply.status(401);
+  return {
+    error: 'AUTH_FAILED',
+    message: 'Invalid or expired ID token',
+  };
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/session/verify
+// Verifies session cookie, returns user info.
+// ---------------------------------------------------------------------------
+
+app.post('/api/session/verify', async (request, reply) => {
+  const sessionCookie = (request.cookies as Record<string, string | undefined>)?.[SESSION_COOKIE_NAME];
+
+  if (!sessionCookie) {
+    reply.status(401);
+    return {
+      error: 'NO_SESSION',
+      message: 'No session cookie present',
+    };
+  }
+
+  let maxRetries = fib(3); // 2 retries
+  let attempt = 0;
+  let lastError: unknown;
+
+  while (attempt <= maxRetries) {
+    try {
+      const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, /* checkRevoked */ true);
+
+      return {
+        status: 'VALID',
+        uid: decodedClaims.uid,
+        email: decodedClaims.email ?? null,
+        name: decodedClaims.name ?? null,
+        picture: decodedClaims.picture ?? null,
+        emailVerified: decodedClaims.email_verified ?? false,
+        authTime: decodedClaims.auth_time,
+        issuedAt: decodedClaims.iat,
+        expiresAt: decodedClaims.exp,
+      };
+    } catch (err) {
+      lastError = err;
+      attempt += 1;
+      if (attempt <= maxRetries) {
+        const backoffMs = phiBackoff(attempt);
+        app.log.warn({
+          msg: 'Session verify failed, retrying with phi-backoff',
+          attempt,
+          backoffMs,
+          error: (err as Error).message,
+        });
+        await new Promise((resolve) => setTimeout(resolve, backoffMs));
+      }
+    }
+  }
+
+  app.log.error({
+    msg: 'Session verification failed after retries',
+    error: (lastError as Error).message,
+  });
+
+  // Clear invalid cookie
+  reply.clearCookie(SESSION_COOKIE_NAME, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    domain: COOKIE_DOMAIN,
+    path: '/',
+  });
+
+  reply.status(401);
+  return {
+    error: 'INVALID_SESSION',
+    message: 'Session cookie is invalid or revoked',
+  };
+});
+
+// ---------------------------------------------------------------------------
+// POST /api/session/revoke
+// Invalidates session cookie and optionally revokes Firebase refresh tokens.
+// ---------------------------------------------------------------------------
+
+app.post('/api/session/revoke', async (request, reply) => {
+  const sessionCookie = (request.cookies as Record<string, string | undefined>)?.[SESSION_COOKIE_NAME];
+
+  // Clear cookie regardless
+  reply.clearCookie(SESSION_COOKIE_NAME, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    domain: COOKIE_DOMAIN,
+    path: '/',
+  });
+
+  // Parse optional body for uid-based server-side revocation
+  const parseResult = RevokeSessionSchema.safeParse(request.body ?? {});
+  const requestUid = parseResult.success ? parseResult.data.uid : undefined;
+
+  // Determine uid to revoke: from body, or from session cookie
+  let uidToRevoke = requestUid;
+
+  if (!uidToRevoke && sessionCookie) {
+    try {
+      const decoded = await admin.auth().verifySessionCookie(sessionCookie);
+      uidToRevoke = decoded.uid;
+    } catch {
+      // Cookie already invalid, just clear it
+      app.log.info({ msg: 'Session cookie already invalid during revoke' });
+    }
+  }
+
+  if (uidToRevoke) {
+    let attempt = 0;
+    const maxRetries = fib(3); // 2 retries
+
+    while (attempt <= maxRetries) {
+      try {
+        await admin.auth().revokeRefreshTokens(uidToRevoke);
+        app.log.info({ msg: 'Refresh tokens revoked', uid: uidToRevoke });
+        break;
+      } catch (err) {
+        attempt += 1;
+        if (attempt <= maxRetries) {
+          const backoffMs = phiBackoff(attempt);
+          app.log.warn({
+            msg: 'Token revocation failed, retrying with phi-backoff',
+            attempt,
+            backoffMs,
+            error: (err as Error).message,
+          });
+          await new Promise((resolve) => setTimeout(resolve, backoffMs));
+        } else {
+          app.log.error({
+            msg: 'Token revocation failed after retries',
+            uid: uidToRevoke,
+            error: (err as Error).message,
+          });
+        }
+      }
+    }
+  }
+
+  reply.status(200);
+  return {
+    status: 'SESSION_REVOKED',
+    uid: uidToRevoke ?? null,
+  };
+});
+
+// ---------------------------------------------------------------------------
+// GET /api/session/relay
+// Serves relay iframe HTML for cross-domain authentication propagation.
+// The iframe is embedded on each Heady domain and communicates session
+// state via postMessage to the parent window.
+// ---------------------------------------------------------------------------
+
+app.get('/api/session/relay', async (request, reply) => {
+  const relayHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Heady Session Relay</title>
+  <style>body{display:none}</style>
+</head>
+<body>
+<script>
+(function() {
+  'use strict';
+
+  // Allowed parent origins (all 9 Heady domains + www variants)
+  var ALLOWED = new Set(${JSON.stringify([...ALLOWED_ORIGINS_SET])});
+
+  // PHI-derived heartbeat interval: ${Math.round(PHI_CUBED * 1000)}ms
+  var HEARTBEAT_MS = ${Math.round(PHI_CUBED * 1000)};
+
+  // Verify session by calling back to this server
+  var VERIFY_URL = '/api/session/verify';
+
+  function sendToParent(data) {
+    if (window.parent === window) return;
+    try {
+      // Post to parent - parent must validate origin on receipt
+      window.parent.postMessage(
+        JSON.stringify({ type: 'heady:session', payload: data }),
+        '*'
+      );
+    } catch (e) {
+      // Silently fail - parent may have navigated away
+    }
+  }
+
+  function checkSession() {
+    fetch(VERIFY_URL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.status === 'VALID') {
+        sendToParent({
+          authenticated: true,
+          uid: data.uid,
+          email: data.email,
+          name: data.name,
+          expiresAt: data.expiresAt
+        });
+      } else {
+        sendToParent({ authenticated: false });
+      }
+    })
+    .catch(function() {
+      sendToParent({ authenticated: false, error: 'NETWORK_ERROR' });
+    });
+  }
+
+  // Listen for requests from parent
+  window.addEventListener('message', function(event) {
+    if (!event.origin || !ALLOWED.has(event.origin)) return;
+
+    var msg;
+    try {
+      msg = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+    } catch (e) { return; }
+
+    if (msg && msg.type === 'heady:session:check') {
+      checkSession();
+    }
+  });
+
+  // Initial check on load
+  checkSession();
+
+  // Periodic heartbeat at phi-cubed interval
+  setInterval(checkSession, HEARTBEAT_MS);
+})();
+</script>
+</body>
+</html>`;
+
+  reply
+    .header('Content-Type', 'text/html; charset=utf-8')
+    .header('Cache-Control', `public, max-age=${RELAY_CACHE_S}`)
+    .header('X-Frame-Options', 'ALLOWALL')
+    .header('Content-Security-Policy', [
+      "default-src 'none'",
+      "script-src 'unsafe-inline'",
+      `connect-src 'self'`,
+      "frame-ancestors " + ALLOWED_ORIGINS.join(' '),
+    ].join('; '))
+    .status(200)
+    .send(relayHtml);
+});
+
+// ---------------------------------------------------------------------------
+// Start server
+// ---------------------------------------------------------------------------
+
+const port = Number(process.env.PORT ?? DEFAULT_PORT);
+app.listen({ port, host: '0.0.0.0' }).then(() => {
+  app.log.info({
+    msg: `auth-session-server listening on ${port}`,
+    port,
+    phi: PHI,
+    sessionMaxAgeSec: SESSION_MAX_AGE_S,
+    corsOrigins: ALLOWED_ORIGINS.length,
+    cookieDomain: COOKIE_DOMAIN,
+  });
+}).catch((error) => {
+  app.log.error(error);
+  process.exit(1);
+});

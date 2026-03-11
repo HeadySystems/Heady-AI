@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -177,7 +175,7 @@ class SendAlertTool extends HeadyMCPTool {
     const formattedMessage = `${severityEmoji[parsed.severity]} [${parsed.severity.toUpperCase()}] ${parsed.message}`;
 
     // In production: POST to Slack webhook or use @slack/web-api
-    logger.info(`[SendAlert] Sending to ${parsed.channel}: ${formattedMessage}`);
+    console.log(`[SendAlert] Sending to ${parsed.channel}: ${formattedMessage}`);
 
     // Simulate Slack API call
     const result = {
@@ -246,7 +244,7 @@ class RunSQLQueryTool extends HeadyMCPTool {
       throw new Error('Query contains disallowed SQL keywords. Only SELECT is permitted.');
     }
 
-    logger.info(`[RunSQL] Executing on ${parsed.database}: ${parsed.query.substring(0, 50)}...`);
+    console.log(`[RunSQL] Executing on ${parsed.database}: ${parsed.query.substring(0, 50)}...`);
 
     // In production: execute against actual database with read-only credentials
     // This is a mock result
@@ -278,7 +276,7 @@ const REGISTERED_TOOLS = new Map();
  */
 const registerTool = (tool) => {
   REGISTERED_TOOLS.set(tool.name, tool);
-  logger.info(`[MCP] Registered tool: ${tool.name} v${tool.version}`);
+  console.log(`[MCP] Registered tool: ${tool.name} v${tool.version}`);
 };
 
 /**
@@ -300,9 +298,9 @@ const initializeTools = async () => {
   for (const tool of tools) {
     try {
       const result = await heady.mcp.registerTool(tool.toRegistrationPayload());
-      logger.info(`[MCP] Registered with Heady™OS: ${tool.name} → ID: ${result.toolId}`);
+      console.log(`[MCP] Registered with Heady™OS: ${tool.name} → ID: ${result.toolId}`);
     } catch (err) {
-      logger.error(`[MCP] Failed to register ${tool.name} with Heady™OS:`, err.message);
+      console.error(`[MCP] Failed to register ${tool.name} with Heady™OS:`, err.message);
     }
   }
 
@@ -333,7 +331,7 @@ app.post('/mcp/execute/:toolName', async (req, res) => {
     });
   }
 
-  logger.info(`[MCP] Executing tool: ${toolName}`, args);
+  console.log(`[MCP] Executing tool: ${toolName}`, args);
   const startMs = Date.now();
 
   try {
@@ -346,7 +344,7 @@ app.post('/mcp/execute/:toolName', async (req, res) => {
       executedAt: new Date().toISOString(),
     });
   } catch (err) {
-    logger.error(`[MCP] Tool ${toolName} error:`, err);
+    console.error(`[MCP] Tool ${toolName} error:`, err);
     res.json({
       toolName,
       isError: true,
@@ -393,9 +391,9 @@ app.get('/health', (req, res) => {
   await initializeTools();
   const PORT = process.env.PORT || 3003;
   app.listen(PORT, () => {
-    logger.info(`[MCP] Custom MCP tool server running on port ${PORT}`);
-    logger.info(`[MCP] Tools: ${Array.from(REGISTERED_TOOLS.keys()).join(', ')}`);
-    logger.info(`[MCP] Register URL: ${process.env.MCP_SERVER_URL || `http://localhost:${PORT}`}`);
+    console.log(`[MCP] Custom MCP tool server running on port ${PORT}`);
+    console.log(`[MCP] Tools: ${Array.from(REGISTERED_TOOLS.keys()).join(', ')}`);
+    console.log(`[MCP] Register URL: ${process.env.MCP_SERVER_URL || `http://localhost:${PORT}`}`);
   });
 })();
 

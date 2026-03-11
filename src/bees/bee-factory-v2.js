@@ -316,7 +316,7 @@ class BeeFactoryV2 extends EventEmitter {
    * @param {string} domain
    * @param {object} config
    * @param {string}   [config.description]
-   * @param {number}   [config.csl_relevance=0.5]
+   * @param {number}   [config.priority=0.5]
    * @param {Array}    [config.workers]         - Array of { name, fn, deps? }
    * @param {boolean}  [config.persist=false]
    * @param {string[]} [config.dependsOn=[]]    - Domains this bee depends on
@@ -327,7 +327,7 @@ class BeeFactoryV2 extends EventEmitter {
   createBee(domain, config = {}) {
     const {
       description = `Dynamic ${domain} bee`,
-      csl_relevance = 0.5,
+      priority = 0.5,
       workers = [],
       persist = false,
       dependsOn = [],
@@ -361,7 +361,7 @@ class BeeFactoryV2 extends EventEmitter {
     const entry = {
       domain,
       description,
-      csl_relevance,
+      priority,
       createdAt: Date.now(),
       dynamic: true,
       validated,
@@ -438,7 +438,7 @@ class BeeFactoryV2 extends EventEmitter {
     this._stats.created++;
 
     this._callHook('onCreate', domain, entry);
-    this.emit('bee:created', { domain, csl_relevance, version: entry.version });
+    this.emit('bee:created', { domain, priority, version: entry.version });
 
     if (persist) {
       this._persistBee(domain, config);
@@ -452,10 +452,10 @@ class BeeFactoryV2 extends EventEmitter {
    *
    * @param {string} name
    * @param {Function|Function[]} work
-   * @param {number} [csl_relevance=0.8]
+   * @param {number} [priority=0.8]
    * @returns {object}
    */
-  spawnBee(name, work, csl_relevance = 0.8) {
+  spawnBee(name, work, priority = 0.8) {
     const workFns = Array.isArray(work) ? work : [work];
     const id = `ephemeral-${name}-${crypto.randomBytes(3).toString('hex')}`;
 
@@ -463,7 +463,7 @@ class BeeFactoryV2 extends EventEmitter {
     const entry = {
       domain: id,
       description: `Ephemeral bee: ${name}`,
-      csl_relevance,
+      priority,
       ephemeral: true,
       createdAt: Date.now(),
       file: `ephemeral:${id}`,
@@ -482,7 +482,7 @@ class BeeFactoryV2 extends EventEmitter {
 
     this._ephemeral.set(id, entry);
     this._health.init(id);
-    this.emit('bee:spawned', { id, name, csl_relevance });
+    this.emit('bee:spawned', { id, name, priority });
     return entry;
   }
 
@@ -544,7 +544,7 @@ class BeeFactoryV2 extends EventEmitter {
     const templates = {
       'health-check': (cfg) => ({
         description: `Health checker for ${cfg.target}`,
-        csl_relevance: 0.9,
+        priority: 0.9,
         workers: [{
           name: 'probe',
           fn: async () => {
@@ -565,7 +565,7 @@ class BeeFactoryV2 extends EventEmitter {
 
       'monitor': (cfg) => ({
         description: `Process monitor for ${cfg.target}`,
-        csl_relevance: 0.7,
+        priority: 0.7,
         workers: [
           {
             name: 'metrics',
@@ -596,7 +596,7 @@ class BeeFactoryV2 extends EventEmitter {
 
       'processor': (cfg) => ({
         description: `Data processor: ${cfg.name}`,
-        csl_relevance: cfg.csl_relevance || 0.6,
+        priority: cfg.priority || 0.6,
         workers: (cfg.tasks || []).map(task => ({
           name: task.name || 'process',
           fn: task.fn || (async () => ({ processed: true, task: task.name })),
@@ -605,7 +605,7 @@ class BeeFactoryV2 extends EventEmitter {
 
       'scanner': (cfg) => ({
         description: `Scanner for ${cfg.target}`,
-        csl_relevance: 0.8,
+        priority: 0.8,
         workers: [{
           name: 'scan',
           fn: cfg.scanFn || (async () => {
@@ -634,7 +634,7 @@ class BeeFactoryV2 extends EventEmitter {
 
       'alerter': (cfg) => ({
         description: `Threshold alerter for ${cfg.target}`,
-        csl_relevance: 0.85,
+        priority: 0.85,
         workers: [{
           name: 'check-thresholds',
           fn: async () => {
@@ -652,7 +652,7 @@ class BeeFactoryV2 extends EventEmitter {
       // NEW in V2
       'validator': (cfg) => ({
         description: `Schema validator for ${cfg.target || 'data'}`,
-        csl_relevance: 0.9,
+        priority: 0.9,
         workers: [{
           name: 'validate',
           fn: async (ctx) => {
@@ -682,7 +682,7 @@ class BeeFactoryV2 extends EventEmitter {
       // NEW in V2
       'scheduler': (cfg) => ({
         description: `Scheduled task bee for ${cfg.name}`,
-        csl_relevance: cfg.csl_relevance || 0.5,
+        priority: cfg.priority || 0.5,
         workers: [{
           name: 'tick',
           fn: async (ctx) => {
@@ -741,7 +741,7 @@ class BeeFactoryV2 extends EventEmitter {
     const factory = this;
     return this.createBee(`swarm-${name}`, {
       description: `Swarm: ${name} (${mode}, ${bees.length} bees)`,
-      csl_relevance: 1.0,
+      priority: 1.0,
       workers: [{
         name: 'orchestrate',
         fn: async (ctx = {}) => {
@@ -912,10 +912,10 @@ class BeeFactoryV2 extends EventEmitter {
   listBees() {
     const all = [];
     for (const [id, entry] of this._registry) {
-      all.push({ domain: id, description: entry.description, csl_relevance: entry.csl_relevance, type: 'registered', version: entry.version, createdAt: entry.createdAt });
+      all.push({ domain: id, description: entry.description, priority: entry.priority, type: 'registered', version: entry.version, createdAt: entry.createdAt });
     }
     for (const [id, entry] of this._ephemeral) {
-      all.push({ domain: id, description: entry.description, csl_relevance: entry.csl_relevance, type: 'ephemeral', createdAt: entry.createdAt });
+      all.push({ domain: id, description: entry.description, priority: entry.priority, type: 'ephemeral', createdAt: entry.createdAt });
     }
     return all;
   }
@@ -1019,7 +1019,7 @@ class BeeFactoryV2 extends EventEmitter {
 
 const domain = '${domain}';
 const description = '${(config.description || '').replace(/'/g, "\\'")}';
-const csl_relevance = ${config.csl_relevance || 0.5};
+const priority = ${config.priority || 0.5};
 
 /**
  * @param {object} ctx - Runtime context
@@ -1033,19 +1033,13 @@ ${workerNames.map(name => `        /**
          * @param {object} deps - Injected dependencies
          */
         async (ctx, deps) => {
-            // IMPLEMENTED: ${name}
-            try {
-                const result = await deps.executeAction("${name}", ctx);
-                return { bee: domain, action: "${name}", status: "completed", result, ts: Date.now() };
-            } catch (err) {
-                return { bee: domain, action: "${name}", status: "failed", error: err.message, ts: Date.now() };
-            }
+            // Implementation delegated to dynamic bee loader
             return { bee: domain, action: '${name}', status: 'active', ts: Date.now() };
         },`).join('\n')}
     ];
 }
 
-module.exports = { domain, description, csl_relevance, getWork };
+module.exports = { domain, description, priority, getWork };
 `;
 
     try { fs.writeFileSync(filePath, code, 'utf8'); } catch { /* non-fatal */ }
@@ -1076,7 +1070,7 @@ module.exports = {
   getFactory,
   // Convenience shorthands that delegate to singleton
   createBee: (domain, config) => getFactory().createBee(domain, config),
-  spawnBee: (name, work, csl_relevance) => getFactory().spawnBee(name, work, csl_relevance),
+  spawnBee: (name, work, priority) => getFactory().spawnBee(name, work, priority),
   createWorkUnit: (domain, name, fn, deps) => getFactory().createWorkUnit(domain, name, fn, deps),
   createFromTemplate: (template, config) => getFactory().createFromTemplate(template, config),
   createSwarm: (name, configs, policy) => getFactory().createSwarm(name, configs, policy),

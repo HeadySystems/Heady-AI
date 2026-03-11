@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -32,7 +30,7 @@ const path = require('path');
 // Graceful logger — falls back to console if pino unavailable
 let logger;
 try { logger = require('./utils/logger'); }
-catch { logger = { info: logger.info, warn: logger.warn, error: logger.error }; }
+catch { logger = { info: console.log, warn: console.warn, error: console.error }; }
 
 // ── Lazy-load dependencies to avoid circular requires ─────────────
 let _vectorMemory = null;

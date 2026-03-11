@@ -1,0 +1,74 @@
+{
+  "dashboard": {
+    "title": "Heady Systems \u2014 Service Health",
+    "uid": "heady-main",
+    "timezone": "utc",
+    "refresh": "21s",
+    "panels": [
+      {
+        "title": "Request Rate (all services)",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(heady_requests_total[1m])) by (service)",
+            "legendFormat": "{{service}}"
+          }
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "timeseries",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "sum(rate(heady_errors_total[1m])) by (service)",
+            "legendFormat": "{{service}}"
+          }
+        ]
+      },
+      {
+        "title": "Average Latency (ms)",
+        "type": "gauge",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "avg(heady_avg_latency_ms) by (domain)",
+            "legendFormat": "{{domain}}"
+          }
+        ]
+      },
+      {
+        "title": "Bulkhead Utilization",
+        "type": "bargauge",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "heady_bulkhead_active",
+            "legendFormat": "{{service}}"
+          }
+        ]
+      }
+    ]
+  }
+}

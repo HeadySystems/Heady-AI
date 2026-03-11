@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file bee-factory.js
  * @description Dynamic Agent Worker Factory — BeeFactory.
@@ -501,7 +499,7 @@ export class Bee extends EventEmitter {
  * const factory = new BeeFactory({ maxBees: 197 });
  *
  * const embedBee = factory.createBee({ type: 'EmbedBee' });
- * embedBee.on('task.completed', ({ duration }) => logger.info('Done in', duration + 'ms'));
+ * embedBee.on('task.completed', ({ duration }) => console.log('Done in', duration + 'ms'));
  *
  * // Register execution handler
  * embedBee._executeHandler = async (payload) => embedText(payload.text);

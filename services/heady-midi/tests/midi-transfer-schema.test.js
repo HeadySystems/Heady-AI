@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Comprehensive test suite for the Heady™ MIDI Transfer Schema.
  * Runnable with: node tests/midi-transfer-schema.test.js
@@ -56,11 +54,11 @@ let passed = 0, failed = 0, total = 0;
 
 function test(name, fn) {
   total++;
-  try { fn(); passed++; logger.info(`  ✓ ${name}`); }
-  catch (e) { failed++; logger.error(`  ✗ ${name}: ${e.message}`); }
+  try { fn(); passed++; console.log(`  ✓ ${name}`); }
+  catch (e) { failed++; console.error(`  ✗ ${name}: ${e.message}`); }
 }
 
-function suite(name) { logger.info(`\n━━━ ${name} ━━━`); }
+function suite(name) { console.log(`\n━━━ ${name} ━━━`); }
 
 // ═════════════════════════════════════════════════════════════════
 // Suite 1: midi-constants
@@ -718,5 +716,5 @@ test('PHI × PSI = 1 (golden ratio identity)', () => {
 });
 
 // ─── Summary ─────────────────────────────────────────────────────
-logger.info(`\n━━━ Results: ${passed}/${total} passed, ${failed} failed ━━━`);
+console.log(`\n━━━ Results: ${passed}/${total} passed, ${failed} failed ━━━`);
 process.exit(failed > 0 ? 1 : 0);

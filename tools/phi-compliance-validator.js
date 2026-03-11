@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -531,7 +529,7 @@ class PhiAuditReport {
  * @example
  * const v = new PhiComplianceValidator({ strictness: 'strict' });
  * const report = v.validateJSON(myConfig, 'config/settings.json');
- * logger.info(report.toMarkdown());
+ * console.log(report.toMarkdown());
  */
 class PhiComplianceValidator {
   /**
@@ -629,7 +627,7 @@ class PhiComplianceValidator {
   validateAll(directory) {
     const reports = [];
     if (!fs.existsSync(directory)) {
-      if (this.verbose) logger.warn(`[PhiValidator] Directory not found: ${directory}`);
+      if (this.verbose) console.warn(`[PhiValidator] Directory not found: ${directory}`);
       return reports;
     }
 
@@ -638,7 +636,7 @@ class PhiComplianceValidator {
       try {
         entries = fs.readdirSync(dir, { withFileTypes: true });
       } catch (e) {
-        if (this.verbose) logger.warn(`[PhiValidator] Cannot read dir: ${dir} — ${e.message}`);
+        if (this.verbose) console.warn(`[PhiValidator] Cannot read dir: ${dir} — ${e.message}`);
         return;
       }
       for (const entry of entries) {
@@ -663,7 +661,7 @@ class PhiComplianceValidator {
               reports.push(this.validateYAML(raw, full));
             }
           } catch (e) {
-            if (this.verbose) logger.warn(`[PhiValidator] Failed to process ${full}: ${e.message}`);
+            if (this.verbose) console.warn(`[PhiValidator] Failed to process ${full}: ${e.message}`);
           }
         }
       }

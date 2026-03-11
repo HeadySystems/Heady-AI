@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadyConductor - Auto-Success Engine
  * Dynamic φ-scaled parallel agent orchestration
@@ -160,7 +158,7 @@ export class AutoSuccessEngine {
     const systemLoad = await this.getSystemLoad();
     const sampleAgentCount = this.computeAgentCount('critical', systemLoad);
 
-    logger.info('[AutoSuccessEngine] Starting with φ-scaled dynamic configuration:', {
+    console.log('[AutoSuccessEngine] Starting with φ-scaled dynamic configuration:', {
       cycleIntervalMs: CYCLE_INTERVAL_MS,
       cycleIntervalDerivation: 'φ⁷ × 1000',
       categories: categoryCount,
@@ -182,7 +180,7 @@ export class AutoSuccessEngine {
       clearInterval(this.timer);
       this.timer = null;
     }
-    logger.info('[AutoSuccessEngine] Stopped');
+    console.log('[AutoSuccessEngine] Stopped');
   }
 
   private async runCycle() {
@@ -202,7 +200,7 @@ export class AutoSuccessEngine {
       phiDistribution: {},
     };
 
-    logger.info(`[AutoSuccessEngine] Cycle #${this.cycleNumber} starting (load: ${systemLoad.toFixed(3)})...`);
+    console.log(`[AutoSuccessEngine] Cycle #${this.cycleNumber} starting (load: ${systemLoad.toFixed(3)})...`);
 
     // Process all categories in parallel with φ-distributed agent counts
     const categoryPromises = this.categories.map(async (category) => {
@@ -232,7 +230,7 @@ export class AutoSuccessEngine {
 
     metrics.durationMs = Date.now() - startTime;
 
-    logger.info('[AutoSuccessEngine] Cycle complete:', {
+    console.log('[AutoSuccessEngine] Cycle complete:', {
       cycle: metrics.cycleNumber,
       duration: `${metrics.durationMs}ms`,
       agents: metrics.totalAgentsSpawned,
@@ -262,12 +260,12 @@ export class AutoSuccessEngine {
   ): Promise<TaskResult[]> {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       if (this.totalRetries >= MAX_RETRIES_TOTAL) {
-        logger.error(`[AutoSuccessEngine] Max total retries (${MAX_RETRIES_TOTAL}) exceeded — escalating to HeadyBuddy`);
+        console.error(`[AutoSuccessEngine] Max total retries (${MAX_RETRIES_TOTAL}) exceeded — escalating to HeadyBuddy`);
         break;
       }
 
       const backoffMs = Math.round(phiPower(attempt) * 1000);
-      logger.info(`[AutoSuccessEngine] Retrying ${category.name} in ${backoffMs}ms (attempt ${attempt}/${maxRetries})`);
+      console.log(`[AutoSuccessEngine] Retrying ${category.name} in ${backoffMs}ms (attempt ${attempt}/${maxRetries})`);
 
       await this.sleep(backoffMs);
       this.totalRetries++;
@@ -299,83 +297,83 @@ export class AutoSuccessEngine {
   // Each returns TaskResult[] — parallel agents within each category
 
   private async runSecurityScans(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Security] Running φ-distributed security scans');
+    console.log('[AutoSuccess:Security] Running φ-distributed security scans');
     return [{ taskId: 'sec-1', category: 'Security', status: 'success', durationMs: 0 }];
   }
 
   private async runIntelligenceChecks(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Intelligence] Running CSL intelligence checks');
+    console.log('[AutoSuccess:Intelligence] Running CSL intelligence checks');
     return [{ taskId: 'int-1', category: 'Intelligence', status: 'success', durationMs: 0 }];
   }
 
   private async runAvailabilityChecks(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Availability] Running availability probes');
+    console.log('[AutoSuccess:Availability] Running availability probes');
     return [{ taskId: 'avail-1', category: 'Availability', status: 'success', durationMs: 0 }];
   }
 
   private async monitorPerformance(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Performance] Monitoring performance metrics');
+    console.log('[AutoSuccess:Performance] Monitoring performance metrics');
     return [{ taskId: 'perf-1', category: 'Performance', status: 'success', durationMs: 0 }];
   }
 
   private async validateCodeQuality(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:CodeQuality] Running quality gates');
+    console.log('[AutoSuccess:CodeQuality] Running quality gates');
     return [{ taskId: 'cq-1', category: 'CodeQuality', status: 'success', durationMs: 0 }];
   }
 
   private async processLearningEvents(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Learning] HeadyVinci pattern learning active');
+    console.log('[AutoSuccess:Learning] HeadyVinci pattern learning active');
     return [{ taskId: 'learn-1', category: 'Learning', status: 'success', durationMs: 0 }];
   }
 
   private async checkCommunications(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Communication] Checking communication channels');
+    console.log('[AutoSuccess:Communication] Checking communication channels');
     return [{ taskId: 'comm-1', category: 'Communication', status: 'success', durationMs: 0 }];
   }
 
   private async validateInfrastructure(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Infrastructure] Validating infrastructure');
+    console.log('[AutoSuccess:Infrastructure] Validating infrastructure');
     return [{ taskId: 'infra-1', category: 'Infrastructure', status: 'success', durationMs: 0 }];
   }
 
   private async auditCompliance(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Compliance] Running compliance audit');
+    console.log('[AutoSuccess:Compliance] Running compliance audit');
     return [{ taskId: 'comp-1', category: 'Compliance', status: 'success', durationMs: 0 }];
   }
 
   private async optimizeCosts(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Cost] Analyzing cost optimization opportunities');
+    console.log('[AutoSuccess:Cost] Analyzing cost optimization opportunities');
     return [{ taskId: 'cost-1', category: 'CostOptimization', status: 'success', durationMs: 0 }];
   }
 
   private async runDiscovery(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:Discovery] Scanning for innovations');
+    console.log('[AutoSuccess:Discovery] Scanning for innovations');
     return [{ taskId: 'disc-1', category: 'Discovery', status: 'success', durationMs: 0 }];
   }
 
   private async runEvolution(): Promise<TaskResult[]> {
     if (!this.config.enableEvolution) return [];
-    logger.info('[AutoSuccess:Evolution] Running controlled evolution cycle');
+    console.log('[AutoSuccess:Evolution] Running controlled evolution cycle');
     return [{ taskId: 'evo-1', category: 'Evolution', status: 'success', durationMs: 0 }];
   }
 
   private async runSelfAssessment(): Promise<TaskResult[]> {
-    logger.info('[AutoSuccess:SelfAssessment] Running metacognitive assessment');
+    console.log('[AutoSuccess:SelfAssessment] Running metacognitive assessment');
     return [{ taskId: 'self-1', category: 'SelfAssessment', status: 'success', durationMs: 0 }];
   }
 
   // ─── DEPENDENT SYSTEMS ──────────────────────────────────────────────────
 
   private async triggerMonteCarloSimulations(): Promise<void> {
-    logger.info('[HeadySims] Running Monte Carlo validation simulations');
+    console.log('[HeadySims] Running Monte Carlo validation simulations');
   }
 
   private async optimizeResourceAllocation(systemLoad: number): Promise<void> {
-    logger.info(`[HeadyVinci] Liquid scaling active (load: ${systemLoad.toFixed(3)}) — φ-ratio rebalancing`);
+    console.log(`[HeadyVinci] Liquid scaling active (load: ${systemLoad.toFixed(3)}) — φ-ratio rebalancing`);
   }
 
   private async recordLearningEvent(category: string, error: any): Promise<void> {
-    logger.info('[HeadyVinci] Learning event recorded:', {
+    console.log('[HeadyVinci] Learning event recorded:', {
       category,
       error: error?.message || String(error),
       timestamp: new Date().toISOString(),
@@ -401,7 +399,7 @@ async function main() {
 }
 
 if (require.main === module) {
-  main().catch(logger.error);
+  main().catch(console.error);
 }
 
 export default AutoSuccessEngine;

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Embedding Engine
  * Zero-dependency text embedding with optional external API support.
@@ -329,7 +327,7 @@ export class EmbeddingEngine {
       }
     } catch (err) {
       // Fallback to local on external API failure
-      logger.warn(`[EmbeddingEngine] ${this.provider} failed (${err.message}), falling back to local`);
+      console.warn(`[EmbeddingEngine] ${this.provider} failed (${err.message}), falling back to local`);
       vec = this._embedLocal(text);
     }
 

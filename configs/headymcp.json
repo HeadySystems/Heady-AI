@@ -1,90 +1,187 @@
 {
-  "mcpServers": {
-    "heady-brain": {
-      "displayName": "Heady",
-      "description": "HeadyBrain — Primary AI model provider for all Heady services",
-      "provider": "headysystems",
-      "transport": "http",
-      "url": "https://headyio.com/mcp",
-      "apiKey": "${HEADY_API_KEY}",
-      "priority": 200,
-      "default": true,
-      "capabilities": {
-        "completion": true,
-        "chat": true,
-        "embedding": true,
-        "codeAnalysis": true,
-        "imageGeneration": true,
-        "translation": true
-      },
-      "endpoints": {
-        "generate": "/api/brain/generate",
-        "chat": "/api/brain/chat",
-        "embed": "/api/brain/embed",
-        "analyze": "/api/brain/analyze",
-        "health": "/api/brain/health"
-      },
-      "routing": {
-        "brainFirst": true,
-        "headyPercentage": 100,
-        "fallbackToExternal": false,
-        "overrideRequires": "explicit_user_direction"
-      },
-      "failover": {
-        "enabled": true,
-        "endpoints": [
-          "https://headyio.com",
-          "https://headyio.com/api/brain-backup",
-          "https://headyio.com/api/brain-emergency"
+    "$schema": "https://heady.ai/schemas/headymcp.v1.json",
+    "name": "heady-mcp",
+    "version": "1.0.0",
+    "description": "Heady™ Model Context Protocol server configuration",
+    "server": {
+        "host": "0.0.0.0",
+        "port": 3321,
+        "transport": [
+            "http",
+            "sse"
         ],
-        "retries": 3,
-        "timeoutMs": 10000
-      }
+        "cors": {
+            "origins": [
+                "https://heady.ai",
+                "https://headyai.com",
+                "https://headyme.com",
+                "https://headysystems.com",
+                "https://headyos.com",
+                "https://headybattle.com",
+                "https://headyarena.com",
+                "https://headyconnection.com",
+                "https://headyenterprises.com"
+            ]
+        }
     },
-    "heady-manager": {
-      "displayName": "Heady Manager",
-      "description": "HeadyManager — Service orchestration and deployment",
-      "provider": "headysystems",
-      "transport": "http",
-      "url": "https://headyio.com/manager",
-      "apiKey": "${HEADY_API_KEY}",
-      "priority": 150,
-      "capabilities": {
-        "deployment": true,
-        "serviceManagement": true,
-        "healthMonitoring": true
-      },
-      "endpoints": {
-        "health": "/api/health",
-        "deploy": "/api/deploy",
-        "status": "/api/status"
-      }
-    },
-    "heady-registry": {
-      "displayName": "Heady Registry",
-      "description": "HeadyRegistry — Central service catalog and discovery",
-      "provider": "headysystems",
-      "transport": "http",
-      "url": "https://headyio.com/registry",
-      "apiKey": "${HEADY_API_KEY}",
-      "priority": 140,
-      "capabilities": {
-        "serviceDiscovery": true,
-        "catalogQuery": true
-      },
-      "endpoints": {
-        "query": "/api/registry",
-        "health": "/health"
-      }
+    "tools": [
+        {
+            "name": "heady_search",
+            "description": "Search Heady 3D vector memory",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Natural language search query"
+                    },
+                    "limit": {
+                        "type": "number",
+                        "default": 10
+                    },
+                    "threshold": {
+                        "type": "number",
+                        "default": 0.618
+                    }
+                },
+                "required": [
+                    "query"
+                ]
+            }
+        },
+        {
+            "name": "heady_store",
+            "description": "Store data in Heady vector memory",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "default": "default"
+                    }
+                },
+                "required": [
+                    "key",
+                    "value"
+                ]
+            }
+        },
+        {
+            "name": "heady_health",
+            "description": "Get Heady system health status",
+            "inputSchema": {
+                "type": "object",
+                "properties": {}
+            }
+        },
+        {
+            "name": "heady_pipeline_run",
+            "description": "Trigger an HCFullPipeline execution",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "task": {
+                        "type": "string"
+                    },
+                    "lane": {
+                        "type": "string",
+                        "enum": [
+                            "fast",
+                            "full",
+                            "arena",
+                            "learning"
+                        ]
+                    },
+                    "priority": {
+                        "type": "number",
+                        "default": 0.618
+                    }
+                },
+                "required": [
+                    "task"
+                ]
+            }
+        },
+        {
+            "name": "heady_bee_list",
+            "description": "List all active bees in the swarm",
+            "inputSchema": {
+                "type": "object",
+                "properties": {}
+            }
+        },
+        {
+            "name": "heady_analyze",
+            "description": "Analyze code or data using Heady AI nodes",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "string"
+                    },
+                    "mode": {
+                        "type": "string",
+                        "enum": [
+                            "code",
+                            "data",
+                            "security",
+                            "performance"
+                        ]
+                    }
+                },
+                "required": [
+                    "input"
+                ]
+            }
+        }
+    ],
+    "resources": [
+        {
+            "uri": "heady://memory/vectors",
+            "name": "Vector Memory",
+            "description": "Heady 3D vector memory store"
+        },
+        {
+            "uri": "heady://pipeline/status",
+            "name": "Pipeline Status",
+            "description": "Current HCFullPipeline execution state"
+        },
+        {
+            "uri": "heady://swarm/health",
+            "name": "Swarm Health",
+            "description": "All bee health and circuit breaker states"
+        }
+    ],
+    "prompts": [
+        {
+            "name": "heady_analyze",
+            "description": "Analyze code or data using Heady intelligence",
+            "arguments": [
+                {
+                    "name": "input",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "heady_explain",
+            "description": "Explain a concept using Heady knowledge base",
+            "arguments": [
+                {
+                    "name": "topic",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "headerName": "Authorization"
     }
-  },
-  "modelRouting": {
-    "defaultModel": "heady-brain",
-    "policy": "heady_only",
-    "headyPercentage": 100,
-    "allowExternalOverride": true,
-    "overrideRequires": "explicit_user_direction",
-    "logAllModelSwitches": true,
-    "fallbackChain": ["heady-brain", "heady-manager"]
-  }
 }

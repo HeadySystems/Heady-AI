@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,4 +8,4 @@ app.get('/', (req, res) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.send(`<html><head><title>${siteConfig.name}</title></head><body><h1>${siteConfig.name}</h1><p>${siteConfig.description}</p></body></html>`);
 });
-app.listen(PORT, () => logger.info(`🐝 HeadyMCP running at http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🐝 HeadyMCP running at http://localhost:${PORT}`));

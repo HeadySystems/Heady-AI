@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -22,6 +20,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../shared/logger')('dynamic-template-engine');
 
 const path = require('path');
 const fs = require('fs');

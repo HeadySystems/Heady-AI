@@ -1,7 +1,7 @@
 /**
  * @fileoverview Heady™ Council — Multi-Model Council for Critical Decisions
  * @module orchestration/heady-council
- * @version 2.0.1
+ * @version 2.0.0
  * @author HeadySystems Inc.
  *
  * Implements Directive 9 (Multi-Model Council — Competitive AI Routing).
@@ -30,7 +30,7 @@
 
 'use strict';
 
-const {
+import {
   PHI,
   PSI,
   fib,
@@ -38,30 +38,14 @@ const {
   phiFusionWeights,
   phiBackoff,
   cosineSimilarity,
+  placeholderVector,
   CSL_THRESHOLDS,
   cslGate,
-  VECTOR: VECTOR_CONFIG,
+  VECTOR_DIMENSIONS,
   normalize,
-} = require('../../shared/phi-math.js');
-
-const VECTOR_DIMENSIONS = VECTOR_CONFIG ? VECTOR_CONFIG.DIMS : 384;
-
-// ─── Shims for functions not exported by phi-math ────────────────────────────
-
-/** Generate a deterministic pseudo-random vector from a seed string. */
-function placeholderVector(seed, dims = VECTOR_DIMENSIONS) {
-  const vec = new Array(dims);
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = ((h << 5) - h + seed.charCodeAt(i)) | 0;
-  for (let i = 0; i < dims; i++) {
-    h = ((h * 1103515245 + 12345) & 0x7fffffff);
-    vec[i] = (h / 0x7fffffff) * 2 - 1;
-  }
-  return normalize(vec);
-}
-
-const logger = { info() {}, warn() {}, error() {}, debug() {} };
-try { const pino = require('pino'); Object.assign(logger, pino()); } catch (_) { /* pino optional */ }
+  dot,
+  magnitude,
+} from '../shared/phi-math.js';
 
 // ─── Scoring Constants ────────────────────────────────────────────────────────
 
@@ -231,7 +215,7 @@ const COUNCIL_MEMBERS = Object.fromEntries(
  * @property {string[]} contributingIds   — all members who contributed
  */
 
-class HeadyCouncil {
+export class HeadyCouncil {
   /**
    * @param {Object} [opts] — options
    * @param {Object} [opts.budgetTracker] — optional budget-tracker service reference
@@ -936,19 +920,18 @@ class HeadyCouncil {
       ...meta,
     };
     if (level === 'error') {
-      logger.error(JSON.stringify(entry));
+      console.error(JSON.stringify(entry));
     } else if (level === 'warn') {
-      logger.warn(JSON.stringify(entry));
+      console.warn(JSON.stringify(entry));
     } else if (process.env.LOG_LEVEL === 'debug') {
-      logger.info(JSON.stringify(entry));
+      console.log(JSON.stringify(entry));
     }
   }
 }
 
-// ─── Exports (CommonJS) ──────────────────────────────────────────────────────
+// ─── Named Exports ────────────────────────────────────────────────────────────
 
-module.exports = {
-  HeadyCouncil,
+export {
   COUNCIL_MEMBERS,
   SCORE_WEIGHTS,
   MIN_MEMBERS,
@@ -957,3 +940,5 @@ module.exports = {
   AGREEMENT_THRESHOLD,
   DISAGREEMENT_THRESHOLD,
 };
+
+export default HeadyCouncil;

@@ -1,12 +1,12 @@
-import { CSL_THRESHOLDS, FIB, PHI, PHI_CUBED, PHI_SQUARED, PSI } from './constants.js';
+import { CSL_THRESHOLD, CSL_THRESHOLDS, EMBEDDING_DENSITY_GATE, FIB, PHI, PHI_CUBED, PHI_SQUARED, PROJECTION_DIMENSIONS, PSI, VECTOR_DIMENSIONS } from './constants.js';
 
-export { PHI, PSI, PHI_SQUARED, PHI_CUBED, FIB, CSL_THRESHOLDS };
+export { PHI, PSI, PHI_SQUARED, PHI_CUBED, FIB, CSL_THRESHOLDS, CSL_THRESHOLD, VECTOR_DIMENSIONS, PROJECTION_DIMENSIONS, EMBEDDING_DENSITY_GATE };
 
 export function fib(index: number): number {
   if (index < 1) return 1;
   if (index <= FIB.length) return FIB[index - 1];
-  let a = FIB[FIB.length - 2];
-  let b = FIB[FIB.length - 1];
+  let a: number = FIB[FIB.length - 2];
+  let b: number = FIB[FIB.length - 1];
   for (let i = FIB.length; i < index; i += 1) {
     const next = a + b;
     a = b;

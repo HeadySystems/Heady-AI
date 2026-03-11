@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../../shared/logger')('index');
 
 const EventEmitter = require('events');
 const crypto       = require('crypto');
@@ -514,6 +515,4 @@ function createHeadyInfer(cfg) {
   return new HeadyInfer(cfg || config);
 }
 
-const getHealth = () => ({ status: 'healthy', service: 'heady-infer', timestamp: new Date().toISOString() });
-
-module.exports = { HeadyInfer, createHeadyInfer, getHealth };
+module.exports = { HeadyInfer, createHeadyInfer };

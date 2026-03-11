@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -33,11 +31,11 @@ let failed = 0;
 function test(name, fn) {
     try {
         fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
         failed++;
     }
 }
@@ -45,11 +43,11 @@ function test(name, fn) {
 async function testAsync(name, fn) {
     try {
         await fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
         failed++;
     }
 }
@@ -72,7 +70,7 @@ function makeFakeInference(outputTokens = 100, confidence = 0.85, delayMs = 0) {
 // computeProofOfInference
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Proof-of-Inference Utility ===');
+console.log('\n=== Proof-of-Inference Utility ===');
 
 test('computeProofOfInference: returns 64-char hex SHA-256', () => {
     const payload = {
@@ -117,7 +115,7 @@ test('computeProofOfInference: different payloads → different hashes', () => {
 // shannonEntropy
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Shannon Entropy Utility ===');
+console.log('\n=== Shannon Entropy Utility ===');
 
 test('shannonEntropy: uniform distribution has max entropy', () => {
     const uniform = new Map([['a', 1], ['b', 1], ['c', 1], ['d', 1]]);
@@ -145,7 +143,7 @@ test('shannonEntropy: accepts plain object', () => {
 // Claim 1: Telemetry Interception + PoI + Audit Log
 // ─────────────────────────────────────────────────────────────────────────────
 
-logger.info('\n=== Claim 1: Telemetry Interception ===');
+console.log('\n=== Claim 1: Telemetry Interception ===');
 
 (async () => {
     await testAsync('Claim 1(a)/(b)/(c)/(d): intercept records structured payload', async () => {
@@ -197,7 +195,7 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // Claim 2: Reasoning Jitter
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info('\n=== Claim 2: Reasoning Jitter ===');
+    console.log('\n=== Claim 2: Reasoning Jitter ===');
 
     await testAsync('Claim 2: computeReasoningJitter returns numeric std dev', async () => {
         const interceptor = new TelemetryInterceptor();
@@ -228,7 +226,7 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // Claim 3: Confidence Drift
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info('\n=== Claim 3: Confidence Drift ===');
+    console.log('\n=== Claim 3: Confidence Drift ===');
 
     await testAsync('Claim 3: computeConfidenceDrift returns drift, rollingAvg, historicalMean', async () => {
         const interceptor = new TelemetryInterceptor();
@@ -260,7 +258,7 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // Claim 4: Action Distribution Entropy
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info('\n=== Claim 4: Action Distribution Entropy ===');
+    console.log('\n=== Claim 4: Action Distribution Entropy ===');
 
     await testAsync('Claim 4: entropy of uniform action distribution is high', async () => {
         const interceptor = new TelemetryInterceptor();
@@ -295,7 +293,7 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // Claim 5: Anomaly Alerts (Reasoning Jitter)
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info('\n=== Claim 5: Anomaly Detection Alerts ===');
+    console.log('\n=== Claim 5: Anomaly Detection Alerts ===');
 
     await testAsync('Claim 5: alert fires when latency exceeds ceiling', async () => {
         const alerts = [];
@@ -340,7 +338,7 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // Claim 6: PoI External Publication
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info('\n=== Claim 6: PoI External Publication ===');
+    console.log('\n=== Claim 6: PoI External Publication ===');
 
     await testAsync('Claim 6: custom poiPublisher is called when poi_store_enabled', async () => {
         const published = [];
@@ -371,7 +369,7 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // Claim 7: Full System
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info('\n=== Claim 7: NeuralStreamTelemetry Full System ===');
+    console.log('\n=== Claim 7: NeuralStreamTelemetry Full System ===');
 
     await testAsync('Claim 7: NeuralStreamTelemetry assembles all sub-systems', async () => {
         const nst = new NeuralStreamTelemetry();
@@ -424,9 +422,9 @@ logger.info('\n=== Claim 1: Telemetry Interception ===');
     // SUMMARY
     // ─────────────────────────────────────────────────────────────────────────
 
-    logger.info(`\n─────────────────────────────────────────`);
-    logger.info(`HS-053 Neural Telemetry: ${passed} passed, ${failed} failed`);
-    logger.info(`─────────────────────────────────────────`);
+    console.log(`\n─────────────────────────────────────────`);
+    console.log(`HS-053 Neural Telemetry: ${passed} passed, ${failed} failed`);
+    console.log(`─────────────────────────────────────────`);
 
     if (failed > 0) process.exit(1);
 })();

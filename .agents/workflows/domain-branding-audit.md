@@ -14,7 +14,7 @@ description: Domain branding audit — validate sacred geometry, theming, and br
    - Accent color matches `site-registry.json`
    - Auth gate present and themed
    - Navigation contains all 9 domains
-   - No `NOTE`, `FIXME`, `localhost`, or placeholder content
+   - No `TODO`, `FIXME`, `localhost`, or placeholder content
 
 2. **Compare against site-registry.json** — Each site's name, tagline, accent color must match
 

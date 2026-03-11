@@ -106,7 +106,7 @@ class SpatialRegistry {
         app.use((req, res, next) => {
             if (!this.edgeContextCache.lastScanTime || (Date.now() - this.edgeContextCache.lastScanTime > 300000)) {
                 this.edgeContextCache.triggerAsyncScan(process.cwd()).catch((err) => {
-                    logger.error('[EdgeContextCache] Scan failed:', err.message);
+                    console.error('[EdgeContextCache] Scan failed:', err.message);
                 });
             }
             req.edgeContext = this.edgeContextCache.getOptimalContext();

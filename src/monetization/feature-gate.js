@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Latent OS — Feature Gate Module
  * HeadySystems Inc.
@@ -25,6 +23,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('feature-gate');
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
 import {

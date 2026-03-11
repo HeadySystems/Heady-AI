@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -31,22 +29,22 @@ let _taskResult = null;
 
 // ── Phase 1: Init ───────────────────────────────────────────────
 async function init() {
-    logger.info(`[${BEE_ID}] 🐝 Bee spawned: ${BEE_CONFIG.beeClass} v${BEE_CONFIG.version}`);
-    logger.info(`[${BEE_ID}] LLM routing: primary=${BEE_CONFIG.llmRouting.primary}, fallback=${BEE_CONFIG.llmRouting.fallback}`);
+    console.log(`[${BEE_ID}] 🐝 Bee spawned: ${BEE_CONFIG.beeClass} v${BEE_CONFIG.version}`);
+    console.log(`[${BEE_ID}] LLM routing: primary=${BEE_CONFIG.llmRouting.primary}, fallback=${BEE_CONFIG.llmRouting.fallback}`);
 
     // Verify DB connection
     try {
         await db.query('SELECT 1');
-        logger.info(`[${BEE_ID}] ✅ pgvector connection verified`);
+        console.log(`[${BEE_ID}] ✅ pgvector connection verified`);
     } catch (err) {
-        logger.error(`[${BEE_ID}] ❌ DB connection failed: ${err.message}`);
+        console.error(`[${BEE_ID}] ❌ DB connection failed: ${err.message}`);
         await destruct(1);
     }
 }
 
 // ── Phase 2: Execute ────────────────────────────────────────────
 async function execute(taskPayload) {
-    logger.info(`[${BEE_ID}] 🔨 Executing task: ${taskPayload.taskType || 'unknown'}`);
+    console.log(`[${BEE_ID}] 🔨 Executing task: ${taskPayload.taskType || 'unknown'}`);
 
     try {
         // Pull relevant AST nodes from vector space
@@ -59,7 +57,7 @@ async function execute(taskPayload) {
             [taskPayload.queryEmbedding || generatePlaceholderEmbedding(), taskPayload.contextLimit || 20]
         );
 
-        logger.info(`[${BEE_ID}] 📡 Loaded ${contextNodes.rows.length} context nodes from vector space`);
+        console.log(`[${BEE_ID}] 📡 Loaded ${contextNodes.rows.length} context nodes from vector space`);
 
         // ┌──────────────────────────────────────────────────────────────┐
         // │  YOUR BEE LOGIC GOES HERE                                    │
@@ -77,9 +75,9 @@ async function execute(taskPayload) {
             output: null, // Replace with actual output
         };
 
-        logger.info(`[${BEE_ID}] ✅ Task completed in ${_taskResult.durationMs}ms`);
+        console.log(`[${BEE_ID}] ✅ Task completed in ${_taskResult.durationMs}ms`);
     } catch (err) {
-        logger.error(`[${BEE_ID}] ❌ Execution failed: ${err.message}`);
+        console.error(`[${BEE_ID}] ❌ Execution failed: ${err.message}`);
         _taskResult = {
             beeId: BEE_ID,
             beeClass: BEE_CONFIG.beeClass,
@@ -101,7 +99,7 @@ async function report() {
             json: _taskResult,
             attributes: { beeClass: BEE_CONFIG.beeClass, beeId: BEE_ID },
         });
-        logger.info(`[${BEE_ID}] 📤 Results published to ${BEE_CONFIG.reporting.resultTopic}`);
+        console.log(`[${BEE_ID}] 📤 Results published to ${BEE_CONFIG.reporting.resultTopic}`);
 
         // Log to governance ledger
         await db.query(
@@ -110,13 +108,13 @@ async function report() {
             [BEE_ID, JSON.stringify(_taskResult)]
         ).catch(() => { }); // Non-fatal
     } catch (err) {
-        logger.error(`[${BEE_ID}] ⚠️ Report failed (non-fatal): ${err.message}`);
+        console.error(`[${BEE_ID}] ⚠️ Report failed (non-fatal): ${err.message}`);
     }
 }
 
 // ── Phase 4: Self-Destruct ──────────────────────────────────────
 async function destruct(exitCode = 0) {
-    logger.info(`[${BEE_ID}] 💀 Self-destructing. Lived for ${Date.now() - _startTime}ms.`);
+    console.log(`[${BEE_ID}] 💀 Self-destructing. Lived for ${Date.now() - _startTime}ms.`);
     await db.end().catch(() => { });
     process.exit(exitCode);
 }
@@ -128,7 +126,7 @@ async function listenForTasks() {
     );
 
     subscription.on('message', async (message) => {
-        logger.info(`[${BEE_ID}] 📩 Task received: ${message.id}`);
+        console.log(`[${BEE_ID}] 📩 Task received: ${message.id}`);
         const payload = JSON.parse(message.data.toString());
 
         await execute(payload);
@@ -141,10 +139,10 @@ async function listenForTasks() {
     });
 
     subscription.on('error', (err) => {
-        logger.error(`[${BEE_ID}] ❌ Subscription error: ${err.message}`);
+        console.error(`[${BEE_ID}] ❌ Subscription error: ${err.message}`);
     });
 
-    logger.info(`[${BEE_ID}] 👂 Listening for tasks on ${BEE_CONFIG.trigger.subscription}...`);
+    console.log(`[${BEE_ID}] 👂 Listening for tasks on ${BEE_CONFIG.trigger.subscription}...`);
 }
 
 // ── Direct Execution (for Cloud Run Jobs / one-shot) ────────────

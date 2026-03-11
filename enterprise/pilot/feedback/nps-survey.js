@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @fileoverview HeadyOS Pilot — NPS Survey Module
  * @module pilot/feedback/nps-survey
@@ -142,7 +140,7 @@ router.post('/:userId', (req, res) => {
     .update(JSON.stringify({ userId, score, surveyIndex, createdAt: response.createdAt }))
     .digest('hex');
 
-  logger.info(JSON.stringify({
+  console.log(JSON.stringify({
     level: 'info',
     eventType: 'NPS_SURVEY_SUBMITTED',
     traceId: crypto.randomUUID(),
@@ -165,7 +163,7 @@ router.post('/:userId', (req, res) => {
 
   // If detractor, flag for CSM follow-up
   if (category === 'DETRACTOR') {
-    logger.info(JSON.stringify({
+    console.log(JSON.stringify({
       level: 'warn',
       eventType: 'NPS_DETRACTOR_FLAGGED',
       data: { userId, score, surveyIndex, requiresFollowUp: true },
@@ -174,7 +172,7 @@ router.post('/:userId', (req, res) => {
 
   // If score >= 8 (promoter), trigger conversion prompt
   if (score >= FIB[5]) { // fib(6)=8
-    logger.info(JSON.stringify({
+    console.log(JSON.stringify({
       level: 'info',
       eventType: 'NPS_CONVERSION_TRIGGER',
       data: { userId, score, shouldSendUpgradePrompt: true },

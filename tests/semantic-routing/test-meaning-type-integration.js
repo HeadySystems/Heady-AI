@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -155,12 +153,12 @@ let passed = 0, failed = 0;
 async function runTest(name, fn) {
     try {
         await fn();
-        logger.info(`  ✓ ${name}`);
+        console.log(`  ✓ ${name}`);
         passed++;
     } catch (err) {
-        logger.error(`  ✗ ${name}`);
-        logger.error(`    ${err.message}`);
-        if (process.env.VERBOSE) logger.error(err.stack);
+        console.error(`  ✗ ${name}`);
+        console.error(`    ${err.message}`);
+        if (process.env.VERBOSE) console.error(err.stack);
         failed++;
     }
 }
@@ -168,7 +166,7 @@ async function runTest(name, fn) {
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 async function runTests() {
-    logger.info('\n[test-meaning-type-integration]');
+    console.log('\n[test-meaning-type-integration]');
 
     // ── test_meaning_type_as_constraint_input ──────────────────────────────
     await runTest('test_meaning_type_as_constraint_input', () => {
@@ -436,6 +434,6 @@ async function runTests() {
 }
 
 runTests().then(() => {
-    logger.info(`\nTests: ${passed} passed, ${failed} failed\n`);
+    console.log(`\nTests: ${passed} passed, ${failed} failed\n`);
     process.exitCode = failed > 0 ? 1 : 0;
 });

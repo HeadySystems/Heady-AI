@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -27,16 +25,16 @@ let passed = 0;
 let failed = 0;
 
 function test(name, fn) {
-  try { fn(); logger.info(`  ✓ ${name}`); passed++; }
-  catch (err) { logger.error(`  ✗ ${name}: ${err.message}`); failed++; }
+  try { fn(); console.log(`  ✓ ${name}`); passed++; }
+  catch (err) { console.error(`  ✗ ${name}: ${err.message}`); failed++; }
 }
 
 async function asyncTest(name, fn) {
-  try { await fn(); logger.info(`  ✓ ${name}`); passed++; }
-  catch (err) { logger.error(`  ✗ ${name}: ${err.message}`); failed++; }
+  try { await fn(); console.log(`  ✓ ${name}`); passed++; }
+  catch (err) { console.error(`  ✗ ${name}: ${err.message}`); failed++; }
 }
 
-logger.info('\n=== Octree Spatial Index Tests ===\n');
+console.log('\n=== Octree Spatial Index Tests ===\n');
 
 test('PHI constant correct', () => { assert.strictEqual(PHI, 1.6180339887); });
 test('FIBONACCI sequence is correct', () => {
@@ -477,5 +475,5 @@ test('MemoryStore high-D vectors via PCA', () => {
   assert.ok(entry.pos.length === 3);
 });
 
-logger.info(`\nResults: ${passed} passed, ${failed} failed\n`);
+console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
 process.exit(failed > 0 ? 1 : 0);

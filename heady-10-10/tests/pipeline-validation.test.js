@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -60,7 +58,7 @@ function test(name, fn) {
     fn();
     passed++;
     // Uncomment the line below for verbose mode:
-    // logger.info(`  ✓ ${name}`);
+    // console.log(`  ✓ ${name}`);
   } catch (err) {
     failed++;
     const msg = err instanceof assert.AssertionError
@@ -117,8 +115,8 @@ try {
 }
 
 if (loadErrors.length > 0) {
-  logger.error('\n⛔  CONFIG LOAD FAILURES — cannot continue:\n');
-  loadErrors.forEach(e => logger.error('  ' + e));
+  console.error('\n⛔  CONFIG LOAD FAILURES — cannot continue:\n');
+  loadErrors.forEach(e => console.error('  ' + e));
   process.exit(1);
 }
 
@@ -132,7 +130,7 @@ const arch = cognitiveConfig.cognitive_architecture;
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 1: PIPELINE STRUCTURE TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── PIPELINE STRUCTURE TESTS ─────────────────────────────────────────────────');
+console.log('\n── PIPELINE STRUCTURE TESTS ─────────────────────────────────────────────────');
 
 test('Exactly 21 stages exist', () => {
   assert.strictEqual(
@@ -208,7 +206,7 @@ test('pipeline.stageCount matches actual stage array length', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 2: PHI-TIMEOUT COMPLIANCE TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── PHI-TIMEOUT COMPLIANCE TESTS ─────────────────────────────────────────────');
+console.log('\n── PHI-TIMEOUT COMPLIANCE TESTS ─────────────────────────────────────────────');
 
 test('Every stage timeout is a canonical φ-derived value', () => {
   stages.forEach(s => {
@@ -292,7 +290,7 @@ test('timeouts config section phi8_extreme equals 46979', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 3: PHI-BACKOFF COMPLIANCE TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── PHI-BACKOFF COMPLIANCE TESTS ─────────────────────────────────────────────');
+console.log('\n── PHI-BACKOFF COMPLIANCE TESTS ─────────────────────────────────────────────');
 
 test('retryPolicy.multiplier ≈ 1.618 (within 0.001 tolerance)', () => {
   const multiplier = pipelineMeta.retryPolicy.multiplier;
@@ -343,7 +341,7 @@ test('retryPolicy.jitterFactor ≈ 0.382 (ψ²)', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 4: POOL SIZE TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── POOL SIZE TESTS ──────────────────────────────────────────────────────────');
+console.log('\n── POOL SIZE TESTS ──────────────────────────────────────────────────────────');
 
 test('bee_workers.default is a Fibonacci number', () => {
   const val = pools.bee_workers.default;
@@ -392,7 +390,7 @@ test('concurrent_requests.default < concurrent_requests.max', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 5: STAGE STEP TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── STAGE STEP TESTS ─────────────────────────────────────────────────────────');
+console.log('\n── STAGE STEP TESTS ─────────────────────────────────────────────────────────');
 
 test('Every stage has at least 1 step', () => {
   stages.forEach(s => {
@@ -461,7 +459,7 @@ test('Total step count across all stages is > 21 (at least 1 per stage)', () => 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 6: PIPELINE VARIANT TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── PIPELINE VARIANT TESTS ───────────────────────────────────────────────────');
+console.log('\n── PIPELINE VARIANT TESTS ───────────────────────────────────────────────────');
 
 test('Exactly 4 variants exist: fast_path, full_path, arena_path, learning_path', () => {
   const variantKeys = Object.keys(variants).sort();
@@ -548,7 +546,7 @@ test('fast_path has fewer stages than full_path (is a genuine shortcut)', () => 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 7: COGNITIVE CONFIG TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── COGNITIVE CONFIG TESTS ───────────────────────────────────────────────────');
+console.log('\n── COGNITIVE CONFIG TESTS ───────────────────────────────────────────────────');
 
 test('cognitive_architecture version is "3.0.0"', () => {
   assert.strictEqual(
@@ -715,7 +713,7 @@ test('scale.auto_success_cycle_ms === 30000 (30-second heartbeat)', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 8: LAW FILE TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── LAW FILE TESTS ───────────────────────────────────────────────────────────');
+console.log('\n── LAW FILE TESTS ───────────────────────────────────────────────────────────');
 
 const LAW_FILES = [
   'LAW-01-thoroughness-over-speed.md',
@@ -825,7 +823,7 @@ test('Each LAW file is non-empty (> 100 bytes)', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 9: DEPRECATION MANIFEST TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── DEPRECATION MANIFEST TESTS ───────────────────────────────────────────────');
+console.log('\n── DEPRECATION MANIFEST TESTS ───────────────────────────────────────────────');
 
 const deprecations = deprecationManifest.deprecations;
 const manifestMeta = deprecationManifest._meta;
@@ -922,7 +920,7 @@ test('summary.totalDeprecations matches actual deprecations array length', () =>
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 10: CANONICAL VERSION MAP TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── CANONICAL VERSION MAP TESTS ──────────────────────────────────────────────');
+console.log('\n── CANONICAL VERSION MAP TESTS ──────────────────────────────────────────────');
 
 const components = versionMap.components;
 
@@ -1018,7 +1016,7 @@ test('_meta.version is present in canonical-version-map.json', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 11: CROSS-FILE CONSISTENCY TESTS
 // ─────────────────────────────────────────────────────────────────────────────
-logger.info('\n── CROSS-FILE CONSISTENCY TESTS ─────────────────────────────────────────────');
+console.log('\n── CROSS-FILE CONSISTENCY TESTS ─────────────────────────────────────────────');
 
 test('pipeline phiRef.phi matches cognitive_architecture phi_constants.phi', () => {
   assertApprox(
@@ -1088,22 +1086,22 @@ test('deprecation deadline date is parseable for all entries', () => {
 // FINAL SUMMARY
 // ─────────────────────────────────────────────────────────────────────────────
 const total = passed + failed;
-logger.info('\n' + '─'.repeat(80));
+console.log('\n' + '─'.repeat(80));
 
 if (failures.length > 0) {
-  logger.info('\nFAILED TESTS:\n');
-  failures.forEach(f => logger.info(f));
-  logger.info('');
+  console.log('\nFAILED TESTS:\n');
+  failures.forEach(f => console.log(f));
+  console.log('');
 }
 
-logger.info(`PIPELINE VALIDATION: ${passed}/${total} tests passed`);
+console.log(`PIPELINE VALIDATION: ${passed}/${total} tests passed`);
 
 if (failed === 0) {
-  logger.info('✓ All tests passed. Heady ecosystem meets the 10/10 health standard.');
+  console.log('✓ All tests passed. Heady ecosystem meets the 10/10 health standard.');
 } else {
-  logger.info(`✗ ${failed} test(s) failed. Review failures above and correct config files.`);
+  console.log(`✗ ${failed} test(s) failed. Review failures above and correct config files.`);
 }
 
-logger.info('─'.repeat(80) + '\n');
+console.log('─'.repeat(80) + '\n');
 
 process.exit(failed > 0 ? 1 : 0);

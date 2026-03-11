@@ -358,11 +358,12 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  logger.error('Fatal:', err);
-  process.exit(1);
-});
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  main().catch((err) => {
+    log.fatal({ err }, 'Fatal error');
+    process.exit(1);
+  });
+}
 
-const getHealth = () => ({ status: 'healthy', service: 'heady-mcp-server', timestamp: new Date().toISOString() });
-
-module.exports = { HeadyMCPProtocol, SERVER_INFO, getHealth };
+module.exports = { HeadyMCPProtocol, SERVER_INFO };

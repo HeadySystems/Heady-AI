@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 'use strict';
 /**
@@ -50,17 +48,17 @@ const verbose = process.argv.includes('--verbose');
 
 function suite(name) {
     currentSuite = name;
-    logger.info(bold(cyan(`\n  ▶ ${name}`)));
+    console.log(bold(cyan(`\n  ▶ ${name}`)));
 }
 
 function assert(condition, label) {
     if (condition) {
         passed++;
-        if (verbose) logger.info(`    ${green('✔')} ${label}`);
+        if (verbose) console.log(`    ${green('✔')} ${label}`);
     } else {
         failed++;
-        logger.info(`    ${red('✖')} ${red(label)}`);
-        logger.info(dim(`      [Suite: ${currentSuite}]`));
+        console.log(`    ${red('✖')} ${red(label)}`);
+        console.log(dim(`      [Suite: ${currentSuite}]`));
     }
 }
 
@@ -68,20 +66,20 @@ function assertClose(actual, expected, tol, label) {
     const ok = Math.abs(actual - expected) <= tol;
     if (ok) {
         passed++;
-        if (verbose) logger.info(`    ${green('✔')} ${label} (${actual.toFixed(6)} ≈ ${expected.toFixed(6)})`);
+        if (verbose) console.log(`    ${green('✔')} ${label} (${actual.toFixed(6)} ≈ ${expected.toFixed(6)})`);
     } else {
         failed++;
-        logger.info(`    ${red('✖')} ${red(label)}`);
-        logger.info(dim(`      expected ${expected} ± ${tol}, got ${actual}`));
+        console.log(`    ${red('✖')} ${red(label)}`);
+        console.log(dim(`      expected ${expected} ± ${tol}, got ${actual}`));
     }
 }
 
 // ─── Banner ───────────────────────────────────────────────────────
-logger.info(bold(cyan('\n╔══════════════════════════════════════════════════╗')));
-logger.info(bold(cyan('║   Heady Phi Scales — Test Suite                  ║')));
-logger.info(bold(cyan('╚══════════════════════════════════════════════════╝')));
-logger.info(dim(`  φ  = ${PHI.toFixed(15)}`));
-logger.info(dim(`  1/φ = ${PHI_INVERSE.toFixed(15)}\n`));
+console.log(bold(cyan('\n╔══════════════════════════════════════════════════╗')));
+console.log(bold(cyan('║   Heady Phi Scales — Test Suite                  ║')));
+console.log(bold(cyan('╚══════════════════════════════════════════════════╝')));
+console.log(dim(`  φ  = ${PHI.toFixed(15)}`));
+console.log(dim(`  1/φ = ${PHI_INVERSE.toFixed(15)}\n`));
 
 // ══════════════════════════════════════════════════════════════════
 // Suite 1 — PhiScale Basic Operations
@@ -348,7 +346,7 @@ suite('Suite 7 — Benchmark: Phi vs Fixed Timeout');
         `phi waste (${Math.round(phiWaste)}ms) < fixed waste (${Math.round(fixedWaste)}ms)`);
     const reduction = (fixedWaste - phiWaste) / fixedWaste;
     assert(reduction > 0.5, `phi reduces waste by >50% on low-latency workload (${(reduction*100).toFixed(1)}%)`);
-    logger.info(dim(`    Fixed: ${Math.round(fixedWaste)}ms waste | Phi: ${Math.round(phiWaste)}ms waste | Saved: ${(reduction * 100).toFixed(1)}%`));
+    console.log(dim(`    Fixed: ${Math.round(fixedWaste)}ms waste | Phi: ${Math.round(phiWaste)}ms waste | Saved: ${(reduction * 100).toFixed(1)}%`));
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -589,18 +587,18 @@ suite('Suite 13 — Dynamic Constants Sanity');
 const total    = passed + failed;
 const passRate = total > 0 ? ((passed / total) * 100).toFixed(1) : '0.0';
 
-logger.info(bold(cyan('\n╔══════════════════════════════════════════════════╗')));
-logger.info(bold(cyan('║   Test Results                                   ║')));
-logger.info(bold(cyan('╚══════════════════════════════════════════════════╝')));
-logger.info(`  Total   : ${bold(String(total))}`);
-logger.info(`  Passed  : ${green(bold(String(passed)))}`);
-logger.info(`  Failed  : ${failed > 0 ? red(bold(String(failed))) : dim(String(failed))}`);
-logger.info(`  Pass Rate: ${failed === 0 ? green(bold(passRate + '%')) : yellow(passRate + '%')}\n`);
+console.log(bold(cyan('\n╔══════════════════════════════════════════════════╗')));
+console.log(bold(cyan('║   Test Results                                   ║')));
+console.log(bold(cyan('╚══════════════════════════════════════════════════╝')));
+console.log(`  Total   : ${bold(String(total))}`);
+console.log(`  Passed  : ${green(bold(String(passed)))}`);
+console.log(`  Failed  : ${failed > 0 ? red(bold(String(failed))) : dim(String(failed))}`);
+console.log(`  Pass Rate: ${failed === 0 ? green(bold(passRate + '%')) : yellow(passRate + '%')}\n`);
 
 if (failed === 0) {
-    logger.info(green(bold('  ✔  All tests passed — phi scales are operating correctly.\n')));
+    console.log(green(bold('  ✔  All tests passed — phi scales are operating correctly.\n')));
     process.exit(0);
 } else {
-    logger.info(red(bold(`  ✖  ${failed} test(s) failed — review output above.\n`)));
+    console.log(red(bold(`  ✖  ${failed} test(s) failed — review output above.\n`)));
     process.exit(1);
 }

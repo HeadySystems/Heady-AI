@@ -111,18 +111,18 @@ E:
 - **Revenue Share** — Affiliate & referral programs
 - **API Pricing** — Pay-as-you-go rates
 
-## 🌐 Service Discovery (No More api.headysystems.com!)
+## 🌐 Service Discovery (No More localhost!)
 
-All services use proper domains instead of api.headysystems.com:
+All services use proper domains instead of localhost:
 
 | Service | Domain | Port |
 |---------|--------|------|
-| HeadyManager | `api.manager.local.headysystems.com` | 3300 |
-| Frontend | `app.local.headysystems.com` | 5173 |
-| HeadyBuddy | `buddy.local.headysystems.com` | 5174 |
-| PostgreSQL | `db.postgres.local.headysystems.com` | 5432 |
-| Redis | `cache.redis.local.headysystems.com` | 6379 |
-| Python Worker | `worker.python.local.headysystems.com` | 8000 |
+| HeadyManager | `api.manager.local.heady.internal` | 3300 |
+| Frontend | `app.local.heady.internal` | 5173 |
+| HeadyBuddy | `buddy.local.heady.internal` | 5174 |
+| PostgreSQL | `db.postgres.local.heady.internal` | 5432 |
+| Redis | `cache.redis.local.heady.internal` | 6379 |
+| Python Worker | `worker.python.local.heady.internal` | 8000 |
 
 ## 🎁 Gift Pack — Friends & Family
 
@@ -165,17 +165,17 @@ heady domains list
 heady health check-all
 
 # View logs
-curl http://logs.local.headysystems.com:9200
+curl http://logs.local.heady.internal:9200
 
 # Metrics dashboard
-open https://metrics.lens.local.headysystems.com
+open https://metrics.lens.local.heady.internal
 ```
 
 ## 🔧 Configuration Files
 
 | File | Purpose |
 |------|---------|
-| `configs/domains/service-discovery.yaml` | Domain mappings, no more api.headysystems.com |
+| `configs/service-discovery.yaml` | Domain mappings, no more localhost |
 | `configs/device-management.yaml` | MDM, zero-touch deployment |
 | `configs/observability.yaml` | Monitoring & alerting |
 | `configs/hcfullpipeline.yaml` | Complete CI/CD workflow |
@@ -199,7 +199,7 @@ You'll get alerts for:
 ## 📊 Dashboards
 
 Access these in your browser:
-- **Overview** — `https://dashboard.headysystems.com/d/overview`
+- **Overview** — `https://dashboard.heady.internal/d/overview`
 - **Devices** — Device fleet management
 - **Services** — Performance metrics
 - **Security** — Compliance & threats
@@ -242,4 +242,3 @@ You've got everything you need to build, deploy, monetize, and share the future 
 ---
 *Built with 💜 by Heady Systems*
 *Version 3.0.0 | Sacred Geometry Architecture*
-

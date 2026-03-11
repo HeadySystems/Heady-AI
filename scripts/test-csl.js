@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * CSL Verification Suite v3.0
  * Tests all CSL gate operations PLUS integration into:
@@ -20,12 +18,12 @@ const RESET = '\x1b[0m';
 let passed = 0, failed = 0;
 
 function assert(label, condition) {
-    if (condition) { logger.info(`  ${PASS} ${label}`); passed++; }
-    else { logger.info(`  ${FAIL} ${label}`); failed++; }
+    if (condition) { console.log(`  ${PASS} ${label}`); passed++; }
+    else { console.log(`  ${FAIL} ${label}`); failed++; }
 }
 
 function section(title) {
-    logger.info(`\n${SECTION}── ${title} ──${RESET}`);
+    console.log(`\n${SECTION}── ${title} ──${RESET}`);
 }
 
 function randomVec(dim = DIM) {
@@ -34,10 +32,10 @@ function randomVec(dim = DIM) {
     return CSL.normalize(v);
 }
 
-logger.info('\n═══════════════════════════════════════════════════════');
-logger.info('  Heady CSL Verification Suite v3.0');
-logger.info('  Core Gates + MCP Router + Bee Factory + Skill Router');
-logger.info('═══════════════════════════════════════════════════════');
+console.log('\n═══════════════════════════════════════════════════════');
+console.log('  Heady CSL Verification Suite v3.0');
+console.log('  Core Gates + MCP Router + Bee Factory + Skill Router');
+console.log('═══════════════════════════════════════════════════════');
 
 // ══════════════════════════════════════════════════════════════════
 // PART 1: CORE CSL GATES
@@ -371,11 +369,11 @@ assert('Cross: MCP ↔ Skill vectors identical', CSL.cosine_similarity(mcpVec, s
 // SUMMARY
 // ══════════════════════════════════════════════════════════════════
 
-logger.info('\n═══════════════════════════════════════════════════════');
-logger.info(`  Results: \x1b[32m${passed} passed\x1b[0m, \x1b[${failed > 0 ? '31' : '32'}m${failed} failed\x1b[0m`);
-logger.info(`  CSL gate calls: ${finalStats.totalCalls}`);
-logger.info(`  Avg resonance score: ${finalStats.avgResonanceScore}`);
-logger.info(`  Systems tested: CSL Core, MCP Router, Bee Factory, Skill Router`);
-logger.info('═══════════════════════════════════════════════════════\n');
+console.log('\n═══════════════════════════════════════════════════════');
+console.log(`  Results: \x1b[32m${passed} passed\x1b[0m, \x1b[${failed > 0 ? '31' : '32'}m${failed} failed\x1b[0m`);
+console.log(`  CSL gate calls: ${finalStats.totalCalls}`);
+console.log(`  Avg resonance score: ${finalStats.avgResonanceScore}`);
+console.log(`  Systems tested: CSL Core, MCP Router, Bee Factory, Skill Router`);
+console.log('═══════════════════════════════════════════════════════\n');
 
 process.exit(failed > 0 ? 1 : 0);

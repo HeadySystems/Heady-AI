@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // ═══════════════════════════════════════════════════════════════
 // Heady™ Dynamic Site Router — Cloudflare Worker
 // Serves ALL 9 domains dynamically at the edge.
@@ -295,7 +293,7 @@ const HOST='${host}',BRAND='${s.brand}';let sess=null,kProv=null;
   if(window.huggingface&&window.huggingface.variables){
     const uid=window.huggingface.variables.SPACE_CREATOR_USER_ID;
     if(uid){
-      logger.info('[HeadyBuddy] HF identity linked:',uid);
+      console.log('[HeadyBuddy] HF identity linked:',uid);
       addM('b','I see you\\'re signed into Hugging Face ('+uid.slice(0,8)+'...). Identity linked across all Heady domains.');
     }
   }
@@ -408,7 +406,7 @@ regDevice();
 if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}
 
 // Log identity
-logger.info('[Heady] ${s.brand} v${VERSION} · Edge rendered · PWA ready · HeadyBuddy active');
+console.log('[Heady] ${s.brand} v${VERSION} · Edge rendered · PWA ready · HeadyBuddy active');
 
 // Sacred Geometry Canvas Animation
 (function(){

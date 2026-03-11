@@ -1,3 +1,8 @@
+/*
+ * © 2026 Heady™Systems Inc..
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -9,36 +14,35 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/agents/claude-code-agent.js                                                    ║
+// ║  FILE: src/agents/headyjules-code-agent.js                                                    ║
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 /**
- * Claude Code Agent
+ * HeadyJules Code Agent
  *
- * Integrates Claude Code (Anthropic CLI) as a Supervisor agent in HCFullPipeline.
+ * Integrates HeadyJules Code (HeadyNexus CLI) as a Supervisor agent in HCFullPipeline.
  * Registered with the Supervisor for code-generation, analysis, refactoring,
  * architecture, and debugging tasks.
  *
- * ROUTING: Direct (no proxy) via @heady/networking internal client.
+ * ROUTING: All AI traffic proxied through HeadyGateway (heady-hive-sdk).
  *
  * USAGE:
  *   - Supervisor routes code-related tasks to this agent.
- *   - Agent spawns `claude` CLI process with structured prompts.
+ *   - Agent spawns `headyjules` CLI process with structured prompts.
  *   - Returns structured results for aggregation.
  *
  * REQUIREMENTS:
- *   - `claude` CLI installed and authenticated (ANTHROPIC_API_KEY in env)
- *   - Or fallback to Anthropic HTTP API via @heady/networking
+ *   - `headyjules` CLI installed and authenticated (HEADY_NEXUS_KEY in env)
+ *   - Or fallback to HeadyNexus HTTP API via @heady-ai/networking
  */
 
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
-const { buildCompactDirective, getPromptHash } = require("./universal-agent-prompt");
 
-const AGENT_ID = "claude-code";
+const AGENT_ID = "headyjules-code";
 const AGENT_SKILLS = [
   "code-generation",
   "code-analysis",
@@ -47,6 +51,45 @@ const AGENT_SKILLS = [
   "debugging",
   "concept-extraction",
   "documentation",
+  "unit-testing",
+  "integration-testing",
+  "e2e-testing",
+  "test-coverage",
+  "api-design",
+  "rest-endpoint",
+  "graphql-schema",
+  "websocket-handler",
+  "database-schema",
+  "migration-gen",
+  "query-optimize",
+  "orm-model",
+  "auth-implement",
+  "jwt-session",
+  "rbac-policy",
+  "oauth-flow",
+  "error-handling",
+  "logging-strategy",
+  "monitoring-hook",
+  "perf-profile",
+  "memory-leak-detect",
+  "concurrency-fix",
+  "race-condition",
+  "design-pattern",
+  "solid-principle",
+  "dependency-inject",
+  "event-driven",
+  "microservice-decompose",
+  "monolith-refactor",
+  "ci-config",
+  "github-actions",
+  "docker-compose",
+  "env-config",
+  "dependency-update",
+  "security-patch",
+  "code-review",
+  "pr-summary",
+  "type-safety",
+  "schema-validate",
 ];
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
@@ -58,7 +101,7 @@ class ClaudeCodeAgent {
     this.skills = AGENT_SKILLS;
     this.projectRoot = options.projectRoot || PROJECT_ROOT;
     this.timeoutMs = options.timeoutMs || DEFAULT_TIMEOUT_MS;
-    this.claudeBin = options.claudeBin || "claude";
+    this.claudeBin = options.claudeBin || "headyjules";
     this.model = options.model || "sonnet";
     this.history = [];
     this.totalTokens = 0;
@@ -66,7 +109,7 @@ class ClaudeCodeAgent {
   }
 
   describe() {
-    return `Claude Code Agent: AI-powered code generation, analysis, refactoring, architecture review, and debugging via Claude CLI. Skills: ${this.skills.join(", ")}`;
+    return `HeadyJules Code Agent: AI-powered code generation, analysis, refactoring, architecture review, and debugging via Heady™Jules CLI. Skills: ${this.skills.join(", ")}`;
   }
 
   /**
@@ -126,107 +169,67 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Build a structured prompt for Claude Code based on task type.
+   * Build a structured prompt for Heady™Jules Code based on task type.
+   * Utilizes the Universal Heady™ Prompt Architecture.
    */
   _buildPrompt(request, metadata) {
-    // Inject universal agent directives into every prompt
-    const universalDirective = buildCompactDirective({
-      id: this.id,
-      skills: this.skills,
-      pool: "hot",
-      ring: "middle",
-    });
+    const contextDetails = [
+      `project: HeadyMonorepo (HCFullPipeline)`,
+      `stage: ${metadata?.requestType || "unknown"}`,
+      `run_id: ${request.runId || request.id || "N/A"}`,
+      `target: ${request.target || "unspecified"}`
+    ].join('\\n');
 
-    const context = [
-      universalDirective,
-      ``,
-      `Project: HeadyMonorepo (HCFullPipeline)`,
-      `Stage: ${metadata?.requestType || "unknown"}`,
-      `Run ID: ${request.runId || request.id || "N/A"}`,
-      `Prompt Hash: ${getPromptHash()}`,
-    ];
+    const baseArchitecture = (roleAndGoal, steps, output, constraints) => {
+      return [
+        `<ROLE_AND_GOAL>\\n${roleAndGoal}\\n</ROLE_AND_GOAL>`,
+        `<CONTEXT>\\n${contextDetails}\\n${request.description || request.prompt || ""}\\n</CONTEXT>`,
+        `<STEPS>\\n${steps}\\n</STEPS>`,
+        `<CONSTRAINTS>\\nNo unverified parallel threads.\\nEnsure all commits map to Master Architecture.\\nFollow HEADY_BRAND header convention.\\nUse CommonJS require.\\n${constraints}\\n</CONSTRAINTS>`,
+        `<OUTPUT>\\nUse structured markdown/dynamic tables for visual output.\\n${output}\\n</OUTPUT>`,
+        `<FEW_SHOT_EXAMPLES>\\n[See internal repository patterns for Heady™ Swarm node creation and HCFP routing standards]\\n</FEW_SHOT_EXAMPLES>`,
+        `<RECAP>\\nConfirm understanding of strict telemetry, formatting, and specific task requirements before proceeding.\\n</RECAP>`
+      ].join('\\n\\n');
+    };
 
     switch (request.taskType) {
       case "code-generation":
-        return [
-          ...context,
-          `Task: Generate code`,
-          `Target: ${request.target || "unspecified"}`,
-          `Requirements: ${request.requirements || request.description || "See request"}`,
-          `Constraints: Follow HEADY_BRAND header convention. Use CommonJS require. Write production-quality code.`,
-          ``,
-          request.prompt || request.description || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Master Coding Agent: Generate robust, enterprise-grade production software.",
+          "1. Analyze requirements recursively.\\n2. Perform sequential code audits.\\n3. Generate implementation mapped to master architecture.",
+          "Write production-quality code. Provide a markdown summary of added features.",
+          "Only use allowed toolsets. Must be strictly typed."
+        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
 
       case "code-analysis":
-        return [
-          ...context,
-          `Task: Analyze code quality, performance, and architecture`,
-          `Files: ${(request.files || []).join(", ") || "project-wide"}`,
-          `Focus: ${request.focus || "general quality, security, performance"}`,
-          `Output: Structured findings with severity, location, and recommendations`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Master Code Auditor: Analyze quality, performance, and architecture.",
+          "1. Scan required files sequentially.\\n2. Cross-reference patterns.\\n3. Identify severe vulnerabilities or complexity.",
+          "Structured findings with severity, location, and recommendations.",
+          "Focus on: " + (request.focus || "general quality, security, performance")
+        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
 
       case "refactoring":
-        return [
-          ...context,
-          `Task: Refactor code`,
-          `Target: ${request.target || "unspecified"}`,
-          `Goal: ${request.goal || "improve clarity, reduce complexity, maintain behavior"}`,
-          `Constraints: No functional changes unless explicitly requested. Preserve tests.`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
-
-      case "architecture":
-        return [
-          ...context,
-          `Task: Architecture review/design`,
-          `Scope: ${request.scope || "full system"}`,
-          `Question: ${request.question || request.description || ""}`,
-          `Configs available: configs/hcfullpipeline.yaml, configs/service-catalog.yaml, configs/system-components.yaml`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
-
-      case "debugging":
-        return [
-          ...context,
-          `Task: Debug issue`,
-          `Error: ${request.error || "unspecified"}`,
-          `Logs: ${request.logs || "see hc_pipeline.log"}`,
-          `Steps to reproduce: ${request.steps || "unknown"}`,
-          ``,
-          request.prompt || "",
-        ].join("\n");
-
-      case "concept-extraction":
-        return [
-          ...context,
-          `Task: Extract concepts and patterns from provided content`,
-          `Source: ${request.source || "provided text"}`,
-          `Output: Structured concepts with name, category, description, applicability`,
-          `Reference: configs/concepts-index.yaml for existing concepts`,
-          ``,
-          request.content || request.prompt || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Master Refactoring Agent: Restructure existing code without modifying external behavior.",
+          "1. Establish pre-refactor state.\\n2. Apply AST-aware modifications.\\n3. Validate internal logic correctness.",
+          "Refactored code and an impact summary table.",
+          "No functional changes unless explicitly requested. Preserve all existing tests. Goal: " + (request.goal || "improve clarity")
+        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
 
       default:
-        return [
-          ...context,
-          `Task: ${request.taskType || "general"}`,
-          `Description: ${request.description || request.prompt || ""}`,
-          ``,
-          request.prompt || request.description || "",
-        ].join("\n");
+        return baseArchitecture(
+          "Heady Swarm Node: Execute general AI operations.",
+          "1. Parse the request.\\n2. Decompose necessary steps.\\n3. Execute optimally.",
+          "Result of operations.",
+          "None specific."
+        ) + `\\n\\nTask: ${request.taskType || "general"}\\nPrompt: ${request.prompt || ""}`;
     }
   }
 
   /**
-   * Execute Claude Code CLI with the given prompt.
-   * Falls back to a simulated response if CLI is not available.
+   * Execute HeadyJules Code CLI with the given prompt.
+   * Falls back to SDK gateway if CLI is not available.
    */
   async _executeClaudeCode(prompt, request) {
     // Try CLI first
@@ -239,13 +242,13 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Check if `claude` CLI is available on PATH.
+   * Check if `headyjules` CLI is available on PATH.
    */
   async _isClaudeCliAvailable() {
     return new Promise((resolve) => {
       const proc = spawn(this.claudeBin, ["--version"], {
         stdio: ["pipe", "pipe", "pipe"],
-        timeout: 4236, // φ³ × 1000
+        timeout: 5000,
         shell: true,
       });
       proc.on("close", (code) => resolve(code === 0));
@@ -254,7 +257,7 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Run Claude CLI in non-interactive mode with a prompt.
+   * Run HeadyJules CLI in non-interactive mode with a prompt.
    */
   _runClaudeCli(prompt, request) {
     return new Promise((resolve, reject) => {
@@ -281,7 +284,7 @@ class ClaudeCodeAgent {
 
       const timeout = setTimeout(() => {
         proc.kill("SIGTERM");
-        reject(new Error(`Claude Code timed out after ${this.timeoutMs}ms`));
+        reject(new Error(`HeadyJules Code timed out after ${this.timeoutMs}ms`));
       }, this.timeoutMs);
 
       proc.stdout.on("data", (data) => { stdout += data.toString(); });
@@ -294,7 +297,7 @@ class ClaudeCodeAgent {
       proc.on("close", (code) => {
         clearTimeout(timeout);
         if (code !== 0) {
-          reject(new Error(`Claude Code exited with code ${code}: ${stderr}`));
+          reject(new Error(`HeadyJules Code exited with code ${code}: ${stderr}`));
           return;
         }
 
@@ -319,38 +322,51 @@ class ClaudeCodeAgent {
 
       proc.on("error", (err) => {
         clearTimeout(timeout);
-        reject(new Error(`Failed to start Claude Code: ${err.message}`));
+        reject(new Error(`Failed to start HeadyJules Code: ${err.message}`));
       });
     });
   }
 
   /**
-   * Fallback when CLI is not available — returns structured task acknowledgment.
-   * The Supervisor can still use this to track what needs to be done.
+   * Fallback when CLI is not available — route through SDK gateway for real AI response.
    */
   _fallbackExecution(prompt, request) {
-    return Promise.resolve({
-      output: [
-        `[Claude Code Agent — Fallback Mode]`,
-        `CLI not available. Task queued for manual execution.`,
-        ``,
-        `Task Type: ${request.taskType || "general"}`,
-        `Target: ${request.target || "N/A"}`,
-        `Description: ${request.description || request.prompt || "N/A"}`,
-        ``,
-        `To execute manually, run:`,
-        `  claude --print --model ${this.model} "${prompt.slice(0, 200)}..."`,
-        ``,
-        `Or install Claude Code: npm install -g @anthropic-ai/claude-code`,
-      ].join("\n"),
-      files: [],
-      suggestions: [
-        "Install Claude Code CLI: npm install -g @anthropic-ai/claude-code",
-        "Set ANTHROPIC_API_KEY in environment",
-        "Re-run pipeline to execute with full Claude Code integration",
-      ],
-      fallback: true,
-    });
+    return (async () => {
+      try {
+        const path = require("path");
+        const HeadyGateway = require(path.join(__dirname, "..", "..", "heady-hive-sdk", "lib", "gateway"));
+        const { createProviders } = require(path.join(__dirname, "..", "..", "heady-hive-sdk", "lib", "providers"));
+        const gateway = new HeadyGateway({ cacheTTL: 300000 });
+        const providers = createProviders(process.env);
+        for (const p of providers) gateway.registerProvider(p);
+
+        const result = await gateway.chat(prompt, {
+          system: `You are a senior software engineer working on the Heady™ ecosystem. Task type: ${request.taskType || "general"}.`,
+        });
+        if (result.ok) {
+          return {
+            output: result.response,
+            files: [],
+            suggestions: [],
+            fallback: false,
+            engine: result.engine,
+          };
+        }
+      } catch { /* gateway unavailable */ }
+
+      // Absolute fallback
+      return {
+        output: [
+          `[HeadyJules Code Agent — Gateway Fallback]`,
+          `Task Type: ${request.taskType || "general"}`,
+          `Target: ${request.target || "N/A"}`,
+          `Description: ${request.description || request.prompt || "N/A"}`,
+        ].join("\n"),
+        files: [],
+        suggestions: [],
+        fallback: true,
+      };
+    })();
   }
 
   /**
@@ -361,7 +377,6 @@ class ClaudeCodeAgent {
       id: this.id,
       skills: this.skills,
       model: this.model,
-      universalPromptHash: getPromptHash(),
       history: this.history.slice(-10),
       totalInvocations: this.history.length,
       successRate: this.history.length > 0

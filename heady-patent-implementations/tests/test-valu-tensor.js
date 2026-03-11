@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
@@ -25,8 +23,8 @@ const _queue = [];
 
 function test(name, fn) {
   _queue.push(async () => {
-    try { await fn(); logger.info(`  ✓ ${name}`); passed++; }
-    catch (err) { logger.error(`  ✗ ${name}: ${err.message}`); failed++; }
+    try { await fn(); console.log(`  ✓ ${name}`); passed++; }
+    catch (err) { console.error(`  ✗ ${name}: ${err.message}`); failed++; }
   });
 }
 
@@ -35,7 +33,7 @@ function asyncTest(name, fn) { test(name, fn); }
 const EPS = 1e-4;
 function approx(a, b) { return Math.abs(a - b) < EPS; }
 
-logger.info('\n=== VALU Tensor Core Tests ===\n');
+console.log('\n=== VALU Tensor Core Tests ===\n');
 
 test('PHI is correct', () => { assert.strictEqual(PHI, 1.6180339887); });
 
@@ -421,6 +419,6 @@ asyncTest('BatchProcessor handles errors gracefully in batch', async () => {
 
 (async () => {
   for (const t of _queue) await t();
-  logger.info(`\nResults: ${passed} passed, ${failed} failed\n`);
+  console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
   process.exit(failed > 0 ? 1 : 0);
 })();

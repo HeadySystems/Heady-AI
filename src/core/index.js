@@ -1,157 +1,175 @@
 /**
- * Heady Core — Unified Barrel Export
- * 
- * Wires all core engines into a single import surface.
- * Every module uses ES module exports, φ-scaled constants,
- * CSL gates (no boolean logic), and concurrent-equals (no priorities).
- * 
- * @module core
- * @author Eric Haywood — HeadySystems Inc.
- * @license PROPRIETARY — 51+ Provisional Patents
+ * © 2026-2026 HeadySystems Inc. All Rights Reserved.
+ * PROPRIETARY AND CONFIDENTIAL.
  */
 
-// === Wave 2 Core Engines ===
+'use strict';
 
-export {
-  LiquidNodeRegistry,
-  VectorRouter,
-  HealthMonitor as LiquidHealthMonitor,
-  TopologyManager,
-  ColabRuntimeManager,
-} from './liquid-nodes/index.js';
+/**
+ * @fileoverview Barrel export for all heady-core modules.
+ * The heady-core suite replaces the following external packages:
+ *   - express         → heady-server
+ *   - cors            → src/middleware/cors
+ *   - dotenv          → heady-env
+ *   - jsonwebtoken    → heady-jwt
+ *   - bcrypt          → heady-crypt
+ *   - node-cron       → heady-scheduler
+ *   - js-yaml         → heady-yaml
+ *   - node-cache      → heady-kv
+ *   - node-fetch/axios → heady-fetch
+ *
+ * @module src/core
+ *
+ * @example
+ * const {
+ *   headyFetch, loadEnv, createServer,
+ *   sign, verify, hash, compare,
+ *   defaultScheduler, defaultStore, parse, stringify
+ * } = require('./src/core');
+ */
 
-export {
-  SwarmManager,
-  BeeLifecycle,
-  TaskRouter as SwarmTaskRouter,
-  WorkStealer,
-  BackpressureManager,
-  ConsensusEngine,
-} from './swarm-engine/index.js';
+// ── Environment loader ────────────────────────────────────────────────────
+const headyEnv = require('./heady-env');
 
-export {
-  TaskDecomposer,
-  ParallelExecutor,
-} from './async-engine/index.js';
+// ── HTTP Fetch client ─────────────────────────────────────────────────────
+const headyFetchModule = require('./heady-fetch');
 
-export {
-  normalize,
-  dot,
-  magnitude,
-  cslAND,
-  cslOR,
-  cslNOT,
-  cslIMPLY,
-  cslXOR,
-  cslCONSENSUS,
-  cslGATE,
-  cslBLEND,
-  topK,
-  slerp,
-  rotate,
-  reduceDimensions,
-  EmbeddingRouter,
-  EmbeddingCache,
-  HybridSearch,
-  BM25Index,
-  BinaryBSC,
-  BipolarMAP,
-  RealHRR,
-  HDCCodebook,
-  TernaryLogic,
-  KleeneK3,
-  Lukasiewicz,
-  CSLContinuous,
-  TRUTH,
-} from './vector-ops/index.js';
+// ── HTTP Server ───────────────────────────────────────────────────────────
+const headyServerModule = require('./heady-server');
 
-// === Wave 3 Core Engines ===
+// ── JWT ───────────────────────────────────────────────────────────────────
+const headyJwt = require('./heady-jwt');
 
-export {
-  HeadyConductor,
-  TaskClassifier,
-} from './conductor/index.js';
+// ── Password hashing ──────────────────────────────────────────────────────
+const headyCrypt = require('./heady-crypt');
 
-export {
-  DurableAgentState,
-  EdgeOriginRouter,
-  VectorizeSync,
-} from './edge-runtime/index.js';
+// ── Task scheduler ────────────────────────────────────────────────────────
+const headySchedulerModule = require('./heady-scheduler');
 
-export {
-  ProviderRacer,
-  HealthMonitor as GatewayHealthMonitor,
-  BYOKManager,
-  SSETransport,
-  WebSocketTransport,
-  JSONRPC,
-} from './liquid-gateway/index.js';
+// ── Key-value store ───────────────────────────────────────────────────────
+const headyKvModule = require('./heady-kv');
 
-export {
-  BeeRegistry,
-  BEE_TEMPLATES,
-  RESOURCE_CLASSES,
-  SWARM_TYPES,
-  POOL_DISTRIBUTION,
-} from './bee-registry/index.js';
+// ── YAML parser ───────────────────────────────────────────────────────────
+const headyYaml = require('./heady-yaml');
 
-export {
-  HCFullPipeline,
-  STAGE_DEFINITIONS,
-  QUALITY_GATES,
-} from './pipeline/index.js';
+// ---------------------------------------------------------------------------
+// Named re-exports (tree-shakeable style)
+// ---------------------------------------------------------------------------
 
-// === Wave 4 Core Engines ===
+module.exports = {
+  // ── heady-env ─────────────────────────────────────────────────────────
+  /** Parse a .env file string */
+  parseEnv: headyEnv.parse,
+  /** Load .env file into process.env */
+  loadEnv: headyEnv.loadEnv,
+  /** Load multiple .env files */
+  loadEnvFiles: headyEnv.loadEnvFiles,
+  /** Get env var or throw */
+  requireEnv: headyEnv.requireEnv,
+  /** Get env var with default */
+  getEnv: headyEnv.getEnv,
+  /** Is production? */
+  isProduction: headyEnv.isProduction,
+  /** Is test? */
+  isTest: headyEnv.isTest,
+  /** Is development? */
+  isDevelopment: headyEnv.isDevelopment,
 
-export {
-  HeadyAutoContext,
-  ContextEnvelope,
-  ContextSource,
-  CONTEXT_SOURCES,
-  CONTEXT_WEIGHTS,
-  contextInjector,
-  ContextInjectorMiddleware,
-  INJECTION_MODES,
-  QUALITY_GATES as CONTEXT_QUALITY_GATES,
-} from './auto-context/index.js';
+  // ── heady-fetch ───────────────────────────────────────────────────────
+  /** Main fetch function with retry + circuit breaker */
+  headyFetch: headyFetchModule.headyFetch || headyFetchModule,
+  /** GET shorthand */
+  fetchGet: (headyFetchModule.headyFetch || headyFetchModule).get,
+  /** POST shorthand */
+  fetchPost: (headyFetchModule.headyFetch || headyFetchModule).post,
+  /** PUT shorthand */
+  fetchPut: (headyFetchModule.headyFetch || headyFetchModule).put,
+  /** PATCH shorthand */
+  fetchPatch: (headyFetchModule.headyFetch || headyFetchModule).patch,
+  /** DELETE shorthand */
+  fetchDelete: (headyFetchModule.headyFetch || headyFetchModule).delete,
+  /** Get circuit breaker status */
+  getCircuitStatus: headyFetchModule.getCircuitStatus,
+  /** Reset a specific circuit */
+  resetCircuit: headyFetchModule.resetCircuit,
 
-export {
-  DriftDetector,
-  DriftMeasurement,
-  COHERENCE_THRESHOLDS,
-  PRESSURE,
-  RepairEngine,
-  RepairRecord,
-  REPAIR_STRATEGIES,
-  DIAGNOSIS,
-  REPAIR_MAP,
-} from './self-healing/index.js';
+  // ── heady-server ──────────────────────────────────────────────────────
+  /** HeadyServer class */
+  HeadyServer: headyServerModule.HeadyServer,
+  /** HeadyRouter class */
+  HeadyRouter: headyServerModule.HeadyRouter,
+  /** Create a new server instance */
+  createServer: headyServerModule.createServer,
+  /** MIME type map */
+  MIME_TYPES: headyServerModule.MIME_TYPES,
 
-// === Wave 5 Core Engines ===
+  // ── heady-jwt ─────────────────────────────────────────────────────────
+  /** Sign a JWT */
+  sign: headyJwt.sign,
+  /** Verify a JWT */
+  verify: headyJwt.verify,
+  /** Decode a JWT without verification */
+  decode: headyJwt.decode,
+  /** Refresh (re-sign) a JWT */
+  refreshToken: headyJwt.refresh,
+  /** Generate a JWT ID */
+  generateJwtId: headyJwt.generateJwtId,
 
-export {
-  TieredContextManager,
-  ContextEntry,
-  TOKEN_BUDGETS,
-} from './context-window/index.js';
+  // ── heady-crypt ───────────────────────────────────────────────────────
+  /** Hash a password (async) */
+  hash: headyCrypt.hash,
+  /** Hash a password (sync) */
+  hashSync: headyCrypt.hashSync,
+  /** Compare password to hash (async) */
+  compare: headycrypt.compare,
+  /** Compare password to hash (sync) */
+  compareSync: headycrypt.compareSync,
+  /** Generate a random hex token */
+  generateToken: headyCrypt.generateToken,
+  /** Generate a Heady™ API key (hk_...) */
+  generateApiKey: headyCrypt.generateApiKey,
+  /** Check if hash needs re-hashing */
+  needsRehash: headyCrypt.needsRehash,
+  /** Timing-safe string equality */
+  timingSafeEqual: headyCrypt.timingSafeEqual,
 
-export {
-  CircuitBreaker,
-  CircuitBreakerRegistry,
-  CB_STATES,
-} from './resilience/index.js';
+  // ── heady-scheduler ───────────────────────────────────────────────────
+  /** HeadyScheduler class */
+  HeadyScheduler: headySchedulerModule.HeadyScheduler,
+  /** Default global scheduler */
+  defaultScheduler: headySchedulerModule.defaultScheduler,
+  /** Create an isolated scheduler */
+  createScheduler: headySchedulerModule.createScheduler,
+  /** Parse a cron expression */
+  parseCronExpression: headySchedulerModule.parseCronExpression,
 
-export {
-  HeadyEventBus,
-  EventEnvelope,
-} from './event-bus/index.js';
+  // ── heady-kv ──────────────────────────────────────────────────────────
+  /** HeadyKV class */
+  HeadyKV: headyKvModule.HeadyKV,
+  /** Create a new KV store */
+  createKV: headyKvModule.createKV,
+  /** Default global KV store */
+  defaultStore: headyKvModule.defaultStore,
 
-export {
-  VectorMemoryStore,
-  MemoryRecord,
-  MEMORY_TYPES,
-} from './vector-memory/index.js';
+  // ── heady-yaml ────────────────────────────────────────────────────────
+  /** Parse a YAML string */
+  parseYaml: headyYaml.parse,
+  /** Parse all YAML documents */
+  parseAllYaml: headyYaml.parseAll,
+  /** Stringify a value to YAML */
+  stringifyYaml: headyYaml.stringify,
+  /** Alias: yaml.load */
+  yamlLoad: headyYaml.parse,
+  /** Alias: yaml.dump */
+  yamlDump: headyYaml.stringify,
 
-export {
-  HeadyBuddy,
-} from './buddy/index.js';
+  // ── Module references (for direct import) ─────────────────────────────
+  /** Full heady-env module */
+  env: headyEnv,
+  /** Full heady-jwt module */
+  jwt: headyJwt,
+  /** Full heady-crypt module */
+  crypt: headyCrypt,
+  /** Full heady-yaml module */
+  yaml: headyYaml,
+};

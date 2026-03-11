@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview HeadyAuthProvider — Complete OAuth2/OIDC authentication provider
  * for the Heady sovereign AI platform (headyme.com).
@@ -167,7 +165,7 @@ export class AuthProvider {
       this._privateKey = crypto.createPrivateKey(privateKey);
       this._publicKey = crypto.createPublicKey(publicKey);
 
-      logger.warn(
+      console.warn(
         '[HeadyAuth] Generated ephemeral RS256 key pair. ' +
         'Set config.jwt.privateKey and config.jwt.publicKey in production.'
       );

@@ -7,7 +7,7 @@ export function getWork(ctx?: {}): ((() => Promise<{
     exists: boolean;
     ageDays: number;
     wordCount: number;
-    hasNOTEs: number;
+    hasTODOs: number;
     stale: boolean;
     needsUpdate: boolean;
     required?: undefined;
@@ -20,7 +20,7 @@ export function getWork(ctx?: {}): ((() => Promise<{
     needsCreation: boolean;
     ageDays?: undefined;
     wordCount?: undefined;
-    hasNOTEs?: undefined;
+    hasTODOs?: undefined;
     stale?: undefined;
     needsUpdate?: undefined;
 }>) | (() => Promise<{

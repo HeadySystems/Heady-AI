@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/deployment-audit.js
@@ -151,7 +149,7 @@ function rotateIfNeeded(filePath, entries) {
   const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const archivePath = filePath.replace('.jsonl', `-archive-${ts}.jsonl`);
   fs.copyFileSync(filePath, archivePath);
-  logger.info(`Audit log rotated: ${archivePath} (${entries.length} entries archived)`);
+  console.log(`Audit log rotated: ${archivePath} (${entries.length} entries archived)`);
 
   // Keep last fib(8)=21 entries in active log for chain continuity
   return entries.slice(-FIB[8]); // 21
@@ -205,14 +203,14 @@ function getSystemInfo() {
 function main() {
   const args = parseArgs(process.argv);
 
-  logger.info('=== Heady™ Deployment Audit ===');
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Type:        ${args.type}`);
-  logger.info(`Version:     ${args.version}`);
-  logger.info(`Environment: ${args.environment}`);
-  logger.info(`Deployer:    ${args.deployer}`);
-  logger.info(`Revision:    ${args.revision}`);
-  logger.info('');
+  console.log('=== Heady™ Deployment Audit ===');
+  console.log(`φ = ${PHI}`);
+  console.log(`Type:        ${args.type}`);
+  console.log(`Version:     ${args.version}`);
+  console.log(`Environment: ${args.environment}`);
+  console.log(`Deployer:    ${args.deployer}`);
+  console.log(`Revision:    ${args.revision}`);
+  console.log('');
 
   // ── Ensure audit directory exists ─────────────────────────
   const auditDir = path.dirname(args.auditFile);
@@ -222,16 +220,16 @@ function main() {
 
   // ── Read existing log ──────────────────────────────────────
   let entries = readAuditLog(args.auditFile);
-  logger.info(`Existing entries: ${entries.length}`);
+  console.log(`Existing entries: ${entries.length}`);
 
   // ── Verify chain integrity ─────────────────────────────────
   const { valid, firstInvalidIndex } = verifyChain(entries);
   if (!valid) {
-    logger.error(`::error::Audit chain integrity violation at index ${firstInvalidIndex}!`);
-    logger.error('Audit chain may have been tampered with.');
+    console.error(`::error::Audit chain integrity violation at index ${firstInvalidIndex}!`);
+    console.error('Audit chain may have been tampered with.');
     // Continue but log the warning
   } else {
-    logger.info('Audit chain integrity: ✅ verified');
+    console.log('Audit chain integrity: ✅ verified');
   }
 
   // ── Rotate if needed ───────────────────────────────────────
@@ -282,7 +280,7 @@ function main() {
   // ── Verify new entry before writing ───────────────────────
   const recheck = computeEntryHash(previousHash, payload);
   if (recheck !== entryId) {
-    logger.error('::error::Entry hash computation error! Entry not written.');
+    console.error('::error::Entry hash computation error! Entry not written.');
     process.exit(1);
   }
 
@@ -297,11 +295,11 @@ function main() {
     fs.appendFileSync(args.auditFile, jsonLine + '\n', 'utf8');
   }
 
-  logger.info(`✅ Audit entry written`);
-  logger.info(`   ID:       ${entryId}`);
-  logger.info(`   Previous: ${previousHash.substring(0, 16)}...`);
-  logger.info(`   Sequence: #${entry.sequence}`);
-  logger.info(`   File:     ${args.auditFile}`);
+  console.log(`✅ Audit entry written`);
+  console.log(`   ID:       ${entryId}`);
+  console.log(`   Previous: ${previousHash.substring(0, 16)}...`);
+  console.log(`   Sequence: #${entry.sequence}`);
+  console.log(`   File:     ${args.auditFile}`);
 
   // ── Emit GitHub step summary ───────────────────────────────
   if (process.env.GITHUB_STEP_SUMMARY) {

@@ -69,7 +69,7 @@ const MCP_TOOLS = [
 ];
 ```
 
-Each tool MUST have a real implementation — no stubs or NOTEs.
+Each tool MUST have a real implementation — no stubs or TODOs.
 
 ### TASK 2: AI Inference Gateway
 

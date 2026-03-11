@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * ORCH-004: PDCA Self-Healing Loop for Heady™Brain
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')('pdca-loop');
 
 class PDCALoop {
     constructor(options = {}) {

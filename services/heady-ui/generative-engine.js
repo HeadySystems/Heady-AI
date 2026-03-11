@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * UI-001: Generative UI Engine — CSL-Gated
@@ -19,6 +17,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-ui/generative-engine.js', '.js'));
 
 // ─── Sacred Geometry Constants ──────────────────────────────────
 const PHI = 1.6180339887498948;

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * Governance Panel — Decentralized Governance Controls
  * Micro-frontend for Heady™Web Universal Shell
@@ -107,7 +105,7 @@ function createApp(container, props = {}) {
   container.appendChild(root);
 
   // Announce mount
-  logger.info('[MFE:governance-panel] Mounted v' + APP_CONFIG.version);
+  console.log('[MFE:governance-panel] Mounted v' + APP_CONFIG.version);
   return { unmount: () => { root.remove(); } };
 }
 

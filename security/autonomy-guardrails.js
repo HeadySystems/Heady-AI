@@ -114,10 +114,7 @@ function evaluateAction(agentId, action) {
           severity: rule.severity,
         };
       }
-    } catch (guardrailErr) {
-      // Guardrail evaluation failure — log but do not block (fail-open for evaluation errors)
-      metrics.blocked++;
-    }
+    } catch {}
   }
 
   // Action allowed
@@ -163,7 +160,7 @@ function createServer(port = 3394) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch (parseErr) { r({ _parseError: parseErr.message }); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
 
       if (url.pathname === '/guardrails/evaluate' && req.method === 'POST') { const b = await readBody(); respond(200, evaluateAction(b.agentId, b.action || b)); }
       else if (url.pathname === '/guardrails/checkin' && req.method === 'POST') { const b = await readBody(); respond(200, humanCheckin(b.agentId)); }

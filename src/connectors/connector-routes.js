@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -130,7 +128,7 @@ function registerConnectorRoutes(app) {
     try {
         require("../utils/logger").logSystem("🔌 Connector routes registered: providers, services, token vault, health");
     } catch {
-        logger.info("🔌 Connector routes registered");
+        console.log("🔌 Connector routes registered");
     }
 }
 

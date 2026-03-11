@@ -1,5 +1,4 @@
-const pino = require('pino');
-const logger = pino();
+const logger = require('../shared/logger')('heady-edge-daemon');
 #!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..

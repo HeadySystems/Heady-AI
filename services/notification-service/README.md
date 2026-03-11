@@ -1,53 +1,24 @@
-# @heady/notification-service
+# notification-service
 
-Real-time notification service for the Heady platform via WebSocket, SSE, and internal push APIs.
+Heady™ notification-service service — part of the Heady™ Sacred Geometry Architecture.
 
-## Endpoints
-
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| WS | /ws?token=... | Token | WebSocket connection |
-| GET | /events?token=...&channels=... | Token | SSE stream |
-| POST | /broadcast | API Key | Broadcast to channel |
-| POST | /notify | API Key | Direct message to user |
-| GET | /health | No | Health check |
-
-## Channels
-
-- `system` — platform-wide system notifications
-- `alerts` — monitoring and alerting
-- `deployments` — deployment status updates
-- `agents` — AI agent activity notifications
-
-## WebSocket Protocol
-
-Connect with token: `ws://host:3381/ws?token=<session-token>`
-
-Every message must include a `token` field for re-validation:
-
-```json
-{ "action": "subscribe", "channel": "alerts", "token": "<token>" }
-{ "action": "unsubscribe", "channel": "alerts", "token": "<token>" }
-{ "action": "ping", "token": "<token>" }
-```
-
-Heartbeat interval: 13s (FIB[7]). Reconnection uses phi-backoff.
-
-## SSE
+## Quick Start
 
 ```bash
-curl -N "http://host:3381/events?token=<token>&channels=system,alerts"
+npm install
+npm start
 ```
 
-Keep-alive: 21s (FIB[8]).
+## Port
 
-## Rate Limits
+Default: `3395`
 
-34 notifications/min per user (FIB[9]).
+## Architecture
 
-## Docker
+- **φ-Scaled**: All thresholds use golden ratio derivatives
+- **Structured Logging**: Pino JSON via `shared/logger.js`
+- **Security Headers**: CSP, CORS allow-list, HSTS via `shared/security-headers.js`
 
-```bash
-docker build -t heady/notification-service .
-docker run -p 3381:3381 --env-file .env heady/notification-service
-```
+---
+
+*© 2026 HeadySystems Inc. — Eric Haywood, Founder*

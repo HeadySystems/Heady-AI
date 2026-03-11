@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/smoke-test.js
@@ -250,7 +248,7 @@ async function requestWithRetry(endpoint, maxRetries, timeoutMs) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     if (attempt > 0) {
       const waitSec = delays[attempt - 1] || delays[delays.length - 1];
-      logger.info(`    Retry ${attempt}/${maxRetries} (waiting ${waitSec}s)...`);
+      console.log(`    Retry ${attempt}/${maxRetries} (waiting ${waitSec}s)...`);
       await new Promise(r => setTimeout(r, waitSec * 1000));
     }
 
@@ -286,13 +284,13 @@ async function requestWithRetry(endpoint, maxRetries, timeoutMs) {
 async function main() {
   const args = parseArgs(process.argv);
 
-  logger.info('=== Heady Smoke Test Suite ===');
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Base URL:  ${args.baseUrl}`);
-  logger.info(`Timeout:   ${args.timeout}ms (φ^2 × 1000)`);
-  logger.info(`Retries:   ${args.retries} (fib(5))`);
-  logger.info(`Suite:     ${args.fullSuite ? 'full' : 'core'}`);
-  logger.info('');
+  console.log('=== Heady Smoke Test Suite ===');
+  console.log(`φ = ${PHI}`);
+  console.log(`Base URL:  ${args.baseUrl}`);
+  console.log(`Timeout:   ${args.timeout}ms (φ^2 × 1000)`);
+  console.log(`Retries:   ${args.retries} (fib(5))`);
+  console.log(`Suite:     ${args.fullSuite ? 'full' : 'core'}`);
+  console.log('');
 
   const endpoints = getEndpoints(args.baseUrl, args.fullSuite);
   const results = {
@@ -328,13 +326,13 @@ async function main() {
     const latDisplay = `${result.latency}ms`;
     const icon = result.passed ? '✅' : (endpoint.critical ? '❌' : '⚠️');
 
-    logger.info(`${icon} ${statusDisplay} [${latDisplay}]`);
+    console.log(`${icon} ${statusDisplay} [${latDisplay}]`);
 
     if (!result.passed) {
-      if (result.bodyError) logger.info(`    Body validation: ${result.bodyError}`);
-      if (result.error)     logger.info(`    Error: ${result.error}`);
+      if (result.bodyError) console.log(`    Body validation: ${result.bodyError}`);
+      if (result.error)     console.log(`    Error: ${result.error}`);
       if (!endpoint.critical) {
-        logger.info(`    (non-critical — continuing)`);
+        console.log(`    (non-critical — continuing)`);
       }
     }
 
@@ -365,12 +363,12 @@ async function main() {
   }
 
   // ── Print summary ──────────────────────────────────────────
-  logger.info('\n=== Smoke Test Summary ===');
-  logger.info(`Total:   ${results.summary.total}`);
-  logger.info(`Passed:  ${results.summary.passed}`);
-  logger.info(`Failed:  ${results.summary.failed}`);
+  console.log('\n=== Smoke Test Summary ===');
+  console.log(`Total:   ${results.summary.total}`);
+  console.log(`Passed:  ${results.summary.passed}`);
+  console.log(`Failed:  ${results.summary.failed}`);
   if (results.summary.criticalFailed) {
-    logger.error('CRITICAL endpoints failed!');
+    console.error('CRITICAL endpoints failed!');
   }
 
   // Latency stats
@@ -381,9 +379,9 @@ async function main() {
     const mean = sorted.reduce((a, b) => a + b, 0) / sorted.length;
     // φ-scaled: warn if p95 > φ^3 × 1000 = 4236ms
     const phiWarnMs = Math.round(Math.pow(PHI, 3) * 1000); // 4236
-    logger.info(`\nLatency: mean=${Math.round(mean)}ms, p95=${p95}ms (φ-warn>${phiWarnMs}ms)`);
+    console.log(`\nLatency: mean=${Math.round(mean)}ms, p95=${p95}ms (φ-warn>${phiWarnMs}ms)`);
     if (p95 > phiWarnMs) {
-      logger.warn(`⚠️  p95 latency ${p95}ms exceeds φ^3×1000=${phiWarnMs}ms warning threshold`);
+      console.warn(`⚠️  p95 latency ${p95}ms exceeds φ^3×1000=${phiWarnMs}ms warning threshold`);
     }
   }
 
@@ -394,20 +392,20 @@ async function main() {
     const dir  = path.dirname(args.output);
     if (dir && !fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(args.output, JSON.stringify(results, null, 2));
-    logger.info(`\nResults written to: ${args.output}`);
+    console.log(`\nResults written to: ${args.output}`);
   }
 
   // ── Exit code ──────────────────────────────────────────────
   if (hasFailure) {
-    logger.error('\n❌ SMOKE TEST FAILED: Critical endpoint(s) unreachable');
+    console.error('\n❌ SMOKE TEST FAILED: Critical endpoint(s) unreachable');
     process.exit(1);
   } else {
-    logger.info('\n✅ SMOKE TEST PASSED: All critical endpoints healthy');
+    console.log('\n✅ SMOKE TEST PASSED: All critical endpoints healthy');
     process.exit(0);
   }
 }
 
 main().catch(err => {
-  logger.error('Fatal error in smoke-test:', err);
+  console.error('Fatal error in smoke-test:', err);
   process.exit(1);
 });

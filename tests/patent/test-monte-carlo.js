@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -33,18 +31,18 @@ let failed = 0;
 function test(name, fn) {
   try {
     fn();
-    logger.info(`  ✓  ${name}`);
+    console.log(`  ✓  ${name}`);
     passed++;
   } catch (err) {
-    logger.error(`  ✗  ${name}`);
-    logger.error(`       ${err.message}`);
+    console.error(`  ✗  ${name}`);
+    console.error(`       ${err.message}`);
     failed++;
   }
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-logger.info('\n── Constants ─────────────────────────────────────────────────────');
+console.log('\n── Constants ─────────────────────────────────────────────────────');
 
 test('PHI equals 1.6180339887', () => {
   assert.strictEqual(PHI, 1.6180339887);
@@ -63,7 +61,7 @@ test('OUTCOME_THRESHOLDS.SUCCESS_MAX is 0.30', () => {
 
 // ─── Mulberry32 PRNG ──────────────────────────────────────────────────────────
 
-logger.info('\n── Mulberry32 PRNG ───────────────────────────────────────────────');
+console.log('\n── Mulberry32 PRNG ───────────────────────────────────────────────');
 
 test('mulberry32 returns values in [0, 1)', () => {
   const rand = mulberry32(42);
@@ -93,7 +91,7 @@ test('mulberry32 produces different sequences for different seeds', () => {
 
 // ─── Distribution Samplers ────────────────────────────────────────────────────
 
-logger.info('\n── Distribution Samplers ─────────────────────────────────────────');
+console.log('\n── Distribution Samplers ─────────────────────────────────────────');
 
 test('sampleUniform returns values in [min, max]', () => {
   const rand = mulberry32(7);
@@ -131,7 +129,7 @@ test('sample dispatches to correct distribution', () => {
 
 // ─── Statistical Helpers ──────────────────────────────────────────────────────
 
-logger.info('\n── Statistical Helpers ───────────────────────────────────────────');
+console.log('\n── Statistical Helpers ───────────────────────────────────────────');
 
 test('scoreToGrade maps ranges correctly', () => {
   assert.strictEqual(scoreToGrade(100), RISK_GRADE.GREEN);
@@ -171,7 +169,7 @@ test('descriptiveStats handles empty array', () => {
 
 // ─── runSimulation ────────────────────────────────────────────────────────────
 
-logger.info('\n── runSimulation ─────────────────────────────────────────────────');
+console.log('\n── runSimulation ─────────────────────────────────────────────────');
 
 test('runSimulation returns required fields', () => {
   const eng = new MonteCarloEngine();
@@ -271,7 +269,7 @@ test('runSimulation includes normal distribution support', () => {
 
 // ─── quickReadiness ───────────────────────────────────────────────────────────
 
-logger.info('\n── quickReadiness ────────────────────────────────────────────────');
+console.log('\n── quickReadiness ────────────────────────────────────────────────');
 
 test('quickReadiness returns GREEN for healthy signals', () => {
   const eng = new MonteCarloEngine();
@@ -302,7 +300,7 @@ test('quickReadiness breakdown sums approximate to score', () => {
 
 // ─── Scenario Analysis ────────────────────────────────────────────────────────
 
-logger.info('\n── Scenario Analysis ─────────────────────────────────────────────');
+console.log('\n── Scenario Analysis ─────────────────────────────────────────────');
 
 test('analyseScenarios returns comparison with best and worst', () => {
   const eng = new MonteCarloEngine();
@@ -317,7 +315,7 @@ test('analyseScenarios returns comparison with best and worst', () => {
 
 // ─── Pipeline Hooks ───────────────────────────────────────────────────────────
 
-logger.info('\n── Pipeline Stage Integration ────────────────────────────────────');
+console.log('\n── Pipeline Stage Integration ────────────────────────────────────');
 
 test('registerPipelineHook is called after simulation for matching stage', () => {
   const eng   = new MonteCarloEngine();
@@ -338,7 +336,7 @@ test('clearPipelineHooks removes hooks for stage', () => {
 
 // ─── Risk Scoring Utility ─────────────────────────────────────────────────────
 
-logger.info('\n── scoreRisk ─────────────────────────────────────────────────────');
+console.log('\n── scoreRisk ─────────────────────────────────────────────────────');
 
 test('scoreRisk returns 100 for no risk factors', () => {
   const eng = new MonteCarloEngine();
@@ -357,7 +355,7 @@ test('scoreRisk returns lower score for high-probability impacts', () => {
 
 // ─── History & Status ─────────────────────────────────────────────────────────
 
-logger.info('\n── History & Status ──────────────────────────────────────────────');
+console.log('\n── History & Status ──────────────────────────────────────────────');
 
 test('getHistory returns recent simulations', () => {
   const eng = new MonteCarloEngine();
@@ -385,9 +383,9 @@ test('status returns totalRuns and phi', () => {
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
-logger.info(`\n── Results ──────────────────────────────────────────────────────`);
-logger.info(`   Passed: ${passed}`);
-logger.info(`   Failed: ${failed}`);
-logger.info(`   Total:  ${passed + failed}`);
+console.log(`\n── Results ──────────────────────────────────────────────────────`);
+console.log(`   Passed: ${passed}`);
+console.log(`   Failed: ${failed}`);
+console.log(`   Total:  ${passed + failed}`);
 
 if (failed > 0) process.exit(1);

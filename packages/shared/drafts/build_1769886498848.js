@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // AI Workflow Engine - Production Deployment Implementation
 // Generated via MCP Orchestration - Task ID: 1769886498848
 
@@ -147,7 +145,7 @@ async function handleWorkflowTrigger(request, env, headers) {
         }
         
         // Log workflow trigger
-        logger.info(\`Workflow triggered: \${workflowData.type}\`);
+        console.log(\`Workflow triggered: \${workflowData.type}\`);
         
         // Process workflow based on type
         const result = await processWorkflow(workflowData, env);
@@ -165,7 +163,7 @@ async function handleWorkflowTrigger(request, env, headers) {
         });
         
     } catch (error) {
-        logger.error('Workflow trigger error:', error);
+        console.error('Workflow trigger error:', error);
         return new Response(JSON.stringify({ 
             error: 'Internal server error',
             details: error.message 
@@ -616,7 +614,7 @@ jobs:
     
     // Production Deployment Pipeline
     async deploy() {
-        logger.info("🚀 Starting production deployment...");
+        console.log("🚀 Starting production deployment...");
         
         const deploymentSteps = [
             'validate_environment',
@@ -632,18 +630,18 @@ jobs:
         const results = {};
         
         for (const step of deploymentSteps) {
-            logger.info(`📋 Executing: ${step}`);
+            console.log(`📋 Executing: ${step}`);
             try {
                 results[step] = await this.executeDeploymentStep(step);
-                logger.info(`✅ Completed: ${step}`);
+                console.log(`✅ Completed: ${step}`);
             } catch (error) {
-                logger.error(`❌ Failed: ${step}`, error);
+                console.error(`❌ Failed: ${step}`, error);
                 results[step] = { error: error.message, status: 'failed' };
                 throw new Error(`Deployment failed at step: ${step}`);
             }
         }
         
-        logger.info("🎉 Production deployment completed successfully!");
+        console.log("🎉 Production deployment completed successfully!");
         return {
             status: 'success',
             timestamp: new Date().toISOString(),
@@ -784,6 +782,6 @@ if (typeof module !== 'undefined' && module.exports) {
 // Auto-deploy if run directly
 if (typeof window === 'undefined' && require.main === module) {
     ProductionDeployment.deploy()
-        .then(result => logger.info("Deployment Result:", JSON.stringify(result, null, 2)))
-        .catch(error => logger.error("Deployment failed:", error));
+        .then(result => console.log("Deployment Result:", JSON.stringify(result, null, 2)))
+        .catch(error => console.error("Deployment failed:", error));
 }

@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyMe Antigravity — Webpack Remote Entry Bootstrap
  *
@@ -15,5 +13,5 @@ import('./mount').then(({ mount }) => {
     theme: 'dark',
   });
 }).catch((err) => {
-  logger.error('[Antigravity] Bootstrap failed:', err);
+  console.error('[Antigravity] Bootstrap failed:', err);
 });

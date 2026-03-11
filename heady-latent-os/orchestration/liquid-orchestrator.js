@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Liquid Latent OS Orchestrator — The Nervous System of Heady™
  * @module orchestration/liquid-orchestrator
@@ -901,13 +899,13 @@ export class LiquidOrchestrator {
     // In production: route to observability-kernel / structured logger
     // In development: stderr only for warn/error
     if (level === 'error') {
-      logger.error(JSON.stringify(entry));
+      console.error(JSON.stringify(entry));
     } else if (level === 'warn') {
-      logger.warn(JSON.stringify(entry));
+      console.warn(JSON.stringify(entry));
     }
     // debug/info silenced unless LOG_LEVEL=debug
     else if (process.env.LOG_LEVEL === 'debug') {
-      logger.info(JSON.stringify(entry));
+      console.log(JSON.stringify(entry));
     }
   }
 }

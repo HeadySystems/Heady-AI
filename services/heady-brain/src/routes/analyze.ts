@@ -23,7 +23,7 @@ analyzeRouter.post('/', async (req, res, next) => {
       contentLength: data.content.length
     });
 
-    // NOTE: Implement actual analysis logic
+    // TODO: Implement actual analysis logic
     res.json({
       analysis: {
         summary: 'Analysis placeholder',

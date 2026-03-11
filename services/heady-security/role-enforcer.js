@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * SEC-002: Role Isolation Enforcer
@@ -11,6 +9,7 @@ const logger = pino();
  */
 
 'use strict';
+const logger = require('../../shared/logger')(require('path').basename('services/heady-security/role-enforcer.js', '.js'));
 
 const ROLES = {
     ADMIN: 'admin',

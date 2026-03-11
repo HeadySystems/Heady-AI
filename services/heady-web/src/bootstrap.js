@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadyWeb — Remote Entry Bootstrap
  *
@@ -51,5 +49,5 @@ import('./mount')
     }
   })
   .catch((err) => {
-    logger.error('[HeadyBootstrap] Failed to mount application:', err);
+    console.error('[HeadyBootstrap] Failed to mount application:', err);
   });

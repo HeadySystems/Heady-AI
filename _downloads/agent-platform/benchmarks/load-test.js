@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Load testing and benchmarking
  */
@@ -17,7 +15,7 @@ class LoadTester {
       duration = 60000, // 60 seconds
     } = options;
 
-    logger.info(`🚀 Starting load test: ${taskCount} tasks, ${concurrency} concurrent`);
+    console.log(`🚀 Starting load test: ${taskCount} tasks, ${concurrency} concurrent`);
 
     const results = {
       totalTasks: 0,
@@ -64,15 +62,15 @@ class LoadTester {
     const p99 = results.latencies[Math.floor(results.latencies.length * 0.99)];
     const throughput = results.completed / duration_sec;
 
-    logger.info('\n📊 Load Test Results:');
-    logger.info(`   Total Tasks: ${results.totalTasks}`);
-    logger.info(`   Completed: ${results.completed}`);
-    logger.info(`   Failed: ${results.failed}`);
-    logger.info(`   Duration: ${duration_sec.toFixed(2)}s`);
-    logger.info(`   Throughput: ${throughput.toFixed(2)} tasks/sec`);
-    logger.info(`   Latency P50: ${p50.toFixed(2)}ms`);
-    logger.info(`   Latency P95: ${p95.toFixed(2)}ms`);
-    logger.info(`   Latency P99: ${p99.toFixed(2)}ms`);
+    console.log('\n📊 Load Test Results:');
+    console.log(`   Total Tasks: ${results.totalTasks}`);
+    console.log(`   Completed: ${results.completed}`);
+    console.log(`   Failed: ${results.failed}`);
+    console.log(`   Duration: ${duration_sec.toFixed(2)}s`);
+    console.log(`   Throughput: ${throughput.toFixed(2)} tasks/sec`);
+    console.log(`   Latency P50: ${p50.toFixed(2)}ms`);
+    console.log(`   Latency P95: ${p95.toFixed(2)}ms`);
+    console.log(`   Latency P99: ${p99.toFixed(2)}ms`);
 
     return results;
   }

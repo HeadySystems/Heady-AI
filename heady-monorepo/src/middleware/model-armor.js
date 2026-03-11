@@ -182,7 +182,7 @@ function createModelArmorMiddleware(opts = {}) {
 
         if (result.blocked) {
             logger.error?.(`[MODEL ARMOR] BLOCKED request to ${req.path}: ${result.injectionThreats.map(t => t.type).join(', ')}`) ||
-                logger.error(`[MODEL ARMOR] BLOCKED: ${req.path}`);
+                console.error(`[MODEL ARMOR] BLOCKED: ${req.path}`);
             return res.status(403).json({
                 error: 'Request blocked by Model Armor',
                 reason: 'Prompt injection detected',

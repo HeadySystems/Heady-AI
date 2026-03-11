@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * HeadyGateway — HeadyStack Client SDK
  * Connects to all HeadyStack API endpoints.
@@ -75,7 +73,7 @@ class HeadyGateway {
         const timer = setTimeout(() => controller.abort(), this._timeout);
 
         if (this._debug) {
-            logger.error(`[HeadyGateway] ${method} ${url.toString()}`);
+            console.error(`[HeadyGateway] ${method} ${url.toString()}`);
         }
 
         try {

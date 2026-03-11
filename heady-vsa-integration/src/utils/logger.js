@@ -18,25 +18,25 @@ const logger = {
 
   debug(...args) {
     if (currentLevel <= LOG_LEVELS.debug) {
-      logger.info('[DEBUG]', ...args);
+      console.log('[DEBUG]', ...args);
     }
   },
 
   info(...args) {
     if (currentLevel <= LOG_LEVELS.info) {
-      logger.info('[INFO]', ...args);
+      console.log('[INFO]', ...args);
     }
   },
 
   warn(...args) {
     if (currentLevel <= LOG_LEVELS.warn) {
-      logger.warn('[WARN]', ...args);
+      console.warn('[WARN]', ...args);
     }
   },
 
   error(...args) {
     if (currentLevel <= LOG_LEVELS.error) {
-      logger.error('[ERROR]', ...args);
+      console.error('[ERROR]', ...args);
     }
   }
 };

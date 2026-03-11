@@ -1,407 +1,295 @@
 /**
- * @fileoverview Heady™ Embedding Router — Multi-Provider Routing with Circuit Breaker Failover
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * Heady™ Embedding Router — src/memory/embedding-router.js
+ * ═══════════════════════════════════════════════════════════════════════════════
  *
- * Routes embedding requests across providers (nomic, jina, local) using:
- *   - CSL-gated provider scoring (cosine alignment of provider capability vectors)
- *   - LRU cache with fib(20) = 6,765 capacity
- *   - Per-provider CircuitBreaker instances for automatic failover
- *   - Phi-backoff retry on transient failures
+ * Multi-provider embedding routing with circuit breaker failover, LRU caching,
+ * cost optimization, and CSL-gated provider scoring.
  *
- * Provider priority order: nomic → jina → local
- * Fallback strategy: round-robin next healthy provider on CircuitOpenError.
+ * Providers: Nomic, Jina, Cohere, Voyage, OpenAI, local Ollama
  *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * © HeadySystems Inc. — Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
 'use strict';
 
-const {
-  fib,
-  PSI,
-  PHI,
-  CSL_THRESHOLDS,
-  cosineSimilarity,
-  normalize,
-  phiBackoffWithJitter,
-  PHI_TIMING,
-  VECTOR,
-  cslGate,
-} = require('../../shared/phi-math.js');
+const { fib, PHI, PSI, CSL_THRESHOLDS, phiFusionWeights, phiBackoff } = require('../../shared/phi-math');
+const { CircuitBreaker } = require('../resilience/circuit-breaker');
 
-const { CircuitBreaker, CircuitOpenError } = require('../resilience/circuit-breaker.js');
-const { retry }                             = require('../resilience/exponential-backoff.js');
-
-// ─── Cache constants ──────────────────────────────────────────────────────────
-
-/** LRU cache capacity: fib(20) = 6,765 */
-const CACHE_CAPACITY = fib(20);
-
-/** Cache hit score gate threshold: CSL DEFAULT (ψ ≈ 0.618) */
-const CACHE_GATE_TAU = CSL_THRESHOLDS.DEFAULT;
-
-/** Minimum provider health score to route to: CSL LOW ≈ 0.691 */
-const MIN_PROVIDER_SCORE = CSL_THRESHOLDS.LOW;
-
-/** Circuit breaker failure threshold: fib(5) = 5 */
-const CB_FAILURE_THRESHOLD = fib(5);
-
-/** Provider timeout per request: PHI_TIMING.PHI_5 ≈ 11,090ms */
-const PROVIDER_TIMEOUT_MS = PHI_TIMING.PHI_5;
-
-/** Max retries per embedding call: fib(3) = 2 */
-const MAX_RETRIES = fib(3);
-
-// ─── Providers ────────────────────────────────────────────────────────────────
+const DEFAULT_DIM = 384;
 
 /**
- * Built-in provider definitions.
- * dim = output embedding dimension
- * speed = relative speed score (0–1, higher = faster)
- * quality = relative quality score (0–1, higher = better)
+ * Provider configuration schema.
+ * @typedef {object} ProviderConfig
+ * @property {string} name
+ * @property {string} model - Model identifier
+ * @property {number} dimensions - Output dimensions
+ * @property {number} costPer1k - Cost per 1000 tokens (USD)
+ * @property {number} maxBatchSize - Max texts per request
+ * @property {Function} embedFn - async (texts[], opts) → Float64Array[]
+ * @property {number} [priority=0] - Lower = preferred
  */
-const PROVIDERS = Object.freeze({
-  nomic: {
-    name:    'nomic',
-    dim:     VECTOR.DIMS,
-    speed:   PSI,           // 0.618 — fast, good quality
-    quality: CSL_THRESHOLDS.HIGH,  // 0.882
-  },
-  jina: {
-    name:    'jina',
-    dim:     VECTOR.DIMS * 2,
-    speed:   PSI * PSI,     // 0.382 — slower
-    quality: CSL_THRESHOLDS.CRITICAL,  // 0.927 — highest quality
-  },
-  local: {
-    name:    'local',
-    dim:     VECTOR.DIMS,
-    speed:   1.0,           // fastest — in-process
-    quality: CSL_THRESHOLDS.MEDIUM,   // 0.809 — good enough
-  },
-});
 
-// ─── LRU Cache ────────────────────────────────────────────────────────────────
-
-/**
- * @class LRUCache
- * Minimal LRU cache backed by Map (insertion order).
- */
-class LRUCache {
-  /**
-   * @param {number} capacity
-   */
-  constructor(capacity) {
-    this.capacity = capacity;
-    this._map     = new Map();
-    this._hits    = 0;
-    this._misses  = 0;
-  }
-
-  /**
-   * Get a cached value or undefined.
-   * @param {string} key
-   * @returns {*}
-   */
-  get(key) {
-    if (!this._map.has(key)) {
-      this._misses++;
-      return undefined;
-    }
-    // Move to end (most-recently-used)
-    const val = this._map.get(key);
-    this._map.delete(key);
-    this._map.set(key, val);
-    this._hits++;
-    return val;
-  }
-
-  /**
-   * Store a value, evicting LRU entry if at capacity.
-   * @param {string} key
-   * @param {*}      value
-   */
-  set(key, value) {
-    if (this._map.has(key)) this._map.delete(key);
-    else if (this._map.size >= this.capacity) {
-      // Evict oldest (first entry in Map)
-      this._map.delete(this._map.keys().next().value);
-    }
-    this._map.set(key, value);
-  }
-
-  /** @returns {{ size: number, capacity: number, hitRate: number }} */
-  stats() {
-    const total = this._hits + this._misses;
-    return {
-      size:     this._map.size,
-      capacity: this.capacity,
-      hits:     this._hits,
-      misses:   this._misses,
-      hitRate:  total > 0 ? this._hits / total : 0,
-    };
-  }
-
-  clear() { this._map.clear(); }
-}
-
-// ─── Cache key ───────────────────────────────────────────────────────────────
-
-/**
- * Generate a deterministic cache key from text input and provider name.
- * Uses a fast djb2-style hash (no crypto dependency needed for cache keys).
- * @param {string} text
- * @param {string} provider
- * @returns {string}
- */
-function cacheKey(text, provider) {
-  let h = fib(11); // 89 — non-zero seed from phi-math
-  for (let i = 0; i < text.length; i++) {
-    h = (Math.imul(h, 31) + text.charCodeAt(i)) >>> 0;
-  }
-  return `${provider}:${h.toString(16)}`;
-}
-
-// ─── EmbeddingRouter class ────────────────────────────────────────────────────
-
-/**
- * @class EmbeddingRouter
- *
- * @example
- * const router = new EmbeddingRouter({
- *   providers: {
- *     nomic: async (text) => fetchNomicEmbedding(text),
- *     jina:  async (text) => fetchJinaEmbedding(text),
- *     local: async (text) => localModel.embed(text),
- *   }
- * });
- * const embedding = await router.embed('What is golden ratio?');
- */
 class EmbeddingRouter {
   /**
    * @param {object} opts
-   * @param {object<string, Function>} opts.providers
-   *   Map of provider name → async fn(text: string) → number[]
-   * @param {string[]}  [opts.order]          - provider priority order
-   * @param {number}    [opts.cacheCapacity]  - LRU cache size (default fib(20))
-   * @param {boolean}   [opts.cacheEnabled]   - enable result caching (default true)
-   * @param {number}    [opts.maxRetries]      - per-call retries (default fib(3)=2)
+   * @param {ProviderConfig[]} opts.providers
+   * @param {number} [opts.cacheSize] - LRU cache capacity (default fib(20)=6765)
+   * @param {number} [opts.cacheTTLMs] - Cache entry TTL (default 1 hour)
+   * @param {number} [opts.targetDim] - Target output dimensions (default 384)
+   * @param {Function} [opts.logger]
    */
-  constructor(opts = {}) {
-    this._providerFns = opts.providers || {};
-    this._order       = opts.order || ['nomic', 'jina', 'local'];
-    this._cache       = new LRUCache(opts.cacheCapacity || CACHE_CAPACITY);
-    this._cacheEnabled = opts.cacheEnabled !== false;
-    this._maxRetries  = opts.maxRetries || MAX_RETRIES;
+  constructor(opts) {
+    this.providers = new Map();
+    this.targetDim = opts.targetDim || DEFAULT_DIM;
+    this.cacheSize = opts.cacheSize || fib(20);   // 6765
+    this.cacheTTLMs = opts.cacheTTLMs || 3600000; // 1 hour
+    this.logger = opts.logger || console;
 
-    // Per-provider circuit breakers
-    this._circuitBreakers = {};
-    for (const name of this._order) {
-      this._circuitBreakers[name] = new CircuitBreaker(`embedding-${name}`, {
-        failureThreshold: CB_FAILURE_THRESHOLD,
-      });
+    // LRU Cache: hash(text+model) → { vector, timestamp }
+    this._cache = new Map();
+    this._cacheOrder = [];
+
+    // Register providers with circuit breakers
+    for (const prov of (opts.providers || [])) {
+      this.registerProvider(prov);
     }
 
-    // Provider performance counters
-    this._counters = {};
-    for (const name of this._order) {
-      this._counters[name] = { calls: 0, failures: 0, cacheHits: 0 };
-    }
-
-    this._totalCalls    = 0;
-    this._totalFailures = 0;
-  }
-
-  // ─── Provider scoring ──────────────────────────────────────────────────────
-
-  /**
-   * Score each provider using CSL-gated health × quality × speed.
-   * Returns providers sorted descending by composite score.
-   * @returns {Array<{name: string, score: number}>}
-   */
-  _scoreProviders() {
-    return this._order
-      .map(name => {
-        const def = PROVIDERS[name] || { speed: PSI, quality: PSI };
-        const cb  = this._circuitBreakers[name];
-        const cnt = this._counters[name];
-
-        // Health: circuit breaker health percentage (0–1)
-        const health  = cb ? cb.healthPercent : 1;
-
-        // Failure penalty — csl-gated by health
-        const failRate = cnt.calls > 0 ? cnt.failures / cnt.calls : 0;
-        const reliability = Math.max(0, 1 - failRate);
-
-        // Composite score: health × quality × reliability, gated by speed
-        const rawScore = health * def.quality * reliability;
-        const score    = cslGate(rawScore, def.speed, CACHE_GATE_TAU);
-
-        return { name, score, health, cb };
-      })
-      .sort((a, b) => b.score - a.score);
+    // Stats
+    this._stats = {
+      totalRequests: 0,
+      cacheHits: 0,
+      cacheMisses: 0,
+      providerCalls: {},
+      errors: 0,
+    };
   }
 
   /**
-   * Select the best available (non-open-circuit) provider.
-   * @returns {string|null} provider name, or null if all are open
+   * Register an embedding provider.
+   * @param {ProviderConfig} config
    */
-  _selectProvider() {
-    const scored = this._scoreProviders();
-    for (const { name, score, cb } of scored) {
-      if (cb && cb.isOpen) continue;
-      if (score < MIN_PROVIDER_SCORE && this._counters[name].calls > fib(5)) continue;
-      if (this._providerFns[name]) return name;
-    }
-    // Last resort: any provider with a function, regardless of score
-    for (const name of this._order) {
-      if (this._providerFns[name]) return name;
-    }
-    return null;
+  registerProvider(config) {
+    this.providers.set(config.name, {
+      ...config,
+      breaker: new CircuitBreaker({
+        name: `embed-${config.name}`,
+        failureThreshold: fib(5),
+        resetTimeoutMs: phiBackoff(0, 5000, 60000, false),
+      }),
+      latencyAvg: 100,
+      successRate: 1.0,
+    });
+    this._stats.providerCalls[config.name] = 0;
   }
 
-  // ─── Core embed ───────────────────────────────────────────────────────────
-
   /**
-   * Embed text, using LRU cache and circuit-breaker failover.
+   * Generate embeddings for one or more texts.
+   * Routes to the best available provider with failover.
    *
-   * @param {string} text      - text to embed
+   * @param {string|string[]} input - Text or array of texts
    * @param {object} [opts]
-   * @param {string}  [opts.provider]    - force a specific provider
-   * @param {boolean} [opts.skipCache]   - bypass cache for this call
-   * @param {number}  [opts.targetDims]  - truncate/pad result to this dim
-   * @returns {Promise<number[]>} normalized embedding
+   * @param {string} [opts.provider] - Force specific provider
+   * @param {number} [opts.dimensions] - Override target dimensions
+   * @param {boolean} [opts.noCache] - Skip cache
+   * @returns {Promise<Float64Array[]>} Array of embedding vectors
    */
-  async embed(text, opts = {}) {
-    if (!text || typeof text !== 'string') {
-      throw new TypeError('EmbeddingRouter.embed: text must be a non-empty string');
-    }
+  async embed(input, opts = {}) {
+    const texts = Array.isArray(input) ? input : [input];
+    const dim = opts.dimensions || this.targetDim;
+    this._stats.totalRequests++;
 
-    this._totalCalls++;
+    // Check cache
+    const results = new Array(texts.length);
+    const uncachedIndices = [];
 
-    // Determine provider
-    const preferredProvider = opts.provider || this._selectProvider();
-    if (!preferredProvider) {
-      throw new Error('EmbeddingRouter: no healthy providers available');
-    }
-
-    // Cache lookup
-    const key = cacheKey(text, preferredProvider);
-    if (this._cacheEnabled && !opts.skipCache) {
-      const cached = this._cache.get(key);
-      if (cached !== undefined) {
-        if (preferredProvider in this._counters) this._counters[preferredProvider].cacheHits++;
-        return cached;
+    if (!opts.noCache) {
+      for (let i = 0; i < texts.length; i++) {
+        const cached = this._cacheGet(texts[i], dim);
+        if (cached) {
+          results[i] = cached;
+          this._stats.cacheHits++;
+        } else {
+          uncachedIndices.push(i);
+          this._stats.cacheMisses++;
+        }
       }
+    } else {
+      for (let i = 0; i < texts.length; i++) uncachedIndices.push(i);
     }
 
-    // Try providers in priority order with circuit breaker failover
-    const providerList = opts.provider
-      ? [opts.provider, ...this._order.filter(n => n !== opts.provider)]
-      : [preferredProvider, ...this._order.filter(n => n !== preferredProvider)];
+    if (uncachedIndices.length === 0) return results;
+
+    // Get uncached texts
+    const uncachedTexts = uncachedIndices.map(i => texts[i]);
+
+    // Select provider
+    const providers = opts.provider
+      ? [this.providers.get(opts.provider)].filter(Boolean)
+      : this._rankProviders(dim);
 
     let lastError;
-    for (const providerName of providerList) {
-      const fn = this._providerFns[providerName];
-      if (!fn) continue;
-
-      const cb = this._circuitBreakers[providerName];
-      if (cb && cb.isOpen) continue;
-
+    for (const prov of providers) {
       try {
-        const embedding = await retry(
-          () => cb
-            ? cb.execute(() => fn(text))
-            : fn(text),
-          {
-            maxRetries: this._maxRetries,
-            timeoutMs:  PROVIDER_TIMEOUT_MS,
-            shouldRetry: (err) => !(err instanceof CircuitOpenError),
+        const vectors = await prov.breaker.execute(async () => {
+          const start = Date.now();
+          const result = await this._callProvider(prov, uncachedTexts, dim);
+          const elapsed = Date.now() - start;
+
+          // Update rolling latency average
+          prov.latencyAvg = prov.latencyAvg * PSI + elapsed * (1 - PSI);
+          prov.successRate = Math.min(1, prov.successRate + 0.01);
+
+          return result;
+        });
+
+        this._stats.providerCalls[prov.name]++;
+
+        // Fill results and cache
+        for (let j = 0; j < uncachedIndices.length; j++) {
+          results[uncachedIndices[j]] = vectors[j];
+          if (!opts.noCache) {
+            this._cacheSet(uncachedTexts[j], dim, vectors[j]);
           }
-        );
-
-        const normed = normalize(embedding);
-
-        // Store in cache
-        if (this._cacheEnabled && !opts.skipCache) {
-          this._cache.set(key, normed);
         }
 
-        this._counters[providerName].calls++;
-        return normed;
+        return results;
 
       } catch (err) {
         lastError = err;
-        this._counters[providerName].calls++;
-        this._counters[providerName].failures++;
-        this._totalFailures++;
-        // Continue to next provider
+        prov.successRate = Math.max(0, prov.successRate - 0.1);
+        this._stats.errors++;
+        this.logger.warn?.(`[EmbeddingRouter] Provider ${prov.name} failed`, err.message);
       }
     }
 
-    throw lastError || new Error('EmbeddingRouter: all providers failed');
+    throw new Error(`All embedding providers failed. Last error: ${lastError?.message}`);
   }
 
-  // ─── Batch embed ──────────────────────────────────────────────────────────
+  /**
+   * Embed a single text and return the vector directly.
+   * @param {string} text
+   * @param {object} [opts]
+   * @returns {Promise<Float64Array>}
+   */
+  async embedOne(text, opts = {}) {
+    const [vector] = await this.embed(text, opts);
+    return vector;
+  }
+
+  // ─── Provider Ranking ──────────────────────────────────────────────────────
 
   /**
-   * Embed an array of texts, respecting phi-batch size fib(8)=21.
-   * @param {string[]} texts
-   * @param {object}   [opts] - same as embed()
-   * @returns {Promise<number[][]>}
+   * Rank providers by composite score: success rate × latency × cost × priority.
+   * Uses phi-fusion weights: [0.486 success, 0.300 latency, 0.214 cost].
    */
-  async embedBatch(texts, opts = {}) {
-    const batchSize = fib(8); // 21
-    const results   = [];
+  _rankProviders(targetDim) {
+    const providers = Array.from(this.providers.values())
+      .filter(p => p.breaker.state !== 'OPEN');
+
+    if (providers.length === 0) return Array.from(this.providers.values());
+
+    const maxLatency = Math.max(1, ...providers.map(p => p.latencyAvg));
+    const maxCost = Math.max(0.0001, ...providers.map(p => p.costPer1k));
+    const weights = phiFusionWeights(3); // [0.486, 0.300, 0.214]
+
+    const scored = providers.map(p => {
+      const successScore = p.successRate;
+      const latencyScore = 1 - (p.latencyAvg / maxLatency);
+      const costScore = 1 - (p.costPer1k / maxCost);
+
+      const composite =
+        successScore * weights[0] +
+        latencyScore * weights[1] +
+        costScore * weights[2];
+
+      return { ...p, composite };
+    });
+
+    scored.sort((a, b) => b.composite - a.composite);
+    return scored;
+  }
+
+  async _callProvider(prov, texts, targetDim) {
+    // Batch if needed
+    const batchSize = prov.maxBatchSize || fib(8); // 21
+    const allVectors = [];
 
     for (let i = 0; i < texts.length; i += batchSize) {
       const batch = texts.slice(i, i + batchSize);
-      const batch_results = await Promise.all(batch.map(t => this.embed(t, opts)));
-      results.push(...batch_results);
+      const vectors = await prov.embedFn(batch, { dimensions: targetDim });
+
+      // MRL truncation if provider returns higher dims than target
+      for (const vec of vectors) {
+        if (vec.length > targetDim) {
+          allVectors.push(new Float64Array(vec.slice(0, targetDim)));
+        } else {
+          allVectors.push(vec instanceof Float64Array ? vec : new Float64Array(vec));
+        }
+      }
     }
-    return results;
+
+    return allVectors;
   }
 
-  // ─── Cache management ─────────────────────────────────────────────────────
+  // ─── Cache ─────────────────────────────────────────────────────────────────
 
-  /** Clear the embedding cache. */
-  clearCache() { this._cache.clear(); }
+  _cacheKey(text, dim) {
+    // Simple hash: first 100 chars + dim + length
+    const prefix = text.slice(0, 100).replace(/\s+/g, ' ');
+    return `${dim}:${text.length}:${prefix}`;
+  }
 
-  // ─── Status ───────────────────────────────────────────────────────────────
+  _cacheGet(text, dim) {
+    const key = this._cacheKey(text, dim);
+    const entry = this._cache.get(key);
+    if (!entry) return null;
+    if (Date.now() - entry.timestamp > this.cacheTTLMs) {
+      this._cache.delete(key);
+      return null;
+    }
+    // Touch for LRU
+    this._cacheOrder = this._cacheOrder.filter(k => k !== key);
+    this._cacheOrder.push(key);
+    return entry.vector;
+  }
 
-  /**
-   * Router diagnostics.
-   * @returns {object}
-   */
+  _cacheSet(text, dim, vector) {
+    const key = this._cacheKey(text, dim);
+    this._cache.set(key, { vector, timestamp: Date.now() });
+    this._cacheOrder.push(key);
+
+    while (this._cache.size > this.cacheSize) {
+      const oldest = this._cacheOrder.shift();
+      if (oldest) this._cache.delete(oldest);
+    }
+  }
+
+  // ─── Status ────────────────────────────────────────────────────────────────
+
   status() {
-    const providers = {};
-    for (const name of this._order) {
-      providers[name] = {
-        ...this._counters[name],
-        circuitBreaker: this._circuitBreakers[name]?.status() || null,
-        available:      !!this._providerFns[name],
-        score:          this._scoreProviders().find(p => p.name === name)?.score,
+    const providerStatuses = {};
+    for (const [name, prov] of this.providers) {
+      providerStatuses[name] = {
+        state: prov.breaker.state,
+        latencyAvg: Math.round(prov.latencyAvg),
+        successRate: prov.successRate.toFixed(3),
+        calls: this._stats.providerCalls[name],
       };
     }
+
     return {
-      totalCalls:    this._totalCalls,
-      totalFailures: this._totalFailures,
-      cache:         this._cache.stats(),
-      providers,
-      selectedProvider: this._selectProvider(),
+      providers: providerStatuses,
+      cache: {
+        size: this._cache.size,
+        capacity: this.cacheSize,
+        hitRate: this._stats.totalRequests > 0
+          ? (this._stats.cacheHits / this._stats.totalRequests).toFixed(3)
+          : '0.000',
+      },
+      stats: { ...this._stats },
     };
   }
 }
 
-// ─── Exports ─────────────────────────────────────────────────────────────────
-
-module.exports = {
-  EmbeddingRouter,
-  LRUCache,
-  cacheKey,
-  PROVIDERS,
-  CACHE_CAPACITY,
-  MIN_PROVIDER_SCORE,
-  CB_FAILURE_THRESHOLD,
-  PROVIDER_TIMEOUT_MS,
-  MAX_RETRIES,
-};
+module.exports = { EmbeddingRouter };

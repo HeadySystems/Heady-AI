@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -23,33 +21,33 @@ async function main() {
     const report = rotation.audit();
 
     if (isJson) {
-        logger.info(JSON.stringify(report, null, 2));
+        console.log(JSON.stringify(report, null, 2));
         return;
     }
 
-    logger.info(`\n═══ Heady Secret Audit [${report.auditedAt}] ═══`);
-    logger.info(`Score: ${report.score} (${report.healthy.length}/${report.total} healthy)`);
+    console.log(`\n═══ Heady Secret Audit [${report.auditedAt}] ═══`);
+    console.log(`Score: ${report.score} (${report.healthy.length}/${report.total} healthy)`);
 
     if (report.expired.length > 0) {
-        logger.info('\n❌ EXPIRED SECRETS (Rotate ASAP):');
+        console.log('\n❌ EXPIRED SECRETS (Rotate ASAP):');
         report.expired.forEach(s => {
-            logger.info(`  - ${s.name.padEnd(20)} [Provider: ${s.provider}] (Age: ${s.ageDays}d, Expiry: 0d)`);
-            if (s.rotationUrl) logger.info(`    URL: ${s.rotationUrl}`);
+            console.log(`  - ${s.name.padEnd(20)} [Provider: ${s.provider}] (Age: ${s.ageDays}d, Expiry: 0d)`);
+            if (s.rotationUrl) console.log(`    URL: ${s.rotationUrl}`);
         });
     }
 
     if (report.warning.length > 0) {
-        logger.info('\n⚠️  WARNING: Secrets Expiring Soon:');
+        console.log('\n⚠️  WARNING: Secrets Expiring Soon:');
         report.warning.forEach(s => {
-            logger.info(`  - ${s.name.padEnd(20)} [Provider: ${s.provider}] (Age: ${s.ageDays}d, Expires in: ${s.daysUntilExpiry}d)`);
+            console.log(`  - ${s.name.padEnd(20)} [Provider: ${s.provider}] (Age: ${s.ageDays}d, Expires in: ${s.daysUntilExpiry}d)`);
         });
     }
 
     if (report.healthy.length === report.total) {
-        logger.info('\n✅ All secrets are healthy and within rotation bounds.');
+        console.log('\n✅ All secrets are healthy and within rotation bounds.');
     }
 
-    logger.info('\n═══ Audit Complete ═══\n');
+    console.log('\n═══ Audit Complete ═══\n');
 }
 
-main().catch(logger.error);
+main().catch(console.error);

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @file cognitive-runtime-governor.js
  * @description Cognitive Resource Governor — CPU/Memory/GPU budget enforcement.
@@ -252,7 +250,7 @@ class PhiSlidingWindow {
  *   maxConcurrency: 21,
  * });
  *
- * gov.on('degradation.changed', ({ mode }) => logger.info('Mode:', mode));
+ * gov.on('degradation.changed', ({ mode }) => console.log('Mode:', mode));
  * gov.start();
  *
  * // Before running a task:

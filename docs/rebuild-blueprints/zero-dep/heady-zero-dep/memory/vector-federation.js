@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Vector Federation — Cross-Node Vector Sync
  * Federated vector search and replication across the 3-Colab cluster.
@@ -396,7 +394,7 @@ export class VectorFederation extends EventEmitter {
     const ackedNodes = acked.map((_, i) => peers[i].id);
 
     if (acked.length < required) {
-      logger.warn(`[VectorFederation] Replication below consistency (${acked.length}/${required})`);
+      console.warn(`[VectorFederation] Replication below consistency (${acked.length}/${required})`);
     }
 
     this.emit('replication', { op, id: payload.id, nodes: ackedNodes });

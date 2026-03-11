@@ -1,0 +1,72 @@
+{
+  "tools": [
+    {
+      "name": "heady_deep_scan",
+      "service": "heady-brain",
+      "endpoint": "/deep-scan",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "directory": { "type": "string", "description": "Directory to scan" },
+          "maxDepth": { "type": "integer", "default": 10, "description": "Max scan depth" }
+        },
+        "required": ["directory"]
+      }
+    },
+    {
+      "name": "heady_analyze",
+      "service": "heady-brain",
+      "endpoint": "/analyze",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "description": "Code to analyze" },
+          "language": { "type": "string", "description": "Programming language" },
+          "analysis_type": { "type": "string", "enum": ["complexity", "security", "maintainability", "full"], "default": "full" }
+        },
+        "required": ["code"]
+      }
+    },
+    {
+      "name": "heady_risks",
+      "service": "heady-brain",
+      "endpoint": "/risks",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "description": "Code to assess" },
+          "scope": { "type": "string", "enum": ["security", "performance", "reliability", "all"], "default": "all" },
+          "severity_threshold": { "type": "string", "enum": ["low", "medium", "high", "critical"], "default": "medium" }
+        },
+        "required": ["code"]
+      }
+    },
+    {
+      "name": "heady_patterns",
+      "service": "heady-brain",
+      "endpoint": "/patterns",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "description": "Code to analyze for patterns" },
+          "pattern_types": { "type": "array", "items": { "type": "string" }, "default": ["design", "anti", "architectural"] }
+        },
+        "required": ["code"]
+      }
+    },
+    {
+      "name": "heady_refactor",
+      "service": "heady-coder",
+      "endpoint": "/refactor",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "description": "Code to refactor" },
+          "strategy": { "type": "string", "enum": ["extract_method", "simplify", "modernize", "optimize", "auto"] },
+          "target": { "type": "string", "description": "Specific function/class to refactor" }
+        },
+        "required": ["code"]
+      }
+    }
+  ]
+}

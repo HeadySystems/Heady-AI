@@ -1,30 +1,25 @@
 {
-  "name": "billing-service",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "Stripe integration for subscriptions and marketplace with φ-scaled pricing tiers",
+  "name": "@heady/billing-service",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Stripe billing for HeadyEX marketplace",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "PORT=3400 node --watch index.js",
-    "health": "curl -s http://localhost:3400/health | jq ."
+    "dev": "PORT=3364 node index.js",
+    "test": "node --test test/",
+    "lint": "eslint .",
+    "health": "curl -s http://0.0.0.0:3364/health | node -e \"process.stdin.resume(); process.stdin.on('data',d=>{const h=JSON.parse(d);process.exit(h.status==='healthy'?0:1)})\""
   },
-  "dependencies": {
-    "express": "^4.21.0",
-    "stripe": "^15.0.0",
-    "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/sdk-node": "^0.52.0",
-    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
-    "@opentelemetry/instrumentation-express": "^0.41.0"
-  },
+  "keywords": [
+    "heady",
+    "infrastructure",
+    "phi-scaled",
+    "csl-gated"
+  ],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
   "engines": {
-    "node": ">=22.0.0"
-  },
-  "heady": {
-    "domain": "integration",
-    "port": 3400,
-    "architecture": "concurrent-equals",
-    "phiScaled": true,
-    "autoContext": "mandatory"
+    "node": ">=20.0.0"
   }
 }

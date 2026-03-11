@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * Heady™ Endpoint Validation Script
@@ -69,15 +67,15 @@ function checkEndpoint(endpoint) {
 }
 
 async function validateAll() {
-  logger.info('🔍 Heady Endpoint Validation\n');
-  logger.info('═'.repeat(70));
+  console.log('🔍 Heady Endpoint Validation\n');
+  console.log('═'.repeat(70));
 
   let totalChecks = 0;
   let passedChecks = 0;
   let criticalFails = 0;
 
   for (const [category, endpoints] of Object.entries(ENDPOINTS)) {
-    logger.info(`\n📂 ${category.toUpperCase()}\n`);
+    console.log(`\n📂 ${category.toUpperCase()}\n`);
 
     for (const endpoint of endpoints) {
       totalChecks++;
@@ -86,48 +84,48 @@ async function validateAll() {
       const icon = result.success ? '✅' : '❌';
       const statusText = result.status || 'UNREACHABLE';
 
-      logger.info(`${icon} ${result.name}`);
-      logger.info(`   URL: ${result.url}`);
-      logger.info(`   Status: ${statusText}`);
+      console.log(`${icon} ${result.name}`);
+      console.log(`   URL: ${result.url}`);
+      console.log(`   Status: ${statusText}`);
 
       if (result.error) {
-        logger.info(`   Error: ${result.error}`);
+        console.log(`   Error: ${result.error}`);
       }
 
       if (result.success) {
         passedChecks++;
         if (result.headers['x-heady-version']) {
-          logger.info(`   Version: ${result.headers['x-heady-version']}`);
+          console.log(`   Version: ${result.headers['x-heady-version']}`);
         }
       } else if (result.required) {
         criticalFails++;
-        logger.info(`   ⚠️  CRITICAL: Required endpoint is down!`);
+        console.log(`   ⚠️  CRITICAL: Required endpoint is down!`);
       }
 
-      logger.info('');
+      console.log('');
     }
   }
 
-  logger.info('═'.repeat(70));
-  logger.info(`\n📊 SUMMARY\n`);
-  logger.info(`Total Checks: ${totalChecks}`);
-  logger.info(`Passed: ${passedChecks} (${Math.round(passedChecks/totalChecks*100)}%)`);
-  logger.info(`Failed: ${totalChecks - passedChecks}`);
-  logger.info(`Critical Failures: ${criticalFails}`);
+  console.log('═'.repeat(70));
+  console.log(`\n📊 SUMMARY\n`);
+  console.log(`Total Checks: ${totalChecks}`);
+  console.log(`Passed: ${passedChecks} (${Math.round(passedChecks/totalChecks*100)}%)`);
+  console.log(`Failed: ${totalChecks - passedChecks}`);
+  console.log(`Critical Failures: ${criticalFails}`);
 
   if (criticalFails > 0) {
-    logger.info('\n❌ VALIDATION FAILED: Critical endpoints are down!');
+    console.log('\n❌ VALIDATION FAILED: Critical endpoints are down!');
     process.exit(1);
   } else if (passedChecks === totalChecks) {
-    logger.info('\n✅ ALL ENDPOINTS VERIFIED');
+    console.log('\n✅ ALL ENDPOINTS VERIFIED');
     process.exit(0);
   } else {
-    logger.info('\n⚠️  VALIDATION PASSED WITH WARNINGS');
+    console.log('\n⚠️  VALIDATION PASSED WITH WARNINGS');
     process.exit(0);
   }
 }
 
 validateAll().catch(err => {
-  logger.error('Fatal error:', err);
+  console.error('Fatal error:', err);
   process.exit(1);
 });

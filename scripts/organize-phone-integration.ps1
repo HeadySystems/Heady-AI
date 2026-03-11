@@ -365,7 +365,7 @@ Write-Host "📊 Creating combined index..." -ForegroundColor Yellow
 ### Android Content
 - Photos: `$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Photos" -File -ErrorAction SilentlyContinue).Count)
 - Videos: `$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Videos" -File -ErrorAction SilentlyContinue).Count)  
-- Documents: `$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Documents" -File -Recurse -Depth 5 -ErrorAction SilentlyContinue).Count)
+- Documents: `$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Documents" -File -Recurse -ErrorAction SilentlyContinue).Count)
 - Downloads: `$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Downloads" -File -ErrorAction SilentlyContinue).Count)
 
 ### iOS Content
@@ -454,18 +454,18 @@ Write-Host "🖼️ Creating visual gallery index..." -ForegroundColor Yellow
 ## 📸 Photo Gallery
 
 ### Recent Android Photos
-`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Photos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 10 | ForEach-Object { -Parallel { "- 📸 [`$(`$_.Name)](Android/Photos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
+`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Photos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 10 | ForEach-Object { "- 📸 [`$(`$_.Name)](Android/Photos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
 
 ### Recent iOS Photos  
-`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\iOS\Photos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 10 | ForEach-Object { -Parallel { "- 🍎 [`$(`$_.Name)](iOS/Photos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
+`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\iOS\Photos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 10 | ForEach-Object { "- 🍎 [`$(`$_.Name)](iOS/Photos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
 
 ## 🎥 Video Gallery
 
 ### Recent Android Videos
-`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Videos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 5 | ForEach-Object { -Parallel { "- 🎥 [`$(`$_.Name)](Android/Videos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
+`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\Android\Videos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 5 | ForEach-Object { "- 🎥 [`$(`$_.Name)](Android/Videos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
 
 ### Recent iOS Videos
-`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\iOS\Videos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 5 | ForEach-Object { -Parallel { "- 🎥 [`$(`$_.Name)](iOS/Videos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
+`$((Get-ChildItem "C:\Users\erich\PersonalEcosystem\PhoneIntegration\iOS\Videos" -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 5 | ForEach-Object { "- 🎥 [`$(`$_.Name)](iOS/Videos/`$(`$_.Name)) - `$(`$_.LastWriteTime.ToString('yyyy-MM-dd'))" })) -join "`n"
 
 ## 🎨 Visual Enhancements Applied
 

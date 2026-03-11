@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -184,7 +182,7 @@ Final Answer: [your complete answer]`;
         steps[steps.length - 1].observation = observation;
 
         if (this.verbose) {
-          logger.info(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
+          console.log(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
         }
       } else {
         // Unexpected format — ask LLM to continue

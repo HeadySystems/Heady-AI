@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ═══════════════════════════════════════════════════════════════
  * CONN-002: Intelligent MCP Router
@@ -175,8 +173,8 @@ if (require.main === module) {
     router.registerProvider({ id: 'openai-mcp', name: 'OpenAI MCP', capabilities: ['chat', 'embed', 'code-generate'], expectedLatency: 200 });
 
     router.route({ tool: 'chat', params: { message: 'hello' } })
-        .then(r => { logger.info('Routed to:', r.provider, `(${r.latency}ms)`); logger.info('✅ MCP Router operational'); })
-        .catch(e => logger.error('❌', e));
+        .then(r => { console.log('Routed to:', r.provider, `(${r.latency}ms)`); console.log('✅ MCP Router operational'); })
+        .catch(e => console.error('❌', e));
 }
 
 module.exports = { IntelligentMCPRouter };

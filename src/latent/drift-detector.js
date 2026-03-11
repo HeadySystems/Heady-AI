@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * ∞ Heady™ Drift Detector — Continuous Semantic Coherence Monitoring
  * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
@@ -415,7 +413,7 @@ class DriftDetector extends EventEmitter {
       } catch (err) {
         // Log scan error without crashing.
         if (process.env.NODE_ENV !== 'test') {
-          logger.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
+          console.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
         }
       }
     }
@@ -509,7 +507,7 @@ class DriftDetector extends EventEmitter {
         this.onHealingTrigger(monitor.componentId, coherence);
       } catch (err) {
         if (process.env.NODE_ENV !== 'test') {
-          logger.error(`[DriftDetector] Healing trigger error: ${err.message}`);
+          console.error(`[DriftDetector] Healing trigger error: ${err.message}`);
         }
       }
     }

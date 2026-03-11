@@ -11,9 +11,6 @@ const HEADY_DOMAINS = [
     'headyme.com', 'headysystems.com', 'headyconnection.org',
     'headymcp.com', 'headyio.com', 'headybuddy.org',
     'headybot.com', 'headyos.com', 'headyapi.com',
-    'heady-ai.com', 'headysense.com', 'headyex.com',
-    'headyfinance.com', 'headyconnection.com', 'perfecttrader.com',
-    'headyai.me',
 ];
 
 const INTERNAL_ENDPOINTS = [
@@ -30,14 +27,14 @@ function getWork(ctx = {}) {
         try {
             const start = Date.now();
             const resp = await fetch(`https://${d}/`, {
-                signal: AbortSignal.timeout(11090), // φ⁵ × 1000
+                signal: AbortSignal.timeout(10000),
                 headers: { 'User-Agent': 'HeadyHealthBee/1.0' },
             });
             const latency = Date.now() - start;
             const html = await resp.text();
             const hasHeadyBrand = html.toLowerCase().includes('heady');
             const hasCanvas = html.includes('canvas') || html.includes('sacred');
-            const hasForbidden = ['localhost', 'NOTE', 'FIXME'].some(f => html.includes(f));
+            const hasForbidden = ['localhost', 'TODO', 'FIXME'].some(f => html.includes(f));
             return {
                 bee: domain, action: `check-${d}`,
                 status: resp.status, latency, healthy: resp.ok && hasHeadyBrand && !hasForbidden,
@@ -52,7 +49,7 @@ function getWork(ctx = {}) {
     work.push(...INTERNAL_ENDPOINTS.map(ep => async () => {
         try {
             const baseUrl = process.env.HEADY_URL || 'https://headyme.com';
-            const resp = await fetch(`${baseUrl}${ep.url}`, { signal: AbortSignal.timeout(4236) }); // φ³ × 1000
+            const resp = await fetch(`${baseUrl}${ep.url}`, { signal: AbortSignal.timeout(5000) });
             return { bee: domain, action: `liveness-${ep.name}`, status: resp.status, healthy: resp.ok };
         } catch (err) {
             return { bee: domain, action: `liveness-${ep.name}`, status: 0, healthy: false, error: err.message };

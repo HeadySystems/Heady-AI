@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 const { PHI_TIMING } = require('../../shared/phi-math');
@@ -195,8 +193,7 @@ const SEED_SERVICES = [
     name: 'vector-store',
     domain: null,
     instances: [
-      { url: 'http://localhost:5432', weight: 1.0, tags: ['postgres', 'pgvector', 'local'] },
-      { url: process.env.DATABASE_URL || 'postgresql://neondb_owner@ep-cold-snow-aesmiwt9.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require', weight: PHI, tags: ['neon', 'production'] },
+      { url: 'http://localhost:5432', weight: 1.0, tags: ['postgres', 'pgvector'] },
     ],
     healthPath: null,        // TCP probe only
     version: '16.0',
@@ -206,8 +203,7 @@ const SEED_SERVICES = [
     name: 'redis',
     domain: null,
     instances: [
-      { url: 'redis://localhost:6379', weight: 1.0, tags: ['cache', 'pubsub', 'local'] },
-      { url: process.env.UPSTASH_REDIS_REST_URL || 'https://finer-sole-64861.upstash.io', weight: PHI, tags: ['upstash', 'production'] },
+      { url: 'redis://localhost:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
     ],
     healthPath: null,
     version: '7.0',
@@ -491,15 +487,9 @@ class HeadyServiceMesh extends EventEmitter {
     this._probeTimer = null;
     this._started    = false;
 
-    // Seed from built-in registry, stripping localhost instances in production
-    const isProd = process.env.NODE_ENV === 'production' || process.env.HEADY_ENV === 'production';
+    // Seed from built-in registry
     for (const def of SEED_SERVICES) {
-      const filtered = isProd
-        ? { ...def, instances: (def.instances || []).filter(i => !i.url.includes('localhost')) }
-        : def;
-      if (filtered.instances.length > 0) {
-        this._registry.set(filtered.name, new ServiceEntry(filtered, this._config));
-      }
+      this._registry.set(def.name, new ServiceEntry(def, this._config));
     }
   }
 
@@ -512,19 +502,19 @@ class HeadyServiceMesh extends EventEmitter {
 
     // Initial probe pass (non-blocking)
     this._runHealthProbes().catch((err) =>
-      logger.error('[mesh] initial health probe error:', err.message)
+      console.error('[mesh] initial health probe error:', err.message)
     );
 
     // Periodic probe
     this._probeTimer = setInterval(
-      () => this._runHealthProbes().catch(logger.error),
+      () => this._runHealthProbes().catch(console.error),
       this._config.healthCheckIntervalMs
     );
 
     // Prevent timer from blocking process exit
     if (this._probeTimer.unref) this._probeTimer.unref();
 
-    logger.info('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
+    console.log('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
     this._publish('heady:service:mesh_started', { ts: Date.now() });
   }
 
@@ -565,7 +555,7 @@ class HeadyServiceMesh extends EventEmitter {
       const exists = entry.instances.find((i) => i.url === url);
       if (!exists) {
         entry.addInstance({ url, weight, tags });
-        logger.info(`[mesh] added instance ${url} → ${name}`);
+        console.log(`[mesh] added instance ${url} → ${name}`);
       }
     } else {
       const entry = new ServiceEntry(
@@ -574,7 +564,7 @@ class HeadyServiceMesh extends EventEmitter {
         this._config
       );
       this._registry.set(name, entry);
-      logger.info(`[mesh] registered new service: ${name}`);
+      console.log(`[mesh] registered new service: ${name}`);
     }
 
     this._publish('heady:service:registered', { name, url, tags, ts: Date.now() });
@@ -716,7 +706,7 @@ class HeadyServiceMesh extends EventEmitter {
         inst.cb.onSuccess();
         inst.consecutiveFails = 0;
         if (!wasHealthy) {
-          logger.info(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
+          console.log(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
           this._publish('heady:service:healthy', { name: entry.name, url: inst.url, ts: Date.now() });
         }
       } else {
@@ -735,7 +725,7 @@ class HeadyServiceMesh extends EventEmitter {
     inst.lastHealthCheck = Date.now();
 
     if (wasHealthy) {
-      logger.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
+      console.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
       this._publish('heady:service:unhealthy', {
         name:  entry.name,
         url:   inst.url,

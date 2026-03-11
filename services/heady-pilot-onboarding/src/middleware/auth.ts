@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -25,7 +23,7 @@ export function middleware(request: NextRequest) {
   if (token && url.pathname.startsWith('/dashboard')) {
     // Check if onboarding is complete
     if (!onboardingComplete || onboardingComplete !== 'true') {
-      logger.info('[Middleware] Onboarding not complete, redirecting to /onboarding');
+      console.log('[Middleware] Onboarding not complete, redirecting to /onboarding');
       url.pathname = '/onboarding';
       return NextResponse.redirect(url);
     }
@@ -33,7 +31,7 @@ export function middleware(request: NextRequest) {
 
   // If user is not authenticated and trying to access protected routes
   if (!token && (url.pathname.startsWith('/dashboard') || url.pathname.startsWith('/onboarding'))) {
-    logger.info('[Middleware] Not authenticated, redirecting to /auth/signin');
+    console.log('[Middleware] Not authenticated, redirecting to /auth/signin');
     url.pathname = '/auth/signin';
     return NextResponse.redirect(url);
   }

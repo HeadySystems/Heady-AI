@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 #!/usr/bin/env node
 /**
  * scripts/ci/analyze-bundle.js
@@ -270,11 +268,11 @@ function formatReport(analysis) {
 async function main() {
   const args = parseArgs(process.argv);
 
-  logger.info('=== Heady Bundle Analysis ===');
-  logger.info(`φ = ${PHI}`);
-  logger.info(`Fail threshold: fib(5)=${args.failPct}%`);
-  logger.info(`Warn threshold: fib(4)=${args.warnPct}%`);
-  logger.info('');
+  console.log('=== Heady Bundle Analysis ===');
+  console.log(`φ = ${PHI}`);
+  console.log(`Fail threshold: fib(5)=${args.failPct}%`);
+  console.log(`Warn threshold: fib(4)=${args.warnPct}%`);
+  console.log('');
 
   // ── Load baseline ──────────────────────────────────────────
   let baseline = {};
@@ -284,20 +282,20 @@ async function main() {
     for (const [k, v] of Object.entries(raw)) {
       baseline[k] = typeof v === 'object' ? (v.bytes || 0) : v;
     }
-    logger.info(`Baseline loaded: ${Object.keys(baseline).length} packages`);
+    console.log(`Baseline loaded: ${Object.keys(baseline).length} packages`);
   } else {
-    logger.warn(`No bundle baseline at ${args.baseline} — treating as first run`);
+    console.warn(`No bundle baseline at ${args.baseline} — treating as first run`);
   }
 
   // ── Measure current sizes ──────────────────────────────────
-  logger.info('Measuring current bundle sizes...');
+  console.log('Measuring current bundle sizes...');
   const current = measureCurrentSizes(args.src);
 
   const existing = Object.entries(current).filter(([, v]) => v.bytes > 0);
-  logger.info(`Measured ${existing.length} packages with build output`);
+  console.log(`Measured ${existing.length} packages with build output`);
 
   for (const [pkg, data] of existing) {
-    logger.info(`  ${data.human.padStart(10)} — ${pkg}${data.autoDiscovered ? ' (auto)' : ''}`);
+    console.log(`  ${data.human.padStart(10)} — ${pkg}${data.autoDiscovered ? ' (auto)' : ''}`);
   }
 
   // ── Compare ────────────────────────────────────────────────
@@ -332,28 +330,28 @@ async function main() {
   };
 
   // ── Print report ───────────────────────────────────────────
-  logger.info('\n' + formatReport(analysis));
+  console.log('\n' + formatReport(analysis));
 
   // ── Write output ───────────────────────────────────────────
   const dir = path.dirname(args.output);
   if (dir && !fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(args.output, JSON.stringify(analysis, null, 2));
-  logger.info(`\nAnalysis written to: ${args.output}`);
+  console.log(`\nAnalysis written to: ${args.output}`);
 
   // ── Exit code ──────────────────────────────────────────────
   if (overallStatus === 'fail') {
-    logger.error(`\n❌ BUNDLE FAIL: Size increase exceeds fib(5)=${args.failPct}% threshold`);
+    console.error(`\n❌ BUNDLE FAIL: Size increase exceeds fib(5)=${args.failPct}% threshold`);
     process.exit(1);
   } else if (overallStatus === 'warn') {
-    logger.warn(`\n⚠️  BUNDLE WARN: Size increase exceeds fib(4)=${args.warnPct}% warning threshold`);
+    console.warn(`\n⚠️  BUNDLE WARN: Size increase exceeds fib(4)=${args.warnPct}% warning threshold`);
     process.exit(0);
   } else {
-    logger.info(`\n✅ BUNDLE PASS: All sizes within φ-scaled thresholds`);
+    console.log(`\n✅ BUNDLE PASS: All sizes within φ-scaled thresholds`);
     process.exit(0);
   }
 }
 
 main().catch(err => {
-  logger.error('Fatal error in analyze-bundle:', err);
+  console.error('Fatal error in analyze-bundle:', err);
   process.exit(1);
 });

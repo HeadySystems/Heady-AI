@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * @fileoverview Graph RAG (Retrieval-Augmented Generation) Engine
  * Zero-dependency knowledge graph with vector embeddings on nodes.
@@ -522,7 +520,7 @@ export class GraphRAG {
         this._adj.get(e.to).in.set(e.id, e);
       }
     } catch (err) {
-      logger.error('[GraphRAG] Load failed:', err.message);
+      console.error('[GraphRAG] Load failed:', err.message);
     }
   }
 

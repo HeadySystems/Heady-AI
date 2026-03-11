@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * @file trading-bee-csl.js
  * @description Apex Trading Intelligence — CSL-gated Trading Bee
@@ -237,7 +235,7 @@ function getWork(ctx = {}) {
  *
  * @example
  * const bee = new TradingBeeCSL({ accountType: '100K' });
- * bee.on('taskRouted', e => logger.info(e.pool.name, e.task.id));
+ * bee.on('taskRouted', e => console.log(e.pool.name, e.task.id));
  * bee.cslRouteTask({ id: 'apx-001', urgency: 0.8, importance: 0.9 });
  */
 class TradingBeeCSL extends EventEmitter {
@@ -391,7 +389,7 @@ class TradingBeeCSL extends EventEmitter {
     // ── § 6.3  QUEUE MANAGEMENT ──────────────────────────────────────────────
 
     /**
-     * Dequeue the next task from the hot pool (highest priority).
+     * Dequeue the next task from the hot pool (concurrent-equal weight).
      * Falls back to warm, then cold if hot is empty.
      *
      * @returns {Object|null}  Next task, or null if all queues empty.

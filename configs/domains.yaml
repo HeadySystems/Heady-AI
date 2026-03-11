@@ -1,142 +1,187 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# Heady™ Latent OS — Domain Routing Configuration
-# Maps each Heady domain to its architectural role, projection repo, and services.
-#
-# © 2024-2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
+# Heady™ Domain Routing Registry — configs/domains.yaml
 # ═══════════════════════════════════════════════════════════════════════════════
+#
+# Complete domain registry. Every request is routed through this map.
+# Zero localhost — everything uses branded Heady domains.
+#
+# © HeadySystems Inc.
+
+# ─── Primary Domains ──────────────────────────────────────────────────────────
 
 domains:
 
-  # ─── Command Center ──────────────────────────────────────────────────────────
-  headyme:
-    url:             https://headyme.com
-    role:            command_center
-    description:     "Primary user-facing dashboard — manages all Heady sessions, agents, and outputs"
-    projection_repo: headyme-projection
-    services:
-      - session-manager
-      - dashboard-api
-      - user-auth
-      - notification-service
-    csl_gate:        0.809   # CSL_THRESHOLDS.MEDIUM — moderate alignment required
-    pool:            hot      # latency-critical
+  # Command Center
+  headyme.com:
+    role: "command-center"
+    description: "Heady™ Command Center — primary platform hub"
+    target: "cloudflare-pages"
+    project: "headyme-production"
+    ssl: true
+    subdomains:
+      app: "Main application"
+      api: "Primary API gateway"
+      ws: "WebSocket relay"
+      heady: "Edge proxy entrypoint"
+      docs: "Documentation"
 
-  # ─── Architecture Engine ─────────────────────────────────────────────────────
-  headysystems:
-    url:             https://headysystems.com
-    role:            architecture_engine
-    description:     "Core platform engineering — deploys and scales the Heady Latent OS"
-    projection_repo: headysystems-projection
-    services:
-      - infra-provisioner
-      - swarm-coordinator
-      - liquid-scheduler
-      - deployment-api
-    csl_gate:        0.882   # CSL_THRESHOLDS.HIGH — strong alignment required
-    pool:            warm
+  # Core Architecture Engine
+  headysystems.com:
+    role: "architecture-engine"
+    description: "HeadySystems™ — core architecture and engineering"
+    target: "cloudflare-pages"
+    project: "heady-production"
+    ssl: true
+    subdomains:
+      api: "Systems API"
+      status: "System status page"
+      metrics: "Observability dashboard"
 
-  # ─── Nonprofit Hub ───────────────────────────────────────────────────────────
-  headyconnection:
-    url:             https://headyconnection.org
-    role:            nonprofit
-    description:     "Nonprofit community platform — education, outreach, and open initiatives"
-    projection_repo: headyconnection-projection
-    services:
-      - content-cms
-      - community-api
-      - donation-service
-      - volunteer-portal
-    csl_gate:        0.618   # PSI — standard CSL gate
-    pool:            warm
+  # Nonprofit & Community
+  headyconnection.org:
+    role: "nonprofit-community"
+    description: "HeadyConnection™ — nonprofit, community, mutual aid"
+    target: "cloudflare-pages"
+    project: "headyconnection-production"
+    ssl: true
+    subdomains:
+      app: "Community app"
+      api: "Community API"
+      grants: "Grant management"
 
-  # ─── Companion AI ────────────────────────────────────────────────────────────
-  headybuddy:
-    url:             https://headybuddy.org
-    role:            companion
-    description:     "AI companion layer — empathic interaction, emotional support, personal assistant"
-    projection_repo: headybuddy-projection
-    services:
-      - companion-agent
-      - emotional-model
-      - memory-bridge
-      - voice-interface
-    csl_gate:        0.809   # CSL_THRESHOLDS.MEDIUM
-    pool:            hot
+  # AI Companion
+  headybuddy.org:
+    role: "companion"
+    description: "HeadyBuddy™ — personal AI companion experience"
+    target: "cloudflare-pages"
+    ssl: true
+    subdomains:
+      app: "Buddy chat interface"
+      api: "Buddy API"
+      voice: "Voice relay"
 
-  # ─── MCP Layer ───────────────────────────────────────────────────────────────
-  headymcp:
-    url:             https://headymcp.com
-    role:            mcp_layer
-    description:     "Model Context Protocol gateway — routes tool calls and model context across the OS"
-    projection_repo: headymcp-projection
-    services:
-      - mcp-gateway
-      - tool-registry
-      - context-router
-      - json-rpc-dispatcher
-    csl_gate:        0.927   # CSL_THRESHOLDS.CRITICAL — near-certain alignment
-    pool:            hot
+  # MCP Layer
+  headymcp.com:
+    role: "mcp-gateway"
+    description: "HeadyMCP™ — Model Context Protocol gateway"
+    target: "cloud-run"
+    service: "heady-mcp"
+    ssl: true
+    subdomains:
+      api: "MCP API"
+      tools: "Tool registry"
+      ws: "MCP WebSocket transport"
 
-  # ─── Developer Platform ──────────────────────────────────────────────────────
-  headyio:
-    url:             https://headyio.com
-    role:            developer_platform
-    description:     "SDK, CLI tools, and developer experience for the Heady ecosystem"
-    projection_repo: headyio-projection
-    services:
-      - sdk-registry
-      - cli-service
-      - docs-api
-      - sandbox-runner
-    csl_gate:        0.691   # CSL_THRESHOLDS.LOW
-    pool:            warm
+  # Developer Platform
+  headyio.com:
+    role: "developer-platform"
+    description: "HeadyIO™ — developer SDK and platform"
+    target: "cloudflare-pages"
+    ssl: true
+    subdomains:
+      api: "Developer API"
+      docs: "SDK documentation"
+      sandbox: "Developer sandbox"
 
-  # ─── Automation Platform ─────────────────────────────────────────────────────
-  headybot:
-    url:             https://headybot.com
-    role:            automation
-    description:     "Workflow automation hub — n8n-style pipelines, bots, scheduled tasks"
-    projection_repo: headybot-projection
-    services:
-      - workflow-engine
-      - bot-registry
-      - trigger-service
-      - scheduler
-    csl_gate:        0.809   # CSL_THRESHOLDS.MEDIUM
-    pool:            warm
+  # Bot & Automation
+  headybot.com:
+    role: "automation"
+    description: "HeadyBot™ — autonomous bot orchestration"
+    target: "cloud-run"
+    service: "heady-bot"
+    ssl: true
+    subdomains:
+      api: "Bot API"
+      hooks: "Webhook receiver"
 
-  # ─── API Gateway ─────────────────────────────────────────────────────────────
-  headyapi:
-    url:             https://headyapi.com
-    role:            api_gateway
-    description:     "Unified API gateway — rate limiting, auth, versioning, and routing"
-    projection_repo: headyapi-projection
-    services:
-      - api-proxy
-      - rate-limiter
-      - auth-middleware
-      - api-analytics
-    csl_gate:        0.927   # CSL_THRESHOLDS.CRITICAL
-    pool:            hot
+  # Public API
+  headyapi.com:
+    role: "public-api"
+    description: "HeadyAPI™ — public intelligence interface"
+    target: "cloud-run"
+    service: "heady-api"
+    ssl: true
+    subdomains:
+      v1: "API v1"
+      v2: "API v2"
 
-  # ─── Intelligence Hub ────────────────────────────────────────────────────────
-  headyai:
-    url:             https://headyai.com
-    role:            intelligence_hub
-    description:     "AI model orchestration — inference, fine-tuning, vector search, and learning loops"
-    projection_repo: headyai-projection
-    services:
-      - inference-router
-      - vector-store
-      - fine-tune-manager
-      - monte-carlo-validator
-    csl_gate:        0.882   # CSL_THRESHOLDS.HIGH
-    pool:            hot
+  # Intelligence Hub
+  heady-ai.com:
+    role: "intelligence-hub"
+    description: "HeadyAI™ — intelligence routing and inference"
+    target: "cloudflare-workers"
+    worker: "heady-ai-router"
+    ssl: true
 
-# ─── Routing Rules ────────────────────────────────────────────────────────────
-# Applied by csl-router.js when dispatching cross-domain requests
-routing:
-  default_csl_gate: 0.618   # PSI — fallback gate for unregistered domains
-  inter_domain_log: true    # log all cross-domain routing decisions
-  max_hops:         8       # fib(6) — maximum routing hops before reject
-  timeout_ms:       6854    # φ⁴ × 1000ms — cross-domain request timeout
+  # Additional domains
+  heady-ai.com:
+    role: "ai-research"
+    description: "Heady™ AI research and publications"
+    target: "cloudflare-pages"
+    ssl: true
+
+# ─── Cloud Run Services ──────────────────────────────────────────────────────
+
+cloud_run:
+  project: "heady-production"
+  region: "us-central1"
+  services:
+    heady-manager:
+      url: "heady-manager-609590223909.us-central1.run.app"
+      minInstances: 1
+      maxInstances: 8          # fib(6)
+      concurrency: 34          # fib(9)
+      cpu: 2
+      memoryMi: 512
+    heady-mcp:
+      url: "heady-mcp-609590223909.us-central1.run.app"
+      minInstances: 0
+      maxInstances: 5          # fib(5)
+      concurrency: 21          # fib(8)
+      cpu: 1
+      memoryMi: 256
+
+# ─── Cloudflare ───────────────────────────────────────────────────────────────
+
+cloudflare:
+  zones:
+    - headyme.com
+    - headyconnection.org
+    - heady-ai.com
+  workers:
+    heady-edge-proxy:
+      route: "heady.headyme.com/*"
+      purpose: "Edge proxy and routing"
+    heady-edge-node:
+      route: "*.heady-ai.com/*"
+      purpose: "AI inference at edge"
+    heady-ai-router:
+      route: "heady-ai.com/*"
+      purpose: "Intelligence routing"
+
+# ─── HuggingFace Spaces ──────────────────────────────────────────────────────
+
+huggingface:
+  spaces:
+    heady-ai:
+      url: "headyme-heady-ai.hf.space"
+      sdk: "docker"
+      hardware: "cpu-basic"
+    heady-demo:
+      url: "headyme-heady-demo.hf.space"
+      sdk: "static"
+
+# ─── URL Rewrite Rules ───────────────────────────────────────────────────────
+# ENFORCEMENT: No localhost, no C:\, no internal references
+
+url_rules:
+  banned_patterns:
+    - "localhost"
+    - "127.0.0.1"
+    - "0.0.0.0"
+    - "C:\\"
+    - "D:\\"
+    - "file://"
+    - ".local"
+    - ".internal"
+  enforcement: "error"   # 'error' = hard fail, 'warn' = log warning

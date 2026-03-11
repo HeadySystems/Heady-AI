@@ -1,5 +1,5 @@
 /**
- * Compliance audit — no stubs, no magic numbers, no sessionStorage, ESM only, Eric Haywood
+ * Compliance audit — no stubs, no magic numbers, no localStorage, ESM only, Eric Haywood
  * Author: Eric Haywood | ESM only
  */
 import { readFileSync, readdirSync, statSync } from 'fs';
@@ -49,8 +49,8 @@ function checkNoMagicNumbers(content, file) {
 }
 
 function checkNoLocalStorage(content, file) {
-  if (content.includes('sessionStorage')) {
-    VIOLATIONS.push({ file, type: 'LOCAL_STORAGE', count: (content.match(/sessionStorage/g) || []).length });
+  if (content.includes('localStorage')) {
+    VIOLATIONS.push({ file, type: 'LOCAL_STORAGE', count: (content.match(/localStorage/g) || []).length });
   }
 }
 
@@ -83,7 +83,7 @@ for (const file of files) {
 
 if (VIOLATIONS.length === 0) {
   console.log('  ✓ No stubs/TODOs found');
-  console.log('  ✓ No sessionStorage usage');
+  console.log('  ✓ No localStorage usage');
   console.log('  ✓ No CommonJS (module.exports/require)');
   console.log('  ✓ No "Eric Head" references');
   console.log('\n✅ Full compliance audit passed. 0 violations.');

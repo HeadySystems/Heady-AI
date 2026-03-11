@@ -25,13 +25,13 @@
  * ╚═══════════════════════════════════════════════════════════════╝
  */
 
-const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, screen, nativeImage } = require('electron');
-const path = require('path');
-const Store = require('electron-store');
+const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, screen, nativeImage } = require("electron");
+const path = require("path");
+const Store = require("electron-store");
 
 const store = new Store({
   defaults: {
-    apiBase: "http://api.headysystems.com:3300",
+    apiBase: "http://localhost:3300",
     position: { x: null, y: null },
     collapsed: true,
     opacity: 0.95,
@@ -50,6 +50,8 @@ const PILL_HEIGHT = 56;
 let mainWindow = null;
 let tray = null;
 let isCollapsed = store.get("collapsed");
+
+// ─── Window Creation ─────────────────────────────────────────────────
 
 function createWindow() {
   const { width: screenW, height: screenH } = screen.getPrimaryDisplay().workAreaSize;
@@ -81,7 +83,7 @@ function createWindow() {
   mainWindow.setOpacity(store.get("opacity"));
 
   if (IS_DEV) {
-    mainWindow.loadURL("http://api.headysystems.com:3400");
+    mainWindow.loadURL("http://localhost:3400");
     mainWindow.webContents.openDevTools({ mode: "detach" });
   } else {
     const widgetPath = path.join(process.resourcesPath, "widget", "index.html");
@@ -98,6 +100,8 @@ function createWindow() {
   mainWindow.on("closed", () => { mainWindow = null; });
 }
 
+// ─── Tray Icon ─────────────────────────────────────────────────────────
+
 function createTray() {
   const iconPath = path.join(__dirname, "icons", "tray-icon.png");
   let trayIcon;
@@ -105,24 +109,10 @@ function createTray() {
     trayIcon = nativeImage.createFromPath(iconPath);
     if (trayIcon.isEmpty()) throw new Error("empty");
   } catch {
-    // Generate a 16x16 placeholder tray icon (blue circle)
-    const size = 16;
-    const canvas = Buffer.alloc(size * size * 4);
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const dx = x - 7.5, dy = y - 7.5;
-        const inside = (dx * dx + dy * dy) <= 49;
-        const i = (y * size + x) * 4;
-        canvas[i] = inside ? 66 : 0;     // R
-        canvas[i+1] = inside ? 133 : 0;  // G
-        canvas[i+2] = inside ? 244 : 0;  // B
-        canvas[i+3] = inside ? 255 : 0;  // A
-      }
-    }
-    trayIcon = nativeImage.createFromBuffer(canvas, { width: size, height: size });
+    trayIcon = nativeImage.createEmpty();
   }
 
-  tray = new Tray(trayIcon);
+  tray = new Tray(trayIcon.isEmpty() ? undefined : trayIcon);
   tray.setToolTip("HeadyBuddy — Perfect Day AI Companion");
 
   const contextMenu = Menu.buildFromTemplate([
@@ -170,6 +160,8 @@ function createTray() {
   tray.on("click", () => toggleVisibility());
 }
 
+// ─── Toggle / Resize ──────────────────────────────────────────────────
+
 function toggleVisibility() {
   if (!mainWindow) return createWindow();
   if (mainWindow.isVisible()) {
@@ -195,37 +187,40 @@ function resizeForState(collapsed) {
   mainWindow.setBounds({ x: cx + dx, y: cy + dy, width: newW, height: newH }, true);
 }
 
+// ─── IPC Handlers ─────────────────────────────────────────────────────
+
+ipcMain.on("widget-state", (event, state) => {
+  resizeForState(state === "pill");
+});
+
+ipcMain.handle("get-config", () => ({
+  apiBase: store.get("apiBase"),
+  quietMode: store.get("quietMode"),
+}));
+
+ipcMain.handle("set-config", (event, key, value) => {
+  store.set(key, value);
+  return true;
+});
+
+ipcMain.handle("get-system-info", () => {
+  const os = require("os");
+  return {
+    platform: process.platform,
+    arch: process.arch,
+    cpus: os.cpus().length,
+    totalMemMB: Math.round(os.totalmem() / 1048576),
+    freeMemMB: Math.round(os.freemem() / 1048576),
+    hostname: os.hostname(),
+    uptime: os.uptime(),
+  };
+});
+
+// ─── App Lifecycle ────────────────────────────────────────────────────
+
 app.whenReady().then(() => {
   createWindow();
   createTray();
-
-  // Initialize IPC handlers after app is ready
-  ipcMain.on("widget-state", (event, state) => {
-    resizeForState(state === "pill");
-  });
-
-  ipcMain.handle("get-config", () => ({
-    apiBase: store.get("apiBase"),
-    quietMode: store.get("quietMode"),
-  }));
-
-  ipcMain.handle("set-config", (event, key, value) => {
-    store.set(key, value);
-    return true;
-  });
-
-  ipcMain.handle("get-system-info", () => {
-    const os = require("os");
-    return {
-      platform: process.platform,
-      arch: process.arch,
-      cpus: os.cpus().length,
-      totalMemMB: Math.round(os.totalmem() / 1048576),
-      freeMemMB: Math.round(os.freemem() / 1048576),
-      hostname: os.hostname(),
-      uptime: os.uptime(),
-    };
-  });
 
   const hotkey = store.get("globalHotkey");
   try {
@@ -246,4 +241,3 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (!mainWindow) createWindow();
 });
-

@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { spawn } from 'child_process';
@@ -8,7 +6,7 @@ const c = new Client({ name: 'test', version: '1.0' }, { capabilities: {} });
 async function run() {
   await c.connect(t);
   const res = await c.callTool({ name: 'heady_health', arguments: {} });
-  logger.info(JSON.stringify(res, null, 2));
+  console.log(JSON.stringify(res, null, 2));
   process.exit(0);
 }
-run().catch(logger.error);
+run().catch(console.error);

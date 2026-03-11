@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Heady™ Neon — Postgres Pool Provider
  *
@@ -37,7 +35,7 @@ if (!Pool) {
         }
 
         _warn() {
-            logger.warn(
+            console.warn(
                 '[heady-neon] Neither @neondatabase/serverless nor pg is installed. ' +
                 'Database operations will fail. Run: npm install pg'
             );

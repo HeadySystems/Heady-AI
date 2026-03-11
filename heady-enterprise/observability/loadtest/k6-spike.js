@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadySystems v3.2.2 — k6 Spike Test
  * ======================================
@@ -142,7 +140,7 @@ export default function (data) {
 
   if (isHighLoad && !_spikePhaseDetected) {
     _spikePhaseDetected = true;
-    logger.info(`VU ${__VU}: Spike phase detected — ${__VU} VUs active (ratio: ${(__VU / BASE_VUS).toFixed(1)}x)`);
+    console.log(`VU ${__VU}: Spike phase detected — ${__VU} VUs active (ratio: ${(__VU / BASE_VUS).toFixed(1)}x)`);
   }
 
   group('Spike: Chat', () => {
@@ -221,28 +219,28 @@ export default function (data) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function setup() {
-  logger.info(`HeadySystems SPIKE Test — φ=${PHI}`);
-  logger.info(`VU profile: fib(5)=${BASE_VUS} → SPIKE fib(11)=${SPIKE_VUS} VUs`);
-  logger.info(`Spike ratio: ${SPIKE_RATIO.toFixed(2)}x ≈ φ^6 = ${(PHI**6).toFixed(3)}`);
-  logger.info(`Spike onset: 10s (sudden). Recovery: 10s.`);
-  logger.info(`Expected behavior during spike:`);
-  logger.info(`  - Rate limiter returns 429 for burst > fib(10)=55 req/s per source`);
-  logger.info(`  - Bulkhead prevents cascade beyond 0.854 (CSL CRITICAL)`);
-  logger.info(`  - Circuit breakers protect downstream services`);
-  logger.info(`  - Auto-scaling triggers within fib(7)=13s`);
-  logger.info(`Base URL: ${BASE_URL}`);
+  console.log(`HeadySystems SPIKE Test — φ=${PHI}`);
+  console.log(`VU profile: fib(5)=${BASE_VUS} → SPIKE fib(11)=${SPIKE_VUS} VUs`);
+  console.log(`Spike ratio: ${SPIKE_RATIO.toFixed(2)}x ≈ φ^6 = ${(PHI**6).toFixed(3)}`);
+  console.log(`Spike onset: 10s (sudden). Recovery: 10s.`);
+  console.log(`Expected behavior during spike:`);
+  console.log(`  - Rate limiter returns 429 for burst > fib(10)=55 req/s per source`);
+  console.log(`  - Bulkhead prevents cascade beyond 0.854 (CSL CRITICAL)`);
+  console.log(`  - Circuit breakers protect downstream services`);
+  console.log(`  - Auto-scaling triggers within fib(7)=13s`);
+  console.log(`Base URL: ${BASE_URL}`);
   return { startTime: Date.now() };
 }
 
 export function teardown(data) {
   const durationS = Math.round((Date.now() - data.startTime) / 1000);
-  logger.info(`\nSpike test complete. Duration: ${durationS}s (~${Math.round(durationS/60)}m)`);
-  logger.info(`Spike profile: fib(5)=${BASE_VUS} → fib(11)=${SPIKE_VUS} VUs (${SPIKE_RATIO.toFixed(1)}x)`);
-  logger.info(`Fibonacci params: base=fib(5), spike=fib(11), sustain=fib(7)=13m`);
-  logger.info(`φ^6 = ${(PHI**6).toFixed(3)} (theoretical spike ratio)`);
-  logger.info(`\nKey questions this test answers:`);
-  logger.info(`  1. Does rate limiter protect at fib(10)=55+ req/s per source?`);
-  logger.info(`  2. Do circuit breakers open at >0.854 (CSL CRITICAL) saturation?`);
-  logger.info(`  3. Does auto-scaling restore capacity within fib(7)=13s?`);
-  logger.info(`  4. Is recovery complete within fib(8)=21s of spike end?`);
+  console.log(`\nSpike test complete. Duration: ${durationS}s (~${Math.round(durationS/60)}m)`);
+  console.log(`Spike profile: fib(5)=${BASE_VUS} → fib(11)=${SPIKE_VUS} VUs (${SPIKE_RATIO.toFixed(1)}x)`);
+  console.log(`Fibonacci params: base=fib(5), spike=fib(11), sustain=fib(7)=13m`);
+  console.log(`φ^6 = ${(PHI**6).toFixed(3)} (theoretical spike ratio)`);
+  console.log(`\nKey questions this test answers:`);
+  console.log(`  1. Does rate limiter protect at fib(10)=55+ req/s per source?`);
+  console.log(`  2. Do circuit breakers open at >0.854 (CSL CRITICAL) saturation?`);
+  console.log(`  3. Does auto-scaling restore capacity within fib(7)=13s?`);
+  console.log(`  4. Is recovery complete within fib(8)=21s of spike end?`);
 }

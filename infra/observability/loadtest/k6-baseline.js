@@ -1,5 +1,3 @@
-import pino from 'pino';
-const logger = pino();
 /**
  * HeadySystems v3.2.2 — k6 Baseline Load Test
  * =============================================
@@ -244,17 +242,17 @@ export default function () {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function setup() {
-  logger.info(`HeadySystems Baseline Load Test — φ=${PHI}`);
-  logger.info(`Target: fib(10)=${TARGET_VUS} VUs, ramp ${RAMP_DURATION}, sustain ${SUSTAIN_DURATION}`);
-  logger.info(`SLA: p95 < ${P95_SLA_MS}ms, p99 < ${P99_SLA_MS}ms, error < ${ERROR_RATE_SLA*100}%`);
-  logger.info(`Base URL: ${BASE_URL}`);
+  console.log(`HeadySystems Baseline Load Test — φ=${PHI}`);
+  console.log(`Target: fib(10)=${TARGET_VUS} VUs, ramp ${RAMP_DURATION}, sustain ${SUSTAIN_DURATION}`);
+  console.log(`SLA: p95 < ${P95_SLA_MS}ms, p99 < ${P99_SLA_MS}ms, error < ${ERROR_RATE_SLA*100}%`);
+  console.log(`Base URL: ${BASE_URL}`);
 
   // Warm-up check
   const health = http.get(`${BASE_URL}/health/live`);
   if (health.status !== 200) {
-    logger.error(`⚠️ Health check failed (${health.status}). Test may fail.`);
+    console.error(`⚠️ Health check failed (${health.status}). Test may fail.`);
   } else {
-    logger.info('✓ Health check passed — starting test.');
+    console.log('✓ Health check passed — starting test.');
   }
 
   return { startTime: Date.now(), baseUrl: BASE_URL };
@@ -262,8 +260,8 @@ export function setup() {
 
 export function teardown(data) {
   const durationMs = Date.now() - data.startTime;
-  logger.info(`\nBaseline test complete.`);
-  logger.info(`Total duration: ${Math.round(durationMs / 1000)}s`);
-  logger.info(`Fibonacci params: VUs=fib(10)=${TARGET_VUS}, ramp=fib(5)=5m, sustain=fib(8)=21m`);
-  logger.info(`φ = ${PHI}`);
+  console.log(`\nBaseline test complete.`);
+  console.log(`Total duration: ${Math.round(durationMs / 1000)}s`);
+  console.log(`Fibonacci params: VUs=fib(10)=${TARGET_VUS}, ramp=fib(5)=5m, sustain=fib(8)=21m`);
+  console.log(`φ = ${PHI}`);
 }

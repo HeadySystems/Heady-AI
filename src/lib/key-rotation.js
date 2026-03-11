@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * E4: API Key Rotation Utility
  * Manages short-lived token generation, rotation schedules, and key lifecycle.
@@ -43,7 +41,7 @@ class KeyRotationManager {
         entry.createdAt = Date.now();
         entry.expiresAt = Date.now() + KEY_TTL_MS;
         entry.rotationCount++;
-        logger.info(`[KEY-ROTATION] Rotated "${name}" (count: ${entry.rotationCount})`);
+        console.log(`[KEY-ROTATION] Rotated "${name}" (count: ${entry.rotationCount})`);
         return entry;
     }
 

@@ -11,10 +11,10 @@ const currentLevel = levels[process.env.LOG_LEVEL] ?? levels.info;
 function makeLogger(namespace) {
   const prefix = namespace ? `[${namespace}]` : '';
   return {
-    error: (...args) => currentLevel >= levels.error && logger.error(new Date().toISOString(), 'ERROR', prefix, ...args),
-    warn:  (...args) => currentLevel >= levels.warn  && logger.warn (new Date().toISOString(), 'WARN ', prefix, ...args),
-    info:  (...args) => currentLevel >= levels.info  && logger.info  (new Date().toISOString(), 'INFO ', prefix, ...args),
-    debug: (...args) => currentLevel >= levels.debug && logger.info  (new Date().toISOString(), 'DEBUG', prefix, ...args),
+    error: (...args) => currentLevel >= levels.error && console.error(new Date().toISOString(), 'ERROR', prefix, ...args),
+    warn:  (...args) => currentLevel >= levels.warn  && console.warn (new Date().toISOString(), 'WARN ', prefix, ...args),
+    info:  (...args) => currentLevel >= levels.info  && console.log  (new Date().toISOString(), 'INFO ', prefix, ...args),
+    debug: (...args) => currentLevel >= levels.debug && console.log  (new Date().toISOString(), 'DEBUG', prefix, ...args),
     child: (sub) => makeLogger(namespace ? `${namespace}:${sub}` : sub),
   };
 }

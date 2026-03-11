@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -247,7 +245,7 @@ router.use((err, req, res, _next) => {
     : err.message;
 
   if (status === 500) {
-    logger.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
+    console.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
   }
 
   return res.status(status).json({ error: 'guard_error', message });

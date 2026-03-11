@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 /**
  * Context Optimizer
  * Intelligent context compression and relevance scoring
@@ -47,7 +45,7 @@ export class ContextOptimizer {
    * Key insight: Different tasks need different context
    */
   async optimize(task: any): Promise<OptimizedContext> {
-    logger.info(`[ContextOptimizer] Optimizing context for ${task.type} task`);
+    console.log(`[ContextOptimizer] Optimizing context for ${task.type} task`);
 
     // Step 1: Gather all available context
     const rawContext = await this.gatherContext(task);
@@ -161,11 +159,11 @@ export class ContextOptimizer {
         kept.push(section);
       } else {
         removed.push(section);
-        logger.info(`[ContextOptimizer] Pruned (score ${score.toFixed(2)}): ${section.substring(0, 50)}...`);
+        console.log(`[ContextOptimizer] Pruned (score ${score.toFixed(2)}): ${section.substring(0, 50)}...`);
       }
     }
 
-    logger.info(`[ContextOptimizer] Kept ${kept.length} sections, pruned ${removed.length}`);
+    console.log(`[ContextOptimizer] Kept ${kept.length} sections, pruned ${removed.length}`);
     return { kept, removed };
   }
 

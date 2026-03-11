@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 'use strict';
 
 /**
@@ -191,7 +189,7 @@ app.event('app_mention', async ({ event, client, say }) => {
     await storeConversationTurn(userId, channelId, userMessage, responseText);
 
   } catch (err) {
-    logger.error('[HeadySlack] Error:', err);
+    console.error('[HeadySlack] Error:', err);
     await say({
       text: `Sorry, I encountered an error: ${err.message}. Please try again.`,
       thread_ts: event.ts,
@@ -227,7 +225,7 @@ app.message(async ({ message, say }) => {
     await storeConversationTurn(userId, channelId, userMessage, response.message.content);
 
   } catch (err) {
-    logger.error('[HeadySlack] DM error:', err);
+    console.error('[HeadySlack] DM error:', err);
     await say({ text: `Error: ${err.message}` });
   }
 });
@@ -343,7 +341,7 @@ app.shortcut('ask_headyos', async ({ shortcut, ack, client }) => {
       },
     });
   } catch (err) {
-    logger.error('[HeadySlack] Shortcut error:', err);
+    console.error('[HeadySlack] Shortcut error:', err);
   }
 });
 
@@ -364,7 +362,7 @@ app.view('ask_headyos_modal', async ({ ack, view, client, body }) => {
       mrkdwn: true,
     });
   } catch (err) {
-    logger.error('[HeadySlack] Modal error:', err);
+    console.error('[HeadySlack] Modal error:', err);
   }
 });
 
@@ -375,8 +373,8 @@ app.view('ask_headyos_modal', async ({ ack, view, client, body }) => {
 (async () => {
   const port = process.env.PORT || fib(12); // fib(12)=144 → port 3144 (we just use 3000 for practicality)
   await app.start(3000);
-  logger.info(`⚡ HeadyOS Slack Bot is running! (Port 3000)`);
-  logger.info(`φ = ${PHI} | Fibonacci constants: fib(7)=${fib(7)}, fib(9)=${fib(9)}, fib(11)=${fib(11)}`);
+  console.log(`⚡ HeadyOS Slack Bot is running! (Port 3000)`);
+  console.log(`φ = ${PHI} | Fibonacci constants: fib(7)=${fib(7)}, fib(9)=${fib(9)}, fib(11)=${fib(11)}`);
 })();
 
 module.exports = { app };

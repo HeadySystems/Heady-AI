@@ -106,14 +106,6 @@ services:
       - internal-domains-configured
       - proxy-bypass-active
 
-  - name: sync-server
-    type: websocket
-    role: Cross-device state synchronization
-    location: src/sync-server.js
-    port: 3306
-    criticality: high
-    healthCheck: { method: http, path: /health }
-
 # ─── APPS ─────────────────────────────────────────────────────────────────
 apps:
   - name: heady-frontend
@@ -177,9 +169,24 @@ websites:
 
   - name: heady-dashboard
     role: Operations dashboard
-    endpoint: https://api.headysystems.com
+    endpoint: https://manager.headysystems.com
     deployment: local + render
     criticality: high
+    healthCheck: { method: http, path: /health/ready }
+
+  - name: headybuddy-widget
+    role: HeadyBuddy overlay widget
+    endpoint: https://buddy.headysystems.com
+    deployment: cloudflare-pages
+    criticality: medium
+    healthCheck: { method: http, path: /health/ready }
+
+  - name: python-worker
+    role: ML inference and background tasks
+    endpoint: http://worker-python.dev.local.heady.internal:5000
+    deployment: cloud-run
+    criticality: high
+    healthCheck: { method: http, path: /health/ready }
 
 # ─── DATA STORES ──────────────────────────────────────────────────────────
 dataStores:

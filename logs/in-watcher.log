@@ -1,0 +1,24 @@
+nohup: ignoring input
+[2026-03-10T15:31:05Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-10T15:38:26Z] PROCESSING: jules_session_16449122244454081823.zip (2MB)
+[2026-03-10T15:38:26Z]   → 3 net-new files from jules_session_16449122244454081823.zip
+[2026-03-10T15:40:10Z] IN-FOLDER WATCHER STARTING (mode: --once, poll: 55s)
+[2026-03-10T15:40:10Z] PROCESSING: jules_session_11625959678638198903.zip (2MB)
+[2026-03-10T15:40:10Z]   → 21 net-new files from jules_session_11625959678638198903.zip
+[2026-03-10T16:29:14Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-10T16:29:14Z] PROCESSING: jules_session_15538589846449006457.zip (1MB)
+[2026-03-10T16:29:15Z]   → 255 net-new files from jules_session_15538589846449006457.zip
+nohup: ignoring input
+[2026-03-10T16:36:50Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-10T16:36:50Z] PROCESSING: jules_session_15420467594094585555.zip (1MB)
+[2026-03-10T16:36:50Z]   → 36 net-new files from jules_session_15420467594094585555.zip
+[2026-03-10T17:08:36Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-10T17:08:36Z] SKIP (duplicate): jules_session_15420467594094585555 (1).zip
+[2026-03-10T17:08:36Z] PROCESSING: jules_session_2030306490357698989.zip (14MB)
+[2026-03-10T17:08:39Z]   → 644 net-new files from jules_session_2030306490357698989.zip
+[2026-03-10T17:26:15Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-10T17:26:15Z] PROCESSING: jules_session_14959553503976149080.zip (1MB)
+[2026-03-10T17:26:15Z]   → 0 net-new files from jules_session_14959553503976149080.zip
+[2026-03-10T17:26:16Z] SKIP (duplicate): jules_session_15420467594094585555 (1).zip
+[2026-03-10T17:26:16Z] PROCESSING: jules_session_2386463515981511763.zip (1MB)
+[2026-03-10T17:26:16Z]   → 1 net-new files from jules_session_2386463515981511763.zip
