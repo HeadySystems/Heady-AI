@@ -1000,7 +1000,9 @@
                     throw new Error(data.message || data.error || 'Sign in failed');
                 }
 
-                // Token is now stored in httpOnly cookie (set by server)
+                // Wait for the secure HTTP cookie to be established
+                // The server will set __heady_session as an HttpOnly cookie.
+                // localStorage is strictly prohibited for tokens.
                 showToast('Welcome! Redirecting...', 'success');
 
                 // Redirect based on isNewUser flag
@@ -1048,7 +1050,7 @@
                     throw new Error(data.message || data.error || 'Registration failed');
                 }
 
-                // Token is now stored in httpOnly cookie (set by server)
+                // Wait for the secure HTTP cookie to be established
                 showToast('Account created! Redirecting to onboarding...', 'success');
 
                 // New users always go to onboarding

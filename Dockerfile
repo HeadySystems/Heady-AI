@@ -1,16 +1,19 @@
-# ═══════════════════════════════════════════════════════════════════════════════
-# Heady™ Production Dockerfile — Multi-Stage Build
-# ═══════════════════════════════════════════════════════════════════════════════
-#
-# Three stages: deps → build → production
-# Node 22 Alpine, tini for proper PID 1, non-root heady user,
-# production tuning, pruned node_modules, health check baked in.
-#
-# © HeadySystems Inc.
-
-# ─── Stage 1: Dependencies ────────────────────────────────────────────────────
-
-FROM node:22-alpine AS deps
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: Dockerfile                                                    ║
+# ║  LAYER: root                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -53,7 +56,8 @@ RUN if [ -f pnpm-lock.yaml ]; then \
       npm prune --omit=dev 2>/dev/null || true; \
     fi
 
-# ─── Stage 3: Production ─────────────────────────────────────────────────────
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD wget -qO- http://localhost:3300/api/health || exit 1
 
 FROM node:22-alpine AS production
 

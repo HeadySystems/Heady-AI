@@ -13,13 +13,19 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-const { Pool } = require('pg');
-const pool = new Pool({
-  user: 'postgres',
-  host: 'internal.headyio.com',
-  database: 'heady',
-  password: 'password',
-  port: 5432,
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+// Removed vite-plugin-obfuscator due to build errors
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3001,
+  },
+  build: {
+    outDir: "dist",
+  },
 });
 
 async function testConnection() {

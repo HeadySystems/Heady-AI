@@ -13,12 +13,9 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-module.exports = function(eleventyConfig) {
-  // Heady Admin specific config
-  return {
-    dir: {
-      input: ".",
-      output: "_site"
-    }
-  };
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
 };

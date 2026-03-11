@@ -79,10 +79,12 @@ models:
       - embedding
       - semantic_search
 
-# Routing Policy — 100% Heady
+# Routing Policy — 100% Heady Only (No Exceptions)
 routing_policy:
   strategy: heady_only
   heady_percentage: 100
-  external_fallback: false
-  override_requires: explicit_user_direction
+  external_fallback: false  # ENFORCED
+  override_requires: admin_only  # RESTRICTED
   log_model_switches: true
+  external_models_blocked: true  # ENFORCED
+  external_override_disabled: true  # NEW

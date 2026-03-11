@@ -1,7 +1,39 @@
 {
-  "registryVersion": "3.2.0",
-  "updatedAt": "2026-02-08T04:12:40.416Z",
-  "description": "HeadyRegistry — Central catalog and control point for the Heady ecosystem",
+  "registryVersion": "4.0.0",
+  "updatedAt": "2026-02-11T23:55:00.000Z",
+  "description": "HeadyRegistry — 100% Cloud-First Central catalog and control point for the Heady ecosystem (REBUILT ON headyio.com)",
+  "last_deployment": "2026-02-11T23:59:00.000Z",
+  "cloud_first": true,
+  "local_resources_required": false,
+  "external_access_minimal": true,
+  "task_status": "COMPLETE_NOW",
+  "domain": "headyio.com",
+  "rebuilt_from_scratch": true,
+  "escalation": {
+    "level": "complete_now",
+    "priority": "critical",
+    "instructions": "All tasks escalated to COMPLETE NOW. Rebuilt on headyio.com domain."
+  },
+  "persistent_memory": {
+    "complexity_level": 10,
+    "preserve_functionality": true,
+    "user_inputs": ["persistent_memory_request", "maximum_complexity", "full_functionality", "cloud_first", "no_local_resources"],
+    "project_state": "operational",
+    "timestamp": "2026-02-11T23:45:00Z",
+    "storage": "HeadyCloud",
+    "storage_locations": ["https://headyio.com/api/memory", "https://headyio.com/registry/memory", "https://headyio.com/manager/memory"],
+    "local_storage": false,
+    "cloud_only": true,
+    "pre_execution_scan": {
+      "enabled": true,
+      "required": true,
+      "adaptive_complexity": true,
+      "real_time_monitoring": true,
+      "scan_layers": ["immediate_context", "project_state", "headycloud_connectivity", "memory_optimization", "execution_readiness"],
+      "cloud_sync": true,
+      "persistent_storage": true
+    }
+  },
 
   "components": [
     {
@@ -1388,7 +1420,55 @@
       "name": "HeadySystems/sandbox",
       "url": "git@github.com:HeadySystems/sandbox.git",
       "role": "experimental",
-      "status": "active"
+      "promotionTargets": ["heady-sys", "heady-me", "heady-conn"],
+      "branchPolicy": {
+        "main": "dev",
+        "exp/*": "short-lived"
+      }
     }
-  ]
+  ],
+  "verticals": [
+    {
+      "id": "mcp",
+      "name": "HeadyMCP",
+      "description": "Model Context Protocol gateway with admin UI",
+      "status": "active",
+      "components": ["mcp-gateway", "admin-ui"],
+      "dockerProfile": "docker-compose.mcp.yml"
+    }
+  ],
+  "userProfiles": [
+    {
+      "id": "eric",
+      "name": "Eric Kit",
+      "path": "configs/user-profiles/eric.yaml",
+      "default": true
+    }
+  ],
+  "protocols": {
+    "curiosity": {
+      "description": "Triggers investigation of recurring or surprising behavior",
+      "triggers": [
+        "recurring-errors",
+        "banned-patterns",
+        "config-drift",
+        "strange-configs"
+      ],
+      "actions": [
+        "gather-context",
+        "form-hypotheses",
+        "propose-safeguards",
+        "surface-patterns"
+      ]
+    }
+  },
+  "error_ids": {
+    "ERR-BANNED-HOST-TARGET": {
+      "severity": "critical",
+      "protocol": "curiosity",
+      "description": "Attempt to use banned host target (api.headysystems.com/onrender.com)"
+    }
+  }
 }
+
+
