@@ -1,10 +1,18 @@
 'use strict';
 
 const EventEmitter = require('events');
-const { fib, PHI, PSI } = require('../shared/phi-math');
-const { createLogger } = require('../shared/logger');
+const path = require('path');
 
-const logger = createLogger('liquid-colab-services');
+// Use the installed @heady/phi-math or fallback to shared/phi-math
+let phiMath;
+try { phiMath = require(path.join(__dirname, '..', 'shared', 'phi-math')); }
+catch { try { phiMath = require('@heady/phi-math'); } catch { phiMath = null; } }
+
+const PHI = phiMath?.PHI ?? 1.618033988749895;
+const PSI = phiMath?.PSI ?? 0.618033988749895;
+const fib = phiMath?.fib ?? ((n) => { const s = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]; return n < s.length ? s[n] : 0; });
+
+const logger = { info: (...a) => console.log('[liquid-colab]', ...a) };
 
 const COLAB_RUNTIME_COUNT = fib(4); // 3 runtimes (Colab Pro+ triple lane)
 const BASE_DURATION_MS = fib(7); // 13

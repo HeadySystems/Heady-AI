@@ -79,7 +79,7 @@ if (authRouter) {
 // ── Liquid Colab Engine ──
 let liquidColab = null;
 try {
-  const { LiquidColabEngine } = require('./src/liquid-colab-services');
+  const { LiquidColabEngine } = require('./src/liquid-colab-services.cjs');
   liquidColab = new LiquidColabEngine({ runtimeCount: 3 });
   logger.info('[HeadyManager] ✅ Liquid Colab Engine: STARTED (3 runtime lanes)');
 } catch (err) {
