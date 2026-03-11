@@ -667,9 +667,28 @@ setInterval(() => {
   }
 }, HEALTH_CHECK_MS);
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// HTTP ROUTES
-// ═══════════════════════════════════════════════════════════════════════════════
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .filter(Boolean)
+  .map(o => o.trim());
+
+function corsMiddleware(req, res, next) {
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin) || process.env.NODE_ENV !== 'production') {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    return res.end();
+  }
+  next();
+}
+
+app.use(corsMiddleware);
+app.use(express.json({ limit: '8mb' }));
 
 app.use(express.json({ limit: `${fib(6)}mb` })); // 8mb
 

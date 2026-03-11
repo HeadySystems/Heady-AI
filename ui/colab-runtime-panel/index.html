@@ -86,39 +86,57 @@
       'use strict';
       var PHI = 1.618; var PSI = 0.618;
 
+      // Default gateway port
+      const gatewayPort = 3352;
+      const protocol = window.location.protocol === 'file:' ? 'http:' : window.location.protocol;
+      const hostname = window.location.hostname || 'localhost';
+      const gatewayUrl = `${protocol}//${hostname}:${gatewayPort}/health`;
+
       function gaugeClass(val) {
         if (val < 0.382) return 'low';
         if (val < 0.618) return 'medium';
         return 'high';
       }
 
-      var defaultRuntimes = [
-        {
-          id: 'colab-1', role: 'Embedding Gen', circuitState: 'closed',
-          health: { score: 0.88, status: 'warm' }
-        },
-        {
-          id: 'colab-2', role: 'Inference', circuitState: 'closed',
-          health: { score: 0.0, status: 'idle' }
-        },
-        {
-          id: 'colab-3', role: 'Vector Ops', circuitState: 'closed',
-          health: { score: 0.65, status: 'executing' }
-        },
-      ];
+      async function fetchData() {
+        try {
+          const res = await fetch(gatewayUrl);
+          if (!res.ok) throw new Error('Network response was not ok');
+          const data = await res.json();
+          render(data);
+        } catch (error) {
+          console.error('Failed to fetch Colab runtime data:', error);
+          document.getElementById('runtime-grid').innerHTML = '<div style="color:var(--red); padding:1rem;">Failed to load data. Is the Colab gateway running?</div>';
+        }
+      }
 
-      function render(runtimes) {
+      function render(data) {
         var grid = document.getElementById('runtime-grid');
 
-        if (!runtimes || runtimes.length === 0) {
-           runtimes = defaultRuntimes;
+        // Convert runtimes object to array
+        const runtimesList = [];
+        if (data.runtimes) {
+            for (const [pool, rt] of Object.entries(data.runtimes)) {
+                runtimesList.push({
+                    id: rt.id,
+                    name: `Colab Pro+ ${pool.charAt(0).toUpperCase() + pool.slice(1)}`,
+                    state: rt.status.toLowerCase(),
+                    gpu: rt.gpuType || 'Unknown',
+                    vram: rt.vram || 40, // Assume 40GB A100/T4 if unknown
+                    utilization: rt.gpuUtil ? rt.gpuUtil / 100 : 0,
+                    memUsed: rt.vram ? rt.vram * (rt.loadFactor || 0) : 0,
+                    temp: rt.temperature || 0,
+                    opsExecuted: rt.taskCount || 0,
+                    queued: pool === 'hot' ? data.queueDepth : 0, // Simplified queue display
+                    errors: 0
+                });
+            }
         }
 
-        grid.innerHTML = runtimes.map(function (r) {
-          var healthScore = (r.health && r.health.score) || 0;
-          var utilPct = (healthScore * 100).toFixed(1);
-          var memPct = utilPct; // dummy map if not exposed
-          var temp = 25 + Math.floor(healthScore * 50);
+        grid.innerHTML = runtimesList.map(function (r) {
+          var utilPct = (r.utilization * 100).toFixed(1);
+          var memPct = r.vram ? ((r.memUsed / r.vram) * 100).toFixed(1) : '0.0';
+          var memUsedFmt = r.memUsed.toFixed(1);
 
           return '<div class="runtime-card">' +
             '<div class="runtime-header">' +
@@ -127,8 +145,13 @@
             '</div>' +
 
             '<div class="gpu-gauge">' +
-              '<div class="gauge-label"><span>Health Score</span><span>' + utilPct + '%</span></div>' +
-              '<div class="gauge-bar"><div class="gauge-fill ' + gaugeClass(healthScore) + '" style="width:' + utilPct + '%"></div></div>' +
+              '<div class="gauge-label"><span>GPU Utilization</span><span>' + utilPct + '%</span></div>' +
+              '<div class="gauge-bar"><div class="gauge-fill ' + gaugeClass(r.utilization) + '" style="width:' + utilPct + '%"></div></div>' +
+            '</div>' +
+
+            '<div class="gpu-gauge">' +
+              '<div class="gauge-label"><span>VRAM (' + memUsedFmt + ' / ' + r.vram + ' GB)</span><span>' + memPct + '%</span></div>' +
+              '<div class="gauge-bar"><div class="gauge-fill ' + gaugeClass(r.memUsed / r.vram) + '" style="width:' + memPct + '%"></div></div>' +
             '</div>' +
 
             '<div class="metric-grid">' +
@@ -154,23 +177,9 @@
         }).join('');
       }
 
-      document.addEventListener('DOMContentLoaded', function() {
-        render(defaultRuntimes); // render fallback
-
-        var apiUrl = "/api/runtimes";
-        fetch(apiUrl)
-          .then(function(response) {
-            if(!response.ok) throw new Error("API Offline");
-            return response.json();
-          })
-          .then(function(data) {
-             if (data.runtimes && data.runtimes.length > 0) {
-               render(data.runtimes);
-             }
-          })
-          .catch(function(err) {
-             console.warn('Colab runtimes API offline, using fallback.', err);
-          });
+      document.addEventListener('DOMContentLoaded', () => {
+          fetchData();
+          setInterval(fetchData, 5000); // Update every 5 seconds
       });
     })();
   </script>
