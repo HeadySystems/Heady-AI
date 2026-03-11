@@ -26,6 +26,7 @@
     "seed": "node scripts/seed.js",
     "deploy": "node scripts/deploy.js",
     "deploy:auto": "node scripts/deploy.js --auto",
+    "scan:directives": "node scripts/heady-directive-intelligence-scan.js",
     "brand:check": "node scripts/brand_headers.js --check",
     "brand:fix": "node scripts/brand_headers.js --fix",
     "test:domains": "node scripts/domain-connectivity-test.js",

@@ -74,6 +74,34 @@ if (authRouter) {
   logger.info('[HeadyManager] ✅ Auth routes mounted at /api/auth');
 }
 
+// ── Liquid Colab Engine ──
+let liquidColab = null;
+try {
+  const { LiquidColabEngine } = require('./src/liquid-colab-services');
+  liquidColab = new LiquidColabEngine({ runtimeCount: 3 });
+  logger.info('[HeadyManager] ✅ Liquid Colab Engine: STARTED (3 runtime lanes)');
+} catch (err) {
+  logger.warn(`[HeadyManager] ⚠️ Liquid Colab Engine not loaded: ${err.message}`);
+}
+
+app.get('/api/colab/health', (req, res) => {
+  if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
+  res.json(liquidColab.getHealth());
+});
+
+app.post('/api/colab/execute/:component', async (req, res) => {
+  if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
+  const result = await liquidColab.execute(req.params.component, req.body || {});
+  if (!result.ok) return res.status(404).json(result);
+  res.json(result);
+});
+
+app.post('/api/colab/smart-execute', async (req, res) => {
+  if (!liquidColab) return res.status(503).json({ error: 'Liquid Colab Engine not active' });
+  const result = await liquidColab.smartExecute(req.body || {});
+  res.json(result);
+});
+
 // ── Error handling (must be last) ──
 app.use(errorHandler);
 
