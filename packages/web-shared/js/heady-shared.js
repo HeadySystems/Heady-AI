@@ -12,7 +12,9 @@
   function initTheme() {
     const root = document.documentElement;
     const toggles = document.querySelectorAll('[data-theme-toggle]');
-    let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Respect the page-author's data-theme; only fall back to OS preference
+    let theme = root.getAttribute('data-theme')
+      || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     root.setAttribute('data-theme', theme);
     toggles.forEach(t => updateToggleIcon(t, theme));
 

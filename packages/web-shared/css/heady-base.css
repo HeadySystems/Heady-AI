@@ -519,6 +519,7 @@ button { cursor: pointer; background: none; border: none; }
   margin-bottom: var(--space-6);
 }
 .hero-title .accent { color: var(--color-accent); }
+.hero-title .accent-gold { color: #f5a623; }
 .hero-title .gradient-text {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
   -webkit-background-clip: text;
