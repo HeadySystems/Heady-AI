@@ -3,7 +3,7 @@
 ## Basic Gate Usage
 
 ```typescript
-import { AND, OR, NOT, truthValue } from '@heady-ai/semantic-logic';
+import { AND, OR, NOT, truthValue } from '@headysystems/semantic-logic';
 
 const a = truthValue(0.7, 'condition_a');
 const b = truthValue(0.5, 'condition_b');
@@ -19,7 +19,7 @@ if (result.isTruthy(0.4)) {
 ## Membership Functions
 
 ```typescript
-import { sigmoid, SemanticVariable } from '@heady-ai/semantic-logic';
+import { sigmoid, SemanticVariable } from '@headysystems/semantic-logic';
 
 const cpuVar = new SemanticVariable('cpu', [0, 100])
   .addTerm('low', triangular(0, 0, 40))

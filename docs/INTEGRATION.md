@@ -1,6 +1,6 @@
-# Integration with Heady™ Architecture
+# Integration with Heady Architecture
 
-## Heady™Brain Decision-Making
+## HeadyBrain Decision-Making
 
 Replace:
 ```typescript
@@ -24,7 +24,7 @@ if (decision.decision === 'PROCEED') {
 }
 ```
 
-## Heady™Conductor Health Monitoring
+## HeadyConductor Health Monitoring
 
 Replace:
 ```typescript

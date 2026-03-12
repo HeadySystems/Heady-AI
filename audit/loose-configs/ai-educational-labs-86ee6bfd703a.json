@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ai-educational-labs",
+  "private_key_id": "86ee6bfd703aae8cba43b692586e95e01d7fb5ea",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJhwTMfuLKCdPc\nRWF1N0GRurOEHieucvSx78D44BNuTbNPEUpcK13jCnjSLDbfy/+CdBw7HEtlKSHo\nXfhaJT6XTWzwsjVfYxZJ9c4Ccw5ioLrJDgSwhy2RfuhfcyOnVVMHC3zaArCQ1pWH\nrFYJ98CTj7+iDybkZzGTyj99VbhlDf+a0kpr86FdYl8SXHzYTyhAJC/q5ip4T3lk\np+UhFJaPTgTIPGsJghZaVqFB0024g/ltOxohD7U9R/dtE4VJWiP/V7BiswOHTd2Z\nD5LAhh0JhBSzRrszuOOeeYAANO/KQVtKmfYYdA3P+tpfk0PV3Kzcj3g7KycufuEK\ng63pxKalAgMBAAECggEAQ4yFOEJDpDL9F3UOAKsfyEgLSfqNlHSlvkq9pO3+tVdI\nBfWmthQ3KRXmf5QgZI1NPJ3MpKeMQgEyg1+UEisvuqlSHa+uIiXlX68LeVi1dqun\nUCLpwX3d8UnXe77tMXZxGQhpte1232V9w3cpc7fejdd+BUUM5TwNqxr8gvdLklsx\nV6KUU9XhixgDK/j7yRv7ATpEBTnJRMB+ECCakgRgiP3q7lfgZFmmEIiD4rwXWGYw\nBpCwlCuXDBkc3lb4sMi7u6pjjAnpQSiC75MMBeZSAxny3QfS8iesuVrGUat1U/ri\nWeKQQIb/IQw3eBFX0bIOT4E4F8rmLrolByyBxw/odQKBgQDvuYBUtdgyM5ZwYY4Q\njtWhyfN6tu6pzre5YTZpDzZm5Djm0CTMicnwSAj8zbxOMqYQwO1O9CTycQPN9dep\n140g7YmLPfZtMruIIUUAyy11IHBL5MYpB7FHM/mzDQ3FRzlxrG2D1HD7uA8tIqmS\nmy54DfiXWGA68qi0V5x1ftF8/wKBgQDXNaL6T05hY4L56dmgCmgl5T+NS2Sug5qh\ndiTyGra7Q/DQ9RxyaOaPpziUOnk3PvJtJStR5UFtk7VSOcL7sY3XlZvbNN81FwHQ\nPXzAHrCtrJgjNKzVIp4rHfNyC244Ni7YHdG1OkQ4PGee+Gbv/xKRsXjN+Lms5kI1\nZop9xlrIWwKBgFnzQgsHHLNhlg5fHJ5r6g9GJt0h7RW8YkXmCzOKqMAc3JkG+vfg\nr+xAK1con4K8EIHy0liw1Xg/Hc1XdO/e2K7FUrnzqxa4VZOz4B93HXx4iop/sjdN\nEqEECKq9uDARFKXprEIuIaLiIpeuDPDc16fmniOz3o/f45uf0C5qQpLjAoGAB/GH\n4XtZ5khZBkZ2bOzVaUir7tgwkCx1Ya5NsM4BnqnkUqIpeaOblwPSF86MuNhO9G5h\nyfUPVC8Wi0FsjAPCu4lfJlkuP/RocbpDR4gad16egvYnxvovImJJoRUA7Xw6gGmh\nWvIaoITCQmDi08rzcYM+dUPP/qzFFtmBFSFkKm8CgYEAiiWD7YoTpoeZEoXSmITb\ned4BsW0y18zj+UeuMx/dg0r0roiGRSfERlXtjEmX3rzM0gD/e0yvOeh2+TbkhNsl\nBMTrFcRRL6DCznrs/egOmsRXL1zRj81Yf4EMbQ/7E1uvcsoOigsya2Txz2isfg4O\nUuhw4sa59wEzkEtzcCmQhak=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ai-educational-labs@ai-educational-labs.iam.gserviceaccount.com",
+  "client_id": "113342129528377095947",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ai-educational-labs%40ai-educational-labs.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

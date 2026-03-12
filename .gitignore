@@ -86,3 +86,21 @@ in/
 # Node
 node_modules/
 logs/auto-commit.log
+
+# Large binary installers (local audit only, not pushed)
+archive/tool-installers/*.deb
+archive/tool-installers/*.tar.gz
+archive/tool-installers/takeout-*.zip
+
+# Large delivery bundles
+archive/code-bundles/heady-all-deliverables*.zip
+archive/code-bundles/heady_delivery_bundle*.zip
+archive/code-bundles/heady-template-bundle.zip
+archive/code-bundles/heady_bounded_security_pass*.zip
+archive/code-bundles/heady-max-potential-rebuild*.zip
+
+# Gradle locks
+headybuddy-mobile/.gradle/
+
+# Large code bundles (>50MB, kept locally)
+archive/code-bundles/wezterm-main.zip
