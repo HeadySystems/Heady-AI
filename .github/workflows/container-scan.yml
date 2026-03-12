@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload FS scan artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-fs-report
           path: trivy-fs.sarif
@@ -184,7 +184,7 @@ jobs:
 
       - name: Upload image scan artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-image-${{ steps.image-name.outputs.suffix }}-report
           path: trivy-image-${{ steps.image-name.outputs.suffix }}.sarif
@@ -234,7 +234,7 @@ jobs:
 
       - name: Upload hadolint artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hadolint-report
           path: hadolint-results.sarif
