@@ -50,3 +50,115 @@ jobs:
           - [ ] No breaking changes
           - [ ] Ready for staging QA" 2>/dev/null || echo 'PR exists'
           fi
+
+      - name: Run comprehensive test orchestrator
+        run: |
+          cd /tmp/heady-testing
+
+          echo "Installing dependencies..."
+          npm ci || pnpm install --frozen-lockfile || npm install
+
+          echo "Running Heady™ Test Orchestrator with PHI constant: ${{ env.PHI }}"
+          node scripts/test-orchestrator.mjs --staging --promote
+
+          echo "✓ Test orchestrator completed — all suites passed"
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-run-report
+          path: |
+            /tmp/heady-testing/reports/test-run-report.json
+            /tmp/heady-testing/reports/test-run-report.md
+            /tmp/heady-testing/.validation-metadata.json
+          retention-days: 30
+
+      - name: Prepare code for staging
+        run: |
+          echo "Preparing validated code for promotion to staging..."
+
+          # Copy validated code
+          cp -r /tmp/heady-testing/* . --no-preserve=mode
+
+          # Create promotion metadata
+          cat > .promotion-metadata.json << EOF
+          {
+            "promoted_at": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+            "promoted_from": "HeadyConnection/Heady-Testing",
+            "promoted_to": "HeadyConnection/Heady-Staging",
+            "promoted_by": "${{ github.actor }}",
+            "trigger_event": "${{ github.event_name }}",
+            "phi_constant": "${{ env.PHI }}"
+          }
+          EOF
+
+          cat .promotion-metadata.json
+
+      - name: Clone and update Heady-Staging repository
+        run: |
+          echo "Cloning Heady-Staging repository..."
+          git clone \
+            --depth=1 \
+            https://github.com/HeadyConnection/Heady-Staging.git \
+            /tmp/heady-staging
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+
+      - name: Push validated code to Heady-Staging
+        run: |
+          cd /tmp/heady-staging
+
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Copy validated code
+          cp -r /tmp/heady-testing/* . --no-preserve=mode
+
+          # Add promotion metadata
+          if [ -f "/tmp/heady-testing/.promotion-metadata.json" ]; then
+            cp /tmp/heady-testing/.promotion-metadata.json .
+          fi
+
+          # Commit and push
+          git add .
+          git commit -m "chore: promote validated code from Heady-Testing to Heady-Staging
+
+          Promoted at: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          Promoted by: ${{ github.actor }}
+          Source: HeadyConnection/Heady-Testing
+          PHI constant: ${{ env.PHI }}"
+
+          git push https://x-access-token:${{ secrets.GH_TOKEN || github.token }}@github.com/HeadyConnection/Heady-Staging.git HEAD:develop
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+
+      - name: Generate promotion summary
+        if: success()
+        run: |
+          echo "## :rocket: Promotion to Staging Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Source Repository:** HeadyConnection/Heady-Testing" >> $GITHUB_STEP_SUMMARY
+          echo "**Target Repository:** HeadyConnection/Heady-Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**Promoted by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**PHI Constant:** ${{ env.PHI }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Validation Checks Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] HeadyValidator verification" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] Comprehensive test orchestrator (pipeline, staging, unit, integration)" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] Test report generated and archived" >> $GITHUB_STEP_SUMMARY
+          echo "- [x] Code sync to Heady-Staging" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The code is now available for comprehensive testing in the Staging environment." >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "## :x: Promotion to Staging Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Failed by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Please review the workflow logs for details." >> $GITHUB_STEP_SUMMARY

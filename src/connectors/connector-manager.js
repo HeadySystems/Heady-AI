@@ -7,9 +7,9 @@
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
-const logger = require('../../utils/logger');
-const CircuitBreaker = require('../../resilience/circuit-breaker');
-const HeadyKV = require('../../core/heady-kv');
+const logger = require('../utils/logger');
+const CircuitBreaker = require('../resilience/circuit-breaker');
+const HeadyKV = require('../core/heady-kv');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -329,7 +329,7 @@ function buildCloudflareConnector(opts = {}) {
     baseUrl: 'https://api.cloudflare.com/client/v4',
   };
   let connected = false;
-  const headyFetch = require('../../core/heady-fetch');
+  const headyFetch = require('../core/heady-fetch');
 
   return {
     async connect() {

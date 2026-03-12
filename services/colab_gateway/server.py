@@ -1,6 +1,12 @@
 """
 Google Colab Gateway Service for Heady Systems
-Enables remote GPU execution through Google Colab notebooks
+Enables remote GPU execution through 4 Google Colab Pro+ notebooks.
+
+Runtimes:
+  colab-a  →  realtime-inference-and-projection     fib(9)=34
+  colab-b  →  vector-retrieval-and-template-opt     fib(8)=21
+  colab-c  →  swarm-burst-and-connector-build       fib(7)=13
+  colab-d  →  DEDICATED intelligence & learning     fib(6)=8  (ISOLATED)
 """
 
 import asyncio
@@ -82,6 +88,17 @@ class ColabGateway:
                 gpu_required=True,
                 estimated_duration_minutes=20,
                 memory_requirement_mb=4096
+            ),
+            "intelligence_learning": GPUExecutionContext(
+                context_type="intelligence_learning",
+                code_template=self._get_intelligence_template(),
+                dependencies=[
+                    "torch", "numpy", "pandas", "sentence-transformers",
+                    "scikit-learn", "transformers", "accelerate"
+                ],
+                gpu_required=True,
+                estimated_duration_minutes=30,
+                memory_requirement_mb=8192
             )
         }
     
@@ -685,6 +702,232 @@ if __name__ == "__main__":
     print(json.dumps(results, indent=2))
 '''
 
+    def _get_intelligence_template(self) -> str:
+        """Template for intelligence & learning context — runs ONLY on colab-d (dedicated)"""
+        return '''
+# HEADY PROJECT: INTELLIGENCE & LEARNING CONTEXT (COLAB-D DEDICATED)
+# -------------------------------------------------------------------
+# GPU-Accelerated Continuous Intelligence — HeadySoul Consciousness Ops
+# THIS RUNTIME IS ISOLATED — never shares GPU time with operational workloads
+
+# 1. INSTALL DEPENDENCIES
+!pip install -q sentence-transformers transformers accelerate scikit-learn
+
+# 2. IMPORTS
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import pandas as pd
+import numpy as np
+from sentence_transformers import SentenceTransformer, losses, InputExample
+from torch.utils.data import DataLoader
+from sklearn.metrics.pairwise import cosine_similarity
+from datetime import datetime, timedelta
+import time
+import json
+import os
+
+# 3. GPU DETECTION
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(f"🧠 HEADY INTELLIGENCE RUNTIME (COLAB-D) ON: {device.upper()}")
+print(f"   DEDICATED: True — Learning runtime isolation active")
+
+# Sacred geometry constants
+PHI = 1.6180339887498948
+FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+
+# 4. INTELLIGENCE CORE
+class HeadySoulIntelligence:
+    """Core intelligence engine for continuous learning and pattern emergence."""
+
+    def __init__(self, model_name='all-MiniLM-L6-v2'):
+        self.model = SentenceTransformer(model_name, device=device)
+        self.pattern_memory = []
+        self.error_signatures = []
+        self.improvement_chain = []
+        self.intelligence_score = 0.0
+
+    def learn_from_errors(self, error_logs):
+        """Error immunization: learn from failures to prevent repeats."""
+        print(f"🛡️ Error immunization: analyzing {len(error_logs)} failures...")
+
+        error_texts = [e.get("message", str(e)) for e in error_logs]
+        embeddings = self.model.encode(error_texts, convert_to_tensor=True, device=device)
+
+        # Cluster similar errors
+        sim_matrix = cosine_similarity(embeddings.cpu().numpy())
+        clusters = []
+        visited = set()
+
+        for i in range(len(sim_matrix)):
+            if i in visited:
+                continue
+            cluster = [i]
+            visited.add(i)
+            for j in range(i + 1, len(sim_matrix)):
+                if j not in visited and sim_matrix[i][j] > 0.85:
+                    cluster.append(j)
+                    visited.add(j)
+            if len(cluster) > 1:
+                clusters.append(cluster)
+
+        # Generate immunization signatures
+        for cluster in clusters:
+            centroid = embeddings[cluster].mean(dim=0)
+            signature = {
+                "pattern": error_texts[cluster[0]][:200],
+                "frequency": len(cluster),
+                "centroid": centroid.cpu().numpy().tolist(),
+                "immunized_at": datetime.now().isoformat(),
+            }
+            self.error_signatures.append(signature)
+
+        return {
+            "errors_analyzed": len(error_logs),
+            "clusters_found": len(clusters),
+            "signatures_generated": len(clusters),
+        }
+
+    def detect_patterns(self, event_stream):
+        """Pattern emergence detection from runtime events."""
+        print(f"🔍 Pattern detection: scanning {len(event_stream)} events...")
+
+        texts = [e.get("description", str(e)) for e in event_stream]
+        embeddings = self.model.encode(texts, convert_to_tensor=True, device=device)
+
+        # Find dense regions (potential patterns)
+        sim_matrix = cosine_similarity(embeddings.cpu().numpy())
+        density_scores = sim_matrix.mean(axis=1)
+
+        # Top patterns by density
+        top_indices = np.argsort(density_scores)[-10:][::-1]
+        patterns = []
+        for idx in top_indices:
+            patterns.append({
+                "event": texts[idx][:200],
+                "density_score": float(density_scores[idx]),
+                "detected_at": datetime.now().isoformat(),
+            })
+            self.pattern_memory.append(patterns[-1])
+
+        return {
+            "events_scanned": len(event_stream),
+            "patterns_detected": len(patterns),
+            "top_patterns": patterns[:5],
+        }
+
+    def evaluate_routing_efficiency(self, task_outcomes):
+        """Train routing intelligence from task outcomes."""
+        print(f"📊 Routing evaluation: {len(task_outcomes)} outcomes...")
+
+        successful = [t for t in task_outcomes if t.get("success")]
+        failed = [t for t in task_outcomes if not t.get("success")]
+
+        success_rate = len(successful) / max(len(task_outcomes), 1)
+        avg_cost = np.mean([t.get("cost", 0) for t in task_outcomes]) if task_outcomes else 0
+        avg_latency = np.mean([t.get("latency_ms", 0) for t in task_outcomes]) if task_outcomes else 0
+
+        improvement = {
+            "success_rate": success_rate,
+            "avg_cost": float(avg_cost),
+            "avg_latency_ms": float(avg_latency),
+            "recommendation": "shift_to_cheaper_provider" if success_rate > 0.95 else "optimize_prompts",
+            "evaluated_at": datetime.now().isoformat(),
+        }
+        self.improvement_chain.append(improvement)
+
+        return improvement
+
+    def self_critique_cycle(self, predictions, ground_truth):
+        """Self-critique pipeline (stages 15-16): evaluate own predictions."""
+        print(f"🔄 Self-critique: {len(predictions)} predictions vs ground truth...")
+
+        correct = sum(1 for p, g in zip(predictions, ground_truth) if p == g)
+        accuracy = correct / max(len(predictions), 1)
+
+        pred_embeddings = self.model.encode(predictions, convert_to_tensor=True, device=device)
+        truth_embeddings = self.model.encode(ground_truth, convert_to_tensor=True, device=device)
+
+        # Semantic similarity between predictions and ground truth
+        similarities = []
+        for i in range(len(predictions)):
+            sim = torch.nn.functional.cosine_similarity(
+                pred_embeddings[i].unsqueeze(0),
+                truth_embeddings[i].unsqueeze(0)
+            ).item()
+            similarities.append(sim)
+
+        avg_similarity = np.mean(similarities)
+        self.intelligence_score = (accuracy * 0.4 + avg_similarity * 0.6) * 100
+
+        return {
+            "exact_accuracy": accuracy,
+            "semantic_similarity": float(avg_similarity),
+            "intelligence_score": self.intelligence_score,
+            "critique_timestamp": datetime.now().isoformat(),
+        }
+
+    def get_intelligence_status(self):
+        """Return current intelligence state."""
+        return {
+            "intelligence_score": self.intelligence_score,
+            "patterns_in_memory": len(self.pattern_memory),
+            "error_signatures": len(self.error_signatures),
+            "improvement_chain_length": len(self.improvement_chain),
+            "device": device,
+            "dedicated_runtime": True,
+        }
+
+# 5. EXECUTION
+def execute_intelligence_cycle():
+    """Execute a full intelligence cycle on dedicated GPU."""
+    print("🧠 Starting HeadySoul Intelligence Cycle on COLAB-D...")
+
+    soul = HeadySoulIntelligence()
+
+    # Simulate error immunization
+    mock_errors = [{"message": f"TimeoutError in service {i % 5}"} for i in range(50)]
+    immunization = soul.learn_from_errors(mock_errors)
+
+    # Simulate pattern detection
+    mock_events = [{"description": f"User action {i} on feature {i % 8}"} for i in range(100)]
+    patterns = soul.detect_patterns(mock_events)
+
+    # Simulate routing evaluation
+    mock_outcomes = [{"success": i % 7 != 0, "cost": 0.01 * i, "latency_ms": 100 + i * 10} for i in range(30)]
+    routing = soul.evaluate_routing_efficiency(mock_outcomes)
+
+    # Simulate self-critique
+    mock_preds = [f"prediction_{i}" for i in range(20)]
+    mock_truth = [f"prediction_{i}" if i % 3 != 0 else f"truth_{i}" for i in range(20)]
+    critique = soul.self_critique_cycle(mock_preds, mock_truth)
+
+    results = {
+        "context": "intelligence_learning",
+        "runtime": "colab-d",
+        "dedicated": True,
+        "immunization": immunization,
+        "pattern_detection": patterns,
+        "routing_evaluation": routing,
+        "self_critique": critique,
+        "intelligence_status": soul.get_intelligence_status(),
+        "completed_at": datetime.now().isoformat(),
+    }
+
+    print(f"✅ Intelligence cycle complete!")
+    print(f"   Score: {critique['intelligence_score']:.1f}")
+    print(f"   Patterns: {patterns['patterns_detected']}")
+    print(f"   Immunizations: {immunization['signatures_generated']}")
+
+    return results
+
+# 6. RUN
+if __name__ == "__main__":
+    results = execute_intelligence_cycle()
+    print("\\n🧠 INTELLIGENCE SUMMARY:")
+    print(json.dumps(results, indent=2))
+'''
+
     async def create_notebook(self, task_id: str, context_type: str) -> Optional[ColabNotebook]:
         """Create a new Colab notebook for GPU execution"""
         if context_type not in self.execution_contexts:
@@ -787,6 +1030,27 @@ if __name__ == "__main__":
                     "speedup_factor": 20.9,
                     "gpu_used": True
                 }
+            elif notebook.context_type == "intelligence_learning":
+                results = {
+                    "context": "intelligence_learning",
+                    "runtime": "colab-d",
+                    "dedicated": True,
+                    "immunization": {
+                        "errors_analyzed": 50,
+                        "clusters_found": 8,
+                        "signatures_generated": 8
+                    },
+                    "pattern_detection": {
+                        "events_scanned": 100,
+                        "patterns_detected": 10
+                    },
+                    "self_critique": {
+                        "intelligence_score": 78.4,
+                        "exact_accuracy": 0.65,
+                        "semantic_similarity": 0.87
+                    },
+                    "gpu_used": True
+                }
             else:  # general_compute
                 results = {
                     "context": "general_compute",
@@ -830,7 +1094,7 @@ colab_gateway = ColabGateway()
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-app = FastAPI(title="Heady Colab Gateway", version="1.0.0")
+app = FastAPI(title="Heady Colab Gateway", version="2.0.0", description="4-runtime GPU orchestration with dedicated intelligence")
 
 class CreateNotebookRequest(BaseModel):
     task_id: str
@@ -886,7 +1150,32 @@ async def list_contexts_api():
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "colab_gateway"}
+    return {
+        "status": "healthy",
+        "service": "colab_gateway",
+        "version": "2.0.0",
+        "runtimes": 4,
+        "contexts": list(colab_gateway.execution_contexts.keys()),
+        "dedicated_learning_runtime": "colab-d"
+    }
+
+@app.get("/api/intelligence-cell/health")
+async def intelligence_health():
+    """Health check for the dedicated intelligence runtime (colab-d)"""
+    return {
+        "status": "healthy",
+        "cell": "intelligence-cell",
+        "runtime": "colab-d",
+        "dedicated": True,
+        "responsibilities": [
+            "continuous-model-fine-tuning",
+            "pattern-recognition-training",
+            "self-critique-pipeline",
+            "evolution-mutation-experiments",
+            "heady-soul-consciousness-ops",
+            "error-immunization-training"
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn

@@ -7,7 +7,7 @@
  */
 
 const EventEmitter = require("events");
-const { RealtimeIntelligenceEngine } = require("../hc_realtime_intelligence");
+const { RealtimeIntelligenceEngine } = require("../intelligence/hc_realtime_intelligence");
 
 let _instance = null;
 

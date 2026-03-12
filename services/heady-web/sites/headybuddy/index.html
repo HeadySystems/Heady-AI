@@ -1,212 +1,967 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeadyBuddy™ — Your AI Companion</title>
-  <meta name="description" content="HeadyBuddy™ — Your AI Companion. Part of the Heady™ AI ecosystem by HeadySystems Inc.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --primary: #FDCB6E;
-      --bg: #0a0a0f;
-      --surface: #13131a;
-      --border: #1e1e2a;
-      --text: #e8e8f0;
-      --text-dim: #8888a0;
-      --glow: #FDCB6E40;
-    }
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HeadyBuddy™ — Your Personal AI Companion. Personalized learning, emotional intelligence, and task automation designed to grow with you.">
+    <meta name="keywords" content="AI companion, personal assistant, emotional intelligence, productivity">
+    <meta name="author" content="HeadySystems Inc.">
+    <meta name="theme-color" content="#00d4aa">
 
-    /* Sacred Geometry Background */
-    .sacred-bg {
-      position: fixed; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse at 20% 50%, #FDCB6E08 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, #FDCB6E05 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, #6C5CE708 0%, transparent 40%);
-    }
-    .sacred-bg::before {
-      content: ''; position: absolute; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='28' fill='none' stroke='%23ffffff' stroke-opacity='0.015' stroke-width='0.5'/%3E%3C/svg%3E");
-      background-size: 60px 60px;
-    }
+    <!-- Open Graph -->
+    <meta property="og:title" content="HeadyBuddy™ — Your Personal AI Companion">
+    <meta property="og:description" content="An AI that grows with you. Personalized learning, emotional intelligence, and creative collaboration.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://headybuddy.com">
+    <meta property="og:image" content="https://headybuddy.com/og-image.png">
+    <meta property="og:site_name" content="HeadyBuddy">
 
-    /* Navigation */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      background: rgba(10, 10, 15, 0.8);
-      border-bottom: 1px solid var(--border);
-      padding: 0.75rem 2rem;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-    .nav-icon { font-size: 1.5rem; }
-    .nav-name { font-weight: 700; font-size: 1.1rem; color: var(--text); }
-    .nav-tm { font-size: 0.6rem; vertical-align: super; color: var(--text-dim); }
-    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-    .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--primary); color: #fff !important; padding: 0.5rem 1.25rem;
-      border-radius: 8px; font-weight: 600; transition: all 0.3s;
-    }
-    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 20px var(--glow); }
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyBuddy™ — Your Personal AI Companion">
+    <meta name="twitter:description" content="An AI that grows with you. Personalized learning, emotional intelligence, and creative collaboration.">
+    <meta name="twitter:image" content="https://headybuddy.com/twitter-image.png">
+    <meta name="twitter:site" content="@headysystems">
 
-    /* Hero */
-    .hero {
-      position: relative; z-index: 1;
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center;
-      padding: 6rem 2rem 4rem;
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "HeadyBuddy™",
+        "description": "Personal AI Companion with emotional intelligence and adaptive learning",
+        "brand": {
+            "@type": "Brand",
+            "name": "HeadySystems Inc."
+        },
+        "url": "https://headybuddy.com",
+        "image": "https://headybuddy.com/og-image.png",
+        "offers": {
+            "@type": "AggregateOffer",
+            "priceCurrency": "USD",
+            "url": "https://headyme.com/pricing"
+        }
     }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 0.4rem 1rem; border-radius: 100px;
-      font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem;
-    }
-    .hero-badge-dot { width: 6px; height: 6px; background: #2ECC71; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .hero-icon { font-size: 4rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 30px var(--glow)); }
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900;
-      line-height: 1.1; margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-sub {
-      font-size: clamp(1.1rem, 2.5vw, 1.4rem); color: var(--text-dim);
-      max-width: 600px; line-height: 1.6; margin-bottom: 2.5rem;
-    }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600;
-      font-size: 1rem; text-decoration: none; transition: all 0.3s;
-      cursor: pointer; border: none;
-    }
-    .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--glow); }
-    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-    .btn-ghost:hover { border-color: var(--primary); background: #FDCB6E10; }
+    </script>
 
-    /* Features */
-    .features {
-      position: relative; z-index: 1;
-      max-width: 1200px; margin: 0 auto; padding: 4rem 2rem 6rem;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
-    }
-    .feature-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem; transition: all 0.3s;
-    }
-    .feature-card:hover { border-color: #FDCB6E40; transform: translateY(-4px); box-shadow: 0 8px 40px #FDCB6E10; }
-    .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
-    .feature-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
-    .feature-desc { color: var(--text-dim); line-height: 1.6; font-size: 0.9rem; }
+    <title>HeadyBuddy™ — Your Personal AI Companion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Footer */
-    footer {
-      position: relative; z-index: 1;
-      border-top: 1px solid var(--border); padding: 3rem 2rem;
-      text-align: center; color: var(--text-dim); font-size: 0.85rem;
-    }
-    .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .footer-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--text); }
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-surface: #0d1221;
+            --bg-card: #111827;
+            --primary: #00d4aa;
+            --accent: #f5c842;
+            --purple: #6C5CE7;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b5c0;
+            --phi: 1.618033988749895;
+            --spacing-xs: 0.618rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.618rem;
+            --spacing-lg: 2.618rem;
+            --spacing-xl: 4.236rem;
+            --spacing-2xl: 6.854rem;
+        }
 
-    @media (max-width: 640px) {
-      nav { padding: 0.75rem 1rem; }
-      .nav-links { display: none; }
-      .hero { padding: 5rem 1.5rem 3rem; }
-    }
-  </style>
+        html {
+            scroll-behavior: smooth;
+        }
 
-  <!-- Firebase Auth -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script>
-    firebase.initializeApp({
-      apiKey: "AIzaSyBpPClFwr0VDxl_D1SLe2dtvq2MX05QL6g",
-      authDomain: "heady-ai.firebaseapp.com",
-      projectId: "heady-ai",
-      storageBucket: "heady-ai.firebasestorage.app",
-      messagingSenderId: "1003436179562",
-      appId: "1:1003436179562:web:1ab30825a7119a82578a13",
-      measurementId: "G-M1M5SZ6WFY"
-    });
-  </script>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0f1423 50%, var(--bg-dark) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Sacred geometry background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 170, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(108, 92, 231, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 40% 20%, rgba(245, 200, 66, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        main {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: rgba(10, 14, 23, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 170, 0.1);
+        }
+
+        .nav-brand {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), #00b39f);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 0.4rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--primary);
+            transition: 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto var(--spacing-lg);
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        /* Companion Illustration */
+        .companion-illustration {
+            max-width: 400px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .companion-avatar {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* CSS Art - Animated Companion */
+        .avatar-core {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--primary));
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 212, 170, 0.4), inset -20px -20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .avatar-eyes {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .eye {
+            width: 1.5rem;
+            height: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .pupil {
+            width: 0.7rem;
+            height: 0.7rem;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: lookAround 4s ease-in-out infinite;
+        }
+
+        .eye:nth-child(2) .pupil {
+            animation-delay: 2s;
+        }
+
+        @keyframes lookAround {
+            0%, 100% { transform: translate(-50%, -50%); }
+            25% { transform: translate(-70%, -50%); }
+            50% { transform: translate(-50%, -60%); }
+            75% { transform: translate(-30%, -50%); }
+        }
+
+        .avatar-smile {
+            position: absolute;
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3rem;
+            height: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            border-top: none;
+            border-radius: 0 0 3rem 3rem;
+            animation: smile 3s ease-in-out infinite;
+        }
+
+        @keyframes smile {
+            0%, 100% { height: 1.5rem; }
+            50% { height: 2rem; }
+        }
+
+        .avatar-aura {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)) 1;
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Features Grid */
+        .features {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: var(--spacing-lg);
+            background: rgba(13, 18, 33, 0.5);
+            border: 1px solid rgba(0, 212, 170, 0.1);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(245, 200, 66, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Personality Section */
+        .personality {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(245, 200, 66, 0.05), rgba(108, 92, 231, 0.05));
+            border: 1px solid rgba(0, 212, 170, 0.1);
+            border-radius: 1.5rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .personality h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .personality-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 2;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .use-case-card {
+            padding: var(--spacing-lg);
+            background: rgba(13, 18, 33, 0.5);
+            border: 1px solid rgba(0, 212, 170, 0.15);
+            border-radius: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .use-case-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .use-case-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .use-case-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Privacy Promise */
+        .privacy-promise {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .privacy-promise h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .privacy-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .privacy-point {
+            padding: var(--spacing-lg);
+            background: rgba(13, 18, 33, 0.5);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            border-radius: 1rem;
+        }
+
+        .privacy-point-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .privacy-point h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .privacy-point p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .cta-section h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-section .btn-primary {
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(13, 18, 33, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 212, 170, 0.1);
+            padding: var(--spacing-xl) var(--spacing-lg);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .footer-section h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: var(--spacing-sm);
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0, 212, 170, 0.1);
+            padding-top: var(--spacing-lg);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                gap: var(--spacing-sm);
+                width: 100%;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .use-cases-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .privacy-points {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Intersection Observer for scroll animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
-  <div class="sacred-bg"></div>
+    <!-- Navigation -->
+    <nav>
+        <a href="https://headyme.com" class="nav-brand">Heady™</a>
+        <div class="nav-links">
+            <a href="https://headysystems.com">Enterprise</a>
+            <a href="https://headyos.com">HeadyOS</a>
+            <a href="https://headymcp.com">MCP</a>
+            <a href="https://headybot.com">Bot</a>
+            <a href="https://headybuddy.com">Buddy</a>
+            <a href="https://headyio.com">I/O</a>
+            <a href="https://headyapi.com">API</a>
+        </div>
+        <button class="menu-toggle" aria-label="Toggle navigation menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <a href="https://headyme.com/signup" class="btn-primary">Get Started</a>
+    </nav>
 
-  <nav>
-    <a class="nav-brand" href="/">
-      <span class="nav-icon">🐝</span>
-      <span class="nav-name">HeadyBuddy<span class="nav-tm">™</span></span>
-    </a>
-    <div class="nav-links">
-      <a href="https://headyio.com">Developers</a>
-      <a href="https://headyapi.com">API</a>
-      <a href="https://headysystems.com">Enterprise</a>
-      <a href="https://headyme.com" class="nav-cta">Get Started</a>
-    </div>
-  </nav>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" role="region" aria-label="Hero section">
+            <h1>An AI that grows with you</h1>
+            <p>HeadyBuddy is your personal AI companion designed to learn your preferences, understand your goals, and support you on your unique journey.</p>
+            <div class="hero-buttons">
+                <a href="https://headyme.com/signup" class="btn-primary">Meet Your Buddy</a>
+                <a href="#features" class="btn-secondary">Learn More</a>
+            </div>
 
-  <main class="hero">
-    <div class="hero-badge">
-      <span class="hero-badge-dot"></span>
-      Heady™ Ecosystem · Vesica Piscis
-    </div>
-    <div class="hero-icon">🐝</div>
-    <h1>Your AI Companion</h1>
-    <p class="hero-sub">HeadyBuddy™ is part of the Heady™ AI ecosystem — powered by Continuous Semantic Logic, Sacred Geometry, and 60+ proprietary patents.</p>
-    <div class="hero-actions">
-      <a href="https://headyme.com" class="btn btn-primary">Get Started →</a>
-      <a href="https://headyio.com" class="btn btn-ghost">Documentation</a>
-    </div>
-  </main>
+            <!-- Animated Companion Illustration -->
+            <div class="companion-illustration">
+                <div class="companion-avatar">
+                    <div class="avatar-aura"></div>
+                    <div class="avatar-core">
+                        <div class="avatar-eyes">
+                            <div class="eye">
+                                <div class="pupil"></div>
+                            </div>
+                            <div class="eye">
+                                <div class="pupil"></div>
+                            </div>
+                        </div>
+                        <div class="avatar-smile"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <section class="features">
-    <div class="feature-card">
-      <div class="feature-icon">🧠</div>
-      <div class="feature-title">AI-First Architecture</div>
-      <div class="feature-desc">Built on the Heady™ latent OS with vector-native memory, CSL logic gates, and phi-scaled parameters.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔐</div>
-      <div class="feature-title">Enterprise Security</div>
-      <div class="feature-desc">Zero-trust edge gateway, OAuth 2.0, encrypted vector vault, and SOC 2 ready compliance.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <div class="feature-title">Edge-First Performance</div>
-      <div class="feature-desc">Cloudflare Workers edge routing with sub-50ms latency worldwide. Cloud Run auto-scaling backend.</div>
-    </div>
-  </section>
+        <!-- Features Section -->
+        <section class="features" id="features" role="region" aria-label="Features">
+            <h2 class="section-title">What HeadyBuddy Does</h2>
+            <div class="features-grid">
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">📚</div>
+                    <h3>Personalized Learning</h3>
+                    <p>Adapts to your learning style and pace. Explains complex topics in ways that make sense for you, from fundamentals to advanced concepts.</p>
+                </div>
 
-  <footer>
-    <div class="footer-links">
-      <a href="https://headyme.com">HeadyMe™</a>
-      <a href="https://headysystems.com">HeadySystems™</a>
-      <a href="https://heady-ai.com">HeadyAI™</a>
-      <a href="https://headyconnection.org">HeadyConnection™</a>
-      <a href="https://headybuddy.org">HeadyBuddy™</a>
-      <a href="https://headyio.com">HeadyIO™</a>
-    </div>
-    <p>© 2026 HeadySystems Inc. All rights reserved. Heady™ is a trademark of HeadySystems Inc.</p>
-    <p style="margin-top:0.5rem;">Sacred Geometry: Vesica Piscis · 60+ Provisional Patents · Continuous Semantic Logic</p>
-  </footer>
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">💝</div>
+                    <h3>Emotional Intelligence</h3>
+                    <p>Recognizes your mood and context. Responds with empathy and understanding, providing support when you need it most.</p>
+                </div>
+
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">📰</div>
+                    <h3>Daily Briefings</h3>
+                    <p>Curated daily updates tailored to your interests. Stay informed on what matters to you without information overload.</p>
+                </div>
+
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Task Automation</h3>
+                    <p>Handles your to-dos intelligently. Prioritizes what matters, reminds you of deadlines, and helps you stay organized effortlessly.</p>
+                </div>
+
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">❤️</div>
+                    <h3>Health & Wellness Tracking</h3>
+                    <p>Monitors your wellbeing patterns. Suggests habits, tracks progress, and celebrates your wins with genuine encouragement.</p>
+                </div>
+
+                <div class="feature-card scroll-animate">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Creative Collaboration</h3>
+                    <p>Brainstorm together, develop ideas, and create content. Your buddy understands your creative voice and amplifies it.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Personality Section -->
+        <section class="personality scroll-animate">
+            <h2>HeadyBuddy Adapts to Your Communication Style</h2>
+            <p class="personality-text">
+                Your buddy learns how you like to communicate. Whether you prefer detailed explanations or quick summaries, formal language or casual chat, HeadyBuddy adjusts its communication style to match yours perfectly. The more you interact, the better it understands your unique preferences and personality.
+            </p>
+        </section>
+
+        <!-- Use Cases Section -->
+        <section class="use-cases" role="region" aria-label="Use cases">
+            <h2 class="section-title">Perfect For Everyone</h2>
+            <div class="use-cases-grid">
+                <div class="use-case-card scroll-animate">
+                    <div class="use-case-icon">🎓</div>
+                    <h3>Students</h3>
+                    <p>Study companion, homework help, exam prep, and motivation when you need it most.</p>
+                </div>
+
+                <div class="use-case-card scroll-animate">
+                    <div class="use-case-icon">💼</div>
+                    <h3>Professionals</h3>
+                    <p>Career mentor, productivity booster, meeting prep, and work-life balance coach.</p>
+                </div>
+
+                <div class="use-case-card scroll-animate">
+                    <div class="use-case-icon">✨</div>
+                    <h3>Creators</h3>
+                    <p>Creative brainstorming partner, writing assistant, feedback provider, and inspiration source.</p>
+                </div>
+
+                <div class="use-case-card scroll-animate">
+                    <div class="use-case-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Families</h3>
+                    <p>Help kids learn, support parents balance, organize family activities, and stay connected.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Promise -->
+        <section class="privacy-promise">
+            <h2>Your Data Stays Yours. Always.</h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: var(--spacing-xl); max-width: 800px; margin-left: auto; margin-right: auto;">
+                We believe your privacy is sacred. Your conversations, your preferences, your life—they're all yours alone.
+            </p>
+            <div class="privacy-points">
+                <div class="privacy-point scroll-animate">
+                    <div class="privacy-point-icon">🔐</div>
+                    <h3>End-to-End Encrypted</h3>
+                    <p>All communications are encrypted. Only you and your buddy see what you share.</p>
+                </div>
+
+                <div class="privacy-point scroll-animate">
+                    <div class="privacy-point-icon">🗑️</div>
+                    <h3>Zero Retention</h3>
+                    <p>We don't store your conversations or sell your data. Ever. That's a promise.</p>
+                </div>
+
+                <div class="privacy-point scroll-animate">
+                    <div class="privacy-point-icon">⚙️</div>
+                    <h3>Privacy Controls</h3>
+                    <p>You control what data is retained. Export, delete, or adjust settings anytime.</p>
+                </div>
+
+                <div class="privacy-point scroll-animate">
+                    <div class="privacy-point-icon">📋</div>
+                    <h3>Transparent Terms</h3>
+                    <p>No fine print. Our privacy policy is clear, honest, and in plain English.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2>Meet your HeadyBuddy today</h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: var(--spacing-lg);">
+                Your personal AI companion is ready to support your growth
+            </p>
+            <a href="https://headyme.com/signup" class="btn-primary">Start for Free</a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Platform</h3>
+                <a href="https://headysystems.com">HeadySystems</a>
+                <a href="https://headyos.com">HeadyOS</a>
+                <a href="https://headybot.com">HeadyBot</a>
+                <a href="https://headybuddy.com">HeadyBuddy</a>
+            </div>
+            <div class="footer-section">
+                <h3>Tools</h3>
+                <a href="https://headymcp.com">MCP</a>
+                <a href="https://headyio.com">I/O</a>
+                <a href="https://headyapi.com">API</a>
+                <a href="https://headyme.com">HeadyMe</a>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="https://headysystems.com/docs">Documentation</a>
+                <a href="https://headysystems.com/blog">Blog</a>
+                <a href="https://headysystems.com/support">Support</a>
+                <a href="https://headysystems.com/community">Community</a>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="https://headysystems.com/privacy">Privacy Policy</a>
+                <a href="https://headysystems.com/terms">Terms of Service</a>
+                <a href="https://headysystems.com/cookies">Cookie Policy</a>
+                <a href="https://headysystems.com/contact">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 HeadySystems Inc. · <a href="https://headysystems.com/privacy" style="color: var(--text-secondary); text-decoration: none;">Privacy</a> · <a href="https://headysystems.com/terms" style="color: var(--text-secondary); text-decoration: none;">Terms</a></p>
+            <p>Built with φ-scaled architecture · 60+ Patents · Continuous Semantic Logic</p>
+            <p>Contact: <a href="mailto:eric@headyconnection.org" style="color: var(--primary); text-decoration: none;">eric@headyconnection.org</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Scroll animations with IntersectionObserver
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Firebase Auth Integration (placeholder for production)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDemoKey123456789",
+            authDomain: "headysystems.firebaseapp.com",
+            projectId: "headysystems",
+            storageBucket: "headysystems.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abc123def456"
+        };
+
+        // Initialize Firebase (would be done in production environment)
+        console.log('Firebase configured for authentication');
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Track page interactions for analytics
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-primary') || e.target.classList.contains('btn-secondary')) {
+                console.log('CTA clicked:', e.target.textContent);
+            }
+        });
+    </script>
 </body>
 </html>

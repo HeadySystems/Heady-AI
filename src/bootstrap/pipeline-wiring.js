@@ -28,7 +28,7 @@ module.exports = function wirePipeline(app, { pipeline, buddy, vectorMemory, sel
 
     // Improvement Scheduler
     try {
-        const { ImprovementScheduler, registerImprovementRoutes } = require('../hc_improvement_scheduler');
+        const { ImprovementScheduler, registerImprovementRoutes } = require('../orchestration/hc_improvement_scheduler');
         const improvementScheduler = new ImprovementScheduler({ interval: 900000, pipeline, patternEngine, selfCritiqueEngine, mcPlanScheduler });
         registerImprovementRoutes(app, improvementScheduler);
         improvementScheduler.start();

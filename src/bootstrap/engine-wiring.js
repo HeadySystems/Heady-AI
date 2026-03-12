@@ -32,7 +32,7 @@ function wireEngines(app, deps = {}) {
     // Secrets vault hydration FIRST — all engines may need env vars
     // Projection engine SECOND — tracks all outbound projections
     try {
-        const vault = require("../vector-secrets-vault");
+        const vault = require("../services/secure-key-vault");
         const hydrated = vault.hydrate();
         logger.logNodeActivity("CONDUCTOR", `  🔐 Vector Vault: ${vault.getStats().totalSecrets} secrets in 3D space, ${hydrated} hydrated into process.env`);
 
@@ -50,7 +50,7 @@ function wireEngines(app, deps = {}) {
     }
 
     try {
-        const projectionEngine = require("../vector-projection-engine");
+        const projectionEngine = require("../memory/vector-projection-engine");
         projectionEngine.init();
         projectionEngine.registerRoutes(app);
         logger.logNodeActivity("CONDUCTOR", `  🌐 Projection Engine: LOADED (${projectionEngine.PROJECTION_TARGETS.length} targets in 3D space)`);
@@ -323,7 +323,7 @@ function wireEngines(app, deps = {}) {
 
     // ─── 8. Auto-Success Task Engine ──────────────────────────────────
     try {
-        const { AutoSuccessEngine, registerAutoSuccessRoutes } = require("../hc_auto_success");
+        const { AutoSuccessEngine, registerAutoSuccessRoutes } = require("../orchestration/hc_auto_success");
         engines.autoSuccessEngine = new AutoSuccessEngine({
             interval: Math.round(1.618 ** 4 * 1000),   // φ⁴ ≈ 6854ms — fluid cycle, ALL tasks every pulse
         });
@@ -355,7 +355,7 @@ function wireEngines(app, deps = {}) {
 
     // ─── 9. HeadyScientist ────────────────────────────────────────────
     try {
-        const { HeadyScientist, registerScientistRoutes } = require("../hc_scientist");
+        const { HeadyScientist, registerScientistRoutes } = require("../intelligence/hc_scientist");
         engines.scientistEngine = new HeadyScientist({ projectRoot: projectRoot || __dirname });
 
         engines.scientistEngine.wireEventBus(eventBus);
@@ -375,7 +375,7 @@ function wireEngines(app, deps = {}) {
 
     // ─── 10. HeadyQA ──────────────────────────────────────────────────
     try {
-        const { HeadyQA, registerQARoutes } = require("../hc_qa");
+        const { HeadyQA, registerQARoutes } = require("../observability/hc_qa");
         engines.qaEngine = new HeadyQA({ projectRoot: projectRoot || __dirname, managerPort: PORT || 3301 });
         registerQARoutes(app, engines.qaEngine);
         engines.qaEngine.startContinuousLoop();

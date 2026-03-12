@@ -7,7 +7,7 @@ module.exports = function mountAuth(app, { logger, secretsManager, cfManager }) 
     let authEngine = null;
 
     try {
-        const { HeadyAuth, registerAuthRoutes } = require('../hc_auth');
+        const { HeadyAuth, registerAuthRoutes } = require('../auth/hc_auth');
         authEngine = new HeadyAuth({
             adminKey: process.env.HEADY_API_KEY,
             googleClientId: process.env.GOOGLE_CLIENT_ID,

@@ -47,11 +47,15 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
     registerServiceRoutes(app, { engines: _engines, vectorMemory, orchestrator: _engines?.orchestrator, Handshake: require('../security/handshake'), projectRoot });
 
     // Static Hosting & Domain Routing
-    const { mountStaticHosting } = require('./static-hosting');
-    mountStaticHosting(app, projectRoot);
+    try {
+        const { mountStaticHosting } = require('./static-hosting');
+        mountStaticHosting(app, projectRoot);
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Static hosting not loaded: ${err.message}`);
+    }
 
     // Core API
-    try { app.use('/api', require('../../services/core-api')); } catch {
+    try { app.use('/api', require('../services/core-api')); } catch {
         try { app.use('/api', require('../routes/config-api')); } catch { }
     }
 

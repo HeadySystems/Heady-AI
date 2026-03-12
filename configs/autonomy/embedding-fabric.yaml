@@ -1,27 +1,58 @@
-version: 1
+version: 2
 objective: deterministic-autonomous-embedding
+updated_at: "2026-03-11T00:00:00Z"
 slo:
   max_ingest_latency_ms: 900
   max_retrieval_latency_ms: 450
   target_success_rate: 0.999
   learning_feedback_cycle_minutes: 5
 colab:
+  subscription_count: 4                          # 4 Colab Pro+ memberships
   subscriptions:
     - id: colab-pro-plus-a
       role: low-latency-ingest
-      max_parallel_jobs: 8
+      max_parallel_jobs: 8                       # fib(6)
       gpu_memory_gb: 24
       cpu_cores: 8
+      fib_concurrency: 34                        # fib(9)
+      env_endpoint: COLAB_A_ENDPOINT
+      env_ngrok: COLAB_A_NGROK_URL
     - id: colab-pro-plus-b
       role: model-evaluation-and-template-learning
       max_parallel_jobs: 6
       gpu_memory_gb: 24
       cpu_cores: 8
+      fib_concurrency: 21                        # fib(8)
+      env_endpoint: COLAB_B_ENDPOINT
+      env_ngrok: COLAB_B_NGROK_URL
     - id: colab-pro-plus-c
       role: background-index-maintenance
       max_parallel_jobs: 4
       gpu_memory_gb: 16
       cpu_cores: 4
+      fib_concurrency: 13                        # fib(7)
+      env_endpoint: COLAB_C_ENDPOINT
+      env_ngrok: COLAB_C_NGROK_URL
+    - id: colab-pro-plus-d
+      role: continuous-intelligence-and-learning
+      dedicated: true                             # NEVER shared with operational workloads
+      max_parallel_jobs: 5                        # fib(5)
+      gpu_memory_gb: 24
+      cpu_cores: 8
+      fib_concurrency: 8                          # fib(6) — dedicated learning budget
+      env_endpoint: COLAB_D_ENDPOINT
+      env_ngrok: COLAB_D_NGROK_URL
+      responsibilities:
+        - continuous-model-fine-tuning             # Train and fine-tune HeadySoul models
+        - pattern-recognition-training             # HeadyVinci pattern training loops
+        - self-critique-pipeline                   # Pipeline stages 15-16
+        - evolution-mutation-experiments            # Pipeline stage 19 controlled mutation
+        - heady-soul-consciousness-ops             # HeadySoul intelligence layer
+        - error-immunization-training              # Learn from failures → prevent repeat
+        - template-quality-optimization            # Train template scoring models
+        - routing-model-training                   # Train provider routing intelligence
+        - deep-research-inference                  # Perplexity-class deep research
+        - embedding-model-fine-tuning              # Custom 384D embedding refinement
 node_responsibilities:
   headybees:
     primary_capabilities:
@@ -50,6 +81,18 @@ node_responsibilities:
       - vector:error_resolution
       - graph:rule_causality
       - vector:state_snapshot
+  intelligence_runtime:
+    primary_capabilities:
+      - continuous-learning-orchestration
+      - model-evaluation-and-selection
+      - pattern-emergence-detection
+      - self-improvement-cycle-management
+    writes:
+      - vector:learned_pattern
+      - vector:model_evaluation
+      - graph:improvement_chain
+      - vector:intelligence_state
+    runtime: colab-pro-plus-d
 data_sources:
   - id: repository-code
     type: git
@@ -76,6 +119,12 @@ data_sources:
     schedule: realtime
     priority: critical
     embedding_type: error-signature-384d
+  - id: learning-outcomes
+    type: intelligence
+    schedule: every_5_minutes
+    priority: critical
+    embedding_type: intelligence-384d
+    target_runtime: colab-pro-plus-d
 storage:
   vector:
     dimensions: 384
@@ -89,6 +138,8 @@ storage:
       - resolved_by
       - supersedes
       - optimized_for
+      - learned_from
+      - improved_by
 orchestration:
   deterministic_capture_required: true
   use_seeded_rng: true
@@ -106,11 +157,24 @@ learning_loops:
     cadence_minutes: 15
     success_metric: template_acceptance_rate
     owner: headybees
+    runtime: colab-pro-plus-d
   - id: error-immunization-loop
     cadence_minutes: 5
     success_metric: repeat_failure_rate
     owner: buddy
+    runtime: colab-pro-plus-d
   - id: routing-efficiency-loop
     cadence_minutes: 10
     success_metric: cost_per_successful_completion
     owner: headyswarm
+    runtime: colab-pro-plus-d
+  - id: intelligence-evolution-loop
+    cadence_minutes: 30
+    success_metric: intelligence_score_delta
+    owner: intelligence_runtime
+    runtime: colab-pro-plus-d
+    description: >
+      Dedicated learning loop on Colab D. Evaluates all accumulated
+      patterns, errors, and outcomes. Trains improved routing models,
+      refines embedding quality, and evolves HeadySoul consciousness.
+      Runs every 30 minutes on the dedicated intelligence GPU.

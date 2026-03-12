@@ -348,7 +348,7 @@ function handleSSE(req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+        'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
     });
 
     // Send endpoint info
@@ -577,7 +577,7 @@ function parseBody(req) {
 function jsonRes(res, code, data) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+        'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     });
@@ -594,7 +594,7 @@ function startHTTPServer() {
         // CORS preflight
         if (req.method === 'OPTIONS') {
             res.writeHead(204, {
-                'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+                'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             });

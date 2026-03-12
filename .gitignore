@@ -6,17 +6,21 @@ build/
 
 # Environment
 .env
+.env.*
 .env.local
 .env.production
+.env.hybrid
 .heady_secrets
 
 # Logs
 *.log
 logs/
+hc_pipeline.log
 
 # IDE
 .idea/
 .vscode/
+.vscode/settings.local.json
 *.swp
 *.swo
 
@@ -36,6 +40,7 @@ venv/
 .pytest_cache/
 *.egg-info/
 .ipynb_checkpoints/
+*.ipynb_checkpoints/
 
 # Data (raw and external, to avoid huge files in git)
 data/raw/
@@ -50,16 +55,26 @@ pipeline-output/
 # Standalone repos (separate git projects)
 windsurf-next/
 
-
 # Personal notebooks (experimental, not tracked)
 notebooks/personal/*
 !notebooks/personal/.gitkeep
+
+# Notebooks with embedded secrets
+_archive/misc/heady_brain_gpu.ipynb
+_archive/misc/heady_unified_os.ipynb
+Heady-pre-production-9f2f0642-main/_archive/misc/heady_brain_gpu.ipynb
+Heady-pre-production-9f2f0642-main/_archive/misc/heady_unified_os.ipynb
+Heady-pre-production-9f2f0642-main/
 
 # Secrets
 .heady/memory.db
 .heady/*.db
 *.db
 .heady/.heady/
+
+# HeadyVault — SA keys, vault seeds, GCP credentials (NEVER commit)
+.heady/gcp-*.json
+.heady/vault-seed.js
 
 # Files exceeding GitHub LFS 2GB per-file limit
 AndroidSDK/system-images/**/*.img
@@ -72,13 +87,13 @@ offline-packages/
 .netlify
 
 # Security — sensitive files
-.env.hybrid
 *.pid
 *.bak
 audit_logs.jsonl
 .heady_deploy_log.jsonl
 *.jsonl
 *.shit
+.shit
 
 # In-folder (ingest zips - too large for GitHub)
 in/
@@ -86,6 +101,12 @@ in/
 # Node
 node_modules/
 logs/auto-commit.log
+package-lock.json
+
+# Rebuild artifacts
+.turbo
+.wrangler
+infrastructure/infrastructure/db_data/
 
 # Large binary installers (local audit only, not pushed)
 archive/tool-installers/*.deb

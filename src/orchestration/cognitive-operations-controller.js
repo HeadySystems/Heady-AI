@@ -7,7 +7,7 @@
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require("crypto");
-let { TERMINAL_STATES } = {}; try { { TERMINAL_STATES } = require("../memory-receipts"); } catch(e) { /* graceful */ }
+let { TERMINAL_STATES } = {}; try { { TERMINAL_STATES } = require("../memory/memory-receipts"); } catch(e) { /* graceful */ }
 
 const QUERY_CLASS = {
     urgent: { maxDepth: 1, targetP95Ms: 250 },
