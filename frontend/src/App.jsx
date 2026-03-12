@@ -15,19 +15,47 @@
 // HEADY_BRAND:END
 import { useState, useEffect } from "react";
 import { Activity, Cpu, Zap, Globe, Server } from "lucide-react";
+import ContextSwitcher from "./components/ContextSwitcher";
+import DynamicRenderer from "./components/DynamicRenderer";
+import PanelManager from "./components/PanelManager";
 
 export default function App() {
   const [tab, setTab] = useState('Dashboard');
+  const [view, setView] = useState('dashboard'); // 'dashboard' or 'workspace'
   const [health, setHealth] = useState(null);
   const [systemStatus, setSystemStatus] = useState(null);
+  const [projection, setProjection] = useState(null);
 
   useEffect(() => {
     fetch("/api/health").then(r => r.json()).then(setHealth).catch(() => {});
     fetch("/api/system/status").then(r => r.json()).then(setSystemStatus).catch(() => {});
   }, []);
 
+  if (view === 'workspace') {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0a0a1a" }}>
+        <ContextSwitcher userId="default" />
+        <DynamicRenderer userId="default" />
+        <PanelManager projection={projection} onUpdate={setProjection} userId="default" />
+        <button
+          onClick={() => setView('dashboard')}
+          style={{
+            position: "fixed", top: 8, right: 16, zIndex: 1001,
+            padding: "4px 12px", borderRadius: 6, fontSize: 11,
+            background: "rgba(108,99,255,0.15)", border: "1px solid rgba(108,99,255,0.3)",
+            color: "#e0e0ff", cursor: "pointer",
+          }}
+        >
+          Dashboard
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-gray-950">
+      <ContextSwitcher userId="default" />
+      <div className="p-8">
       <header className="max-w-6xl mx-auto mb-12">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-3 h-3 rounded-full bg-green-400 animate-breathe" />
@@ -97,6 +125,15 @@ export default function App() {
           </div>
         </div>
       </main>
+      <div style={{ textAlign: "center", marginTop: 24 }}>
+        <button
+          onClick={() => setView('workspace')}
+          className="px-6 py-2 bg-purple-900/50 border border-purple-700/50 rounded-xl text-sm text-purple-300 hover:bg-purple-800/50 transition-colors"
+        >
+          Open Workspace View →
+        </button>
+      </div>
+      </div>
     </div>
   );
 }

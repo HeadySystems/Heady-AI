@@ -19,7 +19,7 @@ const yaml = require('js-yaml');
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
  * ║  🌈 HEADY SYSTEMS — MANAGER SERVER                                         ║
- * ║  🚀 Node.js MCP Server • API Gateway • Sacred Geometry v3.0.0               ║
+ * ║  🚀 Node.js MCP Server • API Gateway • Sacred Geometry v3.1.0               ║
  * ║  🎨 Phi-Based Design • Rainbow Magic • Zero Defect Code ✨                   ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  */
@@ -34,6 +34,8 @@ const compression = require("compression");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
+const http = require("http");
+const { WebSocketServer } = require("ws");
 
 // Load and preload persistent memory before any operations
 function preloadPersistentMemory() {
@@ -301,7 +303,7 @@ app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
     service: "heady-manager",
-    version: "3.0.0",
+    version: "3.1.0",
     ts: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
@@ -312,7 +314,7 @@ app.get("/api/pulse", (req, res) => {
   res.json({
     ok: true,
     service: "heady-manager",
-    version: "3.0.0",
+    version: "3.1.0",
     ts: new Date().toISOString(),
     status: "active",
     endpoints: [
@@ -460,7 +462,7 @@ app.get("/api/system/status", (req, res) => {
 
   res.json({
     system: "Heady Systems",
-    version: "3.0.0",
+    version: "3.1.0",
     environment: (reg.metadata || {}).environment || "development",
     production_ready: activeNodes === nodeList.length && nodeList.length > 0,
     uptime: process.uptime(),
@@ -1595,10 +1597,118 @@ app.get("*", (req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-// ─── Start ──────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  logger.info(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
+// ─── Context CRUD Routes (F-5) ──────────────────────────────────────
+let contextRoutes = null;
+try {
+  contextRoutes = require("./src/routes/context-routes");
+  app.use("/api/context", contextRoutes);
+  logger.info("  ∞ Context CRUD Routes: LOADED");
+} catch (err) {
+  logger.warn(`  ⚠ Context routes not loaded: ${err.message}`);
+}
+
+// ─── Projection API Routes (UI-2) ──────────────────────────────────
+let projectionRoutes = null;
+try {
+  projectionRoutes = require("./src/routes/projection-routes");
+  app.use("/api/projection", projectionRoutes);
+  logger.info("  ∞ Projection API Routes: LOADED");
+} catch (err) {
+  logger.warn(`  ⚠ Projection routes not loaded: ${err.message}`);
+}
+
+// ─── Onboarding Routes (F-4) ───────────────────────────────────────
+let onboardingRoutes = null;
+try {
+  onboardingRoutes = require("./src/onboarding/onboarding-routes");
+  app.use("/api/onboarding", onboardingRoutes);
+  logger.info("  ∞ Onboarding Routes: LOADED");
+} catch (err) {
+  logger.warn(`  ⚠ Onboarding routes not loaded: ${err.message}`);
+}
+
+// ─── Start with WebSocket Support (F-1) ─────────────────────────────
+const server = http.createServer(app);
+const wss = new WebSocketServer({ noServer: true });
+
+// WebSocket connection pool
+const wsClients = new Map();
+
+wss.on("connection", (ws, req) => {
+  const clientId = req.headers["x-client-id"] || `client-${Date.now()}`;
+  wsClients.set(clientId, ws);
+  logger.info(`  ∞ WS connected: ${clientId} (${wsClients.size} active)`);
+
+  ws.on("message", (raw) => {
+    try {
+      const msg = JSON.parse(raw);
+      if (msg.type === "subscribe") {
+        ws._subscriptions = ws._subscriptions || new Set();
+        ws._subscriptions.add(msg.channel);
+        ws.send(JSON.stringify({ type: "subscribed", channel: msg.channel }));
+      } else if (msg.type === "context:switch") {
+        // Broadcast context switch to all subscribed clients
+        broadcastWs("context:update", { contextId: msg.contextId, userId: msg.userId });
+      } else if (msg.type === "ping") {
+        ws.send(JSON.stringify({ type: "pong", ts: Date.now() }));
+      }
+    } catch (e) {
+      ws.send(JSON.stringify({ type: "error", message: "Invalid JSON" }));
+    }
+  });
+
+  ws.on("close", () => {
+    wsClients.delete(clientId);
+    logger.info(`  ∞ WS disconnected: ${clientId} (${wsClients.size} active)`);
+  });
+
+  ws.send(JSON.stringify({ type: "connected", clientId, ts: Date.now() }));
+});
+
+function broadcastWs(type, data) {
+  const payload = JSON.stringify({ type, data, ts: Date.now() });
+  for (const [, client] of wsClients) {
+    if (client.readyState === 1) client.send(payload);
+  }
+}
+
+// Expose broadcast for other modules
+global.headyBroadcastWs = broadcastWs;
+
+// WebSocket upgrade handler
+server.on("upgrade", (request, socket, head) => {
+  const url = new URL(request.url, `http://${request.headers.host}`);
+  if (url.pathname === "/ws" || url.pathname === "/api/ws") {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit("connection", ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+
+// SSE endpoint for clients that can't use WebSocket
+app.get("/api/events", (req, res) => {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+  res.write(`data: ${JSON.stringify({ type: "connected", ts: Date.now() })}\n\n`);
+
+  const interval = setInterval(() => {
+    res.write(`data: ${JSON.stringify({ type: "heartbeat", ts: Date.now() })}\n\n`);
+  }, 30000);
+
+  req.on("close", () => clearInterval(interval));
+});
+
+server.listen(PORT, () => {
+  logger.info(`\n  ∞ Heady Manager v3.1.0 listening on port ${PORT}`);
   logger.info(`  ∞ Health: http://localhost:${PORT}/api/health`);
+  logger.info(`  ∞ WebSocket: ws://localhost:${PORT}/ws`);
+  logger.info(`  ∞ SSE: http://localhost:${PORT}/api/events`);
   logger.info(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
 
