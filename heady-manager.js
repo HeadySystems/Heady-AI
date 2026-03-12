@@ -151,7 +151,7 @@ app.use(helmet({
     useDefaults: true,
     directives: {
       "default-src": ["'self'"],
-      "script-src": ["'self'", "https://headysystems.com"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://headysystems.com"],
       "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       "font-src": ["'self'", "https://fonts.gstatic.com"],
       "img-src": ["'self'", "data:", "https://headysystems.com"],
@@ -260,6 +260,35 @@ if (fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
 }
 app.use(express.static("public"));
+
+// ─── Aloha Protocol State (moved early — used by /api/pulse below) ────
+const alohaProtocol = loadYamlConfig("aloha-protocol.yaml");
+const deOptProtocol = loadYamlConfig("de-optimization-protocol.yaml");
+const stabilityFirst = loadYamlConfig("stability-first.yaml");
+
+const alohaState = {
+  mode: "aloha",
+  activeSince: new Date().toISOString(),
+  protocols: {
+    aloha: !!alohaProtocol,
+    deOptimization: !!deOptProtocol,
+    stabilityFirst: !!stabilityFirst,
+  },
+  stabilityDiagnosticMode: false,
+  crashReports: [],
+  deOptChecks: 0,
+};
+
+if (alohaProtocol) logger.info("  \u221e Aloha Protocol: LOADED (always-on)");
+if (deOptProtocol) logger.info("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
+if (stabilityFirst) logger.info("  \u221e Stability First: LOADED (the canoe must not sink)");
+
+// ─── Suspended Processes Set (used by Monte Carlo scheduler) ─────────
+const suspendedProcesses = new Set();
+
+// ─── Event Bus (used by Auto-Task Conversion) ───────────────────────
+const { EventEmitter: _EventEmitter } = require('events');
+const eventBus = new _EventEmitter();
 
 // ─── Utility ────────────────────────────────────────────────────────
 function readJsonSafe(filePath) {
@@ -1203,26 +1232,8 @@ try {
 }
 
 // ─── Aloha Protocol System (Always-On) ───────────────────────────────
-const alohaProtocol = loadYamlConfig("aloha-protocol.yaml");
-const deOptProtocol = loadYamlConfig("de-optimization-protocol.yaml");
-const stabilityFirst = loadYamlConfig("stability-first.yaml");
-
-const alohaState = {
-  mode: "aloha",
-  activeSince: new Date().toISOString(),
-  protocols: {
-    aloha: !!alohaProtocol,
-    deOptimization: !!deOptProtocol,
-    stabilityFirst: !!stabilityFirst,
-  },
-  stabilityDiagnosticMode: false,
-  crashReports: [],
-  deOptChecks: 0,
-};
-
-if (alohaProtocol) logger.info("  \u221e Aloha Protocol: LOADED (always-on)");
-if (deOptProtocol) logger.info("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
-if (stabilityFirst) logger.info("  \u221e Stability First: LOADED (the canoe must not sink)");
+// NOTE: alohaState, alohaProtocol, deOptProtocol, stabilityFirst are
+// defined early (near line 264) so /api/pulse can reference them.
 
 app.get("/api/aloha/status", (req, res) => {
   res.json({
@@ -1330,6 +1341,15 @@ try {
   logger.info("  ∞ Auth Routes: LOADED");
 } catch (err) {
   logger.warn(`  ⚠ Auth routes not loaded: ${err.message}`);
+}
+
+// ─── Onboarding Routes (Crucial Config) ─────────────────────────────
+try {
+  const onboardingRouter = require('./src/onboarding/onboarding-adapter');
+  app.use('/api/onboarding', onboardingRouter);
+  logger.info("  ∞ Onboarding Routes: LOADED (/api/onboarding/*)");
+} catch (err) {
+  logger.warn(`  ⚠ Onboarding routes not loaded: ${err.message}`);
 }
 
 // ─── Liquid Nodes Status ────────────────────────────────────────────
