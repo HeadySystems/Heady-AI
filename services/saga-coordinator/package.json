@@ -9,7 +9,7 @@
     "dev": "node --watch src/index.js"
   },
   "dependencies": {
-    "@heady/phi-math-foundation": "workspace:*",
+    "@heady-ai/phi-math-foundation": "workspace:*",
     "@heady/structured-logger": "workspace:*",
     "@heady/health-probes": "workspace:*"
   }

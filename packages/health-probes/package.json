@@ -12,8 +12,8 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@heady/phi-math-foundation": "1.0.0",
-    "@heady/structured-logger": "1.0.0"
+    "@heady-ai/phi-math-foundation": "workspace:*",
+    "@heady/structured-logger": "workspace:*"
   },
   "keywords": ["health", "probes", "kubernetes", "readiness", "liveness", "heady"],
   "license": "UNLICENSED",

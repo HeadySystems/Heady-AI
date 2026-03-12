@@ -18,6 +18,6 @@
     "directory": "packages/structured-logger"
   },
   "dependencies": {
-    "@heady/phi-math": "^1.0.0"
+    "@heady-ai/phi-math": "workspace:*"
   }
 }

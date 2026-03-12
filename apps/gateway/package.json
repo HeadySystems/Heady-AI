@@ -8,7 +8,7 @@
     "start": "node src/index.mjs"
   },
   "dependencies": {
-    "@heady-ai/mcp": "workspace:*",
+    "@heady-ai/mcp-server": "workspace:*",
     "@heady-ai/shared": "workspace:*",
     "@heady-ai/vector-memory": "workspace:*",
     "cors": "^2.8.5",
