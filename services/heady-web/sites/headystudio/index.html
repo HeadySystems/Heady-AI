@@ -3,67 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeadyStudio™ — Creative AI Studio</title>
-  <meta name="description" content="HeadyStudio™ internal tool — Creative AI Studio">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Headystudio™ — AI-Native Code Editor</title>
+  <meta name="description" content="Write code with AI assistance built-in for faster development.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #0d0d14; color: #e0e0f0; min-height: 100vh; }
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 1px solid #1a1a2e; backdrop-filter: blur(10px); }
-    .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; }
-    .brand-icon { font-size: 1.3rem; }
-    .status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #888; }
-    .dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 50% { opacity: 0.4; } }
-    main { max-width: 900px; margin: 3rem auto; padding: 0 2rem; }
-    h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .subtitle { color: #888; margin-bottom: 2rem; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; }
-    .card { background: #13131f; border: 1px solid #1e1e30; border-radius: 12px; padding: 1.5rem; transition: all 0.2s; cursor: pointer; }
-    .card:hover { border-color: #A29BFE60; transform: translateY(-2px); }
-    .card-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
-    .card-title { font-weight: 600; margin-bottom: 0.25rem; }
-    .card-desc { color: #888; font-size: 0.85rem; line-height: 1.5; }
-    .login-prompt { margin-top: 3rem; text-align: center; padding: 2rem; background: #13131f; border: 1px solid #1e1e30; border-radius: 12px; }
-    .btn { display: inline-block; padding: 0.7rem 1.5rem; background: #A29BFE; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 1rem; transition: all 0.2s; }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px #A29BFE40; }
-    footer { text-align: center; padding: 2rem; color: #555; font-size: 0.8rem; margin-top: 3rem; border-top: 1px solid #1a1a2e; }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0e17;--surface:#0d1221;--card:#111827;--border:rgba(255,255,255,0.08);--teal:#00d4aa;--gold:#f5c842;--purple:#6C5CE7;--text:#e8e8f0;--dim:#8888a0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .sacred-bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 50%,rgba(0,212,170,0.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(108,92,231,0.03) 0%,transparent 50%)}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(10,14,23,0.85);border-bottom:1px solid var(--border);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between}
+    .nav-brand{color:var(--teal);font-family:'Outfit',sans-serif;font-weight:800;font-size:1.25rem;text-decoration:none}
+    .nav-links{display:flex;gap:1.5rem}.nav-links a{color:var(--dim);text-decoration:none;font-size:0.85rem;transition:color 0.2s}.nav-links a:hover{color:var(--text)}
+    .btn-primary{background:var(--teal);color:#0a0e17;padding:0.5rem 1.25rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.85rem;transition:all 0.2s}
+    .btn-primary:hover{background:#00e8bb;transform:translateY(-1px)}
+    main{position:relative;z-index:1}.hero{padding:8rem 2rem 4rem;text-align:center;max-width:800px;margin:0 auto}
+    .badge{display:inline-block;background:var(--surface);border:1px solid var(--border);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;color:var(--dim);margin-bottom:1.5rem}
+    h1{font-family:'Outfit',sans-serif;font-size:3rem;font-weight:800;line-height:1.1;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 0%,var(--teal) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    h2{font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;margin-bottom:2.5rem;text-align:center}
+    h3{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.75rem}
+    .hero p{color:var(--dim);font-size:1.1rem;line-height:1.7;margin-bottom:2rem}
+    .hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
+    .section{padding:4rem 2rem;max-width:1100px;margin:0 auto}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.75rem;transition:all 0.3s}
+    .card:hover{border-color:var(--teal);transform:translateY(-2px)}.card-icon{font-size:1.5rem;margin-bottom:0.75rem}
+    .card h3{margin-bottom:0.5rem}.card p{color:var(--dim);font-size:0.875rem;line-height:1.6}
+    .cta{padding:4rem 2rem;text-align:center}.cta h2{margin-bottom:1rem}.cta p{color:var(--dim);margin-bottom:2rem}
+    footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center}
+    .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:1.5rem;margin-bottom:1.5rem}
+    .footer-links a{color:var(--dim);text-decoration:none;font-size:0.8rem}.footer-links a:hover{color:var(--teal)}
+    .footer-legal{color:#555;font-size:0.75rem;line-height:1.8}
+    @media(max-width:768px){.nav-links{display:none}h1{font-size:2rem}.grid{grid-template-columns:1fr}}
   </style>
-
-  <!-- Firebase Auth -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script>
-    firebase.initializeApp({
-      apiKey: "AIzaSyBpPClFwr0VDxl_D1SLe2dtvq2MX05QL6g",
-      authDomain: "heady-ai.firebaseapp.com",
-      projectId: "heady-ai",
-      storageBucket: "heady-ai.firebasestorage.app",
-      messagingSenderId: "1003436179562",
-      appId: "1:1003436179562:web:1ab30825a7119a82578a13",
-      measurementId: "G-M1M5SZ6WFY"
-    });
-  </script>
 </head>
 <body>
+  <div class="sacred-bg"></div>
   <nav>
-    <div class="brand"><span class="brand-icon">🎬</span> HeadyStudio™</div>
-    <div class="status"><span class="dot"></span> Internal Tool</div>
+    <a href="https://headyme.com" class="nav-brand">Heady™</a>
+    <div class="nav-links">
+      <a href="https://headysystems.com">Enterprise</a>
+      <a href="https://headyos.com">HeadyOS</a>
+      <a href="https://headymcp.com">MCP</a>
+      <a href="https://headyapi.com">API</a>
+    </div>
+    <a href="https://headyme.com/signup" class="btn-primary">Get Started</a>
   </nav>
   <main>
-    <h1>🎬 Creative AI Studio</h1>
-    <p class="subtitle">HeadyStudio™ — Heady™ internal service at headystudio.com</p>
-    <div class="grid">
-      <div class="card"><div class="card-icon">📊</div><div class="card-title">Dashboard</div><div class="card-desc">Real-time metrics, status, and operational overview.</div></div>
-      <div class="card"><div class="card-icon">⚙️</div><div class="card-title">Configuration</div><div class="card-desc">Service settings, environment variables, and feature flags.</div></div>
-      <div class="card"><div class="card-icon">📋</div><div class="card-title">Logs</div><div class="card-desc">Structured logging, trace viewer, and error tracking.</div></div>
-      <div class="card"><div class="card-icon">🔌</div><div class="card-title">API Explorer</div><div class="card-desc">Interactive API documentation and testing playground.</div></div>
-    </div>
-    <div class="login-prompt">
-      <p>🔐 Authentication required to access HeadyStudio™ tools</p>
-      <a href="https://headyme.com" class="btn">Sign In with Heady™</a>
-    </div>
+    <section class="hero">
+      <div class="badge">🎨 Development IDE</div>
+      <h1>AI-Native Code Editor</h1>
+      <p>Write code with AI assistance built-in for faster development.</p>
+      <div class="hero-cta">
+        <a href="https://headyme.com/signup" class="btn-primary">Get Started</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Key Features</h2>
+      <div class="grid">
+        <div class="card"><div class="card-icon">💡</div><h3>Intelligent Completion</h3><p>Context-aware code completion powered by AI</p></div>
+        <div class="card"><div class="card-icon">🔍</div><h3>Semantic Search</h3><p>Find code using natural language descriptions</p></div>
+        <div class="card"><div class="card-icon">🎯</div><h3>Refactoring</h3><p>AI-powered code refactoring and modernization</p></div>
+        <div class="card"><div class="card-icon">📚</div><h3>Learning Mode</h3><p>Explains code patterns and best practices</p></div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <h2>Ready to Get Started?</h2>
+      <p>Enable ai-native code editor today and transform how you manage your systems.</p>
+      <a href="https://headyme.com/signup" class="btn-primary">Start Now</a>
+    </section>
   </main>
-  <footer>© 2026 HeadySystems Inc. · HeadyStudio™ · Heady™ Internal Service · headystudio.com</footer>
+
+  <footer>
+    <div class="footer-links">
+      <a href="https://headysystems.com">HeadySystems</a>
+      <a href="https://headyme.com">HeadyMe</a>
+      <a href="https://headyos.com">HeadyOS</a>
+      <a href="https://headymcp.com">HeadyMCP</a>
+      <a href="https://headybot.com">HeadyBot</a>
+      <a href="https://headyapi.com">HeadyAPI</a>
+      <a href="https://headyio.com">HeadyIO</a>
+    </div>
+    <div class="footer-legal">
+      © 2026 HeadySystems Inc. · Eric Haywood, Founder<br>
+      Built with φ-scaled architecture · 60+ Patents · Continuous Semantic Logic<br>
+      <a href="mailto:eric@headyconnection.org" style="color:#666">eric@headyconnection.org</a>
+    </div>
+  </footer>
 </body>
 </html>
