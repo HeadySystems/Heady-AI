@@ -1,6 +1,6 @@
-version: 1
+version: 2
 profile: heady-unified-liquid-runtime
-updated_at: 2026-03-03T00:00:00Z
+updated_at: 2026-03-11T00:00:00Z
 objective: >-
   Operate Heady as a unified autonomous lattice where projection, orchestration,
   and dynamic service synthesis run as one system without frontend/backend
@@ -51,20 +51,44 @@ runtime_cells:
       - midi event translation
       - latency telemetry
     health_endpoint: /api/creative-midi-cell/health
+  - id: intelligence-cell
+    responsibilities:
+      - continuous learning orchestration
+      - model evaluation and selection
+      - pattern emergence detection
+      - self-improvement cycle management
+      - heady-soul consciousness operations
+    health_endpoint: /api/intelligence-cell/health
+    dedicated_runtime: colab-d
 resource_strategy:
   colab_pro_plus:
-    plans: 3
+    plans: 4
     assignment:
       - plan: colab-a
         focus: realtime-inference-and-projection
+        fib_concurrency: 34                      # fib(9)
       - plan: colab-b
         focus: vector-retrieval-and-template-optimization
+        fib_concurrency: 21                      # fib(8)
       - plan: colab-c
         focus: swarm-burst-and-connector-build
+        fib_concurrency: 13                      # fib(7)
+      - plan: colab-d
+        focus: continuous-intelligence-and-learning
+        fib_concurrency: 8                       # fib(6)
+        dedicated: true                           # NEVER shared — reserved for learning
+        responsibilities:
+          - model-fine-tuning
+          - pattern-training
+          - self-critique-evolution               # pipeline stages 15-16, 19
+          - heady-soul-consciousness
+          - error-immunization
+          - embedding-refinement
   gpu_policy:
     reserve_vram_pct: 20
     target_utilization_pct: 85
     overflow_action: shift_to-cloud-run-gpu
+    learning_runtime_isolation: true              # colab-d never borrows or lends GPU time
 projection_strategy:
   local_compute_policy: near-zero
   delivery_modes:

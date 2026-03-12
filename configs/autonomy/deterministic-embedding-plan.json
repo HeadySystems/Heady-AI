@@ -1,7 +1,7 @@
 {
-    "version": 1,
-    "generatedAt": "2026-03-03T00:00:00.000Z",
-    "description": "Deterministic embedding plan — baseline for Colab Pro+ orchestration",
+    "version": 2,
+    "generatedAt": "2026-03-11T00:00:00.000Z",
+    "description": "Deterministic embedding plan — 4-runtime Colab Pro+ orchestration with dedicated intelligence GPU",
     "objective": "deterministic-autonomous-embedding",
     "slo": {
         "max_ingest_latency_ms": 900,
@@ -27,6 +27,28 @@
             "role": "background-index-maintenance",
             "status": "pending",
             "max_parallel_jobs": 4
+        },
+        {
+            "id": "colab-pro-plus-d",
+            "role": "continuous-intelligence-and-learning",
+            "status": "pending",
+            "dedicated": true,
+            "max_parallel_jobs": 5,
+            "gpu_memory_gb": 24,
+            "cpu_cores": 8,
+            "fib_concurrency": 8,
+            "responsibilities": [
+                "continuous-model-fine-tuning",
+                "pattern-recognition-training",
+                "self-critique-pipeline",
+                "evolution-mutation-experiments",
+                "heady-soul-consciousness-ops",
+                "error-immunization-training",
+                "template-quality-optimization",
+                "routing-model-training",
+                "deep-research-inference",
+                "embedding-model-fine-tuning"
+            ]
         }
     ],
     "dataSources": [
@@ -59,6 +81,13 @@
             "type": "incidents",
             "schedule": "realtime",
             "priority": "critical"
+        },
+        {
+            "id": "learning-outcomes",
+            "type": "intelligence",
+            "schedule": "every_5_minutes",
+            "priority": "critical",
+            "target_runtime": "colab-pro-plus-d"
         }
     ],
     "storage": {
@@ -69,9 +98,47 @@
             "pca_projection": true
         },
         "graph": {
-            "enabled": true
+            "enabled": true,
+            "relation_types": [
+                "caused_by",
+                "resolved_by",
+                "supersedes",
+                "optimized_for",
+                "learned_from",
+                "improved_by"
+            ]
         }
     },
+    "learningLoops": [
+        {
+            "id": "template-optimization-loop",
+            "cadence_minutes": 15,
+            "success_metric": "template_acceptance_rate",
+            "owner": "headybees",
+            "runtime": "colab-pro-plus-d"
+        },
+        {
+            "id": "error-immunization-loop",
+            "cadence_minutes": 5,
+            "success_metric": "repeat_failure_rate",
+            "owner": "buddy",
+            "runtime": "colab-pro-plus-d"
+        },
+        {
+            "id": "routing-efficiency-loop",
+            "cadence_minutes": 10,
+            "success_metric": "cost_per_successful_completion",
+            "owner": "headyswarm",
+            "runtime": "colab-pro-plus-d"
+        },
+        {
+            "id": "intelligence-evolution-loop",
+            "cadence_minutes": 30,
+            "success_metric": "intelligence_score_delta",
+            "owner": "intelligence_runtime",
+            "runtime": "colab-pro-plus-d"
+        }
+    ],
     "jobs": [],
     "completedJobs": []
 }

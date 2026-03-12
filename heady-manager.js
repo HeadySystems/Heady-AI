@@ -1329,7 +1329,7 @@ app.use((err, req, res, next) => {
 });
 
 // ─── SPA Fallback ───────────────────────────────────────────────────
-app.get("*", (req, res) => {
+app.get("/{*path}", (req, res) => {
   const indexPath = path.join(frontendBuildPath, "index.html");
   if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
   res.status(404).json({ error: "Not found" });
