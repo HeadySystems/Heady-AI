@@ -244,6 +244,7 @@ jobs:
             !node_modules/
           retention-days: 7
           if-no-files-found: ignore
+          if-no-files-found: ignore
 
   # Phase 3: Test Suite
   test:

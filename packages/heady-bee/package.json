@@ -22,6 +22,6 @@
   },
   "dependencies": {
     "@heady-ai/phi-math": "workspace:*",
-    "@heady/structured-logger": "^1.0.0"
+    "@heady/structured-logger": "workspace:*"
   }
 }
