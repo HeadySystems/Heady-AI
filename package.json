@@ -74,7 +74,7 @@
     "@typescript-eslint/parser": "^8.55.0",
     "concurrently": "^9.1.2",
     "eslint": "^10.0.1",
-    "jest": "^25.0.0",
+    "jest": "^25.5.4",
     "jest-transform-yaml": "^1.2.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.2.2",
