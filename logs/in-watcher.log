@@ -30,3 +30,7 @@ nohup: ignoring input
 [2026-03-12T13:04:58Z] SKIP (duplicate): files (1).zip
 [2026-03-12T13:04:59Z] PROCESSING: files (3).zip (1MB)
 [2026-03-12T13:04:59Z]   → 2 net-new files from files (3).zip
+[2026-03-12T17:59:49Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-12T17:59:49Z] SKIP (duplicate): files (1).zip
+[2026-03-12T17:59:49Z] PROCESSING: files (4).zip (1MB)
+[2026-03-12T17:59:49Z]   → 3 net-new files from files (4).zip
