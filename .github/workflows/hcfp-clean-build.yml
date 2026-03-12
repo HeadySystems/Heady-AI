@@ -2,11 +2,13 @@ name: HCFP Clean Build Pipeline
 # Clean build on every change - no incremental artifacts trusted
 # Error handling with classification and recovery
 
+# Push/PR triggers disabled — use ci-unified.yml for main CI/CD
+# on:
+#   push:
+#     branches: [main, master, develop]
+#   pull_request:
+#     branches: [main, master]
 on:
-  push:
-    branches: [main, master, develop]
-  pull_request:
-    branches: [main, master]
   workflow_dispatch:
     inputs:
       full_rebuild:
@@ -15,17 +17,29 @@ on:
         default: true
         type: boolean
 
+concurrency:
+  group: hcfp-clean-build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 env:
-  NODE_VERSION: '20.18.1'
+  NODE_VERSION: '22'
   PYTHON_VERSION: '3.12.7'
   CLEAN_BUILD: true
   ERROR_RETRY_COUNT: 2
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   # Phase 1: Setup and Validation
   setup:
     name: 🔧 Setup Environment
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       cache_key: ${{ steps.cache.outputs.key }}
       should_build: ${{ steps.check.outputs.should_build }}
@@ -50,27 +64,34 @@ jobs:
             echo "should_build=true" >> $GITHUB_OUTPUT
           fi
       
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       
       - name: 🐍 Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
+          cache-dependency-path: requirements.txt
       
       - name: 🔐 Cache Tools (Not Artifacts)
         id: cache
         uses: actions/cache@v4
         with:
           path: |
-            ~/.npm
+            ~/.pnpm-store
             ~/.local/share/virtualenvs
             /usr/local/lib/node_modules
-          key: ${{ runner.os }}-tools-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-tools-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-tools-
 
@@ -78,6 +99,7 @@ jobs:
   build:
     name: 🏗️ Clean Build (No Incremental)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: setup
     if: needs.setup.outputs.should_build != 'false'
     
@@ -94,6 +116,25 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: backend/python_worker/requirements.txt
       
       - name: 🧹 Clean Workspace (No Artifacts)
         run: |
@@ -109,33 +150,30 @@ jobs:
           echo "✅ Workspace cleaned"
       
       - name: 📦 Install Dependencies (Clean)
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci  # Clean install, ignores cache
-          elif [ -f yarn.lock ]; then
-            yarn install --frozen-lockfile
-          elif [ -f pnpm-lock.yaml ]; then
-            pnpm install --frozen-lockfile
-          fi
+        run: pnpm install --frozen-lockfile
       
       - name: 🏗️ Build ${{ matrix.component }}
         id: build
         run: |
+          set -euo pipefail
           case "${{ matrix.component }}" in
             manager)
-              npm run build:manager
+              pnpm run build
               ;;
             worker)
-              cd backend/python_worker && pip install -r requirements.txt && python -m compileall .
+              python -m pip install --upgrade pip
+              python -m pip install -r backend/python_worker/requirements.txt
+              python -m compileall backend/python_worker
               ;;
             frontend)
-              npm run build:frontend
+              npm run build --prefix apps/headyweb
               ;;
             browser-ext)
-              cd distribution/browser/extensions/chrome && npm run build
+              npm install --prefix extensions/vscode --package-lock=false
+              npm run compile --prefix extensions/vscode
               ;;
             mobile)
-              cd HeadyWeb-mobile && npm install && npm run build 2>/dev/null || echo "Mobile build skipped"
+              sh ./headybuddy-mobile/gradlew -p ./headybuddy-mobile assembleDebug
               ;;
           esac
         continue-on-error: true
@@ -169,16 +207,19 @@ jobs:
           # Re-run the build command from previous step
           case "${{ matrix.component }}" in
             manager)
-              npm run build:manager
+              pnpm run build
               ;;
             worker)
-              cd backend/python_worker && python -m compileall .
+              python -m compileall backend/python_worker
               ;;
             frontend)
-              npm run build:frontend
+              npm run build --prefix apps/headyweb
               ;;
             browser-ext)
-              cd distribution/browser/extensions/chrome && npm run build
+              npm run compile --prefix extensions/vscode
+              ;;
+            mobile)
+              sh ./headybuddy-mobile/gradlew -p ./headybuddy-mobile assembleDebug
               ;;
           esac
       
@@ -197,13 +238,18 @@ jobs:
           path: |
             dist/
             build/
+            apps/headyweb/dist/
+            extensions/vscode/out/
+            headybuddy-mobile/app/build/
             !node_modules/
           retention-days: 7
+          if-no-files-found: ignore
 
   # Phase 3: Test Suite
   test:
     name: 🧪 Full Test Suite
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: build
     
     strategy:
@@ -217,6 +263,18 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       
       - name: 🧹 Clean Test Environment
         run: |
@@ -225,20 +283,29 @@ jobs:
           rm -rf test-results/
       
       - name: 📦 Install Dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       
       - name: 🧪 Run ${{ matrix.test_type }} Tests
         id: test
         run: |
+          set -euo pipefail
           case "${{ matrix.test_type }}" in
             unit)
-              npm run test:unit -- --coverage
+              pnpm exec jest --coverage --forceExit --passWithNoTests
               ;;
             integration)
-              npm run test:integration || echo "No integration tests"
+              if node -e "const s=require('./package.json').scripts||{}; process.exit(s['test:integration'] ? 0 : 1)"; then
+                pnpm run test:integration
+              else
+                echo "No integration tests"
+              fi
               ;;
             e2e)
-              npm run test:e2e || echo "No e2e tests"
+              if node -e "const s=require('./package.json').scripts||{}; process.exit(s['test:e2e'] ? 0 : 1)"; then
+                pnpm run test:e2e
+              else
+                echo "No e2e tests"
+              fi
               ;;
           esac
         continue-on-error: ${{ matrix.test_type == 'e2e' }}
@@ -251,20 +318,46 @@ jobs:
             coverage/
             test-results/
             junit.xml
+          if-no-files-found: ignore
         if: always()
 
   # Phase 4: Security & Quality Checks
   security:
     name: 🔒 Security & Quality
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: build
     
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
+
+      - name: 📦 Install Security Dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          python -m pip install --upgrade pip pip-audit
       
       - name: 🔍 Secret Detection
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.93.7
         with:
           path: ./
           base: main
@@ -273,13 +366,17 @@ jobs:
       
       - name: 🛡️ Dependency Vulnerability Scan
         run: |
-          npm audit --audit-level=moderate || true
+          pnpm audit --audit-level=moderate || true
           pip-audit || true
       
       - name: 📋 Lint & Code Quality
         run: |
-          npm run lint
-          npm run format:check
+          pnpm run lint
+          if node -e "const s=require('./package.json').scripts||{}; process.exit(s['format:check'] ? 0 : 1)"; then
+            pnpm run format:check
+          else
+            echo "format:check not configured"
+          fi
       
       - name: 🔐 Check for Hardcoded Secrets
         run: |
@@ -307,6 +404,7 @@ jobs:
   deploy-prep:
     name: 📦 Deploy Preparation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [build, test, security]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
@@ -342,11 +440,13 @@ jobs:
           name: deploy-package-${{ env.VERSION }}
           path: deploy-artifacts/
           retention-days: 30
+          if-no-files-found: ignore
 
   # Phase 6: Error Reporting & Notifications
   report:
     name: 📊 Build Report
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [setup, build, test, security]
     if: always()
     
@@ -432,9 +532,10 @@ jobs:
         continue-on-error: true
 
 # Prevent api.headysystems.com in production code
-  api.headysystems.com-lint:
+  api-headysystems-com-lint:
     name: 🚫 api.headysystems.com Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -453,7 +554,7 @@ jobs:
           else
             echo "✅ No api.headysystems.com references found in production code"
           fi
-                              - name: 🔧 Auto-fix localhost References
+      - name: 🔧 Auto-fix localhost References
         if: failure()
         run: |
           echo "🔧 Attempting auto-fix for localhost references..."
@@ -708,7 +809,6 @@ jobs:
           echo "" >> localhost-report.md
           echo '```' >> localhost-report.md
           grep -rlE "localhost|127\.0\.0\.1|0\.0\.0\.0" --include="*.js" --include="*.ts" --include="*.py" --include="*.yaml" --include="*.yml" src/ 2>/dev/null | sort | uniq >> localhost-report.md || echo "No files affected" >> localhost-report.md
-          echo '
           echo '```' >> localhost-report.md
           echo "" >> localhost-report.md
           
@@ -828,7 +928,7 @@ jobs:
           echo "        entry: bash -c 'grep -rE \"(password|api_key|secret)\\s*[:=]\\s*[\\x27\\\"][^\\x27\\\"]+[\\x27\\\"]\" --include=\"*.js\" --include=\"*.ts\" --include=\"*.py\" src/ && exit 1 || exit 0'" >> localhost-report.md
           echo "        language: system" >> localhost-report.md
           echo "        pass_filenames: false" >> localhost-report.md
-          echo '
+          echo '```' >> localhost-report.md
 
 
 

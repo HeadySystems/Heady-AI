@@ -4,11 +4,13 @@
 # This file is retained for reference only and should be removed in a future cleanup.
 name: Heady™ CI/CD Pipeline [DEPRECATED]
 
-on:
-  push:
-    branches: [ main, staging ]
-  pull_request:
-    branches: [ main ]
+# Triggers disabled — use ci-unified.yml instead
+# on:
+#   push:
+#     branches: [ main, staging ]
+#   pull_request:
+#     branches: [ main ]
+on: workflow_dispatch
 
 env:
   NODE_VERSION: '20'

@@ -1,19 +1,43 @@
 name: Deploy Edge
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'workers/**'
+# Push trigger disabled — use ci-unified.yml for main deploys
+# on:
+#   push:
+#     branches: [main]
+#     paths:
+#       - 'workers/**'
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.6.0'
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.6.0
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - run: pnpm install --frozen-lockfile=false
-      - run: echo "Deploy workers with wrangler here"
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm dlx wrangler@4 deploy --config workers/edge-proxy/wrangler.toml --env production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

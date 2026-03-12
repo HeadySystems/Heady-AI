@@ -2,9 +2,9 @@ name: Heady™ Pilot CI/CD Pipeline
 
 on:
   push:
-    branches: [main, pilot]
+    branches: [pilot]
   pull_request:
-    branches: [main, pilot]
+    branches: [pilot]
 
 env:
   REGISTRY: ghcr.io
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - run: npm ci
       - run: npm test
       - uses: codecov/codecov-action@v4
@@ -44,7 +44,7 @@ jobs:
       - name: Run Snyk
         uses: snyk/actions/node@master
         env:
-          SNYK_TOKEN: \${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   build:
     name: Build & Push Images
@@ -56,16 +56,16 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
-          registry: \${{ env.REGISTRY }}
-          username: \${{ github.actor }}
-          password: \${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & Push API Gateway
         uses: docker/build-push-action@v5
         with:
           context: ./services/heady-api-gateway
           push: true
-          tags: \${{ env.REGISTRY }}/\${{ env.IMAGE_NAME }}/heady-api-gateway:3.2.0
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/heady-api-gateway:3.2.0
 
   deploy:
     name: Deploy to Pilot
@@ -81,7 +81,7 @@ jobs:
 
       - name: Configure kubectl
         run: |
-          echo "\${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
           export KUBECONFIG=./kubeconfig
 
       - name: Deploy to Kubernetes

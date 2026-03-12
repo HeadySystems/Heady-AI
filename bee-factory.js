@@ -30,8 +30,8 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const logger = require('../utils/logger').child('bee-factory');
-const CSL = require('../core/semantic-logic');
+const logger = require('./utils/logger').child('bee-factory');
+const CSL = require('./src/core/semantic-logic');
 
 const BEES_DIR = __dirname;
 const _dynamicRegistry = new Map();
@@ -137,7 +137,7 @@ function createBee(domain, config = {}) {
 
     // Also register in the main registry if available
     try {
-        const registry = require('./registry');
+        const registry = require('./src/bees/registry');
         registry.registry.set(domain, entry);
     } catch { /* registry not loaded yet */ }
 
@@ -183,7 +183,7 @@ function spawnBee(name, work, priority = 0.8) {
 
     // Register in main registry
     try {
-        const registry = require('./registry');
+        const registry = require('./src/bees/registry');
         registry.registry.set(id, entry);
     } catch { /* registry not loaded yet */ }
 
@@ -632,7 +632,7 @@ function dissolveBee(domain) {
     _ephemeralBees.delete(domain);
     _vecCache.delete(domain);
     try {
-        const registry = require('./registry');
+        const registry = require('./src/bees/registry');
         registry.registry.delete(domain);
     } catch { /* fine */ }
 }

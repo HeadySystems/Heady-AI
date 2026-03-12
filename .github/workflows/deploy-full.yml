@@ -4,11 +4,13 @@ name: Heady™ Autonomous Projections
 # All deployments are projections from the monorepo source of truth,
 # which is itself a projection from Heady™'s 3D vector space.
 
+# Push/PR triggers disabled — use ci-unified.yml for main CI/CD
+# on:
+#   push:
+#     branches: [main, master]
+#   pull_request:
+#     branches: [main, master]
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
   workflow_dispatch:
     inputs:
       target:

@@ -451,4 +451,12 @@ function createServer(options = {}) {
   return new HeadyServer(options);
 }
 
-module.exports = { HeadyServer, HeadyRouter, createServer, MIME_TYPES };
+/**
+ * Express-compatible Router factory.
+ * @returns {HeadyRouter}
+ */
+function Router() {
+  return new HeadyRouter();
+}
+
+module.exports = { HeadyServer, HeadyRouter, Router, createServer, MIME_TYPES };

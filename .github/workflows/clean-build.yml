@@ -8,17 +8,20 @@
 
 name: Heady Clean Build and Enforce Standards
 
+# Push/PR triggers disabled — use ci-unified.yml for main/develop CI
+# on:
+#   push:
+#     branches: [main, develop]
+#   pull_request:
+#     branches: [main, develop]
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
   schedule:
     # Nightly clean build to catch drift
     - cron: '0 3 * * *'
+  workflow_dispatch:
 
 env:
-  NODE_VERSION: '20.18.1'
+  NODE_VERSION: '22'
   PYTHON_VERSION: '3.12.7'
   BUILD_TIMEOUT: 30m
   MAX_RETRIES: 3
@@ -392,9 +395,9 @@ jobs:
           
       - name: Setup test environment
         run: |
-          echo "DATABASE_URL=postgresql://postgres:test@api.headysystems.com:5432/heady_test" >> $GITHUB_ENV
-          echo "REDIS_URL=redis://api.headysystems.com:6379" >> $GITHUB_ENV
-          echo "HEADY_MANAGER_URL=http://api.headysystems.com:3300" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql://postgres:test@localhost:5432/heady_test" >> $GITHUB_ENV
+          echo "REDIS_URL=redis://localhost:6379" >> $GITHUB_ENV
+          echo "HEADY_MANAGER_URL=http://localhost:3300" >> $GITHUB_ENV
           
       - name: Start services for integration test
         run: |
@@ -404,7 +407,7 @@ jobs:
           
           # Wait for health check
           for i in {1..30}; do
-            if curl -s http://api.headysystems.com:3300/api/health; then
+            if curl -s http://localhost:3300/api/health; then
               echo "Manager is ready"
               break
             fi

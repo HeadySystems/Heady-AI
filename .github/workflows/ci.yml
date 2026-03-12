@@ -4,11 +4,13 @@
 # This file is retained for reference only and should be removed in a future cleanup.
 name: Heady™ CI/CD Pipeline [DEPRECATED]
 
-on:
-  pull_request:
-    branches: [main, staging, testing]
-  push:
-    branches: [testing]
+# Triggers disabled — use ci-unified.yml instead
+# on:
+#   pull_request:
+#     branches: [main, staging, testing]
+#   push:
+#     branches: [testing]
+on: workflow_dispatch
 
 jobs:
   lint-and-test:
@@ -18,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
       - run: npm ci --ignore-scripts 2>/dev/null || echo 'Dependencies installed'
       - name: Lint

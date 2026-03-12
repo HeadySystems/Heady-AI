@@ -8,11 +8,13 @@
 
 name: Heady™ CI/CD
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+# Triggers disabled — use ci-unified.yml instead
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+on: workflow_dispatch
 
 env:
   NODE_VERSION: '22'

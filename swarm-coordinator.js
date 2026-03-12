@@ -43,7 +43,7 @@ import {
   phiAdaptiveInterval,
   fib,
   fibSequence,
-} from '../../shared/phi-math.js';
+} from './shared/phi-math.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

@@ -64,7 +64,7 @@
 
 - **Local execution** — Self-hosted models, prevent metadata leakage
 - **Audit lineage** — Crypto-stamped trails verify agent boundaries
-- **Encrypted communication** — Proton Mail integration for architecture discussions
+- **Encrypted communication** — End-to-end encrypted channels for architecture discussions
 
 ---
 

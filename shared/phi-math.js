@@ -15,6 +15,21 @@ const PHI_SQ     = 2.618033988749895;      // φ² = φ + 1
 const PHI_CUBED  = 4.23606797749979;       // φ³ = 2φ + 1
 const SQRT5      = 2.23606797749979;       // √5
 const PSI_SQ     = PSI * PSI;              // ψ² ≈ 0.382
+const PSI_2      = PSI_SQ;
+const PSI_3      = PSI * PSI * PSI;
+const PSI_4      = PSI_3 * PSI;
+const PSI_5      = PSI_4 * PSI;
+const PSI_8      = Math.pow(PSI, 8);
+const PSI_9      = Math.pow(PSI, 9);
+const PSI_POWERS = Object.freeze({
+  1: PSI,
+  2: PSI_2,
+  3: PSI_3,
+  4: PSI_4,
+  5: PSI_5,
+  8: PSI_8,
+  9: PSI_9,
+});
 
 // ─── FIBONACCI ───────────────────────────────────────────────────────────────
 const FIB_CACHE = [
@@ -42,6 +57,12 @@ function fibFloor(n) {
   return fib(i);
 }
 
+function fibSequence(n) {
+  const seq = [];
+  for (let i = 0; i <= n; i++) seq.push(i === 0 ? 0 : fib(i));
+  return seq;
+}
+
 // ─── PHI-POWER TIMING (ms) ──────────────────────────────────────────────────
 function phiPower(n) { return Math.pow(PHI, n); }
 function phiMs(n)    { return Math.round(phiPower(n) * 1000); }
@@ -59,6 +80,21 @@ const PHI_TIMING = Object.freeze({
   PHI_10: phiMs(10),   // 121,393ms — max single operation
 });
 
+const PHI_TIMING_COMPAT = Object.freeze({
+  TICK: phiMs(0),
+  PULSE: PHI_TIMING.PHI_1,
+  BEAT: PHI_TIMING.PHI_2,
+  BREATH: PHI_TIMING.PHI_3,
+  WAVE: PHI_TIMING.PHI_4,
+  SURGE: PHI_TIMING.PHI_5,
+  FLOW: PHI_TIMING.PHI_6,
+  CYCLE: PHI_TIMING.PHI_7,
+  TIDE: PHI_TIMING.PHI_8,
+  EPOCH: PHI_TIMING.PHI_9,
+  ERA: PHI_TIMING.PHI_10,
+  ...PHI_TIMING,
+});
+
 // ─── CSL GATE THRESHOLDS ────────────────────────────────────────────────────
 function phiThreshold(level, spread = 0.5) {
   return 1 - Math.pow(PSI, level) * spread;
@@ -70,8 +106,13 @@ const CSL_THRESHOLDS = Object.freeze({
   MEDIUM:    phiThreshold(2),   // ≈ 0.809 — moderate alignment
   HIGH:      phiThreshold(3),   // ≈ 0.882 — strong alignment
   CRITICAL:  phiThreshold(4),   // ≈ 0.927 — near-certain
+});
+
+const DEDUP_THRESHOLD = 0.972;
+
+const CSL_GATE = Object.freeze({
   DEFAULT:   PSI,               //   0.618 — standard CSL gate (1/φ)
-  DEDUP:     0.972,             // above CRITICAL, for semantic identity
+  DEDUP:     DEDUP_THRESHOLD,             // above CRITICAL, for semantic identity
   COHERENCE: phiThreshold(2),   // ≈ 0.809 — drift detection threshold
 });
 
@@ -109,6 +150,13 @@ function phiMultiSplit(whole, n) {
   return weights.map(w => Math.round(whole * w));
 }
 
+function phiResourceWeights(n) {
+  const fibs = [];
+  for (let i = n + 1; i >= 2; i--) fibs.push(fib(i));
+  const sum = fibs.reduce((a, b) => a + b, 0);
+  return fibs.map(value => value / sum);
+}
+
 // ─── PRESSURE LEVELS ────────────────────────────────────────────────────────
 const PRESSURE = Object.freeze({
   NOMINAL:  { min: 0, max: PSI * PSI, label: 'NOMINAL' },
@@ -117,11 +165,32 @@ const PRESSURE = Object.freeze({
   CRITICAL: { min: 1 - Math.pow(PSI, 4), max: 1.0, label: 'CRITICAL' },
 });
 
+const PRESSURE_LEVELS = Object.freeze({
+  NOMINAL_MAX: PSI * PSI,
+  ELEVATED_MAX: PSI,
+  HIGH_MAX: 1 - Math.pow(PSI, 3),
+  CRITICAL: 1 - Math.pow(PSI, 4),
+});
+
 function getPressureLevel(utilization) {
   if (utilization < PRESSURE.NOMINAL.max) return PRESSURE.NOMINAL;
   if (utilization < PRESSURE.ELEVATED.max) return PRESSURE.ELEVATED;
   if (utilization < PRESSURE.HIGH.max) return PRESSURE.HIGH;
   return PRESSURE.CRITICAL;
+}
+
+function classifyPressure(utilization) {
+  if (utilization >= PRESSURE_LEVELS.CRITICAL) return 'critical';
+  if (utilization >= PRESSURE_LEVELS.HIGH_MAX) return 'high';
+  if (utilization >= PRESSURE_LEVELS.ELEVATED_MAX) return 'elevated';
+  return 'nominal';
+}
+
+function phiAdaptiveInterval(currentInterval, healthy, minMs = 1000, maxMs = 60000) {
+  if (healthy) {
+    return Math.min(maxMs, Math.round(currentInterval * PHI));
+  }
+  return Math.max(minMs, Math.round(currentInterval * PSI));
 }
 
 // ─── ALERT THRESHOLDS ───────────────────────────────────────────────────────
@@ -288,25 +357,26 @@ function placeholderVector(dims = 384) {
 // ═════════════════════════════════════════════════════════════════════════════
 module.exports = {
   // Core constants
-  PHI, PSI, PHI_SQ, PHI_CUBED, SQRT5, PSI_SQ,
+  PHI, PSI, PHI_SQ, PHI_CUBED, PHI_CUBE: PHI_CUBED, SQRT5, PSI_SQ,
+  PSI_2, PSI_3, PSI_4, PSI_5, PSI_8, PSI_9, PSI_POWERS,
   // Fibonacci
-  FIB: FIB_CACHE, FIB_CACHE, fib, fibCeil, fibFloor,
+  FIB: FIB_CACHE, FIB_CACHE, fib, fibCeil, fibFloor, fibSequence,
   // Timing
-  phiPower, phiMs, PHI_TIMING, TIMING,
+  phiPower, phiMs, PHI_TIMING: PHI_TIMING_COMPAT, TIMING,
   // Thresholds
-  phiThreshold, CSL_THRESHOLDS,
+  phiThreshold, CSL_THRESHOLDS, DEDUP_THRESHOLD,
   // Backoff
   phiBackoff, phiBackoffWithJitter, PHI_BACKOFF_SEQUENCE,
   // Fusion
-  phiFusionWeights, phiMultiSplit, phiFusionScore,
+  phiFusionWeights, phiMultiSplit, phiFusionScore, phiResourceWeights,
   // Pressure & alerts
-  PRESSURE, PRESSURE_LEVELS: PRESSURE, getPressureLevel,
+  PRESSURE, PRESSURE_LEVELS, getPressureLevel, classifyPressure, phiAdaptiveInterval,
   ALERTS, ALERT_THRESHOLDS: ALERTS,
   // Domain constants
   AUTO_SUCCESS, PIPELINE, BEE, BEE_SCALING: BEE,
   POOLS, RESOURCE_POOLS: POOLS, POOL_SIZES, RESOURCE_ALLOCATION,
   // Scoring
-  JUDGE, JUDGE_WEIGHTS: JUDGE, COST_W, COST_WEIGHTS: COST_W, EVICTION,
+  JUDGE, JUDGE_WEIGHTS: JUDGE, COST_W, COST_WEIGHTS: COST_W, EVICTION, EVICTION_WEIGHTS: EVICTION,
   // Vector
   VECTOR, placeholderVector,
   // Token budgets

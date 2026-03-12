@@ -4,8 +4,8 @@
 #
 # Responsibilities:
 #   - Checkout repository with full history
-#   - Setup Node.js 20 with npm cache
-#   - Setup pnpm 8 with workspace caching
+#   - Setup Node.js 22 with npm cache
+#   - Setup pnpm 10 with workspace caching
 #   - Install all dependencies (frozen lockfile)
 #   - Configure Turborepo remote cache
 #
@@ -15,17 +15,17 @@
 # ============================================================
 
 name: 'Setup Heady™ Environment'
-description: 'Composite action: checkout, Node 20, pnpm, deps, Turborepo remote cache'
+description: 'Composite action: checkout, Node 22, pnpm 10, deps, Turborepo remote cache'
 
 inputs:
   node-version:
     description: 'Node.js version to use'
     required: false
-    default: '20'
+    default: '22'
   pnpm-version:
     description: 'pnpm version to use'
     required: false
-    default: '8'
+    default: '10'
   fetch-depth:
     description: 'Git fetch depth (0 = full history for changelog/versioning)'
     required: false

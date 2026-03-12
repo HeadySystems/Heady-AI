@@ -56,8 +56,8 @@ env:
   PERF_WARN_PCT: '5'       # fib(5)=5 — performance regression warning
   PERF_FAIL_PCT: '8'       # fib(6)=8 — performance regression fail
   COVERAGE_THRESHOLD: '80' # minimum Jest coverage %
-  NODE_VERSION: '20'
-  PNPM_VERSION: '8'
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10'
   # Turborepo remote cache (set in repo secrets)
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}

@@ -43,8 +43,5 @@ binding = "EDGE_METRICS"
 enabled = true
 head_sampling_rate = 1.0
 
-[build]
-command = "npx tsc"
-
 [limits]
 cpu_ms = 50

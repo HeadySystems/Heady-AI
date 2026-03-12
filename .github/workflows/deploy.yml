@@ -20,11 +20,13 @@
 
 name: Heady™ Production Deploy
 
+# Push/PR triggers disabled — use ci-unified.yml for main CI/CD
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
     inputs:
       target:
@@ -101,7 +103,7 @@ jobs:
         run: npm ci || npm install
 
       - name: Lint
-        run: npm run lint 2>/dev/null || echo "Lint not configured"
+        run: npm run lint --if-present
 
       - name: Test
         run: npm test

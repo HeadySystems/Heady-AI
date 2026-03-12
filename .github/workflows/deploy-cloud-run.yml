@@ -1,10 +1,12 @@
 name: Deploy Cloud Run
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'services/**'
-      - 'infra/cloud-run/**'
+# Push trigger disabled — use ci-unified.yml for main deploys
+# on:
+#   push:
+#     branches: [main]
+#     paths:
+#       - 'services/**'
+#       - 'infra/cloud-run/**'
+on: workflow_dispatch
 jobs:
   deploy:
     runs-on: ubuntu-latest

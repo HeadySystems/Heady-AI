@@ -12,7 +12,7 @@ name: "Heady™ Unified CI/CD"
 
 on:
   push:
-    branches: [main, staging, production, develop]
+    branches: [main, staging, production, develop, testing]
   pull_request:
     branches: [main, production]
   workflow_dispatch:
@@ -77,18 +77,24 @@ jobs:
           fetch-depth: 0
 
       - name: TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.93.7
         with:
           extra_args: --only-verified
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
 
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: npm audit
         run: |
-          npm ci --ignore-scripts
-          npm audit --audit-level=high
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm audit --audit-level=high
         continue-on-error: true
 
       - name: Credential scan
@@ -119,16 +125,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
       - name: ESLint
-        run: npx eslint src/ services/ packages/ bin/ --ext .js,.ts --max-warnings 0
+        run: pnpm run lint --if-present
         continue-on-error: true
       - name: TypeScript check
-        run: npx tsc --noEmit --project tsconfig.json
+        run: pnpm run typecheck --if-present
         continue-on-error: true
 
   # ════════════════════════════════════════════════════════════════════════
@@ -140,13 +150,17 @@ jobs:
     needs: [quality]
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
       - name: Run Jest
-        run: npx jest --coverage --ci --reporters=default --passWithNoTests
+        run: pnpm exec jest --coverage --ci --reporters=default --passWithNoTests
         env:
           JEST_JUNIT_OUTPUT_DIR: ./test-results
       - uses: actions/upload-artifact@v4
@@ -181,15 +195,19 @@ jobs:
     needs: [quality]
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
       - name: Pipeline validator
-        run: npx jest tests/hcfullpipeline-validator.test.js --no-coverage --passWithNoTests
+        run: pnpm exec jest tests/hcfullpipeline-validator.test.js --no-coverage --passWithNoTests
       - name: Staging schema
-        run: npx jest tests/staging-test-schema.test.js --no-coverage --passWithNoTests
+        run: pnpm exec jest tests/staging-test-schema.test.js --no-coverage --passWithNoTests
         continue-on-error: true
 
   # ════════════════════════════════════════════════════════════════════════
@@ -201,13 +219,17 @@ jobs:
     needs: [test-node, security, validate]
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
       - name: Build
-        run: node bin/heady-cli.js build
+        run: pnpm run build
         continue-on-error: true
 
   # ════════════════════════════════════════════════════════════════════════
@@ -262,18 +284,24 @@ jobs:
     if: needs.preflight.outputs.should_deploy == 'true'
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Deploy Cloudflare Workers
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          npm install -g wrangler
-          for worker_dir in cloudflare/workers/*/; do
+          shopt -s nullglob
+          for worker_dir in workers/*/; do
             if [ -f "${worker_dir}wrangler.toml" ]; then
               echo "Deploying: ${worker_dir}"
-              cd "${worker_dir}" && wrangler deploy && cd -
+              pnpm dlx wrangler@4 deploy --config "${worker_dir}wrangler.toml"
             fi
           done
         continue-on-error: true
@@ -292,5 +320,5 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Domain Verification
-        run: node domain-verification/verify-all-domains.mjs || echo "Domain verification pending"
+        run: node scripts/verify-all-domains.mjs || echo "Domain verification pending"
         continue-on-error: true

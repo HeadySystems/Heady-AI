@@ -122,6 +122,10 @@ archive/code-bundles/heady-max-potential-rebuild*.zip
 
 # Gradle locks
 headybuddy-mobile/.gradle/
+distribution/ide/jetbrains/.gradle/
+
+# Security-sensitive recovery codes
+audit/strategic-plans/github-recovery-codes.txt
 
 # Large code bundles (>50MB, kept locally)
 archive/code-bundles/wezterm-main.zip

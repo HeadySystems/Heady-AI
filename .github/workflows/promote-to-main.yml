@@ -4,21 +4,26 @@ on:
   push:
     branches: [staging]
 
+concurrency:
+  group: promote-main-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   staging-tests:
     name: Comprehensive Staging Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-      - run: npm ci --ignore-scripts 2>/dev/null || echo 'Dependencies installed'
+      - run: npm ci
       - name: Full test suite
-        run: npm test 2>/dev/null || echo 'Tests completed'
+        run: npm test
       - name: Build validation
-        run: npm run build 2>/dev/null || echo 'Build completed'
+        run: npm run build
 
   promote:
     name: Create Production PR
@@ -33,7 +38,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          EXISTING=$(gh pr list --base main --head staging --json number --jq '.[0].number' 2>/dev/null || echo '')
+          EXISTING=$(gh pr list --base main --head staging --json number --jq '.[0].number' || echo '')
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
             echo "PR #$EXISTING already exists"
           else
@@ -45,11 +50,11 @@ jobs:
 
           Staging tests passed — ready for production.
 
-          **Commit:** ${{ github.sha }}
+          **Commit:** \`${{ github.sha }}\`
           **By:** ${{ github.actor }}
 
           ### Checklist
           - [ ] All staging QA passed
           - [ ] No regressions
-          - [ ] User acceptance confirmed" 2>/dev/null || echo 'PR exists'
+          - [ ] User acceptance confirmed"
           fi

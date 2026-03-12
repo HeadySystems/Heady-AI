@@ -51,11 +51,12 @@ steps:
       - -c
       - |
         echo "════ Phase 0: Install & Test ════"
-        npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts
+        corepack enable
+        pnpm install --frozen-lockfile --ignore-scripts
         echo "Running linter..."
-        npm run lint 2>/dev/null || echo "⚠️  Lint not configured — skipping"
+        pnpm run lint 2>/dev/null || echo "⚠️  Lint not configured — skipping"
         echo "Running tests..."
-        npm test 2>/dev/null || echo "⚠️  Tests not configured — skipping"
+        pnpm test 2>/dev/null || echo "⚠️  Tests not configured — skipping"
         echo "✅ Tests complete"
 
   # ─────────────────────────────────────────────────────────────────────────────
@@ -68,8 +69,9 @@ steps:
       - -c
       - |
         echo "════ Phase 1: Security Audit ════"
-        npm install --ignore-scripts 2>/dev/null || true
-        npm audit --production --audit-level=critical || echo "⚠️  Audit warnings found (non-blocking)"
+        corepack enable
+        pnpm install --frozen-lockfile --ignore-scripts || true
+        pnpm audit --prod --audit-level=critical || echo "⚠️  Audit warnings found (non-blocking)"
         echo "✅ Security audit complete"
     waitFor: ['test']
 

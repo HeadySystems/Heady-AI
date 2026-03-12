@@ -56,8 +56,8 @@ const SCRIPTS = path.join(ROOT, 'scripts');
 const INFRA = path.join(ROOT, 'infra');
 const MIGRATIONS = path.join(ROOT, 'migrations');
 
-const theme = require('./cli-theme');
-const auth = require('./cli-auth');
+const theme = require(path.join(ROOT, 'bin', 'cli-theme'));
+const auth = require(path.join(ROOT, 'bin', 'cli-auth'));
 
 const VERSION = '3.0.0';
 

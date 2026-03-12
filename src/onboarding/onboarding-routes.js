@@ -366,7 +366,7 @@ export function createOnboardingRouter({ controller, projectionEngine, logger = 
    *
    * @body {boolean} [enable=true]       - Whether to activate the email address
    * @body {string}  [forwardTo]         - Optional external address to forward to
-   * @body {boolean} [encryptionEnabled] - Enable end-to-end encryption (ProtonMail-style)
+   * @body {boolean} [encryptionEnabled] - Enable end-to-end encryption
    * @body {string}  [signatureHtml]     - HTML email signature
    */
   router.post('/email-setup', asyncRoute(async (req, res) => {

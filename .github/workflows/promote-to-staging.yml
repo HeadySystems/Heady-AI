@@ -4,18 +4,26 @@ on:
   push:
     branches: [testing]
 
+concurrency:
+  group: promote-staging-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PHI: "1.618033988749895"
+
 jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-      - run: npm ci --ignore-scripts 2>/dev/null || echo 'Dependencies installed'
-      - run: npm test 2>/dev/null || echo 'Tests completed'
+      - run: npm ci
+      - run: npm test
 
   promote:
     name: Create Staging PR
@@ -30,7 +38,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          EXISTING=$(gh pr list --base staging --head testing --json number --jq '.[0].number' 2>/dev/null || echo '')
+          EXISTING=$(gh pr list --base staging --head testing --json number --jq '.[0].number' || echo '')
           if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
             echo "PR #$EXISTING already exists"
           else
@@ -48,13 +56,11 @@ jobs:
           ### Checklist
           - [ ] Integration tests pass
           - [ ] No breaking changes
-          - [ ] Ready for staging QA" 2>/dev/null || echo 'PR exists'
+          - [ ] Ready for staging QA"
           fi
 
       - name: Run comprehensive test orchestrator
         run: |
-          cd /tmp/heady-testing
-
           echo "Installing dependencies..."
           npm ci || pnpm install --frozen-lockfile || npm install
 
@@ -69,17 +75,14 @@ jobs:
         with:
           name: test-run-report
           path: |
-            /tmp/heady-testing/reports/test-run-report.json
-            /tmp/heady-testing/reports/test-run-report.md
-            /tmp/heady-testing/.validation-metadata.json
+            reports/test-run-report.json
+            reports/test-run-report.md
+            .validation-metadata.json
           retention-days: 30
 
       - name: Prepare code for staging
         run: |
           echo "Preparing validated code for promotion to staging..."
-
-          # Copy validated code
-          cp -r /tmp/heady-testing/* . --no-preserve=mode
 
           # Create promotion metadata
           cat > .promotion-metadata.json << EOF
@@ -100,7 +103,7 @@ jobs:
           echo "Cloning Heady-Staging repository..."
           git clone \
             --depth=1 \
-            https://github.com/HeadyConnection/Heady-Staging.git \
+            https://x-access-token:${GH_TOKEN}@github.com/HeadyConnection/Heady-Staging.git \
             /tmp/heady-staging
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
@@ -113,12 +116,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Copy validated code
-          cp -r /tmp/heady-testing/* . --no-preserve=mode
+          # Copy validated code from workspace
+          cp -r $GITHUB_WORKSPACE/* . --no-preserve=mode
 
           # Add promotion metadata
-          if [ -f "/tmp/heady-testing/.promotion-metadata.json" ]; then
-            cp /tmp/heady-testing/.promotion-metadata.json .
+          if [ -f "$GITHUB_WORKSPACE/.promotion-metadata.json" ]; then
+            cp "$GITHUB_WORKSPACE/.promotion-metadata.json" .
           fi
 
           # Commit and push
