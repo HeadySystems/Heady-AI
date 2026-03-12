@@ -345,11 +345,108 @@ function registerLiquidNodeRoutes(app) {
     app.get('/api/liquid-nodes/:nodeId', (req, res) => {
         const status = getNodeStatus(req.params.nodeId);
         if (!status) return res.status(404).json({ error: 'Node not found' });
-        res.json(status);
+        // Augment with circuit breaker state
+        const circuit = isNodeAvailable(req.params.nodeId);
+        res.json({ ...status, circuit });
+    });
+
+    // Circuit breaker diagnostics
+    app.get('/api/liquid-nodes/circuits', (_req, res) => {
+        res.json(getCircuitDiagnostics());
     });
 
     const log = logger.logSystem || logger.info || console.log;
-    log('  🔌 Liquid Nodes: routes registered → /api/liquid-nodes/status, /api/liquid-nodes/:nodeId');
+    log('  🔌 Liquid Nodes: routes registered → /api/liquid-nodes/status, /api/liquid-nodes/:nodeId, /api/liquid-nodes/circuits');
+}
+
+// ─── Circuit Breaker State Per Node ─────────────────────────────
+const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+const CIRCUIT_BREAKER_THRESHOLD = FIB[5];  // 8 consecutive failures → open
+const HALF_OPEN_DELAY_MS = Math.round(PHI * 30000); // ~48.5s before half-open probe
+
+const _circuitState = new Map(); // nodeId → { failures, state, openedAt, lastCheck }
+
+/**
+ * Get or initialize circuit breaker state for a node.
+ */
+function _getCircuit(nodeId) {
+    if (!_circuitState.has(nodeId)) {
+        _circuitState.set(nodeId, { failures: 0, state: 'closed', openedAt: null, lastCheck: 0 });
+    }
+    return _circuitState.get(nodeId);
+}
+
+/**
+ * Record a failure for a node. Opens circuit after threshold.
+ * @param {string} nodeId
+ * @param {string} error - Error message
+ */
+function recordNodeFailure(nodeId, error) {
+    const circuit = _getCircuit(nodeId);
+    circuit.failures++;
+    circuit.lastCheck = Date.now();
+    if (circuit.failures >= CIRCUIT_BREAKER_THRESHOLD && circuit.state !== 'open') {
+        circuit.state = 'open';
+        circuit.openedAt = Date.now();
+        const log = logger.logSystem || logger.warn || console.warn;
+        log(`  ⚡ Circuit OPEN for liquid node ${nodeId} after ${circuit.failures} failures: ${error}`);
+    }
+}
+
+/**
+ * Record a success for a node. Resets circuit to closed.
+ * @param {string} nodeId
+ */
+function recordNodeSuccess(nodeId) {
+    const circuit = _getCircuit(nodeId);
+    if (circuit.failures > 0 || circuit.state !== 'closed') {
+        const log = logger.logSystem || logger.info || console.log;
+        log(`  ✅ Circuit CLOSED for liquid node ${nodeId} (recovered from ${circuit.failures} failures)`);
+    }
+    circuit.failures = 0;
+    circuit.state = 'closed';
+    circuit.openedAt = null;
+    circuit.lastCheck = Date.now();
+}
+
+/**
+ * Check if a node's circuit breaker allows requests.
+ * Implements half-open: after HALF_OPEN_DELAY_MS, allows one probe request.
+ * @param {string} nodeId
+ * @returns {{ allowed: boolean, state: string, failures: number }}
+ */
+function isNodeAvailable(nodeId) {
+    const circuit = _getCircuit(nodeId);
+    if (circuit.state === 'closed') {
+        return { allowed: true, state: 'closed', failures: 0 };
+    }
+    if (circuit.state === 'open') {
+        const elapsed = Date.now() - (circuit.openedAt || 0);
+        if (elapsed >= HALF_OPEN_DELAY_MS) {
+            circuit.state = 'half-open';
+            return { allowed: true, state: 'half-open', failures: circuit.failures };
+        }
+        return { allowed: false, state: 'open', failures: circuit.failures, retryInMs: HALF_OPEN_DELAY_MS - elapsed };
+    }
+    // half-open: allow the probe
+    return { allowed: true, state: 'half-open', failures: circuit.failures };
+}
+
+/**
+ * Get circuit breaker diagnostics for all nodes.
+ */
+function getCircuitDiagnostics() {
+    const diagnostics = {};
+    for (const [nodeId, circuit] of _circuitState) {
+        diagnostics[nodeId] = { ...circuit };
+    }
+    return {
+        threshold: CIRCUIT_BREAKER_THRESHOLD,
+        halfOpenDelayMs: HALF_OPEN_DELAY_MS,
+        nodes: diagnostics,
+        openCount: [..._circuitState.values()].filter(c => c.state === 'open').length,
+        halfOpenCount: [..._circuitState.values()].filter(c => c.state === 'half-open').length,
+    };
 }
 
 module.exports = {
@@ -357,4 +454,9 @@ module.exports = {
     wireLiquidNodes,
     getNodeStatus,
     registerLiquidNodeRoutes,
+    // Circuit breaker API
+    recordNodeFailure,
+    recordNodeSuccess,
+    isNodeAvailable,
+    getCircuitDiagnostics,
 };

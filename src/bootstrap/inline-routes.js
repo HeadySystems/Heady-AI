@@ -8,7 +8,7 @@ const path = require('path');
 const fetch = require('../core/heady-fetch').heady_fetch;
 
 module.exports = function mountInlineRoutes(app, { logger, secretsManager, cfManager, authEngine, _engines }) {
-    const structuredLog = require('../structured-logger');
+    const structuredLog = require('../observability/structured-logger');
 
     // Kubernetes liveness probe
     app.get("/healthz", (_req, res) => {
@@ -113,7 +113,7 @@ module.exports = function mountInlineRoutes(app, { logger, secretsManager, cfMan
     } catch { }
 
     try {
-        const hp = require('../heady-principles');
+        const hp = require('../shared/heady-principles');
         app.get('/api/principles', (req, res) => res.json({
             node: 'heady-principles', constants: { PHI: hp.PHI, BASE: hp.BASE, LOG_BASE: hp.LOG_BASE },
             designTokens: hp.designTokens(8), capacity: hp.capacityParams('medium'), fibonacci: hp.FIB.slice(0, 13),

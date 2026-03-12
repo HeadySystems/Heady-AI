@@ -29,35 +29,41 @@ function registerServiceRoutes(app, deps = {}) {
     const { engines = {}, vectorMemory, orchestrator, Handshake, projectRoot } = deps;
     const { autoSuccessEngine } = engines;
 
-    // ─── Vault Boot — Decrypt credentials from vector space into process.env ──
-    try {
-        const { bootVault, registerVaultProjectionRoutes } = require("../services/vault-boot");
-        bootVault().then(result => {
-            if (result.ok) {
-                logger.logNodeActivity("CONDUCTOR", `  🔐 Vault Boot: ${result.projected} credentials projected into RAM`);
+    // ─── Coordinated Boot Sequence — Vault THEN Liquid Nodes (dependency chain) ──
+    // Vault must complete BEFORE liquid nodes run, since liquid nodes verify
+    // env vars that vault-boot projects from encrypted vector space.
+    const _bootChain = (async () => {
+        // Phase A: Vault Boot — decrypt credentials into process.env
+        try {
+            const { bootVault, registerVaultProjectionRoutes } = require("../services/vault-boot");
+            registerVaultProjectionRoutes(app);
+            const vaultResult = await bootVault();
+            if (vaultResult.ok) {
+                logger.logNodeActivity("CONDUCTOR", `  🔐 Vault Boot: ${vaultResult.projected} credentials projected into RAM`);
             } else {
-                logger.logNodeActivity("CONDUCTOR", `  ⚠ Vault Boot: ${result.reason}`);
+                logger.logNodeActivity("CONDUCTOR", `  ⚠ Vault Boot: ${vaultResult.reason}`);
             }
-        }).catch(e => logger.logError("CONDUCTOR", `Vault boot error: ${e.message}`));
-        registerVaultProjectionRoutes(app);
-    } catch (err) {
-        logger.logNodeActivity("CONDUCTOR", `  ⚠ Vault Boot not loaded: ${err.message}`);
-    }
+        } catch (err) {
+            logger.logNodeActivity("CONDUCTOR", `  ⚠ Vault Boot not loaded: ${err.message}`);
+        }
 
-    // ─── Liquid Node Wiring — Connect external services with vault credentials ──
-    try {
-        const { wireLiquidNodes, registerLiquidNodeRoutes } = require("../boot/wire-liquid-nodes");
-        wireLiquidNodes().then(result => {
-            if (result.ok) {
-                logger.logNodeActivity("CONDUCTOR", `  🔌 Liquid Nodes: ALL ${result.wired}/${result.total} wired (${result.coveragePct}%)`);
+        // Phase B: Liquid Node Wiring — runs AFTER vault credentials are in process.env
+        try {
+            const { wireLiquidNodes, registerLiquidNodeRoutes } = require("../boot/wire-liquid-nodes");
+            registerLiquidNodeRoutes(app);
+            const nodeResult = await wireLiquidNodes();
+            if (nodeResult.ok) {
+                logger.logNodeActivity("CONDUCTOR", `  🔌 Liquid Nodes: ALL ${nodeResult.wired}/${nodeResult.total} wired (${nodeResult.coveragePct}%)`);
             } else {
-                logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Nodes: ${result.wired}/${result.total} wired, ${result.disconnected} disconnected`);
+                logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Nodes: ${nodeResult.wired}/${nodeResult.total} wired, ${nodeResult.disconnected} disconnected`);
             }
-        }).catch(e => logger.logError("CONDUCTOR", `Liquid node wiring error: ${e.message}`));
-        registerLiquidNodeRoutes(app);
-    } catch (err) {
-        logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Nodes not loaded: ${err.message}`);
-    }
+        } catch (err) {
+            logger.logNodeActivity("CONDUCTOR", `  ⚠ Liquid Nodes not loaded: ${err.message}`);
+        }
+    })().catch(e => logger.logError("CONDUCTOR", `Boot chain error: ${e.message}`));
+
+    // Expose boot chain promise for downstream consumers that need to wait
+    app._headyBootChain = _bootChain;
 
     // ─── Auto-Projection — Zero-Middleman Site Deployment ──────────────
     try {
@@ -879,8 +885,77 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ Branded Output not loaded: ${err.message}`);
     }
 
+    // ─── PHASE 4: Catalog Services — Previously missing from boot ─────────────
+    // 6 services defined in configs/service-catalog.yaml but never wired.
+    // Wired March 11, 2026 — full catalog coverage.
+
+    // Observability Kernel — distributed tracing, Prometheus metrics, structured logging
+    try {
+        const observability = require("../core/heady-observability");
+        if (observability.boot) observability.boot(app);
+        if (observability.registerRoutes) observability.registerRoutes(app);
+        if (observability.middleware) app.use(observability.middleware());
+        global.__observabilityKernel = observability;
+        logger.logNodeActivity("CONDUCTOR", "  🔭 Observability Kernel: LOADED (traces + metrics + structured logs)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Observability Kernel not loaded: ${err.message}`);
+    }
+
+    // Heady Health — system health registry and health check aggregation
+    try {
+        const healthRegistry = require("../services/health-registry");
+        if (healthRegistry.boot) healthRegistry.boot();
+        if (healthRegistry.registerRoutes) healthRegistry.registerRoutes(app);
+        global.__healthRegistry = healthRegistry;
+        logger.logNodeActivity("CONDUCTOR", "  💚 Health Registry: LOADED (aggregated health checks)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Health Registry not loaded: ${err.message}`);
+    }
+
+    // Heady Memory — vector memory, federation, hybrid search, embeddings
+    try {
+        const memoryBee = require("../bees/memory-bee");
+        if (memoryBee.boot) memoryBee.boot();
+        global.__memoryBee = memoryBee;
+        logger.logNodeActivity("CONDUCTOR", "  🧠 Memory Bee: LOADED (vector memory + federation + hybrid search)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Memory Bee not loaded: ${err.message}`);
+    }
+
+    // Heady Soul — consciousness/optimization layer with unbreakable laws
+    try {
+        const soulRouter = require("../routes/soul");
+        app.use("/api/soul", soulRouter);
+        logger.logNodeActivity("CONDUCTOR", "  👁 Heady Soul: LOADED → /api/soul/*");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Soul routes not loaded: ${err.message}`);
+    }
+
+    // Heady Guard — geo-IP guardian middleware for impossible-travel detection
+    try {
+        const { geoIpGuardian } = require("../auth/geo_ip_guardian");
+        app.use("/api", geoIpGuardian);
+        logger.logNodeActivity("CONDUCTOR", "  🛡 Heady Guard: LOADED (geo-IP impossible-travel detection)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Guard not loaded: ${err.message}`);
+    }
+
+    // Heady Autobiographer — self-documenting system narrative
+    try {
+        const autobiographerPath = path.resolve(__dirname, "../../services/heady-autobiographer/src");
+        if (fs.existsSync(autobiographerPath)) {
+            const autobiographer = require(autobiographerPath);
+            if (autobiographer.boot) autobiographer.boot();
+            if (autobiographer.registerRoutes) autobiographer.registerRoutes(app);
+            global.__autobiographer = autobiographer;
+            logger.logNodeActivity("CONDUCTOR", "  📖 Autobiographer: LOADED (self-documenting narrative)");
+        }
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Autobiographer not loaded: ${err.message}`);
+    }
+
     logger.logNodeActivity("CONDUCTOR", "  ═══════════════════════════════════════════════");
-    logger.logNodeActivity("CONDUCTOR", "  ✅ All service routes registered (Phase 1-3 complete)");
+    logger.logNodeActivity("CONDUCTOR", "  ✅ All service routes registered (Phase 1-4 complete)");
 }
 
 module.exports = { registerServiceRoutes };

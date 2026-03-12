@@ -25,7 +25,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const arena = require('../src/services/battle-arena');
+const arena = require('./battle-arena');
 
 const args = process.argv.slice(2);
 const ROOT = path.resolve(__dirname, '..');

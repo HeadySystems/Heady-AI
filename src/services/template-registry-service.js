@@ -6,13 +6,13 @@
 const EventEmitter = require('events');
 const { PHI_TIMING } = require('../shared/phi-math');
 const beeRegistry = require('../bees/registry');
-const vectorTemplateEngine = require('../vector-template-engine');
+const vectorTemplateEngine = require('../memory/vector-template-engine');
 const {
     buildRegistrySnapshot,
     validateRegistry,
     evaluateScenarioCoverage,
     createProjectionState,
-} = require('../template-registry-optimizer');
+} = require('../agents/template-registry-optimizer');
 const logger = require('../utils/logger');
 
 class TemplateRegistryService extends EventEmitter {

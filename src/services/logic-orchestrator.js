@@ -203,7 +203,7 @@ class LogicOrchestrator extends EventEmitter {
 
         // Heady™ Principles
         try {
-            const hp = require('../heady-principles');
+            const hp = require('../shared/heady-principles');
             app.get('/api/principles', (req, res) => res.json({
                 node: 'heady-principles',
                 role: 'Mathematical foundation — base-13, log42, golden ratio',

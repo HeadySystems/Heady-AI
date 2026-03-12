@@ -18,7 +18,7 @@
 
 'use strict';
 
-const { PHI, PHI_INV, BASE, phiScale, phiTiming } = require('../heady-principles');
+const { PHI, PHI_INV, BASE, phiScale, phiTiming } = require('../shared/heady-principles');
 
 // ── High-Resolution Clock ──────────────────────────────────────────
 
