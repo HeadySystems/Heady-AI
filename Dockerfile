@@ -10,7 +10,7 @@
 
 # ─── Stage 1: Dependencies ────────────────────────────────────────────────────
 
-FROM node:22-alpine AS deps
+FROM node:25-alpine AS deps
 
 WORKDIR /app
 
@@ -31,7 +31,7 @@ RUN if [ -f pnpm-lock.yaml ]; then \
 
 # ─── Stage 2: Build ──────────────────────────────────────────────────────────
 
-FROM node:22-alpine AS build
+FROM node:25-alpine AS build
 
 WORKDIR /app
 
@@ -55,7 +55,7 @@ RUN if [ -f pnpm-lock.yaml ]; then \
 
 # ─── Stage 3: Production ─────────────────────────────────────────────────────
 
-FROM node:22-alpine AS production
+FROM node:25-alpine AS production
 
 # Install tini for proper PID 1 signal handling (SIGTERM → graceful shutdown)
 RUN apk add --no-cache tini curl
