@@ -1098,6 +1098,25 @@ try {
   console.warn(`  ⚠ Colab Runtime Manager not loaded: ${err.message}`);
 }
 
+// ─── HeadyDeploy — Self-Sovereign Deployment Engine ──────────────────
+let headyDeploy = null;
+try {
+  const { HeadyDeploy, registerDeployRoutes } = require("./services/heady-deploy");
+  headyDeploy = new HeadyDeploy();
+  registerDeployRoutes(app, headyDeploy);
+
+  // Verify auth capability on startup
+  if (headyDeploy.serviceAccount) {
+    console.log(`  ∞ HeadyDeploy: LOADED (${headyDeploy.serviceAccount.client_email})`);
+    console.log(`    → Project: ${headyDeploy.projectId} | Region: ${headyDeploy.region}`);
+    console.log(`    → Endpoints: /api/deploy/status, /api/deploy/cloud-run, /api/deploy/full`);
+  } else {
+    console.warn("  ⚠ HeadyDeploy: LOADED but no service account key found");
+  }
+} catch (err) {
+  console.warn(`  ⚠ HeadyDeploy not loaded: ${err.message}`);
+}
+
 // ─── Aloha Protocol System (Always-On) ───────────────────────────────
 const alohaProtocol = loadYamlConfig("aloha-protocol.yaml");
 const deOptProtocol = loadYamlConfig("de-optimization-protocol.yaml");
