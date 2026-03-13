@@ -1,0 +1,373 @@
+{
+  "metadata": {
+    "version": "4.0.0-production",
+    "environment": "production",
+    "last_updated": "2026-03-12T14:59:00.000Z",
+    "all_nodes_active": true,
+    "production_activated_at": "2026-03-12T14:59:00.000Z",
+    "phi": 1.6180339887,
+    "sacred_geometry": "active"
+  },
+  "nodes": {
+    "HEADY-SOUL": {
+      "name": "Heady Soul",
+      "role": "orchestration",
+      "ring": "center",
+      "layer": "strategic",
+      "domain": "orchestration",
+      "tier": "L",
+      "status": "active",
+      "description": "Central orchestrator — the heartbeat of the Heady swarm",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "COGNITION-CORE": {
+      "name": "Cognition Core",
+      "role": "reasoning",
+      "ring": "inner",
+      "layer": "tactical",
+      "domain": "reasoning",
+      "tier": "L",
+      "status": "active",
+      "description": "Deep reasoning and cognitive inference engine",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "MEMORY-WEAVE": {
+      "name": "Memory Weave",
+      "role": "memory",
+      "ring": "inner",
+      "layer": "tactical",
+      "domain": "memory",
+      "tier": "L",
+      "status": "active",
+      "description": "Persistent memory and recall across sessions and contexts",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "CONTEXT-BRIDGE": {
+      "name": "Context Bridge",
+      "role": "context",
+      "ring": "inner",
+      "layer": "tactical",
+      "domain": "context",
+      "tier": "M",
+      "status": "active",
+      "description": "Cross-context bridging and semantic threading",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "TASK-PLANNER": {
+      "name": "Task Planner",
+      "role": "planning",
+      "ring": "inner",
+      "layer": "tactical",
+      "domain": "planning",
+      "tier": "M",
+      "status": "active",
+      "description": "Task decomposition, dependency graphing, and DAG scheduling",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "CONSENSUS-FORGE": {
+      "name": "Consensus Forge",
+      "role": "consensus",
+      "ring": "inner",
+      "layer": "tactical",
+      "domain": "consensus",
+      "tier": "M",
+      "status": "active",
+      "description": "Multi-agent consensus and conflict resolution",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "CODE-ARTISAN": {
+      "name": "Code Artisan",
+      "role": "coding",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "coding",
+      "tier": "M",
+      "status": "active",
+      "description": "Code generation, refactoring, and quality enforcement",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "DATA-SCULPTOR": {
+      "name": "Data Sculptor",
+      "role": "data",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "data",
+      "tier": "M",
+      "status": "active",
+      "description": "Data transformation, ETL pipelines, and schema management",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "RESEARCH-HERALD": {
+      "name": "Research Herald",
+      "role": "research",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "research",
+      "tier": "M",
+      "status": "active",
+      "description": "Deep research, patent analysis, and knowledge synthesis",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "TOOL-WEAVER": {
+      "name": "Tool Weaver",
+      "role": "tools",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "tools",
+      "tier": "S",
+      "status": "active",
+      "description": "Tool orchestration, MCP integration, and capability routing",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "LANGUAGE-FLOW": {
+      "name": "Language Flow",
+      "role": "language",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "language",
+      "tier": "S",
+      "status": "active",
+      "description": "NLP processing, semantic analysis, and language generation",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "VISION-SCRIBE": {
+      "name": "Vision Scribe",
+      "role": "vision",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "vision",
+      "tier": "S",
+      "status": "active",
+      "description": "Image analysis, visual reasoning, and diagram generation",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "AUDIO-PULSE": {
+      "name": "Audio Pulse",
+      "role": "audio",
+      "ring": "middle",
+      "layer": "operational",
+      "domain": "audio",
+      "tier": "S",
+      "status": "active",
+      "description": "Voice processing, MIDI, and audio signal analysis",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "INTEGRATION-NODE": {
+      "name": "Integration Node",
+      "role": "integration",
+      "ring": "outer",
+      "layer": "operational",
+      "domain": "integration",
+      "tier": "S",
+      "status": "active",
+      "description": "External API integration, webhook management, and service mesh",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "CACHE-GUARDIAN": {
+      "name": "Cache Guardian",
+      "role": "caching",
+      "ring": "outer",
+      "layer": "operational",
+      "domain": "caching",
+      "tier": "S",
+      "status": "active",
+      "description": "Multi-layer caching, invalidation, and edge cache coordination",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "STREAM-RUNNER": {
+      "name": "Stream Runner",
+      "role": "streaming",
+      "ring": "outer",
+      "layer": "operational",
+      "domain": "streaming",
+      "tier": "S",
+      "status": "active",
+      "description": "Real-time event streaming, SSE, and WebSocket coordination",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    },
+    "POLICY-SENTINEL": {
+      "name": "Policy Sentinel",
+      "role": "governance",
+      "ring": "governance",
+      "layer": "strategic",
+      "domain": "governance",
+      "tier": "L",
+      "status": "active",
+      "description": "Policy enforcement, compliance checks, and governance rules",
+      "last_invoked": "2026-03-12T14:59:00.000Z"
+    }
+  },
+  "services": {
+    "heady-manager": {
+      "type": "api-gateway",
+      "status": "healthy",
+      "port": 3300,
+      "version": "3.0.0"
+    },
+    "heady-bus": {
+      "type": "event-bus",
+      "status": "active",
+      "wave": 1
+    },
+    "heady-gate": {
+      "type": "ai-gateway",
+      "status": "active",
+      "wave": 1
+    },
+    "heady-observer": {
+      "type": "observability",
+      "status": "active",
+      "wave": 2
+    },
+    "heady-knowledge": {
+      "type": "rag-knowledge",
+      "status": "active",
+      "wave": 2
+    },
+    "heady-flags": {
+      "type": "feature-flags",
+      "status": "active",
+      "wave": 2
+    },
+    "heady-identity": {
+      "type": "agent-iam",
+      "status": "active",
+      "wave": 3
+    },
+    "heady-registry": {
+      "type": "artifact-registry",
+      "status": "active",
+      "wave": 3
+    },
+    "heady-meter": {
+      "type": "usage-metering",
+      "status": "active",
+      "wave": 4
+    },
+    "heady-audit": {
+      "type": "compliance-audit",
+      "status": "active",
+      "wave": 4
+    }
+  },
+  "tools": {
+    "hcfullpipeline": { "status": "active", "type": "pipeline-engine" },
+    "monte-carlo": { "status": "active", "type": "optimizer" },
+    "pattern-engine": { "status": "active", "type": "intelligence" },
+    "self-critique": { "status": "active", "type": "intelligence" },
+    "story-driver": { "status": "active", "type": "narrative" },
+    "resource-manager": { "status": "active", "type": "resource-management" },
+    "task-scheduler": { "status": "active", "type": "scheduling" },
+    "imagination-engine": { "status": "active", "type": "creativity" },
+    "secrets-manager": { "status": "active", "type": "security" },
+    "cloudflare-manager": { "status": "active", "type": "cdn" }
+  },
+  "workflows": {
+    "antigravity-runtime": { "status": "active" },
+    "bee-swarm-diagnostic": { "status": "active" },
+    "code-projection": { "status": "active" },
+    "continuous-embedding": { "status": "active" },
+    "deep-scan-init": { "status": "active" },
+    "deployment-verification": { "status": "active" },
+    "foundational-pillars": { "status": "active" },
+    "heady-battle-sim": { "status": "active" },
+    "heady-command": { "status": "active" },
+    "heady-drift-monitor": { "status": "active" },
+    "heady-prompt-pipeline": { "status": "active" },
+    "heady-service-bootstrap": { "status": "active" },
+    "health-check": { "status": "active" },
+    "incident-response": { "status": "active" },
+    "memory-compaction": { "status": "active" },
+    "pipeline-dry-run": { "status": "active" },
+    "projection-hygiene": { "status": "active" },
+    "provider-failover-drill": { "status": "active" },
+    "ram-ops": { "status": "active" },
+    "vector-space-ops": { "status": "active" },
+    "concept-alignment": { "status": "active" },
+    "domain-branding-audit": { "status": "active" },
+    "edge-cache-warm": { "status": "active" },
+    "agent-performance-review": { "status": "active" }
+  },
+  "skills": {
+    "heady-cloud-orchestrator": { "status": "active" },
+    "heady-pqc-security": { "status": "active" },
+    "heady-buddy-device": { "status": "active" },
+    "heady-bee-swarm-ops": { "status": "active" },
+    "heady-intelligence-analytics": { "status": "active" },
+    "heady-a2a-protocol": { "status": "active" },
+    "heady-connector-vault": { "status": "active" },
+    "heady-cognitive-runtime": { "status": "active" },
+    "heady-drift-detection": { "status": "active" },
+    "heady-digital-presence": { "status": "active" },
+    "heady-incident-ops": { "status": "active" },
+    "heady-nonprofit-ops": { "status": "active" },
+    "heady-fintech-trading": { "status": "active" },
+    "heady-middleware-armor": { "status": "active" },
+    "heady-midi-creative": { "status": "active" },
+    "heady-microfrontend-portal": { "status": "active" },
+    "heady-sandbox-execution": { "status": "active" },
+    "heady-resilience-cache": { "status": "active" },
+    "heady-voice-relay": { "status": "active" },
+    "heady-vector-projection": { "status": "active" },
+    "heady-task-decomposition": { "status": "active" },
+    "heady-semantic-backpressure": { "status": "active" },
+    "heady-sacred-geometry-css-generator": { "status": "active" },
+    "heady-phi-math-foundation": { "status": "active" },
+    "heady-perplexity-rag-optimizer": { "status": "active" },
+    "heady-perplexity-patent-search": { "status": "active" },
+    "heady-perplexity-multi-agent-eval": { "status": "active" },
+    "heady-perplexity-feedback-loop": { "status": "active" },
+    "heady-perplexity-eval-orchestrator": { "status": "active" },
+    "heady-perplexity-domain-benchmarker": { "status": "active" },
+    "heady-perplexity-deep-research": { "status": "active" },
+    "heady-perplexity-content-generation": { "status": "active" },
+    "heady-perplexity-computer-use": { "status": "active" },
+    "heady-perplexity-competitor-intel": { "status": "active" },
+    "heady-perplexity-code-review": { "status": "active" },
+    "heady-monetization-platform": { "status": "active" },
+    "heady-mcp-server-development": { "status": "active" },
+    "heady-mcp-gateway-zero-trust": { "status": "active" },
+    "heady-hybrid-vector-search": { "status": "active" },
+    "heady-graph-rag-memory": { "status": "active" },
+    "heady-firebase-auth-orchestrator": { "status": "active" },
+    "heady-embedding-router": { "status": "active" },
+    "heady-durable-agent-state": { "status": "active" },
+    "heady-drupal-content-sync": { "status": "active" },
+    "heady-csl-engine": { "status": "active" },
+    "heady-context-window-manager": { "status": "active" }
+  },
+  "colab_runtimes": {
+    "node1-overmind": {
+      "name": "The Overmind",
+      "script": "colab/node1_overmind.py",
+      "role": "Monitor pgvector, detect semantic drift, dispatch tasks",
+      "gpu": "A100",
+      "status": "configured",
+      "subscription": "Colab Pro+"
+    },
+    "node2-forge": {
+      "name": "The Forge",
+      "script": "colab/node2_forge.py",
+      "role": "GitHub↔pgvector sync, AST compilation, edge cache purge",
+      "gpu": "A100",
+      "status": "configured",
+      "subscription": "Colab Pro+"
+    },
+    "node3-edge": {
+      "name": "The Edge",
+      "script": "colab/node3_edge.py",
+      "role": "Market data, momentum signals, portfolio tracking",
+      "gpu": "T4",
+      "status": "configured",
+      "subscription": "Colab Pro+"
+    },
+    "node4-learning": {
+      "name": "The Learning Engine",
+      "script": "colab/node4_learning.py",
+      "role": "Continuous fine-tuning, model evaluation, weight distribution",
+      "gpu": "A100",
+      "status": "configured",
+      "subscription": "Colab Pro+"
+    }
+  }
+}

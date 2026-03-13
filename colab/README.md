@@ -63,12 +63,28 @@ os.environ["GITHUB_REPO"] = "HeadyMe/Heady-pre-production-9f2f0642"
 
 **What it does:** Fetches crypto/equity prices every 30s, generates momentum signals, embeds market state vectors, tracks portfolio P&L.
 
+## Node 4: The Learning Engine (Tab 4)
+
+```python
+# Additional Cell: Install ML libs
+!pip install -q torch numpy
+
+# Cell 3: Clone and run
+!git clone https://github.com/HeadyMe/Heady-pre-production-9f2f0642.git heady 2>/dev/null || true
+%run heady/colab/node4_learning.py
+```
+
+**What it does:** Runs continuous fine-tuning and model evaluation, reads drift signals from Node 1, computes weight deltas via LoRA, pushes evaluation metrics back to pgvector and reports health to HeadyManager.
+
 ## Architecture
 
 ```
 Node 1 (Overmind)  ──dispatch──→  Node 2 (Forge)  ──push──→  Cloudflare Edge
       ↕                                ↕                           ↕
    pgvector ←────── sync ──────→  GitHub Repo  ←──── pull ──→  User browser
-      ↕
+      ↕                                                           
 Node 3 (Edge)  ──── market data ──→  pgvector
+      ↕
+Node 4 (Learning)  ── eval/finetune ──→  pgvector ──→  HeadyManager
 ```
+

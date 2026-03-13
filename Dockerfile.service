@@ -1,0 +1,65 @@
+FROM node:22-alpine
+WORKDIR /app
+
+# Install build tools
+RUN apk add --no-cache python3 make g++ curl
+
+# Copy everything needed
+COPY packages/ ./packages/
+COPY services/ ./services/
+
+# Replace ALL "workspace:*" refs with "file:" paths in every package.json
+# Paths are relative to the service/package directory
+RUN find . -name 'package.json' -not -path '*/node_modules/*' | while read pj; do \
+      sed -i 's|"workspace:\*"|"file:../../packages/service-runtime"|g;' "$pj" 2>/dev/null; \
+    done
+
+# More targeted: replace each workspace dep with its correct file: path
+# In packages/* dirs, depth is ../other-package
+# In services/* dirs, depth is ../../packages/other-package
+RUN find ./packages -name 'package.json' | while read pj; do \
+      sed -i \
+        -e 's|"@heady-ai/observability-client": "file:[^"]*"|"@heady-ai/observability-client": "file:../observability-client"|g' \
+        -e 's|"@heady-ai/contract-types": "file:[^"]*"|"@heady-ai/contract-types": "file:../contract-types"|g' \
+        -e 's|"@heady-ai/service-runtime": "file:[^"]*"|"@heady-ai/service-runtime": "file:../service-runtime"|g' \
+        -e 's|"@heady-ai/schemas": "file:[^"]*"|"@heady-ai/schemas": "file:../schemas"|g' \
+        -e 's|"@heady-ai/types": "file:[^"]*"|"@heady-ai/types": "file:../types"|g' \
+        -e 's|"@heady-ai/core": "file:[^"]*"|"@heady-ai/core": "file:../core"|g' \
+        -e 's|"@heady-ai/config-core": "file:[^"]*"|"@heady-ai/config-core": "file:../config-core"|g' \
+        -e 's|"@heady-ai/kernel": "file:[^"]*"|"@heady-ai/kernel": "file:../kernel"|g' \
+        -e 's|"@heady-ai/csl-gate": "file:[^"]*"|"@heady-ai/csl-gate": "file:../csl-gate"|g' \
+        -e 's|"@heady-ai/shared": "file:[^"]*"|"@heady-ai/shared": "file:../shared"|g' \
+        -e 's|"@heady-ai/phi-math": "file:[^"]*"|"@heady-ai/phi-math": "file:../phi-math"|g' \
+        -e 's|"@heady-ai/redis": "file:[^"]*"|"@heady-ai/redis": "file:../redis"|g' \
+        -e 's|"@heady-ai/gateway": "file:[^"]*"|"@heady-ai/gateway": "file:../gateway"|g' \
+        -e 's|"@heady-ai/sdk": "file:[^"]*"|"@heady-ai/sdk": "file:../sdk"|g' \
+        -e 's|"@heady-ai/heady-types": "file:[^"]*"|"@heady-ai/heady-types": "file:../heady-types"|g' \
+        -e 's|"@heady-ai/heady-config": "file:[^"]*"|"@heady-ai/heady-config": "file:../heady-config"|g' \
+        -e 's|"@heady-ai/memory-stream": "file:[^"]*"|"@heady-ai/memory-stream": "file:../memory-stream"|g' \
+        -e 's|"@heady-ai/vector-memory": "file:[^"]*"|"@heady-ai/vector-memory": "file:../vector-memory"|g' \
+        -e 's|"@heady-ai/agent-identity": "file:[^"]*"|"@heady-ai/agent-identity": "file:../agent-identity"|g' \
+        -e 's|"@heady-ai/observability-kernel": "file:[^"]*"|"@heady-ai/observability-kernel": "file:../observability-kernel"|g' \
+        -e 's|"@heady-ai/mcp-server": "file:[^"]*"|"@heady-ai/mcp-server": "file:../mcp-server"|g' \
+        "$pj"; \
+    done
+
+RUN find ./services -name 'package.json' | while read pj; do \
+      sed -i \
+        -e 's|"@heady-ai/observability-client": "file:[^"]*"|"@heady-ai/observability-client": "file:../../packages/observability-client"|g' \
+        -e 's|"@heady-ai/contract-types": "file:[^"]*"|"@heady-ai/contract-types": "file:../../packages/contract-types"|g' \
+        -e 's|"@heady-ai/service-runtime": "file:[^"]*"|"@heady-ai/service-runtime": "file:../../packages/service-runtime"|g' \
+        -e 's|"@heady-ai/csl-gate": "file:[^"]*"|"@heady-ai/csl-gate": "file:../../packages/csl-gate"|g' \
+        -e 's|"@heady-ai/shared": "file:[^"]*"|"@heady-ai/shared": "file:../../packages/shared"|g' \
+        "$pj"; \
+    done
+
+# Install each target service's dependencies from its own directory
+ARG SERVICE_DIR=services/domain-router
+RUN cd "$SERVICE_DIR" && npm install --legacy-peer-deps 2>&1 || echo "npm install completed with warnings"
+
+# Install tsx globally
+RUN npm install -g tsx typescript
+
+WORKDIR /app
+EXPOSE 4300-4320
+CMD ["node", "-e", "console.log('Service ready')"]

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Systems — Dashboard</title>
+  <meta name="description" content="Heady Systems command center — manage nodes, services, pipelines, and talk to HeadyBuddy.">
+  <link rel="icon" type="image/png" sizes="192x192" href="/heady-icon-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/css/heady.css">
+</head>
+<body>
+  <div class="app">
+    <!-- ─── Header ─────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-left">
+        <span class="logo">∞ Heady Systems</span>
+        <span class="logo-sub">v4.0.0</span>
+      </div>
+      <div class="header-right">
+        <div class="health-badge" id="health-badge">
+          <span class="dot yellow"></span>connecting…
+        </div>
+        <span class="clock" id="clock">--:--:--</span>
+      </div>
+    </header>
+
+    <!-- ─── Sidebar ────────────────────────────────────────── -->
+    <nav class="sidebar">
+      <div class="nav-section-label">Command Center</div>
+      <div class="nav-item active" data-view="overview">
+        <span class="icon">📊</span> Overview
+      </div>
+      <div class="nav-item" data-view="nodes">
+        <span class="icon">🔮</span> Nodes
+      </div>
+      <div class="nav-item" data-view="services">
+        <span class="icon">⚙️</span> Services
+      </div>
+      <div class="nav-item" data-view="resources">
+        <span class="icon">📈</span> Resources
+      </div>
+      <div class="nav-item" data-view="pipeline">
+        <span class="icon">🔄</span> Pipeline
+      </div>
+      <div class="nav-item" data-view="swarms">
+        <span class="icon">🐝</span> Swarms
+      </div>
+      <div class="nav-item" data-view="colab">
+        <span class="icon">⚡</span> Colab
+      </div>
+
+      <div class="nav-section-label">Intelligence</div>
+      <div class="nav-item" data-view="chat">
+        <span class="icon">💬</span> HeadyBuddy
+      </div>
+      <div class="nav-item" data-view="registry">
+        <span class="icon">📦</span> Registry
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="nav-item" onclick="window.open('/api/pulse','_blank')">
+          <span class="icon">🔗</span> API Pulse
+        </div>
+      </div>
+    </nav>
+
+    <!-- ─── Main Content ───────────────────────────────────── -->
+    <main class="main">
+
+      <!-- ── OVERVIEW ────────────────────────────────────── -->
+      <div class="view active" id="view-overview">
+        <div class="dash-grid">
+          <div class="card stat-card">
+            <div class="card-title">System Health</div>
+            <div class="stat-value" id="stat-health-score">—</div>
+            <div class="stat-label">Overall Status</div>
+            <div class="stat-sub">Score: <span id="stat-score-num">—</span></div>
+          </div>
+          <div class="card stat-card">
+            <div class="card-title">Uptime</div>
+            <div class="stat-value" id="stat-uptime">—</div>
+            <div class="stat-label">Server Running</div>
+            <div class="stat-sub" id="stat-env">—</div>
+          </div>
+          <div class="card stat-card">
+            <div class="card-title">Version</div>
+            <div class="stat-value" id="stat-version">—</div>
+            <div class="stat-label">HeadyManager</div>
+            <div class="stat-sub">Heap: <span id="stat-memory">—</span></div>
+          </div>
+          <div class="card stat-card">
+            <div class="card-title">Nodes</div>
+            <div class="stat-value" id="stat-nodes">—</div>
+            <div class="stat-label">Active / Total</div>
+            <div class="stat-sub">Sacred Geometry</div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="card stat-card">
+            <div class="card-title">Tools</div>
+            <div class="stat-value" id="stat-tools">—</div>
+            <div class="stat-label">Registered</div>
+          </div>
+          <div class="card stat-card">
+            <div class="card-title">Workflows</div>
+            <div class="stat-value" id="stat-workflows">—</div>
+            <div class="stat-label">Registered</div>
+          </div>
+          <div class="card stat-card">
+            <div class="card-title">Services</div>
+            <div class="stat-value" id="stat-services-count">—</div>
+            <div class="stat-label">Tracked</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── NODES ───────────────────────────────────────── -->
+      <div class="view" id="view-nodes">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">AI Nodes</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <span id="nodes-summary" style="font-size:0.82rem;color:var(--text-dim)">Loading…</span>
+            <button class="btn btn-secondary" onclick="H.loadNodes()">↻ Refresh</button>
+          </div>
+          <div class="node-grid" id="node-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── SERVICES ────────────────────────────────────── -->
+      <div class="view" id="view-services">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span id="svc-summary" style="font-size:0.82rem;color:var(--text-dim)">Loading…</span>
+          <button class="btn btn-secondary" onclick="H.loadServices()">↻ Refresh</button>
+        </div>
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-title">Subsystems</div>
+            <div class="svc-list" id="svc-subsystems"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Wave Services</div>
+            <div class="svc-list" id="svc-wave"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESOURCES ───────────────────────────────────── -->
+      <div class="view" id="view-resources">
+        <div class="card">
+          <div class="card-title">System Resources</div>
+          <div style="margin-bottom:6px;font-size:0.75rem;color:var(--text-muted)">
+            Mode: <span id="res-status">—</span>
+          </div>
+
+          <div class="gauge-row">
+            <span class="gauge-label">CPU</span>
+            <div class="gauge-track"><div class="gauge-fill ok" id="gauge-cpu" style="width:0%"></div></div>
+            <span class="gauge-value" id="gauge-cpu-val">0%</span>
+          </div>
+          <div style="font-size:0.68rem;color:var(--text-muted);margin:-8px 0 14px 62px" id="res-cpu-detail"></div>
+
+          <div class="gauge-row">
+            <span class="gauge-label">RAM</span>
+            <div class="gauge-track"><div class="gauge-fill ok" id="gauge-ram" style="width:0%"></div></div>
+            <span class="gauge-value" id="gauge-ram-val">0%</span>
+          </div>
+          <div style="font-size:0.68rem;color:var(--text-muted);margin:-8px 0 14px 62px" id="res-ram-detail"></div>
+
+          <div class="gauge-row">
+            <span class="gauge-label">Disk</span>
+            <div class="gauge-track"><div class="gauge-fill ok" id="gauge-disk" style="width:0%"></div></div>
+            <span class="gauge-value" id="gauge-disk-val">0%</span>
+          </div>
+          <div style="font-size:0.68rem;color:var(--text-muted);margin:-8px 0 14px 62px" id="res-disk-detail"></div>
+        </div>
+      </div>
+
+      <!-- ── PIPELINE ────────────────────────────────────── -->
+      <div class="view" id="view-pipeline">
+        <div class="pipeline-actions">
+          <button class="btn btn-primary" onclick="H.runPipeline()">▶ Run Pipeline</button>
+          <button class="btn btn-success" onclick="H.toggleContinuous('start')">⟳ Start Continuous</button>
+          <button class="btn btn-danger" onclick="H.toggleContinuous('stop')">⏹ Stop Continuous</button>
+          <button class="btn btn-secondary" onclick="H.loadPipeline()">↻ Refresh</button>
+        </div>
+        <div id="pipeline-info">
+          <div class="card"><div class="card-title">Pipeline</div><p style="color:var(--text-muted)">Loading…</p></div>
+        </div>
+      </div>
+
+      <!-- ── CHAT ────────────────────────────────────────── -->
+      <div class="view" id="view-chat">
+        <div class="chat-container">
+          <div class="card" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+            <div class="card-title">HeadyBuddy Chat</div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-msg assistant">
+                <div>Hey! I'm HeadyBuddy, your AI companion and orchestration copilot. Ask me anything about the system, run diagnostics, or plan your day. 🌊</div>
+                <div class="msg-meta">HeadyBuddy · ready</div>
+              </div>
+            </div>
+            <div class="chat-chips" id="chat-chips"></div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chat-input" placeholder="Ask HeadyBuddy anything…" autocomplete="off">
+              <button class="btn btn-primary" onclick="H.sendChat()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SWARMS ─────────────────────────────────────── -->
+      <div class="view" id="view-swarms">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span id="swarms-summary" style="font-size:0.82rem;color:var(--text-dim)">Loading…</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" onclick="H.dispatchSwarmTask()">⚡ Dispatch Task</button>
+            <button class="btn btn-secondary" onclick="H.loadSwarms()">↻ Refresh</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">17-Swarm Orchestrator</div>
+          <div class="svc-list" id="swarm-list"></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="card-title">Audit Log (Last 20)</div>
+          <div class="svc-list" id="swarm-audit"></div>
+        </div>
+      </div>
+
+      <!-- ── COLAB ──────────────────────────────────────── -->
+      <div class="view" id="view-colab">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <span id="colab-summary" style="font-size:0.82rem;color:var(--text-dim)">Loading…</span>
+          <button class="btn btn-secondary" onclick="H.loadColab()">↻ Refresh</button>
+        </div>
+        <div class="dash-grid" id="colab-grid"></div>
+      </div>
+
+      <!-- ── REGISTRY ────────────────────────────────────── -->
+      <div class="view" id="view-registry">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="card-title" style="margin-bottom:0">Component Registry</div>
+            <span id="reg-summary" style="font-size:0.75rem;color:var(--text-muted)"></span>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="reg-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Version</th>
+                  <th>Status</th>
+                  <th>Criticality</th>
+                </tr>
+              </thead>
+              <tbody id="registry-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/heady-app.js"></script>
+</body>
+</html>

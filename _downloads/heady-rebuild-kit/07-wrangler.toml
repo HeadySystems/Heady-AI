@@ -1,0 +1,63 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ CLOUDFLARE WORKER CONFIG                                ║
+# ║  Handles all *.headysystems.com + product domains               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+name = "heady-edge-proxy"
+main = "src/edge-proxy.js"
+compatibility_date = "2026-03-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+RENDER_BASE_DOMAIN = "onrender.com"
+HEADY_VERSION = "3.0.0"
+
+# ─── Domain Routes ──────────────────────────────────────────────
+
+# Primary product domains
+[[routes]]
+pattern = "headysystems.com/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern = "www.headysystems.com/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern = "*.headysystems.com/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern = "headyme.com/*"
+zone_name = "headyme.com"
+
+[[routes]]
+pattern = "www.headyme.com/*"
+zone_name = "headyme.com"
+
+[[routes]]
+pattern = "headymcp.com/*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern = "headyio.com/*"
+zone_name = "headyio.com"
+
+[[routes]]
+pattern = "headyos.com/*"
+zone_name = "headyos.com"
+
+[[routes]]
+pattern = "headybuddy.org/*"
+zone_name = "headybuddy.org"
+
+[[routes]]
+pattern = "headyconnection.org/*"
+zone_name = "headyconnection.org"
+
+[[routes]]
+pattern = "1ime1.com/*"
+zone_name = "1ime1.com"
+
+[observability]
+enabled = true
