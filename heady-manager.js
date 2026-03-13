@@ -1117,6 +1117,24 @@ try {
   console.warn(`  ⚠ HeadyDeploy not loaded: ${err.message}`);
 }
 
+// ─── HeadyAuto — Unified Automation Engine ───────────────────────────
+let headyAuto = null;
+try {
+  const { HeadyAuto, registerAutoRoutes } = require("./services/heady-auto");
+  headyAuto = new HeadyAuto();
+  registerAutoRoutes(app, headyAuto);
+
+  // Auto-initialize all subsystems
+  const initResults = headyAuto.init();
+  console.log("  ∞ HeadyAuto: LOADED");
+  console.log(`    → Git credentials: ${initResults.gitCredentials?.ok ? "CONFIGURED" : "needs setup"}`);
+  console.log(`    → Dropzone watcher: ${initResults.dropzoneWatcher?.ok ? "ACTIVE" : "inactive"}`);
+  console.log(`    → Dropzone import: ${initResults.dropzoneImport?.imported || 0} new files`);
+  console.log("    → Endpoints: /api/auto/status, /api/auto/full, /api/auto/deploy");
+} catch (err) {
+  console.warn(`  ⚠ HeadyAuto not loaded: ${err.message}`);
+}
+
 // ─── Aloha Protocol System (Always-On) ───────────────────────────────
 const alohaProtocol = loadYamlConfig("aloha-protocol.yaml");
 const deOptProtocol = loadYamlConfig("de-optimization-protocol.yaml");
