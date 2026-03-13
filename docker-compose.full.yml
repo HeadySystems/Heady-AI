@@ -27,7 +27,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3300
-      - HEADY_TARGET=Docker
+      - HEADY_TARGET=CloudOnly
       - HEADY_VERSION=3.0.0
       - DATABASE_URL=postgresql://heady:heady_secret@heady-postgres:5432/heady
       - REDIS_URL=redis://heady-redis:6379
@@ -58,10 +58,8 @@ services:
     environment:
       - POSTGRES_DB=heady
       - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=heady_secret
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
-    ports:
-      - "5432:5432"
     volumes:
       - heady-postgres:/var/lib/postgresql/data
     ports:
@@ -78,8 +76,6 @@ services:
   heady-redis:
     image: redis:7-alpine
     container_name: heady-redis
-    ports:
-      - "6379:6379"
     volumes:
       - heady-redis:/data
     ports:
@@ -97,8 +93,6 @@ services:
   heady-ollama:
     image: ollama/ollama:latest
     container_name: heady-ollama
-    ports:
-      - "11434:11434"
     volumes:
       - heady-ollama:/root/.ollama
     ports:
@@ -108,145 +102,45 @@ services:
     environment:
       - OLLAMA_HOST=0.0.0.0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:11434/api/tags || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
     restart: unless-stopped
 
-  heady-rag:
-    build: 
-      context: ./HeadyAcademy
-      dockerfile: Dockerfile.rag
-    container_name: heady-rag
-    ports:
-      - "8080:8080"
-    environment:
-      - POSTGRES_HOST=heady-postgres
-      - POSTGRES_DB=heady
-      - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - OLLAMA_HOST=heady-ollama
-    volumes:
-      - heady-rag:/app/data
-    networks:
-      - heady-net
-    depends_on:
-      - heady-postgres
-      - heady-ollama
-    restart: unless-stopped
-
-  # Web Frontend
+  # ─── Web Frontend ──────────────────────────────────────────────
   heady-web:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: heady-web
     ports:
-      - "3000:3000"
+      - "3400:3400"
     environment:
-      - REACT_APP_API_URL=http://localhost:3300
-      - REACT_APP_MCP_URL=http://localhost:3001
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - REACT_APP_API_URL=http://heady-manager:3300
     networks:
       - heady-net
     depends_on:
       - heady-manager
     restart: unless-stopped
 
-  # MCP Gateway
-  heady-mcp:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.mcp
-    container_name: heady-mcp
-    ports:
-      - "3001:3001"
-    environment:
-      - MANAGER_URL=http://heady-manager:3300
-      - OLLAMA_URL=http://heady-ollama:11434
-    volumes:
-      - ./backend:/app
-      - heady-mcp:/app/data
-    networks:
-      - heady-net
-    depends_on:
-      - heady-manager
-      - heady-ollama
-    restart: unless-stopped
-
-  # HeadyBuddy Desktop Service
-  heady-buddy:
-    build:
-      context: ./headybuddy
-      dockerfile: Dockerfile
-    container_name: heady-buddy
-    ports:
-      - "3301:3301"
-    environment:
-      - MANAGER_URL=http://heady-manager:3300
-    volumes:
-      - ./headybuddy:/app
-      - heady-buddy:/app/data
-    networks:
-      - heady-net
-    depends_on:
-      - heady-manager
-    restart: unless-stopped
-
-  # Browser Extension Bridge
-  heady-browser-bridge:
-    build:
-      context: ./agents
-      dockerfile: Dockerfile.bridge
-    container_name: heady-browser-bridge
-    ports:
-      - "3302:3302"
-    environment:
-      - MANAGER_URL=http://heady-manager:3300
-    networks:
-      - heady-net
-    depends_on:
-      - heady-manager
-    restart: unless-stopped
-
-  # Voice I/O Service
-  heady-voice:
-    build:
-      context: ./workers
-      dockerfile: Dockerfile.voice
-    container_name: heady-voice
-    ports:
-      - "3303:3303"
-    environment:
-      - MANAGER_URL=http://heady-manager:3300
-    volumes:
-      - ./workers:/app
-      - heady-voice:/app/data
-    networks:
-      - heady-net
-    depends_on:
-      - heady-manager
-    restart: unless-stopped
-
-  # Admin/Debug Interfaces
+  # ─── Admin/Debug Interfaces ───────────────────────────────────
   heady-pgadmin:
     image: dpage/pgadmin4:latest
     container_name: heady-pgadmin
     ports:
-      - "8080:80"
+      - "5050:80"
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@internal.headyio.com
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@heady.local}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-heady_admin}
       - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
     volumes:
       - heady-pgadmin:/var/lib/pgadmin
     networks:
       - heady-net
     depends_on:
-      - heady-postgres
+      heady-postgres:
+        condition: service_healthy
     restart: unless-stopped
 
   heady-redis-commander:
@@ -259,7 +153,8 @@ services:
     networks:
       - heady-net
     depends_on:
-      - heady-redis
+      heady-redis:
+        condition: service_healthy
     restart: unless-stopped
 
   # ─── Monitoring & Observability ────────────────────────────────
@@ -267,9 +162,9 @@ services:
     image: grafana/grafana:latest
     container_name: heady-grafana
     ports:
-      - "3002:3000"
+      - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-heady_grafana}
       - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
     volumes:
       - heady-grafana:/var/lib/grafana
@@ -288,40 +183,6 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    networks:
-      - heady-net
-    restart: unless-stopped
-
-  # Reverse Proxy / Gateway
-  heady-nginx:
-    image: nginx:alpine
-    container_name: heady-nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./configs/nginx/ssl:/etc/nginx/ssl:ro
-      - heady-nginx:/var/log/nginx
-    networks:
-      - heady-net
-    depends_on:
-      - heady-manager
-      - heady-web
-      - heady-mcp
-    restart: unless-stopped
-
-  # Service Discovery (Consul)
-  heady-consul:
-    image: consul:latest
-    container_name: heady-consul
-    ports:
-      - "8500:8500"
-      - "8600:8600/udp"
-    volumes:
-      - heady-consul:/consul/data
-      - ./configs/consul:/consul/config:ro
-    command: agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
     networks:
       - heady-net
     restart: unless-stopped
@@ -345,6 +206,3 @@ volumes:
 networks:
   heady-net:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
