@@ -34,3 +34,16 @@ nohup: ignoring input
 [2026-03-12T17:59:49Z] SKIP (duplicate): files (1).zip
 [2026-03-12T17:59:49Z] PROCESSING: files (4).zip (1MB)
 [2026-03-12T17:59:49Z]   → 3 net-new files from files (4).zip
+[2026-03-13T10:11:49Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-13T10:11:49Z] PROCESSING: all-model-racing-prompts.zip (1MB)
+[2026-03-13T10:11:49Z]   → 9 net-new files from all-model-racing-prompts.zip
+[2026-03-13T11:25:26Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-13T11:25:26Z] SKIP (duplicate): files (1).zip
+[2026-03-13T11:25:26Z] PROCESSING: files (5).zip (1MB)
+[2026-03-13T11:25:26Z]   → 0 net-new files from files (5).zip
+[2026-03-13T11:25:26Z] PROCESSING: files (6).zip (1MB)
+[2026-03-13T11:25:26Z]   → 0 net-new files from files (6).zip
+[2026-03-13T11:25:26Z] PROCESSING: files.zip (1MB)
+[2026-03-13T11:25:26Z]   → 0 net-new files from files.zip
+[2026-03-13T11:25:26Z] PROCESSING: heady-audit-bundle-2026-03-10.zip (1MB)
+[2026-03-13T11:25:26Z]   → 10 net-new files from heady-audit-bundle-2026-03-10.zip
