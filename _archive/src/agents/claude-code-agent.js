@@ -1,8 +1,3 @@
-/*
- * © 2026 Heady™Systems Inc.
- * PROPRIETARY AND CONFIDENTIAL.
- * Unauthorized copying, modification, or distribution is strictly prohibited.
- */
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,35 +9,36 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/agents/headyjules-code-agent.js                                                    ║
+// ║  FILE: src/agents/claude-code-agent.js                                                    ║
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 /**
- * HeadyJules Code Agent
+ * Claude Code Agent
  *
- * Integrates HeadyJules Code (HeadyNexus CLI) as a Supervisor agent in HCFullPipeline.
+ * Integrates Claude Code (Anthropic CLI) as a Supervisor agent in HCFullPipeline.
  * Registered with the Supervisor for code-generation, analysis, refactoring,
  * architecture, and debugging tasks.
  *
- * ROUTING: All AI traffic proxied through HeadyGateway (heady-hive-sdk).
+ * ROUTING: Direct (no proxy) via @heady/networking internal client.
  *
  * USAGE:
  *   - Supervisor routes code-related tasks to this agent.
- *   - Agent spawns `headyjules` CLI process with structured prompts.
+ *   - Agent spawns `claude` CLI process with structured prompts.
  *   - Returns structured results for aggregation.
  *
  * REQUIREMENTS:
- *   - `headyjules` CLI installed and authenticated (HEADY_NEXUS_KEY in env)
- *   - Or fallback to HeadyNexus HTTP API via @heady-ai/networking
+ *   - `claude` CLI installed and authenticated (ANTHROPIC_API_KEY in env)
+ *   - Or fallback to Anthropic HTTP API via @heady/networking
  */
 
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const yaml = require("js-yaml");
 
-const AGENT_ID = "headyjules-code";
+const AGENT_ID = "claude-code";
 const AGENT_SKILLS = [
   "code-generation",
   "code-analysis",
@@ -51,49 +47,58 @@ const AGENT_SKILLS = [
   "debugging",
   "concept-extraction",
   "documentation",
-  "unit-testing",
-  "integration-testing",
-  "e2e-testing",
-  "test-coverage",
-  "api-design",
-  "rest-endpoint",
-  "graphql-schema",
-  "websocket-handler",
-  "database-schema",
-  "migration-gen",
-  "query-optimize",
-  "orm-model",
-  "auth-implement",
-  "jwt-session",
-  "rbac-policy",
-  "oauth-flow",
-  "error-handling",
-  "logging-strategy",
-  "monitoring-hook",
-  "perf-profile",
-  "memory-leak-detect",
-  "concurrency-fix",
-  "race-condition",
-  "design-pattern",
-  "solid-principle",
-  "dependency-inject",
-  "event-driven",
-  "microservice-decompose",
-  "monolith-refactor",
-  "ci-config",
-  "github-actions",
-  "docker-compose",
-  "env-config",
-  "dependency-update",
-  "security-patch",
-  "code-review",
-  "pr-summary",
-  "type-safety",
-  "schema-validate",
 ];
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
 const DEFAULT_TIMEOUT_MS = 120000;
+
+const PROMPT_CONFIG_PATH = path.join(PROJECT_ROOT, "configs", "autonomous-agent-prompt.yaml");
+const PROMPT_SOURCE_PATH = path.join(PROJECT_ROOT, "docs", "AUTONOMOUS_AGENT_SYSTEM_PROMPT.md");
+
+/**
+ * Load and parse the autonomous agent prompt configuration.
+ * Returns null if config is unavailable (graceful degradation).
+ */
+function loadPromptConfig() {
+  try {
+    const raw = fs.readFileSync(PROMPT_CONFIG_PATH, "utf-8");
+    return yaml.load(raw);
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Load the full system prompt markdown, split into indexed sections.
+ * Sections are delimited by "## <roman-numeral>." headings.
+ */
+function loadPromptSections() {
+  try {
+    const raw = fs.readFileSync(PROMPT_SOURCE_PATH, "utf-8");
+    const sections = {};
+    let currentKey = null;
+    let currentLines = [];
+
+    for (const line of raw.split("\n")) {
+      const sectionMatch = line.match(/^## ([IVXLC]+)\.\s/);
+      if (sectionMatch) {
+        if (currentKey) {
+          sections[currentKey] = currentLines.join("\n").trim();
+        }
+        currentKey = sectionMatch[1];
+        currentLines = [line];
+      } else if (currentKey) {
+        currentLines.push(line);
+      }
+    }
+    if (currentKey) {
+      sections[currentKey] = currentLines.join("\n").trim();
+    }
+    return sections;
+  } catch (err) {
+    return null;
+  }
+}
 
 class ClaudeCodeAgent {
   constructor(options = {}) {
@@ -101,15 +106,20 @@ class ClaudeCodeAgent {
     this.skills = AGENT_SKILLS;
     this.projectRoot = options.projectRoot || PROJECT_ROOT;
     this.timeoutMs = options.timeoutMs || DEFAULT_TIMEOUT_MS;
-    this.claudeBin = options.claudeBin || "headyjules";
+    this.claudeBin = options.claudeBin || "claude";
     this.model = options.model || "sonnet";
     this.history = [];
     this.totalTokens = 0;
     this.totalCost = 0;
+
+    // Load autonomous agent prompt system
+    this.promptConfig = loadPromptConfig();
+    this.promptSections = loadPromptSections();
+    this.promptEnabled = !!(this.promptConfig && this.promptSections);
   }
 
   describe() {
-    return `HeadyJules Code Agent: AI-powered code generation, analysis, refactoring, architecture review, and debugging via Heady™Jules CLI. Skills: ${this.skills.join(", ")}`;
+    return `Claude Code Agent: AI-powered code generation, analysis, refactoring, architecture review, and debugging via Claude CLI. Skills: ${this.skills.join(", ")}`;
   }
 
   /**
@@ -169,67 +179,181 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Build a structured prompt for Heady™Jules Code based on task type.
-   * Utilizes the Universal Heady™ Prompt Architecture.
+   * Get the system prompt context for a given task type and pipeline stage.
+   * Uses the activation rules and section mapping from autonomous-agent-prompt.yaml.
+   *
+   * @param {string} taskType - The task type being executed
+   * @param {string} stage - The current pipeline stage
+   * @param {number} [ors] - Operational Readiness Score (0-100)
+   * @returns {string} System prompt context to prepend, or empty string
+   */
+  _getSystemPromptContext(taskType, stage, ors) {
+    if (!this.promptEnabled) return "";
+
+    const config = this.promptConfig;
+    const activation = config.activation || {};
+
+    // Check if this task type should never receive prompt injection
+    if ((activation.neverInject || []).includes(taskType)) return "";
+
+    // Determine injection mode based on ORS
+    let mode = config.injection?.defaultMode || "sections";
+    if (typeof ors === "number") {
+      if (ors > 85) mode = "full";
+      else if (ors >= 70) mode = "sections";
+      else mode = "summary";
+    }
+
+    // Summary mode: return the condensed version
+    if (mode === "summary") {
+      const summary = config.injection?.summary || "";
+      return summary ? `[SYSTEM PROMPT — MAXIMUM POTENTIAL v2 (Summary)]\n${summary}\n` : "";
+    }
+
+    // Full mode: return all sections concatenated
+    if (mode === "full") {
+      const allSections = Object.values(this.promptSections);
+      return `[SYSTEM PROMPT — MAXIMUM POTENTIAL v2]\n${allSections.join("\n\n")}\n`;
+    }
+
+    // Sections mode: determine which sections to inject
+    let sectionKeys = [];
+
+    // Always-inject task types get the pipeline-aligned sections
+    if ((activation.alwaysInject || []).includes(taskType)) {
+      const pipelineAlignment = config.pipelineAlignment || {};
+      const stageConfig = pipelineAlignment[stage] || pipelineAlignment["execute-major-phase"] || {};
+      sectionKeys = stageConfig.sections || [];
+    }
+
+    // Section-mapped task types get their specific sections
+    const sectionMapping = activation.sectionMapping || {};
+    if (sectionMapping[taskType]) {
+      const mapped = sectionMapping[taskType];
+      for (const key of mapped) {
+        if (!sectionKeys.includes(key)) sectionKeys.push(key);
+      }
+    }
+
+    if (sectionKeys.length === 0) return "";
+
+    // Build the injected prompt from selected sections
+    const injected = sectionKeys
+      .map((key) => this.promptSections[key])
+      .filter(Boolean)
+      .join("\n\n");
+
+    return injected
+      ? `[SYSTEM PROMPT — MAXIMUM POTENTIAL v2 (Sections: ${sectionKeys.join(", ")})]\n${injected}\n`
+      : "";
+  }
+
+  /**
+   * Build a structured prompt for Claude Code based on task type.
    */
   _buildPrompt(request, metadata) {
-    const contextDetails = [
-      `project: HeadyMonorepo (HCFullPipeline)`,
-      `stage: ${metadata?.requestType || "unknown"}`,
-      `run_id: ${request.runId || request.id || "N/A"}`,
-      `target: ${request.target || "unspecified"}`
-    ].join('\\n');
+    const stage = metadata?.stage || metadata?.requestType || "execute-major-phase";
+    const ors = metadata?.ors ?? request.ors;
 
-    const baseArchitecture = (roleAndGoal, steps, output, constraints) => {
-      return [
-        `<ROLE_AND_GOAL>\\n${roleAndGoal}\\n</ROLE_AND_GOAL>`,
-        `<CONTEXT>\\n${contextDetails}\\n${request.description || request.prompt || ""}\\n</CONTEXT>`,
-        `<STEPS>\\n${steps}\\n</STEPS>`,
-        `<CONSTRAINTS>\\nNo unverified parallel threads.\\nEnsure all commits map to Master Architecture.\\nFollow HEADY_BRAND header convention.\\nUse CommonJS require.\\n${constraints}\\n</CONSTRAINTS>`,
-        `<OUTPUT>\\nUse structured markdown/dynamic tables for visual output.\\n${output}\\n</OUTPUT>`,
-        `<FEW_SHOT_EXAMPLES>\\n[See internal repository patterns for Heady™ Swarm node creation and HCFP routing standards]\\n</FEW_SHOT_EXAMPLES>`,
-        `<RECAP>\\nConfirm understanding of strict telemetry, formatting, and specific task requirements before proceeding.\\n</RECAP>`
-      ].join('\\n\\n');
-    };
+    // Inject autonomous agent system prompt context
+    const systemPrompt = this._getSystemPromptContext(
+      request.taskType || "general",
+      stage,
+      typeof ors === "number" ? ors : undefined
+    );
+
+    const context = [
+      `Project: HeadyMonorepo (HCFullPipeline)`,
+      `Stage: ${metadata?.requestType || "unknown"}`,
+      `Run ID: ${request.runId || request.id || "N/A"}`,
+    ];
+
+    // Prepend system prompt if available
+    if (systemPrompt) {
+      context.unshift(systemPrompt);
+    }
 
     switch (request.taskType) {
       case "code-generation":
-        return baseArchitecture(
-          "Master Coding Agent: Generate robust, enterprise-grade production software.",
-          "1. Analyze requirements recursively.\\n2. Perform sequential code audits.\\n3. Generate implementation mapped to master architecture.",
-          "Write production-quality code. Provide a markdown summary of added features.",
-          "Only use allowed toolsets. Must be strictly typed."
-        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
+        return [
+          ...context,
+          `Task: Generate code`,
+          `Target: ${request.target || "unspecified"}`,
+          `Requirements: ${request.requirements || request.description || "See request"}`,
+          `Constraints: Follow HEADY_BRAND header convention. Use CommonJS require. Write production-quality code.`,
+          ``,
+          request.prompt || request.description || "",
+        ].join("\n");
 
       case "code-analysis":
-        return baseArchitecture(
-          "Master Code Auditor: Analyze quality, performance, and architecture.",
-          "1. Scan required files sequentially.\\n2. Cross-reference patterns.\\n3. Identify severe vulnerabilities or complexity.",
-          "Structured findings with severity, location, and recommendations.",
-          "Focus on: " + (request.focus || "general quality, security, performance")
-        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
+        return [
+          ...context,
+          `Task: Analyze code quality, performance, and architecture`,
+          `Files: ${(request.files || []).join(", ") || "project-wide"}`,
+          `Focus: ${request.focus || "general quality, security, performance"}`,
+          `Output: Structured findings with severity, location, and recommendations`,
+          ``,
+          request.prompt || "",
+        ].join("\n");
 
       case "refactoring":
-        return baseArchitecture(
-          "Master Refactoring Agent: Restructure existing code without modifying external behavior.",
-          "1. Establish pre-refactor state.\\n2. Apply AST-aware modifications.\\n3. Validate internal logic correctness.",
-          "Refactored code and an impact summary table.",
-          "No functional changes unless explicitly requested. Preserve all existing tests. Goal: " + (request.goal || "improve clarity")
-        ) + `\\n\\nPrompt: ${request.prompt || ""}`;
+        return [
+          ...context,
+          `Task: Refactor code`,
+          `Target: ${request.target || "unspecified"}`,
+          `Goal: ${request.goal || "improve clarity, reduce complexity, maintain behavior"}`,
+          `Constraints: No functional changes unless explicitly requested. Preserve tests.`,
+          ``,
+          request.prompt || "",
+        ].join("\n");
+
+      case "architecture":
+        return [
+          ...context,
+          `Task: Architecture review/design`,
+          `Scope: ${request.scope || "full system"}`,
+          `Question: ${request.question || request.description || ""}`,
+          `Configs available: configs/hcfullpipeline.yaml, configs/service-catalog.yaml, configs/system-components.yaml`,
+          ``,
+          request.prompt || "",
+        ].join("\n");
+
+      case "debugging":
+        return [
+          ...context,
+          `Task: Debug issue`,
+          `Error: ${request.error || "unspecified"}`,
+          `Logs: ${request.logs || "see hc_pipeline.log"}`,
+          `Steps to reproduce: ${request.steps || "unknown"}`,
+          ``,
+          request.prompt || "",
+        ].join("\n");
+
+      case "concept-extraction":
+        return [
+          ...context,
+          `Task: Extract concepts and patterns from provided content`,
+          `Source: ${request.source || "provided text"}`,
+          `Output: Structured concepts with name, category, description, applicability`,
+          `Reference: configs/concepts-index.yaml for existing concepts`,
+          ``,
+          request.content || request.prompt || "",
+        ].join("\n");
 
       default:
-        return baseArchitecture(
-          "Heady Swarm Node: Execute general AI operations.",
-          "1. Parse the request.\\n2. Decompose necessary steps.\\n3. Execute optimally.",
-          "Result of operations.",
-          "None specific."
-        ) + `\\n\\nTask: ${request.taskType || "general"}\\nPrompt: ${request.prompt || ""}`;
+        return [
+          ...context,
+          `Task: ${request.taskType || "general"}`,
+          `Description: ${request.description || request.prompt || ""}`,
+          ``,
+          request.prompt || request.description || "",
+        ].join("\n");
     }
   }
 
   /**
-   * Execute HeadyJules Code CLI with the given prompt.
-   * Falls back to SDK gateway if CLI is not available.
+   * Execute Claude Code CLI with the given prompt.
+   * Falls back to a simulated response if CLI is not available.
    */
   async _executeClaudeCode(prompt, request) {
     // Try CLI first
@@ -242,7 +366,7 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Check if `headyjules` CLI is available on PATH.
+   * Check if `claude` CLI is available on PATH.
    */
   async _isClaudeCliAvailable() {
     return new Promise((resolve) => {
@@ -257,7 +381,7 @@ class ClaudeCodeAgent {
   }
 
   /**
-   * Run HeadyJules CLI in non-interactive mode with a prompt.
+   * Run Claude CLI in non-interactive mode with a prompt.
    */
   _runClaudeCli(prompt, request) {
     return new Promise((resolve, reject) => {
@@ -284,7 +408,7 @@ class ClaudeCodeAgent {
 
       const timeout = setTimeout(() => {
         proc.kill("SIGTERM");
-        reject(new Error(`HeadyJules Code timed out after ${this.timeoutMs}ms`));
+        reject(new Error(`Claude Code timed out after ${this.timeoutMs}ms`));
       }, this.timeoutMs);
 
       proc.stdout.on("data", (data) => { stdout += data.toString(); });
@@ -297,7 +421,7 @@ class ClaudeCodeAgent {
       proc.on("close", (code) => {
         clearTimeout(timeout);
         if (code !== 0) {
-          reject(new Error(`HeadyJules Code exited with code ${code}: ${stderr}`));
+          reject(new Error(`Claude Code exited with code ${code}: ${stderr}`));
           return;
         }
 
@@ -322,51 +446,38 @@ class ClaudeCodeAgent {
 
       proc.on("error", (err) => {
         clearTimeout(timeout);
-        reject(new Error(`Failed to start HeadyJules Code: ${err.message}`));
+        reject(new Error(`Failed to start Claude Code: ${err.message}`));
       });
     });
   }
 
   /**
-   * Fallback when CLI is not available — route through SDK gateway for real AI response.
+   * Fallback when CLI is not available — returns structured task acknowledgment.
+   * The Supervisor can still use this to track what needs to be done.
    */
   _fallbackExecution(prompt, request) {
-    return (async () => {
-      try {
-        const path = require("path");
-        const HeadyGateway = require(path.join(__dirname, "..", "..", "heady-hive-sdk", "lib", "gateway"));
-        const { createProviders } = require(path.join(__dirname, "..", "..", "heady-hive-sdk", "lib", "providers"));
-        const gateway = new HeadyGateway({ cacheTTL: 300000 });
-        const providers = createProviders(process.env);
-        for (const p of providers) gateway.registerProvider(p);
-
-        const result = await gateway.chat(prompt, {
-          system: `You are a senior software engineer working on the Heady™ ecosystem. Task type: ${request.taskType || "general"}.`,
-        });
-        if (result.ok) {
-          return {
-            output: result.response,
-            files: [],
-            suggestions: [],
-            fallback: false,
-            engine: result.engine,
-          };
-        }
-      } catch { /* gateway unavailable */ }
-
-      // Absolute fallback
-      return {
-        output: [
-          `[HeadyJules Code Agent — Gateway Fallback]`,
-          `Task Type: ${request.taskType || "general"}`,
-          `Target: ${request.target || "N/A"}`,
-          `Description: ${request.description || request.prompt || "N/A"}`,
-        ].join("\n"),
-        files: [],
-        suggestions: [],
-        fallback: true,
-      };
-    })();
+    return Promise.resolve({
+      output: [
+        `[Claude Code Agent — Fallback Mode]`,
+        `CLI not available. Task queued for manual execution.`,
+        ``,
+        `Task Type: ${request.taskType || "general"}`,
+        `Target: ${request.target || "N/A"}`,
+        `Description: ${request.description || request.prompt || "N/A"}`,
+        ``,
+        `To execute manually, run:`,
+        `  claude --print --model ${this.model} "${prompt.slice(0, 200)}..."`,
+        ``,
+        `Or install Claude Code: npm install -g @anthropic-ai/claude-code`,
+      ].join("\n"),
+      files: [],
+      suggestions: [
+        "Install Claude Code CLI: npm install -g @anthropic-ai/claude-code",
+        "Set ANTHROPIC_API_KEY in environment",
+        "Re-run pipeline to execute with full Claude Code integration",
+      ],
+      fallback: true,
+    });
   }
 
   /**
@@ -377,6 +488,12 @@ class ClaudeCodeAgent {
       id: this.id,
       skills: this.skills,
       model: this.model,
+      autonomousPrompt: {
+        enabled: this.promptEnabled,
+        version: this.promptConfig?.version || null,
+        name: this.promptConfig?.name || null,
+        sectionsLoaded: this.promptSections ? Object.keys(this.promptSections).length : 0,
+      },
       history: this.history.slice(-10),
       totalInvocations: this.history.length,
       successRate: this.history.length > 0
