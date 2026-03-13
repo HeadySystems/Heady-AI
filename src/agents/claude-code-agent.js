@@ -41,6 +41,7 @@
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const yaml = require("js-yaml");
 
 const AGENT_ID = "headyjules-code";
 const AGENT_SKILLS = [
@@ -95,6 +96,54 @@ const AGENT_SKILLS = [
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
 const DEFAULT_TIMEOUT_MS = 120000;
 
+const PROMPT_CONFIG_PATH = path.join(PROJECT_ROOT, "configs", "autonomous-agent-prompt.yaml");
+const PROMPT_SOURCE_PATH = path.join(PROJECT_ROOT, "docs", "AUTONOMOUS_AGENT_SYSTEM_PROMPT.md");
+
+/**
+ * Load and parse the autonomous agent prompt configuration.
+ * Returns null if config is unavailable (graceful degradation).
+ */
+function loadPromptConfig() {
+  try {
+    const raw = fs.readFileSync(PROMPT_CONFIG_PATH, "utf-8");
+    return yaml.load(raw);
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Load the full system prompt markdown, split into indexed sections.
+ * Sections are delimited by "## <roman-numeral>." headings.
+ */
+function loadPromptSections() {
+  try {
+    const raw = fs.readFileSync(PROMPT_SOURCE_PATH, "utf-8");
+    const sections = {};
+    let currentKey = null;
+    let currentLines = [];
+
+    for (const line of raw.split("\n")) {
+      const sectionMatch = line.match(/^## ([IVXLC]+)\.\s/);
+      if (sectionMatch) {
+        if (currentKey) {
+          sections[currentKey] = currentLines.join("\n").trim();
+        }
+        currentKey = sectionMatch[1];
+        currentLines = [line];
+      } else if (currentKey) {
+        currentLines.push(line);
+      }
+    }
+    if (currentKey) {
+      sections[currentKey] = currentLines.join("\n").trim();
+    }
+    return sections;
+  } catch (err) {
+    return null;
+  }
+}
+
 class ClaudeCodeAgent {
   constructor(options = {}) {
     this.id = AGENT_ID;
@@ -106,6 +155,11 @@ class ClaudeCodeAgent {
     this.history = [];
     this.totalTokens = 0;
     this.totalCost = 0;
+
+    // Load autonomous agent prompt system
+    this.promptConfig = loadPromptConfig();
+    this.promptSections = loadPromptSections();
+    this.promptEnabled = !!(this.promptConfig && this.promptSections);
   }
 
   describe() {
@@ -191,6 +245,11 @@ class ClaudeCodeAgent {
         `<RECAP>\\nConfirm understanding of strict telemetry, formatting, and specific task requirements before proceeding.\\n</RECAP>`
       ].join('\\n\\n');
     };
+
+    // Prepend system prompt if available
+    if (systemPrompt) {
+      context.unshift(systemPrompt);
+    }
 
     switch (request.taskType) {
       case "code-generation":
@@ -377,6 +436,12 @@ class ClaudeCodeAgent {
       id: this.id,
       skills: this.skills,
       model: this.model,
+      autonomousPrompt: {
+        enabled: this.promptEnabled,
+        version: this.promptConfig?.version || null,
+        name: this.promptConfig?.name || null,
+        sectionsLoaded: this.promptSections ? Object.keys(this.promptSections).length : 0,
+      },
       history: this.history.slice(-10),
       totalInvocations: this.history.length,
       successRate: this.history.length > 0

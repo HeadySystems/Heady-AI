@@ -32,6 +32,12 @@
  *   - deployer:    Render deploy, docker, cloud bridge, env sync
  *   - auditor:     Code audit, security scan, brand check, dependency audit
  *   - observer:    Health checks, metrics, alerts, readiness probes
+ *
+ * AUTONOMOUS PROMPT:
+ *   The claude-code agent loads the MAXIMUM POTENTIAL v2 system prompt from
+ *   docs/AUTONOMOUS_AGENT_SYSTEM_PROMPT.md and injects relevant sections
+ *   based on task type, pipeline stage, and ORS score. Configuration is in
+ *   configs/autonomous-agent-prompt.yaml.
  */
 
 const { ClaudeCodeAgent } = require("./claude-code-agent");

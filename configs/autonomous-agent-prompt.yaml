@@ -1,0 +1,205 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/autonomous-agent-prompt.yaml                      ║
+# ║  LAYER: config                                                   ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+# ╔═══════════════════════════════════════════════════════════════╗
+# ║  HEADY SYSTEMS                                                 ║
+# ║  ━━━━━━━━━━━━━━                                                ║
+# ║  ∞ Sacred Geometry Architecture ∞                              ║
+# ║                                                                ║
+# ║  autonomous-agent-prompt.yaml                                  ║
+# ║  Configuration for the MAXIMUM POTENTIAL v2 system prompt      ║
+# ╚═══════════════════════════════════════════════════════════════╝
+
+version: "2.0.0"
+name: "maximum-potential-v2"
+title: "MAXIMUM POTENTIAL v2 — Universal Autonomous Coding Agent System Prompt"
+
+metadata:
+  created: "2026-03-13"
+  author: "Heady Systems"
+  philosophy: "Eliminate ambiguity. Maximize autonomy. Ship verified, production-grade systems."
+  applicableTo:
+    - claude
+    - gpt
+    - gemini
+    - codex
+    - copilot
+    - cursor
+    - windsurf
+    - cody
+
+# Source file for the full prompt text
+source:
+  path: "docs/AUTONOMOUS_AGENT_SYSTEM_PROMPT.md"
+  format: "markdown"
+  hash: null  # Updated by checkpoint-sync
+
+# When to inject this prompt into agent context
+activation:
+  # Always inject for these task types
+  alwaysInject:
+    - code-generation
+    - architecture
+    - refactoring
+  # Inject specific sections for these task types
+  sectionMapping:
+    code-analysis:
+      - "II"   # Cognitive Architecture
+      - "IV"   # System Building Directives
+      - "V"    # Code Quality Standards
+    debugging:
+      - "II"   # Cognitive Architecture
+      - "XIII" # Advanced Execution Strategies (failure recovery)
+    concept-extraction:
+      - "II"   # Cognitive Architecture
+      - "VI"   # Patterns
+      - "XII"  # Open-Ended Mandate
+    documentation:
+      - "X"    # Documentation Standards
+      - "XI"   # Delivery Checklist
+  # Never inject for these (too lightweight to need full prompt)
+  neverInject:
+    - health-check
+    - status-query
+
+# Injection strategy — how to include the prompt in agent context
+injection:
+  # "full" = entire prompt, "sections" = only mapped sections, "summary" = condensed version
+  defaultMode: "sections"
+  # Maximum token budget for the injected prompt (prevent context bloat)
+  maxTokenBudget: 8000
+  # Summary version for token-constrained contexts
+  summary: |
+    You are an autonomous full-stack software engineering agent.
+    Prime Directives: Ship complete systems. Wire everything. Verify before done. Fix root causes. Compound knowledge.
+    Cognitive Layers: First Principles → 360° Context → Solution Design → Adversarial Thinking → Completeness Audit → Knowledge Accumulation.
+    Execution: Ingest → Plan → Execute → Verify → Self-Critique → Polish.
+    Standards: Completeness over speed. Zero hardcoded values. Typed errors. Observability built in. Security as default. Scale-aware design.
+    Patterns: Typed errors, config validation, service bootstrap, CORS whitelisting, retry with backoff, circuit breakers.
+    Heady Integration: HEADY_BRAND headers. YAML configs. Direct routing. Deterministic execution. ORS-based mode selection. Sacred Geometry UI.
+
+# Prompt sections index (for section-based injection)
+sections:
+  I:
+    title: "Identity & Operating Mode"
+    tokens: ~500
+    tags: [identity, directives, philosophy]
+  II:
+    title: "Cognitive Architecture"
+    tokens: ~800
+    tags: [thinking, analysis, planning]
+  III:
+    title: "Execution Model"
+    tokens: ~600
+    tags: [execution, phases, pipeline]
+  IV:
+    title: "System Building Directives"
+    tokens: ~1200
+    tags: [engineering, standards, quality]
+  V:
+    title: "Code Quality Standards"
+    tokens: ~600
+    tags: [code, naming, structure]
+  VI:
+    title: "Patterns"
+    tokens: ~800
+    tags: [patterns, reusable, building-blocks]
+  VII:
+    title: "Concurrency & Work Orchestration"
+    tokens: ~500
+    tags: [concurrency, parallelism, routing]
+  VIII:
+    title: "Interface & UI Engineering"
+    tokens: ~500
+    tags: [ui, design, accessibility]
+  IX:
+    title: "Testing Philosophy"
+    tokens: ~500
+    tags: [testing, verification, quality]
+  X:
+    title: "Documentation Standards"
+    tokens: ~400
+    tags: [documentation, runbooks]
+  XI:
+    title: "Delivery Checklist"
+    tokens: ~600
+    tags: [checklist, done, verification]
+  XII:
+    title: "Open-Ended Mandate"
+    tokens: ~800
+    tags: [domains, extensions, evolution]
+  XIII:
+    title: "Advanced Execution Strategies"
+    tokens: ~800
+    tags: [parallel, failure-recovery, archaeology, debt]
+  XIV:
+    title: "System Constants — Mathematical Foundations"
+    tokens: ~600
+    tags: [constants, math, fibonacci, golden-ratio]
+  XV:
+    title: "Design System Foundations"
+    tokens: ~500
+    tags: [design, spacing, typography, motion]
+  XVI:
+    title: "Security Deep Dive"
+    tokens: ~600
+    tags: [security, auth, encryption, input-validation]
+  XVII:
+    title: "The Builder's Creed"
+    tokens: ~200
+    tags: [philosophy, creed]
+  XVIII:
+    title: "Meta — How to Use This Prompt"
+    tokens: ~400
+    tags: [meta, customization, evolution]
+  XIX:
+    title: "Heady Systems Integration"
+    tokens: ~500
+    tags: [heady, integration, pipeline-mapping]
+
+# Pipeline stage alignment (maps prompt sections to HCFullPipeline stages)
+pipelineAlignment:
+  ingest:
+    sections: ["II"]
+    mode: "summary"
+  plan:
+    sections: ["I", "II", "III", "VII"]
+    mode: "sections"
+  execute-major-phase:
+    sections: ["I", "III", "IV", "V", "VI", "VII", "VIII", "XIX"]
+    mode: "sections"
+  recover:
+    sections: ["XIII"]
+    mode: "sections"
+  finalize:
+    sections: ["IX", "X", "XI"]
+    mode: "sections"
+
+# ORS-based injection rules (align with Operational Readiness Score)
+orsRules:
+  highPerformance:  # ORS > 85
+    mode: "full"
+    description: "Full prompt injection — aggressive building mode"
+  normal:           # ORS 70-85
+    mode: "sections"
+    description: "Section-based injection — standard operation"
+  maintenance:      # ORS 50-70
+    mode: "summary"
+    description: "Summary only — reduced cognitive load"
+  recovery:         # ORS < 50
+    mode: "summary"
+    additionalSections: ["XIII"]
+    description: "Summary + failure recovery strategies"
