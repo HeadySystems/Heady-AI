@@ -1,0 +1,11 @@
+{
+  "name": "Heady Systems",
+  "description": "Intelligent, parallel, dynamically distributed AI infrastructure",
+  "url": "https://headysystems.com",
+  "nav": [
+    { "label": "Home", "url": "/" },
+    { "label": "Products", "url": "/products" },
+    { "label": "Docs", "url": "/docs" },
+    { "label": "API", "url": "/api" }
+  ]
+}

@@ -1447,15 +1447,16 @@ class HeadyMCPServer {
 
   // --- Git tools ---
 
-  _gitExec(cmd) {
-    const { execSync } = require('child_process');
-    return execSync(cmd, { cwd: HEADY_ROOT, encoding: 'utf8', timeout: 10000 }).trim();
+  _gitExec(args) {
+    const { execFileSync } = require('child_process');
+    return execFileSync('git', args, { cwd: HEADY_ROOT, encoding: 'utf8', timeout: 10000 }).trim();
   }
 
   async gitLog(limit) {
     try {
-      const log = this._gitExec(`git log --oneline -${limit || 15}`);
-      const branch = this._gitExec('git branch --show-current');
+      const safeLimit = String(Math.max(1, Math.min(parseInt(limit, 10) || 15, 200)));
+      const log = this._gitExec(['log', '--oneline', `-${safeLimit}`]);
+      const branch = this._gitExec(['branch', '--show-current']);
       return { content: [{ type: 'text', text: `# Git Log (branch: ${branch})\n\n${log}` }] };
     } catch (e) {
       return { content: [{ type: 'text', text: `Git error: ${e.message}` }], isError: true };
@@ -1464,10 +1465,12 @@ class HeadyMCPServer {
 
   async gitDiff(target, filepath) {
     try {
-      const cmd = filepath
-        ? `git diff ${target || 'HEAD'} -- ${filepath}`
-        : `git diff ${target || ''}`;
-      const diff = this._gitExec(cmd);
+      const safeTarget = target ? String(target).replace(/[^a-zA-Z0-9_.\-\/~^]/g, '') : '';
+      const safePath = filepath ? String(filepath).replace(/[^a-zA-Z0-9_.\-\/]/g, '') : '';
+      const args = ['diff'];
+      if (safeTarget) args.push(safeTarget);
+      if (safePath) { args.push('--'); args.push(safePath); }
+      const diff = this._gitExec(args);
       return { content: [{ type: 'text', text: diff ? `# Git Diff\n\n\`\`\`diff\n${diff.substring(0, 5000)}\n\`\`\`` : 'No changes.' }] };
     } catch (e) {
       return { content: [{ type: 'text', text: `Git error: ${e.message}` }], isError: true };

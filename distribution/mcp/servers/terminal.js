@@ -34,17 +34,31 @@ const { execSync } = require('child_process');
 
 const ALLOWED_COMMANDS = (process.env.HEADY_ALLOWED_COMMANDS || 'git,npm,node,python,docker,ls,dir,cat,type,echo,pwd,cd').split(',');
 
+const SHELL_META = /[;&|`$(){}[\]<>!\n\\]/;
+
 function isCommandAllowed(cmd) {
   const base = cmd.trim().split(/\s+/)[0].toLowerCase();
   return ALLOWED_COMMANDS.some(a => base === a || base.endsWith(`/${a}`) || base.endsWith(`\\${a}`));
+}
+
+function isCommandSafe(cmd) {
+  // Reject shell metacharacters that enable command chaining/injection
+  return !SHELL_META.test(cmd);
 }
 
 async function handler(params) {
   if (!isCommandAllowed(params.command)) {
     return { error: `Command not allowed: ${params.command}. Allowed: ${ALLOWED_COMMANDS.join(', ')}` };
   }
+  if (!isCommandSafe(params.command)) {
+    return { error: 'Command contains unsafe shell metacharacters. Use separate tool calls instead of chaining.' };
+  }
   try {
-    const output = execSync(params.command, {
+    const parts = params.command.trim().split(/\s+/);
+    const cmd = parts[0];
+    const args = parts.slice(1);
+    const { execFileSync } = require('child_process');
+    const output = execFileSync(cmd, args, {
       encoding: 'utf-8',
       cwd: params.cwd || process.cwd(),
       timeout: params.timeout || 30000,

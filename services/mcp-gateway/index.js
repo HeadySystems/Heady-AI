@@ -41,7 +41,14 @@ const { PHI_TIMEOUT_PIPELINE } = require('../../src/shared/phi-timeouts');
 const app = express();
 const PORT = process.env.MCP_PORT || 3500;
 
-app.use(cors());
+const MCP_ORIGINS = (process.env.MCP_CORS_ORIGINS || 'https://headyio.com,https://me.headysystems.com,http://localhost:3001,http://localhost:3300').split(',');
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || MCP_ORIGINS.includes(origin)) return cb(null, true);
+    cb(new Error('CORS: origin not allowed'));
+  },
+  credentials: true,
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // ─── Initialize Orchestrator ──────────────────────────────────────────

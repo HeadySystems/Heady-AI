@@ -1,0 +1,11 @@
+{
+  "name": "@heady/hc-readiness",
+  "version": "1.0.0",
+  "description": "Operational Readiness Evaluator — computes ORS score from app-readiness probes",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

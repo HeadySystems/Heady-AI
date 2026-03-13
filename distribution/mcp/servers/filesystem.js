@@ -66,7 +66,10 @@ async function handler(params) {
     }
     case 'search': {
       try {
-        const result = execSync(`find "${params.path}" -name "${params.pattern}" -maxdepth 5 2>/dev/null || dir /s /b "${params.path}\\${params.pattern}" 2>nul`, { encoding: 'utf-8', timeout: 10000 });
+        const { execFileSync } = require('child_process');
+        const safePath = path.resolve(params.path);
+        const safePattern = String(params.pattern).replace(/[^a-zA-Z0-9_.*?-]/g, '');
+        const result = execFileSync('find', [safePath, '-name', safePattern, '-maxdepth', '5'], { encoding: 'utf-8', timeout: 10000, stdio: ['pipe', 'pipe', 'pipe'] });
         return { matches: result.trim().split('\n').filter(Boolean).slice(0, 50) };
       } catch { return { matches: [] }; }
     }

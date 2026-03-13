@@ -1,0 +1,92 @@
+---
+layout: base
+title: HeadyIO — The Heady Platform
+description: AI orchestration, companion tools, and developer infrastructure for the Heady ecosystem
+---
+
+<section class="page-hero">
+  <h1>Build with Heady</h1>
+  <p class="subtitle">AI orchestration, companion tools, and developer infrastructure</p>
+</section>
+
+<section class="page-content">
+  <div class="cards-grid">
+    <div class="sacred-card">
+      <h3>HCFullPipeline</h3>
+      <p>Deterministic, parallel pipeline engine that runs workloads through ingest, plan, execute, recover, and finalize stages with checkpoints at every boundary.</p>
+    </div>
+    <div class="sacred-card">
+      <h3>HeadyBuddy</h3>
+      <p>Your Perfect Day AI Companion. A floating overlay widget with Sacred Geometry design, resource health monitoring, and cross-device synchronization.</p>
+    </div>
+    <div class="sacred-card">
+      <h3>HeadyAI-IDE</h3>
+      <p>Electron-based AI-powered development environment with Monaco editor, multi-model AI chat, and Sacred Geometry UI theming.</p>
+    </div>
+    <div class="sacred-card">
+      <h3>Multi-Agent Supervisor</h3>
+      <p>Parallel fan-out task routing across builder, researcher, deployer, auditor, observer, and claude-code agents with health-aware load balancing.</p>
+    </div>
+    <div class="sacred-card">
+      <h3>MCP Protocol</h3>
+      <p>Model Context Protocol integration with filesystem, git, memory, and heady-brain servers. Register custom tools and execute across transports.</p>
+    </div>
+    <div class="sacred-card">
+      <h3>HeadyCoin Economy</h3>
+      <p>Token economy with minting, transfers, staking, and a full transaction ledger. Powers the Heady ecosystem's value exchange.</p>
+    </div>
+  </div>
+
+  <section style="margin-top: 3rem;">
+    <h2 style="color: var(--heady-cyan); margin-bottom: 1rem;">Platform Architecture</h2>
+    <div class="sacred-card" style="font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.8;">
+      <pre style="color: var(--heady-text);">
+heady-manager (Node.js, port 3300)
+  ├── HCFullPipeline ─── ingest → plan → execute → recover → finalize
+  ├── Supervisor ──────── builder | researcher | deployer | auditor | observer | claude-code
+  ├── Brain ───────────── analysis, auto-tune, governance, pattern evaluation
+  ├── Readiness ────────── ORS scoring (0-100), probe evaluation
+  ├── Checkpoint ────────── config drift detection, SHA-256 hashes
+  ├── Health ───────────── registered checks, cron, diagnostics
+  └── Registry ─────────── components, environments, docs, notebooks, patterns
+
+heady-conductor (Python, port 5000)
+  ├── FastAPI ──────────── /api/health, /api/action
+  ├── NLP Service ──────── intent classification, entity extraction
+  ├── MCP Service ──────── tool execution, server registry
+  ├── Economy ──────────── HeadyCoin mint/transfer/stake
+  └── Audit ───────────── compliance tracking, integrity checksums
+
+workers (Cloudflare)
+  ├── edge-proxy ────────── reverse proxy with CORS and latency tracking
+  ├── gateway ──────────── JWT + API key auth middleware
+  ├── service-worker ────── OAuth login/callback/token/logout
+  ├── secret-service ────── AES-256-CBC encrypted vault
+  └── heartbeat ─────────── token validation and revocation
+      </pre>
+    </div>
+  </section>
+
+  <section style="margin-top: 3rem;">
+    <h2 style="color: var(--heady-cyan); margin-bottom: 1rem;">Quick Start</h2>
+    <div class="sacred-card">
+      <pre style="color: var(--heady-emerald); font-family: 'Fira Code', monospace; font-size: 0.9rem;">
+# Clone and start
+git clone https://github.com/HeadyMe/Heady-Testing.git
+cd Heady-Testing
+npm install
+npm start
+
+# Pipeline operations
+curl http://localhost:3300/api/health
+curl -X POST http://localhost:3300/api/pipeline/run
+curl http://localhost:3300/api/pipeline/state
+
+# System overview
+curl http://localhost:3300/api/subsystems
+curl http://localhost:3300/api/brain/status
+curl http://localhost:3300/api/readiness/evaluate
+      </pre>
+    </div>
+  </section>
+</section>

@@ -1,0 +1,10 @@
+---
+layout: base
+---
+<section class="page-hero">
+  <h1>{{ title }}</h1>
+  {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
+</section>
+<section class="page-content">
+  {{ content | safe }}
+</section>

@@ -9,14 +9,14 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: .windsurf/admin-config.yaml                                                    ║
-# ║  LAYER: root                                                  ║
+# ║  FILE: .windsurf/admin-config.yaml                               ║
+# ║  LAYER: root                                                     ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 # ╔══════════════════════════════════════════════════════════════════╗
-# ║  HEADING SYSTEMS — Windsurf Optimal Configuration for HeadyVM        ║
-# ║  Version: 3.0.0                                                     ║
-# ║  Target: HeadyVM (Windows Admin Mode)                               ║
+# ║  HEADY SYSTEMS — Windsurf Optimal Configuration for HeadyVM    ║
+# ║  Version: 3.0.0                                                ║
+# ║  Target: HeadyVM (Windows Admin Mode)                          ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 # Model Configuration — Priority Order (Heady-First Policy)
@@ -74,14 +74,13 @@ models:
 # exclusive communication with Heady services only.
 
 # Default Model Selection — Heady-Only Policy (100% Compliance)
-# ONLY HeadyBrain is used. No exceptions. No external models.
 default_model: heady-brain
-fallback_model: heady-conductor  # Heady fallback only
+fallback_model: heady-conductor
 model_selection_policy:
   strategy: heady_only
   heady_percentage: 100
-  allow_external_override: false  # DISABLED
-  override_requires: "admin_only"  # RESTRICTED
+  allow_external_override: false
+  override_requires: "admin_only"
   log_all_model_switches: true
   external_models_blocked: true  # ENFORCED
 
@@ -91,12 +90,12 @@ system:
   max_concurrent_requests: 5
   request_timeout: 120000
   max_response_size: 104857600  # 100MB
-  
+
   # Memory Management
   max_memory_mb: 8192
   memory_cleanup_interval: 300000  # 5 minutes
   cache_size_mb: 2048
-  
+
   # File System
   max_file_size_mb: 100
   watch_directories:
@@ -153,14 +152,14 @@ heady:
   # Authentication
   api_key: "${HEADY_API_KEY}"
   admin_token: "${ADMIN_TOKEN}"
-  
+
   # Features
   auto_sync: true
   real_time_collaboration: true
   code_execution: true
   file_management: true
   terminal_access: true
-  
+
   # Project Paths
   project_root: "${HEADY_PROJECT_ROOT}"
   config_dir: "./configs"
@@ -174,7 +173,7 @@ workspace:
   auto_index: true
   index_interval: 30000  # 30 seconds
   full_index_interval: 300000  # 5 minutes
-  
+
   # Context Window
   max_context_tokens: 200000
   context_priority:
@@ -184,7 +183,7 @@ workspace:
     - project_structure
     - documentation
     - test_files
-  
+
   # Auto-completion
   enable_snippets: true
   enable_ai_suggestions: true
@@ -200,43 +199,43 @@ development:
       linter: "eslint"
       formatter: "prettier"
       extensions: [".js", ".jsx", ".mjs"]
-      
+
     typescript:
       parser: "typescript"
       linter: "eslint"
       formatter: "prettier"
       extensions: [".ts", ".tsx"]
-      
+
     python:
       parser: "python"
       linter: "pylint"
       formatter: "black"
       extensions: [".py"]
-      
+
     yaml:
       parser: "yaml"
       linter: "yamllint"
       formatter: "prettier"
       extensions: [".yaml", ".yml"]
-      
+
     json:
       parser: "json"
       linter: "eslint"
       formatter: "prettier"
       extensions: [".json"]
-      
+
     powershell:
       parser: "powershell"
       linter: "powershell"
       formatter: "prettier"
       extensions: [".ps1", ".psm1"]
-      
+
     markdown:
       parser: "markdown"
       linter: "markdownlint"
       formatter: "prettier"
       extensions: [".md"]
-  
+
   # Git Integration
   git:
     auto_stage: false
@@ -244,7 +243,7 @@ development:
     show_diff: true
     blame: true
     branch_protection: ["main", "master", "develop"]
-  
+
   # Testing
   testing:
     auto_run: false
@@ -262,7 +261,7 @@ ui:
   # Theme
   theme: "heady-dark"
   custom_css: "./.windsurf/custom.css"
-  
+
   # Layout
   sidebar_width: 300
   minimap: true
@@ -270,7 +269,7 @@ ui:
   word_wrap: true
   font_size: 14
   font_family: "Cascadia Code, Fira Code, Consolas, monospace"
-  
+
   # Features
   breadcrumbs: true
   outline: true
@@ -278,7 +277,7 @@ ui:
   output_panel: true
   terminal_panel: true
   debug_panel: true
-  
+
   # Notifications
   show_notifications: true
   notification_duration: 5000
@@ -290,14 +289,14 @@ performance:
   enable_cache: true
   cache_ttl: 3600000  # 1 hour
   cache_dir: "./.windsurf/cache"
-  
+
   # Lazy Loading
   lazy_load_modules: true
   preload_modules:
     - "heady-core"
     - "heady-orchestrator"
     - "heady-brain"
-  
+
   # Optimization
   debounce_time: 300
   throttle_time: 100
@@ -311,7 +310,7 @@ logging:
   max_file_size: 10485760  # 10MB
   max_files: 5
   format: "json"
-  
+
   # Categories
   categories:
     api: true
@@ -329,38 +328,38 @@ extensions:
     config:
       auto_sync: true
       real_time: true
-      
+
   - name: "heady-orchestrator"
     enabled: true
     config:
       auto_execute: false
       show_metrics: true
-      
+
   - name: "heady-brain"
     enabled: true
     config:
       context_aware: true
       learning_mode: true
-  
+
   # Standard Extensions
   - name: "eslint"
     enabled: true
-    
+
   - name: "prettier"
     enabled: true
-    
+
   - name: "gitlens"
     enabled: true
-    
+
   - name: "docker"
     enabled: true
-    
+
   - name: "yaml"
     enabled: true
-    
+
   - name: "powershell"
     enabled: true
-    
+
   - name: "python"
     enabled: true
 
@@ -371,7 +370,7 @@ workflows:
     - "teaching-coding-protocol"
     - "scientific-method-pre-build"
     - "hc-scan-all"
-  
+
   # Workflow triggers
   triggers:
     on_file_change:
@@ -381,11 +380,11 @@ workflows:
         workflow: "validate-python"
       - pattern: "**/*.yaml"
         workflow: "validate-yaml"
-        
+
     on_save:
       - pattern: "**/*.{js,ts,jsx,tsx}"
         workflow: "format-code"
-        
+
     on_commit:
       workflow: "pre-commit-checks"
 
@@ -403,7 +402,7 @@ security:
     - "docker"
     - "pwsh"
     - "bash"
-  
+
   # File Access
   file_access_restrictions: false
   sensitive_files:
@@ -412,7 +411,7 @@ security:
     - "**/secrets.yaml"
     - "**/private.key"
     - "**/*.pem"
-  
+
   # Network
   tls_verify: true
   proxy_url: "${HTTP_PROXY}"

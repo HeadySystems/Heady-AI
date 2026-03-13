@@ -24,7 +24,14 @@ const logger = require('../../src/shared/logger')('ApiApp');
 const app = express();
 
 // Middleware
-app.use(cors());
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGINS || 'https://headyio.com,https://me.headysystems.com,http://localhost:3001').split(',');
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    cb(new Error('CORS: origin not allowed'));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 // Routes

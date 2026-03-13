@@ -30,7 +30,14 @@ const schema = {
   required: ['action'],
 };
 
-const { execSync } = require('child_process');
+const { execSync, execFileSync } = require('child_process');
+
+// Validate container IDs: only allow alphanumeric, hyphens, underscores, dots, and colons
+function sanitizeContainerId(id) {
+  const safe = String(id).replace(/[^a-zA-Z0-9_.\-:]/g, '');
+  if (safe !== id) throw new Error('Invalid container ID: contains unsafe characters');
+  return safe;
+}
 
 async function handler(params) {
   try {
@@ -38,22 +45,26 @@ async function handler(params) {
       case 'list': return { containers: JSON.parse(execSync('docker ps --format json -a', { encoding: 'utf-8' }).split('\n').filter(Boolean).map(l => JSON.parse(l))) };
       case 'logs': {
         if (!params.container_id) return { error: 'container_id required' };
-        const tail = params.tail || 100;
-        return { logs: execSync(`docker logs --tail ${tail} ${params.container_id}`, { encoding: 'utf-8' }) };
+        const tail = String(parseInt(params.tail, 10) || 100);
+        const cid = sanitizeContainerId(params.container_id);
+        return { logs: execFileSync('docker', ['logs', '--tail', tail, cid], { encoding: 'utf-8' }) };
       }
       case 'start': {
         if (!params.container_id) return { error: 'container_id required' };
-        execSync(`docker start ${params.container_id}`);
-        return { ok: true, message: `Started ${params.container_id}` };
+        const cid = sanitizeContainerId(params.container_id);
+        execFileSync('docker', ['start', cid]);
+        return { ok: true, message: `Started ${cid}` };
       }
       case 'stop': {
         if (!params.container_id) return { error: 'container_id required' };
-        execSync(`docker stop ${params.container_id}`);
-        return { ok: true, message: `Stopped ${params.container_id}` };
+        const cid = sanitizeContainerId(params.container_id);
+        execFileSync('docker', ['stop', cid]);
+        return { ok: true, message: `Stopped ${cid}` };
       }
       case 'inspect': {
         if (!params.container_id) return { error: 'container_id required' };
-        return JSON.parse(execSync(`docker inspect ${params.container_id}`, { encoding: 'utf-8' }));
+        const cid = sanitizeContainerId(params.container_id);
+        return JSON.parse(execFileSync('docker', ['inspect', cid], { encoding: 'utf-8' }));
       }
       case 'images': return { images: execSync('docker images --format "{{.Repository}}:{{.Tag}} {{.Size}}"', { encoding: 'utf-8' }).trim().split('\n') };
       default: return { error: `Unknown action: ${params.action}` };

@@ -1,0 +1,8 @@
+{
+  "name": "@heady/spatial-orchestrator",
+  "version": "1.0.0",
+  "description": "Metatron's Cube topology for multi-agent spatial routing with Platonic Solid archetypes",
+  "main": "index.js",
+  "keywords": ["metatron", "spatial", "orchestrator", "sacred-geometry", "routing"],
+  "license": "PROPRIETARY"
+}

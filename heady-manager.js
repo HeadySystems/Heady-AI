@@ -619,7 +619,10 @@ if (vmTokenRoutes) {
 app.post('/api/vm/revoke', async (req, res) => {
   const adminToken = req.headers['authorization']?.split(' ')[1];
   
-  if (adminToken !== process.env.ADMIN_TOKEN) {
+  const expected = process.env.ADMIN_TOKEN;
+  if (!adminToken || !expected ||
+      adminToken.length !== expected.length ||
+      !require('crypto').timingSafeEqual(Buffer.from(adminToken), Buffer.from(expected))) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
   
@@ -642,6 +645,17 @@ app.post('/api/vm/revoke', async (req, res) => {
     res.status(500).json({ error: 'Failed to revoke token' });
   }
 });
+
+// ─── HeadyMemory + AutoContext Service ──────────────────────────────
+let memoryService = null;
+try {
+  const { getMemoryService } = require('./src/services/heady-memory-service');
+  memoryService = getMemoryService();
+  app.use('/api', memoryService.createRoutes());
+  log.info('HeadyMemory + AutoContext: ROUTES LOADED');
+} catch (err) {
+  log.warn('HeadyMemory service not loaded', { errorMessage: err.message });
+}
 
 // ─── Static Assets ─────────────────────────────────────────────────
 // All UI pages served from public/ (self-contained HTML + sacred-geometry.css)

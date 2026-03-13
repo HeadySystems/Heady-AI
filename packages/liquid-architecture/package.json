@@ -1,0 +1,8 @@
+{
+  "name": "@heady/liquid-architecture",
+  "version": "1.0.0",
+  "description": "LiquidArchitectureService — 3D/4D template injection, projection instances, and stale asset governance",
+  "main": "index.js",
+  "keywords": ["liquid", "architecture", "projection", "template", "spatial"],
+  "license": "PROPRIETARY"
+}

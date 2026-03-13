@@ -1,0 +1,68 @@
+name: Repo Integrity Gate
+
+on:
+  push:
+    branches: [main, staging, testing, pre-production]
+  pull_request:
+    branches: [main, staging, testing, pre-production]
+
+jobs:
+  integrity-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for merge-conflict markers
+        run: |
+          echo "Scanning for unresolved merge-conflict markers..."
+          CONFLICTS=$(grep -rn '^\(<<<<<<<\|=======\|>>>>>>>\)' --include='*.js' --include='*.ts' --include='*.jsx' --include='*.tsx' --include='*.json' --include='*.yaml' --include='*.yml' --include='*.md' --include='*.html' --include='*.css' --include='*.py' --include='*.env*' --include='Dockerfile*' . 2>/dev/null || true)
+          if [ -n "$CONFLICTS" ]; then
+            echo "::error::Unresolved merge-conflict markers found!"
+            echo "$CONFLICTS"
+            exit 1
+          fi
+          echo "No conflict markers found."
+
+      - name: Validate JSON manifests
+        run: |
+          echo "Validating JSON manifests..."
+          FAILED=0
+          for f in package.json frontend/package.json heady-registry.json; do
+            if [ -f "$f" ]; then
+              if ! node -e "JSON.parse(require('fs').readFileSync('$f','utf8'));" 2>/dev/null; then
+                echo "::error::Invalid JSON: $f"
+                FAILED=1
+              else
+                echo "  OK: $f"
+              fi
+            fi
+          done
+          if [ $FAILED -ne 0 ]; then exit 1; fi
+          echo "All JSON manifests valid."
+
+      - name: Validate YAML configs
+        run: |
+          echo "Validating YAML configs..."
+          npm install --no-save js-yaml 2>/dev/null
+          FAILED=0
+          for f in $(find configs -name '*.yaml' -o -name '*.yml' 2>/dev/null) render.yaml; do
+            if [ -f "$f" ]; then
+              if ! node -e "require('js-yaml').load(require('fs').readFileSync('$f','utf8'));" 2>/dev/null; then
+                echo "::error::Invalid YAML: $f"
+                FAILED=1
+              else
+                echo "  OK: $f"
+              fi
+            fi
+          done
+          if [ $FAILED -ne 0 ]; then exit 1; fi
+          echo "All YAML configs valid."
+
+      - name: Check for committed secrets
+        run: |
+          echo "Checking for committed .env files..."
+          if [ -f ".env" ]; then
+            echo "::error::.env file is committed! Add to .gitignore."
+            exit 1
+          fi
+          echo "No committed secrets found."

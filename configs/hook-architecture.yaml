@@ -1,0 +1,114 @@
+# ═══════════════════════════════════════════════════════════════════
+# 8-Layer Hook Architecture — Heady™ AI Orchestrator
+# Defines the layered hook system for extensible pipeline behavior
+# ═══════════════════════════════════════════════════════════════════
+
+version: "1.0.0"
+description: "8-Layer Hook Architecture for pipeline extensibility"
+
+layers:
+  # Layer 0: Project-level configuration (CLAUDE.md, .heady.yaml)
+  - id: project-config
+    level: 0
+    name: "Project Config"
+    description: "Static project configuration loaded at startup"
+    sources:
+      - CLAUDE.md
+      - .heady.yaml
+      - configs/*.yaml
+    trigger: startup
+    priority: 100
+
+  # Layer 1: Skill definitions (registered agent capabilities)
+  - id: skills
+    level: 1
+    name: "Skills"
+    description: "Registered agent skill definitions and capability maps"
+    sources:
+      - configs/service-catalog.yaml
+      - src/agents/*/skills.yaml
+    trigger: agent-registration
+    priority: 90
+
+  # Layer 2: Agent definitions (runtime agent config)
+  - id: agent-definitions
+    level: 2
+    name: "Agent Definitions"
+    description: "Runtime agent configuration and role assignments"
+    sources:
+      - src/agents/
+      - configs/service-catalog.yaml
+    trigger: agent-spawn
+    priority: 80
+
+  # Layer 3: User prompt submit hooks (pre-processing)
+  - id: user-prompt-submit
+    level: 3
+    name: "UserPromptSubmit"
+    description: "Pre-processing hooks that run before user input reaches agents"
+    actions:
+      - validate-input
+      - classify-intent
+      - apply-resonance-routing
+    trigger: prompt-submit
+    priority: 70
+
+  # Layer 4: Pre-tool-use hooks (before tool execution)
+  - id: pre-tool-use
+    level: 4
+    name: "PreToolUse"
+    description: "Hooks that run before any tool is invoked"
+    actions:
+      - check-permissions
+      - validate-parameters
+      - circuit-breaker-check
+      - rate-limit-check
+    trigger: tool-invoke
+    priority: 60
+
+  # Layer 5: Post-tool-use hooks (after tool execution)
+  - id: post-tool-use
+    level: 5
+    name: "PostToolUse"
+    description: "Hooks that run after tool execution completes"
+    actions:
+      - capture-metrics
+      - update-load-balance
+      - log-result
+      - update-spatial-position
+    trigger: tool-complete
+    priority: 50
+
+  # Layer 6: Subagent stop hooks (agent lifecycle)
+  - id: subagent-stop
+    level: 6
+    name: "SubagentStop"
+    description: "Hooks that run when a subagent completes or is stopped"
+    actions:
+      - collect-results
+      - release-topology-sphere
+      - update-archetype-metrics
+      - evict-stale-projections
+    trigger: agent-stop
+    priority: 40
+
+  # Layer 7: Stop hooks (pipeline/system stop)
+  - id: stop
+    level: 7
+    name: "Stop"
+    description: "Final hooks that run at pipeline completion or system shutdown"
+    actions:
+      - checkpoint-save
+      - governance-audit
+      - stale-asset-sweep
+      - emit-completion-event
+    trigger: pipeline-end
+    priority: 30
+
+# Hook execution settings
+execution:
+  timeout_ms: 5000
+  parallel_within_layer: true
+  fail_policy: log-and-continue  # log-and-continue | fail-fast | retry
+  max_retries: 2
+  retry_backoff_ms: 500

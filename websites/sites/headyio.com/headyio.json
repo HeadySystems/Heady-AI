@@ -1,0 +1,12 @@
+{
+  "site": {
+    "name": "HeadyIO",
+    "description": "The Heady Platform — AI orchestration, companion tools, and developer infrastructure",
+    "nav": [
+      { "label": "Home", "url": "/" },
+      { "label": "Platform", "url": "/platform" },
+      { "label": "HeadyBuddy", "url": "/buddy" },
+      { "label": "Developers", "url": "/developers" }
+    ]
+  }
+}

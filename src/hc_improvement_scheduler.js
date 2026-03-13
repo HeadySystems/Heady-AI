@@ -144,24 +144,62 @@ class ImprovementScheduler extends EventEmitter {
   }
 
   async handlePatternImprovement(improvement) {
-    // Implementation for pattern-based improvements
-    // This would actually modify code/files based on the pattern
     this.emit('improvement_start', improvement);
-    
-    // TODO: Implement actual code modifications
-    
-    this.emit('improvement_complete', improvement);
-    return { success: true };
+    const { details } = improvement;
+
+    // Reset the pattern state in the engine so it re-enters the healthy lifecycle
+    if (this.patternEngine && typeof this.patternEngine.resetPattern === 'function') {
+      this.patternEngine.resetPattern(details.id);
+    }
+
+    // Log the remediation action for audit trail
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      type: improvement.type,
+      target: improvement.target,
+      action: improvement.type === 'pattern_degradation' ? 'reset_and_retrain' : 'refresh_baseline',
+      severity: details.severity || 'medium',
+    };
+
+    const logPath = path.join(__dirname, '../.checkpoints', 'improvement-log.json');
+    try {
+      const existing = fs.existsSync(logPath) ? JSON.parse(fs.readFileSync(logPath, 'utf8')) : [];
+      existing.push(logEntry);
+      fs.writeFileSync(logPath, JSON.stringify(existing.slice(-200), null, 2));
+    } catch (_) { /* log dir may not exist */ }
+
+    this.emit('improvement_complete', { ...improvement, logEntry });
+    return { success: true, action: logEntry.action };
   }
 
   async handleCritiqueImprovement(improvement) {
-    // Implementation for critique-based improvements
     this.emit('improvement_start', improvement);
-    
-    // TODO: Implement actual fixes based on critique
-    
-    this.emit('improvement_complete', improvement);
-    return { success: true };
+    const { details } = improvement;
+
+    // Apply the critique's suggested fix if the self-critique engine exposes one
+    let applied = false;
+    if (this.selfCritiqueEngine && typeof this.selfCritiqueEngine.applySuggestion === 'function') {
+      applied = await this.selfCritiqueEngine.applySuggestion(details);
+    }
+
+    // Log
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      type: improvement.type,
+      target: improvement.target,
+      action: applied ? 'suggestion_applied' : 'flagged_for_review',
+      severity: details.severity || 'medium',
+    };
+
+    const logPath = path.join(__dirname, '../.checkpoints', 'improvement-log.json');
+    try {
+      const existing = fs.existsSync(logPath) ? JSON.parse(fs.readFileSync(logPath, 'utf8')) : [];
+      existing.push(logEntry);
+      fs.writeFileSync(logPath, JSON.stringify(existing.slice(-200), null, 2));
+    } catch (_) { /* log dir may not exist */ }
+
+    this.emit('improvement_complete', { ...improvement, logEntry });
+    return { success: true, applied, action: logEntry.action };
   }
 }
 

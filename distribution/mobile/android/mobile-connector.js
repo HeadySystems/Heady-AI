@@ -346,9 +346,21 @@ function syncFiles(files) {
     // Implement file sync logic
 }
 
+const MOBILE_ALLOWED_CMDS = new Set(['git', 'npm', 'node', 'python', 'ls', 'pwd', 'cat']);
+const MOBILE_SHELL_META = /[;&|`$(){}[\]<>!\n\\]/;
+
 function executeCommand(command) {
+    const parts = command.trim().split(/\s+/);
+    const base = parts[0];
+    if (!MOBILE_ALLOWED_CMDS.has(base) || MOBILE_SHELL_META.test(command)) {
+        console.warn(`Blocked unsafe command: ${command}`);
+        if (desktopWS && desktopWS.readyState === WebSocket.OPEN) {
+            desktopWS.send(JSON.stringify({ type: 'command_result', stdout: '', stderr: 'Command blocked: not in allowlist or contains unsafe characters', error: 'BLOCKED' }));
+        }
+        return;
+    }
     console.log(`Executing: ${command}`);
-    require('child_process').exec(command, (error, stdout, stderr) => {
+    require('child_process').execFile(base, parts.slice(1), (error, stdout, stderr) => {
         if (desktopWS && desktopWS.readyState === WebSocket.OPEN) {
             desktopWS.send(JSON.stringify({
                 type: 'command_result',

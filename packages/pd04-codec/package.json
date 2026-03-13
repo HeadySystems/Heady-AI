@@ -1,0 +1,8 @@
+{
+  "name": "@heady/pd04-codec",
+  "version": "1.0.0",
+  "description": "PD04 Codec — 3D Vector Data Encoding/Decoding for Heady's spatial intelligence",
+  "main": "index.js",
+  "keywords": ["pd04", "codec", "vector", "3d", "spatial", "heady"],
+  "license": "PROPRIETARY"
+}

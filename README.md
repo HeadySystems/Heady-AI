@@ -48,19 +48,18 @@ HeadyAPI publicly positions itself as a liquid gateway that races 4+ providers a
 
 ## Honest status
 
-Get started with Heady applications:
-
-- [HeadyBuddy](docs/quickstarts/HEADYBUDDY.md) - Android companion
-- [HeadyIDE](docs/quickstarts/HEADYIDE.md) - Desktop AI assistant
-- [HeadyBrowser](docs/quickstarts/HEADYBROWSER.md) - Web extension
-- [HeadyServices](docs/quickstarts/HEADYSERVICES.md) - Backend system
-- [Heady API](docs/quickstarts/HEADY_API_QUICKSTART.md) - Service interaction
-- [HeadyMCP](docs/quickstarts/HEADYMCP.md) - Manager Control Plane
+| Guide | What You Learn | Time |
+|-------|----------------|------|
+| [HeadyBuddy](docs/quickstarts/HEADYBUDDY.md) | AI companion (desktop + mobile) | 15 min |
+| [HeadyServices](docs/quickstarts/HEADYSERVICES.md) | Backend infrastructure | 10 min |
+| [HeadyAI-IDE](docs/quickstarts/HEADYIDE.md) | Custom IDE setup | 20 min |
+| [HeadyBrowser](docs/quickstarts/HEADYBROWSER.md) | Browser extension | 10 min |
+| [HeadyMCP](docs/quickstarts/HEADYMCP.md) | Manager Control Plane | 15 min |
+| [Heady API](docs/quickstarts/HEADY_API_QUICKSTART.md) | API interaction | 10 min |
 
 ## Guides and References
 
-Deeper integration and API documentation:
-
+- [Ecosystem Overview](docs/ECOSYSTEM_OVERVIEW.md) - Full system map across all brands
 - [Service Integration](docs/guides/SERVICE_INTEGRATION.md) - How Heady services connect
 - [HeadyManager API](docs/api/HEADYMANAGER_API.md) - Service endpoints reference
 =======
