@@ -1,0 +1,87 @@
+{
+  "project": {
+    "id": "gen-lang-client-0920560496",
+    "name": "HeadySystems",
+    "region": "us-central1",
+    "account": "eric@headyconnection.org"
+  },
+  "cloudRun": {
+    "services": {
+      "heady-mcp-server": {
+        "image": "gcr.io/gen-lang-client-0920560496/heady-mcp-server:latest",
+        "port": 3310,
+        "minInstances": 1,
+        "maxInstances": 13,
+        "memory": "512Mi",
+        "cpu": "1000m",
+        "concurrency": 8,
+        "timeoutSeconds": 300,
+        "env": {
+          "NODE_ENV": "production",
+          "HEADY_MCP_TRANSPORT": "http",
+          "HEADY_LOG_LEVEL": "info"
+        },
+        "secrets": ["DATABASE_URL", "REDIS_URL", "HEADY_API_KEY"],
+        "url": "https://heady-mcp-server-HASH.us-central1.run.app"
+      },
+      "heady-manager": {
+        "image": "gcr.io/gen-lang-client-0920560496/heady-manager:latest",
+        "port": 3300,
+        "minInstances": 1,
+        "maxInstances": 8,
+        "memory": "512Mi",
+        "cpu": "1000m",
+        "concurrency": 13,
+        "timeoutSeconds": 300,
+        "env": {
+          "NODE_ENV": "production",
+          "MCP_SERVER_URL": "http://localhost:3310"
+        },
+        "secrets": ["DATABASE_URL", "REDIS_URL", "HEADY_API_KEY", "ANTHROPIC_API_KEY"]
+      },
+      "heady-conductor": {
+        "image": "gcr.io/gen-lang-client-0920560496/heady-conductor:latest",
+        "port": 4306,
+        "minInstances": 1,
+        "maxInstances": 21,
+        "memory": "512Mi",
+        "cpu": "1000m",
+        "concurrency": 13,
+        "timeoutSeconds": 300,
+        "env": {
+          "HEADY_ENV": "prod"
+        }
+      }
+    },
+    "secrets": {
+      "database-url": "projects/gen-lang-client-0920560496/secrets/database-url",
+      "redis-url": "projects/gen-lang-client-0920560496/secrets/redis-url",
+      "heady-api-key": "projects/gen-lang-client-0920560496/secrets/heady-api-key",
+      "anthropic-api-key": "projects/gen-lang-client-0920560496/secrets/anthropic-api-key",
+      "render-api-key": "projects/gen-lang-client-0920560496/secrets/render-api-key"
+    }
+  },
+  "domains": {
+    "primary": "headysystems.com",
+    "mcp": "mcp.headysystems.com",
+    "api": "api.headysystems.com",
+    "auth": "auth.headysystems.com",
+    "admin": "admin.headysystems.com"
+  },
+  "cloudflare": {
+    "workerDomain": "headysystems.com",
+    "routes": [
+      "mcp.headysystems.com/*",
+      "api.headysystems.com/*"
+    ]
+  },
+  "deploy": {
+    "strategy": "blue-green",
+    "healthCheckPath": "/health",
+    "rollbackOnFailure": true,
+    "trafficSplitting": {
+      "canaryPercent": 10,
+      "promotionDelay": "5m"
+    }
+  }
+}
