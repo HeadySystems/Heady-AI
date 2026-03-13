@@ -2,7 +2,7 @@
   "mcpServers": {
     "heady": {
       "transport": "streamable-http",
-      "url": "https://mcp.headysystems.com/mcp",
+      "url": "https://headymcp.com/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_HEADY_API_KEY"
       }
