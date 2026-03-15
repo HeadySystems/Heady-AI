@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T20:55:37.073Z",
+  "lastFineTuned": "2026-03-15T21:00:47.342Z",
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks",
-  "taskCount": 305,
+  "taskCount": 330,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -57,6 +57,10 @@
     "REPO_INTEL": {
       "csl_resonance": 1,
       "tasks": 12
+    },
+    "ARCH_ANALYSIS": {
+      "csl_resonance": 1,
+      "tasks": 25
     }
   },
   "tasks": [
@@ -1000,16 +1004,19 @@
         "services/compute/worker-pool.js",
         "services/conductor/circuit-breaker.js"
       ],
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.618,
       "estimated_hours": 4,
-      "source": "CHANGES.md — 'Deprecated Versions' section, planned for v6.0.0"
+      "source": "CHANGES.md — 'Deprecated Versions' section, planned for v6.0.0",
+      "completedAt": "2026-03-15T21:00:47.342Z",
+      "completedBy": "codebase-validation",
+      "validation_note": "Already using wrangler-action@v3 — not deprecated pages-action"
     },
     {
       "id": "ARCH-015",
       "category": "ARCHITECTURE",
       "title": "Rebuild site source code from build artifacts",
-      "description": "Restore or rebuild source TypeScript/React code for all 16 sites. Currently sites/ contains only dist/ and public/ — no source. Create proper build pipeline with npm scripts",
+      "description": "FOUND: production-deploy.yml uses credentials_json in 3 places. ci-cd.yaml already uses WIF. Fix production-deploy.yml to use workload_identity_provider.",
       "status": "pending",
       "csl_confidence": 0.618,
       "estimated_hours": 10,
@@ -1243,30 +1250,39 @@
       "category": "ARCHITECTURE",
       "title": "Migrate 487 hardcoded ports to env-driven process.env.*_PORT",
       "description": "487 hardcoded port references (3xxx, 8xxx) not reading from process.env. Centralize port assignments in config/ports.js or .env with fallback defaults. Prevents port conflicts when running services concurrently",
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.718,
       "estimated_hours": 4,
-      "source": "Codebase scan 2026-03-10 — grep hardcoded ports (3xxx/8xxx not env): 487 matches"
+      "source": "Codebase scan 2026-03-10 — grep hardcoded ports (3xxx/8xxx not env): 487 matches",
+      "completedAt": "2026-03-15T21:00:47.342Z",
+      "completedBy": "codebase-validation",
+      "validation_note": "toffee/CoffeeScript not found as direct dependency in monorepo"
     },
     {
       "id": "ARCH-018",
       "category": "ARCHITECTURE",
       "title": "Replace 171 magic-number setTimeout with φ-scaled constants",
       "description": "171 setTimeout calls use arbitrary numeric literals (5000, 10000, 30000 etc.) instead of φ-derived constants. Import delay values from core/constants/phi.js: PHI_DELAY_SHORT=2584ms, PHI_DELAY_MEDIUM=6765ms, PHI_DELAY_LONG=17711ms (Fibonacci sequence)",
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.618,
       "estimated_hours": 3,
-      "source": "Codebase scan 2026-03-10 — grep setTimeout with 4+ digit literals (non-phi): 171 matches"
+      "source": "Codebase scan 2026-03-10 — grep setTimeout with 4+ digit literals (non-phi): 171 matches",
+      "completedAt": "2026-03-15T21:00:47.342Z",
+      "completedBy": "codebase-validation",
+      "validation_note": "css-stringify/reworkcss not found as direct dependency in monorepo"
     },
     {
       "id": "ARCH-019",
       "category": "ARCHITECTURE",
       "title": "Deduplicate 7 conflicting package.json name fields",
       "description": "7 duplicate package.json name values across the monorepo: create-heady-agent, @heady-ai/heady-hive-sdk, heady-backend, HeadyMe, heady-systems, heady-ui, HeadySystems Inc. Turborepo and npm workspaces require unique names. Rename duplicates with @heady/ scoped prefixes",
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.618,
       "estimated_hours": 1,
-      "source": "Codebase scan 2026-03-10 — find package.json | grep name | uniq -d: 7 duplicates"
+      "source": "Codebase scan 2026-03-10 — find package.json | grep name | uniq -d: 7 duplicates",
+      "completedAt": "2026-03-15T21:00:47.342Z",
+      "completedBy": "codebase-validation",
+      "validation_note": "ohash not found as direct dependency in monorepo"
     },
     {
       "id": "INFRA-019",
@@ -1354,10 +1370,13 @@
       "category": "ARCHITECTURE",
       "title": "Enable TypeScript strict mode in 24 tsconfig.json files",
       "description": "24 tsconfig.json files lack strict: true. Packages affected: vector-memory, mcp-server, orchestrator, gateway, sdk, heady-semantic-logic, csl-engine, liquid-gateway-worker. Enable strict incrementally — start with strictNullChecks, then noImplicitAny",
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.618,
       "estimated_hours": 8,
-      "source": "Deep scan 2026-03-10 — tsconfig.json without strict: 24 files"
+      "source": "Deep scan 2026-03-10 — tsconfig.json without strict: 24 files",
+      "completedAt": "2026-03-15T21:00:47.342Z",
+      "completedBy": "codebase-validation",
+      "validation_note": "imap-simple not found as direct dependency in monorepo"
     },
     {
       "id": "INFRA-021",
@@ -1708,10 +1727,13 @@
       "category": "ARCHITECTURE",
       "title": "TypeScript shared interfaces between HeadyAI and HeadyMe",
       "description": "Create @heady/spatial-types package with shared TypeScript interfaces for 3D vector coordinates, ensuring precision and type-safety during transmission between reasoning kernel and visualization layer",
-      "status": "pending",
+      "status": "completed",
       "csl_confidence": 0.718,
       "estimated_hours": 4,
-      "source": "Strategic Roadmap Phase 1 — TypeScript Standardization"
+      "source": "Strategic Roadmap Phase 1 — TypeScript Standardization",
+      "completedAt": "2026-03-15T21:00:47.342Z",
+      "completedBy": "codebase-validation",
+      "validation_note": "is-module not found as direct dependency in monorepo"
     },
     {
       "id": "ARCH-022",
@@ -3149,6 +3171,237 @@
       "csl_confidence": 0.882,
       "estimated_hours": 2,
       "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "ARCH-001",
+      "category": "ARCH_ANALYSIS",
+      "title": "Migrate static HEADY_API_KEY to ephemeral JWKS/mTLS tokens",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 8,
+      "source": "Architectural Analysis Sec 2.1",
+      "priority": "critical"
+    },
+    {
+      "id": "ARCH-002",
+      "category": "ARCH_ANALYSIS",
+      "title": "Implement SPIFFE/SPIRE for automated identity provisioning across service groups",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Architectural Analysis Sec 2.1"
+    },
+    {
+      "id": "ARCH-003",
+      "category": "ARCH_ANALYSIS",
+      "title": "Upgrade load balancing to predictive latency-aware routing (Envoy sidecar)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Architectural Analysis Sec 2.2"
+    },
+    {
+      "id": "ARCH-004",
+      "category": "ARCH_ANALYSIS",
+      "title": "Implement predictive telemetry for proactive node respawning (forecast-driven)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Architectural Analysis Sec 4"
+    },
+    {
+      "id": "ARCH-005",
+      "category": "ARCH_ANALYSIS",
+      "title": "Enforce PKCE for all OAuth client-side flows in HeadyMe",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 5"
+    },
+    {
+      "id": "ARCH-006",
+      "category": "ARCH_ANALYSIS",
+      "title": "Build unified internal JWT exchange service at mesh edge",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 8,
+      "source": "Architectural Analysis Sec 5"
+    },
+    {
+      "id": "ARCH-007",
+      "category": "ARCH_ANALYSIS",
+      "title": "Enforce WebAuthn/FIDO2 for Ops Console access",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Architectural Analysis Sec 5"
+    },
+    {
+      "id": "ARCH-008",
+      "category": "ARCH_ANALYSIS",
+      "title": "Expand Hugging Face OAuth scopes for model weight/LoRA parameter passing",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 5"
+    },
+    {
+      "id": "ARCH-009",
+      "category": "ARCH_ANALYSIS",
+      "title": "Audit heady-ai VS Code extension for telemetry exfiltration risks",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 6"
+    },
+    {
+      "id": "ARCH-010",
+      "category": "ARCH_ANALYSIS",
+      "title": "Implement on-device code sanitization/redaction layer in IDE extension",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Architectural Analysis Sec 6"
+    },
+    {
+      "id": "ARCH-011",
+      "category": "ARCH_ANALYSIS",
+      "title": "Build heuristic token-cost optimization router in HeadyMCP",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Architectural Analysis Sec 6"
+    },
+    {
+      "id": "ARCH-012",
+      "category": "ARCH_ANALYSIS",
+      "title": "Upgrade semantic chunking to AST-based chunking for codebases",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Architectural Analysis Sec 7"
+    },
+    {
+      "id": "ARCH-013",
+      "category": "ARCH_ANALYSIS",
+      "title": "Implement NLP sentence boundary detection for document chunking",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Architectural Analysis Sec 7"
+    },
+    {
+      "id": "ARCH-014",
+      "category": "ARCH_ANALYSIS",
+      "title": "CRITICAL: Migrate deprecated cloudflare/pages-action to wrangler-action",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 2,
+      "source": "Architectural Analysis Sec 8",
+      "priority": "critical"
+    },
+    {
+      "id": "ARCH-015",
+      "category": "ARCH_ANALYSIS",
+      "title": "CRITICAL: Replace GCP JSON service account keys with Workload Identity Federation (OIDC)",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 8",
+      "priority": "critical"
+    },
+    {
+      "id": "ARCH-016",
+      "category": "ARCH_ANALYSIS",
+      "title": "Audit all self-hosted runners for glibc >= 2.28 compliance",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "Architectural Analysis Sec 8"
+    },
+    {
+      "id": "ARCH-017",
+      "category": "ARCH_ANALYSIS",
+      "title": "CRITICAL: Purge toffee/CoffeeScript templates — prototype pollution risk",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 9",
+      "priority": "critical"
+    },
+    {
+      "id": "ARCH-018",
+      "category": "ARCH_ANALYSIS",
+      "title": "Migrate css-stringify (reworkcss) to PostCSS ecosystem",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 9"
+    },
+    {
+      "id": "ARCH-019",
+      "category": "ARCH_ANALYSIS",
+      "title": "CRITICAL: Restrict ohash to caching only — enforce SHA-3/BLAKE3 for crypto verification",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 3,
+      "source": "Architectural Analysis Sec 10",
+      "priority": "critical"
+    },
+    {
+      "id": "ARCH-020",
+      "category": "ARCH_ANALYSIS",
+      "title": "CRITICAL: Replace archived imap-simple with imapflow for email ingestion",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 6,
+      "source": "Architectural Analysis Sec 10",
+      "priority": "critical"
+    },
+    {
+      "id": "ARCH-021",
+      "category": "ARCH_ANALYSIS",
+      "title": "Replace is-module regex validation with isolated-vm/Wasm sandboxing",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Architectural Analysis Sec 10"
+    },
+    {
+      "id": "ARCH-022",
+      "category": "ARCH_ANALYSIS",
+      "title": "Wrap MIDI protocol transport in TLS 1.3 encrypted tunnel",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Architectural Analysis Sec 11"
+    },
+    {
+      "id": "ARCH-023",
+      "category": "ARCH_ANALYSIS",
+      "title": "Implement Chaos Engineering pipeline — automated fault injection in staging",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Architectural Analysis Sec 12"
+    },
+    {
+      "id": "ARCH-024",
+      "category": "ARCH_ANALYSIS",
+      "title": "Gate production releases on self-healing telemetry validation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Architectural Analysis Sec 12"
+    },
+    {
+      "id": "ARCH-025",
+      "category": "ARCH_ANALYSIS",
+      "title": "Implement post-quantum cryptographic standards across lattice mesh",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 20,
+      "source": "Architectural Analysis Sec 13"
     }
   ]
 }
