@@ -20,7 +20,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 substitutions:
-  _PROJECT_ID: heady-production
+  _PROJECT_ID: heady-production  # Created by scripts/setup-artifact-registry.sh
   _REGION: us-central1
   _REPO_NAME: heady-docker-repo
   _SERVICE_NAME: heady-manager
