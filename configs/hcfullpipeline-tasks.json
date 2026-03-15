@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T13:57:00Z",
+  "lastFineTuned": "2026-03-15T14:09:00Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) tasks",
-  "taskCount": 253,
+  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) tasks",
+  "taskCount": 268,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -45,6 +45,10 @@
     "AUDIT": {
       "csl_resonance": 1.0,
       "tasks": 55
+    },
+    "DEPLOY": {
+      "csl_resonance": 1.0,
+      "tasks": 15
     }
   },
   "tasks": [
@@ -2563,6 +2567,161 @@
       "csl_confidence": 1.0,
       "estimated_hours": 3,
       "source": "Heady System Audit & Remediation Agent v1.0.0 — Phase 0.3 Critical Finding"
+    },
+    {
+      "id": "DEPLOY-001",
+      "category": "DEPLOY",
+      "title": "Ship headysystems.com LIVE — unblock Cloudflare Startups $5K credits",
+      "description": "Deploy real content to headysystems.com: hero section, product overview, about/team, contact. Must be publicly accessible to unblock Cloudflare for Startups application (blocked since Feb 18, 2026). This is THE #1 priority action for the entire ecosystem.",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 4,
+      "source": "External Assessment March 2026 — #1 Priority"
+    },
+    {
+      "id": "DEPLOY-002",
+      "category": "DEPLOY",
+      "title": "Fix CI/CD Stage 2 (Code Quality) failures across all 3 orgs",
+      "description": "Heady Unified CI/CD pipeline failing at Stage 2 Code Quality across HeadyAI, HeadySystems, HeadyConnection. Fix ESLint/Prettier violations, type errors, and linting issues to get green builds. Pipeline: Preflight → Security → Code Quality → Tests → Validation → Build → Deploy → Post-Deploy",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 6,
+      "source": "External Assessment March 2026 — CI/CD Failures"
+    },
+    {
+      "id": "DEPLOY-003",
+      "category": "DEPLOY",
+      "title": "Fix Gitleaks secret scanning CI failures",
+      "description": "Gitleaks detecting secrets in tracked files and git history. Fix: remove tracked .env files, purge PATs from history, add .gitleaksignore for false positives, verify scan passes clean",
+      "status": "pending",
+      "blockedBy": ["AUDIT-003", "AUDIT-055"],
+      "csl_confidence": 1.0,
+      "estimated_hours": 3,
+      "source": "External Assessment March 2026 — Security Scan Failures"
+    },
+    {
+      "id": "DEPLOY-004",
+      "category": "DEPLOY",
+      "title": "Fix CSL & φ-Math Validation failures (HeadyValidator Phase 5)",
+      "description": "HeadySystems CI specifically failing at CSL & φ-Math Validation stage. Fix phi-math module imports, semantic-logic path references, and CSL gate validation tests",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "External Assessment March 2026 — HeadyValidator Failures"
+    },
+    {
+      "id": "DEPLOY-005",
+      "category": "DEPLOY",
+      "title": "Deploy headyconnection.org with complete content (501c3 nonprofit)",
+      "description": "Currently showing 'first draft' from ~Feb 21. Complete with: mission statement, programs, grant information, board info, donation mechanism, 501(c)(3) documentation, real nonprofit content",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 5,
+      "source": "External Assessment March 2026 — Domain Status"
+    },
+    {
+      "id": "DEPLOY-006",
+      "category": "DEPLOY",
+      "title": "Deploy remaining 4 core domains (headyme.com, headyio.com, headybuddy.org, headymcp.com)",
+      "description": "Each domain needs real content deployed via Cloudflare Pages or Workers: headyme.com (personal AI dashboard), headyio.com (AI brain umbrella), headybuddy.org (personal AI assistant), headymcp.com (developer/MCP hub)",
+      "status": "pending",
+      "blockedBy": ["DEPLOY-001"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 12,
+      "source": "External Assessment March 2026 — Domain Status"
+    },
+    {
+      "id": "DEPLOY-007",
+      "category": "DEPLOY",
+      "title": "Investigate headyai.com and headyai.org domain availability",
+      "description": "Neither headyai.com nor headyai.org appear in official domain portfolio. Check availability, register if possible, or document decision not to register. Note: Finnish company Headai (headai.com) exists — brand confusion risk",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "External Assessment March 2026 — Missing Domains"
+    },
+    {
+      "id": "DEPLOY-008",
+      "category": "DEPLOY",
+      "title": "Make at least 1 GitHub repo public with README and docs",
+      "description": "Currently 0 public repos across all 4 GitHub orgs. Make at least one repo public (e.g., docs, SDK, or example project) with proper README, LICENSE, CONTRIBUTING.md, and documentation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "External Assessment March 2026 — Zero Public Repos"
+    },
+    {
+      "id": "DEPLOY-009",
+      "category": "DEPLOY",
+      "title": "Publish @heady-ai npm packages publicly",
+      "description": "@heady-ai/mcp-server v4.0.0 and heady-mcp-server v3.2.0 referenced internally but return zero results on public npm. Either publish publicly or document as intentionally private",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "External Assessment March 2026 — Package Registry"
+    },
+    {
+      "id": "DEPLOY-010",
+      "category": "DEPLOY",
+      "title": "Resubmit Cloudflare for Startups application with live website",
+      "description": "Application filed Feb 18, 2026 blocked on 'live, functional website'. After DEPLOY-001 completion, resubmit with proof of live headysystems.com. Bootstrapped tier = up to $5,000 credits",
+      "status": "pending",
+      "blockedBy": ["DEPLOY-001"],
+      "csl_confidence": 1.0,
+      "estimated_hours": 1,
+      "source": "External Assessment March 2026 — Cloudflare Startups Blocked"
+    },
+    {
+      "id": "DEPLOY-011",
+      "category": "DEPLOY",
+      "title": "Create social media presence (LinkedIn, Twitter/X, Product Hunt)",
+      "description": "Zero social media presence currently. Create official accounts: LinkedIn company page, Twitter/X (@HeadySystems), Product Hunt listing. Cross-link with websites",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "External Assessment March 2026 — Zero Social Presence"
+    },
+    {
+      "id": "DEPLOY-012",
+      "category": "DEPLOY",
+      "title": "Deploy docs.headysystems.com documentation site",
+      "description": "Currently listed as 'to build' in internal docs. Deploy real documentation: Getting Started, API Reference, Architecture Overview, SDK docs. Use Docusaurus, Mintlify, or Cloudflare Pages",
+      "status": "pending",
+      "blockedBy": ["DEPLOY-001"],
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "External Assessment March 2026 — Missing Documentation Site"
+    },
+    {
+      "id": "DEPLOY-013",
+      "category": "DEPLOY",
+      "title": "Make MCP/SSE endpoint publicly accessible at manager.headysystems.com",
+      "description": "manager.headysystems.com/mcp/sse is documented but unreachable. Deploy to Cloud Run or Cloudflare Workers with proper DNS, TLS, and health checks so endpoint is publicly accessible",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "External Assessment March 2026 — MCP Endpoint Unreachable"
+    },
+    {
+      "id": "DEPLOY-014",
+      "category": "DEPLOY",
+      "title": "Enhance HuggingFace Spaces with real demos and descriptions",
+      "description": "9 Spaces exist but have 0 likes and aren't search-indexed. Add proper descriptions, screenshots, tags, and ensure Gradio demos actually work (heady-demo, heady-ai have zero-GPU but need functional UI)",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "External Assessment March 2026 — Only External Presence"
+    },
+    {
+      "id": "DEPLOY-015",
+      "category": "DEPLOY",
+      "title": "Enable Google Search Console indexing for all live domains",
+      "description": "Zero domains are indexed by Google currently. After deploying content, submit sitemaps, verify ownership, request indexing for headysystems.com and all other live domains",
+      "status": "pending",
+      "blockedBy": ["DEPLOY-001"],
+      "csl_confidence": 0.718,
+      "estimated_hours": 2,
+      "source": "External Assessment March 2026 — Zero Search Engine Indexing"
     }
   ]
 }
