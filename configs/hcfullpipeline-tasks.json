@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.5.0",
+  "version": "7.6.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T23:46:58.866Z",
+  "lastFineTuned": "2026-03-15T23:52:43.254Z",
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks + Public Domain Integration (28) + Open Source Governance (18)",
-  "taskCount": 537,
+  "taskCount": 598,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -73,6 +73,50 @@
     "MAX_POTENTIAL": {
       "csl_resonance": 1.618,
       "tasks": 26
+    },
+    "HCFP_EMERGENCY": {
+      "csl_resonance": 1.618,
+      "tasks": 4
+    },
+    "HCFP_CI": {
+      "csl_resonance": 1.618,
+      "tasks": 6
+    },
+    "HCFP_MANAGER": {
+      "csl_resonance": 1.618,
+      "tasks": 6
+    },
+    "HCFP_DATA": {
+      "csl_resonance": 1.618,
+      "tasks": 6
+    },
+    "HCFP_EDGE": {
+      "csl_resonance": 1.618,
+      "tasks": 6
+    },
+    "OPEN_SOURCE": {
+      "csl_resonance": 1.618,
+      "tasks": 6
+    },
+    "INSTANTANEOUS": {
+      "csl_resonance": 1.618,
+      "tasks": 5
+    },
+    "SITE_CONTENT": {
+      "csl_resonance": 1.618,
+      "tasks": 9
+    },
+    "COLAB_4X": {
+      "csl_resonance": 1.618,
+      "tasks": 4
+    },
+    "VERIFICATION": {
+      "csl_resonance": 1.618,
+      "tasks": 6
+    },
+    "PIPELINE": {
+      "csl_resonance": 1.618,
+      "tasks": 3
     }
   },
   "tasks": [
@@ -6540,6 +6584,616 @@
       "auto_fix": "grep -rn \"self.critique\\|self.review\\|autoReview\\|qa.*gate\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} self-critique/review refs\"",
       "completedAt": "2026-03-15T23:46:58.866Z",
       "completedBy": "auto-success-engine-v2"
+    },
+    {
+      "id": "EMG-001",
+      "category": "HCFP_EMERGENCY",
+      "title": "Resolve .env.example merge conflict — remove all <<<<<<< HEAD markers, keep v4.0.0 side",
+      "auto_fix": "grep -c \"<<<<<<< HEAD\" .env.example 2>/dev/null || echo \"0 merge conflicts\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EMG-002",
+      "category": "HCFP_EMERGENCY",
+      "title": "Add pre-commit hook scanning for secret patterns before allowing commits",
+      "auto_fix": "test -f .git/hooks/pre-commit && echo \"pre-commit hook exists\" || echo \"no pre-commit hook\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EMG-003",
+      "category": "HCFP_EMERGENCY",
+      "title": "Verify .gitignore excludes .env, *.key, *.pem, credentials/, secrets/ in ALL repos",
+      "auto_fix": "grep -c \"\\.env\\|\\*.key\\|\\*.pem\\|credentials\\|secrets\" .gitignore 2>/dev/null | xargs -I{} echo \"{} secret patterns in .gitignore\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EMG-004",
+      "category": "HCFP_EMERGENCY",
+      "title": "Purge exposed credentials from git history — BFG Repo-Cleaner across all 4 orgs",
+      "auto_fix": "which bfg 2>/dev/null && echo \"BFG available\" || echo \"BFG not installed — install with brew install bfg\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "CIU-001",
+      "category": "HCFP_CI",
+      "title": "Create packages/phi-math-foundation/index.js extending packages/phi-math/index.js",
+      "auto_fix": "test -f packages/phi-math-foundation/index.js && echo \"phi-math-foundation exists\" || echo \"MISSING: phi-math-foundation/index.js\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "CIU-002",
+      "category": "HCFP_CI",
+      "title": "Create packages/mcp-server/index.js re-exporting src/mcp/heady-mcp-server.js",
+      "auto_fix": "test -f packages/mcp-server/index.js && echo \"mcp-server entry exists\" || echo \"MISSING: mcp-server/index.js\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "CIU-003",
+      "category": "HCFP_CI",
+      "title": "Fix package.json start:mcp script → point to src/mcp/heady-mcp-server.js not backend/app.js",
+      "auto_fix": "grep \"start:mcp\" package.json 2>/dev/null | head -1",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "CIU-004",
+      "category": "HCFP_CI",
+      "title": "Fix YAML syntax in clean-build-ci.yml, promotion-pipeline.yml, file_maintenance.yml",
+      "auto_fix": "find .github/workflows -name \"*.yml\" -exec sh -c \"python3 -c \\\"import yaml; yaml.safe_load(open(\\\"{}\\\")); print(\\\"OK:\\\",\\\"{}\\\")\\\"\" 2>&1 \\; | tail -5 || echo \"YAML validation skipped\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "CIU-005",
+      "category": "HCFP_CI",
+      "title": "Switch all workflows from npm ci/install to pnpm install",
+      "auto_fix": "grep -rl \"npm ci\\|npm install\" .github/workflows/ 2>/dev/null | wc -l | xargs -I{} echo \"{} workflows still using npm\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "CIU-006",
+      "category": "HCFP_CI",
+      "title": "Verify pnpm install && pnpm run build passes locally",
+      "auto_fix": "pnpm -v 2>/dev/null | head -1 || echo \"pnpm not available\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "MGR-001",
+      "category": "HCFP_MANAGER",
+      "title": "Remove require(\"node-fetch\") from heady-manager.js — Node 22 has native fetch",
+      "auto_fix": "grep -c \"node-fetch\" heady-manager.js 2>/dev/null | xargs -I{} echo \"{} node-fetch refs in manager\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "MGR-002",
+      "category": "HCFP_MANAGER",
+      "title": "Remove require(\"yamljs\") from heady-manager.js — already using js-yaml",
+      "auto_fix": "grep -c \"yamljs\" heady-manager.js 2>/dev/null | xargs -I{} echo \"{} yamljs refs in manager\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "MGR-003",
+      "category": "HCFP_MANAGER",
+      "title": "Consolidate pino + structured-logger → use only structured-logger in heady-manager.js",
+      "auto_fix": "grep -c \"require.*pino\\|import.*pino\" heady-manager.js 2>/dev/null | xargs -I{} echo \"{} direct pino refs in manager\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "MGR-004",
+      "category": "HCFP_MANAGER",
+      "title": "Wire Redis pub/sub subscriptions for config_updates channel in heady-manager.js",
+      "auto_fix": "grep -c \"config_updates\\|subscribe.*config\" heady-manager.js 2>/dev/null | xargs -I{} echo \"{} config subscription refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "MGR-005",
+      "category": "HCFP_MANAGER",
+      "title": "Wire Redis pub/sub for provider_routing channel in worker-ai-gateway",
+      "auto_fix": "grep -rn \"provider_routing\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} provider_routing refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "MGR-006",
+      "category": "HCFP_MANAGER",
+      "title": "Add health key writing (SET health:{process} {...} EX 55) to all PM2 processes",
+      "auto_fix": "grep -rn \"health:\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | grep -c \"EX\\|expire\\|setex\" | xargs -I{} echo \"{} health key TTL refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "DL-001",
+      "category": "HCFP_DATA",
+      "title": "Fix remote-resources.yaml: remove localhost fallback for database host",
+      "auto_fix": "grep -c \"localhost\" configs/remote-resources.yaml 2>/dev/null | xargs -I{} echo \"{} localhost refs in remote-resources\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "DL-002",
+      "category": "HCFP_DATA",
+      "title": "Fix remote-resources.yaml: remove redis://localhost:6379, fail loud if REDIS_URL unset",
+      "auto_fix": "grep -c \"redis://localhost\" configs/remote-resources.yaml 2>/dev/null | xargs -I{} echo \"{} redis localhost refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "DL-003",
+      "category": "HCFP_DATA",
+      "title": "Run all migrations from heady-db-infra/migrations/ against Neon",
+      "auto_fix": "find heady-db-infra/migrations -name \"*.sql\" 2>/dev/null | wc -l | xargs -I{} echo \"{} migration files found\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "DL-004",
+      "category": "HCFP_DATA",
+      "title": "Create user profile tables in Neon: users, user_sessions, user_memory, user_preferences",
+      "auto_fix": "grep -rn \"CREATE TABLE.*user\" . --include=\"*.sql\" 2>/dev/null | wc -l | xargs -I{} echo \"{} user table CREATE refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "DL-005",
+      "category": "HCFP_DATA",
+      "title": "Initialize Firebase Admin SDK in services/heady-auth/",
+      "auto_fix": "grep -rn \"firebase-admin\\|initializeApp\" services/heady-auth/ --include=\"*.js\" 2>/dev/null | wc -l | xargs -I{} echo \"{} Firebase Admin refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "DL-006",
+      "category": "HCFP_DATA",
+      "title": "Verify Redis Streams: XGROUP CREATE, XREADGROUP, XACK work over TLS (rediss://)",
+      "auto_fix": "grep -rn \"XGROUP\\|XREADGROUP\\|XACK\\|xgroup\\|xreadgroup\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Redis Streams refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EO-001",
+      "category": "HCFP_EDGE",
+      "title": "Deploy cloudflare/heady-edge-node/ with wrangler deploy",
+      "auto_fix": "test -f cloudflare/heady-edge-node/wrangler.toml && echo \"wrangler.toml exists\" || echo \"MISSING: wrangler.toml\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EO-002",
+      "category": "HCFP_EDGE",
+      "title": "Deploy workers/edge-auth-worker/ with Firebase token verification at edge",
+      "auto_fix": "test -d workers/edge-auth-worker && echo \"edge-auth-worker dir exists\" || echo \"MISSING: workers/edge-auth-worker/\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EO-003",
+      "category": "HCFP_EDGE",
+      "title": "Build headyme.com onboarding flow — Firebase Auth + Sacred Geometry theme + instant dashboard",
+      "auto_fix": "find sites/headyme -name \"*.html\" -o -name \"*.js\" 2>/dev/null | wc -l | xargs -I{} echo \"{} files in sites/headyme\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EO-004",
+      "category": "HCFP_EDGE",
+      "title": "Wire Firebase Auth signup → Cloud Function → Neon user profile + latent space init",
+      "auto_fix": "grep -rn \"onUserCreated\\|auth.*user.*onCreate\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} onUserCreated refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EO-005",
+      "category": "HCFP_EDGE",
+      "title": "Wire post-auth persistent latent space — Pinecone namespace + Redis keyspace + Neon profile per user",
+      "auto_fix": "grep -rn \"user_.*namespace\\|user:.*:profile\\|latent.*space.*init\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} per-user latent space refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "EO-006",
+      "category": "HCFP_EDGE",
+      "title": "Deploy customized content for all 9 domains from site-registry.json with Sacred Geometry themes",
+      "auto_fix": "test -f configs/01-site-registry.json 2>/dev/null && node -e \"const s=JSON.parse(require(\\\"fs\\\").readFileSync(\\\"configs/01-site-registry.json\\\"));console.log(Object.keys(s.sites||s).length,\\\"sites defined\\\")\" 2>/dev/null || echo \"site-registry.json check skipped\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "OSE-001",
+      "category": "OPEN_SOURCE",
+      "title": "Evaluate Google Agent Development Kit (ADK) — McpToolset + ParallelAgent for HeadySwarm",
+      "auto_fix": "grep -rn \"google.*adk\\|agent.*development.*kit\\|McpToolset\\|ParallelAgent\" . --include=\"*.js\" --include=\"*.json\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} ADK refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "OSE-002",
+      "category": "OPEN_SOURCE",
+      "title": "Evaluate Google Always-On Memory Agent — structured memory without vector DB for learning runtime",
+      "auto_fix": "grep -rn \"always.on.*memory\\|memory.*consolidat\\|memory.*compact\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} always-on memory refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "OSE-003",
+      "category": "OPEN_SOURCE",
+      "title": "Evaluate Chroma vector DB — auto hot/warm/cold tiering for per-user embedding storage",
+      "auto_fix": "grep -rn \"chroma\\|chromadb\" . --include=\"*.js\" --include=\"*.json\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Chroma DB refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "OSE-004",
+      "category": "OPEN_SOURCE",
+      "title": "Deploy FirebaseUI Web with Sacred Geometry theming for headyme.com auth",
+      "auto_fix": "grep -rn \"firebaseui\\|FirebaseUI\\|firebase.*ui\" . --include=\"*.js\" --include=\"*.html\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} FirebaseUI refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "OSE-005",
+      "category": "OPEN_SOURCE",
+      "title": "Evaluate HuggingFace smolagents for HeadyBee code-execution worker pattern",
+      "auto_fix": "grep -rn \"smolagents\\|code.*execution.*agent\" . --include=\"*.js\" --include=\"*.py\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} smolagents refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "OSE-006",
+      "category": "OPEN_SOURCE",
+      "title": "Deploy LangFuse for LLM-specific observability — trace every agent reasoning step + tool call",
+      "auto_fix": "grep -rn \"langfuse\\|LangFuse\" . --include=\"*.js\" --include=\"*.json\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} LangFuse refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "IA-001",
+      "category": "INSTANTANEOUS",
+      "title": "Deploy Tier-1 real-time config propagation — Redis pub/sub for rate limits, routing, flags, thresholds",
+      "auto_fix": "grep -rn \"subscribe.*config_updates\\|subscribe.*provider_routing\\|subscribe.*agent_commands\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Redis pub/sub subscription refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "IA-002",
+      "category": "INSTANTANEOUS",
+      "title": "Deploy Tier-2 near-real-time edge routing — Cloudflare KV for feature flags + MCP tool registry",
+      "auto_fix": "grep -rn \"KV.*feature.*flag\\|KV.*tool.*registry\\|kv.*namespace\" . --include=\"*.js\" --include=\"*.toml\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Cloudflare KV routing refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "IA-003",
+      "category": "INSTANTANEOUS",
+      "title": "Wire LLM provider failover < 1s via Redis pub/sub — no CI/CD gate for provider switches",
+      "auto_fix": "grep -rn \"failover\\|provider.*switch\\|provider.*fallback\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} LLM failover refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "IA-004",
+      "category": "INSTANTANEOUS",
+      "title": "Wire dead service detection < 55s via Redis key TTL expiry — no cron polling",
+      "auto_fix": "grep -rn \"EX 55\\|expire.*55\\|TTL.*55\\|dead.*detect\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} 55s TTL death detection refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "IA-005",
+      "category": "INSTANTANEOUS",
+      "title": "Wire learning runtime propagation < 1s — learning_results Redis Stream → operational runtime subscribers",
+      "auto_fix": "grep -rn \"learning_results\\|learning.*stream\\|learning.*propagat\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} learning propagation refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-001",
+      "category": "SITE_CONTENT",
+      "title": "headyme.com — Personal Cloud Hub — Flower of Life animation, #00d4aa accent, onboarding CTA",
+      "auto_fix": "find sites/ -path \"*headyme*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headyme HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-002",
+      "category": "SITE_CONTENT",
+      "title": "headysystems.com — AI Infrastructure Engine — Metatrons Cube, #6366f1, enterprise features",
+      "auto_fix": "find sites/ -path \"*headysystems*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headysystems HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-003",
+      "category": "SITE_CONTENT",
+      "title": "headyconnection.org — Community — Seed of Life, #f59e0b, collaboration + marketplace",
+      "auto_fix": "find sites/ -path \"*headyconnection*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headyconnection HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-004",
+      "category": "SITE_CONTENT",
+      "title": "headymcp.com — MCP Tools — Sri Yantra, #ec4899, 31 tools catalog + playground",
+      "auto_fix": "find sites/ -path \"*headymcp*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headymcp HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-005",
+      "category": "SITE_CONTENT",
+      "title": "headyos.com — Latent OS — Torus, #8b5cf6, architecture deep-dive + CSL reference",
+      "auto_fix": "find sites/ -path \"*headyos*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headyos HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-006",
+      "category": "SITE_CONTENT",
+      "title": "headybuddy.org — AI Companion — Vesica Piscis, #14b8a6, persistent chat + wellness",
+      "auto_fix": "find sites/ -path \"*headybuddy*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headybuddy HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-007",
+      "category": "SITE_CONTENT",
+      "title": "headyapi.com — API Gateway — Platonic Solids, #f97316, Swagger + SDK + rate limit docs",
+      "auto_fix": "find sites/ -path \"*headyapi*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headyapi HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-008",
+      "category": "SITE_CONTENT",
+      "title": "headyio.com — Developer SDK — Golden Spiral, #06b6d4, quickstart + package registry",
+      "auto_fix": "find sites/ -path \"*headyio*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headyio HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "SC-009",
+      "category": "SITE_CONTENT",
+      "title": "headybot.com — Bot Framework — Merkaba, #84cc16, bot wizard + template marketplace",
+      "auto_fix": "find sites/ -path \"*headybot*\" -name \"*.html\" 2>/dev/null | wc -l | xargs -I{} echo \"{} headybot HTML files\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "C4-001",
+      "category": "COLAB_4X",
+      "title": "Deploy hot-us-east Colab runtime — Embedder role, heady_swarm consumer group, reassignable",
+      "auto_fix": "grep -rn \"hot-us-east\\|embedder.*runtime\" . --include=\"*.py\" --include=\"*.js\" --include=\"*.yaml\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} hot-us-east refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "C4-002",
+      "category": "COLAB_4X",
+      "title": "Deploy warm-us-west Colab runtime — Evaluator role, heady_swarm consumer group, reassignable",
+      "auto_fix": "grep -rn \"warm-us-west\\|evaluator.*runtime\" . --include=\"*.py\" --include=\"*.js\" --include=\"*.yaml\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} warm-us-west refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "C4-003",
+      "category": "COLAB_4X",
+      "title": "Deploy cold-eu-west Colab runtime — General compute, heady_swarm consumer group, reassignable",
+      "auto_fix": "grep -rn \"cold-eu-west\\|general.*compute.*runtime\" . --include=\"*.py\" --include=\"*.js\" --include=\"*.yaml\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} cold-eu-west refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "C4-004",
+      "category": "COLAB_4X",
+      "title": "Deploy heady-learner Colab runtime — NEVER reassignable, heady_learning consumer group, 6-step loop",
+      "auto_fix": "grep -rn \"heady.learner\\|heady_learning\\|learning.*consumer\" . --include=\"*.py\" --include=\"*.js\" --include=\"*.yaml\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} heady-learner refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "VM-001",
+      "category": "VERIFICATION",
+      "title": "Verify Manager health: curl :3301/health → healthy + dependency checks for DB, Redis, Firebase",
+      "auto_fix": "curl -s http://localhost:3301/health 2>/dev/null | head -1 || echo \"Manager not reachable at :3301\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "VM-002",
+      "category": "VERIFICATION",
+      "title": "Verify MCP server: curl :4317/health → healthy + tool list of 31 MCP tools",
+      "auto_fix": "curl -s http://localhost:4317/health 2>/dev/null | head -1 || echo \"MCP server not reachable at :4317\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "VM-003",
+      "category": "VERIFICATION",
+      "title": "Verify all 9 domain health checks pass: curl https://{domain}/health → 200",
+      "auto_fix": "for d in headyme.com headysystems.com headyconnection.org headymcp.com headyos.com headybuddy.org headyapi.com headyio.com headybot.com; do curl -s -o /dev/null -w \"$d: %{http_code}\" \"https://$d/health\" 2>/dev/null; done | head -9",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "VM-004",
+      "category": "VERIFICATION",
+      "title": "Verify HeadyValidator all 8 phases pass",
+      "auto_fix": "test -f scripts/heady-validator.js && echo \"HeadyValidator exists\" || echo \"MISSING: scripts/heady-validator.js\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "VM-005",
+      "category": "VERIFICATION",
+      "title": "Verify AutoContext gate — content below 0.618 relevance rejected",
+      "auto_fix": "grep -rn \"0\\.618\\|PSI\\|quality.*gate\" packages/heady-autocontext/ --include=\"*.js\" 2>/dev/null | wc -l | xargs -I{} echo \"{} autocontext quality gate refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "VM-006",
+      "category": "VERIFICATION",
+      "title": "Verify 4 Colab runtime Redis health keys present (3 operational + 1 learning)",
+      "auto_fix": "grep -rn \"health:.*colab\\|colab.*health.*key\" . --include=\"*.js\" --include=\"*.py\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Colab health key refs\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "HFP-001",
+      "category": "PIPELINE",
+      "title": "Create packages/hcfullpipeline/manifest.yaml with 7-stage pipeline (preflight→security→quality→test→build→deploy→verify)",
+      "auto_fix": "test -f packages/hcfullpipeline/manifest.yaml && echo \"manifest.yaml exists\" || echo \"MISSING: manifest.yaml\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "HFP-002",
+      "category": "PIPELINE",
+      "title": "Deploy HCFullPipeline content to HeadySystems/HeadyEcosystem (currently empty repo)",
+      "auto_fix": "echo \"HeadySystems/HeadyEcosystem deployment pending\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
+    },
+    {
+      "id": "HFP-003",
+      "category": "PIPELINE",
+      "title": "Populate HeadySystems/headybuddy-web with HeadyBuddy web frontend (currently empty repo)",
+      "auto_fix": "echo \"HeadySystems/headybuddy-web deployment pending\"",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "HEADY_SUPER_PROMPT v2.1.0"
     }
   ]
 }
