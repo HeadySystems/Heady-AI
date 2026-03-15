@@ -6,7 +6,7 @@
   "lastFineTuned": "2026-03-15T21:56:57.801Z",
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline \u2014 dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks + Public Domain Integration (28)",
-  "taskCount": 371,
+  "taskCount": 457,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -4400,6 +4400,780 @@
       "status": "pending",
       "csl_confidence": 0.8,
       "estimated_hours": 8
+    },
+    {
+      "id": "BUG-001",
+      "category": "FIX",
+      "title": "Resolve merge conflicts in .env.example",
+      "description": "File has <<<<<<< HEAD on line 1. Two versions never reconciled: v4.0.0 vs v3.0.0. Kills entire CI pipeline \u2014 Phase 0 \u03c6-Preflight greps for conflict markers and exits.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 1
+    },
+    {
+      "id": "BUG-002",
+      "category": "FIX",
+      "title": "Fix Node version mismatch \u2014 package.json says >=22, all 46 workflows say 20",
+      "description": "Update all 46 active workflows to NODE_VERSION: 22. Switch from npm ci to pnpm install. Update all -core repos to express ^5.1.0 and node >=22.0.0.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 2
+    },
+    {
+      "id": "BUG-003",
+      "category": "FIX",
+      "title": "Create missing package entrypoints (phi-math-foundation, mcp-server, backend/app.js)",
+      "description": "phi-math-foundation/index.js 404, mcp-server/index.js 404, backend/app.js 404. Create phi-math-foundation extending phi-math. Create mcp-server re-export. Fix start:mcp script.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "BUG-004",
+      "category": "FIX",
+      "title": "Remove node_modules from HeadyWeb repo (22,642 files, 41MB committed)",
+      "description": "Add node_modules/ to .gitignore, git rm -r --cached, force push. Switch default branch master \u2192 main. Clarify if React is acceptable (admin tooling) or needs vanilla JS.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "BUG-005",
+      "category": "SECURITY",
+      "title": "Fix wildcard CORS in HeadyMe/headysystems/server.js",
+      "description": "Replace Access-Control-Allow-Origin: * with domain whitelist from src/config/global.js. All 9 domains + subdomains.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 1
+    },
+    {
+      "id": "INFRA-101",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Cloudflare Workers edge layer \u2014 deploy all 16 workers",
+      "description": "Deploy cloudflare/heady-edge-node (Hono v4.12.x), heady-edge-router, worker-ai-gateway, worker-heady-router, worker-mcp-telemetry + 16 workers. Fix all 9 domain health checks.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 8
+    },
+    {
+      "id": "INFRA-102",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire GCloud Cloud Run \u2014 Dockerfile multi-stage build + PM2 8 processes",
+      "description": "Verify Dockerfile FROM node:22-alpine, ecosystem.config.cjs 8 processes, deployment/cloudrun/ configs. Deploy to heady-production-uc.a.run.app.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-103",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Vertex AI \u2014 NOT YET WIRED in remote-resources.yaml",
+      "description": "Add Vertex AI entry to configs/remote-resources.yaml. Endpoint: {region}-aiplatform.googleapis.com/v1. Wire GCP_PROJECT_ID, GCP_REGION, VERTEX_AI_LOCATION.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-104",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Neon Postgres \u2014 run migrations, fix localhost default",
+      "description": "Run all migrations from heady-db-infra/migrations/. Fix configs/remote-resources.yaml DB_HOST default from localhost to Neon. Verify PgBouncer config.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-105",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Upstash Redis \u2014 fix localhost default, enforce rediss:// TLS",
+      "description": "Fix remote-resources.yaml from redis://localhost:6379 to rediss:// TLS. Fail loud if REDIS_URL unset. Test Streams, pub/sub, sessions.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-106",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Firebase Auth \u2014 Admin SDK init + edge token verification",
+      "description": "Initialize Firebase Admin SDK with env vars. Wire workers/edge-auth-worker/ for token verification. Connect services/heady-auth/, heady-identity/, heady-guard/.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-107",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Sentry error tracking + performance monitoring",
+      "description": "Configure SENTRY_DSN in manager + all workers. Error classification for automated alerting. Performance monitoring.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-108",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire OpenTelemetry + Grafana + Prometheus observability stack",
+      "description": "Deploy packages/observability-client/, observability-kernel/, services/heady-observability/, heady-telemetry/. OTel collector, Grafana dashboards, Prometheus metrics.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 6
+    },
+    {
+      "id": "INFRA-109",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire vector stores \u2014 consolidate 3 services, connect Pinecone + Qdrant + pgvector",
+      "description": "Consolidate heady-vector, heady-vector-memory, vector-memory-service into one. Connect Qdrant at qdrant.headysystems.com. Pinecone namespaces: sg_, add_, shared_.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "INFRA-110",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Stripe billing \u2014 services/billing-service/ + monetization",
+      "description": "Connect Stripe with STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET. Wire services/billing-service/ and src/monetization/.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "INFRA-111",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Discord bot \u2014 services/discord-bot/",
+      "description": "Connect DISCORD_BOT_TOKEN, DISCORD_CLIENT_ID. Deploy services/discord-bot/.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-112",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Notion integration \u2014 sync + audit",
+      "description": "Connect NOTION_API_KEY, NOTION_DATABASE_ID. Wire src/services/ Notion integration. Process data/notion-audit.jsonl.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE1-001",
+      "category": "FIX",
+      "title": "Fix YAML syntax in clean-build-ci.yml, promotion-pipeline.yml, file_maintenance.yml",
+      "description": "These workflows produce 'No jobs were run'. Fix YAML syntax errors.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE1-002",
+      "category": "FIX",
+      "title": "Switch all 46 workflows from npm to pnpm",
+      "description": "Replace npm ci/npm install with pnpm install in all active workflows. Match declared packageManager pnpm@10.6.0.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE1-003",
+      "category": "FIX",
+      "title": "Get pnpm install && pnpm run build passing",
+      "description": "Full clean build must succeed end-to-end. Resolve all dependency issues.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE2-001",
+      "category": "FIX",
+      "title": "Fix heady-manager.js double imports (pino+structured-logger, yamljs+js-yaml, node-fetch+native)",
+      "description": "Remove duplicate imports. Use pino (not structured-logger), js-yaml (not yamljs), native fetch (not node-fetch).",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE2-002",
+      "category": "INFRASTRUCTURE",
+      "title": "All 8 PM2 processes start and stay running",
+      "description": "heady-manager(3301), hcfp-auto-success, api-gateway(4301), domain-router(4311), heady-conductor(4306), heady-mcp(4317), heady-buddy(4318), heady-bee-factory(4319).",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PHASE2-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Manager /health returns structured JSON with dependency checks",
+      "description": "curl :3301/health \u2192 healthy response with Redis, Postgres, Firebase, all service checks.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE3-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Run all Neon Postgres migrations from heady-db-infra/migrations/",
+      "description": "Execute all pending database migrations. Verify schema is current.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE3-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Test Upstash Redis Streams over TLS",
+      "description": "Verify ioredis ping over rediss:// \u2192 PONG. Test Streams XADD/XREAD, pub/sub, sessions.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE3-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Test Firebase Admin SDK init \u2014 getUser returns user",
+      "description": "Initialize Firebase Admin SDK, verify getUser works, confirm token verification.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE4-001",
+      "category": "DEPLOY",
+      "title": "Deploy all Cloudflare Workers to production",
+      "description": "Deploy all workers from cloudflare/ and workers/ directories. Verify health endpoints.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "PHASE4-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Configure Cloudflare named tunnels for all 9 domains",
+      "description": "Set up named tunnels. All domain health checks must pass.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PHASE4-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire MCP transport at manager.headysystems.com/mcp/sse",
+      "description": "MCP SSE transport endpoint live and returning tool list.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE5-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Configure all 6 LLM providers in remote-resources.yaml",
+      "description": "Anthropic, OpenAI, Gemini AI Studio, Gemini Vertex AI, Groq, Perplexity, HuggingFace. All with correct endpoints and timeouts.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE5-002",
+      "category": "DEPLOY",
+      "title": "Deploy worker-ai-gateway with \u03c6 rate limits and CSL routing",
+      "description": "AI gateway with phi-derived rate limits (anon=34/min, auth=89/min, enterprise=233/min) and CSL routing.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PHASE5-003",
+      "category": "QUALITY",
+      "title": "Test each LLM provider end-to-end",
+      "description": "Verify each provider responds correctly: Claude, GPT, Gemini, Groq, Perplexity, HuggingFace.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE6-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy Sentry to manager + all workers",
+      "description": "Sentry DSN configured in heady-manager and all Cloudflare workers. Test error appears in dashboard.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE6-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy OTel collector + Grafana dashboards",
+      "description": "OpenTelemetry collector running, Grafana dashboards active, Prometheus metrics flowing.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "PHASE6-003",
+      "category": "QUALITY",
+      "title": "Self-healing workflow passing \u2014 all 6 jobs green",
+      "description": "Self-healing cron (.github/workflows/self-healing.yml) all 6 jobs pass. All 9 domain checks green.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PHASE7-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy 4 Colab notebooks \u2014 3 operational + 1 learning",
+      "description": "hot-us-east (Embedder), warm-us-west (Evaluator), cold-eu-west (General), heady-learner (Self-learning, never reassigned).",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 6
+    },
+    {
+      "id": "PHASE7-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Colab Redis Streams consumers + XAUTOCLAIM recovery",
+      "description": "3 operational runtimes in heady_swarm consumer group. 1 learning in heady_learning. Dead node recovery: 60s operational, 300s learning.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PHASE7-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire learning runtime 6-step loop publishing to learning_results stream",
+      "description": "Pattern extraction \u2192 LLM benchmarking \u2192 embedding refinement \u2192 knowledge distillation \u2192 self-healing intelligence \u2192 \u03c6-calibration. Publish to learning_results.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 4
+    },
+    {
+      "id": "PHASE7-004",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire Google Drive checkpoint every 68s (Fibonacci: 55+13)",
+      "description": "Colab runtimes checkpoint to Google Drive every 68 seconds. Verify durability.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE8-001",
+      "category": "DEPLOY",
+      "title": "Convert all HeadyMe -core stubs to real servers using headysystems server.js pattern",
+      "description": "Convert 12-line Express stubs to production servers: static serving, API proxy, gzip, security headers, SPA fallback, graceful shutdown, structured logging, phi-math.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 8
+    },
+    {
+      "id": "PHASE8-002",
+      "category": "DEPLOY",
+      "title": "Update all -core repos: express ^4.21.0 \u2192 ^5.1.0, node >=20 \u2192 >=22",
+      "description": "All projected repos must match monorepo versions. express ^5.1.0, node >=22.0.0.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE8-003",
+      "category": "QUALITY",
+      "title": "All 9 domain health checks return HTTP 200",
+      "description": "headyme.com, headysystems.com, headyconnection.org, headybuddy.org, headymcp.com, headyio.com, headybot.com, headyapi.com, heady-ai.com \u2014 all /health \u2192 200.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE9-001",
+      "category": "FEATURES",
+      "title": "Activate 14 agents \u2014 8 Sacred Geometry + 6 Extended",
+      "description": "Activate via env vars and Redis Streams. Each agent processes its domain. ENABLE_CODEMAP, ENABLE_JULES, ENABLE_PERPLEXITY, ENABLE_OBSERVER, etc.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 4
+    },
+    {
+      "id": "PHASE10-001",
+      "category": "QUALITY",
+      "title": "HeadyValidator all 8 phases passing",
+      "description": "Run HeadyValidator through all 8 verification phases. All must pass.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PHASE10-002",
+      "category": "QUALITY",
+      "title": "All 475 tests passing with \u226580% coverage on core/\u03c6-math",
+      "description": "Run full test suite. All 475 tests pass. Coverage \u226580% on packages/phi-math/.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "PHASE10-003",
+      "category": "QUALITY",
+      "title": "MCP server exposes tool list at :4317/health",
+      "description": "curl :4317/health \u2192 healthy + complete tool list.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE10-004",
+      "category": "QUALITY",
+      "title": "Colab \u00d74 Redis health keys present",
+      "description": "3 operational + 1 learning runtime health keys in Redis.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE10-005",
+      "category": "QUALITY",
+      "title": "Vector query returns federated results from \u22652 stores",
+      "description": "Federated vector search across Pinecone + Qdrant returns merged results.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE10-006",
+      "category": "QUALITY",
+      "title": "HeadyAutoContext enforces 0.618 quality gate \u2014 content below threshold rejected",
+      "description": "AutoContext quality gate active on all content pipelines. Below 0.618 \u2192 rejected.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE10-007",
+      "category": "SECURITY",
+      "title": "Zero wildcard CORS in any production code",
+      "description": "grep for Access-Control-Allow-Origin: * \u2192 zero results across all production files.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "PHASE10-008",
+      "category": "SECURITY",
+      "title": "Dependabot zero open security PRs",
+      "description": "All Dependabot security PRs merged or resolved. pnpm audit clean.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "PHASE10-009",
+      "category": "QUALITY",
+      "title": "All workflows use Node 22, all repos declare >=22",
+      "description": "Verify across all 34 repos and 46 workflows. Zero Node 20 references.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "STUB-001",
+      "category": "DEPLOY",
+      "title": "Convert headyos-core stub to production server",
+      "description": "12-line Express stub \u2192 full server: static serving from sites/headyos.com/, API proxy, structured logging, phi-math, health checks.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-002",
+      "category": "DEPLOY",
+      "title": "Convert headyconnection-core stub to production server",
+      "description": "Community workspace stub \u2192 full server with headyconnection.org content.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-003",
+      "category": "DEPLOY",
+      "title": "Convert headyme-core stub to production server",
+      "description": "Personal Cloud Hub stub \u2192 full server with headyme.com content.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-004",
+      "category": "DEPLOY",
+      "title": "Convert headysystems-core stub to production server",
+      "description": "AI Infrastructure Engine stub \u2192 full server.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-005",
+      "category": "DEPLOY",
+      "title": "Convert headyapi-core stub to production server",
+      "description": "API Gateway stub \u2192 full server with headyapi.com content.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-006",
+      "category": "DEPLOY",
+      "title": "Convert headybot-core stub to production server",
+      "description": "Bot Framework stub \u2192 full server with headybot.com content.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-007",
+      "category": "DEPLOY",
+      "title": "Convert headybuddy-core stub to production server",
+      "description": "AI Companion stub \u2192 full server with headybuddy.org content.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-008",
+      "category": "DEPLOY",
+      "title": "Convert headyio-core stub to production server",
+      "description": "Developer SDK stub \u2192 full server with headyio.com content.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-009",
+      "category": "DEPLOY",
+      "title": "Convert headymcp-core stub (claims 31 MCP tools, actually 12-line Express) to production server",
+      "description": "MCP stub \u2192 full server re-exporting from src/mcp/heady-mcp-server.js. Wire 31 MCP tools.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "STUB-010",
+      "category": "DEPLOY",
+      "title": "Populate HeadySystems/HeadyEcosystem (empty repo) with HCFullPipeline content",
+      "description": "New empty repo. Push HCFullPipeline configs, scripts, and documentation.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "STUB-011",
+      "category": "DEPLOY",
+      "title": "Populate HeadySystems/headybuddy-web (empty repo) with HeadyBuddy frontend",
+      "description": "New empty repo. Build HeadyBuddy web frontend \u2014 vanilla JS, Sacred Geometry.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "CMS-001",
+      "category": "FEATURES",
+      "title": "Wire Drupal 11 CMS \u2014 14-drupal-config, modules, themes, services",
+      "description": "Deploy docker-compose from 14-drupal-config/. Wire services/heady-drupal/, heady-drupal-proxy/. Twig templates + vanilla JS.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 6
+    },
+    {
+      "id": "CMS-002",
+      "category": "FEATURES",
+      "title": "Wire HeadyAutoContext content quality gate (0.618 threshold)",
+      "description": "packages/heady-autocontext/ quality gate. Content below 0.618 CSL score \u2192 rejected.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SVC-001",
+      "category": "FEATURES",
+      "title": "Wire MIDI/Ableton integration (140 refs in codebase)",
+      "description": "Connect services/heady-midi/, heady-ableton/, midi_bridge/, packages/pd04-codec/, integrations/max-for-live/.",
+      "status": "pending",
+      "csl_confidence": 0.7,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SVC-002",
+      "category": "ARCHITECTURE",
+      "title": "Consolidate duplicate infra dirs \u2014 infra/cloud-run/ vs infra/cloudrun/",
+      "description": "Two duplicate directories for Cloud Run config. Consolidate into one canonical location.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "SVC-003",
+      "category": "ARCHITECTURE",
+      "title": "Audit Nginx/Consul/Envoy/NATS/K8s/Helm/Terraform refs \u2014 active vs future-state",
+      "description": "72 Nginx, 32 Consul/Envoy, 39 NATS, 296 K8s/Helm/Terraform refs. Classify each as active or future-state.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 3
+    },
+    {
+      "id": "IMPROVE-001",
+      "category": "QUALITY",
+      "title": "Replace all remaining console.log with structured pino logger",
+      "description": "Full codebase scan for console.log in production code. Replace with pino structured logging.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 4
+    },
+    {
+      "id": "IMPROVE-002",
+      "category": "QUALITY",
+      "title": "Convert all var to const/let across codebase",
+      "description": "Scan and replace all var declarations with const or let.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "IMPROVE-003",
+      "category": "QUALITY",
+      "title": "Add JSDoc to all undocumented public functions",
+      "description": "Scan for public functions without JSDoc. Add documentation.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 6
+    },
+    {
+      "id": "IMPROVE-004",
+      "category": "QUALITY",
+      "title": "Replace all magic numbers with \u03c6-derived or Fibonacci constants",
+      "description": "Scan for hardcoded numbers. Replace with PHI, PSI, FIB constants from phi-math.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 4
+    },
+    {
+      "id": "IMPROVE-005",
+      "category": "QUALITY",
+      "title": "Convert all callback-based code to async/await",
+      "description": "Find callback patterns, convert to modern async/await.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "IMPROVE-006",
+      "category": "QUALITY",
+      "title": "Add input validation to all unvalidated endpoints (zod schemas)",
+      "description": "Use zod ^3.24.2 for request validation on all API endpoints.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 6
+    },
+    {
+      "id": "IMPROVE-007",
+      "category": "ARCHITECTURE",
+      "title": "Consolidate 4 MCP server variants into one canonical",
+      "description": "Multiple MCP implementations exist. Consolidate into one at src/mcp/heady-mcp-server.js.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "IMPROVE-008",
+      "category": "ARCHITECTURE",
+      "title": "Verify dependency graph has no circular imports",
+      "description": "Run circular dependency detection across all packages and services.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "IMPROVE-009",
+      "category": "ARCHITECTURE",
+      "title": "Move all business logic out of route handlers into service layers",
+      "description": "Scan route handlers for business logic. Extract into dedicated service modules.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 6
+    },
+    {
+      "id": "IMPROVE-010",
+      "category": "SECURITY",
+      "title": "Scan for hardcoded credentials in all files including tests",
+      "description": "Comprehensive credential scan across entire codebase. Zero hardcoded secrets.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "IMPROVE-011",
+      "category": "SECURITY",
+      "title": "Verify auth middleware on all API endpoints",
+      "description": "Every API endpoint must have proper authentication middleware.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "IMPROVE-012",
+      "category": "SECURITY",
+      "title": "Verify rate limiting active on all public endpoints",
+      "description": "express-rate-limit ^8.2.1 configured on all public-facing routes.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "IMPROVE-013",
+      "category": "QUALITY",
+      "title": "Identify and fix O(n\u00b2) algorithms in hot paths",
+      "description": "Profile hot code paths. Replace quadratic with linear/logarithmic implementations.",
+      "status": "pending",
+      "csl_confidence": 0.75,
+      "estimated_hours": 4
+    },
+    {
+      "id": "IMPROVE-014",
+      "category": "QUALITY",
+      "title": "Check for missing database indexes on frequently-queried columns",
+      "description": "Analyze query patterns, add missing indexes.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "IMPROVE-015",
+      "category": "QUALITY",
+      "title": "Verify connection pools sized with \u03c6-derived constants (min=2, max=13)",
+      "description": "All connection pools use FIB[2]=2 min, FIB[6]=13 max.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1
+    },
+    {
+      "id": "IMPROVE-016",
+      "category": "QUALITY",
+      "title": "Find and eliminate synchronous I/O in async code paths",
+      "description": "Replace fs.readFileSync, fs.writeFileSync etc. with async equivalents in service code.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "IMPROVE-017",
+      "category": "DOCUMENTATION",
+      "title": "Verify all README files describe current state, not past/future",
+      "description": "Audit all README.md files across 34 repos. Update any that describe aspirational or outdated state.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "IMPROVE-018",
+      "category": "DOCUMENTATION",
+      "title": "Verify all documentation links resolve \u2014 zero 404s",
+      "description": "Scan all docs for links. Verify each resolves. Fix or remove broken links.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
     }
   ]
 }
