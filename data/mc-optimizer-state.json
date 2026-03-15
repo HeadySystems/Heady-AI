@@ -1,0 +1,70 @@
+{
+  "poolWins": {
+    "colab-brain": 0,
+    "colab-memory": 0,
+    "colab-conductor": 0,
+    "cloudrun-prod": 0,
+    "cloudrun-staging": 0,
+    "edge-cf": 0,
+    "local-ryzen": 0
+  },
+  "baseRates": {
+    "test-scenario": 0.7827
+  },
+  "totalBatches": 0,
+  "history": [
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 85,
+        "failureRate": 0.15,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 85,
+          "partial": 0,
+          "failure": 15
+        },
+        "confidenceBounds": {
+          "lower": 0.09305903191162297,
+          "upper": 0.23283733332157835
+        },
+        "seed": -221098628,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1773600394621
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 88,
+        "failureRate": 0.12,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 88,
+          "partial": 0,
+          "failure": 12
+        },
+        "confidenceBounds": {
+          "lower": 0.06999337365267776,
+          "upper": 0.19812268002908368
+        },
+        "seed": -221075711,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1773600417538
+    }
+  ],
+  "savedAt": "2026-03-15T18:46:57.543Z"
+}
