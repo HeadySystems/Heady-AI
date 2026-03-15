@@ -46,7 +46,7 @@ SERVICES = [
     {"id": "heady-seventeen-swarm",   "port": 3331, "domain": "headybee.co",          "desc": "17-swarm orchestrator — golden-angle ring topology, CSL gates",       "upstreams": ["heady-swarm-coordinator","heady-bee-factory"]},
     # Pipeline services
     {"id": "heady-pipeline-core",     "port": 3332, "domain": "headysystems.com",     "desc": "Pipeline core — 21-stage HCFullPipeline v4.0, phi-scaled timeouts",   "upstreams": ["heady-manager","heady-brain"]},
-    {"id": "heady-csl-judge",         "port": 3333, "domain": "headysystems.com",     "desc": "CSL judge/scorer — semantic gate evaluation, ternary logic, receipts", "upstreams": ["heady-vector-memory"]},
+    {"id": "heady-csl-judge",         "port": 3333, "domain": "headysystems.com",     "desc": "CSL judge/scorer — semantic gate evaluation, CSL Ternary Gate, receipts", "upstreams": ["heady-vector-memory"]},
     {"id": "heady-auto-success",      "port": 3334, "domain": "headysystems.com",     "desc": "Auto-Success Engine — φ⁷-cycle (29,034ms) background task orchestration","upstreams": ["heady-manager"]},
     # Intelligence/safety
     {"id": "heady-hallucination-watchdog","port": 3335, "domain": "headysystems.com", "desc": "Hallucination detection watchdog — real-time output quality monitoring", "upstreams": ["heady-inference-gateway"]},

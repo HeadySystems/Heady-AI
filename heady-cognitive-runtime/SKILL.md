@@ -1,6 +1,6 @@
 ---
 name: heady-cognitive-runtime
-description: Use when working with cognitive operations control, runtime governance, ternary logic operations, spatial mapping for 3D vector space, rulez gatekeeper enforcement, semantic contextualizer, or spatial context engine in the Heady™ ecosystem. Keywords include cognitive, runtime, governor, ternary logic, spatial mapping, rulez, gatekeeper, semantic context, cognitive controller, and intelligent process management.
+description: Use when working with cognitive operations control, runtime governance, CSL Ternary Gate operations, spatial mapping for 3D vector space, rulez gatekeeper enforcement, semantic contextualizer, or spatial context engine in the Heady™ ecosystem. Keywords include cognitive, runtime, governor, CSL Ternary Gate, spatial mapping, rulez, gatekeeper, semantic context, cognitive controller, and intelligent process management.
 metadata:
   author: HeadySystems
   version: '1.0'
@@ -13,7 +13,7 @@ metadata:
 Use this skill when the user needs to:
 - Implement cognitive operations control flows
 - Configure the runtime governor for process management
-- Use ternary logic (true/false/unknown) instead of binary
+- Use CSL Ternary Gate (true/false/unknown) instead of binary
 - Work with spatial mapping for 3D vector operations
 - Set up the rulez gatekeeper for rule enforcement
 - Enrich context with the semantic contextualizer
@@ -45,8 +45,8 @@ Use this skill when the user needs to:
 3. Implements backpressure when cognitive load exceeds threshold.
 4. Auto-scales reasoning depth based on task complexity score.
 
-### Ternary Logic System
-Unlike binary (true/false), ternary logic adds an "unknown" state:
+### CSL Ternary Gate System
+Unlike binary (true/false), the CSL Ternary Gate adds an "unknown" state:
 - TRUE (1.0): Confirmed with high confidence
 - UNKNOWN (0.5): Insufficient evidence, needs more data
 - FALSE (0.0): Confirmed negative
@@ -75,6 +75,6 @@ This extends naturally to CSL continuous gates where 0.0-1.0 are all valid state
 
 - Cognitive Pipeline State
 - Governor Resource Allocation
-- Ternary Logic Evaluation
+- CSL Ternary Gate Evaluation
 - Spatial Map Coordinates
 - Rule Evaluation Results

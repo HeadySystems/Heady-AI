@@ -4,11 +4,11 @@ description: >
   Use when implementing or extending Continuous Semantic Logic (CSL) — Heady's core geometric AI
   innovation using vector operations as logical gates. Covers CSL AND (cosine), OR (superposition),
   NOT (orthogonal projection), IMPLY (projection), XOR, CONSENSUS, GATE operations, plus HDC/VSA
-  binding and bundling, MoE cosine routing, ternary logic, and mathematical proofs.
+  binding and bundling, MoE cosine routing, CSL Ternary Gate, and mathematical proofs.
   60+ provisional patents. All parameters use phi-continuous scaling.
   Keywords: CSL, Continuous Semantic Logic, geometric logic, vector logic, cosine gate, orthogonal
   projection, semantic NOT, HDC, hyperdimensional computing, VSA, vector symbolic, MoE router,
-  ternary logic, Heady CSL, geometric AI, Sacred Geometry logic.
+  CSL Ternary Gate, Heady CSL, geometric AI, Sacred Geometry logic.
 metadata:
   author: eric-head
   version: '2.0'
@@ -25,7 +25,7 @@ Use this skill when you need to:
 - Build consensus from multiple agent opinions via superposition
 - Route tasks using cosine-based Mixture-of-Experts
 - Implement hyperdimensional computing (HDC/VSA) for symbolic operations
-- Handle uncertainty with ternary logic (TRUE/UNKNOWN/FALSE)
+- Handle uncertainty with CSL Ternary Gate (TRUE/UNKNOWN/FALSE) — continuous cosine mapping to {-1, 0, +1}
 - Prove mathematical properties of CSL operations
 
 ## CSL Gate Definitions
@@ -93,7 +93,7 @@ selected = topK(probs, k=fib(3)=2)
 - Collapse detection threshold: `ψ⁹ ≈ 0.0081`
 - Expert init: `(Math.random() - PSI) * PHI`
 
-### 4. Ternary Logic
+### 4. CSL Ternary Gate
 
 Continuous mapping to vector space:
 - TRUE: cos ≈ +1 (aligned)
@@ -121,6 +121,6 @@ CSL routing is 5× faster than LLM classification (0.1s vs 0.59s), 43% cheaper.
 - `section5-csl-geometric/engine/csl-engine.js`
 - `section5-csl-geometric/engine/hdc-operations.js`
 - `section5-csl-geometric/engine/moe-csl-router.js`
-- `section5-csl-geometric/modules/ternary-logic.js`
+- `section5-csl-geometric/modules/ternary-logic.js` (legacy name — implements CSL Ternary Gate)
 - `section5-csl-geometric/docs/csl-mathematical-proofs.md`
 - `src/vector-space-ops.js`

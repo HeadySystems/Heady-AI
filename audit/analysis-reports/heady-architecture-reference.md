@@ -941,9 +941,9 @@ routing_diversity = 1 - max(probs)       // Inverse of collapse risk
 
 ---
 
-### 2.5 Ternary Logic Modes
+### 2.5 CSL Ternary Gate Modes
 
-CSL supports five ternary logic interpretations. The continuous CSL value maps to three logical states via thresholds:
+CSL supports five CSL Ternary Gate interpretations. The continuous CSL value maps to three logical states via thresholds:
 - **TRUE:** `cos ≥ CSL_THRESHOLDS.MINIMUM ≈ 0.500`
 - **UNKNOWN:** `-CSL_THRESHOLDS.MINIMUM < cos < CSL_THRESHOLDS.MINIMUM` → `(-0.500, 0.500)`
 - **FALSE:** `cos ≤ -CSL_THRESHOLDS.MINIMUM ≈ -0.500`

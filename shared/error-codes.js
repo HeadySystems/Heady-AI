@@ -37,7 +37,7 @@ const HEADY_ERRORS = {
   'PIPELINE_005': { code: 'HEADY-PIPELINE-005', http: 400, message: 'Invalid pipeline configuration' },
   'CSL_001': { code: 'HEADY-CSL-001', http: 400, message: 'CSL gate threshold not met' },
   'CSL_002': { code: 'HEADY-CSL-002', http: 500, message: 'Vector dimension mismatch in CSL operation' },
-  'CSL_003': { code: 'HEADY-CSL-003', http: 400, message: 'Invalid ternary logic mode' },
+  'CSL_003': { code: 'HEADY-CSL-003', http: 400, message: 'Invalid CSL Ternary Gate mode' },
   'CSL_004': { code: 'HEADY-CSL-004', http: 500, message: 'HDC codebook overflow (capacity: 96 items at 384-dim)' },
   'CSL_005': { code: 'HEADY-CSL-005', http: 400, message: 'Cosine similarity out of range' },
   'NATS_001': { code: 'HEADY-NATS-001', http: 503, message: 'NATS JetStream connection lost' },

@@ -310,7 +310,7 @@ function moeRoute(input, experts, opts = {}) {
   return selected.map(e => ({ id: e.id, weight: e.weight / selectedSum }));
 }
 
-// ─── Ternary Logic ───────────────────────────────────────────────────────────
+// ─── CSL Ternary Gate ────────────────────────────────────────────────────────
 
 /**
  * Map cosine similarity to ternary truth value.
@@ -353,6 +353,6 @@ module.exports = {
   // MoE Router
   moeRoute,
 
-  // Ternary Logic
+  // CSL Ternary Gate
   ternary, truthValue,
 };

@@ -56,7 +56,7 @@
 | File | Lines | Purpose |
 |---|---|---|
 | `shared/phi-math.js` | 582 | Single source of truth: all φ, ψ, Fibonacci constants and functions |
-| `shared/csl-engine.js` | 511 | CSL gates (AND, OR, NOT, IMPLY, XOR, CONSENSUS, GATE), ternary logic, MoE router, HDC/VSA |
+| `shared/csl-engine.js` | 511 | CSL gates (AND, OR, NOT, IMPLY, XOR, CONSENSUS, GATE), CSL Ternary Gate, MoE router, HDC/VSA |
 | `shared/sacred-geometry.js` | 371 | Ring topology, node placement, coherence tracking, resource allocation, UI system |
 
 ### Config Files (8 files, 1,801 lines)
@@ -91,8 +91,8 @@ Every constant in the system traces to one of these derivations:
 | Derivation | Value | Used For |
 |---|---|---|
 | φ (golden ratio) | 1.618033988749895 | Backoff multiplier, timeout scaling, layout ratios |
-| ψ = 1/φ | 0.618033988749895 | CSL confidence threshold, budget alerts, ternary positive |
-| ψ² = 1 - ψ | 0.381966011250105 | Ternary negative, pressure nominal, jitter factor |
+| ψ = 1/φ | 0.618033988749895 | CSL confidence threshold, budget alerts, CSL Ternary Gate positive |
+| ψ² = 1 - ψ | 0.381966011250105 | CSL Ternary Gate negative, pressure nominal, jitter factor |
 | ψ³ | 0.236067977499790 | CSL gate temperature, cost weights |
 | ψ⁴ | 0.145898033750315 | Compression trigger (1-ψ⁴≈0.854), eviction fraction |
 | phiThreshold(0) | 0.500 | Coherence critical, CSL minimum |

@@ -216,9 +216,9 @@ describe('MoE Router', () => {
   });
 });
 
-// ─── Ternary Logic ───────────────────────────────────────────────────────────
+// ─── CSL Ternary Gate ────────────────────────────────────────────────────────
 
-describe('Ternary Logic', () => {
+describe('CSL Ternary Gate', () => {
   test('high cosScore → TRUE', () => {
     expect(ternary(0.9)).toBe('TRUE');
   });

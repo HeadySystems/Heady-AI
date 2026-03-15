@@ -1,11 +1,11 @@
 ---
 name: heady-agent-orchestration
-description: Implements Sacred Geometry multi-agent orchestration patterns for the Heady ecosystem, including HeadyBee scouting/foraging and HeadySwarm distributed coordination. Use this skill whenever designing, building, or debugging multi-agent workflows — including agent topology, inter-agent communication, swarm intelligence, task routing, consensus mechanisms, balanced ternary logic, or agent lifecycle management. Triggers on mentions of "Sacred Geometry", "HeadyBee", "HeadySwarm", "agent topology", "swarm orchestration", "ternary logic", "liquid nodes", "agent coordination", or any of the 8 agent names (Alpha, Risk, Execution, Sentinel, Compliance, Data, View, Bridge Builder). Also use for LangGraph, CrewAI, or AutoGen integration work in the Heady context.
+description: Implements Sacred Geometry multi-agent orchestration patterns for the Heady ecosystem, including HeadyBee scouting/foraging and HeadySwarm distributed coordination. Use this skill whenever designing, building, or debugging multi-agent workflows — including agent topology, inter-agent communication, swarm intelligence, task routing, consensus mechanisms, CSL Ternary Gate logic, or agent lifecycle management. Triggers on mentions of "Sacred Geometry", "HeadyBee", "HeadySwarm", "agent topology", "swarm orchestration", "CSL Ternary Gate", "liquid nodes", "agent coordination", or any of the 8 agent names (Alpha, Risk, Execution, Sentinel, Compliance, Data, View, Bridge Builder). Also use for LangGraph, CrewAI, or AutoGen integration work in the Heady context.
 ---
 
 # Heady Agent Orchestration
 
-This skill defines the Sacred Geometry multi-agent orchestration framework — the theoretical backbone and primary differentiator of the Heady system. It organizes agent interactions into a hierarchical topology with cross-links, using balanced ternary decision logic and swarm intelligence for distributed coordination.
+This skill defines the Sacred Geometry multi-agent orchestration framework — the theoretical backbone and primary differentiator of the Heady system. It organizes agent interactions into a hierarchical topology with cross-links, using CSL Ternary Gate decision logic and swarm intelligence for distributed coordination.
 
 ## The 8 Sacred Geometry Agents
 
@@ -60,7 +60,7 @@ Cross-links (dotted):
   Compliance ←→ Risk (regulatory constraints)
 ```
 
-## Balanced Ternary Decision Logic
+## CSL Ternary Gate Decision Logic
 
 Every agent decision outputs one of three states, not binary yes/no. This allows for nuanced decision-making and quorum-based aggregation.
 
@@ -283,7 +283,7 @@ class AgentMessage:
     message_type: str          # TRADE_SIGNAL, RISK_VETO, HEALTH_CHECK, etc.
     correlation_id: str        # UUID for distributed tracing
     timestamp: float           # Unix timestamp
-    ternary_state: int         # -1, 0, or 1
+    ternary_gate_state: int    # -1, 0, or 1 (CSL Ternary Gate)
     payload: dict              # Typed data specific to message_type
     signature: str             # HMAC-SHA256 for authenticity
     ttl: int = 30              # Time-to-live in seconds

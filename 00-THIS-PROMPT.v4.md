@@ -475,7 +475,7 @@ There are **50+ skills** already defined. Perplexity must read and implement ALL
 | `heady-bee-swarm-ops` | 30+ bee type management |
 | `heady-cloud-orchestrator` | Multi-cloud resource management |
 | `heady-code-generation` | Multi-model code gen & refactoring |
-| `heady-cognitive-runtime` | Ternary logic, spatial mapping |
+| `heady-cognitive-runtime` | CSL Ternary Gate, spatial mapping |
 | `heady-companion-memory` | Persistent long-term agent memory |
 | `heady-connector-vault` | Secret management, OAuth, SDK layers |
 | `heady-context-window-manager` | Token budget tracking, compression |

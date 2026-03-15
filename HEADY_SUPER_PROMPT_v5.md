@@ -446,7 +446,7 @@ Every error becomes permanent structural armor.
 | `heady-bee-swarm-ops` | 30+ bee type management |
 | `heady-cloud-orchestrator` | Multi-cloud resource management |
 | `heady-code-generation` | Multi-model code gen & refactoring |
-| `heady-cognitive-runtime` | Ternary logic, spatial mapping |
+| `heady-cognitive-runtime` | CSL Ternary Gate, spatial mapping |
 | `heady-connector-vault` | Secret management, OAuth, SDK layers |
 | `heady-csl-engine` | Continuous Semantic Logic gates |
 | `heady-deep-scan` | Full workspace context mapping |

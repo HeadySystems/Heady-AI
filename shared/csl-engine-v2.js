@@ -103,7 +103,7 @@ function generateRandomVector(dim = DIM, seed = SEED) {
   return normalize(v);
 }
 
-// ─── TERNARY LOGIC ──────────────────────────────────────────────────────────
+// ─── CSL TERNARY GATE ───────────────────────────────────────────────────────
 
 const TERNARY = Object.freeze({
   TRUE: 1,
