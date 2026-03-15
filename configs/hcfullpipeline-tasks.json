@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.4.0",
+  "version": "7.5.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T23:22:39.548Z",
+  "lastFineTuned": "2026-03-15T23:45:52.170Z",
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks + Public Domain Integration (28) + Open Source Governance (18)",
-  "taskCount": 511,
+  "taskCount": 537,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -69,6 +69,10 @@
     "OPEN_GOV": {
       "csl_resonance": 1,
       "tasks": 18
+    },
+    "MAX_POTENTIAL": {
+      "csl_resonance": 1.618,
+      "tasks": 26
     }
   },
   "tasks": [
@@ -6198,6 +6202,292 @@
       "auto_fix": "grep -rn \"1\\.618\\|0\\.618\\|PHI\\|fibonacci\" . --include=\"*.js\" --include=\"*.ts\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} phi references found\"",
       "completedAt": "2026-03-15T23:22:18.774Z",
       "completedBy": "auto-success-engine-v2"
+    },
+    {
+      "id": "SA-001",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement AppError typed error class across all services — statusCode, code, details, isOperational",
+      "description": "Replace all ad-hoc Error throws with structured AppError class. Every error gets statusCode, machine-readable code, details object, and isOperational flag for crash-vs-bug distinction.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 4,
+      "source": "Maximum Potential v1.0.0 — Error Handling Pattern",
+      "auto_fix": "grep -rn \"throw new Error\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} raw Error throws to convert to AppError\""
+    },
+    {
+      "id": "SA-002",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy /health endpoint on every service with dependency checks and version reporting",
+      "description": "Every Node service gets createHealthCheck() with service name, version from package.json, and dependency status checks (DB, Redis, external APIs).",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 3,
+      "source": "Maximum Potential v1.0.0 — Service Template",
+      "auto_fix": "grep -rn \"/health\\|/healthz\\|healthCheck\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} health endpoint refs found\""
+    },
+    {
+      "id": "SA-003",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement SIGTERM/SIGINT graceful shutdown on all services — close connections, flush buffers",
+      "description": "Every service process handles SIGTERM and SIGINT with graceful shutdown: close DB connections, flush log buffers, drain request queues, then exit 0.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 2,
+      "source": "Maximum Potential v1.0.0 — Service Template",
+      "auto_fix": "grep -rn \"SIGTERM\\|SIGINT\\|graceful.*shut\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} graceful shutdown refs\""
+    },
+    {
+      "id": "SA-004",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement validated config.js pattern — env vars with defaults, required field validation, Object.freeze",
+      "description": "Create shared config module with parsed env vars, sensible defaults, required field validation (throw on missing), and frozen config object.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Maximum Potential v1.0.0 — Configuration Pattern",
+      "auto_fix": "grep -rn \"Object.freeze\\|config.*validate\\|required.*config\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} config validation refs\""
+    },
+    {
+      "id": "SA-005",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy CORS whitelist middleware — replace all wildcard CORS with explicit origin list from env",
+      "description": "Implement CORS middleware using ALLOWED_ORIGINS env var split into array. No wildcards in production. Support credentialed requests with explicit origin matching.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 2,
+      "source": "Maximum Potential v1.0.0 — CORS Whitelist Pattern",
+      "auto_fix": "grep -rn \"Access-Control-Allow-Origin.*\\*\\|cors({.*origin.*true\\|cors()\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} wildcard CORS refs to fix\""
+    },
+    {
+      "id": "SA-006",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy structured JSON logging with correlation IDs — replace all console.log across codebase",
+      "description": "Implement pino-based structured logger with auto-generated correlation IDs. Every log entry gets timestamp, level, service name, correlationId, and structured data.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 4,
+      "source": "Maximum Potential v1.0.0 — Structured Observability",
+      "auto_fix": "grep -rn \"console\\.log\\|console\\.error\\|console\\.warn\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} console.* calls to replace with structured logger\""
+    },
+    {
+      "id": "SA-007",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement circuit breaker pattern on all external dependency calls",
+      "description": "Wrap all external API calls (Anthropic, OpenAI, Groq, Perplexity, Firebase, Neon, Redis) with circuit breaker pattern. Configurable failure threshold, reset timeout, and fallback behavior.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Maximum Potential v1.0.0 — Scale-Ready Design",
+      "auto_fix": "grep -rn \"circuit.breaker\\|CircuitBreaker\\|opossum\" . --include=\"*.js\" --include=\"*.json\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} circuit breaker refs\""
+    },
+    {
+      "id": "SA-008",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy connection pooling with configurable limits on all DB/Redis connections",
+      "description": "Ensure all Neon Postgres and Upstash Redis connections use pooling with Fibonacci-derived min/max (min: 2, max: 13). Add pool health metrics.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "Maximum Potential v1.0.0 — Scale-Ready Design",
+      "auto_fix": "grep -rn \"pool.*max\\|pool.*min\\|connectionPool\\|pg.*Pool\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} connection pool refs\""
+    },
+    {
+      "id": "DS-001",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy CSS design system foundations — Fibonacci spacing, φ typography, dark theme, glassmorphism",
+      "description": "Create shared CSS variables: Fibonacci spacing (5,8,13,21,34,55,89px), golden ratio typography scale, dark theme with glass effects, and φ-derived cubic-bezier transitions.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Maximum Potential v1.0.0 — Design System Foundations",
+      "auto_fix": "find . -name \"*.css\" -not -path \"*/node_modules/*\" 2>/dev/null | wc -l | xargs -I{} echo \"{} CSS files found\"; grep -rn \"1\\.618\\|fibonacci\\|golden.ratio\" . --include=\"*.css\" 2>/dev/null | wc -l | xargs -I{} echo \"{} φ-design refs in CSS\""
+    },
+    {
+      "id": "DS-002",
+      "category": "MAX_POTENTIAL",
+      "title": "Create shared/constants.js — PHI, PSI, FIB, RELEVANCE_GATES, RETRY_BACKOFF, POOL_SIZES",
+      "description": "Centralize all mathematical constants: PHI (1.618033988749895), PSI (0.618), Fibonacci sequence, relevance gates (0.382/0.618/0.718), Fibonacci retry backoff, and pool sizes.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 1,
+      "source": "Maximum Potential v1.0.0 — System Constants",
+      "auto_fix": "grep -rn \"1\\.618033988749895\\|0\\.618\\|PHI.*=.*1\\.618\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} PHI constant refs\""
+    },
+    {
+      "id": "DS-003",
+      "category": "MAX_POTENTIAL",
+      "title": "Eliminate all magic numbers in codebase — replace with named constants from shared/constants.js",
+      "description": "Audit for hardcoded timeouts, retry counts, pool sizes, thresholds. Replace with Fibonacci or φ-derived named constants from shared/constants.js.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Maximum Potential v1.0.0 — No Magic Numbers",
+      "auto_fix": "grep -rn \"setTimeout.*[0-9][0-9][0-9][0-9]\\|retries.*[0-9]\\|limit.*[0-9]\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} potential magic numbers to replace\""
+    },
+    {
+      "id": "DS-004",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement capability-based routing — match tasks to agent capabilities via embedding similarity",
+      "description": "Replace priority-based task routing with capability-based routing using cosine similarity on task requirements vs agent capability vectors. Equal-status workers.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Maximum Potential v1.0.0 — Concurrent Execution Architecture",
+      "auto_fix": "grep -rn \"cosine.*similar\\|embedding.*route\\|capability.*match\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} capability routing refs\""
+    },
+    {
+      "id": "SH-001",
+      "category": "MAX_POTENTIAL",
+      "title": "Add zod input validation to all API endpoints — request body, query params, path params",
+      "description": "Deploy zod schemas on every Express/Fastify route. Validate body, query, and params. Return 400 with structured error on validation failure.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Maximum Potential v1.0.0 — Security by Default",
+      "auto_fix": "grep -rn \"zod\\|z\\.object\\|z\\.string\\|validate.*schema\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} zod validation refs\""
+    },
+    {
+      "id": "SH-002",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy rate limiting on all public + auth endpoints — Fibonacci backoff with φ burst multiplier",
+      "description": "Add express-rate-limit or custom rate limiter. Auth endpoints: 5 req/min. Public API: 100 req/min. Burst multiplier: φ × base rate. Use Upstash Redis as backing store.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Maximum Potential v1.0.0 — Security Checklist",
+      "auto_fix": "grep -rn \"rate.limit\\|rateLimit\\|express-rate-limit\\|limiter\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} rate limiting refs\""
+    },
+    {
+      "id": "SH-003",
+      "category": "MAX_POTENTIAL",
+      "title": "Enforce httpOnly + Secure + SameSite=Strict on all cookies across all services",
+      "description": "Audit all cookie-setting code. Enforce httpOnly, Secure, SameSite=Strict flags. No plain cookies in production.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 2,
+      "source": "Maximum Potential v1.0.0 — Security Checklist",
+      "auto_fix": "grep -rn \"cookie\\|setCookie\\|set-cookie\\|httpOnly\\|sameSite\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} cookie refs to audit\""
+    },
+    {
+      "id": "SH-004",
+      "category": "MAX_POTENTIAL",
+      "title": "Add CSRF protection on all state-changing endpoints",
+      "description": "Deploy CSRF tokens on POST/PUT/DELETE endpoints. Use csurf or custom double-submit cookie pattern. Exempt API-key-authenticated machine-to-machine calls.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Maximum Potential v1.0.0 — Security Checklist",
+      "auto_fix": "grep -rn \"csrf\\|csrfToken\\|x-csrf-token\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} CSRF refs\""
+    },
+    {
+      "id": "SH-005",
+      "category": "MAX_POTENTIAL",
+      "title": "Pin all npm dependencies to exact versions — remove ^ and ~ prefixes",
+      "description": "Update all package.json files to use exact version pins (no ^, no ~). Ensure npm ci produces deterministic installs. Add .npmrc with save-exact=true.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Maximum Potential v1.0.0 — Delivery Standards",
+      "auto_fix": "grep -c \"\\^\\|~\" package.json 2>/dev/null | xargs -I{} echo \"{} unpinned deps in root package.json\""
+    },
+    {
+      "id": "SH-006",
+      "category": "MAX_POTENTIAL",
+      "title": "Scan and remove all TODO/FIXME/HACK comments from production code",
+      "description": "Find and resolve every TODO, FIXME, HACK, and placeholder comment in production code. Either implement the feature or remove the dead comment.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "Maximum Potential v1.0.0 — Delivery Standards",
+      "auto_fix": "grep -rn \"TODO\\|FIXME\\|HACK\\|XXX\" . --include=\"*.js\" --include=\"*.ts\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} TODO/FIXME/HACK comments to resolve\""
+    },
+    {
+      "id": "CL-001",
+      "category": "MAX_POTENTIAL",
+      "title": "Configure 4 Colab Pro+ runtimes — 3 operational + 1 dedicated learning/intelligence",
+      "description": "Wire 4 Colab Pro+ memberships: Runtime-1 (model serving), Runtime-2 (embedding generation), Runtime-3 (batch processing), Runtime-4 (dedicated learning — continuous intelligence increase for Heady). All connect via Redis Streams.",
+      "status": "pending",
+      "csl_confidence": 0.927,
+      "estimated_hours": 4,
+      "source": "User directive — 4 Colab Pro+ memberships",
+      "auto_fix": "grep -rn \"colab\\|Colab\\|COLAB\" . --include=\"*.js\" --include=\"*.yaml\" --include=\"*.json\" --include=\"*.md\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Colab refs across codebase\""
+    },
+    {
+      "id": "CL-002",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy Colab-4 learning runtime — 6-step continuous intelligence loop with φ-gated quality",
+      "description": "Dedicated Colab Pro+ for Heady learning: (1) ingest new data, (2) generate embeddings, (3) fine-tune model weights, (4) evaluate on benchmark suite, (5) φ-gate quality check (reject if below 0.618), (6) publish to learning_results Redis stream.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "User directive — 1 Colab dedicated to learning",
+      "auto_fix": "grep -rn \"learning.*runtime\\|learning_results\\|fine.tune\\|LearningEngine\" . --include=\"*.js\" --include=\"*.py\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} learning runtime refs\""
+    },
+    {
+      "id": "CL-003",
+      "category": "MAX_POTENTIAL",
+      "title": "Wire all 4 Colab runtimes to Redis Streams — XADD/XREAD/XAUTOCLAIM recovery",
+      "description": "Each Colab runtime publishes health keys and task results to dedicated Redis streams. Implement XAUTOCLAIM for automatic recovery of stalled tasks. Heartbeat every 13 seconds (Fibonacci).",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Maximum Potential + User directive",
+      "auto_fix": "grep -rn \"XADD\\|XREAD\\|XAUTOCLAIM\\|redis.*stream\" . --include=\"*.js\" --include=\"*.py\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Redis Streams refs\""
+    },
+    {
+      "id": "CL-004",
+      "category": "MAX_POTENTIAL",
+      "title": "Wire Google Drive checkpoint every 68s (Fibonacci: 55+13) across all 4 Colab runtimes",
+      "description": "Auto-save model checkpoints, embeddings, and learning state to Google Drive every 68 seconds. Fibonacci-derived interval ensures optimal checkpoint frequency vs IO overhead.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 2,
+      "source": "Maximum Potential + User directive",
+      "auto_fix": "grep -rn \"checkpoint\\|google.drive\\|gdrive\\|68.*second\\|55.*13\" . --include=\"*.js\" --include=\"*.py\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} Google Drive checkpoint refs\""
+    },
+    {
+      "id": "SW-001",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy HeadyBee swarm workers — equal-status concurrent execution pool with φ-scaled load",
+      "description": "Implement HeadyBee worker swarm: all workers equal status, no priority ranking, tasks distributed by capability match (embedding similarity). Load balanced with φ-scaled burst capacity.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Maximum Potential v1.0.0 + Heady Swarm Architecture",
+      "auto_fix": "grep -rn \"HeadyBee\\|headybee\\|swarm.*worker\\|worker.*pool\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} HeadyBee/swarm refs\""
+    },
+    {
+      "id": "SW-002",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement concurrent execution pools — fire independent tasks simultaneously with DAG resolution",
+      "description": "Build task dependency DAG resolver. Independent tasks fire simultaneously. Data-dependent tasks wait for upstream completion. No arbitrary priority queuing.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Maximum Potential v1.0.0 — Concurrent Execution",
+      "auto_fix": "grep -rn \"DAG\\|dependency.*graph\\|concurrent.*pool\\|Promise\\.all\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} concurrent execution/DAG refs\""
+    },
+    {
+      "id": "SW-003",
+      "category": "MAX_POTENTIAL",
+      "title": "Deploy HeadySwarms distributed orchestration — 17 swarm types with semantic relevance routing",
+      "description": "Activate 17-swarm taxonomy with semantic relevance gates (0.382 include, 0.618 boost, 0.718 inject). Route tasks by embedding distance to swarm capability vectors.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Maximum Potential + Heady Orchestration v4.0",
+      "auto_fix": "grep -rn \"HeadySwarm\\|headyswarm\\|swarm.*type\\|17.*swarm\" . --include=\"*.js\" --include=\"*.json\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} HeadySwarms refs\""
+    },
+    {
+      "id": "SW-004",
+      "category": "MAX_POTENTIAL",
+      "title": "Implement self-critique loop in pipeline — Stage 5 auto-review before delivery",
+      "description": "After every pipeline execution, run self-critique: check for cut corners, missed edge cases, pattern inconsistencies, and production readiness. Block delivery if critique fails φ-gate.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Maximum Potential v1.0.0 — Pipeline Execution Model",
+      "auto_fix": "grep -rn \"self.critique\\|self.review\\|autoReview\\|qa.*gate\" . --include=\"*.js\" 2>/dev/null | grep -v node_modules | wc -l | xargs -I{} echo \"{} self-critique/review refs\""
     }
   ]
 }
