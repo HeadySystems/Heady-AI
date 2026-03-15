@@ -228,6 +228,44 @@
       "heady-sims.headyme.com/*"
     ]
   },
+  "azure": {
+    "subscription": {
+      "id": "6760eeb0-ae64-410c-b076-abb640de2cba",
+      "name": "Azure subscription 1",
+      "tenant": "c230f991-4fc5-46f6-a970-d59ade9d5515",
+      "account": "erichaywod@live.com"
+    },
+    "resourceGroup": "heady-rg",
+    "location": "eastus",
+    "storage": {
+      "accountName": "headystorage2026",
+      "containers": {
+        "assets": "heady-assets",
+        "bundles": "heady-bundles"
+      }
+    },
+    "containerRegistry": {
+      "name": "headyregistry",
+      "loginServer": "headyregistry.azurecr.io"
+    },
+    "containerApps": {
+      "environment": "heady-env",
+      "services": {
+        "heady-api": {
+          "image": "headyregistry.azurecr.io/heady-api:latest",
+          "port": 3300,
+          "minReplicas": 0,
+          "maxReplicas": 5
+        },
+        "heady-mcp-server": {
+          "image": "headyregistry.azurecr.io/heady-mcp-server:latest",
+          "port": 3310,
+          "minReplicas": 0,
+          "maxReplicas": 3
+        }
+      }
+    }
+  },
   "deploy": {
     "strategy": "blue-green",
     "healthCheckPath": "/health",
