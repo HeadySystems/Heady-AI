@@ -188,7 +188,7 @@ try {
   log.warn("Secrets/Cloudflare not loaded", { errorMessage: err.message });
 }
 
-const PORT = process.env.PORT || 3300;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3300;
 const app = express();
 
 // ─── Middleware ─────────────────────────────────────────────────────
@@ -200,7 +200,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
-      connectSrc: ["'self'", "https://*.headysystems.com", "https://*.headyme.com", "https://*.headyapi.com", ...(process.env.CSP_CONNECT_EXTRA || '').split(',').filter(Boolean)],
+      connectSrc: ["'self'", "https://heady-manager.onrender.com", "https://heady-testing.onrender.com", "https://heady-production.onrender.com", "https://*.onrender.com"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
@@ -237,6 +237,23 @@ app.use((req, res, next) => {
   next();
 });
 
+// ─── Core Engine: Latent Space (early init for middleware) ────────────
+let latentSpace = null;
+try {
+  latentSpace = require('./src/hc_latent_space');
+  log.info('Latent space module loaded');
+} catch (e) {
+  log.debug('Latent space module not loaded (non-fatal)', { errorMessage: e.message });
+}
+
+// Latent Space middleware — record all HTTP operations into vector space
+if (latentSpace && typeof latentSpace.middleware === 'function') {
+  app.use(latentSpace.middleware());
+  log.info('Latent space HTTP recording middleware active');
+} else {
+  log.debug('Latent space middleware not available — HTTP ops will not be vector-indexed');
+}
+
 // Manual CORS middleware configuration
 const allowedOrigins = [
   // Heady Systems domains
@@ -261,8 +278,21 @@ const allowedOrigins = [
   'https://headyfinance.com',
   'https://www.headyfinance.com',
 
-  // Cloud deployment domains (env-driven for production)
-  ...(process.env.CORS_EXTRA_ORIGINS || '').split(',').filter(Boolean),
+  // Render.com deployment domains
+  'https://heady-manager.onrender.com',
+  'https://heady-testing.onrender.com',
+  'https://heady-production.onrender.com',
+
+  // Development localhost (ports 3000-3400)
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+  'http://localhost:3003',
+  'http://localhost:3100',
+  'http://localhost:3200',
+  'http://localhost:3300',
+  'http://localhost:3301',
+  'http://localhost:3400',
 ];
 
 app.use((req, res, next) => {
@@ -425,7 +455,10 @@ if (vmTokenRoutes) {
 app.post('/api/vm/revoke', async (req, res) => {
   const adminToken = req.headers['authorization']?.split(' ')[1];
   
-  if (adminToken !== process.env.ADMIN_TOKEN) {
+  const expected = process.env.ADMIN_TOKEN;
+  if (!adminToken || !expected ||
+      adminToken.length !== expected.length ||
+      !require('crypto').timingSafeEqual(Buffer.from(adminToken), Buffer.from(expected))) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
   
@@ -448,6 +481,17 @@ app.post('/api/vm/revoke', async (req, res) => {
     res.status(500).json({ error: 'Failed to revoke token' });
   }
 });
+
+// ─── HeadyMemory + AutoContext Service ──────────────────────────────
+let memoryService = null;
+try {
+  const { getMemoryService } = require('./src/services/heady-memory-service');
+  memoryService = getMemoryService();
+  app.use('/api', memoryService.createRoutes());
+  log.info('HeadyMemory + AutoContext: ROUTES LOADED');
+} catch (err) {
+  log.warn('HeadyMemory service not loaded', { errorMessage: err.message });
+}
 
 // ─── Static Assets ─────────────────────────────────────────────────
 // All UI pages served from public/ (self-contained HTML + sacred-geometry.css)
@@ -983,35 +1027,6 @@ app.get("/api/pipeline/status", (req, res) => {
   });
 });
 
-// ─── Task Queue (Auto-Success Engine) API ────────────────────────────
-app.get("/api/task-queue/summary", (req, res) => {
-  if (!taskQueueLoader) return res.status(503).json({ error: "Task Queue Loader not available" });
-  res.json({ ok: true, ...taskQueueLoader.getSummary(), ts: new Date().toISOString() });
-});
-
-app.post("/api/task-queue/submit", async (req, res) => {
-  if (!taskQueueLoader) return res.status(503).json({ error: "Task Queue Loader not available" });
-  if (!taskScheduler) return res.status(503).json({ error: "Task Scheduler not available" });
-  try {
-    const result = taskQueueLoader.submitAll();
-    res.json({ ok: true, ...result, ts: new Date().toISOString() });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post("/api/task-queue/heartbeat/start", (req, res) => {
-  if (!taskQueueLoader) return res.status(503).json({ error: "Task Queue Loader not available" });
-  taskQueueLoader.startHeartbeat();
-  res.json({ ok: true, action: "heartbeat_started", ts: new Date().toISOString() });
-});
-
-app.post("/api/task-queue/heartbeat/stop", (req, res) => {
-  if (!taskQueueLoader) return res.status(503).json({ error: "Task Queue Loader not available" });
-  taskQueueLoader.stopHeartbeat();
-  res.json({ ok: true, action: "heartbeat_stopped", ts: new Date().toISOString() });
-});
-
 // ─── HeadyAutoIDE & Methodology APIs ────────────────────────────────
 function loadYamlConfig(filename) {
   const filePath = path.join(__dirname, "configs", filename);
@@ -1210,34 +1225,6 @@ try {
   log.info("Task Scheduler: LOADED");
 } catch (err) {
   log.warn("Task Scheduler not loaded", { errorMessage: err.message });
-}
-
-// ─── Task Queue Loader (Auto-Success Engine) ─────────────────────────
-let taskQueueLoader = null;
-try {
-  const { HCTaskQueueLoader } = require("./src/hc_task_queue_loader");
-  taskQueueLoader = new HCTaskQueueLoader(taskScheduler, null);
-
-  taskQueueLoader.on("loaded", (info) => {
-    log.info("Task Queue loaded", { taskCount: info.taskCount, heartbeatMs: info.heartbeatMs });
-  });
-  taskQueueLoader.on("heartbeat:cycle", (report) => {
-    if (report.cycle % 10 === 0) {
-      log.info("Task Queue heartbeat", { cycle: report.cycle, completed: report.completed, failed: report.failed, successRate: report.successRate });
-    }
-  });
-  taskQueueLoader.on("heartbeat:stop_rule", (info) => {
-    log.warn("Task Queue stop rule triggered", { reason: info.reason, errorRate: info.errorRate });
-  });
-
-  if (taskScheduler) {
-    const loadResult = taskQueueLoader.load();
-    log.info("Task Queue Loader: LOADED", { tasks: loadResult.length });
-  } else {
-    log.warn("Task Queue Loader: scheduler not available, skipping load");
-  }
-} catch (err) {
-  log.warn("Task Queue Loader not loaded", { errorMessage: err.message });
 }
 
 // ─── Resource Diagnostics ────────────────────────────────────────────
@@ -1505,31 +1492,6 @@ try {
   log.warn("Improvement Scheduler not loaded", { errorMessage: err.message });
 }
 
-// ─── Error Learning Database — Persistent Mistake Tracking ───────
-try {
-  const { errorLearning, registerErrorLearningRoutes } = require('./src/hc_error_learning');
-  registerErrorLearningRoutes(app);
-
-  // Wire error learning to latent space for cross-system awareness
-  errorLearning.on('error:recurring', (err) => {
-    log.warn('Recurring error detected by learning engine', {
-      errorId: err.id, occurrences: err.occurrences, category: err.category,
-    });
-  });
-
-  errorLearning.on('error:new', (err) => {
-    log.info('New error recorded in learning database', {
-      errorId: err.id, category: err.category, severity: err.severity,
-    });
-  });
-
-  // Expose for other modules
-  global.errorLearning = errorLearning;
-  log.info("Error Learning Database: LOADED");
-} catch (err) {
-  log.warn("Error Learning not loaded", { errorMessage: err.message });
-}
-
 // ─── Swarm Intelligence & Vector Routing ──────────────────────────
 let headySwarms, vectorRouter, colabLatentOps;
 try {
@@ -1547,6 +1509,120 @@ try {
   vectorRouter = null;
   colabLatentOps = null;
 }
+
+// ─── Core Engine Modules: Orchestrator, Conductor ─────────────────
+// (latentSpace already initialized earlier for middleware)
+let orchestrator = null;
+let conductor = null;
+
+try {
+  const HeadyOrchestrator = require('./src/hc_orchestrator');
+  orchestrator = new HeadyOrchestrator();
+  log && log.info && log.info('Orchestrator module loaded');
+} catch (e) {
+  log && log.warn && log.warn('Orchestrator module not loaded (non-fatal)', { errorMessage: e.message });
+}
+
+try {
+  const HeadyConductor = require('./src/hc_conductor');
+  conductor = new HeadyConductor();
+  log && log.info && log.info('Conductor module loaded');
+} catch (e) {
+  log && log.warn && log.warn('Conductor module not loaded (non-fatal)', { errorMessage: e.message });
+}
+
+// ─── Blueprint Subsystems: PD04, Spatial, Liquid, Resonance ─────────
+let pd04Codec = null;
+let spatialOrchestrator = null;
+let liquidArchitecture = null;
+let resonanceRouter = null;
+
+try {
+  const { PD04Codec, Vec3, TernaryOps, LEVELS } = require('./packages/pd04-codec');
+  const { SpatialOrchestrator, PlatonicArchetype } = require('./packages/spatial-orchestrator');
+  const { LiquidArchitectureService } = require('./packages/liquid-architecture');
+  const { ResonanceRouter, RESONANCE_GROUPS } = require('./packages/resonance-router');
+
+  pd04Codec = new PD04Codec();
+  spatialOrchestrator = new SpatialOrchestrator();
+  liquidArchitecture = new LiquidArchitectureService();
+  resonanceRouter = new ResonanceRouter({ defaultRoute: 'general' });
+
+  log && log.info && log.info('Blueprint subsystems loaded', {
+    pd04Codec: true,
+    spatialOrchestrator: true,
+    liquidArchitecture: true,
+    resonanceRouter: true,
+  });
+} catch (e) {
+  log && log.warn && log.warn('Blueprint subsystems not loaded (non-fatal):', e.message);
+}
+
+// Blueprint subsystem API endpoints
+app.get('/api/blueprint/status', (req, res) => {
+  res.json({
+    pd04Codec: pd04Codec ? 'loaded' : 'not_loaded',
+    spatialOrchestrator: spatialOrchestrator ? spatialOrchestrator.status() : null,
+    liquidArchitecture: liquidArchitecture ? liquidArchitecture.status() : null,
+    resonanceRouter: resonanceRouter ? resonanceRouter.status() : null,
+  });
+});
+
+app.post('/api/blueprint/pd04/encode', (req, res) => {
+  if (!pd04Codec) return res.status(503).json({ error: 'pd04_not_loaded' });
+  try {
+    const packet = pd04Codec.encode(req.body);
+    res.json(packet);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.post('/api/blueprint/pd04/decode', (req, res) => {
+  if (!pd04Codec) return res.status(503).json({ error: 'pd04_not_loaded' });
+  try {
+    const decoded = pd04Codec.decode(req.body);
+    res.json({ ...decoded, position: decoded.position.toArray(), intentVector: decoded.intentVector.toArray() });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get('/api/blueprint/spatial/topology', (req, res) => {
+  if (!spatialOrchestrator) return res.status(503).json({ error: 'spatial_not_loaded' });
+  res.json(spatialOrchestrator.cube.snapshot());
+});
+
+app.post('/api/blueprint/resonance/route', (req, res) => {
+  if (!resonanceRouter) return res.status(503).json({ error: 'resonance_not_loaded' });
+  try {
+    const result = resonanceRouter.route(req.body.input || req.body);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.post('/api/blueprint/liquid/project', (req, res) => {
+  if (!liquidArchitecture) return res.status(503).json({ error: 'liquid_not_loaded' });
+  try {
+    const { templateId, position, scale } = req.body;
+    const instance = liquidArchitecture.project(templateId, { position, scale });
+    res.json(instance.snapshot());
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.post('/api/blueprint/liquid/govern', (req, res) => {
+  if (!liquidArchitecture) return res.status(503).json({ error: 'liquid_not_loaded' });
+  try {
+    const result = liquidArchitecture.govern();
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
 
 // ─── HCSysOrchestrator — Multi-Brain Task Router ────────────────────
 let orchestratorRoutes = null;
@@ -2390,7 +2466,7 @@ try {
 
 // ─── HeadyBee Swarm Orchestration ────────────────────────────────
 try {
-  const { router: swarmRouter } = require('./src/routes/swarm-routes');
+  const swarmRouter = require('./src/routes/swarm-routes');
   app.use('/api/swarm', swarmRouter);
   log.info("HeadyBee Swarm Service: LOADED");
 } catch (err) {
@@ -2404,15 +2480,6 @@ try {
   log.info("Scheduler Service: LOADED");
 } catch (err) {
   log.warn("Scheduler routes not loaded", { errorMessage: err.message });
-}
-
-// ─── Feature Modules (Pulse, Constellation, Arena, Voice, etc.) ─────
-try {
-  const { router: featuresRouter } = require('./src/routes/features-routes');
-  app.use('/api/features', featuresRouter);
-  log.info("Feature Modules: LOADED (pulse, constellation, arena, voice, memory-palace, guardian, timeline, dreams, forge, identity, vault, marketplace, briefing, gateway, swarm-mode)");
-} catch (err) {
-  log.warn("Feature routes not loaded", { errorMessage: err.message });
 }
 
 // ─── Swarm Intelligence Routes ────────────────────────────────────
@@ -2695,17 +2762,6 @@ const LIQUID_NODES_REGISTRY = {
       status: 'runtime'
     },
     {
-      name: 'colab-learning',
-      domain: 'latent-space-ops',
-      port: null,
-      envKeys: ['COLAB_LEARNING_ENDPOINT'],
-      capabilities: ['autonomous-learning', 'trial-and-error', 'socratic-method', 'qa', 'risk-analysis', 'self-improvement'],
-      description: 'Google Colab Pro+ membership slot 4 — Dedicated learning runtime for Heady intelligence',
-      status: 'runtime',
-      dedicated: true,
-      modes: ['trial_and_error', 'qa', 'socratic_method', 'risk_analysis']
-    },
-    {
       name: 'latent-vector-store',
       domain: 'latent-space-ops',
       port: null,
@@ -2833,16 +2889,6 @@ app.get('/api/liquid-nodes/health/check', (req, res) => {
       }
     }
 
-    // Record health check results to latent space for trend analysis
-    try {
-      const latent = require('./src/hc_latent_space');
-      latent.record('health', `Liquid nodes health check: ${healthResults.summary.healthy} healthy, ${healthResults.summary.unhealthy} unhealthy`, {
-        healthy: healthResults.summary.healthy,
-        unhealthy: healthResults.summary.unhealthy,
-        unchecked: healthResults.summary.unchecked,
-      });
-    } catch (e) { /* latent space optional */ }
-
     res.json(healthResults);
   } catch (err) {
     log.error('Error in /api/liquid-nodes/health/check', { errorMessage: err.message, errorStack: err.stack });
@@ -2939,112 +2985,32 @@ app.get("/health", (req, res) => {
 });
 
 // ─── Enhanced Health Status with Swarm Modules ──────────────────────
-app.get("/api/health", (req, res) => {
-  res.json({
+function healthResponse() {
+  return {
     status: 'ok',
     timestamp: new Date().toISOString(),
     swarms: headySwarms ? 'loaded' : 'not_loaded',
     vectorRouter: vectorRouter ? 'loaded' : 'not_loaded',
     colabLatentOps: colabLatentOps ? 'loaded' : 'not_loaded',
-  });
+    memoryService: memoryService ? 'loaded' : 'not_loaded',
+    pd04Codec: pd04Codec ? 'loaded' : 'not_loaded',
+    spatialOrchestrator: spatialOrchestrator ? 'loaded' : 'not_loaded',
+    liquidArchitecture: liquidArchitecture ? 'loaded' : 'not_loaded',
+    resonanceRouter: resonanceRouter ? 'loaded' : 'not_loaded',
+    latentSpace: latentSpace ? 'loaded' : 'not_loaded',
+    orchestrator: orchestrator ? 'loaded' : 'not_loaded',
+    conductor: conductor ? 'loaded' : 'not_loaded',
+  };
+}
+
+app.get("/api/health", (req, res) => {
+  res.json(healthResponse());
 });
 
-// ─── Onboarding Routes ──────────────────────────────────────────────
-try {
-  const { OnboardingService, PROVIDERS, SERVICE_CONNECTIONS } = require('./services/onboarding');
-  const onboarding = new OnboardingService();
-
-  app.post('/api/onboarding/auth', express.json(), async (req, res) => {
-    try {
-      const { method, provider, email, password } = req.body;
-      let result;
-      if (method === 'provider') {
-        result = await onboarding.signInWithProvider(provider);
-      } else if (method === 'email') {
-        result = await onboarding.signInWithEmail(email, password);
-      } else if (method === 'create') {
-        result = await onboarding.createAccount(email, password);
-      } else {
-        return res.status(400).json({ error: 'Invalid method. Use: provider, email, or create' });
-      }
-      res.json({ stage: 1, completed: true, ...result });
-    } catch (err) {
-      log.error('Onboarding auth failed', { error: err.message });
-      res.status(500).json({ error: err.message });
-    }
-  });
-
-  app.post('/api/onboarding/username', express.json(), async (req, res) => {
-    try {
-      const { uid, username } = req.body;
-      const result = await onboarding.createHeadyMeAccount(uid, username);
-      res.json({ stage: 2, completed: true, ...result });
-    } catch (err) {
-      log.error('Onboarding username failed', { error: err.message });
-      res.status(400).json({ error: err.message });
-    }
-  });
-
-  app.post('/api/onboarding/email', express.json(), async (req, res) => {
-    try {
-      const { uid, choice, forwardTo } = req.body;
-      const result = await onboarding.configureEmail(uid, choice, forwardTo);
-      res.json({ stage: 3, completed: true, ...result });
-    } catch (err) {
-      log.error('Onboarding email config failed', { error: err.message });
-      res.status(500).json({ error: err.message });
-    }
-  });
-
-  app.post('/api/onboarding/services', express.json(), async (req, res) => {
-    try {
-      const { uid, keys, skip } = req.body;
-      let result;
-      if (skip) {
-        result = await onboarding.skipApiKeys(uid);
-      } else {
-        result = await onboarding.connectServices(uid, keys);
-      }
-      res.json({ stage: 4, completed: true, ...result });
-    } catch (err) {
-      log.error('Onboarding services failed', { error: err.message });
-      res.status(500).json({ error: err.message });
-    }
-  });
-
-  app.post('/api/onboarding/ui', express.json(), async (req, res) => {
-    try {
-      const { uid, preferences } = req.body;
-      const result = await onboarding.configureUI(uid, preferences);
-      await onboarding.completeOnboarding(uid);
-      res.json({ stage: 5, completed: true, setupComplete: true, ...result });
-    } catch (err) {
-      log.error('Onboarding UI config failed', { error: err.message });
-      res.status(500).json({ error: err.message });
-    }
-  });
-
-  app.get('/api/onboarding/state/:uid', async (req, res) => {
-    try {
-      const state = await onboarding.getOnboardingState(req.params.uid);
-      res.json(state);
-    } catch (err) {
-      res.status(404).json({ error: err.message });
-    }
-  });
-
-  app.get('/api/onboarding/providers', (req, res) => {
-    res.json({ providers: PROVIDERS, count: PROVIDERS.length });
-  });
-
-  app.get('/api/onboarding/services', (req, res) => {
-    res.json({ services: SERVICE_CONNECTIONS });
-  });
-
-  log.info('Onboarding routes loaded', { providers: PROVIDERS.length });
-} catch (err) {
-  log.warn('Onboarding service not loaded', { errorMessage: err.message });
-}
+// Alias required by render.yaml healthCheckPath
+app.get("/api/brain/health", (req, res) => {
+  res.json(healthResponse());
+});
 
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((req, res) => {
@@ -3053,7 +3019,7 @@ app.use((req, res) => {
 
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
-  log.info(`Heady Manager v8.0.0 listening`, { port: PORT });
+  log.info(`Heady Manager v3.0.0 listening`, { port: PORT });
   log.info(`Health check available`, { port: PORT });
   log.info(`Environment: ${process.env.NODE_ENV || "development"}`);
 });
