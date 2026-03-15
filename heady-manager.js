@@ -41,7 +41,6 @@ const TASK_PRIORITY = {
 let userDirectedMode = true;
 let suspendedProcesses = new Set([]);  // UNSUSPENDED — all processes active (monte-carlo, pattern-recognition, self-optimization enabled)
 // Core dependencies
-const yaml = require('js-yaml');
 const fs = require('fs');
 const path = require("path");
 const fetch = require('node-fetch');
@@ -206,31 +205,6 @@ function preloadPersistentMemory() {
   return false;
 }
 
-// Preload memory at startup
-preloadPersistentMemory();
-// Load remote resources config
-const remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8'));
-
-// Handle remote resources
-function checkRemoteService(service) {
-  const config = remoteConfig.services[service];
-  if (!config) return { ok: false, critical: false };
-  
-  try {
-    // Check if service is critical and enforce 100% connectivity
-    if (config.critical) {
-      const endpoint = config.endpoint || `https://api.headysystems.com/${service}`;
-      return { ok: true, endpoint, critical: true };
-    }
-    return { ok: true };
-  } catch (error) {
-    return { 
-      ok: false, 
-      critical: config.critical,
-      error: config.critical ? error : undefined
-    };
-  }
-}
 
 // Enforce 100% Heady service connectivity
 function enforceHeadyConnectivity() {
@@ -257,47 +231,6 @@ if (remoteConfig.critical_only) {
   enforceHeadyConnectivity();
 }
 
-// ─── Imagination Engine ─────────────────────────────────────────────
-let imaginationRoutes = null;
-try {
-  imaginationRoutes = require("./src/routes/imagination-routes");
-  log.info("Imagination Engine: ROUTES LOADED");
-} catch (err) {
-  log.warn("Imagination routes not loaded", { errorMessage: err.message });
-}
-
-// ─── Secrets & Cloudflare Management ──────────────────────────────
-let secretsManager = null;
-let cfManager = null;
-try {
-  const { secretsManager: sm, registerSecretsRoutes } = require("./src/hc_secrets_manager");
-  const { CloudflareManager, registerCloudflareRoutes } = require("./src/hc_cloudflare");
-  secretsManager = sm;
-  cfManager = new CloudflareManager(secretsManager);
-
-  // Register non-Cloudflare secrets from manifest
-  const manifestSecrets = [
-    { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
-    { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
-    { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
-    { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
-    { id: "notion_token", name: "Notion Integration Token", envVar: "NOTION_TOKEN", tags: ["notion"], dependents: ["notion-sync"] },
-    { id: "github_token", name: "GitHub PAT", envVar: "GITHUB_TOKEN", tags: ["github", "vcs"], dependents: ["heady-sync"] },
-    { id: "stripe_secret_key", name: "Stripe Secret Key", envVar: "STRIPE_SECRET_KEY", tags: ["stripe", "payments"], dependents: ["billing"] },
-    { id: "stripe_webhook_secret", name: "Stripe Webhook Secret", envVar: "STRIPE_WEBHOOK_SECRET", tags: ["stripe", "webhook"], dependents: ["billing-webhooks"] },
-    { id: "github_app_id", name: "GitHub App ID", envVar: "GITHUB_APP_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
-    { id: "github_app_private_key", name: "GitHub App Private Key", envVar: "GITHUB_APP_PRIVATE_KEY", tags: ["github", "vm"], dependents: ["vm-token"] },
-    { id: "github_app_installation_id", name: "GitHub App Installation ID", envVar: "GITHUB_APP_INSTALLATION_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
-  ];
-  for (const s of manifestSecrets) {
-    secretsManager.register({ ...s, source: "env" });
-  }
-  secretsManager.restoreState();
-  log.info("Secrets Manager: LOADED", { secretsCount: secretsManager.getAll().length });
-  log.info("Cloudflare Manager: LOADED", { tokenValid: cfManager.isTokenValid() });
-} catch (err) {
-  log.warn("Secrets/Cloudflare not loaded", { errorMessage: err.message });
-}
 
 const PORT = 3301;
 const app = express();
@@ -567,33 +500,6 @@ if (fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
 }
 
-// ─── Claude Service ─────────────────────────────────────────────
-let claudeRoutes = null;
-try {
-  claudeRoutes = require("./src/routes/claude-routes");
-  log.info("Claude Service: ROUTES LOADED");
-} catch (err) {
-  log.warn("Claude routes not loaded", { errorMessage: err.message });
-}
-
-// ─── Claude Routes ────────────────────────────────────────────
-if (claudeRoutes) {
-  app.use("/api/claude", claudeRoutes);
-}
-
-// ─── VM Token Routes ─────────────────────────────────────────────
-let vmTokenRoutes = null;
-try {
-  const createVmTokenRoutes = require("./src/routes/vm-token-routes");
-  vmTokenRoutes = createVmTokenRoutes(secretsManager);
-  log.info("VM Token Routes: LOADED");
-} catch (err) {
-  log.warn("VM Token routes not loaded", { errorMessage: err.message });
-}
-
-if (vmTokenRoutes) {
-  app.use("/api/vm", vmTokenRoutes);
-}
 
 // ─── Token Revocation ─────────────────────────────────────────────
 /**
@@ -681,12 +587,6 @@ if (alohaProtocol) logger.info("  \u221e Aloha Protocol: LOADED (always-on)");
 if (deOptProtocol) logger.info("  \u221e De-Optimization Protocol: LOADED (simplicity > speed)");
 if (stabilityFirst) logger.info("  \u221e Stability First: LOADED (the canoe must not sink)");
 
-// ─── Suspended Processes Set (used by Monte Carlo scheduler) ─────────
-const suspendedProcesses = new Set();
-
-// ─── Event Bus (used by Auto-Task Conversion) ───────────────────────
-const { EventEmitter: _EventEmitter } = require('events');
-const eventBus = new _EventEmitter();
 
 // ─── Utility ────────────────────────────────────────────────────────
 function readJsonSafe(filePath) {
@@ -694,8 +594,41 @@ function readJsonSafe(filePath) {
   catch { return null; }
 }
 
+// ─── Kubernetes-Style Health Probes (SEC-15) ────────────────────────
+app.get("/health/live", (req, res) => {
+  res.json({ status: "ok", ts: new Date().toISOString() });
+});
+
+app.get("/health/ready", (req, res) => {
+  // Ready when core services are responsive
+  const ready = typeof eventBus !== 'undefined';
+  res.status(ready ? 200 : 503).json({
+    status: ready ? "ok" : "not_ready",
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
+app.get("/health/startup", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "heady-manager",
+    version: "3.1.0",
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
+});
+
 // ─── Health & Pulse ─────────────────────────────────────────────────
 app.get("/api/health", (req, res) => {
+  // RED-04: Include Redis pool health if available
+  let redisHealth = null;
+  try {
+    const { getRedisPoolV3 } = require('./src/resilience/redis-pool-v3');
+    const pool = getRedisPoolV3();
+    redisHealth = pool.getHealth();
+  } catch { /* Redis pool not yet initialized */ }
+
   res.json({
     ok: true,
     service: "heady-manager",
@@ -703,6 +636,7 @@ app.get("/api/health", (req, res) => {
     ts: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
+    redis: redisHealth,
   });
 });
 
@@ -728,6 +662,7 @@ app.get("/api/pulse", (req, res) => {
     active_layer: activeLayer,
     layer_endpoint: LAYERS[activeLayer]?.endpoint || "",
     endpoints: [
+      "/health/live", "/health/ready", "/health/startup",
       "/api/health", "/api/pulse", "/api/registry", "/api/registry/component/:id",
       "/api/registry/environments", "/api/registry/docs", "/api/registry/notebooks",
       "/api/registry/patterns", "/api/registry/workflows", "/api/registry/ai-nodes",
