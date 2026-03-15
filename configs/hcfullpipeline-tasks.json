@@ -6,7 +6,7 @@
   "lastFineTuned": "2026-03-15T22:16:14.774Z",
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline \u2014 dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks + Public Domain Integration (28) + Open Source Governance (18)",
-  "taskCount": 483,
+  "taskCount": 511,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -5483,6 +5483,258 @@
       "description": "Stream DB changes to Redis Streams or vector stores for learning pipeline. Change Data Capture for real-time sync.",
       "status": "pending",
       "csl_confidence": 0.65,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SPEED-001",
+      "category": "ARCHITECTURE",
+      "title": "Wire Redis pub/sub config_updates channel into every PM2 process",
+      "description": "Every PM2 process subscribes to config_updates at startup. Config changes (rate limits, CSL gates, feature flags, quality thresholds) apply instantly without restart. configs/remote-resources.yaml = defaults, Redis = live values.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 4
+    },
+    {
+      "id": "SPEED-002",
+      "category": "ARCHITECTURE",
+      "title": "Wire Redis pub/sub provider_routing channel for real-time LLM failover",
+      "description": "worker-ai-gateway publishes circuit breaker state changes to provider_routing. All edge workers and backend services reroute LLM traffic in <1s. No cron, no redeploy.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SPEED-003",
+      "category": "ARCHITECTURE",
+      "title": "Wire Redis Stream agent_commands for real-time agent activation/deactivation",
+      "description": "Conductor publishes to agent_commands stream. Agents subscribe and activate/deactivate within FIB[8]\u00d71000=34s heartbeat. No env var changes, no restarts.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SPEED-004",
+      "category": "ARCHITECTURE",
+      "title": "Wire Redis health key TTL system \u2014 replace 15-min cron detection",
+      "description": "Every PM2 process writes SET health:{name} {...} EX 55 every 34s(FIB[8]). Conductor monitors health:* keys continuously. Dead service detected in <55s via TTL expiry, not 15-min cron.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SPEED-005",
+      "category": "ARCHITECTURE",
+      "title": "Wire learning_results Redis Stream \u2192 config_updates pub/sub chain",
+      "description": "4th Colab learning runtime publishes to learning_results stream. Conductor consumes and republishes to config_updates pub/sub. System gets smarter in <1s, not batch.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SPEED-006",
+      "category": "FEATURES",
+      "title": "Add POST /config admin endpoint for live config updates via Redis",
+      "description": "Authenticated with ADMIN_TOKEN, never exposed publicly. Publishes config changes to Redis config_updates channel. Rate limits, flags, thresholds \u2014 all changeable without deploy.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SPEED-007",
+      "category": "INFRASTRUCTURE",
+      "title": "Add health key watcher to conductor with XAUTOCLAIM for expired consumers",
+      "description": "src/orchestration/conductor.js continuously monitors health:* keys. When key expires (service dead), triggers XAUTOCLAIM to redistribute work within 60s.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SPEED-008",
+      "category": "INFRASTRUCTURE",
+      "title": "Store domain routing table in Cloudflare KV \u2014 workers read on every request",
+      "description": "Replace hardcoded routing configs in workers with KV reads. Domain additions/changes propagate globally in <60s without worker redeployment.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "SPEED-009",
+      "category": "INFRASTRUCTURE",
+      "title": "Store feature flags and A/B test assignments in Cloudflare KV",
+      "description": "Edge-level feature flags, canary deployments, rollout percentages (6.18%\u219238.2%\u219261.8%\u2192100%) in KV. Changes take effect globally in <60s.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SPEED-010",
+      "category": "INFRASTRUCTURE",
+      "title": "Store MCP tool registry in Cloudflare KV \u2014 auto-discovery on SSE reconnect",
+      "description": "When new MCP tools come online, KV updates. Claude discovers new tools on next SSE reconnection. No server restart needed.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SPEED-011",
+      "category": "INFRASTRUCTURE",
+      "title": "Add PUT /kv/:namespace/:key admin endpoint behind auth worker",
+      "description": "Programmatic Cloudflare KV updates from backend. Authenticated, never public.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 2
+    },
+    {
+      "id": "VERIFY-001",
+      "category": "QUALITY",
+      "title": "Verify config hot reload \u2014 rate limit change via Redis pub/sub active in <1s",
+      "description": "Change a rate limit value in Redis, publish to config_updates. Verify all PM2 processes apply new value within 1 second.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "VERIFY-002",
+      "category": "QUALITY",
+      "title": "Verify LLM provider failover \u2014 traffic reroutes in <1s",
+      "description": "Kill/mock-fail an LLM provider. Verify circuit breaker publishes to provider_routing and all services reroute within 1 second.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "VERIFY-003",
+      "category": "QUALITY",
+      "title": "Verify health key detection \u2014 conductor detects dead process via TTL in <55s",
+      "description": "Stop a PM2 process. Verify conductor detects missing health key within 55s TTL expiry.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "VERIFY-004",
+      "category": "QUALITY",
+      "title": "Verify learning propagation \u2014 Colab result applied by operational nodes in <1s",
+      "description": "Publish a learning result to learning_results stream. Verify operational runtimes consume and apply within 1 second.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1
+    },
+    {
+      "id": "VERIFY-005",
+      "category": "QUALITY",
+      "title": "Verify edge KV propagation \u2014 workers serve new value in <60s",
+      "description": "Update a value in Cloudflare KV. Verify workers serve the new value within 60 seconds globally.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1
+    },
+    {
+      "id": "VERIFY-006",
+      "category": "QUALITY",
+      "title": "Verify zero-restart config \u2014 no PM2 restarts for any config/flag/threshold change",
+      "description": "Change config values, feature flags, quality thresholds. Verify zero PM2 restarts occur. All changes apply in-process.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1
+    },
+    {
+      "id": "DELIVER-001",
+      "category": "QUALITY",
+      "title": "Pin all dependencies to exact versions \u2014 remove all ^ and ~ ranges",
+      "description": "Convert package.json dependency ranges to exact versions for deterministic builds.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2
+    },
+    {
+      "id": "DELIVER-002",
+      "category": "QUALITY",
+      "title": "Remove all TODO/FIXME/HACK comments from production code",
+      "description": "grep -rn 'TODO\\|FIXME\\|HACK' across entire codebase. Resolve each one \u2014 implement or delete.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 4
+    },
+    {
+      "id": "DELIVER-003",
+      "category": "QUALITY",
+      "title": "Add request/response validation to all API endpoints (zod schemas)",
+      "description": "Every API endpoint validates request body, query params, and path params with zod. Response shapes documented.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 6
+    },
+    {
+      "id": "DELIVER-004",
+      "category": "QUALITY",
+      "title": "Add typed error classes to all error paths \u2014 no generic Error throws",
+      "description": "Replace throw new Error() with AppError(message, statusCode, code, details). Every error has actionable info.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 4
+    },
+    {
+      "id": "DELIVER-005",
+      "category": "QUALITY",
+      "title": "Add correlation IDs to all structured logs",
+      "description": "Every request gets a unique correlation ID. Passed through all service calls. Visible in every log entry.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "DELIVER-006",
+      "category": "DOCUMENTATION",
+      "title": "Add setup/configuration/deployment docs for clean machine bootstrap",
+      "description": "A developer with zero context can clone, configure, and deploy by following docs alone.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4
+    },
+    {
+      "id": "DESIGN-001",
+      "category": "FEATURES",
+      "title": "Create canonical CSS design system with \u03c6-spacing, golden ratio typography, glass morphism",
+      "description": "Root CSS vars: Fibonacci spacing (5,8,13,21,34,55,89px), golden ratio type scale, dark theme, glass effect, \u03c6 cubic-bezier transitions. All sites use this.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 3
+    },
+    {
+      "id": "OBSERVE-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Add /health or /healthz endpoint to every service \u2014 structured JSON with dependency checks",
+      "description": "169 services + 16 workers + 8 PM2 processes. Every one needs a health endpoint returning version, uptime, dependency status.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 8
+    },
+    {
+      "id": "OBSERVE-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Add graceful shutdown handlers (SIGTERM/SIGINT) to all services",
+      "description": "Every service closes DB connections, flushes Redis, completes in-flight requests on shutdown.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 4
+    },
+    {
+      "id": "OBSERVE-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Add error classification for automated alerting across all services",
+      "description": "Typed errors with isOperational flag. Operational errors \u2192 log + alert. Programmer errors \u2192 crash + restart.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 3
+    },
+    {
+      "id": "OBSERVE-004",
+      "category": "INFRASTRUCTURE",
+      "title": "Add distributed tracing across all cross-service calls",
+      "description": "OTel trace context propagated through HTTP headers and Redis Stream metadata.",
+      "status": "pending",
+      "csl_confidence": 0.8,
       "estimated_hours": 4
     }
   ]
