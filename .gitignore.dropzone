@@ -1,0 +1,90 @@
+# ═══════════════════════════════════════════════════════════════
+# HEADY SYSTEM — Critical .gitignore
+# Deploy this IMMEDIATELY to prevent credential and data leaks
+# ═══════════════════════════════════════════════════════════════
+
+# ─── Secrets and Credentials (CRITICAL) ───
+.env
+.env.*
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.hybrid
+!.env.example
+
+# ─── Process and Runtime Files ───
+*.pid
+*.seed
+*.pid.lock
+
+# ─── Backup and Temporary Files ───
+*.bak
+*.old
+*.orig
+*.tmp
+*.swp
+*~
+
+# ─── Logs (contain internal architecture info) ───
+*.log
+audit_logs*
+*deploy_log*
+logs/
+
+# ─── Dependencies ───
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Build Output ───
+dist/
+build/
+.next/
+out/
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+
+# ─── IDE and Editor ───
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+Thumbs.db
+
+# ─── Container and Deploy ───
+docker-compose.override.yml
+
+# ─── ML Models and Data ───
+*.h5
+*.hdf5
+*.pkl
+*.pt
+*.pth
+models/checkpoints/
+data/raw/
+
+# ─── Coverage and Test Reports ───
+coverage/
+.nyc_output/
+*.lcov
+htmlcov/
+
+# ─── OS Files ───
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db

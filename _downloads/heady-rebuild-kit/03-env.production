@@ -1,0 +1,51 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ ENVIRONMENT — Clean (merge-conflict-free)              ║
+# ║  Copy to .env and fill in secrets                               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+# ─── Server ─────────────────────────────────────────────────────
+PORT=3300
+NODE_ENV=production
+HEADY_VERSION=3.0.0
+HEADY_TARGET=CloudOnly
+
+# ─── Database ───────────────────────────────────────────────────
+POSTGRES_PASSWORD=heady_secret
+DATABASE_URL=postgresql://heady:${POSTGRES_PASSWORD}@heady-postgres:5432/heady
+
+# ─── Authentication ─────────────────────────────────────────────
+HEADY_API_KEY=
+ADMIN_TOKEN=
+HF_TOKEN=
+
+# ─── Cloud Configuration ────────────────────────────────────────
+HEADY_CLOUD_MODE=true
+HEADY_LOCAL_SERVICES_ENABLED=false
+HEADY_ACTIVE_ENDPOINT=https://cloud.headysystems.com
+
+# ─── Endpoints ──────────────────────────────────────────────────
+HEADY_ENDPOINT=https://api.headysystems.com
+MANAGER_ENDPOINT=https://manager.headysystems.com
+REGISTRY_ENDPOINT=https://registry.headysystems.com
+CLOUD_HEADYME_URL=https://me.headysystems.com
+CLOUD_HEADYSYSTEMS_URL=https://api.headysystems.com
+CLOUD_HEADYCONNECTION_URL=https://api.headyconnection.org
+
+# ─── AI Nodes ───────────────────────────────────────────────────
+ENABLE_CODEMAP=false
+ENABLE_JULES=false
+ENABLE_PERPLEXITY=false
+ENABLE_OBSERVER=false
+ENABLE_SYNC_SERVICE=false
+ENABLE_PQC=false
+ENABLE_BUILDER=false
+ENABLE_ATLAS=false
+
+# ─── Python Worker ──────────────────────────────────────────────
+PYTHON_WORKER_PATH=backend/python_worker
+HEADY_PYTHON_BIN=python
+
+# ─── Monitoring ─────────────────────────────────────────────────
+GRAFANA_PASSWORD=heady_grafana
+PGADMIN_PASSWORD=heady_admin
+CONSUL_HTTP_TOKEN=

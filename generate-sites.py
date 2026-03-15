@@ -12,7 +12,7 @@ Generates all 9 websites + auth app with:
 - No ranking/priority language
 """
 
-import os, json
+import os, sys, json, re
 
 BASE = "/app"
 
@@ -31,6 +31,10 @@ SITES = [
         "accent": "#00d4aa",
         "accentGlow": "rgba(0,212,170,0.15)",
         "sacredGeometry": "Flower of Life",
+        "brandFont": "Inter",
+        "brandFontImport": "Inter:wght@300;400;500;600;700",
+        "heroStyle": "personal",
+        "canvasConfig": {"nodeCount": 34, "connectionDistance": 160, "secondaryColor": "#40e0d0", "goldColor": "#f0c040", "opacity": 0.3, "geometry": "flowerOfLife"},
         "navLinks": [
             {"label": "Platform", "href": "#platform"},
             {"label": "AI Nodes", "href": "#nodes"},
@@ -114,9 +118,13 @@ SITES = [
         "tagline": "Enterprise AI Orchestration",
         "description": "Self-healing infrastructure, multi-agent orchestration, live telemetry, and zero-trust security — the backbone powering every Heady service.",
         "role": "infrastructure",
-        "accent": "#00d4aa",
-        "accentGlow": "rgba(0,212,170,0.15)",
+        "accent": "#3b82f6",
+        "accentGlow": "rgba(59,130,246,0.15)",
         "sacredGeometry": "Metatrons Cube",
+        "brandFont": "JetBrains Mono",
+        "brandFontImport": "JetBrains+Mono:wght@400;500;700",
+        "heroStyle": "infrastructure",
+        "canvasConfig": {"nodeCount": 55, "connectionDistance": 120, "secondaryColor": "#60a5fa", "goldColor": "#818cf8", "opacity": 0.25, "geometry": "metatronsCube"},
         "navLinks": [
             {"label": "Infrastructure", "href": "#infrastructure"},
             {"label": "Services", "href": "#services"},
@@ -205,6 +213,10 @@ SITES = [
         "accent": "#8b5cf6",
         "accentGlow": "rgba(139,92,246,0.15)",
         "sacredGeometry": "Sri Yantra",
+        "brandFont": "Space Grotesk",
+        "brandFontImport": "Space+Grotesk:wght@300;400;500;600;700",
+        "heroStyle": "research",
+        "canvasConfig": {"nodeCount": 21, "connectionDistance": 200, "secondaryColor": "#c084fc", "goldColor": "#e879f9", "opacity": 0.2, "geometry": "sriYantra"},
         "navLinks": [
             {"label": "Research", "href": "#research"},
             {"label": "Patents", "href": "#patents"},
@@ -293,6 +305,10 @@ SITES = [
         "accent": "#14b8a6",
         "accentGlow": "rgba(20,184,166,0.15)",
         "sacredGeometry": "Torus",
+        "brandFont": "Fira Code",
+        "brandFontImport": "Fira+Code:wght@400;500;600;700",
+        "heroStyle": "developer",
+        "canvasConfig": {"nodeCount": 40, "connectionDistance": 130, "secondaryColor": "#2dd4bf", "goldColor": "#34d399", "opacity": 0.25, "geometry": "torus"},
         "navLinks": [
             {"label": "Runtime", "href": "#runtime"},
             {"label": "SDK", "href": "#sdk"},
@@ -377,6 +393,10 @@ SITES = [
         "accent": "#f59e0b",
         "accentGlow": "rgba(245,158,11,0.15)",
         "sacredGeometry": "Seed of Life",
+        "brandFont": "Outfit",
+        "brandFontImport": "Outfit:wght@300;400;500;600;700",
+        "heroStyle": "community",
+        "canvasConfig": {"nodeCount": 28, "connectionDistance": 170, "secondaryColor": "#fbbf24", "goldColor": "#f59e0b", "opacity": 0.2, "geometry": "seedOfLife"},
         "navLinks": [
             {"label": "Mission", "href": "#mission"},
             {"label": "Programs", "href": "#programs"},
@@ -461,6 +481,10 @@ SITES = [
         "accent": "#06b6d4",
         "accentGlow": "rgba(6,182,212,0.15)",
         "sacredGeometry": "Seed of Life",
+        "brandFont": "Outfit",
+        "brandFontImport": "Outfit:wght@300;400;500;600;700",
+        "heroStyle": "community",
+        "canvasConfig": {"nodeCount": 28, "connectionDistance": 170, "secondaryColor": "#22d3ee", "goldColor": "#67e8f9", "opacity": 0.2, "geometry": "seedOfLife"},
         "navLinks": [
             {"label": "Community", "href": "#community"},
             {"label": "Events", "href": "#events"},
@@ -543,6 +567,10 @@ SITES = [
         "accent": "#10b981",
         "accentGlow": "rgba(16,185,129,0.15)",
         "sacredGeometry": "Fibonacci Spiral",
+        "brandFont": "Inter",
+        "brandFontImport": "Inter:wght@300;400;500;600;700",
+        "heroStyle": "marketplace",
+        "canvasConfig": {"nodeCount": 45, "connectionDistance": 110, "secondaryColor": "#34d399", "goldColor": "#6ee7b7", "opacity": 0.25, "geometry": "fibonacciSpiral"},
         "navLinks": [
             {"label": "Marketplace", "href": "#marketplace"},
             {"label": "HeadyCoin", "href": "#headycoin"},
@@ -623,6 +651,10 @@ SITES = [
         "accent": "#a855f7",
         "accentGlow": "rgba(168,85,247,0.15)",
         "sacredGeometry": "Vesica Piscis",
+        "brandFont": "DM Sans",
+        "brandFontImport": "DM+Sans:wght@400;500;600;700",
+        "heroStyle": "investor",
+        "canvasConfig": {"nodeCount": 21, "connectionDistance": 180, "secondaryColor": "#c084fc", "goldColor": "#f0c040", "opacity": 0.2, "geometry": "vesicaPiscis"},
         "navLinks": [
             {"label": "Financials", "href": "#financials"},
             {"label": "Patents", "href": "#patents"},
@@ -703,6 +735,10 @@ SITES = [
         "accent": "#06b6d4",
         "accentGlow": "rgba(6,182,212,0.15)",
         "sacredGeometry": "Metatrons Cube",
+        "brandFont": "JetBrains Mono",
+        "brandFontImport": "JetBrains+Mono:wght@400;500;700",
+        "heroStyle": "admin",
+        "canvasConfig": {"nodeCount": 55, "connectionDistance": 120, "secondaryColor": "#60a5fa", "goldColor": "#818cf8", "opacity": 0.15, "geometry": "metatronsCube"},
         "navLinks": [
             {"label": "Dashboard", "href": "#dashboard"},
             {"label": "Agents", "href": "#agents"},
@@ -873,7 +909,12 @@ def make_footer_html(current_slug):
         "Company": [
             ("HeadyFinance", "https://headyfinance.com"),
             ("Admin Portal", "https://admin.headysystems.com"),
-            ("GitHub", "https://github.com/HeadyMe"),
+            ("GitHub", "https://github.com/HeadySystems"),
+        ],
+        "Legal": [
+            ("Terms of Service", "https://headysystems.com/legal/terms"),
+            ("Privacy Policy", "https://headysystems.com/legal/privacy"),
+            ("Pricing", "https://headysystems.com/pricing"),
         ],
     }
     html = ""
@@ -888,9 +929,123 @@ def make_footer_html(current_slug):
         </div>'''
     return html
 
+def make_hero_html(site):
+    """Generate a brand-specific hero section."""
+    style = site.get("heroStyle", "personal")
+    accent = site["accent"]
+    
+    if style == "personal":
+        return f'''
+    <div class="hero-badge">✦ Your Sovereign Intelligence</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">Explore Your AI</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+    elif style == "infrastructure":
+        return f'''
+    <div class="hero-badge">⟐ Enterprise Grade · Self-Healing · Zero-Trust</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-terminal glass-card" style="max-width:500px;margin:var(--space-13) auto 0;padding:1.2rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:#9898b0;">
+      <div style="color:#60a5fa;margin-bottom:.4rem;">$ heady status --all</div>
+      <div style="color:#34d399;">✓ 50+ services healthy</div>
+      <div style="color:#34d399;">✓ 17 swarms active</div>
+      <div style="color:#34d399;">✓ Edge mesh: 300+ nodes</div>
+      <div style="color:#fbbf24;">⟐ Latency: &lt;50ms global</div>
+    </div>
+    <div class="hero-cta-row" style="margin-top:var(--space-13);">
+      <a href="#deep-dive" class="btn btn-primary">View Architecture</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+    elif style == "research":
+        return f'''
+    <div class="hero-badge">△ 51+ Patents · φ-Scaled · Peer-Reviewed</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-equation" style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem;color:{accent};margin-top:var(--space-13);opacity:0.8;letter-spacing:.05em;">
+      CSL(x) = φ<sup>-1</sup> · cos(θ) ≥ ψ² → gate(include, boost, inject)
+    </div>
+    <div class="hero-cta-row" style="margin-top:var(--space-13);">
+      <a href="#deep-dive" class="btn btn-primary">Read the Research</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+    elif style == "developer":
+        return f'''
+    <div class="hero-badge">◇ Runtime · Memory · MCP Tools · Event Bus</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-terminal glass-card" style="max-width:480px;margin:var(--space-13) auto 0;padding:1.2rem;text-align:left;font-family:'Fira Code',monospace;font-size:.8rem;color:#9898b0;">
+      <div style="color:#2dd4bf;">$ npm install @heady/sdk</div>
+      <div style="color:#9898b0;margin-top:.3rem;">import {{ Agent, Memory }} from '@heady/sdk'</div>
+      <div style="color:#9898b0;">const agent = new Agent('my-agent')</div>
+      <div style="color:#34d399;margin-top:.3rem;">✓ Agent deployed to HeadyOS runtime</div>
+    </div>
+    <div class="hero-cta-row" style="margin-top:var(--space-13);">
+      <a href="#deep-dive" class="btn btn-primary">Start Building</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+    elif style == "community":
+        return f'''
+    <div class="hero-badge">✦ Mission-Driven · Open Source · For Everyone</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">Join the Movement</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+    elif style == "marketplace":
+        return f'''
+    <div class="hero-badge">🪙 Powered by HeadyCoin · Smart Contract Escrow</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">Browse Agents</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+    elif style == "investor":
+        return f'''
+    <div class="hero-badge">📈 Series A · 51+ Patents · 9 Verticals</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">View Investment Thesis</a>
+      <a href="mailto:invest@headysystems.com" class="btn btn-ghost">Contact IR →</a>
+    </div>'''
+    elif style == "admin":
+        return f'''
+    <div class="hero-badge">🛡️ Authorized Personnel Only · MFA Required</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-cta-row">
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}&require_mfa=true" class="btn btn-primary">Authenticate</a>
+    </div>'''
+    else:
+        return f'''
+    <div class="version-badge">v4.0 · {site["sacredGeometry"]} · {site["role"].replace("-"," ").title()}</div>
+    <h1 class="text-gradient">{site["tagline"]}</h1>
+    <p class="subtitle">{site["description"]}</p>
+    <div class="hero-cta-row">
+      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
+      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In →</a>
+    </div>'''
+
+
 def generate_site_html(site):
     accent = site["accent"]
     accentGlow = site["accentGlow"]
+    brandFont = site.get("brandFont", "Inter")
+    brandFontImport = site.get("brandFontImport", "Inter:wght@300;400;500;600;700")
+    canvasCfg = site.get("canvasConfig", {"nodeCount": 34, "connectionDistance": 140, "secondaryColor": "#40e0d0", "goldColor": "#f0c040", "opacity": 0.3, "geometry": "flowerOfLife"})
+    
+    # Determine font-family stacks per brand
+    if brandFont in ("JetBrains Mono", "Fira Code"):
+        fontStack = f"'{brandFont}', 'Courier New', monospace"
+        headingStack = fontStack
+    else:
+        fontStack = f"'{brandFont}', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        headingStack = fontStack
     
     return f'''<!DOCTYPE html>
 <html lang="en">
@@ -906,21 +1061,37 @@ def generate_site_html(site):
   <meta property="og:url" content="https://{site["domain"]}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family={brandFontImport}&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../packages/design-system/heady-design.css">
   <style>
     :root {{
       --accent: {accent};
       --accent-glow: {accentGlow};
       --accent-subtle: {accentGlow.replace("0.15","0.06")};
+      --brand-font: {fontStack};
+      --brand-heading: {headingStack};
     }}
-    body {{ padding-top: 32px; }} /* cross-nav offset */
+    body {{ padding-top: 32px; font-family: var(--brand-font); }}
+    h1, h2, h3, h4 {{ font-family: var(--brand-heading); }}
     .sacred-canvas {{
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       z-index: 0;
       pointer-events: none;
     }}
+    .hero-badge {{
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: {accentGlow.replace("0.15","0.08")};
+      border: 1px solid {accentGlow.replace("0.15","0.2")};
+      border-radius: 100px;
+      font-size: var(--text-xs);
+      color: {accent};
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-8);
+      font-weight: 500;
+    }}
+    .hero-cta-row {{ display: flex; gap: var(--space-8); justify-content: center; flex-wrap: wrap; }}
     .feature-icon {{
       font-size: 1.618rem;
       display: block;
@@ -983,13 +1154,7 @@ def generate_site_html(site):
 
   <!-- Hero Section -->
   <section class="hero">
-    <div class="version-badge">v3.0 · {site["sacredGeometry"]} · {site["role"].replace("-"," ").title()}</div>
-    <h1 class="text-gradient">{site["tagline"]}</h1>
-    <p class="subtitle">{site["description"]}</p>
-    <div style="display:flex;gap:var(--space-8);">
-      <a href="#deep-dive" class="btn btn-primary">Learn More</a>
-      <a href="https://auth.headysystems.com/login?redirect=https://{site["domain"]}" class="btn btn-ghost">Sign In</a>
-    </div>
+    {make_hero_html(site)}
   </section>
 
   <!-- Stats Banner -->
@@ -1119,11 +1284,12 @@ def generate_site_html(site):
     // Initialize Sacred Geometry Canvas with site-specific settings
     new SacredGeometryCanvas('sacred-canvas', {{
       accentColor: '{accent}',
-      secondaryColor: '#40e0d0',
-      goldColor: '#f0c040',
-      opacity: 0.3,
-      nodeCount: 34,
-      connectionDistance: 140,
+      secondaryColor: '{canvasCfg["secondaryColor"]}',
+      goldColor: '{canvasCfg["goldColor"]}',
+      opacity: {canvasCfg["opacity"]},
+      nodeCount: {canvasCfg["nodeCount"]},
+      connectionDistance: {canvasCfg["connectionDistance"]},
+      geometry: '{canvasCfg["geometry"]}',
     }});
 
     // Initialize Cross-Site Navigation
@@ -1465,29 +1631,29 @@ AUTH_HTML = '''<!DOCTYPE html>
 # ════════════════════════════════════════════════════════════
 
 def main():
-    # Generate each site
+    import re
+    # Generate each site into sites/ directory
     for site in SITES:
-        site_dir = os.path.join(BASE, "apps", site["slug"])
+        site_dir = os.path.join(BASE, "sites", site["slug"])
         os.makedirs(site_dir, exist_ok=True)
         html = generate_site_html(site)
         filepath = os.path.join(site_dir, "index.html")
-        with open(filepath, "w") as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(html)
         # Count words
-        import re
         text = re.sub(r'<[^>]+>', ' ', html)
         words = len(text.split())
-        print(f"  {site['slug']:25s} → {filepath} ({words} words)")
+        print(f"  {site['slug']:25s} -> {filepath} ({words} words)")
 
     # Generate auth app
-    auth_dir = os.path.join(BASE, "apps", "auth")
+    auth_dir = os.path.join(BASE, "sites", "auth")
     os.makedirs(auth_dir, exist_ok=True)
     auth_path = os.path.join(auth_dir, "index.html")
-    with open(auth_path, "w") as f:
+    with open(auth_path, "w", encoding="utf-8") as f:
         f.write(AUTH_HTML)
-    print(f"  {'auth':25s} → {auth_path}")
+    print(f"  {'auth':25s} -> {auth_path}")
 
-    print(f"\nGenerated {len(SITES)} sites + auth app")
+    print(f"\n[OK] Generated {len(SITES)} sites + auth app -> {os.path.join(BASE, 'sites')}")
 
 if __name__ == "__main__":
     main()

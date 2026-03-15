@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Mission Control</title>
+  <meta name="description" content="Live Mission Control dashboard for the Heady™ distributed AI system — liquid nodes, swarm orchestration, Colab runtimes, and service health matrix.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Sacred Geometry Constants */
+      --phi: 1.6180339887;
+      --phi-inv: 0.6180339887;
+      /* Spacing scale based on φ: 5, 8, 13, 21, 34, 55 */
+      --sp-xs: 5px; --sp-sm: 8px; --sp-md: 13px; --sp-lg: 21px; --sp-xl: 34px; --sp-2xl: 55px;
+      /* Colors */
+      --bg-root: #0a0e17;
+      --bg-card: rgba(15, 22, 36, 0.85);
+      --bg-card-hover: rgba(20, 30, 50, 0.95);
+      --border-glow: rgba(100, 200, 255, 0.12);
+      --text-primary: #e8ecf4;
+      --text-secondary: #8892a4;
+      --text-tertiary: #5a6478;
+      --accent-cyan: #00d4ff;
+      --accent-emerald: #00e88f;
+      --accent-violet: #a78bfa;
+      --accent-amber: #fbbf24;
+      --accent-rose: #fb7185;
+      --accent-blue: #60a5fa;
+      --status-active: #00e88f;
+      --status-idle: #5a6478;
+      --status-error: #fb7185;
+      --status-live: #00d4ff;
+      --gradient-hero: linear-gradient(135deg, #0a0e17 0%, #0f1628 40%, #131b30 100%);
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --radius: 13px;
+      --radius-sm: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--gradient-hero);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.618;
+    }
+
+    /* ─── Background breathing animation ─── */
+    body::before {
+      content: '';
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 800px 600px at 20% 30%, rgba(0, 212, 255, 0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 80% 70%, rgba(167, 139, 250, 0.03) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 500px at 50% 50%, rgba(0, 232, 143, 0.02) 0%, transparent 70%);
+      animation: breathe 8s ease-in-out infinite alternate;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes breathe { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+    /* ─── Layout ─── */
+    .container { max-width: 1440px; margin: 0 auto; padding: var(--sp-xl); position: relative; z-index: 1; }
+
+    /* ─── Header ─── */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--sp-2xl); flex-wrap: wrap; gap: var(--sp-lg);
+    }
+    .header-left { display: flex; align-items: center; gap: var(--sp-lg); }
+    .logo {
+      width: 55px; height: 55px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; font-weight: 900; color: #fff;
+      box-shadow: 0 0 34px rgba(0, 212, 255, 0.25);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 21px rgba(0,212,255,0.2); } 50% { box-shadow: 0 0 34px rgba(0,212,255,0.4); } }
+    .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+    .header h1 span { color: var(--accent-cyan); }
+    .header-right { display: flex; align-items: center; gap: var(--sp-md); }
+    .health-badge {
+      display: flex; align-items: center; gap: var(--sp-sm);
+      padding: var(--sp-sm) var(--sp-md);
+      border-radius: 34px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      font-size: 13px; font-weight: 500;
+    }
+    .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--status-active); animation: pulse 2s infinite; }
+    .health-dot.degraded { background: var(--accent-amber); }
+    .health-dot.critical { background: var(--status-error); }
+    .refresh-badge { font-size: 12px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; }
+
+    /* ─── Section Grid ─── */
+    .grid { display: grid; gap: var(--sp-lg); }
+    .grid-top { grid-template-columns: 1fr 1fr; }
+    .grid-bottom { grid-template-columns: 1fr 1fr 1fr; margin-top: var(--sp-lg); }
+    @media (max-width: 1100px) { .grid-top, .grid-bottom { grid-template-columns: 1fr; } }
+
+    /* ─── Cards ─── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: var(--sp-xl);
+      backdrop-filter: blur(21px);
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+    .card:hover { border-color: var(--border-glow); box-shadow: 0 8px 34px rgba(0,0,0,0.3); transform: translateY(-2px); }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--sp-lg); padding-bottom: var(--sp-md);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .card-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: var(--sp-sm); }
+    .card-title .icon { font-size: 18px; }
+    .card-count {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      background: var(--glass); padding: 3px 10px; border-radius: 21px;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Node Ring Topology ─── */
+    .topology-ring {
+      position: relative; width: 100%; aspect-ratio: 1.618;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ring { position: absolute; border: 1px solid var(--glass-border); border-radius: 50%; }
+    .ring-center { width: 15%; height: calc(15% * 1.618); }
+    .ring-inner  { width: 40%; height: calc(40% * 1.618); border-color: rgba(0,212,255,0.1); }
+    .ring-middle { width: 65%; height: calc(65% * 1.618); border-color: rgba(167,139,250,0.08); }
+    .ring-outer  { width: 85%; height: calc(85% * 1.618); border-color: rgba(0,232,143,0.06); }
+    .ring-gov    { width: 100%; height: calc(100% * 1.618); border-color: rgba(251,191,36,0.05); }
+
+    /* ─── Node chips ─── */
+    .node-grid { display: flex; flex-wrap: wrap; gap: var(--sp-sm); }
+    .node-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 5px 10px; border-radius: var(--radius-sm);
+      background: var(--glass); border: 1px solid var(--glass-border);
+      font-size: 11px; font-weight: 500; font-family: 'JetBrains Mono', monospace;
+      transition: all 0.2s;
+    }
+    .node-chip:hover { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); }
+    .node-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .node-dot.active { background: var(--status-active); box-shadow: 0 0 6px rgba(0,232,143,0.5); }
+    .node-dot.idle { background: var(--status-idle); }
+    .node-dot.error { background: var(--status-error); }
+
+    .tier-badge {
+      font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tier-L { background: rgba(0,212,255,0.15); color: var(--accent-cyan); }
+    .tier-M { background: rgba(167,139,250,0.15); color: var(--accent-violet); }
+    .tier-S { background: rgba(0,232,143,0.15); color: var(--accent-emerald); }
+
+    /* ─── Swarm bars ─── */
+    .swarm-list { display: flex; flex-direction: column; gap: 6px; max-height: 400px; overflow-y: auto; }
+    .swarm-row {
+      display: grid; grid-template-columns: 110px 60px 1fr 50px 50px;
+      align-items: center; gap: var(--sp-sm);
+      padding: 6px var(--sp-sm); border-radius: var(--radius-sm);
+      background: var(--glass); font-size: 11px;
+      transition: background 0.2s;
+    }
+    .swarm-row:hover { background: rgba(0,212,255,0.06); }
+    .swarm-name { font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+    .swarm-status { font-size: 10px; padding: 2px 6px; border-radius: 4px; text-align: center; }
+    .swarm-status.idle { background: rgba(90,100,120,0.3); color: var(--text-secondary); }
+    .swarm-status.active { background: rgba(0,232,143,0.15); color: var(--accent-emerald); }
+    .swarm-status.error { background: rgba(251,113,133,0.15); color: var(--accent-rose); }
+    .swarm-status.overloaded { background: rgba(251,191,36,0.15); color: var(--accent-amber); }
+    .swarm-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.05); overflow: hidden; }
+    .swarm-bar-fill { height: 100%; border-radius: 2px; background: var(--accent-cyan); transition: width 0.5s; }
+    .swarm-stat { font-family: 'JetBrains Mono', monospace; text-align: right; color: var(--text-secondary); }
+
+    /* ─── Colab runtime cards ─── */
+    .colab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-md); }
+    @media (max-width: 700px) { .colab-grid { grid-template-columns: 1fr; } }
+    .colab-card {
+      padding: var(--sp-md);
+      background: var(--glass); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.3s;
+    }
+    .colab-card.live { border-color: rgba(0,212,255,0.3); }
+    .colab-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+    .colab-role { font-size: 11px; color: var(--text-secondary); margin-bottom: var(--sp-sm); }
+    .colab-meta { display: flex; gap: var(--sp-md); font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-tertiary); }
+    .colab-gpu { padding: 2px 6px; border-radius: 4px; background: rgba(167,139,250,0.12); color: var(--accent-violet); }
+    .colab-live-badge { padding: 2px 6px; border-radius: 4px; }
+    .colab-live-badge.live { background: rgba(0,212,255,0.12); color: var(--accent-cyan); }
+    .colab-live-badge.offline { background: rgba(90,100,120,0.2); color: var(--text-tertiary); }
+
+    /* ─── Service Health ─── */
+    .health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--sp-sm); }
+    .svc-card {
+      padding: var(--sp-sm) var(--sp-md); border-radius: var(--radius-sm);
+      background: var(--glass); border: 1px solid var(--glass-border);
+      text-align: center; font-size: 11px;
+    }
+    .svc-name { font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 10px; margin-bottom: 3px; }
+    .svc-status { font-size: 10px; }
+    .svc-status.healthy, .svc-status.active { color: var(--accent-emerald); }
+    .svc-status.unknown { color: var(--text-tertiary); }
+
+    /* ─── System overview ─── */
+    .overview-stats { display: flex; flex-wrap: wrap; gap: var(--sp-md); }
+    .stat-block { flex: 1; min-width: 100px; text-align: center; }
+    .stat-value { font-size: 28px; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+    .stat-value.cyan { color: var(--accent-cyan); }
+    .stat-value.emerald { color: var(--accent-emerald); }
+    .stat-value.violet { color: var(--accent-violet); }
+    .stat-value.amber { color: var(--accent-amber); }
+    .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* ─── Score meter ─── */
+    .score-meter { display: flex; align-items: center; gap: var(--sp-md); margin-top: var(--sp-md); }
+    .score-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+    .score-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-cyan));
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .score-label { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; min-width: 55px; text-align: right; }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+    /* ─── Loading skeleton ─── */
+    .skeleton { background: linear-gradient(90deg, var(--glass) 25%, rgba(255,255,255,0.06) 50%, var(--glass) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm); }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    .card.span-2 { grid-column: span 2; }
+    @media (max-width: 1100px) { .card.span-2 { grid-column: span 1; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">∞</div>
+        <div>
+          <h1><span>Heady™</span> Mission Control</h1>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px;">Sacred Geometry v4.0 · Liquid Latent OS</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="health-badge" id="health-badge">
+          <div class="health-dot" id="health-dot"></div>
+          <span id="health-text">Connecting…</span>
+        </div>
+        <div class="refresh-badge" id="last-refresh">—</div>
+      </div>
+    </header>
+
+    <!-- Top row: Liquid Nodes + Swarms -->
+    <div class="grid grid-top">
+      <!-- Liquid Nodes -->
+      <div class="card" id="nodes-section">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">◈</span> Liquid Nodes</div>
+          <div class="card-count" id="nodes-count">—</div>
+        </div>
+        <div class="node-grid" id="nodes-grid">
+          <div class="skeleton" style="width:100%;height:120px;"></div>
+        </div>
+        <div class="score-meter" style="margin-top:var(--sp-lg);">
+          <span style="font-size:11px;color:var(--text-secondary);">Vector Space</span>
+          <div class="score-bar"><div class="score-fill" id="nodes-score-bar" style="width:0%"></div></div>
+          <span class="score-label" id="nodes-score-label">—</span>
+        </div>
+      </div>
+
+      <!-- Swarm Orchestrator -->
+      <div class="card" id="swarms-section">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">⬡</span> 17-Swarm Orchestrator</div>
+          <div class="card-count" id="swarms-count">—</div>
+        </div>
+        <div class="swarm-list" id="swarms-list">
+          <div class="skeleton" style="width:100%;height:200px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row: Colab Runtimes, Service Health, System Overview -->
+    <div class="grid grid-bottom">
+      <!-- Colab Runtimes -->
+      <div class="card" id="colab-section">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">⊛</span> Colab Pro+ Runtimes</div>
+          <div class="card-count" id="colab-count">—</div>
+        </div>
+        <div class="colab-grid" id="colab-grid">
+          <div class="skeleton" style="width:100%;height:80px;"></div>
+        </div>
+      </div>
+
+      <!-- Service Health -->
+      <div class="card" id="services-section">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">◉</span> Service Health</div>
+          <div class="card-count" id="services-count">—</div>
+        </div>
+        <div class="health-grid" id="services-grid">
+          <div class="skeleton" style="width:100%;height:80px;"></div>
+        </div>
+        <div class="score-meter" style="margin-top:var(--sp-lg);">
+          <span style="font-size:11px;color:var(--text-secondary);">Overall</span>
+          <div class="score-bar"><div class="score-fill" id="health-score-bar" style="width:0%"></div></div>
+          <span class="score-label" id="health-score-label">—</span>
+        </div>
+      </div>
+
+      <!-- System Overview -->
+      <div class="card" id="system-section">
+        <div class="card-header">
+          <div class="card-title"><span class="icon">⟐</span> System Overview</div>
+          <div class="card-count" id="system-env">—</div>
+        </div>
+        <div class="overview-stats" id="system-stats">
+          <div class="skeleton" style="width:100%;height:80px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = window.location.origin;
+    const PHI = 1.6180339887;
+
+    // ─── Fetch helpers ──────────────────────────────────────────────────
+    async function fetchJson(url) {
+      try {
+        const r = await fetch(url);
+        if (!r.ok) return null;
+        return r.json();
+      } catch { return null; }
+    }
+
+    // ─── Render: Liquid Nodes ────────────────────────────────────────────
+    async function refreshNodes() {
+      const data = await fetchJson(`${API}/api/liquid-nodes/topology`);
+      if (!data || !data.nodes) return;
+
+      document.getElementById('nodes-count').textContent = `${data.activeNodes}/${data.totalNodes} active`;
+
+      const grid = document.getElementById('nodes-grid');
+      grid.innerHTML = data.nodes.map(n => `
+        <div class="node-chip" title="${n.description || n.role}">
+          <div class="node-dot ${n.status}"></div>
+          <span>${n.name}</span>
+          <span class="tier-badge tier-${n.tier}">${n.tier}</span>
+        </div>
+      `).join('');
+
+      const score = data.healthScore || 0;
+      document.getElementById('nodes-score-bar').style.width = `${Math.round(score * 100)}%`;
+      document.getElementById('nodes-score-label').textContent = data.vectorSpaceState || '—';
+      document.getElementById('nodes-score-label').style.color =
+        data.vectorSpaceState === 'OPTIMAL' ? 'var(--accent-emerald)' :
+        data.vectorSpaceState === 'DEGRADED' ? 'var(--accent-amber)' : 'var(--accent-rose)';
+    }
+
+    // ─── Render: Swarm Orchestrator ──────────────────────────────────────
+    async function refreshSwarms() {
+      const data = await fetchJson(`${API}/api/swarms/status`);
+      if (!data || !data.swarms) {
+        // Fallback to consensus endpoint
+        const fallback = await fetchJson(`${API}/api/swarms/consensus`);
+        if (fallback && fallback.swarms) {
+          document.getElementById('swarms-count').textContent = `${fallback.swarmCount} domains`;
+          document.getElementById('swarms-list').innerHTML = fallback.swarms.map(s => `
+            <div class="swarm-row">
+              <span class="swarm-name">${s.domain}</span>
+              <span class="swarm-status idle">${s.ring}</span>
+              <div class="swarm-bar"><div class="swarm-bar-fill" style="width:0%"></div></div>
+              <span class="swarm-stat">${s.layer}</span>
+              <span class="swarm-stat">—</span>
+            </div>
+          `).join('');
+        }
+        return;
+      }
+
+      document.getElementById('swarms-count').textContent = `${data.swarmCount} swarms · ${data.totalTasks} tasks`;
+
+      const maxReceived = Math.max(1, ...data.swarms.map(s => s.stats?.received || 0));
+      document.getElementById('swarms-list').innerHTML = data.swarms.map(s => {
+        const pct = Math.round(((s.stats?.received || 0) / maxReceived) * 100);
+        return `
+          <div class="swarm-row">
+            <span class="swarm-name">${s.name}</span>
+            <span class="swarm-status ${s.status}">${s.status}</span>
+            <div class="swarm-bar"><div class="swarm-bar-fill" style="width:${pct}%"></div></div>
+            <span class="swarm-stat">${s.queue || 0}q</span>
+            <span class="swarm-stat">${s.stats?.completed || 0}✓</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ─── Render: Colab Runtimes ──────────────────────────────────────────
+    async function refreshColab() {
+      const data = await fetchJson(`${API}/api/colab/runtimes`);
+      if (!data || !data.runtimes) return;
+
+      document.getElementById('colab-count').textContent = `${data.live}/${data.total} live · ${data.subscriptions}`;
+      document.getElementById('colab-grid').innerHTML = data.runtimes.map(r => `
+        <div class="colab-card ${r.live ? 'live' : ''}">
+          <div class="colab-name">${r.name}</div>
+          <div class="colab-role">${r.role}</div>
+          <div class="colab-meta">
+            <span class="colab-gpu">${r.gpu?.name || r.gpu || '—'}</span>
+            <span class="colab-live-badge ${r.live ? 'live' : 'offline'}">${r.live ? '● LIVE' : '○ offline'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ─── Render: Services Health ──────────────────────────────────────────
+    async function refreshServices() {
+      const data = await fetchJson(`${API}/api/services/health-matrix`);
+      if (!data) return;
+
+      const svcList = data.services?.list || [];
+      document.getElementById('services-count').textContent = `${data.services?.healthy || 0}/${data.services?.total || 0} healthy`;
+      document.getElementById('services-grid').innerHTML = svcList.map(s => `
+        <div class="svc-card">
+          <div class="svc-name">${s.id}</div>
+          <div class="svc-status ${s.status}">${s.status}</div>
+        </div>
+      `).join('');
+
+      const score = data.overallScore || 0;
+      document.getElementById('health-score-bar').style.width = `${Math.round(score * 100)}%`;
+      document.getElementById('health-score-label').textContent = data.overallHealth || '—';
+      document.getElementById('health-score-label').style.color =
+        data.overallHealth === 'HEALTHY' ? 'var(--accent-emerald)' :
+        data.overallHealth === 'DEGRADED' ? 'var(--accent-amber)' : 'var(--accent-rose)';
+
+      // Update header badge
+      const dot = document.getElementById('health-dot');
+      const text = document.getElementById('health-text');
+      dot.className = 'health-dot' + (data.overallHealth === 'HEALTHY' ? '' : data.overallHealth === 'DEGRADED' ? ' degraded' : ' critical');
+      text.textContent = data.overallHealth || 'UNKNOWN';
+    }
+
+    // ─── Render: System Overview ──────────────────────────────────────────
+    async function refreshSystem() {
+      const data = await fetchJson(`${API}/api/system/status`);
+      if (!data) return;
+
+      document.getElementById('system-env').textContent = data.environment || 'unknown';
+      const uptimeMin = Math.round((data.uptime || 0) / 60);
+      const heapMB = Math.round((data.memory?.heapUsed || 0) / 1048576);
+
+      document.getElementById('system-stats').innerHTML = `
+        <div class="stat-block">
+          <div class="stat-value cyan">${data.capabilities?.nodes?.active || 0}</div>
+          <div class="stat-label">Active Nodes</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value emerald">${data.capabilities?.tools?.total || 0}</div>
+          <div class="stat-label">Tools</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value violet">${data.capabilities?.workflows?.total || 0}</div>
+          <div class="stat-label">Workflows</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value amber">${uptimeMin}m</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-value cyan">${heapMB}</div>
+          <div class="stat-label">Heap MB</div>
+        </div>
+      `;
+    }
+
+    // ─── Refresh orchestration ───────────────────────────────────────────
+    async function refreshAll() {
+      await Promise.all([refreshNodes(), refreshSwarms(), refreshColab(), refreshServices(), refreshSystem()]);
+      document.getElementById('last-refresh').textContent = new Date().toLocaleTimeString();
+    }
+
+    // Initial load + auto-refresh
+    refreshAll();
+    setInterval(refreshAll, 10000);
+  </script>
+</body>
+</html>
