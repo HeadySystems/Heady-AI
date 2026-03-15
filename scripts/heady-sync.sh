@@ -25,10 +25,17 @@ WATCH_INTERVAL=300  # 5 minutes in seconds
 DEVICE_NAME="$(hostname -s 2>/dev/null || echo 'unknown')"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
 
-# Remotes to push to (primary first, then mirrors)
-# Auto-detected from git remote, filtered to push targets
+# Remotes to push to — all active mirrors (15 total)
+# GitHub: HeadyAI, HeadyConnection, HeadyMe, HeadySystems
+# Azure DevOps: Heady-AI org
 PRIMARY_REMOTE="headyai"
-PUSH_REMOTES=("headyai" "hc-main" "hs-main")
+PUSH_REMOTES=(
+    "headyai" "headyai-staging" "headyai-testing"
+    "hc-main" "hc-testing"
+    "hs-main" "hs-staging" "hs-testing"
+    "heady-testing" "production" "staging"
+    "azure-main" "azure-staging" "azure-testing"
+)
 
 # ─── Color Helpers ────────────────────────────────────────────────
 RED='\033[0;31m'
