@@ -130,3 +130,25 @@ audit/strategic-plans/github-recovery-codes.txt
 # Large code bundles (>50MB, kept locally)
 archive/code-bundles/wezterm-main.zip
 render.yaml.bak
+
+# SEC-03: Infrastructure Hardening — Additional Security Patterns
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+gcp-*.json
+*-service-account*.json
+*.tfstate
+*.tfstate.backup
+.terraform/
+coverage/
+sbom.json
+sbom.xml
+.scannerwork/
+*.heapdump
+*.hprof
+core.*
+.clinic/
+.secrets
+.vault-token

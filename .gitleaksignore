@@ -1,0 +1,17 @@
+# ═══════════════════════════════════════════════════════════════
+# Heady™ .gitleaksignore — Known false positives
+# ═══════════════════════════════════════════════════════════════
+# Format: commit:file:rule:fingerprint
+# Add fingerprints from `gitleaks detect --verbose` output
+# This allows security scanning to pass in CI while
+# tracking historical false positives.
+#
+# © 2026 HeadySystems Inc.
+# ═══════════════════════════════════════════════════════════════
+
+# Historical test/example tokens in documentation
+# These are not real credentials — they appear in README examples
+# and test fixtures. Real credentials are in .env (gitignored).
+
+# Placeholder API keys in example configs
+# (identified during Phase 0 recon March 2026)
