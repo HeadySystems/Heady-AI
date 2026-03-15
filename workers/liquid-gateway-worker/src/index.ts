@@ -187,6 +187,65 @@ export default {
       });
     }
 
+    // ── Liquid Node Status ──
+    if (url.pathname === '/_heady/liquid/status') {
+      const LIQUID_NODES = [
+        { id: 'github', name: 'GitHub', type: 'source-control', status: 'wired', capabilities: ['repos', 'gists', 'actions', 'issues', 'pulls'] },
+        { id: 'cloudflare', name: 'Cloudflare', type: 'edge-compute', status: 'wired', capabilities: ['dns', 'workers', 'pages', 'kv', 'ai-inference', 'r2'] },
+        { id: 'vertex-ai', name: 'Vertex AI', type: 'ml-compute', status: 'wired', capabilities: ['models', 'embeddings', 'predictions'] },
+        { id: 'ai-studio', name: 'Google AI Studio', type: 'ai-provider', status: 'wired', capabilities: ['text-generation', 'embeddings', 'multimodal'] },
+        { id: 'anthropic', name: 'Anthropic', type: 'ai-provider', status: 'wired', capabilities: ['text-generation', 'tool-use', 'vision'] },
+        { id: 'openai', name: 'OpenAI', type: 'ai-provider', status: 'wired', capabilities: ['text-generation', 'embeddings', 'vision'] },
+        { id: 'groq', name: 'Groq', type: 'ai-provider', status: 'wired', capabilities: ['fast-inference'] },
+        { id: 'perplexity', name: 'Perplexity', type: 'ai-provider', status: 'wired', capabilities: ['search-augmented-generation'] },
+        { id: 'huggingface', name: 'Hugging Face', type: 'ai-provider', status: 'wired', capabilities: ['inference', 'model-hosting'] },
+        { id: 'neon', name: 'Neon Postgres', type: 'database', status: env.NEON_CONNECTION ? 'wired' : 'disconnected', capabilities: ['sql', 'branching', 'pgvector'] },
+        { id: 'upstash', name: 'Upstash Redis', type: 'cache', status: env.UPSTASH_REDIS_TOKEN ? 'wired' : 'disconnected', capabilities: ['kv-cache', 'rate-limiting', 'pub-sub', 'vector-store'] },
+        { id: 'pinecone', name: 'Pinecone', type: 'vector-db', status: 'configured', capabilities: ['vector-search', 'embeddings-store', 'namespaces'] },
+        { id: 'firebase', name: 'Firebase', type: 'auth-platform', status: env.FIREBASE_API_KEY ? 'wired' : 'disconnected', capabilities: ['authentication', 'firestore', 'hosting'] },
+        { id: 'sentry', name: 'Sentry', type: 'monitoring', status: 'configured', capabilities: ['error-tracking', 'performance-monitoring', 'release-tracking'] },
+        { id: 'stripe', name: 'Stripe', type: 'payments', status: 'configured', capabilities: ['payments', 'subscriptions'] },
+        { id: 'colab-a', name: 'Colab A (Inference)', type: 'gpu-compute', status: 'standby', capabilities: ['gpu-inference', 'embeddings'], fibConcurrency: 34 },
+        { id: 'colab-d', name: 'Colab D (Intelligence)', type: 'gpu-compute', status: 'standby', capabilities: ['continuous-learning', 'self-critique'], fibConcurrency: 8, dedicated: true },
+      ];
+      const wired = LIQUID_NODES.filter(n => n.status === 'wired').length;
+      return Response.json({
+        ok: true, total: LIQUID_NODES.length, wired,
+        coveragePct: Math.round((wired / LIQUID_NODES.length) * 100),
+        phi: PHI, timestamp: Date.now(), nodes: LIQUID_NODES,
+      });
+    }
+
+    if (url.pathname === '/_heady/liquid/topology') {
+      return Response.json({
+        dimensions: 3, axes: { x: 'latency_priority', y: 'compute_weight', z: 'cache_affinity' },
+        tiers: TIER_VECTORS,
+        magnitudes: Object.fromEntries(Object.entries(TIER_VECTORS).map(([k, v]) => [k, vecMagnitude(v)])),
+        layers: {
+          edge: { platform: 'cloudflare', nodes: ['liquid-gateway-worker'], sites: Object.keys(SITE_REGISTRY).length },
+          compute: { platforms: ['colab', 'cloud-run', 'vertex-ai'], runtimes: COLAB_RUNTIMES.length },
+          data: { databases: ['neon-postgres', 'upstash-redis', 'pinecone'], vectorDims: 3 },
+          ai: { providers: ['ai-studio', 'anthropic', 'openai', 'groq', 'perplexity', 'huggingface'] },
+          ops: { monitoring: ['sentry'], payments: ['stripe'], auth: ['firebase'] },
+        },
+        phi: PHI, psi: PSI,
+      });
+    }
+
+    if (url.pathname === '/_heady/nodes') {
+      return Response.json({
+        version: '5.9.0',
+        services: {
+          pinecone: { type: 'vector-db', endpoint: 'https://api.pinecone.io', status: 'configured' },
+          upstash: { type: 'cache', endpoint: env.UPSTASH_REDIS_URL || 'https://finer-sole-64861.upstash.io', status: env.UPSTASH_REDIS_TOKEN ? 'wired' : 'disconnected' },
+          neon: { type: 'database', project: 'green-water-91851995', region: 'us-east-2', status: env.NEON_CONNECTION ? 'wired' : 'disconnected' },
+          firebase: { type: 'auth', project: 'heady-ai', status: env.FIREBASE_API_KEY ? 'wired' : 'disconnected' },
+          sentry: { type: 'monitoring', org: 'headyconnection-inc', project: 'heady-manager', status: 'configured' },
+        },
+        phi: PHI, timestamp: Date.now(),
+      });
+    }
+
     // ── Auth endpoints (Firebase) ──
     if (url.pathname === '/auth' || url.pathname === '/auth/') {
       return serveAuthPage(env);
@@ -812,6 +871,9 @@ function gatewayHTML(hostname: string): string {
       <a href="/health/sites">Sites</a>
       <a href="/health/vectors">Vectors</a>
       <a href="/health/colab">Colab</a>
+      <a href="/_heady/liquid/status">Liquid Status</a>
+      <a href="/_heady/liquid/topology">Topology</a>
+      <a href="/_heady/nodes">Services</a>
       <a href="/auth">Sign In</a>
     </div>
   </div>
