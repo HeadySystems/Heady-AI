@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T20:31:59.944Z",
+  "lastFineTuned": "2026-03-15T20:55:37.073Z",
   "phi": 1.618033988749895,
   "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) + External Assessment Deploy (15) + Auto-Success-Engine FIX (25) tasks",
-  "taskCount": 293,
+  "taskCount": 305,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -53,6 +53,10 @@
     "FIX": {
       "csl_resonance": 1,
       "tasks": 25
+    },
+    "REPO_INTEL": {
+      "csl_resonance": 1,
+      "tasks": 12
     }
   },
   "tasks": [
@@ -3037,6 +3041,114 @@
       "csl_confidence": 1,
       "estimated_hours": 1,
       "source": "Auto-Success-Engine — Execution Directive"
+    },
+    {
+      "id": "REPO-001",
+      "category": "REPO_INTEL",
+      "title": "Merge Dependabot dep bumps (HeadyAI/Heady: 4 issues)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-002",
+      "category": "REPO_INTEL",
+      "title": "Merge Dependabot dep bumps (HeadySystems/sandbox: 4 issues)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-003",
+      "category": "REPO_INTEL",
+      "title": "Merge Dependabot dep bumps (HeadyAI/Sandbox: 5 issues)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-004",
+      "category": "REPO_INTEL",
+      "title": "Merge CI action bumps (HeadySystems/Heady-Main: 5 issues)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-005",
+      "category": "REPO_INTEL",
+      "title": "Merge CI action bumps (HeadyAI/Heady-Staging: 5 issues)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-006",
+      "category": "REPO_INTEL",
+      "title": "Merge CI action bumps (HeadyAI/Heady-Testing: 5 issues)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-007",
+      "category": "REPO_INTEL",
+      "title": "Merge pnpm/action-setup 3 to 4 (HeadyAI/Heady #39)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 0.5,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-008",
+      "category": "REPO_INTEL",
+      "title": "Merge hadolint-action 3.1.0 to 3.3.0 (HeadyAI/Heady #38)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 0.5,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-009",
+      "category": "REPO_INTEL",
+      "title": "Add CHANGELOG.md to HeadyAI/Sandbox (only repo missing it)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 0.5,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-010",
+      "category": "REPO_INTEL",
+      "title": "Investigate HeadyMe and HeadyConnection org access - PATs returning 404",
+      "status": "pending",
+      "csl_confidence": 1,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-011",
+      "category": "REPO_INTEL",
+      "title": "Verify 6 archived HeadySystems repos have no active dependencies",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "Phase 0 Repo Scan"
+    },
+    {
+      "id": "REPO-012",
+      "category": "REPO_INTEL",
+      "title": "Resolve ZAP Scan Baseline Report (HeadySystems/sandbox #16)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "Phase 0 Repo Scan"
     }
   ]
 }
