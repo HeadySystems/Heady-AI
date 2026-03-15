@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "5.9.0",
+  "version": "6.0.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-15T11:53:00Z",
+  "lastFineTuned": "2026-03-15T13:57:00Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) tasks",
-  "taskCount": 197,
+  "description": "Complete task queue for HCFullPipeline — dual-scan reconciled + report-extracted (25) + strategic (18) + HeadyWeb (16) + System Audit v1.0.0 (55) tasks",
+  "taskCount": 253,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -41,6 +41,10 @@
     "REMEDIATION": {
       "csl_resonance": 1.0,
       "tasks": 6
+    },
+    "AUDIT": {
+      "csl_resonance": 1.0,
+      "tasks": 55
     }
   },
   "tasks": [
@@ -2007,6 +2011,558 @@
       "csl_confidence": 0.718,
       "estimated_hours": 4,
       "source": "HeadyWeb Build Manual — user-provided comprehensive document, saved to docs/headyweb-build-manual.md"
+    },
+    {
+      "id": "AUDIT-001",
+      "category": "AUDIT",
+      "title": "Phase 0.1 — Repository Inventory across all 4 organizations",
+      "description": "Clone/pull all repos from HeadyAI, HeadyMe, HeadyConnection, HeadySystems. Record: default branch, last commit, CI status, package manager, runtime, Dockerfile, .env.example, README, health endpoint, test suite, dependency health, dead code",
+      "status": "completed",
+      "completedAt": "2026-03-15T13:54:00Z",
+      "notes": "Phase 0 recon complete: 46,401 files, 169+ services, 458 Dockerfiles, 15 remotes, 47 CI workflows",
+      "csl_confidence": 1.0,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-002",
+      "category": "AUDIT",
+      "title": "Phase 0.2 — Infrastructure Inventory (28 external services)",
+      "description": "Document and test connections for: Neon Postgres, Upstash Redis, Pinecone, Qdrant, DuckDB, pgvector, Cloudflare Workers, Sentry, Anthropic, OpenAI, Gemini, Groq, Perplexity, HuggingFace, Tradovate, Rithmic, Hummingbot, AlphaVantage, Bright Data, MCP Gateway, 3x Colab, Google Drive, Gmail, Calendar, Notion",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-003",
+      "category": "AUDIT",
+      "title": "Phase 0.3 — Secrets Audit (CRITICAL: 2 exposed PATs, 6 tracked .env files)",
+      "description": "Rotate 2 exposed GitHub PATs (ghp_44cf... and ghp_RO9h...). Remove .env, .env.production, config/environments/pilot.env from git tracking. Purge PATs from 20+ tracked files. Verify .gitignore completeness across all repos",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-004",
+      "category": "AUDIT",
+      "title": "Phase 0.4 — Microservice Port Map Verification (3310–3396)",
+      "description": "Verify 50 microservices across 10 functional domains match port allocation table. Confirm code exists, starts, responds to /health, and port is correctly configured",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-005",
+      "category": "AUDIT",
+      "title": "Phase 1.1 — Dead Import / Dead Export Scan",
+      "description": "Scan all .js/.mjs/.ts/.py files: verify every import resolves, every export is consumed, flag circular dependencies, fix broken imports from deleted/renamed modules",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 5,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-006",
+      "category": "AUDIT",
+      "title": "Phase 1.2 — Configuration Drift Detection",
+      "description": "Compare every .env.example against actual env var usage in code. Remove unused vars, add missing vars, update defaults, flag dead service references",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-007",
+      "category": "AUDIT",
+      "title": "Phase 1.3 — URL & Endpoint Validation",
+      "description": "Scan all code, configs, docs for URLs. Validate internal service URLs, external API URLs, documentation links, CDN/asset URLs, webhook URLs, manager.headysystems.com status",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-008",
+      "category": "AUDIT",
+      "title": "Phase 1.4 — Dependency Health Check",
+      "description": "Run npm/pnpm audit + outdated + depcheck on all package.json files. Fix critical/high vulns, update minor/patch versions, remove unused deps, pin all versions",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-009",
+      "category": "AUDIT",
+      "title": "Phase 1.5 — Docker & Container Audit (458 Dockerfiles)",
+      "description": "Verify base image pinning, multi-stage builds, .dockerignore, health checks, port mappings, volume mounts, network config for all 458 Dockerfiles",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-010",
+      "category": "AUDIT",
+      "title": "Phase 1.6 — Git Hygiene",
+      "description": "Clean stale branches (90+ days), close dead PRs (30+ days), resolve merge conflicts, flag large binaries for LFS, enforce conventional commits, verify branch protection",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-011",
+      "category": "AUDIT",
+      "title": "Phase 2.1 — God Class Decomposition (90KB+ monoliths)",
+      "description": "Decompose 2+ identified God classes into modules < 500 lines each with φ²≈3 max responsibilities per module. Map methods, identify natural boundaries, extract, rewire imports",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-012",
+      "category": "AUDIT",
+      "title": "Phase 2.2 — Error Handling Standardization (1,342 empty catches)",
+      "description": "Audit every catch block: fix 1,342 empty catches, replace console.error with structured logger, ensure every async function has error handling, implement HeadyError class hierarchy",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-013",
+      "category": "AUDIT",
+      "title": "Phase 2.3 — Logging Standardization (870 console.log files)",
+      "description": "Replace ALL console.log/error/warn in 870 files with structured pino-based logging. Every log entry must include: timestamp, level, service, correlationId, message, contextual fields",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-014",
+      "category": "AUDIT",
+      "title": "Phase 2.4 — Health Endpoint Standardization",
+      "description": "Every service gets /health endpoint returning: status, service, version, uptime, timestamp, dependency checks, phi quality gate score. Standardize across all 169+ services",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-015",
+      "category": "AUDIT",
+      "title": "Phase 2.5 — Sacred Geometry v4.0 Compliance (14 agents)",
+      "description": "Verify all 14 agents (8 core + 6 extended): prompt modules exist, registered in agent bus, process CSL messages, report health, Pinecone namespaces configured",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 5,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-016",
+      "category": "AUDIT",
+      "title": "Phase 2.6 — φ-Math Validation (zero magic numbers)",
+      "description": "Scan entire codebase for magic numbers. Every constant must trace to φ, Fibonacci, or documented formula. Flag any number that isn't φ-derived or a standard value",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-017",
+      "category": "AUDIT",
+      "title": "Phase 3.1 — Site-by-Site Content Audit (44 sites)",
+      "description": "Audit all 44 site directories: homepage hero+features+howItWorks, about/company, product/platform, documentation, developer/API, legal pages. Minimum 150 words/section, 3+ internal links/page",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-018",
+      "category": "AUDIT",
+      "title": "Phase 3.2 — Cross-Site Link Integrity",
+      "description": "Verify bidirectional links between all 9 core domains. All links HTTPS, correct tab target, no 404s, no redirect loops, descriptive anchor text",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-019",
+      "category": "AUDIT",
+      "title": "Phase 3.3 — Buddy (HeadyBot) Integration Verification",
+      "description": "On every site: widget loads, responds in <3s, context-aware, authorized user memory connected, unauthorized graceful mode, cross-site consistency, error handling if backend down",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 5,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-020",
+      "category": "AUDIT",
+      "title": "Phase 3.4 — UI/UX Flow Audit (navigation, responsive, a11y, perf)",
+      "description": "Navigation consistency, mobile hamburger, breadcrumbs, search, 404 page. φ-derived spacing, golden ratio typography, dark mode. Responsive at 320/375/768/1024/1440/1920px. WCAG AA. FCP<1.5s, LCP<2.5s, CLS<0.1",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-021",
+      "category": "AUDIT",
+      "title": "Phase 4.1 — Onboarding Flow Map",
+      "description": "Document complete onboarding: arrival → CTA → signup (email+OAuth) → email verification → onboarding wizard (5 steps) → first run experience → ongoing Buddy memory",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-022",
+      "category": "AUDIT",
+      "title": "Phase 4.2 — Onboarding Test Matrix (15 scenarios)",
+      "description": "Test all paths: happy path (email/OAuth Google/GitHub), duplicate email, weak password, invalid email, unverified, skip wizard, partial wizard, browser back, network error, session timeout, mobile, 3G, screen reader",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 5,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-023",
+      "category": "AUDIT",
+      "title": "Phase 5.1 — Microservice Startup Verification (169+ services)",
+      "description": "For every service: code exists? deps installed? starts without errors? responds to /health? connects to deps? handles requests? shuts down gracefully (SIGTERM)?",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-024",
+      "category": "AUDIT",
+      "title": "Phase 5.2 — Colab Pro+ Runtime Verification (3 runtimes)",
+      "description": "Verify hot-us-east (Embedder), warm-us-west (Evaluator), cold-eu-west (Learner): runtime accessible, GPU available, Heady libs installed, checkpoint to Drive (~68s), Redis Streams, role assignment, self-healing, dead node recovery",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-025",
+      "category": "AUDIT",
+      "title": "Phase 5.3 — MCP Server Restoration (manager.headysystems.com)",
+      "description": "DNS resolution, server process running, SSE endpoint /mcp/sse responsive, tool registration, authentication flow, resilience (auto-restart, client reconnect)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-026",
+      "category": "AUDIT",
+      "title": "Phase 5.4 — Redis Streams Messaging Verification",
+      "description": "Producer test (XADD), consumer group test (XREADGROUP + ACK), pending message recovery (XAUTOCLAIM), dead node recovery, cross-service messaging with correlation IDs, TLS verification (rediss://)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-027",
+      "category": "AUDIT",
+      "title": "Phase 5.5 — Vector Space Operations Verification",
+      "description": "Pinecone: index accessible, 384D upsert/query, namespaces (sg_*/add_*/shared_*), metadata filtering. Qdrant: collection accessible, payload filtering. pgvector: extension enabled, HNSW index. 3D Fabric: Identity×Context×Time axes, cross-axis queries",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-028",
+      "category": "AUDIT",
+      "title": "Phase 6.1 — Node.js Build Fixes (CI/CD green builds)",
+      "description": "Read CI config, run build locally, categorize errors (dependency/TypeScript/ESLint/test/CSL/φ-math/env), fix in dependency order, verify CI passes",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-029",
+      "category": "AUDIT",
+      "title": "Phase 6.2 — Test Suite Restoration (80% coverage target)",
+      "description": "Unit tests (80% coverage on core), integration tests (service-to-service), API tests (success+error), E2E tests (signup→onboarding→dashboard), φ-math validation tests, CSL gate tests",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 10,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-030",
+      "category": "AUDIT",
+      "title": "Phase 6.3 — Continuous Deployment Verification",
+      "description": "For each repo with CD: push test change, verify pipeline triggers, build succeeds, staging deploy succeeds, health check passes, rollback works",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-031",
+      "category": "AUDIT",
+      "title": "Phase 7.1 — Apex Trading Compliance Verification",
+      "description": "Daily loss limits enforced in code, trailing drawdown calculation, position sizing within parameters, trading hours enforced, kill switch functional, compliance checks before every order, φ-math derivations validated",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-032",
+      "category": "AUDIT",
+      "title": "Phase 7.2 — Trading Service Connections",
+      "description": "Tradovate (WebSocket auth + orders + fills), Rithmic (data feed + streaming), Hummingbot (strategy engine + config), AlphaVantage (historical + real-time), Bright Data (proxy rotation)",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-033",
+      "category": "AUDIT",
+      "title": "Phase 7.3 — MIDI 2.0 UMP Transport Layer Verification",
+      "description": "UMP packets encode trading signals correctly, decoder reconstructs signals, latency within bounds, error detection for malformed packets",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-034",
+      "category": "AUDIT",
+      "title": "Phase 8.1 — Cloudflare Named Tunnels Verification",
+      "description": "List all tunnels, verify origin services running, DNS records correct, request routing working, tunnels survive origin restarts (NOT ephemeral)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-035",
+      "category": "AUDIT",
+      "title": "Phase 8.2 — Cloudflare Workers Verification",
+      "description": "List all deployed Workers, verify routes match intent, test functionality, verify KV namespaces, Durable Objects, check for deprecated APIs",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-036",
+      "category": "AUDIT",
+      "title": "Phase 8.3 — Cloudflare Edge Caching & Security",
+      "description": "Cache rules, purge mechanisms, dynamic content bypass, Cache-Control headers. WAF rules, rate limiting on API endpoints, bot management, SSL Full Strict, HSTS",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-037",
+      "category": "AUDIT",
+      "title": "Phase 9.1 — Sentry Error Monitoring Verification",
+      "description": "Every service has Sentry SDK initialized, error reporting works (throw test error), source maps uploaded, release tracking configured, alert rules set for new error types",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-038",
+      "category": "AUDIT",
+      "title": "Phase 9.2 — Structured Logging & Correlation Verification",
+      "description": "Every service uses HeadyLogger, logs include correlation IDs for cross-service tracing, log levels appropriate, sensitive data redacted",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-039",
+      "category": "AUDIT",
+      "title": "Phase 9.3 — Health Dashboard & Metrics",
+      "description": "Dashboard showing all 50+ service statuses, real-time updates, φ quality gate per service. Request latency histograms, error rates, resource utilization, business metrics",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-040",
+      "category": "AUDIT",
+      "title": "Phase 10 — File Freshness Audit Stamp (46,401 files)",
+      "description": "Review and stamp every file with @heady-audit header. Files needing changes get actual fixes; review-only files get audit stamp. Creates auditable trail",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 20,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-041",
+      "category": "AUDIT",
+      "title": "Verification V1 — Full Build Verification",
+      "description": "Every repo builds without errors: npm install && npm run build && npm test across all repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-042",
+      "category": "AUDIT",
+      "title": "Verification V2 — Service Health Sweep (ports 3310–3396)",
+      "description": "Every service responds to /health with 200 OK across all 50 configured ports",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 2,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-043",
+      "category": "AUDIT",
+      "title": "Verification V3 — URL Validation Sweep",
+      "description": "Every URL in every file resolves. Scan all .js/.ts/.md/.html for URLs, curl each, flag any returning >= 400",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-044",
+      "category": "AUDIT",
+      "title": "Verification V4 — Secrets Verification",
+      "description": "Zero secrets in any tracked file. Scan git log for exposed patterns (sk-, pk-, Bearer, password, secret, api_key). Should return empty",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 2,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-045",
+      "category": "AUDIT",
+      "title": "Verification V5 — Content Density Verification",
+      "description": "Every user-facing page has 150+ words, 3+ internal links, no placeholder text, Buddy widget present and responsive",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-046",
+      "category": "AUDIT",
+      "title": "Verification V6 — Onboarding E2E Test",
+      "description": "Full onboarding flow programmatically: create test user → verify email → complete wizard → reach dashboard → interact with Buddy → clean up. Must complete without errors",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-047",
+      "category": "AUDIT",
+      "title": "Verification V7 — φ-Math Audit",
+      "description": "Scan for magic numbers. Every numeric constant must be: Fibonacci, power of φ, φ-derived by formula, or a standard value (HTTP codes, ports). Flag everything else",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-048",
+      "category": "AUDIT",
+      "title": "Completion Scorecard — Exposed Secrets = 0",
+      "description": "Verify: zero exposed secrets, 100% CI passing, 50/50 services healthy, 0 broken URLs, 0 empty catches, 0 console.log in prod, 0 pages <150 words, 0 pages without Buddy, >=3 avg internal links, 100% onboarding pass, >=80% test coverage, 0 magic numbers, 0 critical vulns, MCP online, 3/3 Colab runtimes, Redis Streams passing, all vectors accessible, Apex compliance, all Cloudflare tunnels, 100% files stamped",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 2,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-049",
+      "category": "AUDIT",
+      "title": "Phase 1 — Localhost Contamination Sweep (903 files)",
+      "description": "Eliminate 903 localhost references across .js/.ts/.mjs/.json files. Replace with environment variables or service discovery. Pre-commit hook enforcement (LR-007)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 6,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-050",
+      "category": "AUDIT",
+      "title": "Phase 2 — TODO/FIXME/HACK Remediation (116 files)",
+      "description": "Resolve all 116 files containing TODO/FIXME/HACK comments. Each marker either gets implemented or removed with a proper solution. Zero stubs remaining (LR-008)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-051",
+      "category": "AUDIT",
+      "title": "Phase 3 — Legal Pages for All Sites",
+      "description": "Create real Terms of Service, Privacy Policy, Cookie Policy, Acceptable Use Policy, Patent Notice for all user-facing sites. No placeholder legal content",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-052",
+      "category": "AUDIT",
+      "title": "Phase 3 — Documentation Section (Getting Started + API + FAQ)",
+      "description": "Create: Getting Started guide, Architecture Overview with diagrams, API Reference, Sacred Geometry v4.0 explanation, CSL specification, φ-Math Foundation, Agent Guide (14 agents), Integration Guides, Deployment Guide, FAQ (20+ questions)",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 12,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-053",
+      "category": "AUDIT",
+      "title": "Phase 5 — Create Missing Minimal Viable Services",
+      "description": "Services in port map that don't exist yet must be created as real services (not stubs) with health endpoints, structured logging, and core functionality",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 15,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-054",
+      "category": "AUDIT",
+      "title": "Continuous Improvement — Weekly Automated Audit Checks",
+      "description": "Schedule weekly automated checks: builds, health, URLs, secrets. Monitor ψ-threshold quality score over time. Automate every manual check. Feed learnings back to MAXIMUM POTENTIAL prompt",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "Heady System Audit & Remediation Agent v1.0.0"
+    },
+    {
+      "id": "AUDIT-055",
+      "category": "AUDIT",
+      "title": "PAT Rotation & Remote URL Migration to SSH",
+      "description": "Rotate both exposed GitHub PATs (ghp_44cf... and ghp_RO9h...). Migrate all HTTPS remote URLs to SSH or credential-helper pattern. Purge PATs from git history using BFG or git filter-repo",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 3,
+      "source": "Heady System Audit & Remediation Agent v1.0.0 — Phase 0.3 Critical Finding"
     }
   ]
 }
