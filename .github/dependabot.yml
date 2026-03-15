@@ -1,4 +1,5 @@
-# P2-4: Dependabot configuration
+# Heady™ Dependabot Configuration
+# Auto-raise PRs for vulnerable + outdated dependencies
 version: 2
 updates:
   - package-ecosystem: "npm"
@@ -9,40 +10,21 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "automated"
+      - "security"
     commit-message:
-      prefix: "chore(deps):"
+      prefix: "deps"
     groups:
-      opentelemetry:
+      production-deps:
         patterns:
-          - "@opentelemetry/*"
-      lint-format:
-        patterns:
-          - "eslint*"
-          - "prettier*"
-      ai-providers:
-        patterns:
-          - "openai"
-          - "@anthropic-ai/*"
-          - "@google/*"
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
     labels:
       - "ci"
-      - "automated"
-    commit-message:
-      prefix: "chore(ci):"
-
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-    labels:
-      - "docker"
-      - "automated"
-    commit-message:
-      prefix: "chore(docker):"
+      - "dependencies"

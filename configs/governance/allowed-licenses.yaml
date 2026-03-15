@@ -1,0 +1,88 @@
+# ═══════════════════════════════════════════════════════════════
+# Heady™ Allowed Licenses Policy
+# Version: 1.0.0 | Updated: 2026-03-15
+# Enforced in CI via license-checker + OWASP Dependency-Check
+# ═══════════════════════════════════════════════════════════════
+
+allowed:
+  - MIT
+  - Apache-2.0
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - ISC
+  - CC0-1.0
+  - Unlicense
+  - 0BSD
+  - BlueOak-1.0.0
+  - Python-2.0
+
+conditionally_allowed:
+  # Requires legal review before inclusion
+  - MPL-2.0        # Weak copyleft — file-level only, OK for dependencies
+  - LGPL-2.1       # Dynamic linking OK, static linking requires review
+  - LGPL-3.0       # Same as LGPL-2.1
+  - CC-BY-4.0      # Attribution required — OK for content, not code
+  - CC-BY-SA-4.0   # ShareAlike — internal research only, never in product copy
+
+disallowed:
+  # Block in CI — fail build if detected
+  - GPL-2.0
+  - GPL-3.0
+  - AGPL-3.0       # Network copyleft — incompatible with SaaS model
+  - SSPL-1.0       # Server Side Public License — MongoDB-style restriction
+  - BSL-1.1        # Business Source License — time-delayed open source
+  - EUPL-1.2       # European copyleft — jurisdiction complexity
+  - CC-BY-NC-4.0   # NonCommercial — incompatible with commercial use
+  - CC-BY-NC-SA-4.0
+
+content_sources:
+  approved:
+    - source: CC0 / Public Domain
+      use: Unrestricted — media, content, training data
+      attribution: Recommended but not required
+    - source: US Government Works (17 U.S.C. § 105)
+      use: Unrestricted in US — factual content, datasets, patents
+      attribution: Recommended for credibility
+    - source: USPTO Open Data Portal
+      use: Patent/trademark bulk data for dashboards and IP tools
+      attribution: Not required
+    - source: NASA Open APIs
+      use: Earth science, imagery, APOD
+      attribution: "Courtesy NASA" required for imagery
+    - source: Project Gutenberg (US PD texts)
+      use: Internal corpus for reasoning/writing fine-tuning
+      attribution: Track provenance; comply with trademark restrictions
+      notes: Verify jurisdiction for non-US distribution
+
+  research_only:
+    - source: Wikipedia / Wikimedia (CC BY-SA 4.0)
+      use: Internal research index and citation discovery ONLY
+      notes: Never copy to proprietary site copy — ShareAlike infects derivatives
+    - source: Common Crawl
+      use: Research tooling experiments ONLY
+      notes: Open availability ≠ clear commercial training rights
+
+  disallowed:
+    - source: Content with unclear provenance
+    - source: Scraped personal data without consent
+    - source: ToS-prohibited API outputs used for training
+
+enforcement:
+  ci_gates:
+    - tool: license-checker
+      command: "npx license-checker --failOn 'GPL-2.0;GPL-3.0;AGPL-3.0;SSPL-1.0'"
+    - tool: OWASP Dependency-Check
+      command: "dependency-check --scan . --failOnCVSS 7"
+    - tool: CodeQL
+      workflow: .github/workflows/codeql-analysis.yml
+    - tool: Dependabot
+      config: .github/dependabot.yml
+    - tool: Trivy
+      workflow: .github/workflows/trivy-scan.yml
+
+canonical_repo_licenses:
+  HeadySystems/Heady: Apache-2.0
+  HeadySystems/ai-workflow-engine: MIT
+  HeadySystems/HeadyMonorepo: Apache-2.0
+  HeadyMe/heady-automation-ide: Apache-2.0  # FIXED: was MIT in package.json
+  HeadyAI/Heady: Apache-2.0

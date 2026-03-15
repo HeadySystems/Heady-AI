@@ -1,0 +1,41 @@
+{
+  "name": "Heady Commons",
+  "version": "1.0.0",
+  "description": "CC0 / Public Domain media library for the Heady ecosystem",
+  "license": "CC0-1.0",
+  "assets": [],
+  "sources": [
+    {
+      "name": "Tabler Icons",
+      "url": "https://tabler.io/icons",
+      "license": "MIT",
+      "type": "icons"
+    },
+    {
+      "name": "Heroicons",
+      "url": "https://heroicons.com",
+      "license": "MIT",
+      "type": "icons"
+    },
+    {
+      "name": "Unsplash",
+      "url": "https://unsplash.com",
+      "license": "Unsplash License (CC0-like)",
+      "type": "photos"
+    },
+    {
+      "name": "USPTO Open Data",
+      "url": "https://developer.uspto.gov",
+      "license": "Public-Domain-US",
+      "type": "datasets"
+    },
+    {
+      "name": "NASA Open APIs",
+      "url": "https://api.nasa.gov",
+      "license": "Public-Domain-US",
+      "type": "datasets",
+      "attribution": "Courtesy NASA"
+    }
+  ],
+  "lastUpdated": "2026-03-15T23:30:00.000Z"
+}
