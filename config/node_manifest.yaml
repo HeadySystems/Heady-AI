@@ -93,7 +93,7 @@ storage:
     provider: "qdrant"
     dimensions: 1536
     collection: "heady_memory"
-    endpoint: "http://localhost:6333"
+    endpoint: "${QDRANT_URL:-http://localhost:6333}"
     embedder:
       provider: "openai"
       model: "text-embedding-3-small"
