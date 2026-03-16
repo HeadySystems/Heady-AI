@@ -14,7 +14,7 @@ class RedisPoolManager {
         this.maxConnections = opts.maxConnections || 20;
         this.minConnections = opts.minConnections || 5;
         this.idleTimeout = opts.idleTimeout || PHI_TIMING.CYCLE;
-        this.url = opts.url || process.env.REDIS_URL || 'redis://localhost:6379';
+        this.url = opts.url || process.env.REDIS_URL || 'rediss://localhost:6379';
         this.pool = [];
         this.active = 0;
         this.waiting = [];

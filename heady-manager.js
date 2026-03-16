@@ -2722,9 +2722,45 @@ app.get("/api/events", (req, res) => {
   req.on("close", () => clearInterval(interval));
 });
 
+// ─── Swagger / OpenAPI Docs ──────────────────────────────────────────
+try {
+  const swaggerDocument = {
+    openapi: '3.1.0',
+    info: {
+      title: 'Heady API',
+      description: 'Heady Systems API — Sovereign AI Platform',
+      version: '3.1.0',
+      contact: { name: 'HeadySystems', url: 'https://headysystems.com' },
+    },
+    servers: [
+      { url: `http://localhost:${PORT}`, description: 'Local' },
+      { url: 'https://api.headyme.com', description: 'Production' },
+    ],
+    paths: {
+      '/api/health': { get: { summary: 'Health check', tags: ['System'], responses: { '200': { description: 'OK' } } } },
+      '/api/system/status': { get: { summary: 'System status', tags: ['System'], responses: { '200': { description: 'OK' } } } },
+      '/api/pipeline/run': { post: { summary: 'Run pipeline', tags: ['Pipeline'], responses: { '200': { description: 'OK' } } } },
+      '/api/pipeline/state': { get: { summary: 'Pipeline state', tags: ['Pipeline'], responses: { '200': { description: 'OK' } } } },
+      '/api/pipeline/config': { get: { summary: 'Pipeline config', tags: ['Pipeline'], responses: { '200': { description: 'OK' } } } },
+      '/api/registry': { get: { summary: 'Registry catalog', tags: ['Registry'], responses: { '200': { description: 'OK' } } } },
+      '/api/nodes': { get: { summary: 'List nodes', tags: ['Nodes'], responses: { '200': { description: 'OK' } } } },
+      '/api/buddy/health': { get: { summary: 'Buddy health', tags: ['Buddy'], responses: { '200': { description: 'OK' } } } },
+      '/api/buddy/chat': { post: { summary: 'Chat with Buddy', tags: ['Buddy'], responses: { '200': { description: 'OK' } } } },
+    },
+  };
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Heady API Docs',
+  }));
+  logger.info('  ∞ Swagger UI: /api-docs');
+} catch (err) {
+  logger.warn(`  ⚠ Swagger UI not loaded: ${err.message}`);
+}
+
 server.listen(PORT, () => {
   logger.info(`\n  ∞ Heady Manager v3.1.0 listening on port ${PORT}`);
   logger.info(`  ∞ Health: http://localhost:${PORT}/api/health`);
+  logger.info(`  ∞ API Docs: http://localhost:${PORT}/api-docs`);
   logger.info(`  ∞ WebSocket: ws://localhost:${PORT}/ws`);
   logger.info(`  ∞ SSE: http://localhost:${PORT}/api/events`);
   logger.info(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);

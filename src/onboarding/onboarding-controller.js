@@ -678,7 +678,7 @@ export class OnboardingError extends Error {
  * @returns {Promise<OnboardingController>}
  */
 export async function createOnboardingController(opts = {}) {
-  const redis = createClient({ url: process.env.REDIS_URL || 'redis://localhost:6379' });
+  const redis = createClient({ url: process.env.REDIS_URL || 'rediss://localhost:6379' });
   redis.on('error', (err) => {
     (opts.logger || console).error({ err }, '[Onboarding] Redis client error');
   });

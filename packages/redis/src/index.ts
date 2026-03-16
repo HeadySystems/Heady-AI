@@ -6,6 +6,7 @@ export interface RedisPoolConfig {
   port?: number;
   password?: string;
   db?: number;
+  tls?: boolean;
   cluster?: boolean;
   clusterNodes?: { host: string; port: number }[];
   maxRetries?: number;
@@ -33,21 +34,26 @@ export class HeadyRedisPool {
       }
     };
 
+    // Enable TLS by default in production (rediss:// protocol)
+    const useTls = config.tls ?? (process.env.NODE_ENV === 'production');
+    const tlsOpts = useTls ? { tls: { rejectUnauthorized: true } } : {};
+
     if (config.cluster && config.clusterNodes) {
       this.pool = new Cluster(config.clusterNodes, {
-        redisOptions: { ...poolConfig, password: config.password },
+        redisOptions: { ...poolConfig, password: config.password, ...tlsOpts },
         clusterRetryStrategy: (times) => Math.min(100 * times, 2000)
       });
-      this.logger.info('Redis Cluster pool initialized');
+      this.logger.info('Redis Cluster pool initialized', useTls ? '(TLS)' : '(plain)');
     } else {
       this.pool = new Redis({
         host: config.host || 'localhost',
         port: config.port || 6379,
         password: config.password,
         db: config.db || 0,
-        ...poolConfig
+        ...poolConfig,
+        ...tlsOpts
       });
-      this.logger.info('Redis standalone pool initialized');
+      this.logger.info('Redis standalone pool initialized', useTls ? '(TLS)' : '(plain)');
     }
 
     this.setupMonitoring();

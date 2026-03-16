@@ -370,7 +370,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 44,
   },
   'infra.redisUrl': {
-    value: process.env.REDIS_URL || 'redis://localhost:6379',
+    value: process.env.REDIS_URL || 'rediss://localhost:6379',
     type: 'string',
     secret: true,
     description: 'Redis connection URL (Cloud Memorystore in production).',

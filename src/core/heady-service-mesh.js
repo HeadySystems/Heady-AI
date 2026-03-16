@@ -205,7 +205,7 @@ const SEED_SERVICES = [
     name: 'redis',
     domain: null,
     instances: [
-      { url: 'redis://localhost:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
+      { url: process.env.REDIS_URL || 'rediss://localhost:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
     ],
     healthPath: null,
     version: '7.0',

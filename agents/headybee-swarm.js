@@ -28,7 +28,7 @@ const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
  */
 class Config {
   constructor() {
-    this.redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+    this.redisUrl = process.env.REDIS_URL || 'rediss://localhost:6379';
     this.postgresUrl = process.env.DATABASE_URL || 'postgresql://localhost/heady';
     this.pineconeApiKey = process.env.PINECONE_API_KEY || '';
     this.pineconeIndex = process.env.PINECONE_INDEX || 'task-router';
