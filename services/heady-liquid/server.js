@@ -86,7 +86,21 @@ if (process.env.SENTRY_DSN) {
 
 // CORS
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  const ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://app.headyme.com',
+    'https://headysystems.com', 'https://manager.headysystems.com', 'https://dashboard.headysystems.com',
+    'https://headyconnection.org', 'https://app.headyconnection.org',
+    'https://headymcp.com', 'https://api.headymcp.com',
+    'https://headyio.com', 'https://api.headyio.com',
+    'https://headybuddy.org', 'https://app.headybuddy.org',
+    'https://1ime1.com', 'https://app.1ime1.com',
+    'https://headybot.com', 'https://headyapi.com', 'https://heady-ai.com',
+  ]);
+  const reqOrigin = req.headers.origin;
+  if (ALLOWED_ORIGINS.has(reqOrigin)) {
+    res.header('Access-Control-Allow-Origin', reqOrigin);
+    res.header('Vary', 'Origin');
+  }
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Heady-Device');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('X-Heady-Version', VERSION);

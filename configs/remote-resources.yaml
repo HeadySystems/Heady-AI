@@ -36,6 +36,14 @@ services:
     critical: false
     tags: [llm, inference]
 
+  vertex_ai:
+    url: "https://${VERTEX_AI_REGION:-us-central1}-aiplatform.googleapis.com/v1"
+    timeout_ms: 60000
+    retry_attempts: 3
+    retry_backoff_ms: 1000
+    critical: false
+    tags: [llm, inference, google]
+
   groq:
     url: "https://api.groq.com/openai/v1"
     timeout_ms: 30000
@@ -130,7 +138,7 @@ services:
 databases:
   primary:
     type: postgresql
-    host: "${DB_HOST:-localhost}"
+    host: "${DB_HOST}"
     port: 5432
     database: headydb
     pool:
@@ -156,7 +164,10 @@ databases:
 
   cache:
     type: redis
-    url: "${REDIS_URL:-redis://localhost:6379}"
+    url: "${REDIS_URL}"
+    tls:
+      enabled: true
+      reject_unauthorized: true
     pool:
       min: 2
       max: 10
@@ -214,8 +225,8 @@ health_checks:
       expected_status: 200
     - name: postgres
       type: pg_isready
-      host: "${DB_HOST:-localhost}"
+      host: "${DB_HOST}"
       port: 5432
     - name: redis
       type: redis_ping
-      url: "${REDIS_URL:-redis://localhost:6379}"
+      url: "${REDIS_URL}"
