@@ -410,7 +410,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
     return (req, res, next) => {
       const origin = req.headers.origin || '';
       const allowed = HEADY_DOMAINS.some((d) => origin.includes(d)) || !origin;
-      res.setHeader('Access-Control-Allow-Origin',  allowed ? (origin || '*') : 'null');
+      res.setHeader('Access-Control-Allow-Origin',  allowed ? origin : 'null');
       res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', [
         'Content-Type', 'Authorization', 'X-Heady-Key',

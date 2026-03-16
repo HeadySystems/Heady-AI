@@ -14,16 +14,32 @@ const PHI = 1.6180339887;
 
 const CLOUD_RUN_ORIGIN = 'https://heady-manager-609590223909.us-central1.run.app';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Service',
-  'Access-Control-Max-Age': '86400',
-};
+const ALLOWED_ORIGINS = new Set([
+  'https://headyme.com', 'https://app.headyme.com',
+  'https://headysystems.com', 'https://manager.headysystems.com', 'https://dashboard.headysystems.com',
+  'https://headyconnection.org', 'https://app.headyconnection.org',
+  'https://headymcp.com', 'https://api.headymcp.com',
+  'https://headyio.com', 'https://api.headyio.com',
+  'https://headybuddy.org', 'https://app.headybuddy.org',
+  'https://1ime1.com', 'https://app.1ime1.com',
+  'https://headybot.com', 'https://headyapi.com', 'https://heady-ai.com',
+]);
+
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : '',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Service',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    const CORS_HEADERS = corsHeaders(request);
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
