@@ -1,3 +1,15 @@
+// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+    'https://headyfinance.com', 'https://admin.headysystems.com',
+    'https://auth.headysystems.com', 'https://api.headysystems.com',
+]);
+const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
+
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -18,8 +30,9 @@
 
 const http = require('http');
 const crypto = require('crypto');
+const logger = require('../utils/logger').child('dynamic-sites');
 
-const PORT = process.env.SITE_PORT || 3850;
+const PORT = process.env.PORT || process.env.SITE_PORT || 8080;
 const PHI = 1.6180339887;
 
 // ── Site Registry ───────────────────────────────────────────────
@@ -188,6 +201,66 @@ const SITES = {
       { icon: '💼', name: 'Portfolio', desc: 'Risk-optimized allocation' },
     ],
     showAuth: true,
+  },
+  'headyos.com': {
+    brand: 'HeadyOS',
+    tagline: 'The Sovereign Operating System',
+    subtitle: 'A latent AI operating system that runs everywhere — browser, edge, device.',
+    color: '#0ea5e9',
+    accent: '#38bdf8',
+    icon: 'Ω',
+    heroServices: [
+      { icon: '🖥️', name: 'Runtime', desc: 'Cognitive process governor' },
+      { icon: '🧬', name: 'Agents', desc: 'Self-healing agent lifecycle' },
+      { icon: '🔮', name: 'Memory', desc: '3D vector knowledge space' },
+      { icon: '⚡', name: 'Edge', desc: 'Sub-50ms Cloudflare inference' },
+    ],
+    showAuth: true,
+  },
+  'headyex.com': {
+    brand: 'HeadyEX',
+    tagline: 'Executive Intelligence',
+    subtitle: 'AI-powered executive dashboard — strategy, metrics, and decisions at leadership speed.',
+    color: '#64748b',
+    accent: '#94a3b8',
+    icon: 'X',
+    heroServices: [
+      { icon: '📊', name: 'Dashboards', desc: 'Real-time KPI visualization' },
+      { icon: '📋', name: 'Reports', desc: 'AI-generated executive briefs' },
+      { icon: '🎯', name: 'Strategy', desc: 'Goal tracking and alignment' },
+      { icon: '💡', name: 'Insights', desc: 'Predictive business intelligence' },
+    ],
+    showAuth: true,
+  },
+  'headyfinance.com': {
+    brand: 'HeadyFinance',
+    tagline: 'Intelligent FinOps',
+    subtitle: 'AI financial operations — budget routing, cost optimization, and subscription intelligence.',
+    color: '#84cc16',
+    accent: '#a3e635',
+    icon: '$',
+    heroServices: [
+      { icon: '💰', name: 'FinOps', desc: 'Cloud cost optimization' },
+      { icon: '📈', name: 'Forecasting', desc: 'AI spend projections' },
+      { icon: '🏦', name: 'Billing', desc: 'Subscription tier management' },
+      { icon: '🔐', name: 'Compliance', desc: 'SOC 2 audit readiness' },
+    ],
+    showAuth: true,
+  },
+  'headyconnection.com': {
+    brand: 'HeadyConnection',
+    tagline: 'Community Intelligence',
+    subtitle: 'Nonprofit-powered AI — community programs, grant management, and social impact metrics.',
+    color: '#f43f5e',
+    accent: '#fb7185',
+    icon: '♡',
+    heroServices: [
+      { icon: '🤝', name: 'Community', desc: 'Engagement and program tracking' },
+      { icon: '📝', name: 'Grants', desc: 'AI-assisted grant writing' },
+      { icon: '📊', name: 'Impact', desc: 'Social outcome measurement' },
+      { icon: '🌍', name: 'Outreach', desc: 'Multi-channel communication' },
+    ],
+    showAuth: false,
   },
 };
 
@@ -408,10 +481,10 @@ function renderSite(site, host) {
       <span class="nav-name">${site.brand}</span>
     </a>
     <div class="nav-links">
-      <a href="https://headyio.com">Docs</a>
-      <a href="https://headyapi.com">API</a>
-      <a href="https://headymcp.com">MCP</a>
-      <button class="nav-cta" onclick="openAuth()">Sign In</button>
+      <a href="/docs">Docs</a>
+      <a href="/api/health">API</a>
+      <a href="/api/providers">MCP</a>
+      <button class="nav-cta" id="navSignIn" onclick="openAuth()">Sign In</button>
     </div>
   </nav>
 
@@ -502,24 +575,28 @@ function renderSite(site, host) {
   <script>
     const SITE_HOST = '${host}';
     const SITE_BRAND = '${site.brand}';
+    const AUTH_SERVER = 'https://auth.headysystems.com';
     let currentSession = null;
     let currentKeyProvider = null;
 
-    // ── Check for existing session
+    // ── Check for existing session — validate before showing Signed In
     (function() {
       const cookie = document.cookie.split(';').find(c => c.trim().startsWith('heady_session='));
       if (cookie) {
         currentSession = cookie.split('=')[1];
-        const nav = document.querySelector('.nav-cta');
-        if (nav) { nav.textContent = '✓ Signed In'; nav.style.background = '#10b981'; }
-      }
-      // Check HF identity
-      if (window.huggingface && window.huggingface.variables) {
-        const userId = window.huggingface.variables.SPACE_CREATOR_USER_ID;
-        if (userId) {
-          console.log('[HeadyBuddy] HF User detected:', userId);
-          addBuddyMsg('bot', 'I see you\\'re signed into Hugging Face (User: ' + userId.slice(0,8) + '...). I\\'ve linked your identity.');
-        }
+        // Validate the session is still real
+        fetch('/api/session/validate',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({token:currentSession})
+        }).then(r=>r.json()).then(d=>{
+          if(d.valid){
+            const nav=document.getElementById('navSignIn');
+            if(nav){nav.textContent='✓ '+d.user;nav.style.background='#10b981';}
+          } else {
+            document.cookie='heady_session=;path=/;max-age=0';
+            currentSession=null;
+          }
+        }).catch(()=>{ /* leave as Sign In on error */ });
       }
     })();
 
@@ -528,6 +605,15 @@ function renderSite(site, host) {
     function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); }
 
     function oauthLogin(provider) {
+      // Try real OAuth redirect first, fall back to in-app signup
+      const returnUrl = encodeURIComponent(window.location.origin + '/onboarding');
+      const authUrl = AUTH_SERVER + '/api/provider/start?provider=' + encodeURIComponent(provider) + '&return=' + returnUrl;
+      // Check if auth server is reachable
+      fetch(AUTH_SERVER + '/health',{mode:'cors',signal:AbortSignal.timeout(3000)})
+        .then(r=>{ if(r.ok) window.location.href = authUrl; else fallbackSignup(provider); })
+        .catch(()=>fallbackSignup(provider));
+    }
+    function fallbackSignup(provider) {
       fetch('/api/signup', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
@@ -578,11 +664,14 @@ function renderSite(site, host) {
       document.getElementById('successSub').textContent = 'Connected via '+provider+' on '+SITE_BRAND;
       document.getElementById('apiKeyVal').textContent = data.user.apiKey;
       document.getElementById('successOverlay').classList.add('active');
-      const nav = document.querySelector('.nav-cta');
-      if(nav){nav.textContent='✓ Signed In';nav.style.background='#10b981';}
-      addBuddyMsg('bot','Welcome back, '+data.user.displayName+'! Your session is active on '+SITE_BRAND+'.');
+      const nav = document.getElementById('navSignIn');
+      if(nav){nav.textContent='✓ '+data.user.displayName;nav.style.background='#10b981';}
+      addBuddyMsg('bot','Welcome, '+data.user.displayName+'! Your session is active on '+SITE_BRAND+'. Redirecting to onboarding...');
     }
-    function closeSuccess() { document.getElementById('successOverlay').classList.remove('active'); }
+    function closeSuccess() {
+      // Redirect to onboarding after login instead of just closing
+      window.location.href = '/onboarding?session=' + encodeURIComponent(currentSession || '') + '&brand=' + encodeURIComponent(SITE_BRAND);
+    }
 
     // ── HeadyBuddy
     function toggleBuddy() { document.getElementById('buddyPanel').classList.toggle('active'); }
@@ -624,10 +713,24 @@ const server = http.createServer((req, res) => {
   const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
+
+  // ── Cloud Run Health Probes ─────────────────────────────
+  if (url.pathname === '/health/live') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'alive', ts: Date.now() }));
+    return;
+  }
+  if (url.pathname === '/health/ready') {
+    const domainCount = Object.keys(SITES).length;
+    const ready = domainCount > 0;
+    res.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: ready ? 'ready' : 'not_ready', domains: domainCount, ts: Date.now() }));
+    return;
+  }
 
   // ── API Routes ──────────────────────────────────────────
   if (url.pathname === '/api/providers') {
@@ -731,6 +834,184 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── Session Validation ──────────────────────────────────
+  if (url.pathname === '/api/session/validate' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const { token } = JSON.parse(body);
+        if (token && sessions.has(token)) {
+          const s = sessions.get(token);
+          const u = users.get(s.email);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ valid: true, user: u ? u.displayName : s.email, email: s.email }));
+        } else {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ valid: false }));
+        }
+      } catch { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Invalid request' })); }
+    });
+    return;
+  }
+
+  // ── Onboarding Page ────────────────────────────────────
+  if (url.pathname === '/onboarding') {
+    const sessionToken = url.searchParams.get('session') || '';
+    const s = sessions.get(sessionToken);
+    const u = s ? users.get(s.email) : null;
+    const userName = u ? u.displayName : 'Explorer';
+    const userKey = u ? u.apiKey : 'Sign in to get your key';
+    const userProvider = u ? u.provider : 'none';
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Heady-Site': site.brand });
+    res.end(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${site.brand} — Onboarding</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a1a;--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08)}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .onboard{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:4rem 2rem;animation:fadeUp .5s ease}
+    .ob-header{text-align:center;margin-bottom:3rem}
+    .ob-header h1{font-size:2rem;font-weight:800;margin-bottom:.5rem;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .ob-header p{color:var(--dim);font-size:1rem}
+    .ob-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
+    .ob-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+    .ob-step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:white;flex-shrink:0}
+    .ob-card p{color:var(--dim);font-size:.9rem;line-height:1.6}
+    .ob-key{background:rgba(0,0,0,.4);border:1px solid color-mix(in srgb,var(--brand) 20%,transparent);border-radius:10px;padding:.75rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);word-break:break-all;margin:.75rem 0}
+    .ob-tag{display:inline-block;background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:3px 10px;border-radius:16px;font-size:.7rem;font-weight:600;margin:.25rem}
+    .ob-actions{display:flex;gap:1rem;margin-top:2rem;justify-content:center;flex-wrap:wrap}
+    .ob-btn{padding:.75rem 2rem;border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+    .ob-btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:white}
+    .ob-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.15)}
+    .ob-btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+    .ob-btn-secondary:hover{border-color:var(--brand)}
+    .ob-done{text-align:center;margin-top:1rem;color:var(--dim);font-size:.8rem}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="onboard">
+    <div class="ob-header">
+      <h1>Welcome to ${site.brand}, ${userName}!</h1>
+      <p>Let's get you set up in 3 quick steps</p>
+    </div>
+
+    <div class="ob-card">
+      <h3><span class="ob-step-num">1</span> Your Identity</h3>
+      <p>You're signed in via <strong>${userProvider}</strong>. Your session is active across the Heady ecosystem.</p>
+      <div style="margin-top:.5rem">
+        <span class="ob-tag">✅ Authenticated</span>
+        <span class="ob-tag">Provider: ${userProvider}</span>
+      </div>
+    </div>
+
+    <div class="ob-card">
+      <h3><span class="ob-step-num">2</span> Your API Key</h3>
+      <p>Use this key to connect HeadyBuddy, the SDK, or any integration:</p>
+      <div class="ob-key" id="obKey">${userKey}</div>
+      <p>Set as <code style="color:var(--accent)">HEADY_API_KEY</code> in your <code>.env</code> file or pass it in request headers.</p>
+    </div>
+
+    <div class="ob-card">
+      <h3><span class="ob-step-num">3</span> Explore</h3>
+      <p>Your ${site.brand} account gives you access to the entire Heady ecosystem:</p>
+      <div style="margin-top:.75rem">
+        <span class="ob-tag">🧠 AI Chat</span>
+        <span class="ob-tag">🔐 Secure Vault</span>
+        <span class="ob-tag">📊 Dashboard</span>
+        <span class="ob-tag">🐝 Bee Swarm</span>
+        <span class="ob-tag">🤖 25 Providers</span>
+        <span class="ob-tag">💬 HeadyBuddy</span>
+      </div>
+    </div>
+
+    <div class="ob-actions">
+      <button class="ob-btn ob-btn-primary" onclick="window.location.href='/'">Go to ${site.brand}</button>
+      <button class="ob-btn ob-btn-secondary" onclick="window.location.href='/api/health'">View API Status</button>
+    </div>
+    <p class="ob-done">© 2026 Heady™Systems Inc. — Onboarding complete ✓</p>
+  </div>
+</body>
+</html>`);
+    return;
+  }
+
+  // ── Docs Page ──────────────────────────────────────────
+  if (url.pathname === '/docs') {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Heady-Site': site.brand });
+    res.end(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${site.brand} — Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a1a;--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08)}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .container{max-width:800px;margin:0 auto;padding:3rem 2rem}
+    h1{font-size:2rem;font-weight:800;margin-bottom:1rem;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    h2{font-size:1.3rem;font-weight:700;margin:2rem 0 .75rem;color:var(--accent)}
+    p,li{color:var(--dim);line-height:1.7;margin-bottom:.5rem}
+    code{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent)}
+    pre{background:rgba(0,0,0,.4);padding:1rem;border-radius:10px;margin:1rem 0;overflow-x:auto}
+    pre code{background:none;padding:0}
+    a{color:var(--brand);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .back{display:inline-block;margin-bottom:2rem;color:var(--dim);text-decoration:none;font-size:.9rem}
+    .back:hover{color:var(--text)}
+    ul{padding-left:1.5rem}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="/">← Back to ${site.brand}</a>
+    <h1>${site.brand} Documentation</h1>
+    <p>Quick reference for the ${site.brand} platform APIs and integration points.</p>
+
+    <h2>Authentication</h2>
+    <p>Sign in via any of the 25 supported providers (12 OAuth + 13 API keys). After authentication, you receive a <code>HEADY_API_KEY</code> for programmatic access.</p>
+    <pre><code>curl -H "Authorization: Bearer YOUR_HEADY_API_KEY" https://${host}/api/health</code></pre>
+
+    <h2>API Endpoints</h2>
+    <ul>
+      <li><code>GET /api/health</code> — System status and version</li>
+      <li><code>GET /api/providers</code> — List all auth providers</li>
+      <li><code>GET /api/sites</code> — List all Heady ecosystem domains</li>
+      <li><code>POST /api/signup</code> — Create account (email, password, provider)</li>
+      <li><code>POST /api/login</code> — Sign in with email/password</li>
+      <li><code>POST /api/chat</code> — Chat with HeadyBuddy</li>
+      <li><code>POST /api/session/validate</code> — Validate session token</li>
+    </ul>
+
+    <h2>HeadyBuddy Integration</h2>
+    <p>HeadyBuddy is embedded on every Heady site. Use the chat API for programmatic access:</p>
+    <pre><code>fetch('/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: 'What is my status?',
+    session: 'YOUR_SESSION_TOKEN',
+    site: '${site.brand}'
+  })
+})</code></pre>
+
+    <h2>Ecosystem</h2>
+    <p>${Object.keys(SITES).length} domains are part of the Heady ecosystem. Visit <a href="/api/sites">/api/sites</a> for the full list.</p>
+  </div>
+</body>
+</html>`);
+    return;
+  }
+
   // ── Serve dynamic page ──────────────────────────────────
   res.writeHead(200, {
     'Content-Type': 'text/html; charset=utf-8',
@@ -742,15 +1023,27 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`\n  ⚡ Heady Dynamic Sites — http://localhost:${PORT}`);
-  console.log(`     ${Object.keys(SITES).length} domains registered`);
-  console.log(`     ${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
-  console.log(`     HeadyBuddy widget: embedded\n`);
-  console.log('  Domains:');
+  logger.info(`Heady Dynamic Sites listening on :${PORT}`);
+  logger.info(`${Object.keys(SITES).length} domains registered`);
+  logger.info(`${AUTH_PROVIDERS.oauth.length + AUTH_PROVIDERS.apikey.length} auth providers`);
+  logger.info('HeadyBuddy widget: embedded');
   for (const [domain, site] of Object.entries(SITES)) {
-    console.log(`    ${site.icon} ${domain} → ${site.brand}`);
+    logger.info(`  ${site.icon} ${domain} → ${site.brand}`);
   }
-  console.log('');
+});
+
+// ── Graceful Shutdown (Cloud Run sends SIGTERM) ─────────────
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received — draining connections');
+  server.close(() => {
+    logger.info('Server closed cleanly');
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(1), 10_000); // force after 10s
+});
+process.on('SIGINT', () => {
+  logger.info('SIGINT received — shutting down');
+  server.close(() => process.exit(0));
 });
 
 module.exports = { SITES, AUTH_PROVIDERS, server, resolveSite };

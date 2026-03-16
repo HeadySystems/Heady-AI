@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "heady": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["mcp-servers/heady-mcp-server.js"],
+      "description": "Heady MCP Server — 40+ tools for managing the Heady ecosystem (status, configs, deploy, codelock, latent space, git, brain, patterns, secrets, registry)"
+    }
+  }
+}

@@ -43,7 +43,7 @@ let suspendedProcesses = new Set([]);  // UNSUSPENDED — all processes active (
 // Core dependencies
 const fs = require('fs');
 const path = require("path");
-const fetch = require('node-fetch');
+// Node 22+ has built-in global fetch — no node-fetch dependency needed
 const { createAppAuth } = require('@octokit/auth-app');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
@@ -232,7 +232,7 @@ if (remoteConfig.critical_only) {
 }
 
 
-const PORT = 3301;
+const PORT = parseInt(process.env.PORT, 10) || 3301;
 const app = express();
 
 // ─── SEC-08/09/10: Hardened Security Middleware ─────────────────────

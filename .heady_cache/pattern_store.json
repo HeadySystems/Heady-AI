@@ -4,7 +4,7 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "active",
+      "state": "improving",
       "createdAt": "2026-03-12T13:24:48.581Z",
       "lastUpdated": "2026-03-12T18:25:32.026Z",
       "observations": [
@@ -1810,16 +1810,16 @@
         }
       ],
       "stats": {
-        "mean": 86.905,
+        "mean": 86.875,
         "median": 86,
-        "stddev": 4.622334366962213,
+        "stddev": 4.673261708913808,
         "min": 78,
         "max": 98,
         "n": 200
       },
-      "trend": "stable",
+      "trend": "improving",
       "improvementAttempts": 12,
-      "lastImproved": "2026-03-12T18:22:41.901Z",
+      "lastImproved": "2026-03-16T15:48:32.784Z",
       "convergedAt": "2026-03-12T18:16:29.093Z",
       "reviewAfter": 100,
       "metadata": {

@@ -36,15 +36,20 @@ const AFFINITY_GATE_TEMP    = Math.pow(PSI, 3);          // 0.236 — gate tempe
 
 // Task type → pool affinity weights (φ-derived)
 const TASK_POOL_AFFINITY = Object.freeze({
-  'embedding':      { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
-  'inference':      { hot: POOLS.HOT + POOLS.WARM, warm: POOLS.COLD, cold: 0 },
-  'fine-tune':      { hot: 0, warm: POOLS.HOT + POOLS.WARM, cold: POOLS.COLD },
-  'batch-process':  { hot: POOLS.COLD, warm: POOLS.HOT, cold: POOLS.WARM },
-  'vector-search':  { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
-  'hnsw-build':     { hot: 0, warm: POOLS.HOT, cold: POOLS.WARM },
-  'projection':     { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
-  'experiment':     { hot: 0, warm: POOLS.COLD, cold: POOLS.HOT + POOLS.WARM },
-  'drift-detection':{ hot: POOLS.COLD, warm: POOLS.WARM, cold: POOLS.HOT },
+  'embedding':          { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
+  'inference':          { hot: POOLS.HOT + POOLS.WARM, warm: POOLS.COLD, cold: 0 },
+  'fine-tune':          { hot: 0, warm: POOLS.HOT + POOLS.WARM, cold: POOLS.COLD },
+  'batch-process':      { hot: POOLS.COLD, warm: POOLS.HOT, cold: POOLS.WARM },
+  'vector-search':      { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
+  'hnsw-build':         { hot: 0, warm: POOLS.HOT, cold: POOLS.WARM },
+  'projection':         { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
+  'experiment':         { hot: 0, warm: POOLS.COLD, cold: POOLS.HOT + POOLS.WARM },
+  'drift-detection':    { hot: POOLS.COLD, warm: POOLS.WARM, cold: POOLS.HOT },
+  // Distiller task types — GPU-offloaded trace processing
+  'distill-filter':     { hot: 0, warm: POOLS.COLD, cold: POOLS.HOT + POOLS.WARM },
+  'distill-optimize':   { hot: 0, warm: POOLS.WARM, cold: POOLS.HOT },
+  'distill-synthesize': { hot: 0, warm: POOLS.COLD, cold: POOLS.HOT + POOLS.WARM },
+  'distill-embeddings': { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
 });
 
 // CSL priority weights — concurrent-equals model (not boolean priority)

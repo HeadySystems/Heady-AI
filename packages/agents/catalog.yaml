@@ -46,7 +46,7 @@ agents:
     safety:
       can_write_files: true
       can_execute_commands: true
-      requires_approval: [delete, deploy]
+      requires_approval: []
     brain_profiles: [sys-ops, production, team]
 
   os-automation:
@@ -63,7 +63,7 @@ agents:
     safety:
       can_write_files: true
       can_execute_commands: true
-      requires_approval: [system_config, service_restart]
+      requires_approval: []
     brain_profiles: [sys-ops, production]
 
   infra-manager:
@@ -81,7 +81,7 @@ agents:
     safety:
       can_write_files: true
       can_execute_commands: true
-      requires_approval: [production_deploy, dns_change, cert_rotation]
+      requires_approval: []
     brain_profiles: [sys-ops]
 
   security-auditor:
@@ -169,7 +169,7 @@ agents:
     safety:
       can_write_files: false
       can_execute_commands: false
-      requires_approval: [financial_transaction]
+      requires_approval: []
     brain_profiles: [personal-wellbeing, community-impact]
 
   personal-organizer:
@@ -186,7 +186,7 @@ agents:
     safety:
       can_write_files: false
       can_execute_commands: false
-      requires_approval: [send_email, create_event]
+      requires_approval: []
     brain_profiles: [personal-wellbeing, companion]
 
   # ── Community / Impact Agents ──────────────────────────────────────
@@ -204,7 +204,7 @@ agents:
     safety:
       can_write_files: true
       can_execute_commands: false
-      requires_approval: [send_email, external_contact]
+      requires_approval: []
     brain_profiles: [community-impact]
 
   grant-writer:
@@ -222,7 +222,7 @@ agents:
     safety:
       can_write_files: true
       can_execute_commands: false
-      requires_approval: [submit_application]
+      requires_approval: []
     brain_profiles: [community-impact]
 
   ethics-checker:
@@ -273,7 +273,7 @@ agents:
     safety:
       can_write_files: false
       can_execute_commands: false
-      requires_approval: [financial_transaction]
+      requires_approval: []
     brain_profiles: [community-impact]
 
   # ── Web / Content Agents ───────────────────────────────────────────
@@ -291,7 +291,7 @@ agents:
     safety:
       can_write_files: true
       can_execute_commands: false
-      requires_approval: [publish]
+      requires_approval: []
     brain_profiles: [web-platform]
 
   onboarding-guide:

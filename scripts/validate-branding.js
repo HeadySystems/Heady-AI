@@ -13,10 +13,11 @@
 // ║  LAYER: automation                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-const axios = require('axios');
-const config = require('../configs/branding/branding-standards.yaml');
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
+const axios = require('axios');
+const config = yaml.load(fs.readFileSync(path.join(__dirname, '..', 'configs', 'branding', 'branding-standards.yaml'), 'utf8'));
 
 module.exports = { validateBranding, getAllProjectFiles };
 

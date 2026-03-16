@@ -606,3 +606,78 @@ discovery:
     based_on_context: true
     based_on_history: true
     based_on_similar_users: true
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CLAUDE CODE SKILLS (wired from .claude/skills/)
+# ═══════════════════════════════════════════════════════════════════════════
+
+claude_code_skills:
+  heady-status:
+    name: "Heady Status"
+    path: ".claude/skills/heady-status/SKILL.md"
+    maps_to: ["packages/hc-readiness", "packages/hc-health", "/api/health"]
+    mcp_tools: ["heady_status", "heady_health_ping"]
+    category: "observability"
+    auto_run: true
+    requires_approval: false
+
+  heady-pipeline:
+    name: "Heady Pipeline"
+    path: ".claude/skills/heady-pipeline/SKILL.md"
+    maps_to: ["src/hc_pipeline.js", "configs/hcfullpipeline.yaml"]
+    mcp_tools: ["heady_pipeline_status"]
+    category: "build"
+    auto_run: true
+    requires_approval: false
+
+  heady-checkpoint:
+    name: "Heady Checkpoint"
+    path: ".claude/skills/heady-checkpoint/SKILL.md"
+    maps_to: ["packages/hc-checkpoint", "docs/CHECKPOINT_PROTOCOL.md"]
+    mcp_tools: ["heady_checkpoint_run"]
+    category: "sync"
+    auto_run: true
+    requires_approval: false
+
+  heady-deploy:
+    name: "Heady Deploy"
+    path: ".claude/skills/heady-deploy/SKILL.md"
+    maps_to: ["configs/auto-deploy.yaml", "render.yaml", "Dockerfile"]
+    mcp_tools: ["heady_deploy_status", "heady_deploy_run", "heady_cloudrun_status"]
+    category: "infrastructure"
+    auto_run: true
+    requires_approval: false
+
+  heady-security:
+    name: "Heady Security"
+    path: ".claude/skills/heady-security/SKILL.md"
+    maps_to: ["src/hc_secrets_manager.js", "configs/governance-policies.yaml"]
+    mcp_tools: ["heady_secrets_scan", "heady_env_audit", "heady_deps_scan", "heady_codelock_status"]
+    category: "intelligence"
+    auto_run: true
+    requires_approval: false
+
+  heady-config:
+    name: "Heady Config"
+    path: ".claude/skills/heady-config/SKILL.md"
+    maps_to: ["configs/", "heady-registry.json"]
+    mcp_tools: ["heady_list_configs", "heady_read_config", "heady_config_validate"]
+    category: "automation"
+    auto_run: true
+    requires_approval: false
+
+  heady-distiller:
+    name: "Heady Distiller"
+    path: ".claude/skills/heady-distiller/SKILL.md"
+    maps_to:
+      - "src/hc_distiller.js"
+      - "src/hc_trace_recorder.js"
+      - "src/hc_replay_client.js"
+      - "src/hc_trajectory_filter.js"
+      - "src/hc_skill_synthesizer.js"
+      - "src/hc_prompt_optimizer.js"
+      - "configs/distiller-config.yaml"
+    mcp_tools: ["heady_distill_run", "heady_distill_replay", "heady_distill_status", "heady_distill_synthesize"]
+    category: "intelligence"
+    auto_run: true
+    requires_approval: false

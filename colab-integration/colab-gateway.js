@@ -68,6 +68,7 @@ const LIFECYCLE = Object.freeze([
 const TASK_TYPES = Object.freeze([
   'embedding', 'inference', 'fine-tune', 'batch-process',
   'vector-search', 'hnsw-build', 'projection', 'experiment',
+  'distill-filter', 'distill-optimize', 'distill-synthesize', 'distill-embeddings',
 ]);
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -476,6 +477,11 @@ function scheduleReconnect(runtime) {
 }
 
 function handleRuntimeMessage(runtime, msg) {
+  // Distiller middleware: capture task lifecycle for trace recording
+  if (globalThis.__heady_distiller_mw) {
+    try { globalThis.__heady_distiller_mw(runtime, msg); } catch (_) { /* non-blocking */ }
+  }
+
   switch (msg.type) {
     case 'heartbeat':
       runtime.updateHealth(msg.metrics || msg);
@@ -1020,6 +1026,43 @@ app.get('/pool', (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// DISTILLER BRIDGE INTEGRATION
+// ═══════════════════════════════════════════════════════════════════════════════
+
+let distillerBridge = null;
+try {
+  const { ColabDistillerBridge } = require('./colab-distiller-bridge');
+  distillerBridge = new ColabDistillerBridge({
+    config: {
+      filter_pool: 'cold',
+      optimize_pool: 'cold',
+      embed_pool: 'hot',
+      auto_offload_threshold: 100,
+      feedback_loop: true,
+    },
+  });
+  distillerBridge.initialize();
+
+  // Mount distiller API routes
+  app.use('/distill', distillerBridge.createRouter());
+
+  // Create gateway middleware for task lifecycle tracing
+  const distillerMiddleware = distillerBridge.createGatewayMiddleware();
+
+  // Inject middleware into WebSocket message handling
+  const _origHandleRuntimeMessage = handleRuntimeMessage;
+  // Wrap to capture task-complete events for distillation
+  // (handleRuntimeMessage is called for every runtime WebSocket message)
+  globalThis.__heady_distiller_mw = distillerMiddleware;
+
+  log('info', 'Distiller bridge wired into gateway', {
+    routes: ['/distill/status', '/distill/traces', '/distill/optimize', '/distill/pipeline'],
+  });
+} catch (err) {
+  log('warn', 'Distiller bridge not available', { error: err.message });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // SERVER LIFECYCLE
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1031,6 +1074,7 @@ server.listen(PORT, () => {
     queueDepth: QUEUE_DEPTH,
     batchSizes: BATCH_SIZES,
     vectorDims: VECTOR.DIMS,
+    distillerWired: !!distillerBridge,
   });
 
   // Initiate outbound WebSocket connections to runtimes with configured URLs

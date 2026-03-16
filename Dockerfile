@@ -29,7 +29,7 @@ RUN if [ -f pnpm-lock.yaml ]; then \
     elif [ -f yarn.lock ]; then \
       yarn install --production --frozen-lockfile; \
     else \
-      npm ci --omit=dev; \
+      npm install --omit=dev --ignore-scripts; \
     fi
 
 # ─── Stage 2: Build ──────────────────────────────────────────────────────────
@@ -56,8 +56,7 @@ RUN if [ -f pnpm-lock.yaml ]; then \
       npm prune --omit=dev 2>/dev/null || true; \
     fi
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD wget -qO- http://localhost:3300/api/health || exit 1
+# Healthcheck moved to production stage
 
 FROM node:22-alpine AS production
 
@@ -84,6 +83,26 @@ COPY --from=build --chown=heady:heady /app/package.json ./
 COPY --from=build --chown=heady:heady /app/heady-manager.js ./
 COPY --from=build --chown=heady:heady /app/seventeen-swarm-orchestrator.js ./
 COPY --from=build --chown=heady:heady /app/heady-registry.json ./
+COPY --from=build --chown=heady:heady /app/packages ./packages
+
+# Link @heady/* and @heady-ai/* workspace packages into node_modules
+# (workspace symlinks don't survive multi-stage Docker builds)
+RUN for pkg_json in packages/*/package.json; do \
+      pkg_dir=$(dirname "$pkg_json"); \
+      pkg_name=$(node -e "console.log(require('./$pkg_json').name || '')" 2>/dev/null); \
+      if [ -n "$pkg_name" ]; then \
+        scope_dir="node_modules/$(echo $pkg_name | cut -d/ -f1)"; \
+        mkdir -p "$scope_dir"; \
+        ln -sf "../../$pkg_dir" "node_modules/$pkg_name"; \
+      fi; \
+    done && \
+    mkdir -p node_modules/@heady && \
+    for pkg in packages/*/; do \
+      base=$(basename "$pkg"); \
+      if [ ! -L "node_modules/@heady/$base" ]; then \
+        ln -sf "../../$pkg" "node_modules/@heady/$base"; \
+      fi; \
+    done
 
 # Copy heady-hive-sdk if it exists (ignore if missing)
 RUN mkdir -p ./heady-hive-sdk
@@ -95,17 +114,17 @@ USER heady
 # Environment
 ENV NODE_ENV=production
 ENV HEADY_ENV=production
-ENV PORT=3301
+ENV PORT=8080
 
 # V8 tuning: 512MB heap, optimized for server workload
-ENV NODE_OPTIONS="--max-old-space-size=512 --optimize-for-size"
+ENV NODE_OPTIONS="--max-old-space-size=512"
 
 # Expose port
-EXPOSE 3301
+EXPOSE 8080
 
 # Health check: liveness probe on /health/live
 HEALTHCHECK --interval=13s --timeout=5s --start-period=34s --retries=3 \
-  CMD curl -f http://localhost:3301/health/live || exit 1
+  CMD curl -f http://localhost:${PORT}/health/live || exit 1
 
 # Use tini as PID 1 for proper signal handling
 ENTRYPOINT ["/sbin/tini", "--"]
