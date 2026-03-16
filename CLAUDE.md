@@ -350,5 +350,5 @@ improve reliability, performance, or safety, without violating Heady's data
 ownership, security, or social impact goals.
 
 
-## Super Prompt v5.0
-The unified cognitive substrate is at `HEADY_SUPER_PROMPT_v5.md`. All 25 sections are active.
+## Super Prompt v6.0 — Liquid Lattice
+The unified cognitive substrate is at `HEADY_SUPER_PROMPT_v6.md` (codename: Liquid Lattice). All 32 sections are active. 78 repos mapped, 17 swarms, 21 pipeline stages, 50+ skills, 4× GPU runtimes.
