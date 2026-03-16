@@ -1,6 +1,6 @@
+const yaml = require('js-yaml');
 const pino = require('pino');
 const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
-const yaml = require('js-yaml');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -43,9 +43,7 @@ let suspendedProcesses = new Set([]);  // UNSUSPENDED — all processes active (
 // Core dependencies
 const fs = require('fs');
 const path = require("path");
-const fetch = require('node-fetch');
 const { createAppAuth } = require('@octokit/auth-app');
-const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 const { createLogger } = require('./packages/structured-logger');
 
@@ -102,7 +100,13 @@ function preloadPersistentMemory() {
 // Preload memory at startup
 preloadPersistentMemory();
 // Load remote resources config
-const remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8'));
+let remoteConfig;
+try {
+  remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8'));
+} catch (err) {
+  logger.warn(`Failed to load remote-resources.yaml: ${err.message} — using empty config`);
+  remoteConfig = { services: {}, critical_only: true };
+}
 
 // Handle remote resources
 function checkRemoteService(service) {
@@ -463,58 +467,11 @@ if (vmTokenRoutes) {
   app.use("/api/vm", vmTokenRoutes);
 }
 
-// ─── Token Revocation ─────────────────────────────────────────────
-/**
- * @swagger
- * /api/vm/revoke:
- *   post:
- *     summary: Revoke a Soul-Token
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               token:
- *                 type: string
- *     responses:
- *       200:
- *         description: Token revoked
- */
-app.post('/api/vm/revoke', async (req, res) => {
-  const adminToken = req.headers['authorization']?.split(' ')[1];
-  
-  if (adminToken !== process.env.ADMIN_TOKEN) {
-    return res.status(403).json({ error: 'Unauthorized' });
-  }
-  
-  const { token } = req.body;
-  
-  // Update Cloudflare KV to mark token as revoked
-  try {
-    await fetch('https://heartbeat.heady.systems/revoke', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${process.env.HEADY_API_KEY}`
-      },
-      body: JSON.stringify({ token })
-    });
-    
-    res.json({ success: true });
-  } catch (error) {
-    logger.error('Revocation failed:', error);
-    res.status(500).json({ error: 'Failed to revoke token' });
-  }
-});
-
 // ─── Static Assets ─────────────────────────────────────────────────
 const frontendBuildPath = path.join(__dirname, "frontend", "dist");
 if (fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
 }
-
 
 // ─── Token Revocation ─────────────────────────────────────────────
 /**
