@@ -106,29 +106,20 @@ export async function POST(request: NextRequest) {
                 timestamp: new Date().toISOString(),
                 phi: PHI,
             },
-            {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Device, X-Heady-Workspace',
-                },
-            }
+            { headers: corsHeaders(origin) }
         );
     } catch (error) {
         return NextResponse.json(
             { response: 'HeadyBrain is processing your request. Please try again.', status: 'error' },
-            { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
+            { status: 500, headers: corsHeaders(origin) }
         );
     }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+    const origin = request.headers.get('origin') ?? undefined;
     return new Response(null, {
         status: 204,
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Device, X-Heady-Workspace',
-        },
+        headers: corsHeaders(origin),
     });
 }
