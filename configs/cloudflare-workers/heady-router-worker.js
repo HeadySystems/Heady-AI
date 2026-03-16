@@ -428,7 +428,7 @@ const HOST='${host}',BRAND='${s.brand}';let sess=null,kProv=null;
     const uid=window.huggingface.variables.SPACE_CREATOR_USER_ID;
     if(uid){
       console.log('[HeadyBuddy] HF identity linked:',uid);
-      addM('b','I see you\\'re signed into Hugging Face ('+uid.slice(0,8)+'...). Identity linked across all Heady domains.');
+      addM('b','I see you\u0027re signed into Hugging Face ('+uid.slice(0,8)+'...). Identity linked across all Heady domains.');
     }
   }
   // Check URL params for identity handoff
@@ -614,8 +614,8 @@ function sendB(){
       const lo=m.toLowerCase();
       if(lo.includes('who am i')||lo.includes('recognize'))addM('b',sess?'I recognize you — you have an active session on '+BRAND+'.':'Sign in first so I can identify you!');
       else if(lo.includes('health')||lo.includes('status'))addM('b','✅ All systems healthy. 9 domains active. 25 auth providers. Sacred Geometry v3. Self-healing mesh online.');
-      else if(lo.includes('authorize')||lo.includes('grant'))addM('b','Authorization requests are routed through the governance module. I\\'ve logged your request.');
-      else addM('b','['+BRAND+'] I\\'m here at the edge! Full AI chat routes through the Liquid Gateway when cloud runtime is connected.');
+      else if(lo.includes('authorize')||lo.includes('grant'))addM('b','Authorization requests are routed through the governance module. I\u0027ve logged your request.');
+      else addM('b','['+BRAND+'] I\u0027m here at the edge! Full AI chat routes through the Liquid Gateway when cloud runtime is connected.');
     });
 }
 

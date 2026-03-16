@@ -59,3 +59,8 @@ nohup: ignoring input
 [2026-03-16T02:15:17Z] SKIP (duplicate): heady_audit_full_pack (1).zip
 [2026-03-16T02:15:17Z] PROCESSING: heady-complete-deliverables-bundle.zip (1MB)
 [2026-03-16T02:15:17Z]   → 7 net-new files from heady-complete-deliverables-bundle.zip
+[2026-03-16T02:56:27Z] IN-FOLDER WATCHER STARTING (mode: daemon, poll: 55s)
+[2026-03-16T02:56:27Z] SKIP (duplicate): files (1).zip
+[2026-03-16T02:56:27Z] SKIP (duplicate): heady_audit_full_pack (1).zip
+[2026-03-16T02:56:27Z] PROCESSING: heady-complete.zip (1MB)
+[2026-03-16T02:56:28Z]   → 61 net-new files from heady-complete.zip
