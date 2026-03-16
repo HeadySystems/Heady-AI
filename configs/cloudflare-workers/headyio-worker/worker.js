@@ -3,13 +3,15 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     
-    // Handle CORS
+    // Handle CORS — use origin whitelist
+    const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Vary': 'Origin',
         },
       });
     }

@@ -91,7 +91,8 @@ class HeadyConfigController extends ControllerBase {
     ];
 
     return new JsonResponse($config, 200, [
-      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Origin' => \Drupal::request()->headers->get('Origin', ''),
+      'Vary' => 'Origin',
       'Cache-Control' => 'public, max-age=300',
     ]);
   }
@@ -118,7 +119,8 @@ class HeadyConfigController extends ControllerBase {
     ];
 
     return new JsonResponse($health, 200, [
-      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Origin' => \Drupal::request()->headers->get('Origin', ''),
+      'Vary' => 'Origin',
     ]);
   }
 

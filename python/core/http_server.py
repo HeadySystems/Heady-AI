@@ -434,7 +434,7 @@ class CORSConfig:
             else ""
         )
         h: dict[str, str] = {
-            "Access-Control-Allow-Origin": allowed or "*",
+            "Access-Control-Allow-Origin": allowed,
             "Access-Control-Allow-Methods": ", ".join(self.allow_methods),
             "Access-Control-Allow-Headers": ", ".join(self.allow_headers),
             "Access-Control-Max-Age": str(self.max_age),

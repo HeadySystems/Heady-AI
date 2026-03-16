@@ -544,13 +544,15 @@ export default {
     const host = url.hostname;
     const site = resolve(host);
 
-    // CORS preflight
+    // CORS preflight — use request origin, not wildcard
+    const reqOrigin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204, headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': reqOrigin,
           'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+          'Vary': 'Origin',
         }
       });
     }
@@ -813,7 +815,8 @@ self.addEventListener('fetch',e=>{
         'X-Heady-Site': site.brand,
         'X-Heady-Version': '3.2.1',
         'X-Heady-Edge': 'true',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': request.headers.get('Origin') || '',
+        'Vary': 'Origin',
       },
     });
   },
