@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heady Systems - Sacred Authentication</title>
+    <title>Sign In — Heady™ AI Platform</title>
+    <meta name="description" content="Sign in to your Heady AI account. Access your intelligent orchestration dashboard, AI agents, and workspace.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ╔══════════════════════════════════════════════════════════════════╗ */
-        /* ║  HEADY_BRAND:BEGIN — Sacred Geometry Design System              ║ */
-        /* ║  Authentication Page — Glassmorphism & Breathing Orb            ║ */
+        /* ║  HEADY AUTH PAGE — Social Login + Glassmorphism                 ║ */
         /* ╚══════════════════════════════════════════════════════════════════╝ */
 
         :root {
@@ -38,17 +38,11 @@
             --glow-cyan: 0 0 40px rgba(0, 217, 255, 0.5);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html,
-        body {
+        html, body {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
         body {
@@ -59,21 +53,14 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            min-height: 100vh;
             overflow-y: auto;
         }
-
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* BACKGROUND: Sacred Geometry Pattern + Particles */
-        /* ─────────────────────────────────────────────────────────────────── */
 
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background:
                 radial-gradient(circle at 20% 80%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 0, 160, 0.1) 0%, transparent 50%),
@@ -84,25 +71,15 @@
         }
 
         @keyframes shift-gradient {
-
-            0%,
-            100% {
-                filter: brightness(1);
-            }
-
-            50% {
-                filter: brightness(1.1);
-            }
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.1); }
         }
 
-        /* Particle animation background */
         body::after {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image:
                 radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.5), transparent),
                 radial-gradient(2px 2px at 60px 70px, rgba(0, 217, 255, 0.4), transparent),
@@ -118,29 +95,18 @@
         }
 
         @keyframes twinkle {
-
-            0%,
-            100% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
-        /* ─────────────────────────────────────────────────────────────────── */
         /* MAIN CONTAINER */
-        /* ─────────────────────────────────────────────────────────────────── */
-
         .auth-container {
             position: relative;
             z-index: 10;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             padding: 2rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
+            margin: 2rem auto;
         }
 
         .back-link {
@@ -150,7 +116,7 @@
             color: var(--heady-cyan);
             text-decoration: none;
             font-size: 0.9rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             transition: all 0.3s ease;
             font-weight: 500;
         }
@@ -160,114 +126,47 @@
             filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.5));
         }
 
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* CARD: Glassmorphism */
-        /* ─────────────────────────────────────────────────────────────────── */
-
+        /* CARD */
         .auth-card {
             background: rgba(26, 26, 62, 0.4);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: var(--radius-card);
             box-shadow: var(--shadow-sacred);
-            padding: 3rem 2.5rem;
+            padding: 2.5rem 2rem;
             animation: card-float 6s ease-in-out infinite;
         }
 
         @keyframes card-float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-8px);
-            }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
         }
 
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* HEADY ORB: Breathing, Rotating, Glowing */
-        /* ─────────────────────────────────────────────────────────────────── */
-
+        /* ORB */
         .orb-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
         }
 
         .heady-orb {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: conic-gradient(from 0deg,
-                    var(--heady-cyan),
-                    var(--heady-magenta),
-                    var(--heady-gold),
-                    var(--heady-cyan));
-            box-shadow:
-                var(--glow-cyan),
-                var(--glow-gold),
-                0 0 60px rgba(255, 0, 160, 0.4),
-                inset 0 0 30px rgba(255, 255, 255, 0.1);
-            animation:
-                rotate-orb 8s linear infinite,
-                breathe-orb 4s ease-in-out infinite;
-            position: relative;
+            background: conic-gradient(from 0deg, var(--heady-cyan), var(--heady-magenta), var(--heady-gold), var(--heady-cyan));
+            box-shadow: var(--glow-cyan), var(--glow-gold), 0 0 60px rgba(255, 0, 160, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.1);
+            animation: rotate-orb 8s linear infinite, breathe-orb 4s ease-in-out infinite;
         }
 
-        .heady-orb::before {
-            content: '';
-            position: absolute;
-            inset: 20%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent);
-            animation: shift-shine 4s ease-in-out infinite;
-        }
+        @keyframes rotate-orb { to { transform: rotate(360deg); } }
+        @keyframes breathe-orb { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
-        @keyframes rotate-orb {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes breathe-orb {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.08);
-            }
-        }
-
-        @keyframes shift-shine {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-
-            50% {
-                transform: translate(10px, 10px);
-            }
-        }
-
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* TITLE & SUBTITLE */
-        /* ─────────────────────────────────────────────────────────────────── */
-
+        /* TITLE */
         .auth-title {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             background: linear-gradient(135deg, var(--heady-cyan) 0%, var(--heady-gold) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -276,31 +175,28 @@
 
         .auth-subtitle {
             text-align: center;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(245, 240, 232, 0.6);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* MODE TOGGLE: Login / Register */
-        /* ─────────────────────────────────────────────────────────────────── */
-
+        /* MODE TOGGLE */
         .mode-toggle {
             display: flex;
             background: rgba(5, 5, 16, 0.6);
             border-radius: var(--radius-pill);
-            padding: 0.4rem;
-            margin-bottom: 2rem;
+            padding: 0.35rem;
+            margin-bottom: 1.5rem;
             border: 1px solid rgba(212, 175, 55, 0.15);
         }
 
         .toggle-button {
             flex: 1;
-            padding: 0.7rem 1rem;
+            padding: 0.6rem 1rem;
             border: none;
             background: transparent;
             color: rgba(245, 240, 232, 0.6);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             border-radius: var(--radius-pill);
             cursor: pointer;
@@ -315,133 +211,168 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* FORM STYLES */
-        /* ─────────────────────────────────────────────────────────────────── */
-
-        .form-group {
+        /* ─── SOCIAL LOGIN BUTTONS ─── */
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
             margin-bottom: 1.5rem;
         }
 
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-button);
+            background: rgba(5, 5, 16, 0.6);
+            color: var(--heady-white);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .social-btn:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(26, 26, 62, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .social-btn svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .social-btn.google:hover { border-color: rgba(66, 133, 244, 0.6); box-shadow: 0 0 15px rgba(66, 133, 244, 0.2); }
+        .social-btn.github:hover { border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
+        .social-btn.microsoft:hover { border-color: rgba(0, 120, 212, 0.6); box-shadow: 0 0 15px rgba(0, 120, 212, 0.2); }
+        .social-btn.apple:hover { border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 15px rgba(255, 255, 255, 0.15); }
+
+        /* DIVIDER */
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+        }
+
+        .auth-divider span {
+            color: rgba(245, 240, 232, 0.4);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* FORM */
+        .form-group { margin-bottom: 1.2rem; }
+
         label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             color: var(--heady-cream);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .input-wrapper {
-            position: relative;
-        }
+        .input-wrapper { position: relative; }
 
         input[type="text"],
         input[type="email"],
-        input[type="password"],
-        input[type="key"] {
+        input[type="password"] {
             width: 100%;
-            padding: 0.95rem 1.2rem;
+            padding: 0.85rem 1rem;
             background: rgba(5, 5, 16, 0.8);
             border: 2px solid rgba(212, 175, 55, 0.25);
             border-radius: var(--radius-button);
             color: var(--heady-white);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             font-family: inherit;
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="key"]:focus {
+        input:focus {
             outline: none;
             border-color: var(--heady-cyan);
             background: rgba(5, 5, 16, 0.95);
             box-shadow: var(--glow-cyan);
         }
 
-        input::placeholder {
-            color: rgba(245, 240, 232, 0.35);
-        }
+        input::placeholder { color: rgba(245, 240, 232, 0.35); }
 
-        /* Password visibility toggle */
         .password-toggle {
             position: absolute;
-            right: 1rem;
+            right: 0.8rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--heady-cyan);
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
-            padding: 0.5rem;
+            padding: 0.4rem;
         }
 
-        .password-toggle:hover {
-            filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.5));
-        }
+        .password-toggle:hover { filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.5)); }
 
-        /* ─────────────────────────────────────────────────────────────────── */
         /* API KEY COLLAPSIBLE */
-        /* ─────────────────────────────────────────────────────────────────── */
-
         .api-key-section {
-            margin-top: 1.5rem;
             overflow: hidden;
             max-height: 0;
             transition: max-height 0.4s ease;
         }
 
-        .api-key-section.open {
-            max-height: 200px;
-        }
+        .api-key-section.open { max-height: 200px; }
 
         .api-toggle {
             background: none;
             border: none;
             color: var(--heady-gold);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 0;
+            padding: 0.4rem 0;
+            margin-bottom: 0.5rem;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .api-toggle:hover {
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
-        }
+        .api-toggle:hover { filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
 
-        .api-toggle-icon {
-            display: inline-block;
-            transition: transform 0.3s ease;
-        }
+        .api-toggle-icon { display: inline-block; transition: transform 0.3s ease; }
+        .api-toggle.open .api-toggle-icon { transform: rotate(180deg); }
 
-        .api-toggle.open .api-toggle-icon {
-            transform: rotate(180deg);
-        }
-
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* BUTTONS */
-        /* ─────────────────────────────────────────────────────────────────── */
-
+        /* SUBMIT BUTTON */
         .submit-button {
             width: 100%;
-            padding: 1rem;
-            margin-top: 2rem;
+            padding: 0.9rem;
+            margin-top: 1.2rem;
             background: linear-gradient(135deg, var(--heady-gold) 0%, var(--heady-gold-light) 100%);
             border: none;
             border-radius: var(--radius-button);
             color: var(--heady-deep-space);
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -452,189 +383,81 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            position: relative;
         }
 
         .submit-button:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow:
-                0 6px 30px rgba(212, 175, 55, 0.5),
-                0 0 30px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.5), 0 0 30px rgba(212, 175, 55, 0.3);
         }
 
-        .submit-button:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .submit-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .submit-button:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .spinner {
-            width: 16px;
-            height: 16px;
+            width: 16px; height: 16px;
             border: 2px solid rgba(10, 10, 26, 0.3);
             border-top-color: var(--heady-deep-space);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* TOAST NOTIFICATIONS */
-        /* ─────────────────────────────────────────────────────────────────── */
-
+        /* TOAST */
         .toast {
             position: fixed;
-            top: 2rem;
-            right: 2rem;
-            padding: 1.2rem 1.5rem;
+            top: 2rem; right: 2rem;
+            padding: 1rem 1.3rem;
             border-radius: var(--radius-button);
             backdrop-filter: blur(20px);
             border: 1px solid;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 500;
             z-index: 1000;
             animation: slide-in 0.4s ease, slide-out 0.4s ease 3.6s forwards;
             max-width: 320px;
         }
 
-        .toast.success {
-            background: rgba(0, 217, 255, 0.15);
-            border-color: var(--heady-cyan);
-            color: var(--heady-cyan);
-            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
-        }
+        .toast.success { background: rgba(0, 217, 255, 0.15); border-color: var(--heady-cyan); color: var(--heady-cyan); }
+        .toast.error { background: rgba(255, 0, 160, 0.15); border-color: var(--heady-magenta); color: var(--heady-magenta); }
 
-        .toast.error {
-            background: rgba(255, 0, 160, 0.15);
-            border-color: var(--heady-magenta);
-            color: var(--heady-magenta);
-            box-shadow: 0 0 20px rgba(255, 0, 160, 0.3);
-        }
+        @keyframes slide-in { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slide-out { from { opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
 
-        @keyframes slide-in {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
+        /* VALIDATION */
+        input.error { border-color: var(--heady-magenta) !important; }
+        .error-message { font-size: 0.78rem; color: var(--heady-magenta); margin-top: 0.3rem; display: none; }
+        .error-message.show { display: block; }
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slide-out {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-        }
-
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* VALIDATION STATES */
-        /* ─────────────────────────────────────────────────────────────────── */
-
-        input.error {
-            border-color: var(--heady-magenta) !important;
-        }
-
-        .error-message {
-            font-size: 0.8rem;
-            color: var(--heady-magenta);
-            margin-top: 0.4rem;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        /* ─────────────────────────────────────────────────────────────────── */
         /* FOOTER */
-        /* ─────────────────────────────────────────────────────────────────── */
-
         .auth-footer {
             text-align: center;
-            margin-top: 3rem;
-            padding-top: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
             border-top: 1px solid rgba(212, 175, 55, 0.1);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: rgba(245, 240, 232, 0.5);
         }
 
-        .infinity {
-            color: var(--heady-gold);
-            font-weight: 700;
-            margin: 0 0.3rem;
+        .auth-footer a {
+            color: var(--heady-cyan);
+            text-decoration: none;
+            transition: color 0.3s;
         }
 
-        /* ─────────────────────────────────────────────────────────────────── */
-        /* FORM ANIMATIONS */
-        /* ─────────────────────────────────────────────────────────────────── */
+        .auth-footer a:hover { color: var(--heady-gold); }
 
-        .form-content {
-            animation: fade-in 0.5s ease;
-        }
+        .infinity { color: var(--heady-gold); font-weight: 700; margin: 0 0.3rem; }
 
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        .form-content { animation: fade-in 0.5s ease; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ─────────────────────────────────────────────────────────────────── */
         /* RESPONSIVE */
-        /* ─────────────────────────────────────────────────────────────────── */
-
         @media (max-width: 480px) {
-            .auth-container {
-                padding: 1rem;
-                max-width: 100%;
-            }
-
-            .auth-card {
-                padding: 2rem 1.5rem;
-            }
-
-            .auth-title {
-                font-size: 1.5rem;
-            }
-
-            .submit-button {
-                font-size: 0.95rem;
-            }
-
-            .toast {
-                right: 1rem;
-                left: 1rem;
-                max-width: none;
-            }
-
-            .back-link {
-                font-size: 0.85rem;
-            }
+            .auth-container { padding: 1rem; max-width: 100%; }
+            .auth-card { padding: 2rem 1.5rem; }
+            .auth-title { font-size: 1.4rem; }
+            .toast { right: 1rem; left: 1rem; max-width: none; }
         }
-
-        /* HEADY_BRAND:END */
     </style>
 </head>
 
@@ -652,13 +475,37 @@
             </div>
 
             <!-- Title -->
-            <h1 class="auth-title">Sacred Access</h1>
-            <p class="auth-subtitle">Enter the Heady Orchestrator</p>
+            <h1 class="auth-title">Welcome to Heady</h1>
+            <p class="auth-subtitle">Sign in to your AI orchestration platform</p>
 
             <!-- Mode Toggle -->
             <div class="mode-toggle">
-                <button class="toggle-button active" data-mode="login">Sign In</button>
-                <button class="toggle-button" data-mode="register">Create Account</button>
+                <button class="toggle-button active" data-mode="login" id="toggle-login">Sign In</button>
+                <button class="toggle-button" data-mode="register" id="toggle-register">Create Account</button>
+            </div>
+
+            <!-- ═══ SOCIAL LOGIN ═══ -->
+            <div class="social-buttons" id="social-buttons">
+                <button class="social-btn google" id="btn-google" type="button">
+                    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Continue with Google
+                </button>
+                <button class="social-btn github" id="btn-github" type="button">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                    Continue with GitHub
+                </button>
+                <button class="social-btn microsoft" id="btn-microsoft" type="button">
+                    <svg viewBox="0 0 24 24"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="13" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="13" width="10" height="10" fill="#00A4EF"/><rect x="13" y="13" width="10" height="10" fill="#FFB900"/></svg>
+                    Continue with Microsoft
+                </button>
+                <button class="social-btn apple" id="btn-apple" type="button">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    Continue with Apple
+                </button>
+            </div>
+
+            <div class="auth-divider">
+                <span>or continue with email</span>
             </div>
 
             <!-- Login Form -->
@@ -666,7 +513,7 @@
                 <div class="form-group">
                     <label for="login-email">Email</label>
                     <div class="input-wrapper">
-                        <input type="email" id="login-email" name="email" placeholder="your@heady.systems" required>
+                        <input type="email" id="login-email" name="email" placeholder="your@email.com" required>
                     </div>
                     <div class="error-message" data-field="login-email"></div>
                 </div>
@@ -690,7 +537,7 @@
                     <div class="form-group">
                         <label for="login-api-key">API Key</label>
                         <div class="input-wrapper">
-                            <input type="password" id="login-api-key" name="apiKey" placeholder="heady_sk_...">
+                            <input type="password" id="login-api-key" name="apiKey" placeholder="hdy_...">
                             <button type="button" class="password-toggle" data-target="login-api-key">👁</button>
                         </div>
                     </div>
@@ -714,7 +561,7 @@
                 <div class="form-group">
                     <label for="register-email">Email</label>
                     <div class="input-wrapper">
-                        <input type="email" id="register-email" name="email" placeholder="your@heady.systems" required>
+                        <input type="email" id="register-email" name="email" placeholder="your@email.com" required>
                     </div>
                     <div class="error-message" data-field="register-email"></div>
                 </div>
@@ -731,10 +578,8 @@
                 <div class="form-group">
                     <label for="register-password-confirm">Confirm Password</label>
                     <div class="input-wrapper">
-                        <input type="password" id="register-password-confirm" name="passwordConfirm"
-                            placeholder="••••••••" required>
-                        <button type="button" class="password-toggle"
-                            data-target="register-password-confirm">👁</button>
+                        <input type="password" id="register-password-confirm" name="passwordConfirm" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle" data-target="register-password-confirm">👁</button>
                     </div>
                     <div class="error-message" data-field="register-password-confirm"></div>
                 </div>
@@ -746,17 +591,16 @@
 
             <!-- Footer -->
             <div class="auth-footer">
-                <span class="infinity">∞</span> Heady Systems · Sacred Geometry · Organic Intelligence
+                <span class="infinity">∞</span> Heady Systems · <a href="/pricing.html">View Plans</a> · <a href="/onboarding.html">Get Started</a>
             </div>
         </div>
     </div>
 
     <script>
-        /* ════════════════════════════════════════════════════════════════════════ */
-        /* HEADY AUTH PAGE: Core Logic                                             */
-        /* ════════════════════════════════════════════════════════════════════════ */
+        /* ════════════════════════════════════════════════════════════════════ */
+        /* HEADY AUTH PAGE: Core Logic                                         */
+        /* ════════════════════════════════════════════════════════════════════ */
 
-        /* API Resolution with fallback */
         const HEADY_CLOUD_URLS = [
             window.location.origin + '/api',
             'https://heady-manager-headyme.headysystems.com/api',
@@ -778,18 +622,14 @@
                     if (r.ok) {
                         HEADY_API = url;
                         _apiResolved = true;
-                        console.info(JSON.stringify({ message: '[Auth] API resolved', url: HEADY_API }));
                         return url;
                     }
-                } catch(e) {
-                    console.info(JSON.stringify({ message: '[Auth] URL failed', url: url, error: e.message }));
-                }
+                } catch(e) {}
             }
-            console.info(JSON.stringify({ message: '[Auth] Using default API', url: HEADY_API }));
             return HEADY_API;
         }
 
-        /* Mode toggle */
+        /* ─── Mode toggle ─── */
         const modeButtons = document.querySelectorAll('.toggle-button');
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -811,15 +651,27 @@
             });
         });
 
-        /* Password visibility toggle */
-        const passwordToggles = document.querySelectorAll('.password-toggle');
+        /* ─── Social Login Handlers ─── */
+        async function handleSocialLogin(provider) {
+            try {
+                await resolveApi();
+                showToast(`Connecting to ${provider}...`, 'success');
+                window.location.href = `${HEADY_API}/auth/${provider}`;
+            } catch (err) {
+                showToast(`${provider} login unavailable. Please use email/password.`, 'error');
+            }
+        }
 
-        passwordToggles.forEach(toggle => {
+        document.getElementById('btn-google')?.addEventListener('click', () => handleSocialLogin('google'));
+        document.getElementById('btn-github')?.addEventListener('click', () => handleSocialLogin('github'));
+        document.getElementById('btn-microsoft')?.addEventListener('click', () => handleSocialLogin('microsoft'));
+        document.getElementById('btn-apple')?.addEventListener('click', () => handleSocialLogin('apple'));
+
+        /* ─── Password visibility toggle ─── */
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 e.preventDefault();
-                const targetId = toggle.dataset.target;
-                const input = document.getElementById(targetId);
-
+                const input = document.getElementById(toggle.dataset.target);
                 if (input.type === 'password') {
                     input.type = 'text';
                     toggle.textContent = '👁‍🗨';
@@ -830,70 +682,60 @@
             });
         });
 
-        /* API Key collapsible */
-        const apiToggles = document.querySelectorAll('.api-toggle');
-
-        apiToggles.forEach(toggle => {
+        /* ─── API Key collapsible ─── */
+        document.querySelectorAll('.api-toggle').forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 e.preventDefault();
-                const targetId = toggle.dataset.target;
-                const section = document.getElementById(targetId);
-
+                const section = document.getElementById(toggle.dataset.target);
                 section.classList.toggle('open');
                 toggle.classList.toggle('open');
             });
         });
 
-        /* Toast notification */
+        /* ─── Toast ─── */
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 4000);
+            setTimeout(() => toast.remove(), 4000);
         }
 
-        /* Validation helpers */
-        function isValidEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        /* ─── Validation ─── */
+        function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+        function showError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorEl = document.querySelector(`[data-field="${fieldId}"]`);
+            field.classList.add('error');
+            if (errorEl) { errorEl.textContent = message; errorEl.classList.add('show'); }
+        }
+
+        function clearError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorEl = document.querySelector(`[data-field="${fieldId}"]`);
+            field.classList.remove('error');
+            if (errorEl) { errorEl.classList.remove('show'); }
         }
 
         function validateLoginForm() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const apiKey = document.getElementById('login-api-key').value;
-
             let valid = true;
 
-            // Either (email + password) or apiKey
             if (!apiKey) {
-                if (!email) {
-                    showError('login-email', 'Email is required');
-                    valid = false;
-                } else if (!isValidEmail(email)) {
-                    showError('login-email', 'Invalid email format');
-                    valid = false;
-                } else {
-                    clearError('login-email');
-                }
+                if (!email) { showError('login-email', 'Email is required'); valid = false; }
+                else if (!isValidEmail(email)) { showError('login-email', 'Invalid email format'); valid = false; }
+                else { clearError('login-email'); }
 
-                if (!password) {
-                    showError('login-password', 'Password is required');
-                    valid = false;
-                } else if (password.length < 6) {
-                    showError('login-password', 'Password must be at least 6 characters');
-                    valid = false;
-                } else {
-                    clearError('login-password');
-                }
+                if (!password) { showError('login-password', 'Password is required'); valid = false; }
+                else if (password.length < 6) { showError('login-password', 'Password must be at least 6 characters'); valid = false; }
+                else { clearError('login-password'); }
             } else {
                 clearError('login-email');
                 clearError('login-password');
             }
-
             return valid;
         }
 
@@ -902,74 +744,29 @@
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const passwordConfirm = document.getElementById('register-password-confirm').value;
-
             let valid = true;
 
-            if (!name) {
-                showError('register-name', 'Name is required');
-                valid = false;
-            } else {
-                clearError('register-name');
-            }
+            if (!name) { showError('register-name', 'Name is required'); valid = false; }
+            else { clearError('register-name'); }
 
-            if (!email) {
-                showError('register-email', 'Email is required');
-                valid = false;
-            } else if (!isValidEmail(email)) {
-                showError('register-email', 'Invalid email format');
-                valid = false;
-            } else {
-                clearError('register-email');
-            }
+            if (!email) { showError('register-email', 'Email is required'); valid = false; }
+            else if (!isValidEmail(email)) { showError('register-email', 'Invalid email format'); valid = false; }
+            else { clearError('register-email'); }
 
-            if (!password) {
-                showError('register-password', 'Password is required');
-                valid = false;
-            } else if (password.length < 6) {
-                showError('register-password', 'Password must be at least 6 characters');
-                valid = false;
-            } else {
-                clearError('register-password');
-            }
+            if (!password) { showError('register-password', 'Password is required'); valid = false; }
+            else if (password.length < 8) { showError('register-password', 'Password must be at least 8 characters'); valid = false; }
+            else { clearError('register-password'); }
 
-            if (!passwordConfirm) {
-                showError('register-password-confirm', 'Please confirm your password');
-                valid = false;
-            } else if (password !== passwordConfirm) {
-                showError('register-password-confirm', 'Passwords do not match');
-                valid = false;
-            } else {
-                clearError('register-password-confirm');
-            }
+            if (!passwordConfirm) { showError('register-password-confirm', 'Please confirm your password'); valid = false; }
+            else if (password !== passwordConfirm) { showError('register-password-confirm', 'Passwords do not match'); valid = false; }
+            else { clearError('register-password-confirm'); }
 
             return valid;
         }
 
-        function showError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            const errorEl = document.querySelector(`[data-field="${fieldId}"]`);
-
-            field.classList.add('error');
-            if (errorEl) {
-                errorEl.textContent = message;
-                errorEl.classList.add('show');
-            }
-        }
-
-        function clearError(fieldId) {
-            const field = document.getElementById(fieldId);
-            const errorEl = document.querySelector(`[data-field="${fieldId}"]`);
-
-            field.classList.remove('error');
-            if (errorEl) {
-                errorEl.classList.remove('show');
-            }
-        }
-
-        /* Login handler */
+        /* ─── Login handler ─── */
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             if (!validateLoginForm()) return;
 
             const submitBtn = loginForm.querySelector('.submit-button');
@@ -982,10 +779,7 @@
 
             try {
                 await resolveApi();
-
-                const payload = apiKey
-                    ? { apiKey }
-                    : { email, password };
+                const payload = apiKey ? { apiKey } : { email, password };
 
                 const response = await fetch(`${HEADY_API}/auth/login`, {
                     method: 'POST',
@@ -995,21 +789,13 @@
                 });
 
                 const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || data.error || 'Sign in failed');
-                }
+                if (!response.ok) throw new Error(data.message || data.error || 'Sign in failed');
 
                 showToast('Welcome! Redirecting...', 'success');
-
-                // Redirect based on isNewUser flag
                 const redirectUrl = data.isNewUser ? '/onboarding.html' : '/';
-                setTimeout(() => {
-                    window.location.href = redirectUrl;
-                }, 1000);
+                setTimeout(() => { window.location.href = redirectUrl; }, 1000);
 
             } catch (error) {
-                console.info(JSON.stringify({ message: '[Auth] Login error', error: error.message }));
                 showToast(error.message || 'Sign in failed', 'error');
             } finally {
                 submitBtn.disabled = false;
@@ -1017,10 +803,9 @@
             }
         });
 
-        /* Register handler */
+        /* ─── Register handler ─── */
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             if (!validateRegisterForm()) return;
 
             const submitBtn = registerForm.querySelector('.submit-button');
@@ -1033,7 +818,6 @@
 
             try {
                 await resolveApi();
-
                 const response = await fetch(`${HEADY_API}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1042,20 +826,12 @@
                 });
 
                 const data = await response.json();
+                if (!response.ok) throw new Error(data.message || data.error || 'Registration failed');
 
-                if (!response.ok) {
-                    throw new Error(data.message || data.error || 'Registration failed');
-                }
-
-                showToast('Account created! Redirecting to onboarding...', 'success');
-
-                // New users always go to onboarding
-                setTimeout(() => {
-                    window.location.href = '/onboarding.html';
-                }, 1000);
+                showToast('Account created! Starting onboarding...', 'success');
+                setTimeout(() => { window.location.href = '/onboarding.html'; }, 1000);
 
             } catch (error) {
-                console.info(JSON.stringify({ message: '[Auth] Register error', error: error.message }));
                 showToast(error.message || 'Registration failed', 'error');
             } finally {
                 submitBtn.disabled = false;
@@ -1063,11 +839,9 @@
             }
         });
 
-        /* Init: Resolve API on page load */
+        /* ─── Init ─── */
         window.addEventListener('load', () => {
-            resolveApi().catch(err => {
-                console.info(JSON.stringify({ message: '[Auth] Failed to resolve API', error: err.message }));
-            });
+            resolveApi().catch(() => {});
         });
     </script>
 </body>

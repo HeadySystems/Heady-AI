@@ -3,864 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heady Systems - Onboarding</title>
-    <link rel="stylesheet" href="/sacred-geometry.css">
+    <title>Get Started — Heady™ AI Platform</title>
+    <meta name="description" content="Set up your Heady AI workspace. Complete onboarding in 8 steps: welcome, auth, permissions, account, email, UI customization, companion config, and launch.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ╔══════════════════════════════════════════════════════════════════╗ */
+        /* ║  HEADY ONBOARDING — 8-Step Production Flow                     ║ */
+        /* ╚══════════════════════════════════════════════════════════════════╝ */
+
+        :root {
+            --heady-gold: #D4AF37;
+            --heady-gold-light: #F4D03F;
+            --heady-cyan: #00D9FF;
+            --heady-cyan-soft: rgba(0, 217, 255, 0.15);
+            --heady-magenta: #FF00A0;
+            --heady-magenta-soft: rgba(255, 0, 160, 0.15);
+            --heady-deep: #0A0A1A;
+            --heady-void: #050510;
+            --heady-nebula: #1A1A3E;
+            --heady-white: #FAFAFA;
+            --heady-muted: #a0a0c0;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--heady-void) 0%, var(--heady-deep-space) 50%, var(--heady-nebula) 100%);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--heady-void) 0%, var(--heady-deep) 50%, var(--heady-nebula) 100%);
             color: var(--heady-white);
+            min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* BACKGROUND PARTICLES */
-        .particle-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
+        /* Particles */
+        #particleContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--heady-cyan);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float-particle 20s infinite ease-in-out;
+            position: absolute; width: 3px; height: 3px; border-radius: 50%;
+            background: rgba(212, 175, 55, 0.6); animation: particle-float 20s linear infinite;
+        }
+        @keyframes particle-float {
+            0% { transform: translate(0, 0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)); opacity: 0; }
         }
 
-        .particle:nth-child(2n) {
-            background: var(--heady-magenta);
+        /* Container */
+        .wizard-container {
+            position: relative; z-index: 10;
+            max-width: 720px; margin: 0 auto;
+            padding: 30px 24px 50px;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
         }
 
-        .particle:nth-child(3n) {
-            background: var(--heady-gold);
-        }
-
-        @keyframes float-particle {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.1;
-            }
-            50% {
-                transform: translate(var(--tx), var(--ty)) scale(1.5);
-                opacity: 0.4;
-            }
-        }
-
-        /* MAIN CONTAINER */
-        .onboarding-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            z-index: 1;
-        }
-
-        /* PROGRESS INDICATOR */
+        /* Progress Bar */
         .progress-bar {
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 16px;
-            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; margin-bottom: 32px;
+            padding: 16px 20px;
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 62, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 9999px;
+            flex-wrap: wrap;
         }
 
         .progress-dot {
-            width: 12px;
-            height: 12px;
+            width: 28px; height: 28px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(160, 160, 192, 0.2);
+            border: 2px solid rgba(160, 160, 192, 0.3);
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; font-weight: 700;
+            color: var(--heady-muted);
+            flex-shrink: 0;
         }
 
         .progress-dot.active {
             background: var(--heady-gold);
-            box-shadow: var(--glow-gold);
-            transform: scale(1.3);
+            border-color: var(--heady-gold);
+            color: var(--heady-deep);
+            box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
+            transform: scale(1.15);
         }
 
         .progress-dot.completed {
             background: var(--heady-cyan);
-            box-shadow: var(--glow-cyan);
-        }
-
-        /* NAVIGATION BUTTONS */
-        .nav-buttons {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 100;
-        }
-
-        .btn {
-            padding: 14px 32px;
-            border: 2px solid var(--heady-gold);
-            background: transparent;
-            color: var(--heady-gold);
-            border-radius: var(--radius-button);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--heady-gold);
-            z-index: -1;
-            transition: left 0.3s ease;
-        }
-
-        .btn:hover::before {
-            left: 0;
-        }
-
-        .btn:hover {
-            color: var(--heady-deep-space);
-            box-shadow: var(--glow-gold);
-        }
-
-        .btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .btn.secondary {
             border-color: var(--heady-cyan);
-            color: var(--heady-cyan);
+            color: var(--heady-deep);
         }
 
-        .btn.secondary::before {
-            background: var(--heady-cyan);
-        }
-
-        .btn.secondary:hover {
-            color: var(--heady-deep-space);
-            box-shadow: var(--glow-cyan);
-        }
-
-        /* STEP CONTAINER */
-        .step {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .step.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .step.prev {
-            transform: translateX(-50px);
-        }
-
-        .step.next {
-            transform: translateX(50px);
-        }
-
-        .step.active.prev,
-        .step.active.next {
-            transform: translateX(0);
-        }
-
-        /* STEP CONTENT */
-        .step-content {
-            text-align: center;
-            padding: 60px;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        /* ORBS AND ANIMATED ELEMENTS */
-        .heady-orb {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 40px;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                var(--heady-cyan) 0deg,
-                var(--heady-magenta) 120deg,
-                var(--heady-gold) 240deg,
-                var(--heady-cyan) 360deg
-            );
-            box-shadow: var(--shadow-sacred), 0 0 60px rgba(0, 217, 255, 0.4), 0 0 40px rgba(255, 0, 160, 0.3);
-            animation: breathe-orb 4s ease-in-out infinite, rotate-orb 8s linear infinite;
-            position: relative;
-        }
-
-        .heady-orb::before {
-            content: '';
-            position: absolute;
-            inset: 20px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.3), transparent);
-        }
-
-        @keyframes breathe-orb {
-            0%, 100% {
-                transform: scale(1);
-                filter: brightness(1);
-            }
-            50% {
-                transform: scale(1.08);
-                filter: brightness(1.15);
-            }
-        }
-
-        @keyframes rotate-orb {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .celebration-orb {
-            animation: breathe-orb 2s ease-in-out infinite, rotate-orb 6s linear infinite;
-        }
-
-        .celebration-rings {
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 2px solid var(--heady-gold);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: expand-ring 2s ease-out infinite;
-            opacity: 0;
-        }
-
-        @keyframes expand-ring {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(2.5);
-                opacity: 0;
-            }
-        }
-
-        .celebration-rings:nth-child(2) {
-            animation-delay: 0.3s;
-        }
-
-        .celebration-rings:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        /* HEADINGS */
-        h1 {
-            font-size: 56px;
-            font-weight: 700;
-            margin: 20px 0 15px;
-            background: linear-gradient(135deg, var(--heady-gold), var(--heady-gold-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
-        }
-
-        h2 {
-            font-size: 28px;
-            font-weight: 600;
-            margin: 15px 0 10px;
-            color: var(--heady-gold);
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: var(--heady-cyan);
-            font-weight: 300;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-        }
-
-        .description {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.75);
-            line-height: 1.8;
-            margin: 20px 0 40px;
-            font-style: italic;
-        }
-
-        /* STEP 1 - WELCOME */
-        .step-1-content {
-            animation: fade-in-up 0.8s ease 0.2s forwards;
-            opacity: 0;
-        }
-
-        @keyframes fade-in-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* STEP 2 - USE CASE CARDS */
-        .use-case-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin: 40px 0;
-        }
-
-        .use-case-card {
-            padding: 32px 24px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: var(--radius-card);
-            background: rgba(26, 26, 62, 0.5);
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .use-case-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--heady-cyan-soft), var(--heady-magenta-soft));
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
-
-        .use-case-card:hover {
-            border-color: var(--heady-cyan);
-            box-shadow: var(--glow-cyan);
-            transform: translateY(-8px);
-        }
-
-        .use-case-card.selected {
-            border-color: var(--heady-gold);
-            box-shadow: var(--glow-gold);
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .use-case-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            display: inline-block;
-        }
-
-        .use-case-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--heady-gold);
-            margin-bottom: 8px;
-        }
-
-        .use-case-card p {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-        }
-
-        /* STEP 3 - AGENT CARDS */
-        .agent-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            margin: 40px 0;
-        }
-
-        .agent-card {
-            padding: 28px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius-card);
-            background: rgba(26, 26, 62, 0.5);
-            backdrop-filter: blur(10px);
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: slide-up 0.6s ease forwards;
-            opacity: 0;
-        }
-
-        .agent-card:nth-child(1) { animation-delay: 0.1s; }
-        .agent-card:nth-child(2) { animation-delay: 0.2s; }
-        .agent-card:nth-child(3) { animation-delay: 0.3s; }
-        .agent-card:nth-child(4) { animation-delay: 0.4s; }
-
-        @keyframes slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .agent-card:hover {
-            transform: translateY(-12px);
-            border-color: currentColor;
-        }
-
-        .agent-card.heady-buddy {
-            color: var(--heady-cyan);
-            border-color: var(--heady-cyan);
-        }
-
-        .agent-card.heady-buddy:hover {
-            box-shadow: var(--glow-cyan);
-            background: rgba(0, 217, 255, 0.05);
-        }
-
-        .agent-card.builder {
-            color: var(--heady-gold);
-            border-color: var(--heady-gold);
-        }
-
-        .agent-card.builder:hover {
-            box-shadow: var(--glow-gold);
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        .agent-card.researcher {
-            color: var(--heady-magenta);
-            border-color: var(--heady-magenta);
-        }
-
-        .agent-card.researcher:hover {
-            box-shadow: 0 0 40px rgba(255, 0, 160, 0.5);
-            background: rgba(255, 0, 160, 0.05);
-        }
-
-        .agent-card.claude {
-            color: var(--heady-white);
-            border-color: var(--heady-white);
-        }
-
-        .agent-card.claude:hover {
-            box-shadow: 0 0 40px rgba(250, 250, 250, 0.5);
-            background: rgba(250, 250, 250, 0.05);
-        }
-
-        .agent-small-orb {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 12px;
-            border-radius: 50%;
-            background: currentColor;
-            opacity: 0.3;
-            animation: pulse-orb 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-orb {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.6;
-            }
-        }
-
-        .agent-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: currentColor;
-        }
-
-        .agent-card p {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-        }
-
-        .agent-description {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 20px;
-            font-style: italic;
-        }
-
-        /* STEP 4 - INTEGRATIONS */
-        .integrations-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 40px 0;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .integration-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            border: 2px solid rgba(212, 175, 55, 0.2);
-            border-radius: var(--radius-card);
-            background: rgba(26, 26, 62, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .integration-item:hover {
-            border-color: var(--heady-gold);
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .integration-info h3 {
-            font-size: 16px;
-            color: var(--heady-gold);
-            margin-bottom: 4px;
-        }
-
-        .integration-info p {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* TOGGLE SWITCH */
-        .toggle {
-            position: relative;
-            width: 50px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            cursor: pointer;
+        .progress-connector {
+            width: 24px; height: 2px;
+            background: rgba(160, 160, 192, 0.2);
             transition: background 0.3s ease;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            flex-shrink: 0;
         }
 
-        .toggle.active {
-            background: var(--heady-gold);
-            border-color: var(--heady-gold);
+        .progress-connector.completed { background: var(--heady-cyan); }
+
+        /* Step Container */
+        .step {
+            display: none; flex: 1;
+            animation: step-enter 0.5s ease forwards;
+        }
+        .step.active { display: flex; flex-direction: column; }
+        @keyframes step-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .step-content {
+            flex: 1; text-align: center;
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 62, 0.35);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 24px;
+            padding: 40px 30px;
         }
 
-        .toggle::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background: var(--heady-deep-space);
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: left 0.3s ease;
+        .step-content h1, .step-content h2 {
+            background: linear-gradient(135deg, var(--heady-cyan), var(--heady-gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .toggle.active::after {
-            left: 24px;
-        }
+        .step-content h1 { font-size: 2rem; margin-bottom: 12px; }
+        .step-content h2 { font-size: 1.5rem; margin-bottom: 8px; }
+        .step-content .subtitle { font-size: 1rem; color: var(--heady-muted); margin-bottom: 6px; }
+        .step-content .description { font-size: 0.9rem; color: rgba(160, 160, 192, 0.7); margin-bottom: 24px; line-height: 1.6; }
 
-        .skip-link {
-            margin-top: 40px;
-            color: var(--heady-cyan);
-            font-size: 14px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            text-decoration: underline;
+        /* Orb */
+        .heady-orb {
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 20px;
+            background: conic-gradient(from 0deg, var(--heady-cyan), var(--heady-magenta), var(--heady-gold), var(--heady-cyan));
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.5), 0 0 60px rgba(212, 175, 55, 0.3);
+            animation: orb-spin 8s linear infinite;
         }
+        @keyframes orb-spin { to { transform: rotate(360deg); } }
 
-        .skip-link:hover {
-            color: var(--heady-gold);
+        /* Cards Grid */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 14px; margin-bottom: 20px; text-align: left; }
+
+        .option-card {
+            background: rgba(5, 5, 16, 0.6);
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 16px; padding: 18px;
+            cursor: pointer; transition: all 0.3s ease;
         }
+        .option-card:hover { border-color: rgba(212, 175, 55, 0.4); transform: translateY(-3px); }
+        .option-card.selected { border-color: var(--heady-cyan); background: rgba(0, 217, 255, 0.06); box-shadow: 0 0 20px rgba(0, 217, 255, 0.15); }
+        .option-card h3 { font-size: 0.9rem; color: var(--heady-gold); margin-bottom: 4px; }
+        .option-card p { font-size: 0.78rem; color: var(--heady-muted); line-height: 1.4; }
+        .option-card .card-icon { font-size: 1.5rem; margin-bottom: 8px; }
 
-        /* STEP 5 - LAUNCH */
-        .launch-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin: 40px 0;
+        /* Toggle row */
+        .toggle-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; text-align: left; }
+        .toggle-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(5, 5, 16, 0.6); border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 14px; padding: 14px 18px; transition: all 0.3s ease;
         }
+        .toggle-item:hover { border-color: rgba(212, 175, 55, 0.3); }
+        .toggle-info h3 { font-size: 0.9rem; color: var(--heady-white); margin-bottom: 2px; }
+        .toggle-info p { font-size: 0.78rem; color: var(--heady-muted); }
+        .toggle-info .badge { font-size: 0.65rem; background: rgba(0, 217, 255, 0.2); color: var(--heady-cyan); padding: 2px 8px; border-radius: 8px; margin-left: 6px; }
 
+        .toggle-switch {
+            width: 44px; height: 24px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer; position: relative; transition: all 0.3s ease; flex-shrink: 0;
+        }
+        .toggle-switch::after {
+            content: ''; position: absolute; width: 18px; height: 18px;
+            border-radius: 50%; background: #666; top: 2px; left: 2px;
+            transition: all 0.3s ease;
+        }
+        .toggle-switch.active { background: rgba(0, 217, 255, 0.3); border-color: var(--heady-cyan); }
+        .toggle-switch.active::after { left: 22px; background: var(--heady-cyan); }
+
+        /* Form Input */
+        .form-row { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; text-align: left; }
+        .form-row label { font-size: 0.82rem; font-weight: 600; color: var(--heady-gold); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-row input, .form-row select {
+            width: 100%; padding: 12px 16px;
+            background: rgba(5, 5, 16, 0.8); border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 14px; color: var(--heady-white); font-size: 0.9rem; font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        .form-row input:focus, .form-row select:focus { outline: none; border-color: var(--heady-cyan); box-shadow: 0 0 15px rgba(0, 217, 255, 0.3); }
+        .form-row input::placeholder { color: rgba(160, 160, 192, 0.4); }
+        .form-row select option { background: var(--heady-deep); }
+
+        /* Buttons */
+        .nav-buttons { display: flex; justify-content: space-between; gap: 12px; margin-top: 24px; }
+        .btn {
+            padding: 12px 28px; border: none; border-radius: 14px;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer;
+            transition: all 0.3s ease; font-family: inherit;
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, var(--heady-gold), var(--heady-gold-light));
+            color: var(--heady-deep);
+        }
+        .btn.primary:hover { box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
+        .btn.secondary { background: rgba(255, 255, 255, 0.08); color: var(--heady-muted); border: 1px solid rgba(255, 255, 255, 0.15); }
+        .btn.secondary:hover { background: rgba(255, 255, 255, 0.12); }
+
+        .skip-link { font-size: 0.85rem; color: var(--heady-muted); cursor: pointer; text-decoration: underline; margin-top: 12px; }
+        .skip-link:hover { color: var(--heady-cyan); }
+
+        /* Launch grid */
+        .launch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 14px; margin-top: 20px; }
         .launch-card {
-            padding: 32px 24px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: var(--radius-card);
-            background: rgba(26, 26, 62, 0.5);
-            backdrop-filter: blur(10px);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-decoration: none;
-            color: inherit;
+            display: block; text-decoration: none; color: var(--heady-white);
+            background: rgba(5, 5, 16, 0.6); border: 1px solid rgba(0, 217, 255, 0.15);
+            border-radius: 16px; padding: 24px 16px; text-align: center;
+            transition: all 0.3s ease;
+        }
+        .launch-card:hover { border-color: var(--heady-cyan); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 217, 255, 0.15); }
+        .launch-icon { font-size: 2rem; margin-bottom: 8px; }
+        .launch-card h3 { font-size: 0.95rem; color: var(--heady-cyan); margin-bottom: 4px; }
+        .launch-card p { font-size: 0.78rem; color: var(--heady-muted); }
+
+        /* Celebration */
+        .celebration-orb {
+            width: 100px; height: 100px;
+            animation: orb-spin 6s linear infinite, celebration-glow 2s ease-in-out infinite;
+        }
+        @keyframes celebration-glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 217, 255, 0.5), 0 0 60px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(0, 217, 255, 0.8), 0 0 80px rgba(212, 175, 55, 0.5), 0 0 100px rgba(255, 0, 160, 0.3); }
         }
 
-        .launch-card:hover {
-            border-color: var(--heady-gold);
-            box-shadow: var(--glow-gold);
-            transform: translateY(-8px);
-        }
-
-        .launch-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--heady-gold);
-            margin-bottom: 8px;
-        }
-
-        .launch-card p {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .launch-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
-            display: inline-block;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .step-content {
-                padding: 40px 20px;
-            }
-
-            h1 {
-                font-size: 40px;
-            }
-
-            .use-case-grid,
-            .agent-grid,
-            .launch-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-buttons {
-                flex-direction: column;
-                width: 90%;
-                gap: 12px;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .progress-bar {
-                gap: 12px;
-            }
-
-            .heady-orb {
-                width: 120px;
-                height: 120px;
-            }
-
-            .celebration-rings {
-                width: 120px;
-                height: 120px;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 480px) {
-            h1 {
-                font-size: 32px;
-            }
-
-            .subtitle {
-                font-size: 16px;
-            }
-
-            .progress-bar {
-                display: none;
-            }
+            .wizard-container { padding: 16px 12px 40px; }
+            .step-content { padding: 28px 18px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .progress-dot { width: 24px; height: 24px; font-size: 0.6rem; }
+            .progress-connector { width: 12px; }
         }
     </style>
 </head>
 <body>
-    <script src="/nav-component.js"></script>
-    <!-- PARTICLE BACKGROUND -->
-    <div class="particle-bg" id="particleContainer"></div>
+    <div id="particleContainer"></div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="onboarding-container">
-        <!-- PROGRESS INDICATOR -->
+    <div class="wizard-container">
+        <!-- Progress Bar: 8 dots -->
         <div class="progress-bar">
-            <div class="progress-dot active" data-step="1"></div>
-            <div class="progress-dot" data-step="2"></div>
-            <div class="progress-dot" data-step="3"></div>
-            <div class="progress-dot" data-step="4"></div>
-            <div class="progress-dot" data-step="5"></div>
+            <div class="progress-dot active" data-step="1">1</div>
+            <div class="progress-connector" data-after="1"></div>
+            <div class="progress-dot" data-step="2">2</div>
+            <div class="progress-connector" data-after="2"></div>
+            <div class="progress-dot" data-step="3">3</div>
+            <div class="progress-connector" data-after="3"></div>
+            <div class="progress-dot" data-step="4">4</div>
+            <div class="progress-connector" data-after="4"></div>
+            <div class="progress-dot" data-step="5">5</div>
+            <div class="progress-connector" data-after="5"></div>
+            <div class="progress-dot" data-step="6">6</div>
+            <div class="progress-connector" data-after="6"></div>
+            <div class="progress-dot" data-step="7">7</div>
+            <div class="progress-connector" data-after="7"></div>
+            <div class="progress-dot" data-step="8">8</div>
         </div>
 
-        <!-- STEP 1: WELCOME -->
+        <!-- ═══════ STEP 1: WELCOME ═══════ -->
         <div class="step active" data-step="1">
             <div class="step-content">
-                <div class="step-1-content">
-                    <div class="heady-orb"></div>
-                    <h1>Welcome to Heady</h1>
-                    <p class="subtitle">Your Organic Intelligence Operating System</p>
-                    <p class="description">Where sacred geometry meets system intelligence. Breathe. Connect. Evolve.</p>
-                    <button class="btn" id="beginBtn">Begin Your Journey →</button>
+                <div class="heady-orb"></div>
+                <h1>Welcome to Heady</h1>
+                <p class="subtitle">Your Intelligent AI Orchestration Platform</p>
+                <p class="description">
+                    Meet HeadyBuddy — your AI companion for sovereign, privacy-first intelligence.
+                    Bring your own keys, orchestrate multiple AI models, and build intelligent pipelines
+                    that reason in latent space. Let's get you set up in 8 quick steps.
+                </p>
+                <button class="btn primary" id="beginBtn" style="font-size: 1.1rem; padding: 14px 40px;">
+                    Get Started →
+                </button>
+                <div style="margin-top: 16px;">
+                    <a href="/auth.html" style="color: var(--heady-muted); font-size: 0.85rem; text-decoration: none;">Already have an account? <span style="color: var(--heady-cyan);">Sign In</span></a>
                 </div>
             </div>
         </div>
 
-        <!-- STEP 2: USE CASE -->
+        <!-- ═══════ STEP 2: AUTH ═══════ -->
         <div class="step" data-step="2">
             <div class="step-content">
-                <h2>Choose Your Path</h2>
-                <p class="description">What's your primary focus with Heady?</p>
-                <div class="use-case-grid">
-                    <div class="use-case-card" data-use-case="development">
-                        <div class="use-case-icon">∞</div>
-                        <h3>Development</h3>
-                        <p>Code, deploy, orchestrate</p>
+                <h2>Sign In or Create Account</h2>
+                <p class="description">Choose how you'd like to authenticate. All methods are equally secure.</p>
+
+                <div class="cards-grid" style="grid-template-columns: 1fr;">
+                    <div class="option-card" data-auth="google" onclick="selectAuth('google')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="card-icon" style="margin: 0;">🌐</span>
+                            <div><h3>Continue with Google</h3><p>Fastest path — one click</p></div>
+                        </div>
                     </div>
-                    <div class="use-case-card" data-use-case="operations">
-                        <div class="use-case-icon">◈</div>
-                        <h3>Operations</h3>
-                        <p>Monitor, manage, optimize</p>
+                    <div class="option-card" data-auth="github" onclick="selectAuth('github')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="card-icon" style="margin: 0;">🐙</span>
+                            <div><h3>Continue with GitHub</h3><p>Preferred for developers</p></div>
+                        </div>
                     </div>
-                    <div class="use-case-card" data-use-case="intelligence">
-                        <div class="use-case-icon">◉</div>
-                        <h3>Intelligence</h3>
-                        <p>AI agents, pipelines, analysis</p>
+                    <div class="option-card" data-auth="microsoft" onclick="selectAuth('microsoft')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="card-icon" style="margin: 0;">🏢</span>
+                            <div><h3>Continue with Microsoft</h3><p>Enterprise organizations</p></div>
+                        </div>
                     </div>
-                    <div class="use-case-card" data-use-case="all">
-                        <div class="use-case-icon">⬡</div>
-                        <h3>All of the Above</h3>
-                        <p>Full HeadyOS experience</p>
+                    <div class="option-card" data-auth="apple" onclick="selectAuth('apple')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="card-icon" style="margin: 0;">🍎</span>
+                            <div><h3>Continue with Apple</h3><p>Mobile-first authentication</p></div>
+                        </div>
+                    </div>
+                    <div class="option-card" data-auth="email" onclick="selectAuth('email')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span class="card-icon" style="margin: 0;">📧</span>
+                            <div><h3>Email + Password</h3><p>Full sovereignty — no third parties</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email form (hidden until selected) -->
+                <div id="email-auth-form" style="display: none; margin-top: 16px;">
+                    <div class="form-row">
+                        <label for="ob-email">Email</label>
+                        <input type="email" id="ob-email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-row">
+                        <label for="ob-password">Password</label>
+                        <input type="password" id="ob-password" placeholder="••••••••">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- STEP 3: AGENTS -->
+        <!-- ═══════ STEP 3: PERMISSIONS ═══════ -->
         <div class="step" data-step="3">
             <div class="step-content">
-                <h2>Meet Your Agents</h2>
-                <p class="description">These agents work together through the HCFullPipeline to accomplish your goals</p>
-                <div class="agent-grid">
-                    <div class="agent-card heady-buddy">
-                        <div class="agent-small-orb"></div>
-                        <h3>HeadyBuddy</h3>
-                        <p>Chat</p>
-                        <p style="font-size: 12px; margin-top: 8px;">Your conversational AI companion</p>
+                <h2>Access Permissions</h2>
+                <p class="description">HeadyBuddy respects your sovereignty. Choose what it can access — you control everything.</p>
+
+                <div class="toggle-list">
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Vector Memory <span class="badge">Required</span></h3>
+                            <p>Personal knowledge store for AI reasoning</p>
+                        </div>
+                        <div class="toggle-switch active" data-perm="vector_memory" style="pointer-events: none;"></div>
                     </div>
-                    <div class="agent-card builder">
-                        <div class="agent-small-orb"></div>
-                        <h3>Builder Agent</h3>
-                        <p>Build</p>
-                        <p style="font-size: 12px; margin-top: 8px;">Builds and deploys your projects</p>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Cloud Drives</h3>
+                            <p>Google Drive, OneDrive, Dropbox access</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="cloud_drives"></div>
                     </div>
-                    <div class="agent-card researcher">
-                        <div class="agent-small-orb"></div>
-                        <h3>Researcher Agent</h3>
-                        <p>Discover</p>
-                        <p style="font-size: 12px; margin-top: 8px;">Discovers insights and patterns</p>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Code Repositories</h3>
+                            <p>GitHub, GitLab, Bitbucket integration</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="code_repos"></div>
                     </div>
-                    <div class="agent-card claude">
-                        <div class="agent-small-orb"></div>
-                        <h3>Claude Code</h3>
-                        <p>Code</p>
-                        <p style="font-size: 12px; margin-top: 8px;">Your coding co-pilot</p>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Local Filesystem</h3>
+                            <p>Browser File System API access</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="local_fs"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>LLM Providers</h3>
+                            <p>Bring-your-own-key management</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="llm_providers"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>MCP Tools</h3>
+                            <p>Model Context Protocol integrations</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="mcp_tools"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- STEP 4: INTEGRATIONS -->
+        <!-- ═══════ STEP 4: ACCOUNT SETUP ═══════ -->
         <div class="step" data-step="4">
             <div class="step-content">
-                <h2>Connect & Configure</h2>
-                <p class="description">Optional integrations to enhance your workflow</p>
-                <div class="integrations-list">
-                    <div class="integration-item">
-                        <div class="integration-info">
-                            <h3>GitHub</h3>
-                            <p>Connect your repositories</p>
-                        </div>
-                        <div class="toggle" data-integration="github"></div>
-                    </div>
-                    <div class="integration-item">
-                        <div class="integration-info">
-                            <h3>Slack</h3>
-                            <p>Get notifications and updates</p>
-                        </div>
-                        <div class="toggle" data-integration="slack"></div>
-                    </div>
-                    <div class="integration-item">
-                        <div class="integration-info">
-                            <h3>Render</h3>
-                            <p>Cloud deployment platform</p>
-                        </div>
-                        <div class="toggle" data-integration="render"></div>
-                    </div>
-                    <div class="integration-item">
-                        <div class="integration-info">
-                            <h3>Custom API</h3>
-                            <p>Add your own endpoints</p>
-                        </div>
-                        <div class="toggle" data-integration="custom"></div>
+                <h2>Create Your Identity</h2>
+                <p class="description">Set up your Heady username, display name, and choose your plan.</p>
+
+                <div class="form-row">
+                    <label for="ob-username">Username</label>
+                    <div style="position: relative;">
+                        <input type="text" id="ob-username" placeholder="yourname" style="padding-right: 120px;">
+                        <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--heady-muted); font-size: 0.85rem;">@headyme.com</span>
                     </div>
                 </div>
-                <div class="skip-link" id="skipLink">Skip for now</div>
+                <div class="form-row">
+                    <label for="ob-displayname">Display Name</label>
+                    <input type="text" id="ob-displayname" placeholder="Your Full Name">
+                </div>
+                <div class="form-row">
+                    <label for="ob-tier">Plan</label>
+                    <select id="ob-tier">
+                        <option value="free">Free — $0/mo (Community)</option>
+                        <option value="pro-individual" selected>Pro+ Individual — $29/mo</option>
+                        <option value="pro-business">Pro+ Business — $29/seat/mo</option>
+                        <option value="max">Heady Max — $99/mo</option>
+                        <option value="family">Family — $99/mo (6 seats)</option>
+                        <option value="enterprise-max">Enterprise Max — $99/seat/mo</option>
+                        <option value="enterprise-payg">Enterprise PAYG — Custom</option>
+                        <option value="nonprofit">Nonprofit — Custom</option>
+                    </select>
+                </div>
+                <a href="/pricing.html" target="_blank" style="font-size: 0.82rem; color: var(--heady-cyan); text-decoration: none;">Compare all 8 plans →</a>
             </div>
         </div>
 
-        <!-- STEP 5: LAUNCH -->
+        <!-- ═══════ STEP 5: EMAIL SETUP (Optional) ═══════ -->
         <div class="step" data-step="5">
             <div class="step-content">
-                <div style="position: relative; display: inline-block; margin-bottom: 20px;">
-                    <div class="heady-orb celebration-orb"></div>
-                    <div class="celebration-rings"></div>
-                    <div class="celebration-rings"></div>
-                    <div class="celebration-rings"></div>
+                <h2>Sovereign Email</h2>
+                <p class="subtitle">Optional — skip if you don't need an @headyme.com inbox</p>
+                <p class="description">
+                    Activate your encrypted <strong style="color: var(--heady-cyan);">@headyme.com</strong> email inbox.
+                    End-to-end encrypted with S/MIME, HeadyBuddy-managed spam filtering, and full sovereign control.
+                </p>
+
+                <div class="toggle-list">
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Activate Email Inbox</h3>
+                            <p>Get your username@headyme.com address</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="email_inbox" id="email-toggle"></div>
+                    </div>
                 </div>
-                <h1>You're Ready</h1>
+
+                <div id="email-options" style="display: none; margin-top: 16px;">
+                    <div class="toggle-list">
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h3>S/MIME Encryption</h3>
+                                <p>End-to-end encrypted email — keypair auto-generated</p>
+                            </div>
+                            <div class="toggle-switch" data-perm="smime"></div>
+                        </div>
+                        <div class="toggle-item">
+                            <div class="toggle-info">
+                                <h3>Import Contacts</h3>
+                                <p>Upload a vCard file to import existing contacts</p>
+                            </div>
+                            <div class="toggle-switch" data-perm="import_contacts"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skip-link" onclick="goToStep(6)">Skip — I don't need email</div>
+            </div>
+        </div>
+
+        <!-- ═══════ STEP 6: UI CUSTOMIZATION ═══════ -->
+        <div class="step" data-step="6">
+            <div class="step-content">
+                <h2>UI Customization</h2>
+                <p class="description">Choose your HeadyBee workspace theme and HeadySwarm agent allocation.</p>
+
+                <h3 style="color: var(--heady-gold); font-size: 0.9rem; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Workspace Theme</h3>
+                <div class="cards-grid">
+                    <div class="option-card" data-theme="cosmic" onclick="selectTheme(this)">
+                        <div class="card-icon">🌌</div>
+                        <h3>Cosmic Command</h3>
+                        <p>Indigo + deep space — power users</p>
+                    </div>
+                    <div class="option-card selected" data-theme="emerald" onclick="selectTheme(this)">
+                        <div class="card-icon">💎</div>
+                        <h3>Emerald Forge</h3>
+                        <p>Emerald green — builders</p>
+                    </div>
+                    <div class="option-card" data-theme="amber" onclick="selectTheme(this)">
+                        <div class="card-icon">🔥</div>
+                        <h3>Amber Oracle</h3>
+                        <p>Warm amber — research</p>
+                    </div>
+                    <div class="option-card" data-theme="rose" onclick="selectTheme(this)">
+                        <div class="card-icon">🌹</div>
+                        <h3>Rose Garden</h3>
+                        <p>Rose + petal — creative</p>
+                    </div>
+                    <div class="option-card" data-theme="obsidian" onclick="selectTheme(this)">
+                        <div class="card-icon">🖤</div>
+                        <h3>Obsidian Temple</h3>
+                        <p>Near-black + gold — minimal</p>
+                    </div>
+                    <div class="option-card" data-theme="sapphire" onclick="selectTheme(this)">
+                        <div class="card-icon">🔷</div>
+                        <h3>Sapphire Matrix</h3>
+                        <p>Deep blue — data dashboards</p>
+                    </div>
+                    <div class="option-card" data-theme="solar" onclick="selectTheme(this)">
+                        <div class="card-icon">☀️</div>
+                        <h3>Solar Commons</h3>
+                        <p>Light warm — accessibility</p>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--heady-gold); font-size: 0.9rem; margin: 16px 0 12px; text-transform: uppercase; letter-spacing: 0.5px;">Agent Allocation</h3>
+                <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+                    <div class="option-card selected" data-swarm="operations" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Operations — 34%</h3>
+                        <p style="font-size: 0.72rem;">DevOps, infra, automation</p>
+                    </div>
+                    <div class="option-card" data-swarm="intelligence" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Intelligence — 21%</h3>
+                        <p style="font-size: 0.72rem;">Research, analysis</p>
+                    </div>
+                    <div class="option-card" data-swarm="creation" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Creation — 21%</h3>
+                        <p style="font-size: 0.72rem;">Writing, design, codegen</p>
+                    </div>
+                    <div class="option-card" data-swarm="security" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Security — 13%</h3>
+                        <p style="font-size: 0.72rem;">Compliance, audit</p>
+                    </div>
+                    <div class="option-card" data-swarm="edge-cloud" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Edge-Cloud — 8%</h3>
+                        <p style="font-size: 0.72rem;">Deployments, cloud ops</p>
+                    </div>
+                    <div class="option-card" data-swarm="companion" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Companion — 8%</h3>
+                        <p style="font-size: 0.72rem;">Conversational, personal</p>
+                    </div>
+                    <div class="option-card" data-swarm="analytics" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Analytics — 5%</h3>
+                        <p style="font-size: 0.72rem;">Metrics, reporting</p>
+                    </div>
+                    <div class="option-card" data-swarm="governance" onclick="selectSwarm(this)" style="padding: 12px;">
+                        <h3 style="font-size: 0.8rem;">Governance — 5%</h3>
+                        <p style="font-size: 0.72rem;">Oversight, ethics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════ STEP 7: COMPANION CONFIG (Optional) ═══════ -->
+        <div class="step" data-step="7">
+            <div class="step-content">
+                <h2>Configure HeadyBuddy</h2>
+                <p class="subtitle">Optional — defaults are great for most users</p>
+                <p class="description">Personalize your AI companion's name, personality, and capabilities.</p>
+
+                <div class="form-row">
+                    <label for="companion-name">Companion Name</label>
+                    <input type="text" id="companion-name" placeholder="Heady" value="Heady">
+                </div>
+
+                <h3 style="color: var(--heady-gold); font-size: 0.9rem; margin: 12px 0; text-transform: uppercase; letter-spacing: 0.5px;">Personality</h3>
+                <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+                    <div class="option-card" data-personality="analytical" onclick="selectPersonality(this)" style="padding: 12px;">
+                        <div class="card-icon">🔬</div>
+                        <h3>Analytical</h3>
+                        <p>Data-first, precise</p>
+                    </div>
+                    <div class="option-card selected" data-personality="balanced" onclick="selectPersonality(this)" style="padding: 12px;">
+                        <div class="card-icon">⚖️</div>
+                        <h3>Balanced</h3>
+                        <p>Default mix</p>
+                    </div>
+                    <div class="option-card" data-personality="creative" onclick="selectPersonality(this)" style="padding: 12px;">
+                        <div class="card-icon">🎨</div>
+                        <h3>Creative</h3>
+                        <p>Exploratory</p>
+                    </div>
+                    <div class="option-card" data-personality="guardian" onclick="selectPersonality(this)" style="padding: 12px;">
+                        <div class="card-icon">🛡️</div>
+                        <h3>Guardian</h3>
+                        <p>Security-first</p>
+                    </div>
+                    <div class="option-card" data-personality="sage" onclick="selectPersonality(this)" style="padding: 12px;">
+                        <div class="card-icon">🧙</div>
+                        <h3>Sage</h3>
+                        <p>Philosophical</p>
+                    </div>
+                </div>
+
+                <div class="toggle-list" style="margin-top: 16px;">
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Persistent Memory</h3>
+                            <p>HeadyBuddy remembers context across sessions</p>
+                        </div>
+                        <div class="toggle-switch active" data-perm="buddy_memory"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Proactive Suggestions</h3>
+                            <p>Surface relevant content unprompted</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="proactive"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-info">
+                            <h3>Voice (TTS/STT)</h3>
+                            <p>Enable speech-to-text and text-to-speech</p>
+                        </div>
+                        <div class="toggle-switch" data-perm="voice"></div>
+                    </div>
+                </div>
+
+                <div class="skip-link" onclick="goToStep(8)">Skip — use defaults</div>
+            </div>
+        </div>
+
+        <!-- ═══════ STEP 8: COMPLETE ═══════ -->
+        <div class="step" data-step="8">
+            <div class="step-content">
+                <div class="heady-orb celebration-orb" style="margin: 0 auto 20px;"></div>
+                <h1>You're Ready! 🎉</h1>
                 <p class="subtitle">Your HeadyOS workspace is configured</p>
-                <p class="description">Launch into your intelligent operating system and start building</p>
+                <p class="description">Launch into your intelligent operating system and start building with AI-powered orchestration.</p>
+
                 <div class="launch-grid">
                     <a href="/headyos-desktop.html" class="launch-card">
                         <div class="launch-icon">⬡</div>
@@ -881,19 +655,27 @@
             </div>
         </div>
 
-        <!-- NAVIGATION BUTTONS -->
+        <!-- Navigation Buttons -->
         <div class="nav-buttons">
             <button class="btn secondary" id="backBtn" style="display: none;">← Back</button>
-            <button class="btn" id="nextBtn">Next →</button>
+            <button class="btn primary" id="nextBtn">Next →</button>
         </div>
     </div>
 
     <script>
-        // ===== STATE MANAGEMENT =====
+        /* ════════════════════════════════════════════════════════════════════ */
+        /* HEADY ONBOARDING: 8-Step Production Flow                            */
+        /* ════════════════════════════════════════════════════════════════════ */
+
         let currentStep = 1;
-        const totalSteps = 5;
-        let selectedUseCase = null;
-        let selectedIntegrations = {};
+        const totalSteps = 8;
+
+        // Selection state
+        let selectedAuth = null;
+        let selectedTheme = 'emerald';
+        let selectedSwarm = 'operations';
+        let selectedPersonality = 'balanced';
+        let permissions = { vector_memory: true };
         let _apiResolved = false;
         let HEADY_API = window.location.origin + '/api';
 
@@ -904,94 +686,107 @@
             'https://heady-manager-headyconnection.headysystems.com/api',
         ];
 
-        // ===== API RESOLUTION =====
+        // ═══ API Resolution ═══
         async function resolveApi() {
             if (_apiResolved) return HEADY_API;
             for (const url of HEADY_CLOUD_URLS) {
                 try {
                     const r = await fetch(url + '/health', { signal: AbortSignal.timeout(3000) });
-                    if (r.ok) {
-                        HEADY_API = url;
-                        _apiResolved = true;
-                        return url;
-                    }
+                    if (r.ok) { HEADY_API = url; _apiResolved = true; return url; }
                 } catch(e) {}
             }
             return HEADY_API;
         }
 
-        // ===== AUTH CHECK =====
-        function checkAuth() {
-            // Reverting to synchronous true based on demo mode comment
-            return true;
-        }
-
-        // Run auth check immediately
-        // checkAuth(); // Disabled for demo mode. Enable in production.
-
-        // ===== PARTICLE BACKGROUND =====
+        // ═══ Particles ═══
         function initParticles() {
             const container = document.getElementById('particleContainer');
-            const particleCount = Math.min(30, Math.floor(window.innerWidth / 50));
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                const tx = (Math.random() - 0.5) * 200;
-                const ty = (Math.random() - 0.5) * 200;
-
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                particle.style.setProperty('--tx', tx + 'px');
-                particle.style.setProperty('--ty', ty + 'px');
-                particle.style.animationDuration = (10 + Math.random() * 20) + 's';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-
-                container.appendChild(particle);
+            const count = Math.min(30, Math.floor(window.innerWidth / 50));
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * window.innerWidth + 'px';
+                p.style.top = Math.random() * window.innerHeight + 'px';
+                p.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                p.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+                p.style.animationDuration = (10 + Math.random() * 20) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(p);
             }
         }
 
-        // ===== STEP NAVIGATION =====
+        // ═══ Selection Handlers ═══
+        function selectAuth(method) {
+            selectedAuth = method;
+            document.querySelectorAll('[data-auth]').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`[data-auth="${method}"]`).classList.add('selected');
+
+            const emailForm = document.getElementById('email-auth-form');
+            emailForm.style.display = method === 'email' ? 'block' : 'none';
+        }
+
+        function selectTheme(el) {
+            selectedTheme = el.dataset.theme;
+            document.querySelectorAll('[data-theme]').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function selectSwarm(el) {
+            selectedSwarm = el.dataset.swarm;
+            document.querySelectorAll('[data-swarm]').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function selectPersonality(el) {
+            selectedPersonality = el.dataset.personality;
+            document.querySelectorAll('[data-personality]').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // ═══ Toggle Switches ═══
+        document.querySelectorAll('.toggle-switch:not([style*="pointer-events"])').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+                const perm = toggle.dataset.perm;
+                permissions[perm] = toggle.classList.contains('active');
+
+                // Show/hide email options
+                if (perm === 'email_inbox') {
+                    document.getElementById('email-options').style.display = toggle.classList.contains('active') ? 'block' : 'none';
+                }
+            });
+        });
+
+        // ═══ Step Navigation ═══
         function goToStep(step) {
             if (step < 1 || step > totalSteps) return;
 
-            const currentStepEl = document.querySelector(`.step.active`);
-            const nextStepEl = document.querySelector(`.step[data-step="${step}"]`);
+            const currentEl = document.querySelector('.step.active');
+            const nextEl = document.querySelector(`.step[data-step="${step}"]`);
 
-            if (currentStepEl) {
-                currentStepEl.classList.remove('active');
-                if (step > currentStep) {
-                    currentStepEl.classList.add('prev');
-                } else {
-                    currentStepEl.classList.add('next');
-                }
-                setTimeout(() => {
-                    currentStepEl.classList.remove('prev', 'next');
-                }, 500);
-            }
-
-            nextStepEl.classList.add('active');
+            if (currentEl) currentEl.classList.remove('active');
+            nextEl.classList.add('active');
             currentStep = step;
 
             updateProgress();
             updateButtons();
             window.scrollTo(0, 0);
+
+            // Save preferences on step 7→8 transition
+            if (step === totalSteps) savePreferences();
         }
 
         function updateProgress() {
-            const dots = document.querySelectorAll('.progress-dot');
-            dots.forEach((dot, idx) => {
-                const step = idx + 1;
+            document.querySelectorAll('.progress-dot').forEach(dot => {
+                const s = parseInt(dot.dataset.step);
                 dot.classList.remove('active', 'completed');
+                if (s === currentStep) dot.classList.add('active');
+                else if (s < currentStep) dot.classList.add('completed');
+            });
 
-                if (step === currentStep) {
-                    dot.classList.add('active');
-                } else if (step < currentStep) {
-                    dot.classList.add('completed');
-                }
+            document.querySelectorAll('.progress-connector').forEach(conn => {
+                const after = parseInt(conn.dataset.after);
+                conn.classList.toggle('completed', after < currentStep);
             });
         }
 
@@ -1010,112 +805,75 @@
             }
         }
 
-        // ===== EVENT LISTENERS =====
+        // ═══ Save Preferences ═══
+        async function savePreferences() {
+            await resolveApi();
+            try {
+                const response = await fetch(`${HEADY_API}/auth/preferences`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        auth_method: selectedAuth,
+                        permissions,
+                        username: document.getElementById('ob-username')?.value || '',
+                        display_name: document.getElementById('ob-displayname')?.value || '',
+                        tier: document.getElementById('ob-tier')?.value || 'free',
+                        theme: selectedTheme,
+                        swarm: selectedSwarm,
+                        companion_name: document.getElementById('companion-name')?.value || 'Heady',
+                        personality: selectedPersonality,
+                        buddy_memory: permissions.buddy_memory || false,
+                        proactive: permissions.proactive || false,
+                        voice: permissions.voice || false,
+                        onboardingCompleted: true,
+                        onboardingDate: new Date().toISOString(),
+                    }),
+                });
+                if (response.ok) {
+                    document.cookie = `__heady_onboarding_completed=true; path=/; max-age=31536000; secure; samesite=strict`;
+                }
+            } catch (err) {
+                localStorage.setItem('heady_onboarding_completed', 'true');
+            }
+        }
+
+        // ═══ Event Listeners ═══
         document.getElementById('beginBtn')?.addEventListener('click', () => goToStep(2));
         document.getElementById('backBtn')?.addEventListener('click', () => goToStep(currentStep - 1));
         document.getElementById('nextBtn')?.addEventListener('click', () => goToStep(currentStep + 1));
 
-        // Use case selection
-        document.querySelectorAll('.use-case-card').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.use-case-card').forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                selectedUseCase = card.dataset.useCase;
+        // Progress dot clicks (only backward navigation)
+        document.querySelectorAll('.progress-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const step = parseInt(dot.dataset.step);
+                if (step < currentStep) goToStep(step);
             });
         });
-
-        // Integration toggles
-        document.querySelectorAll('.toggle').forEach(toggle => {
-            toggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const integration = toggle.dataset.integration;
-                toggle.classList.toggle('active');
-                selectedIntegrations[integration] = toggle.classList.contains('active');
-            });
-        });
-
-        document.getElementById('skipLink')?.addEventListener('click', () => goToStep(5));
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                if (currentStep === totalSteps) {
-                    window.location.href = '/';
-                } else {
-                    goToStep(currentStep + 1);
-                }
+                if (currentStep === totalSteps) window.location.href = '/';
+                else goToStep(currentStep + 1);
             } else if (e.key === 'Escape' && currentStep > 1) {
                 e.preventDefault();
                 goToStep(currentStep - 1);
             }
         });
 
-        // Progress dot clicks
-        document.querySelectorAll('.progress-dot').forEach(dot => {
-            dot.addEventListener('click', () => {
-                const step = parseInt(dot.dataset.step);
-                if (step < currentStep) {
-                    goToStep(step);
-                }
-            });
-        });
-
-        // ===== SAVE PREFERENCES =====
-        async function savePreferences() {
-            await resolveApi();
-
-            try {
-                const response = await fetch(`${HEADY_API}/auth/preferences`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        workspace: selectedUseCase,
-                        integrations: selectedIntegrations,
-                        onboardingCompleted: true,
-                        onboardingDate: new Date().toISOString(),
-                    }),
-                });
-
-                if (response.ok) {
-                    document.cookie = `__heady_onboarding_completed=true; path=/; max-age=31536000; secure; samesite=strict`;
-                    return true;
-                }
-            } catch (err) {
-                console.info(JSON.stringify({ message: 'Could not save preferences (offline ok)', error: err.message }));
-                localStorage.setItem('heady_onboarding_completed', 'true');
-                return true;
-            }
-        }
-
-        // Override final button
-        const originalGoToStep = goToStep;
-        goToStep = function(step) {
-            if (step === totalSteps && currentStep < totalSteps) {
-                savePreferences();
-            }
-            originalGoToStep(step);
-        };
-
-        // ===== INITIALIZATION =====
+        // ═══ Init ═══
         document.addEventListener('DOMContentLoaded', () => {
-            if (!checkAuth()) return;
-
             initParticles();
             updateProgress();
             updateButtons();
             resolveApi().catch(() => {});
         });
 
-        // Handle window resize for particles
         window.addEventListener('resize', () => {
             const container = document.getElementById('particleContainer');
-            if (container.children.length === 0) {
-                initParticles();
-            }
+            if (container.children.length === 0) initParticles();
         });
     </script>
 </body>
