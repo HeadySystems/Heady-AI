@@ -28,6 +28,17 @@
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 
+// Structured logger — emits JSON in production, readable text in dev
+const LOG_JSON = process.env.NODE_ENV === 'production';
+const log = {
+  info: (msg, meta = {}) => LOG_JSON
+    ? process.stdout.write(JSON.stringify({ level: 'info', module: 'SubsystemRoutes', msg, ...meta, ts: Date.now() }) + '\n')
+    : console.info(`[SubsystemRoutes] ${msg}`),
+  warn: (msg, meta = {}) => LOG_JSON
+    ? process.stdout.write(JSON.stringify({ level: 'warn', module: 'SubsystemRoutes', msg, ...meta, ts: Date.now() }) + '\n')
+    : console.warn(`[SubsystemRoutes] ${msg}`),
+};
+
 const { ColabRuntimeCluster } = require('../colab/colab-runtime-nodes.js');
 const { loadUniversalPrompt, buildAgentPrompt, buildCompactDirective,
         getPromptHash, CSL_GATES, ARCHETYPES, COLAB_RUNTIMES,
@@ -39,12 +50,12 @@ try {
   BeeFactory = require('../bees/bee-factory.js');
   SwarmCoordinator = require('../bees/swarm-coordinator.js');
 } catch (err) {
-  console.warn('[SubsystemRoutes] Bee/Swarm modules not loaded:', err.message);
+  log.warn(' Bee/Swarm modules not loaded:', err.message);
 }
 try {
   registerComputeProviders = require('../hc_pipeline.js').registerComputeProviders;
 } catch (err) {
-  console.warn('[SubsystemRoutes] Pipeline compute registration not available:', err.message);
+  log.warn(' Pipeline compute registration not available:', err.message);
 }
 
 // ── Liquid Nodes (Core Vector Space Infrastructure) ──
@@ -55,7 +66,7 @@ const _liquidNodesReady = import('../core/liquid-nodes/index.js').then(mod => {
   HealthMonitor = mod.HealthMonitor;
   ColabRuntimeManager = mod.ColabRuntimeManager;
 }).catch(err => {
-  console.warn('[SubsystemRoutes] Liquid Nodes modules not loaded:', err.message);
+  log.warn(' Liquid Nodes modules not loaded:', err.message);
 });
 
 // ── Subsystem Singletons ──
@@ -80,9 +91,9 @@ async function initializeSubsystems() {
     colabCluster = new ColabRuntimeCluster();
     await colabCluster.initialize();
     results.colab = true;
-    console.log('[SubsystemRoutes] Colab Runtime Cluster initialized (3 runtimes: Cortex, Synapse, Reflex)');
+    log.info(' Colab Runtime Cluster initialized (3 runtimes: Cortex, Synapse, Reflex)');
   } catch (err) {
-    console.warn('[SubsystemRoutes] Colab cluster init failed:', err.message);
+    log.warn(' Colab cluster init failed:', err.message);
   }
 
   // 2. Initialize Bee Factory (17 swarms, up to 10,000 bees)
@@ -92,11 +103,11 @@ async function initializeSubsystems() {
       if (typeof FactoryClass === 'function') {
         beeFactory = new FactoryClass();
         results.bees = true;
-        console.log('[SubsystemRoutes] Bee Factory initialized');
+        log.info(' Bee Factory initialized');
       }
     }
   } catch (err) {
-    console.warn('[SubsystemRoutes] Bee Factory init failed:', err.message);
+    log.warn(' Bee Factory init failed:', err.message);
   }
 
   // 3. Initialize Swarm Coordinator
@@ -106,20 +117,20 @@ async function initializeSubsystems() {
       if (typeof CoordClass === 'function') {
         swarmCoordinator = new CoordClass({ beeFactory });
         results.swarms = true;
-        console.log('[SubsystemRoutes] Swarm Coordinator initialized (17 swarms)');
+        log.info(' Swarm Coordinator initialized (17 swarms)');
       }
     }
   } catch (err) {
-    console.warn('[SubsystemRoutes] Swarm Coordinator init failed:', err.message);
+    log.warn(' Swarm Coordinator init failed:', err.message);
   }
 
   // 4. Pre-load Universal Prompt (warm the cache)
   try {
     loadUniversalPrompt();
     results.prompt = true;
-    console.log(`[SubsystemRoutes] Universal Agent Prompt loaded (hash: ${getPromptHash()})`);
+    log.info(` Universal Agent Prompt loaded (hash: ${getPromptHash()})`);
   } catch (err) {
-    console.warn('[SubsystemRoutes] Universal Prompt load failed:', err.message);
+    log.warn(' Universal Prompt load failed:', err.message);
   }
 
   // 5. Initialize Liquid Node Registry + Vector Router + Colab Runtime Manager
@@ -129,32 +140,32 @@ async function initializeSubsystems() {
       nodeRegistry = new LiquidNodeRegistry();
       nodeRegistry.initialize();
       results.liquidNodes = true;
-      console.log(`[SubsystemRoutes] Liquid Node Registry initialized (${nodeRegistry.getAllNodes().length} nodes in 3D vector space)`);
+      log.info(` Liquid Node Registry initialized (${nodeRegistry.getAllNodes().length} nodes in 3D vector space)`);
 
       if (VectorRouter) {
         vectorRouter = new VectorRouter(nodeRegistry);
-        console.log('[SubsystemRoutes] Vector Router initialized (CSL-gated 3D routing)');
+        log.info(' Vector Router initialized (CSL-gated 3D routing)');
       }
 
       if (HealthMonitor) {
         healthMonitor = new HealthMonitor(nodeRegistry);
-        console.log('[SubsystemRoutes] Health Monitor initialized (phi-scaled heartbeats)');
+        log.info(' Health Monitor initialized (phi-scaled heartbeats)');
       }
 
       if (ColabRuntimeManager) {
         colabRuntimeManager = new ColabRuntimeManager();
         colabRuntimeManager.initialize();
-        console.log('[SubsystemRoutes] Colab Runtime Manager initialized (3 A100 runtimes as latent space ops)');
+        log.info(' Colab Runtime Manager initialized (3 A100 runtimes as latent space ops)');
       }
     }
   } catch (err) {
-    console.warn('[SubsystemRoutes] Liquid Nodes init failed:', err.message);
+    log.warn(' Liquid Nodes init failed:', err.message);
   }
 
   // 6. Register compute providers with the pipeline task executor
   if (registerComputeProviders && (colabCluster || swarmCoordinator)) {
     registerComputeProviders({ colabCluster, swarmCoordinator, colabRuntimeManager });
-    console.log('[SubsystemRoutes] Pipeline compute providers registered (colab + swarms + liquid nodes)');
+    log.info(' Pipeline compute providers registered (colab + swarms + liquid nodes)');
   }
 
   return results;
@@ -463,19 +474,19 @@ async function shutdownSubsystems() {
     for (const rt of colabRuntimeManager.getAllRuntimes()) {
       try { await colabRuntimeManager.terminate(rt.id); } catch { /* ignore */ }
     }
-    console.log('[SubsystemRoutes] Colab runtime manager shut down');
+    log.info(' Colab runtime manager shut down');
   }
   if (colabCluster) {
     await colabCluster.shutdown();
-    console.log('[SubsystemRoutes] Colab cluster shut down');
+    log.info(' Colab cluster shut down');
   }
   if (beeFactory && typeof beeFactory.shutdown === 'function') {
     await beeFactory.shutdown();
-    console.log('[SubsystemRoutes] Bee factory shut down');
+    log.info(' Bee factory shut down');
   }
   if (swarmCoordinator && typeof swarmCoordinator.shutdown === 'function') {
     await swarmCoordinator.shutdown();
-    console.log('[SubsystemRoutes] Swarm coordinator shut down');
+    log.info(' Swarm coordinator shut down');
   }
 }
 

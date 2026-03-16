@@ -190,7 +190,7 @@ async function incrementalScan() {
 
 // ── Full Registry Population (initial or on-demand) ─────────────
 async function fullPopulate() {
-    const BASE = "https://127.0.0.1:3301";
+    const BASE = process.env.HEADY_MANAGER_URL || "https://127.0.0.1:3301";
     const endpoints = [
         "pulse", "compute/dashboard", "orchestrator/agents", "orchestrator/nodes",
         "optimize/status", "optimize/skills", "optimize/connectors",
