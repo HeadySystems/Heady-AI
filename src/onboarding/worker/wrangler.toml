@@ -1,0 +1,67 @@
+# ─── Heady Onboarding — Cloudflare Worker Configuration ───────────────
+# Edge auth gateway: JWT verification, CORS, rate limiting, origin routing
+
+name = "heady-auth-gateway"
+main = "auth-gateway.js"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ─── Account & Zone ─────────────────────────────────────────────────
+# account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+# zone_id    = "YOUR_CLOUDFLARE_ZONE_ID"
+
+# ─── Routes ─────────────────────────────────────────────────────────
+# Uncomment and configure for production routing:
+# routes = [
+#   { pattern = "api.heady.ai/*",  zone_name = "heady.ai" },
+#   { pattern = "api.heady.dev/*", zone_name = "heady.dev" },
+# ]
+
+# ─── Custom Domain (alternative to routes) ──────────────────────────
+# [env.production]
+# routes = [
+#   { pattern = "api.heady.ai/*", zone_name = "heady.ai" }
+# ]
+
+# ─── Environment Variables ───────────────────────────────────────────
+[vars]
+ORIGIN_URL = "https://heady-onboarding-HASH.a.run.app"
+FIREBASE_PROJECT_ID = "heady-ai"
+
+# ─── KV Namespace Binding (Rate Limiting) ────────────────────────────
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "YOUR_KV_NAMESPACE_ID"
+# preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
+
+# ─── Production Environment ─────────────────────────────────────────
+[env.production]
+name = "heady-auth-gateway-production"
+
+[env.production.vars]
+ORIGIN_URL = "https://heady-onboarding-HASH.a.run.app"
+FIREBASE_PROJECT_ID = "heady-ai"
+
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "YOUR_PRODUCTION_KV_NAMESPACE_ID"
+
+# ─── Staging Environment ────────────────────────────────────────────
+[env.staging]
+name = "heady-auth-gateway-staging"
+
+[env.staging.vars]
+ORIGIN_URL = "https://heady-onboarding-staging-HASH.a.run.app"
+FIREBASE_PROJECT_ID = "heady-ai"
+
+[[env.staging.kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "YOUR_STAGING_KV_NAMESPACE_ID"
+
+# ─── Observability ──────────────────────────────────────────────────
+[observability]
+enabled = true
+
+# ─── Build (no build step needed — single-file ESM worker) ──────────
+# [build]
+# command = ""
