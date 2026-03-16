@@ -8,12 +8,15 @@ In each Colab notebook, run these setup cells first:
 # Cell 1: Install dependencies
 !pip install -q psycopg2-binary openai numpy requests python-dotenv
 
-# Cell 2: Set environment variables
+# Cell 2: Set environment variables (use Colab Secrets for DATABASE_URL!)
+# Click the 🔑 Key icon in the left sidebar → Add Secret:
+#   Name: DATABASE_URL   Value: postgresql://user:pass@host/db?sslmode=require
 import os
-os.environ["DATABASE_URL"] = "postgresql://neondb_owner:npg_tEA7FfeWb5gZ@ep-cold-snow-aesmiwt9.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require"
-os.environ["OPENAI_API_KEY"] = "sk-proj-..."        # Your OpenAI key
-os.environ["UPSTASH_REDIS_REST_URL"] = "https://..."  # Upstash REST URL
-os.environ["UPSTASH_REDIS_REST_TOKEN"] = "..."         # Upstash token
+from google.colab import userdata
+os.environ["DATABASE_URL"] = userdata.get("DATABASE_URL")
+os.environ["OPENAI_API_KEY"] = userdata.get("OPENAI_API_KEY")
+os.environ["UPSTASH_REDIS_REST_URL"] = userdata.get("UPSTASH_REDIS_REST_URL")
+os.environ["UPSTASH_REDIS_REST_TOKEN"] = userdata.get("UPSTASH_REDIS_REST_TOKEN")
 ```
 
 ## Node 1: The Overmind (Tab 1)
