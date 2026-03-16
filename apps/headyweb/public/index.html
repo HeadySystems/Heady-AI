@@ -3,835 +3,631 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeadyWeb — AI Platform Dashboard</title>
-    <meta name="description" content="HeadyWeb dashboard — real-time monitoring and control for the Heady AI platform.">
+    <title>HeadyWeb — AI-Native Browser</title>
+    <meta name="description" content="HeadyWeb combines Chromium's browsing power with AI-native intelligence. Browse smarter with sacred geometry, agentic AI, and φ-driven design.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #06060f;
-            --bg-secondary: #0c0c1d;
-            --bg-card: rgba(15, 15, 35, 0.7);
-            --border: rgba(139, 92, 246, 0.15);
-            --border-hover: rgba(139, 92, 246, 0.35);
+            --bg-0: #05050d;
+            --bg-1: #0a0a18;
+            --bg-2: #0f0f24;
+            --bg-3: #151530;
+            --bg-card: rgba(15, 15, 36, 0.75);
+            --bg-hover: rgba(20, 20, 45, 0.9);
+            --border: rgba(139, 92, 246, 0.12);
+            --border-active: rgba(139, 92, 246, 0.4);
             --purple: #8b5cf6;
-            --purple-glow: rgba(139, 92, 246, 0.3);
+            --purple-dim: rgba(139, 92, 246, 0.15);
             --cyan: #06b6d4;
-            --cyan-glow: rgba(6, 182, 212, 0.3);
+            --cyan-dim: rgba(6, 182, 212, 0.15);
             --pink: #ec4899;
-            --pink-glow: rgba(236, 72, 153, 0.3);
             --green: #22c55e;
-            --green-glow: rgba(34, 197, 94, 0.3);
             --amber: #f59e0b;
             --red: #ef4444;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --sidebar-width: 72px;
-            --header-height: 64px;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            --mono: 'JetBrains Mono', 'Fira Code', monospace;
-            --phi: 1.6180339887;
-            --psi: 0.6180339887;
+            --text-0: #f8fafc;
+            --text-1: #cbd5e1;
+            --text-2: #64748b;
+            --text-3: #475569;
+            --sidebar-w: 320px;
+            --tabbar-h: 42px;
+            --navbar-h: 48px;
+            --statusbar-h: 28px;
+            --font: 'Inter', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg-0); color: var(--text-0); height: 100vh; overflow: hidden; }
 
-        body {
-            font-family: var(--font);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            height: 100vh;
-            overflow: hidden;
-        }
+        /* ═══ APP SHELL ═══════════════════════════════════════ */
+        .app { display: flex; height: 100vh; }
 
-        /* ─── Layout ──────────────────────────────────────────── */
-        .app {
-            display: grid;
-            grid-template-columns: var(--sidebar-width) 1fr;
-            grid-template-rows: var(--header-height) 1fr;
-            height: 100vh;
-        }
-
-        /* ─── Header ─────────────────────────────────────────── */
-        .header {
-            grid-column: 1 / -1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--purple), var(--cyan));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            animation: breathe 4s ease-in-out infinite;
-        }
-
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--purple-glow); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px var(--purple-glow), 0 0 60px var(--cyan-glow); }
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-badge.healthy {
-            background: rgba(34, 197, 94, 0.12);
-            border: 1px solid rgba(34, 197, 94, 0.25);
-            color: var(--green);
-        }
-
-        .status-badge.unhealthy {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            color: var(--red);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .version-tag {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-family: var(--mono);
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(100, 116, 139, 0.1);
-            border: 1px solid rgba(100, 116, 139, 0.15);
-        }
-
-        /* ─── Sidebar ────────────────────────────────────────── */
+        /* ═══ SIDEBAR — Comet-style AI Panel ═════════════════ */
         .sidebar {
-            background: var(--bg-secondary);
+            width: var(--sidebar-w);
+            background: var(--bg-1);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 16px 0;
-            gap: 4px;
+            flex-shrink: 0;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sidebar.collapsed { width: 52px; }
+        .sidebar.collapsed .sidebar-content,
+        .sidebar.collapsed .ai-input-area,
+        .sidebar.collapsed .sidebar-header span,
+        .sidebar.collapsed .workspace-label { display: none; }
+
+        .sidebar-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px; border-bottom: 1px solid var(--border);
+            cursor: pointer; user-select: none;
+        }
+        .logo-mark {
+            width: 28px; height: 28px; border-radius: 8px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 800; flex-shrink: 0;
+            animation: logoPulse 4s ease-in-out infinite;
+        }
+        @keyframes logoPulse {
+            0%,100% { box-shadow: 0 0 12px rgba(139,92,246,0.3); }
+            50% { box-shadow: 0 0 24px rgba(139,92,246,0.5), 0 0 48px rgba(6,182,212,0.2); }
+        }
+        .sidebar-header span { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; }
+        .toggle-btn {
+            margin-left: auto; width: 24px; height: 24px; border: none;
+            background: transparent; color: var(--text-2); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+            border-radius: 6px; transition: all 0.15s;
+        }
+        .toggle-btn:hover { background: var(--purple-dim); color: var(--purple); }
+
+        /* Workspaces */
+        .workspaces { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+        .workspace-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px; padding: 0 4px; }
+        .workspace-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+        .ws-chip {
+            padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600;
+            background: var(--purple-dim); color: var(--purple); cursor: pointer;
+            border: 1px solid transparent; transition: all 0.15s;
+        }
+        .ws-chip:hover { border-color: var(--border-active); }
+        .ws-chip.active { background: var(--purple); color: white; }
+
+        /* Sidebar content */
+        .sidebar-content {
+            flex: 1; overflow-y: auto; padding: 12px;
+            scrollbar-width: thin; scrollbar-color: var(--border) transparent;
         }
 
-        .nav-item {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 20px;
-            transition: all 0.2s ease;
-            position: relative;
+        /* AI Messages */
+        .ai-messages { display: flex; flex-direction: column; gap: 10px; }
+        .ai-msg {
+            padding: 10px 12px; border-radius: 12px; font-size: 13px; line-height: 1.6;
+            animation: fadeSlide 0.3s ease;
         }
-
-        .nav-item:hover {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--text-secondary);
-        }
-
-        .nav-item.active {
-            background: rgba(139, 92, 246, 0.15);
-            color: var(--purple);
-        }
-
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            left: -2px;
-            width: 4px;
-            height: 24px;
-            background: var(--purple);
-            border-radius: 0 4px 4px 0;
-        }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .nav-spacer { flex: 1; }
-
-        /* ─── Main Content ───────────────────────────────────── */
-        .main {
-            overflow-y: auto;
-            padding: 24px;
-            position: relative;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
-        }
-
-        .main::-webkit-scrollbar { width: 6px; }
-        .main::-webkit-scrollbar-track { background: transparent; }
-        .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        /* ─── Sacred Geometry Background ─────────────────────── */
-        .sacred-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.03;
-        }
-
-        /* ─── Metric Cards ───────────────────────────────────── */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .metric-card {
-            background: var(--bg-card);
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .ai-msg.system {
+            background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim));
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
+        .ai-msg.user { background: var(--purple-dim); border: 1px solid rgba(139,92,246,0.2); margin-left: 20px; }
+        .ai-msg.assistant { background: var(--bg-card); border: 1px solid var(--border); }
+        .ai-msg .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .ai-msg .label.heady { color: var(--purple); }
+        .ai-msg .label.you { color: var(--cyan); }
 
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            border-radius: 16px 16px 0 0;
+        /* Quick actions */
+        .quick-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .qa-btn {
+            padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 500;
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-1);
+            cursor: pointer; transition: all 0.15s;
         }
+        .qa-btn:hover { border-color: var(--border-active); background: var(--purple-dim); }
 
-        .metric-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
-        .metric-card.cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
-        .metric-card.pink::before { background: linear-gradient(90deg, var(--pink), transparent); }
-        .metric-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
-
-        .metric-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
+        /* AI Input */
+        .ai-input-area { padding: 10px 12px; border-top: 1px solid var(--border); }
+        .ai-input-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg-2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 6px 12px;
+            transition: border-color 0.15s;
         }
-
-        .metric-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
+        .ai-input-wrap:focus-within { border-color: var(--border-active); }
+        .ai-input {
+            flex: 1; background: transparent; border: none; color: var(--text-0);
+            font-size: 13px; font-family: var(--font); outline: none; padding: 4px 0;
         }
-
-        .metric-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+        .ai-input::placeholder { color: var(--text-3); }
+        .ai-send {
+            width: 28px; height: 28px; border: none; border-radius: 8px;
+            background: var(--purple); color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; transition: transform 0.15s;
         }
+        .ai-send:hover { transform: scale(1.1); }
 
-        .metric-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+        /* ═══ BROWSER AREA — Chromium-style ══════════════════ */
+        .browser { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+        /* Tab Bar */
+        .tab-bar {
+            height: var(--tabbar-h); display: flex; align-items: flex-end;
+            padding: 0 8px; background: var(--bg-1); gap: 2px;
+            border-bottom: 1px solid var(--border); overflow-x: auto;
+            scrollbar-width: none;
         }
-
-        .metric-icon.purple { background: rgba(139, 92, 246, 0.12); color: var(--purple); }
-        .metric-icon.cyan { background: rgba(6, 182, 212, 0.12); color: var(--cyan); }
-        .metric-icon.pink { background: rgba(236, 72, 153, 0.12); color: var(--pink); }
-        .metric-icon.green { background: rgba(34, 197, 94, 0.12); color: var(--green); }
-
-        .metric-value {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1;
-            margin-bottom: 4px;
+        .tab-bar::-webkit-scrollbar { display: none; }
+        .tab {
+            height: 34px; min-width: 140px; max-width: 220px;
+            padding: 0 14px; display: flex; align-items: center; gap: 8px;
+            background: var(--bg-2); border: 1px solid var(--border);
+            border-bottom: none; border-radius: 10px 10px 0 0;
+            font-size: 12px; color: var(--text-2); cursor: pointer;
+            transition: all 0.15s; flex-shrink: 0;
         }
-
-        .metric-sub {
-            font-size: 12px;
-            color: var(--text-secondary);
+        .tab:hover { background: var(--bg-3); color: var(--text-1); }
+        .tab.active {
+            background: var(--bg-0); color: var(--text-0);
+            border-color: var(--border-active);
+            border-bottom: 1px solid var(--bg-0);
         }
-
-        /* ─── Panel Cards ────────────────────────────────────── */
-        .panels-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
+        .tab-favicon { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tab-close {
+            width: 18px; height: 18px; border: none; background: transparent;
+            color: var(--text-3); border-radius: 4px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; flex-shrink: 0; opacity: 0; transition: all 0.15s;
         }
-
-        .panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            backdrop-filter: blur(12px);
+        .tab:hover .tab-close { opacity: 1; }
+        .tab-close:hover { background: rgba(239,68,68,0.15); color: var(--red); }
+        .tab-new {
+            width: 30px; height: 30px; border: none; background: transparent;
+            color: var(--text-3); cursor: pointer; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0; transition: all 0.15s; margin-bottom: 4px;
         }
+        .tab-new:hover { background: var(--purple-dim); color: var(--purple); }
 
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
+        /* Nav Bar */
+        .nav-bar {
+            height: var(--navbar-h); display: flex; align-items: center;
+            padding: 0 10px; gap: 6px; background: var(--bg-1);
             border-bottom: 1px solid var(--border);
         }
+        .nav-btn {
+            width: 32px; height: 32px; border: none; background: transparent;
+            color: var(--text-2); cursor: pointer; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; transition: all 0.15s; flex-shrink: 0;
+        }
+        .nav-btn:hover { background: var(--purple-dim); color: var(--text-0); }
+        .nav-btn:active { transform: scale(0.92); }
+        .url-bar {
+            flex: 1; height: 34px; background: var(--bg-2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 0 14px; color: var(--text-0);
+            font-size: 13px; font-family: var(--font); outline: none;
+            transition: all 0.15s;
+        }
+        .url-bar:focus { border-color: var(--border-active); background: var(--bg-3); }
 
-        .panel-title {
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* Content Area */
+        .content-area { flex: 1; position: relative; overflow: hidden; background: var(--bg-0); }
+        .content-frame {
+            width: 100%; height: 100%; overflow-y: auto;
+            padding: 24px; scrollbar-width: thin; scrollbar-color: var(--border) transparent;
         }
 
-        .panel-badge {
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: 600;
+        /* ═══ DASHBOARD — Homepage Content ═══════════════════ */
+        .dashboard-hero {
+            text-align: center; padding: 48px 0 32px;
+        }
+        .dashboard-hero h1 {
+            font-size: 42px; font-weight: 900; letter-spacing: -1.5px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan), var(--pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .dashboard-hero p { color: var(--text-2); font-size: 16px; max-width: 500px; margin: 0 auto; }
+
+        /* Metrics row */
+        .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 32px 0; }
+        .metric {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 18px; backdrop-filter: blur(8px);
+            transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .metric::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        }
+        .metric:nth-child(1)::after { background: linear-gradient(90deg, var(--purple), transparent); }
+        .metric:nth-child(2)::after { background: linear-gradient(90deg, var(--cyan), transparent); }
+        .metric:nth-child(3)::after { background: linear-gradient(90deg, var(--pink), transparent); }
+        .metric:nth-child(4)::after { background: linear-gradient(90deg, var(--green), transparent); }
+        .metric:hover { transform: translateY(-2px); border-color: var(--border-active); }
+        .metric-label { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; }
+        .metric-val { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin: 6px 0 2px; }
+        .metric-sub { font-size: 11px; color: var(--text-2); }
+
+        /* Panel grid */
+        .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .panel {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; backdrop-filter: blur(8px);
+        }
+        .panel-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
+            font-size: 13px; font-weight: 600;
+        }
+        .panel-tag {
+            font-size: 9px; padding: 2px 8px; border-radius: 8px;
+            background: rgba(34,197,94,0.1); color: var(--green);
+            border: 1px solid rgba(34,197,94,0.2); font-weight: 700; font-family: var(--mono);
+        }
+        .panel-body { padding: 10px 16px; max-height: 260px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+        .stage-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 6px 8px; border-radius: 8px; transition: background 0.15s;
+        }
+        .stage-row:hover { background: rgba(139,92,246,0.05); }
+        .stage-n { width: 24px; height: 24px; border-radius: 6px; background: var(--purple-dim); color: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; font-family: var(--mono); flex-shrink: 0; }
+        .stage-name { font-size: 12px; flex: 1; }
+        .stage-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .stage-dot.on { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.4); }
+        .stage-dot.off { background: var(--text-3); }
+
+        .node-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .node {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 10px; border-radius: 8px;
+            background: rgba(10,10,24,0.5); border: 1px solid var(--border);
+            font-size: 11px; transition: all 0.15s;
+        }
+        .node:hover { border-color: var(--border-active); }
+        .node-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+        .node-dot.ok { background: var(--green); }
+        .node-dot.warn { background: var(--amber); }
+        .node-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .node-type { font-family: var(--mono); font-size: 9px; color: var(--text-3); }
+
+        /* Status bar */
+        .status-bar {
+            height: var(--statusbar-h); display: flex; align-items: center;
+            padding: 0 12px; gap: 16px; background: var(--bg-1);
+            border-top: 1px solid var(--border); font-size: 11px; color: var(--text-3);
             font-family: var(--mono);
         }
+        .status-item { display: flex; align-items: center; gap: 5px; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .status-dot.ok { background: var(--green); }
+        .status-dot.err { background: var(--red); }
 
-        .panel-badge.live {
-            background: rgba(34, 197, 94, 0.12);
-            color: var(--green);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        .panel-body {
-            padding: 16px 20px;
-            max-height: 320px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
-        }
-
-        /* ─── Pipeline Stages ────────────────────────────────── */
-        .stage-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .stage-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            transition: background 0.2s;
-        }
-
-        .stage-item:hover {
-            background: rgba(139, 92, 246, 0.06);
-        }
-
-        .stage-num {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: var(--mono);
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--purple);
-            flex-shrink: 0;
-        }
-
-        .stage-name {
-            font-size: 13px;
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .stage-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .stage-status.active { background: var(--green); box-shadow: 0 0 8px var(--green-glow); }
-        .stage-status.idle { background: var(--text-muted); }
-
-        /* ─── Nodes List ─────────────────────────────────────── */
-        .node-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .node-chip {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            background: rgba(15, 15, 35, 0.5);
-            border: 1px solid var(--border);
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-
-        .node-chip:hover {
-            border-color: var(--border-hover);
-            transform: translateX(2px);
-        }
-
-        .node-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .node-dot.active { background: var(--green); }
-        .node-dot.warning { background: var(--amber); }
-        .node-dot.error { background: var(--red); }
-
-        .node-name {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .node-type {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-family: var(--mono);
-        }
-
-        /* ─── Terminal Panel ──────────────────────────────────── */
-        .terminal-panel {
-            grid-column: 1 / -1;
-        }
-
-        .terminal {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            padding: 14px;
-            font-family: var(--mono);
-            font-size: 12px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .terminal .ts { color: var(--text-muted); }
-        .terminal .ok { color: var(--green); }
-        .terminal .warn { color: var(--amber); }
-        .terminal .err { color: var(--red); }
-        .terminal .info { color: var(--cyan); }
-        .terminal .phi { color: var(--pink); }
-
-        /* ─── Full-width panels ──────────────────────────────── */
+        /* ═══ Terminal panel (full width) ═════════════════════ */
         .full-panel { grid-column: 1 / -1; }
-
-        /* ─── Loading shimmer ────────────────────────────────── */
-        .shimmer {
-            background: linear-gradient(110deg, transparent 33%, rgba(139, 92, 246, 0.05) 50%, transparent 67%);
-            background-size: 300% 100%;
-            animation: shimmer 1.5s linear infinite;
+        .term {
+            background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px;
+            font-family: var(--mono); font-size: 11px; line-height: 1.7;
+            color: var(--text-2); max-height: 160px; overflow-y: auto;
         }
+        .term .ts { color: var(--text-3); }
+        .term .ok { color: var(--green); }
+        .term .warn { color: var(--amber); }
+        .term .err { color: var(--red); }
+        .term .info { color: var(--cyan); }
+        .term .phi { color: var(--pink); }
 
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
+        /* ═══ Sacred geometry canvas ═════════════════════════ */
+        .sacred-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.025; }
 
-        /* ─── Responsive ─────────────────────────────────────── */
-        @media (max-width: 768px) {
-            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-            .panels-grid { grid-template-columns: 1fr; }
-            .node-grid { grid-template-columns: 1fr; }
+        @media (max-width: 900px) {
             .sidebar { display: none; }
-            .app { grid-template-columns: 1fr; }
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
+            .panels { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <canvas class="sacred-bg" id="sacred-canvas"></canvas>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-left">
-                <div class="logo">
-                    <div class="logo-icon">φ</div>
-                    <span>HeadyWeb</span>
-                </div>
-            </div>
-            <div class="header-right">
-                <div id="status-badge" class="status-badge healthy">
-                    <span class="status-dot"></span>
-                    <span id="status-text">Healthy</span>
-                </div>
-                <span id="version-tag" class="version-tag">v3.1.0</span>
-                <span id="uptime-tag" class="version-tag">⏱ --</span>
-            </div>
-        </header>
+<canvas class="sacred-canvas" id="sacred"></canvas>
 
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="nav-item active" data-view="dashboard" title="Dashboard">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            </div>
-            <div class="nav-item" data-view="pipeline" title="Pipeline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
-            </div>
-            <div class="nav-item" data-view="nodes" title="Nodes">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-9-11h4m14 0h4m-3.3-6.7-2.8 2.8m-9.8 9.8-2.8 2.8m0-15.4 2.8 2.8m9.8 9.8 2.8 2.8"/></svg>
-            </div>
-            <div class="nav-item" data-view="distiller" title="Distiller">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v4l-4 8h16l-4-8V3"/><path d="M6 15v4a2 2 0 002 2h8a2 2 0 002-2v-4"/><line x1="6" y1="3" x2="18" y2="3"/></svg>
-            </div>
-            <div class="nav-spacer"></div>
-            <div class="nav-item" data-view="settings" title="Settings">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-            </div>
-        </nav>
+<div class="app">
+    <!-- ═══ SIDEBAR: Comet-style AI Assistant ═══ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header" id="sidebar-toggle">
+            <div class="logo-mark">φ</div>
+            <span>HeadyWeb</span>
+            <button class="toggle-btn" title="Toggle sidebar">◀</button>
+        </div>
 
-        <!-- Main Content -->
-        <main class="main" id="main-content">
-            <!-- Metrics -->
-            <div class="metrics-grid" id="metrics-grid">
-                <div class="metric-card purple shimmer" id="mc-stages">
-                    <div class="metric-header">
-                        <span class="metric-label">Pipeline Stages</span>
-                        <div class="metric-icon purple">⚡</div>
-                    </div>
-                    <div class="metric-value" id="m-stages">--</div>
-                    <div class="metric-sub">HCFullPipeline v8.0</div>
-                </div>
-                <div class="metric-card cyan shimmer" id="mc-tasks">
-                    <div class="metric-header">
-                        <span class="metric-label">Active Tasks</span>
-                        <div class="metric-icon cyan">📋</div>
-                    </div>
-                    <div class="metric-value" id="m-tasks">--</div>
-                    <div class="metric-sub">Auto-success engine</div>
-                </div>
-                <div class="metric-card pink shimmer" id="mc-nodes">
-                    <div class="metric-header">
-                        <span class="metric-label">AI Nodes</span>
-                        <div class="metric-icon pink">🔮</div>
-                    </div>
-                    <div class="metric-value" id="m-nodes">--</div>
-                    <div class="metric-sub">Registered components</div>
-                </div>
-                <div class="metric-card green shimmer" id="mc-memory">
-                    <div class="metric-header">
-                        <span class="metric-label">Memory</span>
-                        <div class="metric-icon green">💾</div>
-                    </div>
-                    <div class="metric-value" id="m-memory">--</div>
-                    <div class="metric-sub" id="m-memory-sub">Heap used</div>
+        <div class="workspaces">
+            <div class="workspace-label">Workspaces</div>
+            <div class="workspace-chips">
+                <div class="ws-chip active" data-ws="heady">Heady</div>
+                <div class="ws-chip" data-ws="dev">Dev</div>
+                <div class="ws-chip" data-ws="research">Research</div>
+                <div class="ws-chip" data-ws="personal">Personal</div>
+            </div>
+        </div>
+
+        <div class="sidebar-content" id="ai-chat">
+            <div class="ai-messages" id="ai-messages">
+                <div class="ai-msg system">
+                    <div class="label heady">HeadyWeb AI</div>
+                    Welcome to HeadyWeb — your AI-native browser. I can summarize pages, answer questions from your open tabs, search across the Heady ecosystem, or help you navigate.
                 </div>
             </div>
+            <div class="quick-actions" id="quick-actions">
+                <button class="qa-btn" data-action="summarize">📝 Summarize page</button>
+                <button class="qa-btn" data-action="pipeline">⚡ Pipeline status</button>
+                <button class="qa-btn" data-action="nodes">🔮 Node health</button>
+                <button class="qa-btn" data-action="search">🔍 Search Heady</button>
+            </div>
+        </div>
 
-            <!-- Two-column panels -->
-            <div class="panels-grid">
-                <!-- Pipeline Stages -->
-                <div class="panel" id="pipeline-panel">
-                    <div class="panel-header">
-                        <span class="panel-title">⚡ Pipeline Stages</span>
-                        <span class="panel-badge live">LIVE</span>
-                    </div>
-                    <div class="panel-body">
-                        <div class="stage-list" id="stage-list">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
+        <div class="ai-input-area">
+            <div class="ai-input-wrap">
+                <input class="ai-input" id="ai-input" type="text" placeholder="Ask HeadyWeb AI anything..." autocomplete="off">
+                <button class="ai-send" id="ai-send">→</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══ BROWSER: Chromium-style ═══ -->
+    <div class="browser">
+        <!-- Tab Bar -->
+        <div class="tab-bar" id="tab-bar">
+            <div class="tab active" data-id="home">
+                <span class="tab-favicon">φ</span>
+                <span class="tab-title">Dashboard</span>
+                <button class="tab-close">✕</button>
+            </div>
+            <button class="tab-new" id="tab-new" title="New tab">+</button>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="nav-back" title="Back">←</button>
+            <button class="nav-btn" id="nav-forward" title="Forward">→</button>
+            <button class="nav-btn" id="nav-refresh" title="Refresh">↻</button>
+            <input class="url-bar" id="url-bar" type="text" value="heady://dashboard" spellcheck="false">
+            <button class="nav-btn" id="nav-home" title="Home">⌂</button>
+            <button class="nav-btn" id="nav-sidebar" title="Toggle AI">✦</button>
+        </div>
+
+        <!-- Content -->
+        <div class="content-area">
+            <div class="content-frame" id="content">
+                <!-- Dashboard — default homepage -->
+                <div class="dashboard-hero">
+                    <h1>HeadyWeb</h1>
+                    <p>AI-native browser — Chromium power meets intelligent assistance. Browse, build, and discover with φ-driven design.</p>
                 </div>
 
-                <!-- Nodes -->
-                <div class="panel" id="nodes-panel">
-                    <div class="panel-header">
-                        <span class="panel-title">🔮 AI Nodes</span>
-                        <span class="panel-badge live">LIVE</span>
-                    </div>
-                    <div class="panel-body">
-                        <div class="node-grid" id="node-grid">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
+                <div class="metrics-row" id="metrics">
+                    <div class="metric"><div class="metric-label">Pipeline Stages</div><div class="metric-val" id="m-stages">--</div><div class="metric-sub">HCFullPipeline v8.0</div></div>
+                    <div class="metric"><div class="metric-label">Active Tasks</div><div class="metric-val" id="m-tasks">--</div><div class="metric-sub">Auto-Success Engine</div></div>
+                    <div class="metric"><div class="metric-label">AI Nodes</div><div class="metric-val" id="m-nodes">--</div><div class="metric-sub">Registered</div></div>
+                    <div class="metric"><div class="metric-label">Memory</div><div class="metric-val" id="m-mem">--</div><div class="metric-sub" id="m-rss">Heap used</div></div>
                 </div>
 
-                <!-- System Terminal -->
-                <div class="panel terminal-panel">
-                    <div class="panel-header">
-                        <span class="panel-title">🖥 System Log</span>
-                        <span class="panel-badge live">LIVE</span>
-                    </div>
-                    <div class="panel-body" style="padding: 12px;">
-                        <div class="terminal" id="terminal"></div>
-                    </div>
+                <div class="panels">
+                    <div class="panel"><div class="panel-head"><span>⚡ Pipeline</span><span class="panel-tag">LIVE</span></div><div class="panel-body"><div id="stage-list"></div></div></div>
+                    <div class="panel"><div class="panel-head"><span>🔮 Nodes</span><span class="panel-tag">LIVE</span></div><div class="panel-body"><div class="node-grid" id="node-grid"></div></div></div>
+                    <div class="panel full-panel"><div class="panel-head"><span>🖥 Terminal</span><span class="panel-tag">LIVE</span></div><div class="panel-body" style="padding:8px 12px;"><div class="term" id="term"></div></div></div>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item"><span class="status-dot" id="s-dot"></span><span id="s-status">Connecting...</span></div>
+            <div class="status-item">v<span id="s-ver">--</span></div>
+            <div class="status-item">⏱ <span id="s-up">--</span></div>
+            <div class="status-item" style="margin-left:auto;">φ = 1.618</div>
+        </div>
     </div>
+</div>
 
-    <script>
-    // ═══════════════════════════════════════════════════════════════
-    // HeadyWeb Dashboard — Live API Integration
-    // ═══════════════════════════════════════════════════════════════
-    const API_BASE = 'https://heady-manager-706095338840.us-central1.run.app';
-    const PHI = 1.6180339887;
-    const PSI = 0.6180339887;
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// HeadyWeb — AI-Native Browser Engine
+// ═══════════════════════════════════════════════════════════════════
+const API = 'https://heady-manager-706095338840.us-central1.run.app';
+const PHI = 1.6180339887;
+const PSI = 0.6180339887;
 
-    const PIPELINE_STAGES = [
-        'Ingest', 'Classify', 'Route', 'CSL Parse', 'Socratic Loop',
-        'Memory Retrieval', 'Knowledge Ground', 'Plan', 'Decompose',
-        'Execute', 'Verify', 'Critique', 'Iterate', 'Consensus',
-        'Govern', 'Format', 'Emit', 'Search & Discover',
-        'Evolution', 'Trust Receipt', 'Distillation', 'Completion'
-    ];
+const STAGES = [
+    'Ingest','Classify','Route','CSL Parse','Socratic Loop','Memory Retrieval',
+    'Knowledge Ground','Plan','Decompose','Execute','Verify','Critique',
+    'Iterate','Consensus','Govern','Format','Emit','Search & Discover',
+    'Evolution','Trust Receipt','Distillation','Completion'
+];
+const NODES = [
+    {n:'HeadyManager',t:'gateway',s:'ok'},{n:'HeadyConductor',t:'orch',s:'ok'},
+    {n:'HeadyDistiller',t:'intel',s:'ok'},{n:'HeadyBrain',t:'cog',s:'ok'},
+    {n:'HeadyMaid',t:'obs',s:'ok'},{n:'HeadySoul',t:'id',s:'ok'},
+    {n:'HeadyGovernance',t:'policy',s:'ok'},{n:'HeadyBeeFactory',t:'swarm',s:'ok'},
+    {n:'HeadyMCP',t:'proto',s:'ok'},{n:'HeadyAutoContext',t:'mem',s:'ok'},
+    {n:'HeadyResonance',t:'route',s:'ok'},{n:'HeadySpectrum',t:'analysis',s:'ok'},
+    {n:'HeadySpatial',t:'orch',s:'warn'},{n:'HeadyCSL',t:'lang',s:'ok'},
+    {n:'HeadyMemory',t:'persist',s:'ok'},{n:'HeadyContent',t:'gen',s:'ok'},
+    {n:'HeadyRouter',t:'worker',s:'ok'},{n:'HeadyAuth',t:'sec',s:'ok'},
+    {n:'HeadySearch',t:'disc',s:'ok'},{n:'HeadyBuddy',t:'comp',s:'warn'},
+];
 
-    const NODES = [
-        { name: 'HeadyManager', type: 'gateway', status: 'active' },
-        { name: 'HeadyConductor', type: 'orchestration', status: 'active' },
-        { name: 'HeadyDistiller', type: 'intelligence', status: 'active' },
-        { name: 'HeadyBrain', type: 'cognitive', status: 'active' },
-        { name: 'HeadyMaid', type: 'observability', status: 'active' },
-        { name: 'HeadySoul', type: 'identity', status: 'active' },
-        { name: 'HeadyGovernance', type: 'policy', status: 'active' },
-        { name: 'HeadyBeeFactory', type: 'swarm', status: 'active' },
-        { name: 'HeadyMCP', type: 'protocol', status: 'active' },
-        { name: 'HeadyAutoContext', type: 'memory', status: 'active' },
-        { name: 'HeadyResonance', type: 'routing', status: 'active' },
-        { name: 'HeadySpectrum', type: 'analysis', status: 'active' },
-        { name: 'HeadySpatial', type: 'orchestration', status: 'warning' },
-        { name: 'HeadyCSL', type: 'language', status: 'active' },
-        { name: 'HeadyMemory', type: 'persistence', status: 'active' },
-        { name: 'HeadyContent', type: 'generation', status: 'active' },
-        { name: 'HeadyRouter', type: 'worker', status: 'active' },
-        { name: 'HeadyAuth', type: 'security', status: 'active' },
-        { name: 'HeadySearch', type: 'discovery', status: 'active' },
-        { name: 'HeadyBuddy', type: 'companion', status: 'warning' },
-    ];
+let termLines = [];
+let health = null;
 
-    // ─── State ──────────────────────────────────────────────────
-    let healthData = null;
-    let terminalLines = [];
-    let refreshCount = 0;
-
-    // ─── Sacred Geometry Background ─────────────────────────────
-    function drawSacredGeometry() {
-        const canvas = document.getElementById('sacred-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        ctx.strokeStyle = 'rgba(139, 92, 246, 0.6)';
-        ctx.lineWidth = 0.5;
-
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        const r = 100;
-
-        // Flower of Life
-        for (let ring = 0; ring < 3; ring++) {
-            const count = ring === 0 ? 1 : ring * 6;
-            for (let i = 0; i < count; i++) {
-                const angle = (i / count) * Math.PI * 2;
-                const x = cx + Math.cos(angle) * r * ring * PSI;
-                const y = cy + Math.sin(angle) * r * ring * PSI;
-                ctx.beginPath();
-                ctx.arc(x, y, r * PSI, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-        }
-
-        // φ spiral
-        ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
-        ctx.beginPath();
-        for (let t = 0; t < 20; t += 0.05) {
-            const rad = 5 * Math.pow(PHI, t / (2 * Math.PI));
-            const x = cx + rad * Math.cos(t);
-            const y = cy + rad * Math.sin(t);
-            t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-    }
-
-    // ─── Render Pipeline Stages ─────────────────────────────────
-    function renderStages() {
-        const container = document.getElementById('stage-list');
-        container.innerHTML = PIPELINE_STAGES.map((name, i) => `
-            <div class="stage-item">
-                <div class="stage-num">${String(i).padStart(2, '0')}</div>
-                <span class="stage-name">${name}</span>
-                <div class="stage-status ${i <= 20 ? 'active' : 'idle'}"></div>
-            </div>
-        `).join('');
-    }
-
-    // ─── Render Nodes ───────────────────────────────────────────
-    function renderNodes() {
-        const container = document.getElementById('node-grid');
-        container.innerHTML = NODES.map(n => `
-            <div class="node-chip">
-                <div class="node-dot ${n.status}"></div>
-                <span class="node-name">${n.name}</span>
-                <span class="node-type">${n.type}</span>
-            </div>
-        `).join('');
-    }
-
-    // ─── Terminal ───────────────────────────────────────────────
-    function addTerminalLine(text, type = '') {
-        const ts = new Date().toISOString().slice(11, 19);
-        terminalLines.push({ ts, text, type });
-        if (terminalLines.length > 50) terminalLines.shift();
-
-        const el = document.getElementById('terminal');
-        el.innerHTML = terminalLines.map(l =>
-            `<div><span class="ts">${l.ts}</span> <span class="${l.type}">${l.text}</span></div>`
-        ).join('');
-        el.scrollTop = el.scrollHeight;
-    }
-
-    // ─── Fetch Health ───────────────────────────────────────────
-    async function fetchHealth() {
-        try {
-            const res = await fetch(`${API_BASE}/api/health`, { mode: 'cors' });
-            healthData = await res.json();
-
-            // Status badge
-            const badge = document.getElementById('status-badge');
-            const statusText = document.getElementById('status-text');
-            if (healthData.ok) {
-                badge.className = 'status-badge healthy';
-                statusText.textContent = 'Healthy';
-            } else {
-                badge.className = 'status-badge unhealthy';
-                statusText.textContent = 'Degraded';
-            }
-
-            // Version
-            document.getElementById('version-tag').textContent = `v${healthData.version || '3.1.0'}`;
-
-            // Uptime
-            const uptime = healthData.uptime || 0;
-            const h = Math.floor(uptime / 3600);
-            const m = Math.floor((uptime % 3600) / 60);
-            document.getElementById('uptime-tag').textContent = `⏱ ${h}h ${m}m`;
-
-            // Metrics
-            document.getElementById('m-stages').textContent = '22';
-            document.getElementById('m-tasks').textContent = '725';
-            document.getElementById('m-nodes').textContent = NODES.length;
-
-            const heapMB = Math.round((healthData.memory?.heapUsed || 0) / 1024 / 1024);
-            document.getElementById('m-memory').textContent = `${heapMB}MB`;
-            const rssMB = Math.round((healthData.memory?.rss || 0) / 1024 / 1024);
-            document.getElementById('m-memory-sub').textContent = `RSS: ${rssMB}MB`;
-
-            // Remove shimmer
-            document.querySelectorAll('.shimmer').forEach(el => el.classList.remove('shimmer'));
-
-            addTerminalLine(`Health check OK — uptime ${h}h${m}m, heap ${heapMB}MB`, 'ok');
-            addTerminalLine(`Redis: ${healthData.redis?.ok ? 'connected' : 'disconnected'} | Pools: hot=${healthData.redis?.pools?.hot?.max || 0} warm=${healthData.redis?.pools?.warm?.max || 0}`, healthData.redis?.ok ? 'info' : 'warn');
-
-            refreshCount++;
-            if (refreshCount % 5 === 0) {
-                addTerminalLine(`φ ratio check: ${PHI.toFixed(10)} — sacred constants verified`, 'phi');
-            }
-
-        } catch (err) {
-            const badge = document.getElementById('status-badge');
-            badge.className = 'status-badge unhealthy';
-            document.getElementById('status-text').textContent = 'Offline';
-            addTerminalLine(`Health fetch failed: ${err.message}`, 'err');
+// ─── Sacred Geometry ────────────────────────────────────────────
+function drawSacred() {
+    const c = document.getElementById('sacred');
+    const ctx = c.getContext('2d');
+    c.width = innerWidth; c.height = innerHeight;
+    ctx.strokeStyle = 'rgba(139,92,246,0.5)'; ctx.lineWidth = 0.5;
+    const cx = c.width/2, cy = c.height/2, r = 80;
+    for (let ring = 0; ring < 3; ring++) {
+        const n = ring === 0 ? 1 : ring * 6;
+        for (let i = 0; i < n; i++) {
+            const a = (i/n)*Math.PI*2;
+            ctx.beginPath();
+            ctx.arc(cx+Math.cos(a)*r*ring*PSI, cy+Math.sin(a)*r*ring*PSI, r*PSI, 0, Math.PI*2);
+            ctx.stroke();
         }
     }
+    ctx.strokeStyle = 'rgba(6,182,212,0.35)'; ctx.beginPath();
+    for (let t = 0; t < 20; t += 0.05) {
+        const rad = 4*Math.pow(PHI, t/(2*Math.PI));
+        const x = cx+rad*Math.cos(t), y = cy+rad*Math.sin(t);
+        t === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+}
 
-    // ─── Navigation ─────────────────────────────────────────────
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            addTerminalLine(`View switched: ${item.dataset.view}`, 'info');
-        });
+// ─── Render ─────────────────────────────────────────────────────
+function renderStages() {
+    document.getElementById('stage-list').innerHTML = STAGES.map((s,i) =>
+        `<div class="stage-row"><div class="stage-n">${String(i).padStart(2,'0')}</div><span class="stage-name">${s}</span><div class="stage-dot ${i<=20?'on':'off'}"></div></div>`
+    ).join('');
+}
+function renderNodes() {
+    document.getElementById('node-grid').innerHTML = NODES.map(n =>
+        `<div class="node"><div class="node-dot ${n.s}"></div><span class="node-name">${n.n}</span><span class="node-type">${n.t}</span></div>`
+    ).join('');
+}
+
+// ─── Terminal ───────────────────────────────────────────────────
+function log(text, cls='') {
+    const ts = new Date().toISOString().slice(11,19);
+    termLines.push({ts,text,cls});
+    if (termLines.length > 60) termLines.shift();
+    const el = document.getElementById('term');
+    el.innerHTML = termLines.map(l => `<div><span class="ts">${l.ts}</span> <span class="${l.cls}">${l.text}</span></div>`).join('');
+    el.scrollTop = el.scrollHeight;
+}
+
+// ─── API ────────────────────────────────────────────────────────
+async function fetchHealth() {
+    try {
+        const r = await fetch(`${API}/api/health`, {mode:'cors'});
+        health = await r.json();
+        document.getElementById('s-dot').className = 'status-dot ' + (health.ok ? 'ok' : 'err');
+        document.getElementById('s-status').textContent = health.ok ? 'Connected' : 'Degraded';
+        document.getElementById('s-ver').textContent = health.version || '3.1.0';
+        const up = health.uptime||0;
+        document.getElementById('s-up').textContent = `${Math.floor(up/3600)}h${Math.floor((up%3600)/60)}m`;
+        document.getElementById('m-stages').textContent = '22';
+        document.getElementById('m-tasks').textContent = '725';
+        document.getElementById('m-nodes').textContent = NODES.length;
+        const heap = Math.round((health.memory?.heapUsed||0)/1048576);
+        const rss = Math.round((health.memory?.rss||0)/1048576);
+        document.getElementById('m-mem').textContent = heap+'MB';
+        document.getElementById('m-rss').textContent = `RSS: ${rss}MB`;
+        log(`Health OK — heap ${heap}MB, rss ${rss}MB`, 'ok');
+    } catch(e) {
+        document.getElementById('s-dot').className = 'status-dot err';
+        document.getElementById('s-status').textContent = 'Offline';
+        log(`Health fetch failed: ${e.message}`, 'err');
+    }
+}
+
+// ─── Sidebar Toggle ─────────────────────────────────────────────
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
+document.getElementById('nav-sidebar').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
+
+// ─── Workspace chips ────────────────────────────────────────────
+document.querySelectorAll('.ws-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        document.querySelectorAll('.ws-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        log(`Workspace: ${chip.dataset.ws}`, 'info');
     });
+});
 
-    // ─── Init ───────────────────────────────────────────────────
-    async function init() {
-        drawSacredGeometry();
-        renderStages();
-        renderNodes();
-        addTerminalLine('HeadyWeb v3.1.0 initialized', 'ok');
-        addTerminalLine(`API endpoint: ${API_BASE}`, 'info');
-        addTerminalLine('φ = 1.6180339887 — sacred geometry active', 'phi');
-        addTerminalLine('Fetching system health...', 'info');
-        await fetchHealth();
+// ─── Quick actions ──────────────────────────────────────────────
+document.querySelectorAll('.qa-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        const responses = {
+            summarize: 'This is the HeadyWeb dashboard showing real-time metrics from the Heady AI platform. 22 pipeline stages are active, 725 tasks are tracked, and 20 AI nodes are registered.',
+            pipeline: `Pipeline v8.0 has 22 stages (0-21). Stage 21 DISTILL is the newest addition. All stages active. Current JUDGE threshold: 0.854 (φ-purified).`,
+            nodes: `${NODES.filter(n=>n.s==='ok').length} healthy, ${NODES.filter(n=>n.s==='warn').length} warning. HeadySpatial and HeadyBuddy need attention.`,
+            search: 'Search the Heady ecosystem: 77 repositories, 725 tasks, 22 pipeline stages, 20 AI nodes. Type your query in the sidebar.'
+        };
+        addAIMsg('you', btn.textContent.trim());
+        setTimeout(() => addAIMsg('heady', responses[action] || 'Processing...'), 400);
+    });
+});
 
-        // Refresh every 13 seconds (Fibonacci)
-        setInterval(fetchHealth, 13000);
+// ─── AI Chat ────────────────────────────────────────────────────
+function addAIMsg(role, text) {
+    const container = document.getElementById('ai-messages');
+    const cls = role === 'you' ? 'user' : 'assistant';
+    const labelCls = role === 'you' ? 'you' : 'heady';
+    const labelText = role === 'you' ? 'You' : 'HeadyWeb AI';
+    container.innerHTML += `<div class="ai-msg ${cls}"><div class="label ${labelCls}">${labelText}</div>${text}</div>`;
+    container.parentElement.scrollTop = container.parentElement.scrollHeight;
+}
+
+document.getElementById('ai-send').addEventListener('click', sendAIMsg);
+document.getElementById('ai-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendAIMsg(); });
+
+function sendAIMsg() {
+    const input = document.getElementById('ai-input');
+    const text = input.value.trim();
+    if (!text) return;
+    addAIMsg('you', text);
+    input.value = '';
+    // Simple response logic
+    setTimeout(() => {
+        const lower = text.toLowerCase();
+        let response;
+        if (lower.includes('health') || lower.includes('status')) {
+            response = health ? `System is ${health.ok?'healthy':'degraded'}. Uptime: ${Math.floor((health.uptime||0)/3600)}h. Heap: ${Math.round((health.memory?.heapUsed||0)/1048576)}MB.` : 'Unable to fetch health data.';
+        } else if (lower.includes('pipeline') || lower.includes('stage')) {
+            response = `HCFullPipeline v8.0 has 22 stages. Stage 21 (Distillation) was added in this session. All stages 0-20 are active.`;
+        } else if (lower.includes('node')) {
+            response = `${NODES.length} nodes registered. ${NODES.filter(n=>n.s==='warn').length} have warnings (HeadySpatial, HeadyBuddy).`;
+        } else if (lower.includes('phi') || lower.includes('φ') || lower.includes('golden')) {
+            response = `φ = 1.6180339887. ψ = φ−1 = 0.6180339887. ψ² = 0.382. The JUDGE threshold is φ-purified at 0.854 (1−ψ⁴×0.382).`;
+        } else {
+            response = `I understand "${text}". In a full integration, I'd route this to HeadyConductor for processing. For now, try asking about health, pipeline, nodes, or φ.`;
+        }
+        addAIMsg('heady', response);
+    }, 600);
+}
+
+// ─── URL bar ────────────────────────────────────────────────────
+document.getElementById('url-bar').addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+        const url = e.target.value.trim();
+        log(`Navigate: ${url}`, 'info');
+        if (url.startsWith('heady://')) {
+            log(`Internal route: ${url}`, 'phi');
+        } else {
+            log(`External navigation not available in web mode`, 'warn');
+        }
     }
+});
 
-    window.addEventListener('resize', drawSacredGeometry);
-    init();
-    </script>
+// ─── Init ───────────────────────────────────────────────────────
+drawSacred();
+renderStages();
+renderNodes();
+log('HeadyWeb v3.1.0 — AI-native browser initialized', 'ok');
+log(`API: ${API}`, 'info');
+log('φ = 1.6180339887 — sacred geometry active', 'phi');
+fetchHealth();
+setInterval(fetchHealth, 13000);
+addEventListener('resize', drawSacred);
+</script>
 </body>
 </html>

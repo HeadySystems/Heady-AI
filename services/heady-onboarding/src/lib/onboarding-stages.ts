@@ -38,7 +38,7 @@ export const ONBOARDING_STAGES: StageConfig[] = [
     description: 'Set up your @headyme.com email — use our secure client or forward to your provider',
     path: '/onboarding/email-config',
     apiEndpoint: '/api/onboarding/email-config',
-    requiredFields: ['emailMode', 'forwardTo'],
+    requiredFields: ['emailMode'],
     estimatedSeconds: Math.round(30 * PHI ** 2), // ~78s
     canGoBack: true,
   },

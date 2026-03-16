@@ -8,7 +8,7 @@
     "dev": "node --watch index.js",
     "test": "node --test",
     "lint": "eslint .",
-    "health": "curl -s http://0.0.0.0:3354/health | jq ."
+    "health": "curl -s http://0.0.0.0:3353/health | jq ."
   },
   "keywords": ["heady", "integration", "sacred-geometry", "phi-scaled"],
   "author": "Eric Haywood <eric@headyconnection.org>",

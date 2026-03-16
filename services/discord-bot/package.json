@@ -1,0 +1,22 @@
+{
+  "name": "@heady-ai/discord-bot",
+  "version": "1.0.0",
+  "description": "Heady Discord Bot — AI-powered community bot with slash commands for 20 AI nodes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test __tests__/discord-bot.test.js",
+    "health": "curl -s http://0.0.0.0:3320/health | jq ."
+  },
+  "keywords": ["heady", "discord", "bot", "ai-nodes", "sacred-geometry"],
+  "author": "Eric Haywood <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20.0.0" },
+  "dependencies": {
+    "discord.js": "^14.16.0",
+    "fastify": "^5.0.0",
+    "pino": "^9.0.0"
+  }
+}

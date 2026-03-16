@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.turbo/
+remotes/
+src/
+backend/
+configs/
+*.bak
+.git
+Dockerfile.webpack.bak
+Dockerfile.cloudrun
+package-lock.json
+webpack.config.js
+vite.config.js
+docker-compose.yml
