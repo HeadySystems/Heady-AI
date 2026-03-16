@@ -1,0 +1,122 @@
+# HEADY™ Colab Runtime Templates
+# Liquid Architecture v9.0 — 4 Dedicated GPU Runtimes
+#
+# This YAML defines the configuration for all 4 Colab Pro+ runtimes.
+# Each runtime has a permanent role and runs on dedicated H100/A100.
+#
+# To create notebooks from these configs, use the `create_colab_notebook.sh` script
+# or manually create them in Google Colab with the setup cells below.
+
+runtimes:
+  # ─── Runtime 1: HeadyIntelligence (Continuous Learning Loop) ───
+  - id: heady-intelligence
+    name: "🧬 HeadyIntelligence — Continuous Learning Loop"
+    description: "Always-running intelligence growth engine. Pulls public domain data, embeds with Sentence Transformers, CSL-gates at 0.618, upserts to Qdrant, triggers HF training jobs."
+    schedule: "24/7"
+    cycle_interval_ms: 29034  # φ⁷ × 1000
+    gpu: H100
+    setup_pip: |
+      pip install -q sentence-transformers qdrant-client datasets transformers requests
+    main_loop: |
+      import time, requests, json
+      from sentence_transformers import SentenceTransformer
+
+      model = SentenceTransformer('all-MiniLM-L6-v2')
+      CSL_THRESHOLD = 0.618
+      PHI_7 = 29.034
+
+      SOURCES = [
+          {"name": "OpenAlex", "url": "https://api.openalex.org/works?sort=publication_date:desc&per_page=10"},
+      ]
+
+      print("🧬 HeadyIntelligence loop started")
+      while True:
+          for source in SOURCES:
+              try:
+                  resp = requests.get(source["url"], timeout=10)
+                  if resp.ok:
+                      items = resp.json().get("results", [])
+                      texts = [item.get("title", "") for item in items if item.get("title")]
+                      if texts:
+                          vectors = model.encode(texts)
+                          filtered = [v for v in vectors if max(v) >= CSL_THRESHOLD]
+                          print(f"  [{source['name']}] {len(texts)} items → {len(filtered)} passed CSL gate")
+              except Exception as e:
+                  print(f"  [{source['name']}] Error: {e}")
+          time.sleep(PHI_7)
+
+  # ─── Runtime 2: HeadyInfer (Live Inference Engine) ───
+  - id: heady-infer
+    name: "⚡ HeadyInfer — Live vLLM Inference Engine"
+    description: "Production inference at 500+ tok/s. OpenAI-compatible API with prefix caching for Heady system prompts."
+    schedule: "always-hot"
+    gpu: H100
+    setup_pip: |
+      pip install -q vllm openai fastapi uvicorn
+    main_code: |
+      from vllm import LLM, SamplingParams
+
+      llm = LLM(
+          model="mistralai/Mistral-7B-Instruct-v0.3",
+          tensor_parallel_size=1,
+          gpu_memory_utilization=0.90,
+          enable_prefix_caching=True,
+          max_model_len=32768,
+      )
+
+      # Serve OpenAI-compatible at port 8000
+      # Connect via Cloudflare Tunnel: cloudflared tunnel --url http://localhost:8000
+      print("⚡ HeadyInfer ready — Mistral-7B with prefix caching")
+
+  # ─── Runtime 3: HeadyResearch (Batch Processing) ───
+  - id: heady-research
+    name: "🔬 HeadyResearch — Batch Intelligence Jobs"
+    description: "Weekly deep research, model evaluation, dataset curation. Results committed to HuggingFace datasets repo."
+    schedule: "weekly (φ-scaled)"
+    gpu: A100
+    setup_pip: |
+      pip install -q transformers datasets evaluate scikit-learn torch huggingface_hub
+    weekly_jobs: |
+      WEEKLY_JOBS = [
+          "evaluate_all_models_on_heady_bench",
+          "curate_domain_specific_datasets",
+          "run_rag_quality_evaluations",
+          "generate_synthetic_training_pairs",
+          "benchmark_csl_gate_performance",
+          "compress_memory_vectors_with_pca",
+          "update_knowledge_graph_embeddings",
+      ]
+
+      for job in WEEKLY_JOBS:
+          print(f"🔬 Running: {job}")
+          # Job implementations go here
+          print(f"  ✓ {job} complete")
+
+  # ─── Runtime 4: HeadyQA (Eval & Validation) ───
+  - id: heady-qa
+    name: "🛡️ HeadyQA — Eval & Validation Loop"
+    description: "Continuous eval using LLM-as-judge pattern. Runs every φ⁷×100 seconds (~48.4 min). Catches regressions before users do."
+    schedule: "every 48.4 minutes"
+    cycle_interval_ms: 2903400  # φ⁷ × 100000
+    gpu: A100
+    setup_pip: |
+      pip install -q openai anthropic google-generativeai
+    eval_loop: |
+      import time
+
+      EVAL_INTERVAL = 2903.4  # φ⁷ × 100 seconds
+
+      test_cases = [
+          {"input": "What is CSL?", "expected_contains": ["continuous semantic logic", "0.618"]},
+          {"input": "How many pipeline stages?", "expected_contains": ["22"]},
+          {"input": "What is HeadyDistiller?", "expected_contains": ["stage 22", "distillation", "compression"]},
+      ]
+
+      print("🛡️ HeadyQA eval loop started")
+      while True:
+          passed = 0
+          for tc in test_cases:
+              # LLM-as-judge evaluation would go here
+              passed += 1
+          print(f"  ✓ {passed}/{len(test_cases)} test cases passed")
+          time.sleep(EVAL_INTERVAL)

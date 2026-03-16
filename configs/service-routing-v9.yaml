@@ -1,0 +1,139 @@
+# HEADY™ Service-to-Provider Routing Matrix
+# Liquid Architecture v9.0 — 8 Cloud Providers
+#
+# Every service has a primary, optional secondary, and optional fallback.
+# Monthly costs estimated at steady-state.
+# Credits: GCloud $250/~3.5 months, Azure $200/~2.5 months.
+
+version: "9.0.0"
+pipeline_stages: 22
+pipeline_completion_target: "φ⁵ × 1.09 ≈ 12.1s"
+
+providers:
+  - name: Google Cloud
+    credits: $250
+    optimal_use: "Vertex AI embeddings, Cloud Run services, Artifact Registry"
+  - name: Azure
+    credits: $200
+    optimal_use: "Azure OpenAI fallback, Cognitive Services, Container Apps"
+  - name: Colab Pro+
+    accounts: 4
+    cost: ~$200/mo
+    optimal_use: "GPU inference, training, continuous learning loop"
+  - name: Cloudflare
+    plan: Business
+    cost: ~$250/mo
+    optimal_use: "Edge Workers, KV, DO, R2, Pages, Tunnels"
+  - name: Upstash
+    cost: ~$0-50/mo
+    optimal_use: "Redis working memory, Kafka event streaming, Vector"
+  - name: Neon
+    cost: ~$19-69/mo
+    optimal_use: "Serverless Postgres — users, auth, tasks, CSL scores"
+  - name: Sentry
+    cost: ~$26/mo
+    optimal_use: "Error tracking — all 9 sites + all services"
+  - name: Hugging Face
+    plan: Team Business
+    cost: ~$120/mo
+    optimal_use: "Model hosting, Spaces, Datasets, Inference Endpoints"
+  - name: GitHub
+    cost: Included
+    optimal_use: "CI/CD Actions, Apps, Gists config"
+
+services:
+  - name: heady-infer
+    primary: "Colab Runtime 2 (vLLM)"
+    secondary: "Colab Runtime 1"
+    fallback: "Azure OpenAI"
+    cost: ~$50/mo
+
+  - name: heady-embed
+    primary: "HF Inference Endpoint"
+    secondary: "Cloudflare Workers AI"
+    fallback: "Vertex AI"
+    cost: ~$6/mo
+
+  - name: heady-classify
+    primary: "HF Inference Endpoint"
+    secondary: "Cloudflare Workers AI"
+    cost: ~$6/mo
+
+  - name: heady-distiller
+    primary: "HF Inference Endpoint"
+    secondary: "Colab Runtime 3"
+    cost: ~$13/mo
+
+  - name: heady-api
+    primary: "Cloud Run (GCP credits)"
+    secondary: "Azure Container Apps"
+    cost: ~$20/mo
+
+  - name: heady-memory
+    primary: "Qdrant Cloud"
+    secondary: "Upstash Vector"
+    cost: ~$25/mo
+
+  - name: heady-db
+    primary: Neon
+    cost: ~$19/mo
+
+  - name: heady-cache
+    primary: "Upstash Redis"
+    secondary: "Cloudflare KV"
+    cost: ~$10/mo
+
+  - name: heady-stream
+    primary: "Upstash Kafka"
+    cost: ~$15/mo
+
+  - name: heady-errors
+    primary: Sentry
+    cost: ~$26/mo
+
+  - name: heady-edge
+    primary: "Cloudflare Workers"
+    cost: Included
+
+  - name: heady-storage
+    primary: "Cloudflare R2"
+    cost: Included
+
+  - name: heady-sites
+    primary: "Cloudflare Pages"
+    cost: Included
+
+  - name: heady-intelligence
+    primary: "Colab Runtime 1 (24/7)"
+    cost: ~$50/mo
+
+  - name: heady-research
+    primary: "Colab Runtime 3 (scheduled)"
+    cost: ~$50/mo
+
+  - name: heady-qa
+    primary: "Colab Runtime 4"
+    secondary: "Vertex AI"
+    cost: ~$50/mo
+
+total_monthly: ~$360/mo
+net_cash_months_1_to_3: ~$110/mo
+
+# ── Updated System Constants (v9.0) ──
+constants:
+  pipeline_stages: 22
+  pipeline_completion_target_s: 12.1      # φ⁵ × 1.09
+  distillation_token_reduction: 0.40      # ~40% on repeated patterns
+  colab_runtimes: 4
+  cloud_providers: 8
+  database: "Neon (Postgres) + Upstash (Redis/Kafka)"
+  error_monitoring: "Sentry (12 projects)"
+  edge_storage: "Cloudflare R2 (zero egress)"
+  config_distribution: "Cloudflare KV (primary) + GitHub Gists (mirror)"
+  csl_gates:
+    core: 0.718
+    include: 0.618
+    recall: 0.382
+  phi: 1.618033988749895
+  phi_5: 11.09
+  phi_7_s: 29.034
