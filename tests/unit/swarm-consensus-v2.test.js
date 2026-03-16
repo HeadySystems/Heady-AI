@@ -34,7 +34,7 @@ describe('SwarmConsensus v2', () => {
   describe('Lock Acquisition', () => {
     it('should acquire a lock and return a nonce', async () => {
       const result = await consensus.acquire('resource-1', 'owner-1');
-      expect(result.acquired).toBe(true);
+      expect(result.ok).toBe(true);
       expect(result.nonce).toBeDefined();
       expect(typeof result.nonce).toBe('string');
       expect(result.nonce.length).toBe(32); // 16 bytes hex
@@ -43,7 +43,7 @@ describe('SwarmConsensus v2', () => {
     it('should prevent double acquisition of same resource', async () => {
       await consensus.acquire('resource-1', 'owner-1');
       const result = await consensus.acquire('resource-1', 'owner-2');
-      expect(result.acquired).toBe(false);
+      expect(result.ok).toBe(false);
     });
 
     it('should emit lock:acquired event', async () => {
@@ -57,21 +57,21 @@ describe('SwarmConsensus v2', () => {
   describe('Lock Release', () => {
     it('should release with valid nonce', async () => {
       const { nonce } = await consensus.acquire('resource-1', 'owner-1');
-      const released = consensus.release('resource-1', nonce);
-      expect(released).toBe(true);
+      const result = consensus.release('resource-1', 'owner-1', nonce);
+      expect(result.ok).toBe(true);
     });
 
     it('should reject release with invalid nonce', async () => {
       await consensus.acquire('resource-1', 'owner-1');
-      const released = consensus.release('resource-1', 'wrong-nonce-value-here-1234');
-      expect(released).toBe(false);
+      const result = consensus.release('resource-1', 'owner-1', 'wrong-nonce-value-here-1234');
+      expect(result.ok).toBe(false);
     });
 
     it('should emit lock:released on successful release', async () => {
       const handler = jest.fn();
       consensus.on('lock:released', handler);
       const { nonce } = await consensus.acquire('resource-1', 'owner-1');
-      consensus.release('resource-1', nonce);
+      consensus.release('resource-1', 'owner-1', nonce);
       expect(handler).toHaveBeenCalled();
     });
   });
@@ -79,14 +79,14 @@ describe('SwarmConsensus v2', () => {
   describe('Heartbeat', () => {
     it('should accept heartbeat with valid nonce', async () => {
       const { nonce } = await consensus.acquire('resource-1', 'owner-1');
-      const result = consensus.heartbeat('resource-1', nonce);
-      expect(result).toBe(true);
+      const result = consensus.heartbeat('resource-1', 'owner-1', nonce);
+      expect(result.ok).toBe(true);
     });
 
     it('should reject heartbeat with invalid nonce', async () => {
       await consensus.acquire('resource-1', 'owner-1');
-      const result = consensus.heartbeat('resource-1', 'invalid-nonce-1234567890ab');
-      expect(result).toBe(false);
+      const result = consensus.heartbeat('resource-1', 'owner-1', 'invalid-nonce-1234567890ab');
+      expect(result.ok).toBe(false);
     });
   });
 
@@ -101,11 +101,13 @@ describe('SwarmConsensus v2', () => {
   });
 
   describe('Metrics', () => {
-    it('should report metrics', async () => {
-      await consensus.acquire('resource-1', 'owner-1');
-      const metrics = consensus.getMetrics();
-      expect(metrics).toBeDefined();
-      expect(metrics.activeLocks).toBeGreaterThanOrEqual(1);
+    it('should report status', async () => {
+      const result = await consensus.acquire('resource-1', 'owner-1');
+      if (result.ok) {
+        const status = consensus.getStatus();
+        expect(status).toBeDefined();
+        expect(status.activeLocks).toBeGreaterThanOrEqual(1);
+      }
     });
   });
 

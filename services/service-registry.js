@@ -15,7 +15,7 @@ const SERVICE_GROUPS = Object.freeze({
   Monitoring:    { start: 3355, services: ['HeadyHealth', 'HeadyMetrics', 'HeadyTrace', 'HeadyAlert', 'HeadyDashboard'] },
   Web:           { start: 3360, services: ['HeadyWeb', 'HeadyCMS', 'HeadyAPI', 'HeadySSR', 'HeadyStatic', 'HeadyCDN', 'HeadyForm', 'HeadySearch', 'HeadyMedia', 'HeadyChat'] },
   Data:          { start: 3370, services: ['HeadyETL', 'HeadyAnalytics', 'HeadyReport', 'HeadyExport', 'HeadyImport', 'HeadySync', 'HeadyMigrate', 'HeadyBackup', 'HeadyRestore', 'HeadyValidate'] },
-  Integration:   { start: 3380, services: ['HeadyMCP', 'HeadyWebhook', 'HeadyOAuth', 'HeadySSO', 'HeadyEmail', 'HeadySMS', 'HeadySlack', 'HeadyGitHub', 'HeadyJira', 'HeadyNotion'] },
+  Integration:   { start: 3380, services: ['HeadyMCP', 'HeadyWebhook', 'HeadyOAuth', 'HeadySSO', 'HeadyEmail', 'HeadySMS', 'HeadySlack', 'HeadyGitHub', 'HeadyJira', 'HeadyNotebookLM'] },
   Specialized:   { start: 3390, services: ['HeadyFinance', 'HeadyLegal', 'HeadyHR', 'HeadyMarketing', 'HeadySales', 'HeadySupport', 'HeadyR&D'] },
 });
 

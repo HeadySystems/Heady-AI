@@ -50,8 +50,10 @@ describe('Swarm Coordination Integration', () => {
   });
 
   it('should handle concurrent dispatches', async () => {
-    const bee = { execute: jest.fn().mockResolvedValue({ ok: true }) };
-    conductor.registerBee('worker', bee);
+    // Register 3 bees so all concurrent dispatches can find an idle bee
+    conductor.registerBee('worker-1', { execute: jest.fn().mockResolvedValue({ ok: true }) });
+    conductor.registerBee('worker-2', { execute: jest.fn().mockResolvedValue({ ok: true }) });
+    conductor.registerBee('worker-3', { execute: jest.fn().mockResolvedValue({ ok: true }) });
 
     const results = await Promise.all([
       conductor.dispatch('task', { id: 1 }),

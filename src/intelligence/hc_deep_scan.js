@@ -31,7 +31,7 @@ const INTERNAL_SERVICES = {
     patterns: { path: "/api/patterns/health", role: "resilience", critical: true },
     lens: { path: "/api/lens/health", role: "differentials", critical: false },
     vinci: { path: "/api/vinci/health", role: "creative", critical: false },
-    notion: { path: "/api/notion/health", role: "knowledge", critical: false },
+    notion: { path: "/api/notebooklm/health", role: "knowledge", critical: false },
     ops: { path: "/api/ops/health", role: "operations", critical: true },
     maintenance: { path: "/api/maintenance/health", role: "housekeeping", critical: true },
     registry: { path: "/api/registry", role: "catalog", critical: true },

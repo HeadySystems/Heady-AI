@@ -254,7 +254,7 @@ const connectors = {
     // List available connectors for the org
     async list() {
         return {
-            available: ['google-drive', 'sharepoint', 'slack', 'notion', 'github', 'jira'],
+            available: ['google-drive', 'sharepoint', 'slack', 'notebooklm', 'github', 'jira'],
             configured: process.env.OPENAI_CONNECTORS ? process.env.OPENAI_CONNECTORS.split(',') : [],
             plan: 'ChatGPT Business',
             seats: 2,

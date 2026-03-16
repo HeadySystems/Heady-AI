@@ -79,7 +79,7 @@ class ProjectHistoryIngestor {
             'src/mcp': 'MCP bridge, telemetry, learning, templates',
             'src/bees': 'HeadyBee factory, templates, swarm intelligence',
             'src/routes': 'API routes: battle, budget, hive-sdk, services',
-            'src/services': 'Heady services: Notion, edge-AI integration',
+            'src/services': 'Heady services: NotebookLM, edge-AI integration',
             'src/telemetry': 'Provider usage tracking, metrics',
             'src': 'Core: brain, soul, providers, orchestrator, security, auth',
             'sites': 'Web UIs: admin, headyos, landing pages',

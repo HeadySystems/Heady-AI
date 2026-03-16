@@ -174,7 +174,7 @@ try {
     { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
     { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
     { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
-    { id: "notion_token", name: "Notion Integration Token", envVar: "NOTION_TOKEN", tags: ["notion"], dependents: ["notion-sync"] },
+    { id: "notebooklm_token", name: "NotebookLM Integration Token", envVar: "NOTEBOOKLM_TOKEN", tags: ["notebooklm"], dependents: ["notebooklm-sync"] },
     { id: "github_token", name: "GitHub PAT", envVar: "GITHUB_TOKEN", tags: ["github", "vcs"], dependents: ["heady-sync"] },
     { id: "stripe_secret_key", name: "Stripe Secret Key", envVar: "STRIPE_SECRET_KEY", tags: ["stripe", "payments"], dependents: ["billing"] },
     { id: "stripe_webhook_secret", name: "Stripe Webhook Secret", envVar: "STRIPE_WEBHOOK_SECRET", tags: ["stripe", "webhook"], dependents: ["billing-webhooks"] },
@@ -234,6 +234,21 @@ if (remoteConfig.critical_only) {
 
 const PORT = 3301;
 const app = express();
+
+// ─── SEC-08/09/10: Hardened Security Middleware ─────────────────────
+const { securityHeaders } = require('./src/middleware/security-headers');
+const { createTierLimiter } = require('./src/resilience/rate-limiter-hardened');
+const { validateEnvironment } = require('./src/security/env-validator-hardened');
+
+// Validate environment on startup (non-blocking in dev)
+const envResult = validateEnvironment(process.env);
+if (!envResult.valid && process.env.NODE_ENV === 'production') {
+  console.error('[SECURITY] Environment validation failed:', envResult.errors);
+  process.exit(1);
+}
+
+// Apply hardened security headers (CORS, HSTS, X-Frame-Options, etc.)
+app.use(securityHeaders);
 
 // ─── Middleware ─────────────────────────────────────────────────────
 app.use(helmet({

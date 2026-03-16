@@ -151,7 +151,7 @@ phases:
         validation: "Google Sign-In and email/password working"
       - component: stripe-billing
         validation: "Checkout sessions create, webhooks verified"
-      - component: notion-sync
+      - component: notebooklm-sync
         validation: "11 notebook pages syncing"
       - component: hugging-face
         validation: "3 HF Spaces deployed and accessible"

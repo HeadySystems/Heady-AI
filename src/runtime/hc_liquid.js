@@ -129,7 +129,7 @@ const COMPONENT_REGISTRY = {
         },
         providerPriority: ["github-ent", "groq"],
     },
-    "notion": {
+    "notebooklm": {
         capabilities: ["knowledge-management", "documentation", "context-synthesis"],
         contexts: ["knowledge-query", "documentation-gen", "context-building"],
         weight: 6,
@@ -338,7 +338,7 @@ const HF_SPACES_TOPOLOGY = {
         },
         providerPriority: ["hf-biz", "gemini", "perplexity", "groq"],
         storage: ["datasets", "user-content"],
-        components: ["notion", "vinci", "buddy"],
+        components: ["notebooklm", "vinci", "buddy"],
         sharedAssets: ["shared/buddy-widget.js", "shared/icon.png", "shared/logo.png"],
     },
     "systems": {

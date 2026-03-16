@@ -614,8 +614,8 @@ function createToolRegistry() {
   });
 
   register({
-    name: 'heady_notion',
-    description: 'Sync Heady Knowledge Vault to Notion — bidirectional knowledge sync.',
+    name: 'heady_notebooklm',
+    description: 'Sync Heady Knowledge Vault to NotebookLM — bidirectional knowledge sync.',
     category: 'integrations',
     phiTier: 5,
     inputSchema: {

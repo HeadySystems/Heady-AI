@@ -130,7 +130,7 @@ function loadMCPTools() {
         { name: 'heady_lens', description: 'Visual analysis, image processing via Heady™Lens.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['analyze', 'process', 'detect'], default: 'analyze' }, image_url: { type: 'string' }, prompt: { type: 'string' } }, required: ['action'] } },
         { name: 'heady_vinci', description: 'Pattern recognition and prediction via Heady™Vinci.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['learn', 'predict', 'recognize'], default: 'predict' }, data: { type: 'string' } }, required: ['data'] } },
         { name: 'heady_buddy', description: 'HeadyBuddy — multi-provider personal AI assistant.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'memory', 'skills', 'tasks', 'providers'], default: 'chat' }, provider: { type: 'string', default: 'auto' } }, required: ['message'] } },
-        { name: 'heady_notion', description: 'Sync Heady Knowledge Vault to Notion (11 pages).', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
+        { name: 'heady_notebooklm', description: 'Sync Heady Knowledge Vault to NotebookLM (11 pages).', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
         { name: 'heady_edge_ai', description: 'Cloudflare edge AI — embeddings, chat, classification, vector search.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['embed', 'chat', 'classify', 'vectorize-insert', 'vectorize-query', 'queue'] }, text: { type: 'string' }, message: { type: 'string' }, model: { type: 'string' }, topK: { type: 'number' } }, required: ['action'] } },
         // ── 3D Vector Space tools (bridge-only) ──
         { name: 'heady_vector_store', description: 'Store a vector embedding with metadata in the 3D GPU vector space.', inputSchema: { type: 'object', properties: { embedding: { type: 'array', items: { type: 'number' }, description: '384-dim float array' }, metadata: { type: 'object', description: 'Metadata to attach' } }, required: ['embedding'] } },
@@ -284,7 +284,7 @@ async function callTool(name, args) {
         heady_lens: '/api/lens/analyze',
         heady_vinci: '/api/vinci/predict',
         heady_buddy: '/api/buddy/chat',
-        heady_notion: '/api/notion/sync',
+        heady_notebooklm: '/api/notebooklm/sync',
         heady_edge_ai: '/api/edge/chat',
     };
 

@@ -119,7 +119,7 @@ class McpSseTransport {
             heady_groq: { method: 'POST', path: '/api/groq/chat', mapArgs: (a) => ({ message: a.message, source: 'heady-mcp-sse' }) },
             heady_buddy: { method: 'POST', path: '/api/buddy/chat', mapArgs: (a) => ({ message: a.message, provider: a.provider || 'auto', source: 'heady-mcp-sse' }) },
             heady_edge_ai: { method: 'POST', path: '/api/edge/chat', mapArgs: (a) => ({ text: a.text, message: a.message, model: a.model, source: 'heady-mcp-sse' }) },
-            heady_notion: { method: 'POST', path: '/api/notion/sync', mapArgs: () => ({ source: 'heady-mcp-sse' }) },
+            heady_notebooklm: { method: 'POST', path: '/api/notebooklm/sync', mapArgs: () => ({ source: 'heady-mcp-sse' }) },
             heady_battle: { method: 'POST', path: '/api/battle/session', mapArgs: (a) => ({ action: a.action, task: a.task, content: a.code, source: 'heady-mcp-sse' }) },
             heady_patterns: { method: 'POST', path: '/api/patterns/analyze', mapArgs: (a) => ({ code: a.code, language: a.language, source: 'heady-mcp-sse' }) },
             heady_risks: { method: 'POST', path: '/api/risks/assess', mapArgs: (a) => ({ content: a.content, scope: a.scope || 'all', source: 'heady-mcp-sse' }) },

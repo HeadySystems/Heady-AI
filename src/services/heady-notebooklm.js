@@ -4,8 +4,8 @@
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * Heady™ → Notion Sync Service
- * Creates and maintains 3 synced notebooks + Knowledge Vault in Notion.
+ * Heady™ → NotebookLM Sync Service
+ * Creates and maintains 3 synced notebooks + Knowledge Vault in NotebookLM.
  * 
  * Notebooks:
  *   1. Comprehensive Guide (IP, architecture, services, patents)
@@ -20,12 +20,12 @@ const path = require("path");
 const https = require("https");
 const logger = require("../utils/logger");
 
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTEBOOKLM_TOKEN = process.env.NOTEBOOKLM_TOKEN;
 const NOTION_VERSION = "2022-06-28";
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
 const NOTEBOOKS_DIR = path.join(__dirname, "..", "..", "docs", "notebooks");
 
-// ─── Notion API Helper ──────────────────────────────────────────────
+// ─── NotebookLM API Helper ──────────────────────────────────────────────
 
 function notionRequest(method, endpoint, body) {
     return new Promise((resolve, reject) => {
@@ -35,8 +35,8 @@ function notionRequest(method, endpoint, body) {
             path: `/v1${endpoint}`,
             method,
             headers: {
-                "Authorization": `Bearer ${NOTION_TOKEN}`,
-                "Notion-Version": NOTION_VERSION,
+                "Authorization": `Bearer ${NOTEBOOKLM_TOKEN}`,
+                "NotebookLM-Version": NOTION_VERSION,
                 "Content-Type": "application/json",
                 ...(payload ? { "Content-Length": Buffer.byteLength(payload) } : {}),
             },
@@ -50,24 +50,24 @@ function notionRequest(method, endpoint, body) {
                 try {
                     const parsed = JSON.parse(data);
                     if (res.statusCode >= 400) {
-                        reject(new Error(`Notion ${res.statusCode}: ${parsed.message || data}`));
+                        reject(new Error(`NotebookLM ${res.statusCode}: ${parsed.message || data}`));
                     } else {
                         resolve(parsed);
                     }
                 } catch {
-                    reject(new Error(`Notion parse error: ${data.substring(0, 200)}`));
+                    reject(new Error(`NotebookLM parse error: ${data.substring(0, 200)}`));
                 }
             });
         });
 
         req.on("error", reject);
-        req.on("timeout", () => { req.destroy(); reject(new Error("Notion timeout")); });
+        req.on("timeout", () => { req.destroy(); reject(new Error("NotebookLM timeout")); });
         if (payload) req.write(payload);
         req.end();
     });
 }
 
-// ─── Markdown → Notion Blocks ───────────────────────────────────────
+// ─── Markdown → NotebookLM Blocks ───────────────────────────────────────
 
 function markdownToBlocks(md, maxBlocks = 95) {
     const lines = md.split("\n");
@@ -111,7 +111,7 @@ function markdownToBlocks(md, maxBlocks = 95) {
         } else if (line.startsWith("```")) {
             // Skip code fence markers (content handled in paragraph fallback)
         } else if (line.startsWith("|")) {
-            // Table rows as paragraphs (Notion tables require special handling)
+            // Table rows as paragraphs (NotebookLM tables require special handling)
             blocks.push({
                 object: "block", type: "paragraph",
                 paragraph: { rich_text: [{ type: "text", text: { content: line } }] },
@@ -148,7 +148,7 @@ async function createPage(parentId, title, icon, blocks) {
         if (search.results && search.results.length > 0) {
             body.parent = { page_id: search.results[0].id };
         } else {
-            throw new Error("No Notion pages shared with the bot. Please share at least one page with the AntiGravity integration in Notion settings.");
+            throw new Error("No NotebookLM pages shared with the bot. Please share at least one page with the AntiGravity integration in NotebookLM settings.");
         }
     }
 
@@ -157,7 +157,7 @@ async function createPage(parentId, title, icon, blocks) {
 
 async function appendBlocks(pageId, blocks) {
     if (!blocks.length) return;
-    // Notion allows max 100 blocks per append
+    // NotebookLM allows max 100 blocks per append
     for (let i = 0; i < blocks.length; i += 100) {
         const chunk = blocks.slice(i, i + 100);
         await notionRequest("PATCH", `/blocks/${pageId}/children`, { children: chunk });
@@ -166,7 +166,7 @@ async function appendBlocks(pageId, blocks) {
 
 // ─── State Management ───────────────────────────────────────────────
 
-const STATE_FILE = path.join(DATA_DIR, "notion-sync-state.json");
+const STATE_FILE = path.join(DATA_DIR, "notebooklm-sync-state.json");
 
 function loadState() {
     try {
@@ -236,7 +236,7 @@ function generateStatusContent() {
 - Added memory receipt system (stored vs not-stored tracking)
 - Created missing services/ modules (core-api, brain_api, orchestrator)
 - Wrapped swagger UI in try/catch for resilient startup
-- Built Notion integration service
+- Built NotebookLM integration service
 - Container rebuilt 3× and deployed with port fix (3301:3301)
 
 ## Known Issues
@@ -248,7 +248,7 @@ function generateStatusContent() {
 - [ ] Fix HeadyLocal container networking for real vector embeddings
 - [ ] Address Dependabot vulnerabilities
 - [ ] Build user authentication tiers (RBAC + subscription)
-- [ ] Complete Notion Knowledge Vault population
+- [ ] Complete NotebookLM Knowledge Vault population
 - [ ] Implement remaining planned concepts (saga compensation, auto-tuning, circuit breaker)
 - [ ] Deploy HeadyWeb production with Firebase auth + Stripe
 
@@ -404,9 +404,9 @@ Add to your MCP config:
 
 // ─── Main Sync Function ─────────────────────────────────────────────
 
-async function syncToNotion() {
-    if (!NOTION_TOKEN) {
-        logger.error("NOTION_TOKEN not set");
+async function syncToNotebookLM() {
+    if (!NOTEBOOKLM_TOKEN) {
+        logger.error("NOTEBOOKLM_TOKEN not set");
         return { ok: false, error: "No token" };
     }
 
@@ -610,7 +610,7 @@ async function syncToNotion() {
 
 // ─── Express Route Registration ─────────────────────────────────────
 
-function registerNotionRoutes(app) {
+function registerNotebookLMRoutes(app) {
     const express = require('../core/heady-server');
     const router = express.Router();
 
@@ -618,8 +618,8 @@ function registerNotionRoutes(app) {
         const state = loadState();
         res.json({
             ok: true,
-            service: "heady-notion",
-            connected: !!NOTION_TOKEN,
+            service: "heady-notebooklm",
+            connected: !!NOTEBOOKLM_TOKEN,
             lastSync: state.lastSync,
             syncCount: state.syncCount,
             pages: Object.keys(state.pages).length,
@@ -629,7 +629,7 @@ function registerNotionRoutes(app) {
 
     router.post("/sync", async (req, res) => {
         try {
-            const result = await syncToNotion();
+            const result = await syncToNotebookLM();
             res.json(result);
         } catch (err) {
             res.status(500).json({ ok: false, error: err.message });
@@ -638,7 +638,7 @@ function registerNotionRoutes(app) {
 
     router.post("/audit", async (req, res) => {
         try {
-            const result = await updateNotionStatus(req.body);
+            const result = await updateNotebookLMStatus(req.body);
             res.json(result);
         } catch (err) {
             res.status(500).json({ ok: false, error: err.message });
@@ -655,8 +655,8 @@ function registerNotionRoutes(app) {
 
 // ─── Continuous Status Updater (Audit Log) ──────────────────────────
 
-async function updateNotionStatus(event = {}) {
-    if (!NOTION_TOKEN) return { ok: false, error: "No token" };
+async function updateNotebookLMStatus(event = {}) {
+    if (!NOTEBOOKLM_TOKEN) return { ok: false, error: "No token" };
 
     const state = loadState();
     const statusPageId = state.pages.status;
@@ -712,13 +712,13 @@ if (require.main === module) {
 
     if (cliAction === "audit") {
         const details = process.argv[3] || `Git push audit at ${new Date().toISOString()}`;
-        logger.logSystem("📋 Appending audit entry to Notion...");
-        updateNotionStatus({ source: "git-hook", action: "git-push", details })
+        logger.logSystem("📋 Appending audit entry to NotebookLM...");
+        updateNotebookLMStatus({ source: "git-hook", action: "git-push", details })
             .then((r) => { logger.logSystem(JSON.stringify(r)); process.exit(r.ok ? 0 : 1); })
             .catch((e) => { logger.error(e); process.exit(1); });
     } else {
-        logger.logSystem("🧠 Heady → Notion Sync Starting...");
-        syncToNotion()
+        logger.logSystem("🧠 Heady → NotebookLM Sync Starting...");
+        syncToNotebookLM()
             .then((result) => {
                 logger.logSystem(JSON.stringify(result, null, 2));
                 process.exit(result.ok ? 0 : 1);
@@ -730,5 +730,5 @@ if (require.main === module) {
     }
 }
 
-module.exports = { syncToNotion, updateNotionStatus, registerNotionRoutes, loadState };
+module.exports = { syncToNotebookLM, updateNotebookLMStatus, registerNotebookLMRoutes, loadState };
 

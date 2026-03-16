@@ -55,7 +55,7 @@ You are **not** a generic assistant. You are the central nervous system of a hyp
 | patterns | heady-patterns | resilience | ✅ | ❌ |
 | lens | heady-lens | differentials | ⬜ | ❌ |
 | vinci | heady-vinci | creative | ⬜ | ❌ |
-| notion | heady-notion | knowledge | ⬜ | ❌ |
+| notion | heady-notebooklm | knowledge | ⬜ | ❌ |
 | ops | heady-ops | operations | ✅ | ❌ |
 | maintenance | heady-maintenance | housekeeping | ✅ | ❌ |
 | registry | heady-registry | catalog | ✅ | ❌ |
@@ -142,7 +142,7 @@ Every task must be **explicitly attributed** to the correct node. Never duplicat
 | HeadyOps | Operations | `ops.js` | Deploy pipelines, service scaling |
 | HeadyPatterns | Pattern Engine | `patterns.js` | Circuit breakers, retries, fallback logic |
 | HeadyMemory | Context Store | `memory.js` | Embeddings, semantic search, recall |
-| HeadyNotion | Knowledge Base | via Notion API | Knowledge vault sync |
+| HeadyNotebookLM | Knowledge Base | via NotebookLM API | Knowledge vault sync |
 | HeadyCoder | Code Generator | via MCP tools | Code generation, scaffolding |
 | HeadyJules | Hyper-Surgeon | via MCP tools | Refactoring, performance optimization |
 | HeadyBuilder | Constructor | via MCP tools | Project creation, dependency management |

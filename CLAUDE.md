@@ -266,8 +266,8 @@ curl -X POST api.headysystems.com:3300/api/system/production # Activate producti
 |------|---------|
 | `docs/CHECKPOINT_PROTOCOL.md` | Master protocol for keeping all files in sync at every checkpoint |
 | `docs/DOC_OWNERS.yaml` | Document ownership, review dates, and freshness tracking |
-| `docs/notion-quick-start.md` | Notion Quick Start notebook template (exportable) |
-| `docs/notion-project-notebook.md` | Notion Project Notebook template (exportable) |
+| `docs/notebooklm-quick-start.md` | NotebookLM Quick Start notebook template (exportable) |
+| `docs/notebooklm-project-notebook.md` | NotebookLM Project Notebook template (exportable) |
 | `docs/heady-services-manual.md` | Comprehensive services manual |
 | `heady-registry.json` | HeadyRegistry — central catalog of all components, workflows, environments, docs, notebooks |
 | `configs/notebook-ci.yaml` | Notebook CI validation configuration |

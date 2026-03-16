@@ -119,7 +119,7 @@ describe('HCFullPipeline', () => {
     it('should skip stages when configured', async () => {
       const run = pipeline.createRun({
         task: 'Skip test',
-        skipStages: ['MONTE_CARLO', 'ARENA', 'EVOLUTION', 'CONTINUOUS_SEARCH'],
+        skipStages: ['MONTE_CARLO', 'ARENA', 'JUDGE', 'EVOLUTION', 'CONTINUOUS_SEARCH'],
       });
       const result = await pipeline.execute(run.id);
       const mcStage = result.stages.find(s => s.name === 'MONTE_CARLO');

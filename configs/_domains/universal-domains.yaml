@@ -404,7 +404,7 @@ integrations:
       - wiki.headysystems.com
       - docs.headysystems.com
     port: 3318
-    branding: "📝 Notion Navigator"
+    branding: "📝 NotebookLM Navigator"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP TOOL SERVERS

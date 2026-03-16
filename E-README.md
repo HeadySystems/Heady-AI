@@ -88,7 +88,7 @@ E:
 - **iOS** — Full native experience
 
 ### 🔌 Integrations (MCP Servers)
-- GitHub, Slack, Notion, Drive
+- GitHub, Slack, NotebookLM, Drive
 - Docker, Calendar, Email
 - Filesystem, Terminal, Browser
 - Database, Search, DuckDuckGo
@@ -217,7 +217,7 @@ Access these in your browser:
 ## 🆘 Support
 
 - **Documentation** — `docs/`
-- **Quick Start** — `docs/notion-quick-start.md`
+- **Quick Start** — `docs/notebooklm-quick-start.md`
 - **API Reference** — `distribution/docs/developer/api-reference.md`
 - **Community** — Discord: `heady.family`
 

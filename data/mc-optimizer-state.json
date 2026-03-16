@@ -9,7 +9,7 @@
     "local-ryzen": 0
   },
   "baseRates": {
-    "test-scenario": 0.7827
+    "test-scenario": 0.6313
   },
   "totalBatches": 0,
   "history": [
@@ -64,7 +64,189 @@
         "async": true
       },
       "runAt": 1773600417538
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 84,
+        "failureRate": 0.16,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 84,
+          "partial": 0,
+          "failure": 16
+        },
+        "confidenceBounds": {
+          "lower": 0.10095202349473717,
+          "upper": 0.24420444558894414
+        },
+        "seed": -220677729,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1773600815520
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 77,
+        "failureRate": 0.23,
+        "riskGrade": "YELLOW",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 77,
+          "partial": 0,
+          "failure": 23
+        },
+        "confidenceBounds": {
+          "lower": 0.15843154746876406,
+          "upper": 0.32154564856827694
+        },
+        "seed": -220547660,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1773600945589
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 81,
+        "failureRate": 0.19,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 81,
+          "partial": 0,
+          "failure": 19
+        },
+        "confidenceBounds": {
+          "lower": 0.1251465399270426,
+          "upper": 0.27779024070807856
+        },
+        "seed": -220523670,
+        "baseRateUsed": 0.85,
+        "simulationMs": 2,
+        "async": true
+      },
+      "runAt": 1773600969580
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 84,
+        "failureRate": 0.16,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 84,
+          "partial": 0,
+          "failure": 16
+        },
+        "confidenceBounds": {
+          "lower": 0.10095202349473717,
+          "upper": 0.24420444558894414
+        },
+        "seed": -220495177,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1773600998072
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 83,
+        "failureRate": 0.17,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 83,
+          "partial": 0,
+          "failure": 17
+        },
+        "confidenceBounds": {
+          "lower": 0.10893476059773154,
+          "upper": 0.25548181233642975
+        },
+        "seed": -220472544,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1773601020705
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 87,
+        "failureRate": 0.13,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 87,
+          "partial": 0,
+          "failure": 13
+        },
+        "confidenceBounds": {
+          "lower": 0.07757093858414264,
+          "upper": 0.20980521894809878
+        },
+        "seed": -220456933,
+        "baseRateUsed": 0.85,
+        "simulationMs": 2,
+        "async": true
+      },
+      "runAt": 1773601036317
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 87,
+        "failureRate": 0.13,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 87,
+          "partial": 0,
+          "failure": 13
+        },
+        "confidenceBounds": {
+          "lower": 0.07757093858414264,
+          "upper": 0.20980521894809878
+        },
+        "seed": -220399553,
+        "baseRateUsed": 0.85,
+        "simulationMs": 2,
+        "async": true
+      },
+      "runAt": 1773601093697
     }
   ],
-  "savedAt": "2026-03-15T18:46:57.543Z"
+  "savedAt": "2026-03-15T18:58:13.703Z"
 }

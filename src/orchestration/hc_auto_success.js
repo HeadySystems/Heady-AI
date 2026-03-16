@@ -279,7 +279,7 @@ const TASK_CATALOG = [
         desc: "Optimize how many connectivity patterns to retain for analysis"
     },
     {
-        id: "opt-017", name: "Optimize Notion sync throughput", cat: "optimization", pool: "cold", w: 2,
+        id: "opt-017", name: "Optimize NotebookLM sync throughput", cat: "optimization", pool: "cold", w: 2,
         desc: "Balance sync completeness against API rate limits"
     },
     {
@@ -341,8 +341,8 @@ const TASK_CATALOG = [
         desc: "Ensure buddy chat has access to current system state"
     },
     {
-        id: "int-012", name: "Verify Notion audit trail integrity", cat: "integration", pool: "cold", w: 2,
-        desc: "Confirm Notion sync state matches actual operations"
+        id: "int-012", name: "Verify NotebookLM audit trail integrity", cat: "integration", pool: "cold", w: 2,
+        desc: "Confirm NotebookLM sync state matches actual operations"
     },
     {
         id: "int-013", name: "Test orchestrator multi-brain routing", cat: "integration", pool: "warm", w: 4,
@@ -473,8 +473,8 @@ const TASK_CATALOG = [
         desc: "Clear pattern engine observations older than window"
     },
     {
-        id: "maint-014", name: "Validate Notion sync state integrity", cat: "maintenance", pool: "cold", w: 2,
-        desc: "Ensure Notion sync state matches actual sync status"
+        id: "maint-014", name: "Validate NotebookLM sync state integrity", cat: "maintenance", pool: "cold", w: 2,
+        desc: "Ensure NotebookLM sync state matches actual sync status"
     },
     {
         id: "maint-015", name: "Health-check all mounted routers", cat: "maintenance", pool: "warm", w: 3,

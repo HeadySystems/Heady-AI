@@ -79,6 +79,8 @@ describe('RedisPoolV3 (src/resilience)', () => {
 
   beforeEach(() => {
     jest.resetModules();
+    // Force mock fallback by making ioredis unavailable
+    jest.mock('ioredis', () => { throw new Error('mocked out'); });
     const mod = require('../../src/resilience/redis-pool-v3');
     RedisPoolV3 = mod.RedisPoolV3;
   });
@@ -90,8 +92,14 @@ describe('RedisPoolV3 (src/resilience)', () => {
     expect(pool.pools.cold).toBeDefined();
   });
 
-  it('should initialize and pre-warm', async () => {
+  function createPool() {
     const pool = new RedisPoolV3();
+    pool.on('error', () => {}); // suppress unhandled EventEmitter errors in test
+    return pool;
+  }
+
+  it('should initialize and pre-warm', async () => {
+    const pool = createPool();
     await pool.initialize();
     expect(pool._initialized).toBe(true);
     expect(pool.pools.hot.connections.length).toBeGreaterThanOrEqual(1);
@@ -99,7 +107,7 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should acquire from hot pool', async () => {
-    const pool = new RedisPoolV3();
+    const pool = createPool();
     await pool.initialize();
     const conn = await pool.acquire('hot');
     expect(conn).toBeDefined();
@@ -109,7 +117,7 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should fall back to lower tiers', async () => {
-    const pool = new RedisPoolV3();
+    const pool = createPool();
     await pool.initialize();
     const conn = await pool.acquire('cold');
     expect(conn).toBeDefined();
@@ -119,7 +127,7 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should perform agent handoff', async () => {
-    const pool = new RedisPoolV3();
+    const pool = createPool();
     await pool.initialize();
     const result = await pool.agentHandoff('agent-1', 'agent-2', { task: 'test' });
     expect(result.handoffId).toContain('handoff:');
@@ -130,7 +138,7 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should return health metrics', async () => {
-    const pool = new RedisPoolV3();
+    const pool = createPool();
     await pool.initialize();
     const health = pool.getHealth();
     expect(health.ok).toBe(true);
@@ -142,7 +150,7 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should withConnection auto-release', async () => {
-    const pool = new RedisPoolV3();
+    const pool = createPool();
     await pool.initialize();
     const result = await pool.withConnection(async (conn) => {
       return conn._poolId;
@@ -152,7 +160,7 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should clean shutdown', async () => {
-    const pool = new RedisPoolV3();
+    const pool = createPool();
     await pool.initialize();
     await pool.acquire('hot');
     await pool.shutdown();

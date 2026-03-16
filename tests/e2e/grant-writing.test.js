@@ -44,13 +44,14 @@ describe('E2E: Grant Writing Pipeline', () => {
   it('should process multi-step grant with task decomposition', async () => {
     const pipeline = new HCFullPipeline();
 
-    // Long task triggers "high" complexity decomposition
+    // Long task triggers "high" complexity decomposition (must be >500 chars)
     const longTask = [
-      'Research federal and state funding sources for community technology programs.',
-      'Draft a comprehensive grant proposal with budget, timeline, and impact metrics.',
-      'Review compliance requirements for HUD Community Development Block Grant.',
-      'Prepare supporting documentation including letters of support and financial statements.',
-      'Submit via grants.gov and track application status.',
+      'Research federal and state funding sources for community technology programs targeting underserved neighborhoods.',
+      'Draft a comprehensive grant proposal with detailed budget breakdown, milestone timeline, and quantitative impact metrics.',
+      'Review compliance requirements for HUD Community Development Block Grant including environmental review and fair housing.',
+      'Prepare supporting documentation including letters of support from community partners and audited financial statements.',
+      'Submit application via grants.gov portal, track application status, and prepare for site visit review process.',
+      'Coordinate with local government partners on matching fund requirements and community benefit agreements.',
     ].join(' ');
 
     const run = pipeline.createRun({

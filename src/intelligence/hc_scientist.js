@@ -65,7 +65,7 @@ const CONSISTENCY_RULES = [
         expectedValue: "40+",
         locations: [
             { file: "scripts/notion-vault-sync.js", pattern: /40\+/i },
-            { file: "src/services/heady-notion.js", pattern: /40\+/i },
+            { file: "src/services/heady-notebooklm.js", pattern: /40\+/i },
         ],
         severity: "high",
     },

@@ -243,7 +243,7 @@ const HEADY_TOOLS = [
   { name: 'heady_telemetry', description: 'Get comprehensive telemetry stats.', inputSchema: { type: 'object', properties: {} } },
   { name: 'heady_template_stats', description: 'Get template auto-generation stats.', inputSchema: { type: 'object', properties: {} } },
   { name: 'heady_orchestrator', description: 'HeadyOrchestrator — system orchestration and communication.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['send', 'status', 'align'], default: 'send' }, target: { type: 'string' } }, required: ['message'] } },
-  { name: 'heady_notion', description: 'Sync Heady Knowledge Vault to Notion.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
+  { name: 'heady_notebooklm', description: 'Sync Heady Knowledge Vault to NotebookLM.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
   { name: 'heady_jules_task', description: 'Dispatch async background coding task.', inputSchema: { type: 'object', properties: { task: { type: 'string' }, repository: { type: 'string' }, priority: { type: 'string', enum: ['low', 'normal', 'high', 'critical'], default: 'normal' }, autoCommit: { type: 'boolean', default: false } }, required: ['task', 'repository'] } },
   { name: 'heady_huggingface_model', description: 'Search/interact with HuggingFace models.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['search', 'info', 'inference'] }, modelId: { type: 'string' }, query: { type: 'string' } }, required: ['action'] } },
   { name: 'heady_maid', description: 'System cleanup and scheduling.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['clean', 'schedule', 'status'], default: 'status' }, target: { type: 'string' } }, required: ['action'] } },
@@ -1925,7 +1925,7 @@ class McpSseTransport {
             heady_groq: { method: 'POST', path: '/api/groq/chat', mapArgs: (a) => ({ message: a.message, source: 'heady-mcp-sse' }) },
             heady_buddy: { method: 'POST', path: '/api/buddy/chat', mapArgs: (a) => ({ message: a.message, provider: a.provider || 'auto', source: 'heady-mcp-sse' }) },
             heady_edge_ai: { method: 'POST', path: '/api/edge/chat', mapArgs: (a) => ({ text: a.text, message: a.message, model: a.model, source: 'heady-mcp-sse' }) },
-            heady_notion: { method: 'POST', path: '/api/notion/sync', mapArgs: () => ({ source: 'heady-mcp-sse' }) },
+            heady_notebooklm: { method: 'POST', path: '/api/notebooklm/sync', mapArgs: () => ({ source: 'heady-mcp-sse' }) },
             heady_battle: { method: 'POST', path: '/api/battle/session', mapArgs: (a) => ({ action: a.action, task: a.task, content: a.code, source: 'heady-mcp-sse' }) },
             heady_patterns: { method: 'POST', path: '/api/patterns/analyze', mapArgs: (a) => ({ code: a.code, language: a.language, source: 'heady-mcp-sse' }) },
             heady_risks: { method: 'POST', path: '/api/risks/assess', mapArgs: (a) => ({ content: a.content, scope: a.scope || 'all', source: 'heady-mcp-sse' }) },
@@ -4056,7 +4056,7 @@ function loadMCPTools() {
         { name: 'heady_lens', description: 'Visual analysis, image processing via HeadyLens.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['analyze', 'process', 'detect'], default: 'analyze' }, image_url: { type: 'string' }, prompt: { type: 'string' } }, required: ['action'] } },
         { name: 'heady_vinci', description: 'Pattern recognition and prediction via HeadyVinci.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['learn', 'predict', 'recognize'], default: 'predict' }, data: { type: 'string' } }, required: ['data'] } },
         { name: 'heady_buddy', description: 'HeadyBuddy — multi-provider personal AI assistant.', inputSchema: { type: 'object', properties: { message: { type: 'string' }, action: { type: 'string', enum: ['chat', 'memory', 'skills', 'tasks', 'providers'], default: 'chat' }, provider: { type: 'string', default: 'auto' } }, required: ['message'] } },
-        { name: 'heady_notion', description: 'Sync Heady Knowledge Vault to Notion (11 pages).', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
+        { name: 'heady_notebooklm', description: 'Sync Heady Knowledge Vault to NotebookLM (11 pages).', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['sync', 'status', 'health'], default: 'sync' } } } },
         { name: 'heady_edge_ai', description: 'Cloudflare edge AI — embeddings, chat, classification, vector search.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['embed', 'chat', 'classify', 'vectorize-insert', 'vectorize-query', 'queue'] }, text: { type: 'string' }, message: { type: 'string' }, model: { type: 'string' }, topK: { type: 'number' } }, required: ['action'] } },
         // ── 3D Vector Space tools (bridge-only) ──
         { name: 'heady_vector_store', description: 'Store a vector embedding with metadata in the 3D GPU vector space.', inputSchema: { type: 'object', properties: { embedding: { type: 'array', items: { type: 'number' }, description: '384-dim float array' }, metadata: { type: 'object', description: 'Metadata to attach' } }, required: ['embedding'] } },
@@ -4210,7 +4210,7 @@ async function callTool(name, args) {
         heady_lens: '/api/lens/analyze',
         heady_vinci: '/api/vinci/predict',
         heady_buddy: '/api/buddy/chat',
-        heady_notion: '/api/notion/sync',
+        heady_notebooklm: '/api/notebooklm/sync',
         heady_edge_ai: '/api/edge/chat',
     };
 

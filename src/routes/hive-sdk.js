@@ -224,7 +224,7 @@ router.get("/mcp/tools", async (req, res) => {
             "heady_patterns", "heady_coder", "heady_codex", "heady_copilot", "heady_lens",
             "heady_vinci", "heady_maid", "heady_maintenance", "heady_ops", "heady_orchestrator",
             "heady_battle", "heady_edge_ai", "heady_embed", "heady_gemini", "heady_groq",
-            "heady_openai", "heady_claude", "heady_buddy", "heady_notion",
+            "heady_openai", "heady_claude", "heady_buddy", "heady_notebooklm",
             "heady_huggingface_model", "heady_jules_task", "heady_auto_flow",
         ],
         count: 31,

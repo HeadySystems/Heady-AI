@@ -113,7 +113,7 @@ const PROVIDERS = Object.freeze({
 // INTEGRATION KEYS
 // ═══════════════════════════════════════════════════════════════════════
 const INTEGRATIONS = Object.freeze({
-    NOTION_TOKEN: optionalEnv('NOTION_TOKEN', ''),
+    NOTEBOOKLM_TOKEN: optionalEnv('NOTEBOOKLM_TOKEN', ''),
     GITHUB_TOKEN: optionalEnv('GITHUB_TOKEN', ''),
     STRIPE_SECRET_KEY: optionalEnv('STRIPE_SECRET_KEY', ''),
     STRIPE_WEBHOOK_SECRET: optionalEnv('STRIPE_WEBHOOK_SECRET', ''),

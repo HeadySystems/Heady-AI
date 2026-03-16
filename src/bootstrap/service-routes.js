@@ -357,14 +357,14 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Hive SDK Endpoints not loaded: ${err.message}`);
     }
 
-    // ─── Notion Sync Routes ────────────────────────────────────────────
+    // ─── NotebookLM Sync Routes ────────────────────────────────────────────
     try {
-        const { registerNotionRoutes } = require("../services/heady-notion");
-        registerNotionRoutes(app);
-        logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyNotion Sync: LOADED");
-        logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/notion/sync, /health, /state");
+        const { registerNotebookLMRoutes } = require("../services/heady-notebooklm");
+        registerNotebookLMRoutes(app);
+        logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyNotebookLM Sync: LOADED");
+        logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/notebooklm/sync, /health, /state");
     } catch (err) {
-        logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyNotion routes not loaded: ${err.message}`);
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyNotebookLM routes not loaded: ${err.message}`);
     }
 
     // ─── IDE Bridge (HeadyAI-IDE Proposal Gateway) ────────────────────

@@ -58,7 +58,7 @@ const TASK_CATALOG = [
     { id: "opt-014", name: "Tune safe mode activation thresholds", cat: "optimization", pool: "warm", w: 4, desc: "Prevent premature safe mode while protecting against overload" },
     { id: "opt-015", name: "Optimize pipeline stage parallelism", cat: "optimization", pool: "hot", w: 5, desc: "Increase parallel execution where stages are independent" },
     { id: "opt-016", name: "Tune connectivity pattern retention", cat: "optimization", pool: "cold", w: 2, desc: "Optimize how many connectivity patterns to retain for analysis" },
-    { id: "opt-017", name: "Optimize Notion sync batch size", cat: "optimization", pool: "cold", w: 2, desc: "Balance sync completeness against API rate limits" },
+    { id: "opt-017", name: "Optimize NotebookLM sync batch size", cat: "optimization", pool: "cold", w: 2, desc: "Balance sync completeness against API rate limits" },
     { id: "opt-018", name: "Tune self-critique severity thresholds", cat: "optimization", pool: "warm", w: 3, desc: "Calibrate severity levels to reduce false alarms" },
     { id: "opt-019", name: "Optimize middleware ordering", cat: "optimization", pool: "warm", w: 3, desc: "Profile Express middleware and optimize execution order" },
     { id: "opt-020", name: "Tune rate limiter parameters", cat: "optimization", pool: "warm", w: 3, desc: "Adjust rate limits based on actual traffic patterns" },
@@ -75,7 +75,7 @@ const TASK_CATALOG = [
     { id: "int-009", name: "Test resource mgr–task scheduler wire", cat: "integration", pool: "warm", w: 3, desc: "Verify safe mode propagates from resource mgr to scheduler" },
     { id: "int-010", name: "Validate story driver event ingestion", cat: "integration", pool: "cold", w: 2, desc: "Confirm all system events route into story narratives" },
     { id: "int-011", name: "Sync HeadyBuddy conversation context", cat: "integration", pool: "cold", w: 2, desc: "Ensure buddy chat has access to current system state" },
-    { id: "int-012", name: "Verify Notion audit trail integrity", cat: "integration", pool: "cold", w: 2, desc: "Confirm Notion sync state matches actual operations" },
+    { id: "int-012", name: "Verify NotebookLM audit trail integrity", cat: "integration", pool: "cold", w: 2, desc: "Confirm NotebookLM sync state matches actual operations" },
     { id: "int-013", name: "Test orchestrator multi-brain routing", cat: "integration", pool: "warm", w: 4, desc: "Verify HCSysOrchestrator correctly routes to brain layers" },
     { id: "int-014", name: "Validate HCFP interceptor pipeline", cat: "integration", pool: "warm", w: 4, desc: "Confirm HCFP HeadyBattle interceptor catches events" },
     { id: "int-015", name: "Test auto-task conversion pipeline", cat: "integration", pool: "warm", w: 3, desc: "Verify recommendation events convert to tasks" },
@@ -111,7 +111,7 @@ const TASK_CATALOG = [
     { id: "maint-011", name: "Verify config file parse-ability", cat: "maintenance", pool: "cold", w: 2, desc: "Test-parse all YAML configs to catch syntax errors early" },
     { id: "maint-012", name: "Compact auto-success task history", cat: "maintenance", pool: "cold", w: 1, desc: "Trim auto-success history to cap at 2000 entries" },
     { id: "maint-013", name: "Reset stale pattern observations", cat: "maintenance", pool: "cold", w: 2, desc: "Clear pattern engine observations older than window" },
-    { id: "maint-014", name: "Validate Notion sync state integrity", cat: "maintenance", pool: "cold", w: 2, desc: "Ensure Notion sync state matches actual sync status" },
+    { id: "maint-014", name: "Validate NotebookLM sync state integrity", cat: "maintenance", pool: "cold", w: 2, desc: "Ensure NotebookLM sync state matches actual sync status" },
     { id: "maint-015", name: "Health-check all mounted routers", cat: "maintenance", pool: "warm", w: 3, desc: "Verify all Express routers respond without errors" },
 
     // ═══ DISCOVERY (15) — Finding new opportunities ═══════════════════════

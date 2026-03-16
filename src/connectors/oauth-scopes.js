@@ -135,10 +135,10 @@ const PROVIDERS = {
         },
     },
     notion: {
-        id: "notion", name: "Notion", icon: "notion", color: "#000000", category: "productivity",
+        id: "notebooklm", name: "NotebookLM", icon: "notebooklm", color: "#000000", category: "productivity",
         services: {
-            pages: { label: "Pages & Docs", icon: "📝", description: "Read, create, and edit Notion pages", scopes: ["read_content", "update_content", "insert_content"] },
-            databases: { label: "Databases", icon: "🗃️", description: "Query and update Notion databases", scopes: ["read_content", "update_content"] },
+            pages: { label: "Pages & Docs", icon: "📝", description: "Read, create, and edit NotebookLM pages", scopes: ["read_content", "update_content", "insert_content"] },
+            databases: { label: "Databases", icon: "🗃️", description: "Query and update NotebookLM databases", scopes: ["read_content", "update_content"] },
             search: { label: "Search", icon: "🔍", description: "Search across your workspace", scopes: ["search"] },
             comments: { label: "Comments", icon: "💬", description: "Read and create comments", scopes: ["read_comments", "create_comments"] },
         },

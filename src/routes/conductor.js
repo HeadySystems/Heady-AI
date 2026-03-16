@@ -41,7 +41,7 @@ const SERVICE_ENDPOINTS = {
     maintenance: "/api/maintenance/health",
     lens: "/api/lens/health",
     vinci: "/api/vinci/health",
-    notion: "/api/notion/health",
+    notion: "/api/notebooklm/health",
     "auto-success": "/api/auto-success/health",
 };
 

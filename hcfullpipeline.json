@@ -1149,10 +1149,16 @@
   },
   "taskQueue": {
     "_meta": {
-      "loadedAt": "2026-03-09T19:38:00Z",
-      "source": "in/heady-system-build.zip + in/heady-perplexity-full-system-context.zip",
-      "totalTasks": 109,
-      "law": "LAW 9 — ALL TASKS THROUGH HCFULLPIPELINE"
+      "loadedAt": "2026-03-15T20:28:00Z",
+      "source": "in/heady-system-build.zip + in/heady-perplexity-full-system-context.zip + Zero-to-Production-v2.0.0",
+      "totalTasks": 215,
+      "arrayLength": 229,
+      "law": "LAW 9 — ALL TASKS THROUGH HCFULLPIPELINE",
+      "ztpVersion": "2.0.0",
+      "ztpTasksAdded": 92,
+      "ztpOriginalTasks": 109,
+      "sectionMarkers": 14,
+      "ztpIntegratedAt": "2026-03-15T20:28:00Z"
     },
     "tasks": [
       {
@@ -2019,6 +2025,776 @@
         "name": "Enforce: Every service emits health status + tracing metadata + registers into service discovery",
         "status": "pending",
         "swarm": "monitor-pulse"
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 0: SECRETS & SECURITY ═══"},
+      {
+        "id": "ZTP-SEC-001",
+        "domain": "security",
+        "name": "Run Gitleaks scan on entire repo and remediate all exposed secrets",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0,
+        "law": "LAW 1 — NEVER EXPOSE SECRETS"
+      },
+      {
+        "id": "ZTP-SEC-002",
+        "domain": "security",
+        "name": "Audit all .env files — ensure .gitignore covers .env, .env.local, .env.production, .env.*.local",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+      {
+        "id": "ZTP-SEC-003",
+        "domain": "security",
+        "name": "Rotate all API keys exposed in git history — OpenAI, Anthropic, Google, Firebase, Cloudflare",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+      {
+        "id": "ZTP-SEC-004",
+        "domain": "security",
+        "name": "Migrate all secrets to Google Secret Manager with φ-scaled rotation (fib(8)=21 day API keys, fib(11)=89 day certs)",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+      {
+        "id": "ZTP-SEC-005",
+        "domain": "security",
+        "name": "Enable Gitleaks pre-commit hook in CI and local dev",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+      {
+        "id": "ZTP-SEC-006",
+        "domain": "security",
+        "name": "Verify TruffleHog deep scan on all branches finds zero high-confidence secrets",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+      {
+        "id": "ZTP-SEC-007",
+        "domain": "security",
+        "name": "Configure SAST scanning (Semgrep/CodeQL) in CI pipeline for every PR",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+      {
+        "id": "ZTP-SEC-008",
+        "domain": "security",
+        "name": "Generate and store Ed25519 signing keys for governance receipt chain",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 0
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 1: CI/CD PIPELINE REPAIR ═══"},
+      {
+        "id": "ZTP-CICD-001",
+        "domain": "deployment",
+        "name": "Fix Stage 2 (Code Quality) failures — ESLint config, TypeScript strict mode errors",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-002",
+        "domain": "deployment",
+        "name": "Fix Node.js test failures blocking CI — resolve import/module resolution errors",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-003",
+        "domain": "deployment",
+        "name": "Fix CSL/φ-Math validation failures in CI Stage 2",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-004",
+        "domain": "deployment",
+        "name": "Green all 8 CI stages end-to-end: Preflight → Security → Quality → Node Tests → Python Tests → Pipeline Validation → Build → Deploy",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-005",
+        "domain": "deployment",
+        "name": "Configure branch protection rules — require passing CI, code review, no force push to main",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-006",
+        "domain": "deployment",
+        "name": "Set up automatic deploy-on-merge for staging and production branches",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-007",
+        "domain": "deployment",
+        "name": "Configure CI caching — npm cache, Docker layer cache, turbo cache for build acceleration",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+      {
+        "id": "ZTP-CICD-008",
+        "domain": "deployment",
+        "name": "Add CI status badges to README.md for all active repos across 3 GitHub orgs",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 1
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 2: FIRST WEBSITES LIVE ═══"},
+      {
+        "id": "ZTP-LIVE-001",
+        "domain": "deployment",
+        "name": "Deploy headysystems.com to Cloudflare Pages — production DNS, TLS, sacred geometry (Metatron's Cube)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-002",
+        "domain": "deployment",
+        "name": "Deploy headyme.com to Cloudflare Pages — production DNS, TLS, sacred geometry (Flower of Life)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-003",
+        "domain": "deployment",
+        "name": "Deploy heady-ai.com to Cloudflare Pages — production DNS, TLS, sacred geometry (Sri Yantra)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-004",
+        "domain": "deployment",
+        "name": "Deploy headyos.com to Cloudflare Pages — production DNS, TLS, sacred geometry (Torus)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-005",
+        "domain": "deployment",
+        "name": "Deploy headyconnection.org to Cloudflare Pages — nonprofit portal, Drupal sync",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-006",
+        "domain": "deployment",
+        "name": "Deploy headyconnection.com to Cloudflare Pages — community portal",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-007",
+        "domain": "deployment",
+        "name": "Deploy headyex.com to Cloudflare Pages — marketplace (Fibonacci Spiral)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-008",
+        "domain": "deployment",
+        "name": "Deploy headyfinance.com to Cloudflare Pages — investor relations",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-009",
+        "domain": "deployment",
+        "name": "Configure Cloudflare DNS records for all 9 domains — A/CNAME records, proxied, SSL Full (Strict)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2
+      },
+      {
+        "id": "ZTP-LIVE-010",
+        "domain": "deployment",
+        "name": "Resubmit Cloudflare for Startups application with live headysystems.com URL",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 2,
+        "blockedBy": ["ZTP-LIVE-001"]
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 3: CONTENT CREATION ═══"},
+      {
+        "id": "ZTP-CONTENT-001",
+        "domain": "documentation",
+        "name": "Write 150+ word sections for all headysystems.com pages — Architecture, Services, Platform, Patents",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3,
+        "law": "LAW 7 — MIN 150 WORDS PER SECTION"
+      },
+      {
+        "id": "ZTP-CONTENT-002",
+        "domain": "documentation",
+        "name": "Write professional content for headyme.com — sovereign AI vision, personal AI assistant narrative",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3
+      },
+      {
+        "id": "ZTP-CONTENT-003",
+        "domain": "documentation",
+        "name": "Write professional content for heady-ai.com — AI platform capabilities, integration docs",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3
+      },
+      {
+        "id": "ZTP-CONTENT-004",
+        "domain": "documentation",
+        "name": "Write professional content for headyconnection.org — nonprofit mission, community programs",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3
+      },
+      {
+        "id": "ZTP-CONTENT-005",
+        "domain": "documentation",
+        "name": "Write professional content for headyex.com — marketplace, agent exchange, pricing tiers",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3
+      },
+      {
+        "id": "ZTP-CONTENT-006",
+        "domain": "documentation",
+        "name": "Write professional content for headyfinance.com — investor relations, financial projections, SAM data",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3
+      },
+      {
+        "id": "ZTP-CONTENT-007",
+        "domain": "documentation",
+        "name": "Create JSON-LD structured data, sitemap.xml, robots.txt, Open Graph tags for all 9 sites",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3
+      },
+      {
+        "id": "ZTP-CONTENT-008",
+        "domain": "documentation",
+        "name": "Verify zero placeholder text across all sites — no Lorem Ipsum, no TODO markers, no Coming Soon",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 3,
+        "law": "LAW 4 — NEVER LEAVE STUBS"
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 4: BUDDY EVERYWHERE ═══"},
+      {
+        "id": "ZTP-BUDDY-001",
+        "domain": "context",
+        "name": "Deploy Buddy (HeadyBot) widget to all 9 production sites with personality kernel",
+        "status": "pending",
+        "swarm": "context-shepherd",
+        "ztpPhase": 4,
+        "law": "LAW 8 — BUDDY MUST BE EVERYWHERE"
+      },
+      {
+        "id": "ZTP-BUDDY-002",
+        "domain": "context",
+        "name": "Implement Buddy context-awareness — site-specific knowledge, user session continuity",
+        "status": "pending",
+        "swarm": "context-shepherd",
+        "ztpPhase": 4
+      },
+      {
+        "id": "ZTP-BUDDY-003",
+        "domain": "context",
+        "name": "Wire Buddy to heady-infer for real-time AI responses via WebSocket",
+        "status": "pending",
+        "swarm": "context-shepherd",
+        "ztpPhase": 4
+      },
+      {
+        "id": "ZTP-BUDDY-004",
+        "domain": "context",
+        "name": "Add Buddy to Discord bot, CLI, and mobile app entry points",
+        "status": "pending",
+        "swarm": "context-shepherd",
+        "ztpPhase": 4
+      },
+      {
+        "id": "ZTP-BUDDY-005",
+        "domain": "context",
+        "name": "Implement Buddy escalation workflow — auto-escalate to HeadyBuddy when failure threshold exceeded",
+        "status": "pending",
+        "swarm": "context-shepherd",
+        "ztpPhase": 4
+      },
+      {
+        "id": "ZTP-BUDDY-006",
+        "domain": "context",
+        "name": "Deploy Buddy onboarding flow — guided tour, capability demo, personalization setup",
+        "status": "pending",
+        "swarm": "context-shepherd",
+        "ztpPhase": 4
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 5: MCP SERVER RESTORATION ═══"},
+      {
+        "id": "ZTP-MCP-001",
+        "domain": "integration",
+        "name": "Restore mcp-server (port 8800) — validate all 47 tools respond via JSON-RPC 2.0 over SSE",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-002",
+        "domain": "integration",
+        "name": "Restore google-mcp (port 8801) — Google Workspace tool adapters (Docs, Sheets, Calendar, Drive)",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-003",
+        "domain": "integration",
+        "name": "Restore memory-mcp (port 8802) — vector memory query/store/remove via MCP endpoints",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-004",
+        "domain": "integration",
+        "name": "Restore perplexity-mcp (port 8803) — Sonar Pro research integration via MCP",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-005",
+        "domain": "integration",
+        "name": "Restore jules-mcp (port 8804) — Jules AI async code delegation",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-006",
+        "domain": "integration",
+        "name": "Restore huggingface-gateway (port 8805) — HuggingFace inference endpoints",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-007",
+        "domain": "integration",
+        "name": "Wire all MCP servers to auto-success-engine health checks and circuit breakers",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 5
+      },
+      {
+        "id": "ZTP-MCP-008",
+        "domain": "integration",
+        "name": "Integration test all 47 MCP tools — valid input, invalid input, timeout, circuit-breaker test per tool",
+        "status": "pending",
+        "swarm": "test-prover",
+        "ztpPhase": 5
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 7: LIQUID NODE ARCHITECTURE ═══"},
+      {
+        "id": "ZTP-LIQUID-001",
+        "domain": "orchestration",
+        "name": "Deploy ColabProvisioner — GPU-accelerated embedding generation on Colab Pro+",
+        "status": "pending",
+        "swarm": "heady-soul",
+        "ztpPhase": 7
+      },
+      {
+        "id": "ZTP-LIQUID-002",
+        "domain": "edge",
+        "name": "Deploy CloudflareProvisioner — edge compute across 300+ PoPs with Workers AI",
+        "status": "pending",
+        "swarm": "edge-runner",
+        "ztpPhase": 7
+      },
+      {
+        "id": "ZTP-LIQUID-003",
+        "domain": "deployment",
+        "name": "Deploy CloudRunProvisioner — containerized auto-scaling with min-instances=1 for critical path",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 7
+      },
+      {
+        "id": "ZTP-LIQUID-004",
+        "domain": "inference",
+        "name": "Deploy AIStudioProvisioner — Gemini access with φ-scaled generation (temperature=0.618, topK=21)",
+        "status": "pending",
+        "swarm": "csl-gateway",
+        "ztpPhase": 7
+      },
+      {
+        "id": "ZTP-LIQUID-005",
+        "domain": "inference",
+        "name": "Deploy VertexAIProvisioner — ML pipelines for embedding generation and model tuning",
+        "status": "pending",
+        "swarm": "csl-gateway",
+        "ztpPhase": 7
+      },
+      {
+        "id": "ZTP-LIQUID-006",
+        "domain": "orchestration",
+        "name": "Wire liquid-scaling orchestrator — φ-scaled auto-provision based on queue pressure",
+        "status": "pending",
+        "swarm": "heady-soul",
+        "ztpPhase": 7
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 8: COLAB PRO+ INTEGRATION ═══"},
+      {
+        "id": "ZTP-COLAB-001",
+        "domain": "inference",
+        "name": "Deploy GPU-accelerated embedding notebooks on Colab Pro+ (A100/T4)",
+        "status": "pending",
+        "swarm": "csl-gateway",
+        "ztpPhase": 8
+      },
+      {
+        "id": "ZTP-COLAB-002",
+        "domain": "inference",
+        "name": "Build colab-gateway dispatch service — notebook execution queue with φ-backoff",
+        "status": "pending",
+        "swarm": "bridge-keeper",
+        "ztpPhase": 8
+      },
+      {
+        "id": "ZTP-COLAB-003",
+        "domain": "inference",
+        "name": "Implement Colab notebook health monitoring — GPU utilization, memory, execution time tracking",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 8
+      },
+      {
+        "id": "ZTP-COLAB-004",
+        "domain": "inference",
+        "name": "Create fine-tuning pipeline notebooks for domain-specific embedding models",
+        "status": "pending",
+        "swarm": "csl-gateway",
+        "ztpPhase": 8
+      },
+      {
+        "id": "ZTP-COLAB-005",
+        "domain": "inference",
+        "name": "Wire Colab outputs to pgvector for automated embedding ingestion",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 8
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 9: VECTOR SPACE OPERATIONS ═══"},
+      {
+        "id": "ZTP-VECTOR-001",
+        "domain": "memory",
+        "name": "Deploy 384-dimensional HNSW indexes on pgvector — ef_construction=89, m=15, ef_search=21",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 9
+      },
+      {
+        "id": "ZTP-VECTOR-002",
+        "domain": "memory",
+        "name": "Deploy octree spatial indexing for 3D vector projection (VALU tensor bridge)",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 9
+      },
+      {
+        "id": "ZTP-VECTOR-003",
+        "domain": "memory",
+        "name": "Implement 3D persistent vector storage scan — session-start memory recall",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 9
+      },
+      {
+        "id": "ZTP-VECTOR-004",
+        "domain": "memory",
+        "name": "Configure semantic drift detection — cosine similarity threshold at ψ=0.618",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 9
+      },
+      {
+        "id": "ZTP-VECTOR-005",
+        "domain": "memory",
+        "name": "Benchmark vector operations — target <50ms for 384d search over 1M vectors",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 9
+      },
+      {
+        "id": "ZTP-VECTOR-006",
+        "domain": "memory",
+        "name": "Deploy vector deduplication service — threshold 0.972 cosine similarity for semantic identity",
+        "status": "pending",
+        "swarm": "vector-weaver",
+        "ztpPhase": 9
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 10: PILOT ONBOARDING ═══"},
+      {
+        "id": "ZTP-ONBOARD-001",
+        "domain": "deployment",
+        "name": "Build pilot onboarding flow — 6 enterprise verticals (Legal, Healthcare, Finance, Manufacturing, Education, Government)",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 10
+      },
+      {
+        "id": "ZTP-ONBOARD-002",
+        "domain": "deployment",
+        "name": "Implement vertical-specific configuration templates with pre-built agent orchestrations",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 10
+      },
+      {
+        "id": "ZTP-ONBOARD-003",
+        "domain": "security",
+        "name": "Wire pilot onboarding to cross-domain SSO via auth.headysystems.com",
+        "status": "pending",
+        "swarm": "security-hive",
+        "ztpPhase": 10
+      },
+      {
+        "id": "ZTP-ONBOARD-004",
+        "domain": "deployment",
+        "name": "Build tenant provisioning automation — isolated namespace per pilot customer",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 10
+      },
+      {
+        "id": "ZTP-ONBOARD-005",
+        "domain": "deployment",
+        "name": "Create pilot analytics dashboard — usage metrics, satisfaction surveys, conversion tracking",
+        "status": "pending",
+        "swarm": "deploy-forge",
+        "ztpPhase": 10
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 11: TRADING INFRASTRUCTURE ═══"},
+      {
+        "id": "ZTP-TRADE-001",
+        "domain": "fintech",
+        "name": "Deploy Alpaca Markets API integration — paper trading with φ-scaled position sizing",
+        "status": "pending",
+        "swarm": "trade-wind",
+        "ztpPhase": 11
+      },
+      {
+        "id": "ZTP-TRADE-002",
+        "domain": "fintech",
+        "name": "Deploy Interactive Brokers TWS API integration — live trading with risk limits",
+        "status": "pending",
+        "swarm": "trade-wind",
+        "ztpPhase": 11
+      },
+      {
+        "id": "ZTP-TRADE-003",
+        "domain": "fintech",
+        "name": "Build AI-driven trade signal generator with CSL confidence scoring",
+        "status": "pending",
+        "swarm": "trade-wind",
+        "ztpPhase": 11
+      },
+      {
+        "id": "ZTP-TRADE-004",
+        "domain": "fintech",
+        "name": "Implement φ-scaled portfolio allocation — position sizes derived from Fibonacci ratios",
+        "status": "pending",
+        "swarm": "trade-wind",
+        "ztpPhase": 11
+      },
+      {
+        "id": "ZTP-TRADE-005",
+        "domain": "fintech",
+        "name": "Build real-time P&L tracking dashboard on headyfinance.com",
+        "status": "pending",
+        "swarm": "trade-wind",
+        "ztpPhase": 11
+      },
+      {
+        "id": "ZTP-TRADE-006",
+        "domain": "fintech",
+        "name": "Deploy AI provider budget metering — per-request cost tracking by provider (OpenAI, Anthropic, Google, Perplexity)",
+        "status": "pending",
+        "swarm": "trade-wind",
+        "ztpPhase": 11
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 12: OBSERVABILITY ═══"},
+      {
+        "id": "ZTP-OBS-001",
+        "domain": "monitoring",
+        "name": "Deploy OpenTelemetry collector — distributed traces from all 57 services → Google Cloud Trace",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 12
+      },
+      {
+        "id": "ZTP-OBS-002",
+        "domain": "monitoring",
+        "name": "Deploy Prometheus metrics endpoints on all services — request count, latency histograms, error rates",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 12
+      },
+      {
+        "id": "ZTP-OBS-003",
+        "domain": "monitoring",
+        "name": "Deploy Grafana dashboards — service health matrix, pipeline throughput, vector performance",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 12
+      },
+      {
+        "id": "ZTP-OBS-004",
+        "domain": "monitoring",
+        "name": "Deploy structured log pipeline — pino → Fluentd/Vector → BigQuery with correlation IDs",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 12
+      },
+      {
+        "id": "ZTP-OBS-005",
+        "domain": "monitoring",
+        "name": "Deploy status.headysystems.com — real-time uptime monitoring for all 57 services",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 12
+      },
+      {
+        "id": "ZTP-OBS-006",
+        "domain": "monitoring",
+        "name": "Configure alerting rules — PagerDuty/Discord webhooks for P0 incidents, φ-scaled escalation",
+        "status": "pending",
+        "swarm": "monitor-pulse",
+        "ztpPhase": 12
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — PHASE 13: FILE FRESHNESS AUDIT ═══"},
+      {
+        "id": "ZTP-AUDIT-001",
+        "domain": "governance",
+        "name": "Implement fib(8)=21 day staleness detection for all configuration files",
+        "status": "pending",
+        "swarm": "policy-sentinel",
+        "ztpPhase": 13
+      },
+      {
+        "id": "ZTP-AUDIT-002",
+        "domain": "governance",
+        "name": "Auto-regenerate stale README.md, CHANGES.md, GAPS_FOUND.md, IMPROVEMENTS.md",
+        "status": "pending",
+        "swarm": "policy-sentinel",
+        "ztpPhase": 13
+      },
+      {
+        "id": "ZTP-AUDIT-003",
+        "domain": "governance",
+        "name": "Verify docs/ hierarchy currency — architecture, ADRs, runbooks, onboarding, security",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 13
+      },
+      {
+        "id": "ZTP-AUDIT-004",
+        "domain": "governance",
+        "name": "Validate all SKILL.md files have current triggers, examples, and tool references",
+        "status": "pending",
+        "swarm": "doc-scribe",
+        "ztpPhase": 13
+      },
+      {
+        "id": "ZTP-AUDIT-005",
+        "domain": "governance",
+        "name": "Run full φ-compliance scorecard — verify all constants derive from phi, no magic numbers",
+        "status": "pending",
+        "swarm": "policy-sentinel",
+        "ztpPhase": 13,
+        "law": "LAW 5 — NEVER BREAK PHI-MATH"
+      },
+
+      {"_section": "═══ ZERO TO PRODUCTION — VERIFICATION PROTOCOL ═══"},
+      {
+        "id": "ZTP-VERIFY-001",
+        "domain": "testing",
+        "name": "Verify all 9 domains return HTTP 200 with valid HTML and >150 words per section",
+        "status": "pending",
+        "swarm": "test-prover",
+        "ztpPhase": 14
+      },
+      {
+        "id": "ZTP-VERIFY-002",
+        "domain": "testing",
+        "name": "Verify all API endpoints return valid responses — /health, /ready, /metrics on all services",
+        "status": "pending",
+        "swarm": "test-prover",
+        "ztpPhase": 14
+      },
+      {
+        "id": "ZTP-VERIFY-003",
+        "domain": "testing",
+        "name": "Verify CI/CD pipeline green across all 3 GitHub orgs — all 8 stages passing",
+        "status": "pending",
+        "swarm": "test-prover",
+        "ztpPhase": 14
+      },
+      {
+        "id": "ZTP-VERIFY-004",
+        "domain": "testing",
+        "name": "Verify Buddy widget present and responsive on all 9 production sites",
+        "status": "pending",
+        "swarm": "test-prover",
+        "ztpPhase": 14
+      },
+      {
+        "id": "ZTP-VERIFY-005",
+        "domain": "governance",
+        "name": "Generate final Zero to Production completion receipt — Ed25519-signed, timestamped, all 14 phases verified",
+        "status": "pending",
+        "swarm": "policy-sentinel",
+        "ztpPhase": 14
       }
     ]
   }

@@ -92,7 +92,7 @@ const BUDDY_CAPABILITIES = {
     documentCreation: {
         label: "Document Creation",
         desc: "Create docs, spreadsheets, presentations, reports",
-        requiresConnector: ["google", "microsoft", "notion"],
+        requiresConnector: ["google", "microsoft", "notebooklm"],
     },
     taskManagement: {
         label: "Task Management",

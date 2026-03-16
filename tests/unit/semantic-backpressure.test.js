@@ -5,25 +5,44 @@
  */
 
 // Mock phi-math and csl-engine (loaded with try/catch in source)
+const fibSeq = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584];
+const mockFib = (n) => fibSeq[n - 1] || 1;
+
 jest.mock('../../src/shared/phi-math.js', () => ({
   PSI: 0.6180339887,
   PSI_2: 0.3819660113,
   PSI_3: 0.2360679775,
-  fib: (n) => {
-    const seq = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584];
-    return seq[n - 1] || 1;
-  },
+  fib: mockFib,
   phiBackoff: (attempt) => 1000 * Math.pow(1.618, attempt),
   phiBackoffWithJitter: (attempt) => 1000 * Math.pow(1.618, attempt) * (0.8 + Math.random() * 0.4),
   CSL_THRESHOLDS: { LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927 },
   PRESSURE_LEVELS: { NOMINAL_MAX: 0.382, ELEVATED_MAX: 0.618, CRITICAL: 0.854, EXCEEDED: 0.910 },
-  phiPriorityScore: () => 0.5,
-  CRITICALITY_WEIGHTS: { critical: 1.0, high: 0.8, standard: 0.5, low: 0.3 },
+  phiPriorityScore: (crit, urg, imp) => 0.618 * crit + 0.382 * urg + 0.236 * imp,
+  CRITICALITY_WEIGHTS: { CRITICAL_PLUS: 13, CRITICAL: 8, SHEDDABLE_PLUS: 5, SHEDDABLE: 2 },
 }), { virtual: true });
 
 jest.mock('../../src/shared/csl-engine.js', () => ({
-  cslAND: (a, b) => a,
-  normalize: (v) => v,
+  cslAND: (a, b) => {
+    // Cosine similarity mock: dot product of two Float64Arrays
+    if (a instanceof Float64Array && b instanceof Float64Array) {
+      let dot = 0;
+      for (let i = 0; i < a.length; i++) dot += a[i] * (b[i] || 0);
+      return dot;
+    }
+    return 0.5;
+  },
+  normalize: (v) => {
+    if (v instanceof Float64Array) {
+      let mag = 0;
+      for (let i = 0; i < v.length; i++) mag += v[i] * v[i];
+      mag = Math.sqrt(mag);
+      if (mag === 0) return v;
+      const out = new Float64Array(v.length);
+      for (let i = 0; i < v.length; i++) out[i] = v[i] / mag;
+      return out;
+    }
+    return v;
+  },
 }), { virtual: true });
 
 describe('SemanticBackpressure', () => {

@@ -138,7 +138,7 @@ function discoverSkills() {
         { name: "headycompute-enterprise", check: () => !!process.env.HEADY_COMPUTE_KEY, type: "ai" },
         { name: "groq-fast", check: () => !!process.env.GROQ_API_KEY, type: "ai" },
         { name: "perplexity-research", check: () => !!process.env.PERPLEXITY_API_KEY, type: "ai" },
-        { name: "notion-sync", check: () => !!process.env.NOTION_API_KEY, type: "integration" },
+        { name: "notebooklm-sync", check: () => !!process.env.NOTEBOOKLM_API_KEY, type: "integration" },
     ];
 
     for (const int of integrations) {

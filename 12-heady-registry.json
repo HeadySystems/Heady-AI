@@ -350,12 +350,12 @@
         "dockerProfiles": ["local-dev", "local-offline", "hybrid", "cloud-saas", "api-only", "full-suite", "browser-only", "dev-tools", "minimal", "voice-enabled"],
         "headyOSForms": ["desktop", "browser-shell", "web-shell", "mobile-shell", "cli", "embedded"],
         "ideExtensions": ["vscode", "jetbrains", "neovim", "sublime", "visual-studio", "xcode"],
-        "mcpServers": ["github", "slack", "notion", "drive", "docker", "calendar", "email", "filesystem", "browser", "database", "search"],
+        "mcpServers": ["github", "slack", "notebooklm", "drive", "docker", "calendar", "email", "filesystem", "browser", "database", "search"],
         "apiClients": ["js", "python", "go", "cli"],
         "automations": ["zapier", "n8n", "make", "webhooks", "custom-webhooks"],
         "connectors": ["slack-bot", "discord-bot", "teams-bot", "email-agent", "calendar-agent", "crm-connector", "document-stores"],
         "ideExtensionsExtra": ["eclipse", "windsurf", "emacs", "vim"],
-        "mcpToolServers": ["github", "slack", "notion", "drive", "docker", "calendar", "filesystem", "terminal", "browser", "duckduckgo"]
+        "mcpToolServers": ["github", "slack", "notebooklm", "drive", "docker", "calendar", "filesystem", "terminal", "browser", "duckduckgo"]
       },
       "mirrors": ["C:/Users/erich/CrossDevice/E's OnePlus Open/HeadyStack/distribution/"],
       "ownership": "core",
@@ -417,7 +417,7 @@
       "type": "mcp-servers",
       "version": "0.1.0",
       "sourceOfTruth": "distribution/mcp/servers/",
-      "responsibilities": ["github", "slack", "notion", "drive", "docker", "calendar", "filesystem", "terminal", "browser", "duckduckgo"],
+      "responsibilities": ["github", "slack", "notebooklm", "drive", "docker", "calendar", "filesystem", "terminal", "browser", "duckduckgo"],
       "ownership": "core",
       "status": "active",
       "criticality": "high",
@@ -1130,15 +1130,15 @@
       "lastUpdated": "2025-01-01"
     },
     {
-      "id": "notion-quick-start",
-      "path": "docs/notion-quick-start.md",
+      "id": "notebooklm-quick-start",
+      "path": "docs/notebooklm-quick-start.md",
       "type": "onboarding",
       "status": "current",
       "lastUpdated": "2025-07-01"
     },
     {
-      "id": "notion-project-notebook",
-      "path": "docs/notion-project-notebook.md",
+      "id": "notebooklm-project-notebook",
+      "path": "docs/notebooklm-project-notebook.md",
       "type": "project-tracking",
       "status": "current",
       "lastUpdated": "2026-02-06"

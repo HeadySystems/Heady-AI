@@ -117,7 +117,7 @@ heady-manager.js          # Node.js MCP Server & API Gateway (port 3300)
 ├── configs/              # YAML configuration (pipeline, resources, governance)
 ├── scripts/              # Automation (Sync, Build, Deploy, Checkpoint)
 ├── notebooks/            # Colab notebooks (quick-start, tutorials, examples)
-├── docs/                 # Documentation & Notion templates
+├── docs/                 # Documentation & NotebookLM notebooks
 └── heady-registry.json   # HeadyRegistry — central catalog of the ecosystem
 =======
 heady-manager.js           # Node.js API Gateway (port 3300)

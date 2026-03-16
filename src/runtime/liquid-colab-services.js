@@ -287,7 +287,7 @@ const EXECUTORS = {
         if (input.content) {
             storedId = await vm().ingestMemory({
                 content: input.content,
-                metadata: { type: "knowledge", component: "notion", source: input.source || "user" },
+                metadata: { type: "knowledge", component: "notebooklm", source: input.source || "user" },
             });
         }
 
@@ -295,7 +295,7 @@ const EXECUTORS = {
         const results = await vm().queryWithRelationships(query, 5, { type: "knowledge" }, 1);
 
         return {
-            component: "notion",
+            component: "notebooklm",
             action: input.content ? "ingest-and-query" : "query",
             storedId,
             results: results.map(r => ({

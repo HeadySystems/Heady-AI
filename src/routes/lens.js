@@ -98,7 +98,7 @@ const MONITORED_ENDPOINTS = {
     "heady-ops": "/api/ops/health",
     "heady-maintenance": "/api/maintenance/health",
     "heady-vinci": "/api/vinci/health",
-    "heady-notion": "/api/notion/health",
+    "heady-notebooklm": "/api/notebooklm/health",
     "heady-auto-success": "/api/auto-success/health",
     "heady-conductor": "/api/conductor/health",
     "heady-lens": "/api/lens/health",
@@ -108,7 +108,7 @@ const MONITORED_ENDPOINTS = {
 const MONITORED_SERVICES = [
     "heady-brain", "heady-soul", "heady-battle", "heady-hcfp",
     "heady-patterns", "heady-ops", "heady-maintenance", "heady-vinci",
-    "heady-notion", "heady-auto-success", "heady-lens", "heady-conductor",
+    "heady-notebooklm", "heady-auto-success", "heady-lens", "heady-conductor",
 ];
 
 for (const service of Object.keys(MONITORED_ENDPOINTS)) {

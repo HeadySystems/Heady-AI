@@ -155,7 +155,7 @@ class HeadyMCPConnector extends EventEmitter {
     return this.execute('email', 'getMessage', { messageId });
   }
 
-  // HeadyNotes methods (replaces Google Keep/Notion)
+  // HeadyNotes methods (replaces Google Keep/NotebookLM)
   async notesListNotes(folder = 'all') {
     return this.execute('notes', 'listNotes', { folder });
   }

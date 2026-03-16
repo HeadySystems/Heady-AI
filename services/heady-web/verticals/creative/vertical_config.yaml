@@ -62,7 +62,7 @@ content:
     - name: "Creative Director"
       description: "Maintains brand voice, visual identity, and style guidelines across all generated content"
       latency: "<1s"
-      integrations: ["Figma", "Adobe CC", "Canva", "Notion", "Contentful"]
+      integrations: ["Figma", "Adobe CC", "Canva", "NotebookLM", "Contentful"]
     - name: "Asset Manager"
       description: "Auto-tags, versions, formats, and distributes creative assets across channels"
       latency: "<500ms"

@@ -146,9 +146,9 @@ const TOOL_REGISTRY = {
     },
   },
   notion: {
-    id: 'notion',
-    name: 'Notion',
-    description: 'Query and update Notion databases and pages',
+    id: 'notebooklm',
+    name: 'NotebookLM',
+    description: 'Query and update NotebookLM databases and pages',
     inputSchema: {
       type: 'object',
       properties: {

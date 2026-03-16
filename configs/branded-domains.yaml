@@ -262,7 +262,7 @@ integrations:
   notion:
     domain: notion.heady.io
     port: 3318
-    branding: "📝 Notion Navigator"
+    branding: "📝 NotebookLM Navigator"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP TOOLS

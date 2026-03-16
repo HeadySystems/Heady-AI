@@ -46,7 +46,7 @@ const SERVICE_CATALOG = {
     maintenance: { endpoint: "/api/maintenance/status", method: "GET", caps: ["health-monitoring", "backup", "restore"], component: "maintenance" },
 
     // ─── Integrations ───────────────────────────────────────────────
-    notion: { endpoint: "/api/notion/sync", method: "POST", caps: ["knowledge-sync", "documentation", "notebooks"], component: "notion" },
+    notion: { endpoint: "/api/notebooklm/sync", method: "POST", caps: ["knowledge-sync", "documentation", "notebooks"], component: "notebooklm" },
     edge: { endpoint: "/api/edge/chat", method: "POST", caps: ["edge-inference", "edge-embed", "low-latency"], component: "cloud" },
     buddy: { endpoint: "/api/buddy/chat", method: "POST", caps: ["personal-assist", "multi-provider", "memory"], component: "buddy" },
     research: { endpoint: "/api/perplexity/research", method: "POST", caps: ["deep-research", "web-search", "academic"], component: "brain" },
@@ -86,7 +86,7 @@ const INTENT_KEYWORDS = {
     "think": "jules", "reason": "jules", "deep": "jules", "complex": "jules",
     "fast": "fast", "quick": "fast", "speed": "fast", "instant": "fast",
     "research": "research", "academic": "research", "web search": "research",
-    "notion": "notion", "sync": "notion", "knowledge": "notion",
+    "notebooklm": "notebooklm", "sync": "notebooklm", "knowledge": "notebooklm",
     "memory": "memory", "recall": "memory", "remember": "memory",
     "battle": "battle", "arena": "battle", "compete": "battle", "compare": "battle",
     "soul": "soul", "reflect": "soul", "introspect": "soul",

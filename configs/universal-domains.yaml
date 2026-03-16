@@ -404,7 +404,7 @@ integrations:
       - wiki.local.heady.internal
       - docs.local.heady.internal
     port: 3318
-    branding: "📝 Notion Navigator"
+    branding: "📝 NotebookLM Navigator"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MCP TOOL SERVERS
