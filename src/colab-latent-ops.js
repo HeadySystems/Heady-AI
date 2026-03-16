@@ -563,10 +563,27 @@ function startLearningCycle() {
         timestamp: runtimeState.learning.lastLearningCycle,
       });
 
+      // Gather error learning context for the learning runtime
+      let errorContext = {};
+      try {
+        const { errorLearning } = require('./hc_error_learning');
+        errorContext = {
+          recentErrors: errorLearning.errors.entries.slice(-10).map(e => ({
+            category: e.category,
+            message: e.message.substring(0, 200),
+            occurrences: e.occurrences,
+            status: e.status,
+            severity: e.severity,
+          })),
+          errorStats: errorLearning.getStats(),
+        };
+      } catch (e) { /* error learning not available */ }
+
       const result = await submitJob('learning', currentMode, {
         cycle: runtimeState.learning.learningCycles,
         mode: currentMode,
         system_state: getStatus(),
+        error_context: errorContext,
       });
 
       if (result && result.insights && Array.isArray(result.insights)) {
@@ -584,6 +601,20 @@ function startLearningCycle() {
             latentSpaceIndex.metadata.totalVectors++;
           }
         }
+
+        // Feed error-related insights back to error learning system
+        try {
+          const { errorLearning } = require('./hc_error_learning');
+          for (const insight of result.insights) {
+            if (insight.type === 'error_resolution' && insight.errorId && insight.fix) {
+              errorLearning.recordResolution(insight.errorId, {
+                fix: insight.fix,
+                success: insight.success !== false,
+                agent: 'colab-learning',
+              });
+            }
+          }
+        } catch (e) { /* error learning feedback optional */ }
       }
     } catch (err) {
       logger.error('Learning cycle failed', { error: err.message });

@@ -1505,19 +1505,44 @@ try {
   log.warn("Improvement Scheduler not loaded", { errorMessage: err.message });
 }
 
+// ─── Error Learning Database — Persistent Mistake Tracking ───────
+try {
+  const { errorLearning, registerErrorLearningRoutes } = require('./src/hc_error_learning');
+  registerErrorLearningRoutes(app);
+
+  // Wire error learning to latent space for cross-system awareness
+  errorLearning.on('error:recurring', (err) => {
+    log.warn('Recurring error detected by learning engine', {
+      errorId: err.id, occurrences: err.occurrences, category: err.category,
+    });
+  });
+
+  errorLearning.on('error:new', (err) => {
+    log.info('New error recorded in learning database', {
+      errorId: err.id, category: err.category, severity: err.severity,
+    });
+  });
+
+  // Expose for other modules
+  global.errorLearning = errorLearning;
+  log.info("Error Learning Database: LOADED");
+} catch (err) {
+  log.warn("Error Learning not loaded", { errorMessage: err.message });
+}
+
 // ─── Swarm Intelligence & Vector Routing ──────────────────────────
 let headySwarms, vectorRouter, colabLatentOps;
 try {
   headySwarms = require('./src/hc_heady_swarms');
   vectorRouter = require('./src/hc_vector_router');
   colabLatentOps = require('./src/colab-latent-ops');
-  log && log.info && log.info('✅ Swarm intelligence modules loaded', {
+  log && log.info && log.info('Swarm intelligence modules loaded', {
     swarms: !!headySwarms,
     vectorRouter: !!vectorRouter,
     colabLatentOps: !!colabLatentOps,
   });
 } catch (e) {
-  log && log.warn && log.warn('⚠️  Swarm modules not loaded (non-fatal):', e.message);
+  log && log.warn && log.warn('Swarm modules not loaded (non-fatal)', { errorMessage: e.message });
   headySwarms = null;
   vectorRouter = null;
   colabLatentOps = null;
@@ -2670,6 +2695,17 @@ const LIQUID_NODES_REGISTRY = {
       status: 'runtime'
     },
     {
+      name: 'colab-learning',
+      domain: 'latent-space-ops',
+      port: null,
+      envKeys: ['COLAB_LEARNING_ENDPOINT'],
+      capabilities: ['autonomous-learning', 'trial-and-error', 'socratic-method', 'qa', 'risk-analysis', 'self-improvement'],
+      description: 'Google Colab Pro+ membership slot 4 — Dedicated learning runtime for Heady intelligence',
+      status: 'runtime',
+      dedicated: true,
+      modes: ['trial_and_error', 'qa', 'socratic_method', 'risk_analysis']
+    },
+    {
       name: 'latent-vector-store',
       domain: 'latent-space-ops',
       port: null,
@@ -2796,6 +2832,16 @@ app.get('/api/liquid-nodes/health/check', (req, res) => {
         healthResults.summary.healthy++;
       }
     }
+
+    // Record health check results to latent space for trend analysis
+    try {
+      const latent = require('./src/hc_latent_space');
+      latent.record('health', `Liquid nodes health check: ${healthResults.summary.healthy} healthy, ${healthResults.summary.unhealthy} unhealthy`, {
+        healthy: healthResults.summary.healthy,
+        unhealthy: healthResults.summary.unhealthy,
+        unchecked: healthResults.summary.unchecked,
+      });
+    } catch (e) { /* latent space optional */ }
 
     res.json(healthResults);
   } catch (err) {
