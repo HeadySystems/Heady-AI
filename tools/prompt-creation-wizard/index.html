@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Prompt Creation Wizard</title>
+  <meta name="description" content="Build powerful AI system prompts with Heady's guided prompt creation wizard">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a28;
+      --bg-input: #0f0f1a;
+      --border: #2a2a3d;
+      --border-focus: #ff6b9d;
+      --text-primary: #e8e8f0;
+      --text-secondary: #8888a0;
+      --text-muted: #5a5a72;
+      --accent: #ff6b9d;
+      --accent-glow: rgba(255, 107, 157, 0.3);
+      --accent2: #7c5cfc;
+      --accent2-glow: rgba(124, 92, 252, 0.3);
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .bg-animation {
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(255, 107, 157, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(124, 92, 252, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(255, 215, 0, 0.04) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px; position: relative; z-index: 1; }
+
+    header { text-align: center; margin-bottom: 40px; }
+
+    .logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    h1 {
+      font-size: 32px; font-weight: 800;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { color: var(--text-secondary); font-size: 15px; margin-top: 6px; }
+
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 36px; margin-bottom: 20px;
+    }
+
+    .card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .card .desc { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+
+    .form-group { margin-bottom: 22px; }
+
+    label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: var(--text-secondary); margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%; padding: 12px 14px;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text-primary);
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      transition: all 0.2s; outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+    select {
+      cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%238888a0' stroke-width='2'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Toggles */
+    .toggle-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 10px;
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .toggle-row:hover { border-color: var(--text-muted); }
+    .toggle-row.active { border-color: var(--accent); background: rgba(255, 107, 157, 0.05); }
+
+    .toggle-switch {
+      width: 44px; height: 24px;
+      background: var(--border); border-radius: 12px;
+      position: relative; transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch::after {
+      content: ''; width: 18px; height: 18px;
+      background: white; border-radius: 50%;
+      position: absolute; top: 3px; left: 3px;
+      transition: transform 0.2s;
+    }
+
+    .toggle-row.active .toggle-switch { background: var(--accent); }
+    .toggle-row.active .toggle-switch::after { transform: translateX(20px); }
+
+    .toggle-label { font-size: 14px; font-weight: 500; }
+    .toggle-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Section Builder */
+    .section-item {
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px; margin-bottom: 10px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } }
+
+    .section-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    }
+
+    .section-header input {
+      font-weight: 600; font-size: 15px; border: none; background: none;
+      color: var(--text-primary); outline: none;
+    }
+
+    .remove-btn {
+      background: none; border: none; color: #f87171;
+      cursor: pointer; font-size: 18px; opacity: 0.5; transition: opacity 0.2s;
+      padding: 4px 8px;
+    }
+    .remove-btn:hover { opacity: 1; }
+
+    .add-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px;
+      background: rgba(255, 107, 157, 0.1); border: 1px dashed rgba(255, 107, 157, 0.3);
+      border-radius: var(--radius); color: var(--accent);
+      font-size: 14px; cursor: pointer; transition: all 0.2s;
+    }
+    .add-btn:hover { background: rgba(255, 107, 157, 0.2); border-color: var(--accent); }
+
+    /* Buttons */
+    .btn-row { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
+
+    .btn {
+      padding: 12px 24px; border-radius: var(--radius);
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white; box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px var(--accent-glow); }
+
+    .btn-secondary {
+      background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-secondary);
+    }
+
+    .btn-success { background: linear-gradient(135deg, #22c55e, #4ade80); color: white; }
+
+    /* Preview */
+    .preview-box {
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+
+    .preview-bar {
+      padding: 10px 16px; background: rgba(255, 107, 157, 0.1);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .preview-bar span { font-size: 13px; font-weight: 600; color: var(--accent); }
+
+    .copy-btn {
+      padding: 5px 12px; background: var(--bg-secondary);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text-secondary); font-size: 12px; cursor: pointer; transition: all 0.2s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+    .preview-content {
+      padding: 16px; font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 12px; line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+      max-height: 500px; overflow-y: auto; color: var(--text-secondary);
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; gap: 16px; padding: 16px; background: var(--bg-secondary);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      text-align: center; flex: 1;
+      padding: 8px; border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border: none; }
+    .stat-value { font-size: 22px; font-weight: 700; color: var(--accent); }
+    .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">✨</div>
+        <div>
+          <h1>Prompt Creation Wizard</h1>
+          <div class="subtitle">Build production-grade AI system prompts for Heady™</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat"><div class="stat-value" id="statSections">0</div><div class="stat-label">Sections</div></div>
+      <div class="stat"><div class="stat-value" id="statWords">0</div><div class="stat-label">Words</div></div>
+      <div class="stat"><div class="stat-value" id="statTokens">~0</div><div class="stat-label">Est. Tokens</div></div>
+      <div class="stat"><div class="stat-value" id="statFeatures">0</div><div class="stat-label">Features</div></div>
+    </div>
+
+    <!-- Card 1: Identity -->
+    <div class="card">
+      <h2>🏷️ Prompt Identity</h2>
+      <p class="desc">Define the core identity and purpose of your AI prompt.</p>
+      <div class="two-col">
+        <div class="form-group">
+          <label>Prompt Name</label>
+          <input type="text" id="promptName" placeholder="e.g., My Custom Agent Prompt" oninput="updateStats()">
+        </div>
+        <div class="form-group">
+          <label>Version</label>
+          <input type="text" id="promptVersion" value="1.0.0" oninput="updateStats()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>AI Persona Name</label>
+        <input type="text" id="personaName" placeholder="e.g., CodeBuddy, DataHelper, CreativeBot" oninput="updateStats()">
+      </div>
+      <div class="form-group">
+        <label>Core Identity Statement</label>
+        <textarea id="identity" placeholder="You are [Name] — a [role] that [primary function]. You specialize in [domain] and always [key behavior]." oninput="updateStats()"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Target Audience</label>
+        <select id="audience" onchange="updateStats()">
+          <option value="developers">Developers</option>
+          <option value="end-users">End Users</option>
+          <option value="business">Business Users</option>
+          <option value="researchers">Researchers</option>
+          <option value="creative">Creative Professionals</option>
+          <option value="universal">Universal (All audiences)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Card 2: Behavioral Rules -->
+    <div class="card">
+      <h2>⚖️ Behavioral Rules</h2>
+      <p class="desc">Toggle core behaviors and constraints for your AI prompt.</p>
+
+      <div class="toggle-row" onclick="toggleFeature(this, 'glass-box')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">🔍 Glass Box (Full Transparency)</div><div class="toggle-desc">Never fail silently. Log every action. Full traceability.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'zero-trust')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">🛡️ Zero-Trust Input</div><div class="toggle-desc">All user input treated as hostile until validated.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'no-todos')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">🚫 No TODOs / No Stubs</div><div class="toggle-desc">Every output must be complete and deployable. No placeholders.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'arena-mode')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">⚔️ Arena Mode</div><div class="toggle-desc">Generate 3-5 competing approaches, pick the best.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'thoroughness')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">🐢 Thoroughness Over Speed</div><div class="toggle-desc">Correctness always wins over speed. Root-cause solutions only.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'context-max')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">🔎 Context Maximization</div><div class="toggle-desc">5-stage context enrichment before every action.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'scale-ready')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">📈 Scale-Ready Design</div><div class="toggle-desc">Every structure designed for massive scale from day one.</div></div>
+      </div>
+      <div class="toggle-row" onclick="toggleFeature(this, 'empathic')">
+        <div class="toggle-switch"></div>
+        <div><div class="toggle-label">💚 Empathic Communication</div><div class="toggle-desc">Adaptive persona that matches user's tone and expertise level.</div></div>
+      </div>
+    </div>
+
+    <!-- Card 3: Custom Sections -->
+    <div class="card">
+      <h2>📝 Custom Sections</h2>
+      <p class="desc">Add your own sections to the prompt. Each section becomes a numbered paragraph.</p>
+      <div id="sectionsContainer"></div>
+      <button class="add-btn" onclick="addSection()">+ Add Section</button>
+    </div>
+
+    <!-- Card 4: Output Constraints -->
+    <div class="card">
+      <h2>📐 Output Constraints</h2>
+      <p class="desc">Define how the AI should format and constrain its outputs.</p>
+      <div class="two-col">
+        <div class="form-group">
+          <label>Output Format</label>
+          <select id="outputFormat" onchange="updateStats()">
+            <option value="markdown">Markdown</option>
+            <option value="json">JSON</option>
+            <option value="code">Code Only</option>
+            <option value="conversational">Conversational</option>
+            <option value="structured">Structured (Headers + Lists)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Response Length</label>
+          <select id="responseLength" onchange="updateStats()">
+            <option value="concise">Concise (short answers)</option>
+            <option value="balanced">Balanced (moderate detail)</option>
+            <option value="thorough">Thorough (comprehensive)</option>
+            <option value="unlimited">Unlimited (as needed)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Custom Output Rules (one per line)</label>
+        <textarea id="outputRules" placeholder="e.g., Always include code examples&#10;Never use placeholder text&#10;Include error handling in all code" oninput="updateStats()"></textarea>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generatePrompt()" style="padding:14px 36px;font-size:16px">✨ Generate Prompt</button>
+    </div>
+
+    <!-- Preview -->
+    <div class="card hidden" id="previewCard" style="margin-top:24px">
+      <h2>📄 Generated Prompt</h2>
+      <p class="desc">Your complete system prompt, ready to use.</p>
+      <div class="preview-box">
+        <div class="preview-bar">
+          <span>system-prompt.md</span>
+          <div style="display:flex;gap:8px">
+            <button class="copy-btn" onclick="copyPrompt()">Copy</button>
+            <button class="copy-btn" onclick="downloadPrompt()">Download</button>
+          </div>
+        </div>
+        <div class="preview-content" id="promptOutput"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const features = new Set();
+    let sectionCount = 0;
+
+    function toggleFeature(row, feature) {
+      row.classList.toggle('active');
+      if (features.has(feature)) features.delete(feature);
+      else features.add(feature);
+      updateStats();
+    }
+
+    function addSection() {
+      sectionCount++;
+      const container = document.getElementById('sectionsContainer');
+      const div = document.createElement('div');
+      div.className = 'section-item';
+      div.innerHTML = `
+        <div class="section-header">
+          <input type="text" placeholder="Section Title (e.g., Error Handling Policy)" class="section-title">
+          <button class="remove-btn" onclick="this.closest('.section-item').remove(); updateStats()">×</button>
+        </div>
+        <textarea placeholder="Section content — describe the rules, behavior, or instructions for this section..." class="section-content" oninput="updateStats()" style="width:100%"></textarea>
+      `;
+      container.appendChild(div);
+      updateStats();
+    }
+
+    function updateStats() {
+      const sections = document.querySelectorAll('.section-item').length;
+      const allText = gatherText();
+      const words = allText.split(/\s+/).filter(Boolean).length;
+      const tokens = Math.round(words * 1.3);
+
+      document.getElementById('statSections').textContent = sections + (features.size > 0 ? '+' + features.size : '');
+      document.getElementById('statWords').textContent = words;
+      document.getElementById('statTokens').textContent = '~' + tokens;
+      document.getElementById('statFeatures').textContent = features.size;
+    }
+
+    function gatherText() {
+      return [
+        document.getElementById('promptName').value,
+        document.getElementById('identity').value,
+        document.getElementById('personaName').value,
+        document.getElementById('outputRules').value,
+        ...[...document.querySelectorAll('.section-title')].map(i => i.value),
+        ...[...document.querySelectorAll('.section-content')].map(i => i.value),
+      ].join(' ');
+    }
+
+    function generatePrompt() {
+      const name = document.getElementById('promptName').value || 'My AI Prompt';
+      const version = document.getElementById('promptVersion').value || '1.0.0';
+      const persona = document.getElementById('personaName').value || 'AI Assistant';
+      const identity = document.getElementById('identity').value || `You are ${persona} — an intelligent AI assistant.`;
+      const audience = document.getElementById('audience').value;
+      const format = document.getElementById('outputFormat').value;
+      const length = document.getElementById('responseLength').value;
+      const rules = document.getElementById('outputRules').value.split('\n').filter(Boolean);
+
+      let md = `# ${name}\n\n`;
+      md += `> **Version**: ${version} | **Generated**: ${new Date().toISOString().split('T')[0]} | **Persona**: ${persona}\n\n`;
+      md += `---\n\n`;
+      md += `## §1 — Identity\n\n${identity}\n\n`;
+
+      // Behavioral rules
+      const ruleMap = {
+        'glass-box': '**Glass Box Mandate** — Never fail silently. Never execute invisibly. Every action must be logged and traceable.',
+        'zero-trust': '**Zero-Trust Input** — All user input is treated as potentially hostile until validated and sanitized.',
+        'no-todos': '**No TODOs, No Stubs** — Every output must be complete and production-ready. `// TODO` is a failure. Placeholder text is unacceptable.',
+        'arena-mode': '**Arena Mode** — For complex decisions, generate 3-5 competing approaches, evaluate each, and select the best.',
+        'thoroughness': '**Thoroughness Over Speed** — Correctness always wins. Prefer root-cause solutions over quick fixes.',
+        'context-max': '**Context Maximization** — Before taking any action, gather maximum context: read related files, check history, understand dependencies.',
+        'scale-ready': '**Scale-Ready Design** — Every structure, pattern, and architecture must be designed for massive scale from the start.',
+        'empathic': '**Empathic Communication** — Adapt tone and technical depth to match the user. Be encouraging with beginners, concise with experts.',
+      };
+
+      if (features.size > 0) {
+        md += `## §2 — Core Rules\n\n`;
+        let ruleNum = 1;
+        for (const feat of features) {
+          if (ruleMap[feat]) md += `${ruleNum}. ${ruleMap[feat]}\n`;
+          ruleNum++;
+        }
+        md += '\n';
+      }
+
+      // Custom sections
+      const sections = document.querySelectorAll('.section-item');
+      let sIdx = features.size > 0 ? 3 : 2;
+      sections.forEach(sec => {
+        const title = sec.querySelector('.section-title').value;
+        const content = sec.querySelector('.section-content').value;
+        if (title || content) {
+          md += `## §${sIdx} — ${title || 'Custom Section'}\n\n${content || '(No content defined)'}\n\n`;
+          sIdx++;
+        }
+      });
+
+      // Output constraints
+      md += `## §${sIdx} — Output Constraints\n\n`;
+      md += `- **Format**: ${format.charAt(0).toUpperCase() + format.slice(1)}\n`;
+      md += `- **Length**: ${length.charAt(0).toUpperCase() + length.slice(1)}\n`;
+      md += `- **Audience**: ${audience.charAt(0).toUpperCase() + audience.slice(1)}\n`;
+      if (rules.length) {
+        md += '\n**Additional Rules:**\n';
+        rules.forEach(r => md += `- ${r}\n`);
+      }
+
+      md += `\n---\n\n> *Generated by Heady™ Prompt Creation Wizard — © ${new Date().getFullYear()} HeadySystems Inc.*\n`;
+
+      document.getElementById('promptOutput').textContent = md;
+      document.getElementById('previewCard').classList.remove('hidden');
+      document.getElementById('previewCard').scrollIntoView({ behavior: 'smooth' });
+      updateStats();
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('promptOutput').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btns = document.querySelectorAll('.copy-btn');
+        btns[0].textContent = '✓ Copied!';
+        btns[0].classList.add('copied');
+        setTimeout(() => { btns[0].textContent = 'Copy'; btns[0].classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function downloadPrompt() {
+      const text = document.getElementById('promptOutput').textContent;
+      const name = document.getElementById('promptName').value || 'system-prompt';
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${slug}.md`;
+      a.click();
+    }
+
+    // Initialize with one section
+    addSection();
+  </script>
+</body>
+</html>

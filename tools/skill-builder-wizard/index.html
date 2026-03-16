@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady™ Skill Builder Wizard</title>
+  <meta name="description" content="Create custom Heady skills with an interactive step-by-step wizard">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a28;
+      --bg-input: #0f0f1a;
+      --border: #2a2a3d;
+      --border-focus: #7c5cfc;
+      --text-primary: #e8e8f0;
+      --text-secondary: #8888a0;
+      --text-muted: #5a5a72;
+      --accent: #7c5cfc;
+      --accent-glow: rgba(124, 92, 252, 0.3);
+      --accent-secondary: #ff6b9d;
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --error: #f87171;
+      --gold: #FFD700;
+      --phi: 1.618;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-animation {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(124, 92, 252, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(74, 222, 128, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { color: var(--text-secondary); font-size: 15px; margin-top: 8px; }
+
+    /* Progress Steps */
+    .progress-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-dot {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600;
+      transition: all 0.3s ease;
+      background: var(--bg-secondary);
+    }
+
+    .step-dot.active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .step-dot.done {
+      border-color: var(--success);
+      background: var(--success);
+      color: var(--bg-primary);
+    }
+
+    .step-line {
+      width: 40px; height: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+
+    .step-line.done { background: var(--success); }
+
+    .step-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 80px;
+    }
+
+    .step-label.active { color: var(--accent); }
+
+    /* Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card .step-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%238888a0' stroke-width='2'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+
+    /* Tag Input */
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-height: 50px;
+      cursor: text;
+    }
+
+    .tag-container:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(124, 92, 252, 0.15);
+      border: 1px solid rgba(124, 92, 252, 0.3);
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--accent);
+      animation: tagIn 0.2s ease;
+    }
+
+    @keyframes tagIn { from { transform: scale(0.8); opacity: 0; } }
+
+    .tag .remove {
+      cursor: pointer;
+      font-size: 16px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .tag .remove:hover { opacity: 1; }
+
+    .tag-input {
+      border: none;
+      background: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    /* Instruction Builder */
+    .instruction-list { list-style: none; counter-reset: step; }
+
+    .instruction-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      animation: slideIn 0.2s ease;
+    }
+
+    @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } }
+
+    .instruction-num {
+      min-width: 32px; height: 32px;
+      background: rgba(124, 92, 252, 0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+
+    .instruction-item input {
+      flex: 1;
+    }
+
+    .instruction-item .remove-btn {
+      background: none;
+      border: none;
+      color: var(--error);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 8px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .instruction-item .remove-btn:hover { opacity: 1; }
+
+    .add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      background: rgba(124, 92, 252, 0.1);
+      border: 1px dashed rgba(124, 92, 252, 0.3);
+      border-radius: var(--radius);
+      color: var(--accent);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-btn:hover {
+      background: rgba(124, 92, 252, 0.2);
+      border-color: var(--accent);
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #9b7dff);
+      color: white;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-muted);
+      color: var(--text-primary);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      color: white;
+    }
+
+    /* Preview */
+    .preview-container {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .preview-header {
+      padding: 12px 16px;
+      background: rgba(124, 92, 252, 0.1);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .preview-header span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .copy-btn {
+      padding: 6px 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+    .preview-body {
+      padding: 16px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 500px;
+      overflow-y: auto;
+      color: var(--text-secondary);
+    }
+
+    /* Hidden steps */
+    .wizard-step { display: none; }
+    .wizard-step.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .container { padding: 20px 16px; }
+      .card { padding: 24px; }
+      h1 { font-size: 24px; }
+      .step-label { display: none; }
+    }
+
+    /* Category chips */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+    }
+    .category-chip {
+      padding: 14px 16px;
+      background: var(--bg-input);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .category-chip:hover { border-color: var(--text-muted); }
+    .category-chip.selected {
+      border-color: var(--accent);
+      background: rgba(124, 92, 252, 0.1);
+      color: var(--accent);
+    }
+    .category-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+
+    /* Download animation */
+    .download-success {
+      text-align: center;
+      padding: 40px;
+    }
+    .download-success .checkmark {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #22c55e, #4ade80);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+  </style>
+</head>
+<body>
+  <div class="bg-animation"></div>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">🧩</div>
+        <div>
+          <h1>Skill Builder Wizard</h1>
+          <div class="subtitle">Create custom Heady™ skills in minutes</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="step-indicator"><div class="step-dot active" data-step="0">1</div><div class="step-label active">Identity</div></div>
+      <div class="step-line"></div>
+      <div class="step-indicator"><div class="step-dot" data-step="1">2</div><div class="step-label">Category</div></div>
+      <div class="step-line"></div>
+      <div class="step-indicator"><div class="step-dot" data-step="2">3</div><div class="step-label">Instructions</div></div>
+      <div class="step-line"></div>
+      <div class="step-indicator"><div class="step-dot" data-step="3">4</div><div class="step-label">Modules</div></div>
+      <div class="step-line"></div>
+      <div class="step-indicator"><div class="step-dot" data-step="4">5</div><div class="step-label">Preview</div></div>
+    </div>
+
+    <!-- Step 1: Identity -->
+    <div class="wizard-step active" data-step="0">
+      <div class="card">
+        <h2>🏷️ Skill Identity</h2>
+        <p class="step-desc">Give your skill a name, description, and define when it should be used.</p>
+        <div class="form-group">
+          <label>Skill Name</label>
+          <input type="text" id="skillName" placeholder="e.g., heady-code-review" oninput="autoSlug(this)">
+        </div>
+        <div class="form-group">
+          <label>Display Title</label>
+          <input type="text" id="skillTitle" placeholder="e.g., Heady™ Code Review">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="skillDesc" placeholder="Describe when this skill should be activated. Include relevant keywords for CSL matching."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Keywords (press Enter to add)</label>
+          <div class="tag-container" id="keywordContainer" onclick="this.querySelector('input').focus()">
+            <input type="text" class="tag-input" id="keywordInput" placeholder="Type a keyword and press Enter">
+          </div>
+        </div>
+        <div class="btn-row">
+          <div></div>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Category -->
+    <div class="wizard-step" data-step="1">
+      <div class="card">
+        <h2>📂 Skill Category</h2>
+        <p class="step-desc">What kind of skill is this? This helps Heady route requests to the right skill.</p>
+        <div class="category-grid" id="categoryGrid">
+          <div class="category-chip" onclick="selectCategory(this, 'coding')"><span class="category-icon">💻</span>Coding</div>
+          <div class="category-chip" onclick="selectCategory(this, 'devops')"><span class="category-icon">🚀</span>DevOps</div>
+          <div class="category-chip" onclick="selectCategory(this, 'security')"><span class="category-icon">🔒</span>Security</div>
+          <div class="category-chip" onclick="selectCategory(this, 'data')"><span class="category-icon">📊</span>Data & Analytics</div>
+          <div class="category-chip" onclick="selectCategory(this, 'ai')"><span class="category-icon">🧠</span>AI / ML</div>
+          <div class="category-chip" onclick="selectCategory(this, 'integration')"><span class="category-icon">🔗</span>Integration</div>
+          <div class="category-chip" onclick="selectCategory(this, 'communication')"><span class="category-icon">💬</span>Communication</div>
+          <div class="category-chip" onclick="selectCategory(this, 'orchestration')"><span class="category-icon">🎼</span>Orchestration</div>
+          <div class="category-chip" onclick="selectCategory(this, 'testing')"><span class="category-icon">🧪</span>Testing</div>
+          <div class="category-chip" onclick="selectCategory(this, 'creative')"><span class="category-icon">🎨</span>Creative</div>
+          <div class="category-chip" onclick="selectCategory(this, 'research')"><span class="category-icon">🔍</span>Research</div>
+          <div class="category-chip" onclick="selectCategory(this, 'custom')"><span class="category-icon">⚡</span>Custom</div>
+        </div>
+        <div class="form-group" style="margin-top:24px">
+          <label>Liquid Node Name (optional)</label>
+          <input type="text" id="liquidNode" placeholder="e.g., LiquidMyFeature">
+        </div>
+        <div class="form-group">
+          <label>Version</label>
+          <input type="text" id="skillVersion" value="1.0" placeholder="1.0">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Instructions -->
+    <div class="wizard-step" data-step="2">
+      <div class="card">
+        <h2>📋 Instructions</h2>
+        <p class="step-desc">Define what the skill does — step-by-step instructions the AI agent will follow.</p>
+        <div class="form-group">
+          <label>"When to Use" Scenarios</label>
+          <ul class="instruction-list" id="useCases">
+            <li class="instruction-item">
+              <span class="instruction-num">1</span>
+              <input type="text" placeholder="e.g., When the user needs to review code for security issues">
+              <button class="remove-btn" onclick="removeItem(this)">×</button>
+            </li>
+          </ul>
+          <button class="add-btn" onclick="addUseCase()">+ Add use case</button>
+        </div>
+        <div class="form-group">
+          <label>Step-by-Step Instructions</label>
+          <ul class="instruction-list" id="instructions">
+            <li class="instruction-item">
+              <span class="instruction-num">1</span>
+              <input type="text" placeholder="e.g., Scan all changed files for common vulnerability patterns">
+              <button class="remove-btn" onclick="removeItem(this)">×</button>
+            </li>
+          </ul>
+          <button class="add-btn" onclick="addInstruction()">+ Add step</button>
+        </div>
+        <div class="form-group">
+          <label>Code Example (optional)</label>
+          <textarea id="codeExample" placeholder="Paste a relevant code snippet or usage example..." style="font-family: monospace; font-size: 13px;"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Modules -->
+    <div class="wizard-step" data-step="3">
+      <div class="card">
+        <h2>📦 Modules & Outputs</h2>
+        <p class="step-desc">Define the modules this skill references and what it outputs.</p>
+        <div class="form-group">
+          <label>Module Map (optional)</label>
+          <div id="moduleList">
+            <div class="instruction-item">
+              <input type="text" placeholder="Module name" style="max-width:200px">
+              <input type="text" placeholder="File path (e.g., src/my-module.js)">
+              <input type="text" placeholder="Role description">
+              <button class="remove-btn" onclick="removeItem(this)">×</button>
+            </div>
+          </div>
+          <button class="add-btn" onclick="addModule()">+ Add module</button>
+        </div>
+        <div class="form-group">
+          <label>Output Formats</label>
+          <div class="tag-container" id="outputContainer" onclick="this.querySelector('input').focus()">
+            <input type="text" class="tag-input" id="outputInput" placeholder="e.g., Security Report (press Enter)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>MCP Tool Name (optional)</label>
+          <input type="text" id="mcpTool" placeholder="e.g., mcp_Heady_heady_code_review">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep()">Generate Preview →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Preview & Download -->
+    <div class="wizard-step" data-step="4">
+      <div class="card">
+        <h2>✨ Your Skill is Ready</h2>
+        <p class="step-desc">Review the generated SKILL.md and download it to your project.</p>
+        <div class="preview-container">
+          <div class="preview-header">
+            <span>📄 SKILL.md</span>
+            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">Copy</button>
+          </div>
+          <div class="preview-body" id="previewContent"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">← Edit</button>
+          <div style="display:flex;gap:12px">
+            <button class="btn btn-primary" onclick="downloadSkill()">⬇ Download SKILL.md</button>
+            <button class="btn btn-success" onclick="showSuccess()">✓ Save to Project</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="successCard" style="display:none">
+        <div class="download-success">
+          <div class="checkmark">✓</div>
+          <h2>Skill Created!</h2>
+          <p style="color:var(--text-secondary);margin-top:12px">
+            Your skill has been saved. Place the SKILL.md file in:<br>
+            <code style="color:var(--accent)">.agents/skills/<span id="savedSkillName">your-skill</span>/SKILL.md</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    let selectedCategory = '';
+    const keywords = [];
+    const outputs = [];
+
+    // Tag input handlers
+    document.getElementById('keywordInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        e.preventDefault();
+        addTag('keywordContainer', 'keywordInput', keywords, e.target.value.trim());
+      }
+    });
+
+    document.getElementById('outputInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        e.preventDefault();
+        addTag('outputContainer', 'outputInput', outputs, e.target.value.trim());
+      }
+    });
+
+    function addTag(containerId, inputId, arr, value) {
+      if (arr.includes(value)) return;
+      arr.push(value);
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.innerHTML = `${value} <span class="remove" onclick="removeTag(this, '${containerId}', '${value}')">&times;</span>`;
+      const input = document.getElementById(inputId);
+      input.parentNode.insertBefore(tag, input);
+      input.value = '';
+    }
+
+    function removeTag(el, containerId, value) {
+      if (containerId === 'keywordContainer') keywords.splice(keywords.indexOf(value), 1);
+      else outputs.splice(outputs.indexOf(value), 1);
+      el.parentElement.remove();
+    }
+
+    function autoSlug(input) {
+      let v = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+      if (!v.startsWith('heady-')) v = 'heady-' + v.replace(/^heady-/, '');
+      input.value = v;
+    }
+
+    function selectCategory(el, cat) {
+      document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedCategory = cat;
+    }
+
+    function addUseCase() {
+      const list = document.getElementById('useCases');
+      const n = list.children.length + 1;
+      const li = document.createElement('li');
+      li.className = 'instruction-item';
+      li.innerHTML = `<span class="instruction-num">${n}</span><input type="text" placeholder="Another use case..."><button class="remove-btn" onclick="removeItem(this)">×</button>`;
+      list.appendChild(li);
+    }
+
+    function addInstruction() {
+      const list = document.getElementById('instructions');
+      const n = list.children.length + 1;
+      const li = document.createElement('li');
+      li.className = 'instruction-item';
+      li.innerHTML = `<span class="instruction-num">${n}</span><input type="text" placeholder="Next step..."><button class="remove-btn" onclick="removeItem(this)">×</button>`;
+      list.appendChild(li);
+    }
+
+    function addModule() {
+      const list = document.getElementById('moduleList');
+      const div = document.createElement('div');
+      div.className = 'instruction-item';
+      div.innerHTML = `<input type="text" placeholder="Module name" style="max-width:200px"><input type="text" placeholder="File path"><input type="text" placeholder="Role description"><button class="remove-btn" onclick="removeItem(this)">×</button>`;
+      list.appendChild(div);
+    }
+
+    function removeItem(btn) {
+      const parent = btn.parentElement;
+      const list = parent.parentElement;
+      if (list.children.length > 1) parent.remove();
+      renumber(list);
+    }
+
+    function renumber(list) {
+      list.querySelectorAll('.instruction-num').forEach((n, i) => n.textContent = i + 1);
+    }
+
+    function nextStep() {
+      if (currentStep < 4) {
+        currentStep++;
+        if (currentStep === 4) generatePreview();
+        updateUI();
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) { currentStep--; updateUI(); }
+    }
+
+    function updateUI() {
+      document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+      document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.add('active');
+      document.querySelectorAll('.step-dot').forEach((d, i) => {
+        d.classList.remove('active', 'done');
+        if (i < currentStep) d.classList.add('done');
+        else if (i === currentStep) d.classList.add('active');
+      });
+      document.querySelectorAll('.step-line').forEach((l, i) => {
+        l.classList.toggle('done', i < currentStep);
+      });
+      document.querySelectorAll('.step-label').forEach((l, i) => {
+        l.classList.toggle('active', i === currentStep);
+      });
+    }
+
+    function generatePreview() {
+      const name = document.getElementById('skillName').value || 'heady-my-skill';
+      const title = document.getElementById('skillTitle').value || 'Heady™ My Skill';
+      const desc = document.getElementById('skillDesc').value || 'A custom Heady skill.';
+      const version = document.getElementById('skillVersion').value || '1.0';
+      const liquidNode = document.getElementById('liquidNode').value;
+      const mcpTool = document.getElementById('mcpTool').value;
+      const code = document.getElementById('codeExample').value;
+
+      const useCases = [...document.getElementById('useCases').querySelectorAll('input')]
+        .map(i => i.value).filter(Boolean);
+      const steps = [...document.getElementById('instructions').querySelectorAll('input')]
+        .map(i => i.value).filter(Boolean);
+      const modules = [...document.getElementById('moduleList').children].map(row => {
+        const inputs = row.querySelectorAll('input');
+        return { name: inputs[0]?.value, path: inputs[1]?.value, role: inputs[2]?.value };
+      }).filter(m => m.name);
+
+      let md = `---\nname: ${name}\ndescription: ${desc}${keywords.length ? ' Keywords include ' + keywords.join(', ') + '.' : ''}\nmetadata:\n  author: HeadySystems\n  version: '${version}'`;
+      if (liquidNode) md += `\n  liquid_node: ${liquidNode}`;
+      if (selectedCategory) md += `\n  category: ${selectedCategory}`;
+      md += `\n---\n\n# ${title}\n\n## When to Use This Skill\n\nUse this skill when the user needs to:\n`;
+      useCases.forEach(u => md += `- ${u}\n`);
+
+      if (modules.length) {
+        md += `\n## Module Map\n\n| Module | Path | Role |\n|---|---|---|\n`;
+        modules.forEach(m => md += `| ${m.name} | ${m.path} | ${m.role} |\n`);
+      }
+
+      if (mcpTool) {
+        md += `\n## Primary Tool\n\n\`\`\`\n${mcpTool}\n\`\`\`\n`;
+      }
+
+      md += `\n## Instructions\n\n`;
+      steps.forEach((s, i) => md += `${i + 1}. ${s}\n`);
+
+      if (code) {
+        md += `\n### Example\n\n\`\`\`javascript\n${code}\n\`\`\`\n`;
+      }
+
+      if (outputs.length) {
+        md += `\n## Output Format\n\n`;
+        outputs.forEach(o => md += `- ${o}\n`);
+      }
+
+      document.getElementById('previewContent').textContent = md;
+      document.getElementById('savedSkillName').textContent = name;
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('previewContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function downloadSkill() {
+      const text = document.getElementById('previewContent').textContent;
+      const name = document.getElementById('skillName').value || 'heady-my-skill';
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'SKILL.md';
+      a.click();
+    }
+
+    function showSuccess() {
+      document.getElementById('successCard').style.display = 'block';
+      document.getElementById('successCard').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
