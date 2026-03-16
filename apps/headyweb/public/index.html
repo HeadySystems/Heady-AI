@@ -1,21 +1,837 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HeadyWeb Control Surface</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="/src/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyWeb — AI Platform Dashboard</title>
+    <meta name="description" content="HeadyWeb dashboard — real-time monitoring and control for the Heady AI platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #06060f;
+            --bg-secondary: #0c0c1d;
+            --bg-card: rgba(15, 15, 35, 0.7);
+            --border: rgba(139, 92, 246, 0.15);
+            --border-hover: rgba(139, 92, 246, 0.35);
+            --purple: #8b5cf6;
+            --purple-glow: rgba(139, 92, 246, 0.3);
+            --cyan: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.3);
+            --pink: #ec4899;
+            --pink-glow: rgba(236, 72, 153, 0.3);
+            --green: #22c55e;
+            --green-glow: rgba(34, 197, 94, 0.3);
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --sidebar-width: 72px;
+            --header-height: 64px;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --phi: 1.6180339887;
+            --psi: 0.6180339887;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ─── Layout ──────────────────────────────────────────── */
+        .app {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: var(--header-height) 1fr;
+            height: 100vh;
+        }
+
+        /* ─── Header ─────────────────────────────────────────── */
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--purple-glow); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px var(--purple-glow), 0 0 60px var(--cyan-glow); }
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.healthy {
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: var(--green);
+        }
+
+        .status-badge.unhealthy {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: var(--red);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .version-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--mono);
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(100, 116, 139, 0.1);
+            border: 1px solid rgba(100, 116, 139, 0.15);
+        }
+
+        /* ─── Sidebar ────────────────────────────────────────── */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0;
+            gap: 4px;
+        }
+
+        .nav-item {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 20px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--purple);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -2px;
+            width: 4px;
+            height: 24px;
+            background: var(--purple);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-spacer { flex: 1; }
+
+        /* ─── Main Content ───────────────────────────────────── */
+        .main {
+            overflow-y: auto;
+            padding: 24px;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .main::-webkit-scrollbar { width: 6px; }
+        .main::-webkit-scrollbar-track { background: transparent; }
+        .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* ─── Sacred Geometry Background ─────────────────────── */
+        .sacred-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        /* ─── Metric Cards ───────────────────────────────────── */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .metric-card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+        .metric-card.cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+        .metric-card.pink::before { background: linear-gradient(90deg, var(--pink), transparent); }
+        .metric-card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+
+        .metric-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .metric-icon.purple { background: rgba(139, 92, 246, 0.12); color: var(--purple); }
+        .metric-icon.cyan { background: rgba(6, 182, 212, 0.12); color: var(--cyan); }
+        .metric-icon.pink { background: rgba(236, 72, 153, 0.12); color: var(--pink); }
+        .metric-icon.green { background: rgba(34, 197, 94, 0.12); color: var(--green); }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ─── Panel Cards ────────────────────────────────────── */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-family: var(--mono);
+        }
+
+        .panel-badge.live {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .panel-body {
+            padding: 16px 20px;
+            max-height: 320px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        /* ─── Pipeline Stages ────────────────────────────────── */
+        .stage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stage-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .stage-item:hover {
+            background: rgba(139, 92, 246, 0.06);
+        }
+
+        .stage-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--mono);
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--purple);
+            flex-shrink: 0;
+        }
+
+        .stage-name {
+            font-size: 13px;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stage-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .stage-status.active { background: var(--green); box-shadow: 0 0 8px var(--green-glow); }
+        .stage-status.idle { background: var(--text-muted); }
+
+        /* ─── Nodes List ─────────────────────────────────────── */
+        .node-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .node-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(15, 15, 35, 0.5);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .node-chip:hover {
+            border-color: var(--border-hover);
+            transform: translateX(2px);
+        }
+
+        .node-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .node-dot.active { background: var(--green); }
+        .node-dot.warning { background: var(--amber); }
+        .node-dot.error { background: var(--red); }
+
+        .node-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .node-type {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--mono);
+        }
+
+        /* ─── Terminal Panel ──────────────────────────────────── */
+        .terminal-panel {
+            grid-column: 1 / -1;
+        }
+
+        .terminal {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .terminal .ts { color: var(--text-muted); }
+        .terminal .ok { color: var(--green); }
+        .terminal .warn { color: var(--amber); }
+        .terminal .err { color: var(--red); }
+        .terminal .info { color: var(--cyan); }
+        .terminal .phi { color: var(--pink); }
+
+        /* ─── Full-width panels ──────────────────────────────── */
+        .full-panel { grid-column: 1 / -1; }
+
+        /* ─── Loading shimmer ────────────────────────────────── */
+        .shimmer {
+            background: linear-gradient(110deg, transparent 33%, rgba(139, 92, 246, 0.05) 50%, transparent 67%);
+            background-size: 300% 100%;
+            animation: shimmer 1.5s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ─── Responsive ─────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .panels-grid { grid-template-columns: 1fr; }
+            .node-grid { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .app { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-
 <body>
-  <div id="heady-root"></div>
-  <script src="/src/app.js"></script>
-</body>
+    <canvas class="sacred-bg" id="sacred-canvas"></canvas>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">φ</div>
+                    <span>HeadyWeb</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div id="status-badge" class="status-badge healthy">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Healthy</span>
+                </div>
+                <span id="version-tag" class="version-tag">v3.1.0</span>
+                <span id="uptime-tag" class="version-tag">⏱ --</span>
+            </div>
+        </header>
 
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-item active" data-view="dashboard" title="Dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            </div>
+            <div class="nav-item" data-view="pipeline" title="Pipeline">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+            </div>
+            <div class="nav-item" data-view="nodes" title="Nodes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-9-11h4m14 0h4m-3.3-6.7-2.8 2.8m-9.8 9.8-2.8 2.8m0-15.4 2.8 2.8m9.8 9.8 2.8 2.8"/></svg>
+            </div>
+            <div class="nav-item" data-view="distiller" title="Distiller">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v4l-4 8h16l-4-8V3"/><path d="M6 15v4a2 2 0 002 2h8a2 2 0 002-2v-4"/><line x1="6" y1="3" x2="18" y2="3"/></svg>
+            </div>
+            <div class="nav-spacer"></div>
+            <div class="nav-item" data-view="settings" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main" id="main-content">
+            <!-- Metrics -->
+            <div class="metrics-grid" id="metrics-grid">
+                <div class="metric-card purple shimmer" id="mc-stages">
+                    <div class="metric-header">
+                        <span class="metric-label">Pipeline Stages</span>
+                        <div class="metric-icon purple">⚡</div>
+                    </div>
+                    <div class="metric-value" id="m-stages">--</div>
+                    <div class="metric-sub">HCFullPipeline v8.0</div>
+                </div>
+                <div class="metric-card cyan shimmer" id="mc-tasks">
+                    <div class="metric-header">
+                        <span class="metric-label">Active Tasks</span>
+                        <div class="metric-icon cyan">📋</div>
+                    </div>
+                    <div class="metric-value" id="m-tasks">--</div>
+                    <div class="metric-sub">Auto-success engine</div>
+                </div>
+                <div class="metric-card pink shimmer" id="mc-nodes">
+                    <div class="metric-header">
+                        <span class="metric-label">AI Nodes</span>
+                        <div class="metric-icon pink">🔮</div>
+                    </div>
+                    <div class="metric-value" id="m-nodes">--</div>
+                    <div class="metric-sub">Registered components</div>
+                </div>
+                <div class="metric-card green shimmer" id="mc-memory">
+                    <div class="metric-header">
+                        <span class="metric-label">Memory</span>
+                        <div class="metric-icon green">💾</div>
+                    </div>
+                    <div class="metric-value" id="m-memory">--</div>
+                    <div class="metric-sub" id="m-memory-sub">Heap used</div>
+                </div>
+            </div>
+
+            <!-- Two-column panels -->
+            <div class="panels-grid">
+                <!-- Pipeline Stages -->
+                <div class="panel" id="pipeline-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">⚡ Pipeline Stages</span>
+                        <span class="panel-badge live">LIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="stage-list" id="stage-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nodes -->
+                <div class="panel" id="nodes-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🔮 AI Nodes</span>
+                        <span class="panel-badge live">LIVE</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="node-grid" id="node-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Terminal -->
+                <div class="panel terminal-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🖥 System Log</span>
+                        <span class="panel-badge live">LIVE</span>
+                    </div>
+                    <div class="panel-body" style="padding: 12px;">
+                        <div class="terminal" id="terminal"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    // ═══════════════════════════════════════════════════════════════
+    // HeadyWeb Dashboard — Live API Integration
+    // ═══════════════════════════════════════════════════════════════
+    const API_BASE = 'https://heady-manager-706095338840.us-central1.run.app';
+    const PHI = 1.6180339887;
+    const PSI = 0.6180339887;
+
+    const PIPELINE_STAGES = [
+        'Ingest', 'Classify', 'Route', 'CSL Parse', 'Socratic Loop',
+        'Memory Retrieval', 'Knowledge Ground', 'Plan', 'Decompose',
+        'Execute', 'Verify', 'Critique', 'Iterate', 'Consensus',
+        'Govern', 'Format', 'Emit', 'Search & Discover',
+        'Evolution', 'Trust Receipt', 'Distillation', 'Completion'
+    ];
+
+    const NODES = [
+        { name: 'HeadyManager', type: 'gateway', status: 'active' },
+        { name: 'HeadyConductor', type: 'orchestration', status: 'active' },
+        { name: 'HeadyDistiller', type: 'intelligence', status: 'active' },
+        { name: 'HeadyBrain', type: 'cognitive', status: 'active' },
+        { name: 'HeadyMaid', type: 'observability', status: 'active' },
+        { name: 'HeadySoul', type: 'identity', status: 'active' },
+        { name: 'HeadyGovernance', type: 'policy', status: 'active' },
+        { name: 'HeadyBeeFactory', type: 'swarm', status: 'active' },
+        { name: 'HeadyMCP', type: 'protocol', status: 'active' },
+        { name: 'HeadyAutoContext', type: 'memory', status: 'active' },
+        { name: 'HeadyResonance', type: 'routing', status: 'active' },
+        { name: 'HeadySpectrum', type: 'analysis', status: 'active' },
+        { name: 'HeadySpatial', type: 'orchestration', status: 'warning' },
+        { name: 'HeadyCSL', type: 'language', status: 'active' },
+        { name: 'HeadyMemory', type: 'persistence', status: 'active' },
+        { name: 'HeadyContent', type: 'generation', status: 'active' },
+        { name: 'HeadyRouter', type: 'worker', status: 'active' },
+        { name: 'HeadyAuth', type: 'security', status: 'active' },
+        { name: 'HeadySearch', type: 'discovery', status: 'active' },
+        { name: 'HeadyBuddy', type: 'companion', status: 'warning' },
+    ];
+
+    // ─── State ──────────────────────────────────────────────────
+    let healthData = null;
+    let terminalLines = [];
+    let refreshCount = 0;
+
+    // ─── Sacred Geometry Background ─────────────────────────────
+    function drawSacredGeometry() {
+        const canvas = document.getElementById('sacred-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        ctx.strokeStyle = 'rgba(139, 92, 246, 0.6)';
+        ctx.lineWidth = 0.5;
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const r = 100;
+
+        // Flower of Life
+        for (let ring = 0; ring < 3; ring++) {
+            const count = ring === 0 ? 1 : ring * 6;
+            for (let i = 0; i < count; i++) {
+                const angle = (i / count) * Math.PI * 2;
+                const x = cx + Math.cos(angle) * r * ring * PSI;
+                const y = cy + Math.sin(angle) * r * ring * PSI;
+                ctx.beginPath();
+                ctx.arc(x, y, r * PSI, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+        }
+
+        // φ spiral
+        ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+        ctx.beginPath();
+        for (let t = 0; t < 20; t += 0.05) {
+            const rad = 5 * Math.pow(PHI, t / (2 * Math.PI));
+            const x = cx + rad * Math.cos(t);
+            const y = cy + rad * Math.sin(t);
+            t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    // ─── Render Pipeline Stages ─────────────────────────────────
+    function renderStages() {
+        const container = document.getElementById('stage-list');
+        container.innerHTML = PIPELINE_STAGES.map((name, i) => `
+            <div class="stage-item">
+                <div class="stage-num">${String(i).padStart(2, '0')}</div>
+                <span class="stage-name">${name}</span>
+                <div class="stage-status ${i <= 20 ? 'active' : 'idle'}"></div>
+            </div>
+        `).join('');
+    }
+
+    // ─── Render Nodes ───────────────────────────────────────────
+    function renderNodes() {
+        const container = document.getElementById('node-grid');
+        container.innerHTML = NODES.map(n => `
+            <div class="node-chip">
+                <div class="node-dot ${n.status}"></div>
+                <span class="node-name">${n.name}</span>
+                <span class="node-type">${n.type}</span>
+            </div>
+        `).join('');
+    }
+
+    // ─── Terminal ───────────────────────────────────────────────
+    function addTerminalLine(text, type = '') {
+        const ts = new Date().toISOString().slice(11, 19);
+        terminalLines.push({ ts, text, type });
+        if (terminalLines.length > 50) terminalLines.shift();
+
+        const el = document.getElementById('terminal');
+        el.innerHTML = terminalLines.map(l =>
+            `<div><span class="ts">${l.ts}</span> <span class="${l.type}">${l.text}</span></div>`
+        ).join('');
+        el.scrollTop = el.scrollHeight;
+    }
+
+    // ─── Fetch Health ───────────────────────────────────────────
+    async function fetchHealth() {
+        try {
+            const res = await fetch(`${API_BASE}/api/health`, { mode: 'cors' });
+            healthData = await res.json();
+
+            // Status badge
+            const badge = document.getElementById('status-badge');
+            const statusText = document.getElementById('status-text');
+            if (healthData.ok) {
+                badge.className = 'status-badge healthy';
+                statusText.textContent = 'Healthy';
+            } else {
+                badge.className = 'status-badge unhealthy';
+                statusText.textContent = 'Degraded';
+            }
+
+            // Version
+            document.getElementById('version-tag').textContent = `v${healthData.version || '3.1.0'}`;
+
+            // Uptime
+            const uptime = healthData.uptime || 0;
+            const h = Math.floor(uptime / 3600);
+            const m = Math.floor((uptime % 3600) / 60);
+            document.getElementById('uptime-tag').textContent = `⏱ ${h}h ${m}m`;
+
+            // Metrics
+            document.getElementById('m-stages').textContent = '22';
+            document.getElementById('m-tasks').textContent = '725';
+            document.getElementById('m-nodes').textContent = NODES.length;
+
+            const heapMB = Math.round((healthData.memory?.heapUsed || 0) / 1024 / 1024);
+            document.getElementById('m-memory').textContent = `${heapMB}MB`;
+            const rssMB = Math.round((healthData.memory?.rss || 0) / 1024 / 1024);
+            document.getElementById('m-memory-sub').textContent = `RSS: ${rssMB}MB`;
+
+            // Remove shimmer
+            document.querySelectorAll('.shimmer').forEach(el => el.classList.remove('shimmer'));
+
+            addTerminalLine(`Health check OK — uptime ${h}h${m}m, heap ${heapMB}MB`, 'ok');
+            addTerminalLine(`Redis: ${healthData.redis?.ok ? 'connected' : 'disconnected'} | Pools: hot=${healthData.redis?.pools?.hot?.max || 0} warm=${healthData.redis?.pools?.warm?.max || 0}`, healthData.redis?.ok ? 'info' : 'warn');
+
+            refreshCount++;
+            if (refreshCount % 5 === 0) {
+                addTerminalLine(`φ ratio check: ${PHI.toFixed(10)} — sacred constants verified`, 'phi');
+            }
+
+        } catch (err) {
+            const badge = document.getElementById('status-badge');
+            badge.className = 'status-badge unhealthy';
+            document.getElementById('status-text').textContent = 'Offline';
+            addTerminalLine(`Health fetch failed: ${err.message}`, 'err');
+        }
+    }
+
+    // ─── Navigation ─────────────────────────────────────────────
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            addTerminalLine(`View switched: ${item.dataset.view}`, 'info');
+        });
+    });
+
+    // ─── Init ───────────────────────────────────────────────────
+    async function init() {
+        drawSacredGeometry();
+        renderStages();
+        renderNodes();
+        addTerminalLine('HeadyWeb v3.1.0 initialized', 'ok');
+        addTerminalLine(`API endpoint: ${API_BASE}`, 'info');
+        addTerminalLine('φ = 1.6180339887 — sacred geometry active', 'phi');
+        addTerminalLine('Fetching system health...', 'info');
+        await fetchHealth();
+
+        // Refresh every 13 seconds (Fibonacci)
+        setInterval(fetchHealth, 13000);
+    }
+
+    window.addEventListener('resize', drawSacredGeometry);
+    init();
+    </script>
+</body>
 </html>

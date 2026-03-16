@@ -1,57 +1,80 @@
-// HEADY_BRAND:BEGIN
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: quick-server.js                                                    ║
-// ║  LAYER: root                                                  ║
-// ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { createLogger } = require('./shared/logger');
-const logger = createLogger('quick-server');
 
 const PORT = process.env.PORT || 3300;
+const PUBLIC = path.join(__dirname, 'public');
+
+const MIME = {
+    '.html': 'text/html; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+    '.woff2': 'font/woff2',
+    '.woff': 'font/woff',
+    '.ttf': 'font/ttf',
+};
 
 const server = http.createServer((req, res) => {
-    let filePath = req.url === '/' ? '/index.html' : req.url;
-    filePath = path.join(__dirname, 'public', filePath);
+    // CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    const ext = path.extname(filePath);
-    const contentTypes = {
-        '.html': 'text/html',
-        '.css': 'text/css',
-        '.js': 'text/javascript',
-        '.json': 'application/json',
-    };
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        return res.end();
+    }
+
+    // Health endpoint
+    if (req.url === '/api/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+            ok: true,
+            service: 'headyweb',
+            version: '3.1.0',
+            ts: new Date().toISOString(),
+        }));
+    }
+
+    // Serve static files
+    let filePath = req.url === '/' ? '/index.html' : req.url.split('?')[0];
+    filePath = path.join(PUBLIC, filePath);
+
+    // Security: prevent directory traversal
+    if (!filePath.startsWith(PUBLIC)) {
+        res.writeHead(403);
+        return res.end('Forbidden');
+    }
 
     fs.readFile(filePath, (err, content) => {
         if (err) {
-            if (req.url === '/api/health') {
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ ok: true, service: 'heady-manager', version: '3.0.0' }));
-                return;
-            }
-            res.writeHead(404);
-            res.end('Not found');
+            // SPA fallback → index.html
+            fs.readFile(path.join(PUBLIC, 'index.html'), (err2, html) => {
+                if (err2) {
+                    res.writeHead(404);
+                    return res.end('Not found');
+                }
+                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                res.end(html);
+            });
             return;
         }
 
-        res.writeHead(200, { 'Content-Type': contentTypes[ext] || 'text/plain' });
+        const ext = path.extname(filePath);
+        res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
         res.end(content);
     });
 });
 
 server.listen(PORT, () => {
-    logger.info(`\u2705 HeadyManager RUNNING on port ${PORT}`);
-    logger.info('\ud83c\udf10 Website: https://headysystems.com');
-    logger.info('\ud83d\udcca Health: /api/health');
+    console.log(`\n  ╔═══════════════════════════════════════╗`);
+    console.log(`  ║  HeadyWeb Dashboard                   ║`);
+    console.log(`  ║  http://localhost:${PORT}               ║`);
+    console.log(`  ║  φ = 1.6180339887                     ║`);
+    console.log(`  ╚═══════════════════════════════════════╝\n`);
 });
