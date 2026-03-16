@@ -3,6 +3,23 @@
  * Auth Page Server — standalone dev server (native http, no Express needed).
  * Usage: node src/auth-page-server.js
  */
+/* ── Heady CORS whitelist (no wildcards) ── */
+const HEADY_ALLOWED_ORIGINS = new Set([
+  "https://headyme.com", "https://www.headyme.com",
+  "https://headysystems.com", "https://www.headysystems.com",
+  "https://heady-ai.com", "https://www.heady-ai.com",
+  "https://headyos.com", "https://www.headyos.com",
+  "https://headyconnection.org", "https://www.headyconnection.org",
+  "https://headyconnection.com", "https://www.headyconnection.com",
+  "https://headyex.com", "https://www.headyex.com",
+  "https://headyfinance.com", "https://www.headyfinance.com",
+  "https://admin.headysystems.com",
+]);
+function _headyCorsOrigin(req) {
+  const o = (req && req.headers && req.headers.origin) || (req && req.headers && req.headers.get && req.headers.get("origin")) || "";
+  return HEADY_ALLOWED_ORIGINS.has(o) ? o : "https://headyme.com";
+}
+
 const http = require('http');
 const path = require('path');
 const { HeadyAuth } = require('./hc_auth');
@@ -28,7 +45,7 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
 
   // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', _headyCorsOrigin(req));
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }

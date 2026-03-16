@@ -19,6 +19,23 @@
  *   HEADY_MCP_TRANSPORT=all     node colab-mcp-bridge.js   # everything
  */
 
+/* ── Heady CORS whitelist (no wildcards) ── */
+const HEADY_ALLOWED_ORIGINS = new Set([
+  "https://headyme.com", "https://www.headyme.com",
+  "https://headysystems.com", "https://www.headysystems.com",
+  "https://heady-ai.com", "https://www.heady-ai.com",
+  "https://headyos.com", "https://www.headyos.com",
+  "https://headyconnection.org", "https://www.headyconnection.org",
+  "https://headyconnection.com", "https://www.headyconnection.com",
+  "https://headyex.com", "https://www.headyex.com",
+  "https://headyfinance.com", "https://www.headyfinance.com",
+  "https://admin.headysystems.com",
+]);
+function _headyCorsOrigin(req) {
+  const o = (req && req.headers && req.headers.origin) || (req && req.headers && req.headers.get && req.headers.get("origin")) || "";
+  return HEADY_ALLOWED_ORIGINS.has(o) ? o : "https://headyme.com";
+}
+
 const http = require('http');
 const crypto = require('crypto');
 const path = require('path');
@@ -335,7 +352,7 @@ function handleSSE(req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': _headyCorsOrigin(req),
     });
 
     // Send endpoint info
@@ -564,7 +581,7 @@ function parseBody(req) {
 function jsonRes(res, code, data) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': _headyCorsOrigin(req),
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     });
@@ -581,7 +598,7 @@ function startHTTPServer() {
         // CORS preflight
         if (req.method === 'OPTIONS') {
             res.writeHead(204, {
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': _headyCorsOrigin(req),
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             });
