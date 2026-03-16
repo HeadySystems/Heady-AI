@@ -300,19 +300,45 @@ const { NonprofitConsultantAgent } = require('./nonprofit-agent');
 // ─── REGISTRY ────────────────────────────────────────────────────────────
 
 /**
+ * Check whether an agent is enabled via ENABLE_<AGENT_ID> env var.
+ * Agents default to enabled unless explicitly set to 'false' or '0'.
+ *
+ * Sacred Geometry agents (8):
+ *   claude-code, fintech, builder, researcher, deployer, auditor, observer, nonprofit
+ * Extended agents (6+):
+ *   Loaded from config/agents.json and toggled via ENABLE_HEADY_BRAIN, etc.
+ */
+function isAgentEnabled(agentId) {
+  const envKey = `ENABLE_${agentId.toUpperCase().replace(/-/g, '_')}`;
+  const val = process.env[envKey];
+  // Enabled by default; only disabled if explicitly set to 'false' or '0'
+  if (val === 'false' || val === '0') return false;
+  return true;
+}
+
+/**
  * Create all agents and return them ready for Supervisor registration.
+ * Each agent can be toggled via ENABLE_<AGENT_ID> env vars.
  */
 function createAllAgents(options = {}) {
-  return [
-    new ClaudeCodeAgent(options.claudeCode || {}),
-    new HeadyFinTechAgent(),
-    new BuilderAgent(),
-    new ResearcherAgent(),
-    new DeployerAgent(),
-    new AuditorAgent(),
-    new ObserverAgent(),
-    new NonprofitConsultantAgent(BaseAgent),
+  const candidates = [
+    { id: 'claude-code',  factory: () => new ClaudeCodeAgent(options.claudeCode || {}) },
+    { id: 'fintech',      factory: () => new HeadyFinTechAgent() },
+    { id: 'builder',      factory: () => new BuilderAgent() },
+    { id: 'researcher',   factory: () => new ResearcherAgent() },
+    { id: 'deployer',     factory: () => new DeployerAgent() },
+    { id: 'auditor',      factory: () => new AuditorAgent() },
+    { id: 'observer',     factory: () => new ObserverAgent() },
+    { id: 'nonprofit',    factory: () => new NonprofitConsultantAgent(BaseAgent) },
   ];
+
+  const agents = [];
+  for (const { id, factory } of candidates) {
+    if (isAgentEnabled(id)) {
+      agents.push(factory());
+    }
+  }
+  return agents;
 }
 
 /**
@@ -331,6 +357,7 @@ function createConfiguredSupervisor(Supervisor, options = {}) {
 module.exports = {
   createAllAgents,
   createConfiguredSupervisor,
+  isAgentEnabled,
   ClaudeCodeAgent,
   HeadyFinTechAgent,
   BuilderAgent,

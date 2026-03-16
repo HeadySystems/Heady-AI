@@ -69,9 +69,25 @@ const ALERT_THRESHOLDS = {
   ERROR_RATE_CRIT:  PSI,          // ≈ 0.618 (61.8%)
 };
 
+/**
+ * Classify a utilization ratio into a pressure level name.
+ * Used by swarm-manager and backpressure controllers.
+ *
+ * @param {number} ratio — utilization ratio in [0, 1]
+ * @returns {string} pressure level name
+ */
+function classifyPressure(ratio) {
+  if (ratio >= 1.0) return 'OVERLOAD';
+  if (ratio >= PRESSURE_LEVELS.HIGH) return 'HIGH';
+  if (ratio >= PRESSURE_LEVELS.MODERATE) return 'MODERATE';
+  if (ratio >= PRESSURE_LEVELS.LOW) return 'LOW';
+  return 'IDLE';
+}
+
 module.exports = {
   phiThreshold,
   CSL_THRESHOLDS,
   PRESSURE_LEVELS,
   ALERT_THRESHOLDS,
+  classifyPressure,
 };

@@ -43,3 +43,11 @@ export {
   DECISION_STATE,
   VOTE_TIMEOUT_MS,
 } from './consensus.js';
+
+export {
+  RedisStreamTransport,
+  useRedisTransport,
+  STREAM_PREFIX,
+  AUTOCLAIM_MIN_IDLE_MS,
+  READ_BATCH,
+} from './redis-transport.js';
