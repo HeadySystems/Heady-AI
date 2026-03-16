@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-16T03:32:02.963Z",
+  "lastFineTuned": "2026-03-16T04:26:00.594Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — v7.0 includes 42 new tasks from Super Prompt v6.0 gap analysis (ASE stubs, SP capabilities, PL stage tasks, SYS cross-cutting)",
-  "taskCount": 662,
+  "description": "Complete task queue for HCFullPipeline — v7.0 includes 42 new tasks from Super Prompt v6.0 gap analysis (ASE stubs, SP capabilities, PL stage tasks, SYS cross-cutting) + 38 absorption tasks from OpenClaw competitive analysis (CRDT collaboration, durable execution, PageRank repo maps, semantic caching, etc.)",
+  "taskCount": 700,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -117,6 +117,10 @@
     "PIPELINE": {
       "csl_resonance": 1.618,
       "tasks": 3
+    },
+    "ABSORPTION": {
+      "csl_resonance": 1.618,
+      "tasks": 38
     }
   },
   "tasks": [
@@ -8359,6 +8363,424 @@
       "estimated_hours": 2,
       "source": "hcfullpipeline.yaml receipt stage signing config",
       "auto_fix": "test -f configs/pki/ed25519-receipt-key.pem && echo 'Key exists' || echo 'MISSING: Ed25519 key'"
+    },
+    {
+      "id": "ABS-001",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidMesh CRDT multiplayer editing via Yjs",
+      "description": "Integrate Yjs (900K+ weekly npm downloads) with y-websocket provider and Monaco/CodeMirror bindings. Each AI agent gets unique CRDT client ID. Awareness CRDT for live cursors/presence. Role-based access control on shared documents.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 16,
+      "source": "OpenClaw gap analysis — no real-time collaboration",
+      "auto_fix": "echo '[ABS] ABS-001: CRDT multiplayer needs implementation'"
+    },
+    {
+      "id": "ABS-002",
+      "category": "ABSORPTION",
+      "title": "Build LiquidEventBus typed action/observation pub/sub on NATS",
+      "description": "Extend NATS JetStream with OpenHands-style typed Actions flowing through central EventStream pub/sub hub. Define action schemas: CmdRunAction, FileWriteAction, BrowseInteractiveAction, AgentDelegateAction. Route observations (CmdOutputObservation, FileReadObservation) back through typed channels.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "OpenHands event-stream architecture",
+      "auto_fix": "echo '[ABS] ABS-002: EventBus typed actions need implementation'"
+    },
+    {
+      "id": "ABS-003",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidDurable workflow/activity separation with replay",
+      "description": "Implement Temporal-style durable execution: Workflows (deterministic orchestration) separate from Activities (non-deterministic side effects — LLM calls, tool execution). Event History provides complete immutable audit trail with replay capability. Model calls become Activities (run once, results recorded). Human approvals use Signals (workflow sleeps hours/days then resumes).",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 16,
+      "source": "Temporal.io durable execution pattern",
+      "auto_fix": "echo '[ABS] ABS-003: Durable execution needs implementation'"
+    },
+    {
+      "id": "ABS-004",
+      "category": "ABSORPTION",
+      "title": "Build LiquidGraphRank PageRank repo maps via tree-sitter",
+      "description": "Build Aider-style repository map: tree-sitter parses symbols into NetworkX MultiDiGraph, ranked by PageRank importance with mentioned identifiers getting 10x weight boost. Generates concise repo-map context for each agent task. Incremental updates on file change events.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 12,
+      "source": "Aider PageRank-based repository map",
+      "auto_fix": "echo '[ABS] ABS-004: PageRank repo maps need implementation'"
+    },
+    {
+      "id": "ABS-005",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidIndex Merkle tree incremental codebase sync",
+      "description": "Implement Cursor-style Merkle tree sync: hash files, detect changes incrementally, chunk with tree-sitter, embed chunks with path context. φ-scheduled incremental updates instead of full rescan. Track file hashes in persistent index for O(1) change detection.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 10,
+      "source": "Cursor Merkle tree indexing architecture",
+      "auto_fix": "echo '[ABS] ABS-005: Merkle tree indexing needs implementation'"
+    },
+    {
+      "id": "ABS-006",
+      "category": "ABSORPTION",
+      "title": "Build LiquidSOP structured output templates between pipeline stages",
+      "description": "Implement MetaGPT-style SOP pipeline: agents communicate through structured outputs (PRDs, design docs, API specs) rather than free-form text. Define templates for each pipeline stage transition. Dramatically reduces hallucination cascading between stages. Publish-subscribe message pool for inter-stage coordination.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "MetaGPT structured SOP outputs — 85.9% Pass@1 on HumanEval",
+      "auto_fix": "echo '[ABS] ABS-006: SOP templates need implementation'"
+    },
+    {
+      "id": "ABS-007",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidCache semantic caching with 0.95 cosine gate",
+      "description": "Cache LLM responses keyed by embedding similarity. Before making model call, check cache with cosine similarity ≥ 0.95 threshold. Use existing Redis deployment. Track hit rates and token savings. 95% cost reduction for repeated queries demonstrated by LiteLLM.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 8,
+      "source": "LiteLLM/Bifrost semantic caching — 95% cost reduction",
+      "auto_fix": "echo '[ABS] ABS-007: Semantic caching needs implementation'"
+    },
+    {
+      "id": "ABS-008",
+      "category": "ABSORPTION",
+      "title": "Build LiquidACI linter-gated editing for agent code changes",
+      "description": "Implement SWE-Agent ACI pattern: file viewer shows ~100 lines per turn, editors reject syntactically invalid edits via linter validation before applying. Search commands output succinct summaries. 10.7 percentage points improvement over bash-only agents.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "SWE-Agent Agent-Computer Interface — NeurIPS 2024",
+      "auto_fix": "echo '[ABS] ABS-008: Linter-gated editing needs implementation'"
+    },
+    {
+      "id": "ABS-009",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidDualPass architect/editor model separation",
+      "description": "Route reasoning models (o1-preview, Claude Opus) to planning phase, formatting models (GPT-4, Claude Sonnet) to code editing. Architect proposes changes with rationale, Editor applies them with correct syntax. Achieved 85% benchmark in Aider.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 10,
+      "source": "Aider Architect/Editor separation pattern",
+      "auto_fix": "echo '[ABS] ABS-009: Dual-pass model separation needs implementation'"
+    },
+    {
+      "id": "ABS-010",
+      "category": "ABSORPTION",
+      "title": "Build LiquidHooks pre/post-action script system",
+      "description": "Implement Claude Code-style hooks: pre/post-action scripts in `.heady/hooks/` directory. Scripts can deny actions (deny-override capability). Five permission modes from default prompts to fully autonomous. Hook categories: PreFileWrite, PostFileWrite, PreCommand, PostCommand, PreToolUse.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "Claude Code hooks system",
+      "auto_fix": "echo '[ABS] ABS-010: Hook system needs implementation'"
+    },
+    {
+      "id": "ABS-011",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidHybridSearch vector+BM25 weighted fusion",
+      "description": "Combine pgvector cosine similarity with full-text BM25 keyword relevance. Fusion formula: finalScore = vectorWeight × vectorScore + textWeight × textScore. Use PostgreSQL FTS for BM25. Configurable weights per query type. Extend existing heady-hybrid-vector-search skill with actual implementation.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "OpenClaw Layer 4 hybrid search architecture",
+      "auto_fix": "echo '[ABS] ABS-011: Hybrid search fusion needs implementation'"
+    },
+    {
+      "id": "ABS-012",
+      "category": "ABSORPTION",
+      "title": "Build LiquidCanvas visual workflow builder web UI",
+      "description": "Drag-and-drop visual builder for HCFullPipeline stages and custom workflows. n8n-style node canvas with typed connections. Export to JSON pipeline definitions. Native AI Agent nodes with human-in-the-loop approval gates. Queue-based horizontal scaling.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 24,
+      "source": "n8n visual flow builder — 500+ integrations",
+      "auto_fix": "echo '[ABS] ABS-012: Visual workflow builder needs implementation'"
+    },
+    {
+      "id": "ABS-013",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidVault capability-based WASM permissions",
+      "description": "IronClaw-inspired capability-based permissions for WASM plugins: endpoint allowlisting, credential injection at host boundary, leak detection. Each plugin declares required capabilities. Host grants minimum necessary permissions. Audit trail for all capability usage.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 12,
+      "source": "IronClaw capability-based WASM security model",
+      "auto_fix": "echo '[ABS] ABS-013: WASM permissions need implementation'"
+    },
+    {
+      "id": "ABS-014",
+      "category": "ABSORPTION",
+      "title": "Build LiquidIntent IDE action tracking and intent inference",
+      "description": "Windsurf Flows-style tracking of ALL developer actions: file edits, terminal commands, clipboard, viewed files. Infer user intent in real-time from action patterns. Background planning agent continuously refines long-term plans while selected model handles short-term actions.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 10,
+      "source": "Windsurf dual planning/execution architecture",
+      "auto_fix": "echo '[ABS] ABS-014: Intent inference needs implementation'"
+    },
+    {
+      "id": "ABS-015",
+      "category": "ABSORPTION",
+      "title": "Scaffold LiquidWebContainer browser-based WASM OS",
+      "description": "Research and scaffold Bolt.new-style WebContainers: Node.js recompiled to WebAssembly with in-memory filesystem (IndexedDB), virtualized TCP (ServiceWorker API). AI controls entire environment. Limitation: JavaScript ecosystem only. Target: proof-of-concept for HeadyIDE browser mode.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Bolt.new WebContainers — 5M+ users, $40M ARR",
+      "auto_fix": "echo '[ABS] ABS-015: WebContainer scaffold needs creation'"
+    },
+    {
+      "id": "ABS-016",
+      "category": "ABSORPTION",
+      "title": "Build LiquidChecks markdown-to-CI-status-check system",
+      "description": "Continue.dev-style AI Checks: markdown files in `.heady/checks/` defining quality gates that run as GitHub status checks. Each check is a natural-language specification validated by AI. Three-component message-passing architecture.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Continue.dev AI Checks system",
+      "auto_fix": "echo '[ABS] ABS-016: Markdown CI checks need implementation'"
+    },
+    {
+      "id": "ABS-017",
+      "category": "ABSORPTION",
+      "title": "Implement LiquidReplan dynamic re-planning on roadblocks",
+      "description": "Devin v3-style dynamic re-planning: when agent encounters roadblock, automatically revise plan instead of failing. Track roadblock patterns. Learn from successful re-plans. Integrate with auto-success-engine for pattern feedback.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Devin v3 dynamic re-planning — 67% PR merge rate",
+      "auto_fix": "echo '[ABS] ABS-017: Dynamic re-planning needs implementation'"
+    },
+    {
+      "id": "ABS-018",
+      "category": "ABSORPTION",
+      "title": "Scaffold LiquidSpeculate speculative decoding for completions",
+      "description": "Research Cursor-style speculative decoding: predict not just tokens but cursor positions and diff blocks. Use proprietary small models for fast prediction, larger models for verification. Target: sub-100ms tab completion.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Cursor speculative decoding architecture",
+      "auto_fix": "echo '[ABS] ABS-018: Speculative decoding needs scaffolding'"
+    },
+    {
+      "id": "ABS-019",
+      "category": "ABSORPTION",
+      "title": "Extend LiquidCrew with CrewAI role/goal/backstory abstraction",
+      "description": "Add CrewAI-style role/goal/backstory metadata to existing 17-swarm bee taxonomy. Four memory types: short-term, long-term, entity, and contextual. Dual architecture: Crews (autonomous teams) + Flows (event-driven orchestration). First-class MCP integration with three transport mechanisms.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "CrewAI role-based agent abstraction — 45.9K stars",
+      "auto_fix": "echo '[ABS] ABS-019: CrewAI abstraction needs extension'"
+    },
+    {
+      "id": "ABS-020",
+      "category": "ABSORPTION",
+      "title": "Integrate Extism WASM plugin runtime for LiquidVault",
+      "description": "Deploy Extism cross-language WASM plugin execution with persistent memory, host-controlled HTTP, and runtime limiters. In-process (not RPC) for performance. WebAssembly Component Model with WIT interface types for type-safe plugin composition.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 12,
+      "source": "Extism WASM plugin system + WebAssembly Component Model",
+      "auto_fix": "echo '[ABS] ABS-020: Extism integration needs implementation'"
+    },
+    {
+      "id": "ABS-021",
+      "category": "ABSORPTION",
+      "title": "Implement MCP bidirectional (every node = client + server)",
+      "description": "Make every liquid node both an MCP client (consuming tools) and MCP server (exposing tools). Four MCP primitives: Resources (read-only data), Tools (executable actions), Prompts (reusable templates), Sampling (reverse LLM requests). Transports: stdio, SSE, Streamable HTTP.",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 10,
+      "source": "MCP protocol — 97M+ monthly SDK downloads",
+      "auto_fix": "echo '[ABS] ABS-021: Bidirectional MCP needs implementation'"
+    },
+    {
+      "id": "ABS-022",
+      "category": "ABSORPTION",
+      "title": "Build Awareness CRDT for live cursor/presence across agents",
+      "description": "Implement Yjs Awareness CRDT for live cursors and presence indicators. Each AI agent shows cursor position, current file, and activity status. Human users see all agent activity in real-time. Extend LiquidMesh with presence protocol.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Yjs Awareness CRDT protocol",
+      "auto_fix": "echo '[ABS] ABS-022: Awareness CRDT needs implementation'"
+    },
+    {
+      "id": "ABS-023",
+      "category": "ABSORPTION",
+      "title": "Implement agent-specific Y.UndoManager per AI participant",
+      "description": "Each AI agent in multiplayer session gets dedicated Y.UndoManager for agent-specific undo/redo. Operational boundaries assign file/section ownership to reduce conflicts. Human can undo individual agent's changes without affecting others.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "Yjs Y.UndoManager per-agent pattern",
+      "auto_fix": "echo '[ABS] ABS-023: Per-agent UndoManager needs implementation'"
+    },
+    {
+      "id": "ABS-024",
+      "category": "ABSORPTION",
+      "title": "Build dependency graph via tree-sitter import/require analysis",
+      "description": "Parse all source files with tree-sitter, extract import/require statements, build persistent dependency graph. Store as adjacency list with incremental updates on file changes. Enable impact analysis: given a file change, what downstream files are affected?",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Aider/Cursor codebase indexing pipeline",
+      "auto_fix": "echo '[ABS] ABS-024: Dependency graph needs implementation'"
+    },
+    {
+      "id": "ABS-025",
+      "category": "ABSORPTION",
+      "title": "Implement architecture drift detection (graph snapshot comparison)",
+      "description": "Compare current dependency graph snapshots against baselines. Detect architecture drift: new circular dependencies, new external dependencies, coupling increase. Alert on violations. Log drift metrics for heady-drift-detection service.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Codebase indexing pipeline — drift detection",
+      "auto_fix": "echo '[ABS] ABS-025: Drift detection needs implementation'"
+    },
+    {
+      "id": "ABS-026",
+      "category": "ABSORPTION",
+      "title": "Build auto-documentation from code using SOP templates",
+      "description": "Generate natural-language documentation alongside raw code chunks. Greptile research shows 12% higher retrieval quality with description-to-query vs code-to-query similarity. Use MetaGPT structured output templates. Auto-update on code changes.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Greptile research + MetaGPT SOP pattern",
+      "auto_fix": "echo '[ABS] ABS-026: Auto-documentation needs implementation'"
+    },
+    {
+      "id": "ABS-027",
+      "category": "ABSORPTION",
+      "title": "Implement hybrid SSE+WebSocket streaming architecture",
+      "description": "Production hybrid pattern: WebSocket for control plane (cancel, feedback, tool call approvals), SSE for data plane (token streaming). HTTP/2 multiplexing eliminates 6-connection browser limit. Multi-agent WebSocket with channel IDs. Target: <250ms first-token latency.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Anthropic/OpenAI hybrid streaming pattern",
+      "auto_fix": "echo '[ABS] ABS-027: Hybrid streaming needs implementation'"
+    },
+    {
+      "id": "ABS-028",
+      "category": "ABSORPTION",
+      "title": "Build MCP Gateway with auth, audit trails, policy enforcement",
+      "description": "Enterprise MCP Gateway (TrueFoundry pattern, sub-3ms latency): authentication per tool call, complete audit trail, policy enforcement (tool allow/deny lists), rate limiting per caller. Open-source ContextForge as reference implementation.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 10,
+      "source": "TrueFoundry/ContextForge MCP Gateway",
+      "auto_fix": "echo '[ABS] ABS-028: MCP Gateway needs implementation'"
+    },
+    {
+      "id": "ABS-029",
+      "category": "ABSORPTION",
+      "title": "Implement fan-out/fan-in parallelism (LangGraph Send pattern)",
+      "description": "LangGraph-style fan-out/fan-in: Send API for parallel sub-task execution with typed state merge on completion. 60% latency reduction for parallelizable workflows. Integrate with existing swarm-coordinator for bee spawning.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "LangGraph Send API — 60% latency reduction",
+      "auto_fix": "echo '[ABS] ABS-029: Fan-out/fan-in needs implementation'"
+    },
+    {
+      "id": "ABS-030",
+      "category": "ABSORPTION",
+      "title": "Build skill security scanning (VirusTotal-style for liquid skills)",
+      "description": "Automated security scanning for community-contributed skills. OpenClaw ClawHub found 820+ malicious skills performing data exfiltration and prompt injection. Scan for: data exfiltration (outbound network), prompt injection patterns, privilege escalation, credential theft.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "Cisco ClawHub security audit — CVE-2026-25253",
+      "auto_fix": "echo '[ABS] ABS-030: Skill security scanning needs implementation'"
+    },
+    {
+      "id": "ABS-031",
+      "category": "ABSORPTION",
+      "title": "Implement semantic caching with LiteLLM integration",
+      "description": "Integrate LiteLLM (33K+ stars, 100+ providers) as AI routing gateway. Implement routing strategies: cost-based, latency-based (PeakEWMA), fallback chains with circuit breaking. Built-in semantic caching at 0.95 similarity threshold. Target: 100M tokens/month → $80K-$100K (from $150K-$180K).",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 6,
+      "source": "LiteLLM multi-provider routing — 33K+ stars",
+      "auto_fix": "echo '[ABS] ABS-031: LiteLLM integration needs implementation'"
+    },
+    {
+      "id": "ABS-032",
+      "category": "ABSORPTION",
+      "title": "Build tool policy cascade (profiles→provider→global→per-agent)",
+      "description": "OpenClaw-style five-layer tool policy: tool profiles (minimal/coding/messaging/full) → provider-specific policies → global allow/deny lists (deny always wins) → per-agent overrides → tool groups (group:fs, group:runtime, group:web). Applied to MCP tool dispatch.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "OpenClaw tool policy cascade architecture",
+      "auto_fix": "echo '[ABS] ABS-032: Tool policy cascade needs implementation'"
+    },
+    {
+      "id": "ABS-033",
+      "category": "ABSORPTION",
+      "title": "Implement sub-agent spawning with depth/concurrency limits",
+      "description": "OpenClaw-style sub-agent spawning via sessions_spawn: depth limits (max 2 for orchestrator pattern), concurrency limits (default 5 children, 8 global), cheaper model routing for sub-agents. Integrate with existing bee-factory for worker provisioning.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "OpenClaw sub-agent spawning pattern",
+      "auto_fix": "echo '[ABS] ABS-033: Sub-agent spawning needs implementation'"
+    },
+    {
+      "id": "ABS-034",
+      "category": "ABSORPTION",
+      "title": "Build steer queue mode (inject messages during active runs)",
+      "description": "Implement OpenClaw-style steer queue: inbound messages queue during active agent runs. Queue checked after each tool call. If queued message exists, remaining tool calls skip and message injects before next response. Enables real-time human steering without interrupting agent flow.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "OpenClaw steer queue mode",
+      "auto_fix": "echo '[ABS] ABS-034: Steer queue needs implementation'"
+    },
+    {
+      "id": "ABS-035",
+      "category": "ABSORPTION",
+      "title": "Implement auto-compaction with silent memory flush",
+      "description": "OpenClaw-style context management: silent memory flush fires before compaction to persist durable notes. Auto-compaction triggers when context approaches model limits. Preserves critical context while freeing token budget.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "OpenClaw auto-compaction pattern",
+      "auto_fix": "echo '[ABS] ABS-035: Auto-compaction needs implementation'"
+    },
+    {
+      "id": "ABS-036",
+      "category": "ABSORPTION",
+      "title": "Build natural language code summaries alongside raw chunks",
+      "description": "Generate NL descriptions for every code chunk during indexing. Greptile research: 12% higher retrieval quality when searching description-to-query vs code-to-query. Store summaries alongside embeddings in pgvector. Update on code changes.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Greptile research — 12% retrieval quality improvement",
+      "auto_fix": "echo '[ABS] ABS-036: NL code summaries need implementation'"
+    },
+    {
+      "id": "ABS-037",
+      "category": "ABSORPTION",
+      "title": "Implement distributed GPU inference mesh (LiquidSwarm)",
+      "description": "Discover and orchestrate ephemeral GPU resources (Colab Pro+, RunPod spot instances, local machines) into unified inference mesh. Model sharding across heterogeneous GPUs with automatic load balancing. Tensor parallelism for models too large for single node.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 16,
+      "source": "Heady exclusive — distributed GPU inference",
+      "auto_fix": "echo '[ABS] ABS-037: GPU inference mesh needs implementation'"
+    },
+    {
+      "id": "ABS-038",
+      "category": "ABSORPTION",
+      "title": "Build CSL-gate continuous conditionals replacing boolean logic",
+      "description": "Replace traditional boolean conditionals with CSL continuous semantic gates in all new liquid nodes. Instead of if(x>0.5), use semanticGate(input, threshold: fuzzy(0.3..0.7), falloff: sigmoid). Gradual transitions between behavioral modes. Learnable routing surfaces.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Heady exclusive — CSL continuous conditionals",
+      "auto_fix": "echo '[ABS] ABS-038: CSL continuous conditionals need implementation'"
     }
   ]
 }
