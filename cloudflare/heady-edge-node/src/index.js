@@ -278,12 +278,14 @@ app.get('/sse', (c) => {
         },
     })
 
+    const reqOrigin = c.req.header('Origin') || '';
     return new Response(stream, {
         headers: {
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': reqOrigin,
+            'Vary': 'Origin',
             'X-Heady-Client-Id': clientId,
         },
     })
@@ -390,12 +392,14 @@ app.get('/api/search', async (c) => {
 
 // === CORS preflight ===
 app.options('*', (c) => {
+    const reqOrigin = c.req.header('Origin') || '';
     return new Response(null, {
         status: 204,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': reqOrigin,
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Vary': 'Origin',
         },
     })
 })

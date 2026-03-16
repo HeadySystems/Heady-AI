@@ -353,7 +353,9 @@ function createSSERouter(projectionManager) {
         res.setHeader('Cache-Control', 'no-cache, no-store');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');  // Disable nginx buffering
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        const origin = req.headers.origin || '';
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
 
         // Flush headers immediately
         if (typeof res.flushHeaders === 'function') res.flushHeaders();

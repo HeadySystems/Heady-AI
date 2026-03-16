@@ -68,12 +68,19 @@ const SECURITY_HEADERS = {
   'X-Powered-By': 'Heady/' + '3.0.0',
 };
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Service',
-  'Access-Control-Max-Age': '86400',
-};
+const HEADY_ORIGIN_DOMAINS = Object.keys(ROUTES).map(d => `https://${d}`);
+const HEADY_ORIGIN_SET = new Set(HEADY_ORIGIN_DOMAINS);
+
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  return {
+    'Access-Control-Allow-Origin': HEADY_ORIGIN_SET.has(origin) ? origin : '',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Service',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -82,7 +89,7 @@ export default {
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: corsHeaders(request) });
     }
 
     // Route lookup
@@ -117,7 +124,7 @@ export default {
       for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
         responseHeaders.set(key, value);
       }
-      for (const [key, value] of Object.entries(CORS_HEADERS)) {
+      for (const [key, value] of Object.entries(corsHeaders(request))) {
         responseHeaders.set(key, value);
       }
 

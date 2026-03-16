@@ -568,8 +568,13 @@ class APIServer {
       const startTime = Date.now();
 
       try {
-        // Add CORS headers
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        // Add CORS headers — use origin whitelist, never wildcard
+        const { isAllowedOrigin } = require('./shared/middleware/cors-config');
+        const reqOrigin = req.headers.origin || '';
+        if (isAllowedOrigin(reqOrigin)) {
+          res.setHeader('Access-Control-Allow-Origin', reqOrigin);
+          res.setHeader('Vary', 'Origin');
+        }
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         res.setHeader('Content-Type', 'application/json');
