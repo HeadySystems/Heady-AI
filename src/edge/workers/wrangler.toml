@@ -21,7 +21,7 @@
 
 name = "heady-edge-inference"
 main = "edge-inference-worker.js"
-compatibility_date = "2025-11-01"
+compatibility_date = "2026-03-01"
 compatibility_flags = ["nodejs_compat"]
 
 # ES Module format (required for Durable Objects)

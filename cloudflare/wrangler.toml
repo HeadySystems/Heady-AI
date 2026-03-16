@@ -10,11 +10,12 @@
 
 name            = "heady-edge-router"
 main            = "worker.js"
-compatibility_date = "2024-09-23"
+compatibility_date = "2026-03-01"
 compatibility_flags = ["nodejs_compat"]
 
 # Account & zone — fill in from Cloudflare dashboard
-account_id      = "8b1fa38f282c691423c6399247d53323"
+# account_id — set via CLOUDFLARE_ACCOUNT_ID env var or wrangler.toml local override
+# account_id = "CLOUDFLARE_ACCOUNT_ID"
 
 # ---------------------------------------------------------------------------
 # Bundling

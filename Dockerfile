@@ -56,9 +56,6 @@ RUN if [ -f pnpm-lock.yaml ]; then \
       npm prune --omit=dev 2>/dev/null || true; \
     fi
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD wget -qO- http://localhost:3300/api/health || exit 1
-
 FROM node:22-alpine AS production
 
 # Install tini for proper PID 1 signal handling (SIGTERM → graceful shutdown)

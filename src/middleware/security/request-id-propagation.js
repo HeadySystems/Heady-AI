@@ -329,7 +329,7 @@ function requestIdMiddleware(opts = {}) {
     if (logger) {
       logger(entry);
     } else if (logOnRequest || logOnResponse) {
-      console.log(JSON.stringify(entry));
+      process.stdout.write(JSON.stringify(entry) + '\n');
     }
   };
 

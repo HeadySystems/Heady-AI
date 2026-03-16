@@ -1,6 +1,8 @@
 'use strict';
 
 const { PHI_TIMING } = require('../shared/phi-math');
+const { createLogger } = require('./heady-logger');
+const meshLog = createLogger('service-mesh');
 /**
  * @fileoverview heady-service-mesh.js
  *
@@ -514,7 +516,7 @@ class HeadyServiceMesh extends EventEmitter {
     // Prevent timer from blocking process exit
     if (this._probeTimer.unref) this._probeTimer.unref();
 
-    console.log('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
+    meshLog.info(`[mesh] started — interval ${this._config.healthCheckIntervalMs} ms`);
     this._publish('heady:service:mesh_started', { ts: Date.now() });
   }
 
@@ -555,7 +557,7 @@ class HeadyServiceMesh extends EventEmitter {
       const exists = entry.instances.find((i) => i.url === url);
       if (!exists) {
         entry.addInstance({ url, weight, tags });
-        console.log(`[mesh] added instance ${url} → ${name}`);
+        meshLog.info(`[mesh] added instance ${url} → ${name}`);
       }
     } else {
       const entry = new ServiceEntry(
@@ -564,7 +566,7 @@ class HeadyServiceMesh extends EventEmitter {
         this._config
       );
       this._registry.set(name, entry);
-      console.log(`[mesh] registered new service: ${name}`);
+      meshLog.info(`[mesh] registered new service: ${name}`);
     }
 
     this._publish('heady:service:registered', { name, url, tags, ts: Date.now() });
@@ -706,7 +708,7 @@ class HeadyServiceMesh extends EventEmitter {
         inst.cb.onSuccess();
         inst.consecutiveFails = 0;
         if (!wasHealthy) {
-          console.log(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
+          meshLog.info(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
           this._publish('heady:service:healthy', { name: entry.name, url: inst.url, ts: Date.now() });
         }
       } else {

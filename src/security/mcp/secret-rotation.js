@@ -342,17 +342,20 @@ class GCPSecretBackend {
     // Add new secret version
     // const parent = `projects/${this.projectId}/secrets/${id}`;
     // await this.client.addSecretVersion({ parent, payload: { data: Buffer.from(value) } });
-    console.log(`[GCP] Would store secret ${id} version with status ${status}`);
+    process.stderr.write(`[GCP] stub: store secret ${id} status=${status}
+`);
   }
 
   async activate(id, value) {
     // Enable the latest version, disable previous
-    console.log(`[GCP] Would activate secret ${id}`);
+    process.stderr.write(`[GCP] stub: activate secret ${id}
+`);
   }
 
   async deactivate(id, value) {
     // Disable or destroy the old version
-    console.log(`[GCP] Would deactivate old version of secret ${id}`);
+    process.stderr.write(`[GCP] stub: deactivate secret ${id}
+`);
   }
 
   async get(id) {
@@ -360,7 +363,8 @@ class GCPSecretBackend {
     // const name = `projects/${this.projectId}/secrets/${id}/versions/latest`;
     // const [version] = await this.client.accessSecretVersion({ name });
     // return version.payload.data.toString();
-    console.log(`[GCP] Would get secret ${id}`);
+    process.stderr.write(`[GCP] stub: get secret ${id}
+`);
     return null;
   }
 }
