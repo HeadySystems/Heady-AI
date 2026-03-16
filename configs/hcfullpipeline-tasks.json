@@ -1,12 +1,12 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-16T04:26:00.594Z",
+  "lastFineTuned": "2026-03-16T04:35:00Z",
   "phi": 1.618033988749895,
-  "description": "Complete task queue for HCFullPipeline — v7.0 includes 42 new tasks from Super Prompt v6.0 gap analysis (ASE stubs, SP capabilities, PL stage tasks, SYS cross-cutting) + 38 absorption tasks from OpenClaw competitive analysis (CRDT collaboration, durable execution, PageRank repo maps, semantic caching, etc.)",
-  "taskCount": 700,
+  "description": "Complete task queue for HCFullPipeline — v7.2.0 includes Tailscale/Colab GPU mesh tasks + Super Prompt v7 swarm/connector tasks",
+  "taskCount": 715,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -16,7 +16,7 @@
     },
     "INFRASTRUCTURE": {
       "csl_resonance": 1,
-      "tasks": 93
+      "tasks": 98
     },
     "ARCHITECTURE": {
       "csl_resonance": 1,
@@ -36,7 +36,7 @@
     },
     "FEATURES": {
       "csl_resonance": 1,
-      "tasks": 57
+      "tasks": 67
     },
     "REMEDIATION": {
       "csl_resonance": 1,
@@ -8781,6 +8781,156 @@
       "estimated_hours": 8,
       "source": "Heady exclusive — CSL continuous conditionals",
       "auto_fix": "echo '[ABS] ABS-038: CSL continuous conditionals need implementation'"
+    },
+    {
+      "id": "INFRA-113",
+      "category": "INFRASTRUCTURE",
+      "title": "Install Tailscale userspace binary + SOCKS5 proxy on all 4 Colab runtimes",
+      "description": "Automate Tailscale static binary install, tailscaled --tun=userspace-networking --socks5-server=localhost:1055 startup, and ephemeral auth key login in Colab notebook init cells. All application traffic must route through SOCKS5 proxy.",
+      "status": "pending",
+      "csl_confidence": 0.818,
+      "estimated_hours": 3,
+      "source": "Tailscale-Colab Architecture — core networking setup"
+    },
+    {
+      "id": "INFRA-114",
+      "category": "INFRASTRUCTURE",
+      "title": "Tailscale OAuth client API for programmatic auth key rotation",
+      "description": "Create OAuth client in Tailscale admin console. On each Colab startup, call POST /api/v2/tailnet/-/keys with ephemeral:true, tags:[tag:colab] to mint fresh auth keys. Auth keys expire after 90 days max — this prevents manual rotation.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 2,
+      "source": "Tailscale-Colab Architecture — auth key expiry strategy"
+    },
+    {
+      "id": "INFRA-115",
+      "category": "INFRASTRUCTURE",
+      "title": "Cloud Run Tailscale multi-stage Dockerfile with userspace networking",
+      "description": "Build multi-stage Dockerfile copying Tailscale binaries from tailscale/tailscale:stable. Startup script brings up tailscaled before main app. Set min-instances=1 to eliminate cold starts. Test HTTP POST >840 byte workaround (Tailscale issue #9894).",
+      "status": "pending",
+      "csl_confidence": 0.818,
+      "estimated_hours": 4,
+      "source": "Tailscale-Colab Architecture — Cloud Run integration, known bug #9894"
+    },
+    {
+      "id": "INFRA-116",
+      "category": "INFRASTRUCTURE",
+      "title": "Cloudflare Worker edge proxy — WAF + JWT + rate limit + cache → Cloud Run",
+      "description": "Deploy CF Worker performing authentication, rate limiting, and edge caching before proxying to Cloud Run orchestrator. Fetch with identity token. Cache identical prompts to eliminate GPU compute for repeated queries.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Tailscale-Colab Architecture — Cloudflare edge layer"
+    },
+    {
+      "id": "FEAT-032",
+      "category": "FEATURES",
+      "title": "Least-loaded GPU worker routing with gpu_weight ratio",
+      "description": "Orchestrator reads worker registry from Redis, filters alive workers with required model, routes to lowest active_requests/gpu_weight ratio (T4=1, L4=1.5, A100=4, H100=5). Include model-loaded check to avoid cold-loading.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "Tailscale-Colab Architecture — load balancing strategy"
+    },
+    {
+      "id": "FEAT-033",
+      "category": "FEATURES",
+      "title": "Session affinity for multi-turn conversations — KV cache locality",
+      "description": "Route multi-turn conversations to same GPU worker for KV cache hits. Store session→worker mapping in Redis with conversation TTL. Fallback: cold-start on any available worker if preferred worker is dead.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "Tailscale-Colab Architecture — session affinity for KV cache"
+    },
+    {
+      "id": "FEAT-034",
+      "category": "FEATURES",
+      "title": "vLLM OpenAI-compatible API deployment on Colab GPU runtimes",
+      "description": "Deploy vLLM on each Colab runtime with OpenAI-compatible API server. Model size mapping: T4→quantized 7B, A100-40→13B fp16, A100-80→30B. Expose via Tailscale mesh. PagedAttention for efficient VRAM across concurrent requests.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": "Tailscale-Colab Architecture — vLLM deployment pattern"
+    },
+    {
+      "id": "FEAT-035",
+      "category": "FEATURES",
+      "title": "Temporal activity heartbeat for long-running GPU generation tasks",
+      "description": "Implement Temporal.io activity heartbeat pattern: worker calls activity.heartbeat(tokens_generated) periodically during long generation. If worker dies, replacement resumes from last heartbeat checkpoint instead of restarting.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 4,
+      "source": "Tailscale-Colab Architecture — state checkpointing for inference"
+    },
+    {
+      "id": "INFRA-117",
+      "category": "INFRASTRUCTURE",
+      "title": "Neon Postgres serverless driver from Cloudflare Workers",
+      "description": "Use @neondatabase/serverless driver for HTTP transport from CF Workers with minimal round trips. Connect via -pooler URL (PgBouncer, 10K concurrent clients). Store task history, user sessions, config, audit logs.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "Tailscale-Colab Architecture — Neon Postgres from edge"
+    },
+    {
+      "id": "FEAT-036",
+      "category": "FEATURES",
+      "title": "ConnectorForgeSwarm — dynamic connector generation in <60 seconds",
+      "description": "When a connector doesn't exist, spawn ConnectorForgeSwarm: APIDiscoveryBee→SchemaExtractionBee→AuthPatternBee→ConnectorCodeGenBee→SecurityScanBee→IntegrationTestBee→DeploymentBee. Target: <60s for documented APIs, <5min for undocumented.",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 12,
+      "source": "Super Prompt v7.0 §6.3 — Dynamic Connector Generation"
+    },
+    {
+      "id": "FEAT-037",
+      "category": "FEATURES",
+      "title": "ConnectorHealthSwarm — continuous monitoring of 89+ connectors",
+      "description": "Pulse check all connectors every φ³ hours (~4.24h). Auto-heal degraded connectors. Dynamic regeneration via ConnectorForgeSwarm for persistently failing ones. Error rate >15% triggers auto-heal.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "Super Prompt v7.0 §33.4 — Autonomous Maintenance Swarms"
+    },
+    {
+      "id": "FEAT-038",
+      "category": "FEATURES",
+      "title": "EvolutionSwarm — persistent pipeline stages 17-19 as always-on swarm",
+      "description": "Run OPTIMIZATION_OPS, CONTINUOUS_SEARCH, EVOLUTION as persistent swarm. Discover new tools/patterns, evaluate against current capabilities, propose absorption into Heady liquid nodes.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 8,
+      "source": "Super Prompt v7.0 §33.4 — EvolutionSwarm"
+    },
+    {
+      "id": "FEAT-039",
+      "category": "FEATURES",
+      "title": "CostGuardianSwarm — cross-provider spend tracking and optimization",
+      "description": "Track spending across all AI providers, cloud services, and infrastructure. Optimize routing by cost. Rotate Anthropic keys across org segments by rate limits. Alert on budget anomalies.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "Super Prompt v7.0 §33.4 — CostGuardianSwarm"
+    },
+    {
+      "id": "FEAT-040",
+      "category": "FEATURES",
+      "title": "Silversertile dynamic app generation — intent → live URL",
+      "description": "User intent → CSL gate → template selection → code synthesis → security scan → deployment → live URL. Templates: React/Next.js, Express API, CF Worker, Discord Bot, Chrome Extension, VS Code Extension, React Native, Electron.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 15,
+      "source": "Super Prompt v7.0 §6.5 — Dynamic App Generation (Silversertile)"
+    },
+    {
+      "id": "FEAT-041",
+      "category": "FEATURES",
+      "title": "MCP server consumption resolution chain — 4-layer discovery",
+      "description": "Resolution chain: (1) Check 89 built-in connectors, (2) Search MCP registries (Glama 19K+, FastMCP 1.8K+), (3) Search ClawHub 13.7K+ skills, (4) Dynamic generation via ConnectorForgeSwarm. All pass through LiquidGateway with sub-3ms latency.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "Super Prompt v7.0 §6.4 — MCP Server Consumption Resolution Chain"
     }
   ]
 }
