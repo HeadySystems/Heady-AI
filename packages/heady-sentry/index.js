@@ -221,12 +221,83 @@ function createMockSentry() {
   };
 }
 
+// ═══════════════════════════════════════════════════════════════
+// SENTRY SEER — AI-powered issue analysis (§P8)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Query Sentry Seer (AI-powered issue analysis).
+ *
+ * Seer analyzes errors via Sentry's API and returns:
+ * - Root cause analysis
+ * - Auto-fix suggestions
+ * - Similar issue grouping
+ *
+ * Requires: organization slug, Sentry API auth token (distinct from DSN).
+ *
+ * @param {object} options
+ * @param {string} options.issueId        - Sentry issue ID
+ * @param {string} options.orgSlug        - Organization slug (e.g. 'headysystems')
+ * @param {string} [options.authToken]    - Sentry API auth token
+ * @returns {Promise<object>} Seer analysis result
+ */
+async function querySeer(options) {
+  const authToken = options.authToken || process.env.SENTRY_AUTH_TOKEN;
+  if (!authToken) {
+    return { available: false, reason: 'No SENTRY_AUTH_TOKEN set' };
+  }
+
+  try {
+    // Autofix: trigger AI analysis for the issue
+    const autofixRes = await fetch(
+      `https://sentry.io/api/0/organizations/${options.orgSlug}/issues/${options.issueId}/autofix/`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          instruction: 'Analyze this error and suggest a fix for the Heady AI platform.',
+        }),
+      }
+    );
+
+    if (!autofixRes.ok) {
+      const errText = await autofixRes.text();
+      return { available: false, status: autofixRes.status, error: errText.slice(0, 200) };
+    }
+
+    const autofixData = await autofixRes.json();
+
+    // Fetch similar issues for grouping
+    const similarRes = await fetch(
+      `https://sentry.io/api/0/organizations/${options.orgSlug}/issues/${options.issueId}/similar-issues/v2/`,
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    );
+    const similarData = similarRes.ok ? await similarRes.json() : [];
+
+    return {
+      available: true,
+      issue_id: options.issueId,
+      autofix: autofixData,
+      similar_issues: Array.isArray(similarData) ? similarData.length : 0,
+      analyzed_at: new Date().toISOString(),
+    };
+  } catch (err) {
+    return { available: false, error: err.message };
+  }
+}
+
 module.exports = {
   initSentry,
   startHeartbeatMonitor,
   trackCslDrift,
   withSpan,
   createMockSentry,
+  querySeer,
   SENTRY_PROJECTS,
   ALERT_THRESHOLDS,
   DROP_PATTERNS,
