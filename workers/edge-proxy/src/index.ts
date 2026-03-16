@@ -102,12 +102,25 @@ function resolveByPath(pathname: string, env: Env): RouteConfig {
   };
 }
 
+const ALLOWED_ORIGINS = new Set([
+  'https://headyme.com', 'https://app.headyme.com',
+  'https://headysystems.com', 'https://manager.headysystems.com', 'https://dashboard.headysystems.com',
+  'https://headyconnection.org', 'https://app.headyconnection.org',
+  'https://headymcp.com', 'https://api.headymcp.com',
+  'https://headyio.com', 'https://api.headyio.com',
+  'https://headybuddy.org', 'https://app.headybuddy.org',
+  'https://1ime1.com', 'https://app.1ime1.com',
+  'https://headybot.com', 'https://headyapi.com', 'https://heady-ai.com',
+]);
+
 function corsHeaders(origin: string | null): Record<string, string> {
+  const allowed = origin && ALLOWED_ORIGINS.has(origin) ? origin : '';
   return {
-    'Access-Control-Allow-Origin': origin || '*',
+    'Access-Control-Allow-Origin': allowed,
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Workspace-ID, X-Brain-Profile',
     'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
   };
 }
 

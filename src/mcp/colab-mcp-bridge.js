@@ -344,12 +344,17 @@ const sseClients = new Map();
 
 function handleSSE(req, res) {
     const clientId = crypto.randomUUID();
-    res.writeHead(200, {
+    const origin = req.headers.origin || '';
+    const sseHeaders = {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
-    });
+    };
+    if (_isHeadyOrigin(origin)) {
+        sseHeaders['Access-Control-Allow-Origin'] = origin;
+        sseHeaders['Vary'] = 'Origin';
+    }
+    res.writeHead(200, sseHeaders);
 
     // Send endpoint info
     res.write(`event: endpoint\ndata: /mcp/message?clientId=${clientId}\n\n`);
@@ -574,13 +579,17 @@ function parseBody(req) {
     });
 }
 
-function jsonRes(res, code, data) {
-    res.writeHead(code, {
+function jsonRes(res, code, data, reqOrigin) {
+    const headers = {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    });
+    };
+    if (reqOrigin && _isHeadyOrigin(reqOrigin)) {
+        headers['Access-Control-Allow-Origin'] = reqOrigin;
+        headers['Vary'] = 'Origin';
+    }
+    res.writeHead(code, headers);
     res.end(JSON.stringify(data));
 }
 
@@ -593,11 +602,16 @@ function startHTTPServer() {
 
         // CORS preflight
         if (req.method === 'OPTIONS') {
-            res.writeHead(204, {
-                'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
+            const preflightOrigin = req.headers.origin || '';
+            const preflightHeaders = {
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-            });
+            };
+            if (_isHeadyOrigin(preflightOrigin)) {
+                preflightHeaders['Access-Control-Allow-Origin'] = preflightOrigin;
+                preflightHeaders['Vary'] = 'Origin';
+            }
+            res.writeHead(204, preflightHeaders);
             return res.end();
         }
 

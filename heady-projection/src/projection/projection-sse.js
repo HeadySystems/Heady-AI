@@ -353,7 +353,12 @@ function createSSERouter(projectionManager) {
         res.setHeader('Cache-Control', 'no-cache, no-store');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');  // Disable nginx buffering
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        const { isAllowedOrigin } = require('../../../../shared/middleware/cors-config');
+        const reqOrigin = req.headers.origin || '';
+        if (isAllowedOrigin(reqOrigin)) {
+          res.setHeader('Access-Control-Allow-Origin', reqOrigin);
+          res.setHeader('Vary', 'Origin');
+        }
 
         // Flush headers immediately
         if (typeof res.flushHeaders === 'function') res.flushHeaders();
