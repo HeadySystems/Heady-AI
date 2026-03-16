@@ -12,14 +12,14 @@
     "run-tests": "curl -sf -X POST ${HEADY_TESTING_URL:-http://heady-testing:3343}/run | node -e \"process.stdin.pipe(process.stdout)\""
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^5.1.0",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/sdk-node": "^0.52.0",
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.0",
     "@opentelemetry/instrumentation-express": "^0.41.0"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "heady": {
     "domain": "testing",

@@ -19,7 +19,7 @@
     "@heady-ai/spatial-events": "workspace:*"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"

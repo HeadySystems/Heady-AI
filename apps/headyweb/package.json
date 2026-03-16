@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "author": "HeadySystems Inc. <dev@headysystems.com>",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -20,7 +20,7 @@
     "clean": "rm -rf dist/"
   },
   "dependencies": {
-    "express": "^4.22.1",
+    "express": "^5.1.0",
     "three": "^0.163.0"
   },
   "devDependencies": {

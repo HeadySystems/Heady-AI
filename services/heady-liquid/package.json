@@ -8,7 +8,7 @@
     "dev": "node --watch server.js"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^5.1.0",
     "@sentry/node": "^8.0.0",
     "ioredis": "^5.4.0",
     "@pinecone-database/pinecone": "^4.0.0",

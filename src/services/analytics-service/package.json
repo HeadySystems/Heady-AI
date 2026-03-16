@@ -10,10 +10,10 @@
     "lint": "eslint src/"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.0.0"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^5.1.0",
     "helmet": "^8.0.0",
     "pg": "^8.13.0"
   },

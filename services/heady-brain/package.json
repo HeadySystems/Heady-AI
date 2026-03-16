@@ -18,7 +18,7 @@
     "@heady-ai/types": "workspace:*",
     "@heady-ai/redis": "workspace:*",
     "@heady-ai/semantic-logic": "workspace:*",
-    "express": "^4.18.2",
+    "express": "^5.1.0",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
     "zod": "^3.22.4"

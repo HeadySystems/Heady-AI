@@ -30,7 +30,7 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "keywords": [
     "heady",
