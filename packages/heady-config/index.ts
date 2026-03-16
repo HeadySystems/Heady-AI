@@ -9,6 +9,11 @@
 
 export * from './base-service';
 export * from './cors';
-export * from './logging';
+export {
+  LogContext, StructuredLogEntry, createLogEntry, createErrorLogEntry,
+  LoggerConfig, getLoggerConfig, redactSensitiveFields,
+  getCorrelationId, generateCorrelationId, extractB3Trace, extractJaegerTrace,
+  createLogContextFromRequest, formatLogEntry, LOG_LEVELS,
+} from './logging';
 export * from './health-check';
 export * from './middleware';

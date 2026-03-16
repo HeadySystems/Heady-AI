@@ -198,9 +198,16 @@ function corsPolicy(opts = {}) {
     // Check for route-level override
     const routeOverride = routeRegistry.find(req.path);
 
-    // Handle public API (no credentials)
+    // Handle public API (no credentials — reflect validated origin, never wildcard)
     if (routeOverride?.allowAll) {
-      res.set('Access-Control-Allow-Origin', '*');
+      const { allowed } = validateOrigin(origin, { additionalDomains, allowLocalhost });
+      if (!allowed) {
+        console.warn('[CORS] Blocked public-route origin:', origin, 'path:', req.path);
+        if (req.method === 'OPTIONS') return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
+        return next();
+      }
+      res.set('Access-Control-Allow-Origin', origin);
+      res.set('Vary', 'Origin');
       res.set('Access-Control-Allow-Methods', (routeOverride.methods || ALLOWED_METHODS).join(', '));
       res.set('Access-Control-Allow-Headers', allowedHeadersStr);
       res.set('Access-Control-Expose-Headers', (routeOverride.exposedHeaders || exposedHeaders).join(', '));
@@ -263,12 +270,25 @@ function corsPolicy(opts = {}) {
 // ─── Route Override Shortcuts ─────────────────────────────────────────────────
 
 /**
- * Middleware to allow all origins on a specific route (public API — no credentials).
+ * Middleware for public routes (no credentials).
+ * Reflects validated first-party origins instead of wildcard '*'.
  * Use for webhook endpoints, public data APIs, etc.
  */
 function publicCors(methods = ['GET', 'POST']) {
   return (req, res, next) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin;
+    if (origin) {
+      const { allowed } = validateOrigin(origin, {
+        allowLocalhost: process.env.NODE_ENV !== 'production',
+      });
+      if (!allowed) {
+        console.warn('[CORS] Blocked public-route origin:', origin, 'path:', req.path);
+        if (req.method === 'OPTIONS') return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
+        return next();
+      }
+      res.set('Access-Control-Allow-Origin', origin);
+      res.set('Vary', 'Origin');
+    }
     res.set('Access-Control-Allow-Methods', methods.join(', '));
     res.set('Access-Control-Allow-Headers', ALLOWED_HEADERS.join(', '));
     res.set('Access-Control-Expose-Headers', EXPOSED_HEADERS.join(', '));
@@ -316,8 +336,8 @@ const app = express();
 
 // Per-route registry
 const routeRegistry = new CORSRouteRegistry()
-  .register('/api/public/', { allowAll: true })
-  .register('/api/webhooks/', { allowAll: true, methods: ['POST'] })
+  .register('/api/public/', { allowAll: true })   // reflects validated origin (no wildcard *)
+  .register('/api/webhooks/', { allowAll: true, methods: ['POST'] })  // same — no credentials
   .register('/api/v1/admin/', { credentials: true })  // enforce first-party only
   .register(/^\/embed\//, { origins: ['https://partner.example.com'], credentials: false });
 

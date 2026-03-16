@@ -1,7 +1,7 @@
 import winston from 'winston';
 
 export class HeadyLogger {
-  private logger: winston.Logger;
+  private logger: any;
 
   constructor(service: string) {
     this.logger = winston.createLogger({

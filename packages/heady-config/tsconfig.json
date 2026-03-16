@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "strict": false,
+    "noImplicitAny": false,
+    "paths": {
+      "@heady/schemas": ["../schemas"]
+    }
+  },
+  "include": ["*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

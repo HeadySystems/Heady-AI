@@ -269,3 +269,84 @@ scripts:
   - name: hc.ps1
     role: HC CLI tool
     criticality: medium
+
+# ─── LIQUID NODES (v7 Omega — Absorbed Platform Features) ────────────────
+liquid-nodes:
+  # Core (existing)
+  - name: LiquidNode
+    location: src/liquid/liquid-node.js
+    role: Self-aware dynamically reconfigurable processing node (384D vector space)
+  - name: LiquidMesh
+    location: src/liquid/liquid-mesh.js
+    role: Dynamic mesh topology connecting all liquid nodes with CSL-scored routing
+  - name: LiquidTaskExecutor
+    location: src/liquid/liquid-task-executor.js
+    role: Async parallel task execution with DAG decomposition
+  - name: LiquidNodeBase
+    location: src/shared/liquid-node-base.js
+    role: Universal base class for all Heady microservices
+
+  # Orchestration (existing)
+  - name: LiquidOrchestrator
+    location: src/orchestration/liquid-orchestrator.js
+    role: Dynamic liquid architecture engine with 17 swarms
+  - name: LiquidGateway
+    location: src/orchestration/liquid-gateway.js
+    role: Multi-provider AI gateway with 7 canonical providers
+  - name: LiquidScheduler
+    location: src/orchestration/liquid-scheduler.js
+    role: Dynamic phi-weighted task scheduling
+
+  # v7 Omega — Absorbed from 18 platforms
+  - name: LiquidEventStream
+    location: src/liquid/liquid-event-stream.js
+    role: "Typed Action/Observation event stream with replay (← OpenHands)"
+    absorbs: OpenHands
+  - name: LiquidACI
+    location: src/liquid/liquid-aci.js
+    role: "Agent-Computer Interface — linter-gated editing, viewport-bounded (← SWE-Agent)"
+    absorbs: SWE-Agent
+  - name: LiquidGraphRank
+    location: src/liquid/liquid-graph-rank.js
+    role: "PageRank repo maps via tree-sitter + φ-scaled personalization (← Aider)"
+    absorbs: Aider
+  - name: LiquidDualPass
+    location: src/liquid/liquid-dual-pass.js
+    role: "Architect/Editor model separation — 85% benchmark (← Aider)"
+    absorbs: Aider
+  - name: LiquidHooks
+    location: src/liquid/liquid-hooks.js
+    role: "Pre/post action scripts with deny-override (← Claude Code)"
+    absorbs: Claude Code
+  - name: LiquidSandbox
+    location: src/liquid/liquid-sandbox.js
+    role: "4-tier execution isolation: Firecracker/Docker/WASM/native (← E2B/IronClaw)"
+    absorbs: E2B, IronClaw
+  - name: LiquidCRDT
+    location: src/liquid/liquid-crdt.js
+    role: "Multiplayer AI collaboration with CRDT conflict resolution (← Yjs/Automerge)"
+    absorbs: Yjs, Automerge
+  - name: LiquidKnowledge
+    location: src/liquid/liquid-knowledge.js
+    role: "Self-evolving knowledge graph with Merkle indexing (← Cursor)"
+    absorbs: Cursor
+  - name: LiquidDurable
+    location: src/liquid/liquid-durable.js
+    role: "Temporal-style crash-proof workflow replay (← Temporal.io)"
+    absorbs: Temporal.io
+  - name: LiquidSOP
+    location: src/liquid/liquid-sop.js
+    role: "Structured Output Protocol — typed artifacts between agents (← MetaGPT)"
+    absorbs: MetaGPT
+  - name: LiquidSemanticCache
+    location: src/liquid/liquid-semantic-cache.js
+    role: "Embedding-based response caching — 95% cost reduction (← LiteLLM)"
+    absorbs: LiteLLM
+  - name: LiquidSelfHeal
+    location: src/liquid/liquid-self-heal.js
+    role: "Self-healing infrastructure with learned failure rules"
+    absorbs: Temporal.io (extended)
+  - name: LiquidProtocol
+    location: src/liquid/liquid-protocol.js
+    role: "3-layer extension system: Skills + MCP + Plugins — 89 connectors (← OpenClaw + n8n)"
+    absorbs: OpenClaw, n8n, MCP ecosystem

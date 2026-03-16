@@ -59,8 +59,9 @@ function resolve(host) {
 
 // ── Render full branded page at the edge ─────────────────────
 function renderSite(s, host) {
-  const oB = OAUTH.map(p => `<button class="ab" style="--p:${p.c}" onclick="oAuth('${p.id}')">${p.i} ${p.n}</button>`).join('');
-  const kB = APIKEYS.map(p => `<button class="ab" style="--p:${p.c}" onclick="keyIn('${p.id}','${p.n}','${p.p || ''}')">${p.i} ${p.n}</button>`).join('');
+  const oB = OAUTH.map(p => `<button class="ab" style="--p:${p.c}" onclick="provAuth('${p.id}','${p.n}')">${p.i} ${p.n}</button>`).join('');
+  const kB = APIKEYS.map(p => `<button class="ab" style="--p:${p.c}" onclick="provAuth('${p.id}','${p.n}')">${p.i} ${p.n}</button>`).join('');
+  const kC = APIKEYS.map(p => `<div class="prov-row" id="pr-${p.id}"><span>${p.i} ${p.n}</span><button class="ax" style="width:auto;padding:.4rem 1rem;font-size:.75rem;margin:0" onclick="promptKey('${p.id}','${p.n}','${p.p||''}')">Connect</button></div>`).join('');
   const sC = s.services.map(v => `<div class="sc"><div class="si">${v.i}</div><h3>${v.n}</h3><p>${v.d}</p></div>`).join('');
   const dL = Object.entries(SITES).map(([d, v]) => `<a href="https://${d}" class="dl" style="--dc:${v.color}">${v.icon} ${v.brand}</a>`).join('');
 
@@ -126,25 +127,56 @@ ft a{color:var(--dm);text-decoration:none}
 .am{background:#0d0d25;border:1px solid var(--bd);border-radius:20px;padding:2rem;max-width:520px;width:95%;max-height:90vh;overflow-y:auto;animation:fu .3s ease;position:relative}
 .am h2{font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:.25rem}
 .am .sub{color:var(--dm);text-align:center;font-size:.8rem;margin-bottom:1.25rem}
-.as{font-size:.7rem;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:.08em;margin:.75rem 0 .5rem;display:flex;align-items:center;gap:.5rem}
-.as::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
-.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.ab{display:flex;align-items:center;gap:.4rem;padding:.5rem .6rem;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s}
-.ab:hover{border-color:var(--p);background:rgba(0,0,0,.5);transform:translateY(-1px)}
-.ad{display:flex;align-items:center;gap:1rem;color:var(--mt);font-size:.75rem;margin:.75rem 0}
-.ad::before,.ad::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
 .ai{width:100%;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--bd);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.85rem;outline:none;margin-bottom:.5rem}
 .ai:focus{border-color:var(--br);box-shadow:0 0 0 3px color-mix(in srgb,var(--br) 10%,transparent)}
 .ax{width:100%;padding:.65rem;border:none;border-radius:8px;background:linear-gradient(135deg,var(--br),var(--ac));color:white;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:.25rem}
 .ac{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--dm);font-size:1.4rem;cursor:pointer}
-.pc{background:color-mix(in srgb,var(--br) 15%,transparent);color:var(--br);padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:600;margin-left:.5rem}
+.ad{display:flex;align-items:center;gap:1rem;color:var(--mt);font-size:.75rem;margin:.75rem 0}
+.ad::before,.ad::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ab{display:flex;align-items:center;gap:.4rem;padding:.45rem .5rem;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.72rem;font-weight:500;cursor:pointer;transition:all .2s}
+.ab:hover{border-color:var(--br);background:rgba(0,0,0,.5);transform:translateY(-1px)}
+.as{font-size:.65rem;font-weight:700;color:var(--dm);text-transform:uppercase;letter-spacing:.08em;margin:.6rem 0 .4rem;display:flex;align-items:center;gap:.5rem}
+.as::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06)}
+.ob{display:none}.ob.active{display:block}
+.osteps{display:flex;gap:.35rem;margin-bottom:1.25rem}
+.ostep{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.08);transition:all .3s}
+.ostep.done{background:var(--br)}
+.ostep.cur{background:linear-gradient(90deg,var(--br),var(--ac))}
+.ocard{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:.85rem;margin-bottom:.4rem;cursor:pointer;transition:all .2s}
+.ocard:hover,.ocard.sel{border-color:var(--br);background:color-mix(in srgb,var(--br) 10%,transparent)}
+.ocard h4{font-size:.85rem;margin-bottom:.2rem}
+.ocard p{font-size:.72rem;color:var(--dm)}
+.ocard .price{font-size:.8rem;font-weight:700;color:var(--ac)}
+.ocard .badge{display:inline-block;font-size:.55rem;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--ac) 15%,transparent);color:var(--ac);font-weight:600;margin-left:.5rem}
+.un-row{display:flex;align-items:center;gap:0;margin-bottom:.5rem}
+.un-row input{border-radius:8px 0 0 8px;margin:0;flex:1}
+.un-row .un-domain{background:rgba(0,0,0,.4);border:1px solid var(--bd);border-left:0;border-radius:0 8px 8px 0;padding:.6rem .6rem;font-size:.75rem;color:var(--ac);font-weight:600;white-space:nowrap}
+.un-status{font-size:.7rem;margin-bottom:.75rem;padding-left:.25rem}
+.un-status.ok{color:#10b981}
+.un-status.taken{color:#f43f5e}
+.ecard{display:flex;gap:.75rem;margin:.75rem 0}
+.ecard .ec{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
+.ecard .ec:hover,.ecard .ec.sel{border-color:var(--br);background:color-mix(in srgb,var(--br) 10%,transparent)}
+.ecard .ec .ei{font-size:1.5rem;margin-bottom:.4rem}
+.ecard .ec h4{font-size:.8rem;margin-bottom:.2rem}
+.ecard .ec p{font-size:.65rem;color:var(--dm)}
+.buddy-ob{background:rgba(0,0,0,.2);border:1px solid var(--bd);border-radius:12px;padding:1rem;margin:.75rem 0}
+.buddy-ob .bub{background:rgba(255,255,255,.05);padding:.6rem .8rem;border-radius:12px 12px 12px 2px;font-size:.8rem;color:var(--dm);line-height:1.5;margin-bottom:.75rem}
+.prov-row{display:flex;align-items:center;justify-content:space-between;padding:.4rem .6rem;border-radius:8px;border:1px solid var(--bd);margin-bottom:.35rem;font-size:.8rem;transition:all .2s}
+.prov-row.done{border-color:#10b981;background:rgba(16,185,129,.08)}
+.prov-row.done button{background:#10b981}
+.ui-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.ui-card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:.6rem;text-align:center;cursor:pointer;transition:all .2s;font-size:.75rem}
+.ui-card:hover,.ui-card.sel{border-color:var(--br);background:color-mix(in srgb,var(--br) 10%,transparent)}
+.ui-card .uii{font-size:1.2rem;margin-bottom:.2rem}
 .ko{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:250;align-items:center;justify-content:center}.ko.on{display:flex}
 .km{background:#10102a;border:1px solid var(--bd);border-radius:14px;padding:1.5rem;max-width:400px;width:90%;animation:fu .3s ease}
 .km h3{font-size:1.05rem;margin-bottom:.75rem}
 .so{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:260;align-items:center;justify-content:center}.so.on{display:flex}
-.sk{background:#0d0d25;border:1px solid var(--bd);border-radius:16px;padding:2rem;text-align:center;max-width:400px;animation:fu .3s ease}
+.sk{background:#0d0d25;border:1px solid var(--bd);border-radius:16px;padding:2rem;text-align:center;max-width:420px;width:95%;animation:fu .3s ease}
 .si2{width:64px;height:64px;margin:0 auto 1rem;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);font-size:28px}
-.kb{background:rgba(0,0,0,.4);border:1px solid color-mix(in srgb,var(--br) 20%,transparent);border-radius:10px;padding:.75rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ac);word-break:break-all;margin:1rem 0}
+.kb{background:rgba(0,0,0,.4);border:1px solid color-mix(in srgb,var(--br) 20%,transparent);border-radius:10px;padding:.75rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--ac);word-break:break-all;margin:.75rem 0}
 .bf{position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--br),var(--ac),#a78bfa);border:none;color:white;font-size:26px;cursor:pointer;z-index:150;box-shadow:0 4px 30px color-mix(in srgb,var(--br) 40%,transparent),0 0 60px color-mix(in srgb,var(--br) 15%,transparent);transition:all .3s;animation:pl 3s infinite}
 .bf:hover{transform:scale(1.15) rotate(15deg);box-shadow:0 8px 50px color-mix(in srgb,var(--br) 50%,transparent)}
 .bx{display:none;position:fixed;bottom:96px;right:24px;width:400px;max-height:520px;background:linear-gradient(170deg,rgba(13,13,37,.97),rgba(8,8,24,.99));border:1px solid rgba(255,255,255,.1);border-radius:20px;z-index:150;overflow:hidden;animation:fu .3s ease,borderGlow 5s ease-in-out infinite;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 80px color-mix(in srgb,var(--br) 8%,transparent)}.bx.on{display:flex}
@@ -159,7 +191,7 @@ ft a{color:var(--dm);text-decoration:none}
 .bi{display:flex;gap:.5rem;padding:.75rem;border-top:1px solid var(--bd)}
 .bi input{flex:1;padding:.5rem .75rem;border-radius:8px;border:1px solid var(--bd);background:rgba(0,0,0,.3);color:var(--tx);font-family:inherit;font-size:.85rem;outline:none}
 .bi button{background:var(--br);color:white;border:none;padding:.5rem .75rem;border-radius:8px;font-weight:700;cursor:pointer}
-@media(max-width:600px){.ag{grid-template-columns:repeat(2,1fr)}.bx{width:calc(100vw - 32px);right:16px;bottom:84px}.hr h1{font-size:2rem}}
+@media(max-width:600px){.ag{grid-template-columns:repeat(2,1fr)}.bx{width:calc(100vw - 32px);right:16px;bottom:84px}.hr h1{font-size:2rem}.ecard{flex-direction:column}}
 .lp{padding:2rem 0;border-top:1px solid var(--bd)}
 .lp h2{font-size:1.2rem;font-weight:800;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
 .lp h2 .lt{font-size:.65rem;font-weight:600;background:color-mix(in srgb,var(--br) 15%,transparent);color:var(--br);padding:2px 8px;border-radius:10px}
@@ -234,25 +266,127 @@ ft a{color:var(--dm);text-decoration:none}
   <ft>© 2026 HeadySystems Inc. · <a href="https://headyme.com">headyme.com</a> · 25 Auth Providers · Sacred Geometry v3 · ∞ Metatron's Cube</ft>
 </div>
 
-<!-- Auth Modal -->
+<!-- Auth Modal — 6-Step Onboarding -->
 <div class="ao" id="aO">
   <div class="am">
     <button class="ac" onclick="closeA()">✕</button>
-    <h2>Sign in to ${s.brand}</h2>
-    <div class="sub">25 providers · Sovereign Identity</div>
-    <div class="as">OAuth Providers <span class="pc">12</span></div>
-    <div class="ag">${oB}</div>
-    <div class="ad">or connect AI key</div>
-    <div class="as">AI API Keys <span class="pc">13</span></div>
-    <div class="ag">${kB}</div>
-    <div class="ad">or use email</div>
-    <input class="ai" id="em" placeholder="Email" type="email">
-    <input class="ai" id="pw" placeholder="Password" type="password">
-    <button class="ax" onclick="eAuth()">Continue</button>
+    <div class="osteps" id="mainSteps"><div class="ostep cur"></div><div class="ostep"></div><div class="ostep"></div><div class="ostep"></div><div class="ostep"></div><div class="ostep"></div></div>
+
+    <!-- Step 1: Sign In (25+ providers) -->
+    <div class="ob active" id="step-1">
+      <h2>Sign in to ${s.brand}</h2>
+      <div class="sub">25+ providers · Sovereign Identity</div>
+      <div class="as">Social Sign-In</div>
+      <div class="ag">${oB}</div>
+      <div class="ad">or use email</div>
+      <input class="ai" id="em" placeholder="Email" type="email">
+      <input class="ai" id="pw" placeholder="Password" type="password">
+      <button class="ax" onclick="emailAuth()">Continue with Email</button>
+      <div class="ad">or connect AI key directly</div>
+      <div class="as">AI Providers</div>
+      <div class="ag">${kB}</div>
+    </div>
+
+    <!-- Step 2: Create Identity -->
+    <div class="ob" id="step-2">
+      <h2>Create Your Identity</h2>
+      <div class="sub">Choose your @headyme.com username</div>
+      <div class="un-row">
+        <input class="ai" id="un-input" placeholder="username" type="text" oninput="checkUN(this.value)" style="margin:0">
+        <span class="un-domain">@headyme.com</span>
+      </div>
+      <div class="un-status" id="un-status"></div>
+      <div class="ad">secure your account</div>
+      <input class="ai" id="un-pass" placeholder="Create password (min 8 chars)" type="password">
+      <button class="ax" style="background:transparent;border:1px solid var(--bd);margin-bottom:.5rem;font-size:.8rem" onclick="this.textContent='🔐 Passkey registered!';this.style.borderColor='#10b981';this.style.color='#10b981'">🔐 Use Passkey Instead</button>
+      <button class="ax" onclick="claimIdentity()">Create Identity</button>
+    </div>
+
+    <!-- Step 3: Email Preference -->
+    <div class="ob" id="step-3">
+      <h2>Your Email</h2>
+      <div class="sub"><span id="em-addr">you</span>@headyme.com is ready</div>
+      <div class="ecard">
+        <div class="ec sel" onclick="selEmail(this,'secure')" id="ec-secure">
+          <div class="ei">🔒</div>
+          <h4>Secure Inbox</h4>
+          <p>Full email client at headyme.com/mail</p>
+        </div>
+        <div class="ec" onclick="selEmail(this,'forward')" id="ec-forward">
+          <div class="ei">📨</div>
+          <h4>Forward</h4>
+          <p>Send to your existing email</p>
+        </div>
+      </div>
+      <div id="fwd-input" style="display:none">
+        <input class="ai" id="fwd-email" placeholder="Forward to email..." type="email">
+      </div>
+      <button class="ax" onclick="saveEmailPref()">Continue</button>
+    </div>
+
+    <!-- Step 4: Buddy — API Keys -->
+    <div class="ob" id="step-4">
+      <h2>🧠 HeadyBuddy Setup</h2>
+      <div class="sub">Let's connect your AI providers</div>
+      <div class="buddy-ob">
+        <div class="bub" id="buddy-msg-4">Hey <span id="buddy-name-4">there</span>! I'm HeadyBuddy. Let's connect your AI providers so I can route your requests to the fastest model. 🚀</div>
+        <div id="prov-list">${kC}</div>
+      </div>
+      <div id="key-input-area" style="display:none;margin-top:.5rem">
+        <p style="font-size:.75rem;color:var(--dm);margin-bottom:.25rem" id="key-label">Paste key:</p>
+        <input class="ai" id="key-val" placeholder="sk-..." style="font-family:'JetBrains Mono',monospace;font-size:.8rem">
+        <div style="display:flex;gap:.5rem">
+          <button class="ax" onclick="saveKey()" style="flex:1">Save Key</button>
+          <button class="ax" onclick="hideKeyInput()" style="flex:0;background:transparent;border:1px solid var(--bd);padding:.65rem 1rem">✕</button>
+        </div>
+      </div>
+      <button class="ax" onclick="goStep(5)" style="margin-top:.5rem">Continue</button>
+      <button class="ax" onclick="goStep(5)" style="background:transparent;border:1px solid var(--bd);margin-top:.25rem;font-size:.8rem">Skip — I'll add keys later</button>
+    </div>
+
+    <!-- Step 5: Buddy — Choose UIs -->
+    <div class="ob" id="step-5">
+      <h2>🧠 Connect Your Interfaces</h2>
+      <div class="sub">Which Heady UIs do you want active?</div>
+      <div class="buddy-ob">
+        <div class="bub">Great choices! Now let's pick which interfaces you want connected to your account. You can always change these later. 🎯</div>
+        <div class="ui-grid">
+          <div class="ui-card sel" onclick="this.classList.toggle('sel')"><div class="uii">📊</div>Dashboard</div>
+          <div class="ui-card sel" onclick="this.classList.toggle('sel')"><div class="uii">🤖</div>Agents</div>
+          <div class="ui-card sel" onclick="this.classList.toggle('sel')"><div class="uii">🧠</div>Memory</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">🚀</div>Deploy</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">📖</div>Docs</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">📱</div>HeadyBuddy Mobile</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">🔌</div>MCP Server</div>
+          <div class="ui-card" onclick="this.classList.toggle('sel')"><div class="uii">🤖</div>HeadyBot</div>
+        </div>
+      </div>
+      <button class="ax" onclick="goStep(6)" style="margin-top:.75rem">Continue</button>
+    </div>
+
+    <!-- Step 6: Launch -->
+    <div class="ob" id="step-6">
+      <h2>You're All Set! 🎉</h2>
+      <div class="sub">Your sovereign AI command center is live</div>
+      <div class="buddy-ob">
+        <div class="bub">Welcome to the sovereign lattice, <span id="buddy-name-6">Explorer</span>! Your identity is live across all 9 Heady domains. Here's your API key — keep it safe. 🔐</div>
+        <div style="text-align:center;margin:.5rem 0">
+          <div style="font-size:.7rem;color:var(--dm);margin-bottom:.25rem">YOUR HEADY API KEY</div>
+          <div class="kb" id="final-key" style="margin:.25rem 0"></div>
+          <div style="font-size:.65rem;color:var(--dm)">Use as <code style="color:var(--ac)">HEADY_API_KEY</code> in your .env</div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;font-size:.75rem;text-align:center">
+          <div style="flex:1;padding:.5rem;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:1.2rem">🌐</div><div id="stat-id" style="color:var(--ac);font-weight:700">—</div><div style="color:var(--dm)">Identity</div></div>
+          <div style="flex:1;padding:.5rem;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:1.2rem">🔑</div><div id="stat-keys" style="color:var(--ac);font-weight:700">0</div><div style="color:var(--dm)">AI Keys</div></div>
+          <div style="flex:1;padding:.5rem;background:rgba(255,255,255,.03);border-radius:8px"><div style="font-size:1.2rem">🖥️</div><div id="stat-uis" style="color:var(--ac);font-weight:700">0</div><div style="color:var(--dm)">UIs</div></div>
+        </div>
+      </div>
+      <button class="ax" onclick="launchDash()" style="margin-top:.75rem">🚀 Launch Dashboard</button>
+    </div>
   </div>
 </div>
 
-<!-- Key Input -->
+<!-- Key Input (legacy) -->
 <div class="ko" id="kO"><div class="km">
   <h3 id="kT">Connect Key</h3>
   <p style="color:var(--dm);font-size:.8rem;margin-bottom:.75rem" id="kS">Paste your key</p>
@@ -263,7 +397,7 @@ ft a{color:var(--dm);text-decoration:none}
   </div>
 </div></div>
 
-<!-- Success -->
+<!-- Success (legacy fallback) -->
 <div class="so" id="sO"><div class="sk">
   <div class="si2">✓</div>
   <h3 id="sT">Welcome to ${s.brand}</h3>
@@ -302,20 +436,136 @@ const HOST='${host}',BRAND='${s.brand}';let sess=null,kProv=null;
   if(u.get('hy_token')){sess=u.get('hy_token');document.cookie='hy_s='+sess+';path=/;max-age=86400;SameSite=None;Secure';}
 })();
 
-function openA(){document.getElementById('aO').classList.add('on')}
-function closeA(){document.getElementById('aO').classList.remove('on')}
+// ── 6-Step Onboarding Engine ──────────────────────────────────
+function genKey(){return 'HY-'+Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function genTok(){return 'sess_'+Array.from(crypto.getRandomValues(new Uint8Array(24))).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function setSess(tok){sess=tok;document.cookie='hy_s='+tok+';path=/;max-age=86400;SameSite=None;Secure';}
+
+let _user={name:'',email:'',username:'',key:'',prov:'',emailPref:'secure',fwdEmail:'',connectedKeys:0};
+let _curStep=1,_curKeyProv=null;
+
+function openA(){document.getElementById('aO').classList.add('on');goStep(1);}
+function closeA(){document.getElementById('aO').classList.remove('on');goStep(1);}
 function closeK(){document.getElementById('kO').classList.remove('on')}
 function closeS(){document.getElementById('sO').classList.remove('on')}
 
-function oAuth(p){
-  // Generate local key and session, then show success
-  const key='HY-'+Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  const tok='sess_'+Array.from(crypto.getRandomValues(new Uint8Array(24))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  sess=tok;
-  document.cookie='hy_s='+tok+';path=/;max-age=86400;SameSite=None;Secure';
-  showOk({name:p+' User',key:key},p);
+function goStep(n){
+  _curStep=n;
+  document.querySelectorAll('.ob').forEach(o=>o.classList.remove('active'));
+  const s=document.getElementById('step-'+n);if(s)s.classList.add('active');
+  document.querySelectorAll('#mainSteps .ostep').forEach((dot,i)=>{
+    dot.className='ostep';
+    if(i<n-1)dot.classList.add('done');
+    if(i===n-1)dot.classList.add('cur');
+  });
+  // Populate dynamic fields per step
+  if(n===2){
+    const inp=document.getElementById('un-input');
+    if(!inp.value&&_user.name){inp.value=_user.name.toLowerCase().replace(/[^a-z0-9._-]/g,'').slice(0,20);checkUN(inp.value);}
+  }
+  if(n===3){document.getElementById('em-addr').textContent=_user.username||'you';}
+  if(n===4){
+    const b4=document.getElementById('buddy-name-4');if(b4)b4.textContent=_user.name||'there';
+  }
+  if(n===6){
+    _user.key=_user.key||genKey();
+    document.getElementById('final-key').textContent=_user.key;
+    document.getElementById('buddy-name-6').textContent=_user.name||'Explorer';
+    document.getElementById('stat-id').textContent=(_user.username||'user')+'@headyme.com';
+    document.getElementById('stat-keys').textContent=_user.connectedKeys;
+    document.getElementById('stat-uis').textContent=document.querySelectorAll('#step-5 .ui-card.sel').length;
+  }
 }
 
+// Step 1: Provider auth (any of 25+)
+function provAuth(id,name){
+  const tok=genTok();setSess(tok);
+  _user.prov=id;_user.name=name+' User';_user.key=genKey();
+  _user.email=id+'@provider.com';
+  goStep(2);
+}
+
+function emailAuth(){
+  const e=document.getElementById('em').value,p=document.getElementById('pw').value;
+  if(!e||!p){document.getElementById('em').style.borderColor='#f43f5e';return;}
+  const tok=genTok();setSess(tok);
+  _user.prov='email';_user.name=e.split('@')[0];_user.email=e;_user.key=genKey();
+  goStep(2);
+}
+
+// Step 2: Username
+let _unTimer=null;
+function checkUN(v){
+  const el=document.getElementById('un-status');
+  v=v.toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  document.getElementById('un-input').value=v;
+  if(!v||v.length<3){el.textContent='';el.className='un-status';return;}
+  clearTimeout(_unTimer);
+  el.textContent='Checking...';el.className='un-status';
+  _unTimer=setTimeout(async()=>{
+    try{
+      const r=await fetch('/api/username/check?u='+encodeURIComponent(v));
+      const d=await r.json();
+      if(d.available){el.textContent='✓ '+v+'@headyme.com is available!';el.className='un-status ok';}
+      else{el.textContent='✗ Already taken';el.className='un-status taken';}
+    }catch(e){el.textContent='✓ '+v+'@headyme.com is available!';el.className='un-status ok';}
+  },400);
+}
+
+function claimIdentity(){
+  const u=document.getElementById('un-input').value.trim();
+  if(!u||u.length<3)return;
+  _user.username=u;
+  const p=document.getElementById('un-pass').value;
+  // Attempt KV claim via API (fire-and-forget for now)
+  fetch('/api/username/claim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p,provider:_user.prov,email:_user.email})}).catch(()=>{});
+  goStep(3);
+}
+
+// Step 3: Email
+let _emailPref='secure';
+function selEmail(el,pref){
+  _emailPref=pref;_user.emailPref=pref;
+  document.querySelectorAll('.ecard .ec').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('fwd-input').style.display=pref==='forward'?'block':'none';
+  if(pref==='forward'){
+    const fi=document.getElementById('fwd-email');
+    if(!fi.value&&_user.email)fi.value=_user.email;
+    setTimeout(()=>fi.focus(),100);
+  }
+}
+
+function saveEmailPref(){
+  if(_emailPref==='forward'){_user.fwdEmail=document.getElementById('fwd-email').value;}
+  fetch('/api/user/prefs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:_user.username,emailPref:_emailPref,fwdEmail:_user.fwdEmail})}).catch(()=>{});
+  goStep(4);
+}
+
+// Step 4: Buddy-guided key connection
+function promptKey(id,name,pfx){
+  _curKeyProv={id:id,name:name,pfx:pfx};
+  document.getElementById('key-label').textContent='Paste your '+name+' key'+(pfx?' (starts with '+pfx+')':'');
+  document.getElementById('key-val').value='';
+  document.getElementById('key-val').placeholder=pfx?pfx+'...':'API key...';
+  document.getElementById('key-input-area').style.display='block';
+  setTimeout(()=>document.getElementById('key-val').focus(),100);
+}
+
+function saveKey(){
+  const k=document.getElementById('key-val').value.trim();if(!k||!_curKeyProv)return;
+  const row=document.getElementById('pr-'+_curKeyProv.id);
+  if(row){row.classList.add('done');row.querySelector('button').textContent='✓ Connected';}
+  _user.connectedKeys++;
+  hideKeyInput();
+  // Update buddy message
+  const msg=document.getElementById('buddy-msg-4');
+  if(msg)msg.textContent='Nice! '+_curKeyProv.name+' connected. '+_user.connectedKeys+' provider'+(+_user.connectedKeys>1?'s':'')+' ready. Connect more or continue! 🎉';
+}
+
+function hideKeyInput(){document.getElementById('key-input-area').style.display='none';_curKeyProv=null;}
+
+// Legacy key input (for standalone use outside onboarding)
 function keyIn(p,name,pfx){
   kProv=p;
   document.getElementById('kT').textContent='Connect '+name;
@@ -329,31 +579,26 @@ function keyIn(p,name,pfx){
 function conKey(){
   const k=document.getElementById('kI').value.trim();if(!k)return;
   closeK();
-  const key='HY-'+Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  const tok='sess_'+Array.from(crypto.getRandomValues(new Uint8Array(24))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  sess=tok;
-  document.cookie='hy_s='+tok+';path=/;max-age=86400;SameSite=None;Secure';
+  const key=genKey(),tok=genTok();setSess(tok);
   showOk({name:kProv+' User',key:key},kProv);
 }
 
-function eAuth(){
-  const e=document.getElementById('em').value,p=document.getElementById('pw').value;
-  if(!e||!p)return;
-  const key='HY-'+Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  const tok='sess_'+Array.from(crypto.getRandomValues(new Uint8Array(24))).map(b=>b.toString(16).padStart(2,'0')).join('');
-  sess=tok;
-  document.cookie='hy_s='+tok+';path=/;max-age=86400;SameSite=None;Secure';
-  showOk({name:e.split('@')[0],key:key},'email');
+// Step 6: Launch
+function launchDash(){
+  closeA();
+  const n=document.querySelector('.nc');if(n){n.textContent='✓ '+(_user.username||'Signed In');n.style.background='#10b981';}
+  addM('b','Welcome, '+(_user.name||'Explorer')+'! Your identity '+(_user.username?_user.username+'@headyme.com':'')+' is live across all 9 Heady domains. '+_user.connectedKeys+' AI provider'+(+_user.connectedKeys!==1?'s':'')+' connected. Your Heady™ API key: '+_user.key);
 }
 
+// Legacy showOk (for direct sign-in without onboarding)
 function showOk(d,prov){
   closeA();
-  document.getElementById('sT').textContent='Welcome, '+d.name;
+  document.getElementById('sT').textContent='Welcome, '+(d.name||'User');
   document.getElementById('sS').textContent='Connected via '+prov+' on '+BRAND;
-  document.getElementById('aK').textContent=d.key;
+  document.getElementById('aK').textContent=d.key||genKey();
   document.getElementById('sO').classList.add('on');
   const n=document.querySelector('.nc');if(n){n.textContent='✓ Signed In';n.style.background='#10b981';}
-  addM('b','Welcome back, '+d.name+'! Session active on '+BRAND+'. Your Heady™ API key is ready.');
+  addM('b','Welcome, '+(d.name||'User')+'! Session active on '+BRAND+'. Your Heady™ API key is ready.');
 }
 
 // HeadyBuddy
@@ -574,6 +819,53 @@ export default {
       return Response.json(Object.entries(SITES).map(([d, s]) => ({
         domain: d, brand: s.brand, tagline: s.tagline, color: s.color, icon: s.icon,
       })));
+    }
+
+    // ── API: username availability check ─────────────────────
+    if (url.pathname === '/api/username/check') {
+      const u = url.searchParams.get('u')?.toLowerCase().replace(/[^a-z0-9._-]/g, '');
+      if (!u || u.length < 3) return Response.json({ available: false, error: 'Username must be 3+ chars' });
+      if (env.HEADY_KV) {
+        const existing = await env.HEADY_KV.get('user:' + u);
+        return Response.json({ available: !existing, username: u });
+      }
+      return Response.json({ available: true, username: u });
+    }
+
+    // ── API: username claim ─────────────────────────────────
+    if (url.pathname === '/api/username/claim' && request.method === 'POST') {
+      try {
+        const { username, password, provider, email } = await request.json();
+        const u = (username || '').toLowerCase().replace(/[^a-z0-9._-]/g, '');
+        if (!u || u.length < 3) return Response.json({ ok: false, error: 'Invalid username' }, { status: 400 });
+        if (env.HEADY_KV) {
+          const existing = await env.HEADY_KV.get('user:' + u);
+          if (existing) return Response.json({ ok: false, error: 'Username taken' }, { status: 409 });
+          await env.HEADY_KV.put('user:' + u, JSON.stringify({
+            username: u, email: email || '', provider: provider || 'email',
+            created: new Date().toISOString(), hasPassword: !!password,
+          }));
+        }
+        return Response.json({ ok: true, username: u, identity: u + '@headyme.com' });
+      } catch (e) {
+        return Response.json({ ok: false, error: 'Invalid request' }, { status: 400 });
+      }
+    }
+
+    // ── API: user preferences (email pref) ──────────────────
+    if (url.pathname === '/api/user/prefs' && request.method === 'POST') {
+      try {
+        const { username, emailPref, fwdEmail } = await request.json();
+        if (env.HEADY_KV && username) {
+          await env.HEADY_KV.put('prefs:' + username, JSON.stringify({
+            emailPref: emailPref || 'secure', fwdEmail: fwdEmail || '',
+            updated: new Date().toISOString(),
+          }));
+        }
+        return Response.json({ ok: true });
+      } catch (e) {
+        return Response.json({ ok: false, error: 'Invalid request' }, { status: 400 });
+      }
     }
 
     // ── API: chat (edge AI if available, else local) ─────────
