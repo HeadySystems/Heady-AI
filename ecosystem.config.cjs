@@ -8,7 +8,7 @@ module.exports = {
       max_memory_restart: '512M',
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3301,
+        PORT: 3300,
       },
       error_file: './logs/heady-manager-error.log',
       out_file: './logs/heady-manager-out.log',

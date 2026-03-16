@@ -567,6 +567,104 @@ function readJsonSafe(filePath) {
 }
 
 // ─── Kubernetes-Style Health Probes (SEC-15) ────────────────────────
+
+// Bare /health endpoint — used by domain health checks and self-healing workflow
+app.get("/health", async (req, res) => {
+  const checks = { redis: 'unknown', postgres: 'unknown', firebase: 'unknown' };
+
+  // Redis ping
+  try {
+    const { getRedisPoolV3 } = require('./src/resilience/redis-pool-v3');
+    const pool = getRedisPoolV3();
+    const health = pool.getHealth();
+    checks.redis = health && health.connected ? 'ok' : 'degraded';
+  } catch { checks.redis = 'unavailable'; }
+
+  // Postgres SELECT 1
+  try {
+    const { getPool } = require('./src/db/pool');
+    const pool = getPool();
+    await pool.query('SELECT 1');
+    checks.postgres = 'ok';
+  } catch { checks.postgres = 'unavailable'; }
+
+  // Firebase status
+  try {
+    const admin = require('firebase-admin');
+    if (admin.apps.length > 0) {
+      checks.firebase = 'ok';
+    } else {
+      checks.firebase = 'not_initialized';
+    }
+  } catch { checks.firebase = 'unavailable'; }
+
+  const allOk = checks.redis !== 'unavailable' || checks.postgres !== 'unavailable';
+  res.status(allOk ? 200 : 503).json({
+    ok: allOk,
+    status: allOk ? 'healthy' : 'degraded',
+    service: 'heady-manager',
+    version: '3.1.0',
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+    checks,
+  });
+});
+
+// Detailed health — used by self-healing workflow (/health/detailed)
+app.get("/health/detailed", async (req, res) => {
+  const checks = {};
+  let score = 100;
+
+  // Redis ping
+  try {
+    const { getRedisPoolV3 } = require('./src/resilience/redis-pool-v3');
+    const pool = getRedisPoolV3();
+    const health = pool.getHealth();
+    checks.redis = { status: health && health.connected ? 'ok' : 'degraded', ...health };
+    if (!health || !health.connected) score -= 25;
+  } catch (e) { checks.redis = { status: 'unavailable', error: e.message }; score -= 25; }
+
+  // Postgres SELECT 1
+  try {
+    const { getPool } = require('./src/db/pool');
+    const pool = getPool();
+    const start = Date.now();
+    await pool.query('SELECT 1');
+    checks.postgres = { status: 'ok', latencyMs: Date.now() - start };
+  } catch (e) { checks.postgres = { status: 'unavailable', error: e.message }; score -= 30; }
+
+  // Firebase status
+  try {
+    const admin = require('firebase-admin');
+    checks.firebase = { status: admin.apps.length > 0 ? 'ok' : 'not_initialized', apps: admin.apps.length };
+    if (admin.apps.length === 0) score -= 10;
+  } catch (e) { checks.firebase = { status: 'unavailable', error: e.message }; score -= 10; }
+
+  // Memory
+  const mem = process.memoryUsage();
+  checks.memory = {
+    heapUsedMB: Math.round(mem.heapUsed / 1048576),
+    heapTotalMB: Math.round(mem.heapTotal / 1048576),
+    rssMB: Math.round(mem.rss / 1048576),
+    external: mem.external,
+  };
+
+  // EventBus
+  checks.eventBus = { status: typeof eventBus !== 'undefined' ? 'ok' : 'missing' };
+
+  res.status(score >= 50 ? 200 : 503).json({
+    ok: score >= 50,
+    score,
+    service: 'heady-manager',
+    version: '3.1.0',
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+    pid: process.pid,
+    nodeVersion: process.version,
+    checks,
+  });
+});
+
 app.get("/health/live", (req, res) => {
   res.json({ status: "ok", ts: new Date().toISOString() });
 });
