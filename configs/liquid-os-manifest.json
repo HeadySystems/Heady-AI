@@ -68,7 +68,7 @@
     }
   },
 
-  "ui_policy": "drupal-only — NO REACT, NO NEXT.JS, NO VITE FRONTENDS",
+  "ui_policy": "liquid-dynamic — HeadyWeb browser as primary UI, HeadyBuddy as AI companion, HeadyAI-IDE for development, HeadyOS as latent orchestrator",
 
   "cms_layer": {
     "platform": "drupal-11",
@@ -100,11 +100,55 @@
     }
   },
 
+  "buddy_layer": {
+    "service": "HeadyBuddy",
+    "version": "2.0.0",
+    "port": 4800,
+    "endpoint": "https://buddy.headysystems.com",
+    "providers": ["heady-brain", "gemini", "claude"],
+    "channels": ["webchat", "discord", "slack", "api"],
+    "features": ["persistent-memory", "task-automation", "digital-actions", "cross-platform"],
+    "packages": {
+      "android": "com.headysystems.buddy",
+      "desktop_linux": "headybuddy-desktop-linux",
+      "desktop_windows": "headybuddy-desktop-windows"
+    }
+  },
+
+  "browser_layer": {
+    "service": "HeadyWeb",
+    "version": "2.0.0",
+    "port": 5173,
+    "endpoint": "https://headyweb.headysystems.com",
+    "features": ["ai-search", "tab-management", "built-in-ide", "extensions", "dev-tools", "sacred-geometry-ui"],
+    "internal_pages": ["headyweb://newtab", "headyweb://settings", "headyweb://ide", "headyweb://history", "headyweb://bookmarks", "headyweb://extensions", "headyweb://downloads"]
+  },
+
+  "ide_layer": {
+    "service": "HeadyAI-IDE",
+    "version": "1.0.0",
+    "accessible_via": ["headyweb://ide", "standalone:5174"],
+    "features": ["code-editor", "ai-assist", "cloud-terminal", "git-integration", "file-tree", "live-preview", "command-palette"],
+    "cloud_first": true,
+    "local_resources_minimal": true
+  },
+
+  "os_layer": {
+    "service": "HeadyOS",
+    "version": "1.0.0",
+    "port": 4900,
+    "endpoint": "https://os.headysystems.com",
+    "features": ["latent-kernel", "personal-persistence", "liquid-routing", "connector-registry", "intelligent-orchestration", "cloud-bridge"],
+    "memory_tiers": ["T0-working", "T1-short-term", "T2-long-term-cloud"],
+    "states": ["BOOT", "READY", "ACTIVE", "IDLE", "SLEEP"]
+  },
+
   "github": {
     "org": "HeadyMe",
-    "total_repos": 77,
+    "total_repos": 78,
     "site_repos": 47,
-    "monorepo": "Heady-pre-production-9f2f0642"
+    "monorepo": "Heady-pre-production-9f2f0642",
+    "updated": "2026-03-17"
   },
 
   "vector_space": {

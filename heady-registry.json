@@ -1,6 +1,6 @@
 {
-  "registryVersion": "4.1.0",
-  "updatedAt": "2026-03-16T18:11:00.000Z",
+  "registryVersion": "5.0.0",
+  "updatedAt": "2026-03-17T19:00:00.000Z",
   "description": "HeadyRegistry \u2014 Central catalog and control point for the Heady ecosystem",
   "last_deployment": "",
   "cloud_first": true,
@@ -90,6 +90,102 @@
         "/recipes/:id",
         "/meta-distill"
       ]
+    },
+    {
+      "id": "headyweb-browser",
+      "name": "HeadyWeb",
+      "type": "application",
+      "version": "2.0.0",
+      "sourceOfTruth": "HeadyWeb/src/App.jsx",
+      "endpoint": "https://headyweb.headysystems.com",
+      "port": 5173,
+      "transport": "https",
+      "responsibilities": [
+        "webBrowsing",
+        "aiSearch",
+        "integratedIDE",
+        "extensionSystem",
+        "devTools",
+        "sacredGeometryUI"
+      ],
+      "ownership": "application",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-03-17",
+      "health": "/health",
+      "apis": ["/search", "/settings", "/ide", "/extensions"]
+    },
+    {
+      "id": "headybuddy-agent",
+      "name": "HeadyBuddy",
+      "type": "agent",
+      "version": "2.0.0",
+      "sourceOfTruth": "HeadyBuddy/server/index.js",
+      "endpoint": "https://buddy.headysystems.com",
+      "port": 4800,
+      "transport": "websocket+http",
+      "responsibilities": [
+        "aiCompanion",
+        "multiProviderChat",
+        "persistentMemory",
+        "taskAutomation",
+        "crossPlatformPresence",
+        "digitalTaskExecution",
+        "autonomousActions"
+      ],
+      "ownership": "agent",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-03-17",
+      "health": "/health",
+      "apis": ["/api/chat", "/api/chat/stream", "/api/skills", "/api/tasks", "/api/memory/:id"]
+    },
+    {
+      "id": "headyai-ide",
+      "name": "HeadyAI-IDE",
+      "type": "application",
+      "version": "1.0.0",
+      "sourceOfTruth": "HeadyWeb/src/components/HeadyIDE.jsx",
+      "endpoint": "headyweb://ide",
+      "transport": "internal",
+      "responsibilities": [
+        "codeEditing",
+        "aiCodeAssist",
+        "cloudComputation",
+        "gitIntegration",
+        "terminalEmulation",
+        "fileManagement",
+        "livePreview"
+      ],
+      "ownership": "developer-tools",
+      "status": "active",
+      "criticality": "high",
+      "lastUpdated": "2026-03-17"
+    },
+    {
+      "id": "headyos-core",
+      "name": "HeadyOS Core",
+      "type": "platform",
+      "version": "1.0.0",
+      "sourceOfTruth": "headyos-core/src/index.js",
+      "endpoint": "https://os.headysystems.com",
+      "port": 4900,
+      "transport": "websocket+http",
+      "responsibilities": [
+        "latentOSKernel",
+        "personalPersistence",
+        "liquidContentRouting",
+        "connectorRegistry",
+        "intelligentOrchestration",
+        "cloudBridge",
+        "crossDeviceSync"
+      ],
+      "ownership": "platform",
+      "status": "active",
+      "criticality": "critical",
+      "lastUpdated": "2026-03-17",
+      "health": "/health",
+      "apis": ["/api/kernel/status", "/api/persistence", "/api/connectors", "/api/orchestrate"]
     }
   ],
   "aiNodes": [
@@ -169,6 +265,78 @@
         "sentimentAnalysis",
         "inference"
       ],
+      "status": "active"
+    },
+    {
+      "id": "maestro",
+      "name": "MAESTRO",
+      "role": "The Orchestration Conductor",
+      "tool": "orchestrator",
+      "triggers": ["coordinate", "orchestrate", "workflow"],
+      "capabilities": ["taskDecomposition", "agentRouting", "workflowExecution", "parallelCoordination"],
+      "status": "active"
+    },
+    {
+      "id": "sentinel",
+      "name": "SENTINEL",
+      "role": "The Security Guardian",
+      "tool": "security_scanner",
+      "triggers": ["security", "audit", "vulnerability"],
+      "capabilities": ["secretsScanning", "vulnerabilityDetection", "complianceCheck", "accessControl"],
+      "status": "active"
+    },
+    {
+      "id": "vinci",
+      "name": "VINCI",
+      "role": "The Design Architect",
+      "tool": "design_engine",
+      "triggers": ["design", "ui", "ux"],
+      "capabilities": ["uiGeneration", "designSystem", "responsiveLayout", "accessibilityAudit"],
+      "status": "active"
+    },
+    {
+      "id": "montecarlo",
+      "name": "MONTECARLO",
+      "role": "The Probabilistic Simulator",
+      "tool": "simulation_engine",
+      "triggers": ["simulate", "probability", "forecast"],
+      "capabilities": ["monteCarloSimulation", "riskAnalysis", "scenarioModeling", "optimizationSearch"],
+      "status": "active"
+    },
+    {
+      "id": "critique",
+      "name": "CRITIQUE",
+      "role": "The Quality Auditor",
+      "tool": "quality_engine",
+      "triggers": ["review", "critique", "quality"],
+      "capabilities": ["codeReview", "architectureReview", "performanceAudit", "bestPracticeEnforcement"],
+      "status": "active"
+    },
+    {
+      "id": "kinetics",
+      "name": "KINETICS",
+      "role": "The Motion Engine",
+      "tool": "animation_engine",
+      "triggers": ["animate", "motion", "interaction"],
+      "capabilities": ["animationDesign", "interactionPatterns", "motionGraphics", "transitionDesign"],
+      "status": "active"
+    },
+    {
+      "id": "imagine",
+      "name": "IMAGINE",
+      "role": "The Creative Visionary",
+      "tool": "creative_engine",
+      "triggers": ["imagine", "create", "generate"],
+      "capabilities": ["imageGeneration", "conceptDesign", "brandingAssets", "creativeWriting"],
+      "status": "active"
+    },
+    {
+      "id": "stories",
+      "name": "STORIES",
+      "role": "The Narrative Architect",
+      "tool": "narrative_engine",
+      "triggers": ["story", "narrative", "content"],
+      "capabilities": ["contentGeneration", "narrativeStructure", "documentationWriting", "brandVoice"],
       "status": "active"
     }
   ],

@@ -19,8 +19,10 @@
 # ║  code-server + Heady Extensions + Sacred Geometry Theme  ║
 # ╚══════════════════════════════════════════════════════════╝
 
-version: "1.0.0"
-updated_at: "2026-02-06"
+version: "2.0.0"
+updated_at: "2026-03-17"
+status: "active"
+description: "HeadyAI-IDE — Windsurf/Antigravity hybrid cloud IDE accessible via HeadyWeb or standalone"
 
 # ── Deployment ──────────────────────────────────────────────
 deployment:
@@ -144,6 +146,26 @@ integration:
     sync_settings: true
     sync_extensions: true
     sync_keybindings: true
+
+  headyos:
+    enabled: true
+    cloud_bridge: true
+    persistence: true
+    computation_routing: cloud-first
+
+  headyweb_integration:
+    enabled: true
+    accessible_at: "headyweb://ide"
+    standalone_port: 5174
+    features:
+      - inline_code_editor
+      - ai_code_assist
+      - cloud_terminal
+      - git_integration
+      - live_preview
+      - command_palette
+      - file_search
+      - split_view
 
 # ── Workspace Settings ──────────────────────────────────────
 workspace:
