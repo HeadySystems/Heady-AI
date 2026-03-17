@@ -3,14 +3,14 @@
  * @description Express router for the 7 onboarding endpoints + skip-to-essentials.
  *
  *   Endpoints:
- *     GET  /api/onboarding/status                — Current onboarding state
- *     POST /api/onboarding/create-identity        — Reserve username + create identity
- *     GET  /api/onboarding/check-username/:username — Debounced availability check
- *     POST /api/onboarding/configure-email        — Email configuration
- *     POST /api/onboarding/set-permissions        — Cloud/Hybrid mode + permissions
- *     POST /api/onboarding/configure-buddy        — Archetype, name, tone, domains
- *     POST /api/onboarding/complete               — Finalize onboarding
- *     POST /api/onboarding/skip-to-essentials     — Fast-track with defaults
+ *     GET  /api/onboarding/status                       — Current onboarding state
+ *     POST /api/onboarding/create-identity               — Reserve username + create identity
+ *     GET  /api/onboarding/check-username/:username?     — Debounced availability check
+ *     POST /api/onboarding/configure-email               — Email configuration
+ *     POST /api/onboarding/set-permissions               — Cloud/Hybrid mode + permissions
+ *     POST /api/onboarding/configure-buddy               — Archetype, name, tone, domains, AI keys
+ *     POST /api/onboarding/complete                      — Finalize onboarding
+ *     POST /api/onboarding/skip-to-essentials            — Fast-track with defaults
  */
 
 import { Router } from 'express';
@@ -44,13 +44,16 @@ import {
 
 const log = pino({ name: 'onboarding-routes' });
 
-// ─── In-Memory Stores for Permissions & Buddy Config ────────────────────────
+// ─── In-Memory Stores for Permissions, Buddy Config & AI Keys ───────────────
 
 /** @type {Map<string, object>} uid → permissions */
 const permissionsStore = new Map();
 
 /** @type {Map<string, object>} uid → buddy config */
 const buddyConfigStore = new Map();
+
+/** @type {Map<string, Record<string, string>>} uid → AI provider API keys */
+const aiKeysStore = new Map();
 
 // ─── ML-DSA-65 Signing Receipt ──────────────────────────────────────────────
 
@@ -158,8 +161,8 @@ export function createOnboardingRouter() {
       ));
     }
 
-    const { username, displayName } = parsed.data;
-    const result = createIdentity(uid, username, displayName);
+    const { username, displayName, password } = parsed.data;
+    const result = createIdentity(uid, username, displayName, password || null);
 
     if (result.error) {
       const status = result.error === 'IDENTITY_EXISTS' ? 409 : 400;
@@ -174,15 +177,19 @@ export function createOnboardingRouter() {
         username: result.identity.username,
         displayName: result.identity.displayName,
         apiKey: result.identity.apiKey,
-        headyEmail: `${result.identity.username}@headyme.com`,
+        headyEmail: result.identity.headyEmail,
       },
       nextStage: 'email',
     }));
   });
 
-  // ── GET /api/onboarding/check-username/:username ────────────────────
-  router.get('/check-username/:username', (req, res) => {
-    const { username } = req.params;
+  // ── GET /api/onboarding/check-username/:username? ───────────────────
+  // Support both GET /check-username?username=foo and GET /check-username/:username
+  router.get('/check-username/:username?', (req, res) => {
+    const username = req.params.username || req.query.username;
+    if (!username) {
+      return res.status(400).json(errorBody('VALIDATION_ERROR', 'Username parameter required'));
+    }
     const result = checkUsernameAvailability(username);
     return res.status(200).json(successBody(result));
   });
@@ -282,21 +289,29 @@ export function createOnboardingRouter() {
     }
 
     const identity = getIdentityByUid(uid);
-    buddyConfigStore.set(uid, { ...parsed.data, configuredAt: new Date().toISOString() });
+    const { aiKeys, ...buddyConfig } = parsed.data;
+    buddyConfigStore.set(uid, { ...buddyConfig, configuredAt: new Date().toISOString() });
+
+    if (aiKeys && Object.keys(aiKeys).length > 0) {
+      // Store AI keys separately (in production: encrypt with AES-256-GCM)
+      aiKeysStore.set(uid, aiKeys);
+      log.info({ uid, providers: Object.keys(aiKeys) }, 'AI provider keys stored');
+    }
 
     // Initialize the latent space with buddy context
     const latentResult = initLatentSpace(uid, {
       username: identity?.username ?? 'unknown',
       displayName: identity?.displayName ?? 'User',
-      archetype: parsed.data.archetype,
-      domains: parsed.data.domains,
+      archetype: buddyConfig.archetype,
+      domains: buddyConfig.domains,
     });
 
     setOnboardingStage(uid, 'buddy');
 
-    log.info({ uid, archetype: parsed.data.archetype, buddyName: parsed.data.buddyName }, 'buddy configured via onboarding');
+    log.info({ uid, archetype: buddyConfig.archetype, buddyName: buddyConfig.buddyName }, 'buddy configured via onboarding');
     return res.status(200).json(successBody({
-      buddyConfig: parsed.data,
+      buddyConfig: buddyConfig,
+      apiKey: identity?.apiKey || null,
       latentSpace: latentResult,
       nextStage: 'complete',
     }));
@@ -369,7 +384,7 @@ export function createOnboardingRouter() {
     const quickUsername = `user-${randomUUID().slice(0, 8)}`;
 
     // Create identity with auto-generated username
-    const identityResult = createIdentity(uid, quickUsername, displayName);
+    const identityResult = createIdentity(uid, quickUsername, displayName, null);
     if (identityResult.error) {
       return res.status(400).json(errorBody(identityResult.error, 'Quick identity creation failed'));
     }
@@ -422,7 +437,7 @@ export function createOnboardingRouter() {
         username: identityResult.identity.username,
         displayName: identityResult.identity.displayName,
         apiKey: identityResult.identity.apiKey,
-        headyEmail: `${identityResult.identity.username}@headyme.com`,
+        headyEmail: identityResult.identity.headyEmail,
       },
       latentSpace: latentResult,
       receipt,

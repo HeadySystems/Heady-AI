@@ -21,7 +21,9 @@ const ALLOWED_ORIGINS = new Set([
   'https://mail.headyme.com',
   'https://heady.dev',
   'https://www.heady.dev',
+  'https://app.heady.dev',
   'https://api.heady.dev',
+  'https://mail.heady.dev',
 ]);
 
 // ─── Rate Limit Config ─────────────────────────────────────────────

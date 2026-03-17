@@ -358,14 +358,18 @@ For each Tier 2 provider:
 | `PORT` | Server port (Cloud Run sets this) | `8080` |
 | `FIREBASE_PROJECT_ID` | Firebase project ID | `heady-ai` |
 | `SESSION_SECRET` | Express session encryption key | (generate 64-char random) |
+| `JWT_SECRET` | JWT token signing secret | (generate 64-char random) |
 | `HEADY_API_BASE` | Core Heady API URL | `https://api.heady.ai` |
-| `CORS_ORIGINS` | Comma-separated allowed origins | (all 11 domains) |
+| `CORS_ORIGINS` | Comma-separated allowed origins | (all 12 domains) |
 
 ### 5.2 Secrets (Google Cloud Secret Manager)
 
 ```bash
 # Create secrets
 echo -n "YOUR_SESSION_SECRET" | gcloud secrets create session-secret \
+  --data-file=- --project=heady-ai
+
+echo -n "YOUR_JWT_SECRET" | gcloud secrets create jwt-secret \
   --data-file=- --project=heady-ai
 
 echo -n "YOUR_ML_DSA_PRIVATE_KEY" | gcloud secrets create ml-dsa-private-key \

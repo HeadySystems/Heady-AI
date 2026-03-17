@@ -20,6 +20,7 @@ const STAGES = [
 ];
 
 const API_BASE = '/api/onboarding';
+const AUTH_BASE = '/auth';
 
 /* Tier 1 native Firebase providers */
 const NATIVE_PROVIDERS = new Map([
@@ -33,6 +34,18 @@ const NATIVE_PROVIDERS = new Map([
 
 /* Tier 2 OIDC providers */
 const OIDC_PROVIDERS = ['oidc.huggingface', 'oidc.discord', 'oidc.slack', 'oidc.linkedin', 'oidc.spotify'];
+
+/* Interface ID mapping: frontend → server */
+const INTERFACE_MAP = {
+  dashboard: 'web',
+  mcp: 'api',
+  headybot: 'web',
+  mobile: 'mobile',
+  agents: 'web',
+  memory: 'web',
+  deploy: 'web',
+  docs: 'web',
+};
 
 /* ---- Toast Manager ---- */
 class ToastManager {
@@ -75,7 +88,7 @@ export class OnboardingWizard {
   /* Session data accumulated across stages */
   #sessionData = {
     authToken: null,
-    sessionId: null,
+    sessionToken: null,
     authProvider: null,
     authUser: null,
     username: null,
@@ -85,26 +98,32 @@ export class OnboardingWizard {
     forwardEmail: null,
     permissionMode: null,
     deviceName: null,
+    analyticsOptIn: true,
+    dataRegion: 'us-east',
     buddyName: null,
     archetype: null,
+    tone: 'casual',
+    domains: ['general'],
     interfaces: [],
     aiKeys: {},
     apiKey: null,
   };
 
-  /* Firebase config — replaced in production by Drupal settings injection */
-  #firebaseConfig = {
-    apiKey: 'AIzaSyHeadyMe_PLACEHOLDER',
-    authDomain: 'heady-ai.firebaseapp.com',
-    projectId: 'heady-ai',
-    storageBucket: 'heady-ai.appspot.com',
-    messagingSenderId: '000000000000',
-    appId: '1:000000000000:web:0000000000000000',
-  };
+  /* Firebase config — injected by Drupal or uses defaults */
+  #firebaseConfig = null;
 
   #usernameCheckTimer = null;
 
   constructor() {
+    this.#firebaseConfig = window.__HEADY_FIREBASE_CONFIG || {
+      apiKey: 'AIzaSyHeadyMe_PLACEHOLDER',
+      authDomain: 'heady-ai.firebaseapp.com',
+      projectId: 'heady-ai',
+      storageBucket: 'heady-ai.appspot.com',
+      messagingSenderId: '000000000000',
+      appId: '1:000000000000:web:0000000000000000',
+    };
+
     this.#toasts = new ToastManager();
     this.#initFirebase();
     this.#initParticles();
@@ -209,6 +228,16 @@ export class OnboardingWizard {
     }
   }
 
+  /* ---- Auth header helper ---- */
+
+  #authHeaders() {
+    const headers = { 'Content-Type': 'application/json' };
+    if (this.#sessionData.sessionToken) {
+      headers['Authorization'] = `Bearer ${this.#sessionData.sessionToken}`;
+    }
+    return headers;
+  }
+
   /* ============================================================
      Stage 1: Auth (Firebase sign-in)
      ============================================================ */
@@ -273,25 +302,27 @@ export class OnboardingWizard {
       const result = await this.#firebaseAuth.signInWithPopup(provider);
       const idToken = await result.user.getIdToken();
 
-      /* Exchange Firebase ID token with backend for session JWT */
-      const resp = await fetch(`${API_BASE}/auth/exchange`, {
+      /* Exchange Firebase ID token with backend — POST /auth/callback */
+      const resp = await fetch(`${AUTH_BASE}/callback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
-        body: JSON.stringify({ idToken }),
+        body: JSON.stringify({ idToken, provider: providerId }),
       });
 
       if (resp.ok) {
-        const data = await resp.json();
+        const envelope = await resp.json();
+        const data = envelope.ok ? envelope.data : envelope;
         this.#handleAuthSuccess({
-          token: data.token || idToken,
-          sessionId: data.sessionId,
+          token: idToken,
+          sessionToken: data.sessionToken,
+          uid: data.uid,
           provider: providerId,
           user: {
             displayName: result.user.displayName,
             email: result.user.email,
             photoURL: result.user.photoURL,
-            uid: result.user.uid,
+            uid: data.uid || result.user.uid,
           },
         });
       } else {
@@ -341,23 +372,27 @@ export class OnboardingWizard {
         }
 
         const idToken = await result.user.getIdToken();
-        const resp = await fetch(`${API_BASE}/auth/exchange`, {
+
+        /* Exchange — POST /auth/callback with provider: 'password' */
+        const resp = await fetch(`${AUTH_BASE}/callback`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'same-origin',
-          body: JSON.stringify({ idToken }),
+          body: JSON.stringify({ idToken, provider: 'password' }),
         });
 
         if (resp.ok) {
-          const data = await resp.json();
+          const envelope = await resp.json();
+          const data = envelope.ok ? envelope.data : envelope;
           this.#handleAuthSuccess({
-            token: data.token || idToken,
-            sessionId: data.sessionId,
-            provider: 'email',
+            token: idToken,
+            sessionToken: data.sessionToken,
+            uid: data.uid,
+            provider: 'password',
             user: {
               displayName: result.user.displayName,
               email: result.user.email,
-              uid: result.user.uid,
+              uid: data.uid || result.user.uid,
             },
           });
         } else {
@@ -365,7 +400,7 @@ export class OnboardingWizard {
         }
       } else {
         /* Dev mode */
-        this.#handleAuthSuccess({ provider: 'email', user: { displayName: null, email } });
+        this.#handleAuthSuccess({ provider: 'password', user: { displayName: null, email } });
       }
     } catch (err) {
       console.error('Email auth error:', err);
@@ -377,7 +412,7 @@ export class OnboardingWizard {
 
   #handleAuthSuccess(data) {
     this.#sessionData.authToken = data.token || null;
-    this.#sessionData.sessionId = data.sessionId || null;
+    this.#sessionData.sessionToken = data.sessionToken || null;
     this.#sessionData.authProvider = data.provider;
     this.#sessionData.authUser = data.user;
 
@@ -462,10 +497,12 @@ export class OnboardingWizard {
     try {
       const resp = await fetch(`${API_BASE}/check-username?username=${encodeURIComponent(username)}`, {
         credentials: 'same-origin',
+        headers: this.#authHeaders(),
       });
 
       if (resp.ok) {
-        const data = await resp.json();
+        const envelope = await resp.json();
+        const data = envelope.ok ? envelope.data : envelope;
         if (data.available) {
           input.classList.remove('error');
           input.classList.add('success');
@@ -530,13 +567,14 @@ export class OnboardingWizard {
     try {
       const resp = await fetch(`${API_BASE}/create-identity`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.#authHeaders(),
         credentials: 'same-origin',
         body: JSON.stringify({ username, password, displayName }),
       });
 
       if (resp.ok) {
-        const data = await resp.json();
+        const envelope = await resp.json();
+        const data = envelope.ok ? envelope.data : envelope;
         this.#sessionData.username = data.username || username;
       } else {
         const err = await resp.json().catch(() => ({}));
@@ -618,15 +656,23 @@ export class OnboardingWizard {
   }
 
   async #saveEmailChoice() {
+    const payload = {
+      contactEmail: this.#sessionData.emailChoice === 'forward'
+        ? this.#sessionData.forwardEmail
+        : (this.#sessionData.authUser?.email || ''),
+      provisionHeadyEmail: this.#sessionData.emailChoice === 'inbox',
+    };
+
+    if (this.#sessionData.emailChoice === 'inbox' && this.#sessionData.username) {
+      payload.headyEmailPrefix = this.#sessionData.username;
+    }
+
     try {
       await fetch(`${API_BASE}/configure-email`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.#authHeaders(),
         credentials: 'same-origin',
-        body: JSON.stringify({
-          choice: this.#sessionData.emailChoice,
-          forwardEmail: this.#sessionData.forwardEmail,
-        }),
+        body: JSON.stringify(payload),
       });
     } catch {
       console.warn('Email API unavailable, proceeding.');
@@ -670,6 +716,18 @@ export class OnboardingWizard {
       this.#sessionData.deviceName = deviceInput.value.trim();
     });
 
+    /* Analytics opt-in checkbox */
+    const analyticsCheckbox = panel.querySelector('#analytics-optin');
+    analyticsCheckbox?.addEventListener('change', () => {
+      this.#sessionData.analyticsOptIn = analyticsCheckbox.checked;
+    });
+
+    /* Data region select */
+    const dataRegionSelect = panel.querySelector('#data-region');
+    dataRegionSelect?.addEventListener('change', () => {
+      this.#sessionData.dataRegion = dataRegionSelect.value;
+    });
+
     panel.querySelector('#perms-continue')?.addEventListener('click', () => {
       if (!this.#sessionData.permissionMode) {
         this.#toasts.show('Please select a mode.', 'error');
@@ -687,15 +745,25 @@ export class OnboardingWizard {
   }
 
   async #savePermissions() {
+    const payload = {
+      mode: this.#sessionData.permissionMode,
+      analyticsOptIn: this.#sessionData.analyticsOptIn,
+      buddyBrowsingAccess: false,
+      buddyCodeExecution: false,
+      buddyToolAccess: false,
+      dataRegion: this.#sessionData.dataRegion,
+    };
+
+    if (this.#sessionData.permissionMode === 'hybrid' && this.#sessionData.deviceName) {
+      payload.deviceName = this.#sessionData.deviceName;
+    }
+
     try {
       await fetch(`${API_BASE}/set-permissions`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.#authHeaders(),
         credentials: 'same-origin',
-        body: JSON.stringify({
-          mode: this.#sessionData.permissionMode,
-          deviceName: this.#sessionData.deviceName,
-        }),
+        body: JSON.stringify(payload),
       });
     } catch {
       console.warn('Permissions API unavailable, proceeding.');
@@ -722,6 +790,8 @@ export class OnboardingWizard {
       onUpdate: (state) => {
         this.#sessionData.buddyName = state.preferredName;
         this.#sessionData.archetype = state.archetype;
+        this.#sessionData.tone = state.tone;
+        this.#sessionData.domains = state.domains;
         this.#sessionData.interfaces = state.interfaces;
         this.#sessionData.aiKeys = state.aiKeys;
       },
@@ -737,6 +807,8 @@ export class OnboardingWizard {
       const state = this.#buddySetup.getState();
       this.#sessionData.buddyName = state.preferredName;
       this.#sessionData.archetype = state.archetype;
+      this.#sessionData.tone = state.tone;
+      this.#sessionData.domains = state.domains;
       this.#sessionData.interfaces = state.interfaces;
       this.#submitBuddySetup();
     });
@@ -748,21 +820,32 @@ export class OnboardingWizard {
     const btn = document.querySelector('#buddy-continue');
     if (btn) { btn.classList.add('loading'); btn.disabled = true; }
 
+    /* Map interface IDs to server values, always include 'web' */
+    const serverInterfaces = new Set(['web']);
+    for (const id of this.#sessionData.interfaces) {
+      const mapped = INTERFACE_MAP[id];
+      if (mapped) serverInterfaces.add(mapped);
+    }
+
+    const payload = {
+      archetype: this.#sessionData.archetype || 'OWL',
+      buddyName: this.#sessionData.buddyName || this.#sessionData.displayName?.split(' ')[0] || 'Buddy',
+      tone: this.#sessionData.tone || 'casual',
+      domains: this.#sessionData.domains || ['general'],
+      interfaces: [...serverInterfaces],
+    };
+
     try {
       const resp = await fetch(`${API_BASE}/configure-buddy`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.#authHeaders(),
         credentials: 'same-origin',
-        body: JSON.stringify({
-          preferredName: this.#sessionData.buddyName,
-          archetype: this.#sessionData.archetype,
-          interfaces: this.#sessionData.interfaces,
-          aiKeys: this.#sessionData.aiKeys,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (resp.ok) {
-        const data = await resp.json();
+        const envelope = await resp.json();
+        const data = envelope.ok ? envelope.data : envelope;
         this.#sessionData.apiKey = data.apiKey;
       }
     } catch {
@@ -780,9 +863,21 @@ export class OnboardingWizard {
 
   #completeInitialized = false;
 
-  #initCompleteStage() {
+  async #initCompleteStage() {
     if (this.#completeInitialized) return;
     this.#completeInitialized = true;
+
+    /* Call POST /api/onboarding/complete before showing summary */
+    try {
+      await fetch(`${API_BASE}/complete`, {
+        method: 'POST',
+        headers: this.#authHeaders(),
+        credentials: 'same-origin',
+        body: JSON.stringify({ acknowledged: true }),
+      });
+    } catch {
+      console.warn('Complete API unavailable, proceeding.');
+    }
 
     this.#populateSummary();
     this.#fireConfetti();
@@ -922,12 +1017,7 @@ export class OnboardingWizard {
   /* ---- Helpers ---- */
 
   #generateMockApiKey() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let key = 'hm_live_';
-    for (let i = 0; i < 32; i++) {
-      key += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return key;
+    return `HY-${crypto.randomUUID()}`;
   }
 
   #escapeHTML(str) {

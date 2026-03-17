@@ -104,6 +104,7 @@ export const AuthCallbackBodySchema = z.object({
 export const CreateIdentityBodySchema = z.object({
   username: usernameField,
   displayName: displayNameField,
+  password: z.string().min(8).max(128).optional(),
 });
 
 // ─── Configure Email ────────────────────────────────────────────────────────
@@ -135,7 +136,7 @@ export const SetPermissionsBodySchema = z.object({
     .trim()
     .optional(),
   /** Share anonymous usage analytics. */
-  analyticsOptIn: z.boolean(),
+  analyticsOptIn: z.boolean().default(true),
   /** Allow buddy to access browsing context. */
   buddyBrowsingAccess: z.boolean().default(false),
   /** Allow buddy to execute code in sandbox. */
@@ -172,6 +173,8 @@ export const ConfigureBuddyBodySchema = z.object({
     .array(z.enum(['web', 'cli', 'ide', 'mobile', 'api', 'slack', 'discord']))
     .min(1)
     .default(['web']),
+  /** Optional AI provider API keys (Tier 3). */
+  aiKeys: z.record(z.string().min(1), z.string().min(1)).optional(),
 });
 
 // ─── Complete ───────────────────────────────────────────────────────────────

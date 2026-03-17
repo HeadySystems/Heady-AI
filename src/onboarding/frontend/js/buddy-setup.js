@@ -1,6 +1,6 @@
 /**
  * HeadyMe Onboarding — HeadyBuddy Setup (Stage 5)
- * Cognitive archetype selection, AI keys, interface toggles, preferred name, live preview.
+ * Cognitive archetype selection, tone, domains, AI keys, interface toggles, preferred name, live preview.
  * ES2024 module — no dependencies.
  */
 
@@ -57,6 +57,21 @@ const ARCHETYPES = [
   },
 ];
 
+/* ---- Tone Options ---- */
+const TONES = [
+  { id: 'professional', label: 'Professional' },
+  { id: 'casual',       label: 'Casual' },
+  { id: 'mentor',       label: 'Mentor' },
+  { id: 'peer',         label: 'Peer' },
+  { id: 'concise',      label: 'Concise' },
+];
+
+/* ---- Domain Suggestions ---- */
+const DOMAIN_SUGGESTIONS = [
+  'engineering', 'design', 'writing', 'research',
+  'data-science', 'devops', 'product', 'general',
+];
+
 /* ---- Interface Registry ---- */
 const INTERFACES = [
   { id: 'dashboard',   name: 'Dashboard',         icon: '\uD83D\uDCCA', default: true },
@@ -90,6 +105,8 @@ export class BuddySetup {
   #state = {
     preferredName: '',
     archetype: 'OWL',
+    tone: 'casual',
+    domains: new Set(['general']),
     interfaces: new Set(INTERFACES.filter(i => i.default).map(i => i.id)),
     aiKeys: {},
   };
@@ -114,6 +131,8 @@ export class BuddySetup {
     return {
       preferredName: this.#state.preferredName,
       archetype: this.#state.archetype,
+      tone: this.#state.tone,
+      domains: [...this.#state.domains],
       interfaces: [...this.#state.interfaces],
       aiKeys: { ...this.#state.aiKeys },
     };
@@ -162,6 +181,46 @@ export class BuddySetup {
           <div class="archetype-description-name" id="archetype-desc-name">${this.#getArchetype().icon} ${this.#getArchetype().name}</div>
           <div class="archetype-description-text" id="archetype-desc-text">${this.#getArchetype().description}</div>
         </div>
+      </div>
+
+      <!-- Tone Selector -->
+      <div class="form-group">
+        <label class="form-label">Conversation Tone</label>
+        <div class="tone-selector" role="radiogroup" aria-label="Conversation tone">
+          ${TONES.map(t => `
+            <label class="tone-option ${t.id === this.#state.tone ? 'selected' : ''}"
+                   data-tone="${t.id}" tabindex="0">
+              <input type="radio" name="buddy-tone" value="${t.id}"
+                     ${t.id === this.#state.tone ? 'checked' : ''}
+                     style="display:none;" />
+              <span class="tone-option-label">${t.label}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Domain Tags -->
+      <div class="form-group">
+        <label class="form-label" for="domain-input">Focus Domains</label>
+        <div class="domain-tags-container" id="domain-tags-container">
+          <div class="domain-tags" id="domain-tags">
+            ${[...this.#state.domains].map(d => `
+              <span class="domain-tag" data-domain="${this.#escapeAttr(d)}">
+                ${this.#escapeHTML(d)}
+                <button type="button" class="domain-tag-remove" aria-label="Remove ${this.#escapeAttr(d)}">&times;</button>
+              </span>
+            `).join('')}
+          </div>
+          <input class="form-input" type="text" id="domain-input"
+                 placeholder="Type a domain and press Enter"
+                 autocomplete="off" style="border: none; padding: 8px; background: transparent; flex: 1; min-width: 160px;" />
+        </div>
+        <div class="domain-suggestions" id="domain-suggestions">
+          ${DOMAIN_SUGGESTIONS.filter(d => !this.#state.domains.has(d)).map(d => `
+            <button type="button" class="domain-suggestion" data-domain="${d}">${d}</button>
+          `).join('')}
+        </div>
+        <div class="helper-text">Add domains to help HeadyBuddy specialize. Press Enter or click a suggestion.</div>
       </div>
 
       <!-- Interface Toggles -->
@@ -274,6 +333,66 @@ export class BuddySetup {
       });
     });
 
+    /* Tone selection */
+    this.#container.querySelectorAll('.tone-option').forEach(option => {
+      const handler = () => {
+        this.#container.querySelectorAll('.tone-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        const radio = option.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+        this.#state.tone = option.dataset.tone;
+        this.#updatePreview();
+        this.#notifyUpdate();
+      };
+
+      option.addEventListener('click', handler);
+      option.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handler();
+        }
+      });
+    });
+
+    /* Domain tag input */
+    const domainInput = this.#container.querySelector('#domain-input');
+    domainInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = domainInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+        if (val && !this.#state.domains.has(val)) {
+          this.#addDomain(val);
+          domainInput.value = '';
+        }
+      }
+    });
+
+    /* Domain suggestion clicks */
+    this.#container.querySelectorAll('.domain-suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const domain = btn.dataset.domain;
+        if (!this.#state.domains.has(domain)) {
+          this.#addDomain(domain);
+        }
+        btn.remove();
+      });
+    });
+
+    /* Domain tag removal (delegated) */
+    this.#container.querySelector('#domain-tags')?.addEventListener('click', (e) => {
+      const removeBtn = e.target.closest('.domain-tag-remove');
+      if (removeBtn) {
+        const tag = removeBtn.closest('.domain-tag');
+        const domain = tag?.dataset.domain;
+        if (domain) {
+          this.#state.domains.delete(domain);
+          tag.remove();
+          this.#refreshDomainSuggestions();
+          this.#notifyUpdate();
+        }
+      }
+    });
+
     /* Interface toggles */
     this.#container.querySelectorAll('.toggle-item').forEach(item => {
       const handler = () => {
@@ -331,6 +450,42 @@ export class BuddySetup {
           delete this.#state.aiKeys[key];
         }
         this.#notifyUpdate();
+      });
+    });
+  }
+
+  /* ---- Domain Helpers ---- */
+
+  #addDomain(domain) {
+    this.#state.domains.add(domain);
+    const tagsContainer = this.#container.querySelector('#domain-tags');
+    if (tagsContainer) {
+      const tag = document.createElement('span');
+      tag.className = 'domain-tag';
+      tag.dataset.domain = domain;
+      tag.innerHTML = `${this.#escapeHTML(domain)} <button type="button" class="domain-tag-remove" aria-label="Remove ${this.#escapeAttr(domain)}">&times;</button>`;
+      tagsContainer.appendChild(tag);
+    }
+    this.#refreshDomainSuggestions();
+    this.#notifyUpdate();
+  }
+
+  #refreshDomainSuggestions() {
+    const suggestionsEl = this.#container.querySelector('#domain-suggestions');
+    if (!suggestionsEl) return;
+    suggestionsEl.innerHTML = DOMAIN_SUGGESTIONS
+      .filter(d => !this.#state.domains.has(d))
+      .map(d => `<button type="button" class="domain-suggestion" data-domain="${d}">${d}</button>`)
+      .join('');
+
+    /* Re-bind new suggestion buttons */
+    suggestionsEl.querySelectorAll('.domain-suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const domain = btn.dataset.domain;
+        if (!this.#state.domains.has(domain)) {
+          this.#addDomain(domain);
+        }
+        btn.remove();
       });
     });
   }

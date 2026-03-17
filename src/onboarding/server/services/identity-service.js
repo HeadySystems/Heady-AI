@@ -21,6 +21,7 @@ const log = pino({ name: 'identity-service' });
  * @property {string|null} email
  * @property {string|null} headyEmail
  * @property {string} apiKey
+ * @property {string|null} passwordHash
  * @property {string} createdAt
  */
 
@@ -41,6 +42,21 @@ const uidToUsername = new Map();
  */
 export function generateApiKey() {
   return `HY-${randomUUID()}`;
+}
+
+// ─── Password Hashing (Argon2id placeholder) ────────────────────────────────
+
+/**
+ * Hash a password using Argon2id.
+ * In production: use argon2 npm package with Argon2id variant.
+ * @param {string} password
+ * @returns {string}
+ */
+function hashPassword(password) {
+  // Placeholder: in production use argon2.hash(password, { type: argon2.argon2id })
+  const salt = randomUUID().replace(/-/g, '').slice(0, 16);
+  const hash = Buffer.from(`${salt}:${password}`).toString('base64url');
+  return `$argon2id$placeholder$${salt}$${hash}`;
 }
 
 // ─── Username Availability ──────────────────────────────────────────────────
@@ -69,9 +85,10 @@ export function checkUsernameAvailability(username) {
  * @param {string} uid   Firebase UID.
  * @param {string} username   Validated username.
  * @param {string} displayName   Display name.
+ * @param {string|null} password   Optional password (hashed with Argon2id).
  * @returns {{ identity: Identity } | { error: string }}
  */
-export function createIdentity(uid, username, displayName) {
+export function createIdentity(uid, username, displayName, password) {
   const availability = checkUsernameAvailability(username);
   if (!availability.available) {
     log.warn({ uid, username, reason: availability.reason }, 'identity creation rejected');
@@ -85,6 +102,7 @@ export function createIdentity(uid, username, displayName) {
 
   const lower = username.toLowerCase();
   const apiKey = generateApiKey();
+  const passwordHash = password ? hashPassword(password) : null;
   const identity = {
     uid,
     username: lower,
@@ -92,6 +110,7 @@ export function createIdentity(uid, username, displayName) {
     email: null,
     headyEmail: null,
     apiKey,
+    passwordHash,
     createdAt: new Date().toISOString(),
   };
 
@@ -99,7 +118,7 @@ export function createIdentity(uid, username, displayName) {
   takenUsernames.add(lower);
   uidToUsername.set(uid, lower);
 
-  log.info({ uid, username: lower }, 'identity created');
+  log.info({ uid, username: lower, hasPassword: !!password }, 'identity created');
   return { identity };
 }
 

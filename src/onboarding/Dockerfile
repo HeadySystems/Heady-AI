@@ -24,13 +24,13 @@ COPY --chown=heady:heady server/ ./
 # Switch to non-root user
 USER heady
 
-# Port
-ENV PORT=3000
+# Cloud Run expects PORT=8080
+ENV PORT=8080
 ENV NODE_ENV=production
-EXPOSE 3000
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:8080/health || exit 1
 
 CMD ["node", "index.js"]

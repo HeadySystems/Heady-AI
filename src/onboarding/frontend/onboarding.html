@@ -351,6 +351,24 @@
             </div>
           </div>
 
+          <!-- Permissions extras: analytics opt-in + data region -->
+          <div class="permissions-extras">
+            <div class="toggle-row" style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: var(--space-md);">
+              <label class="form-label" for="analytics-optin" style="margin-bottom: 0;">Share anonymous usage analytics</label>
+              <input type="checkbox" id="analytics-optin" checked />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="data-region">Data Region</label>
+              <select class="form-input" id="data-region">
+                <option value="us-east" selected>US East</option>
+                <option value="us-west">US West</option>
+                <option value="eu-west">EU West</option>
+                <option value="ap-south">Asia Pacific South</option>
+                <option value="ap-northeast">Asia Pacific Northeast</option>
+              </select>
+            </div>
+          </div>
+
           <div class="privacy-note">
             <span class="privacy-note-icon" aria-hidden="true">&#128737;&#65039;</span>
             <span>Your data is encrypted with <strong>AES-256-GCM</strong>. You own it. We can't read it. You can export or delete everything at any time.</span>

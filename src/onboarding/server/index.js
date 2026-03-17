@@ -5,7 +5,7 @@
  *
  *   Middleware order:
  *     1. Helmet (security headers)
- *     2. CORS (11 Heady domains)
+ *     2. CORS (12 Heady domains)
  *     3. pino-http (request logging)
  *     4. JSON body parser
  *     5. Session (express-session)
@@ -13,7 +13,7 @@
  *     7. Routes
  *
  *   Environment variables:
- *     PORT                    — Listen port (default: 3000)
+ *     PORT                    — Listen port (default: 8080)
  *     NODE_ENV                — 'production' | 'development' (default: 'development')
  *     SESSION_SECRET          — express-session secret (required in production)
  *     JWT_SECRET              — JWT signing secret (required in production)
@@ -35,11 +35,11 @@ const log = pino({ name: 'heady-onboarding' });
 
 // ─── Configuration ──────────────────────────────────────────────────────────
 
-const PORT = parseInt(process.env.PORT ?? '3000', 10);
+const PORT = parseInt(process.env.PORT ?? '8080', 10);
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
 const SESSION_SECRET = process.env.SESSION_SECRET ?? 'heady-dev-session-secret-change-in-production';
 
-// ─── CORS: 11 Heady Domains ────────────────────────────────────────────────
+// ─── CORS: 12 Heady Domains ────────────────────────────────────────────────
 
 const ALLOWED_ORIGINS = [
   'https://heady.ai',
@@ -49,9 +49,11 @@ const ALLOWED_ORIGINS = [
   'https://headyme.com',
   'https://www.headyme.com',
   'https://app.headyme.com',
+  'https://mail.headyme.com',
   'https://heady.dev',
   'https://www.heady.dev',
   'https://app.heady.dev',
+  'https://api.heady.dev',
   'https://mail.heady.dev',
 ];
 
@@ -95,7 +97,7 @@ export function createApp() {
     crossOriginEmbedderPolicy: false,
   }));
 
-  // 2. CORS — 11 Heady domains + localhost in dev
+  // 2. CORS — 12 Heady domains + localhost in dev
   app.use(cors({
     origin: (origin, callback) => {
       if (!origin || ALLOWED_ORIGINS.includes(origin)) {
@@ -138,7 +140,7 @@ export function createApp() {
 
   // ── Health / Readiness ──────────────────────────────────────────────
   app.get('/health', (_req, res) => {
-    res.status(200).json({ ok: true, service: 'heady-onboarding', version: '2.0.0', timestamp: new Date().toISOString() });
+    res.status(200).json({ ok: true, service: 'heady-onboarding', version: '3.0.0', timestamp: new Date().toISOString() });
   });
 
   app.get('/ready', (_req, res) => {
@@ -198,7 +200,7 @@ function main() {
   const app = createApp();
 
   server = app.listen(PORT, () => {
-    log.info({ port: PORT, env: NODE_ENV }, 'HeadyMe onboarding server v2.0.0 started');
+    log.info({ port: PORT, env: NODE_ENV }, 'HeadyMe onboarding server v3.0.0 started');
   });
 
   process.on('SIGTERM', () => shutdown('SIGTERM'));
