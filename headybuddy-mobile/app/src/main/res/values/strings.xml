@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HeadyBuddy</string>
+    <string name="buddy_notification_channel">HeadyBuddy Service</string>
+    <string name="buddy_notification_title">HeadyBuddy</string>
+    <string name="buddy_notification_text">Your AI companion is ready</string>
+    <string name="accessibility_service_description">HeadyBuddy uses accessibility to automate tasks on your behalf. This includes reading screen content, tapping buttons, and navigating apps when you ask Buddy to perform actions.</string>
+    <string name="work_profile_description">HeadyBuddy Work Profile provides isolated app management with AI-powered automation.</string>
+</resources>

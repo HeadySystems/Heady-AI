@@ -42,6 +42,19 @@ contextBridge.exposeInMainWorld("headyDesktop", {
     ipcRenderer.on("quiet-mode", (event, enabled) => callback(enabled));
   },
 
+  // Task automation
+  executeTask: (task) => ipcRenderer.invoke("execute-task", task),
+
+  // Screen capture for AI assist
+  captureScreen: () => ipcRenderer.invoke("capture-screen"),
+
+  // Auth management
+  setAuth: (token, userId) => ipcRenderer.invoke("set-auth", token, userId),
+  getAuth: () => ipcRenderer.invoke("get-auth"),
+
+  // WebSocket endpoint
+  getWsEndpoint: () => ipcRenderer.invoke("get-ws-endpoint"),
+
   // Platform detection
   platform: process.platform,
   isElectron: true,

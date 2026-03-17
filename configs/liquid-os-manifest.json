@@ -1,8 +1,19 @@
 {
   "name": "Heady™ Liquid Latent OS",
-  "version": "4.0.0",
+  "version": "4.1.0",
+  "updated": "2026-03-17",
   "phi": 1.6180339887498949,
   "psi": 0.6180339887498949,
+
+  "counts": {
+    "services": 172,
+    "workers": 22,
+    "sites": 47,
+    "pages_projects": 10,
+    "colab_runtimes": 4,
+    "patents_provisional": 60,
+    "claims": 59
+  },
 
   "edge_layer": {
     "platform": "cloudflare",
@@ -18,6 +29,7 @@
         "ai.headysystems.com/*"
       ]
     },
+    "workers_count": 22,
     "pages_projects": [
       { "name": "headysystems", "url": "headysystems.pages.dev", "domain": "headysystems.com" },
       { "name": "headysystems-com", "url": "headysystems-com.pages.dev" },

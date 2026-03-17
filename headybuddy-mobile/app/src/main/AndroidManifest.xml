@@ -1,33 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.headysystems.headybuddy">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permissions -->
+    <!-- Network -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Foreground Service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Boot & Background -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Overlay (Bubble) -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- Notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Accessibility (Task Automation) -->
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Work Profile / Device Admin -->
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
+    <uses-permission android:name="android.permission.MANAGE_PROFILE_AND_DEVICE_OWNERS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_PROFILES" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- Storage -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Microphone (Voice) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Clipboard -->
+    <uses-permission android:name="android.permission.READ_CLIPBOARD"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".HeadyBuddyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="HeadyBuddy"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HeadyBuddy">
+        android:theme="@style/Theme.HeadyBuddy"
+        android:usesCleartextTraffic="false"
+        tools:targetApi="34">
 
-        <!-- Main Chat Activity -->
+        <!-- Main Activity (Compose) -->
         <activity
-            android:name=".ui.ChatActivity"
+            android:name=".MainActivity"
             android:exported="true"
-            android:label="HeadyBuddy"
-            android:theme="@style/Theme.HeadyBuddy">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.HeadyBuddy"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,10 +72,10 @@
 
         <!-- Share Target Activity -->
         <activity
-            android:name=".ui.ShareActivity"
+            android:name=".ui.screens.ShareActivity"
             android:exported="true"
-            android:label="Ask Heady"
-            android:theme="@style/Theme.HeadyBuddy.Transparent">
+            android:label="Ask Buddy"
+            android:theme="@style/Theme.HeadyBuddy">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -50,6 +86,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/html" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
         </activity>
 
         <!-- Always-On Foreground Service -->
@@ -57,6 +98,39 @@
             android:name=".service.HeadyBuddyService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
+
+        <!-- Bubble Overlay Service -->
+        <service
+            android:name=".service.BubbleService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+
+        <!-- Accessibility Service (Task Automation) -->
+        <service
+            android:name=".automation.HeadyAccessibilityService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- Device Admin Receiver (Work Profile) -->
+        <receiver
+            android:name=".work.HeadyDeviceAdminReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin_policies" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.PROFILE_PROVISIONING_COMPLETE" />
+            </intent-filter>
+        </receiver>
 
         <!-- Boot Receiver -->
         <receiver
@@ -68,6 +142,18 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+
+        <!-- WorkManager Initializer -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
     </application>
 </manifest>

@@ -1,6 +1,16 @@
 buildscript {
     ext.kotlin_version = '1.9.22'
     ext.agpVersion = '8.2.2'
+    ext.compose_bom_version = '2024.02.00'
+    ext.room_version = '2.6.1'
+    ext.lifecycle_version = '2.7.0'
+    ext.nav_version = '2.7.7'
+    ext.hilt_version = '2.50'
+    ext.okhttp_version = '4.12.0'
+    ext.retrofit_version = '2.9.0'
+    ext.coroutines_version = '1.7.3'
+    ext.serialization_version = '1.6.2'
+
     repositories {
         google()
         mavenCentral()
@@ -8,6 +18,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${agpVersion}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
 }
 

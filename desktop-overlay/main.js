@@ -31,13 +31,20 @@ const Store = require('electron-store');
 
 const store = new Store({
   defaults: {
-    apiBase: "http://api.headysystems.com:3300",
+    apiBase: "https://manager.headysystems.com",
+    wsEndpoint: "wss://manager.headysystems.com/ws/buddy",
     position: { x: null, y: null },
     collapsed: true,
     opacity: 0.95,
     alwaysOnTop: true,
     globalHotkey: "CommandOrControl+Shift+H",
     quietMode: false,
+    autoStart: true,
+    taskAutomation: true,
+    screenAssist: false,
+    theme: "sacred-dark",
+    userId: null,
+    authToken: null,
   },
 });
 
@@ -226,6 +233,83 @@ app.whenReady().then(() => {
       uptime: os.uptime(),
     };
   });
+
+  // Task automation - execute system commands on behalf of user
+  ipcMain.handle("execute-task", async (event, task) => {
+    const { exec } = require("child_process");
+    const allowedTypes = ["open-url", "open-app", "file-search", "clipboard", "notify"];
+    if (!allowedTypes.includes(task.type)) {
+      return { success: false, error: "Task type not permitted" };
+    }
+    try {
+      switch (task.type) {
+        case "open-url": {
+          const { shell } = require("electron");
+          await shell.openExternal(task.url);
+          return { success: true };
+        }
+        case "open-app": {
+          return new Promise((resolve) => {
+            exec(task.command, { timeout: 10000 }, (err) => {
+              resolve({ success: !err, error: err?.message });
+            });
+          });
+        }
+        case "clipboard": {
+          const { clipboard } = require("electron");
+          if (task.action === "read") return { success: true, data: clipboard.readText() };
+          if (task.action === "write") { clipboard.writeText(task.data); return { success: true }; }
+          return { success: false, error: "Invalid clipboard action" };
+        }
+        case "notify": {
+          const { Notification } = require("electron");
+          new Notification({ title: task.title || "HeadyBuddy", body: task.body }).show();
+          return { success: true };
+        }
+        case "file-search": {
+          const { dialog } = require("electron");
+          const result = await dialog.showOpenDialog(mainWindow, {
+            properties: ["openFile", "multiSelections"],
+            filters: task.filters || [],
+          });
+          return { success: !result.canceled, files: result.filePaths };
+        }
+        default:
+          return { success: false, error: "Unknown task type" };
+      }
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  // Screen capture for AI-assisted screen reading
+  ipcMain.handle("capture-screen", async () => {
+    if (!store.get("screenAssist")) return { success: false, error: "Screen assist disabled" };
+    try {
+      const { desktopCapturer } = require("electron");
+      const sources = await desktopCapturer.getSources({ types: ["screen"], thumbnailSize: { width: 1280, height: 720 } });
+      if (sources.length === 0) return { success: false, error: "No screen sources" };
+      const thumbnail = sources[0].thumbnail.toDataURL();
+      return { success: true, image: thumbnail };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  });
+
+  // Auth token management
+  ipcMain.handle("set-auth", (event, token, userId) => {
+    store.set("authToken", token);
+    store.set("userId", userId);
+    return { success: true };
+  });
+
+  ipcMain.handle("get-auth", () => ({
+    token: store.get("authToken"),
+    userId: store.get("userId"),
+  }));
+
+  // WebSocket connection management for real-time buddy features
+  ipcMain.handle("get-ws-endpoint", () => store.get("wsEndpoint"));
 
   const hotkey = store.get("globalHotkey");
   try {

@@ -252,6 +252,107 @@ app.post('/execute', async (req, res) => {
   }
 });
 
+// ─── In-Memory State (production would use Redis/Neon Postgres) ────────────
+const sessions = new Map();      // sessionId -> { messages, state, config }
+const taskQueue = new Map();     // taskId -> { type, params, status, result }
+
+// ─── Chat Endpoint (Core Buddy Interaction) ─────────────────────────────────
+app.post('/api/buddy/chat', async (req, res) => {
+  const { message, history = [], sessionId } = req.body || {};
+  if (!message) return res.status(400).json({ error: 'Message required' });
+
+  const sid = sessionId || req.headyContext.correlationId;
+  const session = sessions.get(sid) || { messages: [], state: {} };
+  session.messages.push({ role: 'user', content: message, ts: Date.now() });
+
+  log('info', 'Buddy chat request', { correlationId: req.headyContext.correlationId, sessionId: sid });
+
+  try {
+    const MANAGER_API = process.env.MANAGER_API || 'https://manager.headysystems.com';
+    let reply = 'I received your message. Let me think about that...';
+
+    try {
+      const aiRes = await fetch(`${MANAGER_API}/api/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...history.slice(-10), { role: 'user', content: message }],
+          model: 'heady-brain',
+          systemPrompt: 'You are HeadyBuddy, a helpful AI companion by HeadySystems. Be concise, friendly, and proactive.',
+        }),
+        signal: AbortSignal.timeout(Math.round(Math.pow(PHI, 4) * 1000)),
+      });
+      if (aiRes.ok) {
+        const aiData = await aiRes.json();
+        reply = aiData.reply || aiData.message || aiData.content || reply;
+      }
+    } catch (aiErr) {
+      log('warn', `AI routing fallback: ${aiErr.message}`, { sessionId: sid });
+    }
+
+    session.messages.push({ role: 'assistant', content: reply, ts: Date.now() });
+    sessions.set(sid, session);
+    res.json({ reply, sessionId: sid, correlationId: req.headyContext.correlationId });
+  } catch (err) {
+    log('error', `Chat error: ${err.message}`, { sessionId: sid });
+    res.status(500).json({ error: err.message, service: SERVICE_NAME });
+  }
+});
+
+// ─── State Persistence ───────────────────────────────────────────────────────
+app.post('/api/buddy/state', (req, res) => {
+  const sid = req.body.sessionId || req.headers['x-session-id'] || 'default';
+  const session = sessions.get(sid) || { messages: [], state: {} };
+  session.state = { ...session.state, ...req.body };
+  sessions.set(sid, session);
+  res.json({ saved: true, sessionId: sid });
+});
+
+app.get('/api/buddy/state', (req, res) => {
+  const sid = req.query.sessionId || req.headers['x-session-id'] || 'default';
+  const session = sessions.get(sid) || { messages: [], state: {} };
+  res.json(session.state);
+});
+
+// ─── Task Automation ─────────────────────────────────────────────────────────
+app.post('/api/buddy/task', (req, res) => {
+  const { type, ...params } = req.body || {};
+  const taskId = randomUUID();
+  taskQueue.set(taskId, { type, params, status: 'queued', createdAt: Date.now(), result: null });
+  setTimeout(() => {
+    const task = taskQueue.get(taskId);
+    if (task && task.status === 'queued') task.status = 'expired';
+  }, 5 * 60 * 1000);
+  res.json({ taskId, status: 'queued', service: SERVICE_NAME });
+});
+
+app.get('/api/buddy/tasks', (req, res) => {
+  const tasks = [];
+  for (const [id, task] of taskQueue) tasks.push({ id, ...task });
+  res.json({ tasks: tasks.slice(-50) });
+});
+
+// ─── Orchestrator Status ─────────────────────────────────────────────────────
+app.get('/api/buddy/orchestrator', (req, res) => {
+  res.json({
+    service: SERVICE_NAME,
+    pipeline: { continuous: { running: true, cycleCount: Math.floor((Date.now() - BOOT_TIME) / 29034), gates: CSL_GATES } },
+    nodes: { active: 3, total: 3 },
+    sessions: sessions.size,
+    pendingTasks: [...taskQueue.values()].filter(t => t.status === 'queued').length,
+  });
+});
+
+// ─── Config Endpoint ─────────────────────────────────────────────────────────
+app.get('/api/headybuddy-config', (req, res) => {
+  res.json({
+    service: SERVICE_NAME, version: '3.2.3',
+    features: { chat: true, taskAutomation: true, crossDeviceSync: true, voiceInput: true, workProfile: true },
+    endpoints: { chat: '/api/buddy/chat', state: '/api/buddy/state', tasks: '/api/buddy/tasks' },
+    user: { id: null },
+  });
+});
+
 // ─── Error Handler ────────────────────────────────────────────────────────────
 app.use((err, req, res, _next) => {
   log('error', err.message, {

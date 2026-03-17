@@ -1,15 +1,17 @@
 {
   "name": "headybuddy-desktop",
-  "version": "3.0.0",
-  "description": "HeadyBuddy Desktop Overlay — Always-on AI Companion Widget",
+  "version": "3.1.0",
+  "description": "HeadyBuddy Desktop — AI Companion with Task Automation for Windows, Linux, macOS",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
     "build:widget": "cd ../headybuddy && npm run build",
-    "package:win": "electron-builder --win",
-    "package:mac": "electron-builder --mac",
-    "package:linux": "electron-builder --linux"
+    "package": "npm run build:widget && electron-builder --publish never",
+    "package:win": "npm run build:widget && electron-builder --win",
+    "package:linux": "npm run build:widget && electron-builder --linux",
+    "package:mac": "npm run build:widget && electron-builder --mac",
+    "package:all": "npm run build:widget && electron-builder -mwl"
   },
   "dependencies": {
     "electron-store": "^8.1.0"
@@ -21,6 +23,7 @@
   "build": {
     "appId": "com.headysystems.headybuddy",
     "productName": "HeadyBuddy",
+    "artifactName": "HeadyBuddy-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "dist"
     },
@@ -34,29 +37,54 @@
       {
         "from": "../headybuddy/dist",
         "to": "widget",
-        "filter": [
-          "**/*"
-        ]
+        "filter": ["**/*"]
       }
     ],
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        { "target": "nsis", "arch": ["x64", "arm64"] },
+        { "target": "portable", "arch": ["x64"] }
       ],
-      "icon": "icons/icon.ico"
+      "icon": "icons/icon.ico",
+      "publisherName": "HeadySystems Inc."
     },
-    "mac": {
-      "target": [
-        "dmg"
-      ],
-      "icon": "icons/icon.icns"
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "HeadyBuddy",
+      "runAfterFinish": true
     },
     "linux": {
       "target": [
-        "AppImage"
+        { "target": "AppImage", "arch": ["x64", "arm64"] },
+        { "target": "deb", "arch": ["x64"] },
+        { "target": "snap", "arch": ["x64"] }
       ],
-      "icon": "icons/icon.png"
+      "icon": "icons/icon.png",
+      "category": "Utility",
+      "maintainer": "eric@headyconnection.org",
+      "synopsis": "HeadyBuddy AI Companion",
+      "description": "HeadyBuddy — Your Perfect AI Companion. Task automation, smart assistance, and cloud-powered intelligence.",
+      "desktop": {
+        "Name": "HeadyBuddy",
+        "Comment": "AI Companion by HeadySystems",
+        "Keywords": "AI;Assistant;Companion;Automation;HeadySystems",
+        "StartupWMClass": "headybuddy-desktop"
+      }
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ],
+      "icon": "icons/icon.icns",
+      "category": "public.app-category.productivity"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "HeadyMe",
+      "repo": "headybuddy-desktop"
     }
   }
 }
