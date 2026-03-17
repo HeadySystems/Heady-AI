@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HeadyMe Onboarding — Set up your AI-powered workspace">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>Welcome to HeadyMe</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/onboarding.css">
+
+  <!-- Firebase Auth SDK (compat for broad browser support) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" defer></script>
+
+  <!-- Main onboarding module -->
+  <script type="module" src="js/onboarding.js"></script>
+</head>
+<body>
+
+  <!-- Particle Background -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- Confetti (rendered on completion) -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Screen reader announcer -->
+  <div id="stage-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="onboarding-page">
+
+    <!-- ============ Header ============ -->
+    <header class="onboarding-header">
+      <div class="logo" aria-label="HeadyMe">
+        <span class="logo-brain" aria-hidden="true">🧠</span>
+        <span class="logo-text">Heady<span>Me</span></span>
+      </div>
+    </header>
+
+    <!-- ============ Progress Bar ============ -->
+    <nav class="progress-container" aria-label="Onboarding progress">
+      <div class="progress-steps">
+        <!-- Step 1 -->
+        <div class="progress-step active" data-step="0">
+          <div class="step-indicator">
+            <span class="step-number">1</span>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="step-label">Sign In</span>
+        </div>
+
+        <div class="step-connector"><div class="connector-fill"></div></div>
+
+        <!-- Step 2 -->
+        <div class="progress-step" data-step="1">
+          <div class="step-indicator">
+            <span class="step-number">2</span>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="step-label">Identity</span>
+        </div>
+
+        <div class="step-connector"><div class="connector-fill"></div></div>
+
+        <!-- Step 3 -->
+        <div class="progress-step" data-step="2">
+          <div class="step-indicator">
+            <span class="step-number">3</span>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="step-label">Email</span>
+        </div>
+
+        <div class="step-connector"><div class="connector-fill"></div></div>
+
+        <!-- Step 4 -->
+        <div class="progress-step" data-step="3">
+          <div class="step-indicator">
+            <span class="step-number">4</span>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="step-label">Permissions</span>
+        </div>
+
+        <div class="step-connector"><div class="connector-fill"></div></div>
+
+        <!-- Step 5 -->
+        <div class="progress-step" data-step="4">
+          <div class="step-indicator">
+            <span class="step-number">5</span>
+            <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="step-label">HeadyBuddy</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ Wizard Container ============ -->
+    <main class="wizard-container">
+      <div class="wizard-card">
+
+        <!-- ======== Stage 1: Sign In ======== -->
+        <div class="stage-panel active" data-stage="auth" role="region" aria-label="Sign In">
+          <div class="stage-content">
+            <h2 class="stage-heading" tabindex="-1">Sign In to HeadyMe</h2>
+            <p class="stage-subheading">Choose a provider to get started. Your account stays linked to this identity.</p>
+
+            <!-- Tier 1: Native Firebase Providers -->
+            <div class="provider-section-label">Social &amp; Platform Accounts</div>
+            <div class="provider-grid" role="group" aria-label="Social sign-in providers">
+              <button type="button" class="provider-btn" data-provider="google.com" aria-label="Sign in with Google">
+                <span class="provider-icon" aria-hidden="true">G</span>
+                <span class="provider-name">Google</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="github.com" aria-label="Sign in with GitHub">
+                <span class="provider-icon" aria-hidden="true">&#128025;</span>
+                <span class="provider-name">GitHub</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="microsoft.com" aria-label="Sign in with Microsoft">
+                <span class="provider-icon" aria-hidden="true">&#9638;</span>
+                <span class="provider-name">Microsoft</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="apple.com" aria-label="Sign in with Apple">
+                <span class="provider-icon" aria-hidden="true">&#63743;</span>
+                <span class="provider-name">Apple</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="twitter.com" aria-label="Sign in with X (Twitter)">
+                <span class="provider-icon" aria-hidden="true">&#120143;</span>
+                <span class="provider-name">X / Twitter</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="facebook.com" aria-label="Sign in with Facebook">
+                <span class="provider-icon" aria-hidden="true">f</span>
+                <span class="provider-name">Facebook</span>
+              </button>
+            </div>
+
+            <!-- Tier 2: OIDC Custom Providers -->
+            <div class="provider-section-label">Developer &amp; Community</div>
+            <div class="provider-grid" role="group" aria-label="OIDC sign-in providers">
+              <button type="button" class="provider-btn" data-provider="oidc.huggingface" aria-label="Sign in with HuggingFace">
+                <span class="provider-icon" aria-hidden="true">&#129303;</span>
+                <span class="provider-name">HuggingFace</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="oidc.discord" aria-label="Sign in with Discord">
+                <span class="provider-icon" aria-hidden="true">&#128172;</span>
+                <span class="provider-name">Discord</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="oidc.slack" aria-label="Sign in with Slack">
+                <span class="provider-icon" aria-hidden="true">&#9874;</span>
+                <span class="provider-name">Slack</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="oidc.linkedin" aria-label="Sign in with LinkedIn">
+                <span class="provider-icon" aria-hidden="true">in</span>
+                <span class="provider-name">LinkedIn</span>
+              </button>
+              <button type="button" class="provider-btn" data-provider="oidc.spotify" aria-label="Sign in with Spotify">
+                <span class="provider-icon" aria-hidden="true">&#9835;</span>
+                <span class="provider-name">Spotify</span>
+              </button>
+            </div>
+
+            <!-- Email/Password -->
+            <div class="divider"><span>or sign in with email</span></div>
+
+            <form id="email-signin-form" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="auth-email">Email address</label>
+                <input class="form-input" type="email" id="auth-email"
+                       placeholder="you@example.com" autocomplete="email"
+                       aria-describedby="auth-email-msg" required />
+                <div id="auth-email-msg" class="field-message" aria-live="polite"></div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="auth-password">Password</label>
+                <div class="password-wrapper">
+                  <input class="form-input" type="password" id="auth-password"
+                         placeholder="Your password" autocomplete="current-password"
+                         minlength="8" required />
+                  <button type="button" class="password-toggle" data-target="auth-password" aria-label="Toggle password visibility">&#128065;</button>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full" id="email-signin-btn">
+                <span class="btn-text">Sign In</span>
+              </button>
+              <p class="helper-text" style="text-align: center; margin-top: var(--space-md);">
+                Don't have an account? We'll create one automatically.
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <!-- ======== Stage 2: Identity ======== -->
+        <div class="stage-panel" data-stage="identity" role="region" aria-label="Create Your Identity">
+          <h2 class="stage-heading" tabindex="-1">Create Your Identity</h2>
+          <p class="stage-subheading">Choose a unique username for your HeadyMe account.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="identity-username">Username</label>
+            <div class="input-with-suffix">
+              <input class="form-input" type="text" id="identity-username"
+                     placeholder="yourname" autocomplete="username"
+                     maxlength="30" pattern="[a-z0-9._-]+"
+                     aria-describedby="username-msg" />
+              <span class="input-suffix">@headyme.com</span>
+            </div>
+            <div id="username-msg" class="field-message" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="identity-password">Password <span style="color: var(--text-muted); font-weight: 400;">(optional if using OAuth)</span></label>
+            <div class="password-wrapper">
+              <input class="form-input" type="password" id="identity-password"
+                     placeholder="Min. 8 characters" autocomplete="new-password" minlength="8"
+                     aria-describedby="identity-password-msg" />
+              <button type="button" class="password-toggle" data-target="identity-password" aria-label="Toggle password visibility">&#128065;</button>
+            </div>
+            <div id="identity-password-msg" class="field-message" aria-live="polite"></div>
+            <div class="passkey-option">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">&#128273;</span>
+              <button type="button" id="use-passkey-btn">Use Passkey instead</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="identity-displayname">Display Name</label>
+            <input class="form-input" type="text" id="identity-displayname"
+                   placeholder="Your full name" autocomplete="name" maxlength="100"
+                   aria-describedby="identity-preview-text" />
+          </div>
+
+          <div class="identity-preview" id="identity-preview-text" aria-live="polite">
+            You'll be known as <strong>Your Name</strong> (<strong>username</strong>@headyme.com)
+          </div>
+
+          <div class="action-bar">
+            <button type="button" class="btn btn-ghost" id="identity-back">&larr; Back</button>
+            <button type="button" class="btn btn-primary" id="identity-continue">
+              <span class="btn-text">Continue</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ======== Stage 3: Email ======== -->
+        <div class="stage-panel" data-stage="email" role="region" aria-label="Your Email">
+          <h2 class="stage-heading" tabindex="-1">Your Email</h2>
+          <p class="stage-subheading">How would you like to receive email at your HeadyMe address?</p>
+
+          <div class="option-cards">
+            <!-- Option 1: Secure Inbox -->
+            <div class="option-card" data-choice="inbox" role="radio" aria-checked="false" tabindex="0">
+              <div class="radio-dot"></div>
+              <div class="option-card-header">
+                <span class="option-card-icon" aria-hidden="true">&#128274;</span>
+                <span class="option-card-title">Secure Inbox</span>
+              </div>
+              <div class="option-card-desc">
+                Use <strong>headyme.com/mail</strong> &mdash; our built-in, end-to-end encrypted email client.
+                Zero-knowledge encryption. No ads. No tracking.
+              </div>
+              <div class="email-visual">
+                &#9993;&#65039; &rarr; &#128272; headyme.com/mail &rarr; You
+              </div>
+            </div>
+
+            <!-- Option 2: Forward -->
+            <div class="option-card" data-choice="forward" role="radio" aria-checked="false" tabindex="0">
+              <div class="radio-dot"></div>
+              <div class="option-card-header">
+                <span class="option-card-icon" aria-hidden="true">&#8599;&#65039;</span>
+                <span class="option-card-title">Forward to Existing Email</span>
+              </div>
+              <div class="option-card-desc">
+                Messages sent to your @headyme.com address will be forwarded to your existing inbox.
+              </div>
+              <div class="option-card-details">
+                <label class="form-label" for="forward-email">Forwarding address</label>
+                <input class="form-input" type="email" id="forward-email"
+                       placeholder="you@gmail.com" autocomplete="email" />
+                <div class="email-visual" style="margin-top: var(--space-sm);">
+                  &#9993;&#65039; &rarr; @headyme.com &rarr; &#8599;&#65039; your@email.com
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="helper-text" style="text-align: center;">You can change this anytime in Settings.</p>
+
+          <div class="action-bar">
+            <button type="button" class="btn btn-ghost" id="email-back">&larr; Back</button>
+            <button type="button" class="btn btn-primary" id="email-continue">
+              <span class="btn-text">Continue</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ======== Stage 4: Permissions ======== -->
+        <div class="stage-panel" data-stage="permissions" role="region" aria-label="Permissions">
+          <h2 class="stage-heading" tabindex="-1">How Should Heady Operate?</h2>
+          <p class="stage-subheading">Choose how your data is stored and accessed.</p>
+
+          <div class="option-cards">
+            <!-- Cloud Only -->
+            <div class="option-card" data-choice="cloud" role="radio" aria-checked="false" tabindex="0">
+              <div class="radio-dot"></div>
+              <div class="option-card-header">
+                <span class="option-card-icon" aria-hidden="true">&#9729;&#65039;</span>
+                <span class="option-card-title">Cloud Only</span>
+              </div>
+              <div class="option-card-desc">
+                All data lives in Heady Cloud. Access from any device, anywhere.
+                No local setup required.
+              </div>
+            </div>
+
+            <!-- Hybrid -->
+            <div class="option-card" data-choice="hybrid" role="radio" aria-checked="false" tabindex="0">
+              <div class="radio-dot"></div>
+              <div class="option-card-header">
+                <span class="option-card-icon" aria-hidden="true">&#128256;</span>
+                <span class="option-card-title">Hybrid</span>
+              </div>
+              <div class="option-card-desc">
+                Cloud + local filesystem. Your device connects via a secure Tailscale mesh network.
+                Best for developers and power users.
+              </div>
+              <div class="option-card-details">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" for="device-name">Device name</label>
+                  <input class="form-input" type="text" id="device-name"
+                         placeholder="e.g. eric-macbook" maxlength="50" autocomplete="off" />
+                  <div class="helper-text">
+                    After onboarding, you'll install the HeadyMe agent and connect via Tailscale.
+                    We'll walk you through it step by step.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permissions extras: analytics opt-in + data region -->
+          <div class="permissions-extras">
+            <div class="toggle-row" style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: var(--space-md);">
+              <label class="form-label" for="analytics-optin" style="margin-bottom: 0;">Share anonymous usage analytics</label>
+              <input type="checkbox" id="analytics-optin" checked />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="data-region">Data Region</label>
+              <select class="form-input" id="data-region">
+                <option value="us-east" selected>US East</option>
+                <option value="us-west">US West</option>
+                <option value="eu-west">EU West</option>
+                <option value="ap-south">Asia Pacific South</option>
+                <option value="ap-northeast">Asia Pacific Northeast</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="privacy-note">
+            <span class="privacy-note-icon" aria-hidden="true">&#128737;&#65039;</span>
+            <span>Your data is encrypted with <strong>AES-256-GCM</strong>. You own it. We can't read it. You can export or delete everything at any time.</span>
+          </div>
+
+          <div class="action-bar">
+            <button type="button" class="btn btn-ghost" id="perms-back">&larr; Back</button>
+            <button type="button" class="btn btn-primary" id="perms-continue">
+              <span class="btn-text">Continue</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ======== Stage 5: HeadyBuddy ======== -->
+        <div class="stage-panel" data-stage="buddy" role="region" aria-label="HeadyBuddy Setup">
+          <div class="stage-content">
+            <!-- Rendered by BuddySetup -->
+          </div>
+
+          <div style="padding: 0 var(--wizard-padding) var(--wizard-padding);">
+            <div class="action-bar">
+              <button type="button" class="btn btn-ghost" id="buddy-back">&larr; Back</button>
+              <div class="action-bar-right">
+                <button type="button" class="btn btn-ghost" id="buddy-skip">Skip for now</button>
+                <button type="button" class="btn btn-primary" id="buddy-continue">
+                  <span class="btn-text">Finish Setup</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======== Stage 6: Complete ======== -->
+        <div class="stage-panel" data-stage="complete" role="region" aria-label="Setup Complete">
+          <div class="completion-header">
+            <div class="completion-emoji" aria-hidden="true">&#127881;</div>
+            <h2 class="stage-heading" tabindex="-1">You're All Set!</h2>
+            <p class="stage-subheading">Your HeadyMe workspace is ready. Here's a summary of your setup.</p>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-row">
+              <span class="summary-label">Username</span>
+              <span class="summary-value" id="summary-username">&mdash;</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Email</span>
+              <span class="summary-value" id="summary-email">&mdash;</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Mode</span>
+              <span class="summary-value" id="summary-mode">&mdash;</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Buddy</span>
+              <span class="summary-value" id="summary-buddy">&mdash;</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Archetype</span>
+              <span class="summary-value" id="summary-archetype">&mdash;</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">API Key</span>
+              <span class="summary-value">
+                <span class="api-key-display" id="api-key-value">&mdash;</span>
+                <button class="reveal-btn" id="reveal-api-key" type="button">Reveal</button>
+              </span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Interfaces</span>
+              <span class="summary-value">
+                <span class="interface-tags" id="summary-interfaces">&mdash;</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="privacy-note" style="margin-top: 0; margin-bottom: var(--space-xl);">
+            <span class="privacy-note-icon" aria-hidden="true">&#9888;&#65039;</span>
+            <span>Your API key is shown here <strong>only once</strong>. Save it now &mdash; you can regenerate it later in Settings, but you won't see this value again.</span>
+          </div>
+
+          <div class="completion-actions">
+            <button type="button" class="btn btn-primary btn-large btn-full" id="launch-dashboard">
+              <span class="btn-text">&#128640; Launch Dashboard</span>
+            </button>
+            <a href="/docs" class="btn btn-ghost" style="margin-top: var(--space-sm);">
+              Explore Documentation &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ============ Footer ============ -->
+    <footer class="onboarding-footer">
+      <p>&copy; 2026 HeadyMe &mdash; The Heady Connection Inc.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

@@ -152,3 +152,4 @@ core.*
 .clinic/
 .secrets
 .vault-token
+*.zip
