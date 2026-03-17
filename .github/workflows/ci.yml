@@ -1,65 +1,277 @@
-name: CI
+# ============================================================================
+# HEADY CI/CD — Primary Pipeline
+# .github/workflows/ci.yml
+#
+# Addresses Gap #5: Only 2 workflows existed (ci.yml + headybuddy-android.yml)
+# This replaces the minimal ci.yml with a comprehensive pipeline that maps
+# to the Systematic Scan Protocol (§7) and 4-Layer Testing Fortress (§27).
+#
+# Triggers: PRs to main/staging, pushes to main/staging/develop
+# ============================================================================
+
+name: Heady CI Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging, develop]
   pull_request:
-    branches: [main]
+    branches: [main, staging]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '9'
+
 jobs:
-  build:
+  # ════════════════════════════════════════════════════════════════════
+  # LAYER 0: Systematic Scan Protocol (§7) — blocks everything on failure
+  # ════════════════════════════════════════════════════════════════════
+  systematic-scan:
+    name: '§7 Systematic Scan'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22]
-
     steps:
       - uses: actions/checkout@v4
+
+      - name: 'STEP 2 — Localhost contamination (ZERO TOLERANCE)'
+        run: |
+          HITS=$(grep -rn "localhost\|127\.0\.0\.1\|0\.0\.0\.0" \
+            --include="*.js" --include="*.mjs" --include="*.ts" --include="*.php" \
+            --include="*.twig" --include="*.yaml" --include="*.yml" --include="*.json" \
+            --exclude-dir=node_modules --exclude-dir=vendor --exclude-dir=.git \
+            --exclude="*.test.*" --exclude="*.spec.*" \
+            . || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::LOCALHOST CONTAMINATION DETECTED (Law 0 violation)"
+            echo "$HITS"
+            exit 1
+          fi
+          echo "✓ Zero localhost references found"
+
+      - name: 'STEP 3 — Build step contamination (ZERO TOLERANCE)'
+        run: |
+          # Check for React/Vue/build tool references in frontend code
+          FRAMEWORK_HITS=$(find . -name "*.jsx" -o -name "*.tsx" -o -name "*.vue" -o -name "*.svelte" \
+            -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/vendor/*" 2>/dev/null || true)
+          if [ -n "$FRAMEWORK_HITS" ]; then
+            echo "::error::BUILD STEP CONTAMINATION: Framework files found (Law 3 violation)"
+            echo "$FRAMEWORK_HITS"
+            exit 1
+          fi
+          echo "✓ Zero frontend framework files found"
+
+      - name: 'STEP 4 — console.* contamination'
+        run: |
+          CONSOLE_HITS=$(grep -rn "console\.\(log\|warn\|error\|info\|debug\)" \
+            --include="*.js" --include="*.mjs" --include="*.ts" \
+            --exclude-dir=node_modules --exclude-dir=vendor --exclude-dir=.git \
+            --exclude="*.test.*" --exclude="*.spec.*" \
+            src/ || true)
+          if [ -n "$CONSOLE_HITS" ]; then
+            echo "::warning::console.* usage detected in src/ (LR-006 violation)"
+            echo "$CONSOLE_HITS"
+            # Warning, not failure — gives time to migrate
+          fi
+
+      - name: 'STEP 5 — PQC compliance (Ed25519 retired)'
+        run: |
+          ED_HITS=$(grep -rn "Ed25519\|ed25519\|ed_25519" \
+            --include="*.js" --include="*.mjs" --include="*.ts" --include="*.php" \
+            --exclude-dir=node_modules --exclude-dir=vendor --exclude-dir=.git \
+            . || true)
+          if [ -n "$ED_HITS" ]; then
+            echo "::warning::Ed25519 references found (Law 4 — should be ML-DSA-65)"
+            echo "$ED_HITS"
+          fi
+
+  # ════════════════════════════════════════════════════════════════════
+  # LAYER 0: Lint + Type Check
+  # ════════════════════════════════════════════════════════════════════
+  lint:
+    name: 'Lint & Type Check'
+    runs-on: ubuntu-latest
+    needs: [systematic-scan]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
         with:
-          lfs: true
+          version: ${{ env.PNPM_VERSION }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+      - run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: npm run lint --if-present
-        continue-on-error: true
+      - name: ESLint
+        run: pnpm exec eslint src/ --max-warnings=0
 
-      - name: Build
-        run: npm run build --if-present
-        continue-on-error: true
+      - name: TypeScript
+        run: pnpm exec tsc --noEmit
 
-      - name: Test
-        run: npm test --if-present
-        continue-on-error: true
-
+  # ════════════════════════════════════════════════════════════════════
+  # LAYER 0: Security Scan (SAST + dependency audit)
+  # ════════════════════════════════════════════════════════════════════
   security:
+    name: 'Security Scan'
     runs-on: ubuntu-latest
+    needs: [systematic-scan]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: 22
+          version: ${{ env.PNPM_VERSION }}
 
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
 
-      - name: Security audit
-        run: npm audit --omit=dev || true
+      - run: pnpm install --frozen-lockfile
 
-      - name: Secret scan
-        uses: gitleaks/gitleaks-action@v2
-        continue-on-error: true
+      # LR-002: pnpm audit exclusively
+      - name: Dependency audit
+        run: pnpm audit --audit-level=high
+
+      - name: Semgrep SAST
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/javascript
+            p/typescript
+            p/nodejs
+            p/owasp-top-ten
         env:
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
+        if: ${{ env.SEMGREP_TOKEN != '' }}
+        continue-on-error: true
+
+      - name: Secret detection (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ════════════════════════════════════════════════════════════════════
+  # LAYER 1: Unit Tests (Vitest, ≥90% coverage target)
+  # ════════════════════════════════════════════════════════════════════
+  test-unit:
+    name: 'Unit Tests'
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm exec vitest run --coverage
+        env:
+          NODE_ENV: test
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  # ════════════════════════════════════════════════════════════════════
+  # LAYER 2: Integration Tests (requires services)
+  # ════════════════════════════════════════════════════════════════════
+  test-integration:
+    name: 'Integration Tests'
+    runs-on: ubuntu-latest
+    needs: [test-unit, security]
+    services:
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: heady_test
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: heady_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run migrations
+        run: psql "$DATABASE_URL" -f db/migrations/001_foundation.sql
+        env:
+          DATABASE_URL: postgresql://heady_test:test_password@localhost:5432/heady_test
+
+      - name: Run integration tests
+        run: pnpm exec vitest run --config vitest.integration.config.js
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://heady_test:test_password@localhost:5432/heady_test
+          REDIS_URL: redis://localhost:6379
+
+  # ════════════════════════════════════════════════════════════════════
+  # BUILD: Docker image for Cloud Run
+  # ════════════════════════════════════════════════════════════════════
+  build:
+    name: 'Build Docker Image'
+    runs-on: ubuntu-latest
+    needs: [test-integration]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging')
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Build and push
+        run: |
+          IMAGE="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/heady/heady-manager"
+          TAG="${{ github.sha }}"
+          docker build -f Dockerfile.production -t "$IMAGE:$TAG" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$TAG"
+          docker push "$IMAGE:latest"
