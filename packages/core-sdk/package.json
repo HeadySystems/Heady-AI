@@ -1,0 +1,12 @@
+{
+  "name": "@heady/core-sdk",
+  "version": "1.0.0",
+  "description": "Heady core-sdk package",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src/"
+  },
+  "keywords": ["heady", "core-sdk"],
+  "license": "UNLICENSED"
+}

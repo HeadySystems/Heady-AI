@@ -1,0 +1,12 @@
+{
+  "name": "@heady/heady-ui",
+  "version": "1.0.0",
+  "description": "Heady heady-ui package",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src/"
+  },
+  "keywords": ["heady", "heady-ui"],
+  "license": "UNLICENSED"
+}
