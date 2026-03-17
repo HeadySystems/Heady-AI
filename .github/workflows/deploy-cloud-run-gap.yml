@@ -1,0 +1,140 @@
+# ============================================================================
+# HEADY CI/CD — Cloud Run Deployment
+# .github/workflows/deploy-cloud-run.yml
+#
+# Deploys heady-manager to Cloud Run with φ-stepped canary rollout:
+#   5% → 25% → 50% → 100% (matching §27 Layer 4 canary spec)
+# Auto-rollback on failure within 30 seconds.
+# ============================================================================
+
+name: Deploy to Cloud Run
+
+on:
+  workflow_run:
+    workflows: ['Heady CI Pipeline']
+    types: [completed]
+    branches: [main]
+
+  workflow_dispatch:
+    inputs:
+      skip_canary:
+        description: 'Skip canary rollout (emergency deploy)'
+        type: boolean
+        default: false
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  SERVICE: heady-manager
+  IMAGE: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/heady/heady-manager
+
+jobs:
+  deploy:
+    name: 'Deploy to Cloud Run'
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Get current revision (for rollback)
+        id: current
+        run: |
+          CURRENT=$(gcloud run services describe $SERVICE \
+            --region=$REGION --format='value(status.traffic[0].revisionName)' 2>/dev/null || echo "none")
+          echo "revision=$CURRENT" >> $GITHUB_OUTPUT
+          echo "Current production revision: $CURRENT"
+
+      - name: Deploy new revision (no traffic)
+        id: deploy
+        run: |
+          gcloud run deploy $SERVICE \
+            --image "$IMAGE:${{ github.sha }}" \
+            --region $REGION \
+            --no-traffic \
+            --min-instances=1 \
+            --max-instances=10 \
+            --memory=2Gi \
+            --cpu=1 \
+            --port=3301 \
+            --concurrency=250 \
+            --timeout=300s \
+            --set-env-vars="HEADY_VERSION=${{ github.sha }}" \
+            --format='value(status.latestCreatedRevisionName)'
+          
+          NEW_REV=$(gcloud run services describe $SERVICE \
+            --region=$REGION --format='value(status.latestCreatedRevisionName)')
+          echo "revision=$NEW_REV" >> $GITHUB_OUTPUT
+          echo "New revision: $NEW_REV"
+
+      # ── φ-stepped canary rollout ──────────────────────────────────
+      - name: 'Canary: 5% traffic'
+        if: ${{ !inputs.skip_canary }}
+        run: |
+          gcloud run services update-traffic $SERVICE \
+            --region=$REGION \
+            --to-revisions="${{ steps.deploy.outputs.revision }}=5"
+          echo "Routing 5% traffic to new revision"
+
+      - name: 'Canary: Wait 60s + health check'
+        if: ${{ !inputs.skip_canary }}
+        run: |
+          sleep 60
+          # Check error rate from Cloud Run metrics
+          ERRORS=$(gcloud logging read \
+            "resource.type=\"cloud_run_revision\" AND resource.labels.revision_name=\"${{ steps.deploy.outputs.revision }}\" AND severity>=ERROR" \
+            --limit=10 --format="value(timestamp)" 2>/dev/null | wc -l)
+          
+          if [ "$ERRORS" -gt "5" ]; then
+            echo "::error::Canary failed: $ERRORS errors in 60s"
+            gcloud run services update-traffic $SERVICE \
+              --region=$REGION \
+              --to-revisions="${{ steps.current.outputs.revision }}=100"
+            exit 1
+          fi
+          echo "Canary healthy at 5%: $ERRORS errors"
+
+      - name: 'Canary: 25% traffic'
+        if: ${{ !inputs.skip_canary }}
+        run: |
+          gcloud run services update-traffic $SERVICE \
+            --region=$REGION \
+            --to-revisions="${{ steps.deploy.outputs.revision }}=25"
+          sleep 30
+
+      - name: 'Canary: 50% traffic'
+        if: ${{ !inputs.skip_canary }}
+        run: |
+          gcloud run services update-traffic $SERVICE \
+            --region=$REGION \
+            --to-revisions="${{ steps.deploy.outputs.revision }}=50"
+          sleep 30
+
+      - name: 'Promote: 100% traffic'
+        run: |
+          gcloud run services update-traffic $SERVICE \
+            --region=$REGION \
+            --to-revisions="${{ steps.deploy.outputs.revision }}=100"
+          echo "✓ Full deployment complete"
+
+      # ── Rollback on failure ─────────────────────────────────────
+      - name: 'Rollback on failure'
+        if: failure()
+        run: |
+          echo "::error::Deployment failed, rolling back to ${{ steps.current.outputs.revision }}"
+          gcloud run services update-traffic $SERVICE \
+            --region=$REGION \
+            --to-revisions="${{ steps.current.outputs.revision }}=100"
+          echo "✓ Rollback complete"
