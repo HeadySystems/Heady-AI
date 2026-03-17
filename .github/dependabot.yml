@@ -1,30 +1,36 @@
-# Heady™ Dependabot Configuration
-# Auto-raise PRs for vulnerable + outdated dependencies
+# v9.0 Blueprint §7: Dependabot grouped dependency updates
+# Groups patch/minor production deps into one PR, dev deps into another.
+# Auto-merge non-major updates via dependabot/fetch-metadata action.
+
 version: 2
 updates:
+  # npm dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "security"
-    commit-message:
-      prefix: "deps"
+    open-pull-requests-limit: 5
     groups:
-      production-deps:
-        patterns:
-          - "*"
+      production-patch-minor:
+        dependency-type: "production"
         update-types:
           - "minor"
           - "patch"
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "automated"
 
+  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     labels:
       - "ci"
-      - "dependencies"
+      - "automated"

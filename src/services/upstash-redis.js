@@ -222,6 +222,120 @@ class UpstashClient {
     async ping() { return this._exec(['PING']); }
     async dbsize() { return this._exec(['DBSIZE']); }
     async flushdb() { return this._exec(['FLUSHDB']); }
+    async setex(key, seconds, value) { return this._exec(['SETEX', key, seconds, value]); }
+
+    // ── Redis Streams (v9.0 Blueprint §1: 22-stage pipeline) ──
+    async xadd(stream, id = '*', ...fieldsAndValues) {
+        return this._exec(['XADD', stream, id, ...fieldsAndValues]);
+    }
+
+    async xreadgroup(group, consumer, stream, id = '>', count = 10, blockMs = null) {
+        const cmd = ['XREADGROUP', 'GROUP', group, consumer];
+        if (count) cmd.push('COUNT', count);
+        if (blockMs !== null) cmd.push('BLOCK', blockMs);
+        cmd.push('STREAMS', stream, id);
+        return this._exec(cmd);
+    }
+
+    async xack(stream, group, ...ids) {
+        return this._exec(['XACK', stream, group, ...ids]);
+    }
+
+    async xautoclaim(stream, group, consumer, minIdleMs, startId = '0-0', count = 100) {
+        return this._exec(['XAUTOCLAIM', stream, group, consumer, minIdleMs, startId, 'COUNT', count]);
+    }
+
+    async xpending(stream, group, start = '-', end = '+', count = 10) {
+        return this._exec(['XPENDING', stream, group, start, end, count]);
+    }
+
+    async xlen(stream) { return this._exec(['XLEN', stream]); }
+
+    async xgroupCreate(stream, group, id = '$', mkstream = true) {
+        const cmd = ['XGROUP', 'CREATE', stream, group, id];
+        if (mkstream) cmd.push('MKSTREAM');
+        return this._exec(cmd);
+    }
+
+    async xtrim(stream, maxlen) {
+        return this._exec(['XTRIM', stream, 'MAXLEN', '~', maxlen]);
+    }
+
+    // ── Tenant Namespace Helpers (v9.0 Blueprint §1) ──────────
+    tenantKey(tenantId, ...parts) {
+        return `tenant:{${tenantId}}:${parts.join(':')}`;
+    }
+
+    sessionKey(tenantId, sessionId) {
+        return this.tenantKey(tenantId, 'session', sessionId);
+    }
+
+    jobKey(tenantId, jobId) {
+        return this.tenantKey(tenantId, 'job', jobId, 'status');
+    }
+
+    llmCacheKey(tenantId, hash) {
+        return this.tenantKey(tenantId, 'cache', 'llm', hash);
+    }
+
+    pipelineStreamKey(tenantId) {
+        return this.tenantKey(tenantId, 'pipeline', 'tasks');
+    }
+
+    // ── Worker Heartbeat (v9.0 Blueprint §1: 30s SETEX) ───────
+    async heartbeat(workerId, ttlSec = 30) {
+        const key = `heady:worker:${workerId}:heartbeat`;
+        return this.setex(key, ttlSec, Date.now().toString());
+    }
+
+    async isWorkerAlive(workerId) {
+        const key = `heady:worker:${workerId}:heartbeat`;
+        const val = await this.get(key);
+        return val !== null;
+    }
+
+    // ── Swarm Roster (v9.0 Blueprint §1) ──────────────────────
+    async swarmJoin(swarmName, workerId) {
+        return this.sadd(`heady:swarm:${swarmName}:roster`, workerId);
+    }
+
+    async swarmMembers(swarmName) {
+        return this.smembers(`heady:swarm:${swarmName}:roster`);
+    }
+
+    // ── Sliding Window Rate Limiter (v9.0 Blueprint §1) ───────
+    async rateLimit(identifier, windowSec = 60, maxRequests = 100) {
+        const now = Date.now();
+        const windowKey = `ratelimit:${identifier}`;
+        const windowStart = now - windowSec * 1000;
+
+        const results = await this.pipeline([
+            ['ZREMRANGEBYSCORE', windowKey, 0, windowStart],
+            ['ZADD', windowKey, now, `${now}:${Math.random().toString(36).slice(2, 8)}`],
+            ['ZCARD', windowKey],
+            ['EXPIRE', windowKey, windowSec],
+        ]);
+
+        const currentCount = results[2];
+        return {
+            allowed: currentCount <= maxRequests,
+            remaining: Math.max(0, maxRequests - currentCount),
+            resetMs: windowSec * 1000,
+        };
+    }
+
+    // ── Dead Letter Routing (v9.0 Blueprint §1: 3 failed → DLQ)
+    async routeToDeadLetter(stream, group, messageId, payload) {
+        const dlqStream = `${stream}:dlq`;
+        await this.xadd(dlqStream, '*',
+            'original_stream', stream,
+            'original_group', group,
+            'original_id', messageId,
+            'payload', JSON.stringify(payload),
+            'failed_at', new Date().toISOString()
+        );
+        await this.xack(stream, group, messageId);
+    }
 
     getStats() {
         return {
