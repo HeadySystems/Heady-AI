@@ -5,7 +5,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
-const { PHI_TIMEOUT_REQUEST } = require('@heady/phi-math');
+const { PHI_TIMEOUT_REQUEST } = require('../phi-math');
 
 // ═══════════════════════════════════════════════════════════════════
 // Log Levels and Configuration
@@ -144,6 +144,6 @@ module.exports = {
   // Log levels for reference
   LOG_LEVELS,
 
-  // Re-export phi-math constants for convenience
+  // Re-export phi-math constants for convenience (via relative path)
   PHI_TIMEOUT_REQUEST,
 };
