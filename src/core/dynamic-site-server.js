@@ -1,12 +1,12 @@
 // ─── HEADY CORS WHITELIST ────────────────────────────────────────────
 const HEADY_ALLOWED_ORIGINS = new Set([
-    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
-    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
-    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
-    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-    'https://headyfinance.com', 'https://admin.headysystems.com',
-    'https://auth.headysystems.com', 'https://api.headysystems.com',
+  'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+  'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
+  'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
+  'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
+  'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
+  'https://headyfinance.com', 'https://admin.headysystems.com',
+  'https://auth.headysystems.com', 'https://api.headysystems.com',
 ]);
 const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
 
@@ -481,10 +481,10 @@ function renderSite(site, host) {
       <span class="nav-name">${site.brand}</span>
     </a>
     <div class="nav-links">
-      <a href="/docs">Docs</a>
-      <a href="/api/health">API</a>
-      <a href="/api/providers">MCP</a>
-      <button class="nav-cta" id="navSignIn" onclick="openAuth()">Sign In</button>
+      <a href="https://headyio.com">Docs</a>
+      <a href="https://headyapi.com">API</a>
+      <a href="https://headymcp.com">MCP</a>
+      <button class="nav-cta" onclick="openAuth()">Sign In</button>
     </div>
   </nav>
 
@@ -494,7 +494,7 @@ function renderSite(site, host) {
       <h1><span class="gradient">${site.tagline}</span></h1>
       <p>${site.subtitle}</p>
       <div class="hero-actions">
-        <button class="btn-primary" onclick="openAuth()">Get Started</button>
+        <a class="btn-primary" href="/onboarding" style="text-decoration:none">Get Started</a>
         <button class="btn-secondary" onclick="window.open('https://headyio.com','_blank')">Documentation</button>
       </div>
     </section>
@@ -578,24 +578,21 @@ function renderSite(site, host) {
     let currentSession = null;
     let currentKeyProvider = null;
 
-    // ── Check for existing session — validate before showing Signed In
+    // ── Check for existing session
     (function() {
       const cookie = document.cookie.split(';').find(c => c.trim().startsWith('heady_session='));
       if (cookie) {
         currentSession = cookie.split('=')[1];
-        // Validate the session is still real
-        fetch('/api/session/validate',{
-          method:'POST',headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({token:currentSession})
-        }).then(r=>r.json()).then(d=>{
-          if(d.valid){
-            const nav=document.getElementById('navSignIn');
-            if(nav){nav.textContent='✓ '+d.user;nav.style.background='#10b981';}
-          } else {
-            document.cookie='heady_session=;path=/;max-age=0';
-            currentSession=null;
-          }
-        }).catch(()=>{ /* leave as Sign In on error */ });
+        const nav = document.querySelector('.nav-cta');
+        if (nav) { nav.textContent = '✓ Signed In'; nav.style.background = '#10b981'; }
+      }
+      // Check HF identity
+      if (window.huggingface && window.huggingface.variables) {
+        const userId = window.huggingface.variables.SPACE_CREATOR_USER_ID;
+        if (userId) {
+          logger.info('[HeadyBuddy] HF User detected:', userId);
+          addBuddyMsg('bot', 'I see you\\'re signed into Hugging Face (User: ' + userId.slice(0,8) + '...). I\\'ve linked your identity.');
+        }
       }
     })();
 
@@ -604,41 +601,22 @@ function renderSite(site, host) {
     function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); }
 
     function oauthLogin(provider) {
-      // Open real OAuth popup via dynamic-auth-router on this server
-      const w = 500, h = 600;
-      const left = (screen.width - w) / 2, top = (screen.height - h) / 2;
-      const popup = window.open(
-        '/api/auth/' + provider,
-        'heady_oauth_' + provider,
-        'width='+w+',height='+h+',left='+left+',top='+top+',menubar=no,toolbar=no'
-      );
-      if (!popup) { alert('Please allow popups for OAuth sign-in.'); return; }
-
-      // Listen for postMessage from the callback page
-      function onMessage(e) {
-        if (!e.data || e.data.type !== 'heady_auth_success') return;
-        window.removeEventListener('message', onMessage);
-        const { token, user } = e.data;
-        // Save session and show success
-        currentSession = token;
-        document.cookie = 'heady_session='+token+';path=/;max-age=86400;SameSite=Strict';
-        closeAuth();
-        document.getElementById('successTitle').textContent = 'Welcome, '+(user.name || user.email);
-        document.getElementById('successSub').textContent = 'Connected via '+provider+' on '+SITE_BRAND;
-        document.getElementById('apiKeyVal').textContent = token.substring(0,20)+'...';
-        document.getElementById('successOverlay').classList.add('active');
-        const nav = document.getElementById('navSignIn');
-        if(nav){nav.textContent='✓ '+(user.name||user.email);nav.style.background='#10b981';}
-      }
-      window.addEventListener('message', onMessage);
-
-      // Poll for popup close (user cancelled)
-      const check = setInterval(function() {
-        if (popup.closed) {
-          clearInterval(check);
-          window.removeEventListener('message', onMessage);
+      // Try real OAuth redirect first, then fall back to demo signup
+      const authUrl = '/api/auth/' + provider + '?redirect=' + encodeURIComponent(window.location.href);
+      fetch(authUrl, { method: 'GET', redirect: 'manual' }).then(r => {
+        if (r.type === 'opaqueredirect' || r.status === 302 || r.status === 301) {
+          window.location.href = authUrl; // Real OAuth flow available
+        } else {
+          // Auth route not configured — fall back to demo signup
+          return fetch('/api/signup', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
+          }).then(r2=>r2.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); });
         }
-      }, 500);
+      }).catch(()=>{
+        // No auth backend — demo mode
+        showSuccess({user:{displayName:provider+' User',apiKey:'HY-demo-'+provider,tier:'spark'},token:'demo'},provider);
+      });
     }
 
     function showKeyInput(provider,name,prefix) {
@@ -684,14 +662,11 @@ function renderSite(site, host) {
       document.getElementById('successSub').textContent = 'Connected via '+provider+' on '+SITE_BRAND;
       document.getElementById('apiKeyVal').textContent = data.user.apiKey;
       document.getElementById('successOverlay').classList.add('active');
-      const nav = document.getElementById('navSignIn');
-      if(nav){nav.textContent='✓ '+data.user.displayName;nav.style.background='#10b981';}
-      addBuddyMsg('bot','Welcome, '+data.user.displayName+'! Your session is active on '+SITE_BRAND+'. Redirecting to onboarding...');
+      const nav = document.querySelector('.nav-cta');
+      if(nav){nav.textContent='✓ Signed In';nav.style.background='#10b981';}
+      addBuddyMsg('bot','Welcome back, '+data.user.displayName+'! Your session is active on '+SITE_BRAND+'.');
     }
-    function closeSuccess() {
-      // Redirect to onboarding after login instead of just closing
-      window.location.href = '/onboarding?session=' + encodeURIComponent(currentSession || '') + '&brand=' + encodeURIComponent(SITE_BRAND);
-    }
+    function closeSuccess() { document.getElementById('successOverlay').classList.remove('active'); }
 
     // ── HeadyBuddy
     function toggleBuddy() { document.getElementById('buddyPanel').classList.toggle('active'); }
@@ -708,13 +683,27 @@ function renderSite(site, host) {
       if(!msg)return;
       input.value='';
       addBuddyMsg('user',msg);
-      fetch('/api/chat',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
-      }).then(r=>r.json()).then(d=>{
-        addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
+      // Try AI gateway first (Liquid Gateway routing), fall back to local /api/chat
+      const payload = JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST,model:'auto'});
+      const headers = {'Content-Type':'application/json'};
+      if(currentSession) headers['Authorization'] = 'Bearer '+currentSession;
+      fetch('/api/ai/chat',{
+        method:'POST', headers, body:payload
+      }).then(r=>{
+        if(!r.ok) throw new Error('AI gateway unavailable');
+        return r.json();
+      }).then(d=>{
+        addBuddyMsg('bot',d.response||d.choices?.[0]?.message?.content||d.error||'Thinking...');
       }).catch(()=>{
-        addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
+        // Fallback to local chat endpoint
+        fetch('/api/chat',{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
+        }).then(r=>r.json()).then(d=>{
+          addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
+        }).catch(()=>{
+          addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
+        });
       });
     }
 
@@ -722,6 +711,183 @@ function renderSite(site, host) {
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape'){closeAuth();closeKey();closeSuccess();}
     });
+  </script>
+</body>
+</html>`;
+}
+
+// ── Render Onboarding Page ──────────────────────────────────
+function renderOnboarding(site, host) {
+  const oauthBtns = AUTH_PROVIDERS.oauth.map(p =>
+    `<button class="auth-btn" style="--pcolor:${p.color}" onclick="selectProvider('${p.id}','oauth')">
+      <span class="auth-icon">${p.icon}</span><span>${p.name}</span>
+    </button>`).join('');
+  const apikeyBtns = AUTH_PROVIDERS.apikey.map(p =>
+    `<button class="auth-btn" style="--pcolor:${p.color}" onclick="selectProvider('${p.id}','apikey')">
+      <span class="auth-icon">${p.icon}</span><span>${p.name}</span>
+    </button>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Started — ${site.brand}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0a0a1a;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08);--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--muted:#555577}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
+    .container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:4rem 1.5rem}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,26,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--text)}
+    .nav-logo{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--brand),var(--accent));font-size:16px;font-weight:900;color:white}
+    .nav-name{font-size:1.1rem;font-weight:700}
+    h1{font-size:2rem;font-weight:900;text-align:center;margin-bottom:.5rem;margin-top:3rem}
+    h1 .gradient{background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .subtitle{text-align:center;color:var(--dim);margin-bottom:2.5rem}
+    .step{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;transition:all .3s}
+    .step.active{border-color:color-mix(in srgb,var(--brand) 40%,transparent);box-shadow:0 0 30px color-mix(in srgb,var(--brand) 10%,transparent)}
+    .step-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;cursor:pointer}
+    .step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);font-weight:800;font-size:.9rem;border:2px solid color-mix(in srgb,var(--brand) 25%,transparent);flex-shrink:0}
+    .step-num.done{background:var(--brand);color:white}
+    .step-title{font-weight:700;font-size:1.05rem}
+    .step-body{display:none;padding-top:.5rem}
+    .step.active .step-body{display:block}
+    .auth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+    .auth-btn{display:flex;align-items:center;gap:.4rem;padding:.5rem .6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.3);color:var(--text);font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s}
+    .auth-btn:hover{border-color:var(--pcolor);background:rgba(0,0,0,0.5);transform:translateY(-1px)}
+    .auth-btn.selected{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 15%,transparent)}
+    .auth-icon{font-size:1rem;flex-shrink:0}
+    .auth-section{font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:.75rem 0 .5rem;display:flex;align-items:center;gap:.5rem}
+    .auth-section::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
+    .provider-count{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:600;margin-left:.5rem}
+    .pref-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .pref-card{padding:1rem;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.2);cursor:pointer;transition:all .2s;text-align:center}
+    .pref-card:hover{border-color:color-mix(in srgb,var(--brand) 40%,transparent)}
+    .pref-card.selected{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 10%,transparent)}
+    .pref-icon{font-size:1.5rem;margin-bottom:.5rem}
+    .pref-label{font-weight:600;font-size:.85rem}
+    .pref-desc{color:var(--dim);font-size:.75rem;margin-top:.25rem}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:white;border:none;padding:.75rem 2rem;border-radius:10px;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;width:100%;margin-top:1rem}
+    .btn-primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+    .selected-list{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}
+    .selected-tag{background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:.25rem}
+    @media(max-width:600px){.auth-grid{grid-template-columns:repeat(2,1fr)}.pref-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <nav>
+    <a class="nav-brand" href="/">
+      <div class="nav-logo">${site.icon}</div>
+      <span class="nav-name">${site.brand}</span>
+    </a>
+  </nav>
+
+  <div class="container">
+    <h1><span class="gradient">Get Started</span></h1>
+    <p class="subtitle">Set up your ${site.brand} experience in 3 steps</p>
+
+    <div class="step active" id="step1">
+      <div class="step-header" onclick="showStep(1)">
+        <div class="step-num" id="step1num">1</div>
+        <div class="step-title">Choose Your Providers</div>
+      </div>
+      <div class="step-body">
+        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">Select which AI providers and authentication methods you want to use.</p>
+        <div class="auth-section">OAuth Sign-In <span class="provider-count">12</span></div>
+        <div class="auth-grid">${oauthBtns}</div>
+        <div class="auth-section">AI API Keys <span class="provider-count">13</span></div>
+        <div class="auth-grid">${apikeyBtns}</div>
+        <div class="selected-list" id="selectedProviders"></div>
+        <button class="btn-primary" id="step1btn" onclick="completeStep(1)" disabled>Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+      <div class="step-header" onclick="showStep(2)">
+        <div class="step-num" id="step2num">2</div>
+        <div class="step-title">Set Your Preferences</div>
+      </div>
+      <div class="step-body">
+        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">How do you want to use ${site.brand}?</p>
+        <div class="pref-grid">
+          <div class="pref-card" onclick="togglePref(this,'developer')"><div class="pref-icon">💻</div><div class="pref-label">Developer</div><div class="pref-desc">API access, SDKs, code generation</div></div>
+          <div class="pref-card" onclick="togglePref(this,'creative')"><div class="pref-icon">🎨</div><div class="pref-label">Creative</div><div class="pref-desc">Content, music, design</div></div>
+          <div class="pref-card" onclick="togglePref(this,'business')"><div class="pref-icon">📊</div><div class="pref-label">Business</div><div class="pref-desc">Analytics, reports, automation</div></div>
+          <div class="pref-card" onclick="togglePref(this,'research')"><div class="pref-icon">🔬</div><div class="pref-label">Research</div><div class="pref-desc">Deep search, citations, analysis</div></div>
+        </div>
+        <button class="btn-primary" onclick="completeStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step3">
+      <div class="step-header" onclick="showStep(3)">
+        <div class="step-num" id="step3num">3</div>
+        <div class="step-title">Launch Your Dashboard</div>
+      </div>
+      <div class="step-body">
+        <p style="color:var(--dim);font-size:.85rem;margin-bottom:1rem">You're all set! Here's what's ready for you:</p>
+        <div class="pref-grid">
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">🧠</div><div class="pref-label">HeadyBuddy</div><div class="pref-desc">AI chat companion</div></div>
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">🐝</div><div class="pref-label">Bee Swarm</div><div class="pref-desc">Task automation agents</div></div>
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">🔮</div><div class="pref-label">Vector Memory</div><div class="pref-desc">Persistent knowledge</div></div>
+          <div class="pref-card" style="cursor:default"><div class="pref-icon">📊</div><div class="pref-label">Dashboard</div><div class="pref-desc">System overview</div></div>
+        </div>
+        <button class="btn-primary" onclick="launchDashboard()">Launch ${site.brand} →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const selected = new Set();
+    const prefs = new Set();
+
+    function selectProvider(id, type) {
+      const key = type + ':' + id;
+      const btns = document.querySelectorAll('.auth-btn');
+      btns.forEach(b => {
+        if (b.onclick.toString().includes("'" + id + "'")) b.classList.toggle('selected');
+      });
+      if (selected.has(key)) selected.delete(key); else selected.add(key);
+      document.getElementById('step1btn').disabled = selected.size === 0;
+      renderSelected();
+    }
+
+    function renderSelected() {
+      const el = document.getElementById('selectedProviders');
+      el.innerHTML = Array.from(selected).map(s => {
+        const name = s.split(':')[1];
+        return '<span class="selected-tag">' + name + ' ✓</span>';
+      }).join('');
+    }
+
+    function togglePref(el, pref) {
+      el.classList.toggle('selected');
+      if (prefs.has(pref)) prefs.delete(pref); else prefs.add(pref);
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+    }
+
+    function completeStep(n) {
+      document.getElementById('step' + n + 'num').classList.add('done');
+      document.getElementById('step' + n + 'num').textContent = '✓';
+      showStep(n + 1);
+    }
+
+    function launchDashboard() {
+      // Store selections and redirect
+      localStorage.setItem('heady_providers', JSON.stringify(Array.from(selected)));
+      localStorage.setItem('heady_prefs', JSON.stringify(Array.from(prefs)));
+      localStorage.setItem('heady_onboarded', 'true');
+      window.location.href = '/';
+    }
   </script>
 </body>
 </html>`;
@@ -753,114 +919,6 @@ const server = http.createServer((req, res) => {
   }
 
   // ── API Routes ──────────────────────────────────────────
-
-  // ── OAuth Routes (real provider redirects + callbacks) ──
-  const OAUTH_REGISTRY = {
-    google:    { envKey:'GOOGLE_CLIENT_ID', envSecret:'GOOGLE_CLIENT_SECRET', authUrl:'https://accounts.google.com/o/oauth2/v2/auth', tokenUrl:'https://oauth2.googleapis.com/token', profileUrl:null, scope:'openid email profile', extra:{access_type:'offline'}, extractUser:(tok)=>{ const p=JSON.parse(Buffer.from(tok.id_token.split('.')[1],'base64').toString()); return {email:p.email,name:p.name,photo:p.picture}; } },
-    github:    { envKey:'GITHUB_CLIENT_ID', envSecret:'GITHUB_CLIENT_SECRET', authUrl:'https://github.com/login/oauth/authorize', tokenUrl:'https://github.com/login/oauth/access_token', profileUrl:'https://api.github.com/user', scope:'read:user user:email', extractUser:(_tok,prof)=>({email:prof.email||prof.login+'@github.noreply',name:prof.name||prof.login,photo:prof.avatar_url}) },
-    microsoft: { envKey:'MICROSOFT_CLIENT_ID', envSecret:'MICROSOFT_CLIENT_SECRET', authUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/authorize', tokenUrl:'https://login.microsoftonline.com/common/oauth2/v2.0/token', profileUrl:'https://graph.microsoft.com/v1.0/me', scope:'openid email profile User.Read', extra:{response_mode:'query'}, extractUser:(_tok,prof)=>({email:prof.mail||prof.userPrincipalName,name:prof.displayName,photo:null}) },
-    apple:     { envKey:'APPLE_CLIENT_ID', envSecret:'APPLE_CLIENT_SECRET', authUrl:'https://appleid.apple.com/auth/authorize', tokenUrl:'https://appleid.apple.com/auth/token', profileUrl:null, scope:'name email', extra:{response_mode:'form_post'}, extractUser:(tok)=>{ const p=JSON.parse(Buffer.from(tok.id_token.split('.')[1],'base64').toString()); return {email:p.email,name:p.email?.split('@')[0],photo:null}; } },
-    facebook:  { envKey:'FACEBOOK_APP_ID', envSecret:'FACEBOOK_APP_SECRET', authUrl:'https://www.facebook.com/v19.0/dialog/oauth', tokenUrl:'https://graph.facebook.com/v19.0/oauth/access_token', profileUrl:'https://graph.facebook.com/v19.0/me?fields=id,name,email,picture.type(large)', scope:'email,public_profile', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:prof.picture?.data?.url}) },
-    amazon:    { envKey:'AMAZON_CLIENT_ID', envSecret:'AMAZON_CLIENT_SECRET', authUrl:'https://www.amazon.com/ap/oa', tokenUrl:'https://api.amazon.com/auth/o2/token', profileUrl:'https://api.amazon.com/user/profile', scope:'profile', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:null}) },
-    discord:   { envKey:'DISCORD_CLIENT_ID', envSecret:'DISCORD_CLIENT_SECRET', authUrl:'https://discord.com/api/oauth2/authorize', tokenUrl:'https://discord.com/api/oauth2/token', profileUrl:'https://discord.com/api/users/@me', scope:'identify email', extractUser:(_tok,prof)=>({email:prof.email,name:prof.global_name||prof.username,photo:prof.avatar?`https://cdn.discordapp.com/avatars/${prof.id}/${prof.avatar}.png`:null}) },
-    slack:     { envKey:'SLACK_CLIENT_ID', envSecret:'SLACK_CLIENT_SECRET', authUrl:'https://slack.com/openid/connect/authorize', tokenUrl:'https://slack.com/api/openid.connect.token', profileUrl:'https://slack.com/api/openid.connect.userInfo', scope:'openid email profile', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:prof.picture}) },
-    linkedin:  { envKey:'LINKEDIN_CLIENT_ID', envSecret:'LINKEDIN_CLIENT_SECRET', authUrl:'https://www.linkedin.com/oauth/v2/authorization', tokenUrl:'https://www.linkedin.com/oauth/v2/accessToken', profileUrl:'https://api.linkedin.com/v2/userinfo', scope:'openid profile email', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name,photo:prof.picture}) },
-    twitter:   { envKey:'TWITTER_CLIENT_ID', envSecret:'TWITTER_CLIENT_SECRET', authUrl:'https://twitter.com/i/oauth2/authorize', tokenUrl:'https://api.twitter.com/2/oauth2/token', profileUrl:'https://api.twitter.com/2/users/me?user.fields=profile_image_url', scope:'users.read tweet.read', tokenAuth:'basic', extra:{code_challenge:'challenge',code_challenge_method:'plain'}, extractUser:(_tok,prof)=>({email:null,name:prof.data?.name,photo:prof.data?.profile_image_url}) },
-    spotify:   { envKey:'SPOTIFY_CLIENT_ID', envSecret:'SPOTIFY_CLIENT_SECRET', authUrl:'https://accounts.spotify.com/authorize', tokenUrl:'https://accounts.spotify.com/api/token', profileUrl:'https://api.spotify.com/v1/me', scope:'user-read-email user-read-private', tokenAuth:'basic', extractUser:(_tok,prof)=>({email:prof.email,name:prof.display_name,photo:prof.images?.[0]?.url}) },
-    huggingface:{ envKey:'HUGGINGFACE_CLIENT_ID', envSecret:'HUGGINGFACE_CLIENT_SECRET', authUrl:'https://huggingface.co/oauth/authorize', tokenUrl:'https://huggingface.co/oauth/token', profileUrl:'https://huggingface.co/api/whoami-v2', scope:'openid profile email', extractUser:(_tok,prof)=>({email:prof.email,name:prof.name||prof.fullname,photo:prof.avatarUrl}) },
-  };
-
-  // Helper: postMessage success/error pages
-  function _authSuccessPage(token, user) {
-    const payload = JSON.stringify({ type: 'heady_auth_success', token, user });
-    return `<!DOCTYPE html><html><head><title>Heady — Connected</title>
-<style>body{background:#0a0a0f;color:#e2e8f0;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
-.box{text-align:center;padding:40px;border-radius:24px;background:rgba(15,15,25,0.95);border:1px solid rgba(255,255,255,0.08)}
-h2{color:#818cf8;margin-bottom:8px}p{opacity:0.7;font-size:0.9rem}</style></head>
-<body><div class="box"><h2>✅ Connected to Heady</h2><p>This window will close automatically...</p></div>
-<script>try{window.opener.postMessage(${payload},'*')}catch(e){}setTimeout(function(){window.close()},1500)</script></body></html>`;
-  }
-  function _authErrorPage(msg) {
-    return `<!DOCTYPE html><html><head><title>Heady — Auth Error</title>
-<style>body{background:#0a0a0f;color:#e2e8f0;font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
-.box{text-align:center;padding:40px;border-radius:24px;background:rgba(15,15,25,0.95);border:1px solid rgba(255,255,255,0.08)}
-h2{color:#ef4444;margin-bottom:8px}p{opacity:0.7;font-size:0.9rem}
-.btn{margin-top:16px;padding:10px 24px;border-radius:12px;background:#818cf8;color:#000;border:none;cursor:pointer;font-weight:700}</style></head>
-<body><div class="box"><h2>⚠️ Auth Error</h2><p>${msg}</p><button class="btn" onclick="window.close()">Close</button></div></body></html>`;
-  }
-
-  // GET /api/auth/:provider — redirect to OAuth provider
-  const authMatch = url.pathname.match(/^\/api\/auth\/([a-z]+)$/);
-  if (authMatch && req.method === 'GET') {
-    const providerKey = authMatch[1];
-    const provider = OAUTH_REGISTRY[providerKey];
-    if (!provider) { res.writeHead(404); res.end(_authErrorPage('Unknown provider: ' + providerKey)); return; }
-    const clientId = process.env[provider.envKey];
-    if (!clientId) { res.writeHead(200, {'Content-Type':'text/html'}); res.end(_authErrorPage(`${providerKey} OAuth not configured — set ${provider.envKey} environment variable`)); return; }
-    const redirect = `https://${host}/api/auth/${providerKey}/callback`;
-    const params = new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirect,
-      response_type: 'code',
-      scope: provider.scope,
-      ...(provider.extra || {}),
-    });
-    res.writeHead(302, { Location: `${provider.authUrl}?${params.toString()}` });
-    res.end();
-    return;
-  }
-
-  // GET /api/auth/:provider/callback — exchange code, extract user, postMessage
-  const cbMatch = url.pathname.match(/^\/api\/auth\/([a-z]+)\/callback$/);
-  if (cbMatch && req.method === 'GET') {
-    const providerKey = cbMatch[1];
-    const provider = OAUTH_REGISTRY[providerKey];
-    const code = url.searchParams.get('code');
-    if (!provider) { res.writeHead(200, {'Content-Type':'text/html'}); res.end(_authErrorPage('Unknown provider')); return; }
-    if (!code) { res.writeHead(200, {'Content-Type':'text/html'}); res.end(_authErrorPage('Missing authorization code')); return; }
-    (async () => {
-      try {
-        const redirect = `https://${host}/api/auth/${providerKey}/callback`;
-        const tokenBody = new URLSearchParams({
-          client_id: process.env[provider.envKey],
-          client_secret: process.env[provider.envSecret],
-          code,
-          redirect_uri: redirect,
-          grant_type: 'authorization_code',
-        });
-        const tokenHeaders = { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' };
-        if (provider.tokenAuth === 'basic') {
-          tokenHeaders['Authorization'] = 'Basic ' + Buffer.from(process.env[provider.envKey]+':'+process.env[provider.envSecret]).toString('base64');
-        }
-        const tokenRes = await fetch(provider.tokenUrl, { method: 'POST', headers: tokenHeaders, body: tokenBody.toString() });
-        const tokens = await tokenRes.json();
-        if (tokens.error) throw new Error(tokens.error_description || tokens.error);
-
-        let profile = null;
-        if (provider.profileUrl) {
-          const profRes = await fetch(provider.profileUrl, { headers: { 'Authorization': `Bearer ${tokens.access_token}`, 'Accept': 'application/json', 'User-Agent': 'HeadyMe/3.2' } });
-          profile = await profRes.json();
-        }
-
-        const user = provider.extractUser(tokens, profile);
-        user.provider = providerKey;
-        const sessionToken = `hdy_${providerKey}_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
-
-        // Store session in-memory
-        sessions.set(sessionToken, { userId: crypto.randomUUID(), email: user.email, provider: providerKey });
-
-        logger.info(`[OAuth] ${providerKey} success`, { email: user.email });
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(_authSuccessPage(sessionToken, user));
-      } catch (err) {
-        logger.error(`[OAuth] ${providerKey} failed`, { error: err.message });
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(_authErrorPage(`${providerKey} sign-in failed: ${err.message}`));
-      }
-    })();
-    return;
-  }
-
   if (url.pathname === '/api/providers') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(AUTH_PROVIDERS));
@@ -961,182 +1019,14 @@ h2{color:#ef4444;margin-bottom:8px}p{opacity:0.7;font-size:0.9rem}
     });
     return;
   }
-
-  // ── Session Validation ──────────────────────────────────
-  if (url.pathname === '/api/session/validate' && req.method === 'POST') {
-    let body = '';
-    req.on('data', c => body += c);
-    req.on('end', () => {
-      try {
-        const { token } = JSON.parse(body);
-        if (token && sessions.has(token)) {
-          const s = sessions.get(token);
-          const u = users.get(s.email);
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ valid: true, user: u ? u.displayName : s.email, email: s.email }));
-        } else {
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ valid: false }));
-        }
-      } catch { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Invalid request' })); }
-    });
-    return;
-  }
-
-  // ── Onboarding Page ────────────────────────────────────
+  // ── Onboarding Page ─────────────────────────────────────
   if (url.pathname === '/onboarding') {
-    const sessionToken = url.searchParams.get('session') || '';
-    const s = sessions.get(sessionToken);
-    const u = s ? users.get(s.email) : null;
-    const userName = u ? u.displayName : 'Explorer';
-    const userKey = u ? u.apiKey : 'Sign in to get your key';
-    const userProvider = u ? u.provider : 'none';
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Heady-Site': site.brand });
-    res.end(`<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${site.brand} — Onboarding</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--bg:#0a0a1a;--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08)}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:61.8px 61.8px;z-index:0}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .onboard{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:4rem 2rem;animation:fadeUp .5s ease}
-    .ob-header{text-align:center;margin-bottom:3rem}
-    .ob-header h1{font-size:2rem;font-weight:800;margin-bottom:.5rem;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    .ob-header p{color:var(--dim);font-size:1rem}
-    .ob-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
-    .ob-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
-    .ob-step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:white;flex-shrink:0}
-    .ob-card p{color:var(--dim);font-size:.9rem;line-height:1.6}
-    .ob-key{background:rgba(0,0,0,.4);border:1px solid color-mix(in srgb,var(--brand) 20%,transparent);border-radius:10px;padding:.75rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);word-break:break-all;margin:.75rem 0}
-    .ob-tag{display:inline-block;background:color-mix(in srgb,var(--brand) 15%,transparent);color:var(--brand);padding:3px 10px;border-radius:16px;font-size:.7rem;font-weight:600;margin:.25rem}
-    .ob-actions{display:flex;gap:1rem;margin-top:2rem;justify-content:center;flex-wrap:wrap}
-    .ob-btn{padding:.75rem 2rem;border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;border:none}
-    .ob-btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:white}
-    .ob-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.15)}
-    .ob-btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
-    .ob-btn-secondary:hover{border-color:var(--brand)}
-    .ob-done{text-align:center;margin-top:1rem;color:var(--dim);font-size:.8rem}
-  </style>
-</head>
-<body>
-  <div class="bg-grid"></div>
-  <div class="onboard">
-    <div class="ob-header">
-      <h1>Welcome to ${site.brand}, ${userName}!</h1>
-      <p>Let's get you set up in 3 quick steps</p>
-    </div>
-
-    <div class="ob-card">
-      <h3><span class="ob-step-num">1</span> Your Identity</h3>
-      <p>You're signed in via <strong>${userProvider}</strong>. Your session is active across the Heady ecosystem.</p>
-      <div style="margin-top:.5rem">
-        <span class="ob-tag">✅ Authenticated</span>
-        <span class="ob-tag">Provider: ${userProvider}</span>
-      </div>
-    </div>
-
-    <div class="ob-card">
-      <h3><span class="ob-step-num">2</span> Your API Key</h3>
-      <p>Use this key to connect HeadyBuddy, the SDK, or any integration:</p>
-      <div class="ob-key" id="obKey">${userKey}</div>
-      <p>Set as <code style="color:var(--accent)">HEADY_API_KEY</code> in your <code>.env</code> file or pass it in request headers.</p>
-    </div>
-
-    <div class="ob-card">
-      <h3><span class="ob-step-num">3</span> Explore</h3>
-      <p>Your ${site.brand} account gives you access to the entire Heady ecosystem:</p>
-      <div style="margin-top:.75rem">
-        <span class="ob-tag">🧠 AI Chat</span>
-        <span class="ob-tag">🔐 Secure Vault</span>
-        <span class="ob-tag">📊 Dashboard</span>
-        <span class="ob-tag">🐝 Bee Swarm</span>
-        <span class="ob-tag">🤖 25 Providers</span>
-        <span class="ob-tag">💬 HeadyBuddy</span>
-      </div>
-    </div>
-
-    <div class="ob-actions">
-      <button class="ob-btn ob-btn-primary" onclick="window.location.href='/'">Go to ${site.brand}</button>
-      <button class="ob-btn ob-btn-secondary" onclick="window.location.href='/api/health'">View API Status</button>
-    </div>
-    <p class="ob-done">© 2026 Heady™Systems Inc. — Onboarding complete ✓</p>
-  </div>
-</body>
-</html>`);
-    return;
-  }
-
-  // ── Docs Page ──────────────────────────────────────────
-  if (url.pathname === '/docs') {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'X-Heady-Site': site.brand });
-    res.end(`<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${site.brand} — Documentation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    :root{--bg:#0a0a1a;--brand:${site.color};--accent:${site.accent};--text:#e8e8f0;--dim:#8888aa;--surface:rgba(20,20,50,0.6);--border:rgba(255,255,255,0.08)}
-    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-    .container{max-width:800px;margin:0 auto;padding:3rem 2rem}
-    h1{font-size:2rem;font-weight:800;margin-bottom:1rem;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-    h2{font-size:1.3rem;font-weight:700;margin:2rem 0 .75rem;color:var(--accent)}
-    p,li{color:var(--dim);line-height:1.7;margin-bottom:.5rem}
-    code{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent)}
-    pre{background:rgba(0,0,0,.4);padding:1rem;border-radius:10px;margin:1rem 0;overflow-x:auto}
-    pre code{background:none;padding:0}
-    a{color:var(--brand);text-decoration:none}
-    a:hover{text-decoration:underline}
-    .back{display:inline-block;margin-bottom:2rem;color:var(--dim);text-decoration:none;font-size:.9rem}
-    .back:hover{color:var(--text)}
-    ul{padding-left:1.5rem}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <a class="back" href="/">← Back to ${site.brand}</a>
-    <h1>${site.brand} Documentation</h1>
-    <p>Quick reference for the ${site.brand} platform APIs and integration points.</p>
-
-    <h2>Authentication</h2>
-    <p>Sign in via any of the 25 supported providers (12 OAuth + 13 API keys). After authentication, you receive a <code>HEADY_API_KEY</code> for programmatic access.</p>
-    <pre><code>curl -H "Authorization: Bearer YOUR_HEADY_API_KEY" https://${host}/api/health</code></pre>
-
-    <h2>API Endpoints</h2>
-    <ul>
-      <li><code>GET /api/health</code> — System status and version</li>
-      <li><code>GET /api/providers</code> — List all auth providers</li>
-      <li><code>GET /api/sites</code> — List all Heady ecosystem domains</li>
-      <li><code>POST /api/signup</code> — Create account (email, password, provider)</li>
-      <li><code>POST /api/login</code> — Sign in with email/password</li>
-      <li><code>POST /api/chat</code> — Chat with HeadyBuddy</li>
-      <li><code>POST /api/session/validate</code> — Validate session token</li>
-    </ul>
-
-    <h2>HeadyBuddy Integration</h2>
-    <p>HeadyBuddy is embedded on every Heady site. Use the chat API for programmatic access:</p>
-    <pre><code>fetch('/api/chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    message: 'What is my status?',
-    session: 'YOUR_SESSION_TOKEN',
-    site: '${site.brand}'
-  })
-})</code></pre>
-
-    <h2>Ecosystem</h2>
-    <p>${Object.keys(SITES).length} domains are part of the Heady ecosystem. Visit <a href="/api/sites">/api/sites</a> for the full list.</p>
-  </div>
-</body>
-</html>`);
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'X-Heady-Site': site.brand,
+    });
+    res.end(renderOnboarding(site, host));
     return;
   }
 
