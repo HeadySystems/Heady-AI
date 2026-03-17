@@ -45,7 +45,7 @@ class AutoCommitEngine extends EventEmitter {
         super();
         this.repoRoot = opts.repoRoot || REPO_ROOT;
         this.branch = opts.branch || "main";
-        this.remote = opts.remote || "origin";
+        this.remote = opts.remote || "production";
         this.consecutiveFailures = 0;
         this.lastCommitHash = null;
         this.lastPushAt = null;
