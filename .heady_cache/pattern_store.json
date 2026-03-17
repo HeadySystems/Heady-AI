@@ -6,26 +6,8 @@
       "name": "resource:RAM",
       "state": "degrading",
       "createdAt": "2026-03-12T13:24:48.581Z",
-      "lastUpdated": "2026-03-17T22:56:28.554Z",
+      "lastUpdated": "2026-03-17T23:02:43.595Z",
       "observations": [
-        {
-          "value": 81,
-          "ts": "2026-03-12T17:59:40.910Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-03-12T17:59:47.220Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
         {
           "value": 83,
           "ts": "2026-03-12T17:59:53.282Z",
@@ -1807,18 +1789,36 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-17T23:02:38.580Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-17T23:02:43.595Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 86.775,
+        "mean": 86.74,
         "median": 86,
-        "stddev": 4.853284969997127,
+        "stddev": 4.903305007849292,
         "min": 78,
         "max": 98,
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 13,
+      "improvementAttempts": 16,
       "lastImproved": "2026-03-17T20:00:22.059Z",
       "convergedAt": "2026-03-12T18:16:29.093Z",
       "reviewAfter": 100,
