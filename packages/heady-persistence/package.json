@@ -1,0 +1,27 @@
+{
+  "name": "@heady/persistence",
+  "version": "1.0.0",
+  "description": "Heady User Persistence System — cross-device state sync, session management, and user profile storage",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "health": "node -e \"require('./src/index.ts')\""
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "pg": "^8.13.0",
+    "pgvector": "^0.2.0",
+    "pino": "^9.6.0",
+    "ws": "^8.18.0",
+    "ioredis": "^5.4.0",
+    "jose": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "@types/ws": "^8.5.0",
+    "@types/pg": "^8.11.0"
+  }
+}

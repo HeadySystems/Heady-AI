@@ -1,7 +1,7 @@
 {
-  "version": "4.0.0",
+  "version": "4.1.0",
   "generated": "2026-03-17",
-  "service_count": 172,
+  "service_count": 175,
   "phi": 1.618033988749895,
   "csl_threshold": 0.618,
   "categories": {
@@ -16,175 +16,1093 @@
     "devops": "Deploy, migration, scheduler, cron"
   },
   "services": [
-    { "id": "ai-router", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "ai_router", "type": "directory", "category": "ai", "status": "active", "note": "Python variant" },
-    { "id": "aloha", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "analytics", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "analytics-service", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "analytics-service.js", "type": "file", "category": "observability", "status": "active" },
-    { "id": "api", "type": "directory", "category": "core", "status": "active" },
-    { "id": "api-gateway", "type": "directory", "category": "core", "status": "active" },
-    { "id": "api-gateway.js", "type": "file", "category": "core", "status": "active" },
-    { "id": "asset-pipeline", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "asset-pipeline.js", "type": "file", "category": "devops", "status": "active" },
-    { "id": "auth-session", "type": "directory", "category": "security", "status": "active" },
-    { "id": "auth-session-server", "type": "directory", "category": "security", "status": "active" },
-    { "id": "auth-session-server.js", "type": "file", "category": "security", "status": "active" },
-    { "id": "auto-success-engine", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "billing-service", "type": "directory", "category": "core", "status": "active" },
-    { "id": "billing-service.js", "type": "file", "category": "core", "status": "active" },
-    { "id": "buddy", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "budget-tracker", "type": "directory", "category": "core", "status": "active" },
-    { "id": "cli-service", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "cli_service", "type": "directory", "category": "devops", "status": "active", "note": "Python variant" },
-    { "id": "colab-gateway", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "colab_gateway", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "colab-runtime-manager.js", "type": "file", "category": "integration", "status": "active" },
-    { "id": "conductor-service", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "core-api", "type": "directory", "category": "core", "status": "active" },
-    { "id": "csl-engine-service", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "developer-portal.js", "type": "file", "category": "ui", "status": "active" },
-    { "id": "diagnostics", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "discord-bot", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "domain-router", "type": "directory", "category": "core", "status": "active" },
-    { "id": "google-mcp", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "google_mcp", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "grpc-protos", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "hcfullpipeline-executor", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-ableton", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "heady-audit", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-auth", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-autobiographer", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-auto.js", "type": "file", "category": "devops", "status": "active" },
-    { "id": "heady-auto-success", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-auto-tuner", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-battle", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-bee-factory", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-brain", "type": "directory", "category": "core", "status": "active", "port": 3304 },
-    { "id": "heady-brains", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-buddy", "type": "directory", "category": "ui", "status": "active", "port": 3351 },
-    { "id": "heady-budget-tracker", "type": "directory", "category": "core", "status": "active" },
-    { "id": "heady-bulkhead", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-bus", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-cache", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-cf-worker", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "heady-chain", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-circuit-breaker", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady_client.py", "type": "file", "category": "integration", "status": "active", "note": "Python client" },
-    { "id": "heady-coder", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-colab-coordinator.py", "type": "file", "category": "integration", "status": "active", "note": "Python coordinator" },
-    { "id": "heady-conductor", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-council", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-cqrs", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-cron", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "heady-csl-judge", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-deploy.js", "type": "file", "category": "devops", "status": "active" },
-    { "id": "heady-drupal", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-drupal-proxy", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-embed", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-embeddings", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-eval", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-event-store", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-evolution-engine", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-federation", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-flags", "type": "directory", "category": "core", "status": "active" },
-    { "id": "heady-gate", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-gateway", "type": "directory", "category": "core", "status": "active", "port": 3302 },
-    { "id": "heady-governance", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-guard", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-hallucination-watchdog", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-health", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "heady-hive", "type": "directory", "category": "orchestration", "status": "active", "port": 3306 },
-    { "id": "heady-identity", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-infer", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-inference", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-inference-gateway", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-knowledge", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-lens", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "heady-liquid", "type": "directory", "category": "core", "status": "active" },
-    { "id": "heady-maintenance", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "heady-manager", "type": "directory", "category": "core", "status": "active", "port": 3300 },
-    { "id": "heady-mc", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "heady-mcp", "type": "directory", "category": "integration", "status": "active", "port": 3303 },
-    { "id": "heady-mcp-server", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "heady-memory", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-meter", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "heady-midi", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "heady-model-router", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-observability", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "heady-observer", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "heady-onboarding", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-orchestration", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-persistence", "type": "directory", "category": "data", "status": "active", "port": 3370 },
-    { "id": "heady-persona-router", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-pilot-onboarding", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-pipeline-core", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-pool-router", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-production", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "heady-projection", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-receipt-signer", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-registry", "type": "directory", "category": "core", "status": "active" },
-    { "id": "heady-researcher", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-router", "type": "directory", "category": "core", "status": "active" },
-    { "id": "heady-saga", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-sandbox", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-security", "type": "directory", "category": "security", "status": "active" },
-    { "id": "heady-self-healing", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-seventeen-swarm", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-snapshot", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-soul", "type": "directory", "category": "core", "status": "active", "port": 3305 },
-    { "id": "heady-swarm-coordinator", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "heady-task-browser", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-telemetry", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "heady-testing", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "heady-trader", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "heady-ui", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "heady-vector", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-vector-memory", "type": "directory", "category": "data", "status": "active" },
-    { "id": "heady-vinci", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "heady-web", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "huggingface-gateway", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "huggingface_gateway", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "jules-mcp", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "jules_mcp", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "liquid-nodes", "type": "directory", "category": "core", "status": "active" },
-    { "id": "mcp-gateway", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "mcp-server", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "mcp_server", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "memory-mcp", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "memory_mcp", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "migration-service", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "migration-service.js", "type": "file", "category": "devops", "status": "active" },
-    { "id": "model-gateway", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "model_gateway", "type": "directory", "category": "ai", "status": "active", "note": "Python variant" },
-    { "id": "nats-consumers", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "node-management", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "notification", "type": "directory", "category": "core", "status": "active" },
-    { "id": "notification-service", "type": "directory", "category": "core", "status": "active" },
-    { "id": "notification-service.js", "type": "file", "category": "core", "status": "active" },
-    { "id": "observability-kernel", "type": "directory", "category": "observability", "status": "active" },
-    { "id": "onboarding", "type": "directory", "category": "ui", "status": "active" },
-    { "id": "orchestrator", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "perplexity-mcp", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "perplexity_mcp", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "pipeline", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "prompt-manager", "type": "directory", "category": "ai", "status": "active" },
-    { "id": "prompt_manager", "type": "directory", "category": "ai", "status": "active", "note": "Python variant" },
-    { "id": "registry", "type": "directory", "category": "core", "status": "active" },
-    { "id": "saga-coordinator", "type": "directory", "category": "orchestration", "status": "active" },
-    { "id": "scheduler", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "scheduler-service", "type": "directory", "category": "devops", "status": "active" },
-    { "id": "scheduler-service.js", "type": "file", "category": "devops", "status": "active" },
-    { "id": "search", "type": "directory", "category": "core", "status": "active" },
-    { "id": "search-service", "type": "directory", "category": "core", "status": "active" },
-    { "id": "search-service.js", "type": "file", "category": "core", "status": "active" },
-    { "id": "secret-gateway", "type": "directory", "category": "security", "status": "active" },
-    { "id": "secret_gateway", "type": "directory", "category": "security", "status": "active", "note": "Python variant" },
-    { "id": "service-mesh.js", "type": "file", "category": "orchestration", "status": "active" },
-    { "id": "service-registry.js", "type": "file", "category": "core", "status": "active" },
-    { "id": "silicon-bridge", "type": "directory", "category": "integration", "status": "active" },
-    { "id": "silicon_bridge", "type": "directory", "category": "integration", "status": "active", "note": "Python variant" },
-    { "id": "status-page.js", "type": "file", "category": "observability", "status": "active" },
-    { "id": "vector-memory-service", "type": "directory", "category": "data", "status": "active" }
+    {
+      "id": "ai-router",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "ai_router",
+      "type": "directory",
+      "category": "ai",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "aloha",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "analytics",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "analytics-service",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "analytics-service.js",
+      "type": "file",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "api",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "api-gateway",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "api-gateway.js",
+      "type": "file",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "asset-pipeline",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "asset-pipeline.js",
+      "type": "file",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "auth-session",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "auth-session-server",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "auth-session-server.js",
+      "type": "file",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "auto-success-engine",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "billing-service",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "billing-service.js",
+      "type": "file",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "buddy",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "budget-tracker",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "cli-service",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "cli_service",
+      "type": "directory",
+      "category": "devops",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "colab-gateway",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "colab_gateway",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "colab-runtime-manager.js",
+      "type": "file",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "conductor-service",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "core-api",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "csl-engine-service",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "developer-portal.js",
+      "type": "file",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "diagnostics",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "discord-bot",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "domain-router",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "google-mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "google_mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "grpc-protos",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "hcfullpipeline-executor",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-ableton",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "heady-audit",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-auth",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-autobiographer",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-auto.js",
+      "type": "file",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "heady-auto-success",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-auto-tuner",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-battle",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-bee-factory",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-brain",
+      "type": "directory",
+      "category": "core",
+      "status": "active",
+      "port": 3304
+    },
+    {
+      "id": "heady-brains",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-buddy",
+      "type": "directory",
+      "category": "ui",
+      "status": "active",
+      "port": 3351
+    },
+    {
+      "id": "heady-budget-tracker",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "heady-bulkhead",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-bus",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-cache",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-cf-worker",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "heady-chain",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-circuit-breaker",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady_client.py",
+      "type": "file",
+      "category": "integration",
+      "status": "active",
+      "note": "Python client"
+    },
+    {
+      "id": "heady-coder",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-colab-coordinator.py",
+      "type": "file",
+      "category": "integration",
+      "status": "active",
+      "note": "Python coordinator"
+    },
+    {
+      "id": "heady-conductor",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-council",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-cqrs",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-cron",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "heady-csl-judge",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-deploy.js",
+      "type": "file",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "heady-drupal",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-drupal-proxy",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-embed",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-embeddings",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-eval",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-event-store",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-evolution-engine",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-federation",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-flags",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "heady-gate",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-gateway",
+      "type": "directory",
+      "category": "core",
+      "status": "active",
+      "port": 3302
+    },
+    {
+      "id": "heady-governance",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-guard",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-hallucination-watchdog",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-health",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "heady-hive",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3306
+    },
+    {
+      "id": "heady-identity",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-infer",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-inference",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-inference-gateway",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-knowledge",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-lens",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "heady-liquid",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "heady-maintenance",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "heady-manager",
+      "type": "directory",
+      "category": "core",
+      "status": "active",
+      "port": 3300
+    },
+    {
+      "id": "heady-mc",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "heady-mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "port": 3303
+    },
+    {
+      "id": "heady-mcp-server",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "heady-memory",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-meter",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "heady-midi",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "heady-model-router",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-observability",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "heady-observer",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "heady-onboarding",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-orchestration",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-persistence",
+      "type": "directory",
+      "category": "data",
+      "status": "active",
+      "port": 3370
+    },
+    {
+      "id": "heady-persona-router",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-pilot-onboarding",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-pipeline-core",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-pool-router",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-production",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "heady-projection",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-receipt-signer",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-registry",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "heady-researcher",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-router",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "heady-saga",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-sandbox",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-security",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "heady-self-healing",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-seventeen-swarm",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-snapshot",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-soul",
+      "type": "directory",
+      "category": "core",
+      "status": "active",
+      "port": 3305
+    },
+    {
+      "id": "heady-swarm-coordinator",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "heady-task-browser",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-telemetry",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "heady-testing",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "heady-trader",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "heady-ui",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "heady-vector",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-vector-memory",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-vinci",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "heady-web",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "huggingface-gateway",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "huggingface_gateway",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "jules-mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "jules_mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "liquid-nodes",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "mcp-gateway",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "mcp-server",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "mcp_server",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "memory-mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "memory_mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "migration-service",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "migration-service.js",
+      "type": "file",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "model-gateway",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "model_gateway",
+      "type": "directory",
+      "category": "ai",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "nats-consumers",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "node-management",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "notification",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "notification-service",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "notification-service.js",
+      "type": "file",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "observability-kernel",
+      "type": "directory",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "onboarding",
+      "type": "directory",
+      "category": "ui",
+      "status": "active"
+    },
+    {
+      "id": "orchestrator",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "perplexity-mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "perplexity_mcp",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "pipeline",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "prompt-manager",
+      "type": "directory",
+      "category": "ai",
+      "status": "active"
+    },
+    {
+      "id": "prompt_manager",
+      "type": "directory",
+      "category": "ai",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "registry",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "saga-coordinator",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "scheduler",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "scheduler-service",
+      "type": "directory",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "scheduler-service.js",
+      "type": "file",
+      "category": "devops",
+      "status": "active"
+    },
+    {
+      "id": "search",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "search-service",
+      "type": "directory",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "search-service.js",
+      "type": "file",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "secret-gateway",
+      "type": "directory",
+      "category": "security",
+      "status": "active"
+    },
+    {
+      "id": "secret_gateway",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "service-mesh.js",
+      "type": "file",
+      "category": "orchestration",
+      "status": "active"
+    },
+    {
+      "id": "service-registry.js",
+      "type": "file",
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "id": "silicon-bridge",
+      "type": "directory",
+      "category": "integration",
+      "status": "active"
+    },
+    {
+      "id": "silicon_bridge",
+      "type": "directory",
+      "category": "integration",
+      "status": "active",
+      "note": "Python variant"
+    },
+    {
+      "id": "status-page.js",
+      "type": "file",
+      "category": "observability",
+      "status": "active"
+    },
+    {
+      "id": "vector-memory-service",
+      "type": "directory",
+      "category": "data",
+      "status": "active"
+    },
+    {
+      "id": "heady-buddy-service",
+      "type": "directory",
+      "category": "ui",
+      "status": "active",
+      "port": 3310,
+      "health": "/health",
+      "note": "HeadyBuddy AI Companion Backend \u2014 cross-device sync"
+    },
+    {
+      "id": "heady-ide-service",
+      "type": "directory",
+      "category": "ui",
+      "status": "active",
+      "port": 3320,
+      "health": "/health",
+      "note": "HeadyAI-IDE Cloud Workspace \u2014 Windsurf/Antigravity hybrid"
+    },
+    {
+      "id": "headyweb-browser",
+      "type": "directory",
+      "category": "ui",
+      "status": "active",
+      "port": 3300,
+      "health": "/health",
+      "note": "HeadyWeb Browser \u2014 Comet/Chromium hybrid with micro-frontends"
+    },
+    {
+      "id": "auth-relay",
+      "type": "service",
+      "category": "security",
+      "status": "active",
+      "port": 3371,
+      "health": "/health",
+      "note": "Cross-domain auth relay via iframe/postMessage for all 9 domains"
+    },
+    {
+      "id": "state-sync",
+      "type": "service",
+      "category": "data",
+      "status": "active",
+      "port": 3341,
+      "health": "/health",
+      "note": "WebSocket state sync with CRDT conflict resolution"
+    }
   ]
 }

@@ -298,3 +298,111 @@ volumes:
 networks:
   heady-net:
     driver: bridge
+
+  # ── NEW SERVICES (v4.1.0) ──────────────────────────────
+
+  heady-gateway:
+    build:
+      context: ./services/heady-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3330:3330"
+    environment:
+      - NODE_ENV=production
+      - PORT=3330
+      - GATEWAY_PORT=3330
+      - HEADY_MANAGER_URL=http://heady-manager:3300
+      - HEADY_BRAIN_URL=http://heady-brains:3302
+      - HEADY_CONDUCTOR_URL=http://heady-conductor:3303
+      - BUDDY_SERVICE_URL=http://heady-buddy-service:3310
+      - IDE_SERVICE_URL=http://heady-ide-service:3320
+      - HEADY_PERSISTENCE_URL=http://heady-persistence:3340
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3330/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      heady-net:
+        aliases:
+          - heady-gateway
+    depends_on:
+      - heady-manager
+    restart: unless-stopped
+
+  heady-buddy-service:
+    build:
+      context: ./services/heady-buddy
+      dockerfile: Dockerfile
+    ports:
+      - "3310:3310"
+      - "3311:3311"
+    environment:
+      - NODE_ENV=production
+      - PORT=3310
+      - WS_PORT=3311
+      - DATABASE_URL=${BUDDY_MEMORY_DB_URL:-${DATABASE_URL:-}}
+      - REDIS_URL=${REDIS_URL:-}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-}
+      - JWT_SECRET=${JWT_SECRET:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3310/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      heady-net:
+        aliases:
+          - heady-buddy-service
+    depends_on:
+      - heady-postgres
+      - heady-redis
+    restart: unless-stopped
+
+  heady-ide-service:
+    build:
+      context: ./HeadyAI-IDE
+      dockerfile: Dockerfile
+    ports:
+      - "3320:3320"
+    environment:
+      - NODE_ENV=production
+      - PORT=3320
+      - IDE_WORKSPACE_ROOT=/workspace
+      - HEADY_CONDUCTOR_URL=http://heady-conductor:3303
+      - MCP_GATEWAY_URL=http://heady-manager:3300
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3320/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      heady-net:
+        aliases:
+          - heady-ide-service
+    volumes:
+      - ide-workspace:/workspace
+    restart: unless-stopped
+
+  headyweb-browser:
+    build:
+      context: ./apps/headyweb
+      dockerfile: Dockerfile.cloudrun
+    ports:
+      - "3300:3300"
+    environment:
+      - NODE_ENV=production
+      - PORT=3300
+      - HEADY_GATEWAY_URL=http://heady-gateway:3330
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3300/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      heady-net:
+        aliases:
+          - headyweb-browser
+    restart: unless-stopped
+
