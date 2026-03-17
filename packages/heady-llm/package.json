@@ -1,0 +1,10 @@
+{
+  "name": "@heady/llm",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/gateway.js",
+  "exports": {
+    ".": "./src/gateway.js",
+    "./embed": "./src/embed.js"
+  }
+}
