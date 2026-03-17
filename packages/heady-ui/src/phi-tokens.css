@@ -1,0 +1,106 @@
+/* packages/heady-ui/src/phi-tokens.css */
+/* W3C Design Tokens — φ-scaled CSS Custom Properties */
+/* Phidelity-inspired: all spacing, typography, and layout use golden ratio */
+
+:root {
+  /* ── φ Scale (base 1rem = 16px) ─────────────────────────── */
+  --phi:      1.618033988749895;
+  --phi-inv:  0.618033988749895;
+  --phi-sq:   2.618033988749895;
+
+  /* ── Spacing (φ-scaled from 1rem base) ──────────────────── */
+  --space-0:  0.25rem;    /* 4px  — micro */
+  --space-1:  0.382rem;   /* 6px  — φ⁻² */
+  --space-2:  0.618rem;   /* 10px — φ⁻¹ */
+  --space-3:  1rem;       /* 16px — base */
+  --space-4:  1.618rem;   /* 26px — φ¹ */
+  --space-5:  2.618rem;   /* 42px — φ² */
+  --space-6:  4.236rem;   /* 68px — φ³ */
+  --space-7:  6.854rem;   /* 110px — φ⁴ */
+  --space-8:  11.09rem;   /* 177px — φ⁵ */
+
+  /* ── Typography (φ-scaled modular scale) ────────────────── */
+  --font-xs:   0.618rem;  /* 10px */
+  --font-sm:   0.764rem;  /* 12px */
+  --font-base: 1rem;      /* 16px */
+  --font-md:   1.236rem;  /* 20px */
+  --font-lg:   1.618rem;  /* 26px */
+  --font-xl:   2.618rem;  /* 42px */
+  --font-2xl:  4.236rem;  /* 68px */
+  --font-3xl:  6.854rem;  /* 110px */
+
+  --line-height: 1.618;   /* φ line-height */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-sans: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
+
+  /* ── Sacred Geometry Radii (Fibonacci px) ───────────────── */
+  --radius-fib-5:  5px;
+  --radius-fib-8:  8px;
+  --radius-fib-13: 13px;
+  --radius-fib-21: 21px;
+  --radius-fib-34: 34px;
+  --radius-fib-55: 55px;
+  --radius-fib-89: 89px;
+  --radius-fib-144: 144px;
+  --radius-fib-233: 233px;
+
+  /* ── Colors — Teal/Purple Accent Palette ────────────────── */
+  --teal-primary:   #00d4aa;
+  --teal-dim:       #00a88a;
+  --teal-glow:      rgba(0, 212, 170, 0.3);
+  --purple-primary: #7c5eff;
+  --purple-dim:     #6344cc;
+  --purple-glow:    rgba(124, 94, 255, 0.3);
+  --gold-primary:   #f0b429;
+  --gold-glow:      rgba(240, 180, 41, 0.25);
+
+  /* Dark Theme */
+  --bg-0:  #0a0a0f;       /* deepest background */
+  --bg-1:  #12121a;       /* card background */
+  --bg-2:  #1a1a2e;       /* elevated surface */
+  --bg-3:  #242440;       /* active surface */
+  --text-primary:   #e8e8f0;
+  --text-secondary: #9898b0;
+  --text-dim:       #606078;
+  --border:         rgba(255, 255, 255, 0.08);
+  --border-active:  rgba(0, 212, 170, 0.4);
+
+  /* ── Glassmorphism ──────────────────────────────────────── */
+  --glass-bg:      rgba(18, 18, 26, 0.6);
+  --glass-border:  rgba(255, 255, 255, 0.08);
+  --glass-blur:    blur(20px);
+  --glass-shadow:  0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* ── Animation (φ-timed) ────────────────────────────────── */
+  --duration-fast:   161ms;  /* φ * 100 */
+  --duration-base:   261ms;  /* φ² * 100 */
+  --duration-slow:   423ms;  /* φ³ * 100 */
+  --duration-slower: 685ms;  /* φ⁴ * 100 */
+  --ease-golden: cubic-bezier(0.382, 0, 0.618, 1);
+
+  /* ── φ Grid (Phidelity-inspired) ────────────────────────── */
+  --grid-golden: 1fr 1.618fr;           /* 2-column golden split */
+  --grid-golden-inv: 1.618fr 1fr;       /* inverse */
+  --grid-fib-3: 1fr 1fr 2fr;            /* Fibonacci: 1,1,2 */
+  --grid-fib-5: 1fr 1fr 2fr 3fr 5fr;    /* Fibonacci: 1,1,2,3,5 */
+}
+
+/* ── Utility Classes ──────────────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.grid-golden { display: grid; grid-template-columns: var(--grid-golden); gap: var(--space-4); }
+.grid-golden-inv { display: grid; grid-template-columns: var(--grid-golden-inv); gap: var(--space-4); }
+.grid-fib-3 { display: grid; grid-template-columns: var(--grid-fib-3); gap: var(--space-3); }
+
+.phi-radius { border-radius: var(--radius-fib-13); }
+.phi-padding { padding: var(--space-4); }
+.phi-margin { margin: var(--space-4); }
+
+.teal-glow { box-shadow: 0 0 20px var(--teal-glow), 0 0 40px rgba(0, 212, 170, 0.1); }
+.purple-glow { box-shadow: 0 0 20px var(--purple-glow), 0 0 40px rgba(124, 94, 255, 0.1); }

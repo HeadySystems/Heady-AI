@@ -1,59 +1,64 @@
-# AGENTS.md — Mandatory Rules for ALL AI Agents Working on Heady
+# AGENTS.md — Heady AI Platform
 
-> **This file is loaded automatically by all IDE AI agents (Antigravity, Windsurf, Cursor, etc.)**
-> Any agent that modifies code in this repository MUST follow these rules.
+> AI coding agents: read this file for context before modifying any code.
 
-## MANDATORY FIRST STEP
+## Project Overview
+HeadyAI is a globally distributed, self-improving AI platform (Liquid Architecture v9.0). Monorepo structure with 60+ packages, 120+ services, 30+ apps.
 
-**Before doing ANYTHING, read `HEADY_CONTEXT.md` in the repository root.**
+## Architecture Laws — MUST FOLLOW
+1. **Law of Liquidity** — Every function has a fallback. Every state is checkpointed.
+2. **Law of φ** — All timeouts, TTLs, thresholds use golden ratio (φ = 1.618033988749895).
+3. **Law of Sovereignty** — ZERO localhost, ZERO tunnels. Everything cloud-deployed with real domains.
+4. **Law of Zero Placeholders** — Every line of code must be real, functional, connected. No stubs, no mocks in production.
 
-This file contains:
+## Tech Stack
+- **Runtime:** Node.js ESM (no CommonJS `require()`)
+- **Frontend:** Vanilla HTML/CSS/JS only (no React/Vue/Angular)
+- **API:** Express (Cloud Run) + Hono (Cloudflare Workers)
+- **Database:** Neon Postgres + pgvector (384D, all-MiniLM-L6-v2)
+- **Cache:** Upstash Redis (REST API)
+- **LLM Chain:** Gemini Flash-Lite → DeepSeek V3.2 → Azure GPT-4o-mini → Groq → Workers AI → Colab vLLM
+- **Auth:** Firebase Auth (27 OAuth providers) + cross-domain SSO
+- **Observability:** Sentry (10% trace sampling) + Langfuse
+- **CI/CD:** GitHub Actions + Turborepo
 
-- Live infrastructure URLs (Cloud Run, Cloudflare Workers)
-- Monorepo structure and key file locations
-- Technology stack and deployment commands
-- Sacred rules that must never be violated
-
-If `HEADY_CONTEXT.md` is stale (>24h), run:
-
-```bash
-bash .agents/context/context-scan.sh /home/headyme/Heady
+## Key Constants
+```js
+PHI = 1.618033988749895
+PHI_INV = 0.618033988749895  // CSL include gate
+PHI_SQ = 2.618033988749895   // retry backoff
+PHI_7 = 29034                // heartbeat ms
+TOP_K = 21                   // Fibonacci[7]
+MAX_BEES = 34                // Fibonacci[8]
+VECTOR_DIM = 384
 ```
 
-## SACRED RULES — ZERO TOLERANCE
+## CSL Scoring (Continuous Semantic Logic)
+- CORE ≥ 0.718 — inject into active context
+- INCLUDE ≥ 0.618 — add to response context
+- RECALL ≥ 0.382 — searchable
+- VOID < 0.382 — filtered
 
-1. **NO LOCALHOST.** Never serve sites via localhost, local dev server, or tunnels. Everything deploys to Cloud Run or Cloudflare.
-2. **NO PLACEHOLDERS.** Every line of code must be real, functional, and connected.
-3. **NO ASKING PERMISSION** for obvious fixes. Fix it and report results.
-4. **φ-SCALED MATH.** All spacing, sizing, scoring uses golden ratio (1.618).
-5. **CSL GATES.** Decisions use continuous confidence scores (0→1), not boolean.
-6. **DEPLOY TO CLOUD.** `gcloud run deploy` or Cloudflare API. Period.
+## Redis Key Namespace
+All keys: `tenant:{userId}:{type}:{subtype}`
 
-## PRE-ACTION CONTEXT CHECK
+## Directory Layout
+- `packages/heady-core/` — φ-constants, CSL, tenant keys
+- `packages/heady-llm/` — LLM fallback chain + embeddings
+- `packages/heady-memory/` — T0 Redis + T1 Neon + bootstrap
+- `packages/hcfullpipeline/` — 22-stage cognitive pipeline
+- `packages/heady-guard/` — Zod schemas, Ed25519 signing
+- `services/heady-api/` — Express API (Cloud Run)
+- `services/heady-cf-worker/` — Cloudflare Worker (Hono)
 
-Before every significant action (file edit, deploy, refactor), verify:
+## Protocols
+- **MCP** — agent↔tool (Streamable HTTP transport)
+- **A2A** — agent↔agent (Agent Cards, HTTP/SSE/JSON-RPC)
+- **AG-UI** — agent↔user (event-based streaming)
 
-1. ✅ Have I read `HEADY_CONTEXT.md`?
-2. ✅ Am I using Cloud Run URLs, not localhost?
-3. ✅ Do I know which service owns this code?
-4. ✅ Am I using real API endpoints, not mocked ones?
-5. ✅ Does my change follow φ-scaled patterns?
-
-## DEPLOYMENT CHECKLIST
-
-Before deploying anything:
-
-1. Read `HEADY_CONTEXT.md` for current live URLs
-2. Use `--region us-east1` for Cloud Run
-3. Use `--allow-unauthenticated` unless auth is specifically needed
-4. For CF Workers, use multipart upload (ES modules require it)
-5. After deploy, verify the live URL responds correctly
-
-## KEY CONTEXT
-
-- **GCP Project:** `gen-lang-client-0920560496`
-- **CF Account:** `8b1fa38f282c691423c6399247d53323`
-- **Onboarding URL:** `https://heady-onboarding-609590223909.us-east1.run.app`
-- **IDE URL:** `https://heady-ide-bf4q4zywhq-ue.a.run.app`
-- **Version:** 3.2.3
-- **Monorepo:** `/home/headyme/Heady/`
+## Before Making Changes
+1. Run `node -c <file>` to syntax-check
+2. Ensure no `localhost` or `127.0.0.1` references
+3. Use ESM imports (`import`), never CommonJS (`require`)
+4. Validate inputs with Zod schemas
+5. Use φ-scaled timeouts and retry intervals
