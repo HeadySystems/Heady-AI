@@ -14,6 +14,9 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 FROM node:22-alpine AS deps
+LABEL org.opencontainers.image.source="https://github.com/HeadyMe/Heady" \
+      org.opencontainers.image.vendor="Heady Systems" \
+      org.opencontainers.image.title="Heady"
 
 WORKDIR /app
 
@@ -35,6 +38,9 @@ RUN if [ -f pnpm-lock.yaml ]; then \
 # ─── Stage 2: Build ──────────────────────────────────────────────────────────
 
 FROM node:22-alpine AS build
+LABEL org.opencontainers.image.source="https://github.com/HeadyMe/Heady" \
+      org.opencontainers.image.vendor="Heady Systems" \
+      org.opencontainers.image.title="Heady"
 
 WORKDIR /app
 
@@ -59,12 +65,15 @@ RUN if [ -f pnpm-lock.yaml ]; then \
 # Healthcheck moved to production stage
 
 FROM node:22-alpine AS production
+LABEL org.opencontainers.image.source="https://github.com/HeadyMe/Heady" \
+      org.opencontainers.image.vendor="Heady Systems" \
+      org.opencontainers.image.title="Heady"
 
 # Install tini for proper PID 1 signal handling (SIGTERM → graceful shutdown)
 RUN apk add --no-cache tini curl
 
 # Create non-root heady user
-RUN addgroup -g 1001 -S heady && \
+RUN apk add --no-cache dumb-init && addgroup -g 1001 -S heady && \
     adduser -S heady -u 1001 -G heady
 
 WORKDIR /app
@@ -130,4 +139,4 @@ HEALTHCHECK --interval=13s --timeout=5s --start-period=34s --retries=3 \
 ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start Heady
-CMD ["node", "heady-manager.js"]
+CMD ["dumb-init", "node", "heady-manager.js"]
