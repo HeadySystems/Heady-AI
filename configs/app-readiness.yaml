@@ -17,7 +17,8 @@
 #
 # App Readiness Probes - Business-level health checks for all apps and websites.
 
-version: "2.0.0"
+version: "3.0.0"
+updated_at: "2026-03-17"
 
 # ─── READINESS PROBES ────────────────────────────────────────────────────
 probes:
@@ -102,6 +103,97 @@ probes:
     maxLatencyMs: 2000
     interval: 120
     criticality: low
+
+  - name: headyweb-browser
+    type: http
+    url: https://headyweb.headysystems.com
+    method: GET
+    expectedStatus: 200
+    expectedBody: { contains: "HeadyWeb" }
+    maxLatencyMs: 3000
+    interval: 300
+    criticality: critical
+
+  - name: headyai-ide
+    type: http
+    url: https://headyweb.headysystems.com/ide
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 5000
+    interval: 300
+    criticality: high
+
+  - name: headyos-kernel
+    type: http
+    url: https://os.headysystems.com/health
+    method: GET
+    expectedStatus: 200
+    expectedBody: { contains: "HeadyOS" }
+    maxLatencyMs: 2000
+    interval: 60
+    criticality: critical
+
+  - name: headyos-persistence
+    type: http
+    url: https://os.headysystems.com/api/persistence/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 2000
+    interval: 120
+    criticality: high
+
+  - name: headybuddy-companion
+    type: http
+    url: https://buddy.headysystems.com/health
+    method: GET
+    expectedStatus: 200
+    expectedBody: { contains: "HeadyBuddy" }
+    maxLatencyMs: 2000
+    interval: 60
+    criticality: critical
+
+  - name: headybuddy-websocket
+    type: websocket
+    url: wss://buddy.headysystems.com
+    maxLatencyMs: 3000
+    interval: 120
+    criticality: high
+
+  - name: heady-discord-connector
+    type: http
+    url: https://discord.headysystems.com/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 5000
+    interval: 300
+    criticality: medium
+
+  - name: heady-slack-connector
+    type: http
+    url: https://slack.headysystems.com/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 5000
+    interval: 300
+    criticality: medium
+
+  - name: heady-traces
+    type: http
+    url: https://traces.headysystems.com/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 3000
+    interval: 300
+    criticality: medium
+
+  - name: heady-metrics
+    type: http
+    url: https://metrics.headysystems.com/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 3000
+    interval: 300
+    criticality: medium
 
 # ─── READINESS SCORING ───────────────────────────────────────────────────
 scoring:

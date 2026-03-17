@@ -75,6 +75,144 @@ services:
     port: 4315
     healthPath: /health/ready
     dependencies: [observability-kernel, heady-health, budget-tracker]
+  - name: headyos-kernel
+    runtime: cloud-run
+    port: 4900
+    healthPath: /health
+    dependencies: [heady-memory, heady-governance, heady-conductor]
+    description: "Latent OS kernel — persistence, liquid routing, orchestration"
+  - name: headybuddy-agent
+    runtime: cloud-run
+    port: 4800
+    healthPath: /health
+    dependencies: [heady-brains, heady-memory]
+    description: "HeadyBuddy AI companion — multi-provider, persistent memory, task automation"
+  - name: headyweb-browser
+    runtime: cloud-run
+    port: 5173
+    healthPath: /health
+    dependencies: [headybuddy-agent, heady-brains]
+    description: "HeadyWeb browser — Comet/Chromium hybrid with integrated IDE"
+  - name: headyai-ide
+    runtime: cloud-run
+    port: 5174
+    healthPath: /health
+    dependencies: [headybuddy-agent, headyos-kernel]
+    description: "HeadyAI-IDE — Windsurf/Antigravity hybrid cloud IDE"
+  - name: heady-atlas-agent
+    runtime: cloud-run
+    port: 4320
+    healthPath: /health/ready
+    dependencies: [heady-memory, heady-brains]
+    description: "Knowledge graph and mapping agent"
+  - name: heady-critique-agent
+    runtime: cloud-run
+    port: 4321
+    healthPath: /health/ready
+    dependencies: [heady-brains]
+    description: "Self-critique and quality assurance agent"
+  - name: heady-maestro-agent
+    runtime: cloud-run
+    port: 4322
+    healthPath: /health/ready
+    dependencies: [heady-conductor, heady-brains]
+    description: "Orchestration and coordination agent"
+  - name: heady-sentinel-agent
+    runtime: cloud-run
+    port: 4323
+    healthPath: /health/ready
+    dependencies: [heady-governance, heady-guard]
+    description: "Security monitoring and governance agent"
+  - name: heady-observer-agent
+    runtime: cloud-run
+    port: 4324
+    healthPath: /health/ready
+    dependencies: [observability-kernel, heady-health]
+    description: "System monitoring and observability agent"
+  - name: heady-pythia-agent
+    runtime: cloud-run
+    port: 4325
+    healthPath: /health/ready
+    dependencies: [heady-brains, heady-memory]
+    description: "Prediction and forecasting oracle agent"
+  - name: heady-vinci-agent
+    runtime: cloud-run
+    port: 4326
+    healthPath: /health/ready
+    dependencies: [heady-vinci]
+    description: "Design and UI generation agent"
+  - name: heady-montecarlo-agent
+    runtime: cloud-run
+    port: 4327
+    healthPath: /health/ready
+    dependencies: [heady-brains]
+    description: "Probabilistic simulation and risk analysis agent"
+  - name: heady-imagine-agent
+    runtime: cloud-run
+    port: 4328
+    healthPath: /health/ready
+    dependencies: [heady-brains, heady-vinci]
+    description: "Creative content and image generation agent"
+  - name: heady-stories-agent
+    runtime: cloud-run
+    port: 4329
+    healthPath: /health/ready
+    dependencies: [heady-brains, heady-memory]
+    description: "Narrative architecture and content agent"
+  - name: heady-kinetics-agent
+    runtime: cloud-run
+    port: 4330
+    healthPath: /health/ready
+    dependencies: [heady-vinci]
+    description: "Motion, animation, and interaction design agent"
+  - name: heady-jules-agent
+    runtime: cloud-run
+    port: 4331
+    healthPath: /health/ready
+    dependencies: [heady-brains, heady-memory]
+    description: "The Hyper-Surgeon — precision coding and optimization agent"
+  - name: heady-traces-service
+    runtime: cloud-run
+    port: 4340
+    healthPath: /health/ready
+    dependencies: [observability-kernel]
+    description: "Distributed tracing service"
+  - name: heady-logs-service
+    runtime: cloud-run
+    port: 4341
+    healthPath: /health/ready
+    dependencies: [observability-kernel]
+    description: "Centralized logging service"
+  - name: heady-metrics-service
+    runtime: cloud-run
+    port: 4342
+    healthPath: /health/ready
+    dependencies: [observability-kernel]
+    description: "Metrics collection and alerting service"
+  - name: heady-patterns-service
+    runtime: cloud-run
+    port: 4343
+    healthPath: /health/ready
+    dependencies: [heady-brains, observability-kernel]
+    description: "Pattern recognition and evolution service"
+  - name: heady-discord-connector
+    runtime: cloud-run
+    port: 4350
+    healthPath: /health/ready
+    dependencies: [headybuddy-agent]
+    description: "Discord bot and webhook connector"
+  - name: heady-slack-connector
+    runtime: cloud-run
+    port: 4351
+    healthPath: /health/ready
+    dependencies: [headybuddy-agent]
+    description: "Slack bot and webhook connector"
+  - name: heady-github-connector
+    runtime: cloud-run
+    port: 4352
+    healthPath: /health/ready
+    dependencies: [heady-brains]
+    description: "GitHub App integration connector"
 workers:
   - name: heady-mcp-worker
     runtime: cloudflare-workers
@@ -88,3 +226,9 @@ workers:
   - name: edge-auth-worker
     runtime: cloudflare-workers
     routes: [/verify]
+  - name: headyweb-edge-worker
+    runtime: cloudflare-workers
+    routes: [/browse, /search, /ide]
+  - name: headyos-edge-worker
+    runtime: cloudflare-workers
+    routes: [/os, /sync, /persist]

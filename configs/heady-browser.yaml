@@ -14,9 +14,12 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
-version: "1.0.0"
-description: "Heady Browser — architecture, features, and build configuration"
+version: "2.0.0"
+updated_at: "2026-03-17"
+description: "HeadyWeb Browser — Comet/Chromium hybrid with AI-native features, built-in IDE, Sacred Geometry UI"
 sourceOfTruth: "docs/HEADY_BROWSER_BUDDY_IDE_PROTOCOL.md"
+status: "active"
+repository: "HeadyMe/HeadyWeb"
 
 # ─── PLATFORMS ──────────────────────────────────────────────────────
 platforms:
@@ -148,6 +151,9 @@ featureFusion:
     safari: [reader-mode, energy-efficiency, clean-ux]
     samsung: [split-view, qr-scanning, gesture-navigation]
 
+    comet: [workspace-organization, tab-groups, keyboard-first, productivity-focus]
+    antigravity: [cloud-first-computing, ai-native-ide, minimal-local-resources, seamless-sync]
+
   squashMuseum:
     rule: "Single source of truth per capability — no duplicates"
     ownership:
@@ -159,6 +165,8 @@ featureFusion:
       sync: backend-api
       extensions: engine-extension-system
       devTools: engine-layer
+      ide: headyai-ide-layer
+      cloudCompute: headyos-cloud-bridge
 
 # ─── BUILD PHASES ───────────────────────────────────────────────────
 buildPhases:
