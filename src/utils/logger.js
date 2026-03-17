@@ -18,4 +18,10 @@ const logger = pino({
       }),
 });
 
+// System-level logging aliases for HCFP pipeline callers
+logger.logSystem = (msg, ...args) => logger.info({ component: 'system' }, msg, ...args);
+logger.logBuild = (msg, ...args) => logger.info({ component: 'build' }, msg, ...args);
+logger.logPipeline = (msg, ...args) => logger.info({ component: 'pipeline' }, msg, ...args);
+logger.logLearn = (msg, ...args) => logger.info({ component: 'learning' }, msg, ...args);
+
 module.exports = logger;
