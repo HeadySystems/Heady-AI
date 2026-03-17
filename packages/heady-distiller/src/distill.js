@@ -48,7 +48,7 @@ Return ONLY valid JSON: {
       for (const fact of (compressed.keyFacts ?? []).slice(0, 5)) {
         const embedding = await getEmbedding(fact).catch(() => []);
         if (embedding.length) {
-          await upsertMemory(params.userId, fact, embedding, compressed.confidence).catch(() => {});
+          await upsertMemory(params.userId, fact, embedding, compressed.confidence).catch(() => { });
           patternsAdded++;
         }
       }
@@ -65,3 +65,4 @@ Return ONLY valid JSON: {
     return { stage: 22, name: 'DISTILLATION', patternsAdded: 0, tokenReduction: 0, passed: true };
   }
 }
+
