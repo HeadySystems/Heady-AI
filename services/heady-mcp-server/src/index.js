@@ -35,8 +35,8 @@ const log = createLogger('heady-mcp');
 // ── Server Info ─────────────────────────────────────────────────────────────
 const SERVER_INFO = {
   name: 'heady-mcp-server',
-  version: '5.1.0',
-  description: 'Heady™ Master Control Program — 87 MCP tools across 45 services, φ-scaled autonomous orchestration',
+  version: '5.2.0',
+  description: 'Heady™ Master Control Program — 147 MCP tools across 60 services, liquid parallel async orchestration',
   vendor: 'HeadySystems Inc.',
   homepage: 'https://headymcp.com',
   protocolVersion: '2024-11-05',

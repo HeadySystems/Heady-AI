@@ -1,0 +1,16 @@
+{
+  "name": "@heady/heady-chronicle",
+  "version": "1.0.0",
+  "description": "Heady heady-chronicle MCP service",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "heady": {
+    "port": 3731,
+    "category": "ecosystem",
+    "phiTier": 1,
+    "healthPath": "/health"
+  }
+}

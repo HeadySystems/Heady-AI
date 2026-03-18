@@ -15,6 +15,8 @@ const { getAllServiceEndpoints } = require('../config/services');
 const { DRUPAL_TOOLS } = require('./drupal-integration');
 const { registerAdvancedServices } = require('./advanced-services');
 const { registerCreativeServices } = require('./creative-services');
+let registerEcosystemServices;
+try { registerEcosystemServices = require('./ecosystem-services').registerEcosystemServices; } catch (e) { registerEcosystemServices = () => {}; }
 
 function createToolRegistry() {
   const tools = [];
@@ -768,6 +770,11 @@ function createToolRegistry() {
   // CREATIVE MCP SERVICES — 20 additional innovative services (v5.1)
   // ═══════════════════════════════════════════════════════════════════
   registerCreativeServices(register);
+
+  // ═══════════════════════════════════════════════════════════════════
+  // ECOSYSTEM SERVICES — 15 gap-filling services (v5.2)
+  // ═══════════════════════════════════════════════════════════════════
+  registerEcosystemServices(register);
 
   return { tools, handlers };
 }

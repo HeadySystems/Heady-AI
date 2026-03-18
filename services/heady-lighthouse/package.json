@@ -1,0 +1,16 @@
+{
+  "name": "@heady/heady-lighthouse",
+  "version": "1.0.0",
+  "description": "Heady heady-lighthouse MCP service",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "heady": {
+    "port": 3715,
+    "category": "ecosystem",
+    "phiTier": 1,
+    "healthPath": "/health"
+  }
+}
