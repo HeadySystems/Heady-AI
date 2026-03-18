@@ -23,31 +23,31 @@ tiers:
     maxLatency: 1618ms  # φ × 1000
     services:
       - name: heady-chrono
-        port: 3700
+        port: 3400
         description: "Temporal intelligence — event correlation, bisect, replay"
         tools: [chrono_timeline, chrono_correlate, chrono_bisect, chrono_replay]
         sacred_geometry: metatron
 
       - name: heady-cartograph
-        port: 3701
+        port: 3401
         description: "Dependency & impact mapper — blast radius, graph analysis"
         tools: [carto_impact, carto_graph, carto_upstream, carto_downstream, carto_orphans]
         sacred_geometry: flower_of_life
 
       - name: heady-synapse
-        port: 3702
+        port: 3402
         description: "Inter-agent communication bus — semantic pub/sub, negotiation"
         tools: [synapse_publish, synapse_subscribe, synapse_query, synapse_negotiate]
         sacred_geometry: merkaba
 
       - name: heady-aurora
-        port: 3703
+        port: 3403
         description: "Ambient context enricher — peripheral awareness, relevance"
         tools: [aurora_context, aurora_enrich, aurora_relevant, aurora_ambient]
         sacred_geometry: sri_yantra
 
       - name: heady-nexus
-        port: 3704
+        port: 3404
         description: "Knowledge graph engine — traverse, connect, visualize"
         tools: [nexus_query, nexus_connect, nexus_traverse, nexus_visualize, nexus_gaps]
         sacred_geometry: icosahedron
@@ -59,43 +59,43 @@ tiers:
     maxLatency: 2618ms
     services:
       - name: heady-prism
-        port: 3710
+        port: 3410
         description: "Multi-perspective code review"
         tools: [prism_review, prism_facet, prism_compare, prism_consensus]
         sacred_geometry: dodecahedron
 
       - name: heady-loom
-        port: 3711
+        port: 3411
         description: "Workflow weaver"
         tools: [loom_weave, loom_inspect, loom_pause, loom_replay, loom_unravel]
         sacred_geometry: torus_knot
 
       - name: heady-axiom
-        port: 3712
+        port: 3412
         description: "Invariant & contract enforcer"
         tools: [axiom_define, axiom_check, axiom_report, axiom_enforce]
         sacred_geometry: metatron
 
       - name: heady-mosaic
-        port: 3713
+        port: 3413
         description: "Multi-repo orchestrator"
         tools: [mosaic_plan, mosaic_execute, mosaic_status, mosaic_rollback, mosaic_sync]
         sacred_geometry: flower_of_life
 
       - name: heady-cadence
-        port: 3714
+        port: 3414
         description: "Release rhythm manager"
         tools: [cadence_prepare, cadence_changelog, cadence_gate, cadence_ship, cadence_announce]
         sacred_geometry: sri_yantra
 
       - name: heady-chimera
-        port: 3715
+        port: 3415
         description: "Multi-model AI router"
         tools: [chimera_route, chimera_benchmark, chimera_blend, chimera_cost_optimize]
         sacred_geometry: merkaba
 
       - name: heady-tapestry
-        port: 3716
+        port: 3416
         description: "Event sourcing & CQRS"
         tools: [tapestry_emit, tapestry_replay, tapestry_project, tapestry_query, tapestry_snapshot]
         sacred_geometry: grid64
@@ -107,42 +107,42 @@ tiers:
     maxLatency: 4236ms
     services:
       - name: heady-echo
-        port: 3720
+        port: 3420
         description: "Cross-environment diff"
         tools: [echo_diff, echo_snapshot, echo_promote, echo_rollback]
 
       - name: heady-vault
-        port: 3721
+        port: 3421
         description: "Secrets lifecycle manager"
         tools: [vault_rotate, vault_audit, vault_blast_radius, vault_revoke, vault_expire]
 
       - name: heady-aegis
-        port: 3722
+        port: 3422
         description: "Security posture manager"
         tools: [aegis_assess, aegis_harden, aegis_compliance, aegis_threat_model]
 
       - name: heady-crucible
-        port: 3723
+        port: 3423
         description: "Chaos engineering"
         tools: [crucible_inject, crucible_scenario, crucible_observe, crucible_report, crucible_abort]
 
       - name: heady-arbiter
-        port: 3724
+        port: 3424
         description: "Conflict resolution"
         tools: [arbiter_predict, arbiter_resolve, arbiter_drift, arbiter_reconcile]
 
       - name: heady-ouroboros
-        port: 3725
+        port: 3425
         description: "Self-healing pipeline"
         tools: [ouroboros_diagnose, ouroboros_heal, ouroboros_evolve, ouroboros_journal]
 
       - name: heady-mycelium
-        port: 3726
+        port: 3426
         description: "Service mesh intelligence"
         tools: [mycelium_trace, mycelium_topology, mycelium_hotspot, mycelium_simulate]
 
       - name: heady-rune
-        port: 3727
+        port: 3427
         description: "Infrastructure as Code"
         tools: [rune_plan, rune_apply, rune_drift, rune_rollback, rune_cost]
 
@@ -153,42 +153,42 @@ tiers:
     maxLatency: 6854ms
     services:
       - name: heady-oracle
-        port: 3730
+        port: 3500
         description: "Predictive resource planner"
         tools: [oracle_forecast, oracle_capacity, oracle_cost, oracle_recommend]
 
       - name: heady-nimbus
-        port: 3731
+        port: 3501
         description: "Cloud cost intelligence"
         tools: [nimbus_spend, nimbus_waste, nimbus_optimize, nimbus_forecast, nimbus_allocate]
 
       - name: heady-patina
-        port: 3732
+        port: 3502
         description: "Technical debt tracker"
         tools: [patina_scan, patina_score, patina_prioritize, patina_track]
 
       - name: heady-polaris
-        port: 3733
+        port: 3503
         description: "North star metrics"
         tools: [polaris_define, polaris_track, polaris_correlate, polaris_dashboard, polaris_alert]
 
       - name: heady-solstice
-        port: 3734
+        port: 3504
         description: "Seasonal pattern analyzer"
         tools: [solstice_detect, solstice_predict, solstice_anomaly, solstice_calibrate]
 
       - name: heady-quantum
-        port: 3735
+        port: 3505
         description: "Probabilistic decision engine"
         tools: [quantum_simulate, quantum_bayesian, quantum_decide, quantum_risk]
 
       - name: heady-tempest
-        port: 3736
+        port: 3506
         description: "Load & stress testing"
         tools: [tempest_run, tempest_scenario, tempest_results, tempest_compare, tempest_baseline]
 
       - name: heady-verdant
-        port: 3737
+        port: 3507
         description: "Green computing tracker"
         tools: [verdant_footprint, verdant_optimize, verdant_report, verdant_offset]
 
@@ -199,32 +199,32 @@ tiers:
     maxLatency: 11090ms
     services:
       - name: heady-compass
-        port: 3740
+        port: 3510
         description: "Developer experience navigator"
         tools: [compass_howto, compass_example, compass_setup, compass_path]
 
       - name: heady-scribe
-        port: 3741
+        port: 3511
         description: "Auto-documentation generator"
         tools: [scribe_generate, scribe_drift, scribe_diagram, scribe_runbook]
 
       - name: heady-fossil
-        port: 3742
+        port: 3512
         description: "Code archaeology"
         tools: [fossil_blame_deep, fossil_decision_trail, fossil_experts, fossil_churn]
 
       - name: heady-genesis
-        port: 3743
+        port: 3513
         description: "Project scaffolder"
         tools: [genesis_create, genesis_template, genesis_migrate, genesis_validate]
 
       - name: heady-labyrinth
-        port: 3744
+        port: 3514
         description: "Test maze runner"
         tools: [labyrinth_generate, labyrinth_mutate, labyrinth_coverage, labyrinth_fuzz]
 
       - name: heady-mimic
-        port: 3745
+        port: 3515
         description: "Mock & fixture generator"
         tools: [mimic_generate, mimic_from_schema, mimic_snapshot, mimic_replay]
 
@@ -235,37 +235,37 @@ tiers:
     maxLatency: 17944ms
     services:
       - name: heady-alchemy
-        port: 3750
+        port: 3600
         description: "Data pipeline transformer"
         tools: [alchemy_transform, alchemy_pipeline, alchemy_stream, alchemy_validate]
 
       - name: heady-weave
-        port: 3751
+        port: 3601
         description: "GraphQL federation gateway"
         tools: [weave_schema, weave_query, weave_introspect, weave_stitch]
 
       - name: heady-herald
-        port: 3752
+        port: 3602
         description: "Notification engine"
         tools: [herald_notify, herald_broadcast, herald_preference, herald_digest]
 
       - name: heady-resonance
-        port: 3753
+        port: 3603
         description: "Feedback loop aggregator"
         tools: [resonance_ingest, resonance_themes, resonance_trend, resonance_alert]
 
       - name: heady-ember
-        port: 3754
+        port: 3604
         description: "Warm cache manager"
         tools: [ember_warm, ember_invalidate, ember_analyze, ember_optimize]
 
       - name: heady-sigil
-        port: 3755
+        port: 3605
         description: "API key & token manager"
         tools: [sigil_create, sigil_rotate, sigil_usage, sigil_revoke, sigil_audit]
 
       - name: heady-tessera
-        port: 3756
+        port: 3606
         description: "Feature flags & experiments"
         tools: [tessera_create, tessera_rollout, tessera_evaluate, tessera_results, tessera_kill]
 
@@ -276,22 +276,22 @@ tiers:
     maxLatency: 29034ms
     services:
       - name: heady-lingua
-        port: 3760
+        port: 3610
         description: "i18n & translation"
         tools: [lingua_scan, lingua_translate, lingua_validate, lingua_coverage]
 
       - name: heady-meridian
-        port: 3761
+        port: 3611
         description: "Cross-timezone coordination"
         tools: [meridian_window, meridian_handoff, meridian_available, meridian_schedule]
 
       - name: heady-spectra
-        port: 3762
+        port: 3612
         description: "API contract testing"
         tools: [spectra_validate, spectra_breaking, spectra_matrix, spectra_generate, spectra_evolve]
 
       - name: heady-aether
-        port: 3763
+        port: 3613
         description: "Edge computing orchestrator"
         tools: [aether_deploy_edge, aether_invalidate, aether_route, aether_latency]
 
