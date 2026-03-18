@@ -9,12 +9,12 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: services/core-api/routes/claude-routes.js                                                    ║
+// ║  FILE: services/core-api/routes/heady-routes.js                                                    ║
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 /**
- * Heady Claude API Routes (claude-routes.js)
+ * Heady Claude API Routes (heady-routes.js)
  * 
  * REST API endpoints for the Claude service.
  * Provides: conversation management, completions, and caching.

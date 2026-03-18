@@ -95,7 +95,7 @@ const AGENT_SKILLS = [
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
 const DEFAULT_TIMEOUT_MS = 120000;
 
-class ClaudeCodeAgent {
+class HeadyCodeAgent {
   constructor(options = {}) {
     this.id = AGENT_ID;
     this.skills = AGENT_SKILLS;
@@ -393,4 +393,4 @@ class ClaudeCodeAgent {
   }
 }
 
-module.exports = { ClaudeCodeAgent, AGENT_ID, AGENT_SKILLS };
+module.exports = { HeadyCodeAgent, AGENT_ID, AGENT_SKILLS };
