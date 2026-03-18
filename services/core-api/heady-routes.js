@@ -20,7 +20,7 @@
  * Provides: conversation management, completions, and caching.
  */
 
-const { claude } = require('../hc_claude');
+const { heady } = require('../hc_heady_agent');
 const express = require('express');
 const router = express.Router();
 
@@ -28,11 +28,11 @@ const router = express.Router();
 // INITIALIZATION
 // ============================================================================
 
-// Ensure claude service is initialized
+// Ensure heady service is initialized
 let initialized = false;
 async function ensureInit() {
   if (!initialized) {
-    await claude.init();
+    await heady.init();
     initialized = true;
   }
 }
@@ -42,13 +42,13 @@ async function ensureInit() {
 // ============================================================================
 
 /**
- * POST /api/claude/conversations
+ * POST /api/heady/conversations
  * Create new conversation
  */
 router.post('/conversations', async (req, res) => {
   await ensureInit();
   
-  const conversation = await claude.createConversation();
+  const conversation = await heady.createConversation();
   
   res.json({
     id: conversation.id,
@@ -58,13 +58,13 @@ router.post('/conversations', async (req, res) => {
 });
 
 /**
- * GET /api/claude/conversations/:id
+ * GET /api/heady/conversations/:id
  * Get conversation details
  */
 router.get('/conversations/:id', async (req, res) => {
   await ensureInit();
   
-  const conversation = claude.conversations.get(req.params.id);
+  const conversation = heady.conversations.get(req.params.id);
   if (!conversation) {
     return res.status(404).json({ error: 'Conversation not found' });
   }
@@ -83,7 +83,7 @@ router.get('/conversations/:id', async (req, res) => {
 });
 
 /**
- * POST /api/claude/conversations/:id/messages
+ * POST /api/heady/conversations/:id/messages
  * Add message to conversation
  */
 router.post('/conversations/:id/messages', async (req, res) => {
@@ -95,7 +95,7 @@ router.post('/conversations/:id/messages', async (req, res) => {
   }
   
   try {
-    const message = await claude.addMessage(req.params.id, role, content);
+    const message = await heady.addMessage(req.params.id, role, content);
     res.json({
       id: message.id,
       conversationId: req.params.id,
@@ -113,7 +113,7 @@ router.post('/conversations/:id/messages', async (req, res) => {
 // ============================================================================
 
 /**
- * POST /api/claude/conversations/:id/completions
+ * POST /api/heady/conversations/:id/completions
  * Get completion for conversation
  */
 router.post('/conversations/:id/completions', async (req, res) => {
@@ -122,7 +122,7 @@ router.post('/conversations/:id/completions', async (req, res) => {
   const { options = {} } = req.body;
   
   try {
-    const completion = await claude.getCompletion(req.params.id, options);
+    const completion = await heady.getCompletion(req.params.id, options);
     res.json({
       conversationId: req.params.id,
       completion: completion.completion,
@@ -138,7 +138,7 @@ router.post('/conversations/:id/completions', async (req, res) => {
 // ============================================================================
 
 /**
- * GET /api/claude/stats
+ * GET /api/heady/stats
  * Get service statistics
  */
 router.get('/stats', async (req, res) => {
