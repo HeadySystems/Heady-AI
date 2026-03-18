@@ -1,14 +1,30 @@
 {
-  "name": "@heady/mcp-server",
+  "name": "@heady-ai/mcp-server",
   "version": "5.0.0",
   "description": "Heady™ Master Control Program — Full MCP server with 42 tools, stdio/HTTP/SSE transports, φ-scaled routing, CSL gates",
-  "main": "src/index.js",
+  "main": "index.js",
+  "bin": {
+    "heady-mcp-server": "index.js"
+  },
+  "files": [
+    "index.js",
+    "config/",
+    "tools/",
+    "transports/",
+    "middleware/",
+    "shared/",
+    "core-bridge.js",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "start": "node src/index.js",
-    "start:stdio": "HEADY_MCP_TRANSPORT=stdio node src/index.js",
-    "start:http": "HEADY_MCP_TRANSPORT=http node src/index.js",
-    "start:sse": "HEADY_MCP_TRANSPORT=sse node src/index.js",
-    "dev": "node --watch src/index.js",
+    "start": "node index.js",
+    "start:stdio": "HEADY_MCP_TRANSPORT=stdio node index.js",
+    "start:http": "HEADY_MCP_TRANSPORT=http node index.js",
+    "start:sse": "HEADY_MCP_TRANSPORT=sse node index.js",
+    "dev": "node --watch index.js",
     "test": "node --test src/__tests__/*.test.js",
     "health": "curl -s http://localhost:3310/health | node -e \"process.stdin.pipe(process.stdout)\""
   },
