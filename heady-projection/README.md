@@ -1,3 +1,7 @@
+<!-- STATUS BANNER — do not remove -->
+> [![Status: STAGING](https://img.shields.io/badge/repo--status-STAGING-yellow)](https://github.com/HeadyAI/Heady)
+> **This is a STAGING** component within the Heady monorepo. Canonical source: [HeadyAI/Heady](https://github.com/HeadyAI/Heady).
+
 # Heady™ Autonomous Projection System
 
 > **HeadySystems Inc.** — Proprietary and Confidential

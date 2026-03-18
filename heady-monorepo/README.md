@@ -1,3 +1,7 @@
+<!-- STATUS BANNER — do not remove -->
+> [![Status: MIRROR](https://img.shields.io/badge/repo--status-MIRROR-blue)](https://github.com/HeadyAI/Heady)
+> **This is a MIRROR** of the canonical source at [HeadyAI/Heady](https://github.com/HeadyAI/Heady). Do not open PRs here — contribute to the canonical repo.
+
 # Heady™ AI Platform — Monorepo v3.1.0
 
 > Autonomous multi-agent AI operating system with 20 specialized intelligence nodes,

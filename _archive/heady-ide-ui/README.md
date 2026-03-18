@@ -1,3 +1,7 @@
+<!-- STATUS BANNER — do not remove -->
+> [![Status: ARCHIVED](https://img.shields.io/badge/repo--status-ARCHIVED-lightgrey)](https://github.com/HeadyAI/Heady)
+> **This repo is ARCHIVED.** Read-only. Superseded by [HeadyAI-IDE](../../HeadyAI-IDE/). Do not use in production.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
