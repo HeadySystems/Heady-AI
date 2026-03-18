@@ -1,3 +1,7 @@
+<!-- STATUS BANNER — do not remove -->
+> [![Status: EXPERIMENTAL](https://img.shields.io/badge/repo--status-EXPERIMENTAL-orange)](https://github.com/HeadyAI/Heady)
+> **This is an EXPERIMENTAL** build snapshot. Canonical source: [HeadyAI/Heady](https://github.com/HeadyAI/Heady). Not for production use.
+
 # 🧠 Heady — Latent OS & Autonomous AI Platform
 
 [![Node](https://img.shields.io/badge/node-20%2B-green.svg)]()

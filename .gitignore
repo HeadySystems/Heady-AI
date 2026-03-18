@@ -10,6 +10,9 @@ build/
 .env.local
 .env.production
 .env.hybrid
+env.local
+env.production
+env.hybrid
 .heady_secrets
 
 # Logs
@@ -107,6 +110,13 @@ package-lock.json
 .turbo
 .wrangler
 infrastructure/infrastructure/db_data/
+
+# Windows executables & binaries (never commit)
+*.exe
+*.dll
+*.so
+*.dylib
+cloudflared.exe
 
 # Large binary installers (local audit only, not pushed)
 archive/tool-installers/*.deb
