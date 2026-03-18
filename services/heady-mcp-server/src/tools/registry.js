@@ -13,6 +13,9 @@ const { PHI, PSI, PSI2, FIB, CSL } = require('../config/phi-constants');
 const { callService, checkServiceHealth } = require('./service-client');
 const { getAllServiceEndpoints } = require('../config/services');
 const { DRUPAL_TOOLS } = require('./drupal-integration');
+const { AEGIS_TOOLS } = require('./aegis');
+const { MANDALA_TOOLS } = require('./mandala');
+const { MNEMOSYNE_TOOLS } = require('./mnemosyne');
 
 function createToolRegistry() {
   const tools = [];
@@ -754,6 +757,30 @@ function createToolRegistry() {
   // ═══════════════════════════════════════════════════════════════════
 
   for (const tool of DRUPAL_TOOLS) {
+    register(tool);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // AEGIS — φ-resonant Infrastructure Health Monitor
+  // ═══════════════════════════════════════════════════════════════════
+
+  for (const tool of AEGIS_TOOLS) {
+    register(tool);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MANDALA — Sacred Geometry Computation Engine
+  // ═══════════════════════════════════════════════════════════════════
+
+  for (const tool of MANDALA_TOOLS) {
+    register(tool);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MNEMOSYNE — 3-Tier Memory Orchestrator
+  // ═══════════════════════════════════════════════════════════════════
+
+  for (const tool of MNEMOSYNE_TOOLS) {
     register(tool);
   }
 
