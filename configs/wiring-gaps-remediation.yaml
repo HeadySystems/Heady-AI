@@ -3,11 +3,11 @@
 # Identified via deep ecosystem analysis — 2026-03-18
 # HEADY_BRAND:END
 
-version: "1.0.0"
+version: "1.1.0"
 name: WiringGapsRemediation
 description: |
   Critical wiring gaps identified across 69 repos, 144+ services, 61 packages,
-  and 29 apps. Each gap has severity, impact, and remediation steps.
+  29 apps, and 350+ config files. Each gap has severity, impact, and remediation.
 
 # ═══════════════════════════════════════════════════════════════════════
 # CRITICAL GAPS (Must fix immediately)
@@ -15,9 +15,84 @@ description: |
 
 critical:
 
-  port_conflicts:
+  secrets_in_repo:
+    severity: URGENT
+    description: "GCP/Firebase service account keys and SSL private keys committed to repo"
+    files:
+      - configs/secrets/gcp-service-account.json
+      - configs/secrets/firebase-admin-sdk.json
+      - configs/secrets/gen-lang-client-*.json (4 files)
+      - configs/nginx/ssl/ca.key
+      - configs/nginx/ssl/server.key
+      - configs/nginx/ssl/client.key
+      - configs/api-keys.json
+    impact: "Violates own secret-hygiene-policy.yml; credential exposure risk"
+    remediation:
+      - "IMMEDIATELY rotate all exposed credentials"
+      - "Remove from git history (git filter-branch or BFG)"
+      - "Add configs/secrets/ and configs/nginx/ssl/*.key to .gitignore"
+      - "Move all secrets to HeadyVault (port 3389)"
+      - "Use dynamic secret injection in CI/CD"
+
+  config_version_fragmentation:
     severity: critical
-    description: "Two port conflicts causing service startup race conditions"
+    description: "5 conflicting pipeline versions, 4 diverged registries, 6 port assignment conflicts"
+    details:
+      pipeline_versions:
+        - "hcfullpipeline.yaml: v4.0.0 (renamed stages)"
+        - "heady-registry.json (root): v3.1.0 (deprecated stage names)"
+        - "service-routing-v9.yaml: claims 22 stages"
+        - "CLAUDE.md: v7 (21 stages)"
+        - "new-mcp-services-spec.yaml: v8 (25 stages proposed)"
+      registry_versions:
+        - "production-service-registry.json: v4.0.0"
+        - "configs/heady-registry.json: v3.2.3"
+        - "root heady-registry.json: v4.1.0"
+        - "SERVICE_INDEX.json: v5.0.0"
+      service_coverage_gap: "production-service-registry has only 30 services; SERVICE_INDEX has 211"
+    remediation:
+      - "Designate SERVICE_INDEX.json v5.0.0 as single source of truth"
+      - "Generate production-service-registry.json from SERVICE_INDEX.json"
+      - "Update hcfullpipeline.yaml to v8.0.0 with 25 stages"
+      - "Deprecate root heady-registry.json (stale v3.1.0 stage names)"
+      - "HeadyGenesis validates all registries stay in sync"
+
+  embedding_dimension_conflict:
+    severity: critical
+    description: "CLAUDE.md says 384D embeddings; heady-registry.json says 1536D"
+    impact: "Vector operations will fail if dimension mismatch"
+    remediation:
+      - "1536D is correct (text-embedding-3-large produces 1536D)"
+      - "Update CLAUDE.md to reference 1536D consistently"
+      - "384D reference is legacy from earlier embedding model"
+
+  additional_port_conflicts:
+    severity: critical
+    description: "6 more port conflicts found between service-catalog.yaml and production-service-registry"
+    conflicts:
+      - { service: domain-router, catalog: 4301, production: 4311 }
+      - { service: heady-vinci, catalog: 4309, production: 4323 }
+      - { service: heady-governance, catalog: 4310, production: 4321 }
+      - { service: heady-guard, catalog: 4311, production: 4316 }
+      - { service: heady-bee-factory, catalog: 4313, production: 4319 }
+      - { service: hcfullpipeline-executor, catalog: 4314, production: 4330 }
+    remediation:
+      - "Use SERVICE_INDEX.json port assignments as canonical"
+      - "Update both service-catalog.yaml and production-service-registry.json"
+
+  outdated_ai_models:
+    severity: critical
+    description: "ai-services.yaml references deprecated/retired models"
+    models:
+      - { current: "claude-2.1", should_be: "claude-opus-4-6" }
+      - { current: "code-davinci-002", should_be: "REMOVED (retired by OpenAI)" }
+      - { current: "palm-2", should_be: "gemini-2.5-pro" }
+      - { current: "llama-2-70b", should_be: "llama-4-maverick" }
+    remediation:
+      - "Update ai-services.yaml with current model IDs"
+      - "HeadySynapse manages model routing dynamically"
+
+  port_conflicts:
     conflicts:
       - port: 3320
         claimants: [heady-ide, discord-bot]
