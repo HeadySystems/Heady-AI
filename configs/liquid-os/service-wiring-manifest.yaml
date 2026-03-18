@@ -1,0 +1,738 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - Complete Service Wiring Manifest
+# The Nervous System of the Liquid Latent OS
+# HEADY_BRAND:END
+
+version: "1.0.0"
+name: ServiceWiringManifest
+description: |
+  Master wiring manifest ensuring every service in the Heady ecosystem
+  communicates optimally. Defines all inter-service connections, protocols,
+  circuit breakers, and data flow paths. This is the blueprint for a
+  perfect liquid dynamic parallel async distributed intelligently
+  orchestrated optimized latent OS.
+
+# ═══════════════════════════════════════════════════════════════════════
+# COMMUNICATION PROTOCOLS
+# ═══════════════════════════════════════════════════════════════════════
+
+protocols:
+  sync_http:
+    description: "Synchronous HTTP/HTTPS — request-response"
+    use_for: "User-facing API calls, health checks, short-lived queries"
+    timeout_default_ms: 5000
+    circuit_breaker: true
+
+  async_event:
+    description: "Asynchronous event streaming via Redis Streams / Kafka"
+    use_for: "Inter-service notifications, state changes, audit logs"
+    delivery: at_least_once
+    ordering: per_partition
+
+  sse_mcp:
+    description: "Server-Sent Events for MCP tool communication"
+    use_for: "AI tool calls, LLM integrations, MCP client connections"
+    keepalive_ms: 30000
+
+  websocket:
+    description: "Bidirectional WebSocket for real-time data"
+    use_for: "Collaboration, notifications, live metrics"
+    heartbeat_ms: 15000
+
+  grpc_internal:
+    description: "gRPC for high-throughput internal service communication"
+    use_for: "Vector operations, embedding pipelines, batch processing"
+    max_message_size_mb: 8
+
+# ═══════════════════════════════════════════════════════════════════════
+# CIRCUIT BREAKER CONFIGURATION (φ-scaled)
+# ═══════════════════════════════════════════════════════════════════════
+
+circuit_breaker:
+  default:
+    failure_threshold: 5       # fib(5)
+    success_threshold: 3       # fib(4)
+    timeout_ms: 30000
+    half_open_max: 2           # fib(3)
+    backoff_base_ms: 1618      # φ × 1000
+    backoff_multiplier: 1.618  # φ
+    backoff_jitter: 0.382      # ψ²
+
+  critical:
+    failure_threshold: 3       # fib(4)
+    success_threshold: 2       # fib(3)
+    timeout_ms: 10000
+    half_open_max: 1
+    backoff_base_ms: 618       # ψ × 1000
+    backoff_multiplier: 1.618
+    backoff_jitter: 0.236      # ψ³
+
+# ═══════════════════════════════════════════════════════════════════════
+# SERVICE MESH — COMPLETE WIRING MAP
+# ═══════════════════════════════════════════════════════════════════════
+
+mesh:
+
+  # ─── TIER 0: FOUNDATION (must start first) ─────────────────────────
+
+  postgresql:
+    type: database
+    port: 5432
+    consumers: [heady-memory, heady-persistence, heady-oracle, heady-archive, heady-chrono]
+    protocol: tcp
+    pool_size: 34  # fib(9)
+    health: "SELECT 1"
+
+  redis:
+    type: cache
+    port: 6379
+    consumers: [heady-memory, heady-stream, heady-conductor, heady-cron, heady-nexus]
+    protocol: tcp
+    pool_size: 21  # fib(8)
+    health: PING
+
+  # ─── TIER 1: CORE GATEWAY (serves all traffic) ────────────────────
+
+  heady-gateway:
+    port: 3330
+    protocol: sync_http
+    inbound:
+      - source: external_traffic
+        auth: bearer_token
+        rate_limit: "144 req/min"  # fib(12)
+    outbound:
+      - target: heady-manager
+        protocol: sync_http
+        circuit_breaker: critical
+      - target: heady-conductor
+        protocol: sync_http
+        circuit_breaker: critical
+      - target: heady-shield
+        protocol: sync_http
+        purpose: "Pre-flight security scan"
+    health: /health
+
+  heady-manager:
+    port: 3300
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: heady-gateway
+      - source: mcp_clients
+        protocol: sse_mcp
+    outbound:
+      - target: heady-conductor
+        protocol: sync_http
+      - target: heady-brain
+        protocol: sync_http
+      - target: heady-autocontext
+        protocol: sync_http
+      - target: heady-memory
+        protocol: sync_http
+      - target: heady-persistence
+        protocol: sync_http
+      - target: heady-buddy
+        protocol: sync_http
+    health: /api/health
+
+  # ─── TIER 2: ORCHESTRATION (routes all work) ──────────────────────
+
+  heady-conductor:
+    port: 3303
+    protocol: sync_http
+    inbound:
+      - source: heady-manager
+      - source: heady-forge
+      - source: heady-saga
+    outbound:
+      - target: all_services
+        protocol: sync_http
+        routing: csl_scored
+        pools: { hot: 34, warm: 21, cold: 13 }
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Publish routing decisions"
+    health: /api/health
+
+  heady-stream:
+    port: 3388
+    protocol: async_event
+    topics:
+      - name: heady.events
+        partitions: 8
+        consumers: [heady-chrono, heady-pulse, heady-lens-deep, heady-narrator]
+      - name: heady.commands
+        partitions: 5
+        consumers: [heady-conductor, heady-forge, heady-saga]
+      - name: heady.metrics
+        partitions: 3
+        consumers: [heady-cost, observability-kernel, analytics-service]
+      - name: heady.security
+        partitions: 2
+        consumers: [heady-shield, heady-anchor, heady-vault]
+      - name: heady.memory
+        partitions: 3
+        consumers: [heady-memory, heady-oracle, heady-archive]
+    health: /health
+
+  # ─── TIER 3: INTELLIGENCE (processes all thought) ─────────────────
+
+  heady-brain:
+    port: 3302
+    protocol: sync_http
+    inbound:
+      - source: heady-manager
+      - source: heady-conductor
+    outbound:
+      - target: heady-autocontext
+        protocol: sync_http
+        purpose: "5-pass enrichment"
+      - target: heady-memory
+        protocol: sync_http
+      - target: heady-synapse
+        protocol: sync_http
+        purpose: "Multi-model collaboration"
+      - target: heady-cortex
+        protocol: sync_http
+        purpose: "Structured reasoning"
+    health: /api/health
+
+  heady-autocontext:
+    port: 3396
+    protocol: [sync_http, websocket]
+    inbound:
+      - source: heady-brain
+      - source: heady-conductor
+      - source: heady-buddy
+    outbound:
+      - target: heady-memory
+        protocol: sync_http
+        purpose: "T0/T1/T2 retrieval"
+      - target: search-service
+        protocol: sync_http
+        purpose: "Semantic search"
+      - target: heady-oracle
+        protocol: sync_http
+        purpose: "Graph RAG knowledge grounding"
+      - target: csl-engine
+        protocol: sync_http
+        purpose: "Confidence assessment"
+    health: /context/health
+
+  heady-synapse:
+    port: 3383
+    protocol: sync_http
+    inbound:
+      - source: heady-brain
+      - source: heady-conductor
+    outbound:
+      - target: ai-router
+        protocol: sync_http
+        purpose: "Multi-model dispatch"
+      - target: heady-battle
+        protocol: sync_http
+        purpose: "Competitive evaluation fallback"
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Publish consensus results"
+    health: /health
+
+  heady-cortex:
+    port: 3384
+    protocol: sync_http
+    inbound:
+      - source: heady-brain
+      - source: heady-prism
+      - source: heady-gate
+    outbound:
+      - target: heady-memory
+        protocol: sync_http
+      - target: heady-oracle
+        protocol: sync_http
+        purpose: "Knowledge graph for reasoning"
+      - target: csl-engine
+        protocol: sync_http
+    health: /health
+
+  heady-prism:
+    port: 3385
+    protocol: sync_http
+    inbound:
+      - source: heady-conductor
+      - source: code_review_pipeline
+    outbound:
+      - target: heady-cortex
+        protocol: sync_http
+      - target: heady-brain
+        protocol: sync_http
+    health: /health
+
+  # ─── TIER 4: MEMORY & DATA (stores all knowledge) ─────────────────
+
+  heady-memory:
+    port: internal
+    protocol: sync_http
+    inbound:
+      - source: heady-autocontext
+      - source: heady-brain
+      - source: heady-buddy
+      - source: heady-cortex
+      - source: heady-chrono
+    outbound:
+      - target: postgresql
+        protocol: tcp
+        purpose: "T1/T2 pgvector storage"
+      - target: redis
+        protocol: tcp
+        purpose: "T0 working memory"
+      - target: heady-archive
+        protocol: sync_http
+        purpose: "Cold storage delegation"
+    health: /health
+
+  heady-oracle:
+    port: 3373
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: heady-autocontext
+      - source: heady-cortex
+      - source: heady-prism
+    outbound:
+      - target: postgresql
+        protocol: tcp
+        purpose: "Graph storage (Apache AGE)"
+      - target: heady-memory
+        protocol: sync_http
+        purpose: "Cross-reference with vector memory"
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Publish graph changes"
+    health: /health
+
+  heady-chrono:
+    port: 3371
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: heady-stream
+        topic: heady.events
+      - source: heady-lens-deep
+      - source: heady-narrator
+    outbound:
+      - target: postgresql
+        protocol: tcp
+        purpose: "Temporal event store"
+      - target: heady-memory
+        protocol: sync_http
+        purpose: "Temporal pattern storage"
+      - target: heady-oracle
+        protocol: sync_http
+        purpose: "Temporal graph edges"
+    health: /health
+
+  heady-archive:
+    port: 3387
+    protocol: sync_http
+    inbound:
+      - source: heady-memory
+    outbound:
+      - target: postgresql
+        protocol: tcp
+        purpose: "Compressed cold storage"
+    health: /health
+
+  # ─── TIER 5: SECURITY (guards all access) ─────────────────────────
+
+  heady-shield:
+    port: 3390
+    protocol: sync_http
+    inbound:
+      - source: heady-gateway
+        purpose: "Pre-flight security scan on ALL inbound requests"
+      - source: heady-stream
+        topic: heady.security
+    outbound:
+      - target: heady-soul
+        protocol: sync_http
+        purpose: "Ethical gate escalation"
+      - target: heady-stream
+        protocol: async_event
+        topic: heady.security
+    health: /health
+
+  heady-vault:
+    port: 3389
+    protocol: sync_http
+    inbound:
+      - source: all_services
+        auth: service_identity_mTLS
+    outbound:
+      - target: heady-persistence
+        protocol: sync_http
+        purpose: "Encrypted secret storage"
+      - target: heady-stream
+        protocol: async_event
+        topic: heady.security
+        purpose: "Audit trail"
+    health: /health
+
+  heady-anchor:
+    port: 3379
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: heady-stream
+        topic: heady.security
+      - source: compliance_audit_workflow
+    outbound:
+      - target: heady-persistence
+        protocol: sync_http
+      - target: heady-oracle
+        protocol: sync_http
+        purpose: "Data lineage graph"
+    health: /health
+
+  # ─── TIER 6: USER-FACING (serves all humans) ──────────────────────
+
+  heady-buddy:
+    port: 3310
+    protocol: [sync_http, websocket]
+    inbound:
+      - source: heady-manager
+      - source: heady-nexus
+    outbound:
+      - target: heady-brain
+        protocol: sync_http
+      - target: heady-autocontext
+        protocol: sync_http
+      - target: heady-pulse
+        protocol: sync_http
+        purpose: "Emotion-aware responses"
+      - target: heady-persona
+        protocol: sync_http
+        purpose: "Personalized interaction"
+      - target: heady-rosetta
+        protocol: sync_http
+        purpose: "Multilingual delivery"
+    health: /health
+
+  heady-pulse:
+    port: 3375
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: heady-buddy
+      - source: heady-stream
+        topic: heady.events
+    outbound:
+      - target: heady-memory
+        protocol: sync_http
+        purpose: "Emotional pattern storage"
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Emotional state changes"
+    health: /health
+
+  heady-echo:
+    port: 3372
+    protocol: [sync_http, sse_mcp, websocket]
+    inbound:
+      - source: heady-buddy
+      - source: heady-nexus
+    outbound:
+      - target: heady-pulse
+        protocol: sync_http
+        purpose: "Voice emotion analysis"
+      - target: heady-rosetta
+        protocol: sync_http
+        purpose: "Voice translation"
+      - target: heady-memory
+        protocol: sync_http
+    health: /health
+
+  heady-persona:
+    port: 3394
+    protocol: sync_http
+    inbound:
+      - source: heady-buddy
+      - source: heady-tutor
+    outbound:
+      - target: heady-memory
+        protocol: sync_http
+      - target: heady-persistence
+        protocol: sync_http
+    health: /health
+
+  # ─── TIER 7: OBSERVABILITY (watches everything) ───────────────────
+
+  heady-lens-deep:
+    port: 3398
+    protocol: sync_http
+    inbound:
+      - source: heady-stream
+        topic: heady.metrics
+      - source: incident_response_workflow
+    outbound:
+      - target: heady-chrono
+        protocol: sync_http
+        purpose: "Temporal root cause"
+      - target: heady-relay
+        protocol: sync_http
+        purpose: "Alert notification"
+      - target: heady-narrator
+        protocol: sync_http
+        purpose: "Incident narrative"
+    health: /health
+
+  heady-cost:
+    port: 3399
+    protocol: sync_http
+    inbound:
+      - source: heady-stream
+        topic: heady.metrics
+      - source: cost_optimization_workflow
+    outbound:
+      - target: heady-persistence
+        protocol: sync_http
+      - target: heady-relay
+        protocol: sync_http
+        purpose: "Budget alerts"
+    health: /health
+
+  heady-narrator:
+    port: 3395
+    protocol: sync_http
+    inbound:
+      - source: heady-lens-deep
+      - source: heady-chrono
+      - source: all_workflows
+    outbound:
+      - target: heady-relay
+        protocol: sync_http
+        purpose: "Narrative delivery"
+      - target: heady-persistence
+        protocol: sync_http
+        purpose: "Report storage"
+    health: /health
+
+  # ─── TIER 8: AUTOMATION (executes all work) ───────────────────────
+
+  heady-forge:
+    port: 3376
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: heady-conductor
+      - source: all_workflows
+    outbound:
+      - target: heady-conductor
+        protocol: sync_http
+        purpose: "Dispatch sub-tasks to bees"
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Workflow state events"
+      - target: heady-saga
+        protocol: sync_http
+        purpose: "Distributed transaction coordination"
+    health: /health
+
+  heady-saga:
+    port: 3403
+    protocol: sync_http
+    inbound:
+      - source: heady-forge
+      - source: heady-conductor
+    outbound:
+      - target: heady-persistence
+        protocol: sync_http
+        purpose: "Saga state persistence"
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Saga step events"
+    health: /health
+
+  heady-gate:
+    port: 3404
+    protocol: sync_http
+    inbound:
+      - source: heady-conductor
+      - source: all_workflows
+    outbound:
+      - target: csl-engine
+        protocol: sync_http
+      - target: heady-patterns
+        protocol: sync_http
+      - target: heady-memory
+        protocol: sync_http
+    health: /health
+
+  heady-genesis:
+    port: 3382
+    protocol: [sync_http, sse_mcp]
+    inbound:
+      - source: system_evolution_workflow
+    outbound:
+      - target: heady-weaver
+        protocol: sync_http
+        purpose: "Code generation"
+      - target: heady-conductor
+        protocol: sync_http
+        purpose: "Register new tools"
+      - target: heady-stream
+        protocol: async_event
+        purpose: "Evolution events"
+    health: /health
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# STARTUP SEQUENCE (dependency-ordered, φ-scaled delays)
+# ═══════════════════════════════════════════════════════════════════════
+
+startup_sequence:
+  - step: 1
+    services: [postgresql, redis]
+    delay_ms: 0
+    description: "Data tier — storage backends"
+
+  - step: 2
+    services: [heady-memory, heady-persistence]
+    delay_ms: 1618
+    description: "Memory tier — vector memory and state"
+
+  - step: 3
+    services: [heady-stream, csl-engine]
+    delay_ms: 1000
+    description: "Communication tier — event streaming and confidence"
+
+  - step: 4
+    services: [heady-vault, heady-shield]
+    delay_ms: 618
+    description: "Security tier — secrets and protection"
+
+  - step: 5
+    services: [heady-gateway, heady-manager]
+    delay_ms: 1618
+    description: "Gateway tier — external access"
+
+  - step: 6
+    services: [heady-autocontext, search-service, heady-oracle]
+    delay_ms: 2618
+    description: "Intelligence tier — enrichment and knowledge"
+
+  - step: 7
+    services: [heady-brain, heady-conductor]
+    delay_ms: 1618
+    description: "Orchestration tier — routing and control"
+
+  - step: 8
+    services: [heady-synapse, heady-cortex, heady-prism, heady-chrono]
+    delay_ms: 1000
+    description: "Advanced intelligence tier"
+
+  - step: 9
+    services: [heady-buddy, heady-pulse, heady-echo, heady-persona]
+    delay_ms: 1000
+    description: "User-facing tier"
+
+  - step: 10
+    services: [heady-forge, heady-saga, heady-gate, heady-genesis]
+    delay_ms: 618
+    description: "Automation tier"
+
+  - step: 11
+    services: [heady-lens-deep, heady-cost, heady-narrator, heady-relay]
+    delay_ms: 618
+    description: "Observability tier"
+
+  - step: 12
+    services: [heady-lab, heady-sandbox, heady-weaver, heady-tutor]
+    delay_ms: 618
+    description: "Developer experience tier"
+
+  - step: 13
+    services: [heady-bridge, heady-nexus, heady-canvas, heady-muse]
+    delay_ms: 618
+    description: "Integration and creative tier"
+
+  - step: 14
+    services: [heady-anchor, heady-rosetta, heady-mirror, heady-apex]
+    delay_ms: 618
+    description: "Specialized services tier"
+
+  - step: 15
+    services: [heady-archive, heady-doc-gen, heady-cron, heady-nexus-graph]
+    delay_ms: 618
+    description: "Support services tier"
+
+  - step: 16
+    services: [auto-success-engine]
+    delay_ms: 4236  # φ² × 1618
+    description: "Auto-Success — begins 29,034ms heartbeat cycle"
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# DATA FLOW TOPOLOGY — THE LIQUID OS NERVOUS SYSTEM
+# ═══════════════════════════════════════════════════════════════════════
+
+data_flows:
+  user_request:
+    description: "Complete path of a user request through the Liquid OS"
+    path: |
+      User → Gateway → Shield (security pre-flight)
+           → Manager → AutoContext (5-pass enrichment)
+           → Conductor (CSL-scored routing)
+           → Brain → [Synapse | Cortex | Battle] (intelligence)
+           → Bees (execution) → Gate (quality gate)
+           → Pulse (emotion detection) → Persona (personalization)
+           → Rosetta (translation if needed)
+           → Echo (voice synthesis if needed)
+           → Response → Stream (event publish)
+           → Memory (index result) → Chrono (temporal record)
+           → Oracle (graph update) → Narrator (narrative)
+
+  memory_lifecycle:
+    description: "How memories flow through the 3-tier system"
+    path: |
+      New Data → T0 (working memory, session-bound)
+             → Consolidation Engine (φ-scored evaluation)
+             → T1 (short-term, 47h TTL, pgvector HNSW)
+             → Consolidation Engine (access_freq × reinforcement × importance)
+             → T2 (long-term, partitioned: hot/warm/cold/archive)
+             → Archive (compressed cold storage, 377d retention)
+             → Oracle (graph relationships extracted)
+             → Chrono (temporal patterns recorded)
+
+  security_perimeter:
+    description: "How security is enforced at every layer"
+    path: |
+      External → Shield (WAF, rate limit, bot detection)
+             → Gateway (auth, CORS, TLS)
+             → Vault (secret retrieval, lease-based)
+             → Soul (ethical gate, HALT authority)
+             → Anchor (compliance check)
+             → Guard (input validation)
+             → [Execution] → Anchor (output compliance)
+             → Shield (response sanitization)
+
+  observability_loop:
+    description: "How the system watches itself"
+    path: |
+      All Services → Stream (metrics/events/logs)
+                   → LensDeep (anomaly detection)
+                   → Chrono (temporal correlation)
+                   → Cost (spending tracking)
+                   → Narrator (human narrative)
+                   → Relay (alert delivery)
+                   → Memory (pattern storage)
+                   → Patterns (anti-regression)
+                   → Gate (threshold tuning)
+
+  evolution_cycle:
+    description: "How the system evolves itself"
+    path: |
+      Usage Patterns → Genesis (observation)
+                     → Cortex (analysis)
+                     → Prism (multi-perspective evaluation)
+                     → Mirror (simulation)
+                     → Gate (approval)
+                     → Weaver (code generation)
+                     → Sandbox (testing)
+                     → Lab (experiment)
+                     → Cron (progressive rollout)
+                     → LensDeep (monitoring)
+                     → Memory (learnings recorded)

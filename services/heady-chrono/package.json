@@ -1,0 +1,27 @@
+{
+    "name": "@heady/heady-chrono",
+    "version": "1.0.0",
+    "description": "HeadyChrono — Temporal Intelligence Engine MCP Server",
+    "private": true,
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "node --watch src/index.js",
+        "docker:build": "docker build -t heady-chrono .",
+        "docker:run": "docker run -p 3371:3371 heady-chrono"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.12.0",
+        "hono": "^4.4.0",
+        "@hono/node-server": "^1.12.0",
+        "dotenv": "^16.4.0"
+    },
+    "heady": {
+        "service": "heady-chrono",
+        "port": 3371,
+        "category": "ai",
+        "sacred_geometry_position": "inner_ring",
+        "transport": ["sse", "stdio"],
+        "deployTargets": ["cloud-run", "cloudflare-workers"]
+    }
+}

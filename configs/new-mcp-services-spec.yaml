@@ -1,0 +1,783 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/new-mcp-services-spec.yaml                       ║
+# ║  LAYER: config                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+# ═══════════════════════════════════════════════════════════════════
+# NEW MCP SERVICES SPECIFICATION — 12 Services, φ-Aligned
+# Version: 1.0.0 | Date: 2026-03-18
+# ═══════════════════════════════════════════════════════════════════
+
+version: "1.0.0"
+phi: 1.618033988749895
+csl_threshold: 0.618
+
+# ─────────────────────────────────────────────────────────────────
+# PORT ALLOCATION (extends existing 3300-3368 range)
+# Fibonacci-indexed offsets from base 3370
+# ─────────────────────────────────────────────────────────────────
+port_registry:
+  heady-chrono: 3371
+  heady-echo: 3372
+  heady-oracle: 3373
+  heady-mirror: 3374
+  heady-pulse: 3375
+  heady-forge: 3376
+  heady-nexus: 3377
+  heady-spectrum: 3378
+  heady-anchor: 3379
+  heady-apex: 3380
+  heady-rosetta: 3381
+  heady-genesis: 3382
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 1: HeadyChrono — Temporal Intelligence Engine
+# ═══════════════════════════════════════════════════════════════════
+heady-chrono:
+  name: "HeadyChrono"
+  tagline: "Every moment is a vector. Every timeline a trajectory."
+  port: 3371
+  category: ai
+  sacred_geometry_position: "inner_ring"
+  description: |
+    Time-aware reasoning engine that treats temporal data as first-class
+    citizens in vector space. Enables causal chain analysis, temporal
+    pattern detection, and predictive trajectory modeling. Unlike simple
+    timestamps, Chrono understands causality — what led to what, and
+    what's likely next.
+
+  tools:
+    - name: heady_chrono_trace
+      description: "Trace causal chains across time — follow the thread of events that led to a state"
+      input:
+        event_id: { type: string, required: true }
+        depth: { type: number, default: 8 }
+        direction: { type: string, enum: [backward, forward, bidirectional], default: backward }
+
+    - name: heady_chrono_predict
+      description: "Project future states based on temporal patterns and phi-scaled decay"
+      input:
+        context: { type: string, required: true }
+        horizon: { type: string, enum: [minutes, hours, days, weeks], default: hours }
+        confidence_floor: { type: number, default: 0.618 }
+
+    - name: heady_chrono_diff
+      description: "Compare two points in time — what changed, what drifted, what emerged"
+      input:
+        t1: { type: string, required: true, description: "ISO timestamp or relative (e.g., '2h ago')" }
+        t2: { type: string, default: "now" }
+        scope: { type: string, enum: [system, service, user, global], default: system }
+
+    - name: heady_chrono_replay
+      description: "Replay system state at a historical point — time-travel debugging"
+      input:
+        timestamp: { type: string, required: true }
+        service: { type: string, required: true }
+        include_context: { type: boolean, default: true }
+
+  resources:
+    - uri: "heady://chrono/timeline"
+      description: "Live system timeline with causal annotations"
+    - uri: "heady://chrono/patterns"
+      description: "Detected temporal patterns and recurring cycles"
+
+  dependencies:
+    - heady-persistence
+    - heady-memory
+    - heady-metrics
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 2: HeadyEcho — Voice & Audio Intelligence
+# ═══════════════════════════════════════════════════════════════════
+heady-echo:
+  name: "HeadyEcho"
+  tagline: "The frequency of understanding. The resonance of intent."
+  port: 3372
+  category: ai
+  sacred_geometry_position: "outer_ring"
+  description: |
+    Audio-native intelligence layer. Converts voice to structured intent,
+    generates sonic branding, and enables audio-first interactions across
+    the Heady ecosystem. Bridges the gap between HeadyBuddy's text
+    interface and a fully multimodal future.
+
+  tools:
+    - name: heady_echo_transcribe
+      description: "Real-time voice-to-text with speaker diarization and intent extraction"
+      input:
+        audio_url: { type: string, required: true }
+        language: { type: string, default: "auto" }
+        extract_intent: { type: boolean, default: true }
+        diarize: { type: boolean, default: false }
+
+    - name: heady_echo_synthesize
+      description: "Generate natural speech from text with persona-aligned voice profiles"
+      input:
+        text: { type: string, required: true }
+        voice_profile: { type: string, enum: [buddy, professional, warm, energetic], default: buddy }
+        format: { type: string, enum: [mp3, wav, opus], default: opus }
+
+    - name: heady_echo_fingerprint
+      description: "Audio fingerprinting — identify, classify, and tag audio content"
+      input:
+        audio_url: { type: string, required: true }
+        match_against: { type: string, enum: [library, web, custom], default: library }
+
+    - name: heady_echo_soundscape
+      description: "Generate ambient soundscapes and sonic branding aligned to Sacred Geometry"
+      input:
+        mood: { type: string, enum: [focus, creative, calm, energetic, sacred], default: focus }
+        duration_seconds: { type: number, default: 300 }
+        phi_harmonics: { type: boolean, default: true, description: "Use phi-ratio frequency relationships" }
+
+  resources:
+    - uri: "heady://echo/voices"
+      description: "Available voice profiles and their characteristics"
+    - uri: "heady://echo/library"
+      description: "Audio fingerprint library"
+
+  dependencies:
+    - heady-gateway
+    - heady-conductor
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 3: HeadyOracle — Knowledge Graph Engine
+# ═══════════════════════════════════════════════════════════════════
+heady-oracle:
+  name: "HeadyOracle"
+  tagline: "Beyond similarity. Into meaning."
+  port: 3373
+  category: data
+  sacred_geometry_position: "inner_ring"
+  description: |
+    Graph-native knowledge engine that complements vector memory with
+    structural reasoning. While heady-memory finds similar things,
+    Oracle finds connected things — traversing relationships, discovering
+    paths, and inferring new connections through graph neural reasoning.
+
+  tools:
+    - name: heady_oracle_query
+      description: "Traverse the knowledge graph with natural language — find connections humans miss"
+      input:
+        query: { type: string, required: true }
+        max_hops: { type: number, default: 5 }
+        include_inferred: { type: boolean, default: true, description: "Include AI-inferred edges" }
+
+    - name: heady_oracle_connect
+      description: "Create typed relationships between entities in the knowledge graph"
+      input:
+        from_entity: { type: string, required: true }
+        to_entity: { type: string, required: true }
+        relationship: { type: string, required: true }
+        confidence: { type: number, default: 0.809 }
+        bidirectional: { type: boolean, default: false }
+
+    - name: heady_oracle_discover
+      description: "Find hidden patterns and emergent clusters in the knowledge graph"
+      input:
+        seed_entity: { type: string, required: true }
+        discovery_mode: { type: string, enum: [shortest_path, community, influence, anomaly], default: community }
+        depth: { type: number, default: 3 }
+
+    - name: heady_oracle_explain
+      description: "Generate human-readable explanations of graph paths and reasoning chains"
+      input:
+        from: { type: string, required: true }
+        to: { type: string, required: true }
+        style: { type: string, enum: [technical, narrative, visual], default: narrative }
+
+  resources:
+    - uri: "heady://oracle/graph"
+      description: "Full knowledge graph statistics and topology"
+    - uri: "heady://oracle/entities"
+      description: "Entity registry with types and cardinality"
+    - uri: "heady://oracle/inferences"
+      description: "Recently inferred relationships awaiting validation"
+
+  dependencies:
+    - heady-memory
+    - heady-persistence
+    - hc-brain
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 4: HeadyMirror — Digital Twin & Simulation
+# ═══════════════════════════════════════════════════════════════════
+heady-mirror:
+  name: "HeadyMirror"
+  tagline: "Every system has a shadow. Mirror lets you play with it."
+  port: 3374
+  category: orchestration
+  sacred_geometry_position: "middle_ring"
+  description: |
+    Digital twin engine that creates sandboxed replicas of any Heady
+    service or the entire system. Run what-if scenarios, test
+    configuration changes, simulate load patterns, and preview
+    deployments — all without touching production.
+
+  tools:
+    - name: heady_mirror_spawn
+      description: "Spawn a digital twin of any service or service group"
+      input:
+        target: { type: string, required: true, description: "Service ID or 'full_system'" }
+        snapshot_time: { type: string, default: "now" }
+        mutations: { type: object, default: {}, description: "Config overrides for the twin" }
+
+    - name: heady_mirror_simulate
+      description: "Run a simulation scenario against a digital twin"
+      input:
+        twin_id: { type: string, required: true }
+        scenario: { type: string, required: true, description: "Natural language scenario description" }
+        duration: { type: string, default: "5m" }
+        load_factor: { type: number, default: 1.0 }
+
+    - name: heady_mirror_compare
+      description: "Compare twin behavior against production reality"
+      input:
+        twin_id: { type: string, required: true }
+        metrics: { type: array, items: { type: string }, default: ["latency", "error_rate", "throughput"] }
+
+    - name: heady_mirror_promote
+      description: "Promote a validated twin configuration to staging or production"
+      input:
+        twin_id: { type: string, required: true }
+        target_env: { type: string, enum: [staging, production], required: true }
+        require_approval: { type: boolean, default: true }
+
+  resources:
+    - uri: "heady://mirror/twins"
+      description: "Active digital twins and their status"
+    - uri: "heady://mirror/scenarios"
+      description: "Scenario library with historical results"
+
+  dependencies:
+    - heady-gateway
+    - heady-conductor
+    - heady-persistence
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 5: HeadyPulse — Emotion & Sentiment Intelligence
+# ═══════════════════════════════════════════════════════════════════
+heady-pulse:
+  name: "HeadyPulse"
+  tagline: "Feel the frequency. Respond with resonance."
+  port: 3375
+  category: ai
+  sacred_geometry_position: "outer_ring"
+  description: |
+    Affective computing layer that reads emotional undertones in user
+    interactions and system behaviors. Enables empathetic response
+    tuning, frustration detection, satisfaction scoring, and
+    mood-aware UI adaptation. Core to HeadyConnection's mission
+    of human-centered technology.
+
+  tools:
+    - name: heady_pulse_analyze
+      description: "Detect emotional tone, frustration signals, and satisfaction markers in text"
+      input:
+        text: { type: string, required: true }
+        context: { type: string, default: "", description: "Prior conversation context" }
+        granularity: { type: string, enum: [coarse, fine, dimensional], default: fine }
+
+    - name: heady_pulse_adapt
+      description: "Get response strategy recommendations based on detected emotional state"
+      input:
+        emotion_vector: { type: object, required: true, description: "Output from pulse_analyze" }
+        response_type: { type: string, enum: [text, ui, voice, all], default: text }
+
+    - name: heady_pulse_track
+      description: "Track emotional trajectory over a session — detect escalation or resolution"
+      input:
+        session_id: { type: string, required: true }
+        window: { type: string, default: "30m" }
+
+    - name: heady_pulse_wellbeing
+      description: "Aggregate wellbeing score across user base — community health metric"
+      input:
+        scope: { type: string, enum: [individual, team, community, global], default: community }
+        timeframe: { type: string, default: "24h" }
+
+  resources:
+    - uri: "heady://pulse/emotional_map"
+      description: "Real-time emotional heatmap across the user base"
+    - uri: "heady://pulse/wellbeing"
+      description: "Community wellbeing index and trends"
+
+  dependencies:
+    - heady-memory
+    - heady-buddy
+    - heady-persistence
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 6: HeadyForge — Workflow Automation Engine
+# ═══════════════════════════════════════════════════════════════════
+heady-forge:
+  name: "HeadyForge"
+  tagline: "Shape intent into action. Forge workflows from thought."
+  port: 3376
+  category: orchestration
+  sacred_geometry_position: "middle_ring"
+  description: |
+    Visual DAG-based workflow engine that lets users and agents build
+    complex automation chains across the Heady ecosystem. Think
+    Zapier meets Sacred Geometry — trigger chains that fan out through
+    bees, converge through quality gates, and self-optimize over time.
+
+  tools:
+    - name: heady_forge_create
+      description: "Create a workflow DAG from natural language description"
+      input:
+        description: { type: string, required: true }
+        trigger: { type: string, enum: [manual, cron, webhook, event, emotion], required: true }
+        cron_expression: { type: string, description: "Required if trigger is 'cron'" }
+
+    - name: heady_forge_execute
+      description: "Execute a workflow — fan out through bees, converge through gates"
+      input:
+        workflow_id: { type: string, required: true }
+        input_data: { type: object, default: {} }
+        dry_run: { type: boolean, default: false }
+
+    - name: heady_forge_optimize
+      description: "Analyze workflow execution history and suggest phi-optimized improvements"
+      input:
+        workflow_id: { type: string, required: true }
+        optimization_target: { type: string, enum: [speed, cost, reliability, all], default: all }
+
+    - name: heady_forge_compose
+      description: "Compose multiple workflows into a meta-workflow with conditional branching"
+      input:
+        workflow_ids: { type: array, items: { type: string }, required: true }
+        composition_mode: { type: string, enum: [sequential, parallel, conditional], default: conditional }
+        condition: { type: string, description: "Natural language condition for branching" }
+
+  resources:
+    - uri: "heady://forge/workflows"
+      description: "Active workflow registry with execution statistics"
+    - uri: "heady://forge/templates"
+      description: "Pre-built workflow templates for common patterns"
+
+  dependencies:
+    - heady-conductor
+    - heady-gateway
+    - hc-supervisor
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 7: HeadyNexus — Real-time Collaboration
+# ═══════════════════════════════════════════════════════════════════
+heady-nexus:
+  name: "HeadyNexus"
+  tagline: "Where minds converge. Where ideas multiply."
+  port: 3377
+  category: ui
+  sacred_geometry_position: "middle_ring"
+  description: |
+    Real-time collaboration engine powered by CRDTs and presence
+    awareness. Enables multiplayer editing, shared agent sessions,
+    and collaborative problem-solving. Every cursor is a presence,
+    every edit a vector in shared space.
+
+  tools:
+    - name: heady_nexus_create_room
+      description: "Create a collaborative room with shared context and CRDT state"
+      input:
+        name: { type: string, required: true }
+        type: { type: string, enum: [code, document, canvas, agent_session, whiteboard], required: true }
+        max_participants: { type: number, default: 13 }
+        ai_copilot: { type: boolean, default: true }
+
+    - name: heady_nexus_broadcast
+      description: "Broadcast a message or state change to all room participants"
+      input:
+        room_id: { type: string, required: true }
+        message: { type: string, required: true }
+        type: { type: string, enum: [chat, state_update, cursor, annotation], default: chat }
+
+    - name: heady_nexus_presence
+      description: "Get real-time presence information — who's where, doing what"
+      input:
+        scope: { type: string, enum: [room, service, global], default: room }
+        room_id: { type: string, description: "Required if scope is 'room'" }
+
+    - name: heady_nexus_merge
+      description: "Merge divergent CRDT states with conflict resolution"
+      input:
+        room_id: { type: string, required: true }
+        strategy: { type: string, enum: [last_write_wins, semantic_merge, vote, ai_resolve], default: semantic_merge }
+
+  resources:
+    - uri: "heady://nexus/rooms"
+      description: "Active collaboration rooms and participant counts"
+    - uri: "heady://nexus/presence"
+      description: "Global presence map across the ecosystem"
+
+  dependencies:
+    - heady-persistence
+    - heady-buddy
+    - heady-gateway
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 8: HeadySpectrum — Vision & Multimodal Intelligence
+# ═══════════════════════════════════════════════════════════════════
+heady-spectrum:
+  name: "HeadySpectrum"
+  tagline: "See what others overlook. Understand what others can't."
+  port: 3378
+  category: ai
+  sacred_geometry_position: "outer_ring"
+  description: |
+    Vision and multimodal processing engine. Analyzes images,
+    screenshots, diagrams, and visual artifacts. Powers visual
+    regression testing, UI consistency checking against Sacred
+    Geometry standards, and screenshot-to-code generation.
+
+  tools:
+    - name: heady_spectrum_analyze
+      description: "Deep analysis of images — detect objects, read text, understand layouts"
+      input:
+        image_url: { type: string, required: true }
+        analysis_type: { type: string, enum: [general, ui, diagram, document, code], default: general }
+        extract_text: { type: boolean, default: true }
+
+    - name: heady_spectrum_diff
+      description: "Visual diff between two images — pixel-perfect regression testing"
+      input:
+        image_a: { type: string, required: true }
+        image_b: { type: string, required: true }
+        sensitivity: { type: number, default: 0.618, description: "Diff sensitivity threshold" }
+        highlight_mode: { type: string, enum: [overlay, side_by_side, heatmap], default: heatmap }
+
+    - name: heady_spectrum_generate
+      description: "Generate code from visual input — screenshot to Sacred Geometry components"
+      input:
+        image_url: { type: string, required: true }
+        target_framework: { type: string, enum: [react, html, tailwind, sacred_geometry_sdk], default: sacred_geometry_sdk }
+        include_animations: { type: boolean, default: true }
+
+    - name: heady_spectrum_audit
+      description: "Audit UI against Sacred Geometry design system — spacing, ratios, organic curves"
+      input:
+        image_url: { type: string, required: true }
+        rules: { type: array, items: { type: string }, default: ["phi_spacing", "golden_ratio", "organic_curves", "breathing_rhythm"] }
+        strict: { type: boolean, default: false }
+
+  resources:
+    - uri: "heady://spectrum/gallery"
+      description: "Processed image gallery with analysis metadata"
+    - uri: "heady://spectrum/design_system"
+      description: "Sacred Geometry design tokens and visual rules"
+
+  dependencies:
+    - heady-sacred-geometry-sdk
+    - heady-memory
+    - heady-gateway
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 9: HeadyAnchor — Compliance & Regulation Engine
+# ═══════════════════════════════════════════════════════════════════
+heady-anchor:
+  name: "HeadyAnchor"
+  tagline: "Trust is earned. Compliance is proven."
+  port: 3379
+  category: security
+  sacred_geometry_position: "governance"
+  description: |
+    Automated compliance engine that continuously validates the Heady
+    ecosystem against regulatory frameworks. Generates audit trails,
+    tracks data lineage, and provides real-time compliance scoring.
+    Essential for enterprise adoption and HeadyConnection's nonprofit
+    accountability.
+
+  tools:
+    - name: heady_anchor_scan
+      description: "Scan a service or codebase against compliance frameworks"
+      input:
+        target: { type: string, required: true }
+        frameworks: { type: array, items: { type: string, enum: [gdpr, soc2, hipaa, ccpa, iso27001, pci_dss] }, required: true }
+        depth: { type: string, enum: [quick, standard, deep], default: standard }
+
+    - name: heady_anchor_lineage
+      description: "Trace data lineage — where did this data come from, where did it go"
+      input:
+        data_identifier: { type: string, required: true }
+        direction: { type: string, enum: [upstream, downstream, full], default: full }
+
+    - name: heady_anchor_audit
+      description: "Generate a compliance audit report with evidence and remediation steps"
+      input:
+        scope: { type: string, enum: [service, domain, full_system], default: full_system }
+        format: { type: string, enum: [json, pdf, markdown], default: markdown }
+        include_evidence: { type: boolean, default: true }
+
+    - name: heady_anchor_consent
+      description: "Manage user consent records and data processing agreements"
+      input:
+        user_id: { type: string, required: true }
+        action: { type: string, enum: [check, grant, revoke, export], required: true }
+        purpose: { type: string, required: true }
+
+  resources:
+    - uri: "heady://anchor/compliance_score"
+      description: "Real-time compliance score per framework"
+    - uri: "heady://anchor/audit_trail"
+      description: "Complete audit trail with immutable event log"
+
+  dependencies:
+    - heady-sentinel
+    - heady-persistence
+    - heady-governance
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 10: HeadyApex — Financial Intelligence
+# ═══════════════════════════════════════════════════════════════════
+heady-apex:
+  name: "HeadyApex"
+  tagline: "Where intelligence meets the market. Where phi meets finance."
+  port: 3380
+  category: ai
+  sacred_geometry_position: "middle_ring"
+  description: |
+    Autonomous financial intelligence engine. Portfolio analysis,
+    trading signal generation, risk modeling via Monte Carlo
+    simulations, and market sentiment fusion. Phi-scaled position
+    sizing and Fibonacci retracement are not just indicators —
+    they're first principles.
+
+  tools:
+    - name: heady_apex_analyze
+      description: "Deep analysis of financial instruments with phi-scaled technical indicators"
+      input:
+        symbol: { type: string, required: true }
+        timeframe: { type: string, enum: [1m, 5m, 15m, 1h, 4h, 1d, 1w], default: "1d" }
+        indicators: { type: array, items: { type: string }, default: ["fibonacci", "phi_bands", "golden_cross", "sacred_levels"] }
+
+    - name: heady_apex_montecarlo
+      description: "Run Monte Carlo simulations on portfolio or strategy outcomes"
+      input:
+        portfolio: { type: object, required: true, description: "Asset allocation map" }
+        simulations: { type: number, default: 10000 }
+        horizon_days: { type: number, default: 89 }
+        confidence_levels: { type: array, items: { type: number }, default: [0.618, 0.809, 0.927] }
+
+    - name: heady_apex_signal
+      description: "Generate trading signals with phi-ratio risk/reward and position sizing"
+      input:
+        strategy: { type: string, required: true }
+        risk_per_trade: { type: number, default: 0.0382, description: "3.82% — inverse phi squared" }
+        max_positions: { type: number, default: 8 }
+
+    - name: heady_apex_sentiment
+      description: "Fuse market sentiment from news, social, and on-chain data"
+      input:
+        asset: { type: string, required: true }
+        sources: { type: array, items: { type: string, enum: [news, twitter, reddit, onchain, discord] }, default: ["news", "twitter"] }
+        lookback: { type: string, default: "24h" }
+
+  resources:
+    - uri: "heady://apex/portfolio"
+      description: "Active portfolio state and P&L"
+    - uri: "heady://apex/signals"
+      description: "Live trading signal feed"
+    - uri: "heady://apex/risk"
+      description: "Real-time risk metrics and exposure"
+
+  dependencies:
+    - heady-montecarlo
+    - heady-memory
+    - heady-persistence
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 11: HeadyRosetta — Translation & i18n Intelligence
+# ═══════════════════════════════════════════════════════════════════
+heady-rosetta:
+  name: "HeadyRosetta"
+  tagline: "One meaning. Every language. Zero loss."
+  port: 3381
+  category: integration
+  sacred_geometry_position: "outer_ring"
+  description: |
+    Context-aware multilingual intelligence. Goes beyond word-for-word
+    translation to preserve semantic intent, cultural nuance, and
+    emotional tone across languages. Manages locale files, detects
+    untranslated strings, and enables real-time multilingual
+    conversations in HeadyBuddy.
+
+  tools:
+    - name: heady_rosetta_translate
+      description: "Context-aware translation preserving semantic intent and emotional tone"
+      input:
+        text: { type: string, required: true }
+        from: { type: string, default: "auto" }
+        to: { type: string, required: true }
+        context: { type: string, default: "", description: "Surrounding context for disambiguation" }
+        preserve_tone: { type: boolean, default: true }
+
+    - name: heady_rosetta_localize
+      description: "Localize an entire file or component — dates, numbers, currencies, idioms"
+      input:
+        content: { type: string, required: true }
+        target_locale: { type: string, required: true }
+        content_type: { type: string, enum: [ui, documentation, marketing, legal, technical], default: ui }
+
+    - name: heady_rosetta_scan
+      description: "Scan codebase for untranslated strings and i18n issues"
+      input:
+        path: { type: string, required: true }
+        locales: { type: array, items: { type: string }, default: ["en", "es", "fr", "de", "ja", "zh", "pt", "ar"] }
+        report_missing: { type: boolean, default: true }
+
+    - name: heady_rosetta_harmonize
+      description: "Harmonize translations across all locale files — ensure consistency"
+      input:
+        base_locale: { type: string, default: "en" }
+        fix_inconsistencies: { type: boolean, default: false }
+        generate_missing: { type: boolean, default: true }
+
+  resources:
+    - uri: "heady://rosetta/locales"
+      description: "Supported locales and completion percentages"
+    - uri: "heady://rosetta/glossary"
+      description: "Domain-specific translation glossary"
+
+  dependencies:
+    - heady-memory
+    - heady-docs
+    - heady-gateway
+
+# ═══════════════════════════════════════════════════════════════════
+# SERVICE 12: HeadyGenesis — Self-Evolving Service Generator
+# ═══════════════════════════════════════════════════════════════════
+heady-genesis:
+  name: "HeadyGenesis"
+  tagline: "The service that creates services. The tool that forges tools."
+  port: 3382
+  category: orchestration
+  sacred_geometry_position: "center_adjacent"
+  description: |
+    Meta-programming engine that observes ecosystem usage patterns
+    and auto-generates new MCP tools, services, and integrations.
+    When users repeatedly perform multi-step sequences, Genesis
+    crystallizes them into first-class tools. It's how the Heady
+    ecosystem grows organically — like a living system.
+
+  tools:
+    - name: heady_genesis_observe
+      description: "Analyze usage patterns to identify candidates for new tool generation"
+      input:
+        lookback: { type: string, default: "7d" }
+        min_frequency: { type: number, default: 5, description: "Minimum pattern occurrences" }
+        min_steps: { type: number, default: 3, description: "Minimum steps in sequence" }
+
+    - name: heady_genesis_propose
+      description: "Generate a new MCP tool specification from observed patterns"
+      input:
+        pattern_id: { type: string, required: true }
+        name_hint: { type: string, description: "Suggested name for the new tool" }
+        auto_implement: { type: boolean, default: false }
+
+    - name: heady_genesis_scaffold
+      description: "Scaffold a complete new MCP server from a spec — Sacred Geometry compliant"
+      input:
+        spec: { type: object, required: true, description: "Tool specification object" }
+        template: { type: string, enum: [minimal, standard, full], default: standard }
+        deploy_target: { type: string, enum: [cloud-run, cloudflare-workers, docker], default: cloud-run }
+
+    - name: heady_genesis_evolve
+      description: "Evolve an existing tool — add parameters, optimize, or split into sub-tools"
+      input:
+        tool_name: { type: string, required: true }
+        evolution_type: { type: string, enum: [extend, optimize, split, merge], required: true }
+        suggestion: { type: string, description: "Natural language evolution guidance" }
+
+  resources:
+    - uri: "heady://genesis/patterns"
+      description: "Detected usage patterns awaiting crystallization"
+    - uri: "heady://genesis/proposals"
+      description: "Proposed new tools pending approval"
+    - uri: "heady://genesis/lineage"
+      description: "Tool evolution history — which tools spawned from which patterns"
+
+  dependencies:
+    - heady-conductor
+    - heady-distiller
+    - heady-patterns
+    - template-mcp-server
+
+# ═══════════════════════════════════════════════════════════════════
+# CROSS-SERVICE INTEGRATIONS
+# ═══════════════════════════════════════════════════════════════════
+integrations:
+  chrono_plus_oracle:
+    description: "Temporal knowledge graphs — understand how relationships evolve over time"
+    services: [heady-chrono, heady-oracle]
+    combined_tool: heady_temporal_graph_query
+
+  pulse_plus_echo:
+    description: "Voice emotion detection — real-time sentiment from audio streams"
+    services: [heady-pulse, heady-echo]
+    combined_tool: heady_voice_emotion
+
+  mirror_plus_forge:
+    description: "Workflow simulation — test workflow changes in digital twins before deploying"
+    services: [heady-mirror, heady-forge]
+    combined_tool: heady_workflow_simulation
+
+  spectrum_plus_rosetta:
+    description: "Visual translation — translate text in images, screenshots, and diagrams"
+    services: [heady-spectrum, heady-rosetta]
+    combined_tool: heady_visual_translate
+
+  genesis_plus_chrono:
+    description: "Predictive tool generation — anticipate needed tools before patterns solidify"
+    services: [heady-genesis, heady-chrono]
+    combined_tool: heady_predictive_forge
+
+  apex_plus_pulse:
+    description: "Market mood — fuse market sentiment with trader emotional state for bias detection"
+    services: [heady-apex, heady-pulse]
+    combined_tool: heady_market_mood
+
+# ═══════════════════════════════════════════════════════════════════
+# PIPELINE INTEGRATION — New stages for HCFullPipeline v8
+# ═══════════════════════════════════════════════════════════════════
+pipeline_v8_additions:
+  new_stages:
+    - name: EMOTION_GATE
+      position: "after CONTEXT_ASSEMBLE"
+      service: heady-pulse
+      description: "Detect emotional context and adjust response strategy"
+      csl_threshold: 0.691
+
+    - name: TEMPORAL_ENRICH
+      position: "after CONTEXT_ASSEMBLE"
+      service: heady-chrono
+      description: "Enrich context with temporal patterns and causal chains"
+      csl_threshold: 0.618
+
+    - name: GRAPH_AUGMENT
+      position: "after NODE_SELECT"
+      service: heady-oracle
+      description: "Augment selected node context with graph-derived knowledge"
+      csl_threshold: 0.691
+
+    - name: COMPLIANCE_CHECK
+      position: "after GOVERNANCE_LOG"
+      service: heady-anchor
+      description: "Validate response against compliance frameworks"
+      csl_threshold: 0.882
+
+  updated_path_variants:
+    FULL_PATH_V8: 25  # 21 + 4 new stages
+    FAST_PATH_V8: 8   # +1 emotion gate
+    ARENA_PATH_V8: 10  # +1 graph augment
+    COMPLIANCE_PATH: 12 # New path for regulated industries

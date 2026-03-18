@@ -1,0 +1,338 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - Wiring Gaps Remediation Plan
+# Identified via deep ecosystem analysis — 2026-03-18
+# HEADY_BRAND:END
+
+version: "1.1.0"
+name: WiringGapsRemediation
+description: |
+  Critical wiring gaps identified across 69 repos, 144+ services, 61 packages,
+  29 apps, and 350+ config files. Each gap has severity, impact, and remediation.
+
+# ═══════════════════════════════════════════════════════════════════════
+# CRITICAL GAPS (Must fix immediately)
+# ═══════════════════════════════════════════════════════════════════════
+
+critical:
+
+  secrets_in_repo:
+    severity: URGENT
+    description: "Multiple credential types committed to repo in plaintext"
+    files:
+      - configs/secrets/gcp-service-account.json
+      - configs/secrets/firebase-admin-sdk.json
+      - configs/secrets/gen-lang-client-*.json (4 files)
+      - configs/nginx/ssl/ca.key, server.key, client.key
+      - configs/api-keys.json
+      - configs/users/user-secrets.yaml (5 users with SHARED plaintext tokens)
+      - headyconnection-web/.env.production (hardcoded Drupal secrets)
+    impact: "Full credential compromise; 5 users share identical secret; SSL keys exposed"
+    remediation:
+      - "IMMEDIATELY rotate ALL exposed credentials"
+      - "Remove from git history (BFG Repo-Cleaner)"
+      - "Add configs/secrets/, configs/nginx/ssl/*.key, configs/users/user-secrets.yaml to .gitignore"
+      - "Move all secrets to HeadyVault (port 3389)"
+      - "Generate unique per-user secrets (not shared!)"
+      - "Remove .env.production files from repo; use CI/CD injection"
+
+  unauthenticated_secrets_api:
+    severity: URGENT
+    description: "6 secrets management API routes have ZERO authentication middleware"
+    file: "src/hc_secrets_manager.js"
+    exposed_routes:
+      - "GET /api/secrets (lists all secrets with masked values)"
+      - "GET /api/secrets/status (reveals secret counts)"
+      - "GET /api/secrets/audit (exposes missing/expired secrets)"
+      - "GET /api/secrets/:id (individual secret metadata)"
+      - "POST /api/secrets/:id/refresh (triggers rotation — DoS vector!)"
+      - "GET /api/secrets/alerts (security alerts)"
+    additional_issue: "maskedValue stores first 4 + last 4 chars, reducing brute-force keyspace"
+    remediation:
+      - "Add auth middleware to ALL /api/secrets/* routes immediately"
+      - "Require admin-level auth for POST /refresh endpoint"
+      - "Remove maskedValue from data model entirely"
+      - "Stop persisting partial secrets to /data/secrets-state.json"
+      - "HeadyShield (port 3390) validates all secrets API access"
+
+  vulnerable_dependency:
+    severity: critical
+    description: "yamljs ^0.3.0 has known prototype pollution vulnerability (CVE-2020-28480)"
+    impact: "Remote code execution possible via crafted YAML input"
+    remediation:
+      - "Remove yamljs from package.json"
+      - "Migrate to yaml ^2.8.2 or js-yaml ^4.1.1 (both already installed)"
+
+  audit_log_retention:
+    severity: critical
+    description: "Audit log retention is 89 days; SOC2/GDPR requires 365 days minimum"
+    file: "configs/governance-policies.yaml line 19"
+    remediation:
+      - "Increase retentionDays from 89 to 365"
+      - "HeadyAnchor (port 3379) enforces compliance retention policies"
+
+  secret_hygiene_gaps:
+    severity: critical
+    description: "Secret scanning patterns missing common credential types"
+    file: "configs/security/secret-hygiene-policy.yml"
+    missing_patterns:
+      - "sk- (OpenAI/Stripe keys)"
+      - "ghp_/gho_/github_pat_ (GitHub tokens)"
+      - "whsec_ (Stripe webhook secrets)"
+      - "AIza (Google API keys)"
+      - "password= / secret= (generic patterns)"
+    remediation:
+      - "Expand forbidden_patterns in secret-hygiene-policy.yml"
+      - "HeadyShield integrates with Semgrep rules at configs/semgrep-rules.yaml"
+
+  config_version_fragmentation:
+    severity: critical
+    description: "5 conflicting pipeline versions, 4 diverged registries, 6 port assignment conflicts"
+    details:
+      pipeline_versions:
+        - "hcfullpipeline.yaml: v4.0.0 (renamed stages)"
+        - "heady-registry.json (root): v3.1.0 (deprecated stage names)"
+        - "service-routing-v9.yaml: claims 22 stages"
+        - "CLAUDE.md: v7 (21 stages)"
+        - "new-mcp-services-spec.yaml: v8 (25 stages proposed)"
+      registry_versions:
+        - "production-service-registry.json: v4.0.0"
+        - "configs/heady-registry.json: v3.2.3"
+        - "root heady-registry.json: v4.1.0"
+        - "SERVICE_INDEX.json: v5.0.0"
+      service_coverage_gap: "production-service-registry has only 30 services; SERVICE_INDEX has 211"
+    remediation:
+      - "Designate SERVICE_INDEX.json v5.0.0 as single source of truth"
+      - "Generate production-service-registry.json from SERVICE_INDEX.json"
+      - "Update hcfullpipeline.yaml to v8.0.0 with 25 stages"
+      - "Deprecate root heady-registry.json (stale v3.1.0 stage names)"
+      - "HeadyGenesis validates all registries stay in sync"
+
+  embedding_dimension_conflict:
+    severity: critical
+    description: "CLAUDE.md says 384D embeddings; heady-registry.json says 1536D"
+    impact: "Vector operations will fail if dimension mismatch"
+    remediation:
+      - "1536D is correct (text-embedding-3-large produces 1536D)"
+      - "Update CLAUDE.md to reference 1536D consistently"
+      - "384D reference is legacy from earlier embedding model"
+
+  additional_port_conflicts:
+    severity: critical
+    description: "6 more port conflicts found between service-catalog.yaml and production-service-registry"
+    conflicts:
+      - { service: domain-router, catalog: 4301, production: 4311 }
+      - { service: heady-vinci, catalog: 4309, production: 4323 }
+      - { service: heady-governance, catalog: 4310, production: 4321 }
+      - { service: heady-guard, catalog: 4311, production: 4316 }
+      - { service: heady-bee-factory, catalog: 4313, production: 4319 }
+      - { service: hcfullpipeline-executor, catalog: 4314, production: 4330 }
+    remediation:
+      - "Use SERVICE_INDEX.json port assignments as canonical"
+      - "Update both service-catalog.yaml and production-service-registry.json"
+
+  outdated_ai_models:
+    severity: critical
+    description: "ai-services.yaml references deprecated/retired models"
+    models:
+      - { current: "claude-2.1", should_be: "claude-opus-4-6" }
+      - { current: "code-davinci-002", should_be: "REMOVED (retired by OpenAI)" }
+      - { current: "palm-2", should_be: "gemini-2.5-pro" }
+      - { current: "llama-2-70b", should_be: "llama-4-maverick" }
+    remediation:
+      - "Update ai-services.yaml with current model IDs"
+      - "HeadySynapse manages model routing dynamically"
+
+  port_conflicts:
+    conflicts:
+      - port: 3320
+        claimants: [heady-ide, discord-bot]
+        fix: "Reassign discord-bot to port 3329"
+      - port: 3370
+        claimants: [heady-auth, ai-router]
+        fix: "Reassign ai-router to port 3369"
+    remediation:
+      - "Update package.json for discord-bot: port 3329"
+      - "Update package.json for ai-router: port 3369"
+      - "Update heady-gateway routing table"
+      - "Update .env.example with new port assignments"
+      - "Update service-catalog.yaml"
+      - "Update production-service-registry.json"
+
+  no_service_auth:
+    severity: critical
+    description: "No service-to-service authentication — internal spoofing risk"
+    impact: "Any service can impersonate another; no audit trail for internal calls"
+    remediation:
+      - "Implement JWT-based service identity tokens"
+      - "Each service gets a unique service account with signed JWT"
+      - "HeadyVault issues and rotates service tokens"
+      - "HeadyShield validates service identity on every internal call"
+      - "Add x-heady-service-identity header to all inter-service calls"
+    new_service: heady-vault  # Already designed in extended spec
+
+  no_event_stream:
+    severity: critical
+    description: "No message broker configured — async features non-functional"
+    impact: "Event-driven patterns, notifications, real-time features broken"
+    remediation:
+      - "Deploy Upstash Kafka or Redis Streams as primary broker"
+      - "HeadyStream service (port 3388) manages all topics"
+      - "Define 5 core topics: heady.events, heady.commands, heady.metrics, heady.security, heady.memory"
+      - "All services publish state changes to heady.events"
+      - "HeadyChrono, HeadyPulse, HeadyLensDeep consume from topics"
+    new_service: heady-stream  # Already designed in extended spec
+
+  missing_env_vars:
+    severity: critical
+    description: "4 env vars expected by gateway but missing from .env.example"
+    missing:
+      - HEADY_PERSISTENCE_URL
+      - HEADY_MCP_URL
+      - HEADY_ANALYTICS_URL
+      - HEADY_AUTH_URL
+    remediation:
+      - "Add to .env.example with default localhost values"
+      - "Add to service-discovery.yaml"
+      - "HeadyVault to manage dynamic injection"
+
+  grpc_not_compiled:
+    severity: critical
+    description: "gRPC proto files exist but no compiled .pb.js — gRPC services can't start"
+    files:
+      - services/grpc-protos/heady-vectors.proto
+      - services/grpc-protos/heady-swarm.proto
+      - services/grpc-protos/heady-colab.proto
+    remediation:
+      - "Add protobuf compilation to build pipeline"
+      - "Generate TypeScript types from protos"
+      - "Wire compiled outputs to consuming services"
+
+# ═══════════════════════════════════════════════════════════════════════
+# MAJOR GAPS (Fix within 2 weeks)
+# ═══════════════════════════════════════════════════════════════════════
+
+major:
+
+  missing_health_checks:
+    severity: major
+    description: "19 of 89 services lack health check implementations"
+    impact: "Kubernetes can't detect unhealthy instances; traffic to broken services"
+    remediation:
+      - "Audit all 89 services for /health endpoint"
+      - "Standard response: { status, coherenceScore, version }"
+      - "Use hc-health package for consistent implementation"
+      - "HeadyLensDeep monitors all health endpoints"
+
+  service_registry_duplication:
+    severity: major
+    description: "3 sources of truth for service registry — likely diverged"
+    files:
+      - configs/service-catalog.yaml
+      - configs/production-service-registry.json
+      - services/SERVICE_INDEX.json
+    remediation:
+      - "Make SERVICE_INDEX.json the single source of truth"
+      - "Generate other formats from it via build step"
+      - "HeadyGenesis validates registry consistency"
+
+  csl_bypass:
+    severity: major
+    description: "CSL gates only at gateway level — internal calls bypass confidence checks"
+    impact: "Services can route low-confidence requests directly"
+    remediation:
+      - "Add CSL middleware to service-runtime package"
+      - "All internal HTTP calls include x-heady-csl-score header"
+      - "HeadyGate validates CSL scores at every pipeline boundary"
+      - "Minimum CSL 0.500 enforced at service level"
+
+  cost_tracker_empty:
+    severity: major
+    description: "budget-tracker (port 4303) has no implementation code"
+    impact: "No visibility into spending across cloud providers"
+    remediation:
+      - "Implement HeadyCost service (port 3399)"
+      - "Track: AI token costs, cloud compute, storage, bandwidth"
+      - "Phi-scaled budget allocation per service"
+      - "Alert at 61.8% and 80.9% budget utilization"
+
+  sacred_geometry_incomplete:
+    severity: major
+    description: "Topology mandala incomplete — 8 named nodes missing from services"
+    missing_nodes:
+      - Murphy
+      - Bridge
+      - Muse
+      - Nova
+      - Janitor
+      - Sophia
+      - Cipher
+      - Lens
+    remediation:
+      - "HeadyBridge already designed (port 3396)"
+      - "HeadyMuse already designed (port 3400)"
+      - "HeadyLensDeep covers Lens (port 3398)"
+      - "Map Murphy → HeadyCortex (fault analysis)"
+      - "Map Nova → HeadyGenesis (new service creation)"
+      - "Map Janitor → HeadyArchive (cleanup/maintenance)"
+      - "Map Sophia → HeadyTutor (wisdom/teaching)"
+      - "Map Cipher → HeadyVault (encryption/secrets)"
+
+  observability_incomplete:
+    severity: major
+    description: "OpenTelemetry configured but no trace collection or SLO enforcement"
+    remediation:
+      - "HeadyLensDeep (port 3398) serves as trace aggregator"
+      - "Define SLOs per service in service-catalog.yaml"
+      - "HeadyNexusGraph provides distributed trace visualization"
+      - "HeadyCost tracks observability infrastructure costs"
+
+  swarm_coordination_unclear:
+    severity: major
+    description: "Multiple services claim swarm responsibility with unclear hierarchy"
+    services: [heady-bee-factory, heady-hive, heady-swarm-coordinator, heady-federation]
+    remediation:
+      - "heady-conductor is authoritative swarm coordinator"
+      - "heady-bee-factory creates bees, reports to conductor"
+      - "heady-hive manages swarm state"
+      - "heady-federation handles cross-swarm coordination"
+      - "Document hierarchy in liquid-topology-v5.yaml"
+
+# ═══════════════════════════════════════════════════════════════════════
+# MISSING CLAUDE.md FILES
+# ═══════════════════════════════════════════════════════════════════════
+
+missing_claude_md:
+  description: "CLAUDE.md missing from all *-core repos and most service repos"
+  repos_needing_claude_md:
+    - headymcp-core
+    - headyos-core
+    - headyme-core
+    - headysystems-core
+    - headyio-core
+    - headybot-core
+    - headybuddy-core
+    - headyconnection-core
+    - template-mcp-server
+    - template-swarm-bee
+    - template-heady-ui
+  remediation:
+    - "HeadyDocGen (port 3392) auto-generates CLAUDE.md from service source"
+    - "Standard template: identity, tech stack, critical paths, commands, conventions"
+
+# ═══════════════════════════════════════════════════════════════════════
+# HOW NEW SERVICES FIX GAPS
+# ═══════════════════════════════════════════════════════════════════════
+
+gap_to_service_mapping:
+  port_conflicts: "Fixed by port registry in SERVICE_INDEX.json v5.0.0"
+  no_service_auth: "HeadyVault (3389) + HeadyShield (3390)"
+  no_event_stream: "HeadyStream (3388)"
+  missing_env_vars: "HeadyVault (3389) dynamic injection"
+  missing_health_checks: "HeadyLensDeep (3398) monitors all"
+  service_registry_duplication: "HeadyGenesis (3382) validates consistency"
+  csl_bypass: "HeadyGate (3404) enforces at all boundaries"
+  cost_tracker_empty: "HeadyCost (3399)"
+  sacred_geometry_incomplete: "HeadyBridge, HeadyMuse, HeadyLensDeep, HeadyCortex, HeadyGenesis, HeadyArchive, HeadyTutor, HeadyVault"
+  observability_incomplete: "HeadyLensDeep (3398) + HeadyNexusGraph (3386)"
+  swarm_coordination: "Hierarchy documented in liquid-topology-v5.yaml"
+  missing_claude_md: "HeadyDocGen (3392) auto-generates"
