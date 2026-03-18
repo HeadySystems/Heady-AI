@@ -3,34 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeadyIO — Core API Gateway and Developer Interface</title>
-    <meta name="description" content="Core API Gateway and Developer Interface">
+    <title>HeadyIO — The API Platform for the Heady Ecosystem</title>
+    <meta name="description" content="HeadyIO: The sacred geometry-powered API platform for the Heady Ecosystem. REST, WebSocket, SSE, OAuth 2.1, and phi-scaled rate limiting.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* ================================================================
+           SACRED GEOMETRY DESIGN SYSTEM
+           HeadyIO — The API Platform
+           Deep cosmic palette, phi-derived spacing, glass morphism
+           ================================================================ */
+
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #16161f;
-            --bg-card-hover: #1c1c28;
-            --bg-code: #0d0d14;
-            --border: #1e1e2e;
-            --border-accent: #2a2a3e;
-            --text-primary: #e8e8f0;
-            --text-secondary: #9898b0;
-            --text-muted: #6868a0;
-            --accent: #6366f1;
-            --accent-bright: #818cf8;
-            --accent-glow: rgba(99, 102, 241, 0.15);
-            --accent-2: #06b6d4;
-            --accent-3: #a855f7;
-            --accent-4: #22c55e;
-            --accent-5: #f59e0b;
-            --accent-6: #ef4444;
+            --bg-void: #050510;
+            --bg-deep: #08081a;
+            --bg-card: rgba(15, 15, 35, 0.65);
+            --bg-card-hover: rgba(20, 20, 50, 0.8);
+            --bg-code: #06060f;
+            --border-glass: rgba(100, 100, 255, 0.12);
+            --border-glow: rgba(130, 100, 255, 0.3);
+            --text-primary: #e8e8f8;
+            --text-secondary: #9898c0;
+            --text-muted: #6060a0;
+            --accent-violet: #7c3aed;
+            --accent-indigo: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-fuchsia: #d946ef;
             --gold: #fbbf24;
+            --glass-blur: blur(20px);
+            --glass-bg: rgba(10, 10, 30, 0.6);
             --phi: 1.618;
-            --radius: 12px;
-            --radius-lg: 16px;
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --transition-smooth: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            --transition-bounce: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         * {
@@ -46,12 +56,10 @@
 
         body {
             font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            background: var(--bg-primary);
+            background: var(--bg-void);
             color: var(--text-primary);
             line-height: 1.7;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
         }
 
@@ -59,43 +67,191 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* ─── Nav ───────────────────────────────────────── */
+        /* ================================================================
+           SACRED GEOMETRY CANVAS — BACKGROUND
+           ================================================================ */
+        #sacred-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ================================================================
+           PULSING ORBS — BACKGROUND DECORATION
+           ================================================================ */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.35), transparent 70%);
+            top: -100px;
+            left: -100px;
+            animation: orbPulse1 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%);
+            top: 40%;
+            right: -200px;
+            animation: orbPulse2 10s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.25), transparent 70%);
+            bottom: 10%;
+            left: 20%;
+            animation: orbPulse3 12s ease-in-out infinite;
+        }
+
+        .orb-4 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent 70%);
+            top: 60%;
+            left: -50px;
+            animation: orbPulse1 9s ease-in-out infinite reverse;
+        }
+
+        .orb-5 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 70%);
+            top: 20%;
+            right: 10%;
+            animation: orbPulse2 11s ease-in-out infinite reverse;
+        }
+
+        @keyframes orbPulse1 {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.3; }
+            33% { transform: scale(1.2) translate(30px, 20px); opacity: 0.5; }
+            66% { transform: scale(0.9) translate(-20px, 10px); opacity: 0.35; }
+        }
+
+        @keyframes orbPulse2 {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.25; }
+            50% { transform: scale(1.3) translate(-40px, -30px); opacity: 0.45; }
+        }
+
+        @keyframes orbPulse3 {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            25% { transform: scale(1.15) translate(20px, -20px); opacity: 0.4; }
+            75% { transform: scale(0.85) translate(-15px, 25px); opacity: 0.3; }
+        }
+
+        /* ================================================================
+           PARTICLE FIELD — CANVAS OVERLAY
+           ================================================================ */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ================================================================
+           PAGE WRAPPER
+           ================================================================ */
+        .page-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* ================================================================
+           NAVIGATION — GLASS MORPHISM
+           ================================================================ */
         nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 100;
-            backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(10, 10, 15, 0.82);
-            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(5, 5, 16, 0.75);
+            border-bottom: 1px solid var(--border-glass);
             padding: 0 2rem;
-            height: 64px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: var(--transition-smooth);
+        }
+
+        nav.scrolled {
+            background: rgba(5, 5, 16, 0.92);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             letter-spacing: -0.02em;
             text-decoration: none;
             color: var(--text-primary);
         }
 
-        .nav-brand img.logo-img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            object-fit: contain;
+        .nav-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.9rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
 
-        .nav-brand span {
-            color: var(--accent-bright);
+        .nav-logo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            animation: logoShine 3s ease-in-out infinite;
+        }
+
+        @keyframes logoShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .nav-brand .brand-io {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-fuchsia));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .nav-links {
@@ -109,347 +265,887 @@
             text-decoration: none;
             font-size: 0.875rem;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: var(--transition-smooth);
+            position: relative;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan));
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 1px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
             color: var(--text-primary);
         }
 
         .nav-links .btn-nav {
-            padding: 8px 18px;
-            border-radius: 8px;
+            padding: 10px 22px;
+            border-radius: 12px;
             font-size: 0.82rem;
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
             color: white;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: var(--transition-bounce);
+            border: none;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .nav-links .btn-nav::after {
+            display: none;
         }
 
         .nav-links .btn-nav:hover {
-            background: var(--accent-bright);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
         }
 
-        .page-wrapper {
-            position: relative;
-            z-index: 1;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding-top: 64px;
+        /* ================================================================
+           ANIMATED GRADIENT TEXT
+           ================================================================ */
+        .gradient-text {
+            background: linear-gradient(
+                90deg,
+                var(--accent-violet),
+                var(--accent-cyan),
+                var(--accent-fuchsia),
+                var(--accent-emerald),
+                var(--accent-violet)
+            );
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 6s linear infinite;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            width: 100%;
+        @keyframes shimmerText {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
         }
 
+        .gradient-text-slow {
+            background: linear-gradient(
+                90deg,
+                #e8e8f8,
+                var(--accent-cyan),
+                #e8e8f8,
+                var(--accent-fuchsia),
+                #e8e8f8
+            );
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerText 8s linear infinite;
+        }
+
+        /* ================================================================
+           GRADIENT DIVIDERS
+           ================================================================ */
+        .gradient-divider {
+            height: 2px;
+            border: none;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--accent-violet),
+                var(--accent-cyan),
+                var(--accent-fuchsia),
+                transparent
+            );
+            background-size: 200% 100%;
+            animation: flowDivider 4s linear infinite;
+            margin: 60px 0;
+            border-radius: 1px;
+        }
+
+        @keyframes flowDivider {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .gradient-divider-thin {
+            height: 1px;
+            border: none;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(124, 58, 237, 0.4),
+                rgba(6, 182, 212, 0.4),
+                transparent
+            );
+            background-size: 200% 100%;
+            animation: flowDivider 5s linear infinite;
+            margin: 40px 0;
+        }
+
+        /* ================================================================
+           SCROLL REVEAL ANIMATIONS
+           ================================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ================================================================
+           HERO SECTION
+           ================================================================ */
         .hero {
-            padding-top: 80px;
-            padding-bottom: 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             position: relative;
+            padding: 120px 2rem 80px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            background: rgba(124, 58, 237, 0.12);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.25); }
+        }
+
+        .hero-badge .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5.5vw, 4rem);
+            font-size: clamp(3.5rem, 8vw, 7rem);
             font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-bright) 50%, var(--accent-2) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
         }
 
-        .hero p {
-            font-size: 1.15rem;
+        .hero .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
             color: var(--text-secondary);
-            max-width: 620px;
-            margin: 0 auto 36px;
+            max-width: 650px;
+            margin: 0 auto 48px;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
         .hero-actions {
             display: flex;
-            gap: 14px;
+            gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 12px 28px;
-            border-radius: 10px;
-            font-size: 0.9rem;
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-size: 0.95rem;
             font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.25s;
+            gap: 10px;
+            transition: var(--transition-bounce);
             border: none;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
             color: white;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 25px rgba(124, 58, 237, 0.35);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(124, 58, 237, 0.5);
         }
 
         .btn-secondary {
-            background: var(--bg-card);
+            background: var(--glass-bg);
             color: var(--text-primary);
-            border: 1px solid var(--border-accent);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent);
+            background: rgba(15, 15, 40, 0.8);
+            border-color: var(--border-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* ─── Docs Layout ───────────────────────────────────────── */
-        .docs-layout {
+        .hero-stats {
             display: flex;
-            gap: 40px;
-            padding: 40px 0;
-            flex: 1;
+            gap: 48px;
+            justify-content: center;
+            margin-top: 64px;
+            flex-wrap: wrap;
         }
 
-        .docs-sidebar {
-            width: 280px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 104px;
-            height: calc(100vh - 104px);
-            overflow-y: auto;
-            padding-right: 20px;
-            border-right: 1px solid var(--border);
+        .hero-stat {
+            text-align: center;
         }
 
-        .docs-sidebar h3 {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .hero-stat .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-stat .stat-label {
+            font-size: 0.82rem;
             color: var(--text-muted);
-            margin-bottom: 16px;
-            margin-top: 32px;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
         }
 
-        .docs-sidebar h3:first-child {
-            margin-top: 0;
+        /* ================================================================
+           SECTION STYLES
+           ================================================================ */
+        .section {
+            padding: 100px 0;
+            position: relative;
         }
 
-        .docs-sidebar ul {
-            list-style: none;
-        }
-
-        .docs-sidebar li {
-            margin-bottom: 8px;
-        }
-
-        .docs-sidebar a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            border-left: 2px solid transparent;
-        }
-
-        .docs-sidebar a:hover {
-            color: var(--text-primary);
-            background: var(--bg-card);
-        }
-
-        .docs-sidebar a.active {
-            color: var(--accent-bright);
-            background: rgba(99, 102, 241, 0.1);
-            border-left-color: var(--accent);
-        }
-
-        .docs-content {
-            flex: 1;
-            min-width: 0;
-            max-width: 800px;
-            padding-bottom: 100px;
-        }
-
-        .docs-content section {
-            margin-bottom: 60px;
-            scroll-margin-top: 100px;
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
         }
 
         .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            color: var(--accent-bright);
-            margin-bottom: 12px;
-        }
-
-        .docs-content h2 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 24px;
-            letter-spacing: -0.02em;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-        }
-
-        .docs-content h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 40px;
+            color: var(--accent-cyan);
             margin-bottom: 16px;
         }
 
-        .docs-content p {
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan));
+        }
+
+        .section-label::after {
+            background: linear-gradient(90deg, var(--accent-cyan), transparent);
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
             margin-bottom: 20px;
-            font-size: 1.05rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
+            line-height: 1.15;
         }
 
-        .docs-content ul, .docs-content ol {
-            margin-bottom: 24px;
-            padding-left: 24px;
-            color: var(--text-secondary);
-        }
-
-        .docs-content li {
-            margin-bottom: 10px;
-        }
-
-        .docs-content code {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--accent-bright);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .docs-content pre {
-            background: var(--bg-code);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow-x: auto;
-            margin-bottom: 24px;
-        }
-
-        .docs-content pre code {
-            background: transparent;
-            color: inherit;
-            padding: 0;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-            margin-bottom: 40px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            transition: all 0.25s;
-        }
-
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .feature-card h4 {
+        .section-header p {
             font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ================================================================
+           GLASS CARDS — WITH SACRED GEOMETRY SVG BACKGROUNDS
+           ================================================================ */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .glass-card:hover::before {
+            opacity: 0.15;
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                        0 0 40px rgba(124, 58, 237, 0.08);
+        }
+
+        .glass-card .sacred-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            opacity: 0.06;
+            pointer-events: none;
+            animation: rotateSacred 60s linear infinite;
+        }
+
+        @keyframes rotateSacred {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .glass-card .card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-card h3 {
+            font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ================================================================
+           CARD GRID
+           ================================================================ */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .card-grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* ================================================================
+           API ENDPOINTS SECTION
+           ================================================================ */
+        .endpoint-card {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--border-glow);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .method-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .method-get {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .method-post {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-indigo);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .method-put {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .method-delete {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent-rose);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        .method-ws {
+            background: rgba(217, 70, 239, 0.15);
+            color: var(--accent-fuchsia);
+            border: 1px solid rgba(217, 70, 239, 0.3);
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
             color: var(--text-primary);
         }
 
-        .feature-card p {
+        .endpoint-body {
+            padding: 20px 24px;
+        }
+
+        .endpoint-body p {
             font-size: 0.9rem;
-            margin-bottom: 0;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
         }
 
-        /* ─── Endpoints Table ──────────────────────────────── */
-        .server-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 40px;
+        .endpoint-body pre {
+            background: var(--bg-code);
+            padding: 16px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-glass);
+            overflow-x: auto;
+            font-size: 0.82rem;
+            line-height: 1.7;
         }
 
-        .server-table th {
-            text-align: left;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 16px;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .server-table td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
+        .endpoint-body pre code {
             color: var(--text-secondary);
         }
 
-        .server-table tr:hover td {
+        .code-keyword { color: var(--accent-violet); }
+        .code-string { color: var(--accent-emerald); }
+        .code-number { color: var(--accent-amber); }
+        .code-comment { color: var(--text-muted); font-style: italic; }
+        .code-method { color: var(--accent-cyan); }
+        .code-property { color: var(--accent-rose); }
+
+        /* ================================================================
+           SDK SECTION
+           ================================================================ */
+        .sdk-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .sdk-tab {
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
             background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
         }
 
-        .server-table a {
-            color: var(--accent-bright);
-            text-decoration: none;
-            font-weight: 500;
+        .sdk-tab:hover {
+            color: var(--text-primary);
+            border-color: var(--border-glow);
         }
 
-        .server-table a:hover {
-            text-decoration: underline;
+        .sdk-tab.active {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(99, 102, 241, 0.2));
+            border-color: var(--accent-violet);
+            color: var(--text-primary);
         }
 
-        /* ─── Footer ───────────────────────────────────────── */
+        .sdk-panel {
+            display: none;
+        }
+
+        .sdk-panel.active {
+            display: block;
+        }
+
+        .sdk-code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .sdk-code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: rgba(15, 15, 35, 0.5);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .sdk-code-header span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .sdk-code-header .lang-badge {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .lang-node {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-emerald);
+        }
+
+        .lang-python {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-amber);
+        }
+
+        .lang-go {
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        .sdk-code-block pre {
+            padding: 20px;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .sdk-code-block pre code {
+            color: var(--text-secondary);
+        }
+
+        /* ================================================================
+           AUTH SECTION
+           ================================================================ */
+        .auth-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .auth-step {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            padding: 28px;
+            text-align: center;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-step:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-4px);
+        }
+
+        .auth-step .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: white;
+            margin: 0 auto 16px;
+        }
+
+        .auth-step h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-step p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ================================================================
+           RATE LIMITS — PHI-SCALED TABLE
+           ================================================================ */
+        .rate-table-wrapper {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .rate-table-wrapper .sacred-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            opacity: 0.04;
+            pointer-events: none;
+            animation: rotateSacred 90s linear infinite;
+        }
+
+        .rate-table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rate-table th {
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(10, 10, 30, 0.3);
+        }
+
+        .rate-table td {
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(100, 100, 255, 0.06);
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            transition: var(--transition-smooth);
+        }
+
+        .rate-table tr:hover td {
+            background: rgba(124, 58, 237, 0.04);
+        }
+
+        .rate-table .tier-name {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .rate-table .phi-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .rate-table .fib-badge {
+            display: inline-flex;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--accent-violet);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        /* ================================================================
+           REAL-TIME EVENTS SECTION
+           ================================================================ */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .event-card {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-4px);
+        }
+
+        .event-card .event-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .event-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .event-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .event-card pre {
+            background: var(--bg-code);
+            padding: 16px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-glass);
+            overflow-x: auto;
+            font-size: 0.8rem;
+            line-height: 1.7;
+        }
+
+        .event-card pre code {
+            color: var(--text-secondary);
+        }
+
+        /* ================================================================
+           FOOTER
+           ================================================================ */
         footer {
-            padding: 60px 0;
-            border-top: 1px solid var(--border);
-            background: var(--bg-primary);
-            margin-top: auto;
+            padding: 80px 0 40px;
+            border-top: 1px solid var(--border-glass);
+            background: rgba(5, 5, 16, 0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
         }
 
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 40px;
-            margin-bottom: 40px;
+            margin-bottom: 48px;
         }
 
         .footer-col h4 {
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
 
         .footer-col ul {
@@ -464,283 +1160,898 @@
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.2s;
+            transition: var(--transition-smooth);
+            position: relative;
         }
 
         .footer-col a:hover {
-            color: var(--accent-bright);
+            color: var(--accent-cyan);
+            padding-left: 6px;
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-glass);
         }
 
-        /* ─── Responsive ───────────────────────────────────── */
-        @media (max-width: 900px) {
-            .docs-layout {
-                flex-direction: column;
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            line-height: 1.8;
+        }
+
+        .footer-bottom a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .footer-bottom a:hover {
+            color: var(--accent-fuchsia);
+        }
+
+        .footer-sacred-symbol {
+            margin: 24px auto 0;
+            width: 60px;
+            height: 60px;
+            opacity: 0.3;
+            animation: rotateSacred 30s linear infinite;
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 1024px) {
+            .card-grid-3 {
+                grid-template-columns: repeat(2, 1fr);
             }
-            .docs-sidebar {
-                width: 100%;
-                height: auto;
-                position: static;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-                padding-bottom: 20px;
-                margin-bottom: 40px;
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-grid, .card-grid-3 {
+                grid-template-columns: 1fr;
             }
             .nav-links {
                 display: none;
             }
+            .hero {
+                padding: 100px 1.5rem 60px;
+            }
+            .hero-stats {
+                gap: 24px;
+            }
+            .auth-flow {
+                grid-template-columns: 1fr;
+            }
+            .section {
+                padding: 60px 0;
+            }
         }
+
+        /* ================================================================
+           SCROLLBAR
+           ================================================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(124, 58, 237, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(124, 58, 237, 0.5);
+        }
+
+        /* ================================================================
+           ADDITIONAL GLOW EFFECTS
+           ================================================================ */
+        .glow-violet { box-shadow: 0 0 20px rgba(124, 58, 237, 0.2); }
+        .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+        .glow-emerald { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
+        .glow-rose { box-shadow: 0 0 20px rgba(244, 63, 94, 0.2); }
+
+        .icon-violet { background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05)); color: #a78bfa; }
+        .icon-cyan { background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.05)); color: #22d3ee; }
+        .icon-emerald { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05)); color: #34d399; }
+        .icon-amber { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05)); color: #fbbf24; }
+        .icon-rose { background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(244, 63, 94, 0.05)); color: #fb7185; }
+        .icon-fuchsia { background: linear-gradient(135deg, rgba(217, 70, 239, 0.2), rgba(217, 70, 239, 0.05)); color: #e879f9; }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="https://headyio.com" class="nav-brand">
-            <div class="logo-icon">H</div>
-            Heady<span>IO</span>
-        </a>
-        <div class="nav-links">
-            <a href="#overview" class="active">Overview</a>
-            <a href="#architecture">Architecture</a>
-            <a href="#api">API Reference</a>
-            <a href="#ecosystem">Ecosystem</a>
-            <a href="https://headysystems.com" class="btn-nav">Heady Platform →</a>
-        </div>
-    </nav>
 
+    <!-- ================================================================
+         BACKGROUND LAYERS
+         ================================================================ -->
+    <canvas id="sacred-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="orb orb-5"></div>
+
+    <!-- ================================================================
+         SACRED GEOMETRY SVG DEFINITIONS
+         ================================================================ -->
+    <svg style="position:absolute;width:0;height:0;" aria-hidden="true">
+        <defs>
+            <!-- Flower of Life Pattern -->
+            <pattern id="flower-of-life" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                <circle cx="75" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                <circle cx="25" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                <circle cx="62.5" cy="28.35" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                <circle cx="37.5" cy="28.35" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                <circle cx="62.5" cy="71.65" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+                <circle cx="37.5" cy="71.65" r="25" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+            </pattern>
+
+            <!-- Metatron's Cube Pattern -->
+            <pattern id="metatrons-cube" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                <circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+                <circle cx="60" cy="30" r="15" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                <circle cx="60" cy="90" r="15" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                <circle cx="34" cy="45" r="15" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                <circle cx="86" cy="45" r="15" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                <circle cx="34" cy="75" r="15" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                <circle cx="86" cy="75" r="15" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                <line x1="60" y1="30" x2="86" y2="45" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+                <line x1="86" y1="45" x2="86" y2="75" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+                <line x1="86" y1="75" x2="60" y2="90" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+                <line x1="60" y1="90" x2="34" y2="75" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+                <line x1="34" y1="75" x2="34" y2="45" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+                <line x1="34" y1="45" x2="60" y2="30" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+            </pattern>
+
+            <!-- Sri Yantra Simplified -->
+            <pattern id="sri-yantra" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <polygon points="50,15 85,80 15,80" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.4"/>
+                <polygon points="50,85 15,20 85,20" fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.4"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.3"/>
+            </pattern>
+        </defs>
+    </svg>
+
+    <!-- ================================================================
+         PAGE WRAPPER
+         ================================================================ -->
     <div class="page-wrapper">
-        <section class="hero">
-            <div class="container">
-                <h1>HeadyIO</h1>
-                <p>Core API Gateway and Developer Interface</p>
-                <div class="hero-actions">
-                    <a href="#docs-start" class="btn btn-primary">Read Documentation →</a>
-                    <a href="#api" class="btn btn-secondary">API Reference</a>
+
+        <!-- ============================================================
+             NAVIGATION
+             ============================================================ -->
+        <nav id="main-nav">
+            <a href="https://headyio.com" class="nav-brand">
+                <div class="nav-logo">H</div>
+                Heady<span class="brand-io">IO</span>
+            </a>
+            <div class="nav-links">
+                <a href="#endpoints">Endpoints</a>
+                <a href="#sdks">SDKs</a>
+                <a href="#auth">Auth</a>
+                <a href="#rate-limits">Limits</a>
+                <a href="#realtime">Real-time</a>
+                <a href="https://headysystems.com" class="btn-nav">Heady Platform</a>
+            </div>
+        </nav>
+
+        <!-- ============================================================
+             HERO SECTION
+             ============================================================ -->
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <span class="badge-dot"></span>
+                    API Platform v4.1 — Live
+                </div>
+
+                <h1 class="gradient-text reveal reveal-delay-1">HeadyIO</h1>
+
+                <p class="subtitle reveal reveal-delay-2">
+                    The API Platform for the Heady Ecosystem. Build, connect, and scale
+                    with sacred geometry-powered infrastructure.
+                </p>
+
+                <div class="hero-actions reveal reveal-delay-3">
+                    <a href="#endpoints" class="btn btn-primary">Explore API</a>
+                    <a href="#sdks" class="btn btn-secondary">View SDKs</a>
+                </div>
+
+                <div class="hero-stats reveal reveal-delay-4">
+                    <div class="hero-stat">
+                        <div class="stat-value gradient-text">99.97%</div>
+                        <div class="stat-label">Uptime SLA</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-value gradient-text">&lt;8ms</div>
+                        <div class="stat-label">Avg Latency</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-value gradient-text">175+</div>
+                        <div class="stat-label">Endpoints</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="stat-value gradient-text">21</div>
+                        <div class="stat-label">Pipeline Stages</div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <div class="container">
-            <div class="docs-layout" id="docs-start">
-                <aside class="docs-sidebar">
-                    <h3>Getting Started</h3>
-                    <ul>
-                        <li><a href="#overview" class="nav-item">Overview</a></li>
-                        <li><a href="#quickstart" class="nav-item">Quickstart</a></li>
-                        <li><a href="#installation" class="nav-item">Installation</a></li>
-                    </ul>
-
-                    <h3>Core Concepts</h3>
-                    <ul>
-                        <li><a href="#architecture" class="nav-item">Architecture</a></li>
-                        <li><a href="#data-model" class="nav-item">Data Model</a></li>
-                        <li><a href="#security" class="nav-item">Security</a></li>
-                    </ul>
-
-                    <h3>Integration</h3>
-                    <ul>
-                        <li><a href="#api" class="nav-item">API Reference</a></li>
-                        <li><a href="#webhooks" class="nav-item">Webhooks</a></li>
-                        <li><a href="#sdks" class="nav-item">Client SDKs</a></li>
-                    </ul>
-
-                    <h3>Ecosystem</h3>
-                    <ul>
-                        <li><a href="#ecosystem" class="nav-item">Heady Network</a></li>
-                        <li><a href="#support" class="nav-item">Support</a></li>
-                    </ul>
-                </aside>
-
-                <main class="docs-content">
-                    <section id="overview">
-                        <div class="section-label">Overview</div>
-                        <h2>Introduction to HeadyIO</h2>
-                        <p>Welcome to the official documentation for <strong>HeadyIO</strong>. This platform serves as the core api gateway and developer interface. It is a core component of the broader Heady ecosystem, built on principles of sacred geometry, organic systems, and breathing interfaces.</p>
-
-                        <p>Our infrastructure is designed to provide unparalleled performance, security, and scalability. By deeply integrating with the Heady Model Context Protocol (MCP) and the HCFullPipeline, HeadyIO ensures seamless operation across all layers of the stack.</p>
-
-                        <div class="card-grid">
-                            <div class="feature-card">
-                                <h4>High Performance</h4>
-                                <p>Built on top of Cloudflare edge network and Google Kubernetes Engine for sub-millisecond latency.</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>Brain-Aware</h4>
-                                <p>Fully integrated with the HeadyBrain orchestrator for intelligent, context-aware routing.</p>
-                            </div>
-                            <div class="feature-card">
-                                <h4>Zero Trust Security</h4>
-                                <p>Continuous authentication and Continuous Security Posture Management (CSPM) enforced at every node.</p>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section id="architecture">
-                        <div class="section-label">Architecture</div>
-                        <h2>System Architecture</h2>
-                        <p>HeadyIO utilizes a microservices-based architecture deployed across multiple global regions. The system is conceptually divided into several key layers:</p>
-
-                        <ul>
-                            <li><strong>Edge Layer:</strong> Handles global routing, DDoS protection, and TLS termination via Cloudflare.</li>
-                            <li><strong>Gateway Layer:</strong> API Gateway that validates requests, enforces rate limits, and performs JWT verification.</li>
-                            <li><strong>Orchestration Layer:</strong> The HCSysOrchestrator manages the flow of data between services based on cognitive load and system health.</li>
-                            <li><strong>Service Layer:</strong> The core business logic specific to headyio.com.</li>
-                            <li><strong>Data Layer:</strong> Distributed Postgres databases with real-time replication and vector stores for AI embeddings.</li>
-                        </ul>
-
-                        <pre><code>// Architecture Topology
-const topology = {
-  edge: 'cloudflare-workers',
-  gateway: 'envoy-proxy',
-  orchestrator: 'hcsys-orchestrator',
-  compute: 'gke-clusters',
-  storage: ['postgres', 'redis-cluster', 'qdrant-vector']
-};</code></pre>
-                    </section>
-
-                    <section id="api">
-                        <div class="section-label">Integration</div>
-                        <h2>API Reference</h2>
-                        <p>Interact with HeadyIO programmatically using our REST and MCP APIs. All endpoints require authentication via a standard Bearer token.</p>
-
-                        <h3>Authentication</h3>
-                        <p>Include your API key in the Authorization header of your requests:</p>
-                        <pre><code>curl -H "Authorization: Bearer hdy_your_api_key" https://api.headyio.com/v1/status</code></pre>
-
-                        <h3>Common Endpoints</h3>
-                        <table class="server-table">
-                            <thead>
-                                <tr>
-                                    <th>Endpoint</th>
-                                    <th>Method</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>/v1/health</code></td>
-                                    <td>GET</td>
-                                    <td>Returns the current health status of the service cluster.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/v1/metrics</code></td>
-                                    <td>GET</td>
-                                    <td>Provides Prometheus-formatted metrics for monitoring.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/v1/sync</code></td>
-                                    <td>POST</td>
-                                    <td>Triggers a synchronization event with the Heady Registry.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/mcp/connect</code></td>
-                                    <td>WS</td>
-                                    <td>Establishes a WebSocket connection for real-time MCP streaming.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
-
-                    <section id="ecosystem">
-                        <div class="section-label">Ecosystem</div>
-                        <h2>The Heady Network</h2>
-                        <p>HeadyIO is just one piece of the puzzle. Explore the rest of the Heady ecosystem to see how our platforms connect.</p>
-
-                        <table class="server-table">
-                            <thead>
-                                <tr>
-                                    <th>Platform</th>
-                                    <th>Domain</th>
-                                    <th>Role</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr>
-                                    <td><strong>HeadyMe</strong></td>
-                                    <td><a href="https://headyme.com">headyme.com</a></td>
-                                    <td>Command center — primary user-facing dashboard and control hub</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadySystems</strong></td>
-                                    <td><a href="https://headysystems.com">headysystems.com</a></td>
-                                    <td>Core architecture — system documentation, API reference, developer portal</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>Heady AI</strong></td>
-                                    <td><a href="https://heady-ai.com">heady-ai.com</a></td>
-                                    <td>Intelligence hub — AI capabilities showcase, model playground, research</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyOS</strong></td>
-                                    <td><a href="https://headyos.com">headyos.com</a></td>
-                                    <td>OS interface — interactive HeadyLatentOS management and monitoring</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyConnection (Org)</strong></td>
-                                    <td><a href="https://headyconnection.org">headyconnection.org</a></td>
-                                    <td>Nonprofit — community outreach, education, mission, impact reporting</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyConnection</strong></td>
-                                    <td><a href="https://headyconnection.com">headyconnection.com</a></td>
-                                    <td>Community — user forums, collaboration spaces, knowledge sharing</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyEx</strong></td>
-                                    <td><a href="https://headyex.com">headyex.com</a></td>
-                                    <td>Exchange — marketplace for models, plugins, templates, and integrations</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyFinance</strong></td>
-                                    <td><a href="https://headyfinance.com">headyfinance.com</a></td>
-                                    <td>Finance — billing, subscriptions, usage analytics, cost management</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>Heady Admin</strong></td>
-                                    <td><a href="https://admin.headysystems.com">admin.headysystems.com</a></td>
-                                    <td>Admin — system administration, user management, global configuration</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyIO</strong></td>
-                                    <td><a href="https://headyio.com">headyio.com</a></td>
-                                    <td>Core API Gateway and Developer Interface</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyWeb</strong></td>
-                                    <td><a href="https://headyweb.com">headyweb.com</a></td>
-                                    <td>Web platform and frontend delivery network</td>
-                                </tr>
-
-                                <tr>
-                                    <td><strong>HeadyMCP</strong></td>
-                                    <td><a href="https://headymcp.com">headymcp.com</a></td>
-                                    <td>Model Context Protocol Documentation</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
-                </main>
-            </div>
+            <hr class="gradient-divider">
         </div>
-    </div>
 
+        <!-- ============================================================
+             API ENDPOINTS SECTION
+             ============================================================ -->
+        <section class="section" id="endpoints">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-label">API Reference</div>
+                    <h2 class="gradient-text-slow">API Endpoints</h2>
+                    <p>RESTful endpoints powered by HCFullPipeline v7. Every request traverses our 21-stage sacred geometry pipeline.</p>
+                </div>
+
+                <div class="card-grid" style="grid-template-columns: 1fr;">
+
+                    <!-- GET /v1/health -->
+                    <div class="endpoint-card reveal">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-path">/v1/health</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Returns the current health status, coherence score, and version of the HeadyIO service cluster.</p>
+                            <pre><code><span class="code-comment">// Response 200 OK</span>
+{
+  <span class="code-property">"status"</span>: <span class="code-string">"healthy"</span>,
+  <span class="code-property">"coherenceScore"</span>: <span class="code-number">0.927</span>,
+  <span class="code-property">"version"</span>: <span class="code-string">"4.1.0"</span>,
+  <span class="code-property">"pipeline"</span>: <span class="code-string">"HCFullPipeline-v7"</span>,
+  <span class="code-property">"uptime"</span>: <span class="code-number">99.97</span>,
+  <span class="code-property">"activeNodes"</span>: <span class="code-number">21</span>,
+  <span class="code-property">"latency"</span>: {
+    <span class="code-property">"p50"</span>: <span class="code-number">3.2</span>,
+    <span class="code-property">"p95"</span>: <span class="code-number">8.1</span>,
+    <span class="code-property">"p99"</span>: <span class="code-number">14.4</span>
+  }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- POST /v1/pipeline/execute -->
+                    <div class="endpoint-card reveal reveal-delay-1">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-post">POST</span>
+                            <span class="endpoint-path">/v1/pipeline/execute</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Execute a request through the full 21-stage HCFullPipeline. Supports FAST_PATH (7 stages), FULL_PATH (21 stages), ARENA_PATH (9 stages), and LEARNING_PATH (7 stages).</p>
+                            <pre><code><span class="code-comment">// Request</span>
+{
+  <span class="code-property">"intent"</span>: <span class="code-string">"classify_and_route"</span>,
+  <span class="code-property">"pathVariant"</span>: <span class="code-string">"FULL_PATH"</span>,
+  <span class="code-property">"context"</span>: {
+    <span class="code-property">"channelId"</span>: <span class="code-string">"web-dashboard"</span>,
+    <span class="code-property">"userId"</span>: <span class="code-string">"usr_a1b2c3d4"</span>,
+    <span class="code-property">"embeddings"</span>: [<span class="code-number">0.123</span>, <span class="code-number">-0.456</span>, <span class="code-string">"...384D"</span>]
+  },
+  <span class="code-property">"payload"</span>: {
+    <span class="code-property">"query"</span>: <span class="code-string">"Analyze system coherence"</span>
+  }
+}
+
+<span class="code-comment">// Response 200 OK</span>
+{
+  <span class="code-property">"pipelineId"</span>: <span class="code-string">"pipe_f8e7d6c5"</span>,
+  <span class="code-property">"stagesCompleted"</span>: <span class="code-number">21</span>,
+  <span class="code-property">"coherenceScore"</span>: <span class="code-number">0.882</span>,
+  <span class="code-property">"result"</span>: { <span class="code-comment">/* ... */</span> }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- GET /v1/nodes -->
+                    <div class="endpoint-card reveal reveal-delay-2">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-get">GET</span>
+                            <span class="endpoint-path">/v1/nodes</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>List all nodes in the sacred geometry topology. Returns the full node graph including HeadySoul center, inner ring, middle ring, outer ring, and governance nodes.</p>
+                            <pre><code><span class="code-comment">// Response 200 OK</span>
+{
+  <span class="code-property">"topology"</span>: {
+    <span class="code-property">"center"</span>: [<span class="code-string">"HeadySoul"</span>],
+    <span class="code-property">"inner"</span>: [<span class="code-string">"Conductor"</span>, <span class="code-string">"Brains"</span>, <span class="code-string">"Vinci"</span>, <span class="code-string">"AutoSuccess"</span>],
+    <span class="code-property">"middle"</span>: [<span class="code-string">"JULES"</span>, <span class="code-string">"BUILDER"</span>, <span class="code-string">"OBSERVER"</span>, <span class="code-string">"MURPHY"</span>, <span class="code-string">"ATLAS"</span>, <span class="code-string">"PYTHIA"</span>],
+    <span class="code-property">"outer"</span>: [<span class="code-string">"BRIDGE"</span>, <span class="code-string">"MUSE"</span>, <span class="code-string">"SENTINEL"</span>, <span class="code-string">"NOVA"</span>, <span class="code-string">"JANITOR"</span>, <span class="code-string">"SOPHIA"</span>],
+    <span class="code-property">"governance"</span>: [<span class="code-string">"Check"</span>, <span class="code-string">"Assure"</span>, <span class="code-string">"Aware"</span>, <span class="code-string">"Patterns"</span>]
+  },
+  <span class="code-property">"totalNodes"</span>: <span class="code-number">21</span>
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- PUT /v1/config -->
+                    <div class="endpoint-card reveal reveal-delay-3">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-put">PUT</span>
+                            <span class="endpoint-path">/v1/config/thresholds</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Update CSL (Continuous Semantic Logic) gate thresholds. All thresholds are phi-derived and must respect the CSL constraint hierarchy.</p>
+                            <pre><code><span class="code-comment">// Request</span>
+{
+  <span class="code-property">"gates"</span>: {
+    <span class="code-property">"minimum"</span>: <span class="code-number">0.500</span>,
+    <span class="code-property">"low"</span>: <span class="code-number">0.691</span>,
+    <span class="code-property">"medium"</span>: <span class="code-number">0.809</span>,
+    <span class="code-property">"high"</span>: <span class="code-number">0.882</span>,
+    <span class="code-property">"critical"</span>: <span class="code-number">0.927</span>,
+    <span class="code-property">"dedup"</span>: <span class="code-number">0.972</span>
+  }
+}
+
+<span class="code-comment">// Response 200 OK</span>
+{
+  <span class="code-property">"updated"</span>: <span class="code-keyword">true</span>,
+  <span class="code-property">"phiValidation"</span>: <span class="code-string">"passed"</span>
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- DELETE /v1/cache -->
+                    <div class="endpoint-card reveal reveal-delay-4">
+                        <div class="endpoint-header">
+                            <span class="method-badge method-delete">DELETE</span>
+                            <span class="endpoint-path">/v1/cache/invalidate</span>
+                        </div>
+                        <div class="endpoint-body">
+                            <p>Invalidate cached pipeline results. Supports granular invalidation by pool tier: Hot (34%), Warm (21%), Cold (13%), Reserve (8%).</p>
+                            <pre><code><span class="code-comment">// Request</span>
+{
+  <span class="code-property">"pools"</span>: [<span class="code-string">"hot"</span>, <span class="code-string">"warm"</span>],
+  <span class="code-property">"pattern"</span>: <span class="code-string">"pipeline:*:results"</span>
+}
+
+<span class="code-comment">// Response 200 OK</span>
+{
+  <span class="code-property">"invalidated"</span>: <span class="code-number">1597</span>,
+  <span class="code-property">"pools"</span>: {
+    <span class="code-property">"hot"</span>: <span class="code-number">987</span>,
+    <span class="code-property">"warm"</span>: <span class="code-number">610</span>
+  }
+}</code></pre>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="gradient-divider">
+        </div>
+
+        <!-- ============================================================
+             SDK SECTION
+             ============================================================ -->
+        <section class="section" id="sdks">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-label">Client Libraries</div>
+                    <h2 class="gradient-text-slow">Official SDKs</h2>
+                    <p>First-class SDK support for Node.js, Python, and Go. Each SDK wraps the full HCFullPipeline with type-safe interfaces.</p>
+                </div>
+
+                <div class="reveal">
+                    <div class="sdk-tabs">
+                        <button class="sdk-tab active" data-sdk="node">Node.js</button>
+                        <button class="sdk-tab" data-sdk="python">Python</button>
+                        <button class="sdk-tab" data-sdk="go">Go</button>
+                    </div>
+
+                    <!-- Node.js SDK -->
+                    <div class="sdk-panel active" id="sdk-node">
+                        <div class="sdk-code-block">
+                            <div class="sdk-code-header">
+                                <span>heady-sdk-node</span>
+                                <span class="lang-badge lang-node">Node.js</span>
+                            </div>
+                            <pre><code><span class="code-keyword">import</span> { HeadyIO } <span class="code-keyword">from</span> <span class="code-string">'@heady/sdk-node'</span>;
+
+<span class="code-comment">// Initialize the HeadyIO client with sacred geometry defaults</span>
+<span class="code-keyword">const</span> heady = <span class="code-keyword">new</span> <span class="code-method">HeadyIO</span>({
+  apiKey: process.env.<span class="code-property">HEADY_API_KEY</span>,
+  baseUrl: <span class="code-string">'https://api.headyio.com/v1'</span>,
+  pipeline: <span class="code-string">'FULL_PATH'</span>,
+  timeout: <span class="code-number">8000</span>,
+  retryStrategy: {
+    maxAttempts: <span class="code-number">5</span>,
+    backoff: <span class="code-string">'phi-exponential'</span>,  <span class="code-comment">// PHI^attempt * base</span>
+    jitter: <span class="code-number">0.382</span>              <span class="code-comment">// +/- 38.2% (1 - PSI)</span>
+  }
+});
+
+<span class="code-comment">// Execute a pipeline request</span>
+<span class="code-keyword">const</span> result = <span class="code-keyword">await</span> heady.pipeline.<span class="code-method">execute</span>({
+  intent: <span class="code-string">'classify_and_route'</span>,
+  context: {
+    channelId: <span class="code-string">'web-dashboard'</span>,
+    userId: <span class="code-string">'usr_a1b2c3d4'</span>
+  },
+  payload: {
+    query: <span class="code-string">'Analyze system coherence metrics'</span>
+  }
+});
+
+console.log(result.coherenceScore); <span class="code-comment">// 0.882</span>
+console.log(result.stagesCompleted); <span class="code-comment">// 21</span>
+
+<span class="code-comment">// Subscribe to real-time events via WebSocket</span>
+<span class="code-keyword">const</span> stream = heady.events.<span class="code-method">subscribe</span>({
+  channels: [<span class="code-string">'pipeline.*'</span>, <span class="code-string">'nodes.health'</span>],
+  filter: {
+    coherenceMin: <span class="code-number">0.691</span>
+  }
+});
+
+stream.<span class="code-method">on</span>(<span class="code-string">'pipeline.complete'</span>, (event) => {
+  console.log(<span class="code-string">`Pipeline </span>${event.pipelineId}<span class="code-string"> completed`</span>);
+});
+
+stream.<span class="code-method">on</span>(<span class="code-string">'nodes.health'</span>, (event) => {
+  console.log(<span class="code-string">`Node </span>${event.nodeId}<span class="code-string">: </span>${event.status}<span class="code-string">`</span>);
+});</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Python SDK -->
+                    <div class="sdk-panel" id="sdk-python">
+                        <div class="sdk-code-block">
+                            <div class="sdk-code-header">
+                                <span>heady-sdk-python</span>
+                                <span class="lang-badge lang-python">Python</span>
+                            </div>
+                            <pre><code><span class="code-keyword">import</span> os
+<span class="code-keyword">from</span> heady <span class="code-keyword">import</span> HeadyIO, PipelineConfig, RetryStrategy
+
+<span class="code-comment"># Initialize the HeadyIO client</span>
+client = <span class="code-method">HeadyIO</span>(
+    api_key=os.environ[<span class="code-string">"HEADY_API_KEY"</span>],
+    base_url=<span class="code-string">"https://api.headyio.com/v1"</span>,
+    pipeline=<span class="code-method">PipelineConfig</span>(
+        variant=<span class="code-string">"FULL_PATH"</span>,
+        stages=<span class="code-number">21</span>
+    ),
+    retry=<span class="code-method">RetryStrategy</span>(
+        max_attempts=<span class="code-number">5</span>,
+        backoff=<span class="code-string">"phi-exponential"</span>,
+        jitter=<span class="code-number">0.382</span>
+    )
+)
+
+<span class="code-comment"># Execute pipeline with async context manager</span>
+<span class="code-keyword">async with</span> client <span class="code-keyword">as</span> heady:
+    result = <span class="code-keyword">await</span> heady.pipeline.<span class="code-method">execute</span>(
+        intent=<span class="code-string">"classify_and_route"</span>,
+        context={
+            <span class="code-string">"channel_id"</span>: <span class="code-string">"web-dashboard"</span>,
+            <span class="code-string">"user_id"</span>: <span class="code-string">"usr_a1b2c3d4"</span>,
+        },
+        payload={
+            <span class="code-string">"query"</span>: <span class="code-string">"Analyze system coherence metrics"</span>
+        }
+    )
+
+    <span class="code-method">print</span>(f<span class="code-string">"Coherence: {result.coherence_score}"</span>)  <span class="code-comment"># 0.882</span>
+    <span class="code-method">print</span>(f<span class="code-string">"Stages: {result.stages_completed}"</span>)    <span class="code-comment"># 21</span>
+
+    <span class="code-comment"># Fetch topology</span>
+    nodes = <span class="code-keyword">await</span> heady.nodes.<span class="code-method">list</span>()
+    <span class="code-keyword">for</span> ring, members <span class="code-keyword">in</span> nodes.topology.items():
+        <span class="code-method">print</span>(f<span class="code-string">"{ring}: {', '.join(members)}"</span>)
+
+    <span class="code-comment"># Stream events with SSE</span>
+    <span class="code-keyword">async for</span> event <span class="code-keyword">in</span> heady.events.<span class="code-method">stream</span>(
+        channels=[<span class="code-string">"pipeline.*"</span>],
+        coherence_min=<span class="code-number">0.691</span>
+    ):
+        <span class="code-method">print</span>(f<span class="code-string">"Event: {event.type} | {event.data}"</span>)</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Go SDK -->
+                    <div class="sdk-panel" id="sdk-go">
+                        <div class="sdk-code-block">
+                            <div class="sdk-code-header">
+                                <span>heady-sdk-go</span>
+                                <span class="lang-badge lang-go">Go</span>
+                            </div>
+                            <pre><code><span class="code-keyword">package</span> main
+
+<span class="code-keyword">import</span> (
+    <span class="code-string">"context"</span>
+    <span class="code-string">"fmt"</span>
+    <span class="code-string">"log"</span>
+    <span class="code-string">"os"</span>
+
+    heady <span class="code-string">"github.com/heady-systems/sdk-go"</span>
+)
+
+<span class="code-keyword">func</span> <span class="code-method">main</span>() {
+    <span class="code-comment">// Initialize HeadyIO client with phi-scaled retry</span>
+    client, err := heady.<span class="code-method">NewClient</span>(heady.<span class="code-method">Config</span>{
+        APIKey:   os.<span class="code-method">Getenv</span>(<span class="code-string">"HEADY_API_KEY"</span>),
+        BaseURL:  <span class="code-string">"https://api.headyio.com/v1"</span>,
+        Pipeline: heady.FullPath,
+        Retry: heady.<span class="code-method">RetryConfig</span>{
+            MaxAttempts: <span class="code-number">5</span>,
+            Backoff:     heady.PhiExponential,
+            Jitter:      <span class="code-number">0.382</span>,
+        },
+    })
+    <span class="code-keyword">if</span> err != <span class="code-keyword">nil</span> {
+        log.<span class="code-method">Fatal</span>(err)
+    }
+    <span class="code-keyword">defer</span> client.<span class="code-method">Close</span>()
+
+    ctx := context.<span class="code-method">Background</span>()
+
+    <span class="code-comment">// Execute pipeline</span>
+    result, err := client.Pipeline.<span class="code-method">Execute</span>(ctx, &heady.<span class="code-method">PipelineRequest</span>{
+        Intent: <span class="code-string">"classify_and_route"</span>,
+        Context: heady.<span class="code-method">RequestContext</span>{
+            ChannelID: <span class="code-string">"web-dashboard"</span>,
+            UserID:    <span class="code-string">"usr_a1b2c3d4"</span>,
+        },
+        Payload: map[<span class="code-keyword">string</span>]<span class="code-keyword">interface</span>{}{
+            <span class="code-string">"query"</span>: <span class="code-string">"Analyze system coherence"</span>,
+        },
+    })
+    <span class="code-keyword">if</span> err != <span class="code-keyword">nil</span> {
+        log.<span class="code-method">Fatal</span>(err)
+    }
+
+    fmt.<span class="code-method">Printf</span>(<span class="code-string">"Coherence: %.3f\n"</span>, result.CoherenceScore)
+    fmt.<span class="code-method">Printf</span>(<span class="code-string">"Stages: %d\n"</span>, result.StagesCompleted)
+
+    <span class="code-comment">// Stream real-time events</span>
+    events, err := client.Events.<span class="code-method">Subscribe</span>(ctx, &heady.<span class="code-method">SubscribeConfig</span>{
+        Channels:     []<span class="code-keyword">string</span>{<span class="code-string">"pipeline.*"</span>},
+        CoherenceMin: <span class="code-number">0.691</span>,
+    })
+    <span class="code-keyword">if</span> err != <span class="code-keyword">nil</span> {
+        log.<span class="code-method">Fatal</span>(err)
+    }
+
+    <span class="code-keyword">for</span> event := <span class="code-keyword">range</span> events {
+        fmt.<span class="code-method">Printf</span>(<span class="code-string">"Event: %s | %v\n"</span>, event.Type, event.Data)
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="gradient-divider">
+        </div>
+
+        <!-- ============================================================
+             AUTHENTICATION & OAUTH 2.1
+             ============================================================ -->
+        <section class="section" id="auth">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-label">Security</div>
+                    <h2 class="gradient-text-slow">Authentication &amp; OAuth 2.1</h2>
+                    <p>Zero-trust security enforced at every node. PKCE-required OAuth 2.1 with phi-derived token rotation.</p>
+                </div>
+
+                <div class="auth-flow reveal">
+                    <div class="auth-step reveal-scale">
+                        <div class="step-number">1</div>
+                        <h4>Register Application</h4>
+                        <p>Create your app in the HeadyIO developer console. Receive your client_id and configure redirect URIs.</p>
+                    </div>
+                    <div class="auth-step reveal-scale reveal-delay-1">
+                        <div class="step-number">2</div>
+                        <h4>PKCE Challenge</h4>
+                        <p>Generate a code_verifier and code_challenge. OAuth 2.1 mandates PKCE for all grant types.</p>
+                    </div>
+                    <div class="auth-step reveal-scale reveal-delay-2">
+                        <div class="step-number">3</div>
+                        <h4>Authorization</h4>
+                        <p>Redirect user to /oauth/authorize with scope, state, and PKCE parameters.</p>
+                    </div>
+                    <div class="auth-step reveal-scale reveal-delay-3">
+                        <div class="step-number">4</div>
+                        <h4>Token Exchange</h4>
+                        <p>Exchange authorization code for access and refresh tokens. Tokens rotate on a phi-scaled schedule.</p>
+                    </div>
+                </div>
+
+                <div class="reveal" style="margin-top: 40px;">
+                    <div class="sdk-code-block">
+                        <div class="sdk-code-header">
+                            <span>OAuth 2.1 + PKCE Flow</span>
+                            <span class="lang-badge lang-node">cURL</span>
+                        </div>
+                        <pre><code><span class="code-comment"># Step 1: Authorization Request (browser redirect)</span>
+GET https://auth.headyio.com/oauth/authorize
+  ?response_type=<span class="code-string">code</span>
+  &client_id=<span class="code-string">hdy_client_a1b2c3</span>
+  &redirect_uri=<span class="code-string">https://yourapp.com/callback</span>
+  &scope=<span class="code-string">pipeline:execute nodes:read events:subscribe</span>
+  &state=<span class="code-string">random_csrf_token</span>
+  &code_challenge=<span class="code-string">E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM</span>
+  &code_challenge_method=<span class="code-string">S256</span>
+
+<span class="code-comment"># Step 2: Token Exchange</span>
+curl -X POST https://auth.headyio.com/oauth/token \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d '{
+    <span class="code-property">"grant_type"</span>: <span class="code-string">"authorization_code"</span>,
+    <span class="code-property">"code"</span>: <span class="code-string">"auth_code_from_callback"</span>,
+    <span class="code-property">"client_id"</span>: <span class="code-string">"hdy_client_a1b2c3"</span>,
+    <span class="code-property">"redirect_uri"</span>: <span class="code-string">"https://yourapp.com/callback"</span>,
+    <span class="code-property">"code_verifier"</span>: <span class="code-string">"your_original_code_verifier"</span>
+  }'
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-property">"access_token"</span>: <span class="code-string">"hdy_at_eyJhbGciOi..."</span>,
+  <span class="code-property">"token_type"</span>: <span class="code-string">"Bearer"</span>,
+  <span class="code-property">"expires_in"</span>: <span class="code-number">2584</span>,   <span class="code-comment">// ~43min (Fib-derived)</span>
+  <span class="code-property">"refresh_token"</span>: <span class="code-string">"hdy_rt_dGhlIHF1aW..."</span>,
+  <span class="code-property">"scope"</span>: <span class="code-string">"pipeline:execute nodes:read events:subscribe"</span>
+}
+
+<span class="code-comment"># Step 3: Authenticated API Request</span>
+curl -H <span class="code-string">"Authorization: Bearer hdy_at_eyJhbGciOi..."</span> \
+     https://api.headyio.com/v1/health</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="gradient-divider">
+        </div>
+
+        <!-- ============================================================
+             RATE LIMITS (PHI-SCALED)
+             ============================================================ -->
+        <section class="section" id="rate-limits">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-label">Governance</div>
+                    <h2 class="gradient-text-slow">Rate Limits</h2>
+                    <p>Rate limits follow the Fibonacci sequence scaled by phi. Each tier unlocks the next Fibonacci number in the golden ratio progression.</p>
+                </div>
+
+                <div class="rate-table-wrapper reveal">
+                    <svg class="sacred-bg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="90" stroke="rgba(124,58,237,0.3)" stroke-width="0.5"/>
+                        <circle cx="100" cy="100" r="70" stroke="rgba(6,182,212,0.3)" stroke-width="0.5"/>
+                        <circle cx="100" cy="100" r="50" stroke="rgba(217,70,239,0.3)" stroke-width="0.5"/>
+                        <circle cx="100" cy="100" r="30" stroke="rgba(16,185,129,0.3)" stroke-width="0.5"/>
+                        <line x1="100" y1="10" x2="100" y2="190" stroke="rgba(124,58,237,0.15)" stroke-width="0.3"/>
+                        <line x1="10" y1="100" x2="190" y2="100" stroke="rgba(124,58,237,0.15)" stroke-width="0.3"/>
+                        <line x1="36" y1="36" x2="164" y2="164" stroke="rgba(6,182,212,0.15)" stroke-width="0.3"/>
+                        <line x1="164" y1="36" x2="36" y2="164" stroke="rgba(6,182,212,0.15)" stroke-width="0.3"/>
+                    </svg>
+                    <table class="rate-table">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Requests / Min</th>
+                                <th>Fibonacci Index</th>
+                                <th>Burst Allowance</th>
+                                <th>Backoff Base</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="tier-name">Free</td>
+                                <td class="phi-value">34 req/min</td>
+                                <td><span class="fib-badge">F(9) = 34</span></td>
+                                <td>+ 5 burst</td>
+                                <td>1.618s</td>
+                            </tr>
+                            <tr>
+                                <td class="tier-name">Developer</td>
+                                <td class="phi-value">55 req/min</td>
+                                <td><span class="fib-badge">F(10) = 55</span></td>
+                                <td>+ 8 burst</td>
+                                <td>1.000s</td>
+                            </tr>
+                            <tr>
+                                <td class="tier-name">Professional</td>
+                                <td class="phi-value">89 req/min</td>
+                                <td><span class="fib-badge">F(11) = 89</span></td>
+                                <td>+ 13 burst</td>
+                                <td>0.618s</td>
+                            </tr>
+                            <tr>
+                                <td class="tier-name">Business</td>
+                                <td class="phi-value">144 req/min</td>
+                                <td><span class="fib-badge">F(12) = 144</span></td>
+                                <td>+ 21 burst</td>
+                                <td>0.382s</td>
+                            </tr>
+                            <tr>
+                                <td class="tier-name">Enterprise</td>
+                                <td class="phi-value">233 req/min</td>
+                                <td><span class="fib-badge">F(13) = 233</span></td>
+                                <td>+ 34 burst</td>
+                                <td>0.236s</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="reveal" style="margin-top: 32px;">
+                    <div class="sdk-code-block">
+                        <div class="sdk-code-header">
+                            <span>Rate Limit Headers</span>
+                            <span class="lang-badge lang-node">HTTP</span>
+                        </div>
+                        <pre><code><span class="code-comment">// Rate limit response headers</span>
+X-RateLimit-Limit: <span class="code-number">89</span>
+X-RateLimit-Remaining: <span class="code-number">76</span>
+X-RateLimit-Reset: <span class="code-number">1710764400</span>
+X-RateLimit-Tier: <span class="code-string">professional</span>
+X-RateLimit-Fibonacci: <span class="code-string">F(11)</span>
+X-RateLimit-Burst-Remaining: <span class="code-number">13</span>
+X-Backoff-Strategy: <span class="code-string">phi-exponential</span>
+X-Backoff-Base: <span class="code-string">0.618s</span>
+
+<span class="code-comment">// When rate limited (429 Too Many Requests)</span>
+{
+  <span class="code-property">"error"</span>: <span class="code-string">"rate_limit_exceeded"</span>,
+  <span class="code-property">"retryAfter"</span>: <span class="code-number">1.618</span>,
+  <span class="code-property">"tier"</span>: <span class="code-string">"professional"</span>,
+  <span class="code-property">"fibIndex"</span>: <span class="code-number">11</span>,
+  <span class="code-property">"suggestion"</span>: <span class="code-string">"Upgrade to Business for F(12)=144 req/min"</span>
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="gradient-divider">
+        </div>
+
+        <!-- ============================================================
+             REAL-TIME EVENTS
+             ============================================================ -->
+        <section class="section" id="realtime">
+            <div class="container">
+                <div class="section-header reveal">
+                    <div class="section-label">Streaming</div>
+                    <h2 class="gradient-text-slow">Real-time Events</h2>
+                    <p>Live data streams via WebSocket and Server-Sent Events. Subscribe to pipeline completions, node health, and system coherence in real time.</p>
+                </div>
+
+                <div class="events-grid">
+                    <!-- WebSocket -->
+                    <div class="event-card reveal">
+                        <div class="event-icon">&#x26A1;</div>
+                        <h3 class="gradient-text-slow">WebSocket</h3>
+                        <p>Full-duplex communication for bidirectional real-time streaming. Subscribe to channels, send commands, and receive events with sub-millisecond delivery.</p>
+                        <pre><code><span class="code-comment">// Connect to WebSocket endpoint</span>
+<span class="code-keyword">const</span> ws = <span class="code-keyword">new</span> <span class="code-method">WebSocket</span>(
+  <span class="code-string">'wss://ws.headyio.com/v1/events'</span>
+);
+
+ws.<span class="code-method">onopen</span> = () => {
+  ws.<span class="code-method">send</span>(JSON.<span class="code-method">stringify</span>({
+    type: <span class="code-string">'subscribe'</span>,
+    channels: [
+      <span class="code-string">'pipeline.complete'</span>,
+      <span class="code-string">'nodes.health'</span>,
+      <span class="code-string">'coherence.drift'</span>
+    ],
+    auth: <span class="code-string">'hdy_at_eyJhbG...'</span>
+  }));
+};
+
+ws.<span class="code-method">onmessage</span> = (event) => {
+  <span class="code-keyword">const</span> data = JSON.<span class="code-method">parse</span>(event.data);
+  <span class="code-comment">// { channel, type, payload, ts }</span>
+  console.<span class="code-method">log</span>(data.channel, data.payload);
+};</code></pre>
+                    </div>
+
+                    <!-- SSE -->
+                    <div class="event-card reveal reveal-delay-1">
+                        <div class="event-icon">&#x1F4E1;</div>
+                        <h3 class="gradient-text-slow">Server-Sent Events</h3>
+                        <p>Lightweight unidirectional streaming over HTTP. Automatic reconnection with phi-scaled backoff. Ideal for dashboards and monitoring interfaces.</p>
+                        <pre><code><span class="code-comment">// Connect to SSE endpoint</span>
+<span class="code-keyword">const</span> source = <span class="code-keyword">new</span> <span class="code-method">EventSource</span>(
+  <span class="code-string">'https://api.headyio.com/v1/events/stream'</span>
+  + <span class="code-string">'?channels=pipeline.*,nodes.*'</span>
+  + <span class="code-string">'&token=hdy_at_eyJhbG...'</span>
+);
+
+source.<span class="code-method">addEventListener</span>(
+  <span class="code-string">'pipeline.complete'</span>,
+  (event) => {
+    <span class="code-keyword">const</span> data = JSON.<span class="code-method">parse</span>(event.data);
+    console.<span class="code-method">log</span>(
+      <span class="code-string">`Pipeline ${data.id} done`</span>,
+      <span class="code-string">`Coherence: ${data.coherence}`</span>
+    );
+  }
+);
+
+source.<span class="code-method">addEventListener</span>(
+  <span class="code-string">'nodes.health'</span>,
+  (event) => {
+    <span class="code-keyword">const</span> data = JSON.<span class="code-method">parse</span>(event.data);
+    console.<span class="code-method">log</span>(
+      <span class="code-string">`${data.node}: ${data.status}`</span>
+    );
+  }
+);</code></pre>
+                    </div>
+                </div>
+
+                <div class="reveal" style="margin-top: 32px;">
+                    <div class="card-grid card-grid-3">
+                        <div class="glass-card reveal-scale">
+                            <svg class="sacred-bg" viewBox="0 0 200 200"><rect width="200" height="200" fill="url(#flower-of-life)" style="color: rgba(124,58,237,0.6)"/></svg>
+                            <div class="card-icon icon-violet">&#x1F300;</div>
+                            <h3>Pipeline Events</h3>
+                            <p>Track every stage of the 21-stage pipeline in real time. Monitor CHANNEL_ENTRY through RECEIPT.</p>
+                        </div>
+                        <div class="glass-card reveal-scale reveal-delay-1">
+                            <svg class="sacred-bg" viewBox="0 0 200 200"><rect width="200" height="200" fill="url(#metatrons-cube)" style="color: rgba(6,182,212,0.6)"/></svg>
+                            <div class="card-icon icon-cyan">&#x1F9E0;</div>
+                            <h3>Node Topology</h3>
+                            <p>Live updates from all 21 nodes across the sacred geometry topology rings.</p>
+                        </div>
+                        <div class="glass-card reveal-scale reveal-delay-2">
+                            <svg class="sacred-bg" viewBox="0 0 200 200"><rect width="200" height="200" fill="url(#sri-yantra)" style="color: rgba(217,70,239,0.6)"/></svg>
+                            <div class="card-icon icon-fuchsia">&#x1F4CA;</div>
+                            <h3>Coherence Drift</h3>
+                            <p>CSL gate alerts when coherence scores drift below phi-derived thresholds.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <hr class="gradient-divider">
+        </div>
+
+    </div><!-- end .page-wrapper -->
+
+    <!-- ================================================================
+         FOOTER
+         ================================================================ -->
     <footer>
         <div class="container">
             <div class="footer-grid">
@@ -762,69 +2073,492 @@ const topology = {
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Community & Commerce</h4>
+                    <h4>Community</h4>
                     <ul>
                         <li><a href="https://headyconnection.org">HeadyConnection (Org)</a></li>
-                        <li><a href="https://headyconnection.com">HeadyConnection (Community)</a></li>
+                        <li><a href="https://headyconnection.com">HeadyConnection</a></li>
                         <li><a href="https://headyex.com">HeadyEx Exchange</a></li>
                         <li><a href="https://headyfinance.com">HeadyFinance</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Admin</h4>
+                    <h4>Developer</h4>
                     <ul>
+                        <li><a href="#endpoints">API Reference</a></li>
+                        <li><a href="#sdks">SDKs</a></li>
+                        <li><a href="#auth">Authentication</a></li>
                         <li><a href="https://admin.headysystems.com">System Admin</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2026 Heady Systems Inc. · <a href="https://headysystems.com">headysystems.com</a> · ∞ Sacred Geometry · Organic Systems · Breathing Interfaces</p>
+                <p>&copy; 2026 Heady Systems Inc. &middot; <a href="https://headysystems.com">headysystems.com</a></p>
+                <p>Sacred Geometry &middot; Organic Systems &middot; Breathing Interfaces &middot; HCFullPipeline v7</p>
+                <svg class="footer-sacred-symbol" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="rgba(124,58,237,0.4)" stroke-width="0.8"/>
+                    <circle cx="50" cy="50" r="30" stroke="rgba(6,182,212,0.4)" stroke-width="0.8"/>
+                    <circle cx="50" cy="50" r="15" stroke="rgba(217,70,239,0.4)" stroke-width="0.8"/>
+                    <circle cx="50" cy="20" r="15" stroke="rgba(124,58,237,0.3)" stroke-width="0.5"/>
+                    <circle cx="50" cy="80" r="15" stroke="rgba(124,58,237,0.3)" stroke-width="0.5"/>
+                    <circle cx="24" cy="35" r="15" stroke="rgba(6,182,212,0.3)" stroke-width="0.5"/>
+                    <circle cx="76" cy="35" r="15" stroke="rgba(6,182,212,0.3)" stroke-width="0.5"/>
+                    <circle cx="24" cy="65" r="15" stroke="rgba(217,70,239,0.3)" stroke-width="0.5"/>
+                    <circle cx="76" cy="65" r="15" stroke="rgba(217,70,239,0.3)" stroke-width="0.5"/>
+                </svg>
             </div>
         </div>
     </footer>
 
+    <!-- ================================================================
+         JAVASCRIPT — SACRED GEOMETRY CANVAS RENDERER + INTERACTIONS
+         ================================================================ -->
     <script>
-        // Smooth scroll for nav and sidebar links
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                    // Update active state
-                    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                    if (a.classList.contains('nav-item')) {
-                        a.classList.add('active');
+    (function() {
+        'use strict';
+
+        // ================================================================
+        // CONSTANTS — PHI-DERIVED
+        // ================================================================
+        const PHI = 1.618033988749895;
+        const PSI = 0.6180339887498949;
+        const TAU = Math.PI * 2;
+        const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
+
+        // ================================================================
+        // SACRED GEOMETRY CANVAS — 3D WIREFRAME RENDERER
+        // Renders a torusKnot + flower of life combo with color-shifting edges
+        // ================================================================
+        const sacredCanvas = document.getElementById('sacred-canvas');
+        const sacredCtx = sacredCanvas.getContext('2d');
+        let sacredW, sacredH;
+        let sacredTime = 0;
+
+        function resizeSacredCanvas() {
+            sacredW = sacredCanvas.width = window.innerWidth;
+            sacredH = sacredCanvas.height = window.innerHeight;
+        }
+        resizeSacredCanvas();
+        window.addEventListener('resize', resizeSacredCanvas);
+
+        // 3D projection helper
+        function project3D(x, y, z, cx, cy, fov) {
+            const scale = fov / (fov + z);
+            return {
+                x: x * scale + cx,
+                y: y * scale + cy,
+                scale: scale,
+                z: z
+            };
+        }
+
+        // Rotation matrices
+        function rotateX(x, y, z, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            return { x: x, y: y * cos - z * sin, z: y * sin + z * cos };
+        }
+
+        function rotateY(x, y, z, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            return { x: x * cos + z * sin, y: y, z: -x * sin + z * cos };
+        }
+
+        function rotateZ(x, y, z, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            return { x: x * cos - y * sin, y: x * sin + y * cos, z: z };
+        }
+
+        // Generate torus knot points
+        function generateTorusKnot(p, q, radius, tubeRadius, segments, tubeSegments) {
+            const points = [];
+            const edges = [];
+
+            for (let i = 0; i < segments; i++) {
+                const t = (i / segments) * TAU;
+                const r = radius + tubeRadius * Math.cos(q * t);
+                const x = r * Math.cos(p * t);
+                const y = r * Math.sin(p * t);
+                const z = tubeRadius * Math.sin(q * t);
+                points.push({ x, y, z });
+
+                if (i > 0) {
+                    edges.push([i - 1, i]);
+                }
+            }
+            edges.push([segments - 1, 0]);
+
+            // Add tube cross-sections at intervals
+            for (let i = 0; i < segments; i += Math.floor(segments / tubeSegments)) {
+                const t = (i / segments) * TAU;
+                const cx = (radius + tubeRadius * Math.cos(q * t)) * Math.cos(p * t);
+                const cy = (radius + tubeRadius * Math.cos(q * t)) * Math.sin(p * t);
+                const cz = tubeRadius * Math.sin(q * t);
+
+                // Generate a small circle around this point
+                const circlePoints = 8;
+                const startIdx = points.length;
+                for (let j = 0; j < circlePoints; j++) {
+                    const angle = (j / circlePoints) * TAU;
+                    const ringRadius = tubeRadius * 0.4;
+                    const px = cx + ringRadius * Math.cos(angle) * Math.cos(p * t);
+                    const py = cy + ringRadius * Math.cos(angle) * Math.sin(p * t);
+                    const pz = cz + ringRadius * Math.sin(angle);
+                    points.push({ x: px, y: py, z: pz });
+
+                    if (j > 0) {
+                        edges.push([startIdx + j - 1, startIdx + j]);
                     }
+                }
+                edges.push([startIdx + circlePoints - 1, startIdx]);
+            }
+
+            return { points, edges };
+        }
+
+        // Generate flower of life in 3D
+        function generateFlowerOfLife(radius, layers) {
+            const points = [];
+            const edges = [];
+            const circleSegments = 24;
+
+            function addCircle(cx, cy, cz, r) {
+                const startIdx = points.length;
+                for (let i = 0; i < circleSegments; i++) {
+                    const angle = (i / circleSegments) * TAU;
+                    points.push({
+                        x: cx + r * Math.cos(angle),
+                        y: cy + r * Math.sin(angle),
+                        z: cz
+                    });
+                    if (i > 0) {
+                        edges.push([startIdx + i - 1, startIdx + i]);
+                    }
+                }
+                edges.push([startIdx + circleSegments - 1, startIdx]);
+            }
+
+            // Center circle
+            addCircle(0, 0, 0, radius);
+
+            // First ring (6 circles)
+            if (layers >= 1) {
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * TAU;
+                    const cx = radius * Math.cos(angle);
+                    const cy = radius * Math.sin(angle);
+                    addCircle(cx, cy, 0, radius);
+                }
+            }
+
+            // Second ring (6 more circles)
+            if (layers >= 2) {
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * TAU + TAU / 12;
+                    const cx = radius * PHI * Math.cos(angle);
+                    const cy = radius * PHI * Math.sin(angle);
+                    addCircle(cx, cy, 0, radius);
+                }
+            }
+
+            return { points, edges };
+        }
+
+        // Generate the combined geometry
+        const torusKnot = generateTorusKnot(2, 3, 180, 60, 200, 12);
+        const flowerOfLife = generateFlowerOfLife(120, 2);
+
+        // Offset flower of life points slightly in z
+        flowerOfLife.points.forEach(p => { p.z += 30; });
+
+        // Combine
+        const flowerOffset = torusKnot.points.length;
+        const allPoints = [...torusKnot.points, ...flowerOfLife.points];
+        const allEdges = [
+            ...torusKnot.edges,
+            ...flowerOfLife.edges.map(e => [e[0] + flowerOffset, e[1] + flowerOffset])
+        ];
+
+        // Color shifting function
+        function getEdgeColor(index, total, time) {
+            const hue = ((index / total) * 360 + time * 30) % 360;
+            const saturation = 70 + Math.sin(time + index * 0.1) * 20;
+            const lightness = 45 + Math.sin(time * 0.5 + index * 0.05) * 15;
+            return `hsla(${hue}, ${saturation}%, ${lightness}%, `;
+        }
+
+        // Main render loop for sacred geometry
+        function renderSacredGeometry() {
+            sacredTime += 0.008;
+
+            sacredCtx.fillStyle = 'rgba(5, 5, 16, 0.15)';
+            sacredCtx.fillRect(0, 0, sacredW, sacredH);
+
+            const cx = sacredW / 2;
+            const cy = sacredH / 2;
+            const fov = 600;
+
+            // Slow rotation
+            const rotXAngle = sacredTime * 0.2;
+            const rotYAngle = sacredTime * 0.15;
+            const rotZAngle = sacredTime * 0.1;
+
+            // Project all points
+            const projected = allPoints.map(p => {
+                let pt = rotateX(p.x, p.y, p.z, rotXAngle);
+                pt = rotateY(pt.x, pt.y, pt.z, rotYAngle);
+                pt = rotateZ(pt.x, pt.y, pt.z, rotZAngle);
+                return project3D(pt.x, pt.y, pt.z + 400, cx, cy, fov);
+            });
+
+            // Sort edges by average z-depth for proper rendering
+            const sortedEdges = allEdges.map((edge, idx) => {
+                const p1 = projected[edge[0]];
+                const p2 = projected[edge[1]];
+                if (!p1 || !p2) return null;
+                return {
+                    edge,
+                    idx,
+                    avgZ: (p1.z + p2.z) / 2
+                };
+            }).filter(Boolean).sort((a, b) => b.avgZ - a.avgZ);
+
+            // Draw edges
+            const totalEdges = sortedEdges.length;
+            sortedEdges.forEach((item, drawIdx) => {
+                const { edge, idx } = item;
+                const p1 = projected[edge[0]];
+                const p2 = projected[edge[1]];
+
+                if (!p1 || !p2) return;
+
+                const colorBase = getEdgeColor(idx, allEdges.length, sacredTime);
+                const depthAlpha = Math.max(0.05, Math.min(0.6, p1.scale * 0.5));
+                const lineWidth = Math.max(0.3, p1.scale * 1.2);
+
+                sacredCtx.beginPath();
+                sacredCtx.moveTo(p1.x, p1.y);
+                sacredCtx.lineTo(p2.x, p2.y);
+                sacredCtx.strokeStyle = colorBase + depthAlpha + ')';
+                sacredCtx.lineWidth = lineWidth;
+                sacredCtx.stroke();
+            });
+
+            requestAnimationFrame(renderSacredGeometry);
+        }
+
+        renderSacredGeometry();
+
+        // ================================================================
+        // PARTICLE FIELD WITH CONNECTING LINES
+        // ================================================================
+        const particleCanvas = document.getElementById('particle-canvas');
+        const particleCtx = particleCanvas.getContext('2d');
+        let pW, pH;
+
+        function resizeParticleCanvas() {
+            pW = particleCanvas.width = window.innerWidth;
+            pH = particleCanvas.height = window.innerHeight;
+        }
+        resizeParticleCanvas();
+        window.addEventListener('resize', resizeParticleCanvas);
+
+        const PARTICLE_COUNT = 80;
+        const CONNECTION_DISTANCE = 150;
+        const particles = [];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * pW;
+                this.y = Math.random() * pH;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 0.5;
+                this.hue = Math.random() * 60 + 240; // Blue-purple range
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = pW;
+                if (this.x > pW) this.x = 0;
+                if (this.y < 0) this.y = pH;
+                if (this.y > pH) this.y = 0;
+            }
+
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, TAU);
+                ctx.fillStyle = `hsla(${this.hue}, 70%, 60%, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
+        }
+
+        function renderParticles() {
+            particleCtx.clearRect(0, 0, pW, pH);
+
+            // Update and draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw(particleCtx);
+            });
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < CONNECTION_DISTANCE) {
+                        const alpha = (1 - dist / CONNECTION_DISTANCE) * 0.15;
+                        const hue = (particles[i].hue + particles[j].hue) / 2;
+                        particleCtx.beginPath();
+                        particleCtx.moveTo(particles[i].x, particles[i].y);
+                        particleCtx.lineTo(particles[j].x, particles[j].y);
+                        particleCtx.strokeStyle = `hsla(${hue}, 60%, 50%, ${alpha})`;
+                        particleCtx.lineWidth = 0.5;
+                        particleCtx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(renderParticles);
+        }
+
+        renderParticles();
+
+        // ================================================================
+        // SCROLL REVEAL — INTERSECTION OBSERVER
+        // ================================================================
+        const revealElements = document.querySelectorAll('.reveal, .reveal-scale');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ================================================================
+        // NAV SCROLL EFFECT
+        // ================================================================
+        const mainNav = document.getElementById('main-nav');
+        let lastScrollY = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            if (scrollY > 50) {
+                mainNav.classList.add('scrolled');
+            } else {
+                mainNav.classList.remove('scrolled');
+            }
+            lastScrollY = scrollY;
+        }, { passive: true });
+
+        // ================================================================
+        // SDK TAB SWITCHING
+        // ================================================================
+        const sdkTabs = document.querySelectorAll('.sdk-tab');
+        const sdkPanels = document.querySelectorAll('.sdk-panel');
+
+        sdkTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.sdk;
+
+                sdkTabs.forEach(t => t.classList.remove('active'));
+                sdkPanels.forEach(p => p.classList.remove('active'));
+
+                tab.classList.add('active');
+                const panel = document.getElementById('sdk-' + target);
+                if (panel) panel.classList.add('active');
+            });
+        });
+
+        // ================================================================
+        // SMOOTH SCROLL FOR ANCHOR LINKS
+        // ================================================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
         });
 
-        // Intersection Observer for highlighting sidebar based on scroll position
-        const sections = document.querySelectorAll('.docs-content section');
-        const navItems = document.querySelectorAll('.docs-sidebar .nav-item');
+        // ================================================================
+        // MOUSE PARALLAX ON HERO
+        // ================================================================
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.addEventListener('mousemove', (e) => {
+                const rect = hero.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.3
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navItems.forEach(item => {
-                        item.classList.remove('active');
-                        if (item.getAttribute('href') === '#' + id) {
-                            item.classList.add('active');
-                        }
-                    });
+                const heroContent = hero.querySelector('.hero-content');
+                if (heroContent) {
+                    heroContent.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
                 }
             });
-        }, observerOptions);
 
-        sections.forEach(section => observer.observe(section));
+            hero.addEventListener('mouseleave', () => {
+                const heroContent = hero.querySelector('.hero-content');
+                if (heroContent) {
+                    heroContent.style.transform = 'translate(0, 0)';
+                    heroContent.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+                }
+            });
+        }
+
+        // ================================================================
+        // DYNAMIC CARD SACRED GEOMETRY SPIN SPEED
+        // Accelerate SVG rotation on hover
+        // ================================================================
+        document.querySelectorAll('.glass-card').forEach(card => {
+            const sacredBg = card.querySelector('.sacred-bg');
+            if (sacredBg) {
+                card.addEventListener('mouseenter', () => {
+                    sacredBg.style.animationDuration = '10s';
+                });
+                card.addEventListener('mouseleave', () => {
+                    sacredBg.style.animationDuration = '60s';
+                });
+            }
+        });
+
+        // ================================================================
+        // CONSOLE EASTER EGG
+        // ================================================================
+        console.log(
+            '%c Sacred Geometry %c HeadyIO API Platform v4.1.0 ',
+            'background: linear-gradient(135deg, #7c3aed, #6366f1); color: white; padding: 8px 12px; border-radius: 6px 0 0 6px; font-weight: 700;',
+            'background: #050510; color: #06b6d4; padding: 8px 12px; border-radius: 0 6px 6px 0; font-weight: 600; border: 1px solid #1e1e3e;'
+        );
+        console.log(
+            '%cPHI = 1.618 | PSI = 0.618 | 21 Pipeline Stages | Fibonacci Rate Limits',
+            'color: #9898c0; font-size: 11px;'
+        );
+
+    })();
     </script>
+
 </body>
 </html>
