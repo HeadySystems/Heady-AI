@@ -1,0 +1,1246 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - Extended MCP Services, Tools, Workflows, Agents & Nodes
+# HEADY_BRAND:END
+
+# ═══════════════════════════════════════════════════════════════════════
+# EXTENDED MCP SERVICES SPECIFICATION — 24 New Services + 15 Workflows
+# + 13 New Bees + 8 New Nodes + 6 New Agent Personas
+# Version: 2.0.0 | Date: 2026-03-18
+# Builds on top of the 12 services from new-mcp-services-spec.yaml
+# ═══════════════════════════════════════════════════════════════════════
+
+version: "2.0.0"
+phi: 1.618033988749895
+csl_threshold: 0.618
+
+# ═══════════════════════════════════════════════════════════════════════
+# SECTION A: 24 NEW MCP SERVICES (ports 3383-3406)
+# ═══════════════════════════════════════════════════════════════════════
+
+services:
+
+  # ─── INTELLIGENCE TIER ─────────────────────────────────────────────
+
+  heady-synapse:
+    name: "HeadySynapse"
+    tagline: "The space between neurons. Where insight ignites."
+    port: 3383
+    category: ai
+    sacred_geometry_position: inner_ring
+    description: |
+      Inter-model communication protocol. Routes prompts across Claude,
+      GPT, Gemini, Llama, and Mistral with phi-weighted consensus scoring.
+      Unlike HeadyBattle (competitive), Synapse is collaborative — models
+      build on each other's outputs through iterative refinement rounds.
+    tools:
+      - name: heady_synapse_collaborate
+        description: "Multi-model collaborative reasoning with iterative refinement"
+        input:
+          prompt: { type: string, required: true }
+          models: { type: array, items: { type: string }, default: ["claude", "gpt", "gemini"] }
+          rounds: { type: number, default: 3, description: "Refinement iterations" }
+          consensus_threshold: { type: number, default: 0.809 }
+
+      - name: heady_synapse_specialize
+        description: "Route sub-tasks to the model best suited for each — code to Claude, math to Gemini, creative to GPT"
+        input:
+          task: { type: string, required: true }
+          auto_decompose: { type: boolean, default: true }
+
+      - name: heady_synapse_blend
+        description: "Phi-weighted blend of multiple model outputs into a unified response"
+        input:
+          responses: { type: array, items: { type: object }, required: true }
+          blend_strategy: { type: string, enum: [weighted_average, chain_of_thought, best_of_n, phi_consensus] }
+
+    dependencies: [heady-brain, heady-battle, ai-router]
+
+  heady-cortex:
+    name: "HeadyCortex"
+    tagline: "The reasoning layer. Where logic crystallizes."
+    port: 3384
+    category: ai
+    sacred_geometry_position: inner_ring
+    description: |
+      Structured reasoning engine — chain-of-thought, tree-of-thought, and
+      graph-of-thought reasoning patterns. Provides explicit reasoning traces
+      that can be audited, replayed, and learned from. Powers HeadyBuddy's
+      ability to show its work.
+    tools:
+      - name: heady_cortex_reason
+        description: "Execute structured reasoning with traceable logic chains"
+        input:
+          question: { type: string, required: true }
+          strategy: { type: string, enum: [chain_of_thought, tree_of_thought, graph_of_thought, socratic, adversarial] }
+          max_depth: { type: number, default: 8 }
+          show_work: { type: boolean, default: true }
+
+      - name: heady_cortex_verify
+        description: "Verify a conclusion by running it through adversarial reasoning"
+        input:
+          claim: { type: string, required: true }
+          evidence: { type: array, items: { type: string } }
+          rigor: { type: string, enum: [casual, standard, rigorous, mathematical] }
+
+      - name: heady_cortex_decompose
+        description: "Break complex problems into solvable sub-problems with dependency graph"
+        input:
+          problem: { type: string, required: true }
+          max_sub_problems: { type: number, default: 13 }
+
+    dependencies: [heady-brain, heady-memory, csl-engine]
+
+  heady-prism:
+    name: "HeadyPrism"
+    tagline: "One input. Infinite perspectives."
+    port: 3385
+    category: ai
+    sacred_geometry_position: middle_ring
+    description: |
+      Multi-perspective analysis engine. Takes any input and generates
+      viewpoints from different frameworks — technical, business, ethical,
+      user-experience, security, accessibility. Prevents tunnel vision
+      in decision-making.
+    tools:
+      - name: heady_prism_analyze
+        description: "Analyze from multiple perspectives simultaneously"
+        input:
+          input: { type: string, required: true }
+          perspectives: { type: array, items: { type: string, enum: [technical, business, ethical, ux, security, accessibility, legal, environmental, cultural] } }
+          depth: { type: string, enum: [surface, moderate, deep] }
+
+      - name: heady_prism_debate
+        description: "Stage an internal debate between perspectives to find trade-offs"
+        input:
+          topic: { type: string, required: true }
+          pro_perspective: { type: string, required: true }
+          con_perspective: { type: string, required: true }
+          rounds: { type: number, default: 3 }
+
+    dependencies: [heady-brain, heady-cortex]
+
+  # ─── DATA & KNOWLEDGE TIER ────────────────────────────────────────
+
+  heady-nexus-graph:
+    name: "HeadyNexusGraph"
+    tagline: "The nervous system of the ecosystem."
+    port: 3386
+    category: data
+    sacred_geometry_position: inner_ring
+    description: |
+      Service mesh graph — real-time topology of all service connections,
+      data flows, latency paths, and dependency chains. Powers the
+      system's self-awareness about its own architecture.
+    tools:
+      - name: heady_mesh_topology
+        description: "Get the live service mesh topology — nodes, edges, latencies, health"
+        input:
+          include_latency: { type: boolean, default: true }
+          include_error_rates: { type: boolean, default: true }
+          depth: { type: string, enum: [services_only, with_endpoints, full_trace] }
+
+      - name: heady_mesh_trace
+        description: "Distributed tracing — follow a request through the entire service mesh"
+        input:
+          trace_id: { type: string, required: true }
+          include_payloads: { type: boolean, default: false }
+
+      - name: heady_mesh_bottleneck
+        description: "Identify bottleneck services in the mesh — latency, throughput, error hotspots"
+        input:
+          timeframe: { type: string, default: "1h" }
+          top_n: { type: number, default: 5 }
+
+    dependencies: [heady-gateway, heady-conductor, observability-kernel]
+
+  heady-archive:
+    name: "HeadyArchive"
+    tagline: "Memory is mortal. Archives are eternal."
+    port: 3387
+    category: data
+    sacred_geometry_position: outer_ring
+    description: |
+      Long-term cold storage and retrieval. Manages the T2 archive
+      partition, compresses rarely-accessed memories, and provides
+      archaeological queries — "what did we know 6 months ago about X?"
+    tools:
+      - name: heady_archive_store
+        description: "Archive data to cold storage with compression and indexing"
+        input:
+          data: { type: object, required: true }
+          retention_days: { type: number, default: 377, description: "Fibonacci retention" }
+          compression: { type: string, enum: [none, lz4, zstd], default: zstd }
+
+      - name: heady_archive_retrieve
+        description: "Retrieve from cold storage — archaeological query"
+        input:
+          query: { type: string, required: true }
+          time_range: { type: object, properties: { from: { type: string }, to: { type: string } } }
+
+      - name: heady_archive_compact
+        description: "Compact and deduplicate archived data — reclaim storage"
+        input:
+          strategy: { type: string, enum: [dedup, merge_similar, prune_low_value] }
+          dry_run: { type: boolean, default: true }
+
+    dependencies: [heady-memory, heady-persistence]
+
+  heady-stream:
+    name: "HeadyStream"
+    tagline: "Data in motion. Intelligence in real-time."
+    port: 3388
+    category: data
+    sacred_geometry_position: middle_ring
+    description: |
+      Event streaming and real-time data pipeline. Manages Kafka/Redis
+      Streams for inter-service communication, event sourcing, and
+      change data capture. The circulatory system of the Liquid OS.
+    tools:
+      - name: heady_stream_publish
+        description: "Publish an event to a topic — fire and forget or await acknowledgment"
+        input:
+          topic: { type: string, required: true }
+          payload: { type: object, required: true }
+          key: { type: string }
+          await_ack: { type: boolean, default: false }
+
+      - name: heady_stream_subscribe
+        description: "Subscribe to a topic with optional filtering"
+        input:
+          topic: { type: string, required: true }
+          filter: { type: string, description: "JMESPath filter expression" }
+          consumer_group: { type: string, default: "default" }
+
+      - name: heady_stream_replay
+        description: "Replay events from a topic starting at a specific offset or timestamp"
+        input:
+          topic: { type: string, required: true }
+          from: { type: string, description: "Offset or ISO timestamp" }
+          limit: { type: number, default: 100 }
+
+    dependencies: [redis, heady-persistence]
+
+  # ─── SECURITY & COMPLIANCE TIER ───────────────────────────────────
+
+  heady-vault:
+    name: "HeadyVault"
+    tagline: "Secrets don't leak. They vault."
+    port: 3389
+    category: security
+    sacred_geometry_position: governance
+    description: |
+      Centralized secrets management. Dynamic secret rotation, lease-based
+      access, audit trails, and post-quantum encryption at rest.
+      Replaces scattered .env files with a single source of truth.
+    tools:
+      - name: heady_vault_get
+        description: "Retrieve a secret by path — leased, audited, encrypted in transit"
+        input:
+          path: { type: string, required: true }
+          lease_duration: { type: string, default: "1h" }
+
+      - name: heady_vault_rotate
+        description: "Rotate a secret — update all dependent services automatically"
+        input:
+          path: { type: string, required: true }
+          notify_dependents: { type: boolean, default: true }
+
+      - name: heady_vault_audit
+        description: "Audit trail — who accessed what secret, when, from where"
+        input:
+          path: { type: string }
+          timeframe: { type: string, default: "24h" }
+          accessor: { type: string }
+
+    dependencies: [heady-soul, heady-persistence]
+
+  heady-shield:
+    name: "HeadyShield"
+    tagline: "Defense in depth. Protection in phi."
+    port: 3390
+    category: security
+    sacred_geometry_position: governance
+    description: |
+      Runtime application security. WAF rules, rate limiting, DDoS
+      protection, bot detection, and prompt injection defense.
+      The immune system of the Liquid OS.
+    tools:
+      - name: heady_shield_scan_prompt
+        description: "Scan a prompt for injection attacks, jailbreaks, and adversarial inputs"
+        input:
+          prompt: { type: string, required: true }
+          sensitivity: { type: string, enum: [low, medium, high, paranoid], default: high }
+
+      - name: heady_shield_rate_check
+        description: "Check rate limit status for a client — remaining quota, reset time"
+        input:
+          client_id: { type: string, required: true }
+          endpoint: { type: string }
+
+      - name: heady_shield_block
+        description: "Block a client, IP, or pattern — temporary or permanent"
+        input:
+          target: { type: string, required: true }
+          target_type: { type: string, enum: [ip, client_id, pattern, user_agent] }
+          duration: { type: string, default: "1h" }
+          reason: { type: string, required: true }
+
+    dependencies: [heady-gateway, heady-sentinel, heady-soul]
+
+  # ─── DEVELOPER EXPERIENCE TIER ────────────────────────────────────
+
+  heady-lab:
+    name: "HeadyLab"
+    tagline: "Experiment freely. Ship confidently."
+    port: 3391
+    category: devops
+    sacred_geometry_position: middle_ring
+    description: |
+      Experimentation platform. A/B testing, feature flags, canary
+      deployments, and experiment tracking. Every feature rolls out
+      through phi-scaled progressive delivery.
+    tools:
+      - name: heady_lab_experiment
+        description: "Create an experiment with control and variant groups"
+        input:
+          name: { type: string, required: true }
+          variants: { type: array, items: { type: object } }
+          rollout_schedule: { type: string, enum: [instant, phi_progressive, manual], default: phi_progressive }
+          success_metric: { type: string, required: true }
+
+      - name: heady_lab_flag
+        description: "Toggle a feature flag — instant, canary, or phi-progressive"
+        input:
+          flag: { type: string, required: true }
+          enabled: { type: boolean, required: true }
+          rollout_percent: { type: number, default: 100 }
+
+      - name: heady_lab_results
+        description: "Get experiment results with statistical significance"
+        input:
+          experiment_id: { type: string, required: true }
+          confidence_level: { type: number, default: 0.95 }
+
+    dependencies: [heady-persistence, heady-gateway, analytics-service]
+
+  heady-doc-gen:
+    name: "HeadyDocGen"
+    tagline: "Code tells what. Docs tell why."
+    port: 3392
+    category: devops
+    sacred_geometry_position: outer_ring
+    description: |
+      AI-powered documentation generator. Analyzes code, configs, and
+      architecture to produce living documentation that stays in sync
+      with the codebase. Generates API docs, architecture diagrams,
+      onboarding guides, and runbooks.
+    tools:
+      - name: heady_docgen_generate
+        description: "Generate documentation from code — API docs, architecture diagrams, guides"
+        input:
+          source: { type: string, required: true, description: "File path or service name" }
+          doc_type: { type: string, enum: [api, architecture, onboarding, runbook, changelog, readme] }
+          format: { type: string, enum: [markdown, html, pdf, openapi], default: markdown }
+
+      - name: heady_docgen_sync
+        description: "Sync documentation with code changes — detect drift and update"
+        input:
+          doc_path: { type: string, required: true }
+          source_path: { type: string, required: true }
+          auto_fix: { type: boolean, default: false }
+
+      - name: heady_docgen_diagram
+        description: "Generate architecture diagrams from service topology"
+        input:
+          scope: { type: string, enum: [service, domain, full_system] }
+          style: { type: string, enum: [mermaid, d2, excalidraw, sacred_geometry], default: sacred_geometry }
+          include_data_flows: { type: boolean, default: true }
+
+    dependencies: [heady-docs, heady-memory, heady-oracle]
+
+  heady-sandbox:
+    name: "HeadySandbox"
+    tagline: "Break things safely. Learn everything."
+    port: 3393
+    category: devops
+    sacred_geometry_position: middle_ring
+    description: |
+      Isolated execution environments for code, experiments, and agent
+      testing. Containerized sandboxes with resource limits, network
+      isolation, and automatic cleanup. Safe space for bees to execute
+      untrusted code.
+    tools:
+      - name: heady_sandbox_create
+        description: "Spawn an isolated sandbox environment"
+        input:
+          runtime: { type: string, enum: [node, python, deno, bash, docker], default: node }
+          memory_mb: { type: number, default: 512 }
+          timeout_ms: { type: number, default: 30000 }
+          network: { type: boolean, default: false }
+
+      - name: heady_sandbox_execute
+        description: "Execute code in a sandbox — returns stdout, stderr, exit code"
+        input:
+          sandbox_id: { type: string, required: true }
+          code: { type: string, required: true }
+          stdin: { type: string }
+
+      - name: heady_sandbox_inspect
+        description: "Inspect sandbox state — filesystem, processes, resource usage"
+        input:
+          sandbox_id: { type: string, required: true }
+
+    dependencies: [heady-conductor, heady-guard]
+
+  # ─── USER EXPERIENCE TIER ─────────────────────────────────────────
+
+  heady-persona:
+    name: "HeadyPersona"
+    tagline: "Every user is unique. Every experience should be too."
+    port: 3394
+    category: ui
+    sacred_geometry_position: outer_ring
+    description: |
+      User personalization engine. Builds and maintains rich user models
+      from interaction patterns. Powers adaptive UI, personalized
+      recommendations, and context-aware responses.
+    tools:
+      - name: heady_persona_profile
+        description: "Get or create a user persona profile"
+        input:
+          user_id: { type: string, required: true }
+          include_preferences: { type: boolean, default: true }
+          include_history: { type: boolean, default: false }
+
+      - name: heady_persona_adapt
+        description: "Get UI/UX adaptation recommendations for a specific user"
+        input:
+          user_id: { type: string, required: true }
+          context: { type: string, enum: [chat, ide, web, mobile, desktop] }
+
+      - name: heady_persona_learn
+        description: "Record a user preference or behavior signal"
+        input:
+          user_id: { type: string, required: true }
+          signal_type: { type: string, enum: [preference, behavior, feedback, correction] }
+          data: { type: object, required: true }
+
+    dependencies: [heady-memory, heady-buddy, heady-persistence]
+
+  heady-narrator:
+    name: "HeadyNarrator"
+    tagline: "Every system tells a story. Narrator makes it readable."
+    port: 3395
+    category: ui
+    sacred_geometry_position: outer_ring
+    description: |
+      System narrative engine. Translates technical events, metrics,
+      and state changes into human-readable stories. Powers status
+      pages, incident reports, and the "explain like I'm 5" feature.
+    tools:
+      - name: heady_narrator_explain
+        description: "Translate technical state into a human-readable narrative"
+        input:
+          event: { type: object, required: true }
+          audience: { type: string, enum: [technical, non_technical, executive, child], default: non_technical }
+          length: { type: string, enum: [tweet, paragraph, full], default: paragraph }
+
+      - name: heady_narrator_timeline
+        description: "Generate a narrative timeline of system events"
+        input:
+          timeframe: { type: string, default: "24h" }
+          focus: { type: string, enum: [incidents, deployments, milestones, all] }
+
+      - name: heady_narrator_report
+        description: "Generate periodic reports — daily digest, weekly summary, monthly review"
+        input:
+          period: { type: string, enum: [daily, weekly, monthly] }
+          sections: { type: array, items: { type: string }, default: ["health", "deployments", "incidents", "metrics", "learnings"] }
+
+    dependencies: [heady-chrono, heady-pulse, observability-kernel]
+
+  # ─── INTEGRATION TIER ──────────────────────────────────────────────
+
+  heady-bridge:
+    name: "HeadyBridge"
+    tagline: "Connect everything. Bridge every gap."
+    port: 3396
+    category: integration
+    sacred_geometry_position: outer_ring
+    description: |
+      Universal integration bridge. Pre-built connectors for GitHub,
+      Slack, Discord, Jira, Linear, Notion, Google Workspace, and
+      custom webhooks. Bidirectional sync with conflict resolution.
+    tools:
+      - name: heady_bridge_connect
+        description: "Connect an external service — OAuth flow or API key"
+        input:
+          service: { type: string, enum: [github, slack, discord, jira, linear, notion, google_workspace, custom_webhook] }
+          config: { type: object, required: true }
+
+      - name: heady_bridge_sync
+        description: "Sync data between Heady and an external service"
+        input:
+          bridge_id: { type: string, required: true }
+          direction: { type: string, enum: [push, pull, bidirectional] }
+          resource_type: { type: string, required: true }
+
+      - name: heady_bridge_webhook
+        description: "Register a webhook endpoint for incoming events"
+        input:
+          url: { type: string, required: true }
+          events: { type: array, items: { type: string }, required: true }
+          secret: { type: string }
+
+    dependencies: [heady-gateway, heady-persistence, heady-vault]
+
+  heady-relay:
+    name: "HeadyRelay"
+    tagline: "Messages don't get lost. They relay."
+    port: 3397
+    category: integration
+    sacred_geometry_position: outer_ring
+    description: |
+      Notification relay — multi-channel message delivery with
+      intelligent routing, deduplication, and escalation chains.
+      Delivers via email, SMS, Slack, Discord, push, and in-app.
+    tools:
+      - name: heady_relay_send
+        description: "Send a notification via the optimal channel(s)"
+        input:
+          recipient: { type: string, required: true }
+          message: { type: string, required: true }
+          channels: { type: array, items: { type: string, enum: [email, sms, slack, discord, push, in_app] } }
+          priority: { type: string, enum: [low, normal, high, critical], default: normal }
+          deduplicate: { type: boolean, default: true }
+
+      - name: heady_relay_escalate
+        description: "Escalate a notification through the chain — if no ack, try next channel"
+        input:
+          notification_id: { type: string, required: true }
+          escalation_chain: { type: array, items: { type: string }, required: true }
+          ack_timeout_ms: { type: number, default: 300000 }
+
+    dependencies: [notification-service, heady-persistence]
+
+  # ─── OBSERVABILITY TIER ────────────────────────────────────────────
+
+  heady-lens-deep:
+    name: "HeadyLensDeep"
+    tagline: "Surface metrics lie. Deep lens reveals truth."
+    port: 3398
+    category: observability
+    sacred_geometry_position: governance
+    description: |
+      Deep observability — goes beyond metrics to understand system
+      behavior. Anomaly detection, root cause analysis, performance
+      profiling, and predictive alerting.
+    tools:
+      - name: heady_lens_anomaly
+        description: "Detect anomalies in system metrics using phi-sigma thresholds"
+        input:
+          metric: { type: string, required: true }
+          lookback: { type: string, default: "24h" }
+          sensitivity: { type: number, default: 0.618 }
+
+      - name: heady_lens_rca
+        description: "Root cause analysis — trace an incident to its origin"
+        input:
+          incident_id: { type: string, required: true }
+          method: { type: string, enum: [five_whys, fault_tree, bayesian, all], default: all }
+
+      - name: heady_lens_predict
+        description: "Predictive alerting — forecast metric breaches before they happen"
+        input:
+          metric: { type: string, required: true }
+          horizon: { type: string, default: "4h" }
+          threshold: { type: number, required: true }
+
+    dependencies: [observability-kernel, heady-metrics, heady-chrono]
+
+  heady-cost:
+    name: "HeadyCost"
+    tagline: "Every token has a price. Every decision a budget."
+    port: 3399
+    category: observability
+    sacred_geometry_position: governance
+    description: |
+      Cost intelligence — tracks spending across all cloud providers,
+      AI model calls, and infrastructure. Phi-scaled budget allocation,
+      cost forecasting, and optimization recommendations.
+    tools:
+      - name: heady_cost_report
+        description: "Generate cost report across all providers"
+        input:
+          period: { type: string, enum: [daily, weekly, monthly] }
+          breakdown_by: { type: string, enum: [service, provider, model, domain] }
+
+      - name: heady_cost_forecast
+        description: "Forecast costs based on current trajectory"
+        input:
+          horizon: { type: string, enum: [week, month, quarter] }
+          scenario: { type: string, enum: [current, growth_10x, optimized] }
+
+      - name: heady_cost_optimize
+        description: "Get cost optimization recommendations"
+        input:
+          target_reduction: { type: number, default: 0.382, description: "38.2% reduction target (ψ²)" }
+          preserve: { type: array, items: { type: string }, default: ["latency", "reliability"] }
+
+    dependencies: [cost-tracker-bee, heady-persistence, analytics-service]
+
+  # ─── CREATIVE & GENERATIVE TIER ───────────────────────────────────
+
+  heady-muse:
+    name: "HeadyMuse"
+    tagline: "Inspiration on demand. Creativity without limits."
+    port: 3400
+    category: ai
+    sacred_geometry_position: middle_ring
+    description: |
+      Creative generation engine. UI mockups, color palettes, copy
+      variations, naming suggestions, and branding concepts — all
+      aligned to Sacred Geometry aesthetics.
+    tools:
+      - name: heady_muse_design
+        description: "Generate UI design concepts aligned to Sacred Geometry"
+        input:
+          brief: { type: string, required: true }
+          style: { type: string, enum: [sacred_geometry, minimal, playful, corporate, organic], default: sacred_geometry }
+          deliverables: { type: array, items: { type: string, enum: [mockup, wireframe, palette, typography, icons] } }
+
+      - name: heady_muse_name
+        description: "Generate naming suggestions — products, features, services, domains"
+        input:
+          context: { type: string, required: true }
+          style: { type: string, enum: [technical, friendly, mythological, geometric, abstract] }
+          count: { type: number, default: 13 }
+
+      - name: heady_muse_copy
+        description: "Generate copy variations — taglines, descriptions, CTAs"
+        input:
+          product: { type: string, required: true }
+          tone: { type: string, enum: [professional, warm, inspiring, technical, playful] }
+          formats: { type: array, items: { type: string, enum: [tagline, description, cta, email_subject, social_post] } }
+
+    dependencies: [heady-brain, heady-memory]
+
+  heady-canvas:
+    name: "HeadyCanvas"
+    tagline: "The infinite whiteboard. Where ideas take shape."
+    port: 3401
+    category: ui
+    sacred_geometry_position: middle_ring
+    description: |
+      Collaborative infinite canvas with AI-powered diagramming.
+      Architecture diagrams, flow charts, mind maps, and system
+      topologies rendered in Sacred Geometry style.
+    tools:
+      - name: heady_canvas_create
+        description: "Create a canvas with AI-generated initial content"
+        input:
+          title: { type: string, required: true }
+          template: { type: string, enum: [blank, architecture, flowchart, mindmap, topology, sacred_mandala] }
+          from_description: { type: string }
+
+      - name: heady_canvas_ai_draw
+        description: "AI draws on the canvas — generates diagram from natural language"
+        input:
+          canvas_id: { type: string, required: true }
+          instruction: { type: string, required: true }
+          style: { type: string, enum: [technical, organic, sacred_geometry], default: sacred_geometry }
+
+    dependencies: [heady-nexus, heady-muse]
+
+  # ─── AUTOMATION & ORCHESTRATION TIER ───────────────────────────────
+
+  heady-cron:
+    name: "HeadyCron"
+    tagline: "Time-triggered intelligence. Scheduled brilliance."
+    port: 3402
+    category: orchestration
+    sacred_geometry_position: outer_ring
+    description: |
+      Intelligent scheduling — phi-scaled intervals, workload-aware
+      execution, dependency-aware ordering, and automatic retry
+      with exponential backoff.
+    tools:
+      - name: heady_cron_schedule
+        description: "Schedule a recurring task with phi-scaled intervals"
+        input:
+          task: { type: string, required: true }
+          schedule: { type: string, required: true, description: "Cron expression or phi interval (e.g., 'phi_5m')" }
+          timeout_ms: { type: number, default: 30000 }
+          max_retries: { type: number, default: 3 }
+
+      - name: heady_cron_list
+        description: "List all scheduled tasks with next execution time"
+        input:
+          filter: { type: string, enum: [active, paused, failed, all], default: active }
+
+      - name: heady_cron_trigger
+        description: "Manually trigger a scheduled task immediately"
+        input:
+          job_id: { type: string, required: true }
+          override_params: { type: object }
+
+    dependencies: [scheduler-service, heady-conductor]
+
+  heady-saga:
+    name: "HeadySaga"
+    tagline: "Distributed transactions. Guaranteed completion."
+    port: 3403
+    category: orchestration
+    sacred_geometry_position: inner_ring
+    description: |
+      Distributed saga coordinator — manages multi-service transactions
+      with compensating actions. Ensures eventual consistency across
+      the service mesh without distributed locks.
+    tools:
+      - name: heady_saga_start
+        description: "Start a distributed saga — define steps and compensating actions"
+        input:
+          name: { type: string, required: true }
+          steps: { type: array, items: { type: object, properties: { action: { type: string }, compensate: { type: string }, service: { type: string } } }, required: true }
+          timeout_ms: { type: number, default: 60000 }
+
+      - name: heady_saga_status
+        description: "Check saga execution status — completed steps, pending, compensated"
+        input:
+          saga_id: { type: string, required: true }
+
+    dependencies: [heady-conductor, heady-persistence, heady-stream]
+
+  heady-gate:
+    name: "HeadyGate"
+    tagline: "Quality gates that think. Thresholds that learn."
+    port: 3404
+    category: orchestration
+    sacred_geometry_position: governance
+    description: |
+      Intelligent quality gates — CSL-scored approval/rejection at
+      pipeline boundaries. Self-tuning thresholds that learn from
+      past decisions. Powers the QUALITY_GATE, ASSURANCE_GATE, and
+      CSL_GATE stages of HCFullPipeline.
+    tools:
+      - name: heady_gate_evaluate
+        description: "Evaluate a payload against a quality gate"
+        input:
+          gate: { type: string, enum: [quality, assurance, csl, security, compliance, performance] }
+          payload: { type: object, required: true }
+          override_threshold: { type: number }
+
+      - name: heady_gate_tune
+        description: "Tune gate thresholds based on historical pass/fail data"
+        input:
+          gate: { type: string, required: true }
+          lookback: { type: string, default: "30d" }
+          target_false_positive_rate: { type: number, default: 0.05 }
+
+    dependencies: [csl-engine, heady-patterns, heady-memory]
+
+  heady-weaver:
+    name: "HeadyWeaver"
+    tagline: "Code that writes itself. APIs that compose themselves."
+    port: 3405
+    category: ai
+    sacred_geometry_position: middle_ring
+    description: |
+      Code generation and composition engine. Generates boilerplate,
+      API clients, database schemas, test suites, and full service
+      scaffolds. Understands Sacred Geometry conventions and generates
+      Heady-compliant code.
+    tools:
+      - name: heady_weaver_generate
+        description: "Generate code from specification — Sacred Geometry compliant"
+        input:
+          spec: { type: string, required: true, description: "Natural language specification" }
+          language: { type: string, enum: [javascript, typescript, python, go, rust] }
+          framework: { type: string }
+          include_tests: { type: boolean, default: true }
+
+      - name: heady_weaver_scaffold
+        description: "Scaffold a complete Heady service from template"
+        input:
+          service_name: { type: string, required: true }
+          template: { type: string, enum: [mcp_server, rest_api, worker, bee, agent, ui_component] }
+          port: { type: number }
+
+      - name: heady_weaver_api_client
+        description: "Generate a typed API client from an OpenAPI/MCP spec"
+        input:
+          spec_url: { type: string, required: true }
+          language: { type: string, enum: [javascript, typescript, python], default: typescript }
+
+    dependencies: [heady-brain, heady-oracle, template-mcp-server]
+
+  heady-tutor:
+    name: "HeadyTutor"
+    tagline: "Learn by doing. Guided by intelligence."
+    port: 3406
+    category: ai
+    sacred_geometry_position: outer_ring
+    description: |
+      Adaptive learning engine. Generates tutorials, exercises, and
+      assessments tailored to the user's skill level. Powers onboarding
+      for new Heady developers and the HeadyConnection education mission.
+    tools:
+      - name: heady_tutor_lesson
+        description: "Generate a personalized lesson based on skill level and learning style"
+        input:
+          topic: { type: string, required: true }
+          skill_level: { type: string, enum: [beginner, intermediate, advanced, expert] }
+          style: { type: string, enum: [hands_on, conceptual, visual, socratic] }
+
+      - name: heady_tutor_assess
+        description: "Assess understanding and identify knowledge gaps"
+        input:
+          topic: { type: string, required: true }
+          user_id: { type: string, required: true }
+
+      - name: heady_tutor_path
+        description: "Generate a learning path — ordered sequence of lessons to mastery"
+        input:
+          goal: { type: string, required: true }
+          current_level: { type: string, enum: [beginner, intermediate, advanced] }
+          time_budget_hours: { type: number, default: 21 }
+
+    dependencies: [heady-brain, heady-memory, heady-persona]
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# SECTION B: 13 NEW BEE TYPES (extending 89 → 102 bees)
+# ═══════════════════════════════════════════════════════════════════════
+
+new_bees:
+  - id: temporal-bee
+    template: processor
+    csl_domain: temporal
+    priority: 0.7
+    capability: "Causal chain analysis, temporal pattern detection"
+    memory_integration: "Temporal patterns in T2 episodic"
+    service: heady-chrono
+
+  - id: voice-bee
+    template: processor
+    csl_domain: audio
+    priority: 0.6
+    capability: "Voice transcription, intent extraction, synthesis"
+    memory_integration: "Voice profiles in T2 procedural"
+    service: heady-echo
+
+  - id: graph-bee
+    template: processor
+    csl_domain: knowledge
+    priority: 0.8
+    capability: "Knowledge graph traversal, relationship inference"
+    memory_integration: "Graph patterns in T2 semantic"
+    service: heady-oracle
+
+  - id: emotion-bee
+    template: scanner
+    csl_domain: affect
+    priority: 0.7
+    capability: "Sentiment detection, frustration signals, empathy tuning"
+    memory_integration: "Emotional patterns in T2 episodic"
+    service: heady-pulse
+
+  - id: simulation-bee
+    template: processor
+    csl_domain: simulation
+    priority: 0.6
+    capability: "Digital twin spawning, what-if scenarios"
+    memory_integration: "Simulation results in T2 procedural"
+    service: heady-mirror
+
+  - id: compliance-bee
+    template: scanner
+    csl_domain: compliance
+    priority: 0.9
+    capability: "Real-time compliance checking against GDPR/SOC2/HIPAA"
+    memory_integration: "Compliance history in T2 episodic"
+    service: heady-anchor
+
+  - id: translation-bee
+    template: processor
+    csl_domain: i18n
+    priority: 0.5
+    capability: "Context-aware translation, tone preservation"
+    memory_integration: "Translation glossary in T2 semantic"
+    service: heady-rosetta
+
+  - id: reasoning-bee
+    template: processor
+    csl_domain: reasoning
+    priority: 0.8
+    capability: "Structured reasoning chains, adversarial verification"
+    memory_integration: "Reasoning patterns in T2 procedural"
+    service: heady-cortex
+
+  - id: persona-bee
+    template: monitor
+    csl_domain: personalization
+    priority: 0.6
+    capability: "User preference tracking, adaptation signals"
+    memory_integration: "User models in T2 procedural"
+    service: heady-persona
+
+  - id: cost-optimizer-bee
+    template: monitor
+    csl_domain: cost
+    priority: 0.7
+    capability: "Cross-provider cost optimization, budget forecasting"
+    memory_integration: "Cost patterns in T2 procedural"
+    service: heady-cost
+
+  - id: narrative-bee
+    template: processor
+    csl_domain: narrative
+    priority: 0.5
+    capability: "Technical event to human narrative translation"
+    memory_integration: "Narrative templates in T2 semantic"
+    service: heady-narrator
+
+  - id: sandbox-bee
+    template: processor
+    csl_domain: execution
+    priority: 0.7
+    capability: "Isolated code execution, result validation"
+    memory_integration: "Execution traces in T2 episodic"
+    service: heady-sandbox
+
+  - id: genesis-bee
+    template: processor
+    csl_domain: meta
+    priority: 0.6
+    capability: "Usage pattern observation, tool generation proposals"
+    memory_integration: "Tool lineage in T2 semantic"
+    service: heady-genesis
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# SECTION C: 8 NEW NODES (extending node registry)
+# ═══════════════════════════════════════════════════════════════════════
+
+new_nodes:
+  intelligence:
+    - id: heady-synapse-node
+      name: HeadySynapse
+      role: "Multi-model collaborative reasoning, consensus building"
+      port: 3383
+      csl_domain: intelligence
+      criticality: high
+      dependencies: [heady-brain, heady-battle, ai-router]
+
+    - id: heady-cortex-node
+      name: HeadyCortex
+      role: "Structured reasoning engine — CoT, ToT, GoT patterns"
+      port: 3384
+      csl_domain: intelligence
+      criticality: high
+      dependencies: [heady-brain, heady-memory, csl-engine]
+
+    - id: heady-prism-node
+      name: HeadyPrism
+      role: "Multi-perspective analysis — prevents tunnel vision"
+      port: 3385
+      csl_domain: intelligence
+      criticality: medium
+      dependencies: [heady-brain, heady-cortex-node]
+
+  infrastructure:
+    - id: heady-mesh-node
+      name: HeadyNexusGraph
+      role: "Service mesh topology, distributed tracing, bottleneck detection"
+      port: 3386
+      csl_domain: orchestration
+      criticality: critical
+      dependencies: [heady-gateway, heady-conductor, observability-kernel]
+
+    - id: heady-stream-node
+      name: HeadyStream
+      role: "Event streaming, pub/sub, change data capture"
+      port: 3388
+      csl_domain: data-sync
+      criticality: critical
+      dependencies: [redis, heady-persistence]
+
+    - id: heady-vault-node
+      name: HeadyVault
+      role: "Centralized secrets management, dynamic rotation"
+      port: 3389
+      csl_domain: security
+      criticality: critical
+      dependencies: [heady-soul, heady-persistence]
+
+  specialized:
+    - id: heady-saga-node
+      name: HeadySaga
+      role: "Distributed transaction coordination, compensating actions"
+      port: 3403
+      csl_domain: orchestration
+      criticality: high
+      dependencies: [heady-conductor, heady-persistence, heady-stream-node]
+
+    - id: heady-gate-node
+      name: HeadyGate
+      role: "Self-tuning quality gates, CSL-scored approval/rejection"
+      port: 3404
+      csl_domain: governance
+      criticality: high
+      dependencies: [csl-engine, heady-patterns, heady-memory]
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# SECTION D: 6 NEW AGENT PERSONAS
+# ═══════════════════════════════════════════════════════════════════════
+
+new_agents:
+  architect:
+    id: "@architect-agent"
+    node: HeadyPrism
+    role: "System design authority, multi-perspective architecture decisions"
+    context_access: "Full service mesh topology, dependency graphs, all configs"
+    csl_threshold: 0.809
+    constraints:
+      - "Considers technical, business, ethical, and UX perspectives"
+      - "Documents all architecture decision records (ADRs)"
+      - "Never adds complexity without justification"
+
+  storyteller:
+    id: "@storyteller-agent"
+    node: HeadyNarrator
+    role: "Translates system events into human narratives"
+    context_access: "Observability data, incident history, deployment logs"
+    csl_threshold: 0.618
+    constraints:
+      - "Adapts language to audience (technical vs executive)"
+      - "Highlights impact, not implementation"
+      - "Generates empathetic incident reports"
+
+  guardian:
+    id: "@guardian-agent"
+    nodes: [HeadyShield, HeadyVault, HeadyAnchor]
+    role: "Runtime security, secrets management, compliance enforcement"
+    context_access: "Security scan results, compliance scores, vault audit logs"
+    csl_threshold: 0.927
+    constraints:
+      - "Blocks before investigating — security-first bias"
+      - "Zero tolerance for secret exposure"
+      - "Continuous compliance monitoring"
+
+  experimenter:
+    id: "@experimenter-agent"
+    node: HeadyLab
+    role: "Feature experimentation, A/B testing, progressive rollouts"
+    context_access: "Experiment results, user metrics, feature flags"
+    csl_threshold: 0.691
+    constraints:
+      - "Statistical significance before conclusions"
+      - "Phi-progressive rollout only"
+      - "Always has a rollback plan"
+
+  teacher:
+    id: "@teacher-agent"
+    node: HeadyTutor
+    role: "Adaptive education, onboarding, skill assessment"
+    context_access: "User learning history, skill assessments, curriculum"
+    csl_threshold: 0.618
+    constraints:
+      - "Adapts to learning style automatically"
+      - "Never overwhelms — phi-scaled difficulty progression"
+      - "Celebrates progress"
+
+  economist:
+    id: "@economist-agent"
+    node: HeadyCost
+    role: "Cost optimization, budget forecasting, resource allocation"
+    context_access: "All provider costs, usage patterns, budget constraints"
+    csl_threshold: 0.691
+    constraints:
+      - "Never sacrifices reliability for cost"
+      - "Phi-scaled budget allocation across services"
+      - "Proactive alerts before budget exhaustion"
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# SECTION E: 15 NEW WORKFLOWS
+# ═══════════════════════════════════════════════════════════════════════
+
+new_workflows:
+
+  incident_response:
+    name: "Incident Response Pipeline"
+    trigger: [alert, heady_lens_anomaly]
+    stages:
+      - detect: "HeadyLensDeep anomaly detection"
+      - classify: "HeadyPulse severity assessment"
+      - trace: "HeadyChrono causal chain tracing"
+      - diagnose: "HeadyCortex root cause analysis"
+      - mitigate: "HeadyForge automated remediation workflow"
+      - narrate: "HeadyNarrator incident report generation"
+      - learn: "HeadyVinci pattern extraction for prevention"
+    automation_level: semi_autonomous
+
+  user_onboarding:
+    name: "User Onboarding Flow"
+    trigger: [new_user_signup]
+    stages:
+      - profile: "HeadyPersona initial profiling"
+      - assess: "HeadyTutor skill assessment"
+      - customize: "HeadyMuse personalized UI generation"
+      - guide: "HeadyTutor adaptive tutorial"
+      - connect: "HeadyBridge integration setup"
+    automation_level: fully_autonomous
+
+  code_review_pipeline:
+    name: "AI Code Review"
+    trigger: [pull_request]
+    stages:
+      - analyze: "HeadyWeaver code analysis"
+      - security: "HeadyShield vulnerability scan"
+      - quality: "HeadyGate quality evaluation"
+      - perspective: "HeadyPrism multi-perspective review"
+      - document: "HeadyDocGen documentation sync"
+      - narrate: "HeadyNarrator review summary"
+    automation_level: semi_autonomous
+
+  cost_optimization:
+    name: "Cost Optimization Cycle"
+    trigger: [cron_weekly]
+    stages:
+      - report: "HeadyCost spending report"
+      - forecast: "HeadyCost trajectory forecast"
+      - optimize: "HeadyCost optimization recommendations"
+      - simulate: "HeadyMirror impact simulation"
+      - approve: "HeadyGate approval gate"
+      - implement: "HeadyForge implementation workflow"
+    automation_level: human_in_loop
+
+  knowledge_crystallization:
+    name: "Knowledge Crystallization"
+    trigger: [memory_consolidation_cycle]
+    stages:
+      - scan: "HeadyOracle graph pattern scan"
+      - infer: "HeadyOracle relationship inference"
+      - validate: "HeadyCortex adversarial verification"
+      - store: "HeadyArchive permanent storage"
+      - index: "HeadyMemory T2 indexing"
+    automation_level: fully_autonomous
+
+  multi_model_evaluation:
+    name: "Multi-Model Battle + Consensus"
+    trigger: [complex_query, battle_dispatch]
+    stages:
+      - decompose: "HeadyCortex problem decomposition"
+      - specialize: "HeadySynapse model specialization"
+      - battle: "HeadyBattle competitive evaluation"
+      - consensus: "HeadySynapse phi-weighted consensus"
+      - verify: "HeadyCortex conclusion verification"
+    automation_level: fully_autonomous
+
+  compliance_audit:
+    name: "Compliance Audit Workflow"
+    trigger: [cron_monthly, regulatory_change]
+    stages:
+      - scan: "HeadyAnchor framework scan"
+      - trace: "HeadyAnchor data lineage"
+      - verify: "HeadyCortex evidence verification"
+      - report: "HeadyAnchor audit report"
+      - remediate: "HeadyForge remediation workflow"
+      - narrate: "HeadyNarrator executive summary"
+    automation_level: human_in_loop
+
+  deployment_pipeline:
+    name: "Sacred Deployment Pipeline"
+    trigger: [merge_to_main]
+    stages:
+      - build: "HeadyWeaver build verification"
+      - test: "HeadySandbox isolated testing"
+      - security: "HeadyShield security scan"
+      - simulate: "HeadyMirror production simulation"
+      - gate: "HeadyGate deployment approval"
+      - deploy: "HeadyCron phi-progressive rollout"
+      - observe: "HeadyLensDeep post-deploy monitoring"
+      - narrate: "HeadyNarrator deployment report"
+    automation_level: semi_autonomous
+
+  emotion_adaptive_response:
+    name: "Emotion-Adaptive Response"
+    trigger: [every_user_message]
+    stages:
+      - sense: "HeadyPulse emotion detection"
+      - adapt: "HeadyPulse response strategy"
+      - personalize: "HeadyPersona user adaptation"
+      - translate: "HeadyRosetta multilingual delivery"
+    automation_level: fully_autonomous
+
+  system_evolution:
+    name: "System Self-Evolution"
+    trigger: [weekly, ors_above_85]
+    stages:
+      - observe: "HeadyGenesis pattern observation"
+      - propose: "HeadyGenesis tool proposal"
+      - evaluate: "HeadyPrism multi-perspective evaluation"
+      - simulate: "HeadyMirror impact simulation"
+      - approve: "HeadyGate evolution approval"
+      - scaffold: "HeadyGenesis service scaffold"
+      - deploy: "HeadyCron canary deployment"
+    automation_level: human_in_loop
+
+  cross_service_health:
+    name: "Cross-Service Health Sweep"
+    trigger: [cron_5m]
+    stages:
+      - topology: "HeadyNexusGraph mesh topology scan"
+      - health: "HeadyLensDeep anomaly detection"
+      - bottleneck: "HeadyNexusGraph bottleneck analysis"
+      - predict: "HeadyLensDeep predictive alerting"
+      - report: "HeadyNarrator health narrative"
+    automation_level: fully_autonomous
+
+  multilingual_release:
+    name: "Multilingual Release"
+    trigger: [new_release]
+    stages:
+      - scan: "HeadyRosetta untranslated string scan"
+      - translate: "HeadyRosetta context-aware translation"
+      - harmonize: "HeadyRosetta cross-locale harmonization"
+      - review: "HeadyGate translation quality gate"
+      - deploy: "HeadyForge locale deployment"
+    automation_level: semi_autonomous
+
+  financial_analysis:
+    name: "Financial Intelligence Cycle"
+    trigger: [market_open, cron_4h]
+    stages:
+      - analyze: "HeadyApex technical analysis"
+      - sentiment: "HeadyApex sentiment fusion"
+      - simulate: "HeadyApex Monte Carlo simulation"
+      - signal: "HeadyApex signal generation"
+      - risk: "HeadyCortex risk verification"
+      - notify: "HeadyRelay signal notification"
+    automation_level: semi_autonomous
+
+  creative_sprint:
+    name: "Creative Sprint Workflow"
+    trigger: [design_request]
+    stages:
+      - brief: "HeadyMuse creative brief analysis"
+      - generate: "HeadyMuse design concept generation"
+      - audit: "HeadySpectrum Sacred Geometry audit"
+      - canvas: "HeadyCanvas collaborative refinement"
+      - export: "HeadyDocGen asset documentation"
+    automation_level: semi_autonomous
+
+  disaster_recovery:
+    name: "Disaster Recovery Protocol"
+    trigger: [ors_below_50, service_cascade_failure]
+    stages:
+      - assess: "HeadyLensDeep damage assessment"
+      - isolate: "HeadyShield affected service isolation"
+      - trace: "HeadyChrono temporal root cause"
+      - recover: "HeadyMirror restore from twin snapshot"
+      - verify: "HeadyGate recovery verification"
+      - report: "HeadyNarrator incident postmortem"
+    automation_level: semi_autonomous

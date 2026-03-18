@@ -1,0 +1,230 @@
+# HEADY_BRAND:BEGIN
+# Heady Systems - Liquid Topology v5.0
+# The Sacred Geometry of Perfect Orchestration
+# HEADY_BRAND:END
+
+version: "5.0.0"
+name: LiquidTopologyV5
+description: |
+  The complete Sacred Geometry topology of the Heady Liquid Latent OS.
+  Every node has a position, every connection has a purpose, and every
+  interaction is phi-scaled. This is the architectural truth of the system.
+
+# ═══════════════════════════════════════════════════════════════════════
+# SACRED GEOMETRY MANDALA — COMPLETE TOPOLOGY
+# ═══════════════════════════════════════════════════════════════════════
+#
+#                        ╭─── ARCHIVE ───╮
+#                   RELAY │               │ DOCGEN
+#                        │    NARRATOR    │
+#              BRIDGE ───┤               ├─── TUTOR
+#                        │   ┌───────┐   │
+#             ROSETTA ───┤   │ MUSE  │   ├─── LAB
+#                        │   │       │   │
+#              ANCHOR ───┤   │ ╭───╮ │   ├─── SANDBOX
+#                        │   │ │   │ │   │
+#               APEX ────┤   │ │ S │ │   ├─── WEAVER
+#                        │   │ │ O │ │   │
+#              MIRROR ───┤   │ │ U │ │   ├─── CRON
+#                        │   │ │ L │ │   │
+#              PULSE ────┤   │ ╰───╯ │   ├─── SAGA
+#                        │   │BRAIN  │   │
+#               ECHO ────┤   │CONDUC │   ├─── GATE
+#                        │   │VINCI  │   │
+#             ORACLE ────┤   │SYNAPSE│   ├─── GENESIS
+#                        │   │CORTEX │   │
+#             CHRONO ────┤   │AUTOCON│   ├─── FORGE
+#                        │   └───────┘   │
+#             SHIELD ────┤    PRISM      ├─── STREAM
+#                        │    NEXUS      │
+#              VAULT ────┤    CANVAS     ├─── MESH
+#                        │    PERSONA    │
+#             SPECTRUM ──┤    BUDDY      ├─── COST
+#                        │               │
+#              LENS ─────┤    MANAGER    ├─── NEXUSGRAPH
+#                        │    GATEWAY    │
+#                        ╰───────────────╯
+#
+
+topology:
+  center:
+    node: HeadySoul
+    role: "Decision authority, ethical gate, value alignment"
+    connections: [brain, conductor, shield, vault, anchor]
+    csl_threshold: 0.927
+    principle: "The still point around which all intelligence orbits"
+
+  inner_ring:
+    description: "Core intelligence and orchestration — the heartbeat"
+    nodes:
+      - HeadyBrain
+      - HeadyConductor
+      - HeadyVinci
+      - HeadyAutoSuccess
+      - HeadySynapse
+      - HeadyCortex
+      - HeadyAutoContext
+    connections_pattern: "Full mesh — every inner node talks to every other"
+    csl_threshold: 0.809
+
+  middle_ring:
+    description: "Specialized intelligence and execution"
+    nodes:
+      - HeadyPrism
+      - HeadyForge
+      - HeadyMirror
+      - HeadyApex
+      - HeadyMuse
+      - HeadyCanvas
+      - HeadyWeaver
+      - HeadyNexus
+      - HeadyPersona
+      - HeadyBuddy
+    connections_pattern: "Spoke to inner ring + lateral to adjacent middle nodes"
+    csl_threshold: 0.691
+
+  outer_ring:
+    description: "Integration, observation, and specialized services"
+    nodes:
+      - HeadyEcho
+      - HeadySpectrum
+      - HeadyRosetta
+      - HeadyBridge
+      - HeadyRelay
+      - HeadyTutor
+      - HeadyLab
+      - HeadySandbox
+      - HeadyCron
+      - HeadyArchive
+      - HeadyDocGen
+      - HeadyNarrator
+    connections_pattern: "Spoke to middle ring + event stream broadcast"
+    csl_threshold: 0.618
+
+  governance_layer:
+    description: "Cross-cutting concerns — security, compliance, quality, cost"
+    nodes:
+      - HeadyShield
+      - HeadyVault
+      - HeadyAnchor
+      - HeadyGate
+      - HeadyLensDeep
+      - HeadyCost
+      - HeadySaga
+      - HeadyGenesis
+    connections_pattern: "Connected to ALL rings — governance is omnipresent"
+    csl_threshold: 0.882
+
+  infrastructure_layer:
+    description: "Data and communication backbone"
+    nodes:
+      - HeadyMemory
+      - HeadyOracle
+      - HeadyChrono
+      - HeadyStream
+      - HeadyNexusGraph
+      - HeadyPersistence
+    connections_pattern: "Foundation — supports all layers above"
+    csl_threshold: 0.618
+
+# ═══════════════════════════════════════════════════════════════════════
+# LIQUID DYNAMICS — HOW THE SYSTEM BREATHES
+# ═══════════════════════════════════════════════════════════════════════
+
+dynamics:
+  breathing_rhythm:
+    description: |
+      The system has a breathing rhythm — expanding and contracting based
+      on load, time of day, and emotional state of the user base.
+    inhale: "Scale up — more bees, wider pools, higher concurrency"
+    exhale: "Scale down — consolidate, archive, optimize"
+    frequency: "Auto-Success heartbeat: 29,034ms cycle"
+    phi_scaling: |
+      concurrency = base × φ^(load_factor)
+      pool_size = fib(ceil(log_φ(active_users)))
+
+  parallel_execution:
+    description: |
+      True parallelism — not just concurrent, but topologically parallel.
+      Independent branches of the pipeline execute simultaneously.
+    patterns:
+      fan_out: "Conductor dispatches to N bees simultaneously"
+      fan_in: "Bees report to swarm coordinator, phi-weighted consensus"
+      pipeline: "21-stage HCFullPipeline with skip-ahead on fast path"
+      saga: "Multi-service transactions with compensating actions"
+      event_driven: "Stream subscribers process events in parallel partitions"
+
+  async_orchestration:
+    description: |
+      Every operation is fundamentally async. Sync HTTP is syntactic sugar
+      over async event flows. The system never blocks — it delegates.
+    patterns:
+      fire_and_forget: "Publish to stream, don't wait"
+      request_reply: "Publish, await response on reply topic"
+      scatter_gather: "Fan out to N, gather results, phi-consensus"
+      choreography: "Services react to events, no central coordinator needed"
+      orchestration: "Conductor coordinates complex flows, saga for transactions"
+
+  distributed_intelligence:
+    description: |
+      Intelligence is not centralized in one node — it's distributed
+      across the entire topology. Every node contributes to the whole.
+    layers:
+      - name: "Edge Intelligence"
+        nodes: [heady-shield, heady-gateway]
+        capability: "Security scanning, rate limiting, basic routing"
+      - name: "Routing Intelligence"
+        nodes: [heady-conductor, csl-engine]
+        capability: "CSL-scored task routing, pool management"
+      - name: "Deep Intelligence"
+        nodes: [heady-brain, heady-synapse, heady-cortex]
+        capability: "Multi-model reasoning, structured thought"
+      - name: "Memory Intelligence"
+        nodes: [heady-memory, heady-oracle, heady-chrono]
+        capability: "Knowledge retrieval, graph reasoning, temporal patterns"
+      - name: "Emotional Intelligence"
+        nodes: [heady-pulse, heady-persona, heady-echo]
+        capability: "Emotion detection, personalization, voice interaction"
+      - name: "Operational Intelligence"
+        nodes: [heady-lens-deep, heady-cost, heady-genesis]
+        capability: "Anomaly detection, cost optimization, self-evolution"
+
+  optimization:
+    description: |
+      Every path is optimized. Every threshold is phi-derived. Every
+      pool is Fibonacci-indexed. The system converges toward optimal
+      performance through continuous learning.
+    strategies:
+      - name: "CSL Gate Optimization"
+        method: "Bayesian threshold tuning based on historical outcomes"
+        service: heady-gate
+      - name: "Routing Optimization"
+        method: "Multi-armed bandit for bee selection with exploration bonus"
+        service: heady-conductor
+      - name: "Memory Optimization"
+        method: "φ-decay PDE for memory consolidation"
+        service: heady-memory
+      - name: "Cost Optimization"
+        method: "Portfolio optimization across cloud providers"
+        service: heady-cost
+      - name: "Evolution Optimization"
+        method: "Genetic algorithm with φ-blend crossover for config tuning"
+        service: heady-genesis
+
+# ═══════════════════════════════════════════════════════════════════════
+# COMPLETENESS VERIFICATION
+# ═══════════════════════════════════════════════════════════════════════
+
+verification:
+  total_services: 211  # 175 original + 12 new + 24 extended
+  total_tools: 102     # 31 original + 6 headymcp + 48 new + 17 extended
+  total_bees: 102      # 89 original + 13 new
+  total_agents: 13     # 7 original + 6 new
+  total_nodes: 33      # 25 original + 8 new
+  total_workflows: 15  # All new
+  total_resources: 42  # 21 headymcp + 21 extended
+  pipeline_stages: 25  # HCFullPipeline v8
+  memory_tiers: 3      # T0/T1/T2 + Archive
+  csl_gate_levels: 6   # MINIMUM/LOW/MEDIUM/HIGH/CRITICAL/DEDUP
+  domains: 9           # headyme/headysystems/headyconnection/headybuddy/headymcp/headyio/headybot/headyapi/headyai
+  sacred_geometry_layers: 5  # center + inner + middle + outer + governance

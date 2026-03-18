@@ -1,7 +1,7 @@
 {
-  "version": "4.2.0",
+  "version": "5.0.0",
   "generated": "2026-03-18",
-  "service_count": 187,
+  "service_count": 211,
   "phi": 1.618033988749895,
   "csl_threshold": 0.618,
   "categories": {
@@ -1211,6 +1211,222 @@
       "port": 3382,
       "health": "/health",
       "note": "Self-Evolving Service Generator — auto-generate tools from usage patterns, meta-programming"
+    },
+    {
+      "id": "heady-synapse",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3383,
+      "health": "/health",
+      "note": "Multi-model collaborative reasoning — iterative refinement and phi-consensus"
+    },
+    {
+      "id": "heady-cortex",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3384,
+      "health": "/health",
+      "note": "Structured reasoning engine — chain/tree/graph of thought, adversarial verification"
+    },
+    {
+      "id": "heady-prism",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3385,
+      "health": "/health",
+      "note": "Multi-perspective analysis — technical, business, ethical, UX, security viewpoints"
+    },
+    {
+      "id": "heady-nexus-graph",
+      "type": "service",
+      "category": "data",
+      "status": "planned",
+      "port": 3386,
+      "health": "/health",
+      "note": "Service mesh topology — distributed tracing, bottleneck detection, live topology map"
+    },
+    {
+      "id": "heady-archive",
+      "type": "service",
+      "category": "data",
+      "status": "planned",
+      "port": 3387,
+      "health": "/health",
+      "note": "Long-term cold storage — compressed archives, archaeological queries, T2 management"
+    },
+    {
+      "id": "heady-stream",
+      "type": "service",
+      "category": "data",
+      "status": "planned",
+      "port": 3388,
+      "health": "/health",
+      "note": "Event streaming — pub/sub, change data capture, inter-service async communication"
+    },
+    {
+      "id": "heady-vault",
+      "type": "service",
+      "category": "security",
+      "status": "planned",
+      "port": 3389,
+      "health": "/health",
+      "note": "Centralized secrets management — dynamic rotation, lease-based access, PQ encryption"
+    },
+    {
+      "id": "heady-shield",
+      "type": "service",
+      "category": "security",
+      "status": "planned",
+      "port": 3390,
+      "health": "/health",
+      "note": "Runtime application security — WAF, prompt injection defense, bot detection"
+    },
+    {
+      "id": "heady-lab",
+      "type": "service",
+      "category": "devops",
+      "status": "planned",
+      "port": 3391,
+      "health": "/health",
+      "note": "Experimentation platform — A/B testing, feature flags, phi-progressive delivery"
+    },
+    {
+      "id": "heady-doc-gen",
+      "type": "service",
+      "category": "devops",
+      "status": "planned",
+      "port": 3392,
+      "health": "/health",
+      "note": "AI documentation generator — API docs, architecture diagrams, living docs"
+    },
+    {
+      "id": "heady-sandbox",
+      "type": "service",
+      "category": "devops",
+      "status": "planned",
+      "port": 3393,
+      "health": "/health",
+      "note": "Isolated execution environments — containerized sandboxes for code and agent testing"
+    },
+    {
+      "id": "heady-persona",
+      "type": "service",
+      "category": "ui",
+      "status": "planned",
+      "port": 3394,
+      "health": "/health",
+      "note": "User personalization engine — adaptive UI, preferences, context-aware responses"
+    },
+    {
+      "id": "heady-narrator",
+      "type": "service",
+      "category": "ui",
+      "status": "planned",
+      "port": 3395,
+      "health": "/health",
+      "note": "System narrative engine — translates technical events into human-readable stories"
+    },
+    {
+      "id": "heady-bridge",
+      "type": "service",
+      "category": "integration",
+      "status": "planned",
+      "port": 3396,
+      "health": "/health",
+      "note": "Universal integration bridge — GitHub, Slack, Discord, Jira, custom webhooks"
+    },
+    {
+      "id": "heady-relay",
+      "type": "service",
+      "category": "integration",
+      "status": "planned",
+      "port": 3397,
+      "health": "/health",
+      "note": "Multi-channel notification relay — email, SMS, Slack, Discord, push, escalation chains"
+    },
+    {
+      "id": "heady-lens-deep",
+      "type": "service",
+      "category": "observability",
+      "status": "planned",
+      "port": 3398,
+      "health": "/health",
+      "note": "Deep observability — anomaly detection, RCA, performance profiling, predictive alerting"
+    },
+    {
+      "id": "heady-cost",
+      "type": "service",
+      "category": "observability",
+      "status": "planned",
+      "port": 3399,
+      "health": "/health",
+      "note": "Cost intelligence — cloud spending, AI token costs, phi-scaled budget allocation"
+    },
+    {
+      "id": "heady-muse",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3400,
+      "health": "/health",
+      "note": "Creative generation — UI mockups, naming, copy, Sacred Geometry design concepts"
+    },
+    {
+      "id": "heady-canvas",
+      "type": "service",
+      "category": "ui",
+      "status": "planned",
+      "port": 3401,
+      "health": "/health",
+      "note": "Collaborative infinite canvas — AI diagramming, Sacred Geometry rendering"
+    },
+    {
+      "id": "heady-cron",
+      "type": "service",
+      "category": "orchestration",
+      "status": "planned",
+      "port": 3402,
+      "health": "/health",
+      "note": "Intelligent scheduling — phi-scaled intervals, workload-aware execution"
+    },
+    {
+      "id": "heady-saga",
+      "type": "service",
+      "category": "orchestration",
+      "status": "planned",
+      "port": 3403,
+      "health": "/health",
+      "note": "Distributed saga coordinator — multi-service transactions with compensating actions"
+    },
+    {
+      "id": "heady-gate",
+      "type": "service",
+      "category": "orchestration",
+      "status": "planned",
+      "port": 3404,
+      "health": "/health",
+      "note": "Self-tuning quality gates — CSL-scored approval/rejection, Bayesian threshold learning"
+    },
+    {
+      "id": "heady-weaver",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3405,
+      "health": "/health",
+      "note": "Code generation engine — scaffolds, API clients, Sacred Geometry compliant code"
+    },
+    {
+      "id": "heady-tutor",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3406,
+      "health": "/health",
+      "note": "Adaptive learning engine — personalized tutorials, skill assessment, learning paths"
     }
   ]
 }
