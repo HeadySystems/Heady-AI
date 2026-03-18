@@ -1,12 +1,12 @@
 FROM node:20-slim
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --production
+RUN npm install --production
 COPY . .
 ENV NODE_ENV=production
-ENV PORT=3310
+ENV PORT=8080
 ENV HEADY_MCP_TRANSPORT=http
-ENV HEADY_MCP_PORT=3310
+ENV HEADY_MCP_PORT=8080
 RUN groupadd -r heady && useradd -r -g heady heady
 RUN chown -R heady:heady /app
 USER heady
