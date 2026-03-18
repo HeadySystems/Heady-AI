@@ -70,23 +70,89 @@ function extractBareTokens(raw) {
 
 // ── Domain Mapping ──────────────────────────────────────────────
 const ENV_DOMAIN_MAP = {
-    CLAUDE_API_KEY: { domain: 'anthropic', label: 'Claude API Key' },
-    CLAUDE_CODE_OAUTH_TOKEN: { domain: 'anthropic', label: 'Claude Code OAuth Token' },
-    ANTHROPIC_ADMIN_KEY: { domain: 'anthropic', label: 'Anthropic Admin Key' },
-    ANTHROPIC_ORG_ID: { domain: 'anthropic', label: 'Anthropic Org ID' },
-    ANTHROPIC_API_KEY: { domain: 'anthropic', label: 'Anthropic API Key' },
-    CLAUDE_DEV_ADMIN_KEY: { domain: 'anthropic', label: 'Claude Dev Admin Key' },
+    // Anthropic / Claude
+    CLAUDE_API_KEY: { domain: 'claude', label: 'Claude API Key' },
+    CLAUDE_CODE_OAUTH_TOKEN: { domain: 'claude', label: 'Claude Code OAuth Token' },
+    ANTHROPIC_ADMIN_KEY: { domain: 'claude', label: 'Anthropic Admin Key' },
+    ANTHROPIC_ORG_ID: { domain: 'claude', label: 'Anthropic Org ID' },
+    ANTHROPIC_API_KEY: { domain: 'claude', label: 'Anthropic API Key' },
+    CLAUDE_DEV_ADMIN_KEY: { domain: 'claude', label: 'Claude Dev Admin Key' },
+    // OpenAI
     OPENAI_API_KEY: { domain: 'openai', label: 'OpenAI Service Account Key' },
+    // Azure
+    AZURE_OPENAI_API_KEY: { domain: 'azure', label: 'Azure OpenAI API Key' },
+    AZURE_OPENAI_ENDPOINT: { domain: 'azure', label: 'Azure OpenAI Endpoint' },
+    // Google / GCP
     GEMINI_API_KEY: { domain: 'gcloud', label: 'Gemini API Key (primary)' },
     GEMINI_API_KEY_HEADY: { domain: 'gcloud', label: 'Gemini API Key (heady)' },
     GOOGLE_API_KEY: { domain: 'gcloud', label: 'Google API Key (primary)' },
     GOOGLE_API_KEY_SECONDARY: { domain: 'gcloud', label: 'Google API Key (secondary)' },
     GCLOUD_API_KEY: { domain: 'gcloud', label: 'GCloud API Key' },
     GOOGLE_CLOUD_API_KEY: { domain: 'gcloud', label: 'Google Cloud API Key' },
+    GOOGLE_AI_API_KEY: { domain: 'googleai', label: 'Google AI Studio Key' },
+    // Firebase
     FIREBASE_API_KEY: { domain: 'firebase', label: 'Firebase API Key' },
-    PINECONE_API_KEY: { domain: 'supabase', label: 'Pinecone Vector DB Key' }, // closest domain
+    FIREBASE_APP_ID: { domain: 'firebase', label: 'Firebase App ID' },
+    FIREBASE_PROJECT_ID: { domain: 'firebase', label: 'Firebase Project ID' },
+    // Hugging Face
+    HF_TOKEN: { domain: 'huggingface', label: 'HuggingFace Token (primary)' },
+    HF_TOKEN_1: { domain: 'huggingface', label: 'HuggingFace Token #1' },
+    HF_TOKEN_2: { domain: 'huggingface', label: 'HuggingFace Token #2' },
+    HF_TOKEN_3: { domain: 'huggingface', label: 'HuggingFace Token #3' },
+    // Groq
+    GROQ_API_KEY: { domain: 'groq', label: 'Groq API Key' },
+    // Perplexity
+    PERPLEXITY_API_KEY: { domain: 'perplexity', label: 'Perplexity API Key' },
+    // Neon Postgres
+    NEON_API_KEY: { domain: 'neon', label: 'Neon API Key' },
+    NEON_PASSWORD: { domain: 'neon', label: 'Neon DB Password' },
+    DATABASE_URL: { domain: 'neon', label: 'Primary Database URL' },
+    // Upstash Redis
+    UPSTASH_REDIS_REST_TOKEN: { domain: 'upstash', label: 'Upstash Redis REST Token' },
+    QSTASH_TOKEN: { domain: 'upstash', label: 'QStash Token' },
+    QSTASH_CURRENT_SIGNING_KEY: { domain: 'upstash', label: 'QStash Current Signing Key' },
+    QSTASH_NEXT_SIGNING_KEY: { domain: 'upstash', label: 'QStash Next Signing Key' },
+    // Cosmos DB
+    COSMOS_KEY: { domain: 'cosmos', label: 'Azure Cosmos DB Key' },
+    COSMOS_ENDPOINT: { domain: 'cosmos', label: 'Azure Cosmos DB Endpoint' },
+    // Discord
+    DISCORD_BOT_TOKEN: { domain: 'discord', label: 'Discord Bot Token' },
+    DISCORD_CLIENT_ID: { domain: 'discord', label: 'Discord Client ID' },
+    // Payments
     STRIPE_SECRET_KEY: { domain: 'stripe', label: 'Stripe Live Secret Key' },
-    OP_SERVICE_ACCOUNT_TOKEN: { domain: 'domain', label: '1Password Service Account' },
+    // Sentry
+    SENTRY_DSN: { domain: 'sentry', label: 'Sentry DSN' },
+    SENTRY_AUTH_TOKEN: { domain: 'sentry', label: 'Sentry Auth Token' },
+    // Email
+    RESEND_API_KEY: { domain: 'resend', label: 'Resend Email API Key' },
+    SMTP_PASSWORD: { domain: 'email', label: 'SMTP Password' },
+    // Cloudflare
+    CLOUDFLARE_API_TOKEN: { domain: 'cloudflare', label: 'Cloudflare API Token' },
+    CF_API_TOKEN: { domain: 'cloudflare', label: 'Cloudflare API Token (alt)' },
+    CF_KV_API_TOKEN: { domain: 'cloudflare', label: 'Cloudflare KV API Token' },
+    // GitHub
+    GITHUB_TOKEN: { domain: 'github', label: 'GitHub PAT' },
+    HEADY_GITHUB_PAT: { domain: 'github', label: 'Heady GitHub PAT' },
+    GITHUB_APP_PRIVATE_KEY: { domain: 'github', label: 'GitHub App Private Key' },
+    // GCP Service Account
+    GCP_SA_KEY: { domain: 'gcloud', label: 'GCP Service Account Key' },
+    // Heady Internal
+    HEADY_API_KEY: { domain: 'heady', label: 'Heady Internal API Key' },
+    HEADY_ADMIN_TOKEN: { domain: 'heady', label: 'Heady Admin Token' },
+    HEADY_VAULT_KEY: { domain: 'heady', label: 'Heady Vault Encryption Key' },
+    HEADY_VAULT_PASSPHRASE: { domain: 'heady', label: 'Heady Vault Passphrase' },
+    HEADY_SESSION_SECRET: { domain: 'heady', label: 'Heady Session Secret' },
+    INTERNAL_API_KEY: { domain: 'heady', label: 'Internal API Key' },
+    INTERNAL_NODE_SECRET: { domain: 'heady', label: 'Internal Node Secret' },
+    JWT_SECRET: { domain: 'heady', label: 'JWT Secret' },
+    // 1Password
+    OP_SERVICE_ACCOUNT_TOKEN: { domain: 'onepassword', label: '1Password Service Account' },
+    // Pinecone
+    PINECONE_API_KEY: { domain: 'pinecone', label: 'Pinecone Vector DB Key' },
+    // OAuth
+    GOOGLE_CLIENT_SECRET: { domain: 'gcloud', label: 'Google OAuth Client Secret' },
+    OAUTH_CLIENT_SECRET: { domain: 'heady', label: 'Heady OAuth Client Secret' },
+    FACEBOOK_APP_SECRET: { domain: 'custom', label: 'Facebook App Secret' },
 };
 
 // ── Main ────────────────────────────────────────────────────────
@@ -146,8 +212,8 @@ async function main() {
     for (const [key, value] of Object.entries(envVars)) {
         const mapping = ENV_DOMAIN_MAP[key];
         if (!mapping) {
-            console.log(`  ? ${key} (no domain mapping, storing as 'domain')`);
-            await vault.store(key.toLowerCase(), 'domain', value, { label: key, format: 'env-var' });
+            console.log(`  ? ${key} (no domain mapping, storing as 'custom')`);
+            await vault.store(key.toLowerCase(), 'custom', value, { label: key, format: 'env-var' });
             stored++;
             continue;
         }

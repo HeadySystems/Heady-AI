@@ -60,17 +60,22 @@ const DOMAINS = {
     gcloud: { label: 'Google Cloud', zone: 3 },
     workspace: { label: 'Google Workspace', zone: 3 },
     googleai: { label: 'Google AI Studio', zone: 3 },
+    firebase: { label: 'Firebase', zone: 3 },
     huggingface: { label: 'Hugging Face', zone: 4 },
     openai: { label: 'OpenAI', zone: 4 },
+    azure: { label: 'Azure OpenAI / Cosmos', zone: 4 },
     claude: { label: 'Claude / Anthropic', zone: 4 },
     groq: { label: 'Groq', zone: 4 },
     perplexity: { label: 'Perplexity', zone: 4 },
     upstash: { label: 'Upstash Redis', zone: 5 },
     neon: { label: 'Neon Postgres', zone: 5 },
     pinecone: { label: 'Pinecone', zone: 5 },
+    cosmos: { label: 'Azure Cosmos DB', zone: 5 },
     sentry: { label: 'Sentry', zone: 6 },
     stripe: { label: 'Stripe', zone: 6 },
     onepassword: { label: '1Password', zone: 6 },
+    discord: { label: 'Discord', zone: 6 },
+    resend: { label: 'Resend Email', zone: 6 },
     heady: { label: 'Heady Internal', zone: 7 },
     email: { label: 'Email / SMTP', zone: 7 },
     ssh: { label: 'SSH Keys', zone: 8 },
@@ -371,6 +376,16 @@ class SecureKeyVault {
                 return { headers: { 'Authorization': `Bearer ${cred.value}` } };
             case 'neon':
                 return { headers: { 'Authorization': `Bearer ${cred.value}` } };
+            case 'azure':
+                return { headers: { 'api-key': cred.value } };
+            case 'cosmos':
+                return { headers: { 'x-ms-master-key': cred.value } };
+            case 'discord':
+                return { headers: { 'Authorization': `Bot ${cred.value}` } };
+            case 'resend':
+                return { headers: { 'Authorization': `Bearer ${cred.value}` } };
+            case 'firebase':
+                return { token: cred.value };
             case 'gcloud':
             case 'googleai':
                 return { token: cred.value };
