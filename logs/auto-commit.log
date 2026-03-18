@@ -6425,3 +6425,28 @@ Pushed successfully
     [35mcomponent[39m: "system"
 [2026-03-18 02:30:05.358 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-18T08:30:05.358Z] [INFO] Successfully pushed 68b702911e to production/main[39m
     [35mcomponent[39m: "system"
+Committed: 1d463a6713 — HCFP-AUTO: 5 file(s) changed — index.js, pattern_store.json, thresholds.js
+Pushed successfully
+[2026-03-18 02:35:02.321 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-18T08:35:02.321Z] [INFO] Committed 1d463a6713: HCFP-AUTO: 5 file(s) changed — index.js, pattern_store.json, thresholds.js[39m
+    [35mcomponent[39m: "system"
+[2026-03-18 02:35:03.803 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-18T08:35:03.803Z] [INFO] Successfully pushed 1d463a6713 to production/main[39m
+    [35mcomponent[39m: "system"
+node:internal/modules/package_json_reader:93
+        throw error;
+        ^
+
+SyntaxError: Error parsing /home/headyme/Heady/package.json: Expected double-quoted property name in JSON at position 321
+    at parse (<anonymous>)
+    at read (node:internal/modules/package_json_reader:80:16)
+    at readPackage (node:internal/modules/package_json_reader:141:10)
+    at Object.readPackageScope (node:internal/modules/package_json_reader:164:19)
+    at trySelf (node:internal/modules/cjs/loader:587:58)
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1189:24)
+    at Module._load (node:internal/modules/cjs/loader:1043:27)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32 {
+  path: '/home/headyme/Heady/package.json'
+}
+
+Node.js v20.19.2
