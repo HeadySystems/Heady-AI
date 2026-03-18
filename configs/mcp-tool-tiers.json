@@ -1,0 +1,42 @@
+{
+  "tool_classification": {
+    "version": "1.0.0",
+    "last_updated": "2026-03-18",
+    "tiers": {
+      "tier1_readonly": {
+        "description": "Read-only cognitive tools — auto-approve, no HITL gate",
+        "approval": "auto",
+        "tools": [
+          "heady_memory", "heady_soul", "heady_vinci", "heady_risks", "heady_battle",
+          "heady_chat", "heady_claude", "heady_openai", "heady_gemini", "heady_groq",
+          "heady_buddy", "heady_health", "heady_maid", "heady_recall",
+          "heady_vector_store", "heady_vector_search", "heady_vector_stats",
+          "heady_search", "heady_edge_ai", "heady_lens", "heady_notebooklm",
+          "heady_huggingface_model", "heady_orchestrator", "heady_hcfp_status",
+          "heady_telemetry", "heady_csl_engine", "heady_agent_orchestration",
+          "heady_cms_taxonomy", "heady_cms_media", "heady_cms_views", "heady_cms_search",
+          "aegis_heartbeat", "mandala_phi", "mandala_constants",
+          "mnemosyne_remember", "mnemosyne_recall", "mnemosyne_forget", "mnemosyne_consolidate"
+        ],
+        "annotations": { "readOnlyHint": true, "destructiveHint": false, "openWorldHint": false }
+      },
+      "tier2_write": {
+        "description": "Write operations — require session-scoped approval",
+        "approval": "session_scoped",
+        "tools": [
+          "heady_deep_scan", "heady_auto_flow", "heady_embed", "heady_analyze",
+          "heady_coder", "heady_patterns", "heady_refactor", "heady_complete",
+          "heady_maintenance", "heady_learn", "heady_memory_stats",
+          "heady_template_stats", "heady_cms_content", "aegis_service_check"
+        ],
+        "annotations": { "readOnlyHint": false, "destructiveHint": false, "openWorldHint": true }
+      },
+      "tier3_destructive": {
+        "description": "Destructive/deploy operations — mandatory HITL confirmation, Ed25519 trust receipts",
+        "approval": "human_in_the_loop",
+        "tools": ["heady_deploy", "heady_ops", "heady_jules_task"],
+        "annotations": { "readOnlyHint": false, "destructiveHint": true, "openWorldHint": true }
+      }
+    }
+  }
+}
