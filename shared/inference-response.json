@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.headysystems.com/inference-response.json",
+  "title": "Inference Response",
+  "type": "object",
+  "required": [
+    "response",
+    "model",
+    "tokensUsed",
+    "latencyMs"
+  ],
+  "properties": {
+    "response": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "tokensUsed": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "integer"
+        },
+        "output": {
+          "type": "integer"
+        }
+      }
+    },
+    "latencyMs": {
+      "type": "number"
+    },
+    "cslConfidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "outputHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

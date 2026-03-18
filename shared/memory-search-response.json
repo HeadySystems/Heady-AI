@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.headysystems.com/memory-search-response.json",
+  "title": "Memory Search Response",
+  "type": "object",
+  "required": [
+    "matches",
+    "queryId",
+    "latencyMs"
+  ],
+  "properties": {
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "score",
+          "content"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "content": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "queryId": {
+      "type": "string"
+    },
+    "latencyMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "totalResults": {
+      "type": "integer"
+    }
+  }
+}

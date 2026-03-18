@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.headysystems.com/embedding-response.json",
+  "title": "Embedding Response",
+  "type": "object",
+  "required": [
+    "embedding",
+    "model",
+    "dimensions",
+    "tokensUsed"
+  ],
+  "properties": {
+    "embedding": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 384,
+      "maxItems": 1536
+    },
+    "model": {
+      "type": "string"
+    },
+    "dimensions": {
+      "type": "integer"
+    },
+    "tokensUsed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "cached": {
+      "type": "boolean"
+    }
+  }
+}

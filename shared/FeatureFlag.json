@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.headysystems.com/schemas/FeatureFlag",
+  "type": "object",
+  "required": [
+    "name",
+    "enabled"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 144
+    },
+    "rollout_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "csl_gate": {
+      "type": "number"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "kill_switch": {
+      "type": "boolean"
+    }
+  }
+}

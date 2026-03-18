@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.headysystems.com/schemas/HealthCheckResponse",
+  "type": "object",
+  "required": [
+    "status",
+    "service"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "healthy",
+        "degraded",
+        "unhealthy"
+      ]
+    },
+    "service": {
+      "type": "string"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "uptime_ms": {
+      "type": "integer"
+    },
+    "error_rate": {
+      "type": "number"
+    },
+    "coherence_score": {
+      "type": "number"
+    },
+    "csl_gate": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    }
+  }
+}

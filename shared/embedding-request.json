@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.headysystems.com/embedding-request.json",
+  "title": "Embedding Request",
+  "description": "Request to create vector embedding via heady-embed",
+  "type": "object",
+  "required": [
+    "text",
+    "model"
+  ],
+  "properties": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32768
+    },
+    "model": {
+      "type": "string",
+      "enum": [
+        "nomic-embed-text-v1.5",
+        "jina-embeddings-v3",
+        "voyage-3-lite"
+      ]
+    },
+    "dimensions": {
+      "type": "integer",
+      "enum": [
+        384,
+        768,
+        1536
+      ],
+      "default": 384
+    },
+    "taskType": {
+      "type": "string",
+      "enum": [
+        "search_document",
+        "search_query",
+        "clustering",
+        "classification"
+      ]
+    }
+  }
+}
