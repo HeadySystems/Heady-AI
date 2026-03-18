@@ -3,11 +3,11 @@
 # Identified via deep ecosystem analysis — 2026-03-18
 # HEADY_BRAND:END
 
-version: "1.1.0"
+version: "1.0.0"
 name: WiringGapsRemediation
 description: |
   Critical wiring gaps identified across 69 repos, 144+ services, 61 packages,
-  29 apps, and 350+ config files. Each gap has severity, impact, and remediation.
+  and 29 apps. Each gap has severity, impact, and remediation steps.
 
 # ═══════════════════════════════════════════════════════════════════════
 # CRITICAL GAPS (Must fix immediately)
@@ -15,134 +15,9 @@ description: |
 
 critical:
 
-  secrets_in_repo:
-    severity: URGENT
-    description: "Multiple credential types committed to repo in plaintext"
-    files:
-      - configs/secrets/gcp-service-account.json
-      - configs/secrets/firebase-admin-sdk.json
-      - configs/secrets/gen-lang-client-*.json (4 files)
-      - configs/nginx/ssl/ca.key, server.key, client.key
-      - configs/api-keys.json
-      - configs/users/user-secrets.yaml (5 users with SHARED plaintext tokens)
-      - headyconnection-web/.env.production (hardcoded Drupal secrets)
-    impact: "Full credential compromise; 5 users share identical secret; SSL keys exposed"
-    remediation:
-      - "IMMEDIATELY rotate ALL exposed credentials"
-      - "Remove from git history (BFG Repo-Cleaner)"
-      - "Add configs/secrets/, configs/nginx/ssl/*.key, configs/users/user-secrets.yaml to .gitignore"
-      - "Move all secrets to HeadyVault (port 3389)"
-      - "Generate unique per-user secrets (not shared!)"
-      - "Remove .env.production files from repo; use CI/CD injection"
-
-  unauthenticated_secrets_api:
-    severity: URGENT
-    description: "6 secrets management API routes have ZERO authentication middleware"
-    file: "src/hc_secrets_manager.js"
-    exposed_routes:
-      - "GET /api/secrets (lists all secrets with masked values)"
-      - "GET /api/secrets/status (reveals secret counts)"
-      - "GET /api/secrets/audit (exposes missing/expired secrets)"
-      - "GET /api/secrets/:id (individual secret metadata)"
-      - "POST /api/secrets/:id/refresh (triggers rotation — DoS vector!)"
-      - "GET /api/secrets/alerts (security alerts)"
-    additional_issue: "maskedValue stores first 4 + last 4 chars, reducing brute-force keyspace"
-    remediation:
-      - "Add auth middleware to ALL /api/secrets/* routes immediately"
-      - "Require admin-level auth for POST /refresh endpoint"
-      - "Remove maskedValue from data model entirely"
-      - "Stop persisting partial secrets to /data/secrets-state.json"
-      - "HeadyShield (port 3390) validates all secrets API access"
-
-  vulnerable_dependency:
-    severity: critical
-    description: "yamljs ^0.3.0 has known prototype pollution vulnerability (CVE-2020-28480)"
-    impact: "Remote code execution possible via crafted YAML input"
-    remediation:
-      - "Remove yamljs from package.json"
-      - "Migrate to yaml ^2.8.2 or js-yaml ^4.1.1 (both already installed)"
-
-  audit_log_retention:
-    severity: critical
-    description: "Audit log retention is 89 days; SOC2/GDPR requires 365 days minimum"
-    file: "configs/governance-policies.yaml line 19"
-    remediation:
-      - "Increase retentionDays from 89 to 365"
-      - "HeadyAnchor (port 3379) enforces compliance retention policies"
-
-  secret_hygiene_gaps:
-    severity: critical
-    description: "Secret scanning patterns missing common credential types"
-    file: "configs/security/secret-hygiene-policy.yml"
-    missing_patterns:
-      - "sk- (OpenAI/Stripe keys)"
-      - "ghp_/gho_/github_pat_ (GitHub tokens)"
-      - "whsec_ (Stripe webhook secrets)"
-      - "AIza (Google API keys)"
-      - "password= / secret= (generic patterns)"
-    remediation:
-      - "Expand forbidden_patterns in secret-hygiene-policy.yml"
-      - "HeadyShield integrates with Semgrep rules at configs/semgrep-rules.yaml"
-
-  config_version_fragmentation:
-    severity: critical
-    description: "5 conflicting pipeline versions, 4 diverged registries, 6 port assignment conflicts"
-    details:
-      pipeline_versions:
-        - "hcfullpipeline.yaml: v4.0.0 (renamed stages)"
-        - "heady-registry.json (root): v3.1.0 (deprecated stage names)"
-        - "service-routing-v9.yaml: claims 22 stages"
-        - "CLAUDE.md: v7 (21 stages)"
-        - "new-mcp-services-spec.yaml: v8 (25 stages proposed)"
-      registry_versions:
-        - "production-service-registry.json: v4.0.0"
-        - "configs/heady-registry.json: v3.2.3"
-        - "root heady-registry.json: v4.1.0"
-        - "SERVICE_INDEX.json: v5.0.0"
-      service_coverage_gap: "production-service-registry has only 30 services; SERVICE_INDEX has 211"
-    remediation:
-      - "Designate SERVICE_INDEX.json v5.0.0 as single source of truth"
-      - "Generate production-service-registry.json from SERVICE_INDEX.json"
-      - "Update hcfullpipeline.yaml to v8.0.0 with 25 stages"
-      - "Deprecate root heady-registry.json (stale v3.1.0 stage names)"
-      - "HeadyGenesis validates all registries stay in sync"
-
-  embedding_dimension_conflict:
-    severity: critical
-    description: "CLAUDE.md says 384D embeddings; heady-registry.json says 1536D"
-    impact: "Vector operations will fail if dimension mismatch"
-    remediation:
-      - "1536D is correct (text-embedding-3-large produces 1536D)"
-      - "Update CLAUDE.md to reference 1536D consistently"
-      - "384D reference is legacy from earlier embedding model"
-
-  additional_port_conflicts:
-    severity: critical
-    description: "6 more port conflicts found between service-catalog.yaml and production-service-registry"
-    conflicts:
-      - { service: domain-router, catalog: 4301, production: 4311 }
-      - { service: heady-vinci, catalog: 4309, production: 4323 }
-      - { service: heady-governance, catalog: 4310, production: 4321 }
-      - { service: heady-guard, catalog: 4311, production: 4316 }
-      - { service: heady-bee-factory, catalog: 4313, production: 4319 }
-      - { service: hcfullpipeline-executor, catalog: 4314, production: 4330 }
-    remediation:
-      - "Use SERVICE_INDEX.json port assignments as canonical"
-      - "Update both service-catalog.yaml and production-service-registry.json"
-
-  outdated_ai_models:
-    severity: critical
-    description: "ai-services.yaml references deprecated/retired models"
-    models:
-      - { current: "claude-2.1", should_be: "claude-opus-4-6" }
-      - { current: "code-davinci-002", should_be: "REMOVED (retired by OpenAI)" }
-      - { current: "palm-2", should_be: "gemini-2.5-pro" }
-      - { current: "llama-2-70b", should_be: "llama-4-maverick" }
-    remediation:
-      - "Update ai-services.yaml with current model IDs"
-      - "HeadySynapse manages model routing dynamically"
-
   port_conflicts:
+    severity: critical
+    description: "Two port conflicts causing service startup race conditions"
     conflicts:
       - port: 3320
         claimants: [heady-ide, discord-bot]
