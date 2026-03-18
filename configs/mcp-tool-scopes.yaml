@@ -1,0 +1,248 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/mcp-tool-scopes.yaml                              ║
+# ║  LAYER: governance                                               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# MCP Tool Permission Scopes — Per-tool governance for 47 MCP tools.
+#
+# Addresses confused deputy risk identified in the Heady security audit:
+# deploy-class tools (deploy, ops, maintenance, maid) previously shared
+# the same auth surface as cognitive tools. This config enforces distinct
+# permission scopes per tool group with PHI-derived rate limits.
+#
+# Rate limits follow the Fibonacci sequence: 89, 55, 34, 21, 13, 8
+# CSL thresholds are φ-derived (0.500, 0.618, 0.809, 0.882, 0.927)
+#
+
+version: "1.0.0"
+schema: mcp-tool-scopes
+updated: "2026-03-18"
+
+# ─── TOOL GROUPS ────────────────────────────────────────────────────────────
+
+tool_groups:
+
+  # ── Intelligence ──────────────────────────────────────────────────────────
+  # Read-only analytical tools. No state mutation, no approval gates.
+  intelligence:
+    description: >
+      Cognitive analysis tools — read-only access to codebase, patterns,
+      and risk surfaces. Cannot modify state. Highest throughput allowed.
+    scope: read-only
+    auth_level: public
+    requires_approval: false
+    rate_limit_per_minute: 89
+    csl_threshold: 0.500
+    tools:
+      - deep_scan
+      - analyze
+      - risks
+      - patterns
+      - refactor
+
+  # ── Memory ────────────────────────────────────────────────────────────────
+  # Vector memory operations. Read-write to memory store only.
+  memory:
+    description: >
+      384D vector memory operations — embedding, recall, search, and
+      learning. Scoped to memory store; cannot reach filesystem or deploy.
+    scope: read-write-memory
+    auth_level: authenticated
+    requires_approval: false
+    rate_limit_per_minute: 55
+    csl_threshold: 0.500
+    tools:
+      - memory
+      - embed
+      - learn
+      - recall
+      - vector_store
+      - vector_search
+      - vector_stats
+
+  # ── Orchestration ─────────────────────────────────────────────────────────
+  # Pipeline and conductor flow control. Requires CSL gate >= 0.618.
+  orchestration:
+    description: >
+      Pipeline orchestration and conductor routing. Controls task flow
+      through HCFullPipeline stages. Gated by CSL confidence to prevent
+      low-coherence requests from triggering multi-stage workflows.
+    scope: orchestrate
+    auth_level: authenticated
+    requires_approval: false
+    rate_limit_per_minute: 34
+    csl_threshold: 0.618
+    tools:
+      - auto_flow
+      - orchestrator
+      - hcfp_status
+      - csl_engine
+
+  # ── Execution ─────────────────────────────────────────────────────────────
+  # LLM and agent execution tools. Rate-limited to control cost and blast radius.
+  execution:
+    description: >
+      LLM provider execution and agent dispatch. Each call may invoke
+      external APIs with cost implications. Rate-limited per Fibonacci
+      to bound spend and prevent runaway loops.
+    scope: execute
+    auth_level: authenticated
+    requires_approval: false
+    rate_limit_per_minute: 21
+    csl_threshold: 0.809
+    tools:
+      - coder
+      - battle
+      - buddy
+      - chat
+      - claude
+      - openai
+      - gemini
+      - groq
+
+  # ── Operations ────────────────────────────────────────────────────────────
+  # Deploy-class and admin tools. HITL required for destructive actions.
+  operations:
+    description: >
+      Infrastructure operations — deploy, health checks, maintenance,
+      cleanup, and telemetry. Deploy, maintenance, and maid tools require
+      explicit human-in-the-loop approval before execution. This is the
+      primary remediation for the confused deputy risk in the audit.
+    scope: admin
+    auth_level: admin
+    requires_approval: true
+    rate_limit_per_minute: 13
+    csl_threshold: 0.882
+    tools:
+      - deploy
+      - health
+      - ops
+      - maintenance
+      - maid
+      - telemetry
+    approval_overrides:
+      # health and telemetry are read-only; exempt from HITL
+      - tool: health
+        requires_approval: false
+      - tool: telemetry
+        requires_approval: false
+      # These three always require human sign-off
+      - tool: deploy
+        requires_approval: true
+      - tool: maintenance
+        requires_approval: true
+      - tool: maid
+        requires_approval: true
+      - tool: ops
+        requires_approval: true
+
+  # ── CMS ───────────────────────────────────────────────────────────────────
+  # Content management operations. Rate-limited to prevent content flooding.
+  cms:
+    description: >
+      Drupal CMS content operations — create, update, taxonomy management,
+      media uploads, view rendering, and search indexing. Rate-limited to
+      prevent bulk content injection or accidental mass updates.
+    scope: content-write
+    auth_level: authenticated
+    requires_approval: false
+    rate_limit_per_minute: 8
+    csl_threshold: 0.618
+    tools:
+      - cms_content
+      - cms_taxonomy
+      - cms_media
+      - cms_views
+      - cms_search
+
+# ─── DESTRUCTIVE ACTIONS ───────────────────────────────────────────────────
+# Tools that modify state and require human-in-the-loop (HITL) confirmation.
+# The gateway MUST block these tool calls until an authorized human approves
+# via the HeadyBuddy approval workflow or the admin dashboard.
+
+destructive_actions:
+  description: >
+    State-modifying tools that carry elevated risk. All tools listed here
+    require HITL approval regardless of the caller's auth level. This is
+    enforced at the gateway layer before MCP dispatch.
+  enforcement: gateway-pre-dispatch
+  hitl_channel: heady-buddy-approval
+  hitl_timeout_seconds: 300
+  hitl_default_on_timeout: deny
+
+  tools:
+    - tool: deploy
+      group: operations
+      risk: critical
+      description: "Triggers Cloud Run / edge deployment. Irreversible in production."
+      hitl_required: true
+
+    - tool: maintenance
+      group: operations
+      risk: high
+      description: "Runs maintenance routines — may restart services or rotate secrets."
+      hitl_required: true
+
+    - tool: maid
+      group: operations
+      risk: high
+      description: "Cleanup agent — deletes stale data, prunes caches, archives logs."
+      hitl_required: true
+
+    - tool: ops
+      group: operations
+      risk: high
+      description: "Infrastructure operations — scaling, config changes, resource allocation."
+      hitl_required: true
+
+    - tool: cms_content
+      group: cms
+      risk: medium
+      description: "Creates or updates published content. Bulk operations require approval."
+      hitl_required: false
+      hitl_required_for_bulk: true
+      bulk_threshold: 5
+
+    - tool: cms_media
+      group: cms
+      risk: medium
+      description: "Uploads media assets. Large uploads or bulk operations require approval."
+      hitl_required: false
+      hitl_required_for_bulk: true
+      bulk_threshold: 13
+
+    - tool: vector_store
+      group: memory
+      risk: low
+      description: "Writes to 384D vector memory. Logged but not gated for single writes."
+      hitl_required: false
+      hitl_required_for_bulk: true
+      bulk_threshold: 89
+
+# ─── SCOPE ENFORCEMENT ─────────────────────────────────────────────────────
+# How the gateway validates tool calls against this config.
+
+enforcement:
+  # Every MCP tool call must match exactly one group
+  strict_membership: true
+  # Unknown tools are blocked by default
+  default_deny: true
+  # Log all tool invocations for audit trail
+  audit_log: true
+  # CSL score is checked before dispatch; below threshold = reject
+  csl_gate_enabled: true
+  # Rate limits are per-session, sliding window
+  rate_limit_window: sliding
+  rate_limit_scope: per-session

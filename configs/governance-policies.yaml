@@ -1,20 +1,171 @@
-version: 1
+version: 2
+# ─── PROTECTED ACTIONS ─────────────────────────────────────────────────────────
 protectedActions:
   - deploy
   - delete
   - rotate_secrets
   - publish_public_content
   - create_external_write
+  - maintenance_run
+  - maid_cleanup
+  - financial_transaction
+
+# ─── APPROVAL GATES ────────────────────────────────────────────────────────────
 approvals:
   requiredFor:
     - deploy
     - public_post
     - delete
+    - maintenance_run
+    - maid_cleanup
+    - financial_transaction
+    - patent_zone_modify
+
+# ─── IDENTITY & AUTH ───────────────────────────────────────────────────────────
 identity:
   serviceTokens: ed25519
   userEdgeAuth: cloudflare-access
   sessionProof: jwt
+
+# ─── AUDIT TRAIL ───────────────────────────────────────────────────────────────
 audit:
   logFormat: jsonl
-  retentionDays: 89
+  retentionDays: 89              # fib(11)
   tamperChain: sha256_prev_hash
+  memoryWriteAuditing: true
+  deployApprovalChain: true
+
+# ─── PER-TOOL GOVERNANCE (v2 — MCP Tool Scoping) ──────────────────────────────
+# Each MCP tool group has distinct permission scopes, rate limits, and approval gates.
+# See also: configs/mcp-tool-scopes.yaml for detailed tool-level definitions.
+toolGovernance:
+  intelligence:
+    tools: [deep_scan, analyze, risks, patterns, refactor]
+    authLevel: authenticated
+    requiresApproval: false
+    rateLimit: 89                # fib(11) per minute
+    cslThreshold: 0.500          # MINIMUM
+    riskLevel: LOW
+
+  memory:
+    tools: [memory, embed, learn, recall, vector_store, vector_search, vector_stats]
+    authLevel: authenticated
+    requiresApproval: false
+    rateLimit: 55                # fib(10) per minute
+    cslThreshold: 0.500          # MINIMUM
+    riskLevel: LOW
+    auditWrites: true
+
+  orchestration:
+    tools: [auto_flow, orchestrator, hcfp_status, csl_engine]
+    authLevel: authenticated
+    requiresApproval: false
+    rateLimit: 34                # fib(9) per minute
+    cslThreshold: 0.618          # BOOST (PSI)
+    riskLevel: MEDIUM
+
+  execution:
+    tools: [coder, battle, buddy, chat, claude, openai, gemini, groq]
+    authLevel: authenticated
+    requiresApproval: false
+    rateLimit: 21                # fib(8) per minute
+    cslThreshold: 0.618          # BOOST (PSI)
+    riskLevel: MEDIUM
+
+  operations:
+    tools: [deploy, health, ops, maintenance, maid, telemetry]
+    authLevel: admin
+    requiresApproval: true       # HITL for deploy, maintenance, maid
+    rateLimit: 13                # fib(7) per minute
+    cslThreshold: 0.882          # HIGH
+    riskLevel: HIGH
+    destructiveTools: [deploy, maintenance, maid]
+
+  cms:
+    tools: [cms_content, cms_taxonomy, cms_media, cms_views, cms_search]
+    authLevel: authenticated
+    requiresApproval: false
+    rateLimit: 34                # fib(9) per minute
+    cslThreshold: 0.618          # BOOST (PSI)
+    riskLevel: MEDIUM
+
+# ─── PER-AGENT GOVERNANCE ─────────────────────────────────────────────────────
+# Each named agent has an explicit action allowlist.
+agentGovernance:
+  BRAIN:
+    allowedToolGroups: [intelligence, memory, orchestration, execution, cms]
+    maxConcurrent: 3             # fib(4)
+    budgetPerSession: 10.00
+    canSelfModify: false
+
+  RESEARCHER:
+    allowedToolGroups: [intelligence, memory]
+    maxConcurrent: 2             # fib(3)
+    budgetPerSession: 5.00
+    canSelfModify: false
+
+  DEVOPS:
+    allowedToolGroups: [operations, intelligence]
+    maxConcurrent: 3             # fib(4)
+    budgetPerSession: 5.00
+    canSelfModify: false
+    requiresApprovalFor: [deploy, maintenance, maid]
+
+  CONTENT:
+    allowedToolGroups: [cms, intelligence, memory]
+    maxConcurrent: 3             # fib(4)
+    budgetPerSession: 3.00
+    canSelfModify: false
+
+  JULES:
+    allowedToolGroups: [orchestration]
+    maxConcurrent: 5             # fib(5)
+    budgetPerSession: 2.00
+    canSelfModify: false
+
+  BUILDER:
+    allowedToolGroups: [execution, intelligence]
+    maxConcurrent: 2             # fib(3)
+    budgetPerSession: 8.00
+    canSelfModify: false
+
+  OBSERVER:
+    allowedToolGroups: [operations]
+    maxConcurrent: 5             # fib(5)
+    budgetPerSession: 1.00
+    canSelfModify: false
+    readOnly: true
+
+  SENTINEL:
+    allowedToolGroups: [intelligence, operations]
+    maxConcurrent: 2             # fib(3)
+    budgetPerSession: 3.00
+    canSelfModify: false
+
+  ATLAS:
+    allowedToolGroups: [intelligence, memory]
+    maxConcurrent: 3             # fib(4)
+    budgetPerSession: 3.00
+    canSelfModify: false
+
+  MUSE:
+    allowedToolGroups: [cms, intelligence]
+    maxConcurrent: 2             # fib(3)
+    budgetPerSession: 3.00
+    canSelfModify: false
+
+  SOPHIA:
+    allowedToolGroups: [memory, intelligence]
+    maxConcurrent: 2             # fib(3)
+    budgetPerSession: 5.00
+    canSelfModify: false
+
+# ─── PATENT LOCK ENFORCEMENT ──────────────────────────────────────────────────
+patentLock:
+  enabled: true
+  zones: [HS-2026-051, HS-2026-052, HS-2026-053, HS-2026-054, HS-2026-055,
+          HS-2026-056, HS-2026-057, HS-2026-058, HS-2026-059, HS-2026-060,
+          HS-2026-061, HS-2026-062]
+  requiresSwarm: ARBITER
+  approvalRequired: true
+  auditAll: true

@@ -108,6 +108,13 @@ package-lock.json
 .wrangler
 infrastructure/infrastructure/db_data/
 
+# Binary executables (never commit — SEC-03 hardening)
+*.exe
+*.dll
+*.so
+*.dylib
+cloudflared.exe
+
 # Large binary installers (local audit only, not pushed)
 archive/tool-installers/*.deb
 archive/tool-installers/*.tar.gz
