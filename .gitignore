@@ -10,9 +10,6 @@ build/
 .env.local
 .env.production
 .env.hybrid
-env.local
-env.production
-env.hybrid
 .heady_secrets
 
 # Logs
@@ -111,7 +108,7 @@ package-lock.json
 .wrangler
 infrastructure/infrastructure/db_data/
 
-# Windows executables & binaries (never commit)
+# Binary executables (never commit — SEC-03 hardening)
 *.exe
 *.dll
 *.so
