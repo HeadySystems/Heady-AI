@@ -1,305 +1,216 @@
 /**
- * heady-federation — Agent federation — cross-swarm coordination, shared context
- * Heady™ Service | Domain: agents | Port: 3323
- * ALL requests enriched by HeadyAutoContext (MANDATORY)
- * NO priority/ranking code. Everything concurrent and equal.
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
+ * ╔══════════════════════════════════════════════════════════════════╗
+ * ║  heady-federation — Service Entry Point                              ║
+ * ║  Module federation — micro-frontend composition, versioned contracts                                                  ║
+ * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║
+ * ╚══════════════════════════════════════════════════════════════════╝
+ *
+ * Domain:    heady.io
+ * Port:      3344
+ * Upstreams: none
+ *
+ * Middleware stack (in order):
+ *   1. OpenTelemetry tracing init
+ *   2. headyRequestId — trace/request ID propagation
+ *   3. headyAutoContext — phi-context enrichment
+ *   4. headyCslDomain — CSL domain matching across concurrent-equals domains
+ *   5. headyAccessLog — structured pino JSON logging
+ *   6. headyRateLimit — φ-scaled token bucket
+ *   7. headySecurityHeaders — zero-trust headers
+ *   8. [service-specific routes]
+ *   9. headyErrorHandler — typed error handling
+ *
+ * Health endpoints:
+ *   GET /health           — combined status
+ *   GET /health/live      — Kubernetes liveness
+ *   GET /health/ready     — Kubernetes readiness
+ *   GET /health/startup   — Kubernetes startup
+ *   GET /health/details   — phi-enriched full detail
  */
+
 'use strict';
 
 import express from 'express';
-import { randomUUID } from 'crypto';
+import {
+  loadConfig,
+  createLogger, logHealthEvent,
+  initOtel, getTracer, createMetrics, headySpan,
+  HealthRegistry, memoryCheck, envCheck,
+  headyRequestId, headyAutoContext, headyCslDomain,
+  headyAccessLog, headyRateLimit, headySecurityHeaders, headyErrorHandler,
+  PSI, CSL_THRESHOLDS, TIMEOUTS, AUTO_SUCCESS_CYCLE_MS,
+} from '@heady/platform';
 
-// ─── φ-Math Constants (No Magic Numbers) ──────────────────────────────────────
-const PHI = 1.618033988749895;
-const PSI = 1 / PHI;
-const PSI2 = PSI * PSI;
-const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
-const VECTOR_DIM = 384;
-const CSL_GATES = Object.freeze({
-  include: PSI * PSI,   // ≈ 0.382
-  boost: PSI,           // ≈ 0.618
-  inject: PSI + 0.1,    // ≈ 0.718
-});
+// ─── BOOTSTRAP ────────────────────────────────────────────────────────────────
 
-// ─── Service Config ───────────────────────────────────────────────────────────
 const SERVICE_NAME = 'heady-federation';
-const PORT = process.env.PORT || 3323;
-const DOMAIN = 'agents';
-const BOOT_TIME = Date.now();
+const config = loadConfig(SERVICE_NAME);
+const logger = createLogger({
+  service: SERVICE_NAME,
+  domain:  config.domain,
+  level:   process.env.LOG_LEVEL ?? 'info',
+});
 
-// ─── Express Setup ────────────────────────────────────────────────────────────
+// Initialize OpenTelemetry BEFORE any imports that instrument
+await initOtel({ service: SERVICE_NAME, domain: config.domain });
+const tracer  = getTracer(SERVICE_NAME);
+const metrics = createMetrics(SERVICE_NAME);
+
+// ─── HEALTH REGISTRY ──────────────────────────────────────────────────────────
+
+const health = new HealthRegistry({
+  service: SERVICE_NAME,
+  version: config.version,
+  domain:  config.domain,
+});
+
+// Memory check (degraded if heap ratio > ψ = 0.618)
+health.register('memory', memoryCheck());
+
+// Required environment variables
+health.register('env', envCheck([
+  'SERVICE_NAME', 'SERVICE_VERSION', 'HEADY_DOMAIN', 'NODE_ENV',
+]));
+
+
+
+// ─── EXPRESS APP ─────────────────────────────────────────────────────────────
+
 const app = express();
-app.use(express.json({ limit: '8mb' }));
-app.disable('x-powered-by');
 
-// ─── MANDATORY: HeadyAutoContext Enrichment Middleware ─────────────────────────
-// Every request is enriched with context. This is NOT optional.
-app.use((req, res, next) => {
-  req.headyContext = {
-    service: SERVICE_NAME,
-    domain: DOMAIN,
-    correlationId: req.headers['x-correlation-id'] || randomUUID(),
-    timestamp: Date.now(),
-    vectorDim: VECTOR_DIM,
-    cslGates: CSL_GATES,
-  };
-  res.setHeader('X-Heady-Service', SERVICE_NAME);
-  res.setHeader('X-Correlation-Id', req.headyContext.correlationId);
-  res.setHeader('X-Heady-Domain', DOMAIN);
-  next();
-});
+// Body parsing
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 
+// ── Middleware stack ──
+app.use(headyRequestId());
+app.use(headyAutoContext());           // HeadyAutoContext hooks
+app.use(headyCslDomain([], null));     // CSL domain matching across concurrent-equals domains
+app.use(headyAccessLog(logger));
+app.use(headyRateLimit({
+  windowMs:    config.rateLimit.windowMs,
+  maxRequests: config.rateLimit.maxRequests,
+  burst:       config.rateLimit.burst,
+}));
+app.use(headySecurityHeaders());
 
-// ─── OpenTelemetry Distributed Tracing ────────────────────────────────────────
-// Spans propagate across all services via W3C Trace Context headers
-import { trace, context, SpanKind, SpanStatusCode } from '@opentelemetry/api';
-const tracer = trace.getTracer(SERVICE_NAME, '1.0.0');
+// ── Health routes ──
+health.attachRoutes(app);
 
-// ─── Bulkhead Pattern: Per-Service Thread Pool ────────────────────────────────
-// Prevents cascading failures. Pool size: Fibonacci-scaled.
-const BULKHEAD = {
-  maxConcurrent: 55,   // Fibonacci: max concurrent requests
-  queueSize: 89,       // Fibonacci: max queued requests
-  active: 0,
-  queued: 0,
-};
+// ─── SERVICE ROUTES ───────────────────────────────────────────────────────────
 
-function bulkheadMiddleware(req, res, next) {
-  if (BULKHEAD.active >= BULKHEAD.maxConcurrent) {
-    if (BULKHEAD.queued >= BULKHEAD.queueSize) {
-      return res.status(503).json({
-        error: 'Service at capacity',
-        service: SERVICE_NAME,
-        bulkhead: { active: BULKHEAD.active, queued: BULKHEAD.queued },
-      });
-    }
-    BULKHEAD.queued++;
-    // φ-scaled backoff before retry
-    setTimeout(() => {
-      BULKHEAD.queued--;
-      next();
-    }, Math.round(PSI * 1000));
-    return;
-  }
-  BULKHEAD.active++;
-  res.on('finish', () => { BULKHEAD.active--; });
-  next();
-}
-
-// ─── OpenTelemetry Span Middleware ────────────────────────────────────────────
-function otelSpanMiddleware(req, res, next) {
-  const span = tracer.startSpan(`${SERVICE_NAME}:${req.method} ${req.path}`, {
-    kind: SpanKind.SERVER,
-    attributes: {
-      'http.method': req.method,
-      'http.url': req.originalUrl,
-      'http.route': req.path,
-      'heady.service': SERVICE_NAME,
-      'heady.domain': DOMAIN,
-      'heady.correlation_id': req.headyContext?.correlationId || 'unknown',
-      'heady.vector_dim': VECTOR_DIM,
-    },
-  });
-  req.otelSpan = span;
-  res.on('finish', () => {
-    span.setAttribute('http.status_code', res.statusCode);
-    if (res.statusCode >= 400) {
-      span.setStatus({ code: SpanStatusCode.ERROR, message: `HTTP ${res.statusCode}` });
-    }
-    span.end();
-  });
-  next();
-}
-
-// ─── Structured Logging ───────────────────────────────────────────────────────
-function log(level, msg, meta = {}) {
-  const entry = {
-    timestamp: new Date().toISOString(),
-    service: SERVICE_NAME,
-    level,
-    message: msg,
-    correlationId: meta.correlationId || 'system',
-    domain: DOMAIN,
-    ...meta,
-  };
-  process.stdout.write(JSON.stringify(entry) + "\n");
-}
-
-// ─── Typed Error Classes ──────────────────────────────────────────────────────
-class HeadyServiceError extends Error {
-  constructor(message, code, meta = {}) {
-    super(message);
-    this.name = 'HeadyServiceError';
-    this.code = code;
-    this.meta = meta;
-  }
-}
-
-// ─── Health Endpoints ─────────────────────────────────────────────────────────
-app.get('/health', (req, res) => {
+/**
+ * GET /status
+ * Service identity and phi-context summary.
+ */
+app.get('/status', (req, res) => {
   res.json({
-    service: SERVICE_NAME,
-    status: 'operational',
-    domain: DOMAIN,
-    uptime: Math.round((Date.now() - BOOT_TIME) / 1000),
-    port: PORT,
-    vectorDim: VECTOR_DIM,
-    phiVersion: PHI.toFixed(15),
+    service:     SERVICE_NAME,
+    version:     config.version,
+    domain:      config.domain,
+    status:      'running',
+    phi_context: {
+      phi:         PSI + 1,              // φ = 1.618...
+      confidence:  PSI,                  // ψ = 0.618
+      coherence:   CSL_THRESHOLDS.HIGH,  // 0.882
+      cycle_ms:    AUTO_SUCCESS_CYCLE_MS, // 29034 ms
+    },
     timestamp: new Date().toISOString(),
   });
 });
 
-app.get('/healthz', (req, res) => {
-  res.status(200).send('OK');
-});
+/**
+ * POST /process
+ * Primary service endpoint. Executes within an OTLP-traced span
+ * with phi-context attributes attached.
+ */
+app.post('/process', async (req, res, next) => {
+  const start = Date.now();
+  metrics.requestCounter.add(1, { service: SERVICE_NAME });
 
-app.get('/health/live', (req, res) => {
-  res.json({ status: 'alive', service: SERVICE_NAME });
-});
-
-app.get('/health/ready', (req, res) => {
-  res.json({ status: 'ready', service: SERVICE_NAME, domain: DOMAIN });
-});
-
-// ─── Service Info ─────────────────────────────────────────────────────────────
-app.get('/info', (req, res) => {
-  res.json({
-    service: SERVICE_NAME,
-    description: 'Agent federation — cross-swarm coordination, shared context',
-    domain: DOMAIN,
-    port: PORT,
-    version: '3.2.3',
-    phiConstants: {
-      PHI, PSI,
-      timeouts: {
-        phi1: Math.round(PHI * 1000),
-        phi2: Math.round(PHI * PHI * 1000),
-        phi3: Math.round(PHI * PHI * PHI * 1000),
-        phi4: Math.round(Math.pow(PHI, 4) * 1000),
-      },
-      fibPools: FIB.slice(4, 10),
-      cslGates: CSL_GATES,
-    },
-    swarmAffinity: DOMAIN,
-    architecture: 'concurrent-equals',
-    bootTime: new Date(BOOT_TIME).toISOString(),
-  });
-});
-
-// ─── Context Enrichment Endpoint ──────────────────────────────────────────────
-app.post('/context/enrich', (req, res) => {
-  const { content, sessionId } = req.body || {};
-  log('info', 'Context enrichment request', {
-    correlationId: req.headyContext.correlationId,
-    sessionId,
-    contentLength: content ? content.length : 0,
-  });
-  res.json({
-    enriched: true,
-    service: SERVICE_NAME,
-    domain: DOMAIN,
-    correlationId: req.headyContext.correlationId,
-    cslGates: CSL_GATES,
-  });
-});
-
-// ─── Domain-Specific Endpoint ─────────────────────────────────────────────────
-app.post('/execute', async (req, res) => {
-  const startTime = performance.now();
-  const { task, context } = req.body || {};
-  
   try {
-    log('info', `Executing task on ${SERVICE_NAME}`, {
-      correlationId: req.headyContext.correlationId,
-      taskType: task?.type || 'unknown',
+    const result = await headySpan(tracer, `${SERVICE_NAME}.process`, {
+      confidence: PSI,
+      coherence:  CSL_THRESHOLDS.HIGH,
+      domain:     req.headyDomain ?? config.domain,
+      pipelineStage: req.body?.stage ?? 'unknown',
+    }, async (span) => {
+      // ── Service-specific logic ──────────────────────────────────────
+      const input = req.body ?? {};
+
+      // Validate input CSL confidence gate
+      const inputConfidence = input.confidence ?? PSI;
+      if (inputConfidence < CSL_THRESHOLDS.PASS) {
+        const err = new Error(`Input confidence ${inputConfidence.toFixed(3)} below CSL gate ψ = ${PSI.toFixed(3)}`);
+        err.status = 422;
+        throw err;
+      }
+
+      // Service-specific processing goes here
+      const output = {
+        service:    SERVICE_NAME,
+        input_keys: Object.keys(input),
+        processed:  true,
+        confidence: PSI,
+        domain:     config.domain,
+      };
+
+      span.setAttribute('heady.output.keys', Object.keys(output).join(','));
+      return output;
     });
 
-    // CSL domain-match routing (NOT priority-based)
-    const domainMatch = task?.domain === DOMAIN ? 1.0 : 0.5;
-    
-    if (domainMatch < CSL_GATES.include) {
-      return res.status(200).json({
-        routed: false,
-        reason: 'CSL domain mismatch below include gate',
-        similarity: domainMatch,
-        gate: CSL_GATES.include,
-      });
-    }
+    const latencyMs = Date.now() - start;
+    metrics.latencyHistogram.record(latencyMs, { service: SERVICE_NAME });
 
-    const result = {
-      service: SERVICE_NAME,
-      domain: DOMAIN,
-      executed: true,
-      correlationId: req.headyContext.correlationId,
-      domainMatch,
-      latencyMs: Math.round(performance.now() - startTime),
-      timestamp: new Date().toISOString(),
-    };
-
-    res.json(result);
+    res.json({
+      success: true,
+      data: result,
+      latency_ms: latencyMs,
+      phi_context: { confidence: PSI, domain: config.domain },
+    });
   } catch (err) {
-    log('error', `Execution failed: ${err.message}`, {
-      correlationId: req.headyContext.correlationId,
-      error: err.message,
-      stack: err.stack,
-    });
-    res.status(500).json({
-      error: err.message,
-      service: SERVICE_NAME,
-      correlationId: req.headyContext.correlationId,
-    });
+    next(err);
   }
 });
 
-// ─── Error Handler ────────────────────────────────────────────────────────────
-app.use((err, req, res, _next) => {
-  log('error', err.message, {
-    correlationId: req.headyContext?.correlationId,
-    stack: err.stack,
+// ─── ERROR HANDLER (last middleware, after all routes) ───────────────────────
+
+app.use(headyErrorHandler(logger));
+
+// ─── SERVER STARTUP ───────────────────────────────────────────────────────────
+
+const server = app.listen(config.port, () => {
+  logHealthEvent(logger, 'startup', true, {
+    port: config.port,
+    domain: config.domain,
+    phi_cycle_ms: AUTO_SUCCESS_CYCLE_MS,
+    csl_threshold: CSL_THRESHOLDS.PASS,
   });
-  res.status(err.code || 500).json({
-    error: err.message,
-    service: SERVICE_NAME,
-    correlationId: req.headyContext?.correlationId,
-  });
+  logger.info({ event: 'service.started', port: config.port, domain: config.domain },
+    `${SERVICE_NAME} listening on :${config.port}`);
+  health.markReady();
 });
 
-// ─── Boot ─────────────────────────────────────────────────────────────────────
+// Graceful shutdown — φ⁶ × 1000 = 17,944 ms window
+async function gracefulShutdown(signal) {
+  logger.info({ event: 'service.shutdown', signal }, `Graceful shutdown initiated (${signal})`);
+  const shutdownTimeout = setTimeout(() => process.exit(1), config.timeout.shutdown);
 
-// ─── Consul Service Discovery Registration ────────────────────────────────────
-async function registerWithConsul() {
-  const CONSUL_HOST = process.env.CONSUL_HOST || 'consul';
-  const CONSUL_PORT = process.env.CONSUL_PORT || 8500;
-  const INSTANCE_ID = process.env.INSTANCE_ID || `${SERVICE_NAME}-${process.pid}`;
-  try {
-    const registration = {
-      ID: INSTANCE_ID,
-      Name: SERVICE_NAME,
-      Port: parseInt(PORT),
-      Tags: ['heady', DOMAIN, 'v1'],
-      Meta: { domain: DOMAIN, vector_dim: String(VECTOR_DIM), version: '1.0.0' },
-      Check: {
-        HTTP: `http://127.0.0.1:${PORT}/health`,
-        Interval: '13s',     // Fibonacci
-        Timeout: '5s',       // Fibonacci
-        DeregisterCriticalServiceAfter: '89s', // Fibonacci
-      },
-    };
-    // In production, POST to Consul API
-    log('info', `Consul registration prepared for ${INSTANCE_ID}`, { consul: `${CONSUL_HOST}:${CONSUL_PORT}` });
-  } catch (err) {
-    log('warn', `Consul registration deferred: ${err.message}`);
-  }
+  server.close(async () => {
+    clearTimeout(shutdownTimeout);
+    logger.info({ event: 'service.shutdown.complete' }, `${SERVICE_NAME} shutdown complete`);
+    process.exit(0);
+  });
 }
 
-app.listen(PORT, () => {
-  registerWithConsul();
-  log('info', `${SERVICE_NAME} operational on port ${PORT}`, {
-    domain: DOMAIN,
-    phiTimeout: Math.round(PHI * 1000) + 'ms',
-    cslGates: CSL_GATES,
-  });
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT',  () => gracefulShutdown('SIGINT'));
+
+// Unhandled rejection safety net (Law #1: every async has error handling)
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error({ event: 'unhandled_rejection', reason: String(reason) },
+    'Unhandled Promise rejection — this is a Law #1 violation, fix immediately');
+  process.exit(1); // Force crash to trigger health check failure → restart
 });
 
-export default app;
+export { app, server, health, config };

@@ -1,271 +1,442 @@
 /**
- * Heady™ Migration Service — Database Schema Versioning
- * Runs pgvector migrations with rollback support
- * © 2026 HeadySystems Inc. — Eric Haywood, Founder
+ * @heady/migration-service — Schema Migration Engine
+ * 
+ * PostgreSQL + pgvector schema migrations with φ-scaled versioning,
+ * advisory lock safety, and CSL-gated rollback confidence.
+ * 
+ * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 
-'use strict';
+import { readdir, readFile } from 'node:fs/promises';
+import { join, basename } from 'node:path';
+import { EventEmitter } from 'node:events';
+import { PHI, PSI, FIB, phiThreshold, phiBackoff } from '@heady/phi-math-foundation';
+import { createLogger } from '@heady/structured-logger';
 
-const express = require('express');
-const { Pool } = require('pg');
-const { createLogger, requestLogger } = require('../../shared/logger');
-const { securityHeaders, gracefulShutdown } = require('../../shared/security-headers');
+const logger = createLogger({ service: 'migration-service' });
 
-const app = express();
-const PORT = process.env.SERVICE_PORT || 3398;
-const FIB_8 = 8;
-
-const logger = createLogger({ service: 'migration-service', domain: 'data' });
-
-app.use(express.json({ limit: '256kb' }));
-app.use(securityHeaders());
-app.use(requestLogger(logger));
-
-const pool = new Pool({
-    host: process.env.PGHOST || 'localhost',
-    port: parseInt(process.env.PGPORT) || 6432,
-    database: process.env.PGDATABASE || 'heady_vector',
-    user: process.env.PGUSER || 'heady',
-    password: process.env.PGPASSWORD,
-    max: FIB_8, // Migrations are low-concurrency
+/** φ-scaled configuration */
+const CONFIG = Object.freeze({
+  pgConnectionString: process.env.PG_CONNECTION_STRING,
+  migrationsDir: process.env.MIGRATIONS_DIR || './migrations',
+  lockTimeoutMs: parseInt(process.env.LOCK_TIMEOUT_MS || '6854', 10), // phiBackoff(4)
+  maxRetries: FIB[5],                         // 5
+  retryBaseMs: 1000,
+  advisoryLockId: 0x484541_4459,              // "HEADY" in hex
+  rollbackConfidenceThreshold: phiThreshold(3), // ≈0.882 HIGH
+  batchSize: FIB[6],                          // 8
 });
 
-pool.on('error', (err) => logger.error({ err }, 'Unexpected pool error'));
-
-async function initMigrationTable() {
-    try {
-        await pool.query(`
-      CREATE TABLE IF NOT EXISTS heady_migrations (
-        id SERIAL PRIMARY KEY,
-        version VARCHAR(20) NOT NULL UNIQUE,
-        name VARCHAR(200) NOT NULL,
-        applied_at TIMESTAMPTZ DEFAULT NOW(),
-        rolled_back_at TIMESTAMPTZ,
-        checksum VARCHAR(64)
-      );
-    `);
-        logger.info('Migration table initialized');
-    } catch (err) {
-        logger.error({ err }, 'Failed to initialize migration table');
-        throw err;
-    }
+/**
+ * Migration record structure
+ */
+class MigrationRecord {
+  constructor(version, name, checksum, appliedAt = null) {
+    this.version = version;
+    this.name = name;
+    this.checksum = checksum;
+    this.appliedAt = appliedAt;
+  }
 }
 
-// Built-in migrations
-const MIGRATIONS = [
-    {
-        version: '001',
-        name: 'create_vector_extension',
-        up: `CREATE EXTENSION IF NOT EXISTS vector;`,
-        down: `-- Cannot safely drop vector extension`,
-    },
-    {
-        version: '002',
-        name: 'create_embeddings_table',
-        up: `
-      CREATE TABLE IF NOT EXISTS heady_embeddings (
-        id BIGSERIAL PRIMARY KEY,
-        content_hash VARCHAR(64) NOT NULL,
-        content_type VARCHAR(50) NOT NULL,
-        source VARCHAR(100),
-        embedding vector(384) NOT NULL,
-        metadata JSONB DEFAULT '{}',
-        created_at TIMESTAMPTZ DEFAULT NOW()
+/**
+ * Compute deterministic checksum for migration content
+ */
+function computeChecksum(content) {
+  let hash = 0;
+  for (let i = 0; i < content.length; i++) {
+    const char = content.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash).toString(16).padStart(8, '0');
+}
+
+/**
+ * Parse migration filename: "001_create_vectors_table.sql"
+ */
+function parseMigrationFile(filename) {
+  const match = filename.match(/^(\d+)_(.+)\.(sql|js)$/);
+  if (!match) return null;
+  return {
+    version: parseInt(match[1], 10),
+    name: match[2],
+    extension: match[3],
+  };
+}
+
+/**
+ * MigrationEngine — manages schema evolution
+ */
+class MigrationEngine extends EventEmitter {
+  #pgPool = null;
+  #migrationsDir;
+
+  constructor(pgPool, migrationsDir = CONFIG.migrationsDir) {
+    super();
+    this.#pgPool = pgPool;
+    this.#migrationsDir = migrationsDir;
+  }
+
+  /**
+   * Ensure migration tracking table exists
+   */
+  async ensureMigrationTable() {
+    await this.#pgPool.query(`
+      CREATE TABLE IF NOT EXISTS heady_migrations (
+        version     INTEGER PRIMARY KEY,
+        name        TEXT NOT NULL,
+        checksum    TEXT NOT NULL,
+        applied_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        rolled_back BOOLEAN NOT NULL DEFAULT FALSE
+      )
+    `);
+    logger.info('Migration table ensured');
+  }
+
+  /**
+   * Acquire advisory lock with φ-backoff retries
+   */
+  async acquireLock() {
+    for (let attempt = 0; attempt < CONFIG.maxRetries; attempt++) {
+      const result = await this.#pgPool.query(
+        'SELECT pg_try_advisory_lock($1) AS locked',
+        [CONFIG.advisoryLockId]
       );
-      CREATE INDEX IF NOT EXISTS idx_embeddings_hash ON heady_embeddings(content_hash);
-    `,
-        down: `DROP TABLE IF EXISTS heady_embeddings;`,
-    },
-    {
-        version: '003',
-        name: 'create_hnsw_index',
-        up: `CREATE INDEX IF NOT EXISTS idx_embeddings_hnsw ON heady_embeddings USING hnsw (embedding vector_cosine_ops) WITH (m = 32, ef_construction = 200);`,
-        down: `DROP INDEX IF EXISTS idx_embeddings_hnsw;`,
-    },
-    {
-        version: '004',
-        name: 'create_sessions_table',
-        up: `
-      CREATE TABLE IF NOT EXISTS heady_sessions (
-        id VARCHAR(128) PRIMARY KEY,
-        user_id VARCHAR(128) NOT NULL,
-        data JSONB DEFAULT '{}',
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        expires_at TIMESTAMPTZ NOT NULL
+      if (result.rows[0].locked) {
+        logger.info('Advisory lock acquired');
+        return true;
+      }
+      const delay = phiBackoff(attempt, CONFIG.retryBaseMs, CONFIG.lockTimeoutMs);
+      logger.warn('Lock contention, backing off', { attempt, delayMs: delay });
+      await new Promise(r => setTimeout(r, delay));
+    }
+    throw new Error('Failed to acquire migration lock after max retries');
+  }
+
+  /**
+   * Release advisory lock
+   */
+  async releaseLock() {
+    await this.#pgPool.query(
+      'SELECT pg_advisory_unlock($1)',
+      [CONFIG.advisoryLockId]
+    );
+    logger.info('Advisory lock released');
+  }
+
+  /**
+   * Load pending migrations from filesystem
+   */
+  async loadMigrations() {
+    const files = await readdir(this.#migrationsDir);
+    const migrations = [];
+
+    for (const file of files.sort()) {
+      const parsed = parseMigrationFile(file);
+      if (!parsed) continue;
+
+      const content = await readFile(
+        join(this.#migrationsDir, file),
+        'utf-8'
       );
-      CREATE INDEX IF NOT EXISTS idx_sessions_user ON heady_sessions(user_id);
-      CREATE INDEX IF NOT EXISTS idx_sessions_expires ON heady_sessions(expires_at);
-    `,
-        down: `DROP TABLE IF EXISTS heady_sessions;`,
-    },
-    {
-        version: '005',
-        name: 'create_analytics_events',
-        up: `
-      CREATE TABLE IF NOT EXISTS heady_events (
-        id BIGSERIAL PRIMARY KEY,
-        event_type VARCHAR(100) NOT NULL,
-        session_id VARCHAR(64),
-        user_id VARCHAR(128),
-        domain VARCHAR(100),
-        path VARCHAR(500),
-        referrer VARCHAR(500),
-        user_agent VARCHAR(500),
-        country VARCHAR(2),
-        properties JSONB DEFAULT '{}',
-        created_at TIMESTAMPTZ DEFAULT NOW()
-      );
-      CREATE INDEX IF NOT EXISTS idx_events_type ON heady_events(event_type);
-      CREATE INDEX IF NOT EXISTS idx_events_domain ON heady_events(domain);
-      CREATE INDEX IF NOT EXISTS idx_events_created ON heady_events(created_at);
-    `,
-        down: `DROP TABLE IF EXISTS heady_events;`,
-    },
-    {
-        version: '006',
-        name: 'create_search_index',
-        up: `
-      CREATE EXTENSION IF NOT EXISTS pg_trgm;
-      CREATE TABLE IF NOT EXISTS heady_search_index (
-        id BIGSERIAL PRIMARY KEY,
-        content_type VARCHAR(50) NOT NULL,
-        title TEXT NOT NULL,
-        body TEXT,
-        url VARCHAR(500),
-        source VARCHAR(100),
-        metadata JSONB DEFAULT '{}',
-        embedding vector(384),
+      const checksum = computeChecksum(content);
+
+      migrations.push({
+        ...parsed,
+        content,
+        checksum,
+        filename: file,
+      });
+    }
+
+    return migrations;
+  }
+
+  /**
+   * Get applied migration versions
+   */
+  async getAppliedMigrations() {
+    const result = await this.#pgPool.query(
+      'SELECT version, name, checksum, applied_at FROM heady_migrations WHERE rolled_back = FALSE ORDER BY version'
+    );
+    return result.rows;
+  }
+
+  /**
+   * Detect checksum mismatches (drift detection)
+   */
+  async detectDrift(migrations) {
+    const applied = await this.getAppliedMigrations();
+    const drifts = [];
+
+    for (const appliedMig of applied) {
+      const localMig = migrations.find(m => m.version === appliedMig.version);
+      if (localMig && localMig.checksum !== appliedMig.checksum) {
+        drifts.push({
+          version: appliedMig.version,
+          name: appliedMig.name,
+          appliedChecksum: appliedMig.checksum,
+          localChecksum: localMig.checksum,
+        });
+      }
+    }
+
+    if (drifts.length > 0) {
+      logger.error('Migration drift detected', { drifts });
+    }
+    return drifts;
+  }
+
+  /**
+   * Run pending migrations forward
+   */
+  async migrateUp() {
+    await this.ensureMigrationTable();
+    await this.acquireLock();
+
+    try {
+      const allMigrations = await this.loadMigrations();
+      const applied = await this.getAppliedMigrations();
+      const appliedVersions = new Set(applied.map(m => m.version));
+
+      const pending = allMigrations.filter(m => !appliedVersions.has(m.version));
+
+      if (pending.length === 0) {
+        logger.info('No pending migrations');
+        return { applied: 0, total: allMigrations.length };
+      }
+
+      // Drift check before proceeding
+      const drifts = await this.detectDrift(allMigrations);
+      if (drifts.length > 0) {
+        throw new Error(`Migration drift detected on ${drifts.length} files. Resolve before migrating.`);
+      }
+
+      let appliedCount = 0;
+
+      for (const migration of pending) {
+        const client = await this.#pgPool.connect();
+        try {
+          await client.query('BEGIN');
+
+          if (migration.extension === 'sql') {
+            await client.query(migration.content);
+          } else if (migration.extension === 'js') {
+            // JS migrations export an { up, down } object
+            const mod = await import(join(this.#migrationsDir, migration.filename));
+            await mod.up(client);
+          }
+
+          await client.query(
+            'INSERT INTO heady_migrations (version, name, checksum) VALUES ($1, $2, $3)',
+            [migration.version, migration.name, migration.checksum]
+          );
+
+          await client.query('COMMIT');
+          appliedCount++;
+
+          this.emit('migration-applied', {
+            version: migration.version,
+            name: migration.name,
+          });
+          logger.info('Migration applied', {
+            version: migration.version,
+            name: migration.name,
+          });
+        } catch (err) {
+          await client.query('ROLLBACK');
+          logger.error('Migration failed, rolled back', {
+            version: migration.version,
+            error: err.message,
+          });
+          throw err;
+        } finally {
+          client.release();
+        }
+      }
+
+      return { applied: appliedCount, total: allMigrations.length };
+    } finally {
+      await this.releaseLock();
+    }
+  }
+
+  /**
+   * Rollback the most recent N migrations
+   */
+  async migrateDown(steps = 1) {
+    await this.ensureMigrationTable();
+    await this.acquireLock();
+
+    try {
+      const applied = await this.getAppliedMigrations();
+      const allMigrations = await this.loadMigrations();
+
+      const toRollback = applied.slice(-steps).reverse();
+
+      if (toRollback.length === 0) {
+        logger.info('No migrations to rollback');
+        return { rolledBack: 0 };
+      }
+
+      let rolledBackCount = 0;
+
+      for (const target of toRollback) {
+        const localMig = allMigrations.find(m => m.version === target.version);
+        if (!localMig || localMig.extension !== 'js') {
+          logger.warn('No rollback available for SQL-only migration', {
+            version: target.version,
+          });
+          continue;
+        }
+
+        const client = await this.#pgPool.connect();
+        try {
+          await client.query('BEGIN');
+
+          const mod = await import(join(this.#migrationsDir, localMig.filename));
+          if (typeof mod.down !== 'function') {
+            throw new Error(`Migration ${target.version} has no down() function`);
+          }
+          await mod.down(client);
+
+          await client.query(
+            'UPDATE heady_migrations SET rolled_back = TRUE WHERE version = $1',
+            [target.version]
+          );
+
+          await client.query('COMMIT');
+          rolledBackCount++;
+
+          this.emit('migration-rolledback', {
+            version: target.version,
+            name: target.name,
+          });
+          logger.info('Migration rolled back', {
+            version: target.version,
+            name: target.name,
+          });
+        } catch (err) {
+          await client.query('ROLLBACK');
+          logger.error('Rollback failed', {
+            version: target.version,
+            error: err.message,
+          });
+          throw err;
+        } finally {
+          client.release();
+        }
+      }
+
+      return { rolledBack: rolledBackCount };
+    } finally {
+      await this.releaseLock();
+    }
+  }
+
+  /**
+   * Get migration status report
+   */
+  async status() {
+    await this.ensureMigrationTable();
+    const allMigrations = await this.loadMigrations();
+    const applied = await this.getAppliedMigrations();
+    const appliedVersions = new Set(applied.map(m => m.version));
+    const drifts = await this.detectDrift(allMigrations);
+
+    return {
+      total: allMigrations.length,
+      applied: applied.length,
+      pending: allMigrations.filter(m => !appliedVersions.has(m.version)).length,
+      drifts: drifts.length,
+      migrations: allMigrations.map(m => ({
+        version: m.version,
+        name: m.name,
+        status: appliedVersions.has(m.version) ? 'applied' : 'pending',
+        drifted: drifts.some(d => d.version === m.version),
+      })),
+    };
+  }
+}
+
+/**
+ * Built-in migrations for Heady vector infrastructure
+ */
+const BUILT_IN_MIGRATIONS = [
+  {
+    version: 1,
+    name: 'create_pgvector_extension',
+    sql: `CREATE EXTENSION IF NOT EXISTS vector;`,
+  },
+  {
+    version: 2,
+    name: 'create_heady_vectors_table',
+    sql: `
+      CREATE TABLE IF NOT EXISTS heady_vectors (
+        id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        content     TEXT NOT NULL,
+        embedding   vector(384),
+        metadata    JSONB DEFAULT '{}',
+        namespace   TEXT NOT NULL DEFAULT 'default',
         search_vector tsvector,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
+        created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
-      CREATE INDEX IF NOT EXISTS idx_search_embedding ON heady_search_index USING hnsw (embedding vector_cosine_ops) WITH (m = 32, ef_construction = 200);
-      CREATE INDEX IF NOT EXISTS idx_search_fts ON heady_search_index USING gin (search_vector);
-      CREATE INDEX IF NOT EXISTS idx_search_trgm ON heady_search_index USING gin (title gin_trgm_ops);
+      CREATE INDEX IF NOT EXISTS idx_vectors_embedding 
+        ON heady_vectors USING hnsw (embedding vector_cosine_ops) 
+        WITH (m = 21, ef_construction = 144);
+      CREATE INDEX IF NOT EXISTS idx_vectors_namespace 
+        ON heady_vectors (namespace);
+      CREATE INDEX IF NOT EXISTS idx_vectors_search 
+        ON heady_vectors USING gin (search_vector);
+      CREATE INDEX IF NOT EXISTS idx_vectors_metadata 
+        ON heady_vectors USING gin (metadata);
     `,
-        down: `DROP TABLE IF EXISTS heady_search_index;`,
-    },
-    {
-        version: '007',
-        name: 'create_notifications_table',
-        up: `
-      CREATE TABLE IF NOT EXISTS heady_notifications (
-        id BIGSERIAL PRIMARY KEY,
-        user_id VARCHAR(128) NOT NULL,
-        type VARCHAR(50) NOT NULL,
-        title VARCHAR(200),
-        message TEXT,
-        data JSONB DEFAULT '{}',
-        read_at TIMESTAMPTZ,
-        created_at TIMESTAMPTZ DEFAULT NOW()
+  },
+  {
+    version: 3,
+    name: 'create_heady_migrations_table',
+    sql: `
+      CREATE TABLE IF NOT EXISTS heady_migrations (
+        version     INTEGER PRIMARY KEY,
+        name        TEXT NOT NULL,
+        checksum    TEXT NOT NULL,
+        applied_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        rolled_back BOOLEAN NOT NULL DEFAULT FALSE
       );
-      CREATE INDEX IF NOT EXISTS idx_notifications_user ON heady_notifications(user_id);
-      CREATE INDEX IF NOT EXISTS idx_notifications_unread ON heady_notifications(user_id) WHERE read_at IS NULL;
     `,
-        down: `DROP TABLE IF EXISTS heady_notifications;`,
-    },
+  },
+  {
+    version: 4,
+    name: 'create_search_vector_trigger',
+    sql: `
+      CREATE OR REPLACE FUNCTION heady_update_search_vector()
+      RETURNS TRIGGER AS $$
+      BEGIN
+        NEW.search_vector := to_tsvector('english', COALESCE(NEW.content, ''));
+        NEW.updated_at := NOW();
+        RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql;
+
+      DROP TRIGGER IF EXISTS trg_update_search_vector ON heady_vectors;
+      CREATE TRIGGER trg_update_search_vector
+        BEFORE INSERT OR UPDATE OF content ON heady_vectors
+        FOR EACH ROW
+        EXECUTE FUNCTION heady_update_search_vector();
+    `,
+  },
 ];
 
-// Health check
-app.get('/health', (_, res) => res.json({
-    status: 'healthy',
-    service: 'migration-service',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-}));
+const getHealth = () => ({ status: 'healthy', service: 'migration-service', timestamp: new Date().toISOString() });
 
-// Run pending migrations
-app.post('/api/v1/migrate', async (req, res) => {
-    const applied = [];
-
-    try {
-        const { rows: existing } = await pool.query(
-            `SELECT version FROM heady_migrations WHERE rolled_back_at IS NULL`
-        );
-        const appliedVersions = new Set(existing.map(r => r.version));
-
-        for (const migration of MIGRATIONS) {
-            if (appliedVersions.has(migration.version)) continue;
-
-            try {
-                await pool.query('BEGIN');
-                await pool.query(migration.up);
-                await pool.query(
-                    `INSERT INTO heady_migrations (version, name) VALUES ($1, $2)`,
-                    [migration.version, migration.name]
-                );
-                await pool.query('COMMIT');
-                applied.push({ version: migration.version, name: migration.name });
-                logger.info({ version: migration.version, name: migration.name }, 'Migration applied');
-            } catch (err) {
-                await pool.query('ROLLBACK');
-                logger.error({ err, version: migration.version }, 'Migration failed');
-                return res.status(500).json({
-                    error: `Migration ${migration.version} failed: ${err.message}`,
-                    applied,
-                });
-            }
-        }
-
-        res.json({ applied, total: applied.length });
-    } catch (err) {
-        logger.error({ err }, 'Migration check failed');
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// Rollback last migration
-app.post('/api/v1/rollback', async (req, res) => {
-    try {
-        const { rows } = await pool.query(
-            `SELECT * FROM heady_migrations WHERE rolled_back_at IS NULL ORDER BY id DESC LIMIT 1`
-        );
-        if (!rows.length) return res.json({ message: 'Nothing to rollback' });
-
-        const last = rows[0];
-        const migration = MIGRATIONS.find(m => m.version === last.version);
-        if (!migration) {
-            return res.status(404).json({ error: `Migration ${last.version} not found in registry` });
-        }
-
-        await pool.query('BEGIN');
-        await pool.query(migration.down);
-        await pool.query(
-            `UPDATE heady_migrations SET rolled_back_at = NOW() WHERE version = $1`,
-            [last.version]
-        );
-        await pool.query('COMMIT');
-        logger.info({ version: last.version, name: last.name }, 'Migration rolled back');
-        res.json({ rolledBack: { version: last.version, name: last.name } });
-    } catch (err) {
-        await pool.query('ROLLBACK').catch(() => { });
-        logger.error({ err }, 'Rollback failed');
-        res.status(500).json({ error: `Rollback failed: ${err.message}` });
-    }
-});
-
-// Status
-app.get('/api/v1/status', async (_, res) => {
-    try {
-        const { rows } = await pool.query(`SELECT * FROM heady_migrations ORDER BY id`);
-        const pending = MIGRATIONS.filter(
-            m => !rows.find(r => r.version === m.version && !r.rolled_back_at)
-        ).length;
-        res.json({ migrations: rows, pending, totalDefined: MIGRATIONS.length });
-    } catch (err) {
-        logger.error({ err }, 'Status check failed');
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-initMigrationTable().then(() => {
-    const server = app.listen(PORT, () => {
-        logger.info({ port: PORT, totalMigrations: MIGRATIONS.length }, 'migration-service listening');
-    });
-    gracefulShutdown(server, logger, { pool });
-}).catch((err) => {
-    logger.fatal({ err }, 'Failed to start migration-service');
-    process.exit(1);
-});
-
-module.exports = app;
+export {
+  MigrationEngine,
+  MigrationRecord,
+  computeChecksum,
+  parseMigrationFile,
+  BUILT_IN_MIGRATIONS,
+  CONFIG as MIGRATION_CONFIG,
+  getHealth,
+};

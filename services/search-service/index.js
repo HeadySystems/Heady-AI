@@ -1,202 +1,328 @@
 /**
- * Heady™ Hybrid Search Service
- * Full-text (BM25) + vector (pgvector cosine) combined search
- * Reciprocal Rank Fusion (RRF) for result merging
- * © 2026 HeadySystems Inc. — Eric Haywood, Founder
+ * @heady/search-service — Hybrid Vector + BM25 Search
+ * 
+ * CSL-gated relevance scoring with Reciprocal Rank Fusion.
+ * All constants φ-scaled per Heady Unbreakable Laws.
+ * 
+ * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 
-'use strict';
+import { createServer } from 'node:http';
+import { EventEmitter } from 'node:events';
+import { PHI, PSI, FIB, phiThreshold, phiBackoff, cslGate } from '@heady/phi-math-foundation';
+import { createLogger } from '@heady/structured-logger';
+import { createHealthRouter } from '@heady/health-probes';
 
-const express = require('express');
-const { Pool } = require('pg');
-const { createLogger, requestLogger } = require('../../shared/logger');
-const { securityHeaders, gracefulShutdown } = require('../../shared/security-headers');
+const logger = createLogger({ service: 'search-service' });
 
-const app = express();
-const PORT = process.env.SERVICE_PORT || 3397;
-const PHI = 1.618033988749895;
-const PSI = 1 / PHI;
-const RRF_K = 55; // Fibonacci constant for RRF
-const FIB_21 = 21;
-const FIB_34 = 34;
-const FIB_384 = 384; // Embedding dimension
-
-const logger = createLogger({ service: 'search-service', domain: 'data' });
-
-app.use(express.json({ limit: '2mb' }));
-app.use(securityHeaders());
-app.use(requestLogger(logger));
-
-const pool = new Pool({
-    host: process.env.PGHOST || 'localhost',
-    port: parseInt(process.env.PGPORT) || 6432, // Via PgBouncer
-    database: process.env.PGDATABASE || 'heady_vector',
-    user: process.env.PGUSER || 'heady',
-    password: process.env.PGPASSWORD,
-    max: FIB_34,
+/** φ-scaled configuration */
+const CONFIG = Object.freeze({
+  port: parseInt(process.env.PORT || '8089', 10),
+  pgConnectionString: process.env.PG_CONNECTION_STRING,
+  natsUrl: process.env.NATS_URL,
+  embeddingDimensions: parseInt(process.env.EMBEDDING_DIMENSIONS || '384', 10),
+  searchTimeoutMs: parseInt(process.env.SEARCH_TIMEOUT_MS || '4236', 10),
+  maxResultsDefault: FIB[8],           // 21
+  rerankTopK: FIB[8],                  // 21
+  hybridRrfK: FIB[10],                // 55
+  cslRelevanceThreshold: phiThreshold(1), // ≈0.691 LOW
+  cslHighRelevance: phiThreshold(3),      // ≈0.882 HIGH
+  bm25Weight: PSI,                        // ≈0.618
+  vectorWeight: 1 - PSI,                  // ≈0.382 (dense vector gets less because BM25 is primary for keyword)
+  maxConcurrentQueries: FIB[7],           // 13
+  cacheSize: FIB[16],                     // 987
+  cacheTtlMs: FIB[10] * 1000,            // 55s
 });
 
-pool.on('error', (err) => logger.error({ err }, 'Unexpected pool error'));
+/**
+ * LRU Cache with φ-scaled eviction
+ */
+class SearchCache {
+  #cache = new Map();
+  #maxSize;
+  #ttlMs;
 
-// Initialize search tables
-async function initSearch() {
-    try {
-        await pool.query(`
-      CREATE EXTENSION IF NOT EXISTS vector;
-      CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  constructor(maxSize = CONFIG.cacheSize, ttlMs = CONFIG.cacheTtlMs) {
+    this.#maxSize = maxSize;
+    this.#ttlMs = ttlMs;
+  }
 
-      CREATE TABLE IF NOT EXISTS heady_search_index (
-        id BIGSERIAL PRIMARY KEY,
-        content_type VARCHAR(50) NOT NULL,
-        title TEXT NOT NULL,
-        body TEXT,
-        url VARCHAR(500),
-        source VARCHAR(100),
-        metadata JSONB DEFAULT '{}',
-        embedding vector(384),
-        search_vector tsvector,
-        created_at TIMESTAMPTZ DEFAULT NOW(),
-        updated_at TIMESTAMPTZ DEFAULT NOW()
-      );
-
-      CREATE INDEX IF NOT EXISTS idx_search_embedding ON heady_search_index USING hnsw (embedding vector_cosine_ops) WITH (m = 32, ef_construction = 200);
-      CREATE INDEX IF NOT EXISTS idx_search_fts ON heady_search_index USING gin (search_vector);
-      CREATE INDEX IF NOT EXISTS idx_search_trgm ON heady_search_index USING gin (title gin_trgm_ops);
-    `);
-        logger.info('Search tables initialized');
-    } catch (err) {
-        logger.error({ err }, 'Failed to initialize search tables');
-        throw err;
+  get(key) {
+    const entry = this.#cache.get(key);
+    if (!entry) return null;
+    if (Date.now() - entry.ts > this.#ttlMs) {
+      this.#cache.delete(key);
+      return null;
     }
+    // Move to end (most recent)
+    this.#cache.delete(key);
+    this.#cache.set(key, entry);
+    return entry.value;
+  }
+
+  set(key, value) {
+    if (this.#cache.size >= this.#maxSize) {
+      // Evict oldest (first key)
+      const firstKey = this.#cache.keys().next().value;
+      this.#cache.delete(firstKey);
+    }
+    this.#cache.set(key, { value, ts: Date.now() });
+  }
+
+  get size() { return this.#cache.size; }
+  clear() { this.#cache.clear(); }
 }
 
-// Health check
-app.get('/health', (_, res) => res.json({
-    status: 'healthy',
-    service: 'search-service',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-}));
+/**
+ * Reciprocal Rank Fusion — merges BM25 + vector results
+ * k parameter is φ-scaled: FIB[10] = 55
+ */
+function reciprocalRankFusion(bm25Results, vectorResults, k = CONFIG.hybridRrfK) {
+  const scores = new Map();
 
-// Hybrid search: BM25 + vector + RRF fusion
-app.post('/api/v1/search', async (req, res) => {
-    const { query, embedding, limit = FIB_21, contentType } = req.body;
-    if (!query && !embedding) {
-        return res.status(400).json({ error: 'query or embedding required' });
-    }
+  for (let i = 0; i < bm25Results.length; i++) {
+    const id = bm25Results[i].id;
+    const rrfScore = 1 / (k + i + 1);
+    scores.set(id, (scores.get(id) || 0) + rrfScore * CONFIG.bm25Weight);
+  }
 
-    const safeLimit = Math.min(Math.max(parseInt(limit) || FIB_21, 1), 100);
+  for (let i = 0; i < vectorResults.length; i++) {
+    const id = vectorResults[i].id;
+    const rrfScore = 1 / (k + i + 1);
+    scores.set(id, (scores.get(id) || 0) + rrfScore * CONFIG.vectorWeight);
+  }
 
-    try {
-        const results = {};
+  // Merge metadata from both result sets
+  const metadataMap = new Map();
+  for (const r of [...bm25Results, ...vectorResults]) {
+    if (!metadataMap.has(r.id)) metadataMap.set(r.id, r);
+  }
 
-        // Full-text search (BM25-style via tsvector)
-        if (query && typeof query === 'string') {
-            const ftsParams = contentType
-                ? [query.slice(0, 500), safeLimit, String(contentType).slice(0, 50)]
-                : [query.slice(0, 500), safeLimit];
-            const typeFilter = contentType ? 'AND content_type = $3' : '';
+  return Array.from(scores.entries())
+    .map(([id, score]) => ({
+      ...metadataMap.get(id),
+      fusedScore: score,
+      relevanceGate: cslGate(score, score, CONFIG.cslRelevanceThreshold),
+    }))
+    .filter(r => r.relevanceGate > CONFIG.cslRelevanceThreshold)
+    .sort((a, b) => b.fusedScore - a.fusedScore)
+    .slice(0, CONFIG.maxResultsDefault);
+}
 
-            const ftsResults = await pool.query(`
-        SELECT id, title, url, content_type, ts_rank(search_vector, plainto_tsquery('english', $1)) as score
-        FROM heady_search_index
-        WHERE search_vector @@ plainto_tsquery('english', $1) ${typeFilter}
-        ORDER BY score DESC LIMIT $2
-      `, ftsParams);
+/**
+ * Vector similarity search via pgvector
+ */
+async function vectorSearch(pgPool, embedding, options = {}) {
+  const { limit = CONFIG.rerankTopK, namespace = 'default' } = options;
+  const query = `
+    SELECT id, content, metadata, 
+           1 - (embedding <=> $1::vector) AS similarity
+    FROM heady_vectors 
+    WHERE namespace = $2
+    ORDER BY embedding <=> $1::vector
+    LIMIT $3
+  `;
+  const result = await pgPool.query(query, [
+    JSON.stringify(embedding),
+    namespace,
+    limit,
+  ]);
+  return result.rows.map(row => ({
+    id: row.id,
+    content: row.content,
+    metadata: row.metadata,
+    similarity: parseFloat(row.similarity),
+  }));
+}
 
-            ftsResults.rows.forEach((row, rank) => {
-                results[row.id] = { ...row, fts_rank: rank + 1, fts_score: row.score };
-            });
-        }
+/**
+ * BM25 full-text search via PostgreSQL ts_rank
+ */
+async function bm25Search(pgPool, queryText, options = {}) {
+  const { limit = CONFIG.rerankTopK, namespace = 'default' } = options;
+  const query = `
+    SELECT id, content, metadata,
+           ts_rank_cd(search_vector, plainto_tsquery('english', $1)) AS rank
+    FROM heady_vectors
+    WHERE namespace = $3
+      AND search_vector @@ plainto_tsquery('english', $1)
+    ORDER BY rank DESC
+    LIMIT $2
+  `;
+  const result = await pgPool.query(query, [queryText, limit, namespace]);
+  return result.rows.map(row => ({
+    id: row.id,
+    content: row.content,
+    metadata: row.metadata,
+    bm25Rank: parseFloat(row.rank),
+  }));
+}
 
-        // Vector similarity search
-        if (embedding && Array.isArray(embedding) && embedding.length === FIB_384) {
-            const vecParams = contentType
-                ? [`[${embedding.join(',')}]`, safeLimit, String(contentType).slice(0, 50)]
-                : [`[${embedding.join(',')}]`, safeLimit];
-            const vecTypeFilter = contentType ? 'AND content_type = $3' : '';
+/**
+ * Hybrid search: BM25 + vector + RRF + CSL gate
+ */
+async function hybridSearch(pgPool, embeddingFn, queryText, options = {}) {
+  const { namespace = 'default', limit = CONFIG.maxResultsDefault } = options;
 
-            const vecResults = await pool.query(`
-        SELECT id, title, url, content_type, 1 - (embedding <=> $1::vector) as score
-        FROM heady_search_index
-        WHERE embedding IS NOT NULL ${vecTypeFilter}
-        ORDER BY embedding <=> $1::vector LIMIT $2
-      `, vecParams);
+  const [embedding, bm25Results] = await Promise.all([
+    embeddingFn(queryText),
+    bm25Search(pgPool, queryText, { namespace }),
+  ]);
 
-            vecResults.rows.forEach((row, rank) => {
-                if (results[row.id]) {
-                    results[row.id].vec_rank = rank + 1;
-                    results[row.id].vec_score = row.score;
-                } else {
-                    results[row.id] = { ...row, vec_rank: rank + 1, vec_score: row.score };
-                }
-            });
-        }
+  const vectorResults = await vectorSearch(pgPool, embedding, { namespace });
 
-        // Reciprocal Rank Fusion
-        const fused = Object.values(results).map(r => {
-            const ftsRRF = r.fts_rank ? 1 / (RRF_K + r.fts_rank) : 0;
-            const vecRRF = r.vec_rank ? 1 / (RRF_K + r.vec_rank) : 0;
-            return { ...r, rrf_score: ftsRRF + vecRRF };
-        });
+  const fused = reciprocalRankFusion(bm25Results, vectorResults);
 
-        fused.sort((a, b) => b.rrf_score - a.rrf_score);
+  return {
+    results: fused.slice(0, limit),
+    meta: {
+      bm25Count: bm25Results.length,
+      vectorCount: vectorResults.length,
+      fusedCount: fused.length,
+      rrfK: CONFIG.hybridRrfK,
+      cslThreshold: CONFIG.cslRelevanceThreshold,
+    },
+  };
+}
 
-        res.json({
-            query: query ? String(query).slice(0, 100) : undefined,
-            results: fused.slice(0, safeLimit),
-            total: fused.length,
-            fusion: 'rrf',
-            rrf_k: RRF_K,
-        });
-    } catch (err) {
-        req.log.error({ err }, 'Search query failed');
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
+/**
+ * SearchService — main service class
+ */
+class SearchService extends EventEmitter {
+  #pgPool = null;
+  #cache;
+  #activeQueries = 0;
+  #server = null;
 
-// Index content
-app.post('/api/v1/index', async (req, res) => {
-    const { title, body, url, contentType, source, metadata, embedding } = req.body;
-    if (!title || typeof title !== 'string') {
-        return res.status(400).json({ error: 'title (string) required' });
-    }
+  constructor() {
+    super();
+    this.#cache = new SearchCache();
+  }
 
-    try {
-        const embeddingValue = embedding && Array.isArray(embedding) && embedding.length === FIB_384
-            ? `[${embedding.join(',')}]`
-            : null;
-
-        const { rows } = await pool.query(`
-      INSERT INTO heady_search_index (title, body, url, content_type, source, metadata, embedding, search_vector)
-      VALUES ($1, $2, $3, $4, $5, $6, $7::vector, to_tsvector('english', $1 || ' ' || COALESCE($2, '')))
-      RETURNING id
-    `, [
-            String(title).slice(0, 1000),
-            body ? String(body).slice(0, 50000) : null,
-            url ? String(url).slice(0, 500) : null,
-            contentType ? String(contentType).slice(0, 50) : null,
-            source ? String(source).slice(0, 100) : null,
-            JSON.stringify(metadata || {}),
-            embeddingValue,
-        ]);
-
-        logger.info({ id: rows[0]?.id, contentType, source }, 'Content indexed');
-        res.json({ indexed: true, id: rows[0]?.id });
-    } catch (err) {
-        req.log.error({ err }, 'Index operation failed');
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-initSearch().then(() => {
-    const server = app.listen(PORT, () => {
-        logger.info({ port: PORT }, 'search-service listening');
+  async initialize(pgPool, embeddingFn) {
+    this.#pgPool = pgPool;
+    this._embeddingFn = embeddingFn;
+    logger.info('SearchService initialized', {
+      cacheSize: CONFIG.cacheSize,
+      maxConcurrent: CONFIG.maxConcurrentQueries,
+      rrfK: CONFIG.hybridRrfK,
     });
-    gracefulShutdown(server, logger, { pool });
-}).catch((err) => {
-    logger.fatal({ err }, 'Failed to start search-service');
-    process.exit(1);
-});
+  }
 
-module.exports = app;
+  async search(queryText, options = {}) {
+    if (this.#activeQueries >= CONFIG.maxConcurrentQueries) {
+      const error = new Error('Search backpressure: too many concurrent queries');
+      error.code = 'SEARCH_BACKPRESSURE';
+      throw error;
+    }
+
+    const cacheKey = `${queryText}:${options.namespace || 'default'}`;
+    const cached = this.#cache.get(cacheKey);
+    if (cached) {
+      this.emit('cache-hit', { query: queryText });
+      return cached;
+    }
+
+    this.#activeQueries++;
+    try {
+      const result = await hybridSearch(
+        this.#pgPool,
+        this._embeddingFn,
+        queryText,
+        options
+      );
+      this.#cache.set(cacheKey, result);
+      this.emit('search-complete', {
+        query: queryText,
+        resultCount: result.results.length,
+      });
+      return result;
+    } finally {
+      this.#activeQueries--;
+    }
+  }
+
+  get stats() {
+    return {
+      activeQueries: this.#activeQueries,
+      cacheSize: this.#cache.size,
+      maxConcurrent: CONFIG.maxConcurrentQueries,
+    };
+  }
+
+  async startServer() {
+    const health = createHealthRouter({
+      service: 'search-service',
+      checks: {
+        postgres: async () => {
+          await this.#pgPool.query('SELECT 1');
+          return { status: 'healthy' };
+        },
+        cache: async () => ({
+          status: 'healthy',
+          size: this.#cache.size,
+        }),
+      },
+    });
+
+    this.#server = createServer(async (req, res) => {
+      const url = new URL(req.url, `http://0.0.0.0:${CONFIG.port}`);
+
+      if (url.pathname.startsWith('/health')) {
+        return health(req, res);
+      }
+
+      if (url.pathname === '/search' && req.method === 'POST') {
+        let body = '';
+        for await (const chunk of req) body += chunk;
+        try {
+          const { query, namespace, limit } = JSON.parse(body);
+          if (!query || typeof query !== 'string') {
+            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Missing query parameter' }));
+            return;
+          }
+          const result = await this.search(query, { namespace, limit });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(result));
+        } catch (err) {
+          const status = err.code === 'SEARCH_BACKPRESSURE' ? 429 : 500;
+          res.writeHead(status, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: err.message, code: err.code }));
+        }
+        return;
+      }
+
+      if (url.pathname === '/stats' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(this.stats));
+        return;
+      }
+
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Not found' }));
+    });
+
+    this.#server.listen(CONFIG.port, () => {
+      logger.info('Search service listening', { port: CONFIG.port });
+    });
+  }
+
+  async shutdown() {
+    if (this.#server) {
+      await new Promise(resolve => this.#server.close(resolve));
+    }
+    this.#cache.clear();
+    logger.info('Search service shut down');
+  }
+}
+
+export {
+  SearchService,
+  SearchCache,
+  reciprocalRankFusion,
+  hybridSearch,
+  vectorSearch,
+  bm25Search,
+  CONFIG as SEARCH_CONFIG,
+};

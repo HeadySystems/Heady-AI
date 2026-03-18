@@ -1,0 +1,13 @@
+{
+  "liquid_nodes": {
+    "enabled": true,
+    "orchestration": "heady_swarms",
+    "execution": "heady_bee",
+    "dynamic_parallel_execution": true,
+    "vector_space": {
+      "dimensions": 384,
+      "storage": "pgvector",
+      "csl_gate_threshold": 0.618
+    }
+  }
+}

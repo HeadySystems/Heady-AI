@@ -1,321 +1,210 @@
 /**
- * Heady™ Latent OS v5.2.0
- * © 2026 HeadySystems Inc. — Eric Haywood — 51 Provisional Patents
- * ZERO MAGIC NUMBERS — All constants φ-derived or Fibonacci
- */
-'use strict';
-
-const http = require('http');
-const crypto = require('crypto');
-const { PHI, PSI, fib, phiMs, PHI_TIMING, CSL_THRESHOLDS } = require('../../shared/phi-math');
-
-const SERVICE_NAME = 'heady-onboarding';
-const PORT = parseInt(process.env.SERVICE_PORT || '3365', 10);
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// STRUCTURED LOGGER
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const LOG_LEVELS = { error: 0, warn: 1, info: 2, debug: 3 };
-const CURRENT_LEVEL = LOG_LEVELS[process.env.LOG_LEVEL || 'info'];
-const logger = Object.fromEntries(
-  Object.entries(LOG_LEVELS).map(([level, num]) => [
-    level,
-    (data) => {
-      if (num <= CURRENT_LEVEL) {
-        const entry = JSON.stringify({ timestamp: new Date().toISOString(), level, service: SERVICE_NAME, ...data });
-        process[num === 0 ? 'stderr' : 'stdout'].write(entry + '\n');
-      }
-    },
-  ])
-);
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// ONBOARDING STAGES — Fibonacci-indexed progression
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/**
- * Onboarding follows a φ-scaled progression through stages.
- * Each stage has a completion weight that sums to 1.0 using phi-fusion.
+ * @file index.js
+ * @description Express app entry point — middleware chain, route mounting,
+ *   Firebase Admin init, health/readiness endpoints, graceful shutdown.
  *
- * Stage 1: Account Creation (ψ³ ≈ 0.236 weight)
- * Stage 2: Profile Setup (ψ² ≈ 0.382 weight)
- * Stage 3: Workspace Config (ψ ≈ 0.618 weight → subtracted to balance)
- * Stage 4: Integration Connect
- * Stage 5: First Task
+ *   Middleware order:
+ *     1. Helmet (security headers)
+ *     2. CORS (12 Heady domains)
+ *     3. pino-http (request logging)
+ *     4. JSON body parser
+ *     5. Session (express-session)
+ *     6. Onboarding guard
+ *     7. Routes
+ *
+ *   Environment variables:
+ *     PORT                    — Listen port (default: 8080)
+ *     NODE_ENV                — 'production' | 'development' (default: 'development')
+ *     SESSION_SECRET          — express-session secret (required in production)
+ *     JWT_SECRET              — JWT signing secret (required in production)
+ *     FIREBASE_SERVICE_ACCOUNT — JSON-encoded service account key (optional; falls back to default credentials)
  */
 
-const ONBOARDING_STAGES = [
-  {
-    id: 'account_creation',
-    name: 'Create Account',
-    description: 'Email, password, and identity verification',
-    order: 1,
-    requiredFields: ['email', 'password', 'name'],
-    estimatedMs: PHI_TIMING.PHI_3,  // 4,236ms
-  },
-  {
-    id: 'profile_setup',
-    name: 'Set Up Profile',
-    description: 'Avatar, display name, and preferences',
-    order: 2,
-    requiredFields: ['displayName'],
-    estimatedMs: PHI_TIMING.PHI_4,  // 6,854ms
-  },
-  {
-    id: 'workspace_config',
-    name: 'Configure Workspace',
-    description: 'Select domain, connect repos, set permissions',
-    order: 3,
-    requiredFields: ['workspaceName', 'primaryDomain'],
-    estimatedMs: PHI_TIMING.PHI_5,  // 11,090ms
-  },
-  {
-    id: 'integration_connect',
-    name: 'Connect Integrations',
-    description: 'GitHub, GCP, Cloudflare, Colab Pro+',
-    order: 4,
-    requiredFields: [],  // optional stage
-    estimatedMs: PHI_TIMING.PHI_6,  // 17,944ms
-  },
-  {
-    id: 'first_task',
-    name: 'Complete First Task',
-    description: 'Run your first HeadyConductor pipeline',
-    order: 5,
-    requiredFields: [],  // guided experience
-    estimatedMs: PHI_TIMING.PHI_7,  // 29,034ms
-  },
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import session from 'express-session';
+import pinoHttp from 'pino-http';
+import pino from 'pino';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { createAuthRouter } from './routes/auth-routes.js';
+import { createOnboardingRouter } from './routes/onboarding-routes.js';
+import { onboardingGuard } from './middleware/onboarding-guard.js';
+
+const log = pino({ name: 'heady-onboarding' });
+
+// ─── Configuration ──────────────────────────────────────────────────────────
+
+const PORT = parseInt(process.env.PORT ?? '8080', 10);
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
+const SESSION_SECRET = process.env.SESSION_SECRET ?? 'heady-dev-session-secret-change-in-production';
+
+// ─── CORS: 12 Heady Domains ────────────────────────────────────────────────
+
+const ALLOWED_ORIGINS = [
+  'https://heady.ai',
+  'https://www.heady.ai',
+  'https://app.heady.ai',
+  'https://api.heady.ai',
+  'https://headyme.com',
+  'https://www.headyme.com',
+  'https://app.headyme.com',
+  'https://mail.headyme.com',
+  'https://heady.dev',
+  'https://www.heady.dev',
+  'https://app.heady.dev',
+  'https://api.heady.dev',
+  'https://mail.heady.dev',
 ];
 
-// In-memory store (production would use pgvector/postgres)
-const userOnboarding = new Map();
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// REQUEST HANDLING
-// ═══════════════════════════════════════════════════════════════════════════════
-
-function parseBody(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on('data', chunk => chunks.push(chunk));
-    req.on('end', () => {
-      try {
-        resolve(chunks.length > 0 ? JSON.parse(Buffer.concat(chunks).toString()) : {});
-      } catch (err) {
-        reject(err);
-      }
-    });
-    req.on('error', reject);
-  });
+if (NODE_ENV === 'development') {
+  ALLOWED_ORIGINS.push('http://localhost:3000', 'http://localhost:8080', 'http://localhost:5173');
 }
 
-function jsonResponse(res, statusCode, data) {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify(data));
-}
+// ─── Firebase Admin Init ────────────────────────────────────────────────────
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// API ROUTES
-// ═══════════════════════════════════════════════════════════════════════════════
+let firebaseApp;
 
-const server = http.createServer(async (req, res) => {
-  const requestId = req.headers['x-request-id'] || `heady-${crypto.randomUUID()}`;
-  res.setHeader('X-Request-ID', requestId);
+function initFirebase() {
+  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
 
-  try {
-    // ─── Health ─────────────────────────────────────────────────────────────
-    if (req.url === '/health' && req.method === 'GET') {
-      return jsonResponse(res, 200, {
-        status: 'healthy',
-        service: SERVICE_NAME,
-        version: '5.2.0',
-        stages: ONBOARDING_STAGES.length,
-        activeUsers: userOnboarding.size,
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString(),
-      });
+  if (serviceAccount) {
+    try {
+      const parsed = JSON.parse(serviceAccount);
+      firebaseApp = initializeApp({ credential: cert(parsed) });
+      log.info('Firebase Admin initialized with service account');
+    } catch (err) {
+      log.error({ err: err.message }, 'Failed to parse FIREBASE_SERVICE_ACCOUNT');
+      throw err;
     }
-
-    // ─── GET /stages — List all onboarding stages ───────────────────────────
-    if (req.url === '/stages' && req.method === 'GET') {
-      return jsonResponse(res, 200, {
-        stages: ONBOARDING_STAGES,
-        totalStages: ONBOARDING_STAGES.length,
-      });
-    }
-
-    // ─── POST /start — Initialize onboarding for a user ─────────────────────
-    if (req.url === '/start' && req.method === 'POST') {
-      const body = await parseBody(req);
-      const { userId, email, name } = body;
-
-      if (!userId || !email) {
-        return jsonResponse(res, 400, {
-          error: 'HEADY-ONBOARD-400',
-          message: 'userId and email are required',
-        });
-      }
-
-      const session = {
-        userId,
-        email,
-        name: name || '',
-        currentStage: 0,
-        stages: ONBOARDING_STAGES.map(s => ({
-          ...s,
-          status: 'pending',
-          completedAt: null,
-          data: {},
-        })),
-        startedAt: Date.now(),
-        completedAt: null,
-      };
-
-      session.stages[0].status = 'active';
-      userOnboarding.set(userId, session);
-
-      logger.info({ msg: 'onboarding_started', userId, email, requestId });
-
-      return jsonResponse(res, 201, {
-        message: 'Onboarding started',
-        session: {
-          userId,
-          currentStage: session.stages[0].id,
-          progress: 0,
-          totalStages: ONBOARDING_STAGES.length,
-        },
-      });
-    }
-
-    // ─── POST /complete-stage — Mark a stage complete ────────────────────────
-    if (req.url === '/complete-stage' && req.method === 'POST') {
-      const body = await parseBody(req);
-      const { userId, stageId, data } = body;
-
-      if (!userId || !stageId) {
-        return jsonResponse(res, 400, {
-          error: 'HEADY-ONBOARD-400',
-          message: 'userId and stageId are required',
-        });
-      }
-
-      const session = userOnboarding.get(userId);
-      if (!session) {
-        return jsonResponse(res, 404, {
-          error: 'HEADY-ONBOARD-404',
-          message: 'Onboarding session not found',
-        });
-      }
-
-      const stageIndex = session.stages.findIndex(s => s.id === stageId);
-      if (stageIndex === -1) {
-        return jsonResponse(res, 404, {
-          error: 'HEADY-ONBOARD-404',
-          message: `Stage not found: ${stageId}`,
-        });
-      }
-
-      const stage = session.stages[stageIndex];
-
-      // Validate required fields
-      for (const field of stage.requiredFields) {
-        if (!data?.[field]) {
-          return jsonResponse(res, 400, {
-            error: 'HEADY-ONBOARD-400',
-            message: `Missing required field: ${field}`,
-            requiredFields: stage.requiredFields,
-          });
-        }
-      }
-
-      // Complete the stage
-      stage.status = 'completed';
-      stage.completedAt = Date.now();
-      stage.data = data || {};
-
-      // Advance to next stage
-      session.currentStage = stageIndex + 1;
-      if (session.currentStage < session.stages.length) {
-        session.stages[session.currentStage].status = 'active';
-      } else {
-        session.completedAt = Date.now();
-      }
-
-      const progress = (stageIndex + 1) / session.stages.length;
-
-      logger.info({
-        msg: 'stage_completed',
-        userId,
-        stageId,
-        progress: Math.round(progress * 100),
-        requestId,
-      });
-
-      return jsonResponse(res, 200, {
-        message: `Stage completed: ${stage.name}`,
-        progress: Math.round(progress * 100),
-        currentStage: session.currentStage < session.stages.length
-          ? session.stages[session.currentStage].id
-          : null,
-        isComplete: session.completedAt !== null,
-      });
-    }
-
-    // ─── GET /status/:userId — Get onboarding status ─────────────────────────
-    const statusMatch = req.url.match(/^\/status\/([^/]+)$/);
-    if (statusMatch && req.method === 'GET') {
-      const userId = statusMatch[1];
-      const session = userOnboarding.get(userId);
-
-      if (!session) {
-        return jsonResponse(res, 404, {
-          error: 'HEADY-ONBOARD-404',
-          message: 'Onboarding session not found',
-        });
-      }
-
-      const completedCount = session.stages.filter(s => s.status === 'completed').length;
-
-      return jsonResponse(res, 200, {
-        userId,
-        progress: Math.round((completedCount / session.stages.length) * 100),
-        currentStage: session.currentStage < session.stages.length
-          ? session.stages[session.currentStage].id
-          : null,
-        isComplete: session.completedAt !== null,
-        stages: session.stages.map(s => ({
-          id: s.id,
-          name: s.name,
-          status: s.status,
-          completedAt: s.completedAt,
-        })),
-        startedAt: session.startedAt,
-        completedAt: session.completedAt,
-      });
-    }
-
-    // ─── 404 ────────────────────────────────────────────────────────────────
-    jsonResponse(res, 404, { error: 'HEADY-NOT-FOUND-404', message: `Route not found: ${req.method} ${req.url}` });
-
-  } catch (err) {
-    logger.error({ msg: 'request_error', error: err.message, requestId });
-    jsonResponse(res, 500, { error: 'HEADY-INTERNAL-500', message: 'Internal server error' });
+  } else {
+    // Default credentials (GCE, Cloud Run, emulator)
+    firebaseApp = initializeApp();
+    log.info('Firebase Admin initialized with default credentials');
   }
-});
 
-// ─── Graceful Shutdown ────────────────────────────────────────────────────────
-const shutdown = (signal) => {
-  logger.info({ msg: 'shutdown_initiated', signal });
-  server.close(() => {
-    logger.info({ msg: 'shutdown_complete' });
-    process.exit(0);
+  return firebaseApp;
+}
+
+// ─── App Factory ────────────────────────────────────────────────────────────
+
+export function createApp() {
+  const app = express();
+
+  // 1. Helmet — security headers
+  app.use(helmet({
+    contentSecurityPolicy: NODE_ENV === 'production' ? undefined : false,
+    crossOriginEmbedderPolicy: false,
+  }));
+
+  // 2. CORS — 12 Heady domains + localhost in dev
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true);
+      } else {
+        log.warn({ origin }, 'CORS origin rejected');
+        callback(new Error('CORS not allowed'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    maxAge: 86400,
+  }));
+
+  // 3. pino-http — structured request logging
+  app.use(pinoHttp({
+    logger: log,
+    autoLogging: { ignore: (req) => req.url === '/health' || req.url === '/ready' },
+    customSuccessMessage: (req, res) => `${req.method} ${req.url} ${res.statusCode}`,
+    customErrorMessage: (req, res) => `${req.method} ${req.url} ${res.statusCode}`,
+  }));
+
+  // 4. JSON body parser
+  app.use(express.json({ limit: '1mb' }));
+
+  // 5. Session middleware
+  app.use(session({
+    secret: SESSION_SECRET,
+    name: 'heady.sid',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 24h
+    },
+  }));
+
+  // ── Health / Readiness ──────────────────────────────────────────────
+  app.get('/health', (_req, res) => {
+    res.status(200).json({ ok: true, service: 'heady-onboarding', version: '3.0.0', timestamp: new Date().toISOString() });
   });
-  setTimeout(() => process.exit(1), PHI_TIMING.PHI_5);
-};
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
 
-server.listen(PORT, () => {
-  logger.info({ msg: 'started', port: PORT, stages: ONBOARDING_STAGES.length });
-});
+  app.get('/ready', (_req, res) => {
+    const ready = !!firebaseApp;
+    res.status(ready ? 200 : 503).json({ ok: ready, service: 'heady-onboarding' });
+  });
+
+  // ── Mount auth routes (before onboarding guard) ─────────────────────
+  app.use('/auth', createAuthRouter(firebaseApp));
+
+  // 6. Onboarding guard — blocks non-onboarded users from app routes
+  app.use(onboardingGuard());
+
+  // ── Mount onboarding routes ─────────────────────────────────────────
+  app.use('/api/onboarding', createOnboardingRouter());
+
+  // ── 404 handler ─────────────────────────────────────────────────────
+  app.use((_req, res) => {
+    res.status(404).json({ ok: false, error: { code: 'NOT_FOUND', message: 'Route not found' } });
+  });
+
+  // ── Global error handler ──────────────────────────────────────────
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, _req, res, _next) => {
+    log.error({ err: err.message, stack: err.stack }, 'unhandled error');
+    res.status(500).json({ ok: false, error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } });
+  });
+
+  return app;
+}
+
+// ─── Graceful Shutdown ──────────────────────────────────────────────────────
+
+let server;
+
+function shutdown(signal) {
+  log.info({ signal }, 'shutdown signal received');
+  if (server) {
+    server.close(() => {
+      log.info('HTTP server closed');
+      process.exit(0);
+    });
+    // Force exit after 10s if connections don't close
+    setTimeout(() => {
+      log.warn('forcing shutdown after timeout');
+      process.exit(1);
+    }, 10_000).unref();
+  } else {
+    process.exit(0);
+  }
+}
+
+// ─── Bootstrap ──────────────────────────────────────────────────────────────
+
+function main() {
+  initFirebase();
+  const app = createApp();
+
+  server = app.listen(PORT, () => {
+    log.info({ port: PORT, env: NODE_ENV }, 'HeadyMe onboarding server v3.0.0 started');
+  });
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}
+
+main();
