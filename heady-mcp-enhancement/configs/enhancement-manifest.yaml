@@ -155,77 +155,77 @@ workflows:
 agents:
   - id: heady-sentinel
     ring: outer
-    port: 3501
+    port: 3801
     role: Security watchdog
 
   - id: heady-muse
     ring: outer
-    port: 3502
+    port: 3802
     role: Creative intelligence
 
   - id: heady-nova
     ring: outer
-    port: 3503
+    port: 3803
     role: Innovation explorer
 
   - id: heady-sophia
     ring: outer
-    port: 3504
+    port: 3804
     role: Wisdom synthesizer
 
   - id: heady-cipher
     ring: outer
-    port: 3505
+    port: 3805
     role: Cryptography specialist
 
   - id: heady-lens
     ring: outer
-    port: 3506
+    port: 3806
     role: Deep analysis engine
 
   - id: heady-bridge
     ring: outer
-    port: 3507
+    port: 3807
     role: Integration specialist
 
   - id: heady-murphy
     ring: middle
-    port: 3508
+    port: 3808
     role: Resilience tester
 
   - id: heady-janitor
     ring: outer
-    port: 3509
+    port: 3809
     role: Cleanup specialist
 
   - id: heady-forge
     ring: outer
-    port: 3510
+    port: 3810
     role: Builder specialist
 
   - id: heady-aegis
     ring: outer
-    port: 3511
+    port: 3811
     role: Runtime shield
 
   - id: heady-chronos
     ring: outer
-    port: 3512
+    port: 3812
     role: Time management
 
   - id: heady-nexus
     ring: outer
-    port: 3513
+    port: 3813
     role: Federation hub
 
   - id: heady-echo
     ring: outer
-    port: 3514
+    port: 3814
     role: Replay specialist
 
   - id: heady-flux
     ring: outer
-    port: 3515
+    port: 3815
     role: Stream processor
 
 # ═══════════════════════════════════════════════════════════════════
@@ -234,71 +234,71 @@ agents:
 nodes:
   orchestration:
     - id: heady-mesh
-      port: 3601
+      port: 3901
       role: Service mesh controller
 
     - id: heady-resonance
-      port: 3602
+      port: 3902
       role: Harmonic synchronization
 
   intelligence:
     - id: heady-intuition
-      port: 3611
+      port: 3911
       role: Pre-cognitive pattern matching
 
     - id: heady-spectra
-      port: 3612
+      port: 3912
       role: Multi-modal embedding fusion
 
     - id: heady-parallax
-      port: 3613
+      port: 3913
       role: Perspective shifting
 
   execution:
     - id: heady-quantum
-      port: 3621
+      port: 3921
       role: Quantum-inspired optimization
 
     - id: heady-wave
-      port: 3622
+      port: 3922
       role: Wave function collapse
 
     - id: heady-pulse
-      port: 3623
+      port: 3923
       role: System heartbeat
 
   infrastructure:
     - id: heady-gravity
-      port: 3631
+      port: 3931
       role: Resource gravity field
 
     - id: heady-tide
-      port: 3632
+      port: 3932
       role: Data flow management
 
     - id: heady-aurora
-      port: 3633
+      port: 3933
       role: Visualization engine
 
     - id: heady-vortex
-      port: 3634
+      port: 3934
       role: Log aggregation with vector compression
 
   specialized:
     - id: heady-oracle
-      port: 3641
+      port: 3941
       role: Prediction engine
 
     - id: heady-genesis
-      port: 3642
+      port: 3942
       role: Service genesis
 
     - id: heady-phoenix
-      port: 3643
+      port: 3943
       role: Resurrection node
 
     - id: heady-harmony
-      port: 3644
+      port: 3944
       role: Consensus engine
 
 # ═══════════════════════════════════════════════════════════════════
