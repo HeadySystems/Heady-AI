@@ -1,0 +1,12 @@
+[
+  {"priority":"critical","title":"Resolve public README merge conflicts","reason":"Canonical architecture is ambiguous and repo integrity is visibly broken"},
+  {"priority":"critical","title":"Route production orchestration endpoints to real JSON backends","reason":"/api/system/status, /api/supervisor/status, /api/brain/status, /api/registry, /api/pipeline/state all fall through to the SPA"},
+  {"priority":"critical","title":"Implement headymcp-core as a real MCP server","reason":"Public MCP repo is a 2-commit placeholder and does not back the 30+ tool claim"},
+  {"priority":"critical","title":"Separate Heady-Testing from Heady-Main","reason":"Testing repo is structurally identical to main and gives no quality signal"},
+  {"priority":"high","title":"Add a durable async message bus","reason":"Distributed parallel execution is not observable; likely single-process today"},
+  {"priority":"high","title":"Publish a node registry and MCP tool manifest","reason":"20 nodes and 30+ tools are claimed but not publicly enumerated"},
+  {"priority":"high","title":"Populate HeadySystems/HeadyEcosystem","reason":"Named ecosystem repo is effectively empty or inaccessible"},
+  {"priority":"high","title":"Add metrics and drift endpoints","reason":"6-signal drift detection and real-time observability are unverified without live metrics"},
+  {"priority":"high","title":"Set Cloud Run minimum instances and explicit release tags","reason":"Cold starts and untagged deployments undermine latency and rollback claims"},
+  {"priority":"high","title":"Audit certs directory and undocumented Java mass","reason":"Potential security exposure and architectural ambiguity"}
+]

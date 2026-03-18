@@ -1,0 +1,186 @@
+{
+  "$schema": "heady-wiring-manifest/v2",
+  "version": "2.0.0",
+  "phi": 1.618033988749895,
+  "psi": 0.618033988749895,
+  "generatedAt": "2026-03-18T00:00:00.000Z",
+
+  "sacredGeometry": {
+    "CENTER": {
+      "order": 0,
+      "nodes": ["HeadySoul"],
+      "weight": 4.23606797749979
+    },
+    "INNER_RING": {
+      "order": 1,
+      "nodes": ["HeadyBrains", "HeadyConductor", "HeadyVinci", "HeadyAutoSuccess", "GENESIS"],
+      "weight": 2.618033988749895
+    },
+    "MIDDLE_RING": {
+      "order": 2,
+      "nodes": ["JULES", "BUILDER", "OBSERVER", "MURPHY", "ATLAS", "PYTHIA", "NEXUS"],
+      "weight": 1.618033988749895
+    },
+    "OUTER_RING": {
+      "order": 3,
+      "nodes": ["BRIDGE", "MUSE", "SENTINEL", "NOVA", "JANITOR", "SOPHIA", "CIPHER", "LENS", "AEGIS"],
+      "weight": 1.0
+    },
+    "GOVERNANCE": {
+      "order": 4,
+      "nodes": ["HeadyCheck", "HeadyAssure", "HeadyAware", "HeadyPatterns", "HeadyMC", "HeadyRisks", "ORACLE", "CHRONICLE"],
+      "weight": 0.618033988749895
+    }
+  },
+
+  "services": {
+    "HeadySoul":       { "type": "core",         "ring": "CENTER",      "endpoint": "internal://headysoul",        "capabilities": ["awareness", "values", "identity"] },
+    "HeadyBrains":     { "type": "core",         "ring": "INNER_RING",  "endpoint": "internal://headybrains",      "capabilities": ["reasoning", "llm", "inference"] },
+    "HeadyConductor":  { "type": "orchestrator", "ring": "INNER_RING",  "endpoint": "internal://headyconductor",   "capabilities": ["routing", "orchestration", "dispatch"] },
+    "HeadyVinci":      { "type": "creative",     "ring": "INNER_RING",  "endpoint": "internal://headyvinci",       "capabilities": ["creative", "generation", "design"] },
+    "HeadyAutoSuccess":{ "type": "automation",   "ring": "INNER_RING",  "endpoint": "internal://headyautosuccess", "capabilities": ["automation", "workflow", "scheduling"] },
+    "GENESIS":         { "type": "node",         "ring": "INNER_RING",  "endpoint": "internal://genesis",          "capabilities": ["spawning", "instantiation", "scaling"] },
+    "JULES":           { "type": "agent",        "ring": "MIDDLE_RING", "endpoint": "internal://jules",            "capabilities": ["coding", "development", "refactoring"] },
+    "BUILDER":         { "type": "agent",        "ring": "MIDDLE_RING", "endpoint": "internal://builder",          "capabilities": ["building", "compilation", "deployment"] },
+    "OBSERVER":        { "type": "agent",        "ring": "MIDDLE_RING", "endpoint": "internal://observer",         "capabilities": ["monitoring", "telemetry", "alerting"] },
+    "MURPHY":          { "type": "agent",        "ring": "MIDDLE_RING", "endpoint": "internal://murphy",           "capabilities": ["resilience", "chaos", "fault-injection"] },
+    "ATLAS":           { "type": "agent",        "ring": "MIDDLE_RING", "endpoint": "internal://atlas",            "capabilities": ["mapping", "discovery", "navigation"] },
+    "PYTHIA":          { "type": "agent",        "ring": "MIDDLE_RING", "endpoint": "internal://pythia",           "capabilities": ["prediction", "forecasting", "analytics"] },
+    "NEXUS":           { "type": "node",         "ring": "MIDDLE_RING", "endpoint": "internal://nexus",            "capabilities": ["cross-domain", "bridging", "routing"] },
+    "BRIDGE":          { "type": "connector",    "ring": "OUTER_RING",  "endpoint": "internal://bridge",           "capabilities": ["integration", "api", "external"] },
+    "MUSE":            { "type": "creative",     "ring": "OUTER_RING",  "endpoint": "internal://muse",             "capabilities": ["inspiration", "ideation", "brainstorm"] },
+    "SENTINEL":        { "type": "security",     "ring": "OUTER_RING",  "endpoint": "internal://sentinel",         "capabilities": ["monitoring", "threat-detection", "audit"] },
+    "NOVA":            { "type": "engine",       "ring": "OUTER_RING",  "endpoint": "internal://nova",             "capabilities": ["processing", "computation", "transform"] },
+    "JANITOR":         { "type": "maintenance",  "ring": "OUTER_RING",  "endpoint": "internal://janitor",          "capabilities": ["cleanup", "gc", "optimization"] },
+    "SOPHIA":          { "type": "wisdom",       "ring": "OUTER_RING",  "endpoint": "internal://sophia",           "capabilities": ["knowledge", "learning", "synthesis"] },
+    "CIPHER":          { "type": "security",     "ring": "OUTER_RING",  "endpoint": "internal://cipher",           "capabilities": ["encryption", "auth", "secrets"] },
+    "LENS":            { "type": "analytics",    "ring": "OUTER_RING",  "endpoint": "internal://lens",             "capabilities": ["visualization", "dashboard", "reporting"] },
+    "AEGIS":           { "type": "node",         "ring": "OUTER_RING",  "endpoint": "internal://aegis",            "capabilities": ["protection", "defense", "security-coordination"] },
+    "HeadyCheck":      { "type": "governance",   "ring": "GOVERNANCE",  "endpoint": "internal://headycheck",       "capabilities": ["quality", "validation", "review"] },
+    "HeadyAssure":     { "type": "governance",   "ring": "GOVERNANCE",  "endpoint": "internal://headyassure",      "capabilities": ["assurance", "compliance", "audit"] },
+    "HeadyAware":      { "type": "governance",   "ring": "GOVERNANCE",  "endpoint": "internal://headyaware",       "capabilities": ["awareness", "context", "situational"] },
+    "HeadyPatterns":   { "type": "governance",   "ring": "GOVERNANCE",  "endpoint": "internal://headypatterns",    "capabilities": ["patterns", "anti-patterns", "standards"] },
+    "HeadyMC":         { "type": "governance",   "ring": "GOVERNANCE",  "endpoint": "internal://headymc",          "capabilities": ["coordination", "consensus", "voting"] },
+    "HeadyRisks":      { "type": "governance",   "ring": "GOVERNANCE",  "endpoint": "internal://headyrisks",       "capabilities": ["risk", "assessment", "mitigation"] },
+    "ORACLE":          { "type": "node",         "ring": "GOVERNANCE",  "endpoint": "internal://oracle",           "capabilities": ["wisdom", "synthesis", "guidance"] },
+    "CHRONICLE":       { "type": "node",         "ring": "GOVERNANCE",  "endpoint": "internal://chronicle",        "capabilities": ["history", "audit-trail", "immutable-log"] }
+  },
+
+  "tools": {
+    "vector-search":    { "handler": "vector-ops",        "minCSL": 0.691 },
+    "vector-store":     { "handler": "vector-ops",        "minCSL": 0.809 },
+    "llm-generate":     { "handler": "HeadyBrains",       "minCSL": 0.809 },
+    "code-analyze":     { "handler": "JULES",             "minCSL": 0.691 },
+    "code-refactor":    { "handler": "JULES",             "minCSL": 0.809 },
+    "deploy-service":   { "handler": "BUILDER",           "minCSL": 0.882 },
+    "monitor-metrics":  { "handler": "OBSERVER",          "minCSL": 0.691 },
+    "chaos-inject":     { "handler": "MURPHY",            "minCSL": 0.927 },
+    "predict-trend":    { "handler": "PYTHIA",            "minCSL": 0.809 },
+    "encrypt-payload":  { "handler": "CIPHER",            "minCSL": 0.882 },
+    "audit-check":      { "handler": "HeadyAssure",       "minCSL": 0.882 },
+    "causal-trace":     { "handler": "causal-tracer",     "minCSL": 0.809 },
+    "ghost-run":        { "handler": "ghost-runner",      "minCSL": 0.882 },
+    "swarm-broadcast":  { "handler": "swarm-broadcaster", "minCSL": 0.809 },
+    "memory-prune":     { "handler": "memory-pruner",     "minCSL": 0.809 },
+    "pattern-match":    { "handler": "pattern-matcher",   "minCSL": 0.691 },
+    "schema-evolve":    { "handler": "schema-evolver",    "minCSL": 0.882 },
+    "drift-detect":     { "handler": "drift-detector",    "minCSL": 0.809 },
+    "fusion-merge":     { "handler": "fusion-merger",     "minCSL": 0.809 },
+    "policy-enforce":   { "handler": "policy-enforcer",   "minCSL": 0.927 },
+    "topology-scan":    { "handler": "topology-scanner",  "minCSL": 0.691 },
+    "latent-dream":     { "handler": "dream-engine",      "minCSL": 0.809 },
+    "battle-evaluate":  { "handler": "battle-arena",      "minCSL": 0.809 }
+  },
+
+  "agents": {
+    "immune-agent":        { "node": "AEGIS",  "capabilities": ["threat-detection", "defense", "vaccination"],        "file": "../agents/heady-immune-agent.js" },
+    "archaeologist-agent": { "node": "ORACLE", "capabilities": ["knowledge-archaeology", "temporal-reversal"],        "file": "../agents/heady-archaeologist-agent.js" },
+    "diplomat-agent":      { "node": "NEXUS",  "capabilities": ["negotiation", "mediation", "sla-management"],        "file": "../agents/heady-diplomat-agent.js" },
+    "cartographer-agent":  { "node": "NEXUS",  "capabilities": ["topology-mapping", "dependency-graph"],              "file": "../agents/heady-cartographer-agent.js" },
+    "prophet-agent":       { "node": "ORACLE", "capabilities": ["failure-prediction", "causal-inference"],            "file": "../agents/heady-prophet-agent.js" }
+  },
+
+  "workflows": {
+    "ecosystem-health-scan":       { "agents": ["cartographer-agent", "immune-agent"],  "nodes": ["AEGIS", "NEXUS", "ORACLE"],    "criticality": "high",     "file": "../workflows/ecosystem-health-scan.js" },
+    "genetic-optimization-cycle":  { "agents": ["prophet-agent"],                       "nodes": ["GENESIS", "ORACLE"],            "criticality": "medium",   "file": "../workflows/genetic-optimization-cycle.js" },
+    "knowledge-consolidation":     { "agents": ["archaeologist-agent"],                 "nodes": ["ORACLE", "CHRONICLE"],          "criticality": "medium",   "file": "../workflows/knowledge-consolidation.js" },
+    "self-healing-cycle":          { "agents": ["immune-agent", "prophet-agent"],       "nodes": ["AEGIS", "GENESIS"],             "criticality": "critical", "file": "../workflows/self-healing-cycle.js" },
+    "liquid-rebalance":            { "agents": ["cartographer-agent"],                  "nodes": ["NEXUS"],                        "criticality": "high",     "file": "../workflows/liquid-rebalance.js" }
+  },
+
+  "nodes": {
+    "ORACLE":    { "ring": "GOVERNANCE",  "type": "wisdom",     "file": "../nodes/ORACLE.js" },
+    "GENESIS":   { "ring": "INNER_RING",  "type": "creation",   "file": "../nodes/GENESIS.js" },
+    "NEXUS":     { "ring": "MIDDLE_RING", "type": "connection",  "file": "../nodes/NEXUS.js" },
+    "AEGIS":     { "ring": "OUTER_RING",  "type": "protection",  "file": "../nodes/AEGIS.js" },
+    "CHRONICLE": { "ring": "GOVERNANCE",  "type": "history",    "file": "../nodes/CHRONICLE.js" }
+  },
+
+  "eventSubscriptions": [
+    { "subscriber": "HeadyConductor",  "channels": ["system", "tool", "agent", "pipeline"] },
+    { "subscriber": "AEGIS",           "channels": ["security", "health", "system"] },
+    { "subscriber": "ORACLE",          "channels": ["system", "memory", "metrics"] },
+    { "subscriber": "CHRONICLE",       "channels": ["system", "security", "pipeline", "agent"] },
+    { "subscriber": "GENESIS",         "channels": ["system", "swarm", "agent"] },
+    { "subscriber": "NEXUS",           "channels": ["system", "swarm", "agent", "tool"] },
+    { "subscriber": "OBSERVER",        "channels": ["health", "metrics", "system"] },
+    { "subscriber": "SENTINEL",        "channels": ["security", "health"] },
+    { "subscriber": "immune-agent",    "channels": ["security", "health", "system"] },
+    { "subscriber": "prophet-agent",   "channels": ["metrics", "health", "system"] },
+    { "subscriber": "cartographer-agent", "channels": ["system", "health", "swarm"] },
+    { "subscriber": "diplomat-agent",  "channels": ["swarm", "agent", "system"] },
+    { "subscriber": "archaeologist-agent", "channels": ["memory", "system"] }
+  ],
+
+  "serviceDependencies": [
+    { "from": "HeadyConductor", "to": "HeadySoul" },
+    { "from": "HeadyConductor", "to": "HeadyBrains" },
+    { "from": "GENESIS",        "to": "HeadyConductor" },
+    { "from": "NEXUS",          "to": "HeadyConductor" },
+    { "from": "AEGIS",          "to": "SENTINEL" },
+    { "from": "AEGIS",          "to": "CIPHER" },
+    { "from": "AEGIS",          "to": "MURPHY" },
+    { "from": "ORACLE",         "to": "PYTHIA" },
+    { "from": "ORACLE",         "to": "SOPHIA" },
+    { "from": "ORACLE",         "to": "CHRONICLE" },
+    { "from": "CHRONICLE",      "to": "HeadySoul" },
+    { "from": "immune-agent",   "to": "AEGIS" },
+    { "from": "prophet-agent",  "to": "ORACLE" },
+    { "from": "archaeologist-agent", "to": "ORACLE" },
+    { "from": "diplomat-agent",  "to": "NEXUS" },
+    { "from": "cartographer-agent", "to": "NEXUS" },
+    { "from": "JULES",          "to": "HeadyBrains" },
+    { "from": "BUILDER",        "to": "HeadyBrains" },
+    { "from": "OBSERVER",       "to": "LENS" },
+    { "from": "PYTHIA",         "to": "HeadyBrains" }
+  ],
+
+  "pools": {
+    "hot":        { "ratio": 0.34, "fibonacci": 34, "label": "Hot Pool" },
+    "warm":       { "ratio": 0.21, "fibonacci": 21, "label": "Warm Pool" },
+    "cold":       { "ratio": 0.13, "fibonacci": 13, "label": "Cold Pool" },
+    "reserve":    { "ratio": 0.08, "fibonacci": 8,  "label": "Reserve Pool" },
+    "governance": { "ratio": 0.05, "fibonacci": 5,  "label": "Governance Pool" }
+  },
+
+  "cslThresholds": {
+    "MINIMUM":  0.500,
+    "LOW":      0.691,
+    "MEDIUM":   0.809,
+    "HIGH":     0.882,
+    "CRITICAL": 0.927,
+    "DEDUP":    0.972
+  },
+
+  "domains": [
+    "headyme.com",
+    "headysystems.com",
+    "headyconnection.org",
+    "headybuddy.org",
+    "headymcp.com",
+    "headyio.com",
+    "headybot.com",
+    "headyapi.com",
+    "headyai.com"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "agents": [
+    {"name":"HERMES","type":"bee","priority":"P0","mission":"Protocol liaison for MCP transport, sessions, Server Card, DPoP, and WIF","pool":"hot"},
+    {"name":"KRONOS","type":"bee","priority":"P0","mission":"Task lifecycle manager for SEP-1686 state, retry, and expiry","pool":"hot"},
+    {"name":"ARGUS","type":"bee","priority":"P1","mission":"Audit, telemetry, and drift analysis","pool":"hot"},
+    {"name":"NEXUS","type":"bee","priority":"P1","mission":"Federation, scope enforcement, and tenant isolation","pool":"warm"},
+    {"name":"HERALD","type":"bee","priority":"P1","mission":"Trigger registration and webhook/event dispatch","pool":"warm"},
+    {"name":"PYTHIA+","type":"node_upgrade","priority":"P2","mission":"Expose Monte Carlo validation, ORS gating, and governance checks via MCP"}
+  ],
+  "nodes": [
+    {"name":"HeadyMCP Gateway Worker","priority":"P0","role":"Stateless Streamable HTTP MCP gateway on Cloudflare Workers"},
+    {"name":"HeadyTask Store","priority":"P0","role":"D1+KV task state store for SEP-1686 lifecycle"},
+    {"name":"HERMES Worker","priority":"P1","role":"Dedicated protocol/auth/session worker"},
+    {"name":"HERALD Event Bus","priority":"P1","role":"Cloudflare Queues-based event and trigger bus"},
+    {"name":"ARGUS Telemetry Collector","priority":"P1","role":"Structured audit and observability collector"}
+  ]
+}
