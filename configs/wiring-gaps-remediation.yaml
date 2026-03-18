@@ -17,22 +17,72 @@ critical:
 
   secrets_in_repo:
     severity: URGENT
-    description: "GCP/Firebase service account keys and SSL private keys committed to repo"
+    description: "Multiple credential types committed to repo in plaintext"
     files:
       - configs/secrets/gcp-service-account.json
       - configs/secrets/firebase-admin-sdk.json
       - configs/secrets/gen-lang-client-*.json (4 files)
-      - configs/nginx/ssl/ca.key
-      - configs/nginx/ssl/server.key
-      - configs/nginx/ssl/client.key
+      - configs/nginx/ssl/ca.key, server.key, client.key
       - configs/api-keys.json
-    impact: "Violates own secret-hygiene-policy.yml; credential exposure risk"
+      - configs/users/user-secrets.yaml (5 users with SHARED plaintext tokens)
+      - headyconnection-web/.env.production (hardcoded Drupal secrets)
+    impact: "Full credential compromise; 5 users share identical secret; SSL keys exposed"
     remediation:
-      - "IMMEDIATELY rotate all exposed credentials"
-      - "Remove from git history (git filter-branch or BFG)"
-      - "Add configs/secrets/ and configs/nginx/ssl/*.key to .gitignore"
+      - "IMMEDIATELY rotate ALL exposed credentials"
+      - "Remove from git history (BFG Repo-Cleaner)"
+      - "Add configs/secrets/, configs/nginx/ssl/*.key, configs/users/user-secrets.yaml to .gitignore"
       - "Move all secrets to HeadyVault (port 3389)"
-      - "Use dynamic secret injection in CI/CD"
+      - "Generate unique per-user secrets (not shared!)"
+      - "Remove .env.production files from repo; use CI/CD injection"
+
+  unauthenticated_secrets_api:
+    severity: URGENT
+    description: "6 secrets management API routes have ZERO authentication middleware"
+    file: "src/hc_secrets_manager.js"
+    exposed_routes:
+      - "GET /api/secrets (lists all secrets with masked values)"
+      - "GET /api/secrets/status (reveals secret counts)"
+      - "GET /api/secrets/audit (exposes missing/expired secrets)"
+      - "GET /api/secrets/:id (individual secret metadata)"
+      - "POST /api/secrets/:id/refresh (triggers rotation — DoS vector!)"
+      - "GET /api/secrets/alerts (security alerts)"
+    additional_issue: "maskedValue stores first 4 + last 4 chars, reducing brute-force keyspace"
+    remediation:
+      - "Add auth middleware to ALL /api/secrets/* routes immediately"
+      - "Require admin-level auth for POST /refresh endpoint"
+      - "Remove maskedValue from data model entirely"
+      - "Stop persisting partial secrets to /data/secrets-state.json"
+      - "HeadyShield (port 3390) validates all secrets API access"
+
+  vulnerable_dependency:
+    severity: critical
+    description: "yamljs ^0.3.0 has known prototype pollution vulnerability (CVE-2020-28480)"
+    impact: "Remote code execution possible via crafted YAML input"
+    remediation:
+      - "Remove yamljs from package.json"
+      - "Migrate to yaml ^2.8.2 or js-yaml ^4.1.1 (both already installed)"
+
+  audit_log_retention:
+    severity: critical
+    description: "Audit log retention is 89 days; SOC2/GDPR requires 365 days minimum"
+    file: "configs/governance-policies.yaml line 19"
+    remediation:
+      - "Increase retentionDays from 89 to 365"
+      - "HeadyAnchor (port 3379) enforces compliance retention policies"
+
+  secret_hygiene_gaps:
+    severity: critical
+    description: "Secret scanning patterns missing common credential types"
+    file: "configs/security/secret-hygiene-policy.yml"
+    missing_patterns:
+      - "sk- (OpenAI/Stripe keys)"
+      - "ghp_/gho_/github_pat_ (GitHub tokens)"
+      - "whsec_ (Stripe webhook secrets)"
+      - "AIza (Google API keys)"
+      - "password= / secret= (generic patterns)"
+    remediation:
+      - "Expand forbidden_patterns in secret-hygiene-policy.yml"
+      - "HeadyShield integrates with Semgrep rules at configs/semgrep-rules.yaml"
 
   config_version_fragmentation:
     severity: critical
