@@ -1,7 +1,7 @@
 {
-  "version": "4.1.0",
-  "generated": "2026-03-17",
-  "service_count": 175,
+  "version": "4.2.0",
+  "generated": "2026-03-18",
+  "service_count": 187,
   "phi": 1.618033988749895,
   "csl_threshold": 0.618,
   "categories": {
@@ -1103,6 +1103,114 @@
       "port": 3341,
       "health": "/health",
       "note": "WebSocket state sync with CRDT conflict resolution"
+    },
+    {
+      "id": "heady-chrono",
+      "type": "service",
+      "category": "ai",
+      "status": "active",
+      "port": 3371,
+      "health": "/health",
+      "note": "Temporal Intelligence Engine — causal chains, time-travel debugging, predictive trajectories"
+    },
+    {
+      "id": "heady-echo",
+      "type": "service",
+      "category": "ai",
+      "status": "active",
+      "port": 3372,
+      "health": "/health",
+      "note": "Voice & Audio Intelligence — transcription, synthesis, phi-harmonic soundscapes"
+    },
+    {
+      "id": "heady-oracle",
+      "type": "service",
+      "category": "data",
+      "status": "active",
+      "port": 3373,
+      "health": "/health",
+      "note": "Knowledge Graph Engine — graph traversal, relationship inference, pattern discovery"
+    },
+    {
+      "id": "heady-mirror",
+      "type": "service",
+      "category": "orchestration",
+      "status": "planned",
+      "port": 3374,
+      "health": "/health",
+      "note": "Digital Twin & Simulation — sandboxed replicas, what-if scenarios, config preview"
+    },
+    {
+      "id": "heady-pulse",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3375,
+      "health": "/health",
+      "note": "Emotion & Sentiment Intelligence — affective computing, wellbeing scoring"
+    },
+    {
+      "id": "heady-forge",
+      "type": "service",
+      "category": "orchestration",
+      "status": "planned",
+      "port": 3376,
+      "health": "/health",
+      "note": "Workflow Automation — DAG builder, trigger chains, cross-service choreography"
+    },
+    {
+      "id": "heady-nexus",
+      "type": "service",
+      "category": "ui",
+      "status": "planned",
+      "port": 3377,
+      "health": "/health",
+      "note": "Real-time Collaboration — CRDT rooms, presence awareness, multiplayer editing"
+    },
+    {
+      "id": "heady-spectrum",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3378,
+      "health": "/health",
+      "note": "Vision & Multimodal — image analysis, visual diff, Sacred Geometry UI audit"
+    },
+    {
+      "id": "heady-anchor",
+      "type": "service",
+      "category": "security",
+      "status": "planned",
+      "port": 3379,
+      "health": "/health",
+      "note": "Compliance & Regulation — GDPR/SOC2/HIPAA, data lineage, audit trails"
+    },
+    {
+      "id": "heady-apex",
+      "type": "service",
+      "category": "ai",
+      "status": "planned",
+      "port": 3380,
+      "health": "/health",
+      "note": "Financial Intelligence — Monte Carlo, phi-ratio trading signals, sentiment fusion"
+    },
+    {
+      "id": "heady-rosetta",
+      "type": "service",
+      "category": "integration",
+      "status": "planned",
+      "port": 3381,
+      "health": "/health",
+      "note": "Translation & i18n — context-aware multilingual, locale management, tone preservation"
+    },
+    {
+      "id": "heady-genesis",
+      "type": "service",
+      "category": "orchestration",
+      "status": "planned",
+      "port": 3382,
+      "health": "/health",
+      "note": "Self-Evolving Service Generator — auto-generate tools from usage patterns, meta-programming"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
     "$schema": "https://heady.ai/schemas/headymcp.v1.json",
     "name": "heady-mcp",
-    "version": "1.0.0",
-    "description": "Heady™ Model Context Protocol server configuration",
+    "version": "2.0.0",
+    "description": "Heady™ Model Context Protocol server configuration — 12 new services",
     "server": {
         "host": "0.0.0.0",
         "port": 3321,
@@ -20,7 +20,9 @@
                 "https://headybattle.com",
                 "https://headyarena.com",
                 "https://headyconnection.com",
-                "https://headyenterprises.com"
+                "https://headyenterprises.com",
+                "https://headymcp.com",
+                "https://headyio.com"
             ]
         }
     },
@@ -95,7 +97,8 @@
                             "fast",
                             "full",
                             "arena",
-                            "learning"
+                            "learning",
+                            "compliance"
                         ]
                     },
                     "priority": {
@@ -139,6 +142,679 @@
                     "input"
                 ]
             }
+        },
+        {
+            "name": "heady_chrono_trace",
+            "description": "Trace causal chains across time — follow the thread of events",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "event_id": {
+                        "type": "string",
+                        "description": "Event identifier to trace from"
+                    },
+                    "depth": {
+                        "type": "number",
+                        "default": 8
+                    },
+                    "direction": {
+                        "type": "string",
+                        "enum": ["backward", "forward", "bidirectional"],
+                        "default": "backward"
+                    }
+                },
+                "required": ["event_id"]
+            }
+        },
+        {
+            "name": "heady_chrono_predict",
+            "description": "Project future states based on temporal patterns and phi-scaled decay",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "context": {
+                        "type": "string",
+                        "description": "Context for prediction"
+                    },
+                    "horizon": {
+                        "type": "string",
+                        "enum": ["minutes", "hours", "days", "weeks"],
+                        "default": "hours"
+                    },
+                    "confidence_floor": {
+                        "type": "number",
+                        "default": 0.618
+                    }
+                },
+                "required": ["context"]
+            }
+        },
+        {
+            "name": "heady_chrono_diff",
+            "description": "Compare two points in time — what changed, drifted, emerged",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "t1": {
+                        "type": "string",
+                        "description": "ISO timestamp or relative (e.g., '2h ago')"
+                    },
+                    "t2": {
+                        "type": "string",
+                        "default": "now"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "enum": ["system", "service", "user", "global"],
+                        "default": "system"
+                    }
+                },
+                "required": ["t1"]
+            }
+        },
+        {
+            "name": "heady_chrono_replay",
+            "description": "Replay system state at a historical point — time-travel debugging",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "timestamp": {
+                        "type": "string"
+                    },
+                    "service": {
+                        "type": "string"
+                    },
+                    "include_context": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["timestamp", "service"]
+            }
+        },
+        {
+            "name": "heady_echo_transcribe",
+            "description": "Voice-to-text with speaker diarization and intent extraction",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "audio_url": {
+                        "type": "string"
+                    },
+                    "language": {
+                        "type": "string",
+                        "default": "auto"
+                    },
+                    "extract_intent": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "diarize": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                },
+                "required": ["audio_url"]
+            }
+        },
+        {
+            "name": "heady_echo_synthesize",
+            "description": "Generate natural speech with persona-aligned voice profiles",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "voice_profile": {
+                        "type": "string",
+                        "enum": ["buddy", "professional", "warm", "energetic"],
+                        "default": "buddy"
+                    },
+                    "format": {
+                        "type": "string",
+                        "enum": ["mp3", "wav", "opus"],
+                        "default": "opus"
+                    }
+                },
+                "required": ["text"]
+            }
+        },
+        {
+            "name": "heady_echo_soundscape",
+            "description": "Generate ambient soundscapes aligned to Sacred Geometry phi-harmonics",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "mood": {
+                        "type": "string",
+                        "enum": ["focus", "creative", "calm", "energetic", "sacred"],
+                        "default": "focus"
+                    },
+                    "duration_seconds": {
+                        "type": "number",
+                        "default": 300
+                    },
+                    "phi_harmonics": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            }
+        },
+        {
+            "name": "heady_oracle_query",
+            "description": "Traverse the knowledge graph — find connections humans miss",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string"
+                    },
+                    "max_hops": {
+                        "type": "number",
+                        "default": 5
+                    },
+                    "include_inferred": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["query"]
+            }
+        },
+        {
+            "name": "heady_oracle_connect",
+            "description": "Create typed relationships between entities in the knowledge graph",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "from_entity": {
+                        "type": "string"
+                    },
+                    "to_entity": {
+                        "type": "string"
+                    },
+                    "relationship": {
+                        "type": "string"
+                    },
+                    "confidence": {
+                        "type": "number",
+                        "default": 0.809
+                    },
+                    "bidirectional": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                },
+                "required": ["from_entity", "to_entity", "relationship"]
+            }
+        },
+        {
+            "name": "heady_oracle_discover",
+            "description": "Find hidden patterns and emergent clusters in the knowledge graph",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "seed_entity": {
+                        "type": "string"
+                    },
+                    "discovery_mode": {
+                        "type": "string",
+                        "enum": ["shortest_path", "community", "influence", "anomaly"],
+                        "default": "community"
+                    },
+                    "depth": {
+                        "type": "number",
+                        "default": 3
+                    }
+                },
+                "required": ["seed_entity"]
+            }
+        },
+        {
+            "name": "heady_mirror_spawn",
+            "description": "Spawn a digital twin of any service or the full system",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "target": {
+                        "type": "string",
+                        "description": "Service ID or 'full_system'"
+                    },
+                    "snapshot_time": {
+                        "type": "string",
+                        "default": "now"
+                    },
+                    "mutations": {
+                        "type": "object",
+                        "default": {}
+                    }
+                },
+                "required": ["target"]
+            }
+        },
+        {
+            "name": "heady_mirror_simulate",
+            "description": "Run a what-if scenario against a digital twin",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "twin_id": {
+                        "type": "string"
+                    },
+                    "scenario": {
+                        "type": "string"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "default": "5m"
+                    },
+                    "load_factor": {
+                        "type": "number",
+                        "default": 1.0
+                    }
+                },
+                "required": ["twin_id", "scenario"]
+            }
+        },
+        {
+            "name": "heady_pulse_analyze",
+            "description": "Detect emotional tone, frustration signals, and satisfaction markers",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "context": {
+                        "type": "string",
+                        "default": ""
+                    },
+                    "granularity": {
+                        "type": "string",
+                        "enum": ["coarse", "fine", "dimensional"],
+                        "default": "fine"
+                    }
+                },
+                "required": ["text"]
+            }
+        },
+        {
+            "name": "heady_pulse_wellbeing",
+            "description": "Aggregate community wellbeing score — emotional health metric",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "scope": {
+                        "type": "string",
+                        "enum": ["individual", "team", "community", "global"],
+                        "default": "community"
+                    },
+                    "timeframe": {
+                        "type": "string",
+                        "default": "24h"
+                    }
+                }
+            }
+        },
+        {
+            "name": "heady_forge_create",
+            "description": "Create a workflow DAG from natural language description",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "trigger": {
+                        "type": "string",
+                        "enum": ["manual", "cron", "webhook", "event", "emotion"]
+                    },
+                    "cron_expression": {
+                        "type": "string"
+                    }
+                },
+                "required": ["description", "trigger"]
+            }
+        },
+        {
+            "name": "heady_forge_execute",
+            "description": "Execute a workflow — fan out through bees, converge through gates",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "workflow_id": {
+                        "type": "string"
+                    },
+                    "input_data": {
+                        "type": "object",
+                        "default": {}
+                    },
+                    "dry_run": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                },
+                "required": ["workflow_id"]
+            }
+        },
+        {
+            "name": "heady_nexus_create_room",
+            "description": "Create a collaborative room with shared CRDT state",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["code", "document", "canvas", "agent_session", "whiteboard"]
+                    },
+                    "max_participants": {
+                        "type": "number",
+                        "default": 13
+                    },
+                    "ai_copilot": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["name", "type"]
+            }
+        },
+        {
+            "name": "heady_nexus_presence",
+            "description": "Get real-time presence — who's where, doing what",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "scope": {
+                        "type": "string",
+                        "enum": ["room", "service", "global"],
+                        "default": "room"
+                    },
+                    "room_id": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        {
+            "name": "heady_spectrum_analyze",
+            "description": "Deep image analysis — objects, text, layouts, diagrams",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "analysis_type": {
+                        "type": "string",
+                        "enum": ["general", "ui", "diagram", "document", "code"],
+                        "default": "general"
+                    },
+                    "extract_text": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["image_url"]
+            }
+        },
+        {
+            "name": "heady_spectrum_diff",
+            "description": "Visual diff between two images — pixel-perfect regression testing",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "image_a": {
+                        "type": "string"
+                    },
+                    "image_b": {
+                        "type": "string"
+                    },
+                    "sensitivity": {
+                        "type": "number",
+                        "default": 0.618
+                    },
+                    "highlight_mode": {
+                        "type": "string",
+                        "enum": ["overlay", "side_by_side", "heatmap"],
+                        "default": "heatmap"
+                    }
+                },
+                "required": ["image_a", "image_b"]
+            }
+        },
+        {
+            "name": "heady_spectrum_audit",
+            "description": "Audit UI against Sacred Geometry design system",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "rules": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "default": ["phi_spacing", "golden_ratio", "organic_curves", "breathing_rhythm"]
+                    },
+                    "strict": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                },
+                "required": ["image_url"]
+            }
+        },
+        {
+            "name": "heady_anchor_scan",
+            "description": "Scan service against compliance frameworks (GDPR, SOC2, HIPAA)",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "target": {
+                        "type": "string"
+                    },
+                    "frameworks": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": ["gdpr", "soc2", "hipaa", "ccpa", "iso27001", "pci_dss"]
+                        }
+                    },
+                    "depth": {
+                        "type": "string",
+                        "enum": ["quick", "standard", "deep"],
+                        "default": "standard"
+                    }
+                },
+                "required": ["target", "frameworks"]
+            }
+        },
+        {
+            "name": "heady_anchor_lineage",
+            "description": "Trace data lineage — where data came from and where it went",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "data_identifier": {
+                        "type": "string"
+                    },
+                    "direction": {
+                        "type": "string",
+                        "enum": ["upstream", "downstream", "full"],
+                        "default": "full"
+                    }
+                },
+                "required": ["data_identifier"]
+            }
+        },
+        {
+            "name": "heady_apex_montecarlo",
+            "description": "Run Monte Carlo simulations on portfolio outcomes",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "portfolio": {
+                        "type": "object",
+                        "description": "Asset allocation map"
+                    },
+                    "simulations": {
+                        "type": "number",
+                        "default": 10000
+                    },
+                    "horizon_days": {
+                        "type": "number",
+                        "default": 89
+                    },
+                    "confidence_levels": {
+                        "type": "array",
+                        "items": { "type": "number" },
+                        "default": [0.618, 0.809, 0.927]
+                    }
+                },
+                "required": ["portfolio"]
+            }
+        },
+        {
+            "name": "heady_apex_signal",
+            "description": "Generate trading signals with phi-ratio risk/reward sizing",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "strategy": {
+                        "type": "string"
+                    },
+                    "risk_per_trade": {
+                        "type": "number",
+                        "default": 0.0382
+                    },
+                    "max_positions": {
+                        "type": "number",
+                        "default": 8
+                    }
+                },
+                "required": ["strategy"]
+            }
+        },
+        {
+            "name": "heady_rosetta_translate",
+            "description": "Context-aware translation preserving semantic intent and tone",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "from": {
+                        "type": "string",
+                        "default": "auto"
+                    },
+                    "to": {
+                        "type": "string"
+                    },
+                    "context": {
+                        "type": "string",
+                        "default": ""
+                    },
+                    "preserve_tone": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["text", "to"]
+            }
+        },
+        {
+            "name": "heady_rosetta_scan",
+            "description": "Scan codebase for untranslated strings and i18n issues",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    },
+                    "locales": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "default": ["en", "es", "fr", "de", "ja", "zh", "pt", "ar"]
+                    },
+                    "report_missing": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                },
+                "required": ["path"]
+            }
+        },
+        {
+            "name": "heady_genesis_observe",
+            "description": "Analyze usage patterns to identify candidates for new tool generation",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "lookback": {
+                        "type": "string",
+                        "default": "7d"
+                    },
+                    "min_frequency": {
+                        "type": "number",
+                        "default": 5
+                    },
+                    "min_steps": {
+                        "type": "number",
+                        "default": 3
+                    }
+                }
+            }
+        },
+        {
+            "name": "heady_genesis_scaffold",
+            "description": "Scaffold a complete new MCP server from spec — Sacred Geometry compliant",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "spec": {
+                        "type": "object",
+                        "description": "Tool specification object"
+                    },
+                    "template": {
+                        "type": "string",
+                        "enum": ["minimal", "standard", "full"],
+                        "default": "standard"
+                    },
+                    "deploy_target": {
+                        "type": "string",
+                        "enum": ["cloud-run", "cloudflare-workers", "docker"],
+                        "default": "cloud-run"
+                    }
+                },
+                "required": ["spec"]
+            }
+        },
+        {
+            "name": "heady_genesis_evolve",
+            "description": "Evolve an existing tool — extend, optimize, split, or merge",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "tool_name": {
+                        "type": "string"
+                    },
+                    "evolution_type": {
+                        "type": "string",
+                        "enum": ["extend", "optimize", "split", "merge"]
+                    },
+                    "suggestion": {
+                        "type": "string"
+                    }
+                },
+                "required": ["tool_name", "evolution_type"]
+            }
         }
     ],
     "resources": [
@@ -156,6 +832,96 @@
             "uri": "heady://swarm/health",
             "name": "Swarm Health",
             "description": "All bee health and circuit breaker states"
+        },
+        {
+            "uri": "heady://chrono/timeline",
+            "name": "Chrono Timeline",
+            "description": "Live system timeline with causal annotations"
+        },
+        {
+            "uri": "heady://chrono/patterns",
+            "name": "Temporal Patterns",
+            "description": "Detected temporal patterns and recurring cycles"
+        },
+        {
+            "uri": "heady://echo/voices",
+            "name": "Voice Profiles",
+            "description": "Available voice profiles and characteristics"
+        },
+        {
+            "uri": "heady://oracle/graph",
+            "name": "Knowledge Graph",
+            "description": "Full knowledge graph topology and statistics"
+        },
+        {
+            "uri": "heady://oracle/inferences",
+            "name": "Graph Inferences",
+            "description": "Recently inferred relationships awaiting validation"
+        },
+        {
+            "uri": "heady://mirror/twins",
+            "name": "Digital Twins",
+            "description": "Active digital twins and their status"
+        },
+        {
+            "uri": "heady://pulse/emotional_map",
+            "name": "Emotional Map",
+            "description": "Real-time emotional heatmap across the user base"
+        },
+        {
+            "uri": "heady://pulse/wellbeing",
+            "name": "Wellbeing Index",
+            "description": "Community wellbeing index and trends"
+        },
+        {
+            "uri": "heady://forge/workflows",
+            "name": "Workflows",
+            "description": "Active workflow registry with execution statistics"
+        },
+        {
+            "uri": "heady://nexus/rooms",
+            "name": "Collaboration Rooms",
+            "description": "Active rooms and participant counts"
+        },
+        {
+            "uri": "heady://nexus/presence",
+            "name": "Global Presence",
+            "description": "Global presence map across the ecosystem"
+        },
+        {
+            "uri": "heady://spectrum/design_system",
+            "name": "Design System",
+            "description": "Sacred Geometry design tokens and visual rules"
+        },
+        {
+            "uri": "heady://anchor/compliance_score",
+            "name": "Compliance Score",
+            "description": "Real-time compliance score per framework"
+        },
+        {
+            "uri": "heady://apex/signals",
+            "name": "Trading Signals",
+            "description": "Live trading signal feed"
+        },
+        {
+            "uri": "heady://apex/risk",
+            "name": "Risk Metrics",
+            "description": "Real-time risk metrics and exposure"
+        },
+        {
+            "uri": "heady://rosetta/locales",
+            "name": "Locale Registry",
+            "description": "Supported locales and completion percentages"
+        },
+        {
+            "uri": "heady://genesis/patterns",
+            "name": "Usage Patterns",
+            "description": "Detected patterns awaiting crystallization into tools"
+        },
+        {
+            "uri": "heady://genesis/lineage",
+            "name": "Tool Lineage",
+            "description": "Tool evolution history — which tools spawned from which patterns"
         }
     ],
     "prompts": [
@@ -176,6 +942,50 @@
                 {
                     "name": "topic",
                     "required": true
+                }
+            ]
+        },
+        {
+            "name": "heady_chrono_investigate",
+            "description": "Investigate a system event by tracing its causal history",
+            "arguments": [
+                {
+                    "name": "event",
+                    "required": true
+                },
+                {
+                    "name": "depth",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "heady_oracle_explore",
+            "description": "Explore knowledge graph connections from a starting concept",
+            "arguments": [
+                {
+                    "name": "concept",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "heady_pulse_check_in",
+            "description": "Assess emotional state of a conversation and recommend adaptations",
+            "arguments": [
+                {
+                    "name": "conversation",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "heady_genesis_ideate",
+            "description": "Brainstorm new tool ideas based on ecosystem gaps and usage patterns",
+            "arguments": [
+                {
+                    "name": "domain",
+                    "required": false
                 }
             ]
         }
