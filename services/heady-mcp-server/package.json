@@ -1,19 +1,14 @@
 {
   "name": "@heady-ai/mcp-server",
-  "version": "5.0.0",
-  "description": "Heady™ Master Control Program — Full MCP server with 42 tools, stdio/HTTP/SSE transports, φ-scaled routing, CSL gates",
-  "main": "index.js",
+  "version": "5.1.0",
+  "description": "Heady™ Master Control Program — 97+ MCP tools, stdio/HTTP/SSE transports, φ-scaled routing, CSL gates",
+  "main": "src/index.js",
   "bin": {
-    "heady-mcp-server": "index.js"
+    "heady-mcp-server": "src/index.js"
   },
   "files": [
-    "index.js",
-    "config/",
-    "tools/",
-    "transports/",
-    "middleware/",
-    "shared/",
-    "core-bridge.js",
+    "src/",
+    "new-tools/",
     "README.md"
   ],
   "publishConfig": {
