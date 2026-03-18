@@ -6520,35 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "7b80ec5c-a2ae-466e-b6e0-9fbe322768b1",
-        "timestamp": "2026-02-12T00:09:09.598Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 43
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "c8675ad0-c840-4dac-ad3c-6fccc7a4a1ba",
-        "timestamp": "2026-02-12T00:09:09.602Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:ingest",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:deploy_priority"
-          ],
-          "count": 3
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "46e3bd80-a54a-4ccf-8f16-7282e1f50986",
         "timestamp": "2026-02-12T00:11:10.935Z",
         "type": "ERROR_BURST_DETECTED",
@@ -14789,11 +14760,37 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "fb8abcb3-a45c-4094-afbb-24aeb970c474",
+        "timestamp": "2026-03-18T02:40:22.120Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:RAM",
+          "name": "resource:RAM",
+          "count": 32
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "f2057e21-607d-4c39-9184-65624ef8dc71",
+        "timestamp": "2026-03-18T02:42:22.120Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:RAM",
+          "name": "resource:RAM",
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-03-18T02:38:22.119Z"
+    "updatedAt": "2026-03-18T02:42:22.120Z"
   }
 }
