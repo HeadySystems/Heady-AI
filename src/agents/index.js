@@ -40,7 +40,7 @@
  *   configs/autonomous-agent-prompt.yaml.
  */
 
-const { ClaudeCodeAgent } = require("./claude-code-agent");
+const { ClaudeCodeAgent } = require("./heady-code-agent");
 const { HeadyFinTechAgent } = require("./heady-fintech-agent");
 const crypto = require("crypto");
 

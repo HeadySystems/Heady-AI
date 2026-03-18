@@ -24,7 +24,7 @@ Use this skill when the user needs to:
 | buddy-device-bridge | src/buddy-device-bridge.js | Cross-device buddy sync |
 | buddy-computer-use | src/buddy-computer-use.js | Computer-use agent capability |
 | heady-buddy-agent | src/agents/heady-buddy-agent.js | HeadyBuddy conversational agent |
-| claude-code-agent | src/agents/claude-code-agent.js | Claude coding agent integration |
+| heady-code-agent | src/agents/heady-code-agent.js | Claude coding agent integration |
 | buddy-authorization | src/buddy-authorization.js | Buddy auth and permissions |
 | buddy-agent-hub | src/buddy-agent-hub.js | Multi-agent hub for buddy |
 

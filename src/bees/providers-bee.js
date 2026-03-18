@@ -1,7 +1,7 @@
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Providers Bee — Covers all AI provider modules:
- * brain-providers.js, claude-sdk.js, provider-benchmark.js,
+ * brain-providers.js, heady-sdk.js, provider-benchmark.js,
  * heady-models.js, monte-carlo.js
  */
 const domain = 'providers';
@@ -11,7 +11,7 @@ const priority = 0.85;
 function getWork(ctx = {}) {
     const mods = [
         { name: 'brain-providers', path: '../providers/brain-providers' },
-        { name: 'claude-sdk', path: '../providers/claude-sdk' },
+        { name: 'heady-sdk', path: '../providers/heady-sdk' },
         { name: 'provider-benchmark', path: '../provider-benchmark' },
         { name: 'heady-models', path: '../models/heady-models' },
         { name: 'monte-carlo', path: '../monte-carlo' },

@@ -12,7 +12,7 @@ const priority = 0.7;
 function getWork(ctx = {}) {
     const routes = [
         'aloha', 'auth-routes', 'battle', 'billing-routes', 'brain',
-        'buddy', 'buddy-companion', 'budget-router', 'claude-routes',
+        'buddy', 'buddy-companion', 'budget-router', 'heady-routes',
         'conductor', 'config', 'config-api', 'enterprise-ops', 'governance',
         'harmony', 'hcfp', 'headybuddy-config', 'headyme-onboarding',
         'health-routes', 'hive-sdk', 'lens', 'maintenance', 'memory',

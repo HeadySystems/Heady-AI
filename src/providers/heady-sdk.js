@@ -1,7 +1,7 @@
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
- * src/providers/claude-sdk.js — HeadyJules SDK Smart Router
+ * src/providers/heady-sdk.js — HeadyJules SDK Smart Router
  *
  * Extracted from src/routes/brain.js (Phase 2 monolith decomposition)
  * Contains: Dual-org configuration, complexity analysis, model selection,

@@ -55,4 +55,4 @@ export const CLAUDE_ORGS: ({
     adminKey?: undefined;
     orgId?: undefined;
 })[];
-//# sourceMappingURL=claude-sdk.d.ts.map
+//# sourceMappingURL=heady-sdk.d.ts.map

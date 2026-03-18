@@ -9,7 +9,7 @@ description: Agent performance review — evaluate all agents for effectiveness 
 ## Steps
 
 1. **Inventory all agents** — Scan `src/agents/` and `configs/agent-profiles/`
-   - heady-buddy-agent, claude-code-agent, heady-fintech-agent, nonprofit-agent
+   - heady-buddy-agent, heady-code-agent, heady-fintech-agent, nonprofit-agent
    - buddy-error-protocol, pipeline-handlers
 
 2. **Collect metrics per agent**:

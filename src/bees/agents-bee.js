@@ -1,7 +1,7 @@
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Agents Bee — Covers all src/agents/ modules:
- * buddy-error-protocol (479), claude-code-agent, heady-buddy-agent,
+ * buddy-error-protocol (479), heady-code-agent, heady-buddy-agent,
  * heady-fintech-agent, nonprofit-agent, pipeline-handlers
  */
 const domain = 'agents';
@@ -10,7 +10,7 @@ const priority = 0.85;
 
 function getWork(ctx = {}) {
     const mods = [
-        'buddy-error-protocol', 'claude-code-agent', 'heady-buddy-agent',
+        'buddy-error-protocol', 'heady-code-agent', 'heady-buddy-agent',
         'heady-fintech-agent', 'nonprofit-agent', 'pipeline-handlers',
     ];
     return mods.map(name => async () => {

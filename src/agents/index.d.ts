@@ -6,7 +6,7 @@ export function createAllAgents(options?: {}): (ClaudeCodeAgent | HeadyFinTechAg
  * Create and configure a Supervisor with all agents registered.
  */
 export function createConfiguredSupervisor(Supervisor: any, options?: {}): any;
-import { ClaudeCodeAgent } from "./claude-code-agent";
+import { ClaudeCodeAgent } from "./heady-code-agent";
 import { HeadyFinTechAgent } from "./heady-fintech-agent";
 export class BuilderAgent extends BaseAgent {
     constructor();

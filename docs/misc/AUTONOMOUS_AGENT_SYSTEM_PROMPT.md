@@ -698,7 +698,7 @@ Treat this prompt like a living codebase. When you discover a new pattern that w
 
 ### Agent Registration
 
-This prompt is loaded by the `claude-code` agent (`src/agents/claude-code-agent.js`) and injected as system context for all task types routed by the Supervisor. The prompt sections map to pipeline stages:
+This prompt is loaded by the `claude-code` agent (`src/agents/heady-code-agent.js`) and injected as system context for all task types routed by the Supervisor. The prompt sections map to pipeline stages:
 
 | Prompt Section | Pipeline Stage | Application |
 |---------------|----------------|-------------|
@@ -724,7 +724,7 @@ This prompt is loaded by the `claude-code` agent (`src/agents/claude-code-agent.
 ### Integration Points
 
 - **Config:** `configs/autonomous-agent-prompt.yaml` — prompt metadata, version, activation rules
-- **Agent:** `src/agents/claude-code-agent.js` — loads this prompt for task execution
+- **Agent:** `src/agents/heady-code-agent.js` — loads this prompt for task execution
 - **Supervisor:** `packages/hc-supervisor/` — routes tasks using capability matching (Section VII)
 - **Brain:** `packages/hc-brain/` — applies ORS-based execution mode selection (Section I)
 - **Checkpoint:** `packages/hc-checkpoint/` — validates against Section XI checklist
