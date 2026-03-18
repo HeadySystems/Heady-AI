@@ -111,12 +111,12 @@ Skills are installed into your Claude environment and automatically trigger base
 
 | Install Path | Triggers |
 |-------------|----------|
-| `claude-skills/heady-intelligence/` | analyze, scan, risks, patterns |
-| `claude-skills/heady-memory/` | remember, recall, search knowledge |
-| `claude-skills/heady-orchestrator/` | pipeline, orchestrate, automate |
-| `claude-skills/heady-coder/` | write code, build, implement |
-| `claude-skills/heady-ops/` | deploy, health, monitor, ops |
-| `claude-skills/heady-cms/` | publish, content, article, CMS |
+| `heady-skills/heady-intelligence/` | analyze, scan, risks, patterns |
+| `heady-skills/heady-memory/` | remember, recall, search knowledge |
+| `heady-skills/heady-orchestrator/` | pipeline, orchestrate, automate |
+| `heady-skills/heady-coder/` | write code, build, implement |
+| `heady-skills/heady-ops/` | deploy, health, monitor, ops |
+| `heady-skills/heady-cms/` | publish, content, article, CMS |
 
 ## Tool Discovery
 

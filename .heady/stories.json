@@ -6520,36 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "ecfa9d9e-edf0-409a-82af-d56ce064dd2d",
-        "timestamp": "2026-02-11T23:54:51.950Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 31
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "b94b96ff-ae13-421b-97d1-ab746f447b26",
-        "timestamp": "2026-02-11T23:54:51.953Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:monitor-feedback"
-          ],
-          "count": 4
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "b9b7630c-dfaf-4849-a9ea-a7b14996c400",
         "timestamp": "2026-02-11T23:56:52.185Z",
         "type": "ERROR_BURST_DETECTED",
@@ -14815,11 +14785,37 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "b5491f46-dea9-47a3-9511-47113b273b9a",
+        "timestamp": "2026-03-18T01:20:22.109Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:RAM",
+          "name": "resource:RAM",
+          "count": 11
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "cab99797-4824-4f5c-a376-4673737eb74d",
+        "timestamp": "2026-03-18T01:22:22.109Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:RAM",
+          "name": "resource:RAM",
+          "count": 5
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-03-18T01:18:22.110Z"
+    "updatedAt": "2026-03-18T01:22:22.109Z"
   }
 }

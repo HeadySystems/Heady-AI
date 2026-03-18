@@ -1824,7 +1824,7 @@
       "reviewAfter": 100,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 11,
+        "burstCount": 5,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -1962,7 +1962,7 @@
     "created": "2026-03-12T00:54:21.685Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-03-18T01:20:01.808Z",
+  "lastUpdated": "2026-03-18T01:25:01.814Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -1970,25 +1970,25 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-03-18T01:20:01.808Z",
-      "lastSeen": "2026-03-18T01:20:01.808Z",
+      "firstSeen": "2026-03-18T01:25:01.815Z",
+      "lastSeen": "2026-03-18T01:25:01.815Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 120,
+  "commitCount24h": 121,
   "topTopics": [
     {
       "word": "file(s)",
-      "count": 107
+      "count": 108
     },
     {
       "word": "hcfp-auto",
-      "count": 64
+      "count": 65
     },
     {
       "word": "changed",
-      "count": 64
+      "count": 65
     },
     {
       "word": "auto-commit.log",
