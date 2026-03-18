@@ -1,0 +1,82 @@
+{
+  "name": "Heady MCP Server",
+  "version": "5.1.0",
+  "description": "Heady Latent OS — Intelligent orchestration, memory, and agent platform via Model Context Protocol",
+  "homepage": "https://headymcp.com",
+  "documentation": "https://docs.headysystems.com",
+  "logo": "https://headysystems.com/assets/heady-logo.svg",
+  "transport": {
+    "type": "streamable-http",
+    "endpoint": "/mcp/v1",
+    "fallback": "sse"
+  },
+  "authentication": {
+    "schemes": ["bearer", "dpop"],
+    "oauth": {
+      "authorization_url": "https://auth.headysystems.com/authorize",
+      "token_url": "https://auth.headysystems.com/token",
+      "scopes": ["read", "write", "admin", "agent:execute", "tool:invoke"]
+    }
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true,
+    "sampling": true,
+    "tasks": true,
+    "logging": true
+  },
+  "tools": [
+    {"name": "heady.tool_dispatch", "category": "mcp_infra", "description": "Unified stateless MCP routing with method-aware dispatch"},
+    {"name": "heady.server_card", "category": "mcp_infra", "description": "Serve capability card"},
+    {"name": "heady.task_manager", "category": "mcp_infra", "description": "SEP-1686 task lifecycle with retry and expiry"},
+    {"name": "heady.audit_trail", "category": "observability", "description": "Tamper-evident audit chain for tool and agent activity"},
+    {"name": "heady.session_store", "category": "mcp_infra", "description": "KV-backed stateless session layer"},
+    {"name": "heady.semantic_cache", "category": "memory", "description": "Semantic deduplication cache"},
+    {"name": "heady.bee_registry", "category": "agents", "description": "Live bee capability and load registry"},
+    {"name": "heady.conductor_mcp", "category": "agents", "description": "MCP-facing HCFullPipeline conductor interface"},
+    {"name": "heady.health_mcp", "category": "observability", "description": "Aggregate health across MCP servers and nodes"},
+    {"name": "heady.telemetry_stream", "category": "observability", "description": "Structured telemetry stream"},
+    {"name": "heady.drift_detector", "category": "observability", "description": "6-signal drift detection and trigger events"},
+    {"name": "heady.dpop_auth", "category": "security", "description": "DPoP token binding for MCP requests"},
+    {"name": "heady.wif_auth", "category": "security", "description": "Workload identity federation"},
+    {"name": "heady.oauth_gateway", "category": "security", "description": "Scoped OAuth gateway"},
+    {"name": "heady.zero_trust_sandbox", "category": "security", "description": "Capability-based execution sandbox"},
+    {"name": "heady.vector_resource", "category": "memory", "description": "Vector memory as MCP resources"},
+    {"name": "heady.graph_rag", "category": "memory", "description": "Graph retrieval over vector memory"},
+    {"name": "heady.embed_pipeline", "category": "memory", "description": "Continuous embedding ingest"},
+    {"name": "heady.monte_carlo_gate", "category": "governance", "description": "Simulation gate for deploy validation"},
+    {"name": "heady.swarm_orchestrator", "category": "agents", "description": "Expose swarm execution as MCP tasks"},
+    {"name": "heady.federation_manager", "category": "agents", "description": "Cross-tenant bee delegation"},
+    {"name": "heady_brain_query", "category": "memory", "description": "Query the latent brain for stored knowledge"},
+    {"name": "heady_brain_ingest", "category": "memory", "description": "Ingest new knowledge into the brain"},
+    {"name": "heady_battle_run", "category": "orchestration", "description": "Run multi-model battle arena"},
+    {"name": "heady_pipeline_execute", "category": "orchestration", "description": "Execute HCFullPipeline stages"},
+    {"name": "heady_pipeline_status", "category": "orchestration", "description": "Get current pipeline state"},
+    {"name": "heady_skill_invoke", "category": "agents", "description": "Invoke a registered Heady skill"},
+    {"name": "heady_csl_evaluate", "category": "intelligence", "description": "Evaluate CSL expressions"},
+    {"name": "heady_phi_compute", "category": "intelligence", "description": "Compute phi-scaled values"},
+    {"name": "heady_sacred_geometry", "category": "intelligence", "description": "Generate sacred geometry patterns"},
+    {"name": "heady_node_status", "category": "infrastructure", "description": "Get status of all active nodes"}
+  ],
+  "agents": {
+    "HERMES": {"type": "bee", "pool": "hot", "mission": "Protocol liaison for MCP transport, sessions, Server Card, DPoP, and WIF"},
+    "KRONOS": {"type": "bee", "pool": "hot", "mission": "Task lifecycle manager for SEP-1686 state, retry, and expiry"},
+    "ARGUS": {"type": "bee", "pool": "hot", "mission": "Audit, telemetry, and drift analysis"},
+    "NEXUS": {"type": "bee", "pool": "warm", "mission": "Federation, scope enforcement, and tenant isolation"},
+    "HERALD": {"type": "bee", "pool": "warm", "mission": "Trigger registration and webhook/event dispatch"},
+    "PYTHIA": {"type": "node", "pool": "hot", "mission": "Monte Carlo validation, ORS gating, and governance checks"}
+  },
+  "nodes": {
+    "HeadyMCP_Gateway": {"role": "Stateless Streamable HTTP MCP gateway on Cloudflare Workers"},
+    "HeadyTask_Store": {"role": "D1+KV task state store for SEP-1686 lifecycle"},
+    "HERMES_Worker": {"role": "Dedicated protocol/auth/session worker"},
+    "HERALD_Event_Bus": {"role": "Cloudflare Queues-based event and trigger bus"},
+    "ARGUS_Collector": {"role": "Structured audit and observability collector"}
+  },
+  "phi_constants": {
+    "golden_ratio": 1.618033988749895,
+    "phi_inverse": 0.618033988749895,
+    "phi_squared": 2.618033988749895
+  }
+}
