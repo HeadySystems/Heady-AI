@@ -1810,9 +1810,9 @@
         }
       ],
       "stats": {
-        "mean": 83.705,
+        "mean": 83.435,
         "median": 80,
-        "stddev": 6.395934255446971,
+        "stddev": 6.290927991957943,
         "min": 78,
         "max": 98,
         "n": 200
@@ -1824,7 +1824,7 @@
       "reviewAfter": 100,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 28,
+        "burstCount": 17,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -1962,7 +1962,7 @@
     "created": "2026-03-12T00:54:21.685Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-03-18T01:45:01.285Z",
+  "lastUpdated": "2026-03-18T01:50:01.914Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -1970,25 +1970,25 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-03-18T01:45:01.285Z",
-      "lastSeen": "2026-03-18T01:45:01.285Z",
+      "firstSeen": "2026-03-18T01:50:01.914Z",
+      "lastSeen": "2026-03-18T01:50:01.914Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 125,
+  "commitCount24h": 126,
   "topTopics": [
     {
       "word": "file(s)",
-      "count": 112
+      "count": 113
     },
     {
       "word": "hcfp-auto",
-      "count": 69
+      "count": 70
     },
     {
       "word": "changed",
-      "count": 69
+      "count": 70
     },
     {
       "word": "auto-commit.log",
@@ -2004,11 +2004,11 @@
     },
     {
       "word": "resource-events.jsonl",
-      "count": 35
+      "count": 36
     },
     {
       "word": "pattern_store.json",
-      "count": 27
+      "count": 28
     },
     {
       "word": "2026-03-17t16",
