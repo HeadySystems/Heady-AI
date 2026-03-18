@@ -6,530 +6,8 @@
       "name": "resource:RAM",
       "state": "active",
       "createdAt": "2026-03-12T13:24:48.581Z",
-      "lastUpdated": "2026-03-18T03:15:01.851Z",
+      "lastUpdated": "2026-03-18T03:19:52.675Z",
       "observations": [
-        {
-          "value": 80,
-          "ts": "2026-03-17T18:34:22.597Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T18:34:27.611Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-03-17T18:34:32.626Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-03-17T18:34:37.640Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T19:25:32.757Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T20:00:47.879Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T20:00:52.907Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T20:00:57.944Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T20:01:22.969Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T20:01:27.987Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T20:02:08.004Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T20:02:13.017Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T22:55:48.419Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-03-17T22:55:53.437Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 83,
-          "ts": "2026-03-17T22:55:58.455Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 83,
-          "ts": "2026-03-17T22:56:03.478Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 83,
-          "ts": "2026-03-17T22:56:08.495Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-03-17T22:56:13.511Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T22:56:18.525Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-17T22:56:23.539Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-03-17T22:56:28.554Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T23:02:38.580Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T23:02:43.595Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T23:55:03.742Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T23:55:08.754Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-17T23:55:13.768Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-03-18T01:16:48.954Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-03-18T01:16:53.968Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-03-18T01:16:58.985Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-03-18T01:17:03.999Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-03-18T01:17:09.015Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-03-18T01:17:14.033Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:17:29.047Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:17:34.061Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:17:49.075Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:17:54.090Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:17:59.104Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:32:49.162Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:32:54.179Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:32:59.196Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:04.210Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:09.224Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:14.238Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:19.251Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:24.264Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:29.279Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:33:34.293Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:34:29.309Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:34:34.322Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:34:39.337Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-03-18T01:34:44.351Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:34:49.366Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:34:54.379Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:34:59.392Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:35:04.405Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-03-18T01:35:09.420Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:35:14.435Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 79,
-          "ts": "2026-03-18T01:35:19.450Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
         {
           "value": 80,
           "ts": "2026-03-18T01:35:24.464Z",
@@ -1807,14 +1285,536 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:15:06.863Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-03-18T03:15:11.876Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-03-18T03:15:16.891Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-03-18T03:15:21.906Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-03-18T03:15:26.920Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-03-18T03:15:31.935Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:15:36.950Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:15:41.964Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:15:46.978Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:15:51.992Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:15:57.007Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:16:02.023Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:16:07.036Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:16:12.050Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-18T03:16:17.065Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:16:22.078Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:16:27.090Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:16:32.106Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:16:37.120Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:16:42.133Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:16:47.146Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:16:52.159Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:16:57.171Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:17:02.185Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:17:07.200Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:17:12.213Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:17.227Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:22.241Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:17:27.257Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-03-18T03:17:32.272Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:37.285Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:42.299Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:47.314Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:52.330Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:17:57.343Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:02.355Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:07.373Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:12.386Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:17.401Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:22.421Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:27.437Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:32.452Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:37.465Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:42.479Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:47.494Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:52.507Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:18:57.522Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:02.538Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:07.552Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:12.563Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:17.577Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:22.594Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:27.610Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:32.623Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:37.636Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:42.649Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:47.662Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-03-18T03:19:52.675Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 78.885,
+        "mean": 78.91,
         "median": 79,
-        "stddev": 1.1143495860814971,
+        "stddev": 0.92838569571057,
         "min": 78,
-        "max": 83,
+        "max": 82,
         "n": 200
       },
       "trend": "unstable",
@@ -1824,7 +1824,7 @@
       "reviewAfter": 100,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 5,
+        "burstCount": 52,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -1962,7 +1962,7 @@
     "created": "2026-03-12T00:54:21.685Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-03-18T03:15:02.208Z",
+  "lastUpdated": "2026-03-18T03:20:01.556Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -1970,25 +1970,25 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-03-18T03:15:02.208Z",
-      "lastSeen": "2026-03-18T03:15:02.208Z",
+      "firstSeen": "2026-03-18T03:20:01.556Z",
+      "lastSeen": "2026-03-18T03:20:01.556Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 153,
+  "commitCount24h": 156,
   "topTopics": [
     {
       "word": "file(s)",
-      "count": 130
+      "count": 131
     },
     {
       "word": "hcfp-auto",
-      "count": 87
+      "count": 88
     },
     {
       "word": "changed",
-      "count": 87
+      "count": 88
     },
     {
       "word": "auto-commit.log",
@@ -1996,11 +1996,11 @@
     },
     {
       "word": "resource-events.jsonl",
-      "count": 52
+      "count": 53
     },
     {
       "word": "pattern_store.json",
-      "count": 43
+      "count": 44
     },
     {
       "word": "chore(auto)",
@@ -2012,11 +2012,11 @@
     },
     {
       "word": "feat",
-      "count": 17
+      "count": 19
     },
     {
       "word": "stories.json",
-      "count": 12
+      "count": 13
     }
   ]
 }
