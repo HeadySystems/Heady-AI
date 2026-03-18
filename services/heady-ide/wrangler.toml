@@ -1,0 +1,62 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ AI-IDE — Cloudflare Configuration                       ║
+# ║  Pages: heady-ai.com/ide (static client)                        ║
+# ║  Workers: edge proxy + AI Gateway + MCP                         ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+name = "heady-ai-ide"
+compatibility_date = "2026-03-01"
+main = "worker/index.js"
+
+[vars]
+ENVIRONMENT = "production"
+IDE_SERVER_URL = "https://ide.heady-ai.com"
+MCP_SERVER_URL = "https://headymcp.com"
+
+# R2 bucket binding for workspace files
+[[r2_buckets]]
+binding = "WORKSPACES"
+bucket_name = "heady-workspaces"
+
+# KV for config and caching
+[[kv_namespaces]]
+binding = "CONFIG"
+id = "" # Fill with KV namespace ID
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "" # Fill with KV namespace ID
+
+# AI Gateway
+[ai]
+binding = "AI"
+
+# Hyperdrive (Neon connection pooling)
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "" # Fill with Hyperdrive config ID
+
+# Durable Objects for IDE sessions
+[durable_objects]
+bindings = [
+  { name = "IDE_SESSION", class_name = "IDESession" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["IDESession"]
+
+# Routes
+[[routes]]
+pattern = "heady-ai.com/ide/*"
+zone_name = "heady-ai.com"
+
+# Pages deployment (static IDE client)
+[site]
+bucket = "./client/dist"
+
+# Dev settings
+[dev]
+port = 3400
+local_protocol = "https"

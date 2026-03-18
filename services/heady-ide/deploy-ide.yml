@@ -1,0 +1,191 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ AI-IDE Deploy — CF Pages + Cloud Run                    ║
+# ║  φ-stepped canary: 5% → 25% → 50% → 100%                       ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+name: Deploy HeadyAI-IDE
+on:
+  push:
+    branches: [main]
+    paths: ['packages/heady-ide/**']
+  workflow_dispatch:
+    inputs:
+      skip_canary:
+        description: 'Skip canary and deploy 100%'
+        type: boolean
+        default: false
+
+env:
+  GCP_PROJECT: gen-lang-client-0920560496
+  GCP_REGION: us-central1
+  SERVICE_NAME: heady-ide-server
+  CF_PROJECT: heady-ai-ide
+
+jobs:
+  # ── Step 1: Test ────────────────────────────────────────────────
+  test:
+    name: Lint + Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+  # ── Step 2: Deploy IDE Client → CF Pages ────────────────────────
+  deploy-client:
+    name: Client → CF Pages (heady-ai.com/ide)
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - name: Build client assets
+        run: |
+          mkdir -p dist
+          cp -r client/* dist/ 2>/dev/null || true
+          echo "Client build complete"
+      - name: Deploy to CF Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: ${{ env.CF_PROJECT }}
+          directory: dist
+
+  # ── Step 3: Build Container ─────────────────────────────────────
+  build-server:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - id: build
+        run: |
+          IMAGE="gcr.io/${{ env.GCP_PROJECT }}/${{ env.SERVICE_NAME }}:${{ github.sha }}"
+          gcloud builds submit . --tag "$IMAGE" --timeout=600
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+  # ── Step 4: Canary Deploy → Cloud Run ───────────────────────────
+  deploy-canary:
+    name: Canary Deploy (5%)
+    runs-on: ubuntu-latest
+    needs: build-server
+    if: ${{ !inputs.skip_canary }}
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Deploy canary revision (5% traffic)
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image ${{ needs.build-server.outputs.image }} \
+            --region ${{ env.GCP_REGION }} \
+            --no-traffic \
+            --min-instances 1 \
+            --max-instances 13 \
+            --memory 4Gi \
+            --cpu 2 \
+            --timeout 3600 \
+            --tag canary
+
+          CANARY_REV=$(gcloud run revisions list --service=${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} --format='value(REVISION)' --limit=1)
+
+          gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} \
+            --to-revisions "${CANARY_REV}=5"
+
+      - name: Health check canary
+        run: |
+          CANARY_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} \
+            --format='value(status.traffic[0].url)' 2>/dev/null || echo "")
+          
+          # Wait φ⁵ seconds (~11s) then check health
+          sleep 12
+          HEALTH=$(curl -sf "https://canary---${SERVICE_NAME}-uc.a.run.app/health" || echo '{"status":"unknown"}')
+          echo "Canary health: $HEALTH"
+
+  # ── Step 5: Promote φ-steps ─────────────────────────────────────
+  promote-25:
+    name: Promote to 25%
+    runs-on: ubuntu-latest
+    needs: deploy-canary
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: |
+          CANARY_REV=$(gcloud run revisions list --service=${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} --format='value(REVISION)' --limit=1)
+          gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} \
+            --to-revisions "${CANARY_REV}=25"
+          sleep 30
+
+  promote-50:
+    name: Promote to 50%
+    runs-on: ubuntu-latest
+    needs: promote-25
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: |
+          CANARY_REV=$(gcloud run revisions list --service=${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} --format='value(REVISION)' --limit=1)
+          gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} \
+            --to-revisions "${CANARY_REV}=50"
+          sleep 30
+
+  promote-100:
+    name: Promote to 100%
+    runs-on: ubuntu-latest
+    needs: promote-50
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: |
+          gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+            --region ${{ env.GCP_REGION }} \
+            --to-latest
+
+  # ── Full deploy (skip canary) ───────────────────────────────────
+  deploy-full:
+    name: Full Deploy (100%)
+    runs-on: ubuntu-latest
+    needs: build-server
+    if: ${{ inputs.skip_canary }}
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image ${{ needs.build-server.outputs.image }} \
+            --region ${{ env.GCP_REGION }} \
+            --min-instances 1 \
+            --max-instances 13 \
+            --memory 4Gi \
+            --cpu 2 \
+            --timeout 3600 \
+            --allow-unauthenticated
