@@ -1,0 +1,23 @@
+[
+  {"name":"heady.tool_dispatch","category":"mcp_infra","priority":"P0","purpose":"Unified stateless MCP routing with method-aware dispatch","depends_on":["heady.session_store","HERMES Worker"]},
+  {"name":"heady.server_card","category":"mcp_infra","priority":"P0","purpose":"Serve /.well-known/mcp.json capability card","depends_on":[]},
+  {"name":"heady.task_manager","category":"mcp_infra","priority":"P0","purpose":"SEP-1686 task lifecycle with retry and expiry","depends_on":["HeadyTask Store","KRONOS"]},
+  {"name":"heady.audit_trail","category":"observability","priority":"P0","purpose":"Tamper-evident audit chain for tool and agent activity","depends_on":["ARGUS"]},
+  {"name":"heady.session_store","category":"mcp_infra","priority":"P0","purpose":"KV-backed stateless session layer for MCP requests","depends_on":[]},
+  {"name":"heady.dpop_auth","category":"security","priority":"P1","purpose":"DPoP token binding for MCP requests","depends_on":["HERMES Worker"]},
+  {"name":"heady.wif_auth","category":"security","priority":"P1","purpose":"Workload identity federation for machine-to-machine auth","depends_on":["Cloud Run OIDC","NEXUS"]},
+  {"name":"heady.oauth_gateway","category":"security","priority":"P1","purpose":"Scoped OAuth gateway replacing static API keys","depends_on":["heady.session_store"]},
+  {"name":"heady.zero_trust_sandbox","category":"security","priority":"P1","purpose":"Capability-based execution sandbox with validation and redaction","depends_on":[]},
+  {"name":"heady.bee_registry","category":"agents","priority":"P1","purpose":"Live bee capability and load registry","depends_on":["BeeFactory"]},
+  {"name":"heady.swarm_orchestrator","category":"agents","priority":"P1","purpose":"Expose swarm execution as MCP tasks","depends_on":["HiveCoordinator","heady.task_manager"]},
+  {"name":"heady.federation_manager","category":"agents","priority":"P2","purpose":"Cross-tenant and cross-org bee delegation","depends_on":["heady.wif_auth","NEXUS"]},
+  {"name":"heady.conductor_mcp","category":"agents","priority":"P1","purpose":"MCP-facing HCFullPipeline conductor interface","depends_on":["HCFullPipeline","heady.task_manager"]},
+  {"name":"heady.vector_resource","category":"memory","priority":"P2","purpose":"Expose vector memory as MCP resources with caching","depends_on":["Neon pgvector","Cloudflare KV"]},
+  {"name":"heady.graph_rag","category":"memory","priority":"P2","purpose":"Graph retrieval over vector memory and entity links","depends_on":["Neon pgvector"]},
+  {"name":"heady.semantic_cache","category":"memory","priority":"P1","purpose":"Semantic deduplication cache for near-duplicate requests","depends_on":["Cloudflare KV"]},
+  {"name":"heady.embed_pipeline","category":"memory","priority":"P2","purpose":"Continuous embedding ingest into pgvector/Pinecone","depends_on":["Hugging Face embeddings","Neon pgvector","Pinecone"]},
+  {"name":"heady.health_mcp","category":"observability","priority":"P1","purpose":"Aggregate health across MCP servers and nodes","depends_on":["ARGUS"]},
+  {"name":"heady.telemetry_stream","category":"observability","priority":"P1","purpose":"Structured telemetry stream for latency, drift, and routing","depends_on":["ARGUS"]},
+  {"name":"heady.drift_detector","category":"observability","priority":"P1","purpose":"Expose 6-signal drift detection and trigger events","depends_on":["ARGUS","HERALD"]},
+  {"name":"heady.monte_carlo_gate","category":"governance","priority":"P2","purpose":"Simulation gate for deploy and pipeline validation","depends_on":["PYTHIA upgrade"]}
+]
