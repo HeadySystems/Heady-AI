@@ -299,33 +299,35 @@ async function handleDomainQuery(input) {
     const lower = input.toLowerCase();
 
     // Find matching domain
-    const match = domains.find(d => lower.includes(d.domain) || lower.includes(d.siteId) || lower.includes(d.node.toLowerCase()));
+    const match = domains.find(d => lower.includes(d.domain) || lower.includes(d.siteId) || (d.node && lower.includes(d.node.toLowerCase())));
 
     if (match) {
         console.log(`\n  🌐 ${match.domain}`);
-        console.log(`     Brand:    ${match.node}`);
-        console.log(`     Type:     ${match.type}`);
-        console.log(`     Purpose:  ${match.purpose}`);
-        console.log(`     Status:   ${match.status}`);
-        console.log(`     Theme:    ${match.theme.primary} / ${match.theme.secondary}`);
-        console.log(`     SEO:      ${match.seo.title}`);
-        console.log(`     CTA:      ${match.primaryCta.label} → ${match.primaryCta.href}`);
-        console.log(`     Content:  ${match.sitePath}/`);
+        console.log(`     Brand:    ${match.node || match.brand || 'N/A'}`);
+        console.log(`     Type:     ${match.type || 'N/A'}`);
+        console.log(`     Purpose:  ${match.purpose || 'N/A'}`);
+        console.log(`     Status:   ${match.status || 'N/A'}`);
+        if (match.theme) console.log(`     Theme:    ${match.theme.primary} / ${match.theme.secondary}`);
+        if (match.seo) console.log(`     SEO:      ${match.seo.title}`);
+        if (match.primaryCta) console.log(`     CTA:      ${match.primaryCta.label} → ${match.primaryCta.href}`);
+        if (match.sitePath) console.log(`     Content:  ${match.sitePath}/`);
 
         // Check content exists
-        const contentDir = path.join(ROOT, match.sitePath);
-        if (fs.existsSync(contentDir)) {
-            const files = fs.readdirSync(contentDir);
-            console.log(`     Files:    ${files.join(', ')}`);
-        } else {
-            warn(`Content directory missing: ${contentDir}`);
+        if (match.sitePath) {
+            const contentDir = path.join(ROOT, match.sitePath);
+            if (fs.existsSync(contentDir)) {
+                const files = fs.readdirSync(contentDir);
+                console.log(`     Files:    ${files.join(', ')}`);
+            } else {
+                warn(`Content directory missing: ${contentDir}`);
+            }
         }
     } else {
         // List all domains
         info(`${domains.length} domains registered:`);
         for (const d of domains) {
             const statusIcon = d.status === 'active' ? '🟢' : '🟡';
-            console.log(`  ${statusIcon} ${d.domain.padEnd(25)} ${d.node.padEnd(18)} ${d.purpose.substring(0, 50)}`);
+            console.log(`  ${statusIcon} ${(d.domain || '').padEnd(25)} ${(d.node || d.brand || '').padEnd(18)} ${(d.purpose || '').substring(0, 50)}`);
         }
     }
 }
