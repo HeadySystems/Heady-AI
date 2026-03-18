@@ -1,0 +1,21 @@
+{
+  "name": "@heady/fossil",
+  "version": "1.0.0",
+  "description": "Code archaeology",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3512,
+    "category": "devex",
+    "phiTier": 5,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

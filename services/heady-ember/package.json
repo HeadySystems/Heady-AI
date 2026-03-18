@@ -1,0 +1,21 @@
+{
+  "name": "@heady/ember",
+  "version": "1.0.0",
+  "description": "Warm cache manager",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3604,
+    "category": "data",
+    "phiTier": 6,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

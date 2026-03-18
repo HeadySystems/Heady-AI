@@ -1,0 +1,21 @@
+{
+  "name": "@heady/nexus",
+  "version": "1.0.0",
+  "description": "Knowledge graph engine",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3404,
+    "category": "intelligence",
+    "phiTier": 4,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

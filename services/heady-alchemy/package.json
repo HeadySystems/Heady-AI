@@ -1,0 +1,21 @@
+{
+  "name": "@heady/alchemy",
+  "version": "1.0.0",
+  "description": "Data pipeline transformer",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3600,
+    "category": "data",
+    "phiTier": 6,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

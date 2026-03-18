@@ -1,7 +1,7 @@
 {
   "version": "4.1.0",
-  "generated": "2026-03-17",
-  "service_count": 175,
+  "generated": "2026-03-18",
+  "service_count": 220,
   "phi": 1.618033988749895,
   "csl_threshold": 0.618,
   "categories": {
@@ -13,7 +13,12 @@
     "integration": "MCP, external APIs, bridges",
     "observability": "Health, metrics, telemetry, logging",
     "ui": "Web shell, buddy, embed, UI services",
-    "devops": "Deploy, migration, scheduler, cron"
+    "devops": "Deploy, migration, scheduler, cron",
+    "intelligence": "Temporal, contextual, and knowledge intelligence services",
+    "optimization": "Resource planning, cost, metrics, and performance optimization",
+    "devex": "Developer experience, documentation, scaffolding, and testing tools",
+    "platform": "Platform services: i18n, feature flags, edge, API management",
+    "infrastructure": "Infrastructure as code and service mesh intelligence"
   },
   "services": [
     {
@@ -1066,7 +1071,7 @@
       "status": "active",
       "port": 3310,
       "health": "/health",
-      "note": "HeadyBuddy AI Companion Backend \u2014 cross-device sync"
+      "note": "HeadyBuddy AI Companion Backend — cross-device sync"
     },
     {
       "id": "heady-ide-service",
@@ -1075,7 +1080,7 @@
       "status": "active",
       "port": 3320,
       "health": "/health",
-      "note": "HeadyAI-IDE Cloud Workspace \u2014 Windsurf/Antigravity hybrid"
+      "note": "HeadyAI-IDE Cloud Workspace — Windsurf/Antigravity hybrid"
     },
     {
       "id": "headyweb-browser",
@@ -1084,7 +1089,7 @@
       "status": "active",
       "port": 3300,
       "health": "/health",
-      "note": "HeadyWeb Browser \u2014 Comet/Chromium hybrid with micro-frontends"
+      "note": "HeadyWeb Browser — Comet/Chromium hybrid with micro-frontends"
     },
     {
       "id": "auth-relay",
@@ -1103,6 +1108,411 @@
       "port": 3341,
       "health": "/health",
       "note": "WebSocket state sync with CRDT conflict resolution"
+    },
+    {
+      "id": "heady-chrono",
+      "type": "directory",
+      "category": "intelligence",
+      "status": "active",
+      "port": 3400,
+      "health": "/health",
+      "note": "Temporal intelligence"
+    },
+    {
+      "id": "heady-cartograph",
+      "type": "directory",
+      "category": "intelligence",
+      "status": "active",
+      "port": 3401,
+      "health": "/health",
+      "note": "Dependency & impact mapper"
+    },
+    {
+      "id": "heady-synapse",
+      "type": "directory",
+      "category": "intelligence",
+      "status": "active",
+      "port": 3402,
+      "health": "/health",
+      "note": "Inter-agent communication bus"
+    },
+    {
+      "id": "heady-aurora",
+      "type": "directory",
+      "category": "intelligence",
+      "status": "active",
+      "port": 3403,
+      "health": "/health",
+      "note": "Ambient context enricher"
+    },
+    {
+      "id": "heady-nexus",
+      "type": "directory",
+      "category": "intelligence",
+      "status": "active",
+      "port": 3404,
+      "health": "/health",
+      "note": "Knowledge graph engine"
+    },
+    {
+      "id": "heady-prism",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3410,
+      "health": "/health",
+      "note": "Multi-perspective code review"
+    },
+    {
+      "id": "heady-loom",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3411,
+      "health": "/health",
+      "note": "Workflow weaver"
+    },
+    {
+      "id": "heady-axiom",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3412,
+      "health": "/health",
+      "note": "Invariant & contract enforcer"
+    },
+    {
+      "id": "heady-mosaic",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3413,
+      "health": "/health",
+      "note": "Multi-repo orchestrator"
+    },
+    {
+      "id": "heady-cadence",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3414,
+      "health": "/health",
+      "note": "Release rhythm manager"
+    },
+    {
+      "id": "heady-chimera",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3415,
+      "health": "/health",
+      "note": "Multi-model AI router"
+    },
+    {
+      "id": "heady-tapestry",
+      "type": "directory",
+      "category": "orchestration",
+      "status": "active",
+      "port": 3416,
+      "health": "/health",
+      "note": "Event sourcing & CQRS"
+    },
+    {
+      "id": "heady-echo",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "port": 3420,
+      "health": "/health",
+      "note": "Cross-environment diff"
+    },
+    {
+      "id": "heady-vault",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "port": 3421,
+      "health": "/health",
+      "note": "Secrets lifecycle manager"
+    },
+    {
+      "id": "heady-aegis",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "port": 3422,
+      "health": "/health",
+      "note": "Security posture manager"
+    },
+    {
+      "id": "heady-crucible",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "port": 3423,
+      "health": "/health",
+      "note": "Chaos engineering"
+    },
+    {
+      "id": "heady-arbiter",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "port": 3424,
+      "health": "/health",
+      "note": "Conflict resolution"
+    },
+    {
+      "id": "heady-ouroboros",
+      "type": "directory",
+      "category": "security",
+      "status": "active",
+      "port": 3425,
+      "health": "/health",
+      "note": "Self-healing pipeline"
+    },
+    {
+      "id": "heady-mycelium",
+      "type": "directory",
+      "category": "infrastructure",
+      "status": "active",
+      "port": 3426,
+      "health": "/health",
+      "note": "Service mesh intelligence"
+    },
+    {
+      "id": "heady-rune",
+      "type": "directory",
+      "category": "infrastructure",
+      "status": "active",
+      "port": 3427,
+      "health": "/health",
+      "note": "Infrastructure as Code"
+    },
+    {
+      "id": "heady-oracle",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3500,
+      "health": "/health",
+      "note": "Predictive resource planner"
+    },
+    {
+      "id": "heady-nimbus",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3501,
+      "health": "/health",
+      "note": "Cloud cost intelligence"
+    },
+    {
+      "id": "heady-patina",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3502,
+      "health": "/health",
+      "note": "Technical debt tracker"
+    },
+    {
+      "id": "heady-polaris",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3503,
+      "health": "/health",
+      "note": "North star metrics"
+    },
+    {
+      "id": "heady-solstice",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3504,
+      "health": "/health",
+      "note": "Seasonal pattern analyzer"
+    },
+    {
+      "id": "heady-quantum",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3505,
+      "health": "/health",
+      "note": "Probabilistic decision engine"
+    },
+    {
+      "id": "heady-tempest",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3506,
+      "health": "/health",
+      "note": "Load & stress testing"
+    },
+    {
+      "id": "heady-verdant",
+      "type": "directory",
+      "category": "optimization",
+      "status": "active",
+      "port": 3507,
+      "health": "/health",
+      "note": "Green computing tracker"
+    },
+    {
+      "id": "heady-compass",
+      "type": "directory",
+      "category": "devex",
+      "status": "active",
+      "port": 3510,
+      "health": "/health",
+      "note": "Developer experience navigator"
+    },
+    {
+      "id": "heady-scribe",
+      "type": "directory",
+      "category": "devex",
+      "status": "active",
+      "port": 3511,
+      "health": "/health",
+      "note": "Auto-documentation generator"
+    },
+    {
+      "id": "heady-fossil",
+      "type": "directory",
+      "category": "devex",
+      "status": "active",
+      "port": 3512,
+      "health": "/health",
+      "note": "Code archaeology"
+    },
+    {
+      "id": "heady-genesis",
+      "type": "directory",
+      "category": "devex",
+      "status": "active",
+      "port": 3513,
+      "health": "/health",
+      "note": "Project scaffolder"
+    },
+    {
+      "id": "heady-labyrinth",
+      "type": "directory",
+      "category": "devex",
+      "status": "active",
+      "port": 3514,
+      "health": "/health",
+      "note": "Test maze runner"
+    },
+    {
+      "id": "heady-mimic",
+      "type": "directory",
+      "category": "devex",
+      "status": "active",
+      "port": 3515,
+      "health": "/health",
+      "note": "Mock & fixture generator"
+    },
+    {
+      "id": "heady-alchemy",
+      "type": "directory",
+      "category": "data",
+      "status": "active",
+      "port": 3600,
+      "health": "/health",
+      "note": "Data pipeline transformer"
+    },
+    {
+      "id": "heady-weave",
+      "type": "directory",
+      "category": "data",
+      "status": "active",
+      "port": 3601,
+      "health": "/health",
+      "note": "GraphQL federation gateway"
+    },
+    {
+      "id": "heady-herald",
+      "type": "directory",
+      "category": "data",
+      "status": "active",
+      "port": 3602,
+      "health": "/health",
+      "note": "Notification engine"
+    },
+    {
+      "id": "heady-resonance",
+      "type": "directory",
+      "category": "data",
+      "status": "active",
+      "port": 3603,
+      "health": "/health",
+      "note": "Feedback loop aggregator"
+    },
+    {
+      "id": "heady-ember",
+      "type": "directory",
+      "category": "data",
+      "status": "active",
+      "port": 3604,
+      "health": "/health",
+      "note": "Warm cache manager"
+    },
+    {
+      "id": "heady-sigil",
+      "type": "directory",
+      "category": "platform",
+      "status": "active",
+      "port": 3605,
+      "health": "/health",
+      "note": "API key & token manager"
+    },
+    {
+      "id": "heady-tessera",
+      "type": "directory",
+      "category": "platform",
+      "status": "active",
+      "port": 3606,
+      "health": "/health",
+      "note": "Feature flags & experiments"
+    },
+    {
+      "id": "heady-lingua",
+      "type": "directory",
+      "category": "platform",
+      "status": "active",
+      "port": 3610,
+      "health": "/health",
+      "note": "i18n & translation"
+    },
+    {
+      "id": "heady-meridian",
+      "type": "directory",
+      "category": "platform",
+      "status": "active",
+      "port": 3611,
+      "health": "/health",
+      "note": "Cross-timezone coordination"
+    },
+    {
+      "id": "heady-spectra",
+      "type": "directory",
+      "category": "platform",
+      "status": "active",
+      "port": 3612,
+      "health": "/health",
+      "note": "API contract testing"
+    },
+    {
+      "id": "heady-aether",
+      "type": "directory",
+      "category": "platform",
+      "status": "active",
+      "port": 3613,
+      "health": "/health",
+      "note": "Edge computing orchestrator"
     }
   ]
 }

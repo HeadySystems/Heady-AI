@@ -1,0 +1,21 @@
+{
+  "name": "@heady/quantum",
+  "version": "1.0.0",
+  "description": "Probabilistic decision engine",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3505,
+    "category": "optimization",
+    "phiTier": 5,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

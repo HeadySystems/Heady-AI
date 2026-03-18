@@ -38,8 +38,9 @@ const RATE_LIMITS = {
   INTERNAL: FIB[13],      // 233 req/min
 };
 
-// Service ports (all 50 services)
+// Service ports — φ-indexed across all 95 services
 const PORTS = {
+  // ═══ Core (33xx) ═══
   MCP_SERVER: 3310,
   HEADY_BRAIN: 3311,
   HEADY_MEMORY: 3312,
@@ -62,6 +63,65 @@ const PORTS = {
   HEADY_GUARD: 3329,
   HCFP: 3330,
   EDGE_AI: 3331,
+
+  // ═══ Advanced MCP Services — Tier 0 (34xx) ═══
+  HEADY_CHRONO: 3400,
+  HEADY_CARTOGRAPH: 3401,
+  HEADY_SYNAPSE: 3402,
+  HEADY_AURORA: 3403,
+  HEADY_NEXUS: 3404,
+
+  // ═══ Advanced MCP Services — Tier 1 (34xx) ═══
+  HEADY_PRISM: 3410,
+  HEADY_LOOM: 3411,
+  HEADY_AXIOM: 3412,
+  HEADY_MOSAIC: 3413,
+  HEADY_CADENCE: 3414,
+  HEADY_CHIMERA: 3415,
+  HEADY_TAPESTRY: 3416,
+
+  // ═══ Advanced MCP Services — Tier 2 (34xx) ═══
+  HEADY_ECHO: 3420,
+  HEADY_VAULT: 3421,
+  HEADY_AEGIS: 3422,
+  HEADY_CRUCIBLE: 3423,
+  HEADY_ARBITER: 3424,
+  HEADY_OUROBOROS: 3425,
+  HEADY_MYCELIUM: 3426,
+  HEADY_RUNE: 3427,
+
+  // ═══ Advanced MCP Services — Tier 3 (35xx) ═══
+  HEADY_ORACLE: 3500,
+  HEADY_NIMBUS: 3501,
+  HEADY_PATINA: 3502,
+  HEADY_POLARIS: 3503,
+  HEADY_SOLSTICE: 3504,
+  HEADY_QUANTUM: 3505,
+  HEADY_TEMPEST: 3506,
+  HEADY_VERDANT: 3507,
+
+  // ═══ Advanced MCP Services — Tier 4 (35xx) ═══
+  HEADY_COMPASS: 3510,
+  HEADY_SCRIBE: 3511,
+  HEADY_FOSSIL: 3512,
+  HEADY_GENESIS: 3513,
+  HEADY_LABYRINTH: 3514,
+  HEADY_MIMIC: 3515,
+
+  // ═══ Advanced MCP Services — Tier 5 (36xx) ═══
+  HEADY_ALCHEMY: 3600,
+  HEADY_WEAVE: 3601,
+  HEADY_HERALD: 3602,
+  HEADY_RESONANCE: 3603,
+  HEADY_EMBER: 3604,
+  HEADY_SIGIL: 3605,
+  HEADY_TESSERA: 3606,
+
+  // ═══ Advanced MCP Services — Tier 6 (36xx) ═══
+  HEADY_LINGUA: 3610,
+  HEADY_MERIDIAN: 3611,
+  HEADY_SPECTRA: 3612,
+  HEADY_AETHER: 3613,
 };
 
 // φ-scaled retry delays (ms)

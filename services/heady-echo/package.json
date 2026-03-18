@@ -1,0 +1,21 @@
+{
+  "name": "@heady/echo",
+  "version": "1.0.0",
+  "description": "Cross-environment diff",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3420,
+    "category": "security",
+    "phiTier": 4,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

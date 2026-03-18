@@ -13,6 +13,8 @@ const { PHI, PSI, PSI2, FIB, CSL } = require('../config/phi-constants');
 const { callService, checkServiceHealth } = require('./service-client');
 const { getAllServiceEndpoints } = require('../config/services');
 const { DRUPAL_TOOLS } = require('./drupal-integration');
+const { registerAdvancedServices } = require('./advanced-services');
+const { registerCreativeServices } = require('./creative-services');
 
 function createToolRegistry() {
   const tools = [];
@@ -756,6 +758,16 @@ function createToolRegistry() {
   for (const tool of DRUPAL_TOOLS) {
     register(tool);
   }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // ADVANCED MCP SERVICES — 25 new φ-scaled services (v5.1)
+  // ═══════════════════════════════════════════════════════════════════
+  registerAdvancedServices(register);
+
+  // ═══════════════════════════════════════════════════════════════════
+  // CREATIVE MCP SERVICES — 20 additional innovative services (v5.1)
+  // ═══════════════════════════════════════════════════════════════════
+  registerCreativeServices(register);
 
   return { tools, handlers };
 }
