@@ -1,0 +1,64 @@
+# ─── Heady Onboarding — Cloudflare Worker Configuration ───────────────
+# Edge auth gateway: JWT verification, CORS, rate limiting, origin routing
+
+name = "heady-auth-gateway"
+main = "auth-gateway.js"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ─── Account & Zone ─────────────────────────────────────────────────
+# TODO: Replace with your Cloudflare account ID
+# account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+# TODO: Replace with your Cloudflare zone ID
+# zone_id = "YOUR_CLOUDFLARE_ZONE_ID"
+
+# ─── Routes ─────────────────────────────────────────────────────────
+# TODO: Uncomment and configure for production routing:
+# routes = [
+#   { pattern = "api.heady.ai/*",  zone_name = "heady.ai" },
+#   { pattern = "api.heady.dev/*", zone_name = "heady.dev" },
+# ]
+
+# ─── Environment Variables ───────────────────────────────────────────
+[vars]
+# TODO: Replace with actual Cloud Run service URL after deployment
+ORIGIN_URL = "https://heady-onboarding-REPLACE.a.run.app"
+FIREBASE_PROJECT_ID = "heady-ai"
+
+# ─── KV Namespace Binding (Rate Limiting) ────────────────────────────
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+# TODO: Replace with actual KV namespace ID from `wrangler kv:namespace create RATE_LIMIT`
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# ─── Production Environment ─────────────────────────────────────────
+[env.production]
+name = "heady-auth-gateway-production"
+
+[env.production.vars]
+# TODO: Replace with production Cloud Run service URL
+ORIGIN_URL = "https://heady-onboarding-REPLACE.a.run.app"
+FIREBASE_PROJECT_ID = "heady-ai"
+
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT"
+# TODO: Replace with production KV namespace ID
+id = "REPLACE_WITH_PRODUCTION_KV_NAMESPACE_ID"
+
+# ─── Staging Environment ────────────────────────────────────────────
+[env.staging]
+name = "heady-auth-gateway-staging"
+
+[env.staging.vars]
+# TODO: Replace with staging Cloud Run service URL
+ORIGIN_URL = "https://heady-onboarding-staging-REPLACE.a.run.app"
+FIREBASE_PROJECT_ID = "heady-ai"
+
+[[env.staging.kv_namespaces]]
+binding = "RATE_LIMIT"
+# TODO: Replace with staging KV namespace ID
+id = "REPLACE_WITH_STAGING_KV_NAMESPACE_ID"
+
+# ─── Observability ──────────────────────────────────────────────────
+[observability]
+enabled = true
