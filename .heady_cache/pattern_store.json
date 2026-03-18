@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-03-18T20:45:02.079Z",
-  "version": 206,
+  "lastUpdated": "2026-03-18T20:50:01.595Z",
+  "version": 207,
   "phi": 1.618033988749895,
   "resourcePatterns": [
     {
@@ -8,8 +8,8 @@
       "confidence": 1,
       "severity": "LOW",
       "firstSeen": "2026-03-18T03:35:01.395Z",
-      "lastSeen": "2026-03-18T20:45:02.079Z",
-      "occurrences": 206
+      "lastSeen": "2026-03-18T20:50:01.595Z",
+      "occurrences": 207
     }
   ],
   "gitVelocity": "HIGH",
@@ -28,12 +28,12 @@
       "count": 287
     },
     {
-      "word": "auto-commit.log",
+      "word": "pattern_store.json",
       "count": 249
     },
     {
-      "word": "pattern_store.json",
-      "count": 248
+      "word": "auto-commit.log",
+      "count": 249
     },
     {
       "word": "resource-events.jsonl",
