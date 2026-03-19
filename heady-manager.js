@@ -45,10 +45,20 @@ const fetch = require('node-fetch');
 const { createAppAuth } = require('@octokit/auth-app');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-const { createLogger } = require('./packages/structured-logger');
-
-// Structured logger for heady-manager
-const log = createLogger('heady-manager', 'core');
+// Structured logger with resilient fallback — boot must never fail on logging
+let log;
+try {
+  const { createLogger: _createLogger } = require('./packages/structured-logger');
+  log = _createLogger('heady-manager', 'core');
+} catch (err) {
+  // Fallback logger when workspace deps aren't linked
+  const _log = (level) => (msg, meta) => {
+    const entry = JSON.stringify({ ts: new Date().toISOString(), level, service: 'heady-manager', msg, ...(meta || {}) });
+    (level === 'error' || level === 'fatal' ? process.stderr : process.stdout).write(entry + '\n');
+  };
+  log = { debug: _log('debug'), info: _log('info'), warn: _log('warn'), error: _log('error'), fatal: _log('fatal') };
+  log.warn('Structured logger not available, using fallback', { error: err.message });
+}
 
 /**
  * @swagger
@@ -96,8 +106,13 @@ function preloadPersistentMemory() {
 
 // Preload memory at startup
 preloadPersistentMemory();
-// Load remote resources config
-const remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8'));
+// Load remote resources config — with graceful fallback for missing files
+let remoteConfig = { services: {} };
+try {
+  remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8')) || remoteConfig;
+} catch (err) {
+  log.warn('Remote resources config not found, using defaults', { error: err.message });
+}
 
 // Handle remote resources
 function checkRemoteService(service) {
