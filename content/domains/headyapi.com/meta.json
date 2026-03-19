@@ -1,6 +1,6 @@
 {
   "title": "HeadyAPI — The Developer API for Heady™",
-  "description": "Full programmatic access to the Heady™ AI ecosystem. REST + GraphQL, interactive playground, SDK libraries for JS/Python/Go, φ-scaled rate limiting, WebSocket streaming, and 15 production endpoints.",
+  "description": "HeadyAPI provides full programmatic access to the entire Heady™ ecosystem. REST and GraphQL dual API surface with 15 core endpoints, interactive browser playground, φ-scaled rate limiting with golden ratio burst allowances, SDK libraries for JavaScript/TypeScript and Python, WebSocket streaming for real-time agent output, OpenAPI 3.1 specification, and granular API key management with scoping, rotation, and audit logging.",
   "keywords": [
     "HeadyAPI",
     "AI API",
@@ -15,10 +15,16 @@
     "API playground",
     "API key management",
     "WebSocket streaming AI",
-    "Heady developer"
+    "Heady developer",
+    "API key management",
+    "interactive API playground",
+    "phi rate limiting",
+    "agent spawning API",
+    "vector search API",
+    "pipeline execution API"
   ],
   "ogTitle": "HeadyAPI — Build on Heady™",
-  "ogDescription": "REST + GraphQL API with interactive playground, SDK libraries, and φ-scaled rate limiting. Full access to the Heady™ AI ecosystem in your code.",
+  "ogDescription": "REST + GraphQL + WebSocket. 15 endpoints, 4 SDKs, interactive playground, φ-scaled rate limiting. Full programmatic access to the Heady™ AI ecosystem for developers and teams.",
   "ogImage": "https://headyapi.com/og-image.png",
   "twitterCard": "summary_large_image",
   "twitterSite": "@HeadySystems",

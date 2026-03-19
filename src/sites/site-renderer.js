@@ -137,6 +137,9 @@ function renderSite(site) {
 <meta property="og:url" content="https://${site.domain || 'headyme.com'}">
 <meta property="og:image" content="https://headysystems.com/assets/og-${(site.slug || site.name || 'heady').toLowerCase()}.png">
 <meta property="og:site_name" content="${site.name}">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${site.name} — ${site.tagline}">
 <meta name="twitter:description" content="${(site.description || "").replace(/"/g, "&quot;")}">

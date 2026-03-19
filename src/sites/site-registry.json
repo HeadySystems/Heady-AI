@@ -227,6 +227,11 @@
                     "icon": "🌍",
                     "title": "HeadyConnection Nonprofit Mission",
                     "desc": "Through HeadyConnection Inc. (501(c)(3)), we invest in digital equity, workforce development, and community education programs. Technology that empowers communities, not just enterprises."
+                },
+                {
+                    "icon": "V",
+                    "title": "384D Vector Memory",
+                    "desc": "Persistent 3D spatial memory with pgvector-backed HNSW indexing, O(log n) octree retrieval, and cross-agent semantic sharing across all 9 Heady domains."
                 }
             ],
             "stats": [
@@ -2447,6 +2452,187 @@
                 }
             ],
             "chatEnabled": true
+        },
+        "headyapi.com": {
+            "name": "HeadyAPI",
+            "slug": "headyapi",
+            "tagline": "The Developer API for Heady",
+            "description": "HeadyAPI provides full programmatic access to the entire Heady ecosystem through a dual REST and GraphQL API surface. 15 core endpoints cover chat completion, 384D vector embedding generation, semantic memory search, agent spawning, pipeline execution, bee coordination, CSL gate routing, and budget tracking. Interactive playground lets developers test every endpoint in-browser. SDK libraries for JavaScript/TypeScript and Python with full type definitions, async support, streaming helpers, and automatic retry with phi-backoff. Rate limits follow golden ratio scaling with burst allowances and rolling windows that adapt naturally to usage patterns.",
+            "role": "api-gateway",
+            "vertical": "developer",
+            "sacredGeometry": "Vesica Piscis",
+            "accent": "#ff6d00",
+            "accentDark": "#e65100",
+            "accentGlow": "rgba(255,109,0,0.15)",
+            "heroTitle": "Build on Heady",
+            "heroSubtitle": "Full programmatic access to 20+ AI agents, 384D vector memory, 31 MCP tools, and the 17-Swarm Matrix. REST, GraphQL, and WebSocket with SDKs in your language.",
+            "canvasAnimation": "api-flow",
+            "navLinks": [
+                {
+                    "label": "Docs",
+                    "href": "#docs"
+                },
+                {
+                    "label": "Playground",
+                    "href": "#playground"
+                },
+                {
+                    "label": "SDKs",
+                    "href": "#sdks"
+                },
+                {
+                    "label": "Pricing",
+                    "href": "#pricing"
+                },
+                {
+                    "label": "Get API Key",
+                    "href": "#keys",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🔗",
+                    "title": "REST + GraphQL",
+                    "desc": "Dual API surface for every use case. REST for simple integrations with predictable URLs, GraphQL for complex nested queries with precise response control."
+                },
+                {
+                    "icon": "🎮",
+                    "title": "Interactive Playground",
+                    "desc": "Test every endpoint directly in your browser with pre-filled examples, response inspection, and live API calls against your own key."
+                },
+                {
+                    "icon": "🔑",
+                    "title": "Key Management",
+                    "desc": "Create, scope, rotate, and revoke API keys with granular permissions, IP allowlists, rate tier assignments, and full audit logging."
+                },
+                {
+                    "icon": "⚡",
+                    "title": "phi-Scaled Rate Limiting",
+                    "desc": "Golden ratio-derived rate tiers with Fibonacci burst allowances, rolling windows, and per-key overrides for natural traffic scaling."
+                },
+                {
+                    "icon": "🔔",
+                    "title": "Webhook Events",
+                    "desc": "Subscribe to real-time events from agent completions, pipeline status changes, and memory updates. HMAC-signed payloads with configurable retry."
+                },
+                {
+                    "icon": "📦",
+                    "title": "SDK Libraries",
+                    "desc": "Official JavaScript/TypeScript and Python SDKs with full typings, async/await, streaming helpers, and automatic retry with phi-backoff."
+                },
+                {
+                    "icon": "📡",
+                    "title": "WebSocket Streaming",
+                    "desc": "Bidirectional real-time streaming for agent output, live memory updates, and event subscriptions without polling overhead."
+                },
+                {
+                    "icon": "📖",
+                    "title": "OpenAPI 3.1 Spec",
+                    "desc": "Complete machine-readable specification for Postman import, SDK generation, and automated testing of all 15 core endpoints."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "15",
+                    "label": "Endpoints"
+                },
+                {
+                    "value": "4",
+                    "label": "SDKs"
+                },
+                {
+                    "value": "3",
+                    "label": "Transports"
+                },
+                {
+                    "value": "31",
+                    "label": "MCP Tools"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "API Capabilities",
+                    "subheading": "Everything developers need to build on Heady"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Platform Specs",
+                    "subheading": "Production-grade API infrastructure"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Start Building Today",
+                    "subheading": "Get your free API key and explore the playground"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Developers",
+                    "links": [
+                        [
+                            "API Docs",
+                            "#docs"
+                        ],
+                        [
+                            "Playground",
+                            "#playground"
+                        ],
+                        [
+                            "OpenAPI Spec",
+                            "#"
+                        ],
+                        [
+                            "Changelog",
+                            "#"
+                        ]
+                    ]
+                },
+                {
+                    "title": "SDKs",
+                    "links": [
+                        [
+                            "JavaScript",
+                            "#sdks"
+                        ],
+                        [
+                            "Python",
+                            "#sdks"
+                        ],
+                        [
+                            "Go (Planned)",
+                            "#sdks"
+                        ],
+                        [
+                            "Rust (Planned)",
+                            "#sdks"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Ecosystem",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "HeadyMe",
+                            "https://headyme.com"
+                        ],
+                        [
+                            "HeadyMCP",
+                            "https://headymcp.com"
+                        ],
+                        [
+                            "Community",
+                            "https://headyconnection.org"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
         }
     },
     "externalLinks": {
@@ -2497,6 +2683,7 @@
         "www.headydata.io": "headydata.io",
         "www.headyinc.com": "headyinc.com",
         "www.headyhc.com": "headyhc.com",
-        "www.headygraphics.com": "headygraphics.com"
+        "www.headygraphics.com": "headygraphics.com",
+        "www.headyapi.com": "headyapi.com"
     }
 }

@@ -67,7 +67,7 @@ services:
     
   # MCP Gateway
   mcp-gateway:
-    host: mcp.headysystems.comheadyio.com
+    host: mcp.headyio.com
     port: 3001
     protocol: http
     purpose: Model Context Protocol tool gateway
