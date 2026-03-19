@@ -41,7 +41,11 @@ class AuthManager {
    * @param {number}  [opts.sessionTtlMs]
    */
   constructor(opts = {}) {
-    this._jwt = opts.jwt || new HeadyJWT({ secret: opts.jwtSecret || process.env.JWT_SECRET || 'heady-default-secret-change-in-prod' });
+    const jwtSecret = opts.jwtSecret || process.env.JWT_SECRET;
+    if (!jwtSecret && !opts.jwt) {
+      throw new Error('[AuthManager] FATAL: JWT_SECRET environment variable is required. Refusing to start with default secret.');
+    }
+    this._jwt = opts.jwt || new HeadyJWT({ secret: jwtSecret });
     this._kv = opts.kv || new HeadyKV({ namespace: 'auth' });
 
     this.sessionTtlMs = opts.sessionTtlMs ?? SESSION_TTL_MS;
