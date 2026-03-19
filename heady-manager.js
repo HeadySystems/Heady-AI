@@ -3168,3 +3168,17 @@ try {
   log.warn("Branding Monitor not loaded", { errorMessage: err.message });
 }
 
+// ─── Auto-Sync Service (φ-scaled fetch/merge/push cycle) ──────────
+try {
+  const autoSync = require('./src/orchestration/auto-commit-deploy');
+  autoSync.start();
+  const status = autoSync.getStatus();
+  log.info("Auto-Sync Service: STARTED", {
+    fetchInterval: `${autoSync.FETCH_MERGE_INTERVAL_MS}ms`,
+    pushRemotes: autoSync.PUSH_REMOTES,
+    running: status.running
+  });
+} catch (err) {
+  log.warn("Auto-Sync Service not loaded (non-fatal)", { errorMessage: err.message });
+}
+
