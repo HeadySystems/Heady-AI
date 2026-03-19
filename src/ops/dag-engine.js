@@ -11,7 +11,11 @@ let redisClient = null;
 try {
     const { getKV: redis } = require('../core/heady-kv'); // HeadyKV replaces redis
 const logger = require("../utils/logger");
-    redisClient = redis.createClient({ url: process.env.REDIS_URL || 'redis://127.0.0.1:6379' });
+    const redisUrl = process.env.REDIS_URL;
+    if (!redisUrl && process.env.NODE_ENV === 'production') {
+        throw new Error('REDIS_URL required in production');
+    }
+    redisClient = redis.createClient({ url: redisUrl || 'redis://127.0.0.1:6379' }); // dev fallback only
     redisClient.on('error', (err) => logger.warn('Redis Cluster not connected. Using in-memory state.'));
     redisClient.connect().catch(() => { });
 } catch (e) {

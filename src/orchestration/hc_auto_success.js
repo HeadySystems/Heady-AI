@@ -1416,10 +1416,18 @@ class AutoSuccessEngine extends EventEmitter {
 
         if (task.id === 'hcfp-002') {
             // Check bridge status endpoint
-            const distillerUrl = process.env.DISTILLER_URL || 'http://localhost:3375';
-            const bridgeUrl    = process.env.BRIDGE_STATUS_URL || 'http://localhost:3301/api/hcfp-bridge/status';
+            const distillerUrl = process.env.DISTILLER_URL;
+            if (!distillerUrl && process.env.NODE_ENV === 'production') {
+                throw new Error('DISTILLER_URL required in production');
+            }
+            const resolvedDistillerUrl = distillerUrl || 'http://localhost:3375'; // dev fallback only
+            const bridgeUrl = process.env.BRIDGE_STATUS_URL;
+            if (!bridgeUrl && process.env.NODE_ENV === 'production') {
+                throw new Error('BRIDGE_STATUS_URL required in production');
+            }
+            const resolvedBridgeUrl = bridgeUrl || 'http://localhost:3301/api/hcfp-bridge/status'; // dev fallback only
             try {
-                const res = await fetch(bridgeUrl, { signal: AbortSignal.timeout(3000) });
+                const res = await fetch(resolvedBridgeUrl, { signal: AbortSignal.timeout(3000) });
                 const body = await res.json().catch(() => ({}));
                 return { finding: `bridge ${res.ok ? 'ACTIVE' : 'DOWN'}: cycles=${body.cycleCount ?? '?'}, lastRun=${body.lastRunAt ?? 'never'}` };
             } catch {

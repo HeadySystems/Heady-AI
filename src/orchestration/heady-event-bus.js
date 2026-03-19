@@ -31,11 +31,10 @@ const EventEmitter = require('events');
 const crypto = require('crypto');
 
 // ─── φ-MATH ───────────────────────────────────────────────────────────────────
-const PHI = 1.618033988749895;
-const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584];
+const { PHI, FIB, fib } = require('../../core/constants/phi');
 
-const MAX_HISTORY     = FIB[17];   // 2584 — event ring buffer size
-const MAX_DEAD_LETTER = FIB[13];   // 377 — dead-letter queue max
+const MAX_HISTORY     = fib(18);   // 2584 — event ring buffer size
+const MAX_DEAD_LETTER = fib(14);   // 377 — dead-letter queue max
 
 // ─── Logger ───────────────────────────────────────────────────────────────────
 let _logger = null;

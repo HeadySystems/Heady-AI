@@ -45,14 +45,22 @@ function getServices() {
   if (global.serviceRegistry && Array.isArray(global.serviceRegistry)) {
     return global.serviceRegistry;
   }
-  // Default built-in services
-  return [
-    { name: 'api-gateway',      url: 'http://localhost:3000/health', critical: true  },
-    { name: 'vector-store',     url: 'http://localhost:3001/health', critical: true  },
-    { name: 'swarm-coordinator',url: 'http://localhost:3002/health', critical: true  },
-    { name: 'task-runner',      url: 'http://localhost:3003/health', critical: false },
-    { name: 'telemetry-sink',   url: 'http://localhost:3004/health', critical: false },
+  // Default built-in services — URLs driven by environment variables
+  const serviceDefaults = [
+    { name: 'api-gateway',       envVar: 'API_GATEWAY_URL',       devFallback: 'http://localhost:3000', critical: true  },
+    { name: 'vector-store',      envVar: 'VECTOR_STORE_URL',      devFallback: 'http://localhost:3001', critical: true  },
+    { name: 'swarm-coordinator', envVar: 'SWARM_COORDINATOR_URL', devFallback: 'http://localhost:3002', critical: true  },
+    { name: 'task-runner',       envVar: 'TASK_RUNNER_URL',       devFallback: 'http://localhost:3003', critical: false },
+    { name: 'telemetry-sink',    envVar: 'TELEMETRY_SINK_URL',    devFallback: 'http://localhost:3004', critical: false },
   ];
+
+  return serviceDefaults.map(svc => {
+    const baseUrl = process.env[svc.envVar];
+    if (!baseUrl && process.env.NODE_ENV === 'production') {
+      throw new Error(`${svc.envVar} required in production`);
+    }
+    return { name: svc.name, url: `${baseUrl || svc.devFallback}/health`, critical: svc.critical };
+  });
 }
 
 // ---------------------------------------------------------------------------
