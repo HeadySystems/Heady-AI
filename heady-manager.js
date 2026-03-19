@@ -1040,13 +1040,53 @@ app.post("/api/v1/train", async (req, res) => {
  *         description: Pipeline status
  */
 app.get("/api/pipeline/status", (req, res) => {
+  const pipelineState = pipeline ? pipeline.getState() : null;
+  const lastHistory = pipeline?.history?.length > 0 ? pipeline.history[pipeline.history.length - 1] : null;
   res.json({
-    status: "idle",
-    lastRun: null,
-    nextRun: null,
-    activeTasks: 0,
-    domain: "api.headyio.com"
+    status: pipelineState?.status || (continuousPipeline.running ? "continuous" : "idle"),
+    lastRun: lastHistory || null,
+    continuousPipeline: {
+      running: continuousPipeline.running,
+      cycleCount: continuousPipeline.cycleCount,
+      lastCycleTs: continuousPipeline.lastCycleTs,
+      gates: continuousPipeline.gateResults,
+      lastResult: continuousPipeline.lastPipelineResult || null,
+    },
+    autoSuccess: autoSuccessEngine ? {
+      running: true,
+      error: autoSuccessError,
+    } : { running: false, error: autoSuccessError },
+    activeTasks: pipelineState?.metrics?.totalTasks || 0,
+    ts: new Date().toISOString(),
   });
+});
+
+// Auto-Success Engine API routes
+app.get("/api/auto-success/status", (req, res) => {
+  if (!autoSuccessEngine) {
+    return res.status(503).json({ error: "Auto-Success Engine not loaded", reason: autoSuccessError });
+  }
+  try {
+    const status = typeof autoSuccessEngine.getStatus === 'function' ? autoSuccessEngine.getStatus() : {};
+    const metrics = typeof autoSuccessEngine.getMetrics === 'function' ? autoSuccessEngine.getMetrics() : {};
+    res.json({ ok: true, ...status, metrics, ts: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/auto-success/trigger", async (req, res) => {
+  if (!autoSuccessEngine) {
+    return res.status(503).json({ error: "Auto-Success Engine not loaded", reason: autoSuccessError });
+  }
+  try {
+    const result = typeof autoSuccessEngine.runCycle === 'function'
+      ? await autoSuccessEngine.runCycle()
+      : { status: 'no_runCycle_method' };
+    res.json({ ok: true, result, ts: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // ─── HeadyAutoIDE & Methodology APIs ────────────────────────────────
@@ -1493,6 +1533,45 @@ try {
   log.warn("Pipeline bind failed", { errorMessage: err.message });
 }
 
+// ─── Auto-Success Engine (135-task heartbeat — LAW 07) ────────────────
+let autoSuccessEngine = null;
+let autoSuccessError = null;
+try {
+  const { AutoSuccessEngine } = require('./src/engines/auto-success-engine');
+  autoSuccessEngine = new AutoSuccessEngine({
+    verbose: false,
+    enableMonteCarlo: true,
+    enableLiquidScaling: true,
+  });
+
+  // Forward auto-success events to global event bus
+  autoSuccessEngine.on('cycle:complete', (data) => {
+    eventBus.emit('autosuccess:cycle', data);
+    if (storyDriver) {
+      storyDriver.ingestSystemEvent({
+        type: 'AUTO_SUCCESS_CYCLE',
+        refs: { cycleNumber: data.cycleNumber, healthScore: data.metrics?.healthScore },
+        source: 'auto-success-engine',
+      });
+    }
+  });
+  autoSuccessEngine.on('incident', (data) => {
+    eventBus.emit('autosuccess:incident', data);
+    log.error('AutoSuccess INCIDENT', { cycleNumber: data.cycleNumber, failures: data.cumulativeFailures });
+  });
+
+  // Start the heartbeat
+  autoSuccessEngine.start().then(() => {
+    log.info('Auto-Success Engine: STARTED', { taskCount: autoSuccessEngine.taskCount || 135 });
+  }).catch((err) => {
+    autoSuccessError = err.message;
+    log.warn('Auto-Success Engine start failed', { errorMessage: err.message });
+  });
+} catch (err) {
+  autoSuccessError = err.message;
+  log.warn('Auto-Success Engine not loaded', { errorMessage: err.message });
+}
+
 // ─── Continuous Improvement Scheduler ─────────────────────────────────
 let improvementScheduler = null;
 try {
@@ -1933,7 +2012,7 @@ app.post("/api/buddy/pipeline/continuous", (req, res) => {
   continuousPipeline.errors = [];
   continuousPipeline.cycleCount = 0;
 
-  const runCycle = () => {
+  const runCycle = async () => {
     if (!continuousPipeline.running) return;
     continuousPipeline.cycleCount++;
     continuousPipeline.lastCycleTs = new Date().toISOString();
@@ -1945,15 +2024,11 @@ app.post("/api/buddy/pipeline/continuous", (req, res) => {
     };
     const allPass = Object.values(continuousPipeline.gateResults).every(Boolean);
 
-    // Emit story events for pipeline cycles
-    if (storyDriver) {
-      if (allPass) {
-        storyDriver.ingestSystemEvent({
-          type: "PIPELINE_CYCLE_COMPLETE",
-          refs: { cycleNumber: continuousPipeline.cycleCount, gatesSummary: "all passed" },
-          source: "hcfullpipeline",
-        });
-      } else {
+    if (!allPass) {
+      continuousPipeline.running = false;
+      continuousPipeline.exitReason = "gate_failed";
+      if (continuousPipeline.intervalId) clearInterval(continuousPipeline.intervalId);
+      if (storyDriver) {
         storyDriver.ingestSystemEvent({
           type: "PIPELINE_GATE_FAIL",
           refs: {
@@ -1964,17 +2039,43 @@ app.post("/api/buddy/pipeline/continuous", (req, res) => {
           source: "hcfullpipeline",
         });
       }
+      return;
     }
 
-    if (!allPass) {
-      continuousPipeline.running = false;
-      continuousPipeline.exitReason = "gate_failed";
-      if (continuousPipeline.intervalId) clearInterval(continuousPipeline.intervalId);
+    // ── EXECUTE: Run HCFullPipeline (all stages) ────────────────────────
+    let pipelineResult = null;
+    if (pipeline) {
+      try {
+        pipelineResult = await pipeline.run();
+        continuousPipeline.lastPipelineResult = {
+          runId: pipelineResult?.runId,
+          status: pipelineResult?.status,
+          completedTasks: pipelineResult?.metrics?.completedTasks,
+          failedTasks: pipelineResult?.metrics?.failedTasks,
+          elapsedMs: pipelineResult?.metrics?.elapsedMs,
+        };
+        log.info('Continuous pipeline cycle complete', {
+          cycle: continuousPipeline.cycleCount,
+          status: pipelineResult?.status,
+          tasks: pipelineResult?.metrics?.completedTasks,
+        });
+      } catch (pipeErr) {
+        log.error('Continuous pipeline run failed', { error: pipeErr.message });
+        continuousPipeline.errors.push({ cycle: continuousPipeline.cycleCount, error: pipeErr.message, ts: new Date().toISOString() });
+      }
     }
 
-    // Checkpoint validation logged (async — avoids blocking the event loop)
-    if (fs.existsSync(path.join(__dirname, 'scripts', 'checkpoint-validation.ps1'))) {
-      log.info("Checkpoint validation available", { cycleCount: continuousPipeline.cycleCount });
+    // Emit story events
+    if (storyDriver) {
+      storyDriver.ingestSystemEvent({
+        type: "PIPELINE_CYCLE_COMPLETE",
+        refs: {
+          cycleNumber: continuousPipeline.cycleCount,
+          gatesSummary: "all passed",
+          pipelineStatus: pipelineResult?.status || 'skipped',
+        },
+        source: "hcfullpipeline",
+      });
     }
   };
 
