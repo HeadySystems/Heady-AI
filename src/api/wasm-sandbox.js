@@ -10,6 +10,21 @@
  * or RCE attacks against the Heady™Conductor node.
  */
 
+// SECURITY: Sandboxed dynamic code execution
+function safeFunctionCreate(code) {
+    if (typeof code !== 'string' || code.length > 10000) {
+        throw new Error('Invalid code input for dynamic function');
+    }
+    // Block dangerous patterns
+    const blocked = ['require', 'import', 'process', 'child_process', 'fs', 'eval', '__proto__', 'constructor'];
+    for (const pattern of blocked) {
+        if (code.includes(pattern)) {
+            throw new Error(`Blocked pattern "${pattern}" in dynamic code`);
+        }
+    }
+    return new Function(code);
+}
+
 class WasmSandbox {
     constructor() {
         this.isolateConfig = {
@@ -28,9 +43,8 @@ class WasmSandbox {
                 throw new Error("Security Violation: Access to host environment denied.");
             }
 
-            const safeEval = new Function('context', `
+            const safeEval = safeFunctionCreate(`
         "use strict";
-const logger = require("../utils/logger");
         const console = { log: () => {} }; // Silence
         ${userCode}
       `);

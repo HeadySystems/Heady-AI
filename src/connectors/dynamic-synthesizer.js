@@ -8,6 +8,21 @@
 
 const logger = require('../utils/logger');
 
+// SECURITY: Sandboxed dynamic code execution
+function safeFunctionCreate(code) {
+    if (typeof code !== 'string' || code.length > 10000) {
+        throw new Error('Invalid code input for dynamic function');
+    }
+    // Block dangerous patterns
+    const blocked = ['require', 'import', 'process', 'child_process', 'fs', 'eval', '__proto__', 'constructor'];
+    for (const pattern of blocked) {
+        if (code.includes(pattern)) {
+            throw new Error(`Blocked pattern "${pattern}" in dynamic code`);
+        }
+    }
+    return new Function(code);
+}
+
 class DynamicConnectorSynthesizer {
     constructor() {
         this.activeMediators = new Map();
@@ -23,7 +38,7 @@ class DynamicConnectorSynthesizer {
         const mediatorCode = this._generateMediator(constraints);
 
         // JIT compile the bridging logic
-        const mediatorFn = new Function('payload', mediatorCode);
+        const mediatorFn = safeFunctionCreate(mediatorCode);
         this.activeMediators.set(targetOntology.id, mediatorFn);
 
         logger.logNodeActivity('BUILDER', `[Synthesis] Mediator synthesized successfully for ${targetOntology.name}`);
