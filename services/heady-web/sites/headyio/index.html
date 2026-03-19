@@ -1,945 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-heady-site="headyio">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="HeadyIO™ - Unified Data Pipeline & Integration Hub. Connect 200+ data sources, orchestrate workflows, and scale seamlessly with φ-scaled architecture.">
-  <meta name="theme-color" content="#0a0e17">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="HeadyIO™ — Unified Data Pipeline & Integration Hub">
-  <meta property="og:description" content="Connect everything. Orchestrate anything. 200+ connectors, real-time streaming, zero-downtime migrations.">
+  <title>HeadyIO™ — Developer Platform</title>
+  <meta name="description" content="HeadyIO™ - Developer Platform. Part of the Heady™ intelligent platform by HeadySystems Inc.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://headyio.com/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%236366f1'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://headyio.com">
-  <meta property="og:image" content="https://headyio.com/assets/og-headyio.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-
-  <!-- Twitter Card -->
+  <meta property="og:url" content="https://headyio.com/">
+  <meta property="og:title" content="HeadyIO™ — Developer Platform">
+  <meta property="og:description" content="HeadyIO™ - Developer Platform. Part of the Heady™ intelligent platform by HeadySystems Inc.">
+  <meta property="og:site_name" content="HeadyIO™">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="HeadyIO™ — Unified Data Pipeline & Integration Hub">
-  <meta name="twitter:description" content="Connect 200+ data sources, orchestrate workflows seamlessly">
-  <meta name="twitter:image" content="https://headyio.com/assets/og-headyio.png">
-
-  <!-- JSON-LD -->
+  <meta name="twitter:title" content="HeadyIO™ — Developer Platform">
+  <meta name="twitter:description" content="HeadyIO™ - Developer Platform. Part of the Heady™ intelligent platform by HeadySystems Inc.">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "HeadyIO™",
-    "description": "Unified Data Pipeline & Integration Hub",
-    "url": "https://headyio.com",
-    "applicationCategory": "WebApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "creator": {
-      "@type": "Organization",
-      "name": "HeadySystems Inc.",
-      "founder": {
-        "@type": "Person",
-        "name": "Eric Haywood"
-      }
-    }
-  }
+  {"@context":"https://schema.org","@type":"WebSite","name":"HeadyIO™","url":"https://headyio.com","description":"HeadyIO™ - Developer Platform. Part of the Heady™ intelligent platform by HeadySystems Inc.","publisher":{"@type":"Organization","name":"HeadySystems Inc.","url":"https://headysystems.com","founder":{"@type":"Person","name":"Eric Haywood"}}}
   </script>
-
-  <title>HeadyIO™ — Unified Data Pipeline & Integration Hub</title>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --bg: #0a0e17;
-      --surface: #0d1221;
-      --card: #111827;
-      --primary: #00d4aa;
-      --accent: #f5c842;
-      --purple: #6C5CE7;
-      --text-primary: #e0e7ff;
-      --text-secondary: #94a3b8;
-      --phi: 1.618033988749895;
-      --spacing-base: 1rem;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, var(--bg) 0%, #0f1626 50%, #0a0e17 100%);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(108, 92, 231, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(245, 200, 66, 0.03) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: calc(var(--spacing-base) * 1.5) calc(var(--spacing-base) * 3);
-      backdrop-filter: blur(10px);
-      background: rgba(10, 14, 23, 0.8);
-      border-bottom: 1px solid rgba(0, 212, 170, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-brand {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--primary);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: calc(var(--spacing-base) * 2);
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--bg);
-      padding: calc(var(--spacing-base) * 0.5) calc(var(--spacing-base) * 1.5);
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.875rem;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary:hover {
-      background: #00b894;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0, 212, 170, 0.2);
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        flex-wrap: wrap;
-        padding: 1rem;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      nav.mobile-open .nav-links {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 1rem;
-      }
-    }
-
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: calc(var(--spacing-base) * 3) calc(var(--spacing-base) * 2);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-content {
-      max-width: 900px;
-      text-align: center;
-      z-index: 2;
-    }
-
-    .hero h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2.5rem, 8vw, 4.5rem);
-      font-weight: 700;
-      margin-bottom: calc(var(--spacing-base) * 1.5);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-
-    .hero h1 .accent {
-      color: var(--primary);
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      color: var(--text-secondary);
-      margin-bottom: calc(var(--spacing-base) * 3);
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: calc(var(--spacing-base) * 1.5);
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: calc(var(--spacing-base) * 4);
-    }
-
-    .btn-secondary {
-      background: rgba(0, 212, 170, 0.1);
-      color: var(--primary);
-      padding: calc(var(--spacing-base) * 0.75) calc(var(--spacing-base) * 2);
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      border: 1px solid var(--primary);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(0, 212, 170, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .data-flow {
-      width: 100%;
-      max-width: 600px;
-      height: 300px;
-      margin: 0 auto;
-      background: rgba(0, 212, 170, 0.05);
-      border-radius: 12px;
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      padding: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      position: relative;
-    }
-
-    .flow-node {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-    }
-
-    .flow-icon {
-      width: 60px;
-      height: 60px;
-      background: rgba(0, 212, 170, 0.1);
-      border: 2px solid var(--primary);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .flow-icon:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    .features {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: calc(var(--spacing-base) * 4);
-    }
-
-    .section-header h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      margin-bottom: calc(var(--spacing-base) * 1);
-      letter-spacing: -0.02em;
-    }
-
-    .section-header p {
-      color: var(--text-secondary);
-      font-size: 1.125rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: calc(var(--spacing-base) * 2);
-      margin-bottom: calc(var(--spacing-base) * 4);
-    }
-
-    .feature-card {
-      background: rgba(17, 24, 39, 0.5);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 12px;
-      padding: calc(var(--spacing-base) * 2);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--primary);
-      background: rgba(17, 24, 39, 0.8);
-    }
-
-    .feature-card:hover::before {
-      opacity: 1;
-    }
-
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: calc(var(--spacing-base) * 1);
-      display: inline-block;
-    }
-
-    .feature-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: calc(var(--spacing-base) * 0.5);
-      color: var(--primary);
-    }
-
-    .feature-card p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .architecture {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      background: rgba(13, 18, 33, 0.5);
-      margin: calc(var(--spacing-base) * 4) 0;
-    }
-
-    .architecture-content {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .architecture-diagram {
-      background: rgba(17, 24, 39, 0.6);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 12px;
-      padding: calc(var(--spacing-base) * 3);
-      margin-top: calc(var(--spacing-base) * 2);
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: calc(var(--spacing-base) * 2);
-      min-height: 250px;
-    }
-
-    .arch-column {
-      flex: 1;
-      min-width: 150px;
-      text-align: center;
-    }
-
-    .arch-box {
-      background: rgba(0, 212, 170, 0.1);
-      border: 2px solid var(--primary);
-      border-radius: 8px;
-      padding: calc(var(--spacing-base) * 1.5);
-      margin-bottom: calc(var(--spacing-base) * 1);
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .arch-arrow {
-      font-size: 2rem;
-      color: var(--accent);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-
-    .connectors {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .connectors-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: calc(var(--spacing-base) * 1.5);
-      margin-top: calc(var(--spacing-base) * 2);
-    }
-
-    .connector-badge {
-      background: rgba(17, 24, 39, 0.6);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 8px;
-      padding: calc(var(--spacing-base) * 1.5);
-      text-align: center;
-      font-size: 0.85rem;
-      transition: all 0.3s ease;
-    }
-
-    .connector-badge:hover {
-      border-color: var(--primary);
-      background: rgba(0, 212, 170, 0.1);
-    }
-
-    .connector-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .code-section {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      background: rgba(13, 18, 33, 0.5);
-    }
-
-    .code-content {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .code-block {
-      background: rgba(10, 14, 23, 0.8);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 12px;
-      padding: calc(var(--spacing-base) * 2);
-      overflow-x: auto;
-      margin-top: calc(var(--spacing-base) * 2);
-    }
-
-    .code-block code {
-      font-family: 'Berkeley Mono', 'Courier New', monospace;
-      font-size: 0.875rem;
-      color: var(--text-primary);
-      line-height: 1.6;
-      display: block;
-      white-space: pre;
-    }
-
-    .code-keyword {
-      color: var(--primary);
-    }
-
-    .code-string {
-      color: var(--accent);
-    }
-
-    .code-comment {
-      color: var(--text-secondary);
-    }
-
-    .cta-section {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .cta-section h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      margin-bottom: calc(var(--spacing-base) * 2);
-      letter-spacing: -0.02em;
-    }
-
-    .cta-section p {
-      color: var(--text-secondary);
-      font-size: 1.125rem;
-      margin-bottom: calc(var(--spacing-base) * 3);
-    }
-
-    footer {
-      background: rgba(10, 14, 23, 0.8);
-      border-top: 1px solid rgba(0, 212, 170, 0.1);
-      padding: calc(var(--spacing-base) * 4) calc(var(--spacing-base) * 2);
-      margin-top: calc(var(--spacing-base) * 6);
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: calc(var(--spacing-base) * 2);
-      margin-bottom: calc(var(--spacing-base) * 2);
-    }
-
-    .footer-section h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-      margin-bottom: calc(var(--spacing-base) * 1);
-      color: var(--primary);
-    }
-
-    .footer-section a {
-      display: block;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
-      transition: color 0.3s ease;
-    }
-
-    .footer-section a:hover {
-      color: var(--primary);
-    }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(0, 212, 170, 0.1);
-      padding-top: calc(var(--spacing-base) * 2);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: calc(var(--spacing-base) * 2);
-    }
-
-    .footer-legal {
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    :root{--accent:#6366f1;--bg:#0a0e17;--surface:#0d1221;--border:rgba(255,255,255,0.08);--text:#f0f4ff;--text2:#8b98b8;--text3:#4a5568;--font:'Outfit',sans-serif;--body:'Inter',sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.618;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px}
+    .logo{font-family:var(--font);font-size:clamp(2rem,6vw,3.75rem);font-weight:800;margin-bottom:13px;letter-spacing:-0.03em}
+    .logo .a{color:var(--accent)}
+    .tagline{font-size:clamp(1rem,2.5vw,1.5rem);color:var(--text2);margin-bottom:34px;max-width:500px}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 21px;border:1px solid #6366f140;border-radius:100px;background:#6366f115;font-size:0.875rem;color:var(--accent);margin-bottom:55px}
+    .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:p 2s infinite}
+    @keyframes p{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:13px;max-width:900px;width:100%;margin-bottom:55px}
+    .card{background:rgba(13,18,33,0.7);border:1px solid var(--border);border-radius:13px;padding:21px;backdrop-filter:blur(16px);transition:all .3s;text-decoration:none;color:var(--text)}
+    .card:hover{border-color:#6366f140;transform:translateY(-3px)}
+    .card h4{font-family:var(--font);font-size:.875rem;font-weight:600;margin-bottom:4px}
+    .card p{font-size:.75rem;color:var(--text3)}
+    .cta-row{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-bottom:34px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 34px;border-radius:8px;font-family:var(--body);font-size:.875rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
+    .btn-p{background:var(--accent);color:var(--bg)}
+    .btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 24px #6366f140}
+    .btn-g{background:transparent;color:var(--text2);border:1px solid var(--border)}
+    .btn-g:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+    .footer{position:absolute;bottom:21px;font-size:.75rem;color:var(--text3)}
+    .footer a{color:var(--text3);margin:0 8px;text-decoration:none;transition:color .2s}
+    .footer a:hover{color:var(--accent)}
+    canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
   </style>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn6egPC90ZXh0Pjwvc3ZnPg==">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn6egPC90ZXh0Pjwvc3ZnPg==">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="canonical" href="https://headyio.com">
-    <script src="https://browser.sentry-cdn.com/8.0.0/bundle.tracing.min.js" crossorigin="anonymous"></script>
-    <script>Sentry.init({ dsn: 'https://686bb550b67ec462925e50f696e117fb@o4510998791192576.ingest.us.sentry.io/4511070424334336', tracesSampleRate: 0.1, environment: 'production' });</script>
 </head>
 <body>
-  <nav>
-    <a href="https://headyme.com" class="nav-brand">Heady™</a>
-    <div class="nav-links">
-      <a href="https://headysystems.com">Enterprise</a>
-      <a href="https://headyos.com">HeadyOS</a>
-      <a href="https://headymcp.com">MCP</a>
-      <a href="https://headybot.com">Bot</a>
-      <a href="https://headybuddy.org">Buddy</a>
-      <a href="https://headyio.com">I/O</a>
-      <a href="https://headyapi.com">API</a>
-    </div>
-    <a href="https://headyme.com/signup" class="btn-primary">Get Started</a>
-  </nav>
-
-  <section class="hero">
-    <div class="hero-content fade-in">
-      <h1>Connect <span class="accent">everything</span>. Orchestrate <span class="accent">anything</span>.</h1>
-      <p>The unified data pipeline platform for modern engineering teams. Real-time streaming, batch processing, and zero-downtime migrations at φ-scale.</p>
-
-      <div class="hero-buttons">
-        <a href="#features" class="btn-primary">Explore Features</a>
-        <a href="https://headyme.com/signup" class="btn-secondary">Get Started Free</a>
-      </div>
-
-      <div class="data-flow">
-        <div class="flow-node">
-          <div class="flow-icon">📊</div>
-          <span>Sources</span>
-        </div>
-        <div style="font-size: 2rem; color: var(--accent);">→</div>
-        <div class="flow-node">
-          <div class="flow-icon" style="background: rgba(108, 92, 231, 0.1); border-color: var(--purple);">⚙️</div>
-          <span>HeadyIO</span>
-        </div>
-        <div style="font-size: 2rem; color: var(--accent);">→</div>
-        <div class="flow-node">
-          <div class="flow-icon">📈</div>
-          <span>Destinations</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="features" class="features fade-in">
-    <div class="section-header">
-      <h2>Powerful Features</h2>
-      <p>Everything you need to build world-class data infrastructure</p>
-    </div>
-
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔌</div>
-        <h3>200+ Connectors</h3>
-        <p>Pre-built integrations for databases, APIs, cloud services, and SaaS platforms. Connect to any data source in minutes.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">⚡</div>
-        <h3>Real-time Streaming</h3>
-        <p>Sub-second latency data streaming with guaranteed delivery. Process events as they happen with confidence.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📦</div>
-        <h3>φ-Scaled Batch</h3>
-        <p>Process millions of records efficiently with our golden-ratio optimized batch engine. Scale without bottlenecks.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🧠</div>
-        <h3>Schema Auto-detection</h3>
-        <p>Automatically detect and validate data schemas. Adapt to schema changes without manual intervention.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔄</div>
-        <h3>Data Transformation</h3>
-        <p>Powerful transformation engine with SQL, Python, and JavaScript support. Build complex pipelines visually or in code.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🚀</div>
-        <h3>Zero-downtime Migrations</h3>
-        <p>Migrate data seamlessly without interrupting production. Built-in verification and rollback capabilities.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="architecture fade-in">
-    <div class="architecture-content">
-      <div class="section-header">
-        <h2>Modern Architecture</h2>
-        <p>Built for scale and reliability</p>
-      </div>
-
-      <div class="architecture-diagram">
-        <div class="arch-column">
-          <div class="arch-box">Data Sources</div>
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">Databases, APIs, Events</div>
-        </div>
-
-        <div class="arch-arrow">→</div>
-
-        <div class="arch-column">
-          <div class="arch-box">Pipeline Engine</div>
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">Transform, Validate, Enrich</div>
-        </div>
-
-        <div class="arch-arrow">→</div>
-
-        <div class="arch-column">
-          <div class="arch-box">Destinations</div>
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">Warehouse, Analytics, Apps</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="connectors fade-in">
-    <div class="section-header">
-      <h2>200+ Integrations</h2>
-      <p>Connect with your entire data stack</p>
-    </div>
-
-    <div class="connectors-grid">
-      <div class="connector-badge"><span class="connector-icon">🗄️</span>PostgreSQL</div>
-      <div class="connector-badge"><span class="connector-icon">🔍</span>Elasticsearch</div>
-      <div class="connector-badge"><span class="connector-icon">☁️</span>AWS S3</div>
-      <div class="connector-badge"><span class="connector-icon">⚡</span>Kafka</div>
-      <div class="connector-badge"><span class="connector-icon">📊</span>Snowflake</div>
-      <div class="connector-badge"><span class="connector-icon">🏗️</span>BigQuery</div>
-      <div class="connector-badge"><span class="connector-icon">📈</span>Salesforce</div>
-      <div class="connector-badge"><span class="connector-icon">💬</span>Slack</div>
-      <div class="connector-badge"><span class="connector-icon">🔗</span>REST APIs</div>
-      <div class="connector-badge"><span class="connector-icon">🌐</span>Webhooks</div>
-      <div class="connector-badge"><span class="connector-icon">📱</span>Mobile SDKs</div>
-      <div class="connector-badge"><span class="connector-icon">🗂️</span>More...</div>
-    </div>
-  </section>
-
-  <section class="code-section fade-in">
-    <div class="code-content">
-      <div class="section-header">
-        <h2>Simple Configuration</h2>
-        <p>Define your integration in seconds</p>
-      </div>
-
-      <div class="code-block">
-        <code><span class="code-keyword">const</span> pipeline = {
-  name: <span class="code-string">"customer_data_sync"</span>,
-  source: {
-    type: <span class="code-string">"postgres"</span>,
-    connection: <span class="code-string">"prod_db"</span>,
-    query: <span class="code-string">"SELECT * FROM customers WHERE updated_at > ?"</span>
-  },
-  transform: [
-    { type: <span class="code-string">"filter"</span>, condition: <span class="code-string">"status = 'active'"</span> },
-    { type: <span class="code-string">"enrich"</span>, lookup: <span class="code-string">"customer_profile"</span> }
-  ],
-  destination: {
-    type: <span class="code-string">"snowflake"</span>,
-    table: <span class="code-string">"analytics.customers"</span>,
-    mode: <span class="code-string">"merge"</span>
-  },
-  schedule: <span class="code-string">"every 5 minutes"</span>
-};</code>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta-section fade-in">
-    <h2>Ready to Transform Your Data?</h2>
-    <p>Join hundreds of engineering teams building world-class data infrastructure with HeadyIO.</p>
-    <a href="https://headyme.com/signup" class="btn-primary">Start Integrating</a>
-  </section>
-
-  
-    
-    <!-- Pricing -->
-    <section id="pricing" style="padding:5rem 2rem;text-align:center">
-      <div style="max-width:1100px;margin:0 auto">
-        <h2 style="font-size:2rem;margin-bottom:0.75rem;color:#e8e8f0">Simple, Transparent Pricing</h2>
-        <p style="color:#9898b0;margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto">Start free. Scale with confidence. No surprises.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;text-align:left">
-          <div style="padding:2rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:#9898b0;margin-bottom:0.5rem">Starter</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#e8e8f0;margin-bottom:0.5rem">Free</div>
-            <div style="color:#9898b0;font-size:0.85rem;margin-bottom:1.5rem">For individuals and small projects</div>
-            <ul style="list-style:none;padding:0;margin-bottom:2rem">
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 3 AI model providers</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 1GB vector memory</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Community support</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Basic MCP tools</li>
-            </ul>
-            <a href="https://headyme.com/signup" style="display:block;text-align:center;padding:0.75rem;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e8e8f0;text-decoration:none;font-weight:600;font-size:0.9rem">Get Started</a>
-          </div>
-          <div style="padding:2rem;background:rgba(99,102,241,0.05);border:2px solid rgba(99,102,241,0.3);border-radius:16px;position:relative">
-            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;padding:0.25rem 1rem;border-radius:20px;font-size:0.75rem;font-weight:600">Most Popular</div>
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:#6366f1;margin-bottom:0.5rem">Pro</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#e8e8f0;margin-bottom:0.5rem">$29<span style="font-size:1rem;font-weight:400;color:#9898b0">/mo</span></div>
-            <div style="color:#9898b0;font-size:0.85rem;margin-bottom:1.5rem">For professionals and teams</div>
-            <ul style="list-style:none;padding:0;margin-bottom:2rem">
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 5 AI model providers</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 10GB vector memory</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Priority support</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; All 47 MCP tools</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; HeadyBuddy companion</li>
-            </ul>
-            <a href="https://headyme.com/signup" style="display:block;text-align:center;padding:0.75rem;background:#6366f1;border-radius:8px;color:#fff;text-decoration:none;font-weight:600;font-size:0.9rem">Start Pro Trial</a>
-          </div>
-          <div style="padding:2rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:#fbbf24;margin-bottom:0.5rem">Enterprise</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#e8e8f0;margin-bottom:0.5rem">$299<span style="font-size:1rem;font-weight:400;color:#9898b0">/mo</span></div>
-            <div style="color:#9898b0;font-size:0.85rem;margin-bottom:1.5rem">For organizations at scale</div>
-            <ul style="list-style:none;padding:0;margin-bottom:2rem">
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Unlimited model providers</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Unlimited vector memory</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Dedicated support + SLA</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Custom HeadyBee swarms</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; SOC 2 + HIPAA ready</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; White-glove onboarding</li>
-            </ul>
-            <a href="https://headysystems.com#contact" style="display:block;text-align:center;padding:0.75rem;border:1px solid rgba(251,191,36,0.3);border-radius:8px;color:#fbbf24;text-decoration:none;font-weight:600;font-size:0.9rem">Contact Sales</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Heady Ecosystem -->
-    <section class="ecosystem" style="padding:5rem 2rem;background:rgba(13,18,33,0.4);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)">
-      <div style="max-width:1100px;margin:0 auto;text-align:center">
-        <h2 style="font-size:2rem;margin-bottom:0.75rem;color:#e8e8f0">The Heady Ecosystem</h2>
-        <p style="color:#9898b0;margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto">Nine specialized domains. One sovereign AI platform. Built with Sacred Geometry precision and protected by 60+ patents.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;text-align:left">
-          <a href="https://headyme.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#6366f1;margin-bottom:0.25rem">HeadyMe</div>
-            <div style="color:#9898b0;font-size:0.85rem">Command center — your AI operating system hub</div>
-          </a>
-          <a href="https://heady-ai.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#06b6d4;margin-bottom:0.25rem">Heady AI</div>
-            <div style="color:#9898b0;font-size:0.85rem">Intelligence routing, model playground, and research</div>
-          </a>
-          <a href="https://headysystems.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#8b5cf6;margin-bottom:0.25rem">HeadySystems</div>
-            <div style="color:#9898b0;font-size:0.85rem">Enterprise AI architecture and orchestration engine</div>
-          </a>
-          <a href="https://headyconnection.org" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:0.25rem">HeadyConnection</div>
-            <div style="color:#9898b0;font-size:0.85rem">501(c)(3) nonprofit — community, mutual aid, digital equity</div>
-          </a>
-          <a href="https://headybuddy.org" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#f59e0b;margin-bottom:0.25rem">HeadyBuddy</div>
-            <div style="color:#9898b0;font-size:0.85rem">Personal AI companion — voice, memory, emotional awareness</div>
-          </a>
-          <a href="https://headymcp.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#ec4899;margin-bottom:0.25rem">HeadyMCP</div>
-            <div style="color:#9898b0;font-size:0.85rem">Model Context Protocol gateway — 47 tools, one protocol</div>
-          </a>
-          <a href="https://headyio.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#14b8a6;margin-bottom:0.25rem">HeadyIO</div>
-            <div style="color:#9898b0;font-size:0.85rem">Developer platform — SDKs, data pipelines, streaming</div>
-          </a>
-          <a href="https://headybot.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#f97316;margin-bottom:0.25rem">HeadyBot</div>
-            <div style="color:#9898b0;font-size:0.85rem">Agent marketplace — discover and deploy AI automation</div>
-          </a>
-          <a href="https://headyapi.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#3b82f6;margin-bottom:0.25rem">HeadyAPI</div>
-            <div style="color:#9898b0;font-size:0.85rem">REST and GraphQL APIs — endpoint docs, SDKs, rate limits</div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4>Products</h4>
-        <a href="https://headysystems.com">Enterprise</a>
-        <a href="https://headyos.com">HeadyOS</a>
-        <a href="https://headymcp.com">MCP</a>
-        <a href="https://headybot.com">Bot</a>
-      </div>
-
-      <div class="footer-section">
-        <h4>Platform</h4>
-        <a href="https://headybuddy.org">Buddy</a>
-        <a href="https://headyio.com">I/O</a>
-        <a href="https://headyapi.com">API</a>
-        <a href="https://headyme.com">Heady™</a>
-      </div>
-
-      <div class="footer-section">
-        <h4>Resources</h4>
-        <a href="#" title="Documentation coming soon">Documentation</a>
-        <a href="https://headyme.com/api">API Reference</a>
-        <a href="https://headyme.com/status">Status</a>
-        <a href="https://headyme.com/support">Support</a>
-      </div>
-
-      <div class="footer-section">
-        <h4>Company</h4>
-        <a href="https://headyconnection.org">About</a>
-        <a href="https://headyconnection.org/blog">Blog</a>
-        <a href="https://headyconnection.org/careers">Careers</a>
-        <a href="mailto:eric@headyconnection.org">Contact</a>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="footer-legal">© 2026 HeadySystems Inc. · Eric Haywood, Founder</div>
-      <div class="footer-legal">Built with φ-scaled architecture · 60+ Patents · CSL</div>
-      <div class="footer-legal">
-        <a href="https://headyme.com/privacy" style="color: var(--text-secondary); text-decoration: none;">Privacy</a> ·
-        <a href="https://headyme.com/terms" style="color: var(--text-secondary); text-decoration: none;">Terms</a> ·
-        <a href="https://headyme.com/security" style="color: var(--text-secondary); text-decoration: none;">Security</a>
-      </div>
-    </div>
-  </footer>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBpPClFwr0VDxl_D1SLe2dtvq2MX05QL6g",
-      authDomain: "heady-ai.firebaseapp.com",
-      projectId: "heady-ai"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    window.firebaseApp = app;
-    window.firebaseAuth = auth;
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, observerOptions);
-
-      document.querySelectorAll('.fade-in').forEach(el => {
-        observer.observe(el);
-      });
-    });
-  </script>
+  <canvas id="sacred-geo-canvas" aria-hidden="true"></canvas>
+  <div class="badge"><span class="badge-dot"></span>HeadySystems Inc. — 60+ Patents</div>
+  <h1 class="logo"><span class="a">HeadyIO</span>™</h1>
+  <p class="tagline">Developer Platform. Part of the Heady™ intelligent platform — Sacred Geometry powered AI infrastructure.</p>
+  <div class="grid">
+    <a class="card" href="https://headyme.com"><h4>HeadyMe</h4><p>AI Operating System</p></a>
+    <a class="card" href="https://headysystems.com"><h4>HeadySystems</h4><p>Infrastructure</p></a>
+    <a class="card" href="https://headyio.com"><h4>Heady I/O</h4><p>Developer SDK</p></a>
+    <a class="card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>AI Gateway</p></a>
+    <a class="card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Tools</p></a>
+    <a class="card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+    <a class="card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
+    <a class="card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
+  </div>
+  <div class="cta-row">
+    <a href="https://headyme.com" class="btn btn-p">Get Started →</a>
+    <a href="https://headyio.com" class="btn btn-g">Documentation</a>
+  </div>
+  <div class="footer">
+    <p>© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Patents</p>
+    <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:eric@headysystems.com">Contact</a></p>
+  </div>
+  <script>var ACCENT='#6366f1';
+(function(){
+  const c=document.getElementById('sacred-geo-canvas');if(!c)return;
+  const x=c.getContext('2d');let w,h,t=0;
+  const PHI=1.6180339887,PSI=0.6180339887;
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function draw(){
+    x.clearRect(0,0,w,h);
+    x.globalAlpha=0.06;
+    const cx=w/2,cy=h/2,r=Math.min(w,h)*0.35;
+    // Flower of Life pattern
+    for(let i=0;i<6;i++){
+      const a=(Math.PI/3)*i+t*0.1;
+      const px=cx+Math.cos(a)*r*PSI;
+      const py=cy+Math.sin(a)*r*PSI;
+      x.beginPath();x.arc(px,py,r*PSI,0,Math.PI*2);
+      x.strokeStyle=ACCENT;x.lineWidth=0.8;x.stroke();
+    }
+    // Center circle
+    x.beginPath();x.arc(cx,cy,r*PSI,0,Math.PI*2);
+    x.strokeStyle=ACCENT;x.lineWidth=1;x.stroke();
+    // Rotating outer ring
+    for(let i=0;i<12;i++){
+      const a=(Math.PI/6)*i+t*0.05;
+      const px=cx+Math.cos(a)*r;
+      const py=cy+Math.sin(a)*r;
+      x.beginPath();x.arc(px,py,4,0,Math.PI*2);
+      x.fillStyle=ACCENT;x.globalAlpha=0.12;x.fill();
+    }
+    // Connecting lines
+    x.globalAlpha=0.03;
+    for(let i=0;i<6;i++){
+      const a1=(Math.PI/3)*i+t*0.08;
+      const a2=(Math.PI/3)*((i+2)%6)+t*0.08;
+      x.beginPath();
+      x.moveTo(cx+Math.cos(a1)*r,cy+Math.sin(a1)*r);
+      x.lineTo(cx+Math.cos(a2)*r,cy+Math.sin(a2)*r);
+      x.strokeStyle=ACCENT;x.lineWidth=0.5;x.stroke();
+    }
+    t+=0.008;requestAnimationFrame(draw);
+  }
+  draw();
+})();</script>
 </body>
 </html>

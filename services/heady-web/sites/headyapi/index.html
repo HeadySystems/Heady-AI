@@ -1,1036 +1,313 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-heady-site="headyapi-com">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="HeadyAPI™ - Developer Platform & REST/GraphQL Gateway. Build intelligent APIs with φ-scaled rate limits, SDK support, and OpenAPI 3.1.">
-  <meta name="theme-color" content="#0a0e17">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="HeadyAPI™ — Developer Platform & REST/GraphQL Gateway">
-  <meta property="og:description" content="Build with intelligence. REST + GraphQL, rate limiting, webhook delivery, multi-SDK support.">
+  <title>HeadyAPI™ — Liquid Intelligence Gateway</title>
+  <meta name="description" content="Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://headyapi.com/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f59e0b'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://headyapi.com">
-  <meta property="og:image" content="https://headyapi.com/assets/og-headyapi.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-
-  <!-- Twitter Card -->
+  <meta property="og:url" content="https://headyapi.com/">
+  <meta property="og:title" content="HeadyAPI™ — Liquid Intelligence Gateway">
+  <meta property="og:description" content="Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.">
+  <meta property="og:site_name" content="HeadyAPI™">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="HeadyAPI™ — Developer Platform & REST/GraphQL Gateway">
-  <meta name="twitter:description" content="REST + GraphQL, rate limiting, webhook delivery, multi-SDK support.">
-  <meta name="twitter:image" content="https://headyapi.com/assets/og-headyapi.png">
-
-  <!-- JSON-LD -->
+  <meta name="twitter:title" content="HeadyAPI™ — Liquid Intelligence Gateway">
+  <meta name="twitter:description" content="Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "HeadyAPI™",
-    "description": "Developer Platform & REST/GraphQL Gateway",
-    "url": "https://headyapi.com",
-    "applicationCategory": "WebApplication",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "creator": {
-      "@type": "Organization",
-      "name": "HeadySystems Inc.",
-      "founder": {
-        "@type": "Person",
-        "name": "Eric Haywood"
-      }
-    }
-  }
+  {"@context":"https://schema.org","@type":"WebSite","name":"HeadyAPI™","url":"https://headyapi.com","description":"Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.","publisher":{"@type":"Organization","name":"HeadySystems Inc.","url":"https://headysystems.com","founder":{"@type":"Person","name":"Eric Haywood"}}}
   </script>
-
-  <title>HeadyAPI™ — Developer Platform & REST/GraphQL Gateway</title>
-
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --bg: #0a0e17;
-      --surface: #0d1221;
-      --card: #111827;
-      --primary: #00d4aa;
-      --accent: #f5c842;
-      --purple: #6C5CE7;
-      --text-primary: #e0e7ff;
-      --text-secondary: #94a3b8;
-      --phi: 1.618033988749895;
-      --spacing-base: 1rem;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, var(--bg) 0%, #0f1626 50%, #0a0e17 100%);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(108, 92, 231, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(245, 200, 66, 0.03) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: calc(var(--spacing-base) * 1.5) calc(var(--spacing-base) * 3);
-      backdrop-filter: blur(10px);
-      background: rgba(10, 14, 23, 0.8);
-      border-bottom: 1px solid rgba(0, 212, 170, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-brand {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--primary);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: calc(var(--spacing-base) * 2);
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--bg);
-      padding: calc(var(--spacing-base) * 0.5) calc(var(--spacing-base) * 1.5);
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.875rem;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary:hover {
-      background: #00b894;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0, 212, 170, 0.2);
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        flex-wrap: wrap;
-        padding: 1rem;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      nav.mobile-open .nav-links {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        margin-top: 1rem;
-      }
-    }
-
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: calc(var(--spacing-base) * 3) calc(var(--spacing-base) * 2);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-content {
-      max-width: 900px;
-      text-align: center;
-      z-index: 2;
-    }
-
-    .hero h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2.5rem, 8vw, 4.5rem);
-      font-weight: 700;
-      margin-bottom: calc(var(--spacing-base) * 1.5);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-
-    .hero h1 .accent {
-      color: var(--primary);
-    }
-
-    .hero p {
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      color: var(--text-secondary);
-      margin-bottom: calc(var(--spacing-base) * 3);
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: calc(var(--spacing-base) * 1.5);
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: calc(var(--spacing-base) * 4);
-    }
-
-    .btn-secondary {
-      background: rgba(0, 212, 170, 0.1);
-      color: var(--primary);
-      padding: calc(var(--spacing-base) * 0.75) calc(var(--spacing-base) * 2);
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      border: 1px solid var(--primary);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(0, 212, 170, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .api-demo {
-      width: 100%;
-      max-width: 700px;
-      height: auto;
-      margin: 0 auto;
-      background: rgba(0, 212, 170, 0.05);
-      border-radius: 12px;
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      padding: 2rem;
-    }
-
-    .demo-section {
-      margin-bottom: 1.5rem;
-    }
-
-    .demo-section:last-child {
-      margin-bottom: 0;
-    }
-
-    .demo-label {
-      font-size: 0.75rem;
-      color: var(--accent);
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-    }
-
-    .demo-code {
-      background: rgba(10, 14, 23, 0.8);
-      border-left: 3px solid var(--primary);
-      padding: 0.75rem 1rem;
-      border-radius: 4px;
-      font-family: 'Berkeley Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--text-primary);
-      overflow-x: auto;
-    }
-
-    .features {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: calc(var(--spacing-base) * 4);
-    }
-
-    .section-header h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      margin-bottom: calc(var(--spacing-base) * 1);
-      letter-spacing: -0.02em;
-    }
-
-    .section-header p {
-      color: var(--text-secondary);
-      font-size: 1.125rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: calc(var(--spacing-base) * 2);
-      margin-bottom: calc(var(--spacing-base) * 4);
-    }
-
-    .feature-card {
-      background: rgba(17, 24, 39, 0.5);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 12px;
-      padding: calc(var(--spacing-base) * 2);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, transparent 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--primary);
-      background: rgba(17, 24, 39, 0.8);
-    }
-
-    .feature-card:hover::before {
-      opacity: 1;
-    }
-
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: calc(var(--spacing-base) * 1);
-      display: inline-block;
-    }
-
-    .feature-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: calc(var(--spacing-base) * 0.5);
-      color: var(--primary);
-    }
-
-    .feature-card p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .code-tabs {
-      display: flex;
-      border-bottom: 1px solid rgba(0, 212, 170, 0.2);
-      margin-bottom: 1.5rem;
-      gap: 1rem;
-    }
-
-    .code-tab {
-      padding: 0.75rem 1rem;
-      color: var(--text-secondary);
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.875rem;
-      transition: all 0.3s ease;
-      border-bottom: 2px solid transparent;
-    }
-
-    .code-tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    .code-tab:hover {
-      color: var(--primary);
-    }
-
-    .code-block {
-      background: rgba(10, 14, 23, 0.8);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 12px;
-      padding: calc(var(--spacing-base) * 2);
-      overflow-x: auto;
-      margin-top: calc(var(--spacing-base) * 2);
-    }
-
-    .code-block code {
-      font-family: 'Berkeley Mono', 'Courier New', monospace;
-      font-size: 0.875rem;
-      color: var(--text-primary);
-      line-height: 1.6;
-      display: block;
-      white-space: pre;
-    }
-
-    .code-keyword {
-      color: var(--primary);
-    }
-
-    .code-string {
-      color: var(--accent);
-    }
-
-    .code-comment {
-      color: var(--text-secondary);
-    }
-
-    .rate-limits-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: calc(var(--spacing-base) * 2);
-    }
-
-    .rate-limits-table th,
-    .rate-limits-table td {
-      padding: calc(var(--spacing-base) * 1.5);
-      text-align: left;
-      border-bottom: 1px solid rgba(0, 212, 170, 0.1);
-    }
-
-    .rate-limits-table th {
-      background: rgba(0, 212, 170, 0.05);
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .rate-limits-table tr:hover {
-      background: rgba(0, 212, 170, 0.02);
-    }
-
-    .fibonacci-highlight {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .sdks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: calc(var(--spacing-base) * 2);
-      margin-top: calc(var(--spacing-base) * 2);
-    }
-
-    .sdk-card {
-      background: rgba(17, 24, 39, 0.6);
-      border: 1px solid rgba(0, 212, 170, 0.2);
-      border-radius: 8px;
-      padding: calc(var(--spacing-base) * 1.5);
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .sdk-card:hover {
-      border-color: var(--primary);
-      background: rgba(0, 212, 170, 0.1);
-    }
-
-    .sdk-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .sdk-name {
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-
-    .sdk-link {
-      color: var(--text-secondary);
-      font-size: 0.8rem;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .sdk-link:hover {
-      color: var(--accent);
-    }
-
-    .cta-section {
-      padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .cta-section h2 {
-      font-family: 'Outfit', sans-serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 700;
-      margin-bottom: calc(var(--spacing-base) * 2);
-      letter-spacing: -0.02em;
-    }
-
-    .cta-section p {
-      color: var(--text-secondary);
-      font-size: 1.125rem;
-      margin-bottom: calc(var(--spacing-base) * 3);
-    }
-
-    footer {
-      background: rgba(10, 14, 23, 0.8);
-      border-top: 1px solid rgba(0, 212, 170, 0.1);
-      padding: calc(var(--spacing-base) * 4) calc(var(--spacing-base) * 2);
-      margin-top: calc(var(--spacing-base) * 6);
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: calc(var(--spacing-base) * 2);
-      margin-bottom: calc(var(--spacing-base) * 2);
-    }
-
-    .footer-section h4 {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-      margin-bottom: calc(var(--spacing-base) * 1);
-      color: var(--primary);
-    }
-
-    .footer-section a {
-      display: block;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
-      transition: color 0.3s ease;
-    }
-
-    .footer-section a:hover {
-      color: var(--primary);
-    }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(0, 212, 170, 0.1);
-      padding-top: calc(var(--spacing-base) * 2);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: calc(var(--spacing-base) * 2);
-    }
-
-    .footer-legal {
-      color: var(--text-secondary);
-      font-size: 0.75rem;
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+    :root{--phi:1.6180339887;--phi-inv:0.6180339887;--bg-base:#0a0e17;--bg-surface:#0d1221;--bg-card:#111827;--bg-glass:rgba(13,18,33,0.7);--border:rgba(255,255,255,0.08);--border-glow:#f59e0b40;--accent:#f59e0b;--accent-dim:#f59e0bcc;--accent-glow:#f59e0b22;--accent-alt:#ef4444;--text-primary:#f0f4ff;--text-secondary:#8b98b8;--text-muted:#4a5568;--font-display:'Outfit',sans-serif;--font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono','Fira Code',monospace;--sp-1:4px;--sp-2:8px;--sp-3:13px;--sp-4:21px;--sp-5:34px;--sp-6:55px;--sp-7:89px;--sp-8:144px;--radius-sm:8px;--radius-md:13px;--radius-lg:21px;--radius-xl:34px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg-base);color:var(--text-primary);font-family:var(--font-body);line-height:1.618;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--accent-glow);color:var(--accent)}
+    a{color:inherit;text-decoration:none}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:var(--sp-4) var(--sp-6);display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);background:rgba(10,14,23,0.8);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;gap:var(--sp-3);font-family:var(--font-display);font-weight:700;font-size:1.25rem}
+    .nav-logo .icon{width:32px;height:32px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--bg-base);font-weight:800}
+    .nav-links{display:flex;gap:var(--sp-6);list-style:none}
+    .nav-links a{font-size:0.875rem;font-weight:500;color:var(--text-secondary);transition:color 0.2s}
+    .nav-links a:hover{color:var(--text-primary)}
+    .nav-cta{display:flex;gap:var(--sp-3)}
+    .btn{display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-5);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.875rem;font-weight:600;cursor:pointer;border:none;transition:all 0.2s}
+    .btn-primary{background:var(--accent);color:var(--bg-base)}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px #f59e0b40}
+    .btn-ghost{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+    .btn-ghost:hover{color:var(--text-primary);border-color:rgba(255,255,255,0.2)}
+
+    /* HERO */
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:var(--sp-8) var(--sp-6) var(--sp-7)}
+    #sacred-geo-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+    .hero-content{position:relative;z-index:2;text-align:center;max-width:880px;margin:0 auto}
+    .hero-badge{display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-2) var(--sp-4);border:1px solid var(--border-glow);border-radius:100px;background:var(--accent-glow);font-size:0.875rem;font-weight:500;color:var(--accent);margin-bottom:var(--sp-5);backdrop-filter:blur(10px)}
+    .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+    .hero-title{font-family:var(--font-display);font-size:clamp(2.25rem,8vw,4.5rem);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:var(--sp-5)}
+    .hero-title .accent{color:var(--accent)}
+    .hero-title .accent-alt{color:var(--accent-alt)}
+    .hero-subtitle{font-size:clamp(1.125rem,2.5vw,1.5rem);color:var(--text-secondary);line-height:1.618;margin-bottom:var(--sp-6);max-width:640px;margin-left:auto;margin-right:auto}
+    .hero-cta{display:flex;align-items:center;justify-content:center;gap:var(--sp-4);flex-wrap:wrap;margin-bottom:var(--sp-7)}
+    .hero-cta .btn{padding:var(--sp-4) var(--sp-6);font-size:1rem}
+    .hero-stats{display:flex;justify-content:center;gap:var(--sp-7);flex-wrap:wrap}
+    .hero-stat{text-align:center}
+    .hero-stat-value{font-family:var(--font-display);font-size:1.875rem;font-weight:700;color:var(--accent);line-height:1}
+    .hero-stat-label{font-size:0.875rem;color:var(--text-muted);margin-top:var(--sp-1)}
+    .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to bottom,transparent,var(--bg-base));z-index:1}
+
+    /* SECTIONS */
+    .section{padding:var(--sp-8) var(--sp-6);max-width:1200px;margin:0 auto}
+    .section-header{text-align:center;margin-bottom:var(--sp-7)}
+    .section-label{font-size:0.875rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:var(--sp-3)}
+    .section-title{font-family:var(--font-display);font-size:clamp(1.875rem,4vw,3rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;margin-bottom:var(--sp-4)}
+    .section-desc{font-size:1.125rem;color:var(--text-secondary);max-width:560px;margin:0 auto;line-height:1.618}
+
+    /* FEATURES */
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)}
+    .feature-card{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--sp-6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transition:all 0.3s;position:relative;overflow:hidden}
+    .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent-glow),transparent);opacity:0;transition:opacity 0.3s}
+    .feature-card:hover{border-color:var(--border-glow);transform:translateY(-4px);box-shadow:0 20px 60px #f59e0b14}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{width:48px;height:48px;border-radius:var(--radius-sm);background:var(--accent-glow);display:flex;align-items:center;justify-content:center;margin-bottom:var(--sp-4);font-size:22px}
+    .feature-title{font-family:var(--font-display);font-size:1.25rem;font-weight:600;margin-bottom:var(--sp-3)}
+    .feature-desc{font-size:0.875rem;color:var(--text-secondary);line-height:1.618}
+
+    /* STATS */
+    .stats-section{background:var(--bg-surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--sp-7) var(--sp-6)}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);max-width:1000px;margin:0 auto}
+    .stat-item{text-align:center;padding:var(--sp-5)}
+    .stat-number{font-family:var(--font-display);font-size:clamp(1.875rem,4vw,3rem);font-weight:800;color:var(--accent);line-height:1}
+    .stat-label{font-size:0.875rem;color:var(--text-muted);margin-top:var(--sp-2)}
+
+    /* ECOSYSTEM */
+    .ecosystem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--sp-3)}
+    .eco-card{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--sp-4);text-align:center;transition:all 0.2s;text-decoration:none;color:var(--text-primary)}
+    .eco-card:hover{border-color:var(--border-glow);transform:translateY(-2px)}
+    .eco-card h4{font-family:var(--font-display);font-size:0.875rem;font-weight:600;margin-bottom:var(--sp-1)}
+    .eco-card p{font-size:0.75rem;color:var(--text-muted)}
+
+    /* CTA */
+    .cta-section{text-align:center;padding:var(--sp-8) var(--sp-6);position:relative}
+    .cta-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,#f59e0b08,transparent 70%);pointer-events:none}
+    .cta-title{font-family:var(--font-display);font-size:clamp(1.875rem,5vw,3.75rem);font-weight:800;margin-bottom:var(--sp-4);position:relative}
+    .cta-desc{font-size:1.125rem;color:var(--text-secondary);margin-bottom:var(--sp-6);max-width:500px;margin-left:auto;margin-right:auto;position:relative}
+    .cta-buttons{display:flex;justify-content:center;gap:var(--sp-4);flex-wrap:wrap;position:relative}
+    .cta-buttons .btn{padding:var(--sp-4) var(--sp-6);font-size:1rem}
+
+    /* FOOTER */
+    .footer{border-top:1px solid var(--border);padding:var(--sp-7) var(--sp-6);text-align:center}
+    .footer-links{display:flex;justify-content:center;gap:var(--sp-6);flex-wrap:wrap;margin-bottom:var(--sp-5)}
+    .footer-links a{font-size:0.875rem;color:var(--text-secondary);transition:color 0.2s}
+    .footer-links a:hover{color:var(--accent)}
+    .footer-copy{font-size:0.75rem;color:var(--text-muted)}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .features-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .nav-links{display:none}
+      .hero-stats{gap:var(--sp-5)}
     }
   </style>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn6egPC90ZXh0Pjwvc3ZnPg==">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn6egPC90ZXh0Pjwvc3ZnPg==">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="canonical" href="https://headyapi.com">
-    <script src="https://browser.sentry-cdn.com/8.0.0/bundle.tracing.min.js" crossorigin="anonymous"></script>
-    <script>Sentry.init({ dsn: 'https://19db162e58a4521de7a0edd7304ce3ee@o4510998791192576.ingest.us.sentry.io/4511070424989696', tracesSampleRate: 0.1, environment: 'production' });</script>
 </head>
 <body>
-  <nav>
-    <a href="https://headyme.com" class="nav-brand">Heady™</a>
-    <div class="nav-links">
-      <a href="https://headysystems.com">Enterprise</a>
-      <a href="https://headyos.com">HeadyOS</a>
-      <a href="https://headymcp.com">MCP</a>
-      <a href="https://headybot.com">Bot</a>
-      <a href="https://headybuddy.org">Buddy</a>
-      <a href="https://headyio.com">I/O</a>
-      <a href="https://headyapi.com">API</a>
+  <canvas id="sacred-geo-canvas" aria-hidden="true"></canvas>
+
+  <!-- NAV -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a href="https://headyapi.com/" class="nav-logo">
+      <span class="icon">◆</span>
+      <span>HeadyAPI™</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#ecosystem">Ecosystem</a></li>
+      <li><a href="https://headyio.com">Docs</a></li>
+      <li><a href="https://headyconnection.com">Community</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="https://headyme.com" class="btn btn-ghost">Sign In</a>
+      <a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-primary">Start Free</a>
     </div>
-    <a href="https://headyme.com/signup" class="btn-primary">Get Started</a>
   </nav>
 
+  <!-- HERO -->
   <section class="hero">
-    <div class="hero-content fade-in">
-      <h1>Build with <span class="accent">intelligence</span></h1>
-      <p>The complete developer platform for REST and GraphQL APIs. φ-scaled rate limiting, webhook delivery, and SDK support for Python, JavaScript, Go, and Rust.</p>
-
-      <div class="hero-buttons">
-        <a href="#features" class="btn-primary">Explore Features</a>
-        <a href="https://headyme.com/signup" class="btn-secondary">Get Your API Key</a>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>HeadySystems Inc. — 60+ Patents</span>
       </div>
-
-      <div class="api-demo">
-        <div class="demo-section">
-          <div class="demo-label">REST Request</div>
-          <div class="demo-code">curl -H "Authorization: Bearer sk_live_abc123" \<br>  https://api.heady.io/v1/data</div>
-        </div>
-        <div class="demo-section">
-          <div class="demo-label">GraphQL Query</div>
-          <div class="demo-code">{<br>  user(id: "usr_123") {<br>    name<br>    email<br>  }<br>}</div>
-        </div>
-        <div class="demo-section">
-          <div class="demo-label">Response (200 OK)</div>
-          <div class="demo-code">{ "status": "success",<br>  "data": { "user": {...} },<br>  "meta": { "latency_ms": 12 } }</div>
-        </div>
+      <h1 class="hero-title">
+        <span class="accent">HeadyAPI</span>™<br>
+        Liquid Intelligence Gateway
+      </h1>
+      <p class="hero-subtitle">Unified AI gateway that races providers, caches responses, and auto-fails-over. One endpoint, every model.</p>
+      <div class="hero-cta">
+        <a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-primary">Start Free →</a>
+        <a href="https://headyio.com/docs" class="btn btn-ghost">API Reference</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hero-stat-value">4+</span><span class="hero-stat-label">AI Providers</span></div>
+        <div class="hero-stat"><span class="hero-stat-value"><200ms</span><span class="hero-stat-label">Edge Latency</span></div>
+        <div class="hero-stat"><span class="hero-stat-value">100K+</span><span class="hero-stat-label">Req/Day Capacity</span></div>
+        <div class="hero-stat"><span class="hero-stat-value">3x</span><span class="hero-stat-label">Cost Reduction</span></div>
       </div>
     </div>
   </section>
 
-  <section id="features" class="features fade-in">
+  <!-- FEATURES -->
+  <section class="section" id="features">
     <div class="section-header">
-      <h2>Powerful API Capabilities</h2>
-      <p>Everything developers need to build production-grade APIs</p>
+      <p class="section-label">Capabilities</p>
+      <h2 class="section-title">Built Different</h2>
+      <p class="section-desc">Every component is engineered with Sacred Geometry mathematics and Continuous Semantic Logic.</p>
     </div>
-
     <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔀</div>
-        <h3>REST + GraphQL</h3>
-        <p>Unified API gateway supporting both REST and GraphQL protocols. One endpoint, multiple query languages, complete flexibility.</p>
+      <div class="feature-card">
+        <div class="feature-icon">🏁</div>
+        <h3 class="feature-title">Provider Racing</h3>
+        <p class="feature-desc">Send your prompt to multiple models simultaneously. First quality response wins. Determinism-proven answers.</p>
       </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">⚡</div>
-        <h3>φ-Scaled Rate Limiting</h3>
-        <p>Fibonacci-based rate tiers: 34/min anonymous, 89/min authenticated, 233/min enterprise. Perfect golden-ratio scaling.</p>
+      <div class="feature-card">
+        <div class="feature-icon">💾</div>
+        <h3 class="feature-title">Semantic Cache</h3>
+        <p class="feature-desc">Proven answers are cached and recalled by similarity. Cache hits are instant — zero model calls.</p>
       </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔑</div>
-        <h3>API Key Management</h3>
-        <p>Create, rotate, and revoke API keys with granular permissions. Full audit logs and usage analytics for each key.</p>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3 class="feature-title">Auto-Failover</h3>
+        <p class="feature-desc">If OpenAI is down, Gemini takes over. If Gemini is slow, Groq responds. Zero downtime, always.</p>
       </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🪝</div>
-        <h3>Webhook Delivery</h3>
-        <p>Reliable event delivery with automatic retries, exponential backoff, and delivery verification. Signed payloads for security.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📚</div>
-        <h3>Multi-SDK Support</h3>
-        <p>Official SDKs for Python, JavaScript, Go, and Rust. Consistent API across all languages with full type safety.</p>
-      </div>
-
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📋</div>
-        <h3>OpenAPI 3.1 Spec</h3>
-        <p>Complete OpenAPI 3.1 specification. Auto-generated documentation, schema validation, and code generation tools.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="features fade-in" style="background: rgba(13, 18, 33, 0.5); margin: calc(var(--spacing-base) * 4) 0; padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);">
-    <div class="section-header">
-      <h2>Code Examples</h2>
-      <p>Get started in minutes with our SDKs</p>
-    </div>
-
-    <div style="max-width: 900px; margin: 0 auto;">
-      <div class="code-tabs">
-        <button class="code-tab active" onclick="switchTab(event, 'curl')">cURL</button>
-        <button class="code-tab" onclick="switchTab(event, 'python')">Python</button>
-        <button class="code-tab" onclick="switchTab(event, 'javascript')">JavaScript</button>
-      </div>
-
-      <div id="curl" class="code-block">
-        <code><span class="code-keyword">curl</span> -X POST https://api.heady.io/v1/query \
-  -H <span class="code-string">"Content-Type: application/json"</span> \
-  -H <span class="code-string">"Authorization: Bearer sk_live_abc123"</span> \
-  -d <span class="code-string">'{
-    "query": "{ user(id: \"usr_123\") { name email } }"
-  }'</span></code>
-      </div>
-
-      <div id="python" class="code-block" style="display: none;">
-        <code><span class="code-keyword">from</span> heady <span class="code-keyword">import</span> Client
-
-client = Client(api_key=<span class="code-string">"sk_live_abc123"</span>)
-
-response = client.query(<span class="code-string">"""
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      name
-      email
-    }
-  }
-"""</span>, variables={<span class="code-string">"id"</span>: <span class="code-string">"usr_123"</span>})
-
-print(response.data)</code>
-      </div>
-
-      <div id="javascript" class="code-block" style="display: none;">
-        <code><span class="code-keyword">import</span> { HeadyClient } <span class="code-keyword">from</span> <span class="code-string">'@heady/sdk'</span>;
-
-<span class="code-keyword">const</span> client = <span class="code-keyword">new</span> HeadyClient({
-  apiKey: <span class="code-string">'sk_live_abc123'</span>
-});
-
-<span class="code-keyword">const</span> { data } = <span class="code-keyword">await</span> client.query(`
-  query GetUser($id: ID!) {
-    user(id: $id) {
-      name
-      email
-    }
-  }
-`, { id: <span class="code-string">'usr_123'</span> });
-
-console.log(data);</code>
-      </div>
-    </div>
-  </section>
-
-  <section class="features fade-in" style="padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);">
-    <div class="section-header">
-      <h2>Rate Limits</h2>
-      <p>φ-scaled tiers using Fibonacci numbers</p>
-    </div>
-
-    <div style="max-width: 900px; margin: 0 auto; overflow-x: auto;">
-      <table class="rate-limits-table">
-        <thead>
-          <tr>
-            <th>Plan</th>
-            <th>Rate Limit</th>
-            <th>Requests/Minute</th>
-            <th>Use Case</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Anonymous</td>
-            <td><span class="fibonacci-highlight">34/min</span></td>
-            <td>34</td>
-            <td>Testing & exploration</td>
-          </tr>
-          <tr>
-            <td>Authenticated</td>
-            <td><span class="fibonacci-highlight">89/min</span></td>
-            <td>89</td>
-            <td>Development & small production</td>
-          </tr>
-          <tr>
-            <td>Enterprise</td>
-            <td><span class="fibonacci-highlight">233/min</span></td>
-            <td>233</td>
-            <td>Large-scale production deployments</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="features fade-in" style="background: rgba(13, 18, 33, 0.5); padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);">
-    <div class="section-header">
-      <h2>Authentication Methods</h2>
-      <p>Secure your API with industry-standard authentication</p>
-    </div>
-
-    <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: calc(var(--spacing-base) * 2);">
       <div class="feature-card">
         <div class="feature-icon">🔑</div>
-        <h3>API Keys</h3>
-        <p>Simple key-based authentication with scopes and rate limiting. Best for server-to-server communication.</p>
+        <h3 class="feature-title">BYOK Support</h3>
+        <p class="feature-desc">Bring your own API keys for any provider. Use your existing contracts and billing.</p>
       </div>
-
       <div class="feature-card">
-        <div class="feature-icon">🔐</div>
-        <h3>OAuth 2.0</h3>
-        <p>Full OAuth 2.0 support with authorization code, client credentials, and refresh token flows.</p>
+        <div class="feature-icon">📈</div>
+        <h3 class="feature-title">Usage Analytics</h3>
+        <p class="feature-desc">Per-model cost tracking, latency histograms, cache hit rates, and provider reliability scores.</p>
       </div>
-
       <div class="feature-card">
-        <div class="feature-icon">⚙️</div>
-        <h3>JWT Tokens</h3>
-        <p>JSON Web Tokens with RS256/HS256 signing. Self-contained, stateless authentication at scale.</p>
+        <div class="feature-icon">🛡️</div>
+        <h3 class="feature-title">Model Armor</h3>
+        <p class="feature-desc">Output filtering, prompt injection detection, PII scrubbing, and compliance enforcement built in.</p>
       </div>
     </div>
   </section>
 
-  <section class="features fade-in" style="padding: calc(var(--spacing-base) * 6) calc(var(--spacing-base) * 2);">
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item"><span class="stat-number">60+</span><span class="stat-label">Patents Filed</span></div>
+      <div class="stat-item"><span class="stat-number">21</span><span class="stat-label">Microservices</span></div>
+      <div class="stat-item"><span class="stat-number">17</span><span class="stat-label">AI Swarms</span></div>
+      <div class="stat-item"><span class="stat-number">φ</span><span class="stat-label">Sacred Geometry</span></div>
+    </div>
+  </section>
+
+  <!-- ECOSYSTEM -->
+  <section class="section" id="ecosystem">
     <div class="section-header">
-      <h2>SDKs & Libraries</h2>
-      <p>Official SDKs with full type safety and documentation</p>
+      <p class="section-label">Platform</p>
+      <h2 class="section-title">The Heady™ Ecosystem</h2>
+      <p class="section-desc">A unified intelligence platform spanning every domain of AI.</p>
     </div>
-
-    <div style="max-width: 900px; margin: 0 auto;">
-      <div class="sdks-grid">
-        <div class="sdk-card">
-          <div class="sdk-icon">🐍</div>
-          <div class="sdk-name">Python</div>
-          <a href="https://github.com/headysystems/python-sdk" class="sdk-link">View on GitHub →</a>
-        </div>
-
-        <div class="sdk-card">
-          <div class="sdk-icon">⚛️</div>
-          <div class="sdk-name">JavaScript</div>
-          <a href="https://github.com/headysystems/js-sdk" class="sdk-link">View on GitHub →</a>
-        </div>
-
-        <div class="sdk-card">
-          <div class="sdk-icon">🦀</div>
-          <div class="sdk-name">Rust</div>
-          <a href="https://github.com/headysystems/rust-sdk" class="sdk-link">View on GitHub →</a>
-        </div>
-
-        <div class="sdk-card">
-          <div class="sdk-icon">🐹</div>
-          <div class="sdk-name">Go</div>
-          <a href="https://github.com/headysystems/go-sdk" class="sdk-link">View on GitHub →</a>
-        </div>
-      </div>
+    <div class="ecosystem-grid">
+      <a class="eco-card" href="https://headyme.com"><h4>HeadyMe</h4><p>AI Operating System</p></a>
+      <a class="eco-card" href="https://headysystems.com"><h4>HeadySystems</h4><p>Infrastructure Engine</p></a>
+      <a class="eco-card" href="https://headyio.com"><h4>Heady I/O</h4><p>Developer Platform</p></a>
+      <a class="eco-card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>Intelligence Gateway</p></a>
+      <a class="eco-card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Server</p></a>
+      <a class="eco-card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
+      <a class="eco-card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+      <a class="eco-card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
+      <a class="eco-card" href="https://headylens.com"><h4>HeadyLens</h4><p>Visual Analysis</p></a>
+      <a class="eco-card" href="https://headybot.com"><h4>HeadyBot</h4><p>Agent Orchestration</p></a>
+      <a class="eco-card" href="https://headyfinance.com"><h4>HeadyFinance</h4><p>Financial Intelligence</p></a>
+      <a class="eco-card" href="https://headyconnection.org"><h4>HeadyConnection</h4><p>AI for Good</p></a>
     </div>
   </section>
 
-  <section class="cta-section fade-in">
-    <h2>Start Building Today</h2>
-    <p>Join thousands of developers using HeadyAPI to power their applications.</p>
-    <a href="https://headyme.com/signup" class="btn-primary">Get Your API Key</a>
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2 class="cta-title">Ready to <span class="accent">Start</span>?</h2>
+    <p class="cta-desc">Join the Heady platform and experience AI without boundaries.</p>
+    <div class="cta-buttons">
+      <a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-primary">Start Free →</a>
+      <a href="https://headyio.com/docs" class="btn btn-ghost">API Reference</a>
+    </div>
   </section>
 
-  
-    
-    <!-- Pricing -->
-    <section id="pricing" style="padding:5rem 2rem;text-align:center">
-      <div style="max-width:1100px;margin:0 auto">
-        <h2 style="font-size:2rem;margin-bottom:0.75rem;color:#e8e8f0">Simple, Transparent Pricing</h2>
-        <p style="color:#9898b0;margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto">Start free. Scale with confidence. No surprises.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;text-align:left">
-          <div style="padding:2rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:#9898b0;margin-bottom:0.5rem">Starter</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#e8e8f0;margin-bottom:0.5rem">Free</div>
-            <div style="color:#9898b0;font-size:0.85rem;margin-bottom:1.5rem">For individuals and small projects</div>
-            <ul style="list-style:none;padding:0;margin-bottom:2rem">
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 3 AI model providers</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 1GB vector memory</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Community support</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Basic MCP tools</li>
-            </ul>
-            <a href="https://headyme.com/signup" style="display:block;text-align:center;padding:0.75rem;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e8e8f0;text-decoration:none;font-weight:600;font-size:0.9rem">Get Started</a>
-          </div>
-          <div style="padding:2rem;background:rgba(99,102,241,0.05);border:2px solid rgba(99,102,241,0.3);border-radius:16px;position:relative">
-            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#6366f1;color:#fff;padding:0.25rem 1rem;border-radius:20px;font-size:0.75rem;font-weight:600">Most Popular</div>
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:#6366f1;margin-bottom:0.5rem">Pro</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#e8e8f0;margin-bottom:0.5rem">$29<span style="font-size:1rem;font-weight:400;color:#9898b0">/mo</span></div>
-            <div style="color:#9898b0;font-size:0.85rem;margin-bottom:1.5rem">For professionals and teams</div>
-            <ul style="list-style:none;padding:0;margin-bottom:2rem">
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 5 AI model providers</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; 10GB vector memory</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Priority support</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; All 47 MCP tools</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; HeadyBuddy companion</li>
-            </ul>
-            <a href="https://headyme.com/signup" style="display:block;text-align:center;padding:0.75rem;background:#6366f1;border-radius:8px;color:#fff;text-decoration:none;font-weight:600;font-size:0.9rem">Start Pro Trial</a>
-          </div>
-          <div style="padding:2rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px">
-            <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:#fbbf24;margin-bottom:0.5rem">Enterprise</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#e8e8f0;margin-bottom:0.5rem">$299<span style="font-size:1rem;font-weight:400;color:#9898b0">/mo</span></div>
-            <div style="color:#9898b0;font-size:0.85rem;margin-bottom:1.5rem">For organizations at scale</div>
-            <ul style="list-style:none;padding:0;margin-bottom:2rem">
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Unlimited model providers</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Unlimited vector memory</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Dedicated support + SLA</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; Custom HeadyBee swarms</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; SOC 2 + HIPAA ready</li>
-              <li style="padding:0.5rem 0;color:#c0c0d0;font-size:0.9rem">&#10003; White-glove onboarding</li>
-            </ul>
-            <a href="https://headysystems.com#contact" style="display:block;text-align:center;padding:0.75rem;border:1px solid rgba(251,191,36,0.3);border-radius:8px;color:#fbbf24;text-decoration:none;font-weight:600;font-size:0.9rem">Contact Sales</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Heady Ecosystem -->
-    <section class="ecosystem" style="padding:5rem 2rem;background:rgba(13,18,33,0.4);border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)">
-      <div style="max-width:1100px;margin:0 auto;text-align:center">
-        <h2 style="font-size:2rem;margin-bottom:0.75rem;color:#e8e8f0">The Heady Ecosystem</h2>
-        <p style="color:#9898b0;margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto">Nine specialized domains. One sovereign AI platform. Built with Sacred Geometry precision and protected by 60+ patents.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;text-align:left">
-          <a href="https://headyme.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#6366f1;margin-bottom:0.25rem">HeadyMe</div>
-            <div style="color:#9898b0;font-size:0.85rem">Command center — your AI operating system hub</div>
-          </a>
-          <a href="https://heady-ai.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#06b6d4;margin-bottom:0.25rem">Heady AI</div>
-            <div style="color:#9898b0;font-size:0.85rem">Intelligence routing, model playground, and research</div>
-          </a>
-          <a href="https://headysystems.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#8b5cf6;margin-bottom:0.25rem">HeadySystems</div>
-            <div style="color:#9898b0;font-size:0.85rem">Enterprise AI architecture and orchestration engine</div>
-          </a>
-          <a href="https://headyconnection.org" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#22c55e;margin-bottom:0.25rem">HeadyConnection</div>
-            <div style="color:#9898b0;font-size:0.85rem">501(c)(3) nonprofit — community, mutual aid, digital equity</div>
-          </a>
-          <a href="https://headybuddy.org" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#f59e0b;margin-bottom:0.25rem">HeadyBuddy</div>
-            <div style="color:#9898b0;font-size:0.85rem">Personal AI companion — voice, memory, emotional awareness</div>
-          </a>
-          <a href="https://headymcp.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#ec4899;margin-bottom:0.25rem">HeadyMCP</div>
-            <div style="color:#9898b0;font-size:0.85rem">Model Context Protocol gateway — 47 tools, one protocol</div>
-          </a>
-          <a href="https://headyio.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#14b8a6;margin-bottom:0.25rem">HeadyIO</div>
-            <div style="color:#9898b0;font-size:0.85rem">Developer platform — SDKs, data pipelines, streaming</div>
-          </a>
-          <a href="https://headybot.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#f97316;margin-bottom:0.25rem">HeadyBot</div>
-            <div style="color:#9898b0;font-size:0.85rem">Agent marketplace — discover and deploy AI automation</div>
-          </a>
-          <a href="https://headyapi.com" style="display:block;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;text-decoration:none;transition:all 0.3s">
-            <div style="font-weight:700;color:#3b82f6;margin-bottom:0.25rem">HeadyAPI</div>
-            <div style="color:#9898b0;font-size:0.85rem">REST and GraphQL APIs — endpoint docs, SDKs, rate limits</div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4>Products</h4>
-        <a href="https://headysystems.com">Enterprise</a>
-        <a href="https://headyos.com">HeadyOS</a>
-        <a href="https://headymcp.com">MCP</a>
-        <a href="https://headybot.com">Bot</a>
-      </div>
-
-      <div class="footer-section">
-        <h4>Platform</h4>
-        <a href="https://headybuddy.org">Buddy</a>
-        <a href="https://headyio.com">I/O</a>
-        <a href="https://headyapi.com">API</a>
-        <a href="https://headyme.com">Heady™</a>
-      </div>
-
-      <div class="footer-section">
-        <h4>Resources</h4>
-        <a href="#" title="Documentation coming soon">Documentation</a>
-        <a href="https://headyme.com/api">API Reference</a>
-        <a href="https://headyme.com/status">Status</a>
-        <a href="https://headyme.com/support">Support</a>
-      </div>
-
-      <div class="footer-section">
-        <h4>Company</h4>
-        <a href="https://headyconnection.org">About</a>
-        <a href="https://headyconnection.org/blog">Blog</a>
-        <a href="https://headyconnection.org/careers">Careers</a>
-        <a href="mailto:eric@headyconnection.org">Contact</a>
-      </div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://headysystems.com">HeadySystems</a>
+      <a href="https://headyio.com">Documentation</a>
+      <a href="https://headyconnection.com">Community</a>
+      <a href="https://github.com/HeadyMe">GitHub</a>
+      <a href="mailto:eric@headysystems.com">Contact</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
     </div>
-
-    <div class="footer-bottom">
-      <div class="footer-legal">© 2026 HeadySystems Inc. · Eric Haywood, Founder</div>
-      <div class="footer-legal">Built with φ-scaled architecture · 60+ Patents · CSL</div>
-      <div class="footer-legal">
-        <a href="https://headyme.com/privacy" style="color: var(--text-secondary); text-decoration: none;">Privacy</a> ·
-        <a href="https://headyme.com/terms" style="color: var(--text-secondary); text-decoration: none;">Terms</a> ·
-        <a href="https://headyme.com/security" style="color: var(--text-secondary); text-decoration: none;">Security</a>
-      </div>
-    </div>
+    <p class="footer-copy">© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Provisional Patents</p>
   </footer>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBpPClFwr0VDxl_D1SLe2dtvq2MX05QL6g",
-      authDomain: "heady-ai.firebaseapp.com",
-      projectId: "heady-ai"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    window.firebaseApp = app;
-    window.firebaseAuth = auth;
-  </script>
-
   <script>
-    function switchTab(event, tabId) {
-      // Hide all tabs
-      document.querySelectorAll('[id="curl"], [id="python"], [id="javascript"]').forEach(tab => {
-        tab.style.display = 'none';
-      });
-
-      // Remove active class from all buttons
-      document.querySelectorAll('.code-tab').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      // Show selected tab and mark button as active
-      document.getElementById(tabId).style.display = 'block';
-      event.target.classList.add('active');
+    var ACCENT='#f59e0b';
+    
+(function(){
+  const c=document.getElementById('sacred-geo-canvas');if(!c)return;
+  const x=c.getContext('2d');let w,h,t=0;
+  const PHI=1.6180339887,PSI=0.6180339887;
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function draw(){
+    x.clearRect(0,0,w,h);
+    x.globalAlpha=0.06;
+    const cx=w/2,cy=h/2,r=Math.min(w,h)*0.35;
+    // Flower of Life pattern
+    for(let i=0;i<6;i++){
+      const a=(Math.PI/3)*i+t*0.1;
+      const px=cx+Math.cos(a)*r*PSI;
+      const py=cy+Math.sin(a)*r*PSI;
+      x.beginPath();x.arc(px,py,r*PSI,0,Math.PI*2);
+      x.strokeStyle=ACCENT;x.lineWidth=0.8;x.stroke();
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, observerOptions);
-
-      document.querySelectorAll('.fade-in').forEach(el => {
-        observer.observe(el);
-      });
-    });
+    // Center circle
+    x.beginPath();x.arc(cx,cy,r*PSI,0,Math.PI*2);
+    x.strokeStyle=ACCENT;x.lineWidth=1;x.stroke();
+    // Rotating outer ring
+    for(let i=0;i<12;i++){
+      const a=(Math.PI/6)*i+t*0.05;
+      const px=cx+Math.cos(a)*r;
+      const py=cy+Math.sin(a)*r;
+      x.beginPath();x.arc(px,py,4,0,Math.PI*2);
+      x.fillStyle=ACCENT;x.globalAlpha=0.12;x.fill();
+    }
+    // Connecting lines
+    x.globalAlpha=0.03;
+    for(let i=0;i<6;i++){
+      const a1=(Math.PI/3)*i+t*0.08;
+      const a2=(Math.PI/3)*((i+2)%6)+t*0.08;
+      x.beginPath();
+      x.moveTo(cx+Math.cos(a1)*r,cy+Math.sin(a1)*r);
+      x.lineTo(cx+Math.cos(a2)*r,cy+Math.sin(a2)*r);
+      x.strokeStyle=ACCENT;x.lineWidth=0.5;x.stroke();
+    }
+    t+=0.008;requestAnimationFrame(draw);
+  }
+  draw();
+})();
   </script>
 </body>
 </html>

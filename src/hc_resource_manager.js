@@ -159,12 +159,18 @@ function collectDisk() {
   return { currentPercent: 0, absoluteValue: 0, capacity: 0, unit: "GB" };
 }
 
+let _gpuAvailable = null; // null = unknown, true/false = cached result
+
 function collectGPU() {
+  // Skip GPU collection entirely if we already know nvidia-smi isn't available
+  if (_gpuAvailable === false) return null;
+
   try {
     const out = execSync(
       "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits",
       { timeout: 5000, encoding: "utf-8" }
     );
+    _gpuAvailable = true;
     const parts = out.trim().split(",").map(s => parseFloat(s.trim()));
     return {
       compute: { currentPercent: parts[0] || 0, absoluteValue: parts[0] || 0, capacity: 100, unit: "%" },
@@ -176,7 +182,11 @@ function collectGPU() {
       },
     };
   } catch (err) {
-    log.warning("Failed to collect GPU metrics", { error: err.message });
+    if (_gpuAvailable === null) {
+      // First failure — log once and cache
+      log.warning("GPU not available (nvidia-smi not found) — skipping GPU metrics permanently");
+      _gpuAvailable = false;
+    }
     return null;
   }
 }

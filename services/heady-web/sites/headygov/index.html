@@ -1,535 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-heady-site="headygov">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="HeadyGov™ — AI for government and public sector. Intelligent automation for civic institutions.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyGov™ — Government AI Solutions</title>
+  <meta name="description" content="HeadyGov™ - Government AI Solutions. Part of the Heady™ intelligent platform by HeadySystems Inc.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://headygov.com/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%233b82f6'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="HeadyGov™ - AI for Government & Public Sector">
-  <meta property="og:description" content="HeadyGov™ — AI for government and public sector. Intelligent automation for civic institutions.">
-  <meta property="og:url" content="https://headyme.com">
-  <link rel="canonical" href="https://headyme.com">
-    <title>HeadyGov™ - AI for Government & Public Sector</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #0a0e17;
-            --surface: #0d1221;
-            --card: #111827;
-            --primary: #00d4aa;
-            --accent: #f5c842;
-            --purple: #6C5CE7;
-            --phi: 1.618033988749895;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: #e0e0e0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(0, 212, 170, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(108, 92, 231, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(245, 200, 66, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.618rem 2.618rem;
-            backdrop-filter: blur(10px);
-            background: rgba(10, 14, 23, 0.8);
-            border-bottom: 1px solid rgba(0, 212, 170, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .nav-brand {
-            font-size: 1.618rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #a0a0a0;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #00b896);
-            color: var(--bg);
-            padding: 0.618rem 1.618rem;
-            border-radius: 0.382rem;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 212, 170, 0.3);
-        }
-
-        .hero {
-            padding: 4rem 2.618rem;
-            text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.618rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero .subtitle {
-            font-size: 1.381rem;
-            color: #a0a0a0;
-            margin-bottom: 2rem;
-        }
-
-        .hero p {
-            font-size: 1.05rem;
-            color: #b0b0b0;
-            max-width: 700px;
-            margin: 0 auto 2.618rem;
-            line-height: 1.8;
-        }
-
-        .hero .cta-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            padding: 0.618rem 1.618rem;
-            border: 2px solid var(--primary);
-            border-radius: 0.382rem;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(0, 212, 170, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .features {
-            padding: 4rem 2.618rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .features h2 {
-            text-align: center;
-            font-size: 2.618rem;
-            margin-bottom: 3rem;
-            color: var(--primary);
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .feature-card {
-            background: rgba(17, 24, 39, 0.6);
-            border: 1px solid rgba(0, 212, 170, 0.2);
-            border-radius: 0.618rem;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(108, 92, 231, 0.1));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .feature-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .feature-card h3 {
-            font-size: 1.381rem;
-            margin-bottom: 0.618rem;
-            color: var(--primary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .feature-card p {
-            color: #a0a0a0;
-            position: relative;
-            z-index: 1;
-            line-height: 1.6;
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 0.618rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .use-cases {
-            padding: 4rem 2.618rem;
-            background: rgba(13, 18, 33, 0.5);
-            max-width: 1400px;
-            margin: 2rem auto;
-            border-radius: 0.618rem;
-            border: 1px solid rgba(0, 212, 170, 0.1);
-        }
-
-        .use-cases h2 {
-            text-align: center;
-            font-size: 2.618rem;
-            margin-bottom: 3rem;
-            color: var(--accent);
-        }
-
-        .use-case-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.618rem;
-        }
-
-        .use-case-item {
-            padding: 1.618rem;
-            background: rgba(10, 14, 23, 0.5);
-            border-left: 4px solid var(--purple);
-            border-radius: 0.382rem;
-            transition: all 0.3s;
-        }
-
-        .use-case-item:hover {
-            border-left-color: var(--primary);
-            transform: translateX(4px);
-        }
-
-        .use-case-item h4 {
-            color: var(--primary);
-            margin-bottom: 0.618rem;
-            font-size: 1.154rem;
-        }
-
-        .use-case-item p {
-            color: #a0a0a0;
-            font-size: 0.95rem;
-        }
-
-        .compliance {
-            padding: 3rem 2.618rem;
-            text-align: center;
-            max-width: 1200px;
-            margin: 3rem auto;
-        }
-
-        .compliance h3 {
-            color: var(--primary);
-            margin-bottom: 2rem;
-            font-size: 1.618rem;
-        }
-
-        .compliance-badges {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1.618rem;
-        }
-
-        .compliance-badge {
-            background: rgba(0, 212, 170, 0.1);
-            border: 1px solid rgba(0, 212, 170, 0.3);
-            padding: 0.8rem 1.618rem;
-            border-radius: 0.382rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cta-section {
-            padding: 4rem 2.618rem;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(108, 92, 231, 0.1));
-            border: 1px solid rgba(0, 212, 170, 0.2);
-            border-radius: 0.618rem;
-            max-width: 1000px;
-            margin: 4rem auto;
-        }
-
-        .cta-section h2 {
-            font-size: 2.618rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        .cta-section p {
-            font-size: 1.154rem;
-            color: #a0a0a0;
-            margin-bottom: 2rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        footer {
-            background: rgba(10, 14, 23, 0.95);
-            border-top: 1px solid rgba(0, 212, 170, 0.1);
-            padding: 3rem 2.618rem;
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .footer-section a {
-            display: block;
-            color: #a0a0a0;
-            text-decoration: none;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-
-        .footer-section a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(0, 212, 170, 0.1);
-            padding-top: 1.618rem;
-            text-align: center;
-            color: #808080;
-            font-size: 0.9rem;
-        }
-
-        .footer-bottom p {
-            margin-bottom: 0.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .hero .subtitle { font-size: 1rem; }
-            nav { flex-direction: column; gap: 1rem; text-align: center; }
-            .nav-links { flex-direction: column; gap: 1rem; }
-            .hero .cta-group { flex-direction: column; align-items: center; }
-            .features, .use-cases, .compliance { padding: 2rem 1rem; }
-        }
-    </style>
+  <meta property="og:url" content="https://headygov.com/">
+  <meta property="og:title" content="HeadyGov™ — Government AI Solutions">
+  <meta property="og:description" content="HeadyGov™ - Government AI Solutions. Part of the Heady™ intelligent platform by HeadySystems Inc.">
+  <meta property="og:site_name" content="HeadyGov™">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HeadyGov™ — Government AI Solutions">
+  <meta name="twitter:description" content="HeadyGov™ - Government AI Solutions. Part of the Heady™ intelligent platform by HeadySystems Inc.">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"HeadyGov™","url":"https://headygov.com","description":"HeadyGov™ - Government AI Solutions. Part of the Heady™ intelligent platform by HeadySystems Inc.","publisher":{"@type":"Organization","name":"HeadySystems Inc.","url":"https://headysystems.com","founder":{"@type":"Person","name":"Eric Haywood"}}}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--accent:#3b82f6;--bg:#0a0e17;--surface:#0d1221;--border:rgba(255,255,255,0.08);--text:#f0f4ff;--text2:#8b98b8;--text3:#4a5568;--font:'Outfit',sans-serif;--body:'Inter',sans-serif}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.618;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px}
+    .logo{font-family:var(--font);font-size:clamp(2rem,6vw,3.75rem);font-weight:800;margin-bottom:13px;letter-spacing:-0.03em}
+    .logo .a{color:var(--accent)}
+    .tagline{font-size:clamp(1rem,2.5vw,1.5rem);color:var(--text2);margin-bottom:34px;max-width:500px}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 21px;border:1px solid #3b82f640;border-radius:100px;background:#3b82f615;font-size:0.875rem;color:var(--accent);margin-bottom:55px}
+    .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:p 2s infinite}
+    @keyframes p{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:13px;max-width:900px;width:100%;margin-bottom:55px}
+    .card{background:rgba(13,18,33,0.7);border:1px solid var(--border);border-radius:13px;padding:21px;backdrop-filter:blur(16px);transition:all .3s;text-decoration:none;color:var(--text)}
+    .card:hover{border-color:#3b82f640;transform:translateY(-3px)}
+    .card h4{font-family:var(--font);font-size:.875rem;font-weight:600;margin-bottom:4px}
+    .card p{font-size:.75rem;color:var(--text3)}
+    .cta-row{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-bottom:34px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 34px;border-radius:8px;font-family:var(--body);font-size:.875rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
+    .btn-p{background:var(--accent);color:var(--bg)}
+    .btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 24px #3b82f640}
+    .btn-g{background:transparent;color:var(--text2);border:1px solid var(--border)}
+    .btn-g:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
+    .footer{position:absolute;bottom:21px;font-size:.75rem;color:var(--text3)}
+    .footer a{color:var(--text3);margin:0 8px;text-decoration:none;transition:color .2s}
+    .footer a:hover{color:var(--accent)}
+    canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
+  </style>
 </head>
 <body>
-    <nav>
-        <a href="https://headyme.com" class="nav-brand">Heady™</a>
-        <div class="nav-links">
-            <a href="https://headysystems.com">Enterprise</a>
-            <a href="https://headyos.com">HeadyOS</a>
-            <a href="https://headymcp.com">MCP</a>
-            <a href="https://headybot.com">Bot</a>
-            <a href="https://headybuddy.org">Buddy</a>
-            <a href="https://headyio.com">I/O</a>
-            <a href="https://headyapi.com">API</a>
-        </div>
-        <a href="https://headyme.com/signup" class="btn-primary">Get Started</a>
-    </nav>
-
-    <section class="hero">
-        <h1>HeadyGov™</h1>
-        <p class="subtitle">AI for Government & Public Sector</p>
-        <p>Transform citizen services, accelerate case management, and ensure regulatory compliance with intelligent automation built for the public sector.</p>
-        <div class="cta-group">
-            <a href="https://headyme.com/demo" class="btn-primary">Request Demo</a>
-            <a href="https://headyme.com/resources" class="btn-secondary">View Case Study</a>
-        </div>
-    </section>
-
-    <section class="features">
-        <h2>Designed for Government</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🔐</div>
-                <h3>FedRAMP Ready</h3>
-                <p>Built with federal security requirements. Achieve compliance faster with pre-configured controls and continuous monitoring aligned with FedRAMP standards.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">✓</div>
-                <h3>FISMA Compliance</h3>
-                <p>Meet Federal Information Security Management Act requirements. Automated auditing, risk assessment, and compliance documentation for all federal agencies.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">👥</div>
-                <h3>Citizen Services Automation</h3>
-                <p>Scale service delivery without scaling staff. Intelligent chatbots, application processing, and status tracking that serve citizens 24/7.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔗</div>
-                <h3>Inter-agency Data Sharing</h3>
-                <p>Secure, compliant data exchange between agencies. Eliminate data silos while maintaining strict privacy and security protocols.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="use-cases">
-        <h2>Real-World Applications</h2>
-        <div class="use-case-grid">
-            <div class="use-case-item">
-                <h4>Case Management</h4>
-                <p>Automate intake, routing, and status tracking for benefits, licensing, and administrative cases.</p>
-            </div>
-            <div class="use-case-item">
-                <h4>Benefits Processing</h4>
-                <p>Accelerate eligibility determination and reduce processing times for welfare, unemployment, and veteran benefits.</p>
-            </div>
-            <div class="use-case-item">
-                <h4>Regulatory Analysis</h4>
-                <p>Monitor regulatory changes, assess compliance impact, and generate required reports automatically.</p>
-            </div>
-            <div class="use-case-item">
-                <h4>Public Safety Analytics</h4>
-                <p>Analyze crime patterns, optimize resource allocation, and support evidence-based policing strategies.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="compliance">
-        <h3>Enterprise-Grade Security & Compliance</h3>
-        <div class="compliance-badges">
-            <div class="compliance-badge">✓ FedRAMP</div>
-            <div class="compliance-badge">✓ FISMA</div>
-            <div class="compliance-badge">✓ NIST 800-53</div>
-            <div class="compliance-badge">✓ FIPS 140-2</div>
-            <div class="compliance-badge">✓ SOC 2 Type II</div>
-            <div class="compliance-badge">✓ ADA Compliant</div>
-        </div>
-    </section>
-
-    <section class="cta-section">
-        <h2>Ready to Transform Government Operations?</h2>
-        <p>Join agencies nationwide in leveraging AI for better citizen outcomes and operational efficiency.</p>
-        <div class="cta-buttons">
-            <a href="https://headyme.com/signup" class="btn-primary">Start Free Trial</a>
-            <a href="https://headyme.com/contact" class="btn-secondary">Contact Sales</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Platform</h4>
-                <a href="https://headysystems.com">Enterprise</a>
-                <a href="https://headyos.com">HeadyOS</a>
-                <a href="https://headymcp.com">MCP</a>
-            </div>
-            <div class="footer-section">
-                <h4>Solutions</h4>
-                <a href="https://headybot.com">Bot</a>
-                <a href="https://headybuddy.org">Buddy</a>
-                <a href="https://headyio.com">I/O</a>
-            </div>
-            <div class="footer-section">
-                <h4>Resources</h4>
-                <a href="#" title="Documentation coming soon">Documentation</a>
-                <a href="https://headyme.com/blog">Blog</a>
-                <a href="https://headyme.com/community">Community</a>
-            </div>
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <a href="https://headyme.com/privacy">Privacy Policy</a>
-                <a href="https://headyme.com/terms">Terms of Service</a>
-                <a href="https://headyme.com/security">Security</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2026 HeadySystems Inc. · Eric Haywood, Founder</p>
-            <p>Built with φ-scaled architecture · 60+ Patents · CSL</p>
-            <p><a href="mailto:eric@headyconnection.org" style="color: #a0a0a0; text-decoration: none;">eric@headyconnection.org</a></p>
-        </div>
-    </footer>
+  <canvas id="sacred-geo-canvas" aria-hidden="true"></canvas>
+  <div class="badge"><span class="badge-dot"></span>HeadySystems Inc. — 60+ Patents</div>
+  <h1 class="logo"><span class="a">HeadyGov</span>™</h1>
+  <p class="tagline">Government AI Solutions. Part of the Heady™ intelligent platform — Sacred Geometry powered AI infrastructure.</p>
+  <div class="grid">
+    <a class="card" href="https://headyme.com"><h4>HeadyMe</h4><p>AI Operating System</p></a>
+    <a class="card" href="https://headysystems.com"><h4>HeadySystems</h4><p>Infrastructure</p></a>
+    <a class="card" href="https://headyio.com"><h4>Heady I/O</h4><p>Developer SDK</p></a>
+    <a class="card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>AI Gateway</p></a>
+    <a class="card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Tools</p></a>
+    <a class="card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+    <a class="card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
+    <a class="card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
+  </div>
+  <div class="cta-row">
+    <a href="https://headyme.com" class="btn btn-p">Get Started →</a>
+    <a href="https://headyio.com" class="btn btn-g">Documentation</a>
+  </div>
+  <div class="footer">
+    <p>© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Patents</p>
+    <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:eric@headysystems.com">Contact</a></p>
+  </div>
+  <script>var ACCENT='#3b82f6';
+(function(){
+  const c=document.getElementById('sacred-geo-canvas');if(!c)return;
+  const x=c.getContext('2d');let w,h,t=0;
+  const PHI=1.6180339887,PSI=0.6180339887;
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function draw(){
+    x.clearRect(0,0,w,h);
+    x.globalAlpha=0.06;
+    const cx=w/2,cy=h/2,r=Math.min(w,h)*0.35;
+    // Flower of Life pattern
+    for(let i=0;i<6;i++){
+      const a=(Math.PI/3)*i+t*0.1;
+      const px=cx+Math.cos(a)*r*PSI;
+      const py=cy+Math.sin(a)*r*PSI;
+      x.beginPath();x.arc(px,py,r*PSI,0,Math.PI*2);
+      x.strokeStyle=ACCENT;x.lineWidth=0.8;x.stroke();
+    }
+    // Center circle
+    x.beginPath();x.arc(cx,cy,r*PSI,0,Math.PI*2);
+    x.strokeStyle=ACCENT;x.lineWidth=1;x.stroke();
+    // Rotating outer ring
+    for(let i=0;i<12;i++){
+      const a=(Math.PI/6)*i+t*0.05;
+      const px=cx+Math.cos(a)*r;
+      const py=cy+Math.sin(a)*r;
+      x.beginPath();x.arc(px,py,4,0,Math.PI*2);
+      x.fillStyle=ACCENT;x.globalAlpha=0.12;x.fill();
+    }
+    // Connecting lines
+    x.globalAlpha=0.03;
+    for(let i=0;i<6;i++){
+      const a1=(Math.PI/3)*i+t*0.08;
+      const a2=(Math.PI/3)*((i+2)%6)+t*0.08;
+      x.beginPath();
+      x.moveTo(cx+Math.cos(a1)*r,cy+Math.sin(a1)*r);
+      x.lineTo(cx+Math.cos(a2)*r,cy+Math.sin(a2)*r);
+      x.strokeStyle=ACCENT;x.lineWidth=0.5;x.stroke();
+    }
+    t+=0.008;requestAnimationFrame(draw);
+  }
+  draw();
+})();</script>
 </body>
 </html>

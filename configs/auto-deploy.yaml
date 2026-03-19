@@ -60,7 +60,7 @@ targets:
   # Local primary workspace
   - name: "local-primary"
     type: "path"
-    path: "C:\\Users\\erich\\Heady"
+    path: "/home/headyme/Heady"
     role: "local-sot"
     auto_sync: true
     redundancy: 1
@@ -68,7 +68,7 @@ targets:
   # Local sandbox workspace
   - name: "local-sandbox"
     type: "path"
-    path: "C:\\Users\\erich\\Heady-Sandbox"
+    path: "/home/headyme/Heady-Sandbox"
     role: "local-sandbox"
     auto_sync: true
     redundancy: 1
@@ -79,7 +79,7 @@ policies:
   verification_timeout: 233              # fib(13) = 233
   retry_count: 2
   required_success_rate: 1.0  # 100% for production
-  api.headysystems.com_allowed: false
+  localhost_allowed: false
 
 # Production Gate — must pass before pushing to production
 production_gate:

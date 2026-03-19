@@ -15,7 +15,7 @@ const ROOT = join(__dirname, '..');
 const SITES_DIR = process.env.SITES_OUT || join(ROOT, 'services', 'heady-web', 'sites');
 // Fallback to /tmp if main dir is unwritable
 const OUTPUT_DIR = (() => {
-    try { writeFileSync(join(SITES_DIR, '.write-test'), ''); const { unlinkSync } = await import('fs'); unlinkSync(join(SITES_DIR, '.write-test')); return SITES_DIR; }
+    try { writeFileSync(join(SITES_DIR, '.write-test'), ''); const fs = require('fs'); fs.unlinkSync(join(SITES_DIR, '.write-test')); return SITES_DIR; }
     catch { const tmp = '/tmp/heady-sites-generated'; mkdirSync(tmp, { recursive: true }); console.log('⚠ Using /tmp output (run: sudo cp -r /tmp/heady-sites-generated/* services/heady-web/sites/)'); return tmp; }
 })();
 const data = JSON.parse(readFileSync(join(__dirname, 'site-content-data.json'), 'utf-8'));
