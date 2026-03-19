@@ -186,6 +186,15 @@ spec:
         interval: 30s
         timeout: 5s
 
+    # Memory Service — vector search and upsert
+    - name: heady-memory
+      version: 3.2.0
+      replicas: 1
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
+
   remotes:
     - name: headyCloudUI
       url: https://console.headycloud.com/remoteEntry.js
