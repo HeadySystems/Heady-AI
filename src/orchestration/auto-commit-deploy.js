@@ -68,8 +68,8 @@ const SAFE_MERGE_PATTERNS = [
   /^renovate\//,                      // Renovate bot
 ];
 
-// Push targets — all configured remotes (not just 'origin')
-const PUSH_REMOTES = (process.env.HEADY_PUSH_REMOTES || 'hc-main,azure-main').split(',').map(r => r.trim()).filter(Boolean);
+// Push targets — all configured main remotes across all orgs
+const PUSH_REMOTES = (process.env.HEADY_PUSH_REMOTES || 'hc-main,hs-main,headyai,azure-main').split(',').map(r => r.trim()).filter(Boolean);
 
 // ─── LOGGER ──────────────────────────────────────────────────────────────────
 let _logger = null;
