@@ -170,12 +170,22 @@ async function runCategory(category, ctx) {
     if (!result.ok) failCount++;
 
     bus.emit('task', {
-      type:     'task_complete',
+      type:     result.ok ? 'task_complete' : 'task_failed',
       data:     { category, taskIndex: i, ...result },
       temporal: result.ok ? CSL_THRESHOLDS.HIGH : PSI,
       semantic: result.score,
       spatial:  PSI,
     });
+
+    if (!result.ok) {
+      bus.emit('alert', {
+        type:     'auto_success_task_failed',
+        data:     { category, taskIndex: i, key: result.key, detail: result.detail },
+        temporal: PSI,
+        semantic: result.score,
+        spatial:  PSI,
+      });
+    }
   }
 
   const avgScore = totalScore / TASKS_PER_CATEGORY;
