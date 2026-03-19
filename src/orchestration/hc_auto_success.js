@@ -42,7 +42,7 @@ const EventEmitter = require("events");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) { console.error('[hc_auto_success] logger load failed:', e.message || e); }
 
 const HISTORY_PATH = path.join(__dirname, "..", "data", "auto-success-tasks.json");
 const AUDIT_PATH = path.join(__dirname, "..", "data", "auto-success-audit.json");
@@ -107,17 +107,17 @@ const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
 
 // ─── TASK CATALOG (fib(12) = 144 tasks × fib(7) = 13 categories) ────────────
 let extraTasks = [];
-try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { }
+try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let nonprofitTasks = [];
-try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { }
+try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let buddyTasks = [];
-try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { }
+try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let long814Tasks = [];
-try { long814Tasks = require('./long814-tasks.json'); } catch (e) { }
+try { long814Tasks = require('./long814-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let headyosTasks = [];
-try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { }
+try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let orchProtocolTasks = [];
-try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { }
+try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let phase5Tasks = [];
 try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
 let downloadsTasks = [];
