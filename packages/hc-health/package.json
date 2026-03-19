@@ -1,11 +1,11 @@
 {
-  "name": "@heady/hc-health",
+  "name": "@heady-ai/hc-health",
   "version": "1.0.0",
   "description": "System health monitoring, diagnostics, and cron-based health checks",
   "main": "index.js",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@heady/phi-math": "file:../phi-math"
+    "@heady-ai/phi-math": "workspace:*"
   }
 }

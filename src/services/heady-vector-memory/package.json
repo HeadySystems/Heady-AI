@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-vector-memory",
+  "name": "@heady-ai/heady-vector-memory",
   "version": "3.2.3",
   "description": "3D vector memory \u2014 pgvector RAG, Graph traversal",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

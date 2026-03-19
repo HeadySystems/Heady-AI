@@ -1,5 +1,5 @@
 /**
- * @heady/nats-consumers — Event-Driven Message Consumers
+ * @heady-ai/nats-consumers — Event-Driven Message Consumers
  * 
  * NATS JetStream consumers for all Heady event streams.
  * φ-scaled batch sizes, ack windows, and backpressure.
@@ -10,8 +10,8 @@
 
 import { EventEmitter } from 'node:events';
 import { randomUUID } from 'node:crypto';
-import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger({ service: 'nats-consumers' });
 

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/cli",
+  "name": "@heady-ai/cli",
   "version": "0.1.0",
   "description": "HeadyOS CLI — terminal-based AI assistant",
   "bin": { "heady": "./bin/heady.js" },

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/scheduler-service",
+  "name": "@heady-ai/scheduler-service",
   "version": "1.0.0",
   "description": "Cron-equivalent job scheduler with φ-scaled intervals and circuit breakers for the Heady platform",
   "main": "src/index.js",

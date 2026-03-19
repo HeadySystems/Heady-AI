@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — auth/index.js                                 ║
+ * ║  @heady-ai/platform — auth/index.js                                 ║
  * ║  JWT + mTLS + service-to-service auth, Ed25519 receipt signing   ║
  * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║
  * ╚══════════════════════════════════════════════════════════════════╝

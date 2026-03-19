@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-auto-success",
+  "name": "@heady-ai/heady-auto-success",
   "version": "3.2.3",
   "description": "Auto-Success Engine \u2014 phi7-cycle 29034ms background tasks",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

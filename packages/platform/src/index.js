@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — Root Index                                    ║
+ * ║  @heady-ai/platform — Root Index                                    ║
  * ║  Heady™ Shared Platform Package                                  ║
  * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║
  * ╚══════════════════════════════════════════════════════════════════╝

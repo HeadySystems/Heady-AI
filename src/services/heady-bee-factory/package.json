@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-bee-factory",
+  "name": "@heady-ai/heady-bee-factory",
   "version": "3.2.3",
   "description": "Bee factory \u2014 spawn/retire 10K bees, 89 types",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/api-gateway",
+  "name": "@heady-ai/api-gateway",
   "version": "5.2.0",
   "description": "Heady\u2122 Liquid API Gateway \u2014 CSL-gated routing with circuit breakers",
   "main": "index.js",

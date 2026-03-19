@@ -1,5 +1,5 @@
 /**
- * @heady/edge-runtime — Durable Agent State
+ * @heady-ai/edge-runtime — Durable Agent State
  * 
  * Cloudflare Durable Object for persistent agent state with
  * hibernatable WebSockets, SQLite storage, and alarm scheduling.
@@ -8,8 +8,8 @@
  * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 
-import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger({ service: 'durable-agent-state' });
 

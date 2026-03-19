@@ -1,5 +1,5 @@
 {
-  "name": "@heady/vector-memory-service",
+  "name": "@heady-ai/vector-memory-service",
   "version": "4.0.0",
   "type": "module",
   "main": "dist/index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-drupal",
+  "name": "@heady-ai/heady-drupal",
   "version": "3.2.3",
   "description": "Drupal integration — headyconnection.org CMS bridge and proxy",
   "type": "module",
@@ -10,7 +10,7 @@
     "test":  "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-pipeline-core",
+  "name": "@heady-ai/heady-pipeline-core",
   "version": "3.2.3",
   "description": "Pipeline core \u2014 21-stage HCFullPipeline v4.0",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

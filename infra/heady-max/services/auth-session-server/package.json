@@ -1,5 +1,5 @@
 {
-  "name": "@heady/auth-session-server",
+  "name": "@heady-ai/auth-session-server",
   "version": "1.0.0",
   "description": "Heady Auth Session Server — OAuth2/OIDC with PKCE, httpOnly cookies, RS256 JWT",
   "author": "Eric Haywood <eric@headyconnection.org>",

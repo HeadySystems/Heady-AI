@@ -15,7 +15,7 @@
 // HEADY_BRAND:END
 
 const os = require('os');
-const { PHI_CIRCUIT_BREAKER } = require('@heady/phi-math');
+const { PHI_CIRCUIT_BREAKER } = require('@heady-ai/phi-math');
 
 // ═══════════════════════════════════════════════════════════════════
 // HC Health — System Health Monitoring and Diagnostics

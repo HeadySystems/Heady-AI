@@ -14,8 +14,8 @@ const {
   PHI_TIMEOUT_REQUEST,
   phiBackoff,
   phiScale,
-} = require('@heady/phi-math');
-const { createLogger } = require('@heady/structured-logger');
+} = require('@heady-ai/phi-math');
+const { createLogger } = require('@heady-ai/structured-logger');
 
 // ═══════════════════════════════════════════════════════════════════
 // Structured Logger Configuration

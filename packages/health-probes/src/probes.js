@@ -1,6 +1,6 @@
 'use strict';
 
-const { PHI, PSI, PSI2, nearestFib, FIB } = require('@heady/phi-math-foundation');
+const { PHI, PSI, PSI2, nearestFib, FIB } = require('@heady-ai/phi-math-foundation');
 
 /**
  * Status enum for health probes.

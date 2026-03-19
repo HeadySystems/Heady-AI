@@ -1,6 +1,6 @@
 /**
  * mcp-server — CJS entrypoint
- * Bridges require('@heady/mcp-server') to the TypeScript dist build
+ * Bridges require('@heady-ai/mcp-server') to the TypeScript dist build
  */
 'use strict';
 

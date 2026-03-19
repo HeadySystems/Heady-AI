@@ -1,5 +1,5 @@
 {
-  "name": "@heady/search-service",
+  "name": "@heady-ai/search-service",
   "version": "1.0.0",
   "description": "Heady Hybrid BM25+Vector Search with RRF",
   "author": "Eric Haywood <eric@headyconnection.org>",

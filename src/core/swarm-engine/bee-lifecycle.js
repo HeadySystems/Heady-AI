@@ -17,8 +17,8 @@ import {
   EVICTION_WEIGHTS,
   phiBackoff,
   cslGate,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger('bee-lifecycle');
 

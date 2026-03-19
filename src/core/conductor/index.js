@@ -1,5 +1,5 @@
 /**
- * @heady/conductor — Barrel Export
+ * @heady-ai/conductor — Barrel Export
  * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 export { HeadyConductor, ConductorTask, TaskState, CONDUCTOR_CONFIG } from './conductor.js';

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/schema-registry",
+  "name": "@heady-ai/schema-registry",
   "version": "1.0.0",
   "description": "Central JSON Schema registry with validation for the Heady platform",
   "main": "src/index.js",

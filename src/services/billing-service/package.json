@@ -1,5 +1,5 @@
 {
-  "name": "@heady/billing-service",
+  "name": "@heady-ai/billing-service",
   "version": "1.0.0",
   "description": "Stripe billing integration for HeadyEX marketplace subscriptions",
   "main": "src/index.js",

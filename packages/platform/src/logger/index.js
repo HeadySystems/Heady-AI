@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — logger/index.js                               ║
+ * ║  @heady-ai/platform — logger/index.js                               ║
  * ║  Structured JSON logger with φ-context enrichment               ║
  * ║  © 2026 HeadySystems Inc.                                        ║
  * ╚══════════════════════════════════════════════════════════════════╝

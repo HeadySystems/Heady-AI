@@ -1,5 +1,5 @@
 {
-  "name": "@heady/health-probes",
+  "name": "@heady-ai/health-probes",
   "version": "1.0.0",
   "description": "Health check probes with phi-scaled thresholds for the Heady platform",
   "main": "src/index.js",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@heady-ai/phi-math-foundation": "workspace:*",
-    "@heady/structured-logger": "workspace:*"
+    "@heady-ai/structured-logger": "workspace:*"
   },
   "keywords": ["health", "probes", "kubernetes", "readiness", "liveness", "heady"],
   "license": "UNLICENSED",

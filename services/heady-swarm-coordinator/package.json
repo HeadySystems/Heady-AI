@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-swarm-coordinator",
+  "name": "@heady-ai/heady-swarm-coordinator",
   "version": "3.2.3",
   "description": "Swarm coordinator — cross-swarm messaging, < 10ms latency target",
   "type": "module",
@@ -10,7 +10,7 @@
     "test":  "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

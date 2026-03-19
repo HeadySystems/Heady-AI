@@ -1,5 +1,5 @@
 /**
- * @heady/conductor — HeadyConductor Central Orchestrator
+ * @heady-ai/conductor — HeadyConductor Central Orchestrator
  * 
  * The central dispatch and coordination engine for all Heady tasks.
  * Routes tasks to the right AI nodes, manages pool scheduling,
@@ -12,8 +12,8 @@
 
 import { randomUUID } from 'node:crypto';
 import { EventEmitter } from 'node:events';
-import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 import { classifyTask, selectNodes, DOMAINS, POOLS } from './task-classifier.js';
 
 const logger = createLogger({ service: 'heady-conductor' });

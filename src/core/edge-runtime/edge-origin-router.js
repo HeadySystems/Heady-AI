@@ -1,5 +1,5 @@
 /**
- * @heady/edge-runtime — Edge-Origin Router
+ * @heady-ai/edge-runtime — Edge-Origin Router
  * 
  * Routes requests between Cloudflare edge (fast, cheap) and
  * Cloud Run origin (powerful, expensive) using φ-scored complexity.
@@ -12,8 +12,8 @@
  * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 
-import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger({ service: 'edge-origin-router' });
 

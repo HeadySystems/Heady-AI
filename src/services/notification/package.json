@@ -1,5 +1,5 @@
 {
-  "name": "@heady/notification",
+  "name": "@heady-ai/notification",
   "version": "5.1.0",
   "description": "Heady™ Notification Service — WebSocket + SSE + NATS JetStream real-time notifications",
   "main": "index.js",

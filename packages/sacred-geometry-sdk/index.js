@@ -1,5 +1,5 @@
 /**
- * @heady/sacred-geometry-sdk
+ * @heady-ai/sacred-geometry-sdk
  * Mathematical harmony design system built on the golden ratio.
  * © 2026 HeadySystems Inc. All Rights Reserved.
  */

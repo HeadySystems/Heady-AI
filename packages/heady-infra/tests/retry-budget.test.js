@@ -1,9 +1,9 @@
 /**
- * @heady/heady-infra — Test Suite
+ * @heady-ai/heady-infra — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/heady-infra', () => {
+describe('@heady-ai/heady-infra', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/retry-budget.js');

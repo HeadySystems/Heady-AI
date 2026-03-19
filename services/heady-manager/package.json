@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-manager",
+  "name": "@heady-ai/heady-manager",
   "version": "3.2.3",
   "description": "Primary orchestration manager — 21-stage pipeline controller",
   "type": "module",
@@ -10,7 +10,7 @@
     "test":  "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

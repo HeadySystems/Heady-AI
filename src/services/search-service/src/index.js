@@ -1,5 +1,5 @@
 /**
- * @heady/search-service — Hybrid Vector + BM25 Search
+ * @heady-ai/search-service — Hybrid Vector + BM25 Search
  * 
  * CSL-gated relevance scoring with Reciprocal Rank Fusion.
  * All constants φ-scaled per Heady Unbreakable Laws.
@@ -9,9 +9,9 @@
 
 import { createServer } from 'node:http';
 import { EventEmitter } from 'node:events';
-import { PHI, PSI, FIB, phiThreshold, phiBackoff, cslGate } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
-import { createHealthRouter } from '@heady/health-probes';
+import { PHI, PSI, FIB, phiThreshold, phiBackoff, cslGate } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
+import { createHealthRouter } from '@heady-ai/health-probes';
 
 const logger = createLogger({ service: 'search-service' });
 

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-budget-tracker",
+  "name": "@heady-ai/heady-budget-tracker",
   "version": "3.2.3",
   "description": "Budget tracker — token/cost tracking per bee, swarm, pipeline stage",
   "type": "module",
@@ -10,7 +10,7 @@
     "test":  "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

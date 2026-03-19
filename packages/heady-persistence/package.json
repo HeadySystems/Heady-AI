@@ -1,5 +1,5 @@
 {
-  "name": "@heady/persistence",
+  "name": "@heady-ai/persistence",
   "version": "1.0.0",
   "description": "Heady User Persistence System — cross-device state sync, session management, and user profile storage",
   "main": "src/index.ts",

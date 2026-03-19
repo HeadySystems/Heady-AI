@@ -23,7 +23,7 @@ import {
   CSL_THRESHOLDS,
   cslGate,
   cslBlend,
-} from '@heady/phi-math-foundation';
+} from '@heady-ai/phi-math-foundation';
 
 const DIM = 384;
 

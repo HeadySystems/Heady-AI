@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — phi/index.js                                  ║
+ * ║  @heady-ai/platform — phi/index.js                                  ║
  * ║  Single Source of Truth for all φ-derived constants              ║
  * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║
  * ╚══════════════════════════════════════════════════════════════════╝

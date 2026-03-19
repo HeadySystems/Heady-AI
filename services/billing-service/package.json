@@ -1,5 +1,5 @@
 {
-  "name": "@heady/billing-service",
+  "name": "@heady-ai/billing-service",
   "version": "1.0.0",
   "description": "HEADY billing service with φ-scaled pricing and Stripe integration",
   "main": "dist/index.js",

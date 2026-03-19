@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — otel/index.js                                 ║
+ * ║  @heady-ai/platform — otel/index.js                                 ║
  * ║  OpenTelemetry SDK bootstrap and instrumentation hooks           ║
  * ║  © 2026 HeadySystems Inc.                                        ║
  * ╚══════════════════════════════════════════════════════════════════╝
@@ -14,7 +14,7 @@
  *
  * USAGE:
  *   // Must be required BEFORE any other imports
- *   import { initOtel, HeadyTracer } from '@heady/platform/otel';
+ *   import { initOtel, HeadyTracer } from '@heady-ai/platform/otel';
  *   await initOtel({ service: 'heady-gateway', domain: 'headysystems.com' });
  */
 

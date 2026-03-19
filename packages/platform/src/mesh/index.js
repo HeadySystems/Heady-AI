@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — mesh/index.js                                 ║
+ * ║  @heady-ai/platform — mesh/index.js                                 ║
  * ║  Envoy/mTLS service mesh contracts and circuit breaker           ║
  * ║  © 2026 HeadySystems Inc.                                        ║
  * ╚══════════════════════════════════════════════════════════════════╝

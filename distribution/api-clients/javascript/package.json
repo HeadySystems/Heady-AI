@@ -1,5 +1,5 @@
 {
-  "name": "@heady/sdk",
+  "name": "@heady-ai/sdk",
   "version": "0.1.0",
   "description": "Heady AI — JavaScript/TypeScript SDK for HeadyStack API",
   "main": "dist/index.js",

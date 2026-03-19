@@ -1,5 +1,5 @@
 {
-  "name": "@heady/search-service",
+  "name": "@heady-ai/search-service",
   "version": "1.0.0",
   "description": "Full-text and vector hybrid search service for HEADY platform",
   "main": "dist/index.js",

@@ -1,5 +1,5 @@
 /**
- * @heady/migration-service — Schema Migration Engine
+ * @heady-ai/migration-service — Schema Migration Engine
  * 
  * PostgreSQL + pgvector schema migrations with φ-scaled versioning,
  * advisory lock safety, and CSL-gated rollback confidence.
@@ -10,8 +10,8 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { join, basename } from 'node:path';
 import { EventEmitter } from 'node:events';
-import { PHI, PSI, FIB, phiThreshold, phiBackoff } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, FIB, phiThreshold, phiBackoff } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger({ service: 'migration-service' });
 

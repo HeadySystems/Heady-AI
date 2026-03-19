@@ -1,5 +1,5 @@
 {
-  "name": "@heady/asset-pipeline",
+  "name": "@heady-ai/asset-pipeline",
   "version": "1.0.0",
   "description": "Heady Asset Processing Pipeline with CDN & Dedup",
   "author": "Eric Haywood <eric@headyconnection.org>",

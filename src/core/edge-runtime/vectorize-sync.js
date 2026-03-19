@@ -1,5 +1,5 @@
 /**
- * @heady/edge-runtime — Vectorize ↔ pgvector Sync
+ * @heady-ai/edge-runtime — Vectorize ↔ pgvector Sync
  * 
  * Bidirectional incremental sync between Cloudflare Vectorize (edge)
  * and pgvector (origin). pgvector is source of truth.
@@ -7,8 +7,8 @@
  * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 
-import { PHI, PSI, FIB, phiBackoff } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, FIB, phiBackoff } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger({ service: 'vectorize-sync' });
 

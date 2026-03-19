@@ -20,8 +20,8 @@ import {
   PRESSURE_LEVELS,
   classifyPressure,
   phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger('backpressure');
 

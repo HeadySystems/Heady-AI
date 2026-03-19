@@ -1,5 +1,5 @@
 {
-  "name": "@heady/auth-session",
+  "name": "@heady-ai/auth-session",
   "version": "5.1.0",
   "description": "Heady™ Auth Session Server — Central Authentication with Firebase Admin SDK, httpOnly cookies, cross-domain relay",
   "main": "index.js",

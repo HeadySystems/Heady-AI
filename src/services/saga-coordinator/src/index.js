@@ -1,5 +1,5 @@
 /**
- * @heady/saga-coordinator — Distributed Saga Orchestrator
+ * @heady-ai/saga-coordinator — Distributed Saga Orchestrator
  * 
  * Manages multi-step distributed transactions with φ-scaled timeouts,
  * CSL-gated step validation, and automatic compensation on failure.
@@ -10,8 +10,8 @@
 
 import { randomUUID } from 'node:crypto';
 import { EventEmitter } from 'node:events';
-import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+import { PHI, PSI, PSI2, FIB, phiThreshold, phiBackoff, cslGate } from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 
 const logger = createLogger({ service: 'saga-coordinator' });
 

@@ -1,9 +1,9 @@
 /**
- * @heady/heady-llm — Test Suite
+ * @heady-ai/heady-llm — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/heady-llm', () => {
+describe('@heady-ai/heady-llm', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/gateway.js');

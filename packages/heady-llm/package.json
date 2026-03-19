@@ -1,5 +1,5 @@
 {
-  "name": "@heady/llm",
+  "name": "@heady-ai/llm",
   "version": "1.0.0",
   "type": "module",
   "main": "src/gateway.js",

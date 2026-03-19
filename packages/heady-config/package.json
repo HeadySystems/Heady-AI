@@ -1,5 +1,5 @@
 {
-  "name": "@heady/config",
+  "name": "@heady-ai/config",
   "version": "1.0.0",
   "description": "HEADY platform shared configuration utilities for services, CORS, logging, health checks, and middleware",
   "main": "dist/index.js",
@@ -22,7 +22,7 @@
   "author": "HEADY Team",
   "license": "MIT",
   "dependencies": {
-    "@heady/schemas": "workspace:*",
+    "@heady-ai/schemas": "workspace:*",
     "compression": "^1.7.4"
   },
   "devDependencies": {

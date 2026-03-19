@@ -1,5 +1,5 @@
 {
-  "name": "@heady/scheduler-service",
+  "name": "@heady-ai/scheduler-service",
   "version": "1.0.0",
   "description": "φ-scaled interval scheduler service for HEADY platform",
   "main": "dist/index.js",

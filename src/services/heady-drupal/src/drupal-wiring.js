@@ -30,7 +30,7 @@ import {
   PSI, CSL_THRESHOLDS, TIMEOUTS, phiBackoff,
   MeshClient, CircuitBreaker,
   createLogger, logConfidenceEvent,
-} from '@heady/platform';
+} from '@heady-ai/platform';
 
 // ─── DRUPAL CONFIG ────────────────────────────────────────────────────────────
 

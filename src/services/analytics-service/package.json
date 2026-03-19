@@ -1,5 +1,5 @@
 {
-  "name": "@heady/analytics-service",
+  "name": "@heady-ai/analytics-service",
   "version": "1.0.0",
   "description": "Privacy-first self-hosted analytics for the Heady platform",
   "main": "src/index.js",

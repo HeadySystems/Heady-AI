@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-battle",
+  "name": "@heady-ai/heady-battle",
   "version": "3.2.3",
   "description": "HeadyBattle — Arena mode multi-model competition, Monte Carlo eval",
   "type": "module",
@@ -10,7 +10,7 @@
     "test":  "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/migration-service",
+  "name": "@heady-ai/migration-service",
   "version": "2.0.0",
   "type": "module",
   "description": "Schema migration service with φ-scaled versioning and CSL-gated rollback safety",
@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "@heady-ai/phi-math-foundation": "workspace:*",
-    "@heady/structured-logger": "workspace:*"
+    "@heady-ai/structured-logger": "workspace:*"
   }
 }

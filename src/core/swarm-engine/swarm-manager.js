@@ -22,8 +22,8 @@ import {
   PRESSURE_LEVELS,
   classifyPressure,
   phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 import { HeadyBee, BEE_STATE, domainToVector, cosine } from './bee-lifecycle.js';
 
 const logger = createLogger('swarm-manager');

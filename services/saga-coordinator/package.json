@@ -1,5 +1,5 @@
 {
-  "name": "@heady/saga-coordinator",
+  "name": "@heady-ai/saga-coordinator",
   "version": "2.0.0",
   "type": "module",
   "description": "Distributed saga orchestrator with φ-scaled compensation and CSL-gated step validation",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@heady-ai/phi-math-foundation": "workspace:*",
-    "@heady/structured-logger": "workspace:*",
-    "@heady/health-probes": "workspace:*"
+    "@heady-ai/structured-logger": "workspace:*",
+    "@heady-ai/health-probes": "workspace:*"
   }
 }

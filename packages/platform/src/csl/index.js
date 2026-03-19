@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — csl/index.js                                  ║
+ * ║  @heady-ai/platform — csl/index.js                                  ║
  * ║  Continuous Semantic Logic (CSL) Engine                          ║
  * ║  Geometric vector operations as logical gates                    ║
  * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║

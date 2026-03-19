@@ -1,9 +1,9 @@
 /**
- * @heady/heady-auth — Test Suite
+ * @heady-ai/heady-auth — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/heady-auth', () => {
+describe('@heady-ai/heady-auth', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/heady-auth-widget.js');
