@@ -885,7 +885,7 @@ class AutoSuccessEngine extends EventEmitter {
         // HeadyAutoContext — always-on workspace context intelligence
         this._autoContext = null;
         try {
-            const { getAutoContext } = require('../../shared/heady-auto-context');
+            const { getAutoContext } = require('../services/heady-auto-context');
             const ctx = getAutoContext();
             if (ctx) {
                 this._autoContext = ctx;
@@ -912,7 +912,7 @@ class AutoSuccessEngine extends EventEmitter {
         } else if (!this._autoContext) {
             // Late-bind attempt (autoContext may have been initialized after engine)
             try {
-                const { getAutoContext } = require('../../shared/heady-auto-context');
+                const { getAutoContext } = require('../services/heady-auto-context');
                 const ctx = getAutoContext();
                 if (ctx) this._autoContext = ctx;
             } catch { /* graceful */ }

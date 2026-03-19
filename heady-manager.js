@@ -504,6 +504,7 @@ function readJsonSafe(filePath) {
 }
 
 // ─── Health & Pulse ─────────────────────────────────────────────────
+<<<<<<< HEAD
 /**
  * @swagger
  * /api/pulse:
@@ -517,6 +518,31 @@ function readJsonSafe(filePath) {
  * @description Service pulse check
  * @returns {Object} Service pulse data
  */
+=======
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "heady-manager",
+    version: "3.0.0",
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+  });
+});
+
+// ─── Render Health Check Alias (Bug #2 Fix) ─────────────────────────
+app.get("/api/brain/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "heady-manager",
+    version: "3.0.0",
+    ts: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+  });
+});
+
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
 app.get("/api/pulse", (req, res) => {
   res.json({
     ok: true,
@@ -2069,6 +2095,7 @@ try {
   log.warn("Secrets/Cloudflare routes not registered", { errorMessage: err.message });
 }
 
+<<<<<<< HEAD
 // ─── Layer Management ─────────────────────────────────────────────────
 const LAYERS = {
   "local": { name: "Local Dev", endpoint: "https://app.headysystems.com" },
@@ -2129,6 +2156,125 @@ app.post("/api/layer/switch", (req, res) => {
     ts: new Date().toISOString()
   });
 });
+=======
+// ─── HeadyBee Agent System (Bug #3 Fix) ──────────────────────────────
+let beeFactory = null;
+try {
+  beeFactory = require("./agents/bee-factory");
+  if (typeof beeFactory.registerBeeRoutes === "function") {
+    beeFactory.registerBeeRoutes(app);
+  }
+  console.log("  ∞ HeadyBee Agent Factory: LOADED");
+} catch (err) {
+  console.warn(`  ⚠ HeadyBee not loaded: ${err.message}`);
+}
+
+// ─── Latent Space / Vector Memory (Bug #4 Fix) ──────────────────────
+let latentSpace = null;
+try {
+  const { HCLatentSpace, registerLatentSpaceRoutes } = require("./src/hc_latent_space");
+  latentSpace = new HCLatentSpace({ backend: "memory" });
+  registerLatentSpaceRoutes(app, latentSpace);
+  console.log("  ∞ Latent Space: LOADED (" + latentSpace.dimensions + "d, " + latentSpace.backend + " backend)");
+} catch (err) {
+  console.warn(`  ⚠ Latent Space not loaded: ${err.message}`);
+}
+
+// ─── Orchestrator Engine (Bug #5 Fix) ────────────────────────────────
+let orchestrator = null;
+try {
+  const orchMod = require("./src/hc_orchestrator");
+  if (orchMod.HCOrchestrator) {
+    orchestrator = new orchMod.HCOrchestrator();
+    if (typeof orchMod.registerOrchestratorRoutes === "function") {
+      orchMod.registerOrchestratorRoutes(app, orchestrator);
+    }
+  } else if (typeof orchMod === "function") {
+    orchestrator = orchMod;
+  } else {
+    orchestrator = orchMod;
+  }
+  console.log("  ∞ Orchestrator Engine: LOADED");
+} catch (err) {
+  console.warn(`  ⚠ Orchestrator not loaded: ${err.message}`);
+}
+
+// ─── Conductor / AI Brain (Bug #6 Fix) ───────────────────────────────
+let conductor = null;
+try {
+  const condMod = require("./src/hc_conductor");
+  if (condMod.HCConductor) {
+    conductor = new condMod.HCConductor();
+    if (typeof condMod.registerConductorRoutes === "function") {
+      condMod.registerConductorRoutes(app, conductor);
+    }
+  } else if (typeof condMod === "function") {
+    conductor = condMod;
+  } else {
+    conductor = condMod;
+  }
+  console.log("  ∞ Conductor (AI Brain): LOADED");
+} catch (err) {
+  console.warn(`  ⚠ Conductor not loaded: ${err.message}`);
+}
+
+// ─── Colab Runtime Manager (Bug #7 Fix) ──────────────────────────────
+let colabRuntimeManager = null;
+try {
+  const colabMod = require("./services/colab-runtime-manager");
+  if (colabMod.ColabRuntimeManager) {
+    colabRuntimeManager = new colabMod.ColabRuntimeManager();
+    if (typeof colabMod.registerColabRoutes === "function") {
+      colabMod.registerColabRoutes(app, colabRuntimeManager);
+    }
+  } else if (typeof colabMod.registerRoutes === "function") {
+    colabMod.registerRoutes(app);
+    colabRuntimeManager = colabMod;
+  } else {
+    colabRuntimeManager = colabMod;
+  }
+  console.log("  ∞ Colab Runtime Manager: LOADED");
+} catch (err) {
+  console.warn(`  ⚠ Colab Runtime Manager not loaded: ${err.message}`);
+}
+
+// ─── HeadyDeploy — Self-Sovereign Deployment Engine ──────────────────
+let headyDeploy = null;
+try {
+  const { HeadyDeploy, registerDeployRoutes } = require("./services/heady-deploy");
+  headyDeploy = new HeadyDeploy();
+  registerDeployRoutes(app, headyDeploy);
+
+  // Verify auth capability on startup
+  if (headyDeploy.serviceAccount) {
+    console.log(`  ∞ HeadyDeploy: LOADED (${headyDeploy.serviceAccount.client_email})`);
+    console.log(`    → Project: ${headyDeploy.projectId} | Region: ${headyDeploy.region}`);
+    console.log(`    → Endpoints: /api/deploy/status, /api/deploy/cloud-run, /api/deploy/full`);
+  } else {
+    console.warn("  ⚠ HeadyDeploy: LOADED but no service account key found");
+  }
+} catch (err) {
+  console.warn(`  ⚠ HeadyDeploy not loaded: ${err.message}`);
+}
+
+// ─── HeadyAuto — Unified Automation Engine ───────────────────────────
+let headyAuto = null;
+try {
+  const { HeadyAuto, registerAutoRoutes } = require("./services/heady-auto");
+  headyAuto = new HeadyAuto();
+  registerAutoRoutes(app, headyAuto);
+
+  // Auto-initialize all subsystems
+  const initResults = headyAuto.init();
+  console.log("  ∞ HeadyAuto: LOADED");
+  console.log(`    → Git credentials: ${initResults.gitCredentials?.ok ? "CONFIGURED" : "needs setup"}`);
+  console.log(`    → Dropzone watcher: ${initResults.dropzoneWatcher?.ok ? "ACTIVE" : "inactive"}`);
+  console.log(`    → Dropzone import: ${initResults.dropzoneImport?.imported || 0} new files`);
+  console.log("    → Endpoints: /api/auto/status, /api/auto/full, /api/auto/deploy");
+} catch (err) {
+  console.warn(`  ⚠ HeadyAuto not loaded: ${err.message}`);
+}
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
 
 // ─── Aloha Protocol System (Always-On) ───────────────────────────────
 const alohaProtocol = yaml.load(fs.readFileSync('./configs/aloha-protocol.yaml', 'utf8'));
@@ -2421,6 +2567,7 @@ app.get("/api/aloha/web-baseline", (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 // ─── Access Point Configuration Loader ────────────────────────────────
 const accessConfig = yaml.load(fs.readFileSync('./configs/access-points.yaml', 'utf8'));
 
@@ -2949,11 +3096,74 @@ app.get('/api/diagnostics', (req, res) => {
     routes: {
       total: app._router.stack.filter(r => r.route).length,
       middleware: app._router.stack.filter(r => !r.route).length,
+=======
+// ─── Service Health Matrix (Optimization 1: Aggregate all 57 services) ──────
+app.get("/api/services/health-matrix", (req, res) => {
+  const reg = loadRegistry();
+  const nodeList = Object.entries(reg.nodes || {});
+  const serviceList = Object.entries(reg.services || {});
+  const now = Date.now();
+
+  // Aggregate node health
+  const nodeHealth = nodeList.map(([id, node]) => ({
+    id,
+    name: node.name || id,
+    status: node.status || "unknown",
+    lastInvoked: node.last_invoked || null,
+    staleSince: node.last_invoked && (now - new Date(node.last_invoked).getTime()) > 300000
+      ? Math.round((now - new Date(node.last_invoked).getTime()) / 1000) + "s"
+      : null,
+  }));
+
+  // Aggregate service health
+  const serviceHealth = serviceList.map(([id, svc]) => ({
+    id,
+    status: svc.status || "unknown",
+    type: svc.type || "service",
+  }));
+
+  // Subsystem status aggregation
+  const subsystems = {
+    pipeline: pipeline ? { loaded: true, state: pipeline.getState()?.status || "idle" } : { loaded: false },
+    mcScheduler: mcPlanScheduler ? { loaded: true, mode: mcPlanScheduler.getSpeedMode?.() || "unknown" } : { loaded: false },
+    patternEngine: patternEngine ? { loaded: true, running: true } : { loaded: false },
+    selfCritique: selfCritiqueEngine ? { loaded: true } : { loaded: false },
+    resourceManager: resourceManager ? { loaded: true, safeMode: resourceManager.getSnapshot?.()?.safeMode || false } : { loaded: false },
+    taskScheduler: taskScheduler ? { loaded: true, paused: taskScheduler.getStatus?.()?.paused || false } : { loaded: false },
+    storyDriver: storyDriver ? { loaded: true } : { loaded: false },
+    secretsManager: secretsManager ? { loaded: true, count: secretsManager.getAll?.()?.length || 0 } : { loaded: false },
+    cloudflare: cfManager ? { loaded: true, tokenValid: cfManager.isTokenValid?.() || false } : { loaded: false },
+    imaginationEngine: imaginationRoutes ? { loaded: true } : { loaded: false },
+  };
+
+  const activeNodes = nodeHealth.filter(n => n.status === "active").length;
+  const healthyServices = serviceHealth.filter(s => s.status === "healthy" || s.status === "active").length;
+  const loadedSubsystems = Object.values(subsystems).filter(s => s.loaded).length;
+  const totalSubsystems = Object.keys(subsystems).length;
+
+  // Overall health score (φ-weighted: nodes 0.382, services 0.382, subsystems 0.236)
+  const nodeScore = nodeList.length > 0 ? activeNodes / nodeList.length : 0;
+  const serviceScore = serviceList.length > 0 ? healthyServices / serviceList.length : 0;
+  const subsystemScore = loadedSubsystems / totalSubsystems;
+  const overallScore = Math.round((nodeScore * 0.382 + serviceScore * 0.382 + subsystemScore * 0.236) * 1000) / 1000;
+
+  res.json({
+    ok: true,
+    overallHealth: overallScore >= 0.618 ? "HEALTHY" : overallScore >= 0.382 ? "DEGRADED" : "CRITICAL",
+    overallScore,
+    nodes: { total: nodeList.length, active: activeNodes, list: nodeHealth },
+    services: { total: serviceList.length, healthy: healthyServices, list: serviceHealth },
+    subsystems,
+    continuousPipeline: {
+      running: continuousPipeline.running,
+      cycleCount: continuousPipeline.cycleCount,
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
     },
     ts: new Date().toISOString(),
   });
 });
 
+<<<<<<< HEAD
 app.get('/api/readiness', (req, res) => {
   const checks = {
     server: true,
@@ -2965,6 +3175,424 @@ app.get('/api/readiness', (req, res) => {
   res.status(allHealthy ? 200 : 503).json({
     ready: allHealthy,
     checks,
+=======
+// ─── Swarm Consensus Metrics (Optimization 5: Cross-Swarm Intelligence) ─────
+app.get("/api/swarms/consensus", (req, res) => {
+  const reg = loadRegistry();
+  const nodeList = Object.entries(reg.nodes || {});
+  const activeNodes = nodeList.filter(([, n]) => n.status === "active");
+
+  // Build swarm domain distribution from registry
+  const swarmDomains = [
+    { id: "heady-soul",       ring: "center",     layer: "strategic",   domain: "orchestration" },
+    { id: "cognition-core",   ring: "inner",      layer: "tactical",    domain: "reasoning" },
+    { id: "memory-weave",     ring: "inner",      layer: "tactical",    domain: "memory" },
+    { id: "context-bridge",   ring: "inner",      layer: "tactical",    domain: "context" },
+    { id: "task-planner",     ring: "inner",      layer: "tactical",    domain: "planning" },
+    { id: "consensus-forge",  ring: "inner",      layer: "tactical",    domain: "consensus" },
+    { id: "code-artisan",     ring: "middle",     layer: "operational", domain: "coding" },
+    { id: "data-sculptor",    ring: "middle",     layer: "operational", domain: "data" },
+    { id: "research-herald",  ring: "middle",     layer: "operational", domain: "research" },
+    { id: "tool-weaver",      ring: "middle",     layer: "operational", domain: "tools" },
+    { id: "language-flow",    ring: "middle",     layer: "operational", domain: "language" },
+    { id: "vision-scribe",    ring: "middle",     layer: "operational", domain: "vision" },
+    { id: "audio-pulse",      ring: "middle",     layer: "operational", domain: "audio" },
+    { id: "integration-node", ring: "outer",      layer: "operational", domain: "integration" },
+    { id: "cache-guardian",   ring: "outer",      layer: "operational", domain: "caching" },
+    { id: "stream-runner",    ring: "outer",      layer: "operational", domain: "streaming" },
+    { id: "policy-sentinel",  ring: "governance", layer: "strategic",   domain: "governance" },
+  ];
+
+  // Ring health aggregation
+  const ringHealth = {};
+  for (const swarm of swarmDomains) {
+    if (!ringHealth[swarm.ring]) ringHealth[swarm.ring] = { total: 0, domains: [] };
+    ringHealth[swarm.ring].total++;
+    ringHealth[swarm.ring].domains.push(swarm.domain);
+  }
+
+  // Layer aggregation
+  const layerCounts = {};
+  for (const swarm of swarmDomains) {
+    layerCounts[swarm.layer] = (layerCounts[swarm.layer] || 0) + 1;
+  }
+
+  // Consensus readiness score (all swarms agreeable if nodes are active)
+  const consensusReadiness = activeNodes.length > 0
+    ? Math.round((activeNodes.length / Math.max(nodeList.length, 1)) * 1000) / 1000
+    : 0;
+
+  // Feed into pattern engine if available
+  if (patternEngine && consensusReadiness < 0.618) {
+    patternEngine.observe("reliability", "swarm:consensus", consensusReadiness * 100, {
+      severity: consensusReadiness < 0.382 ? "CRITICAL" : "WARN_HARD",
+      tags: ["swarm", "consensus"],
+    });
+  }
+
+  res.json({
+    ok: true,
+    swarmCount: swarmDomains.length,
+    consensusReadiness,
+    consensusState: consensusReadiness >= 0.618 ? "CONVERGED" : consensusReadiness >= 0.382 ? "PARTIAL" : "DIVERGED",
+    topology: {
+      rings: ringHealth,
+      layers: layerCounts,
+    },
+    swarms: swarmDomains,
+    activeNodeCount: activeNodes.length,
+    totalNodeCount: nodeList.length,
+    ts: new Date().toISOString(),
+  });
+});
+
+// ─── Imagination Engine → Pipeline Evolution Wiring (Optimization 2+5) ──────
+try {
+  if (patternEngine && pipeline) {
+    // When imagination concepts are generated, feed novelty scores into pattern engine
+    // This creates a closed feedback loop: Imagination → Patterns → Self-Critique → Evolution
+    if (typeof pipeline.on === "function") {
+      pipeline.on("stage:evolution:complete", (data) => {
+        if (patternEngine) {
+          patternEngine.observe("innovation", "evolution:imagination_seed", data?.noveltyScore || 0, {
+            mutations: data?.mutationsGenerated || 0,
+            promoted: data?.mutationsPromoted || 0,
+            tags: ["evolution", "imagination"],
+          });
+        }
+        if (storyDriver) {
+          storyDriver.ingestSystemEvent({
+            type: "EVOLUTION_CYCLE_COMPLETE",
+            refs: {
+              mutations: data?.mutationsGenerated || 0,
+              promoted: data?.mutationsPromoted || 0,
+              imaginationSeeded: true,
+            },
+            source: "hcfullpipeline:evolution",
+          });
+        }
+      });
+    }
+    console.log("  ∞ Imagination → Evolution wiring: ACTIVE");
+  }
+} catch (err) {
+  console.warn(`  ⚠ Imagination → Evolution wiring failed: ${err.message}`);
+}
+
+// ─── Colab Runtime Management ────────────────────────────────────────────────
+const colabHeartbeats = {};
+
+app.get("/api/colab/runtimes", (req, res) => {
+  const reg = loadRegistry();
+  const runtimes = reg.colab_runtimes || {};
+  const runtimeList = Object.entries(runtimes).map(([id, rt]) => {
+    const heartbeat = colabHeartbeats[id] || null;
+    const staleThresholdMs = 5 * 60 * 1000; // 5 minutes
+    const isLive = heartbeat && (Date.now() - new Date(heartbeat.ts).getTime()) < staleThresholdMs;
+    return {
+      id,
+      ...rt,
+      live: isLive,
+      lastHeartbeat: heartbeat ? heartbeat.ts : null,
+      latestMetrics: heartbeat ? heartbeat.latestMetrics : null,
+      gpu: heartbeat ? heartbeat.gpu : { available: false, name: rt.gpu || "unknown", memoryGB: 0 },
+    };
+  });
+  const liveCount = runtimeList.filter(r => r.live).length;
+  res.json({
+    ok: true,
+    total: runtimeList.length,
+    live: liveCount,
+    subscriptions: "Colab Pro+ × 4",
+    runtimes: runtimeList,
+    ts: new Date().toISOString(),
+  });
+});
+
+app.get("/api/colab/runtimes/:nodeId", (req, res) => {
+  const reg = loadRegistry();
+  const runtimes = reg.colab_runtimes || {};
+  const rt = runtimes[req.params.nodeId];
+  if (!rt) return res.status(404).json({ error: `Runtime '${req.params.nodeId}' not found` });
+  const heartbeat = colabHeartbeats[req.params.nodeId] || null;
+  res.json({
+    ok: true,
+    id: req.params.nodeId,
+    ...rt,
+    lastHeartbeat: heartbeat,
+    ts: new Date().toISOString(),
+  });
+});
+
+app.post("/api/colab/runtimes/:nodeId/heartbeat", (req, res) => {
+  const nodeId = req.params.nodeId;
+  colabHeartbeats[nodeId] = {
+    ...req.body,
+    ts: new Date().toISOString(),
+    receivedAt: Date.now(),
+  };
+
+  // Wire heartbeat into story driver
+  if (storyDriver) {
+    storyDriver.ingestSystemEvent({
+      type: "COLAB_HEARTBEAT",
+      refs: { nodeId, cycleCount: req.body.cycleCount || 0 },
+      source: "colab_runtime",
+    });
+  }
+
+  res.json({ ok: true, nodeId, acknowledged: true, ts: new Date().toISOString() });
+});
+
+// ─── Liquid Node Topology ────────────────────────────────────────────────────
+app.get("/api/liquid-nodes/topology", (req, res) => {
+  const reg = loadRegistry();
+  const nodeList = Object.entries(reg.nodes || {});
+  const nodes = nodeList.map(([id, n]) => ({
+    id,
+    name: n.name || id,
+    role: n.role || "unknown",
+    ring: n.ring || "unknown",
+    layer: n.layer || "unknown",
+    domain: n.domain || "unknown",
+    tier: n.tier || "M",
+    status: n.status || "unknown",
+    description: n.description || "",
+    lastInvoked: n.last_invoked || null,
+  }));
+
+  // Ring aggregation
+  const rings = {};
+  for (const node of nodes) {
+    if (!rings[node.ring]) rings[node.ring] = { count: 0, active: 0, domains: [] };
+    rings[node.ring].count++;
+    if (node.status === "active") rings[node.ring].active++;
+    rings[node.ring].domains.push(node.domain);
+  }
+
+  // Layer aggregation
+  const layers = {};
+  for (const node of nodes) {
+    if (!layers[node.layer]) layers[node.layer] = { count: 0, active: 0 };
+    layers[node.layer].count++;
+    if (node.status === "active") layers[node.layer].active++;
+  }
+
+  // Tier distribution
+  const tiers = { L: 0, M: 0, S: 0 };
+  for (const node of nodes) {
+    tiers[node.tier] = (tiers[node.tier] || 0) + 1;
+  }
+
+  const activeCount = nodes.filter(n => n.status === "active").length;
+  const healthScore = nodeList.length > 0
+    ? Math.round((activeCount / nodeList.length) * 1000) / 1000
+    : 0;
+
+  res.json({
+    ok: true,
+    totalNodes: nodes.length,
+    activeNodes: activeCount,
+    healthScore,
+    vectorSpaceState: healthScore >= 0.618 ? "OPTIMAL" : healthScore >= 0.382 ? "DEGRADED" : "CRITICAL",
+    topology: { rings, layers, tiers },
+    nodes,
+    phi: 1.6180339887,
+    ts: new Date().toISOString(),
+  });
+});
+
+app.post("/api/liquid-nodes/:nodeId/invoke", (req, res) => {
+  const reg = loadRegistry();
+  const id = req.params.nodeId.toUpperCase();
+  if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
+  reg.nodes[id].status = "active";
+  reg.nodes[id].last_invoked = new Date().toISOString();
+  saveRegistry(reg);
+
+  // Wire into pattern engine
+  if (patternEngine) {
+    patternEngine.observeSuccess(`liquid_node:${id}`, 0, {
+      domain: reg.nodes[id].domain,
+      tags: ["liquid_node", "invocation"],
+    });
+  }
+
+  res.json({ ok: true, node: id, status: "active", invokedAt: reg.nodes[id].last_invoked });
+});
+
+// ─── Wave 1–4 Service Wiring ──────────────────────────────────────────────────
+const WAVE_SERVICES = [
+  { name: "HeadyBus",       path: "./services/heady-bus",       register: "registerBusRoutes",       label: "Event Bus" },
+  { name: "HeadyGate",      path: "./services/heady-gate",      register: "registerGateRoutes",      label: "AI Gateway" },
+  { name: "HeadyObserver",  path: "./services/heady-observer",  register: "registerObserverRoutes",  label: "AIOps Observability" },
+  { name: "HeadyKnowledge", path: "./services/heady-knowledge", register: "registerKnowledgeRoutes", label: "RAG Knowledge Base" },
+  { name: "HeadyFlags",     path: "./services/heady-flags",     register: "registerFlagsRoutes",     label: "Feature Flags" },
+  { name: "HeadyIdentity",  path: "./services/heady-identity",  register: "registerIdentityRoutes",  label: "Agent IAM" },
+  { name: "HeadyRegistry",  path: "./services/heady-registry",  register: "registerRegistryRoutes",  label: "Artifact Registry" },
+  { name: "HeadyMeter",     path: "./services/heady-meter",     register: "registerMeterRoutes",     label: "Usage Metering" },
+  { name: "HeadyAudit",     path: "./services/heady-audit",     register: "registerAuditRoutes",     label: "Compliance Audit" },
+];
+
+let waveLoaded = 0;
+for (const svc of WAVE_SERVICES) {
+  try {
+    const mod = require(svc.path);
+    if (typeof mod[svc.register] === "function") {
+      mod[svc.register](app);
+      waveLoaded++;
+      console.log(`  ∞ ${svc.name}: LOADED (${svc.label})`);
+    } else {
+      console.warn(`  ⚠ ${svc.name}: register function '${svc.register}' not found`);
+    }
+  } catch (err) {
+    console.warn(`  ⚠ ${svc.name}: ${err.message}`);
+  }
+}
+console.log(`  ∞ Wave Services: ${waveLoaded}/${WAVE_SERVICES.length} loaded`);
+
+// ─── 17-Swarm Orchestrator Wiring ────────────────────────────────────────────
+let swarmOrchestrator = null;
+try {
+  const { SwarmOrchestrator, SwarmTask, PRIORITY } = require("./seventeen-swarm-orchestrator");
+  swarmOrchestrator = new SwarmOrchestrator();
+  swarmOrchestrator.start();
+
+  // Wire swarm task completions into pattern engine
+  if (patternEngine) {
+    for (const [, swarm] of swarmOrchestrator.getAllSwarms()) {
+      swarm.onChange("complete", (task) => {
+        patternEngine.observeSuccess(`swarm:${swarm.name}:${task.type}`, task.getDuration() || 0, {
+          swarm: swarm.name, priority: task.priority,
+          tags: ["swarm", swarm.name.toLowerCase()],
+        });
+      });
+      swarm.onChange("error", (task) => {
+        patternEngine.observeError(`swarm:${swarm.name}:${task.type}`, task.error || "unknown", {
+          swarm: swarm.name, priority: task.priority,
+          tags: ["swarm", swarm.name.toLowerCase(), "failure"],
+        });
+      });
+    }
+  }
+
+  // Wire self-critique bottlenecks → Emergency swarm escalation
+  if (selfCritiqueEngine && typeof selfCritiqueEngine.on === "function") {
+    selfCritiqueEngine.on("critique:critical", (critique) => {
+      swarmOrchestrator.dispatch(new SwarmTask({
+        type: "escalation",
+        targetSwarm: "Emergency",
+        payload: { source: "self-critique", critique },
+        priority: PRIORITY.CRITICAL,
+      }));
+    });
+  }
+
+  // Wire swarm emergency events into story driver
+  if (storyDriver) {
+    const emergencySwarm = swarmOrchestrator.getSwarm("Emergency");
+    if (emergencySwarm) {
+      emergencySwarm.onChange("complete", (task) => {
+        storyDriver.ingestSystemEvent({
+          type: "SWARM_EMERGENCY_HANDLED",
+          refs: { taskId: task.id, payload: task.payload },
+          source: "swarm_orchestrator:emergency",
+        });
+      });
+    }
+  }
+
+  console.log(`  ∞ Swarm Orchestrator: LOADED (${swarmOrchestrator.listSwarmNames().length} swarms active)`);
+} catch (err) {
+  console.warn(`  ⚠ Swarm Orchestrator not loaded: ${err.message}`);
+}
+
+// ─── Swarm Orchestrator REST Endpoints ───────────────────────────────────────
+app.get("/api/swarms/status", (req, res) => {
+  if (!swarmOrchestrator) return res.status(503).json({ error: "Swarm Orchestrator not loaded" });
+  const status = swarmOrchestrator.getStatus();
+
+  // Map swarm names to liquid node domains for cross-referencing
+  const SWARM_TO_DOMAIN = {
+    Deploy: "integration", Battle: "consensus", Research: "research",
+    Security: "governance", Memory: "memory", Creative: "audio",
+    Trading: "data", Health: "streaming", Governance: "governance",
+    Documentation: "language", Testing: "coding", Migration: "data",
+    Monitoring: "streaming", Cleanup: "caching", Onboarding: "context",
+    Analytics: "research", Emergency: "orchestration",
+  };
+
+  const enrichedSwarms = status.swarms.map(s => ({
+    ...s,
+    linkedDomain: SWARM_TO_DOMAIN[s.name] || null,
+  }));
+
+  res.json({
+    ok: true,
+    initialized: status.initialized,
+    swarmCount: enrichedSwarms.length,
+    totalTasks: status.totalTasks,
+    busMessagesLast60s: status.busHistory,
+    swarms: enrichedSwarms,
+    ts: new Date().toISOString(),
+  });
+});
+
+app.post("/api/swarms/dispatch", (req, res) => {
+  if (!swarmOrchestrator) return res.status(503).json({ error: "Swarm Orchestrator not loaded" });
+  const { SwarmTask: ST, PRIORITY: PR } = require("./seventeen-swarm-orchestrator");
+  const { type, targetSwarm, payload, priority } = req.body;
+  if (!type) return res.status(400).json({ error: "type is required" });
+
+  const task = new ST({
+    type,
+    targetSwarm: targetSwarm || null,
+    payload: payload || {},
+    priority: PR[priority] || PR.NORMAL,
+  });
+  const result = swarmOrchestrator.dispatch(task);
+
+  // Wire dispatch into pattern engine
+  if (patternEngine) {
+    patternEngine.observeSuccess("swarm:dispatch", 0, {
+      swarm: targetSwarm || "auto-routed", taskType: type,
+      tags: ["swarm", "dispatch"],
+    });
+  }
+
+  res.json({
+    ok: true,
+    taskId: result.id,
+    status: result.status,
+    targetSwarm: result.targetSwarm,
+    ts: new Date().toISOString(),
+  });
+});
+
+app.get("/api/swarms/audit", (req, res) => {
+  if (!swarmOrchestrator) return res.status(503).json({ error: "Swarm Orchestrator not loaded" });
+  const since = req.query.since ? parseInt(req.query.since, 10) : Date.now() - 3600000;
+  const action = req.query.action || undefined;
+  const log = swarmOrchestrator.getAuditLog({ since, action });
+  res.json({
+    ok: true,
+    total: log.length,
+    entries: log.slice(-100),
+    ts: new Date().toISOString(),
+  });
+});
+
+app.get("/api/swarms/bus/history", (req, res) => {
+  if (!swarmOrchestrator) return res.status(503).json({ error: "Swarm Orchestrator not loaded" });
+  const since = req.query.since ? parseInt(req.query.since, 10) : Date.now() - 60000;
+  const history = swarmOrchestrator.getBus().getHistory({ since });
+  res.json({
+    ok: true,
+    total: history.length,
+    messages: history.slice(-50).map(m => ({
+      id: m.id, type: m.type, from: m.from, to: m.to, priority: m.priority, ts: m.ts,
+    })),
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
     ts: new Date().toISOString(),
   });
 });
@@ -2979,6 +3607,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+<<<<<<< HEAD
 // Root health endpoint (before SPA fallback)
 app.get("/health", (req, res) => {
   res.redirect("/api/health");
@@ -3015,6 +3644,13 @@ app.get("/api/brain/health", (req, res) => {
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: "Not found", path: req.path, hint: "Try /api/health or visit /" });
+=======
+// ─── SPA Fallback ───────────────────────────────────────────────────
+app.get("/{*path}", (req, res) => {
+  const indexPath = path.join(frontendBuildPath, "index.html");
+  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
+  res.status(404).json({ error: "Not found" });
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
 });
 
 // ─── Start ──────────────────────────────────────────────────────────

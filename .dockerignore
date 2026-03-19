@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 .git
 .env
@@ -44,3 +45,68 @@ docs
 notebooks
 *.md
 !README.md
+=======
+# ═══════════════════════════════════════════════════════════════
+# Heady™ .dockerignore
+# ═══════════════════════════════════════════════════════════════
+
+# Version control
+.git
+.gitignore
+
+# IDE & editor
+.vscode
+.cursor
+.windsurf
+.gemini
+.github
+
+# Build artifacts
+node_modules
+coverage
+dist
+.turbo
+.next
+*.tsbuildinfo
+
+# Archive & downloads (huge, not needed in images)
+_archive
+_downloads
+
+# Documentation & tests (not in production images)
+tests
+notebooks
+*.test.js
+*.test.ts
+*.test.mjs
+*.spec.js
+*.spec.ts
+
+# Deployment configs (not part of app)
+deployment
+heady-build
+heady-deploy
+heady-improvements
+heady-latent-os-runtime-bundle
+heady-monorepo
+heady-native-services
+heady-projection
+heady-10-10
+drupal
+
+# Large binary assets
+*.mp4
+*.mp3
+*.wav
+*.zip
+*.tar.gz
+*.woff2
+*.ttf
+lfs-assets
+
+# Secrets
+.env
+.env.*
+.heady/gcp-*.json
+.heady/vault-seed.js
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
