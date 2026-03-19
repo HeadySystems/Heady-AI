@@ -76,7 +76,7 @@ swarms:
 # Vector routing configuration
 vectorRouting:
   enabled: true
-  dimensions: 128
+  dimensions: 144                   # fib(12) — φ-compliant vector dims
   algorithm: trigram_hash
   thresholds:
     include: 0.382   # CSL_GATES.include — minimum relevance
@@ -92,8 +92,8 @@ parallelism:
   dependencyResolution: topological # DAG-based dependency ordering
   failurePolicy: continue_others    # One failing task never blocks others
   phiBackoff:
-    maxRetries: 4
-    baseDelayMs: 800                # FIB[5] * 100
+    maxRetries: 5                   # fib(5)
+    baseDelayMs: 1618               # φ × 1000
     multiplier: 1.618               # PHI
 
 # Colab offloading
@@ -124,7 +124,7 @@ integration:
 # Observability
 observability:
   logLevel: info
-  metricsInterval: 5000            # FIB[7]*1000 = 21s rounded
+  metricsInterval: 21000           # fib(8) × 1000 = 21s
   healthEndpoint: /api/swarms/health
   metricsEndpoint: /api/swarms/metrics
   recordToLatentSpace: true
