@@ -37,6 +37,7 @@ class HeadyConductor extends EventEmitter {
     constructor() {
         super();
         this.bees = new Map();          // beeId → { bee, status, lastHeartbeat, taskCount }
+        this._categoryIndex = new Map(); // FIX: O(1) category index — taskType → beeId[]
         this.taskQueue = [];            // pending tasks
         this.activeExecutions = new Map(); // executionId → { beeId, task, startTime }
         this.executionLog = [];         // completed executions
@@ -55,11 +56,24 @@ class HeadyConductor extends EventEmitter {
             taskCount: 0,
             registered: Date.now(),
         });
+        // FIX: maintain O(1) category index on registration
+        const keys = [bee.category, bee.domain].filter(Boolean);
+        for (const key of keys) {
+            if (!this._categoryIndex.has(key)) this._categoryIndex.set(key, []);
+            const arr = this._categoryIndex.get(key);
+            if (!arr.includes(beeId)) arr.push(beeId);
+        }
         this.emit('bee:registered', { beeId });
         logger.info(`[Conductor] Registered bee: ${beeId}`);
     }
 
     unregisterBee(beeId) {
+        // Remove from category index
+        for (const [key, arr] of this._categoryIndex) {
+            const idx = arr.indexOf(beeId);
+            if (idx >= 0) arr.splice(idx, 1);
+            if (arr.length === 0) this._categoryIndex.delete(key);
+        }
         this.bees.delete(beeId);
         this.emit('bee:unregistered', { beeId });
     }
@@ -73,20 +87,23 @@ class HeadyConductor extends EventEmitter {
      * @returns {Promise<object>} Execution result
      */
     async dispatch(taskType, payload, opts = {}) {
+        // FIX: validate taskType to prevent prototype pollution (__proto__, constructor, etc.)
+        if (!taskType || typeof taskType !== 'string' || !/^[a-zA-Z0-9:_\-\.]+$/.test(taskType)) {
+            this.totalFailed++;
+            return { ok: false, error: `Invalid taskType: must be alphanumeric with :_-. only` };
+        }
         const executionId = `exec_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
 
-        // Route: explicit beeId > category match > first idle
+        // Route: explicit beeId > O(1) category index > first idle
         let targetBee = null;
         if (opts.beeId && this.bees.has(opts.beeId)) {
             targetBee = opts.beeId;
         } else {
-            // Find best bee by category match
-            for (const [id, entry] of this.bees) {
-                const bee = entry.bee;
-                if (bee.category === taskType || bee.domain === taskType) {
-                    targetBee = id;
-                    break;
-                }
+            // FIX: O(1) lookup via _categoryIndex instead of O(n) loop
+            const indexed = this._categoryIndex.get(taskType);
+            if (indexed && indexed.length > 0) {
+                // Pick first idle from indexed set, or first overall
+                targetBee = indexed.find(id => this.bees.get(id)?.status === 'idle') || indexed[0];
             }
             // Fallback: first idle bee
             if (!targetBee) {
@@ -127,6 +144,8 @@ class HeadyConductor extends EventEmitter {
 
             entry.status = 'idle';
             this.totalCompleted++;
+            // FIX: capture startTime BEFORE delete (was always 0 due to delete-before-read bug)
+            const startTime = this.activeExecutions.get(executionId)?.startTime;
             this.activeExecutions.delete(executionId);
 
             const execution = {
@@ -134,7 +153,7 @@ class HeadyConductor extends EventEmitter {
                 beeId: targetBee,
                 taskType,
                 result,
-                durationMs: Date.now() - this.activeExecutions.get(executionId)?.startTime || 0,
+                durationMs: startTime ? Date.now() - startTime : 0,
                 completedAt: Date.now(),
             };
             this.executionLog.push(execution);
@@ -269,6 +288,10 @@ function registerConductorRoutes(app) {
     app.post('/api/conductor/dispatch', async (req, res) => {
         try {
             const { taskType, payload, opts } = req.body;
+            // FIX: validate taskType at HTTP boundary — prevents prototype pollution and injection
+            if (!taskType || typeof taskType !== 'string' || !/^[a-zA-Z0-9:_\-\.]+$/.test(taskType)) {
+                return res.status(400).json({ ok: false, error: 'taskType must be alphanumeric string with :_-. only' });
+            }
             const result = await conductor.dispatch(taskType, payload, opts);
             res.json(result);
         } catch (err) {

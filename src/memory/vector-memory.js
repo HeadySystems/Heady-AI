@@ -284,6 +284,55 @@ class VectorMemory {
     this._store.clear();
     this._accessOrder = [];
   }
+
+  // ─── queryMemory / ingestMemory aliases ─────────────────────────────────────
+  // Fixes crashes at buddy-core.js:632 and self-awareness.js:173
+  // which call these methods expecting them on the VectorMemory API surface.
+
+  /**
+   * queryMemory — semantic search alias compatible with pgvector adapter API.
+   * Delegates to searchText() if embedFn available, else search() with raw vector.
+   * @param {string|Float64Array|number[]} query - Text or raw vector
+   * @param {number} [limit=10]
+   * @param {number} [threshold=0.5] - Min cosine similarity
+   * @param {object} [filter]
+   * @returns {Promise<Array<{id, score, metadata, importance}>>}
+   */
+  async queryMemory(query, limit = 10, threshold = 0.5, filter = null) {
+    if (this.persistence && typeof this.persistence.queryMemory === 'function') {
+      // Prefer persistence layer (pgvector HNSW — much faster for large stores)
+      if (typeof query === 'string') {
+        if (!this.embedFn) throw new Error('VectorMemory: embedFn required for text queryMemory');
+        const queryVector = await this.embedFn(query);
+        return this.persistence.queryMemory(queryVector, limit, threshold, filter);
+      }
+      return this.persistence.queryMemory(query, limit, threshold, filter);
+    }
+
+    // RAM fallback
+    let results;
+    if (typeof query === 'string') {
+      results = await this.searchText(query, limit, filter);
+    } else {
+      results = this.search(query, limit, filter);
+    }
+    return results.filter(r => r.score >= threshold);
+  }
+
+  /**
+   * ingestMemory — store alias with text-first signature.
+   * Fixes crash in self-awareness.js:173.
+   * @param {string} id
+   * @param {string|Float64Array|number[]} vectorOrText - Raw vector or text to embed
+   * @param {object} [metadata]
+   * @param {number} [importance=0.5]
+   */
+  async ingestMemory(id, vectorOrText, metadata = {}, importance = 0.5) {
+    if (typeof vectorOrText === 'string') {
+      return this.storeText(id, vectorOrText, metadata, importance);
+    }
+    return this.store(id, vectorOrText, metadata, importance);
+  }
 }
 
 module.exports = { VectorMemory, DEFAULT_DIM, DEFAULT_CAPACITY };

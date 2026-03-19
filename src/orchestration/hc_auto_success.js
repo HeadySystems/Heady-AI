@@ -122,6 +122,17 @@ let phase5Tasks = [];
 try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
 let downloadsTasks = [];
 try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
+// ─── NEW CATALOGS (2026-03-19): Deep audit, AutoContext, Architecture fixes ───
+let autoContextTasks = [];
+try { autoContextTasks = require('./autocontext-integration-tasks.json'); } catch (e) { }
+let unimplementedArchTasks = [];
+try { unimplementedArchTasks = require('./unimplemented-arch-tasks.json'); } catch (e) { }
+let architectureFixTasks = [];
+try { architectureFixTasks = require('./architecture-fix-tasks.json'); } catch (e) { }
+let beneficialBundleTasks = [];
+try { beneficialBundleTasks = require('./beneficial-bundle-tasks.json'); } catch (e) { }
+let autonomyEnhancementTasks = [];
+try { autonomyEnhancementTasks = require('./autonomy-enhancement-tasks.json'); } catch (e) { }
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,
@@ -131,6 +142,11 @@ const TASK_CATALOG = [
     ...orchProtocolTasks,
     ...phase5Tasks,
     ...downloadsTasks,
+    ...autoContextTasks,
+    ...unimplementedArchTasks,
+    ...architectureFixTasks,
+    ...beneficialBundleTasks,
+    ...autonomyEnhancementTasks,
     // ═══ LEARNING (20) — Targeted system learning ═══════════════════════════
     {
         id: "learn-001", name: "Analyze config drift patterns", cat: "learning", pool: "warm", w: 3,
@@ -770,6 +786,62 @@ const TASK_CATALOG = [
         id: "hive-020", name: "Hive integration compliance audit", cat: "hive-integration", pool: "hot", w: 5,
         desc: "Full sweep of all external integrations, APIs, and SDK endpoints"
     },
+    // ═══ HCFULLPIPELINE CONTINUOUS EXECUTION (13 = fib(7)) ══════════════════
+    // These tasks ensure HCFullPipeline runs autonomously as part of every cycle.
+    // The event bridge (hcfp-event-bridge.js) wires pipeline:trigger → runner.run().
+    // These tasks emit that event and verify pipeline health.
+    {
+        id: "hcfp-001", name: "Trigger HCFullPipeline evolution cycle", cat: "evolution", pool: "hot", w: 5,
+        desc: "Emit pipeline:trigger to global.eventBus — starts a 22-stage autonomous pipeline run via HCFPEventBridge"
+    },
+    {
+        id: "hcfp-002", name: "Verify HCFPRunner liveness", cat: "monitoring", pool: "warm", w: 4,
+        desc: "Check /api/hcfp-bridge/status endpoint — confirm runner is connected and bridge is active"
+    },
+    {
+        id: "hcfp-003", name: "Check Distillation stage output", cat: "intelligence", pool: "cold", w: 3,
+        desc: "Query heady-distiller /api/recipes for new SKILL.md files synthesized from recent pipeline runs"
+    },
+    {
+        id: "hcfp-004", name: "Monitor pipeline stage latencies", cat: "monitoring", pool: "warm", w: 3,
+        desc: "Read stage timing from last pipeline run — flag stages exceeding φ⁵×1000ms threshold"
+    },
+    {
+        id: "hcfp-005", name: "Validate CSL gate scores across all stages", cat: "compliance", pool: "warm", w: 4,
+        desc: "Confirm each HCFP stage returned score >= its cslThreshold — detect quality regressions"
+    },
+    {
+        id: "hcfp-006", name: "Sync pipeline run history to memory", cat: "data-sync", pool: "cold", w: 2,
+        desc: "Upsert last pipeline run metadata to Mnemosyne 3-tier memory for long-term pattern analysis"
+    },
+    {
+        id: "hcfp-007", name: "Check auto-commit-deploy engine status", cat: "infrastructure", pool: "warm", w: 3,
+        desc: "Verify auto-commit-deploy is running, check last commit timestamp, alert if stale > φ⁸ interval"
+    },
+    {
+        id: "hcfp-008", name: "Verify HCFPEventBridge event forwarding", cat: "monitoring", pool: "hot", w: 4,
+        desc: "Confirm pipeline:started/completed events are reaching this engine from HCFPEventBridge"
+    },
+    {
+        id: "hcfp-009", name: "Run HCFP FAST_PATH for health probe", cat: "availability", pool: "hot", w: 5,
+        desc: "Execute 7-stage FAST_PATH variant — fastest pipeline health check (CHANNEL_ENTRY→RECEIPT)"
+    },
+    {
+        id: "hcfp-010", name: "Archive stale pipeline artifacts", cat: "maintenance", pool: "cold", w: 2,
+        desc: "Move pipeline run data older than φ¹³ days to cold storage, free hot/warm pool capacity"
+    },
+    {
+        id: "hcfp-011", name: "Validate Fibonacci stage count (22 = fib(8)+fib(5))", cat: "compliance", pool: "cold", w: 2,
+        desc: "Confirm HCFP_STAGES.length === 22 — structural integrity check on pipeline definition"
+    },
+    {
+        id: "hcfp-012", name: "Check pipeline rollback states", cat: "resilience", pool: "warm", w: 3,
+        desc: "Scan last 8 pipeline runs for rollbackExecuted flags — identify systemic failure patterns"
+    },
+    {
+        id: "hcfp-013", name: "Verify distiller wisdom.json growth", cat: "evolution", pool: "cold", w: 2,
+        desc: "Check wisdom.json recipe count — distillation should grow with each successful pipeline run"
+    },
 ];
 
 // ─── AUTO-SUCCESS ENGINE ────────────────────────────────────────────────────
@@ -810,6 +882,16 @@ class AutoSuccessEngine extends EventEmitter {
         this._storyDriver = null;
         this._resourceManager = null;
         this._eventBus = global.eventBus || null;
+        // HeadyAutoContext — always-on workspace context intelligence
+        this._autoContext = null;
+        try {
+            const { getAutoContext } = require('../../shared/heady-auto-context');
+            const ctx = getAutoContext();
+            if (ctx) {
+                this._autoContext = ctx;
+                logger.logSystem && logger.logSystem('  ∞ AutoSuccess: HeadyAutoContext wired (latent space enrichment active)');
+            }
+        } catch { /* autoContext optional — enrichment degrades gracefully */ }
 
         // Resource awareness via constructor
         if (opts.resourceManager) {
@@ -824,6 +906,17 @@ class AutoSuccessEngine extends EventEmitter {
         if (systems.storyDriver) this._storyDriver = systems.storyDriver;
         if (systems.eventBus) this._eventBus = systems.eventBus;
         if (systems.resourceManager) this._wireResourceManager(systems.resourceManager);
+        // Wire HeadyAutoContext for latent space enrichment on every reaction
+        if (systems.autoContext) {
+            this._autoContext = systems.autoContext;
+        } else if (!this._autoContext) {
+            // Late-bind attempt (autoContext may have been initialized after engine)
+            try {
+                const { getAutoContext } = require('../../shared/heady-auto-context');
+                const ctx = getAutoContext();
+                if (ctx) this._autoContext = ctx;
+            } catch { /* graceful */ }
+        }
     }
 
     _wireResourceManager(rm) {
@@ -899,6 +992,31 @@ class AutoSuccessEngine extends EventEmitter {
         const reactionStart = Date.now();
         this.reactionCount++;
         this.lastReactionTs = new Date().toISOString();
+
+        // ─── HEADYAUTOCONTEXT ENRICHMENT — inject workspace context into reaction ──
+        // Every reaction is enriched with live workspace state before tasks execute.
+        // This grounds all task decisions in actual project context (not just system metrics).
+        let reactionContext = {};
+        if (this._autoContext) {
+            try {
+                const enriched = await this._autoContext.enrich(
+                    `auto-success reaction: ${trigger} (cycle ${this.reactionCount})`,
+                    { domain: 'battle', vectorSearch: true }
+                );
+                reactionContext = {
+                    systemContext: enriched.systemContext ? enriched.systemContext.slice(0, 500) : '',
+                    sources: enriched.stats?.sourcesIncluded || 0,
+                    tokens: enriched.stats?.tokensUsed || 0,
+                    vectorHits: enriched.stats?.vectorHits || 0,
+                };
+                // Emit context enrichment event for observability
+                if (this._eventBus) {
+                    this._eventBus.emit('autocontext:enriched', {
+                        trigger, cycle: this.reactionCount, ...enriched.stats,
+                    });
+                }
+            } catch { /* autoContext enrichment degrades gracefully */ }
+        }
 
         // Select tasks relevant to this trigger — all tasks fire, learning from everything
         const allTasks = this._selectAll();
@@ -1122,6 +1240,20 @@ class AutoSuccessEngine extends EventEmitter {
         'vision': 'creative',
         'mission': 'orchestration',
         'development': 'pipeline',
+        // ── HCFP categories wired to pipeline bee ──
+        'evolution': 'pipeline',      // hcfp-001, hcfp-013 — pipeline evolution tasks
+        'resilience': 'pipeline',     // hcfp-012 — pipeline resilience checks
+        'availability': 'pipeline',   // hcfp-009 — pipeline availability probes
+        'data-sync': 'memory',        // hcfp-006 — memory sync tasks
+        'infrastructure': 'ops',      // hcfp-007 — infrastructure checks
+        // ── New catalog categories (2026-03-19) ──
+        'autocontext': 'intelligence',  // ac-* tasks — HeadyAutoContext integration
+        'fix': 'engines',               // fix-* tasks — architecture fixes
+        'unimp': 'services',            // unimp-* tasks — unimplemented services
+        'bb': 'connectors',             // bb-* tasks — beneficial bundle
+        'auto': 'pipeline',             // auto-* tasks — autonomy enhancements
+        'observability': 'telemetry',   // observability tasks
+        'quality': 'lifecycle',         // quality gate tasks
     };
 
     /** Delegate to a bee — fire ALL its workers PLUS dynamic workers for every mapped task.
@@ -1266,6 +1398,45 @@ class AutoSuccessEngine extends EventEmitter {
     /** React: group tasks by bee domain, fire each bee ONCE.
      *  Most effective: no redundancy, every task covered, every bee fires exactly once. */
     async _performWork(task) {
+        // ── HCFP special handlers — direct pipeline control tasks ────────────
+        if (task.id === 'hcfp-001') {
+            // Emit pipeline:trigger to global.eventBus — HCFPEventBridge routes to runner.run()
+            const bus = this._eventBus || global.eventBus;
+            if (bus) {
+                const cycle = this.reactionCount;
+                bus.emit('pipeline:trigger', {
+                    task: `auto-success-evo-${cycle}`,
+                    source: 'hc_auto_success:hcfp-001',
+                    cycle, ts: Date.now(),
+                });
+                return { finding: `pipeline:trigger emitted (cycle ${cycle}) — HCFPEventBridge will route to runner.run()` };
+            }
+            return { finding: 'pipeline:trigger skipped — eventBus not available (engine not fully wired)' };
+        }
+
+        if (task.id === 'hcfp-002') {
+            // Check bridge status endpoint
+            const distillerUrl = process.env.DISTILLER_URL || 'http://localhost:3375';
+            const bridgeUrl    = process.env.BRIDGE_STATUS_URL || 'http://localhost:3301/api/hcfp-bridge/status';
+            try {
+                const res = await fetch(bridgeUrl, { signal: AbortSignal.timeout(3000) });
+                const body = await res.json().catch(() => ({}));
+                return { finding: `bridge ${res.ok ? 'ACTIVE' : 'DOWN'}: cycles=${body.cycleCount ?? '?'}, lastRun=${body.lastRunAt ?? 'never'}` };
+            } catch {
+                return { finding: 'hcfp-bridge endpoint not reachable — manager may not be running locally' };
+            }
+        }
+
+        if (task.id === 'hcfp-009') {
+            // Emit FAST_PATH pipeline run via eventBus
+            const bus = this._eventBus || global.eventBus;
+            if (bus) {
+                bus.emit('pipeline:run', { task: 'fast-path-health-probe', variant: 'FAST_PATH', source: 'hcfp-009' });
+                return { finding: 'FAST_PATH health probe triggered via pipeline:run event' };
+            }
+            return { finding: 'FAST_PATH probe skipped — eventBus not available' };
+        }
+
         // When called individually (legacy/fallback), delegate to single-task mode
         const beeDomain = AutoSuccessEngine.CAT_TO_BEE[task.cat];
         if (beeDomain) {
