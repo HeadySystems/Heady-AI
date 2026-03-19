@@ -144,11 +144,11 @@ function handleHealthCheck(env) {
 // ─── CORS Handling ─────────────────────────────────────────────────
 
 function handleCors(request, env) {
-  const origin = request.headers.get('Origin') || '*';
-  const allowedOrigins = env.CORS_ORIGINS || '*';
+  const origin = request.headers.get('Origin') || '';
+  const allowedOrigins = env.CORS_ORIGINS || 'https://headysystems.com,https://headyio.com,https://headyconnection.org,https://headyconnection.com,https://headybuddy.org,https://headymcp.com,https://admin.headysystems.com';
 
   const corsHeaders = {
-    'Access-Control-Allow-Origin': allowedOrigins === '*' ? '*' : origin,
+    'Access-Control-Allow-Origin': allowedOrigins.split(',').map(o => o.trim()).includes(origin) ? origin : allowedOrigins.split(',')[0].trim(),
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Request-Id',
     'Access-Control-Max-Age': '86400',

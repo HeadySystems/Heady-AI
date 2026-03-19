@@ -278,12 +278,14 @@ app.get('/sse', (c) => {
         },
     })
 
+    const reqOrigin = c.req.header('Origin') || '';
+    const sseAllowed = HEADY_ORIGINS.includes(reqOrigin) ? reqOrigin : HEADY_ORIGINS[0];
     return new Response(stream, {
         headers: {
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': sseAllowed,
             'X-Heady-Client-Id': clientId,
         },
     })
@@ -388,12 +390,23 @@ app.get('/api/search', async (c) => {
     try { return c.json(JSON.parse(result.content[0].text)) } catch { return c.json(result) }
 })
 
+// === Heady domain allowlist ===
+const HEADY_ORIGINS = [
+    'https://headysystems.com', 'https://www.headysystems.com',
+    'https://headyio.com', 'https://headyconnection.org',
+    'https://headyconnection.com', 'https://headybuddy.org',
+    'https://headymcp.com', 'https://admin.headysystems.com',
+    'https://manager.headysystems.com', 'https://api.headysystems.com',
+];
+
 // === CORS preflight ===
 app.options('*', (c) => {
+    const origin = c.req.header('Origin') || '';
+    const allowed = HEADY_ORIGINS.includes(origin) ? origin : HEADY_ORIGINS[0];
     return new Response(null, {
         status: 204,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': allowed,
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
