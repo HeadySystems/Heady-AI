@@ -87,7 +87,7 @@ psutil==5.9.6
 GPUtil==1.4.0
 
 # Configuration management
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 configparser==7.0.0
 
 # Utilities
