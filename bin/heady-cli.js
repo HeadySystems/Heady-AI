@@ -14,7 +14,8 @@
  *   heady status                          — Visual system dashboard
  *   heady battle "prompt"                 — Provider battle with agent tracker
  *   heady council "prompt"                — Multi-model council
- *   heady doctor                          — Health check
+ *   heady doctor [--fix] [--json]          — Full systems diagnostic
+ *   heady fix                              — Auto-fix safe issues (alias for doctor --fix)
  *   heady help                            — Show all commands
  *
  * @module bin/heady-cli
@@ -66,7 +67,7 @@ const _injectedKeys = auth.injectCredentials();
 
 const KNOWN_COMMANDS = [
     'init', 'start', 'dev', 'build', 'deploy', 'test',
-    'doctor', 'rotate-keys', 'migrate', 'projection',
+    'doctor', 'fix', 'rotate-keys', 'migrate', 'projection',
     'status', 'help', 'validate', 'scaffold',
     'council', 'battle', 'determinism', 'learn', 'context',
     'login', 'logout', 'whoami',
@@ -581,20 +582,32 @@ const commands = {
         run('pnpm test');
     },
 
+    async fix(...args) {
+        return commands.doctor('--fix', ...args);
+    },
+
     async doctor(...args) {
         const doFix = args.includes('--fix') || args.includes('-f');
-        heading('Heady™ Systems Check' + (doFix ? ' + Auto-Fix' : ''));
-        info(`Node.js: ${process.version} | CLI: v${VERSION} | Root: ${ROOT}`);
-        if (doFix) info('Auto-fix mode enabled (--fix)');
-        console.log('');
+        const doJson = args.includes('--json') || args.includes('-j');
+        const doVerbose = args.includes('--verbose') || args.includes('-v');
+
+        if (!doJson) {
+            heading('Heady™ Systems Check' + (doFix ? ' + Auto-Fix' : ''));
+            info(`Node.js: ${process.version} | CLI: v${VERSION} | Root: ${ROOT}`);
+            if (doFix) info('Auto-fix mode enabled (--fix)');
+            if (doVerbose) info('Verbose mode enabled');
+            console.log('');
+        }
 
         let passed = 0, failed = 0, warned = 0, fixed = 0;
         const results = [];
 
         function check(name, status, detail, fixable = false) {
-            const icon = status === 'pass' ? '✓' : status === 'fail' ? '✗' : '⚠';
-            const color = status === 'pass' ? '\x1b[32m' : status === 'fail' ? '\x1b[31m' : '\x1b[33m';
-            console.log(`  ${color}${icon}\x1b[0m ${name}${detail ? ` — ${detail}` : ''}`);
+            if (!doJson) {
+                const icon = status === 'pass' ? '✓' : status === 'fail' ? '✗' : '⚠';
+                const color = status === 'pass' ? '\x1b[32m' : status === 'fail' ? '\x1b[31m' : '\x1b[33m';
+                console.log(`  ${color}${icon}\x1b[0m ${name}${detail ? ` — ${detail}` : ''}`);
+            }
             results.push({ name, status, detail, fixable });
             if (status === 'pass') passed++;
             else if (status === 'fail') failed++;
@@ -837,6 +850,24 @@ const commands = {
         const healthScore = total > 0 ? passed / total : 0;
         const grade = healthScore >= 0.9 ? 'A' : healthScore >= 0.8 ? 'B' : healthScore >= 0.7 ? 'C' :
             healthScore >= 0.6 ? 'D' : 'F';
+
+        // ═══ JSON OUTPUT (Vercel pattern) ══════════════════════════════
+        if (doJson) {
+            const report = {
+                ok: failed === 0,
+                grade,
+                score: parseFloat((healthScore * 100).toFixed(1)),
+                passed, warned, failed, fixed,
+                total: passed + warned + failed,
+                ts: new Date().toISOString(),
+                node: process.version,
+                cli: VERSION,
+                root: ROOT,
+                checks: results,
+            };
+            console.log(JSON.stringify(report, null, 2));
+            return;
+        }
 
         console.log(`\n  \x1b[1m${'═'.repeat(50)}\x1b[0m`);
         console.log(`  \x1b[1mResults:\x1b[0m ${passed} \x1b[32mpassed\x1b[0m, ${warned} \x1b[33mwarned\x1b[0m, ${failed} \x1b[31mfailed\x1b[0m`);

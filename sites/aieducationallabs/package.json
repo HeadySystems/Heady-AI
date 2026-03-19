@@ -1,0 +1,17 @@
+{
+  "name": "aieducationallabs",
+  "version": "1.0.0",
+  "description": "AI Educational Labs — University-Grade Interactive Science Labs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "compression": "^1.7.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
