@@ -1,0 +1,11 @@
+{
+  "lastSyncAt": null,
+  "lastSHA": null,
+  "filesSync": 0,
+  "errors": [
+    {
+      "at": "2026-03-19T17:57:10.581Z",
+      "msg": "Command failed: git push -u origin main --force\nerror: src refspec main does not match any\nerror: failed to push some refs to 'https://github.com/HeadySystems/HeadyAutoContext.git'\n"
+    }
+  ]
+}
