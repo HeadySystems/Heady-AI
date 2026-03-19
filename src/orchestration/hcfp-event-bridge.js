@@ -60,16 +60,17 @@ const CSL_LOW  = 0.382; // ψ² — minimum confidence to proceed
 // ─── EVENT NAME TRANSLATION MAP ──────────────────────────────────────────────
 // HCFPRunner internal event  →  global.eventBus event
 const EVENT_MAP = Object.freeze({
-  'run:start':     'pipeline:started',
-  'run:complete':  'pipeline:completed',
-  'run:stopped':   'pipeline:completed',  // also maps to completed (with status)
-  'stage:start':   'pipeline:stage:start',
-  'stage:end':     'pipeline:stage:end',
-  'stage:passed':  'pipeline:stage:passed',
-  'stage:failed':  'pipeline:failed',
-  'run:paused':    'pipeline:paused',
-  'run:resumed':   'pipeline:resumed',
-  'run:cancelled': 'pipeline:failed',
+  'run:start':      'pipeline:started',
+  'run:complete':   'pipeline:completed',
+  'run:stopped':    'pipeline:completed',  // also maps to completed (with status)
+  'stage:start':    'pipeline:stage:start',
+  'stage:end':      'pipeline:stage:end',
+  'stage:complete': 'pipeline:stage:complete',
+  'stage:passed':   'pipeline:stage:passed',
+  'stage:failed':   'pipeline:stage:failed',
+  'run:paused':     'pipeline:paused',
+  'run:resumed':    'pipeline:resumed',
+  'run:cancelled':  'pipeline:failed',
 });
 
 // ─── REVERSE MAP: global.eventBus → HCFPRunner ───────────────────────────────
@@ -137,6 +138,46 @@ class HCFPEventBridge {
       this._wiredEvents.push({ dir: 'runner→bus', runnerEvent, busEvent, handler });
     }
 
+    // ── 1b. Stage lifecycle guarantee ────────────────────────────────────────
+    // Ensure every stage that starts emits either stage:complete or stage:failed.
+    // If a stage:start fires but neither completion event follows within the
+    // stage timeout (+ φ-margin), synthesize a stage:failed event.
+    this._pendingStages = new Map();
+
+    this._runner.on('stage:start', (data) => {
+      const stageId = data?.stageId || data?.stage || 'unknown';
+      const timeout = (data?.timeout || 30000) * PHI; // φ-margin on stage timeout
+      const timer = setTimeout(() => {
+        if (this._pendingStages.has(stageId)) {
+          this._pendingStages.delete(stageId);
+          const failPayload = {
+            stageId,
+            runId: data?.runId,
+            reason: 'stage_timeout_no_completion_event',
+            synthesized: true,
+            ts: Date.now(),
+          };
+          this._runner.emit?.('stage:failed', failPayload);
+          log('warn', `synthesized stage:failed for "${stageId}" — no completion event received`, { stageId });
+        }
+      }, timeout);
+      this._pendingStages.set(stageId, timer);
+    });
+
+    const clearPendingStage = (data) => {
+      const stageId = data?.stageId || data?.stage || 'unknown';
+      const timer = this._pendingStages.get(stageId);
+      if (timer) {
+        clearTimeout(timer);
+        this._pendingStages.delete(stageId);
+      }
+    };
+
+    this._runner.on('stage:complete', clearPendingStage);
+    this._runner.on('stage:passed', clearPendingStage);
+    this._runner.on('stage:failed', clearPendingStage);
+    this._runner.on('stage:end', clearPendingStage);
+
     // Track last run completion for CSL-gated autonomous trigger
     this._runner.on('run:complete', () => { this._lastRunAt = Date.now(); });
 
@@ -182,6 +223,12 @@ class HCFPEventBridge {
     clearInterval(this._timer);
     this._initial = null;
     this._timer = null;
+
+    // Clear any pending stage lifecycle timers
+    if (this._pendingStages) {
+      for (const timer of this._pendingStages.values()) clearTimeout(timer);
+      this._pendingStages.clear();
+    }
 
     // Clean up all wired listeners
     for (const w of this._wiredEvents) {
