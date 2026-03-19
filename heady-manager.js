@@ -3037,16 +3037,22 @@ const productServices = [
   { path: "/api/train", module: "./src/services/heady-train-service", name: "HeadyTrainService" },
   { path: "/api/revenue", module: "./src/services/heady-revenue-router", name: "HeadyRevenue" },
   { path: "/api/paas", module: "./src/api/pipeline-as-a-service", name: "PipelineAsAService" },
+  { path: "/api/intel", module: "./src/services/heady-intel", name: "HeadyIntel" },
 ];
 
 for (const svc of productServices) {
   try {
     const mod = require(svc.module);
-    const router = mod.createDojoRouter || mod.createTrainRouter || mod.createRevenueRouter || mod.createRouter || mod.router || mod;
-    if (typeof router === 'function' && router.name !== 'router') {
-      app.use(svc.path, router());
-    } else {
-      app.use(svc.path, router);
+    // Find the router factory or router instance from any export pattern
+    const factory = mod.createDojoRouter || mod.createTrainRouter || mod.createRevenueRouter
+      || mod.createIntelRouter || mod.createRouter || mod.createGuardRouter
+      || mod.createMeshRouter || mod.createRouterGateway;
+    if (typeof factory === 'function') {
+      app.use(svc.path, factory());
+    } else if (mod.router && typeof mod.router === 'function') {
+      app.use(svc.path, mod.router);
+    } else if (typeof mod === 'function') {
+      app.use(svc.path, mod);
     }
     log.info(`${svc.name}: MOUNTED at ${svc.path}`);
   } catch (err) {
