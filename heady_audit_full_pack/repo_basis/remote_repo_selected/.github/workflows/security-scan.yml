@@ -94,7 +94,7 @@ jobs:
           " || echo "Audit completed with warnings"
 
       - name: Upload audit results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: npm-audit-${{ github.run_id }}
@@ -228,7 +228,7 @@ jobs:
           echo "✓ License check complete"
 
       - name: Upload license report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: license-report-${{ github.run_id }}

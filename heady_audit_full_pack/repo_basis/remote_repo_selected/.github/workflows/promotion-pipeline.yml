@@ -89,7 +89,7 @@ jobs:
 
       - name: Upload ESLint results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lint-results-${{ github.sha }}
           path: |
@@ -181,7 +181,7 @@ jobs:
 
       - name: Upload security scan results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: security-results-${{ github.sha }}
           path: |
@@ -300,7 +300,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ github.sha }}
           path: |
@@ -379,7 +379,7 @@ jobs:
 
       - name: Upload benchmark results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: benchmark-results-${{ github.sha }}
           path: |
@@ -440,7 +440,7 @@ jobs:
 
       - name: Upload bundle analysis
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bundle-analysis-${{ github.sha }}
           path: bundle-analysis.json
@@ -544,7 +544,7 @@ jobs:
 
       - name: Upload dependency audit results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-audit-${{ github.sha }}
           path: |
@@ -588,7 +588,7 @@ jobs:
 
       - name: Upload dead code report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dead-code-report-${{ github.sha }}
           path: dead-code-report.json

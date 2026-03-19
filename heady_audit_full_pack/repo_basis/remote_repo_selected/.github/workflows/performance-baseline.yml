@@ -386,7 +386,7 @@ jobs:
 
       # ── 10. Upload baselines as artifacts ────────────────────
       - name: Upload performance baseline
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: performance-baseline
           path: .benchmarks/baseline.json
@@ -395,7 +395,7 @@ jobs:
           overwrite: true
 
       - name: Upload bundle baseline
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bundle-baseline
           path: bundle-sizes.json
@@ -403,7 +403,7 @@ jobs:
           overwrite: true
 
       - name: Upload raw benchmark data
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: raw-benchmarks-${{ github.run_id }}
           path: |

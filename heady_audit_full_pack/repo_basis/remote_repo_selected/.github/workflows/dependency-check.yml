@@ -121,7 +121,7 @@ jobs:
           fi
 
       - name: Upload audit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: npm-audit-production
           path: audit-report.json
@@ -192,7 +192,7 @@ jobs:
           jq -r 'to_entries | group_by(.value.licenses) | .[] | "- **\(.[0].value.licenses)**: \(length) packages"' license-report.json >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload license report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: license-report
           path: license-report.json
@@ -255,7 +255,7 @@ jobs:
 
       - name: Upload Trivy report artifact
         if: always() && steps.check_dockerfile.outputs.exists == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-${{ matrix.image.name }}-report
           path: trivy-${{ matrix.image.name }}.sarif
