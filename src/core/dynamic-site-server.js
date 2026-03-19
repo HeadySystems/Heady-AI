@@ -262,6 +262,36 @@ const SITES = {
     ],
     showAuth: false,
   },
+  'admin.headysystems.com': {
+    brand: 'Heady Admin',
+    tagline: 'Administrative Control Plane',
+    subtitle: 'Secure governance, deployment controls, service operations, and platform management for the Heady ecosystem.',
+    color: '#06b6d4',
+    accent: '#22d3ee',
+    icon: '⌘',
+    heroServices: [
+      { icon: '🛡️', name: 'Governance', desc: 'Policy controls, approvals, and audit visibility' },
+      { icon: '🚀', name: 'Deployments', desc: 'Release status, rollouts, and environment control' },
+      { icon: '📡', name: 'Operations', desc: 'Service health, incident handling, and recovery' },
+      { icon: '🔐', name: 'Access', desc: 'Administrative identity and privileged session control' },
+    ],
+    showAuth: true,
+  },
+  'auth.headysystems.com': {
+    brand: 'Heady Auth',
+    tagline: 'Unified Identity Gateway',
+    subtitle: 'Centralized sign-in, provider linking, API key onboarding, and secure access across every Heady domain.',
+    color: '#7c3aed',
+    accent: '#a78bfa',
+    icon: '🔐',
+    heroServices: [
+      { icon: '🪪', name: 'Identity', desc: 'Cross-domain account and profile continuity' },
+      { icon: '🔗', name: 'Providers', desc: 'OAuth and API key connections in one entrypoint' },
+      { icon: '🧠', name: 'Workspace', desc: 'Portable sign-in across the Heady operating system' },
+      { icon: '🛡️', name: 'Security', desc: 'Protected sessions, credential controls, and recovery flows' },
+    ],
+    showAuth: true,
+  },
 };
 
 // ── Auth Providers (same 25 from auth-page-server.js) ───────
@@ -310,9 +340,21 @@ function hashPw(pw, salt) {
 }
 
 // ── Resolve site from Host header ────────────────────────────
+function normalizeHost(host) {
+  return typeof host === 'string' ? host.replace(/:\d+$/, '').trim().toLowerCase() : '';
+}
+
+function resolveIncomingHost(headers = {}) {
+  const forwardedHostHeader = headers['x-forwarded-host'] || headers['X-Forwarded-Host'];
+  const forwardedHost = Array.isArray(forwardedHostHeader)
+    ? forwardedHostHeader[0]
+    : String(forwardedHostHeader || '').split(',')[0];
+  const preferredHost = normalizeHost(forwardedHost) || normalizeHost(headers.host);
+  return preferredHost || 'headyme.com';
+}
+
 function resolveSite(host) {
-  if (!host) return SITES['headyme.com'];
-  const clean = host.replace(/:\d+$/, '').toLowerCase();
+  const clean = normalizeHost(host) || 'headyme.com';
   // Direct match
   if (SITES[clean]) return SITES[clean];
   // www. prefix
@@ -730,7 +772,7 @@ function renderSite(site, host) {
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
-  const host = req.headers.host || 'headyme.com';
+  const host = resolveIncomingHost(req.headers);
   const site = resolveSite(host);
 
   res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
