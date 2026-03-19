@@ -17,7 +17,8 @@
  * Integration: Plugs into the ui-registry.js manifest system.
  */
 
-const logger = require('./structured-logger');
+const { getLogger } = require('./structured-logger');
+const logger = getLogger('domain-router');
 
 // ── Domain → UI Projection Matrix ───────────────────────────────
 const DOMAIN_PROJECTIONS = {

@@ -23,7 +23,8 @@
  *   - Budget / High-Volume                → HuggingFace open models
  */
 
-const logger = require('./structured-logger');
+const { getLogger } = require('./structured-logger');
+const logger = getLogger('llm-router');
 const crypto = require('crypto');
 
 // ── Model Registry ──────────────────────────────────────────────

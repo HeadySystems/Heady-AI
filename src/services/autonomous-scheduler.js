@@ -18,7 +18,8 @@
  *   - Daily:    Self-healing cycle (projection noise scan + cleanup)
  */
 
-const logger = require('./structured-logger');
+const { getLogger } = require('./structured-logger');
+const logger = getLogger('autonomous-scheduler');
 
 // ── Schedule Registry ───────────────────────────────────────────
 const _schedules = new Map();
