@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-const { logger } = require('../utils/logger');
+const logger = require('../utils/logger');
 const { PhiScale } = require('./phi-scales');
 
 /**

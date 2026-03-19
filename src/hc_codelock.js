@@ -1,4 +1,4 @@
-const { logger } = require('./utils/logger');
+const logger = require('./utils/logger');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HeadyCodeLock — Codebase Governance & Approval Gate            ║

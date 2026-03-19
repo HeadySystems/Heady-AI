@@ -5,7 +5,7 @@
  */
 
 const { Hypervector } = require('./hypervector');
-const { logger } = require('../utils/logger');
+const logger = require('../utils/logger');
 const fs = require('fs');
 const path = require('path');
 

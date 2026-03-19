@@ -6,7 +6,7 @@
 
 const { Hypervector } = require('./hypervector');
 const { VSACodebook } = require('./codebook');
-const { logger } = require('../utils/logger');
+const logger = require('../utils/logger');
 
 /**
  * Continuous Semantic Logic gates using VSA representations

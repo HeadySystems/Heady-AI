@@ -13,7 +13,7 @@
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-const { logger } = require('./utils/logger');
+const logger = require('./utils/logger');
 const { Pool } = require('pg');
 
 const pool = new Pool({

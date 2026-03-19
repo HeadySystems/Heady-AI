@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const { logger } = require('../utils/logger');
+const logger = require('../utils/logger');
 
 const CATEGORIES = [
   'health_monitoring', 'agent_lifecycle', 'memory_maintenance',
