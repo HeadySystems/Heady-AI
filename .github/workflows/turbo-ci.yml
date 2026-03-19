@@ -38,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Turbo cache (GitHub Artifacts)
-        uses: felixmosh/turborepo-gh-artifacts@v3
+        uses: felixmosh/turborepo-gh-artifacts@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
