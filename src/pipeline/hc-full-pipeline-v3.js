@@ -861,6 +861,24 @@ class HCFullPipelineV3 extends EventEmitter {
       for (const stageId of stageIds) {
         if (ctx.aborted) break;
         await this._runStageWithRetry(stageId, ctx);
+
+        // ── Quality gate: CSL score must stay above PSI (0.618) ──
+        const cslScore = this._computeCSLScore(ctx);
+        if (cslScore < PSI) {
+          const gatePayload = {
+            runId: ctx.runId,
+            stageId,
+            stageName: STAGE_BY_ID.get(stageId)?.name,
+            cslScore,
+            threshold: PSI,
+            reason: `CSL score ${cslScore.toFixed(3)} dropped below PSI threshold ${PSI.toFixed(3)}`,
+          };
+          this.emit('pipeline:quality_gate_failed', gatePayload);
+          ctx.aborted = true;
+          this._status = 'failed';
+          throw new Error(gatePayload.reason);
+        }
+
         this._checkStopRules(ctx);
       }
 
@@ -941,6 +959,45 @@ class HCFullPipelineV3 extends EventEmitter {
       this._status = 'aborting';
       this.emit('pipeline:abort', { runId: this._activeContext.runId, reason: 'manual' });
     }
+  }
+
+  /**
+   * Compute a Continuous Scoring Logic (CSL) quality score for the current run.
+   * Based on ratio of successful stages to attempted, with penalty for recent failures.
+   * Returns a value in [0, 1]; pipeline halts if below PSI (0.618).
+   *
+   * @param {PipelineContext} ctx
+   * @returns {number} CSL score between 0 and 1
+   * @private
+   */
+  _computeCSLScore(ctx) {
+    if (!ctx.stageResults || ctx.stageResults.size === 0) return 1.0;
+
+    let completed = 0;
+    let failed = 0;
+    for (const [, entry] of ctx.stageResults) {
+      if (entry.status === 'complete') completed++;
+      else if (entry.status === 'failed') failed++;
+    }
+
+    const total = completed + failed;
+    if (total === 0) return 1.0;
+
+    // Base score: completion ratio
+    let score = completed / total;
+
+    // Penalty for consecutive recent failures (exponential decay using PSI)
+    const stageEntries = [...ctx.stageResults.values()];
+    let recentFailStreak = 0;
+    for (let i = stageEntries.length - 1; i >= 0; i--) {
+      if (stageEntries[i].status === 'failed') recentFailStreak++;
+      else break;
+    }
+    if (recentFailStreak > 0) {
+      score *= Math.pow(PSI, recentFailStreak);
+    }
+
+    return Math.max(0, Math.min(1, score));
   }
 
   // ── Private helpers ────────────────────────────────────────────────────────
