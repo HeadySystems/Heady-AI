@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — HeadySync: Cross-device state synchronization */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const fs=require('fs');const path=require('path');
 const STORE_PATH=path.join(__dirname,'../../.heady_cache/sync-store.json');
 function loadStore(){try{return JSON.parse(fs.readFileSync(STORE_PATH,'utf8'))}catch{return{devices:[],syncLog:[],version:1}}}
@@ -14,7 +15,7 @@ function sync(deviceId,state){
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'heady-sync'}));
   if(parsed.pathname==='/sync'&&req.method==='POST'){let body='';req.on('data',c=>body+=c);req.on('end',()=>{const{deviceId,state}=JSON.parse(body);res.end(JSON.stringify(sync(deviceId,state)))});return}

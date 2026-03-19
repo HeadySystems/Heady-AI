@@ -12,13 +12,20 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 # Site → Cloud Run service name → Custom domain
 declare -A SITES=(
   [headyme]="heady-web-headyme:headyme.com"
-  [heady-ai]="heady-web-ai:heady-ai.com"
+  [headyai]="heady-web-ai:headyai.com"
+  [heady-ai]="heady-web-ai-alt:heady-ai.com"
   [headyos]="heady-web-os:headyos.com"
   [headysystems]="heady-web-systems:headysystems.com"
   [headyex]="heady-web-ex:headyex.com"
   [headyfinance]="heady-web-finance:headyfinance.com"
+  [headybuddy]="heady-web-buddy:headybuddy.com"
   [headyconnection-com]="heady-web-conn-com:headyconnection.com"
   [headyconnection-org]="heady-web-conn-org:headyconnection.org"
+  [headymcp]="heady-web-mcp:headymcp.com"
+  [headybot]="heady-web-bot:headybot.com"
+  [headylens]="heady-web-lens:headylens.com"
+  [headyapi]="heady-web-api:headyapi.com"
+  [headyio]="heady-web-io:headyio.com"
   [admin-portal]="heady-web-admin:admin.headyme.com"
 )
 
@@ -57,10 +64,10 @@ for SITE in "${!SITES[@]}"; do
     --region="$REGION" \
     --allow-unauthenticated \
     --port=8080 \
-    --memory=128Mi \
+    --memory=512Mi \
     --cpu=1 \
-    --min-instances=0 \
-    --max-instances=3 \
+    --min-instances=1 \
+    --max-instances=5 \
     --project="$PROJECT" \
     --quiet
   
@@ -84,6 +91,6 @@ done
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║  ✅ All 9 sites deployed!                                   ║"
+echo "║  ✅ All 16 sites deployed!                                  ║"
 echo "║  Next: Configure DNS CNAME records pointing to ghs.google   ║"
 echo "╚══════════════════════════════════════════════════════════════╝"

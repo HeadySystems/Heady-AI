@@ -32,6 +32,7 @@ const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.ru
  */
 
 const http = require('http');
+const logger = require('../../shared/logger').createChildLogger('colab-mcp-bridge');
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 const path = require('path');
@@ -79,14 +80,14 @@ const telemetry = new HeadyTelemetry(vectorStore, learner);
     learner.learnPreference('3D GPU vector space for all memory operations');
     learner.learnPreference('Comprehensive data gathering during and between interactions for optimization');
 
-    console.log(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
-    console.log(`  📊 Telemetry: audit trail + optimization engine active`);
+    logger.info({ count: learner.interactionCount }, 'Seeded knowledge vectors');
+    logger.info('Telemetry: audit trail + optimization engine active');
 })();
 
 // ── Project History Ingestion — Full codebase context on boot ────
 const { ProjectHistoryIngestor } = require('./project-history-ingestor');
 const historyIngestor = new ProjectHistoryIngestor(learner);
-historyIngestor.ingestAll().catch(e => console.error(`  ⚠ History ingest error: ${e.message}`));
+historyIngestor.ingestAll().catch(e => logger.error({ err: e }, 'History ingest error'));
 
 // ── Tool Registry ────────────────────────────────────────────────
 // Full 33-tool registry: 30 from heady-mcp-server.js + 3 vector space tools.
@@ -142,7 +143,7 @@ function loadMCPTools() {
         { name: 'heady_memory_stats', description: 'Get continuous learning stats (interactions, directives, categories, memory usage).', inputSchema: { type: 'object', properties: {} } },
         { name: 'heady_telemetry', description: 'Get comprehensive telemetry stats (audit trail, tool call analytics, optimizations, environment).', inputSchema: { type: 'object', properties: {} } },
     ];
-    console.log(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
+    logger.info({ count: HEADY_TOOLS.length }, 'MCP tools loaded');
 }
 
 // ── Tool Handler ─────────────────────────────────────────────────
@@ -348,7 +349,7 @@ function handleSSE(req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
+        'Access-Control-Allow-Origin': _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null',
     });
 
     // Send endpoint info
@@ -574,10 +575,10 @@ function parseBody(req) {
     });
 }
 
-function jsonRes(res, code, data) {
+function jsonRes(res, code, data, origin) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
+        'Access-Control-Allow-Origin': _isHeadyOrigin(origin) ? origin : 'null',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     });
@@ -594,7 +595,7 @@ function startHTTPServer() {
         // CORS preflight
         if (req.method === 'OPTIONS') {
             res.writeHead(204, {
-                'Access-Control-Allow-Origin': '*',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
+                'Access-Control-Allow-Origin': _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null',
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             });
@@ -613,34 +614,34 @@ function startHTTPServer() {
         if (url.pathname === '/mcp/rpc' && req.method === 'POST') {
             const body = await parseBody(req);
             const response = await handleJsonRpc(body);
-            return jsonRes(res, 200, response || { jsonrpc: '2.0', result: null });
+            return jsonRes(res, 200, response || { jsonrpc: '2.0', result: null }, req.headers.origin);
         }
 
         // ── REST: List tools ──
         if (url.pathname === '/mcp/tools' && req.method === 'GET') {
-            return jsonRes(res, 200, { tools: HEADY_TOOLS, count: HEADY_TOOLS.length });
+            return jsonRes(res, 200, { tools: HEADY_TOOLS, count: HEADY_TOOLS.length }, req.headers.origin);
         }
 
         // ── REST: Call tool ──
         if (url.pathname === '/mcp/tools/call' && req.method === 'POST') {
             const body = await parseBody(req);
             const result = await callTool(body.name, body.arguments || {});
-            return jsonRes(res, 200, result);
+            return jsonRes(res, 200, result, req.headers.origin);
         }
 
         // ── Vector Space REST endpoints ──
         if (url.pathname === '/vector/store' && req.method === 'POST') {
             const body = await parseBody(req);
             const result = vectorStore.store(body.embedding, body.metadata || {});
-            return jsonRes(res, 200, result);
+            return jsonRes(res, 200, result, req.headers.origin);
         }
         if (url.pathname === '/vector/search' && req.method === 'POST') {
             const body = await parseBody(req);
             const results = vectorStore.search(body.embedding, body.topK || 5);
-            return jsonRes(res, 200, { results });
+            return jsonRes(res, 200, { results }, req.headers.origin);
         }
         if (url.pathname === '/vector/stats' && req.method === 'GET') {
-            return jsonRes(res, 200, vectorStore.getStats());
+            return jsonRes(res, 200, vectorStore.getStats(), req.headers.origin);
         }
 
         // ── Health ──
@@ -659,7 +660,7 @@ function startHTTPServer() {
                 gpu: GPU_CONFIG,
                 uptime: process.uptime(),
                 timestamp: new Date().toISOString(),
-            });
+            }, req.headers.origin);
         }
 
         // ── 404 ──
@@ -669,7 +670,7 @@ function startHTTPServer() {
                 'POST /mcp/tools/call', 'POST /vector/store', 'POST /vector/search',
                 'GET  /vector/stats', 'WS   ws://host:port (WebSocket)',
             ]
-        });
+        }, req.headers.origin);
     });
 
     // WebSocket upgrade
@@ -682,24 +683,21 @@ function startHTTPServer() {
     });
 
     server.listen(PORT, async () => {
-        console.log(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
-        console.log(`  ════════════════════════════════════`);
-        console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
-        console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
-        console.log(`  📡 SSE       : http://localhost:${PORT}/sse`);
-        console.log(`  📡 WebSocket : ws://localhost:${PORT}`);
-        console.log(`  📡 Health    : http://localhost:${PORT}/health`);
-        console.log(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
-        console.log(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
+        logger.info({
+            port: PORT,
+            transports: ['HTTP REST', 'JSON-RPC', 'SSE', 'WebSocket'],
+            vectors: vectorStore.getStats().vectorCount,
+            dimensions: vectorStore.getStats().dimensions,
+            gpu: GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode',
+        }, 'Heady MCP Multi-Transport Bridge started');
 
         // ngrok tunnel for Colab
         const ngrokUrl = await setupNgrokTunnel(PORT);
         if (ngrokUrl) {
-            console.log(`  🌐 ngrok     : ${ngrokUrl}`);
-            console.log(`  🌐 SSE       : ${ngrokUrl}/sse`);
+            logger.info({ ngrokUrl, sse: `${ngrokUrl}/sse` }, 'ngrok tunnel established');
         }
 
-        console.log(`  ════════════════════════════════════\n`);
+        logger.info('Bridge initialization complete');
     });
 }
 
@@ -721,7 +719,7 @@ async function main() {
 }
 
 main().catch(err => {
-    console.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
+    logger.error({ err }, 'Fatal error in MCP Bridge');
     process.exit(1);
 });
 

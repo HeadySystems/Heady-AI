@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — Prompt Alchemist: Transform mediocre prompts into φ-structured masterpieces */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const PHI=1.618033988749895;
 const ENHANCEMENT_RULES=[
   {pattern:/^(.{1,30})$/,enhance:'Add context, constraints, and expected output format',priority:1},
@@ -17,7 +18,7 @@ function alchemize(prompt){
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'prompt-alchemist'}));
   if(parsed.pathname==='/enhance'&&req.method==='POST'){let body='';req.on('data',c=>body+=c);req.on('end',()=>{const{prompt}=JSON.parse(body);res.end(JSON.stringify(alchemize(prompt),null,2))});return}

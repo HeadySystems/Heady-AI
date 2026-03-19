@@ -138,7 +138,7 @@ app.get('/api/notifications/stream', cookieAuthMiddleware, (req: Request, res: R
     sessionId: user.sessionId
   });
 
-  sseHandler.addConnection(connectionId, user, res);
+  sseHandler.addConnection(connectionId, user, res, req.headers.origin);
 });
 
 app.post('/api/push/subscribe', cookieAuthMiddleware, (req: Request, res: Response) => {

@@ -11,6 +11,7 @@
  *         visible growth trajectory.
  */
 
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
@@ -186,7 +187,7 @@ function getPersonalitySummary() {
 // ── HTTP Server ──────────────────────────────────────────────────────
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Content-Type', 'application/json');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
 

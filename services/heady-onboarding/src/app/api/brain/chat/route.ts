@@ -1,5 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Heady CORS whitelist — mirrors shared/cors-config.js
+const HEADY_ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://www.headyme.com',
+    'https://headysystems.com', 'https://www.headysystems.com',
+    'https://headyai.com', 'https://www.headyai.com',
+    'https://headybuddy.com', 'https://www.headybuddy.com',
+    'https://headybuddy.org', 'https://www.headybuddy.org',
+    'https://headymcp.com', 'https://www.headymcp.com',
+    'https://headyio.com', 'https://www.headyio.com',
+    'https://headybot.com', 'https://www.headybot.com',
+    'https://headyapi.com', 'https://www.headyapi.com',
+    'https://headylens.com', 'https://www.headylens.com',
+    'https://headyfinance.com', 'https://www.headyfinance.com',
+    'https://headyconnection.org', 'https://www.headyconnection.org',
+    'https://headyconnection.com', 'https://www.headyconnection.com',
+    'https://admin.headysystems.com',
+]);
+function getAllowedOrigin(origin: string | null): string {
+    return origin && HEADY_ALLOWED_ORIGINS.has(origin) ? origin : 'null';
+}
+
 const PHI = 1.6180339887;
 
 /** HeadyBrain Chat API — serves buddy widget across all Heady sites */
@@ -86,7 +107,7 @@ export async function POST(request: NextRequest) {
             },
             {
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': getAllowedOrigin(request.headers.get('origin')),
                     'Access-Control-Allow-Methods': 'POST, OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Device, X-Heady-Workspace',
                 },
@@ -95,16 +116,16 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         return NextResponse.json(
             { response: 'HeadyBrain is processing your request. Please try again.', status: 'error' },
-            { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
+            { status: 500, headers: { 'Access-Control-Allow-Origin': getAllowedOrigin(request.headers.get('origin')) } }
         );
     }
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
     return new Response(null, {
         status: 204,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': getAllowedOrigin(request.headers.get('origin')),
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Device, X-Heady-Workspace',
         },

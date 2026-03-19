@@ -1,12 +1,14 @@
 /* © 2026 Heady™ — HeadyForge: Template engine for creating new Heady microservices */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const fs=require('fs');const path=require('path');
 function generateService(name,description,port,endpoints){
   const safeName=name.replace(/[^a-z0-9-]/gi,'-').toLowerCase();
   const serverJs=`/* © 2026 Heady™ Systems Inc. — ${name} */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'${safeName}'}));
@@ -21,7 +23,7 @@ server.listen(PORT,()=>console.log('${name} on :'+PORT));`;
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'heady-forge'}));
   if(parsed.pathname==='/generate'&&req.method==='POST'){let body='';req.on('data',c=>body+=c);req.on('end',()=>{const{name,description,port,endpoints}=JSON.parse(body);const result=generateService(name,description,port,endpoints);res.end(JSON.stringify(result,null,2))});return}

@@ -7,6 +7,7 @@
 
 'use strict';
 
+const { isAllowedOrigin } = require('../../../shared/cors-config');
 const http = require('http');
 const { URL } = require('url');
 const {
@@ -245,7 +246,7 @@ class HeadyMCPServerEnhanced {
     const url = new URL(req.url, `http://${req.headers.host}`);
 
     // CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Heady-Correlation-Id');
     res.setHeader('X-Heady-Phi', String(PHI));

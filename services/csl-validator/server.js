@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — CSL Validator: Validate Continuous Semantic Logic gate outputs */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const PHI=1.618033988749895;
 const GATES={alpha:{threshold:1/PHI,name:'Quality Gate α',checks:['coherence','relevance','accuracy']},
 beta:{threshold:Math.pow(1/PHI,2),name:'Quality Gate β',checks:['depth','novelty','completeness']},
@@ -12,7 +13,7 @@ function validateGate(gateName,scores){
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'csl-validator'}));
   if(parsed.pathname==='/gates')return res.end(JSON.stringify(GATES,null,2));

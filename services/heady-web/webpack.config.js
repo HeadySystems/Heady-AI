@@ -224,8 +224,19 @@ module.exports = (env = {}, argv = {}) => {
               changeOrigin: true,
             },
           ],
-          headers: {
-            'Access-Control-Allow-Origin': '*',
+          headers: (req) => {
+            const origin = req.headers.origin;
+            const HEADY_ORIGINS = new Set([
+              'https://headyme.com','https://www.headyme.com','https://headysystems.com','https://www.headysystems.com',
+              'https://headyai.com','https://www.headyai.com','https://headybuddy.com','https://www.headybuddy.com',
+              'https://headybuddy.org','https://www.headybuddy.org','https://headymcp.com','https://www.headymcp.com',
+              'https://headyio.com','https://www.headyio.com','https://headybot.com','https://www.headybot.com',
+              'https://headyapi.com','https://www.headyapi.com','https://headylens.com','https://www.headylens.com',
+              'https://headyfinance.com','https://www.headyfinance.com','https://headyconnection.org','https://www.headyconnection.org',
+              'https://headyconnection.com','https://www.headyconnection.com','https://admin.headysystems.com',
+              'http://localhost:3000','http://localhost:8080',
+            ]);
+            return { 'Access-Control-Allow-Origin': origin && HEADY_ORIGINS.has(origin) ? origin : 'null' };
           },
         }
       : undefined,

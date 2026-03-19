@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — Context Weaver: Intelligently manages conversation context windows */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const fs=require('fs');const path=require('path');
 const PHI=1.618033988749895;const STORE_PATH=path.join(__dirname,'../../.heady_cache/context-weaver.json');
 function loadStore(){try{return JSON.parse(fs.readFileSync(STORE_PATH,'utf8'))}catch{return{sessions:[],version:1}}}
@@ -21,7 +22,7 @@ function weaveContext(messages,maxTokens){
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'context-weaver'}));
   if(parsed.pathname==='/weave'&&req.method==='POST'){let body='';req.on('data',c=>body+=c);req.on('end',()=>{const{messages,maxTokens}=JSON.parse(body);res.end(JSON.stringify(weaveContext(messages||[],maxTokens),null,2))});return}

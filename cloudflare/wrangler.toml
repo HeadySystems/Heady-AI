@@ -46,6 +46,8 @@ routes = [
   { pattern = "www.headyconnection.com/*",  zone_name = "headyconnection.com" },
 
   # ── Companion ─────────────────────────────────────────────────────────
+  { pattern = "headybuddy.com/*",           zone_name = "headybuddy.com" },
+  { pattern = "www.headybuddy.com/*",       zone_name = "headybuddy.com" },
   { pattern = "headybuddy.org/*",           zone_name = "headybuddy.org" },
   { pattern = "www.headybuddy.org/*",       zone_name = "headybuddy.org" },
   { pattern = "headybot.com/*",             zone_name = "headybot.com" },
@@ -151,12 +153,13 @@ routes = [
   { pattern = "staging.headyme.com/*",        zone_name = "headyme.com" },
   { pattern = "staging.headysystems.com/*",   zone_name = "headysystems.com" },
   { pattern = "staging.headyconnection.org/*",zone_name = "headyconnection.org" },
+  { pattern = "staging.headybuddy.com/*",     zone_name = "headybuddy.com" },
   { pattern = "staging.headybuddy.org/*",     zone_name = "headybuddy.org" },
   { pattern = "staging.headymcp.com/*",       zone_name = "headymcp.com" },
   { pattern = "staging.headyio.com/*",        zone_name = "headyio.com" },
   { pattern = "staging.headybot.com/*",       zone_name = "headybot.com" },
   { pattern = "staging.headyapi.com/*",       zone_name = "headyapi.com" },
-  { pattern = "staging.heady-ai.com/*",        zone_name = "heady-ai.com" },
+  { pattern = "staging.heady-ai.com/*",         zone_name = "heady-ai.com" },
   { pattern = "staging.headyconnection.com/*", zone_name = "headyconnection.com" },
   { pattern = "staging.headyos.com/*",         zone_name = "headyos.com" },
   { pattern = "staging.headycloud.com/*",      zone_name = "headycloud.com" },

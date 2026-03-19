@@ -3,6 +3,7 @@
  * Collective Memory — Project Memory That Outlives Conversations
  * Aggregated wisdom from all interactions, automatically distilled.
  */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
@@ -45,7 +46,7 @@ function recall(topic) {
 
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Content-Type', 'application/json');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   if (parsed.pathname === '/health') return res.end(JSON.stringify({ status: 'ok', service: 'collective-memory' }));

@@ -19,6 +19,7 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
+const { isAllowedOrigin } = require("../../shared/cors-config");
 const logger = require("./utils/logger");
 
 const AUDIT_DIR = path.join(__dirname, "..", "data");
@@ -196,7 +197,7 @@ function registerRoutes(app, orchestrator) {
             "Content-Type": "text/event-stream",
             "Cache-Control": "no-cache",
             Connection: "keep-alive",
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": isAllowedOrigin(req.headers.origin) ? req.headers.origin : "null",
         });
         res.write(`data: ${JSON.stringify({ type: "connected", ts: new Date().toISOString() })}\n\n`);
         sseClients.add(res);

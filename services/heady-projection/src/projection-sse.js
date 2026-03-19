@@ -2,6 +2,8 @@
 
 'use strict';
 
+const { isAllowedOrigin } = require('../../../shared/cors-config');
+
 /**
  * projection-sse.js — SSE Streaming for the Autonomous Projection System
  * ═══════════════════════════════════════════════════════════════════════
@@ -353,7 +355,7 @@ function createSSERouter(projectionManager) {
         res.setHeader('Cache-Control', 'no-cache, no-store');
         res.setHeader('Connection', 'keep-alive');
         res.setHeader('X-Accel-Buffering', 'no');  // Disable nginx buffering
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
 
         // Flush headers immediately
         if (typeof res.flushHeaders === 'function') res.flushHeaders();
