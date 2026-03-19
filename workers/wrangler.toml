@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Cloudflare Workers Configuration
 # Based on 2026 best practices for Heady edge infrastructure
 
@@ -63,3 +64,15 @@ LOG_LEVEL = "debug"
 # Limits
 [limits]
 cpu_ms = 50
+=======
+name = "heartbeat-worker"
+main = "heartbeat.js"
+compatibility_date = "2024-06-01"
+
+kv_namespaces = [
+  { binding = "HEARTBEAT_KV", id = "heartbeat-kv-store" }
+]
+
+[vars]
+HEADY_API_KEY = "{{ secrets.HEADY_API_KEY }}"
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg

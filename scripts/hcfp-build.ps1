@@ -223,15 +223,22 @@ function Start-CleanBuild {
     $pythonVersion = python --version 2>&1
     Write-Status "Python: $pythonVersion" "Green"
     
+<<<<<<< HEAD
     # Check for localhost references
     Write-Status "🔍 Scanning for localhost references..." "Cyan"
     $localhostRefs = @()
+=======
+    # Check for api.headysystems.com references
+    Write-Status "🔍 Scanning for api.headysystems.com references..." "Cyan"
+    $api.headysystems.comRefs = @()
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     
     $jsFiles = Get-ChildItem -Path "src" -Filter "*.js" -Recurse -ErrorAction SilentlyContinue
     $tsFiles = Get-ChildItem -Path "src" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue
     
     foreach ($file in ($jsFiles + $tsFiles)) {
         $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+<<<<<<< HEAD
         if ($content -match "localhost|127\.0\.0\.1|0\.0\.0\.0") {
             $localhostRefs += $file.FullName
         }
@@ -242,6 +249,18 @@ function Start-CleanBuild {
         $localhostRefs | ForEach-Object { Write-Status "  - $_" "Yellow" }
     } else {
         Write-Status "✅ No localhost references found in source code" "Green"
+=======
+        if ($content -match "api.headysystems.com|127\.0\.0\.1|0\.0\.0\.0") {
+            $api.headysystems.comRefs += $file.FullName
+        }
+    }
+    
+    if ($api.headysystems.comRefs.Count -gt 0) {
+        Write-Status "⚠️  Found $($api.headysystems.comRefs.Count) files with api.headysystems.com references" "Yellow"
+        $api.headysystems.comRefs | ForEach-Object { Write-Status "  - $_" "Yellow" }
+    } else {
+        Write-Status "✅ No api.headysystems.com references found in source code" "Green"
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     }
     
     # Phase 2: Clean Dependencies
@@ -406,7 +425,11 @@ trap {
     # Alert the user
     Write-Host ""
     Write-Status "🔔 ALERT: Build requires manual intervention" "Magenta"
+<<<<<<< HEAD
     Write-Status "Check logs and fix the issue before retrying" "Yellow"
+=======
+    Write-Status "Check logs and fix the issue before retrying." "Yellow"
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     
     exit 1
 }

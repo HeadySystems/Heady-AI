@@ -10,7 +10,11 @@
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
 # ║  FILE: services/api/python_worker/Dockerfile                                                    ║
+<<<<<<< HEAD
 # ║  LAYER: services                                                  ║
+=======
+# ║  LAYER: root                                                  ║
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 # ╔═══════════════════════════════════════════════════════════════╗
@@ -35,6 +39,10 @@ COPY . .
 EXPOSE 5000
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+<<<<<<< HEAD
   CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
+=======
+  CMD python -c "import urllib.request; urllib.request.urlopen('https://api.headysystems.com/health')" || exit 1
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 
 CMD ["python", "-m", "heady_project.api"]

@@ -30,7 +30,11 @@ import ExpandedView from "./components/ExpandedView";
 import CrossDeviceSync from "./components/CrossDeviceSync";
 import DemoRepos from "./components/DemoRepos";
 
+<<<<<<< HEAD
 const HEADY_API = import.meta.env.VITE_HEADY_API || "https://manager.headysystems.com";
+=======
+const HEADY_API = import.meta.env.VITE_HEADY_API || "http://localhost:3301/api";
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 const RESOURCE_POLL_MS = 5000;
 const ORCHESTRATOR_POLL_MS = 8000;
 
@@ -92,6 +96,51 @@ function usePipelineState(enabled) {
   return pipelineState;
 }
 
+// ─── State Synchronization ──────────────────────────────────────────────
+const syncState = useCallback(async (state) => {
+  try {
+    await fetch(`${HEADY_API}/api/buddy/state`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(state)
+    });
+  } catch (err) {
+    console.error('State sync failed:', err);
+  }
+}, []);
+
+// On state changes, sync to server
+useEffect(() => {
+  if (viewState === 'pill') return; // Don't sync in minimal state
+  
+  syncState({
+    messages,
+    viewState,
+    pipelineState,
+    config
+  });
+}, [messages, viewState, pipelineState, config, syncState]);
+
+// On startup, fetch state from server
+useEffect(() => {
+  async function fetchState() {
+    try {
+      const res = await fetch(`${HEADY_API}/api/buddy/state`);
+      if (!res.ok) return;
+      
+      const remoteState = await res.json();
+      if (remoteState.messages) setMessages(remoteState.messages);
+      if (remoteState.viewState) setViewState(remoteState.viewState);
+      if (remoteState.pipelineState) setPipelineState(remoteState.pipelineState);
+      if (remoteState.config) setConfig(remoteState.config);
+    } catch (err) {
+      console.error('Failed to fetch state:', err);
+    }
+  }
+  
+  fetchState();
+}, []);
+
 // ─── App ───────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -102,6 +151,7 @@ export default function App() {
   const resourceData = useResourceHealth();
   const pipelineState = usePipelineState(viewState === "expanded");
 
+<<<<<<< HEAD
   // ─── State Synchronization ────────────────────────────────────────────
   const syncState = useCallback(async (state) => {
     try {
@@ -138,6 +188,8 @@ export default function App() {
     fetchState();
   }, []);
 
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
   useEffect(() => {
     fetch(`${HEADY_API}/api/headybuddy-config`)
       .then(response => response.json())

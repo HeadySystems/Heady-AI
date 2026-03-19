@@ -86,14 +86,22 @@ Write-Host "φ = $Global:PHI" -ForegroundColor Yellow
 Write-Host "Scanning: $Path" -ForegroundColor Yellow
 
 # Get all CSS, SCSS, JSX, TSX files
+<<<<<<< HEAD
 $files = Get-ChildItem -Path $Path -Include "*.css", "*.scss", "*.jsx", "*.tsx", "*.js", "*.ts" -Recurse -ErrorAction SilentlyContinue
+=======
+$files = Get-ChildItem -Path $Path -Include "*.css", "*.scss", "*.jsx", "*.tsx", "*.js", "*.ts" -Recurse -Depth 5 -ErrorAction SilentlyContinue
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 
 $totalFiles = 0
 $filesWithViolations = 0
 
 foreach ($file in $files) {
     $totalFiles++
+<<<<<<< HEAD
     $content = Get-Content $file.FullName -Raw
+=======
+    $content = [System.IO.File]::ReadAllText($file.FullName)
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     $violations = @()
     
     # Find all pixel values

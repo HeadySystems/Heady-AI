@@ -1,8 +1,13 @@
 /**
+<<<<<<< HEAD
  * HeadyOS Sacred Geometry Design System v5.0
  * Visual Language: Organic, Rounded, Breathing, Living
  * Motion System: Phi-Timed (φ = 1.618) — all durations, delays, and easing
  *   derive from the golden ratio for mathematically harmonious movement
+=======
+ * HeadyOS Sacred Geometry Design System
+ * Visual Language: Organic, Rounded, Breathing, Living
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
  */
 
 :root {
@@ -10,11 +15,16 @@
   --heady-gold: #D4AF37;
   --heady-gold-light: #F4D03F;
   --heady-gold-dark: #B8860B;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
   --heady-cyan: #00D9FF;
   --heady-cyan-soft: rgba(0, 217, 255, 0.2);
   --heady-magenta: #FF00A0;
   --heady-magenta-soft: rgba(255, 0, 160, 0.2);
+<<<<<<< HEAD
 
   --heady-deep-space: #0A0A1A;
   --heady-void: #050510;
@@ -24,10 +34,22 @@
   --heady-cream: #F5F0E8;
   --heady-gray: rgba(255, 255, 255, 0.6);
 
+=======
+  
+  --heady-deep-space: #0A0A1A;
+  --heady-void: #050510;
+  --heady-nebula: #1A1A3E;
+  
+  --heady-white: #FAFAFA;
+  --heady-cream: #F5F0E8;
+  --heady-gray: rgba(255, 255, 255, 0.6);
+  
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
   /* Sacred Glow Effects */
   --glow-gold: 0 0 30px rgba(212, 175, 55, 0.6);
   --glow-cyan: 0 0 40px rgba(0, 217, 255, 0.5);
   --glow-magenta: 0 0 30px rgba(255, 0, 160, 0.5);
+<<<<<<< HEAD
 
   /* ═══ PHI MOTION SYSTEM ═══
    * All timing derives from φ = 1.618033988749895
@@ -81,16 +103,32 @@
   --space-89: 89px;
   --space-144: 144px;
 
+=======
+  
+  /* Sacred Geometry Animations */
+  --breath-slow: 4s ease-in-out infinite;
+  --breath-medium: 2s ease-in-out infinite;
+  --pulse-gentle: 1.5s ease-in-out infinite;
+  --spin-sacred: 20s linear infinite;
+  
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
   /* Organic Rounding */
   --radius-sacred: 24px;
   --radius-pill: 9999px;
   --radius-card: 20px;
   --radius-button: 16px;
+<<<<<<< HEAD
 
   /* Sacred Shadows */
   --shadow-sacred: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --shadow-floating: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
   --shadow-deep: 0 34px 89px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 217, 255, 0.08);
+=======
+  
+  /* Sacred Shadows */
+  --shadow-sacred: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-floating: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.1);
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 }
 
 /* Sacred Geometry Background Pattern */
@@ -301,6 +339,7 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+<<<<<<< HEAD
 
 /* ═══════════════════════════════════════════════════════════════
    PHI MOTION SYSTEM v5.0 — Golden Ratio Temporal Animations
@@ -519,3 +558,5 @@
   transition: width var(--dur-graceful) var(--ease-phi);
   box-shadow: 0 0 13px rgba(0, 217, 255, 0.4);
 }
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg

@@ -40,7 +40,10 @@ venv/
 .pytest_cache/
 *.egg-info/
 .ipynb_checkpoints/
+<<<<<<< HEAD
 *.ipynb_checkpoints/
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 
 # Data (raw and external, to avoid huge files in git)
 data/raw/
@@ -59,6 +62,7 @@ windsurf-next/
 notebooks/personal/*
 !notebooks/personal/.gitkeep
 
+<<<<<<< HEAD
 # Notebooks with embedded secrets
 _archive/misc/heady_brain_gpu.ipynb
 _archive/misc/heady_unified_os.ipynb
@@ -68,15 +72,22 @@ Heady-pre-production-9f2f0642-main/
 <<<<<<< HEAD
 
 # Secrets
+=======
+# Secrets — CRITICAL: never commit these
+.heady/.shit
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 .heady/memory.db
 .heady/*.db
 *.db
 .heady/.heady/
 
+<<<<<<< HEAD
 # HeadyVault — SA keys, vault seeds, GCP credentials (NEVER commit)
 .heady/gcp-*.json
 .heady/vault-seed.js
 
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 # Files exceeding GitHub LFS 2GB per-file limit
 AndroidSDK/system-images/**/*.img
 
@@ -87,12 +98,18 @@ offline-packages/
 # Local Netlify folder
 .netlify
 
+<<<<<<< HEAD
 # Security — sensitive files
+=======
+# Security — sensitive files (added by deep scan remediation)
+.env.hybrid
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 *.pid
 *.bak
 audit_logs.jsonl
 .heady_deploy_log.jsonl
 *.jsonl
+<<<<<<< HEAD
 *.shit
 .shit
 
@@ -170,3 +187,6 @@ core.*
 hc_pipeline.log
 package-lock.json
 >>>>>>> hc-testing/dependabot/docker/node-25-slim
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+logs/resource-events.jsonl

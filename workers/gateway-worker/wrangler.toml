@@ -160,6 +160,15 @@ script_name = "heady-auth-gateway-prod-worker"
 enabled = true
 head_sampling_rate = 1.0
 
+<<<<<<< HEAD
+=======
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "service-worker"
+
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 [limits]
 cpu_ms = 50
 

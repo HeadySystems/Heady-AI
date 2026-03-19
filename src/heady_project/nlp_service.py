@@ -9,8 +9,13 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<<<<<<< HEAD
 # ║  FILE: src/heady_project/nlp_service.py                          ║
 # ║  LAYER: backend/src                                              ║
+=======
+# ║  FILE: src/heady_project/nlp_service.py                                                    ║
+# ║  LAYER: backend/src                                                  ║
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 

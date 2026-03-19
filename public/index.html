@@ -5,6 +5,7 @@
   HEADY_BRAND:END -->
 <html lang="en">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="HeadyOS — The unified intelligent orchestration platform. Sacred Geometry design, living systems, AI-powered pipeline management.">
@@ -1740,5 +1741,1240 @@
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
     });
   </script>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HeadyOS - Intelligent Orchestration Platform with Sacred Geometry">
+    <meta name="theme-color" content="#0a0e27">
+    <title>HeadyOS - Intelligent Orchestration</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--heady-void) 0%, var(--heady-deep-space) 50%, var(--heady-nebula) 100%);
+            color: var(--heady-white);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Animated background orbs */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 10%;
+            left: 5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: float-1 20s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 10%;
+            right: 5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 0, 200, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: float-2 25s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float-1 {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, -20px); }
+            50% { transform: translate(-10px, 30px); }
+            75% { transform: translate(-30px, -10px); }
+        }
+
+        @keyframes float-2 {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-30px, 20px); }
+            50% { transform: translate(20px, -20px); }
+            75% { transform: translate(10px, 30px); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 200, 0.5), 0 0 40px rgba(0, 255, 200, 0.3); }
+            50% { text-shadow: 0 0 30px rgba(0, 255, 200, 0.8), 0 0 60px rgba(0, 255, 200, 0.5); }
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 60px;
+            animation: slide-up 0.8s ease-out;
+        }
+
+        .hero-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                from 0deg,
+                var(--heady-cyan) 0deg,
+                var(--heady-magenta) 90deg,
+                var(--heady-gold) 180deg,
+                var(--heady-cyan) 360deg
+            );
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            font-weight: 700;
+            color: var(--heady-void);
+            box-shadow: 0 0 40px rgba(0, 255, 200, 0.5), inset 0 0 40px rgba(255, 0, 200, 0.2);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .connection-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--heady-cyan);
+            box-shadow: 0 0 15px var(--heady-cyan);
+            animation: pulse-glow 2s ease-in-out infinite;
+            border: 2px solid var(--heady-void);
+        }
+
+        .connection-status.offline {
+            background: var(--heady-gray);
+            box-shadow: 0 0 15px rgba(150, 150, 150, 0.5);
+            animation: none;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 0;
+            animation: pulse-glow 2s ease-in-out infinite;
+            background: linear-gradient(135deg, var(--heady-white) 0%, var(--heady-cyan) 50%, var(--heady-magenta) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: var(--heady-gray);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin: 10px 0 0 0;
+            animation: fade-in 1.2s ease-out;
+        }
+
+        .tagline-accent {
+            color: var(--heady-cyan);
+            font-weight: 500;
+        }
+
+        /* ========== STATUS BAR ========== */
+        .status-bar {
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.1);
+            animation: slide-up 1s ease-out 0.2s both;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: var(--heady-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .status-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--heady-cyan);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .status-value.health {
+            color: var(--heady-magenta);
+        }
+
+        .status-value.pending {
+            color: var(--heady-gold);
+        }
+
+        /* ========== NAVIGATION GRID ========== */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+            animation: slide-up 1s ease-out 0.4s both;
+        }
+
+        .nav-card {
+            background: rgba(15, 20, 40, 0.5);
+            border: 1.5px solid rgba(0, 255, 200, 0.1);
+            border-radius: 24px;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.1), transparent);
+            transition: left 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card:hover {
+            background: rgba(20, 30, 50, 0.8);
+            border-color: rgba(0, 255, 200, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 255, 200, 0.2);
+        }
+
+        .nav-card-icon {
+            font-size: 2.5rem;
+            display: inline-block;
+        }
+
+        .nav-card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--heady-white);
+        }
+
+        .nav-card-desc {
+            font-size: 0.95rem;
+            color: var(--heady-gray);
+            line-height: 1.5;
+        }
+
+        .nav-card-arrow {
+            margin-top: auto;
+            font-size: 1.5rem;
+            color: var(--heady-cyan);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+            transform: translateX(-5px);
+        }
+
+        .nav-card:hover .nav-card-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        /* ========== METRICS ROW ========== */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 60px;
+            animation: slide-up 1s ease-out 0.6s both;
+        }
+
+        .metric-card {
+            background: rgba(10, 14, 39, 0.4);
+            border: 1px solid rgba(255, 0, 200, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--heady-gold);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--heady-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ========== CHAT WIDGET ========== */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 380px;
+            height: 600px;
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            animation: slide-up 0.6s ease-out 1s both;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.15), rgba(255, 0, 200, 0.1));
+            border-bottom: 1px solid rgba(0, 255, 200, 0.2);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .chat-header-icon {
+            font-size: 1.5rem;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        .chat-header-text h3 {
+            font-size: 1rem;
+            margin: 0;
+            color: var(--heady-cyan);
+        }
+
+        .chat-header-text p {
+            font-size: 0.75rem;
+            color: var(--heady-gray);
+            margin: 2px 0 0 0;
+        }
+
+        .chat-close {
+            margin-left: auto;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--heady-gray);
+            transition: color 0.2s;
+            padding: 4px 8px;
+        }
+
+        .chat-close:hover {
+            color: var(--heady-cyan);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-message {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-width: 90%;
+            animation: slide-up 0.3s ease-out;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: rgba(0, 255, 200, 0.15);
+            border: 1px solid rgba(0, 255, 200, 0.3);
+            color: var(--heady-white);
+        }
+
+        .chat-message.assistant {
+            align-self: flex-start;
+            background: rgba(255, 0, 200, 0.1);
+            border: 1px solid rgba(255, 0, 200, 0.2);
+            color: var(--heady-gray);
+        }
+
+        .chat-input-area {
+            border-top: 1px solid rgba(0, 255, 200, 0.1);
+            padding: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--heady-white);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(0, 255, 200, 0.5);
+        }
+
+        .chat-input::placeholder {
+            color: var(--heady-gray);
+        }
+
+        .chat-send {
+            background: linear-gradient(135deg, var(--heady-cyan), var(--heady-magenta));
+            border: none;
+            color: var(--heady-void);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
+        }
+
+        .chat-send:active {
+            transform: scale(0.95);
+        }
+
+        .chat-widget.collapsed {
+            width: 380px;
+            height: auto;
+        }
+
+        .chat-widget.collapsed .chat-messages,
+        .chat-widget.collapsed .chat-input-area {
+            display: none;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            margin-top: 100px;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(0, 255, 200, 0.1);
+            text-align: center;
+            color: var(--heady-gray);
+            font-size: 0.9rem;
+            animation: fade-in 1.2s ease-out 0.8s both;
+        }
+
+        footer p {
+            margin: 0 0 10px 0;
+        }
+
+        footer a {
+            color: var(--heady-cyan);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--heady-magenta);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .hero {
+                padding: 40px 16px;
+                margin-bottom: 30px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 40px;
+            }
+
+            .status-bar {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 16px 20px;
+                gap: 16px;
+            }
+
+            .metrics-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .chat-widget {
+                width: 100%;
+                height: 400px;
+                bottom: 0;
+                right: 0;
+                border-radius: 20px 20px 0 0;
+            }
+
+            .logo {
+                font-size: 40px;
+            }
+
+            .logo-container {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .tagline {
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+            }
+
+            .status-bar {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 12px 16px;
+                gap: 12px;
+            }
+
+            .status-label {
+                font-size: 0.7rem;
+            }
+
+            .status-value {
+                font-size: 1.3rem;
+            }
+
+            .nav-card {
+                padding: 24px 20px;
+            }
+
+            .metrics-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .chat-widget {
+                width: 100%;
+                height: 350px;
+            }
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--heady-cyan);
+            border-radius: 50%;
+            margin-left: 4px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* System Pulse */
+        .system-pulse-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            animation: slide-up 1s ease-out 0.15s both;
+        }
+
+        .pulse-badge {
+            background: rgba(10, 14, 39, 0.5);
+            border: 1.5px solid rgba(0, 255, 200, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .pulse-badge:hover {
+            border-color: rgba(0, 255, 200, 0.5);
+            background: rgba(10, 14, 39, 0.7);
+            box-shadow: 0 0 20px rgba(0, 255, 200, 0.15);
+        }
+
+        .pulse-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--heady-cyan);
+            box-shadow: 0 0 10px var(--heady-cyan);
+            animation: pulse-breathe 2s ease-in-out infinite;
+        }
+
+        .pulse-indicator.warning {
+            background: var(--heady-gold);
+            box-shadow: 0 0 10px var(--heady-gold);
+        }
+
+        .pulse-indicator.error {
+            background: #ff4466;
+            box-shadow: 0 0 10px #ff4466;
+        }
+
+        .pulse-label {
+            font-size: 0.75rem;
+            color: var(--heady-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .pulse-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--heady-cyan);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .pulse-value.warning {
+            color: var(--heady-gold);
+        }
+
+        .pulse-value.error {
+            color: #ff4466;
+        }
+
+        .pulse-detail {
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.6);
+            margin-top: 4px;
+        }
+
+        @keyframes pulse-breathe {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="logo-container">
+                    <div class="logo">H</div>
+                    <div class="connection-status" id="connectionStatus"></div>
+                </div>
+                <h1>HeadyOS</h1>
+                <p class="tagline">
+                    <span class="tagline-accent">Intelligent Orchestration</span> · Sacred Geometry · <span class="tagline-accent">Living Systems</span>
+                </p>
+                <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;">
+                    <a href="/auth.html" style="padding:8px 20px;border-radius:var(--radius-pill);background:linear-gradient(135deg,var(--heady-gold),var(--heady-gold-dark));color:#000;font-weight:600;text-decoration:none;font-size:0.85rem;transition:all 0.3s;">Sign In</a>
+                    <a href="/onboarding.html" style="padding:8px 20px;border-radius:var(--radius-pill);border:1px solid var(--heady-cyan);color:var(--heady-cyan);text-decoration:none;font-size:0.85rem;transition:all 0.3s;">Get Started</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SYSTEM PULSE (Live Indicators) -->
+        <section class="system-pulse-container" id="systemPulse">
+            <div class="pulse-badge">
+                <div class="pulse-indicator" id="pulseHealth"></div>
+                <div class="pulse-label">Overall Health</div>
+                <div class="pulse-value" id="pulseHealthValue">--</div>
+                <div class="pulse-detail" id="pulseHealthDetail"></div>
+            </div>
+
+            <div class="pulse-badge">
+                <div class="pulse-indicator" id="pulseNodes"></div>
+                <div class="pulse-label">Active Nodes</div>
+                <div class="pulse-value" id="pulseNodesValue">--</div>
+                <div class="pulse-detail" id="pulseNodesDetail"></div>
+            </div>
+
+            <div class="pulse-badge">
+                <div class="pulse-indicator" id="pulseSwarm"></div>
+                <div class="pulse-label">Swarm Status</div>
+                <div class="pulse-value" id="pulseSwarmValue">--</div>
+                <div class="pulse-detail" id="pulseSwarmDetail"></div>
+            </div>
+
+            <div class="pulse-badge">
+                <div class="pulse-indicator" id="pulseScheduler"></div>
+                <div class="pulse-label">Scheduler</div>
+                <div class="pulse-value" id="pulseSchedulerValue">--</div>
+                <div class="pulse-detail" id="pulseSchedulerDetail"></div>
+            </div>
+        </section>
+
+        <!-- STATUS BAR -->
+        <section class="status-bar">
+            <div class="status-item">
+                <div class="status-label">System Status</div>
+                <div class="status-value" id="systemStatus">--</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Active Nodes</div>
+                <div class="status-value" id="activeNodes">--</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Pipeline State</div>
+                <div class="status-value" id="pipelineState">--</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Health Score</div>
+                <div class="status-value health" id="healthScore">--</div>
+            </div>
+        </section>
+
+        <!-- NAVIGATION GRID -->
+        <section class="nav-grid">
+            <a href="/headyos-desktop.html" class="nav-card">
+                <div class="nav-card-icon">🖥️</div>
+                <div class="nav-card-title">HeadyOS Desktop</div>
+                <div class="nav-card-desc">Full desktop orchestration experience with complete system control</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+
+            <a href="/headyos-mobile.html" class="nav-card">
+                <div class="nav-card-icon">📱</div>
+                <div class="nav-card-title">HeadyOS Mobile</div>
+                <div class="nav-card-desc">Touch-optimized mobile interface for on-the-go management</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+
+            <a href="/headybuddy-integrated.html" class="nav-card">
+                <div class="nav-card-icon">💬</div>
+                <div class="nav-card-title">HeadyBuddy Chat</div>
+                <div class="nav-card-desc">AI assistant for intelligent system operations and automation</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+
+            <a href="/mcp-dashboard.html" class="nav-card">
+                <div class="nav-card-icon">🔌</div>
+                <div class="nav-card-title">MCP Dashboard</div>
+                <div class="nav-card-desc">Tool orchestration and protocol management interface</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+
+            <a href="/docker-orchestrator.html" class="nav-card">
+                <div class="nav-card-icon">🐳</div>
+                <div class="nav-card-title">Docker Orchestrator</div>
+                <div class="nav-card-desc">Container management, deployment, and real-time monitoring</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+
+            <a href="/api-docs.html" class="nav-card">
+                <div class="nav-card-icon">📡</div>
+                <div class="nav-card-title">API Explorer</div>
+                <div class="nav-card-desc">Interactive API documentation and live request testing</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+
+            <a href="/status.html" class="nav-card">
+                <div class="nav-card-icon">📊</div>
+                <div class="nav-card-title">System Status</div>
+                <div class="nav-card-desc">Real-time health monitoring and service status dashboard</div>
+                <div class="nav-card-arrow">→</div>
+            </a>
+        </section>
+
+        <!-- METRICS ROW -->
+        <section class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-number" id="metricsNodes">0</div>
+                <div class="metric-label">Total Nodes</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" id="metricsPipelineRuns">0</div>
+                <div class="metric-label">Pipeline Runs</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" id="metricsUptime">--</div>
+                <div class="metric-label">Uptime</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number" id="metricsORS">--</div>
+                <div class="metric-label">ORS Score</div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>Heady Systems · Sacred Geometry · Always On</p>
+            <p>
+                <a href="/api/health">Health Status</a> · 
+                <a href="/api/registry">Component Registry</a> · 
+                <a href="/api/system/status">System Status</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- CHAT WIDGET -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header" id="chatHeader">
+            <div class="chat-header-icon">💬</div>
+            <div class="chat-header-text">
+                <h3>HeadyBuddy</h3>
+                <p>System Assistant</p>
+            </div>
+            <div class="chat-close" id="chatClose">✕</div>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="chatInput" 
+                placeholder="Ask HeadyBuddy..." 
+                autocomplete="off"
+            />
+            <button class="chat-send" id="chatSend">→</button>
+        </div>
+    </div>
+
+    <script>
+        // ========== API RESOLUTION =========
+        const HEADY_CLOUD_URLS = [
+            window.location.origin + '/api',
+            'https://heady-manager-headyme.headysystems.com/api',
+            'https://heady-manager-headysystems.headysystems.com/api',
+            'https://heady-manager-headyconnection.headysystems.com/api',
+        ];
+
+        let HEADY_API = HEADY_CLOUD_URLS[0];
+        let _apiResolved = false;
+
+        async function resolveApi() {
+            if (_apiResolved) return HEADY_API;
+            
+            for (const url of HEADY_CLOUD_URLS) {
+                try {
+                    const r = await fetch(url + '/health', { 
+                        signal: AbortSignal.timeout(3000),
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (r.ok) { 
+                        HEADY_API = url; 
+                        _apiResolved = true; 
+                        console.log('[HeadyOS] API resolved to:', HEADY_API);
+                        return url; 
+                    }
+                } catch(e) {
+                    console.debug('[HeadyOS] API endpoint failed:', url, e.message);
+                }
+            }
+            
+            console.warn('[HeadyOS] Using fallback API:', HEADY_API);
+            _apiResolved = true;
+            return HEADY_API;
+        }
+
+        // ========== STATUS UPDATES =========
+        async function updateSystemStatus() {
+            try {
+                const response = await fetch(HEADY_API + '/health', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: AbortSignal.timeout(5000)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('connectionStatus').classList.remove('offline');
+                    document.getElementById('systemStatus').textContent = data.status || 'Healthy';
+
+                    // Update pulse indicator for overall health
+                    updatePulseIndicator('health', data.status === 'Healthy' ? 'ok' : 'warning', data.status || 'Healthy');
+
+                    // Parse uptime if available
+                    if (data.uptime) {
+                        const hours = Math.floor(data.uptime / 3600);
+                        const minutes = Math.floor((data.uptime % 3600) / 60);
+                        document.getElementById('metricsUptime').textContent =
+                            hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+                    }
+                } else {
+                    setOfflineMode();
+                }
+            } catch (e) {
+                console.warn('[HeadyOS] Health check failed:', e.message);
+                setOfflineMode();
+            }
+        }
+
+        // ========== SYSTEM PULSE UPDATES =========
+        async function updateSystemPulse() {
+            try {
+                // Fetch multiple endpoints in parallel
+                const [healthRes, nodesRes, swarmRes, schedulerRes] = await Promise.allSettled([
+                    fetch(HEADY_API + '/health', {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        signal: AbortSignal.timeout(4000)
+                    }),
+                    fetch(HEADY_API + '/liquid-nodes', {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        signal: AbortSignal.timeout(4000)
+                    }),
+                    fetch(HEADY_API + '/swarm/health', {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        signal: AbortSignal.timeout(4000)
+                    }),
+                    fetch(HEADY_API + '/scheduler/health', {
+                        method: 'GET',
+                        headers: { 'Accept': 'application/json' },
+                        signal: AbortSignal.timeout(4000)
+                    })
+                ]);
+
+                // Process health
+                if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
+                    const data = await healthRes.value.json();
+                    const status = data.status === 'Healthy' ? 'ok' : 'warning';
+                    updatePulseIndicator('health', status, data.status || 'Healthy', data.uptime_seconds ? formatUptime(data.uptime_seconds) : '');
+                } else {
+                    updatePulseIndicator('health', 'error', 'Offline', 'Unreachable');
+                }
+
+                // Process nodes
+                if (nodesRes.status === 'fulfilled' && nodesRes.value.ok) {
+                    const data = await nodesRes.value.json();
+                    const nodeCount = data.count || data.nodes?.length || 0;
+                    const activeCount = data.active || nodeCount;
+                    const status = activeCount > 0 ? 'ok' : 'warning';
+                    updatePulseIndicator('nodes', status, activeCount, `of ${nodeCount}`);
+                } else {
+                    updatePulseIndicator('nodes', 'error', '0', 'Unavailable');
+                }
+
+                // Process swarm
+                if (swarmRes.status === 'fulfilled' && swarmRes.value.ok) {
+                    const data = await swarmRes.value.json();
+                    const status = data.status === 'healthy' ? 'ok' : 'warning';
+                    updatePulseIndicator('swarm', status, data.status || 'Unknown', data.members ? `${data.members} members` : '');
+                } else {
+                    updatePulseIndicator('swarm', 'error', 'Offline', 'Unavailable');
+                }
+
+                // Process scheduler
+                if (schedulerRes.status === 'fulfilled' && schedulerRes.value.ok) {
+                    const data = await schedulerRes.value.json();
+                    const status = data.status === 'running' ? 'ok' : 'warning';
+                    updatePulseIndicator('scheduler', status, data.status || 'Unknown', data.queued ? `${data.queued} queued` : '');
+                } else {
+                    updatePulseIndicator('scheduler', 'error', 'Offline', 'Unavailable');
+                }
+            } catch (e) {
+                console.warn('[HeadyOS] System pulse update failed:', e.message);
+            }
+        }
+
+        function updatePulseIndicator(type, status, value, detail) {
+            const indicatorId = `pulse${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            const valueId = `${indicatorId}Value`;
+            const detailId = `${indicatorId}Detail`;
+
+            const indicator = document.getElementById(indicatorId);
+            const valueEl = document.getElementById(valueId);
+            const detailEl = document.getElementById(detailId);
+
+            if (!indicator || !valueEl) return;
+
+            // Update indicator style
+            indicator.classList.remove('warning', 'error');
+            if (status !== 'ok') {
+                indicator.classList.add(status);
+            }
+
+            // Update value style
+            if (valueEl) {
+                valueEl.classList.remove('warning', 'error');
+                valueEl.textContent = value;
+                if (status !== 'ok') {
+                    valueEl.classList.add(status);
+                }
+            }
+
+            // Update detail
+            if (detailEl && detail) {
+                detailEl.textContent = detail;
+            }
+        }
+
+        function formatUptime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
+        }
+
+        async function updateSystemStats() {
+            try {
+                const response = await fetch(HEADY_API + '/system/status', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' },
+                    signal: AbortSignal.timeout(5000)
+                });
+
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('activeNodes').textContent = stats.nodes?.active || '0';
+                    document.getElementById('pipelineState').textContent = stats.pipeline?.state || 'Idle';
+                    document.getElementById('healthScore').textContent = stats.ors || '--';
+                    document.getElementById('metricsNodes').textContent = stats.nodes?.total || '0';
+                    document.getElementById('metricsPipelineRuns').textContent = stats.pipeline?.runs || '0';
+                    document.getElementById('metricsORS').textContent = stats.ors || '--';
+                }
+            } catch (e) {
+                console.warn('[HeadyOS] System stats failed:', e.message);
+            }
+        }
+
+        function setOfflineMode() {
+            document.getElementById('connectionStatus').classList.add('offline');
+            document.getElementById('systemStatus').textContent = 'Offline';
+            document.getElementById('pipelineState').textContent = 'Disconnected';
+            document.getElementById('healthScore').textContent = '--';
+        }
+
+        // ========== CHAT WIDGET =========
+        class HeadyBuddyChat {
+            constructor() {
+                this.messages = [];
+                this.isCollapsed = false;
+                this.init();
+            }
+
+            init() {
+                const header = document.getElementById('chatHeader');
+                const close = document.getElementById('chatClose');
+                const input = document.getElementById('chatInput');
+                const send = document.getElementById('chatSend');
+
+                header.addEventListener('click', () => this.toggleCollapse());
+                close.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleCollapse();
+                });
+                send.addEventListener('click', () => this.sendMessage());
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Initial greeting
+                this.addMessage('assistant', 'Hey there! I\'m HeadyBuddy, your AI assistant. I can help you manage your HeadyOS system, run commands, check status, or answer questions. What can I do for you?');
+            }
+
+            toggleCollapse() {
+                const widget = document.getElementById('chatWidget');
+                this.isCollapsed = !this.isCollapsed;
+                widget.classList.toggle('collapsed');
+            }
+
+            addMessage(role, text) {
+                const messagesDiv = document.getElementById('chatMessages');
+                const msgEl = document.createElement('div');
+                msgEl.className = `chat-message ${role}`;
+                msgEl.textContent = text;
+                messagesDiv.appendChild(msgEl);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                this.messages.push({ role, text });
+            }
+
+            sendMessage() {
+                const input = document.getElementById('chatInput');
+                const text = input.value.trim();
+                
+                if (!text) return;
+
+                this.addMessage('user', text);
+                input.value = '';
+
+                // Simulate assistant response
+                this.getAssistantResponse(text);
+            }
+
+            async getAssistantResponse(prompt) {
+                try {
+                    // Show typing indicator
+                    const response = await fetch(HEADY_API + '/buddy/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: prompt }),
+                        signal: AbortSignal.timeout(10000)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.addMessage('assistant', data.response || data.message || 'Got it!');
+                    } else {
+                        this.addMessage('assistant', 'I\'m having trouble connecting right now. Please try again in a moment.');
+                    }
+                } catch (e) {
+                    const responses = [
+                        'I can help with that! Try using the HeadyOS Desktop for more detailed control.',
+                        'That sounds like a great question! Check the API docs for more information.',
+                        'Let me know if you need help navigating the system!'
+                    ];
+                    this.addMessage('assistant', responses[Math.floor(Math.random() * responses.length)]);
+                }
+            }
+        }
+
+        // ========== INITIALIZATION =========
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Resolve API endpoint
+            await resolveApi();
+
+            // Initialize chat
+            new HeadyBuddyChat();
+
+            // Update status immediately
+            updateSystemStatus();
+            updateSystemStats();
+            updateSystemPulse();
+
+            // Poll for live updates every 30 seconds
+            setInterval(updateSystemStatus, 30000);
+            setInterval(updateSystemStats, 30000);
+            setInterval(updateSystemPulse, 30000);
+
+            console.log('[HeadyOS] Landing page initialized');
+            console.log('[HeadyOS] API Base:', HEADY_API);
+        });
+
+        // Handle visibility change to reduce polling when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                console.log('[HeadyOS] Tab hidden, reducing update frequency');
+            } else {
+                console.log('[HeadyOS] Tab visible, updating status');
+                updateSystemStatus();
+                updateSystemStats();
+                updateSystemPulse();
+            }
+        });
+    </script>
+    <script src="/nav-global.js"></script>
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 </body>
 </html>

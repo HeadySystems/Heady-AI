@@ -166,7 +166,11 @@ function Invoke-RecoveryAction {
     switch ($RCA.RecommendedAction) {
         "RETRY_WITH_DELAY" {
             Write-Host "`n⏳ Waiting 10 seconds before retry..."
+<<<<<<< HEAD
             Start-Sleep -Seconds 10
+=======
+            # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             
             Write-HeadyLog "🔄 Retrying build..." "INFO"
             & npm ci --ignore-scripts
@@ -184,7 +188,11 @@ function Invoke-RecoveryAction {
             Write-Host "`n⚠️  Manual fix required. Please address the root cause.`n"
             Write-Host "Root Cause: $($RCA.FiveWhys[-1])`n"
             Write-Host "Recommended preventions:"
+<<<<<<< HEAD
             $RCA.Prevention | ForEach-Object { Write-Host "  - $_" }
+=======
+            $RCA.Prevention | ForEach-Object { -Parallel { Write-Host "  - $_" }
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             
             $response = Read-Host "`nHas the issue been fixed? (y/N)"
             
@@ -218,7 +226,11 @@ function Invoke-CleanRebuild {
     Write-HeadyLog "📸 Preserving error evidence..." "INFO"
     Copy-Item -Path "package.json" -Destination "$evidenceDir/" -ErrorAction SilentlyContinue
     Copy-Item -Path "package-lock.json" -Destination "$evidenceDir/" -ErrorAction SilentlyContinue
+<<<<<<< HEAD
     Get-ChildItem -Path "." -Filter "npm-debug.log" -Recurse | Copy-Item -Destination "$evidenceDir/"
+=======
+    Get-ChildItem -Path "." -Filter "npm-debug.log" -Recurse -Depth 5 | Copy-Item -Destination "$evidenceDir/"
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     
     # Phase 2: Clean workspace
     Write-HeadyLog "🗑️  Cleaning workspace..." "INFO"

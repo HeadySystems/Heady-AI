@@ -1,6 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.9.22'
     ext.agpVersion = '8.2.2'
+<<<<<<< HEAD
     ext.compose_bom_version = '2024.02.00'
     ext.room_version = '2.6.1'
     ext.lifecycle_version = '2.7.0'
@@ -11,6 +12,8 @@ buildscript {
     ext.coroutines_version = '1.7.3'
     ext.serialization_version = '1.6.2'
 
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     repositories {
         google()
         mavenCentral()
@@ -18,7 +21,10 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${agpVersion}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+<<<<<<< HEAD
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     }
 }
 

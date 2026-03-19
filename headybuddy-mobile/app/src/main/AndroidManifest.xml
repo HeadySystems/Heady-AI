@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Network -->
@@ -45,11 +46,26 @@
     <!-- Clipboard -->
     <uses-permission android:name="android.permission.READ_CLIPBOARD"
         tools:ignore="ProtectedPermissions" />
+=======
+    package="com.headysystems.headybuddy">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 
     <application
         android:name=".HeadyBuddyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+<<<<<<< HEAD
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -64,6 +80,19 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.HeadyBuddy"
             android:windowSoftInputMode="adjustResize">
+=======
+        android:label="HeadyBuddy"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HeadyBuddy">
+
+        <!-- Main Chat Activity -->
+        <activity
+            android:name=".ui.ChatActivity"
+            android:exported="true"
+            android:label="HeadyBuddy"
+            android:theme="@style/Theme.HeadyBuddy">
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -72,10 +101,17 @@
 
         <!-- Share Target Activity -->
         <activity
+<<<<<<< HEAD
             android:name=".ui.screens.ShareActivity"
             android:exported="true"
             android:label="Ask Buddy"
             android:theme="@style/Theme.HeadyBuddy">
+=======
+            android:name=".ui.ShareActivity"
+            android:exported="true"
+            android:label="Ask Heady"
+            android:theme="@style/Theme.HeadyBuddy.Transparent">
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -86,11 +122,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/html" />
             </intent-filter>
+<<<<<<< HEAD
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
             </intent-filter>
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
         </activity>
 
         <!-- Always-On Foreground Service -->
@@ -99,6 +138,7 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
+<<<<<<< HEAD
         <!-- Bubble Overlay Service -->
         <service
             android:name=".service.BubbleService"
@@ -132,6 +172,8 @@
             </intent-filter>
         </receiver>
 
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
         <!-- Boot Receiver -->
         <receiver
             android:name=".receiver.BootReceiver"
@@ -143,6 +185,7 @@
             </intent-filter>
         </receiver>
 
+<<<<<<< HEAD
         <!-- WorkManager Initializer -->
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -155,5 +198,7 @@
                 tools:node="remove" />
         </provider>
 
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     </application>
 </manifest>

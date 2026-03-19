@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # HEADY_BRAND:BEGIN
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -35,4 +36,13 @@ ingress:
       connectTimeout: 30s
 
   # Catch-all: return 404 for unmatched hostnames
+=======
+tunnel: YOUR_ACTUAL_TUNNEL_ID  # Replace with your Cloudflare Tunnel ID
+credentials-file: /etc/cloudflare/credentials.json
+ingress:
+  - hostname: api.headyio.com
+    service: http://manager.eadyio.com:3300
+  - hostname: mcp.headymcp.com
+    service: http://tero.com:3001
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
   - service: http_status:404

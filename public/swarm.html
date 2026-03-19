@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <!-- HEADY_BRAND:BEGIN · HeadySwarm Monitor · Sacred Geometry v5.0 · HEADY_BRAND:END -->
 <html lang="en">
 <head>
@@ -558,5 +559,856 @@
       setInterval(refreshSwarm, 5000);
     });
   </script>
+=======
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyBee Swarm Intelligence</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e6ff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .orb-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-cyan {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            top: -100px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        .orb-magenta {
+            width: 350px;
+            height: 350px;
+            background: #FF00A0;
+            bottom: -50px;
+            right: -50px;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        .orb-gold {
+            width: 300px;
+            height: 300px;
+            background: #D4AF37;
+            top: 50%;
+            right: 10%;
+            animation-duration: 35s;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(-30px, 30px) rotate(180deg); }
+            75% { transform: translate(30px, 50px) rotate(270deg); }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00D9FF, #FF00A0, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #FF00A0;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1em;
+            color: #b0b6cc;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.6;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.8em;
+            color: #00D9FF;
+            margin: 60px 0 30px 0;
+            font-weight: 600;
+        }
+
+        /* Hexagonal Grid Visualization */
+        .hex-grid-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .hex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 8px;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .hexagon {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hex-shape {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.3), rgba(255, 0, 160, 0.3));
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            border: 2px solid #00D9FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: hex-pulse 3s infinite;
+        }
+
+        .hexagon:hover .hex-shape {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.8), rgba(255, 0, 160, 0.8));
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
+        }
+
+        @keyframes hex-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .hex-icon {
+            font-size: 1.8em;
+            z-index: 1;
+        }
+
+        .hex-tooltip {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 14, 39, 0.95);
+            border: 1px solid #00D9FF;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.8em;
+            color: #00D9FF;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .hexagon:hover .hex-tooltip {
+            opacity: 1;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #FF00A0;
+            background: rgba(255, 0, 160, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.2em;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            color: #FF00A0;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            color: #b0b6cc;
+        }
+
+        .stat-subtext {
+            font-size: 0.85em;
+            color: #00D9FF;
+            margin-top: 10px;
+        }
+
+        /* Architecture Section */
+        .architecture-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .architecture-section h3 {
+            color: #D4AF37;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+        }
+
+        .architecture-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #D4AF37;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .arch-title {
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .arch-description {
+            color: #b0b6cc;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .arch-details {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #D4AF37;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Task Distribution Visualization */
+        .distribution-viz {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .distribution-bars {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .distribution-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .dist-label {
+            width: 120px;
+            color: #b0b6cc;
+            font-size: 0.95em;
+        }
+
+        .dist-bar-container {
+            flex: 1;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 8px;
+            height: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .dist-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00D9FF, #FF00A0);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: #0a0e27;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: width 0.5s ease;
+        }
+
+        /* Colony Health Section */
+        .health-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .health-metric {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 160, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .health-name {
+            color: #FF00A0;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .health-value {
+            font-size: 1.8em;
+            color: #00D9FF;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+        }
+
+        .health-status {
+            font-size: 0.85em;
+            color: #b0b6cc;
+            margin-top: 8px;
+        }
+
+        /* Swarm Commander */
+        .commander-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .commander-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .commander-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .commander-card:hover {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: #00D9FF;
+            transform: translateY(-3px);
+        }
+
+        .command-icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        .command-name {
+            color: #00D9FF;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .command-description {
+            color: #b0b6cc;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .phi-scaling {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid #D4AF37;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .phi-title {
+            color: #D4AF37;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .phi-content {
+            color: #b0b6cc;
+            line-height: 1.6;
+        }
+
+        .phi-formula {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: #D4AF37;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .hex-grid {
+                grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+            }
+
+            .hexagon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb-container">
+        <div class="orb orb-cyan"></div>
+        <div class="orb orb-magenta"></div>
+        <div class="orb orb-gold"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>HeadyBee Swarm</h1>
+            <div class="subtitle">Distributed Swarm Intelligence Platform</div>
+            <p class="description">
+                HeadySwarm harnesses the power of distributed agents (HeadyBees) working in coordinated groups 
+                to process tasks in parallel. Using Sacred Geometry principles and bio-inspired algorithms, 
+                the swarm automatically scales and optimizes based on real-time demand.
+            </p>
+        </div>
+
+        <!-- Hexagonal Grid Visualization -->
+        <div class="hex-grid-container">
+            <div class="section-title">Active Swarm Grid (Live Workers)</div>
+            <p style="color: #b0b6cc; margin-bottom: 20px;">Click on any bee to monitor individual worker status</p>
+            <div class="hex-grid">
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #1: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #2: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #3: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #4: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #5: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #6: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #7: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #8: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #9: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #10: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #11: Idle</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #12: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #13: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #14: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #15: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #16: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #17: Idle</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #18: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #19: Active</div></div>
+                <div class="hexagon"><div class="hex-shape"><span class="hex-icon">🐝</span></div><div class="hex-tooltip">Worker #20: Active</div></div>
+            </div>
+        </div>
+
+        <!-- Swarm Statistics -->
+        <div>
+            <div class="section-title">Swarm Statistics</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🐝</div>
+                    <div class="stat-value" id="activeWorkers">847</div>
+                    <div class="stat-label">Active Workers</div>
+                    <div class="stat-subtext">98.6% utilization</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value" id="tasksPerSec">12.4K</div>
+                    <div class="stat-label">Tasks/Second</div>
+                    <div class="stat-subtext">Peak capacity: 18.2K</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="efficiency">94.2%</div>
+                    <div class="stat-label">Efficiency Score</div>
+                    <div class="stat-subtext">Optimal performance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-value" id="avgLatency">124ms</div>
+                    <div class="stat-label">Avg Latency</div>
+                    <div class="stat-subtext">P99: 342ms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="successRate">99.94%</div>
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-subtext">Errors: 18 in 300K tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-value" id="completedTasks">3.2M</div>
+                    <div class="stat-label">Tasks Completed</div>
+                    <div class="stat-subtext">Since last restart</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Swarm Architecture Section -->
+        <div class="architecture-section">
+            <h3>Swarm Architecture</h3>
+            <div class="architecture-item">
+                <div class="arch-title">🐝 HeadyBee (Individual Worker)</div>
+                <div class="arch-description">
+                    A single HeadyBee is an independent autonomous agent capable of executing specialized tasks. 
+                    Each bee maintains its own state, can coordinate with other bees, and reports metrics back to 
+                    the swarm controller. Bees are highly efficient and can scale from lightweight microservices 
+                    to full-featured processing nodes.
+                </div>
+                <div class="arch-details">
+                    • Autonomous task execution • Local state management • Inter-bee communication • Health reporting • Resource-aware scaling
+                </div>
+            </div>
+
+            <div class="architecture-item">
+                <div class="arch-title">🐝🐝 HeadySwarm (Coordinated Group)</div>
+                <div class="arch-description">
+                    A HeadySwarm is a collection of HeadyBees working together as a unified system. The swarm 
+                    employs sophisticated coordination algorithms including task distribution, load balancing, 
+                    fault tolerance, and adaptive scaling. Swarms communicate through a shared message broker 
+                    and maintain distributed consensus on global state.
+                </div>
+                <div class="arch-details">
+                    • Collective task distribution • Dynamic load balancing • Fault recovery • Adaptive scaling • Distributed consensus
+                </div>
+            </div>
+
+            <div class="architecture-item">
+                <div class="arch-title">👑 Swarm Controller</div>
+                <div class="arch-description">
+                    The Swarm Controller orchestrates all bees and manages swarm-level operations. It monitors 
+                    aggregate metrics, adjusts resource allocation, handles bee lifecycle management, and 
+                    implements global optimization strategies. Controllers use machine learning to predict 
+                    demand and proactively scale swarms.
+                </div>
+                <div class="arch-details">
+                    • Global orchestration • Predictive scaling • Resource optimization • Health monitoring • Policy enforcement
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Distribution -->
+        <div class="distribution-viz">
+            <div class="section-title">Task Distribution Across Workers</div>
+            <div class="distribution-bars">
+                <div class="distribution-item">
+                    <div class="dist-label">AI Analysis</div>
+                    <div class="dist-bar-container">
+                        <div class="dist-bar" style="width: 35%;">35%</div>
+                    </div>
+                </div>
+                <div class="distribution-item">
+                    <div class="dist-label">Data Processing</div>
+                    <div class="dist-bar-container">
+                        <div class="dist-bar" style="width: 28%;">28%</div>
+                    </div>
+                </div>
+                <div class="distribution-item">
+                    <div class="dist-label">Memory Ops</div>
+                    <div class="dist-bar-container">
+                        <div class="dist-bar" style="width: 18%;">18%</div>
+                    </div>
+                </div>
+                <div class="distribution-item">
+                    <div class="dist-label">Crypto/Security</div>
+                    <div class="dist-bar-container">
+                        <div class="dist-bar" style="width: 12%;">12%</div>
+                    </div>
+                </div>
+                <div class="distribution-item">
+                    <div class="dist-label">Communication</div>
+                    <div class="dist-bar-container">
+                        <div class="dist-bar" style="width: 7%;">7%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colony Health Metrics -->
+        <div class="health-section">
+            <div class="section-title">Colony Health Metrics</div>
+            <div class="health-grid">
+                <div class="health-metric">
+                    <div class="health-name">Overall Health</div>
+                    <div class="health-value">98.2%</div>
+                    <div class="health-status">Excellent - All systems nominal</div>
+                </div>
+                <div class="health-metric">
+                    <div class="health-name">Bee Availability</div>
+                    <div class="health-value">847/847</div>
+                    <div class="health-status">All workers responding</div>
+                </div>
+                <div class="health-metric">
+                    <div class="health-name">Communication Health</div>
+                    <div class="health-value">99.8%</div>
+                    <div class="health-status">Latency stable at 2ms avg</div>
+                </div>
+                <div class="health-metric">
+                    <div class="health-name">Resource Utilization</div>
+                    <div class="health-value">73%</div>
+                    <div class="health-status">Headroom available for scaling</div>
+                </div>
+                <div class="health-metric">
+                    <div class="health-name">Error Rate</div>
+                    <div class="health-value">0.06%</div>
+                    <div class="health-status">Well within SLA bounds</div>
+                </div>
+                <div class="health-metric">
+                    <div class="health-name">Fault Recovery</div>
+                    <div class="health-value">100%</div>
+                    <div class="health-status">No unrecovered failures</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHI Scaling Section -->
+        <div class="phi-scaling">
+            <div class="phi-title">Swarm Auto-Scaling Using PHI Ratio</div>
+            <div class="phi-content">
+                HeadySwarm implements intelligent auto-scaling using the golden ratio (PHI = 1.618). 
+                The system monitors task queue depth and automatically scales worker count up or down 
+                to maintain optimal efficiency while respecting resource constraints.
+            </div>
+            <div class="phi-formula">
+                new_worker_count = current_workers × PHI^(queue_depth_factor)
+                <br><br>
+                where: queue_depth_factor = (queue_length / target_queue_length) - 1
+                <br>
+                Fibonacci sequence determines tier sizes: 1, 1, 2, 3, 5, 8, 13, 21, 34...
+            </div>
+        </div>
+
+        <!-- Swarm Commander -->
+        <div class="commander-section">
+            <div class="section-title">🎯 Swarm Commander</div>
+            <p style="color: #b0b6cc; margin-bottom: 20px;">Advanced swarm monitoring and control center</p>
+            <div class="commander-grid">
+                <div class="commander-card">
+                    <div class="command-icon">📊</div>
+                    <div class="command-name">Real-Time Metrics</div>
+                    <div class="command-description">Monitor live performance metrics across all worker nodes with millisecond precision.</div>
+                </div>
+                <div class="commander-card">
+                    <div class="command-icon">⚙️</div>
+                    <div class="command-name">Dynamic Scaling</div>
+                    <div class="command-description">Manually trigger scaling events or adjust scaling policies without service interruption.</div>
+                </div>
+                <div class="commander-card">
+                    <div class="command-icon">🔄</div>
+                    <div class="command-name">Load Rebalancing</div>
+                    <div class="command-description">Intelligently redistribute tasks across workers to optimize throughput and latency.</div>
+                </div>
+                <div class="commander-card">
+                    <div class="command-icon">🐛</div>
+                    <div class="command-name">Fault Detection</div>
+                    <div class="command-description">Automatic detection and recovery of failed workers with instant replacement.</div>
+                </div>
+                <div class="commander-card">
+                    <div class="command-icon">📈</div>
+                    <div class="command-name">Performance Analysis</div>
+                    <div class="command-description">Deep analytics on swarm performance including bottleneck identification and optimization recommendations.</div>
+                </div>
+                <div class="commander-card">
+                    <div class="command-icon">🔐</div>
+                    <div class="command-name">Security Monitoring</div>
+                    <div class="command-description">Continuous security monitoring across the swarm with threat detection and response automation.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 16px; padding: 40px; margin-bottom: 60px;">
+            <h2 style="font-size: 1.6em; color: #00D9FF; margin-bottom: 20px;">Why Swarm Intelligence?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="padding: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid #00D9FF; border-radius: 8px;">
+                    <div style="color: #00D9FF; font-weight: 600; margin-bottom: 10px;">Horizontal Scalability</div>
+                    <div style="color: #b0b6cc; line-height: 1.6;">Add more bees to increase throughput without architectural changes. Perfect for elastic cloud environments.</div>
+                </div>
+                <div style="padding: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid #FF00A0; border-radius: 8px;">
+                    <div style="color: #FF00A0; font-weight: 600; margin-bottom: 10px;">Fault Tolerance</div>
+                    <div style="color: #b0b6cc; line-height: 1.6;">If a bee fails, other bees automatically pick up its work. No single point of failure.</div>
+                </div>
+                <div style="padding: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid #D4AF37; border-radius: 8px;">
+                    <div style="color: #D4AF37; font-weight: 600; margin-bottom: 10px;">Adaptive Load Balancing</div>
+                    <div style="color: #b0b6cc; line-height: 1.6;">Tasks are automatically routed to the most capable and available worker based on real-time performance.</div>
+                </div>
+                <div style="padding: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid #00D9FF; border-radius: 8px;">
+                    <div style="color: #00D9FF; font-weight: 600; margin-bottom: 10px;">Self-Healing</div>
+                    <div style="color: #b0b6cc; line-height: 1.6;">Swarms detect and automatically recover from transient failures without human intervention.</div>
+                </div>
+                <div style="padding: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid #FF00A0; border-radius: 8px;">
+                    <div style="color: #FF00A0; font-weight: 600; margin-bottom: 10px;">Emergent Optimization</div>
+                    <div style="color: #b0b6cc; line-height: 1.6;">Collective behavior emerges from simple local rules, leading to system-wide optimization.</div>
+                </div>
+                <div style="padding: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid #D4AF37; border-radius: 8px;">
+                    <div style="color: #D4AF37; font-weight: 600; margin-bottom: 10px;">Resource Efficiency</div>
+                    <div style="color: #b0b6cc; line-height: 1.6;">Intelligent scheduling maximizes hardware utilization and minimizes energy consumption.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Resolve API endpoint with fallback to same-origin
+        function resolveApi() {
+            const loc = window.location;
+            const sameOrigin = loc.protocol + '//' + loc.host;
+            const renderUrls = [
+                'https://heady-manager.onrender.com',
+                'https://heady-testing.onrender.com',
+                'https://heady-production.onrender.com'
+            ];
+            // Try same-origin first (works when served from heady-manager)
+            return sameOrigin;
+        }
+
+        // Fetch swarm health data from API
+        async function fetchSwarmHealth() {
+            try {
+                const response = await fetch(resolveApi() + '/api/swarms/health', { signal: AbortSignal.timeout(5000) });
+                if (!response.ok) throw new Error('API unavailable');
+                return await response.json();
+            } catch (e) {
+                console.warn('Swarm API unavailable, using demo data:', e.message);
+                return null;
+            }
+        }
+
+        // Animate statistics with real or demo data
+        async function animateStats() {
+            const health = await fetchSwarmHealth();
+
+            const stats = [
+                { id: 'activeWorkers', base: health?.active_workers || 847, format: n => Math.round(n) },
+                { id: 'tasksPerSec', base: health?.throughput || 12400, format: n => (Math.round(n / 100) * 100).toLocaleString() + 'K' },
+                { id: 'efficiency', base: health?.efficiency_score || 94.2, format: n => n.toFixed(1) + '%' },
+                { id: 'avgLatency', base: health?.avg_latency || 124, format: n => Math.round(n) + 'ms' },
+                { id: 'successRate', base: health?.success_rate || 99.94, format: n => n.toFixed(2) + '%' },
+                { id: 'completedTasks', base: health?.completed_tasks || 3200000, format: n => (Math.round(n / 100000) / 10).toFixed(1) + 'M' }
+            ];
+
+            stats.forEach(stat => {
+                const el = document.getElementById(stat.id);
+                if (el) {
+                    const variance = stat.base * 0.02;
+                    const newValue = stat.base + (Math.random() - 0.5) * variance * 2;
+                    el.textContent = stat.format(newValue);
+                }
+            });
+        }
+
+        // Initial update
+        animateStats();
+        // Poll every 5 seconds
+        setInterval(animateStats, 5000);
+
+        // Make commander cards interactive
+        document.querySelectorAll('.commander-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.background = 'rgba(0, 217, 255, 0.2)';
+                setTimeout(() => {
+                    this.style.background = 'rgba(255, 255, 255, 0.03)';
+                }, 1500);
+            });
+        });
+    </script>
+    <script src="/nav-global.js"></script>
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 </body>
 </html>

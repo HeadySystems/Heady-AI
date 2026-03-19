@@ -46,10 +46,17 @@ New-Item -ItemType Directory -Force -Path $METRICS_DIR | Out-Null
 
 # Service endpoints (using new domain names)
 $SERVICES = @{
+<<<<<<< HEAD
     manager = "http://manager.dev.local.heady.internal:3300"
     conductor = "http://conductor.dev.local.heady.internal:8080"
     brain = "http://brain.dev.local.heady.internal:8081"
     supervisor = "http://supervisor.dev.local.heady.internal:8082"
+=======
+    manager = "http://manager.dev.local.headysystems.com:3300"
+    conductor = "http://conductor.dev.local.headysystems.com:8080"
+    brain = "http://brain.dev.local.headysystems.com:8081"
+    supervisor = "http://supervisor.dev.local.headysystems.com:8082"
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 }
 
 function Test-ServiceHealth {
@@ -201,7 +208,11 @@ function Show-Dashboard {
     if (Test-Path $ALERT_LOG) {
         $alerts = Get-Content $ALERT_LOG | 
             Where-Object { $_ } | 
+<<<<<<< HEAD
             ForEach-Object { $_ | ConvertFrom-Json } |
+=======
+            ForEach-Object { -Parallel { $_ | ConvertFrom-Json } |
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             Sort-Object timestamp -Descending |
             Select-Object -First 5
         
@@ -234,9 +245,15 @@ function Start-Monitoring {
     
     # Check hosts file is configured
     $hostsContent = Get-Content "$env:SystemRoot\System32\drivers\etc\hosts" -ErrorAction SilentlyContinue
+<<<<<<< HEAD
     if (-not ($hostsContent -match "heady.internal")) {
         Write-Host "⚠️  Warning: Internal domains not found in hosts file" -ForegroundColor Yellow
         Write-Host "   Run: node scripts/localhost-to-domain.js hosts" -ForegroundColor Yellow
+=======
+    if (-not ($hostsContent -match "headysystems.com")) {
+        Write-Host "⚠️  Warning: Internal domains not found in hosts file" -ForegroundColor Yellow
+        Write-Host "   Run: node scripts/api.headysystems.com-to-domain.js hosts" -ForegroundColor Yellow
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
         Write-Host "   Then add output to C:\Windows\System32\drivers\etc\hosts" -ForegroundColor Yellow
     }
     
@@ -260,7 +277,11 @@ function Start-Monitoring {
         }
         
         # Wait before next check
+<<<<<<< HEAD
         Start-Sleep -Seconds 30
+=======
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED0
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     }
 }
 

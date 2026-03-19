@@ -1,0 +1,411 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: packages/agents/catalog.yaml                                                    ║
+# ║  LAYER: root                                                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+# ═══════════════════════════════════════════════════════════════════════
+# HEADY SYSTEMS — Agent Catalog
+# ═══════════════════════════════════════════════════════════════════════
+# Central catalog of all agent roles available in the Heady ecosystem.
+# Brain profiles (configs/brain-profiles.yaml) reference these roles
+# to assemble per-workspace agent sets.
+#
+# Each agent defines: capabilities, allowed MCP tools, resource tier,
+# safety constraints, and which brain profiles may use it.
+
+version: "1.0.0"
+name: AgentCatalog
+
+# ─── AGENT ROLE DEFINITIONS ─────────────────────────────────────────
+agents:
+
+  # ── Core System Agents ─────────────────────────────────────────────
+  coding-agent:
+    id: coding-agent
+    category: development
+    description: "Code generation, review, refactoring, debugging"
+    capabilities:
+      - code_generation
+      - code_review
+      - refactoring
+      - debugging
+      - test_generation
+      - documentation
+    tools: [github, filesystem, terminal, browser]
+    resource_tier: M
+    safety:
+      can_write_files: true
+      can_execute_commands: true
+      requires_approval: [delete, deploy]
+    brain_profiles: [sys-ops, production, team]
+
+  os-automation:
+    id: os-automation
+    category: operations
+    description: "OS-level automation, scripting, process management"
+    capabilities:
+      - script_execution
+      - process_management
+      - file_management
+      - system_monitoring
+    tools: [terminal, filesystem, docker]
+    resource_tier: M
+    safety:
+      can_write_files: true
+      can_execute_commands: true
+      requires_approval: [system_config, service_restart]
+    brain_profiles: [sys-ops, production]
+
+  infra-manager:
+    id: infra-manager
+    category: operations
+    description: "Infrastructure management — Docker, CI/CD, DNS, SSL"
+    capabilities:
+      - docker_management
+      - ci_cd_pipeline
+      - dns_configuration
+      - ssl_management
+      - deployment
+    tools: [docker, github, terminal]
+    resource_tier: L
+    safety:
+      can_write_files: true
+      can_execute_commands: true
+      requires_approval: [production_deploy, dns_change, cert_rotation]
+    brain_profiles: [sys-ops]
+
+  security-auditor:
+    id: security-auditor
+    category: security
+    description: "Security scanning, vulnerability detection, audit trails"
+    capabilities:
+      - vulnerability_scan
+      - dependency_audit
+      - secret_detection
+      - compliance_check
+    tools: [terminal, filesystem, github]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: true
+      requires_approval: []
+    brain_profiles: [sys-ops, production]
+
+  summarizer:
+    id: summarizer
+    category: intelligence
+    description: "Content summarization, meeting notes, document digests"
+    capabilities:
+      - text_summarization
+      - key_point_extraction
+      - meeting_notes
+      - document_digest
+    tools: [filesystem, browser, drive]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [sys-ops, team, production, companion]
+
+  # ── Personal Workspace Agents ──────────────────────────────────────
+  wellbeing-coach:
+    id: wellbeing-coach
+    category: personal
+    description: "Mental health check-ins, habit tracking, wellness guidance"
+    capabilities:
+      - mood_tracking
+      - habit_suggestions
+      - meditation_guidance
+      - sleep_analysis
+      - stress_management
+    tools: [calendar, drive, email, browser]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [personal-wellbeing]
+
+  teaching-mentor:
+    id: teaching-mentor
+    category: education
+    description: "Personalized tutoring, curriculum design, skill assessment"
+    capabilities:
+      - lesson_planning
+      - skill_assessment
+      - quiz_generation
+      - concept_explanation
+      - flashcard_creation
+    tools: [filesystem, browser, terminal]
+    resource_tier: S
+    safety:
+      can_write_files: true
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [personal-wellbeing]
+
+  wealth-redistribution-helper:
+    id: wealth-redistribution-helper
+    category: social-impact
+    description: "Financial planning with equity lens, donation optimization"
+    capabilities:
+      - financial_analysis
+      - donation_optimization
+      - ppp_calculation
+      - equity_assessment
+    tools: [browser, drive]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: [financial_transaction]
+    brain_profiles: [personal-wellbeing, community-impact]
+
+  personal-organizer:
+    id: personal-organizer
+    category: personal
+    description: "Calendar management, task prioritization, daily planning"
+    capabilities:
+      - calendar_management
+      - task_prioritization
+      - daily_planning
+      - email_triage
+    tools: [calendar, email, drive, notion]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: [send_email, create_event]
+    brain_profiles: [personal-wellbeing, companion]
+
+  # ── Community / Impact Agents ──────────────────────────────────────
+  bd-agent:
+    id: bd-agent
+    category: business
+    description: "Business development, partnership outreach, market research"
+    capabilities:
+      - market_research
+      - partnership_outreach
+      - proposal_drafting
+      - competitor_analysis
+    tools: [github, slack, notion, browser, email]
+    resource_tier: M
+    safety:
+      can_write_files: true
+      can_execute_commands: false
+      requires_approval: [send_email, external_contact]
+    brain_profiles: [community-impact]
+
+  grant-writer:
+    id: grant-writer
+    category: social-impact
+    description: "Grant research, proposal writing, compliance documentation"
+    capabilities:
+      - grant_search
+      - proposal_writing
+      - budget_narrative
+      - compliance_documentation
+      - impact_reporting
+    tools: [drive, browser, notion]
+    resource_tier: M
+    safety:
+      can_write_files: true
+      can_execute_commands: false
+      requires_approval: [submit_application]
+    brain_profiles: [community-impact]
+
+  ethics-checker:
+    id: ethics-checker
+    category: governance
+    description: "Ethical review of decisions, bias detection, fairness audit"
+    capabilities:
+      - bias_detection
+      - fairness_audit
+      - ethical_review
+      - transparency_check
+    tools: [browser]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [community-impact, production]
+
+  wealth-redistribution-analyst:
+    id: wealth-redistribution-analyst
+    category: social-impact
+    description: "Analysis of wealth distribution patterns, PPP data, impact metrics"
+    capabilities:
+      - wealth_distribution_analysis
+      - ppp_data_analysis
+      - impact_metrics
+      - equity_reporting
+    tools: [browser, drive]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [community-impact]
+
+  donation-planner:
+    id: donation-planner
+    category: social-impact
+    description: "Donation scheduling, tax optimization, impact tracking"
+    capabilities:
+      - donation_scheduling
+      - tax_optimization
+      - impact_tracking
+      - nonprofit_matching
+    tools: [calendar, email, drive]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: [financial_transaction]
+    brain_profiles: [community-impact]
+
+  # ── Web / Content Agents ───────────────────────────────────────────
+  content-writer:
+    id: content-writer
+    category: content
+    description: "Marketing copy, blog posts, documentation, landing pages"
+    capabilities:
+      - copywriting
+      - blog_writing
+      - documentation
+      - seo_optimization
+    tools: [browser, drive, notion]
+    resource_tier: S
+    safety:
+      can_write_files: true
+      can_execute_commands: false
+      requires_approval: [publish]
+    brain_profiles: [web-platform]
+
+  onboarding-guide:
+    id: onboarding-guide
+    category: ux
+    description: "User onboarding flows, tutorial generation, help content"
+    capabilities:
+      - onboarding_flow
+      - tutorial_generation
+      - faq_creation
+      - help_content
+    tools: [browser]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [web-platform]
+
+  demo-runner:
+    id: demo-runner
+    category: ux
+    description: "Interactive product demos, feature showcases"
+    capabilities:
+      - demo_orchestration
+      - feature_showcase
+      - sandbox_management
+    tools: [browser, terminal]
+    resource_tier: M
+    safety:
+      can_write_files: false
+      can_execute_commands: true
+      requires_approval: []
+    brain_profiles: [web-platform]
+
+  # ── Companion / Always-On Agents ───────────────────────────────────
+  quick-assistant:
+    id: quick-assistant
+    category: companion
+    description: "Fast responses, quick actions, context-aware suggestions"
+    capabilities:
+      - quick_answer
+      - context_suggestions
+      - share_target_handler
+      - clipboard_actions
+    tools: [filesystem, terminal, browser, calendar]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [companion]
+
+  context-keeper:
+    id: context-keeper
+    category: companion
+    description: "Cross-device context persistence, session continuity"
+    capabilities:
+      - context_persistence
+      - session_restore
+      - cross_device_sync
+      - memory_management
+    tools: [filesystem, drive]
+    resource_tier: S
+    safety:
+      can_write_files: true
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [companion]
+
+  # ── General / Fallback ─────────────────────────────────────────────
+  general-assistant:
+    id: general-assistant
+    category: general
+    description: "General-purpose assistant for any task type"
+    capabilities:
+      - general_qa
+      - task_routing
+      - search
+      - summarization
+    tools: [browser, filesystem, terminal]
+    resource_tier: S
+    safety:
+      can_write_files: false
+      can_execute_commands: false
+      requires_approval: []
+    brain_profiles: [production, team]
+
+# ─── RESOURCE TIERS ──────────────────────────────────────────────────
+resource_tiers:
+  S:
+    description: "Small — lightweight, fast, low resource usage"
+    max_concurrent: 10
+    timeout_ms: 30000
+  M:
+    description: "Medium — moderate resource usage, standard timeouts"
+    max_concurrent: 5
+    timeout_ms: 60000
+  L:
+    description: "Large — heavy resource usage, extended timeouts"
+    max_concurrent: 2
+    timeout_ms: 120000
+
+# ─── COORDINATION PATTERNS ───────────────────────────────────────────
+coordination:
+  single:
+    description: "One agent handles the full task"
+    use_when: "Simple, focused tasks"
+  parallel:
+    description: "Multiple agents work simultaneously, results merged"
+    use_when: "Independent subtasks, research + ethics check"
+  sequential:
+    description: "Agents work in defined order, each consuming prior output"
+    use_when: "Pipeline tasks — draft → review → finalize"
+  arena:
+    description: "Same task to multiple agents/brains, compare and pick best"
+    use_when: "High-stakes decisions, quality comparison"

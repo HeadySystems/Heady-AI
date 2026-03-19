@@ -134,8 +134,12 @@ function renderSite(site, host) {
     }
   }
 
-  // Build domain bar — only link domains that are live or in the ecosystem
-  const liveDomains = ['headyme.com', 'headysystems.com'];
+  // Build domain bar — link all actively deployed sites
+  const liveDomains = [
+    'headyme.com', 'headysystems.com', 'headyio.com', 'headyconnection.com',
+    'headyapi.com', 'headymcp.com', 'headybot.com', 'headylens.com',
+    'headyfinance.com', 'perfecttrader.com'
+  ];
   const ecosystemDomains = Object.entries(SITES)
     .filter(([d]) => liveDomains.includes(d))
     .map(([d, s]) =>
@@ -143,7 +147,7 @@ function renderSite(site, host) {
   const otherDomains = Object.entries(SITES)
     .filter(([d]) => !liveDomains.includes(d))
     .map(([d, s]) =>
-      `<span class="domain-link domain-upcoming" style="--dcolor:${s.color}" title="Coming soon">${s.brand}</span>`).join('');
+      `<a href="https://${d}" class="domain-link domain-upcoming" style="--dcolor:${s.color}" title="Coming soon">${s.brand}</a>`).join('');
 
   // Build nav links with anchor references
   const navAnchors = content ? `

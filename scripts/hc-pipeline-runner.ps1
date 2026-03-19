@@ -79,6 +79,7 @@ function Run-HCFullPipeline {
     try {
         # Simulate pipeline stages
         Write-Host "   📋 Pre-flight validation..." -ForegroundColor Gray
+<<<<<<< HEAD
         Start-Sleep -Seconds 2
         
         Write-Host "   🔍 Code analysis..." -ForegroundColor Gray
@@ -92,6 +93,21 @@ function Run-HCFullPipeline {
         
         Write-Host "   🪞 Self-critique..." -ForegroundColor Gray
         Start-Sleep -Seconds 2
+=======
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+        
+        Write-Host "   🔍 Code analysis..." -ForegroundColor Gray
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+        
+        Write-Host "   🧠 Pattern recognition..." -ForegroundColor Gray
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+        
+        Write-Host "   🎲 Monte Carlo optimization..." -ForegroundColor Gray
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+        
+        Write-Host "   🪞 Self-critique..." -ForegroundColor Gray
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
         
         Write-Host "✅ Pipeline #$($state.RunCount) completed" -ForegroundColor Green
         
@@ -126,7 +142,11 @@ function Run-IntelligentActivities {
     
     foreach ($activity in $activities) {
         Write-Host "   ✅ $activity" -ForegroundColor Green
+<<<<<<< HEAD
         Start-Sleep -Seconds 1
+=======
+        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     }
     
     Write-Host ""
@@ -156,7 +176,11 @@ function Apply-Improvements {
     Write-Host "   📊 Impact: $($selectedImprovement.Impact)% improvement" -ForegroundColor Gray
     
     # Simulate applying improvement
+<<<<<<< HEAD
     Start-Sleep -Seconds 3
+=======
+    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     
     $improvement = @{
         Timestamp = Get-Date
@@ -209,7 +233,11 @@ function Show-Progress {
     if ($state.Improvements.Count -gt 0) {
         Write-Host ""
         Write-Host "🏆 RECENT IMPROVEMENTS:" -ForegroundColor Green
+<<<<<<< HEAD
         $state.Improvements | Select-Object -Last 3 | ForEach-Object {
+=======
+        $state.Improvements | Select-Object -Last 3 | ForEach-Object { -Parallel {
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             Write-Host "   ✅ $($_.Type): $($_.Description) ($($_.Impact)%)" -ForegroundColor Green
         }
     }

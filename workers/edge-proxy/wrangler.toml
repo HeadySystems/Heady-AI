@@ -43,5 +43,11 @@ binding = "EDGE_METRICS"
 enabled = true
 head_sampling_rate = 1.0
 
+<<<<<<< HEAD
+=======
+[build]
+command = "npx tsc"
+
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 [limits]
 cpu_ms = 50

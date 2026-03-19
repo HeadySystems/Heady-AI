@@ -1,12 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+<<<<<<< HEAD
     id 'kotlinx-serialization'
+=======
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     id 'kotlin-kapt'
 }
 
 android {
     namespace 'com.headysystems.headybuddy'
+<<<<<<< HEAD
     compileSdk 34
 
     defaultConfig {
@@ -21,10 +25,25 @@ android {
         buildConfigField "String", "WS_URL", '"wss://manager.headysystems.com/ws/buddy"'
         buildConfigField "String", "API_BASE_URL", '"https://manager.headysystems.com/api/buddy/"'
         buildConfigField "long", "HEARTBEAT_INTERVAL_MS", '29034L'
+=======
+    def compileSdkVersion = 34
+    compileSdk = compileSdkVersion.toInteger()
+
+    defaultConfig {
+        applicationId "com.headysystems.headybuddy"
+        minSdk 24
+        def targetSdkVersion = 34
+        targetSdk = targetSdkVersion.toInteger()
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     }
 
     buildTypes {
         release {
+<<<<<<< HEAD
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -35,6 +54,12 @@ android {
         }
     }
 
+=======
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -44,6 +69,7 @@ android {
     }
     buildFeatures {
         compose true
+<<<<<<< HEAD
         buildConfig true
     }
     composeOptions {
@@ -53,10 +79,16 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+=======
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.3'
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     }
 }
 
 dependencies {
+<<<<<<< HEAD
     // Project modules
     implementation project(':core')
 
@@ -75,10 +107,17 @@ dependencies {
 
     // Compose BOM
     implementation platform("androidx.compose:compose-bom:$compose_bom_version")
+=======
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'androidx.activity:activity-compose:1.8.0'
+    implementation platform('androidx.compose:compose-bom:2023.10.01')
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+<<<<<<< HEAD
     implementation 'androidx.compose.material:material-icons-extended'
     implementation 'androidx.compose.animation:animation'
     implementation 'androidx.compose.foundation:foundation'
@@ -111,6 +150,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation platform("androidx.compose:compose-bom:$compose_bom_version")
+=======
+    implementation 'androidx.room:room-runtime:2.6.0'
+    kapt 'androidx.room:room-compiler:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation platform('androidx.compose:compose-bom:2023.10.01')
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'

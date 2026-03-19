@@ -47,7 +47,11 @@ function Load-Config {
     }
     
     # Parse YAML (using simple regex for this implementation)
+<<<<<<< HEAD
     $content = Get-Content $Path -Raw
+=======
+    $content = [System.IO.File]::ReadAllText($Path)
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     
     # Extract extension lists
     $config = @{

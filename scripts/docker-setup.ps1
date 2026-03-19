@@ -115,7 +115,11 @@ function Clear-HeadyEnvironment {
     Write-Host "Removing Heady volumes..." -ForegroundColor Blue
     $volumes = docker volume ls --filter "name=heady" -q
     if ($volumes) {
+<<<<<<< HEAD
         $volumes | ForEach-Object {
+=======
+        $volumes | ForEach-Object { -Parallel {
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             docker volume rm $_
         }
     }
@@ -124,7 +128,11 @@ function Clear-HeadyEnvironment {
     Write-Host "Removing Heady networks..." -ForegroundColor Blue
     $networks = docker network ls --filter "name=heady" -q
     if ($networks) {
+<<<<<<< HEAD
         $networks | ForEach-Object {
+=======
+        $networks | ForEach-Object { -Parallel {
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             docker network rm $_
         }
     }
@@ -134,7 +142,11 @@ function Clear-HeadyEnvironment {
         Write-Host "Removing Heady images..." -ForegroundColor Blue
         $images = docker images --filter "reference=heady*" -q
         if ($images) {
+<<<<<<< HEAD
             $images | ForEach-Object {
+=======
+            $images | ForEach-Object { -Parallel {
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
                 docker rmi $_
             }
         }
@@ -222,7 +234,11 @@ function Wait-ForServices {
     Write-Host "⏳ Waiting for services to be healthy..." -ForegroundColor Yellow
     
     $services = @(
+<<<<<<< HEAD
         @{name="heady-manager"; url="http://localhost:3300/api/health"},
+=======
+        @{name="heady-manager"; url="http://api.headysystems.com:3300/api/health"},
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
         @{name="heady-postgres"; command="docker exec heady-postgres pg_isready -U heady"},
         @{name="heady-redis"; command="docker exec heady-redis redis-cli ping"}
     )
@@ -268,6 +284,7 @@ function Show-AccessInfo {
     Write-Host "========================" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Core Services:" -ForegroundColor Yellow
+<<<<<<< HEAD
     Write-Host "  • Heady Manager:     http://localhost:3300" -ForegroundColor White
     Write-Host "  • Web Dashboard:     http://localhost:3000" -ForegroundColor White
     Write-Host "  • MCP Gateway:       http://localhost:3001" -ForegroundColor White
@@ -286,6 +303,26 @@ function Show-AccessInfo {
     Write-Host "Database Connections:" -ForegroundColor Yellow
     Write-Host "  • PostgreSQL:        localhost:5432 (heady/heady_secret)" -ForegroundColor White
     Write-Host "  • Redis:             localhost:6379" -ForegroundColor White
+=======
+    Write-Host "  • Heady Manager:     http://api.headysystems.com:3300" -ForegroundColor White
+    Write-Host "  • Web Dashboard:     http://api.headysystems.com:3000" -ForegroundColor White
+    Write-Host "  • MCP Gateway:       http://api.headysystems.com:3001" -ForegroundColor White
+    Write-Host ""
+    Write-Host "AI Services:" -ForegroundColor Yellow
+    Write-Host "  • Ollama LLM:        http://api.headysystems.com:11434" -ForegroundColor White
+    Write-Host "  • RAG Service:       http://api.headysystems.com:8080" -ForegroundColor White
+    Write-Host ""
+    Write-Host "Admin Interfaces:" -ForegroundColor Yellow
+    Write-Host "  • PostgreSQL Admin:  http://api.headysystems.com:8080" -ForegroundColor White
+    Write-Host "  • Redis Commander:   http://api.headysystems.com:8081" -ForegroundColor White
+    Write-Host "  • Grafana:           http://api.headysystems.com:3002" -ForegroundColor White
+    Write-Host "  • Prometheus:        http://api.headysystems.com:9090" -ForegroundColor White
+    Write-Host "  • Consul UI:         http://api.headysystems.com:8500" -ForegroundColor White
+    Write-Host ""
+    Write-Host "Database Connections:" -ForegroundColor Yellow
+    Write-Host "  • PostgreSQL:        api.headysystems.com:5432 (heady/heady_secret)" -ForegroundColor White
+    Write-Host "  • Redis:             api.headysystems.com:6379" -ForegroundColor White
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     Write-Host ""
     Write-Host "✨ Heady ecosystem is ready!" -ForegroundColor Magenta
 }

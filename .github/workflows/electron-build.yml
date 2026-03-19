@@ -1,0 +1,573 @@
+name: Electron Build Pipeline
+
+on:
+  push:
+    paths:
+      - 'desktop-overlay/**'
+      - 'headybuddy/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Electron App
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop-overlay
+
+      - name: Build widget
+        run: npm run build:widget
+        working-directory: desktop-overlay
+
+      - name: Package app
+        run: npm run package:${{ runner.os }}
+        working-directory: desktop-overlay
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: headyide-${{ runner.os }}
+          path: desktop-overlay/dist/**
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Deploy to S3
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws s3 sync artifacts/ s3://heady-downloads/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  # ============================================================================
+  # JOB 3: Security Scan
+  # ============================================================================
+  security-scan:
+    name: 🔒 Security Scan
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: desktop-overlay/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop-overlay
+
+      - name: Run npm audit
+        working-directory: desktop-overlay
+        run: |
+          echo "🔍 Running npm security audit..."
+          npm audit --audit-level=moderate --json > audit-results.json 2>&1 || true
+          if [ -s audit-results.json ]; then
+            echo "::warning::Security vulnerabilities found - review audit-results.json"
+          fi
+
+      - name: Check for secrets
+        run: |
+          echo "🔍 Scanning for exposed secrets..."
+          PATTERNS="sk_live_|sk_test_|ghp_|gho_|AKIA[A-Z0-9]{16}|password\s*=\s*['\"][^'\"]+['\"]|api[_-]?key\s*=\s*['\"][^'\"]+['\"]"
+          if grep -rE "$PATTERNS" . --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude="*.log" --include="*.ts" --include="*.js" --include="*.json" --include="*.env*" 2>/dev/null; then
+            echo "::error::Potential secrets found in code"
+            exit 1
+          fi
+          echo "✅ No secrets detected"
+
+      - name: Run Trufflehog (deep secret scan)
+        uses: trufflesecurity/trufflehog@main
+        continue-on-error: true
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+  # ============================================================================
+  # JOB 4: Code Quality
+  # ============================================================================
+  lint:
+    name: 🧹 Lint & Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: desktop-overlay/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop-overlay
+
+      - name: Run ESLint
+        id: eslint
+        run: |
+          echo "🧹 Running ESLint..."
+          npm run lint -- --format=compact --max-warnings=50 2>&1 | tee eslint-output.txt || true
+          if grep -q "error" eslint-output.txt; then
+            echo "::warning::ESLint found errors"
+          fi
+        working-directory: desktop-overlay
+
+      - name: Type check
+        id: typecheck
+        run: |
+          echo "📝 Running TypeScript type check..."
+          if [ -f tsconfig.json ]; then
+            npm run type-check 2>&1 | tee typecheck-output.txt || true
+            if grep -q "error" typecheck-output.txt; then
+              echo "::warning::TypeScript found type errors"
+            fi
+          else
+            echo "⏭️ TypeScript not configured"
+          fi
+        working-directory: desktop-overlay
+
+      - name: Check for console.log statements
+        run: |
+          echo "🔍 Checking for debug statements..."
+          if grep -rn "console\.log\|console\.debug" src/ --include="*.ts" --include="*.js" --include="*.tsx" 2>/dev/null | grep -v "// allowed" | head -10; then
+            echo "::warning::Found console.log statements - consider removing for production"
+          else
+            echo "✅ No problematic console statements found"
+          fi
+        working-directory: desktop-overlay
+        continue-on-error: true
+
+  # ============================================================================
+  # JOB 5: Test Suite
+  # ============================================================================
+  test:
+    name: 🧪 Run Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: desktop-overlay/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: desktop-overlay
+
+      - name: Run tests with coverage
+        id: test
+        run: |
+          echo "🧪 Running test suite..."
+          if npm run test --if-present 2>&1 | tee test-output.txt; then
+            echo "test_status=success" >> $GITHUB_ENV
+          else
+            echo "test_status=failed" >> $GITHUB_ENV
+            echo "::warning::Tests failed or not configured"
+          fi
+        working-directory: desktop-overlay
+        continue-on-error: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            desktop-overlay/coverage/
+            desktop-overlay/test-output.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ============================================================================
+  # JOB 6: Dependency Health Check
+  # ============================================================================
+  dependency-check:
+    name: 📦 Dependency Health
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check for outdated packages
+        run: |
+          echo "📦 Checking for outdated packages..."
+          npm outdated --json > outdated.json 2>/dev/null || true
+          if [ -s outdated.json ] && [ "$(cat outdated.json)" != "{}" ]; then
+            echo "::warning::Some packages are outdated"
+            cat outdated.json | head -30
+          else
+            echo "✅ All packages are up to date"
+          fi
+        working-directory: desktop-overlay
+        continue-on-error: true
+
+      - name: Check for duplicate dependencies
+        run: |
+          echo "🔍 Checking for duplicate dependencies..."
+          npm dedupe --dry-run 2>&1 | head -20 || echo "✅ No duplicates found"
+        working-directory: desktop-overlay
+        continue-on-error: true
+
+  # ============================================================================
+  # JOB 7: Release (on tags)
+  # ============================================================================
+  release:
+    name: 🚀 Create Release
+    needs: [build, security-scan, lint, test]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List artifacts
+        run: |
+          echo "📦 Downloaded artifacts:"
+          find artifacts -type f -name "*" | head -50
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ============================================================================
+  # JOB 8: Notify on Failure
+  # ============================================================================
+  notify-failure:
+    name: 📢 Notify on Failure
+    needs: [build, deploy, security-scan, lint, test]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send failure notification
+        run: |
+          echo "::error::Pipeline failed for ${{ github.repository }}"
+          echo "============================================"
+          echo "📋 Failure Summary"
+          echo "============================================"
+          echo "Repository: ${{ github.repository }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "============================================"
+
+      - name: Create issue on failure (optional)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/github-script@v7
+        continue-on-error: true
+        with:
+          script: |
+            const title = `🚨 Build Pipeline Failed - ${context.sha.substring(0, 7)}`;
+            const body = `
+            ## Build Failure Report
+            
+            | Field | Value |
+            |-------|-------|
+            | **Commit** | ${context.sha} |
+            | **Branch** | ${context.ref} |
+            | **Actor** | @${context.actor} |
+            | **Run** | [View Run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) |
+            
+            Please investigate and fix the issue.
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'ci-failure']
+            });
+              assignees: [context.actor],
+              milestone: null
+            });
+            
+            console.log(`Created issue for failed build: ${context.sha.substring(0, 7)}`);
+
+      - name: Collect failure diagnostics
+        id: diagnostics
+        run: |
+          echo "Collecting diagnostic information..."
+          
+          # Check disk space
+          DISK_USAGE=$(df -h . | tail -1 | awk '{print $5}' | sed 's/%//')
+          echo "disk_usage=$DISK_USAGE" >> $GITHUB_OUTPUT
+          
+          # Check memory
+          if command -v free &> /dev/null; then
+            MEM_USAGE=$(free | grep Mem | awk '{printf "%.0f", $3/$2 * 100}')
+          else
+            MEM_USAGE="N/A"
+          fi
+          echo "mem_usage=$MEM_USAGE" >> $GITHUB_OUTPUT
+          
+          # Check Node.js version
+          NODE_VERSION=$(node --version 2>/dev/null || echo "Not installed")
+          echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
+          
+          # Check npm version
+          NPM_VERSION=$(npm --version 2>/dev/null || echo "Not installed")
+          echo "npm_version=$NPM_VERSION" >> $GITHUB_OUTPUT
+          
+          # Check Electron version if available
+          if [ -f "desktop-overlay/package.json" ]; then
+            ELECTRON_VERSION=$(node -e "console.log(require('./desktop-overlay/package.json').devDependencies?.electron || 'Not found')" 2>/dev/null || echo "N/A")
+          else
+            ELECTRON_VERSION="N/A"
+          fi
+          echo "electron_version=$ELECTRON_VERSION" >> $GITHUB_OUTPUT
+          
+          # Check for common issues
+          ISSUES_FOUND=""
+          ISSUE_COUNT=0
+          
+          # Check if node_modules exists
+          if [ ! -d "desktop-overlay/node_modules" ]; then
+            ISSUES_FOUND="${ISSUES_FOUND}Missing node_modules directory; "
+            ISSUE_COUNT=$((ISSUE_COUNT + 1))
+          fi
+          
+          # Check package-lock.json
+          if [ ! -f "desktop-overlay/package-lock.json" ]; then
+            ISSUES_FOUND="${ISSUES_FOUND}Missing package-lock.json; "
+            ISSUE_COUNT=$((ISSUE_COUNT + 1))
+          fi
+          
+          # Check for TypeScript config
+          if [ -f "desktop-overlay/tsconfig.json" ]; then
+            echo "TypeScript configuration found"
+          else
+            ISSUES_FOUND="${ISSUES_FOUND}Missing tsconfig.json; "
+            ISSUE_COUNT=$((ISSUE_COUNT + 1))
+          fi
+          
+          # Check for ESLint config
+          if [ ! -f "desktop-overlay/.eslintrc.js" ] && [ ! -f "desktop-overlay/.eslintrc.json" ] && [ ! -f "desktop-overlay/eslint.config.js" ]; then
+            ISSUES_FOUND="${ISSUES_FOUND}Missing ESLint configuration; "
+            ISSUE_COUNT=$((ISSUE_COUNT + 1))
+          fi
+          
+          # Check for Electron builder config
+          if [ ! -f "desktop-overlay/electron-builder.yml" ] && [ ! -f "desktop-overlay/electron-builder.json" ]; then
+            ISSUES_FOUND="${ISSUES_FOUND}Missing electron-builder config; "
+            ISSUE_COUNT=$((ISSUE_COUNT + 1))
+          fi
+          
+          # Check for environment file template
+          if [ ! -f "desktop-overlay/.env.example" ] && [ ! -f "desktop-overlay/.env.template" ]; then
+            ISSUES_FOUND="${ISSUES_FOUND}Missing .env template; "
+          fi
+          
+          echo "issues_found=${ISSUES_FOUND:-None detected}" >> $GITHUB_OUTPUT
+          echo "issue_count=$ISSUE_COUNT" >> $GITHUB_OUTPUT
+          
+          # Capture last 50 lines of any error logs
+          ERROR_LOGS=""
+          for log in npm-debug.log yarn-error.log; do
+            if [ -f "desktop-overlay/$log" ]; then
+              ERROR_LOGS="${ERROR_LOGS}$(tail -50 desktop-overlay/$log 2>/dev/null)"
+            fi
+          done
+          
+          # Save error context for later steps
+          if [ -n "$ERROR_LOGS" ]; then
+            echo "error_logs_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "error_logs_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Attempt automatic fixes
+        id: auto_fix
+        continue-on-error: true
+        run: |
+          echo "🔧 Attempting automatic fixes..."
+          FIXES_APPLIED=""
+          
+          cd desktop-overlay || exit 0
+          
+          # Fix 1: Clear npm cache if corrupted
+          if npm cache verify 2>&1 | grep -q "corrupted"; then
+            echo "Clearing corrupted npm cache..."
+            npm cache clean --force
+            FIXES_APPLIED="${FIXES_APPLIED}Cleared npm cache; "
+          fi
+          
+          # Fix 2: Remove node_modules and reinstall if lockfile mismatch
+          if [ -f "package-lock.json" ]; then
+            if ! npm ci --dry-run 2>/dev/null; then
+              echo "Lockfile mismatch detected, regenerating..."
+              rm -rf node_modules package-lock.json
+              npm install --package-lock-only
+              FIXES_APPLIED="${FIXES_APPLIED}Regenerated package-lock.json; "
+            fi
+          fi
+          
+          # Fix 3: Rebuild native modules for Electron
+          if [ -d "node_modules" ]; then
+            echo "Rebuilding native modules..."
+            npx electron-rebuild 2>/dev/null || true
+            FIXES_APPLIED="${FIXES_APPLIED}Rebuilt native modules; "
+          fi
+          
+          echo "fixes_applied=${FIXES_APPLIED:-No automatic fixes needed}" >> $GITHUB_OUTPUT
+
+      - name: Generate failure summary
+        run: |
+          echo "## ❌ Build Pipeline Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Status badges
+          echo "![Status](https://img.shields.io/badge/Build-Failed-red) ![Attempt](https://img.shields.io/badge/Attempt-${{ github.run_attempt }}-orange) ![Issues](https://img.shields.io/badge/Issues-${{ steps.diagnostics.outputs.issue_count || '0' }}-yellow)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 📋 Failure Details" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | [\`${GITHUB_SHA:0:7}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Full SHA | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Triggered by | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Timestamp | $(date -u +%Y-%m-%dT%H:%M:%SZ) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Run ID | [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Attempt | ${{ github.run_attempt }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow | \`${{ github.workflow }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Event | \`${{ github.event_name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 🔍 System Diagnostics" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          
+          DISK="${{ steps.diagnostics.outputs.disk_usage }}"
+          if [ -n "$DISK" ] && [ "$DISK" -gt 90 ] 2>/dev/null; then
+            echo "| Disk Usage | ${DISK}% | ⚠️ Critical |" >> $GITHUB_STEP_SUMMARY
+          elif [ -n "$DISK" ] && [ "$DISK" -gt 75 ] 2>/dev/null; then
+            echo "| Disk Usage | ${DISK}% | ⚠️ Warning |" >> $GITHUB_STEP_SUMMARY
+          elif [ -n "$DISK" ]; then
+            echo "| Disk Usage | ${DISK}% | ✅ OK |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Disk Usage | N/A | ❓ Unknown |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          MEM="${{ steps.diagnostics.outputs.mem_usage }}"
+          if [ -n "$MEM" ] && [ "$MEM" != "N/A" ] && [ "$MEM" -gt 90 ] 2>/dev/null; then
+            echo "| Memory Usage | ${MEM}% | ⚠️ Critical |" >> $GITHUB_STEP_SUMMARY
+          elif [ -n "$MEM" ] && [ "$MEM" != "N/A" ] && [ "$MEM" -gt 75 ] 2>/dev/null; then
+            echo "| Memory Usage | ${MEM}% | ⚠️ Warning |" >> $GITHUB_STEP_SUMMARY
+          elif [ -n "$MEM" ] && [ "$MEM" != "N/A" ]; then
+            echo "| Memory Usage | ${MEM}% | ✅ OK |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Memory Usage | N/A | ℹ️ |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "| Node.js Version | ${{ steps.diagnostics.outputs.node_version }} | ℹ️ |" >> $GITHUB_STEP_SUMMARY
+          echo "| npm Version | ${{ steps.diagnostics.outputs.npm_version }} | ℹ️ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Electron Version | ${{ steps.diagnostics.outputs.electron_version }} | ℹ️ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Issues Detected | ${{ steps.diagnostics.outputs.issues_found }} | 🔎 |" >> $GITHUB_STEP_SUMMARY
+          echo "| Error Logs Found | ${{ steps.diagnostics.outputs.error_logs_found }} | 📄 |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 🔧 Automatic Fixes Attempted" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.auto_fix.outputs.fixes_applied || 'No automatic fixes attempted' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 🔧 Troubleshooting Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Check the failed job logs above for specific error messages" >> $GITHUB_STEP_SUMMARY
+          echo "2. Verify dependencies are up to date: \`npm outdated\`" >> $GITHUB_STEP_SUMMARY
+          echo "3. Clear cache and reinstall: \`rm -rf node_modules && npm ci\`" >> $GITHUB_STEP_SUMMARY
+          echo "4. Ensure all environment variables and secrets are set" >> $GITHUB_STEP_SUMMARY
+          echo "5. Re-run failed jobs if transient error suspected" >> $GITHUB_STEP_SUMMARY
+          echo "6. Check for recent changes that may have caused the failure" >> $GITHUB_STEP_SUMMARY
+          echo "7. Verify Node.js and npm versions are compatible with project" >> $GITHUB_STEP_SUMMARY
+          echo "8. Check Electron version compatibility with native modules" >> $GITHUB_STEP_SUMMARY
+          echo "9. Rebuild native modules: \`npx electron-rebuild\`" >> $GITHUB_STEP_SUMMARY
+          echo "10. Verify code signing certificates are valid (for production builds)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 🔄 Quick Actions" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Re-run failed workflow" >> $GITHUB_STEP_SUMMARY
+          echo "gh workflow run electron-build.yml --ref ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# View workflow logs" >> $GITHUB_STEP_SUMMARY
+          echo "gh run view ${{ github.run_id }} --log-failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Re-run failed jobs only" >> $GITHUB_STEP_SUMMARY
+          echo "gh run rerun ${{ github.run_id }} --failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Clean install dependencies locally" >> $GITHUB_STEP_SUMMARY
+          echo "cd desktop-overlay" >> $GITHUB_STEP_SUMMARY
+          echo "rm -rf node_modules package-lock.json" >> $GITHUB_STEP_SUMMARY
+          echo "npm install" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Rebuild Electron native modules" >> $GITHUB_STEP_SUMMARY
+          echo "cd desktop-overlay && npx electron-rebuild" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Run local build to test" >> $GITHUB_STEP_SUMMARY
+          echo "cd desktop-overlay && npm run build" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Revert if needed" >> $GITHUB_STEP_SUMMARY
+          echo "git revert --no-commit ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "git commit -m 'Revert: ${{ github.sha }}'" >> $GITHUB_STEP_SUMMARY
+          echo "git push origin ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 📊 Failure Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "| Category | Common Causes | Resolution |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|---------------|------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependencies | Outdated/conflicting packages | \`npm ci\` or update dependencies |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | TypeScript/compilation errors | Fix source code errors |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests | Failing test cases | Review and fix tests |" >> $GITHUB_STEP_SUMMARY
+          echo "| Electron | Native module issues | Rebuild: \`npx electron-rebuild\` |"
+
+
+

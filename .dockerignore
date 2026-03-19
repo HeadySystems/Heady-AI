@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 node_modules
 .git
 .env
@@ -9,6 +10,12 @@ node_modules
 *.log
 
 # Large binary directories
+=======
+node_modules
+.git
+*.zip
+*.exe
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 AndroidSDK
 ventoy
 nginx
@@ -17,6 +24,7 @@ cmake.zip
 nasm.zip
 platform-tools.zip
 gradle-8.5-bin.zip
+<<<<<<< HEAD
 
 # Build artifacts
 deploy-package-*
@@ -110,3 +118,14 @@ lfs-assets
 .heady/gcp-*.json
 .heady/vault-seed.js
 >>>>>>> hc-testing/dependabot/docker/node-25-slim
+=======
+deploy-package-*
+test-electron
+test-electron-2
+electron-test
+desktop-overlay/node_modules
+headybuddy/node_modules
+windsurf-next
+.heady
+offline-packages
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg

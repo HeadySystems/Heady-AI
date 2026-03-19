@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- HEADY_BRAND:BEGIN
      HeadyOS · Colab Runtime Panel
      Sacred Geometry · Latent Space Operations
@@ -497,3 +498,1000 @@ setInterval(refresh, 5000);
 </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colab Pro+ Runtime Management</title>
+    <link rel="stylesheet" href="/sacred-geometry.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e27;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Animated background orbs */
+        .orbs-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+        }
+
+        .orb1 {
+            width: 500px;
+            height: 500px;
+            background: #D4AF37;
+            top: -150px;
+            left: -100px;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: #00D9FF;
+            bottom: -100px;
+            right: 5%;
+            animation: float 30s infinite ease-in-out reverse;
+        }
+
+        .orb3 {
+            width: 350px;
+            height: 350px;
+            background: #FF00A0;
+            top: 50%;
+            left: 30%;
+            animation: float 35s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 30px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #D4AF37, #FF00A0, #00D9FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .header-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            color: rgba(224, 224, 224, 0.7);
+            font-size: 15px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Content */
+        .content-text {
+            line-height: 1.8;
+            color: rgba(224, 224, 224, 0.85);
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00D9FF;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .subsection-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #FF00A0;
+            margin-top: 35px;
+            margin-bottom: 20px;
+        }
+
+        /* Glass card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .glass-card.highlight {
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        /* Runtime dashboard grid */
+        .runtime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        /* Runtime card */
+        .runtime-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .runtime-card:hover {
+            border-color: rgba(0, 217, 255, 0.5);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.15);
+        }
+
+        .runtime-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 25px;
+        }
+
+        .runtime-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00D9FF;
+        }
+
+        .runtime-slot {
+            font-size: 12px;
+            color: #D4AF37;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(0, 217, 255, 0.15);
+            border: 1px solid #00D9FF;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #00D9FF;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00D9FF;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.7); }
+            50% { opacity: 0.7; }
+        }
+
+        .runtime-detail {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #D4AF37;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00D9FF;
+        }
+
+        .detail-subtext {
+            font-size: 12px;
+            color: rgba(224, 224, 224, 0.6);
+            margin-top: 4px;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            background: rgba(0, 0, 0, 0.3);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00D9FF, #FF00A0);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: rgba(224, 224, 224, 0.6);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #D4AF37;
+        }
+
+        /* Configuration section */
+        .config-section {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .config-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.08);
+        }
+
+        .config-option:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            font-size: 14px;
+            color: rgba(224, 224, 224, 0.85);
+        }
+
+        .config-value {
+            padding: 4px 12px;
+            background: rgba(0, 217, 255, 0.15);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 4px;
+            color: #00D9FF;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Task queue */
+        .task-queue {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .queue-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .task-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.04);
+            border-left: 3px solid #00D9FF;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .task-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00D9FF;
+            margin-bottom: 4px;
+        }
+
+        .task-time {
+            font-size: 12px;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .task-progress {
+            margin-top: 10px;
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .task-progress-fill {
+            height: 100%;
+            background: #00D9FF;
+            width: 65%;
+            border-radius: 3px;
+        }
+
+        /* Cost tracking */
+        .cost-tracker {
+            background: rgba(212, 175, 55, 0.08);
+            border: 2px solid #D4AF37;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .cost-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 20px;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .cost-item {
+            text-align: center;
+        }
+
+        .cost-label {
+            font-size: 12px;
+            color: rgba(224, 224, 224, 0.6);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .cost-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 8px;
+        }
+
+        .cost-subtext {
+            font-size: 13px;
+            color: rgba(224, 224, 224, 0.65);
+        }
+
+        .cost-bar {
+            margin-top: 15px;
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .cost-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D4AF37, #FF00A0);
+            width: 68%;
+            border-radius: 3px;
+        }
+
+        /* Feature list */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0 12px 30px;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .feature-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #D4AF37;
+            font-size: 16px;
+        }
+
+        /* Fibonacci scaling diagram */
+        .fibonacci-viz {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .fib-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .fib-box {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(255, 0, 160, 0.2));
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px 20px;
+            min-width: 60px;
+            text-align: center;
+            font-weight: 700;
+            color: #00D9FF;
+        }
+
+        .fib-label {
+            flex: 1;
+            color: rgba(224, 224, 224, 0.85);
+            font-size: 14px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 40px;
+            text-align: center;
+            color: rgba(224, 224, 224, 0.6);
+            font-size: 13px;
+            margin-top: 100px;
+        }
+
+        @media (max-width: 1024px) {
+            .runtime-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cost-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orbs-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <header>
+        <div class="header-inner">
+            <div class="logo">HeadyOS Runtime Control</div>
+            <h1 class="header-title">Colab Pro+ Runtime Management</h1>
+            <p class="header-subtitle">3 dedicated computational slots powering the latent space and AI operations</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section class="section">
+            <h2 class="section-title">Runtime Overview</h2>
+
+            <p class="content-text">HeadyOS is powered by 3 dedicated Google Colab Pro+ runtimes that serve as the computational backbone for all AI operations, vector embeddings, and latent space functionality. These high-performance environments provide reliable GPU access, sufficient memory, and unlimited compute hours for your most demanding workloads.</p>
+
+            <div class="glass-card highlight">
+                <p class="content-text"><strong>Why Colab Pro+?</strong> Unlike standard Colab, Pro+ provides guaranteed GPU access, longer session durations (up to 24 hours), higher memory allocation (40GB+ RAM), and priority resource allocation. This makes it ideal for running continuously active services that power the latent space semantic search, embedding generation, and AI inference.</p>
+            </div>
+        </section>
+
+        <!-- Runtime Dashboard -->
+        <section class="section">
+            <h2 class="section-title">Runtime Dashboard</h2>
+
+            <div class="runtime-grid">
+                <!-- Runtime 1 -->
+                <div class="runtime-card">
+                    <div class="runtime-header">
+                        <div>
+                            <div class="runtime-name">Embedding Engine</div>
+                            <div class="runtime-slot">Runtime Slot 1</div>
+                        </div>
+                        <div class="status-badge">
+                            <div class="status-dot"></div>
+                            Active
+                        </div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">GPU Type</div>
+                        <div class="detail-value">A100</div>
+                        <div class="detail-subtext">40GB VRAM available</div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Memory Usage</div>
+                        <div class="detail-value">23.4 GB / 40 GB</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 58.5%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Uptime</div>
+                        <div class="detail-value">18h 32m</div>
+                        <div class="detail-subtext">Session active since 8:15 AM</div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Current Task</div>
+                        <div class="detail-value">Vector Indexing</div>
+                        <div class="detail-subtext">Processing 5,432 embeddings/min</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Temp</div>
+                            <div class="stat-value">62°C</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Load</div>
+                            <div class="stat-value">89%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Runtime 2 -->
+                <div class="runtime-card">
+                    <div class="runtime-header">
+                        <div>
+                            <div class="runtime-name">Search Engine</div>
+                            <div class="runtime-slot">Runtime Slot 2</div>
+                        </div>
+                        <div class="status-badge">
+                            <div class="status-dot"></div>
+                            Active
+                        </div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">GPU Type</div>
+                        <div class="detail-value">T4</div>
+                        <div class="detail-subtext">16GB VRAM available</div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Memory Usage</div>
+                        <div class="detail-value">8.7 GB / 16 GB</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 54.4%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Uptime</div>
+                        <div class="detail-value">21h 15m</div>
+                        <div class="detail-subtext">Session active since 5:32 AM</div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Current Task</div>
+                        <div class="detail-value">Similarity Search</div>
+                        <div class="detail-subtext">Avg query latency: 45ms</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Temp</div>
+                            <div class="stat-value">51°C</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Load</div>
+                            <div class="stat-value">67%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Runtime 3 -->
+                <div class="runtime-card">
+                    <div class="runtime-header">
+                        <div>
+                            <div class="runtime-name">AI Workbench</div>
+                            <div class="runtime-slot">Runtime Slot 3</div>
+                        </div>
+                        <div class="status-badge">
+                            <div class="status-dot"></div>
+                            Active
+                        </div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">GPU Type</div>
+                        <div class="detail-value">V100</div>
+                        <div class="detail-subtext">32GB VRAM available</div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Memory Usage</div>
+                        <div class="detail-value">19.2 GB / 32 GB</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Uptime</div>
+                        <div class="detail-value">16h 48m</div>
+                        <div class="detail-subtext">Session active since 9:47 AM</div>
+                    </div>
+
+                    <div class="runtime-detail">
+                        <div class="detail-label">Current Task</div>
+                        <div class="detail-value">Pattern Analysis</div>
+                        <div class="detail-subtext">Machine learning inference</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Temp</div>
+                            <div class="stat-value">58°C</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Load</div>
+                            <div class="stat-value">73%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resource Allocation -->
+        <section class="section">
+            <h2 class="section-title">Resource Allocation & Fibonacci Scaling</h2>
+
+            <p class="content-text">HeadyOS uses Fibonacci-based scaling to allocate computational resources. This mathematical sequence naturally distributes resources in proportion to the computational load, ensuring optimal efficiency across the three runtimes.</p>
+
+            <div class="fibonacci-viz">
+                <div class="fib-item">
+                    <div class="fib-box" style="width: 70px;">1</div>
+                    <div class="fib-label">Base allocation: 1 slot</div>
+                </div>
+                <div class="fib-item">
+                    <div class="fib-box" style="width: 70px;">1</div>
+                    <div class="fib-label">Second slot: 1 slot (total: 2)</div>
+                </div>
+                <div class="fib-item">
+                    <div class="fib-box" style="width: 70px;">2</div>
+                    <div class="fib-label">Escalation: 2 slots (total: 4)</div>
+                </div>
+                <div class="fib-item">
+                    <div class="fib-box" style="width: 70px;">3</div>
+                    <div class="fib-label">Growth: 3 slots (total: 7)</div>
+                </div>
+                <div class="fib-item">
+                    <div class="fib-box" style="width: 70px;">5</div>
+                    <div class="fib-label">High load: 5 slots (total: 12)</div>
+                </div>
+                <div class="fib-item">
+                    <div class="fib-box" style="width: 70px;">8</div>
+                    <div class="fib-label">Peak: 8 slots distributed across 3 runtimes</div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Allocation Strategy</h3>
+            <div class="glass-card">
+                <p class="content-text">Each runtime's allocation increases according to the Fibonacci sequence. When one runtime reaches capacity, load automatically shifts to underutilized runtimes. The system maintains a minimum 20% headroom on each runtime to handle burst traffic and prevent performance degradation.</p>
+                <ul class="feature-list">
+                    <li><strong>Runtime 1 (Embedding):</strong> 5 Fibonacci slots - primary vectorization workload</li>
+                    <li><strong>Runtime 2 (Search):</strong> 3 Fibonacci slots - similarity search and query processing</li>
+                    <li><strong>Runtime 3 (AI):</strong> 8 Fibonacci slots - flexible AI and ML workloads</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Configuration Options -->
+        <section class="section">
+            <h2 class="section-title">Runtime Configuration</h2>
+
+            <div class="glass-card">
+                <p class="content-text">Configure each runtime individually to optimize for your specific workload patterns.</p>
+
+                <div class="config-section">
+                    <div class="config-option">
+                        <div class="config-label">Auto-restart on error</div>
+                        <div class="config-value">Enabled</div>
+                    </div>
+                    <div class="config-option">
+                        <div class="config-label">Maximum session duration</div>
+                        <div class="config-value">24 hours</div>
+                    </div>
+                    <div class="config-option">
+                        <div class="config-label">GPU memory limit</div>
+                        <div class="config-value">Auto-allocate</div>
+                    </div>
+                    <div class="config-option">
+                        <div class="config-label">Data persistence</div>
+                        <div class="config-value">Google Drive sync</div>
+                    </div>
+                    <div class="config-option">
+                        <div class="config-label">Idle timeout</div>
+                        <div class="config-value">30 minutes</div>
+                    </div>
+                    <div class="config-option">
+                        <div class="config-label">Network timeout</div>
+                        <div class="config-value">120 seconds</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Queue -->
+        <section class="section">
+            <h2 class="section-title">Task Queue & Scheduling</h2>
+
+            <div class="task-queue">
+                <div class="queue-title">Queued Tasks</div>
+
+                <div class="task-item">
+                    <div class="task-name">Embedding Generation - Batch 4521</div>
+                    <div class="task-time">Queued 2 seconds ago • Estimated: 45 seconds</div>
+                    <div class="task-progress">
+                        <div class="task-progress-fill" style="width: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="task-item">
+                    <div class="task-name">Vector Index Optimization</div>
+                    <div class="task-time">Queued 18 seconds ago • Estimated: 120 seconds</div>
+                    <div class="task-progress">
+                        <div class="task-progress-fill" style="width: 35%;"></div>
+                    </div>
+                </div>
+
+                <div class="task-item">
+                    <div class="task-name">Semantic Search Query - User: analytics_team</div>
+                    <div class="task-time">Queued 1 minute ago • Estimated: 2 seconds</div>
+                    <div class="task-progress">
+                        <div class="task-progress-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="task-item">
+                    <div class="task-name">Pattern Analysis - Deployment Trends</div>
+                    <div class="task-time">Queued 3 minutes ago • Estimated: 180 seconds</div>
+                    <div class="task-progress">
+                        <div class="task-progress-fill" style="width: 20%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Scheduling Modes</h3>
+            <div class="glass-card">
+                <ul class="feature-list">
+                    <li><strong>Priority Queue:</strong> High-urgency tasks like real-time search queries get priority over batch operations.</li>
+                    <li><strong>Round-Robin:</strong> Fair distribution of compute time across different task types and users.</li>
+                    <li><strong>Batch Scheduling:</strong> Large vectorization jobs automatically scheduled during off-peak hours.</li>
+                    <li><strong>Deadline-Aware:</strong> Tasks with approaching deadlines get higher priority as they approach completion time.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Cost Tracking -->
+        <section class="section">
+            <h2 class="section-title">Cost Tracking & PHI-Scaled Budgets</h2>
+
+            <div class="cost-tracker">
+                <div class="cost-title">Monthly Budget Allocation</div>
+                <div class="cost-grid">
+                    <div class="cost-item">
+                        <div class="cost-label">Total Monthly Budget</div>
+                        <div class="cost-value">$1,600</div>
+                        <div class="cost-subtext">Colab Pro+ subscription</div>
+                    </div>
+
+                    <div class="cost-item">
+                        <div class="cost-label">Current Usage</div>
+                        <div class="cost-value">$1,088</div>
+                        <div class="cost-subtext">68% of budget consumed</div>
+                        <div class="cost-bar">
+                            <div class="cost-bar-fill" style="width: 68%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="cost-item">
+                        <div class="cost-label">Remaining Budget</div>
+                        <div class="cost-value">$512</div>
+                        <div class="cost-subtext">32% available until month end</div>
+                    </div>
+
+                    <div class="cost-item">
+                        <div class="cost-label">Days Remaining</div>
+                        <div class="cost-value">8 days</div>
+                        <div class="cost-subtext">Budget resets March 31</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">PHI-Scaled Budget Allocation</h3>
+            <div class="glass-card highlight">
+                <p class="content-text">HeadyOS uses the Golden Ratio (φ ≈ 1.618) to proportionally allocate budgets across the three runtimes based on their computational demands and usage patterns. This mathematical approach ensures that each runtime gets resources proportional to its value contribution.</p>
+                <ul class="feature-list">
+                    <li><strong>Runtime 1 Allocation:</strong> $533 (33.3%) - Embedding generation is computationally intensive</li>
+                    <li><strong>Runtime 2 Allocation:</strong> $328 (20.5%) - Search is responsive but less compute-heavy</li>
+                    <li><strong>Runtime 3 Allocation:</strong> $739 (46.2%) - Flexible for peak AI workloads</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Cost Optimization Tips</h3>
+            <div class="glass-card">
+                <ul class="feature-list">
+                    <li>Batch vectorization jobs during off-peak hours for better resource utilization</li>
+                    <li>Use Runtime 2 (T4) for query serving instead of A100 when possible to save costs</li>
+                    <li>Archive old embeddings to reduce Runtime 1 memory pressure</li>
+                    <li>Enable auto-shutdown for idle runtimes to prevent wasted credits</li>
+                    <li>Monitor task execution times and optimize long-running jobs</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Computational Backbone -->
+        <section class="section">
+            <h2 class="section-title">HeadyOS Computational Backbone</h2>
+
+            <p class="content-text">The 3 Colab Pro+ runtimes form the computational backbone that powers every aspect of HeadyOS. Without these high-performance environments, the latent space semantic search, real-time embeddings, and AI inference would not be possible at the scale and speed that HeadyOS requires.</p>
+
+            <div class="glass-card">
+                <h3 class="subsection-title">Role of Each Runtime</h3>
+                <ul class="feature-list">
+                    <li><strong>Embedding Engine (Runtime 1):</strong> Converts all text, operations, and queries into vector representations using transformer models. Operates 24/7 to continuously ingest and process new data.</li>
+                    <li><strong>Search Engine (Runtime 2):</strong> Performs real-time similarity search across millions of vectors using optimized algorithms like Approximate Nearest Neighbors (ANN). Serves user queries with <100ms latency.</li>
+                    <li><strong>AI Workbench (Runtime 3):</strong> Runs machine learning models, pattern analysis, and long-running AI tasks. Flexible allocation to handle burst workloads and experimental features.</li>
+                </ul>
+            </div>
+
+            <div class="glass-card highlight">
+                <h3 class="subsection-title">Performance Characteristics</h3>
+                <ul class="feature-list">
+                    <li><strong>Throughput:</strong> Process 10,000+ embeddings per hour across all runtimes</li>
+                    <li><strong>Latency:</strong> Semantic search queries complete in 45-100ms on average</li>
+                    <li><strong>Capacity:</strong> Support up to 10 million vectors in the ring buffer with efficient search</li>
+                    <li><strong>Availability:</strong> 99.5% uptime with automatic failover and recovery</li>
+                    <li><strong>Scalability:</strong> Distribute load across runtimes as queries increase</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Why This Matters for HeadyOS</h3>
+            <div class="glass-card">
+                <p class="content-text">The combination of 3 dedicated Colab Pro+ runtimes with optimized allocation using Fibonacci scaling enables HeadyOS to deliver intelligence at scale. Rather than making users wait for expensive compute operations, the always-on runtimes ensure that:</p>
+                <ul class="feature-list">
+                    <li>New operations are immediately indexed and searchable in the latent space</li>
+                    <li>Semantic search queries return results in milliseconds, not seconds</li>
+                    <li>Complex AI workloads don't impact the responsiveness of the user-facing system</li>
+                    <li>The system learns from history and provides smarter recommendations over time</li>
+                    <li>Cost remains predictable with PHI-scaled budget allocation</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Monitoring & Alerts -->
+        <section class="section">
+            <h2 class="section-title">Monitoring & Health Alerts</h2>
+
+            <div class="glass-card">
+                <h3 class="subsection-title">Key Metrics Tracked</h3>
+                <ul class="feature-list">
+                    <li><strong>Memory Usage:</strong> Alert if any runtime exceeds 85% memory allocation</li>
+                    <li><strong>GPU Temperature:</strong> Alert if temperature exceeds 75°C (normal operation ≤70°C)</li>
+                    <li><strong>Query Latency:</strong> Alert if search response time exceeds 150ms</li>
+                    <li><strong>Task Queue Depth:</strong> Alert if queue depth exceeds 50 pending tasks</li>
+                    <li><strong>Session Duration:</strong> Auto-restart sessions approaching 24-hour limit</li>
+                    <li><strong>Error Rates:</strong> Alert if task failure rate exceeds 5%</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 HeadyOS Colab Runtime Management. Compute power for the intelligent OS.</p>
+    </footer>
+
+    <script src="/nav-global.js"></script>
+</body>
+</html>
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg

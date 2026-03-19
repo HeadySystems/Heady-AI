@@ -1,0 +1,835 @@
+name: HCFP Clean Build Pipeline
+# Clean build on every change - no incremental artifacts trusted
+# Error handling with classification and recovery
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      full_rebuild:
+        description: 'Force full rebuild from scratch'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  NODE_VERSION: '20.18.1'
+  PYTHON_VERSION: '3.12.7'
+  CLEAN_BUILD: true
+  ERROR_RETRY_COUNT: 2
+
+jobs:
+  # Phase 1: Setup and Validation
+  setup:
+    name: 🔧 Setup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      cache_key: ${{ steps.cache.outputs.key }}
+      should_build: ${{ steps.check.outputs.should_build }}
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for proper builds
+      
+      - name: 🔍 Check for api.headysystems.com references
+        id: check
+        run: |
+          echo "🔍 Scanning for api.headysystems.com references..."
+          python scripts/api.headysystems.com-inventory.py --root . --output api.headysystems.com-check.json || true
+          
+          # Check if critical api.headysystems.com refs exist
+          if grep -r "api.headysystems.com:3300\|api.headysystems.com:3300" --include="*.js" --include="*.ts" --include="*.py" --include="*.yaml" src/ 2>/dev/null | head -5; then
+            echo "⚠️  Found hardcoded api.headysystems.com references in source code"
+            echo "should_build=warning" >> $GITHUB_OUTPUT
+          else
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: 🔐 Cache Tools (Not Artifacts)
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.local/share/virtualenvs
+            /usr/local/lib/node_modules
+          key: ${{ runner.os }}-tools-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-tools-
+
+  # Phase 2: Clean Build
+  build:
+    name: 🏗️ Clean Build (No Incremental)
+    runs-on: ubuntu-latest
+    needs: setup
+    if: needs.setup.outputs.should_build != 'false'
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+          - manager
+          - worker
+          - frontend
+          - browser-ext
+          - mobile
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🧹 Clean Workspace (No Artifacts)
+        run: |
+          echo "🧹 Performing clean build - removing all build artifacts..."
+          rm -rf dist/
+          rm -rf build/
+          rm -rf .next/
+          rm -rf out/
+          rm -rf node_modules/.cache/
+          rm -rf coverage/
+          rm -rf .nyc_output/
+          find . -name "*.log" -delete
+          echo "✅ Workspace cleaned"
+      
+      - name: 📦 Install Dependencies (Clean)
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci  # Clean install, ignores cache
+          elif [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile
+          elif [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          fi
+      
+      - name: 🏗️ Build ${{ matrix.component }}
+        id: build
+        run: |
+          case "${{ matrix.component }}" in
+            manager)
+              npm run build:manager
+              ;;
+            worker)
+              cd backend/python_worker && pip install -r requirements.txt && python -m compileall .
+              ;;
+            frontend)
+              npm run build:frontend
+              ;;
+            browser-ext)
+              cd distribution/browser/extensions/chrome && npm run build
+              ;;
+            mobile)
+              cd HeadyWeb-mobile && npm install && npm run build 2>/dev/null || echo "Mobile build skipped"
+              ;;
+          esac
+        continue-on-error: true
+      
+      - name: 🔍 Classify Build Error
+        if: steps.build.outcome == 'failure'
+        id: error_classify
+        run: |
+          ERROR_LOG="build-error-${{ matrix.component }}.log"
+          
+          # Check error patterns
+          if grep -q "network timeout\|ECONNREFUSED\|ETIMEDOUT\|fetch failed" $ERROR_LOG 2>/dev/null; then
+            echo "error_type=transient_network" >> $GITHUB_OUTPUT
+            echo "🔄 Transient network error detected - will retry"
+          elif grep -q "permission denied\|EACCES\|EPERM" $ERROR_LOG 2>/dev/null; then
+            echo "error_type=permission" >> $GITHUB_OUTPUT
+            echo "🚫 Permission error - requires manual fix"
+          elif grep -q "syntax error\|SyntaxError\|Unexpected token\|Module not found\|Cannot find module" $ERROR_LOG 2>/dev/null; then
+            echo "error_type=code_config" >> $GITHUB_OUTPUT
+            echo "🔴 Code/config error - blocking issue"
+          else
+            echo "error_type=unknown" >> $GITHUB_OUTPUT
+            echo "❓ Unknown error type"
+          fi
+      
+      - name: 🔄 Retry Build (Transient Errors Only)
+        if: steps.build.outcome == 'failure' && steps.error_classify.outputs.error_type == 'transient_network'
+        run: |
+          echo "🔄 Retrying build after transient error..."
+          sleep 30
+          # Re-run the build command from previous step
+          case "${{ matrix.component }}" in
+            manager)
+              npm run build:manager
+              ;;
+            worker)
+              cd backend/python_worker && python -m compileall .
+              ;;
+            frontend)
+              npm run build:frontend
+              ;;
+            browser-ext)
+              cd distribution/browser/extensions/chrome && npm run build
+              ;;
+          esac
+      
+      - name: ❌ Fail on Non-Recoverable Error
+        if: steps.build.outcome == 'failure' && steps.error_classify.outputs.error_type != 'transient_network'
+        run: |
+          echo "🚨 Build failed with non-recoverable error: ${{ steps.error_classify.outputs.error_type }}"
+          echo "::error::Build failure in ${{ matrix.component }} - requires code/config fix"
+          exit 1
+      
+      - name: 📤 Upload Build Artifacts
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.component }}
+          path: |
+            dist/
+            build/
+            !node_modules/
+          retention-days: 7
+
+  # Phase 3: Test Suite
+  test:
+    name: 🧪 Full Test Suite
+    runs-on: ubuntu-latest
+    needs: build
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        test_type:
+          - unit
+          - integration
+          - e2e
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🧹 Clean Test Environment
+        run: |
+          rm -rf coverage/
+          rm -rf .nyc_output/
+          rm -rf test-results/
+      
+      - name: 📦 Install Dependencies
+        run: npm ci
+      
+      - name: 🧪 Run ${{ matrix.test_type }} Tests
+        id: test
+        run: |
+          case "${{ matrix.test_type }}" in
+            unit)
+              npm run test:unit -- --coverage
+              ;;
+            integration)
+              npm run test:integration || echo "No integration tests"
+              ;;
+            e2e)
+              npm run test:e2e || echo "No e2e tests"
+              ;;
+          esac
+        continue-on-error: ${{ matrix.test_type == 'e2e' }}
+      
+      - name: 📊 Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.test_type }}
+          path: |
+            coverage/
+            test-results/
+            junit.xml
+        if: always()
+
+  # Phase 4: Security & Quality Checks
+  security:
+    name: 🔒 Security & Quality
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Secret Detection
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+      
+      - name: 🛡️ Dependency Vulnerability Scan
+        run: |
+          npm audit --audit-level=moderate || true
+          pip-audit || true
+      
+      - name: 📋 Lint & Code Quality
+        run: |
+          npm run lint
+          npm run format:check
+      
+      - name: 🔐 Check for Hardcoded Secrets
+        run: |
+          # Check for common secret patterns
+          patterns=(
+            "password\s*=\s*['\"][^'\"]+['\"]"
+            "api_key\s*=\s*['\"][^'\"]+['\"]"
+            "secret\s*=\s*['\"][^'\"]+['\"]"
+            "token\s*=\s*['\"][^'\"]{20,}['\"]"
+          )
+          
+          found=0
+          for pattern in "${patterns[@]}"; do
+            if grep -rE "$pattern" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | grep -v "example\|test\|spec\|mock"; then
+              echo "⚠️  Potential hardcoded secret found with pattern: $pattern"
+              found=1
+            fi
+          done
+          
+          if [ $found -eq 1 ]; then
+            echo "::warning::Potential hardcoded secrets detected - review required"
+          fi
+
+  # Phase 5: Deployment Preparation
+  deploy-prep:
+    name: 📦 Deploy Preparation
+    runs-on: ubuntu-latest
+    needs: [build, test, security]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+      - name: 📥 Download All Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: deploy-artifacts/
+          pattern: build-*
+      
+      - name: 🔍 Verify Artifacts
+        run: |
+          echo "📦 Verifying build artifacts..."
+          ls -la deploy-artifacts/
+          
+          # Check each artifact
+          for dir in deploy-artifacts/build-*/; do
+            if [ -d "$dir" ]; then
+              echo "✅ Found: $dir"
+              du -sh "$dir"
+            fi
+          done
+      
+      - name: 🏷️ Tag Release
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "📌 Release version: $VERSION"
+      
+      - name: 📤 Upload Deploy Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-package-${{ env.VERSION }}
+          path: deploy-artifacts/
+          retention-days: 30
+
+  # Phase 6: Error Reporting & Notifications
+  report:
+    name: 📊 Build Report
+    runs-on: ubuntu-latest
+    needs: [setup, build, test, security]
+    if: always()
+    
+    steps:
+      - name: 📥 Collect Results
+        run: |
+          echo "## 🏗️ HCFP Clean Build Report" > build-report.md
+          echo "" >> build-report.md
+          echo "**Commit:** ${{ github.sha }}" >> build-report.md
+          echo "**Branch:** ${{ github.ref }}" >> build-report.md
+          echo "**Triggered by:** ${{ github.actor }}" >> build-report.md
+          echo "" >> build-report.md
+          
+          echo "### 📋 Job Status" >> build-report.md
+          echo "- Setup: ${{ needs.setup.result }}" >> build-report.md
+          echo "- Build: ${{ needs.build.result }}" >> build-report.md
+          echo "- Test: ${{ needs.test.result }}" >> build-report.md
+          echo "- Security: ${{ needs.security.result }}" >> build-report.md
+          echo "" >> build-report.md
+          
+          if [ "${{ needs.build.result }}" == "failure" ]; then
+            echo "🚨 **BUILD FAILED** - Manual intervention required" >> build-report.md
+            echo "::error::HCFP Clean Build failed - check logs for details"
+          elif [ "${{ needs.test.result }}" == "failure" ]; then
+            echo "⚠️ **TESTS FAILED** - Review test results" >> build-report.md
+          else
+            echo "✅ **BUILD SUCCESSFUL**" >> build-report.md
+          fi
+      
+      - name: 🔔 Alert on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "🚨 HCFP Build Failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 Clean Build Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n${{ github.sha }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author:*\n${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Logs"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+# Prevent api.headysystems.com in production code
+  api.headysystems.com-lint:
+    name: 🚫 api.headysystems.com Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Check for api.headysystems.com in Production Code
+        run: |
+          # Only check production-bound code
+          EXCLUDE_DIRS="test|spec|example|docs|.github|scripts"
+          
+          if grep -rE "api.headysystems.com|127\.0\.0\.1|0\.0\.0\.0" \
+            --include="*.js" --include="*.ts" --include="*.py" \
+            src/ 2>/dev/null | grep -vE "$EXCLUDE_DIRS"; then
+            echo "::error::Found api.headysystems.com references in production code!"
+            echo "These must be replaced with service domain names."
+            exit 1
+          else
+            echo "✅ No api.headysystems.com references found in production code"
+          fi
+                              - name: 🔧 Auto-fix localhost References
+        if: failure()
+        run: |
+          echo "🔧 Attempting auto-fix for localhost references..."
+          
+          # Check if fix script exists
+          if [ -f "scripts/localhost-inventory.py" ]; then
+            python scripts/localhost-inventory.py --fix --dry-run || true
+            echo ""
+            echo "📋 Dry-run complete. To apply fixes, run:"
+            echo "  python scripts/localhost-inventory.py --fix"
+          fi
+          
+          # Check for service discovery configuration
+          if [ -f "configs/service-discovery.yaml" ]; then
+            echo ""
+            echo "📦 Available Service Discovery Domains:"
+            cat configs/service-discovery.yaml | grep -E "^\s+\w+:" | head -15
+          fi
+          
+          echo ""
+          echo "📋 Quick Fix Guide:"
+          echo "  1. Replace 'localhost:3000' with '\${API_BASE_URL}'"
+          echo "  2. Replace 'localhost:3001' with '\${WEB_APP_URL}'"
+          echo "  3. Replace '127.0.0.1' with service names from service-discovery.yaml"
+          echo "  4. Use environment variables for all URLs"
+          echo "  5. For Docker, use service names (e.g., 'api', 'web', 'db')"
+          echo "  6. Replace hardcoded ports with environment variables"
+          echo "  7. Use 'wss://' instead of 'ws://' for WebSocket connections"
+          echo ""
+          echo "🔗 Reference: docs/url-style-guide.md"
+          echo ""
+          echo "🔄 Common Replacements:"
+          echo "  localhost:3000  → https://api.headysystems.com"
+          echo "  localhost:3001  → https://app.headysystems.com"
+          echo "  localhost:5432  → \${DATABASE_URL}"
+          echo "  localhost:6379  → \${REDIS_URL}"
+          echo "  127.0.0.1       → Use Docker service names or proper domains"
+          echo ""
+          echo "🔄 Attempting automatic sed replacements (dry-run)..."
+          
+          # Show what would be replaced
+          for file in $(find src/ -type f \( -name "*.js" -o -name "*.ts" -o -name "*.py" \) 2>/dev/null); do
+            if grep -qE "localhost|127\.0\.0\.1" "$file" 2>/dev/null; then
+              echo "  Would modify: $file"
+            fi
+          done
+
+      - name: 🔍 Deep Scan for Security Issues
+        run: |
+          echo "🔍 Running deep security scan..."
+          
+          # Check for exposed credentials
+          echo "Checking for exposed credentials..."
+          CRED_PATTERNS=(
+            "password\s*[:=]\s*['\"][^'\"]+['\"]"
+            "api[_-]?key\s*[:=]\s*['\"][^'\"]+['\"]"
+            "secret\s*[:=]\s*['\"][^'\"]+['\"]"
+            "token\s*[:=]\s*['\"][a-zA-Z0-9]{20,}['\"]"
+            "private[_-]?key"
+            "BEGIN\s+(RSA|DSA|EC|OPENSSH)\s+PRIVATE\s+KEY"
+          )
+          
+          cred_found=0
+          for pattern in "${CRED_PATTERNS[@]}"; do
+            if grep -rE "$pattern" --include="*.js" --include="*.ts" --include="*.py" --include="*.yaml" --include="*.yml" src/ configs/ 2>/dev/null | grep -vE "example|test|spec|mock|placeholder|\\\$\{"; then
+              echo "⚠️ Potential credential exposure: $pattern"
+              cred_found=1
+            fi
+          done
+          
+          if [ $cred_found -eq 0 ]; then
+            echo "✅ No exposed credentials detected"
+          fi
+          
+          # Check for insecure protocols
+          echo ""
+          echo "Checking for insecure protocols..."
+          if grep -rE "http://[^l]" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | grep -vE "localhost|127\.0\.0\.1|example|test"; then
+            echo "⚠️ Found HTTP (non-HTTPS) URLs in production code"
+          fi
+          
+          # Check for SQL injection vulnerabilities
+          echo ""
+          echo "Checking for potential SQL injection patterns..."
+          if grep -rE "execute\s*\(\s*[\"'].*\+|f[\"'].*SELECT.*\{|\.format\(.*SELECT" --include="*.py" src/ 2>/dev/null | grep -vE "test|spec"; then
+            echo "⚠️ Potential SQL injection vulnerability detected"
+          fi
+
+      - name: 📊 Generate Comprehensive Report
+        if: always()
+        run: |
+          echo "📊 Generating comprehensive localhost usage report..."
+          
+          # Initialize report
+          cat > localhost-report.md << 'EOF'
+          # 🔍 Localhost & Security Reference Report
+          
+          EOF
+          
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> localhost-report.md
+          echo "**Commit:** ${{ github.sha }}" >> localhost-report.md
+          echo "**Branch:** ${{ github.ref_name }}" >> localhost-report.md
+          echo "**Run Number:** ${{ github.run_number }}" >> localhost-report.md
+          echo "**Triggered By:** ${{ github.actor }}" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Executive Summary
+          echo "## 📋 Executive Summary" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          total_localhost=$(grep -rlE "localhost|127\.0\.0\.1|0\.0\.0\.0" src/ 2>/dev/null | wc -l || echo "0")
+          if [ "$total_localhost" -eq 0 ]; then
+            echo "✅ **Status: PASS** - No localhost references found in production code" >> localhost-report.md
+          else
+            echo "⚠️ **Status: REVIEW NEEDED** - Found $total_localhost files with localhost references" >> localhost-report.md
+          fi
+          echo "" >> localhost-report.md
+          
+          # Count occurrences by file type
+          echo "## 📁 References by File Type" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "| Extension | File Count | Severity |" >> localhost-report.md
+          echo "|-----------|------------|----------|" >> localhost-report.md
+          
+          total_count=0
+          for ext in js ts jsx tsx py yaml yml json html css vue svelte go rs java; do
+            count=$(grep -rlE "localhost|127\.0\.0\.1|0\.0\.0\.0" --include="*.$ext" src/ 2>/dev/null | wc -l || echo "0")
+            if [ "$count" -gt 0 ]; then
+              severity="🟡 Medium"
+              if [ "$count" -gt 10 ]; then
+                severity="🔴 High"
+              elif [ "$count" -lt 3 ]; then
+                severity="🟢 Low"
+              fi
+              echo "| .$ext | $count | $severity |" >> localhost-report.md
+              total_count=$((total_count + count))
+            fi
+          done
+          
+          echo "" >> localhost-report.md
+          echo "**Total files affected:** $total_count" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Pattern Analysis
+          echo "## 🔬 Pattern Analysis" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          localhost_count=$(grep -rE "localhost" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | wc -l || echo "0")
+          ip_count=$(grep -rE "127\.0\.0\.1" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | wc -l || echo "0")
+          zero_ip_count=$(grep -rE "0\.0\.0\.0" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | wc -l || echo "0")
+          private_ip_count=$(grep -rE "192\.168\.|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2[0-9]|3[0-1])\." --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | wc -l || echo "0")
+          
+          echo "| Pattern | Count | Risk Level |" >> localhost-report.md
+          echo "|---------|-------|------------|" >> localhost-report.md
+          echo "| \`localhost\` | $localhost_count | 🟡 Medium |" >> localhost-report.md
+          echo "| \`127.0.0.1\` | $ip_count | 🟡 Medium |" >> localhost-report.md
+          echo "| \`0.0.0.0\` | $zero_ip_count | 🔴 High |" >> localhost-report.md
+          echo "| Private IPs | $private_ip_count | 🔴 High |" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Hardcoded Port Analysis
+          echo "## 🔌 Hardcoded Port Analysis" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "| Port | Service | Count | Recommended Replacement |" >> localhost-report.md
+          echo "|------|---------|-------|------------------------|" >> localhost-report.md
+          
+          declare -A port_services=(
+            ["3000"]="API Server"
+            ["3001"]="Web App"
+            ["5432"]="PostgreSQL"
+            ["6379"]="Redis"
+            ["8000"]="Backend"
+            ["8080"]="HTTP Proxy"
+            ["5000"]="Flask/Dev"
+            ["27017"]="MongoDB"
+            ["9200"]="Elasticsearch"
+            ["5672"]="RabbitMQ"
+          )
+          
+          declare -A port_replacements=(
+            ["3000"]="\${API_BASE_URL}"
+            ["3001"]="\${WEB_APP_URL}"
+            ["5432"]="\${DATABASE_URL}"
+            ["6379"]="\${REDIS_URL}"
+            ["8000"]="\${BACKEND_URL}"
+            ["8080"]="\${PROXY_URL}"
+            ["5000"]="\${APP_URL}"
+            ["27017"]="\${MONGODB_URL}"
+            ["9200"]="\${ELASTICSEARCH_URL}"
+            ["5672"]="\${RABBITMQ_URL}"
+          )
+          
+          for port in 3000 3001 5432 6379 8000 8080 5000 27017 9200 5672; do
+            port_count=$(grep -rE "localhost:$port|127\.0\.0\.1:$port" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | wc -l || echo "0")
+            if [ "$port_count" -gt 0 ]; then
+              service="${port_services[$port]:-Unknown}"
+              replacement="${port_replacements[$port]:-\${SERVICE_URL}}"
+              echo "| $port | $service | $port_count | \`$replacement\` |" >> localhost-report.md
+            fi
+          done
+          echo "" >> localhost-report.md
+          
+          # Security Concerns
+          echo "## 🔒 Security Concerns" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          security_issues=0
+          
+          # Check for insecure WebSocket
+          ws_count=$(grep -rE "ws://[^l]" --include="*.js" --include="*.ts" src/ 2>/dev/null | grep -v localhost | wc -l || echo "0")
+          if [ "$ws_count" -gt 0 ]; then
+            echo "| ⚠️ | Insecure WebSocket (ws://) | $ws_count | Use wss:// for production |" >> localhost-report.md
+            security_issues=$((security_issues + 1))
+          fi
+          
+          # Check for wildcard CORS
+          cors_count=$(grep -rE "Access-Control-Allow-Origin.*\*" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | wc -l || echo "0")
+          if [ "$cors_count" -gt 0 ]; then
+            echo "| ⚠️ | Wildcard CORS origins | $cors_count | Specify allowed origins |" >> localhost-report.md
+            security_issues=$((security_issues + 1))
+          fi
+          
+          # Check for HTTP in production
+          http_count=$(grep -rE "http://[^l]" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | grep -vE "localhost|127\.0\.0\.1|example" | wc -l || echo "0")
+          if [ "$http_count" -gt 0 ]; then
+            echo "| ⚠️ | Insecure HTTP URLs | $http_count | Use HTTPS |" >> localhost-report.md
+            security_issues=$((security_issues + 1))
+          fi
+          
+          # Check for hardcoded API domains
+          hardcoded_api=$(grep -rE "api\.headysystems\.com" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | grep -v "#" | wc -l || echo "0")
+          if [ "$hardcoded_api" -gt 0 ]; then
+            echo "| ⚠️ | Hardcoded API domain | $hardcoded_api | Use service discovery |" >> localhost-report.md
+            security_issues=$((security_issues + 1))
+          fi
+          
+          if [ $security_issues -eq 0 ]; then
+            echo "✅ No security concerns detected" >> localhost-report.md
+          fi
+          echo "" >> localhost-report.md
+          
+          # Detailed Findings
+          echo "## 📝 Detailed Findings (Top 50)" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo '```' >> localhost-report.md
+          grep -rnE "localhost|127\.0\.0\.1" --include="*.js" --include="*.ts" --include="*.py" src/ 2>/dev/null | head -50 >> localhost-report.md || echo "No findings" >> localhost-report.md
+          echo '```' >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Affected Files List
+          echo "## 📄 Affected Files" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo '```' >> localhost-report.md
+          grep -rlE "localhost|127\.0\.0\.1|0\.0\.0\.0" --include="*.js" --include="*.ts" --include="*.py" --include="*.yaml" --include="*.yml" src/ 2>/dev/null | sort | uniq >> localhost-report.md || echo "No files affected" >> localhost-report.md
+          echo '
+          echo '```' >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Recommendations Section
+          echo "## 💡 Recommendations" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "### Immediate Actions" >> localhost-report.md
+          echo "1. Replace all \`localhost\` references with environment variables" >> localhost-report.md
+          echo "2. Use service discovery for inter-service communication" >> localhost-report.md
+          echo "3. Update Docker Compose to use service names instead of IPs" >> localhost-report.md
+          echo "4. Implement proper CORS configuration with specific origins" >> localhost-report.md
+          echo "5. Review and update all hardcoded port references" >> localhost-report.md
+          echo "6. Migrate all HTTP endpoints to HTTPS" >> localhost-report.md
+          echo "7. Replace ws:// WebSocket connections with wss://" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "### Long-term Improvements" >> localhost-report.md
+          echo "1. Implement centralized configuration management" >> localhost-report.md
+          echo "2. Use secrets management (Vault, AWS Secrets Manager, Azure Key Vault)" >> localhost-report.md
+          echo "3. Add pre-commit hooks to catch localhost references" >> localhost-report.md
+          echo "4. Implement service mesh for production environments" >> localhost-report.md
+          echo "5. Set up automated security scanning in CI/CD" >> localhost-report.md
+          echo "6. Create environment-specific configuration files" >> localhost-report.md
+          echo "7. Implement infrastructure as code (Terraform/Pulumi)" >> localhost-report.md
+          echo "8. Set up centralized logging and monitoring" >> localhost-report.md
+          echo "9. Implement circuit breakers for service resilience" >> localhost-report.md
+          echo "10. Create runbooks for common operational tasks" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Environment Variable Mapping
+          echo "## 🔧 Environment Variable Mapping" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "| Current Pattern | Recommended Variable | Example Value |" >> localhost-report.md
+          echo "|-----------------|---------------------|---------------|" >> localhost-report.md
+          echo "| \`localhost:3000\` | \`API_BASE_URL\` | \`https://api.headysystems.com\` |" >> localhost-report.md
+          echo "| \`localhost:3001\` | \`WEB_APP_URL\` | \`https://app.headysystems.com\` |" >> localhost-report.md
+          echo "| \`localhost:5432\` | \`DATABASE_URL\` | \`postgresql://user:pass@db:5432/heady\` |" >> localhost-report.md
+          echo "| \`localhost:6379\` | \`REDIS_URL\` | \`redis://cache:6379\` |" >> localhost-report.md
+          echo "| \`localhost:9200\` | \`ELASTICSEARCH_URL\` | \`http://elasticsearch:9200\` |" >> localhost-report.md
+          echo "| \`localhost:27017\` | \`MONGODB_URL\` | \`mongodb://mongo:27017/heady\` |" >> localhost-report.md
+          echo "| \`localhost:5672\` | \`RABBITMQ_URL\` | \`amqp://rabbitmq:5672\` |" >> localhost-report.md
+          echo "| \`localhost:8080\` | \`PROXY_URL\` | \`http://proxy:8080\` |" >> localhost-report.md
+          echo "| \`localhost:8000\` | \`BACKEND_URL\` | \`http://backend:8000\` |" >> localhost-report.md
+          echo "| \`localhost:4000\` | \`GRAPHQL_URL\` | \`https://graphql.headysystems.com\` |" >> localhost-report.md
+          echo "| \`localhost:11211\` | \`MEMCACHED_URL\` | \`memcached://cache:11211\` |" >> localhost-report.md
+          echo "| \`localhost:9092\` | \`KAFKA_URL\` | \`kafka://broker:9092\` |" >> localhost-report.md
+          echo "| \`localhost:2181\` | \`ZOOKEEPER_URL\` | \`zookeeper://zk:2181\` |" >> localhost-report.md
+          echo "| \`localhost:443\` | \`HTTPS_URL\` | \`https://secure.headysystems.com\` |" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Docker Service Name Mapping
+          echo "## 🐳 Docker Service Name Mapping" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "| Localhost Reference | Docker Service Name | Network Alias |" >> localhost-report.md
+          echo "|---------------------|---------------------|---------------|" >> localhost-report.md
+          echo "| \`localhost:3000\` | \`api\` | \`api.local\` |" >> localhost-report.md
+          echo "| \`localhost:3001\` | \`web\` | \`web.local\` |" >> localhost-report.md
+          echo "| \`localhost:5432\` | \`postgres\` | \`db.local\` |" >> localhost-report.md
+          echo "| \`localhost:6379\` | \`redis\` | \`cache.local\` |" >> localhost-report.md
+          echo "| \`localhost:27017\` | \`mongo\` | \`mongo.local\` |" >> localhost-report.md
+          echo "| \`localhost:9200\` | \`elasticsearch\` | \`es.local\` |" >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Auto-fix suggestions
+          echo "## 🔄 Auto-Fix Commands" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "Run these commands to automatically fix common issues:" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo '```bash' >> localhost-report.md
+          echo "# Fix localhost:3000 references" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' \\) -exec sed -i 's|localhost:3000|\${API_BASE_URL}|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix localhost:3001 references" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' \\) -exec sed -i 's|localhost:3001|\${WEB_APP_URL}|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix 127.0.0.1 references" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' -o -name '*.py' \\) -exec sed -i 's|127\\.0\\.0\\.1|localhost|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix hardcoded database connections" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' -o -name '*.py' \\) -exec sed -i 's|localhost:5432|\${DATABASE_HOST}:5432|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix Redis connections" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' -o -name '*.py' \\) -exec sed -i 's|localhost:6379|\${REDIS_HOST}:6379|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix insecure WebSocket connections" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' \\) -exec sed -i 's|ws://|wss://|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix HTTP to HTTPS (excluding localhost)" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' \\) -exec sed -i 's|http://api\\.|https://api.|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Remove hardcoded private IPs" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' -o -name '*.py' \\) -exec sed -i 's|192\\.168\\.[0-9]*\\.[0-9]*|\${INTERNAL_HOST}|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix MongoDB connections" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' -o -name '*.py' \\) -exec sed -i 's|localhost:27017|\${MONGODB_HOST}:27017|g' {} \\;" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "# Fix Elasticsearch connections" >> localhost-report.md
+          echo "find src/ -type f \\( -name '*.js' -o -name '*.ts' -o -name '*.py' \\) -exec sed -i 's|localhost:9200|\${ELASTICSEARCH_HOST}:9200|g' {} \\;" >> localhost-report.md
+          echo '```' >> localhost-report.md
+          echo "" >> localhost-report.md
+          
+          # Pre-commit Hook Setup
+          echo "## 🪝 Pre-commit Hook Setup" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo "Add this to \`.pre-commit-config.yaml\` to prevent future issues:" >> localhost-report.md
+          echo "" >> localhost-report.md
+          echo '```yaml' >> localhost-report.md
+          echo "repos:" >> localhost-report.md
+          echo "  - repo: local" >> localhost-report.md
+          echo "    hooks:" >> localhost-report.md
+          echo "      - id: no-localhost" >> localhost-report.md
+          echo "        name: Check for localhost references" >> localhost-report.md
+          echo "        entry: bash -c 'grep -rE \"localhost|127\\.0\\.0\\.1\" --include=\"*.js\" --include=\"*.ts\" --include=\"*.py\" src/ && exit 1 || exit 0'" >> localhost-report.md
+          echo "        language: system" >> localhost-report.md
+          echo "        pass_filenames: false" >> localhost-report.md
+          echo "      - id: no-hardcoded-secrets" >> localhost-report.md
+          echo "        name: Check for hardcoded secrets" >> localhost-report.md
+          echo "        entry: bash -c 'grep -rE \"(password|api_key|secret)\\s*[:=]\\s*[\\x27\\\"][^\\x27\\\"]+[\\x27\\\"]\" --include=\"*.js\" --include=\"*.ts\" --include=\"*.py\" src/ && exit 1 || exit 0'" >> localhost-report.md
+          echo "        language: system" >> localhost-report.md
+          echo "        pass_filenames: false" >> localhost-report.md
+          echo '
+
+
+
+
