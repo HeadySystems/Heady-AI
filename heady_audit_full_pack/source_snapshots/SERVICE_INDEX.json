@@ -239,7 +239,7 @@
     {
       "id": "heady-buddy",
       "port": 3315,
-      "domain": "headybuddy.com",
+      "domain": "headybuddy.org",
       "description": "HeadyBuddy \u2014 AI companion, persistent memory, empathic personas",
       "upstreams": [
         "heady-brain",

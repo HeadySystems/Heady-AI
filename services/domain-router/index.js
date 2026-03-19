@@ -219,7 +219,7 @@ const DOMAIN_ROUTES = [
   { domain: 'headysystems.com', target: 'heady-web', port: 3300, cslGate: CSL_EXACT_MATCH },
   { domain: 'www.headysystems.com', target: 'heady-web', port: 3300, cslGate: CSL_EXACT_MATCH },
   { domain: 'headyconnection.org', target: 'heady-web', port: 3300, cslGate: CSL_EXACT_MATCH },
-  { domain: 'headybuddy.com', target: 'heady-buddy', port: 3302, cslGate: CSL_EXACT_MATCH },
+  { domain: 'headybuddy.org', target: 'heady-buddy', port: 3302, cslGate: CSL_EXACT_MATCH },
   { domain: 'headyapi.com', target: 'api-gateway', port: 3303, cslGate: CSL_EXACT_MATCH },
   { domain: 'headyos.com', target: 'heady-web', port: 3300, cslGate: CSL_EXACT_MATCH },
   { domain: '*.headyme.com', target: 'heady-web', port: 3300, cslGate: CSL_PARTIAL_MATCH },

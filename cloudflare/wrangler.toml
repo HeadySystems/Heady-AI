@@ -84,6 +84,26 @@ routes = [
   { pattern = "www.headystore.com/*",       zone_name = "headystore.com" },
   { pattern = "headyex.com/*",              zone_name = "headyex.com" },
   { pattern = "www.headyex.com/*",          zone_name = "headyex.com" },
+
+  # ── Audit Ecosystem Domains (added March 2026) ───────────────────────
+  { pattern = "headyai.com/*",              zone_name = "headyai.com" },
+  { pattern = "www.headyai.com/*",          zone_name = "headyai.com" },
+  { pattern = "headyfullstack.com/*",       zone_name = "headyfullstack.com" },
+  { pattern = "www.headyfullstack.com/*",   zone_name = "headyfullstack.com" },
+  { pattern = "headymusic.net/*",           zone_name = "headymusic.net" },
+  { pattern = "www.headymusic.net/*",       zone_name = "headymusic.net" },
+  { pattern = "headycloud.io/*",            zone_name = "headycloud.io" },
+  { pattern = "www.headycloud.io/*",        zone_name = "headycloud.io" },
+  { pattern = "headydata.io/*",             zone_name = "headydata.io" },
+  { pattern = "www.headydata.io/*",         zone_name = "headydata.io" },
+  { pattern = "headyinc.com/*",             zone_name = "headyinc.com" },
+  { pattern = "www.headyinc.com/*",         zone_name = "headyinc.com" },
+  { pattern = "headyhc.com/*",              zone_name = "headyhc.com" },
+  { pattern = "www.headyhc.com/*",          zone_name = "headyhc.com" },
+  { pattern = "headygraphics.com/*",        zone_name = "headygraphics.com" },
+  { pattern = "www.headygraphics.com/*",    zone_name = "headygraphics.com" },
+  { pattern = "headyapis.com/*",            zone_name = "headyapis.com" },
+  { pattern = "www.headyapis.com/*",        zone_name = "headyapis.com" },
 ]
 
 # ---------------------------------------------------------------------------

@@ -15,7 +15,7 @@
  *           data-features="chat,tasks,memory"
  *           async></script>
  *
- * Works on: headysystems.com, headyme.com, headybuddy.com, headymcp.com,
+ * Works on: headysystems.com, headyme.com, headybuddy.org, headymcp.com,
  *           headyio.com, headybot.com, headyapi.com, headylens.com,
  *           headyai.com, headyfinance.com, headyconnection.org, 1ime1.com
  */
@@ -43,7 +43,7 @@ const HeadyBuddyEmbed = (() => {
 
   // ── Allowed origins for cross-domain SSO ────────────────────
   const ALLOWED_ORIGINS = new Set([
-    'headysystems.com', 'headyme.com', 'headybuddy.com', 'headymcp.com',
+    'headysystems.com', 'headyme.com', 'headybuddy.org', 'headymcp.com',
     'headyio.com', 'headybot.com', 'headyapi.com', 'headylens.com',
     'headyai.com', 'headyfinance.com', 'headyconnection.org', '1ime1.com',
   ]);

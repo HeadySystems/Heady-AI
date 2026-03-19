@@ -29,7 +29,7 @@ module.exports = Object.freeze({
     },
     {
       "repo": "headybuddy-core",
-      "domain": "headybuddy.com",
+      "domain": "headybuddy.org",
       "title": "HeadyBuddy",
       "surfacePath": "projections/headybuddy-core/site",
       "targetRepoOverlay": "overlays/Heady-pre-production-9f2f0642/apps/remotes/headybuddy-core"

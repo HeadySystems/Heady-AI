@@ -21,7 +21,7 @@ const log = createLogger('cross-site-auth', 'security');
 const ALLOWED_ORIGINS = new Set([
   'https://headysystems.com',
   'https://headyme.com',
-  'https://headybuddy.com',
+  'https://headybuddy.org',
   'https://headymcp.com',
   'https://headyio.com',
   'https://headybot.com',

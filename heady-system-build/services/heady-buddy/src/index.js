@@ -5,7 +5,7 @@
  * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
- * Domain:    headybuddy.com
+ * Domain:    headybuddy.org
  * Port:      3315
  * Upstreams: heady-brain, heady-vector-memory, heady-soul
  *

@@ -1,0 +1,121 @@
+# ============================================================================
+# HEADY CI/CD — Stale Issue Management
+# .github/workflows/stale-issues.yml
+#
+# Marks issues stale after 30 days of inactivity.
+# Closes stale issues after an additional 30 days (60 days total).
+# PRs are handled separately with more lenient thresholds.
+# ============================================================================
+
+name: Stale Issues
+
+on:
+  schedule:
+    # Run daily at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # Allow manual trigger for immediate cleanup
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark and Close Stale Issues
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # ── Thresholds ──────────────────────────────────────────────────
+          days-before-issue-stale: 30
+          days-before-issue-close: 30    # 30 days stale + 30 days to close = 60 days total
+          days-before-pr-stale: 60       # PRs get more time — they represent real work
+          days-before-pr-close: 30       # 60 days stale + 30 days to close = 90 days total
+
+          # ── Labels ──────────────────────────────────────────────────────
+          stale-issue-label: 'stale'
+          close-issue-label: 'closed-stale'
+          stale-pr-label: 'stale'
+          close-pr-label: 'closed-stale'
+
+          # ── Messages ────────────────────────────────────────────────────
+          stale-issue-message: |
+            This issue has been automatically marked as **stale** because it has not had
+            any activity in the past 30 days.
+
+            If this issue is still relevant, please:
+            - Leave a comment with an update or context
+            - Add the `keep-open` label to prevent automatic closure
+
+            This issue will be **closed in 30 days** if no further activity occurs.
+
+            _— Heady Stale Bot_
+
+          close-issue-message: |
+            This issue has been **automatically closed** due to 60 days of inactivity.
+
+            If this is still a valid issue, please reopen it with updated context.
+            For bugs, include reproduction steps and the current version.
+
+            _— Heady Stale Bot_
+
+          stale-pr-message: |
+            This pull request has been automatically marked as **stale** because it has
+            not had any activity in the past 60 days.
+
+            If this PR is still in progress:
+            - Push a new commit or leave a comment
+            - Add the `keep-open` label to prevent automatic closure
+
+            This PR will be **closed in 30 days** if no further activity occurs.
+
+            _— Heady Stale Bot_
+
+          close-pr-message: |
+            This pull request has been **automatically closed** due to 90 days of inactivity.
+
+            If you'd like to continue this work, please reopen the PR or submit a new one
+            rebased against the current `main` branch.
+
+            _— Heady Stale Bot_
+
+          # ── Exemptions ──────────────────────────────────────────────────
+          # Issues/PRs with these labels are never marked stale
+          exempt-issue-labels: >-
+            keep-open,
+            pinned,
+            security,
+            critical,
+            in-progress,
+            blocked,
+            dependencies,
+            performance,
+            lighthouse
+
+          exempt-pr-labels: >-
+            keep-open,
+            pinned,
+            security,
+            critical,
+            in-progress,
+            blocked,
+            dependencies,
+            do-not-merge
+
+          # ── Milestones: don't auto-close issues assigned to a milestone ─
+          exempt-all-milestones: true
+
+          # ── Assignees: don't auto-close issues with an assignee ─────────
+          exempt-all-assignees: false
+
+          # ── Operations budget (GitHub API rate limit) ────────────────────
+          operations-per-run: 100
+
+          # ── Remove stale label if activity resumes ───────────────────────
+          remove-stale-when-updated: true
+
+          # ── Debug mode (set to true to test without making changes) ──────
+          debug-only: false
+
+          # ── Ascending order processes oldest first ────────────────────────
+          ascending: true

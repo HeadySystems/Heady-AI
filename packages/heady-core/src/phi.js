@@ -24,7 +24,7 @@ export const CANARY_STEPS = [0.05, 0.25, 0.50, 1.00]; // φ-stepped deploy
 
 export const HEADY_DOMAINS = [
   'headysystems.com', 'headyme.com', 'headyconnection.org',
-  'headybuddy.com', 'headymcp.com', 'headyio.com',
+  'headybuddy.org', 'headymcp.com', 'headyio.com',
   'headybot.com', 'headyapi.com', 'headylens.com',
   'headyai.com', 'headyfinance.com'
 ];

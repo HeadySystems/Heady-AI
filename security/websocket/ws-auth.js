@@ -29,7 +29,7 @@ function validateUpgrade(req) {
   const sessionId = cookies['heady_sid'];
   if (!sessionId) return { valid: false, error: 'No session cookie' };
   const origin = req.headers.origin;
-  const allowedOrigins = ['https://headyme.com', 'https://headysystems.com', 'https://headybuddy.com', 'https://admin.headysystems.com'];
+  const allowedOrigins = ['https://headyme.com', 'https://headysystems.com', 'https://headybuddy.org', 'https://admin.headysystems.com'];
   if (origin && !allowedOrigins.includes(origin)) return { valid: false, error: 'Origin not allowed' };
   return { valid: true, sessionId, userId: 'pending-validation' };
 }

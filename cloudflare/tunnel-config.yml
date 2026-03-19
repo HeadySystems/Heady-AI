@@ -109,3 +109,52 @@ ingress:
   # ── Catch-all ─────────────────────────────────────────────────────────
   # Returns 404 for any unmatched hostname. Must be last rule.
   - service: http_status:404
+
+  # ── Audit Ecosystem Domains (added March 2026) ─────────────────────
+  - hostname: headyai.com
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headyai.com
+
+  - hostname: headyfullstack.com
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headyfullstack.com
+
+  - hostname: headymusic.net
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headymusic.net
+
+  - hostname: headycloud.io
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headycloud.io
+
+  - hostname: headydata.io
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headydata.io
+
+  - hostname: headyinc.com
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headyinc.com
+
+  - hostname: headyhc.com
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headyhc.com
+
+  - hostname: headygraphics.com
+    service: http://heady-manager:3301
+    originRequest:
+      connectTimeout: 30s
+      httpHostHeader: headygraphics.com

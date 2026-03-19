@@ -4,7 +4,7 @@
             "name": "HeadyMe",
             "slug": "headyme",
             "tagline": "Your AI Operating System",
-            "description": "The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.",
+            "description": "The autonomous intelligence platform that thinks, orchestrates, and evolves across every device and domain. HeadyMe is your personal command center — a unified AI operating system built on 384-dimensional vector memory, Sacred Geometry orchestration, and Continuous Semantic Logic. With 60+ provisional patents protecting the core architecture, HeadyMe delivers a seamless experience across 16 interconnected domains. Whether you are managing AI workflows, exploring vector memory spaces, or coordinating autonomous agent swarms, HeadyMe puts sovereign AI intelligence at your fingertips. Founded by Eric Haywood in Fort Collins, Colorado.",
             "role": "personal-cloud",
             "vertical": "consumer",
             "sacredGeometry": "Flower of Life",
@@ -12,7 +12,7 @@
             "accentDark": "#00b891",
             "accentGlow": "rgba(0,212,170,0.15)",
             "heroTitle": "Your AI Operating System",
-            "heroSubtitle": "The autonomous intelligence platform that thinks, orchestrates, and evolves. 51+ patents. 21 microservices. One unified experience.",
+            "heroSubtitle": "The autonomous intelligence platform that thinks, orchestrates, and evolves. 60+ patents. 21 microservices. 16 domains. One unified experience powered by Sacred Geometry.",
             "canvasAnimation": "sacred-nodes",
             "navLinks": [
                 {
@@ -36,41 +36,51 @@
             "features": [
                 {
                     "icon": "✦",
-                    "title": "Personal Dashboard",
-                    "desc": "Unified view across all Heady services — your command center for AI workflows, memory, and orchestration."
+                    "title": "Personal AI Command Center",
+                    "desc": "Unified dashboard across all 16 Heady services — your mission control for AI workflows, vector memory exploration, agent swarm management, and cross-domain orchestration. Everything connected through Sacred Geometry topology."
                 },
                 {
                     "icon": "🧠",
-                    "title": "3D AI Memory",
-                    "desc": "Vector-spatial context that remembers everything with O(log n) retrieval via octree partitioning."
+                    "title": "384D Vector Memory",
+                    "desc": "Vector-spatial context that remembers everything with O(log n) retrieval via octree partitioning. Your personal AI memory persists across sessions, devices, and domains with phi-scaled consolidation and semantic drift detection."
                 },
                 {
                     "icon": "☁️",
-                    "title": "Cloud Runtime",
-                    "desc": "Managed execution environment for 20 autonomous AI nodes with self-healing infrastructure."
+                    "title": "Cloud Runtime Engine",
+                    "desc": "Managed execution environment for 20+ autonomous AI nodes with self-healing infrastructure. Google Cloud Run, Cloudflare Workers, and edge compute orchestrated by HeadyConductor with phi-backoff circuit breakers and graceful degradation."
                 },
                 {
                     "icon": "🔗",
-                    "title": "Cross-Vertical Sync",
-                    "desc": "Seamlessly share context between all Heady apps — one memory space, infinite projections."
+                    "title": "Cross-Domain Synchronization",
+                    "desc": "Seamlessly share context between all Heady applications — one memory space, infinite projections. Real-time state synchronization across HeadyMe, HeadyBuddy, HeadyAPI, HeadyMCP, and every domain in the ecosystem."
+                },
+                {
+                    "icon": "🛡️",
+                    "title": "Sovereign Data Architecture",
+                    "desc": "Your data belongs to you. Post-quantum cryptography, zero-knowledge proofs, GDPR compliance, and data residency controls ensure complete sovereignty over your AI interactions and memory."
+                },
+                {
+                    "icon": "⚡",
+                    "title": "Phi-Scaled Performance",
+                    "desc": "Every constant derived from the golden ratio. Fibonacci-sized caches, phi-backoff retry logic, CSL-gated routing decisions, and Sacred Geometry resource allocation deliver mathematically optimal performance at every scale."
                 }
             ],
             "stats": [
                 {
-                    "value": "51+",
+                    "value": "60+",
                     "label": "Patents"
                 },
                 {
-                    "value": "20",
+                    "value": "20+",
                     "label": "AI Nodes"
                 },
                 {
-                    "value": "21",
-                    "label": "Microservices"
+                    "value": "384D",
+                    "label": "Memory Space"
                 },
                 {
                     "value": "<2s",
-                    "label": "Response"
+                    "label": "Response Time"
                 }
             ],
             "sections": [
@@ -153,7 +163,7 @@
             "name": "HeadySystems",
             "slug": "headysystems",
             "tagline": "Enterprise AI Orchestration",
-            "description": "The compliance-ready, patent-protected platform for autonomous agent deployment at scale. SOC2, HIPAA, GDPR ready. 51+ patents. Founded by Eric Haywood.",
+            "description": "HeadySystems Inc. is the AI operating system company building the world's first sovereign, self-healing intelligence platform. With 60+ provisional patents covering Continuous Semantic Logic, Sacred Geometry orchestration, 3D vector memory architecture, and autonomous agent swarm coordination, HeadySystems delivers enterprise-grade AI infrastructure that thinks, adapts, and evolves. The platform spans 16 interconnected domains, 21 microservices, and 30+ specialized AI agents — all governed by phi-scaled resource allocation and CSL-gated quality assurance. SOC 2, HIPAA, and GDPR ready. Founded by Eric Haywood in Fort Collins, Colorado.",
             "role": "infrastructure",
             "vertical": "enterprise",
             "sacredGeometry": "Metatrons Cube",
@@ -189,34 +199,39 @@
             ],
             "features": [
                 {
+                    "icon": "🏗️",
+                    "title": "Enterprise AI Operating System",
+                    "desc": "The complete platform for deploying autonomous AI agents at enterprise scale. Multi-tenant architecture with phi-scaled resource isolation, RBAC mesh permissions, and CSL-gated access controls across all 16 domains."
+                },
+                {
                     "icon": "🛡️",
                     "title": "Self-Healing Infrastructure",
-                    "desc": "Auto-heal resilience loops, circuit breakers, and autonomous error recovery across all services."
+                    "desc": "Auto-heal resilience loops with circuit breakers, phi-exponential backoff, and autonomous error recovery across all services. When coherence drops below 0.809, the system self-diagnoses and repairs without human intervention."
                 },
                 {
                     "icon": "🎼",
-                    "title": "Buddy Orchestrator",
-                    "desc": "Multi-agent orchestration via Sacred Geometry — 150+ supervisors coordinating 20 AI nodes."
+                    "title": "Sacred Geometry Orchestration",
+                    "desc": "150+ supervisors coordinating 20+ AI nodes through Sacred Geometry topology — Flower of Life, Metatron's Cube, Sri Yantra patterns governing resource allocation, node placement, and workload distribution."
                 },
                 {
-                    "icon": "📊",
-                    "title": "Live Telemetry",
-                    "desc": "Structured logging, health probes, race audits, and real-time performance dashboards."
+                    "icon": "📜",
+                    "title": "Patent-Protected Innovation",
+                    "desc": "60+ provisional patents covering CSL gate operations, vector memory architecture, agent swarm coordination, phi-harmonic scaling, and Sacred Geometry orchestration. Non-provisional conversions underway for 4 key patents."
                 },
                 {
-                    "icon": "⚡",
-                    "title": "HCFP Auto-Success",
-                    "desc": "Continuous deployment with security scanning, SBOM generation, smoke tests, and auto-verification."
+                    "icon": "💼",
+                    "title": "Compliance-Ready Platform",
+                    "desc": "SOC 2 Type II, HIPAA, and GDPR compliance built into every layer. Cryptographic audit trails via OracleChain, semantic firewall for prompt injection prevention, and post-quantum cryptography readiness."
                 },
                 {
-                    "icon": "🔐",
-                    "title": "Zero Trust Security",
-                    "desc": "mTLS client certs, secret rotation, Cloudflare WARP enforcement, and TruffleHog scanning."
+                    "icon": "🌍",
+                    "title": "HeadyConnection Nonprofit Mission",
+                    "desc": "Through HeadyConnection Inc. (501(c)(3)), we invest in digital equity, workforce development, and community education programs. Technology that empowers communities, not just enterprises."
                 },
                 {
-                    "icon": "🌐",
-                    "title": "Edge Mesh Network",
-                    "desc": "Cloudflare Workers edge proxy with KV caching, sub-50ms latency, and deterministic routing."
+                    "icon": "V",
+                    "title": "384D Vector Memory",
+                    "desc": "Persistent 3D spatial memory with pgvector-backed HNSW indexing, O(log n) octree retrieval, and cross-agent semantic sharing across all 9 Heady domains."
                 }
             ],
             "stats": [
@@ -326,7 +341,7 @@
             "name": "HeadyAI",
             "slug": "heady-ai",
             "tagline": "The Science Behind HeadyOS",
-            "description": "Pioneering Continuous Semantic Logic, Vector Symbolic Architecture, and Sacred Geometry Topology. 51+ provisional patents by HeadySystems Inc.",
+            "description": "HeadyAI is the intelligence routing hub of the Heady ecosystem — where models, embeddings, and reasoning chains converge. Access Claude, GPT-4o, Gemini, Groq, Perplexity Sonar, and local models through a unified gateway with automatic failover, budget-aware cost caps, and task-aware routing matrices. HeadyAI implements Continuous Semantic Logic for intelligent model selection, phi-scaled token budgets, and Battle Arena mode for competitive model evaluation. The research arm of HeadySystems Inc., HeadyAI advances the science of autonomous intelligence.",
             "role": "research",
             "vertical": "research",
             "sacredGeometry": "Sri Yantra",
@@ -361,24 +376,34 @@
             ],
             "features": [
                 {
-                    "icon": "∿",
-                    "title": "Continuous Semantic Logic",
-                    "desc": "Multi-valued gate operations with soft thresholds enabling probabilistic semantic reasoning. ƒ(x) ∈ [0,1] with φ-weighted activation."
+                    "icon": "🧠",
+                    "title": "Multi-Model Intelligence Hub",
+                    "desc": "Access Claude, GPT-4o, Gemini, Groq, Perplexity Sonar, and local models through a unified API. CSL-gated model selection ensures the right model handles each task based on cost, latency, and capability scoring."
                 },
                 {
-                    "icon": "⊕",
-                    "title": "Vector Symbolic Architecture",
-                    "desc": "Hyperdimensional computing with d ≥ 10,000 dimensions. Binding (⊗) and bundling (⊕) preserve semantic structure."
+                    "icon": "⚔️",
+                    "title": "Battle Arena Evaluation",
+                    "desc": "Pit AI models against each other in competitive evaluation. ELO/Glicko-2 ratings, parallel provider racing, and phi-weighted scoring determine the best model for any task category."
                 },
                 {
-                    "icon": "φ",
-                    "title": "Sacred Geometry Topology",
-                    "desc": "The golden ratio φ ≈ 1.618 and Fibonacci scaling encode natural optimization into system architecture."
+                    "icon": "🔬",
+                    "title": "Research & Experimentation",
+                    "desc": "Monte Carlo simulation, causal inference, hypothesis testing, and A/B experimentation framework. Test architectural decisions and model performance with statistical rigor before deploying to production."
                 },
                 {
-                    "icon": "⬡",
-                    "title": "3D Spatial Memory",
-                    "desc": "Agent memory as navigable 3D vector spaces with O(log n) octree retrieval and adaptive reorganization."
+                    "icon": "🎯",
+                    "title": "Continuous Semantic Logic Engine",
+                    "desc": "CSL replaces binary if/else with geometric AI gates — AND (cosine similarity), OR (superposition), NOT (orthogonal projection), and GATE (sigmoid activation). The mathematical foundation of intelligent routing."
+                },
+                {
+                    "icon": "💰",
+                    "title": "Budget-Aware Routing",
+                    "desc": "Phi-tiered cost management with Fibonacci-stepped spending limits. Track per-provider costs, enforce budget caps, and optimize for cost-quality tradeoff across all model providers."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "Liquid Failover Architecture",
+                    "desc": "Circuit breakers with phi-backoff, multi-provider racing, and automatic failover ensure 99.99% availability. When one provider degrades, traffic seamlessly shifts to the next-best option."
                 }
             ],
             "stats": [
@@ -487,7 +512,7 @@
             "name": "HeadyOS",
             "slug": "headyos",
             "tagline": "The AI Operating System for Developers",
-            "description": "A cloud-native operating system layer where agents, tools, and memory converge into a unified runtime.",
+            "description": "HeadyOS is the operating system interface for the Heady Latent OS — a living, self-aware software organism that operates in 384-dimensional embedding space. HeadyOS provides interactive management and monitoring of the entire Heady ecosystem through a dark-mode glassmorphism interface with Sacred Geometry visualizations. Monitor AI node health, manage vector memory, visualize the Sacred Geometry topology, track coherence scores, and orchestrate agent swarms from a single unified dashboard. Every interaction is CSL-gated, every metric is phi-scaled, and every visualization follows golden ratio proportions. HeadyOS treats software components as living organisms that breathe, heal, and evolve autonomously.",
             "role": "operating-system",
             "vertical": "developer",
             "sacredGeometry": "Torus",
@@ -518,24 +543,34 @@
             ],
             "features": [
                 {
-                    "icon": "💻",
-                    "title": "Agent Runtime",
-                    "desc": "Managed execution environment for AI agents with hot-reload, sandboxing, and resource limits."
+                    "icon": "🖥️",
+                    "title": "Latent OS Management Console",
+                    "desc": "Interactive terminal and visual dashboard for managing the Heady Latent OS. Monitor 20+ AI nodes, inspect 384D vector embeddings, and orchestrate agent swarms through a Sacred Geometry-themed interface with real-time WebSocket updates."
                 },
                 {
-                    "icon": "🗄️",
-                    "title": "Unified Memory",
-                    "desc": "Shared 3D vector space across all running agents with cross-context awareness."
+                    "icon": "🌀",
+                    "title": "Sacred Geometry Topology Viewer",
+                    "desc": "3D visualization of the Sacred Geometry orchestration topology — see how nodes connect across Center, Inner, Middle, Outer, and Governance rings. Interactive rotation, zoom, and node inspection with live coherence scoring."
+                },
+                {
+                    "icon": "💓",
+                    "title": "Alive Software Monitor",
+                    "desc": "Watch the Heady ecosystem breathe. Real-time heartbeat monitoring, semantic drift detection, self-healing cycle visualization, and coherence score tracking for every component in the living software organism."
                 },
                 {
                     "icon": "🔧",
-                    "title": "System Primitives",
-                    "desc": "File, network, and compute tools available to any agent via MCP protocol."
+                    "title": "System Configuration",
+                    "desc": "YAML-driven configuration management with live reload, cross-service impact analysis, and phi-tiered feature flags. Change any system parameter with instant validation and automatic rollback on coherence drift."
                 },
                 {
-                    "icon": "📡",
-                    "title": "Event Bus",
-                    "desc": "Real-time inter-agent communication with pub/sub, request-reply, and streaming."
+                    "icon": "📈",
+                    "title": "Performance Analytics",
+                    "desc": "DuckDB-powered analytics dashboards with Fibonacci-bucketed histograms, p50/p95/p99 latency tracking, provider cost breakdowns, and trend detection across all 21 microservices."
+                },
+                {
+                    "icon": "🔮",
+                    "title": "Predictive Operations",
+                    "desc": "Monte Carlo simulation and temporal forecasting predict system behavior before it happens. Anticipate load spikes, cost overruns, and coherence drift with phi-weighted confidence intervals."
                 }
             ],
             "stats": [
@@ -631,7 +666,7 @@
             "name": "HeadyConnection",
             "slug": "headyconnection-org",
             "tagline": "AI for Everyone — Non-Profit AI Access",
-            "description": "Empowering nonprofits with AI-driven grant writing, impact analytics, and community engagement.",
+            "description": "HeadyConnection Inc. is a 501(c)(3) nonprofit organization dedicated to bridging the digital divide through technology education, workforce development, and community empowerment. Founded by Eric Haywood in Fort Collins, Colorado, HeadyConnection partners with schools, libraries, community centers, and workforce development programs to deliver free AI literacy training, coding workshops, and digital skills programs. Our mission is simple: ensure that the benefits of sovereign AI technology reach every community, regardless of economic status. Through HeadyConnection Gift Packs, we provide devices, internet access, and personalized AI tutoring to underserved families. Every dollar donated directly funds community programs.",
             "role": "community",
             "vertical": "nonprofit",
             "sacredGeometry": "Seed of Life",
@@ -662,24 +697,34 @@
             ],
             "features": [
                 {
-                    "icon": "📝",
-                    "title": "Grant Writing AI",
-                    "desc": "Automated proposal drafting with compliance checks and funder matching."
+                    "icon": "🎓",
+                    "title": "AI Literacy Programs",
+                    "desc": "Free workshops teaching AI fundamentals, prompt engineering, data literacy, and responsible AI use. Curriculum designed for middle school through adult learners, delivered in partnership with schools and community centers across Colorado and beyond."
                 },
                 {
-                    "icon": "📈",
-                    "title": "Impact Analytics",
-                    "desc": "Measure and visualize real-world outcomes with evidence-based reporting."
+                    "icon": "💼",
+                    "title": "Workforce Development",
+                    "desc": "Career pathways in AI engineering, cloud computing, data science, and software development. Mentorship from HeadySystems engineers, portfolio-building projects, and direct hiring pipeline for program graduates."
                 },
                 {
-                    "icon": "🤝",
-                    "title": "Community Hub",
-                    "desc": "Connected nonprofit network for resource sharing and collaboration."
+                    "icon": "🌐",
+                    "title": "Digital Equity Initiative",
+                    "desc": "HeadyConnection Gift Packs provide refurbished devices, internet access, and 12 months of personalized AI tutoring to underserved families. Bridging the digital divide one household at a time."
                 },
                 {
-                    "icon": "💡",
-                    "title": "Proof View",
-                    "desc": "Evidence-based impact documentation for stakeholders and funders."
+                    "icon": "🤲",
+                    "title": "Community Innovation Labs",
+                    "desc": "Maker spaces and innovation labs where community members prototype, build, and launch technology projects. Access to AI tools, 3D printing, and mentorship from industry professionals."
+                },
+                {
+                    "icon": "🏫",
+                    "title": "School Partnership Program",
+                    "desc": "Direct partnerships with K-12 schools providing AI curriculum modules, teacher training workshops, and student mentorship programs. Bringing cutting-edge AI education to every classroom."
+                },
+                {
+                    "icon": "❤️",
+                    "title": "Impact Measurement",
+                    "desc": "Transparent impact reporting with phi-scaled metrics. Every donation tracked from receipt to community outcome. Annual impact reports published with full financial transparency."
                 }
             ],
             "stats": [
@@ -779,7 +824,7 @@
             "name": "HeadyConnection",
             "slug": "headyconnection-com",
             "tagline": "The Heady Community Portal",
-            "description": "Connect, collaborate, and grow with the global Heady developer and user community.",
+            "description": "The HeadyConnection community portal is where builders, researchers, and enthusiasts collaborate on the future of sovereign AI. Join forums, share projects, contribute to open-source initiatives, and connect with the growing Heady ecosystem community. HeadyConnection.com hosts knowledge-sharing spaces, collaborative problem-solving, community-driven plugin development, and direct feedback channels to the HeadySystems engineering team. Whether you are an enterprise architect evaluating Heady for production or a student learning about AI systems, this is your community home.",
             "role": "community-portal",
             "vertical": "community",
             "sacredGeometry": "Seed of Life",
@@ -810,24 +855,34 @@
             ],
             "features": [
                 {
-                    "icon": "🌐",
-                    "title": "Global Network",
-                    "desc": "Join thousands of developers, researchers, and AI enthusiasts worldwide."
-                },
-                {
                     "icon": "💬",
-                    "title": "Discussion Forum",
-                    "desc": "Ask questions, share projects, and get help from the community."
+                    "title": "Community Forums",
+                    "desc": "Discussion spaces organized by domain — architecture, AI agents, vector memory, Sacred Geometry, creative AI, and more. Ask questions, share discoveries, and collaborate with the global Heady community."
                 },
                 {
-                    "icon": "🎯",
-                    "title": "Events & Meetups",
-                    "desc": "Virtual and in-person events, hackathons, and workshops."
+                    "icon": "🛠️",
+                    "title": "Open Source Contributions",
+                    "desc": "Contribute to Heady open-source projects, submit bee templates, share HeadyBuddy personas, and build community plugins. GitHub integration with automated code review and CSL-gated quality scoring."
                 },
                 {
-                    "icon": "🏆",
-                    "title": "Contributor Program",
-                    "desc": "Earn recognition, rewards, and access for community contributions."
+                    "icon": "📚",
+                    "title": "Knowledge Base",
+                    "desc": "Community-curated documentation, tutorials, and best practices for every Heady domain. From getting-started guides to advanced architecture patterns, all searchable through 384D vector similarity."
+                },
+                {
+                    "icon": "🎓",
+                    "title": "Learning Paths",
+                    "desc": "Structured learning paths from beginner to expert across CSL, phi-math, Sacred Geometry, vector memory, and agent orchestration. Interactive exercises and community-verified certifications."
+                },
+                {
+                    "icon": "🤝",
+                    "title": "Collaboration Spaces",
+                    "desc": "Virtual workspaces for team projects, hackathons, and cross-organization collaboration. Integrated with HeadyBuddy for AI-assisted brainstorming and project management."
+                },
+                {
+                    "icon": "📢",
+                    "title": "Direct Engineering Access",
+                    "desc": "Feedback channels directly to HeadySystems engineers. Feature requests, bug reports, and architecture discussions with the team building the platform."
                 }
             ],
             "stats": [
@@ -914,7 +969,7 @@
             "name": "HeadyEX",
             "slug": "headyex",
             "tagline": "AI Agent Marketplace & Token Platform",
-            "description": "Trade, deploy, and monetize AI agents on the world's first sacred-geometry-powered agent marketplace.",
+            "description": "HeadyEx is the marketplace and exchange for the Heady ecosystem — a curated platform where developers, enterprises, and creators buy, sell, and share AI models, plugins, templates, integrations, and HeadyBee agent configurations. Every listing is CSL-scored for quality, phi-weighted for reputation, and cryptographically signed for authenticity. HeadyEx uses HeadyCoin credits for frictionless transactions, supports bring-your-own-key model access, and maintains a rigorous curation pipeline with Fibonacci-tiered quality gates. From premium HeadyBuddy personas to enterprise integration templates, HeadyEx is where the Heady economy comes alive.",
             "role": "marketplace",
             "vertical": "fintech",
             "sacredGeometry": "Fibonacci Spiral",
@@ -946,24 +1001,34 @@
             ],
             "features": [
                 {
-                    "icon": "🤖",
-                    "title": "Agent Marketplace",
-                    "desc": "Browse, purchase, and deploy pre-built AI agents with verified performance metrics."
+                    "icon": "🏪",
+                    "title": "AI Model Marketplace",
+                    "desc": "Browse, evaluate, and deploy AI models from top providers. Each model CSL-scored for quality, latency, and cost-effectiveness. One-click deployment to your Heady runtime with automatic phi-scaled budget allocation."
                 },
                 {
-                    "icon": "📊",
-                    "title": "Live Trading",
-                    "desc": "Real-time agent performance tracking with φ-weighted scoring algorithms."
+                    "icon": "🔌",
+                    "title": "Plugin & Integration Hub",
+                    "desc": "Thousands of community-built plugins, HeadyBee templates, and enterprise integrations. Connect Heady to Slack, GitHub, Notion, Salesforce, and hundreds more services with pre-built connectors."
                 },
                 {
-                    "icon": "🪙",
-                    "title": "HeadyCoin",
-                    "desc": "Native utility token powering the HeadyEX ecosystem and agent rewards."
+                    "icon": "💎",
+                    "title": "HeadyCoin Economy",
+                    "desc": "Frictionless transactions with HeadyCoin credits. Earn by contributing, spend on premium content. Phi-scaled pricing ensures fair value for creators and accessibility for consumers."
                 },
                 {
-                    "icon": "🔒",
-                    "title": "Secure Escrow",
-                    "desc": "Smart contract escrow for agent transactions with dispute resolution."
+                    "icon": "🎭",
+                    "title": "HeadyBuddy Persona Store",
+                    "desc": "Premium AI companion personas for every use case — executive assistant, code reviewer, research analyst, creative writer, and custom-trained specialists with unique personality embeddings."
+                },
+                {
+                    "icon": "⭐",
+                    "title": "Reputation & Curation",
+                    "desc": "Decentralized trust scoring with phi-weighted ELO ratings. Fibonacci-tiered curation ensures only quality content reaches the marketplace. Community reviews and automated quality gates."
+                },
+                {
+                    "icon": "🔐",
+                    "title": "Cryptographic Authenticity",
+                    "desc": "Every marketplace listing signed with Ed25519 signatures via HeadyGuard. Tamper-proof provenance tracking ensures you get exactly what you paid for."
                 }
             ],
             "stats": [
@@ -1050,7 +1115,7 @@
             "name": "HeadySystems Investor Relations",
             "slug": "headyfinance",
             "tagline": "Invest in the Future of AI",
-            "description": "HeadySystems Inc. investor relations portal — financial performance, patent portfolio valuation, and strategic growth projections.",
+            "description": "HeadyFinance is the financial intelligence and investor relations hub for the Heady ecosystem. Manage subscriptions, track API usage, monitor spending across AI providers, and access investor materials. HeadyFinance implements phi-tiered subscription plans, Fibonacci-stepped usage metering, real-time cost analytics with DuckDB, and Stripe-powered billing. For investors, HeadyFinance provides financial projections, patent portfolio valuation, market sizing analysis, and direct communication with HeadySystems leadership. Apex Trading Intelligence integration provides risk management and Monte Carlo simulation for financial modeling.",
             "role": "investor-relations",
             "vertical": "finance",
             "sacredGeometry": "Vesica Piscis",
@@ -1082,24 +1147,34 @@
             ],
             "features": [
                 {
+                    "icon": "💳",
+                    "title": "Subscription Management",
+                    "desc": "Phi-tiered subscription plans — Free, Pro, Enterprise, and Sovereign. Manage billing, upgrade paths, and usage limits through a glassmorphism dashboard with Stripe-powered payments."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Usage Analytics",
+                    "desc": "Real-time cost tracking across all AI providers. Per-model, per-domain, and per-user spending breakdowns with Fibonacci-bucketed trend analysis and budget alerts."
+                },
+                {
+                    "icon": "🏦",
+                    "title": "Investor Relations",
+                    "desc": "Financial projections, patent portfolio valuation ($60M+ estimated), market sizing (TAM $500B+), competitive positioning, and quarterly updates for current and prospective investors."
+                },
+                {
                     "icon": "📈",
-                    "title": "Growth Metrics",
-                    "desc": "Revenue projections, user growth, and platform adoption analytics."
+                    "title": "Apex Trading Intelligence",
+                    "desc": "Monte Carlo simulation, risk scoring, and financial modeling powered by CSL-gated confidence intervals. Phi-scaled position sizing and circuit breakers for automated trading strategies."
                 },
                 {
-                    "icon": "🏛️",
-                    "title": "Patent Portfolio",
-                    "desc": "51+ provisional patents creating defensible competitive moats across AI."
+                    "icon": "🔍",
+                    "title": "FinOps Dashboard",
+                    "desc": "Unified financial operations view across Google Cloud, Cloudflare, LLM providers, and infrastructure costs. Budget routing with phi-weighted allocation and automatic cost optimization recommendations."
                 },
                 {
-                    "icon": "🌐",
-                    "title": "9 Domain Verticals",
-                    "desc": "Diversified portfolio spanning consumer, enterprise, developer, finance, and nonprofit."
-                },
-                {
-                    "icon": "🔮",
-                    "title": "Strategic Roadmap",
-                    "desc": "Series A timeline, partnership pipeline, and enterprise pilot program."
+                    "icon": "📋",
+                    "title": "Compliance & Reporting",
+                    "desc": "SOC 2 Type II compliance tracking, financial audit trails, tax documentation, and regulatory reporting. Every transaction logged with cryptographic receipts via OracleChain."
                 }
             ],
             "stats": [
@@ -1324,6 +1399,1240 @@
                 }
             ],
             "chatEnabled": false
+        },
+        "headyfullstack.com": {
+            "name": "HeadyFullStack",
+            "slug": "headyfullstack",
+            "tagline": "Full-Stack AI Development",
+            "description": "End-to-end AI-powered development platform. From frontend to backend, database to deployment — Heady orchestrates the entire stack with autonomous intelligence.",
+            "role": "development-platform",
+            "vertical": "developer",
+            "sacredGeometry": "Sri Yantra",
+            "accent": "#06b6d4",
+            "accentDark": "#0891b2",
+            "accentGlow": "rgba(6,182,212,0.15)",
+            "heroTitle": "Full-Stack AI Development",
+            "heroSubtitle": "End-to-end AI-powered development platform. From frontend to backend, database to deployment — Heady orchestrates the entire stack.",
+            "canvasAnimation": "sacred-nodes",
+            "navLinks": [
+                {
+                    "label": "Stack",
+                    "href": "#stack"
+                },
+                {
+                    "label": "Tools",
+                    "href": "#tools"
+                },
+                {
+                    "label": "Deploy",
+                    "href": "#deploy"
+                },
+                {
+                    "label": "HeadySystems",
+                    "href": "https://headysystems.com",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "⚡",
+                    "title": "Autonomous Code Generation",
+                    "desc": "AI nodes write, review, and deploy production-grade code across 20+ frameworks with CSL-gated quality assurance."
+                },
+                {
+                    "icon": "🏗️",
+                    "title": "Infrastructure as Intelligence",
+                    "desc": "Self-provisioning infrastructure that adapts to your workload. Docker, Cloud Run, and Cloudflare Workers orchestrated by Sacred Geometry topology."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "CI/CD Pipeline Intelligence",
+                    "desc": "Automated build, test, and deploy pipelines with phi-scaled rollout stages and instant rollback on coherence drift."
+                },
+                {
+                    "icon": "🛡️",
+                    "title": "Security-First Architecture",
+                    "desc": "Post-quantum cryptography, mTLS, RBAC, and semantic firewall — security baked into every layer of the stack."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "20+",
+                    "label": "Frameworks"
+                },
+                {
+                    "value": "89",
+                    "label": "AI Nodes"
+                },
+                {
+                    "value": "<3s",
+                    "label": "Deploy Time"
+                },
+                {
+                    "value": "99.9%",
+                    "label": "Uptime"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "The Complete Stack",
+                    "subheading": "Every layer of development, powered by autonomous intelligence"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Platform Metrics",
+                    "subheading": "Built for production from day one"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Start Building",
+                    "subheading": "Deploy your first project in under 3 minutes"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Platform",
+                    "links": [
+                        [
+                            "Stack Overview",
+                            "#stack"
+                        ],
+                        [
+                            "Deployment",
+                            "#deploy"
+                        ],
+                        [
+                            "API",
+                            "https://headyapi.com"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Resources",
+                    "links": [
+                        [
+                            "Documentation",
+                            "https://headyio.com"
+                        ],
+                        [
+                            "HeadyMCP",
+                            "https://headymcp.com"
+                        ],
+                        [
+                            "GitHub",
+                            "https://github.com/HeadyMe"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Company",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "Contact",
+                            "mailto:eric@headysystems.com"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headymusic.net": {
+            "name": "HeadyMusic",
+            "slug": "headymusic",
+            "tagline": "AI-Powered Music Intelligence",
+            "description": "Where artificial intelligence meets musical creativity. MIDI bridge, audio processing, generative composition, and real-time music analysis powered by Sacred Geometry harmonics.",
+            "role": "creative-music",
+            "vertical": "creative",
+            "sacredGeometry": "Torus",
+            "accent": "#a855f7",
+            "accentDark": "#9333ea",
+            "accentGlow": "rgba(168,85,247,0.15)",
+            "heroTitle": "AI-Powered Music Intelligence",
+            "heroSubtitle": "Where artificial intelligence meets musical creativity. MIDI bridge, generative composition, and real-time analysis powered by Sacred Geometry harmonics.",
+            "canvasAnimation": "sacred-nodes",
+            "navLinks": [
+                {
+                    "label": "Create",
+                    "href": "#create"
+                },
+                {
+                    "label": "MIDI Bridge",
+                    "href": "#midi"
+                },
+                {
+                    "label": "Studio",
+                    "href": "#studio"
+                },
+                {
+                    "label": "HeadySystems",
+                    "href": "https://headysystems.com",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🎵",
+                    "title": "MIDI Bridge Matrix",
+                    "desc": "Sub-millisecond MIDI-to-UDP, TCP, MCP, and API routing. Connect hardware controllers to AI workflows in real-time."
+                },
+                {
+                    "icon": "🎼",
+                    "title": "Generative Composition",
+                    "desc": "AI-assisted music creation using phi-harmonic intervals, golden ratio timing, and Sacred Geometry frequency mapping."
+                },
+                {
+                    "icon": "🔊",
+                    "title": "Audio Intelligence",
+                    "desc": "Real-time audio analysis, stem separation, tempo detection, and harmonic profiling powered by vector embeddings."
+                },
+                {
+                    "icon": "🎹",
+                    "title": "Ableton Link Sync",
+                    "desc": "Seamless integration with DAWs via Ableton Link tempo synchronization and MIDI clock distribution."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "<1ms",
+                    "label": "MIDI Latency"
+                },
+                {
+                    "value": "4",
+                    "label": "Bridge Types"
+                },
+                {
+                    "value": "∞",
+                    "label": "Compositions"
+                },
+                {
+                    "value": "384D",
+                    "label": "Audio Vectors"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "Creative AI Toolkit",
+                    "subheading": "Musical intelligence powered by Sacred Geometry harmonics"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Performance",
+                    "subheading": "Real-time audio processing at scale"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Start Creating",
+                    "subheading": "Connect your instruments and let AI amplify your creativity"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Music",
+                    "links": [
+                        [
+                            "MIDI Bridge",
+                            "#midi"
+                        ],
+                        [
+                            "Studio",
+                            "#studio"
+                        ],
+                        [
+                            "Compositions",
+                            "#create"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Platform",
+                    "links": [
+                        [
+                            "HeadyMe",
+                            "https://headyme.com"
+                        ],
+                        [
+                            "HeadyAPI",
+                            "https://headyapi.com"
+                        ],
+                        [
+                            "Documentation",
+                            "https://headyio.com"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Company",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "HeadyConnection",
+                            "https://headyconnection.org"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headycloud.io": {
+            "name": "HeadyCloud",
+            "slug": "headycloud",
+            "tagline": "Sovereign Cloud Infrastructure",
+            "description": "Multi-cloud orchestration with sovereign data controls. Deploy across Google Cloud, Cloudflare, and edge nodes with phi-scaled autoscaling and zero-trust security.",
+            "role": "cloud-infrastructure",
+            "vertical": "infrastructure",
+            "sacredGeometry": "Vesica Piscis",
+            "accent": "#14b8a6",
+            "accentDark": "#0d9488",
+            "accentGlow": "rgba(20,184,166,0.15)",
+            "heroTitle": "Sovereign Cloud Infrastructure",
+            "heroSubtitle": "Multi-cloud orchestration with sovereign data controls. Deploy across Google Cloud, Cloudflare, and edge nodes with phi-scaled autoscaling.",
+            "canvasAnimation": "enterprise-grid",
+            "navLinks": [
+                {
+                    "label": "Infrastructure",
+                    "href": "#infra"
+                },
+                {
+                    "label": "Edge Network",
+                    "href": "#edge"
+                },
+                {
+                    "label": "Security",
+                    "href": "#security"
+                },
+                {
+                    "label": "HeadySystems",
+                    "href": "https://headysystems.com",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "☁️",
+                    "title": "Multi-Cloud Orchestration",
+                    "desc": "Unified control plane across Google Cloud Run, Cloudflare Workers, and edge compute with automatic failover and load balancing."
+                },
+                {
+                    "icon": "🌐",
+                    "title": "Edge-First Architecture",
+                    "desc": "Deploy AI inference at the edge with Cloudflare Workers AI. Sub-5ms latency for embeddings, classification, and chat."
+                },
+                {
+                    "icon": "🔐",
+                    "title": "Zero-Trust Security",
+                    "desc": "Sovereign data controls, GDPR compliance, data residency enforcement, and post-quantum cryptography across all regions."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Phi-Scaled Autoscaling",
+                    "desc": "Fibonacci-stepped scaling that adapts to load patterns. From 0 to global scale with golden ratio resource allocation."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "200+",
+                    "label": "Edge Nodes"
+                },
+                {
+                    "value": "<5ms",
+                    "label": "Edge Latency"
+                },
+                {
+                    "value": "99.99%",
+                    "label": "Uptime SLA"
+                },
+                {
+                    "value": "3",
+                    "label": "Cloud Regions"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "Cloud Capabilities",
+                    "subheading": "Enterprise infrastructure powered by Sacred Geometry topology"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Global Network",
+                    "subheading": "Edge-optimized for real-time AI workloads"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Deploy Now",
+                    "subheading": "Launch your first service in under 60 seconds"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Infrastructure",
+                    "links": [
+                        [
+                            "Cloud Run",
+                            "#infra"
+                        ],
+                        [
+                            "Cloudflare",
+                            "#edge"
+                        ],
+                        [
+                            "Security",
+                            "#security"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Resources",
+                    "links": [
+                        [
+                            "HeadyAPI",
+                            "https://headyapi.com"
+                        ],
+                        [
+                            "Documentation",
+                            "https://headyio.com"
+                        ],
+                        [
+                            "Status",
+                            "https://headyme.com/status"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Company",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "Contact",
+                            "mailto:eric@headysystems.com"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headydata.io": {
+            "name": "HeadyData",
+            "slug": "headydata",
+            "tagline": "AI Data Intelligence Platform",
+            "description": "Transform raw data into actionable intelligence with 384D vector embeddings, DuckDB analytics, pgvector memory, and phi-scaled data pipelines.",
+            "role": "data-intelligence",
+            "vertical": "analytics",
+            "sacredGeometry": "Metatrons Cube",
+            "accent": "#f59e0b",
+            "accentDark": "#d97706",
+            "accentGlow": "rgba(245,158,11,0.15)",
+            "heroTitle": "AI Data Intelligence",
+            "heroSubtitle": "Transform raw data into actionable intelligence with 384D vector embeddings, DuckDB analytics, and phi-scaled data pipelines.",
+            "canvasAnimation": "sacred-nodes",
+            "navLinks": [
+                {
+                    "label": "Analytics",
+                    "href": "#analytics"
+                },
+                {
+                    "label": "Vector Memory",
+                    "href": "#vectors"
+                },
+                {
+                    "label": "Pipelines",
+                    "href": "#pipelines"
+                },
+                {
+                    "label": "HeadySystems",
+                    "href": "https://headysystems.com",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "📊",
+                    "title": "384D Vector Analytics",
+                    "desc": "Every data point embedded in 384-dimensional space. Semantic search, clustering, and anomaly detection powered by pgvector and HNSW indexing."
+                },
+                {
+                    "icon": "🔍",
+                    "title": "Hybrid Search Engine",
+                    "desc": "BM25 full-text combined with dense vector similarity and SPLADE sparse retrieval. Reciprocal Rank Fusion delivers the most relevant results."
+                },
+                {
+                    "icon": "⚡",
+                    "title": "DuckDB Analytics",
+                    "desc": "In-memory analytical processing with columnar storage. Run complex queries across terabytes of data in milliseconds."
+                },
+                {
+                    "icon": "🔄",
+                    "title": "Phi-Scaled Pipelines",
+                    "desc": "ETL and data transformation pipelines that scale with Fibonacci-stepped batch sizes and golden ratio resource allocation."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "384D",
+                    "label": "Vector Space"
+                },
+                {
+                    "value": "<5ms",
+                    "label": "Query Time"
+                },
+                {
+                    "value": "TB+",
+                    "label": "Data Scale"
+                },
+                {
+                    "value": "3",
+                    "label": "Search Modes"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "Data Capabilities",
+                    "subheading": "Intelligence extraction at every scale"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Performance",
+                    "subheading": "Real-time analytics on massive datasets"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Connect Your Data",
+                    "subheading": "Start extracting intelligence in minutes"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Data",
+                    "links": [
+                        [
+                            "Analytics",
+                            "#analytics"
+                        ],
+                        [
+                            "Vectors",
+                            "#vectors"
+                        ],
+                        [
+                            "Pipelines",
+                            "#pipelines"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Platform",
+                    "links": [
+                        [
+                            "HeadyAPI",
+                            "https://headyapi.com"
+                        ],
+                        [
+                            "HeadyCloud",
+                            "https://headycloud.io"
+                        ],
+                        [
+                            "Documentation",
+                            "https://headyio.com"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Company",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "HeadyConnection",
+                            "https://headyconnection.org"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headyinc.com": {
+            "name": "HeadyInc",
+            "slug": "headyinc",
+            "tagline": "HeadySystems Inc. — Corporate",
+            "description": "Official corporate portal for HeadySystems Inc. Investor relations, leadership team, patent portfolio, press releases, and partnership opportunities.",
+            "role": "corporate",
+            "vertical": "enterprise",
+            "sacredGeometry": "Flower of Life",
+            "accent": "#7c5eff",
+            "accentDark": "#6d4de6",
+            "accentGlow": "rgba(124,94,255,0.15)",
+            "heroTitle": "HeadySystems Inc.",
+            "heroSubtitle": "Building the future of autonomous intelligence. 60+ patents. Sovereign AI platform. Founded by Eric Haywood in Fort Collins, Colorado.",
+            "canvasAnimation": "enterprise-grid",
+            "navLinks": [
+                {
+                    "label": "About",
+                    "href": "#about"
+                },
+                {
+                    "label": "Leadership",
+                    "href": "#team"
+                },
+                {
+                    "label": "Patents",
+                    "href": "#patents"
+                },
+                {
+                    "label": "Contact",
+                    "href": "#contact",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🏢",
+                    "title": "Corporate Overview",
+                    "desc": "HeadySystems Inc. is an AI operating system company building sovereign, self-healing intelligence platforms with 60+ provisional patents."
+                },
+                {
+                    "icon": "📜",
+                    "title": "Patent Portfolio",
+                    "desc": "60+ provisional patents covering Continuous Semantic Logic (CSL), Sacred Geometry orchestration, 3D vector memory, and autonomous agent swarms."
+                },
+                {
+                    "icon": "🤝",
+                    "title": "Strategic Partnerships",
+                    "desc": "Partnering with enterprises, nonprofits, and developers to deploy autonomous AI systems that respect data sovereignty and user privacy."
+                },
+                {
+                    "icon": "🌍",
+                    "title": "Mission & Impact",
+                    "desc": "Through HeadyConnection Inc., we invest in community education, digital equity, and workforce development programs nationwide."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "60+",
+                    "label": "Patents"
+                },
+                {
+                    "value": "9",
+                    "label": "Domains"
+                },
+                {
+                    "value": "30+",
+                    "label": "AI Agents"
+                },
+                {
+                    "value": "2024",
+                    "label": "Founded"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "Company Overview",
+                    "subheading": "Sovereign AI for the enterprise"
+                },
+                {
+                    "type": "stats",
+                    "heading": "By the Numbers",
+                    "subheading": "Scale and innovation from day one"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Get in Touch",
+                    "subheading": "Partnership inquiries, press, and investor relations"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Corporate",
+                    "links": [
+                        [
+                            "About",
+                            "#about"
+                        ],
+                        [
+                            "Leadership",
+                            "#team"
+                        ],
+                        [
+                            "Patents",
+                            "#patents"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Ecosystem",
+                    "links": [
+                        [
+                            "HeadyMe",
+                            "https://headyme.com"
+                        ],
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "HeadyAPI",
+                            "https://headyapi.com"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Contact",
+                    "links": [
+                        [
+                            "Investors",
+                            "https://headyfinance.com"
+                        ],
+                        [
+                            "Press",
+                            "mailto:press@headysystems.com"
+                        ],
+                        [
+                            "Email",
+                            "mailto:eric@headysystems.com"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headyhc.com": {
+            "name": "HeadyHC",
+            "slug": "headyhc",
+            "tagline": "HeadyConnection Community",
+            "description": "The HeadyConnection community hub — connecting people through technology, education, and opportunity. Digital equity programs, workforce development, and community innovation.",
+            "role": "community-hub",
+            "vertical": "nonprofit",
+            "sacredGeometry": "Seed of Life",
+            "accent": "#f59e0b",
+            "accentDark": "#d97706",
+            "accentGlow": "rgba(245,158,11,0.15)",
+            "heroTitle": "HeadyConnection Community",
+            "heroSubtitle": "Connecting people through technology, education, and opportunity. Digital equity programs, workforce development, and community innovation.",
+            "canvasAnimation": "sacred-nodes",
+            "navLinks": [
+                {
+                    "label": "Programs",
+                    "href": "#programs"
+                },
+                {
+                    "label": "Impact",
+                    "href": "#impact"
+                },
+                {
+                    "label": "Get Involved",
+                    "href": "#involved"
+                },
+                {
+                    "label": "Donate",
+                    "href": "https://headyconnection.org",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🎓",
+                    "title": "Education Programs",
+                    "desc": "Free AI literacy workshops, coding bootcamps, and digital skills training for underserved communities across Colorado and beyond."
+                },
+                {
+                    "icon": "💼",
+                    "title": "Workforce Development",
+                    "desc": "Career pathways in AI, cloud computing, and software engineering with mentorship from HeadySystems engineers."
+                },
+                {
+                    "icon": "🌐",
+                    "title": "Digital Equity",
+                    "desc": "Bridging the digital divide with device donation programs, community internet access, and technology literacy initiatives."
+                },
+                {
+                    "icon": "🤲",
+                    "title": "Community Innovation",
+                    "desc": "Innovation labs and maker spaces where community members can prototype, build, and launch technology projects."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "501(c)(3)",
+                    "label": "Nonprofit Status"
+                },
+                {
+                    "value": "CO",
+                    "label": "Headquarters"
+                },
+                {
+                    "value": "1000+",
+                    "label": "Lives Impacted"
+                },
+                {
+                    "value": "2024",
+                    "label": "Founded"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "Our Programs",
+                    "subheading": "Building community through technology"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Impact",
+                    "subheading": "Measurable change in real communities"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Join the Movement",
+                    "subheading": "Volunteer, donate, or partner with HeadyConnection"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Programs",
+                    "links": [
+                        [
+                            "Education",
+                            "#programs"
+                        ],
+                        [
+                            "Workforce",
+                            "#impact"
+                        ],
+                        [
+                            "Get Involved",
+                            "#involved"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Organization",
+                    "links": [
+                        [
+                            "HeadyConnection",
+                            "https://headyconnection.org"
+                        ],
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Contact",
+                    "links": [
+                        [
+                            "Email",
+                            "mailto:eric@headyconnection.org"
+                        ],
+                        [
+                            "Volunteer",
+                            "#involved"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headygraphics.com": {
+            "name": "HeadyGraphics",
+            "slug": "headygraphics",
+            "tagline": "AI-Powered Visual Design",
+            "description": "Generative design, Sacred Geometry visualization, brand identity systems, and AI-powered creative tools. Where algorithms meet aesthetics.",
+            "role": "creative-design",
+            "vertical": "creative",
+            "sacredGeometry": "Flower of Life",
+            "accent": "#ec4899",
+            "accentDark": "#db2777",
+            "accentGlow": "rgba(236,72,153,0.15)",
+            "heroTitle": "AI-Powered Visual Design",
+            "heroSubtitle": "Generative design, Sacred Geometry visualization, brand identity systems, and AI-powered creative tools.",
+            "canvasAnimation": "sacred-nodes",
+            "navLinks": [
+                {
+                    "label": "Design",
+                    "href": "#design"
+                },
+                {
+                    "label": "Gallery",
+                    "href": "#gallery"
+                },
+                {
+                    "label": "Tools",
+                    "href": "#tools"
+                },
+                {
+                    "label": "HeadySystems",
+                    "href": "https://headysystems.com",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🎨",
+                    "title": "Generative Design Engine",
+                    "desc": "AI-driven visual creation using Sacred Geometry patterns, golden ratio layouts, and phi-proportioned compositions."
+                },
+                {
+                    "icon": "✨",
+                    "title": "Brand Identity AI",
+                    "desc": "Automated brand system generation — logos, color palettes, typography pairings, and visual guidelines from a single prompt."
+                },
+                {
+                    "icon": "🖼️",
+                    "title": "Sacred Geometry Gallery",
+                    "desc": "Interactive visualizations of Flower of Life, Metatron's Cube, Sri Yantra, and other sacred patterns rendered in real-time WebGL."
+                },
+                {
+                    "icon": "🎭",
+                    "title": "Glassmorphism Studio",
+                    "desc": "Design tool for creating premium dark-mode interfaces with glassmorphism effects, micro-animations, and phi-scaled spacing."
+                },
+                {
+                    "icon": "🔗",
+                    "title": "Ecosystem Integration",
+                    "desc": "Seamlessly connected to all 16 Heady domains through Sacred Geometry topology. Share context, memory, and intelligence across HeadyMe, HeadySystems, HeadyAPI, HeadyMCP, and every service in the ecosystem."
+                },
+                {
+                    "icon": "📊",
+                    "title": "Built-in Analytics",
+                    "desc": "DuckDB-powered analytics with phi-scaled dashboards. Track usage, performance, and coherence metrics in real-time. Fibonacci-bucketed histograms and trend detection powered by 384D vector embeddings."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "∞",
+                    "label": "Designs"
+                },
+                {
+                    "value": "φ",
+                    "label": "Proportions"
+                },
+                {
+                    "value": "WebGL",
+                    "label": "Renderer"
+                },
+                {
+                    "value": "384D",
+                    "label": "Color Space"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "Creative Tools",
+                    "subheading": "Visual intelligence powered by Sacred Geometry"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Capabilities",
+                    "subheading": "Where algorithms meet aesthetics"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Start Designing",
+                    "subheading": "Create stunning visuals with AI assistance"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Design",
+                    "links": [
+                        [
+                            "Engine",
+                            "#design"
+                        ],
+                        [
+                            "Gallery",
+                            "#gallery"
+                        ],
+                        [
+                            "Tools",
+                            "#tools"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Platform",
+                    "links": [
+                        [
+                            "HeadyMe",
+                            "https://headyme.com"
+                        ],
+                        [
+                            "HeadyAPI",
+                            "https://headyapi.com"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Company",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "Contact",
+                            "mailto:eric@headysystems.com"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
+        },
+        "headyapi.com": {
+            "name": "HeadyAPI",
+            "slug": "headyapi",
+            "tagline": "The Developer API for Heady",
+            "description": "HeadyAPI provides full programmatic access to the entire Heady ecosystem through a dual REST and GraphQL API surface. 15 core endpoints cover chat completion, 384D vector embedding generation, semantic memory search, agent spawning, pipeline execution, bee coordination, CSL gate routing, and budget tracking. Interactive playground lets developers test every endpoint in-browser. SDK libraries for JavaScript/TypeScript and Python with full type definitions, async support, streaming helpers, and automatic retry with phi-backoff. Rate limits follow golden ratio scaling with burst allowances and rolling windows that adapt naturally to usage patterns.",
+            "role": "api-gateway",
+            "vertical": "developer",
+            "sacredGeometry": "Vesica Piscis",
+            "accent": "#ff6d00",
+            "accentDark": "#e65100",
+            "accentGlow": "rgba(255,109,0,0.15)",
+            "heroTitle": "Build on Heady",
+            "heroSubtitle": "Full programmatic access to 20+ AI agents, 384D vector memory, 31 MCP tools, and the 17-Swarm Matrix. REST, GraphQL, and WebSocket with SDKs in your language.",
+            "canvasAnimation": "api-flow",
+            "navLinks": [
+                {
+                    "label": "Docs",
+                    "href": "#docs"
+                },
+                {
+                    "label": "Playground",
+                    "href": "#playground"
+                },
+                {
+                    "label": "SDKs",
+                    "href": "#sdks"
+                },
+                {
+                    "label": "Pricing",
+                    "href": "#pricing"
+                },
+                {
+                    "label": "Get API Key",
+                    "href": "#keys",
+                    "cta": true
+                }
+            ],
+            "features": [
+                {
+                    "icon": "🔗",
+                    "title": "REST + GraphQL",
+                    "desc": "Dual API surface for every use case. REST for simple integrations with predictable URLs, GraphQL for complex nested queries with precise response control."
+                },
+                {
+                    "icon": "🎮",
+                    "title": "Interactive Playground",
+                    "desc": "Test every endpoint directly in your browser with pre-filled examples, response inspection, and live API calls against your own key."
+                },
+                {
+                    "icon": "🔑",
+                    "title": "Key Management",
+                    "desc": "Create, scope, rotate, and revoke API keys with granular permissions, IP allowlists, rate tier assignments, and full audit logging."
+                },
+                {
+                    "icon": "⚡",
+                    "title": "phi-Scaled Rate Limiting",
+                    "desc": "Golden ratio-derived rate tiers with Fibonacci burst allowances, rolling windows, and per-key overrides for natural traffic scaling."
+                },
+                {
+                    "icon": "🔔",
+                    "title": "Webhook Events",
+                    "desc": "Subscribe to real-time events from agent completions, pipeline status changes, and memory updates. HMAC-signed payloads with configurable retry."
+                },
+                {
+                    "icon": "📦",
+                    "title": "SDK Libraries",
+                    "desc": "Official JavaScript/TypeScript and Python SDKs with full typings, async/await, streaming helpers, and automatic retry with phi-backoff."
+                },
+                {
+                    "icon": "📡",
+                    "title": "WebSocket Streaming",
+                    "desc": "Bidirectional real-time streaming for agent output, live memory updates, and event subscriptions without polling overhead."
+                },
+                {
+                    "icon": "📖",
+                    "title": "OpenAPI 3.1 Spec",
+                    "desc": "Complete machine-readable specification for Postman import, SDK generation, and automated testing of all 15 core endpoints."
+                }
+            ],
+            "stats": [
+                {
+                    "value": "15",
+                    "label": "Endpoints"
+                },
+                {
+                    "value": "4",
+                    "label": "SDKs"
+                },
+                {
+                    "value": "3",
+                    "label": "Transports"
+                },
+                {
+                    "value": "31",
+                    "label": "MCP Tools"
+                }
+            ],
+            "sections": [
+                {
+                    "type": "features",
+                    "heading": "API Capabilities",
+                    "subheading": "Everything developers need to build on Heady"
+                },
+                {
+                    "type": "stats",
+                    "heading": "Platform Specs",
+                    "subheading": "Production-grade API infrastructure"
+                },
+                {
+                    "type": "cta",
+                    "heading": "Start Building Today",
+                    "subheading": "Get your free API key and explore the playground"
+                }
+            ],
+            "footerCols": [
+                {
+                    "title": "Developers",
+                    "links": [
+                        [
+                            "API Docs",
+                            "#docs"
+                        ],
+                        [
+                            "Playground",
+                            "#playground"
+                        ],
+                        [
+                            "OpenAPI Spec",
+                            "#"
+                        ],
+                        [
+                            "Changelog",
+                            "#"
+                        ]
+                    ]
+                },
+                {
+                    "title": "SDKs",
+                    "links": [
+                        [
+                            "JavaScript",
+                            "#sdks"
+                        ],
+                        [
+                            "Python",
+                            "#sdks"
+                        ],
+                        [
+                            "Go (Planned)",
+                            "#sdks"
+                        ],
+                        [
+                            "Rust (Planned)",
+                            "#sdks"
+                        ]
+                    ]
+                },
+                {
+                    "title": "Ecosystem",
+                    "links": [
+                        [
+                            "HeadySystems",
+                            "https://headysystems.com"
+                        ],
+                        [
+                            "HeadyMe",
+                            "https://headyme.com"
+                        ],
+                        [
+                            "HeadyMCP",
+                            "https://headymcp.com"
+                        ],
+                        [
+                            "Community",
+                            "https://headyconnection.org"
+                        ]
+                    ]
+                }
+            ],
+            "chatEnabled": true
         }
     },
     "externalLinks": {
@@ -1363,6 +2672,18 @@
         "www.headyex.com": "headyex.com",
         "www.headyfinance.com": "headyfinance.com",
         "manager.headysystems.com": "admin.headysystems.com",
-        "admin.headysystems.com": "admin.headysystems.com"
+        "admin.headysystems.com": "admin.headysystems.com",
+        "headyai.com": "heady-ai.com",
+        "www.headyai.com": "heady-ai.com",
+        "headyapis.com": "headyapi.com",
+        "www.headyapis.com": "headyapi.com",
+        "www.headyfullstack.com": "headyfullstack.com",
+        "www.headymusic.net": "headymusic.net",
+        "www.headycloud.io": "headycloud.io",
+        "www.headydata.io": "headydata.io",
+        "www.headyinc.com": "headyinc.com",
+        "www.headyhc.com": "headyhc.com",
+        "www.headygraphics.com": "headygraphics.com",
+        "www.headyapi.com": "headyapi.com"
     }
 }

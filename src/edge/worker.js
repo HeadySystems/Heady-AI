@@ -98,7 +98,6 @@ const ALLOWED_ORIGINS = [
   'https://headysystems.com', 'https://www.headysystems.com',
   'https://headyai.com', 'https://www.headyai.com',
   'https://headybuddy.org', 'https://www.headybuddy.org',
-  'https://headybuddy.org', 'https://www.headybuddy.org',
   'https://headymcp.com', 'https://www.headymcp.com',
   'https://headyio.com', 'https://www.headyio.com',
   'https://headybot.com', 'https://www.headybot.com',

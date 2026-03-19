@@ -57,7 +57,7 @@ const CORS_CONFIG = {
     'https://headyme.com',
     'https://headysystems.com',
     'https://headyapi.com',
-    'https://headybuddy.com',
+    'https://headybuddy.org',
     'https://headymcp.com',
     'https://heady.io',
     'https://headyconnection.org',
