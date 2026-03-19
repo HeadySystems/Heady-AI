@@ -1000,13 +1000,13 @@ function legalPageHTML(type: 'privacy' | 'terms', hostname: string): string {
     <p>These terms are governed by the laws of the State of California, United States. Disputes shall be resolved in courts located in San Francisco County, California.</p>
   `;
 
-  return \`<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>\${title} — Heady™</title>
-  <meta name="description" content="\${title} for Heady™ by HeadySystems Inc.">
+  <title>${title} — Heady™</title>
+  <meta name="description" content="${title} for Heady™ by HeadySystems Inc.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%236c63ff'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
   <style>
@@ -1035,15 +1035,15 @@ function legalPageHTML(type: 'privacy' | 'terms', hostname: string): string {
     <div><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="/">Home</a></div>
   </nav>
   <div class="container">
-    <h1><span>Heady™</span> \${title}</h1>
+    <h1><span>Heady™</span> ${title}</h1>
     <p class="updated">Last updated: March 19, 2026 · Effective for all Heady™ domains</p>
-    \${content}
+    ${content}
     <div class="footer">
       <p>© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic</p>
       <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:eric@headysystems.com">Contact</a></p>
     </div>
   </div>
 </body>
-</html>\`;
+</html>`;
 }
 

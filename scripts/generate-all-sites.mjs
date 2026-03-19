@@ -275,7 +275,7 @@ ${features.map(f => `      <div class="feature-card">
       <a class="eco-card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>Intelligence Gateway</p></a>
       <a class="eco-card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Server</p></a>
       <a class="eco-card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
-      <a class="eco-card" href="https://headybuddy.com"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+      <a class="eco-card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
       <a class="eco-card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
       <a class="eco-card" href="https://headylens.com"><h4>HeadyLens</h4><p>Visual Analysis</p></a>
       <a class="eco-card" href="https://headybot.com"><h4>HeadyBot</h4><p>Agent Orchestration</p></a>
@@ -383,7 +383,7 @@ function generateStubSite(stub) {
     <a class="card" href="https://headyio.com"><h4>Heady I/O</h4><p>Developer SDK</p></a>
     <a class="card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>AI Gateway</p></a>
     <a class="card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Tools</p></a>
-    <a class="card" href="https://headybuddy.com"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+    <a class="card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
     <a class="card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
     <a class="card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
   </div>
