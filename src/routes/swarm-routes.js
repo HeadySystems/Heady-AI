@@ -6,7 +6,7 @@
 // HEADY_BRAND:END
 
 const express = require('express');
-const { createSwarm } = require('@heady/bee');
+const { createSwarm } = require('../../packages/heady-bee');
 const { getLogger } = require('../services/structured-logger');
 
 // ═══════════════════════════════════════════════════════════════════
