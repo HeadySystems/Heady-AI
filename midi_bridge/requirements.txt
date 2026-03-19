@@ -8,10 +8,13 @@ requests>=2.32.3
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> hs-testing/dependabot/pip/midi_bridge/pydantic-2.12.5
 =======
 >>>>>>> hs-testing/dependabot/pip/midi_bridge/pydantic-2.12.5
+=======
+>>>>>>> hs-main/dependabot/pip/midi_bridge/pydantic-2.12.5
 pydantic==2.12.5
 python-dotenv==1.2.2
 asyncio-mqtt==0.16.2
