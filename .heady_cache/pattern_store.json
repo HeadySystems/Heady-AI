@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-03-19T11:40:01.268Z",
-  "version": 27,
+  "lastUpdated": "2026-03-19T11:45:02.063Z",
+  "version": 28,
   "phi": 1.618033988749895,
   "resourcePatterns": [],
   "gitVelocity": "HIGH",
@@ -20,7 +20,7 @@
     },
     {
       "word": "pattern_store.json",
-      "count": 253
+      "count": 252
     },
     {
       "word": "auto-commit.log",
@@ -31,16 +31,16 @@
       "count": 47
     },
     {
-      "word": "resource-events.jsonl",
-      "count": 37
-    },
-    {
       "word": "remote-tracking",
       "count": 37
     },
     {
       "word": "branch",
       "count": 37
+    },
+    {
+      "word": "resource-events.jsonl",
+      "count": 36
     },
     {
       "word": "feat",
