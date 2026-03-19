@@ -1,5 +1,4 @@
 <!-- HEADY_BRAND:BEGIN
-<<<<<<< HEAD
 <!-- ╔══════════════════════════════════════════════════════════════════╗
 <!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
 <!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
@@ -62,53 +61,10 @@ HeadyAPI publicly positions itself as a liquid gateway that races 4+ providers a
 - [Ecosystem Overview](docs/ECOSYSTEM_OVERVIEW.md) - Full system map across all brands
 - [Service Integration](docs/guides/SERVICE_INTEGRATION.md) - How Heady services connect
 - [HeadyManager API](docs/api/HEADYMANAGER_API.md) - Service endpoints reference
-=======
-╔══════════════════════════════════════════════════════════════════╗
-║  HeadyOS · Sacred Geometry · Organic Systems · Breathing Interfaces ║
-║  FILE: README.md  ·  LAYER: root                                ║
-╚══════════════════════════════════════════════════════════════════╝
-HEADY_BRAND:END -->
-
-# Heady Systems
-
-> **Sacred Geometry · Organic Systems · Breathing Interfaces**
-
-HeadyOS is a **unified intelligent orchestration platform** for AI pipelines, distributed agents, and modern workloads. Every component self-monitors, self-corrects, and adapts in real time — a *living system*.
-
----
-
-## 🚀 System Status: 100% FULLY FUNCTIONAL
-
-**HeadyCloud is live and operational** with complete auto-deployment capabilities. All services are running at optimal performance with 100% HeadyBrain dominance and persistent memory integration.
-
-### ✅ Live Services
-- **HeadyCloud API**: https://headysystems.com/api
-- **HeadyManager**: https://headysystems.com/manager  
-- **Registry Service**: https://headysystems.com/registry
-- **Brain Service**: https://brain.headysystems.com
-- **Auto-Deploy Pipeline**: Active and operational
-
-### 🎯 Quick Start (Cloud-First)
-
-```bash
-git clone https://github.com/HeadySystems/Heady.git
-cd Heady
-npm install
-cp .env.example .env
-# Edit .env — set at minimum ANTHROPIC_API_KEY
-npm start
-curl localhost:3300/api/health
-```
-
-Cloud deploy: Deploy to GCP Cloud Run via `npm run deploy:cloud-run` or use the included GitHub Actions workflows.
-
----
->>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
 
 ## Architecture
 
 ```
-<<<<<<< HEAD
 heady-manager.js          # Node.js MCP Server & API Gateway (port 3300)
 ├── src/                  # Core pipeline engine & agents
 ├── backend/              # Python worker & MCP servers
@@ -119,31 +75,10 @@ heady-manager.js          # Node.js MCP Server & API Gateway (port 3300)
 ├── notebooks/            # Colab notebooks (quick-start, tutorials, examples)
 ├── docs/                 # Documentation & NotebookLM notebooks
 └── heady-registry.json   # HeadyRegistry — central catalog of the ecosystem
-=======
-heady-manager.js           # Node.js API Gateway (port 3300)
-├── src/hc_pipeline.js     # HCFullPipeline engine
-├── src/agents/            # Builder, Researcher, Claude Code, Deployer
-├── packages/hc-supervisor # Multi-agent Supervisor (parallel fan-out)
-├── packages/hc-brain/     # HeadyBrain meta-controller
-├── packages/hc-health/    # Health checks + cron
-├── configs/               # YAML configs (source of truth)
-├── public/                # Static frontend (this site)
-│   ├── index.html         # Landing page
-│   ├── docs.html          # Documentation hub
-│   ├── products.html      # Product catalog
-│   ├── api-docs.html      # Interactive API docs
-│   ├── status.html        # System status
-│   └── verticals/         # Product vertical pages
-├── frontend/              # React admin IDE (Vite)
-├── scripts/               # Build, deploy, checkpoint automation
-├── docs/                  # Developer documentation
-└── heady-registry.json    # Central component catalog
->>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
 ```
 
 ---
 
-<<<<<<< HEAD
 | Endpoint | Description |
 |---|---|
 | `GET /api/health` | Health check |
@@ -160,9 +95,6 @@ heady-manager.js           # Node.js API Gateway (port 3300)
 | `GET /api/registry/patterns` | List architecture patterns |
 | `GET /api/registry/workflows` | List workflows |
 | `GET /api/registry/ai-nodes` | List AI nodes from registry |
-=======
-## HCFullPipeline
->>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
 
 Five-stage deterministic execution with deep checkpoints:
 
@@ -247,7 +179,6 @@ Full protocol: `docs/CHECKPOINT_PROTOCOL.md`
 | `configs/hcfullpipeline.yaml` | Pipeline definition (source of truth) |
 | `heady-registry.json` | Central component catalog |
 
-<<<<<<< HEAD
 ## Python & Colab Development
 
 This project supports Python development with PyCharm and Google Colab integration.
@@ -286,9 +217,6 @@ pip install -r requirements.txt
 - `NOTEBOOK_TEMPLATE.md` - Template for new notebooks
 - `COLAB_WORKFLOW.md` - Google Colab workflow guide
 - `.env.example` - Environment variables template
-=======
----
->>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
 
 ## Python & Colab Development
 
@@ -342,9 +270,5 @@ Cloud Run deploy: `npm run deploy:cloud-run`
 
 ## License
 
-<<<<<<< HEAD
 Proprietary - Heady Systems
 
-=======
-Proprietary — Heady Systems
->>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586
