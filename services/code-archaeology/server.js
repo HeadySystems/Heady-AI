@@ -3,6 +3,7 @@
  * Code Archaeology MCP — Deep History of Code Evolution
  * Shows how any function/module evolved over time. Git-blame on steroids.
  */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http = require('http');
 const url = require('url');
 const { execSync } = require('child_process');
@@ -29,7 +30,7 @@ function excavate(filePath, functionName) {
 
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Content-Type', 'application/json');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   if (parsed.pathname === '/health') return res.end(JSON.stringify({ status: 'ok', service: 'code-archaeology' }));

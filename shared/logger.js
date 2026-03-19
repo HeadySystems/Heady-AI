@@ -1,53 +1,21 @@
 'use strict';
 
 /**
- * @fileoverview Heady™ Shared Logger Factory
- * @description Pino-based structured logger with service name + domain tagging.
- *              All services should use this factory for consistent log format.
- * @version 1.0.0
+ * @fileoverview Heady™ Shared Logger — Pino-based structured logging
+ * @description Central logger with redaction, pretty-printing in dev,
+ *              and child-logger factory for per-component tagging.
+ * @version 2.0.0
  */
 
 const pino = require('pino');
 
-const HEADY_DOMAINS = [
-    'headyme.com',
-    'headysystems.com',
-    'headyapi.com',
-    'headyconnection.org',
-    'headybuddy.org',
-    'headymcp.com',
-    'headyio.com',
-    'headybot.com',
-    'heady-ai.com',
-    'headyos.com',
-    'headysense.com',
-    'headyex.com',
-    'headyfinance.com',
-    'headyconnection.com',
-    'perfecttrader.com',
-    'headyai.me',
-];
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  transport: process.env.NODE_ENV !== 'production' ? { target: 'pino-pretty' } : undefined,
+  base: { service: process.env.HEADY_SERVICE || 'heady', version: '4.1.0' },
+  timestamp: pino.stdTimeFunctions.isoTime,
+  redact: ['req.headers.authorization', 'req.headers["x-heady-key"]', 'password', 'secret', 'token'],
+});
 
-/**
- * Create a structured pino logger for a Heady service.
- * @param {object} opts
- * @param {string} opts.service  - Service name (e.g. 'analytics-service')
- * @param {string} [opts.domain] - Primary domain (e.g. 'headyapi.com')
- * @param {string} [opts.level]  - Log level (default: env LOG_LEVEL or 'info')
- * @returns {import('pino').Logger}
- */
-function createLogger(opts = {}) {
-    const { service = 'heady', domain, level } = opts;
-    return pino({
-        level: level || process.env.LOG_LEVEL || 'info',
-        name: service,
-        base: {
-            service,
-            domain: domain || HEADY_DOMAINS[0],
-            pid: process.pid,
-        },
-        timestamp: pino.stdTimeFunctions.isoTime,
-    });
-}
-
-module.exports = { createLogger, HEADY_DOMAINS };
+module.exports = logger;
+module.exports.createChildLogger = (name) => logger.child({ component: name });

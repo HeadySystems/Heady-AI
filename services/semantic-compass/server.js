@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — Semantic Compass: Navigate your knowledge space directionally */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const PHI=1.618033988749895;const TAU=Math.PI*2;
 function navigate(currentTopic,direction,knowledgeBase){
   const directions={north:'broader/abstract',south:'specific/detailed',east:'related/adjacent',west:'contrasting/opposite',northeast:'abstract+adjacent',northwest:'abstract+contrasting',southeast:'specific+adjacent',southwest:'specific+contrasting'};
@@ -13,7 +14,7 @@ function navigate(currentTopic,direction,knowledgeBase){
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'semantic-compass'}));
   if(parsed.pathname==='/navigate'&&req.method==='POST'){let body='';req.on('data',c=>body+=c);req.on('end',()=>{const{topic,direction,knowledgeBase}=JSON.parse(body);res.end(JSON.stringify(navigate(topic,direction,knowledgeBase),null,2))});return}

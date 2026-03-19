@@ -11,6 +11,7 @@
  *         parameterized by conversational context.
  */
 
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const PHI = 1.618033988749895;
 const PHI_INV = 0.618033988749895;
 const TAU = Math.PI * 2;
@@ -316,7 +317,7 @@ const server = http.createServer((req, res) => {
   const path = parsed.pathname;
 
   // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }

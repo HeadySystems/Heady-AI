@@ -74,6 +74,7 @@
 'use strict';
 
 const { PHI_TIMING } = require('../shared/phi-math');
+const logger = require('../../shared/logger').createChildLogger('heady-api-gateway-v2');
 const http         = require('http');
 const https        = require('https');
 const { URL }      = require('url');
@@ -387,7 +388,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
 
     this._started = true;
     this.emit('gateway:started', { port });
-    console.log(`[HeadyApiGatewayV2] Listening on port ${port}`);
+    logger.info(`Listening on port ${port}`);
     return this;
   }
 
@@ -997,11 +998,11 @@ if (require.main === module) {
 
     // Graceful shutdown
     const shutdown = async (sig) => {
-      console.log(`[HeadyApiGatewayV2] ${sig} received — draining connections...`);
+      logger.info(`${sig} received — draining connections...`);
       await gw.stop();
       process.exit(0);
     };
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT',  () => shutdown('SIGINT'));
-  })().catch((err) => { console.error(err); process.exit(1); });
+  })().catch((err) => { logger.error(err); process.exit(1); });
 }

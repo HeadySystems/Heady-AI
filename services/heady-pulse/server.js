@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — HeadyPulse: Real-time heartbeat and ecosystem health */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http=require('http');const url=require('url');const https=require('https');const fs=require('fs');const path=require('path');
 const SERVICES_DIR=path.join(__dirname,'..');
 function discoverServices(){
@@ -29,7 +30,7 @@ async function checkHealth(serviceUrl){
 }
 const server=http.createServer(async(req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'heady-pulse'}));
   if(parsed.pathname==='/discover')return res.end(JSON.stringify(discoverServices(),null,2));

@@ -16,6 +16,7 @@ const { EventEmitter } = require("events");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { isAllowedOrigin } = require("../../shared/cors-config");
 const logger = require("./utils/logger");
 
 const AUDIT = path.join(__dirname, "..", "data", "sdk-services-audit.jsonl");
@@ -277,7 +278,7 @@ function registerRoutes(app, orchestrator) {
             "Content-Type": "text/event-stream",
             "Cache-Control": "no-cache",
             Connection: "keep-alive",
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": isAllowedOrigin(req.headers.origin) ? req.headers.origin : "null",
         });
         res.write(`data: ${JSON.stringify({ type: "connected", ts: new Date().toISOString() })}\n\n`);
         sseClients.add(res);

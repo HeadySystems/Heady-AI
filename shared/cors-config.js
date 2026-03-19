@@ -8,7 +8,7 @@
 const HEADY_DOMAINS = [
   'headyme.com',
   'headysystems.com',
-  'headyai.com',
+  'heady-ai.com',
   'headybuddy.com',
   'headybuddy.org',
   'headymcp.com',

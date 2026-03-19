@@ -1,4 +1,5 @@
 /* © 2026 Heady™ — Swarm Optimizer: Auto-tunes swarm configurations based on task performance */
+const { isAllowedOrigin } = require('../../shared/cors-config');
 const http = require('http');const url = require('url');const fs = require('fs');const path = require('path');
 const PHI = 1.618033988749895;const STORE_PATH = path.join(__dirname, '../../.heady_cache/swarm-optimizer.json');
 const SWARMS = ['Navigator','Researcher','Creator','Analyst','Guardian','Connector','Optimizer','Storyteller','Architect','Diplomat','Scout','Healer','Sage','Warrior','Alchemist','Dreamer','Oracle'];
@@ -11,7 +12,7 @@ function optimizeConfig(taskType,metrics){
 }
 const server=http.createServer((req,res)=>{
   const parsed=url.parse(req.url,true);
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Content-Type','application/json');
+  res.setHeader('Access-Control-Allow-Origin', isAllowedOrigin(req.headers.origin) ? req.headers.origin : 'null');res.setHeader('Content-Type','application/json');
   if(req.method==='OPTIONS'){res.writeHead(204);return res.end()}
   if(parsed.pathname==='/health')return res.end(JSON.stringify({status:'ok',service:'swarm-optimizer'}));
   if(parsed.pathname==='/optimize'&&req.method==='POST'){let body='';req.on('data',c=>body+=c);req.on('end',()=>{const{taskType,metrics}=JSON.parse(body);const store=loadStore();const config=optimizeConfig(taskType,metrics);store.configs.push(config);store.version++;saveStore(store);res.end(JSON.stringify(config,null,2))});return}
