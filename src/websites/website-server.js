@@ -432,7 +432,9 @@ class WebsiteServer {
   _buildCSP() {
     return [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      // TODO: Replace 'unsafe-inline' with nonce-based CSP for scripts
+      "script-src 'self'",
+      // TODO: Migrate 'unsafe-inline' in style-src to nonce-based approach
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
       "font-src 'self'",

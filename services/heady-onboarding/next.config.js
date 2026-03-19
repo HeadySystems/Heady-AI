@@ -10,7 +10,9 @@ const nextConfig = {
   // Enable experimental features for pilot
   experimental: {
     serverActions: {
-      allowedOrigins: ['headyme.com', 'localhost:3000']
+      allowedOrigins: process.env.NODE_ENV === 'production'
+        ? ['headyme.com']
+        : ['headyme.com', 'localhost:3000']
     }
   },
 

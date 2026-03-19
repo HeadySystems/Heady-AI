@@ -113,7 +113,7 @@ body {
 }
 
 .header-tagline {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 400;
     color: var(--text-dim);
     text-transform: uppercase;
@@ -190,7 +190,7 @@ body {
 }
 
 .welcome-hint {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-dim);
     font-style: italic;
     max-width: 260px;
@@ -232,7 +232,7 @@ body {
 }
 
 .buddy-label {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--accent);
     text-transform: uppercase;
@@ -267,7 +267,7 @@ body {
 }
 
 .buddy-timestamp {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--text-dim);
     margin-top: 8px;
 }
@@ -294,7 +294,7 @@ body {
 .buddy-image-caption {
     padding: 10px 14px;
     background: var(--bg-card);
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-secondary);
     border-top: 1px solid var(--border);
 }
@@ -318,7 +318,7 @@ body {
 }
 
 .buddy-code-lang {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--accent);
     text-transform: uppercase;
@@ -326,7 +326,7 @@ body {
 }
 
 .buddy-code-copy {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--text-dim);
     background: none;
     border: 1px solid var(--border);
@@ -398,7 +398,7 @@ body {
 }
 
 .buddy-status-text {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-secondary);
 }
 
@@ -433,14 +433,14 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-secondary);
 }
 
 .buddy-list li::before {
     content: '◆';
     color: var(--accent);
-    font-size: 8px;
+    font-size: 11px;
     margin-top: 5px;
     flex-shrink: 0;
 }
@@ -474,7 +474,7 @@ body {
 }
 
 .thinking-text {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-dim);
     font-style: italic;
 }
@@ -497,7 +497,7 @@ body {
     border-radius: 20px;
     padding: 10px 16px;
     font-family: var(--font);
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-primary);
     outline: none;
     transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);

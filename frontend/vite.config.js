@@ -5,10 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:3301',
-      '/health': 'http://localhost:3301',
-      '/mcp': 'http://localhost:3301',
-      '/metrics': 'http://localhost:3301',
+      '/api': process.env.VITE_API_URL || 'http://localhost:3301',
+      '/health': process.env.VITE_API_URL || 'http://localhost:3301',
+      '/mcp': process.env.VITE_API_URL || 'http://localhost:3301',
+      '/metrics': process.env.VITE_API_URL || 'http://localhost:3301',
     },
   },
   build: {

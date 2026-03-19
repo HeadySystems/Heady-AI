@@ -1,3 +1,4 @@
+const { spawn } = require('child_process');
 const { PhiBackoff } = require('../core/phi-scales');
 const logger = require('../utils/logger').child({ component: 'respawn-controller' });
 
@@ -5,7 +6,17 @@ class RespawnController {
     constructor(quarantineManager) {
         this.quarantineManager = quarantineManager;
         this.respawnHistory = new Map();
+        this.registry = new Map();
         this.maxAttempts = 5;
+    }
+
+    registerService(serviceId, entryPoint) {
+        this.registry.set(serviceId, {
+            entryPoint,
+            pid: null,
+            restartCount: 0,
+            lastRestart: null,
+        });
     }
 
     async attemptRespawn(serviceId) {
@@ -34,7 +45,6 @@ class RespawnController {
         await new Promise(resolve => setTimeout(resolve, backoffTime));
 
         try {
-            // TODO: Implement actual restart logic (process.fork, docker-compose, etc.)
             const success = await this.restartService(serviceId);
 
             if (success) {
@@ -53,9 +63,32 @@ class RespawnController {
     }
 
     async restartService(serviceId) {
-        // Placeholder - implement actual restart logic
-        // Options: child_process.fork, docker-compose restart, Cloud Run revision swap
-        return true;
+        const serviceEntry = this.registry.get(serviceId);
+        if (!serviceEntry) {
+            logger.warn('No registry entry for service', { serviceId });
+            return false;
+        }
+
+        try {
+            const child = spawn('node', [serviceEntry.entryPoint], {
+                detached: true,
+                stdio: 'ignore',
+                env: { ...process.env, SERVICE_NAME: serviceId },
+            });
+            child.unref();
+            serviceEntry.pid = child.pid;
+            serviceEntry.restartCount = (serviceEntry.restartCount || 0) + 1;
+            serviceEntry.lastRestart = Date.now();
+            logger.info('Restarted service', {
+                serviceId,
+                pid: child.pid,
+                restartCount: serviceEntry.restartCount,
+            });
+            return true;
+        } catch (err) {
+            logger.error('Failed to restart service', { serviceId, error: err.message });
+            return false;
+        }
     }
 
     getHistory(serviceId) {

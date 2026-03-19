@@ -211,7 +211,9 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
+      // TODO: Replace 'unsafe-inline' with nonce-based CSP (e.g., "'nonce-<server-generated>'")
+      scriptSrc: ["'self'", "https://cdnjs.cloudflare.com"],
+      // TODO: Migrate 'unsafe-inline' in styleSrc to nonce-based approach
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
@@ -221,7 +223,7 @@ app.use(helmet({
       baseUri: ["'self'"],
     },
   },
-  crossOriginEmbedderPolicy: false,
+  crossOriginEmbedderPolicy: { policy: 'credentialless' },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   hsts: { maxAge: 31536000, includeSubDomains: true },
 }));

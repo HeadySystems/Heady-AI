@@ -23,9 +23,39 @@ chatRouter.post('/', async (req, res, next) => {
       model: data.model
     });
 
-    // TODO: Implement actual chat logic with LLM
+    const llmEndpoint = process.env.HEADY_LLM_ENDPOINT;
+    if (!llmEndpoint) {
+      return res.status(503).json({
+        error: 'LLM service not configured',
+        message: 'Set HEADY_LLM_ENDPOINT environment variable',
+        fallback: true
+      });
+    }
+
+    const llmResponse = await fetch(llmEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(process.env.HEADY_LLM_API_KEY && { 'Authorization': `Bearer ${process.env.HEADY_LLM_API_KEY}` }),
+      },
+      body: JSON.stringify({
+        message: data.message,
+        model: data.model || 'gpt-4',
+        context: data.context || [],
+      }),
+    });
+
+    if (!llmResponse.ok) {
+      logger.error('LLM request failed', { status: llmResponse.status });
+      return res.status(502).json({
+        error: 'LLM service error',
+        message: `Upstream returned ${llmResponse.status}`,
+      });
+    }
+
+    const llmData = await llmResponse.json();
     res.json({
-      response: `Echo: ${data.message}`,
+      response: llmData.response ?? llmData.choices?.[0]?.message?.content ?? '',
       model: data.model || 'gpt-4',
       timestamp: new Date().toISOString()
     });

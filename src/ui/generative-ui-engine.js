@@ -93,6 +93,7 @@ class GenerativeUI {
             sandboxed: true,
             permissions,
             iframe: permissions.includes('execute') ? false : true,
+            // TODO: Migrate 'unsafe-inline' in style-src to nonce-based approach when sandbox supports it
             csp: "default-src 'none'; style-src 'unsafe-inline'; script-src 'none'",
         };
     }

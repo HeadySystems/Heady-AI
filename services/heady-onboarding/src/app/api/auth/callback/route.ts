@@ -39,9 +39,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Verify token with Firebase Admin (in production)
-    // For now, trust the client-side Firebase Auth verification
-    // TODO: Add firebase-admin verification for production hardening
+    // Server-side token structure validation
+    // TODO: Replace with full firebase-admin.auth().verifyIdToken() for production
+    if (!validateTokenStructure(body.idToken)) {
+      console.warn('[AUTH_CALLBACK] Invalid token structure received', { uid: body.uid });
+      return NextResponse.json(
+        { error: 'Invalid token format' },
+        { status: 401 }
+      );
+    }
+    console.warn('[AUTH_CALLBACK] Token structure valid but full server-side verification with firebase-admin is not yet enabled');
+
     const sessionToken = generateSessionToken(body.uid);
 
     // Check if user exists in database
@@ -139,6 +147,26 @@ export async function DELETE(): Promise<NextResponse> {
   });
 
   return response;
+}
+
+// ── Token Validation ─────────────────────────────────────
+
+/**
+ * Server-side token structure validation.
+ * Verifies the token is a well-formed JWT (3 base64url-encoded parts
+ * with valid JSON header and payload). This does NOT verify the signature —
+ * full verification requires firebase-admin.auth().verifyIdToken().
+ */
+function validateTokenStructure(token: string): boolean {
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+  try {
+    JSON.parse(Buffer.from(parts[0], 'base64url').toString());
+    JSON.parse(Buffer.from(parts[1], 'base64url').toString());
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // ── Helpers ──────────────────────────────────────────────

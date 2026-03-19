@@ -3,6 +3,7 @@
  * Digital signature verification for semantic logic gates
  */
 
+import { createHash } from 'crypto';
 import { KyberTruthValue } from './kyber-gates';
 import { OctuplePrecisionTruthValue } from '../core/extended-precision';
 
@@ -86,14 +87,11 @@ export class SignedGate {
   }
 
   /**
-   * Simple hash function (placeholder for actual crypto hash)
+   * SHA-256 hash function using Node.js crypto module
    */
   private hashMessage(msg: string): bigint {
-    let hash = 0n;
-    for (let i = 0; i < msg.length; i++) {
-      hash = (hash << 5n) - hash + BigInt(msg.charCodeAt(i));
-    }
-    return hash & ((1n << 256n) - 1n); // Keep 256 bits
+    const hashBuffer = createHash('sha256').update(msg).digest();
+    return BigInt('0x' + hashBuffer.toString('hex'));
   }
 
   getGate(): KyberTruthValue {

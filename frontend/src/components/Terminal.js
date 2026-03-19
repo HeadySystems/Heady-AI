@@ -45,7 +45,7 @@ const TerminalComponent = () => {
     // Determine WebSocket URL
     let wsHost = window.location.host;
     if (window.location.port === '3000') {
-         wsHost = 'localhost:8000'; // Development fallback
+         wsHost = import.meta.env.VITE_WS_HOST || 'localhost:8000'; // Development fallback
     }
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
