@@ -1,14 +1,14 @@
 {
   "$schema": "heady://pipeline/task-queue",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-03-16T19:29:00.000Z",
+  "lastFineTuned": "2026-03-19T10:58:53.123805",
   "phi": 1.618033988749895,
   "pipelineStages": 22,
   "pipelineCompletionTarget": "\u03c6\u2075 \u00d7 1.09 \u2248 12.1s",
   "description": "Complete task queue for HCFullPipeline v9.0 \u2014 22 stages (HeadyDistiller = Stage 22: Knowledge Distillation & Compression). Liquid Architecture v9.0 with 8 cloud providers, 4 Colab runtimes, Neon+Upstash+Qdrant data layer.",
-  "taskCount": 887,
+  "taskCount": 761,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
@@ -9103,7 +9103,7 @@
     {
       "id": "AIEDUCLABS-002",
       "category": "AIEDUCLABS",
-      "title": "Earth Sciences lab module — plate tectonics, weather, geology",
+      "title": "Earth Sciences lab module \u2014 plate tectonics, weather, geology",
       "description": "Canvas-based interactive simulations for plate tectonic drift, weather pattern modeling, and geological layer exploration",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9115,7 +9115,7 @@
     {
       "id": "AIEDUCLABS-003",
       "category": "AIEDUCLABS",
-      "title": "Biology lab module — cell explorer, DNA, ecosystems",
+      "title": "Biology lab module \u2014 cell explorer, DNA, ecosystems",
       "description": "Interactive biology simulations: 3D cell navigation, DNA replication steps, predator-prey ecosystem modeling",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9127,7 +9127,7 @@
     {
       "id": "AIEDUCLABS-004",
       "category": "AIEDUCLABS",
-      "title": "Chemistry lab module — molecular builder, reactions, periodic table",
+      "title": "Chemistry lab module \u2014 molecular builder, reactions, periodic table",
       "description": "3D molecule construction, chemical reaction dynamics simulator, interactive periodic table with orbital configs",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9139,7 +9139,7 @@
     {
       "id": "AIEDUCLABS-005",
       "category": "AIEDUCLABS",
-      "title": "Physics lab module — projectile motion, optics, circuits",
+      "title": "Physics lab module \u2014 projectile motion, optics, circuits",
       "description": "Kinematics projectile launcher, optical bench with lenses/mirrors, real-time circuit analysis simulator",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9151,7 +9151,7 @@
     {
       "id": "AIEDUCLABS-006",
       "category": "AIEDUCLABS",
-      "title": "Computer Science & AI lab module — sorting, neural nets, pathfinding",
+      "title": "Computer Science & AI lab module \u2014 sorting, neural nets, pathfinding",
       "description": "Sorting algorithm step-through visualizer, neural network playground with training, A*/Dijkstra pathfinding maze",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9163,7 +9163,7 @@
     {
       "id": "AIEDUCLABS-007",
       "category": "AIEDUCLABS",
-      "title": "Engineering & Robotics lab module — circuits, robot arm, bridge builder",
+      "title": "Engineering & Robotics lab module \u2014 circuits, robot arm, bridge builder",
       "description": "Digital logic circuit designer, programmable robotic arm simulator, structural bridge stress-testing",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9175,7 +9175,7 @@
     {
       "id": "AIEDUCLABS-008",
       "category": "AIEDUCLABS",
-      "title": "Admin UI — lab management, user management, compliance dashboard",
+      "title": "Admin UI \u2014 lab management, user management, compliance dashboard",
       "description": "Full admin dashboard with lab CRUD, user role management, compliance status tracking, usage analytics",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9187,7 +9187,7 @@
     {
       "id": "AIEDUCLABS-009",
       "category": "AIEDUCLABS",
-      "title": "Subscriber UI — lab browser, workspace, progress tracker",
+      "title": "Subscriber UI \u2014 lab browser, workspace, progress tracker",
       "description": "Student-facing lab catalog, interactive lab workspace with canvas simulations, per-discipline progress tracking",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9199,7 +9199,7 @@
     {
       "id": "AIEDUCLABS-010",
       "category": "AIEDUCLABS",
-      "title": "VR integration — WebXR/A-Frame immersive lab sessions",
+      "title": "VR integration \u2014 WebXR/A-Frame immersive lab sessions",
       "description": "WebXR session support for VR headsets. A-Frame scene readiness for immersive 3D lab environments",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9211,7 +9211,7 @@
     {
       "id": "AIEDUCLABS-011",
       "category": "AIEDUCLABS",
-      "title": "Voice control — Web Speech API commands and narration",
+      "title": "Voice control \u2014 Web Speech API commands and narration",
       "description": "Continuous speech recognition for hands-free lab control. Voice commands: play, pause, reset, step, record, export",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9223,7 +9223,7 @@
     {
       "id": "AIEDUCLABS-012",
       "category": "AIEDUCLABS",
-      "title": "Accessibility — WCAG 2.1 AA+, screen reader, keyboard nav",
+      "title": "Accessibility \u2014 WCAG 2.1 AA+, screen reader, keyboard nav",
       "description": "Focus indicators, ARIA roles, skip links, screen reader announcements, keyboard navigation, high contrast mode, reduced motion",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9235,7 +9235,7 @@
     {
       "id": "AIEDUCLABS-013",
       "category": "AIEDUCLABS",
-      "title": "Cross-platform PWA — offline/online sync for all OS",
+      "title": "Cross-platform PWA \u2014 offline/online sync for all OS",
       "description": "Service worker for offline caching, IndexedDB local storage, PWA manifest for Windows/macOS/Android/iOS/Linux installability",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9247,7 +9247,7 @@
     {
       "id": "AIEDUCLABS-014",
       "category": "AIEDUCLABS",
-      "title": "Authentication — Firebase Auth (email/password + Google)",
+      "title": "Authentication \u2014 Firebase Auth (email/password + Google)",
       "description": "Login/signup flows with Firebase Auth integration, session persistence, role-based access control (admin vs subscriber)",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9259,7 +9259,7 @@
     {
       "id": "AIEDUCLABS-015",
       "category": "AIEDUCLABS",
-      "title": "Compliance — ToS, Operator Agreement, FERPA/COPPA",
+      "title": "Compliance \u2014 ToS, Operator Agreement, FERPA/COPPA",
       "description": "Terms of Service acceptance gate, Operator Agreement for institutions, FERPA and COPPA compliance documentation",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9271,7 +9271,7 @@
     {
       "id": "AIEDUCLABS-016",
       "category": "AIEDUCLABS",
-      "title": "Data export — CSV, JSON, PDF for lab results and progress",
+      "title": "Data export \u2014 CSV, JSON, PDF for lab results and progress",
       "description": "One-click export of lab results and progress data in CSV, JSON, and PDF (via print) formats",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9295,7 +9295,7 @@
     {
       "id": "AIEDUCLABS-018",
       "category": "AIEDUCLABS",
-      "title": "SEO — sitemap.xml, robots.txt, Open Graph, structured data",
+      "title": "SEO \u2014 sitemap.xml, robots.txt, Open Graph, structured data",
       "description": "Search engine optimization with sitemap, robots directives, Open Graph meta tags, Twitter Cards, and semantic HTML",
       "status": "done",
       "completedAt": "2026-03-18T00:26:00Z",
@@ -9303,6 +9303,176 @@
       "csl_confidence": 0.882,
       "estimated_hours": 1,
       "auto_fix": "echo '[AIEDUCLABS] SEO deployed'"
+    },
+    {
+      "id": "SECURITY-028",
+      "category": "SECURITY",
+      "title": "Wire guard-rules.json into heady-guard service runtime",
+      "description": "The new guard-rules.json config (145 lines) defines PII, toxicity, and prompt-injection rules but needs to be loaded by the heady-guard service at startup. Connect config loading in src/services/guard/index.js",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 2,
+      "source": "configs/guard-rules.json \u2014 no runtime loader found"
+    },
+    {
+      "id": "SECURITY-029",
+      "category": "SECURITY",
+      "title": "Add Luhn validation for credit card detection in Guard pipeline",
+      "description": "guard-rules.json has luhn_validate: true for credit card pattern but no implementation exists. Add Luhn check in PII stage",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "configs/guard-rules.json \u2014 credit_card.luhn_validate flag"
+    },
+    {
+      "id": "QUALITY-031",
+      "category": "QUALITY",
+      "title": "Fix non-phi timeouts in heady.config.json",
+      "description": "boot_ms=30000, shutdown_ms=10000, health_ms=5000, tool_ms=30000 are round numbers, not phi-derived. Replace with \u03c6\u207f \u00d7 1000 values",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "configs/heady.config.json \u2014 timeouts section"
+    },
+    {
+      "id": "QUALITY-032",
+      "category": "QUALITY",
+      "title": "Validate CSL confidence_ceiling of 0.718 against phi derivation",
+      "description": "heady.config.json sets confidence_ceiling=0.718 but this is not a standard \u03c6-derived value (1/\u03c6\u00b2=0.382, 1/\u03c6=0.618, \u03c6-1=0.618). Document or fix the derivation",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 0.5,
+      "source": "configs/heady.config.json \u2014 csl.thresholds.high"
+    },
+    {
+      "id": "FEATURES-042",
+      "category": "FEATURES",
+      "title": "Integrate BeeFactory agent into swarm orchestration pipeline",
+      "description": "agents/bee-factory.js was added in production merge but not wired into the 17-Swarm Matrix or HCFullPipeline. Register in swarm-taxonomy.json and add to skill router",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 3,
+      "source": "agents/bee-factory.js \u2014 new agent, no swarm registration"
+    },
+    {
+      "id": "DEPLOY-016",
+      "category": "DEPLOY",
+      "title": "Test and validate Dockerfile.distroless build",
+      "description": "New distroless Dockerfile added but no CI workflow references it. Add distroless build target to ci.yml and test the build",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "Dockerfile.distroless \u2014 no CI integration"
+    },
+    {
+      "id": "INFRASTRUCTURE-118",
+      "category": "INFRASTRUCTURE",
+      "title": "Audit and consolidate 28 GitHub Actions workflows",
+      "description": "28 CI/CD workflows in .github/workflows/ \u2014 many appear duplicated (deploy-cloud-run.yml vs deploy-cloud-run-v2.yml vs deploy-cloud-run-gap.yml). Consolidate into fewer, well-organized workflows",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 4,
+      "source": ".github/workflows/ \u2014 28 files, potential duplicates"
+    },
+    {
+      "id": "INFRASTRUCTURE-119",
+      "category": "INFRASTRUCTURE",
+      "title": "Remove localhost-validation.yml workflow",
+      "description": "localhost-validation.yml (18KB) references localhost patterns which violate the /heady-no-local rule. Remove or replace with cloud-based validation",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 1,
+      "source": ".github/workflows/localhost-validation.yml \u2014 violates no-local rule"
+    },
+    {
+      "id": "ARCHITECTURE-026",
+      "category": "ARCHITECTURE",
+      "title": "Wire swarm-taxonomy.json into swarm orchestrator runtime",
+      "description": "New swarm-taxonomy.json config (195 lines) defines the 17-swarm matrix but needs to be loaded by the orchestrator at startup instead of hardcoded values",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "configs/swarm-taxonomy.json \u2014 no runtime loader"
+    },
+    {
+      "id": "DEPLOY-017",
+      "category": "DEPLOY",
+      "title": "Validate liquid-os-manifest.json against running Cloud Run services",
+      "description": "New liquid-os-manifest.json (197 lines) defines the OS manifest but needs validation against actual Cloud Run service config",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "configs/liquid-os-manifest.json \u2014 no validation step"
+    },
+    {
+      "id": "VERIFICATION-007",
+      "category": "VERIFICATION",
+      "title": "Verify all CHANGELOG v3.1.0 features have working implementations",
+      "description": "CHANGELOG.md lists 20+ features added in v3.1.0 (OTel, graceful shutdown, feature flags, key rotation, eval pipeline, prompt guard, circuit breaker, worker pool, graph orchestrator, multi-cloud failover, SSO+RBAC, audit logging). Verify each has working code and tests",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 8,
+      "source": "CHANGELOG.md \u2014 v3.1.0 features listed but unverified"
+    },
+    {
+      "id": "FEATURES-043",
+      "category": "FEATURES",
+      "title": "Implement intelligent squash-merge from Golden Master Plan",
+      "description": "Golden_Master_Plan.md describes auto-squash-merge across cascade workspaces. Implement in auto-commit-deploy.js or as separate merge orchestrator",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 5,
+      "source": "docs/strategic/Golden_Master_Plan.md \u2014 Phase 4 auto-merge"
+    },
+    {
+      "id": "FEATURES-044",
+      "category": "FEATURES",
+      "title": "Implement visual test runner from Golden Master Plan",
+      "description": "Golden_Master_Plan.md describes a visible auto-test/demo flow. Build a browser-based test dashboard showing real-time test execution",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 6,
+      "source": "docs/strategic/Golden_Master_Plan.md \u2014 visible testing flow"
+    },
+    {
+      "id": "DOCUMENTATION-030",
+      "category": "DOCUMENTATION",
+      "title": "Sync Dropzone context tiers with live codebase changes",
+      "description": "The 3 context tiers (Small/Medium/Large) in Desktop/Dropzone/01-Context need a sync mechanism to stay current as the codebase evolves. Add a script or workflow to regenerate context files",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "Dropzone reorganization \u2014 context files are static snapshots"
+    },
+    {
+      "id": "INFRASTRUCTURE-120",
+      "category": "INFRASTRUCTURE",
+      "title": "Wire auto-commit-deploy service into main orchestrator startup",
+      "description": "Auto-sync service loads correctly (all exports verified) but status shows running:false \u2014 it needs start() called from the main heady-manager startup sequence",
+      "status": "pending",
+      "csl_confidence": 0.718,
+      "estimated_hours": 1,
+      "source": "auto-commit-deploy.js \u2014 getStatus shows running:false"
+    },
+    {
+      "id": "SITE_CONTENT-010",
+      "category": "SITE_CONTENT",
+      "title": "Wire OG image assets into liquid site projections",
+      "description": "9 new OG images (og-heady-ai.png through og-headysystems.png) were added in production merge. Wire into site-registry.json meta tags for each domain",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "assets/og-*.png \u2014 9 images added, not referenced in site-registry"
+    },
+    {
+      "id": "QUALITY-033",
+      "category": "QUALITY",
+      "title": "Validate CODEOWNERS file has correct team assignments",
+      "description": "New .github/CODEOWNERS file added \u2014 verify all paths map to correct teams/users and that branch protection rules reference it",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 0.5,
+      "source": ".github/CODEOWNERS \u2014 new file, needs validation"
     }
   ]
 }
