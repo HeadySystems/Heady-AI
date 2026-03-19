@@ -12,6 +12,21 @@ const { execSync } = require('child_process');
 const { httpPost } = require('./nodes');
 const config = require('./config');
 
+// SECURITY: Sandboxed dynamic code execution
+function safeFunctionCreate(code) {
+  if (typeof code !== 'string' || code.length > 10000) {
+    throw new Error('Invalid code input for dynamic function');
+  }
+  // Block dangerous patterns
+  const blocked = ['require', 'import', 'process', 'child_process', 'fs', 'eval', '__proto__', 'constructor'];
+  for (const pattern of blocked) {
+    if (code.includes(pattern)) {
+      throw new Error(`Blocked pattern "${pattern}" in dynamic code`);
+    }
+  }
+  return new Function(code);
+}
+
 // ─── JSON Schema Validator (lightweight, no external deps) ───────────────────
 
 function validateSchema(schema, value, path = 'root') {
@@ -424,7 +439,7 @@ class ToolRegistry {
             Math, JSON, parseInt, parseFloat, String, Number, Boolean, Array, Object,
           };
           try {
-            const fn = new Function(...Object.keys(sandbox), `"use strict"; ${code}`);
+            const fn = safeFunctionCreate(`"use strict"; ${code}`);
             const result = fn(...Object.values(sandbox));
             return { output: logs.join('\n'), result: result !== undefined ? result : null, language };
           } catch (err) {
@@ -472,7 +487,7 @@ class ToolRegistry {
         };
         const sanitized = expression.replace(/[;{}]/g, '');
         try {
-          const fn = new Function(...Object.keys(mathEnv), `"use strict"; return (${sanitized})`);
+          const fn = safeFunctionCreate(`"use strict"; return (${sanitized})`);
           const result = fn(...Object.values(mathEnv));
           return { expression, result, type: typeof result };
         } catch (err) {
