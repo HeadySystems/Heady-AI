@@ -11,6 +11,25 @@
  */
 
 const logger = require("../utils/logger");
+const path = require("path");
+
+// ─── HeadyAutoContext — always-on workspace context intelligence ──────────────
+// Instantiated ONCE at module load so all engines share the same indexed instance.
+let _autoContext = null;
+try {
+    const { getAutoContext } = require("../../shared/heady-auto-context");
+    const projectRoot = path.resolve(__dirname, "../..");
+    _autoContext = getAutoContext({ workspaceRoot: projectRoot, alwaysOn: true });
+    // Expose globally for liquid architecture access
+    global.__autoContext = _autoContext;
+    // Kick off full workspace indexing in background (non-blocking)
+    if (_autoContext && typeof _autoContext.indexWorkspace === "function") {
+        _autoContext.indexWorkspace().catch(() => { /* silent — index degrades gracefully */ });
+    }
+    logger.info && logger.info("[engine-wiring] HeadyAutoContext singleton ready — workspace indexing started");
+} catch (e) {
+    logger.warn && logger.warn("[engine-wiring] HeadyAutoContext not available:", e.message);
+}
 
 /**
  * Initialize all system engines and wire them together.
@@ -73,6 +92,40 @@ function wireEngines(app, deps = {}) {
         cloudOrchestrator: null,
         bees: null,
     };
+
+    // ─── 0b. HeadyAutoContext API routes ─────────────────────────────
+    if (_autoContext) {
+        app.get("/api/autocontext/stats", (_req, res) => res.json(_autoContext.getStats()));
+        app.post("/api/autocontext/enrich", async (req, res) => {
+            try {
+                const { task, domain, vectorSearch, focusFiles } = req.body || {};
+                if (!task) return res.status(400).json({ error: "task required" });
+                const result = await _autoContext.enrich(task, { domain, vectorSearch, focusFiles });
+                res.json({ ok: true, ...result });
+            } catch (e) {
+                res.status(500).json({ ok: false, error: e.message });
+            }
+        });
+        app.post("/api/autocontext/index", async (_req, res) => {
+            try {
+                const count = await _autoContext.indexWorkspace();
+                res.json({ ok: true, filesIndexed: count });
+            } catch (e) {
+                res.status(500).json({ ok: false, error: e.message });
+            }
+        });
+        // Wire AutoContext into InferenceGateway if available
+        try {
+            const { wireGateway } = require("../../shared/heady-auto-context");
+            const inferenceGateway = global.__inferenceGateway;
+            if (inferenceGateway) {
+                wireGateway(inferenceGateway, _autoContext);
+                logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyAutoContext ↔ InferenceGateway: WIRED (auto-enrichment on all complete/battle/race calls)");
+            }
+        } catch { /* InferenceGateway may not be available yet — will wire on first use */ }
+        logger.logNodeActivity("CONDUCTOR", "  ∞ HeadyAutoContext: LOADED (always-on, background indexer, vector memory, phi-scaled)");
+        logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/autocontext/stats, /enrich, /index");
+    }
 
     // ─── 1. Resource Manager ──────────────────────────────────────────
     try {
@@ -334,6 +387,7 @@ function wireEngines(app, deps = {}) {
             storyDriver: engines.storyDriver || null,
             resourceManager: engines.resourceManager || null,
             eventBus: eventBus,
+            autoContext: _autoContext,   // ← HeadyAutoContext: enriches EVERY reaction
         });
 
         registerAutoSuccessRoutes(app, engines.autoSuccessEngine);
@@ -498,6 +552,67 @@ function wireEngines(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/bees/health, /status, /history, /blast, /blast/health");
     } catch (err) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyBees not loaded: ${err.message}`);
+    }
+
+    // ─── 13. HCFPRunner + EventBridge — Continuous Pipeline Automation ──
+    // Critical fix: HCFPRunner fires internal events (run:start, run:complete) but
+    // hc_auto_success listens on global.eventBus for pipeline:started, pipeline:completed.
+    // HCFPEventBridge translates names AND sets up φ⁷-interval autonomous triggers.
+    try {
+        let HCFPRunnerCtor;
+        try {
+            const hcfpMod = require("../../../orchestration/hcfp-runner");
+            HCFPRunnerCtor = hcfpMod.default || hcfpMod.HCFPRunner || hcfpMod;
+        } catch { /* try alternate path */ }
+        if (!HCFPRunnerCtor) {
+            const hcfpMod = require("../../orchestration/hcfp-runner");
+            HCFPRunnerCtor = hcfpMod.default || hcfpMod.HCFPRunner || hcfpMod;
+        }
+
+        const { HCFPEventBridge } = require("../orchestration/hcfp-event-bridge");
+
+        const hcfpRunner = new HCFPRunnerCtor();
+        engines.hcfpRunner = hcfpRunner;
+
+        // Bridge runner events → global eventBus (with name translation)
+        // and set up φ⁷-interval autonomous pipeline triggers
+        if (eventBus) {
+            const bridge = new HCFPEventBridge(hcfpRunner, eventBus);
+            bridge.start();
+            engines.hcfpBridge = bridge;
+
+            // Register bridge status endpoint
+            app.get("/api/hcfp-bridge/status", (_req, res) => res.json(bridge.getStatus()));
+            app.post("/api/hcfp-bridge/trigger", (_req, res) => {
+                const task = _req.body?.task || "manual-trigger";
+                hcfpRunner.run(task)
+                    .then(r => res.json({ ok: true, runId: r.id, status: r.status }))
+                    .catch(e => res.status(500).json({ ok: false, error: e.message }));
+            });
+
+            logger.logNodeActivity("CONDUCTOR", "  ∞ HCFPEventBridge: WIRED (runner→eventBus + φ⁷ autonomous trigger)");
+            logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/hcfp-bridge/status, /trigger");
+        }
+
+        // Expose globally for liquid architecture access
+        global.__hcfpRunner = hcfpRunner;
+
+        // Wire auto-success engine → pipeline: when auto-success triggers pipeline:run,
+        // route it to the runner (already handled by bridge REVERSE_MAP)
+        if (engines.autoSuccessEngine && eventBus) {
+            // When auto-success wants to force a pipeline run, it emits pipeline:run
+            // The bridge's REVERSE_MAP already handles this. Log for visibility:
+            engines.autoSuccessEngine.on("reaction:completed", () => {
+                const lastResult = engines.autoSuccessEngine.getLastCycle?.();
+                if (lastResult?.shouldRunPipeline) {
+                    eventBus.emit("pipeline:run", { task: "auto-success-reaction", source: "engine" });
+                }
+            });
+        }
+
+        logger.logNodeActivity("CONDUCTOR", `  ∞ HCFPRunner: LOADED (22-stage pipeline, Distillation wired, φ⁷ autonomous loop)`);
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ HCFPRunner/EventBridge not loaded: ${err.message}`);
     }
 
     return engines;

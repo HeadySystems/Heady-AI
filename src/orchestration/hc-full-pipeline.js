@@ -63,6 +63,8 @@ class HCFullPipeline extends EventEmitter {
         const availableMB = (mem.heapTotal - mem.heapUsed) / (1024 * 1024);
         this.maxConcurrent = opts.maxConcurrent || Math.max(4, Math.floor(availableMB / 10));
         this.runs = new Map();
+        // FIX: LRU eviction — prevent unbounded memory growth on high-throughput pipeline runs
+        this._maxRuns = opts.maxRuns || 1000;
         this.monteCarlo = opts.monteCarlo || null;
         this.policyEngine = opts.policyEngine || null;
         this.incidentManager = opts.incidentManager || null;
@@ -175,6 +177,11 @@ class HCFullPipeline extends EventEmitter {
         };
 
         this.runs.set(runId, run);
+        // FIX: LRU eviction — prevent unbounded memory growth (was: runs stored forever)
+        if (this.runs.size > this._maxRuns) {
+            const oldestKey = this.runs.keys().next().value;
+            this.runs.delete(oldestKey);
+        }
         this.emit("run:created", { runId, request });
         return run;
     }
