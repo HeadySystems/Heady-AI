@@ -489,6 +489,28 @@ try {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// MONETIZATION LAYER TASKS — new products wired into auto-success
+// ═══════════════════════════════════════════════════════════════════════════════
+TASK_CATALOG.push(
+  { id: "revenue-meter-flush",      name: "Flush metered billing events to Stripe",    cat: "monetization-iaas", pool: "hot",  w: 5, desc: "Ensure all buffered meter events are flushed to billing" },
+  { id: "revenue-budget-check",     name: "Verify tenant budget utilization",          cat: "monetization-iaas", pool: "hot",  w: 5, desc: "Check all tenants against monthly budget limits" },
+  { id: "paas-webhook-health",      name: "Probe PaaS webhook endpoint health",       cat: "monetization-iaas", pool: "warm", w: 4, desc: "Circuit-break unhealthy webhook stages" },
+  { id: "paas-pipeline-latency",    name: "Benchmark PaaS pipeline execution time",   cat: "monetization-iaas", pool: "warm", w: 4, desc: "Target: <60s for standard 22-stage run" },
+  { id: "guard-audit-integrity",    name: "Verify HeadyGuard audit chain integrity",   cat: "security",          pool: "hot",  w: 5, desc: "Validate SHA-256 hash chain is tamper-free" },
+  { id: "guard-kill-switch-test",   name: "Test kill-switch fires at 51% threshold",   cat: "security",          pool: "hot",  w: 5, desc: "Simulate 51% daily loss and verify flatten-and-sever" },
+  { id: "guard-hallucination-rate", name: "Track hallucination detection rate",         cat: "intelligence-training", pool: "warm", w: 4, desc: "Monitor false positive/negative rates" },
+  { id: "dojo-daily-challenge",     name: "Generate and solve daily coding challenge",  cat: "coding-mastery",    pool: "hot",  w: 5, desc: "Minimum 20 challenges/day target" },
+  { id: "dojo-skill-radar-update",  name: "Update skill proficiency radar",            cat: "coding-mastery",    pool: "warm", w: 4, desc: "Track improvement across 12 domains" },
+  { id: "dojo-pattern-extract",     name: "Extract patterns from solved challenges",    cat: "coding-mastery",    pool: "warm", w: 3, desc: "Build reusable pattern library" },
+  { id: "train-gap-analysis",       name: "Run skill gap analysis from failure rates",  cat: "intelligence-training", pool: "hot",  w: 5, desc: "Identify top 10 weakest areas" },
+  { id: "train-spaced-review",      name: "Execute spaced repetition reviews",          cat: "intelligence-training", pool: "warm", w: 4, desc: "Fibonacci-interval knowledge retention" },
+  { id: "train-curriculum-gen",     name: "Auto-generate training curriculum",          cat: "intelligence-training", pool: "warm", w: 3, desc: "Priority-ranked by impact score" },
+  { id: "mesh-agent-health",        name: "Monitor all v2 agent health scores",         cat: "monitoring",        pool: "hot",  w: 5, desc: "Argus + Hermes + Kronos v2 health" },
+  { id: "intel-competitive-scan",   name: "Run weekly competitive intelligence scan",   cat: "competitive-intel", pool: "cold", w: 3, desc: "Technology differentiation tracking" },
+  { id: "sacred-sdk-integrity",     name: "Validate Sacred Geometry SDK exports",       cat: "verification",      pool: "warm", w: 3, desc: "Fibonacci CSS, phi-timing, torus themes" },
+);
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // EXECUTION DEFAULTS — MAX EFFORT UNLESS USER OVERRIDES
 // HCFullPipeline and Auto-Success always run at maximum effort by default.
 // Set effortLevel to 'standard' or 'minimal' only via explicit user request.

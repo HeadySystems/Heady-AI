@@ -954,8 +954,64 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ Autobiographer not loaded: ${err.message}`);
     }
 
+    // ─── MONETIZATION LAYER — Revenue, PaaS, Guard, Dojo, Training ────────────
+
+    // Heady Revenue — unified metered billing & product catalog
+    try {
+        const { createRevenueRouter } = require("../services/heady-revenue");
+        app.use("/api/revenue", createRevenueRouter());
+        logger.logNodeActivity("CONDUCTOR", "  💰 Heady Revenue: LOADED → /api/revenue/*");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Revenue not loaded: ${err.message}`);
+    }
+
+    // Pipeline-as-a-Service — enterprise webhook pipeline API
+    try {
+        const { createPaaSRouter } = require("../services/pipeline-as-a-service");
+        app.use("/api/paas", createPaaSRouter());
+        logger.logNodeActivity("CONDUCTOR", "  🔗 Pipeline-as-a-Service: LOADED → /api/paas/*");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Pipeline-as-a-Service not loaded: ${err.message}`);
+    }
+
+    // HeadyGuard — governance-as-a-service (kill-switch + audit + hallucination guard)
+    try {
+        const { createGuardRouter } = require("../services/heady-guard");
+        app.use("/api/guard", createGuardRouter());
+        logger.logNodeActivity("CONDUCTOR", "  🛡️ HeadyGuard: LOADED → /api/guard/*");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyGuard not loaded: ${err.message}`);
+    }
+
+    // Heady Code Dojo — continuous coding practice engine
+    try {
+        const { createDojoRouter } = require("../services/heady-code-dojo");
+        app.use("/api/dojo", createDojoRouter());
+        logger.logNodeActivity("CONDUCTOR", "  🥋 Heady Code Dojo: LOADED → /api/dojo/*");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Code Dojo not loaded: ${err.message}`);
+    }
+
+    // Heady Train Service — skill gap analysis & training
+    try {
+        const { createTrainRouter } = require("../services/heady-train-service");
+        app.use("/api/train", createTrainRouter());
+        logger.logNodeActivity("CONDUCTOR", "  🎓 Heady Train Service: LOADED → /api/train/*");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Heady Train Service not loaded: ${err.message}`);
+    }
+
+    // Unified Auto-Success Scheduler
+    try {
+        const { unifiedScheduler } = require("../orchestration/auto-success-unified-scheduler");
+        unifiedScheduler.start();
+        logger.logNodeActivity("CONDUCTOR", "  🔄 Unified Auto-Success Scheduler: STARTED");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ Unified Scheduler not loaded: ${err.message}`);
+    }
+
     logger.logNodeActivity("CONDUCTOR", "  ═══════════════════════════════════════════════");
-    logger.logNodeActivity("CONDUCTOR", "  ✅ All service routes registered (Phase 1-4 complete)");
+    logger.logNodeActivity("CONDUCTOR", "  ✅ All service routes registered (Phase 1-5 complete — monetization layer active)");
 }
 
 module.exports = { registerServiceRoutes };
