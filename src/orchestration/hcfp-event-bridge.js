@@ -146,6 +146,44 @@ function bridgeHCFPEvents(eventBus, autoSuccessEngine = null) {
     });
     _unsubscribers.push(unsubRunFailed);
 
+    // ── AUTO-DEPLOY EVENTS → drift detection + sync triggers ────────────
+    const unsubAutoDeploy = eventBus.subscribe('auto-deploy:pushed', (event) => {
+        _stats.totalBridged++;
+        // After every auto-deploy push, trigger audit tasks for sync verification
+        eventBus.publish('heady:auto-success:reaction', {
+            trigger: 'auto_deploy_pushed',
+            remote: event.remote,
+            branch: event.branch,
+            commit: event.commit,
+            bridgedAt: Date.now(),
+        }).catch(() => { /* non-critical */ });
+    });
+    _unsubscribers.push(unsubAutoDeploy);
+
+    const unsubDrift = eventBus.subscribe('auto-deploy:drift-detected', (event) => {
+        _stats.totalBridged++;
+        eventBus.publish('heady:auto-success:reaction', {
+            trigger: 'config_drift_detected',
+            remote: event.remote,
+            fileCount: event.fileCount,
+            severity: 'high',
+            bridgedAt: Date.now(),
+        }).catch(() => { /* non-critical */ });
+    });
+    _unsubscribers.push(unsubDrift);
+
+    const unsubPushFailed = eventBus.subscribe('auto-deploy:push-failed', (event) => {
+        _stats.totalBridged++;
+        eventBus.publish('heady:auto-success:reaction', {
+            trigger: 'auto_deploy_push_failed',
+            remote: event.remote,
+            error: event.error,
+            severity: 'critical',
+            bridgedAt: Date.now(),
+        }).catch(() => { /* non-critical */ });
+    });
+    _unsubscribers.push(unsubPushFailed);
+
     return {
         /**
          * Late-bind the auto-success engine (for cases where it initializes after the bridge).
@@ -161,6 +199,7 @@ function bridgeHCFPEvents(eventBus, autoSuccessEngine = null) {
                 ..._stats,
                 uptimeMs: Date.now() - _stats.startedAt,
                 autoSuccessWired: !!_autoSuccess,
+                autoDeployEventsWired: true,
             };
         },
 

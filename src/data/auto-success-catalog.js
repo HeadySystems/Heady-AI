@@ -1,17 +1,16 @@
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- * Auto-Success Task Catalog — 209 tasks across 20 categories.
+ * Auto-Success Task Catalog — 249 tasks across 20 categories.
  * Extracted from hc_auto_success.js for maintainability.
  *
- * AUDIT (2026-03-19):
- *   Inline tasks: 197 (learning:20, optimization:20, integration:15, monitoring:15,
- *     maintenance:15, discovery:15, verification:15, creative:10, deep-intel:10,
- *     hive-integration:20, mop-security:5, mop-architecture:5, mop-docs:3,
- *     mop-infrastructure:4, mop-cicd:4, mop-mcp:5, mop-ai-gateway:9,
- *     mop-performance:2, mop-auth:2, mop-sites:3)
+ * AUDIT (2026-03-19 Full-Spectrum):
+ *   Original inline tasks: 197
+ *   Audit-extracted tasks: 40 (from 15-layer full-spectrum audit)
  *   External JSON: production-optimization-tasks.json (12 tasks)
- *   Empty JSON files: auto-flow-tasks.json, nonprofit-tasks.json, buddy-tasks.json (0 each)
- *   Total verified: 209 tasks (NOT the claimed 598)
+ *   Total verified: 249 tasks
+ *   Coverage: boot-integrity, pipeline-health, data-layer, security, service-mesh,
+ *     performance, auto-success, agent-marketplace, IP, sacred-geometry, learning,
+ *     training, revenue-architecture, auto-deploy, sync-service
  */
 
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
@@ -262,6 +261,71 @@ const TASK_CATALOG = [
     { id: "mop-site-001", name: "Deploy site-generator as Cloud Run service", cat: "mop-sites", pool: "hot", w: 5, desc: "Interactive on-the-fly site builds tailored per user/audience on Cloud Run" },
     { id: "mop-site-002", name: "Per-user dynamic template rendering", cat: "mop-sites", pool: "warm", w: 4, desc: "Implement audience-aware template rendering for dynamic sites" },
     { id: "mop-site-003", name: "Remove PM2 site entries from ecosystem", cat: "mop-sites", pool: "warm", w: 3, desc: "Remove 40+ site PM2 entries from ecosystem.config.cjs" },
+
+    // ═══ AUDIT-EXTRACTED TASKS (2026-03-19 Full-Spectrum Audit) ═══════════════
+    // Layer 1 — Boot Integrity
+    { id: "audit-boot-001", name: "Fix heady-manager cold-start under 5s", cat: "optimization", pool: "hot", w: 5, desc: "Trace require() chain, fix circular deps, dead imports — target <5s cold-start" },
+    { id: "audit-boot-002", name: "Validate engine-wiring bootstrap order", cat: "verification", pool: "hot", w: 5, desc: "Verify engine-wiring.js initializes all engines in correct dependency sequence" },
+    { id: "audit-boot-003", name: "Eliminate circular dependencies", cat: "maintenance", pool: "hot", w: 5, desc: "Detect and break all circular require() chains across src/" },
+
+    // Layer 2 — Pipeline Health
+    { id: "audit-pipe-001", name: "Verify all 21 pipeline stages emit events", cat: "verification", pool: "hot", w: 5, desc: "Every stage must emit stage:complete or stage:failed through heady-event-bus" },
+    { id: "audit-pipe-002", name: "Wire pipeline telemetry per stage", cat: "integration", pool: "warm", w: 4, desc: "Emit timing and outcome telemetry to pipeline-telemetry.js for every stage" },
+    { id: "audit-pipe-003", name: "Enable parallel execution for independent stages", cat: "optimization", pool: "hot", w: 5, desc: "Identify independent pipeline stages and enable concurrent execution" },
+    { id: "audit-pipe-004", name: "Add quality gates between pipeline stages", cat: "verification", pool: "warm", w: 4, desc: "Halt pipeline on CSL regression between consecutive stages" },
+
+    // Layer 3 — Data Layer
+    { id: "audit-data-001", name: "Validate neon-db + pgvector adapter", cat: "verification", pool: "warm", w: 4, desc: "Test neon-db.js + pg-vector-adapter.js connectivity and query correctness" },
+    { id: "audit-data-002", name: "Test RLS tenant isolation policies", cat: "mop-security", pool: "hot", w: 5, desc: "Verify row-level security policies prevent cross-tenant data access" },
+    { id: "audit-data-003", name: "Benchmark vector search latency <100ms p95", cat: "optimization", pool: "warm", w: 4, desc: "Profile pgvector queries and optimize indexes for <100ms p95" },
+
+    // Layer 4 — Security Pass
+    { id: "audit-sec-001", name: "Scan and remove hardcoded secrets", cat: "mop-security", pool: "hot", w: 5, desc: "Find and remove all hardcoded API keys, tokens, passwords from source" },
+    { id: "audit-sec-002", name: "Eliminate eval() usage", cat: "mop-security", pool: "hot", w: 5, desc: "Replace all eval() calls with safe alternatives across codebase" },
+    { id: "audit-sec-003", name: "Fix wildcard CORS configurations", cat: "mop-security", pool: "hot", w: 5, desc: "Replace Access-Control-Allow-Origin: * with domain whitelist" },
+    { id: "audit-sec-004", name: "Verify governance kill-switch fires", cat: "verification", pool: "hot", w: 5, desc: "Feed 51% loss to governance-engine and confirm flatten-and-sever executes" },
+    { id: "audit-sec-005", name: "Validate audit trail immutability", cat: "verification", pool: "warm", w: 4, desc: "Confirm audit logs are append-only and tamper-evident" },
+
+    // Layer 5 — Service Mesh
+    { id: "audit-mesh-001", name: "Fix 6 degraded Cloud Run health endpoints", cat: "mop-infrastructure", pool: "hot", w: 5, desc: "Fix headyconnection, headybuddy, headymcp, headyio, admin-ui Cloud Run 404s" },
+    { id: "audit-mesh-002", name: "Verify CORS whitelist covers all 11 domains", cat: "integration", pool: "warm", w: 4, desc: "Ensure CORS allows all Heady domains: headysystems.com, headyio.com, etc." },
+    { id: "audit-mesh-003", name: "Test hallucination watchdog catches fabricated data", cat: "verification", pool: "warm", w: 4, desc: "Feed known fabricated data to heady-hallucination-watchdog.js and verify detection" },
+    { id: "audit-mesh-004", name: "Verify v2 agents initialize cleanly", cat: "verification", pool: "warm", w: 4, desc: "Test argus-v2, hermes-v2, kronos-v2 initialization without errors" },
+
+    // Layer 6 — Performance
+    { id: "audit-perf-001", name: "Profile LLM routing hot path to 200ms p50", cat: "optimization", pool: "hot", w: 5, desc: "Profile API→LLM routing→response path; fix top 3 bottlenecks" },
+    { id: "audit-perf-002", name: "Implement connection pooling for DB", cat: "optimization", pool: "warm", w: 4, desc: "Add connection pooling to neon-db.js to reduce connection overhead" },
+    { id: "audit-perf-003", name: "Add response caching for frequent queries", cat: "optimization", pool: "warm", w: 4, desc: "Cache repeated LLM and DB query responses with TTL-based invalidation" },
+    { id: "audit-perf-004", name: "Lazy-load cold modules on demand", cat: "optimization", pool: "warm", w: 3, desc: "Convert eager require() of rarely-used modules to lazy loading" },
+
+    // Layer 7 — Auto-Success Validation
+    { id: "audit-as-001", name: "Populate empty JSON task files", cat: "maintenance", pool: "warm", w: 4, desc: "Fill auto-flow-tasks.json, nonprofit-tasks.json, buddy-tasks.json with real tasks" },
+    { id: "audit-as-002", name: "Fix top 10 highest-weight stub tasks", cat: "maintenance", pool: "hot", w: 5, desc: "Identify and make fully operational the 10 highest-weight stub tasks" },
+    { id: "audit-as-003", name: "Unify auto-success-engine.js schedulers", cat: "optimization", pool: "hot", w: 5, desc: "Merge competing auto-success-engine.js instances under single scheduler" },
+
+    // Layer 8-10 — Agent Marketplace, IP, Sacred Geometry
+    { id: "audit-agent-001", name: "Package v2 agents as deployable SDK bundles", cat: "hive-integration", pool: "warm", w: 4, desc: "Package argus-v2, hermes-v2, kronos-v2 as @heady/agent-sdk bundles" },
+    { id: "audit-ip-001", name: "Activate patent tracker weekly scans", cat: "deep-intel", pool: "warm", w: 3, desc: "Enable patentTracker.js and competitive-intelligence-engine.js on weekly cron" },
+    { id: "audit-sg-001", name: "Extract sacred geometry SDK standalone", cat: "creative", pool: "warm", w: 3, desc: "Extract Fibonacci CSS, phi-timing, torus themes into @heady/sacred-geometry-sdk" },
+
+    // Layer 11 — Auto-Success Activation
+    { id: "audit-as-004", name: "Wire hcfp-event-bridge to trigger task batches", cat: "integration", pool: "hot", w: 5, desc: "Every pipeline completion triggers next auto-success task batch via event bridge" },
+    { id: "audit-as-005", name: "Fibonacci-timed hot/warm/cold pool cycling", cat: "optimization", pool: "warm", w: 4, desc: "Implement Fibonacci-interval task cycling across pool tiers" },
+
+    // Layer 12-14 — Learning, Coding Practice, Training
+    { id: "audit-learn-001", name: "Optimize Colab vector training persistence", cat: "learning", pool: "warm", w: 4, desc: "Configure GPUVectorStore for persistent 3D vector space across Colab sessions" },
+    { id: "audit-learn-002", name: "Wire continuous-learner to ingest all changes", cat: "learning", pool: "warm", w: 4, desc: "Every interaction, code change, error feeds into vector memory via continuous-learner" },
+    { id: "audit-learn-003", name: "Build heady-code-dojo challenge engine", cat: "creative", pool: "warm", w: 4, desc: "LLM-generated coding challenges with auto-evaluation and skill tracking" },
+    { id: "audit-train-001", name: "Skill gap analysis from failure patterns", cat: "deep-intel", pool: "warm", w: 4, desc: "Cross-reference CSL scores, auto-success failures to identify top 10 skill gaps" },
+    { id: "audit-train-002", name: "Spaced repetition at Fibonacci intervals", cat: "learning", pool: "cold", w: 3, desc: "Re-test trained topics at 1,2,3,5,8,13 day Fibonacci intervals" },
+
+    // Layer 15 — Revenue Architecture
+    { id: "audit-rev-001", name: "Wire Stripe metered billing for vector storage", cat: "integration", pool: "warm", w: 4, desc: "Implement Stripe metered billing per 1M vectors stored + per 1K queries" },
+    { id: "audit-rev-002", name: "Build Pipeline-as-a-Service webhook API", cat: "integration", pool: "warm", w: 4, desc: "Let enterprises plug custom stages into HCFullPipeline via webhook + metered billing" },
+
+    // Auto-Deploy & Sync Optimization
+    { id: "audit-deploy-001", name: "Optimize auto-deploy with retry and multi-remote", cat: "mop-cicd", pool: "hot", w: 5, desc: "Add exponential backoff retry, multi-remote push, and health-check gating to auto-deploy" },
+    { id: "audit-deploy-002", name: "Autonomous sync service with drift detection", cat: "mop-cicd", pool: "hot", w: 5, desc: "Continuous sync across all repos with config drift detection and auto-repair" },
 ];
 
 // ─── POOL ALLOCATION ────────────────────────────────────────────────────────
