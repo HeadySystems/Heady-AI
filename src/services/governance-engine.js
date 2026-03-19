@@ -109,6 +109,25 @@ class GovernanceEngine extends EventEmitter {
       governanceId, actionType: action.type,
     });
 
+    // ── Kill-switch override — block ALL actions when active ───────────────
+    if (this._killSwitchActive) {
+      const result = {
+        governanceId,
+        actionId: action.id,
+        actionType: action.type,
+        decision: GovernanceDecision.DENY,
+        reason: `Kill-switch active since ${new Date(this._killSwitchTriggeredAt).toISOString()}: ${this._killSwitchReason}`,
+        checks: [{ type: 'KILL_SWITCH', decision: GovernanceDecision.DENY }],
+        sessionId: context.sessionId || null,
+        userId: context.userId || null,
+        duration: Date.now() - startAt,
+        evaluatedAt: Date.now(),
+      };
+      this._audit(result);
+      this.emit('governance:denied', result);
+      return result;
+    }
+
     const checks = [];
     let decision = GovernanceDecision.ALLOW;
     let denyReason = null;
@@ -428,6 +447,128 @@ class GovernanceEngine extends EventEmitter {
     }
 
     return { decision: GovernanceDecision.ALLOW };
+  }
+
+  // ─── Kill Switch — Catastrophic Loss Protection ──────────────────────────────
+
+  /**
+   * Catastrophic loss kill-switch.
+   * Monitors daily loss metrics and triggers emergency shutdown if losses
+   * exceed the configured threshold (default: 51% daily loss).
+   *
+   * When triggered:
+   *   1. All new actions are DENIED
+   *   2. A governance:kill-switch event is emitted
+   *   3. The kill-switch remains active until manually reset
+   *
+   * @param {object} lossMetrics
+   * @param {number} lossMetrics.dailyLossPercent  - Current daily loss as a percentage (0-100)
+   * @param {number} lossMetrics.totalExposure     - Total value at risk
+   * @param {string} [lossMetrics.source]          - Source system reporting the loss
+   * @param {object} [options]
+   * @param {number} [options.threshold=51]        - Loss percentage threshold to trigger kill-switch
+   * @returns {{ triggered: boolean, reason?: string }}
+   */
+  evaluateKillSwitch(lossMetrics, options = {}) {
+    const threshold = options.threshold || 51;
+    const { dailyLossPercent, totalExposure, source } = lossMetrics;
+
+    if (typeof dailyLossPercent !== 'number' || dailyLossPercent < 0) {
+      return { triggered: false, reason: 'Invalid loss metrics' };
+    }
+
+    if (dailyLossPercent >= threshold) {
+      this._killSwitchActive = true;
+      this._killSwitchTriggeredAt = Date.now();
+      this._killSwitchReason = `Catastrophic loss: ${dailyLossPercent.toFixed(2)}% daily loss exceeds ${threshold}% threshold (exposure: ${totalExposure}, source: ${source || 'unknown'})`;
+
+      logger.error('[GovernanceEngine] KILL SWITCH TRIGGERED', {
+        dailyLossPercent,
+        threshold,
+        totalExposure,
+        source,
+      });
+
+      this.emit('governance:kill-switch', {
+        triggered: true,
+        dailyLossPercent,
+        threshold,
+        totalExposure,
+        source,
+        triggeredAt: new Date().toISOString(),
+      });
+
+      // Record in audit trail
+      this._audit({
+        governanceId: `kill-switch-${Date.now()}`,
+        actionId: 'kill-switch',
+        actionType: 'kill_switch_activation',
+        decision: GovernanceDecision.DENY,
+        reason: this._killSwitchReason,
+        sessionId: null,
+        userId: 'system',
+        evaluatedAt: Date.now(),
+        duration: 0,
+      });
+
+      return { triggered: true, reason: this._killSwitchReason };
+    }
+
+    return { triggered: false, dailyLossPercent, threshold };
+  }
+
+  /**
+   * Check if the kill-switch is currently active.
+   * @returns {boolean}
+   */
+  isKillSwitchActive() {
+    return !!this._killSwitchActive;
+  }
+
+  /**
+   * Manually reset the kill-switch after human review.
+   * Requires admin authorization context.
+   * @param {object} context — { userId, reason }
+   * @returns {{ reset: boolean }}
+   */
+  resetKillSwitch(context = {}) {
+    if (!this._killSwitchActive) {
+      return { reset: false, reason: 'Kill-switch is not active' };
+    }
+
+    if (!context.userId) {
+      return { reset: false, reason: 'Admin userId required to reset kill-switch' };
+    }
+
+    const previousReason = this._killSwitchReason;
+    this._killSwitchActive = false;
+    this._killSwitchReason = null;
+
+    logger.warn('[GovernanceEngine] Kill-switch RESET by admin', {
+      userId: context.userId,
+      resetReason: context.reason,
+      previousTrigger: previousReason,
+    });
+
+    this.emit('governance:kill-switch-reset', {
+      userId: context.userId,
+      reason: context.reason,
+      resetAt: new Date().toISOString(),
+    });
+
+    this._audit({
+      governanceId: `kill-switch-reset-${Date.now()}`,
+      actionId: 'kill-switch-reset',
+      actionType: 'kill_switch_reset',
+      decision: GovernanceDecision.ALLOW,
+      reason: `Kill-switch reset by ${context.userId}: ${context.reason || 'no reason provided'}`,
+      sessionId: null,
+      userId: context.userId,
+      evaluatedAt: Date.now(),
+      duration: 0,
+    });
+
+    return { reset: true };
   }
 
   // ─── Audit Trail ─────────────────────────────────────────────────────────────
