@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizer — HeadyLens</title>
+  <meta name="description" content="HeadyLens 3D vector space visualizer — see intelligence in three dimensions.">
+  <style>
+    :root{--bg:#0a0a0f;--tx:#e8e8f0;--dm:#9898b0;--ac:#6366f1;--bd:#1e1e2e}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column}
+    .container{max-width:800px;margin:0 auto;padding:3rem 1.5rem;flex:1}
+    h1{font-size:2.5rem;margin-bottom:1rem;background:linear-gradient(135deg,var(--ac),#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    p{color:var(--dm);line-height:1.8;margin-bottom:1.5rem;font-size:1.1rem}
+    .card{background:rgba(22,22,31,0.8);border:1px solid var(--bd);border-radius:13px;padding:1.5rem;margin-bottom:1rem}
+    .card h3{color:var(--tx);margin-bottom:0.5rem}
+    .card p{margin-bottom:0;font-size:0.95rem}
+    .back{display:inline-block;margin-top:2rem;color:var(--ac);text-decoration:none;font-weight:500}
+    .back:hover{text-decoration:underline}
+    footer{text-align:center;padding:2rem;color:var(--dm);font-size:0.85rem;border-top:1px solid var(--bd)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>3D Visualizer</h1>
+<p>HeadyLens projects 384-dimensional vector embeddings into an interactive 3D space using octree partitioning and φ-scaled rendering.</p>
+<div class="card"><h3>🌐 3D Vector Space</h3><p>Explore your memory vectors in real-time 3D — zoom, rotate, and query by proximity.</p></div>
+<div class="card"><h3>🔮 Logic Visualizer</h3><p>Watch CSL gates fire in real-time as they process confidence signals through the pipeline.</p></div>
+<div class="card"><h3>🐝 Swarm Topology</h3><p>See how bee agents coordinate — task distribution DAGs and consensus voting visualized.</p></div>
+<div class="card"><h3>✨ Sacred Geometry</h3><p>Fibonacci spirals, Metatron&apos;s Cube, and Flower of Life patterns rendered in WebGL.</p></div>
+    <a href="/" class="back">← Back to Home</a>
+  </div>
+  <footer>© 2024-2026 HeadySystems Inc. All Rights Reserved.</footer>
+</body>
+</html>
