@@ -68,21 +68,40 @@ const SECURITY_HEADERS = {
   'X-Powered-By': 'Heady/' + '3.0.0',
 };
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Service',
-  'Access-Control-Max-Age': '86400',
-};
+// Allowed origins — all Heady domains (no wildcard in production)
+const ALLOWED_ORIGINS = new Set([
+  'https://headysystems.com', 'https://www.headysystems.com',
+  'https://headyme.com', 'https://www.headyme.com',
+  'https://headymcp.com', 'https://headyio.com', 'https://headyos.com',
+  'https://headybuddy.org', 'https://headyconnection.org', 'https://1ime1.com',
+  'https://api.headysystems.com', 'https://manager.headysystems.com',
+  'https://mcp.headysystems.com', 'https://registry.headysystems.com',
+  // Subdomains
+  ...Object.keys(ROUTES).filter(d => d.endsWith('.headysystems.com')).map(d => `https://${d}`),
+  // Development
+  'http://localhost:3000', 'http://localhost:3300', 'http://localhost:5173',
+]);
+
+function getCorsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  const allowedOrigin = ALLOWED_ORIGINS.has(origin) ? origin : '';
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Service',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const hostname = url.hostname;
 
-    // CORS preflight
+    // CORS preflight — origin-validated, no wildcard
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: getCorsHeaders(request) });
     }
 
     // Route lookup
@@ -117,7 +136,7 @@ export default {
       for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
         responseHeaders.set(key, value);
       }
-      for (const [key, value] of Object.entries(CORS_HEADERS)) {
+      for (const [key, value] of Object.entries(getCorsHeaders(request))) {
         responseHeaders.set(key, value);
       }
 

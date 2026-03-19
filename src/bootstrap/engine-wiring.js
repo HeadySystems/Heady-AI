@@ -36,11 +36,18 @@ function wireEngines(app, deps = {}) {
         const hydrated = vault.hydrate();
         logger.logNodeActivity("CONDUCTOR", `  🔐 Vector Vault: ${vault.getStats().totalSecrets} secrets in 3D space, ${hydrated} hydrated into process.env`);
 
-        // Vault API routes
-        app.get("/api/vault/stats", (req, res) => res.json(vault.getStats()));
-        app.get("/api/vault/list", (req, res) => res.json({ ok: true, secrets: vault.list() }));
-        app.get("/api/vault/audit", (req, res) => res.json({ ok: true, entries: vault.getAuditLog(parseInt(req.query.limit) || 20) }));
-        app.post("/api/vault/query", (req, res) => {
+        // Vault API routes — PROTECTED: require admin API key
+        const vaultAuth = (req, res, next) => {
+            const token = req.headers['authorization']?.split(' ')[1] || req.headers['x-heady-api-key'];
+            if (!token || token !== process.env.HEADY_API_KEY) {
+                return res.status(403).json({ error: "Vault access requires admin API key" });
+            }
+            next();
+        };
+        app.get("/api/vault/stats", vaultAuth, (req, res) => res.json(vault.getStats()));
+        app.get("/api/vault/list", vaultAuth, (req, res) => res.json({ ok: true, secrets: vault.list() }));
+        app.get("/api/vault/audit", vaultAuth, (req, res) => res.json({ ok: true, entries: vault.getAuditLog(parseInt(req.query.limit) || 20) }));
+        app.post("/api/vault/query", vaultAuth, (req, res) => {
             const { query, topK } = req.body;
             if (!query) return res.status(400).json({ error: "query required" });
             res.json({ ok: true, results: vault.querySecrets(query, topK || 5) });

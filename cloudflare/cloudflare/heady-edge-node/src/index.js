@@ -283,7 +283,7 @@ app.get('/sse', (c) => {
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': c.req.header('Origin') || '',
             'X-Heady-Client-Id': clientId,
         },
     })
@@ -393,7 +393,7 @@ app.options('*', (c) => {
     return new Response(null, {
         status: 204,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': c.req.header('Origin') || '',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
