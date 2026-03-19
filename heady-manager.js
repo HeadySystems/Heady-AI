@@ -3027,6 +3027,33 @@ app.get("/api/brain/health", (req, res) => {
   res.json(healthResponse());
 });
 
+// ─── Product Service Routes (Layers 5-15) ───────────────────────────
+// Each service mounts with try/catch for resilient boot — missing modules don't crash the server
+const productServices = [
+  { path: "/api/guard", module: "./src/services/heady-guard", name: "HeadyGuard" },
+  { path: "/api/mesh", module: "./src/services/heady-mesh-dashboard", name: "HeadyMesh" },
+  { path: "/api/router", module: "./src/services/heady-router-gateway", name: "HeadyRouter" },
+  { path: "/api/dojo", module: "./src/services/heady-code-dojo", name: "HeadyCodeDojo" },
+  { path: "/api/train", module: "./src/services/heady-train-service", name: "HeadyTrainService" },
+  { path: "/api/revenue", module: "./src/services/heady-revenue-router", name: "HeadyRevenue" },
+  { path: "/api/paas", module: "./src/api/pipeline-as-a-service", name: "PipelineAsAService" },
+];
+
+for (const svc of productServices) {
+  try {
+    const mod = require(svc.module);
+    const router = mod.createDojoRouter || mod.createTrainRouter || mod.createRevenueRouter || mod.createRouter || mod.router || mod;
+    if (typeof router === 'function' && router.name !== 'router') {
+      app.use(svc.path, router());
+    } else {
+      app.use(svc.path, router);
+    }
+    log.info(`${svc.name}: MOUNTED at ${svc.path}`);
+  } catch (err) {
+    log.warn(`${svc.name} not loaded: ${err.message}`);
+  }
+}
+
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: "Not found", path: req.path, hint: "Try /api/health or visit /" });

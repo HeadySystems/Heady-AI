@@ -1,1 +1,152 @@
-[]
+[
+  {
+    "id": "af-001",
+    "name": "scan_dependency_vulnerabilities",
+    "category": "security",
+    "weight": 0.89,
+    "pool": "hot",
+    "description": "Run npm audit and flag CVEs above CVSS 7.0",
+    "executor": "shell",
+    "command": "npm audit --json 2>/dev/null | node -e \"const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d||'{}');console.log(JSON.stringify({vulns:j.metadata?.vulnerabilities||{},total:j.metadata?.totalDependencies||0}))\""
+  },
+  {
+    "id": "af-002",
+    "name": "validate_config_schema",
+    "category": "verification",
+    "weight": 0.75,
+    "pool": "warm",
+    "description": "Verify all YAML configs parse without errors",
+    "executor": "function",
+    "handler": "configValidator.validateAll"
+  },
+  {
+    "id": "af-003",
+    "name": "check_git_status_clean",
+    "category": "maintenance",
+    "weight": 0.55,
+    "pool": "warm",
+    "description": "Verify working tree is clean with no uncommitted changes",
+    "executor": "shell",
+    "command": "git status --porcelain"
+  },
+  {
+    "id": "af-004",
+    "name": "measure_boot_time",
+    "category": "optimization",
+    "weight": 0.80,
+    "pool": "warm",
+    "description": "Time heady-manager.js require chain to detect boot regressions",
+    "executor": "shell",
+    "command": "node -e \"const s=Date.now();try{require('./heady-manager.js')}catch(e){}console.log(JSON.stringify({bootMs:Date.now()-s}))\""
+  },
+  {
+    "id": "af-005",
+    "name": "scan_dead_code_exports",
+    "category": "optimization",
+    "weight": 0.45,
+    "pool": "cold",
+    "description": "Identify exported functions with zero import references",
+    "executor": "function",
+    "handler": "deadCodeScanner.scan"
+  },
+  {
+    "id": "af-006",
+    "name": "verify_pipeline_stage_handlers",
+    "category": "verification",
+    "weight": 0.90,
+    "pool": "hot",
+    "description": "Confirm all 22 pipeline stages have registered handlers",
+    "executor": "function",
+    "handler": "pipelineVerifier.checkHandlers"
+  },
+  {
+    "id": "af-007",
+    "name": "check_cors_whitelist",
+    "category": "security",
+    "weight": 0.85,
+    "pool": "hot",
+    "description": "Scan for wildcard CORS in all JS files",
+    "executor": "shell",
+    "command": "grep -rn \"Access-Control-Allow-Origin.*\\*\" src/ cloudflare/ --include='*.js' 2>/dev/null | wc -l"
+  },
+  {
+    "id": "af-008",
+    "name": "monitor_memory_usage",
+    "category": "monitoring",
+    "weight": 0.70,
+    "pool": "warm",
+    "description": "Check process memory usage and flag if heap > 512MB",
+    "executor": "function",
+    "handler": "memoryMonitor.check"
+  },
+  {
+    "id": "af-009",
+    "name": "refresh_embedding_index",
+    "category": "learning",
+    "weight": 0.60,
+    "pool": "cold",
+    "description": "Rebuild vector embeddings for recently modified files",
+    "executor": "function",
+    "handler": "embeddingRefresher.rebuild"
+  },
+  {
+    "id": "af-010",
+    "name": "run_lighthouse_audit",
+    "category": "optimization",
+    "weight": 0.50,
+    "pool": "cold",
+    "description": "Run Lighthouse performance audit on public frontend pages",
+    "executor": "function",
+    "handler": "lighthouseAuditor.run"
+  },
+  {
+    "id": "af-011",
+    "name": "check_ssl_certificate_expiry",
+    "category": "security",
+    "weight": 0.95,
+    "pool": "hot",
+    "description": "Check SSL certificate expiry for all Heady domains",
+    "executor": "function",
+    "handler": "sslChecker.checkAll"
+  },
+  {
+    "id": "af-012",
+    "name": "sync_registry_versions",
+    "category": "maintenance",
+    "weight": 0.65,
+    "pool": "warm",
+    "description": "Ensure heady-registry.json matches deployed service versions",
+    "executor": "function",
+    "handler": "registrySync.verify"
+  },
+  {
+    "id": "af-013",
+    "name": "compute_operational_readiness_score",
+    "category": "monitoring",
+    "weight": 0.88,
+    "pool": "hot",
+    "description": "Calculate ORS from all health probes and pipeline metrics",
+    "executor": "function",
+    "handler": "readinessEvaluator.compute"
+  },
+  {
+    "id": "af-014",
+    "name": "detect_config_drift",
+    "category": "verification",
+    "weight": 0.78,
+    "pool": "warm",
+    "description": "Compare config file hashes against last checkpoint baseline",
+    "executor": "function",
+    "handler": "driftDetector.scan"
+  },
+  {
+    "id": "af-015",
+    "name": "prune_stale_vector_memories",
+    "category": "maintenance",
+    "weight": 0.40,
+    "pool": "cold",
+    "description": "Remove vector embeddings older than 30 days from cold storage",
+    "executor": "function",
+    "handler": "memoryPruner.prune"
+  }
+]

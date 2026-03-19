@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "id": "np-001",
+    "name": "scan_accessibility_compliance",
+    "category": "nonprofit",
+    "weight": 0.90,
+    "pool": "hot",
+    "description": "WCAG 2.2 AA accessibility audit across all Heady public-facing sites"
+  },
+  {
+    "id": "np-002",
+    "name": "generate_impact_report",
+    "category": "nonprofit",
+    "weight": 0.75,
+    "pool": "warm",
+    "description": "Generate quarterly social impact report: users served, tasks automated, time saved"
+  },
+  {
+    "id": "np-003",
+    "name": "audit_data_privacy",
+    "category": "nonprofit",
+    "weight": 0.85,
+    "pool": "hot",
+    "description": "Verify GDPR/CCPA compliance: data retention, consent tracking, right-to-delete"
+  },
+  {
+    "id": "np-004",
+    "name": "check_open_source_contributions",
+    "category": "nonprofit",
+    "weight": 0.60,
+    "pool": "cold",
+    "description": "Track and report Heady's open-source contributions and community engagement"
+  },
+  {
+    "id": "np-005",
+    "name": "monitor_carbon_footprint",
+    "category": "nonprofit",
+    "weight": 0.70,
+    "pool": "warm",
+    "description": "Estimate compute carbon footprint from Cloud Run usage and suggest optimizations"
+  },
+  {
+    "id": "np-006",
+    "name": "validate_ethical_ai_guidelines",
+    "category": "nonprofit",
+    "weight": 0.80,
+    "pool": "warm",
+    "description": "Verify all LLM prompts follow ethical AI guidelines: no bias, no harmful content"
+  },
+  {
+    "id": "np-007",
+    "name": "generate_transparency_report",
+    "category": "nonprofit",
+    "weight": 0.55,
+    "pool": "cold",
+    "description": "Auto-generate AI transparency report: model usage, decision explanations, data sources"
+  },
+  {
+    "id": "np-008",
+    "name": "check_digital_equity",
+    "category": "nonprofit",
+    "weight": 0.65,
+    "pool": "warm",
+    "description": "Verify low-bandwidth and offline-capable modes function correctly"
+  }
+]

@@ -1,1 +1,82 @@
-[]
+[
+  {
+    "id": "bt-001",
+    "name": "greet_user_context",
+    "category": "buddy",
+    "weight": 0.90,
+    "pool": "hot",
+    "description": "Prepare personalized greeting based on user context, time, and recent activity"
+  },
+  {
+    "id": "bt-002",
+    "name": "suggest_next_action",
+    "category": "buddy",
+    "weight": 0.85,
+    "pool": "hot",
+    "description": "Analyze recent activity and suggest the most productive next action"
+  },
+  {
+    "id": "bt-003",
+    "name": "summarize_daily_progress",
+    "category": "buddy",
+    "weight": 0.75,
+    "pool": "warm",
+    "description": "Generate end-of-day summary of tasks completed, patterns discovered, and metrics"
+  },
+  {
+    "id": "bt-004",
+    "name": "detect_user_frustration",
+    "category": "buddy",
+    "weight": 0.80,
+    "pool": "warm",
+    "description": "Monitor interaction patterns for signs of frustration and suggest breaks or pivots"
+  },
+  {
+    "id": "bt-005",
+    "name": "curate_learning_resources",
+    "category": "learning",
+    "weight": 0.60,
+    "pool": "cold",
+    "description": "Based on current skill gaps, suggest relevant tutorials, docs, and exercises"
+  },
+  {
+    "id": "bt-006",
+    "name": "sync_cross_device_state",
+    "category": "integration",
+    "weight": 0.70,
+    "pool": "warm",
+    "description": "Sync workspace state across IDE, web, and mobile channels"
+  },
+  {
+    "id": "bt-007",
+    "name": "generate_standup_report",
+    "category": "buddy",
+    "weight": 0.65,
+    "pool": "warm",
+    "description": "Auto-generate daily standup report from git commits, pipeline runs, and task completions"
+  },
+  {
+    "id": "bt-008",
+    "name": "check_focus_mode",
+    "category": "buddy",
+    "weight": 0.55,
+    "pool": "cold",
+    "description": "Determine if user is in deep focus and suppress non-critical notifications"
+  },
+  {
+    "id": "bt-009",
+    "name": "archive_completed_context",
+    "category": "maintenance",
+    "weight": 0.45,
+    "pool": "cold",
+    "description": "Move completed project context to long-term vector memory (T2)"
+  },
+  {
+    "id": "bt-010",
+    "name": "prepare_session_resume",
+    "category": "buddy",
+    "weight": 0.88,
+    "pool": "hot",
+    "description": "Pre-warm context for next session based on predicted user needs"
+  }
+]
