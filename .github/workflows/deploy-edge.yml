@@ -2,8 +2,9 @@
 # HEADY CI/CD — Cloudflare Edge Deployment
 # .github/workflows/deploy-edge.yml
 #
-# Deploys active Cloudflare Workers with safe gating so unrelated worker issues
-# do not block urgent branded-domain recovery.
+# Deploys Cloudflare Workers (edge proxy, AI gateway, MCP telemetry)
+# LR-001: Uses workingDirectory: cloudflare/heady-edge-proxy
+# LR-005: Validates Host header stripping before deploy
 # ============================================================================
 
 name: Deploy Edge Workers
@@ -13,77 +14,28 @@ on:
     branches: [main]
     paths:
       - 'cloudflare/**'
-      - 'shared/worker-router.js'
       - 'src/edge/**'
-      - 'workers/**'
-      - '.github/workflows/deploy-edge.yml'
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 env:
-  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
-  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID || vars.CF_ACCOUNT_ID || secrets.CF_ACCOUNT_ID || '8b1fa38f282c691423c6399247d53323' }}
-  AI_ROUTING_RULES_KV_ID: ${{ vars.AI_ROUTING_RULES_KV_ID || secrets.AI_ROUTING_RULES_KV_ID }}
-  AI_COST_TRACKER_KV_ID: ${{ vars.AI_COST_TRACKER_KV_ID || secrets.AI_COST_TRACKER_KV_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
 
 jobs:
   validate:
-    name: Validate Edge Workers
+    name: 'Validate Edge Workers'
     runs-on: ubuntu-latest
-    outputs:
-      has_cf_credentials: ${{ steps.flags.outputs.has_cf_credentials }}
-      has_ai_gateway_kv: ${{ steps.flags.outputs.has_ai_gateway_kv }}
     steps:
       - uses: actions/checkout@v6
 
-      - name: Check active worker directories
-        run: |
-          required_dirs=(
-            cloudflare/worker-heady-router
-            cloudflare/worker-ai-gateway
-            cloudflare/worker-mcp-telemetry
-          )
-
-          for dir in "${required_dirs[@]}"; do
-            if [ ! -d "$dir" ]; then
-              echo "::error::Missing active worker directory: $dir"
-              exit 1
-            fi
-          done
-
-      - name: Compute deployment flags
-        id: flags
-        run: |
-          if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
-            echo "has_cf_credentials=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_cf_credentials=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::No Cloudflare API token available through CLOUDFLARE_API_TOKEN or CF_API_TOKEN secrets. Deploy jobs will be skipped."
-          fi
-
-          if [ -n "${AI_ROUTING_RULES_KV_ID}" ] && [ -n "${AI_COST_TRACKER_KV_ID}" ]; then
-            echo "has_ai_gateway_kv=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_ai_gateway_kv=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::AI gateway KV IDs are missing. The optional AI gateway deploy will be skipped."
-          fi
-
+      # LR-005: Verify Host header deletion in edge proxy
       - name: 'LR-005: Check Host header handling'
         run: |
-          files=$(find cloudflare/worker-heady-router cloudflare/heady-edge-router \
-            -type f \( -name '*.js' -o -name '*.ts' \) 2>/dev/null || true)
-
-          if [ -z "$files" ]; then
-            echo "::warning::No active edge router sources found for host-header validation (LR-005)"
-            exit 0
+          if ! grep -q "delete.*headers.*Host\|request\.headers\.delete.*host" cloudflare/heady-edge-proxy/*.js cloudflare/heady-edge-proxy/*.ts 2>/dev/null; then
+            echo "::warning::Host header deletion not found in edge proxy (LR-005)"
           fi
 
-          if ! grep -Eqi "delete.*headers.*Host|request\.headers\.delete.*host" $files; then
-            echo "::warning::Host header deletion not found in active edge router sources (LR-005)"
-          fi
-
+      # No localhost in Workers code
       - name: 'Law 0: Localhost check'
         run: |
           HITS=$(grep -rn "localhost\|127\.0\.0\.1" cloudflare/ --include="*.js" --include="*.ts" || true)
@@ -93,33 +45,18 @@ jobs:
             exit 1
           fi
 
-      - name: Validate wrangler configs
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import tomllib
-
-          for path in [
-              'cloudflare/worker-heady-router/wrangler.toml',
-              'cloudflare/worker-ai-gateway/wrangler.toml',
-              'cloudflare/worker-mcp-telemetry/wrangler.toml',
-          ]:
-              tomllib.loads(Path(path).read_text())
-              print(f'validated {path}')
-          PY
-
-  deploy-heady-router:
-    name: Deploy worker-heady-router
+  deploy-edge-proxy:
+    name: 'Deploy heady-edge-proxy'
     runs-on: ubuntu-latest
     needs: [validate]
-    if: ${{ needs.validate.outputs.has_cf_credentials == 'true' }}
+    # LR-001: workingDirectory for edge deploys
     defaults:
       run:
-        working-directory: cloudflare/worker-heady-router
+        working-directory: cloudflare/heady-edge-proxy
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
 
@@ -129,68 +66,40 @@ jobs:
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
         env:
-          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
   deploy-ai-gateway:
-    name: Deploy AI Gateway Worker
+    name: 'Deploy AI Gateway Worker'
     runs-on: ubuntu-latest
     needs: [validate]
-    if: ${{ needs.validate.outputs.has_cf_credentials == 'true' && needs.validate.outputs.has_ai_gateway_kv == 'true' }}
     defaults:
       run:
         working-directory: cloudflare/worker-ai-gateway
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install wrangler
-        run: npm install -g wrangler
-
-      - name: Render deploy config
-        run: |
-          python - <<'PY'
-          import os
-          from pathlib import Path
-
-          source = Path('wrangler.toml').read_text()
-          source = source.replace('__AI_ROUTING_RULES_KV_ID__', os.environ['AI_ROUTING_RULES_KV_ID'])
-          source = source.replace('__AI_COST_TRACKER_KV_ID__', os.environ['AI_COST_TRACKER_KV_ID'])
-          Path('wrangler.deploy.toml').write_text(source)
-          PY
-        env:
-          AI_ROUTING_RULES_KV_ID: ${{ env.AI_ROUTING_RULES_KV_ID }}
-          AI_COST_TRACKER_KV_ID: ${{ env.AI_COST_TRACKER_KV_ID }}
-
+      - run: npm install -g wrangler
       - name: Deploy
-        run: wrangler deploy --config wrangler.deploy.toml
+        run: wrangler deploy --config wrangler.toml
         env:
-          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
   deploy-mcp-telemetry:
-    name: Deploy MCP Telemetry Worker
+    name: 'Deploy MCP Telemetry Worker'
     runs-on: ubuntu-latest
     needs: [validate]
-    if: ${{ needs.validate.outputs.has_cf_credentials == 'true' }}
     defaults:
       run:
         working-directory: cloudflare/worker-mcp-telemetry
     steps:
       - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install wrangler
-        run: npm install -g wrangler
-
+      - run: npm install -g wrangler
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
         env:
-          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
