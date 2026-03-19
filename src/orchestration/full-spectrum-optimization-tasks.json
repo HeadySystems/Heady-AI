@@ -1,0 +1,208 @@
+{
+  "category": "full_spectrum_optimization",
+  "version": "1.0.0",
+  "description": "Auto-success tasks for 15-layer full-spectrum optimization, monetization, and intelligence",
+  "source": "heady-full-spectrum-prompt-v1",
+  "tasks": [
+    {
+      "id": "fso-l1-boot-integrity",
+      "name": "Layer 1: Validate heady-manager.js cold-start <5s, fix circular deps",
+      "category": "boot_integrity",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "boot-validator.traceRequireChain",
+      "args": { "entrypoint": "heady-manager.js", "target_ms": 5000 },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l2-pipeline-health",
+      "name": "Layer 2: Run HCFullPipeline end-to-end, verify all 22 stages emit events",
+      "category": "pipeline",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "hcfp.runFullPipeline",
+      "args": { "validate_events": true },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l3-data-layer",
+      "name": "Layer 3: Validate neon-db + pgvector + tenant isolation, benchmark <100ms p95",
+      "category": "data_layer",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "data-validator.benchmarkVectorSearch",
+      "args": { "target_p95_ms": 100 },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l4-security-pass",
+      "name": "Layer 4: Security scan — secrets, eval(), wildcard CORS, XSS, prototype pollution",
+      "category": "security",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "security-scanner.fullScan",
+      "args": {},
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l4-governance-killswitch",
+      "name": "Layer 4: Verify governance kill-switch fires on 51% loss scenario",
+      "category": "security",
+      "weight": 4.236,
+      "pool": "hot",
+      "executor": "governance-engine.testKillSwitch",
+      "args": { "loss_pct": 51 },
+      "schedule": "weekly"
+    },
+    {
+      "id": "fso-l5-service-mesh",
+      "name": "Layer 5: Hit every /health endpoint, verify CORS for all 11 domains",
+      "category": "service_mesh",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "aegis.fullServiceCheck",
+      "args": {},
+      "schedule": "hourly"
+    },
+    {
+      "id": "fso-l5-v2-agents-health",
+      "name": "Layer 5: Verify argus-v2, hermes-v2, kronos-v2 initialize without errors",
+      "category": "service_mesh",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "agent-validator.initializeAll",
+      "args": { "agents": ["argus-v2", "hermes-v2", "kronos-v2"] },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l5-hallucination-watchdog",
+      "name": "Layer 5: Verify hallucination watchdog catches fabricated data",
+      "category": "service_mesh",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "hallucination-watchdog.selfTest",
+      "args": {},
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l6-performance-profile",
+      "name": "Layer 6: Profile hot path, identify top 3 bottlenecks, target 200ms p50",
+      "category": "performance",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "performance-profiler.hotPath",
+      "args": { "target_p50_ms": 200 },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l7-auto-success-validation",
+      "name": "Layer 7: Execute one task from each of 33 auto-success categories",
+      "category": "auto_success",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "auto-success.sampleAllCategories",
+      "args": { "sample_size": 1 },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l7-stub-detection",
+      "name": "Layer 7: Identify and fix top 10 highest-weight stub tasks",
+      "category": "auto_success",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "auto-success.findStubs",
+      "args": { "fix_count": 10 },
+      "schedule": "weekly"
+    },
+    {
+      "id": "fso-l8-agent-marketplace",
+      "name": "Layer 8: Package v2 agents into @heady/agent-sdk bundles",
+      "category": "marketplace",
+      "weight": 1.0,
+      "pool": "cold",
+      "executor": "agent-packager.bundle",
+      "args": { "agents": ["argus-v2", "hermes-v2", "kronos-v2"] },
+      "schedule": "monthly"
+    },
+    {
+      "id": "fso-l9-patent-tracker",
+      "name": "Layer 9: Run patent portfolio triage — flag deadlines within φ×30 days",
+      "category": "competitive_intelligence",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "patentTracker.triagePortfolio",
+      "args": {},
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l10-sacred-geometry-sdk",
+      "name": "Layer 10: Extract Fibonacci CSS + phi timing into @heady/sacred-geometry-sdk",
+      "category": "sdk",
+      "weight": 0.618,
+      "pool": "cold",
+      "executor": "sdk-builder.extractSacredGeometry",
+      "args": {},
+      "schedule": "monthly"
+    },
+    {
+      "id": "fso-l11-auto-success-full-throttle",
+      "name": "Layer 11: Verify 598 tasks cycle through hot/warm/cold pools",
+      "category": "auto_success",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "auto-success.verifyPoolCycling",
+      "args": { "target_task_count": 598 },
+      "schedule": "hourly"
+    },
+    {
+      "id": "fso-l12-colab-intelligence",
+      "name": "Layer 12: Optimize Colab notebooks for max learning throughput",
+      "category": "learning",
+      "weight": 1.0,
+      "pool": "warm",
+      "executor": "colab-optimizer.optimizeAll",
+      "args": {},
+      "schedule": "weekly"
+    },
+    {
+      "id": "fso-l13-code-dojo",
+      "name": "Layer 13: Generate and evaluate 20 coding challenges per day",
+      "category": "learning",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "code-dojo.generateAndEvaluate",
+      "args": { "challenge_count": 20 },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l14-skill-gap-analysis",
+      "name": "Layer 14: Cross-reference benchmark scores to identify top 10 skill gaps",
+      "category": "learning",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "heady-train.skillGapAnalysis",
+      "args": { "top_n": 10 },
+      "schedule": "weekly"
+    },
+    {
+      "id": "fso-l14-spaced-repetition",
+      "name": "Layer 14: Re-test trained topics at Fibonacci intervals",
+      "category": "learning",
+      "weight": 1.0,
+      "pool": "warm",
+      "executor": "heady-train.spacedRepetition",
+      "args": { "intervals_days": [1, 2, 3, 5, 8, 13] },
+      "schedule": "daily"
+    },
+    {
+      "id": "fso-l15-revenue-metrics",
+      "name": "Layer 15: Track revenue metrics across all product lines",
+      "category": "revenue",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "billing-monitor.trackRevenue",
+      "args": { "products": ["vector-memory", "pipeline-api", "heady-guard", "heady-mesh", "heady-router", "heady-autopilot", "agent-marketplace", "heady-intel", "sacred-geometry-sdk"] },
+      "schedule": "daily"
+    }
+  ]
+}

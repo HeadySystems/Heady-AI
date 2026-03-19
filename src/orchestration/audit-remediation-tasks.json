@@ -1,0 +1,239 @@
+{
+  "category": "audit_remediation",
+  "version": "1.0.0",
+  "description": "Auto-success tasks extracted from 30-phase ecosystem audit (2026-03-19)",
+  "source": "claude/audit-heady-ecosystem-AB4Mo",
+  "tasks": [
+    {
+      "id": "audit-p0-mcp-localhost-fix",
+      "name": "Fix MCP server localhost routing — set NODE_ENV=production on Cloud Run",
+      "category": "infrastructure",
+      "weight": 4.236,
+      "pool": "hot",
+      "priority": "P0",
+      "executor": "heady-deploy.setEnvVar",
+      "args": { "service": "heady-mcp-server", "key": "NODE_ENV", "value": "production" },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-p0-dependabot-critical",
+      "name": "Resolve 2 critical Dependabot vulnerabilities",
+      "category": "security",
+      "weight": 4.236,
+      "pool": "hot",
+      "priority": "P0",
+      "executor": "npm-audit.fix",
+      "args": { "severity": "critical" },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-p0-dependabot-high",
+      "name": "Resolve 41 high Dependabot vulnerabilities",
+      "category": "security",
+      "weight": 2.618,
+      "pool": "hot",
+      "priority": "P1",
+      "executor": "npm-audit.fix",
+      "args": { "severity": "high" },
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-p1-cloud-run-service-urls",
+      "name": "Configure Cloud Run service-to-service URLs for all 20 microservices",
+      "category": "infrastructure",
+      "weight": 2.618,
+      "pool": "hot",
+      "priority": "P1",
+      "executor": "heady-deploy.configureServiceMesh",
+      "args": { "services": ["heady-brain", "heady-memory", "heady-soul", "heady-vinci", "heady-conductor", "heady-coder", "heady-battle", "heady-buddy", "heady-guard", "heady-maid", "heady-lens", "auth-session", "api-gateway", "notification", "billing", "analytics", "search", "scheduler", "hcfp", "edge-ai"] },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-p1-phi-constant-drift-monitor",
+      "name": "Monitor for phi constant redefinitions across codebase",
+      "category": "code_quality",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P1",
+      "executor": "grep-scanner.findDuplicateConstants",
+      "args": { "pattern": "const PHI = 1.618", "exclude": "core/constants/phi.js" },
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-p1-magic-number-scanner",
+      "name": "Scan for magic numbers not using phi.js constants",
+      "category": "code_quality",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P1",
+      "executor": "grep-scanner.findMagicNumbers",
+      "args": { "dirs": ["src/", "services/", "core/"] },
+      "schedule": "weekly"
+    },
+    {
+      "id": "audit-p2-admin-headysystems-404",
+      "name": "Fix admin.headysystems.com returning 404",
+      "category": "infrastructure",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P2",
+      "executor": "dns-checker.validateSubdomain",
+      "args": { "domain": "admin.headysystems.com" },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-p2-headylens-deploy",
+      "name": "Deploy and verify headylens.com",
+      "category": "infrastructure",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P2",
+      "executor": "heady-deploy.deploySite",
+      "args": { "domain": "headylens.com" },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-p2-headyfinance-deploy",
+      "name": "Deploy and verify headyfinance.com",
+      "category": "infrastructure",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P2",
+      "executor": "heady-deploy.deploySite",
+      "args": { "domain": "headyfinance.com" },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-p2-headybot-latency",
+      "name": "Investigate headybot.com 462ms latency (slowest domain)",
+      "category": "performance",
+      "weight": 1.0,
+      "pool": "warm",
+      "priority": "P2",
+      "executor": "aegis.profileDomain",
+      "args": { "domain": "headybot.com", "target_ms": 250 },
+      "schedule": "weekly"
+    },
+    {
+      "id": "audit-p2-headyai-redirect",
+      "name": "Ensure headyai.com serves full content (not just /lander redirect)",
+      "category": "content",
+      "weight": 1.0,
+      "pool": "warm",
+      "priority": "P2",
+      "executor": "content-checker.validatePage",
+      "args": { "url": "https://headyai.com", "expect": "full-page" },
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-p2-cloudrun-404-services",
+      "name": "Fix 6 Cloud Run services returning 404 (headyconnection, headyio, headybuddy, headymcp, admin-ui)",
+      "category": "infrastructure",
+      "weight": 2.618,
+      "pool": "hot",
+      "priority": "P1",
+      "executor": "heady-deploy.fixCloudRunRouting",
+      "args": { "services": ["headyconnection", "headyio", "headybuddy", "headymcp", "admin-ui"] },
+      "schedule": "immediate"
+    },
+    {
+      "id": "audit-aegis-score-improvement",
+      "name": "Improve Aegis φ-health score from 0.5385 to ≥0.618 (NOMINAL)",
+      "category": "monitoring",
+      "weight": 2.618,
+      "pool": "hot",
+      "priority": "P1",
+      "executor": "aegis.improveHealthScore",
+      "args": { "current": 0.5385, "target": 0.618 },
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-console-log-scanner",
+      "name": "Scan and replace any console.log in production code with Pino",
+      "category": "code_quality",
+      "weight": 1.0,
+      "pool": "cold",
+      "priority": "P2",
+      "executor": "grep-scanner.replaceConsoleLogs",
+      "args": { "dirs": ["src/", "services/", "core/"] },
+      "schedule": "weekly"
+    },
+    {
+      "id": "audit-localhost-scanner",
+      "name": "Scan for localhost references in production code paths",
+      "category": "security",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P1",
+      "executor": "grep-scanner.findLocalhostRefs",
+      "args": { "dirs": ["src/", "services/", "mcp-servers/"], "exclude": ["test", "spec"] },
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-cors-wildcard-scanner",
+      "name": "Scan for wildcard CORS in production",
+      "category": "security",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P1",
+      "executor": "security-scanner.findWildcardCORS",
+      "args": {},
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-esm-commonjs-consistency",
+      "name": "Ensure all JS files use CommonJS (no ESM export in .js files)",
+      "category": "code_quality",
+      "weight": 1.0,
+      "pool": "cold",
+      "priority": "P2",
+      "executor": "grep-scanner.findESMInCommonJS",
+      "args": { "pattern": "^export (function|const|class|default)" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "audit-fib-index-consistency",
+      "name": "Verify FIB array indexing consistency (phi.js starts at 0, others at 1)",
+      "category": "code_quality",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P1",
+      "executor": "grep-scanner.verifyFibIndexing",
+      "args": {},
+      "schedule": "weekly"
+    },
+    {
+      "id": "audit-event-bus-wiring",
+      "name": "Verify all pipeline stages emit events through HeadyEventBus",
+      "category": "pipeline",
+      "weight": 1.618,
+      "pool": "warm",
+      "priority": "P1",
+      "executor": "pipeline-validator.verifyEventEmission",
+      "args": {},
+      "schedule": "daily"
+    },
+    {
+      "id": "audit-connectivity-matrix",
+      "name": "Build and verify 11x11 cross-site connectivity matrix",
+      "category": "content",
+      "weight": 1.0,
+      "pool": "cold",
+      "priority": "P2",
+      "executor": "link-checker.buildConnectivityMatrix",
+      "args": { "domains": ["headyme.com", "headysystems.com", "headyconnection.org", "headybuddy.org", "headymcp.com", "headyio.com", "headybot.com", "headyapi.com", "headyai.com", "headylens.com", "headyfinance.com"] },
+      "schedule": "weekly"
+    },
+    {
+      "id": "audit-sacred-geometry-css",
+      "name": "Verify Fibonacci spacing and φ-typography across all sites",
+      "category": "code_quality",
+      "weight": 0.618,
+      "pool": "cold",
+      "priority": "P3",
+      "executor": "css-scanner.verifySacredGeometry",
+      "args": {},
+      "schedule": "monthly"
+    }
+  ]
+}
