@@ -1,7 +1,7 @@
 {
   "name": "heady-latent-os",
   "version": "4.2.0",
-  "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
+  "description": "Self-aware, self-correcting intelligence infrastructure \u2014 the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
     "node": ">=20.0.0"
@@ -30,7 +30,11 @@
     "test:domains": "node scripts/domain-connectivity-test.js",
     "test:branding": "node scripts/validate-branding.js",
     "audit:fix": "npm audit fix --force",
-    "cli": "python scripts/heady_cli.py"
+    "cli": "python scripts/heady_cli.py",
+    "validate:env": "node src/security/env-validator.cjs",
+    "validate:env:strict": "node src/security/env-validator.cjs --strict",
+    "validate:env:ci": "node src/security/env-validator.cjs --ci",
+    "predeploy": "node src/security/env-validator.cjs --strict"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.74.0",

@@ -1,36 +1,7 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-# HEADY_BRAND:BEGIN
-# ╔══════════════════════════════════════════════════════════════════╗
-# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-# ║                                                                  ║
-# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: Dockerfile                                                    ║
-# ║  LAYER: root                                                  ║
-# ╚══════════════════════════════════════════════════════════════════╝
-# HEADY_BRAND:END
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
-FROM node:20-alpine
-=======
-# ═══════════════════════════════════════════════════════════════════════════════
-# Heady™ Production Dockerfile — Multi-Stage Build
-# ═══════════════════════════════════════════════════════════════════════════════
-=======
 # ═══════════════════════════════════════════════════════════════════════
 #  HEADY SYSTEMS — Production Dockerfile
 #  ∞ Sacred Geometry · Organic Systems · Breathing Interfaces
 # ═══════════════════════════════════════════════════════════════════════
->>>>>>> production/main
 #
 #  Multi-stage build with phi-derived resource configuration.
 #  Target: Google Cloud Run
@@ -57,28 +28,12 @@ RUN rm -rf .git .github .turbo .heady_cache tests __tests__ \
 # ─── Stage 2: Production ─────────────────────────────────────────────
 FROM node:22-alpine AS production
 
-<<<<<<< HEAD
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-<<<<<<< HEAD
-  CMD wget -qO- http://localhost:3300/api/health || exit 1
-=======
-  CMD wget -qO- http://api.headysystems.com:3300/api/health || exit 1
->>>>>>> a3d7d06c432bf92df85e53f8d0cf1e6c8622ccea
-
-<<<<<<< HEAD
-=======
-FROM node:25-alpine AS production
-
 # Install tini for proper PID 1 signal handling (SIGTERM → graceful shutdown)
 RUN apk add --no-cache tini curl
 
-# Create non-root heady user
+# Security: non-root heady user
 RUN addgroup -g 1001 -S heady && \
     adduser -S heady -u 1001 -G heady
-=======
-# Security: non-root user
-RUN addgroup -g 1001 heady && adduser -u 1001 -G heady -D heady
->>>>>>> production/main
 
 WORKDIR /app
 
@@ -89,7 +44,7 @@ COPY --from=builder --chown=heady:heady /app /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Health check — phi-scaled interval (13s check, 8s timeout, 5 retries)
+# Health check — phi-scaled interval (13s check, 8s timeout, 21s start, 5 retries)
 HEALTHCHECK --interval=13s --timeout=8s --start-period=21s --retries=5 \
   CMD node -e "const http=require('http');const r=http.get('http://0.0.0.0:'+process.env.PORT+'/health',{timeout:5000},(res)=>{process.exit(res.statusCode===200?0:1)});r.on('error',()=>process.exit(1))"
 
@@ -98,6 +53,9 @@ USER heady
 
 # Expose port
 EXPOSE 3000
+
+# Use tini as init system
+ENTRYPOINT ["/sbin/tini", "--"]
 
 # Start command
 CMD ["node", "heady-manager.js"]
