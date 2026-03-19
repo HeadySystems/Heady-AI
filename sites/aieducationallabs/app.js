@@ -199,13 +199,22 @@ function announceRoute(hash) {
 
 // ─── Render: Home ───────────────────────────────────────────────────────────
 function renderHome() {
+  const totalLabs = DISCIPLINES.reduce((s,d)=>s+d.labs.length,0);
+  const totalCredits = DISCIPLINES.reduce((s,d)=>s+d.labs.reduce((c,l)=>c+(l.credits||0),0),0);
+  const vrLabs = DISCIPLINES.reduce((s,d)=>s+d.labs.filter(l=>l.vr).length,0);
   return `<div class="hero">
-    <h1>University-Grade Interactive Labs</h1>
-    <p>AI-powered science and technology labs with VR, voice control, and full accessibility. Learn by doing — anywhere, on any device.</p>
+    <h1>University-Grade Interactive Science Labs</h1>
+    <p style="max-width:700px;margin:0 auto var(--sp-lg)">Explore ${totalLabs} AI-powered interactive labs across ${DISCIPLINES.length} disciplines — with VR immersion, voice control, real-time data collection, and WCAG 2.1 accessibility. Built for university courses, AP classes, and self-directed learners.</p>
     <div class="hero-actions">
-      <a href="#/labs" class="btn btn-primary btn-lg">🔬 Explore Labs</a>
-      <a href="#/auth" class="btn btn-secondary btn-lg">👤 Sign In</a>
+      <a href="#/labs" class="btn btn-primary btn-lg">🔬 Explore All ${totalLabs} Labs</a>
+      <a href="#/auth" class="btn btn-secondary btn-lg">👤 Sign In / Register</a>
     </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--sp-md);margin-bottom:var(--sp-2xl);text-align:center">
+    <div class="glass-card" style="padding:var(--sp-lg)"><div style="font-size:2rem;font-weight:800;color:var(--primary)">${totalLabs}</div><div style="color:var(--text-secondary);font-size:0.85rem">Interactive Labs</div></div>
+    <div class="glass-card" style="padding:var(--sp-lg)"><div style="font-size:2rem;font-weight:800;color:var(--secondary)">${DISCIPLINES.length}</div><div style="color:var(--text-secondary);font-size:0.85rem">Disciplines</div></div>
+    <div class="glass-card" style="padding:var(--sp-lg)"><div style="font-size:2rem;font-weight:800;color:var(--accent)">${totalCredits}</div><div style="color:var(--text-secondary);font-size:0.85rem">Total Credits</div></div>
+    <div class="glass-card" style="padding:var(--sp-lg)"><div style="font-size:2rem;font-weight:800;color:#a855f7">${vrLabs}</div><div style="color:var(--text-secondary);font-size:0.85rem">VR-Ready Labs</div></div>
   </div>
   <div class="lab-grid">${DISCIPLINES.map(d => `
     <div class="glass-card lab-card" data-discipline="${d.id}" onclick="navigateTo('/labs')" tabindex="0"
@@ -215,21 +224,36 @@ function renderHome() {
       <div class="lab-desc">${d.desc}</div>
       <div class="lab-meta">
         <span class="lab-badge">${d.labs.length} Labs</span>
-        ${d.labs.some(l=>l.vr) ? '<span class="lab-badge vr">🥽 VR Ready</span>' : ''}
+        <span class="lab-badge">${d.labs.reduce((c,l)=>c+(l.credits||0),0)} Credits</span>
+        ${d.labs.some(l=>l.vr) ? '<span class="lab-badge vr">🥽 VR</span>' : ''}
         <span class="lab-badge voice">🎤 Voice</span>
       </div>
+      <div style="margin-top:var(--sp-sm);font-size:0.8rem;color:var(--text-secondary)"><strong>Prerequisites:</strong> ${d.prereqs||'None'}</div>
     </div>`).join('')}
   </div>
+  <div style="margin-top:var(--sp-2xl)">
+    <div class="glass-card" style="max-width:900px;margin:0 auto">
+      <h2 style="margin-bottom:var(--sp-lg);text-align:center">🎓 Learning Methodology</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--sp-lg)">
+        <div><h3 style="color:var(--primary);font-size:1rem">1. Guided Theory</h3><p style="color:var(--text-secondary);font-size:0.85rem">Each lab includes comprehensive background theory, key equations, and conceptual frameworks drawn from university-level textbooks and peer-reviewed sources.</p></div>
+        <div><h3 style="color:var(--secondary);font-size:1rem">2. Interactive Simulation</h3><p style="color:var(--text-secondary);font-size:0.85rem">Real-time Canvas simulations let you manipulate variables, observe results, and build intuition for complex phenomena through hands-on experimentation.</p></div>
+        <div><h3 style="color:var(--accent);font-size:1rem">3. Data Collection & Analysis</h3><p style="color:var(--text-secondary);font-size:0.85rem">Record simulation data, export to CSV/JSON/PDF, and perform quantitative analysis — the same workflow used in professional research laboratories.</p></div>
+        <div><h3 style="color:#a855f7;font-size:1rem">4. Assessment & Mastery</h3><p style="color:var(--text-secondary);font-size:0.85rem">Learning objectives are mapped to measurable outcomes. Track your progress, earn credits, and demonstrate mastery across all disciplines.</p></div>
+      </div>
+    </div>
+  </div>
   <div style="margin-top:var(--sp-2xl);text-align:center">
-    <div class="glass-card" style="display:inline-block;max-width:700px">
-      <h2 style="margin-bottom:var(--sp-md)">Platform Features</h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--sp-md);text-align:left">
-        <div>♿ <strong>Accessible</strong><br><small style="color:var(--text-secondary)">WCAG 2.1 AA+ compliant</small></div>
-        <div>🥽 <strong>VR Ready</strong><br><small style="color:var(--text-secondary)">WebXR immersive labs</small></div>
-        <div>🎤 <strong>Voice Control</strong><br><small style="color:var(--text-secondary)">Hands-free interaction</small></div>
-        <div>📱 <strong>Cross-Platform</strong><br><small style="color:var(--text-secondary)">All OS + offline mode</small></div>
-        <div>📊 <strong>Data Export</strong><br><small style="color:var(--text-secondary)">CSV, JSON, PDF</small></div>
-        <div>🔐 <strong>Compliant</strong><br><small style="color:var(--text-secondary)">ToS, FERPA, COPPA</small></div>
+    <div class="glass-card" style="display:inline-block;max-width:900px">
+      <h2 style="margin-bottom:var(--sp-md)">Platform Capabilities</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--sp-md);text-align:left">
+        <div>♿ <strong>Full Accessibility</strong><br><small style="color:var(--text-secondary)">WCAG 2.1 AA+ compliant, screen reader support, keyboard navigation, high contrast mode, adjustable text sizing</small></div>
+        <div>🥽 <strong>VR Immersion</strong><br><small style="color:var(--text-secondary)">WebXR-powered immersive 3D environments for ${vrLabs} labs. Compatible with Quest, Vive, and cardboard headsets</small></div>
+        <div>🎤 <strong>Voice Control</strong><br><small style="color:var(--text-secondary)">Hands-free lab operation via Web Speech API. Say "play", "pause", "reset", "record data", or "export" to control simulations</small></div>
+        <div>📱 <strong>Cross-Platform</strong><br><small style="color:var(--text-secondary)">Windows, macOS, Linux, iOS, Android. PWA installable with offline/online sync for uninterrupted access</small></div>
+        <div>📊 <strong>Data Export</strong><br><small style="color:var(--text-secondary)">Export simulation data as CSV, JSON, or PDF reports. Compatible with Excel, Google Sheets, Jupyter, and R Studio</small></div>
+        <div>🔐 <strong>Enterprise Compliant</strong><br><small style="color:var(--text-secondary)">Terms of Service, Operator Agreement, FERPA, COPPA, and institutional data handling policies built-in</small></div>
+        <div>🧮 <strong>Real Equations</strong><br><small style="color:var(--text-secondary)">Every lab includes relevant formulas, derivations, and mathematical models drawn from standard university curricula</small></div>
+        <div>📚 <strong>Credit-Bearing</strong><br><small style="color:var(--text-secondary)">Labs are weighted by difficulty (2-4 credits). Complete all ${totalLabs} labs for ${totalCredits} total credits toward certification</small></div>
       </div>
     </div>
   </div>`;
@@ -238,20 +262,28 @@ function renderHome() {
 // ─── Render: Lab Browser ────────────────────────────────────────────────────
 function renderLabBrowser() {
   if (!State.tosAccepted && State.user) return renderToSGate();
-  return `<h1 style="margin-bottom:var(--sp-xl)">🔬 Lab Catalog</h1>
+  const diffColors = {Beginner:'#22c55e',Intermediate:'#f59e0b',Advanced:'#ef4444'};
+  return `<h1 style="margin-bottom:var(--sp-sm)">🔬 Lab Catalog</h1>
+  <p style="color:var(--text-secondary);margin-bottom:var(--sp-xl);max-width:700px">Browse ${DISCIPLINES.reduce((s,d)=>s+d.labs.length,0)} interactive labs across ${DISCIPLINES.length} disciplines. Each lab includes learning objectives, background theory, key equations, and real-time data collection.</p>
   ${DISCIPLINES.map(d => `
     <div style="margin-bottom:var(--sp-2xl)">
-      <h2 style="color:${d.color};margin-bottom:var(--sp-md)">${d.icon} ${d.name}</h2>
+      <h2 style="color:${d.color};margin-bottom:var(--sp-xs)">${d.icon} ${d.name}</h2>
+      <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:var(--sp-md)">${d.desc}<br><strong>Prerequisites:</strong> ${d.prereqs||'None'}</p>
       <div class="lab-grid">${d.labs.map(l => `
         <div class="glass-card lab-card" data-discipline="${d.id}" onclick="navigateTo('/lab/${l.id}')"
              tabindex="0" role="button" aria-label="Open ${l.name} lab">
           <div class="lab-icon" aria-hidden="true">${d.icon}</div>
           <div class="lab-title">${l.name}</div>
           <div class="lab-desc">${l.desc}</div>
-          <div class="lab-meta">
+          <div class="lab-meta" style="flex-wrap:wrap">
+            <span class="lab-badge" style="background:${diffColors[l.difficulty]||'#6366f1'}22;color:${diffColors[l.difficulty]||'#6366f1'}">${l.difficulty||'—'}</span>
+            <span class="lab-badge">⏱ ${l.time||'—'}</span>
+            <span class="lab-badge" style="background:var(--primary-alpha);color:var(--primary)">${l.credits||0} Credits</span>
             ${l.vr ? '<span class="lab-badge vr">🥽 VR</span>' : ''}
-            ${l.voice ? '<span class="lab-badge voice">🎤 Voice</span>' : ''}
-            <span class="lab-badge">Interactive</span>
+            ${l.voice ? '<span class="lab-badge voice">🎤</span>' : ''}
+          </div>
+          <div style="margin-top:var(--sp-sm);font-size:0.75rem;color:var(--text-secondary)">
+            <strong>Objectives:</strong> ${(l.objectives||[]).length} learning outcomes · <strong>Concepts:</strong> ${(l.concepts||[]).length} key terms
           </div>
         </div>`).join('')}
       </div>
@@ -286,9 +318,13 @@ function renderLabWorkspace(labId) {
   for (const d of DISCIPLINES) { const found = d.labs.find(l => l.id === labId); if (found) { lab = found; disc = d; break; } }
   if (!lab) return '<div class="hero"><h1>Lab Not Found</h1></div>';
   State.currentLab = lab;
+  const diffColors = {Beginner:'#22c55e',Intermediate:'#f59e0b',Advanced:'#ef4444'};
   return `<div style="margin-bottom:var(--sp-lg);display:flex;align-items:center;gap:var(--sp-md);flex-wrap:wrap">
     <a href="#/labs" class="btn btn-secondary btn-sm">← Back to Labs</a>
     <h1 style="font-size:1.5rem">${disc.icon} ${lab.name}</h1>
+    <span class="lab-badge" style="background:${diffColors[lab.difficulty]||'#6366f1'}22;color:${diffColors[lab.difficulty]||'#6366f1'}">${lab.difficulty||'—'}</span>
+    <span class="lab-badge">⏱ ${lab.time||'—'}</span>
+    <span class="lab-badge" style="background:var(--primary-alpha);color:var(--primary)">${lab.credits||0} Credits</span>
     ${lab.vr ? '<button class="vr-badge" onclick="enterVR()" aria-label="Enter VR mode">🥽 Enter VR</button>' : ''}
   </div>
   <div class="lab-workspace">
@@ -303,11 +339,15 @@ function renderLabWorkspace(labId) {
         <button class="btn btn-secondary btn-sm" onclick="exportLabData('csv')">📥 Export CSV</button>
       </div>
     </div>
-    <div class="lab-sidebar">
-      <div class="sidebar-panel"><h3>Description</h3><p style="color:var(--text-secondary);font-size:0.9rem">${lab.desc}</p></div>
-      <div class="sidebar-panel"><h3>Controls</h3><div id="lab-controls">Loading controls...</div></div>
-      <div class="sidebar-panel"><h3>Data Output</h3><pre id="lab-data" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--secondary);max-height:200px;overflow:auto">Waiting for simulation...</pre></div>
-      <div class="sidebar-panel"><h3>Voice Commands</h3>
+    <div class="lab-sidebar" style="max-height:80vh;overflow-y:auto">
+      <div class="sidebar-panel"><h3>📋 Description</h3><p style="color:var(--text-secondary);font-size:0.9rem">${lab.desc}</p></div>
+      ${lab.objectives ? `<div class="sidebar-panel"><h3>🎯 Learning Objectives</h3><ol style="color:var(--text-secondary);font-size:0.85rem;padding-left:var(--sp-lg);margin:0">${lab.objectives.map(o=>`<li style="margin-bottom:4px">${o}</li>`).join('')}</ol></div>` : ''}
+      ${lab.theory ? `<div class="sidebar-panel"><h3>📖 Theory Background</h3><p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6">${lab.theory}</p></div>` : ''}
+      ${lab.concepts ? `<div class="sidebar-panel"><h3>🔑 Key Concepts</h3><div style="display:flex;flex-wrap:wrap;gap:4px">${lab.concepts.map(c=>`<span style="background:rgba(99,102,241,0.12);color:#818cf8;padding:2px 8px;border-radius:4px;font-size:0.75rem">${c}</span>`).join('')}</div></div>` : ''}
+      ${lab.equations ? `<div class="sidebar-panel"><h3>🧮 Key Equations</h3><div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent)">${lab.equations.map(e=>`<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05)">${e}</div>`).join('')}</div></div>` : ''}
+      <div class="sidebar-panel"><h3>🎛️ Controls</h3><div id="lab-controls">Loading controls...</div></div>
+      <div class="sidebar-panel"><h3>📊 Data Output</h3><pre id="lab-data" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--secondary);max-height:200px;overflow:auto">Waiting for simulation...</pre></div>
+      <div class="sidebar-panel"><h3>🎤 Voice Commands</h3>
         <p style="color:var(--text-secondary);font-size:0.85rem">Say: "reset", "play", "pause", "step", "record data", "export"</p>
       </div>
     </div>
