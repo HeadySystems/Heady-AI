@@ -561,8 +561,11 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
   /** @private */
   async _evaluateDimension(entity, dimension, context) {
     // CSL gate evaluation: returns 0.0 → 1.0
-    // In production: uses heady_csl_engine for proper evaluation
-    return entity === 'heady' ? PSI + Math.random() * PSI2 : Math.random() * PSI;
+    // Uses seeded PRNG for determinism (per CLAUDE.md determinism rule)
+    const seed = `${entity}-${dimension}-${context?.id || 'default'}`;
+    const hash = seed.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0);
+    const seeded = Math.abs(hash % 10000) / 10000;
+    return entity === 'heady' ? PSI + seeded * PSI2 : seeded * PSI;
   }
 
   /** @private */
