@@ -15,14 +15,14 @@
 // HEADY_BRAND:END
 
 const express = require('express');
-const { createLogger } = require('../../packages/structured-logger');
+const { createLogger } = require('../services/structured-logger');
 const { PHI, phiBackoff, phiScale } = require('../../packages/phi-math');
 
 // ═══════════════════════════════════════════════════════════════════
 // Structured Logger Configuration
 // ═══════════════════════════════════════════════════════════════════
 
-const logger = createLogger('heady-scheduler-routes', 'scheduler');
+const logger = getLogger('heady-scheduler-routes', 'scheduler');
 
 // ═══════════════════════════════════════════════════════════════════
 // φ-Scaled Interval Presets

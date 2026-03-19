@@ -45,10 +45,10 @@ const fetch = require('node-fetch');
 const { createAppAuth } = require('@octokit/auth-app');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-const { createLogger } = require('./packages/structured-logger');
+const { getLogger } = require('./src/services/structured-logger');
 
 // Structured logger for heady-manager
-const log = createLogger('heady-manager', 'core');
+const log = getLogger('heady-manager');
 
 /**
  * @swagger

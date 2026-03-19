@@ -5,10 +5,10 @@
 
 const express = require('express');
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
+const { createLogger } = require('../services/structured-logger');
 
 const router = express.Router();
-const log = createLogger('analytics', 'analytics');
+const log = getLogger('analytics', 'analytics');
 
 // In-memory analytics store (replace with TimescaleDB/BigQuery in production)
 const events = [];

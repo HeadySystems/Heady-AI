@@ -21,7 +21,7 @@
 const { getLogger } = require('./structured-logger');
 const logger = getLogger('ai-gateway');
 
-const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '8b1fa38f282c691423c6399247d53323';
+const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
 const GATEWAY_NAME = process.env.HEADY_CLOUDFLARE_AI_GATEWAY || 'heady-gateway';
 const AI_GATEWAY_BASE = `https://gateway.ai.cloudflare.com/v1/${ACCOUNT_ID}/${GATEWAY_NAME}`;
 

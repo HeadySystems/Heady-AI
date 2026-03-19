@@ -1,8 +1,8 @@
 'use strict';
 
 const { recipeRegistry } = require('./recipe-registry');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('recipe-router', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('recipe-router', 'distiller');
 
 const PSI = 0.6180339887;
 const PSI_SQ = 0.3819660113;
@@ -22,7 +22,7 @@ async function routeRecipe(intentVector, taskClass, minTier = 1) {
 
   // Tier 3: exact replay — requires strong match (≥ ψ)
   if (best.tier === 3 && best.score >= PSI) {
-    log.activity('fast-path match', { recipe_id: best.id, score: best.score, task_class: taskClass });
+    log.info('fast-path match', { recipe_id: best.id, score: best.score, task_class: taskClass });
     return {
       action: 'FAST_PATH',
       recipe: best,
@@ -34,7 +34,7 @@ async function routeRecipe(intentVector, taskClass, minTier = 1) {
 
   // Tier 2: pipeline config — moderate match (≥ ψ²)
   if (best.tier === 2 && best.score >= PSI_SQ) {
-    log.activity('config optimization match', { recipe_id: best.id, score: best.score });
+    log.info('config optimization match', { recipe_id: best.id, score: best.score });
     return {
       action: 'OPTIMIZE_CONFIG',
       config: best.config,

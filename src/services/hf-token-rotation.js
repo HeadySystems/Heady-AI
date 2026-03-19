@@ -122,7 +122,13 @@ async function hfInference(model, body, opts = {}) {
                 },
                 body: JSON.stringify(body),
             });
-            if (retryRes.ok) return retryRes.json();
+            if (retryRes.status === 429) {
+                markRateLimited(retry.index);
+            } else if (retryRes.ok) {
+                return retryRes.json();
+            } else {
+                _tokenStats[retry.index].errors++;
+            }
         }
         throw new Error(`HuggingFace rate limited on all tokens for model ${model}`);
     }

@@ -15,8 +15,8 @@
  * @see https://en.wikipedia.org/wiki/Autonomic_computing#MAPE-K
  */
 
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('mape-k', 'orchestration');
+const { getLogger } = require('../services/structured-logger');
+const log = getLogger('mape-k');
 
 // φ-derived constants
 const PHI = 1.618033988749895;
@@ -63,7 +63,7 @@ class MapeK {
   // ═══════════════════════════════════════════════════════════════
 
   start() {
-    log.system('MAPE-K loop starting', { interval_ms: PHI_7_MS });
+    log.info('MAPE-K loop starting', { interval_ms: PHI_7_MS });
     this.timer = setInterval(() => this.cycle(), PHI_7_MS);
     this.cycle(); // Immediate first run
     return this;
@@ -74,7 +74,7 @@ class MapeK {
       clearInterval(this.timer);
       this.timer = null;
     }
-    log.system('MAPE-K loop stopped', { total_cycles: this.cycleCount });
+    log.info('MAPE-K loop stopped', { total_cycles: this.cycleCount });
   }
 
   /**
@@ -101,7 +101,7 @@ class MapeK {
       await this.updateKnowledge(metrics, anomalies, plan, results);
 
       const durationMs = Date.now() - cycleStart;
-      log.activity('MAPE-K cycle complete', {
+      log.info('MAPE-K cycle complete', {
         cycle: this.cycleCount,
         duration_ms: durationMs,
         anomalies: anomalies.length,
@@ -169,7 +169,7 @@ class MapeK {
     if (this.redis && !this.redis.mock) {
       try {
         const ping = await this.redis.ping();
-        metrics.redis = { status: ping.ok ? 'healthy' : 'degraded' };
+        metrics.redis = { status: ping === 'PONG' ? 'healthy' : 'degraded' };
       } catch {
         metrics.redis = { status: 'down' };
       }
@@ -363,7 +363,7 @@ class MapeK {
           case ACTIONS.SCALE_DOWN:
           case ACTIONS.RECONFIGURE:
             // Log intent — actual scaling requires cloud provider APIs
-            log.activity(`MAPE-K action: ${action.action}`, {
+            log.info(`MAPE-K action: ${action.action}`, {
               target: action.target,
               params: action.params,
               reason: action.anomaly.message,
@@ -431,12 +431,13 @@ class MapeK {
     }
 
     // Broadcast status via Redis
-    if (this.redis && !this.redis.mock) {
-      await this.redis.publishPipelineEvent('mape-k', {
+    if (this.redis) {
+      await this.redis.set('heady:mape-k:last-cycle', JSON.stringify({
         cycle: this.cycleCount,
         anomalies: anomalies.length,
         actions_taken: results.filter(r => r.success).length,
-      }).catch(() => {});
+        timestamp: Date.now(),
+      }), { ex: 300 }).catch(() => {});
     }
   }
 

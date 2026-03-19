@@ -1,8 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('replay-recorder', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('replay-recorder', 'distiller');
 
 /**
  * Tier 3 — Full Execution Recipe / Deterministic Replay.

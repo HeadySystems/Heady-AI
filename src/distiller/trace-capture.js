@@ -1,8 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('trace-capture', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('trace-capture', 'distiller');
 
 /**
  * Append-only JSONL trace capture with SHA-256 hash chain.
@@ -57,7 +57,7 @@ function captureTrace(traceId, executionLog) {
     capture.append(event.stage, event.event, event.meta, event.replay);
   }
 
-  log.activity('trace captured', {
+  log.info('trace captured', {
     trace_id: traceId,
     events: capture.events.length,
     integrity: capture.verify(),

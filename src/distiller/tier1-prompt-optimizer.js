@@ -1,8 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('prompt-optimizer', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('prompt-optimizer', 'distiller');
 
 const FIB_12 = 144; // max optimization calls
 
@@ -19,7 +19,7 @@ async function optimizePrompt(trace, options = {}) {
   const prompts = llmCalls.map(call => call.replay?.input).filter(Boolean);
 
   if (!prompts.length) {
-    log.system('no prompts to optimize', { trace_id: trace.trace_id });
+    log.info('no prompts to optimize', { trace_id: trace.trace_id });
     return null;
   }
 

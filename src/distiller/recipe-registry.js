@@ -1,8 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('recipe-registry', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('recipe-registry', 'distiller');
 
 const PSI = 0.6180339887;
 const PSI_SQ = 0.3819660113;
@@ -31,7 +31,7 @@ class RecipeRegistry {
         last_used: null,
       });
       this.stats.total++;
-      log.activity('recipe stored', { id, tier: recipe.tier, task_class: recipe.task_class });
+      log.info('recipe stored', { id, tier: recipe.tier, task_class: recipe.task_class });
     }
   }
 
@@ -65,7 +65,7 @@ class RecipeRegistry {
     if (recipe) {
       recipe.archived = true;
       recipe.archived_at = Date.now();
-      log.activity('recipe archived', { id, task_class: recipe.task_class });
+      log.info('recipe archived', { id, task_class: recipe.task_class });
     }
   }
 
@@ -76,7 +76,7 @@ class RecipeRegistry {
         const successRate = recipe.successes / recipe.uses;
         if (successRate < PSI_SQ) {
           await this.softDelete(id);
-          log.activity('recipe pruned', { id, success_rate: successRate, uses: recipe.uses });
+          log.info('recipe pruned', { id, success_rate: successRate, uses: recipe.uses });
         }
       }
     }

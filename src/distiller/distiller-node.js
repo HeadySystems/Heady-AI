@@ -16,9 +16,9 @@
  */
 
 const express = require('express');
-const { createLogger } = require('../../packages/structured-logger');
+const { createLogger } = require('../services/structured-logger');
 
-const log = createLogger('heady-distiller', 'intelligence');
+const log = getLogger('heady-distiller', 'intelligence');
 
 // φ-derived constants
 const PSI = 0.6180339887;       // φ⁻¹
@@ -97,7 +97,7 @@ app.post('/distill', async (req, res) => {
       );
     }
 
-    log.activity('distillation complete', {
+    log.info('distillation complete', {
       trace_id,
       recipes_created: recipes.length,
       task_class: filtered.task_class,
@@ -186,7 +186,7 @@ app.delete('/recipes/:id', async (req, res) => {
 const PORT = parseInt(process.env.DISTILLER_PORT, 10) || 3398;
 
 app.listen(PORT, () => {
-  log.system(`heady-distiller v1.0.0 listening on port ${PORT}`, {
+  log.info(`heady-distiller v1.0.0 listening on port ${PORT}`, {
     judge_threshold: JUDGE_THRESHOLD,
     meta_trigger: META_TRIGGER,
     max_optimization_calls: FIB_12,

@@ -1,8 +1,8 @@
 'use strict';
 
 const { recipeRegistry } = require('./recipe-registry');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('meta-distiller', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('meta-distiller', 'distiller');
 
 /**
  * Meta-Distillation: when a task class accumulates > fib(9)=34 recipes,
@@ -38,7 +38,7 @@ async function metaDistill(taskClass) {
     }
   }
 
-  log.activity('meta-distillation complete', {
+  log.info('meta-distillation complete', {
     task_class: taskClass,
     total_recipes: recipes.length,
     archived: archived.length,

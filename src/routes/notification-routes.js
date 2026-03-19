@@ -6,10 +6,10 @@
 const express = require('express');
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
+const { createLogger } = require('../services/structured-logger');
 
 const router = express.Router();
-const log = createLogger('notifications', 'notifications');
+const log = getLogger('notifications', 'notifications');
 const notificationBus = new EventEmitter();
 notificationBus.setMaxListeners(100);
 

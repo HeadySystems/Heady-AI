@@ -1,8 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../../packages/structured-logger');
-const log = createLogger('config-extractor', 'distiller');
+const { createLogger } = require('../services/structured-logger');
+const log = getLogger('config-extractor', 'distiller');
 
 /**
  * Tier 2 — Pipeline Configuration extraction.
