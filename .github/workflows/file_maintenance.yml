@@ -214,7 +214,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create failure issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const title = `🚨 File Maintenance Scan Failed - Run #${{ github.run_number }}`;
@@ -258,7 +258,7 @@ jobs:
           
       - name: Prune old workflow artifacts
         if: github.ref == 'refs/heads/main'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -294,7 +294,7 @@ jobs:
 
       - name: Clean stale branches
         if: github.ref == 'refs/heads/main'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         continue-on-error: true
         with:
           script: |
