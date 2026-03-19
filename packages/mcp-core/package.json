@@ -1,0 +1,36 @@
+{
+  "name": "@heady-ai/mcp-core",
+  "version": "5.0.0",
+  "private": false,
+  "description": "Shared types and SDK for Heady MCP services — restricted access, org members only.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "dependencies": {},
+  "license": "UNLICENSED",
+  "author": {
+    "name": "HeadySystems Inc.",
+    "email": "eric@headyconnection.org",
+    "url": "https://heady-ai.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HeadyMe/heady-production.git",
+    "directory": "packages/mcp-core"
+  },
+  "homepage": "https://heady-ai.com",
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

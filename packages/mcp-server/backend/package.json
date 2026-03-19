@@ -1,0 +1,25 @@
+{
+  "name": "@heady-ai/mcp-backend",
+  "version": "5.0.0",
+  "private": true,
+  "description": "PRIVATE — Heady MCP Backend for Cloud Run. Contains all trade secrets. NEVER publish to npm.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "deploy": "gcloud run deploy heady-mcp-backend --source . --region us-east1 --allow-unauthenticated --quiet",
+    "deploy:auth": "gcloud run deploy heady-mcp-backend --source . --region us-east1 --no-allow-unauthenticated --quiet"
+  },
+  "dependencies": {
+    "@heady-ai/core": "workspace:*",
+    "@heady-ai/vector-memory": "workspace:*",
+    "@heady-ai/phi-math": "workspace:*",
+    "@heady-ai/csl-engine": "workspace:*",
+    "@heady-ai/orchestrator": "workspace:*",
+    "@heady-ai/heady-memory": "workspace:*",
+    "@heady-ai/heady-conductor": "workspace:*",
+    "@heady-ai/heady-guard": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

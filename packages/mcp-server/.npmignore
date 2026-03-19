@@ -1,0 +1,38 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  .npmignore — Prevent trade secrets from being published       ║
+# ║  This file ensures ONLY the public facade ships to npm         ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+# NEVER publish the private backend
+backend/
+
+# NEVER publish the old proprietary source
+src/index.ts
+src/index.mjs
+dist/
+
+# Build artifacts
+.turbo/
+node_modules/
+*.tgz
+
+# Dev files
+tsconfig.json
+package-rebuild.json
+.eslintrc*
+.prettierrc*
+jest.config*
+__tests__/
+*.test.*
+*.spec.*
+coverage/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
