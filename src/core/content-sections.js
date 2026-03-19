@@ -131,13 +131,218 @@ const OTHER_DOMAIN_CONTENT = {
   },
 };
 
+// ─── ADDITIONAL DOMAINS FROM JSON CONTENT ─────────────────────────────────
+// These domains have rich JSON content in content/domains/ that we transform
+// into the renderer format. Hand-crafted for production quality.
+
+const EXPANDED_DOMAIN_CONTENT = {
+  'headymusic.com': {
+    about: {
+      title: 'The Universe Has a Rhythm. Now You Can Compose With It.',
+      paragraphs: [
+        'HeadyMusic is an AI-native creative studio that applies Sacred Geometry — the golden ratio, Fibonacci intervals, and harmonic series mathematics — to music composition, MIDI generation, and collaborative production. Your muse, mathematically amplified.',
+        'HeadyCompose generates melodic structures using φ-Harmonic scales derived from the overtone series. HeadyMIDI translates geometric patterns into SysEx messages your hardware synths understand. HeadyRhythm builds rhythmic patterns from Fibonacci subdivisions. Whether you produce in Ableton, Logic Pro, or FL Studio, HeadyMusic syncs seamlessly via our DAW bridge.',
+        'From stem separation powered by neural spectral analysis to live collaborative sessions with real-time MIDI sync, HeadyMusic gives musicians, producers, and creative technologists tools that feel like inspiration — because the math behind them is the same math behind the music of the spheres.',
+      ],
+    },
+    deepDive: {
+      title: 'Intelligence That Feels Like Inspiration',
+      items: [
+        { icon: '🎼', title: 'Generative Composition', desc: 'HeadyCompose generates full melodic, harmonic, and rhythmic compositions from a text prompt, mood descriptor, or seed chord — all anchored to φ-Harmonic scale systems derived from the natural overtone series.' },
+        { icon: '🎛️', title: 'MIDI SysEx Integration', desc: 'HeadyMIDI sends and receives SysEx messages for direct parameter control of hardware synthesizers, drum machines, and MIDI controllers. Map geometric patterns to oscillator frequencies, filter cutoffs, and LFO rates.' },
+        { icon: '🔗', title: 'Ableton & Multi-DAW Sync', desc: 'HeadySync bridges HeadyMusic to Ableton Live via Max for Live devices and the Ableton Link protocol. Logic Pro, FL Studio, and Bitwig integrations are also available.' },
+        { icon: '🎵', title: 'φ-Harmonic Scales', desc: 'Thirty mathematically-derived scale systems based on the golden ratio. Dorian-φ, Lydian-φ, Phrygian-φ — each scale embeds Fibonacci intervals that sound harmonically natural because they mirror the physics of resonance.' },
+        { icon: '🎤', title: 'AI Stem Separation', desc: 'HeadyStem uses neural spectral analysis to isolate vocals, drums, bass, and melodic elements from any audio file — studio-grade separation quality in seconds, not hours.' },
+        { icon: '👥', title: 'Live Collaboration', desc: 'HeadyCollab enables real-time collaborative composition sessions with MIDI sync, shared arrangement views, and version history. Multiple producers can jam together across any distance.' },
+      ],
+    },
+    technology: {
+      title: 'Create Without Limits',
+      stack: [
+        { label: 'Creator', value: 'Free — 20 compositions/month, MIDI & MP3 export' },
+        { label: 'Producer', value: '$13/mo — unlimited compositions, all DAW integrations' },
+        { label: 'Studio', value: '$34/mo — stem separation, collaboration, priority rendering' },
+        { label: 'Enterprise', value: '$89/mo — custom scales, API access, dedicated compute' },
+      ],
+    },
+    faq: [
+      { q: 'What is HeadyMusic?', a: 'HeadyMusic is an AI-native creative studio that applies Sacred Geometry mathematics — golden ratio intervals, Fibonacci phrase lengths, and harmonic series — to music composition, MIDI generation, and collaborative production.' },
+      { q: 'Which DAWs does HeadyMusic work with?', a: 'HeadyMusic integrates with Ableton Live (via Max for Live + Ableton Link), Logic Pro (via MIDI FX), FL Studio (via VST wrapper), Bitwig, and Reaper. Any DAW that accepts MIDI input can use HeadyMusic exports.' },
+      { q: 'Is HeadyMusic free?', a: 'Yes. The Creator tier is free with 20 compositions per month, 3 stem separations, and MIDI/MP3 export. Producer ($13/mo) and Studio ($34/mo) unlock unlimited compositions and professional features.' },
+      { q: 'What are φ-Harmonic scales?', a: 'φ-Harmonic scales are mathematically-derived scale systems where interval ratios are based on the golden ratio (φ ≈ 1.618) and Fibonacci numbers. They sound harmonically natural because they mirror the physics of resonance and the overtone series.' },
+    ],
+  },
+
+  'headycloud.com': {
+    about: {
+      title: 'Infrastructure That Thinks for Itself.',
+      paragraphs: [
+        'HeadyCloud orchestrates your AI workloads across Google Cloud Run, Cloudflare Workers, and Render with a self-healing mesh that scales instantly, routes intelligently, and never goes down — backed by a 99.99% SLA target.',
+        'Purpose-built for the Heady AI ecosystem and production-ready for any enterprise workload. HeadyCloud abstracts the complexity of multi-cloud infrastructure into a single control plane — with φ-scaled resource allocation, zero-downtime deployments, and OpenTelemetry-native observability baked in from day one.',
+        'From automatic failover and φ-ramped autoscaling to encrypted-at-rest vector storage and real-time telemetry dashboards, HeadyCloud gives operations teams infrastructure that heals itself faster than humans can diagnose the problem.',
+      ],
+    },
+    deepDive: {
+      title: 'Enterprise Cloud, Intelligently Orchestrated',
+      items: [
+        { icon: '☁️', title: 'Multi-Cloud Routing', desc: 'HeadyCloud routes workloads dynamically across Google Cloud Run, Cloudflare Workers, and Render. CSL gate logic evaluates workload semantics, provider health, and latency SLOs to make routing decisions in under 2ms.' },
+        { icon: '📈', title: 'φ-Scaled Auto-Scaling', desc: 'Scale from zero to production in under 3 seconds using Cloud Run\'s container-native autoscaler, augmented with φ-scaled pre-warming that predicts load spikes. Scale-to-zero reduces costs by up to 78%.' },
+        { icon: '🔄', title: 'Self-Healing Mesh', desc: 'The service mesh continuously monitors all nodes via active health probes. When a service degrades, the mesh reroutes traffic within 500ms, spins up replacements, and triggers root-cause analysis automatically.' },
+        { icon: '🚀', title: 'Zero-Downtime Deploys', desc: 'Blue-green deployments with automated canary analysis (5% → 25% → 50% → 100%). Automatic rollback if error rates exceed φ-derived thresholds. Average deploy time: 47 seconds.' },
+        { icon: '🔐', title: 'Encrypted Vector Storage', desc: 'AES-256-GCM encryption at rest for all pgvector data. TLS 1.3 in transit. Neon Postgres branching for zero-risk schema migrations. SOC 2 Type II compliance in progress.' },
+        { icon: '📊', title: 'OpenTelemetry Observability', desc: 'Every request traced end-to-end with OpenTelemetry spans, Langfuse LLM tracing, and Sentry error tracking. Real-time dashboards show p50/p95/p99 latency, error rates, and cost per request.' },
+      ],
+    },
+    technology: {
+      title: 'Simple, Predictable Cloud Pricing',
+      stack: [
+        { label: 'Starter', value: 'Free — 2 vCPU, 512MB RAM, 100K requests/mo' },
+        { label: 'Growth', value: '$55/mo — 4 vCPU, 2GB RAM, 1M requests/mo, 3 regions' },
+        { label: 'Scale', value: '$144/mo — 8 vCPU, 8GB RAM, 10M requests/mo, 5 regions' },
+        { label: 'Enterprise', value: 'Custom — dedicated compute, SLA guarantee, 24/7 support' },
+      ],
+    },
+    faq: [
+      { q: 'What is HeadyCloud?', a: 'HeadyCloud is the multi-cloud orchestration layer of the Heady AI platform. It routes workloads across Google Cloud Run, Cloudflare Workers, and Render with intelligent failover, φ-scaled autoscaling, and zero-downtime deployments.' },
+      { q: 'What is the SLA?', a: 'HeadyCloud targets 99.99% uptime (4.38 hours of downtime per year maximum). Scale and Enterprise tiers include SLA guarantees with service credits for violations.' },
+      { q: 'How does self-healing work?', a: 'Every service runs active health probes. When a node fails, traffic reroutes within 500ms. Replacement instances spin up automatically. Root-cause analysis runs in parallel via the AI observability layer.' },
+      { q: 'Is HeadyCloud free to start?', a: 'Yes. The Starter tier includes 2 shared vCPU, 512MB RAM, 100K API requests per month, and 1GB vector storage — no credit card required.' },
+    ],
+  },
+
+  'headyapi.com': {
+    about: {
+      title: 'Build on Heady — The API That Does It All',
+      paragraphs: [
+        'HeadyAPI gives developers full programmatic access to the entire Heady ecosystem. Chat with any AI model, generate embeddings, search vector memory, execute MCP tools, and orchestrate multi-agent workflows — all through a single REST and GraphQL interface.',
+        'Every endpoint is authenticated, rate-limited, and observable. CSL-gated request validation ensures semantic correctness before execution. Response times are measured in milliseconds, not seconds — thanks to Cloudflare edge caching and optimized Cloud Run origins.',
+        'SDKs for JavaScript, Python, Go, and Rust make integration a one-liner. OpenAPI 3.1 specs enable instant client generation for any language. HeadyAPI is the developer\'s gateway to sovereign AI infrastructure.',
+      ],
+    },
+    deepDive: {
+      title: 'One API. Every AI Capability.',
+      items: [
+        { icon: '💬', title: 'Multi-Model Chat', desc: 'Chat with Claude, GPT-4o, Gemini, Groq, and Perplexity through a unified endpoint. The Liquid Gateway routes to the optimal provider based on task semantics, latency, and cost.' },
+        { icon: '🧬', title: 'Embedding Generation', desc: 'Generate 384D vector embeddings using Nomic Embed v2 with automatic caching and deduplication. Batch endpoints process up to 1,000 texts per request.' },
+        { icon: '🔍', title: 'Vector Memory Search', desc: 'Semantic search across your stored knowledge using hybrid BM25 + dense vector retrieval with Reciprocal Rank Fusion. Sub-5ms query times via HNSW indexing.' },
+        { icon: '🐝', title: 'Agent Orchestration', desc: 'Spawn, manage, and monitor HeadyBee agent swarms programmatically. Define task DAGs, set resource budgets, and receive results via webhooks or streaming SSE.' },
+      ],
+    },
+    technology: {
+      title: 'API Pricing',
+      stack: [
+        { label: 'Free Tier', value: '10,000 requests/month, 100MB vector storage' },
+        { label: 'Developer', value: '$0.001/request after free tier' },
+        { label: 'Enterprise', value: 'Volume discounts, SLA, dedicated endpoints' },
+      ],
+    },
+    faq: [
+      { q: 'What can I build with HeadyAPI?', a: 'Anything that needs AI intelligence — chatbots, search engines, recommendation systems, content generators, autonomous agents, and more. HeadyAPI provides chat, embeddings, vector search, agent orchestration, and MCP tool execution.' },
+      { q: 'Which SDKs are available?', a: 'Official SDKs for JavaScript/TypeScript, Python, Go, and Rust. Community SDKs for Ruby, PHP, and Java. Full OpenAPI 3.1 spec for auto-generation in any language.' },
+      { q: 'What are the rate limits?', a: 'Free tier: 100 requests/minute. Developer: 1,000 requests/minute. Enterprise: custom limits with dedicated endpoints and priority routing.' },
+    ],
+  },
+
+  'headybot.com': {
+    about: {
+      title: 'The Conversational AI That Lives Where Your Users Are',
+      paragraphs: [
+        'HeadyBot is enterprise-ready conversational AI that meets your users wherever they already are — on your website, in Slack, Discord, Teams, WhatsApp, or embedded in your product. One intelligence layer, every channel.',
+        'Unlike generic chatbot platforms, HeadyBot is powered by the Heady multi-model gateway and 384D vector memory. It remembers context across conversations, routes complex queries to specialized AI models, and escalates to humans when confidence drops below CSL thresholds.',
+        'Deploy in minutes with a single script tag or API call. Train on your own data with zero-shot fine-tuning via vector memory uploads. HeadyBot speaks your brand\'s language from day one.',
+      ],
+    },
+    deepDive: {
+      title: 'Conversational Intelligence at Scale',
+      items: [
+        { icon: '🌐', title: 'Omnichannel Deployment', desc: 'One bot, every platform. Deploy to web, Slack, Discord, Microsoft Teams, WhatsApp, SMS, and custom channels. Unified conversation history across all touchpoints.' },
+        { icon: '🧠', title: 'Persistent Memory', desc: 'HeadyBot remembers every user interaction in 384D vector space. Return visitors get personalized, context-aware responses from their first message.' },
+        { icon: '🔀', title: 'Multi-Model Intelligence', desc: 'Complex questions route to Claude for reasoning, GPT-4o for creativity, Gemini for multimodal, and Groq for speed. The Liquid Gateway selects the best model per message.' },
+        { icon: '📞', title: 'Human Escalation', desc: 'When confidence drops below CSL MEDIUM (0.809), HeadyBot seamlessly escalates to human agents with full conversation context, sentiment analysis, and suggested responses.' },
+      ],
+    },
+    faq: [
+      { q: 'How quickly can I deploy HeadyBot?', a: 'Under 5 minutes. Add a single script tag to your website, or use the Slack/Discord app installer. Enterprise deployments with custom training take 1-2 hours.' },
+      { q: 'Can HeadyBot learn from my documentation?', a: 'Yes. Upload PDFs, markdown, URLs, or structured data to the vector memory. HeadyBot will use your content as its primary knowledge source with zero-shot retrieval-augmented generation.' },
+      { q: 'What languages does HeadyBot support?', a: 'HeadyBot supports 95+ languages through its multi-model backend. Language detection is automatic. Response language matches the user\'s input language.' },
+    ],
+  },
+
+  'headyio.com': {
+    about: {
+      title: 'Move Data Anywhere, At Any Speed',
+      paragraphs: [
+        'HeadyIO is the event-driven data layer of the Heady platform. Ingest events, route webhooks with reliability guarantees, stream real-time data between services, and transform payloads — all through a single, fault-tolerant pipeline.',
+        'Built on an append-only event sourcing architecture with CQRS projections, HeadyIO captures every state change as an immutable record. Events are partitioned by Sacred Geometry layer with Fibonacci-sized time windows, enabling point-in-time replay and real-time streaming simultaneously.',
+        'Whether you\'re building real-time dashboards, piping webhook events between SaaS tools, or streaming AI inference results to client applications, HeadyIO gives you the data plumbing that just works.',
+      ],
+    },
+    deepDive: {
+      title: 'Event-Driven Architecture, Production-Grade',
+      items: [
+        { icon: '📡', title: 'Webhook Relay', desc: 'Receive, validate, and route webhooks from any service with automatic retries, deduplication, and delivery guarantees. Never miss an event.' },
+        { icon: '🔄', title: 'Event Sourcing', desc: 'Every state change is an immutable event. Replay from any point in time. Build multiple read projections from the same event stream.' },
+        { icon: '⚡', title: 'Real-Time Streaming', desc: 'Server-Sent Events (SSE) and WebSocket streams deliver data to clients in under 50ms. Backpressure management prevents overwhelm.' },
+        { icon: '🔀', title: 'Transform Pipeline', desc: 'Apply transformations, filters, and enrichments to data in flight. CSL-gated routing sends events to the right downstream service based on semantic content.' },
+      ],
+    },
+    faq: [
+      { q: 'What is HeadyIO?', a: 'HeadyIO is the event-driven data layer for the Heady platform — webhook relay, event sourcing, real-time streaming, and transform pipelines in a single service.' },
+      { q: 'Is HeadyIO free?', a: 'HeadyIO includes a free tier with 50,000 events/month. Paid tiers start at $21/mo for 1M events/month with higher throughput and longer retention.' },
+    ],
+  },
+
+  'heady-ai.com': {
+    about: {
+      title: 'Intelligence Engineered on the Laws of the Universe.',
+      paragraphs: [
+        'Heady AI pioneers Continuous Semantic Logic — a φ-scaled architecture that replaces binary Boolean gates with continuous vector geometry operations. AND becomes cosine similarity. NOT becomes orthogonal projection. GATE uses golden-ratio-derived thresholds.',
+        'This isn\'t incremental improvement — it\'s a paradigm shift in how AI systems reason, decide, and self-govern. Traditional AI stacks make binary decisions. Heady AI makes continuous, nuanced decisions on a spectrum, weighted by the same mathematical constants that govern spiral galaxies and nautilus shells.',
+        'With 72+ provisional patents and a research team obsessed with mathematical elegance, Heady AI is building the foundation for the next generation of artificial intelligence — one where the math is as beautiful as the results.',
+      ],
+    },
+    deepDive: {
+      title: 'The Science Behind the System',
+      items: [
+        { icon: '📐', title: 'Continuous Semantic Logic', desc: 'CSL replaces Boolean true/false with continuous vector operations. AND is cosine similarity, NOT is orthogonal projection, GATE uses φ-derived thresholds (0.500 → 0.927). Nuanced reasoning instead of brittle if/else chains.' },
+        { icon: '🌀', title: 'Sacred Geometry Orchestration', desc: 'Nodes placed according to golden-ratio coordinates in a multi-layer topology. The architecture mirrors the mathematical patterns found in nature — self-similar, self-healing, and inherently scalable.' },
+        { icon: '🧬', title: '384D Vector Space', desc: 'Every concept, document, user, and system component is embedded in 384-dimensional vector space. Semantic relationships emerge naturally from geometric proximity.' },
+        { icon: '🧠', title: 'Alive Software', desc: 'The system maintains a vector embedding of its own architecture — a self-model that drifts as code changes. When semantic drift exceeds thresholds, alerts fire before coherence degrades.' },
+      ],
+    },
+    faq: [
+      { q: 'What is Continuous Semantic Logic?', a: 'CSL is Heady AI\'s core innovation — replacing binary Boolean logic with continuous vector geometry operations. Instead of true/false, decisions exist on a spectrum scored by cosine similarity and phi-derived thresholds.' },
+      { q: 'How many patents does Heady AI hold?', a: 'Heady AI has filed 72+ provisional patents covering Continuous Semantic Logic, Sacred Geometry Orchestration, Alive Software self-modeling, and related innovations. Estimated portfolio value exceeds $4.87M.' },
+      { q: 'Is Heady AI open source?', a: 'Core components will be open-sourced progressively. The HeadyMCP server and selected HeadyBee agents are already available. Enterprise features and the patent-protected CSL engine are proprietary.' },
+    ],
+  },
+};
+
+// Merge expanded content into OTHER_DOMAIN_CONTENT
+Object.assign(OTHER_DOMAIN_CONTENT, EXPANDED_DOMAIN_CONTENT);
+
 /**
  * Get content sections for a given domain.
- * Returns the rich content if available, otherwise generates minimal placeholders
- * from the site registry data.
+ * Priority: hand-crafted SITE_CONTENT > OTHER_DOMAIN_CONTENT > dynamic JSON loader > null
  */
 function getContentForDomain(domain) {
-  return SITE_CONTENT[domain] || OTHER_DOMAIN_CONTENT[domain] || null;
+  if (SITE_CONTENT[domain]) return SITE_CONTENT[domain];
+  if (OTHER_DOMAIN_CONTENT[domain]) return OTHER_DOMAIN_CONTENT[domain];
+
+  // Attempt dynamic loading from content/domains/ JSON files
+  try {
+    const { loadDomainContent } = require('./content-loader');
+    const dynamicContent = loadDomainContent(domain);
+    if (dynamicContent) {
+      // Cache for subsequent requests
+      OTHER_DOMAIN_CONTENT[domain] = dynamicContent;
+      return dynamicContent;
+    }
+  } catch (e) {
+    // content-loader not available or failed — graceful degradation
+  }
+
+  return null;
 }
 
 module.exports = { SITE_CONTENT, OTHER_DOMAIN_CONTENT, getContentForDomain };
