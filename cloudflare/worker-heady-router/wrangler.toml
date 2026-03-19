@@ -2,25 +2,44 @@ name = "worker-heady-router"
 main = "src/index.js"
 compatibility_date = "2026-03-06"
 
-# KV Namespace for UI Manifest (compiled UI chunks by domain/path)
 [[kv_namespaces]]
 binding = "HEADY_UI_MANIFEST"
 id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
 
-# Internal auth token for triggering Colab compiler
 [vars]
 # HEADY_INTERNAL_TOKEN = "set via wrangler secret"
+HEADY_ORIGIN_BASE = "https://heady-manager-1073792900703.us-east1.run.app"
+COLAB_COMPILER_WEBHOOK = "https://heady-manager-1073792900703.us-east1.run.app/api/hologram/compile"
 
-# Route all 9+ Heady domains through this worker
-# Configure in Cloudflare Dashboard → Workers Routes:
-#   *headymcp.com/*
-#   *headysystems.com/*
-#   *headyme.com/*
-#   *headyapi.com/*
-#   *headyio.com/*
-#   *headyfinance.com/*
-#   *headymusic.com/*
-#   *headyconnection.org/*
-#   *headyconnection.org/*
-#   *myheady-ai.com/*
-#   *heady.headyme.com/*
+# Active recovery routes managed as infrastructure-as-code.
+[[routes]]
+pattern = "heady-ai.com/*"
+zone_name = "heady-ai.com"
+
+[[routes]]
+pattern = "www.heady-ai.com/*"
+zone_name = "heady-ai.com"
+
+[[routes]]
+pattern = "headyos.com/*"
+zone_name = "headyos.com"
+
+[[routes]]
+pattern = "www.headyos.com/*"
+zone_name = "headyos.com"
+
+[[routes]]
+pattern = "headyex.com/*"
+zone_name = "headyex.com"
+
+[[routes]]
+pattern = "www.headyex.com/*"
+zone_name = "headyex.com"
+
+[[routes]]
+pattern = "admin.headysystems.com/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern = "auth.headysystems.com/*"
+zone_name = "headysystems.com"
