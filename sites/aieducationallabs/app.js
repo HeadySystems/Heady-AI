@@ -356,19 +356,135 @@ function renderLabWorkspace(labId) {
 
 // ─── Lab Simulations ────────────────────────────────────────────────────────
 const LabSims = {
-  state: { running: false, time: 0, data: [], animId: null },
+  state: { running: false, time: 0, data: [], animId: null, mouse:{x:0,y:0,down:false,clicked:false,dragging:false,dragStart:null}, params:{} },
   init(labId) {
     const canvas = document.getElementById('lab-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-    this.state = { running: false, time: 0, data: [], animId: null };
+    this.state = { running: false, time: 0, data: [], animId: null, mouse:{x:0,y:0,down:false,clicked:false,dragging:false,dragStart:null,hover:null}, params:{}, _highlights:[] };
+    // Default params per lab
+    const defaults = {
+      'plate-tectonics':{speed:1,depth:3400,showLabels:true},'weather-patterns':{windSpeed:5,temp:22,humidity:65,showPressure:true},
+      'geological-layers':{drillSpeed:2,showFossils:true,showDating:true},'cell-explorer':{zoom:1,showLabels:true,selectedOrganelle:null},
+      'dna-replication':{replicationSpeed:1,showEnzymes:true},'ecosystem-sim':{preyCount:20,predCount:5,spawnRate:0.02},
+      'molecular-builder':{selectedAtom:'O',bondAngle:104.5,showElectrons:true,atoms:[]},'reaction-sim':{temperature:300,catalyst:false,concentration:1},
+      'periodic-table':{selectedElement:0,showOrbits:true},'projectile-motion':{velocity:50,angle:45,gravity:9.81,showTrail:true,launched:false,trails:[]},
+      'optics-bench':{focalLength:150,lensX:0.5,numRays:5,showFocal:true},'circuit-sim':{voltage:12,resistance:100,showElectrons:true},
+      'sorting-viz':{algorithm:'bubble',speed:1,arraySize:30},'neural-net':{learningRate:0.1,layers:[3,5,4,2],showWeights:true,epoch:0},
+      'pathfinding':{algorithm:'astar',showVisited:true,drawMode:'wall'},'circuit-design':{inputs:[1,0],gateType:'AND'},
+      'robot-arm':{joint1:0,joint2:0,joint3:0,gripOpen:true,autoMode:true},'bridge-builder':{load:0,material:'steel',showStress:true}
+    };
+    this.state.params = {...(defaults[labId]||{})};
     this.renderSim(ctx, canvas, labId);
     this.setupControls(labId);
+    this.setupMouseEvents(canvas, ctx, labId);
     window.addEventListener('resize', () => {
       canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
       this.renderSim(ctx, canvas, labId);
     });
+  },
+  setupMouseEvents(canvas, ctx, labId) {
+    const getPos = (e) => { const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left,y:t.clientY-r.top}; };
+    canvas.addEventListener('mousemove', (e) => { const p=getPos(e); this.state.mouse.x=p.x; this.state.mouse.y=p.y; if(this.state.mouse.down)this.state.mouse.dragging=true; if(!this.state.running)this.renderSim(ctx,canvas,labId); this.handleHover(canvas,labId); });
+    canvas.addEventListener('mousedown', (e) => { const p=getPos(e); this.state.mouse.down=true; this.state.mouse.dragStart={x:p.x,y:p.y}; });
+    canvas.addEventListener('mouseup', (e) => { const p=getPos(e); if(!this.state.mouse.dragging){this.state.mouse.clicked=true; this.handleClick(ctx,canvas,labId);} this.state.mouse.down=false; this.state.mouse.dragging=false; });
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const p=getPos(e); this.state.mouse.x=p.x; this.state.mouse.y=p.y; this.state.mouse.down=true; this.state.mouse.dragStart={x:p.x,y:p.y}; }, {passive:false});
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const p=getPos(e); this.state.mouse.x=p.x; this.state.mouse.y=p.y; this.state.mouse.dragging=true; if(!this.state.running)this.renderSim(ctx,canvas,labId); }, {passive:false});
+    canvas.addEventListener('touchend', (e) => { if(!this.state.mouse.dragging){this.state.mouse.clicked=true; this.handleClick(ctx,canvas,labId);} this.state.mouse.down=false; this.state.mouse.dragging=false; });
+    canvas.style.cursor = 'crosshair';
+  },
+  handleHover(canvas, labId) {
+    const {x,y} = this.state.mouse;
+    let tooltip = null;
+    if (labId==='cell-explorer') {
+      const W=canvas.width, H=canvas.height, cx=W/2, cy=H/2, r=Math.min(W,H)*0.35;
+      const d=Math.sqrt((x-cx+10)**2+(y-cy-5)**2);
+      if(d<r*0.22) tooltip='Nucleus — Contains DNA, controls gene expression';
+      else if(Math.sqrt((x-cx)**2+(y-cy)**2)<r) tooltip='Cytoplasm — Click organelles to learn more';
+    } else if (labId==='periodic-table') {
+      tooltip = 'Click an element to select it';
+    } else if (labId==='pathfinding') {
+      tooltip = this.state.params.drawMode==='wall'?'Click to toggle walls':'Click to set start/end';
+    }
+    canvas.title = tooltip||'';
+  },
+  handleClick(ctx, canvas, labId) {
+    const {x,y} = this.state.mouse;
+    const W=canvas.width, H=canvas.height;
+    this.state.mouse.clicked = false;
+    
+    if (labId==='cell-explorer') {
+      const cx=W/2, cy=H/2, r=Math.min(W,H)*0.35;
+      const d=Math.sqrt((x-cx+10)**2+(y-cy-5)**2);
+      if(d<r*0.22) { this.state.params.selectedOrganelle='Nucleus'; showToast('Nucleus: Contains DNA wrapped around histones. Controls gene expression via mRNA transcription.','info'); }
+      else { const t=this.state.time*0.02;
+        for(let i=0;i<5;i++){ const a=t+i*1.26; const mx=cx+Math.cos(a)*r*0.55, my=cy+Math.sin(a)*r*0.45;
+          if(Math.sqrt((x-mx)**2+(y-my)**2)<18){this.state.params.selectedOrganelle='Mitochondria'; showToast('Mitochondria: Powerhouse of the cell. Produces ATP via oxidative phosphorylation (36-38 ATP per glucose).','info');break;}
+        }
+      }
+      this.renderSim(ctx,canvas,labId); updateDataOutput();
+    }
+    else if (labId==='molecular-builder') {
+      if(!this.state.params.atoms) this.state.params.atoms=[];
+      const atomColors = {H:'#f0f0f0',O:'#ef4444',N:'#3b82f6',C:'#4b5563',S:'#f59e0b'};
+      this.state.params.atoms.push({x,y,type:this.state.params.selectedAtom,c:atomColors[this.state.params.selectedAtom]||'#888'});
+      showToast(`Placed ${this.state.params.selectedAtom} atom at (${Math.round(x)}, ${Math.round(y)})`,'success');
+      this.renderSim(ctx,canvas,labId); updateDataOutput();
+    }
+    else if (labId==='pathfinding') {
+      if(!this.state._grid) return;
+      const cols=16,rows=10,cw=(W-40)/cols,ch=(H-80)/rows;
+      const c=Math.floor((x-20)/cw), r=Math.floor((y-50)/ch);
+      if(r>=0&&r<rows&&c>=0&&c<cols&&!(r===0&&c===0)&&!(r===rows-1&&c===cols-1)){
+        this.state._grid[r][c]=this.state._grid[r][c]?0:1;
+        this.state._visited=[];
+        showToast(this.state._grid[r][c]?'Wall placed':'Wall removed','info');
+        this.renderSim(ctx,canvas,labId); updateDataOutput();
+      }
+    }
+    else if (labId==='periodic-table') {
+      const cols=5,cellW=Math.min(60,(W-80)/cols),cellH=50;
+      const elements=[{s:'H',n:1,name:'Hydrogen',mass:1.008},{s:'He',n:2,name:'Helium',mass:4.003},{s:'Li',n:3,name:'Lithium',mass:6.941},{s:'Be',n:4,name:'Beryllium',mass:9.012},{s:'B',n:5,name:'Boron',mass:10.81},{s:'C',n:6,name:'Carbon',mass:12.011},{s:'N',n:7,name:'Nitrogen',mass:14.007},{s:'O',n:8,name:'Oxygen',mass:15.999},{s:'F',n:9,name:'Fluorine',mass:18.998},{s:'Ne',n:10,name:'Neon',mass:20.180}];
+      elements.forEach((el,i)=>{ const col=i%cols,row=Math.floor(i/cols); const ex=W/2-(cols*cellW)/2+col*cellW+5,ey=60+row*(cellH+8);
+        if(x>=ex&&x<=ex+cellW-10&&y>=ey&&y<=ey+cellH){this.state.params.selectedElement=i; showToast(`${el.name} (${el.s}) — Atomic #${el.n}, Mass: ${el.mass} u`,'info');}
+      });
+      this.renderSim(ctx,canvas,labId); updateDataOutput();
+    }
+    else if (labId==='projectile-motion') {
+      if(!this.state.params.launched){ this.state.params.launched=true; this.state.params.launchTime=this.state.time; this.state.params.trails.push([]); if(!this.state.running) this.play(); showToast('Projectile launched!','success'); }
+      else { this.state.params.launched=false; showToast('Click canvas to launch again','info'); }
+      updateDataOutput();
+    }
+    else if (labId==='robot-arm') {
+      this.state.params.autoMode=false;
+      const baseX=W/2,baseY=H*0.8;
+      const dx=x-baseX,dy=baseY-y;
+      const targetAngle=Math.atan2(dx,dy);
+      this.state.params.joint1=targetAngle*0.5;
+      this.state.params.joint2=targetAngle*0.8;
+      showToast(`Arm target: (${Math.round(x)}, ${Math.round(y)})`,'info');
+      this.renderSim(ctx,canvas,labId); updateDataOutput();
+    }
+    else if (labId==='bridge-builder') {
+      this.state.params.load = Math.max(0,100 - (y/H)*100);
+      showToast(`Load set to ${this.state.params.load.toFixed(0)}%`,'info');
+      this.renderSim(ctx,canvas,labId); updateDataOutput();
+    }
+    else if (labId==='ecosystem-sim') {
+      if(!this.state._eco) return;
+      this.state._eco.prey.push({x,y,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2});
+      showToast(`Prey added at (${Math.round(x)},${Math.round(y)}). Total: ${this.state._eco.prey.length}`,'success');
+      this.renderSim(ctx,canvas,labId); updateDataOutput();
+    }
+    else if (labId==='circuit-sim') {
+      const cx2=W/2,cy2=H/2;
+      if(Math.abs(x-cx2+W*0.3)<15&&Math.abs(y-cy2)<20){
+        this.state.params.voltage = this.state.params.voltage>=24?3:this.state.params.voltage+3;
+        showToast(`Voltage: ${this.state.params.voltage}V`,'info');
+        this.renderSim(ctx,canvas,labId); updateDataOutput();
+      }
+    }
   },
   renderSim(ctx, canvas, labId) {
     const W = canvas.width, H = canvas.height;
@@ -377,6 +493,8 @@ const LabSims = {
     ctx.strokeStyle = 'rgba(108,99,255,0.08)'; ctx.lineWidth = 1;
     for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    // Mouse cursor indicator
+    if(this.state.mouse.x>0&&this.state.mouse.y>0){ctx.strokeStyle='rgba(99,102,241,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(this.state.mouse.x,this.state.mouse.y,8,0,Math.PI*2);ctx.stroke();}
     // Dispatch to lab-specific renderer
     const renderer = this.renderers[labId] || this.renderers.default;
     renderer(ctx, W, H, this.state);
@@ -426,14 +544,37 @@ const LabSims = {
     tick();
   },
   pause() { this.state.running = false; if (this.state.animId) cancelAnimationFrame(this.state.animId); },
-  reset() { this.pause(); this.state.time = 0; this.state.data = []; this.state._arr = null; const c=document.getElementById('lab-canvas'); if(c) this.renderSim(c.getContext('2d'),c,State.currentLab?.id||'default'); },
+  reset() { this.pause(); this.state.time = 0; this.state.data = []; this.state._arr=null; this.state._sortIdx=0; this.state._particles=null; this.state._eco=null; this.state._grid=null; this.state._visited=[]; this.state.params.launched=false; this.state.params.trails=[]; this.state.params.atoms=[]; const c=document.getElementById('lab-canvas'); if(c){const labId=State.currentLab?.id||'default'; this.init(labId);} },
   setupControls(labId) {
     const el = document.getElementById('lab-controls');
     if (!el) return;
-    el.innerHTML = `<div style="display:flex;flex-direction:column;gap:var(--sp-sm)">
-      <label style="font-size:0.85rem;color:var(--text-secondary)">Speed: <input type="range" min="1" max="10" value="5" id="speed-ctrl" style="width:100%"></label>
-      <label style="font-size:0.85rem;color:var(--text-secondary)">Zoom: <input type="range" min="50" max="200" value="100" id="zoom-ctrl" style="width:100%"></label>
-    </div>`;
+    const p = this.state.params;
+    const ctrl = (label,id,min,max,val,step) => `<label style="font-size:0.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px"><span style="min-width:90px">${label}</span><input type="range" min="${min}" max="${max}" value="${val}" step="${step||1}" id="${id}" style="flex:1" oninput="LabSims.state.params.${id.replace('ctrl-','')}=parseFloat(this.value);document.getElementById('${id}-val').textContent=this.value"><span id="${id}-val" style="min-width:35px;text-align:right;color:var(--accent);font-family:var(--font-mono);font-size:0.8rem">${val}</span></label>`;
+    const toggle = (label,id,val) => `<label style="font-size:0.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" ${val?'checked':''} onchange="LabSims.state.params.${id}=this.checked" style="accent-color:var(--primary)"> ${label}</label>`;
+    const select = (label,id,opts,val) => `<label style="font-size:0.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:8px"><span style="min-width:90px">${label}</span><select id="${id}" onchange="LabSims.state.params.${id.replace('ctrl-','')}=this.value" style="flex:1;background:var(--surface);color:var(--text-primary);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:4px 8px">${opts.map(o=>`<option value="${o}" ${o===val?'selected':''}>${o}</option>`).join('')}</select></label>`;
+    const hint = (text) => `<div style="font-size:0.75rem;color:var(--text-muted);padding:4px 0;border-top:1px solid rgba(255,255,255,0.05);margin-top:4px">💡 ${text}</div>`;
+
+    const controls = {
+      'plate-tectonics': ctrl('Speed','ctrl-speed',0.1,5,p.speed,0.1)+toggle('Show Labels','showLabels',p.showLabels)+hint('Watch plates diverge and converge. Magma particles show convection.'),
+      'weather-patterns': ctrl('Wind Speed','ctrl-windSpeed',0,20,p.windSpeed,1)+ctrl('Temperature','ctrl-temp',0,45,p.temp,1)+ctrl('Humidity','ctrl-humidity',0,100,p.humidity,1)+toggle('Show Pressure','showPressure',p.showPressure)+hint('Observe how temperature and humidity affect cloud formation.'),
+      'geological-layers': ctrl('Drill Speed','ctrl-drillSpeed',0.5,5,p.drillSpeed,0.5)+toggle('Show Fossils','showFossils',p.showFossils)+toggle('Show Dating','showDating',p.showDating)+hint('Press Play to drill. Each layer reveals different strata.'),
+      'cell-explorer': ctrl('Zoom','ctrl-zoom',0.5,3,p.zoom,0.1)+toggle('Show Labels','showLabels',p.showLabels)+hint('Click organelles to learn about them. Nucleus, mitochondria, ER are clickable.'),
+      'dna-replication': ctrl('Replication Speed','ctrl-replicationSpeed',0.5,5,p.replicationSpeed,0.5)+toggle('Show Enzymes','showEnzymes',p.showEnzymes)+hint('Press Play to watch helicase unwind the double helix.'),
+      'ecosystem-sim': ctrl('Prey Count','ctrl-preyCount',5,50,p.preyCount,1)+ctrl('Predator Count','ctrl-predCount',1,15,p.predCount,1)+hint('Click anywhere on canvas to add prey organisms.'),
+      'molecular-builder': select('Atom Type','ctrl-selectedAtom',['H','O','N','C','S'],p.selectedAtom)+toggle('Show Electrons','showElectrons',p.showElectrons)+hint('Click on the canvas to place atoms. Build molecules visually!'),
+      'reaction-sim': ctrl('Temperature (K)','ctrl-temperature',100,1500,p.temperature,50)+ctrl('Concentration','ctrl-concentration',0.1,3,p.concentration,0.1)+toggle('Add Catalyst','catalyst',p.catalyst)+hint('Higher temperature → faster reactions. Catalyst lowers activation energy.'),
+      'periodic-table': toggle('Show Orbits','showOrbits',p.showOrbits)+hint('Click any element to select it and see its electron configuration.'),
+      'projectile-motion': ctrl('Velocity (m/s)','ctrl-velocity',10,100,p.velocity,5)+ctrl('Angle (°)','ctrl-angle',5,85,p.angle,1)+ctrl('Gravity (m/s²)','ctrl-gravity',1,20,p.gravity,0.5)+toggle('Show Trail','showTrail',p.showTrail)+hint('Click canvas to launch! Adjust angle and velocity for max range.'),
+      'optics-bench': ctrl('Focal Length','ctrl-focalLength',50,300,p.focalLength,10)+ctrl('Num Rays','ctrl-numRays',1,10,p.numRays,1)+toggle('Show Focal Point','showFocal',p.showFocal)+hint('Observe how changing focal length affects ray convergence.'),
+      'circuit-sim': ctrl('Voltage (V)','ctrl-voltage',1,24,p.voltage,1)+ctrl('Resistance (Ω)','ctrl-resistance',10,500,p.resistance,10)+toggle('Show Electrons','showElectrons',p.showElectrons)+hint('Click the battery (left side) to cycle voltage. V=IR.'),
+      'sorting-viz': select('Algorithm','ctrl-algorithm',['bubble','selection','insertion','merge','quick'],p.algorithm)+ctrl('Speed','ctrl-speed',1,10,p.speed,1)+hint('Watch how different algorithms compare and swap elements.'),
+      'neural-net': ctrl('Learning Rate','ctrl-learningRate',0.001,1,p.learningRate,0.01)+toggle('Show Weights','showWeights',p.showWeights)+hint('Observe how weight connections pulse during training epochs.'),
+      'pathfinding': select('Algorithm','ctrl-algorithm',['astar','bfs','dijkstra'],p.algorithm)+toggle('Show Visited','showVisited',p.showVisited)+hint('Click grid cells to add/remove walls. Green=start, Red=end.'),
+      'circuit-design': select('Gate','ctrl-gateType',['AND','OR','NOT','XOR','NAND','NOR'],p.gateType)+hint('Observe signal propagation through logic gates.'),
+      'robot-arm': ctrl('Joint 1 (°)','ctrl-joint1',-90,90,(p.joint1*180/Math.PI).toFixed(0),5)+ctrl('Joint 2 (°)','ctrl-joint2',-120,120,(p.joint2*180/Math.PI).toFixed(0),5)+ctrl('Joint 3 (°)','ctrl-joint3',-90,90,(p.joint3*180/Math.PI).toFixed(0),5)+toggle('Auto Mode','autoMode',p.autoMode)+toggle('Gripper Open','gripOpen',p.gripOpen)+hint('Click canvas to position arm. Disable Auto for manual joint control.'),
+      'bridge-builder': ctrl('Load (%)','ctrl-load',0,100,p.load,5)+select('Material','ctrl-material',['steel','aluminum','wood','concrete'],p.material)+toggle('Show Stress','showStress',p.showStress)+hint('Click canvas to set load position. Watch stress distribution change.')
+    };
+    el.innerHTML = `<div style="display:flex;flex-direction:column;gap:6px">${controls[labId]||ctrl('Speed','ctrl-speed',1,10,5,1)}</div>`;
   }
 };
 
@@ -442,12 +583,46 @@ function labAction(action) {
   else if (action === 'pause') LabSims.pause();
   else if (action === 'reset') LabSims.reset();
   else if (action === 'step') { LabSims.state.time += 1; const c=document.getElementById('lab-canvas'); if(c) LabSims.renderSim(c.getContext('2d'),c,State.currentLab?.id||'default'); updateDataOutput(); }
-  else if (action === 'record') { LabSims.state.data.push({time:LabSims.state.time,recorded:new Date().toISOString()}); showToast('Data point recorded!','success'); updateDataOutput(); }
+  else if (action === 'record') {
+    const s = LabSims.state, p = s.params, labId = State.currentLab?.id;
+    const data = {time:s.time.toFixed(2),recorded:new Date().toISOString()};
+    // Lab-specific data recording
+    if(labId==='projectile-motion') Object.assign(data,{velocity:p.velocity,angle:p.angle,gravity:p.gravity});
+    else if(labId==='circuit-sim') Object.assign(data,{voltage:p.voltage,resistance:p.resistance,current:(p.voltage/p.resistance).toFixed(4),power:(p.voltage*p.voltage/p.resistance).toFixed(2)});
+    else if(labId==='reaction-sim') Object.assign(data,{temperature:p.temperature,concentration:p.concentration,catalyst:p.catalyst,reactants:s._particles?.filter(x=>x.type<2).length,products:s._particles?.filter(x=>x.type===2).length});
+    else if(labId==='ecosystem-sim') Object.assign(data,{prey:s._eco?.prey.length,predators:s._eco?.pred.length,generation:Math.floor(s.time/10)});
+    s.data.push(data);
+    showToast(`Data point #${s.data.length} recorded!`,'success');
+    updateDataOutput();
+  }
 }
 
 function updateDataOutput() {
   const el = document.getElementById('lab-data');
-  if (el) el.textContent = JSON.stringify({time:LabSims.state.time.toFixed(2),running:LabSims.state.running,dataPoints:LabSims.state.data.length},null,2);
+  if (!el) return;
+  const s = LabSims.state, p = s.params, labId = State.currentLab?.id;
+  let output = {};
+  switch(labId) {
+    case 'plate-tectonics': {const t=s.time*0.02; output={time:s.time.toFixed(1)+'s',drift:(Math.sin(t)*2.4).toFixed(2)+' cm/yr',depth:Math.round(3400+Math.sin(t)*200)+' km',speed:p.speed,running:s.running}; break;}
+    case 'weather-patterns': output={time:s.time.toFixed(1)+'s',pressure:(1013+Math.sin(s.time*0.03)*15).toFixed(0)+' hPa',temperature:p.temp.toFixed(1)+'°C',humidity:p.humidity+'%',windSpeed:p.windSpeed+' km/h'}; break;
+    case 'cell-explorer': output={time:s.time.toFixed(1)+'s',zoom:p.zoom.toFixed(1)+'×',selected:p.selectedOrganelle||'none',organelles:'nucleus, mitochondria(5), ER, ribosomes(12)'}; break;
+    case 'dna-replication': {const split=Math.min(s.time*0.5,12); output={time:s.time.toFixed(1)+'s',basePairs:20,replicated:Math.floor(split),progress:(split/20*100).toFixed(0)+'%',speed:p.replicationSpeed+'×'}; break;}
+    case 'ecosystem-sim': output={time:s.time.toFixed(1)+'s',prey:s._eco?.prey.length||0,predators:s._eco?.pred.length||0,generation:Math.floor(s.time/10),preyGrowthRate:'r=0.1',carryingCapacity:'K=100'}; break;
+    case 'molecular-builder': output={time:s.time.toFixed(1)+'s',molecule:'H₂O (default)',bondAngle:p.bondAngle+'°',bondLength:'0.96 Å',placedAtoms:(p.atoms||[]).length,selectedAtom:p.selectedAtom}; break;
+    case 'reaction-sim': output={time:s.time.toFixed(1)+'s',temperature:p.temperature+'K',concentration:p.concentration,catalyst:p.catalyst?'Active':'None',reactants:s._particles?.filter(x=>x.type<2).length||30,products:s._particles?.filter(x=>x.type===2).length||0}; break;
+    case 'periodic-table': {const els=['H','He','Li','Be','B','C','N','O','F','Ne']; output={selected:els[p.selectedElement]||'H',atomicNumber:p.selectedElement+1,showOrbits:p.showOrbits}; break;}
+    case 'projectile-motion': {const g=p.gravity,v0=p.velocity,a=p.angle*Math.PI/180; output={velocity:p.velocity+' m/s',angle:p.angle+'°',gravity:p.gravity+' m/s²',maxHeight:(v0*v0*Math.sin(a)*Math.sin(a)/(2*g)).toFixed(1)+' m',range:(v0*v0*Math.sin(2*a)/g).toFixed(1)+' m',flightTime:(2*v0*Math.sin(a)/g).toFixed(2)+' s',launched:p.launched,trails:(p.trails||[]).length}; break;}
+    case 'optics-bench': output={focalLength:p.focalLength+'px',numRays:p.numRays,lensType:'Convex',showFocal:p.showFocal,magnification:(-p.focalLength/(300-p.focalLength)).toFixed(2)+'×'}; break;
+    case 'circuit-sim': {const V=p.voltage,R=p.resistance,I=V/R; output={voltage:V+'V',resistance:R+'Ω',current:(I*1000).toFixed(1)+' mA',power:(V*I).toFixed(2)+' W',energy:(V*I*s.time).toFixed(1)+' J'}; break;}
+    case 'sorting-viz': output={algorithm:p.algorithm,elements:p.arraySize||30,comparisons:Math.floor(s.time/2),swaps:Math.floor(s.time/4),index:s._sortIdx||0,sorted:s._arr?s._arr.every((v,i,a)=>!i||a[i-1]<=v):false}; break;
+    case 'neural-net': output={layers:'[3,5,4,2]',totalNeurons:14,totalWeights:43,learningRate:p.learningRate,epoch:Math.floor(s.time),loss:(1/(1+s.time*0.1)).toFixed(4)}; break;
+    case 'pathfinding': output={algorithm:p.algorithm,gridSize:'16×10',walls:s._grid?s._grid.flat().filter(c=>c).length:0,visited:(s._visited||[]).length,drawMode:p.drawMode}; break;
+    case 'robot-arm': output={joint1:(p.joint1*180/Math.PI).toFixed(1)+'°',joint2:(p.joint2*180/Math.PI).toFixed(1)+'°',joint3:(p.joint3*180/Math.PI).toFixed(1)+'°',gripper:p.gripOpen?'Open':'Closed',mode:p.autoMode?'Auto':'Manual'}; break;
+    case 'bridge-builder': {const stress=p.load*0.45; output={load:p.load.toFixed(0)+'%',material:p.material,maxStress:stress.toFixed(1)+' MPa',safetyFactor:(100/Math.max(stress,1)).toFixed(1),status:stress>40?'⚠️ DANGER':stress>25?'⚠️ WARNING':'✅ SAFE'}; break;}
+    default: output={time:s.time.toFixed(2),running:s.running,dataPoints:s.data.length};
+  }
+  if(s.data.length>0) output.recordedPoints = s.data.length;
+  el.textContent = JSON.stringify(output,null,2);
 }
 
 // ─── Auth (Firebase) ────────────────────────────────────────────────────────
