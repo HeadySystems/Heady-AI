@@ -42,7 +42,19 @@
 const EventEmitter = require('events');
 const crypto = require('crypto');
 
-// ─── φ-Derived Constants ────────────────────────────────────────────────────
+// ─── Trade Secret Vault Integration ─────────────────────────────────────────
+// Detection patterns and scoring weights are loaded from the centralized
+// trade-secret-vault at runtime. They are NEVER hardcoded in this file.
+// See: src/security/trade-secret-vault.js
+
+const { getSecret, CATEGORIES } = require('../security/trade-secret-vault');
+
+const _vaultSecrets = getSecret(CATEGORIES.DETECTION_PATTERNS, 'phi-governance-engine');
+const PHI_DATA_PATTERNS = _vaultSecrets?.phiPatterns || [];
+const INJECTION_PATTERNS = _vaultSecrets?.injectionPatterns || [];
+
+// ─── φ-Derived Constants (PATENTABLE — HS-067) ──────────────────────────────
+// These are part of the patent disclosure and are NOT trade secrets.
 
 const PHI  = 1.6180339887498949;
 const PSI  = 0.6180339887498949;
@@ -53,7 +65,7 @@ const PHI4 = PHI * PHI2 * PHI;  // ≈ 6.854
 // Fibonacci sequence for window sizes and thresholds
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597];
 
-// ─── PHI Anomaly Sigma Thresholds (Type 1: Statistical) ─────────────────────
+// ─── PHI Anomaly Sigma Thresholds (Type 1: Statistical — PATENTABLE) ────────
 
 const SIGMA_THRESHOLDS = Object.freeze({
     NOMINAL:  0,         // Normal operating range
@@ -61,49 +73,6 @@ const SIGMA_THRESHOLDS = Object.freeze({
     ALERT:    PHI2,      // ≈ 2.618σ — moderate anomaly, notify
     CRITICAL: PHI4,      // ≈ 6.854σ — severe anomaly, quarantine
 });
-
-// ─── PHI Data Patterns (Type 2: Compliance/HIPAA) ───────────────────────────
-// Protected Health Information detection patterns for pre-LLM quarantine
-
-const PHI_DATA_PATTERNS = [
-    // Medical Record Numbers
-    /\bMRN[:\s#]*\d{6,10}\b/i,
-    // Social Security Numbers
-    /\b\d{3}[-\s]?\d{2}[-\s]?\d{4}\b/,
-    // Medical Diagnosis Codes (ICD-10)
-    /\b[A-Z]\d{2}(\.\d{1,4})?\b/,
-    // Health Insurance Claim Numbers
-    /\b(HICN|HCPCS|CPT)[:\s#]*[A-Z0-9]{5,14}\b/i,
-    // NPI (National Provider Identifier)
-    /\bNPI[:\s#]*\d{10}\b/i,
-    // Date of Birth patterns in medical context
-    /\b(DOB|Date\s*of\s*Birth)[:\s]*\d{1,2}[/\-]\d{1,2}[/\-]\d{2,4}\b/i,
-    // Patient names in medical context
-    /\b(Patient|Pt)[:\s]*(Name|ID)[:\s]*[A-Z][a-z]+\s+[A-Z][a-z]+/i,
-    // Drug/prescription patterns
-    /\b(Rx|DEA)[:\s#]*[A-Z0-9]{7,14}\b/i,
-    // Blood type
-    /\bBlood\s*Type[:\s]*(A|B|AB|O)[+-]\b/i,
-    // Lab results
-    /\b(HbA1c|CBC|BMP|CMP|TSH|PSA)[:\s]*[\d.]+\b/i,
-];
-
-// ─── Prompt Injection Patterns (from extracted tasks) ────────────────────────
-
-const INJECTION_PATTERNS = [
-    /ignore\s+(all\s+)?previous\s+instructions/i,
-    /you\s+are\s+now\s+(a|an)\s+/i,
-    /system\s*prompt/i,
-    /jailbreak/i,
-    /reveal\s+(your|the)\s+(instructions|prompt|system)/i,
-    /bypass\s+(safety|filter|guard|content)/i,
-    /pretend\s+(you|to)\s+(are|be)\s+/i,
-    /DAN\s+(mode|jailbreak)/i,
-    /\[INST\]|\[\/INST\]|<<SYS>>|<\|system\|>/i,
-    /<script[\s>]|javascript:|data:text\/html/i,
-    /\{\{.*\}\}/,
-    /\$\{.*\}/,
-];
 
 // ─── KV Execution Store ─────────────────────────────────────────────────────
 // In-memory KV for millisecond-level step tracking (enterprise observability)
@@ -615,6 +584,7 @@ module.exports = {
     governanceMiddleware,
     wireGovernanceRoutes,
     SIGMA_THRESHOLDS,
-    PHI_DATA_PATTERNS,
-    INJECTION_PATTERNS,
+    // NOTE: PHI_DATA_PATTERNS and INJECTION_PATTERNS are NO LONGER exported.
+    // They are trade secrets loaded from ../security/trade-secret-vault.js
+    // and accessible only within this module at runtime.
 };
