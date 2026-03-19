@@ -196,7 +196,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
@@ -222,6 +222,17 @@ app.use("/api/analytics", express.json({ limit: "256kb" }));
 // Security: remove X-Powered-By
 app.disable('x-powered-by');
 
+// Admin auth middleware — validates ADMIN_TOKEN via timing-safe comparison
+function requireAdmin(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1] || req.headers['x-admin-token'];
+  const expected = process.env.ADMIN_TOKEN;
+  if (!token || !expected || token.length !== expected.length ||
+      !require('crypto').timingSafeEqual(Buffer.from(token), Buffer.from(expected))) {
+    return res.status(403).json({ error: 'Admin authentication required' });
+  }
+  next();
+}
+
 // Additional security headers and request ID generation
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -229,8 +240,7 @@ app.use((req, res, next) => {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 
   // Generate or use provided request ID
-  const crypto = require('crypto');
-  const requestId = req.get('X-Request-ID') || crypto.randomUUID();
+  const requestId = req.get('X-Request-ID') || require('crypto').randomUUID();
   req.id = requestId;
   res.setHeader('X-Request-ID', requestId);
 
@@ -298,9 +308,9 @@ const allowedOrigins = [
 app.use((req, res, next) => {
   const origin = req.get('origin');
 
-  // Check if origin is in whitelist or matches *.onrender.com pattern
-  const isAllowed = allowedOrigins.includes(origin) ||
-    (origin && origin.endsWith('.onrender.com'));
+  // Check if origin is in whitelist (no wildcard patterns)
+  const { isAllowedOrigin } = require('./shared/cors-config');
+  const isAllowed = allowedOrigins.includes(origin) || isAllowedOrigin(origin);
 
   if (isAllowed) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -521,7 +531,7 @@ app.get("/api/pulse", (req, res) => {
   res.json({
     ok: true,
     service: "heady-manager",
-    version: "3.0.0",
+    version: "4.1.0",
     ts: new Date().toISOString(),
     status: "active",
     active_layer: activeLayer,
@@ -767,7 +777,7 @@ app.get("/api/nodes/:nodeId", (req, res) => {
  *       200:
  *         description: Node activated
  */
-app.post("/api/nodes/:nodeId/activate", (req, res) => {
+app.post("/api/nodes/:nodeId/activate", requireAdmin, (req, res) => {
   const reg = loadRegistry();
   const id = req.params.nodeId.toUpperCase();
   if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
@@ -792,7 +802,7 @@ app.post("/api/nodes/:nodeId/activate", (req, res) => {
  *       200:
  *         description: Node deactivated
  */
-app.post("/api/nodes/:nodeId/deactivate", (req, res) => {
+app.post("/api/nodes/:nodeId/deactivate", requireAdmin, (req, res) => {
   const reg = loadRegistry();
   const id = req.params.nodeId.toUpperCase();
   if (!reg.nodes[id]) return res.status(404).json({ error: `Node '${id}' not found` });
@@ -818,7 +828,7 @@ app.get("/api/system/status", (req, res) => {
 
   res.json({
     system: "Heady Systems",
-    version: "3.0.0",
+    version: "4.1.0",
     environment: (reg.metadata || {}).environment || "development",
     production_ready: activeNodes === nodeList.length && nodeList.length > 0,
     uptime: process.uptime(),
@@ -843,7 +853,7 @@ app.get("/api/system/status", (req, res) => {
  *       200:
  *         description: Production activated
  */
-app.post("/api/system/production", (req, res) => {
+app.post("/api/system/production", requireAdmin, (req, res) => {
   const reg = loadRegistry();
   const ts = new Date().toISOString();
   const report = { nodes: [], tools: [], workflows: [], services: [] };
@@ -914,7 +924,7 @@ app.get("/api/pipeline/config", (req, res) => {
  *       200:
  *         description: Pipeline run result
  */
-app.post("/api/pipeline/run", async (req, res) => {
+app.post("/api/pipeline/run", requireAdmin, async (req, res) => {
   if (!pipeline) return res.status(503).json({ error: "Pipeline not loaded", reason: pipelineError });
   try {
     const result = await pipeline.run(req.body || {});
@@ -2897,7 +2907,7 @@ app.get('/api/liquid-nodes/health/check', (req, res) => {
 });
 
 // ─── HeadyVault Status ──────────────────────────────────────────────
-app.get('/api/vault/status', (req, res) => {
+app.get('/api/vault/status', requireAdmin, (req, res) => {
   const categories = {
     'ai-llm': ['ANTHROPIC_API_KEY', 'CLAUDE_API_KEY', 'OPENAI_API_KEY', 'GROQ_API_KEY', 'PERPLEXITY_API_KEY', 'HF_TOKEN', 'GEMINI_API_KEY'],
     'infrastructure': ['DATABASE_URL', 'NEON_API_KEY', 'UPSTASH_REDIS_REST_URL', 'FIREBASE_API_KEY', 'PINECONE_API_KEY'],
@@ -2919,7 +2929,7 @@ app.get('/api/vault/status', (req, res) => {
 // ─── Enhanced Health & Diagnostics ──────────────────────────────────
 const serverStartTime = Date.now();
 
-app.get('/api/diagnostics', (req, res) => {
+app.get('/api/diagnostics', requireAdmin, (req, res) => {
   const memUsage = process.memoryUsage();
   const uptime = Date.now() - serverStartTime;
   res.json({

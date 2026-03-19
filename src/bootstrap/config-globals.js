@@ -3,7 +3,10 @@
  * Extracted from heady-manager.js lines 1-145
  * Environment, event bus, MIDI bus, edge cache, secrets management
  */
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// TLS cert validation — only disable in development with explicit opt-in
+if (process.env.HEADY_DISABLE_TLS_VERIFY === 'true' && process.env.NODE_ENV !== 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 const logger = require('../utils/logger');
 const redisPool = require('../utils/redis-pool');
