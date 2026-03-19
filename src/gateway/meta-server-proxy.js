@@ -436,7 +436,7 @@ export class MCPMetaServerProxy extends EventEmitter {
     if (!server) return;
 
     // Close connection
-    try { await server.client.close?.(); } catch (_) {}
+    try { await server.client.close?.(); } catch (err) { console.error('[meta-server-proxy] upstream client close failed:', err.message || err); }
 
     // Remove all tools from this server
     for (const [qualifiedName, sId] of this._routingTable) {
@@ -527,11 +527,11 @@ export class MCPMetaServerProxy extends EventEmitter {
     // Close all upstream connections
     const closes = [];
     for (const [, server] of this._upstreams) {
-      closes.push(server.client.close?.().catch(() => {}));
+      closes.push(server.client.close?.().catch(err => console.error('[meta-server-proxy] upstream close failed:', err.message || err)));
     }
     await Promise.allSettled(closes);
 
-    await this._mcpServer?.close?.().catch(() => {});
+    await this._mcpServer?.close?.().catch(err => console.error('[meta-server-proxy] mcp server close failed:', err.message || err));
     this._initialized = false;
     this.emit('shutdown', {});
   }
@@ -717,7 +717,7 @@ export class MCPMetaServerProxy extends EventEmitter {
         const serverId = this._routingTable.get(qualifiedName);
         if (serverId) {
           // Background refresh
-          this._discoverServerTools(serverId).catch(() => {});
+          this._discoverServerTools(serverId).catch(err => console.error('[meta-server-proxy] background tool refresh failed:', err.message || err));
         }
       }
 

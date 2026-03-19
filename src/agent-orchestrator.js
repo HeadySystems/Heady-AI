@@ -120,7 +120,7 @@ class AgentOrchestrator extends EventEmitter {
         // Store result in vector memory if available
         if (this._vectorMemory && task.payload.prompt) {
           const text = `Agent task: ${task.payload.prompt.slice(0, 200)}\nResult: ${result.text.slice(0, 300)}`;
-          this._vectorMemory.store(task.id, null, text, { type: 'agent_result', taskType: task.type, agentId }).catch(() => {});
+          this._vectorMemory.store(task.id, null, text, { type: 'agent_result', taskType: task.type, agentId }).catch(err => console.error('[agent-orchestrator] vector store failed:', err.message || err));
         }
 
         return { text: result.text, provider: result.provider, model: result.model, tokens: result.tokens };

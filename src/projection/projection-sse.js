@@ -314,7 +314,7 @@ class SSEManager extends EventEmitter {
             try {
                 client.stopHeartbeat();
                 client.res.end();
-            } catch (_) {}
+            } catch (err) { console.error('[projection-sse] client close failed:', err.message || err); }
         }
         this._clients.clear();
         logger.info('[SSE] All clients closed');
@@ -337,7 +337,7 @@ const _sseManager = new SSEManager();
  */
 function createSSERouter(projectionManager) {
     let express;
-    try { express = require('express'); } catch (_) {
+    try { express = require('express'); } catch (err) {
         throw new Error('[projection-sse] express is required');
     }
 
@@ -392,7 +392,7 @@ function createSSERouter(projectionManager) {
                         res.write(_formatSSEEvent(version, t, all[t]));
                     }
                 }
-            } catch (_) {}
+            } catch (err) { console.error('[projection-sse] initial state replay failed:', err.message || err); }
         }
 
         logger.info({ clientId, types }, '[SSE] Client connected');

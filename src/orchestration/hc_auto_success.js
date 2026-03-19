@@ -119,20 +119,20 @@ try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { /* eslint-di
 let orchProtocolTasks = [];
 try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let phase5Tasks = [];
-try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
+try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let downloadsTasks = [];
-try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
+try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { /* eslint-disable-line no-empty */ }
 // ─── NEW CATALOGS (2026-03-19): Deep audit, AutoContext, Architecture fixes ───
 let autoContextTasks = [];
-try { autoContextTasks = require('./autocontext-integration-tasks.json'); } catch (e) { }
+try { autoContextTasks = require('./autocontext-integration-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let unimplementedArchTasks = [];
-try { unimplementedArchTasks = require('./unimplemented-arch-tasks.json'); } catch (e) { }
+try { unimplementedArchTasks = require('./unimplemented-arch-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let architectureFixTasks = [];
-try { architectureFixTasks = require('./architecture-fix-tasks.json'); } catch (e) { }
+try { architectureFixTasks = require('./architecture-fix-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let beneficialBundleTasks = [];
-try { beneficialBundleTasks = require('./beneficial-bundle-tasks.json'); } catch (e) { }
+try { beneficialBundleTasks = require('./beneficial-bundle-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 let autonomyEnhancementTasks = [];
-try { autonomyEnhancementTasks = require('./autonomy-enhancement-tasks.json'); } catch (e) { }
+try { autonomyEnhancementTasks = require('./autonomy-enhancement-tasks.json'); } catch (e) { /* eslint-disable-line no-empty */ }
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,
@@ -891,7 +891,7 @@ class AutoSuccessEngine extends EventEmitter {
                 this._autoContext = ctx;
                 logger.logSystem && logger.logSystem('  ∞ AutoSuccess: HeadyAutoContext wired (latent space enrichment active)');
             }
-        } catch { /* autoContext optional — enrichment degrades gracefully */ }
+        } catch (err) { console.error('[hc_auto_success] autoContext init failed:', err.message || err); }
 
         // Resource awareness via constructor
         if (opts.resourceManager) {
@@ -915,7 +915,7 @@ class AutoSuccessEngine extends EventEmitter {
                 const { getAutoContext } = require('../services/heady-auto-context');
                 const ctx = getAutoContext();
                 if (ctx) this._autoContext = ctx;
-            } catch { /* graceful */ }
+            } catch (err) { console.error('[hc_auto_success] autoContext late-bind failed:', err.message || err); }
         }
     }
 
@@ -948,7 +948,7 @@ class AutoSuccessEngine extends EventEmitter {
 
         // ═══ AUTO-COMMIT/PUSH/DEPLOY — Permanent pipeline automation ════════
         try {
-            let autoCommitDeploy = null; try { autoCommitDeploy = require("./auto-commit-deploy"); } catch(e) { /* graceful */ }
+            let autoCommitDeploy = null; try { autoCommitDeploy = require("./auto-commit-deploy"); } catch(e) { console.error('[hc_auto_success] auto-commit-deploy load failed:', e.message || e); }
             autoCommitDeploy.start();
             logger.logSystem("  ∞ AutoCommitDeploy: WIRED — event-driven auto-commit/push/deploy");
         } catch (e) {
@@ -1015,7 +1015,7 @@ class AutoSuccessEngine extends EventEmitter {
                         trigger, cycle: this.reactionCount, ...enriched.stats,
                     });
                 }
-            } catch { /* autoContext enrichment degrades gracefully */ }
+            } catch (err) { console.error('[hc_auto_success] autoContext enrichment failed:', err.message || err); }
         }
 
         // Select tasks relevant to this trigger — all tasks fire, learning from everything
@@ -1044,7 +1044,7 @@ class AutoSuccessEngine extends EventEmitter {
                     refs: { trigger, totalReactions: this.reactionCount, totalSucceeded: this.totalSucceeded, reactionDurationMs },
                     source: "auto_success_reactor",
                 });
-            } catch { /* story driver may not accept */ }
+            } catch (err) { console.error('[hc_auto_success] story driver ingest failed:', err.message || err); }
         }
 
         // Feed to eventBus — but don't trigger self (prevent infinite loop)
@@ -1132,7 +1132,7 @@ class AutoSuccessEngine extends EventEmitter {
                             severity: "low",
                             suggestedImprovements: ["Review task implementation", "Check resource availability"],
                         });
-                    } catch { /* self-critique may not accept */ }
+                    } catch (err) { console.error('[hc_auto_success] self-critique record failed:', err.message || err); }
                 }
             }
         }
@@ -1186,7 +1186,7 @@ class AutoSuccessEngine extends EventEmitter {
                         tags: ["auto_success", task.cat, terminalState],
                     });
                 }
-            } catch { /* pattern engine may not accept */ }
+            } catch (err) { console.error('[hc_auto_success] pattern engine observe failed:', err.message || err); }
         }
 
         // Record in history
@@ -1270,7 +1270,7 @@ class AutoSuccessEngine extends EventEmitter {
             if (registryWork && registryWork.length > 0) {
                 coreWorkers = registryWork;
             }
-        } catch { /* registry not available */ }
+        } catch (err) { console.error('[hc_auto_success] bee registry load failed:', err.message || err); }
 
         // Method 2: Fallback to direct require if registry didn't have it
         if (coreWorkers.length === 0) {
@@ -1287,9 +1287,9 @@ class AutoSuccessEngine extends EventEmitter {
                             coreWorkers = bee.getWork({ tasks, engine: this });
                             break;
                         }
-                    } catch { /* try next */ }
+                    } catch { /* eslint-disable-line no-empty — try next bee file */ }
                 }
-            } catch { /* ok */ }
+            } catch (err) { console.error('[hc_auto_success] bee domain require failed:', err.message || err); }
         }
 
         // Dynamic workers: each task description becomes its own worker
@@ -1370,7 +1370,7 @@ class AutoSuccessEngine extends EventEmitter {
                     }),
                 };
                 vectorMemory.add(`bee:${beeDomain}:reaction:${this.reactionCount}`, learning);
-            } catch { /* vector memory write absorbed */ }
+            } catch (err) { console.error('[hc_auto_success] vector memory write failed:', err.message || err); }
         }
 
         // ─── EMIT EVENT — other subsystems react to this domain's work ──
@@ -1497,7 +1497,7 @@ class AutoSuccessEngine extends EventEmitter {
             if (fs.existsSync(TRIAL_LEDGER_PATH)) {
                 return JSON.parse(fs.readFileSync(TRIAL_LEDGER_PATH, 'utf8'));
             }
-        } catch { /* ok */ }
+        } catch (err) { console.error('[hc_auto_success] trial ledger load failed:', err.message || err); }
         return [];
     }
 
@@ -1506,7 +1506,7 @@ class AutoSuccessEngine extends EventEmitter {
             const dir = path.dirname(TRIAL_LEDGER_PATH);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(TRIAL_LEDGER_PATH, JSON.stringify(this._trialLedger.slice(-MAX_TRIAL_ENTRIES), null, 2));
-        } catch { /* non-critical */ }
+        } catch (err) { console.error('[hc_auto_success] trial ledger save failed:', err.message || err); }
     }
 
     getTrialLedger(opts = {}) {
@@ -1542,7 +1542,7 @@ class AutoSuccessEngine extends EventEmitter {
             if (fs.existsSync(AUDIT_PATH)) {
                 return JSON.parse(fs.readFileSync(AUDIT_PATH, 'utf8'));
             }
-        } catch { /* ok */ }
+        } catch (err) { console.error('[hc_auto_success] audit load failed:', err.message || err); }
         return [];
     }
 
@@ -1551,7 +1551,7 @@ class AutoSuccessEngine extends EventEmitter {
             const dir = path.dirname(AUDIT_PATH);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(AUDIT_PATH, JSON.stringify((this._auditTrail || []).slice(-MAX_AUDIT), null, 2));
-        } catch { /* non-critical */ }
+        } catch (err) { console.error('[hc_auto_success] audit save failed:', err.message || err); }
     }
 
     getAuditTrail(opts = {}) {

@@ -27,9 +27,9 @@ const EventEmitter = require('events');
 
 // ─── Optional dependencies ────────────────────────────────────────────────────
 let pg, redis, axios;
-try { pg    = require('pg');       } catch {}
-try { redis = require('ioredis');  } catch {}
-try { axios = require('axios');    } catch {}
+try { pg    = require('pg');       } catch { /* eslint-disable-line no-empty */ }
+try { redis = require('ioredis');  } catch { /* eslint-disable-line no-empty */ }
+try { axios = require('axios');    } catch { /* eslint-disable-line no-empty */ }
 
 // =============================================================================
 // Constants
@@ -194,7 +194,7 @@ class DriftDetector extends EventEmitter {
         maxRetriesPerRequest: 1,
         enableOfflineQueue: false,
       });
-      await this._redisClient.connect().catch(() => {});
+      await this._redisClient.connect().catch(err => console.error('[drift-detector] redis connect failed:', err.message || err));
     }
 
     // Load baseline into memory
@@ -204,8 +204,8 @@ class DriftDetector extends EventEmitter {
   }
 
   async destroy() {
-    await this._pgPool?.end().catch(() => {});
-    await this._redisClient?.quit().catch(() => {});
+    await this._pgPool?.end().catch(err => console.error('[drift-detector] pg pool end failed:', err.message || err));
+    await this._redisClient?.quit().catch(err => console.error('[drift-detector] redis quit failed:', err.message || err));
   }
 
   // ---------------------------------------------------------------------------
@@ -267,7 +267,7 @@ class DriftDetector extends EventEmitter {
         'drift:last-check',
         3600,
         JSON.stringify(result)
-      ).catch(() => {});
+      ).catch(err => console.error('[drift-detector] redis cache write failed:', err.message || err));
     }
 
     // Emit events
@@ -331,7 +331,7 @@ class DriftDetector extends EventEmitter {
       this.emit('recalibrated', { reason, timestamp: new Date().toISOString() });
       console.log('[DriftDetector] Baseline recalibration complete');
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {});
+      await client.query('ROLLBACK').catch(err => console.error('[drift-detector] rollback failed:', err.message || err));
       console.error('[DriftDetector] Recalibration failed:', err.message);
       throw err;
     } finally {
@@ -425,7 +425,7 @@ class DriftDetector extends EventEmitter {
             STDDEV(confidence) AS stddev_confidence
           FROM ${this.config.currentTable}
           WHERE created_at > NOW() - INTERVAL '24 hours'
-        `).catch(() => ({ rows: [{}] }));
+        `).catch(err => { console.error('[drift-detector] structural drift query failed:', err.message || err); return { rows: [{}] }; });
 
         const total          = parseInt(rows[0]?.total        || '0');
         const clusterCount   = parseInt(rows[0]?.cluster_count || '0');
@@ -570,12 +570,12 @@ class DriftDetector extends EventEmitter {
 
     // Try Redis cache first
     if (this._redisClient) {
-      const cached = await this._redisClient.get('drift:baseline').catch(() => null);
+      const cached = await this._redisClient.get('drift:baseline').catch(err => { console.error('[drift-detector] redis baseline read failed:', err.message || err); return null; });
       if (cached) {
         try {
           this._baseline = JSON.parse(cached);
           return;
-        } catch {}
+        } catch (err) { console.error('[drift-detector] baseline cache parse failed:', err.message || err); }
       }
     }
 
@@ -608,7 +608,7 @@ class DriftDetector extends EventEmitter {
           'drift:baseline',
           1800,
           JSON.stringify(this._baseline)
-        ).catch(() => {});
+        ).catch(err => console.error('[drift-detector] redis baseline cache write failed:', err.message || err));
       }
     } catch (err) {
       console.warn('[DriftDetector] Could not load baseline:', err.message);
@@ -641,7 +641,7 @@ class DriftDetector extends EventEmitter {
               return JSON.parse(row.embedding.replace(/^\[/, '[').replace(/\]$/, ']'));
             }
             return Array.isArray(row.embedding) ? row.embedding : null;
-          } catch { return null; }
+          } catch { return null; /* eslint-disable-line no-empty — skip unparseable embeddings */ }
         })
         .filter(v => v && v.length === EMBEDDING_DIMS);
     } catch (err) {
@@ -669,7 +669,7 @@ class DriftDetector extends EventEmitter {
         deltas.push(parseFloat(rows[i - 1].overall_score) - parseFloat(rows[i].overall_score));
       }
       return deltas;
-    } catch { return []; }
+    } catch (err) { console.error('[drift-detector] historical deltas query failed:', err.message || err); return []; }
   }
 
   async _persistDriftRecord(result) {
@@ -758,7 +758,7 @@ class DriftDetector extends EventEmitter {
         score:       result.overallScore,
         timestamp:   result.timestamp,
         trajectory:  result.trajectory,
-      })).catch(() => {});
+      })).catch(err => console.error('[drift-detector] redis critical drift publish failed:', err.message || err));
     }
 
     // 3. Emit for local subscribers (e.g., HealthMonitor integration)

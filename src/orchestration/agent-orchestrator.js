@@ -25,7 +25,7 @@
 const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) { console.error('[agent-orchestrator] logger load failed:', e.message || e); }
 
 const AUDIT_PATH = path.join(__dirname, "..", "data", "agent-orchestrator-audit.jsonl");
 const PHI = 1.6180339887;
@@ -78,7 +78,7 @@ class HeadySupervisor {
 }
 
 // ─── HeadyConductor (federated routing) ────────────────────────────
-const { getConductor } = (function(){try{return require("./heady-conductor")}catch(e){return {}}})();
+const { getConductor } = (function(){try{return require("./heady-conductor")}catch(e){console.error('[agent-orchestrator] heady-conductor load failed:', e.message || e);return {}}})();
 
 class AgentOrchestrator extends EventEmitter {
     constructor(options = {}) {
@@ -281,13 +281,13 @@ class AgentOrchestrator extends EventEmitter {
             try {
                 const prunedCount = await this.vectorMem.pruneOldest(100);
                 this._audit({ type: "performance:prune_context", trigger: "high_latency", prunedCount });
-            } catch (e) { }
+            } catch (e) { console.error('[agent-orchestrator] context prune failed:', e.message || e); }
         }
     }
 
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: new Date().toISOString() });
-        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
+        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch (err) { console.error('[agent-orchestrator] audit write failed:', err.message || err); }
         this.emit("audit", entry);
     }
 
@@ -399,8 +399,8 @@ class AgentOrchestrator extends EventEmitter {
                     this.vectorMem.ingestMemory({
                         content: `STATIC REFUSAL TRIGGERED:\nAction: ${task.action}\nPayload: ${JSON.stringify(payload)}\nReason: Ill-typed arguments.`,
                         metadata: { type: "static_refusal", severity: "CRITICAL", ts: validation.ts }
-                    }).catch(() => { });
-                } catch (e) { }
+                    }).catch(err => console.error('[agent-orchestrator] static refusal memory ingest failed:', err.message || err));
+                } catch (e) { console.error('[agent-orchestrator] static refusal logging failed:', e.message || e); }
             }
 
             this._audit({ type: "security:static_refusal", action: task.action, reason: errorMsg });
@@ -496,7 +496,7 @@ class AgentOrchestrator extends EventEmitter {
                         };
                         await this.vectorMem.ingestMemory(ingestionPayload);
                     }
-                } catch { }
+                } catch (err) { console.error('[agent-orchestrator] memory store failed:', err.message || err); }
             }
 
             const taskRecord = {
@@ -647,9 +647,10 @@ class AgentOrchestrator extends EventEmitter {
         app.get("/api/orchestrator/audit", (req, res) => {
             try {
                 const lines = fs.readFileSync(AUDIT_PATH, "utf-8").trim().split("\n").slice(-100);
-                const entries = lines.map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+                const entries = lines.map(l => { try { return JSON.parse(l); } catch { return null; /* eslint-disable-line no-empty — skip malformed lines */ } }).filter(Boolean);
                 res.json({ ok: true, entries, total: entries.length });
-            } catch {
+            } catch (err) {
+                console.error('[agent-orchestrator] audit read failed:', err.message || err);
                 res.json({ ok: true, entries: [], total: 0 });
             }
         });
