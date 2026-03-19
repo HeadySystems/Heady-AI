@@ -26,6 +26,50 @@
 const logger = require('./structured-logger');
 const crypto = require('crypto');
 
+// ── In-Memory LRU Cache for Routing Decisions ─────────────────
+// Avoids re-computing routing for identical (taskType, constraints) combos
+class RoutingLRUCache {
+    constructor(maxSize = 256, ttlMs = 30000) {
+        this._map = new Map();
+        this._maxSize = maxSize;
+        this._ttlMs = ttlMs;
+    }
+
+    _key(taskType, opts) {
+        return `${taskType}|${opts.preferredModel || ''}|${opts.costConstraint || ''}|${opts.maxLatencyMs || ''}|${opts.contextSize || ''}`;
+    }
+
+    get(taskType, opts) {
+        const key = this._key(taskType, opts);
+        const entry = this._map.get(key);
+        if (!entry) return null;
+        if (Date.now() - entry.ts > this._ttlMs) {
+            this._map.delete(key);
+            return null;
+        }
+        // Move to end (most recently used)
+        this._map.delete(key);
+        this._map.set(key, entry);
+        return entry.value;
+    }
+
+    set(taskType, opts, value) {
+        const key = this._key(taskType, opts);
+        this._map.delete(key); // remove if exists for re-insertion at end
+        if (this._map.size >= this._maxSize) {
+            // Evict oldest (first key)
+            const oldest = this._map.keys().next().value;
+            this._map.delete(oldest);
+        }
+        this._map.set(key, { value, ts: Date.now() });
+    }
+
+    get size() { return this._map.size; }
+    clear() { this._map.clear(); }
+}
+
+const _routeCache = new RoutingLRUCache(256, 30000); // 256 entries, 30s TTL
+
 // ── Model Registry ──────────────────────────────────────────────
 const MODEL_REGISTRY = {
     'claude-sonnet': {
@@ -168,6 +212,15 @@ function routeTask(taskType, opts = {}) {
         contextSize,
     } = opts;
 
+    // Check LRU cache for identical routing decision (skip if _excludeModels present)
+    if (!opts._excludeModels) {
+        const cached = _routeCache.get(taskType, opts);
+        if (cached) {
+            // Return cached result with fresh routingId and timestamp
+            return { ...cached, routingId: crypto.randomBytes(6).toString('hex'), timestamp: new Date().toISOString(), routingReason: cached.routingReason + '+cached' };
+        }
+    }
+
     const routingId = crypto.randomBytes(6).toString('hex');
 
     // 1. Check for forced model override
@@ -203,7 +256,10 @@ function routeTask(taskType, opts = {}) {
         const reason = candidateKey === defaultModelKey ? 'matrix-match' : 'failover';
         if (reason === 'failover') _routingStats.failovers++;
         _recordRouting(routingId, taskType, candidateKey, reason);
-        return _buildRoutingResult(routingId, candidateKey, model, taskType, reason);
+        const result = _buildRoutingResult(routingId, candidateKey, model, taskType, reason);
+        // Cache successful routing decisions
+        if (!opts._excludeModels) _routeCache.set(taskType, opts, result);
+        return result;
     }
 
     // 4. Last resort: return any available model
@@ -334,6 +390,7 @@ function getRoutingStats() {
         totalRegistered: Object.keys(MODEL_REGISTRY).length,
         totalAvailable: _getAvailableModels().length,
         taskTypes: Object.keys(ROUTING_MATRIX),
+        cache: { size: _routeCache.size, maxSize: 256, ttlMs: 30000 },
     };
 }
 
@@ -406,4 +463,6 @@ module.exports = {
     llmRouterRoutes,
     MODEL_REGISTRY,
     ROUTING_MATRIX,
+    RoutingLRUCache,
+    _routeCache,
 };

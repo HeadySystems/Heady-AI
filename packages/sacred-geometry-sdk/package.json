@@ -1,0 +1,10 @@
+{
+  "name": "@heady/sacred-geometry-sdk",
+  "version": "1.0.0",
+  "description": "Mathematical harmony design system built on the golden ratio — phi, fibonacci, torus, metatron coordinates, and CSS custom properties",
+  "main": "index.js",
+  "author": "HeadySystems Inc.",
+  "license": "UNLICENSED",
+  "keywords": ["sacred-geometry", "golden-ratio", "phi", "fibonacci", "design-system", "css"],
+  "engines": { "node": ">=18.0.0" }
+}

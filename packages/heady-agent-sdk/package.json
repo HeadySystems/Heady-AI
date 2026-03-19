@@ -1,0 +1,27 @@
+{
+  "name": "@heady/agent-sdk",
+  "version": "1.0.0",
+  "description": "Heady Agent SDK — build, package, and publish agents for the Heady Agent Marketplace",
+  "main": "index.js",
+  "keywords": [
+    "heady",
+    "agent",
+    "marketplace",
+    "sdk",
+    "ai-agent",
+    "multi-agent"
+  ],
+  "author": "HeadySystems Inc.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/headysystems/heady.git",
+    "directory": "packages/heady-agent-sdk"
+  }
+}

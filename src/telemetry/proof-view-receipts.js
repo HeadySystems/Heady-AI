@@ -68,9 +68,11 @@ function generateReceipt(params) {
     // Update chain
     lastHash = contentHash;
 
-    // Persist to append-only log
+    // Persist to append-only log (async — non-blocking on hot path)
     const logFile = path.join(RECEIPTS_DIR, `receipts-${timestamp.split("T")[0]}.jsonl`);
-    fs.appendFileSync(logFile, JSON.stringify(receipt) + "\n");
+    fs.promises.appendFile(logFile, JSON.stringify(receipt) + "\n").catch(() => {
+        // best-effort persistence — receipt already returned to caller
+    });
 
     return receipt;
 }

@@ -94,10 +94,20 @@ const ACCOUNT_REGISTRY = {
  * Load budget configuration from YAML.
  * @returns {object} Budget config with per-provider/account limits and alert thresholds
  */
+// Budget config cache — avoids re-reading YAML on every record() call
+let _budgetConfigCache = null;
+let _budgetConfigMtime = 0;
+
 function loadBudgetConfig() {
     try {
         if (fs.existsSync(BUDGET_CONFIG_PATH)) {
-            return yaml.load(fs.readFileSync(BUDGET_CONFIG_PATH, "utf8"));
+            const stat = fs.statSync(BUDGET_CONFIG_PATH);
+            if (_budgetConfigCache && stat.mtimeMs === _budgetConfigMtime) {
+                return _budgetConfigCache;
+            }
+            _budgetConfigCache = yaml.load(fs.readFileSync(BUDGET_CONFIG_PATH, "utf8"));
+            _budgetConfigMtime = stat.mtimeMs;
+            return _budgetConfigCache;
         }
     } catch (err) {
         logger.error("[ProviderTracker] Budget config load error:", err.message);
@@ -190,12 +200,10 @@ function record(event) {
         ...metadata,
     };
 
-    // ── 1. Persist to JSONL ─────────────────────────────────────────
-    try {
-        fs.appendFileSync(USAGE_LOG, JSON.stringify(entry) + "\n");
-    } catch (err) {
+    // ── 1. Persist to JSONL (async — non-blocking on hot path) ─────
+    fs.promises.appendFile(USAGE_LOG, JSON.stringify(entry) + "\n").catch(err => {
         logger.error("[ProviderTracker] Write error:", err.message);
-    }
+    });
 
     // ── 2. Update in-memory aggregates ──────────────────────────────
     const data = { tokensIn, tokensOut, costUsd, latencyMs, error };

@@ -1,0 +1,8 @@
+{
+  "name": "@heady/billing",
+  "version": "1.0.0",
+  "description": "Unified billing — usage-based metering, subscriptions, invoicing, revenue reporting",
+  "main": "index.js",
+  "author": "HeadySystems Inc.",
+  "license": "UNLICENSED"
+}
