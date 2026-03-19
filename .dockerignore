@@ -44,3 +44,15 @@ docs
 notebooks
 *.md
 !README.md
+
+# Non-production directories
+_archive
+_downloads
+audit
+context
+desktop-overlay
+HeadyAI-IDE
+distribution
+
+# Ensure assets are included (og:images)
+!assets/
