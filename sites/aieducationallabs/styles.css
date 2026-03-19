@@ -41,6 +41,10 @@
   --lab-physics: #3B82F6;
   --lab-cs: #EC4899;
   --lab-eng: #F97316;
+  --lab-wetchem: #06B6D4;
+  --lab-micro: #8B5CF6;
+  --lab-enviro: #22C55E;
+  --lab-anatomy: #E11D48;
 
   /* Spacing (φ-scaled) */
   --sp-xs: 4px;
@@ -258,6 +262,10 @@ body {
 .lab-card[data-discipline="physics"] .lab-icon { background: linear-gradient(135deg, var(--lab-physics), #60A5FA); }
 .lab-card[data-discipline="cs"] .lab-icon { background: linear-gradient(135deg, var(--lab-cs), #F472B6); }
 .lab-card[data-discipline="engineering"] .lab-icon { background: linear-gradient(135deg, var(--lab-eng), #FB923C); }
+.lab-card[data-discipline="wetchem"] .lab-icon { background: linear-gradient(135deg, var(--lab-wetchem), #22D3EE); }
+.lab-card[data-discipline="micro"] .lab-icon { background: linear-gradient(135deg, var(--lab-micro), #A78BFA); }
+.lab-card[data-discipline="enviro"] .lab-icon { background: linear-gradient(135deg, var(--lab-enviro), #4ADE80); }
+.lab-card[data-discipline="anatomy"] .lab-icon { background: linear-gradient(135deg, var(--lab-anatomy), #FB7185); }
 
 .lab-card .lab-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
 .lab-card .lab-desc { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
