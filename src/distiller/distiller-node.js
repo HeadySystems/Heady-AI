@@ -16,7 +16,7 @@
  */
 
 const express = require('express');
-const { createLogger } = require('../services/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 
 const log = getLogger('heady-distiller', 'intelligence');
 

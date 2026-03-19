@@ -1,7 +1,7 @@
 'use strict';
 
 const { recipeRegistry } = require('./recipe-registry');
-const { createLogger } = require('../services/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 const log = getLogger('recipe-router', 'distiller');
 
 const PSI = 0.6180339887;

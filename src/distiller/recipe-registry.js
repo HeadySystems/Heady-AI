@@ -1,7 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../services/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 const log = getLogger('recipe-registry', 'distiller');
 
 const PSI = 0.6180339887;
