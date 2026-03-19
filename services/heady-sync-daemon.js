@@ -87,11 +87,13 @@ class RemoteRegistry {
     _classifyRole(name) {
         // HeadyAI remotes are the source of truth
         if (name.startsWith('headyai')) return REMOTE_ROLES.SOURCE;
+        // HeadySystems main is also a source (receives external contributions)
+        if (name === 'hs-main') return REMOTE_ROLES.SOURCE;
         // Azure remotes trigger CI/CD
         if (name.startsWith('azure-')) return REMOTE_ROLES.DEPLOY;
         // Production remote is deploy target
         if (name === 'production') return REMOTE_ROLES.DEPLOY;
-        // HeadySystems are mirrors
+        // HeadySystems others are mirrors
         if (name.startsWith('hs-')) return REMOTE_ROLES.MIRROR;
         // Everything else is a mirror
         return REMOTE_ROLES.MIRROR;
@@ -888,8 +890,8 @@ class HeadySyncDaemon {
                 const sortedMerges = needsMerge.sort((a, b) => b.priority - a.priority);
 
                 for (const remote of sortedMerges) {
-                    // Only merge from sources (not mirrors or deploy targets)
-                    if (remote.role !== REMOTE_ROLES.SOURCE) continue;
+                    // Merge from sources and any remote that has commits we're behind on
+                    if (remote.role !== REMOTE_ROLES.SOURCE && remote.role !== REMOTE_ROLES.MIRROR) continue;
 
                     const result = this.merger.merge(remote.remote, 'main');
                     cycle.steps.merges.push(result);
