@@ -1,0 +1,60 @@
+{
+  "_note": "Sentry DSN Registry — created by Full-Spectrum Beneficial Actions pipeline. Org: headyconnection-inc. Team: headyconnection-inc.",
+  "_created": "2026-03-19",
+  "projects": {
+    "heady-manager": {
+      "slug": "heady-manager",
+      "platform": "node",
+      "dsn": "EXISTING — check Sentry dashboard",
+      "services": ["heady-manager"]
+    },
+    "auth-session-server": {
+      "slug": "auth-session-server",
+      "platform": "node",
+      "dsn": "https://1dec8f2ffb045ee2eb9626691cd5c3f5@o4510998791192576.ingest.us.sentry.io/4511070479908865",
+      "services": ["auth-session-server"]
+    },
+    "edge-proxy": {
+      "slug": "edge-proxy",
+      "platform": "javascript",
+      "dsn": "https://6406c097a1faefda63a7bc8fce0576a2@o4510998791192576.ingest.us.sentry.io/4511070479908866",
+      "services": ["edge-proxy", "edge-router", "edge-worker"]
+    },
+    "liquid-gateway-worker": {
+      "slug": "liquid-gateway-worker",
+      "platform": "javascript",
+      "dsn": "https://0eeb0f1ac37a8c294dc8800163d61e29@o4510998791192576.ingest.us.sentry.io/4511070479843328",
+      "services": ["liquid-gateway-worker"]
+    },
+    "api-gateway": {
+      "slug": "api-gateway",
+      "platform": "node",
+      "dsn": "https://c673a5da4da16fdbe4770eee023ef93a@o4510998791192576.ingest.us.sentry.io/4511070479908864",
+      "services": ["api-gateway"]
+    },
+    "headyme-frontend": {
+      "slug": "headyme-frontend",
+      "platform": "javascript",
+      "dsn": "https://f942f6c5a0844358f9a45fe714638832@o4510998791192576.ingest.us.sentry.io/4511070480629760",
+      "services": ["headyme.com", "headysystems.com", "headyconnection.org"]
+    },
+    "headybuddy-frontend": {
+      "slug": "headybuddy-frontend",
+      "platform": "javascript",
+      "dsn": "https://939fc67bcd6cc5c052978326dc3da6a0@o4510998791192576.ingest.us.sentry.io/4511070480629762",
+      "services": ["headybuddy.org", "headybuddy.com"]
+    },
+    "heady-mcp-server": {
+      "slug": "heady-mcp-server",
+      "platform": "node",
+      "dsn": "https://55230208fcb40ae7af617bb394e5cb93@o4510998791192576.ingest.us.sentry.io/4511070480629763",
+      "services": ["headymcp.com", "mcp-transport", "mcp-service"]
+    },
+    "heady-ai-cloudrun": {
+      "slug": "heady-ai-cloudrun",
+      "platform": "node",
+      "dsn": "https://4cf894b835a5ddcc47e577a72d3cd2e8@o4510998791192576.ingest.us.sentry.io/4511070480629761",
+      "services": ["heady-ai.com", "ai-router", "cloud-run-origin"]
+    }
+  }
+}
