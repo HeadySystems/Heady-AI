@@ -490,7 +490,11 @@ const LabSims = {
       'optics-bench':{focalLength:150,lensX:0.5,numRays:5,showFocal:true},'circuit-sim':{voltage:12,resistance:100,showElectrons:true},
       'sorting-viz':{algorithm:'bubble',speed:1,arraySize:30},'neural-net':{learningRate:0.1,layers:[3,5,4,2],showWeights:true,epoch:0},
       'pathfinding':{algorithm:'astar',showVisited:true,drawMode:'wall'},'circuit-design':{inputs:[1,0],gateType:'AND'},
-      'robot-arm':{joint1:0,joint2:0,joint3:0,gripOpen:true,autoMode:true},'bridge-builder':{load:0,material:'steel',showStress:true}
+      'robot-arm':{joint1:0,joint2:0,joint3:0,gripOpen:true,autoMode:true},'bridge-builder':{load:0,material:'steel',showStress:true},
+      'titration':{volume:0,pH:2.5,indicator:true,equivalenceReached:false,buddyStep:0},'distillation':{temp:25,fraction:0,condenserOn:true,heating:false,buddyStep:0},'chromatography':{solventFront:0,uvOn:false,spotted:false,buddyStep:0},
+      'gram-stain':{step:0,stainTime:0,buddyStep:0},'microscope-sim':{objective:4,focusLevel:50,slide:'blood',oilApplied:false,buddyStep:0},'bacterial-culture':{zone:0,incubated:false,cfuCount:0,buddyStep:0},
+      'water-quality':{site:'stream',pH:7.2,DO:8.1,turbidity:12,nitrate:3.5,buddyStep:0},'soil-analysis':{sand:40,silt:35,clay:25,percolation:0,buddyStep:0},'biodiversity-survey':{quadrats:0,speciesCount:0,diversity:0,buddyStep:0},
+      'frog-dissection':{incisionMade:false,skinReflected:false,organsExposed:false,selectedOrgan:null,buddyStep:0},'skeleton-explorer':{selectedBone:null,identified:0,region:'full',buddyStep:0},'heart-dissection':{sectionMade:false,selectedChamber:null,tracingPath:false,buddyStep:0}
     };
     this.state.params = {...(defaults[labId]||{})};
     this.renderSim(ctx, canvas, labId);
