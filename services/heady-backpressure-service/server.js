@@ -257,6 +257,15 @@ class HeadyBackpressureService {
   _setupRoutes() {
     this.app.use(express.json());
 
+    // Security headers
+    this.app.use((req, res, next) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+      res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+      next();
+    });
+
     this.app.get('/health', (_req, res) => {
       const pressure = this.calculateSystemPressure();
       const coherence = 1 - pressure;

@@ -249,6 +249,15 @@ class HeadyResourceCrystallizerService {
     this.log = createLogger(this.serviceName);
     this.app = express();
     this.app.use(express.json({ limit: '2mb' }));
+
+    // Security headers
+    this.app.use((req, res, next) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+      res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+      res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+      next();
+    });
     this.pool = new ResourcePool(config.capacity || FIB[12]);
     this.engine = new AllocationEngine(this.pool);
     this.monitor = new DemandSignalMonitor();
