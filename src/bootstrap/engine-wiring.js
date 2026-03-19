@@ -55,11 +55,24 @@ function wireEngines(app, deps = {}) {
         const hydrated = vault.hydrate();
         logger.logNodeActivity("CONDUCTOR", `  🔐 Vector Vault: ${vault.getStats().totalSecrets} secrets in 3D space, ${hydrated} hydrated into process.env`);
 
-        // Vault API routes
-        app.get("/api/vault/stats", (req, res) => res.json(vault.getStats()));
-        app.get("/api/vault/list", (req, res) => res.json({ ok: true, secrets: vault.list() }));
-        app.get("/api/vault/audit", (req, res) => res.json({ ok: true, entries: vault.getAuditLog(parseInt(req.query.limit) || 20) }));
-        app.post("/api/vault/query", (req, res) => {
+        // Vault API routes — protected by API key middleware
+        const vaultAuth = (req, res, next) => {
+            const expectedKey = process.env.HEADY_API_KEY || process.env.ADMIN_TOKEN || process.env.HEADY_ADMIN_TOKEN;
+            if (!expectedKey) {
+                return res.status(503).json({ error: "Vault API key not configured" });
+            }
+            const authHeader = req.headers.authorization || "";
+            const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+            const providedKey = req.headers["x-api-key"] || req.headers["x-admin-token"] || bearerToken;
+            if (!providedKey || providedKey !== expectedKey) {
+                return res.status(401).json({ error: "Unauthorized — valid API key required for vault access" });
+            }
+            next();
+        };
+        app.get("/api/vault/stats", vaultAuth, (req, res) => res.json(vault.getStats()));
+        app.get("/api/vault/list", vaultAuth, (req, res) => res.json({ ok: true, secrets: vault.list() }));
+        app.get("/api/vault/audit", vaultAuth, (req, res) => res.json({ ok: true, entries: vault.getAuditLog(parseInt(req.query.limit) || 20) }));
+        app.post("/api/vault/query", vaultAuth, (req, res) => {
             const { query, topK } = req.body;
             if (!query) return res.status(400).json({ error: "query required" });
             res.json({ ok: true, results: vault.querySecrets(query, topK || 5) });

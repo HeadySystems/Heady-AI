@@ -49,6 +49,8 @@ let _neonApi = null;
 let _connectionCount = 0;
 let _queryCount = 0;
 let _lastError = null;
+let _queryLatencies = [];           // rolling window of last 100 query latencies (ms)
+const MAX_LATENCY_SAMPLES = 100;
 
 // ═══════════════════════════════════════════════════════════════
 // Connection Pool
@@ -78,7 +80,9 @@ async function connect() {
         const { Pool } = require('../core/heady-neon');
         _pool = new Pool({
             connectionString,
-            ssl: { rejectUnauthorized: false },
+            ssl: {
+                rejectUnauthorized: process.env.NODE_ENV === 'production',
+            },
             max: 10,
             idleTimeoutMillis: 30_000,
             connectionTimeoutMillis: 10_000,
@@ -124,8 +128,14 @@ async function query(text, params = []) {
 
     try {
         _queryCount++;
+        const queryStart = Date.now();
         const result = await _pool.query(text, params);
-        return { ok: true, rows: result.rows, rowCount: result.rowCount };
+        const latencyMs = Date.now() - queryStart;
+        _queryLatencies.push(latencyMs);
+        if (_queryLatencies.length > MAX_LATENCY_SAMPLES) {
+            _queryLatencies = _queryLatencies.slice(-MAX_LATENCY_SAMPLES);
+        }
+        return { ok: true, rows: result.rows, rowCount: result.rowCount, latencyMs };
     } catch (err) {
         _lastError = err.message;
         logger.error("[neon-db] Query failed", { error: err.message, query: text.slice(0, 100) });
@@ -233,6 +243,53 @@ async function createBranch(projectId, branchName, parentBranchId = null) {
 // Health & Status
 // ═══════════════════════════════════════════════════════════════
 
+/**
+ * Connection pool health check — verifies pool is alive with a lightweight query.
+ * @returns {Promise<{ ok: boolean, totalCount: number, idleCount: number, waitingCount: number, latencyMs: number }>}
+ */
+async function poolHealthCheck() {
+    if (!_pool) {
+        return { ok: false, error: "Pool not initialized", totalCount: 0, idleCount: 0, waitingCount: 0 };
+    }
+    const start = Date.now();
+    try {
+        const client = await _pool.connect();
+        await client.query("SELECT 1");
+        client.release();
+        const latencyMs = Date.now() - start;
+        return {
+            ok: true,
+            totalCount: _pool.totalCount || 0,
+            idleCount: _pool.idleCount || 0,
+            waitingCount: _pool.waitingCount || 0,
+            latencyMs,
+        };
+    } catch (err) {
+        return { ok: false, error: err.message, totalCount: 0, idleCount: 0, waitingCount: 0 };
+    }
+}
+
+/**
+ * Get query latency statistics from the rolling window.
+ * @returns {{ count: number, avgMs: number, p50Ms: number, p95Ms: number, p99Ms: number, maxMs: number }}
+ */
+function getQueryLatencyStats() {
+    if (_queryLatencies.length === 0) {
+        return { count: 0, avgMs: 0, p50Ms: 0, p95Ms: 0, p99Ms: 0, maxMs: 0 };
+    }
+    const sorted = [..._queryLatencies].sort((a, b) => a - b);
+    const count = sorted.length;
+    const sum = sorted.reduce((s, v) => s + v, 0);
+    return {
+        count,
+        avgMs: Math.round(sum / count),
+        p50Ms: sorted[Math.floor(count * 0.5)],
+        p95Ms: sorted[Math.floor(count * 0.95)],
+        p99Ms: sorted[Math.floor(count * 0.99)],
+        maxMs: sorted[count - 1],
+    };
+}
+
 function health() {
     return {
         service: "neon-db",
@@ -244,7 +301,13 @@ function health() {
             connectionCount: _connectionCount,
             queryCount: _queryCount,
             lastError: _lastError,
+            latency: getQueryLatencyStats(),
         },
+        pool: _pool ? {
+            totalCount: _pool.totalCount || 0,
+            idleCount: _pool.idleCount || 0,
+            waitingCount: _pool.waitingCount || 0,
+        } : null,
         hasConnectionString: !!_getConnectionString(),
         hasApiKey: !!_getApiKey(),
         schemaPath: "db/schema.sql",
@@ -398,6 +461,8 @@ module.exports = {
     migrateIaaS,
     disconnect,
     health,
+    poolHealthCheck,
+    getQueryLatencyStats,
     neonApi,
     listProjects,
     getProject,

@@ -260,8 +260,7 @@ class GraphBuilder {
 
   /**
    * Reconstruct a GraphBuilder from a serialized JSON object.
-   * Condition functions are restored using new Function() with a restricted scope.
-   * Only use with trusted, validated input.
+   * Uses new Function() with validation instead of eval() for safety.
    */
   static fromJSON(json) {
     const builder = new GraphBuilder(json.id);
@@ -271,10 +270,15 @@ class GraphBuilder {
     for (const edge of json.edges) {
       let condFn = null;
       if (edge.condition) {
+        // Validate condition string — must be a simple arrow/function expression, no dangerous tokens
+        const forbidden = /\b(require|import|process|global|__dirname|__filename|child_process|exec|spawn)\b/;
+        if (forbidden.test(edge.condition)) {
+          throw new Error(`Unsafe condition in edge ${edge.from}→${edge.to}: contains forbidden token`);
+        }
         try {
-          condFn = new Function('ctx', `'use strict'; return (${edge.condition})(ctx);`);
-        } catch (err) {
-          throw new Error(`Invalid edge condition from "${edge.from}" to "${edge.to}": ${err.message}`);
+          condFn = new Function('ctx', `"use strict"; return (${edge.condition})(ctx);`);
+        } catch (parseErr) {
+          throw new Error(`Invalid condition in edge ${edge.from}→${edge.to}: ${parseErr.message}`);
         }
       }
       builder.addEdge(edge.from, edge.to, condFn, edge.label);

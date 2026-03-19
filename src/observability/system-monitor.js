@@ -89,14 +89,17 @@ let incidentManager = null;
 let intervalId = null;
 
 // ── Logging ─────────────────────────────────────────────────────
+let _logDirEnsured = false;
 function log(level, msg) {
     const line = `[WATCHDOG] [${new Date().toISOString()}] [${level}] ${msg}`;
     logger.logSystem(line);
-    try {
+    // Async file write — non-blocking on scan hot path
+    if (!_logDirEnsured) {
         const dir = path.dirname(CONFIG.logFile);
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        fs.appendFileSync(CONFIG.logFile, line + "\n");
-    } catch { /* best-effort */ }
+        try { fs.mkdirSync(dir, { recursive: true }); } catch { /* exists */ }
+        _logDirEnsured = true;
+    }
+    fs.promises.appendFile(CONFIG.logFile, line + "\n").catch(() => { /* best-effort */ });
 }
 
 // ── Utility: exec with fallback ─────────────────────────────────

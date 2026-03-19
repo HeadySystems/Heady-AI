@@ -1,0 +1,14 @@
+{
+  "plans": [
+    { "id": "free", "name": "Free", "price": 0, "interval": "month", "features": ["10K vectors", "10 pipeline runs/mo", "100K LLM tokens", "50 agent executions", "Community support"] },
+    { "id": "pro", "name": "Pro", "price": 4900, "interval": "month", "features": ["1M vectors", "500 pipeline runs/mo", "10M LLM tokens", "5K agent executions", "Email support", "Sacred Geometry UI", "Custom agents"] },
+    { "id": "enterprise", "name": "Enterprise", "price": 49900, "interval": "month", "features": ["Unlimited vectors", "Unlimited pipeline runs", "Unlimited LLM tokens", "Unlimited agent executions", "Dedicated support", "SOC 2 compliance", "Custom SLAs", "On-prem option", "HeadyGuard governance", "HeadyIntel reports"] },
+    { "id": "custom", "name": "Custom", "price": -1, "interval": "annual", "features": ["Everything in Enterprise", "Custom agent development", "Architecture consulting", "White-label option", "Dedicated infrastructure"] }
+  ],
+  "addons": [
+    { "id": "heady-guard", "name": "HeadyGuard", "price": 9900, "interval": "month", "description": "Governance-as-a-service: kill-switch, audit trail, hallucination watchdog" },
+    { "id": "heady-intel", "name": "HeadyIntel", "price": 50000, "interval": "month", "description": "Weekly AI-generated competitive intelligence reports" },
+    { "id": "heady-mesh", "name": "HeadyMesh", "price": 2900, "interval": "month", "description": "Per-agent monitoring dashboard with auto-healing" },
+    { "id": "sacred-geometry-sdk", "name": "Sacred Geometry SDK License", "price": 99900, "interval": "year", "description": "Design system built on mathematical harmony" }
+  ]
+}

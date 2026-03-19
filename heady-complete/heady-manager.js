@@ -31,7 +31,17 @@ const PORT = process.env.PORT || 3301;
 // ── Global middleware ──
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || '*',
+  origin: process.env.CORS_ORIGINS?.split(',') || [
+    'https://headysystems.com',
+    'https://www.headysystems.com',
+    'https://manager.headysystems.com',
+    'https://admin.headysystems.com',
+    'https://headyme.com',
+    'https://headyio.com',
+    'https://headybuddy.org',
+    'https://headymcp.com',
+    'https://headyconnection.org',
+  ],
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));

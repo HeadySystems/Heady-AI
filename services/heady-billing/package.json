@@ -1,0 +1,8 @@
+{
+  "name": "@heady/billing",
+  "version": "1.0.0",
+  "description": "Unified Billing — usage-based, subscription, licensing, platform-fees, consulting; Stripe-ready",
+  "main": "index.js",
+  "author": "HeadySystems Inc.",
+  "license": "UNLICENSED"
+}
