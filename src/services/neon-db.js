@@ -78,7 +78,7 @@ async function connect() {
         const { Pool } = require('../core/heady-neon');
         _pool = new Pool({
             connectionString,
-            ssl: { rejectUnauthorized: false },
+            ssl: { rejectUnauthorized: process.env.PG_SSL_REJECT_UNAUTHORIZED !== 'false' },
             max: 10,
             idleTimeoutMillis: 30_000,
             connectionTimeoutMillis: 10_000,
