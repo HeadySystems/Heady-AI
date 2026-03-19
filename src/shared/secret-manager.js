@@ -21,7 +21,10 @@ const logger = createLogger('secret-manager');
 const SECRET_CACHE_TTL_MS = fib(13) * 1000;       // 233 seconds
 const SECRET_REFRESH_INTERVAL_MS = fib(12) * 1000; // 144 seconds
 const MAX_FETCH_RETRIES = fib(5);                   // 5 retries
-const GCP_PROJECT_ID = process.env.GCP_PROJECT_ID || 'gen-lang-client-0920560496';
+const GCP_PROJECT_ID = process.env.GCP_PROJECT_ID;
+if (!GCP_PROJECT_ID) {
+  logger.warn('[secret-manager] GCP_PROJECT_ID not set — Secret Manager unavailable');
+}
 const SECRET_PREFIX = 'heady-';
 
 // ═══════════════════════════════════════════════════════════
