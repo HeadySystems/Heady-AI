@@ -1,17 +1,11 @@
 {
-  "name": "headyai-ide",
+  "name": "windsurf-ultra",
   "version": "1.0.0",
-  "description": "HeadyAI-IDE — Cloud-First AI Development Environment by HeadySystems",
   "main": "main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "start": "electron .",
-    "start:web": "vite --host",
-    "package:win": "electron-builder --win",
-    "package:linux": "electron-builder --linux",
-    "package:mac": "electron-builder --mac"
+    "start": "electron ."
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -21,27 +15,13 @@
     "lucide-react": "^0.564.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.13.0",
-    "xterm": "^5.3.0",
-    "xterm-addon-fit": "^0.8.0",
-    "xterm-addon-web-links": "^0.9.0"
+    "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.24",
-    "electron-builder": "^24.13.3",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.8",
     "tailwindcss": "^4.1.18",
-    "vite": "^5.1.4"
-  },
-  "build": {
-    "appId": "com.headysystems.headyai-ide",
-    "productName": "HeadyAI-IDE",
-    "directories": { "output": "dist-electron" },
-    "files": ["main.js", "build/**/*"],
-    "win": { "target": ["nsis", "portable"] },
-    "linux": { "target": ["AppImage", "deb"], "category": "Development" },
-    "mac": { "target": ["dmg"] },
-    "publish": { "provider": "github", "owner": "HeadyMe", "repo": "headyai-ide" }
+    "vite": "^8.0.0"
   }
 }

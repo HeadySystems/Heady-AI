@@ -20,8 +20,8 @@
     "clean": "rm -rf dist/"
   },
   "dependencies": {
-    "express": "^4.22.1",
-    "three": "^0.183.2"
+    "express": "^5.2.1",
+    "three": "^0.163.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
