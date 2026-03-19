@@ -68,8 +68,6 @@ const HOSTNAME_VERTICAL_MAP = {
   'headysystems.com':      'headysystems',
   'enterprise.headysystems.com': 'headysystems',
   'heady-ai.com':           'heady-ai',
-  'headyai.com':            'heady-ai',
-  'www.headyai.com':        'heady-ai',
   'ai.headyme.com':        'heady-ai',
   'headyconnection.com':   'headyconnection',
   'headyconnection.org':   'headyconnection',

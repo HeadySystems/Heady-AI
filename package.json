@@ -80,5 +80,12 @@
   "offline": {
     "nodeModulesPath": "./offline-packages/node_modules",
     "pythonPackagesPath": "./offline-packages/python-libs"
+  },
+  "overrides": {
+    "protobufjs": ">=7.4.0",
+    "underscore": ">=1.13.7",
+    "minimatch": ">=3.1.2",
+    "undici": ">=6.19.0",
+    "flatted": ">=3.3.2"
   }
 }

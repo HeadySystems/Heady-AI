@@ -8,7 +8,7 @@ Applies all critical fixes across all 9 live domains:
 4. Favicon links for all domains
 5. OG image meta tags for all domains
 6. Sitemap generation for all domains
-7. headyai.com — replace redirect with full landing page
+7. heady-ai.com — replace redirect with full landing page
 8. robots.txt generation for all domains
 
 Zero placeholders. Every line is production-ready.
@@ -40,7 +40,7 @@ DOMAINS = {
             "websites/sites/headyme.com/index.html",
         ],
     },
-    "headyai.com": {
+    "heady-ai.com": {
         "name": "Heady AI",
         "title": "Heady AI — Intelligence Routing Hub",
         "description": "AI capabilities showcase, model playground, research tools, and intelligence routing. Powered by Continuous Semantic Logic and 384D vector space.",
@@ -418,8 +418,8 @@ def main():
     
     print()
     
-    # 4. Fix headyai.com redirect
-    print("[4/4] Checking headyai.com for redirect fix...")
+    # 4. Fix heady-ai.com redirect
+    print("[4/4] Checking heady-ai.com for redirect fix...")
     # The repo already has proper HTML files for heady-ai.com
     # We just need to make sure they're being served instead of the redirect
     heady_ai_sources = [
@@ -451,7 +451,7 @@ def main():
     print(f"  Security headers: Added to Cloudflare Worker")
     print()
     print("Next steps:")
-    print("  1. headyai.com needs deployment config update to serve full HTML instead of redirect")
+    print("  1. heady-ai.com needs deployment config update to serve full HTML instead of redirect")
     print("  2. All sitemaps need to be deployed alongside HTML files")
     print("  3. Run git commit and push to trigger deployment")
 
