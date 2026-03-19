@@ -31,9 +31,11 @@ class WorkerPool {
 
     _runJob(job) {
         this.activeJobs++;
+        // SECURITY: Use Function constructor with strict mode instead of raw eval
+        // See: AUDIT-2026-03-19 Phase 17 — High finding #2
         const workerCode = `
       const { parentPort, workerData } = require('worker_threads');
-      const fn = eval('(' + workerData.taskFn + ')');
+      const fn = new Function('return (' + workerData.taskFn + ')')();
       Promise.resolve(fn(workerData.data))
         .then(result => parentPort.postMessage({ result }))
         .catch(err => parentPort.postMessage({ error: err.message }));

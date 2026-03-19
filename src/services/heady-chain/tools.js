@@ -431,17 +431,13 @@ class ToolRegistry {
             return { output: logs.join('\n'), error: err.message, language };
           }
         } else if (language === 'shell') {
-          try {
-            const output = execSync(code, {
-              timeout,
-              encoding: 'utf8',
-              maxBuffer: 1024 * 1024,
-              shell: true,
-            });
-            return { output: output.trim(), language };
-          } catch (err) {
-            return { output: err.stdout?.trim() || '', error: err.message, language };
-          }
+          // SECURITY: Shell execution disabled in production — RCE vector
+          // See: AUDIT-2026-03-19 Phase 17 — Critical finding #3
+          return {
+            output: '',
+            error: 'Shell execution is disabled in production for security. Use heady_coder tool instead.',
+            language,
+          };
         }
         throw new Error(`Unsupported language: ${language}`);
       },

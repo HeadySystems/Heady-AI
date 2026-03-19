@@ -8,12 +8,17 @@
 const HEADY_DOMAINS = [
   'headyme.com',
   'headysystems.com',
-  'heady-ai.com',
-  'headyos.com',
+  'headyai.com',
+  'headybuddy.com',
+  'headybuddy.org',
+  'headymcp.com',
+  'headyio.com',
+  'headybot.com',
+  'headyapi.com',
+  'headylens.com',
+  'headyfinance.com',
   'headyconnection.org',
   'headyconnection.com',
-  'headyex.com',
-  'headyfinance.com',
   'admin.headysystems.com',
 ];
 
