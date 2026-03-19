@@ -255,6 +255,14 @@ const SERVICE_MANIFEST = [
         endpoints: ['/api/hf/tokens'],
         events: { emits: ['token:rotated'], reacts: [] },
     },
+    {
+        id: 'phi-governance',
+        module: '../../governance/phi-governance-engine',
+        factory: 'getPhiGovernance',
+        infra: ['cloudflare', 'sentry', 'upstash', 'neon'],
+        endpoints: ['/api/governance/health', '/api/governance/scan', '/api/governance/quarantine', '/api/governance/receipts', '/api/governance/trace'],
+        events: { emits: ['scan:complete', 'quarantine:added'], reacts: ['gateway:request', 'auth:failure', 'security:alert'] },
+    },
 
     // ═══ Digital Presence ════════════════════════════════════════════════
     {
