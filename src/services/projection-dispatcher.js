@@ -25,6 +25,8 @@ class ProjectionDispatcher extends EventEmitter {
         this.activeLayer = "local";
         this.projectionEngine = null;
         this.projectionGovernance = null;
+        this.projectionService = null;   // Milestone Alpha — ephemeral agent dispatch
+        this.vectorBridge = null;         // Zero-Hour Mandate 2 — type-safe coordinate handshakes
         this.domainRouter = null;
         this.uiRegistry = null;
         this.llmRouter = null;
@@ -72,6 +74,24 @@ class ProjectionDispatcher extends EventEmitter {
             logger.logNodeActivity("PROJ_DISPATCH", "  ⚖️  Projection Governance: LOADED");
         } catch (err) {
             logger.logNodeActivity("PROJ_DISPATCH", `  ⚠ Projection Governance not loaded: ${err.message}`);
+        }
+
+        // ── ProjectionService (Milestone Alpha — The Dispatcher) ──
+        try {
+            const { getProjectionService } = require("../services/projection-service");
+            this.projectionService = getProjectionService();
+            logger.logNodeActivity("PROJ_DISPATCH", "  🚀 ProjectionService: LOADED (ephemeral agent dispatch)");
+        } catch (err) {
+            logger.logNodeActivity("PROJ_DISPATCH", `  ⚠ ProjectionService not loaded: ${err.message}`);
+        }
+
+        // ── VectorBridge (Zero-Hour Mandate 2) ──
+        try {
+            const { VectorBridge } = require("../core/vector-bridge");
+            this.vectorBridge = new VectorBridge({ serviceId: 'projection-dispatcher' });
+            logger.logNodeActivity("PROJ_DISPATCH", "  🔗 VectorBridge: LOADED (type-safe coordinate handshakes)");
+        } catch (err) {
+            logger.logNodeActivity("PROJ_DISPATCH", `  ⚠ VectorBridge not loaded: ${err.message}`);
         }
 
         // ── Domain Router ──
@@ -196,6 +216,22 @@ class ProjectionDispatcher extends EventEmitter {
         // Projection Governance
         if (this.projectionGovernance && this.projectionGovernance.governanceRoutes) {
             this.projectionGovernance.governanceRoutes(app);
+        }
+
+        // ProjectionService (Milestone Alpha)
+        if (this.projectionService) {
+            try {
+                const { projectionServiceRoutes } = require("../services/projection-service");
+                projectionServiceRoutes(app);
+            } catch { /* non-fatal */ }
+        }
+
+        // VectorBridge routes
+        if (this.vectorBridge) {
+            try {
+                const { registerVectorBridgeRoutes } = require("../core/vector-bridge");
+                registerVectorBridgeRoutes(app);
+            } catch { /* non-fatal */ }
         }
 
         // Domain Router
