@@ -4,7 +4,7 @@
   "description": "Heady\u2122 Shared Foundation Modules \u2014 \u03c6-math, logger, health, errors, config, types",
   "author": "Eric Haywood <eric@headyconnection.org>",
   "license": "UNLICENSED",
-  "type": "module",
+
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
