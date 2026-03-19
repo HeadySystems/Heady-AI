@@ -301,55 +301,188 @@ function updateDataOutput() {
   if (el) el.textContent = JSON.stringify({time:LabSims.state.time.toFixed(2),running:LabSims.state.running,dataPoints:LabSims.state.data.length},null,2);
 }
 
-// ─── Auth ───────────────────────────────────────────────────────────────────
+// ─── Auth (Firebase) ────────────────────────────────────────────────────────
 function renderAuth() {
+  if (State.user) { navigateTo('/profile'); return ''; }
   return `<div class="auth-container"><div class="glass-card">
-    <h2>Sign In to AI Edu Labs</h2>
+    <h2 id="auth-title">Sign In to AI Edu Labs</h2>
+    <div id="auth-error" style="display:none;color:var(--danger);background:rgba(239,68,68,0.1);padding:var(--sp-sm) var(--sp-md);border-radius:8px;margin-bottom:var(--sp-md);font-size:0.9rem"></div>
     <div class="form-group"><label for="auth-email">Email</label><input type="email" id="auth-email" class="form-input" placeholder="you@university.edu"></div>
     <div class="form-group"><label for="auth-pass">Password</label><input type="password" id="auth-pass" class="form-input" placeholder="••••••••"></div>
-    <button class="btn btn-primary btn-lg" style="width:100%" onclick="doLogin()">Sign In</button>
+    <div id="auth-confirm-group" class="form-group" style="display:none"><label for="auth-confirm">Confirm Password</label><input type="password" id="auth-confirm" class="form-input" placeholder="••••••••"></div>
+    <button class="btn btn-primary btn-lg" style="width:100%" id="auth-submit-btn" onclick="doLogin()">Sign In</button>
     <div class="divider">or</div>
-    <button class="btn btn-secondary btn-lg" style="width:100%" onclick="doGoogleLogin()">🔑 Sign in with Google</button>
-    <p style="text-align:center;margin-top:var(--sp-lg);color:var(--text-muted);font-size:0.85rem">
-      Don't have an account? <a href="#" onclick="doSignup();return false" style="color:var(--primary)">Sign Up</a>
+    <button class="btn btn-secondary btn-lg" style="width:100%" onclick="doGoogleLogin()">
+      <svg width="18" height="18" viewBox="0 0 48 48" style="vertical-align:middle;margin-right:8px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Sign in with Google
+    </button>
+    <button class="btn btn-secondary btn-lg" style="width:100%;margin-top:var(--sp-sm)" onclick="doAnonymousLogin()">👤 Continue as Guest</button>
+    <p style="text-align:center;margin-top:var(--sp-lg);color:var(--text-muted);font-size:0.85rem" id="auth-toggle-text">
+      Don't have an account? <a href="#" onclick="toggleAuthMode();return false" style="color:var(--primary)" id="auth-toggle-link">Sign Up</a>
+    </p>
+    <p style="text-align:center;margin-top:var(--sp-xs);font-size:0.8rem">
+      <a href="#" onclick="doPasswordReset();return false" style="color:var(--text-muted)">Forgot password?</a>
     </p>
   </div></div>`;
 }
 
-function doLogin() {
-  const email = document.getElementById('auth-email')?.value;
-  const pass = document.getElementById('auth-pass')?.value;
-  if (!email || !pass) { showToast('Please fill in all fields', 'warning'); return; }
-  // Simulate auth (replace with Firebase Auth in production)
-  State.user = { email, name: email.split('@')[0], role: email.includes('admin') ? 'admin' : 'subscriber' };
+let authMode = 'login'; // 'login' or 'signup'
+
+function toggleAuthMode() {
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  const title = document.getElementById('auth-title');
+  const btn = document.getElementById('auth-submit-btn');
+  const confirm = document.getElementById('auth-confirm-group');
+  const toggle = document.getElementById('auth-toggle-link');
+  const toggleText = document.getElementById('auth-toggle-text');
+  if (authMode === 'signup') {
+    title.textContent = 'Create Your Account';
+    btn.textContent = 'Create Account';
+    btn.setAttribute('onclick', 'doSignup()');
+    confirm.style.display = 'block';
+    toggleText.innerHTML = 'Already have an account? <a href="#" onclick="toggleAuthMode();return false" style="color:var(--primary)">Sign In</a>';
+  } else {
+    title.textContent = 'Sign In to AI Edu Labs';
+    btn.textContent = 'Sign In';
+    btn.setAttribute('onclick', 'doLogin()');
+    confirm.style.display = 'none';
+    toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuthMode();return false" style="color:var(--primary)">Sign Up</a>';
+  }
+  clearAuthError();
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+function clearAuthError() {
+  const el = document.getElementById('auth-error');
+  if (el) el.style.display = 'none';
+}
+
+function firebaseErrorMsg(code) {
+  const map = {
+    'auth/user-not-found': 'No account found with that email. Try signing up.',
+    'auth/wrong-password': 'Incorrect password. Try again or reset your password.',
+    'auth/invalid-credential': 'Invalid credentials. Check your email and password.',
+    'auth/email-already-in-use': 'An account already exists with that email. Try signing in.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
+    'auth/popup-closed-by-user': 'Google sign-in was cancelled.',
+    'auth/network-request-failed': 'Network error. Check your connection and try again.'
+  };
+  return map[code] || 'Authentication error: ' + code;
+}
+
+function setUserFromFirebase(fbUser) {
+  State.user = {
+    uid: fbUser.uid,
+    email: fbUser.email || 'anonymous',
+    name: fbUser.displayName || (fbUser.email ? fbUser.email.split('@')[0] : 'Guest'),
+    photoURL: fbUser.photoURL || null,
+    role: (fbUser.email && fbUser.email.includes('admin')) ? 'admin' : 'subscriber',
+    isAnonymous: fbUser.isAnonymous || false
+  };
   State.isAdmin = State.user.role === 'admin';
   State.tosAccepted = loadFromLocal().tosAccepted || false;
   saveToLocal();
-  showToast('Welcome, ' + State.user.name + '!', 'success');
-  updateAuthUI();
-  navigateTo('/labs');
+  // Log analytics event
+  if (typeof firebaseAnalytics !== 'undefined') firebaseAnalytics.logEvent('login', { method: fbUser.providerData?.[0]?.providerId || 'anonymous' });
 }
 
-function doGoogleLogin() {
-  State.user = { email: 'user@gmail.com', name: 'Lab User', role: 'subscriber' };
-  State.isAdmin = false; saveToLocal(); showToast('Signed in via Google!', 'success');
-  updateAuthUI(); navigateTo('/labs');
+function doLogin() {
+  const email = document.getElementById('auth-email')?.value?.trim();
+  const pass = document.getElementById('auth-pass')?.value;
+  if (!email || !pass) { showAuthError('Please fill in all fields.'); return; }
+  clearAuthError();
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  firebaseAuth.signInWithEmailAndPassword(email, pass)
+    .then(cred => {
+      setUserFromFirebase(cred.user);
+      showToast('Welcome back, ' + State.user.name + '!', 'success');
+      updateAuthUI();
+      navigateTo('/labs');
+    })
+    .catch(err => {
+      showAuthError(firebaseErrorMsg(err.code));
+      btn.disabled = false; btn.textContent = 'Sign In';
+    });
 }
 
 function doSignup() {
-  showToast('Registration opens soon! Use Sign In for now.', 'info');
+  const email = document.getElementById('auth-email')?.value?.trim();
+  const pass = document.getElementById('auth-pass')?.value;
+  const confirm = document.getElementById('auth-confirm')?.value;
+  if (!email || !pass || !confirm) { showAuthError('Please fill in all fields.'); return; }
+  if (pass !== confirm) { showAuthError('Passwords do not match.'); return; }
+  clearAuthError();
+  const btn = document.getElementById('auth-submit-btn');
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  firebaseAuth.createUserWithEmailAndPassword(email, pass)
+    .then(cred => {
+      return cred.user.updateProfile({ displayName: email.split('@')[0] }).then(() => cred.user);
+    })
+    .then(user => {
+      setUserFromFirebase(user);
+      showToast('Account created! Welcome, ' + State.user.name + '!', 'success');
+      updateAuthUI();
+      navigateTo('/labs');
+    })
+    .catch(err => {
+      showAuthError(firebaseErrorMsg(err.code));
+      btn.disabled = false; btn.textContent = 'Create Account';
+    });
+}
+
+function doGoogleLogin() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('profile');
+  provider.addScope('email');
+  firebaseAuth.signInWithPopup(provider)
+    .then(result => {
+      setUserFromFirebase(result.user);
+      showToast('Welcome, ' + State.user.name + '!', 'success');
+      updateAuthUI();
+      navigateTo('/labs');
+    })
+    .catch(err => {
+      if (err.code !== 'auth/popup-closed-by-user') showToast(firebaseErrorMsg(err.code), 'error');
+    });
+}
+
+function doAnonymousLogin() {
+  firebaseAuth.signInAnonymously()
+    .then(cred => {
+      setUserFromFirebase(cred.user);
+      showToast('Signed in as Guest. Create an account to save your progress!', 'info');
+      updateAuthUI();
+      navigateTo('/labs');
+    })
+    .catch(err => showToast(firebaseErrorMsg(err.code), 'error'));
+}
+
+function doPasswordReset() {
+  const email = document.getElementById('auth-email')?.value?.trim();
+  if (!email) { showAuthError('Enter your email above, then click "Forgot password?"'); return; }
+  firebaseAuth.sendPasswordResetEmail(email)
+    .then(() => showToast('Password reset email sent to ' + email, 'success'))
+    .catch(err => showAuthError(firebaseErrorMsg(err.code)));
 }
 
 function doLogout() {
-  State.user = null; State.isAdmin = false; State.tosAccepted = false;
-  saveToLocal(); updateAuthUI(); showToast('Signed out', 'info'); navigateTo('/');
+  firebaseAuth.signOut().then(() => {
+    State.user = null; State.isAdmin = false; State.tosAccepted = false;
+    saveToLocal(); updateAuthUI(); showToast('Signed out', 'info'); navigateTo('/');
+  }).catch(err => showToast('Sign out failed: ' + err.message, 'error'));
 }
 
 function updateAuthUI() {
   const authNav = document.getElementById('nav-auth');
-  const adminNav = document.getElementById('nav-admin');
   if (State.user) {
-    authNav.textContent = '🚪 Sign Out'; authNav.href = '#'; authNav.onclick = (e) => { e.preventDefault(); doLogout(); };
+    const label = State.user.isAnonymous ? '👤 Guest' : '🚪 Sign Out';
+    authNav.textContent = label; authNav.href = '#'; authNav.onclick = (e) => { e.preventDefault(); doLogout(); };
     authNav.className = 'btn btn-secondary btn-sm';
   } else {
     authNav.textContent = 'Sign In'; authNav.href = '#/auth'; authNav.onclick = null;
@@ -545,7 +678,6 @@ window.addEventListener('offline', () => { State.offline = true; showToast('You 
 // ─── Init ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   restoreState();
-  updateAuthUI();
   VoiceCtrl.init();
   document.getElementById('voice-toggle').addEventListener('click', () => VoiceCtrl.toggle());
   document.getElementById('hamburger-btn').addEventListener('click', () => {
@@ -554,8 +686,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('hamburger-btn').setAttribute('aria-expanded', nav.classList.contains('open'));
   });
   window.addEventListener('hashchange', () => { handleRoute(); initLabIfNeeded(); });
-  handleRoute();
-  initLabIfNeeded();
+
+  // Firebase Auth state listener — restores session on page reload
+  if (typeof firebaseAuth !== 'undefined') {
+    firebaseAuth.onAuthStateChanged(fbUser => {
+      if (fbUser) {
+        setUserFromFirebase(fbUser);
+        updateAuthUI();
+        // Re-render current page if on auth page
+        if (State.route === '/auth') navigateTo('/labs');
+      } else {
+        State.user = null; State.isAdmin = false;
+        updateAuthUI();
+      }
+      // Initial route render after auth state is known
+      handleRoute();
+      initLabIfNeeded();
+    });
+  } else {
+    // Fallback if Firebase not loaded
+    updateAuthUI();
+    handleRoute();
+    initLabIfNeeded();
+  }
+
   // Register service worker
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 });

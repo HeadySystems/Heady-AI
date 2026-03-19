@@ -73,6 +73,25 @@
     <div class="modal-content" id="modal-content"></div>
   </div>
 
+  <!-- Firebase SDK (compat for vanilla JS) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+  <script>
+    // Firebase Configuration — AI Educational Labs
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_lz-bbri2Sk2fGKW3PnEA6JBQapem3nQ",
+      authDomain: "aieducationallabs.firebaseapp.com",
+      projectId: "aieducationallabs",
+      storageBucket: "aieducationallabs.firebasestorage.app",
+      messagingSenderId: "450433825766",
+      appId: "1:450433825766:web:b2bd9892a94d76cef83427",
+      measurementId: "G-K979N3BTQ8"
+    };
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    const firebaseAuth = firebase.auth();
+    const firebaseAnalytics = firebase.analytics();
+  </script>
   <script src="app.js"></script>
 </body>
 </html>
