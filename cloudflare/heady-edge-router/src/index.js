@@ -85,7 +85,7 @@ function getOriginConfig(hostname) {
     'headyweb.com':         { pathPrefix: '', cacheTtl: CACHE_TTL.static },
     'headymcp.com':         { pathPrefix: '/mcp', cacheTtl: 0 },
     'headyio.com':          { pathPrefix: '', cacheTtl: CACHE_TTL.static },
-    'headybuddy.com':       { pathPrefix: '', cacheTtl: CACHE_TTL.static },
+    'headybuddy.org':       { pathPrefix: '', cacheTtl: CACHE_TTL.static },
     'headyapi.com':         { pathPrefix: '/api', cacheTtl: CACHE_TTL.api },
     'headyos.com':          { pathPrefix: '', cacheTtl: CACHE_TTL.static },
   };

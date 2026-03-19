@@ -35,7 +35,7 @@ export default {
 
     // ── Domain Aliases (non-canonical → canonical) ──
     const DOMAIN_ALIASES = {
-      'headybuddy.org':  'headybuddy.com',
+      'headybuddy.org':  'headybuddy.org',
     };
     const resolvedHost = DOMAIN_ALIASES[host] || host;
 
@@ -43,7 +43,7 @@ export default {
     const ROUTES = {
       'headysystems.com':    'sites/headysystems.html',
       'headyme.com':         'sites/headyme.html',
-      'headybuddy.com':      'sites/headybuddy.html',
+      'headybuddy.org':      'sites/headybuddy.html',
       'headymcp.com':        'sites/headymcp.html',
       'headyio.com':         'sites/headyio.html',
       'headybot.com':        'sites/headybot.html',

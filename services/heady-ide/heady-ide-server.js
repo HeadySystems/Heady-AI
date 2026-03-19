@@ -29,7 +29,7 @@ const PORT = parseInt(process.env.HEADY_IDE_PORT || process.env.PORT || '8080', 
 const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || '').split(',').concat([
   'https://heady-ai.com', 'https://headyme.com', 'https://headysystems.com',
   'https://headyapi.com', 'https://headymcp.com', 'https://headyio.com',
-  'https://headybot.com', 'https://headybuddy.com', 'https://headyconnection.org',
+  'https://headybot.com', 'https://headybuddy.org', 'https://headyconnection.org',
   'https://headylens.com', 'https://headyfinance.com',
   'http://localhost:3000', // dev only
 ]).filter(Boolean);

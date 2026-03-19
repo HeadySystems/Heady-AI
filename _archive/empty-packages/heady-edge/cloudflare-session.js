@@ -34,7 +34,7 @@ const R2_BUCKETS = {
 const PAGES_SITES = [
   { domain: 'headyme.com',           project: 'headyme',         accent: '#4c8fff' },
   { domain: 'headysystems.com',      project: 'headysystems',    accent: '#6366f1' },
-  { domain: 'headybuddy.com',        project: 'headybuddy',      accent: '#10b981' },
+  { domain: 'headybuddy.org',        project: 'headybuddy',      accent: '#10b981' },
   { domain: 'headyai.com',           project: 'headyai',         accent: '#f59e0b' },
   { domain: 'headybrain.com',        project: 'headybrain',      accent: '#ec4899' },
   { domain: 'headyguard.com',        project: 'headyguard',      accent: '#ef4444' },

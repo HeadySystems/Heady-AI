@@ -188,7 +188,7 @@ const DOMAIN_ENV_MAP = Object.freeze({
   'headyme.com':         'HEADY_URL_HEADYME',
   'headysystems.com':    'HEADY_URL_HEADYSYSTEMS',
   'headyos.com':         'HEADY_URL_HEADYOS',
-  'headybuddy.com':      'HEADY_URL_HEADYBUDDY',
+  'headybuddy.org':      'HEADY_URL_HEADYBUDDY',
   'headymcp.com':        'HEADY_URL_HEADYMCP',
   'headyapi.com':        'HEADY_URL_HEADYAPI',
   'heady.io':            'HEADY_URL_HEADYIO',

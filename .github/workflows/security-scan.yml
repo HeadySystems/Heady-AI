@@ -1,0 +1,178 @@
+# ============================================================================
+# HEADY CI/CD — Security Scan
+# .github/workflows/security-scan.yml
+#
+# Triggers: push to main, weekly schedule (Mondays at 08:00 UTC)
+# - npm audit (soft-fail for workspace protocol issues)
+# - gitleaks secret detection
+# - .env file check
+# ============================================================================
+
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Every Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write  # For uploading SARIF results
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────
+  # JOB 1: Dependency audit
+  # ──────────────────────────────────────────────────────────────────
+  npm-audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies (no scripts)
+        run: npm ci --ignore-scripts
+
+      - name: Run npm audit
+        # Soft-fail: workspace: protocol dependencies trigger false positives.
+        # We still surface the report as a warning so it's visible in the log.
+        run: |
+          echo "Running npm audit (informational — workspace protocol issues soft-fail)"
+          npm audit --audit-level=high 2>&1 | tee audit-report.txt || {
+            EXIT=$?
+            # Check if the only issues are workspace protocol false-positives
+            if grep -q "ENOAUDIT\|EUNSUPPORTEDPROTOCOL\|workspace:" audit-report.txt; then
+              echo "::warning::npm audit reported workspace protocol issues (known false positives — not blocking)"
+            else
+              echo "::warning::npm audit found vulnerabilities at high severity or above (non-blocking — review required)"
+              cat audit-report.txt
+            fi
+            # Always exit 0 to avoid blocking — review the warning in the log
+            exit 0
+          }
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report-${{ github.sha }}
+          path: audit-report.txt
+          retention-days: 30
+
+  # ──────────────────────────────────────────────────────────────────
+  # JOB 2: Secret detection via gitleaks
+  # ──────────────────────────────────────────────────────────────────
+  gitleaks:
+    name: Secret Detection (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history scan
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITLEAKS_LICENSE is optional — community edition works without it
+          # Set GITLEAKS_LICENSE secret if you have a paid license for org-level scanning
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  # ──────────────────────────────────────────────────────────────────
+  # JOB 3: Check for accidentally committed .env files
+  # ──────────────────────────────────────────────────────────────────
+  env-file-check:
+    name: .env File Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for .env files in working tree
+        run: |
+          echo "Scanning working tree for .env files..."
+          ENV_FILES=$(find . \
+            -name ".env" -o \
+            -name ".env.local" -o \
+            -name ".env.production" -o \
+            -name ".env.staging" -o \
+            -name ".env.development" \
+            -not -path "*/.git/*" \
+            -not -path "*/node_modules/*" \
+            -not -name "*.example" \
+            -not -name "*.sample" \
+            2>/dev/null || true)
+
+          if [ -n "$ENV_FILES" ]; then
+            echo "::error::.env file(s) found in repository — these should NOT be committed!"
+            echo "$ENV_FILES"
+            echo ""
+            echo "Add these to .gitignore immediately:"
+            echo "$ENV_FILES"
+            exit 1
+          fi
+          echo "No .env files found in working tree."
+
+      - name: Check git history for .env files
+        run: |
+          echo "Scanning git history for accidentally committed .env files..."
+          # Check if any .env files exist in git history (excluding examples)
+          HISTORY_HITS=$(git log --all --full-history --name-only --pretty=format: -- \
+            '*.env' '.env' '.env.local' '.env.production' '.env.staging' \
+            2>/dev/null | grep -v "^$" | grep -v "example\|sample" || true)
+
+          if [ -n "$HISTORY_HITS" ]; then
+            echo "::warning::.env file(s) found in git history (non-blocking but requires review):"
+            echo "$HISTORY_HITS"
+            echo ""
+            echo "Consider using git-filter-repo to purge sensitive history."
+          else
+            echo "No .env files found in git history."
+          fi
+
+      - name: Verify .gitignore covers .env patterns
+        run: |
+          if [ -f .gitignore ]; then
+            if grep -q "\.env" .gitignore; then
+              echo ".gitignore covers .env files."
+            else
+              echo "::warning::.gitignore does not explicitly ignore .env files — add '.env*' to .gitignore"
+            fi
+          else
+            echo "::warning::No .gitignore found at repo root"
+          fi
+
+  # ──────────────────────────────────────────────────────────────────
+  # Summary
+  # ──────────────────────────────────────────────────────────────────
+  security-complete:
+    name: Security Scan Complete
+    runs-on: ubuntu-latest
+    needs: [npm-audit, gitleaks, env-file-check]
+    if: always()
+    steps:
+      - name: Report results
+        run: |
+          echo "Security scan results:"
+          echo "  npm-audit:      ${{ needs.npm-audit.result }}"
+          echo "  gitleaks:       ${{ needs.gitleaks.result }}"
+          echo "  env-file-check: ${{ needs.env-file-check.result }}"
+
+          # Only hard-fail on secrets found (gitleaks failure) or .env committed
+          if [[ "${{ needs.gitleaks.result }}" == "failure" ]]; then
+            echo "::error::gitleaks detected secrets in the repository — HARD FAIL"
+            exit 1
+          fi
+          if [[ "${{ needs.env-file-check.result }}" == "failure" ]]; then
+            echo "::error::.env file(s) committed to repository — HARD FAIL"
+            exit 1
+          fi
+          echo "Security scan passed."

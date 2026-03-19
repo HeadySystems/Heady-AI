@@ -25,7 +25,7 @@ const corsOptions = {
             'https://headyconnection.com',
             'https://headyex.com',
             'https://headyfinance.com',
-            'https://headybuddy.com',
+            'https://headybuddy.org',
         ];
         if (whitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true);

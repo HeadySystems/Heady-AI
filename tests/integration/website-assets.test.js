@@ -24,7 +24,7 @@ const fs = require('fs');
 const WEBSITES_DIR = path.resolve(__dirname, '../../websites');
 const EXPECTED_SITES = [
   'headyme.com', 'headysystems.com', 'headyconnection.org',
-  'headybuddy.com', 'headymcp.com', 'heady.io',
+  'headybuddy.org', 'headymcp.com', 'heady.io',
   'headyconnection.com', 'headybot.com', 'headyapi.com'
 ];
 
@@ -70,7 +70,7 @@ module.exports = {
   },
 
   'dashboard sites include fetch() API integration': () => {
-    const dashboardSites = ['headyme.com', 'headysystems.com', 'headybuddy.com'];
+    const dashboardSites = ['headyme.com', 'headysystems.com', 'headybuddy.org'];
     const noFetch = [];
     for (const site of dashboardSites) {
       const html = fs.readFileSync(path.join(WEBSITES_DIR, site, 'index.html'), 'utf8');
