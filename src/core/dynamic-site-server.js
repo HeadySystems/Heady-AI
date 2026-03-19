@@ -1410,6 +1410,23 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ── CTA Sub-Routes (render main page instead of 404) ────
+  const CTA_ROUTES = ['/catalog', '/dashboard', '/viz', '/keys', '/settings', '/api-keys', '/docs', '/features', '/about'];
+  if (CTA_ROUTES.includes(url.pathname)) {
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache',
+      'X-Heady-Site': site.brand,
+      'X-Heady-Route': url.pathname,
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'SAMEORIGIN',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+    });
+    res.end(renderSite(site, host));
+    return;
+  }
+
   // ── Serve dynamic page ──────────────────────────────────
   res.writeHead(200, {
     'Content-Type': 'text/html; charset=utf-8',
