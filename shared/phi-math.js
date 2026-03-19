@@ -387,4 +387,5 @@ module.exports = {
   cosineSimilarity, normalize,
   // Colab
   COLAB_RUNTIMES,
+  phiTimeout: phiMs,
 };
