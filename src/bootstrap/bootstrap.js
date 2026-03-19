@@ -47,6 +47,7 @@ const MAX_PHASE_RETRIES = fib(4); // 3
 
 /** Phase names (ordered) */
 const PHASE_NAMES = Object.freeze([
+  'PreBootValidation',
   'Config',
   'Logger',
   'EventBus',
@@ -82,6 +83,47 @@ let _booted = false;
  * @property {Function|null}   teardown
  * @property {string}          [error]
  */
+
+// Phase 0 — Pre-Boot Module Validation
+async function phasePreBootValidation() {
+  const CRITICAL_MODULES = [
+    '../memory/vector-memory',
+    '../csl/csl-engine',
+    '../orchestration/heady-conductor',
+    '../pipeline/pipeline-core',
+    '../auto-success/auto-success-engine',
+    '../core/event-bus',
+    '../core/heady-logger',
+  ];
+
+  const found = [];
+  const missing = [];
+
+  for (const mod of CRITICAL_MODULES) {
+    try {
+      require.resolve(mod);
+      found.push(mod);
+      log.debug(`Pre-boot: module found — ${mod}`);
+    } catch {
+      missing.push(mod);
+      log.warn(`Pre-boot: MISSING critical module — ${mod}`);
+    }
+  }
+
+  log.info('Pre-boot module validation complete', {
+    total: CRITICAL_MODULES.length,
+    found: found.length,
+    missing: missing.length,
+  });
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Pre-boot validation failed: ${missing.length} critical module(s) missing:\n  - ${missing.join('\n  - ')}`
+    );
+  }
+
+  return null; // no teardown needed
+}
 
 // Phase 1 — Config
 async function phaseConfig() {
@@ -331,6 +373,7 @@ async function phaseReady() {
 // ─── Phase Table ─────────────────────────────────────────────────────────────
 
 const PHASES = [
+  { name: 'PreBootValidation', fn: phasePreBootValidation },
   { name: 'Config',       fn: phaseConfig },
   { name: 'Logger',       fn: phaseLogger },
   { name: 'EventBus',     fn: phaseEventBus },
