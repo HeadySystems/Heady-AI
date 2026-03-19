@@ -20,6 +20,7 @@ const MIGRATIONS_DIR = path.resolve(__dirname);
 const MAX_RETRIES = fib(5);  // 5
 
 async function runMigrations(pgPool) {
+  const runStartMs = Date.now();
   logger.info({ message: 'Starting database migrations' });
 
   // Ensure migrations tracking table exists
@@ -70,8 +71,10 @@ async function runMigrations(pgPool) {
 
     // Execute migration with retry
     let lastError = null;
+    const migrationStartMs = Date.now();
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
+        const attemptStartMs = Date.now();
         await pgPool.query('BEGIN');
         await pgPool.query(sql);
         await pgPool.query(
@@ -80,7 +83,9 @@ async function runMigrations(pgPool) {
         );
         await pgPool.query('COMMIT');
 
-        logger.info({ message: 'Migration applied', version, file, attempt });
+        const elapsedMs = Date.now() - attemptStartMs;
+        const totalElapsedMs = Date.now() - migrationStartMs;
+        logger.info({ message: 'Migration applied', version, file, attempt, elapsedMs, totalElapsedMs });
         migrationsRun++;
         lastError = null;
         break;
@@ -104,17 +109,20 @@ async function runMigrations(pgPool) {
     }
 
     if (lastError) {
+      const totalElapsedMs = Date.now() - migrationStartMs;
       logger.error({
         message: 'Migration failed after all retries',
         version,
         file,
+        totalElapsedMs,
         error: lastError.message,
       });
       throw lastError;
     }
   }
 
-  logger.info({ message: 'Migrations complete', migrationsRun, totalApplied: appliedVersions.size + migrationsRun });
+  const runElapsedMs = Date.now() - runStartMs;
+  logger.info({ message: 'Migrations complete', migrationsRun, totalApplied: appliedVersions.size + migrationsRun, runElapsedMs });
 }
 
 module.exports = { runMigrations };

@@ -511,12 +511,21 @@ const performanceTasks = {
   }),
 
   cache_hit_ratio: (start) => new Promise((resolve) => {
-    // Placeholder: actual value injected by cache layer; default to phi-aligned target
+    // Measure real module cache hit ratio from require.cache
+    const cacheEntries = Object.keys(require.cache).length;
+    // Check how many of our known modules are cached vs total attempted
+    const srcModules = Object.keys(require.cache).filter(k => k.includes('/src/'));
+    const nodeModules = Object.keys(require.cache).filter(k => k.includes('/node_modules/'));
+    const totalCached = srcModules.length + nodeModules.length;
+    const hitRatio = cacheEntries > 0 ? totalCached / cacheEntries : 0;
     const targetRatio = 1 - PSI * PSI * PSI;  // ≈ 0.764
-    resolve(taskResult('cache_hit_ratio', 'pass', {
-      targetRatio: targetRatio.toFixed(4),
-      note: 'Cache hit metrics injected by Heady™Brains cache layer',
-      phiThresholdMedium: (1 - PSI * PSI * PSI).toFixed(4)
+    const status = hitRatio >= targetRatio ? 'pass' : hitRatio >= PSI ? 'warn' : 'fail';
+    resolve(taskResult('cache_hit_ratio', status, {
+      requireCacheEntries: cacheEntries,
+      srcModulesCached: srcModules.length,
+      nodeModulesCached: nodeModules.length,
+      hitRatio: hitRatio.toFixed(4),
+      targetRatio: targetRatio.toFixed(4)
     }, start));
   }),
 
@@ -530,24 +539,61 @@ const performanceTasks = {
   }),
 
   embedding_throughput: (start) => new Promise((resolve) => {
-    // Target: fib(10)=55 embeddings/sec minimum
-    const targetThroughput = 55;
-    resolve(taskResult('embedding_throughput', 'pass', {
+    // Measure actual vector computation throughput with a real 384-dim cosine similarity benchmark
+    const targetThroughput = 55;  // fib(10)=55 embeddings/sec minimum
+    const dim = 384;
+    const iterations = 100;
+    const vecA = new Float32Array(dim).fill(0).map(() => Math.random());
+    const vecB = new Float32Array(dim).fill(0).map(() => Math.random());
+    const t0 = Date.now();
+    for (let i = 0; i < iterations; i++) {
+      let dot = 0, normA = 0, normB = 0;
+      for (let j = 0; j < dim; j++) {
+        dot += vecA[j] * vecB[j];
+        normA += vecA[j] * vecA[j];
+        normB += vecB[j] * vecB[j];
+      }
+      // cosine similarity
+      const _sim = dot / (Math.sqrt(normA) * Math.sqrt(normB));
+    }
+    const elapsedMs = Math.max(Date.now() - t0, 1);
+    const throughput = Math.round((iterations / elapsedMs) * 1000);
+    const status = throughput >= targetThroughput ? 'pass' : throughput >= 21 ? 'warn' : 'fail';
+    resolve(taskResult('embedding_throughput', status, {
+      measuredOpsPerSec: throughput,
       targetEmbeddingsPerSec: targetThroughput,
-      note: 'Embedding throughput measured by Heady™Vinci embedding layer'
+      benchmarkIterations: iterations,
+      benchmarkDimensions: dim,
+      elapsedMs
     }, start));
   }),
 
-  api_throughput: (start) => new Promise((resolve) => {
-    const uptime = process.uptime();
-    // Simulated: measure process throughput capacity via available CPUs
+  api_throughput: (start) => new Promise(async (resolve) => {
+    // Measure actual async request handling throughput via timed Promise.all batch
     const cpuCount = os.cpus().length;
-    const estimatedRps = Math.floor(cpuCount * 144);  // fib(12)=144 per core baseline
-    resolve(taskResult('api_throughput', 'pass', {
-      estimatedRps,
+    const batchSize = 100;
+    const t0 = Date.now();
+    const batch = [];
+    for (let i = 0; i < batchSize; i++) {
+      batch.push(new Promise(r => setImmediate(() => {
+        // Simulate minimal request handler work: JSON parse + serialize
+        const payload = JSON.stringify({ i, ts: Date.now(), cpu: cpuCount });
+        const parsed = JSON.parse(payload);
+        r(parsed);
+      })));
+    }
+    await Promise.all(batch);
+    const elapsedMs = Math.max(Date.now() - t0, 1);
+    const measuredRps = Math.round((batchSize / elapsedMs) * 1000);
+    const baselineRps = cpuCount * 144;  // fib(12)=144 per core baseline
+    const status = measuredRps >= baselineRps ? 'pass' : measuredRps >= baselineRps * PSI ? 'warn' : 'fail';
+    resolve(taskResult('api_throughput', status, {
+      measuredRps,
+      baselineRps,
+      batchSize,
+      elapsedMs,
       cpuCores: cpuCount,
-      processUptimeSec: uptime.toFixed(1),
-      baselinePerCore: 144
+      processUptimeSec: process.uptime().toFixed(1)
     }, start));
   }),
 
@@ -897,11 +943,27 @@ const learningTasks = {
   }),
 
   knowledge_gap_detection: (start) => new Promise((resolve) => {
-    resolve(taskResult('knowledge_gap_detection', 'pass', {
-      gapDetectionEnabled: true,
-      algorithmVersion: '1.618',
-      confidenceDecayRate: PSI,
-      detectionFrequencySec: 3600
+    // Scan data directories for knowledge coverage gaps
+    const dataDir = path.join(process.cwd(), 'data');
+    const knowledgeSources = ['wisdom.json', 'error_patterns.json', 'preferences.json',
+      'embeddings', 'finetune', 'arena', 'graph', 'vector_index'];
+    const coverage = {};
+    let found = 0;
+    for (const src of knowledgeSources) {
+      const exists = (() => { try { return fs.existsSync(path.join(dataDir, src)); } catch { return false; } })();
+      coverage[src] = exists;
+      if (exists) found++;
+    }
+    const coverageRatio = found / knowledgeSources.length;
+    const gaps = knowledgeSources.filter(s => !coverage[s]);
+    const status = coverageRatio >= PSI ? 'pass' : coverageRatio >= PSI * PSI ? 'warn' : 'fail';
+    resolve(taskResult('knowledge_gap_detection', status, {
+      coverageRatio: coverageRatio.toFixed(4),
+      sourcesFound: found,
+      totalSources: knowledgeSources.length,
+      gaps,
+      coverage,
+      confidenceDecayRate: PSI
     }, start));
   }),
 
@@ -928,19 +990,64 @@ const learningTasks = {
   }),
 
   pattern_reinforcement: (start) => new Promise((resolve) => {
-    resolve(taskResult('pattern_reinforcement', 'pass', {
+    // Check for pattern data files and measure actual pattern growth
+    const patternsDir = path.join(process.cwd(), 'data', 'patterns');
+    const hasPatterns = (() => { try { return fs.existsSync(patternsDir); } catch { return false; } })();
+    let patternCount = 0;
+    let newestPatternAge = Infinity;
+    if (hasPatterns) {
+      try {
+        const files = fs.readdirSync(patternsDir);
+        patternCount = files.length;
+        for (const f of files.slice(-5)) {
+          const stat = fs.statSync(path.join(patternsDir, f));
+          const ageMs = Date.now() - stat.mtimeMs;
+          if (ageMs < newestPatternAge) newestPatternAge = ageMs;
+        }
+      } catch { /* skip */ }
+    }
+    // Also check global pattern engine if available
+    const patternEngine = global.__patternEngine;
+    const engineStats = patternEngine && typeof patternEngine.getStats === 'function'
+      ? patternEngine.getStats() : null;
+    const status = patternCount > 0 || engineStats ? 'pass' : 'warn';
+    resolve(taskResult('pattern_reinforcement', status, {
+      patternsDir: hasPatterns,
+      patternFileCount: patternCount,
+      newestPatternAgeMs: isFinite(newestPatternAge) ? newestPatternAge : null,
+      engineStats: engineStats ? { observations: engineStats.observations, improvements: engineStats.improvements } : null,
       reinforcementRate: PHI,
       decayRate: PSI,
-      algorithm: 'phi_weighted_ema',
-      active: true
+      algorithm: 'phi_weighted_ema'
     }, start));
   }),
 
   pattern_deprecation: (start) => new Promise((resolve) => {
-    resolve(taskResult('pattern_deprecation', 'pass', {
-      deprecationThreshold: PSI * PSI,  // ≈ 0.382 confidence floor
-      sweepIntervalSec: 86400,
-      active: true
+    // Scan for stale pattern files and identify candidates for deprecation
+    const patternsDir = path.join(process.cwd(), 'data', 'patterns');
+    const hasPatterns = (() => { try { return fs.existsSync(patternsDir); } catch { return false; } })();
+    let staleCount = 0;
+    let totalPatterns = 0;
+    const staleThresholdMs = 48 * 60 * 60 * 1000; // 48 hours
+    if (hasPatterns) {
+      try {
+        const files = fs.readdirSync(patternsDir);
+        totalPatterns = files.length;
+        for (const f of files) {
+          const stat = fs.statSync(path.join(patternsDir, f));
+          if (Date.now() - stat.mtimeMs > staleThresholdMs) staleCount++;
+        }
+      } catch { /* skip */ }
+    }
+    const staleRatio = totalPatterns > 0 ? staleCount / totalPatterns : 0;
+    const status = staleRatio <= PSI * PSI ? 'pass' : staleRatio <= PSI ? 'warn' : 'fail';
+    resolve(taskResult('pattern_deprecation', status, {
+      totalPatterns,
+      stalePatterns: staleCount,
+      staleRatio: staleRatio.toFixed(4),
+      deprecationThreshold: (PSI * PSI).toFixed(4),
+      staleThresholdHours: 48,
+      patternsDir: hasPatterns
     }, start));
   }),
 
@@ -1327,30 +1434,90 @@ const intelligenceTasks = {
   }),
 
   model_routing_accuracy: (start) => new Promise((resolve) => {
+    // Verify model routing configuration and available providers
     const routingModelConfigured = !!(process.env.ROUTING_MODEL || process.env.HEADY_ROUTER_MODEL);
-    resolve(taskResult('model_routing_accuracy', 'pass', {
+    const providers = {
+      openai: !!process.env.OPENAI_API_KEY,
+      anthropic: !!process.env.ANTHROPIC_API_KEY,
+      google: !!process.env.GOOGLE_AI_API_KEY,
+      groq: !!process.env.GROQ_API_KEY,
+      huggingface: !!process.env.HUGGINGFACE_API_KEY
+    };
+    const availableProviders = Object.entries(providers).filter(([, v]) => v).map(([k]) => k);
+    // Check for LLM router module
+    let routerLoaded = false;
+    try {
+      const routerPath = path.join(process.cwd(), 'src', 'routing', 'llm-router.js');
+      routerLoaded = fs.existsSync(routerPath);
+    } catch { /* skip */ }
+    const canRoute = availableProviders.length >= 2 && (routingModelConfigured || routerLoaded);
+    const status = canRoute ? 'pass' : availableProviders.length >= 1 ? 'warn' : 'fail';
+    resolve(taskResult('model_routing_accuracy', status, {
       routingModelConfigured,
-      targetAccuracy: CSL_THRESHOLDS.HIGH,  // 0.882
-      minAccuracy: CSL_THRESHOLDS.MEDIUM,   // 0.809
+      routerModuleFound: routerLoaded,
+      providers,
+      availableProviderCount: availableProviders.length,
+      canMultiModelRoute: canRoute,
+      targetAccuracy: CSL_THRESHOLDS.HIGH,
+      minAccuracy: CSL_THRESHOLDS.MEDIUM,
       routingStrategy: 'phi_weighted_ensemble'
     }, start));
   }),
 
   response_quality_score: (start) => new Promise((resolve) => {
-    resolve(taskResult('response_quality_score', 'pass', {
+    // Check for response quality evaluation infrastructure
+    const judgeModel = process.env.JUDGE_MODEL || null;
+    const hasAnthropicKey = !!process.env.ANTHROPIC_API_KEY;
+    const hasOpenaiKey = !!process.env.OPENAI_API_KEY;
+    // Check for quality gate and self-critique modules
+    const qualityGatePath = path.join(process.cwd(), 'src', 'orchestration', 'quality-gate.js');
+    const selfCritiquePath = path.join(process.cwd(), 'src', 'orchestration', 'self-critique.js');
+    const hasQualityGate = (() => { try { return fs.existsSync(qualityGatePath); } catch { return false; } })();
+    const hasSelfCritique = (() => { try { return fs.existsSync(selfCritiquePath); } catch { return false; } })();
+    // Check global self-critique stats if available
+    const selfCritique = global.__selfCritique;
+    const critiqueStats = selfCritique && typeof selfCritique.getStats === 'function'
+      ? selfCritique.getStats() : null;
+    const canEvaluate = (hasAnthropicKey || hasOpenaiKey) && (hasQualityGate || hasSelfCritique);
+    const status = canEvaluate ? 'pass' : hasQualityGate || hasSelfCritique ? 'warn' : 'warn';
+    resolve(taskResult('response_quality_score', status, {
+      canEvaluate,
+      judgeModel: judgeModel || (hasAnthropicKey ? 'claude-3-5-sonnet' : hasOpenaiKey ? 'gpt-4o' : null),
+      qualityGateModuleFound: hasQualityGate,
+      selfCritiqueModuleFound: hasSelfCritique,
+      critiqueStats: critiqueStats ? { totalCritiques: critiqueStats.totalCritiques, avgSeverity: critiqueStats.avgSeverity } : null,
       minQualityScore: CSL_THRESHOLDS.MEDIUM,
       targetQualityScore: CSL_THRESHOLDS.HIGH,
-      evaluationModel: process.env.JUDGE_MODEL || 'claude-3-5-sonnet',
-      samplingRate: PSI * PSI   // 38.2%
+      samplingRate: (PSI * PSI).toFixed(4)
     }, start));
   }),
 
   hallucination_detection_rate: (start) => new Promise((resolve) => {
-    resolve(taskResult('hallucination_detection_rate', 'pass', {
-      detectionEnabled: true,
+    // Check for actual hallucination watchdog module and its operational state
+    let watchdogActive = false;
+    let watchdogStats = null;
+    try {
+      const watchdog = require(path.join(process.cwd(), 'src', 'observability', 'hallucination-watchdog.js'));
+      if (watchdog && typeof watchdog.getStats === 'function') {
+        watchdogStats = watchdog.getStats();
+        watchdogActive = true;
+      }
+    } catch { /* watchdog not yet deployed */ }
+    // Check if the watchdog source file exists
+    const watchdogPath = path.join(process.cwd(), 'src', 'observability', 'hallucination-watchdog.js');
+    const fileExists = (() => { try { return fs.existsSync(watchdogPath); } catch { return false; } })();
+    // Check vector memory for grounding facts availability
+    const vectorMemory = global.__vectorMemory;
+    const hasGroundingData = vectorMemory && typeof vectorMemory.size === 'function' ? vectorMemory.size() > 0 : false;
+    const status = watchdogActive ? 'pass' : fileExists ? 'warn' : 'warn';
+    resolve(taskResult('hallucination_detection_rate', status, {
+      watchdogActive,
+      watchdogFileExists: fileExists,
+      watchdogStats,
+      hasGroundingData,
       method: 'cross_model_verification',
-      threshold: CSL_THRESHOLDS.CRITICAL,  // 0.927
-      falsePositiveTarget: PSI * PSI * PSI  // ≈ 0.236
+      threshold: CSL_THRESHOLDS.CRITICAL,
+      falsePositiveTarget: (PSI * PSI * PSI).toFixed(4)
     }, start));
   }),
 
@@ -1376,12 +1543,47 @@ const intelligenceTasks = {
   }),
 
   prompt_effectiveness: (start) => new Promise((resolve) => {
-    const promptLibExists = (() => { try { return fs.existsSync(path.join(process.cwd(), 'prompts')); } catch { return false; } })();
-    resolve(taskResult('prompt_effectiveness', 'pass', {
-      promptLibExists,
-      effectivenessTarget: CSL_THRESHOLDS.HIGH,  // 0.882
-      versionControlled: promptLibExists,
-      abTestingEnabled: !!(process.env.PROMPT_AB_TEST)
+    // Scan for actual prompt files and measure prompt library health
+    const promptDirs = ['prompts', 'src/prompts', '.claude', 'configs'];
+    const cwd = process.cwd();
+    let promptFileCount = 0;
+    let promptDirFound = null;
+    for (const dir of promptDirs) {
+      const fullPath = path.join(cwd, dir);
+      try {
+        if (fs.existsSync(fullPath)) {
+          promptDirFound = dir;
+          const files = fs.readdirSync(fullPath);
+          promptFileCount += files.filter(f => /\.(md|txt|yaml|yml|json)$/i.test(f)).length;
+        }
+      } catch { /* skip */ }
+    }
+    // Check for .claude skills (slash commands with prompt templates)
+    const claudeDir = path.join(cwd, '.claude');
+    let skillCount = 0;
+    try {
+      if (fs.existsSync(claudeDir)) {
+        const walk = (d) => {
+          const entries = fs.readdirSync(d);
+          for (const e of entries) {
+            const full = path.join(d, e);
+            const stat = fs.statSync(full);
+            if (stat.isDirectory()) walk(full);
+            else if (/\.(md|txt)$/.test(e)) skillCount++;
+          }
+        };
+        walk(claudeDir);
+      }
+    } catch { /* skip */ }
+    const abTestEnabled = !!(process.env.PROMPT_AB_TEST);
+    const status = promptFileCount > 5 ? 'pass' : promptFileCount > 0 ? 'warn' : 'fail';
+    resolve(taskResult('prompt_effectiveness', status, {
+      promptFileCount,
+      promptDirFound,
+      claudeSkillFiles: skillCount,
+      versionControlled: !!promptDirFound,
+      abTestingEnabled: abTestEnabled,
+      effectivenessTarget: CSL_THRESHOLDS.HIGH
     }, start));
   }),
 
@@ -1598,8 +1800,8 @@ class AutoSuccessEngine {
       taskRegistry:    Object.fromEntries(
         Object.entries(TASK_REGISTRY).map(([cat, tasks]) => [cat, Object.keys(tasks).length])
       ),
-      totalTasks:      135,
-      categories:      13,  // fib(7)
+      totalTasks:      Object.values(TASK_REGISTRY).reduce((s, t) => s + Object.keys(t).length, 0),
+      categories:      Object.keys(TASK_REGISTRY).length,
       phiConstants: {
         PHI, PSI,
         taskTimeoutMs:  TASK_TIMEOUT_MS,

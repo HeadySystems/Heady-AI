@@ -641,6 +641,79 @@ function wireEngines(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ HCFPRunner/EventBridge not loaded: ${err.message}`);
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // PHASE 14: NEW SERVICES — Marketplace, Revenue, Intelligence, Sacred Geometry
+    // Wired after all core engines; these are product/monetization layers
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // 14a. Agent Marketplace
+    try {
+        const { createRouter: marketplaceRouter } = require("../marketplace/agent-marketplace");
+        app.use(marketplaceRouter());
+        logger.logNodeActivity("CONDUCTOR", "  ∞ AgentMarketplace: WIRED (5 endpoints, 20% platform fee)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ AgentMarketplace not loaded: ${err.message}`);
+    }
+
+    // 14b. Revenue Engine
+    try {
+        const { createRouter: revenueRouter } = require("../billing/revenue-engine");
+        app.use(revenueRouter());
+        logger.logNodeActivity("CONDUCTOR", "  ∞ RevenueEngine: WIRED (5-model monetization, φ-scaled tiers)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ RevenueEngine not loaded: ${err.message}`);
+    }
+
+    // 14c. IP Tracker
+    try {
+        const { createRouter: ipRouter } = require("../intelligence/ip-tracker");
+        app.use(ipRouter());
+        logger.logNodeActivity("CONDUCTOR", "  ∞ IPTracker: WIRED (72 patents, competitive analysis)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ IPTracker not loaded: ${err.message}`);
+    }
+
+    // 14d. Code Dojo
+    try {
+        const { createRouter: dojoRouter } = require("../intelligence/heady-code-dojo");
+        app.use(dojoRouter());
+        logger.logNodeActivity("CONDUCTOR", "  ∞ CodeDojo: WIRED (20 challenges, 12 domains, skill radar)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ CodeDojo not loaded: ${err.message}`);
+    }
+
+    // 14e. Training Service
+    try {
+        const { createRouter: trainRouter } = require("../intelligence/heady-train-service");
+        app.use(trainRouter());
+        logger.logNodeActivity("CONDUCTOR", "  ∞ TrainService: WIRED (skill gaps, spaced repetition, 8 priorities)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ TrainService not loaded: ${err.message}`);
+    }
+
+    // 14f. Colab Runtime Optimizer
+    try {
+        const { createRouter: colabRouter } = require("../intelligence/colab-runtime-optimizer");
+        app.use(colabRouter());
+        logger.logNodeActivity("CONDUCTOR", "  ∞ ColabOptimizer: WIRED (3-tier memory, session persistence)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ ColabOptimizer not loaded: ${err.message}`);
+    }
+
+    // 14g. Unified Auto-Success Scheduler
+    try {
+        const UnifiedScheduler = require("../orchestration/unified-auto-success-scheduler");
+        const scheduler = new UnifiedScheduler({ eventBus });
+        engines.unifiedScheduler = scheduler;
+        // Auto-start in background after boot completes
+        if (eventBus) {
+            eventBus.once("system_ready", () => scheduler.start());
+        }
+        logger.logNodeActivity("CONDUCTOR", "  ∞ UnifiedScheduler: WIRED (hot/warm/cold pools, φ-timed, 100% idle utilization)");
+    } catch (err) {
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ UnifiedScheduler not loaded: ${err.message}`);
+    }
+
     return engines;
 }
 

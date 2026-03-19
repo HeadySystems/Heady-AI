@@ -55,6 +55,10 @@ const STATUS = {
     ROLLED_BACK: "rolled_back",
 };
 
+// ─── φ-derived quality gate threshold ────────────────────────────────────────
+const PHI = 1.618033988749895;
+const PSI_QUALITY_GATE = 1 / PHI; // 0.618 — minimum CSL score between stages
+
 class HCFullPipeline extends EventEmitter {
     constructor(opts = {}) {
         super();
@@ -219,6 +223,24 @@ class HCFullPipeline extends EventEmitter {
                     stage.finishedAt = new Date().toISOString();
                     stage.metrics.durationMs = new Date(stage.finishedAt) - new Date(stage.startedAt);
                     this.emit("stage:completed", { runId, stage: stage.name, result, metrics: stage.metrics });
+
+                    // ── Quality gate: CSL score must stay above PSI (0.618) ──
+                    const cslScore = this._computeCSLScore(run);
+                    if (cslScore < PSI_QUALITY_GATE) {
+                        const gatePayload = {
+                            runId,
+                            stage: stage.name,
+                            cslScore,
+                            threshold: PSI_QUALITY_GATE,
+                            reason: `CSL score ${cslScore.toFixed(3)} dropped below PSI threshold ${PSI_QUALITY_GATE.toFixed(3)}`,
+                        };
+                        this.emit("pipeline:quality_gate_failed", gatePayload);
+                        run.status = STATUS.FAILED;
+                        run.finishedAt = new Date().toISOString();
+                        run.qualityGateFailure = gatePayload;
+                        this.emit("run:failed", { runId, error: gatePayload.reason, failedStage: stage.name });
+                        return run;
+                    }
 
                     // Check for PAUSED status (approval gate)
                     if (run.status === STATUS.PAUSED) {
@@ -783,6 +805,47 @@ class HCFullPipeline extends EventEmitter {
             return pools[taskType] || pools.general;
         }
 
+    // ─── CSL quality score computation ──────────────────────────────
+    /**
+     * Compute a Continuous Scoring Logic (CSL) score for the current run.
+     * Based on the ratio of completed stages to total attempted, weighted
+     * by stage failure/success pattern. Returns a value in [0, 1].
+     *
+     * @param {object} run - Pipeline run state
+     * @returns {number} CSL score between 0 and 1
+     */
+    _computeCSLScore(run) {
+        const attempted = run.stages.filter(
+            s => s.status === STATUS.COMPLETED || s.status === STATUS.FAILED
+        );
+        if (attempted.length === 0) return 1.0; // no data yet — pass gate
+
+        const completed = attempted.filter(s => s.status === STATUS.COMPLETED).length;
+        const failed = attempted.filter(s => s.status === STATUS.FAILED).length;
+        const total = attempted.length;
+
+        // Base score: completion ratio
+        let score = completed / total;
+
+        // Penalty for consecutive recent failures (exponential decay)
+        let recentFailStreak = 0;
+        for (let i = attempted.length - 1; i >= 0; i--) {
+            if (attempted[i].status === STATUS.FAILED) recentFailStreak++;
+            else break;
+        }
+        if (recentFailStreak > 0) {
+            score *= Math.pow(PSI_QUALITY_GATE, recentFailStreak);
+        }
+
+        // Factor in self-heal success rate if available
+        if (this.selfHealStats.attempts > 0) {
+            const healRate = this.selfHealStats.successes / this.selfHealStats.attempts;
+            score = score * 0.8 + healRate * 0.2; // 80% stage health + 20% heal capacity
+        }
+
+        return Math.max(0, Math.min(1, score));
+    }
+
     // ─── Rollback with audit logging ─────────────────────────────
     async _rollback(run, failedIndex) {
             run.rollbackLog = [];
@@ -901,9 +964,12 @@ class HCFullPipeline extends EventEmitter {
                 } catch (err) {
                     stage.status = STATUS.FAILED;
                     stage.error = err.message;
+                    stage.finishedAt = new Date().toISOString();
+                    stage.metrics.durationMs = new Date(stage.finishedAt) - new Date(stage.startedAt);
+                    this.emit("stage:failed", { runId, stage: stage.name, error: err.message });
                     run.status = STATUS.FAILED;
                     run.finishedAt = new Date().toISOString();
-                    this.emit("run:failed", { runId, error: err.message });
+                    this.emit("run:failed", { runId, error: err.message, failedStage: stage.name });
                     return run;
                 }
             }

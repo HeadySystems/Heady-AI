@@ -1,18 +1,36 @@
 /*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- * Auto-Success Task Catalog — 135+ tasks across 9 categories.
+ * Auto-Success Task Catalog — 598 tasks across 33 categories.
  * Extracted from hc_auto_success.js for maintainability.
+ * Categories: learning, optimization, integration, monitoring, maintenance,
+ *   discovery, verification, creative, deep-intel, hive-integration,
+ *   mop-security, mop-architecture, mop-docs, mop-infrastructure, mop-cicd,
+ *   mop-mcp, mop-ai-gateway, mop-performance, mop-auth, mop-sites,
+ *   monetization-iaas, monetization-agent, monetization-b2b, dev-acceleration,
+ *   subscription-optimization, architecture-fix, autocontext-integration,
+ *   autonomy-enhancement, beneficial-bundle, unimplemented-arch, module-health,
+ *   event-bus-pipeline, competitive-intel, perpetual-optimization,
+ *   coding-mastery, intelligence-training,
+ *   devops, trading, documentation, testing, deployment
  */
 
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
 let extraTasks = [];
-try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) { }
+try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load auto-flow-tasks.json: ${e.message}`);
+}
 let nonprofitTasks = [];
-try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) { }
+try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load nonprofit-tasks.json: ${e.message}`);
+}
 let buddyTasks = [];
-try { buddyTasks = require('../buddy-tasks.json'); } catch (e) { }
+try { buddyTasks = require('../buddy-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load buddy-tasks.json: ${e.message}`);
+}
 let prodOptTasks = [];
-try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) { }
+try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load production-optimization-tasks.json: ${e.message}`);
+}
 
 const TASK_CATALOG = [
     ...extraTasks,
@@ -460,6 +478,175 @@ const TASK_CATALOG = [
     { id: "intel-train-008", name: "Train: Knowledge distillation", cat: "intelligence-training", pool: "warm", w: 4, desc: "Compress session learnings into vectors. Embedding fine-tuning, recall optimization." },
     { id: "intel-train-009", name: "Train: Spaced repetition testing", cat: "intelligence-training", pool: "warm", w: 3, desc: "Re-test trained topics at Fibonacci intervals (1,2,3,5,8,13 days). Verify retention." },
     { id: "intel-train-010", name: "Train: Skill gap re-analysis", cat: "intelligence-training", pool: "hot", w: 5, desc: "Re-run skill gap analysis. Compare against last cycle. Verify improvement. Next curriculum." },
+
+    // ─── DEVOPS (20 tasks) ──────────────────────────────────────────────────────
+    { id: "devops-001", name: "CI pipeline validation", cat: "devops", pool: "hot", w: 5, desc: "Verify GitHub Actions / Cloud Build pipelines pass on latest commit" },
+    { id: "devops-002", name: "Container image freshness", cat: "devops", pool: "warm", w: 4, desc: "Check all Docker images are built from latest source, no stale layers" },
+    { id: "devops-003", name: "DNS record validation", cat: "devops", pool: "warm", w: 4, desc: "Verify all 16 Heady domains resolve correctly to expected IPs/CNAMEs" },
+    { id: "devops-004", name: "SSL certificate expiry check", cat: "devops", pool: "hot", w: 5, desc: "Check SSL certs across all domains, warn if expiry < 30 days" },
+    { id: "devops-005", name: "Cloud Run revision health", cat: "devops", pool: "hot", w: 5, desc: "Verify latest Cloud Run revisions are serving traffic with healthy instances" },
+    { id: "devops-006", name: "Render service status", cat: "devops", pool: "hot", w: 4, desc: "Check all Render.com services are deployed and responding" },
+    { id: "devops-007", name: "Database backup verification", cat: "devops", pool: "warm", w: 4, desc: "Confirm Neon Postgres backups completed within last 24h" },
+    { id: "devops-008", name: "Log aggregation health", cat: "devops", pool: "warm", w: 3, desc: "Verify log pipeline is collecting from all services without gaps" },
+    { id: "devops-009", name: "Environment variable audit", cat: "devops", pool: "cold", w: 3, desc: "Compare env vars across dev/staging/production for drift" },
+    { id: "devops-010", name: "Dependency vulnerability scan", cat: "devops", pool: "hot", w: 5, desc: "Run npm audit across all packages, flag critical vulnerabilities" },
+    { id: "devops-011", name: "Resource quota check", cat: "devops", pool: "warm", w: 3, desc: "Verify GCP resource quotas have sufficient headroom (>20%)" },
+    { id: "devops-012", name: "CDN cache hit ratio", cat: "devops", pool: "warm", w: 3, desc: "Check Cloudflare cache hit ratio, optimize if below 80%" },
+    { id: "devops-013", name: "Artifact registry cleanup", cat: "devops", pool: "cold", w: 2, desc: "Remove old container images and build artifacts older than 30 days" },
+    { id: "devops-014", name: "Infrastructure as Code drift", cat: "devops", pool: "warm", w: 4, desc: "Compare render.yaml and cloudbuild.yaml against actual deployed state" },
+    { id: "devops-015", name: "Service mesh connectivity", cat: "devops", pool: "hot", w: 4, desc: "Verify all internal service-to-service calls succeed with <100ms latency" },
+    { id: "devops-016", name: "Secrets rotation status", cat: "devops", pool: "warm", w: 4, desc: "Check GCP Secret Manager for secrets approaching rotation deadline" },
+    { id: "devops-017", name: "Auto-scaling validation", cat: "devops", pool: "warm", w: 3, desc: "Verify Cloud Run auto-scaling triggers at correct thresholds" },
+    { id: "devops-018", name: "Monitoring alert coverage", cat: "devops", pool: "warm", w: 3, desc: "Ensure all critical services have alerting rules configured" },
+    { id: "devops-019", name: "Uptime SLA calculation", cat: "devops", pool: "hot", w: 4, desc: "Calculate rolling 30-day uptime per service, flag below 99.9%" },
+    { id: "devops-020", name: "Cost optimization scan", cat: "devops", pool: "cold", w: 3, desc: "Identify over-provisioned resources and recommend rightsizing" },
+
+    // ─── TRADING (20 tasks) ─────────────────────────────────────────────────────
+    { id: "trading-001", name: "Strategy backtest execution", cat: "trading", pool: "hot", w: 5, desc: "Run backtests on active trading strategies against last 30 days of data" },
+    { id: "trading-002", name: "Risk limit validation", cat: "trading", pool: "hot", w: 5, desc: "Verify position sizes, max drawdown, and daily loss limits are enforced" },
+    { id: "trading-003", name: "Kill-switch threshold check", cat: "trading", pool: "hot", w: 5, desc: "Confirm governance kill-switch fires at 45% daily loss (5% safety buffer)" },
+    { id: "trading-004", name: "API token health", cat: "trading", pool: "hot", w: 5, desc: "Validate trading API tokens are active and have correct permissions" },
+    { id: "trading-005", name: "Order execution latency", cat: "trading", pool: "warm", w: 4, desc: "Measure order-to-fill latency, alert if p95 exceeds 500ms" },
+    { id: "trading-006", name: "Position reconciliation", cat: "trading", pool: "hot", w: 5, desc: "Compare internal position tracking vs broker-reported positions" },
+    { id: "trading-007", name: "P&L calculation accuracy", cat: "trading", pool: "warm", w: 4, desc: "Verify P&L calculations match broker statements within 0.01% tolerance" },
+    { id: "trading-008", name: "Market data feed health", cat: "trading", pool: "hot", w: 5, desc: "Check market data websocket connections are live with <1s staleness" },
+    { id: "trading-009", name: "Strategy correlation check", cat: "trading", pool: "warm", w: 3, desc: "Calculate correlation matrix between active strategies, flag >0.8" },
+    { id: "trading-010", name: "Drawdown recovery analysis", cat: "trading", pool: "warm", w: 4, desc: "Analyze drawdown events and recovery times, compare vs historical avg" },
+    { id: "trading-011", name: "Slippage monitoring", cat: "trading", pool: "warm", w: 4, desc: "Track execution slippage per instrument, alert if avg exceeds 2bps" },
+    { id: "trading-012", name: "Margin utilization check", cat: "trading", pool: "hot", w: 4, desc: "Monitor margin utilization, warn if above 70% of available" },
+    { id: "trading-013", name: "EOD session boundary", cat: "trading", pool: "hot", w: 5, desc: "Verify EOD flatten at 4:59 PM ET executes correctly per governance rules" },
+    { id: "trading-014", name: "Strategy parameter drift", cat: "trading", pool: "warm", w: 3, desc: "Detect if live strategy parameters have drifted from backtested optima" },
+    { id: "trading-015", name: "Trade journal generation", cat: "trading", pool: "cold", w: 2, desc: "Auto-generate daily trade journal with entry/exit analysis" },
+    { id: "trading-016", name: "Compliance rule validation", cat: "trading", pool: "warm", w: 4, desc: "Verify all trades comply with Apex PA rules and regulatory requirements" },
+    { id: "trading-017", name: "Monte Carlo simulation", cat: "trading", pool: "warm", w: 4, desc: "Run Monte Carlo on current portfolio to estimate VaR and max drawdown" },
+    { id: "trading-018", name: "Benchmark comparison", cat: "trading", pool: "cold", w: 3, desc: "Compare portfolio returns vs SPY/QQQ benchmarks on risk-adjusted basis" },
+    { id: "trading-019", name: "Fee impact analysis", cat: "trading", pool: "cold", w: 2, desc: "Calculate total fees paid, compare vs expected, flag anomalies" },
+    { id: "trading-020", name: "Data quality validation", cat: "trading", pool: "warm", w: 4, desc: "Check historical data for gaps, outliers, and corporate actions" },
+
+    // ─── TESTING (20 tasks) ─────────────────────────────────────────────────────
+    { id: "testing-001", name: "Unit test suite execution", cat: "testing", pool: "hot", w: 5, desc: "Run full Jest/Vitest test suite, report pass/fail/coverage" },
+    { id: "testing-002", name: "Integration test validation", cat: "testing", pool: "hot", w: 5, desc: "Execute integration tests against live service endpoints" },
+    { id: "testing-003", name: "Code coverage analysis", cat: "testing", pool: "warm", w: 4, desc: "Calculate code coverage, flag files below 60% threshold" },
+    { id: "testing-004", name: "API contract testing", cat: "testing", pool: "warm", w: 4, desc: "Validate all API endpoints match their OpenAPI/Swagger schemas" },
+    { id: "testing-005", name: "Snapshot test freshness", cat: "testing", pool: "cold", w: 2, desc: "Check snapshot tests are up-to-date, regenerate stale snapshots" },
+    { id: "testing-006", name: "E2E smoke tests", cat: "testing", pool: "hot", w: 5, desc: "Run critical path E2E tests: auth flow, API gateway, pipeline trigger" },
+    { id: "testing-007", name: "Load test execution", cat: "testing", pool: "cold", w: 3, desc: "Run load tests at 2x expected traffic, verify response times" },
+    { id: "testing-008", name: "Regression test sweep", cat: "testing", pool: "warm", w: 4, desc: "Execute regression suite against recently changed files" },
+    { id: "testing-009", name: "Test flakiness detection", cat: "testing", pool: "warm", w: 3, desc: "Identify flaky tests by running suite 3x, flag inconsistent results" },
+    { id: "testing-010", name: "Security test execution", cat: "testing", pool: "hot", w: 5, desc: "Run OWASP ZAP or equivalent against API endpoints" },
+    { id: "testing-011", name: "Mutation testing", cat: "testing", pool: "cold", w: 3, desc: "Run mutation tests to validate test quality and catch weak assertions" },
+    { id: "testing-012", name: "Performance benchmark", cat: "testing", pool: "warm", w: 4, desc: "Run CSL benchmark suite, compare against baseline scores" },
+    { id: "testing-013", name: "Memory leak detection", cat: "testing", pool: "warm", w: 4, desc: "Profile memory usage over 1000 requests, flag growing heap" },
+    { id: "testing-014", name: "Event bus test coverage", cat: "testing", pool: "warm", w: 3, desc: "Verify all event bus topics have at least one test subscriber" },
+    { id: "testing-015", name: "Database migration test", cat: "testing", pool: "warm", w: 4, desc: "Run migrations up and down on test database, verify idempotency" },
+    { id: "testing-016", name: "Config validation tests", cat: "testing", pool: "warm", w: 3, desc: "Validate all YAML configs parse correctly and match schemas" },
+    { id: "testing-017", name: "Agent behavior tests", cat: "testing", pool: "warm", w: 4, desc: "Test argus/hermes/kronos v2 agent lifecycle: init, execute, shutdown" },
+    { id: "testing-018", name: "WebSocket connection tests", cat: "testing", pool: "warm", w: 3, desc: "Test SSE/WebSocket endpoints for connection stability and message delivery" },
+    { id: "testing-019", name: "CORS validation tests", cat: "testing", pool: "warm", w: 3, desc: "Verify CORS headers correct for all 16 whitelisted domains" },
+    { id: "testing-020", name: "Rate limit tests", cat: "testing", pool: "warm", w: 3, desc: "Test rate limiter enforces 100 req/min per IP correctly" },
+
+    // ─── DEPLOYMENT (20 tasks) ──────────────────────────────────────────────────
+    { id: "deploy-001", name: "Canary deployment analysis", cat: "deployment", pool: "hot", w: 5, desc: "Monitor canary deployment error rate vs baseline, auto-rollback if >2x" },
+    { id: "deploy-002", name: "Rollback readiness check", cat: "deployment", pool: "hot", w: 5, desc: "Verify previous known-good revision is available for instant rollback" },
+    { id: "deploy-003", name: "Blue-green switch validation", cat: "deployment", pool: "warm", w: 4, desc: "Confirm blue-green deployment switch completes with zero dropped requests" },
+    { id: "deploy-004", name: "Post-deploy health gates", cat: "deployment", pool: "hot", w: 5, desc: "After deploy, verify all health endpoints return 200 within 30s" },
+    { id: "deploy-005", name: "Database migration status", cat: "deployment", pool: "hot", w: 5, desc: "Confirm all pending migrations applied successfully before traffic shift" },
+    { id: "deploy-006", name: "Feature flag status", cat: "deployment", pool: "warm", w: 3, desc: "Audit active feature flags, remove stale flags older than 30 days" },
+    { id: "deploy-007", name: "Deployment frequency tracking", cat: "deployment", pool: "cold", w: 2, desc: "Track deployment frequency per service, target daily deploys" },
+    { id: "deploy-008", name: "Change failure rate", cat: "deployment", pool: "warm", w: 4, desc: "Calculate change failure rate (rollbacks/total deploys), target <5%" },
+    { id: "deploy-009", name: "Mean time to recovery", cat: "deployment", pool: "warm", w: 4, desc: "Track MTTR per incident, target <15 minutes" },
+    { id: "deploy-010", name: "Lead time for changes", cat: "deployment", pool: "cold", w: 3, desc: "Measure commit-to-production lead time, target <1 hour" },
+    { id: "deploy-011", name: "Dependency update check", cat: "deployment", pool: "warm", w: 3, desc: "Check for outdated npm dependencies with known security patches" },
+    { id: "deploy-012", name: "Build artifact integrity", cat: "deployment", pool: "warm", w: 4, desc: "Verify build artifact checksums match expected hashes" },
+    { id: "deploy-013", name: "Multi-region readiness", cat: "deployment", pool: "cold", w: 3, desc: "Verify service can be deployed to secondary region within 5 minutes" },
+    { id: "deploy-014", name: "Smoke test post-deploy", cat: "deployment", pool: "hot", w: 5, desc: "Run critical path smoke tests immediately after every deployment" },
+    { id: "deploy-015", name: "Config drift detection", cat: "deployment", pool: "warm", w: 4, desc: "Compare deployed config vs repo config, flag any drift" },
+    { id: "deploy-016", name: "Service discovery update", cat: "deployment", pool: "warm", w: 3, desc: "Verify service registry reflects latest deployed versions" },
+    { id: "deploy-017", name: "Traffic shift validation", cat: "deployment", pool: "hot", w: 4, desc: "Confirm traffic routing updated to new revision across all regions" },
+    { id: "deploy-018", name: "Webhook notification", cat: "deployment", pool: "warm", w: 3, desc: "Send deploy notification to Slack/Discord with version and changelog" },
+    { id: "deploy-019", name: "Resource scaling verification", cat: "deployment", pool: "warm", w: 3, desc: "Verify auto-scaling rules active on newly deployed revision" },
+    { id: "deploy-020", name: "Deployment audit log", cat: "deployment", pool: "cold", w: 2, desc: "Record deployment event in immutable audit log with actor and diff" },
+
+    // ─── DOCUMENTATION (15 tasks) ───────────────────────────────────────────────
+    { id: "docs-001", name: "API docs freshness check", cat: "documentation", pool: "warm", w: 4, desc: "Compare API endpoint implementations vs documented endpoints, flag gaps" },
+    { id: "docs-002", name: "Changelog generation", cat: "documentation", pool: "warm", w: 3, desc: "Generate changelog from conventional commits since last release" },
+    { id: "docs-003", name: "README accuracy audit", cat: "documentation", pool: "cold", w: 2, desc: "Verify README instructions work when followed step-by-step" },
+    { id: "docs-004", name: "Architecture diagram sync", cat: "documentation", pool: "cold", w: 3, desc: "Check architecture diagrams match current service topology" },
+    { id: "docs-005", name: "Doc ownership freshness", cat: "documentation", pool: "warm", w: 3, desc: "Check DOC_OWNERS.yaml for overdue reviews per ownership policy" },
+    { id: "docs-006", name: "Colab notebook validation", cat: "documentation", pool: "warm", w: 4, desc: "Verify all Colab notebooks parse and reference correct API endpoints" },
+    { id: "docs-007", name: "Config documentation sync", cat: "documentation", pool: "warm", w: 3, desc: "Ensure all YAML configs have corresponding documentation entries" },
+    { id: "docs-008", name: "Error message catalog", cat: "documentation", pool: "cold", w: 2, desc: "Catalog all user-facing error messages, ensure they are helpful and consistent" },
+    { id: "docs-009", name: "SDK usage examples", cat: "documentation", pool: "warm", w: 3, desc: "Verify Sacred Geometry SDK and Agent SDK have working usage examples" },
+    { id: "docs-010", name: "Runbook completeness", cat: "documentation", pool: "warm", w: 4, desc: "Verify runbooks exist for all critical incident scenarios" },
+    { id: "docs-011", name: "TypeScript type coverage", cat: "documentation", pool: "cold", w: 2, desc: "Check JSDoc type annotations cover all exported functions" },
+    { id: "docs-012", name: "Migration guide currency", cat: "documentation", pool: "cold", w: 2, desc: "Ensure upgrade/migration guides cover latest breaking changes" },
+    { id: "docs-013", name: "Environment setup guide", cat: "documentation", pool: "cold", w: 2, desc: "Validate dev environment setup guide works on fresh machine" },
+    { id: "docs-014", name: "Glossary maintenance", cat: "documentation", pool: "cold", w: 1, desc: "Update Heady glossary with new terms (CSL, HCFP, ORS, etc.)" },
+    { id: "docs-015", name: "Compliance documentation", cat: "documentation", pool: "warm", w: 4, desc: "Verify SOC 2, GDPR, and data handling docs are current" },
+
+    // ─── BILLING (16 tasks) ─────────────────────────────────────────────────────
+    { id: "billing-001", name: "Stripe webhook health", cat: "billing", pool: "hot", w: 5, desc: "Verify Stripe webhooks are delivering and being processed correctly" },
+    { id: "billing-002", name: "Usage metering accuracy", cat: "billing", pool: "hot", w: 5, desc: "Compare metered usage vs actual resource consumption, flag >5% drift" },
+    { id: "billing-003", name: "Invoice generation test", cat: "billing", pool: "warm", w: 4, desc: "Generate test invoice for each billing model, verify line items" },
+    { id: "billing-004", name: "Subscription lifecycle check", cat: "billing", pool: "warm", w: 4, desc: "Test create/upgrade/downgrade/cancel subscription flows end-to-end" },
+    { id: "billing-005", name: "Revenue recognition audit", cat: "billing", pool: "warm", w: 3, desc: "Verify MRR/ARR calculations match actual Stripe data" },
+    { id: "billing-006", name: "Platform fee calculation", cat: "billing", pool: "warm", w: 4, desc: "Verify 20% marketplace platform fee is calculated correctly" },
+    { id: "billing-007", name: "Discount code validation", cat: "billing", pool: "cold", w: 2, desc: "Test discount code application and expiry enforcement" },
+    { id: "billing-008", name: "Payment failure handling", cat: "billing", pool: "hot", w: 5, desc: "Verify dunning flow: retry logic, grace period, suspension" },
+    { id: "billing-009", name: "Tier upgrade triggers", cat: "billing", pool: "warm", w: 3, desc: "Verify automatic tier upgrades trigger at correct usage thresholds" },
+    { id: "billing-010", name: "Tax calculation accuracy", cat: "billing", pool: "warm", w: 3, desc: "Verify tax calculations for different jurisdictions" },
+    { id: "billing-011", name: "Refund processing test", cat: "billing", pool: "cold", w: 2, desc: "Test refund flow: partial refund, full refund, credit application" },
+    { id: "billing-012", name: "Usage dashboard accuracy", cat: "billing", pool: "warm", w: 3, desc: "Verify tenant-facing usage dashboard matches internal metering" },
+    { id: "billing-013", name: "Free tier enforcement", cat: "billing", pool: "warm", w: 4, desc: "Verify free tier limits enforced: API calls, vector storage, pipeline runs" },
+    { id: "billing-014", name: "Multi-currency support", cat: "billing", pool: "cold", w: 2, desc: "Verify pricing displays correctly in USD, EUR, GBP" },
+    { id: "billing-015", name: "Revenue metrics dashboard", cat: "billing", pool: "warm", w: 3, desc: "Verify revenue metrics: ARPU, LTV, churn rate calculations" },
+    { id: "billing-016", name: "Billing API rate limits", cat: "billing", pool: "warm", w: 3, desc: "Verify billing API endpoints have appropriate rate limits" },
+
+    // ─── MARKETPLACE (15 tasks) ─────────────────────────────────────────────────
+    { id: "mktplace-001", name: "Agent listing validation", cat: "marketplace", pool: "hot", w: 5, desc: "Verify all marketplace agent listings have valid manifests and bundles" },
+    { id: "mktplace-002", name: "Agent install flow test", cat: "marketplace", pool: "hot", w: 5, desc: "Test end-to-end agent install: browse, select, install, verify running" },
+    { id: "mktplace-003", name: "Usage tracking accuracy", cat: "marketplace", pool: "warm", w: 4, desc: "Verify per-agent usage metering matches actual invocations" },
+    { id: "mktplace-004", name: "Revenue share calculation", cat: "marketplace", pool: "warm", w: 4, desc: "Verify 20% platform fee split is calculated correctly per transaction" },
+    { id: "mktplace-005", name: "Agent version management", cat: "marketplace", pool: "warm", w: 3, desc: "Test agent version upgrade flow: publish new version, notify users" },
+    { id: "mktplace-006", name: "Agent sandbox isolation", cat: "marketplace", pool: "hot", w: 5, desc: "Verify marketplace agents run in isolated sandbox, no cross-tenant access" },
+    { id: "mktplace-007", name: "Rating system integrity", cat: "marketplace", pool: "warm", w: 3, desc: "Verify agent ratings can only be submitted by users who installed the agent" },
+    { id: "mktplace-008", name: "Agent search relevance", cat: "marketplace", pool: "warm", w: 3, desc: "Test marketplace search returns relevant results for common queries" },
+    { id: "mktplace-009", name: "Agent uninstall cleanup", cat: "marketplace", pool: "warm", w: 3, desc: "Verify agent uninstall removes all resources and stops billing" },
+    { id: "mktplace-010", name: "Publisher onboarding flow", cat: "marketplace", pool: "cold", w: 2, desc: "Test agent publisher registration and submission review flow" },
+    { id: "mktplace-011", name: "Agent health monitoring", cat: "marketplace", pool: "hot", w: 4, desc: "Monitor installed agent health, auto-disable if crash rate >10%" },
+    { id: "mktplace-012", name: "Marketplace API rate limits", cat: "marketplace", pool: "warm", w: 3, desc: "Verify marketplace API endpoints have per-tenant rate limits" },
+    { id: "mktplace-013", name: "Agent bundle security scan", cat: "marketplace", pool: "hot", w: 5, desc: "Scan agent bundles for malicious code patterns before listing approval" },
+    { id: "mktplace-014", name: "Featured agent rotation", cat: "marketplace", pool: "cold", w: 2, desc: "Rotate featured agents on marketplace homepage weekly" },
+    { id: "mktplace-015", name: "Developer documentation", cat: "marketplace", pool: "cold", w: 2, desc: "Verify agent developer docs cover SDK, submission, and billing" },
+
+    // ─── SACRED GEOMETRY (10 tasks) ─────────────────────────────────────────────
+    { id: "sacred-001", name: "PHI constant precision", cat: "sacred-geometry", pool: "hot", w: 5, desc: "Verify PHI=1.618033988749895 used consistently across all modules" },
+    { id: "sacred-002", name: "Fibonacci sequence accuracy", cat: "sacred-geometry", pool: "warm", w: 4, desc: "Test fibonacci() function against known values up to fib(50)" },
+    { id: "sacred-003", name: "CSS breakpoint validation", cat: "sacred-geometry", pool: "warm", w: 3, desc: "Verify phi-breakpoints render correctly at 320/518/838/1356/2194" },
+    { id: "sacred-004", name: "Typography scale harmony", cat: "sacred-geometry", pool: "warm", w: 3, desc: "Validate phi-typography scale produces harmonious size ratios" },
+    { id: "sacred-005", name: "Golden spiral rendering", cat: "sacred-geometry", pool: "cold", w: 2, desc: "Render golden spiral coordinates, verify visual accuracy" },
+    { id: "sacred-006", name: "Torus layout integrity", cat: "sacred-geometry", pool: "cold", w: 2, desc: "Verify torus layout produces valid 3D coordinates with no collisions" },
+    { id: "sacred-007", name: "Metatron grid accuracy", cat: "sacred-geometry", pool: "cold", w: 2, desc: "Validate Metatron's Cube grid generates correct connection patterns" },
+    { id: "sacred-008", name: "PHI timing consistency", cat: "sacred-geometry", pool: "warm", w: 4, desc: "Verify all phi-backoff and phi-timing values match expected φ^n calculations" },
+    { id: "sacred-009", name: "CSS custom properties export", cat: "sacred-geometry", pool: "warm", w: 3, desc: "Verify generateCSSCustomProperties() outputs valid CSS with all variables" },
+    { id: "sacred-010", name: "SDK cross-platform test", cat: "sacred-geometry", pool: "cold", w: 3, desc: "Test sacred-geometry-sdk works in Node.js, browser, and Colab environments" },
+
+    // ─── GOVERNANCE (15 tasks) ──────────────────────────────────────────────────
+    { id: "gov-001", name: "Kill-switch fire drill", cat: "governance", pool: "hot", w: 5, desc: "Simulate 51% daily loss, verify flatten-and-sever executes correctly" },
+    { id: "gov-002", name: "Audit trail immutability", cat: "governance", pool: "hot", w: 5, desc: "Verify audit log entries cannot be modified or deleted after creation" },
+    { id: "gov-003", name: "Role-based access check", cat: "governance", pool: "warm", w: 4, desc: "Test RBAC: admin bypass, sensitive action blocking, least privilege" },
+    { id: "gov-004", name: "Budget limit enforcement", cat: "governance", pool: "hot", w: 5, desc: "Verify per-session token/USD consumption limits trigger correctly" },
+    { id: "gov-005", name: "Content safety filters", cat: "governance", pool: "warm", w: 4, desc: "Test content safety regex blocks SSN, credit card, password patterns" },
+    { id: "gov-006", name: "Mission alignment check", cat: "governance", pool: "warm", w: 3, desc: "Verify anti-mission phrase blocking is active and up-to-date" },
+    { id: "gov-007", name: "Policy engine evaluation", cat: "governance", pool: "warm", w: 4, desc: "Test custom policy evaluation with various action/actor/domain combos" },
+    { id: "gov-008", name: "Trading consistency rule", cat: "governance", pool: "hot", w: 5, desc: "Verify 50% daily profit cap with 45% safety buffer enforced" },
+    { id: "gov-009", name: "Hallucination watchdog test", cat: "governance", pool: "hot", w: 5, desc: "Feed known false claim to watchdog, verify BLOCK disposition" },
+    { id: "gov-010", name: "Data residency compliance", cat: "governance", pool: "warm", w: 3, desc: "Verify tenant data stays in declared geographic region" },
+    { id: "gov-011", name: "Access log completeness", cat: "governance", pool: "warm", w: 4, desc: "Verify all API requests are logged with actor, action, and timestamp" },
+    { id: "gov-012", name: "Encryption at rest check", cat: "governance", pool: "warm", w: 4, desc: "Verify all stored data (Neon, GCS, vectors) is encrypted at rest" },
+    { id: "gov-013", name: "Encryption in transit check", cat: "governance", pool: "warm", w: 4, desc: "Verify all inter-service communication uses TLS 1.2+" },
+    { id: "gov-014", name: "SOC 2 control validation", cat: "governance", pool: "cold", w: 3, desc: "Validate SOC 2 Type II controls are operational and documented" },
+    { id: "gov-015", name: "Incident response readiness", cat: "governance", pool: "warm", w: 4, desc: "Verify incident response runbook is current and contacts are valid" },
 ];
 
 // ─── DYNAMIC JSON TASK LOADER ──────────────────────────────────────────────────
@@ -481,7 +668,7 @@ try {
       const tasks = Array.isArray(data) ? data : (data.tasks || data.categories || []);
       JSON_TASKS = JSON_TASKS.concat(tasks);
     } catch (e) {
-      // Graceful skip if file not found
+      console.warn(`[auto-success-catalog] Failed to load JSON task file "${file}": ${e.message}`);
     }
   }
 } catch (e) {
