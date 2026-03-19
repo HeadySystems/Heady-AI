@@ -1,0 +1,121 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> production/main
+node_modules
+.git
+.env
+.env.*
+!.env.example
+*.zip
+*.exe
+*.log
+
+# Large binary directories
+=======
+node_modules
+.git
+*.zip
+*.exe
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+AndroidSDK
+ventoy
+nginx
+gradle
+cmake.zip
+nasm.zip
+platform-tools.zip
+gradle-8.5-bin.zip
+<<<<<<< HEAD
+
+# Build artifacts
+deploy-package-*
+dist
+build
+
+# Test/dev directories
+test-electron
+test-electron-2
+electron-test
+
+# Sub-project node_modules
+desktop-overlay/node_modules
+headybuddy/node_modules
+frontend/node_modules
+
+# IDE and tool caches
+windsurf-next
+.heady
+offline-packages
+.vscode
+.idea
+
+# Documentation (not needed in container)
+docs
+notebooks
+*.md
+!README.md
+
+# Non-production directories
+_archive
+_downloads
+audit
+context
+desktop-overlay
+HeadyAI-IDE
+distribution
+
+<<<<<<< HEAD
+# Documentation & tests (not in production images)
+tests
+notebooks
+*.test.js
+*.test.ts
+*.test.mjs
+*.spec.js
+*.spec.ts
+
+# Deployment configs (not part of app)
+deployment
+heady-build
+heady-deploy
+heady-improvements
+heady-latent-os-runtime-bundle
+heady-monorepo
+heady-native-services
+heady-projection
+heady-10-10
+drupal
+
+# Large binary assets
+*.mp4
+*.mp3
+*.wav
+*.zip
+*.tar.gz
+*.woff2
+*.ttf
+lfs-assets
+
+# Secrets
+.env
+.env.*
+.heady/gcp-*.json
+.heady/vault-seed.js
+>>>>>>> hc-testing/dependabot/docker/node-25-slim
+=======
+deploy-package-*
+test-electron
+test-electron-2
+electron-test
+desktop-overlay/node_modules
+headybuddy/node_modules
+windsurf-next
+.heady
+offline-packages
+>>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+=======
+# Ensure assets are included (og:images)
+!assets/
+>>>>>>> production/main
