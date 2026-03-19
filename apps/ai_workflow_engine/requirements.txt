@@ -79,7 +79,7 @@ httpx==0.26.0
 # Development tools
 black>=25.1.0
 isort==5.13.2
-flake8==7.1.0
+flake8==7.3.0
 mypy==1.19.1
 
 # Resource monitoring
