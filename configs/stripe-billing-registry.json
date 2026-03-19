@@ -1,0 +1,96 @@
+{
+  "_note": "Stripe Billing Registry — created by Full-Spectrum Beneficial Actions pipeline.",
+  "_created": "2026-03-19",
+  "products": {
+    "developer": {
+      "name": "Heady Developer",
+      "product_id": "prod_UAyyzjtPdufhZn",
+      "description": "Developer tier — API access, 100K tokens/month, community support, single user",
+      "prices": {
+        "monthly": {
+          "price_id": "price_1TCd0W7edJeDouhQi49Vts6c",
+          "amount_cents": 2900,
+          "currency": "usd",
+          "interval": "month"
+        },
+        "annual": {
+          "price_id": "price_1TCd0y7edJeDouhQJ8RmrbEc",
+          "amount_cents": 29000,
+          "currency": "usd",
+          "interval": "year",
+          "savings_pct": "16.7%"
+        }
+      },
+      "features": [
+        "API access (100K tokens/month)",
+        "Community support",
+        "Single user",
+        "HeadyMCP tool access",
+        "Basic analytics"
+      ]
+    },
+    "team": {
+      "name": "Heady Team",
+      "product_id": "prod_UAyyJHo95Ng1oj",
+      "description": "Team tier — Full API access, 1M tokens/month per seat, priority support",
+      "prices": {
+        "monthly": {
+          "price_id": "price_1TCd0W7edJeDouhQHLFrAJcM",
+          "amount_cents": 9900,
+          "currency": "usd",
+          "interval": "month",
+          "per_seat": true
+        },
+        "annual": {
+          "price_id": "price_1TCd0y7edJeDouhQLlDE3WDz",
+          "amount_cents": 99000,
+          "currency": "usd",
+          "interval": "year",
+          "per_seat": true,
+          "savings_pct": "16.7%"
+        }
+      },
+      "features": [
+        "Full API access (1M tokens/month/seat)",
+        "Priority support",
+        "Team dashboard",
+        "Shared workspaces",
+        "Advanced analytics",
+        "HeadyBuddy integration",
+        "Custom webhooks"
+      ]
+    },
+    "enterprise": {
+      "name": "Heady Enterprise",
+      "product_id": "prod_UAyyk4NBRAMuKX",
+      "description": "Enterprise tier — Unlimited API, dedicated infrastructure, SLA guarantees",
+      "prices": {
+        "monthly": {
+          "price_id": "price_1TCd0W7edJeDouhQ2dU62NhH",
+          "amount_cents": 49900,
+          "currency": "usd",
+          "interval": "month"
+        },
+        "annual": {
+          "price_id": "price_1TCd0y7edJeDouhQ9f0mdwNd",
+          "amount_cents": 499000,
+          "currency": "usd",
+          "interval": "year",
+          "savings_pct": "16.7%"
+        }
+      },
+      "features": [
+        "Unlimited API access",
+        "Dedicated infrastructure",
+        "99.9% SLA guarantee",
+        "Custom integrations",
+        "SSO / SAML",
+        "Audit logging",
+        "Dedicated account manager",
+        "Private vector memory",
+        "Custom model fine-tuning",
+        "On-premise option"
+      ]
+    }
+  }
+}

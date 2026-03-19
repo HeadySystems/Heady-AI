@@ -102,12 +102,36 @@ function resolveByPath(pathname: string, env: Env): RouteConfig {
   };
 }
 
+/**
+ * Heady CORS whitelist — explicit origins only, no wildcard.
+ * Phi-scaled max-age: 86400 * PSI ≈ 53395 seconds.
+ */
+const HEADY_CORS_ORIGINS = new Set([
+  'https://headyme.com', 'https://www.headyme.com',
+  'https://headysystems.com', 'https://www.headysystems.com',
+  'https://heady-ai.com', 'https://www.heady-ai.com',
+  'https://headyconnection.org', 'https://www.headyconnection.org',
+  'https://headyconnection.com', 'https://www.headyconnection.com',
+  'https://headybuddy.org', 'https://www.headybuddy.org',
+  'https://headymcp.com', 'https://www.headymcp.com',
+  'https://headyio.com', 'https://www.headyio.com',
+  'https://headybot.com', 'https://www.headybot.com',
+  'https://headyapi.com', 'https://www.headyapi.com',
+  'https://headyos.com', 'https://www.headyos.com',
+  'https://admin.headysystems.com',
+  'https://auth.headysystems.com',
+  'https://api.headysystems.com',
+]);
+
 function corsHeaders(origin: string | null): Record<string, string> {
+  // Strict origin check — never return wildcard *
+  const allowedOrigin = origin && HEADY_CORS_ORIGINS.has(origin) ? origin : '';
   return {
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Workspace-ID, X-Brain-Profile',
-    'Access-Control-Max-Age': '86400',
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-CSRF, X-Workspace-ID, X-Brain-Profile, X-Request-ID, X-Correlation-ID',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '53395',
   };
 }
 
