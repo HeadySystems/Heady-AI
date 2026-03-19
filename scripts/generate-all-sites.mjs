@@ -81,6 +81,7 @@ function generateFullSite(site) {
   <meta name="description" content="${description}">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://${domain}/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='${encodeURIComponent(accent)}'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://${domain}/">
   <meta property="og:title" content="${title} — ${tagline}">
@@ -203,11 +204,11 @@ function generateFullSite(site) {
     <ul class="nav-links">
       <li><a href="#features">Features</a></li>
       <li><a href="#ecosystem">Ecosystem</a></li>
-      <li><a href="https://headyio.com/docs">Docs</a></li>
+      <li><a href="https://headyio.com">Docs</a></li>
       <li><a href="https://headyconnection.com">Community</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-ghost">Sign In</a>
+      <a href="https://headyme.com" class="btn btn-ghost">Sign In</a>
       <a href="${cta.primaryHref}" class="btn btn-primary">${cta.primary}</a>
     </div>
   </nav>
@@ -274,11 +275,11 @@ ${features.map(f => `      <div class="feature-card">
       <a class="eco-card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>Intelligence Gateway</p></a>
       <a class="eco-card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Server</p></a>
       <a class="eco-card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
-      <a class="eco-card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+      <a class="eco-card" href="https://headybuddy.com"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
       <a class="eco-card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
-      <a class="eco-card" href="https://headycloud.com"><h4>HeadyCloud</h4><p>Sovereign Infra</p></a>
+      <a class="eco-card" href="https://headylens.com"><h4>HeadyLens</h4><p>Visual Analysis</p></a>
       <a class="eco-card" href="https://headybot.com"><h4>HeadyBot</h4><p>Agent Orchestration</p></a>
-      <a class="eco-card" href="https://headystore.com"><h4>HeadyStore</h4><p>AI Marketplace</p></a>
+      <a class="eco-card" href="https://headyfinance.com"><h4>HeadyFinance</h4><p>Financial Intelligence</p></a>
       <a class="eco-card" href="https://headyconnection.org"><h4>HeadyConnection</h4><p>AI for Good</p></a>
     </div>
   </section>
@@ -297,12 +298,14 @@ ${features.map(f => `      <div class="feature-card">
   <footer class="footer">
     <div class="footer-links">
       <a href="https://headysystems.com">HeadySystems</a>
-      <a href="https://headyio.com/docs">Documentation</a>
+      <a href="https://headyio.com">Documentation</a>
       <a href="https://headyconnection.com">Community</a>
       <a href="https://github.com/HeadyMe">GitHub</a>
-      <a href="mailto:eric@headyconnection.org">Contact</a>
+      <a href="mailto:eric@headysystems.com">Contact</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
     </div>
-    <p class="footer-copy">© 2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Provisional Patents</p>
+    <p class="footer-copy">© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Provisional Patents</p>
   </footer>
 
   <script>
@@ -317,13 +320,28 @@ function generateStubSite(stub) {
     const { slug, title, tagline, accent } = stub;
     const domain = slug.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() + '.com';
 
+    const metaDesc = `${title} - ${tagline}. Part of the Heady™ intelligent platform by HeadySystems Inc.`;
     return `<!DOCTYPE html>
 <html lang="en" data-heady-site="${slug}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title} — ${tagline}</title>
-  <meta name="description" content="${title} - ${tagline}. Part of the Heady™ intelligent platform by HeadySystems Inc.">
+  <meta name="description" content="${metaDesc}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://${domain}/">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='${encodeURIComponent(accent)}'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://${domain}/">
+  <meta property="og:title" content="${title} — ${tagline}">
+  <meta property="og:description" content="${metaDesc}">
+  <meta property="og:site_name" content="${title}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${title} — ${tagline}">
+  <meta name="twitter:description" content="${metaDesc}">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"${title}","url":"https://${domain}","description":"${metaDesc}","publisher":{"@type":"Organization","name":"HeadySystems Inc.","url":"https://headysystems.com","founder":{"@type":"Person","name":"Eric Haywood"}}}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=${data.designTokens.fonts}&display=swap" rel="stylesheet">
@@ -342,13 +360,15 @@ function generateStubSite(stub) {
     .card:hover{border-color:${accent}40;transform:translateY(-3px)}
     .card h4{font-family:var(--font);font-size:.875rem;font-weight:600;margin-bottom:4px}
     .card p{font-size:.75rem;color:var(--text3)}
-    .cta-row{display:flex;gap:13px;flex-wrap:wrap;justify-content:center}
+    .cta-row{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-bottom:34px}
     .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 34px;border-radius:8px;font-family:var(--body);font-size:.875rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none}
     .btn-p{background:var(--accent);color:var(--bg)}
     .btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 24px ${accent}40}
     .btn-g{background:transparent;color:var(--text2);border:1px solid var(--border)}
     .btn-g:hover{color:var(--text);border-color:rgba(255,255,255,.2)}
     .footer{position:absolute;bottom:21px;font-size:.75rem;color:var(--text3)}
+    .footer a{color:var(--text3);margin:0 8px;text-decoration:none;transition:color .2s}
+    .footer a:hover{color:var(--accent)}
     canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
   </style>
 </head>
@@ -363,15 +383,18 @@ function generateStubSite(stub) {
     <a class="card" href="https://headyio.com"><h4>Heady I/O</h4><p>Developer SDK</p></a>
     <a class="card" href="https://headyapi.com"><h4>HeadyAPI</h4><p>AI Gateway</p></a>
     <a class="card" href="https://headymcp.com"><h4>HeadyMCP</h4><p>MCP Tools</p></a>
-    <a class="card" href="https://headybuddy.org"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
+    <a class="card" href="https://headybuddy.com"><h4>HeadyBuddy</h4><p>AI Companion</p></a>
     <a class="card" href="https://headyos.com"><h4>HeadyOS</h4><p>Latent OS</p></a>
     <a class="card" href="https://heady-ai.com"><h4>Heady AI</h4><p>Intelligence Hub</p></a>
   </div>
   <div class="cta-row">
-    <a href="https://heady-onboarding-bf4q4zywhq-ue.a.run.app" class="btn btn-p">Get Started →</a>
-    <a href="https://headyio.com/docs" class="btn btn-g">Documentation</a>
+    <a href="https://headyme.com" class="btn btn-p">Get Started →</a>
+    <a href="https://headyio.com" class="btn btn-g">Documentation</a>
   </div>
-  <p class="footer">© 2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Patents</p>
+  <div class="footer">
+    <p>© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic · 60+ Patents</p>
+    <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:eric@headysystems.com">Contact</a></p>
+  </div>
   <script>var ACCENT='${accent}';${sacredGeoJS}</script>
 </body>
 </html>`;

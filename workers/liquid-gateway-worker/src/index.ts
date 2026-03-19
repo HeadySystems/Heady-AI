@@ -133,12 +133,66 @@ interface Env {
   UPSTASH_REDIS_TOKEN: string;
 }
 
+// ── Security: Blocked Paths ─────────────────────────────────────────
+const BLOCKED_PATHS = [
+  '/.env', '/.env.local', '/.env.production', '/.env.staging',
+  '/.git', '/.git/config', '/.git/HEAD', '/.gitignore',
+  '/package.json', '/package-lock.json', '/yarn.lock', '/pnpm-lock.yaml',
+  '/.npmrc', '/.yarnrc', '/tsconfig.json', '/wrangler.toml',
+  '/docker-compose.yml', '/Dockerfile', '/.dockerignore',
+  '/wp-config.php', '/wp-login.php', '/xmlrpc.php',
+  '/.htaccess', '/.htpasswd', '/web.config',
+  '/composer.json', '/composer.lock',
+];
+
+function isBlockedPath(pathname: string): boolean {
+  const lower = pathname.toLowerCase();
+  return BLOCKED_PATHS.some(p => lower === p || lower.startsWith(p + '/'));
+}
+
+// ── Security Headers ────────────────────────────────────────────────
+const SECURITY_HEADERS: Record<string, string> = {
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  'Content-Security-Policy': "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'self'",
+};
+
+function addSecurityHeaders(response: Response): Response {
+  const newHeaders = new Headers(response.headers);
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    newHeaders.set(key, value);
+  }
+  // Remove server info leaks
+  newHeaders.delete('X-Powered-By');
+  newHeaders.delete('Server');
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: newHeaders,
+  });
+}
+
 // ── Main Handler ────────────────────────────────────────────────────
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const hostname = url.hostname;
     const startTime = Date.now();
+
+    // ── SECURITY: Block sensitive file access ──
+    if (isBlockedPath(url.pathname)) {
+      return addSecurityHeaders(new Response('404 Not Found', { status: 404 }));
+    }
+
+    // ── SECURITY: Force HTTPS redirect ──
+    if (url.protocol === 'http:') {
+      url.protocol = 'https:';
+      return Response.redirect(url.toString(), 301);
+    }
 
     // ── System endpoints ──
     if (url.pathname === '/health') {
@@ -288,10 +342,23 @@ export default {
       });
     }
 
+    // ── Legal pages (privacy, terms) ──
+    if (url.pathname === '/privacy' || url.pathname === '/privacy/') {
+      return addSecurityHeaders(new Response(legalPageHTML('privacy', hostname), {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+      }));
+    }
+    if (url.pathname === '/terms' || url.pathname === '/terms/') {
+      return addSecurityHeaders(new Response(legalPageHTML('terms', hostname), {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' },
+      }));
+    }
+
     // ── Site routing ──
     const site = SITE_REGISTRY[hostname];
     if (site) {
-      return serveSite(request, url, site, env, ctx);
+      const response = await serveSite(request, url, site, env, ctx);
+      return addSecurityHeaders(response);
     }
 
     // ── Wildcard: *.headysystems.com subdomain routing ──
@@ -301,14 +368,15 @@ export default {
         s.repo === `heady-${sub}` || s.repo === sub
       );
       if (wildcardSite) {
-        return serveSite(request, url, wildcardSite, env, ctx);
+        const response = await serveSite(request, url, wildcardSite, env, ctx);
+        return addSecurityHeaders(response);
       }
     }
 
     // ── Default: serve gateway landing ──
-    return new Response(gatewayHTML(hostname), {
+    return addSecurityHeaders(new Response(gatewayHTML(hostname), {
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
-    });
+    }));
   },
 };
 
@@ -880,3 +948,102 @@ function gatewayHTML(hostname: string): string {
 </body>
 </html>`;
 }
+
+// ── Legal Pages (Privacy / Terms) ───────────────────────────────────
+function legalPageHTML(type: 'privacy' | 'terms', hostname: string): string {
+  const isPrivacy = type === 'privacy';
+  const title = isPrivacy ? 'Privacy Policy' : 'Terms of Service';
+  const content = isPrivacy ? `
+    <h2>Information We Collect</h2>
+    <p>We collect information you provide directly, including account registration data (email, name), usage data through cookies and analytics, and technical data (IP address, browser type, device information).</p>
+
+    <h2>How We Use Your Information</h2>
+    <p>We use collected information to provide and improve our services, communicate with you about updates and features, ensure platform security and prevent abuse, and comply with legal obligations.</p>
+
+    <h2>Data Storage & Security</h2>
+    <p>Your data is stored securely using industry-standard encryption. We use Cloudflare for edge security, Firebase for authentication, and Neon Postgres for data persistence. All data is encrypted in transit (TLS 1.3) and at rest (AES-256).</p>
+
+    <h2>Third-Party Services</h2>
+    <p>We use the following third-party services: Google Cloud Platform, Cloudflare, Firebase Authentication, Sentry (error tracking), and Stripe (payment processing). Each operates under their own privacy policies.</p>
+
+    <h2>Your Rights</h2>
+    <p>You have the right to access, correct, or delete your personal data. You may also request data portability or restrict processing. Contact us at <a href="mailto:privacy@headysystems.com">privacy@headysystems.com</a> to exercise these rights.</p>
+
+    <h2>Cookies</h2>
+    <p>We use essential cookies for authentication and session management. Analytics cookies help us understand usage patterns. You can disable non-essential cookies in your browser settings.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>We may update this policy periodically. Material changes will be communicated via email or platform notification. Continued use after changes constitutes acceptance.</p>
+  ` : `
+    <h2>Acceptance of Terms</h2>
+    <p>By accessing or using any Heady™ service, you agree to be bound by these Terms of Service. If you do not agree, do not use our services.</p>
+
+    <h2>Services</h2>
+    <p>HeadySystems Inc. provides AI-powered tools, APIs, and platforms ("Services") across the Heady™ ecosystem. Services are provided "as-is" and may be modified, suspended, or discontinued at any time.</p>
+
+    <h2>User Accounts</h2>
+    <p>You are responsible for maintaining the confidentiality of your account credentials. You must provide accurate information and promptly update it if it changes. You are responsible for all activity under your account.</p>
+
+    <h2>Acceptable Use</h2>
+    <p>You agree not to: use Services for illegal purposes, attempt to gain unauthorized access to systems, interfere with service operations, reverse engineer proprietary technology, or use automated systems to scrape content without permission.</p>
+
+    <h2>Intellectual Property</h2>
+    <p>All Heady™ technology, including Sacred Geometry algorithms, Continuous Semantic Logic, and related innovations, are proprietary to HeadySystems Inc. and protected by 60+ provisional patents.</p>
+
+    <h2>API Usage</h2>
+    <p>API access is subject to rate limits and usage quotas. You must not exceed published limits or use APIs in ways that degrade service for other users. API keys are confidential and non-transferable.</p>
+
+    <h2>Limitation of Liability</h2>
+    <p>HeadySystems Inc. shall not be liable for indirect, incidental, or consequential damages arising from use of Services. Total liability is limited to fees paid in the 12 months preceding the claim.</p>
+
+    <h2>Governing Law</h2>
+    <p>These terms are governed by the laws of the State of California, United States. Disputes shall be resolved in courts located in San Francisco County, California.</p>
+  `;
+
+  return \`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>\${title} — Heady™</title>
+  <meta name="description" content="\${title} for Heady™ by HeadySystems Inc.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%236c63ff'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%230a0e17' font-family='system-ui' font-weight='800' font-size='18'%3E◆%3C/text%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0a0e17;--surface:#0d1221;--border:rgba(255,255,255,0.08);--accent:#6c63ff;--text:#f0f4ff;--text2:#8b98b8;--text3:#4a5568}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.618;-webkit-font-smoothing:antialiased}
+    .container{max-width:720px;margin:0 auto;padding:89px 34px 55px}
+    .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:21px 34px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);background:rgba(10,14,23,0.85);border-bottom:1px solid var(--border)}
+    .nav a{color:var(--text2);text-decoration:none;font-size:.875rem;transition:color .2s}
+    .nav a:hover{color:var(--accent)}
+    .nav-logo{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.25rem;color:var(--text)}
+    h1{font-family:'Outfit',sans-serif;font-size:2.5rem;font-weight:800;margin-bottom:34px;letter-spacing:-0.03em}
+    h1 span{color:var(--accent)}
+    h2{font-family:'Outfit',sans-serif;font-size:1.25rem;font-weight:600;margin:34px 0 13px;color:var(--text)}
+    p{color:var(--text2);margin-bottom:13px;font-size:.9375rem}
+    a{color:var(--accent)}
+    .updated{font-size:.75rem;color:var(--text3);margin-bottom:34px}
+    .footer{border-top:1px solid var(--border);margin-top:55px;padding-top:21px;text-align:center;font-size:.75rem;color:var(--text3)}
+    .footer a{color:var(--text3);margin:0 8px;text-decoration:none}
+    .footer a:hover{color:var(--accent)}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo">◆ Heady™</a>
+    <div><a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="/terms">Terms</a> &nbsp;·&nbsp; <a href="/">Home</a></div>
+  </nav>
+  <div class="container">
+    <h1><span>Heady™</span> \${title}</h1>
+    <p class="updated">Last updated: March 19, 2026 · Effective for all Heady™ domains</p>
+    \${content}
+    <div class="footer">
+      <p>© 2024-2026 HeadySystems Inc. — Sacred Geometry · Continuous Semantic Logic</p>
+      <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:eric@headysystems.com">Contact</a></p>
+    </div>
+  </div>
+</body>
+</html>\`;
+}
+
