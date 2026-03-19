@@ -122,6 +122,9 @@ let phase5Tasks = [];
 try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
 let downloadsTasks = [];
 try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
+// ─── FULL-SPECTRUM OPTIMIZATION TASKS (15-layer audit) ───────────────────────
+let fullSpectrumTasks = [];
+try { fullSpectrumTasks = require('./full-spectrum-auto-success-tasks.json').tasks || []; } catch (e) { }
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,
@@ -131,6 +134,7 @@ const TASK_CATALOG = [
     ...orchProtocolTasks,
     ...phase5Tasks,
     ...downloadsTasks,
+    ...fullSpectrumTasks,
     // ═══ LEARNING (20) — Targeted system learning ═══════════════════════════
     {
         id: "learn-001", name: "Analyze config drift patterns", cat: "learning", pool: "warm", w: 3,

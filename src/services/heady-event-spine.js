@@ -20,7 +20,7 @@ const CONSUMER_GROUP = 'hcfp-consumers';
  * This is the correct model for latent-space instantaneous delivery.
  * NEVER use setInterval, setTimeout-based polling, or sleep loops.
  */
-export class HeadyEventSpine {
+class HeadyEventSpine {
   constructor(redisClient) {
     this.redis = redisClient;
     this.streamKey = STREAM_KEY;
@@ -142,4 +142,4 @@ export class HeadyEventSpine {
   }
 }
 
-export default HeadyEventSpine;
+module.exports = { HeadyEventSpine };

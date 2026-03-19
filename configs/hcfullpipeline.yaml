@@ -158,6 +158,20 @@ pipeline:
   #   → receipt(20) → distiller(21)
   #   + parallel side lanes: pqc, system_operations, priority
   #
+  # ─── FULL-SPECTRUM OPTIMIZATION TASK REGISTRY ────────────────────────────────
+  # 120 tasks from 15-layer audit loaded from:
+  #   src/orchestration/full-spectrum-auto-success-tasks.json
+  #   src/orchestration/full-spectrum-bridge.js
+  # Each task is mapped to both a pipeline stage AND an auto-success category.
+  fullSpectrumTasks:
+    enabled: true
+    source: "src/orchestration/full-spectrum-auto-success-tasks.json"
+    bridge: "src/orchestration/full-spectrum-bridge.js"
+    totalTasks: 120
+    layers: 15
+    categories: 13
+    autoInjectToStages: true
+
   stages:
 
     # ── STAGE 0: Channel Entry (Heady™ Buddy / Multi-Channel Gateway) ───────────

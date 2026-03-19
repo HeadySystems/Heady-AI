@@ -8,8 +8,8 @@
 // Sacred Geometry v4.0 | Liquid Latent OS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import { HeadyEventSpine } from '../services/heady-event-spine.js';
-import { TaskGraph } from './task-graph.js';
+const { HeadyEventSpine } = require('../services/heady-event-spine.js');
+const { TaskGraph } = require('./task-graph.js');
 
 const PHI = 1.618033988749895;
 
@@ -41,7 +41,7 @@ class PhiRetry {
  * All independent tasks execute in parallel simultaneously.
  * Completion is determined by the task graph reaching terminal nodes.
  */
-export class HCFullPipeline {
+class HCFullPipeline {
   constructor({ conductorUrl, nodes, eventSpine }) {
     this.conductorUrl = conductorUrl;
     this.nodes = nodes;             // Map<nodeId, LiquidNode>
@@ -208,4 +208,4 @@ export class HCFullPipeline {
   }
 }
 
-export default HCFullPipeline;
+module.exports = { HCFullPipeline };

@@ -14,7 +14,7 @@
  * When a subtask completes, downstream subtasks with all deps satisfied
  * are returned by getUnblocked() for immediate concurrent dispatch.
  */
-export class TaskGraph {
+class TaskGraph {
   constructor(rootTaskId) {
     this.rootTaskId = rootTaskId;
     this.nodes = new Map();     // subtaskId → { subtask, status, result, deps, dependents }
@@ -126,4 +126,4 @@ export class TaskGraph {
   }
 }
 
-export default TaskGraph;
+module.exports = { TaskGraph };

@@ -6,6 +6,6 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@heady/phi-math": "file:../phi-math"
+    "@heady-ai/phi-math": "workspace:*"
   }
 }

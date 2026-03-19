@@ -11,7 +11,7 @@
 
 'use strict';
 
-import {
+const {
   PSI,
   PSI2,
   PSI3,
@@ -19,7 +19,7 @@ import {
   fib,
   ALERT_THRESHOLDS,
   phiFusionWeights,
-} from '../shared/phi-math.js';
+} = require('../shared/phi-math.js');
 
 // ─── Module Constants ──────────────────────────────────────────────────────────
 
@@ -125,7 +125,7 @@ function resolveAlertLevel(ratio) {
  * @description Tracks AI provider spend in real-time, enforces phi-derived budget
  * thresholds, and recommends provider downgrades before caps are hit.
  */
-export class BudgetTracker {
+class BudgetTracker {
   /**
    * @param {object} [config={}]
    * @param {number}  [config.dailyBudgetUSD=50]        Total daily budget.
@@ -551,3 +551,5 @@ export class BudgetTracker {
  * @property {object} alertThresholds
  * @property {SpendEvent[]} recentEvents
  */
+
+module.exports = { BudgetTracker };

@@ -23,19 +23,19 @@
   "author": "Heady Systems",
   "license": "MIT",
   "dependencies": {
-    "@heady/phi-math": "^1.0.0",
-    "@heady/structured-logger": "^1.0.0",
-    "@heady/bee": "^1.0.0"
+    "@heady-ai/phi-math": "workspace:*",
+    "@heady/structured-logger": "workspace:*",
+    "@heady/bee": "workspace:*"
   },
   "peerDependencies": {
-    "@heady/phi-math": "^1.0.0",
-    "@heady/structured-logger": "^1.0.0"
+    "@heady-ai/phi-math": "workspace:*",
+    "@heady/structured-logger": "workspace:*"
   },
   "peerDependenciesOptional": {
-    "@heady/bee": "^1.0.0"
+    "@heady/bee": "workspace:*"
   },
   "optionalDependencies": {
-    "@heady/bee": "^1.0.0"
+    "@heady/bee": "workspace:*"
   },
   "engines": {
     "node": ">=18.0.0"
