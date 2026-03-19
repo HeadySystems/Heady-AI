@@ -56,13 +56,18 @@ const PHI = 1.618033988749895;
 const PSI = 1 / PHI;  // ≈ 0.618
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
 
-/** No token budget — inject ALL relevant context for maximum intelligence */
-
 /** Relevance thresholds — CSL gates at φ intervals */
 const CSL_GATES = {
     include: PSI * PSI,     // ≈ 0.382 — minimum to include in context
     boost: PSI,             // ≈ 0.618 — high relevance
     critical: PSI + 0.1,    // ≈ 0.718 — always included
+};
+
+/** Compression tiers — aligned to CSL gates */
+const COMPRESSION_TIERS = {
+    NONE:  'none',   // ≥ critical (0.718) — full content, no compression
+    LIGHT: 'light',  // boost–critical (0.618–0.718) — signatures + exports + key lines
+    HEAVY: 'heavy',  // include–boost (0.382–0.618) — structural summary only
 };
 
 /** File extensions to scan */
@@ -149,6 +154,7 @@ class HeadyAutoContext extends EventEmitter {
         this._stats = {
             totalEnrichments: 0,
             totalTokensInjected: 0,
+            totalTokensSaved: 0,
             avgEnrichTimeMs: 0,
             vectorSearches: 0,
             cacheHits: 0,
@@ -237,17 +243,25 @@ class HeadyAutoContext extends EventEmitter {
         const gated = deduped.filter(s => s.relevance >= CSL_GATES.include);
 
         // ── 5: Rank by relevance (include ALL gated sources) ────────────
-        const packed = this._rankByRelevance(gated);
+        const ranked = this._rankByRelevance(gated);
+
+        // ── 5b: Tiered compression (φ-aligned) ─────────────────────────
+        const packed = this._compressSources(ranked);
 
         // ── 6: Build context injection block ─────────────────────────────
         const systemContext = this._buildContextBlock(packed);
 
         // ── 7: Record stats ──────────────────────────────────────────────
         const enrichTimeMs = Date.now() - startMs;
+        const tokensPreCompression = ranked.reduce((s, c) => s + c.tokens, 0);
         const tokensUsed = packed.reduce((s, c) => s + c.tokens, 0);
+        const compressionRatio = tokensPreCompression > 0
+            ? ((1 - tokensUsed / tokensPreCompression) * 100).toFixed(1)
+            : '0.0';
 
         this._stats.totalEnrichments++;
         this._stats.totalTokensInjected += tokensUsed;
+        this._stats.totalTokensSaved += (tokensPreCompression - tokensUsed);
         this._stats.avgEnrichTimeMs = (
             this._stats.avgEnrichTimeMs * (this._stats.totalEnrichments - 1) + enrichTimeMs
         ) / this._stats.totalEnrichments;
@@ -257,7 +271,9 @@ class HeadyAutoContext extends EventEmitter {
             sourcesScanned: sources.length,
             sourcesGated: gated.length,
             sourcesIncluded: packed.length,
+            tokensPreCompression,
             tokensUsed,
+            compressionRatio: `${compressionRatio}%`,
             scanTimeMs: enrichTimeMs,
             vectorHits: sources.filter(s => s.type === 'vector').length,
         };
@@ -519,8 +535,38 @@ class HeadyAutoContext extends EventEmitter {
     _summarizeContent(content, relPath) {
         const ext = path.extname(relPath);
         const lines = content.split('\n');
-        const firstComment = lines.find(l => l.trim().startsWith('*') || l.trim().startsWith('//'));
-        return (firstComment || lines[0] || relPath).trim().slice(0, 200);
+        const parts = [];
+
+        // 1: Module doc comment or first comment
+        const firstComment = lines.find(l => {
+            const t = l.trim();
+            return t.startsWith('/**') || t.startsWith('* ') || t.startsWith('//');
+        });
+        if (firstComment) parts.push(firstComment.trim().replace(/^\/\*\*?\s*|\*\/\s*$/g, '').trim());
+
+        // 2: Exports / module.exports
+        const exportLines = lines.filter(l =>
+            /^(export\s+(default\s+)?(class|function|const|let|var|async)|module\.exports)/.test(l.trim())
+        ).slice(0, 5);
+        if (exportLines.length > 0) {
+            parts.push('Exports: ' + exportLines.map(l => l.trim().slice(0, 80)).join('; '));
+        }
+
+        // 3: Class/function names
+        const defs = lines.filter(l =>
+            /^\s*(class|function|async\s+function)\s+\w+/.test(l)
+        ).map(l => l.trim().replace(/\{.*$/, '').trim()).slice(0, 8);
+        if (defs.length > 0) parts.push('Defines: ' + defs.join(', '));
+
+        // 4: Config keys for JSON/YAML
+        if (ext === '.json' || ext === '.yaml' || ext === '.yml') {
+            const keys = lines.filter(l => /^\s*["']?\w+["']?\s*[:=]/.test(l))
+                .map(l => l.trim().split(/[:=]/)[0].replace(/["']/g, '').trim())
+                .slice(0, 10);
+            if (keys.length > 0) parts.push('Keys: ' + keys.join(', '));
+        }
+
+        return (parts.join(' | ') || lines[0] || relPath).slice(0, 500);
     }
 
     async _persistVectors() {
@@ -849,6 +895,293 @@ class HeadyAutoContext extends EventEmitter {
     }
 
     // ═══════════════════════════════════════════════════════════════════════
+    // ═══ TIERED CONTEXT COMPRESSION (φ-aligned) ═══
+    // ═══════════════════════════════════════════════════════════════════════
+
+    /**
+     * Apply tiered compression to ranked sources based on CSL relevance gates.
+     *
+     *   ≥ 0.718 (critical) → NONE  — full content preserved
+     *   0.618–0.718 (boost) → LIGHT — signatures, exports, key lines
+     *   0.382–0.618 (include) → HEAVY — structural summary only
+     *
+     * Config files and focus files (relevance 1.0) are always exempt.
+     * Vector memory hits are already compressed (just metadata), so exempt.
+     *
+     * @param {ContextSource[]} sources - Ranked sources
+     * @returns {ContextSource[]} Sources with compressed content
+     */
+    _compressSources(sources) {
+        return sources.map(s => {
+            // Exempt types: configs (small + need exact values), vectors (already summary),
+            // prior_build (already condensed), focus files (user-requested)
+            if (s.type === 'config' || s.type === 'vector' || s.type === 'prior_build') return s;
+            if (s.relevance >= 1.0) return s; // Focus files
+
+            // Determine tier
+            let tier;
+            if (s.relevance >= CSL_GATES.critical) {
+                tier = COMPRESSION_TIERS.NONE;
+            } else if (s.relevance >= CSL_GATES.boost) {
+                tier = COMPRESSION_TIERS.LIGHT;
+            } else {
+                tier = COMPRESSION_TIERS.HEAVY;
+            }
+
+            if (tier === COMPRESSION_TIERS.NONE) return s;
+
+            // Apply compression
+            const compressed = this._compressContent(s.content, tier, s.path);
+            return new ContextSource({
+                type: s.type,
+                path: s.path,
+                content: compressed,
+                relevance: s.relevance,
+                vectorScore: s.vectorScore,
+            });
+        });
+    }
+
+    /**
+     * Structure-aware content compression.
+     *
+     * LIGHT mode — extracts:
+     *   - Import/require statements
+     *   - Function/class/method signatures (no bodies)
+     *   - Export declarations
+     *   - Key constant/variable assignments
+     *   - Comments marked with TODO/FIXME/HACK/NOTE
+     *
+     * HEAVY mode — produces:
+     *   - File purpose (from leading comments)
+     *   - List of exports and class/function names
+     *   - Key config values (for JSON/YAML)
+     *   - Total line count for scale reference
+     *
+     * @param {string} content - Raw file content
+     * @param {string} tier - COMPRESSION_TIERS.LIGHT or COMPRESSION_TIERS.HEAVY
+     * @param {string} [filePath] - For extension-aware compression
+     * @returns {string} Compressed content
+     */
+    _compressContent(content, tier, filePath = '') {
+        const ext = path.extname(filePath).toLowerCase();
+        const lines = content.split('\n');
+        const totalLines = lines.length;
+
+        // ── JSON: compress by showing structure only ──────────────────────
+        if (ext === '.json') {
+            return this._compressJSON(content, tier, totalLines);
+        }
+
+        // ── YAML: compress by showing top-level keys ─────────────────────
+        if (ext === '.yaml' || ext === '.yml') {
+            return this._compressYAML(lines, tier, totalLines);
+        }
+
+        // ── Markdown: compress to headings + first paragraph ─────────────
+        if (ext === '.md') {
+            return this._compressMarkdown(lines, tier, totalLines);
+        }
+
+        // ── Code files (JS/TS/PY/Go/etc.) ────────────────────────────────
+        if (tier === COMPRESSION_TIERS.LIGHT) {
+            return this._compressCodeLight(lines, totalLines, ext);
+        }
+
+        return this._compressCodeHeavy(lines, totalLines, ext, filePath);
+    }
+
+    /**
+     * LIGHT code compression — signatures + structural lines only.
+     */
+    _compressCodeLight(lines, totalLines, ext) {
+        const kept = [];
+        let inBlockComment = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const trimmed = line.trim();
+
+            // Track block comments
+            if (trimmed.startsWith('/*')) inBlockComment = true;
+            if (inBlockComment) {
+                // Keep doc comments (/** ... */) as they contain API docs
+                if (trimmed.startsWith('/**') || trimmed.startsWith('* @')) {
+                    kept.push(line);
+                }
+                if (trimmed.includes('*/')) inBlockComment = false;
+                continue;
+            }
+
+            // Always keep: imports, requires, exports
+            if (/^\s*(import\s|const\s+\{.*\}\s*=\s*require|require\s*\(|from\s+['"])/.test(trimmed) ||
+                /^\s*(export\s+(default\s+)?(class|function|const|let|var|async|type|interface))/.test(trimmed) ||
+                /^\s*module\.exports/.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+
+            // Keep class declarations and method signatures
+            if (/^\s*(class\s+\w+|constructor\s*\(|static\s+|async\s+\w+\s*\(|get\s+\w+\s*\(|set\s+\w+\s*\()/.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+
+            // Keep function declarations (standalone + arrow with name)
+            if (/^\s*(function\s+\w+|async\s+function\s+\w+|const\s+\w+\s*=\s*(async\s+)?\(|const\s+\w+\s*=\s*(async\s+)?function)/.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+
+            // Keep named method definitions (object/class methods)
+            if (/^\s*\w+\s*\(.*\)\s*\{?\s*$/.test(trimmed) && !trimmed.startsWith('if') &&
+                !trimmed.startsWith('for') && !trimmed.startsWith('while') &&
+                !trimmed.startsWith('switch') && !trimmed.startsWith('return')) {
+                kept.push(line);
+                continue;
+            }
+
+            // Keep key constant assignments (ALL_CAPS or important-looking)
+            if (/^\s*const\s+[A-Z_]{3,}\s*=/.test(trimmed) ||
+                /^\s*(let|var)\s+[A-Z_]{3,}\s*=/.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+
+            // Keep TODO/FIXME/HACK/NOTE comments
+            if (/\/\/\s*(TODO|FIXME|HACK|NOTE|WARN|XXX|BUG)/i.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+
+            // Python-specific: keep def/class
+            if (ext === '.py' && /^\s*(def\s+\w+|class\s+\w+|@\w+)/.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+
+            // Go-specific: keep func/type
+            if (ext === '.go' && /^\s*(func\s+|type\s+\w+\s+(struct|interface))/.test(trimmed)) {
+                kept.push(line);
+                continue;
+            }
+        }
+
+        const header = `[light-compressed: ${kept.length}/${totalLines} lines kept]`;
+        return header + '\n' + kept.join('\n');
+    }
+
+    /**
+     * HEAVY code compression — structural summary only.
+     */
+    _compressCodeHeavy(lines, totalLines, ext, filePath) {
+        const parts = [];
+        parts.push(`[${path.basename(filePath)} — ${totalLines} lines]`);
+
+        // Extract file purpose from leading comments
+        const leadingComment = [];
+        for (const line of lines.slice(0, 20)) {
+            const t = line.trim();
+            if (t.startsWith('*') || t.startsWith('//') || t.startsWith('/**') || t === '') {
+                leadingComment.push(t.replace(/^[\/*\s]+/, '').trim());
+            } else break;
+        }
+        const purpose = leadingComment.filter(Boolean).join(' ').slice(0, 200);
+        if (purpose) parts.push(`Purpose: ${purpose}`);
+
+        // Collect exports
+        const exports = lines.filter(l =>
+            /^\s*(export\s+(default\s+)?(class|function|const|let|async|type|interface)|module\.exports)/.test(l.trim())
+        ).map(l => l.trim().slice(0, 100));
+        if (exports.length > 0) parts.push('Exports: ' + exports.join('; '));
+
+        // Collect class/function names
+        const defs = lines.filter(l =>
+            /^\s*(class\s+\w+|function\s+\w+|async\s+function\s+\w+)/.test(l.trim())
+        ).map(l => l.trim().replace(/[{(].*$/, '').trim());
+        if (defs.length > 0) parts.push('Defines: ' + defs.join(', '));
+
+        // Python defs
+        if (ext === '.py') {
+            const pyDefs = lines.filter(l => /^\s*(def|class)\s+\w+/.test(l.trim()))
+                .map(l => l.trim().replace(/:.*$/, '').trim());
+            if (pyDefs.length > 0) parts.push('Defines: ' + pyDefs.join(', '));
+        }
+
+        // Count key patterns
+        const importCount = lines.filter(l => /^\s*(import\s|require\s*\()/.test(l.trim())).length;
+        if (importCount > 0) parts.push(`Dependencies: ${importCount} imports`);
+
+        return parts.join('\n');
+    }
+
+    /**
+     * JSON compression — show keys and structure without values.
+     */
+    _compressJSON(content, tier, totalLines) {
+        try {
+            const parsed = JSON.parse(content);
+            if (tier === COMPRESSION_TIERS.HEAVY) {
+                const topKeys = Object.keys(parsed).slice(0, 20);
+                return `[JSON — ${totalLines} lines] Keys: ${topKeys.join(', ')}`;
+            }
+            // LIGHT: show top-level keys with value types
+            const structure = Object.entries(parsed).slice(0, 30).map(([k, v]) => {
+                if (Array.isArray(v)) return `${k}: Array[${v.length}]`;
+                if (v && typeof v === 'object') return `${k}: {${Object.keys(v).slice(0, 5).join(', ')}...}`;
+                return `${k}: ${JSON.stringify(v)}`;
+            });
+            return `[JSON — ${totalLines} lines]\n` + structure.join('\n');
+        } catch (_) {
+            return content.slice(0, 500) + '\n[truncated]';
+        }
+    }
+
+    /**
+     * YAML compression — show top-level keys and nesting.
+     */
+    _compressYAML(lines, tier, totalLines) {
+        const topKeys = lines
+            .filter(l => /^\w+\s*:/.test(l))
+            .map(l => l.split(':')[0].trim())
+            .slice(0, 20);
+
+        if (tier === COMPRESSION_TIERS.HEAVY) {
+            return `[YAML — ${totalLines} lines] Keys: ${topKeys.join(', ')}`;
+        }
+
+        // LIGHT: top-level entries with first child
+        const kept = lines.filter(l => /^\w+\s*:/.test(l) || /^\s{2}\w+\s*:/.test(l)).slice(0, 40);
+        return `[YAML — ${totalLines} lines]\n` + kept.join('\n');
+    }
+
+    /**
+     * Markdown compression — headings + first paragraph.
+     */
+    _compressMarkdown(lines, tier, totalLines) {
+        if (tier === COMPRESSION_TIERS.HEAVY) {
+            const headings = lines.filter(l => /^#{1,4}\s+/.test(l)).slice(0, 15);
+            return `[Markdown — ${totalLines} lines]\n` + headings.join('\n');
+        }
+
+        // LIGHT: headings + first non-empty line after each heading
+        const kept = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (/^#{1,4}\s+/.test(lines[i])) {
+                kept.push(lines[i]);
+                // Grab first content line after heading
+                for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+                    if (lines[j].trim() && !lines[j].startsWith('#')) {
+                        kept.push(lines[j]);
+                        break;
+                    }
+                }
+            }
+        }
+        return `[Markdown — ${totalLines} lines]\n` + kept.join('\n');
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
     // ═══ CONTEXT BLOCK BUILDER ═══
     // ═══════════════════════════════════════════════════════════════════════
 
@@ -956,6 +1289,7 @@ class HeadyAutoContext extends EventEmitter {
                 : 0,
             vectorMemoryStats: this._vectorMemory?.stats() || null,
             alwaysOn: this._alwaysOn,
+            totalTokensSaved: this._stats.totalTokensSaved,
         };
     }
 }
@@ -1037,4 +1371,5 @@ module.exports = {
     getAutoContext,
     wireGateway,
     CSL_GATES,
+    COMPRESSION_TIERS,
 };

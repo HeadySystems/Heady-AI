@@ -1,67 +1,50 @@
 {
-<<<<<<< HEAD
-  "lastUpdated": "2026-03-19T07:55:01.204Z",
-  "version": 340,
+  "lastUpdated": "2026-03-19T09:30:02.045Z",
+  "version": 1,
   "phi": 1.618033988749895,
-  "resourcePatterns": [
-    {
-      "type": "RESOURCE_STABLE",
-      "confidence": 1,
-      "severity": "LOW",
-      "firstSeen": "2026-03-18T03:35:01.395Z",
-      "lastSeen": "2026-03-19T02:10:01.494Z",
-      "occurrences": 262
-    }
-  ],
+  "resourcePatterns": [],
   "gitVelocity": "HIGH",
-  "commitCount24h": 347,
+  "commitCount24h": 338,
   "topTopics": [
     {
       "word": "hcfp-auto",
-      "count": 286
+      "count": 268
     },
     {
       "word": "file(s)",
-      "count": 286
+      "count": 268
     },
     {
       "word": "changed",
-      "count": 286
+      "count": 268
     },
     {
       "word": "pattern_store.json",
-      "count": 280
+      "count": 262
     },
     {
       "word": "auto-commit.log",
-      "count": 256
-    },
-    {
-      "word": "resource-events.jsonl",
-      "count": 48
-    },
-    {
-      "word": "feat",
-      "count": 16
+      "count": 238
     },
     {
       "word": "merge",
-      "count": 11
+      "count": 40
+    },
+    {
+      "word": "resource-events.jsonl",
+      "count": 39
+    },
+    {
+      "word": "remote-tracking",
+      "count": 35
+    },
+    {
+      "word": "branch",
+      "count": 35
     },
     {
       "word": "app.js",
-      "count": 11
-    },
-    {
-      "word": "tasks",
-      "count": 8
+      "count": 10
     }
   ]
-=======
-  "patterns": {},
-  "metadata": {
-    "created": "2026-03-12T00:54:21.685Z",
-    "version": "1.0.0"
-  }
->>>>>>> hc-testing/dependabot/docker/node-25-slim
 }
