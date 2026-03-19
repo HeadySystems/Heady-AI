@@ -6,13 +6,21 @@
 
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
 let extraTasks = [];
-try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) { }
+try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load auto-flow-tasks.json: ${e.message}`);
+}
 let nonprofitTasks = [];
-try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) { }
+try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load nonprofit-tasks.json: ${e.message}`);
+}
 let buddyTasks = [];
-try { buddyTasks = require('../buddy-tasks.json'); } catch (e) { }
+try { buddyTasks = require('../buddy-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load buddy-tasks.json: ${e.message}`);
+}
 let prodOptTasks = [];
-try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) { }
+try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) {
+  console.warn(`[auto-success-catalog] Failed to load production-optimization-tasks.json: ${e.message}`);
+}
 
 const TASK_CATALOG = [
     ...extraTasks,
@@ -481,7 +489,7 @@ try {
       const tasks = Array.isArray(data) ? data : (data.tasks || data.categories || []);
       JSON_TASKS = JSON_TASKS.concat(tasks);
     } catch (e) {
-      // Graceful skip if file not found
+      console.warn(`[auto-success-catalog] Failed to load JSON task file "${file}": ${e.message}`);
     }
   }
 } catch (e) {
