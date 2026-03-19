@@ -5,7 +5,7 @@
 
 const express = require('express');
 const crypto = require('crypto');
-const { createLogger } = require('../services/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 
 const router = express.Router();
 const log = getLogger('analytics', 'analytics');

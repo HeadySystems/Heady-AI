@@ -15,7 +15,7 @@
 // HEADY_BRAND:END
 
 const express = require('express');
-const { createLogger } = require('../services/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 const { PHI, phiBackoff, phiScale } = require('../../packages/phi-math');
 
 // ═══════════════════════════════════════════════════════════════════

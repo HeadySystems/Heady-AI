@@ -6,7 +6,7 @@
 const express = require('express');
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
-const { createLogger } = require('../services/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 
 const router = express.Router();
 const log = getLogger('notifications', 'notifications');

@@ -7,13 +7,13 @@
 
 const express = require('express');
 const { createSwarm } = require('@heady/bee');
-const { createLogger } = require('@heady/structured-logger');
+const { getLogger } = require('../services/structured-logger');
 
 // ═══════════════════════════════════════════════════════════════════
 // Structured Logger Configuration
 // ═══════════════════════════════════════════════════════════════════
 
-const logger = createLogger('heady-swarm-routes', 'api');
+const logger = getLogger('heady-swarm-routes', 'api');
 
 // ═══════════════════════════════════════════════════════════════════
 // Router Setup
