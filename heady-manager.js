@@ -202,7 +202,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
@@ -310,9 +310,8 @@ const allowedOrigins = [
 app.use((req, res, next) => {
   const origin = req.get('origin');
 
-  // Check if origin is in whitelist or matches *.onrender.com pattern
-  const isAllowed = allowedOrigins.includes(origin) ||
-    (origin && origin.endsWith('.onrender.com'));
+  // Check if origin is in whitelist
+  const isAllowed = allowedOrigins.includes(origin);
 
   if (isAllowed) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -1970,7 +1969,8 @@ app.post("/api/buddy/pipeline/continuous", (req, res) => {
 
   runCycle();
   if (continuousPipeline.running) {
-    continuousPipeline.intervalId = setInterval(runCycle, req.body.intervalMs || 30000);
+    const intervalMs = Math.max(5000, Math.min(300000, parseInt(req.body.intervalMs) || 30000));
+    continuousPipeline.intervalId = setInterval(runCycle, intervalMs);
   }
 
   res.json({
@@ -2550,9 +2550,14 @@ if (colabLatentOps && colabLatentOps.router) {
 }
 app.get('/api/colab/notebook-template/:runtime', (req, res) => {
   if (!colabLatentOps) return res.status(503).json({ error: 'colab_not_loaded' });
+  const ALLOWED_RUNTIMES = ['python3', 'node18', 'node20', 'deno', 'bun'];
+  const runtime = req.params.runtime;
+  if (!ALLOWED_RUNTIMES.includes(runtime)) {
+    return res.status(400).json({ error: `Invalid runtime: ${runtime}` });
+  }
   try {
-    const template = colabLatentOps.getNotebookTemplate(req.params.runtime);
-    res.json({ status: 'ok', runtime: req.params.runtime, template });
+    const template = colabLatentOps.getNotebookTemplate(runtime);
+    res.json({ status: 'ok', runtime, template });
   } catch (e) {
     res.status(500).json({ status: 'error', error: e.message });
   }
