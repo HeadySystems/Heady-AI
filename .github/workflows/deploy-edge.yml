@@ -24,11 +24,16 @@ permissions:
 env:
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
   CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID || vars.CF_ACCOUNT_ID || secrets.CF_ACCOUNT_ID || '8b1fa38f282c691423c6399247d53323' }}
+  AI_ROUTING_RULES_KV_ID: ${{ vars.AI_ROUTING_RULES_KV_ID || secrets.AI_ROUTING_RULES_KV_ID }}
+  AI_COST_TRACKER_KV_ID: ${{ vars.AI_COST_TRACKER_KV_ID || secrets.AI_COST_TRACKER_KV_ID }}
 
 jobs:
   validate:
     name: Validate Edge Workers
     runs-on: ubuntu-latest
+    outputs:
+      has_cf_credentials: ${{ steps.flags.outputs.has_cf_credentials }}
+      has_ai_gateway_kv: ${{ steps.flags.outputs.has_ai_gateway_kv }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,10 +52,21 @@ jobs:
             fi
           done
 
-      - name: Check Cloudflare credential wiring
+      - name: Compute deployment flags
+        id: flags
         run: |
-          if [ -z "${CLOUDFLARE_API_TOKEN}" ]; then
+          if [ -n "${CLOUDFLARE_API_TOKEN}" ]; then
+            echo "has_cf_credentials=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_cf_credentials=false" >> "$GITHUB_OUTPUT"
             echo "::warning::No Cloudflare API token available through CLOUDFLARE_API_TOKEN or CF_API_TOKEN secrets. Deploy jobs will be skipped."
+          fi
+
+          if [ -n "${AI_ROUTING_RULES_KV_ID}" ] && [ -n "${AI_COST_TRACKER_KV_ID}" ]; then
+            echo "has_ai_gateway_kv=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_ai_gateway_kv=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::AI gateway KV IDs are missing. The optional AI gateway deploy will be skipped."
           fi
 
       - name: 'LR-005: Check Host header handling'
@@ -95,7 +111,7 @@ jobs:
     name: Deploy worker-heady-router
     runs-on: ubuntu-latest
     needs: [validate]
-    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' || secrets.CF_API_TOKEN != '' }}
+    if: ${{ needs.validate.outputs.has_cf_credentials == 'true' }}
     defaults:
       run:
         working-directory: cloudflare/worker-heady-router
@@ -119,13 +135,10 @@ jobs:
     name: Deploy AI Gateway Worker
     runs-on: ubuntu-latest
     needs: [validate]
-    if: ${{ (secrets.CLOUDFLARE_API_TOKEN != '' || secrets.CF_API_TOKEN != '') && (vars.AI_ROUTING_RULES_KV_ID != '' || secrets.AI_ROUTING_RULES_KV_ID != '') && (vars.AI_COST_TRACKER_KV_ID != '' || secrets.AI_COST_TRACKER_KV_ID != '') }}
+    if: ${{ needs.validate.outputs.has_cf_credentials == 'true' && needs.validate.outputs.has_ai_gateway_kv == 'true' }}
     defaults:
       run:
         working-directory: cloudflare/worker-ai-gateway
-    env:
-      AI_ROUTING_RULES_KV_ID: ${{ vars.AI_ROUTING_RULES_KV_ID || secrets.AI_ROUTING_RULES_KV_ID }}
-      AI_COST_TRACKER_KV_ID: ${{ vars.AI_COST_TRACKER_KV_ID || secrets.AI_COST_TRACKER_KV_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -147,6 +160,9 @@ jobs:
           source = source.replace('__AI_COST_TRACKER_KV_ID__', os.environ['AI_COST_TRACKER_KV_ID'])
           Path('wrangler.deploy.toml').write_text(source)
           PY
+        env:
+          AI_ROUTING_RULES_KV_ID: ${{ env.AI_ROUTING_RULES_KV_ID }}
+          AI_COST_TRACKER_KV_ID: ${{ env.AI_COST_TRACKER_KV_ID }}
 
       - name: Deploy
         run: wrangler deploy --config wrangler.deploy.toml
@@ -158,7 +174,7 @@ jobs:
     name: Deploy MCP Telemetry Worker
     runs-on: ubuntu-latest
     needs: [validate]
-    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' || secrets.CF_API_TOKEN != '' }}
+    if: ${{ needs.validate.outputs.has_cf_credentials == 'true' }}
     defaults:
       run:
         working-directory: cloudflare/worker-mcp-telemetry
