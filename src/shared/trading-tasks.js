@@ -5,12 +5,18 @@
  * HeadyBuddy Trading Tasks — Auto-Success task definitions
  * for the Apex 3.0 autonomous trading system.
  *
+ * Updated March 2026 to reflect:
+ *   - EOD (End-of-Day) accounts drawdown model
+ *   - 50% Consistency Rule (PA accounts, March 2026 update)
+ *   - 1-Day Pass evaluation capability
+ *   - 20-Node mesh network trade copier
+ *
  * These tasks are auto-assigned, auto-completing, and produce
  * comprehensive audit trail entries for every cycle.
  */
 
 module.exports = [
-    // ═══ APEX RISK MONITORING (15) ═══════════════════════════════════════════
+    // ═══ APEX RISK MONITORING (20) ═══════════════════════════════════════════
     {
         id: "apx-001", name: "Verify trailing drawdown calculation",
         cat: "trading", pool: "hot", w: 5,
@@ -22,9 +28,9 @@ module.exports = [
         desc: "Ensure max adverse excursion never exceeds 30% of day profit balance"
     },
     {
-        id: "apx-003", name: "Check consistency rule compliance",
+        id: "apx-003", name: "Check 50% consistency rule compliance",
         cat: "trading", pool: "hot", w: 5,
-        desc: "Verify no single day exceeds 30% of total profit"
+        desc: "Verify no single day exceeds 50% of total profit (PA accounts, March 2026)"
     },
     {
         id: "apx-004", name: "Calculate safety net threshold",
@@ -86,6 +92,185 @@ module.exports = [
         cat: "trading", pool: "hot", w: 5,
         desc: "Track total execution latency targeting 20ms via PTX hot path"
     },
+
+    // ═══ EOD VECTOR EXPLOIT — Angle 1 (10) ══════════════════════════════════
+    {
+        id: "eod-001", name: "Validate EOD drawdown calculation model",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Confirm End-of-Day drawdown only recalculates at 4:59 PM ET daily close"
+    },
+    {
+        id: "eod-002", name: "Track EOD vs intraday trailing performance",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Compare PnL outcomes on EOD accounts vs legacy intraday trailing accounts"
+    },
+    {
+        id: "eod-003", name: "Vector-match broader intraday trend patterns",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Pre-load 3D vector DB with high-probability structural setups for EOD holds"
+    },
+    {
+        id: "eod-004", name: "Monitor mid-day pullback resilience",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Track how EOD positions survive normal intraday volatility without liquidation"
+    },
+    {
+        id: "eod-005", name: "Validate EOD session boundary enforcement",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Ensure all position management aligns with 4:59 PM ET EOD boundary"
+    },
+    {
+        id: "eod-006", name: "Track liquidity sweep entry accuracy",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Monitor vector similarity confidence for liquidity sweep pattern entries"
+    },
+    {
+        id: "eod-007", name: "Validate hold-through-volatility profit capture",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Measure profit capture rate when system holds through normal market noise"
+    },
+    {
+        id: "eod-008", name: "Pre-load historical A+ setup vectors",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Batch-embed thousands of winning trade patterns into 3D spatial index"
+    },
+    {
+        id: "eod-009", name: "Monitor EOD account balance trajectory",
+        cat: "trading", pool: "warm", w: 3,
+        desc: "Track daily closing balance trajectory toward profit target"
+    },
+    {
+        id: "eod-010", name: "Validate EOD risk model parameter sync",
+        cat: "trading", pool: "warm", w: 3,
+        desc: "Ensure risk parameters correctly distinguish EOD from legacy account types"
+    },
+
+    // ═══ 50% GOVERNANCE KILL-SWITCH — Angle 2 (8) ═══════════════════════════
+    {
+        id: "gov-ks-001", name: "50% consistency kill-switch activation test",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Verify governance kill-switch fires at 45% of total accumulated profit (5% buffer)"
+    },
+    {
+        id: "gov-ks-002", name: "Monitor real-time floating PnL stream",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Validate continuous PnL monitoring via broker websocket stream"
+    },
+    {
+        id: "gov-ks-003", name: "Test flatten-and-sever execution protocol",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Confirm kill-switch: (1) close all positions, (2) cancel orders, (3) revoke API token"
+    },
+    {
+        id: "gov-ks-004", name: "Validate daily limit recalculation",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Confirm Max_Daily_Profit = Total_Accumulated_Profit × 0.45 at 5:00 PM ET reset"
+    },
+    {
+        id: "gov-ks-005", name: "Test API token revocation and restoration",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Ensure API token revocation blocks ALL new orders and restores at next session"
+    },
+    {
+        id: "gov-ks-006", name: "Monitor kill-switch audit trail completeness",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Every kill-switch activation must produce a complete governance audit entry"
+    },
+    {
+        id: "gov-ks-007", name: "Validate 5-day payout window tracking",
+        cat: "trading", pool: "warm", w: 3,
+        desc: "Track progress toward qualifying for new 5-day payout windows"
+    },
+    {
+        id: "gov-ks-008", name: "Test kill-switch under extreme volatility",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Simulate rapid profit spike scenario to verify sub-second kill-switch response"
+    },
+
+    // ═══ 1-DAY PASS PRECISION ENGINE — Angle 3 (8) ══════════════════════════
+    {
+        id: "pass-001", name: "Validate single-day evaluation pass capability",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Confirm system can identify and execute enough A+ setups to hit profit target in one session"
+    },
+    {
+        id: "pass-002", name: "Monitor vector confidence threshold accuracy",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Track ≥0.98 confidence vector matches against actual win/loss outcomes"
+    },
+    {
+        id: "pass-003", name: "Validate tick-to-vector embedding latency",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Ensure 50-tick rolling window vectorization completes under 5ms"
+    },
+    {
+        id: "pass-004", name: "Monitor cosine similarity search speed",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Track real-time similarity search against pre-loaded vector DB under 100µs"
+    },
+    {
+        id: "pass-005", name: "Validate LLM-bypass execution path",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Confirm trade execution bypasses LLM entirely when vector match ≥0.98"
+    },
+    {
+        id: "pass-006", name: "Track optimal position sizing for 1-day targets",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Calculate position size needed to hit evaluation profit target in single session"
+    },
+    {
+        id: "pass-007", name: "Monitor multi-model validation pre-execution",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Track HeadyConnection multi-model validation agreement rate before execution"
+    },
+    {
+        id: "pass-008", name: "Validate evaluation pass rate tracking",
+        cat: "trading", pool: "warm", w: 3,
+        desc: "Track historical evaluation pass attempts and success rate metrics"
+    },
+
+    // ═══ 20-NODE MESH NETWORK — Angle 4 (8) ═════════════════════════════════
+    {
+        id: "mesh-001", name: "Validate zero-latency trade copier mesh",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Confirm HeadyConnection replicates trades across 20 accounts simultaneously"
+    },
+    {
+        id: "mesh-002", name: "Monitor per-account slippage variance",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Track execution price variance across all 20 mesh nodes vs master signal"
+    },
+    {
+        id: "mesh-003", name: "Test mesh failover and node isolation",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Confirm individual node failure doesn't cascade to other mesh accounts"
+    },
+    {
+        id: "mesh-004", name: "Validate Docker container orchestration",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Ensure each of 20 accounts runs in isolated Docker container with own state"
+    },
+    {
+        id: "mesh-005", name: "Monitor aggregate daily PnL across mesh",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Track total profit across all 20 nodes (target: $20k/day from $1k master signal)"
+    },
+    {
+        id: "mesh-006", name: "Test simultaneous order execution timing",
+        cat: "trading", pool: "hot", w: 5,
+        desc: "Validate all 20 nodes execute within 50ms of master signal"
+    },
+    {
+        id: "mesh-007", name: "Monitor per-node consistency rule compliance",
+        cat: "trading", pool: "warm", w: 4,
+        desc: "Each of 20 accounts must independently satisfy 50% consistency rule"
+    },
+    {
+        id: "mesh-008", name: "Validate mesh scaling economics",
+        cat: "trading", pool: "cold", w: 3,
+        desc: "Track infrastructure cost vs revenue amplification ratio for the mesh"
+    },
+
     // ═══ TERNARY REASONER MODULE (10) ════════════════════════════════════════
     {
         id: "trm-001", name: "Validate ternary state transitions",

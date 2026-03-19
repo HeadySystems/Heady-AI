@@ -252,6 +252,71 @@ const TASK_CATALOG = [
     { id: "mop-site-001", name: "Deploy site-generator as Cloud Run service", cat: "mop-sites", pool: "hot", w: 5, desc: "Interactive on-the-fly site builds tailored per user/audience on Cloud Run" },
     { id: "mop-site-002", name: "Per-user dynamic template rendering", cat: "mop-sites", pool: "warm", w: 4, desc: "Implement audience-aware template rendering for dynamic sites" },
     { id: "mop-site-003", name: "Remove PM2 site entries from ecosystem", cat: "mop-sites", pool: "warm", w: 3, desc: "Remove 40+ site PM2 entries from ecosystem.config.cjs" },
+
+    // ═══ MONETIZATION — IaaS / SaaS PLAY (10) ═══════════════════════════════
+    { id: "mon-iaas-001", name: "Package 3D vector storage as API", cat: "monetization-iaas", pool: "hot", w: 5, desc: "Expose octree spatial index as multi-tenant API with rate limiting and auth" },
+    { id: "mon-iaas-002", name: "Design multi-tenant data isolation", cat: "monetization-iaas", pool: "hot", w: 5, desc: "Implement tenant-isolated vector namespaces using Neon/Upstash" },
+    { id: "mon-iaas-003", name: "Build governance API tier system", cat: "monetization-iaas", pool: "warm", w: 4, desc: "Package GovernanceEngine as tiered API: $49/mo basic, $149/mo pro, enterprise" },
+    { id: "mon-iaas-004", name: "Integrate Stripe billing pipeline", cat: "monetization-iaas", pool: "hot", w: 5, desc: "Wire Stripe subscriptions + usage-based billing for API consumption" },
+    { id: "mon-iaas-005", name: "Create developer SDK package", cat: "monetization-iaas", pool: "warm", w: 4, desc: "Publish heady-sdk NPM package for external developer integration" },
+    { id: "mon-iaas-006", name: "Design API gateway with token monitoring", cat: "monetization-iaas", pool: "hot", w: 5, desc: "Central gateway for all client API traffic with per-tenant token tracking" },
+    { id: "mon-iaas-007", name: "Build developer portal and docs", cat: "monetization-iaas", pool: "warm", w: 3, desc: "Create interactive API documentation portal with code examples" },
+    { id: "mon-iaas-008", name: "Implement OAuth 2.0 API key issuance", cat: "monetization-iaas", pool: "warm", w: 4, desc: "Secure API key generation and management via Firebase/OAuth 2.0" },
+    { id: "mon-iaas-009", name: "Monitor API usage and billing accuracy", cat: "monetization-iaas", pool: "warm", w: 4, desc: "Track per-tenant API calls, token consumption, and billing accuracy" },
+    { id: "mon-iaas-010", name: "Design SLA monitoring dashboard", cat: "monetization-iaas", pool: "warm", w: 3, desc: "Build uptime, latency, and throughput monitoring for SaaS customers" },
+
+    // ═══ SOVEREIGN AGENT ALTERNATIVE (10) ════════════════════════════════════
+    { id: "mon-agent-001", name: "Package HeadyBuddy as sovereign agent", cat: "monetization-agent", pool: "hot", w: 5, desc: "Position as OS-agnostic, bring-your-own-keys competitor to Jules/Mariner" },
+    { id: "mon-agent-002", name: "Build multi-LLM router demo", cat: "monetization-agent", pool: "warm", w: 4, desc: "Create demo showing Claude/OpenAI/HF orchestration without vendor lock-in" },
+    { id: "mon-agent-003", name: "Design enterprise licensing model", cat: "monetization-agent", pool: "warm", w: 4, desc: "Annual licensing for on-premise HeadyMe deployment with IP protection" },
+    { id: "mon-agent-004", name: "Build data privacy compliance layer", cat: "monetization-agent", pool: "hot", w: 5, desc: "Guarantee proprietary enterprise data never leaves customer infrastructure" },
+    { id: "mon-agent-005", name: "Create vendor comparison matrix", cat: "monetization-agent", pool: "cold", w: 2, desc: "Document Heady advantages vs Jules, Mariner, AutoGPT, CrewAI" },
+    { id: "mon-agent-006", name: "Design white-label deployment package", cat: "monetization-agent", pool: "warm", w: 4, desc: "Create customizable Heady deployment for enterprise branding" },
+    { id: "mon-agent-007", name: "Build on-premise installer", cat: "monetization-agent", pool: "warm", w: 4, desc: "Docker Compose + Helm chart for air-gapped enterprise deployment" },
+    { id: "mon-agent-008", name: "Track enterprise prospect pipeline", cat: "monetization-agent", pool: "cold", w: 2, desc: "CRM-style tracking of potential enterprise licensing opportunities" },
+    { id: "mon-agent-009", name: "Monitor competitive landscape shifts", cat: "monetization-agent", pool: "cold", w: 2, desc: "Track new agentic AI competitors and feature parity changes" },
+    { id: "mon-agent-010", name: "Build agent capability showcase", cat: "monetization-agent", pool: "warm", w: 3, desc: "Interactive demo showing 20-node orchestration, spatial computing, governance" },
+
+    // ═══ B2B ENTITY FORMATION (10) ══════════════════════════════════════════
+    { id: "mon-b2b-001", name: "Register HeadySystems LLC/C-Corp", cat: "monetization-b2b", pool: "hot", w: 5, desc: "Formalize business structure with EIN — required for Stripe + enterprise" },
+    { id: "mon-b2b-002", name: "Establish corporate bank account", cat: "monetization-b2b", pool: "hot", w: 5, desc: "Open business bank account for Stripe merchant services and revenue" },
+    { id: "mon-b2b-003", name: "Configure Stripe merchant account", cat: "monetization-b2b", pool: "hot", w: 5, desc: "Set up Stripe Connect with verified business identity for SaaS billing" },
+    { id: "mon-b2b-004", name: "File provisional trademark for Heady™", cat: "monetization-b2b", pool: "warm", w: 4, desc: "Protect Heady, HeadyMe, HeadyBuddy trademarks via USPTO" },
+    { id: "mon-b2b-005", name: "Establish IP sovereignty documentation", cat: "monetization-b2b", pool: "warm", w: 4, desc: "Formal documentation asserting Heady has no relation to any existing entity" },
+    { id: "mon-b2b-006", name: "Create standard licensing agreement", cat: "monetization-b2b", pool: "warm", w: 3, desc: "Draft enterprise licensing template (SaaS, on-premise, white-label)" },
+    { id: "mon-b2b-007", name: "Set up business insurance", cat: "monetization-b2b", pool: "cold", w: 2, desc: "E&O and general liability insurance for SaaS/API services" },
+    { id: "mon-b2b-008", name: "Establish vendor compliance checklist", cat: "monetization-b2b", pool: "warm", w: 3, desc: "SOC 2 readiness checklist for enterprise vendor approval processes" },
+    { id: "mon-b2b-009", name: "Configure business tax accounts", cat: "monetization-b2b", pool: "warm", w: 3, desc: "Set up state + federal tax accounts for SaaS revenue reporting" },
+    { id: "mon-b2b-010", name: "Track revenue and runway metrics", cat: "monetization-b2b", pool: "warm", w: 3, desc: "Dashboard tracking MRR, ARR, CAC, LTV, and runway vs burn rate" },
+
+    // ═══ IDE ACCELERATION (10) ══════════════════════════════════════════════
+    { id: "dev-ide-001", name: "Optimize multi-repo workspace context", cat: "dev-acceleration", pool: "warm", w: 4, desc: "Configure IDE to index all 5 HeadyMe repos simultaneously for cross-repo search" },
+    { id: "dev-ide-002", name: "Set up Claude Code terminal integration", cat: "dev-acceleration", pool: "warm", w: 4, desc: "Install Claude Code extension for in-IDE agentic coding with full workspace awareness" },
+    { id: "dev-ide-003", name: "Configure automated refactoring pipelines", cat: "dev-acceleration", pool: "warm", w: 3, desc: "Set up IDE-driven bulk refactoring for Docker configs and vector algorithms" },
+    { id: "dev-ide-004", name: "Build cross-platform dev environment sync", cat: "dev-acceleration", pool: "warm", w: 3, desc: "Sync IDE settings, extensions, and configs across Linux/Windows workstations" },
+    { id: "dev-ide-005", name: "Create Heady-specific code snippets library", cat: "dev-acceleration", pool: "cold", w: 2, desc: "Pre-built snippet library for common Heady patterns: Vec3, governance, bee defs" },
+    { id: "dev-ide-006", name: "Set up automated PR review pipeline", cat: "dev-acceleration", pool: "warm", w: 4, desc: "Auto-review PRs against governance policies before merge" },
+    { id: "dev-ide-007", name: "Configure HeadyMCP IDE integration", cat: "dev-acceleration", pool: "warm", w: 4, desc: "Wire HeadyMCP tools into IDE for in-editor spatial queries and agent management" },
+    { id: "dev-ide-008", name: "Build test harness generator", cat: "dev-acceleration", pool: "warm", w: 3, desc: "Auto-generate node:test scaffolding for new service files" },
+    { id: "dev-ide-009", name: "Create deployment shortcut commands", cat: "dev-acceleration", pool: "cold", w: 2, desc: "One-command deployment to Cloud Run from IDE terminal" },
+    { id: "dev-ide-010", name: "Monitor dev velocity metrics", cat: "dev-acceleration", pool: "cold", w: 2, desc: "Track commits/day, files changed, services deployed for productivity insights" },
+
+    // ═══ SUBSCRIPTION STACK OPTIMIZATION (15) ═══════════════════════════════
+    { id: "sub-opt-001", name: "Route training to Colab Pro+ exclusively", cat: "subscription-optimization", pool: "warm", w: 4, desc: "Ensure ALL heavy ML tasks (vectorization, training) run on Colab Pro+, not GCP" },
+    { id: "sub-opt-002", name: "Segregate live trading from training compute", cat: "subscription-optimization", pool: "hot", w: 5, desc: "Absolute isolation: GCP Chicago for live trading, Colab for ML — never mix" },
+    { id: "sub-opt-003", name: "Optimize Cloudflare Zero Trust routing", cat: "subscription-optimization", pool: "warm", w: 4, desc: "Use Cloudflare Zero Trust for inter-node security instead of custom mTLS" },
+    { id: "sub-opt-004", name: "Monitor monthly infrastructure burn rate", cat: "subscription-optimization", pool: "warm", w: 4, desc: "Track actual spend across GCP, Cloudflare, API keys vs $750/mo budget" },
+    { id: "sub-opt-005", name: "Deploy GCP instances near Chicago exchange", cat: "subscription-optimization", pool: "hot", w: 5, desc: "Host live trading containers in us-central1 (closest to CME) for sub-ms latency" },
+    { id: "sub-opt-006", name: "Route LLMs to end-of-day analysis only", cat: "subscription-optimization", pool: "warm", w: 4, desc: "Keep Claude/OpenAI/Perplexity OUT of live trading path — EOD analysis only" },
+    { id: "sub-opt-007", name: "Use Perplexity for morning macro scan", cat: "subscription-optimization", pool: "warm", w: 3, desc: "Daily 6AM Perplexity API call for CPI/FOMC/macro no-trade zone detection" },
+    { id: "sub-opt-008", name: "Optimize HuggingFace token rotation", cat: "subscription-optimization", pool: "warm", w: 3, desc: "Implement 3-token round-robin rotation per v9.0 blueprint for HF inference" },
+    { id: "sub-opt-009", name: "Track API cost per trade execution", cat: "subscription-optimization", pool: "warm", w: 3, desc: "Calculate exact infrastructure cost per trade to verify profitability margin" },
+    { id: "sub-opt-010", name: "Self-sustaining infrastructure validation", cat: "subscription-optimization", pool: "warm", w: 4, desc: "Verify trading revenue covers ALL infrastructure costs (self-sustaining check)" },
+    { id: "sub-opt-011", name: "Monitor Upstash Redis memory utilization", cat: "subscription-optimization", pool: "warm", w: 3, desc: "Track Upstash memory usage and optimize for working memory efficiency" },
+    { id: "sub-opt-012", name: "Optimize Neon Postgres query patterns", cat: "subscription-optimization", pool: "warm", w: 3, desc: "Analyze and optimize pgvector queries for cost-effective compute units" },
+    { id: "sub-opt-013", name: "Track Sentry event quota utilization", cat: "subscription-optimization", pool: "cold", w: 2, desc: "Monitor Sentry event consumption against plan limits" },
+    { id: "sub-opt-014", name: "Audit unused API key subscriptions", cat: "subscription-optimization", pool: "cold", w: 2, desc: "Identify and cancel unused or underutilized API subscriptions" },
+    { id: "sub-opt-015", name: "Calculate infrastructure ROI per angle", cat: "subscription-optimization", pool: "warm", w: 4, desc: "ROI analysis per strategic angle: trading, IaaS, licensing, consulting" },
 ];
 
 // ─── POOL ALLOCATION ────────────────────────────────────────────────────────
