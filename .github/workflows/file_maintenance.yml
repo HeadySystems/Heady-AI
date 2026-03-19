@@ -174,7 +174,7 @@ jobs:
       - name: Check for hardcoded localhost references
         run: |
           echo "🔍 Scanning for hardcoded localhost references..."
-          if grep -rn "localhost:3300\|127.0.0.1:3300" --include="*.js" --include="*.ts" --include="*.py" --include="*.yaml" src/ 2>/dev/null | head -10; then
+          if grep -rn "0.0.0.0:3300\|127.0.0.1:3300" --include="*.js" --include="*.ts" --include="*.py" --include="*.yaml" src/ 2>/dev/null | head -10; then
             echo "::warning::Found hardcoded localhost references"
           else
             echo "✅ No problematic localhost references found"
