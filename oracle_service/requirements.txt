@@ -1,5 +1,5 @@
 # HeadyField Oracle Dependencies
-paho-mqtt==1.6.1
+paho-mqtt==2.1.0
 influxdb-client==1.38.0
 cryptography>=44.0.3
 requests>=2.32.3
