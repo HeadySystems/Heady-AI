@@ -18,6 +18,8 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  // Neon serverless Postgres requires SSL; rejectUnauthorized: false is needed
+  // because Neon uses a custom CA not in the default Node.js trust store
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 

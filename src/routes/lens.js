@@ -148,7 +148,7 @@ function fetchManagerJson(endpoint, timeoutMs = 5000) {
             path: `${url.pathname}${url.search}`,
             method: "GET",
             timeout: timeoutMs,
-            rejectUnauthorized: false,
+            rejectUnauthorized: process.env.NODE_ENV !== 'production',
         }, (resp) => {
             let data = "";
             resp.on("data", (chunk) => { data += chunk; });

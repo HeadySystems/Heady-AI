@@ -232,7 +232,7 @@ function fetchLocal(endpoint) {
             path: `${url.pathname}${url.search}`,
             method: "GET",
             timeout: 3000,
-            rejectUnauthorized: false,
+            rejectUnauthorized: process.env.NODE_ENV !== 'production',
         }, (resp) => {
             let data = "";
             resp.on("data", (c) => { data += c; });
