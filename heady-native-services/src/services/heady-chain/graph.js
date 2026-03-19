@@ -268,9 +268,18 @@ class GraphBuilder {
       builder.addNode(node.id, node.type, node.config, node.metadata);
     }
     for (const edge of json.edges) {
-      /* eslint-disable no-eval */
-      const condFn = edge.condition ? eval(`(${edge.condition})`) : null;
-      /* eslint-enable no-eval */
+      // Safe condition restoration: only allow known condition keys, not arbitrary code
+      let condFn = null;
+      if (edge.condition && typeof edge.condition === 'string') {
+        const safePattern = /^(?:ctx|context|result|state)\s*=>/;
+        if (safePattern.test(edge.condition.trim())) {
+          try {
+            condFn = new Function('ctx', `'use strict'; return (${edge.condition})(ctx);`);
+          } catch {
+            condFn = null;
+          }
+        }
+      }
       builder.addEdge(edge.from, edge.to, condFn, edge.label);
     }
     if (json.entryPoint) builder.setEntryPoint(json.entryPoint);

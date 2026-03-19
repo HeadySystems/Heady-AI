@@ -238,7 +238,7 @@ const DOMAIN_DEFINITIONS = [
     tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
     rateLimit: { windowMs: 60_000, max: 1000, burstMax: 2000 },
     allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
-    cors: { origins: ['*'], credentials: false },
+    cors: { origins: ['https://app.headysystems.com', 'https://headyweb.headysystems.com', 'https://os.headysystems.com', 'https://buddy.headysystems.com'], credentials: false },
     headers: {
       'X-Heady-Domain':   'headyapi',
       'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,

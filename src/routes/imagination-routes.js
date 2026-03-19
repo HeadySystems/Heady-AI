@@ -4,7 +4,7 @@
  * ║  ∞ Sacred Geometry · Generative Concepts · IP Packaging     ║
  * ╚══════════════════════════════════════════════════════════════╝
  */
-const express = require('../core/heady-server');
+const express = require('express');
 const router = express.Router();
 const logger = require("../utils/logger");
 

@@ -427,7 +427,10 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
     if(area && session && session.valid !== false) {
       const tier = session.tier || 'core';
       const emoji = session.warp ? '🛡️' : tier === 'admin' ? '👑' : '✦';
-      area.innerHTML = '<div class="auth-badge"><span class="dot"></span>' + emoji + ' ' + (session.email || session.userId || tier).toString().slice(0,15) + ' · ' + tier.toUpperCase() + '</div>';
+      // Sanitize user data before DOM insertion
+      const displayName = (session.email || session.userId || tier).toString().slice(0,15).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+      const sanitizedTier = tier.toUpperCase().replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]));
+      area.innerHTML = '<div class="auth-badge"><span class="dot"></span>' + emoji + ' ' + displayName + ' · ' + sanitizedTier + '</div>';
     }
     // WARP badge
     const wb = document.getElementById('warp-badge');

@@ -76,7 +76,7 @@ const config = {
   },
 
   // HTTP service config
-  corsOrigins: (process.env.HEADY_EVAL_CORS_ORIGINS || '*').split(',').map((s) => s.trim()),
+  corsOrigins: (process.env.HEADY_EVAL_CORS_ORIGINS || 'https://app.headysystems.com,https://headyweb.headysystems.com,https://os.headysystems.com,https://buddy.headysystems.com').split(',').map((s) => s.trim()),
   trustProxy: process.env.HEADY_EVAL_TRUST_PROXY === 'true',
 
   // Environment
