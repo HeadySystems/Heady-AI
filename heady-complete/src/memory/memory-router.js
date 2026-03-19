@@ -1,15 +1,16 @@
 'use strict';
 
 const { MemoryStore } = require('./memory-store');
+const { authenticateJWT } = require('../gateway/auth');
 
 const memoryStore = new MemoryStore();
 
 function setupMemoryRoutes(app) {
-  app.get('/api/memory/status', (req, res) => {
+  app.get('/api/memory/status', authenticateJWT, (req, res) => {
     res.json(memoryStore.getStatus());
   });
 
-  app.post('/api/memory/ingest', async (req, res, next) => {
+  app.post('/api/memory/ingest', authenticateJWT, async (req, res, next) => {
     try {
       const { content, metadata } = req.body;
       if (!content) return res.status(400).json({ error: 'content is required' });
@@ -20,7 +21,7 @@ function setupMemoryRoutes(app) {
     }
   });
 
-  app.post('/api/memory/query', async (req, res, next) => {
+  app.post('/api/memory/query', authenticateJWT, async (req, res, next) => {
     try {
       const { query, limit } = req.body;
       if (!query) return res.status(400).json({ error: 'query is required' });

@@ -13,6 +13,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const STATE_FILE = path.join(__dirname, "..", "data", "secrets-state.json");
 
@@ -97,15 +98,67 @@ class SecretsManager {
     /**
      * Persist state to disk.
      */
+    /**
+     * Derive encryption key from ENCRYPTION_KEY env var using HKDF-like approach.
+     */
+    _getEncryptionKey() {
+        const key = process.env.ENCRYPTION_KEY || process.env.JWT_SECRET;
+        if (!key) return null;
+        return crypto.createHash("sha256").update(key).digest();
+    }
+
+    /**
+     * Encrypt data with AES-256-GCM.
+     */
+    _encrypt(plaintext) {
+        const key = this._getEncryptionKey();
+        if (!key) return plaintext; // Fallback: no encryption key available
+        const iv = crypto.randomBytes(12);
+        const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+        const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
+        const tag = cipher.getAuthTag();
+        return JSON.stringify({
+            encrypted: true,
+            iv: iv.toString("base64"),
+            tag: tag.toString("base64"),
+            data: encrypted.toString("base64"),
+        });
+    }
+
+    /**
+     * Decrypt data encrypted with AES-256-GCM.
+     */
+    _decrypt(ciphertext) {
+        try {
+            const parsed = JSON.parse(ciphertext);
+            if (!parsed.encrypted) return ciphertext; // Plaintext fallback
+            const key = this._getEncryptionKey();
+            if (!key) throw new Error("No encryption key available");
+            const decipher = crypto.createDecipheriv(
+                "aes-256-gcm",
+                key,
+                Buffer.from(parsed.iv, "base64")
+            );
+            decipher.setAuthTag(Buffer.from(parsed.tag, "base64"));
+            return Buffer.concat([
+                decipher.update(Buffer.from(parsed.data, "base64")),
+                decipher.final(),
+            ]).toString("utf8");
+        } catch {
+            return ciphertext; // Return as-is if not encrypted or decryption fails
+        }
+    }
+
     saveState() {
         try {
             const dir = path.dirname(STATE_FILE);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-            fs.writeFileSync(STATE_FILE, JSON.stringify({
+            const plaintext = JSON.stringify({
                 secrets: this.getAll(),
                 rotationLog: this._rotationLog,
                 savedAt: new Date().toISOString(),
-            }, null, 2));
+            }, null, 2);
+            fs.writeFileSync(STATE_FILE, this._encrypt(plaintext));
         } catch { /* non-blocking */ }
     }
 
@@ -115,7 +168,9 @@ class SecretsManager {
     restoreState() {
         try {
             if (fs.existsSync(STATE_FILE)) {
-                const data = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
+                const raw = fs.readFileSync(STATE_FILE, "utf8");
+                const decrypted = this._decrypt(raw);
+                const data = JSON.parse(decrypted);
                 if (data.rotationLog) this._rotationLog = data.rotationLog;
             }
         } catch { /* non-blocking */ }
@@ -128,32 +183,26 @@ const secretsManager = new SecretsManager();
 /**
  * Register Express routes for secrets management.
  */
-function registerSecretsRoutes(app) {
-    app.get("/api/secrets/status", (req, res) => {
+function registerSecretsRoutes(app, { authenticateJWT } = {}) {
+    // If no auth middleware provided, create a no-op that logs a warning
+    const auth = authenticateJWT || ((req, res, next) => {
+        console.warn("[SecretsManager] WARNING: Secrets routes loaded without authentication middleware");
+        next();
+    });
+
+    app.get("/api/secrets/status", auth, (req, res) => {
         res.json({ ok: true, ...secretsManager.getSummary(), ts: new Date().toISOString() });
     });
 
-    app.get("/api/secrets", (req, res) => {
+    app.get("/api/secrets", auth, (req, res) => {
         res.json({ ok: true, secrets: secretsManager.getAll() });
     });
 
-    app.get("/api/secrets/audit", (req, res) => {
+    app.get("/api/secrets/audit", auth, (req, res) => {
         res.json({ ok: true, ...secretsManager.audit() });
     });
 
-    app.get("/api/secrets/:id", (req, res) => {
-        const secret = secretsManager.get(req.params.id);
-        if (!secret) return res.status(404).json({ error: "Secret not found" });
-        res.json({ ok: true, secret });
-    });
-
-    app.post("/api/secrets/:id/refresh", (req, res) => {
-        const rotated = secretsManager.rotate(req.params.id);
-        secretsManager.saveState();
-        res.json({ ok: rotated, message: rotated ? "Rotated" : "Secret not found" });
-    });
-
-    app.get("/api/secrets/alerts", (req, res) => {
+    app.get("/api/secrets/alerts", auth, (req, res) => {
         const audit = secretsManager.audit();
         res.json({
             ok: true,
@@ -164,9 +213,21 @@ function registerSecretsRoutes(app) {
         });
     });
 
-    app.get("/api/secrets/check", (req, res) => {
+    app.get("/api/secrets/check", auth, (req, res) => {
         const audit = secretsManager.audit();
         res.json({ ok: audit.score >= 80, score: audit.score });
+    });
+
+    app.get("/api/secrets/:id", auth, (req, res) => {
+        const secret = secretsManager.get(req.params.id);
+        if (!secret) return res.status(404).json({ error: "Secret not found" });
+        res.json({ ok: true, secret });
+    });
+
+    app.post("/api/secrets/:id/refresh", auth, (req, res) => {
+        const rotated = secretsManager.rotate(req.params.id);
+        secretsManager.saveState();
+        res.json({ ok: rotated, message: rotated ? "Rotated" : "Secret not found" });
     });
 }
 

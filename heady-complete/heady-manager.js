@@ -31,7 +31,7 @@ const PORT = process.env.PORT || 3301;
 // ── Global middleware ──
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || '*',
+  origin: process.env.CORS_ORIGINS?.split(',') || false,
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
