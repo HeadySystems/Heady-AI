@@ -2419,7 +2419,7 @@ const INTELLIGENCE = {
 const COMPETITIVE_INTELLIGENCE = {
   async competitorRegistryFreshness() {
     const t0 = Date.now();
-    const ciPath = path.join(ROOT, 'configs', 'competitive-intelligence.yaml');
+    const ciPath = path.join(PROJECT_ROOT, 'configs', 'competitive-intelligence.yaml');
     const exists = fsExists(ciPath);
     if (!exists) return warn('competitorRegistryFreshness', 'COMPETITIVE_INTELLIGENCE',
       { exists: false }, 'Competitive intelligence config not found — create configs/competitive-intelligence.yaml', Date.now() - t0);
@@ -2434,8 +2434,8 @@ const COMPETITIVE_INTELLIGENCE = {
   async githubTrendingMonitor() {
     const t0 = Date.now();
     // Check if trending data cache exists
-    const cachePath = path.join(ROOT, '.heady-memory', 'github-trending-cache.json');
-    const hasCacheDir = fsExists(path.join(ROOT, '.heady-memory'));
+    const cachePath = path.join(PROJECT_ROOT, '.heady-memory', 'github-trending-cache.json');
+    const hasCacheDir = fsExists(path.join(PROJECT_ROOT, '.heady-memory'));
     return taskResult('githubTrendingMonitor', 'COMPETITIVE_INTELLIGENCE',
       hasCacheDir ? 'pass' : 'warn', { cacheDir: hasCacheDir },
       hasCacheDir ? 'GitHub trending cache directory exists' : 'No trending cache — discovery pipeline not yet active',
@@ -2452,7 +2452,7 @@ const COMPETITIVE_INTELLIGENCE = {
       { name: 'battle-arena', path: path.join(SRC_DIR, 'orchestration', 'heady-battle.js') },
       { name: 'vibe-router', path: path.join(SRC_DIR, 'routing', 'vibe-match-router.js') },
       { name: 'monte-carlo', path: path.join(SRC_DIR, 'intelligence', 'monte-carlo-engine.js') },
-      { name: 'sacred-geometry', path: path.join(ROOT, 'core', 'constants', 'phi.js') },
+      { name: 'sacred-geometry', path: path.join(PROJECT_ROOT, 'core', 'constants', 'phi.js') },
       { name: 'pqc-security', path: path.join(SRC_DIR, 'security', 'vector-native-scanner.js') },
     ];
     const present = capabilities.filter(c => fsExists(c.path));
@@ -2467,7 +2467,7 @@ const COMPETITIVE_INTELLIGENCE = {
 
   async patentImplementationCoverage() {
     const t0 = Date.now();
-    const patentRegPath = path.join(ROOT, 'configs', 'patent-registry-standardized.yaml');
+    const patentRegPath = path.join(PROJECT_ROOT, 'configs', 'patent-registry-standardized.yaml');
     const exists = fsExists(patentRegPath);
     return taskResult('patentImplementationCoverage', 'COMPETITIVE_INTELLIGENCE',
       exists ? 'pass' : 'warn', { registryExists: exists },
@@ -2487,8 +2487,8 @@ const COMPETITIVE_INTELLIGENCE = {
 
   async publicDomainPatternIntegration() {
     const t0 = Date.now();
-    const conceptsPath = path.join(ROOT, 'configs', 'concepts-index.yaml');
-    const ipPath = path.join(ROOT, 'configs', 'ip-registry.yaml');
+    const conceptsPath = path.join(PROJECT_ROOT, 'configs', 'concepts-index.yaml');
+    const ipPath = path.join(PROJECT_ROOT, 'configs', 'ip-registry.yaml');
     const both = fsExists(conceptsPath) && fsExists(ipPath);
     return taskResult('publicDomainPatternIntegration', 'COMPETITIVE_INTELLIGENCE',
       both ? 'pass' : 'warn', { conceptsIndex: fsExists(conceptsPath), ipRegistry: fsExists(ipPath) },
@@ -2498,7 +2498,7 @@ const COMPETITIVE_INTELLIGENCE = {
 
   async licenseComplianceCheck() {
     const t0 = Date.now();
-    const pkgPath = path.join(ROOT, 'package.json');
+    const pkgPath = path.join(PROJECT_ROOT, 'package.json');
     if (!fsExists(pkgPath)) return fail('licenseComplianceCheck', 'COMPETITIVE_INTELLIGENCE',
       {}, 'package.json not found', Date.now() - t0);
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
