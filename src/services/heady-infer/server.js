@@ -52,7 +52,8 @@ function createApp(cfg = config) {
   // Fast liveness — no provider ping
   app.get('/health', (req, res) => {
     const report = liveness(gateway);
-    res.status(200).json(report);
+    const code = (report.status === 'healthy' || report.status === 'ok') ? 200 : 503;
+    res.status(code).json(report);
   });
 
   // ─── Mount HeadyInfer Router ───────────────────────────────────────────────
