@@ -413,10 +413,56 @@ const TASK_CATALOG = [
     { id: "ci-005", name: "Benchmark Heady vs competitors on latency", cat: "competitive-intel", pool: "warm", w: 4, desc: "Run latency benchmarks against OpenAI, Anthropic API gateways" },
     { id: "ci-006", name: "Generate weekly competitive digest", cat: "competitive-intel", pool: "cold", w: 2, desc: "Auto-generate weekly competitor intelligence summary" },
     { id: "ci-007", name: "Alert on competitive threat signals", cat: "competitive-intel", pool: "hot", w: 5, desc: "Fire alerts when competitors announce features in Heady's domain" },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // PERPETUAL OPTIMIZATION LOOP — NEVER STOPS
+    // Standing directive: continuously audit → fix → optimize → monetize → learn
+    // These tasks cycle infinitely through the auto-success scheduler.
+    // Every completion re-queues the next pass at higher standards.
+    // Directive: .heady/directives/full-spectrum-optimization.md
+    // ═══════════════════════════════════════════════════════════════════════
+    { id: "perp-opt-001", name: "∞ Boot integrity audit — cold-start <5s", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Trace all require() chains in heady-manager.js. Fix circular deps, missing modules, dead imports. Re-run every cycle." },
+    { id: "perp-opt-002", name: "∞ Pipeline 22-stage end-to-end validation", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Run HCFullPipeline all 22 stages. Verify every stage emits stage:complete or stage:failed. Fix any silent failures." },
+    { id: "perp-opt-003", name: "∞ Data layer RLS + vector benchmark", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Test neon-db + pg-vector-adapter + tenant-isolation RLS. Benchmark: <100ms p95 vector query latency." },
+    { id: "perp-opt-004", name: "∞ Security sweep — secrets, eval, CORS, XSS", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Scan for hardcoded secrets, eval(), wildcard CORS, missing auth, XSS, prototype pollution. Fix all findings." },
+    { id: "perp-opt-005", name: "∞ Service mesh health — all endpoints", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Hit every /health endpoint. Verify CORS for 11 domains. Test webhook-dispatcher, hallucination-watchdog, agents." },
+    { id: "perp-opt-006", name: "∞ Performance hot-path profiling", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Profile request → LLM routing → response. Fix top 3 bottlenecks. Target: 200ms p50 response time." },
+    { id: "perp-opt-007", name: "∞ Auto-success task validation sweep", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Load all tasks, execute one per category, identify stubs vs functional. Fix top 10 highest-weight stubs." },
+    { id: "perp-opt-008", name: "∞ Kill-switch governance test", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Feed governance engine 51% daily loss. Confirm flatten-and-sever fires. Verify audit trail immutability." },
+    { id: "perp-opt-009", name: "∞ Event bus liveness + bridge validation", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Verify heady-event-bus pub/sub, hcfp-event-bridge connection, and event replay all function." },
+    { id: "perp-opt-010", name: "∞ Monetization product readiness check", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Check Vector Memory API, HeadyGuard, HeadyRouter, HeadyMesh, HeadyAutoPilot — all must have working endpoints." },
+    { id: "perp-opt-011", name: "∞ Colab intelligence + session persistence", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Verify Colab runtime saves state on disconnect, restores on reconnect. Test continuous-learner ingestion." },
+    { id: "perp-opt-012", name: "∞ Code dojo — generate + solve challenge", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Generate 1 coding challenge, solve, run through cslBenchmark. Log skill improvement. Never stop." },
+    { id: "perp-opt-013", name: "∞ Training service — close #1 skill gap", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Identify weakest area from benchmarks + failure rates. Generate curriculum. Train. Produce working code." },
+    { id: "perp-opt-014", name: "∞ Competitive intel scan", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Run competitive-intelligence-engine scan. Track competitor releases. Alert on threat signals." },
+    { id: "perp-opt-015", name: "∞ Full re-audit — raise the bar 10%", cat: "perpetual-optimization", pool: "hot", w: 5, desc: "Complete cycle. Increase all thresholds by 10%. Re-queue all perp-opt tasks. The bar always rises. NEVER ENDS." },
+
+    // ─── CODING MASTERY (continuous practice) ────────────────────────────────
+    { id: "code-master-001", name: "Practice: Node.js async patterns", cat: "coding-mastery", pool: "hot", w: 5, desc: "Generate + solve async/await, Promise.all, stream challenges. Benchmark against cslBenchmark." },
+    { id: "code-master-002", name: "Practice: SQL + pgvector optimization", cat: "coding-mastery", pool: "hot", w: 5, desc: "Write and optimize vector queries. Practice RLS policies, indexes, EXPLAIN ANALYZE." },
+    { id: "code-master-003", name: "Practice: Cloud Run deployment", cat: "coding-mastery", pool: "warm", w: 4, desc: "Practice multi-stage Docker builds, health checks, graceful shutdown, scaling." },
+    { id: "code-master-004", name: "Practice: Cloudflare Workers", cat: "coding-mastery", pool: "warm", w: 4, desc: "Build and test edge functions, KV storage patterns, Durable Objects." },
+    { id: "code-master-005", name: "Practice: MCP protocol", cat: "coding-mastery", pool: "warm", w: 4, desc: "Implement MCP tools, resources, prompts. Test with stdio + SSE transports." },
+    { id: "code-master-006", name: "Practice: Multi-agent orchestration", cat: "coding-mastery", pool: "warm", w: 4, desc: "Build agent communication, consensus, task delegation patterns." },
+    { id: "code-master-007", name: "Practice: Security hardening", cat: "coding-mastery", pool: "hot", w: 5, desc: "Practice CSP headers, CORS, rate limiting, input sanitization, secret rotation." },
+    { id: "code-master-008", name: "Practice: Trading algorithm logic", cat: "coding-mastery", pool: "warm", w: 4, desc: "Implement and backtest trading strategies. Practice risk management patterns." },
+    { id: "code-master-009", name: "Practice: Real GitHub issue fixing", cat: "coding-mastery", pool: "hot", w: 5, desc: "Pull actual HeadyMe repo issues. Attempt fix. Submit draft PR. Track success rate." },
+    { id: "code-master-010", name: "Practice: LLM prompt engineering", cat: "coding-mastery", pool: "warm", w: 4, desc: "Design, test, and optimize prompts for all Heady LLM integrations." },
+
+    // ─── INTELLIGENCE TRAINING (skill gap closure) ───────────────────────────
+    { id: "intel-train-001", name: "Train: pgvector query optimization", cat: "intelligence-training", pool: "hot", w: 5, desc: "Deep-dive pgvector indexing (IVFFlat vs HNSW), query planning, cost analysis." },
+    { id: "intel-train-002", name: "Train: Stripe metered billing", cat: "intelligence-training", pool: "hot", w: 5, desc: "Implement Stripe usage records, metered subscriptions, webhook handling." },
+    { id: "intel-train-003", name: "Train: SOC 2 compliance patterns", cat: "intelligence-training", pool: "warm", w: 4, desc: "Study SOC 2 Type II. Implement audit logging, access controls, encryption at rest." },
+    { id: "intel-train-004", name: "Train: WebSocket streaming", cat: "intelligence-training", pool: "warm", w: 4, desc: "Implement real WebSocket transport. Heartbeat, reconnection, binary frames, backpressure." },
+    { id: "intel-train-005", name: "Train: Sacred geometry proofs", cat: "intelligence-training", pool: "warm", w: 3, desc: "Formalize Fibonacci, phi-ratio, torus topology foundations. Strengthen IP claims." },
+    { id: "intel-train-006", name: "Train: Multi-agent consensus", cat: "intelligence-training", pool: "warm", w: 4, desc: "Study Raft, PBFT, gossip protocols. Implement consensus for swarm decisions." },
+    { id: "intel-train-007", name: "Train: OpenTelemetry observability", cat: "intelligence-training", pool: "warm", w: 4, desc: "Wire traces, metrics, logs to OTel. Span context propagation, custom metrics." },
+    { id: "intel-train-008", name: "Train: Knowledge distillation", cat: "intelligence-training", pool: "warm", w: 4, desc: "Compress session learnings into vectors. Embedding fine-tuning, recall optimization." },
+    { id: "intel-train-009", name: "Train: Spaced repetition testing", cat: "intelligence-training", pool: "warm", w: 3, desc: "Re-test trained topics at Fibonacci intervals (1,2,3,5,8,13 days). Verify retention." },
+    { id: "intel-train-010", name: "Train: Skill gap re-analysis", cat: "intelligence-training", pool: "hot", w: 5, desc: "Re-run skill gap analysis. Compare against last cycle. Verify improvement. Next curriculum." },
 ];
 
 // ─── DYNAMIC JSON TASK LOADER ──────────────────────────────────────────────────
-// Auto-imports all 254 tasks from the 5 merged JSON task files
 const JSON_TASK_FILES = [
   'architecture-fix-tasks.json',
   'autocontext-integration-tasks.json',
@@ -435,12 +481,29 @@ try {
       const tasks = Array.isArray(data) ? data : (data.tasks || data.categories || []);
       JSON_TASKS = JSON_TASKS.concat(tasks);
     } catch (e) {
-      // Graceful skip if file not found (won't break catalog)
+      // Graceful skip if file not found
     }
   }
 } catch (e) {
   // Fallback — no dynamic loading in non-Node environments
 }
 
-// ─── POOL ALLOCATION ────────────────────────────────────────────────────────
-module.exports = { TASK_CATALOG, JSON_TASKS, JSON_TASK_FILES };
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXECUTION DEFAULTS — MAX EFFORT UNLESS USER OVERRIDES
+// HCFullPipeline and Auto-Success always run at maximum effort by default.
+// Set effortLevel to 'standard' or 'minimal' only via explicit user request.
+// ═══════════════════════════════════════════════════════════════════════════════
+const EXECUTION_CONFIG = {
+  effortLevel: 'max',                // DEFAULT: max | standard | minimal
+  perpetualLoop: true,               // perp-opt tasks always re-queue on completion
+  perpetualThresholdIncrease: 0.10,  // raise bar 10% each cycle
+  maxRetriesPerTask: 3,              // retry failed tasks up to 3x before cold pool
+  hotPoolPriority: 'fifo-weighted',  // weight 5 tasks run first
+  idleCycleUtilization: 1.0,         // use 100% of idle cycles for auto-success
+  codingPracticeMinDaily: 20,        // minimum coding challenges per day
+  skillGapClosureTarget: '48h',      // close #1 skill gap every 48 hours
+  standingDirective: '.heady/directives/full-spectrum-optimization.md',
+};
+
+// ─── EXPORTS ────────────────────────────────────────────────────────────────────
+module.exports = { TASK_CATALOG, JSON_TASKS, JSON_TASK_FILES, EXECUTION_CONFIG };
