@@ -351,6 +351,32 @@ function renderSite(site, host) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${site.brand} — ${site.tagline}</title>
   <meta name="description" content="${site.subtitle}">
+  <meta property="og:title" content="${site.brand} — ${site.tagline}">
+  <meta property="og:description" content="${site.subtitle}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://${host}">
+  <meta property="og:image" content="https://headysystems.com/og/${host.replace(/\.\w+$/, '')}.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${site.brand} — ${site.tagline}">
+  <meta name="twitter:description" content="${site.subtitle}">
+  <meta name="twitter:site" content="@HeadySystems">
+  <link rel="canonical" href="https://${host}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "${site.brand}",
+    "url": "https://${host}",
+    "description": "${site.subtitle}",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "publisher": {
+      "@type": "Organization",
+      "name": "HeadySystems Inc.",
+      "url": "https://headysystems.com"
+    }
+  }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -467,6 +493,9 @@ function renderSite(site, host) {
       .auth-grid{grid-template-columns:repeat(2,1fr)}
       .buddy-panel{width:calc(100vw - 32px);right:16px;bottom:84px}
       .hero h1{font-size:2rem}
+      .nav-links{gap:.75rem}
+      .nav-links a{font-size:.75rem}
+      .nav-cta{padding:.4rem .8rem;font-size:.75rem}
     }
   </style>
 </head>
@@ -504,9 +533,13 @@ function renderSite(site, host) {
     <div class="domain-bar">${allDomains}</div>
 
     <footer>
-      © 2026 Heady™Systems Inc. · All rights reserved ·
-      <a href="https://headyme.com">headyme.com</a> ·
-      25+ Auth Providers · Sacred Geometry v3
+      <div style="margin-bottom:.75rem">
+        <a href="https://headysystems.com/privacy" style="margin:0 .5rem">Privacy Policy</a> ·
+        <a href="https://headysystems.com/terms" style="margin:0 .5rem">Terms of Service</a> ·
+        <a href="mailto:hello@headysystems.com" style="margin:0 .5rem">Contact</a>
+      </div>
+      © 2026 HeadySystems Inc. &amp; HeadyConnection Inc. · All rights reserved ·
+      <a href="https://headysystems.com">headysystems.com</a> · 72+ Patents Filed
     </footer>
   </div>
 
@@ -1036,6 +1069,11 @@ const server = http.createServer((req, res) => {
     'Cache-Control': 'no-cache',
     'X-Heady-Site': site.brand,
     'X-Heady-Version': '3.2.1',
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'SAMEORIGIN',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.run.app;",
   });
   res.end(renderSite(site, host));
 });
