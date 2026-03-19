@@ -197,24 +197,49 @@ class PgVectorAdapter {
         }
 
         return this._withRetry(async () => {
-            const result = await this._pool.query(`
-                SELECT
-                    id,
-                    metadata,
-                    importance,
-                    1 - (embedding <=> $1::vector) AS score
-                FROM ${this.tableName}
-                WHERE ${whereClause}
-                ORDER BY embedding <=> $1::vector
-                LIMIT $2
-            `, params);
+            const startMs = Date.now();
 
-            return result.rows.map(row => ({
-                id: row.id,
-                score: parseFloat(row.score),
-                metadata: typeof row.metadata === 'object' ? row.metadata : JSON.parse(row.metadata || '{}'),
-                importance: parseFloat(row.importance),
-            }));
+            // Acquire a dedicated client to set session-local HNSW search parameters
+            const client = await this._pool.connect();
+            try {
+                // Set HNSW ef_search for this session to ensure the index is used
+                // with an appropriate candidate pool size (φ-derived: fib(9) = 55)
+                await client.query(`SET LOCAL hnsw.ef_search = ${HNSW_EF_SEARCH}`);
+
+                const result = await client.query(`
+                    SELECT
+                        id,
+                        metadata,
+                        importance,
+                        1 - (embedding <=> $1::vector) AS score
+                    FROM ${this.tableName}
+                    WHERE ${whereClause}
+                    ORDER BY embedding <=> $1::vector
+                    LIMIT $2
+                `, params);
+
+                const elapsedMs = Date.now() - startMs;
+                if (elapsedMs > 100) {
+                    log('warn', `Vector search slow: ${elapsedMs}ms (threshold: 100ms)`, {
+                        elapsedMs,
+                        k,
+                        threshold,
+                        resultCount: result.rows.length,
+                        table: this.tableName,
+                    });
+                } else {
+                    log('debug', `Vector search completed`, { elapsedMs, resultCount: result.rows.length });
+                }
+
+                return result.rows.map(row => ({
+                    id: row.id,
+                    score: parseFloat(row.score),
+                    metadata: typeof row.metadata === 'object' ? row.metadata : JSON.parse(row.metadata || '{}'),
+                    importance: parseFloat(row.importance),
+                }));
+            } finally {
+                client.release();
+            }
         });
     }
 
