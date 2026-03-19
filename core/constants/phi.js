@@ -53,7 +53,7 @@ const CSL = {
   MINIMUM:   0.500,                // Bare minimum gate
   BOOST:     PSI,                  // 0.618 — promoted/boosted
   INJECT:    0.718,                // Force injection
-  MEDIUM:    1 / (1 + PSI),        // ~0.618 — routing decisions
+  MEDIUM:    PHI / (PHI + PSI2),    // 0.809 — routing decisions
   HIGH:      0.882,                // High confidence
   CRITICAL:  0.927,                // Critical — near certain
 };

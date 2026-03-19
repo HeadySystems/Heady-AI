@@ -16,13 +16,8 @@
  */
 'use strict';
 
-const PHI  = 1.618033988749895;
-const PSI  = 0.618033988749895;
-const FIB  = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
-const SESSION_TTL_MS = Math.round(3600000 * PHI); // ~5832s
-
-// CSL similarity thresholds
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927 };
+const { PHI, PSI, FIB, CSL, TIMING } = require('../../core/constants/phi');
+const SESSION_TTL_MS = Math.round(TIMING.LONG * PHI); // ~54,966ms
 
 // Trust pillar weights (must sum to 1.0)
 const TRUST_WEIGHTS = { coherence: 0.35, completion: 0.25, reliability: 0.20, integrity: 0.10, stability: 0.10 };

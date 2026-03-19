@@ -34,20 +34,11 @@
 
 const EventEmitter = require('events');
 
-// ─── φ-Math ───────────────────────────────────────────────────────────────────
-const PHI = 1.618033988749895;
-const PSI = 0.618033988749895;
-const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584];
+// ─── φ-Math (single source of truth) ──────────────────────────────────────────
+const { PHI, PSI, FIB, CSL: _CSL } = require('../../core/constants/phi');
 
-// CSL thresholds — matches shared/phi-math.js
-const CSL = {
-    MINIMUM:  0.500,
-    LOW:      0.691,
-    MEDIUM:   0.809,
-    HIGH:     0.882,
-    CRITICAL: 0.927,
-    DEDUP:    0.972,
-};
+// Extend CSL with watchdog-specific thresholds
+const CSL = { ..._CSL, LOW: 0.691, DEDUP: 0.972 };
 
 // Watchdog-specific thresholds
 const CONTRADICTION_THRESHOLD = 0.809; // CSL MEDIUM — semantic contradiction gate

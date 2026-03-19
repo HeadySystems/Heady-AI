@@ -23,8 +23,7 @@
 'use strict';
 
 const { TOPICS } = require('../core/heady-event-bus');
-
-const PHI = 1.6180339887;
+const { PHI } = require('../../core/constants/phi');
 
 /**
  * Bridge HCFP pipeline events to auto-success triggers.

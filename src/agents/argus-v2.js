@@ -23,9 +23,9 @@
  */
 'use strict';
 
-const PHI    = 1.618033988749895;
-const PSI    = 0.618033988749895;
+const { PHI, PSI, FIB, CSL } = require('../../core/constants/phi');
 const crypto = require('crypto');
+const FIB_89 = FIB[11]; // 89
 
 // φ-health thresholds
 const PHI_HEALTH = { THRIVING: 1.000, NOMINAL: PSI, DEGRADED: 0.382, CRITICAL: 0.236 };
@@ -385,5 +385,4 @@ class ArgusV2Agent {
   }
 }
 
-const FIB_89 = 89;
 module.exports = { ArgusV2Agent, OTEL_GENAI, DriftSignals, PHI_HEALTH, PHI, PSI };

@@ -63,9 +63,15 @@ const log = getLogger('heady-manager');
  * @description Service health check
  * @returns {Object} Service health data
  */
-// Initialize event bus
-const { EventEmitter } = require('events');
-const eventBus = new EventEmitter();
+// Initialize event bus (use structured HeadyEventBus from core)
+let eventBus;
+try {
+  const { getEventBus } = require('./src/core/heady-event-bus');
+  eventBus = getEventBus();
+} catch {
+  const { EventEmitter } = require('events');
+  eventBus = new EventEmitter();
+}
 
 // Make available to other modules
 global.eventBus = eventBus;
@@ -283,16 +289,18 @@ const allowedOrigins = [
   'https://heady-testing.onrender.com',
   'https://heady-production.onrender.com',
 
-  // Development localhost (ports 3000-3400)
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:3002',
-  'http://localhost:3003',
-  'http://localhost:3100',
-  'http://localhost:3200',
-  'http://localhost:3300',
-  'http://localhost:3301',
-  'http://localhost:3400',
+  // Development localhost (only in non-production environments)
+  ...(process.env.NODE_ENV !== 'production' ? [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
+    'http://localhost:3100',
+    'http://localhost:3200',
+    'http://localhost:3300',
+    'http://localhost:3301',
+    'http://localhost:3400',
+  ] : []),
 ];
 
 app.use((req, res, next) => {

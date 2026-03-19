@@ -26,27 +26,14 @@
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
-const { PHI_TIMING } = require('../shared/phi-math');
+const { PHI, PSI, PSI2, FIB, CSL, TIMING, PHI_POWERS, phiRetryDelays, cslGate } = require('../../core/constants/phi');
 
-// ─── φ Constants ────────────────────────────────────────────────────────────
-const PHI = 1.618033988749895;
-const PSI = 0.618033988749895;
-const PSI2 = 0.3819660112501054;
-const PHI2 = 2.618033988749895;
-const PHI3 = 4.23606797749979;
+// φ-derived convenience aliases
+const PHI2 = PHI_POWERS.PHI_2; // 2.618
+const PHI3 = PHI_POWERS.PHI_3; // 4.236
 
-// ─── Fibonacci Sequence (for backoff, pool sizes, intervals) ────────────────
-const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
-
-// ─── CSL Gate Thresholds ────────────────────────────────────────────────────
-const CSL_GATES = Object.freeze({
-  SUPPRESS: 0.236,
-  INCLUDE: 0.382,
-  BOOST: 0.618,
-  INJECT: 0.718,
-  HIGH: 0.882,
-  CRITICAL: 0.927,
-});
+// CSL Gate Thresholds (from canonical source)
+const CSL_GATES = CSL;
 
 // ─── Pipeline Stage Configuration ───────────────────────────────────────────
 const STAGES = Object.freeze({
