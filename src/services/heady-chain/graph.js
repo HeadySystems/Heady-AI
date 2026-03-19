@@ -260,7 +260,7 @@ class GraphBuilder {
 
   /**
    * Reconstruct a GraphBuilder from a serialized JSON object.
-   * WARNING: eval is used to restore condition functions — only use with trusted input.
+   * Uses new Function() with validation instead of eval() for safety.
    */
   static fromJSON(json) {
     const builder = new GraphBuilder(json.id);
@@ -268,9 +268,19 @@ class GraphBuilder {
       builder.addNode(node.id, node.type, node.config, node.metadata);
     }
     for (const edge of json.edges) {
-      /* eslint-disable no-eval */
-      const condFn = edge.condition ? eval(`(${edge.condition})`) : null;
-      /* eslint-enable no-eval */
+      let condFn = null;
+      if (edge.condition) {
+        // Validate condition string — must be a simple arrow/function expression, no dangerous tokens
+        const forbidden = /\b(require|import|process|global|__dirname|__filename|child_process|exec|spawn)\b/;
+        if (forbidden.test(edge.condition)) {
+          throw new Error(`Unsafe condition in edge ${edge.from}→${edge.to}: contains forbidden token`);
+        }
+        try {
+          condFn = new Function('ctx', `"use strict"; return (${edge.condition})(ctx);`);
+        } catch (parseErr) {
+          throw new Error(`Invalid condition in edge ${edge.from}→${edge.to}: ${parseErr.message}`);
+        }
+      }
       builder.addEdge(edge.from, edge.to, condFn, edge.label);
     }
     if (json.entryPoint) builder.setEntryPoint(json.entryPoint);
