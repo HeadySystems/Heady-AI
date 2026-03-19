@@ -18,25 +18,44 @@ const logger = createLogger('cors');
 // ═══════════════════════════════════════════════════════════
 
 const ALLOWED_ORIGINS = new Set([
+  // ─── 11 Production Domains ────────────────────────────────
   'https://headyme.com',
   'https://www.headyme.com',
   'https://headysystems.com',
   'https://www.headysystems.com',
-  'https://heady-ai.com',
-  'https://www.heady-ai.com',
-  'https://headyos.com',
-  'https://www.headyos.com',
   'https://headyconnection.org',
   'https://www.headyconnection.org',
   'https://headyconnection.com',
   'https://www.headyconnection.com',
-  'https://headyex.com',
-  'https://www.headyex.com',
+  'https://headybuddy.org',
+  'https://www.headybuddy.org',
+  'https://headymcp.com',
+  'https://www.headymcp.com',
+  'https://headyio.com',
+  'https://www.headyio.com',
+  'https://headybot.com',
+  'https://www.headybot.com',
+  'https://headyapi.com',
+  'https://www.headyapi.com',
+  'https://headyai.com',
+  'https://www.headyai.com',
+  'https://heady-ai.com',
+  'https://www.heady-ai.com',
+  'https://headylens.com',
+  'https://www.headylens.com',
   'https://headyfinance.com',
   'https://www.headyfinance.com',
+  // ─── Subdomains ───────────────────────────────────────────
   'https://admin.headysystems.com',
   'https://auth.headysystems.com',
   'https://api.headysystems.com',
+  'https://headyos.com',
+  'https://www.headyos.com',
+  'https://headyex.com',
+  'https://www.headyex.com',
+  // ─── Cloud Run / Render ───────────────────────────────────
+  'https://heady-manager-609590223909.us-central1.run.app',
+  'https://heady-manager.onrender.com',
 ]);
 
 // Development origins added only if NODE_ENV !== 'production'
