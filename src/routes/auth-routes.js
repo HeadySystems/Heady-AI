@@ -30,11 +30,15 @@ const sessions = new Map();
 // Map<userId, { email, password (hashed in prod), name, createdAt }>
 const users = new Map();
 
-// Demo user seed
+// Demo user seed — password sourced from env, bcrypt-hashed at startup
+const DEMO_PASSWORD = process.env.HEADY_DEMO_PASSWORD || crypto.randomBytes(24).toString('base64url');
+const bcrypt = require('bcrypt');
+const DEMO_PASSWORD_HASH = bcrypt.hashSync(DEMO_PASSWORD, 12);
+
 const DEMO_USER = {
   id: 'demo-user-1',
   email: 'eric@headyconnection.org',
-  password: 'heady2026', // In production, this would be hashed
+  passwordHash: DEMO_PASSWORD_HASH,
   name: 'Eric Haywood',
 };
 
@@ -227,8 +231,8 @@ router.post('/login', (req, res) => {
       });
     }
 
-    // Validate password (timing-safe comparison)
-    if (!timingSafeEqual(password, user.password)) {
+    // Validate password (bcrypt comparison)
+    if (!bcrypt.compareSync(password, user.passwordHash || '')) {
       return res.status(401).json({
         error: 'unauthorized',
         message: 'Invalid email or password',
@@ -308,7 +312,7 @@ router.post('/register', (req, res) => {
     const newUser = {
       id: userId,
       email,
-      password, // In production, hash with bcrypt or similar
+      passwordHash: bcrypt.hashSync(password, 12),
       name,
       createdAt: new Date(),
     };

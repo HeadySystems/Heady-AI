@@ -36,11 +36,11 @@ export const options = {
 
 // Test data
 const users = [
-  { email: 'user1@heady.app', password: 'SecurePassword123!' },
-  { email: 'user2@heady.app', password: 'SecurePassword456!' },
-  { email: 'user3@heady.app', password: 'SecurePassword789!' },
-  { email: 'user4@heady.app', password: 'SecurePassword012!' },
-  { email: 'user5@heady.app', password: 'SecurePassword345!' },
+  { email: 'user1@heady.app', password: __ENV.K6_TEST_PASSWORD || 'changeme' },
+  { email: 'user2@heady.app', password: __ENV.K6_TEST_PASSWORD || 'changeme' },
+  { email: 'user3@heady.app', password: __ENV.K6_TEST_PASSWORD || 'changeme' },
+  { email: 'user4@heady.app', password: __ENV.K6_TEST_PASSWORD || 'changeme' },
+  { email: 'user5@heady.app', password: __ENV.K6_TEST_PASSWORD || 'changeme' },
 ];
 
 export function setup() {

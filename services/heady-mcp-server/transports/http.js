@@ -18,7 +18,8 @@ class HttpTransport {
   }
 
   _setup() {
-    this.app.use(cors());
+    const { corsOptions } = require('../../../shared/cors-config');
+    this.app.use(cors(corsOptions));
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(express.json());

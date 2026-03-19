@@ -390,7 +390,8 @@ for (const svc of HEADY_SERVICES) {
 // ─── Express App ────────────────────────────────────────────
 const app = express();
 app.use(helmet());
-app.use(cors());
+const { corsOptions } = require('../../shared/cors-config');
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '1mb' }));
 app.use(headyAutoContext);
 

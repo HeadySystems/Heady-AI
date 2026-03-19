@@ -18,7 +18,8 @@ const app = express();
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+const { corsOptions } = require('../../../shared/cors-config');
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 
 // Routes

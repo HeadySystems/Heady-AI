@@ -569,7 +569,9 @@ class APIServer {
 
       try {
         // Add CORS headers
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        const { ALLOWED_ORIGINS } = require('./shared/cors-config');
+        const reqOrigin = req.headers.origin;
+        res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGINS.has(reqOrigin) ? reqOrigin : 'https://headysystems.com');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         res.setHeader('Content-Type', 'application/json');
