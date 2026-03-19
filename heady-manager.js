@@ -278,6 +278,28 @@ const allowedOrigins = [
   'https://headyfinance.com',
   'https://www.headyfinance.com',
 
+  // Audit ecosystem domains
+  'https://headyai.com',
+  'https://www.headyai.com',
+  'https://headyapi.com',
+  'https://www.headyapi.com',
+  'https://headyapis.com',
+  'https://www.headyapis.com',
+  'https://headyfullstack.com',
+  'https://www.headyfullstack.com',
+  'https://headymusic.net',
+  'https://www.headymusic.net',
+  'https://headycloud.io',
+  'https://www.headycloud.io',
+  'https://headydata.io',
+  'https://www.headydata.io',
+  'https://headyinc.com',
+  'https://www.headyinc.com',
+  'https://headyhc.com',
+  'https://www.headyhc.com',
+  'https://headygraphics.com',
+  'https://www.headygraphics.com',
+
   // Render.com deployment domains
   'https://heady-manager.onrender.com',
   'https://heady-testing.onrender.com',

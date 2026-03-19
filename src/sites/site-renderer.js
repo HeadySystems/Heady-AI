@@ -14,8 +14,14 @@
 
 const fs = require("fs");
 const path = require("path");
-const registry = require("./site-registry.json");
+const rawRegistry = require("./site-registry.json");
 const logger = require("../utils/logger");
+
+// Normalize registry key: support both preconfiguredSites (current) and preconfigured (legacy)
+const registry = {
+  ...rawRegistry,
+  preconfigured: rawRegistry.preconfiguredSites || rawRegistry.preconfigured || {},
+};
 
 const USER_SITES_PATH = path.join(__dirname, "..", "..", "data", "user-sites.json");
 
@@ -128,7 +134,43 @@ function renderSite(site) {
 <meta property="og:title" content="${site.name} — ${site.tagline}">
 <meta property="og:description" content="${(site.description || "").replace(/"/g, "&quot;")}">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<meta property="og:url" content="https://${site.domain || 'headyme.com'}">
+<meta property="og:image" content="https://headysystems.com/assets/og-${(site.slug || site.name || 'heady').toLowerCase()}.png">
+<meta property="og:site_name" content="${site.name}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${site.name} — ${site.tagline}">
+<meta name="twitter:description" content="${(site.description || "").replace(/"/g, "&quot;")}">
+<meta name="twitter:image" content="https://headysystems.com/assets/og-${(site.slug || site.name || 'heady').toLowerCase()}.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+<link rel="icon" type="image/png" sizes="192x192" href="/heady-icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/heady-icon-512.png">
+<link rel="apple-touch-icon" href="/heady-icon-192.png">
+<link rel="canonical" href="https://${site.domain || 'headyme.com'}">
+<script type="application/ld+json">
+${JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": site.name,
+  "url": "https://" + (site.domain || "headyme.com"),
+  "description": site.description || site.tagline || "",
+  "publisher": {
+    "@type": "Organization",
+    "name": "HeadySystems Inc.",
+    "url": "https://headysystems.com",
+    "founder": {
+      "@type": "Person",
+      "name": "Eric Haywood"
+    },
+    "foundingDate": "2024",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Fort Collins",
+      "addressRegion": "CO",
+      "addressCountry": "US"
+    }
+  }
+})}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--accent:${c};--accent-dark:${cd};--bg:#050508;--surface:rgba(15,15,20,0.18);--border:rgba(255,255,255,0.04);--text:#e2e8f0;--text-dim:rgba(255,255,255,0.5);--text-muted:rgba(255,255,255,0.3)}
