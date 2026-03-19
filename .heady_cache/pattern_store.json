@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-03-19T00:20:01.384Z",
-  "version": 249,
+  "lastUpdated": "2026-03-19T00:25:02.108Z",
+  "version": 250,
   "phi": 1.618033988749895,
   "resourcePatterns": [
     {
@@ -29,11 +29,11 @@
     },
     {
       "word": "pattern_store.json",
-      "count": 275
+      "count": 274
     },
     {
       "word": "auto-commit.log",
-      "count": 253
+      "count": 252
     },
     {
       "word": "resource-events.jsonl",
