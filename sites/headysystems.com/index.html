@@ -770,10 +770,10 @@
     </footer>
 
     <!-- Sacred Geometry Canvas -->
-    <canvas id="sacred-geo" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.5;"></canvas>
+    <canvas id="sacred-geo" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.6;"></canvas>
 
     <script>
-    // ─── Sacred Geometry Engine v4.0 — Multi-Shape Wireframe ───
+    // ─── Sacred Geometry Engine v5.0 — Massive Wireframe + Glow + Trails ───
     (function() {
         const PHI = 1.618033988749895;
         const TAU = Math.PI * 2;
@@ -788,13 +788,13 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // ── Shape 1: Icosahedron (20 faces, 12 vertices, 30 edges) ──
+        // ── SHAPE 1: Icosahedron ──
         function buildIcosahedron() {
             const t = PHI;
             const pts = [
-                [-1, t, 0], [1, t, 0], [-1,-t, 0], [1,-t, 0],
-                [0,-1, t], [0, 1, t], [0,-1,-t], [0, 1,-t],
-                [ t, 0,-1], [ t, 0, 1], [-t, 0,-1], [-t, 0, 1]
+                [-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],
+                [0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],
+                [t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]
             ];
             const faces = [
                 [0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],
@@ -802,57 +802,39 @@
                 [3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],
                 [4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]
             ];
-            const edgeSet = new Set();
-            const edges = [];
-            faces.forEach(f => {
-                for (let i = 0; i < 3; i++) {
-                    const a = Math.min(f[i], f[(i+1)%3]);
-                    const b = Math.max(f[i], f[(i+1)%3]);
-                    const key = a + ',' + b;
-                    if (!edgeSet.has(key)) { edgeSet.add(key); edges.push([a, b]); }
-                }
-            });
+            const es = new Set(), edges = [];
+            faces.forEach(f => { for(let i=0;i<3;i++){const a=Math.min(f[i],f[(i+1)%3]),b=Math.max(f[i],f[(i+1)%3]),k=a+','+b;if(!es.has(k)){es.add(k);edges.push([a,b])}} });
             return { pts, edges };
         }
 
-        // ── Shape 2: Stellated Octahedron (Stella Octangula) ──
-        function buildStellatedOctahedron() {
-            const s = 1.4;
-            // Two interlocking tetrahedra
+        // ── SHAPE 2: Stellated Octahedron (Stella Octangula) ──
+        function buildStella() {
+            const s = 1.6;
             const pts = [
-                // Tetrahedron 1
-                [ s, s, s], [ s,-s,-s], [-s, s,-s], [-s,-s, s],
-                // Tetrahedron 2
-                [-s,-s,-s], [-s, s, s], [ s,-s, s], [ s, s,-s],
-                // Octahedron core vertices for extra wireframe
-                [s*1.2, 0, 0], [-s*1.2, 0, 0], [0, s*1.2, 0], [0,-s*1.2, 0], [0, 0, s*1.2], [0, 0,-s*1.2]
+                [s,s,s],[s,-s,-s],[-s,s,-s],[-s,-s,s],
+                [-s,-s,-s],[-s,s,s],[s,-s,s],[s,s,-s],
+                [s*1.3,0,0],[-s*1.3,0,0],[0,s*1.3,0],[0,-s*1.3,0],[0,0,s*1.3],[0,0,-s*1.3]
             ];
             const edges = [
-                // Tetra 1: all edges
                 [0,1],[0,2],[0,3],[1,2],[1,3],[2,3],
-                // Tetra 2: all edges
                 [4,5],[4,6],[4,7],[5,6],[5,7],[6,7],
-                // Cross-connections (wireframe density)
                 [0,4],[0,5],[0,6],[0,7],[1,4],[1,5],[1,6],[1,7],
                 [2,4],[2,5],[2,6],[2,7],[3,4],[3,5],[3,6],[3,7],
-                // Octahedron core
                 [8,10],[8,11],[8,12],[8,13],[9,10],[9,11],[9,12],[9,13],
                 [10,12],[10,13],[11,12],[11,13]
             ];
             return { pts, edges };
         }
 
-        // ── Shape 3: Dodecahedron (12 faces, 20 vertices, 30 edges) ──
-        function buildDodecahedron() {
-            const a = 1, b = 1/PHI, c = PHI;
+        // ── SHAPE 3: Dodecahedron ──
+        function buildDodeca() {
+            const b = 1/PHI, c = PHI;
             const pts = [
-                // Cube vertices
-                [ 1, 1, 1],[ 1, 1,-1],[ 1,-1, 1],[ 1,-1,-1],
-                [-1, 1, 1],[-1, 1,-1],[-1,-1, 1],[-1,-1,-1],
-                // Rectangle vertices (3 golden rectangles)
-                [0, b, c],[0, b,-c],[0,-b, c],[0,-b,-c],
-                [ b, c, 0],[ b,-c, 0],[-b, c, 0],[-b,-c, 0],
-                [ c, 0, b],[ c, 0,-b],[-c, 0, b],[-c, 0,-b]
+                [1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],
+                [-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1],
+                [0,b,c],[0,b,-c],[0,-b,c],[0,-b,-c],
+                [b,c,0],[b,-c,0],[-b,c,0],[-b,-c,0],
+                [c,0,b],[c,0,-b],[-c,0,b],[-c,0,-b]
             ];
             const edges = [
                 [0,8],[0,12],[0,16],[1,9],[1,12],[1,17],
@@ -864,177 +846,162 @@
             return { pts, edges };
         }
 
-        // ── Shape 4: Dense Torus Knot (p=3, q=5 — complex trefoil) ──
-        function buildTorusKnot(p, q, segments, r1, r2) {
-            const pts = [];
-            for (let i = 0; i < segments; i++) {
-                const t = (TAU / segments) * i;
-                const r = r1 + r2 * Math.cos(q * t);
-                pts.push([
-                    r * Math.cos(p * t),
-                    r * Math.sin(p * t),
-                    r2 * Math.sin(q * t)
-                ]);
-            }
-            const edges = [];
-            for (let i = 0; i < pts.length; i++) {
-                edges.push([i, (i + 1) % pts.length]);
-                // Cross-links every 8th segment for denser wireframe
-                if (i % 8 === 0) edges.push([i, (i + segments/3|0) % pts.length]);
+        // ── SHAPE 4: Dense Torus Knot (p=3, q=7) ──
+        function buildTorus() {
+            const pts = [], edges = [], segs = 500;
+            for (let i = 0; i < segs; i++) {
+                const t = (TAU / segs) * i;
+                const r = 2.5 + 0.8 * Math.cos(7 * t);
+                pts.push([r * Math.cos(3 * t), r * Math.sin(3 * t), 0.8 * Math.sin(7 * t)]);
+                edges.push([i, (i + 1) % segs]);
+                if (i % 6 === 0) edges.push([i, (i + segs / 3 | 0) % segs]);
+                if (i % 10 === 0) edges.push([i, (i + segs / 5 | 0) % segs]);
             }
             return { pts, edges };
         }
 
-        // ── Shape 5: Flower of Life ring (6 overlapping circles in 3D) ──
-        function buildFlowerOfLife() {
-            const pts = [];
-            const edges = [];
-            const circleSegs = 48;
-            const radius = 1.0;
-            // 7 circles: 1 center + 6 surrounding
-            const centers = [[0, 0]];
-            for (let i = 0; i < 6; i++) {
-                const a = (TAU / 6) * i;
-                centers.push([Math.cos(a) * radius, Math.sin(a) * radius]);
-            }
+        // ── SHAPE 5: Flower of Life (7 circles) ──
+        function buildFlower() {
+            const pts = [], edges = [], segs = 60, rad = 1.2;
+            const centers = [[0,0]];
+            for (let i = 0; i < 6; i++) centers.push([Math.cos(TAU/6*i)*rad, Math.sin(TAU/6*i)*rad]);
             centers.forEach((c, ci) => {
-                const baseIdx = pts.length;
-                for (let i = 0; i < circleSegs; i++) {
-                    const a = (TAU / circleSegs) * i;
-                    const z = Math.sin(a * 2 + ci) * 0.3; // slight 3D wobble per circle
-                    pts.push([c[0] + Math.cos(a) * radius, c[1] + Math.sin(a) * radius, z]);
-                    edges.push([baseIdx + i, baseIdx + (i + 1) % circleSegs]);
+                const base = pts.length;
+                for (let i = 0; i < segs; i++) {
+                    const a = (TAU/segs)*i;
+                    pts.push([c[0]+Math.cos(a)*rad, c[1]+Math.sin(a)*rad, Math.sin(a*3+ci)*0.4]);
+                    edges.push([base+i, base+(i+1)%segs]);
                 }
             });
             return { pts, edges };
         }
 
-        // Build all shapes
-        const icosahedron = buildIcosahedron();
-        const stella = buildStellatedOctahedron();
-        const dodecahedron = buildDodecahedron();
-        const torusKnot = buildTorusKnot(3, 5, 400, 2.0, 0.7);
-        const flower = buildFlowerOfLife();
+        const shapes = [
+            { geo: buildIcosahedron(), hue: 175, alpha: 0.7, lineW: 1.8, sizeK: 0.8, glow: 12,
+              rx: 0.18*PHI, ry: 0.14, rz: 0.10/PHI },
+            { geo: buildStella(), hue: 38, alpha: 0.55, lineW: 1.4, sizeK: 0.7, glow: 10,
+              rx: 0.12, ry: 0.16*PHI, rz: 0.08 },
+            { geo: buildDodeca(), hue: 270, alpha: 0.45, lineW: 1.6, sizeK: 0.9, glow: 14,
+              rx: 0.06/PHI, ry: 0.13, rz: 0.19*PHI },
+            { geo: buildTorus(), hue: 195, alpha: 0.25, lineW: 0.9, sizeK: 0.38, glow: 6,
+              rx: 0.08, ry: 0.05*PHI, rz: 0.10/PHI },
+            { geo: buildFlower(), hue: 330, alpha: 0.30, lineW: 0.8, sizeK: 0.55, glow: 8,
+              rx: 0.04, ry: 0.03/PHI, rz: 0.06*PHI }
+        ];
 
-        // ── 3D rotation ──
-        function rotatePoint(p, rx, ry, rz) {
-            let [x, y, z] = p;
-            let cy = Math.cos(rx), sy = Math.sin(rx);
-            let y1 = y * cy - z * sy, z1 = y * sy + z * cy;
-            y = y1; z = z1;
-            let cx = Math.cos(ry), sx = Math.sin(ry);
-            let x1 = x * cx + z * sx, z2 = -x * sx + z * cx;
-            x = x1; z = z2;
-            let cz = Math.cos(rz), sz = Math.sin(rz);
-            let x2 = x * cz - y * sz, y2 = x * sz + y * cz;
-            return [x2, y2, z];
-        }
-
-        function project(p, scale, cx, cy) {
-            const fov = 5;
-            const zOff = fov + p[2] * 0.25;
-            const f = fov / Math.max(zOff, 0.1);
-            return { x: cx + p[0] * scale * f, y: cy + p[1] * scale * f, depth: p[2] };
-        }
-
-        // ── Flow-field particles ──
-        const DOT_COUNT = 120;
-        const dots = [];
-        for (let i = 0; i < DOT_COUNT; i++) {
-            dots.push({
-                x: Math.random() * 4 - 2, y: Math.random() * 4 - 2,
-                z: Math.random() * 4 - 2, phase: Math.random() * TAU
+        // ── Sparkle particles ──
+        const SPARKS = 200;
+        const sparks = [];
+        for (let i = 0; i < SPARKS; i++) {
+            sparks.push({
+                x: Math.random()*6-3, y: Math.random()*6-3, z: Math.random()*6-3,
+                phase: Math.random()*TAU, speed: 0.3 + Math.random()*0.7,
+                hue: Math.random()*360, size: 0.5 + Math.random()*2
             });
         }
 
-        function drawShape(shape, rx, ry, rz, scale, cx, cy, hueBase, alpha, lineW) {
-            const projected = shape.pts.map(p => {
-                const r = rotatePoint(p, rx, ry, rz);
-                return project(r, scale, cx, cy);
-            });
-            shape.edges.forEach(([a, b]) => {
+        // ── 3D Engine ──
+        function rot(p, rx, ry, rz) {
+            let [x,y,z] = p;
+            let c=Math.cos(rx),s=Math.sin(rx),y1=y*c-z*s,z1=y*s+z*c; y=y1;z=z1;
+            c=Math.cos(ry);s=Math.sin(ry); let x1=x*c+z*s,z2=-x*s+z*c; x=x1;z=z2;
+            c=Math.cos(rz);s=Math.sin(rz); let x2=x*c-y*s,y2=x*s+y*c;
+            return [x2,y2,z];
+        }
+
+        function proj(p, scale, cx, cy) {
+            const fov = 5, zO = fov + p[2]*0.2;
+            const f = fov / Math.max(zO, 0.1);
+            return { x: cx+p[0]*scale*f, y: cy+p[1]*scale*f, d: p[2] };
+        }
+
+        function drawShape(shape, t, scale, cx, cy) {
+            const rx = t * shape.rx;
+            const ry = t * shape.ry;
+            const rz = t * shape.rz;
+            const S = scale * shape.sizeK;
+
+            const projected = shape.geo.pts.map(p => proj(rot(p, rx, ry, rz), S, cx, cy));
+
+            // Enable glow
+            ctx.shadowColor = `hsla(${shape.hue}, 100%, 60%, 0.8)`;
+            ctx.shadowBlur = shape.glow;
+
+            // Draw edges with glow
+            shape.geo.edges.forEach(([a, b]) => {
                 if (a >= projected.length || b >= projected.length) return;
                 const pa = projected[a], pb = projected[b];
-                const avgD = (pa.depth + pb.depth) / 2;
-                const dA = Math.max(0.1, Math.min(1, 0.55 + avgD * 0.2));
-                const hue = (hueBase + avgD * 25 + time * 6) % 360;
+                const avgD = (pa.d + pb.d) / 2;
+                const dA = Math.max(0.15, Math.min(1, 0.6 + avgD * 0.2));
+                const hue = (shape.hue + avgD * 20 + t * 5) % 360;
+
+                // Edge pulse wave — brightness ripple along edges
+                const pulse = 0.7 + 0.3 * Math.sin(t * 2 + a * 0.5);
+
                 ctx.beginPath();
                 ctx.moveTo(pa.x, pa.y);
                 ctx.lineTo(pb.x, pb.y);
-                ctx.strokeStyle = `hsla(${hue}, 75%, 58%, ${dA * alpha})`;
-                ctx.lineWidth = lineW + dA * 0.6;
+                ctx.strokeStyle = `hsla(${hue}, 80%, ${50 + pulse * 15}%, ${dA * shape.alpha * pulse})`;
+                ctx.lineWidth = shape.lineW + dA * 0.8;
                 ctx.stroke();
             });
-            // Vertex nodes
-            projected.forEach(p => {
-                const dA = Math.max(0.2, Math.min(1, 0.5 + p.depth * 0.25));
+
+            // Vertex glow nodes
+            ctx.shadowBlur = shape.glow * 1.5;
+            projected.forEach((p, i) => {
+                const dA = Math.max(0.2, Math.min(1, 0.55 + p.d * 0.2));
+                const pulse = 0.6 + 0.4 * Math.sin(t * 3 + i * 0.8);
+                const radius = (2.5 + dA * 2) * pulse;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 2 + dA * 1.5, 0, TAU);
-                ctx.fillStyle = `hsla(${hueBase}, 85%, 70%, ${dA * alpha * 0.7})`;
+                ctx.arc(p.x, p.y, radius, 0, TAU);
+                ctx.fillStyle = `hsla(${shape.hue}, 90%, 75%, ${dA * shape.alpha * 0.8 * pulse})`;
                 ctx.fill();
             });
+
+            ctx.shadowBlur = 0;
         }
 
-        function drawFlowField(scale, cx, cy) {
-            dots.forEach(d => {
-                d.phase += 0.002 * PHI;
-                const px = d.x + Math.sin(time * 0.25 + d.phase) * 0.2;
-                const py = d.y + Math.cos(time * 0.3 * PHI + d.phase) * 0.2;
-                const pz = d.z + Math.sin(time * 0.15 + d.phase * PHI) * 0.2;
-                const r = rotatePoint([px, py, pz], time * 0.02, time * 0.015, time * 0.01);
-                const p = project(r, scale * 0.8, cx, cy);
-                const dA = Math.max(0.03, 0.25 + p.depth * 0.1);
+        function drawSparks(t, scale, cx, cy) {
+            sparks.forEach(s => {
+                s.phase += 0.002 * s.speed * PHI;
+                const px = s.x + Math.sin(t * 0.2 * s.speed + s.phase) * 0.3;
+                const py = s.y + Math.cos(t * 0.25 * PHI + s.phase) * 0.3;
+                const pz = s.z + Math.sin(t * 0.15 + s.phase * PHI) * 0.3;
+                const r = rot([px, py, pz], t * 0.015, t * 0.01, t * 0.008);
+                const p = proj(r, scale * 0.6, cx, cy);
+                const dA = Math.max(0.02, 0.2 + p.d * 0.08);
+                const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(t * 4 + s.phase * 3));
+
+                ctx.shadowColor = `hsla(${s.hue}, 80%, 70%, 0.6)`;
+                ctx.shadowBlur = 4;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 1.2, 0, TAU);
-                ctx.fillStyle = `hsla(190, 50%, 55%, ${dA})`;
+                ctx.arc(p.x, p.y, s.size * twinkle, 0, TAU);
+                ctx.fillStyle = `hsla(${s.hue}, 70%, 65%, ${dA * twinkle})`;
                 ctx.fill();
             });
+            ctx.shadowBlur = 0;
         }
 
         function animate() {
-            time += 0.006;
-            ctx.clearRect(0, 0, W, H);
+            time += 0.012;
+
+            // Motion trail — don't fully clear, leave ghosting
+            ctx.fillStyle = 'rgba(5, 10, 25, 0.15)';
+            ctx.fillRect(0, 0, W, H);
 
             const cx = W / 2;
             const cy = H / 2;
-            const baseScale = Math.min(W, H) * 0.28;
+            const baseScale = Math.min(W, H) * 0.42;
 
-            // Breathing
-            const breathe = 1 + Math.sin(time * 0.4 * PHI) * 0.08;
+            // Dramatic breathing
+            const breathe = 1 + Math.sin(time * 0.3 * PHI) * 0.06;
             const S = baseScale * breathe;
 
-            // Draw flow field
-            drawFlowField(S, cx, cy);
+            // Draw sparkle field underneath
+            drawSparks(time, S, cx, cy);
 
-            // Shape 1: ICOSAHEDRON — large, center, teal (φ-speed set 1)
-            const r1x = time * 0.10 * PHI;
-            const r1y = time * 0.08;
-            const r1z = time * 0.06 / PHI;
-            drawShape(icosahedron, r1x, r1y, r1z, S * 0.65, cx, cy, 175, 0.55, 1.2);
-
-            // Shape 2: STELLATED OCTAHEDRON — overlapping, gold/amber (φ-speed set 2)
-            const r2x = time * 0.07;
-            const r2y = time * 0.11 * PHI;
-            const r2z = time * 0.05;
-            drawShape(stella, r2x, r2y, r2z, S * 0.55, cx, cy, 38, 0.4, 1.0);
-
-            // Shape 3: DODECAHEDRON — behind, purple/violet (φ-speed set 3)
-            const r3x = time * 0.04 / PHI;
-            const r3y = time * 0.09;
-            const r3z = time * 0.13 * PHI;
-            drawShape(dodecahedron, r3x, r3y, r3z, S * 0.75, cx, cy, 270, 0.3, 1.4);
-
-            // Shape 4: TORUS KNOT — large outer orbit, cyan wireframe
-            const r4x = time * 0.05;
-            const r4y = time * 0.03 * PHI;
-            const r4z = time * 0.07 / PHI;
-            drawShape(torusKnot, r4x, r4y, r4z, S * 0.35, cx, cy, 195, 0.18, 0.8);
-
-            // Shape 5: FLOWER OF LIFE — gentle rotation, rose/pink
-            const r5x = time * 0.03;
-            const r5y = time * 0.02 / PHI;
-            const r5z = time * 0.04 * PHI;
-            drawShape(flower, r5x, r5y, r5z, S * 0.50, cx, cy, 330, 0.2, 0.7);
+            // Draw all 5 shapes — each with unique rotation
+            shapes.forEach(shape => drawShape(shape, time, S, cx, cy));
 
             requestAnimationFrame(animate);
         }
