@@ -1,7 +1,7 @@
 {
   "name": "heady-latent-os",
   "version": "4.2.0",
-  "description": "Self-aware, self-correcting intelligence infrastructure \u2014 the Heady Latent OS",
+  "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
     "node": ">=20.0.0"
@@ -37,17 +37,12 @@
     "predeploy": "node src/security/env-validator.cjs --strict"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@anthropic-ai/sdk": "^0.74.0",
-    "@google/generative-ai": "^0.21.0",
-    "@heady/phi-math": "file:packages/phi-math",
-    "@heady/structured-logger": "file:packages/structured-logger",
-=======
     "@anthropic-ai/sdk": "^0.78.0",
     "@google/genai": "^1.42.0",
     "@google/generative-ai": "^0.24.1",
+    "@heady/phi-math": "file:packages/phi-math",
+    "@heady/structured-logger": "file:packages/structured-logger",
     "@huggingface/inference": "^4.13.12",
->>>>>>> hs-main/dependabot/npm_and_yarn/anthropic-ai/sdk-0.78.0
     "@modelcontextprotocol/sdk": "^1.0.1",
     "@notionhq/client": "^2.2.15",
     "@octokit/auth-app": "^8.2.0",
@@ -57,19 +52,11 @@
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-<<<<<<< HEAD
-    "dotenv": "^16.6.1",
+    "dotenv": "^17.3.1",
     "eventsource": "^3.0.2",
     "express": "^5.1.0",
     "express-rate-limit": "^8.3.1",
-    "groq-sdk": "^0.7.0",
-=======
-    "dotenv": "^17.3.1",
-    "electron": "40.2.1",
-    "express": "^4.21.2",
-    "express-rate-limit": "^8.2.1",
     "groq-sdk": "^0.37.0",
->>>>>>> hs-main/dependabot/npm_and_yarn/dotenv-17.3.1
     "helmet": "^8.1.0",
     "ioredis": "^5.4.1",
     "js-yaml": "^4.1.1",
@@ -96,24 +83,9 @@
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.57.0",
     "concurrently": "^9.1.2",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "eslint": "^9.18.0",
-    "jest": "^29.7.0",
-    "jest-transform-yaml": "^1.2.0",
-=======
     "eslint": "^10.0.3",
-    "jest": "^30.2.0",
->>>>>>> hs-main/dependabot/npm_and_yarn/eslint-10.0.3
-=======
-    "eslint": "^10.0.1",
     "jest": "^30.3.0",
->>>>>>> hs-main/dependabot/npm_and_yarn/jest-30.3.0
-=======
-    "eslint": "^10.0.1",
-    "jest": "^30.3.0",
->>>>>>> hs-main/dependabot/npm_and_yarn/jest-30.3.0
+    "jest-transform-yaml": "^1.2.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.3.3",
     "supertest": "^7.2.2",
