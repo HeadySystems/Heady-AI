@@ -76,7 +76,13 @@ const STATE = {
 function loadPatternStore() {
   try {
     if (fs.existsSync(PATTERN_STORE_PATH)) {
-      return JSON.parse(fs.readFileSync(PATTERN_STORE_PATH, "utf8"));
+      const data = JSON.parse(fs.readFileSync(PATTERN_STORE_PATH, "utf8"));
+      // Validate the store has the required 'patterns' key — another component
+      // may have overwritten the file with an incompatible schema.
+      if (data && typeof data.patterns === "object" && data.patterns !== null) {
+        return data;
+      }
+      log.warning("Pattern store missing 'patterns' key — reinitializing", { path: PATTERN_STORE_PATH, keys: Object.keys(data || {}) });
     }
   } catch (err) { log.warning("Failed to load pattern store", { path: PATTERN_STORE_PATH, error: err.message }); }
   return { patterns: {}, metadata: { created: new Date().toISOString(), version: "1.0.0" } };
@@ -169,6 +175,8 @@ class HCPatternEngine extends EventEmitter {
     if (typeof category !== "string" || typeof name !== "string") {
       throw new Error(`observe() requires string category and name, got: ${typeof category}, ${typeof name}`);
     }
+    // Defensive: ensure patterns map exists even if store was corrupted at runtime
+    if (!this.store.patterns) this.store.patterns = {};
     const patternId = this._patternId(category, name);
 
     if (!this.store.patterns[patternId]) {

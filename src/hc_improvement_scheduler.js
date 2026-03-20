@@ -91,12 +91,12 @@ class ImprovementScheduler extends EventEmitter {
   }
 
   async getImprovementCandidates() {
-    // Get patterns needing improvement
-    const stagnantPatterns = this.patternEngine.getPatternsByState('stagnant');
-    const degradingPatterns = this.patternEngine.getPatternsByState('degrading');
+    // Get patterns needing improvement (guard against undefined returns)
+    const stagnantPatterns = this.patternEngine.getPatternsByState('stagnant') || [];
+    const degradingPatterns = this.patternEngine.getPatternsByState('degrading') || [];
     
-    // Get self-critique findings
-    const critiques = this.selfCritiqueEngine.getRecentCritiques();
+    // Get self-critique findings (guard against undefined returns)
+    const critiques = this.selfCritiqueEngine.getRecentCritiques() || [];
     
     // Combine into improvement candidates
     return [

@@ -1359,9 +1359,13 @@ try {
   if (resourceManager) {
     resourceManager.on("resource_event", (event) => {
       if (event.severity === "WARN_HARD" || event.severity === "CRITICAL") {
-        patternEngine.observe("reliability", `resource:${event.resourceType}`, event.currentUsagePercent, {
-          severity: event.severity, tags: ["resource", event.resourceType],
-        });
+        try {
+          patternEngine.observe("reliability", `resource:${event.resourceType}`, event.currentUsagePercent, {
+            severity: event.severity, tags: ["resource", event.resourceType],
+          });
+        } catch (err) {
+          log.warn("PatternEngine observe failed (non-fatal)", { error: err.message });
+        }
       }
     });
   }
