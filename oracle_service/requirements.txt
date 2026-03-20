@@ -14,7 +14,11 @@ uvicorn==0.24.0
 >>>>>>> headyai-staging/dependabot/pip/oracle_service/pydantic-2.12.5
 pydantic==2.12.5
 python-dotenv==1.2.2
+<<<<<<< HEAD
 numpy==2.4.3
+=======
+numpy==1.24.3
+>>>>>>> heady-testing/dependabot/pip/oracle_service/pandas-3.0.1
 pandas==3.0.1
 scipy==1.17.1
 aiofiles==25.1.0
