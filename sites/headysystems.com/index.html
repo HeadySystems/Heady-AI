@@ -769,7 +769,193 @@
         </div>
     </footer>
 
+    <!-- Sacred Geometry Canvas -->
+    <canvas id="sacred-geo" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35;"></canvas>
+
     <script>
+    // ─── Sacred Geometry Engine v3.0 — Metatron's Cube ───
+    (function() {
+        const PHI = 1.618033988749895;
+        const TAU = Math.PI * 2;
+        const canvas = document.getElementById('sacred-geo');
+        const ctx = canvas.getContext('2d');
+        let W, H, time = 0;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // ── Metatron's Cube geometry ──
+        // 13 vertices: center + 6 inner hexagon + 6 outer hexagon
+        function buildMetatronsCube() {
+            const pts = [];
+            // Center
+            pts.push([0, 0, 0]);
+            // Inner hexagon (radius 1)
+            for (let i = 0; i < 6; i++) {
+                const a = (TAU / 6) * i;
+                pts.push([Math.cos(a), Math.sin(a), 0]);
+            }
+            // Outer hexagon (radius PHI)
+            for (let i = 0; i < 6; i++) {
+                const a = (TAU / 6) * i + TAU / 12;
+                pts.push([Math.cos(a) * PHI, Math.sin(a) * PHI, 0]);
+            }
+            // All connections — every vertex connects to every other
+            const edges = [];
+            for (let i = 0; i < pts.length; i++) {
+                for (let j = i + 1; j < pts.length; j++) {
+                    edges.push([i, j]);
+                }
+            }
+            return { pts, edges };
+        }
+
+        // ── Torus knot for outer halo ──
+        function buildTorusKnot(p, q, segments, r1, r2) {
+            const pts = [];
+            for (let i = 0; i < segments; i++) {
+                const t = (TAU / segments) * i;
+                const r = r1 + r2 * Math.cos(q * t);
+                pts.push([
+                    r * Math.cos(p * t),
+                    r * Math.sin(p * t),
+                    r2 * Math.sin(q * t)
+                ]);
+            }
+            const edges = [];
+            for (let i = 0; i < pts.length; i++) {
+                edges.push([i, (i + 1) % pts.length]);
+            }
+            return { pts, edges };
+        }
+
+        const metatron = buildMetatronsCube();
+        const torus = buildTorusKnot(2, 3, 300, 2.2, 0.6);
+
+        // ── 3D rotation matrices (φ-governed speeds) ──
+        function rotatePoint(p, rx, ry, rz) {
+            let [x, y, z] = p;
+            // Rotate X
+            let cy = Math.cos(rx), sy = Math.sin(rx);
+            let y1 = y * cy - z * sy, z1 = y * sy + z * cy;
+            y = y1; z = z1;
+            // Rotate Y
+            let cx = Math.cos(ry), sx = Math.sin(ry);
+            let x1 = x * cx + z * sx, z2 = -x * sx + z * cx;
+            x = x1; z = z2;
+            // Rotate Z
+            let cz = Math.cos(rz), sz = Math.sin(rz);
+            let x2 = x * cz - y * sz, y2 = x * sz + y * cz;
+            return [x2, y2, z];
+        }
+
+        function project(p, scale, cx, cy) {
+            const fov = 4;
+            const zOffset = fov + p[2] * 0.3;
+            const f = fov / Math.max(zOffset, 0.1);
+            return {
+                x: cx + p[0] * scale * f,
+                y: cy + p[1] * scale * f,
+                depth: p[2]
+            };
+        }
+
+        // ── Flowing dot flow-field ──
+        const DOT_COUNT = 60;
+        const dots = [];
+        for (let i = 0; i < DOT_COUNT; i++) {
+            dots.push({
+                x: Math.random() * 2 - 1,
+                y: Math.random() * 2 - 1,
+                z: Math.random() * 2 - 1,
+                phase: Math.random() * TAU
+            });
+        }
+
+        function drawShape(shape, rx, ry, rz, scale, cx, cy, hueBase, alpha) {
+            const projected = shape.pts.map(p => {
+                const r = rotatePoint(p, rx, ry, rz);
+                return project(r, scale, cx, cy);
+            });
+
+            shape.edges.forEach(([a, b]) => {
+                const pa = projected[a], pb = projected[b];
+                const avgDepth = (pa.depth + pb.depth) / 2;
+                const depthAlpha = Math.max(0.08, Math.min(1, 0.5 + avgDepth * 0.25));
+                const hue = (hueBase + avgDepth * 30 + time * 8) % 360;
+
+                ctx.beginPath();
+                ctx.moveTo(pa.x, pa.y);
+                ctx.lineTo(pb.x, pb.y);
+                ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${depthAlpha * alpha})`;
+                ctx.lineWidth = 0.6 + depthAlpha * 0.5;
+                ctx.stroke();
+            });
+
+            // Draw vertices as small dots
+            projected.forEach(p => {
+                const depthAlpha = Math.max(0.15, Math.min(1, 0.5 + p.depth * 0.3));
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5 + depthAlpha, 0, TAU);
+                ctx.fillStyle = `hsla(${hueBase}, 80%, 70%, ${depthAlpha * alpha * 0.8})`;
+                ctx.fill();
+            });
+        }
+
+        function drawFlowField(rx, ry, rz, scale, cx, cy) {
+            dots.forEach(d => {
+                d.phase += 0.003 * PHI;
+                const px = d.x + Math.sin(time * 0.3 + d.phase) * 0.15;
+                const py = d.y + Math.cos(time * 0.4 * PHI + d.phase) * 0.15;
+                const pz = d.z + Math.sin(time * 0.2 + d.phase * PHI) * 0.15;
+                const r = rotatePoint([px, py, pz], rx * 0.3, ry * 0.3, rz * 0.3);
+                const p = project(r, scale * 1.5, cx, cy);
+                const depthAlpha = Math.max(0.05, 0.3 + p.depth * 0.15);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1, 0, TAU);
+                ctx.fillStyle = `hsla(175, 60%, 55%, ${depthAlpha})`;
+                ctx.fill();
+            });
+        }
+
+        function animate() {
+            time += 0.008;
+            ctx.clearRect(0, 0, W, H);
+
+            const cx = W / 2;
+            const cy = H / 2;
+            const baseScale = Math.min(W, H) * 0.12;
+
+            // φ-governed rotation speeds (never synchronize)
+            const rx = time * 0.15 * PHI;
+            const ry = time * 0.12;
+            const rz = time * 0.09 / PHI;
+
+            // Breathing scale (sin-based, 0.88 to 1.12)
+            const breathe = 1 + Math.sin(time * 0.5 * PHI) * 0.12;
+            const scale = baseScale * breathe;
+
+            // Draw flow field underneath
+            drawFlowField(rx, ry, rz, scale, cx, cy);
+
+            // Draw torus knot (outer halo, purple-ish)
+            drawShape(torus, rx * 0.7, ry * 0.8, rz * 0.6, scale * 0.45, cx, cy, 270, 0.2);
+
+            // Draw Metatron's Cube (center, teal/gold)
+            drawShape(metatron, rx, ry, rz, scale, cx, cy, 175, 0.6);
+
+            // Draw second Metatron's Cube rotated (golden shimmer)
+            drawShape(metatron, rx + Math.PI / 3, ry - Math.PI / 4, rz + Math.PI / 6, scale * 0.7, cx, cy, 42, 0.25);
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+
     // ─── Scroll Reveal ───
     const reveals = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver((entries) => {
@@ -816,6 +1002,36 @@
             if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
         });
     });
+
+    // ─── Interactive Card Glow (mouse-tracking radial gradient) ───
+    document.querySelectorAll('.feature-card, .product-card, .stat-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+            card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            card.style.background = `radial-gradient(circle 200px at var(--mouse-x) var(--mouse-y), rgba(201,168,76,0.08), rgba(15,25,50,0.6))`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.background = '';
+        });
+    });
+
+    // ─── Stat Card Shine (periodic 45° linear gradient sweep, 6s cycle) ───
+    const shineStyle = document.createElement('style');
+    shineStyle.textContent = `
+        @keyframes card-shine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .stat-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: var(--radius);
+            background: linear-gradient(135deg, transparent 40%, rgba(201,168,76,0.06) 50%, transparent 60%);
+            background-size: 200% 100%;
+            animation: card-shine 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+    `;
+    document.head.appendChild(shineStyle);
     </script>
 </body>
 </html>
