@@ -3,53 +3,5 @@
   "metadata": {
     "created": "2026-03-20T23:20:04Z",
     "version": "1.0.0"
-  },
-  "lastUpdated": "2026-03-20T23:55:02.025Z",
-  "version": 1,
-  "phi": 1.618033988749895,
-  "resourcePatterns": [],
-  "gitVelocity": "HIGH",
-  "commitCount24h": 246,
-  "topTopics": [
-    {
-      "word": "chore(auto)",
-      "count": 217
-    },
-    {
-      "word": "auto-commit.log",
-      "count": 212
-    },
-    {
-      "word": "[tier=significant]",
-      "count": 209
-    },
-    {
-      "word": "pattern_store.json",
-      "count": 11
-    },
-    {
-      "word": "[auto-sync]",
-      "count": 10
-    },
-    {
-      "word": "merge",
-      "count": 10
-    },
-    {
-      "word": "chore(deps)",
-      "count": 10
-    },
-    {
-      "word": "bump",
-      "count": 10
-    },
-    {
-      "word": "/apps/ai_workflow_engine",
-      "count": 10
-    },
-    {
-      "word": "hcfp-auto",
-      "count": 9
-    }
-  ]
+  }
 }

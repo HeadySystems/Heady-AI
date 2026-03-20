@@ -192,3 +192,6 @@ package-lock.json
 logs/resource-events.jsonl
 =======
 >>>>>>> production/main
+
+!.env.example
+!.env.template
