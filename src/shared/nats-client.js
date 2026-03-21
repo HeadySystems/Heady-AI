@@ -9,12 +9,17 @@
 
 'use strict';
 
-const { createLogger } = require('./logger');
 const {
-  PHI, PSI, fib, phiBackoffWithJitter,
-  CSL_THRESHOLDS, TIMING,
+  createLogger
+} = require('./logger');
+const {
+  PHI,
+  PSI,
+  fib,
+  phiBackoffWithJitter,
+  CSL_THRESHOLDS,
+  TIMING
 } = require('./phi-math');
-
 const logger = createLogger('nats-client');
 
 // ═══════════════════════════════════════════════════════════
@@ -23,18 +28,22 @@ const logger = createLogger('nats-client');
 
 const NATS_CONFIG = {
   servers: (process.env.NATS_SERVERS || 'nats://heady-nats:4222').split(','),
-  maxReconnectAttempts: fib(7),       // 13 attempts
-  reconnectTimeWait: fib(7) * 1000,   // 13s base
-  pingInterval: fib(8) * 1000,        // 21s ping
-  maxPingOut: fib(5),                  // 5 missed pings before disconnect
-  name: process.env.SERVICE_NAME || 'heady-service',
+  maxReconnectAttempts: fib(7),
+  reconnectTimeWait: fib(7) * 1000,
+  // 13s base
+  pingInterval: fib(8) * 1000,
+  // 21s ping
+  maxPingOut: fib(5),
+  // 5 missed pings before disconnect
+  name: process.env.SERVICE_NAME || 'heady-service'
 };
-
 const JETSTREAM_CONFIG = {
-  maxAckPending: fib(12),             // 144 pending acks
-  ackWaitMs: fib(9) * 1000,           // 34s ack wait
-  maxDeliverMs: fib(5),               // 5 delivery attempts
-  maxMsgSize: fib(20),                // 6765 bytes max message
+  maxAckPending: fib(12),
+  // 144 pending acks
+  ackWaitMs: fib(9) * 1000,
+  // 34s ack wait
+  maxDeliverMs: fib(5),
+  maxMsgSize: fib(20) // 6765 bytes max message
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -42,16 +51,69 @@ const JETSTREAM_CONFIG = {
 // ═══════════════════════════════════════════════════════════
 
 const STREAMS = Object.freeze({
-  INFERENCE:     { name: 'HEADY_INFERENCE',     subjects: ['heady.inference.>'],     maxMsgs: fib(17), maxAgeNs: fib(11) * 3600e9 },  // 89 hours
-  MEMORY:        { name: 'HEADY_MEMORY',        subjects: ['heady.memory.>'],        maxMsgs: fib(17), maxAgeNs: fib(12) * 3600e9 },  // 144 hours
-  AGENT:         { name: 'HEADY_AGENT',         subjects: ['heady.agent.>'],         maxMsgs: fib(16), maxAgeNs: fib(11) * 3600e9 },
-  ORCHESTRATION: { name: 'HEADY_ORCHESTRATION', subjects: ['heady.orchestration.>'], maxMsgs: fib(16), maxAgeNs: fib(10) * 3600e9 },
-  SECURITY:      { name: 'HEADY_SECURITY',      subjects: ['heady.security.>'],      maxMsgs: fib(17), maxAgeNs: fib(13) * 3600e9 },  // 233 hours
-  MONITORING:    { name: 'HEADY_MONITORING',     subjects: ['heady.monitoring.>'],    maxMsgs: fib(16), maxAgeNs: fib(10) * 3600e9 },
-  WEB:           { name: 'HEADY_WEB',           subjects: ['heady.web.>'],           maxMsgs: fib(15), maxAgeNs: fib(9) * 3600e9 },
-  DATA:          { name: 'HEADY_DATA',          subjects: ['heady.data.>'],          maxMsgs: fib(17), maxAgeNs: fib(12) * 3600e9 },
-  INTEGRATION:   { name: 'HEADY_INTEGRATION',   subjects: ['heady.integration.>'],   maxMsgs: fib(15), maxAgeNs: fib(10) * 3600e9 },
-  LIFECYCLE:     { name: 'HEADY_LIFECYCLE',      subjects: ['heady.lifecycle.>'],     maxMsgs: fib(16), maxAgeNs: fib(11) * 3600e9 },
+  INFERENCE: {
+    name: 'HEADY_INFERENCE',
+    subjects: ['heady.inference.>'],
+    maxMsgs: fib(17),
+    maxAgeNs: fib(11) * 3600e9
+  },
+  // 89 hours
+  MEMORY: {
+    name: 'HEADY_MEMORY',
+    subjects: ['heady.memory.>'],
+    maxMsgs: fib(17),
+    maxAgeNs: fib(12) * 3600e9
+  },
+  // 144 hours
+  AGENT: {
+    name: 'HEADY_AGENT',
+    subjects: ['heady.agent.>'],
+    maxMsgs: fib(16),
+    maxAgeNs: fib(11) * 3600e9
+  },
+  ORCHESTRATION: {
+    name: 'HEADY_ORCHESTRATION',
+    subjects: ['heady.orchestration.>'],
+    maxMsgs: fib(16),
+    maxAgeNs: fib(10) * 3600e9
+  },
+  SECURITY: {
+    name: 'HEADY_SECURITY',
+    subjects: ['heady.security.>'],
+    maxMsgs: fib(17),
+    maxAgeNs: fib(13) * 3600e9
+  },
+  // 233 hours
+  MONITORING: {
+    name: 'HEADY_MONITORING',
+    subjects: ['heady.monitoring.>'],
+    maxMsgs: fib(16),
+    maxAgeNs: fib(10) * 3600e9
+  },
+  WEB: {
+    name: 'HEADY_WEB',
+    subjects: ['heady.web.>'],
+    maxMsgs: fib(15),
+    maxAgeNs: fib(9) * 3600e9
+  },
+  DATA: {
+    name: 'HEADY_DATA',
+    subjects: ['heady.data.>'],
+    maxMsgs: fib(17),
+    maxAgeNs: fib(12) * 3600e9
+  },
+  INTEGRATION: {
+    name: 'HEADY_INTEGRATION',
+    subjects: ['heady.integration.>'],
+    maxMsgs: fib(15),
+    maxAgeNs: fib(10) * 3600e9
+  },
+  LIFECYCLE: {
+    name: 'HEADY_LIFECYCLE',
+    subjects: ['heady.lifecycle.>'],
+    maxMsgs: fib(16),
+    maxAgeNs: fib(11) * 3600e9
+  }
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -60,7 +122,10 @@ const STREAMS = Object.freeze({
 
 class HeadyNatsClient {
   constructor(config = {}) {
-    this.config = { ...NATS_CONFIG, ...config };
+    this.config = {
+      ...NATS_CONFIG,
+      ...config
+    };
     this.nc = null;
     this.js = null;
     this.jsm = null;
@@ -70,27 +135,26 @@ class HeadyNatsClient {
     this.reconnectCount = 0;
     this.connected = false;
   }
-
   async connect(authToken) {
     try {
-      const { connect, StringCodec, JSONCodec } = require('nats');
-      
+      const {
+        connect,
+        StringCodec,
+        JSONCodec
+      } = require('nats');
       this.sc = StringCodec();
       this.jc = JSONCodec();
-
       const connectOpts = {
         servers: this.config.servers,
         maxReconnectAttempts: this.config.maxReconnectAttempts,
         reconnectTimeWait: this.config.reconnectTimeWait,
         pingInterval: this.config.pingInterval,
         maxPingOut: this.config.maxPingOut,
-        name: this.config.name,
+        name: this.config.name
       };
-
       if (authToken) {
         connectOpts.token = authToken;
       }
-
       this.nc = await connect(connectOpts);
 
       // Event handlers
@@ -98,41 +162,57 @@ class HeadyNatsClient {
         for await (const s of this.nc.status()) {
           switch (s.type) {
             case 'reconnecting':
-              logger.warn({ message: 'NATS reconnecting', data: s.data });
+              logger.warn({
+                message: 'NATS reconnecting',
+                data: s.data
+              });
               break;
             case 'reconnect':
               this.reconnectCount++;
-              logger.info({ message: 'NATS reconnected', count: this.reconnectCount });
+              logger.info({
+                message: 'NATS reconnected',
+                count: this.reconnectCount
+              });
               break;
             case 'disconnect':
               this.connected = false;
-              logger.warn({ message: 'NATS disconnected' });
+              logger.warn({
+                message: 'NATS disconnected'
+              });
               break;
             case 'error':
               this.errorCount++;
-              logger.error({ message: 'NATS error', error: String(s.data) });
+              logger.error({
+                message: 'NATS error',
+                error: String(s.data)
+              });
               break;
           }
         }
-      })().catch((err) => { logger.error({ message: 'NATS status monitor failed', error: String(err) }); });
+      })().catch(err => {
+        logger.error({
+          message: 'NATS status monitor failed',
+          error: String(err)
+        });
+      });
 
       // Get JetStream contexts
       this.js = this.nc.jetstream();
       this.jsm = await this.nc.jetstreamManager();
-
       this.connected = true;
-
       logger.info({
         message: 'NATS client connected',
         servers: this.config.servers,
-        name: this.config.name,
+        name: this.config.name
       });
 
       // Ensure all streams exist
       await this._ensureStreams();
-
     } catch (error) {
-      logger.error({ message: 'NATS connection failed', error: error.message });
+      logger.error({
+        message: 'NATS connection failed',
+        error: error.message
+      });
       throw error;
     }
   }
@@ -145,7 +225,10 @@ class HeadyNatsClient {
     for (const [key, streamDef] of Object.entries(STREAMS)) {
       try {
         await this.jsm.streams.info(streamDef.name);
-        logger.debug({ message: 'Stream exists', stream: streamDef.name });
+        logger.debug({
+          message: 'Stream exists',
+          stream: streamDef.name
+        });
       } catch (error) {
         if (error.code === '404' || error.message?.includes('not found')) {
           await this.jsm.streams.add({
@@ -156,11 +239,19 @@ class HeadyNatsClient {
             storage: 'file',
             retention: 'limits',
             num_replicas: 1,
-            discard: 'old',
+            discard: 'old'
           });
-          logger.info({ message: 'Stream created', stream: streamDef.name, subjects: streamDef.subjects });
+          logger.info({
+            message: 'Stream created',
+            stream: streamDef.name,
+            subjects: streamDef.subjects
+          });
         } else {
-          logger.error({ message: 'Stream check failed', stream: streamDef.name, error: error.message });
+          logger.error({
+            message: 'Stream check failed',
+            stream: streamDef.name,
+            error: error.message
+          });
         }
       }
     }
@@ -174,9 +265,7 @@ class HeadyNatsClient {
     if (!this.connected) {
       throw new NatsError('Not connected to NATS', 'NOT_CONNECTED');
     }
-
     const payload = this.jc.encode(this._wrapMessage(subject, data));
-    
     if (options.jetstream !== false) {
       // JetStream publish with ack
       let lastError = null;
@@ -184,14 +273,14 @@ class HeadyNatsClient {
         try {
           const ack = await this.js.publish(subject, payload, {
             msgID: options.msgId || _generateMsgId(),
-            expect: options.expect,
+            expect: options.expect
           });
           this.publishCount++;
           logger.debug({
             message: 'JetStream publish',
             subject,
             stream: ack.stream,
-            seq: ack.seq,
+            seq: ack.seq
           });
           return ack;
         } catch (error) {
@@ -208,14 +297,13 @@ class HeadyNatsClient {
       this.publishCount++;
     }
   }
-
   _wrapMessage(subject, data) {
     return {
       subject,
       data,
       timestamp: Date.now(),
       source: this.config.name,
-      correlationId: _generateMsgId(),
+      correlationId: _generateMsgId()
     };
   }
 
@@ -226,16 +314,16 @@ class HeadyNatsClient {
   async subscribe(subject, handler, options = {}) {
     const consumerName = options.consumer || `${this.config.name}-${subject.replace(/[.>*]/g, '-')}`;
     const durable = options.durable !== false;
-
     try {
       const consumerOpts = {
         durable_name: durable ? consumerName : undefined,
         filter_subject: subject,
         ack_policy: 'explicit',
         max_ack_pending: JETSTREAM_CONFIG.maxAckPending,
-        ack_wait: JETSTREAM_CONFIG.ackWaitMs * 1e6,  // nanoseconds
+        ack_wait: JETSTREAM_CONFIG.ackWaitMs * 1e6,
+        // nanoseconds
         max_deliver: JETSTREAM_CONFIG.maxDeliverMs,
-        deliver_policy: options.deliverPolicy || 'new',
+        deliver_policy: options.deliverPolicy || 'new'
       };
 
       // Find the correct stream for this subject
@@ -250,17 +338,19 @@ class HeadyNatsClient {
       } catch {
         await this.jsm.consumers.add(streamName, consumerOpts);
       }
-
       const sub = await this.js.pullSubscribe(subject, {
         stream: streamName,
-        config: consumerOpts,
+        config: consumerOpts
       });
 
       // Pull loop
       const pullLoop = async () => {
         while (this.connected) {
           try {
-            const msgs = await sub.fetch({ batch: fib(6), expires: fib(7) * 1000 }); // batch 8, 13s timeout
+            const msgs = await sub.fetch({
+              batch: fib(6),
+              expires: fib(7) * 1000
+            }); // batch 8, 13s timeout
             for await (const msg of msgs) {
               try {
                 const decoded = this.jc.decode(msg.data);
@@ -268,48 +358,59 @@ class HeadyNatsClient {
                   subject: msg.subject,
                   seq: msg.seq,
                   ack: () => msg.ack(),
-                  nak: (delay) => msg.nak(delay),
-                  working: () => msg.working(),
+                  nak: delay => msg.nak(delay),
+                  working: () => msg.working()
                 });
                 msg.ack();
               } catch (handlerError) {
                 logger.error({
                   message: 'Handler error',
                   subject,
-                  error: handlerError.message,
+                  error: handlerError.message
                 });
                 msg.nak(phiBackoffWithJitter(0));
               }
             }
           } catch (error) {
             if (this.connected) {
-              logger.warn({ message: 'Pull error, retrying', subject, error: error.message });
+              logger.warn({
+                message: 'Pull error, retrying',
+                subject,
+                error: error.message
+              });
               await new Promise(r => setTimeout(r, phiBackoffWithJitter(0)));
             }
           }
         }
       };
-
       pullLoop().catch(err => {
-        logger.error({ message: 'Pull loop terminated', subject, error: err.message });
+        logger.error({
+          message: 'Pull loop terminated',
+          subject,
+          error: err.message
+        });
       });
-
-      this.subscriptions.set(consumerName, { sub, subject, handler });
-
+      this.subscriptions.set(consumerName, {
+        sub,
+        subject,
+        handler
+      });
       logger.info({
         message: 'JetStream subscription active',
         subject,
         consumer: consumerName,
-        stream: streamName,
+        stream: streamName
       });
-
       return consumerName;
     } catch (error) {
-      logger.error({ message: 'Subscribe failed', subject, error: error.message });
+      logger.error({
+        message: 'Subscribe failed',
+        subject,
+        error: error.message
+      });
       throw error;
     }
   }
-
   _findStreamForSubject(subject) {
     for (const [, streamDef] of Object.entries(STREAMS)) {
       for (const pattern of streamDef.subjects) {
@@ -326,13 +427,15 @@ class HeadyNatsClient {
   // REQUEST-REPLY PATTERN
   // ═══════════════════════════════════════════════════════════
 
-  async request(subject, data, timeoutMs = fib(9) * 1000) {  // 34s timeout
+  async request(subject, data, timeoutMs = fib(9) * 1000) {
+    // 34s timeout
     if (!this.connected) {
       throw new NatsError('Not connected', 'NOT_CONNECTED');
     }
-
     const payload = this.jc.encode(this._wrapMessage(subject, data));
-    const response = await this.nc.request(subject, payload, { timeout: timeoutMs });
+    const response = await this.nc.request(subject, payload, {
+      timeout: timeoutMs
+    });
     return this.jc.decode(response.data);
   }
 
@@ -342,9 +445,10 @@ class HeadyNatsClient {
 
   async getHealth() {
     if (!this.connected || !this.nc) {
-      return { status: 'disconnected' };
+      return {
+        status: 'disconnected'
+      };
     }
-
     const streamInfos = {};
     for (const [key, streamDef] of Object.entries(STREAMS)) {
       try {
@@ -352,13 +456,14 @@ class HeadyNatsClient {
         streamInfos[key] = {
           messages: info.state.messages,
           bytes: info.state.bytes,
-          consumers: info.state.consumer_count,
+          consumers: info.state.consumer_count
         };
       } catch {
-        streamInfos[key] = { status: 'unavailable' };
+        streamInfos[key] = {
+          status: 'unavailable'
+        };
       }
     }
-
     return {
       status: 'connected',
       servers: this.config.servers,
@@ -367,7 +472,7 @@ class HeadyNatsClient {
       errors: this.errorCount,
       reconnects: this.reconnectCount,
       subscriptions: this.subscriptions.size,
-      streams: streamInfos,
+      streams: streamInfos
     };
   }
 
@@ -376,10 +481,13 @@ class HeadyNatsClient {
   // ═══════════════════════════════════════════════════════════
 
   async shutdown() {
-    logger.info({ message: 'NATS client shutting down' });
+    logger.info({
+      message: 'NATS client shutting down'
+    });
     this.connected = false;
-
-    for (const [name, { sub }] of this.subscriptions) {
+    for (const [name, {
+      sub
+    }] of this.subscriptions) {
       try {
         sub.unsubscribe();
       } catch {
@@ -387,14 +495,14 @@ class HeadyNatsClient {
       }
     }
     this.subscriptions.clear();
-
     if (this.nc) {
       await this.nc.drain();
       await this.nc.close();
       this.nc = null;
     }
-
-    logger.info({ message: 'NATS client shut down cleanly' });
+    logger.info({
+      message: 'NATS client shut down cleanly'
+    });
   }
 }
 
@@ -403,11 +511,9 @@ class HeadyNatsClient {
 // ═══════════════════════════════════════════════════════════
 
 const crypto = require('crypto');
-
 function _generateMsgId() {
-  return crypto.randomBytes(fib(7)).toString('hex');  // 13 bytes
+  return crypto.randomBytes(fib(7)).toString('hex'); // 13 bytes
 }
-
 class NatsError extends Error {
   constructor(message, code) {
     super(message);
@@ -421,19 +527,17 @@ class NatsError extends Error {
 // ═══════════════════════════════════════════════════════════
 
 let _instance = null;
-
 function getClient(config) {
   if (!_instance) {
     _instance = new HeadyNatsClient(config);
   }
   return _instance;
 }
-
 module.exports = {
   HeadyNatsClient,
   getClient,
   STREAMS,
   NATS_CONFIG,
   JETSTREAM_CONFIG,
-  NatsError,
+  NatsError
 };

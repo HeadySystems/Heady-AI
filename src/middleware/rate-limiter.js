@@ -33,12 +33,7 @@
 
 import { EventEmitter } from 'events';
 import crypto from 'crypto';
-import {
-  CSL_THRESHOLDS,
-  DEDUP_THRESHOLD,
-  cslGate,
-  fib,
-} from '../../shared/phi-math.js';
+import { CSL_THRESHOLDS, DEDUP_THRESHOLD, cslGate, fib } from '../../shared/phi-math.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -137,7 +132,12 @@ class PriorityQueue {
    * @param {number} expires - Timestamp after which the request should be rejected
    */
   push(priority, resolve, reject, expires) {
-    this._heap.push({ priority, resolve, reject, expires });
+    this._heap.push({
+      priority,
+      resolve,
+      reject,
+      expires
+    });
     this._bubbleUp(this._heap.length - 1);
   }
 
@@ -148,7 +148,7 @@ class PriorityQueue {
    */
   pop() {
     if (this._heap.length === 0) return null;
-    const top  = this._heap[0];
+    const top = this._heap[0];
     const last = this._heap.pop();
     if (this._heap.length > 0) {
       this._heap[0] = last;
@@ -158,11 +158,13 @@ class PriorityQueue {
   }
 
   /** @returns {number} Queue depth */
-  get size() { return this._heap.length; }
+  get size() {
+    return this._heap.length;
+  }
 
   /** Remove expired entries and reject them */
   expireOld() {
-    const now    = Date.now();
+    const now = Date.now();
     const active = [];
     for (const item of this._heap) {
       if (item.expires <= now) {
@@ -193,7 +195,8 @@ class PriorityQueue {
     const n = this._heap.length;
     while (true) {
       let smallest = i;
-      const l = 2 * i + 1, r = 2 * i + 2;
+      const l = 2 * i + 1,
+        r = 2 * i + 2;
       if (l < n && this._heap[l].priority < this._heap[smallest].priority) smallest = l;
       if (r < n && this._heap[r].priority < this._heap[smallest].priority) smallest = r;
       if (smallest === i) break;
@@ -205,14 +208,6 @@ class PriorityQueue {
 
 // ─── Token Bucket ─────────────────────────────────────────────────────────────
 
-/**
- * Token bucket implementation for smooth rate limiting.
- *
- * Tokens are consumed per request and refilled at a fixed rate.
- * Burst allowance permits temporary bursts above the steady-state rate.
- *
- * @private
- */
 class TokenBucket {
   /**
    * @param {Object} options
@@ -222,29 +217,30 @@ class TokenBucket {
    * @param {number} [options.initialTokens] - Starting tokens (default = capacity)
    */
   constructor(options) {
-    this._capacity         = options.capacity;
-    this._refillRate       = options.refillRate;
+    this._capacity = options.capacity;
+    this._refillRate = options.refillRate;
     this._refillIntervalMs = options.refillIntervalMs ?? DEFAULT_REFILL_INTERVAL_MS;
-    this._tokens           = options.initialTokens ?? options.capacity;
-    this._lastRefill       = Date.now();
+    this._tokens = options.initialTokens ?? options.capacity;
+    this._lastRefill = Date.now();
   }
-
-  /**
-   * Attempt to consume `count` tokens.
-   *
-   * @param {number} [count=1] - Tokens to consume
-   * @returns {{allowed: boolean, remaining: number, retryAfterMs: number}}
-   */
   consume(count = 1) {
     this._refill();
     if (this._tokens >= count) {
       this._tokens -= count;
-      return { allowed: true, remaining: Math.floor(this._tokens), retryAfterMs: 0 };
+      return {
+        allowed: true,
+        remaining: Math.floor(this._tokens),
+        retryAfterMs: 0
+      };
     }
-    const deficit        = count - this._tokens;
-    const refillsNeeded  = Math.ceil(deficit / this._refillRate);
-    const retryAfterMs   = refillsNeeded * this._refillIntervalMs;
-    return { allowed: false, remaining: Math.floor(this._tokens), retryAfterMs };
+    const deficit = count - this._tokens;
+    const refillsNeeded = Math.ceil(deficit / this._refillRate);
+    const retryAfterMs = refillsNeeded * this._refillIntervalMs;
+    return {
+      allowed: false,
+      remaining: Math.floor(this._tokens),
+      retryAfterMs
+    };
   }
 
   /** @returns {number} Current token count */
@@ -254,15 +250,17 @@ class TokenBucket {
   }
 
   /** @returns {number} Bucket capacity */
-  get capacity() { return this._capacity; }
+  get capacity() {
+    return this._capacity;
+  }
 
   /** @private */
   _refill() {
-    const now     = Date.now();
+    const now = Date.now();
     const elapsed = now - this._lastRefill;
     if (elapsed >= this._refillIntervalMs) {
       const intervals = Math.floor(elapsed / this._refillIntervalMs);
-      this._tokens    = Math.min(this._capacity, this._tokens + intervals * this._refillRate);
+      this._tokens = Math.min(this._capacity, this._tokens + intervals * this._refillRate);
       this._lastRefill = now;
     }
   }
@@ -287,10 +285,10 @@ class SlidingWindow {
    * @param {number} [buckets=fib(9)] - Number of sub-window buckets (default 34)
    */
   constructor(windowMs, buckets = DEFAULT_SLIDING_WINDOW_BUCKETS) {
-    this._windowMs   = windowMs;
-    this._buckets    = buckets;
-    this._bucketMs   = windowMs / buckets;
-    this._counts     = new Array(buckets).fill(0);
+    this._windowMs = windowMs;
+    this._buckets = buckets;
+    this._bucketMs = windowMs / buckets;
+    this._counts = new Array(buckets).fill(0);
     this._timestamps = new Array(buckets).fill(0);
     this._currentIdx = 0;
   }
@@ -301,12 +299,11 @@ class SlidingWindow {
    * @returns {number} Current window count after increment
    */
   hit() {
-    const now        = Date.now();
-    const idx        = Math.floor((now / this._bucketMs) % this._buckets);
+    const now = Date.now();
+    const idx = Math.floor(now / this._bucketMs % this._buckets);
     const bucketStart = Math.floor(now / this._bucketMs) * this._bucketMs;
-
     if (this._timestamps[idx] !== bucketStart) {
-      this._counts[idx]     = 0;
+      this._counts[idx] = 0;
       this._timestamps[idx] = bucketStart;
     }
     this._counts[idx]++;
@@ -320,7 +317,7 @@ class SlidingWindow {
    * @returns {number}
    */
   count() {
-    const now         = Date.now();
+    const now = Date.now();
     const windowStart = now - this._windowMs;
     let total = 0;
     for (let i = 0; i < this._buckets; i++) {
@@ -340,31 +337,13 @@ class SlidingWindow {
 
 // ─── Semantic Deduplication Cache ─────────────────────────────────────────────
 
-/**
- * Cache for detecting semantically duplicate requests using CSL-gated
- * cosine similarity.
- *
- * Unlike the previous hard-threshold approach (sim > 0.95 = duplicate),
- * this cache uses `cslGate()` to compute a soft gate score.  A request is
- * considered a duplicate when its gated similarity score exceeds
- * DEDUP_THRESHOLD (≈ 0.972), which replaces the old 0.95 constant.
- *
- * The CSL gate sigmoid formula:
- *   gatedSim = sim × sigmoid((sim - DEDUP_THRESHOLD) / PHI_TEMPERATURE)
- *
- * This means borderline matches (0.95–0.972) now return a proportional
- * score instead of being silently accepted or rejected, giving callers
- * the option to act on the degree of similarity.
- *
- * @private
- */
 class SemanticDedupCache {
   /**
    * @param {number} [ttlMs=fib(9)*100] - Entry TTL (duplicate window, default 3 400 ms)
    * @param {number} [maxSize=fib(17)] - Maximum cache entries (default F(17)=1597)
    */
   constructor(ttlMs = fib(9) * 100, maxSize = fib(17)) {
-    this._ttlMs   = ttlMs;
+    this._ttlMs = ttlMs;
     this._maxSize = maxSize;
     /** @type {Array<{embedding: number[], result: any, expires: number, requestId: string, similarity?: number}>} */
     this._entries = [];
@@ -385,7 +364,6 @@ class SemanticDedupCache {
     const now = Date.now();
     // Evict expired entries
     this._entries = this._entries.filter(e => e.expires > now);
-
     for (const entry of this._entries) {
       const sim = cosineSimilarity(embedding, entry.embedding);
 
@@ -398,18 +376,19 @@ class SemanticDedupCache {
        * Replaces the old hard `if (sim >= 0.95)` check.
        */
       const gatedSim = cslGate(sim, sim, DEDUP_SIMILARITY_THRESHOLD);
-
       if (gatedSim >= DEDUP_SIMILARITY_THRESHOLD * DEDUP_SIMILARITY_THRESHOLD) {
         return {
-          isDuplicate:       true,
-          cachedResult:      entry.result,
+          isDuplicate: true,
+          cachedResult: entry.result,
           originalRequestId: entry.requestId,
-          similarity:        sim,
-          gatedSimilarity:   gatedSim,
+          similarity: sim,
+          gatedSimilarity: gatedSim
         };
       }
     }
-    return { isDuplicate: false };
+    return {
+      isDuplicate: false
+    };
   }
 
   /**
@@ -427,7 +406,7 @@ class SemanticDedupCache {
       embedding,
       result,
       requestId,
-      expires: Date.now() + this._ttlMs,
+      expires: Date.now() + this._ttlMs
     });
   }
 }
@@ -443,9 +422,11 @@ class SemanticDedupCache {
  */
 function cosineSimilarity(a, b) {
   if (!a || !b || a.length !== b.length) return 0;
-  let dot = 0, normA = 0, normB = 0;
+  let dot = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < a.length; i++) {
-    dot   += a[i] * b[i];
+    dot += a[i] * b[i];
     normA += a[i] * a[i];
     normB += b[i] * b[i];
   }
@@ -464,9 +445,9 @@ function cosineSimilarity(a, b) {
 function embedRequest(toolName, params) {
   const text = toolName + ':' + JSON.stringify(params ?? {});
   const hash = crypto.createHash('sha256').update(text).digest();
-  const vec  = new Float64Array(64);
+  const vec = new Float64Array(64);
   for (let i = 0; i < 64; i++) {
-    vec[i] = (hash[i % 32] / 128) - 1; // Normalize to [-1, 1]
+    vec[i] = hash[i % 32] / 128 - 1; // Normalize to [-1, 1]
   }
   // L2 normalize
   let norm = 0;
@@ -540,15 +521,18 @@ export class SemanticRateLimiter extends EventEmitter {
 
     /** @type {RateLimitConfig} */
     this._defaults = {
-      requestsPerMinute:  fib(9) + fib(10),  // F(9)+F(10) = 34+55 = 89 ≈ old default 60 (phi-adjacent)
-      burstMultiplier:    2,
-      windowMs:           DEFAULT_WINDOW_MS,
-      queueTimeoutMs:     fib(9) * 100,       // F(9)×100 = 3 400 ms (≈ old 5 000 ms, phi-shortened)
-      dedupTtlMs:         fib(9) * 100,       // F(9)×100 = 3 400 ms
-      enableDedup:        true,
-      enableQueue:        true,
-      priority:           1,
-      ...options.defaults,
+      requestsPerMinute: fib(9) + fib(10),
+      // F(9)+F(10) = 34+55 = 89 ≈ old default 60 (phi-adjacent)
+      burstMultiplier: 2,
+      windowMs: DEFAULT_WINDOW_MS,
+      queueTimeoutMs: fib(9) * 100,
+      // F(9)×100 = 3 400 ms (≈ old 5 000 ms, phi-shortened)
+      dedupTtlMs: fib(9) * 100,
+      // F(9)×100 = 3 400 ms
+      enableDedup: true,
+      enableQueue: true,
+      priority: 1,
+      ...options.defaults
     };
 
     /**
@@ -576,9 +560,9 @@ export class SemanticRateLimiter extends EventEmitter {
 
     /** @type {TokenBucket} Gateway-global rate bucket */
     this._globalBucket = new TokenBucket({
-      capacity:        Math.ceil(this._globalRpm * 2),
-      refillRate:      Math.ceil(this._globalRpm / 60),
-      refillIntervalMs: DEFAULT_REFILL_INTERVAL_MS,  // fib(8)×100 = 2 100 ms
+      capacity: Math.ceil(this._globalRpm * 2),
+      refillRate: Math.ceil(this._globalRpm / 60),
+      refillIntervalMs: DEFAULT_REFILL_INTERVAL_MS // fib(8)×100 = 2 100 ms
     });
 
     /** @type {Map<string, {allowed: number, rejected: number, deduped: number}>} */
@@ -598,7 +582,10 @@ export class SemanticRateLimiter extends EventEmitter {
    * @param {RateLimitConfig} config - Rate limit configuration
    */
   configure(toolName, config) {
-    this._toolConfigs.set(toolName, { ...this._defaults, ...config });
+    this._toolConfigs.set(toolName, {
+      ...this._defaults,
+      ...config
+    });
   }
 
   /**
@@ -635,82 +622,97 @@ export class SemanticRateLimiter extends EventEmitter {
    * }>}
    */
   async check(toolName, params, context = {}) {
-    const userId    = context.userId    ?? 'anonymous';
+    const userId = context.userId ?? 'anonymous';
     const sessionId = context.sessionId ?? 'default';
     const requestId = context.requestId ?? crypto.randomUUID();
-    const config    = this._toolConfigs.get(toolName) ?? this._defaults;
-    const priority  = context.priority ?? config.priority;
-
+    const config = this._toolConfigs.get(toolName) ?? this._defaults;
+    const priority = context.priority ?? config.priority;
     this._ensureStats(toolName);
 
     // ── 1. Global gateway check ──────────────────────────────────────────────
     const globalCheck = this._globalBucket.consume(1);
     if (!globalCheck.allowed) {
       this._stats.get(toolName).rejected++;
-      this.emit('rate_limited', { requestId, toolName, userId, level: 'global', retryAfterMs: globalCheck.retryAfterMs });
+      this.emit('rate_limited', {
+        requestId,
+        toolName,
+        userId,
+        level: 'global',
+        retryAfterMs: globalCheck.retryAfterMs
+      });
       return this._buildResult(false, config, null, globalCheck.retryAfterMs, 'Gateway rate limit exceeded');
     }
 
     // ── 2. Semantic deduplication (CSL-gated) ────────────────────────────────
     if (config.enableDedup) {
-      const embedding  = embedRequest(toolName, params);
+      const embedding = embedRequest(toolName, params);
       const dedupCache = this._getDedupCache(toolName, config);
       const dedupResult = dedupCache.check(embedding);
-
       if (dedupResult.isDuplicate) {
         this._stats.get(toolName).deduped++;
         this.emit('duplicate_detected', {
-          requestId, toolName, userId,
+          requestId,
+          toolName,
+          userId,
           originalRequestId: dedupResult.originalRequestId,
-          similarity:        dedupResult.similarity?.toFixed(4),
-          gatedSimilarity:   dedupResult.gatedSimilarity?.toFixed(4),
+          similarity: dedupResult.similarity?.toFixed(4),
+          gatedSimilarity: dedupResult.gatedSimilarity?.toFixed(4),
           /**
            * Note: the old event payload said `similarity: '≥0.95'`.
            * Now we report the actual CSL-gated value for observability,
            * and reference the phi-derived threshold in the label.
            */
-          threshold:         `DEDUP_THRESHOLD≈${DEDUP_SIMILARITY_THRESHOLD.toFixed(3)}`,
+          threshold: `DEDUP_THRESHOLD≈${DEDUP_SIMILARITY_THRESHOLD.toFixed(3)}`
         });
         return {
-          allowed:       true,
-          deduplicated:  true,
-          cachedResult:  dedupResult.cachedResult,
-          headers:       this._buildHeaders(toolName, userId, sessionId, config),
-          retryAfterMs:  0,
-          dedupSimilarity: dedupResult.gatedSimilarity,
+          allowed: true,
+          deduplicated: true,
+          cachedResult: dedupResult.cachedResult,
+          headers: this._buildHeaders(toolName, userId, sessionId, config),
+          retryAfterMs: 0,
+          dedupSimilarity: dedupResult.gatedSimilarity
         };
       }
     }
 
     // ── 3. Per-tool token bucket ─────────────────────────────────────────────
     const toolBucket = this._getBucket(`tool:${toolName}`, config);
-    const toolCheck  = toolBucket.consume(1);
+    const toolCheck = toolBucket.consume(1);
 
     // ── 4. Per-user-per-tool sliding window ──────────────────────────────────
-    const userKey     = `user:${userId}:${toolName}`;
-    const userWindow  = this._getWindow(userKey, config);
-    const userCount   = userWindow.hit();
-    const userLimit   = Math.ceil(config.requestsPerMinute / fib(5)); // User gets 1/F(5) = 1/5 of tool limit
+    const userKey = `user:${userId}:${toolName}`;
+    const userWindow = this._getWindow(userKey, config);
+    const userCount = userWindow.hit();
+    const userLimit = Math.ceil(config.requestsPerMinute / fib(5)); // User gets 1/F(5) = 1/5 of tool limit
     const userAllowed = userCount <= userLimit;
 
     // ── 5. Per-session sliding window ────────────────────────────────────────
-    const sessionKey     = `session:${sessionId}`;
-    const sessionWindow  = this._getWindow(sessionKey, config);
-    const sessionCount   = sessionWindow.hit();
-    const sessionLimit   = config.requestsPerMinute * fib(4); // Session total = F(4)=3× tool limit
+    const sessionKey = `session:${sessionId}`;
+    const sessionWindow = this._getWindow(sessionKey, config);
+    const sessionCount = sessionWindow.hit();
+    const sessionLimit = config.requestsPerMinute * fib(4); // Session total = F(4)=3× tool limit
     const sessionAllowed = sessionCount <= sessionLimit;
-
     const allowed = toolCheck.allowed && userAllowed && sessionAllowed;
-
     if (!allowed) {
       this._stats.get(toolName).rejected++;
-
       let retryAfterMs = toolCheck.retryAfterMs;
       let reason = 'Tool rate limit exceeded';
-      if (!userAllowed)    { retryAfterMs = DEFAULT_WINDOW_MS; reason = 'User rate limit exceeded'; }
-      if (!sessionAllowed) { retryAfterMs = DEFAULT_WINDOW_MS; reason = 'Session rate limit exceeded'; }
-
-      this.emit('rate_limited', { requestId, toolName, userId, sessionId, reason, retryAfterMs });
+      if (!userAllowed) {
+        retryAfterMs = DEFAULT_WINDOW_MS;
+        reason = 'User rate limit exceeded';
+      }
+      if (!sessionAllowed) {
+        retryAfterMs = DEFAULT_WINDOW_MS;
+        reason = 'Session rate limit exceeded';
+      }
+      this.emit('rate_limited', {
+        requestId,
+        toolName,
+        userId,
+        sessionId,
+        reason,
+        retryAfterMs
+      });
 
       // Queue the request if enabled and queue not full
       if (config.enableQueue) {
@@ -719,13 +721,16 @@ export class SemanticRateLimiter extends EventEmitter {
           return this._enqueue(queue, toolName, priority, config, requestId);
         }
       }
-
       return this._buildResult(false, config, null, retryAfterMs, reason);
     }
-
     this._stats.get(toolName).allowed++;
     const headers = this._buildHeaders(toolName, userId, sessionId, config);
-    return { allowed: true, deduplicated: false, headers, retryAfterMs: 0 };
+    return {
+      allowed: true,
+      deduplicated: false,
+      headers,
+      retryAfterMs: 0
+    };
   }
 
   /**
@@ -739,7 +744,7 @@ export class SemanticRateLimiter extends EventEmitter {
   cacheResult(toolName, params, result, requestId) {
     const config = this._toolConfigs.get(toolName) ?? this._defaults;
     if (!config.enableDedup) return;
-    const embedding  = embedRequest(toolName, params);
+    const embedding = embedRequest(toolName, params);
     const dedupCache = this._getDedupCache(toolName, config);
     dedupCache.store(embedding, result, requestId ?? crypto.randomUUID());
   }
@@ -760,35 +765,38 @@ export class SemanticRateLimiter extends EventEmitter {
   _enqueue(queue, toolName, priority, config, requestId) {
     return new Promise((resolve, reject) => {
       const expires = Date.now() + config.queueTimeoutMs;
-      const pos     = queue.size;
+      const pos = queue.size;
       queue.push(priority, resolve, reject, expires);
-      this.emit('request_queued', { requestId, toolName, priority, queuePosition: pos });
+      this.emit('request_queued', {
+        requestId,
+        toolName,
+        priority,
+        queuePosition: pos
+      });
       // Schedule serving the queue after a short phi-scaled delay (fib(5)×10 = 50 ms)
       setTimeout(() => this._drainQueue(toolName), fib(5) * 10);
     });
   }
-
-  /**
-   * Attempt to drain the queue for a tool by serving waiting requests.
-   *
-   * @param {string} toolName
-   * @private
-   */
   _drainQueue(toolName) {
     const queue = this._queues.get(toolName);
     if (!queue || queue.size === 0) return;
-
     const config = this._toolConfigs.get(toolName) ?? this._defaults;
     const bucket = this._getBucket(`tool:${toolName}`, config);
-
     queue.expireOld();
-
     while (queue.size > 0 && bucket.tokens >= 1) {
       const item = queue.pop();
       if (!item) break;
       bucket.consume(1);
-      item.resolve({ allowed: true, deduplicated: false, headers: {}, retryAfterMs: 0, servedFromQueue: true });
-      this.emit('request_served_from_queue', { toolName });
+      item.resolve({
+        allowed: true,
+        deduplicated: false,
+        headers: {},
+        retryAfterMs: 0,
+        servedFromQueue: true
+      });
+      this.emit('request_served_from_queue', {
+        toolName
+      });
     }
   }
 
@@ -805,9 +813,10 @@ export class SemanticRateLimiter extends EventEmitter {
       const capacity = Math.ceil(config.requestsPerMinute * config.burstMultiplier);
       this._buckets.set(key, new TokenBucket({
         capacity,
-        refillRate:      Math.max(1, Math.ceil(config.requestsPerMinute / 60)),
-        refillIntervalMs: DEFAULT_REFILL_INTERVAL_MS,  // fib(8)×100 = 2 100 ms
-        initialTokens:   capacity,
+        refillRate: Math.max(1, Math.ceil(config.requestsPerMinute / 60)),
+        refillIntervalMs: DEFAULT_REFILL_INTERVAL_MS,
+        // fib(8)×100 = 2 100 ms
+        initialTokens: capacity
       }));
     }
     return this._buckets.get(key);
@@ -862,19 +871,18 @@ export class SemanticRateLimiter extends EventEmitter {
    * @private
    */
   _buildHeaders(toolName, userId, sessionId, config) {
-    const bucket   = this._getBucket(`tool:${toolName}`, config);
-    const window   = this._getWindow(`user:${userId}:${toolName}`, config);
+    const bucket = this._getBucket(`tool:${toolName}`, config);
+    const window = this._getWindow(`user:${userId}:${toolName}`, config);
     const userLimit = Math.ceil(config.requestsPerMinute / fib(5));
-    const resetTs  = Math.ceil((Date.now() + config.windowMs) / 1000);
-
+    const resetTs = Math.ceil((Date.now() + config.windowMs) / 1000);
     return {
-      'X-RateLimit-Limit':     String(config.requestsPerMinute),
+      'X-RateLimit-Limit': String(config.requestsPerMinute),
       'X-RateLimit-Remaining': String(Math.max(0, userLimit - window.count())),
-      'X-RateLimit-Reset':     String(resetTs),
-      'X-RateLimit-Burst':     String(Math.floor(bucket.tokens)),
-      'X-RateLimit-Policy':    `${config.requestsPerMinute};w=${config.windowMs / 1000}`,
+      'X-RateLimit-Reset': String(resetTs),
+      'X-RateLimit-Burst': String(Math.floor(bucket.tokens)),
+      'X-RateLimit-Policy': `${config.requestsPerMinute};w=${config.windowMs / 1000}`,
       'X-RateLimit-Window-Ms': String(DEFAULT_WINDOW_MS),
-      'X-RateLimit-Phi-Dedup': `threshold=${DEDUP_SIMILARITY_THRESHOLD.toFixed(4)}`,
+      'X-RateLimit-Phi-Dedup': `threshold=${DEDUP_SIMILARITY_THRESHOLD.toFixed(4)}`
     };
   }
 
@@ -890,10 +898,17 @@ export class SemanticRateLimiter extends EventEmitter {
   _buildResult(allowed, config, cachedResult, retryAfterMs, reason) {
     const headers = {};
     if (!allowed) {
-      headers['Retry-After']           = String(Math.ceil(retryAfterMs / 1000));
+      headers['Retry-After'] = String(Math.ceil(retryAfterMs / 1000));
       headers['X-RateLimit-Remaining'] = '0';
     }
-    return { allowed, deduplicated: false, cachedResult, headers, retryAfterMs, reason };
+    return {
+      allowed,
+      deduplicated: false,
+      cachedResult,
+      headers,
+      retryAfterMs,
+      reason
+    };
   }
 
   /**
@@ -904,7 +919,11 @@ export class SemanticRateLimiter extends EventEmitter {
    */
   _ensureStats(toolName) {
     if (!this._stats.has(toolName)) {
-      this._stats.set(toolName, { allowed: 0, rejected: 0, deduped: 0 });
+      this._stats.set(toolName, {
+        allowed: 0,
+        rejected: 0,
+        deduped: 0
+      });
     }
   }
 
@@ -928,29 +947,29 @@ export class SemanticRateLimiter extends EventEmitter {
     for (const [toolName, s] of this._stats) {
       toolStats[toolName] = {
         ...s,
-        total:       s.allowed + s.rejected + s.deduped,
-        dedupRate:   s.deduped > 0 ? `${((s.deduped / (s.allowed + s.deduped)) * 100).toFixed(1)}%` : '0%',
-        queueDepth:  this._queues.get(toolName)?.size ?? 0,
-        bucketTokens: this._buckets.get(`tool:${toolName}`)?.tokens ?? 'N/A',
+        total: s.allowed + s.rejected + s.deduped,
+        dedupRate: s.deduped > 0 ? `${(s.deduped / (s.allowed + s.deduped) * 100).toFixed(1)}%` : '0%',
+        queueDepth: this._queues.get(toolName)?.size ?? 0,
+        bucketTokens: this._buckets.get(`tool:${toolName}`)?.tokens ?? 'N/A'
       };
     }
     return {
-      globalBucketTokens:   this._globalBucket.tokens,
+      globalBucketTokens: this._globalBucket.tokens,
       globalBucketCapacity: this._globalBucket.capacity,
-      configuredTools:      this._toolConfigs.size,
-      activeBuckets:        this._buckets.size,
-      activeWindows:        this._windows.size,
-      dedupCaches:          this._dedupCaches.size,
+      configuredTools: this._toolConfigs.size,
+      activeBuckets: this._buckets.size,
+      activeWindows: this._windows.size,
+      dedupCaches: this._dedupCaches.size,
       phiConstants: {
-        DEDUP_THRESHOLD:          DEDUP_SIMILARITY_THRESHOLD,
+        DEDUP_THRESHOLD: DEDUP_SIMILARITY_THRESHOLD,
         DEFAULT_WINDOW_MS,
         DEFAULT_REFILL_INTERVAL_MS,
         CLEANUP_INTERVAL_MS,
         DEFAULT_SLIDING_WINDOW_BUCKETS,
         MAX_QUEUE_SIZE,
-        CSL_THRESHOLDS,
+        CSL_THRESHOLDS
       },
-      tools: toolStats,
+      tools: toolStats
     };
   }
 
@@ -971,7 +990,11 @@ export class SemanticRateLimiter extends EventEmitter {
   reset() {
     this._buckets.clear();
     this._windows.clear();
-    for (const [, s] of this._stats) { s.allowed = 0; s.rejected = 0; s.deduped = 0; }
+    for (const [, s] of this._stats) {
+      s.allowed = 0;
+      s.rejected = 0;
+      s.deduped = 0;
+    }
   }
 
   /**
@@ -984,6 +1007,5 @@ export class SemanticRateLimiter extends EventEmitter {
     }
   }
 }
-
 export { TokenBucket, SlidingWindow, SemanticDedupCache, PriorityQueue, cosineSimilarity, embedRequest };
 export default SemanticRateLimiter;

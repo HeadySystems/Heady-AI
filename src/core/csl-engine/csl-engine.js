@@ -24,7 +24,6 @@
  */
 
 import { PHI, PSI, PHI_TEMPERATURE, CSL_THRESHOLDS, phiThreshold, EPSILON as PHI_EPSILON, adaptiveTemperature } from '../../shared/phi-math.js';
-
 'use strict';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -46,8 +45,6 @@ const ZERO_NORM_THRESHOLD = 1e-8;
  * CSL_THRESHOLDS.MINIMUM ≈ 0.500 — noise floor for geometric truth activation. */
 const DEFAULT_GATE_THRESHOLD = CSL_THRESHOLDS.MINIMUM; // ≈ 0.500 (CSL noise floor)
 
-/** Default temperature τ for soft gating / softmax operations.
- * PHI_TEMPERATURE = PSI^3 ≈ 0.236 — phi-harmonic softness. */
 const DEFAULT_TEMPERATURE = PHI_TEMPERATURE; // PSI^3 ≈ 0.236
 
 // ─── Utility Functions ────────────────────────────────────────────────────────
@@ -196,21 +193,10 @@ class CSLEngine {
   static PHI = PHI;
   /** Golden ratio conjugate (1/Φ = Φ-1) — accessible on class */
   static PSI = PSI;
-
-  /**
-   * @param {Object} [options]
-   * @param {number} [options.dim=384] - Vector dimension
-   * @param {number} [options.epsilon=1e-10] - Numerical stability epsilon
-   * @param {number} [options.gateThreshold=0.0] - Default threshold τ for GATE
-   * @param {number} [options.temperature=1.0] - Default temperature for soft gates
-   * @param {boolean} [options.normalizeInputs=true] - Auto-normalize inputs
-   */
   constructor(options = {}) {
     this.dim = options.dim || DEFAULT_DIM;
     this.epsilon = options.epsilon || EPSILON;
-    this.gateThreshold = options.gateThreshold !== undefined
-      ? options.gateThreshold
-      : DEFAULT_GATE_THRESHOLD;
+    this.gateThreshold = options.gateThreshold !== undefined ? options.gateThreshold : DEFAULT_GATE_THRESHOLD;
     this.temperature = options.temperature || DEFAULT_TEMPERATURE;
     this.normalizeInputs = options.normalizeInputs !== false;
 
@@ -218,7 +204,7 @@ class CSLEngine {
     this._stats = {
       operationCount: 0,
       degenerateVectors: 0,
-      gateActivations: 0,
+      gateActivations: 0
     };
   }
 
@@ -254,12 +240,10 @@ class CSLEngine {
     this._stats.operationCount++;
     const normA = norm(a);
     const normB = norm(b);
-
     if (normA < this.epsilon || normB < this.epsilon) {
       this._stats.degenerateVectors++;
       return 0.0; // degenerate: zero vectors are orthogonal to everything
     }
-
     const dotProduct = dot(a, b);
     return clamp(dotProduct / (normA * normB), -1.0, 1.0);
   }
@@ -297,13 +281,11 @@ class CSLEngine {
     this._stats.operationCount++;
     const sum = vectorAdd(a, b);
     const n = norm(sum);
-
     if (n < this.epsilon) {
       this._stats.degenerateVectors++;
       // a ≈ -b: concepts cancel. Return zero vector to signal cancellation.
       return new Float64Array(a.length);
     }
-
     return vectorScale(sum, 1.0 / n);
   }
 
@@ -357,7 +339,6 @@ class CSLEngine {
     for (let i = 0; i < a.length; i++) {
       result[i] = a[i] - projCoeff * b[i];
     }
-
     if (returnNormalized) {
       return normalize(result);
     }
@@ -396,7 +377,6 @@ class CSLEngine {
     if (normBSq < this.epsilon) {
       return new Float64Array(a.length); // zero consequent: no implication
     }
-
     const projCoeff = dot(a, b) / normBSq;
     return vectorScale(b, projCoeff);
   }
@@ -449,12 +429,10 @@ class CSLEngine {
     // a_⊥b: component of a orthogonal to b (NOT(a, b) unnormalized)
     const normBSq = dot(b, b);
     const normASq = dot(a, a);
-
     if (normASq < this.epsilon || normBSq < this.epsilon) {
       this._stats.degenerateVectors++;
       return new Float64Array(a.length);
     }
-
     const projAonB = dot(a, b) / normBSq;
     const projBonA = dot(a, b) / normASq; // Note: dot(b,a) = dot(a,b)
 
@@ -466,12 +444,10 @@ class CSLEngine {
       const b_excl = b[i] - projBonA * a[i];
       exclusive[i] = a_excl + b_excl;
     }
-
     const n = norm(exclusive);
     if (n < this.epsilon) {
       return new Float64Array(a.length); // a ≈ b: no exclusive content
     }
-
     return vectorScale(exclusive, 1.0 / n);
   }
 
@@ -506,11 +482,9 @@ class CSLEngine {
    */
   CONSENSUS(vectors, weights = null) {
     this._stats.operationCount++;
-
     if (!vectors || vectors.length === 0) {
       throw new Error('CONSENSUS requires at least one vector');
     }
-
     const dim = vectors[0].length;
     const n = vectors.length;
 
@@ -542,70 +516,36 @@ class CSLEngine {
 
     // Measure consensus strength before normalizing
     const strength = norm(sum);
-
     if (strength < this.epsilon) {
       this._stats.degenerateVectors++;
       return {
         consensus: new Float64Array(dim),
-        strength: 0.0,
+        strength: 0.0
       };
     }
-
     const consensus = vectorScale(sum, 1.0 / strength);
-    return { consensus, strength: clamp(strength, 0, 1) };
+    return {
+      consensus,
+      strength: clamp(strength, 0, 1)
+    };
   }
-
-  /**
-   * CSL GATE — Threshold activation function using cosine similarity.
-   *
-   * Mathematical formula:
-   *   GATE(input, gate_vector, τ) = θ( cos(input, gate_vector) - τ )
-   *
-   * Where θ is the Heaviside step function (hard gate) or sigmoid (soft gate):
-   *   Hard:  GATE = 1  if cos(input, gate_vector) ≥ τ, else 0
-   *   Soft:  GATE = σ( (cos(input, gate_vector) - τ) / temperature )
-   *
-   * The gate_vector defines a semantic "topic direction" in embedding space.
-   * Inputs aligned with this direction (above threshold τ) pass the gate.
-   *
-   * Properties:
-   *   - Bounded output: hard ∈ {0,1}, soft ∈ (0,1)
-   *   - Scale invariant: GATE(λ·input, gate_vector, τ) = GATE(input, gate_vector, τ)
-   *   - Differentiable (soft gate only)
-   *   - Valid activation function: monotone, bounded, Lipschitz-continuous (soft)
-   *
-   * Proof that soft GATE is a valid activation function:
-   *   (See csl-mathematical-proofs.md §4: CSL GATE Activation Properties)
-   *
-   * @param {Float32Array|Float64Array|number[]} input - Input vector to gate
-   * @param {Float32Array|Float64Array|number[]} gateVector - Gate direction vector
-   * @param {number} [threshold=0.0] - Threshold τ ∈ [-1, +1]
-   * @param {'hard'|'soft'} [mode='hard'] - Hard (step) or soft (sigmoid) gate
-   * @param {number} [temperature=1.0] - Temperature for soft gate sharpness
-   * @returns {{ activation: number, cosScore: number }}
-   *   activation: gate output ∈ {0,1} (hard) or (0,1) (soft)
-   *   cosScore: raw cosine similarity before thresholding
-   */
   GATE(input, gateVector, threshold = null, mode = 'hard', temperature = null) {
     this._stats.operationCount++;
-
     const tau = threshold !== null ? threshold : this.gateThreshold;
     const temp = temperature !== null ? temperature : this.temperature;
-
     const cosScore = this.AND(input, gateVector);
     const shifted = cosScore - tau;
-
     let activation;
     if (mode === 'hard') {
       activation = shifted >= 0 ? 1 : 0;
     } else {
-      // Soft (sigmoid) gate: σ(x) = 1 / (1 + e^{-x/temp})
       activation = 1.0 / (1.0 + Math.exp(-shifted / temp));
     }
-
     if (activation > 0) this._stats.gateActivations++;
-
-    return { activation, cosScore };
+    return {
+      activation,
+      cosScore
+    };
   }
 
   /**
@@ -660,11 +600,9 @@ class CSLEngine {
     if (!basisVectors || basisVectors.length === 0) {
       return new Float64Array(a.length);
     }
-
     const dim = a.length;
     // Gram-Schmidt orthogonalization of basisVectors
     const orthoBasis = [];
-
     for (let j = 0; j < basisVectors.length; j++) {
       let vec = new Float64Array(basisVectors[j]);
 
@@ -675,7 +613,6 @@ class CSLEngine {
           vec[i] -= coeff * e[i];
         }
       }
-
       const n = norm(vec);
       if (n > this.epsilon) {
         const unitVec = vectorScale(vec, 1.0 / n);
@@ -691,7 +628,6 @@ class CSLEngine {
         projection[i] += coeff * e[i];
       }
     }
-
     return projection;
   }
 
@@ -731,7 +667,6 @@ class CSLEngine {
     if (normA < this.epsilon) {
       return new Float64Array(bVectors.length);
     }
-
     const result = new Float64Array(bVectors.length);
     for (let j = 0; j < bVectors.length; j++) {
       const normB = norm(bVectors[j]);
@@ -832,8 +767,9 @@ class CSLEngine {
     const norms = vectors.map(v => norm(v));
 
     // Pre-allocate n×n matrix as array of Float64Arrays
-    const matrix = Array.from({ length: n }, () => new Float64Array(n));
-
+    const matrix = Array.from({
+      length: n
+    }, () => new Float64Array(n));
     for (let i = 0; i < n; i++) {
       matrix[i][i] = 1.0; // self-similarity
       for (let j = i + 1; j < n; j++) {
@@ -844,7 +780,6 @@ class CSLEngine {
         matrix[j][i] = sim; // symmetric
       }
     }
-
     return matrix;
   }
 
@@ -856,14 +791,20 @@ class CSLEngine {
    * @returns {{ operationCount: number, degenerateVectors: number, gateActivations: number }}
    */
   getStats() {
-    return { ...this._stats };
+    return {
+      ...this._stats
+    };
   }
 
   /**
    * Reset runtime statistics.
    */
   resetStats() {
-    this._stats = { operationCount: 0, degenerateVectors: 0, gateActivations: 0 };
+    this._stats = {
+      operationCount: 0,
+      degenerateVectors: 0,
+      gateActivations: 0
+    };
   }
 
   // ─── Phi-Harmonic Gate Extensions ───────────────────────────────────────────────
@@ -888,26 +829,18 @@ class CSLEngine {
   phiGATE(input, gateVector, level = 2, mode = 'hard') {
     const threshold = phiThreshold(level); // e.g. level=2 ≈ 0.809 (MEDIUM)
     const result = this.GATE(input, gateVector, threshold, mode);
-    return { ...result, threshold };
+    return {
+      ...result,
+      threshold
+    };
   }
-
-  /**
-   * Adaptive GATE — uses adaptiveTemperature(entropy, maxEntropy) for dynamic softness.
-   *
-   * Temperature = PSI^(1 + 2*(1 - H/Hmax)) from phi-math.js.
-   * At max entropy (uniform distribution): temperature ≈ PSI (softest).
-   * At zero entropy (deterministic):       temperature ≈ PSI^3 (sharpest = PHI_TEMPERATURE).
-   *
-   * @param {Float32Array|Float64Array|number[]} input - Input vector
-   * @param {Float32Array|Float64Array|number[]} gateVector - Gate direction vector
-   * @param {number} entropy - Current routing entropy H (nats)
-   * @param {number} maxEntropy - Maximum possible entropy Hmax = log(numExperts)
-   * @returns {{ activation: number, cosScore: number, temperature: number }}
-   */
   adaptiveGATE(input, gateVector, entropy, maxEntropy) {
     const temperature = adaptiveTemperature(entropy, maxEntropy);
     const result = this.GATE(input, gateVector, null, 'soft', temperature);
-    return { ...result, temperature };
+    return {
+      ...result,
+      temperature
+    };
   }
 
   /**
@@ -920,14 +853,12 @@ class CSLEngine {
   validateVector(vector, expectedDim = null) {
     const issues = [];
     const dim = expectedDim || this.dim;
-
     if (!vector || vector.length === 0) {
       issues.push('Vector is empty or null');
     } else {
       if (vector.length !== dim) {
         issues.push(`Dimension mismatch: got ${vector.length}, expected ${dim}`);
       }
-
       let hasNaN = false;
       let hasInf = false;
       for (let i = 0; i < vector.length; i++) {
@@ -936,14 +867,15 @@ class CSLEngine {
       }
       if (hasNaN) issues.push('Vector contains NaN values');
       if (hasInf) issues.push('Vector contains Inf values');
-
       const n = norm(vector);
       if (n < ZERO_NORM_THRESHOLD) {
         issues.push('Vector is near-zero (degenerate)');
       }
     }
-
-    return { valid: issues.length === 0, issues };
+    return {
+      valid: issues.length === 0,
+      issues
+    };
   }
 }
 
@@ -963,5 +895,5 @@ module.exports = {
   DEFAULT_DIM,
   LARGE_DIM,
   EPSILON,
-  ZERO_NORM_THRESHOLD,
+  ZERO_NORM_THRESHOLD
 };

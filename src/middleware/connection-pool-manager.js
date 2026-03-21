@@ -1,44 +1,7 @@
 const logger = console;
-/**
- * @fileoverview MCP Connection Pool Manager — Phi-Continuous Edition
- *
- * Manages a pool of MCP server connections with configurable min/max/idle
- * settings. Provides transport-aware pooling, heartbeat health monitoring,
- * automatic exponential-backoff reconnection (using the golden-ratio phi
- * for the backoff multiplier), connection warm-up on startup, and rich
- * connection metrics.
- *
- * ── Phi-Math Integration ────────────────────────────────────────────────────
- * All fixed pool size limits, timeout constants, and backoff multipliers are
- * replaced with deterministic values from the shared phi-math module:
- *
- *   min:                 2       → fib(3)  = 2   (unchanged numerically)
- *   max:                10       → fib(7)  = 13  (phi-scaled upward)
- *   idleTimeoutMs:   60_000      → fib(16)*1000/fib(10) ≈ 17 945 ms
- *   maxReconnectAttempts: 10     → fib(7)  = 13
- *   reconnect backoff            → phiBackoff() from shared module
- *   heartbeat interval           → phiAdaptiveInterval() — grows φ when
- *                                   healthy, shrinks ψ when failing
- *
- * The local `const PHI = 1.618…` is removed; all phi usage now comes
- * from the shared module to guarantee a single source of truth.
- * ─────────────────────────────────────────────────────────────────────────────
- *
- * @module modules/connection-pool-manager
- * @requires @modelcontextprotocol/sdk
- * @requires events
- * @requires shared/phi-math
- */
-
 import { EventEmitter } from 'events';
 import crypto from 'crypto';
-import {
-  PHI,
-  PSI,
-  phiBackoff,
-  phiAdaptiveInterval,
-  fib,
-} from '../../shared/phi-math.js';
+import { PHI, PSI, phiBackoff, phiAdaptiveInterval, fib } from '../../shared/phi-math.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -47,83 +10,43 @@ import {
 /** Pool connection states */
 export const ConnectionState = Object.freeze({
   CONNECTING: 'connecting',
-  IDLE:       'idle',
-  ACTIVE:     'active',
-  DRAINING:   'draining',
-  CLOSED:     'closed',
-  ERROR:      'error',
+  IDLE: 'idle',
+  ACTIVE: 'active',
+  DRAINING: 'draining',
+  CLOSED: 'closed',
+  ERROR: 'error'
 });
 
 /** Transport types and their pooling strategies */
 export const TransportType = Object.freeze({
-  SSE:             'sse',
+  SSE: 'sse',
   STREAMABLE_HTTP: 'streamable-http',
-  STDIO:           'stdio',
-  WEBSOCKET:       'websocket',
+  STDIO: 'stdio',
+  WEBSOCKET: 'websocket'
 });
-
-/**
- * Default pool settings — all values phi/Fibonacci derived.
- *
- * @property {number} min                 fib(3)  = 2   — minimum connections
- * @property {number} max                 fib(7)  = 13  — maximum connections (was 10)
- * @property {number} idleTimeoutMs       fib(16)*1000/fib(10) ≈ 17 945 ms (was 60 000 ms)
- *                                        Ratio fib(16)/fib(10) = 987/55 ≈ 17.945 follows the
- *                                        Fibonacci ratio convergence toward φ.
- * @property {number} acquireTimeoutMs    fib(10)*100 = 5 500 ms (was 5 000 ms, phi-rounded)
- * @property {number} heartbeatIntervalMs fib(11)*1000/fib(7) ≈ 6 846 ms base (was 15 000 ms)
- *                                        Actual cadence is adaptive via phiAdaptiveInterval().
- * @property {number} heartbeatTimeoutMs  fib(8)*100 = 2 100 ms (was 3 000 ms)
- * @property {number} maxReconnectAttempts fib(7) = 13 (was 10)
- * @property {number} reconnectBaseDelayMs fib(8)*10 = 210 ms  (was 500 ms)
- * @property {number} reconnectMaxDelayMs  fib(16)*100 = 98 700 ms (was 60 000 ms; φ-extended)
- */
 const POOL_DEFAULTS = Object.freeze({
-  min:                   fib(3),                                   // F(3)  = 2
-  max:                   fib(7),                                   // F(7)  = 13
-  idleTimeoutMs:         Math.round((fib(16) * 1000) / fib(10)),   // ≈ 17 945 ms
-  acquireTimeoutMs:      fib(10) * 100,                            // F(10) × 100 = 5 500 ms
-  heartbeatIntervalMs:   Math.round((fib(11) * 1000) / fib(7)),    // ≈ 6 846 ms base
-  heartbeatTimeoutMs:    fib(8) * 100,                             // F(8)  × 100 = 2 100 ms
-  maxReconnectAttempts:  fib(7),                                   // F(7)  = 13
-  reconnectBaseDelayMs:  fib(8) * 10,                              // F(8)  × 10  = 210 ms
-  reconnectMaxDelayMs:   fib(16) * 100,                            // F(16) × 100 = 98 700 ms
-  warmUpOnStart:         true,
+  min: fib(3),
+  // F(3)  = 2
+  max: fib(7),
+  // F(7)  = 13
+  idleTimeoutMs: Math.round(fib(16) * 1000 / fib(10)),
+  // ≈ 17 945 ms
+  acquireTimeoutMs: fib(10) * 100,
+  // F(10) × 100 = 5 500 ms
+  heartbeatIntervalMs: Math.round(fib(11) * 1000 / fib(7)),
+  // ≈ 6 846 ms base
+  heartbeatTimeoutMs: fib(8) * 100,
+  // F(8)  × 100 = 2 100 ms
+  maxReconnectAttempts: fib(7),
+  // F(7)  = 13
+  reconnectBaseDelayMs: fib(8) * 10,
+  // F(8)  × 10  = 210 ms
+  reconnectMaxDelayMs: fib(16) * 100,
+  // F(16) × 100 = 98 700 ms
+  warmUpOnStart: true
 });
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-/**
- * @typedef {Object} PooledConnection
- * @property {string} id - Unique connection identifier
- * @property {string} serverId - Target MCP server identifier
- * @property {Object} client - MCP SDK Client instance
- * @property {Object} transport - Underlying transport instance
- * @property {ConnectionState} state - Current connection state
- * @property {Date} createdAt - Connection creation timestamp
- * @property {Date} lastUsedAt - Last activity timestamp
- * @property {Date|null} lastHeartbeatAt - Last successful heartbeat
- * @property {number} useCount - Total number of times this connection was used
- * @property {number} reconnectAttempts - Consecutive reconnect attempts
- * @property {string} transportType - Transport type for this connection
- */
-
-/**
- * @typedef {Object} PoolConfig
- * @property {string} serverId - Unique server identifier
- * @property {string} transportType - Transport type
- * @property {Function} transportFactory - Async factory: () => {client, transport}
- * @property {number} [min] - Minimum pool size (default fib(3)=2)
- * @property {number} [max] - Maximum pool size (default fib(7)=13)
- * @property {number} [idleTimeoutMs] - Max idle time before connection eviction
- * @property {number} [acquireTimeoutMs] - Max wait time to acquire connection
- * @property {number} [heartbeatIntervalMs] - Heartbeat check base interval
- * @property {number} [heartbeatTimeoutMs] - Heartbeat response timeout
- * @property {number} [maxReconnectAttempts] - Max consecutive reconnect attempts (default fib(7)=13)
- * @property {number} [reconnectBaseDelayMs] - Initial reconnect backoff delay
- * @property {number} [reconnectMaxDelayMs] - Maximum reconnect backoff delay
- * @property {boolean} [warmUpOnStart] - Pre-create min connections on init
- */
 
 // ─── ConnectionPool ───────────────────────────────────────────────────────────
 
@@ -138,7 +61,10 @@ class ConnectionPool extends EventEmitter {
    */
   constructor(config) {
     super();
-    this.config = { ...POOL_DEFAULTS, ...config };
+    this.config = {
+      ...POOL_DEFAULTS,
+      ...config
+    };
     this.serverId = config.serverId;
     this.transportType = config.transportType;
 
@@ -186,27 +112,28 @@ class ConnectionPool extends EventEmitter {
       const warmUpPromises = [];
       for (let i = 0; i < this.config.min; i++) {
         warmUpPromises.push(this._createConnection().catch(err => {
-          this.emit('warn', { event: 'warmup_failed', serverId: this.serverId, error: err.message });
+          this.emit('warn', {
+            event: 'warmup_failed',
+            serverId: this.serverId,
+            error: err.message
+          });
         }));
       }
       await Promise.allSettled(warmUpPromises);
     }
 
     // Start heartbeat monitoring at the current adaptive interval
-    this._heartbeatTimer = setInterval(
-      () => this._runHeartbeats(),
-      this._currentHeartbeatIntervalMs
-    );
+    this._heartbeatTimer = setInterval(() => this._runHeartbeats(), this._currentHeartbeatIntervalMs);
     this._heartbeatTimer.unref?.();
 
     // Start idle eviction at half the idle timeout (Fibonacci-derived)
-    this._idleEvictionTimer = setInterval(
-      () => this._evictIdleConnections(),
-      Math.round(this.config.idleTimeoutMs / PHI)   // ÷φ ≈ ×0.618 — checks more often than full interval
+    this._idleEvictionTimer = setInterval(() => this._evictIdleConnections(), Math.round(this.config.idleTimeoutMs / PHI) // ÷φ ≈ ×0.618 — checks more often than full interval
     );
     this._idleEvictionTimer.unref?.();
-
-    this.emit('initialized', { serverId: this.serverId, poolSize: this._connections.size });
+    this.emit('initialized', {
+      serverId: this.serverId,
+      poolSize: this._connections.size
+    });
   }
 
   /**
@@ -216,8 +143,14 @@ class ConnectionPool extends EventEmitter {
    */
   async destroy() {
     this._destroyed = true;
-    if (this._heartbeatTimer)    { clearInterval(this._heartbeatTimer);    this._heartbeatTimer    = null; }
-    if (this._idleEvictionTimer) { clearInterval(this._idleEvictionTimer); this._idleEvictionTimer = null; }
+    if (this._heartbeatTimer) {
+      clearInterval(this._heartbeatTimer);
+      this._heartbeatTimer = null;
+    }
+    if (this._idleEvictionTimer) {
+      clearInterval(this._idleEvictionTimer);
+      this._idleEvictionTimer = null;
+    }
 
     // Reject all waiting acquires
     for (const waiter of this._waitQueue) {
@@ -257,7 +190,10 @@ class ConnectionPool extends EventEmitter {
       conn.state = ConnectionState.ACTIVE;
       conn.lastUsedAt = new Date();
       conn.useCount++;
-      this.emit('connection_acquired', { connId, serverId: this.serverId });
+      this.emit('connection_acquired', {
+        connId,
+        serverId: this.serverId
+      });
       return conn;
     }
 
@@ -271,7 +207,11 @@ class ConnectionPool extends EventEmitter {
         conn.useCount++;
         return conn;
       } catch (err) {
-        this.emit('error', { event: 'create_failed', serverId: this.serverId, error: err.message });
+        this.emit('error', {
+          event: 'create_failed',
+          serverId: this.serverId,
+          error: err.message
+        });
         // Fall through to waiting
       }
     }
@@ -283,8 +223,11 @@ class ConnectionPool extends EventEmitter {
         if (idx !== -1) this._waitQueue.splice(idx, 1);
         reject(new Error(`Acquire timeout for server ${this.serverId} (${active} active, ${this._connections.size} total)`));
       }, this.config.acquireTimeoutMs);
-
-      this._waitQueue.push({ resolve, reject, timer });
+      this._waitQueue.push({
+        resolve,
+        reject,
+        timer
+      });
     });
   }
 
@@ -295,16 +238,17 @@ class ConnectionPool extends EventEmitter {
    */
   release(conn) {
     if (!conn || !this._connections.has(conn.id)) return;
-
     if (conn.state === ConnectionState.CLOSED || conn.state === ConnectionState.ERROR) {
       this._connections.delete(conn.id);
       this._ensureMin();
       return;
     }
-
     conn.state = ConnectionState.IDLE;
     conn.lastUsedAt = new Date();
-    this.emit('connection_released', { connId: conn.id, serverId: this.serverId });
+    this.emit('connection_released', {
+      connId: conn.id,
+      serverId: this.serverId
+    });
 
     // Dispatch to waiting acquirer if any
     const waiter = this._waitQueue.shift();
@@ -315,7 +259,6 @@ class ConnectionPool extends EventEmitter {
       waiter.resolve(conn);
       return;
     }
-
     this._idle.push(conn.id);
   }
 
@@ -328,32 +271,38 @@ class ConnectionPool extends EventEmitter {
    * @private
    */
   async _createConnection() {
-    const id  = crypto.randomUUID();
+    const id = crypto.randomUUID();
     const now = new Date();
 
     /** @type {PooledConnection} */
     const conn = {
       id,
-      serverId:           this.serverId,
-      client:             null,
-      transport:          null,
-      state:              ConnectionState.CONNECTING,
-      createdAt:          now,
-      lastUsedAt:         now,
-      lastHeartbeatAt:    null,
-      useCount:           0,
-      reconnectAttempts:  0,
-      transportType:      this.transportType,
+      serverId: this.serverId,
+      client: null,
+      transport: null,
+      state: ConnectionState.CONNECTING,
+      createdAt: now,
+      lastUsedAt: now,
+      lastHeartbeatAt: null,
+      useCount: 0,
+      reconnectAttempts: 0,
+      transportType: this.transportType
     };
     this._connections.set(id, conn);
-
     try {
-      const { client, transport } = await this.config.transportFactory();
-      conn.client    = client;
+      const {
+        client,
+        transport
+      } = await this.config.transportFactory();
+      conn.client = client;
       conn.transport = transport;
-      conn.state     = ConnectionState.IDLE;
+      conn.state = ConnectionState.IDLE;
       this._idle.push(id);
-      this.emit('connection_created', { connId: id, serverId: this.serverId, transportType: this.transportType });
+      this.emit('connection_created', {
+        connId: id,
+        serverId: this.serverId,
+        transportType: this.transportType
+      });
       return conn;
     } catch (err) {
       conn.state = ConnectionState.ERROR;
@@ -374,11 +323,14 @@ class ConnectionPool extends EventEmitter {
     conn.state = ConnectionState.DRAINING;
     try {
       await conn.client?.close?.();
-    } catch (_) { /* ignore */  }
+    } catch (_) {/* ignore */}
     conn.state = ConnectionState.CLOSED;
     this._connections.delete(connId);
     this._idle = this._idle.filter(id => id !== connId);
-    this.emit('connection_closed', { connId, serverId: this.serverId });
+    this.emit('connection_closed', {
+      connId,
+      serverId: this.serverId
+    });
   }
 
   // ─── Heartbeat ─────────────────────────────────────────────────────────────
@@ -402,21 +354,20 @@ class ConnectionPool extends EventEmitter {
   async _runHeartbeats() {
     const idleSnapshot = [...this._idle];
     let anyFailed = false;
-
     for (const connId of idleSnapshot) {
       const conn = this._connections.get(connId);
       if (!conn || conn.state !== ConnectionState.IDLE) continue;
-
       try {
-        await Promise.race([
-          this._heartbeatConnection(conn),
-          new Promise((_, r) => setTimeout(() => r(new Error('heartbeat timeout')), this.config.heartbeatTimeoutMs)),
-        ]);
-        conn.lastHeartbeatAt  = new Date();
+        await Promise.race([this._heartbeatConnection(conn), new Promise((_, r) => setTimeout(() => r(new Error('heartbeat timeout')), this.config.heartbeatTimeoutMs))]);
+        conn.lastHeartbeatAt = new Date();
         conn.reconnectAttempts = 0;
       } catch (err) {
         anyFailed = true;
-        this.emit('heartbeat_failed', { connId, serverId: this.serverId, error: err.message });
+        this.emit('heartbeat_failed', {
+          connId,
+          serverId: this.serverId,
+          error: err.message
+        });
         conn.state = ConnectionState.ERROR;
         this._idle = this._idle.filter(id => id !== connId);
         this._scheduleReconnect(conn);
@@ -424,13 +375,10 @@ class ConnectionPool extends EventEmitter {
     }
 
     // Phi-adaptive interval update after the heartbeat pass
-    const nextInterval = phiAdaptiveInterval(
-      this._currentHeartbeatIntervalMs,
-      !anyFailed,
-      this.config.heartbeatTimeoutMs * fib(3),  // min = heartbeatTimeout × F(3) ≈ 3× timeout
-      fib(14) * 1000,                            // max = F(14)×1000 = 377 000 ms
+    const nextInterval = phiAdaptiveInterval(this._currentHeartbeatIntervalMs, !anyFailed, this.config.heartbeatTimeoutMs * fib(3),
+    // min = heartbeatTimeout × F(3) ≈ 3× timeout
+    fib(14) * 1000 // max = F(14)×1000 = 377 000 ms
     );
-
     if (nextInterval !== this._currentHeartbeatIntervalMs) {
       this._currentHeartbeatIntervalMs = nextInterval;
       // Reschedule timer at new adaptive interval
@@ -442,7 +390,7 @@ class ConnectionPool extends EventEmitter {
       this.emit('heartbeat_interval_adjusted', {
         serverId: this.serverId,
         intervalMs: nextInterval,
-        healthy: !anyFailed,
+        healthy: !anyFailed
       });
     }
   }
@@ -468,74 +416,50 @@ class ConnectionPool extends EventEmitter {
 
   // ─── Reconnection ──────────────────────────────────────────────────────────
 
-  /**
-   * Schedule a reconnect attempt with phi-ratio exponential backoff.
-   *
-   * Delay formula (from shared phi-math phiBackoff):
-   *   delay(attempt) = baseMs × φ^attempt, clamped to maxMs, with ψ² jitter
-   *
-   * This replaces the previous inline `Math.pow(PHI, attempts)` with the
-   * shared phiBackoff() function, which additionally applies φ-jitter to
-   * spread reconnect storms.
-   *
-   * Sequence with baseMs = fib(8)×10 = 210 ms:
-   *   attempt 0:  210 ms
-   *   attempt 1:  340 ms
-   *   attempt 2:  549 ms
-   *   attempt 3:  888 ms
-   *   attempt 4:  1 436 ms
-   *   attempt 5:  2 323 ms
-   *   attempt 6:  3 759 ms
-   *   attempt 7:  6 082 ms
-   *   attempt 12: ≈ 98 700 ms (max, fib(16)×100)
-   *
-   * @param {PooledConnection} conn
-   * @private
-   */
   _scheduleReconnect(conn) {
     if (conn.reconnectAttempts >= this.config.maxReconnectAttempts) {
-      this.emit('reconnect_exhausted', { serverId: this.serverId, connId: conn.id });
+      this.emit('reconnect_exhausted', {
+        serverId: this.serverId,
+        connId: conn.id
+      });
       this._connections.delete(conn.id);
       this._ensureMin();
       return;
     }
-
-    /**
-     * phiBackoff() replaces:
-     *   Math.min(base × φ^attempts, maxDelay)
-     * with the identical formula but sourced from the shared module,
-     * adding ψ²-jitter (≈±38.2%) to prevent reconnect storms.
-     */
-    const delay = phiBackoff(
-      conn.reconnectAttempts,
-      this.config.reconnectBaseDelayMs,
-      this.config.reconnectMaxDelayMs,
-      true,  // jitter = true
+    const delay = phiBackoff(conn.reconnectAttempts, this.config.reconnectBaseDelayMs, this.config.reconnectMaxDelayMs, true // jitter = true
     );
-
     conn.reconnectAttempts++;
     this.emit('reconnect_scheduled', {
-      connId:    conn.id,
-      serverId:  this.serverId,
-      attempt:   conn.reconnectAttempts,
-      delayMs:   Math.round(delay),
+      connId: conn.id,
+      serverId: this.serverId,
+      attempt: conn.reconnectAttempts,
+      delayMs: Math.round(delay)
     });
-
     setTimeout(async () => {
       if (this._destroyed) return;
       try {
-        const { client, transport } = await this.config.transportFactory();
-        conn.client             = client;
-        conn.transport          = transport;
-        conn.state              = ConnectionState.IDLE;
-        conn.lastHeartbeatAt    = new Date();
+        const {
+          client,
+          transport
+        } = await this.config.transportFactory();
+        conn.client = client;
+        conn.transport = transport;
+        conn.state = ConnectionState.IDLE;
+        conn.lastHeartbeatAt = new Date();
         if (!this._connections.has(conn.id)) {
           this._connections.set(conn.id, conn);
         }
         this._idle.push(conn.id);
-        this.emit('reconnected', { connId: conn.id, serverId: this.serverId });
+        this.emit('reconnected', {
+          connId: conn.id,
+          serverId: this.serverId
+        });
       } catch (err) {
-        this.emit('reconnect_failed', { connId: conn.id, serverId: this.serverId, error: err.message });
+        this.emit('reconnect_failed', {
+          connId: conn.id,
+          serverId: this.serverId,
+          error: err.message
+        });
         this._scheduleReconnect(conn);
       }
     }, delay);
@@ -552,7 +476,6 @@ class ConnectionPool extends EventEmitter {
   _evictIdleConnections() {
     const now = Date.now();
     const toEvict = [];
-
     for (const connId of [...this._idle]) {
       const conn = this._connections.get(connId);
       if (!conn) continue;
@@ -565,7 +488,6 @@ class ConnectionPool extends EventEmitter {
     // Keep at least min connections alive
     const keepCount = Math.max(0, this._activeCount() + this._idle.length - toEvict.length - this.config.min);
     const actualEvict = toEvict.slice(0, Math.max(0, toEvict.length - keepCount));
-
     for (const connId of actualEvict) {
       const conn = this._connections.get(connId);
       if (conn) this._closeConnection(connId, conn);
@@ -589,7 +511,11 @@ class ConnectionPool extends EventEmitter {
     const deficit = this.config.min - this._connections.size;
     for (let i = 0; i < deficit; i++) {
       this._createConnection().catch(err => {
-        this.emit('warn', { event: 'ensure_min_failed', serverId: this.serverId, error: err.message });
+        this.emit('warn', {
+          event: 'ensure_min_failed',
+          serverId: this.serverId,
+          error: err.message
+        });
       });
     }
   }
@@ -604,15 +530,15 @@ class ConnectionPool extends EventEmitter {
   getMetrics() {
     const active = this._activeCount();
     return {
-      serverId:           this.serverId,
-      transportType:      this.transportType,
+      serverId: this.serverId,
+      transportType: this.transportType,
       active,
-      idle:               this._idle.length,
-      total:              this._connections.size,
-      waiting:            this._waitQueue.length,
-      min:                this.config.min,
-      max:                this.config.max,
-      heartbeatIntervalMs: this._currentHeartbeatIntervalMs,
+      idle: this._idle.length,
+      total: this._connections.size,
+      waiting: this._waitQueue.length,
+      min: this.config.min,
+      max: this.config.max,
+      heartbeatIntervalMs: this._currentHeartbeatIntervalMs
     };
   }
 }
@@ -677,15 +603,14 @@ export class MCPConnectionPoolManager extends EventEmitter {
     const pool = new ConnectionPool(config);
 
     // Bubble up pool events
-    pool.on('error',                data => this.emit('pool_error',          data));
-    pool.on('connection_created',   data => this.emit('connection_created',  data));
-    pool.on('connection_closed',    data => this.emit('connection_closed',   data));
-    pool.on('heartbeat_failed',     data => this.emit('heartbeat_failed',    data));
-    pool.on('reconnect_scheduled',  data => this.emit('reconnect_scheduled', data));
-    pool.on('reconnected',          data => this.emit('reconnected',         data));
-    pool.on('reconnect_exhausted',  data => this.emit('reconnect_exhausted', data));
+    pool.on('error', data => this.emit('pool_error', data));
+    pool.on('connection_created', data => this.emit('connection_created', data));
+    pool.on('connection_closed', data => this.emit('connection_closed', data));
+    pool.on('heartbeat_failed', data => this.emit('heartbeat_failed', data));
+    pool.on('reconnect_scheduled', data => this.emit('reconnect_scheduled', data));
+    pool.on('reconnected', data => this.emit('reconnected', data));
+    pool.on('reconnect_exhausted', data => this.emit('reconnect_exhausted', data));
     pool.on('heartbeat_interval_adjusted', data => this.emit('heartbeat_interval_adjusted', data));
-
     this._pools.set(config.serverId, pool);
   }
 
@@ -716,7 +641,9 @@ export class MCPConnectionPoolManager extends EventEmitter {
     }
     await Promise.allSettled(inits);
     this._initialized = true;
-    this.emit('initialized', { pools: this._pools.size });
+    this.emit('initialized', {
+      pools: this._pools.size
+    });
   }
 
   /**
@@ -761,15 +688,6 @@ export class MCPConnectionPoolManager extends EventEmitter {
     if (!pool) return;
     pool.release(conn);
   }
-
-  /**
-   * Execute an operation with a pooled connection, automatically releasing it.
-   *
-   * @template T
-   * @param {string} serverId - Target server identifier
-   * @param {(conn: PooledConnection) => Promise<T>} operation - Operation to run
-   * @returns {Promise<T>}
-   */
   async withConnection(serverId, operation) {
     const conn = await this.acquire(serverId);
     try {
@@ -800,19 +718,26 @@ export class MCPConnectionPoolManager extends EventEmitter {
    * }}
    */
   getAllMetrics() {
-    const pools  = [];
-    const totals = { active: 0, idle: 0, total: 0, waiting: 0 };
-
+    const pools = [];
+    const totals = {
+      active: 0,
+      idle: 0,
+      total: 0,
+      waiting: 0
+    };
     for (const [, pool] of this._pools) {
       const m = pool.getMetrics();
       pools.push(m);
-      totals.active  += m.active;
-      totals.idle    += m.idle;
-      totals.total   += m.total;
+      totals.active += m.active;
+      totals.idle += m.idle;
+      totals.total += m.total;
       totals.waiting += m.waiting;
     }
-
-    return { pools, totals, poolCount: this._pools.size };
+    return {
+      pools,
+      totals,
+      poolCount: this._pools.size
+    };
   }
 
   /**
@@ -837,6 +762,5 @@ export class MCPConnectionPoolManager extends EventEmitter {
     return m.active + m.idle > 0;
   }
 }
-
 export { ConnectionPool, PHI, POOL_DEFAULTS };
 export default MCPConnectionPoolManager;

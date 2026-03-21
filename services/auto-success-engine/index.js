@@ -37,7 +37,6 @@ class HeadyLogger {
   constructor(context) {
     this.context = context;
   }
-
   _log(level, message, meta = {}) {
     const entry = {
       timestamp: new Date().toISOString(),
@@ -49,13 +48,19 @@ class HeadyLogger {
     const fn = level === 'error' ? console.error : level === 'warn' ? console.warn : console.log;
     fn(JSON.stringify(entry));
   }
-
-  info(message, meta) { this._log('info', message, meta); }
-  warn(message, meta) { this._log('warn', message, meta); }
-  error(message, meta) { this._log('error', message, meta); }
-  debug(message, meta) { this._log('debug', message, meta); }
+  info(message, meta) {
+    this._log('info', message, meta);
+  }
+  warn(message, meta) {
+    this._log('warn', message, meta);
+  }
+  error(message, meta) {
+    this._log('error', message, meta);
+  }
+  debug(message, meta) {
+    this._log('debug', message, meta);
+  }
 }
-
 const logger = new HeadyLogger('auto-success-engine');
 
 // ─── HeadyAutoContext Middleware ─────────────────────────────
@@ -78,12 +83,12 @@ class ServiceHealthRegistry {
     this.lastHeartbeat = null;
     this.cslConfidence = 1.0; // Start fully confident
   }
-
   register(serviceId, config = {}) {
     this.services.set(serviceId, {
       id: serviceId,
       status: 'unknown',
-      cslConfidence: PSI, // Start at golden ratio
+      cslConfidence: PSI,
+      // Start at golden ratio
       lastCheck: null,
       lastHealthy: null,
       failCount: 0,
@@ -93,19 +98,18 @@ class ServiceHealthRegistry {
       registeredAt: Date.now(),
       metadata: config.metadata || {}
     });
-    logger.info(`Service registered: ${serviceId}`, { port: config.port });
+    logger.info(`Service registered: ${serviceId}`, {
+      port: config.port
+    });
   }
-
   updateHealth(serviceId, healthy, latencyMs = 0) {
     const svc = this.services.get(serviceId);
     if (!svc) {
       logger.warn(`Unknown service health update: ${serviceId}`);
       return;
     }
-
     const now = Date.now();
     svc.lastCheck = now;
-
     if (healthy) {
       svc.status = 'healthy';
       svc.lastHealthy = now;
@@ -118,7 +122,6 @@ class ServiceHealthRegistry {
       svc.failCount += 1;
       // CSL confidence decays, phi-scaled
       svc.cslConfidence = Math.max(0.0, svc.cslConfidence * PSI);
-
       if (svc.cslConfidence < CSL_CRITICAL) {
         svc.status = 'critical';
       } else if (svc.cslConfidence < CSL_DEGRADED) {
@@ -131,7 +134,6 @@ class ServiceHealthRegistry {
     // Recalculate global CSL confidence
     this._recalculateGlobalConfidence();
   }
-
   _recalculateGlobalConfidence() {
     if (this.services.size === 0) {
       this.cslConfidence = 1.0;
@@ -143,11 +145,9 @@ class ServiceHealthRegistry {
     }
     this.cslConfidence = sum / this.services.size;
   }
-
   getStatus(serviceId) {
     return this.services.get(serviceId) || null;
   }
-
   getAllStatuses() {
     const result = {};
     for (const [id, svc] of this.services) {
@@ -162,24 +162,16 @@ class ServiceHealthRegistry {
     }
     return result;
   }
-
   getGlobalHealth() {
     const total = this.services.size;
     let healthy = 0;
     let degraded = 0;
     let critical = 0;
-
     for (const svc of this.services.values()) {
-      if (svc.cslConfidence >= CSL_HEALTHY) healthy++;
-      else if (svc.cslConfidence >= CSL_DEGRADED) degraded++;
-      else critical++;
+      if (svc.cslConfidence >= CSL_HEALTHY) healthy++;else if (svc.cslConfidence >= CSL_DEGRADED) degraded++;else critical++;
     }
-
     let globalStatus = 'healthy';
-    if (this.cslConfidence < CSL_CRITICAL) globalStatus = 'critical';
-    else if (this.cslConfidence < CSL_DEGRADED) globalStatus = 'degraded';
-    else if (this.cslConfidence < CSL_HEALTHY) globalStatus = 'warning';
-
+    if (this.cslConfidence < CSL_CRITICAL) globalStatus = 'critical';else if (this.cslConfidence < CSL_DEGRADED) globalStatus = 'degraded';else if (this.cslConfidence < CSL_HEALTHY) globalStatus = 'warning';
     return {
       status: globalStatus,
       cslConfidence: Number(this.cslConfidence.toFixed(6)),
@@ -201,22 +193,25 @@ class AutoRecoveryEngine {
     this.recoveryLog = [];
     this.maxLogSize = 89; // Fibonacci number
   }
-
   async attemptRecovery(serviceId) {
     const svc = this.registry.getStatus(serviceId);
     if (!svc) {
       logger.warn(`Cannot recover unknown service: ${serviceId}`);
-      return { success: false, reason: 'unknown_service' };
+      return {
+        success: false,
+        reason: 'unknown_service'
+      };
     }
-
     if (svc.status === 'healthy') {
-      return { success: true, reason: 'already_healthy' };
+      return {
+        success: true,
+        reason: 'already_healthy'
+      };
     }
 
     // Fibonacci retry delay
     const retryIndex = Math.min(svc.retryIndex, FIBONACCI_RETRY_MS.length - 1);
     const delayMs = FIBONACCI_RETRY_MS[retryIndex];
-
     if (svc.retryIndex >= FIBONACCI_MAX_RETRIES) {
       const entry = {
         serviceId,
@@ -227,11 +222,13 @@ class AutoRecoveryEngine {
       };
       this._addLog(entry);
       logger.error(`Recovery exhausted for ${serviceId}`, entry);
-      return { success: false, reason: 'retries_exhausted', retries: svc.retryIndex };
+      return {
+        success: false,
+        reason: 'retries_exhausted',
+        retries: svc.retryIndex
+      };
     }
-
     svc.retryIndex += 1;
-
     const entry = {
       serviceId,
       action: 'recovery_attempt',
@@ -252,27 +249,30 @@ class AutoRecoveryEngine {
           signal: controller.signal
         });
         clearTimeout(timeout);
-
         if (response.ok) {
           this.registry.updateHealth(serviceId, true);
           logger.info(`Recovery successful for ${serviceId}`);
-          return { success: true, reason: 'health_check_passed' };
+          return {
+            success: true,
+            reason: 'health_check_passed'
+          };
         }
       } catch (err) {
         logger.warn(`Recovery probe failed for ${serviceId}: ${err.message}`);
       }
     }
-
-    return { success: false, reason: 'probe_failed', nextRetryMs: delayMs };
+    return {
+      success: false,
+      reason: 'probe_failed',
+      nextRetryMs: delayMs
+    };
   }
-
   _addLog(entry) {
     this.recoveryLog.push(entry);
     if (this.recoveryLog.length > this.maxLogSize) {
       this.recoveryLog = this.recoveryLog.slice(-55); // Fibonacci trim
     }
   }
-
   getLog() {
     return this.recoveryLog;
   }
@@ -286,11 +286,9 @@ class HeartbeatEngine {
     this.intervalHandle = null;
     this.running = false;
   }
-
   start() {
     if (this.running) return;
     this.running = true;
-
     logger.info(`Heartbeat engine starting`, {
       intervalMs: HEARTBEAT_INTERVAL_MS,
       phi7: PHI_7.toFixed(6)
@@ -302,7 +300,6 @@ class HeartbeatEngine {
     // Phi^7 interval
     this.intervalHandle = setInterval(() => this._beat(), HEARTBEAT_INTERVAL_MS);
   }
-
   stop() {
     if (!this.running) return;
     this.running = false;
@@ -312,14 +309,11 @@ class HeartbeatEngine {
     }
     logger.info('Heartbeat engine stopped');
   }
-
   async _beat() {
     this.registry.heartbeatCount += 1;
     this.registry.lastHeartbeat = Date.now();
-
     const beatNumber = this.registry.heartbeatCount;
     const globalHealth = this.registry.getGlobalHealth();
-
     logger.info(`Heartbeat #${beatNumber}`, {
       globalStatus: globalHealth.status,
       cslConfidence: globalHealth.cslConfidence,
@@ -328,8 +322,6 @@ class HeartbeatEngine {
       degraded: globalHealth.degraded,
       critical: globalHealth.critical
     });
-
-    // Check each registered service and attempt recovery for unhealthy ones
     for (const [serviceId, svc] of this.registry.services) {
       if (svc.status !== 'healthy' && svc.status !== 'unknown') {
         await this.recovery.attemptRecovery(serviceId);
@@ -346,7 +338,6 @@ class HeartbeatEngine {
           });
           clearTimeout(timeout);
           const latency = Date.now() - start;
-
           this.registry.updateHealth(serviceId, response.ok, latency);
         } catch (_err) {
           this.registry.updateHealth(serviceId, false);
@@ -362,28 +353,54 @@ const recovery = new AutoRecoveryEngine(registry);
 const heartbeat = new HeartbeatEngine(registry, recovery);
 
 // Register known Heady services with their ports
-const HEADY_SERVICES = [
-  { id: 'heady-manager', port: 3300 },
-  { id: 'heady-brain', port: 3310 },
-  { id: 'heady-conductor', port: 3311 },
-  { id: 'domain-router', port: 3391 },
-  { id: 'budget-tracker', port: 3392 },
-  { id: 'heady-cache', port: 3393 },
-  { id: 'hcfullpipeline-executor', port: 3320 },
-  { id: 'heady-guard', port: 3330 },
-  { id: 'heady-memory', port: 3340 },
-  { id: 'heady-soul', port: 3350 },
-  { id: 'heady-hive', port: 3360 },
-  { id: 'heady-eval', port: 3370 },
-  { id: 'heady-embed', port: 3380 }
-];
-
+const HEADY_SERVICES = [{
+  id: 'heady-manager',
+  port: 3300
+}, {
+  id: 'heady-brain',
+  port: 3310
+}, {
+  id: 'heady-conductor',
+  port: 3311
+}, {
+  id: 'domain-router',
+  port: 3391
+}, {
+  id: 'budget-tracker',
+  port: 3392
+}, {
+  id: 'heady-cache',
+  port: 3393
+}, {
+  id: 'hcfullpipeline-executor',
+  port: 3320
+}, {
+  id: 'heady-guard',
+  port: 3330
+}, {
+  id: 'heady-memory',
+  port: 3340
+}, {
+  id: 'heady-soul',
+  port: 3350
+}, {
+  id: 'heady-hive',
+  port: 3360
+}, {
+  id: 'heady-eval',
+  port: 3370
+}, {
+  id: 'heady-embed',
+  port: 3380
+}];
 for (const svc of HEADY_SERVICES) {
-  const host = process.env[`${svc.id.toUpperCase().replace(/-/g, '_')}_HOST`] || 'localhost';
+  const host = process.env[`${svc.id.toUpperCase().replace(/-/g, '_')}_HOST`] || "0.0.0.0";
   registry.register(svc.id, {
     port: svc.port,
     endpoint: `http://${host}:${svc.port}`,
-    metadata: { registeredBy: 'auto-success-engine' }
+    metadata: {
+      registeredBy: 'auto-success-engine'
+    }
   });
 }
 
@@ -391,7 +408,9 @@ for (const svc of HEADY_SERVICES) {
 const app = express();
 app.use(helmet());
 app.use(cors());
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({
+  limit: '1mb'
+}));
 app.use(headyAutoContext);
 
 // Health endpoint
@@ -429,32 +448,67 @@ app.get('/status', (_req, res) => {
 
 // Register a new service
 app.post('/register', (req, res) => {
-  const { serviceId, endpoint, port, metadata } = req.body;
+  const {
+    serviceId,
+    endpoint,
+    port,
+    metadata
+  } = req.body;
   if (!serviceId) {
-    res.status(400).json({ error: { code: 'MISSING_SERVICE_ID', message: 'serviceId is required' } });
+    res.status(400).json({
+      error: {
+        code: 'MISSING_SERVICE_ID',
+        message: 'serviceId is required'
+      }
+    });
     return;
   }
-  registry.register(serviceId, { endpoint, port, metadata });
-  res.status(201).json({ registered: serviceId, timestamp: new Date().toISOString() });
+  registry.register(serviceId, {
+    endpoint,
+    port,
+    metadata
+  });
+  res.status(201).json({
+    registered: serviceId,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Report health for a service
 app.post('/report', (req, res) => {
-  const { serviceId, healthy, latencyMs } = req.body;
+  const {
+    serviceId,
+    healthy,
+    latencyMs
+  } = req.body;
   if (!serviceId || typeof healthy !== 'boolean') {
-    res.status(400).json({ error: { code: 'INVALID_REPORT', message: 'serviceId and healthy (boolean) are required' } });
+    res.status(400).json({
+      error: {
+        code: 'INVALID_REPORT',
+        message: 'serviceId and healthy (boolean) are required'
+      }
+    });
     return;
   }
   registry.updateHealth(serviceId, healthy, latencyMs || 0);
   const status = registry.getStatus(serviceId);
-  res.json({ serviceId, status: status.status, cslConfidence: Number(status.cslConfidence.toFixed(6)) });
+  res.json({
+    serviceId,
+    status: status.status,
+    cslConfidence: Number(status.cslConfidence.toFixed(6))
+  });
 });
 
 // Get individual service status
 app.get('/service/:serviceId', (req, res) => {
   const status = registry.getStatus(req.params.serviceId);
   if (!status) {
-    res.status(404).json({ error: { code: 'SERVICE_NOT_FOUND', message: `Service ${req.params.serviceId} not registered` } });
+    res.status(404).json({
+      error: {
+        code: 'SERVICE_NOT_FOUND',
+        message: `Service ${req.params.serviceId} not registered`
+      }
+    });
     return;
   }
   res.json(status);
@@ -466,19 +520,31 @@ app.post('/recover/:serviceId', async (req, res) => {
     const result = await recovery.attemptRecovery(req.params.serviceId);
     res.json(result);
   } catch (err) {
-    logger.error('Recovery endpoint error', { error: err.message });
-    res.status(500).json({ error: { code: 'RECOVERY_ERROR', message: err.message } });
+    logger.error('Recovery endpoint error', {
+      error: err.message
+    });
+    res.status(500).json({
+      error: {
+        code: 'RECOVERY_ERROR',
+        message: err.message
+      }
+    });
   }
 });
 
 // Recovery log
 app.get('/recovery-log', (_req, res) => {
-  res.json({ log: recovery.getLog() });
+  res.json({
+    log: recovery.getLog()
+  });
 });
 
 // Error handler
 app.use((err, _req, res, _next) => {
-  logger.error('Unhandled request error', { error: err.message, stack: err.stack });
+  logger.error('Unhandled request error', {
+    error: err.message,
+    stack: err.stack
+  });
   res.status(err.statusCode || 500).json({
     error: {
       code: err.code || 'INTERNAL_ERROR',
@@ -489,7 +555,6 @@ app.use((err, _req, res, _next) => {
 
 // ─── Start ──────────────────────────────────────────────────
 const PORT = Number(process.env.PORT) || 3390;
-
 app.listen(PORT, '0.0.0.0', () => {
   logger.info(`Auto-Success Engine listening on port ${PORT}`, {
     heartbeatIntervalMs: HEARTBEAT_INTERVAL_MS,
@@ -507,11 +572,17 @@ process.on('SIGTERM', () => {
   heartbeat.stop();
   process.exit(0);
 });
-
 process.on('SIGINT', () => {
   logger.info('SIGINT received, shutting down gracefully');
   heartbeat.stop();
   process.exit(0);
 });
-
-module.exports = { app, registry, recovery, heartbeat, HeartbeatEngine, ServiceHealthRegistry, AutoRecoveryEngine };
+module.exports = {
+  app,
+  registry,
+  recovery,
+  heartbeat,
+  HeartbeatEngine,
+  ServiceHealthRegistry,
+  AutoRecoveryEngine
+};

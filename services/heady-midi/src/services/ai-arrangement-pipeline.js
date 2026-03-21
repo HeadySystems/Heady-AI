@@ -1,70 +1,29 @@
-/**
- * @fileoverview Cloud-to-Ableton Arrangement Pipeline — Transforms natural
- * language descriptions into structured arrangement JSON, encodes to SysEx
- * commands via the codec, and dispatches them to Ableton Live through the
- * MIDI event bus.
- *
- * Pipeline stages: parse → generate → validate → encode → dispatch
- * Each stage emits lifecycle events on MidiEventBus (NOTE_ON on PIPELINE
- * channel with task lifecycle notes).
- *
- * Features:
- * - Natural language → arrangement JSON conversion (mock LLM)
- * - Structured arrangement with tempo, time signature, sections, tracks, clips
- * - Full SysEx encoding using sysex-codec
- * - φ-timed scheduling for event dispatch within bars
- * - Real-time progress tracking with percentage
- * - Golden ratio subdivision for musical timing
- *
- * @module services/ai-arrangement-pipeline
- * @version 2.0.0
- * @author HeadySystems™
- * @license Proprietary — HeadySystems™ & HeadyConnection™
- *
- * ⚡ Made with 💜 by Heady™Systems™ & HeadyConnection™
- * Sacred Geometry :: Organic Systems :: Breathing Interfaces
- */
-
-import {
-  PHI, PSI, PSI2, FIB,
-  CHANNEL, NOTE, VELOCITY, STATUS,
-  DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING,
-  SYSEX_CMD,
-} from '../shared/midi-constants.js';
-
-import {
-  encodeSetTempo, encodeSetTimeSignature,
-  encodeTriggerClip, encodeSetDeviceParam,
-  encodeTransport, encodeCreateMidiTrack,
-  encodeCreateAudioTrack, encodeSetTrackVolume,
-  encodeSetClipName, encodeSetClipColor,
-  encodeFireScene, encodeArmTrack,
-  encodeSetTrackSend, encodeSetMacro,
-  encodeMuteTrack, encodeSoloTrack,
-  encodeSetLoopRegion, encodeAIArrangement,
-  buildSysEx, encodeJSON,
-} from '../shared/sysex-codec.js';
-
+import { PHI, PSI, PSI2, FIB, CHANNEL, NOTE, VELOCITY, STATUS, DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING, SYSEX_CMD } from '../shared/midi-constants.js';
+import { encodeSetTempo, encodeSetTimeSignature, encodeTriggerClip, encodeSetDeviceParam, encodeTransport, encodeCreateMidiTrack, encodeCreateAudioTrack, encodeSetTrackVolume, encodeSetClipName, encodeSetClipColor, encodeFireScene, encodeArmTrack, encodeSetTrackSend, encodeSetMacro, encodeMuteTrack, encodeSoloTrack, encodeSetLoopRegion, encodeAIArrangement, buildSysEx, encodeJSON } from '../shared/sysex-codec.js';
 import { EventEmitter } from 'events';
 
 // ─── Constants ────────────────────────────────────────────────────
 
 /** Pipeline stage names */
 const STAGE = Object.freeze({
-  PARSE:     'parse',
-  GENERATE:  'generate',
-  VALIDATE:  'validate',
-  ENCODE:    'encode',
-  DISPATCH:  'dispatch',
+  PARSE: 'parse',
+  GENERATE: 'generate',
+  VALIDATE: 'validate',
+  ENCODE: 'encode',
+  DISPATCH: 'dispatch'
 });
 
 /** Stage weights for progress calculation (φ-distributed) */
 const STAGE_WEIGHTS = Object.freeze({
-  [STAGE.PARSE]:     PSI2,       // ≈ 0.382 — ~8% (lightest)
-  [STAGE.GENERATE]:  PHI,        // ≈ 1.618 — ~33%
-  [STAGE.VALIDATE]:  PSI,        // ≈ 0.618 — ~13%
-  [STAGE.ENCODE]:    1.0,        // 1.000 — ~21%
-  [STAGE.DISPATCH]:  PHI - PSI,  // ≈ 1.000 — ~21%
+  [STAGE.PARSE]: PSI2,
+  // ≈ 0.382 — ~8% (lightest)
+  [STAGE.GENERATE]: PHI,
+  // ≈ 1.618 — ~33%
+  [STAGE.VALIDATE]: PSI,
+  // ≈ 0.618 — ~13%
+  [STAGE.ENCODE]: 1.0,
+  // 1.000 — ~21%
+  [STAGE.DISPATCH]: PHI - PSI // ≈ 1.000 — ~21%
 });
 
 /** Total weight for normalization */
@@ -105,7 +64,7 @@ class PipelineEventBus extends EventEmitter {
       note: noteNumber,
       velocity,
       timestamp: Date.now(),
-      ...meta,
+      ...meta
     });
   }
 
@@ -120,7 +79,7 @@ class PipelineEventBus extends EventEmitter {
       stage,
       percent: Math.round(Math.min(100, Math.max(0, percent))),
       message,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
   }
 }
@@ -150,21 +109,6 @@ class PipelineEventBus extends EventEmitter {
  * @property {boolean} [armed] - Whether track should be armed
  */
 
-/**
- * @typedef {Object} ArrangementSection
- * @property {string} name - Section name (e.g., 'Intro', 'Verse')
- * @property {number} bars - Number of bars
- * @property {number} [tempo] - Section-local tempo override
- * @property {ArrangementTrack[]} tracks - Tracks in this section
- */
-
-/**
- * @typedef {Object} Arrangement
- * @property {number} tempo - Global tempo (BPM)
- * @property {{ numerator: number, denominator: number }} timeSignature - Time signature
- * @property {ArrangementSection[]} sections - Arrangement sections
- */
-
 // ─── Natural Language Parser (Mock LLM) ───────────────────────────
 
 /**
@@ -178,217 +122,245 @@ class PipelineEventBus extends EventEmitter {
 export async function parseNaturalLanguage(description) {
   // Simulate LLM latency (φ-scaled: ~618ms)
   await new Promise(resolve => setTimeout(resolve, Math.round(FIB[6] * PSI * 100)));
-
   const lowerDesc = description.toLowerCase();
 
   // ── Pattern: "4-bar intro with pad swell, verse with drums and bass, build to chorus"
-  if (
-    lowerDesc.includes('intro') &&
-    lowerDesc.includes('verse') &&
-    (lowerDesc.includes('chorus') || lowerDesc.includes('build'))
-  ) {
+  if (lowerDesc.includes('intro') && lowerDesc.includes('verse') && (lowerDesc.includes('chorus') || lowerDesc.includes('build'))) {
     return {
-      tempo: DEFAULT_BPM, // 89 BPM
-      timeSignature: { numerator: 4, denominator: 4 },
-      sections: [
-        {
-          name: 'Intro — Pad Swell',
-          bars: 4,
-          tracks: [
-            {
-              type: 'midi',
-              name: 'Pad',
-              clips: [
-                {
-                  scene: 0,
-                  notes: [
-                    [60, 40, 0, DEFAULT_PPQ * 16],              // C4, soft, full 4 bars
-                    [64, 35, DEFAULT_PPQ * 2, DEFAULT_PPQ * 14], // E4, softer, delayed φ-offset
-                    [67, 30, DEFAULT_PPQ * 4, DEFAULT_PPQ * 12], // G4, building
-                  ],
-                  automation: [
-                    { param: 'filter_cutoff', time: 0, value: 20 },
-                    { param: 'filter_cutoff', time: DEFAULT_PPQ * 8, value: 80 },
-                    { param: 'filter_cutoff', time: DEFAULT_PPQ * 16, value: 127 },
-                  ],
-                },
-              ],
-              devices: [
-                { name: 'Wavetable', params: { cutoff: 20, resonance: 60, attack: 100, release: 90 } },
-                { name: 'Reverb', params: { decay: 100, size: 90, mix: 70 } },
-              ],
-              volume: Math.round(127 * PSI), // ≈ 78
-            },
-            {
-              type: 'audio',
-              name: 'Atmosphere',
-              clips: [{ scene: 0 }],
-              devices: [
-                { name: 'EQ Eight', params: { highpass: 40, low_gain: 30 } },
-              ],
-              volume: Math.round(127 * PSI2), // ≈ 48
-            },
-          ],
-        },
-        {
-          name: 'Verse — Drums & Bass',
-          bars: 8,
-          tracks: [
-            {
-              type: 'midi',
-              name: 'Drums',
-              clips: [
-                {
-                  scene: 1,
-                  notes: [
-                    // Kick: beats 1, 3 (φ-swing offset on beat 3)
-                    [36, VELOCITY.HIGH, 0, DEFAULT_PPQ / 4],
-                    [36, VELOCITY.MEDIUM, DEFAULT_PPQ * 2 + Math.round(DEFAULT_PPQ * PHI_SWING * 0.1), DEFAULT_PPQ / 4],
-                    // Snare: beats 2, 4
-                    [38, VELOCITY.HIGH, DEFAULT_PPQ, DEFAULT_PPQ / 4],
-                    [38, VELOCITY.HIGH, DEFAULT_PPQ * 3, DEFAULT_PPQ / 4],
-                    // Hi-hat: eighth notes with φ-velocity pattern
-                    ...Array.from({ length: 8 }, (_, i) => [
-                      42,
-                      Math.round(VELOCITY.LOW + (VELOCITY.HIGH - VELOCITY.LOW) * Math.pow(PSI, i % 3)),
-                      DEFAULT_PPQ * i / 2,
-                      DEFAULT_PPQ / 8,
-                    ]),
-                  ],
-                },
-              ],
-              devices: [
-                { name: 'Drum Rack', params: { swing: Math.round(127 * PHI_SWING) } },
-              ],
-              volume: VELOCITY.HIGH,
-            },
-            {
-              type: 'midi',
-              name: 'Bass',
-              clips: [
-                {
-                  scene: 1,
-                  notes: [
-                    [36, VELOCITY.HIGH, 0, DEFAULT_PPQ * 2],                       // C2
-                    [36, VELOCITY.MEDIUM, DEFAULT_PPQ * 2, DEFAULT_PPQ],            // C2
-                    [39, VELOCITY.HIGH, DEFAULT_PPQ * 3, DEFAULT_PPQ],              // Eb2
-                    [41, VELOCITY.MEDIUM, DEFAULT_PPQ * 4, DEFAULT_PPQ * 2],        // F2
-                    [43, VELOCITY.HIGH, DEFAULT_PPQ * 6, DEFAULT_PPQ + DEFAULT_PPQ / 2], // G2
-                    [36, VELOCITY.MEDIUM, DEFAULT_PPQ * 7 + DEFAULT_PPQ / 2, DEFAULT_PPQ / 2], // C2 pickup
-                  ],
-                },
-              ],
-              devices: [
-                { name: 'Analog', params: { cutoff: 70, drive: 50, sub: 90 } },
-              ],
-              volume: VELOCITY.HIGH,
-            },
-            {
-              type: 'midi',
-              name: 'Pad',
-              clips: [{ scene: 1 }],
-              devices: [
-                { name: 'Wavetable', params: { cutoff: 90, resonance: 40, attack: 60, release: 80 } },
-              ],
-              volume: Math.round(127 * PSI2), // Pad sits back in verse
-            },
-          ],
-        },
-        {
-          name: 'Build to Chorus',
-          bars: 4,
-          tempo: Math.round(DEFAULT_BPM * (1 + PSI2 * 0.1)), // Slight tempo ramp ≈ 92.4
-          tracks: [
-            {
-              type: 'midi',
-              name: 'Drums',
-              clips: [
-                {
-                  scene: 2,
-                  notes: [
-                    // Snare roll crescendo — 16th notes with increasing velocity
-                    ...Array.from({ length: 16 }, (_, i) => [
-                      38,
-                      Math.round(VELOCITY.LOW + (VELOCITY.MAXIMUM - VELOCITY.LOW) * (i / 15)),
-                      DEFAULT_PPQ * i / 4,
-                      DEFAULT_PPQ / 8,
-                    ]),
-                    // Crash on downbeat of bar 4
-                    [49, VELOCITY.MAXIMUM, DEFAULT_PPQ * 12, DEFAULT_PPQ * 4],
-                  ],
-                },
-              ],
-              volume: VELOCITY.MAXIMUM,
-            },
-            {
-              type: 'midi',
-              name: 'Bass',
-              clips: [
-                {
-                  scene: 2,
-                  notes: [
-                    [36, VELOCITY.MAXIMUM, 0, DEFAULT_PPQ * 8],  // Sustained C2 pedal
-                  ],
-                  automation: [
-                    { param: 'drive', time: 0, value: 50 },
-                    { param: 'drive', time: DEFAULT_PPQ * 8, value: 110 },
-                  ],
-                },
-              ],
-              volume: VELOCITY.MAXIMUM,
-            },
-            {
-              type: 'midi',
-              name: 'Pad',
-              clips: [{ scene: 2 }],
-              devices: [
-                { name: 'Wavetable', params: { cutoff: 127, resonance: 60, attack: 20, release: 50 } },
-              ],
-              volume: VELOCITY.HIGH,
-            },
-            {
-              type: 'audio',
-              name: 'FX Riser',
-              clips: [{ scene: 2 }],
-              devices: [
-                { name: 'Reverb', params: { decay: 127, size: 127, mix: 80 } },
-                { name: 'Auto Filter', params: { frequency: 20, resonance: 80 } },
-              ],
-              volume: VELOCITY.HIGH,
-            },
-          ],
-        },
-      ],
+      tempo: DEFAULT_BPM,
+      // 89 BPM
+      timeSignature: {
+        numerator: 4,
+        denominator: 4
+      },
+      sections: [{
+        name: 'Intro — Pad Swell',
+        bars: 4,
+        tracks: [{
+          type: 'midi',
+          name: 'Pad',
+          clips: [{
+            scene: 0,
+            notes: [[60, 40, 0, DEFAULT_PPQ * 16],
+            // C4, soft, full 4 bars
+            [64, 35, DEFAULT_PPQ * 2, DEFAULT_PPQ * 14],
+            // E4, softer, delayed φ-offset
+            [67, 30, DEFAULT_PPQ * 4, DEFAULT_PPQ * 12] // G4, building
+            ],
+            automation: [{
+              param: 'filter_cutoff',
+              time: 0,
+              value: 20
+            }, {
+              param: 'filter_cutoff',
+              time: DEFAULT_PPQ * 8,
+              value: 80
+            }, {
+              param: 'filter_cutoff',
+              time: DEFAULT_PPQ * 16,
+              value: 127
+            }]
+          }],
+          devices: [{
+            name: 'Wavetable',
+            params: {
+              cutoff: 20,
+              resonance: 60,
+              attack: 100,
+              release: 90
+            }
+          }, {
+            name: 'Reverb',
+            params: {
+              decay: 100,
+              size: 90,
+              mix: 70
+            }
+          }],
+          volume: Math.round(127 * PSI) // ≈ 78
+        }, {
+          type: 'audio',
+          name: 'Atmosphere',
+          clips: [{
+            scene: 0
+          }],
+          devices: [{
+            name: 'EQ Eight',
+            params: {
+              highpass: 40,
+              low_gain: 30
+            }
+          }],
+          volume: Math.round(127 * PSI2) // ≈ 48
+        }]
+      }, {
+        name: 'Verse — Drums & Bass',
+        bars: 8,
+        tracks: [{
+          type: 'midi',
+          name: 'Drums',
+          clips: [{
+            scene: 1,
+            notes: [
+            // Kick: beats 1, 3 (φ-swing offset on beat 3)
+            [36, VELOCITY.HIGH, 0, DEFAULT_PPQ / 4], [36, VELOCITY.MEDIUM, DEFAULT_PPQ * 2 + Math.round(DEFAULT_PPQ * PHI_SWING * 0.1), DEFAULT_PPQ / 4],
+            // Snare: beats 2, 4
+            [38, VELOCITY.HIGH, DEFAULT_PPQ, DEFAULT_PPQ / 4], [38, VELOCITY.HIGH, DEFAULT_PPQ * 3, DEFAULT_PPQ / 4],
+            // Hi-hat: eighth notes with φ-velocity pattern
+            ...Array.from({
+              length: 8
+            }, (_, i) => [42, Math.round(VELOCITY.LOW + (VELOCITY.HIGH - VELOCITY.LOW) * Math.pow(PSI, i % 3)), DEFAULT_PPQ * i / 2, DEFAULT_PPQ / 8])]
+          }],
+          devices: [{
+            name: 'Drum Rack',
+            params: {
+              swing: Math.round(127 * PHI_SWING)
+            }
+          }],
+          volume: VELOCITY.HIGH
+        }, {
+          type: 'midi',
+          name: 'Bass',
+          clips: [{
+            scene: 1,
+            notes: [[36, VELOCITY.HIGH, 0, DEFAULT_PPQ * 2],
+            // C2
+            [36, VELOCITY.MEDIUM, DEFAULT_PPQ * 2, DEFAULT_PPQ],
+            // C2
+            [39, VELOCITY.HIGH, DEFAULT_PPQ * 3, DEFAULT_PPQ],
+            // Eb2
+            [41, VELOCITY.MEDIUM, DEFAULT_PPQ * 4, DEFAULT_PPQ * 2],
+            // F2
+            [43, VELOCITY.HIGH, DEFAULT_PPQ * 6, DEFAULT_PPQ + DEFAULT_PPQ / 2],
+            // G2
+            [36, VELOCITY.MEDIUM, DEFAULT_PPQ * 7 + DEFAULT_PPQ / 2, DEFAULT_PPQ / 2] // C2 pickup
+            ]
+          }],
+          devices: [{
+            name: 'Analog',
+            params: {
+              cutoff: 70,
+              drive: 50,
+              sub: 90
+            }
+          }],
+          volume: VELOCITY.HIGH
+        }, {
+          type: 'midi',
+          name: 'Pad',
+          clips: [{
+            scene: 1
+          }],
+          devices: [{
+            name: 'Wavetable',
+            params: {
+              cutoff: 90,
+              resonance: 40,
+              attack: 60,
+              release: 80
+            }
+          }],
+          volume: Math.round(127 * PSI2) // Pad sits back in verse
+        }]
+      }, {
+        name: 'Build to Chorus',
+        bars: 4,
+        tempo: Math.round(DEFAULT_BPM * (1 + PSI2 * 0.1)),
+        tracks: [{
+          type: 'midi',
+          name: 'Drums',
+          clips: [{
+            scene: 2,
+            notes: [
+            // Snare roll crescendo — 16th notes with increasing velocity
+            ...Array.from({
+              length: 16
+            }, (_, i) => [38, Math.round(VELOCITY.LOW + (VELOCITY.MAXIMUM - VELOCITY.LOW) * (i / 15)), DEFAULT_PPQ * i / 4, DEFAULT_PPQ / 8]),
+            // Crash on downbeat of bar 4
+            [49, VELOCITY.MAXIMUM, DEFAULT_PPQ * 12, DEFAULT_PPQ * 4]]
+          }],
+          volume: VELOCITY.MAXIMUM
+        }, {
+          type: 'midi',
+          name: 'Bass',
+          clips: [{
+            scene: 2,
+            notes: [[36, VELOCITY.MAXIMUM, 0, DEFAULT_PPQ * 8] // Sustained C2 pedal
+            ],
+            automation: [{
+              param: 'drive',
+              time: 0,
+              value: 50
+            }, {
+              param: 'drive',
+              time: DEFAULT_PPQ * 8,
+              value: 110
+            }]
+          }],
+          volume: VELOCITY.MAXIMUM
+        }, {
+          type: 'midi',
+          name: 'Pad',
+          clips: [{
+            scene: 2
+          }],
+          devices: [{
+            name: 'Wavetable',
+            params: {
+              cutoff: 127,
+              resonance: 60,
+              attack: 20,
+              release: 50
+            }
+          }],
+          volume: VELOCITY.HIGH
+        }, {
+          type: 'audio',
+          name: 'FX Riser',
+          clips: [{
+            scene: 2
+          }],
+          devices: [{
+            name: 'Reverb',
+            params: {
+              decay: 127,
+              size: 127,
+              mix: 80
+            }
+          }, {
+            name: 'Auto Filter',
+            params: {
+              frequency: 20,
+              resonance: 80
+            }
+          }],
+          volume: VELOCITY.HIGH
+        }]
+      }]
     };
   }
 
   // ── Generic fallback: simple 8-bar arrangement ──
   return {
     tempo: DEFAULT_BPM,
-    timeSignature: { numerator: 4, denominator: 4 },
-    sections: [
-      {
-        name: 'Generated Section',
-        bars: FIB[5], // 8 bars
-        tracks: [
-          {
-            type: 'midi',
-            name: 'Lead',
-            clips: [
-              {
-                scene: 0,
-                notes: [
-                  [60, VELOCITY.MEDIUM, 0, DEFAULT_PPQ],
-                  [64, VELOCITY.MEDIUM, DEFAULT_PPQ, DEFAULT_PPQ],
-                  [67, VELOCITY.HIGH, DEFAULT_PPQ * 2, DEFAULT_PPQ * 2],
-                ],
-              },
-            ],
-            volume: VELOCITY.HIGH,
-          },
-        ],
-      },
-    ],
+    timeSignature: {
+      numerator: 4,
+      denominator: 4
+    },
+    sections: [{
+      name: 'Generated Section',
+      bars: FIB[5],
+      // 8 bars
+      tracks: [{
+        type: 'midi',
+        name: 'Lead',
+        clips: [{
+          scene: 0,
+          notes: [[60, VELOCITY.MEDIUM, 0, DEFAULT_PPQ], [64, VELOCITY.MEDIUM, DEFAULT_PPQ, DEFAULT_PPQ], [67, VELOCITY.HIGH, DEFAULT_PPQ * 2, DEFAULT_PPQ * 2]]
+        }],
+        volume: VELOCITY.HIGH
+      }]
+    }]
   };
 }
 
@@ -411,19 +383,23 @@ export async function parseNaturalLanguage(description) {
 export function validateArrangement(arrangement) {
   const errors = [];
   const warnings = [];
-
   if (!arrangement) {
-    return { valid: false, errors: ['Arrangement is null or undefined'], warnings };
+    return {
+      valid: false,
+      errors: ['Arrangement is null or undefined'],
+      warnings
+    };
   }
-
-  // Tempo validation
   if (typeof arrangement.tempo !== 'number' || arrangement.tempo < 20 || arrangement.tempo > 999) {
     errors.push(`Invalid tempo: ${arrangement.tempo} (must be 20-999 BPM)`);
   }
 
   // Time signature validation
   if (arrangement.timeSignature) {
-    const { numerator, denominator } = arrangement.timeSignature;
+    const {
+      numerator,
+      denominator
+    } = arrangement.timeSignature;
     if (!numerator || numerator < 1 || numerator > 127) {
       errors.push(`Invalid time signature numerator: ${numerator}`);
     }
@@ -448,7 +424,6 @@ export function validateArrangement(arrangement) {
       if (section.tempo && (section.tempo < 20 || section.tempo > 999)) {
         errors.push(`Section ${si} ("${section.name}"): invalid tempo: ${section.tempo}`);
       }
-
       if (!Array.isArray(section.tracks)) {
         errors.push(`Section ${si} ("${section.name}"): tracks must be an array`);
       } else if (section.tracks.length > MAX_TRACKS_PER_SECTION) {
@@ -492,8 +467,11 @@ export function validateArrangement(arrangement) {
       }
     });
   }
-
-  return { valid: errors.length === 0, errors, warnings };
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings
+  };
 }
 
 // ─── SysEx Encoder ────────────────────────────────────────────────
@@ -517,27 +495,23 @@ export function encodeArrangement(arrangement) {
   const commands = [];
   let currentTimeMs = 0;
   const bpm = arrangement.tempo || DEFAULT_BPM;
-  const beatMs = (60 / bpm) * 1000;
+  const beatMs = 60 / bpm * 1000;
   const barMs = beatMs * (arrangement.timeSignature?.numerator || 4);
 
   // ── Global setup commands ──
 
-  // Set tempo
   commands.push({
     sysex: encodeSetTempo(bpm),
     description: `Set tempo → ${bpm} BPM`,
-    scheduleMs: currentTimeMs,
+    scheduleMs: currentTimeMs
   });
 
   // Set time signature
   if (arrangement.timeSignature) {
     commands.push({
-      sysex: encodeSetTimeSignature(
-        arrangement.timeSignature.numerator,
-        arrangement.timeSignature.denominator
-      ),
+      sysex: encodeSetTimeSignature(arrangement.timeSignature.numerator, arrangement.timeSignature.denominator),
       description: `Set time signature → ${arrangement.timeSignature.numerator}/${arrangement.timeSignature.denominator}`,
-      scheduleMs: currentTimeMs,
+      scheduleMs: currentTimeMs
     });
   }
 
@@ -550,17 +524,22 @@ export function encodeArrangement(arrangement) {
   for (const section of arrangement.sections) {
     for (const track of section.tracks) {
       if (!uniqueTracks.has(track.name)) {
-        uniqueTracks.set(track.name, { index: trackCounter++, type: track.type });
+        uniqueTracks.set(track.name, {
+          index: trackCounter++,
+          type: track.type
+        });
       }
     }
   }
-
-  for (const [name, { index, type }] of uniqueTracks) {
+  for (const [name, {
+    index,
+    type
+  }] of uniqueTracks) {
     const encoder = type === 'audio' ? encodeCreateAudioTrack : encodeCreateMidiTrack;
     commands.push({
       sysex: encoder(name),
       description: `Create ${type} track "${name}" at index ${index}`,
-      scheduleMs: currentTimeMs,
+      scheduleMs: currentTimeMs
     });
     currentTimeMs += Math.round(beatMs * PSI2 * PSI); // Small gap between track creates
   }
@@ -574,13 +553,11 @@ export function encodeArrangement(arrangement) {
     const sectionStartMs = currentTimeMs;
     const sectionBars = section.bars || FIB[5];
     const sectionDurationMs = sectionBars * barMs;
-
-    // Section-local tempo
     if (section.tempo && section.tempo !== bpm) {
       commands.push({
         sysex: encodeSetTempo(section.tempo),
         description: `[${section.name}] Tempo → ${section.tempo} BPM`,
-        scheduleMs: currentTimeMs,
+        scheduleMs: currentTimeMs
       });
     }
 
@@ -595,7 +572,7 @@ export function encodeArrangement(arrangement) {
         commands.push({
           sysex: encodeSetTrackVolume(trackIdx, track.volume),
           description: `[${section.name}] "${track.name}" volume → ${track.volume}`,
-          scheduleMs: currentTimeMs,
+          scheduleMs: currentTimeMs
         });
       }
 
@@ -604,7 +581,7 @@ export function encodeArrangement(arrangement) {
         commands.push({
           sysex: encodeArmTrack(trackIdx, 1),
           description: `[${section.name}] "${track.name}" arm`,
-          scheduleMs: currentTimeMs,
+          scheduleMs: currentTimeMs
         });
       }
 
@@ -616,7 +593,7 @@ export function encodeArrangement(arrangement) {
               commands.push({
                 sysex: encodeSetDeviceParam(trackIdx, devIdx, paramIdx, value & 0x7F),
                 description: `[${section.name}] "${track.name}" → ${device.name}.${paramName} = ${value}`,
-                scheduleMs: currentTimeMs + Math.round(paramIdx * beatMs * PSI2 * PSI),
+                scheduleMs: currentTimeMs + Math.round(paramIdx * beatMs * PSI2 * PSI)
               });
             });
           }
@@ -634,7 +611,7 @@ export function encodeArrangement(arrangement) {
             commands.push({
               sysex: encodeSetClipName(trackIdx, clip.scene, clip.name),
               description: `[${section.name}] "${track.name}" clip name → "${clip.name}"`,
-              scheduleMs: currentTimeMs + clipOffsetMs,
+              scheduleMs: currentTimeMs + clipOffsetMs
             });
           }
 
@@ -642,7 +619,7 @@ export function encodeArrangement(arrangement) {
           commands.push({
             sysex: encodeTriggerClip(trackIdx, clip.scene),
             description: `[${section.name}] "${track.name}" trigger clip scene=${clip.scene}`,
-            scheduleMs: currentTimeMs + clipOffsetMs + Math.round(beatMs * PSI2),
+            scheduleMs: currentTimeMs + clipOffsetMs + Math.round(beatMs * PSI2)
           });
         });
       }
@@ -654,9 +631,10 @@ export function encodeArrangement(arrangement) {
 
   // ── Start transport at the end ──
   commands.push({
-    sysex: encodeTransport(0x01), // PLAY
+    sysex: encodeTransport(0x01),
+    // PLAY
     description: 'Transport → PLAY',
-    scheduleMs: 0, // Transport starts first (reorder at dispatch time)
+    scheduleMs: 0 // Transport starts first (reorder at dispatch time)
   });
 
   // Sort by scheduled time
@@ -666,7 +644,6 @@ export function encodeArrangement(arrangement) {
   if (commands.length > MAX_SYSEX_COMMANDS) {
     commands.length = MAX_SYSEX_COMMANDS;
   }
-
   return commands;
 }
 
@@ -717,8 +694,8 @@ export class ArrangementPipeline extends EventEmitter {
     this._eventBus = new PipelineEventBus();
 
     // Forward MIDI events
-    this._eventBus.on('midi', (event) => this.emit('midi', event));
-    this._eventBus.on('progress', (event) => this.emit('progress', event));
+    this._eventBus.on('midi', event => this.emit('midi', event));
+    this._eventBus.on('progress', event => this.emit('progress', event));
 
     /** @type {boolean} Whether a pipeline run is in progress */
     this._running = false;
@@ -737,73 +714,69 @@ export class ArrangementPipeline extends EventEmitter {
     if (this._running) {
       throw new Error('Pipeline is already running');
     }
-
     this._running = true;
     this._runCount++;
     const runId = `run-${this._runCount}-${Date.now().toString(36)}`;
     const startTime = Date.now();
-
     this._log(`[Pipeline] Starting run ${runId}: "${description.slice(0, 80)}..."`);
     this._emitStageStart(STAGE.PARSE);
-
     try {
       // ── Stage 1: Parse natural language ──
-      this._eventBus.emitMidiEvent(NOTE.TASK_INGEST, VELOCITY.MEDIUM, { stage: STAGE.PARSE });
+      this._eventBus.emitMidiEvent(NOTE.TASK_INGEST, VELOCITY.MEDIUM, {
+        stage: STAGE.PARSE
+      });
       this._emitProgress(STAGE.PARSE, 0, 'Parsing natural language description...');
-
       const arrangement = await this._llmParser(description);
-
       this._emitProgress(STAGE.PARSE, 100, 'Parse complete');
       this._emitStageComplete(STAGE.PARSE);
 
       // ── Stage 2: Generate (post-process / enhance) ──
       this._emitStageStart(STAGE.GENERATE);
-      this._eventBus.emitMidiEvent(NOTE.TASK_DECOMPOSE, VELOCITY.MEDIUM, { stage: STAGE.GENERATE });
+      this._eventBus.emitMidiEvent(NOTE.TASK_DECOMPOSE, VELOCITY.MEDIUM, {
+        stage: STAGE.GENERATE
+      });
       this._emitProgress(STAGE.GENERATE, 0, 'Generating arrangement structure...');
-
       const enhanced = this._enhanceArrangement(arrangement);
-
       this._emitProgress(STAGE.GENERATE, 100, 'Generation complete');
       this._emitStageComplete(STAGE.GENERATE);
 
       // ── Stage 3: Validate ──
       this._emitStageStart(STAGE.VALIDATE);
-      this._eventBus.emitMidiEvent(NOTE.TASK_VALIDATE, VELOCITY.MEDIUM, { stage: STAGE.VALIDATE });
+      this._eventBus.emitMidiEvent(NOTE.TASK_VALIDATE, VELOCITY.MEDIUM, {
+        stage: STAGE.VALIDATE
+      });
       this._emitProgress(STAGE.VALIDATE, 0, 'Validating arrangement...');
-
       const validation = validateArrangement(enhanced);
-
       if (!validation.valid) {
         this._eventBus.emitMidiEvent(NOTE.TASK_FAILED, VELOCITY.CRITICAL, {
           stage: STAGE.VALIDATE,
-          errors: validation.errors,
+          errors: validation.errors
         });
         this._running = false;
         throw new Error(`Validation failed: ${validation.errors.join('; ')}`);
       }
-
       if (validation.warnings.length > 0) {
         this._log(`[Pipeline] Validation warnings: ${validation.warnings.join('; ')}`);
       }
-
       this._emitProgress(STAGE.VALIDATE, 100, `Validation passed (${validation.warnings.length} warnings)`);
       this._emitStageComplete(STAGE.VALIDATE);
 
       // ── Stage 4: Encode to SysEx ──
       this._emitStageStart(STAGE.ENCODE);
-      this._eventBus.emitMidiEvent(NOTE.TASK_PERSIST, VELOCITY.MEDIUM, { stage: STAGE.ENCODE });
+      this._eventBus.emitMidiEvent(NOTE.TASK_PERSIST, VELOCITY.MEDIUM, {
+        stage: STAGE.ENCODE
+      });
       this._emitProgress(STAGE.ENCODE, 0, 'Encoding SysEx commands...');
-
       const commands = encodeArrangement(enhanced);
-
       this._emitProgress(STAGE.ENCODE, 100, `Encoded ${commands.length} SysEx commands`);
       this._emitStageComplete(STAGE.ENCODE);
 
       // ── Stage 5: Dispatch ──
       this._emitStageStart(STAGE.DISPATCH);
-      this._eventBus.emitMidiEvent(NOTE.TASK_EXECUTE, VELOCITY.HIGH, { stage: STAGE.DISPATCH });
+      this._eventBus.emitMidiEvent(NOTE.TASK_EXECUTE, VELOCITY.HIGH, {
+        stage: STAGE.DISPATCH
+      });
       this._emitProgress(STAGE.DISPATCH, 0, 'Dispatching to Ableton...');
-
       let dispatched = 0;
       if (!this._dryRun) {
         dispatched = await this._dispatchCommands(commands);
@@ -811,13 +784,13 @@ export class ArrangementPipeline extends EventEmitter {
         dispatched = commands.length;
         this._log(`[Pipeline] Dry run — ${commands.length} commands prepared but not dispatched`);
       }
-
       this._emitProgress(STAGE.DISPATCH, 100, `Dispatched ${dispatched} commands`);
       this._emitStageComplete(STAGE.DISPATCH);
 
       // ── Complete ──
-      this._eventBus.emitMidiEvent(NOTE.TASK_COMPLETE, VELOCITY.HIGH, { runId });
-
+      this._eventBus.emitMidiEvent(NOTE.TASK_COMPLETE, VELOCITY.HIGH, {
+        runId
+      });
       const elapsed = Date.now() - startTime;
       const result = {
         runId,
@@ -827,21 +800,22 @@ export class ArrangementPipeline extends EventEmitter {
         trackCount: new Set(enhanced.sections.flatMap(s => s.tracks.map(t => t.name))).size,
         elapsedMs: elapsed,
         arrangement: enhanced,
-        validation,
+        validation
       };
-
       this._log(`[Pipeline] Complete: ${dispatched} commands in ${elapsed}ms`);
       this.emit('complete', result);
       this._running = false;
       return result;
-
     } catch (err) {
       this._eventBus.emitMidiEvent(NOTE.TASK_FAILED, VELOCITY.CRITICAL, {
         runId,
-        error: err.message,
+        error: err.message
       });
       this._running = false;
-      this.emit('error', { runId, error: err });
+      this.emit('error', {
+        runId,
+        error: err
+      });
       throw err;
     }
   }
@@ -866,13 +840,10 @@ export class ArrangementPipeline extends EventEmitter {
                 const [pitch, velocity, startTick, duration] = note;
                 // Apply φ-swing to non-downbeat notes
                 const isDownbeat = startTick % DEFAULT_PPQ === 0;
-                const swungStart = isDownbeat
-                  ? startTick
-                  : startTick + Math.round(DEFAULT_PPQ * PHI_SWING * 0.05);
+                const swungStart = isDownbeat ? startTick : startTick + Math.round(DEFAULT_PPQ * PHI_SWING * 0.05);
 
                 // Apply φ-scaled duration variation (slight shortening for groove)
                 const groovedDuration = Math.round(duration * (1 - PSI2 * 0.05));
-
                 return [pitch, velocity, swungStart, Math.max(1, groovedDuration)];
               });
             }
@@ -880,7 +851,6 @@ export class ArrangementPipeline extends EventEmitter {
         }
       }
     }
-
     return enhanced;
   }
 
@@ -896,7 +866,6 @@ export class ArrangementPipeline extends EventEmitter {
     let dispatched = 0;
     const total = commands.length;
     let lastScheduleMs = 0;
-
     for (let i = 0; i < total; i++) {
       const cmd = commands[i];
 
@@ -917,11 +886,10 @@ export class ArrangementPipeline extends EventEmitter {
 
       // Progress update every φ-derived interval
       if (i % FIB[5] === 0 || i === total - 1) {
-        const percent = Math.round(((i + 1) / total) * 100);
+        const percent = Math.round((i + 1) / total * 100);
         this._emitProgress(STAGE.DISPATCH, percent, `${dispatched}/${total} commands`);
       }
     }
-
     return dispatched;
   }
 
@@ -943,8 +911,7 @@ export class ArrangementPipeline extends EventEmitter {
       cumulative += STAGE_WEIGHTS[stageOrder[i]];
     }
     cumulative += STAGE_WEIGHTS[stage] * (stagePercent / 100);
-    const totalPercent = Math.round((cumulative / TOTAL_WEIGHT) * 100);
-
+    const totalPercent = Math.round(cumulative / TOTAL_WEIGHT * 100);
     this._eventBus.emitProgress(stage, totalPercent, message);
   }
 
@@ -954,7 +921,10 @@ export class ArrangementPipeline extends EventEmitter {
    * @private
    */
   _emitStageStart(stage) {
-    this.emit('stage_start', { stage, timestamp: Date.now() });
+    this.emit('stage_start', {
+      stage,
+      timestamp: Date.now()
+    });
     this._log(`[Pipeline] Stage: ${stage}`);
   }
 
@@ -964,7 +934,10 @@ export class ArrangementPipeline extends EventEmitter {
    * @private
    */
   _emitStageComplete(stage) {
-    this.emit('stage_complete', { stage, timestamp: Date.now() });
+    this.emit('stage_complete', {
+      stage,
+      timestamp: Date.now()
+    });
   }
 
   // ─── Accessors ────────────────────────────────────────────────────

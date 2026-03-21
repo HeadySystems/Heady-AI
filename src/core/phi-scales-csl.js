@@ -8,30 +8,29 @@
  * normalization, and spiral path generation. All classes integrate with the
  * CSL system (semantic-logic.js) and emit structured telemetry via the logger.
  */
-
 const logger = require('../utils/logger');
-const csl    = require('./semantic-logic');
+const csl = require('./semantic-logic');
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const PHI          = 1.618033988749895;
-const PHI_INVERSE  = 0.618033988749895;   // 1 / PHI  (= PHI - 1)
-const SQRT_PHI     = Math.sqrt(PHI);       // ≈ 1.272019649514069
-const PHI_SQUARED  = PHI * PHI;            // ≈ 2.618033988749895
-const PHI_CUBED    = PHI * PHI * PHI;      // ≈ 4.23606797749979
-const LOG_PHI      = Math.log(PHI);        // ≈ 0.48121182505960344
-const TWO_PI_PHI   = 2 * Math.PI * PHI;   // ≈ 10.166407384630987
+const PHI = 1.618033988749895;
+const PHI_INVERSE = 0.618033988749895; // 1 / PHI  (= PHI - 1)
+const SQRT_PHI = Math.sqrt(PHI); // ≈ 1.272019649514069
+const PHI_SQUARED = PHI * PHI; // ≈ 2.618033988749895
+const PHI_CUBED = PHI * PHI * PHI; // ≈ 4.23606797749979
+const LOG_PHI = Math.log(PHI); // ≈ 0.48121182505960344
+const TWO_PI_PHI = 2 * Math.PI * PHI; // ≈ 10.166407384630987
 
 /** First 30 Fibonacci numbers (F(0)=0 … F(29)=514229) */
-const FIBONACCI_SEQUENCE = (function buildFib() {
+const FIBONACCI_SEQUENCE = function buildFib() {
   const seq = [0, 1];
   for (let i = 2; i < 30; i++) {
     seq.push(seq[i - 1] + seq[i - 2]);
   }
   return Object.freeze(seq);
-}());
+}();
 
 // ---------------------------------------------------------------------------
 // PhiRange
@@ -52,14 +51,16 @@ class PhiRange {
     if (baseMin >= baseMax) {
       throw new RangeError(`PhiRange: baseMin (${baseMin}) must be less than baseMax (${baseMax})`);
     }
-    this.baseMin       = baseMin;
-    this.baseMax       = baseMax;
+    this.baseMin = baseMin;
+    this.baseMax = baseMax;
     this.phiNormalized = phiNormalized;
-    this.span          = baseMax - baseMin;
-    this._phiPoint     = baseMin + this.span * PHI_INVERSE;
-
+    this.span = baseMax - baseMin;
+    this._phiPoint = baseMin + this.span * PHI_INVERSE;
     logger.debug('PhiRange created', {
-      baseMin, baseMax, phiNormalized, phiPoint: this._phiPoint,
+      baseMin,
+      baseMax,
+      phiNormalized,
+      phiPoint: this._phiPoint
     });
   }
 
@@ -78,13 +79,11 @@ class PhiRange {
     // Below phi-point: linear across [0, PHI_INVERSE]
     if (clamped <= this._phiPoint) {
       const subSpan = this._phiPoint - this.baseMin;
-      return subSpan === 0 ? 0 : ((clamped - this.baseMin) / subSpan) * PHI_INVERSE;
+      return subSpan === 0 ? 0 : (clamped - this.baseMin) / subSpan * PHI_INVERSE;
     }
     // Above phi-point: linear across [PHI_INVERSE, 1]
     const superSpan = this.baseMax - this._phiPoint;
-    return superSpan === 0
-      ? 1
-      : PHI_INVERSE + ((clamped - this._phiPoint) / superSpan) * (1 - PHI_INVERSE);
+    return superSpan === 0 ? 1 : PHI_INVERSE + (clamped - this._phiPoint) / superSpan * (1 - PHI_INVERSE);
   }
 
   /**
@@ -99,10 +98,10 @@ class PhiRange {
     }
     if (n <= PHI_INVERSE) {
       const subSpan = this._phiPoint - this.baseMin;
-      return this.baseMin + (n / PHI_INVERSE) * subSpan;
+      return this.baseMin + n / PHI_INVERSE * subSpan;
     }
     const superSpan = this.baseMax - this._phiPoint;
-    return this._phiPoint + ((n - PHI_INVERSE) / (1 - PHI_INVERSE)) * superSpan;
+    return this._phiPoint + (n - PHI_INVERSE) / (1 - PHI_INVERSE) * superSpan;
   }
 
   /** @returns {number} the phi equilibrium point in raw units */
@@ -142,7 +141,7 @@ class PhiRange {
   goldenPartition() {
     return {
       lower: new PhiRange(this.baseMin, this._phiPoint, this.phiNormalized),
-      upper: new PhiRange(this._phiPoint, this.baseMax, this.phiNormalized),
+      upper: new PhiRange(this._phiPoint, this.baseMax, this.phiNormalized)
     };
   }
 
@@ -182,30 +181,31 @@ class PhiScale {
    * @param {string}   [opts.cslGate=null]
    */
   constructor(opts = {}) {
-    this.name          = opts.name          ?? 'unnamed';
-    this.baseValue     = opts.baseValue     ?? 1;
-    this.min           = opts.min           ?? 0;
-    this.max           = opts.max           ?? PHI_SQUARED;
+    this.name = opts.name ?? 'unnamed';
+    this.baseValue = opts.baseValue ?? 1;
+    this.min = opts.min ?? 0;
+    this.max = opts.max ?? PHI_SQUARED;
     this.phiNormalized = opts.phiNormalized ?? false;
-    this.sensitivity   = opts.sensitivity   ?? 0.1;
+    this.sensitivity = opts.sensitivity ?? 0.1;
     this.momentumDecay = opts.momentumDecay ?? 0.8;
     this.telemetryFeed = opts.telemetryFeed ?? null;
-    this.maxHistorySize= opts.maxHistorySize?? 200;
+    this.maxHistorySize = opts.maxHistorySize ?? 200;
     this.enforceBounds = opts.enforceBounds ?? true;
-    this.unit          = opts.unit          ?? '';
-    this.category      = opts.category      ?? '';
-    this.cslGate       = opts.cslGate       ?? null;
-
+    this.unit = opts.unit ?? '';
+    this.category = opts.category ?? '';
+    this.cslGate = opts.cslGate ?? null;
     if (this.baseValue < this.min || this.baseValue > this.max) {
       logger.warn('PhiScale: baseValue outside [min, max], clamping', {
-        name: this.name, baseValue: this.baseValue, min: this.min, max: this.max,
+        name: this.name,
+        baseValue: this.baseValue,
+        min: this.min,
+        max: this.max
       });
       this.baseValue = Math.max(this.min, Math.min(this.max, this.baseValue));
     }
-
-    this.current  = this.baseValue;
+    this.current = this.baseValue;
     this._momentum = 0;
-    this._history  = []; // { ts, value, delta, metrics }
+    this._history = []; // { ts, value, delta, metrics }
 
     this._range = new PhiRange(this.min, this.max, this.phiNormalized);
 
@@ -213,17 +213,23 @@ class PhiScale {
     if (this.cslGate) {
       try {
         if (csl && typeof csl.registerGate === 'function') {
-          csl.registerGate(this.cslGate, { phiScale: this.name });
+          csl.registerGate(this.cslGate, {
+            phiScale: this.name
+          });
         }
       } catch (err) {
         logger.warn('PhiScale: CSL gate registration failed', {
-          name: this.name, cslGate: this.cslGate, error: err.message,
+          name: this.name,
+          cslGate: this.cslGate,
+          error: err.message
         });
       }
     }
-
     logger.debug('PhiScale created', {
-      name: this.name, baseValue: this.baseValue, min: this.min, max: this.max,
+      name: this.name,
+      baseValue: this.baseValue,
+      min: this.min,
+      max: this.max
     });
   }
 
@@ -273,7 +279,8 @@ class PhiScale {
         rawAdjustment = this.telemetryFeed(metrics, this.current, this) ?? 0;
       } catch (err) {
         logger.error('PhiScale: telemetryFeed threw', {
-          name: this.name, error: err.message,
+          name: this.name,
+          error: err.message
         });
         rawAdjustment = 0;
       }
@@ -282,30 +289,29 @@ class PhiScale {
     } else if (typeof metrics.signal === 'number') {
       rawAdjustment = metrics.signal;
     }
-
-    this._momentum = this.momentumDecay * this._momentum
-                   + (1 - this.momentumDecay) * rawAdjustment;
-
-    const delta    = this.sensitivity * this._momentum;
+    this._momentum = this.momentumDecay * this._momentum + (1 - this.momentumDecay) * rawAdjustment;
+    const delta = this.sensitivity * this._momentum;
     const proposed = this.current + delta;
-
-    const next = this.enforceBounds
-      ? Math.max(this.min, Math.min(this.max, proposed))
-      : proposed;
-
-    const entry = { ts: Date.now(), value: next, delta, metrics };
+    const next = this.enforceBounds ? Math.max(this.min, Math.min(this.max, proposed)) : proposed;
+    const entry = {
+      ts: Date.now(),
+      value: next,
+      delta,
+      metrics
+    };
     this._history.push(entry);
     if (this._history.length > this.maxHistorySize) {
       this._history.shift();
     }
-
     this.current = next;
-
     logger.debug('PhiScale.adjust', {
-      name: this.name, rawAdjustment, momentum: this._momentum,
-      delta, prev: this.current - delta, next,
+      name: this.name,
+      rawAdjustment,
+      momentum: this._momentum,
+      delta,
+      prev: this.current - delta,
+      next
     });
-
     return this.current;
   }
 
@@ -341,10 +347,14 @@ class PhiScale {
 
   /** Restore current value to baseValue and clear momentum & history. */
   reset() {
-    logger.info('PhiScale.reset', { name: this.name, from: this.current, to: this.baseValue });
-    this.current   = this.baseValue;
+    logger.info('PhiScale.reset', {
+      name: this.name,
+      from: this.current,
+      to: this.baseValue
+    });
+    this.current = this.baseValue;
     this._momentum = 0;
-    this._history  = [];
+    this._history = [];
   }
 
   /**
@@ -353,18 +363,24 @@ class PhiScale {
    */
   stats() {
     if (this._history.length === 0) {
-      return { mean: this.current, stddev: 0, min: this.current, max: this.current, count: 0 };
+      return {
+        mean: this.current,
+        stddev: 0,
+        min: this.current,
+        max: this.current,
+        count: 0
+      };
     }
     const values = this._history.map(h => h.value);
-    const n      = values.length;
-    const mean   = values.reduce((s, v) => s + v, 0) / n;
+    const n = values.length;
+    const mean = values.reduce((s, v) => s + v, 0) / n;
     const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
     return {
       mean,
       stddev: Math.sqrt(variance),
-      min:    Math.min(...values),
-      max:    Math.max(...values),
-      count:  n,
+      min: Math.min(...values),
+      max: Math.max(...values),
+      count: n
     };
   }
 
@@ -376,11 +392,11 @@ class PhiScale {
     const window = this._history.slice(-10);
     if (window.length < 2) return 'stable';
     const first = window[0].value;
-    const last  = window[window.length - 1].value;
-    const span  = this.max - this.min;
+    const last = window[window.length - 1].value;
+    const span = this.max - this.min;
     const threshold = span * 0.01; // 1 % of full range
-    if (last - first >  threshold) return 'increasing';
-    if (first - last >  threshold) return 'decreasing';
+    if (last - first > threshold) return 'increasing';
+    if (first - last > threshold) return 'decreasing';
     return 'stable';
   }
 
@@ -392,7 +408,6 @@ class PhiScale {
   cslActivation() {
     const x = this.normalized();
     const activation = 1 / (1 + Math.exp(-20 * (x - PHI_INVERSE)));
-
     if (this.cslGate) {
       try {
         if (csl && typeof csl.activateGate === 'function') {
@@ -400,12 +415,16 @@ class PhiScale {
         }
       } catch (err) {
         logger.warn('PhiScale.cslActivation: gate call failed', {
-          name: this.name, error: err.message,
+          name: this.name,
+          error: err.message
         });
       }
     }
-
-    logger.debug('PhiScale.cslActivation', { name: this.name, normalized: x, activation });
+    logger.debug('PhiScale.cslActivation', {
+      name: this.name,
+      normalized: x,
+      activation
+    });
     return activation;
   }
 
@@ -419,7 +438,7 @@ class PhiScale {
    */
   cslTernary(tolerance = 0.05) {
     const dev = this.phiDeviation();
-    if (dev >  tolerance) return  1;
+    if (dev > tolerance) return 1;
     if (dev < -tolerance) return -1;
     return 0;
   }
@@ -430,9 +449,13 @@ class PhiScale {
    * @returns {number}
    */
   cslRisk() {
-    const dev  = Math.abs(this.phiDeviation());  // 0 at phi, up to ~0.618 at extremes
+    const dev = Math.abs(this.phiDeviation()); // 0 at phi, up to ~0.618 at extremes
     const risk = Math.min(1, dev / PHI_INVERSE);
-    logger.debug('PhiScale.cslRisk', { name: this.name, deviation: dev, risk });
+    logger.debug('PhiScale.cslRisk', {
+      name: this.name,
+      deviation: dev,
+      risk
+    });
     return risk;
   }
 
@@ -442,21 +465,22 @@ class PhiScale {
    */
   snapshot() {
     return {
-      name:          this.name,
-      baseValue:     this.baseValue,
-      current:       this.current,
-      min:           this.min,
-      max:           this.max,
+      name: this.name,
+      baseValue: this.baseValue,
+      current: this.current,
+      min: this.min,
+      max: this.max,
       phiNormalized: this.phiNormalized,
-      sensitivity:   this.sensitivity,
+      sensitivity: this.sensitivity,
       momentumDecay: this.momentumDecay,
       enforceBounds: this.enforceBounds,
-      unit:          this.unit,
-      category:      this.category,
-      cslGate:       this.cslGate,
-      momentum:      this._momentum,
-      history:       this._history.slice(), // shallow copy
-      ts:            Date.now(),
+      unit: this.unit,
+      category: this.category,
+      cslGate: this.cslGate,
+      momentum: this._momentum,
+      history: this._history.slice(),
+      // shallow copy
+      ts: Date.now()
     };
   }
 
@@ -468,23 +492,25 @@ class PhiScale {
     if (!snap || typeof snap !== 'object') {
       throw new TypeError('PhiScale.restore: snapshot must be an object');
     }
-    this.name          = snap.name          ?? this.name;
-    this.baseValue     = snap.baseValue     ?? this.baseValue;
-    this.current       = snap.current       ?? this.baseValue;
-    this.min           = snap.min           ?? this.min;
-    this.max           = snap.max           ?? this.max;
+    this.name = snap.name ?? this.name;
+    this.baseValue = snap.baseValue ?? this.baseValue;
+    this.current = snap.current ?? this.baseValue;
+    this.min = snap.min ?? this.min;
+    this.max = snap.max ?? this.max;
     this.phiNormalized = snap.phiNormalized ?? this.phiNormalized;
-    this.sensitivity   = snap.sensitivity   ?? this.sensitivity;
+    this.sensitivity = snap.sensitivity ?? this.sensitivity;
     this.momentumDecay = snap.momentumDecay ?? this.momentumDecay;
     this.enforceBounds = snap.enforceBounds ?? this.enforceBounds;
-    this.unit          = snap.unit          ?? this.unit;
-    this.category      = snap.category      ?? this.category;
-    this.cslGate       = snap.cslGate       ?? this.cslGate;
-    this._momentum     = snap.momentum      ?? 0;
-    this._history      = Array.isArray(snap.history) ? snap.history.slice() : [];
-    this._range        = new PhiRange(this.min, this.max, this.phiNormalized);
-
-    logger.info('PhiScale.restore', { name: this.name, current: this.current });
+    this.unit = snap.unit ?? this.unit;
+    this.category = snap.category ?? this.category;
+    this.cslGate = snap.cslGate ?? this.cslGate;
+    this._momentum = snap.momentum ?? 0;
+    this._history = Array.isArray(snap.history) ? snap.history.slice() : [];
+    this._range = new PhiRange(this.min, this.max, this.phiNormalized);
+    logger.info('PhiScale.restore', {
+      name: this.name,
+      current: this.current
+    });
   }
 }
 
@@ -492,70 +518,53 @@ class PhiScale {
 // PhiBackoff
 // ---------------------------------------------------------------------------
 
-/**
- * Phi-exponential retry interval generator.
- * Intervals grow as baseInterval * PHI^attempt, ensuring sub-exponential
- * (relative to standard 2x doubling) yet golden-ratio-tuned backoff.
- */
 class PhiBackoff {
-  /**
-   * @param {number} [baseInterval=1000]   Initial wait in ms
-   * @param {number} [maxAttempts=10]
-   * @param {number} [jitterFactor=0.15]   ±fraction of interval added as jitter
-   */
   constructor(baseInterval = 1000, maxAttempts = 10, jitterFactor = 0.15) {
-    this.baseInterval  = baseInterval;
-    this.maxAttempts   = maxAttempts;
-    this.jitterFactor  = jitterFactor;
-    this._attempt      = 0;
-    this._elapsed      = 0;
+    this.baseInterval = baseInterval;
+    this.maxAttempts = maxAttempts;
+    this.jitterFactor = jitterFactor;
+    this._attempt = 0;
+    this._elapsed = 0;
     this._MAX_INTERVAL = 300_000; // 5 minutes hard cap
 
-    logger.debug('PhiBackoff created', { baseInterval, maxAttempts, jitterFactor });
+    logger.debug('PhiBackoff created', {
+      baseInterval,
+      maxAttempts,
+      jitterFactor
+    });
   }
-
-  /**
-   * Compute and return the next backoff interval in ms, advancing the attempt counter.
-   * @returns {number} interval in ms, or -1 when maxAttempts exhausted
-   */
   next() {
     if (this._attempt >= this.maxAttempts) {
-      logger.warn('PhiBackoff.next: maxAttempts exhausted', { maxAttempts: this.maxAttempts });
+      logger.warn('PhiBackoff.next: maxAttempts exhausted', {
+        maxAttempts: this.maxAttempts
+      });
       return -1;
     }
-    const raw     = this.baseInterval * Math.pow(PHI, this._attempt);
-    const capped  = Math.min(raw, this._MAX_INTERVAL);
-    const jitter  = capped * this.jitterFactor * (2 * Math.random() - 1);
-    const interval= Math.max(0, Math.round(capped + jitter));
-
+    const raw = this.baseInterval * Math.pow(PHI, this._attempt);
+    const capped = Math.min(raw, this._MAX_INTERVAL);
+    const jitter = capped * this.jitterFactor * (2 * Math.random() - 1);
+    const interval = Math.max(0, Math.round(capped + jitter));
     this._elapsed += interval;
     this._attempt += 1;
-
-    logger.debug('PhiBackoff.next', { attempt: this._attempt, interval });
+    logger.debug('PhiBackoff.next', {
+      attempt: this._attempt,
+      interval
+    });
     return interval;
   }
-
-  /**
-   * Return the full deterministic (no jitter) sequence for all attempts.
-   * @returns {number[]}
-   */
   sequence() {
     const seq = [];
     for (let i = 0; i < this.maxAttempts; i++) {
-      const raw    = this.baseInterval * Math.pow(PHI, i);
+      const raw = this.baseInterval * Math.pow(PHI, i);
       seq.push(Math.min(Math.round(raw), this._MAX_INTERVAL));
     }
     return seq;
   }
-
-  /** Reset the attempt counter and elapsed tracker. */
   reset() {
     this._attempt = 0;
     this._elapsed = 0;
     logger.debug('PhiBackoff.reset');
   }
-
-  /** @returns {number} attempts remaining */
   remaining() {
     return Math.max(0, this.maxAttempts - this._attempt);
   }
@@ -570,22 +579,21 @@ class PhiBackoff {
    * @returns {{ phi: number[], standard: number[], ratios: number[] }}
    */
   compare() {
-    const phi      = this.sequence();
+    const phi = this.sequence();
     const standard = [];
     for (let i = 0; i < this.maxAttempts; i++) {
       standard.push(Math.min(Math.round(this.baseInterval * Math.pow(2, i)), this._MAX_INTERVAL));
     }
     const ratios = phi.map((p, i) => standard[i] > 0 ? +(p / standard[i]).toFixed(4) : null);
-    return { phi, standard, ratios };
+    return {
+      phi,
+      standard,
+      ratios
+    };
   }
-
   toString() {
     const seq = this.sequence();
-    return (
-      `PhiBackoff(base=${this.baseInterval}ms, attempts=${this.maxAttempts}, ` +
-      `jitter=±${(this.jitterFactor * 100).toFixed(0)}%) — sequence: ` +
-      seq.map(v => `${v}ms`).join(', ')
-    );
+    return `PhiBackoff(base=${this.baseInterval}ms, attempts=${this.maxAttempts}, ` + `jitter=±${(this.jitterFactor * 100).toFixed(0)}%) — sequence: ` + seq.map(v => `${v}ms`).join(', ');
   }
 }
 
@@ -607,8 +615,11 @@ class PhiDecay {
     this.halfLife = halfLife;
     // Derive the theta that yields r = 0.5: PHI^(-θ_half/90) = 0.5
     // => -θ_half/90 * LOG_PHI = ln(0.5) => θ_half = -90 * ln(0.5) / LOG_PHI
-    this._thetaHalf = (-90 * Math.log(0.5)) / LOG_PHI;
-    logger.debug('PhiDecay created', { halfLife, thetaHalf: this._thetaHalf });
+    this._thetaHalf = -90 * Math.log(0.5) / LOG_PHI;
+    logger.debug('PhiDecay created', {
+      halfLife,
+      thetaHalf: this._thetaHalf
+    });
   }
 
   /**
@@ -618,7 +629,7 @@ class PhiDecay {
    */
   decay(elapsedTime) {
     if (elapsedTime < 0) return 1;
-    const thetaDeg = (elapsedTime / this.halfLife) * this._thetaHalf;
+    const thetaDeg = elapsedTime / this.halfLife * this._thetaHalf;
     return Math.pow(PHI, -thetaDeg / 90);
   }
 
@@ -642,8 +653,8 @@ class PhiDecay {
       throw new RangeError('PhiDecay.timeToDecay: targetPercent must be in (0, 1)');
     }
     // PHI^(-θ/90) = targetPercent => θ = -90 * ln(targetPercent) / LOG_PHI
-    const thetaDeg = (-90 * Math.log(targetPercent)) / LOG_PHI;
-    return (thetaDeg / this._thetaHalf) * this.halfLife;
+    const thetaDeg = -90 * Math.log(targetPercent) / LOG_PHI;
+    return thetaDeg / this._thetaHalf * this.halfLife;
   }
 
   /**
@@ -665,11 +676,15 @@ class PhiDecay {
    * @returns {{ goldenSpiral: number, linear: number, standardExponential: number }}
    */
   compare(elapsedTime) {
-    const t     = Math.max(0, elapsedTime);
-    const goldenSpiral      = this.decay(t);
-    const linear            = Math.max(0, 1 - t / (2 * this.halfLife));
+    const t = Math.max(0, elapsedTime);
+    const goldenSpiral = this.decay(t);
+    const linear = Math.max(0, 1 - t / (2 * this.halfLife));
     const standardExponential = Math.exp(-Math.log(2) * t / this.halfLife);
-    return { goldenSpiral, linear, standardExponential };
+    return {
+      goldenSpiral,
+      linear,
+      standardExponential
+    };
   }
 }
 
@@ -686,7 +701,9 @@ class PhiPartitioner {
   constructor() {
     // Local mutable copy for indexed lookups (excludes 0 for practical work sizing)
     this._fibs = FIBONACCI_SEQUENCE.slice(1); // [1,1,2,3,5,8,13,21,...]
-    logger.debug('PhiPartitioner created', { fibCount: this._fibs.length });
+    logger.debug('PhiPartitioner created', {
+      fibCount: this._fibs.length
+    });
   }
 
   /**
@@ -722,12 +739,18 @@ class PhiPartitioner {
       // Find largest eligible Fibonacci ≤ remaining
       let chosen = 1;
       for (let i = eligible.length - 1; i >= 0; i--) {
-        if (eligible[i] <= remaining) { chosen = eligible[i]; break; }
+        if (eligible[i] <= remaining) {
+          chosen = eligible[i];
+          break;
+        }
       }
       chunks.push(chosen);
       remaining -= chosen;
       if (chunks.length > 10_000) {
-        logger.warn('PhiPartitioner.split: chunk limit reached, truncating', { totalWork, maxChunkSize });
+        logger.warn('PhiPartitioner.split: chunk limit reached, truncating', {
+          totalWork,
+          maxChunkSize
+        });
         break;
       }
     }
@@ -740,7 +763,7 @@ class PhiPartitioner {
    * @returns {number}
    */
   fibonacci(n) {
-    if (n < 0)  throw new RangeError('fibonacci: n must be ≥ 0');
+    if (n < 0) throw new RangeError('fibonacci: n must be ≥ 0');
     if (n < FIBONACCI_SEQUENCE.length) return FIBONACCI_SEQUENCE[n];
     // Extend beyond the pre-computed 30 terms
     let a = FIBONACCI_SEQUENCE[FIBONACCI_SEQUENCE.length - 2];
@@ -762,7 +785,10 @@ class PhiPartitioner {
     let bestDist = Math.abs(n - best);
     for (const f of this._fibs) {
       const dist = Math.abs(n - f);
-      if (dist < bestDist) { best = f; bestDist = dist; }
+      if (dist < bestDist) {
+        best = f;
+        bestDist = dist;
+      }
     }
     return best;
   }
@@ -795,9 +821,13 @@ class PhiPartitioner {
    * @returns {{ larger: number, smaller: number, ratio: number }}
    */
   goldenPartition(total) {
-    const larger  = total * PHI_INVERSE;   // larger sub-part (≈61.8 % of total)
+    const larger = total * PHI_INVERSE; // larger sub-part (≈61.8 % of total)
     const smaller = total - larger;
-    return { larger, smaller, ratio: larger / (smaller || 1) };
+    return {
+      larger,
+      smaller,
+      ratio: larger / (smaller || 1)
+    };
   }
 }
 
@@ -860,10 +890,10 @@ class PhiNormalizer {
    */
   static mapDiscrete(discreteValue, discreteMin, discreteMax) {
     if (discreteMax === discreteMin) return PHI_INVERSE;
-    const linear  = (discreteValue - discreteMin) / (discreteMax - discreteMin);
+    const linear = (discreteValue - discreteMin) / (discreteMax - discreteMin);
     // Apply golden spiral warp: each step is scaled by PHI^(linear*2 - 1)
-    const warped  = Math.pow(PHI, (linear * 2 - 1) * LOG_PHI) - Math.pow(PHI, -LOG_PHI);
-    const scale   = Math.pow(PHI, LOG_PHI) - Math.pow(PHI, -LOG_PHI);
+    const warped = Math.pow(PHI, (linear * 2 - 1) * LOG_PHI) - Math.pow(PHI, -LOG_PHI);
+    const scale = Math.pow(PHI, LOG_PHI) - Math.pow(PHI, -LOG_PHI);
     return scale === 0 ? linear : Math.max(0, Math.min(1, warped / scale));
   }
 
@@ -881,7 +911,9 @@ class PhiNormalizer {
     }
     const idx = categories.indexOf(category);
     if (idx === -1) {
-      logger.warn('PhiNormalizer.mapCategory: unknown category, returning PHI_INVERSE', { category });
+      logger.warn('PhiNormalizer.mapCategory: unknown category, returning PHI_INVERSE', {
+        category
+      });
       return PHI_INVERSE;
     }
     const n = categories.length;
@@ -901,9 +933,7 @@ class PhiNormalizer {
     // Golden-ratio warp: each successive step is multiplied by PHI_INVERSE
     // cumulative weighting uses partial sums of geometric series with ratio PHI_INVERSE
     const total = (1 - Math.pow(PHI_INVERSE, steps)) / (1 - PHI_INVERSE);
-    const cumulative = total === 0
-      ? normalized
-      : (1 - Math.pow(PHI_INVERSE, value + 1)) / ((1 - PHI_INVERSE) * total);
+    const cumulative = total === 0 ? normalized : (1 - Math.pow(PHI_INVERSE, value + 1)) / ((1 - PHI_INVERSE) * total);
     return Math.max(0, Math.min(1, cumulative));
   }
 }
@@ -923,9 +953,12 @@ class PhiSpiral {
    * @param {number} [rotations=2]  Number of full rotations for generated point sets
    */
   constructor(scale = 1, rotations = 2) {
-    this.scale     = scale;
+    this.scale = scale;
     this.rotations = rotations;
-    logger.debug('PhiSpiral created', { scale, rotations });
+    logger.debug('PhiSpiral created', {
+      scale,
+      rotations
+    });
   }
 
   /**
@@ -935,12 +968,12 @@ class PhiSpiral {
    */
   point(theta) {
     const r = this.scale * Math.pow(PHI, theta / 90);
-    const rad = (theta * Math.PI) / 180;
+    const rad = theta * Math.PI / 180;
     return {
-      x:     r * Math.cos(rad),
-      y:     r * Math.sin(rad),
+      x: r * Math.cos(rad),
+      y: r * Math.sin(rad),
       r,
-      theta,
+      theta
     };
   }
 
@@ -952,8 +985,8 @@ class PhiSpiral {
   points(count = 36) {
     if (count < 2) throw new RangeError('PhiSpiral.points: count must be ≥ 2');
     const totalDeg = 360 * this.rotations;
-    const step     = totalDeg / (count - 1);
-    const pts      = [];
+    const step = totalDeg / (count - 1);
+    const pts = [];
     for (let i = 0; i < count; i++) {
       pts.push(this.point(i * step));
     }
@@ -968,7 +1001,7 @@ class PhiSpiral {
    * @returns {{ x: number, y: number, r: number, theta: number }}
    */
   interpolate(startTheta, endTheta, t) {
-    const t_   = Math.max(0, Math.min(1, t));
+    const t_ = Math.max(0, Math.min(1, t));
     const theta = startTheta + (endTheta - startTheta) * t_;
     return this.point(theta);
   }
@@ -988,7 +1021,6 @@ module.exports = {
   LOG_PHI,
   TWO_PI_PHI,
   FIBONACCI_SEQUENCE,
-
   // Classes
   PhiRange,
   PhiScale,
@@ -996,5 +1028,5 @@ module.exports = {
   PhiDecay,
   PhiPartitioner,
   PhiNormalizer,
-  PhiSpiral,
+  PhiSpiral
 };

@@ -16,17 +16,8 @@
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
-import {
-  MANUFACTURER_ID, SYSEX_VERSION, SYSEX_CMD, SYSEX_CMD_NAMES,
-  STATUS, TRANSPORT, CHANNEL, NOTE, VELOCITY,
-  PHI, PSI, FIB,
-  DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING,
-} from '../shared/midi-constants.js';
-
-import {
-  decodeSysExCommand, parseSysEx, buildSysEx,
-  encodeJSON, encodeString, encode14bit,
-} from '../shared/sysex-codec.js';
+import { MANUFACTURER_ID, SYSEX_VERSION, SYSEX_CMD, SYSEX_CMD_NAMES, STATUS, TRANSPORT, CHANNEL, NOTE, VELOCITY, PHI, PSI, FIB, DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING } from '../shared/midi-constants.js';
+import { decodeSysExCommand, parseSysEx, buildSysEx, encodeJSON, encodeString, encode14bit } from '../shared/sysex-codec.js';
 
 // ─── M4L Globals (provided by Max runtime) ────────────────────────
 /* global inlets, outlets, post, outlet, LiveAPI, Task */
@@ -110,13 +101,11 @@ class AbletonLiveProxy {
    * @param {number} value - Value 0-127, mapped to param range
    */
   setDeviceParam(trackIdx, deviceIdx, paramIdx, value) {
-    const api = this._api(
-      `live_set tracks ${trackIdx} devices ${deviceIdx} parameters ${paramIdx}`
-    );
+    const api = this._api(`live_set tracks ${trackIdx} devices ${deviceIdx} parameters ${paramIdx}`);
     if (api) {
       const min = parseFloat(api.get('min')) || 0;
       const max = parseFloat(api.get('max')) || 1;
-      const mapped = min + (value / 127) * (max - min);
+      const mapped = min + value / 127 * (max - min);
       api.set('value', mapped);
     }
     this._log(`[Device] track=${trackIdx} dev=${deviceIdx} param=${paramIdx} → ${value}`);
@@ -133,19 +122,25 @@ class AbletonLiveProxy {
       return;
     }
     switch (action) {
-      case TRANSPORT.STOP:    api.call('stop_playing'); break;
-      case TRANSPORT.PLAY:    api.call('start_playing'); break;
-      case TRANSPORT.RECORD:  api.set('record_mode', 1); break;
-      case TRANSPORT.PAUSE:   api.call('stop_playing'); break;
-      case TRANSPORT.REWIND:  api.set('current_song_time', 0); break;
-      default: this._log(`[Transport] Unknown action: ${action}`);
+      case TRANSPORT.STOP:
+        api.call('stop_playing');
+        break;
+      case TRANSPORT.PLAY:
+        api.call('start_playing');
+        break;
+      case TRANSPORT.RECORD:
+        api.set('record_mode', 1);
+        break;
+      case TRANSPORT.PAUSE:
+        api.call('stop_playing');
+        break;
+      case TRANSPORT.REWIND:
+        api.set('current_song_time', 0);
+        break;
+      default:
+        this._log(`[Transport] Unknown action: ${action}`);
     }
   }
-
-  /**
-   * Set the song tempo.
-   * @param {number} bpm - Beats per minute
-   */
   setTempo(bpm) {
     const api = this._api('live_set');
     if (api) {
@@ -315,23 +310,16 @@ class AbletonLiveProxy {
 
 // ─── SysEx Handler ────────────────────────────────────────────────
 
-/**
- * HeadySysExHandler — Core dispatch engine for all 32 Heady™ SysEx commands.
- * Parses incoming SysEx frames on manufacturer ID 0x7D and routes each
- * command to the appropriate Ableton Live API call.
- *
- * @class
- * @example
- * const handler = new HeadySysExHandler({ log: console.log, send: bytes => ... });
- * handler.processSysEx([0xF0, 0x7D, 0x01, 0x06, 0x7A, 0xF7]); // SET_TEMPO 89.0
- */
 export class HeadySysExHandler {
   /**
    * @param {Object} options
    * @param {Function} options.log - Log output function
    * @param {Function} options.send - Send SysEx response bytes (Uint8Array)
    */
-  constructor({ log = console.log, send = () => {} } = {}) {
+  constructor({
+    log = console.log,
+    send = () => {}
+  } = {}) {
     /** @type {Function} */
     this._log = log;
 
@@ -349,7 +337,6 @@ export class HeadySysExHandler {
 
     /** @type {boolean} Whether an AI arrangement is currently executing */
     this._arrangementBusy = false;
-
     this._log(`[HeadySysEx] Protocol V${SUPPORTED_PROTOCOL_VERSION} initialized | Manufacturer 0x${MANUFACTURER_ID.toString(16).toUpperCase()}`);
   }
 
@@ -360,18 +347,21 @@ export class HeadySysExHandler {
    */
   processSysEx(data) {
     const decoded = decodeSysExCommand(data);
-
     if (!decoded.valid) {
       this._log(`[HeadySysEx] Invalid frame: ${decoded.cmdName}`);
-      return { handled: false, cmdName: decoded.cmdName };
+      return {
+        handled: false,
+        cmdName: decoded.cmdName
+      };
     }
-
     this._commandCount++;
     const cmdName = decoded.cmdName;
     this._log(`[HeadySysEx] #${this._commandCount} Cmd=0x${decoded.cmd.toString(16).padStart(2, '0')} (${cmdName})`);
-
     this._dispatch(decoded);
-    return { handled: true, cmdName };
+    return {
+      handled: true,
+      cmdName
+    };
   }
 
   /**
@@ -502,7 +492,6 @@ export class HeadySysExHandler {
       case SYSEX_CMD.AI_GENERATE_PATTERN:
         this._handleAIGeneratePattern(decoded);
         break;
-
       default:
         this._log(`[HeadySysEx] Unhandled command: 0x${decoded.cmd.toString(16)}`);
     }
@@ -534,9 +523,7 @@ export class HeadySysExHandler {
    * @private
    */
   _handleSetTrackEQ(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.track} devices 0 parameters`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.track} devices 0 parameters`);
     this._log(`[EQ] track=${decoded.track} band=${decoded.band} freq=${decoded.freq} gain=${decoded.gain} Q=${decoded.q}`);
   }
 
@@ -548,11 +535,9 @@ export class HeadySysExHandler {
    * @private
    */
   _handleSetClipColor(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`);
     if (api) {
-      const color = (decoded.r << 16) | (decoded.g << 8) | decoded.b;
+      const color = decoded.r << 16 | decoded.g << 8 | decoded.b;
       api.set('color', color);
     }
     this._log(`[ClipColor] track=${decoded.track} scene=${decoded.scene} rgb=(${decoded.r},${decoded.g},${decoded.b})`);
@@ -564,9 +549,7 @@ export class HeadySysExHandler {
    * @private
    */
   _handleSetClipName(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`);
     if (api) {
       api.set('name', decoded.name);
     }
@@ -579,9 +562,7 @@ export class HeadySysExHandler {
    * @private
    */
   _handleQuantizeClip(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`);
     if (api) {
       api.call('quantize', decoded.quantize);
     }
@@ -594,9 +575,7 @@ export class HeadySysExHandler {
    * @private
    */
   _handleDuplicateClip(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.srcTrack} clip_slots ${decoded.srcScene}`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.srcTrack} clip_slots ${decoded.srcScene}`);
     if (api) {
       api.call('duplicate_clip_to', decoded.dstTrack, decoded.dstScene);
     }
@@ -609,9 +588,7 @@ export class HeadySysExHandler {
    * @private
    */
   _handleDeleteClip(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`);
     if (api) {
       api.call('delete_clip');
     }
@@ -624,9 +601,7 @@ export class HeadySysExHandler {
    * @private
    */
   _handleConsolidateClip(decoded) {
-    const api = this._live._api(
-      `live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`
-    );
+    const api = this._live._api(`live_set tracks ${decoded.track} clip_slots ${decoded.scene} clip`);
     this._log(`[Consolidate] track=${decoded.track} scene=${decoded.scene}`);
   }
 
@@ -641,7 +616,7 @@ export class HeadySysExHandler {
       version: this._negotiatedVersion,
       commandsProcessed: this._commandCount,
       arrangementBusy: this._arrangementBusy,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
     const response = buildSysEx(SYSEX_CMD.STATUS_REQUEST, encodeJSON(state));
     this._send(response);
@@ -749,34 +724,22 @@ export class HeadySysExHandler {
 
   // ─── AI Arrangement Execution ─────────────────────────────────────
 
-  /**
-   * Handle AI_ARRANGEMENT (0x20).
-   * Parses JSON sections and schedules clip triggers, device param changes,
-   * and transport commands sequentially with φ-timed delays.
-   * @param {Object} decoded - { data: { tempo, sections[] } }
-   * @private
-   */
   _handleAIArrangement(decoded) {
     if (this._arrangementBusy) {
       this._log('[AI] Arrangement already in progress — ignoring');
       return;
     }
-
     const arrangement = decoded.data;
     if (!arrangement || !arrangement.sections) {
       this._log('[AI] Invalid arrangement data');
       return;
     }
-
     if (arrangement.sections.length > MAX_ARRANGEMENT_SECTIONS) {
       this._log(`[AI] Too many sections (${arrangement.sections.length} > ${MAX_ARRANGEMENT_SECTIONS})`);
       return;
     }
-
     this._arrangementBusy = true;
     this._log(`[AI] Starting arrangement: ${arrangement.sections.length} sections`);
-
-    // Set global tempo if provided
     if (arrangement.tempo) {
       this._live.setTempo(arrangement.tempo);
     }
@@ -808,14 +771,10 @@ export class HeadySysExHandler {
       this._log('[AI] Arrangement complete');
       return;
     }
-
     const section = sections[index];
     const bars = section.bars || FIB[5]; // Default 8 bars
-    const progress = Math.round(((index + 1) / sections.length) * 127);
-
+    const progress = Math.round((index + 1) / sections.length * 127);
     this._log(`[AI] Section ${index + 1}/${sections.length}: "${section.name}" (${bars} bars) — ${Math.round(progress / 1.27)}%`);
-
-    // Section-local tempo override
     if (section.tempo) {
       this._live.setTempo(section.tempo);
     }
@@ -829,7 +788,7 @@ export class HeadySysExHandler {
 
     // Schedule next section after φ-derived delay (bars × beat duration × φ)
     const bpm = section.tempo || DEFAULT_BPM;
-    const beatMs = (60 / bpm) * 1000;
+    const beatMs = 60 / bpm * 1000;
     const sectionDurationMs = bars * 4 * beatMs; // 4 beats per bar
     const nextDelayMs = Math.round(sectionDurationMs * PSI); // φ-compression for preview mode
 
@@ -886,7 +845,7 @@ export class HeadySysExHandler {
       status: 'accepted',
       style: params?.style,
       bars: params?.bars,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     }));
     this._send(ack);
   }
@@ -933,15 +892,16 @@ export function initM4L() {
     inlets = INLET_COUNT;
     outlets = OUTLET_COUNT;
   }
-
-  const logFn = typeof post !== 'undefined' ? (msg) => post(msg + '\n') : console.log;
-  const sendFn = (bytes) => {
+  const logFn = typeof post !== 'undefined' ? msg => post(msg + '\n') : console.log;
+  const sendFn = bytes => {
     if (typeof outlet !== 'undefined') {
       outlet(0, Array.from(bytes));
     }
   };
-
-  _handler = new HeadySysExHandler({ log: logFn, send: sendFn });
+  _handler = new HeadySysExHandler({
+    log: logFn,
+    send: sendFn
+  });
   logFn(`[HeadySysEx] M4L device ready — V${SUPPORTED_PROTOCOL_VERSION}`);
 }
 

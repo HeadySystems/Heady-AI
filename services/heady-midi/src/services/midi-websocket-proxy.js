@@ -22,17 +22,8 @@
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
-import {
-  PHI, PSI, FIB,
-  NETWORK_MIDI_PORT, WS_MIDI_PORT, MAX_WS_CLIENTS,
-  EVENT_BUFFER_SIZE, BACKOFF_BASE_MS, BACKOFF_MAX_MS,
-  STATUS, UMP_TYPE, UMP_STATUS, MANUFACTURER_ID,
-  CHANNEL, VELOCITY,
-} from '../shared/midi-constants.js';
-
-import {
-  parseSysEx, buildSysEx,
-} from '../shared/sysex-codec.js';
+import { PHI, PSI, FIB, NETWORK_MIDI_PORT, WS_MIDI_PORT, MAX_WS_CLIENTS, EVENT_BUFFER_SIZE, BACKOFF_BASE_MS, BACKOFF_MAX_MS, STATUS, UMP_TYPE, UMP_STATUS, MANUFACTURER_ID, CHANNEL, VELOCITY } from '../shared/midi-constants.js';
+import { parseSysEx, buildSysEx } from '../shared/sysex-codec.js';
 
 // ─── Node.js Imports (lazy, for server-side only) ─────────────────
 import { createSocket } from 'dgram';
@@ -48,11 +39,11 @@ const WS_MAGIC_GUID = '258EAFA5-E914-47DA-95CA-5AB5DC286688';
 /** WebSocket opcodes */
 const WS_OPCODE = Object.freeze({
   CONTINUATION: 0x0,
-  TEXT:         0x1,
-  BINARY:       0x2,
-  CLOSE:        0x8,
-  PING:         0x9,
-  PONG:         0xA,
+  TEXT: 0x1,
+  BINARY: 0x2,
+  CLOSE: 0x8,
+  PING: 0x9,
+  PONG: 0xA
 });
 
 /** UMP packet size in bytes (1 word = 4 bytes for MIDI 1.0 channel voice) */
@@ -69,13 +60,6 @@ const CONNECTION_TIMEOUT_MS = Math.round(FIB[11] * FIB[5] * PSI); // 89 × 8 × 
 
 // ─── Ring Buffer ──────────────────────────────────────────────────
 
-/**
- * Fixed-size ring buffer for storing recent MIDI events.
- * Size derived from Fibonacci sequence (987).
- *
- * @class
- * @template T
- */
 export class RingBuffer {
   /**
    * @param {number} [capacity=EVENT_BUFFER_SIZE] - Buffer capacity (default: 987)
@@ -161,7 +145,7 @@ export class RingBuffer {
 export function midi1ToUMP(midi1Bytes, group = 0) {
   const ump = new Uint8Array(UMP_WORD_BYTES);
   // Byte 0: message type (0x2 = MIDI 1.0 voice) in high nibble, group in low nibble
-  ump[0] = (UMP_TYPE.MIDI1_VOICE << 4) | (group & 0x0F);
+  ump[0] = UMP_TYPE.MIDI1_VOICE << 4 | group & 0x0F;
   // Bytes 1-3: original MIDI 1.0 bytes
   ump[1] = midi1Bytes[0] || 0;
   ump[2] = midi1Bytes[1] || 0;
@@ -178,16 +162,23 @@ export function midi1ToUMP(midi1Bytes, group = 0) {
  */
 export function umpToMidi1(ump) {
   if (!ump || ump.length < UMP_WORD_BYTES) {
-    return { type: 0, group: 0, midi1: [], valid: false };
+    return {
+      type: 0,
+      group: 0,
+      midi1: [],
+      valid: false
+    };
   }
-
-  const msgType = (ump[0] >> 4) & 0x0F;
+  const msgType = ump[0] >> 4 & 0x0F;
   const group = ump[0] & 0x0F;
-
   if (msgType !== UMP_TYPE.MIDI1_VOICE) {
-    return { type: msgType, group, midi1: [], valid: false };
+    return {
+      type: msgType,
+      group,
+      midi1: [],
+      valid: false
+    };
   }
-
   const statusByte = ump[1];
   const msgKind = statusByte & 0xF0;
   const channel = statusByte & 0x0F;
@@ -197,12 +188,15 @@ export function umpToMidi1(ump) {
   if (msgKind === STATUS.PROGRAM_CHANGE || msgKind === STATUS.CHANNEL_PRESSURE) {
     byteCount = 2;
   }
-
   const midi1 = [ump[1]];
   if (byteCount >= 2) midi1.push(ump[2]);
   if (byteCount >= 3) midi1.push(ump[3]);
-
-  return { type: msgType, group, midi1, valid: true };
+  return {
+    type: msgType,
+    group,
+    midi1,
+    valid: true
+  };
 }
 
 /**
@@ -220,7 +214,7 @@ export function midi1ToUMP2(midi1Bytes, group = 0) {
   const channel = statusByte & 0x0F;
 
   // Byte 0: message type 0x4 (MIDI 2.0 voice), group
-  ump[0] = (UMP_TYPE.MIDI2_VOICE << 4) | (group & 0x0F);
+  ump[0] = UMP_TYPE.MIDI2_VOICE << 4 | group & 0x0F;
   // Byte 1: status (preserving channel)
   ump[1] = statusByte;
   // Byte 2: note number / CC number
@@ -233,27 +227,26 @@ export function midi1ToUMP2(midi1Bytes, group = 0) {
   const data2 = midi1Bytes[2] || 0;
   if (msgKind === STATUS.NOTE_ON || msgKind === STATUS.NOTE_OFF) {
     // 16-bit velocity in bytes 4-5 (upscale: v << 9 | v << 2 | v >> 5)
-    const vel16 = data2 > 0 ? (data2 << 9) | (data2 << 2) | (data2 >> 5) : 0;
-    ump[4] = (vel16 >> 8) & 0xFF;
+    const vel16 = data2 > 0 ? data2 << 9 | data2 << 2 | data2 >> 5 : 0;
+    ump[4] = vel16 >> 8 & 0xFF;
     ump[5] = vel16 & 0xFF;
     ump[6] = 0;
     ump[7] = 0;
   } else if (msgKind === STATUS.CC) {
     // 32-bit CC value (upscale 7-bit)
-    const cc32 = (data2 << 25) | (data2 << 18) | (data2 << 11) | (data2 << 4) | (data2 >> 3);
-    ump[4] = (cc32 >> 24) & 0xFF;
-    ump[5] = (cc32 >> 16) & 0xFF;
-    ump[6] = (cc32 >> 8) & 0xFF;
+    const cc32 = data2 << 25 | data2 << 18 | data2 << 11 | data2 << 4 | data2 >> 3;
+    ump[4] = cc32 >> 24 & 0xFF;
+    ump[5] = cc32 >> 16 & 0xFF;
+    ump[6] = cc32 >> 8 & 0xFF;
     ump[7] = cc32 & 0xFF;
   } else {
     // Pitch bend, pressure, etc. — simple upscale
-    const val16 = (data2 << 9) | (data2 << 2);
-    ump[4] = (val16 >> 8) & 0xFF;
+    const val16 = data2 << 9 | data2 << 2;
+    ump[4] = val16 >> 8 & 0xFF;
     ump[5] = val16 & 0xFF;
     ump[6] = 0;
     ump[7] = 0;
   }
-
   return ump;
 }
 
@@ -275,7 +268,6 @@ function buildWSFrame(payload, opcode = WS_OPCODE.BINARY) {
   } else {
     headerLen = 10;
   }
-
   const frame = Buffer.alloc(headerLen + len);
   frame[0] = 0x80 | opcode; // FIN + opcode
 
@@ -288,7 +280,6 @@ function buildWSFrame(payload, opcode = WS_OPCODE.BINARY) {
     frame[1] = 127;
     frame.writeBigUInt64BE(BigInt(len), 2);
   }
-
   payload.copy ? payload.copy(frame, headerLen) : frame.set(payload, headerLen);
   return frame;
 }
@@ -299,42 +290,58 @@ function buildWSFrame(payload, opcode = WS_OPCODE.BINARY) {
  * @returns {{ opcode: number, payload: Buffer, valid: boolean }}
  */
 function parseWSFrame(data) {
-  if (data.length < 2) return { opcode: 0, payload: Buffer.alloc(0), valid: false };
-
+  if (data.length < 2) return {
+    opcode: 0,
+    payload: Buffer.alloc(0),
+    valid: false
+  };
   const opcode = data[0] & 0x0F;
   const masked = (data[1] & 0x80) !== 0;
   let payloadLen = data[1] & 0x7F;
   let offset = 2;
-
   if (payloadLen === 126) {
-    if (data.length < 4) return { opcode, payload: Buffer.alloc(0), valid: false };
+    if (data.length < 4) return {
+      opcode,
+      payload: Buffer.alloc(0),
+      valid: false
+    };
     payloadLen = data.readUInt16BE(2);
     offset = 4;
   } else if (payloadLen === 127) {
-    if (data.length < 10) return { opcode, payload: Buffer.alloc(0), valid: false };
+    if (data.length < 10) return {
+      opcode,
+      payload: Buffer.alloc(0),
+      valid: false
+    };
     payloadLen = Number(data.readBigUInt64BE(2));
     offset = 10;
   }
-
   let maskKey = null;
   if (masked) {
-    if (data.length < offset + 4) return { opcode, payload: Buffer.alloc(0), valid: false };
+    if (data.length < offset + 4) return {
+      opcode,
+      payload: Buffer.alloc(0),
+      valid: false
+    };
     maskKey = data.slice(offset, offset + 4);
     offset += 4;
   }
-
   if (data.length < offset + payloadLen) {
-    return { opcode, payload: Buffer.alloc(0), valid: false };
+    return {
+      opcode,
+      payload: Buffer.alloc(0),
+      valid: false
+    };
   }
-
   const payload = Buffer.alloc(payloadLen);
   for (let i = 0; i < payloadLen; i++) {
-    payload[i] = masked
-      ? data[offset + i] ^ maskKey[i % 4]
-      : data[offset + i];
+    payload[i] = masked ? data[offset + i] ^ maskKey[i % 4] : data[offset + i];
   }
-
-  return { opcode, payload, valid: true };
+  return {
+    opcode,
+    payload,
+    valid: true
+  };
 }
 
 // ─── WebSocket Client Wrapper ─────────────────────────────────────
@@ -503,8 +510,6 @@ export class MidiWebSocketProxy extends EventEmitter {
 
     /** @type {boolean} Server running state */
     this._running = false;
-
-    /** @type {number} Reconnect attempt counter */
     this._reconnectAttempt = 0;
 
     /** @type {NodeJS.Timeout|null} Reconnect timer handle */
@@ -517,7 +522,6 @@ export class MidiWebSocketProxy extends EventEmitter {
    */
   async start() {
     if (this._running) return;
-
     this._log(`[MidiWSProxy] Starting — UDP:${this.udpPort} WS:${this.wsPort} Max clients:${this.maxClients}`);
 
     // Start UDP listener
@@ -528,7 +532,6 @@ export class MidiWebSocketProxy extends EventEmitter {
 
     // Start ping interval
     this._pingInterval = setInterval(() => this._pingAllClients(), PING_INTERVAL_MS);
-
     this._running = true;
     this._reconnectAttempt = 0;
     this._log('[MidiWSProxy] Running');
@@ -540,12 +543,10 @@ export class MidiWebSocketProxy extends EventEmitter {
    */
   async stop() {
     this._running = false;
-
     if (this._pingInterval) {
       clearInterval(this._pingInterval);
       this._pingInterval = null;
     }
-
     if (this._reconnectTimer) {
       clearTimeout(this._reconnectTimer);
       this._reconnectTimer = null;
@@ -565,10 +566,9 @@ export class MidiWebSocketProxy extends EventEmitter {
 
     // Close HTTP
     if (this._httpServer) {
-      await new Promise((resolve) => this._httpServer.close(resolve));
+      await new Promise(resolve => this._httpServer.close(resolve));
       this._httpServer = null;
     }
-
     this._log('[MidiWSProxy] Stopped');
   }
 
@@ -578,7 +578,6 @@ export class MidiWebSocketProxy extends EventEmitter {
    */
   _startUDP() {
     this._udpSocket = createSocket('udp4');
-
     this._udpSocket.on('message', (msg, rinfo) => {
       // Remember the remote endpoint for bidirectional relay
       if (!this._udpRemoteHost) {
@@ -586,15 +585,12 @@ export class MidiWebSocketProxy extends EventEmitter {
         this._udpRemotePort = rinfo.port;
         this._log(`[UDP] Remote endpoint: ${rinfo.address}:${rinfo.port}`);
       }
-
       this._handleUDPPacket(msg, rinfo);
     });
-
-    this._udpSocket.on('error', (err) => {
+    this._udpSocket.on('error', err => {
       this._log(`[UDP] Error: ${err.message}`);
       this._scheduleReconnect();
     });
-
     this._udpSocket.bind(this.udpPort, this.udpHost, () => {
       this._log(`[UDP] Bound to ${this.udpHost}:${this.udpPort}`);
     });
@@ -608,19 +604,18 @@ export class MidiWebSocketProxy extends EventEmitter {
   _startHTTP() {
     return new Promise((resolve, reject) => {
       this._httpServer = createServer((req, res) => {
-        res.writeHead(426, { 'Content-Type': 'text/plain' });
+        res.writeHead(426, {
+          'Content-Type': 'text/plain'
+        });
         res.end('WebSocket upgrade required');
       });
-
       this._httpServer.on('upgrade', (req, socket, head) => {
         this._handleUpgrade(req, socket, head);
       });
-
-      this._httpServer.on('error', (err) => {
+      this._httpServer.on('error', err => {
         this._log(`[HTTP] Error: ${err.message}`);
         reject(err);
       });
-
       this._httpServer.listen(this.wsPort, () => {
         this._log(`[WS] Listening on port ${this.wsPort}`);
         resolve();
@@ -644,7 +639,6 @@ export class MidiWebSocketProxy extends EventEmitter {
       socket.destroy();
       return;
     }
-
     const wsKey = req.headers['sec-websocket-key'];
     if (!wsKey) {
       socket.write('HTTP/1.1 400 Bad Request\r\n\r\n');
@@ -653,43 +647,34 @@ export class MidiWebSocketProxy extends EventEmitter {
     }
 
     // RFC 6455 accept key
-    const acceptKey = createHash('sha1')
-      .update(wsKey + WS_MAGIC_GUID)
-      .digest('base64');
-
-    const responseHeaders = [
-      'HTTP/1.1 101 Switching Protocols',
-      'Upgrade: websocket',
-      'Connection: Upgrade',
-      `Sec-WebSocket-Accept: ${acceptKey}`,
-      'Sec-WebSocket-Protocol: midi2-ump',
-      '',
-      '',
-    ].join('\r\n');
-
+    const acceptKey = createHash('sha1').update(wsKey + WS_MAGIC_GUID).digest('base64');
+    const responseHeaders = ['HTTP/1.1 101 Switching Protocols', 'Upgrade: websocket', 'Connection: Upgrade', `Sec-WebSocket-Accept: ${acceptKey}`, 'Sec-WebSocket-Protocol: midi2-ump', '', ''].join('\r\n');
     socket.write(responseHeaders);
 
     // Register client
     const clientId = `ws-${++this._clientIdSeq}-${Date.now().toString(36)}`;
     const client = new WSClient(socket, clientId);
     this._clients.set(clientId, client);
-
     this._log(`[WS] Client connected: ${clientId} (${this._clients.size}/${this.maxClients})`);
-    this.emit('client_connected', { id: clientId, total: this._clients.size });
+    this.emit('client_connected', {
+      id: clientId,
+      total: this._clients.size
+    });
 
     // Send buffered events as a welcome burst
     this._sendBufferedEvents(client);
 
     // Handle incoming frames
-    socket.on('data', (data) => this._handleWSData(client, data));
-
+    socket.on('data', data => this._handleWSData(client, data));
     socket.on('close', () => {
       this._clients.delete(clientId);
       this._log(`[WS] Client disconnected: ${clientId} (${this._clients.size}/${this.maxClients})`);
-      this.emit('client_disconnected', { id: clientId, total: this._clients.size });
+      this.emit('client_disconnected', {
+        id: clientId,
+        total: this._clients.size
+      });
     });
-
-    socket.on('error', (err) => {
+    socket.on('error', err => {
       this._log(`[WS] Socket error (${clientId}): ${err.message}`);
       this._clients.delete(clientId);
     });
@@ -702,9 +687,12 @@ export class MidiWebSocketProxy extends EventEmitter {
    * @private
    */
   _handleWSData(client, data) {
-    const { opcode, payload, valid } = parseWSFrame(data);
+    const {
+      opcode,
+      payload,
+      valid
+    } = parseWSFrame(data);
     if (!valid) return;
-
     switch (opcode) {
       case WS_OPCODE.BINARY:
         this._handleWSBinary(client, payload);
@@ -736,7 +724,6 @@ export class MidiWebSocketProxy extends EventEmitter {
    */
   _handleWSBinary(client, payload) {
     let umpPacket;
-
     if (payload.length <= 3) {
       // Raw MIDI 1.0 bytes → convert to UMP
       umpPacket = midi1ToUMP(Array.from(payload));
@@ -753,13 +740,15 @@ export class MidiWebSocketProxy extends EventEmitter {
       timestamp: Date.now(),
       source: client.id,
       direction: 'ws→udp',
-      data: Array.from(umpPacket),
+      data: Array.from(umpPacket)
     });
 
     // Relay to UDP hardware endpoint
     this._relayToUDP(umpPacket);
-
-    this.emit('ws_message', { clientId: client.id, data: umpPacket });
+    this.emit('ws_message', {
+      clientId: client.id,
+      data: umpPacket
+    });
   }
 
   /**
@@ -771,39 +760,42 @@ export class MidiWebSocketProxy extends EventEmitter {
   _handleWSText(client, text) {
     try {
       const msg = JSON.parse(text);
-
       switch (msg.type) {
-        case 'ping': {
-          // Latency measurement: respond with timestamp
-          client.sendText(JSON.stringify({
-            type: 'pong',
-            clientTs: msg.timestamp,
-            serverTs: Date.now(),
-          }));
-          break;
-        }
-        case 'subscribe': {
-          this._log(`[WS] Client ${client.id} subscribed to: ${msg.channels?.join(', ')}`);
-          break;
-        }
-        case 'buffer_request': {
-          // Client requests buffered events
-          const count = Math.min(msg.count || FIB[8], EVENT_BUFFER_SIZE); // Default 34, max 987
-          this._sendBufferedEvents(client, count);
-          break;
-        }
-        case 'stats': {
-          client.sendText(JSON.stringify({
-            type: 'stats',
-            clients: this._clients.size,
-            maxClients: this.maxClients,
-            bufferSize: this._eventBuffer.size,
-            bufferCapacity: this._eventBuffer.capacity,
-            totalEvents: this._eventBuffer.totalCount,
-            uptime: Date.now() - (this._httpServer?._startTime || Date.now()),
-          }));
-          break;
-        }
+        case 'ping':
+          {
+            // Latency measurement: respond with timestamp
+            client.sendText(JSON.stringify({
+              type: 'pong',
+              clientTs: msg.timestamp,
+              serverTs: Date.now()
+            }));
+            break;
+          }
+        case 'subscribe':
+          {
+            this._log(`[WS] Client ${client.id} subscribed to: ${msg.channels?.join(', ')}`);
+            break;
+          }
+        case 'buffer_request':
+          {
+            // Client requests buffered events
+            const count = Math.min(msg.count || FIB[8], EVENT_BUFFER_SIZE); // Default 34, max 987
+            this._sendBufferedEvents(client, count);
+            break;
+          }
+        case 'stats':
+          {
+            client.sendText(JSON.stringify({
+              type: 'stats',
+              clients: this._clients.size,
+              maxClients: this.maxClients,
+              bufferSize: this._eventBuffer.size,
+              bufferCapacity: this._eventBuffer.capacity,
+              totalEvents: this._eventBuffer.totalCount,
+              uptime: Date.now() - (this._httpServer?._startTime || Date.now())
+            }));
+            break;
+          }
         default:
           this._log(`[WS] Unknown text message type: ${msg.type}`);
       }
@@ -830,14 +822,16 @@ export class MidiWebSocketProxy extends EventEmitter {
       timestamp: Date.now(),
       source: `${rinfo.address}:${rinfo.port}`,
       direction: 'udp→ws',
-      data: Array.from(packet),
+      data: Array.from(packet)
     };
     this._eventBuffer.push(event);
 
     // Broadcast to all connected WS clients
     this._broadcastBinary(packet);
-
-    this.emit('ump_received', { data: packet, rinfo });
+    this.emit('ump_received', {
+      data: packet,
+      rinfo
+    });
   }
 
   /**
@@ -847,9 +841,8 @@ export class MidiWebSocketProxy extends EventEmitter {
    */
   _relayToUDP(umpPacket) {
     if (!this._udpSocket || !this._udpRemoteHost || !this._udpRemotePort) return;
-
     const buf = Buffer.from(umpPacket);
-    this._udpSocket.send(buf, 0, buf.length, this._udpRemotePort, this._udpRemoteHost, (err) => {
+    this._udpSocket.send(buf, 0, buf.length, this._udpRemotePort, this._udpRemoteHost, err => {
       if (err) {
         this._log(`[UDP] Send error: ${err.message}`);
       }
@@ -879,17 +872,15 @@ export class MidiWebSocketProxy extends EventEmitter {
   _sendBufferedEvents(client, count) {
     const events = this._eventBuffer.recent(count);
     if (events.length === 0) return;
-
     client.sendText(JSON.stringify({
       type: 'buffer_replay',
       count: events.length,
       events: events.map(e => ({
         timestamp: e.timestamp,
         direction: e.direction,
-        data: e.data,
-      })),
+        data: e.data
+      }))
     }));
-
     this._log(`[WS] Sent ${events.length} buffered events to ${client.id}`);
   }
 
@@ -904,29 +895,21 @@ export class MidiWebSocketProxy extends EventEmitter {
         this._log(`[WS] Client ${id} timed out — disconnecting`);
         client.close(1001);
         this._clients.delete(id);
-        this.emit('client_disconnected', { id, total: this._clients.size, reason: 'timeout' });
+        this.emit('client_disconnected', {
+          id,
+          total: this._clients.size,
+          reason: 'timeout'
+        });
         continue;
       }
       client.ping();
     }
   }
-
-  /**
-   * Schedule a reconnect attempt with φ-exponential backoff.
-   * Delay = BACKOFF_BASE_MS × PHI^attempt, capped at BACKOFF_MAX_MS.
-   * @private
-   */
   _scheduleReconnect() {
     if (!this._running || this._reconnectTimer) return;
-
-    const delay = Math.min(
-      BACKOFF_MAX_MS,
-      Math.round(BACKOFF_BASE_MS * Math.pow(PHI, this._reconnectAttempt))
-    );
+    const delay = Math.min(BACKOFF_MAX_MS, Math.round(BACKOFF_BASE_MS * Math.pow(PHI, this._reconnectAttempt)));
     this._reconnectAttempt++;
-
     this._log(`[Reconnect] Attempt ${this._reconnectAttempt} in ${delay}ms (φ-backoff)`);
-
     this._reconnectTimer = setTimeout(async () => {
       this._reconnectTimer = null;
       try {
@@ -958,7 +941,7 @@ export class MidiWebSocketProxy extends EventEmitter {
     return Array.from(this._clients.values()).map(c => ({
       id: c.id,
       latencyMs: c.latencyMs,
-      connectedAt: c.connectedAt,
+      connectedAt: c.connectedAt
     }));
   }
 

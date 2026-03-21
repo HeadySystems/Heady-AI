@@ -1,4 +1,6 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyInfer Standalone Server
@@ -8,16 +10,20 @@
  *
  * Can also be required as a module from a parent service for embedding.
  */
-
-const express    = require('express');
-const helmet     = require('helmet');
-const cors       = require('cors');
+const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
 const compression = require('compression');
-const config     = require('./config');
-const { HeadyInfer } = require('./index');
-const { createRouter } = require('./routes');
-const { liveness }     = require('./health');
-
+const config = require('./config');
+const {
+  HeadyInfer
+} = require('./index');
+const {
+  createRouter
+} = require('./routes');
+const {
+  liveness
+} = require('./health');
 function createApp(cfg = config) {
   const app = express();
 
@@ -25,12 +31,14 @@ function createApp(cfg = config) {
   app.use(helmet());
   app.use(cors());
   app.use(compression());
-  app.use(express.json({ limit: '10mb' }));
+  app.use(express.json({
+    limit: '10mb'
+  }));
 
   // Request logging middleware
   app.use((req, _res, next) => {
     if (cfg.logging.level !== 'silent') {
-      console.log(`[HeadyInfer] ${req.method} ${req.path} ${new Date().toISOString()}`);
+      logger.info(`[HeadyInfer] ${req.method} ${req.path} ${new Date().toISOString()}`);
     }
     next();
   });
@@ -51,46 +59,51 @@ function createApp(cfg = config) {
   // ─── 404 Handler ──────────────────────────────────────────────────────────
   app.use((req, res) => {
     res.status(404).json({
-      error:     'Not found',
-      path:      req.path,
-      service:   cfg.serviceName,
-      timestamp: new Date().toISOString(),
+      error: 'Not found',
+      path: req.path,
+      service: cfg.serviceName,
+      timestamp: new Date().toISOString()
     });
   });
-
-  return { app, gateway };
+  return {
+    app,
+    gateway
+  };
 }
 
 // ─── Startup ───────────────────────────────────────────────────────────────
 
 if (require.main === module) {
-  const { app, gateway } = createApp();
+  const {
+    app,
+    gateway
+  } = createApp();
   const port = config.port;
-
   const server = app.listen(port, '0.0.0.0', () => {
-    console.log(`[HeadyInfer] Server listening on port ${port} (${config.env})`);
-    console.log(`[HeadyInfer] Health: http://localhost:${port}/health`);
-    console.log(`[HeadyInfer] API:    http://localhost:${port}/api/v1/infer`);
+    logger.info(`[HeadyInfer] Server listening on port ${port} (${config.env})`);
+    logger.info(`[HeadyInfer] Health: http://localhost:${port}/health`);
+    logger.info(`[HeadyInfer] API:    http://localhost:${port}/api/v1/infer`);
   });
 
   // ─── Graceful Shutdown ─────────────────────────────────────────────────────
-  const shutdown = async (signal) => {
-    console.log(`[HeadyInfer] ${signal} received. Shutting down...`);
+  const shutdown = async signal => {
+    logger.info(`[HeadyInfer] ${signal} received. Shutting down...`);
     server.close(async () => {
       await gateway.shutdown();
-      console.log('[HeadyInfer] Server closed');
+      logger.info('[HeadyInfer] Server closed');
       process.exit(0);
     });
     // Force-quit after 10s
-    setTimeout(() => { process.exit(1); }, 10_000);
+    setTimeout(() => {
+      process.exit(1);
+    }, 10_000);
   };
-
   process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT',  () => shutdown('SIGINT'));
-
-  process.on('unhandledRejection', (reason) => {
-    console.error('[HeadyInfer] Unhandled rejection:', reason);
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('unhandledRejection', reason => {
+    logger.error('[HeadyInfer] Unhandled rejection:', reason);
   });
 }
-
-module.exports = { createApp };
+module.exports = {
+  createApp
+};

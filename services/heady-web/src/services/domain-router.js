@@ -12,7 +12,9 @@
 
 'use strict';
 
-const { resolveUI } = require('./ui-registry');
+const {
+  resolveUI
+} = require('./ui-registry');
 
 /**
  * Full domain map: hostname → projection config.
@@ -38,44 +40,44 @@ const DOMAIN_MAP = {
     projection: 'antigravity',
     deployTarget: 'cloudflare-pages',
     endpoint: 'https://headyme.com',
-    stalenessBudget: 300,        // 5 minutes
+    stalenessBudget: 300,
+    // 5 minutes
     syncMode: 'event-driven',
-    description: 'Primary platform entry — 3D vector visualization',
+    description: 'Primary platform entry — 3D vector visualization'
   },
-
   'headysystems.com': {
     uiId: 'landing',
     category: 'marketing',
     projection: 'landing',
     deployTarget: 'cloudflare-pages',
     endpoint: 'https://headysystems.com',
-    stalenessBudget: 3600,       // 1 hour
+    stalenessBudget: 3600,
+    // 1 hour
     syncMode: 'event-driven',
-    description: 'Marketing landing page for Heady™Systems Inc.',
+    description: 'Marketing landing page for Heady™Systems Inc.'
   },
-
   'headymcp.com': {
     uiId: 'governance-panel',
     category: 'ops',
     projection: 'governance-panel',
     deployTarget: 'cloud-run',
     endpoint: 'https://headymcp.com',
-    stalenessBudget: 60,         // 1 minute — governance needs freshness
+    stalenessBudget: 60,
+    // 1 minute — governance needs freshness
     syncMode: 'event-driven',
-    description: 'MCP governance and policy engine',
+    description: 'MCP governance and policy engine'
   },
-
   'headyconnection.org': {
     uiId: 'vector-explorer',
     category: 'platform',
     projection: 'vector-explorer',
     deployTarget: 'huggingface-spaces',
     endpoint: 'https://headyconnection.org',
-    stalenessBudget: 120,        // 2 minutes
+    stalenessBudget: 120,
+    // 2 minutes
     syncMode: 'event-driven',
-    description: 'Vector memory federation network',
+    description: 'Vector memory federation network'
   },
-
   // ── Subdomain routes ───────────────────────────────────────────────────────
 
   'app.headyme.com': {
@@ -84,33 +86,33 @@ const DOMAIN_MAP = {
     projection: 'swarm-dashboard',
     deployTarget: 'cloud-run',
     endpoint: 'https://app.headyme.com',
-    stalenessBudget: 15,         // 15 seconds — live agent data
+    stalenessBudget: 15,
+    // 15 seconds — live agent data
     syncMode: 'event-driven',
-    description: 'Real-time agent swarm monitoring dashboard',
+    description: 'Real-time agent swarm monitoring dashboard'
   },
-
   'ide.headysystems.com': {
     uiId: 'heady-ide',
     category: 'developer',
     projection: 'heady-ide',
     deployTarget: 'cloud-run',
     endpoint: 'https://ide.headysystems.com',
-    stalenessBudget: 0,          // No caching — IDE is always live
+    stalenessBudget: 0,
+    // No caching — IDE is always live
     syncMode: 'event-driven',
-    description: 'AI-assisted code editor and development environment',
+    description: 'AI-assisted code editor and development environment'
   },
-
   'deploy.headyme.com': {
     uiId: 'projection-monitor',
     category: 'ops',
     projection: 'projection-monitor',
     deployTarget: 'cloud-run',
     endpoint: 'https://deploy.headyme.com',
-    stalenessBudget: 30,         // 30 seconds
+    stalenessBudget: 30,
+    // 30 seconds
     syncMode: 'event-driven',
-    description: 'Deployment projection health monitoring',
+    description: 'Deployment projection health monitoring'
   },
-
   'projections.headysystems.com': {
     uiId: 'projection-monitor',
     category: 'ops',
@@ -119,9 +121,8 @@ const DOMAIN_MAP = {
     endpoint: 'https://projections.headysystems.com',
     stalenessBudget: 30,
     syncMode: 'event-driven',
-    description: 'Deployment projection health monitoring',
+    description: 'Deployment projection health monitoring'
   },
-
   'www.headyme.com': {
     uiId: 'antigravity',
     category: 'platform',
@@ -130,9 +131,8 @@ const DOMAIN_MAP = {
     endpoint: 'https://www.headyme.com',
     stalenessBudget: 300,
     syncMode: 'event-driven',
-    description: 'Primary platform — www alias',
+    description: 'Primary platform — www alias'
   },
-
   'www.headysystems.com': {
     uiId: 'landing',
     category: 'marketing',
@@ -141,32 +141,30 @@ const DOMAIN_MAP = {
     endpoint: 'https://www.headysystems.com',
     stalenessBudget: 3600,
     syncMode: 'event-driven',
-    description: 'Marketing landing page — www alias',
+    description: 'Marketing landing page — www alias'
   },
-
   // ── Development ────────────────────────────────────────────────────────────
 
-  'localhost': {
+  "0.0.0.0": {
     uiId: 'landing',
     category: 'dev',
     projection: 'landing',
     deployTarget: 'local',
-    endpoint: 'http://localhost:3000',
+    endpoint: "http://0.0.0.0:3000",
     stalenessBudget: 0,
     syncMode: 'manual',
-    description: 'Local development server',
+    description: 'Local development server'
   },
-
-  '127.0.0.1': {
+  "0.0.0.0": {
     uiId: 'landing',
     category: 'dev',
     projection: 'landing',
     deployTarget: 'local',
-    endpoint: 'http://127.0.0.1:3000',
+    endpoint: "http://0.0.0.0:3000",
     stalenessBudget: 0,
     syncMode: 'manual',
-    description: 'Local development server (IP)',
-  },
+    description: 'Local development server (IP)'
+  }
 };
 
 // ── Router API ────────────────────────────────────────────────────────────────
@@ -188,7 +186,6 @@ const DOMAIN_MAP = {
  */
 function resolveDomain(hostname) {
   if (!hostname) return null;
-
   const key = hostname.toLowerCase().trim();
 
   // ── 1. Exact DOMAIN_MAP match ────────────────────────────────────────────
@@ -197,7 +194,7 @@ function resolveDomain(hostname) {
       uiId: DOMAIN_MAP[key].uiId,
       category: DOMAIN_MAP[key].category,
       hostname: key,
-      config: DOMAIN_MAP[key],
+      config: DOMAIN_MAP[key]
     };
   }
 
@@ -214,11 +211,10 @@ function resolveDomain(hostname) {
         deployTarget: 'cloudflare-pages',
         stalenessBudget: 300,
         syncMode: 'event-driven',
-        description: uiCfg.description || '',
-      },
+        description: uiCfg.description || ''
+      }
     };
   }
-
   return null;
 }
 
@@ -238,7 +234,9 @@ function resolveCurrentDomain() {
  * @returns {typeof DOMAIN_MAP}
  */
 function getDomainMap() {
-  return { ...DOMAIN_MAP };
+  return {
+    ...DOMAIN_MAP
+  };
 }
 
 // ── Exports ───────────────────────────────────────────────────────────────────
@@ -247,5 +245,5 @@ module.exports = {
   DOMAIN_MAP,
   resolveDomain,
   resolveCurrentDomain,
-  getDomainMap,
+  getDomainMap
 };

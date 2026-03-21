@@ -1,3 +1,5 @@
+import { createLogger } from '../../../utils/logger';
+const logger = createLogger('auto-fixed');
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -23,7 +25,7 @@ export function middleware(request: NextRequest) {
   if (token && url.pathname.startsWith('/dashboard')) {
     // Check if onboarding is complete
     if (!onboardingComplete || onboardingComplete !== 'true') {
-      console.log('[Middleware] Onboarding not complete, redirecting to /onboarding');
+      logger.info('[Middleware] Onboarding not complete, redirecting to /onboarding');
       url.pathname = '/onboarding';
       return NextResponse.redirect(url);
     }
@@ -31,18 +33,12 @@ export function middleware(request: NextRequest) {
 
   // If user is not authenticated and trying to access protected routes
   if (!token && (url.pathname.startsWith('/dashboard') || url.pathname.startsWith('/onboarding'))) {
-    console.log('[Middleware] Not authenticated, redirecting to /auth/signin');
+    logger.info('[Middleware] Not authenticated, redirecting to /auth/signin');
     url.pathname = '/auth/signin';
     return NextResponse.redirect(url);
   }
-
   return NextResponse.next();
 }
-
 export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/onboarding/:path*',
-    '/api/user/:path*'
-  ],
+  matcher: ['/dashboard/:path*', '/onboarding/:path*', '/api/user/:path*']
 };

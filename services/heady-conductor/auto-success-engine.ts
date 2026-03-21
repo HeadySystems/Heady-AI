@@ -1,3 +1,5 @@
+import { createLogger } from '../utils/logger';
+const logger = createLogger('auto-fixed');
 /**
  * HeadyConductor - Auto-Success Engine
  * Dynamic φ-scaled parallel agent orchestration
@@ -32,10 +34,13 @@ const CSL_THRESHOLD = 1 / PHI; // 0.618...
 
 /** φ-ratio distribution tiers for agent allocation */
 const PHI_DISTRIBUTION_TIERS = {
-  critical: 1 - (1 / PHI),      // 0.382 — Security, Intelligence, Availability
-  high: 1 / (PHI * PHI),     // 0.236 — Performance, Code Quality, Learning
-  standard: 1 / (PHI ** 3),      // 0.146 — Communication, Infrastructure, Compliance
-  growth: 1 / (PHI ** 4),      // 0.090 — Cost, Discovery, Evolution, Self-Assessment
+  critical: 1 - 1 / PHI,
+  // 0.382 — Security, Intelligence, Availability
+  high: 1 / (PHI * PHI),
+  // 0.236 — Performance, Code Quality, Learning
+  standard: 1 / PHI ** 3,
+  // 0.146 — Communication, Infrastructure, Compliance
+  growth: 1 / PHI ** 4 // 0.090 — Cost, Discovery, Evolution, Self-Assessment
 } as const;
 
 // ─── TYPE DEFINITIONS ────────────────────────────────────────────────────
@@ -45,7 +50,6 @@ interface CategoryConfig {
   tier: keyof typeof PHI_DISTRIBUTION_TIERS;
   handler: () => Promise<TaskResult[]>;
 }
-
 interface TaskResult {
   taskId: string;
   category: string;
@@ -53,14 +57,12 @@ interface TaskResult {
   durationMs: number;
   learningEvent?: LearningEvent;
 }
-
 interface LearningEvent {
   category: string;
   error: string;
   timestamp: string;
   preventionRule?: string;
 }
-
 interface CycleMetrics {
   cycleNumber: number;
   startTime: number;
@@ -80,7 +82,6 @@ export class AutoSuccessEngine {
   private totalRetries = 0;
   private categories: CategoryConfig[] = [];
   private timer: NodeJS.Timer | null = null;
-
   constructor(private config: {
     enableMonteCarloValidation: boolean;
     enableLiquidScaling: boolean;
@@ -98,27 +99,66 @@ export class AutoSuccessEngine {
     // Categories are discovered from the task catalog, not hardcoded.
     // Each category self-registers with its tier assignment.
     return [
-      // Tier 1: Critical (38.2% of agent budget)
-      { name: 'Security', tier: 'critical', handler: () => this.runSecurityScans() },
-      { name: 'Intelligence', tier: 'critical', handler: () => this.runIntelligenceChecks() },
-      { name: 'Availability', tier: 'critical', handler: () => this.runAvailabilityChecks() },
-
-      // Tier 2: High (23.6% of agent budget)
-      { name: 'Performance', tier: 'high', handler: () => this.monitorPerformance() },
-      { name: 'CodeQuality', tier: 'high', handler: () => this.validateCodeQuality() },
-      { name: 'Learning', tier: 'high', handler: () => this.processLearningEvents() },
-
-      // Tier 3: Standard (14.6% of agent budget)
-      { name: 'Communication', tier: 'standard', handler: () => this.checkCommunications() },
-      { name: 'Infrastructure', tier: 'standard', handler: () => this.validateInfrastructure() },
-      { name: 'Compliance', tier: 'standard', handler: () => this.auditCompliance() },
-
-      // Tier 4: Growth (9.0% of agent budget)
-      { name: 'CostOptimization', tier: 'growth', handler: () => this.optimizeCosts() },
-      { name: 'Discovery', tier: 'growth', handler: () => this.runDiscovery() },
-      { name: 'Evolution', tier: 'growth', handler: () => this.runEvolution() },
-      { name: 'SelfAssessment', tier: 'growth', handler: () => this.runSelfAssessment() },
-    ];
+    // Tier 1: Critical (38.2% of agent budget)
+    {
+      name: 'Security',
+      tier: 'critical',
+      handler: () => this.runSecurityScans()
+    }, {
+      name: 'Intelligence',
+      tier: 'critical',
+      handler: () => this.runIntelligenceChecks()
+    }, {
+      name: 'Availability',
+      tier: 'critical',
+      handler: () => this.runAvailabilityChecks()
+    },
+    // Tier 2: High (23.6% of agent budget)
+    {
+      name: 'Performance',
+      tier: 'high',
+      handler: () => this.monitorPerformance()
+    }, {
+      name: 'CodeQuality',
+      tier: 'high',
+      handler: () => this.validateCodeQuality()
+    }, {
+      name: 'Learning',
+      tier: 'high',
+      handler: () => this.processLearningEvents()
+    },
+    // Tier 3: Standard (14.6% of agent budget)
+    {
+      name: 'Communication',
+      tier: 'standard',
+      handler: () => this.checkCommunications()
+    }, {
+      name: 'Infrastructure',
+      tier: 'standard',
+      handler: () => this.validateInfrastructure()
+    }, {
+      name: 'Compliance',
+      tier: 'standard',
+      handler: () => this.auditCompliance()
+    },
+    // Tier 4: Growth (9.0% of agent budget)
+    {
+      name: 'CostOptimization',
+      tier: 'growth',
+      handler: () => this.optimizeCosts()
+    }, {
+      name: 'Discovery',
+      tier: 'growth',
+      handler: () => this.runDiscovery()
+    }, {
+      name: 'Evolution',
+      tier: 'growth',
+      handler: () => this.runEvolution()
+    }, {
+      name: 'SelfAssessment',
+      tier: 'growth',
+      handler: () => this.runSelfAssessment()
+    }];
   }
 
   /**
@@ -127,7 +167,7 @@ export class AutoSuccessEngine {
    */
   private computeAgentCount(tier: keyof typeof PHI_DISTRIBUTION_TIERS, systemLoad: number): number {
     const weight = PHI_DISTRIBUTION_TIERS[tier];
-    const loadFactor = 1 - (systemLoad * (1 - CSL_THRESHOLD)); // Scale down under high load
+    const loadFactor = 1 - systemLoad * (1 - CSL_THRESHOLD); // Scale down under high load
 
     // Compute raw agent count from φ-weighted budget
     const totalBudget = MAX_AGENTS_PER_CATEGORY; // fib(8) = 21
@@ -152,20 +192,18 @@ export class AutoSuccessEngine {
       return 0.382; // Default to 1 - 1/φ if metrics unavailable
     }
   }
-
   public async start() {
     const categoryCount = this.categories.length;
     const systemLoad = await this.getSystemLoad();
     const sampleAgentCount = this.computeAgentCount('critical', systemLoad);
-
-    console.log('[AutoSuccessEngine] Starting with φ-scaled dynamic configuration:', {
+    logger.info('[AutoSuccessEngine] Starting with φ-scaled dynamic configuration:', {
       cycleIntervalMs: CYCLE_INTERVAL_MS,
       cycleIntervalDerivation: 'φ⁷ × 1000',
       categories: categoryCount,
       scalingMode: 'dynamic_phi',
       sampleCriticalAgents: sampleAgentCount,
       cslThreshold: CSL_THRESHOLD,
-      taskTimeoutMs: TASK_TIMEOUT_MS,
+      taskTimeoutMs: TASK_TIMEOUT_MS
     });
 
     // Start the φ-timed cycle
@@ -174,20 +212,17 @@ export class AutoSuccessEngine {
     // Run initial cycle immediately
     await this.runCycle();
   }
-
   public stop() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    console.log('[AutoSuccessEngine] Stopped');
+    logger.info('[AutoSuccessEngine] Stopped');
   }
-
   private async runCycle() {
     this.cycleNumber++;
     const startTime = Date.now();
     const systemLoad = await this.getSystemLoad();
-
     const metrics: CycleMetrics = {
       cycleNumber: this.cycleNumber,
       startTime,
@@ -197,17 +232,15 @@ export class AutoSuccessEngine {
       tasksCompleted: 0,
       tasksFailed: 0,
       learningEvents: 0,
-      phiDistribution: {},
+      phiDistribution: {}
     };
-
-    console.log(`[AutoSuccessEngine] Cycle #${this.cycleNumber} starting (load: ${systemLoad.toFixed(3)})...`);
+    logger.info(`[AutoSuccessEngine] Cycle #${this.cycleNumber} starting (load: ${systemLoad.toFixed(3)})...`);
 
     // Process all categories in parallel with φ-distributed agent counts
-    const categoryPromises = this.categories.map(async (category) => {
+    const categoryPromises = this.categories.map(async category => {
       const agentCount = this.computeAgentCount(category.tier, systemLoad);
       metrics.phiDistribution[category.name] = agentCount;
       metrics.totalAgentsSpawned += agentCount;
-
       try {
         // Run with timeout
         const results = await this.withTimeout(category.handler(), TASK_TIMEOUT_MS);
@@ -220,17 +253,12 @@ export class AutoSuccessEngine {
 
         // Every failure is a learning event — not a fatal error
         await this.recordLearningEvent(category.name, error);
-
-        // Phi-backoff retry (up to fib(4)=3 attempts)
         return this.retryWithPhiBackoff(category, MAX_RETRIES_PER_CYCLE);
       }
     });
-
     await Promise.allSettled(categoryPromises);
-
     metrics.durationMs = Date.now() - startTime;
-
-    console.log('[AutoSuccessEngine] Cycle complete:', {
+    logger.info('[AutoSuccessEngine] Cycle complete:', {
       cycle: metrics.cycleNumber,
       duration: `${metrics.durationMs}ms`,
       agents: metrics.totalAgentsSpawned,
@@ -238,14 +266,13 @@ export class AutoSuccessEngine {
       completed: metrics.tasksCompleted,
       failed: metrics.tasksFailed,
       learnings: metrics.learningEvents,
-      distribution: metrics.phiDistribution,
+      distribution: metrics.phiDistribution
     });
 
     // Trigger dependent systems
     if (this.config.enableMonteCarloValidation) {
       await this.triggerMonteCarloSimulations();
     }
-
     if (this.config.enableLiquidScaling) {
       await this.optimizeResourceAllocation(systemLoad);
     }
@@ -254,22 +281,16 @@ export class AutoSuccessEngine {
   /**
    * Retry with φ-backoff: φ¹ → φ² → φ³ (1618ms → 2618ms → 4236ms)
    */
-  private async retryWithPhiBackoff(
-    category: CategoryConfig,
-    maxRetries: number,
-  ): Promise<TaskResult[]> {
+  private async retryWithPhiBackoff(category: CategoryConfig, maxRetries: number): Promise<TaskResult[]> {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       if (this.totalRetries >= MAX_RETRIES_TOTAL) {
-        console.error(`[AutoSuccessEngine] Max total retries (${MAX_RETRIES_TOTAL}) exceeded — escalating to HeadyBuddy`);
+        logger.error(`[AutoSuccessEngine] Max total retries (${MAX_RETRIES_TOTAL}) exceeded — escalating to HeadyBuddy`);
         break;
       }
-
       const backoffMs = Math.round(phiPower(attempt) * 1000);
-      console.log(`[AutoSuccessEngine] Retrying ${category.name} in ${backoffMs}ms (attempt ${attempt}/${maxRetries})`);
-
+      logger.info(`[AutoSuccessEngine] Retrying ${category.name} in ${backoffMs}ms (attempt ${attempt}/${maxRetries})`);
       await this.sleep(backoffMs);
       this.totalRetries++;
-
       try {
         return await this.withTimeout(category.handler(), TASK_TIMEOUT_MS);
       } catch {
@@ -288,7 +309,6 @@ export class AutoSuccessEngine {
       promise.then(resolve, reject).finally(() => clearTimeout(timer));
     });
   }
-
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -297,87 +317,138 @@ export class AutoSuccessEngine {
   // Each returns TaskResult[] — parallel agents within each category
 
   private async runSecurityScans(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Security] Running φ-distributed security scans');
-    return [{ taskId: 'sec-1', category: 'Security', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Security] Running φ-distributed security scans');
+    return [{
+      taskId: 'sec-1',
+      category: 'Security',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async runIntelligenceChecks(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Intelligence] Running CSL intelligence checks');
-    return [{ taskId: 'int-1', category: 'Intelligence', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Intelligence] Running CSL intelligence checks');
+    return [{
+      taskId: 'int-1',
+      category: 'Intelligence',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async runAvailabilityChecks(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Availability] Running availability probes');
-    return [{ taskId: 'avail-1', category: 'Availability', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Availability] Running availability probes');
+    return [{
+      taskId: 'avail-1',
+      category: 'Availability',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async monitorPerformance(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Performance] Monitoring performance metrics');
-    return [{ taskId: 'perf-1', category: 'Performance', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Performance] Monitoring performance metrics');
+    return [{
+      taskId: 'perf-1',
+      category: 'Performance',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async validateCodeQuality(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:CodeQuality] Running quality gates');
-    return [{ taskId: 'cq-1', category: 'CodeQuality', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:CodeQuality] Running quality gates');
+    return [{
+      taskId: 'cq-1',
+      category: 'CodeQuality',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async processLearningEvents(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Learning] HeadyVinci pattern learning active');
-    return [{ taskId: 'learn-1', category: 'Learning', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Learning] HeadyVinci pattern learning active');
+    return [{
+      taskId: 'learn-1',
+      category: 'Learning',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async checkCommunications(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Communication] Checking communication channels');
-    return [{ taskId: 'comm-1', category: 'Communication', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Communication] Checking communication channels');
+    return [{
+      taskId: 'comm-1',
+      category: 'Communication',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async validateInfrastructure(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Infrastructure] Validating infrastructure');
-    return [{ taskId: 'infra-1', category: 'Infrastructure', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Infrastructure] Validating infrastructure');
+    return [{
+      taskId: 'infra-1',
+      category: 'Infrastructure',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async auditCompliance(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Compliance] Running compliance audit');
-    return [{ taskId: 'comp-1', category: 'Compliance', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Compliance] Running compliance audit');
+    return [{
+      taskId: 'comp-1',
+      category: 'Compliance',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async optimizeCosts(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Cost] Analyzing cost optimization opportunities');
-    return [{ taskId: 'cost-1', category: 'CostOptimization', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Cost] Analyzing cost optimization opportunities');
+    return [{
+      taskId: 'cost-1',
+      category: 'CostOptimization',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async runDiscovery(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:Discovery] Scanning for innovations');
-    return [{ taskId: 'disc-1', category: 'Discovery', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Discovery] Scanning for innovations');
+    return [{
+      taskId: 'disc-1',
+      category: 'Discovery',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async runEvolution(): Promise<TaskResult[]> {
     if (!this.config.enableEvolution) return [];
-    console.log('[AutoSuccess:Evolution] Running controlled evolution cycle');
-    return [{ taskId: 'evo-1', category: 'Evolution', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:Evolution] Running controlled evolution cycle');
+    return [{
+      taskId: 'evo-1',
+      category: 'Evolution',
+      status: 'success',
+      durationMs: 0
+    }];
   }
-
   private async runSelfAssessment(): Promise<TaskResult[]> {
-    console.log('[AutoSuccess:SelfAssessment] Running metacognitive assessment');
-    return [{ taskId: 'self-1', category: 'SelfAssessment', status: 'success', durationMs: 0 }];
+    logger.info('[AutoSuccess:SelfAssessment] Running metacognitive assessment');
+    return [{
+      taskId: 'self-1',
+      category: 'SelfAssessment',
+      status: 'success',
+      durationMs: 0
+    }];
   }
 
   // ─── DEPENDENT SYSTEMS ──────────────────────────────────────────────────
 
   private async triggerMonteCarloSimulations(): Promise<void> {
-    console.log('[HeadySims] Running Monte Carlo validation simulations');
+    logger.info('[HeadySims] Running Monte Carlo validation simulations');
   }
-
   private async optimizeResourceAllocation(systemLoad: number): Promise<void> {
-    console.log(`[HeadyVinci] Liquid scaling active (load: ${systemLoad.toFixed(3)}) — φ-ratio rebalancing`);
+    logger.info(`[HeadyVinci] Liquid scaling active (load: ${systemLoad.toFixed(3)}) — φ-ratio rebalancing`);
   }
-
   private async recordLearningEvent(category: string, error: any): Promise<void> {
-    console.log('[HeadyVinci] Learning event recorded:', {
+    logger.info('[HeadyVinci] Learning event recorded:', {
       category,
       error: error?.message || String(error),
       timestamp: new Date().toISOString(),
-      retryBudget: `${this.totalRetries}/${MAX_RETRIES_TOTAL}`,
+      retryBudget: `${this.totalRetries}/${MAX_RETRIES_TOTAL}`
     });
   }
 }
@@ -388,18 +459,15 @@ async function main() {
   const engine = new AutoSuccessEngine({
     enableMonteCarloValidation: true,
     enableLiquidScaling: true,
-    enableEvolution: true,
+    enableEvolution: true
   });
-
   await engine.start();
 
   // Graceful shutdown
   process.on('SIGTERM', () => engine.stop());
   process.on('SIGINT', () => engine.stop());
 }
-
 if (require.main === module) {
   main().catch(console.error);
 }
-
 export default AutoSuccessEngine;

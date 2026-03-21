@@ -15,15 +15,17 @@ const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 
 /** HCFP 21-Stage Pipeline for causal stage transitions */
-const PIPELINE_STAGES = [
-  'CHANNEL_ENTRY', 'CONTEXT_ASSEMBLY', 'INTENT_CLASSIFY', 'NODE_SELECT', 'PRE_EXECUTE',
-  'EXECUTE', 'POST_EXECUTE', 'QUALITY_GATE', 'ASSURANCE_GATE', 'PATTERN_CAPTURE',
-  'STORY_UPDATE', 'LEARNING', 'DRIFT_CHECK', 'COHERENCE_VALIDATE', 'RECEIPT_SIGN',
-  'CHECKPOINT', 'CLEANUP', 'METRICS_EMIT', 'TELEMETRY_FLUSH', 'GOVERNANCE_LOG', 'RECEIPT'
-];
+const PIPELINE_STAGES = ['CHANNEL_ENTRY', 'CONTEXT_ASSEMBLY', 'INTENT_CLASSIFY', 'NODE_SELECT', 'PRE_EXECUTE', 'EXECUTE', 'POST_EXECUTE', 'QUALITY_GATE', 'ASSURANCE_GATE', 'PATTERN_CAPTURE', 'STORY_UPDATE', 'LEARNING', 'DRIFT_CHECK', 'COHERENCE_VALIDATE', 'RECEIPT_SIGN', 'CHECKPOINT', 'CLEANUP', 'METRICS_EMIT', 'TELEMETRY_FLUSH', 'GOVERNANCE_LOG', 'RECEIPT'];
 
 /** Monte Carlo simulation count, Fibonacci-derived */
 const MC_SIMULATIONS = FIB[10]; // 55
@@ -45,12 +47,6 @@ function log(level, msg, meta = {}, correlationId = null) {
     ...meta
   }) + '\n');
 }
-
-/**
- * Phi-backoff delay.
- * @param {number} attempt - Attempt number
- * @returns {number} Delay in ms
- */
 function phiBackoff(attempt) {
   return FIB[Math.min(attempt, FIB.length - 1)] * PSI * 1000;
 }
@@ -63,7 +59,7 @@ function phiBackoff(attempt) {
 function seededRandom(seed) {
   let s = seed;
   return () => {
-    s = (s * 1664525 + 1013904223) & 0xFFFFFFFF;
+    s = s * 1664525 + 1013904223 & 0xFFFFFFFF;
     return (s >>> 0) / 0xFFFFFFFF;
   };
 }
@@ -100,7 +96,11 @@ class HeadyCausalInferenceService {
     this.server = null;
     this._started = false;
     this._coherence = CSL.HIGH;
-    this._circuitBreaker = { failures: 0, maxFailures: FIB[6], openUntil: 0 };
+    this._circuitBreaker = {
+      failures: 0,
+      maxFailures: FIB[6],
+      openUntil: 0
+    };
   }
 
   /**
@@ -114,25 +114,37 @@ class HeadyCausalInferenceService {
       const oldest = [...this.models.entries()].sort((a, b) => a[1].createdAt - b[1].createdAt)[0];
       if (oldest) this.models.delete(oldest[0]);
     }
-
     const nodes = new Map();
     const edges = [];
-
     for (const spec of nodeSpecs) {
       nodes.set(spec.id, {
         id: spec.id,
         parents: spec.parents || [],
-        mechanism: spec.mechanism || ((parentVals) => parentVals.reduce((s, v) => s + v, 0) * PSI),
+        mechanism: spec.mechanism || (parentVals => parentVals.reduce((s, v) => s + v, 0) * PSI),
         value: spec.initialValue || 0
       });
-      for (const parent of (spec.parents || [])) {
-        edges.push({ from: parent, to: spec.id });
+      for (const parent of spec.parents || []) {
+        edges.push({
+          from: parent,
+          to: spec.id
+        });
       }
     }
-
-    this.models.set(modelId, { nodes, edges, createdAt: Date.now() });
-    log('info', 'SCM created', { modelId, nodeCount: nodes.size, edgeCount: edges.length });
-    return { modelId, nodeCount: nodes.size, edgeCount: edges.length };
+    this.models.set(modelId, {
+      nodes,
+      edges,
+      createdAt: Date.now()
+    });
+    log('info', 'SCM created', {
+      modelId,
+      nodeCount: nodes.size,
+      edgeCount: edges.length
+    });
+    return {
+      modelId,
+      nodeCount: nodes.size,
+      edgeCount: edges.length
+    };
   }
 
   /**
@@ -144,8 +156,7 @@ class HeadyCausalInferenceService {
   _topologicalSort(nodes) {
     const visited = new Set();
     const stack = [];
-
-    const visit = (id) => {
+    const visit = id => {
       if (visited.has(id)) return;
       visited.add(id);
       const node = nodes.get(id);
@@ -156,7 +167,6 @@ class HeadyCausalInferenceService {
       }
       stack.push(id);
     };
-
     for (const id of nodes.keys()) visit(id);
     return stack;
   }
@@ -175,7 +185,10 @@ class HeadyCausalInferenceService {
     // Clone nodes
     const clonedNodes = new Map();
     for (const [id, node] of model.nodes) {
-      clonedNodes.set(id, { ...node, parents: [...node.parents] });
+      clonedNodes.set(id, {
+        ...node,
+        parents: [...node.parents]
+      });
     }
 
     // Apply interventions: sever parent links for intervened nodes
@@ -194,11 +207,8 @@ class HeadyCausalInferenceService {
       if (!node) continue;
       if (id in interventions) continue;
       const parentVals = node.parents.map(pid => clonedNodes.get(pid)?.value || 0);
-      node.value = typeof node.mechanism === 'function'
-        ? node.mechanism(parentVals)
-        : parentVals.reduce((s, v) => s + v, 0) * PSI;
+      node.value = typeof node.mechanism === 'function' ? node.mechanism(parentVals) : parentVals.reduce((s, v) => s + v, 0) * PSI;
     }
-
     const result = {};
     for (const [id, node] of clonedNodes) result[id] = node.value;
     return result;
@@ -228,10 +238,16 @@ class HeadyCausalInferenceService {
     const deltas = {};
     for (const [id, cfValue] of Object.entries(cfResult)) {
       const factualValue = factual[id] || 0;
-      deltas[id] = { factual: factualValue, counterfactual: cfValue, delta: cfValue - factualValue };
+      deltas[id] = {
+        factual: factualValue,
+        counterfactual: cfValue,
+        delta: cfValue - factualValue
+      };
     }
-
-    return { counterfactualState: cfResult, deltas };
+    return {
+      counterfactualState: cfResult,
+      deltas
+    };
   }
 
   /**
@@ -245,18 +261,17 @@ class HeadyCausalInferenceService {
   monteCarloSimulate(modelId, interventions, options = {}) {
     const model = this.models.get(modelId);
     if (!model) throw new Error('Model not found');
-
     const numSims = options.simulations || this.mcSimulations;
     const noiseScale = options.noiseScale || PSI * 0.1;
     const seed = options.seed || Date.now();
     const rng = seededRandom(seed);
-
     const results = [];
     for (let i = 0; i < numSims; i++) {
       // Add Gaussian-ish noise to interventions
       const noisyInterventions = {};
       for (const [k, v] of Object.entries(interventions)) {
-        const u1 = rng(), u2 = rng();
+        const u1 = rng(),
+          u2 = rng();
         const noise = Math.sqrt(-2 * Math.log(u1 || 0.001)) * Math.cos(2 * Math.PI * u2) * noiseScale;
         noisyInterventions[k] = v + noise;
       }
@@ -282,8 +297,11 @@ class HeadyCausalInferenceService {
         confidence: variance < PSI ? 'high' : variance < PHI ? 'medium' : 'low'
       };
     }
-
-    return { simulations: numSims, seed, stats };
+    return {
+      simulations: numSims,
+      seed,
+      stats
+    };
   }
 
   /**
@@ -297,11 +315,13 @@ class HeadyCausalInferenceService {
     const correlationId = context.correlationId || crypto.randomUUID();
     const fromIdx = PIPELINE_STAGES.indexOf(fromStage);
     const toIdx = PIPELINE_STAGES.indexOf(toStage);
-
     if (fromIdx === -1 || toIdx === -1) {
-      return { error: 'Invalid pipeline stage', fromStage, toStage };
+      return {
+        error: 'Invalid pipeline stage',
+        fromStage,
+        toStage
+      };
     }
-
     const stagesSkipped = toIdx - fromIdx - 1;
     const isForward = toIdx > fromIdx;
     const isCriticalJump = stagesSkipped > FIB[4]; // Jumping more than 3 stages
@@ -314,7 +334,6 @@ class HeadyCausalInferenceService {
       COHERENCE_VALIDATE: PHI,
       GOVERNANCE_LOG: PHI
     };
-
     const fromRisk = stageRisk[fromStage] || 1;
     const toRisk = stageRisk[toStage] || 1;
     const transitionRisk = (fromRisk + toRisk) * (1 + stagesSkipped * PSI) * (isForward ? 1 : PHI);
@@ -325,10 +344,20 @@ class HeadyCausalInferenceService {
 
     // Side-effect prediction
     const potentialEffects = [];
-    if (isCriticalJump) potentialEffects.push({ type: 'skipped_validation', severity: 'high', stages: PIPELINE_STAGES.slice(fromIdx + 1, toIdx) });
-    if (!isForward) potentialEffects.push({ type: 'backward_transition', severity: 'medium', riskMultiplier: PHI });
-    if (toStage === 'EXECUTE' && fromStage !== 'PRE_EXECUTE') potentialEffects.push({ type: 'unguarded_execution', severity: 'critical' });
-
+    if (isCriticalJump) potentialEffects.push({
+      type: 'skipped_validation',
+      severity: 'high',
+      stages: PIPELINE_STAGES.slice(fromIdx + 1, toIdx)
+    });
+    if (!isForward) potentialEffects.push({
+      type: 'backward_transition',
+      severity: 'medium',
+      riskMultiplier: PHI
+    });
+    if (toStage === 'EXECUTE' && fromStage !== 'PRE_EXECUTE') potentialEffects.push({
+      type: 'unguarded_execution',
+      severity: 'critical'
+    });
     const assessment = {
       correlationId,
       fromStage,
@@ -350,15 +379,17 @@ class HeadyCausalInferenceService {
       const firstKey = this.assessmentCache.keys().next().value;
       this.assessmentCache.delete(firstKey);
     }
-
-    log('info', 'Pipeline transition assessed', { fromStage, toStage, cslGate }, correlationId);
+    log('info', 'Pipeline transition assessed', {
+      fromStage,
+      toStage,
+      cslGate
+    }, correlationId);
     return assessment;
   }
 
   /** Set up Express routes. @private */
   _setupRoutes() {
     this.app.use(express.json());
-
     this.app.get('/health', (_req, res) => {
       res.json({
         status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
@@ -369,51 +400,59 @@ class HeadyCausalInferenceService {
         timestamp: new Date().toISOString()
       });
     });
-
     this.app.post('/model', (req, res) => {
       try {
         const result = this.createModel(req.body.modelId, req.body.nodes);
         res.status(201).json(result);
       } catch (err) {
-        res.status(400).json({ error: err.message });
+        res.status(400).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/model/:id/intervene', (req, res) => {
       try {
         const result = this.doIntervention(req.params.id, req.body.interventions);
-        res.json({ modelId: req.params.id, state: result });
+        res.json({
+          modelId: req.params.id,
+          state: result
+        });
       } catch (err) {
-        res.status(404).json({ error: err.message });
+        res.status(404).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/model/:id/counterfactual', (req, res) => {
       try {
         const result = this.counterfactual(req.params.id, req.body.factual, req.body.intervention);
         res.json(result);
       } catch (err) {
-        res.status(404).json({ error: err.message });
+        res.status(404).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/model/:id/simulate', (req, res) => {
       try {
         const result = this.monteCarloSimulate(req.params.id, req.body.interventions, req.body.options);
         res.json(result);
       } catch (err) {
-        res.status(404).json({ error: err.message });
+        res.status(404).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/pipeline/assess', (req, res) => {
       const result = this.assessPipelineTransition(req.body.from, req.body.to, req.body.context);
       if (result.error) return res.status(400).json(result);
       res.json(result);
     });
-
     this.app.get('/pipeline/stages', (_req, res) => {
-      res.json({ stages: PIPELINE_STAGES, count: PIPELINE_STAGES.length });
+      res.json({
+        stages: PIPELINE_STAGES,
+        count: PIPELINE_STAGES.length
+      });
     });
   }
 
@@ -421,10 +460,12 @@ class HeadyCausalInferenceService {
   async start() {
     if (this._started) return;
     this._setupRoutes();
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server = this.app.listen(this.port, () => {
         this._started = true;
-        log('info', 'HeadyCausalInferenceService started', { port: this.port });
+        log('info', 'HeadyCausalInferenceService started', {
+          port: this.port
+        });
         resolve();
       });
     });
@@ -433,7 +474,7 @@ class HeadyCausalInferenceService {
   /** @returns {Promise<void>} */
   async stop() {
     if (!this._started) return;
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.close(() => {
         this._started = false;
         this.models.clear();
@@ -446,8 +487,19 @@ class HeadyCausalInferenceService {
 
   /** @returns {Object} Health status */
   health() {
-    return { status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded', coherence: this._coherence, activeModels: this.models.size };
+    return {
+      status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
+      coherence: this._coherence,
+      activeModels: this.models.size
+    };
   }
 }
-
-module.exports = { HeadyCausalInferenceService, PHI, PSI, FIB, CSL, PIPELINE_STAGES, phiBackoff };
+module.exports = {
+  HeadyCausalInferenceService,
+  PHI,
+  PSI,
+  FIB,
+  CSL,
+  PIPELINE_STAGES,
+  phiBackoff
+};

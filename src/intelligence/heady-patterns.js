@@ -14,9 +14,14 @@
 'use strict';
 
 const {
-  PHI, PSI, PSI_SQ, PSI_CUBE, PSI_FOURTH,
+  PHI,
+  PSI,
+  PSI_SQ,
+  PSI_CUBE,
+  PSI_FOURTH,
   EMBEDDING_DIM,
-  fib, nearestFib,
+  fib,
+  nearestFib,
   CSL_THRESHOLDS,
   phiThreshold,
   phiBackoff,
@@ -27,10 +32,12 @@ const {
   cslBlend,
   adaptiveTemperature,
   PRESSURE_LEVELS,
-  ALERT_THRESHOLDS,
+  ALERT_THRESHOLDS
 } = require('../../shared/phi-math.js');
 const logger = require('../../shared/logger.js');
-const { createHealthCheck } = require('../../shared/health.js');
+const {
+  createHealthCheck
+} = require('../../shared/health.js');
 
 // ═══════════════════════════════════════════════════════════
 // CONSTANTS — All phi-derived
@@ -81,11 +88,31 @@ const COMPARISON_BATCH = fib(6);
  * Weights sum to 1.0 using phiFusionWeights(5).
  */
 const DRIFT_CATEGORIES = Object.freeze({
-  STRUCTURAL:   { label: 'structural',   weight: 0.387, description: 'Module boundary or API contract violated' },
-  SEMANTIC:     { label: 'semantic',      weight: 0.239, description: 'Meaning divergence from intended design' },
-  BEHAVIORAL:   { label: 'behavioral',    weight: 0.148, description: 'Runtime behavior deviates from spec' },
-  PERFORMANCE:  { label: 'performance',   weight: 0.092, description: 'Latency or throughput degradation' },
-  MISSION:      { label: 'mission',       weight: 0.057, description: 'Deviation from HeadyConnection mission values' },
+  STRUCTURAL: {
+    label: 'structural',
+    weight: 0.387,
+    description: 'Module boundary or API contract violated'
+  },
+  SEMANTIC: {
+    label: 'semantic',
+    weight: 0.239,
+    description: 'Meaning divergence from intended design'
+  },
+  BEHAVIORAL: {
+    label: 'behavioral',
+    weight: 0.148,
+    description: 'Runtime behavior deviates from spec'
+  },
+  PERFORMANCE: {
+    label: 'performance',
+    weight: 0.092,
+    description: 'Latency or throughput degradation'
+  },
+  MISSION: {
+    label: 'mission',
+    weight: 0.057,
+    description: 'Deviation from HeadyConnection mission values'
+  }
 });
 
 /**
@@ -114,18 +141,13 @@ function classifyDrift(event, referenceEmbedding, metadata = {}) {
 
   // Severity mapped to phi-harmonic levels
   let severity = 'low';
-  if (driftMagnitude > 1 - CSL_THRESHOLDS.LOW) severity = 'medium';       // > ~0.309
-  if (driftMagnitude > 1 - CSL_THRESHOLDS.MEDIUM) severity = 'high';     // > ~0.191 (inverted)
-  if (driftMagnitude > PSI) severity = 'critical';                          // > 0.618
+  if (driftMagnitude > 1 - CSL_THRESHOLDS.LOW) severity = 'medium'; // > ~0.309
+  if (driftMagnitude > 1 - CSL_THRESHOLDS.MEDIUM) severity = 'high'; // > ~0.191 (inverted)
+  if (driftMagnitude > PSI) severity = 'critical'; // > 0.618
 
   // Severity re-evaluation using actual thresholds
-  if (similarity < CSL_THRESHOLDS.MINIMUM) severity = 'critical';
-  else if (similarity < CSL_THRESHOLDS.LOW) severity = 'high';
-  else if (similarity < CSL_THRESHOLDS.MEDIUM) severity = 'medium';
-  else severity = 'low';
-
+  if (similarity < CSL_THRESHOLDS.MINIMUM) severity = 'critical';else if (similarity < CSL_THRESHOLDS.LOW) severity = 'high';else if (similarity < CSL_THRESHOLDS.MEDIUM) severity = 'medium';else severity = 'low';
   const recommendation = generateRecommendation(topCategory, severity, similarity, metadata);
-
   logger.info({
     component: 'HeadyPatterns',
     action: 'classify_drift',
@@ -133,9 +155,8 @@ function classifyDrift(event, referenceEmbedding, metadata = {}) {
     severity,
     similarity: Number(similarity.toFixed(6)),
     confidence: Number(confidence.toFixed(6)),
-    source: event.source,
+    source: event.source
   });
-
   return {
     category: DRIFT_CATEGORIES[topCategory],
     categoryKey: topCategory,
@@ -144,7 +165,7 @@ function classifyDrift(event, referenceEmbedding, metadata = {}) {
     similarity,
     driftMagnitude,
     recommendation,
-    timestamp: event.timestamp || Date.now(),
+    timestamp: event.timestamp || Date.now()
   };
 }
 
@@ -155,7 +176,7 @@ function extractSignal(event, categoryKey, metadata) {
   const m = event.metadata || metadata;
   switch (categoryKey) {
     case 'STRUCTURAL':
-      return m.apiContractBroken ? 1.0 : (m.moduleViolation ? PSI : PSI_CUBE);
+      return m.apiContractBroken ? 1.0 : m.moduleViolation ? PSI : PSI_CUBE;
     case 'SEMANTIC':
       return m.meaningDivergence || PSI_SQ;
     case 'BEHAVIORAL':
@@ -163,7 +184,7 @@ function extractSignal(event, categoryKey, metadata) {
     case 'PERFORMANCE':
       return m.latencyRatio ? Math.min(m.latencyRatio / PHI, 1.0) : PSI_FOURTH;
     case 'MISSION':
-      return m.missionScore ? (1 - m.missionScore) : PSI_FOURTH;
+      return m.missionScore ? 1 - m.missionScore : PSI_FOURTH;
     default:
       return PSI_FOURTH;
   }
@@ -178,34 +199,33 @@ function generateRecommendation(categoryKey, severity, similarity, metadata) {
       critical: 'HALT deployments. API contract violation requires immediate rollback and contract review.',
       high: 'Queue architecture review. Module boundaries may need reinforcement.',
       medium: 'Log for next sprint. Minor structural drift detected.',
-      low: 'No action needed. Structural alignment within tolerance.',
+      low: 'No action needed. Structural alignment within tolerance.'
     },
     SEMANTIC: {
       critical: 'HeadySoul intervention required. Core meaning has diverged significantly.',
       high: 'Schedule semantic realignment session with HeadyVinci.',
       medium: 'Monitor closely. Semantic drift approaching actionable threshold.',
-      low: 'Within expected variance. Continue monitoring.',
+      low: 'Within expected variance. Continue monitoring.'
     },
     BEHAVIORAL: {
       critical: 'Circuit breaker activated. Behavioral deviation exceeds safe bounds.',
       high: 'HeadyAnalyze deep scan needed. Unexpected runtime behavior.',
       medium: 'Add additional behavioral tests. Minor deviation observed.',
-      low: 'Normal variance. No action required.',
+      low: 'Normal variance. No action required.'
     },
     PERFORMANCE: {
       critical: 'Scale immediately. Performance degradation exceeds φ× baseline.',
       high: 'HeadyMC simulation recommended. Evaluate optimization strategies.',
       medium: 'Review resource allocation. Performance trending down.',
-      low: 'Performance within phi-scaled bounds.',
+      low: 'Performance within phi-scaled bounds.'
     },
     MISSION: {
       critical: 'HeadySoul emergency review. Mission alignment critically compromised.',
       high: 'Schedule mission alignment workshop. Values drift detected.',
       medium: 'Note in HeadyAutobiographer. Minor mission drift.',
-      low: 'Mission aligned. No concerns.',
-    },
+      low: 'Mission aligned. No concerns.'
+    }
   };
-
   return (actions[categoryKey] || {})[severity] || 'Review and assess manually.';
 }
 
@@ -220,8 +240,9 @@ class PatternStore {
     this._maxPatterns = maxPatterns;
     this._accessOrder = [];
   }
-
-  get size() { return this._patterns.size; }
+  get size() {
+    return this._patterns.size;
+  }
 
   /**
    * Add or update a pattern.
@@ -275,7 +296,10 @@ class PatternStore {
       if (!pattern.centroid) continue;
       const sim = cosineSimilarity(embedding, pattern.centroid);
       if (sim >= threshold) {
-        results.push({ pattern, similarity: sim });
+        results.push({
+          pattern,
+          similarity: sim
+        });
       }
     }
     return results.sort((a, b) => b.similarity - a.similarity);
@@ -290,42 +314,35 @@ class PatternStore {
     // Score candidates: phi-weighted (importance × recency × frequency)
     let worstId = null;
     let worstScore = Infinity;
-
-    const evictionWeights = { importance: 0.486, recency: 0.300, frequency: 0.214 };
+    const evictionWeights = {
+      importance: 0.486,
+      recency: 0.300,
+      frequency: 0.214
+    };
     const now = Date.now();
-
     for (const id of this._accessOrder) {
       const p = this._patterns.get(id);
       if (!p) continue;
-
       const age = (now - p.lastSeen) / PATTERN_TTL_MS;
       const importanceScore = p.occurrences / CONFIRMATION_THRESHOLD;
       const recencyScore = Math.exp(-age * PHI);
       const frequencyScore = p.frequency || PSI_FOURTH;
-
-      const score = (
-        evictionWeights.importance * Math.min(importanceScore, 1.0) +
-        evictionWeights.recency * recencyScore +
-        evictionWeights.frequency * Math.min(frequencyScore, 1.0)
-      );
-
+      const score = evictionWeights.importance * Math.min(importanceScore, 1.0) + evictionWeights.recency * recencyScore + evictionWeights.frequency * Math.min(frequencyScore, 1.0);
       if (score < worstScore) {
         worstScore = score;
         worstId = id;
       }
     }
-
     if (worstId) {
       logger.info({
         component: 'HeadyPatterns',
         action: 'evict_pattern',
         patternId: worstId,
-        score: Number(worstScore.toFixed(6)),
+        score: Number(worstScore.toFixed(6))
       });
       this.delete(worstId);
     }
   }
-
   _touch(id) {
     this._accessOrder = this._accessOrder.filter(x => x !== id);
     this._accessOrder.push(id);
@@ -350,7 +367,7 @@ class PatternStore {
         component: 'HeadyPatterns',
         action: 'prune_expired',
         count: expired.length,
-        remaining: this._patterns.size,
+        remaining: this._patterns.size
       });
     }
     return expired.length;
@@ -370,7 +387,13 @@ class Pattern {
    * @param {Float32Array} opts.centroid — 384D centroid embedding
    * @param {string} [opts.description] — human description
    */
-  constructor({ id, category, severity, centroid, description = '' }) {
+  constructor({
+    id,
+    category,
+    severity,
+    centroid,
+    description = ''
+  }) {
     this.id = id;
     this.category = category;
     this.severity = severity;
@@ -414,14 +437,13 @@ class Pattern {
         action: 'pattern_confirmed',
         patternId: this.id,
         category: this.category,
-        occurrences: this.occurrences,
+        occurrences: this.occurrences
       });
     }
-
     if (incidentData) {
       this.incidents.push({
         timestamp,
-        ...incidentData,
+        ...incidentData
       });
       // Keep incidents bounded — fib(8) = 21
       while (this.incidents.length > fib(8)) {
@@ -468,7 +490,7 @@ class Pattern {
       frequency: Number(this.frequency.toFixed(6)),
       confirmed: this.confirmed,
       escalated: this.escalated,
-      incidentCount: this.incidents.length,
+      incidentCount: this.incidents.length
     };
   }
 }
@@ -483,8 +505,9 @@ class ClusterEngine {
     this._clusters = new Map();
     this._maxClusters = maxClusters;
   }
-
-  get size() { return this._clusters.size; }
+  get size() {
+    return this._clusters.size;
+  }
 
   /**
    * Assign a pattern to the best matching cluster, or create a new one.
@@ -497,7 +520,6 @@ class ClusterEngine {
     // Find matching clusters
     let bestCluster = null;
     let bestSim = 0;
-
     for (const [id, cluster] of this._clusters) {
       const sim = cosineSimilarity(pattern.centroid, cluster.centroid);
       if (sim > bestSim) {
@@ -505,7 +527,6 @@ class ClusterEngine {
         bestCluster = cluster;
       }
     }
-
     if (bestCluster && bestSim >= CLUSTER_MERGE_THRESHOLD) {
       bestCluster.addPattern(pattern);
       return bestCluster.id;
@@ -515,19 +536,16 @@ class ClusterEngine {
     if (this._clusters.size >= this._maxClusters) {
       this._evictSmallest();
     }
-
     const clusterId = `cluster_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
     const newCluster = new PatternCluster(clusterId, pattern);
     this._clusters.set(clusterId, newCluster);
-
     logger.info({
       component: 'HeadyPatterns',
       action: 'new_cluster',
       clusterId,
       patternId: pattern.id,
-      category: pattern.category,
+      category: pattern.category
     });
-
     return clusterId;
   }
 
@@ -535,18 +553,11 @@ class ClusterEngine {
    * Get all clusters sorted by total occurrences.
    */
   ranked() {
-    return Array.from(this._clusters.values())
-      .sort((a, b) => b.totalOccurrences - a.totalOccurrences);
+    return Array.from(this._clusters.values()).sort((a, b) => b.totalOccurrences - a.totalOccurrences);
   }
-
-  /**
-   * Attempt to merge similar clusters.
-   * @returns {number} — number of merges performed
-   */
   consolidate() {
     const clusterList = Array.from(this._clusters.values());
     let merges = 0;
-
     for (let i = 0; i < clusterList.length; i++) {
       for (let j = i + 1; j < clusterList.length; j++) {
         const sim = cosineSimilarity(clusterList[i].centroid, clusterList[j].centroid);
@@ -562,7 +573,7 @@ class ClusterEngine {
             action: 'merge_clusters',
             kept: clusterList[i].id,
             merged: clusterList[j].id,
-            similarity: Number(sim.toFixed(6)),
+            similarity: Number(sim.toFixed(6))
           });
         }
       }
@@ -576,20 +587,17 @@ class ClusterEngine {
   _evictSmallest() {
     let worstId = null;
     let worstCount = Infinity;
-
     for (const [id, cluster] of this._clusters) {
       if (cluster.totalOccurrences < worstCount) {
         worstCount = cluster.totalOccurrences;
         worstId = id;
       }
     }
-
     if (worstId) {
       this._clusters.delete(worstId);
     }
   }
 }
-
 class PatternCluster {
   constructor(id, initialPattern) {
     this.id = id;
@@ -599,7 +607,6 @@ class PatternCluster {
     this.dominantCategory = initialPattern.category;
     this.created = Date.now();
   }
-
   addPattern(pattern) {
     this.patterns.push(pattern);
     this.totalOccurrences += pattern.occurrences;
@@ -626,17 +633,15 @@ class PatternCluster {
     for (const p of this.patterns) {
       catCounts[p.category] = (catCounts[p.category] || 0) + p.occurrences;
     }
-    this.dominantCategory = Object.entries(catCounts)
-      .sort((a, b) => b[1] - a[1])[0][0];
+    this.dominantCategory = Object.entries(catCounts).sort((a, b) => b[1] - a[1])[0][0];
   }
-
   toJSON() {
     return {
       id: this.id,
       patternCount: this.patterns.length,
       totalOccurrences: this.totalOccurrences,
       dominantCategory: this.dominantCategory,
-      created: this.created,
+      created: this.created
     };
   }
 }
@@ -679,14 +684,13 @@ class RecurringIssueDetector {
     let pattern;
     let isRecurring = false;
     let isEscalation = false;
-
     if (matches.length > 0) {
       // Update existing pattern
       pattern = matches[0].pattern;
       pattern.record(event.timestamp || Date.now(), {
         source: event.source,
         severity: classification.severity,
-        similarity: classification.similarity,
+        similarity: classification.similarity
       });
       pattern.updateCentroid(event.embedding);
       isRecurring = pattern.confirmed;
@@ -705,20 +709,19 @@ class RecurringIssueDetector {
         category: classification.category.label,
         severity: classification.severity,
         centroid: event.embedding,
-        description: `${classification.category.description} detected from ${event.source}`,
+        description: `${classification.category.description} detected from ${event.source}`
       });
       this._store.set(patternId, pattern);
     }
 
     // Assign to cluster
     const clusterId = this._clusters.assign(pattern);
-
     return {
       classification,
       pattern: pattern.toJSON(),
       clusterId,
       isRecurring,
-      isEscalation,
+      isEscalation
     };
   }
 
@@ -727,16 +730,14 @@ class RecurringIssueDetector {
    */
   _fireEscalation(pattern) {
     const cluster = this._findPatternCluster(pattern);
-
     logger.info({
       component: 'HeadyPatterns',
       action: 'escalation_triggered',
       patternId: pattern.id,
       category: pattern.category,
       occurrences: pattern.occurrences,
-      frequency: Number(pattern.frequency.toFixed(6)),
+      frequency: Number(pattern.frequency.toFixed(6))
     });
-
     for (const cb of this._escalationCallbacks) {
       try {
         cb(pattern, cluster);
@@ -744,12 +745,11 @@ class RecurringIssueDetector {
         logger.error({
           component: 'HeadyPatterns',
           action: 'escalation_callback_error',
-          error: err.message,
+          error: err.message
         });
       }
     }
   }
-
   _findPatternCluster(pattern) {
     for (const cluster of this._clusters.ranked()) {
       if (cluster.patterns.includes(pattern)) return cluster;
@@ -777,9 +777,8 @@ class TrendAnalyzer {
       timestamp: classification.timestamp || Date.now(),
       severity: classification.severity,
       category: classification.category.label || classification.category,
-      similarity: classification.similarity,
+      similarity: classification.similarity
     });
-
     while (this._events.length > this._maxEvents) {
       this._events.shift();
     }
@@ -794,9 +793,13 @@ class TrendAnalyzer {
     const now = Date.now();
     const cutoff = now - windowMs;
     const recent = this._events.filter(e => e.timestamp > cutoff);
-
     if (recent.length === 0) {
-      return { trend: 'stable', eventCount: 0, categories: {}, severities: {} };
+      return {
+        trend: 'stable',
+        eventCount: 0,
+        categories: {},
+        severities: {}
+      };
     }
 
     // Category distribution
@@ -806,7 +809,12 @@ class TrendAnalyzer {
     }
 
     // Severity distribution
-    const severities = { critical: 0, high: 0, medium: 0, low: 0 };
+    const severities = {
+      critical: 0,
+      high: 0,
+      medium: 0,
+      low: 0
+    };
     for (const e of recent) {
       severities[e.severity] = (severities[e.severity] || 0) + 1;
     }
@@ -815,14 +823,11 @@ class TrendAnalyzer {
     const midpoint = cutoff + windowMs / 2;
     const firstHalf = recent.filter(e => e.timestamp <= midpoint).length;
     const secondHalf = recent.filter(e => e.timestamp > midpoint).length;
-
     let trend = 'stable';
-    if (secondHalf > firstHalf * PHI) trend = 'worsening';
-    else if (firstHalf > secondHalf * PHI) trend = 'improving';
+    if (secondHalf > firstHalf * PHI) trend = 'worsening';else if (firstHalf > secondHalf * PHI) trend = 'improving';
 
     // Average similarity
     const avgSimilarity = recent.reduce((sum, e) => sum + (e.similarity || 0), 0) / recent.length;
-
     return {
       trend,
       eventCount: recent.length,
@@ -831,7 +836,7 @@ class TrendAnalyzer {
       averageSimilarity: Number(avgSimilarity.toFixed(6)),
       firstHalfCount: firstHalf,
       secondHalfCount: secondHalf,
-      windowMs,
+      windowMs
     };
   }
 }
@@ -871,18 +876,17 @@ class HeadyPatternsEngine {
           component: 'HeadyPatterns',
           action: 'periodic_consolidation',
           merges,
-          clusterCount: this._clusters.size,
+          clusterCount: this._clusters.size
         });
       }
     }, fib(14) * 1000);
-
     logger.info({
       component: 'HeadyPatterns',
       action: 'engine_started',
       maxPatterns: MAX_PATTERNS,
       maxClusters: MAX_CLUSTERS,
       pruneIntervalMs: fib(13) * 1000,
-      consolidateIntervalMs: fib(14) * 1000,
+      consolidateIntervalMs: fib(14) * 1000
     });
   }
 
@@ -894,7 +898,10 @@ class HeadyPatternsEngine {
     this._started = false;
     if (this._pruneInterval) clearInterval(this._pruneInterval);
     if (this._consolidateInterval) clearInterval(this._consolidateInterval);
-    logger.info({ component: 'HeadyPatterns', action: 'engine_stopped' });
+    logger.info({
+      component: 'HeadyPatterns',
+      action: 'engine_stopped'
+    });
   }
 
   /**
@@ -922,9 +929,7 @@ class HeadyPatternsEngine {
    * Get all confirmed patterns.
    */
   getConfirmedPatterns() {
-    return this._store.all()
-      .filter(p => p.confirmed)
-      .map(p => p.toJSON());
+    return this._store.all().filter(p => p.confirmed).map(p => p.toJSON());
   }
 
   /**
@@ -950,7 +955,7 @@ class HeadyPatternsEngine {
       patternCount: this._store.size,
       confirmedPatterns: this._store.all().filter(p => p.confirmed).length,
       clusterCount: this._clusters.size,
-      trend: this._trends.analyze(),
+      trend: this._trends.analyze()
     };
   }
 }
@@ -961,7 +966,9 @@ class HeadyPatternsEngine {
 
 function cosineSimilarity(a, b) {
   if (!a || !b || a.length !== b.length) return 0;
-  let dot = 0, normA = 0, normB = 0;
+  let dot = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     normA += a[i] * a[i];
@@ -985,7 +992,6 @@ const healthCheck = createHealthCheck('heady-patterns', () => {
 // ═══════════════════════════════════════════════════════════
 
 let _sharedEngine = null;
-
 function getSharedEngine() {
   if (!_sharedEngine) {
     _sharedEngine = new HeadyPatternsEngine();
@@ -1001,28 +1007,21 @@ module.exports = {
   // Core classifier
   classifyDrift,
   DRIFT_CATEGORIES,
-
   // Pattern management
   Pattern,
   PatternStore,
-
   // Clustering
   PatternCluster,
   ClusterEngine,
-
   // Recurrence detection
   RecurringIssueDetector,
-
   // Trend analysis
   TrendAnalyzer,
-
   // Main engine
   HeadyPatternsEngine,
   getSharedEngine,
-
   // Health
   healthCheck,
-
   // Constants (for testing)
   MAX_PATTERNS,
   SLIDING_WINDOW_BUCKETS,
@@ -1033,7 +1032,6 @@ module.exports = {
   PATTERN_TTL_MS,
   CLUSTER_MERGE_THRESHOLD,
   DECAY_HALF_LIFE_MS,
-
   // Utility
-  cosineSimilarity,
+  cosineSimilarity
 };

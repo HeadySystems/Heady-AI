@@ -1,9 +1,15 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 // packages/heady-ui/src/HeadyPostAuthBootstrap.js
 // §18 — Shared Post-Auth Bootstrap Component
 // Vanilla JS — no framework dependency (Law 3)
 
 class HeadyPostAuthBootstrap {
-  constructor({ siteId, accentColor = '#00d4aa', apiBase = 'https://api.headysystems.com' }) {
+  constructor({
+    siteId,
+    accentColor = '#00d4aa',
+    apiBase = 'https://api.headysystems.com'
+  }) {
     this.siteId = siteId;
     this.accentColor = accentColor;
     this.apiBase = apiBase;
@@ -11,33 +17,42 @@ class HeadyPostAuthBootstrap {
     this.memoryProfile = null;
     this.init();
   }
-
   async init() {
     try {
       const profile = await this.fetchUserProfile();
-      if (!profile) { this.renderGuestState(); return; }
+      if (!profile) {
+        this.renderGuestState();
+        return;
+      }
       this.user = profile;
       await this.bootstrapMemory(profile.uid);
       this.renderAuthenticatedState(profile);
       if (profile.isNewUser) this.launchOnboarding(profile);
     } catch (err) {
-      console.warn('[HeadyBootstrap]', err.message);
+      logger.warn('[HeadyBootstrap]', err.message);
       this.renderGuestState();
     }
   }
-
   async fetchUserProfile() {
-    const res = await fetch(`${this.apiBase}/api/auth/me`, { credentials: 'include' });
+    const res = await fetch(`${this.apiBase}/api/auth/me`, {
+      credentials: 'include'
+    });
     if (!res.ok) return null;
     return res.json();
   }
-
   async bootstrapMemory(userId) {
     const res = await fetch(`${this.apiBase}/api/memory/bootstrap`, {
       method: 'POST',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, siteId: this.siteId, cslThreshold: 0.618, topK: 21 })
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId,
+        siteId: this.siteId,
+        cslThreshold: 0.618,
+        topK: 21
+      })
     });
     if (!res.ok) return;
     this.memoryProfile = await res.json();
@@ -50,7 +65,6 @@ class HeadyPostAuthBootstrap {
       window.AutoContextBridge.injectMemory(this.memoryProfile);
     }
   }
-
   renderAuthenticatedState(profile) {
     const trigger = document.querySelector('.heady-auth-trigger');
     if (trigger) {
@@ -72,12 +86,14 @@ class HeadyPostAuthBootstrap {
       if (hero) hero.appendChild(badge);
     }
   }
-
   renderGuestState() {
-    document.querySelectorAll('.heady-auth-required').forEach(el => { el.style.display = 'none'; });
-    document.querySelectorAll('.heady-guest-only').forEach(el => { el.style.display = ''; });
+    document.querySelectorAll('.heady-auth-required').forEach(el => {
+      el.style.display = 'none';
+    });
+    document.querySelectorAll('.heady-guest-only').forEach(el => {
+      el.style.display = '';
+    });
   }
-
   launchOnboarding(profile) {
     const completed = localStorage.getItem(`heady_onboarding_${this.siteId}_${profile.uid}`);
     if (completed) return;
@@ -90,9 +106,7 @@ class HeadyPostAuthBootstrap {
     }).catch(() => {}); // Non-fatal
   }
 }
-
 if (typeof window !== 'undefined') {
   window.HeadyPostAuthBootstrap = HeadyPostAuthBootstrap;
 }
-
 export { HeadyPostAuthBootstrap };

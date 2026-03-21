@@ -16,7 +16,14 @@ const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 
 /** Ghost run states */
 const GHOST_STATES = {
@@ -32,11 +39,26 @@ const GHOST_STATES = {
 
 /** Impact severity levels, CSL-mapped */
 const IMPACT_SEVERITY = {
-  NONE: { level: 0, csl: 1.0 },
-  LOW: { level: 1, csl: CSL.HIGH },
-  MEDIUM: { level: 2, csl: CSL.MEDIUM },
-  HIGH: { level: 3, csl: CSL.LOW },
-  CRITICAL: { level: 4, csl: CSL.MINIMUM }
+  NONE: {
+    level: 0,
+    csl: 1.0
+  },
+  LOW: {
+    level: 1,
+    csl: CSL.HIGH
+  },
+  MEDIUM: {
+    level: 2,
+    csl: CSL.MEDIUM
+  },
+  HIGH: {
+    level: 3,
+    csl: CSL.LOW
+  },
+  CRITICAL: {
+    level: 4,
+    csl: CSL.MINIMUM
+  }
 };
 
 /** Maximum concurrent ghost runs, Fibonacci-derived */
@@ -59,12 +81,6 @@ function log(level, msg, meta = {}, correlationId = null) {
     ...meta
   }) + '\n');
 }
-
-/**
- * Phi-backoff delay.
- * @param {number} attempt - Attempt number
- * @returns {number} Delay in ms
- */
 function phiBackoff(attempt) {
   return FIB[Math.min(attempt, FIB.length - 1)] * PSI * 1000;
 }
@@ -97,7 +113,11 @@ class HeadyGhostProtocolService {
     this._started = false;
     this._coherence = CSL.HIGH;
     this._activeRuns = 0;
-    this._circuitBreaker = { failures: 0, maxFailures: FIB[6], openUntil: 0 };
+    this._circuitBreaker = {
+      failures: 0,
+      maxFailures: FIB[6],
+      openUntil: 0
+    };
   }
 
   /**
@@ -108,7 +128,9 @@ class HeadyGhostProtocolService {
    */
   registerHandler(actionType, handler) {
     this.actionHandlers.set(actionType, handler);
-    log('info', 'Ghost handler registered', { actionType });
+    log('info', 'Ghost handler registered', {
+      actionType
+    });
   }
 
   /**
@@ -129,10 +151,8 @@ class HeadyGhostProtocolService {
     if (this._circuitBreaker.failures >= this._circuitBreaker.maxFailures && Date.now() < this._circuitBreaker.openUntil) {
       throw new Error('Circuit breaker OPEN: too many ghost run failures');
     }
-
     const runId = crypto.randomUUID();
     const correlationId = proposal.context?.correlationId || crypto.randomUUID();
-
     const ghostRun = {
       runId,
       correlationId,
@@ -147,11 +167,17 @@ class HeadyGhostProtocolService {
       completedAt: null,
       timeoutMs: this.timeoutMs
     };
-
     this.ghostRuns.set(runId, ghostRun);
     this._activeRuns++;
-    log('info', 'Ghost run created', { runId, actionType: proposal.actionType }, correlationId);
-    return { runId, correlationId, state: ghostRun.state };
+    log('info', 'Ghost run created', {
+      runId,
+      actionType: proposal.actionType
+    }, correlationId);
+    return {
+      runId,
+      correlationId,
+      state: ghostRun.state
+    };
   }
 
   /**
@@ -164,30 +190,20 @@ class HeadyGhostProtocolService {
     const run = this.ghostRuns.get(runId);
     if (!run) throw new Error('Ghost run not found');
     if (run.state !== GHOST_STATES.PENDING) throw new Error(`Invalid state for execution: ${run.state}`);
-
     run.state = GHOST_STATES.SIMULATING;
     run.startedAt = Date.now();
-
     const handler = this.actionHandlers.get(run.actionType);
     const simulationEnv = this._createSimulationEnv(run);
-
     try {
       // Execute with phi-scaled timeout
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Ghost run timeout')), run.timeoutMs)
-      );
-
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Ghost run timeout')), run.timeoutMs));
       let simulationResult;
       if (handler) {
-        simulationResult = await Promise.race([
-          handler(run.params, simulationEnv),
-          timeoutPromise
-        ]);
+        simulationResult = await Promise.race([handler(run.params, simulationEnv), timeoutPromise]);
       } else {
         // Default simulation: static analysis of proposal
         simulationResult = this._defaultSimulation(run);
       }
-
       run.state = GHOST_STATES.ANALYZING;
 
       // Generate impact report
@@ -198,7 +214,6 @@ class HeadyGhostProtocolService {
       run.state = GHOST_STATES.GATE_CHECK;
       const gateResult = this._cslGateCheck(impactReport);
       run.gateResult = gateResult;
-
       run.state = gateResult.approved ? GHOST_STATES.APPROVED : GHOST_STATES.REJECTED;
       run.completedAt = Date.now();
       this._activeRuns = Math.max(0, this._activeRuns - 1);
@@ -208,28 +223,43 @@ class HeadyGhostProtocolService {
 
       // Store in history
       this._storeHistory(runId, run);
-
       log('info', `Ghost run ${run.state}`, {
         runId,
         safetyScore: impactReport.safetyScore,
         approved: gateResult.approved
       }, run.correlationId);
-
-      return { runId, state: run.state, impactReport, gateResult };
+      return {
+        runId,
+        state: run.state,
+        impactReport,
+        gateResult
+      };
     } catch (err) {
       run.state = GHOST_STATES.REJECTED;
       run.completedAt = Date.now();
       this._activeRuns = Math.max(0, this._activeRuns - 1);
-
       this._circuitBreaker.failures++;
       if (this._circuitBreaker.failures >= this._circuitBreaker.maxFailures) {
         this._circuitBreaker.openUntil = Date.now() + phiBackoff(this._circuitBreaker.failures);
       }
-
-      run.impactReport = { error: err.message, safetyScore: 0, severity: 'CRITICAL' };
-      run.gateResult = { approved: false, reason: err.message };
-      log('error', 'Ghost run failed', { runId, error: err.message }, run.correlationId);
-      return { runId, state: run.state, error: err.message };
+      run.impactReport = {
+        error: err.message,
+        safetyScore: 0,
+        severity: 'CRITICAL'
+      };
+      run.gateResult = {
+        approved: false,
+        reason: err.message
+      };
+      log('error', 'Ghost run failed', {
+        runId,
+        error: err.message
+      }, run.correlationId);
+      return {
+        runId,
+        state: run.state,
+        error: err.message
+      };
     }
   }
 
@@ -242,25 +272,35 @@ class HeadyGhostProtocolService {
   _createSimulationEnv(run) {
     return {
       mutations: [],
-      resourceUsage: { cpu: 0, memory: 0, network: 0, storage: 0 },
+      resourceUsage: {
+        cpu: 0,
+        memory: 0,
+        network: 0,
+        storage: 0
+      },
       sideEffects: [],
       servicesAccessed: new Set(),
-
       /** Record a simulated data mutation */
       recordMutation(target, operation, data) {
-        this.mutations.push({ target, operation, data, timestamp: Date.now() });
+        this.mutations.push({
+          target,
+          operation,
+          data,
+          timestamp: Date.now()
+        });
       },
-
       /** Record a simulated side effect */
       recordSideEffect(type, description) {
-        this.sideEffects.push({ type, description, timestamp: Date.now() });
+        this.sideEffects.push({
+          type,
+          description,
+          timestamp: Date.now()
+        });
       },
-
       /** Record service access */
       recordServiceAccess(serviceId) {
         this.servicesAccessed.add(serviceId);
       },
-
       /** Record resource consumption */
       recordResource(type, amount) {
         if (type in this.resourceUsage) this.resourceUsage[type] += amount;
@@ -302,17 +342,12 @@ class HeadyGhostProtocolService {
     const sideEffectRisk = Math.min(1, sideEffectCount / FIB[5]) * PHI * PHI;
     const blastRadius = Math.min(1, servicesAffected / FIB[6]);
     const resourceRisk = Object.values(simEnv.resourceUsage).reduce((s, v) => s + v, 0) / (FIB[10] * PHI);
-
     const totalRisk = (mutationRisk + sideEffectRisk + blastRadius + resourceRisk) / (PHI * PHI + PHI + 2);
     const safetyScore = Math.max(0, Math.min(1, 1 - totalRisk));
 
     // Determine severity
     let severity = 'NONE';
-    if (safetyScore < IMPACT_SEVERITY.CRITICAL.csl) severity = 'CRITICAL';
-    else if (safetyScore < IMPACT_SEVERITY.HIGH.csl) severity = 'HIGH';
-    else if (safetyScore < IMPACT_SEVERITY.MEDIUM.csl) severity = 'MEDIUM';
-    else if (safetyScore < IMPACT_SEVERITY.LOW.csl) severity = 'LOW';
-
+    if (safetyScore < IMPACT_SEVERITY.CRITICAL.csl) severity = 'CRITICAL';else if (safetyScore < IMPACT_SEVERITY.HIGH.csl) severity = 'HIGH';else if (safetyScore < IMPACT_SEVERITY.MEDIUM.csl) severity = 'MEDIUM';else if (safetyScore < IMPACT_SEVERITY.LOW.csl) severity = 'LOW';
     return {
       runId: run.runId,
       actionType: run.actionType,
@@ -323,7 +358,12 @@ class HeadyGhostProtocolService {
       servicesAffected: [...simEnv.servicesAccessed, ...run.affectedServices],
       resourceUsage: simEnv.resourceUsage,
       blastRadius,
-      riskBreakdown: { mutationRisk, sideEffectRisk, blastRadius, resourceRisk },
+      riskBreakdown: {
+        mutationRisk,
+        sideEffectRisk,
+        blastRadius,
+        resourceRisk
+      },
       duration: Date.now() - run.startedAt,
       timestamp: new Date().toISOString()
     };
@@ -339,21 +379,13 @@ class HeadyGhostProtocolService {
     const score = impactReport.safetyScore;
     const approved = score >= this.minGateScore;
     let gateLevel;
-
-    if (score >= CSL.CRITICAL) gateLevel = 'AUTO_APPROVE';
-    else if (score >= CSL.HIGH) gateLevel = 'APPROVE';
-    else if (score >= CSL.MEDIUM) gateLevel = 'APPROVE_WITH_MONITOR';
-    else if (score >= CSL.LOW) gateLevel = 'MANUAL_REVIEW';
-    else gateLevel = 'REJECT';
-
+    if (score >= CSL.CRITICAL) gateLevel = 'AUTO_APPROVE';else if (score >= CSL.HIGH) gateLevel = 'APPROVE';else if (score >= CSL.MEDIUM) gateLevel = 'APPROVE_WITH_MONITOR';else if (score >= CSL.LOW) gateLevel = 'MANUAL_REVIEW';else gateLevel = 'REJECT';
     return {
       approved,
       gateLevel,
       safetyScore: score,
       threshold: this.minGateScore,
-      recommendations: !approved
-        ? [`Safety score ${score.toFixed(3)} below threshold ${this.minGateScore}`, 'Consider reducing blast radius or adding safeguards']
-        : [`Action cleared with safety score ${score.toFixed(3)}`]
+      recommendations: !approved ? [`Safety score ${score.toFixed(3)} below threshold ${this.minGateScore}`, 'Consider reducing blast radius or adding safeguards'] : [`Action cleared with safety score ${score.toFixed(3)}`]
     };
   }
 
@@ -368,10 +400,15 @@ class HeadyGhostProtocolService {
     if (run.state !== GHOST_STATES.APPROVED) {
       throw new Error(`Cannot commit: run is ${run.state}, must be APPROVED`);
     }
-
     run.state = GHOST_STATES.COMMITTED;
-    log('info', 'Ghost run committed to production', { runId }, run.correlationId);
-    return { runId, state: run.state, committedAt: new Date().toISOString() };
+    log('info', 'Ghost run committed to production', {
+      runId
+    }, run.correlationId);
+    return {
+      runId,
+      state: run.state,
+      committedAt: new Date().toISOString()
+    };
   }
 
   /**
@@ -397,7 +434,6 @@ class HeadyGhostProtocolService {
   /** Set up Express routes. @private */
   _setupRoutes() {
     this.app.use(express.json());
-
     this.app.get('/health', (_req, res) => {
       this._coherence = this._circuitBreaker.failures < this._circuitBreaker.maxFailures ? CSL.HIGH : CSL.LOW;
       res.json({
@@ -410,42 +446,47 @@ class HeadyGhostProtocolService {
         timestamp: new Date().toISOString()
       });
     });
-
     this.app.post('/ghost/create', (req, res) => {
       try {
         const result = this.createGhostRun(req.body);
         res.status(201).json(result);
       } catch (err) {
-        res.status(429).json({ error: err.message });
+        res.status(429).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/ghost/:id/execute', async (req, res) => {
       try {
         const result = await this.executeGhostRun(req.params.id);
         res.json(result);
       } catch (err) {
-        res.status(400).json({ error: err.message });
+        res.status(400).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/ghost/:id/commit', async (req, res) => {
       try {
         const result = await this.commitGhostRun(req.params.id);
         res.json(result);
       } catch (err) {
-        res.status(400).json({ error: err.message });
+        res.status(400).json({
+          error: err.message
+        });
       }
     });
-
     this.app.get('/ghost/:id', (req, res) => {
       const run = this.ghostRuns.get(req.params.id);
-      if (!run) return res.status(404).json({ error: 'Ghost run not found' });
+      if (!run) return res.status(404).json({
+        error: 'Ghost run not found'
+      });
       res.json(run);
     });
-
     this.app.get('/ghost/history', (_req, res) => {
-      res.json({ history: Array.from(this.impactHistory.values()) });
+      res.json({
+        history: Array.from(this.impactHistory.values())
+      });
     });
   }
 
@@ -453,10 +494,12 @@ class HeadyGhostProtocolService {
   async start() {
     if (this._started) return;
     this._setupRoutes();
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server = this.app.listen(this.port, () => {
         this._started = true;
-        log('info', 'HeadyGhostProtocolService started', { port: this.port });
+        log('info', 'HeadyGhostProtocolService started', {
+          port: this.port
+        });
         resolve();
       });
     });
@@ -465,7 +508,7 @@ class HeadyGhostProtocolService {
   /** @returns {Promise<void>} */
   async stop() {
     if (!this._started) return;
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.close(() => {
         this._started = false;
         this.ghostRuns.clear();
@@ -477,8 +520,20 @@ class HeadyGhostProtocolService {
 
   /** @returns {Object} Health */
   health() {
-    return { status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded', coherence: this._coherence, activeRuns: this._activeRuns };
+    return {
+      status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
+      coherence: this._coherence,
+      activeRuns: this._activeRuns
+    };
   }
 }
-
-module.exports = { HeadyGhostProtocolService, PHI, PSI, FIB, CSL, GHOST_STATES, IMPACT_SEVERITY, phiBackoff };
+module.exports = {
+  HeadyGhostProtocolService,
+  PHI,
+  PSI,
+  FIB,
+  CSL,
+  GHOST_STATES,
+  IMPACT_SEVERITY,
+  phiBackoff
+};

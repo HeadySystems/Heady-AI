@@ -1,13 +1,3 @@
-/**
- * Phase 1: ERROR DETECTION & PROBABILISTIC HALT
- *
- * Intercept the error. Halt probabilistic generation.
- * Do NOT attempt conversational debugging — capture raw state instead.
- *
- * @param {Error|string} error - The intercepted error
- * @param {object} context - Execution context at time of failure
- * @returns {object} Halted execution state
- */
 export function interceptError(error: Error | string, context?: object): object;
 /**
  * Phase 2: DETERMINISTIC STATE EXTRACTION
@@ -68,9 +58,9 @@ declare function hashError(error: any): string;
  * Classify an error into a category.
  */
 declare function classifyError(error: any): {
-    type: string;
-    category: string;
-    recoverable: boolean;
+  type: string;
+  category: string;
+  recoverable: boolean;
 };
 /**
  * Derive a deterministic constraint from the error classification.

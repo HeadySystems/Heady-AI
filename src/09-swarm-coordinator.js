@@ -28,22 +28,7 @@
 
 import { EventEmitter } from 'events';
 import { createHash, randomUUID } from 'crypto';
-import {
-  PHI,
-  PSI,
-  CSL_THRESHOLDS,
-  DEDUP_THRESHOLD,
-  phiResourceWeights,
-  phiBackoff,
-  phiFusionWeights,
-  cslGate,
-  cslBlend,
-  PRESSURE_LEVELS,
-  classifyPressure,
-  phiAdaptiveInterval,
-  fib,
-  fibSequence,
-} from '../../shared/phi-math.js';
+import { PHI, PSI, CSL_THRESHOLDS, DEDUP_THRESHOLD, phiResourceWeights, phiBackoff, phiFusionWeights, cslGate, cslBlend, PRESSURE_LEVELS, classifyPressure, phiAdaptiveInterval, fib, fibSequence } from '../../shared/phi-math.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -72,9 +57,9 @@ const FIB_TOTAL = FIBONACCI.slice(0, 17).reduce((a, b) => a + b, 0);
  *
  * The gaps between levels now follow the golden ratio: gap(LOW→MED)/gap(MED→HIGH) ≈ φ.
  */
-const CSL_THRESHOLD_HIGH = CSL_THRESHOLDS.HIGH;     // ≈ 0.882  (was 0.85)
-const CSL_THRESHOLD_MED  = CSL_THRESHOLDS.MEDIUM;   // ≈ 0.809  (was 0.72)
-const CSL_THRESHOLD_LOW  = CSL_THRESHOLDS.LOW;      // ≈ 0.691  (was 0.55)
+const CSL_THRESHOLD_HIGH = CSL_THRESHOLDS.HIGH; // ≈ 0.882  (was 0.85)
+const CSL_THRESHOLD_MED = CSL_THRESHOLDS.MEDIUM; // ≈ 0.809  (was 0.72)
+const CSL_THRESHOLD_LOW = CSL_THRESHOLDS.LOW; // ≈ 0.691  (was 0.55)
 
 /**
  * Phi-derived resource weights for the 17-swarm pool.
@@ -89,27 +74,29 @@ const PHI_WEIGHTS_17 = phiResourceWeights(17);
 
 /** Swarm health states */
 const SWARM_STATE = Object.freeze({
-  HEALTHY:   'healthy',
-  DEGRADED:  'degraded',
-  OVERLOADED:'overloaded',
-  FAILED:    'failed',
-  RECOVERING:'recovering',
+  HEALTHY: 'healthy',
+  DEGRADED: 'degraded',
+  OVERLOADED: 'overloaded',
+  FAILED: 'failed',
+  RECOVERING: 'recovering'
 });
 
 /** Orchestration layer identifiers (hierarchical topology) */
 const LAYER = Object.freeze({
-  STRATEGIC:   'strategic',   // HeadySoul center + governance
-  TACTICAL:    'tactical',    // Inner ring coordinators
-  OPERATIONAL: 'operational', // Middle + outer ring workers
+  STRATEGIC: 'strategic',
+  // HeadySoul center + governance
+  TACTICAL: 'tactical',
+  // Inner ring coordinators
+  OPERATIONAL: 'operational' // Middle + outer ring workers
 });
 
 /** Ring assignments aligned with Sacred Geometry topology */
 const RING = Object.freeze({
   CENTER: 'center',
-  INNER:  'inner',
+  INNER: 'inner',
   MIDDLE: 'middle',
-  OUTER:  'outer',
-  GOVERNANCE: 'governance',
+  OUTER: 'outer',
+  GOVERNANCE: 'governance'
 });
 
 /** Default metrics snapshot interval (ms) */
@@ -144,33 +131,135 @@ const MIN_HEALTHY_SWARMS = 5;
  * Fibonacci index determines resource weight (higher index = more resources).
  */
 const SWARM_DEFINITIONS = [
-  // CENTER — HeadySoul (strategic, highest Fibonacci weight)
-  { id: 'heady-soul',        ring: RING.CENTER,     layer: LAYER.STRATEGIC,   fibIdx: 10, domain: 'orchestration',  cslThreshold: CSL_THRESHOLD_HIGH },
-
-  // INNER — Tactical coordinators (5 swarms)
-  { id: 'cognition-core',    ring: RING.INNER,      layer: LAYER.TACTICAL,    fibIdx: 9,  domain: 'reasoning',      cslThreshold: CSL_THRESHOLD_HIGH },
-  { id: 'memory-weave',      ring: RING.INNER,      layer: LAYER.TACTICAL,    fibIdx: 8,  domain: 'memory',         cslThreshold: CSL_THRESHOLD_HIGH },
-  { id: 'context-bridge',    ring: RING.INNER,      layer: LAYER.TACTICAL,    fibIdx: 8,  domain: 'context',        cslThreshold: CSL_THRESHOLD_MED  },
-  { id: 'task-planner',      ring: RING.INNER,      layer: LAYER.TACTICAL,    fibIdx: 7,  domain: 'planning',       cslThreshold: CSL_THRESHOLD_HIGH },
-  { id: 'consensus-forge',   ring: RING.INNER,      layer: LAYER.TACTICAL,    fibIdx: 7,  domain: 'consensus',      cslThreshold: CSL_THRESHOLD_MED  },
-
-  // MIDDLE — Operational specialists (7 swarms)
-  { id: 'code-artisan',      ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 6,  domain: 'coding',         cslThreshold: CSL_THRESHOLD_MED  },
-  { id: 'data-sculptor',     ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 6,  domain: 'data',           cslThreshold: CSL_THRESHOLD_MED  },
-  { id: 'research-herald',   ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 5,  domain: 'research',       cslThreshold: CSL_THRESHOLD_MED  },
-  { id: 'tool-weaver',       ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 5,  domain: 'tools',          cslThreshold: CSL_THRESHOLD_MED  },
-  { id: 'language-flow',     ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 5,  domain: 'language',       cslThreshold: CSL_THRESHOLD_MED  },
-  { id: 'vision-scribe',     ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 4,  domain: 'vision',         cslThreshold: CSL_THRESHOLD_LOW  },
-  { id: 'audio-pulse',       ring: RING.MIDDLE,     layer: LAYER.OPERATIONAL, fibIdx: 4,  domain: 'audio',          cslThreshold: CSL_THRESHOLD_LOW  },
-
-  // OUTER — Edge workers (3 swarms)
-  { id: 'integration-node',  ring: RING.OUTER,      layer: LAYER.OPERATIONAL, fibIdx: 3,  domain: 'integration',    cslThreshold: CSL_THRESHOLD_LOW  },
-  { id: 'cache-guardian',    ring: RING.OUTER,      layer: LAYER.OPERATIONAL, fibIdx: 3,  domain: 'caching',        cslThreshold: CSL_THRESHOLD_LOW  },
-  { id: 'stream-runner',     ring: RING.OUTER,      layer: LAYER.OPERATIONAL, fibIdx: 2,  domain: 'streaming',      cslThreshold: CSL_THRESHOLD_LOW  },
-
-  // GOVERNANCE — Policy + compliance (1 swarm)
-  { id: 'policy-sentinel',   ring: RING.GOVERNANCE, layer: LAYER.STRATEGIC,   fibIdx: 6,  domain: 'governance',     cslThreshold: CSL_THRESHOLD_HIGH },
-];
+// CENTER — HeadySoul (strategic, highest Fibonacci weight)
+{
+  id: 'heady-soul',
+  ring: RING.CENTER,
+  layer: LAYER.STRATEGIC,
+  fibIdx: 10,
+  domain: 'orchestration',
+  cslThreshold: CSL_THRESHOLD_HIGH
+},
+// INNER — Tactical coordinators (5 swarms)
+{
+  id: 'cognition-core',
+  ring: RING.INNER,
+  layer: LAYER.TACTICAL,
+  fibIdx: 9,
+  domain: 'reasoning',
+  cslThreshold: CSL_THRESHOLD_HIGH
+}, {
+  id: 'memory-weave',
+  ring: RING.INNER,
+  layer: LAYER.TACTICAL,
+  fibIdx: 8,
+  domain: 'memory',
+  cslThreshold: CSL_THRESHOLD_HIGH
+}, {
+  id: 'context-bridge',
+  ring: RING.INNER,
+  layer: LAYER.TACTICAL,
+  fibIdx: 8,
+  domain: 'context',
+  cslThreshold: CSL_THRESHOLD_MED
+}, {
+  id: 'task-planner',
+  ring: RING.INNER,
+  layer: LAYER.TACTICAL,
+  fibIdx: 7,
+  domain: 'planning',
+  cslThreshold: CSL_THRESHOLD_HIGH
+}, {
+  id: 'consensus-forge',
+  ring: RING.INNER,
+  layer: LAYER.TACTICAL,
+  fibIdx: 7,
+  domain: 'consensus',
+  cslThreshold: CSL_THRESHOLD_MED
+},
+// MIDDLE — Operational specialists (7 swarms)
+{
+  id: 'code-artisan',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 6,
+  domain: 'coding',
+  cslThreshold: CSL_THRESHOLD_MED
+}, {
+  id: 'data-sculptor',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 6,
+  domain: 'data',
+  cslThreshold: CSL_THRESHOLD_MED
+}, {
+  id: 'research-herald',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 5,
+  domain: 'research',
+  cslThreshold: CSL_THRESHOLD_MED
+}, {
+  id: 'tool-weaver',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 5,
+  domain: 'tools',
+  cslThreshold: CSL_THRESHOLD_MED
+}, {
+  id: 'language-flow',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 5,
+  domain: 'language',
+  cslThreshold: CSL_THRESHOLD_MED
+}, {
+  id: 'vision-scribe',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 4,
+  domain: 'vision',
+  cslThreshold: CSL_THRESHOLD_LOW
+}, {
+  id: 'audio-pulse',
+  ring: RING.MIDDLE,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 4,
+  domain: 'audio',
+  cslThreshold: CSL_THRESHOLD_LOW
+},
+// OUTER — Edge workers (3 swarms)
+{
+  id: 'integration-node',
+  ring: RING.OUTER,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 3,
+  domain: 'integration',
+  cslThreshold: CSL_THRESHOLD_LOW
+}, {
+  id: 'cache-guardian',
+  ring: RING.OUTER,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 3,
+  domain: 'caching',
+  cslThreshold: CSL_THRESHOLD_LOW
+}, {
+  id: 'stream-runner',
+  ring: RING.OUTER,
+  layer: LAYER.OPERATIONAL,
+  fibIdx: 2,
+  domain: 'streaming',
+  cslThreshold: CSL_THRESHOLD_LOW
+},
+// GOVERNANCE — Policy + compliance (1 swarm)
+{
+  id: 'policy-sentinel',
+  ring: RING.GOVERNANCE,
+  layer: LAYER.STRATEGIC,
+  fibIdx: 6,
+  domain: 'governance',
+  cslThreshold: CSL_THRESHOLD_HIGH
+}];
 
 // ─── Helper Utilities ─────────────────────────────────────────────────────────
 
@@ -182,9 +271,11 @@ const SWARM_DEFINITIONS = [
  */
 function cosineSimilarity(a, b) {
   if (a.length !== b.length) throw new Error(`Vector dimension mismatch: ${a.length} vs ${b.length}`);
-  let dot = 0, normA = 0, normB = 0;
+  let dot = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < a.length; i++) {
-    dot   += a[i] * b[i];
+    dot += a[i] * b[i];
     normA += a[i] * a[i];
     normB += b[i] * b[i];
   }
@@ -205,22 +296,8 @@ function cosineSimilarity(a, b) {
 function fibWeight(fibIdx) {
   return FIBONACCI[Math.min(fibIdx, FIBONACCI.length - 1)] / FIB_TOTAL;
 }
-
-/**
- * Golden-ratio exponential backoff with phi-derived jitter.
- *
- * Base formula: delay = baseMs × 2^attempt  (standard doubling)
- * Phi jitter:   ±(base × ψ²) ≈ ±38.2% of base  (was ±30% — arbitrary)
- *
- * ψ² ≈ 0.382 is the phi-harmonic complement of ψ (≈ 0.618).
- * Together ψ + ψ² = 1, so the jitter band is precisely [0.618×base, base].
- *
- * @param {number} attempt - Attempt number (0-based)
- * @param {number} baseMs  - Base delay in ms
- * @returns {number} Delay in ms
- */
 function backoffDelay(attempt, baseMs = 100) {
-  const exp  = Math.min(attempt, 10);
+  const exp = Math.min(attempt, 10);
   const base = baseMs * Math.pow(2, exp);
   // ψ² ≈ 0.382 — phi-derived jitter coefficient (was arbitrary 0.3)
   const jitter = Math.random() * base * Math.pow(PSI, 2);
@@ -237,13 +314,13 @@ class SwarmInstance {
    * @param {object} def - Swarm definition from SWARM_DEFINITIONS
    */
   constructor(def) {
-    this.id           = def.id;
-    this.ring         = def.ring;
-    this.layer        = def.layer;
-    this.domain       = def.domain;
+    this.id = def.id;
+    this.ring = def.ring;
+    this.layer = def.layer;
+    this.domain = def.domain;
     this.cslThreshold = def.cslThreshold;
-    this.fibIdx       = def.fibIdx;
-    this.weight       = fibWeight(def.fibIdx);
+    this.fibIdx = def.fibIdx;
+    this.weight = fibWeight(def.fibIdx);
 
     /** @type {string} Current swarm health state */
     this.state = SWARM_STATE.HEALTHY;
@@ -269,14 +346,14 @@ class SwarmInstance {
     /** Metrics accumulator */
     this.metrics = {
       tasksCompleted: 0,
-      tasksFailed:    0,
-      tasksRejected:  0,
+      tasksFailed: 0,
+      tasksRejected: 0,
       totalLatencyMs: 0,
-      lastHealthAt:   Date.now(),
+      lastHealthAt: Date.now(),
       consecutiveFails: 0,
-      windowRequests:  0,
-      windowAccepts:   0,
-      windowStart:     Date.now(),
+      windowRequests: 0,
+      windowAccepts: 0,
+      windowStart: Date.now()
     };
 
     /**
@@ -289,14 +366,16 @@ class SwarmInstance {
      *   the phi backoff is used in the swarm-level backoff helper instead.
      */
     this.circuitBreaker = {
-      state:          'closed', // closed | open | half-open
-      failCount:      0,
-      lastOpenedAt:   null,
+      state: 'closed',
+      // closed | open | half-open
+      failCount: 0,
+      lastOpenedAt: null,
       halfOpenProbes: 0,
       /** fib(5) = 5 — Fibonacci-derived failure threshold (was hardcoded 5) */
-      FAILURE_THRESHOLD:   fib(5),        // = 5
+      FAILURE_THRESHOLD: fib(5),
+      // = 5
       RECOVERY_TIMEOUT_MS: 45_000,
-      HALF_OPEN_MAX_PROBES: 3,
+      HALF_OPEN_MAX_PROBES: 3
     };
   }
 
@@ -311,10 +390,7 @@ class SwarmInstance {
         return false;
       }
     }
-    return (
-      this.state !== SWARM_STATE.FAILED &&
-      this.queue.length < MAX_QUEUE_DEPTH
-    );
+    return this.state !== SWARM_STATE.FAILED && this.queue.length < MAX_QUEUE_DEPTH;
   }
 
   /** @returns {number} Queue utilization ratio [0, 1] */
@@ -339,11 +415,9 @@ class SwarmInstance {
    * @returns {number} Updated interval in ms
    */
   advanceHealthInterval(healthy) {
-    this._healthCheckInterval = phiAdaptiveInterval(
-      this._healthCheckInterval,
-      healthy,
-      1_000,   // minMs: at most once per second when degraded
-      60_000,  // maxMs: at most once per minute when healthy
+    this._healthCheckInterval = phiAdaptiveInterval(this._healthCheckInterval, healthy, 1_000,
+    // minMs: at most once per second when degraded
+    60_000 // maxMs: at most once per minute when healthy
     );
     return this._healthCheckInterval;
   }
@@ -362,7 +436,7 @@ class SwarmInstance {
       if (this.circuitBreaker.state === 'half-open') {
         this.circuitBreaker.halfOpenProbes++;
         if (this.circuitBreaker.halfOpenProbes >= this.circuitBreaker.HALF_OPEN_MAX_PROBES) {
-          this.circuitBreaker.state    = 'closed';
+          this.circuitBreaker.state = 'closed';
           this.circuitBreaker.failCount = 0;
         }
       }
@@ -371,7 +445,7 @@ class SwarmInstance {
       this.metrics.consecutiveFails++;
       this.circuitBreaker.failCount++;
       if (this.circuitBreaker.failCount >= this.circuitBreaker.FAILURE_THRESHOLD) {
-        this.circuitBreaker.state      = 'open';
+        this.circuitBreaker.state = 'open';
         this.circuitBreaker.lastOpenedAt = Date.now();
       }
     }
@@ -380,9 +454,10 @@ class SwarmInstance {
 
   /** Derive health state from current metrics */
   _updateState() {
-    const { consecutiveFails } = this.metrics;
+    const {
+      consecutiveFails
+    } = this.metrics;
     const healthy = this.circuitBreaker.state === 'closed' && consecutiveFails === 0;
-
     if (this.circuitBreaker.state === 'open') {
       this.state = SWARM_STATE.FAILED;
     } else if (consecutiveFails >= 3) {
@@ -412,27 +487,25 @@ class SwarmInstance {
    * @returns {object}
    */
   getMetricsSnapshot() {
-    const avgLatency = this.metrics.tasksCompleted > 0
-      ? Math.round(this.metrics.totalLatencyMs / this.metrics.tasksCompleted)
-      : 0;
+    const avgLatency = this.metrics.tasksCompleted > 0 ? Math.round(this.metrics.totalLatencyMs / this.metrics.tasksCompleted) : 0;
     return {
-      swarmId:       this.id,
-      ring:          this.ring,
-      layer:         this.layer,
-      domain:        this.domain,
-      state:         this.state,
-      circuitState:  this.circuitBreaker.state,
-      queueDepth:    this.queue.length,
+      swarmId: this.id,
+      ring: this.ring,
+      layer: this.layer,
+      domain: this.domain,
+      state: this.state,
+      circuitState: this.circuitBreaker.state,
+      queueDepth: this.queue.length,
       queuePressure: Math.round(this.queuePressure * 100) / 100,
-      activeTasks:   this.activeTasks.size,
-      tasksCompleted:this.metrics.tasksCompleted,
-      tasksFailed:   this.metrics.tasksFailed,
+      activeTasks: this.activeTasks.size,
+      tasksCompleted: this.metrics.tasksCompleted,
+      tasksFailed: this.metrics.tasksFailed,
       tasksRejected: this.metrics.tasksRejected,
-      avgLatencyMs:  avgLatency,
+      avgLatencyMs: avgLatency,
       throughputTps: Math.round(this.throughput * 100) / 100,
-      weight:        Math.round(this.weight * 1000) / 1000,
+      weight: Math.round(this.weight * 1000) / 1000,
       healthCheckIntervalMs: this._healthCheckInterval,
-      timestamp:     new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 }
@@ -461,30 +534,33 @@ class SwarmMessageBus extends EventEmitter {
    */
   publish(topic, message, opts = {}) {
     const envelope = {
-      id:        randomUUID(),
+      id: randomUUID(),
       topic,
       message,
-      priority:  opts.priority ?? 5,
+      priority: opts.priority ?? 5,
       publishedAt: Date.now(),
-      expiresAt: opts.ttlMs ? Date.now() + opts.ttlMs : null,
+      expiresAt: opts.ttlMs ? Date.now() + opts.ttlMs : null
     };
 
     // Deliver immediately to subscribers
     const subs = this._subscribers.get(topic) ?? new Set();
     const globalSubs = this._subscribers.get('*') ?? new Set();
     const allSubs = new Set([...subs, ...globalSubs]);
-
     if (allSubs.size > 0) {
       for (const handler of allSubs) {
-        try { handler(envelope); } catch (err) { /* isolate subscriber errors */  }
+        try {
+          handler(envelope);
+        } catch (err) {/* isolate subscriber errors */}
       }
     } else {
       // Queue for late subscribers
       if (!this._queues.has(topic)) this._queues.set(topic, []);
       this._queues.get(topic).push(envelope);
     }
-
-    this.emit('published', { topic, messageId: envelope.id });
+    this.emit('published', {
+      topic,
+      messageId: envelope.id
+    });
     return envelope.id;
   }
 
@@ -502,11 +578,12 @@ class SwarmMessageBus extends EventEmitter {
     const queued = this._queues.get(topic) ?? [];
     for (const env of queued) {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
-        try { handler(env); } catch (err) { /* structured-logger: emit error */  }
+        try {
+          handler(env);
+        } catch (err) {/* structured-logger: emit error */}
       }
     }
     this._queues.delete(topic);
-
     return () => this._subscribers.get(topic)?.delete(handler);
   }
 
@@ -517,7 +594,10 @@ class SwarmMessageBus extends EventEmitter {
    * @param {object} payload - Message payload
    */
   sendDirect(fromId, toId, payload) {
-    return this.publish(`direct:${toId}`, { ...payload, from: fromId });
+    return this.publish(`direct:${toId}`, {
+      ...payload,
+      from: fromId
+    });
   }
 
   /**
@@ -526,7 +606,13 @@ class SwarmMessageBus extends EventEmitter {
    * @param {number} pressure   - Pressure level [0, 1]
    */
   broadcastBackpressure(swarmId, pressure) {
-    return this.publish('backpressure', { swarmId, pressure, ts: Date.now() }, { priority: 10 });
+    return this.publish('backpressure', {
+      swarmId,
+      pressure,
+      ts: Date.now()
+    }, {
+      priority: 10
+    });
   }
 }
 
@@ -570,16 +656,15 @@ class SwarmCoordinator extends EventEmitter {
   constructor(opts = {}) {
     super();
     this.setMaxListeners(200);
-
-    this._beeFactory      = opts.beeFactory      ?? null;
-    this._beeRegistry     = opts.beeRegistry     ?? null;
-    this._headyBees       = opts.headyBees       ?? null;
-    this._swarmConsensus  = opts.swarmConsensus  ?? null;
-    this._cslThreshold    = opts.cslThreshold    ?? CSL_THRESHOLD_MED;
+    this._beeFactory = opts.beeFactory ?? null;
+    this._beeRegistry = opts.beeRegistry ?? null;
+    this._headyBees = opts.headyBees ?? null;
+    this._swarmConsensus = opts.swarmConsensus ?? null;
+    this._cslThreshold = opts.cslThreshold ?? CSL_THRESHOLD_MED;
     this._metricsInterval = opts.metricsIntervalMs ?? METRICS_INTERVAL_MS;
-    this._healthCheckMs   = opts.healthCheckMs   ?? HEALTH_CHECK_INTERVAL_MS;
-    this._embedFn         = opts.embedFn         ?? null;
-    this._llmClassifyFn   = opts.llmClassifyFn   ?? null;
+    this._healthCheckMs = opts.healthCheckMs ?? HEALTH_CHECK_INTERVAL_MS;
+    this._embedFn = opts.embedFn ?? null;
+    this._llmClassifyFn = opts.llmClassifyFn ?? null;
 
     /** @type {Map<string, SwarmInstance>} All swarms keyed by ID */
     this._swarms = new Map();
@@ -592,17 +677,22 @@ class SwarmCoordinator extends EventEmitter {
 
     /** Global coordinator metrics */
     this._globalMetrics = {
-      totalTasksRouted:   0,
-      totalTasksCompleted:0,
-      totalTasksFailed:   0,
-      routingDecisions:   { deterministic: 0, csl: 0, llm: 0, loadBalance: 0 },
-      startedAt: new Date().toISOString(),
+      totalTasksRouted: 0,
+      totalTasksCompleted: 0,
+      totalTasksFailed: 0,
+      routingDecisions: {
+        deterministic: 0,
+        csl: 0,
+        llm: 0,
+        loadBalance: 0
+      },
+      startedAt: new Date().toISOString()
     };
 
     /** @type {NodeJS.Timer|null} */
-    this._metricsTimer    = null;
-    this._healthTimer     = null;
-    this._initialized     = false;
+    this._metricsTimer = null;
+    this._healthTimer = null;
+    this._initialized = false;
   }
 
   // ─── Lifecycle ─────────────────────────────────────────────────────────────
@@ -623,11 +713,14 @@ class SwarmCoordinator extends EventEmitter {
     }
 
     // Wire up message bus subscriptions
-    this._bus.subscribe('backpressure', (env) => this._handleBackpressureSignal(env));
-    this._bus.subscribe('*', (env) => {
+    this._bus.subscribe('backpressure', env => this._handleBackpressureSignal(env));
+    this._bus.subscribe('*', env => {
       if (env.topic.startsWith('direct:')) {
         const targetId = env.topic.replace('direct:', '');
-        this.emit('message:received', { targetId, envelope: env });
+        this.emit('message:received', {
+          targetId,
+          envelope: env
+        });
       }
     });
 
@@ -637,21 +730,14 @@ class SwarmCoordinator extends EventEmitter {
     }
 
     // Start health monitoring
-    this._healthTimer = setInterval(
-      () => this._runHealthChecks(),
-      this._healthCheckMs
-    );
+    this._healthTimer = setInterval(() => this._runHealthChecks(), this._healthCheckMs);
 
     // Start metrics collection
-    this._metricsTimer = setInterval(
-      () => this._emitMetricsSnapshot(),
-      this._metricsInterval
-    );
-
+    this._metricsTimer = setInterval(() => this._emitMetricsSnapshot(), this._metricsInterval);
     this._initialized = true;
     this.emit('coordinator:ready', {
       swarmCount: this._swarms.size,
-      timestamp:  new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
   }
 
@@ -668,9 +754,10 @@ class SwarmCoordinator extends EventEmitter {
     while (this._activeTotalCount() > 0 && Date.now() < deadline) {
       await new Promise(r => setTimeout(r, 500));
     }
-
     this._initialized = false;
-    this.emit('coordinator:shutdown', { timestamp: new Date().toISOString() });
+    this.emit('coordinator:shutdown', {
+      timestamp: new Date().toISOString()
+    });
   }
 
   // ─── Public API ────────────────────────────────────────────────────────────
@@ -698,14 +785,19 @@ class SwarmCoordinator extends EventEmitter {
    */
   async routeTask(task, executor = null) {
     if (!this._initialized) await this.initialize();
-
     const taskId = task.id ?? randomUUID();
-    const enriched = { ...task, id: taskId, priority: task.priority ?? 5 };
+    const enriched = {
+      ...task,
+      id: taskId,
+      priority: task.priority ?? 5
+    };
 
     // Step 1: Resolve target swarm
-    const { swarmId, strategy } = await this._resolveTargetSwarm(enriched);
+    const {
+      swarmId,
+      strategy
+    } = await this._resolveTargetSwarm(enriched);
     const swarm = this._swarms.get(swarmId);
-
     if (!swarm || !swarm.canAccept) {
       const fallback = this._pickFallback(swarmId);
       if (!fallback) {
@@ -713,7 +805,6 @@ class SwarmCoordinator extends EventEmitter {
       }
       return this.routeTask(enriched, executor); // re-route with fallback
     }
-
     this._globalMetrics.totalTasksRouted++;
     this._globalMetrics.routingDecisions[strategy]++;
 
@@ -727,14 +818,14 @@ class SwarmCoordinator extends EventEmitter {
    */
   getSwarmHealth() {
     return [...this._swarms.values()].map(s => ({
-      id:           s.id,
-      ring:         s.ring,
-      layer:        s.layer,
-      domain:       s.domain,
-      state:        s.state,
+      id: s.id,
+      ring: s.ring,
+      layer: s.layer,
+      domain: s.domain,
+      state: s.state,
       circuitState: s.circuitBreaker.state,
-      queueDepth:   s.queue.length,
-      activeTasks:  s.activeTasks.size,
+      queueDepth: s.queue.length,
+      activeTasks: s.activeTasks.size
     }));
   }
 
@@ -762,12 +853,12 @@ class SwarmCoordinator extends EventEmitter {
   getGlobalMetrics() {
     return {
       ...this._globalMetrics,
-      swarmCount:     this._swarms.size,
-      healthySwarms:  this._countByState(SWARM_STATE.HEALTHY),
+      swarmCount: this._swarms.size,
+      healthySwarms: this._countByState(SWARM_STATE.HEALTHY),
       degradedSwarms: this._countByState(SWARM_STATE.DEGRADED),
-      failedSwarms:   this._countByState(SWARM_STATE.FAILED),
+      failedSwarms: this._countByState(SWARM_STATE.FAILED),
       totalActiveTasks: this._activeTotalCount(),
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -788,7 +879,10 @@ class SwarmCoordinator extends EventEmitter {
    * @param {object} payload - Signal payload
    */
   broadcastSignal(type, payload) {
-    return this._bus.publish('broadcast', { type, ...payload });
+    return this._bus.publish('broadcast', {
+      type,
+      ...payload
+    });
   }
 
   /**
@@ -813,7 +907,11 @@ class SwarmCoordinator extends EventEmitter {
   async _resolveTargetSwarm(task) {
     // 1. Explicit swarm ID
     if (task.swarmId && this._swarms.has(task.swarmId)) {
-      return { swarmId: task.swarmId, strategy: 'deterministic', score: 1.0 };
+      return {
+        swarmId: task.swarmId,
+        strategy: 'deterministic',
+        score: 1.0
+      };
     }
 
     // 2. CSL cosine similarity routing
@@ -825,7 +923,11 @@ class SwarmCoordinator extends EventEmitter {
     // 3. Domain string matching
     if (task.domain) {
       const domainMatch = this._domainRoute(task.domain);
-      if (domainMatch) return { swarmId: domainMatch, strategy: 'deterministic', score: 0.9 };
+      if (domainMatch) return {
+        swarmId: domainMatch,
+        strategy: 'deterministic',
+        score: 0.9
+      };
     }
 
     // 4. LLM classification fallback
@@ -833,16 +935,27 @@ class SwarmCoordinator extends EventEmitter {
       try {
         const swarmId = await this._llmClassifyFn(task);
         if (swarmId && this._swarms.has(swarmId)) {
-          return { swarmId, strategy: 'llm', score: 0.8 };
+          return {
+            swarmId,
+            strategy: 'llm',
+            score: 0.8
+          };
         }
       } catch (err) {
-        this.emit('routing:llm-error', { error: err.message, taskId: task.id });
+        this.emit('routing:llm-error', {
+          error: err.message,
+          taskId: task.id
+        });
       }
     }
 
     // 5. Fibonacci-weighted load balancing
     const swarmId = this._fibLoadBalance(task);
-    return { swarmId, strategy: 'loadBalance', score: 0 };
+    return {
+      swarmId,
+      strategy: 'loadBalance',
+      score: 0
+    };
   }
 
   /**
@@ -853,21 +966,20 @@ class SwarmCoordinator extends EventEmitter {
    */
   async _cslRoute(task) {
     let queryEmbedding = task.embedding;
-
     if (!queryEmbedding && this._embedFn && task.description) {
       try {
         queryEmbedding = await this._embedFn(task.description);
       } catch (err) {
-        this.emit('routing:embed-error', { error: err.message, taskId: task.id });
+        this.emit('routing:embed-error', {
+          error: err.message,
+          taskId: task.id
+        });
         return null;
       }
     }
-
     if (!queryEmbedding) return null;
-
     let bestScore = -Infinity;
     let bestSwarm = null;
-
     for (const swarm of this._swarms.values()) {
       if (!swarm.canAccept || !swarm.embedding) continue;
       const score = cosineSimilarity(queryEmbedding, swarm.embedding);
@@ -876,11 +988,13 @@ class SwarmCoordinator extends EventEmitter {
         bestSwarm = swarm;
       }
     }
-
     if (bestSwarm && bestScore >= (bestSwarm.cslThreshold ?? this._cslThreshold)) {
-      return { swarmId: bestSwarm.id, strategy: 'csl', score: bestScore };
+      return {
+        swarmId: bestSwarm.id,
+        strategy: 'csl',
+        score: bestScore
+      };
     }
-
     return null;
   }
 
@@ -924,13 +1038,11 @@ class SwarmCoordinator extends EventEmitter {
     const hash = createHash('sha256').update(task.id).digest('hex');
     const hashVal = parseInt(hash.slice(0, 8), 16) / 0xFFFFFFFF;
     const targetWeight = hashVal * totalWeight;
-
     let cumulative = 0;
     for (const swarm of healthySwarms) {
       cumulative += swarm.weight;
       if (hashVal <= cumulative / totalWeight) return swarm.id;
     }
-
     return healthySwarms[healthySwarms.length - 1].id;
   }
 
@@ -942,7 +1054,11 @@ class SwarmCoordinator extends EventEmitter {
    */
   async _executeOnSwarm(swarm, task, executor, strategy) {
     const startMs = Date.now();
-    swarm.activeTasks.set(task.id, { task, startMs, strategy });
+    swarm.activeTasks.set(task.id, {
+      task,
+      startMs,
+      strategy
+    });
 
     /**
      * @event SwarmCoordinator#task:routed
@@ -952,17 +1068,15 @@ class SwarmCoordinator extends EventEmitter {
      * @property {string} strategy - Routing strategy used
      */
     this.emit('task:routed', {
-      taskId:   task.id,
-      swarmId:  swarm.id,
+      taskId: task.id,
+      swarmId: swarm.id,
       strategy,
-      ring:     swarm.ring,
-      layer:    swarm.layer,
-      domain:   swarm.domain,
+      ring: swarm.ring,
+      layer: swarm.layer,
+      domain: swarm.domain
     });
-
     try {
       let result;
-
       if (executor) {
         result = await executor(task, swarm);
       } else if (this._headyBees) {
@@ -972,7 +1086,6 @@ class SwarmCoordinator extends EventEmitter {
         // Simulation: resolve immediately (replace with real execution in production)
         result = await this._simulateExecution(task);
       }
-
       const latencyMs = Date.now() - startMs;
       swarm.activeTasks.delete(task.id);
       swarm.recordCompletion(latencyMs, true);
@@ -982,35 +1095,40 @@ class SwarmCoordinator extends EventEmitter {
        * @event SwarmCoordinator#task:completed
        */
       this.emit('task:completed', {
-        taskId:    task.id,
-        swarmId:   swarm.id,
+        taskId: task.id,
+        swarmId: swarm.id,
         latencyMs,
-        result,
+        result
       });
 
       // Check if queue pressure has dropped below nominal
       if (swarm.queuePressure < PSI * PSI && swarm.state === SWARM_STATE.OVERLOADED) {
         // Recovery threshold = ψ² ≈ 0.382 (NOMINAL_MAX) — phi-harmonic lower bound
         swarm.state = SWARM_STATE.HEALTHY;
-        this.emit('swarm:recovered', { swarmId: swarm.id });
+        this.emit('swarm:recovered', {
+          swarmId: swarm.id
+        });
       }
-
-      return { taskId: task.id, swarmId: swarm.id, strategy, latencyMs, result };
-
+      return {
+        taskId: task.id,
+        swarmId: swarm.id,
+        strategy,
+        latencyMs,
+        result
+      };
     } catch (err) {
       const latencyMs = Date.now() - startMs;
       swarm.activeTasks.delete(task.id);
       swarm.recordCompletion(latencyMs, false);
       this._globalMetrics.totalTasksFailed++;
-
       if (swarm.state === SWARM_STATE.FAILED) {
         /**
          * @event SwarmCoordinator#swarm:degraded
          */
         this.emit('swarm:degraded', {
-          swarmId:     swarm.id,
+          swarmId: swarm.id,
           circuitState: swarm.circuitBreaker.state,
-          error:       err.message,
+          error: err.message
         });
       }
 
@@ -1018,19 +1136,22 @@ class SwarmCoordinator extends EventEmitter {
        * @event SwarmCoordinator#task:failed
        */
       this.emit('task:failed', {
-        taskId:   task.id,
-        swarmId:  swarm.id,
-        error:    err.message,
-        latencyMs,
+        taskId: task.id,
+        swarmId: swarm.id,
+        error: err.message,
+        latencyMs
       });
 
       // Graceful degradation: retry on a fallback swarm
       const fallback = this._pickFallback(swarm.id);
       if (fallback && task._retryCount < 2) {
-        const retryTask = { ...task, _retryCount: (task._retryCount ?? 0) + 1, swarmId: fallback };
+        const retryTask = {
+          ...task,
+          _retryCount: (task._retryCount ?? 0) + 1,
+          swarmId: fallback
+        };
         return this.routeTask(retryTask, executor);
       }
-
       throw err;
     }
   }
@@ -1043,7 +1164,11 @@ class SwarmCoordinator extends EventEmitter {
   async _simulateExecution(task) {
     const delayMs = 50 + Math.random() * 200;
     await new Promise(r => setTimeout(r, delayMs));
-    return { simulated: true, taskId: task.id, delayMs };
+    return {
+      simulated: true,
+      taskId: task.id,
+      delayMs
+    };
   }
 
   // ─── Degradation & Failover ────────────────────────────────────────────────
@@ -1060,17 +1185,11 @@ class SwarmCoordinator extends EventEmitter {
     if (!failed) return null;
 
     // Same ring preference
-    const sameRing = [...this._swarms.values()]
-      .filter(s => s.id !== failedSwarmId && s.ring === failed.ring && s.canAccept)
-      .sort((a, b) => b.weight - a.weight);
-
+    const sameRing = [...this._swarms.values()].filter(s => s.id !== failedSwarmId && s.ring === failed.ring && s.canAccept).sort((a, b) => b.weight - a.weight);
     if (sameRing.length > 0) return sameRing[0].id;
 
     // Any healthy swarm
-    const anyHealthy = [...this._swarms.values()]
-      .filter(s => s.id !== failedSwarmId && s.canAccept)
-      .sort((a, b) => b.weight - a.weight);
-
+    const anyHealthy = [...this._swarms.values()].filter(s => s.id !== failedSwarmId && s.canAccept).sort((a, b) => b.weight - a.weight);
     return anyHealthy.length > 0 ? anyHealthy[0].id : null;
   }
 
@@ -1086,11 +1205,9 @@ class SwarmCoordinator extends EventEmitter {
   _runHealthChecks() {
     const now = Date.now();
     let healthyCount = 0;
-
     for (const swarm of this._swarms.values()) {
       swarm.metrics.lastHealthAt = now;
       swarm._updateState();
-
       if (swarm.state === SWARM_STATE.HEALTHY) healthyCount++;
 
       // Propagate backpressure if queue pressure exceeds ELEVATED_MAX (ψ ≈ 0.618)
@@ -1102,19 +1219,18 @@ class SwarmCoordinator extends EventEmitter {
          * @event SwarmCoordinator#backpressure
          */
         this.emit('backpressure', {
-          swarmId:  swarm.id,
+          swarmId: swarm.id,
           pressure: swarm.queuePressure,
-          state:    swarm.state,
-          level:    classifyPressure(swarm.queuePressure),
+          state: swarm.state,
+          level: classifyPressure(swarm.queuePressure)
         });
       }
     }
-
     if (healthyCount < MIN_HEALTHY_SWARMS) {
       this.emit('coordinator:critical', {
-        message:      `Only ${healthyCount} healthy swarms (minimum: ${MIN_HEALTHY_SWARMS})`,
+        message: `Only ${healthyCount} healthy swarms (minimum: ${MIN_HEALTHY_SWARMS})`,
         healthyCount,
-        timestamp:    new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
     }
   }
@@ -1124,7 +1240,10 @@ class SwarmCoordinator extends EventEmitter {
    * @private
    */
   _handleBackpressureSignal(envelope) {
-    const { swarmId, pressure } = envelope.message;
+    const {
+      swarmId,
+      pressure
+    } = envelope.message;
     const swarm = this._swarms.get(swarmId);
     if (!swarm) return;
 
@@ -1135,8 +1254,11 @@ class SwarmCoordinator extends EventEmitter {
     } else if (level === 'high') {
       swarm.state = SWARM_STATE.DEGRADED;
     }
-
-    this.emit('backpressure:received', { swarmId, pressure, level });
+    this.emit('backpressure:received', {
+      swarmId,
+      pressure,
+      level
+    });
   }
 
   // ─── Embeddings ────────────────────────────────────────────────────────────
@@ -1146,12 +1268,15 @@ class SwarmCoordinator extends EventEmitter {
    * @private
    */
   async _buildDomainEmbeddings() {
-    const promises = [...this._swarms.values()].map(async (swarm) => {
+    const promises = [...this._swarms.values()].map(async swarm => {
       try {
         const description = `${swarm.domain} swarm: ${swarm.id} (${swarm.ring} ring, ${swarm.layer} layer)`;
         swarm.embedding = await this._embedFn(description);
       } catch (err) {
-        this.emit('embedding:error', { swarmId: swarm.id, error: err.message });
+        this.emit('embedding:error', {
+          swarmId: swarm.id,
+          error: err.message
+        });
       }
     });
     await Promise.allSettled(promises);
@@ -1163,7 +1288,7 @@ class SwarmCoordinator extends EventEmitter {
   _emitMetricsSnapshot() {
     const snapshot = {
       global: this.getGlobalMetrics(),
-      swarms: this.getAllMetrics(),
+      swarms: this.getAllMetrics()
     };
     /**
      * @event SwarmCoordinator#metrics:snapshot
@@ -1188,21 +1313,5 @@ class SwarmCoordinator extends EventEmitter {
 
 // ─── Exports ──────────────────────────────────────────────────────────────────
 
-export {
-  SwarmCoordinator,
-  SwarmInstance,
-  SwarmMessageBus,
-  SWARM_DEFINITIONS,
-  SWARM_STATE,
-  LAYER,
-  RING,
-  FIBONACCI,
-  FIB_TOTAL,
-  CSL_THRESHOLD_HIGH,
-  CSL_THRESHOLD_MED,
-  CSL_THRESHOLD_LOW,
-  cosineSimilarity,
-  fibWeight,
-};
-
+export { SwarmCoordinator, SwarmInstance, SwarmMessageBus, SWARM_DEFINITIONS, SWARM_STATE, LAYER, RING, FIBONACCI, FIB_TOTAL, CSL_THRESHOLD_HIGH, CSL_THRESHOLD_MED, CSL_THRESHOLD_LOW, cosineSimilarity, fibWeight };
 export default SwarmCoordinator;

@@ -20,16 +20,19 @@
 'use strict';
 
 const {
-  PHI, PSI, fib, CSL_THRESHOLDS,
-  sigmoid,
+  PHI,
+  PSI,
+  fib,
+  CSL_THRESHOLDS,
+  sigmoid
 } = require('../../shared/phi-math');
 
 // ─── φ-Constants ─────────────────────────────────────────────────────────────
 
-const DEFAULT_DIM            = fib(14);                  // 377 (close to 384)
-const PHI_TEMPERATURE        = PSI * PSI * PSI;          // ψ³ ≈ 0.236
-const ANTI_COLLAPSE_WEIGHT   = Math.pow(PSI, 8);         // ψ⁸ ≈ 0.0131
-const COLLAPSE_THRESHOLD     = Math.pow(PSI, 9);         // ψ⁹ ≈ 0.0081
+const DEFAULT_DIM = fib(14); // 377 (close to 384)
+const PHI_TEMPERATURE = PSI * PSI * PSI; // ψ³ ≈ 0.236
+const ANTI_COLLAPSE_WEIGHT = Math.pow(PSI, 8); // ψ⁸ ≈ 0.0131
+const COLLAPSE_THRESHOLD = Math.pow(PSI, 9); // ψ⁹ ≈ 0.0081
 
 // ─── Core Operations ────────────────────────────────────────────────────────
 
@@ -38,7 +41,9 @@ const COLLAPSE_THRESHOLD     = Math.pow(PSI, 9);         // ψ⁹ ≈ 0.0081
  * Returns scalar in [-1, +1]: +1=aligned, 0=orthogonal, -1=opposed
  */
 function cslAND(vecA, vecB) {
-  let dot = 0, magA = 0, magB = 0;
+  let dot = 0,
+    magA = 0,
+    magB = 0;
   const len = Math.min(vecA.length, vecB.length);
   for (let i = 0; i < len; i++) {
     dot += vecA[i] * vecB[i];
@@ -114,14 +119,12 @@ function cslXOR(vecA, vecB) {
 function cslCONSENSUS(vectors, weights = null) {
   if (!vectors || vectors.length === 0) return null;
   if (vectors.length === 1) return normalize(vectors[0]);
-
   const dim = vectors[0].length;
   const result = new Float32Array(dim);
 
   // Default weights: phi-geometric series
   const w = weights || vectors.map((_, idx) => Math.pow(PSI, idx));
   const totalWeight = w.reduce((a, b) => a + b, 0);
-
   for (let i = 0; i < dim; i++) {
     let sum = 0;
     for (let j = 0; j < vectors.length; j++) {
@@ -129,14 +132,8 @@ function cslCONSENSUS(vectors, weights = null) {
     }
     result[i] = sum;
   }
-
   return normalize(result);
 }
-
-/**
- * CSL GATE — Soft sigmoid gating
- * output = value × σ((cosScore - τ) / temperature)
- */
 function cslGATE(value, cosScore, tau = CSL_THRESHOLDS.MINIMUM, temperature = PHI_TEMPERATURE) {
   const gateValue = sigmoid((cosScore - tau) / temperature);
   if (typeof value === 'number') return value * gateValue;
@@ -149,10 +146,6 @@ function cslGATE(value, cosScore, tau = CSL_THRESHOLDS.MINIMUM, temperature = PH
   }
   return gateValue;
 }
-
-/**
- * Adaptive GATE — temperature adjusts based on entropy
- */
 function adaptiveGATE(value, cosScore, entropy, maxEntropy, tau = CSL_THRESHOLDS.MINIMUM) {
   const entropyRatio = maxEntropy > 0 ? entropy / maxEntropy : PSI;
   const adaptiveTemp = PHI_TEMPERATURE * (1 + entropyRatio * PSI);
@@ -166,13 +159,11 @@ function dot(a, b) {
   for (let i = 0; i < a.length; i++) sum += a[i] * b[i];
   return sum;
 }
-
 function magnitude(v) {
   let sum = 0;
   for (let i = 0; i < v.length; i++) sum += v[i] * v[i];
   return Math.sqrt(sum);
 }
-
 function normalize(v) {
   const mag = magnitude(v);
   if (mag < 1e-10) return v;
@@ -180,13 +171,11 @@ function normalize(v) {
   for (let i = 0; i < v.length; i++) result[i] = v[i] / mag;
   return result;
 }
-
 function randomUnitVector(dim = DEFAULT_DIM) {
   const v = new Float32Array(dim);
   for (let i = 0; i < dim; i++) v[i] = Math.random() * 2 - 1;
   return normalize(v);
 }
-
 function zeroVector(dim = DEFAULT_DIM) {
   return new Float32Array(dim);
 }
@@ -212,7 +201,6 @@ function phiFusionScores(scores) {
 function isCollapsed(v) {
   return magnitude(v) < COLLAPSE_THRESHOLD;
 }
-
 module.exports = {
   // CSL Operations
   cslAND,
@@ -235,5 +223,5 @@ module.exports = {
   DEFAULT_DIM,
   PHI_TEMPERATURE,
   ANTI_COLLAPSE_WEIGHT,
-  COLLAPSE_THRESHOLD,
+  COLLAPSE_THRESHOLD
 };

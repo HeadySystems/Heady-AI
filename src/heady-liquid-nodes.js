@@ -13,16 +13,15 @@
  * @version 3.0.0
  */
 const logger = console;
-
-
 import { Pinecone } from '@pinecone-database/pinecone';
 import { createClient } from '@upstash/redis';
 import pkg from 'pg';
 import * as Sentry from '@sentry/node';
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
-
-const { Pool } = pkg;
+const {
+  Pool
+} = pkg;
 
 // ============================================================================
 // CONSTANTS & CONFIGURATION
@@ -41,7 +40,7 @@ const NodeState = {
   MERGING: 'MERGING',
   SPLITTING: 'SPLITTING',
   DEGRADED: 'DEGRADED',
-  DORMANT: 'DORMANT',
+  DORMANT: 'DORMANT'
 };
 
 /**
@@ -55,7 +54,7 @@ const MessageType = {
   SPLIT_REQUEST: 'SPLIT_REQUEST',
   REBALANCE: 'REBALANCE',
   ACK: 'ACK',
-  ERROR: 'ERROR',
+  ERROR: 'ERROR'
 };
 
 /**
@@ -69,7 +68,7 @@ const NodeType = {
   ATLAS: 'ATLAS',
   PYTHIA: 'PYTHIA',
   COORDINATOR: 'COORDINATOR',
-  MEMORY: 'MEMORY',
+  MEMORY: 'MEMORY'
 };
 
 // ============================================================================
@@ -85,23 +84,23 @@ function loadConfig() {
       apiKey: process.env.PINECONE_API_KEY,
       index: process.env.PINECONE_INDEX || 'heady-vectors',
       namespace: process.env.PINECONE_NAMESPACE || 'default',
-      environment: process.env.PINECONE_ENVIRONMENT || 'production',
+      environment: process.env.PINECONE_ENVIRONMENT || 'production'
     },
     postgres: {
-      host: process.env.NEON_HOST || 'localhost',
+      host: process.env.NEON_HOST || "0.0.0.0",
       port: parseInt(process.env.NEON_PORT || '5432'),
       database: process.env.NEON_DATABASE || 'heady',
       user: process.env.NEON_USER || 'postgres',
       password: process.env.NEON_PASSWORD || '',
-      ssl: process.env.NEON_SSL === 'true',
+      ssl: process.env.NEON_SSL === 'true'
     },
     redis: {
-      url: process.env.UPSTASH_REDIS_URL || (process.env.SERVICE_URL || 'http://0.0.0.0:6379'),
-      token: process.env.UPSTASH_REDIS_TOKEN || '',
+      url: process.env.UPSTASH_REDIS_URL || process.env.SERVICE_URL || 'http://0.0.0.0:6379',
+      token: process.env.UPSTASH_REDIS_TOKEN || ''
     },
     sentry: {
       dsn: process.env.SENTRY_DSN || '',
-      enabled: process.env.SENTRY_ENABLED === 'true',
+      enabled: process.env.SENTRY_ENABLED === 'true'
     },
     mesh: {
       maxNodes: parseInt(process.env.MAX_NODES || '100'),
@@ -109,12 +108,11 @@ function loadConfig() {
       heartbeatInterval: parseInt(process.env.HEARTBEAT_INTERVAL || '5000'),
       healthCheckInterval: parseInt(process.env.HEALTH_CHECK_INTERVAL || '10000'),
       maxRetries: parseInt(process.env.MAX_RETRIES || '3'),
-      timeout: parseInt(process.env.OPERATION_TIMEOUT || '30000'),
+      timeout: parseInt(process.env.OPERATION_TIMEOUT || '30000')
     },
     nodeId: process.env.NODE_ID || `node-${uuidv4().slice(0, 8)}`,
-    environment: process.env.NODE_ENV || 'production',
+    environment: process.env.NODE_ENV || 'production'
   };
-
   return config;
 }
 
@@ -140,7 +138,9 @@ class MeshError extends Error {
  */
 class NodeNotFoundError extends MeshError {
   constructor(nodeId) {
-    super(`Node not found: ${nodeId}`, 'NODE_NOT_FOUND', { nodeId });
+    super(`Node not found: ${nodeId}`, 'NODE_NOT_FOUND', {
+      nodeId
+    });
     this.name = 'NodeNotFoundError';
   }
 }
@@ -153,7 +153,7 @@ class CapacityExceededError extends MeshError {
     super(`Node capacity exceeded: ${current}/${max}`, 'CAPACITY_EXCEEDED', {
       nodeId,
       current,
-      max,
+      max
     });
     this.name = 'CapacityExceededError';
   }
@@ -164,7 +164,10 @@ class CapacityExceededError extends MeshError {
  */
 class TimeoutError extends MeshError {
   constructor(operationId, duration) {
-    super(`Operation timeout after ${duration}ms`, 'TIMEOUT', { operationId, duration });
+    super(`Operation timeout after ${duration}ms`, 'TIMEOUT', {
+      operationId,
+      duration
+    });
     this.name = 'TimeoutError';
   }
 }
@@ -204,21 +207,18 @@ class SacredGeometryEngine {
    */
   goldenSpiralPlacement(count) {
     const positions = [];
-    const goldenAngle = (2 * Math.PI) / (this.phi * this.phi);
-
+    const goldenAngle = 2 * Math.PI / (this.phi * this.phi);
     for (let i = 0; i < count; i++) {
       const angle = i * goldenAngle;
       const radius = Math.sqrt(i) * 0.5;
-      const z = (i / count) * 2 - 1;
-
+      const z = i / count * 2 - 1;
       positions.push({
         x: radius * Math.cos(angle),
         y: radius * Math.sin(angle),
         z,
-        index: i,
+        index: i
       });
     }
-
     return positions;
   }
 
@@ -230,19 +230,16 @@ class SacredGeometryEngine {
    */
   fibonacciPartition(data, k) {
     if (k <= 1) return [data];
-
     const partitions = [];
     const fibSequence = this.fibonacci.slice(0, k).sort((a, b) => a - b);
     const total = fibSequence.reduce((a, b) => a + b, 0);
-    const normalized = fibSequence.map((f) => f / total);
-
+    const normalized = fibSequence.map(f => f / total);
     let start = 0;
     for (let i = 0; i < k; i++) {
       const end = i === k - 1 ? data.length : Math.ceil(start + data.length * normalized[i]);
       partitions.push(data.slice(start, end));
       start = end;
     }
-
     return partitions;
   }
 
@@ -255,12 +252,10 @@ class SacredGeometryEngine {
     const entries = Object.entries(metrics);
     let score = 0;
     let weight = 1;
-
     for (const [key, value] of entries) {
       score += value * weight;
       weight /= this.phi;
     }
-
     return score;
   }
 
@@ -274,11 +269,9 @@ class SacredGeometryEngine {
   vesicaPiscisOverlap(capA, capB) {
     const setA = new Set(capA);
     const setB = new Set(capB);
-    const intersection = [...setA].filter((x) => setB.has(x)).length;
+    const intersection = [...setA].filter(x => setB.has(x)).length;
     const union = new Set([...setA, ...setB]).size;
-
     if (union === 0) return 0;
-
     const jaccardIndex = intersection / union;
     // Vesica piscis formula: overlap is maximized at φ ratio
     return jaccardIndex * this.phi / (1 + this.phi);
@@ -291,31 +284,26 @@ class SacredGeometryEngine {
    */
   findOptimalLatticePoint(existingPositions) {
     if (existingPositions.length === 0) {
-      return { x: 0, y: 0, z: 0 };
+      return {
+        x: 0,
+        y: 0,
+        z: 0
+      };
     }
-
     const candidates = this.goldenSpiralPlacement(existingPositions.length + 1);
     let maxMinDistance = 0;
     let bestPosition = candidates[candidates.length - 1];
-
     for (const candidate of candidates) {
       let minDistance = Infinity;
-
       for (const existing of existingPositions) {
-        const dist = Math.sqrt(
-          Math.pow(candidate.x - existing.x, 2) +
-          Math.pow(candidate.y - existing.y, 2) +
-          Math.pow(candidate.z - existing.z, 2)
-        );
+        const dist = Math.sqrt(Math.pow(candidate.x - existing.x, 2) + Math.pow(candidate.y - existing.y, 2) + Math.pow(candidate.z - existing.z, 2));
         minDistance = Math.min(minDistance, dist);
       }
-
       if (minDistance > maxMinDistance) {
         maxMinDistance = minDistance;
         bestPosition = candidate;
       }
     }
-
     return bestPosition;
   }
 }
@@ -345,7 +333,7 @@ class StructuredLogger {
       correlationId: this.correlationId,
       nodeId: this.config.nodeId,
       environment: this.config.environment,
-      ...context,
+      ...context
     };
   }
 
@@ -382,8 +370,8 @@ class StructuredLogger {
       error: {
         message: error.message,
         code: error.code,
-        stack: error.stack,
-      },
+        stack: error.stack
+      }
     });
     logger.error(JSON.stringify(entry));
   }
@@ -431,7 +419,11 @@ class LiquidNode {
     this.capacity = options.capacity || 1000;
     this.load = 0;
     this.state = NodeState.CRYSTALLIZING;
-    this.position = options.position || { x: 0, y: 0, z: 0 };
+    this.position = options.position || {
+      x: 0,
+      y: 0,
+      z: 0
+    };
     this.neighbors = [];
     this.metadata = options.metadata || {};
     this.createdAt = new Date();
@@ -441,7 +433,7 @@ class LiquidNode {
       tasksProcessed: 0,
       errorsEncountered: 0,
       averageLatency: 0,
-      uptime: 0,
+      uptime: 0
     };
   }
 
@@ -449,7 +441,7 @@ class LiquidNode {
    * Get current load percentage
    */
   getLoadPercentage() {
-    return (this.load / this.capacity) * 100;
+    return this.load / this.capacity * 100;
   }
 
   /**
@@ -457,12 +449,7 @@ class LiquidNode {
    */
   isHealthy() {
     const heartbeatAge = Date.now() - this.lastHeartbeat.getTime();
-    return (
-      this.state !== NodeState.DEGRADED &&
-      this.state !== NodeState.DORMANT &&
-      heartbeatAge < 30000 &&
-      this.getLoadPercentage() < 95
-    );
+    return this.state !== NodeState.DEGRADED && this.state !== NodeState.DORMANT && heartbeatAge < 30000 && this.getLoadPercentage() < 95;
   }
 
   /**
@@ -488,8 +475,7 @@ class LiquidNode {
   recordTaskCompletion(latency) {
     this.metrics.tasksProcessed++;
     const n = this.metrics.tasksProcessed;
-    this.metrics.averageLatency =
-      (this.metrics.averageLatency * (n - 1) + latency) / n;
+    this.metrics.averageLatency = (this.metrics.averageLatency * (n - 1) + latency) / n;
   }
 
   /**
@@ -510,14 +496,12 @@ class LiquidNode {
       [NodeState.MERGING]: [NodeState.FLUID, NodeState.DEGRADED],
       [NodeState.SPLITTING]: [NodeState.FLUID, NodeState.DEGRADED],
       [NodeState.DEGRADED]: [NodeState.FLUID, NodeState.DORMANT],
-      [NodeState.DORMANT]: [NodeState.CRYSTALLIZING],
+      [NodeState.DORMANT]: [NodeState.CRYSTALLIZING]
     };
-
     if (validTransitions[this.state]?.includes(newState)) {
       this.state = newState;
       return true;
     }
-
     return false;
   }
 
@@ -538,7 +522,7 @@ class LiquidNode {
       neighbors: this.neighbors,
       metrics: this.metrics,
       createdAt: this.createdAt,
-      lastHeartbeat: this.lastHeartbeat,
+      lastHeartbeat: this.lastHeartbeat
     };
   }
 }
@@ -562,23 +546,21 @@ class VectorMemory {
   constructor(options = {}) {
     this.logger = options.logger || new StructuredLogger({});
     this.enabled = !!options.apiKey;
-
     if (this.enabled) {
       try {
         this.pinecone = new Pinecone({
           apiKey: options.apiKey,
-          environment: options.environment || 'production',
+          environment: options.environment || 'production'
         });
         this.index = this.pinecone.Index(options.index || 'heady-vectors');
         this.namespace = options.namespace || 'default';
       } catch (error) {
         this.logger.warn('Pinecone initialization failed, vector memory disabled', {
-          error: error.message,
+          error: error.message
         });
         this.enabled = false;
       }
     }
-
     this.memoryMap = new Map();
     this.vectorDimension = options.vectorDimension || 1536;
   }
@@ -615,29 +597,32 @@ class VectorMemory {
         embedding,
         metadata,
         storedAt: new Date(),
-        accessCount: 0,
+        accessCount: 0
       });
 
       // Store in Pinecone if enabled
       if (this.enabled) {
-        await this.index.upsert([
-          {
-            id,
-            values: embedding,
-            metadata: {
-              key,
-              content: content.slice(0, 1000),
-              ...metadata,
-              timestamp: Date.now(),
-            },
-          },
-        ]);
+        await this.index.upsert([{
+          id,
+          values: embedding,
+          metadata: {
+            key,
+            content: content.slice(0, 1000),
+            ...metadata,
+            timestamp: Date.now()
+          }
+        }]);
       }
-
-      this.logger.debug('Memory stored', { key, id, contentLength: content.length });
+      this.logger.debug('Memory stored', {
+        key,
+        id,
+        contentLength: content.length
+      });
       return id;
     } catch (error) {
-      this.logger.error('Failed to store memory', error, { key });
+      this.logger.error('Failed to store memory', error, {
+        key
+      });
       throw error;
     }
   }
@@ -660,7 +645,7 @@ class VectorMemory {
           key,
           similarity,
           content: memory.content,
-          metadata: memory.metadata,
+          metadata: memory.metadata
         });
         memory.accessCount++;
       }
@@ -668,7 +653,9 @@ class VectorMemory {
       // Sort by similarity and return top K
       return results.sort((a, b) => b.similarity - a.similarity).slice(0, topK);
     } catch (error) {
-      this.logger.error('Failed to recall memories', error, { query });
+      this.logger.error('Failed to recall memories', error, {
+        query
+      });
       throw error;
     }
   }
@@ -681,15 +668,14 @@ class VectorMemory {
     if (this.memoryMap.has(key)) {
       const memory = this.memoryMap.get(key);
       this.memoryMap.delete(key);
-
       if (this.enabled) {
         await this.index.deleteOne(memory.id);
       }
-
-      this.logger.debug('Memory forgotten', { key });
+      this.logger.debug('Memory forgotten', {
+        key
+      });
       return true;
     }
-
     return false;
   }
 
@@ -701,34 +687,24 @@ class VectorMemory {
       const threshold = 0.85;
       const memories = Array.from(this.memoryMap.entries());
       const toDelete = new Set();
-
       for (let i = 0; i < memories.length; i++) {
         if (toDelete.has(memories[i][0])) continue;
-
         for (let j = i + 1; j < memories.length; j++) {
           if (toDelete.has(memories[j][0])) continue;
-
-          const similarity = this._cosineSimilarity(
-            memories[i][1].embedding,
-            memories[j][1].embedding
-          );
-
+          const similarity = this._cosineSimilarity(memories[i][1].embedding, memories[j][1].embedding);
           if (similarity > threshold) {
             // Keep the more frequently accessed one
-            const toRemove =
-              memories[i][1].accessCount > memories[j][1].accessCount
-                ? memories[j][0]
-                : memories[i][0];
+            const toRemove = memories[i][1].accessCount > memories[j][1].accessCount ? memories[j][0] : memories[i][0];
             toDelete.add(toRemove);
           }
         }
       }
-
       for (const key of toDelete) {
         await this.forget(key);
       }
-
-      this.logger.info('Memory consolidated', { memoriesRemoved: toDelete.size });
+      this.logger.info('Memory consolidated', {
+        memoriesRemoved: toDelete.size
+      });
       return toDelete.size;
     } catch (error) {
       this.logger.error('Failed to consolidate memories', error);
@@ -743,28 +719,21 @@ class VectorMemory {
     try {
       const memories = Array.from(this.memoryMap.values());
       if (memories.length < 2) return [];
-
       const connections = [];
       const threshold = 0.6;
-
       for (let i = 0; i < memories.length; i++) {
         for (let j = i + 1; j < memories.length; j++) {
-          const similarity = this._cosineSimilarity(
-            memories[i].embedding,
-            memories[j].embedding
-          );
-
+          const similarity = this._cosineSimilarity(memories[i].embedding, memories[j].embedding);
           if (similarity > threshold && similarity < 0.95) {
             connections.push({
               from: memories[i].id,
               to: memories[j].id,
               similarity,
-              potentialInsight: `Unexpected connection: ${memories[i].content.slice(0, 50)} <-> ${memories[j].content.slice(0, 50)}`,
+              potentialInsight: `Unexpected connection: ${memories[i].content.slice(0, 50)} <-> ${memories[j].content.slice(0, 50)}`
             });
           }
         }
       }
-
       return connections.sort((a, b) => b.similarity - a.similarity);
     } catch (error) {
       this.logger.error('Failed to dream', error);
@@ -783,7 +752,7 @@ class VectorMemory {
         id: memory.id,
         accessCount: memory.accessCount,
         metadata: memory.metadata,
-        storedAt: memory.storedAt,
+        storedAt: memory.storedAt
       });
     }
     return map;
@@ -797,16 +766,13 @@ class VectorMemory {
     let dotProduct = 0;
     let magnitudeA = 0;
     let magnitudeB = 0;
-
     for (let i = 0; i < vecA.length; i++) {
       dotProduct += vecA[i] * vecB[i];
       magnitudeA += vecA[i] * vecA[i];
       magnitudeB += vecB[i] * vecB[i];
     }
-
     magnitudeA = Math.sqrt(magnitudeA);
     magnitudeB = Math.sqrt(magnitudeB);
-
     if (magnitudeA === 0 || magnitudeB === 0) return 0;
     return dotProduct / (magnitudeA * magnitudeB);
   }
@@ -835,16 +801,15 @@ class MeshProtocol {
     this.circuitBreakers = new Map();
     this.messageLog = [];
     this.maxMessageLogSize = 1000;
-
     if (this.enabled) {
       try {
         this.redis = createClient({
           url: options.redisUrl,
-          token: options.redisToken,
+          token: options.redisToken
         });
       } catch (error) {
         this.logger.warn('Redis initialization failed, mesh protocol disabled', {
-          error: error.message,
+          error: error.message
         });
         this.enabled = false;
       }
@@ -856,7 +821,6 @@ class MeshProtocol {
    */
   async connect() {
     if (!this.enabled) return;
-
     try {
       await this.redis.connect();
       this.logger.info('Connected to Redis mesh protocol');
@@ -873,7 +837,6 @@ class MeshProtocol {
    */
   async publish(channel, message) {
     if (!this.enabled) return false;
-
     try {
       const envelope = {
         id: uuidv4(),
@@ -882,21 +845,20 @@ class MeshProtocol {
         to: channel,
         correlationId: message.correlationId || uuidv4(),
         timestamp: Date.now(),
-        payload: message.payload || {},
+        payload: message.payload || {}
       };
-
       await this.redis.publish(channel, JSON.stringify(envelope));
-
       this._recordMessage(envelope);
       this.logger.debug('Message published', {
         channel,
         messageType: envelope.type,
-        messageId: envelope.id,
+        messageId: envelope.id
       });
-
       return true;
     } catch (error) {
-      this.logger.error('Failed to publish message', error, { channel });
+      this.logger.error('Failed to publish message', error, {
+        channel
+      });
       return false;
     }
   }
@@ -908,26 +870,31 @@ class MeshProtocol {
    */
   async subscribe(channel, handler) {
     if (!this.enabled) return false;
-
     try {
       const pubsub = await this.redis.subscribe(channel);
-
-      pubsub.onMessage((message) => {
+      pubsub.onMessage(message => {
         try {
           const envelope = JSON.parse(message);
           this._recordMessage(envelope);
           handler(envelope);
         } catch (error) {
-          this.logger.error('Failed to handle message', error, { channel });
+          this.logger.error('Failed to handle message', error, {
+            channel
+          });
         }
       });
-
-      this.subscriptions.set(channel, { pubsub, handler });
-      this.logger.info('Subscribed to channel', { channel });
-
+      this.subscriptions.set(channel, {
+        pubsub,
+        handler
+      });
+      this.logger.info('Subscribed to channel', {
+        channel
+      });
       return true;
     } catch (error) {
-      this.logger.error('Failed to subscribe to channel', error, { channel });
+      this.logger.error('Failed to subscribe to channel', error, {
+        channel
+      });
       return false;
     }
   }
@@ -938,10 +905,14 @@ class MeshProtocol {
    */
   async unsubscribe(channel) {
     if (this.subscriptions.has(channel)) {
-      const { pubsub } = this.subscriptions.get(channel);
+      const {
+        pubsub
+      } = this.subscriptions.get(channel);
       await pubsub.unsubscribe();
       this.subscriptions.delete(channel);
-      this.logger.info('Unsubscribed from channel', { channel });
+      this.logger.info('Unsubscribed from channel', {
+        channel
+      });
       return true;
     }
     return false;
@@ -955,10 +926,8 @@ class MeshProtocol {
     if (!this.circuitBreakers.has(nodeId)) {
       return false;
     }
-
     const breaker = this.circuitBreakers.get(nodeId);
     const now = Date.now();
-
     if (breaker.state === 'OPEN') {
       if (now - breaker.openedAt > 30000) {
         breaker.state = 'HALF_OPEN';
@@ -967,7 +936,6 @@ class MeshProtocol {
       }
       return true;
     }
-
     return false;
   }
 
@@ -980,17 +948,18 @@ class MeshProtocol {
       this.circuitBreakers.set(nodeId, {
         state: 'CLOSED',
         failureCount: 0,
-        openedAt: null,
+        openedAt: null
       });
     }
-
     const breaker = this.circuitBreakers.get(nodeId);
     breaker.failureCount++;
-
     if (breaker.failureCount >= 5) {
       breaker.state = 'OPEN';
       breaker.openedAt = Date.now();
-      this.logger.warn('Circuit breaker opened', { nodeId, failureCount: breaker.failureCount });
+      this.logger.warn('Circuit breaker opened', {
+        nodeId,
+        failureCount: breaker.failureCount
+      });
     }
   }
 
@@ -1004,7 +973,9 @@ class MeshProtocol {
       if (breaker.state === 'HALF_OPEN') {
         breaker.state = 'CLOSED';
         breaker.failureCount = 0;
-        this.logger.info('Circuit breaker closed', { nodeId });
+        this.logger.info('Circuit breaker closed', {
+          nodeId
+        });
       }
     }
   }
@@ -1016,9 +987,8 @@ class MeshProtocol {
   _recordMessage(envelope) {
     this.messageLog.push({
       ...envelope,
-      recordedAt: Date.now(),
+      recordedAt: Date.now()
     });
-
     if (this.messageLog.length > this.maxMessageLogSize) {
       this.messageLog = this.messageLog.slice(-this.maxMessageLogSize);
     }
@@ -1080,17 +1050,14 @@ class LatticeController {
     const optimalPos = this.geometry.findOptimalLatticePoint(this.positions);
     node.position = optimalPos;
     this.positions.push(optimalPos);
-
     this.nodes.set(node.id, node);
     node.transitionTo(NodeState.FLUID);
-
     this.logger.info('Node added to lattice', {
       nodeId: node.id,
       nodeType: node.type,
       position: optimalPos,
-      latticeSize: this.nodes.size,
+      latticeSize: this.nodes.size
     });
-
     return node;
   }
 
@@ -1108,10 +1075,9 @@ class LatticeController {
     if (node.taskQueue.length > 0) {
       this.logger.warn('Draining tasks from node before removal', {
         nodeId,
-        taskCount: node.taskQueue.length,
+        taskCount: node.taskQueue.length
       });
     }
-
     node.transitionTo(NodeState.DORMANT);
     this.nodes.delete(nodeId);
 
@@ -1120,12 +1086,10 @@ class LatticeController {
     if (posIndex !== -1) {
       this.positions.splice(posIndex, 1);
     }
-
     this.logger.info('Node removed from lattice', {
       nodeId,
-      latticeSize: this.nodes.size,
+      latticeSize: this.nodes.size
     });
-
     return true;
   }
 
@@ -1136,12 +1100,14 @@ class LatticeController {
    */
   findNearest(queryVector, k = 3) {
     const distances = [];
-
     for (const [nodeId, node] of this.nodes.entries()) {
       const distance = this._cosineSimilarity(queryVector, node.embedding);
-      distances.push({ nodeId, distance, node });
+      distances.push({
+        nodeId,
+        distance,
+        node
+      });
     }
-
     return distances.sort((a, b) => b.distance - a.distance).slice(0, k);
   }
 
@@ -1151,7 +1117,6 @@ class LatticeController {
   getTopology() {
     const nodes = [];
     const edges = [];
-
     for (const [nodeId, node] of this.nodes.entries()) {
       nodes.push({
         id: nodeId,
@@ -1161,40 +1126,33 @@ class LatticeController {
         capabilities: node.capabilities,
         load: node.load,
         capacity: node.capacity,
-        isHealthy: node.isHealthy(),
+        isHealthy: node.isHealthy()
       });
     }
 
     // Build adjacency edges based on proximity
     for (let i = 0; i < this.positions.length; i++) {
       for (let j = i + 1; j < this.positions.length; j++) {
-        const dist = Math.sqrt(
-          Math.pow(this.positions[i].x - this.positions[j].x, 2) +
-          Math.pow(this.positions[i].y - this.positions[j].y, 2) +
-          Math.pow(this.positions[i].z - this.positions[j].z, 2)
-        );
-
+        const dist = Math.sqrt(Math.pow(this.positions[i].x - this.positions[j].x, 2) + Math.pow(this.positions[i].y - this.positions[j].y, 2) + Math.pow(this.positions[i].z - this.positions[j].z, 2));
         if (dist < 2.0) {
           const nodeIds = Array.from(this.nodes.keys());
           edges.push({
             from: nodeIds[i],
             to: nodeIds[j],
-            distance: dist,
+            distance: dist
           });
         }
       }
     }
-
     return {
       nodes,
       edges,
       statistics: {
         totalNodes: this.nodes.size,
-        healthyNodes: Array.from(this.nodes.values()).filter((n) => n.isHealthy()).length,
-        averageLoad: Array.from(this.nodes.values()).reduce((sum, n) => sum + n.load, 0) /
-          Math.max(1, this.nodes.size),
-        maxCapacity: this.maxNodes,
-      },
+        healthyNodes: Array.from(this.nodes.values()).filter(n => n.isHealthy()).length,
+        averageLoad: Array.from(this.nodes.values()).reduce((sum, n) => sum + n.load, 0) / Math.max(1, this.nodes.size),
+        maxCapacity: this.maxNodes
+      }
     };
   }
 
@@ -1207,7 +1165,6 @@ class LatticeController {
    */
   routeTask(task) {
     const candidates = [];
-
     for (const [nodeId, node] of this.nodes.entries()) {
       if (!node.canAcceptLoad(task.requiredCapacity || 1)) {
         continue;
@@ -1215,36 +1172,28 @@ class LatticeController {
 
       // Check capability match
       if (task.requiredCapabilities?.length) {
-        const hasAllCapabilities = task.requiredCapabilities.every((cap) =>
-          node.capabilities.includes(cap)
-        );
+        const hasAllCapabilities = task.requiredCapabilities.every(cap => node.capabilities.includes(cap));
         if (!hasAllCapabilities) continue;
       }
 
       // Calculate routing score
-      const embeddingSimilarity = this._cosineSimilarity(
-        task.embedding || Array(1536).fill(0),
-        node.embedding
-      );
+      const embeddingSimilarity = this._cosineSimilarity(task.embedding || Array(1536).fill(0), node.embedding);
       const loadFactor = 1 - node.getLoadPercentage() / 100;
       const score = embeddingSimilarity * 0.6 + loadFactor * 0.4;
-
       candidates.push({
         nodeId,
         node,
         score,
         embeddingSimilarity,
-        loadFactor,
+        loadFactor
       });
     }
-
     if (candidates.length === 0) {
       throw new MeshError('No suitable nodes found for task routing', 'NO_SUITABLE_NODES', {
         requiredCapacity: task.requiredCapacity,
-        requiredCapabilities: task.requiredCapabilities,
+        requiredCapabilities: task.requiredCapabilities
       });
     }
-
     return candidates.sort((a, b) => b.score - a.score);
   }
 
@@ -1254,27 +1203,21 @@ class LatticeController {
   rebalanceLattice() {
     const nodeIds = Array.from(this.nodes.keys());
     const newPositions = this.geometry.goldenSpiralPlacement(nodeIds.length);
-
     for (let i = 0; i < nodeIds.length; i++) {
       const node = this.nodes.get(nodeIds[i]);
       const newPos = newPositions[i];
-
       this.logger.debug('Node repositioned during rebalance', {
         nodeId: nodeIds[i],
         oldPosition: node.position,
-        newPosition: newPos,
+        newPosition: newPos
       });
-
       node.position = newPos;
     }
-
     this.positions = newPositions;
-
     this.logger.info('Lattice rebalanced', {
       nodeCount: this.nodes.size,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
-
     return true;
   }
 
@@ -1286,16 +1229,13 @@ class LatticeController {
     let dotProduct = 0;
     let magnitudeA = 0;
     let magnitudeB = 0;
-
     for (let i = 0; i < Math.min(vecA.length, vecB.length); i++) {
       dotProduct += vecA[i] * vecB[i];
       magnitudeA += vecA[i] * vecA[i];
       magnitudeB += vecB[i] * vecB[i];
     }
-
     magnitudeA = Math.sqrt(magnitudeA);
     magnitudeB = Math.sqrt(magnitudeB);
-
     if (magnitudeA === 0 || magnitudeB === 0) return 0;
     return dotProduct / (magnitudeA * magnitudeB);
   }
@@ -1333,64 +1273,60 @@ class NodeOrchestrator {
     const operationId = uuidv4();
     const correlationId = uuidv4();
     const startTime = Date.now();
-
     this.logger.info('Starting parallel operation', {
       operationId,
       correlationId,
-      taskCount: tasks.length,
+      taskCount: tasks.length
     });
-
     try {
       const promises = tasks.map(async (task, index) => {
         const candidates = this.lattice.routeTask(task);
         if (candidates.length === 0) {
           throw new MeshError(`No suitable node for task ${index}`);
         }
-
         const targetNode = candidates[0].node;
         targetNode.updateLoad(task.requiredCapacity || 1);
         targetNode.taskQueue.push(task);
-
         await this.meshProtocol.publish(`node:${targetNode.id}`, {
           type: MessageType.TASK,
           correlationId,
           payload: {
             taskId: task.id || uuidv4(),
             taskIndex: index,
-            task,
-          },
+            task
+          }
         });
-
         return {
           taskIndex: index,
           nodeId: targetNode.id,
-          submitted: true,
+          submitted: true
         };
       });
-
       const results = await Promise.allSettled(promises);
       const duration = Date.now() - startTime;
-
-      const successful = results.filter((r) => r.status === 'fulfilled').length;
-      const failed = results.filter((r) => r.status === 'rejected').length;
-
+      const successful = results.filter(r => r.status === 'fulfilled').length;
+      const failed = results.filter(r => r.status === 'rejected').length;
       this.logger.info('Parallel operation completed', {
         operationId,
         successful,
         failed,
-        duration,
+        duration
       });
-
       return {
         operationId,
         correlationId,
         successful,
         failed,
         duration,
-        results: results.map((r) => (r.status === 'fulfilled' ? r.value : { error: r.reason })),
+        results: results.map(r => r.status === 'fulfilled' ? r.value : {
+          error: r.reason
+        })
       };
     } catch (error) {
-      this.logger.error('Parallel operation failed', error, { operationId, correlationId });
+      this.logger.error('Parallel operation failed', error, {
+        operationId,
+        correlationId
+      });
       throw error;
     }
   }
@@ -1403,64 +1339,56 @@ class NodeOrchestrator {
     const operationId = uuidv4();
     const correlationId = uuidv4();
     const startTime = Date.now();
-
     this.logger.info('Starting pipeline operation', {
       operationId,
       correlationId,
-      stageCount: stages.length,
+      stageCount: stages.length
     });
-
     try {
       let pipelineData = {};
-
       for (let stageIndex = 0; stageIndex < stages.length; stageIndex++) {
         const stage = stages[stageIndex];
         const stageId = `stage-${stageIndex}`;
-
         const candidates = this.lattice.routeTask(stage.task || {});
         if (candidates.length === 0) {
           throw new MeshError(`No suitable node for stage ${stageIndex}`);
         }
-
         const targetNode = candidates[0].node;
         targetNode.updateLoad(1);
-
         const stagePayload = {
           stageId,
           stageIndex,
           input: pipelineData,
-          task: stage.task,
+          task: stage.task
         };
-
         await this.meshProtocol.publish(`node:${targetNode.id}`, {
           type: MessageType.TASK,
           correlationId,
-          payload: stagePayload,
+          payload: stagePayload
         });
-
         pipelineData = {
           stageId,
-          output: stage.processFn ? stage.processFn(pipelineData) : pipelineData,
+          output: stage.processFn ? stage.processFn(pipelineData) : pipelineData
         };
       }
-
       const duration = Date.now() - startTime;
-
       this.logger.info('Pipeline operation completed', {
         operationId,
         stageCount: stages.length,
-        duration,
+        duration
       });
-
       return {
         operationId,
         correlationId,
         stageCount: stages.length,
         finalData: pipelineData,
-        duration,
+        duration
       };
     } catch (error) {
-      this.logger.error('Pipeline operation failed', error, { operationId, correlationId });
+      this.logger.error('Pipeline operation failed', error, {
+        operationId,
+        correlationId
+      });
       throw error;
     }
   }
@@ -1473,45 +1401,47 @@ class NodeOrchestrator {
   async scatter(task, nodes) {
     const operationId = uuidv4();
     const correlationId = uuidv4();
-
     this.logger.info('Scattering task to nodes', {
       operationId,
       correlationId,
-      nodeCount: nodes.length,
+      nodeCount: nodes.length
     });
-
-    const promises = nodes.map(async (node) => {
+    const promises = nodes.map(async node => {
       if (!node.canAcceptLoad(task.requiredCapacity || 1)) {
         this.logger.warn('Node cannot accept load', {
           nodeId: node.id,
-          requiredCapacity: task.requiredCapacity,
+          requiredCapacity: task.requiredCapacity
         });
-        return { nodeId: node.id, status: 'rejected', reason: 'INSUFFICIENT_CAPACITY' };
+        return {
+          nodeId: node.id,
+          status: 'rejected',
+          reason: 'INSUFFICIENT_CAPACITY'
+        };
       }
-
       node.updateLoad(task.requiredCapacity || 1);
       node.taskQueue.push(task);
-
       await this.meshProtocol.publish(`node:${node.id}`, {
         type: MessageType.TASK,
         correlationId,
         payload: {
           taskId: task.id || uuidv4(),
-          task,
-        },
+          task
+        }
       });
-
-      return { nodeId: node.id, status: 'submitted' };
+      return {
+        nodeId: node.id,
+        status: 'submitted'
+      };
     });
-
     const results = await Promise.allSettled(promises);
-
     return {
       operationId,
       correlationId,
-      submitted: results.filter((r) => r.status === 'fulfilled').length,
-      failed: results.filter((r) => r.status === 'rejected').length,
-      results: results.map((r) => (r.status === 'fulfilled' ? r.value : { error: r.reason })),
+      submitted: results.filter(r => r.status === 'fulfilled').length,
+      failed: results.filter(r => r.status === 'rejected').length,
+      results: results.map(r => r.status === 'fulfilled' ? r.value : {
+        error: r.reason
+      })
     };
   }
 
@@ -1524,42 +1454,37 @@ class NodeOrchestrator {
     const operationId = uuidv4();
     const results = [];
     const timeout = this.timeout;
-
     return new Promise((resolve, reject) => {
       const timeoutHandle = setTimeout(() => {
         reject(new TimeoutError(operationId, timeout));
       }, timeout);
-
-      const handler = (message) => {
+      const handler = message => {
         if (message.type === MessageType.RESULT && message.from) {
           results.push({
             from: message.from,
             payload: message.payload,
-            timestamp: message.timestamp,
+            timestamp: message.timestamp
           });
-
           if (results.length === nodeIds.length) {
             clearTimeout(timeoutHandle);
             this.meshProtocol.unsubscribe(resultChannel).then(() => {
               resolve({
                 operationId,
                 resultCount: results.length,
-                results,
+                results
               });
             });
           }
         }
       };
-
-      this.meshProtocol.subscribe(resultChannel, handler).catch((error) => {
+      this.meshProtocol.subscribe(resultChannel, handler).catch(error => {
         clearTimeout(timeoutHandle);
         reject(error);
       });
-
       this.logger.info('Gathering results', {
         operationId,
         expectedCount: nodeIds.length,
-        resultChannel,
+        resultChannel
       });
     });
   }
@@ -1574,67 +1499,59 @@ class NodeOrchestrator {
     const operationId = uuidv4();
     const correlationId = uuidv4();
     const startTime = Date.now();
-
     this.logger.info('Starting map-reduce operation', {
       operationId,
       correlationId,
-      dataSize: data.length,
+      dataSize: data.length
     });
-
     try {
       // Partition data using Fibonacci ratios
       const geometry = new SacredGeometryEngine();
-      const healthyNodes = Array.from(this.lattice.nodes.values()).filter((n) =>
-        n.isHealthy()
-      );
-
+      const healthyNodes = Array.from(this.lattice.nodes.values()).filter(n => n.isHealthy());
       if (healthyNodes.length === 0) {
         throw new MeshError('No healthy nodes available for map-reduce');
       }
-
       const partitions = geometry.fibonacciPartition(data, healthyNodes.length);
 
       // Map phase
       const mapPromises = healthyNodes.map(async (node, index) => {
         const partition = partitions[index];
         node.updateLoad(partition.length);
-
-        const mapResult = partition.map((item) => mapFn(item));
-
-        return { nodeId: node.id, results: mapResult };
+        const mapResult = partition.map(item => mapFn(item));
+        return {
+          nodeId: node.id,
+          results: mapResult
+        };
       });
-
       const mapResults = await Promise.allSettled(mapPromises);
 
       // Reduce phase
       let accumulated = [];
-
       for (const result of mapResults) {
         if (result.status === 'fulfilled') {
           accumulated = accumulated.concat(result.value.results);
         }
       }
-
       const reduceResult = accumulated.reduce((acc, item) => reduceFn(acc, item), null);
-
       const duration = Date.now() - startTime;
-
       this.logger.info('Map-reduce operation completed', {
         operationId,
         duration,
         dataSize: data.length,
-        partitionCount: partitions.length,
+        partitionCount: partitions.length
       });
-
       return {
         operationId,
         correlationId,
         result: reduceResult,
         duration,
-        processedItems: accumulated.length,
+        processedItems: accumulated.length
       };
     } catch (error) {
-      this.logger.error('Map-reduce operation failed', error, { operationId, correlationId });
+      this.logger.error('Map-reduce operation failed', error, {
+        operationId,
+        correlationId
+      });
       throw error;
     }
   }
@@ -1673,18 +1590,15 @@ class HealthMesh {
    */
   async start() {
     this.isRunning = true;
-
     this.heartbeatHandle = setInterval(() => {
       this._sendHeartbeats();
     }, this.heartbeatInterval);
-
     this.healthCheckHandle = setInterval(() => {
       this._performHealthCheck();
     }, this.healthCheckInterval);
-
     this.logger.info('Health mesh started', {
       heartbeatInterval: this.heartbeatInterval,
-      healthCheckInterval: this.healthCheckInterval,
+      healthCheckInterval: this.healthCheckInterval
     });
   }
 
@@ -1693,15 +1607,12 @@ class HealthMesh {
    */
   async stop() {
     this.isRunning = false;
-
     if (this.heartbeatHandle) {
       clearInterval(this.heartbeatHandle);
     }
-
     if (this.healthCheckHandle) {
       clearInterval(this.healthCheckHandle);
     }
-
     this.logger.info('Health mesh stopped');
   }
 
@@ -1712,14 +1623,13 @@ class HealthMesh {
   async _sendHeartbeats() {
     for (const [nodeId, node] of this.lattice.nodes.entries()) {
       node.lastHeartbeat = new Date();
-
       await this.meshProtocol.publish(`node:${nodeId}`, {
         type: MessageType.HEARTBEAT,
         payload: {
           nodeId: nodeId,
           timestamp: Date.now(),
-          latticeSize: this.lattice.nodes.size,
-        },
+          latticeSize: this.lattice.nodes.size
+        }
       });
     }
   }
@@ -1732,7 +1642,6 @@ class HealthMesh {
     const topology = this.lattice.getTopology();
     const degradedNodes = [];
     const healthyNodes = [];
-
     for (const nodeInfo of topology.nodes) {
       if (nodeInfo.isHealthy) {
         healthyNodes.push(nodeInfo.id);
@@ -1745,25 +1654,22 @@ class HealthMesh {
     if (degradedNodes.length > 0) {
       this.logger.warn('Degraded nodes detected', {
         degradedCount: degradedNodes.length,
-        degradedNodes,
+        degradedNodes
       });
-
       await this._redistributeLoad(degradedNodes);
     }
 
     // If we have too many degraded nodes, trigger lattice repair
     if (degradedNodes.length > topology.nodes.length * 0.3) {
       this.logger.warn('Too many degraded nodes, triggering lattice repair', {
-        degradedRatio: degradedNodes.length / topology.nodes.length,
+        degradedRatio: degradedNodes.length / topology.nodes.length
       });
-
       await this._repairLattice();
     }
-
     this.logger.debug('Health check completed', {
       healthyNodes: healthyNodes.length,
       degradedNodes: degradedNodes.length,
-      totalNodes: topology.nodes.length,
+      totalNodes: topology.nodes.length
     });
   }
 
@@ -1788,10 +1694,9 @@ class HealthMesh {
             const healthyNode = candidates[0].node;
             healthyNode.updateLoad(1);
             healthyNode.taskQueue.push(task);
-
             this.logger.debug('Task redistributed', {
               from: degradedId,
-              to: healthyNode.id,
+              to: healthyNode.id
             });
           }
         } catch (error) {
@@ -1810,16 +1715,17 @@ class HealthMesh {
    */
   async _repairLattice() {
     // Remove dormant nodes
-    const nodesToRemove = Array.from(this.lattice.nodes.values())
-      .filter((n) => n.state === NodeState.DORMANT || !n.isHealthy())
-      .map((n) => n.id);
-
+    const nodesToRemove = Array.from(this.lattice.nodes.values()).filter(n => n.state === NodeState.DORMANT || !n.isHealthy()).map(n => n.id);
     for (const nodeId of nodesToRemove) {
       try {
         this.lattice.removeNode(nodeId);
-        this.logger.info('Removed unhealthy node during repair', { nodeId });
+        this.logger.info('Removed unhealthy node during repair', {
+          nodeId
+        });
       } catch (error) {
-        this.logger.warn('Failed to remove node during repair', error, { nodeId });
+        this.logger.warn('Failed to remove node during repair', error, {
+          nodeId
+        });
       }
     }
 
@@ -1841,13 +1747,13 @@ class HealthMesh {
       isRunning: this.isRunning,
       timestamp: new Date().toISOString(),
       topology: topology,
-      nodeStatuses: topology.nodes.map((n) => ({
+      nodeStatuses: topology.nodes.map(n => ({
         id: n.id,
         type: n.type,
         state: n.state,
         healthy: n.isHealthy,
-        loadPercentage: (n.load / n.capacity) * 100,
-      })),
+        loadPercentage: n.load / n.capacity * 100
+      }))
     };
   }
 }
@@ -1873,13 +1779,15 @@ class HeadyLiquidNodeController {
       Sentry.init({
         dsn: this.config.sentry.dsn,
         environment: this.config.environment,
-        tracesSampleRate: 1.0,
+        tracesSampleRate: 1.0
       });
     }
-
     this.logger.info('Initializing Heady Liquid Node Controller', {
       version: '3.0.0',
-      config: { ...this.config, passwords: '***REDACTED***' },
+      config: {
+        ...this.config,
+        passwords: '***REDACTED***'
+      }
     });
 
     // Initialize components
@@ -1889,36 +1797,31 @@ class HeadyLiquidNodeController {
       index: this.config.pinecone.index,
       namespace: this.config.pinecone.namespace,
       logger: this.logger,
-      vectorDimension: this.config.mesh.vectorDimension,
+      vectorDimension: this.config.mesh.vectorDimension
     });
-
     this.meshProtocol = new MeshProtocol({
       redisUrl: this.config.redis.url,
       redisToken: this.config.redis.token,
       nodeId: this.config.nodeId,
-      logger: this.logger,
+      logger: this.logger
     });
-
     this.lattice = new LatticeController({
       maxNodes: this.config.mesh.maxNodes,
-      logger: this.logger,
+      logger: this.logger
     });
-
     this.orchestrator = new NodeOrchestrator({
       lattice: this.lattice,
       meshProtocol: this.meshProtocol,
       logger: this.logger,
-      timeout: this.config.mesh.timeout,
+      timeout: this.config.mesh.timeout
     });
-
     this.healthMesh = new HealthMesh({
       lattice: this.lattice,
       meshProtocol: this.meshProtocol,
       logger: this.logger,
       heartbeatInterval: this.config.mesh.heartbeatInterval,
-      healthCheckInterval: this.config.mesh.healthCheckInterval,
+      healthCheckInterval: this.config.mesh.healthCheckInterval
     });
-
     this.isInitialized = false;
   }
 
@@ -1937,12 +1840,10 @@ class HeadyLiquidNodeController {
 
       // Create core AI nodes
       await this._createCoreNodes();
-
       this.isInitialized = true;
       this.logger.info('Controller initialization complete', {
-        nodeCount: this.lattice.nodes.size,
+        nodeCount: this.lattice.nodes.size
       });
-
       return true;
     } catch (error) {
       this.logger.error('Controller initialization failed', error);
@@ -1955,27 +1856,37 @@ class HeadyLiquidNodeController {
    * @private
    */
   async _createCoreNodes() {
-    const coreNodes = [
-      { type: NodeType.CODEMAP, capabilities: ['code-analysis', 'architecture', 'refactoring'] },
-      { type: NodeType.JULES, capabilities: ['memory-management', 'state-coordination'] },
-      { type: NodeType.OBSERVER, capabilities: ['monitoring', 'logging', 'alerting'] },
-      { type: NodeType.BUILDER, capabilities: ['task-execution', 'compilation', 'deployment'] },
-      { type: NodeType.ATLAS, capabilities: ['routing', 'topology', 'load-balancing'] },
-      { type: NodeType.PYTHIA, capabilities: ['prediction', 'optimization', 'forecasting'] },
-    ];
-
+    const coreNodes = [{
+      type: NodeType.CODEMAP,
+      capabilities: ['code-analysis', 'architecture', 'refactoring']
+    }, {
+      type: NodeType.JULES,
+      capabilities: ['memory-management', 'state-coordination']
+    }, {
+      type: NodeType.OBSERVER,
+      capabilities: ['monitoring', 'logging', 'alerting']
+    }, {
+      type: NodeType.BUILDER,
+      capabilities: ['task-execution', 'compilation', 'deployment']
+    }, {
+      type: NodeType.ATLAS,
+      capabilities: ['routing', 'topology', 'load-balancing']
+    }, {
+      type: NodeType.PYTHIA,
+      capabilities: ['prediction', 'optimization', 'forecasting']
+    }];
     for (const nodeConfig of coreNodes) {
       const node = new LiquidNode({
         type: nodeConfig.type,
         capabilities: nodeConfig.capabilities,
-        embedding: Array(this.config.mesh.vectorDimension)
-          .fill(0)
-          .map(() => Math.random()),
-        capacity: 100,
+        embedding: Array(this.config.mesh.vectorDimension).fill(0).map(() => Math.random()),
+        capacity: 100
       });
-
       this.lattice.addNode(node);
-      this.logger.info('Core node created', { nodeId: node.id, type: node.type });
+      this.logger.info('Core node created', {
+        nodeId: node.id,
+        type: node.type
+      });
     }
   }
 
@@ -1987,20 +1898,14 @@ class HeadyLiquidNodeController {
     try {
       const node = new LiquidNode({
         ...options,
-        embedding: options.embedding ||
-          Array(this.config.mesh.vectorDimension)
-            .fill(0)
-            .map(() => Math.random()),
+        embedding: options.embedding || Array(this.config.mesh.vectorDimension).fill(0).map(() => Math.random())
       });
-
       this.lattice.addNode(node);
-
       this.logger.info('New node created', {
         nodeId: node.id,
         type: node.type,
-        capabilities: node.capabilities,
+        capabilities: node.capabilities
       });
-
       return node;
     } catch (error) {
       this.logger.error('Failed to create node', error, options);
@@ -2015,46 +1920,38 @@ class HeadyLiquidNodeController {
   async submitTask(task) {
     try {
       const taskId = task.id || uuidv4();
-      const embedding = task.embedding ||
-        Array(this.config.mesh.vectorDimension)
-          .fill(0)
-          .map(() => Math.random());
-
+      const embedding = task.embedding || Array(this.config.mesh.vectorDimension).fill(0).map(() => Math.random());
       const enrichedTask = {
         ...task,
         id: taskId,
         embedding,
-        submittedAt: Date.now(),
+        submittedAt: Date.now()
       };
-
       const candidates = this.lattice.routeTask(enrichedTask);
-
       if (candidates.length === 0) {
         throw new MeshError('No suitable nodes for task');
       }
-
       const targetNode = candidates[0].node;
       targetNode.updateLoad(enrichedTask.requiredCapacity || 1);
       targetNode.taskQueue.push(enrichedTask);
-
       await this.meshProtocol.publish(`node:${targetNode.id}`, {
         type: MessageType.TASK,
-        payload: enrichedTask,
+        payload: enrichedTask
       });
-
       this.logger.info('Task submitted', {
         taskId,
         targetNodeId: targetNode.id,
-        taskType: task.type,
+        taskType: task.type
       });
-
       return {
         taskId,
         targetNodeId: targetNode.id,
-        status: 'submitted',
+        status: 'submitted'
       };
     } catch (error) {
-      this.logger.error('Failed to submit task', error, { task });
+      this.logger.error('Failed to submit task', error, {
+        task
+      });
       throw error;
     }
   }
@@ -2099,12 +1996,18 @@ class HeadyLiquidNodeController {
     return (req, res) => {
       try {
         const health = this.getHealthStatus();
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, {
+          'Content-Type': 'application/json'
+        });
         res.end(JSON.stringify(health, null, 2));
       } catch (error) {
         this.logger.error('Health endpoint error', error);
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: error.message }));
+        res.writeHead(500, {
+          'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({
+          error: error.message
+        }));
       }
     };
   }
@@ -2116,12 +2019,18 @@ class HeadyLiquidNodeController {
     return (req, res) => {
       try {
         const topology = this.getTopology();
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, {
+          'Content-Type': 'application/json'
+        });
         res.end(JSON.stringify(topology, null, 2));
       } catch (error) {
         this.logger.error('Topology endpoint error', error);
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: error.message }));
+        res.writeHead(500, {
+          'Content-Type': 'application/json'
+        });
+        res.end(JSON.stringify({
+          error: error.message
+        }));
       }
     };
   }
@@ -2138,16 +2047,17 @@ class HeadyLiquidNodeController {
 
       // Drain all task queues
       for (const [nodeId, node] of this.lattice.nodes.entries()) {
-        this.logger.debug('Draining node task queue', { nodeId, queueSize: node.taskQueue.length });
+        this.logger.debug('Draining node task queue', {
+          nodeId,
+          queueSize: node.taskQueue.length
+        });
         node.taskQueue = [];
       }
 
       // Disconnect mesh protocol
       await this.meshProtocol.disconnect();
-
       this.isInitialized = false;
       this.logger.info('Graceful shutdown complete');
-
       return true;
     } catch (error) {
       this.logger.error('Shutdown error', error);
@@ -2179,9 +2089,11 @@ async function demo() {
       heartbeatInterval: 5000,
       healthCheckInterval: 10000,
       maxRetries: 3,
-      timeout: 30000,
+      timeout: 30000
     },
-    sentry: { enabled: false },
+    sentry: {
+      enabled: false
+    }
   });
 
   // Initialize
@@ -2202,27 +2114,22 @@ async function demo() {
     await controller.createNode({
       type: NodeType.COORDINATOR,
       capabilities: ['coordination', 'orchestration'],
-      capacity: 150,
+      capacity: 150
     });
   }
-
   const topology2 = controller.getTopology();
   logger.info(`  • Nodes after creation: ${topology2.statistics.totalNodes}`);
 
   // Store memories
   logger.info('\n▸ Storing memories in vector space...');
-  await controller.storeMemory(
-    'task-1',
-    'Analyze the system architecture and provide optimization suggestions',
-    { category: 'analysis', priority: 'high' }
-  );
-
-  await controller.storeMemory(
-    'task-2',
-    'Monitor system health and alert on anomalies',
-    { category: 'monitoring', priority: 'medium' }
-  );
-
+  await controller.storeMemory('task-1', 'Analyze the system architecture and provide optimization suggestions', {
+    category: 'analysis',
+    priority: 'high'
+  });
+  await controller.storeMemory('task-2', 'Monitor system health and alert on anomalies', {
+    category: 'monitoring',
+    priority: 'medium'
+  });
   logger.info('  • Memories stored successfully');
 
   // Submit tasks
@@ -2232,30 +2139,25 @@ async function demo() {
       type: 'analysis',
       requiredCapabilities: ['code-analysis'],
       requiredCapacity: 10,
-      description: `Task ${i + 1}`,
+      description: `Task ${i + 1}`
     });
     logger.info(`  • Task ${result.taskId} routed to ${result.targetNodeId}`);
   }
 
   // Demonstrate parallel execution
   logger.info('\n▸ Executing parallel operations...');
-  const tasks = Array(3)
-    .fill(null)
-    .map((_, i) => ({
-      id: `parallel-task-${i}`,
-      type: 'parallel',
-      requiredCapacity: 5,
-    }));
-
+  const tasks = Array(3).fill(null).map((_, i) => ({
+    id: `parallel-task-${i}`,
+    type: 'parallel',
+    requiredCapacity: 5
+  }));
   const parallelResult = await controller.orchestrator.parallel(tasks);
   logger.info(`  • Parallel result: ${parallelResult.successful} successful, ${parallelResult.failed} failed`);
 
   // Display health status
   logger.info('\n▸ Health Status:');
   const health = controller.getHealthStatus();
-  logger.info(
-    `  • Running: ${health.isRunning} | Nodes: ${health.nodeStatuses.length} | Healthy: ${health.nodeStatuses.filter((n) => n.healthy).length}`
-  );
+  logger.info(`  • Running: ${health.isRunning} | Nodes: ${health.nodeStatuses.length} | Healthy: ${health.nodeStatuses.filter(n => n.healthy).length}`);
 
   // Display updated topology
   logger.info('\n▸ Final Lattice Topology:');
@@ -2263,54 +2165,30 @@ async function demo() {
   logger.info(`  Nodes in mesh:`);
   for (const node of finalTopology.nodes) {
     const healthStatus = node.isHealthy ? '✓' : '✗';
-    const loadBar = '█'.repeat(Math.floor(node.loadPercentage / 5)) +
-      '░'.repeat(20 - Math.floor(node.loadPercentage / 5));
-    logger.info(
-      `    ${healthStatus} ${node.id} [${node.type}] ${loadBar} ${node.loadPercentage.toFixed(0)}%`
-    );
+    const loadBar = '█'.repeat(Math.floor(node.loadPercentage / 5)) + '░'.repeat(20 - Math.floor(node.loadPercentage / 5));
+    logger.info(`    ${healthStatus} ${node.id} [${node.type}] ${loadBar} ${node.loadPercentage.toFixed(0)}%`);
   }
 
   // Shutdown gracefully
   logger.info('\n▸ Shutting down gracefully...');
   await controller.shutdown();
-
   logger.info('\n✓ Demo completed successfully\n');
 }
 
 // Export classes and functions
 export {
-  // Core classes
-  HeadyLiquidNodeController,
-  LiquidNode,
-  LatticeController,
-  NodeOrchestrator,
-  VectorMemory,
-  MeshProtocol,
-  HealthMesh,
-  SacredGeometryEngine,
-  StructuredLogger,
-
-  // Error classes
-  MeshError,
-  NodeNotFoundError,
-  CapacityExceededError,
-  TimeoutError,
-
-  // Constants
-  NodeState,
-  MessageType,
-  NodeType,
-  PHI,
-  FIB_SEQUENCE,
-
-  // Utilities
-  loadConfig,
-  demo,
-};
+// Core classes
+HeadyLiquidNodeController, LiquidNode, LatticeController, NodeOrchestrator, VectorMemory, MeshProtocol, HealthMesh, SacredGeometryEngine, StructuredLogger,
+// Error classes
+MeshError, NodeNotFoundError, CapacityExceededError, TimeoutError,
+// Constants
+NodeState, MessageType, NodeType, PHI, FIB_SEQUENCE,
+// Utilities
+loadConfig, demo };
 
 // Run demo if this is the main module
 if (import.meta.url === `file://${process.argv[1]}`) {
-  demo().catch((error) => {
+  demo().catch(error => {
     logger.error('Demo failed:', error);
     process.exit(1);
   });

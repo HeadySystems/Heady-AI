@@ -45,10 +45,7 @@ const INBOX_PAGE_SIZE = 50;
 const SMTP_PROVIDERS = ['mailgun', 'ses', 'smtp', 'mailcow'];
 
 /** Mime types considered "safe" for display without sandbox */
-const SAFE_MIME_TYPES = new Set([
-  'text/plain', 'text/html', 'image/png', 'image/jpeg',
-  'image/gif', 'image/webp', 'application/pdf',
-]);
+const SAFE_MIME_TYPES = new Set(['text/plain', 'text/html', 'image/png', 'image/jpeg', 'image/gif', 'image/webp', 'application/pdf']);
 
 // ─── SecureEmailClient Class ──────────────────────────────────────────────────
 
@@ -77,7 +74,12 @@ export class SecureEmailClient {
    * @param {object}  [opts.wsServer] - WebSocket.Server for push notifications
    * @param {object}  opts.config   - Platform configuration
    */
-  constructor({ db, redis, wsServer, config }) {
+  constructor({
+    db,
+    redis,
+    wsServer,
+    config
+  }) {
     this.db = db;
     this.redis = redis;
     this.wsServer = wsServer;
@@ -90,10 +92,7 @@ export class SecureEmailClient {
     this._imapPool = new Map();
 
     /** Encryption key (32 bytes) for email at-rest encryption */
-    this._encKey = Buffer.from(
-      config.email?.encryptionKey || crypto.randomBytes(32).toString('hex'),
-      'hex'
-    ).slice(0, 32);
+    this._encKey = Buffer.from(config.email?.encryptionKey || crypto.randomBytes(32).toString('hex'), 'hex').slice(0, 32);
   }
 
   // ── Initialization ─────────────────────────────────────────────────────────
@@ -109,7 +108,6 @@ export class SecureEmailClient {
   /** @private */
   async _createSmtpTransport() {
     const provider = this.config.email?.smtpProvider;
-
     if (provider === 'mailgun') {
       this._transport = createTransport({
         host: 'smtp.mailgun.org',
@@ -117,8 +115,8 @@ export class SecureEmailClient {
         secure: false,
         auth: {
           user: this.config.email.mailgun.smtp_login,
-          pass: this.config.email.mailgun.smtp_password,
-        },
+          pass: this.config.email.mailgun.smtp_password
+        }
       });
     } else if (provider === 'ses') {
       this._transport = createTransport({
@@ -127,8 +125,8 @@ export class SecureEmailClient {
         secure: false,
         auth: {
           user: this.config.email.ses.accessKeyId,
-          pass: this.config.email.ses.secretAccessKey,
-        },
+          pass: this.config.email.ses.secretAccessKey
+        }
       });
     } else if (provider === 'smtp' || provider === 'mailcow') {
       this._transport = createTransport({
@@ -137,14 +135,18 @@ export class SecureEmailClient {
         secure: this.config.email.smtp?.secure ?? false,
         auth: {
           user: this.config.email.smtp?.user,
-          pass: this.config.email.smtp?.pass,
+          pass: this.config.email.smtp?.pass
         },
-        tls: { rejectUnauthorized: true },
+        tls: {
+          rejectUnauthorized: true
+        }
       });
     } else {
       // Development / test mode — use ethereal
       logger.warn('[HeadyEmail] No SMTP provider configured. Using test transport.');
-      this._transport = createTransport({ jsonTransport: true });
+      this._transport = createTransport({
+        jsonTransport: true
+      });
     }
   }
 
@@ -167,26 +169,29 @@ export class SecureEmailClient {
    * @param {string}   opts.userId       - Sender user UUID (for storage)
    * @returns {Promise<{messageId: string, accepted: string[]}>}
    */
-  async send({ from, to, cc, bcc, subject, text, html, attachments = [], inReplyTo, references, userId }) {
+  async send({
+    from,
+    to,
+    cc,
+    bcc,
+    subject,
+    text,
+    html,
+    attachments = [],
+    inReplyTo,
+    references,
+    userId
+  }) {
     // Validate sender
     if (!from?.endsWith('@headyme.com')) {
-      throw new EmailError(
-        'Sender must be a @headyme.com address.',
-        'EMAIL_INVALID_SENDER',
-        400
-      );
+      throw new EmailError('Sender must be a @headyme.com address.', 'EMAIL_INVALID_SENDER', 400);
     }
 
     // Validate recipients
-    const recipients = [
-      ...(Array.isArray(to) ? to : [to]),
-      ...(cc ? (Array.isArray(cc) ? cc : [cc]) : []),
-    ].filter(Boolean);
-
+    const recipients = [...(Array.isArray(to) ? to : [to]), ...(cc ? Array.isArray(cc) ? cc : [cc] : [])].filter(Boolean);
     if (recipients.length === 0) {
       throw new EmailError('At least one recipient is required.', 'EMAIL_NO_RECIPIENTS', 400);
     }
-
     for (const addr of recipients) {
       if (!this._isValidEmail(addr)) {
         throw new EmailError(`Invalid recipient address: ${addr}`, 'EMAIL_INVALID_RECIPIENT', 400);
@@ -208,14 +213,17 @@ export class SecureEmailClient {
       html,
       attachments: sanitizedAttachments,
       messageId,
-      ...(inReplyTo && { inReplyTo }),
-      ...(references && { references }),
+      ...(inReplyTo && {
+        inReplyTo
+      }),
+      ...(references && {
+        references
+      }),
       headers: {
         'X-Heady-Version': '1.0',
-        'X-Mailer': 'Heady™ Secure Email',
-      },
+        'X-Mailer': 'Heady™ Secure Email'
+      }
     };
-
     const info = await this._transport.sendMail(mailOptions);
 
     // Store sent email (encrypted)
@@ -227,38 +235,40 @@ export class SecureEmailClient {
       subject,
       text: text || '',
       html: html || '',
-      sentAt: new Date().toISOString(),
+      sentAt: new Date().toISOString()
     });
 
     // Notify via WebSocket
-    this._emitEmailEvent(userId, 'sent', { messageId, subject, to });
-
-    return { messageId, accepted: info.accepted || [to] };
+    this._emitEmailEvent(userId, 'sent', {
+      messageId,
+      subject,
+      to
+    });
+    return {
+      messageId,
+      accepted: info.accepted || [to]
+    };
   }
-
-  /**
-   * Send a transactional/system email (welcome, verification, etc.).
-   * Uses a system SMTP address, not a user address.
-   *
-   * @param {object}  opts
-   * @param {string}  opts.to          - Recipient address
-   * @param {string}  opts.subject     - Subject
-   * @param {string}  opts.templateId  - Template identifier
-   * @param {object}  opts.variables   - Template variables
-   * @returns {Promise<object>}
-   */
-  async sendTransactional({ to, subject, templateId, variables = {} }) {
-    const { html, text } = await this._renderTemplate(templateId, variables);
-
+  async sendTransactional({
+    to,
+    subject,
+    templateId,
+    variables = {}
+  }) {
+    const {
+      html,
+      text
+    } = await this._renderTemplate(templateId, variables);
     const mailOptions = {
       from: `Heady <${this.config.email?.fromAddress || 'hello@headyme.com'}>`,
       to,
       subject,
       html,
       text,
-      headers: { 'X-Heady-Transactional': templateId },
+      headers: {
+        'X-Heady-Transactional': templateId
+      }
     };
-
     return this._transport.sendMail(mailOptions);
   }
 
@@ -274,38 +284,50 @@ export class SecureEmailClient {
    * @param {boolean} [opts.unreadOnly=false] - Filter to unread
    * @returns {Promise<{emails: object[], total: number, page: number, hasMore: boolean}>}
    */
-  async getInbox(userId, { page = 1, folder = 'INBOX', unreadOnly = false } = {}) {
+  async getInbox(userId, {
+    page = 1,
+    folder = 'INBOX',
+    unreadOnly = false
+  } = {}) {
     const emailAccount = await this._getEmailAccount(userId);
-
     if (emailAccount.provider === 'cloudflare') {
       // Cloudflare only routes — fetch from PostgreSQL storage
-      return this._getStoredEmails(userId, { page, folder, unreadOnly });
+      return this._getStoredEmails(userId, {
+        page,
+        folder,
+        unreadOnly
+      });
     }
 
     // Full IMAP mailbox (Mailcow)
     const client = await this._getImapClient(userId, emailAccount);
     try {
       await client.mailboxOpen(folder);
-
       const searchCriteria = unreadOnly ? ['UNSEEN'] : ['ALL'];
-      const uids = await client.search(searchCriteria, { uid: true });
-
+      const uids = await client.search(searchCriteria, {
+        uid: true
+      });
       const total = uids.length;
       const start = (page - 1) * INBOX_PAGE_SIZE;
       const pageUids = uids.slice(-start - INBOX_PAGE_SIZE, uids.length - start).reverse();
-
       const emails = [];
       for await (const message of client.fetch(pageUids.join(','), {
         uid: true,
         flags: true,
         bodyStructure: true,
         envelope: true,
-        internalDate: true,
-      }, { uid: true })) {
+        internalDate: true
+      }, {
+        uid: true
+      })) {
         emails.push(this._formatEnvelope(message));
       }
-
-      return { emails, total, page, hasMore: total > page * INBOX_PAGE_SIZE };
+      return {
+        emails,
+        total,
+        page,
+        hasMore: total > page * INBOX_PAGE_SIZE
+      };
     } finally {
       // Return client to pool (don't destroy)
     }
@@ -321,31 +343,30 @@ export class SecureEmailClient {
    */
   async readEmail(userId, uid, folder = 'INBOX') {
     const emailAccount = await this._getEmailAccount(userId);
-
     if (emailAccount.provider === 'cloudflare' || emailAccount.provider === 'none') {
       return this._getStoredEmailById(userId, uid);
     }
-
     const client = await this._getImapClient(userId, emailAccount);
     await client.mailboxOpen(folder);
-
     const messages = [];
     for await (const message of client.fetch(uid, {
       uid: true,
       flags: true,
-      source: true,
-    }, { uid: true })) {
+      source: true
+    }, {
+      uid: true
+    })) {
       messages.push(message);
     }
-
     if (messages.length === 0) {
       throw new EmailError('Email not found.', 'EMAIL_NOT_FOUND', 404);
     }
-
     const parsed = await simpleParser(messages[0].source);
 
     // Mark as seen
-    await client.messageFlagsAdd(uid, ['\\Seen'], { uid: true });
+    await client.messageFlagsAdd(uid, ['\\Seen'], {
+      uid: true
+    });
 
     // Decrypt body if stored encrypted
     const emailData = {
@@ -358,16 +379,15 @@ export class SecureEmailClient {
       date: parsed.date,
       text: parsed.text,
       html: parsed.html,
-      attachments: (parsed.attachments || []).map((a) => ({
+      attachments: (parsed.attachments || []).map(a => ({
         filename: a.filename,
         contentType: a.contentType,
         size: a.size,
-        contentId: a.contentId,
+        contentId: a.contentId
         // Do not return raw content unless explicitly requested (streaming)
       })),
-      flags: messages[0].flags,
+      flags: messages[0].flags
     };
-
     return emailData;
   }
 
@@ -380,26 +400,27 @@ export class SecureEmailClient {
    */
   async deleteEmail(userId, uid, folder = 'INBOX', permanent = false) {
     const emailAccount = await this._getEmailAccount(userId);
-
     if (emailAccount.provider === 'cloudflare') {
-      await this.db.query(
-        'UPDATE stored_emails SET deleted = TRUE, deleted_at = NOW() WHERE user_id = $1 AND id = $2',
-        [userId, uid]
-      );
-      return { success: true };
+      await this.db.query('UPDATE stored_emails SET deleted = TRUE, deleted_at = NOW() WHERE user_id = $1 AND id = $2', [userId, uid]);
+      return {
+        success: true
+      };
     }
-
     const client = await this._getImapClient(userId, emailAccount);
     await client.mailboxOpen(folder);
-
     if (permanent) {
-      await client.messageFlagsAdd(uid, ['\\Deleted'], { uid: true });
+      await client.messageFlagsAdd(uid, ['\\Deleted'], {
+        uid: true
+      });
       await client.mailboxClose(); // EXPUNGE on close
     } else {
-      await client.messageMove(uid, 'Trash', { uid: true });
+      await client.messageMove(uid, 'Trash', {
+        uid: true
+      });
     }
-
-    return { success: true };
+    return {
+      success: true
+    };
   }
 
   /**
@@ -415,38 +436,63 @@ export class SecureEmailClient {
    * @param {string}  [query.folder='INBOX']
    * @returns {Promise<object[]>}
    */
-  async searchEmails(userId, { text, from, subject, since, before, unread, folder = 'INBOX' } = {}) {
+  async searchEmails(userId, {
+    text,
+    from,
+    subject,
+    since,
+    before,
+    unread,
+    folder = 'INBOX'
+  } = {}) {
     const emailAccount = await this._getEmailAccount(userId);
-
     if (emailAccount.provider === 'cloudflare') {
-      return this._searchStoredEmails(userId, { text, from, subject, since, before, unread });
+      return this._searchStoredEmails(userId, {
+        text,
+        from,
+        subject,
+        since,
+        before,
+        unread
+      });
     }
-
     const client = await this._getImapClient(userId, emailAccount);
     await client.mailboxOpen(folder);
-
     const criteria = [];
-    if (text) criteria.push({ text });
-    if (from) criteria.push({ from });
-    if (subject) criteria.push({ subject });
-    if (since) criteria.push({ since: new Date(since) });
-    if (before) criteria.push({ before: new Date(before) });
+    if (text) criteria.push({
+      text
+    });
+    if (from) criteria.push({
+      from
+    });
+    if (subject) criteria.push({
+      subject
+    });
+    if (since) criteria.push({
+      since: new Date(since)
+    });
+    if (before) criteria.push({
+      before: new Date(before)
+    });
     if (unread) criteria.push('UNSEEN');
-
     if (criteria.length === 0) criteria.push('ALL');
-
-    const uids = await client.search(criteria.length === 1 ? criteria[0] : criteria, { uid: true });
+    const uids = await client.search(criteria.length === 1 ? criteria[0] : criteria, {
+      uid: true
+    });
 
     // Fetch envelopes for search results (limit 100)
     const limited = uids.slice(-100);
     const results = [];
-
     for await (const message of client.fetch(limited.join(','), {
-      uid: true, envelope: true, flags: true, internalDate: true,
-    }, { uid: true })) {
+      uid: true,
+      envelope: true,
+      flags: true,
+      internalDate: true
+    }, {
+      uid: true
+    })) {
       results.push(this._formatEnvelope(message));
     }
-
     return results;
   }
 
@@ -460,20 +506,8 @@ export class SecureEmailClient {
    */
   async forwardEmail(userId, uid, to, fromAddress, comment = '') {
     const original = await this.readEmail(userId, uid);
-
-    const subject = original.subject?.startsWith('Fwd: ')
-      ? original.subject
-      : `Fwd: ${original.subject}`;
-
-    const forwardHeader = [
-      '---------- Forwarded message ----------',
-      `From: ${original.from?.address}`,
-      `Date: ${original.date}`,
-      `Subject: ${original.subject}`,
-      `To: ${original.to?.map((t) => t.address).join(', ')}`,
-      '',
-    ].join('\n');
-
+    const subject = original.subject?.startsWith('Fwd: ') ? original.subject : `Fwd: ${original.subject}`;
+    const forwardHeader = ['---------- Forwarded message ----------', `From: ${original.from?.address}`, `Date: ${original.date}`, `Subject: ${original.subject}`, `To: ${original.to?.map(t => t.address).join(', ')}`, ''].join('\n');
     return this.send({
       userId,
       from: fromAddress,
@@ -481,7 +515,7 @@ export class SecureEmailClient {
       subject,
       text: comment ? `${comment}\n\n${forwardHeader}\n${original.text}` : `${forwardHeader}\n${original.text}`,
       html: original.html,
-      references: original.messageId,
+      references: original.messageId
     });
   }
 
@@ -495,10 +529,7 @@ export class SecureEmailClient {
   encryptEmailContent(content) {
     const iv = crypto.randomBytes(12);
     const cipher = crypto.createCipheriv('aes-256-gcm', this._encKey, iv);
-    const encrypted = Buffer.concat([
-      cipher.update(content, 'utf8'),
-      cipher.final(),
-    ]);
+    const encrypted = Buffer.concat([cipher.update(content, 'utf8'), cipher.final()]);
     const tag = cipher.getAuthTag();
     return Buffer.concat([iv, tag, encrypted]).toString('base64');
   }
@@ -513,10 +544,8 @@ export class SecureEmailClient {
     const iv = data.slice(0, 12);
     const tag = data.slice(12, 28);
     const encrypted = data.slice(28);
-
     const decipher = crypto.createDecipheriv('aes-256-gcm', this._encKey, iv);
     decipher.setAuthTag(tag);
-
     return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
   }
 
@@ -533,28 +562,23 @@ export class SecureEmailClient {
   async provisionSmimeCertificate(userId, headyEmail) {
     // In production: call out to CA API (e.g., Actalis Free S/MIME)
     // Here we generate a self-signed cert for development
-    const { privateKey, certificate } = await this._generateSelfSignedSmimeCert(headyEmail);
-
-    const fingerprint = crypto
-      .createHash('sha256')
-      .update(certificate)
-      .digest('hex')
-      .match(/.{2}/g)
-      .join(':')
-      .toUpperCase();
+    const {
+      privateKey,
+      certificate
+    } = await this._generateSelfSignedSmimeCert(headyEmail);
+    const fingerprint = crypto.createHash('sha256').update(certificate).digest('hex').match(/.{2}/g).join(':').toUpperCase();
 
     // Store encrypted private key
     const encryptedKey = this.encryptEmailContent(privateKey);
-    await this.db.query(
-      `INSERT INTO smime_certificates (user_id, email, certificate, private_key_enc, fingerprint, created_at, expires_at)
+    await this.db.query(`INSERT INTO smime_certificates (user_id, email, certificate, private_key_enc, fingerprint, created_at, expires_at)
        VALUES ($1, $2, $3, $4, $5, NOW(), NOW() + INTERVAL '1 year')
        ON CONFLICT (user_id) DO UPDATE
          SET certificate = $3, private_key_enc = $4, fingerprint = $5,
-             created_at = NOW(), expires_at = NOW() + INTERVAL '1 year'`,
-      [userId, headyEmail, certificate, encryptedKey, fingerprint]
-    );
-
-    return { certificate, fingerprint };
+             created_at = NOW(), expires_at = NOW() + INTERVAL '1 year'`, [userId, headyEmail, certificate, encryptedKey, fingerprint]);
+    return {
+      certificate,
+      fingerprint
+    };
     // Note: private key is never returned to the client after initial provisioning
   }
 
@@ -564,7 +588,7 @@ export class SecureEmailClient {
     // This uses OpenSSL via child_process in real implementation
     return {
       privateKey: '-----BEGIN PRIVATE KEY-----\n[generated]\n-----END PRIVATE KEY-----',
-      certificate: '-----BEGIN CERTIFICATE-----\n[generated]\n-----END CERTIFICATE-----',
+      certificate: '-----BEGIN CERTIFICATE-----\n[generated]\n-----END CERTIFICATE-----'
     };
   }
 
@@ -578,15 +602,14 @@ export class SecureEmailClient {
    */
   _emitEmailEvent(userId, eventType, payload) {
     if (!this.wsServer) return;
-
     const message = JSON.stringify({
       type: `email:${eventType}`,
       data: payload,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
 
     // Broadcast to all WebSocket clients connected for this user
-    this.wsServer.clients.forEach((ws) => {
+    this.wsServer.clients.forEach(ws => {
       if (ws.readyState === 1 /* OPEN */ && ws.userId === userId) {
         ws.send(message);
       }
@@ -604,18 +627,15 @@ export class SecureEmailClient {
     if (emailAccount.provider !== 'mailcow' && emailAccount.provider !== 'smtp') {
       return; // Cloudflare routing doesn't support IMAP IDLE
     }
-
     const client = await this._getImapClient(userId, emailAccount);
-
-    client.on('exists', (data) => {
+    client.on('exists', data => {
       if (data.path === 'INBOX') {
         this._emitEmailEvent(userId, 'new_mail', {
           folder: 'INBOX',
-          count: data.count,
+          count: data.count
         });
       }
     });
-
     await client.idle();
   }
 
@@ -630,11 +650,13 @@ export class SecureEmailClient {
    */
   async checkSpam(emailData) {
     const spamConfig = this.config.email?.spamFilter;
-
     if (!spamConfig?.enabled) {
-      return { isSpam: false, score: 0, reasons: [] };
+      return {
+        isSpam: false,
+        score: 0,
+        reasons: []
+      };
     }
-
     try {
       if (spamConfig.provider === 'rspamd') {
         return await this._checkRspamd(emailData);
@@ -642,8 +664,11 @@ export class SecureEmailClient {
     } catch (err) {
       logger.error('[HeadyEmail] Spam check failed:', err.message);
     }
-
-    return { isSpam: false, score: 0, reasons: [] };
+    return {
+      isSpam: false,
+      score: 0,
+      reasons: []
+    };
   }
 
   /** @private */
@@ -653,18 +678,20 @@ export class SecureEmailClient {
       headers: {
         'Content-Type': 'text/plain',
         'From': emailData.from?.address || '',
-        'Subject': emailData.subject || '',
+        'Subject': emailData.subject || ''
       },
-      body: emailData.rawMessage || '',
+      body: emailData.rawMessage || ''
     });
-
-    if (!resp.ok) return { isSpam: false, score: 0, reasons: [] };
-
+    if (!resp.ok) return {
+      isSpam: false,
+      score: 0,
+      reasons: []
+    };
     const result = await resp.json();
     return {
       isSpam: result.action === 'reject' || result.action === 'add header',
       score: result.score || 0,
-      reasons: Object.keys(result.symbols || {}),
+      reasons: Object.keys(result.symbols || {})
     };
   }
 
@@ -679,40 +706,29 @@ export class SecureEmailClient {
    */
   async _processAttachments(attachments) {
     if (!attachments?.length) return [];
-
     const processed = [];
-
     for (const attachment of attachments) {
       // Size check
       if (attachment.size > MAX_ATTACHMENT_SIZE) {
-        throw new EmailError(
-          `Attachment "${attachment.filename}" exceeds maximum size of ${MAX_ATTACHMENT_SIZE / 1024 / 1024}MB.`,
-          'EMAIL_ATTACHMENT_TOO_LARGE',
-          400
-        );
+        throw new EmailError(`Attachment "${attachment.filename}" exceeds maximum size of ${MAX_ATTACHMENT_SIZE / 1024 / 1024}MB.`, 'EMAIL_ATTACHMENT_TOO_LARGE', 400);
       }
 
       // Virus scan reference (production: integrate with ClamAV or VirusTotal)
       if (this.config.email?.virusScan?.enabled) {
         const scanResult = await this._scanAttachmentForViruses(attachment);
         if (scanResult.infected) {
-          throw new EmailError(
-            `Attachment "${attachment.filename}" failed virus scan.`,
-            'EMAIL_ATTACHMENT_INFECTED',
-            400,
-            { threat: scanResult.threat }
-          );
+          throw new EmailError(`Attachment "${attachment.filename}" failed virus scan.`, 'EMAIL_ATTACHMENT_INFECTED', 400, {
+            threat: scanResult.threat
+          });
         }
       }
-
       processed.push({
         filename: attachment.filename,
         content: attachment.content,
         contentType: attachment.contentType || 'application/octet-stream',
-        encoding: 'base64',
+        encoding: 'base64'
       });
     }
-
     return processed;
   }
 
@@ -726,11 +742,15 @@ export class SecureEmailClient {
     // In production: stream to ClamAV daemon (clamd) via TCP
     // or call VirusTotal API for unknown files
     const clamUrl = this.config.email.virusScan.clamAvUrl;
-    if (!clamUrl) return { infected: false };
+    if (!clamUrl) return {
+      infected: false
+    };
 
     // Implement ClamAV streaming scan here
     // Example: send to clamd INSTREAM command
-    return { infected: false }; // Placeholder
+    return {
+      infected: false
+    }; // Placeholder
   }
 
   // ── IMAP Connection Pool ──────────────────────────────────────────────────
@@ -745,27 +765,25 @@ export class SecureEmailClient {
       if (existing.usable) return existing;
       this._imapPool.delete(userId);
     }
-
     const password = this._decryptMailboxPassword(emailAccount.mailbox_password_enc);
-
     const client = new ImapFlow({
       host: this.config.email?.imap?.host || 'mail.headyme.com',
       port: this.config.email?.imap?.port || 993,
       secure: true,
       auth: {
         user: emailAccount.address,
-        pass: password,
+        pass: password
       },
       logger: false,
-      tls: { rejectUnauthorized: true },
+      tls: {
+        rejectUnauthorized: true
+      }
     });
-
     await client.connect();
     this._imapPool.set(userId, client);
 
     // Clean up on disconnect
     client.on('close', () => this._imapPool.delete(userId));
-
     return client;
   }
 
@@ -778,113 +796,104 @@ export class SecureEmailClient {
   async _storeSentEmail(userId, emailData) {
     const encryptedContent = this.encryptEmailContent(JSON.stringify({
       text: emailData.text,
-      html: emailData.html,
+      html: emailData.html
     }));
-
-    await this.db.query(
-      `INSERT INTO stored_emails
+    await this.db.query(`INSERT INTO stored_emails
          (user_id, message_id, folder, from_address, to_addresses,
           cc_addresses, subject, content_enc, sent_at, is_read, deleted)
-       VALUES ($1, $2, 'Sent', $3, $4, $5, $6, $7, $8, TRUE, FALSE)`,
-      [
-        userId,
-        emailData.messageId,
-        emailData.from,
-        JSON.stringify(emailData.to),
-        JSON.stringify(emailData.cc),
-        emailData.subject,
-        encryptedContent,
-        emailData.sentAt,
-      ]
-    );
+       VALUES ($1, $2, 'Sent', $3, $4, $5, $6, $7, $8, TRUE, FALSE)`, [userId, emailData.messageId, emailData.from, JSON.stringify(emailData.to), JSON.stringify(emailData.cc), emailData.subject, encryptedContent, emailData.sentAt]);
   }
 
   /** @private */
-  async _getStoredEmails(userId, { page, folder, unreadOnly }) {
+  async _getStoredEmails(userId, {
+    page,
+    folder,
+    unreadOnly
+  }) {
     const offset = (page - 1) * INBOX_PAGE_SIZE;
     const conditions = ['user_id = $1', 'folder = $2', 'deleted = FALSE'];
     const params = [userId, folder || 'INBOX'];
-
     if (unreadOnly) {
       conditions.push('is_read = FALSE');
     }
-
-    const totalResult = await this.db.query(
-      `SELECT COUNT(*) FROM stored_emails WHERE ${conditions.join(' AND ')}`,
-      params
-    );
+    const totalResult = await this.db.query(`SELECT COUNT(*) FROM stored_emails WHERE ${conditions.join(' AND ')}`, params);
     const total = parseInt(totalResult.rows[0].count, 10);
-
-    const result = await this.db.query(
-      `SELECT id, message_id, from_address, to_addresses, subject, sent_at, is_read, folder
+    const result = await this.db.query(`SELECT id, message_id, from_address, to_addresses, subject, sent_at, is_read, folder
        FROM stored_emails
        WHERE ${conditions.join(' AND ')}
        ORDER BY sent_at DESC
-       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, INBOX_PAGE_SIZE, offset]
-    );
-
-    return { emails: result.rows, total, page, hasMore: total > page * INBOX_PAGE_SIZE };
+       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`, [...params, INBOX_PAGE_SIZE, offset]);
+    return {
+      emails: result.rows,
+      total,
+      page,
+      hasMore: total > page * INBOX_PAGE_SIZE
+    };
   }
 
   /** @private */
   async _getStoredEmailById(userId, id) {
-    const result = await this.db.query(
-      'SELECT * FROM stored_emails WHERE user_id = $1 AND id = $2 AND deleted = FALSE',
-      [userId, id]
-    );
-
+    const result = await this.db.query('SELECT * FROM stored_emails WHERE user_id = $1 AND id = $2 AND deleted = FALSE', [userId, id]);
     if (result.rows.length === 0) {
       throw new EmailError('Email not found.', 'EMAIL_NOT_FOUND', 404);
     }
-
     const email = result.rows[0];
     const decrypted = JSON.parse(this.decryptEmailContent(email.content_enc));
 
     // Mark as read
     await this.db.query('UPDATE stored_emails SET is_read = TRUE WHERE id = $1', [email.id]);
-
     return {
       ...email,
       text: decrypted.text,
       html: decrypted.html,
-      content_enc: undefined, // Remove encrypted content from response
+      content_enc: undefined // Remove encrypted content from response
     };
   }
 
   /** @private */
-  async _searchStoredEmails(userId, { text, from, subject, since, before, unread }) {
+  async _searchStoredEmails(userId, {
+    text,
+    from,
+    subject,
+    since,
+    before,
+    unread
+  }) {
     const conditions = ['user_id = $1', 'deleted = FALSE'];
     const params = [userId];
     let idx = 2;
-
-    if (text) { conditions.push(`subject ILIKE $${idx++}`); params.push(`%${text}%`); }
-    if (from) { conditions.push(`from_address ILIKE $${idx++}`); params.push(`%${from}%`); }
-    if (subject) { conditions.push(`subject ILIKE $${idx++}`); params.push(`%${subject}%`); }
-    if (since) { conditions.push(`sent_at >= $${idx++}`); params.push(since); }
-    if (before) { conditions.push(`sent_at <= $${idx++}`); params.push(before); }
-    if (unread) { conditions.push('is_read = FALSE'); }
-
-    const result = await this.db.query(
-      `SELECT id, message_id, from_address, to_addresses, subject, sent_at, is_read, folder
+    if (text) {
+      conditions.push(`subject ILIKE $${idx++}`);
+      params.push(`%${text}%`);
+    }
+    if (from) {
+      conditions.push(`from_address ILIKE $${idx++}`);
+      params.push(`%${from}%`);
+    }
+    if (subject) {
+      conditions.push(`subject ILIKE $${idx++}`);
+      params.push(`%${subject}%`);
+    }
+    if (since) {
+      conditions.push(`sent_at >= $${idx++}`);
+      params.push(since);
+    }
+    if (before) {
+      conditions.push(`sent_at <= $${idx++}`);
+      params.push(before);
+    }
+    if (unread) {
+      conditions.push('is_read = FALSE');
+    }
+    const result = await this.db.query(`SELECT id, message_id, from_address, to_addresses, subject, sent_at, is_read, folder
        FROM stored_emails
        WHERE ${conditions.join(' AND ')}
-       ORDER BY sent_at DESC LIMIT 100`,
-      params
-    );
-
+       ORDER BY sent_at DESC LIMIT 100`, params);
     return result.rows;
   }
-
-  // ── Template Rendering ────────────────────────────────────────────────────
-
-  /**
-   * Render an email template with variables.
-   * @private
-   */
   async _renderTemplate(templateId, variables) {
     const templates = {
-      welcome: (v) => ({
+      welcome: v => ({
         html: `
 <!DOCTYPE html>
 <html>
@@ -907,23 +916,20 @@ export class SecureEmailClient {
   <p style="color: #666; font-size: 12px;">© ${v.year} Heady. headyme.com</p>
 </body>
 </html>`,
-        text: `Welcome to Heady, ${v.displayName}!\n\nVerify your email: ${v.verifyUrl}\n\nYour Heady email: ${v.headyEmail}`,
+        text: `Welcome to Heady, ${v.displayName}!\n\nVerify your email: ${v.verifyUrl}\n\nYour Heady email: ${v.headyEmail}`
       }),
-
-      reset_password: (v) => ({
+      reset_password: v => ({
         html: `<p>Reset your Heady password: <a href="${v.resetUrl}">${v.resetUrl}</a><br>Expires in 1 hour.</p>`,
-        text: `Reset your password: ${v.resetUrl}\nExpires in 1 hour.`,
-      }),
+        text: `Reset your password: ${v.resetUrl}\nExpires in 1 hour.`
+      })
     };
-
     const renderer = templates[templateId];
     if (!renderer) {
       return {
         html: `<p>Notification from Heady™</p>`,
-        text: 'Notification from Heady™',
+        text: 'Notification from Heady™'
       };
     }
-
     return renderer(variables);
   }
 
@@ -931,16 +937,9 @@ export class SecureEmailClient {
 
   /** @private */
   async _getEmailAccount(userId) {
-    const result = await this.db.query(
-      'SELECT * FROM email_accounts WHERE user_id = $1',
-      [userId]
-    );
+    const result = await this.db.query('SELECT * FROM email_accounts WHERE user_id = $1', [userId]);
     if (result.rows.length === 0) {
-      throw new EmailError(
-        'No email account found. Please complete account setup.',
-        'EMAIL_ACCOUNT_NOT_FOUND',
-        404
-      );
+      throw new EmailError('No email account found. Please complete account setup.', 'EMAIL_ACCOUNT_NOT_FOUND', 404);
     }
     return result.rows[0];
   }
@@ -977,9 +976,8 @@ export class SecureEmailClient {
       flags: [...(message.flags || [])],
       seen: message.flags?.has('\\Seen') ?? false,
       flagged: message.flags?.has('\\Flagged') ?? false,
-      hasAttachments: message.bodyStructure?.childNodes?.length > 1,
+      hasAttachments: message.bodyStructure?.childNodes?.length > 1
     };
   }
 }
-
 export default SecureEmailClient;

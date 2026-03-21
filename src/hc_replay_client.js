@@ -13,24 +13,12 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
-/**
- * HeadyDistiller — Replay Client
- *
- * Deterministic replay engine inspired by AgentRR / Temporal.io.
- * Loads a trace JSONL, stubs LLM calls with recorded responses,
- * and re-executes using recorded non-deterministic inputs.
- *
- * Core insight: LLM outputs cannot be made fully deterministic even
- * with temperature=0 and seed params. The robust solution is
- * record-and-stub: capture every response verbatim during execution,
- * then return recorded responses during reproduction.
- */
-
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { EventEmitter } = require('events');
-
+const {
+  EventEmitter
+} = require('events');
 class ReplayClient extends EventEmitter {
   constructor(options = {}) {
     super();
@@ -61,39 +49,28 @@ class ReplayClient extends EventEmitter {
   buildStubMap(traceEntries) {
     const stubMap = new Map();
     let llmCallIndex = 0;
-
     for (const entry of traceEntries) {
       if (entry.type === 'llm_call') {
-        const promptHash = crypto.createHash('sha256')
-          .update(entry.prompt || '')
-          .digest('hex')
-          .slice(0, 16);
-
+        const promptHash = crypto.createHash('sha256').update(entry.prompt || '').digest('hex').slice(0, 16);
         stubMap.set(`llm_${llmCallIndex}_${promptHash}`, {
           response: entry.response,
           responseHash: entry.responseHash,
           model: entry.model,
           tokens: entry.tokens,
-          latencyMs: entry.latencyMs,
+          latencyMs: entry.latencyMs
         });
         llmCallIndex++;
       }
-
       if (entry.type === 'tool_call') {
-        const inputHash = crypto.createHash('sha256')
-          .update(entry.input || '')
-          .digest('hex')
-          .slice(0, 16);
-
+        const inputHash = crypto.createHash('sha256').update(entry.input || '').digest('hex').slice(0, 16);
         stubMap.set(`tool_${entry.tool}_${inputHash}`, {
           output: entry.output,
           outputHash: entry.outputHash,
           durationMs: entry.durationMs,
-          success: entry.success,
+          success: entry.success
         });
       }
     }
-
     return stubMap;
   }
 
@@ -109,23 +86,19 @@ class ReplayClient extends EventEmitter {
        * throws if no recording found (strict replay mode).
        */
       async call(prompt, options = {}) {
-        const promptHash = crypto.createHash('sha256')
-          .update(typeof prompt === 'string' ? prompt : JSON.stringify(prompt))
-          .digest('hex')
-          .slice(0, 16);
-
+        const promptHash = crypto.createHash('sha256').update(typeof prompt === 'string' ? prompt : JSON.stringify(prompt)).digest('hex').slice(0, 16);
         const key = `llm_${callIndex}_${promptHash}`;
         const stub = stubMap.get(key);
         callIndex++;
-
         if (stub) {
           return {
             response: stub.response,
             model: stub.model,
             tokens: stub.tokens,
-            latencyMs: 0, // instant replay
+            latencyMs: 0,
+            // instant replay
             replayed: true,
-            originalLatencyMs: stub.latencyMs,
+            originalLatencyMs: stub.latencyMs
           };
         }
 
@@ -139,17 +112,19 @@ class ReplayClient extends EventEmitter {
               latencyMs: 0,
               replayed: true,
               fuzzyMatch: true,
-              originalLatencyMs: v.latencyMs,
+              originalLatencyMs: v.latencyMs
             };
           }
         }
-
         if (options.strict !== false) {
           throw new Error(`Replay: No recorded response for LLM call #${callIndex - 1} (hash: ${promptHash})`);
         }
-
-        return { response: null, replayed: false, missing: true };
-      },
+        return {
+          response: null,
+          replayed: false,
+          missing: true
+        };
+      }
     };
   }
 
@@ -168,44 +143,37 @@ class ReplayClient extends EventEmitter {
       hashMismatches: 0,
       missingStubs: 0,
       verified: false,
-      details: [],
+      details: []
     };
-
     const stubMap = this.buildStubMap(entries);
-
     for (const entry of entries) {
       if (entry.type === 'llm_call') {
         report.llmCalls++;
-        const promptHash = crypto.createHash('sha256')
-          .update(entry.prompt || '')
-          .digest('hex')
-          .slice(0, 16);
+        const promptHash = crypto.createHash('sha256').update(entry.prompt || '').digest('hex').slice(0, 16);
 
         // Verify response hash integrity
-        const computedHash = crypto.createHash('sha256')
-          .update(entry.response || '')
-          .digest('hex')
-          .slice(0, 16);
-
+        const computedHash = crypto.createHash('sha256').update(entry.response || '').digest('hex').slice(0, 16);
         if (computedHash === entry.responseHash) {
           report.hashMatches++;
-          report.details.push({ type: 'llm', seq: entry._seq, status: 'match' });
+          report.details.push({
+            type: 'llm',
+            seq: entry._seq,
+            status: 'match'
+          });
         } else {
           report.hashMismatches++;
           report.details.push({
-            type: 'llm', seq: entry._seq, status: 'mismatch',
-            expected: entry.responseHash, got: computedHash,
+            type: 'llm',
+            seq: entry._seq,
+            status: 'mismatch',
+            expected: entry.responseHash,
+            got: computedHash
           });
         }
       }
-
       if (entry.type === 'tool_call') {
         report.toolCalls++;
-        const computedHash = crypto.createHash('sha256')
-          .update(entry.output || '')
-          .digest('hex')
-          .slice(0, 16);
-
+        const computedHash = crypto.createHash('sha256').update(entry.output || '').digest('hex').slice(0, 16);
         if (computedHash === entry.outputHash) {
           report.hashMatches++;
         } else {
@@ -213,7 +181,6 @@ class ReplayClient extends EventEmitter {
         }
       }
     }
-
     report.verified = report.hashMismatches === 0 && report.missingStubs === 0;
     this.emit('verify:complete', report);
     return report;
@@ -225,21 +192,18 @@ class ReplayClient extends EventEmitter {
   extractTimeline(traceId) {
     const entries = this.loadTrace(traceId);
     const timeline = [];
-
     for (const entry of entries) {
-      if (['trace_start', 'trace_end', 'llm_call', 'tool_call',
-           'skill_step', 'pipeline_stage_start', 'pipeline_stage_end'].includes(entry.type)) {
+      if (['trace_start', 'trace_end', 'llm_call', 'tool_call', 'skill_step', 'pipeline_stage_start', 'pipeline_stage_end'].includes(entry.type)) {
         timeline.push({
           seq: entry._seq,
           type: entry.type,
           timestamp: entry.timestamp || entry._ts,
           durationMs: entry.durationMs || entry.latencyMs || 0,
           label: entry.tool || entry.step || entry.stageName || entry.model || entry.type,
-          success: entry.success !== false && entry.status !== 'failed',
+          success: entry.success !== false && entry.status !== 'failed'
         });
       }
     }
-
     return timeline;
   }
 
@@ -250,11 +214,9 @@ class ReplayClient extends EventEmitter {
     const entries = this.loadTrace(traceId);
     const startEntry = entries.find(e => e.type === 'trace_start');
     const endEntry = entries.find(e => e.type === 'trace_end');
-
     const llmCalls = entries.filter(e => e.type === 'llm_call');
     const toolCalls = entries.filter(e => e.type === 'tool_call');
     const steps = entries.filter(e => e.type === 'skill_step');
-
     return {
       traceId,
       source: startEntry?.meta?.source || 'unknown',
@@ -269,7 +231,7 @@ class ReplayClient extends EventEmitter {
       totalLLMLatencyMs: llmCalls.reduce((s, e) => s + (e.latencyMs || 0), 0),
       totalToolDurationMs: toolCalls.reduce((s, e) => s + (e.durationMs || 0), 0),
       successfulSteps: steps.filter(s => s.success !== false).length,
-      failedSteps: steps.filter(s => s.success === false).length,
+      failedSteps: steps.filter(s => s.success === false).length
     };
   }
 
@@ -279,10 +241,15 @@ class ReplayClient extends EventEmitter {
     const content = fs.readFileSync(filepath, 'utf8').trim();
     if (!content) return [];
     return content.split('\n').map(line => {
-      try { return JSON.parse(line); }
-      catch (e) { return { type: 'parse_error', raw: line }; }
+      try {
+        return JSON.parse(line);
+      } catch (e) {
+        return {
+          type: 'parse_error',
+          raw: line
+        };
+      }
     });
   }
 }
-
 module.exports = ReplayClient;

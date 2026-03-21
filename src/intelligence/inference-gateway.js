@@ -5,10 +5,10 @@
  */
 
 'use strict';
-const logger = require('../utils/logger') || console;
 
+const logger = require('../utils/logger') || console;
 const EventEmitter = require('events');
-const crypto       = require('crypto');
+const crypto = require('crypto');
 
 // ─────────────────────────────────────────────
 // Response Normalizer
@@ -26,18 +26,18 @@ function normalizeResponse(raw, providerId, requestId) {
   return {
     requestId,
     providerId,
-    model:      raw.model   ?? 'unknown',
-    text:       raw.text    ?? '',
-    citations:  raw.citations ?? [],
+    model: raw.model ?? 'unknown',
+    text: raw.text ?? '',
+    citations: raw.citations ?? [],
     usage: {
-      inputTokens:  raw.usage?.inputTokens  ?? 0,
+      inputTokens: raw.usage?.inputTokens ?? 0,
       outputTokens: raw.usage?.outputTokens ?? 0,
-      totalTokens:  (raw.usage?.inputTokens ?? 0) + (raw.usage?.outputTokens ?? 0),
+      totalTokens: (raw.usage?.inputTokens ?? 0) + (raw.usage?.outputTokens ?? 0)
     },
-    latencyMs:    raw.latencyMs  ?? 0,
+    latencyMs: raw.latencyMs ?? 0,
     attemptCount: raw.attemptCount ?? 1,
-    cached:       false,
-    createdAt:    Date.now(),
+    cached: false,
+    createdAt: Date.now()
   };
 }
 
@@ -52,11 +52,11 @@ function normalizeEmbedding(raw, providerId, requestId) {
   return {
     requestId,
     providerId,
-    model:     raw.model     ?? 'unknown',
+    model: raw.model ?? 'unknown',
     embedding: raw.embedding ?? [],
     latencyMs: raw.latencyMs ?? 0,
-    cached:    false,
-    createdAt: Date.now(),
+    cached: false,
+    createdAt: Date.now()
   };
 }
 
@@ -75,7 +75,7 @@ class DedupeCache {
    * @param {number} [opts.maxEntries=1000] Max entries before LRU eviction
    */
   constructor(opts = {}) {
-    this.ttlMs      = opts.ttlMs      ?? 60_000;
+    this.ttlMs = opts.ttlMs ?? 60_000;
     this.maxEntries = opts.maxEntries ?? 1_000;
     /** @type {Map<string, {value: any, ts: number}>} */
     this._cache = new Map();
@@ -88,7 +88,11 @@ class DedupeCache {
    * @returns {string}
    */
   keyFor(prompt, opts = {}) {
-    const payload = JSON.stringify({ prompt, taskType: opts.taskType, model: opts.model });
+    const payload = JSON.stringify({
+      prompt,
+      taskType: opts.taskType,
+      model: opts.model
+    });
     return crypto.createHash('sha256').update(payload).digest('hex');
   }
 
@@ -118,14 +122,21 @@ class DedupeCache {
       // Evict oldest entry
       this._cache.delete(this._cache.keys().next().value);
     }
-    this._cache.set(key, { value, ts: Date.now() });
+    this._cache.set(key, {
+      value,
+      ts: Date.now()
+    });
   }
 
   /** @returns {number} */
-  get size() { return this._cache.size; }
+  get size() {
+    return this._cache.size;
+  }
 
   /** Clear all entries */
-  clear() { this._cache.clear(); }
+  clear() {
+    this._cache.clear();
+  }
 
   /** Evict all expired entries */
   evictExpired() {
@@ -146,7 +157,7 @@ class DedupeCache {
 class UsageLogger {
   constructor() {
     /** @type {Array<UsageEvent>} */
-    this._log  = [];
+    this._log = [];
     this._maxLog = 10_000;
   }
 
@@ -154,7 +165,10 @@ class UsageLogger {
    * @param {UsageEvent} event
    */
   log(event) {
-    this._log.push({ ...event, ts: Date.now() });
+    this._log.push({
+      ...event,
+      ts: Date.now()
+    });
     if (this._log.length > this._maxLog) this._log.shift();
   }
 
@@ -168,9 +182,9 @@ class UsageLogger {
    */
   query(filter = {}) {
     return this._log.filter(e => {
-      if (filter.sessionId  && e.sessionId  !== filter.sessionId)  return false;
-      if (filter.providerId && e.providerId !== filter.providerId)  return false;
-      if (filter.since      && e.ts         <  filter.since)        return false;
+      if (filter.sessionId && e.sessionId !== filter.sessionId) return false;
+      if (filter.providerId && e.providerId !== filter.providerId) return false;
+      if (filter.since && e.ts < filter.since) return false;
       return true;
     });
   }
@@ -182,17 +196,24 @@ class UsageLogger {
    */
   aggregate(filter = {}) {
     const events = this.query(filter);
-    const totals = { requests: events.length, inputTokens: 0, outputTokens: 0, totalCostUsd: 0 };
+    const totals = {
+      requests: events.length,
+      inputTokens: 0,
+      outputTokens: 0,
+      totalCostUsd: 0
+    };
     for (const e of events) {
-      totals.inputTokens  += e.inputTokens  ?? 0;
+      totals.inputTokens += e.inputTokens ?? 0;
       totals.outputTokens += e.outputTokens ?? 0;
-      totals.totalCostUsd += e.costUsd      ?? 0;
+      totals.totalCostUsd += e.costUsd ?? 0;
     }
     return totals;
   }
 
   /** @returns {number} Log length */
-  get length() { return this._log.length; }
+  get length() {
+    return this._log.length;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -214,21 +235,42 @@ async function* streamToSSE(stream, requestId) {
     const decoder = new TextDecoder();
     try {
       while (true) {
-        const { done, value } = await reader.read();
-        if (done) { yield { requestId, delta: '', done: true }; break; }
-        const text = decoder.decode(value, { stream: true });
+        const {
+          done,
+          value
+        } = await reader.read();
+        if (done) {
+          yield {
+            requestId,
+            delta: '',
+            done: true
+          };
+          break;
+        }
+        const text = decoder.decode(value, {
+          stream: true
+        });
         // Parse SSE lines
         for (const line of text.split('\n')) {
           if (line.startsWith('data: ')) {
             const raw = line.slice(6);
-            if (raw === '[DONE]') { yield { requestId, delta: '', done: true }; return; }
+            if (raw === '[DONE]') {
+              yield {
+                requestId,
+                delta: '',
+                done: true
+              };
+              return;
+            }
             try {
               const parsed = JSON.parse(raw);
-              const delta  = parsed.choices?.[0]?.delta?.content
-                          ?? parsed.candidates?.[0]?.content?.parts?.[0]?.text
-                          ?? '';
-              if (delta) yield { requestId, delta, done: false };
-            } catch { /* skip malformed */ }
+              const delta = parsed.choices?.[0]?.delta?.content ?? parsed.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+              if (delta) yield {
+                requestId,
+                delta,
+                done: false
+              };
+            } catch {/* skip malformed */}
           }
         }
       }
@@ -241,9 +283,17 @@ async function* streamToSSE(stream, requestId) {
   // Node.js Readable
   for await (const chunk of stream) {
     const text = typeof chunk === 'string' ? chunk : chunk.toString('utf8');
-    yield { requestId, delta: text, done: false };
+    yield {
+      requestId,
+      delta: text,
+      done: false
+    };
   }
-  yield { requestId, delta: '', done: true };
+  yield {
+    requestId,
+    delta: '',
+    done: true
+  };
 }
 
 // ─────────────────────────────────────────────
@@ -257,31 +307,6 @@ async function* streamToSSE(stream, requestId) {
  * @property {number}  [dedupeTtlMs]       Dedup cache TTL
  * @property {number}  [dedupeMaxEntries]  Dedup cache size
  * @property {boolean} [logUsage=true]     Enable usage logging
- */
-
-/**
- * @typedef {object} InferenceRequest
- * @property {string}  prompt
- * @property {string}  taskType           One of TASK_TYPES from llm-router.js
- * @property {string}  [sessionId]
- * @property {string}  [attributionId]    For billing attribution
- * @property {object}  [opts]             Passed to the router (model, maxTokens, temperature, stream)
- * @property {boolean} [critical]         HeadySoul override
- * @property {boolean} [bypassCache]      Skip dedup cache for this request
- */
-
-/**
- * @typedef {object} NormalizedResponse
- * @property {string}   requestId
- * @property {string}   providerId
- * @property {string}   model
- * @property {string}   text
- * @property {string[]} citations
- * @property {object}   usage
- * @property {number}   latencyMs
- * @property {number}   attemptCount
- * @property {boolean}  cached
- * @property {number}   createdAt
  */
 
 /**
@@ -336,20 +361,17 @@ class InferenceGateway extends EventEmitter {
   constructor(config) {
     super();
     if (!config.router) throw new Error('InferenceGateway: config.router is required');
-    this.router     = config.router;
+    this.router = config.router;
     this.dedupeEnabled = config.dedupe ?? true;
-    this.logEnabled    = config.logUsage ?? true;
-
-    this.cache  = new DedupeCache({
-      ttlMs:      config.dedupeTtlMs      ?? 60_000,
-      maxEntries: config.dedupeMaxEntries ?? 1_000,
+    this.logEnabled = config.logUsage ?? true;
+    this.cache = new DedupeCache({
+      ttlMs: config.dedupeTtlMs ?? 60_000,
+      maxEntries: config.dedupeMaxEntries ?? 1_000
     });
-
     this.usageLog = new UsageLogger();
 
     // Schedule cache eviction every minute
-    this._evictTimer = setInterval(() => this.cache.evictExpired(), 60_000).unref?.() ??
-                       setInterval(() => this.cache.evictExpired(), 60_000);
+    this._evictTimer = setInterval(() => this.cache.evictExpired(), 60_000).unref?.() ?? setInterval(() => this.cache.evictExpired(), 60_000);
   }
 
   // ── Core Inference ──
@@ -364,36 +386,59 @@ class InferenceGateway extends EventEmitter {
     const {
       prompt,
       taskType,
-      sessionId      = null,
-      attributionId  = null,
-      opts           = {},
-      critical       = false,
-      bypassCache    = false,
+      sessionId = null,
+      attributionId = null,
+      opts = {},
+      critical = false,
+      bypassCache = false
     } = req;
 
     // ─ Cache lookup ─
-    const cacheKey = this.cache.keyFor(prompt, { taskType, ...opts });
+    const cacheKey = this.cache.keyFor(prompt, {
+      taskType,
+      ...opts
+    });
     if (this.dedupeEnabled && !bypassCache) {
       const cached = this.cache.get(cacheKey);
       if (cached) {
-        const response = { ...cached, requestId, cached: true };
-        this.emit('cache_hit', { requestId, taskType, sessionId });
+        const response = {
+          ...cached,
+          requestId,
+          cached: true
+        };
+        this.emit('cache_hit', {
+          requestId,
+          taskType,
+          sessionId
+        });
         if (this.logEnabled) this._logUsage(response, sessionId, attributionId, taskType, true);
         return response;
       }
     }
 
     // ─ Route ─
-    this.emit('request_start', { requestId, taskType, sessionId });
-
+    this.emit('request_start', {
+      requestId,
+      taskType,
+      sessionId
+    });
     let raw;
     try {
-      raw = await this.router.route({ taskType, prompt, opts, critical, sessionId });
+      raw = await this.router.route({
+        taskType,
+        prompt,
+        opts,
+        critical,
+        sessionId
+      });
     } catch (err) {
-      this.emit('request_error', { requestId, taskType, err });
+      this.emit('request_error', {
+        requestId,
+        taskType,
+        err
+      });
       throw err;
     }
-
     const response = normalizeResponse(raw, raw.providerId, requestId);
 
     // ─ Cache store ─
@@ -405,8 +450,12 @@ class InferenceGateway extends EventEmitter {
     if (this.logEnabled) {
       this._logUsage(response, sessionId, attributionId, taskType, false);
     }
-
-    this.emit('request_complete', { requestId, taskType, sessionId, latencyMs: response.latencyMs });
+    this.emit('request_complete', {
+      requestId,
+      taskType,
+      sessionId,
+      latencyMs: response.latencyMs
+    });
     return response;
   }
 
@@ -421,21 +470,35 @@ class InferenceGateway extends EventEmitter {
    */
   async *inferStream(req) {
     const requestId = this._reqId();
-    const { prompt, taskType, opts = {}, critical = false, sessionId = null } = req;
-
-    this.emit('stream_start', { requestId, taskType, sessionId });
-
+    const {
+      prompt,
+      taskType,
+      opts = {},
+      critical = false,
+      sessionId = null
+    } = req;
+    this.emit('stream_start', {
+      requestId,
+      taskType,
+      sessionId
+    });
     let raw;
     try {
       raw = await this.router.route({
         taskType,
         prompt,
-        opts:     { ...opts, stream: true },
+        opts: {
+          ...opts,
+          stream: true
+        },
         critical,
-        sessionId,
+        sessionId
       });
     } catch (err) {
-      this.emit('stream_error', { requestId, err });
+      this.emit('stream_error', {
+        requestId,
+        err
+      });
       throw err;
     }
 
@@ -444,17 +507,28 @@ class InferenceGateway extends EventEmitter {
       yield* streamToSSE(raw._stream, requestId);
     } else {
       // Fallback: simulate streaming from complete response
-      const text   = raw.text ?? '';
+      const text = raw.text ?? '';
       const chunks = Math.ceil(text.length / 20);
       for (let i = 0; i < chunks; i++) {
         const delta = text.slice(i * 20, (i + 1) * 20);
-        yield { requestId, delta, done: false };
+        yield {
+          requestId,
+          delta,
+          done: false
+        };
         await new Promise(r => setTimeout(r, 10));
       }
-      yield { requestId, delta: '', done: true };
+      yield {
+        requestId,
+        delta: '',
+        done: true
+      };
     }
-
-    this.emit('stream_complete', { requestId, taskType, sessionId });
+    this.emit('stream_complete', {
+      requestId,
+      taskType,
+      sessionId
+    });
   }
 
   // ── Embeddings ──
@@ -468,22 +542,33 @@ class InferenceGateway extends EventEmitter {
    */
   async embed(text, opts = {}, sessionId = null) {
     const requestId = this._reqId();
-    const cacheKey  = this.cache.keyFor(text, { type: 'embed', ...opts });
-
+    const cacheKey = this.cache.keyFor(text, {
+      type: 'embed',
+      ...opts
+    });
     if (this.dedupeEnabled) {
       const cached = this.cache.get(cacheKey);
       if (cached) {
-        this.emit('cache_hit', { requestId, type: 'embed', sessionId });
-        return { ...cached, requestId, cached: true };
+        this.emit('cache_hit', {
+          requestId,
+          type: 'embed',
+          sessionId
+        });
+        return {
+          ...cached,
+          requestId,
+          cached: true
+        };
       }
     }
-
-    const raw      = await this.router.embed(text, opts);
+    const raw = await this.router.embed(text, opts);
     const response = normalizeEmbedding(raw, raw.providerId, requestId);
-
     if (this.dedupeEnabled) this.cache.set(cacheKey, response);
-
-    this.emit('embed_complete', { requestId, sessionId, model: response.model });
+    this.emit('embed_complete', {
+      requestId,
+      sessionId,
+      model: response.model
+    });
     return response;
   }
 
@@ -498,17 +583,17 @@ class InferenceGateway extends EventEmitter {
    */
   async inferBatch(requests, opts = {}) {
     const concurrency = opts.concurrency ?? 4;
-    const results     = new Array(requests.length);
-    let   ptr         = 0;
-
+    const results = new Array(requests.length);
+    let ptr = 0;
     const worker = async () => {
       while (ptr < requests.length) {
         const idx = ptr++;
         results[idx] = await this.infer(requests[idx]);
       }
     };
-
-    await Promise.all(Array.from({ length: concurrency }, worker));
+    await Promise.all(Array.from({
+      length: concurrency
+    }, worker));
     return results;
   }
 
@@ -519,21 +604,28 @@ class InferenceGateway extends EventEmitter {
    * @param {object} [filter]
    * @returns {UsageEvent[]}
    */
-  queryUsage(filter = {}) { return this.usageLog.query(filter); }
+  queryUsage(filter = {}) {
+    return this.usageLog.query(filter);
+  }
 
   /**
    * Aggregated usage statistics.
    * @param {object} [filter]
    * @returns {object}
    */
-  aggregateUsage(filter = {}) { return this.usageLog.aggregate(filter); }
+  aggregateUsage(filter = {}) {
+    return this.usageLog.aggregate(filter);
+  }
 
   /**
    * Dedup cache statistics.
    * @returns {{size: number, ttlMs: number}}
    */
   cacheStats() {
-    return { size: this.cache.size, ttlMs: this.cache.ttlMs };
+    return {
+      size: this.cache.size,
+      ttlMs: this.cache.ttlMs
+    };
   }
 
   /**
@@ -542,9 +634,9 @@ class InferenceGateway extends EventEmitter {
    */
   status() {
     return {
-      cacheSize:     this.cache.size,
-      usageLogSize:  this.usageLog.length,
-      routerStatus:  this.router.status?.() ?? null,
+      cacheSize: this.cache.size,
+      usageLogSize: this.usageLog.length,
+      routerStatus: this.router.status?.() ?? null
     };
   }
 
@@ -562,20 +654,19 @@ class InferenceGateway extends EventEmitter {
   _reqId() {
     return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
   }
-
   _logUsage(response, sessionId, attributionId, taskType, cached) {
     this.usageLog.log({
-      requestId:     response.requestId,
-      sessionId:     sessionId     ?? 'anonymous',
+      requestId: response.requestId,
+      sessionId: sessionId ?? 'anonymous',
       attributionId: attributionId ?? 'unattributed',
-      providerId:    response.providerId,
-      model:         response.model,
-      taskType:      taskType ?? 'unknown',
-      inputTokens:   response.usage?.inputTokens  ?? 0,
-      outputTokens:  response.usage?.outputTokens ?? 0,
-      latencyMs:     response.latencyMs,
+      providerId: response.providerId,
+      model: response.model,
+      taskType: taskType ?? 'unknown',
+      inputTokens: response.usage?.inputTokens ?? 0,
+      outputTokens: response.usage?.outputTokens ?? 0,
+      latencyMs: response.latencyMs,
       cached,
-      costUsd:       0, // populated by budget tracker if needed
+      costUsd: 0 // populated by budget tracker if needed
     });
   }
 }
@@ -591,20 +682,14 @@ class InferenceGateway extends EventEmitter {
  * @returns {InferenceGateway}
  */
 function createGateway(router, config = {}) {
-  return new InferenceGateway({ router, ...config });
+  return new InferenceGateway({
+    router,
+    ...config
+  });
 }
 
 // ─────────────────────────────────────────────
 // Exports
 // ─────────────────────────────────────────────
 
-export {
-
-  InferenceGateway,
-  DedupeCache,
-  UsageLogger,
-  createGateway,
-  normalizeResponse,
-  normalizeEmbedding,
-  streamToSSE,
-};
+export { InferenceGateway, DedupeCache, UsageLogger, createGateway, normalizeResponse, normalizeEmbedding, streamToSSE };

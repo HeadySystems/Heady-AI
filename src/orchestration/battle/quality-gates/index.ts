@@ -1,3 +1,5 @@
+import { createLogger } from '../../../utils/logger';
+const logger = createLogger('auto-fixed');
 /**
  * Quality Gate Validator for Heady™Battle Coding Workflows
  * 
@@ -20,21 +22,18 @@ export interface QualityRule {
   severity: 'blocker' | 'critical' | 'warning';
   validator: (code: string) => Promise<RuleResult>;
 }
-
 export interface RuleResult {
   passed: boolean;
   score: number;
   violations: Violation[];
   suggestions: string[];
 }
-
 export interface Violation {
   line: number;
   message: string;
   severity: 'blocker' | 'critical' | 'warning';
   autoFixable: boolean;
 }
-
 export interface ValidationResult {
   passed: boolean;
   overallScore: number;
@@ -49,11 +48,9 @@ export interface ValidationResult {
     autoFixable: number;
   };
 }
-
 export class QualityGateValidator {
   private rules: QualityRule[];
   private strictMode: boolean;
-
   constructor(rules: QualityRule[], strictMode: boolean = true) {
     this.rules = rules;
     this.strictMode = strictMode;
@@ -64,9 +61,8 @@ export class QualityGateValidator {
    * Runs all quality gates and determines pass/fail
    */
   async validate(code: string): Promise<ValidationResult> {
-    console.log('[QualityGate] Starting validation with ${this.rules.length} rules');
+    logger.info('[QualityGate] Starting validation with ${this.rules.length} rules');
     const startTime = Date.now();
-
     const results: RuleResult[] = [];
     const failures: string[] = [];
     const warnings: string[] = [];
@@ -77,28 +73,24 @@ export class QualityGateValidator {
       try {
         const result = await rule.validator(code);
         results.push(result);
-
         if (!result.passed) {
           const message = `${rule.name}: ${result.violations.length} violations`;
-
           if (rule.severity === 'blocker' || rule.severity === 'critical') {
             failures.push(message);
           } else {
             warnings.push(message);
           }
-
           allViolations.push(...result.violations);
         }
-
         return result;
       } catch (error) {
-        console.error(`[QualityGate] Rule ${rule.name} failed:`, error);
+        logger.error(`[QualityGate] Rule ${rule.name} failed:`, error);
         return {
           passed: false,
           score: 0,
-          violations: [{ 
-            line: 0, 
-            message: `Rule execution error: ${error}`, 
+          violations: [{
+            line: 0,
+            message: `Rule execution error: ${error}`,
             severity: 'critical',
             autoFixable: false
           }],
@@ -106,28 +98,22 @@ export class QualityGateValidator {
         };
       }
     });
-
     await Promise.all(rulePromises);
 
     // Calculate overall score
     const overallScore = this.calculateOverallScore(results);
 
     // Determine pass/fail
-    const passed = this.strictMode 
-      ? failures.length === 0 && overallScore >= 0.8
-      : failures.length === 0;
+    const passed = this.strictMode ? failures.length === 0 && overallScore >= 0.8 : failures.length === 0;
 
     // Generate suggested fixes
     const suggestedFixes = await this.generateFixes(allViolations, code);
-
     const metadata = {
       executionTime: Date.now() - startTime,
       rulesEvaluated: this.rules.length,
       autoFixable: allViolations.filter(v => v.autoFixable).length
     };
-
-    console.log(`[QualityGate] Validation ${passed ? 'PASSED' : 'FAILED'} (score: ${overallScore.toFixed(2)})`);
-
+    logger.info(`[QualityGate] Validation ${passed ? 'PASSED' : 'FAILED'} (score: ${overallScore.toFixed(2)})`);
     return {
       passed,
       overallScore,
@@ -145,84 +131,69 @@ export class QualityGateValidator {
    */
   static defaultRules(): QualityRule[] {
     return [
-      // Security rules
-      {
-        name: 'No Hardcoded Secrets',
-        category: 'security',
-        threshold: 0.0,
-        severity: 'blocker',
-        validator: async (code) => this.checkHardcodedSecrets(code)
-      },
-      {
-        name: 'SQL Injection Prevention',
-        category: 'security',
-        threshold: 0.0,
-        severity: 'blocker',
-        validator: async (code) => this.checkSQLInjection(code)
-      },
-      {
-        name: 'XSS Prevention',
-        category: 'security',
-        threshold: 0.0,
-        severity: 'critical',
-        validator: async (code) => this.checkXSS(code)
-      },
-
-      // Complexity rules
-      {
-        name: 'Cyclomatic Complexity',
-        category: 'complexity',
-        threshold: 10,
-        severity: 'warning',
-        validator: async (code) => this.checkComplexity(code)
-      },
-      {
-        name: 'Function Length',
-        category: 'complexity',
-        threshold: 50,
-        severity: 'warning',
-        validator: async (code) => this.checkFunctionLength(code)
-      },
-
-      // Architecture rules
-      {
-        name: 'No Console Logs in Production',
-        category: 'architecture',
-        threshold: 0.0,
-        severity: 'warning',
-        validator: async (code) => this.checkConsoleLogs(code)
-      },
-      {
-        name: 'Error Handling Required',
-        category: 'architecture',
-        threshold: 1.0,
-        severity: 'critical',
-        validator: async (code) => this.checkErrorHandling(code)
-      },
-
-      // Performance rules
-      {
-        name: 'No Synchronous File I/O',
-        category: 'performance',
-        threshold: 0.0,
-        severity: 'warning',
-        validator: async (code) => this.checkSyncFileIO(code)
-      }
-    ];
+    // Security rules
+    {
+      name: 'No Hardcoded Secrets',
+      category: 'security',
+      threshold: 0.0,
+      severity: 'blocker',
+      validator: async code => this.checkHardcodedSecrets(code)
+    }, {
+      name: 'SQL Injection Prevention',
+      category: 'security',
+      threshold: 0.0,
+      severity: 'blocker',
+      validator: async code => this.checkSQLInjection(code)
+    }, {
+      name: 'XSS Prevention',
+      category: 'security',
+      threshold: 0.0,
+      severity: 'critical',
+      validator: async code => this.checkXSS(code)
+    },
+    // Complexity rules
+    {
+      name: 'Cyclomatic Complexity',
+      category: 'complexity',
+      threshold: 10,
+      severity: 'warning',
+      validator: async code => this.checkComplexity(code)
+    }, {
+      name: 'Function Length',
+      category: 'complexity',
+      threshold: 50,
+      severity: 'warning',
+      validator: async code => this.checkFunctionLength(code)
+    },
+    // Architecture rules
+    {
+      name: 'No Console Logs in Production',
+      category: 'architecture',
+      threshold: 0.0,
+      severity: 'warning',
+      validator: async code => this.checkConsoleLogs(code)
+    }, {
+      name: 'Error Handling Required',
+      category: 'architecture',
+      threshold: 1.0,
+      severity: 'critical',
+      validator: async code => this.checkErrorHandling(code)
+    },
+    // Performance rules
+    {
+      name: 'No Synchronous File I/O',
+      category: 'performance',
+      threshold: 0.0,
+      severity: 'warning',
+      validator: async code => this.checkSyncFileIO(code)
+    }];
   }
 
   // Security validators
   private static async checkHardcodedSecrets(code: string): Promise<RuleResult> {
-    const patterns = [
-      /api[_-]?key\s*=\s*["'][^"']+["']/gi,
-      /password\s*=\s*["'][^"']+["']/gi,
-      /secret\s*=\s*["'][^"']+["']/gi,
-      /token\s*=\s*["'][^"']+["']/gi
-    ];
-
+    const patterns = [/api[_-]?key\s*=\s*["'][^"']+["']/gi, /password\s*=\s*["'][^"']+["']/gi, /secret\s*=\s*["'][^"']+["']/gi, /token\s*=\s*["'][^"']+["']/gi];
     const violations: Violation[] = [];
     const lines = code.split('\n');
-
     lines.forEach((line, idx) => {
       patterns.forEach(pattern => {
         if (pattern.test(line)) {
@@ -235,24 +206,19 @@ export class QualityGateValidator {
         }
       });
     });
-
     return {
       passed: violations.length === 0,
       score: violations.length === 0 ? 1.0 : 0.0,
       violations,
-      suggestions: violations.length > 0 
-        ? ['Move secrets to environment variables or secrets manager']
-        : []
+      suggestions: violations.length > 0 ? ['Move secrets to environment variables or secrets manager'] : []
     };
   }
-
   private static async checkSQLInjection(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const lines = code.split('\n');
 
     // Check for string concatenation in SQL queries
     const sqlPattern = /(?:query|execute|sql).*?\+.*?["'`]/gi;
-
     lines.forEach((line, idx) => {
       if (sqlPattern.test(line)) {
         violations.push({
@@ -263,24 +229,19 @@ export class QualityGateValidator {
         });
       }
     });
-
     return {
       passed: violations.length === 0,
       score: violations.length === 0 ? 1.0 : 0.0,
       violations,
-      suggestions: violations.length > 0 
-        ? ['Use parameterized queries or ORM methods']
-        : []
+      suggestions: violations.length > 0 ? ['Use parameterized queries or ORM methods'] : []
     };
   }
-
   private static async checkXSS(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const lines = code.split('\n');
 
     // Check for innerHTML or dangerouslySetInnerHTML
     const xssPattern = /(?:innerHTML|dangerouslySetInnerHTML)/gi;
-
     lines.forEach((line, idx) => {
       if (xssPattern.test(line) && !line.includes('sanitize')) {
         violations.push({
@@ -291,14 +252,11 @@ export class QualityGateValidator {
         });
       }
     });
-
     return {
       passed: violations.length === 0,
       score: violations.length === 0 ? 1.0 : 0.0,
       violations,
-      suggestions: violations.length > 0
-        ? ['Use DOMPurify or similar sanitization library']
-        : []
+      suggestions: violations.length > 0 ? ['Use DOMPurify or similar sanitization library'] : []
     };
   }
 
@@ -306,7 +264,6 @@ export class QualityGateValidator {
   private static async checkComplexity(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const functions = this.extractFunctions(code);
-
     functions.forEach(func => {
       const complexity = this.calculateCyclomaticComplexity(func.body);
       if (complexity > 10) {
@@ -318,21 +275,16 @@ export class QualityGateValidator {
         });
       }
     });
-
     return {
       passed: violations.length === 0,
-      score: violations.length === 0 ? 1.0 : Math.max(0, 1 - (violations.length * 0.1)),
+      score: violations.length === 0 ? 1.0 : Math.max(0, 1 - violations.length * 0.1),
       violations,
-      suggestions: violations.length > 0
-        ? ['Break down complex functions into smaller, focused functions']
-        : []
+      suggestions: violations.length > 0 ? ['Break down complex functions into smaller, focused functions'] : []
     };
   }
-
   private static async checkFunctionLength(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const functions = this.extractFunctions(code);
-
     functions.forEach(func => {
       const lines = func.body.split('\n').length;
       if (lines > 50) {
@@ -344,14 +296,11 @@ export class QualityGateValidator {
         });
       }
     });
-
     return {
       passed: violations.length === 0,
-      score: violations.length === 0 ? 1.0 : Math.max(0, 1 - (violations.length * 0.1)),
+      score: violations.length === 0 ? 1.0 : Math.max(0, 1 - violations.length * 0.1),
       violations,
-      suggestions: violations.length > 0
-        ? ['Refactor long functions into smaller, reusable functions']
-        : []
+      suggestions: violations.length > 0 ? ['Refactor long functions into smaller, reusable functions'] : []
     };
   }
 
@@ -359,7 +308,6 @@ export class QualityGateValidator {
   private static async checkConsoleLogs(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const lines = code.split('\n');
-
     lines.forEach((line, idx) => {
       if (/console\.(log|debug|info|warn|error)/.test(line) && !line.includes('// DEBUG')) {
         violations.push({
@@ -370,25 +318,19 @@ export class QualityGateValidator {
         });
       }
     });
-
     return {
       passed: violations.length === 0,
       score: violations.length === 0 ? 1.0 : 0.8,
       violations,
-      suggestions: violations.length > 0
-        ? ['Replace console logs with logger (Winston, Pino, etc.)']
-        : []
+      suggestions: violations.length > 0 ? ['Replace console logs with logger (Winston, Pino, etc.)'] : []
     };
   }
-
   private static async checkErrorHandling(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const functions = this.extractFunctions(code);
-
     functions.forEach(func => {
       const hasAsync = func.signature.includes('async');
       const hasTryCatch = func.body.includes('try') && func.body.includes('catch');
-
       if (hasAsync && !hasTryCatch) {
         violations.push({
           line: func.line,
@@ -398,14 +340,11 @@ export class QualityGateValidator {
         });
       }
     });
-
     return {
       passed: violations.length === 0,
       score: violations.length === 0 ? 1.0 : 0.5,
       violations,
-      suggestions: violations.length > 0
-        ? ['Add try-catch blocks to async functions']
-        : []
+      suggestions: violations.length > 0 ? ['Add try-catch blocks to async functions'] : []
     };
   }
 
@@ -413,9 +352,7 @@ export class QualityGateValidator {
   private static async checkSyncFileIO(code: string): Promise<RuleResult> {
     const violations: Violation[] = [];
     const lines = code.split('\n');
-
     const syncMethods = ['readFileSync', 'writeFileSync', 'readdirSync', 'statSync'];
-
     lines.forEach((line, idx) => {
       syncMethods.forEach(method => {
         if (line.includes(method)) {
@@ -428,14 +365,11 @@ export class QualityGateValidator {
         }
       });
     });
-
     return {
       passed: violations.length === 0,
       score: violations.length === 0 ? 1.0 : 0.7,
       violations,
-      suggestions: violations.length > 0
-        ? ['Use async file I/O methods (readFile, writeFile, etc.)']
-        : []
+      suggestions: violations.length > 0 ? ['Use async file I/O methods (readFile, writeFile, etc.)'] : []
     };
   }
 
@@ -445,7 +379,6 @@ export class QualityGateValidator {
     const sum = results.reduce((acc, r) => acc + r.score, 0);
     return sum / results.length;
   }
-
   private async generateFixes(violations: Violation[], code: string): Promise<string[]> {
     const autoFixable = violations.filter(v => v.autoFixable);
     if (autoFixable.length === 0) return [];
@@ -453,7 +386,6 @@ export class QualityGateValidator {
     // Generate automatic fixes for fixable violations
     return autoFixable.map(v => `Line ${v.line}: ${v.message}`);
   }
-
   private static extractFunctions(code: string): Array<{
     name: string;
     line: number;
@@ -461,12 +393,15 @@ export class QualityGateValidator {
     body: string;
   }> {
     // Simple function extraction (could be improved with AST parsing)
-    const functions: Array<{ name: string; line: number; signature: string; body: string }> = [];
+    const functions: Array<{
+      name: string;
+      line: number;
+      signature: string;
+      body: string;
+    }> = [];
     const lines = code.split('\n');
-
     let currentFunction: any = null;
     let braceDepth = 0;
-
     lines.forEach((line, idx) => {
       if (/(?:function|const|let|var)\s+\w+\s*=.*=>|(?:async\s+)?function\s+\w+/.test(line)) {
         currentFunction = {
@@ -476,45 +411,28 @@ export class QualityGateValidator {
           body: ''
         };
       }
-
       if (currentFunction) {
         currentFunction.body += line + '\n';
         braceDepth += (line.match(/{/g) || []).length;
         braceDepth -= (line.match(/}/g) || []).length;
-
         if (braceDepth === 0 && currentFunction.body.includes('{')) {
           functions.push(currentFunction);
           currentFunction = null;
         }
       }
     });
-
     return functions;
   }
-
   private static calculateCyclomaticComplexity(code: string): number {
     // Count decision points
-    const decisionPoints = [
-      /\bif\b/g,
-      /\belse\sif\b/g,
-      /\bfor\b/g,
-      /\bwhile\b/g,
-      /\bcase\b/g,
-      /\bcatch\b/g,
-      /&&/g,
-      /\|\|/g,
-      /\?/g
-    ];
-
+    const decisionPoints = [/\bif\b/g, /\belse\sif\b/g, /\bfor\b/g, /\bwhile\b/g, /\bcase\b/g, /\bcatch\b/g, /&&/g, /\|\|/g, /\?/g];
     let complexity = 1; // Base complexity
 
     decisionPoints.forEach(pattern => {
       const matches = code.match(pattern);
       if (matches) complexity += matches.length;
     });
-
     return complexity;
   }
 }
-
 export default QualityGateValidator;

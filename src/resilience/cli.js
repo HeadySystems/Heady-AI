@@ -1,93 +1,86 @@
 #!/usr/bin/env node
 'use strict';
+
 const logger = require('../utils/logger') || console;
-
-/**
- * create-heady-agent CLI
- * Scaffolds a new HeadyBee agent module for the Heady™ ecosystem
- * 
- * Usage:
- *   create-heady-agent my-bee
- *   create-heady-agent my-bee --template monitor --language typescript
- *   create-heady-agent (interactive)
- */
-
-const { Command } = require('commander');
+const {
+  Command
+} = require('commander');
 const inquirer = require('inquirer');
 const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
-
 const PHI = 1.6180339887;
 const VERSION = '1.0.0';
-
 const TEMPLATES = {
-  basic: { desc: 'Minimal HeadyBee with lifecycle hooks', complexity: 'low' },
-  monitor: { desc: 'Health monitoring bee with PHI-scaled intervals', complexity: 'medium' },
-  processor: { desc: 'Data processing bee with pipeline integration', complexity: 'medium' },
-  connector: { desc: 'External service connector with circuit breaker', complexity: 'high' },
-  creative: { desc: 'Content generation bee with LLM routing', complexity: 'high' },
-  security: { desc: 'Security scanning bee with governance hooks', complexity: 'high' },
+  basic: {
+    desc: 'Minimal HeadyBee with lifecycle hooks',
+    complexity: 'low'
+  },
+  monitor: {
+    desc: 'Health monitoring bee with PHI-scaled intervals',
+    complexity: 'medium'
+  },
+  processor: {
+    desc: 'Data processing bee with pipeline integration',
+    complexity: 'medium'
+  },
+  connector: {
+    desc: 'External service connector with circuit breaker',
+    complexity: 'high'
+  },
+  creative: {
+    desc: 'Content generation bee with LLM routing',
+    complexity: 'high'
+  },
+  security: {
+    desc: 'Security scanning bee with governance hooks',
+    complexity: 'high'
+  }
 };
-
 const program = new Command();
-
-program
-  .name('create-heady-agent')
-  .version(VERSION)
-  .description('Scaffold a new HeadyBee agent for the Heady™ ecosystem')
-  .argument('[name]', 'Agent name (e.g., my-custom-bee)')
-  .option('-t, --template <template>', 'Template to use', 'basic')
-  .option('-l, --language <lang>', 'Language (javascript|typescript)', 'javascript')
-  .option('--no-git', 'Skip git initialization')
-  .option('--no-install', 'Skip npm install')
-  .action(async (name, options) => {
-    try {
-      const config = name
-        ? { name, template: options.template, language: options.language }
-        : await interactivePrompt();
-
-      await scaffold(config, options);
-    } catch (err) {
-      logger.error(chalk.red(`\n❌ Error: ${err.message}\n`));
-      process.exit(1);
-    }
-  });
-
+program.name('create-heady-agent').version(VERSION).description('Scaffold a new HeadyBee agent for the Heady™ ecosystem').argument('[name]', 'Agent name (e.g., my-custom-bee)').option('-t, --template <template>', 'Template to use', 'basic').option('-l, --language <lang>', 'Language (javascript|typescript)', 'javascript').option('--no-git', 'Skip git initialization').option('--no-install', 'Skip npm install').action(async (name, options) => {
+  try {
+    const config = name ? {
+      name,
+      template: options.template,
+      language: options.language
+    } : await interactivePrompt();
+    await scaffold(config, options);
+  } catch (err) {
+    logger.error(chalk.red(`\n❌ Error: ${err.message}\n`));
+    process.exit(1);
+  }
+});
 async function interactivePrompt() {
   logger.info(chalk.yellow(`\n🐝 create-heady-agent v${VERSION}\n`));
-
-  const answers = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'Agent name:',
-      validate: (input) => /^[a-z][a-z0-9-]*$/.test(input) || 'Use lowercase letters, numbers, and hyphens',
-    },
-    {
-      type: 'list',
-      name: 'template',
-      message: 'Template:',
-      choices: Object.entries(TEMPLATES).map(([key, val]) => ({
-        name: `${key} — ${val.desc}`,
-        value: key,
-      })),
-    },
-    {
-      type: 'list',
-      name: 'language',
-      message: 'Language:',
-      choices: ['javascript', 'typescript'],
-    },
-  ]);
-
+  const answers = await inquirer.prompt([{
+    type: 'input',
+    name: 'name',
+    message: 'Agent name:',
+    validate: input => /^[a-z][a-z0-9-]*$/.test(input) || 'Use lowercase letters, numbers, and hyphens'
+  }, {
+    type: 'list',
+    name: 'template',
+    message: 'Template:',
+    choices: Object.entries(TEMPLATES).map(([key, val]) => ({
+      name: `${key} — ${val.desc}`,
+      value: key
+    }))
+  }, {
+    type: 'list',
+    name: 'language',
+    message: 'Language:',
+    choices: ['javascript', 'typescript']
+  }]);
   return answers;
 }
-
 async function scaffold(config, options) {
-  const { name, template, language } = config;
+  const {
+    name,
+    template,
+    language
+  } = config;
   const targetDir = path.resolve(process.cwd(), name);
-
   logger.info(chalk.yellow(`\n🐝 Scaffolding HeadyBee: ${name}`));
   logger.info(chalk.gray(`   Template: ${template}`));
   logger.info(chalk.gray(`   Language: ${language}`));
@@ -112,18 +105,27 @@ async function scaffold(config, options) {
 
   // Git init
   if (options.git !== false) {
-    const { execSync } = require('child_process');
-    execSync('git init', { cwd: targetDir, stdio: 'ignore' });
+    const {
+      execSync
+    } = require('child_process');
+    execSync('git init', {
+      cwd: targetDir,
+      stdio: 'ignore'
+    });
     logger.info(chalk.green('  ✅ Git initialized'));
   }
 
   // npm install
   if (options.install !== false) {
-    const { execSync } = require('child_process');
+    const {
+      execSync
+    } = require('child_process');
     logger.info(chalk.gray('  📦 Installing dependencies...'));
-    execSync('npm install', { cwd: targetDir, stdio: 'inherit' });
+    execSync('npm install', {
+      cwd: targetDir,
+      stdio: 'inherit'
+    });
   }
-
   logger.info(chalk.green(`\n✅ HeadyBee "${name}" created successfully!`));
   logger.info(chalk.gray(`\nNext steps:`));
   logger.info(chalk.white(`  cd ${name}`));
@@ -131,7 +133,6 @@ async function scaffold(config, options) {
   logger.info(chalk.white(`  npm start`));
   logger.info(chalk.gray(`\nDocs: https://headyio.com/docs/create-agent\n`));
 }
-
 async function generatePackageJson(dir, name, template) {
   const pkg = {
     name: `@heady-ai/${name}`,
@@ -143,17 +144,17 @@ async function generatePackageJson(dir, name, template) {
       test: 'jest --coverage',
       'test:watch': 'jest --watch',
       lint: 'eslint src/ tests/',
-      dev: 'node --watch src/index.js',
+      dev: 'node --watch src/index.js'
     },
     keywords: ['heady', 'headybee', 'agent', 'mcp', template],
     author: '',
     license: 'MIT',
     dependencies: {
-      express: '^4.21.0',
+      express: '^4.21.0'
     },
     devDependencies: {
       jest: '^29.0.0',
-      eslint: '^9.0.0',
+      eslint: '^9.0.0'
     },
     heady: {
       type: 'bee',
@@ -161,28 +162,23 @@ async function generatePackageJson(dir, name, template) {
       version: '3.1',
       phi: PHI,
       capabilities: [],
-      rings: 'outer',
-    },
+      rings: 'outer'
+    }
   };
-
   if (template === 'connector') {
     pkg.dependencies['ioredis'] = '^5.0.0';
   }
   if (template === 'creative') {
     pkg.dependencies['@anthropic-ai/sdk'] = '^0.74.0';
   }
-
-  await fs.writeJson(path.join(dir, 'package.json'), pkg, { spaces: 2 });
+  await fs.writeJson(path.join(dir, 'package.json'), pkg, {
+    spaces: 2
+  });
   logger.info(chalk.green('  ✅ package.json'));
 }
-
 async function generateBee(dir, name, template, language) {
   const ext = language === 'typescript' ? 'ts' : 'js';
-  const className = name
-    .split('-')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join('') + 'Bee';
-
+  const className = name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('') + 'Bee';
   const templates = {
     basic: `'use strict';
 
@@ -311,9 +307,8 @@ class ${className} extends EventEmitter {
 }
 
 module.exports = { ${className} };
-`,
+`
   };
-
   const code = templates[template] || templates.basic;
   await fs.writeFile(path.join(dir, 'src', `bee.${ext}`), code);
   logger.info(chalk.green(`  ✅ src/bee.${ext}`));
@@ -347,41 +342,31 @@ process.on('SIGTERM', async () => {
   await fs.writeFile(path.join(dir, 'src', `index.${ext}`), indexCode);
   logger.info(chalk.green(`  ✅ src/index.${ext}`));
 }
-
 async function generateConfig(dir, name, template) {
   const config = {
     bee: {
       name,
       template,
-      version: '0.1.0',
+      version: '0.1.0'
     },
     phi: PHI,
     timing: {
       interval_ms: Math.round(PHI * 5000),
       timeout_ms: Math.round(PHI * PHI * PHI * 1000),
-      backoff_base_ms: 500,
+      backoff_base_ms: 500
     },
     registration: {
-      conductor_url: '${HEADY_CONDUCTOR_URL:-http://localhost:3848}',
+      conductor_url: "${HEADY_CONDUCTOR_URL:-http://0.0.0.0:3848}",
       capabilities: [],
-      ring: 'outer',
-    },
+      ring: 'outer'
+    }
   };
-
-  const yaml = Object.entries(config)
-    .map(([k, v]) => `${k}:\n${JSON.stringify(v, null, 2).split('\n').map(l => '  ' + l).join('\n')}`)
-    .join('\n\n');
-
+  const yaml = Object.entries(config).map(([k, v]) => `${k}:\n${JSON.stringify(v, null, 2).split('\n').map(l => '  ' + l).join('\n')}`).join('\n\n');
   await fs.writeFile(path.join(dir, 'configs', 'bee-config.yaml'), `# ${name} HeadyBee Configuration\n# PHI = ${PHI}\n\n${yaml}`);
   logger.info(chalk.green('  ✅ configs/bee-config.yaml'));
 }
-
 async function generateTests(dir, name, template) {
-  const className = name
-    .split('-')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join('') + 'Bee';
-
+  const className = name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('') + 'Bee';
   const testCode = `'use strict';
 
 const { ${className} } = require('./bee');
@@ -426,11 +411,9 @@ describe('${className}', () => {
   });
 });
 `;
-
   await fs.writeFile(path.join(dir, 'tests', 'bee.test.js'), testCode);
   logger.info(chalk.green('  ✅ tests/bee.test.js'));
 }
-
 async function generateCI(dir, name) {
   const ci = `name: CI
 on: [push, pull_request]
@@ -452,7 +435,6 @@ jobs:
   await fs.writeFile(path.join(dir, '.github', 'workflows', 'ci.yml'), ci);
   logger.info(chalk.green('  ✅ .github/workflows/ci.yml'));
 }
-
 async function generateReadme(dir, name, template) {
   const readme = `# @heady-ai/${name}
 
@@ -488,10 +470,8 @@ MIT
   await fs.writeFile(path.join(dir, 'README.md'), readme);
   logger.info(chalk.green('  ✅ README.md'));
 }
-
 async function generateGitignore(dir) {
   await fs.writeFile(path.join(dir, '.gitignore'), `node_modules/\ncoverage/\n.env\n.env.*\ndist/\n*.log\n`);
   logger.info(chalk.green('  ✅ .gitignore'));
 }
-
 program.parse();

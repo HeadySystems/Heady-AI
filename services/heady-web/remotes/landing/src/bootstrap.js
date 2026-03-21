@@ -1,9 +1,16 @@
+const { createLogger } = require('../../../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * HeadySystems Landing — Webpack Remote Entry Bootstrap
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
-import('./mount').then(({ mount }) => {
+import('./mount').then(({
+  mount
+}) => {
   const container = document.getElementById('heady-root') || document.body;
-  mount(container, { autoMount: true, theme: 'dark' });
-}).catch((err) => console.error('[Landing] Bootstrap failed:', err));
+  mount(container, {
+    autoMount: true,
+    theme: 'dark'
+  });
+}).catch(err => logger.error('[Landing] Bootstrap failed:', err));

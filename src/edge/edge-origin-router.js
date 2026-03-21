@@ -35,14 +35,21 @@ const logger = createLogger('edge-origin-router');
  * These are the same values as before — verified as correct Fibonacci numbers.
  */
 const COMPLEXITY_WEIGHTS = {
-  TOKEN_ESTIMATE:    fib(9),   // 34 — dominant factor: context length
-  TOOL_COUNT:        fib(8),   // 21 — tool use implies agentic complexity
-  MESSAGE_DEPTH:     fib(7),   // 13 — conversation depth
-  SYSTEM_PROMPT_LEN: fib(6),   //  8 — elaborate system prompts = complex
-  EXPLICIT_HINT:     fib(5),   //  5 — client-provided complexity hint
-  MULTIMODAL:        fib(4),   //  3 — multimodal input
-  REASONING_MODEL:   fib(3),   //  2 — requires chain-of-thought reasoning
-  RAG_CONTEXT:       fib(2),   //  1 — has retrieved context to process
+  TOKEN_ESTIMATE: fib(9),
+  // 34 — dominant factor: context length
+  TOOL_COUNT: fib(8),
+  // 21 — tool use implies agentic complexity
+  MESSAGE_DEPTH: fib(7),
+  // 13 — conversation depth
+  SYSTEM_PROMPT_LEN: fib(6),
+  //  8 — elaborate system prompts = complex
+  EXPLICIT_HINT: fib(5),
+  //  5 — client-provided complexity hint
+  MULTIMODAL: fib(4),
+  //  3 — multimodal input
+  REASONING_MODEL: fib(3),
+  //  2 — requires chain-of-thought reasoning
+  RAG_CONTEXT: fib(2) //  1 — has retrieved context to process
 };
 
 /**
@@ -52,23 +59,25 @@ const COMPLEXITY_WEIGHTS = {
  *   ORIGIN_ONLY = floor(CSL_THRESHOLDS.LOW * 87)      ≈ 60  (low threshold scaled)
  */
 const TIER_THRESHOLDS = {
-  EDGE_ONLY:   Math.floor(CSL_THRESHOLDS.MINIMUM * 50),  // ≈ 25 (CSL noise floor scaled)
-  EDGE_PREFER: Math.floor(CSL_THRESHOLDS.LOW * 87),      // ≈ 60 (CSL LOW scaled to score range)
-  ORIGIN_ONLY: Math.floor(CSL_THRESHOLDS.LOW * 87),      // ≈ 60 (same boundary)
+  EDGE_ONLY: Math.floor(CSL_THRESHOLDS.MINIMUM * 50),
+  // ≈ 25 (CSL noise floor scaled)
+  EDGE_PREFER: Math.floor(CSL_THRESHOLDS.LOW * 87),
+  // ≈ 60 (CSL LOW scaled to score range)
+  ORIGIN_ONLY: Math.floor(CSL_THRESHOLDS.LOW * 87) // ≈ 60 (same boundary)
 };
 
 /**
  * Edge inference timeout (ms) before fallback to origin.
  * phi-scaled: round(1000 × PHI^3) ≈ 4236ms.
  */
-const EDGE_TIMEOUT_MS = Math.round(1000 * Math.pow(PHI, 3));    // ≈ 4236ms (phi-scaled from 1s base)
+const EDGE_TIMEOUT_MS = Math.round(1000 * Math.pow(PHI, 3)); // ≈ 4236ms (phi-scaled from 1s base)
 
 /**
  * Origin request timeout (ms).
  * phi-scaled: round(1000 × PHI^7) ≈ 29034ms ≈ 29s (close to original 30s).
  * PHI^7 × 1000 gives exact phi-continuous derivation.
  */
-const ORIGIN_TIMEOUT_MS = Math.round(1000 * Math.pow(PHI, 7));  // ≈ 29034ms (phi-scaled from 1s base)
+const ORIGIN_TIMEOUT_MS = Math.round(1000 * Math.pow(PHI, 7)); // ≈ 29034ms (phi-scaled from 1s base)
 
 /**
  * Latency measurement ring buffer size.
@@ -82,19 +91,6 @@ const LATENCY_WINDOW = fib(10); // fib(10) = 55 ✓ already Fibonacci — made e
 
 /**
  * @typedef {'edge_only'|'edge_prefer'|'origin_only'} RouteTier
- */
-
-/**
- * @typedef {object} RouteDecision
- * @property {RouteTier} tier
- * @property {'edge'|'origin'} primary - Primary route to attempt
- * @property {'edge'|'origin'|null} fallback - Fallback on failure
- * @property {number} complexityScore
- * @property {string[]} reasons - Human-readable reasons for decision
- * @property {string} requestTag - Unique tag for analytics
- * @property {object} [smartPlacementHint] - Hint for CF Smart Placement
- * @property {number} estimatedLatencyMs - Estimated latency for this route
- * @property {number} estimatedCostNeurons - Estimated Cloudflare Neurons cost
  */
 
 /**
@@ -120,7 +116,10 @@ class LatencyTracker {
   constructor(windowSize = LATENCY_WINDOW) {
     this._edge = new Array(windowSize).fill(null);
     this._origin = new Array(windowSize).fill(null);
-    this._idx = { edge: 0, origin: 0 };
+    this._idx = {
+      edge: 0,
+      origin: 0
+    };
     this._windowSize = windowSize;
   }
 
@@ -137,18 +136,23 @@ class LatencyTracker {
    * @returns {{p50: number, p95: number, count: number}}
    */
   stats(route) {
-    const arr = (route === 'edge' ? this._edge : this._origin)
-      .filter((v) => v !== null)
-      .sort((a, b) => a - b);
-
-    if (arr.length === 0) return { p50: Infinity, p95: Infinity, count: 0 };
+    const arr = (route === 'edge' ? this._edge : this._origin).filter(v => v !== null).sort((a, b) => a - b);
+    if (arr.length === 0) return {
+      p50: Infinity,
+      p95: Infinity,
+      count: 0
+    };
 
     // Phi-harmonic percentile indices:
     //   p50 → PSI ≈ 0.618  (golden ratio conjugate — phi-harmonic median)
     //   p95 → 1 - PSI^3 ≈ 0.854  (phi-harmonic high-percentile)
-    const p50 = arr[Math.floor(arr.length * PSI)];                          // PSI ≈ 0.618
-    const p95 = arr[Math.floor(arr.length * (1 - Math.pow(PSI, 3)))];       // 1 - PSI^3 ≈ 0.854
-    return { p50, p95, count: arr.length };
+    const p50 = arr[Math.floor(arr.length * PSI)]; // PSI ≈ 0.618
+    const p95 = arr[Math.floor(arr.length * (1 - Math.pow(PSI, 3)))]; // 1 - PSI^3 ≈ 0.854
+    return {
+      p50,
+      p95,
+      count: arr.length
+    };
   }
 }
 
@@ -172,7 +176,7 @@ export class EdgeOriginRouter {
     kv = null,
     preferCost = true,
     geoRules = {},
-    costBudgets = {},
+    costBudgets = {}
   }) {
     this.originUrl = originUrl.replace(/\/$/, '');
     this.originApiKey = originApiKey;
@@ -185,7 +189,12 @@ export class EdgeOriginRouter {
     this._latency = new LatencyTracker();
 
     /** Request counters for analytics */
-    this._counters = { edge: 0, origin: 0, fallback: 0, error: 0 };
+    this._counters = {
+      edge: 0,
+      origin: 0,
+      fallback: 0,
+      error: 0
+    };
   }
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -204,15 +213,17 @@ export class EdgeOriginRouter {
     const tier = this._assignTier(score, request);
     const reasons = this._buildReasonList(request, score, tier);
     const requestTag = this._buildRequestTag(request, tier);
-
-    const { primary, fallback } = this._selectRoute(tier, request);
+    const {
+      primary,
+      fallback
+    } = this._selectRoute(tier, request);
     const estimatedLatencyMs = this._estimateLatency(primary);
     const estimatedCostNeurons = this._estimateCost(request, primary);
-
-    const smartPlacementHint = primary === 'origin'
-      ? { placement: 'smart', affinity: 'origin_db', reason: 'origin_heavy_query' }
-      : null;
-
+    const smartPlacementHint = primary === 'origin' ? {
+      placement: 'smart',
+      affinity: 'origin_db',
+      reason: 'origin_heavy_query'
+    } : null;
     return {
       tier,
       primary,
@@ -222,7 +233,7 @@ export class EdgeOriginRouter {
       requestTag,
       smartPlacementHint,
       estimatedLatencyMs,
-      estimatedCostNeurons,
+      estimatedCostNeurons
     };
   }
 
@@ -236,13 +247,10 @@ export class EdgeOriginRouter {
    */
   async route(routerRequest, httpRequest, env) {
     const decision = this.decide(routerRequest);
-
     let response = null;
     let routeUsed = decision.primary;
     let fallbackUsed = false;
-
     const startTime = Date.now();
-
     try {
       if (decision.primary === 'edge') {
         response = await this._callEdge(httpRequest, env, decision);
@@ -253,12 +261,10 @@ export class EdgeOriginRouter {
       }
     } catch (primaryErr) {
       logger.warn(`[EdgeOriginRouter] primary route (${decision.primary}) failed:`, primaryErr.message);
-
       if (decision.fallback) {
         fallbackUsed = true;
         routeUsed = decision.fallback;
         this._counters.fallback++;
-
         try {
           if (decision.fallback === 'origin') {
             response = await this._callOrigin(httpRequest, decision);
@@ -274,7 +280,6 @@ export class EdgeOriginRouter {
         throw primaryErr;
       }
     }
-
     const latencyMs = Date.now() - startTime;
     this._latency.record(routeUsed, latencyMs);
 
@@ -285,16 +290,15 @@ export class EdgeOriginRouter {
     mutableHeaders.set('X-Heady-Complexity', String(decision.complexityScore));
     mutableHeaders.set('X-Heady-Latency', String(latencyMs));
     if (fallbackUsed) mutableHeaders.set('X-Heady-Fallback', '1');
-
     return {
       response: new Response(response.body, {
         status: response.status,
         statusText: response.statusText,
-        headers: mutableHeaders,
+        headers: mutableHeaders
       }),
       route: routeUsed,
       tag: decision.requestTag,
-      fallbackUsed,
+      fallbackUsed
     };
   }
 
@@ -304,15 +308,17 @@ export class EdgeOriginRouter {
    */
   getStats() {
     return {
-      counters: { ...this._counters },
+      counters: {
+        ...this._counters
+      },
       latency: {
         edge: this._latency.stats('edge'),
-        origin: this._latency.stats('origin'),
+        origin: this._latency.stats('origin')
       },
       config: {
         originUrl: this.originUrl,
-        preferCost: this.preferCost,
-      },
+        preferCost: this.preferCost
+      }
     };
   }
 
@@ -334,22 +340,21 @@ export class EdgeOriginRouter {
     const tokenEst = req.tokenEstimate ?? Math.ceil(totalChars / 4);
 
     // TOKEN_ESTIMATE: normalized to 0–34
-    score += Math.min((tokenEst / 2000) * COMPLEXITY_WEIGHTS.TOKEN_ESTIMATE, COMPLEXITY_WEIGHTS.TOKEN_ESTIMATE);
+    score += Math.min(tokenEst / 2000 * COMPLEXITY_WEIGHTS.TOKEN_ESTIMATE, COMPLEXITY_WEIGHTS.TOKEN_ESTIMATE);
 
     // TOOL_COUNT: each tool adds complexity
     const toolCount = req.tools?.length ?? 0;
     score += Math.min(toolCount * 5, COMPLEXITY_WEIGHTS.TOOL_COUNT);
 
     // MESSAGE_DEPTH: conversation turns
-    score += Math.min((messages.length / 10) * COMPLEXITY_WEIGHTS.MESSAGE_DEPTH, COMPLEXITY_WEIGHTS.MESSAGE_DEPTH);
+    score += Math.min(messages.length / 10 * COMPLEXITY_WEIGHTS.MESSAGE_DEPTH, COMPLEXITY_WEIGHTS.MESSAGE_DEPTH);
 
     // SYSTEM_PROMPT_LEN
-    const systemLen = messages.find((m) => m.role === 'system')?.content?.length ?? 0;
-    score += Math.min((systemLen / 500) * COMPLEXITY_WEIGHTS.SYSTEM_PROMPT_LEN, COMPLEXITY_WEIGHTS.SYSTEM_PROMPT_LEN);
+    const systemLen = messages.find(m => m.role === 'system')?.content?.length ?? 0;
+    score += Math.min(systemLen / 500 * COMPLEXITY_WEIGHTS.SYSTEM_PROMPT_LEN, COMPLEXITY_WEIGHTS.SYSTEM_PROMPT_LEN);
 
     // EXPLICIT_HINT
-    if (req.complexity === 'high') score += COMPLEXITY_WEIGHTS.EXPLICIT_HINT;
-    else if (req.complexity === 'medium') score += COMPLEXITY_WEIGHTS.EXPLICIT_HINT * 0.5;
+    if (req.complexity === 'high') score += COMPLEXITY_WEIGHTS.EXPLICIT_HINT;else if (req.complexity === 'medium') score += COMPLEXITY_WEIGHTS.EXPLICIT_HINT * 0.5;
 
     // MULTIMODAL
     if (req.multimodal) score += COMPLEXITY_WEIGHTS.MULTIMODAL;
@@ -365,7 +370,6 @@ export class EdgeOriginRouter {
     if (req.type === 'classify' || req.type === 'embed' || req.type === 'rerank') {
       return 5; // Force tier 1
     }
-
     return Math.round(score);
   }
 
@@ -385,7 +389,6 @@ export class EdgeOriginRouter {
     const geoOverride = this.geoRules[req.region];
     if (geoOverride === 'edge_only') return 'edge_only';
     if (geoOverride === 'origin_only') return 'origin_only';
-
     if (score < TIER_THRESHOLDS.EDGE_ONLY) return 'edge_only';
     if (score < TIER_THRESHOLDS.ORIGIN_ONLY) return 'edge_prefer';
     return 'origin_only';
@@ -403,15 +406,33 @@ export class EdgeOriginRouter {
       const originStats = this._latency.stats('origin');
       // If edge p95 is less than origin p50, strongly prefer edge
       if (edgeStats.count > 5 && edgeStats.p95 < (originStats.p50 || Infinity)) {
-        return { primary: 'edge', fallback: 'origin' };
+        return {
+          primary: 'edge',
+          fallback: 'origin'
+        };
       }
     }
-
     switch (tier) {
-      case 'edge_only':    return { primary: 'edge', fallback: null };
-      case 'edge_prefer':  return { primary: 'edge', fallback: 'origin' };
-      case 'origin_only':  return { primary: 'origin', fallback: null };
-      default:             return { primary: 'edge', fallback: 'origin' };
+      case 'edge_only':
+        return {
+          primary: 'edge',
+          fallback: null
+        };
+      case 'edge_prefer':
+        return {
+          primary: 'edge',
+          fallback: 'origin'
+        };
+      case 'origin_only':
+        return {
+          primary: 'origin',
+          fallback: null
+        };
+      default:
+        return {
+          primary: 'edge',
+          fallback: 'origin'
+        };
     }
   }
 
@@ -424,7 +445,6 @@ export class EdgeOriginRouter {
    */
   _buildReasonList(req, score, tier) {
     const reasons = [`complexity_score=${score}`, `tier=${tier}`];
-
     if (req.type === 'embed' || req.type === 'classify') reasons.push('fast_path_type');
     if (req.tools?.length > 0) reasons.push(`tool_count=${req.tools.length}`);
     if (req.requiresReasoning) reasons.push('reasoning_model_required');
@@ -432,7 +452,6 @@ export class EdgeOriginRouter {
     if (req.tier === 'enterprise') reasons.push('enterprise_tier_upgrade');
     if (req.region && this.geoRules[req.region]) reasons.push(`geo_override_${this.geoRules[req.region]}`);
     if (this.preferCost) reasons.push('cost_preference_enabled');
-
     return reasons;
   }
 
@@ -494,8 +513,8 @@ export class EdgeOriginRouter {
         ...Object.fromEntries(request.headers),
         'X-Heady-Route': 'edge',
         'X-Heady-Tag': decision.requestTag,
-        'X-Heady-Complexity': String(decision.complexityScore),
-      },
+        'X-Heady-Complexity': String(decision.complexityScore)
+      }
     });
 
     // Use Service Binding if available, otherwise forward to self
@@ -506,22 +525,18 @@ export class EdgeOriginRouter {
     // Fallback: forward to the same origin URL with edge path
     const url = new URL(request.url);
     const edgeUrl = new URL(url.pathname, url.origin);
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), EDGE_TIMEOUT_MS);
-
     try {
       const response = await fetch(edgeUrl.toString(), {
         method: request.method,
         headers: edgeRequest.headers,
         body: request.body,
-        signal: controller.signal,
+        signal: controller.signal
       });
-
       if (!response.ok && response.status >= 500) {
         throw new Error(`Edge returned ${response.status}`);
       }
-
       return response;
     } finally {
       clearTimeout(timeout);
@@ -538,10 +553,8 @@ export class EdgeOriginRouter {
   async _callOrigin(request, decision) {
     const url = new URL(request.url);
     const originUrl = `${this.originUrl}${url.pathname}${url.search}`;
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), ORIGIN_TIMEOUT_MS);
-
     try {
       const response = await fetch(originUrl, {
         method: request.method,
@@ -550,16 +563,14 @@ export class EdgeOriginRouter {
           'Authorization': this.originApiKey ? `Bearer ${this.originApiKey}` : request.headers.get('Authorization') ?? '',
           'X-Heady-Route': 'origin',
           'X-Heady-Tag': decision.requestTag,
-          'X-Heady-Forwarded-By': 'edge-origin-router',
+          'X-Heady-Forwarded-By': 'edge-origin-router'
         },
         body: request.body,
-        signal: controller.signal,
+        signal: controller.signal
       });
-
       if (!response.ok && response.status >= 500) {
         throw new Error(`Origin returned ${response.status}`);
       }
-
       return response;
     } finally {
       clearTimeout(timeout);

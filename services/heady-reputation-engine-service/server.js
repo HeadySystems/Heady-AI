@@ -15,7 +15,14 @@ const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 
 /** Initial ELO rating, derived from Fibonacci */
 const BASE_ELO = FIB[13]; // 233
@@ -25,11 +32,31 @@ const ELO_K = FIB[5] * PHI; // ~8.09
 const REPUTATION_DIMS = ['reliability', 'quality', 'speed', 'security', 'cooperation'];
 /** Trust tiers mapped to CSL */
 const TRUST_TIERS = {
-  UNTRUSTED: { min: 0, max: CSL.MINIMUM, label: 'Untrusted' },
-  PROVISIONAL: { min: CSL.MINIMUM, max: CSL.LOW, label: 'Provisional' },
-  TRUSTED: { min: CSL.LOW, max: CSL.HIGH, label: 'Trusted' },
-  HIGHLY_TRUSTED: { min: CSL.HIGH, max: CSL.CRITICAL, label: 'Highly Trusted' },
-  SOVEREIGN: { min: CSL.CRITICAL, max: 1.0, label: 'Sovereign' }
+  UNTRUSTED: {
+    min: 0,
+    max: CSL.MINIMUM,
+    label: 'Untrusted'
+  },
+  PROVISIONAL: {
+    min: CSL.MINIMUM,
+    max: CSL.LOW,
+    label: 'Provisional'
+  },
+  TRUSTED: {
+    min: CSL.LOW,
+    max: CSL.HIGH,
+    label: 'Trusted'
+  },
+  HIGHLY_TRUSTED: {
+    min: CSL.HIGH,
+    max: CSL.CRITICAL,
+    label: 'Highly Trusted'
+  },
+  SOVEREIGN: {
+    min: CSL.CRITICAL,
+    max: 1.0,
+    label: 'Sovereign'
+  }
 };
 
 /**
@@ -49,12 +76,6 @@ function log(level, msg, meta = {}, correlationId = null) {
     ...meta
   }) + '\n');
 }
-
-/**
- * Phi-backoff delay.
- * @param {number} attempt - Attempt number
- * @returns {number} Delay in ms
- */
 function phiBackoff(attempt) {
   return FIB[Math.min(attempt, FIB.length - 1)] * PSI * 1000;
 }
@@ -110,10 +131,8 @@ class HeadyReputationEngineService {
       }
       if (lowestId) this.entities.delete(lowestId);
     }
-
     const elo = {};
     for (const dim of REPUTATION_DIMS) elo[dim] = BASE_ELO;
-
     const entity = {
       id: entityId,
       type,
@@ -124,11 +143,19 @@ class HeadyReputationEngineService {
       tier: 'TRUSTED',
       registeredAt: Date.now()
     };
-
     this.entities.set(entityId, entity);
     if (!this.endorsementGraph.has(entityId)) this.endorsementGraph.set(entityId, new Set());
-    log('info', 'Entity registered', { entityId, type });
-    return { entityId, type, elo, trustScore: entity.trustScore, tier: entity.tier };
+    log('info', 'Entity registered', {
+      entityId,
+      type
+    });
+    return {
+      entityId,
+      type,
+      elo,
+      trustScore: entity.trustScore,
+      tier: entity.tier
+    };
   }
 
   /**
@@ -144,10 +171,8 @@ class HeadyReputationEngineService {
     const entity = this.entities.get(entityId);
     if (!entity) throw new Error('Entity not found');
     if (!REPUTATION_DIMS.includes(dimension)) throw new Error(`Invalid dimension: ${dimension}`);
-
     const currentElo = entity.elo[dimension];
     let expectedScore;
-
     if (opponentId && this.entities.has(opponentId)) {
       const opponent = this.entities.get(opponentId);
       const opponentElo = opponent.elo[dimension];
@@ -155,7 +180,7 @@ class HeadyReputationEngineService {
       expectedScore = 1 / (1 + Math.pow(FIB[7], (opponentElo - currentElo) / (BASE_ELO * PHI)));
       // Update opponent
       const opponentExpected = 1 - expectedScore;
-      opponent.elo[dimension] = Math.round(opponentElo + ELO_K * ((1 - outcome) - opponentExpected));
+      opponent.elo[dimension] = Math.round(opponentElo + ELO_K * (1 - outcome - opponentExpected));
       this._recalculateTrust(opponentId);
     } else {
       expectedScore = PSI; // Default expected performance
@@ -165,13 +190,15 @@ class HeadyReputationEngineService {
     entity.elo[dimension] = Math.round(currentElo + ELO_K * (outcome - expectedScore));
 
     // Record in Fibonacci-windowed history
-    entity.history.push({ action: dimension, outcome, timestamp: Date.now() });
+    entity.history.push({
+      action: dimension,
+      outcome,
+      timestamp: Date.now()
+    });
     if (entity.history.length > this.historyWindow) {
       entity.history = entity.history.slice(entity.history.length - this.historyWindow);
     }
-
     this._recalculateTrust(entityId);
-
     return {
       entityId,
       dimension,
@@ -206,14 +233,12 @@ class HeadyReputationEngineService {
       security: PHI * PHI * PHI,
       cooperation: PHI
     };
-
     let weightedSum = 0;
     let totalWeight = 0;
     for (const dim of REPUTATION_DIMS) {
       weightedSum += normalizedScores[dim] * weights[dim];
       totalWeight += weights[dim];
     }
-
     const baseScore = weightedSum / totalWeight;
 
     // Endorsement bonus: each endorser contributes their own trust * PSI^distance
@@ -249,15 +274,21 @@ class HeadyReputationEngineService {
     if (!this.entities.has(endorserId)) throw new Error('Endorser not found');
     if (!this.entities.has(endorseeId)) throw new Error('Endorsee not found');
     if (endorserId === endorseeId) throw new Error('Self-endorsement not allowed');
-
     if (!this.endorsementGraph.has(endorseeId)) this.endorsementGraph.set(endorseeId, new Set());
     this.endorsementGraph.get(endorseeId).add(endorserId);
-
     this._recalculateTrust(endorseeId);
-
     const endorsee = this.entities.get(endorseeId);
-    log('info', 'Endorsement recorded', { endorserId, endorseeId, newTrust: endorsee.trustScore });
-    return { endorserId, endorseeId, newTrust: endorsee.trustScore, tier: endorsee.tier };
+    log('info', 'Endorsement recorded', {
+      endorserId,
+      endorseeId,
+      newTrust: endorsee.trustScore
+    });
+    return {
+      endorserId,
+      endorseeId,
+      newTrust: endorsee.trustScore,
+      tier: endorsee.tier
+    };
   }
 
   /**
@@ -271,7 +302,12 @@ class HeadyReputationEngineService {
     if (endorsers) endorsers.delete(endorserId);
     this._recalculateTrust(endorseeId);
     const endorsee = this.entities.get(endorseeId);
-    return { endorserId, endorseeId, newTrust: endorsee?.trustScore, revoked: true };
+    return {
+      endorserId,
+      endorseeId,
+      newTrust: endorsee?.trustScore,
+      revoked: true
+    };
   }
 
   /**
@@ -282,7 +318,6 @@ class HeadyReputationEngineService {
   getProfile(entityId) {
     const entity = this.entities.get(entityId);
     if (!entity) throw new Error('Entity not found');
-
     const endorsers = this.endorsementGraph.get(entityId) || new Set();
     const recentHistory = entity.history.slice(-FIB[7]); // Last 13
 
@@ -291,17 +326,24 @@ class HeadyReputationEngineService {
     const recentAvg = recentHistory.length > 0 ? recentHistory.reduce((s, h) => s + h.outcome, 0) / recentHistory.length : PSI;
     const oldAvg = oldHistory.length > 0 ? oldHistory.reduce((s, h) => s + h.outcome, 0) / oldHistory.length : PSI;
     const trend = recentAvg - oldAvg;
-
     return {
       id: entity.id,
       type: entity.type,
-      elo: { ...entity.elo },
+      elo: {
+        ...entity.elo
+      },
       trustScore: entity.trustScore,
       tier: entity.tier,
       endorserCount: endorsers.size,
       historyLength: entity.history.length,
-      trend: { direction: trend > 0 ? 'improving' : trend < 0 ? 'declining' : 'stable', magnitude: Math.abs(trend) },
-      recentOutcomes: recentHistory.map(h => ({ action: h.action, outcome: h.outcome })),
+      trend: {
+        direction: trend > 0 ? 'improving' : trend < 0 ? 'declining' : 'stable',
+        magnitude: Math.abs(trend)
+      },
+      recentOutcomes: recentHistory.map(h => ({
+        action: h.action,
+        outcome: h.outcome
+      })),
       registeredAt: entity.registeredAt
     };
   }
@@ -315,20 +357,22 @@ class HeadyReputationEngineService {
   leaderboard(type = null, limit = FIB[7]) {
     let entities = Array.from(this.entities.values());
     if (type) entities = entities.filter(e => e.type === type);
-    return entities
-      .sort((a, b) => b.trustScore - a.trustScore)
-      .slice(0, limit)
-      .map(e => ({ id: e.id, type: e.type, trustScore: e.trustScore, tier: e.tier, elo: { ...e.elo } }));
+    return entities.sort((a, b) => b.trustScore - a.trustScore).slice(0, limit).map(e => ({
+      id: e.id,
+      type: e.type,
+      trustScore: e.trustScore,
+      tier: e.tier,
+      elo: {
+        ...e.elo
+      }
+    }));
   }
 
   /** Set up Express routes. @private */
   _setupRoutes() {
     this.app.use(express.json());
-
     this.app.get('/health', (_req, res) => {
-      const avgTrust = this.entities.size > 0
-        ? Array.from(this.entities.values()).reduce((s, e) => s + e.trustScore, 0) / this.entities.size
-        : CSL.HIGH;
+      const avgTrust = this.entities.size > 0 ? Array.from(this.entities.values()).reduce((s, e) => s + e.trustScore, 0) / this.entities.size : CSL.HIGH;
       this._coherence = avgTrust;
       res.json({
         status: avgTrust >= CSL.MEDIUM ? 'healthy' : 'degraded',
@@ -338,39 +382,47 @@ class HeadyReputationEngineService {
         timestamp: new Date().toISOString()
       });
     });
-
     this.app.post('/entity', (req, res) => {
       const result = this.registerEntity(req.body.entityId, req.body.type);
       res.status(201).json(result);
     });
-
     this.app.get('/entity/:id', (req, res) => {
-      try { res.json(this.getProfile(req.params.id)); }
-      catch (err) { res.status(404).json({ error: err.message }); }
+      try {
+        res.json(this.getProfile(req.params.id));
+      } catch (err) {
+        res.status(404).json({
+          error: err.message
+        });
+      }
     });
-
     this.app.post('/entity/:id/outcome', (req, res) => {
       try {
         const result = this.recordOutcome(req.params.id, req.body.dimension, req.body.outcome, req.body.opponentId);
         res.json(result);
       } catch (err) {
-        res.status(400).json({ error: err.message });
+        res.status(400).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/endorse', (req, res) => {
-      try { res.json(this.endorse(req.body.endorserId, req.body.endorseeId)); }
-      catch (err) { res.status(400).json({ error: err.message }); }
+      try {
+        res.json(this.endorse(req.body.endorserId, req.body.endorseeId));
+      } catch (err) {
+        res.status(400).json({
+          error: err.message
+        });
+      }
     });
-
     this.app.delete('/endorse', (req, res) => {
       const result = this.revokeEndorsement(req.body.endorserId, req.body.endorseeId);
       res.json(result);
     });
-
     this.app.get('/leaderboard', (req, res) => {
       const limit = parseInt(req.query.limit) || FIB[7];
-      res.json({ leaderboard: this.leaderboard(req.query.type || null, limit) });
+      res.json({
+        leaderboard: this.leaderboard(req.query.type || null, limit)
+      });
     });
   }
 
@@ -378,10 +430,12 @@ class HeadyReputationEngineService {
   async start() {
     if (this._started) return;
     this._setupRoutes();
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server = this.app.listen(this.port, () => {
         this._started = true;
-        log('info', 'HeadyReputationEngineService started', { port: this.port });
+        log('info', 'HeadyReputationEngineService started', {
+          port: this.port
+        });
         resolve();
       });
     });
@@ -390,7 +444,7 @@ class HeadyReputationEngineService {
   /** @returns {Promise<void>} */
   async stop() {
     if (!this._started) return;
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.close(() => {
         this._started = false;
         log('info', 'HeadyReputationEngineService stopped');
@@ -401,8 +455,21 @@ class HeadyReputationEngineService {
 
   /** @returns {Object} Health */
   health() {
-    return { status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded', coherence: this._coherence, trackedEntities: this.entities.size };
+    return {
+      status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
+      coherence: this._coherence,
+      trackedEntities: this.entities.size
+    };
   }
 }
-
-module.exports = { HeadyReputationEngineService, PHI, PSI, FIB, CSL, REPUTATION_DIMS, TRUST_TIERS, BASE_ELO, phiBackoff };
+module.exports = {
+  HeadyReputationEngineService,
+  PHI,
+  PSI,
+  FIB,
+  CSL,
+  REPUTATION_DIMS,
+  TRUST_TIERS,
+  BASE_ELO,
+  phiBackoff
+};

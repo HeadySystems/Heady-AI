@@ -30,7 +30,7 @@ const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
  */
 class Config {
   constructor() {
-    this.redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+    this.redisUrl = process.env.REDIS_URL || "redis://redis:6379";
     this.postgresUrl = process.env.DATABASE_URL || 'postgresql://localhost/heady';
     this.pineconeApiKey = process.env.PINECONE_API_KEY || '';
     this.pineconeIndex = process.env.PINECONE_INDEX || 'task-router';
@@ -46,7 +46,6 @@ class Config {
 
     this.validate();
   }
-
   validate() {
     if (!this.redisUrl) {
       throw new Error('REDIS_URL environment variable is required');
@@ -55,14 +54,13 @@ class Config {
       throw new Error('DATABASE_URL environment variable is required');
     }
   }
-
   toJSON() {
     return {
       nodeEnv: this.nodeEnv,
       port: this.port,
       logLevel: this.logLevel,
       heartbeatInterval: this.heartbeatInterval,
-      taskQueueTimeout: this.taskQueueTimeout,
+      taskQueueTimeout: this.taskQueueTimeout
     };
   }
 }
@@ -74,28 +72,37 @@ class Config {
 class Logger {
   constructor(level = 'info') {
     this.level = level;
-    this.levelMap = { error: 0, warn: 1, info: 2, debug: 3 };
+    this.levelMap = {
+      error: 0,
+      warn: 1,
+      info: 2,
+      debug: 3
+    };
     this.currentLevel = this.levelMap[level] || 2;
   }
-
   log(level, message, data = {}) {
     if (this.levelMap[level] > this.currentLevel) return;
-
     const timestamp = new Date().toISOString();
     const logEntry = {
       timestamp,
       level,
       message,
-      ...data,
+      ...data
     };
-
     logger.info(JSON.stringify(logEntry));
   }
-
-  error(message, data) { this.log('error', message, data); }
-  warn(message, data) { this.log('warn', message, data); }
-  info(message, data) { this.log('info', message, data); }
-  debug(message, data) { this.log('debug', message, data); }
+  error(message, data) {
+    this.log('error', message, data);
+  }
+  warn(message, data) {
+    this.log('warn', message, data);
+  }
+  info(message, data) {
+    this.log('info', message, data);
+  }
+  debug(message, data) {
+    this.log('debug', message, data);
+  }
 }
 
 // ============================================================================
@@ -110,32 +117,28 @@ class SwarmError extends Error {
     this.details = details;
     this.timestamp = new Date().toISOString();
   }
-
   toJSON() {
     return {
       name: this.name,
       message: this.message,
       code: this.code,
       details: this.details,
-      timestamp: this.timestamp,
+      timestamp: this.timestamp
     };
   }
 }
-
 class TaskDecompositionError extends SwarmError {
   constructor(message, details) {
     super(message, 'TASK_DECOMPOSITION_FAILED', details);
     this.name = 'TaskDecompositionError';
   }
 }
-
 class BeeCapacityError extends SwarmError {
   constructor(message, details) {
     super(message, 'BEE_CAPACITY_EXCEEDED', details);
     this.name = 'BeeCapacityError';
   }
 }
-
 class RoutingError extends SwarmError {
   constructor(message, details) {
     super(message, 'ROUTING_FAILED', details);
@@ -154,20 +157,20 @@ const TaskState = {
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   RETRYING: 'RETRYING',
-  CANCELLED: 'CANCELLED',
+  CANCELLED: 'CANCELLED'
 };
-
 const BeeState = {
   IDLE: 'IDLE',
   WORKING: 'WORKING',
   UNHEALTHY: 'UNHEALTHY',
-  DEAD: 'DEAD',
+  DEAD: 'DEAD'
 };
-
 const CircuitState = {
-  CLOSED: 'CLOSED',    // Normal operation
-  OPEN: 'OPEN',        // Too many failures, reject requests
-  HALF_OPEN: 'HALF_OPEN', // Testing recovery
+  CLOSED: 'CLOSED',
+  // Normal operation
+  OPEN: 'OPEN',
+  // Too many failures, reject requests
+  HALF_OPEN: 'HALF_OPEN' // Testing recovery
 };
 
 // ============================================================================
@@ -190,7 +193,7 @@ class BeeWorker extends EventEmitter {
       lastHeartbeat: Date.now(),
       successCount: 0,
       failureCount: 0,
-      totalExecutionTime: 0,
+      totalExecutionTime: 0
     };
     this.circuitBreaker = {
       state: CircuitState.CLOSED,
@@ -199,7 +202,7 @@ class BeeWorker extends EventEmitter {
       failureCount: 0,
       successCount: 0,
       lastFailureTime: null,
-      resetTimeout: 60000, // 1 minute
+      resetTimeout: 60000 // 1 minute
     };
     this.executingTasks = new Map();
     this.taskHistory = [];
@@ -209,11 +212,7 @@ class BeeWorker extends EventEmitter {
    * Check if bee can accept a new task
    */
   canAcceptTask() {
-    return (
-      this.currentLoad < this.maxConcurrency &&
-      this.state === BeeState.IDLE &&
-      this.circuitBreaker.state !== CircuitState.OPEN
-    );
+    return this.currentLoad < this.maxConcurrency && this.state === BeeState.IDLE && this.circuitBreaker.state !== CircuitState.OPEN;
   }
 
   /**
@@ -226,48 +225,44 @@ class BeeWorker extends EventEmitter {
         currentLoad: this.currentLoad,
         maxConcurrency: this.maxConcurrency,
         state: this.state,
-        circuitState: this.circuitBreaker.state,
+        circuitState: this.circuitBreaker.state
       });
     }
-
     this.currentLoad++;
     this.state = BeeState.WORKING;
     const startTime = Date.now();
     const taskId = task.id;
-
     this.executingTasks.set(taskId, {
       startTime,
-      task,
+      task
     });
-
     try {
       const result = await executor(task);
       const duration = Date.now() - startTime;
-
       this.healthStatus.successCount++;
       this.healthStatus.totalExecutionTime += duration;
       this.circuitBreaker.successCount++;
 
       // Check if we should transition from HALF_OPEN to CLOSED
-      if (this.circuitBreaker.state === CircuitState.HALF_OPEN &&
-          this.circuitBreaker.successCount >= this.circuitBreaker.successThreshold) {
+      if (this.circuitBreaker.state === CircuitState.HALF_OPEN && this.circuitBreaker.successCount >= this.circuitBreaker.successThreshold) {
         this.circuitBreaker.state = CircuitState.CLOSED;
         this.circuitBreaker.failureCount = 0;
         this.circuitBreaker.successCount = 0;
       }
-
       this.taskHistory.push({
         taskId,
         status: 'success',
         duration,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
-
       this.executingTasks.delete(taskId);
-      return { success: true, result, duration };
+      return {
+        success: true,
+        result,
+        duration
+      };
     } catch (error) {
       const duration = Date.now() - startTime;
-
       this.healthStatus.failureCount++;
       this.circuitBreaker.failureCount++;
       this.circuitBreaker.lastFailureTime = Date.now();
@@ -277,15 +272,13 @@ class BeeWorker extends EventEmitter {
         this.circuitBreaker.state = CircuitState.OPEN;
         this.state = BeeState.UNHEALTHY;
       }
-
       this.taskHistory.push({
         taskId,
         status: 'failure',
         duration,
         error: error.message,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       });
-
       this.executingTasks.delete(taskId);
       throw error;
     } finally {
@@ -318,14 +311,13 @@ class BeeWorker extends EventEmitter {
         this.circuitBreaker.state = CircuitState.HALF_OPEN;
       }
     }
-
     return {
       nodeId: this.nodeId,
       state: this.state,
       currentLoad: this.currentLoad,
       circuitState: this.circuitBreaker.state,
       healthStatus: this.healthStatus,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -334,12 +326,8 @@ class BeeWorker extends EventEmitter {
    */
   getStatus() {
     const recentTasks = this.taskHistory.slice(-10);
-    const successRate = this.healthStatus.successCount /
-      (this.healthStatus.successCount + this.healthStatus.failureCount || 1);
-    const avgExecutionTime = this.healthStatus.successCount > 0
-      ? this.healthStatus.totalExecutionTime / this.healthStatus.successCount
-      : 0;
-
+    const successRate = this.healthStatus.successCount / (this.healthStatus.successCount + this.healthStatus.failureCount || 1);
+    const avgExecutionTime = this.healthStatus.successCount > 0 ? this.healthStatus.totalExecutionTime / this.healthStatus.successCount : 0;
     return {
       nodeId: this.nodeId,
       capabilities: this.capabilities,
@@ -350,9 +338,9 @@ class BeeWorker extends EventEmitter {
       healthStatus: {
         ...this.healthStatus,
         successRate: Math.round(successRate * 100),
-        avgExecutionTime: Math.round(avgExecutionTime),
+        avgExecutionTime: Math.round(avgExecutionTime)
       },
-      recentTasks,
+      recentTasks
     };
   }
 }
@@ -373,7 +361,12 @@ class TaskDecomposer {
    * Decompose a task into subtasks based on complexity and dependencies
    */
   decompose(task) {
-    const { id, type, payload, complexity = 'simple' } = task;
+    const {
+      id,
+      type,
+      payload,
+      complexity = 'simple'
+    } = task;
     const subtasks = [];
     const dependencies = {};
 
@@ -382,24 +375,54 @@ class TaskDecomposer {
       // No decomposition needed
       return {
         taskId: id,
-        subtasks: [{ ...task, level: 0, parents: [] }],
-        graph: { [task.id]: { parents: [], children: [] } },
-        executionPlan: [{ level: 0, taskIds: [task.id] }],
+        subtasks: [{
+          ...task,
+          level: 0,
+          parents: []
+        }],
+        graph: {
+          [task.id]: {
+            parents: [],
+            children: []
+          }
+        },
+        executionPlan: [{
+          level: 0,
+          taskIds: [task.id]
+        }]
       };
     }
 
     // Medium complexity: break into 2-3 stages
     if (complexity === 'medium') {
       const stageIds = this.createSubtaskIds(id, 3);
-      const stages = [
-        { id: stageIds[0], type: 'preparation', level: 0, parents: [] },
-        { id: stageIds[1], type: 'execution', level: 1, parents: [stageIds[0]] },
-        { id: stageIds[2], type: 'finalization', level: 2, parents: [stageIds[1]] },
-      ];
-
+      const stages = [{
+        id: stageIds[0],
+        type: 'preparation',
+        level: 0,
+        parents: []
+      }, {
+        id: stageIds[1],
+        type: 'execution',
+        level: 1,
+        parents: [stageIds[0]]
+      }, {
+        id: stageIds[2],
+        type: 'finalization',
+        level: 2,
+        parents: [stageIds[1]]
+      }];
       stages.forEach(stage => {
-        subtasks.push({ ...task, id: stage.id, type: stage.type, level: stage.level });
-        dependencies[stage.id] = { parents: stage.parents, children: [] };
+        subtasks.push({
+          ...task,
+          id: stage.id,
+          type: stage.type,
+          level: stage.level
+        });
+        dependencies[stage.id] = {
+          parents: stage.parents,
+          children: []
+        };
         stage.parents.forEach(parent => {
           dependencies[parent].children.push(stage.id);
         });
@@ -418,18 +441,24 @@ class TaskDecomposer {
           id: subId,
           type: 'analysis',
           subtype: ['validation', 'planning', 'optimization'][idx],
-          level: 0,
+          level: 0
         });
-        dependencies[subId] = { parents: [], children: [stageIds[3]] };
+        dependencies[subId] = {
+          parents: [],
+          children: [stageIds[3]]
+        };
       });
 
       // Integration stage
-      dependencies[stageIds[3]] = { parents: analysisIds, children: [stageIds[4], stageIds[5]] };
+      dependencies[stageIds[3]] = {
+        parents: analysisIds,
+        children: [stageIds[4], stageIds[5]]
+      };
       subtasks.push({
         ...task,
         id: stageIds[3],
         type: 'integration',
-        level: 1,
+        level: 1
       });
 
       // Execution (parallel)
@@ -439,36 +468,40 @@ class TaskDecomposer {
           id: subId,
           type: 'execution',
           subtype: ['primary', 'verification'][idx],
-          level: 2,
+          level: 2
         });
-        dependencies[subId] = { parents: [stageIds[3]], children: [stageIds[6]] };
+        dependencies[subId] = {
+          parents: [stageIds[3]],
+          children: [stageIds[6]]
+        };
       });
 
       // Finalization
-      dependencies[stageIds[6]] = { parents: [stageIds[4], stageIds[5]], children: [] };
+      dependencies[stageIds[6]] = {
+        parents: [stageIds[4], stageIds[5]],
+        children: []
+      };
       subtasks.push({
         ...task,
         id: stageIds[6],
         type: 'finalization',
-        level: 3,
+        level: 3
       });
     }
 
     // Build execution plan (topological sort)
     const executionPlan = this.topologicalSort(dependencies);
-
     this.logger.debug('Task decomposed', {
       originalTaskId: id,
       subtaskCount: subtasks.length,
       complexity,
-      levels: Math.max(...subtasks.map(s => s.level), 0) + 1,
+      levels: Math.max(...subtasks.map(s => s.level), 0) + 1
     });
-
     return {
       taskId: id,
       subtasks,
       graph: dependencies,
-      executionPlan,
+      executionPlan
     };
   }
 
@@ -489,19 +522,15 @@ class TaskDecomposer {
   topologicalSort(dependencies) {
     const inDegree = {};
     const nodes = Object.keys(dependencies);
-
     nodes.forEach(node => {
       inDegree[node] = dependencies[node].parents.length;
     });
-
     const queue = nodes.filter(node => inDegree[node] === 0);
     const result = [];
     let level = 0;
-
     while (queue.length > 0) {
       const currentLevel = [];
       const nextQueue = [];
-
       queue.forEach(node => {
         currentLevel.push(node);
         dependencies[node].children.forEach(child => {
@@ -511,16 +540,16 @@ class TaskDecomposer {
           }
         });
       });
-
       if (currentLevel.length > 0) {
-        result.push({ level, taskIds: currentLevel });
+        result.push({
+          level,
+          taskIds: currentLevel
+        });
         level++;
       }
-
       queue.splice(0);
       queue.push(...nextQueue);
     }
-
     return result;
   }
 
@@ -528,10 +557,16 @@ class TaskDecomposer {
    * Estimate task cost
    */
   estimateCost(task) {
-    const { complexity = 'simple', payload = {} } = task;
-    const baseCost = { simple: 1, medium: 5, complex: 20 };
+    const {
+      complexity = 'simple',
+      payload = {}
+    } = task;
+    const baseCost = {
+      simple: 1,
+      medium: 5,
+      complex: 20
+    };
     const payloadCost = JSON.stringify(payload).length / 100;
-
     return (baseCost[complexity] || 1) + payloadCost;
   }
 }
@@ -563,12 +598,13 @@ class HiveMemory {
       ...task,
       enqueuedAt: Date.now(),
       state: TaskState.PENDING,
-      retryCount: 0,
+      retryCount: 0
     });
-
     this.taskStates.set(task.id, TaskState.PENDING);
-    this.logger.debug('Task enqueued', { taskId: task.id, queueSize: this.taskQueue.length });
-
+    this.logger.debug('Task enqueued', {
+      taskId: task.id,
+      queueSize: this.taskQueue.length
+    });
     return task.id;
   }
 
@@ -581,7 +617,6 @@ class HiveMemory {
     // Simple FIFO - production would use priority queue
     const task = this.taskQueue.shift();
     this.taskStates.set(task.id, TaskState.ASSIGNED);
-
     return task;
   }
 
@@ -590,15 +625,17 @@ class HiveMemory {
    */
   updateTaskState(taskId, newState, metadata = {}) {
     this.taskStates.set(taskId, newState);
-
     const task = this.executionHistory.find(t => t.id === taskId);
     if (task) {
       task.state = newState;
       task.lastUpdate = Date.now();
       Object.assign(task, metadata);
     }
-
-    this.logger.debug('Task state updated', { taskId, newState, metadata });
+    this.logger.debug('Task state updated', {
+      taskId,
+      newState,
+      metadata
+    });
   }
 
   /**
@@ -610,9 +647,8 @@ class HiveMemory {
       result,
       duration,
       timestamp: new Date().toISOString(),
-      state: TaskState.COMPLETED,
+      state: TaskState.COMPLETED
     };
-
     this.executionHistory.push(record);
     this.taskStates.set(taskId, TaskState.COMPLETED);
 
@@ -620,8 +656,10 @@ class HiveMemory {
     if (this.executionHistory.length > 10000) {
       this.executionHistory.shift();
     }
-
-    this.logger.debug('Task execution recorded', { taskId, duration });
+    this.logger.debug('Task execution recorded', {
+      taskId,
+      duration
+    });
   }
 
   /**
@@ -633,13 +671,15 @@ class HiveMemory {
       error: error.message,
       retryCount,
       timestamp: new Date().toISOString(),
-      state: TaskState.FAILED,
+      state: TaskState.FAILED
     };
-
     this.executionHistory.push(record);
     this.taskStates.set(taskId, TaskState.FAILED);
-
-    this.logger.warn('Task failure recorded', { taskId, error: error.message, retryCount });
+    this.logger.warn('Task failure recorded', {
+      taskId,
+      error: error.message,
+      retryCount
+    });
   }
 
   /**
@@ -657,7 +697,7 @@ class HiveMemory {
       queueSize: this.taskQueue.length,
       historySize: this.executionHistory.length,
       totalTasksProcessed: this.executionHistory.length,
-      stateDistribution: this.getStateDistribution(),
+      stateDistribution: this.getStateDistribution()
     };
   }
 
@@ -669,11 +709,9 @@ class HiveMemory {
     Object.values(TaskState).forEach(state => {
       distribution[state] = 0;
     });
-
     this.taskStates.forEach(state => {
       distribution[state]++;
     });
-
     return distribution;
   }
 }
@@ -700,7 +738,9 @@ class HealthMonitor extends EventEmitter {
    */
   registerBee(bee) {
     this.bees.set(bee.nodeId, bee);
-    this.logger.info('Bee registered for health monitoring', { nodeId: bee.nodeId });
+    this.logger.info('Bee registered for health monitoring', {
+      nodeId: bee.nodeId
+    });
   }
 
   /**
@@ -709,13 +749,11 @@ class HealthMonitor extends EventEmitter {
   start() {
     if (this.isRunning) return;
     this.isRunning = true;
-
     this.heartbeatInterval = setInterval(() => {
       this.performHealthCheck();
     }, this.config.heartbeatInterval);
-
     this.logger.info('Health monitor started', {
-      interval: this.config.heartbeatInterval,
+      interval: this.config.heartbeatInterval
     });
   }
 
@@ -736,7 +774,6 @@ class HealthMonitor extends EventEmitter {
    */
   performHealthCheck() {
     const results = [];
-
     this.bees.forEach(bee => {
       const heartbeat = bee.heartbeat();
       results.push(heartbeat);
@@ -745,15 +782,20 @@ class HealthMonitor extends EventEmitter {
       const timeSinceHeartbeat = Date.now() - heartbeat.lastHeartbeat;
       if (timeSinceHeartbeat > 15000) {
         bee.state = BeeState.DEAD;
-        this.emit('bee-dead', { nodeId: bee.nodeId, timeSinceHeartbeat });
+        this.emit('bee-dead', {
+          nodeId: bee.nodeId,
+          timeSinceHeartbeat
+        });
         this.logger.warn('Bee marked as dead', {
           nodeId: bee.nodeId,
-          timeSinceHeartbeat,
+          timeSinceHeartbeat
         });
       }
     });
-
-    this.emit('health-check', { results, timestamp: new Date().toISOString() });
+    this.emit('health-check', {
+      results,
+      timestamp: new Date().toISOString()
+    });
   }
 
   /**
@@ -761,18 +803,16 @@ class HealthMonitor extends EventEmitter {
    */
   getSwarmHealth() {
     const beeHealths = Array.from(this.bees.values()).map(bee => bee.heartbeat());
-
     const healthy = beeHealths.filter(h => h.state !== BeeState.DEAD).length;
     const total = beeHealths.length;
-    const healthPercentage = total > 0 ? (healthy / total) * 100 : 0;
-
+    const healthPercentage = total > 0 ? healthy / total * 100 : 0;
     return {
       timestamp: new Date().toISOString(),
       totalBees: total,
       healthyBees: healthy,
       healthPercentage: Math.round(healthPercentage),
       beeHealths,
-      isHealthy: healthPercentage >= 80,
+      isHealthy: healthPercentage >= 80
     };
   }
 
@@ -780,10 +820,14 @@ class HealthMonitor extends EventEmitter {
    * Auto-respawn failed bee
    */
   respawnBee(nodeId, capabilities) {
-    this.logger.info('Respawning bee', { nodeId });
+    this.logger.info('Respawning bee', {
+      nodeId
+    });
     const newBee = new BeeWorker(nodeId, capabilities);
     this.bees.set(nodeId, newBee);
-    this.emit('bee-respawned', { nodeId });
+    this.emit('bee-respawned', {
+      nodeId
+    });
     return newBee;
   }
 }
@@ -822,16 +866,17 @@ class SwarmProtocol extends EventEmitter {
       type,
       correlationId,
       payload,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
-
-    this.logger.debug('Message sent', { type, correlationId });
+    this.logger.debug('Message sent', {
+      type,
+      correlationId
+    });
     this.emit('message-sent', message);
 
     // Execute registered handlers
     const handlers = this.messageHandlers.get(type) || [];
     const results = [];
-
     for (const handler of handlers) {
       try {
         const result = await handler(payload, correlationId);
@@ -840,12 +885,14 @@ class SwarmProtocol extends EventEmitter {
         this.logger.error('Message handler failed', {
           type,
           correlationId,
-          error: error.message,
+          error: error.message
         });
       }
     }
-
-    return { correlationId, results };
+    return {
+      correlationId,
+      results
+    };
   }
 
   /**
@@ -889,7 +936,7 @@ class SwarmQueen extends EventEmitter {
       totalTasksSubmitted: 0,
       totalTasksCompleted: 0,
       totalTasksFailed: 0,
-      totalExecutionTime: 0,
+      totalExecutionTime: 0
     };
   }
 
@@ -897,46 +944,39 @@ class SwarmQueen extends EventEmitter {
    * Initialize AI node bees
    */
   initializeBees() {
-    const nodeConfigs = [
-      {
-        nodeId: 'CODEMAP',
-        capabilities: ['code-analysis', 'ast-traversal', 'dependency-mapping', 'code-review'],
-        maxConcurrency: 3,
-      },
-      {
-        nodeId: 'JULES',
-        capabilities: ['task-execution', 'build', 'deployment', 'process-management'],
-        maxConcurrency: 5,
-      },
-      {
-        nodeId: 'OBSERVER',
-        capabilities: ['monitoring', 'health-check', 'anomaly-detection', 'logging'],
-        maxConcurrency: 4,
-      },
-      {
-        nodeId: 'BUILDER',
-        capabilities: ['code-generation', 'file-creation', 'infrastructure', 'scaffolding'],
-        maxConcurrency: 3,
-      },
-      {
-        nodeId: 'ATLAS',
-        capabilities: ['knowledge-graph', 'navigation', 'context-retrieval', 'semantics'],
-        maxConcurrency: 6,
-      },
-      {
-        nodeId: 'PYTHIA',
-        capabilities: ['prediction', 'inference', 'pattern-recognition', 'analytics'],
-        maxConcurrency: 4,
-      },
-    ];
-
+    const nodeConfigs = [{
+      nodeId: 'CODEMAP',
+      capabilities: ['code-analysis', 'ast-traversal', 'dependency-mapping', 'code-review'],
+      maxConcurrency: 3
+    }, {
+      nodeId: 'JULES',
+      capabilities: ['task-execution', 'build', 'deployment', 'process-management'],
+      maxConcurrency: 5
+    }, {
+      nodeId: 'OBSERVER',
+      capabilities: ['monitoring', 'health-check', 'anomaly-detection', 'logging'],
+      maxConcurrency: 4
+    }, {
+      nodeId: 'BUILDER',
+      capabilities: ['code-generation', 'file-creation', 'infrastructure', 'scaffolding'],
+      maxConcurrency: 3
+    }, {
+      nodeId: 'ATLAS',
+      capabilities: ['knowledge-graph', 'navigation', 'context-retrieval', 'semantics'],
+      maxConcurrency: 6
+    }, {
+      nodeId: 'PYTHIA',
+      capabilities: ['prediction', 'inference', 'pattern-recognition', 'analytics'],
+      maxConcurrency: 4
+    }];
     nodeConfigs.forEach(config => {
       const bee = new BeeWorker(config.nodeId, config.capabilities, config.maxConcurrency);
       this.bees.set(config.nodeId, bee);
       this.healthMonitor.registerBee(bee);
     });
-
-    this.logger.info('Bees initialized', { count: this.bees.size });
+    this.logger.info('Bees initialized', {
+      count: this.bees.size
+    });
   }
 
   /**
@@ -944,15 +984,17 @@ class SwarmQueen extends EventEmitter {
    */
   start() {
     this.healthMonitor.start();
-    this.logger.info('SwarmQueen started', { beesCount: this.bees.size });
+    this.logger.info('SwarmQueen started', {
+      beesCount: this.bees.size
+    });
 
     // Listen to health events
-    this.healthMonitor.on('bee-dead', (data) => {
+    this.healthMonitor.on('bee-dead', data => {
       this.handleDeadBee(data);
     });
 
     // Listen to protocol messages
-    this.protocol.onMessage('TASK_SUBMIT', (payload) => this.submit(payload));
+    this.protocol.onMessage('TASK_SUBMIT', payload => this.submit(payload));
   }
 
   /**
@@ -965,17 +1007,14 @@ class SwarmQueen extends EventEmitter {
     // Wait for active tasks to complete or timeout
     const timeout = this.config.gracefulShutdownTimeout;
     const startTime = Date.now();
-
     while (this.activeTasks.size > 0 && Date.now() - startTime < timeout) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-
     if (this.activeTasks.size > 0) {
       this.logger.warn('Force stopping with active tasks', {
-        activeTasks: this.activeTasks.size,
+        activeTasks: this.activeTasks.size
       });
     }
-
     this.logger.info('SwarmQueen stopped');
   }
 
@@ -986,13 +1025,11 @@ class SwarmQueen extends EventEmitter {
     if (!task.id) {
       task.id = crypto.randomUUID();
     }
-
     this.stats.totalTasksSubmitted++;
-
     this.logger.info('Task submitted', {
       taskId: task.id,
       type: task.type,
-      complexity: task.complexity,
+      complexity: task.complexity
     });
 
     // Decompose the task
@@ -1002,12 +1039,12 @@ class SwarmQueen extends EventEmitter {
     } catch (error) {
       this.logger.error('Task decomposition failed', {
         taskId: task.id,
-        error: error.message,
+        error: error.message
       });
       this.memory.recordFailure(task.id, error, 0);
       throw new TaskDecompositionError(`Failed to decompose task ${task.id}`, {
         taskId: task.id,
-        error: error.message,
+        error: error.message
       });
     }
 
@@ -1024,7 +1061,7 @@ class SwarmQueen extends EventEmitter {
       decomposition,
       subtaskIds,
       startTime: Date.now(),
-      status: 'executing',
+      status: 'executing'
     });
 
     // Execute the task tree
@@ -1035,7 +1072,10 @@ class SwarmQueen extends EventEmitter {
    * Execute a decomposed task according to execution plan
    */
   async executeDecomposedTask(decomposition, originalTaskId) {
-    const { subtasks, executionPlan } = decomposition;
+    const {
+      subtasks,
+      executionPlan
+    } = decomposition;
     const results = {};
     let failed = false;
 
@@ -1048,10 +1088,12 @@ class SwarmQueen extends EventEmitter {
         const subtask = subtasks.find(s => s.id === taskId);
         return this.executeSubtask(subtask, originalTaskId).catch(error => {
           failed = true;
-          return { taskId, error };
+          return {
+            taskId,
+            error
+          };
         });
       });
-
       const levelResults = await Promise.all(levelPromises);
       levelResults.forEach(result => {
         results[result.taskId] = result;
@@ -1065,7 +1107,6 @@ class SwarmQueen extends EventEmitter {
       activeTask.status = failed ? 'failed' : 'completed';
       activeTask.duration = duration;
       activeTask.results = results;
-
       if (!failed) {
         this.stats.totalTasksCompleted++;
         this.stats.totalExecutionTime += duration;
@@ -1074,14 +1115,12 @@ class SwarmQueen extends EventEmitter {
         this.stats.totalTasksFailed++;
         this.memory.recordFailure(originalTaskId, new Error('Subtask failed'), 0);
       }
-
       this.taskResults.set(originalTaskId, activeTask);
     }
-
     return {
       taskId: originalTaskId,
       status: failed ? 'failed' : 'success',
-      results,
+      results
     };
   }
 
@@ -1091,19 +1130,16 @@ class SwarmQueen extends EventEmitter {
   async executeSubtask(subtask, originalTaskId, retryCount = 0) {
     const maxRetries = 3;
     const bee = this.findOptimalBee(subtask);
-
     if (!bee) {
       const error = new RoutingError(`No available bee for subtask ${subtask.id}`, {
         subtaskId: subtask.id,
-        capabilities: subtask.requiredCapabilities || [],
+        capabilities: subtask.requiredCapabilities || []
       });
-
       if (retryCount < maxRetries) {
         // Wait and retry
         await new Promise(resolve => setTimeout(resolve, FIBONACCI[retryCount] * 1000));
         return this.executeSubtask(subtask, originalTaskId, retryCount + 1);
       }
-
       throw error;
     }
 
@@ -1111,37 +1147,32 @@ class SwarmQueen extends EventEmitter {
     try {
       const result = await bee.executeTask(subtask, this.createTaskExecutor(subtask));
       this.memory.updateTaskState(subtask.id, TaskState.COMPLETED);
-
       this.logger.info('Subtask completed', {
         subtaskId: subtask.id,
         nodeId: bee.nodeId,
-        duration: result.duration,
+        duration: result.duration
       });
-
       return {
         taskId: subtask.id,
         nodeId: bee.nodeId,
         success: true,
         result: result.result,
-        duration: result.duration,
+        duration: result.duration
       };
     } catch (error) {
       this.logger.warn('Subtask failed', {
         subtaskId: subtask.id,
         nodeId: bee.nodeId,
         error: error.message,
-        retryCount,
+        retryCount
       });
-
       if (retryCount < maxRetries) {
         // Exponential backoff using Fibonacci
         const backoffTime = FIBONACCI[Math.min(retryCount, FIBONACCI.length - 1)] * 1000;
         await new Promise(resolve => setTimeout(resolve, backoffTime));
-
         this.memory.updateTaskState(subtask.id, TaskState.RETRYING);
         return this.executeSubtask(subtask, originalTaskId, retryCount + 1);
       }
-
       this.memory.updateTaskState(subtask.id, TaskState.FAILED);
       throw error;
     }
@@ -1156,14 +1187,11 @@ class SwarmQueen extends EventEmitter {
 
     // Filter bees with required capabilities
     this.bees.forEach(bee => {
-      const hasCapabilities = requiredCapabilities.length === 0 ||
-        requiredCapabilities.some(req => bee.capabilities.includes(req));
-
+      const hasCapabilities = requiredCapabilities.length === 0 || requiredCapabilities.some(req => bee.capabilities.includes(req));
       if (hasCapabilities && bee.canAcceptTask()) {
         candidates.push(bee);
       }
     });
-
     if (candidates.length === 0) {
       return null;
     }
@@ -1173,20 +1201,14 @@ class SwarmQueen extends EventEmitter {
     candidates.sort((a, b) => {
       const loadA = a.currentLoad / a.maxConcurrency;
       const loadB = b.currentLoad / b.maxConcurrency;
-      const speedA = a.healthStatus.successCount > 0
-        ? a.healthStatus.totalExecutionTime / a.healthStatus.successCount
-        : Infinity;
-      const speedB = b.healthStatus.successCount > 0
-        ? b.healthStatus.totalExecutionTime / b.healthStatus.successCount
-        : Infinity;
+      const speedA = a.healthStatus.successCount > 0 ? a.healthStatus.totalExecutionTime / a.healthStatus.successCount : Infinity;
+      const speedB = b.healthStatus.successCount > 0 ? b.healthStatus.totalExecutionTime / b.healthStatus.successCount : Infinity;
 
       // PHI-weighted scoring: prefer faster bees with lower load
-      const scoreA = (loadA * PHI) + (speedA / 1000);
-      const scoreB = (loadB * PHI) + (speedB / 1000);
-
+      const scoreA = loadA * PHI + speedA / 1000;
+      const scoreB = loadB * PHI + speedB / 1000;
       return scoreA - scoreB;
     });
-
     return candidates[0];
   }
 
@@ -1194,16 +1216,15 @@ class SwarmQueen extends EventEmitter {
    * Create task executor function
    */
   createTaskExecutor(task) {
-    return async (subtask) => {
+    return async subtask => {
       // Simulate execution based on task type
       const executionTime = this.simulateTaskExecution(subtask);
       await new Promise(resolve => setTimeout(resolve, executionTime));
-
       return {
         taskId: subtask.id,
         status: 'completed',
         executedAt: new Date().toISOString(),
-        payload: subtask.payload,
+        payload: subtask.payload
       };
     };
   }
@@ -1212,7 +1233,11 @@ class SwarmQueen extends EventEmitter {
    * Simulate task execution time based on complexity
    */
   simulateTaskExecution(task) {
-    const baseTime = { simple: 100, medium: 500, complex: 2000 };
+    const baseTime = {
+      simple: 100,
+      medium: 500,
+      complex: 2000
+    };
     const complexity = task.complexity || 'simple';
     const time = baseTime[complexity] || 100;
 
@@ -1224,8 +1249,12 @@ class SwarmQueen extends EventEmitter {
    * Handle dead bee - respawn or remove from rotation
    */
   handleDeadBee(data) {
-    const { nodeId } = data;
-    this.logger.warn('Handling dead bee', { nodeId });
+    const {
+      nodeId
+    } = data;
+    this.logger.warn('Handling dead bee', {
+      nodeId
+    });
 
     // Try to respawn
     const config = Array.from(this.bees.values()).find(b => b.nodeId === nodeId);
@@ -1240,16 +1269,15 @@ class SwarmQueen extends EventEmitter {
   getStatus() {
     const health = this.healthMonitor.getSwarmHealth();
     const queueStats = this.memory.getQueueStats();
-
     return {
       queen: {
         started: true,
         activeTaskCount: this.activeTasks.size,
-        stats: this.stats,
+        stats: this.stats
       },
       bees: health,
       queue: queueStats,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -1260,13 +1288,12 @@ class SwarmQueen extends EventEmitter {
     const activeTask = this.activeTasks.get(taskId);
     const result = this.taskResults.get(taskId);
     const state = this.memory.getTaskState(taskId);
-
     return {
       taskId,
       state,
       active: this.activeTasks.has(taskId),
       activeTask,
-      result,
+      result
     };
   }
 }
@@ -1281,27 +1308,35 @@ class SwarmQueen extends EventEmitter {
 function createHealthEndpoint(swarmQueen) {
   return (req, res) => {
     if (req.method !== 'GET') {
-      res.writeHead(405, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Method not allowed' }));
+      res.writeHead(405, {
+        'Content-Type': 'application/json'
+      });
+      res.end(JSON.stringify({
+        error: 'Method not allowed'
+      }));
       return;
     }
-
     const path = req.url;
-
     if (path === '/health') {
       const status = swarmQueen.getStatus();
       res.writeHead(status.bees.isHealthy ? 200 : 503, {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       });
       res.end(JSON.stringify(status, null, 2));
     } else if (path.startsWith('/health/task/')) {
       const taskId = path.split('/').pop();
       const taskStatus = swarmQueen.getTaskStatus(taskId);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      });
       res.end(JSON.stringify(taskStatus, null, 2));
     } else {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Not found' }));
+      res.writeHead(404, {
+        'Content-Type': 'application/json'
+      });
+      res.end(JSON.stringify({
+        error: 'Not found'
+      }));
     }
   };
 }
@@ -1318,14 +1353,11 @@ async function demonstrateSwarm() {
   logger.info('HeadyBee Swarm Orchestration Engine v3.0 - Demonstration');
   logger.info('Sacred Geometry v4.0 - φ-weighted distributed intelligence');
   logger.info('='.repeat(80) + '\n');
-
   try {
     // Initialize
     const config = new Config();
     const logger = new Logger(config.logLevel);
-
     logger.info('Initializing SwarmQueen', config.toJSON());
-
     const queen = new SwarmQueen(config, logger);
     queen.start();
 
@@ -1337,11 +1369,10 @@ async function demonstrateSwarm() {
       complexity: 'simple',
       payload: {
         code: 'function add(a, b) { return a + b; }',
-        language: 'javascript',
+        language: 'javascript'
       },
-      capabilities: ['code-analysis'],
+      capabilities: ['code-analysis']
     };
-
     const simpleResult = await queen.submit(simpleTask);
     logger.info('Simple Task Result:', JSON.stringify(simpleResult, null, 2));
 
@@ -1353,10 +1384,9 @@ async function demonstrateSwarm() {
       complexity: 'medium',
       payload: {
         service: 'api-gateway',
-        environment: 'staging',
-      },
+        environment: 'staging'
+      }
     };
-
     const mediumResult = await queen.submit(mediumTask);
     logger.info('Medium Task Result:', JSON.stringify(mediumResult, null, 2));
 
@@ -1369,10 +1399,9 @@ async function demonstrateSwarm() {
       payload: {
         fromService: 'legacy-monolith',
         toService: 'microservices',
-        dataRequired: ['users', 'transactions', 'analytics'],
-      },
+        dataRequired: ['users', 'transactions', 'analytics']
+      }
     };
-
     const complexResult = await queen.submit(complexTask);
     logger.info('Complex Task Result:', JSON.stringify(complexResult, null, 2));
 
@@ -1385,7 +1414,6 @@ async function demonstrateSwarm() {
     logger.info('\n--- Graceful Shutdown ---\n');
     await queen.stop();
     logger.info('Swarm shut down successfully');
-
     logger.info('\n' + '='.repeat(80));
     logger.info('Demonstration complete');
     logger.info('='.repeat(80) + '\n');
@@ -1400,34 +1428,16 @@ async function demonstrateSwarm() {
 // ============================================================================
 
 export {
-  // Main classes
-  SwarmQueen,
-  BeeWorker,
-  TaskDecomposer,
-  HiveMemory,
-  HealthMonitor,
-  SwarmProtocol,
-
-  // Configuration
-  Config,
-  Logger,
-
-  // Errors
-  SwarmError,
-  TaskDecompositionError,
-  BeeCapacityError,
-  RoutingError,
-
-  // Enums
-  TaskState,
-  BeeState,
-  CircuitState,
-
-  // Utilities
-  createHealthEndpoint,
-  PHI,
-  FIBONACCI,
-};
+// Main classes
+SwarmQueen, BeeWorker, TaskDecomposer, HiveMemory, HealthMonitor, SwarmProtocol,
+// Configuration
+Config, Logger,
+// Errors
+SwarmError, TaskDecompositionError, BeeCapacityError, RoutingError,
+// Enums
+TaskState, BeeState, CircuitState,
+// Utilities
+createHealthEndpoint, PHI, FIBONACCI };
 
 // ============================================================================
 // SELF-INVOKING DEMONSTRATION (if run directly)

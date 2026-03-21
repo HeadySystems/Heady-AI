@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * Heady MCP Core Services — P0/P1 Infrastructure
  * Tool Dispatch, Session Store, Task Manager, Audit Trail,
@@ -17,13 +19,18 @@ const PHI_INV = 0.618033988749895;
 class ToolDispatchService {
   constructor() {
     this.registry = new Map();
-    this.metrics = { dispatched: 0, errors: 0 };
+    this.metrics = {
+      dispatched: 0,
+      errors: 0
+    };
   }
-
   register(toolName, handler) {
-    this.registry.set(toolName, { handler, registeredAt: Date.now(), invocations: 0 });
+    this.registry.set(toolName, {
+      handler,
+      registeredAt: Date.now(),
+      invocations: 0
+    });
   }
-
   async dispatch(toolName, params, context = {}) {
     const entry = this.registry.get(toolName);
     if (!entry) throw new Error(`Tool not found: ${toolName}`);
@@ -31,20 +38,32 @@ class ToolDispatchService {
     entry.invocations++;
     try {
       const result = await entry.handler(params, context);
-      return { success: true, result };
+      return {
+        success: true,
+        result
+      };
     } catch (err) {
       this.metrics.errors++;
-      return { success: false, error: err.message };
+      return {
+        success: false,
+        error: err.message
+      };
     }
   }
-
   listTools() {
     return Array.from(this.registry.entries()).map(([name, entry]) => ({
-      name, registeredAt: entry.registeredAt, invocations: entry.invocations
+      name,
+      registeredAt: entry.registeredAt,
+      invocations: entry.invocations
     }));
   }
-
-  health() { return { service: 'tool_dispatch', tools: this.registry.size, ...this.metrics }; }
+  health() {
+    return {
+      service: 'tool_dispatch',
+      tools: this.registry.size,
+      ...this.metrics
+    };
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -55,24 +74,38 @@ class SessionStoreService {
     this.sessions = new Map();
     this.ttl = opts.ttl || Math.round(3600000 * PHI);
   }
-
   create(clientId, meta = {}) {
     const id = `sess-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
-    const session = { id, clientId, meta, createdAt: Date.now(), expiresAt: Date.now() + this.ttl, data: {} };
+    const session = {
+      id,
+      clientId,
+      meta,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + this.ttl,
+      data: {}
+    };
     this.sessions.set(id, session);
     return session;
   }
-
   get(sessionId) {
     const s = this.sessions.get(sessionId);
     if (!s) return null;
-    if (Date.now() > s.expiresAt) { this.sessions.delete(sessionId); return null; }
+    if (Date.now() > s.expiresAt) {
+      this.sessions.delete(sessionId);
+      return null;
+    }
     s.expiresAt = Date.now() + this.ttl; // sliding
     return s;
   }
-
-  destroy(sessionId) { return this.sessions.delete(sessionId); }
-  health() { return { service: 'session_store', activeSessions: this.sessions.size }; }
+  destroy(sessionId) {
+    return this.sessions.delete(sessionId);
+  }
+  health() {
+    return {
+      service: 'session_store',
+      activeSessions: this.sessions.size
+    };
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -82,29 +115,36 @@ class TaskManagerService {
   constructor(opts = {}) {
     this.kronosAgent = opts.kronos || null;
   }
-
   async create(taskDef) {
     if (this.kronosAgent) return this.kronosAgent.createTask(taskDef);
-    return { id: `tm-${Date.now()}`, state: 'pending', ...taskDef, createdAt: Date.now() };
+    return {
+      id: `tm-${Date.now()}`,
+      state: 'pending',
+      ...taskDef,
+      createdAt: Date.now()
+    };
   }
-
   async transition(taskId, state, payload) {
     if (this.kronosAgent) return this.kronosAgent.transitionTask(taskId, state, payload);
-    return { taskId, state, updatedAt: Date.now() };
+    return {
+      taskId,
+      state,
+      updatedAt: Date.now()
+    };
   }
-
   async get(taskId) {
     if (this.kronosAgent) return this.kronosAgent.getTask(taskId);
     return null;
   }
-
   async list(filters) {
     if (this.kronosAgent) return this.kronosAgent.listTasks(filters);
     return [];
   }
-
   health() {
-    return { service: 'task_manager', backend: this.kronosAgent ? 'kronos' : 'standalone' };
+    return {
+      service: 'task_manager',
+      backend: this.kronosAgent ? 'kronos' : 'standalone'
+    };
   }
 }
 
@@ -116,22 +156,29 @@ class AuditTrailService {
     this.argusAgent = opts.argus || null;
     this._fallbackLog = [];
   }
-
   record(event) {
     if (this.argusAgent) return this.argusAgent.recordAudit(event);
-    const entry = { seq: this._fallbackLog.length, timestamp: Date.now(), ...event };
+    const entry = {
+      seq: this._fallbackLog.length,
+      timestamp: Date.now(),
+      ...event
+    };
     this._fallbackLog.push(entry);
     return entry;
   }
-
   verify() {
     if (this.argusAgent) return this.argusAgent.verifyAuditChain();
-    return { valid: true, entries: this._fallbackLog.length };
+    return {
+      valid: true,
+      entries: this._fallbackLog.length
+    };
   }
-
   health() {
-    return { service: 'audit_trail', backend: this.argusAgent ? 'argus' : 'standalone',
-      entries: this.argusAgent ? this.argusAgent.auditLog.length : this._fallbackLog.length };
+    return {
+      service: 'audit_trail',
+      backend: this.argusAgent ? 'argus' : 'standalone',
+      entries: this.argusAgent ? this.argusAgent.auditLog.length : this._fallbackLog.length
+    };
   }
 }
 
@@ -146,11 +193,9 @@ class SemanticCacheService {
     this.hits = 0;
     this.misses = 0;
   }
-
   _hashKey(input) {
     return crypto.createHash('sha256').update(JSON.stringify(input)).digest('hex').slice(0, 16);
   }
-
   get(input) {
     const key = this._hashKey(input);
     const entry = this.cache.get(key);
@@ -163,20 +208,28 @@ class SemanticCacheService {
     entry.accessCount++;
     return entry.value;
   }
-
   set(input, value) {
     const key = this._hashKey(input);
     if (this.cache.size >= this.maxSize) {
-      const oldest = Array.from(this.cache.entries())
-        .sort((a, b) => a[1].accessCount - b[1].accessCount)[0];
+      const oldest = Array.from(this.cache.entries()).sort((a, b) => a[1].accessCount - b[1].accessCount)[0];
       if (oldest) this.cache.delete(oldest[0]);
     }
-    this.cache.set(key, { value, createdAt: Date.now(), expiresAt: Date.now() + this.ttl, accessCount: 0 });
+    this.cache.set(key, {
+      value,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + this.ttl,
+      accessCount: 0
+    });
   }
-
   health() {
     const hitRate = this.hits + this.misses > 0 ? this.hits / (this.hits + this.misses) : 0;
-    return { service: 'semantic_cache', entries: this.cache.size, hitRate: hitRate.toFixed(3), hits: this.hits, misses: this.misses };
+    return {
+      service: 'semantic_cache',
+      entries: this.cache.size,
+      hitRate: hitRate.toFixed(3),
+      hits: this.hits,
+      misses: this.misses
+    };
   }
 }
 
@@ -187,34 +240,41 @@ class BeeRegistryService {
   constructor() {
     this.bees = new Map();
   }
-
   register(bee) {
     const entry = {
-      name: bee.name, type: bee.type || 'bee', pool: bee.pool || 'warm',
-      capabilities: bee.capabilities || [], status: 'idle', load: 0,
-      registeredAt: Date.now(), lastHeartbeat: Date.now()
+      name: bee.name,
+      type: bee.type || 'bee',
+      pool: bee.pool || 'warm',
+      capabilities: bee.capabilities || [],
+      status: 'idle',
+      load: 0,
+      registeredAt: Date.now(),
+      lastHeartbeat: Date.now()
     };
     this.bees.set(bee.name, entry);
     return entry;
   }
-
   heartbeat(name) {
     const bee = this.bees.get(name);
-    if (bee) { bee.lastHeartbeat = Date.now(); bee.status = 'active'; }
+    if (bee) {
+      bee.lastHeartbeat = Date.now();
+      bee.status = 'active';
+    }
     return bee;
   }
-
   findByCapability(capability) {
-    return Array.from(this.bees.values())
-      .filter(b => b.capabilities.includes(capability) && b.status !== 'offline')
-      .sort((a, b) => a.load - b.load);
+    return Array.from(this.bees.values()).filter(b => b.capabilities.includes(capability) && b.status !== 'offline').sort((a, b) => a.load - b.load);
   }
-
-  list() { return Array.from(this.bees.values()); }
-
+  list() {
+    return Array.from(this.bees.values());
+  }
   health() {
     const active = Array.from(this.bees.values()).filter(b => b.status === 'active').length;
-    return { service: 'bee_registry', total: this.bees.size, active };
+    return {
+      service: 'bee_registry',
+      total: this.bees.size,
+      active
+    };
   }
 }
 
@@ -227,15 +287,21 @@ class ConductorMCPService {
     this.currentStage = null;
     this.stageHistory = [];
   }
-
   async executeStage(stageId, params = {}) {
     this.pipelineState = 'running';
     this.currentStage = stageId;
-    this.stageHistory.push({ stage: stageId, startedAt: Date.now(), params });
-    console.log(`[CONDUCTOR] Executing stage: ${stageId}`);
-    return { stage: stageId, state: 'running', startedAt: Date.now() };
+    this.stageHistory.push({
+      stage: stageId,
+      startedAt: Date.now(),
+      params
+    });
+    logger.info(`[CONDUCTOR] Executing stage: ${stageId}`);
+    return {
+      stage: stageId,
+      state: 'running',
+      startedAt: Date.now()
+    };
   }
-
   async completeStage(stageId, result = {}) {
     const entry = this.stageHistory.find(s => s.stage === stageId && !s.completedAt);
     if (entry) {
@@ -247,14 +313,20 @@ class ConductorMCPService {
     this.pipelineState = 'idle';
     return entry;
   }
-
   getState() {
-    return { state: this.pipelineState, currentStage: this.currentStage,
+    return {
+      state: this.pipelineState,
+      currentStage: this.currentStage,
       completedStages: this.stageHistory.filter(s => s.completedAt).length,
-      totalStages: this.stageHistory.length };
+      totalStages: this.stageHistory.length
+    };
   }
-
-  health() { return { service: 'conductor_mcp', ...this.getState() }; }
+  health() {
+    return {
+      service: 'conductor_mcp',
+      ...this.getState()
+    };
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -264,11 +336,9 @@ class HealthMCPService {
   constructor() {
     this.services = new Map();
   }
-
   register(name, healthFn) {
     this.services.set(name, healthFn);
   }
-
   async aggregate() {
     const results = {};
     let allHealthy = true;
@@ -277,14 +347,25 @@ class HealthMCPService {
         results[name] = await fn();
         if (results[name].status && results[name].status !== 'healthy') allHealthy = false;
       } catch (err) {
-        results[name] = { status: 'error', error: err.message };
+        results[name] = {
+          status: 'error',
+          error: err.message
+        };
         allHealthy = false;
       }
     }
-    return { overall: allHealthy ? 'healthy' : 'degraded', services: results, checkedAt: Date.now() };
+    return {
+      overall: allHealthy ? 'healthy' : 'degraded',
+      services: results,
+      checkedAt: Date.now()
+    };
   }
-
-  health() { return { service: 'health_mcp', monitored: this.services.size }; }
+  health() {
+    return {
+      service: 'health_mcp',
+      monitored: this.services.size
+    };
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -296,22 +377,27 @@ class TelemetryStreamService {
     this.buffer = [];
     this.maxBuffer = 5000;
   }
-
   record(metric) {
     if (this.argus) return this.argus.recordTelemetry(metric);
-    const point = { timestamp: Date.now(), ...metric };
+    const point = {
+      timestamp: Date.now(),
+      ...metric
+    };
     this.buffer.push(point);
     if (this.buffer.length > this.maxBuffer) this.buffer = this.buffer.slice(-3000);
     return point;
   }
-
   query(service, metric, windowMs) {
     if (this.argus) return this.argus.getTelemetry(service, metric, windowMs);
     const cutoff = Date.now() - (windowMs || 300000);
     return this.buffer.filter(p => p.service === service && p.timestamp >= cutoff);
   }
-
-  health() { return { service: 'telemetry_stream', buffered: this.buffer.length }; }
+  health() {
+    return {
+      service: 'telemetry_stream',
+      buffered: this.buffer.length
+    };
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -321,19 +407,20 @@ class DriftDetectorService {
   constructor(opts = {}) {
     this.argus = opts.argus || null;
   }
-
   setBaseline(service, metric, baseline) {
     if (this.argus) return this.argus.setBaseline(service, metric, baseline);
   }
-
   getAlerts(since) {
     if (this.argus) return this.argus.getDriftAlerts(since);
     return [];
   }
-
-  health() { return { service: 'drift_detector', backend: this.argus ? 'argus' : 'standalone' }; }
+  health() {
+    return {
+      service: 'drift_detector',
+      backend: this.argus ? 'argus' : 'standalone'
+    };
+  }
 }
-
 module.exports = {
   ToolDispatchService,
   SessionStoreService,

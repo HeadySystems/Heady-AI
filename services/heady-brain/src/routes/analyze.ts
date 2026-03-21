@@ -1,10 +1,8 @@
 import { Router, type Router as RouterType } from 'express';
 import { HeadyLogger, validateRequest } from '@heady-ai/core';
 import { z } from 'zod';
-
 export const analyzeRouter: RouterType = Router();
 const logger = new HeadyLogger('heady-brain:analyze');
-
 const AnalyzeRequestSchema = z.object({
   content: z.string().min(1),
   type: z.enum(['code', 'text', 'data']),
@@ -13,17 +11,13 @@ const AnalyzeRequestSchema = z.object({
     includeRecommendations: z.boolean().optional()
   }).optional()
 });
-
 analyzeRouter.post('/', async (req, res, next) => {
   try {
     const data = validateRequest(AnalyzeRequestSchema, req.body);
-
     logger.info('Analysis request received', {
       type: data.type,
       contentLength: data.content.length
     });
-
-    // TODO: Implement actual analysis logic
     res.json({
       analysis: {
         summary: 'Analysis placeholder',
@@ -32,7 +26,6 @@ analyzeRouter.post('/', async (req, res, next) => {
       },
       timestamp: new Date().toISOString()
     });
-
   } catch (error) {
     next(error);
   }

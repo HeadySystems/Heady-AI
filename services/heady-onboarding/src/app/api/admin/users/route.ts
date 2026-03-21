@@ -1,16 +1,19 @@
+import { createLogger } from '../../../../../../utils/logger';
+const logger = createLogger('auto-fixed');
 export const dynamic = "force-dynamic";
-import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
-
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth()
-
+    const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({
+        error: "Unauthorized"
+      }, {
+        status: 401
+      });
     }
-
     const users = await prisma.user.findMany({
       select: {
         id: true,
@@ -31,12 +34,17 @@ export async function GET(req: NextRequest) {
       orderBy: {
         createdAt: "desc"
       }
-    })
-
-    return NextResponse.json({ users, total: users.length })
-
+    });
+    return NextResponse.json({
+      users,
+      total: users.length
+    });
   } catch (error) {
-    console.error("Admin users list error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    logger.error("Admin users list error:", error);
+    return NextResponse.json({
+      error: "Internal server error"
+    }, {
+      status: 500
+    });
   }
 }

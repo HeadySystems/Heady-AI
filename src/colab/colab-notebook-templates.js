@@ -1,46 +1,58 @@
-/**
- * Heady™ Colab Notebook Template Generator v5.0
- * Generates valid .ipynb notebooks for 3 specialized Colab Pro+ runtimes
- * Alpha: Inference & Embedding | Beta: Vector Memory & Search | Gamma: Training & Evolution
- * 
- * @author Eric Haywood — HeadySystems Inc.
- * @license Proprietary — HeadySystems Inc.
- */
-
 'use strict';
 
 const {
-  PHI, PSI, fib, EMBEDDING_DIM, HNSW_PARAMS, COLAB_RUNTIMES,
-  CSL_THRESHOLDS, TIMING, BACKOFF_SEQUENCE, SERVICE_PORTS,
+  PHI,
+  PSI,
+  fib,
+  EMBEDDING_DIM,
+  HNSW_PARAMS,
+  COLAB_RUNTIMES,
+  CSL_THRESHOLDS,
+  TIMING,
+  BACKOFF_SEQUENCE,
+  SERVICE_PORTS
 } = require('../../shared/phi-math');
-const { createLogger } = require('../../shared/logger');
-
+const {
+  createLogger
+} = require('../../shared/logger');
 const logger = createLogger('colab-notebook-templates');
-
 function makeCell(cellType, source, metadata = {}) {
   return {
     cell_type: cellType,
-    metadata: { ...metadata },
+    metadata: {
+      ...metadata
+    },
     source: Array.isArray(source) ? source : source.split('\n').map((l, i, arr) => i < arr.length - 1 ? l + '\n' : l),
-    ...(cellType === 'code' ? { execution_count: null, outputs: [] } : {}),
+    ...(cellType === 'code' ? {
+      execution_count: null,
+      outputs: []
+    } : {})
   };
 }
-
 function makeNotebook(cells) {
   return {
     nbformat: 4,
     nbformat_minor: 5,
     metadata: {
-      kernelspec: { display_name: 'Python 3', language: 'python', name: 'python3' },
-      language_info: { name: 'python', version: '3.10.12' },
+      kernelspec: {
+        display_name: 'Python 3',
+        language: 'python',
+        name: 'python3'
+      },
+      language_info: {
+        name: 'python',
+        version: '3.10.12'
+      },
       accelerator: 'GPU',
       gpuClass: 'premium',
-      colab: { provenance: [], gpuType: 'A100' },
+      colab: {
+        provenance: [],
+        gpuType: 'A100'
+      }
     },
-    cells,
+    cells
   };
 }
-
 class NotebookTemplateGenerator {
   constructor() {
     this.gpuMemoryGB = COLAB_RUNTIMES.GPU_MEMORY_GB;
@@ -49,12 +61,8 @@ class NotebookTemplateGenerator {
     this.checkpointInterval = COLAB_RUNTIMES.CHECKPOINT_INTERVAL_S;
     this.vectorCacheSize = COLAB_RUNTIMES.VECTOR_CACHE_SIZE;
   }
-
   generateAlphaNotebook() {
-    const cells = [
-      makeCell('markdown', `# Heady™ Runtime Alpha — Inference & Embedding Engine\n\n**GPU**: A100 ${this.gpuMemoryGB}GB | **Role**: Model serving, embedding generation\n\n**Author**: Eric Haywood — HeadySystems Inc.`),
-
-      makeCell('code', `# === Setup ===
+    const cells = [makeCell('markdown', `# Heady™ Runtime Alpha — Inference & Embedding Engine\n\n**GPU**: A100 ${this.gpuMemoryGB}GB | **Role**: Model serving, embedding generation\n\n**Author**: Eric Haywood — HeadySystems Inc.`), makeCell('code', `# === Setup ===
 !pip install -q torch transformers sentence-transformers numpy requests fastapi uvicorn
 
 import torch
@@ -75,9 +83,7 @@ GPU_MEMORY_GB = ${this.gpuMemoryGB}    # fib(10) = 55
 HEARTBEAT_INTERVAL = ${fib(7)}        # fib(7) = 13 seconds
 HEALTH_ENDPOINT = "http://localhost:${SERVICE_PORTS.HEADY_HEALTH}/health"
 
-print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "setup_complete", "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"}))`),
-
-      makeCell('code', `# === GPU Memory Management ===
+print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "setup_complete", "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"}))`), makeCell('code', `# === GPU Memory Management ===
 def get_gpu_stats():
     if not torch.cuda.is_available():
         return {"gpu_available": False}
@@ -92,9 +98,7 @@ def get_gpu_stats():
 # Set memory fraction — phi-scaled allocation
 if torch.cuda.is_available():
     torch.cuda.set_per_process_memory_fraction(${PSI.toFixed(4)})  # PSI ≈ 0.618
-    print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "gpu_configured", **get_gpu_stats()}))`),
-
-      makeCell('code', `# === Embedding Model ===
+    print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "gpu_configured", **get_gpu_stats()}))`), makeCell('code', `# === Embedding Model ===
 from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer('all-MiniLM-L6-v2')  # 384-dim output
@@ -122,9 +126,7 @@ def batch_embed(texts, batch_size=BATCH_SIZE):
 
 # Smoke test
 test_embeddings = batch_embed(["Heady Sacred Geometry", "Phi-based scaling"])
-print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "embedding_test_pass", "dim": len(test_embeddings[0])}))`),
-
-      makeCell('code', `# === Inference Loop with Phi-Backoff ===
+print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "embedding_test_pass", "dim": len(test_embeddings[0])}))`), makeCell('code', `# === Inference Loop with Phi-Backoff ===
 BACKOFF_SEQUENCE = ${JSON.stringify(BACKOFF_SEQUENCE)}  # ms
 
 def inference_loop():
@@ -180,19 +182,17 @@ def inference_loop():
             time.sleep(delay)
             attempt += 1
 
-# Uncomment to run: inference_loop()`),
-    ];
-
+# Uncomment to run: inference_loop()`)];
     const nb = makeNotebook(cells);
-    logger.info('notebook_generated', { runtime: 'alpha', role: 'inference-embedding', cells: cells.length });
+    logger.info('notebook_generated', {
+      runtime: 'alpha',
+      role: 'inference-embedding',
+      cells: cells.length
+    });
     return nb;
   }
-
   generateBetaNotebook() {
-    const cells = [
-      makeCell('markdown', `# Heady™ Runtime Beta — Vector Memory & Search Engine\n\n**GPU**: A100 ${this.gpuMemoryGB}GB | **Role**: HNSW index ops, batch similarity, vector memory\n\n**Author**: Eric Haywood — HeadySystems Inc.`),
-
-      makeCell('code', `# === Setup ===
+    const cells = [makeCell('markdown', `# Heady™ Runtime Beta — Vector Memory & Search Engine\n\n**GPU**: A100 ${this.gpuMemoryGB}GB | **Role**: HNSW index ops, batch similarity, vector memory\n\n**Author**: Eric Haywood — HeadySystems Inc.`), makeCell('code', `# === Setup ===
 !pip install -q numpy hnswlib psycopg2-binary pgvector requests
 
 import numpy as np
@@ -212,9 +212,7 @@ VECTOR_CACHE_SIZE = ${this.vectorCacheSize}    # fib(20) = 6765
 CHECKPOINT_INTERVAL = ${this.checkpointInterval}
 HEALTH_ENDPOINT = "http://localhost:${SERVICE_PORTS.HEADY_HEALTH}/health"
 
-print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "setup_complete"}))`),
-
-      makeCell('code', `# === HNSW Index Manager ===
+print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "setup_complete"}))`), makeCell('code', `# === HNSW Index Manager ===
 class VectorMemoryIndex:
     def __init__(self, dim=EMBEDDING_DIM, max_elements=${this.vectorCacheSize}):
         self.dim = dim
@@ -276,9 +274,7 @@ class VectorMemoryIndex:
         }
 
 vmi = VectorMemoryIndex()
-print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "index_ready", **vmi.get_stats()}))`),
-
-      makeCell('code', `# === Batch Similarity & Drift Detection ===
+print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "index_ready", **vmi.get_stats()}))`), makeCell('code', `# === Batch Similarity & Drift Detection ===
 CSL_THRESHOLDS = {
     "MINIMUM": ${CSL_THRESHOLDS.MINIMUM.toFixed(6)},
     "LOW": ${CSL_THRESHOLDS.LOW.toFixed(6)},
@@ -310,19 +306,17 @@ def detect_drift(current_embedding, reference_embedding):
         }))
     return {"similarity": round(sim, 6), "drifted": drifted}
 
-print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "drift_detection_ready"}))`),
-    ];
-
+print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "drift_detection_ready"}))`)];
     const nb = makeNotebook(cells);
-    logger.info('notebook_generated', { runtime: 'beta', role: 'vector-memory-search', cells: cells.length });
+    logger.info('notebook_generated', {
+      runtime: 'beta',
+      role: 'vector-memory-search',
+      cells: cells.length
+    });
     return nb;
   }
-
   generateGammaNotebook() {
-    const cells = [
-      makeCell('markdown', `# Heady™ Runtime Gamma — Training & Evolution Engine\n\n**GPU**: A100 ${this.gpuMemoryGB}GB | **Role**: Fine-tuning, Monte Carlo simulations, evolution\n\n**Author**: Eric Haywood — HeadySystems Inc.`),
-
-      makeCell('code', `# === Setup ===
+    const cells = [makeCell('markdown', `# Heady™ Runtime Gamma — Training & Evolution Engine\n\n**GPU**: A100 ${this.gpuMemoryGB}GB | **Role**: Fine-tuning, Monte Carlo simulations, evolution\n\n**Author**: Eric Haywood — HeadySystems Inc.`), makeCell('code', `# === Setup ===
 !pip install -q torch numpy scipy requests
 
 import torch
@@ -343,9 +337,7 @@ CROSSOVER_RATE = ${PSI.toFixed(6)}      # PSI ≈ 0.618
 MAX_GENERATIONS = ${fib(7)}             # fib(7) = 13
 CHECKPOINT_INTERVAL = ${this.checkpointInterval}
 
-print(json.dumps({"level": "INFO", "service": "colab-gamma", "message": "setup_complete"}))`),
-
-      makeCell('code', `# === Monte Carlo Simulation Engine ===
+print(json.dumps({"level": "INFO", "service": "colab-gamma", "message": "setup_complete"}))`), makeCell('code', `# === Monte Carlo Simulation Engine ===
 class MonteCarloEngine:
     def __init__(self, num_sims=MONTE_CARLO_SIMS):
         self.num_sims = num_sims
@@ -386,9 +378,7 @@ def test_scenario(params, seed=0):
     rng = np.random.RandomState(seed)
     return rng.normal(params.get("mu", 0), params.get("sigma", 1))
 
-mc.simulate(test_scenario, {"mu": PHI, "sigma": PSI})`),
-
-      makeCell('code', `# === Evolution Engine ===
+mc.simulate(test_scenario, {"mu": PHI, "sigma": PSI})`), makeCell('code', `# === Evolution Engine ===
 class EvolutionEngine:
     def __init__(self, dim=EMBEDDING_DIM, pop_size=EVOLUTION_POPULATION):
         self.dim = dim
@@ -465,37 +455,39 @@ class EvolutionEngine:
 
 evo = EvolutionEngine()
 result = evo.evolve(lambda ind: -float(np.sum((ind - np.ones(${EMBEDDING_DIM}) / np.sqrt(${EMBEDDING_DIM}))**2)))
-print(json.dumps({"level": "INFO", "service": "colab-gamma", "message": "evolution_test_complete", **result}))`),
-    ];
-
+print(json.dumps({"level": "INFO", "service": "colab-gamma", "message": "evolution_test_complete", **result}))`)];
     const nb = makeNotebook(cells);
-    logger.info('notebook_generated', { runtime: 'gamma', role: 'training-evolution', cells: cells.length });
+    logger.info('notebook_generated', {
+      runtime: 'gamma',
+      role: 'training-evolution',
+      cells: cells.length
+    });
     return nb;
   }
-
   generateAll() {
     return {
       alpha: this.generateAlphaNotebook(),
       beta: this.generateBetaNotebook(),
-      gamma: this.generateGammaNotebook(),
+      gamma: this.generateGammaNotebook()
     };
   }
-
   saveAll(basePath) {
     const fs = require('fs');
     const path = require('path');
     const notebooks = this.generateAll();
-
     const files = {};
     for (const [name, nb] of Object.entries(notebooks)) {
       const filePath = path.join(basePath, `heady-runtime-${name}.ipynb`);
       fs.writeFileSync(filePath, JSON.stringify(nb, null, 2), 'utf8');
       files[name] = filePath;
-      logger.info('notebook_saved', { runtime: name, path: filePath });
+      logger.info('notebook_saved', {
+        runtime: name,
+        path: filePath
+      });
     }
-
     return files;
   }
 }
-
-module.exports = { NotebookTemplateGenerator };
+module.exports = {
+  NotebookTemplateGenerator
+};

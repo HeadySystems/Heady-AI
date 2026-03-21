@@ -1,15 +1,22 @@
 'use strict';
 
-const { PHI_TIMING } = require('../shared/phi-math');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
 /**
  * @fileoverview MCP transport layer — SSE + JSON-RPC 2.0 over HTTP.
  * Implements the MCP (Model Context Protocol) transport specification.
  * @module mcp/mcp-transport
  */
 
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 const logger = require('../utils/logger');
-const { getAllTools, executeTool } = require('./mcp-tools');
+const {
+  getAllTools,
+  executeTool
+} = require('./mcp-tools');
 
 /**
  * @typedef {Object} JsonRpcRequest
@@ -36,13 +43,27 @@ const { getAllTools, executeTool } = require('./mcp-tools');
  */
 
 const JSONRPC_VERSION = '2.0';
-
 const JSON_RPC_ERRORS = {
-  PARSE_ERROR: { code: -32700, message: 'Parse error' },
-  INVALID_REQUEST: { code: -32600, message: 'Invalid Request' },
-  METHOD_NOT_FOUND: { code: -32601, message: 'Method not found' },
-  INVALID_PARAMS: { code: -32602, message: 'Invalid params' },
-  INTERNAL_ERROR: { code: -32603, message: 'Internal error' },
+  PARSE_ERROR: {
+    code: -32700,
+    message: 'Parse error'
+  },
+  INVALID_REQUEST: {
+    code: -32600,
+    message: 'Invalid Request'
+  },
+  METHOD_NOT_FOUND: {
+    code: -32601,
+    message: 'Method not found'
+  },
+  INVALID_PARAMS: {
+    code: -32602,
+    message: 'Invalid params'
+  },
+  INTERNAL_ERROR: {
+    code: -32603,
+    message: 'Internal error'
+  }
 };
 
 /**
@@ -58,7 +79,6 @@ class MCPTransport extends EventEmitter {
     this._requestCount = 0;
     this._errorCount = 0;
     this._startedAt = new Date().toISOString();
-
     logger.info('[mcp-transport] MCPTransport initialized');
   }
 
@@ -81,18 +101,27 @@ class MCPTransport extends EventEmitter {
     res.setHeader('X-Accel-Buffering', 'no'); // Disable nginx buffering
     const origin = req.headers.origin || '';
     const allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
-    const corsOrigin = allowedOrigins.includes(origin) ? origin : (allowedOrigins[0] || 'https://headyme.com');
+    const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0] || 'https://headyme.com';
     res.setHeader('Access-Control-Allow-Origin', corsOrigin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.flushHeaders();
-
-    const client = { id: clientId, res, connectedAt: new Date(), eventCount: 0 };
+    const client = {
+      id: clientId,
+      res,
+      connectedAt: new Date(),
+      eventCount: 0
+    };
     this._clients.set(clientId, client);
-
-    logger.info(`[mcp-transport] SSE client connected: ${clientId}`, { total: this._clients.size });
+    logger.info(`[mcp-transport] SSE client connected: ${clientId}`, {
+      total: this._clients.size
+    });
 
     // Send initial connection event
-    this._sendRaw(client, 'connected', { clientId, serverTime: new Date().toISOString(), protocolVersion: '1.0' });
+    this._sendRaw(client, 'connected', {
+      clientId,
+      serverTime: new Date().toISOString(),
+      protocolVersion: '1.0'
+    });
 
     // Heartbeat every 30s to keep connection alive
     const heartbeat = setInterval(() => {
@@ -100,21 +129,23 @@ class MCPTransport extends EventEmitter {
         clearInterval(heartbeat);
         return;
       }
-      this._sendRaw(client, 'ping', { ts: Date.now() });
+      this._sendRaw(client, 'ping', {
+        ts: Date.now()
+      });
     }, PHI_TIMING.CYCLE);
 
     // Cleanup on disconnect
     const cleanup = () => {
       clearInterval(heartbeat);
       this._clients.delete(clientId);
-      logger.info(`[mcp-transport] SSE client disconnected: ${clientId}`, { remaining: this._clients.size });
+      logger.info(`[mcp-transport] SSE client disconnected: ${clientId}`, {
+        remaining: this._clients.size
+      });
       this.emit('client:disconnect', clientId);
     };
-
     req.on('close', cleanup);
     req.on('abort', cleanup);
     req.on('error', cleanup);
-
     this.emit('client:connect', clientId);
     return clientId;
   }
@@ -180,7 +211,7 @@ class MCPTransport extends EventEmitter {
 
     // Batch requests
     if (Array.isArray(body)) {
-      const responses = await Promise.all(body.map((r) => this._dispatch(r)));
+      const responses = await Promise.all(body.map(r => this._dispatch(r)));
       return res.json(responses);
     }
 
@@ -189,19 +220,16 @@ class MCPTransport extends EventEmitter {
       this._errorCount++;
       return res.status(400).json(this._errorResponse(null, JSON_RPC_ERRORS.PARSE_ERROR));
     }
-
     if (body.jsonrpc !== JSONRPC_VERSION) {
       this._errorCount++;
       return res.status(400).json(this._errorResponse(body.id || null, JSON_RPC_ERRORS.INVALID_REQUEST));
     }
-
     const response = await this._dispatch(body);
 
     // Notifications (no id) don't get a response body
     if (body.id === undefined && !response.error) {
       return res.status(204).end();
     }
-
     return res.json(response);
   }
 
@@ -212,18 +240,25 @@ class MCPTransport extends EventEmitter {
    * @param {Object} res - Express response
    */
   async handleStreamingRPC(req, res) {
-    const { clientId } = req.query;
-
+    const {
+      clientId
+    } = req.query;
     if (!clientId || !this._clients.has(clientId)) {
-      return res.status(400).json({ error: 'Invalid or missing clientId. Connect to /api/mcp/stream first.' });
+      return res.status(400).json({
+        error: 'Invalid or missing clientId. Connect to /api/mcp/stream first.'
+      });
     }
-
     const body = req.body;
     if (!body || body.jsonrpc !== JSONRPC_VERSION) {
-      return res.status(400).json({ error: 'Invalid JSON-RPC request' });
+      return res.status(400).json({
+        error: 'Invalid JSON-RPC request'
+      });
     }
-
-    res.json({ accepted: true, clientId, requestId: body.id });
+    res.json({
+      accepted: true,
+      clientId,
+      requestId: body.id
+    });
 
     // Dispatch asynchronously and stream result via SSE
     const dispatch = async () => {
@@ -231,7 +266,10 @@ class MCPTransport extends EventEmitter {
         const response = await this._dispatch(body);
         this.sendEvent(clientId, 'rpc:response', response);
       } catch (err) {
-        this.sendEvent(clientId, 'rpc:error', { error: err.message, requestId: body.id });
+        this.sendEvent(clientId, 'rpc:error', {
+          error: err.message,
+          requestId: body.id
+        });
       }
     };
     dispatch();
@@ -244,44 +282,47 @@ class MCPTransport extends EventEmitter {
    * @returns {Promise<JsonRpcResponse>}
    */
   async _dispatch(request) {
-    const { method, params, id } = request;
-
+    const {
+      method,
+      params,
+      id
+    } = request;
     if (!method || typeof method !== 'string') {
       return this._errorResponse(id || null, JSON_RPC_ERRORS.INVALID_REQUEST);
     }
-
-    logger.debug(`[mcp-transport] dispatch: ${method}`, { id });
-
+    logger.debug(`[mcp-transport] dispatch: ${method}`, {
+      id
+    });
     try {
       switch (method) {
         case 'tools/list':
           return this._successResponse(id, await this._handleToolsList(params));
-
         case 'tools/call':
           return this._successResponse(id, await this._handleToolsCall(params));
-
         case 'resources/list':
           return this._successResponse(id, await this._handleResourcesList(params));
-
         case 'prompts/list':
           return this._successResponse(id, await this._handlePromptsList(params));
-
         case 'ping':
-          return this._successResponse(id, { pong: true, ts: Date.now() });
-
+          return this._successResponse(id, {
+            pong: true,
+            ts: Date.now()
+          });
         case 'initialize':
           return this._successResponse(id, this._handleInitialize(params));
-
         default:
           return this._errorResponse(id, {
             ...JSON_RPC_ERRORS.METHOD_NOT_FOUND,
-            message: `Method '${method}' not found`,
+            message: `Method '${method}' not found`
           });
       }
     } catch (err) {
       this._errorCount++;
       logger.error(`[mcp-transport] dispatch error for '${method}': ${err.message}`);
-      return this._errorResponse(id, { ...JSON_RPC_ERRORS.INTERNAL_ERROR, data: err.message });
+      return this._errorResponse(id, {
+        ...JSON_RPC_ERRORS.INTERNAL_ERROR,
+        data: err.message
+      });
     }
   }
 
@@ -294,27 +335,28 @@ class MCPTransport extends EventEmitter {
    */
   async _handleToolsList(params = {}) {
     const tools = getAllTools();
-    const { category, limit, cursor } = params;
-
+    const {
+      category,
+      limit,
+      cursor
+    } = params;
     let filtered = tools;
     if (category) {
-      filtered = filtered.filter((t) => t.category === category);
+      filtered = filtered.filter(t => t.category === category);
     }
-
     const start = cursor ? parseInt(cursor, 10) : 0;
     const pageSize = limit || filtered.length;
     const page = filtered.slice(start, start + pageSize);
     const nextCursor = start + pageSize < filtered.length ? String(start + pageSize) : null;
-
     return {
-      tools: page.map((t) => ({
+      tools: page.map(t => ({
         name: t.name,
         description: t.description,
         category: t.category,
-        inputSchema: t.inputSchema,
+        inputSchema: t.inputSchema
       })),
       nextCursor,
-      total: filtered.length,
+      total: filtered.length
     };
   }
 
@@ -326,22 +368,27 @@ class MCPTransport extends EventEmitter {
    * @returns {Promise<Object>}
    */
   async _handleToolsCall(params = {}) {
-    const { name, arguments: args = {} } = params;
-    if (!name) throw Object.assign(new Error('params.name is required'), { rpcCode: -32602 });
-
+    const {
+      name,
+      arguments: args = {}
+    } = params;
+    if (!name) throw Object.assign(new Error('params.name is required'), {
+      rpcCode: -32602
+    });
     logger.info(`[mcp-transport] executing tool: ${name}`);
     const result = await executeTool(name, args);
 
     // Format as MCP content response
     return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify(result, null, 2),
-        },
-      ],
+      content: [{
+        type: 'text',
+        text: JSON.stringify(result, null, 2)
+      }],
       isError: !result.success,
-      _meta: { tool: name, durationMs: result.durationMs },
+      _meta: {
+        tool: name,
+        durationMs: result.durationMs
+      }
     };
   }
 
@@ -351,58 +398,59 @@ class MCPTransport extends EventEmitter {
    * @returns {Promise<{resources: Array}>}
    */
   async _handleResourcesList(params = {}) {
-    const resources = [
-      {
-        uri: 'heady://memory/store',
-        name: 'HeadyStack Memory Store',
-        description: 'Vector memory store for semantic search',
-        mimeType: 'application/json',
-      },
-      {
-        uri: 'heady://config/current',
-        name: 'Current Configuration',
-        description: 'Active runtime configuration',
-        mimeType: 'application/json',
-      },
-      {
-        uri: 'heady://telemetry/snapshot',
-        name: 'Telemetry Snapshot',
-        description: 'Current system metrics',
-        mimeType: 'application/json',
-      },
-    ];
-
-    return { resources };
+    const resources = [{
+      uri: 'heady://memory/store',
+      name: 'HeadyStack Memory Store',
+      description: 'Vector memory store for semantic search',
+      mimeType: 'application/json'
+    }, {
+      uri: 'heady://config/current',
+      name: 'Current Configuration',
+      description: 'Active runtime configuration',
+      mimeType: 'application/json'
+    }, {
+      uri: 'heady://telemetry/snapshot',
+      name: 'Telemetry Snapshot',
+      description: 'Current system metrics',
+      mimeType: 'application/json'
+    }];
+    return {
+      resources
+    };
   }
-
-  /**
-   * prompts/list — Lists available prompt templates.
-   * @param {Object} [params]
-   * @returns {Promise<{prompts: Array}>}
-   */
   async _handlePromptsList(params = {}) {
-    const prompts = [
-      {
-        name: 'system-health-report',
-        description: 'Generate a system health report',
-        arguments: [{ name: 'detailed', description: 'Include detailed metrics', required: false }],
-      },
-      {
-        name: 'security-audit',
-        description: 'Run a security audit and summarize findings',
-        arguments: [{ name: 'target', description: 'Target directory', required: false }],
-      },
-      {
-        name: 'deployment-plan',
-        description: 'Generate a deployment plan for a target environment',
-        arguments: [
-          { name: 'environment', description: 'Target environment', required: true },
-          { name: 'service', description: 'Service name', required: false },
-        ],
-      },
-    ];
-
-    return { prompts };
+    const prompts = [{
+      name: 'system-health-report',
+      description: 'Generate a system health report',
+      arguments: [{
+        name: 'detailed',
+        description: 'Include detailed metrics',
+        required: false
+      }]
+    }, {
+      name: 'security-audit',
+      description: 'Run a security audit and summarize findings',
+      arguments: [{
+        name: 'target',
+        description: 'Target directory',
+        required: false
+      }]
+    }, {
+      name: 'deployment-plan',
+      description: 'Generate a deployment plan for a target environment',
+      arguments: [{
+        name: 'environment',
+        description: 'Target environment',
+        required: true
+      }, {
+        name: 'service',
+        description: 'Service name',
+        required: false
+      }]
+    }];
+    return {
+      prompts
+    };
   }
 
   /**
@@ -414,15 +462,22 @@ class MCPTransport extends EventEmitter {
     return {
       protocolVersion: '2024-11-05',
       capabilities: {
-        tools: { listChanged: false },
-        resources: { subscribe: false, listChanged: false },
-        prompts: { listChanged: false },
-        logging: {},
+        tools: {
+          listChanged: false
+        },
+        resources: {
+          subscribe: false,
+          listChanged: false
+        },
+        prompts: {
+          listChanged: false
+        },
+        logging: {}
       },
       serverInfo: {
         name: 'HeadyStack MCP Server',
-        version: '1.0.0',
-      },
+        version: '1.0.0'
+      }
     };
   }
 
@@ -435,7 +490,11 @@ class MCPTransport extends EventEmitter {
    * @returns {JsonRpcResponse}
    */
   _successResponse(id, result) {
-    return { jsonrpc: JSONRPC_VERSION, id: id ?? null, result };
+    return {
+      jsonrpc: JSONRPC_VERSION,
+      id: id ?? null,
+      result
+    };
   }
 
   /**
@@ -445,7 +504,11 @@ class MCPTransport extends EventEmitter {
    * @returns {JsonRpcResponse}
    */
   _errorResponse(id, error) {
-    return { jsonrpc: JSONRPC_VERSION, id: id ?? null, error };
+    return {
+      jsonrpc: JSONRPC_VERSION,
+      id: id ?? null,
+      error
+    };
   }
 
   // ─── Transport Stats ───────────────────────────────────────────────────
@@ -460,9 +523,10 @@ class MCPTransport extends EventEmitter {
       totalRequests: this._requestCount,
       totalErrors: this._errorCount,
       startedAt: this._startedAt,
-      uptime: process.uptime(),
+      uptime: process.uptime()
     };
   }
 }
-
-module.exports = { MCPTransport };
+module.exports = {
+  MCPTransport
+};

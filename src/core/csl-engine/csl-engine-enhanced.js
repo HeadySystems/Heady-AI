@@ -22,7 +22,9 @@
 'use strict';
 
 const crypto = require('crypto');
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 
 // ---------------------------------------------------------------------------
 // PHI CONSTANTS — ALL derived from φ = 1.6180339887
@@ -57,14 +59,21 @@ const EPSILON = 1e-10;
  *   - CRITICAL ≈ 0.927               — 1 - PSI⁴/2
  */
 const CSL_THRESHOLDS = Object.freeze({
-  EXECUTE:  PSI,                              // ≈ 0.618
-  CAUTIOUS: PSI * PSI,                        // ≈ 0.382
-  HALT:     PSI * PSI * PSI,                  // ≈ 0.236
-  MINIMUM:  0.5,                              // noise floor
-  LOW:      1 - PSI * 0.5,                   // ≈ 0.691
-  MEDIUM:   1 - PSI * PSI * 0.5,             // ≈ 0.809
-  HIGH:     1 - PSI * PSI * PSI * 0.5,       // ≈ 0.882
-  CRITICAL: 1 - Math.pow(PSI, 4) * 0.5,      // ≈ 0.927
+  EXECUTE: PSI,
+  // ≈ 0.618
+  CAUTIOUS: PSI * PSI,
+  // ≈ 0.382
+  HALT: PSI * PSI * PSI,
+  // ≈ 0.236
+  MINIMUM: 0.5,
+  // noise floor
+  LOW: 1 - PSI * 0.5,
+  // ≈ 0.691
+  MEDIUM: 1 - PSI * PSI * 0.5,
+  // ≈ 0.809
+  HIGH: 1 - PSI * PSI * PSI * 0.5,
+  // ≈ 0.882
+  CRITICAL: 1 - Math.pow(PSI, 4) * 0.5 // ≈ 0.927
 });
 
 /**
@@ -72,9 +81,9 @@ const CSL_THRESHOLDS = Object.freeze({
  * @description Human-readable labels for each CSL confidence zone.
  */
 const ZONE_LABELS = Object.freeze({
-  EXECUTE:  'EXECUTE',
+  EXECUTE: 'EXECUTE',
   CAUTIOUS: 'CAUTIOUS',
-  HALT:     'HALT',
+  HALT: 'HALT'
 });
 
 /**
@@ -82,9 +91,11 @@ const ZONE_LABELS = Object.freeze({
  * @description Tri-state signal codes for risk gate output.
  */
 const SIGNAL_CODES = Object.freeze({
-  ENGAGE: +1,   // riskLevel < CAUTIOUS threshold — safe to proceed
-  HOLD:    0,   // CAUTIOUS ≤ riskLevel < EXECUTE threshold — wait
-  REPEL:  -1,   // riskLevel ≥ EXECUTE threshold — back off
+  ENGAGE: +1,
+  // riskLevel < CAUTIOUS threshold — safe to proceed
+  HOLD: 0,
+  // CAUTIOUS ≤ riskLevel < EXECUTE threshold — wait
+  REPEL: -1 // riskLevel ≥ EXECUTE threshold — back off
 });
 
 // ---------------------------------------------------------------------------
@@ -96,14 +107,14 @@ const SIGNAL_CODES = Object.freeze({
  * @param {number} v
  * @returns {number}
  */
-const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const clamp01 = v => Math.min(1, Math.max(0, v));
 
 /**
  * Sigmoid activation σ(x) = 1 / (1 + e^−x).
  * @param {number} x
  * @returns {number} ∈ (0, 1)
  */
-const sigmoid = (x) => 1 / (1 + Math.exp(-x));
+const sigmoid = x => 1 / (1 + Math.exp(-x));
 
 /**
  * Assert a value is a finite number in [0, 1].
@@ -113,9 +124,7 @@ const sigmoid = (x) => 1 / (1 + Math.exp(-x));
  */
 const assertConfidence = (v, name = 'value') => {
   if (typeof v !== 'number' || !isFinite(v) || v < 0 || v > 1) {
-    throw new TypeError(
-      `CSLScalarEngine: "${name}" must be a finite number in [0, 1]; received ${v}`
-    );
+    throw new TypeError(`CSLScalarEngine: "${name}" must be a finite number in [0, 1]; received ${v}`);
   }
 };
 
@@ -131,9 +140,7 @@ const assertArray = (arr, name = 'values') => {
   }
   arr.forEach((v, i) => {
     if (typeof v !== 'number' || !isFinite(v)) {
-      throw new TypeError(
-        `CSLScalarEngine: "${name}[${i}]" must be a finite number; received ${v}`
-      );
+      throw new TypeError(`CSLScalarEngine: "${name}[${i}]" must be a finite number; received ${v}`);
     }
   });
 };
@@ -167,18 +174,17 @@ class CSLScalarEngine extends EventEmitter {
    */
   constructor(options = {}) {
     super();
-    this._verbose   = options.verbose  !== undefined ? Boolean(options.verbose)  : false;
-    this._strict    = options.strict   !== undefined ? Boolean(options.strict)   : true;
-    this._instanceId = options.instanceId
-      || crypto.randomBytes(8).toString('hex');
-    this._opCount   = 0;
+    this._verbose = options.verbose !== undefined ? Boolean(options.verbose) : false;
+    this._strict = options.strict !== undefined ? Boolean(options.strict) : true;
+    this._instanceId = options.instanceId || crypto.randomBytes(8).toString('hex');
+    this._opCount = 0;
 
     // Expose constants so consumers don't need to import separately
-    this.PHI        = PHI;
-    this.PSI        = PSI;
-    this.PHI_SQ     = PHI_SQ;
-    this.PHI_CUBE   = PHI_CUBE;
-    this.EPSILON    = EPSILON;
+    this.PHI = PHI;
+    this.PSI = PSI;
+    this.PHI_SQ = PHI_SQ;
+    this.PHI_CUBE = PHI_CUBE;
+    this.EPSILON = EPSILON;
     this.THRESHOLDS = CSL_THRESHOLDS;
   }
 
@@ -193,7 +199,12 @@ class CSLScalarEngine extends EventEmitter {
   _trace(method, inputs, result) {
     this._opCount++;
     if (this._verbose) {
-      this.emit('operation', { method, inputs, result, seq: this._opCount });
+      this.emit('operation', {
+        method,
+        inputs,
+        result,
+        seq: this._opCount
+      });
     }
     return result;
   }
@@ -234,7 +245,10 @@ class CSLScalarEngine extends EventEmitter {
     a = this._guard(a, 'a');
     b = this._guard(b, 'b');
     const result = clamp01(Math.sqrt(a * b));
-    return this._trace('cslAnd', { a, b }, result);
+    return this._trace('cslAnd', {
+      a,
+      b
+    }, result);
   }
 
   /**
@@ -258,7 +272,10 @@ class CSLScalarEngine extends EventEmitter {
     a = this._guard(a, 'a');
     b = this._guard(b, 'b');
     const result = clamp01(a + b - a * b);
-    return this._trace('cslOr', { a, b }, result);
+    return this._trace('cslOr', {
+      a,
+      b
+    }, result);
   }
 
   /**
@@ -277,7 +294,9 @@ class CSLScalarEngine extends EventEmitter {
   cslNot(a) {
     a = this._guard(a, 'a');
     const result = clamp01(1 - a);
-    return this._trace('cslNot', { a }, result);
+    return this._trace('cslNot', {
+      a
+    }, result);
   }
 
   /**
@@ -302,7 +321,10 @@ class CSLScalarEngine extends EventEmitter {
     b = this._guard(b, 'b');
     const joint = Math.sqrt(a * b); // = cslAnd raw
     const result = clamp01(Math.abs(a - b) * (1 - joint));
-    return this._trace('cslXor', { a, b }, result);
+    return this._trace('cslXor', {
+      a,
+      b
+    }, result);
   }
 
   /**
@@ -326,7 +348,10 @@ class CSLScalarEngine extends EventEmitter {
     a = this._guard(a, 'a');
     b = this._guard(b, 'b');
     const result = a <= b ? 1 : clamp01(b / (a + EPSILON));
-    return this._trace('cslImplies', { a, b }, result);
+    return this._trace('cslImplies', {
+      a,
+      b
+    }, result);
   }
 
   /**
@@ -350,7 +375,10 @@ class CSLScalarEngine extends EventEmitter {
     const ab = a <= b ? 1 : b / (a + EPSILON);
     const ba = b <= a ? 1 : a / (b + EPSILON);
     const result = clamp01(Math.sqrt(ab * ba));
-    return this._trace('cslEquivalent', { a, b }, result);
+    return this._trace('cslEquivalent', {
+      a,
+      b
+    }, result);
   }
 
   /**
@@ -382,46 +410,28 @@ class CSLScalarEngine extends EventEmitter {
     confidence = this._guard(confidence, 'confidence');
     const zone = this.classify(confidence);
     const result = {
-      execute:    zone === ZONE_LABELS.EXECUTE,
+      execute: zone === ZONE_LABELS.EXECUTE,
       confidence,
       zone,
-      action:     String(action),
+      action: String(action)
     };
-    return this._trace('cslGate', { confidence, action }, result);
+    return this._trace('cslGate', {
+      confidence,
+      action
+    }, result);
   }
-
-  /**
-   * @method cslBlend
-   * @description
-   *   Smooth interpolation between two weight values (high, low) based on
-   *   a sigmoid of the normalised score offset from a pivot τ (tau).
-   *   Temperature is fixed at PSI³ ≈ 0.236, which produces a gentle
-   *   phi-proportioned transition region.
-   *
-   *   Formula:
-   *     t      = σ((score − τ) / temperature)   where temperature = PSI³
-   *     result = t · high + (1 − t) · low
-   *
-   *   When score >> τ the result approaches `high`; when score << τ it
-   *   approaches `low`.
-   *
-   * @param {number} high  — upper weight (score → ∞)
-   * @param {number} low   — lower weight (score → −∞)
-   * @param {number} score — input driver ∈ [0, 1]
-   * @param {number} [tau=PSI] — pivot point (default PSI ≈ 0.618)
-   * @returns {number} Blended value
-   *
-   * @example
-   * engine.cslBlend(1.0, 0.0, 0.618, 0.618); // ≈ 0.5  (at pivot)
-   * engine.cslBlend(1.0, 0.0, 0.9,   0.618); // > 0.5  (above pivot → high)
-   * engine.cslBlend(1.0, 0.0, 0.2,   0.618); // < 0.5  (below pivot → low)
-   */
   cslBlend(high, low, score, tau = PSI) {
     score = this._guard(score, 'score');
     const temperature = Math.pow(PSI, 3); // PSI³ ≈ 0.236
     const t = sigmoid((score - tau) / temperature);
     const result = t * high + (1 - t) * low;
-    return this._trace('cslBlend', { high, low, score, tau, temperature }, result);
+    return this._trace('cslBlend', {
+      high,
+      low,
+      score,
+      tau,
+      temperature
+    }, result);
   }
 
   // -------------------------------------------------------------------------
@@ -454,7 +464,10 @@ class CSLScalarEngine extends EventEmitter {
       return acc + Math.log(clamped + EPSILON);
     }, 0);
     const result = clamp01(Math.exp(logSum / n));
-    return this._trace('geometricMean', { values, n }, result);
+    return this._trace('geometricMean', {
+      values,
+      n
+    }, result);
   }
 
   /**
@@ -487,26 +500,27 @@ class CSLScalarEngine extends EventEmitter {
     // Build phi-geometric default weights
     let w = weights;
     if (!w) {
-      w = Array.from({ length: n }, (_, i) => Math.pow(PSI, i));
+      w = Array.from({
+        length: n
+      }, (_, i) => Math.pow(PSI, i));
     } else {
       assertArray(w, 'weights');
       if (w.length !== n) {
-        throw new RangeError(
-          `CSLScalarEngine: "weights" length (${w.length}) must match "values" length (${n})`
-        );
+        throw new RangeError(`CSLScalarEngine: "weights" length (${w.length}) must match "values" length (${n})`);
       }
     }
-
     const wSum = w.reduce((s, x) => s + x, 0);
     if (wSum < EPSILON) throw new RangeError('CSLScalarEngine: weights must not all be zero');
-
     const logWeightedSum = values.reduce((acc, v, i) => {
       const clamped = clamp01(v);
-      return acc + (w[i] / wSum) * Math.log(clamped + EPSILON);
+      return acc + w[i] / wSum * Math.log(clamped + EPSILON);
     }, 0);
-
     const result = clamp01(Math.exp(logWeightedSum));
-    return this._trace('phiFusion', { values, weights: w, wSum }, result);
+    return this._trace('phiFusion', {
+      values,
+      weights: w,
+      wSum
+    }, result);
   }
 
   // -------------------------------------------------------------------------
@@ -534,7 +548,7 @@ class CSLScalarEngine extends EventEmitter {
   classify(confidence) {
     if (this._strict) assertConfidence(confidence, 'confidence');
     const v = clamp01(confidence);
-    if (v >= CSL_THRESHOLDS.EXECUTE)  return ZONE_LABELS.EXECUTE;
+    if (v >= CSL_THRESHOLDS.EXECUTE) return ZONE_LABELS.EXECUTE;
     if (v >= CSL_THRESHOLDS.CAUTIOUS) return ZONE_LABELS.CAUTIOUS;
     return ZONE_LABELS.HALT;
   }
@@ -554,11 +568,11 @@ class CSLScalarEngine extends EventEmitter {
    * // => 'a3f8...c21e'  (stable for same inputs)
    */
   hashOutput(result) {
-    const serialised = JSON.stringify(result, (_, v) =>
-      typeof v === 'number' ? parseFloat(v.toFixed(15)) : v
-    );
+    const serialised = JSON.stringify(result, (_, v) => typeof v === 'number' ? parseFloat(v.toFixed(15)) : v);
     const hash = crypto.createHash('sha256').update(serialised).digest('hex');
-    return this._trace('hashOutput', { resultType: typeof result }, hash);
+    return this._trace('hashOutput', {
+      resultType: typeof result
+    }, hash);
   }
 
   // -------------------------------------------------------------------------
@@ -607,23 +621,31 @@ class CSLScalarEngine extends EventEmitter {
     if (typeof limit !== 'number' || !isFinite(limit) || Math.abs(limit) < EPSILON) {
       throw new TypeError('cslRiskGate: "limit" must be a non-zero finite number');
     }
-
-    const ratio      = Math.abs(exposure) / (Math.abs(limit) + EPSILON);
+    const ratio = Math.abs(exposure) / (Math.abs(limit) + EPSILON);
     const activation = (ratio - tau) * steepness;
-    const riskLevel  = sigmoid(activation); // ∈ (0, 1)
+    const riskLevel = sigmoid(activation); // ∈ (0, 1)
 
     let signal;
     if (riskLevel < CSL_THRESHOLDS.CAUTIOUS) {
-      signal = SIGNAL_CODES.ENGAGE;   // +1
+      signal = SIGNAL_CODES.ENGAGE; // +1
     } else if (riskLevel < CSL_THRESHOLDS.EXECUTE) {
-      signal = SIGNAL_CODES.HOLD;     //  0
+      signal = SIGNAL_CODES.HOLD; //  0
     } else {
-      signal = SIGNAL_CODES.REPEL;    // -1
+      signal = SIGNAL_CODES.REPEL; // -1
     }
-
     const zone = this.classify(riskLevel);
-    const result = { riskLevel, signal, activation, zone };
-    return this._trace('cslRiskGate', { exposure, limit, tau, steepness }, result);
+    const result = {
+      riskLevel,
+      signal,
+      activation,
+      zone
+    };
+    return this._trace('cslRiskGate', {
+      exposure,
+      limit,
+      tau,
+      steepness
+    }, result);
   }
 
   // -------------------------------------------------------------------------
@@ -638,8 +660,10 @@ class CSLScalarEngine extends EventEmitter {
   getStats() {
     return {
       instanceId: this._instanceId,
-      opCount:    this._opCount,
-      thresholds: { ...CSL_THRESHOLDS },
+      opCount: this._opCount,
+      thresholds: {
+        ...CSL_THRESHOLDS
+      }
     };
   }
 }
@@ -660,7 +684,6 @@ class CSLScalarEngine extends EventEmitter {
 function createCSLEngine(options = {}) {
   return new CSLScalarEngine(options);
 }
-
 module.exports = {
   // Class
   CSLScalarEngine,
@@ -677,5 +700,5 @@ module.exports = {
   SIGNAL_CODES,
   // Utilities (exported for testing)
   clamp01,
-  sigmoid,
+  sigmoid
 };

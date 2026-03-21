@@ -13,21 +13,6 @@
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-/**
- * Imagination Engine - LLM Integration Module
- * 
- * Future enhancement: Use Large Language Models for concept generation,
- * evaluation, and refinement. Currently a placeholder with interface definitions.
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('hc_imagination_llm');
-
- * 
- * When LLM integration is enabled:
- * - Concept generation uses LLM prompts instead of template-based
- * - Novelty scoring uses embeddings from LLM
- * - Safety checking uses LLM classifier
- * - Claim drafting uses LLM for legal language
- */
 
 class ImaginationLLMIntegration {
   constructor(config = {}) {
@@ -37,34 +22,11 @@ class ImaginationLLMIntegration {
     this.maxTokens = config.maxTokens || 2000;
     this.temperature = config.temperature || 0.7;
   }
-
-  /**
-   * Generate concept using LLM
-   * 
-   * Prompt template for concept generation:
-   * "You are an inventive system. Given these technical primitives:
-   * {primitives_list}
-   * 
-   * Generate a novel concept by combining these primitives. The concept should:
-   * 1. Be technically plausible
-   * 2. Be genuinely novel (not obvious combination)
-   * 3. Have clear utility
-   * 4. Respect safety constraints: {safety_rules}
-   * 
-   * Return JSON with:
-   * - title: Short descriptive name
-   * - summary: One-paragraph description
-   * - mechanism: Technical explanation of how it works
-   * - applications: Array of potential use cases
-   * - novelty_statement: What makes this novel vs existing approaches"
-   */
   async generateConceptWithLLM(primitives, safetyRules) {
     if (!this.enabled) {
-      return null; // Fall back to template-based generation
+      return null;
     }
-
     const prompt = this.buildGenerationPrompt(primitives, safetyRules);
-    
     try {
       const response = await this.callLLM(prompt);
       return this.parseConceptResponse(response);
@@ -73,29 +35,11 @@ class ImaginationLLMIntegration {
       return null;
     }
   }
-
-  /**
-   * Evaluate concept using LLM
-   * 
-   * Prompt template for evaluation:
-   * "Evaluate this concept for:
-   * 1. Novelty (0-1): Is this genuinely new vs known approaches?
-   * 2. Usefulness (0-1): Does this solve a real problem effectively?
-   * 3. Risk (0-1): Are there safety, ethical, or misuse concerns?
-   * 4. Feasibility (0-1): Can this be built with current technology?
-   * 
-   * Concept: {concept_description}
-   * Similar prior work: {prior_work_summary}
-   * 
-   * Return JSON with scores and detailed justification for each."
-   */
   async evaluateWithLLM(concept, similarWork = []) {
     if (!this.enabled) {
       return null; // Fall back to heuristic evaluation
     }
-
     const prompt = this.buildEvaluationPrompt(concept, similarWork);
-    
     try {
       const response = await this.callLLM(prompt);
       return this.parseEvaluationResponse(response);
@@ -114,7 +58,6 @@ class ImaginationLLMIntegration {
     if (!this.enabled) {
       return null;
     }
-
     const prompt = `
 You are refining an invention concept based on critique.
 
@@ -133,7 +76,6 @@ Return JSON with:
 - changes_made: array of specific changes
 - confidence: how well the refinements address critiques (0-1)
 `;
-
     try {
       const response = await this.callLLM(prompt);
       return this.parseRefinementResponse(response);
@@ -156,7 +98,6 @@ Return JSON with:
     if (!this.enabled) {
       return null;
     }
-
     const prompt = `
 Draft patent claims for this invention:
 
@@ -182,7 +123,6 @@ Ensure claims are:
 
 Return JSON with claims array. Each claim needs: number, type (independent/dependent), depends_on (for dependent), and text.
 `;
-
     try {
       const response = await this.callLLM(prompt);
       return this.parseClaimsResponse(response);
@@ -205,7 +145,6 @@ Return JSON with claims array. Each claim needs: number, type (independent/depen
     if (!this.enabled) {
       return null; // Fall back to rule-based checking
     }
-
     const prompt = `
 Analyze this concept for safety and ethical concerns:
 
@@ -236,7 +175,6 @@ Return JSON with:
 - concerns: array of specific concerns
 - mitigation_suggestions: array of ways to reduce risk
 `;
-
     try {
       const response = await this.callLLM(prompt);
       return this.parseSafetyResponse(response);
@@ -271,7 +209,6 @@ Return JSON with:
     if (!this.enabled) {
       return null;
     }
-
     const prompt = `
 Based on this invention concept, what prior art or existing technologies might be relevant?
 
@@ -288,7 +225,6 @@ For each, estimate similarity (0-1) and explain potential overlap.
 
 Return JSON array with: title, source_type, similarity_score, overlap_description.
 `;
-
     try {
       const response = await this.callLLM(prompt);
       return JSON.parse(response);
@@ -303,10 +239,7 @@ Return JSON array with: title, source_type, similarity_score, overlap_descriptio
   // ============================================================================
 
   buildGenerationPrompt(primitives, safetyRules) {
-    const primitivesText = primitives.map((p, i) => 
-      `${i + 1}. [${p.kind}] ${p.description}`
-    ).join('\n');
-
+    const primitivesText = primitives.map((p, i) => `${i + 1}. [${p.kind}] ${p.description}`).join('\n');
     return `
 You are an inventive system participating in concept generation.
 
@@ -328,12 +261,8 @@ Provide your response as JSON with these fields:
 - assumptions: Array of key assumptions this relies on
 `;
   }
-
   buildEvaluationPrompt(concept, similarWork) {
-    const similarText = similarWork.length > 0 
-      ? similarWork.map((s, i) => `${i + 1}. ${s.title}: ${s.summary || 'N/A'}`).join('\n')
-      : 'No similar work provided.';
-
+    const similarText = similarWork.length > 0 ? similarWork.map((s, i) => `${i + 1}. ${s.title}: ${s.summary || 'N/A'}`).join('\n') : 'No similar work provided.';
     return `
 Evaluate this invention concept:
 
@@ -367,7 +296,6 @@ Return JSON format:
 }
 `;
   }
-
   async callLLM(prompt) {
     // This would make actual API call to LLM service
     // Placeholder implementation
@@ -385,7 +313,7 @@ Return JSON format:
     //   body: JSON.stringify({
     //     model: 'gpt-4',
     //     messages: [{ role: 'user', content: prompt }],
-    //     temperature: this.temperature,
+
     //     max_tokens: this.maxTokens
     //   })
     // });
@@ -393,7 +321,6 @@ Return JSON format:
 
     throw new Error('LLM integration not fully implemented - configure endpoint and API key');
   }
-
   parseConceptResponse(response) {
     try {
       return JSON.parse(response);
@@ -406,19 +333,15 @@ Return JSON format:
       throw new Error('Could not parse LLM response as JSON');
     }
   }
-
   parseEvaluationResponse(response) {
     return this.parseConceptResponse(response);
   }
-
   parseRefinementResponse(response) {
     return this.parseConceptResponse(response);
   }
-
   parseClaimsResponse(response) {
     return this.parseConceptResponse(response);
   }
-
   parseSafetyResponse(response) {
     return this.parseConceptResponse(response);
   }
@@ -426,7 +349,8 @@ Return JSON format:
 
 // Configuration for enabling LLM integration
 const LLM_CONFIG = {
-  enabled: false, // Set to true when LLM is configured
+  enabled: false,
+  // Set to true when LLM is configured
   modelEndpoint: process.env.LLM_ENDPOINT || null,
   apiKey: process.env.LLM_API_KEY || null,
   model: process.env.LLM_MODEL || 'gpt-4',
@@ -436,7 +360,6 @@ const LLM_CONFIG = {
 
 // Export
 const imaginationLLM = new ImaginationLLMIntegration(LLM_CONFIG);
-
 module.exports = {
   ImaginationLLMIntegration,
   imaginationLLM,

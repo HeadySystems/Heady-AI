@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -17,7 +19,9 @@ class ToolRegistry {
    * @param {object} [opts]
    * @param {object} [opts.logger]   - Pino/Winston-compatible logger
    */
-  constructor({ logger } = {}) {
+  constructor({
+    logger
+  } = {}) {
     /** @type {Map<string, ToolEntry>} */
     this._tools = new Map();
     this._log = logger || this._defaultLogger();
@@ -27,9 +31,9 @@ class ToolRegistry {
 
   _defaultLogger() {
     return {
-      info:  (...a) => console.error('[ToolRegistry:INFO]',  ...a),
-      warn:  (...a) => console.error('[ToolRegistry:WARN]',  ...a),
-      error: (...a) => console.error('[ToolRegistry:ERROR]', ...a),
+      info: (...a) => logger.error('[ToolRegistry:INFO]', ...a),
+      warn: (...a) => logger.error('[ToolRegistry:WARN]', ...a),
+      error: (...a) => logger.error('[ToolRegistry:ERROR]', ...a)
     };
   }
 
@@ -44,7 +48,6 @@ class ToolRegistry {
     if (schema.type) {
       const allowedTypes = Array.isArray(schema.type) ? schema.type : [schema.type];
       const actualType = Array.isArray(value) ? 'array' : typeof value;
-
       if (!allowedTypes.includes(actualType)) {
         errors.push(`${path}: expected ${allowedTypes.join('|')}, got ${actualType}`);
         return errors; // No point continuing on type mismatch
@@ -95,7 +98,6 @@ class ToolRegistry {
         }
       }
     }
-
     return errors;
   }
 
@@ -121,15 +123,13 @@ class ToolRegistry {
     if (this._tools.has(tool.name)) {
       this._log.warn(`Tool '${tool.name}' already registered — overwriting`);
     }
-
     const entry = {
       name: tool.name,
       description: tool.description || '',
       inputSchema: tool.inputSchema,
       handler: tool.handler || null,
-      registeredAt: new Date().toISOString(),
+      registeredAt: new Date().toISOString()
     };
-
     this._tools.set(tool.name, entry);
     this._log.info(`Registered tool: ${tool.name}`);
   }
@@ -140,10 +140,10 @@ class ToolRegistry {
    * @returns {Array<{name: string, description: string, inputSchema: object}>}
    */
   list() {
-    return Array.from(this._tools.values()).map((entry) => ({
+    return Array.from(this._tools.values()).map(entry => ({
       name: entry.name,
       description: entry.description,
-      inputSchema: entry.inputSchema,
+      inputSchema: entry.inputSchema
     }));
   }
 
@@ -177,9 +177,11 @@ class ToolRegistry {
   validate(name, args) {
     const entry = this._tools.get(name);
     if (!entry) {
-      return { valid: false, errors: [`Unknown tool: '${name}'`] };
+      return {
+        valid: false,
+        errors: [`Unknown tool: '${name}'`]
+      };
     }
-
     const schema = entry.inputSchema;
     const errors = [];
 
@@ -207,8 +209,10 @@ class ToolRegistry {
         errors.push(...propErrors);
       }
     }
-
-    return { valid: errors.length === 0, errors };
+    return {
+      valid: errors.length === 0,
+      errors
+    };
   }
 
   /**
@@ -224,16 +228,13 @@ class ToolRegistry {
     if (!entry) {
       throw new Error(`Unknown tool: '${name}'`);
     }
-
     const validation = this.validate(name, args);
     if (!validation.valid) {
       throw new Error(`Validation failed for '${name}': ${validation.errors.join('; ')}`);
     }
-
     if (typeof entry.handler !== 'function') {
       throw new Error(`Tool '${name}' has no handler — use HeadyConductor to route`);
     }
-
     return await entry.handler(args);
   }
 
@@ -269,11 +270,11 @@ class ToolRegistry {
    */
   stats() {
     const tools = Array.from(this._tools.values());
-    const withHandlers = tools.filter((t) => typeof t.handler === 'function').length;
+    const withHandlers = tools.filter(t => typeof t.handler === 'function').length;
     return {
       total: tools.length,
       withHandlers,
-      withoutHandlers: tools.length - withHandlers,
+      withoutHandlers: tools.length - withHandlers
     };
   }
 
@@ -286,5 +287,4 @@ class ToolRegistry {
     return Array.from(this._tools.keys()).sort();
   }
 }
-
 module.exports = ToolRegistry;

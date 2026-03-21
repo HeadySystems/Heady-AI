@@ -1,4 +1,5 @@
 'use strict';
+
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Competitive Intelligence Engine (Pythia)               ║
@@ -22,11 +23,12 @@
  * @module competitive-intelligence-engine
  * @version 1.0.0
  */
-
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
-const { PHI_TIMING } = require('../shared/phi-math');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
 
 // ─── φ Constants ────────────────────────────────────────────────────────────
 const PHI = 1.618033988749895;
@@ -45,7 +47,7 @@ const CSL_GATES = Object.freeze({
   BOOST: 0.618,
   INJECT: 0.718,
   HIGH: 0.882,
-  CRITICAL: 0.927,
+  CRITICAL: 0.927
 });
 
 // ─── Pipeline Stage Configuration ───────────────────────────────────────────
@@ -53,64 +55,69 @@ const STAGES = Object.freeze({
   DISCOVER: {
     name: 'discover',
     description: 'Automated discovery of competing solutions',
-    timeout_ms: Math.round(PHI3 * 1000), // ~4,236ms
-    max_retries: FIB[4], // 3
+    timeout_ms: Math.round(PHI3 * 1000),
+    // ~4,236ms
+    max_retries: FIB[4] // 3
   },
   CATALOG: {
     name: 'catalog',
     description: 'Add to competitive registry with metadata',
-    timeout_ms: Math.round(PHI2 * 1000), // ~2,618ms
-    max_retries: FIB[4],
+    timeout_ms: Math.round(PHI2 * 1000),
+    // ~2,618ms
+    max_retries: FIB[4]
   },
   SANDBOX: {
     name: 'sandbox_test',
     description: 'Deploy competitor in isolated sandbox and test',
-    timeout_ms: Math.round(PHI * PHI3 * 1000), // ~6,854ms
-    max_retries: FIB[3], // 2
+    timeout_ms: Math.round(PHI * PHI3 * 1000),
+    // ~6,854ms
+    max_retries: FIB[3] // 2
   },
   BATTLE: {
     name: 'battle_compare',
     description: 'HeadyBattle arena comparison',
-    timeout_ms: Math.round(PHI * PHI * PHI3 * 1000), // ~11,090ms
-    max_retries: FIB[3],
+    timeout_ms: Math.round(PHI * PHI * PHI3 * 1000),
+    // ~11,090ms
+    max_retries: FIB[3]
   },
   EXTRACT: {
     name: 'extract',
     description: 'Identify beneficial components for integration',
     timeout_ms: Math.round(PHI2 * 1000),
-    max_retries: FIB[4],
+    max_retries: FIB[4]
   },
   INTEGRATE: {
     name: 'integrate',
     description: 'Implement beneficial components into Heady',
-    timeout_ms: Math.round(PHI * PHI * PHI * PHI3 * 1000), // ~17,944ms
-    max_retries: FIB[3],
+    timeout_ms: Math.round(PHI * PHI * PHI * PHI3 * 1000),
+    // ~17,944ms
+    max_retries: FIB[3]
   },
   SURPASS: {
     name: 'surpass',
     description: 'Verify Heady exceeds competitor capability',
     timeout_ms: Math.round(PHI3 * 1000),
-    max_retries: FIB[4],
-  },
+    max_retries: FIB[4]
+  }
 });
 
 // ─── Scoring Dimensions (φ-weighted) ────────────────────────────────────────
 const SCORING_WEIGHTS = Object.freeze({
-  correctness: PHI,    // 1.618 — highest importance
-  security: PHI,       // 1.618 — equal to correctness
-  performance: 1.0,    // baseline weight
-  code_quality: PSI,   // 0.618
-  sacred_geometry: PSI2, // 0.382
-  total: PHI + PHI + 1.0 + PSI + PSI2, // 4.236 = φ³
+  correctness: PHI,
+  // 1.618 — highest importance
+  security: PHI,
+  // 1.618 — equal to correctness
+  performance: 1.0,
+  // baseline weight
+  code_quality: PSI,
+  // 0.618
+  sacred_geometry: PSI2,
+  // 0.382
+  total: PHI + PHI + 1.0 + PSI + PSI2 // 4.236 = φ³
 });
 
 // ─── Competitor Categories ──────────────────────────────────────────────────
-const CATEGORIES = [
-  'orchestration', 'memory_systems', 'mcp_protocol', 'vector_operations',
-  'battle_arena', 'agent_frameworks', 'code_generation', 'observability',
-  'csl_logic', 'cms_integration', 'edge_ai', 'security', 'voice_ai',
-  'knowledge_graphs', 'workflow_automation',
-];
+const CATEGORIES = ['orchestration', 'memory_systems', 'mcp_protocol', 'vector_operations', 'battle_arena', 'agent_frameworks', 'code_generation', 'observability', 'csl_logic', 'cms_integration', 'edge_ai', 'security', 'voice_ai', 'knowledge_graphs', 'workflow_automation'];
 
 /**
  * @class CompetitiveIntelligenceEngine
@@ -138,7 +145,7 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       ipRegistryPath: path.join(process.cwd(), 'configs', 'ip-registry.yaml'),
       conceptsPath: path.join(process.cwd(), 'configs', 'concepts-index.yaml'),
       dryRun: false,
-      ...config,
+      ...config
     };
 
     /** @type {Map<string, object>} Competitor registry keyed by category */
@@ -156,30 +163,29 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
 
   // ─── Stage 1: DISCOVER ──────────────────────────────────────────────────
 
-  /**
-   * Discover competing solutions for a given category.
-   * Sources: GitHub trending, HuggingFace, ArXiv, Hacker News.
-   *
-   * @param {string} category - Category from CATEGORIES
-   * @returns {Promise<object[]>} Array of discovered competitors
-   */
   async discover(category) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'discover', category });
-
+    this.emit('stage:start', {
+      stage: 'discover',
+      category
+    });
     if (!CATEGORIES.includes(category)) {
       throw new AppError(`Unknown category: ${category}. Valid: ${CATEGORIES.join(', ')}`, 'CI_INVALID_CATEGORY');
     }
-
-    const sources = [
-      { name: 'github_trending', weight: PHI },
-      { name: 'huggingface_spaces', weight: 1.0 },
-      { name: 'arxiv_papers', weight: PSI },
-      { name: 'hackernews', weight: PSI2 },
-    ];
-
+    const sources = [{
+      name: 'github_trending',
+      weight: PHI
+    }, {
+      name: 'huggingface_spaces',
+      weight: 1.0
+    }, {
+      name: 'arxiv_papers',
+      weight: PSI
+    }, {
+      name: 'hackernews',
+      weight: PSI2
+    }];
     const candidates = [];
-
     for (const source of sources) {
       try {
         const results = await this._querySource(source.name, category);
@@ -187,15 +193,23 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
           ...r,
           source: source.name,
           source_weight: source.weight,
-          discovered_at: new Date().toISOString(),
+          discovered_at: new Date().toISOString()
         })));
       } catch (err) {
-        this.emit('stage:error', { stage: 'discover', source: source.name, error: err.message });
+        this.emit('stage:error', {
+          stage: 'discover',
+          source: source.name,
+          error: err.message
+        });
       }
     }
-
     const elapsed = Date.now() - t0;
-    this.emit('stage:complete', { stage: 'discover', category, count: candidates.length, elapsed_ms: elapsed });
+    this.emit('stage:complete', {
+      stage: 'discover',
+      category,
+      count: candidates.length,
+      elapsed_ms: elapsed
+    });
     return candidates;
   }
 
@@ -209,8 +223,10 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async catalog(competitor) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'catalog', name: competitor.name });
-
+    this.emit('stage:start', {
+      stage: 'catalog',
+      name: competitor.name
+    });
     const entry = {
       id: `${competitor.category}-${competitor.name}`.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
       name: competitor.name,
@@ -223,7 +239,7 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       architecture_type: competitor.architecture || 'unknown',
       language: competitor.language || 'unknown',
       ip_status: await this._checkIPCompliance(competitor),
-      cataloged_at: new Date().toISOString(),
+      cataloged_at: new Date().toISOString()
     };
 
     // Store in registry
@@ -231,9 +247,12 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       this._registry.set(competitor.category, []);
     }
     this._registry.get(competitor.category).push(entry);
-
     const elapsed = Date.now() - t0;
-    this.emit('stage:complete', { stage: 'catalog', name: competitor.name, elapsed_ms: elapsed });
+    this.emit('stage:complete', {
+      stage: 'catalog',
+      name: competitor.name,
+      elapsed_ms: elapsed
+    });
     return entry;
   }
 
@@ -247,8 +266,10 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async sandboxTest(catalogEntry) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'sandbox_test', name: catalogEntry.name });
-
+    this.emit('stage:start', {
+      stage: 'sandbox_test',
+      name: catalogEntry.name
+    });
     const benchmarks = {
       setup_time_ms: 0,
       feature_coverage: 0,
@@ -258,9 +279,8 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       memory_usage_mb: 0,
       error_rate: 0,
       code_lines: 0,
-      dependency_count: 0,
+      dependency_count: 0
     };
-
     if (this.config.dryRun) {
       benchmarks.dry_run = true;
     } else {
@@ -274,10 +294,16 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
         benchmarks.status = 'failed';
       }
     }
-
     const elapsed = Date.now() - t0;
-    this.emit('stage:complete', { stage: 'sandbox_test', name: catalogEntry.name, elapsed_ms: elapsed });
-    return { ...catalogEntry, benchmarks };
+    this.emit('stage:complete', {
+      stage: 'sandbox_test',
+      name: catalogEntry.name,
+      elapsed_ms: elapsed
+    });
+    return {
+      ...catalogEntry,
+      benchmarks
+    };
   }
 
   // ─── Stage 4: BATTLE COMPARE ────────────────────────────────────────────
@@ -291,16 +317,21 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async battleCompare(testedEntry) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'battle_compare', name: testedEntry.name });
-
+    this.emit('stage:start', {
+      stage: 'battle_compare',
+      name: testedEntry.name
+    });
     const dimensions = Object.keys(SCORING_WEIGHTS).filter(k => k !== 'total');
-    const scores = { heady: {}, competitor: {}, winner: null, margin: 0 };
-
+    const scores = {
+      heady: {},
+      competitor: {},
+      winner: null,
+      margin: 0
+    };
     for (const dim of dimensions) {
       // CSL gate evaluation: continuous 0.0 → 1.0
       const headyScore = await this._evaluateDimension('heady', dim, testedEntry);
       const competitorScore = await this._evaluateDimension(testedEntry.name, dim, testedEntry);
-
       scores.heady[dim] = headyScore;
       scores.competitor[dim] = competitorScore;
     }
@@ -314,13 +345,19 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
     scores.margin = margin;
     scores.winner = margin > 0.05 ? 'heady' : margin < -0.05 ? testedEntry.name : 'tie';
     scores.heady_surpasses = scores.winner === 'heady';
-
     this._battleCache.set(testedEntry.id, scores);
     this._analysisCount++;
-
     const elapsed = Date.now() - t0;
-    this.emit('stage:complete', { stage: 'battle_compare', name: testedEntry.name, winner: scores.winner, elapsed_ms: elapsed });
-    return { ...testedEntry, battle: scores };
+    this.emit('stage:complete', {
+      stage: 'battle_compare',
+      name: testedEntry.name,
+      winner: scores.winner,
+      elapsed_ms: elapsed
+    });
+    return {
+      ...testedEntry,
+      battle: scores
+    };
   }
 
   // ─── Stage 5: EXTRACT ───────────────────────────────────────────────────
@@ -334,8 +371,10 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async extract(battleResult) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'extract', name: battleResult.name });
-
+    this.emit('stage:start', {
+      stage: 'extract',
+      name: battleResult.name
+    });
     const extractions = [];
     const battle = battleResult.battle || {};
     const competitorScores = battle.competitor || {};
@@ -344,15 +383,12 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
     for (const [dim, score] of Object.entries(competitorScores)) {
       if (dim === 'weighted_total') continue;
       const headyScore = (battle.heady || {})[dim] || 0;
-
-      if (score > headyScore && (score - headyScore) > PSI2) {
+      if (score > headyScore && score - headyScore > PSI2) {
         // Competitor is meaningfully better in this dimension
         const beneficial = await this._assessBenefit(battleResult, dim, score - headyScore);
-
         if (beneficial.csl_score >= CSL_GATES.BOOST) {
           // Passes CSL gate — beneficial to integrate
           const ipClear = await this._checkIPCompliance(battleResult);
-
           extractions.push({
             dimension: dim,
             delta: +(score - headyScore).toFixed(3),
@@ -360,15 +396,22 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
             technique: beneficial.technique,
             ip_status: ipClear,
             integration_complexity: beneficial.complexity,
-            recommended: ipClear.status === 'clear',
+            recommended: ipClear.status === 'clear'
           });
         }
       }
     }
-
     const elapsed = Date.now() - t0;
-    this.emit('stage:complete', { stage: 'extract', name: battleResult.name, extractions: extractions.length, elapsed_ms: elapsed });
-    return { ...battleResult, extractions };
+    this.emit('stage:complete', {
+      stage: 'extract',
+      name: battleResult.name,
+      extractions: extractions.length,
+      elapsed_ms: elapsed
+    });
+    return {
+      ...battleResult,
+      extractions
+    };
   }
 
   // ─── Stage 6: INTEGRATE ─────────────────────────────────────────────────
@@ -382,19 +425,18 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async integrate(extractionResult) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'integrate', name: extractionResult.name });
-
+    this.emit('stage:start', {
+      stage: 'integrate',
+      name: extractionResult.name
+    });
     const integrations = [];
-
-    for (const extraction of (extractionResult.extractions || [])) {
+    for (const extraction of extractionResult.extractions || []) {
       if (!extraction.recommended) continue;
-
       const result = {
         dimension: extraction.dimension,
         technique: extraction.technique,
-        status: 'pending',
+        status: 'pending'
       };
-
       if (this.config.dryRun) {
         result.status = 'dry_run';
         result.would_integrate = true;
@@ -410,13 +452,19 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
           result.error = err.message;
         }
       }
-
       integrations.push(result);
     }
-
     const elapsed = Date.now() - t0;
-    this.emit('stage:complete', { stage: 'integrate', name: extractionResult.name, integrations: integrations.length, elapsed_ms: elapsed });
-    return { ...extractionResult, integrations };
+    this.emit('stage:complete', {
+      stage: 'integrate',
+      name: extractionResult.name,
+      integrations: integrations.length,
+      elapsed_ms: elapsed
+    });
+    return {
+      ...extractionResult,
+      integrations
+    };
   }
 
   // ─── Stage 7: SURPASS ───────────────────────────────────────────────────
@@ -430,8 +478,10 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async surpass(integrationResult) {
     const t0 = Date.now();
-    this.emit('stage:start', { stage: 'surpass', name: integrationResult.name });
-
+    this.emit('stage:start', {
+      stage: 'surpass',
+      name: integrationResult.name
+    });
     const SURPASS_THRESHOLD = PHI * PSI2; // 0.786
 
     const scorecard = {
@@ -443,7 +493,7 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       architecture_cleaner: false,
       sacred_geometry_compliant: true,
       overall_score: 0,
-      surpassed: false,
+      surpassed: false
     };
 
     // Re-run battle comparison after integrations
@@ -455,17 +505,18 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
     // Compute overall surpass score
     scorecard.overall_score = this._computeSurpassScore(scorecard);
     scorecard.surpassed = scorecard.overall_score >= SURPASS_THRESHOLD;
-
     const elapsed = Date.now() - t0;
     this.emit('stage:complete', {
       stage: 'surpass',
       name: integrationResult.name,
       surpassed: scorecard.surpassed,
       score: scorecard.overall_score,
-      elapsed_ms: elapsed,
+      elapsed_ms: elapsed
     });
-
-    return { ...integrationResult, scorecard };
+    return {
+      ...integrationResult,
+      scorecard
+    };
   }
 
   // ─── Full Pipeline ──────────────────────────────────────────────────────
@@ -478,31 +529,35 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
    */
   async runFullPipeline(category) {
     const t0 = Date.now();
-    this.emit('pipeline:start', { category });
-
+    this.emit('pipeline:start', {
+      category
+    });
     const report = {
       category,
       started_at: new Date().toISOString(),
       stages: {},
       competitors_analyzed: 0,
       integrations_applied: 0,
-      surpassed: 0,
+      surpassed: 0
     };
-
     try {
       // Stage 1: Discover
       const candidates = await this.discover(category);
-      report.stages.discover = { count: candidates.length };
+      report.stages.discover = {
+        count: candidates.length
+      };
 
       // Stages 2-7: Process each candidate
       for (const candidate of candidates) {
-        const cataloged = await this.catalog({ ...candidate, category });
+        const cataloged = await this.catalog({
+          ...candidate,
+          category
+        });
         const tested = await this.sandboxTest(cataloged);
         const battled = await this.battleCompare(tested);
         const extracted = await this.extract(battled);
         const integrated = await this.integrate(extracted);
         const result = await this.surpass(integrated);
-
         report.competitors_analyzed++;
         if (result.integrations && result.integrations.length > 0) {
           report.integrations_applied += result.integrations.length;
@@ -514,10 +569,8 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
     } catch (err) {
       report.error = err.message;
     }
-
     report.completed_at = new Date().toISOString();
     report.elapsed_ms = Date.now() - t0;
-
     this.emit('pipeline:complete', report);
     return report;
   }
@@ -537,7 +590,7 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       total_integrations: Object.values(results).reduce((s, r) => s + r.integrations_applied, 0),
       total_surpassed: Object.values(results).reduce((s, r) => s + r.surpassed, 0),
       categories: results,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -553,7 +606,11 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
   /** @private */
   async _mapFeatures(competitor) {
     // Maps competitor features to Heady equivalents
-    return { mapped: true, coverage: 0, gaps: [] };
+    return {
+      mapped: true,
+      coverage: 0,
+      gaps: []
+    };
   }
 
   /** @private */
@@ -562,7 +619,10 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
     const license = (competitor.license || '').toLowerCase();
     const permissive = ['mit', 'apache-2.0', 'bsd-2-clause', 'bsd-3-clause', 'isc', 'unlicense'];
     const status = permissive.includes(license) ? 'clear' : license.includes('gpl') ? 'caution' : 'review';
-    return { status, license: competitor.license };
+    return {
+      status,
+      license: competitor.license
+    };
   }
 
   /** @private */
@@ -594,7 +654,7 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
     return {
       csl_score: +csl_score.toFixed(3),
       technique: `${dimension} optimization from ${competitor.name}`,
-      complexity: delta > PSI ? 'high' : delta > PSI2 ? 'medium' : 'low',
+      complexity: delta > PSI ? 'high' : delta > PSI2 ? 'medium' : 'low'
     };
   }
 
@@ -605,7 +665,7 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
       performance_superiority: 1.0,
       battle_win_rate: PHI,
       architecture_cleaner: PSI,
-      sacred_geometry_compliant: PSI2,
+      sacred_geometry_compliant: PSI2
     };
     let score = 0;
     let totalWeight = 0;
@@ -619,11 +679,21 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
 
   // ─── Getters ────────────────────────────────────────────────────────────
 
-  get registry() { return this._registry; }
-  get battleCache() { return this._battleCache; }
-  get analysisCount() { return this._analysisCount; }
-  get integrationCount() { return this._integrationCount; }
-  get categories() { return [...CATEGORIES]; }
+  get registry() {
+    return this._registry;
+  }
+  get battleCache() {
+    return this._battleCache;
+  }
+  get analysisCount() {
+    return this._analysisCount;
+  }
+  get integrationCount() {
+    return this._integrationCount;
+  }
+  get categories() {
+    return [...CATEGORIES];
+  }
 }
 
 /**
@@ -637,11 +707,10 @@ class AppError extends Error {
     this.code = code;
   }
 }
-
 module.exports = {
   CompetitiveIntelligenceEngine,
   CATEGORIES,
   STAGES,
   SCORING_WEIGHTS,
-  CSL_GATES,
+  CSL_GATES
 };

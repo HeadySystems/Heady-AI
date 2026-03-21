@@ -15,26 +15,23 @@
 'use strict';
 
 const crypto = require('crypto');
-const { EventEmitter } = require('events');
-
+const {
+  EventEmitter
+} = require('events');
 const PHI = (1 + Math.sqrt(5)) / 2;
 const PSI = 1 / PHI;
 const PSI2 = PSI * PSI;
-const FIB = [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597];
+const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597];
 
 /** @param {number} n @returns {number} */
-function fib(n) { return FIB[n - 1] || 0; }
+function fib(n) {
+  return FIB[n - 1] || 0;
+}
 
 /** @param {number} level @returns {number} */
-function phiThreshold(level) { return 1 - Math.pow(PSI, level) * 0.5; }
-
-/**
- * Phi-exponential backoff.
- * @param {number} attempt
- * @param {number} [baseMs=1000]
- * @param {number} [maxMs=60000]
- * @returns {number}
- */
+function phiThreshold(level) {
+  return 1 - Math.pow(PSI, level) * 0.5;
+}
 function phiBackoff(attempt, baseMs, maxMs) {
   const base = typeof baseMs === 'number' ? baseMs : 1000;
   const max = typeof maxMs === 'number' ? maxMs : 60000;
@@ -48,13 +45,13 @@ function phiBackoff(attempt, baseMs, maxMs) {
  * @enum {string}
  */
 const RUNTIME_STATE = Object.freeze({
-  IDLE:         'IDLE',
-  CONNECTING:   'CONNECTING',
-  READY:        'READY',
-  BUSY:         'BUSY',
-  DRAINING:     'DRAINING',
+  IDLE: 'IDLE',
+  CONNECTING: 'CONNECTING',
+  READY: 'READY',
+  BUSY: 'BUSY',
+  DRAINING: 'DRAINING',
   DISCONNECTED: 'DISCONNECTED',
-  ERROR:        'ERROR',
+  ERROR: 'ERROR'
 });
 
 /**
@@ -62,9 +59,11 @@ const RUNTIME_STATE = Object.freeze({
  * @enum {string}
  */
 const RUNTIME_ROLE = Object.freeze({
-  EMBEDDING:   'EMBEDDING',    // Runtime 1: Embedding generation (Nomic, Jina, Cohere)
-  PROJECTION:  'PROJECTION',   // Runtime 2: UMAP/t-SNE/PCA 3D projection
-  INFERENCE:   'INFERENCE',    // Runtime 3: LLM inference (Ollama, vLLM, local models)
+  EMBEDDING: 'EMBEDDING',
+  // Runtime 1: Embedding generation (Nomic, Jina, Cohere)
+  PROJECTION: 'PROJECTION',
+  // Runtime 2: UMAP/t-SNE/PCA 3D projection
+  INFERENCE: 'INFERENCE' // Runtime 3: LLM inference (Ollama, vLLM, local models)
 });
 
 /**
@@ -72,10 +71,10 @@ const RUNTIME_ROLE = Object.freeze({
  * @enum {string}
  */
 const GPU_TYPE = Object.freeze({
-  T4:     'T4',
-  A100:   'A100',
-  V100:   'V100',
-  L4:     'L4',
+  T4: 'T4',
+  A100: 'A100',
+  V100: 'V100',
+  L4: 'L4'
 });
 
 // ─── COLAB RUNTIME INSTANCE ─────────────────────────────────────────────────
@@ -142,7 +141,6 @@ class ColabRuntimeInstance extends EventEmitter {
     this.state = RUNTIME_STATE.CONNECTING;
     this.endpoint = endpoint;
     this.startTime = Date.now();
-
     try {
       // Verify connectivity with a health check
       const healthy = await this._healthCheck();
@@ -150,7 +148,10 @@ class ColabRuntimeInstance extends EventEmitter {
         this.state = RUNTIME_STATE.READY;
         this.failedChecks = 0;
         this.lastHeartbeat = Date.now();
-        this.emit('connected', { id: this.id, role: this.role });
+        this.emit('connected', {
+          id: this.id,
+          role: this.role
+        });
         return true;
       }
       this.state = RUNTIME_STATE.ERROR;
@@ -174,13 +175,16 @@ class ColabRuntimeInstance extends EventEmitter {
     if (this.state !== RUNTIME_STATE.READY && this.state !== RUNTIME_STATE.BUSY) {
       throw new Error(`Runtime ${this.id} not ready (state: ${this.state})`);
     }
-
     const jobId = job.id || crypto.randomBytes(fib(6)).toString('hex');
-    const jobEntry = { task: job.type, startTime: Date.now(), status: 'running', id: jobId };
+    const jobEntry = {
+      task: job.type,
+      startTime: Date.now(),
+      status: 'running',
+      id: jobId
+    };
     this.activeJobs.push(jobEntry);
     this.state = RUNTIME_STATE.BUSY;
     this.taskCount++;
-
     try {
       const result = await this._executeJob(job, jobId);
       jobEntry.status = 'completed';
@@ -215,76 +219,81 @@ class ColabRuntimeInstance extends EventEmitter {
       role: this.role,
       type: job.type,
       status: 'completed',
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
-
     switch (job.type) {
-      case 'embed': {
-        const texts = Array.isArray(job.payload.texts) ? job.payload.texts : [job.payload.text || ''];
-        const dimension = job.payload.dimension || 384;
-        result.embeddings = texts.map((text) => {
-          const vec = new Array(dimension).fill(0);
-          for (let i = 0; i < text.length; i++) {
-            const idx = (text.charCodeAt(i) * fib(7) + i * fib(5)) % dimension;
-            vec[idx] += Math.sin(text.charCodeAt(i) * PSI + i * PHI) * PSI;
-          }
-          let mag = 0;
-          for (let i = 0; i < dimension; i++) mag += vec[i] * vec[i];
-          mag = Math.sqrt(mag);
-          if (mag > 0) for (let i = 0; i < dimension; i++) vec[i] /= mag;
-          return vec;
-        });
-        result.count = result.embeddings.length;
-        result.dimension = dimension;
-        break;
-      }
-      case 'project': {
-        const vectors = job.payload.vectors || [];
-        const method = job.payload.method || 'umap';
-        const targetDim = job.payload.targetDim || 3;
-        result.projections = vectors.map((vec, idx) => {
-          // Simplified projection — in production, UMAP/t-SNE runs on GPU
-          const projected = new Array(targetDim).fill(0);
-          for (let d = 0; d < targetDim; d++) {
-            for (let i = 0; i < Math.min(vec.length, fib(8)); i++) {
-              projected[d] += vec[i * targetDim + d] * PHI;
+      case 'embed':
+        {
+          const texts = Array.isArray(job.payload.texts) ? job.payload.texts : [job.payload.text || ''];
+          const dimension = job.payload.dimension || 384;
+          result.embeddings = texts.map(text => {
+            const vec = new Array(dimension).fill(0);
+            for (let i = 0; i < text.length; i++) {
+              const idx = (text.charCodeAt(i) * fib(7) + i * fib(5)) % dimension;
+              vec[idx] += Math.sin(text.charCodeAt(i) * PSI + i * PHI) * PSI;
             }
-            projected[d] = Math.tanh(projected[d]);
-          }
-          return { index: idx, coordinates: projected };
-        });
-        result.method = method;
-        result.targetDim = targetDim;
-        result.count = result.projections.length;
-        break;
-      }
-      case 'infer': {
-        result.response = {
-          model: job.payload.model || 'local-llm',
-          prompt: job.payload.prompt || '',
-          status: 'queued_for_gpu',
-          estimatedMs: Math.round(PHI * PHI * PHI * 1000),
-        };
-        break;
-      }
-      case 'search': {
-        const queryVec = job.payload.queryVector || [];
-        const topK = job.payload.topK || fib(5);
-        result.results = [];
-        for (let i = 0; i < topK; i++) {
-          result.results.push({
-            rank: i + 1,
-            score: 1 - (i * PSI * 0.1),
-            id: crypto.randomBytes(fib(5)).toString('hex'),
+            let mag = 0;
+            for (let i = 0; i < dimension; i++) mag += vec[i] * vec[i];
+            mag = Math.sqrt(mag);
+            if (mag > 0) for (let i = 0; i < dimension; i++) vec[i] /= mag;
+            return vec;
           });
+          result.count = result.embeddings.length;
+          result.dimension = dimension;
+          break;
         }
-        result.topK = topK;
-        break;
-      }
+      case 'project':
+        {
+          const vectors = job.payload.vectors || [];
+          const method = job.payload.method || 'umap';
+          const targetDim = job.payload.targetDim || 3;
+          result.projections = vectors.map((vec, idx) => {
+            // Simplified projection — in production, UMAP/t-SNE runs on GPU
+            const projected = new Array(targetDim).fill(0);
+            for (let d = 0; d < targetDim; d++) {
+              for (let i = 0; i < Math.min(vec.length, fib(8)); i++) {
+                projected[d] += vec[i * targetDim + d] * PHI;
+              }
+              projected[d] = Math.tanh(projected[d]);
+            }
+            return {
+              index: idx,
+              coordinates: projected
+            };
+          });
+          result.method = method;
+          result.targetDim = targetDim;
+          result.count = result.projections.length;
+          break;
+        }
+      case 'infer':
+        {
+          result.response = {
+            model: job.payload.model || 'local-llm',
+            prompt: job.payload.prompt || '',
+            status: 'queued_for_gpu',
+            estimatedMs: Math.round(PHI * PHI * PHI * 1000)
+          };
+          break;
+        }
+      case 'search':
+        {
+          const queryVec = job.payload.queryVector || [];
+          const topK = job.payload.topK || fib(5);
+          result.results = [];
+          for (let i = 0; i < topK; i++) {
+            result.results.push({
+              rank: i + 1,
+              score: 1 - i * PSI * 0.1,
+              id: crypto.randomBytes(fib(5)).toString('hex')
+            });
+          }
+          result.topK = topK;
+          break;
+        }
       default:
         result.status = 'unknown_job_type';
     }
-
     return result;
   }
 
@@ -328,7 +337,7 @@ class ColabRuntimeInstance extends EventEmitter {
       gpuUtilization: this.gpuUtilization,
       memUtilization: this.memUtilization,
       activeJobs: this.activeJobs.length,
-      endpoint: this.endpoint,
+      endpoint: this.endpoint
     };
   }
 
@@ -341,12 +350,15 @@ class ColabRuntimeInstance extends EventEmitter {
     // Wait for active jobs to complete (with phi-scaled timeout)
     const maxWait = Math.round(PHI * PHI * PHI * PHI * 1000); // ~7s
     const start = Date.now();
-    while (this.activeJobs.length > 0 && (Date.now() - start) < maxWait) {
+    while (this.activeJobs.length > 0 && Date.now() - start < maxWait) {
       await new Promise(r => setTimeout(r, fib(8) * 100)); // 2100ms
     }
     this.state = RUNTIME_STATE.DISCONNECTED;
     this.endpoint = null;
-    this.emit('disconnected', { id: this.id, role: this.role });
+    this.emit('disconnected', {
+      id: this.id,
+      role: this.role
+    });
   }
 }
 
@@ -369,43 +381,28 @@ class ColabCluster extends EventEmitter {
     super();
 
     /** @type {ColabRuntimeInstance[]} */
-    this.runtimes = [
-      new ColabRuntimeInstance({
-        id: 'runtime-1',
-        role: RUNTIME_ROLE.EMBEDDING,
-        notebookUrl: process.env.COLAB_RUNTIME_1_URL || 'https://colab.research.google.com/runtime-1',
-        gpuType: GPU_TYPE.A100,
-        maxMemoryGB: fib(9), // 34GB
-      }),
-      new ColabRuntimeInstance({
-        id: 'runtime-2',
-        role: RUNTIME_ROLE.PROJECTION,
-        notebookUrl: process.env.COLAB_RUNTIME_2_URL || 'https://colab.research.google.com/runtime-2',
-        gpuType: GPU_TYPE.T4,
-        maxMemoryGB: fib(8), // 21GB
-      }),
-      new ColabRuntimeInstance({
-        id: 'runtime-3',
-        role: RUNTIME_ROLE.INFERENCE,
-        notebookUrl: process.env.COLAB_RUNTIME_3_URL || 'https://colab.research.google.com/runtime-3',
-        gpuType: GPU_TYPE.A100,
-        maxMemoryGB: fib(10), // 55GB
-      }),
-    ];
+    this.runtimes = [new ColabRuntimeInstance({
+      id: 'runtime-1',
+      role: RUNTIME_ROLE.EMBEDDING,
+      notebookUrl: process.env.COLAB_RUNTIME_1_URL || 'https://colab.research.google.com/runtime-1',
+      gpuType: GPU_TYPE.A100,
+      maxMemoryGB: fib(9) // 34GB
+    }), new ColabRuntimeInstance({
+      id: 'runtime-2',
+      role: RUNTIME_ROLE.PROJECTION,
+      notebookUrl: process.env.COLAB_RUNTIME_2_URL || 'https://colab.research.google.com/runtime-2',
+      gpuType: GPU_TYPE.T4,
+      maxMemoryGB: fib(8) // 21GB
+    }), new ColabRuntimeInstance({
+      id: 'runtime-3',
+      role: RUNTIME_ROLE.INFERENCE,
+      notebookUrl: process.env.COLAB_RUNTIME_3_URL || 'https://colab.research.google.com/runtime-3',
+      gpuType: GPU_TYPE.A100,
+      maxMemoryGB: fib(10) // 55GB
+    })];
 
     /** @type {Map<string, string>} Job type to preferred role mapping */
-    this.routingTable = new Map([
-      ['embed',    RUNTIME_ROLE.EMBEDDING],
-      ['encode',   RUNTIME_ROLE.EMBEDDING],
-      ['tokenize', RUNTIME_ROLE.EMBEDDING],
-      ['project',  RUNTIME_ROLE.PROJECTION],
-      ['reduce',   RUNTIME_ROLE.PROJECTION],
-      ['cluster',  RUNTIME_ROLE.PROJECTION],
-      ['visualize',RUNTIME_ROLE.PROJECTION],
-      ['infer',    RUNTIME_ROLE.INFERENCE],
-      ['generate', RUNTIME_ROLE.INFERENCE],
-      ['complete', RUNTIME_ROLE.INFERENCE],
-      ['search',   RUNTIME_ROLE.EMBEDDING], // Search uses embedding runtime for similarity
+    this.routingTable = new Map([['embed', RUNTIME_ROLE.EMBEDDING], ['encode', RUNTIME_ROLE.EMBEDDING], ['tokenize', RUNTIME_ROLE.EMBEDDING], ['project', RUNTIME_ROLE.PROJECTION], ['reduce', RUNTIME_ROLE.PROJECTION], ['cluster', RUNTIME_ROLE.PROJECTION], ['visualize', RUNTIME_ROLE.PROJECTION], ['infer', RUNTIME_ROLE.INFERENCE], ['generate', RUNTIME_ROLE.INFERENCE], ['complete', RUNTIME_ROLE.INFERENCE], ['search', RUNTIME_ROLE.EMBEDDING] // Search uses embedding runtime for similarity
     ]);
 
     /** @type {number|null} Health check interval timer */
@@ -420,23 +417,26 @@ class ColabCluster extends EventEmitter {
   async initialize(endpoints) {
     const ep = endpoints || {};
     const results = {};
-
     for (const runtime of this.runtimes) {
-      const endpoint = ep[runtime.id]
-        || process.env[`COLAB_${runtime.id.toUpperCase().replace(/-/g, '_')}_ENDPOINT`]
-        || null;
-
+      const endpoint = ep[runtime.id] || process.env[`COLAB_${runtime.id.toUpperCase().replace(/-/g, '_')}_ENDPOINT`] || null;
       if (endpoint) {
         const connected = await runtime.connect(endpoint);
-        results[runtime.id] = { connected, role: runtime.role, endpoint };
+        results[runtime.id] = {
+          connected,
+          role: runtime.role,
+          endpoint
+        };
       } else {
-        results[runtime.id] = { connected: false, role: runtime.role, reason: 'no_endpoint' };
+        results[runtime.id] = {
+          connected: false,
+          role: runtime.role,
+          reason: 'no_endpoint'
+        };
       }
     }
 
     // Start health monitoring
     this._startHealthMonitor();
-
     return results;
   }
 
@@ -452,7 +452,6 @@ class ColabCluster extends EventEmitter {
     // Route to preferred runtime by job type
     const preferredRole = this.routingTable.get(job.type) || RUNTIME_ROLE.INFERENCE;
     const preferred = this.runtimes.find(r => r.role === preferredRole && r.state === RUNTIME_STATE.READY);
-
     if (preferred) {
       return preferred.submitJob(job);
     }
@@ -468,7 +467,6 @@ class ColabCluster extends EventEmitter {
     if (busy) {
       return busy.submitJob(job);
     }
-
     throw new Error(`No available Colab runtime for job type: ${job.type}`);
   }
 
@@ -481,7 +479,10 @@ class ColabCluster extends EventEmitter {
   async embed(texts, dimension) {
     return this.submitJob({
       type: 'embed',
-      payload: { texts, dimension: dimension || 384 },
+      payload: {
+        texts,
+        dimension: dimension || 384
+      }
     });
   }
 
@@ -495,7 +496,11 @@ class ColabCluster extends EventEmitter {
   async project(vectors, method, targetDim) {
     return this.submitJob({
       type: 'project',
-      payload: { vectors, method: method || 'umap', targetDim: targetDim || 3 },
+      payload: {
+        vectors,
+        method: method || 'umap',
+        targetDim: targetDim || 3
+      }
     });
   }
 
@@ -508,7 +513,10 @@ class ColabCluster extends EventEmitter {
   async infer(prompt, model) {
     return this.submitJob({
       type: 'infer',
-      payload: { prompt, model },
+      payload: {
+        prompt,
+        model
+      }
     });
   }
 
@@ -521,7 +529,10 @@ class ColabCluster extends EventEmitter {
   async search(queryVector, topK) {
     return this.submitJob({
       type: 'search',
-      payload: { queryVector, topK: topK || fib(5) },
+      payload: {
+        queryVector,
+        topK: topK || fib(5)
+      }
     });
   }
 
@@ -539,7 +550,10 @@ class ColabCluster extends EventEmitter {
           runtime.failedChecks++;
           if (runtime.failedChecks >= runtime.maxFailedChecks) {
             runtime.state = RUNTIME_STATE.ERROR;
-            this.emit('runtime_error', { id: runtime.id, role: runtime.role });
+            this.emit('runtime_error', {
+              id: runtime.id,
+              role: runtime.role
+            });
           }
         } else {
           runtime.failedChecks = 0;
@@ -557,7 +571,6 @@ class ColabCluster extends EventEmitter {
     const readyCount = this.runtimes.filter(r => r.state === RUNTIME_STATE.READY).length;
     const totalTasks = this.runtimes.reduce((sum, r) => sum + r.taskCount, 0);
     const totalErrors = this.runtimes.reduce((sum, r) => sum + r.errorCount, 0);
-
     return {
       clusterHealth: readyCount === 3 ? 'healthy' : readyCount > 0 ? 'degraded' : 'offline',
       runtimesReady: readyCount,
@@ -567,7 +580,7 @@ class ColabCluster extends EventEmitter {
       errorRate: totalTasks > 0 ? totalErrors / totalTasks : 0,
       runtimes,
       routingTable: Object.fromEntries(this.routingTable),
-      phi: PHI,
+      phi: PHI
     };
   }
 
@@ -708,20 +721,22 @@ class LatentSpaceOps {
     const pairwise = [];
     let totalSim = 0;
     let pairCount = 0;
-
     for (let i = 0; i < embeddings.length; i++) {
       for (let j = i + 1; j < embeddings.length; j++) {
         const sim = this._cosine(embeddings[i], embeddings[j]);
-        pairwise.push({ a: i, b: j, similarity: sim });
+        pairwise.push({
+          a: i,
+          b: j,
+          similarity: sim
+        });
         totalSim += sim;
         pairCount++;
       }
     }
-
     return {
       pairwise,
       averageCoherence: pairCount > 0 ? totalSim / pairCount : 0,
-      threshold: phiThreshold(2), // MEDIUM threshold for coherence
+      threshold: phiThreshold(2) // MEDIUM threshold for coherence
     };
   }
 
@@ -732,7 +747,9 @@ class LatentSpaceOps {
    * @private
    */
   _cosine(a, b) {
-    let dot = 0, magA = 0, magB = 0;
+    let dot = 0,
+      magA = 0,
+      magB = 0;
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       magA += a[i] * a[i];
@@ -796,5 +813,5 @@ module.exports = {
   FIB,
   fib,
   phiThreshold,
-  phiBackoff,
+  phiBackoff
 };

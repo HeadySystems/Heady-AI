@@ -23,52 +23,63 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const {
-  PHI, PSI, PHI_SQ, fib, phiMs, phiBackoff, phiBackoffWithJitter,
-  CSL_THRESHOLDS, PHI_TIMING, POOLS, VECTOR,
-  cosineSimilarity, normalize, cslGate, sigmoid,
-  getPressureLevel, PRESSURE, ALERTS,
+  PHI,
+  PSI,
+  PHI_SQ,
+  fib,
+  phiMs,
+  phiBackoff,
+  phiBackoffWithJitter,
+  CSL_THRESHOLDS,
+  PHI_TIMING,
+  POOLS,
+  VECTOR,
+  cosineSimilarity,
+  normalize,
+  cslGate,
+  sigmoid,
+  getPressureLevel,
+  PRESSURE,
+  ALERTS
 } = require('../shared/phi-math');
-
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({
+  server
+});
 const PORT = process.env.SERVICE_PORT || 3352;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // φ-DERIVED CONSTANTS — ZERO MAGIC NUMBERS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const HEARTBEAT_MS       = PHI_TIMING.PHI_7;             // 29,034ms heartbeat cycle
-const RECONNECT_BASE_MS  = PHI_TIMING.PHI_1;             // 1,618ms base reconnect
-const MAX_RECONNECT_MS   = PHI_TIMING.PHI_8;             // 46,979ms max reconnect delay
-const TASK_TIMEOUT_MS    = PHI_TIMING.PHI_6;             // 17,944ms per task
-const HEALTH_CHECK_MS    = PHI_TIMING.PHI_3;             // 4,236ms health scan interval
-const DRAIN_TIMEOUT_MS   = PHI_TIMING.PHI_8;             // 46,979ms drain window
-const QUEUE_DEPTH        = fib(13);                      // 233 max queued tasks
-const BATCH_SIZES        = [fib(6), fib(7), fib(8), fib(9), fib(10)]; // [8, 13, 21, 34, 55]
-const MAX_RECONNECT_ATTEMPTS = fib(8);                   // 21 attempts before giving up
-const WS_PING_INTERVAL   = PHI_TIMING.PHI_5;            // 11,090ms WebSocket ping
-const GPU_UTIL_HISTORY    = fib(8);                      // 21 samples for rolling average
-const TASK_ID_ENTROPY     = fib(6);                      // 8 chars random suffix
+const HEARTBEAT_MS = PHI_TIMING.PHI_7; // 29,034ms heartbeat cycle
+const RECONNECT_BASE_MS = PHI_TIMING.PHI_1; // 1,618ms base reconnect
+const MAX_RECONNECT_MS = PHI_TIMING.PHI_8; // 46,979ms max reconnect delay
+const TASK_TIMEOUT_MS = PHI_TIMING.PHI_6; // 17,944ms per task
+const HEALTH_CHECK_MS = PHI_TIMING.PHI_3; // 4,236ms health scan interval
+const DRAIN_TIMEOUT_MS = PHI_TIMING.PHI_8; // 46,979ms drain window
+const QUEUE_DEPTH = fib(13); // 233 max queued tasks
+const BATCH_SIZES = [fib(6), fib(7), fib(8), fib(9), fib(10)]; // [8, 13, 21, 34, 55]
+const MAX_RECONNECT_ATTEMPTS = fib(8);
+const WS_PING_INTERVAL = PHI_TIMING.PHI_5; // 11,090ms WebSocket ping
+const GPU_UTIL_HISTORY = fib(8); // 21 samples for rolling average
+const TASK_ID_ENTROPY = fib(6); // 8 chars random suffix
 
 const POOL_WEIGHTS = {
-  hot:  POOLS.HOT,        // 0.34 — user-facing, latency-critical
-  warm: POOLS.WARM,       // 0.21 — background batch processing
-  cold: POOLS.COLD,       // 0.13 — analytics, experiments
+  hot: POOLS.HOT,
+  // 0.34 — user-facing, latency-critical
+  warm: POOLS.WARM,
+  // 0.21 — background batch processing
+  cold: POOLS.COLD // 0.13 — analytics, experiments
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // RUNTIME LIFECYCLE
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const LIFECYCLE = Object.freeze([
-  'PROVISIONING', 'READY', 'ACTIVE', 'DRAINING', 'SHUTDOWN',
-]);
-
-const TASK_TYPES = Object.freeze([
-  'embedding', 'inference', 'fine-tune', 'batch-process',
-  'vector-search', 'hnsw-build', 'projection', 'experiment',
-]);
+const LIFECYCLE = Object.freeze(['PROVISIONING', 'READY', 'ACTIVE', 'DRAINING', 'SHUTDOWN']);
+const TASK_TYPES = Object.freeze(['embedding', 'inference', 'fine-tune', 'batch-process', 'vector-search', 'hnsw-build', 'projection', 'experiment']);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // STRUCTURED LOGGING
@@ -80,7 +91,7 @@ function log(level, msg, meta = {}) {
     level,
     service: 'colab-gateway',
     msg,
-    ...meta,
+    ...meta
   }) + '\n');
 }
 
@@ -91,9 +102,9 @@ function log(level, msg, meta = {}) {
 class ColabRuntime {
   constructor(config) {
     this.id = config.id;
-    this.pool = config.pool;                       // 'hot', 'warm', 'cold'
+    this.pool = config.pool; // 'hot', 'warm', 'cold'
     this.url = config.url;
-    this.status = LIFECYCLE[0];                    // PROVISIONING
+    this.status = LIFECYCLE[0]; // PROVISIONING
     this.gpuType = config.gpuType || 'unknown';
     this.vram = config.vram || 0;
     this.gpuUtil = 0;
@@ -115,31 +126,25 @@ class ColabRuntime {
     this.startedAt = null;
     this.lastTaskAt = null;
   }
-
   get isHealthy() {
     if (!this.lastHeartbeat) return false;
     const age = Date.now() - this.lastHeartbeat;
-    return age < (HEARTBEAT_MS * PHI);  // φ × heartbeat = ~47s grace period
+    return age < HEARTBEAT_MS * PHI; // φ × heartbeat = ~47s grace period
   }
-
   get isActive() {
     return this.isHealthy && (this.status === 'ACTIVE' || this.status === 'READY');
   }
-
   get loadFactor() {
     // φ-weighted composite: GPU weight = PSI (0.618), memory weight = 1-PSI (0.382)
     return (this.gpuUtil * PSI + this.memoryUtil * (1 - PSI)) / 100;
   }
-
   get avgGpuUtil() {
     if (this.gpuUtilHistory.length === 0) return 0;
     return this.gpuUtilHistory.reduce((s, v) => s + v, 0) / this.gpuUtilHistory.length;
   }
-
   get pressureLevel() {
     return getPressureLevel(this.loadFactor);
   }
-
   updateHealth(metrics) {
     this.gpuUtil = metrics.gpuUtil || 0;
     this.memoryUtil = metrics.memoryUtil || 0;
@@ -165,32 +170,28 @@ class ColabRuntime {
       this.status = 'ACTIVE';
       if (!this.startedAt) this.startedAt = Date.now();
     }
-
     this.reconnectAttempt = 0;
   }
-
   transitionTo(newStatus) {
     const currentIdx = LIFECYCLE.indexOf(this.status);
     const newIdx = LIFECYCLE.indexOf(newStatus);
     if (newIdx < 0) return false;
-
     log('info', 'Runtime lifecycle transition', {
       runtime: this.id,
       from: this.status,
-      to: newStatus,
+      to: newStatus
     });
-
     this.status = newStatus;
     return true;
   }
-
   registerTask(taskId) {
     this.taskCount++;
     this.totalTasks++;
     this.lastTaskAt = Date.now();
-    this.pendingTasks.set(taskId, { startedAt: Date.now() });
+    this.pendingTasks.set(taskId, {
+      startedAt: Date.now()
+    });
   }
-
   completeTask(taskId, success = true) {
     this.taskCount = Math.max(0, this.taskCount - 1);
     this.pendingTasks.delete(taskId);
@@ -200,7 +201,6 @@ class ColabRuntime {
       this.failedTasks++;
     }
   }
-
   snapshot() {
     return {
       id: this.id,
@@ -221,7 +221,7 @@ class ColabRuntime {
       failedTasks: this.failedTasks,
       wsConnected: this.wsReady,
       availableModels: this.availableModels,
-      uptimeMs: this.startedAt ? Date.now() - this.startedAt : 0,
+      uptimeMs: this.startedAt ? Date.now() - this.startedAt : 0
     };
   }
 }
@@ -230,26 +230,22 @@ class ColabRuntime {
 // RUNTIME POOL
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const runtimes = new Map([
-  ['hot', new ColabRuntime({
-    id: 'colab-hot',
-    pool: 'hot',
-    url: process.env.COLAB_RUNTIME_HOT_URL || '',
-    capabilities: ['embedding', 'inference', 'vector-search', 'projection'],
-  })],
-  ['warm', new ColabRuntime({
-    id: 'colab-warm',
-    pool: 'warm',
-    url: process.env.COLAB_RUNTIME_WARM_URL || '',
-    capabilities: ['embedding', 'fine-tune', 'batch-process', 'hnsw-build'],
-  })],
-  ['cold', new ColabRuntime({
-    id: 'colab-cold',
-    pool: 'cold',
-    url: process.env.COLAB_RUNTIME_COLD_URL || '',
-    capabilities: ['experiment', 'batch-process', 'hnsw-build', 'inference'],
-  })],
-]);
+const runtimes = new Map([['hot', new ColabRuntime({
+  id: 'colab-hot',
+  pool: 'hot',
+  url: process.env.COLAB_RUNTIME_HOT_URL || '',
+  capabilities: ['embedding', 'inference', 'vector-search', 'projection']
+})], ['warm', new ColabRuntime({
+  id: 'colab-warm',
+  pool: 'warm',
+  url: process.env.COLAB_RUNTIME_WARM_URL || '',
+  capabilities: ['embedding', 'fine-tune', 'batch-process', 'hnsw-build']
+})], ['cold', new ColabRuntime({
+  id: 'colab-cold',
+  pool: 'cold',
+  url: process.env.COLAB_RUNTIME_COLD_URL || '',
+  capabilities: ['experiment', 'batch-process', 'hnsw-build', 'inference']
+})]]);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TASK QUEUE
@@ -264,15 +260,20 @@ function generateTaskId() {
   const rand = Math.random().toString(36).slice(2, 2 + TASK_ID_ENTROPY);
   return `task_${ts}_${rand}`;
 }
-
 function enqueueTask(task) {
   if (taskQueue.length >= QUEUE_DEPTH) {
-    return { ok: false, error: 'HEADY-COLAB-003', message: 'Queue full' };
+    return {
+      ok: false,
+      error: 'HEADY-COLAB-003',
+      message: 'Queue full'
+    };
   }
   taskQueue.push(task);
-  return { ok: true, queuePosition: taskQueue.length };
+  return {
+    ok: true,
+    queuePosition: taskQueue.length
+  };
 }
-
 function dequeueForRuntime(runtime) {
   for (let i = 0; i < taskQueue.length; i++) {
     const task = taskQueue[i];
@@ -303,7 +304,6 @@ setInterval(() => {
 function routeTask(task) {
   let bestRuntime = null;
   let bestScore = -1;
-
   for (const [pool, runtime] of runtimes) {
     if (!runtime.isActive) continue;
 
@@ -320,24 +320,19 @@ function routeTask(task) {
     const typeMatch = runtime.capabilities.includes(task.type) ? PHI_SQ : 1;
 
     // φ-weighted load penalty: higher load = lower score
-    const loadPenalty = 1 - (runtime.loadFactor * PSI);
+    const loadPenalty = 1 - runtime.loadFactor * PSI;
 
     // Pressure penalty: runtimes under pressure score lower
     const pressureLabel = runtime.pressureLevel.label;
-    const pressurePenalty = pressureLabel === 'NOMINAL' ? 1
-      : pressureLabel === 'ELEVATED' ? PSI
-      : pressureLabel === 'HIGH' ? PSI * PSI
-      : Math.pow(PSI, 3); // CRITICAL
+    const pressurePenalty = pressureLabel === 'NOMINAL' ? 1 : pressureLabel === 'ELEVATED' ? PSI : pressureLabel === 'HIGH' ? PSI * PSI : Math.pow(PSI, 3); // CRITICAL
 
     // Composite routing score
     const compositeScore = affinityScore * loadPenalty * pressurePenalty * typeMatch;
-
     if (compositeScore > bestScore) {
       bestScore = compositeScore;
       bestRuntime = runtime;
     }
   }
-
   return bestRuntime;
 }
 
@@ -348,12 +343,11 @@ function routeTask(task) {
 function promoteRuntime(fromPool, toPool) {
   const source = runtimes.get(fromPool);
   if (!source || !source.isHealthy) return false;
-
   log('warn', 'Runtime promotion triggered', {
     from: fromPool,
     to: toPool,
     sourceGpuUtil: source.gpuUtil,
-    sourceLoadFactor: source.loadFactor.toFixed(4),
+    sourceLoadFactor: source.loadFactor.toFixed(4)
   });
 
   // Reconfigure source for the target pool's workload
@@ -366,13 +360,11 @@ function promoteRuntime(fromPool, toPool) {
       type: 'promotion',
       fromPool,
       toPool,
-      capabilities: source.capabilities,
+      capabilities: source.capabilities
     }));
   }
-
   return true;
 }
-
 function checkFailover() {
   const hot = runtimes.get('hot');
   const warm = runtimes.get('warm');
@@ -395,10 +387,8 @@ function checkFailover() {
 
 function connectToRuntime(runtime) {
   if (!runtime.url) return;
-
   try {
     const ws = new WebSocket(runtime.url);
-
     ws.on('open', () => {
       runtime.ws = ws;
       runtime.wsReady = true;
@@ -410,31 +400,39 @@ function connectToRuntime(runtime) {
         type: 'register',
         gatewayId: 'colab-gateway',
         pool: runtime.pool,
-        capabilities: runtime.capabilities,
+        capabilities: runtime.capabilities
       }));
-
-      log('info', 'WebSocket connected to runtime', { runtime: runtime.id, pool: runtime.pool });
+      log('info', 'WebSocket connected to runtime', {
+        runtime: runtime.id,
+        pool: runtime.pool
+      });
     });
-
-    ws.on('message', (data) => {
+    ws.on('message', data => {
       try {
         const msg = JSON.parse(data.toString());
         handleRuntimeMessage(runtime, msg);
       } catch (err) {
-        log('error', 'Failed to parse runtime message', { runtime: runtime.id, error: err.message });
+        log('error', 'Failed to parse runtime message', {
+          runtime: runtime.id,
+          error: err.message
+        });
       }
     });
-
     ws.on('close', () => {
       runtime.wsReady = false;
       runtime.ws = null;
-      log('warn', 'WebSocket disconnected', { runtime: runtime.id, pool: runtime.pool });
+      log('warn', 'WebSocket disconnected', {
+        runtime: runtime.id,
+        pool: runtime.pool
+      });
       scheduleReconnect(runtime);
     });
-
-    ws.on('error', (err) => {
+    ws.on('error', err => {
       runtime.wsReady = false;
-      log('error', 'WebSocket error', { runtime: runtime.id, error: err.message });
+      log('error', 'WebSocket error', {
+        runtime: runtime.id,
+        error: err.message
+      });
     });
 
     // φ-timed ping to keep connection alive
@@ -445,60 +443,63 @@ function connectToRuntime(runtime) {
         clearInterval(pingInterval);
       }
     }, WS_PING_INTERVAL);
-
   } catch (err) {
-    log('error', 'Failed to connect to runtime', { runtime: runtime.id, error: err.message });
+    log('error', 'Failed to connect to runtime', {
+      runtime: runtime.id,
+      error: err.message
+    });
     scheduleReconnect(runtime);
   }
 }
-
 function scheduleReconnect(runtime) {
   if (runtime.reconnectAttempt >= MAX_RECONNECT_ATTEMPTS) {
-    log('error', 'Max reconnect attempts reached', { runtime: runtime.id, attempts: runtime.reconnectAttempt });
+    log('error', 'Max reconnect attempts reached', {
+      runtime: runtime.id,
+      attempts: runtime.reconnectAttempt
+    });
     runtime.transitionTo('SHUTDOWN');
     return;
   }
-
   runtime.reconnectAttempt++;
   const delay = phiBackoffWithJitter(runtime.reconnectAttempt, RECONNECT_BASE_MS, MAX_RECONNECT_MS);
-
   log('info', 'Scheduling reconnect', {
     runtime: runtime.id,
     attempt: runtime.reconnectAttempt,
-    delayMs: delay,
+    delayMs: delay
   });
-
   setTimeout(() => {
     if (runtime.status !== 'SHUTDOWN') {
       connectToRuntime(runtime);
     }
   }, delay);
 }
-
 function handleRuntimeMessage(runtime, msg) {
   switch (msg.type) {
     case 'heartbeat':
       runtime.updateHealth(msg.metrics || msg);
       break;
+    case 'task-complete':
+      {
+        const {
+          taskId,
+          result,
+          success
+        } = msg;
+        runtime.completeTask(taskId, success !== false);
+        taskResults.set(taskId, {
+          result,
+          success: success !== false,
+          completedAt: Date.now(),
+          runtime: runtime.id
+        });
 
-    case 'task-complete': {
-      const { taskId, result, success } = msg;
-      runtime.completeTask(taskId, success !== false);
-      taskResults.set(taskId, {
-        result,
-        success: success !== false,
-        completedAt: Date.now(),
-        runtime: runtime.id,
-      });
-
-      // Try to dequeue next task for this runtime
-      const nextTask = dequeueForRuntime(runtime);
-      if (nextTask) {
-        dispatchTaskToRuntime(runtime, nextTask);
+        // Try to dequeue next task for this runtime
+        const nextTask = dequeueForRuntime(runtime);
+        if (nextTask) {
+          dispatchTaskToRuntime(runtime, nextTask);
+        }
+        break;
       }
-      break;
-    }
-
     case 'capabilities':
       runtime.capabilities = msg.capabilities || runtime.capabilities;
       if (msg.capabilityVector) {
@@ -506,55 +507,54 @@ function handleRuntimeMessage(runtime, msg) {
       }
       runtime.availableModels = msg.models || runtime.availableModels;
       break;
-
     case 'gpu-metrics':
       runtime.updateHealth(msg);
       break;
-
     case 'error':
       log('error', 'Runtime reported error', {
         runtime: runtime.id,
         error: msg.error,
-        taskId: msg.taskId,
+        taskId: msg.taskId
       });
       if (msg.taskId) {
         runtime.completeTask(msg.taskId, false);
       }
       break;
-
     default:
-      log('debug', 'Unknown runtime message type', { runtime: runtime.id, type: msg.type });
+      log('debug', 'Unknown runtime message type', {
+        runtime: runtime.id,
+        type: msg.type
+      });
   }
 }
-
 function dispatchTaskToRuntime(runtime, task) {
   if (!runtime.ws || !runtime.wsReady) return false;
-
   runtime.registerTask(task.id);
-
   runtime.ws.send(JSON.stringify({
     type: 'task',
     taskId: task.id,
     taskType: task.type,
     data: task.data,
-    timeoutMs: TASK_TIMEOUT_MS,
+    timeoutMs: TASK_TIMEOUT_MS
   }));
 
   // Set task timeout
   setTimeout(() => {
     if (runtime.pendingTasks.has(task.id)) {
-      log('warn', 'Task timed out', { taskId: task.id, runtime: runtime.id });
+      log('warn', 'Task timed out', {
+        taskId: task.id,
+        runtime: runtime.id
+      });
       runtime.completeTask(task.id, false);
       taskResults.set(task.id, {
         result: null,
         success: false,
         error: 'HEADY-COLAB-005: Task timed out',
         completedAt: Date.now(),
-        runtime: runtime.id,
+        runtime: runtime.id
       });
     }
   }, TASK_TIMEOUT_MS);
-
   return true;
 }
 
@@ -563,12 +563,12 @@ function dispatchTaskToRuntime(runtime, task) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 wss.on('connection', (ws, req) => {
-  log('info', 'Incoming WebSocket connection', { remoteAddress: req.socket.remoteAddress });
-
-  ws.on('message', (data) => {
+  log('info', 'Incoming WebSocket connection', {
+    remoteAddress: req.socket.remoteAddress
+  });
+  ws.on('message', data => {
     try {
       const msg = JSON.parse(data.toString());
-
       if (msg.type === 'register' && msg.pool) {
         const runtime = runtimes.get(msg.pool);
         if (runtime) {
@@ -576,23 +576,20 @@ wss.on('connection', (ws, req) => {
           runtime.wsReady = true;
           runtime.reconnectAttempt = 0;
           runtime.transitionTo('READY');
-
           if (msg.capabilities) runtime.capabilities = msg.capabilities;
           if (msg.gpuType) runtime.gpuType = msg.gpuType;
           if (msg.vram) runtime.vram = msg.vram;
           if (msg.models) runtime.availableModels = msg.models;
-
           ws.send(JSON.stringify({
             type: 'registered',
             pool: msg.pool,
             heartbeatMs: HEARTBEAT_MS,
-            batchSizes: BATCH_SIZES,
+            batchSizes: BATCH_SIZES
           }));
-
           log('info', 'Runtime registered via WebSocket', {
             pool: msg.pool,
             gpuType: runtime.gpuType,
-            capabilities: runtime.capabilities,
+            capabilities: runtime.capabilities
           });
         }
       } else if (msg.pool) {
@@ -602,17 +599,20 @@ wss.on('connection', (ws, req) => {
         }
       }
     } catch (err) {
-      log('error', 'Failed to parse incoming WebSocket message', { error: err.message });
+      log('error', 'Failed to parse incoming WebSocket message', {
+        error: err.message
+      });
     }
   });
-
   ws.on('close', () => {
     // Find which runtime this was and mark disconnected
     for (const [, runtime] of runtimes) {
       if (runtime.ws === ws) {
         runtime.wsReady = false;
         runtime.ws = null;
-        log('warn', 'Runtime WebSocket disconnected', { runtime: runtime.id });
+        log('warn', 'Runtime WebSocket disconnected', {
+          runtime: runtime.id
+        });
         break;
       }
     }
@@ -626,7 +626,6 @@ wss.on('connection', (ws, req) => {
 // φ-timed heartbeat monitor
 setInterval(() => {
   checkFailover();
-
   for (const [pool, runtime] of runtimes) {
     if (!runtime.isHealthy && runtime.url && runtime.status !== 'SHUTDOWN') {
       runtime.reconnectAttempt++;
@@ -635,7 +634,7 @@ setInterval(() => {
         pool,
         status: runtime.status,
         reconnectAttempt: runtime.reconnectAttempt,
-        nextRetryMs: delay,
+        nextRetryMs: delay
       });
     }
   }
@@ -662,7 +661,9 @@ setInterval(() => {
 setInterval(() => {
   for (const [pool, runtime] of runtimes) {
     if (runtime.ws && runtime.wsReady) {
-      runtime.ws.send(JSON.stringify({ type: 'health-check' }));
+      runtime.ws.send(JSON.stringify({
+        type: 'health-check'
+      }));
     }
   }
 }, HEALTH_CHECK_MS);
@@ -671,7 +672,9 @@ setInterval(() => {
 // HTTP ROUTES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-app.use(express.json({ limit: `${fib(6)}mb` })); // 8mb
+app.use(express.json({
+  limit: `${fib(6)}mb`
+})); // 8mb
 
 // Health endpoint
 app.get('/health', (req, res) => {
@@ -681,7 +684,6 @@ app.get('/health', (req, res) => {
     status[pool] = rt.snapshot();
     if (rt.isHealthy) healthyCount++;
   }
-
   res.json({
     ok: healthyCount > 0,
     service: 'colab-gateway',
@@ -693,82 +695,107 @@ app.get('/health', (req, res) => {
     queueCapacity: QUEUE_DEPTH,
     heartbeatMs: HEARTBEAT_MS,
     batchSizes: BATCH_SIZES,
-    ts: new Date().toISOString(),
+    ts: new Date().toISOString()
   });
 });
 
 // Register/update runtime health (HTTP fallback for runtimes without WebSocket)
 app.post('/runtime/:pool/heartbeat', (req, res) => {
-  const { pool } = req.params;
+  const {
+    pool
+  } = req.params;
   const runtime = runtimes.get(pool);
   if (!runtime) {
-    return res.status(404).json({ error: 'HEADY-COLAB-001', message: 'Unknown pool' });
+    return res.status(404).json({
+      error: 'HEADY-COLAB-001',
+      message: 'Unknown pool'
+    });
   }
-
   runtime.updateHealth(req.body);
   log('info', 'Runtime heartbeat (HTTP)', {
     pool,
     gpuUtil: runtime.gpuUtil,
     memoryUtil: runtime.memoryUtil,
-    status: runtime.status,
+    status: runtime.status
   });
-
-  res.json({ ok: true, nextHeartbeatMs: HEARTBEAT_MS });
+  res.json({
+    ok: true,
+    nextHeartbeatMs: HEARTBEAT_MS
+  });
 });
 
 // Register runtime capabilities
 app.post('/runtime/:pool/register', (req, res) => {
-  const { pool } = req.params;
+  const {
+    pool
+  } = req.params;
   const runtime = runtimes.get(pool);
   if (!runtime) {
-    return res.status(404).json({ error: 'HEADY-COLAB-001', message: 'Unknown pool' });
+    return res.status(404).json({
+      error: 'HEADY-COLAB-001',
+      message: 'Unknown pool'
+    });
   }
-
   if (req.body.capabilities) runtime.capabilities = req.body.capabilities;
   if (req.body.capabilityVector) runtime.capabilityVector = req.body.capabilityVector;
   if (req.body.gpuType) runtime.gpuType = req.body.gpuType;
   if (req.body.vram) runtime.vram = req.body.vram;
   if (req.body.models) runtime.availableModels = req.body.models;
   runtime.transitionTo('READY');
-
-  log('info', 'Runtime registered', { pool, capabilities: runtime.capabilities });
-  res.json({ ok: true, pool, heartbeatMs: HEARTBEAT_MS, batchSizes: BATCH_SIZES });
+  log('info', 'Runtime registered', {
+    pool,
+    capabilities: runtime.capabilities
+  });
+  res.json({
+    ok: true,
+    pool,
+    heartbeatMs: HEARTBEAT_MS,
+    batchSizes: BATCH_SIZES
+  });
 });
 
 // Submit task to Colab runtime
 app.post('/task', (req, res) => {
-  const { type, data, embedding, preferPool, priority } = req.body;
+  const {
+    type,
+    data,
+    embedding,
+    preferPool,
+    priority
+  } = req.body;
   if (!type) {
-    return res.status(400).json({ error: 'HEADY-COLAB-002', message: 'Missing task type' });
+    return res.status(400).json({
+      error: 'HEADY-COLAB-002',
+      message: 'Missing task type'
+    });
   }
-
   const task = {
     id: generateTaskId(),
     type,
     data,
     embedding: embedding || null,
     preferPool: preferPool || null,
-    priority: priority || PSI, // Default priority: 0.618
-    submittedAt: Date.now(),
+    priority: priority || PSI,
+    // Default priority: 0.618
+    submittedAt: Date.now()
   };
 
   // Route task to optimal runtime
   const runtime = preferPool ? runtimes.get(preferPool) : routeTask(task);
-
   if (runtime && runtime.isActive) {
     if (dispatchTaskToRuntime(runtime, task)) {
       log('info', 'Task dispatched', {
         taskId: task.id,
         type,
         runtime: runtime.id,
-        pool: runtime.pool,
+        pool: runtime.pool
       });
       return res.json({
         ok: true,
         taskId: task.id,
         runtime: runtime.id,
         pool: runtime.pool,
-        status: 'dispatched',
+        status: 'dispatched'
       });
     }
   }
@@ -780,31 +807,34 @@ app.post('/task', (req, res) => {
       error: 'HEADY-COLAB-003',
       message: 'All runtimes busy and queue full',
       queueDepth: taskQueue.length,
-      queueCapacity: QUEUE_DEPTH,
+      queueCapacity: QUEUE_DEPTH
     });
   }
-
   log('info', 'Task queued', {
     taskId: task.id,
     type,
-    queuePosition: enqueueResult.queuePosition,
+    queuePosition: enqueueResult.queuePosition
   });
-
   res.json({
     ok: true,
     taskId: task.id,
     status: 'queued',
-    queuePosition: enqueueResult.queuePosition,
+    queuePosition: enqueueResult.queuePosition
   });
 });
 
 // Get task result
 app.get('/task/:taskId', (req, res) => {
-  const { taskId } = req.params;
+  const {
+    taskId
+  } = req.params;
   const result = taskResults.get(taskId);
-
   if (result) {
-    return res.json({ ok: true, taskId, ...result });
+    return res.json({
+      ok: true,
+      taskId,
+      ...result
+    });
   }
 
   // Check if task is still pending on any runtime
@@ -815,7 +845,7 @@ app.get('/task/:taskId', (req, res) => {
         taskId,
         status: 'processing',
         runtime: runtime.id,
-        pool: runtime.pool,
+        pool: runtime.pool
       });
     }
   }
@@ -827,18 +857,26 @@ app.get('/task/:taskId', (req, res) => {
       ok: true,
       taskId,
       status: 'queued',
-      queuePosition: queuedIdx + 1,
+      queuePosition: queuedIdx + 1
     });
   }
-
-  res.status(404).json({ error: 'HEADY-COLAB-006', message: 'Task not found' });
+  res.status(404).json({
+    error: 'HEADY-COLAB-006',
+    message: 'Task not found'
+  });
 });
 
 // Batch embedding request
 app.post('/embed', (req, res) => {
-  const { texts, batchSize } = req.body;
+  const {
+    texts,
+    batchSize
+  } = req.body;
   if (!texts || !Array.isArray(texts)) {
-    return res.status(400).json({ error: 'HEADY-COLAB-004', message: 'Missing texts array' });
+    return res.status(400).json({
+      error: 'HEADY-COLAB-004',
+      message: 'Missing texts array'
+    });
   }
 
   // Select optimal batch size from Fibonacci sequence
@@ -857,28 +895,27 @@ app.post('/embed', (req, res) => {
     const task = {
       id: generateTaskId(),
       type: 'embedding',
-      data: { texts: batch, batchIndex: idx },
+      data: {
+        texts: batch,
+        batchIndex: idx
+      },
       preferPool,
       priority: texts.length <= effectiveBatch ? 1 : PSI,
-      submittedAt: Date.now(),
+      submittedAt: Date.now()
     };
-
     if (runtime && runtime.isActive) {
       dispatchTaskToRuntime(runtime, task);
     } else {
       enqueueTask(task);
     }
-
     return task.id;
   });
-
   log('info', 'Embedding request', {
     textCount: texts.length,
     batches: batches.length,
     batchSize: effectiveBatch,
-    routedTo: preferPool,
+    routedTo: preferPool
   });
-
   res.json({
     ok: true,
     totalTexts: texts.length,
@@ -886,28 +923,33 @@ app.post('/embed', (req, res) => {
     batchSize: effectiveBatch,
     routedTo: preferPool,
     dimensions: VECTOR.DIMS,
-    taskIds,
+    taskIds
   });
 });
 
 // Drain a runtime (graceful shutdown)
 app.post('/runtime/:pool/drain', (req, res) => {
-  const { pool } = req.params;
+  const {
+    pool
+  } = req.params;
   const runtime = runtimes.get(pool);
   if (!runtime) {
-    return res.status(404).json({ error: 'HEADY-COLAB-001', message: 'Unknown pool' });
+    return res.status(404).json({
+      error: 'HEADY-COLAB-001',
+      message: 'Unknown pool'
+    });
   }
-
   runtime.transitionTo('DRAINING');
-
   if (runtime.ws && runtime.wsReady) {
     runtime.ws.send(JSON.stringify({
       type: 'drain',
-      timeoutMs: DRAIN_TIMEOUT_MS,
+      timeoutMs: DRAIN_TIMEOUT_MS
     }));
   }
-
-  log('info', 'Runtime draining', { pool, pendingTasks: runtime.taskCount });
+  log('info', 'Runtime draining', {
+    pool,
+    pendingTasks: runtime.taskCount
+  });
 
   // After drain timeout, force shutdown
   setTimeout(() => {
@@ -920,8 +962,12 @@ app.post('/runtime/:pool/drain', (req, res) => {
       }
     }
   }, DRAIN_TIMEOUT_MS);
-
-  res.json({ ok: true, pool, status: 'DRAINING', drainTimeoutMs: DRAIN_TIMEOUT_MS });
+  res.json({
+    ok: true,
+    pool,
+    status: 'DRAINING',
+    drainTimeoutMs: DRAIN_TIMEOUT_MS
+  });
 });
 
 // Prometheus metrics
@@ -963,8 +1009,8 @@ app.get('/pool', (req, res) => {
       taskTimeoutMs: TASK_TIMEOUT_MS,
       queueDepth: QUEUE_DEPTH,
       batchSizes: BATCH_SIZES,
-      vectorDims: VECTOR.DIMS,
-    },
+      vectorDims: VECTOR.DIMS
+    }
   });
 });
 
@@ -979,7 +1025,7 @@ server.listen(PORT, () => {
     heartbeatMs: HEARTBEAT_MS,
     queueDepth: QUEUE_DEPTH,
     batchSizes: BATCH_SIZES,
-    vectorDims: VECTOR.DIMS,
+    vectorDims: VECTOR.DIMS
   });
 
   // Initiate outbound WebSocket connections to runtimes with configured URLs
@@ -989,19 +1035,18 @@ server.listen(PORT, () => {
     }
   }
 });
-
 process.on('SIGTERM', () => {
   log('info', 'Colab gateway shutting down — draining runtimes');
-
   for (const [, rt] of runtimes) {
     rt.transitionTo('DRAINING');
     if (rt.ws && rt.wsReady) {
-      rt.ws.send(JSON.stringify({ type: 'shutdown' }));
+      rt.ws.send(JSON.stringify({
+        type: 'shutdown'
+      }));
       rt.ws.close();
     }
     rt.transitionTo('SHUTDOWN');
   }
-
   wss.close(() => {
     server.close(() => {
       log('info', 'Colab gateway stopped');
@@ -1009,13 +1054,23 @@ process.on('SIGTERM', () => {
     });
   });
 });
-
-process.on('uncaughtException', (err) => {
-  log('error', 'Uncaught exception', { error: err.message, stack: err.stack });
+process.on('uncaughtException', err => {
+  log('error', 'Uncaught exception', {
+    error: err.message,
+    stack: err.stack
+  });
 });
-
-process.on('unhandledRejection', (reason) => {
-  log('error', 'Unhandled rejection', { reason: String(reason) });
+process.on('unhandledRejection', reason => {
+  log('error', 'Unhandled rejection', {
+    reason: String(reason)
+  });
 });
-
-module.exports = { app, server, runtimes, taskQueue, routeTask, LIFECYCLE, TASK_TYPES };
+module.exports = {
+  app,
+  server,
+  runtimes,
+  taskQueue,
+  routeTask,
+  LIFECYCLE,
+  TASK_TYPES
+};

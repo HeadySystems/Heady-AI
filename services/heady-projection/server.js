@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -17,13 +19,11 @@ import { join, dirname } from 'node:path';
 import { readFileSync, existsSync } from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const PHI              = 1.6180339887;
-const PORT             = Number(process.env.DASHBOARD_PORT) || 3850;
-const PROJECTION_HOST  = process.env.PROJECTION_SERVICE || 'http://localhost:3849';
-const INDEX_HTML       = join(__dirname, 'index.html');
+const PHI = 1.6180339887;
+const PORT = Number(process.env.DASHBOARD_PORT) || 3850;
+const PROJECTION_HOST = process.env.PROJECTION_SERVICE || "http://0.0.0.0:3849";
+const INDEX_HTML = join(__dirname, 'index.html');
 
 // ── App ───────────────────────────────────────────────────────────────────────
 const app = express();
@@ -41,48 +41,42 @@ app.get('/', (_req, res) => {
 // ── Proxy: /api/* → projection service ───────────────────────────────────────
 app.use('/api', (req, res) => {
   const targetUrl = `${PROJECTION_HOST}${req.url}`;
-
   const isSSE = req.headers.accept?.includes('text/event-stream');
   const isHttps = PROJECTION_HOST.startsWith('https://');
   const transport = isHttps ? https : http;
-
   const upstreamUrl = new URL(targetUrl);
-
   const options = {
     hostname: upstreamUrl.hostname,
-    port:     upstreamUrl.port || (isHttps ? 443 : 80),
-    path:     upstreamUrl.pathname + (upstreamUrl.search || ''),
-    method:   req.method,
+    port: upstreamUrl.port || (isHttps ? 443 : 80),
+    path: upstreamUrl.pathname + (upstreamUrl.search || ''),
+    method: req.method,
     headers: {
       ...req.headers,
       host: upstreamUrl.host,
       'x-forwarded-for': req.socket.remoteAddress,
       'x-forwarded-host': req.headers.host,
-      'x-forwarded-proto': 'http',
-    },
+      'x-forwarded-proto': 'http'
+    }
   };
-
-  const proxyReq = transport.request(options, (proxyRes) => {
+  const proxyReq = transport.request(options, proxyRes => {
     // Copy status + headers
     res.writeHead(proxyRes.statusCode, proxyRes.headers);
-
     if (isSSE) {
       // Flush headers immediately for SSE
       res.flushHeaders?.();
-      proxyRes.on('data', (chunk) => res.write(chunk));
+      proxyRes.on('data', chunk => res.write(chunk));
       proxyRes.on('end', () => res.end());
     } else {
       proxyRes.pipe(res);
     }
   });
-
-  proxyReq.on('error', (e) => {
-    console.error(`[Dashboard] Proxy error → ${targetUrl}: ${e.message}`);
+  proxyReq.on('error', e => {
+    logger.error(`[Dashboard] Proxy error → ${targetUrl}: ${e.message}`);
     if (!res.headersSent) {
       res.status(502).json({
-        error:   'Bad Gateway',
+        error: 'Bad Gateway',
         message: `Projection service unavailable at ${PROJECTION_HOST}`,
-        phi:     PHI,
+        phi: PHI
       });
     }
   });
@@ -97,38 +91,38 @@ app.use('/api', (req, res) => {
 // ── Health check for the dashboard server itself ───────────────────────────────
 app.get('/_health', (_req, res) => {
   res.json({
-    service:     'heady-dashboard',
-    status:      'ok',
-    phi:         PHI,
-    upstream:    PROJECTION_HOST,
-    ts:          Date.now(),
+    service: 'heady-dashboard',
+    status: 'ok',
+    phi: PHI,
+    upstream: PROJECTION_HOST,
+    ts: Date.now()
   });
 });
 
 // ── 404 fallback ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+  res.status(404).json({
+    error: 'Not Found'
+  });
 });
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 const server = createServer(app);
 server.listen(PORT, () => {
-  console.log(`[Heady Dashboard] ▶  http://localhost:${PORT}`);
-  console.log(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
-  console.log(`[Heady Dashboard] φ  PHI = ${PHI}`);
+  logger.info(`[Heady Dashboard] ▶  http://localhost:${PORT}`);
+  logger.info(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
+  logger.info(`[Heady Dashboard] φ  PHI = ${PHI}`);
 });
 
 // ── Graceful shutdown ─────────────────────────────────────────────────────────
 function shutdown(signal) {
-  console.log(`\n[Dashboard] ${signal} received — shutting down…`);
+  logger.info(`\n[Dashboard] ${signal} received — shutting down…`);
   server.close(() => {
-    console.log('[Dashboard] HTTP server closed.');
+    logger.info('[Dashboard] HTTP server closed.');
     process.exit(0);
   });
   setTimeout(() => process.exit(1), Math.round(PHI * 3000));
 }
-
 process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT',  () => shutdown('SIGINT'));
-
+process.on('SIGINT', () => shutdown('SIGINT'));
 export default app;

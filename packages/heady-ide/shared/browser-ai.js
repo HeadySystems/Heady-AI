@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Browser AI v1.0                                        ║
 // ║  Zero-cost client-side inference via Transformers.js + WebGPU   ║
@@ -27,7 +29,6 @@
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;
-
 export class HeadyBrowserAI {
   constructor(opts = {}) {
     this.embedModel = opts.embedModel || 'Xenova/all-MiniLM-L6-v2';
@@ -46,7 +47,6 @@ export class HeadyBrowserAI {
    */
   async init() {
     if (this.ready) return;
-
     try {
       // Dynamic import — Transformers.js from CDN
       this._transformers = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3/dist/transformers.min.js');
@@ -60,21 +60,17 @@ export class HeadyBrowserAI {
           this.device = 'wasm';
         }
       }
-
-      console.log(`[HeadyBrowserAI] Initializing with device: ${this.device}`);
+      logger.info(`[HeadyBrowserAI] Initializing with device: ${this.device}`);
 
       // Pre-load embedding pipeline (most used)
-      this._embedPipeline = await this._transformers.pipeline(
-        'feature-extraction',
-        this.embedModel,
-        { device: this.device, dtype: 'fp32' }
-      );
-
+      this._embedPipeline = await this._transformers.pipeline('feature-extraction', this.embedModel, {
+        device: this.device,
+        dtype: 'fp32'
+      });
       this.ready = true;
-      console.log('[HeadyBrowserAI] Ready — embeddings available at $0/inference');
-
+      logger.info('[HeadyBrowserAI] Ready — embeddings available at $0/inference');
     } catch (err) {
-      console.warn('[HeadyBrowserAI] Initialization failed — falling back to server:', err.message);
+      logger.warn('[HeadyBrowserAI] Initialization failed — falling back to server:', err.message);
       this.ready = false;
     }
   }
@@ -88,11 +84,10 @@ export class HeadyBrowserAI {
    */
   async embed(texts) {
     const input = Array.isArray(texts) ? texts : [texts];
-
     if (this.ready && this._embedPipeline) {
       const results = await this._embedPipeline(input, {
         pooling: 'mean',
-        normalize: true,
+        normalize: true
       });
 
       // Convert to plain arrays
@@ -114,17 +109,14 @@ export class HeadyBrowserAI {
   async classify(text, labels) {
     if (this.ready && this._transformers) {
       if (!this._classifyPipeline) {
-        this._classifyPipeline = await this._transformers.pipeline(
-          'zero-shot-classification',
-          this.classifyModel,
-          { device: this.device }
-        );
+        this._classifyPipeline = await this._transformers.pipeline('zero-shot-classification', this.classifyModel, {
+          device: this.device
+        });
       }
-
       const result = await this._classifyPipeline(text, labels);
       return result.labels.map((label, i) => ({
         label,
-        score: result.scores[i],
+        score: result.scores[i]
       }));
     }
 
@@ -140,11 +132,7 @@ export class HeadyBrowserAI {
    * @returns {Promise<number>} Similarity score [0, 1]
    */
   async similarity(textA, textB) {
-    const [embA, embB] = await Promise.all([
-      this.embed(textA),
-      this.embed(textB),
-    ]);
-
+    const [embA, embB] = await Promise.all([this.embed(textA), this.embed(textB)]);
     return this._cosineSim(embA[0], embB[0]);
   }
 
@@ -155,20 +143,16 @@ export class HeadyBrowserAI {
   async batchSimilarity(query, candidates) {
     const queryEmb = (await this.embed(query))[0];
     const candEmbs = await this.embed(candidates);
-
     const scored = candidates.map((text, i) => ({
       text,
-      score: this._cosineSim(queryEmb, candEmbs[i]),
+      score: this._cosineSim(queryEmb, candEmbs[i])
     }));
-
     scored.sort((a, b) => b.score - a.score);
 
     // CSL tier classification
     return scored.map(s => ({
       ...s,
-      cslTier: s.score >= PSI + 0.1 ? 'CORE' :
-               s.score >= PSI ? 'INCLUDE' :
-               s.score >= PSI * PSI ? 'RECALL' : 'VOID',
+      cslTier: s.score >= PSI + 0.1 ? 'CORE' : s.score >= PSI ? 'INCLUDE' : s.score >= PSI * PSI ? 'RECALL' : 'VOID'
     }));
   }
 
@@ -177,10 +161,7 @@ export class HeadyBrowserAI {
    * Lightweight complexity estimation for routing.
    */
   canHandleLocally(taskType) {
-    const localCapabilities = new Set([
-      'embed', 'classify', 'similarity', 'sentiment',
-      'tokenize', 'language-detect',
-    ]);
+    const localCapabilities = new Set(['embed', 'classify', 'similarity', 'sentiment', 'tokenize', 'language-detect']);
     return this.ready && localCapabilities.has(taskType);
   }
 
@@ -194,17 +175,17 @@ export class HeadyBrowserAI {
       webgpuAvailable: typeof navigator !== 'undefined' && !!navigator.gpu,
       embedModel: this.embedModel,
       classifyModel: this.classifyModel,
-      capabilities: this.ready
-        ? ['embed', 'classify', 'similarity', 'sentiment']
-        : ['fallback-to-server'],
-      costPerInference: '$0.00',
+      capabilities: this.ready ? ['embed', 'classify', 'similarity', 'sentiment'] : ['fallback-to-server'],
+      costPerInference: '$0.00'
     };
   }
 
   // ── Private Methods ─────────────────────────────────────────────
 
   _cosineSim(a, b) {
-    let dot = 0, normA = 0, normB = 0;
+    let dot = 0,
+      normA = 0,
+      normB = 0;
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       normA += a[i] * a[i];
@@ -213,24 +194,26 @@ export class HeadyBrowserAI {
     const denom = Math.sqrt(normA) * Math.sqrt(normB);
     return denom > 0 ? dot / denom : 0;
   }
-
   async _serverEmbed(texts) {
     const resp = await fetch('/api/v1/embed', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ texts }),
-      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        texts
+      }),
+      credentials: 'include'
     });
     const data = await resp.json();
     return data.embeddings;
   }
-
   _keywordClassify(text, labels) {
     // Ultra-simple fallback: score by keyword overlap
     const words = text.toLowerCase().split(/\s+/);
     return labels.map(label => ({
       label,
-      score: words.filter(w => label.toLowerCase().includes(w) || w.includes(label.toLowerCase())).length / words.length,
+      score: words.filter(w => label.toLowerCase().includes(w) || w.includes(label.toLowerCase())).length / words.length
     })).sort((a, b) => b.score - a.score);
   }
 }
@@ -239,5 +222,4 @@ export class HeadyBrowserAI {
 if (typeof window !== 'undefined') {
   window.HeadyBrowserAI = HeadyBrowserAI;
 }
-
 export default HeadyBrowserAI;

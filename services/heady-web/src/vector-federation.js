@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * HeadyWeb — VectorFederation
  *
@@ -13,7 +15,6 @@
 'use strict';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
-
 const FEDERATION_VERSION = '2.1.0';
 const DEFAULT_DIMENSIONS = 384;
 const DEFAULT_REPLICATION_FACTOR = 2;
@@ -66,7 +67,7 @@ class VectorFederation {
     dimensions = DEFAULT_DIMENSIONS,
     replicationFactor = DEFAULT_REPLICATION_FACTOR,
     gossipIntervalMs = DEFAULT_GOSSIP_INTERVAL_MS,
-    densityGate = DEFAULT_DENSITY_GATE,
+    densityGate = DEFAULT_DENSITY_GATE
   } = {}) {
     this.nodeId = nodeId;
     this.dimensions = dimensions;
@@ -83,7 +84,6 @@ class VectorFederation {
 
     /** @type {Array<{action: string, id: string, timestamp: number, peer?: string}>} */
     this._replicationLog = [];
-
     this._gossipTimer = null;
   }
 
@@ -98,25 +98,19 @@ class VectorFederation {
   async upsert(entry) {
     if (!entry?.id) throw new TypeError('upsert: entry.id is required');
     if (!Array.isArray(entry.embedding) || entry.embedding.length !== this.dimensions) {
-      throw new TypeError(
-        `upsert: entry.embedding must be an array of ${this.dimensions} numbers ` +
-        `(got ${Array.isArray(entry.embedding) ? entry.embedding.length : typeof entry.embedding})`
-      );
+      throw new TypeError(`upsert: entry.embedding must be an array of ${this.dimensions} numbers ` + `(got ${Array.isArray(entry.embedding) ? entry.embedding.length : typeof entry.embedding})`);
     }
-
     const record = {
       ...entry,
-      timestamp: entry.timestamp || Date.now(),
+      timestamp: entry.timestamp || Date.now()
     };
-
     this._store.set(entry.id, record);
     this._logReplication('upsert', entry.id);
 
     // Replicate to peers asynchronously (fire-and-forget)
-    this._replicateToPeers('push', record).catch((err) => {
-      console.warn(`[VectorFederation] Push replication failed for ${entry.id}:`, err.message);
+    this._replicateToPeers('push', record).catch(err => {
+      logger.warn(`[VectorFederation] Push replication failed for ${entry.id}:`, err.message);
     });
-
     return record;
   }
 
@@ -166,9 +160,7 @@ class VectorFederation {
     if (!Array.isArray(queryEmbedding) || queryEmbedding.length !== this.dimensions) {
       throw new TypeError(`search: queryEmbedding must be an array of ${this.dimensions} numbers`);
     }
-
     const localResults = this._localSearch(queryEmbedding, k);
-
     if (!federated || this._peers.size === 0) {
       return localResults;
     }
@@ -184,10 +176,7 @@ class VectorFederation {
         merged.set(result.id, result);
       }
     }
-
-    return Array.from(merged.values())
-      .sort((a, b) => b.score - a.score)
-      .slice(0, k);
+    return Array.from(merged.values()).sort((a, b) => b.score - a.score).slice(0, k);
   }
 
   /**
@@ -199,14 +188,16 @@ class VectorFederation {
   _localSearch(queryEmbedding, k) {
     const results = [];
     const qNorm = this._norm(queryEmbedding);
-
     for (const [id, entry] of this._store) {
       const score = this._cosine(queryEmbedding, entry.embedding, qNorm);
       if (score >= this.densityGate) {
-        results.push({ id, score, entry });
+        results.push({
+          id,
+          score,
+          entry
+        });
       }
     }
-
     return results.sort((a, b) => b.score - a.score).slice(0, k);
   }
 
@@ -226,7 +217,7 @@ class VectorFederation {
       endpoint: peer.endpoint.replace(/\/$/, ''),
       active: true,
       lastSeen: Date.now(),
-      vectorCount: 0,
+      vectorCount: 0
     });
   }
 
@@ -256,37 +247,28 @@ class VectorFederation {
   async pullFromPeer(peerId) {
     const peer = this._peers.get(peerId);
     if (!peer) throw new Error(`Unknown peer: ${peerId}`);
-
     try {
       const res = await fetch(`${peer.endpoint}/api/vectors/export`, {
-        headers: { 'X-Heady-Node': this.nodeId },
-        signal: AbortSignal.timeout(15_000),
+        headers: {
+          'X-Heady-Node': this.nodeId
+        },
+        signal: AbortSignal.timeout(15_000)
       });
-
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
       const data = await res.json();
       const entries = data?.vectors || [];
       let count = 0;
-
       for (const entry of entries) {
-        if (
-          entry?.id &&
-          Array.isArray(entry.embedding) &&
-          entry.embedding.length === this.dimensions
-        ) {
+        if (entry?.id && Array.isArray(entry.embedding) && entry.embedding.length === this.dimensions) {
           this._store.set(entry.id, entry);
           count++;
         }
       }
-
       peer.lastSeen = Date.now();
       peer.vectorCount = entries.length;
       peer.active = true;
-
       this._logReplication('pull', `${count} vectors`, peerId);
       return count;
-
     } catch (err) {
       peer.active = false;
       throw new Error(`Pull from peer ${peerId} failed: ${err.message}`);
@@ -299,8 +281,8 @@ class VectorFederation {
   startGossip() {
     if (this._gossipTimer) return;
     this._gossipTimer = setInterval(() => {
-      this._gossipCycle().catch((err) => {
-        console.warn('[VectorFederation] Gossip cycle error:', err.message);
+      this._gossipCycle().catch(err => {
+        logger.warn('[VectorFederation] Gossip cycle error:', err.message);
       });
     }, this.gossipIntervalMs);
   }
@@ -336,49 +318,69 @@ class VectorFederation {
     app.post(`${prefix}/upsert`, async (req, res) => {
       try {
         const entry = await this.upsert(req.body);
-        res.json({ ok: true, id: entry.id });
+        res.json({
+          ok: true,
+          id: entry.id
+        });
       } catch (err) {
-        res.status(400).json({ ok: false, error: err.message });
+        res.status(400).json({
+          ok: false,
+          error: err.message
+        });
       }
     });
-
     app.get(`${prefix}/export`, (_req, res) => {
       res.json({
         nodeId: this.nodeId,
         vectors: Array.from(this._store.values()),
         count: this._store.size,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
     });
-
     app.post(`${prefix}/search`, async (req, res) => {
       try {
-        const { embedding, k = DEFAULT_SEARCH_K, federated = false } = req.body;
+        const {
+          embedding,
+          k = DEFAULT_SEARCH_K,
+          federated = false
+        } = req.body;
         const results = await this.search(embedding, k, federated);
-        res.json({ ok: true, results, count: results.length });
+        res.json({
+          ok: true,
+          results,
+          count: results.length
+        });
       } catch (err) {
-        res.status(400).json({ ok: false, error: err.message });
+        res.status(400).json({
+          ok: false,
+          error: err.message
+        });
       }
     });
-
     app.get(`${prefix}/peers`, (_req, res) => {
-      res.json({ peers: this.getPeers() });
+      res.json({
+        peers: this.getPeers()
+      });
     });
-
     app.post(`${prefix}/peers`, (req, res) => {
       try {
         this.addPeer(req.body);
-        res.json({ ok: true });
+        res.json({
+          ok: true
+        });
       } catch (err) {
-        res.status(400).json({ ok: false, error: err.message });
+        res.status(400).json({
+          ok: false,
+          error: err.message
+        });
       }
     });
-
     app.delete(`${prefix}/peers/:id`, (req, res) => {
       this.removePeer(req.params.id);
-      res.json({ ok: true });
+      res.json({
+        ok: true
+      });
     });
-
     app.get(`${prefix}/stats`, (_req, res) => {
       res.json(this.getStats());
     });
@@ -391,7 +393,7 @@ class VectorFederation {
    * @returns {object}
    */
   getStats() {
-    const activePeers = Array.from(this._peers.values()).filter((p) => p.active).length;
+    const activePeers = Array.from(this._peers.values()).filter(p => p.active).length;
     return {
       nodeId: this.nodeId,
       version: this.version,
@@ -402,7 +404,7 @@ class VectorFederation {
       totalPeers: this._peers.size,
       activePeers,
       gossipActive: this._gossipTimer !== null,
-      replicationLogSize: this._replicationLog.length,
+      replicationLogSize: this._replicationLog.length
     };
   }
 
@@ -428,16 +430,13 @@ class VectorFederation {
     let dot = 0;
     let normA = aNorm || 0;
     let normB = 0;
-
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       if (!aNorm) normA += a[i] * a[i];
       normB += b[i] * b[i];
     }
-
     if (!aNorm) normA = Math.sqrt(normA);
     normB = Math.sqrt(normB);
-
     if (normA === 0 || normB === 0) return 0;
     return dot / (normA * normB);
   }
@@ -461,7 +460,9 @@ class VectorFederation {
       action,
       id,
       timestamp: Date.now(),
-      ...(peer ? { peer } : {}),
+      ...(peer ? {
+        peer
+      } : {})
     });
     // Cap log at 1000 entries
     if (this._replicationLog.length > 1000) {
@@ -473,47 +474,41 @@ class VectorFederation {
    * @private
    */
   async _replicateToPeers(mode, entry) {
-    const activePeers = Array.from(this._peers.values()).filter((p) => p.active);
+    const activePeers = Array.from(this._peers.values()).filter(p => p.active);
     if (activePeers.length === 0) return;
 
     // Pick up to replicationFactor random peers
-    const targets = activePeers
-      .sort(() => Math.random() - 0.5)
-      .slice(0, this.replicationFactor);
-
-    await Promise.allSettled(
-      targets.map(async (peer) => {
-        const res = await fetch(`${peer.endpoint}/api/vectors/upsert`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Heady-Node': this.nodeId,
-          },
-          body: JSON.stringify(entry),
-          signal: AbortSignal.timeout(5_000),
-        });
-        if (res.ok) {
-          this._logReplication('push-ok', entry.id, peer.id);
-          peer.lastSeen = Date.now();
-          peer.active = true;
-        }
-      })
-    );
+    const targets = activePeers.sort(() => Math.random() - 0.5).slice(0, this.replicationFactor);
+    await Promise.allSettled(targets.map(async peer => {
+      const res = await fetch(`${peer.endpoint}/api/vectors/upsert`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Heady-Node': this.nodeId
+        },
+        body: JSON.stringify(entry),
+        signal: AbortSignal.timeout(5_000)
+      });
+      if (res.ok) {
+        this._logReplication('push-ok', entry.id, peer.id);
+        peer.lastSeen = Date.now();
+        peer.active = true;
+      }
+    }));
   }
 
   /**
    * @private
    */
   async _gossipCycle() {
-    const activePeers = Array.from(this._peers.values()).filter((p) => p.active);
+    const activePeers = Array.from(this._peers.values()).filter(p => p.active);
     if (activePeers.length === 0) return;
-
     const target = activePeers[Math.floor(Math.random() * activePeers.length)];
     try {
       await this.pullFromPeer(target.id);
       this._logReplication('gossip-pull', `from ${target.id}`);
     } catch (err) {
-      console.warn(`[VectorFederation] Gossip pull failed from ${target.id}:`, err.message);
+      logger.warn(`[VectorFederation] Gossip pull failed from ${target.id}:`, err.message);
     }
   }
 
@@ -521,19 +516,22 @@ class VectorFederation {
    * @private
    */
   async _federatedSearch(queryEmbedding, k) {
-    const activePeers = Array.from(this._peers.values()).filter((p) => p.active);
+    const activePeers = Array.from(this._peers.values()).filter(p => p.active);
     const allResults = [];
-
-    const peerSearches = activePeers.map(async (peer) => {
+    const peerSearches = activePeers.map(async peer => {
       try {
         const res = await fetch(`${peer.endpoint}/api/vectors/search`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-Heady-Node': this.nodeId,
+            'X-Heady-Node': this.nodeId
           },
-          body: JSON.stringify({ embedding: queryEmbedding, k, federated: false }),
-          signal: AbortSignal.timeout(5_000),
+          body: JSON.stringify({
+            embedding: queryEmbedding,
+            k,
+            federated: false
+          }),
+          signal: AbortSignal.timeout(5_000)
         });
         if (!res.ok) return;
         const data = await res.json();
@@ -544,7 +542,6 @@ class VectorFederation {
         peer.active = false;
       }
     });
-
     await Promise.allSettled(peerSearches);
     return allResults;
   }
@@ -552,4 +549,7 @@ class VectorFederation {
 
 // ── Exports ───────────────────────────────────────────────────────────────────
 
-module.exports = { VectorFederation, FEDERATION_VERSION };
+module.exports = {
+  VectorFederation,
+  FEDERATION_VERSION
+};

@@ -15,30 +15,25 @@
 
 const EventEmitter = require('events');
 const {
-  PHI, PSI, fib, phiFusionWeights,
-  PHI_TIMING, CSL_THRESHOLDS,
+  PHI,
+  PSI,
+  fib,
+  phiFusionWeights,
+  PHI_TIMING,
+  CSL_THRESHOLDS
 } = require('../../shared/phi-math');
 
 // ─── Channel Definitions ──────────────────────────────────────────────────────
 
 /** All valid namespaced channels */
-const CHANNELS = Object.freeze([
-  'task',
-  'lifecycle',
-  'health',
-  'drift',
-  'alert',
-  'learning',
-]);
+const CHANNELS = Object.freeze(['task', 'lifecycle', 'health', 'drift', 'alert', 'learning']);
 
 /** Channel priority weights (phi-fusion across 6 channels) */
-const CHANNEL_WEIGHTS = Object.freeze(
-  CHANNELS.reduce((acc, ch, i) => {
-    const weights = phiFusionWeights(CHANNELS.length);
-    acc[ch] = weights[i];
-    return acc;
-  }, {})
-);
+const CHANNEL_WEIGHTS = Object.freeze(CHANNELS.reduce((acc, ch, i) => {
+  const weights = phiFusionWeights(CHANNELS.length);
+  acc[ch] = weights[i];
+  return acc;
+}, {}));
 
 // ─── Ring Buffer ──────────────────────────────────────────────────────────────
 
@@ -48,11 +43,10 @@ const HISTORY_CAPACITY = fib(12); // 144
 class RingBuffer {
   constructor(capacity) {
     this._capacity = capacity;
-    this._buf      = new Array(capacity);
-    this._head     = 0; // next write position
-    this._size     = 0;
+    this._buf = new Array(capacity);
+    this._head = 0; // next write position
+    this._size = 0;
   }
-
   push(item) {
     this._buf[this._head] = item;
     this._head = (this._head + 1) % this._capacity;
@@ -62,37 +56,28 @@ class RingBuffer {
   /** Returns events oldest-first */
   toArray() {
     if (this._size === 0) return [];
-    const start = this._size < this._capacity
-      ? 0
-      : this._head; // oldest slot when full
+    const start = this._size < this._capacity ? 0 : this._head; // oldest slot when full
     const result = [];
     for (let i = 0; i < this._size; i++) {
       result.push(this._buf[(start + i) % this._capacity]);
     }
     return result;
   }
-
-  get size()     { return this._size; }
-  get capacity() { return this._capacity; }
+  get size() {
+    return this._size;
+  }
+  get capacity() {
+    return this._capacity;
+  }
 }
 
 // ─── Octant Indexing ──────────────────────────────────────────────────────────
 
-/**
- * Map a 3-axis coherence vector to an octant index (0–7).
- * Axes represent: semantic alignment, temporal urgency, spatial proximity.
- * Each axis is quantised: >= PSI (0.618) → 1, else → 0.
- *
- * @param {number} semantic   0–1 semantic alignment score
- * @param {number} temporal   0–1 temporal urgency score
- * @param {number} spatial    0–1 spatial proximity score
- * @returns {number} octant index 0–7
- */
 function octantIndex(semantic, temporal, spatial) {
   const s = semantic >= PSI ? 1 : 0;
   const t = temporal >= PSI ? 1 : 0;
-  const p = spatial  >= PSI ? 1 : 0;
-  return (s << 2) | (t << 1) | p;
+  const p = spatial >= PSI ? 1 : 0;
+  return s << 2 | t << 1 | p;
 }
 
 /**
@@ -140,48 +125,32 @@ class EventBus extends EventEmitter {
 
   // ─── Core API ───────────────────────────────────────────────────────────────
 
-  /**
-   * Emit a phi-prioritised event on a namespaced channel.
-   *
-   * @param {string} channel     one of CHANNELS
-   * @param {object} event       event payload
-   * @param {string} [event.id]
-   * @param {string} [event.type]
-   * @param {object} [event.data]
-   * @param {number} [event.semantic]  0–1 semantic alignment
-   * @param {number} [event.temporal]  0–1 temporal urgency
-   * @param {number} [event.spatial]   0–1 spatial proximity
-   * @returns {boolean} true if any listener received the event
-   */
   emit(channel, event = {}) {
     if (!CHANNELS.includes(channel)) {
       throw new Error(`[EventBus] Unknown channel: "${channel}". Valid: ${CHANNELS.join(', ')}`);
     }
-
-    const semantic  = typeof event.semantic  === 'number' ? event.semantic  : PSI;
-    const temporal  = typeof event.temporal  === 'number' ? event.temporal  : PSI;
-    const spatial   = typeof event.spatial   === 'number' ? event.spatial   : PSI;
+    const semantic = typeof event.semantic === 'number' ? event.semantic : PSI;
+    const temporal = typeof event.temporal === 'number' ? event.temporal : PSI;
+    const spatial = typeof event.spatial === 'number' ? event.spatial : PSI;
     const coherence = (semantic + temporal + spatial) / 3;
 
     /** @type {EnrichedEvent} */
     const enriched = {
-      id:        event.id   || `${channel}:${Date.now()}:${Math.random().toString(36).slice(2, 7)}`,
+      id: event.id || `${channel}:${Date.now()}:${Math.random().toString(36).slice(2, 7)}`,
       channel,
-      type:      event.type || channel,
-      data:      event.data || {},
+      type: event.type || channel,
+      data: event.data || {},
       semantic,
       temporal,
       spatial,
       coherence,
-      octant:    octantIndex(semantic, temporal, spatial),
-      priority:  computePriority(channel, coherence),
-      ts:        Date.now(),
+      octant: octantIndex(semantic, temporal, spatial),
+      priority: computePriority(channel, coherence),
+      ts: Date.now()
     };
-
     this._history.push(enriched);
     this._processed++;
     this._channelCounts.set(channel, (this._channelCounts.get(channel) || 0) + 1);
-
     return super.emit(channel, enriched);
   }
 
@@ -228,13 +197,14 @@ class EventBus extends EventEmitter {
     const counts = {};
     for (const [ch, n] of this._channelCounts) counts[ch] = n;
     return {
-      processed:       this._processed,
-      historySize:     this._history.size,
+      processed: this._processed,
+      historySize: this._history.size,
       historyCapacity: this._history.capacity,
-      channelCounts:   counts,
-      uptimeMs:        Date.now() - this._startedAt,
-      phiCapacity:     HISTORY_CAPACITY,   // fib(12) = 144
-      coherenceGate:   CSL_THRESHOLDS.COHERENCE,
+      channelCounts: counts,
+      uptimeMs: Date.now() - this._startedAt,
+      phiCapacity: HISTORY_CAPACITY,
+      // fib(12) = 144
+      coherenceGate: CSL_THRESHOLDS.COHERENCE
     };
   }
 
@@ -260,7 +230,6 @@ class EventBus extends EventEmitter {
 
 /** Module-level singleton — one bus per process */
 const _instance = new EventBus();
-
 module.exports = {
   EventBus,
   CHANNELS,
@@ -270,5 +239,5 @@ module.exports = {
   computePriority,
   RingBuffer,
   /** @type {EventBus} Process-scoped singleton event bus */
-  bus: _instance,
+  bus: _instance
 };

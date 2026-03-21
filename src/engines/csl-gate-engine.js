@@ -1,4 +1,5 @@
 'use strict';
+
 const logger = require('../utils/logger') || console;
 
 /**
@@ -26,18 +27,12 @@ const {
   adaptiveTemperature,
   cosineSimilarity,
   phiFusionWeights,
-  phiPriorityScore,
+  phiPriorityScore
 } = require('../shared/phi-math.js');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CSLGateEngine
 // ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * @typedef {Object} GateOptions
- * @property {number} [tau=1.0]          - Temperature sharpness parameter
- * @property {number} [temp=PHI_TEMPERATURE] - Phi temperature modifier
- */
 
 /**
  * @typedef {Object} DriftResult
@@ -66,28 +61,11 @@ const {
  * const gated = engine.gate(0.9, 0.85);  // → smooth sigmoid output
  */
 class CSLGateEngine {
-  /**
-   * Creates a new CSLGateEngine instance.
-   *
-   * @param {Object} [config={}] - Optional configuration overrides
-   * @param {Object} [config.thresholds]                          - Custom threshold values (defaults from CSL_THRESHOLDS)
-   * @param {number} [config.thresholds.MINIMUM=0.500]            - Minimum acceptance threshold
-   * @param {number} [config.thresholds.LOW=0.691]                - Low confidence threshold
-   * @param {number} [config.thresholds.MEDIUM=0.809]             - Medium confidence threshold
-   * @param {number} [config.thresholds.HIGH=0.882]               - High confidence threshold
-   * @param {number} [config.thresholds.CRITICAL=0.927]           - Critical confidence threshold
-   * @param {number} [config.dedupThreshold=DEDUP_THRESHOLD]      - Semantic dedup similarity cutoff
-   * @param {number} [config.coherenceDriftThreshold=COHERENCE_DRIFT_THRESHOLD] - Drift detection cutoff
-   * @param {number} [config.defaultTau=1.0]                      - Default sigmoid sharpness
-   * @param {number} [config.defaultTemp=PHI_TEMPERATURE]         - Default phi temperature
-   */
   constructor(config = {}) {
     this.thresholds = Object.assign({}, CSL_THRESHOLDS, config.thresholds || {});
     this.dedupThreshold = config.dedupThreshold !== undefined ? config.dedupThreshold : DEDUP_THRESHOLD;
-    this.coherenceDriftThreshold = config.coherenceDriftThreshold !== undefined
-      ? config.coherenceDriftThreshold
-      : COHERENCE_DRIFT_THRESHOLD;
-    this.defaultTau  = config.defaultTau  !== undefined ? config.defaultTau  : 1.0;
+    this.coherenceDriftThreshold = config.coherenceDriftThreshold !== undefined ? config.coherenceDriftThreshold : COHERENCE_DRIFT_THRESHOLD;
+    this.defaultTau = config.defaultTau !== undefined ? config.defaultTau : 1.0;
     this.defaultTemp = config.defaultTemp !== undefined ? config.defaultTemp : PHI_TEMPERATURE;
   }
 
@@ -95,36 +73,13 @@ class CSLGateEngine {
   // CORE GATE & BLEND
   // ───────────────────────────────────────────────────────────────────────────
 
-  /**
-   * Applies smooth sigmoid CSL gating to a value.
-   * Combines a raw value with a cosine similarity score using phi-temperature sigmoid.
-   *
-   * @param {number}      value    - Raw input value
-   * @param {number}      cosScore - Cosine similarity score in [-1, 1]
-   * @param {GateOptions} [options={}] - Optional tau and temp overrides
-   * @returns {number} Gated output in (0, 1)
-   *
-   * @example
-   * const output = engine.gate(0.9, 0.85, { tau: 1.5 });
-   */
   gate(value, cosScore, options = {}) {
-    const tau  = options.tau  !== undefined ? options.tau  : this.defaultTau;
+    const tau = options.tau !== undefined ? options.tau : this.defaultTau;
     const temp = options.temp !== undefined ? options.temp : this.defaultTemp;
     return cslGate(value, cosScore, tau, temp);
   }
-
-  /**
-   * Smooth weight interpolation using CSL sigmoid blending.
-   * Blends between high and low weights based on cosine similarity.
-   *
-   * @param {number}      weightHigh   - Weight when cosScore is high
-   * @param {number}      weightLow    - Weight when cosScore is low
-   * @param {number}      cosScore     - Cosine similarity in [-1, 1]
-   * @param {GateOptions} [options={}] - Optional tau and temp overrides
-   * @returns {number} Interpolated weight
-   */
   blend(weightHigh, weightLow, cosScore, options = {}) {
-    const tau  = options.tau  !== undefined ? options.tau  : this.defaultTau;
+    const tau = options.tau !== undefined ? options.tau : this.defaultTau;
     const temp = options.temp !== undefined ? options.temp : this.defaultTemp;
     return cslBlend(weightHigh, weightLow, cosScore, tau, temp);
   }
@@ -152,9 +107,9 @@ class CSLGateEngine {
   classify(cosScore) {
     const t = this.thresholds;
     if (cosScore >= t.CRITICAL) return 'CRITICAL';
-    if (cosScore >= t.HIGH)     return 'HIGH';
-    if (cosScore >= t.MEDIUM)   return 'MEDIUM';
-    if (cosScore >= t.LOW)      return 'LOW';
+    if (cosScore >= t.HIGH) return 'HIGH';
+    if (cosScore >= t.MEDIUM) return 'MEDIUM';
+    if (cosScore >= t.LOW) return 'LOW';
     return 'MINIMUM';
   }
 
@@ -203,19 +158,22 @@ class CSLGateEngine {
    */
   scoreCandidates(candidates, criteria) {
     if (!candidates || candidates.length === 0) return [];
-    if (!criteria  || criteria.length === 0)    return candidates.map(c => ({ candidate: c, score: 0 }));
-
+    if (!criteria || criteria.length === 0) return candidates.map(c => ({
+      candidate: c,
+      score: 0
+    }));
     const weights = phiFusionWeights(criteria.length);
-
     const scored = candidates.map(candidate => {
       const factorScores = criteria.map(c => {
         const raw = c.fn(candidate);
         return Math.max(0, Math.min(1, raw));
       });
       const score = factorScores.reduce((acc, s, i) => acc + s * weights[i], 0);
-      return { candidate, score };
+      return {
+        candidate,
+        score
+      };
     });
-
     return scored.sort((a, b) => b.score - a.score);
   }
 
@@ -240,24 +198,20 @@ class CSLGateEngine {
     if (!items || items.length === 0) return [];
     const kept = [];
     const keptEmbeddings = [];
-
     for (let i = 0; i < items.length; i++) {
       const emb = embeddings[i];
       let isDuplicate = false;
-
       for (const keptEmb of keptEmbeddings) {
         if (cosineSimilarity(emb, keptEmb) >= threshold) {
           isDuplicate = true;
           break;
         }
       }
-
       if (!isDuplicate) {
         kept.push(items[i]);
         keptEmbeddings.push(emb);
       }
     }
-
     return kept;
   }
 
@@ -265,19 +219,6 @@ class CSLGateEngine {
   // ADAPTIVE GATE
   // ───────────────────────────────────────────────────────────────────────────
 
-  /**
-   * Applies CSL gating with entropy-adaptive temperature.
-   * High entropy → lower temperature → sharper gate. Low entropy → gentler.
-   *
-   * @param {number} value      - Raw input value
-   * @param {number} cosScore   - Cosine similarity score in [-1, 1]
-   * @param {number} entropy    - Current entropy measure
-   * @param {number} maxEntropy - Maximum possible entropy for normalization
-   * @returns {number} Adaptively gated output in (0, 1)
-   *
-   * @example
-   * const output = engine.adaptiveGate(0.9, 0.8, 3.2, 5.0);
-   */
   adaptiveGate(value, cosScore, entropy, maxEntropy) {
     const temp = adaptiveTemperature(entropy, maxEntropy);
     return cslGate(value, cosScore, this.defaultTau, temp);
@@ -311,50 +252,28 @@ class CSLGateEngine {
   // GATE CHAIN
   // ───────────────────────────────────────────────────────────────────────────
 
-  /**
-   * Creates a composable gate-chain function from an ordered array of stage configs.
-   * Each stage receives the output of the previous stage as its `value`.
-   * The chain short-circuits if any stage output falls below CSL_THRESHOLDS.MINIMUM.
-   *
-   * @param {Array<{tau?: number, temp?: number, cosScore: number|function(number): number}>} stages
-   *   - Ordered pipeline stages. `cosScore` may be a fixed number or a function of the current value.
-   * @returns {function(number): { output: number, stages: number[], terminated: boolean }}
-   *   A function that accepts an initial value and returns the chain result.
-   *
-   * @example
-   * const chain = engine.createGateChain([
-   *   { cosScore: 0.85, tau: 1.0 },
-   *   { cosScore: v => v * 0.9, tau: 1.2 },
-   * ]);
-   * const result = chain(0.95);
-   * // result.output → final gated value
-   * // result.stages → intermediate outputs per stage
-   * // result.terminated → true if chain exited early
-   */
   createGateChain(stages) {
     const engine = this;
     return function runChain(initialValue) {
       let current = initialValue;
       const stageOutputs = [];
       let terminated = false;
-
       for (const stage of stages) {
-        const tau  = stage.tau  !== undefined ? stage.tau  : engine.defaultTau;
+        const tau = stage.tau !== undefined ? stage.tau : engine.defaultTau;
         const temp = stage.temp !== undefined ? stage.temp : engine.defaultTemp;
-        const cos  = typeof stage.cosScore === 'function'
-          ? stage.cosScore(current)
-          : stage.cosScore;
-
+        const cos = typeof stage.cosScore === 'function' ? stage.cosScore(current) : stage.cosScore;
         current = cslGate(current, cos, tau, temp);
         stageOutputs.push(current);
-
         if (current < engine.thresholds.MINIMUM) {
           terminated = true;
           break;
         }
       }
-
-      return { output: current, stages: stageOutputs, terminated };
+      return {
+        output: current,
+        stages: stageOutputs,
+        terminated
+      };
     };
   }
 
@@ -376,17 +295,14 @@ class CSLGateEngine {
   computeCoherence(embeddings) {
     if (!embeddings || embeddings.length === 0) return 0;
     if (embeddings.length === 1) return 1;
-
     let sum = 0;
     let count = 0;
-
     for (let i = 0; i < embeddings.length; i++) {
       for (let j = i + 1; j < embeddings.length; j++) {
         sum += cosineSimilarity(embeddings[i], embeddings[j]);
         count++;
       }
     }
-
     return count > 0 ? sum / count : 0;
   }
 
@@ -413,7 +329,7 @@ class CSLGateEngine {
     return {
       drifted: similarity < threshold,
       similarity,
-      delta,
+      delta
     };
   }
 }

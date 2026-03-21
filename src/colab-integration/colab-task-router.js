@@ -15,45 +15,96 @@
 'use strict';
 
 const {
-  PHI, PSI, PHI_SQ, fib, phiMs,
-  CSL_THRESHOLDS, PHI_TIMING, POOLS, VECTOR,
-  cosineSimilarity, normalize, cslGate, sigmoid,
-  phiFusionWeights, getPressureLevel,
+  PHI,
+  PSI,
+  PHI_SQ,
+  fib,
+  phiMs,
+  CSL_THRESHOLDS,
+  PHI_TIMING,
+  POOLS,
+  VECTOR,
+  cosineSimilarity,
+  normalize,
+  cslGate,
+  sigmoid,
+  phiFusionWeights,
+  getPressureLevel
 } = require('../shared/phi-math');
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // φ-DERIVED CONSTANTS — ZERO MAGIC NUMBERS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const QUEUE_DEPTH           = fib(13);                    // 233 max queued tasks
-const QUEUE_DRAIN_BATCH     = fib(6);                     // 8 tasks per drain cycle
-const ROUTING_TIMEOUT_MS    = PHI_TIMING.PHI_3;          // 4,236ms routing decision timeout
-const STALE_TASK_MS         = PHI_TIMING.PHI_9;          // 75,025ms — task considered stale
-const PRIORITY_DECAY_RATE   = PSI;                        // 0.618 — priority decays by ψ per timeout
-const MIN_ROUTING_SCORE     = CSL_THRESHOLDS.MINIMUM;    // 0.500 — noise floor for routing
-const AFFINITY_GATE_TAU     = CSL_THRESHOLDS.DEFAULT;    // 0.618 — CSL gate threshold
-const AFFINITY_GATE_TEMP    = Math.pow(PSI, 3);          // 0.236 — gate temperature
+const QUEUE_DEPTH = fib(13); // 233 max queued tasks
+const QUEUE_DRAIN_BATCH = fib(6); // 8 tasks per drain cycle
+const ROUTING_TIMEOUT_MS = PHI_TIMING.PHI_3; // 4,236ms routing decision timeout
+const STALE_TASK_MS = PHI_TIMING.PHI_9; // 75,025ms — task considered stale
+const PRIORITY_DECAY_RATE = PSI; // 0.618 — priority decays by ψ per timeout
+const MIN_ROUTING_SCORE = CSL_THRESHOLDS.MINIMUM; // 0.500 — noise floor for routing
+const AFFINITY_GATE_TAU = CSL_THRESHOLDS.DEFAULT; // 0.618 — CSL gate threshold
+const AFFINITY_GATE_TEMP = Math.pow(PSI, 3);
 
 // Task type → pool affinity weights (φ-derived)
 const TASK_POOL_AFFINITY = Object.freeze({
-  'embedding':      { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
-  'inference':      { hot: POOLS.HOT + POOLS.WARM, warm: POOLS.COLD, cold: 0 },
-  'fine-tune':      { hot: 0, warm: POOLS.HOT + POOLS.WARM, cold: POOLS.COLD },
-  'batch-process':  { hot: POOLS.COLD, warm: POOLS.HOT, cold: POOLS.WARM },
-  'vector-search':  { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
-  'hnsw-build':     { hot: 0, warm: POOLS.HOT, cold: POOLS.WARM },
-  'projection':     { hot: POOLS.HOT, warm: POOLS.WARM, cold: POOLS.COLD },
-  'experiment':     { hot: 0, warm: POOLS.COLD, cold: POOLS.HOT + POOLS.WARM },
-  'drift-detection':{ hot: POOLS.COLD, warm: POOLS.WARM, cold: POOLS.HOT },
+  'embedding': {
+    hot: POOLS.HOT,
+    warm: POOLS.WARM,
+    cold: POOLS.COLD
+  },
+  'inference': {
+    hot: POOLS.HOT + POOLS.WARM,
+    warm: POOLS.COLD,
+    cold: 0
+  },
+  'fine-tune': {
+    hot: 0,
+    warm: POOLS.HOT + POOLS.WARM,
+    cold: POOLS.COLD
+  },
+  'batch-process': {
+    hot: POOLS.COLD,
+    warm: POOLS.HOT,
+    cold: POOLS.WARM
+  },
+  'vector-search': {
+    hot: POOLS.HOT,
+    warm: POOLS.WARM,
+    cold: POOLS.COLD
+  },
+  'hnsw-build': {
+    hot: 0,
+    warm: POOLS.HOT,
+    cold: POOLS.WARM
+  },
+  'projection': {
+    hot: POOLS.HOT,
+    warm: POOLS.WARM,
+    cold: POOLS.COLD
+  },
+  'experiment': {
+    hot: 0,
+    warm: POOLS.COLD,
+    cold: POOLS.HOT + POOLS.WARM
+  },
+  'drift-detection': {
+    hot: POOLS.COLD,
+    warm: POOLS.WARM,
+    cold: POOLS.HOT
+  }
 });
 
 // CSL priority weights — concurrent-equals model (not boolean priority)
 const PRIORITY_WEIGHTS = Object.freeze({
-  REALTIME:   1.0,                          // 1.000 — user-facing, latency-critical
-  HIGH:       PSI,                          // 0.618 — important background
-  NORMAL:     PSI * PSI,                    // 0.382 — standard processing
-  LOW:        Math.pow(PSI, 3),             // 0.236 — batch/analytics
-  BACKGROUND: Math.pow(PSI, 4),             // 0.146 — experiments, low priority
+  REALTIME: 1.0,
+  // 1.000 — user-facing, latency-critical
+  HIGH: PSI,
+  // 0.618 — important background
+  NORMAL: PSI * PSI,
+  // 0.382 — standard processing
+  LOW: Math.pow(PSI, 3),
+  // 0.236 — batch/analytics
+  BACKGROUND: Math.pow(PSI, 4) // 0.146 — experiments, low priority
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -66,7 +117,7 @@ function log(level, msg, meta = {}) {
     level,
     service: 'colab-task-router',
     msg,
-    ...meta,
+    ...meta
   }) + '\n');
 }
 
@@ -96,15 +147,14 @@ function classifyTask(task) {
   } else {
     priorityWeight = PRIORITY_WEIGHTS.NORMAL;
   }
-
   return {
     ...task,
     classification: {
       type,
       poolAffinity,
       priorityWeight,
-      classifiedAt: Date.now(),
-    },
+      classifiedAt: Date.now()
+    }
   };
 }
 
@@ -112,20 +162,6 @@ function classifyTask(task) {
 // CSL ROUTING SCORER
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/**
- * Score a runtime for a given task using CSL cosine routing.
- *
- * Composite score = cslGate(
- *   affinityScore × loadFactor × pressureFactor × taskMatch,
- *   cosineAlignment,
- *   τ = AFFINITY_GATE_TAU,
- *   temp = AFFINITY_GATE_TEMP
- * )
- *
- * @param {object} task - Classified task with embedding and classification
- * @param {object} runtime - Runtime state object
- * @returns {object} { score, components }
- */
 function scoreRuntime(task, runtime) {
   const pool = runtime.pool;
   const classification = task.classification || classifyTask(task).classification;
@@ -140,16 +176,11 @@ function scoreRuntime(task, runtime) {
   }
 
   // 3. φ-weighted load factor: lighter load = higher score
-  const loadFactor = 1 - (runtime.loadFactor * PSI);
+  const loadFactor = 1 - runtime.loadFactor * PSI;
 
   // 4. Pressure penalty from runtime utilization
-  const pressureLabel = runtime.pressureLevel
-    ? runtime.pressureLevel.label || runtime.pressureLevel
-    : 'NOMINAL';
-  const pressureFactor = pressureLabel === 'NOMINAL' ? 1
-    : pressureLabel === 'ELEVATED' ? PSI
-    : pressureLabel === 'HIGH' ? PSI * PSI
-    : Math.pow(PSI, 3); // CRITICAL
+  const pressureLabel = runtime.pressureLevel ? runtime.pressureLevel.label || runtime.pressureLevel : 'NOMINAL';
+  const pressureFactor = pressureLabel === 'NOMINAL' ? 1 : pressureLabel === 'ELEVATED' ? PSI : pressureLabel === 'HIGH' ? PSI * PSI : Math.pow(PSI, 3); // CRITICAL
 
   // 5. Task type match bonus
   const capabilities = runtime.capabilities || [];
@@ -163,10 +194,7 @@ function scoreRuntime(task, runtime) {
   const rawScore = poolAffinity * loadFactor * pressureFactor * typeMatch * gpuFactor;
 
   // 8. CSL-gated final score: smooth sigmoid gating by cosine alignment
-  const gatedScore = cosineAffinity > MIN_ROUTING_SCORE
-    ? cslGate(rawScore, cosineAffinity, AFFINITY_GATE_TAU, AFFINITY_GATE_TEMP)
-    : rawScore * cosineAffinity;
-
+  const gatedScore = cosineAffinity > MIN_ROUTING_SCORE ? cslGate(rawScore, cosineAffinity, AFFINITY_GATE_TAU, AFFINITY_GATE_TEMP) : rawScore * cosineAffinity;
   return {
     score: gatedScore,
     components: {
@@ -177,8 +205,8 @@ function scoreRuntime(task, runtime) {
       typeMatch,
       gpuAvailable,
       rawScore: Number(rawScore.toFixed(6)),
-      gatedScore: Number(gatedScore.toFixed(6)),
-    },
+      gatedScore: Number(gatedScore.toFixed(6))
+    }
   };
 }
 
@@ -218,7 +246,10 @@ class ColabTaskRouter {
     if (classifiedTask.preferPool) {
       const preferred = this._runtimes.get(classifiedTask.preferPool);
       if (preferred && preferred.isActive) {
-        const { score, components } = scoreRuntime(classifiedTask, preferred);
+        const {
+          score,
+          components
+        } = scoreRuntime(classifiedTask, preferred);
         if (score > MIN_ROUTING_SCORE) {
           this._recordRouting(classifiedTask, preferred, score, components);
           return {
@@ -226,7 +257,7 @@ class ColabTaskRouter {
             pool: preferred.pool,
             score,
             queued: false,
-            components,
+            components
           };
         }
       }
@@ -236,8 +267,16 @@ class ColabTaskRouter {
     const candidates = [];
     for (const [pool, runtime] of this._runtimes) {
       if (!runtime.isActive && runtime.isHealthy !== true) continue;
-      const { score, components } = scoreRuntime(classifiedTask, runtime);
-      candidates.push({ runtime, pool, score, components });
+      const {
+        score,
+        components
+      } = scoreRuntime(classifiedTask, runtime);
+      candidates.push({
+        runtime,
+        pool,
+        score,
+        components
+      });
     }
 
     // Sort by score descending
@@ -252,7 +291,7 @@ class ColabTaskRouter {
           pool: candidate.pool,
           score: candidate.score,
           queued: false,
-          components: candidate.components,
+          components: candidate.components
         };
       }
     }
@@ -267,7 +306,7 @@ class ColabTaskRouter {
         score: best.score,
         queued: false,
         components: best.components,
-        belowThreshold: true,
+        belowThreshold: true
       };
     }
 
@@ -290,7 +329,6 @@ class ColabTaskRouter {
       // Overflow handling: drop lowest-priority task if new task has higher priority
       const newPriority = task.classification?.priorityWeight || PRIORITY_WEIGHTS.NORMAL;
       const lowestIdx = this._findLowestPriorityIndex();
-
       if (lowestIdx >= 0) {
         const lowestPriority = this._queue[lowestIdx].classification?.priorityWeight || 0;
         if (newPriority > lowestPriority) {
@@ -299,14 +337,14 @@ class ColabTaskRouter {
             droppedTaskId: dropped.id,
             droppedPriority: lowestPriority,
             newTaskId: task.id,
-            newPriority,
+            newPriority
           });
         } else {
           return {
             queued: false,
             error: 'HEADY-COLAB-003',
             message: `Queue full (${this._queueDepth}), task priority too low`,
-            queueDepth: this._queue.length,
+            queueDepth: this._queue.length
           };
         }
       }
@@ -322,26 +360,22 @@ class ColabTaskRouter {
         break;
       }
     }
-
     this._queue.splice(insertIdx, 0, {
       ...task,
-      enqueuedAt: Date.now(),
+      enqueuedAt: Date.now()
     });
-
     this._totalQueued++;
-
     log('info', 'Task enqueued', {
       taskId: task.id,
       type: task.type,
       priority,
       queuePosition: insertIdx + 1,
-      queueDepth: this._queue.length,
+      queueDepth: this._queue.length
     });
-
     return {
       queued: true,
       queuePosition: insertIdx + 1,
-      queueDepth: this._queue.length,
+      queueDepth: this._queue.length
     };
   }
 
@@ -363,24 +397,25 @@ class ColabTaskRouter {
       if (type && runtime.capabilities && !runtime.capabilities.includes(type)) continue;
 
       // Check if task is stale
-      if (task.enqueuedAt && (Date.now() - task.enqueuedAt) > STALE_TASK_MS) {
+      if (task.enqueuedAt && Date.now() - task.enqueuedAt > STALE_TASK_MS) {
         this._queue.splice(i, 1);
         log('warn', 'Stale task removed from queue', {
           taskId: task.id,
-          ageMs: Date.now() - task.enqueuedAt,
+          ageMs: Date.now() - task.enqueuedAt
         });
         i--;
         continue;
       }
 
       // Score this runtime for the task
-      const { score } = scoreRuntime(task, runtime);
+      const {
+        score
+      } = scoreRuntime(task, runtime);
       if (score > 0) {
         this._queue.splice(i, 1);
         return task;
       }
     }
-
     return null;
   }
 
@@ -392,27 +427,30 @@ class ColabTaskRouter {
   drain() {
     const routed = [];
     let drained = 0;
-
     for (const [, runtime] of this._runtimes) {
       if (!runtime.isActive) continue;
-
       while (drained < QUEUE_DRAIN_BATCH) {
         const task = this.dequeue(runtime);
         if (!task) break;
-
-        const { score, components } = scoreRuntime(task, runtime);
-        routed.push({ task, runtime, score, components });
+        const {
+          score,
+          components
+        } = scoreRuntime(task, runtime);
+        routed.push({
+          task,
+          runtime,
+          score,
+          components
+        });
         drained++;
       }
     }
-
     if (routed.length > 0) {
       log('info', 'Queue drain cycle', {
         drained: routed.length,
-        remaining: this._queue.length,
+        remaining: this._queue.length
       });
     }
-
     return routed;
   }
 
@@ -422,18 +460,21 @@ class ColabTaskRouter {
   pruneStale() {
     const now = Date.now();
     const before = this._queue.length;
-
     this._queue = this._queue.filter(task => {
-      if (task.enqueuedAt && (now - task.enqueuedAt) > STALE_TASK_MS) {
-        log('warn', 'Pruned stale task', { taskId: task.id });
+      if (task.enqueuedAt && now - task.enqueuedAt > STALE_TASK_MS) {
+        log('warn', 'Pruned stale task', {
+          taskId: task.id
+        });
         return false;
       }
       return true;
     });
-
     const pruned = before - this._queue.length;
     if (pruned > 0) {
-      log('info', 'Stale task pruning', { pruned, remaining: this._queue.length });
+      log('info', 'Stale task pruning', {
+        pruned,
+        remaining: this._queue.length
+      });
     }
     return pruned;
   }
@@ -453,7 +494,6 @@ class ColabTaskRouter {
     }
     return lowestIdx;
   }
-
   _recordRouting(task, runtime, score, components) {
     this._totalRouted++;
     this._routingHistory.push({
@@ -462,9 +502,8 @@ class ColabTaskRouter {
       pool: runtime.pool,
       score: Number(score.toFixed(6)),
       priority: task.classification?.priorityWeight,
-      ts: Date.now(),
+      ts: Date.now()
     });
-
     if (this._routingHistory.length > this._routingHistoryMax) {
       this._routingHistory.shift();
     }
@@ -475,28 +514,19 @@ class ColabTaskRouter {
   get queueDepth() {
     return this._queue.length;
   }
-
   get queueCapacity() {
     return this._queueDepth;
   }
-
   status() {
     const queueByType = {};
     const queueByPriority = {};
-
     for (const task of this._queue) {
       const type = task.classification?.type || task.type || 'unknown';
       queueByType[type] = (queueByType[type] || 0) + 1;
-
       const priority = task.classification?.priorityWeight || PRIORITY_WEIGHTS.NORMAL;
-      const bucket = priority >= PRIORITY_WEIGHTS.REALTIME ? 'REALTIME'
-        : priority >= PRIORITY_WEIGHTS.HIGH ? 'HIGH'
-        : priority >= PRIORITY_WEIGHTS.NORMAL ? 'NORMAL'
-        : priority >= PRIORITY_WEIGHTS.LOW ? 'LOW'
-        : 'BACKGROUND';
+      const bucket = priority >= PRIORITY_WEIGHTS.REALTIME ? 'REALTIME' : priority >= PRIORITY_WEIGHTS.HIGH ? 'HIGH' : priority >= PRIORITY_WEIGHTS.NORMAL ? 'NORMAL' : priority >= PRIORITY_WEIGHTS.LOW ? 'LOW' : 'BACKGROUND';
       queueByPriority[bucket] = (queueByPriority[bucket] || 0) + 1;
     }
-
     return {
       queueDepth: this._queue.length,
       queueCapacity: this._queueDepth,
@@ -507,10 +537,9 @@ class ColabTaskRouter {
       totalQueued: this._totalQueued,
       totalDropped: this._totalDropped,
       totalOverflow: this._totalOverflow,
-      recentRoutings: this._routingHistory.slice(-fib(5)), // Last 5 routings
+      recentRoutings: this._routingHistory.slice(-fib(5)) // Last 5 routings
     };
   }
-
   metrics() {
     const lines = [];
     lines.push(`heady_router_queue_depth ${this._queue.length}`);
@@ -538,5 +567,5 @@ module.exports = {
   MIN_ROUTING_SCORE,
   AFFINITY_GATE_TAU,
   AFFINITY_GATE_TEMP,
-  STALE_TASK_MS,
+  STALE_TASK_MS
 };

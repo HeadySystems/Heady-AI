@@ -15,8 +15,21 @@ const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
-const RING_RADIUS = { CENTER: 0, INNER: FIB[8], MIDDLE: FIB[8] * PHI, OUTER: FIB[8] * PHI * PHI, GOVERNANCE: FIB[8] * PHI * PHI * PHI };
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
+const RING_RADIUS = {
+  CENTER: 0,
+  INNER: FIB[8],
+  MIDDLE: FIB[8] * PHI,
+  OUTER: FIB[8] * PHI * PHI,
+  GOVERNANCE: FIB[8] * PHI * PHI * PHI
+};
 
 // ── SACRED GEOMETRY RING DEFINITIONS ─────────────────────────────────────────
 const RING_MEMBERS = {
@@ -45,12 +58,6 @@ function log(level, msg, meta = {}, correlationId = null) {
   };
   process.stdout.write(JSON.stringify(entry) + '\n');
 }
-
-/**
- * Calculate phi-backoff delay for retry attempts.
- * @param {number} attempt - Current attempt number (0-indexed)
- * @returns {number} Delay in milliseconds
- */
 function phiBackoff(attempt) {
   const fibIdx = Math.min(attempt, FIB.length - 1);
   return FIB[fibIdx] * PSI * 1000;
@@ -92,7 +99,7 @@ class HeadyTopologyService {
     for (const [ring, members] of Object.entries(RING_MEMBERS)) {
       const radius = RING_RADIUS[ring];
       members.forEach((name, idx) => {
-        const angle = (2 * Math.PI * idx) / members.length;
+        const angle = 2 * Math.PI * idx / members.length;
         const zOffset = Math.sin(angle * PSI) * FIB[5];
         this.nodes.set(name, {
           id: name,
@@ -108,7 +115,9 @@ class HeadyTopologyService {
         });
       });
     }
-    log('info', 'Default topology initialized', { nodeCount: this.nodes.size });
+    log('info', 'Default topology initialized', {
+      nodeCount: this.nodes.size
+    });
   }
 
   /**
@@ -166,10 +175,15 @@ class HeadyTopologyService {
       dist.set(nodeId, Infinity);
     }
     dist.set(source, 0);
-    queue.push({ id: source, cost: 0 });
+    queue.push({
+      id: source,
+      cost: 0
+    });
     while (queue.length > 0) {
       queue.sort((a, b) => a.cost - b.cost);
-      const { id: current } = queue.shift();
+      const {
+        id: current
+      } = queue.shift();
       if (current === target) break;
       if (visited.has(current)) continue;
       visited.add(current);
@@ -180,7 +194,10 @@ class HeadyTopologyService {
         if (totalCost < dist.get(neighbor)) {
           dist.set(neighbor, totalCost);
           prev.set(neighbor, current);
-          queue.push({ id: neighbor, cost: totalCost });
+          queue.push({
+            id: neighbor,
+            cost: totalCost
+          });
         }
       }
     }
@@ -190,7 +207,11 @@ class HeadyTopologyService {
       path.unshift(step);
       step = prev.get(step);
     }
-    return { path, totalCost: dist.get(target), hops: path.length - 1 };
+    return {
+      path,
+      totalCost: dist.get(target),
+      hops: path.length - 1
+    };
   }
 
   /**
@@ -207,14 +228,21 @@ class HeadyTopologyService {
     const node = {
       id: nodeId,
       ring: data.ring || existing.ring || 'OUTER',
-      position: data.position || existing.position || { x: 0, y: 0, z: 0 },
-      health: data.health != null ? data.health : (existing.health || CSL.MEDIUM),
+      position: data.position || existing.position || {
+        x: 0,
+        y: 0,
+        z: 0
+      },
+      health: data.health != null ? data.health : existing.health || CSL.MEDIUM,
       capabilities: data.capabilities || existing.capabilities || [],
       lastSeen: Date.now()
     };
     this.nodes.set(nodeId, node);
     this.distanceCache.clear();
-    log('info', 'Node registered', { nodeId, ring: node.ring });
+    log('info', 'Node registered', {
+      nodeId,
+      ring: node.ring
+    });
     return node;
   }
 
@@ -226,7 +254,10 @@ class HeadyTopologyService {
   deregisterNode(nodeId) {
     const removed = this.nodes.delete(nodeId);
     if (removed) this.distanceCache.clear();
-    log('info', 'Node deregistered', { nodeId, removed });
+    log('info', 'Node deregistered', {
+      nodeId,
+      removed
+    });
     return removed;
   }
 
@@ -236,7 +267,13 @@ class HeadyTopologyService {
    */
   calculateCoherence() {
     if (this.nodes.size === 0) return CSL.MINIMUM;
-    const ringWeights = { CENTER: PHI * PHI * PHI, INNER: PHI * PHI, MIDDLE: PHI, OUTER: 1, GOVERNANCE: PHI * PHI };
+    const ringWeights = {
+      CENTER: PHI * PHI * PHI,
+      INNER: PHI * PHI,
+      MIDDLE: PHI,
+      OUTER: 1,
+      GOVERNANCE: PHI * PHI
+    };
     let weightedSum = 0;
     let totalWeight = 0;
     for (const node of this.nodes.values()) {
@@ -260,13 +297,25 @@ class HeadyTopologyService {
       for (let j = i + 1; j < nodeIds.length; j++) {
         const dist = this.calculateDistance(nodeIds[i], nodeIds[j]);
         if (dist !== null && dist < RING_RADIUS.OUTER * PSI) {
-          edges.push({ source: nodeIds[i], target: nodeIds[j], distance: dist, cost: this.routingCost(nodeIds[i], nodeIds[j]) });
+          edges.push({
+            source: nodeIds[i],
+            target: nodeIds[j],
+            distance: dist,
+            cost: this.routingCost(nodeIds[i], nodeIds[j])
+          });
         }
       }
     }
     const rings = {};
     for (const [ring, members] of Object.entries(RING_MEMBERS)) {
-      rings[ring] = { radius: RING_RADIUS[ring], members, healthy: members.filter(m => { const n = this.nodes.get(m); return n && n.health >= CSL.MEDIUM; }).length };
+      rings[ring] = {
+        radius: RING_RADIUS[ring],
+        members,
+        healthy: members.filter(m => {
+          const n = this.nodes.get(m);
+          return n && n.health >= CSL.MEDIUM;
+        }).length
+      };
     }
     return {
       timestamp: new Date().toISOString(),
@@ -303,16 +352,32 @@ class HeadyTopologyService {
     this.app.get('/topology/map', (_req, res) => {
       const correlationId = crypto.randomUUID();
       log('info', 'Topology map requested', {}, correlationId);
-      res.json({ correlationId, ...this.generateTopologyMap() });
+      res.json({
+        correlationId,
+        ...this.generateTopologyMap()
+      });
     });
 
     /** Distance between two nodes */
     this.app.get('/topology/distance', (req, res) => {
-      const { from, to } = req.query;
-      if (!from || !to) return res.status(400).json({ error: 'Missing from/to query params' });
+      const {
+        from,
+        to
+      } = req.query;
+      if (!from || !to) return res.status(400).json({
+        error: 'Missing from/to query params'
+      });
       const dist = this.calculateDistance(from, to);
-      if (dist === null) return res.status(404).json({ error: 'Node not found' });
-      res.json({ from, to, distance: dist, routingCost: this.routingCost(from, to), path: this.findPath(from, to) });
+      if (dist === null) return res.status(404).json({
+        error: 'Node not found'
+      });
+      res.json({
+        from,
+        to,
+        distance: dist,
+        routingCost: this.routingCost(from, to),
+        path: this.findPath(from, to)
+      });
     });
 
     /** System-wide coherence score */
@@ -323,7 +388,12 @@ class HeadyTopologyService {
         const healths = members.map(m => this.nodes.get(m)?.health || 0);
         ringHealth[ring] = healths.length > 0 ? healths.reduce((a, b) => a + b, 0) / healths.length : 0;
       }
-      res.json({ coherence, ringHealth, cslGate: coherence >= CSL.HIGH ? 'OPTIMAL' : coherence >= CSL.MEDIUM ? 'NOMINAL' : 'DEGRADED', timestamp: new Date().toISOString() });
+      res.json({
+        coherence,
+        ringHealth,
+        cslGate: coherence >= CSL.HIGH ? 'OPTIMAL' : coherence >= CSL.MEDIUM ? 'NOMINAL' : 'DEGRADED',
+        timestamp: new Date().toISOString()
+      });
     });
 
     /** Register a node */
@@ -331,16 +401,24 @@ class HeadyTopologyService {
       const correlationId = crypto.randomUUID();
       try {
         const node = this.registerNode(req.body.id, req.body);
-        res.status(201).json({ correlationId, node });
+        res.status(201).json({
+          correlationId,
+          node
+        });
       } catch (err) {
-        res.status(400).json({ correlationId, error: err.message });
+        res.status(400).json({
+          correlationId,
+          error: err.message
+        });
       }
     });
 
     /** Deregister a node */
     this.app.delete('/topology/node/:id', (req, res) => {
       const removed = this.deregisterNode(req.params.id);
-      res.json({ removed });
+      res.json({
+        removed
+      });
     });
   }
 
@@ -351,14 +429,18 @@ class HeadyTopologyService {
   async start() {
     if (this._started) return;
     this._setupRoutes();
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server = this.app.listen(this.port, () => {
         this._started = true;
         this._coherenceTimer = setInterval(() => {
           const c = this.calculateCoherence();
-          if (c < CSL.LOW) log('warn', 'System coherence below LOW threshold', { coherence: c });
+          if (c < CSL.LOW) log('warn', 'System coherence below LOW threshold', {
+            coherence: c
+          });
         }, this.coherenceCheckIntervalMs);
-        log('info', 'HeadyTopologyService started', { port: this.port });
+        log('info', 'HeadyTopologyService started', {
+          port: this.port
+        });
         resolve();
       });
     });
@@ -371,7 +453,7 @@ class HeadyTopologyService {
   async stop() {
     if (!this._started) return;
     clearInterval(this._coherenceTimer);
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.close(() => {
         this._started = false;
         log('info', 'HeadyTopologyService stopped');
@@ -385,8 +467,20 @@ class HeadyTopologyService {
    * @returns {Object} Health status
    */
   health() {
-    return { status: this._lastCoherence >= CSL.MEDIUM ? 'healthy' : 'degraded', coherence: this._lastCoherence, nodeCount: this.nodes.size };
+    return {
+      status: this._lastCoherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
+      coherence: this._lastCoherence,
+      nodeCount: this.nodes.size
+    };
   }
 }
-
-module.exports = { HeadyTopologyService, PHI, PSI, FIB, CSL, RING_MEMBERS, RING_RADIUS, phiBackoff };
+module.exports = {
+  HeadyTopologyService,
+  PHI,
+  PSI,
+  FIB,
+  CSL,
+  RING_MEMBERS,
+  RING_RADIUS,
+  phiBackoff
+};

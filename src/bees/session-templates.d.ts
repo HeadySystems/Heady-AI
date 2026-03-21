@@ -10,4 +10,3 @@ export const valuationReportSwarm: Object;
 export const prunerBee: Object;
 export const testerBee: Object;
 export const embedderBee: Object;
-//# sourceMappingURL=session-templates.d.ts.map

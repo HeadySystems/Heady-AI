@@ -22,8 +22,12 @@ export function createCfCNeuron(inputDim, tauInit = PHI) {
   // Xavier-like initialization scaled by φ
   const scale = PHI_INV / Math.sqrt(inputDim);
   return {
-    weights: Array.from({ length: inputDim }, () => (Math.random() * 2 - 1) * scale),
-    recurrent: Array.from({ length: 1 }, () => (Math.random() * 2 - 1) * scale),
+    weights: Array.from({
+      length: inputDim
+    }, () => (Math.random() * 2 - 1) * scale),
+    recurrent: Array.from({
+      length: 1
+    }, () => (Math.random() * 2 - 1) * scale),
     bias: (Math.random() - 0.5) * PHI_INV,
     tau: tauInit,
     state: 0
@@ -53,19 +57,14 @@ export function stepCfCNeuron(neuron, input, dt = 1.0) {
   // Closed-form ODE solution
   const decay = Math.exp(-dt / neuron.tau);
   const newState = neuron.state * decay + (1 - decay) * sigma;
-
   return {
     output: newState,
-    neuron: { ...neuron, state: newState }
+    neuron: {
+      ...neuron,
+      state: newState
+    }
   };
 }
-
-/**
- * CfC Network — a layer of CfC neurons with adaptive time constants.
- * Suitable for temporal pattern recognition with very few neurons (19-50).
- *
- * @typedef {{ neurons: CfCNeuron[], outputWeights: number[][] }} CfCNetwork
- */
 
 /**
  * Create a CfC network (liquid neural network layer).
@@ -76,7 +75,9 @@ export function stepCfCNeuron(neuron, input, dt = 1.0) {
  */
 export function createCfCNetwork(inputDim, hiddenDim = 21, outputDim = 1) {
   // Each neuron gets a φ-scaled time constant from Fibonacci sequence
-  const neurons = Array.from({ length: hiddenDim }, (_, i) => {
+  const neurons = Array.from({
+    length: hiddenDim
+  }, (_, i) => {
     const fibIdx = i % FIBONACCI.length;
     const tau = FIBONACCI[fibIdx] * PHI_INV; // Fibonacci × φ⁻¹
     return createCfCNeuron(inputDim, Math.max(0.1, tau));
@@ -84,11 +85,15 @@ export function createCfCNetwork(inputDim, hiddenDim = 21, outputDim = 1) {
 
   // Output projection weights
   const scale = PHI_INV / Math.sqrt(hiddenDim);
-  const outputWeights = Array.from({ length: outputDim }, () =>
-    Array.from({ length: hiddenDim }, () => (Math.random() * 2 - 1) * scale)
-  );
-
-  return { neurons, outputWeights };
+  const outputWeights = Array.from({
+    length: outputDim
+  }, () => Array.from({
+    length: hiddenDim
+  }, () => (Math.random() * 2 - 1) * scale));
+  return {
+    neurons,
+    outputWeights
+  };
 }
 
 /**
@@ -104,7 +109,10 @@ export function forwardCfCNetwork(network, input, dt = 1.0) {
 
   // Step each CfC neuron
   for (const neuron of network.neurons) {
-    const { output, neuron: updated } = stepCfCNeuron(neuron, input, dt);
+    const {
+      output,
+      neuron: updated
+    } = stepCfCNeuron(neuron, input, dt);
     hiddenStates.push(output);
     updatedNeurons.push(updated);
   }
@@ -117,32 +125,32 @@ export function forwardCfCNetwork(network, input, dt = 1.0) {
     }
     return sum;
   });
-
-  return { outputs, network: { ...network, neurons: updatedNeurons }, hiddenStates };
+  return {
+    outputs,
+    network: {
+      ...network,
+      neurons: updatedNeurons
+    },
+    hiddenStates
+  };
 }
-
-/**
- * Create an adaptive bee using a CfC neuron.
- * The neuron's time constant adapts to the task's temporal dynamics.
- *
- * @param {string} beeType — the bee specialization (e.g., 'research', 'code', 'creative')
- * @param {number} inputDim
- * @returns {{ type: string, neuron: CfCNeuron, process: function }}
- */
 export function createAdaptiveBee(beeType, inputDim = 8) {
   // Different bee types get different initial time constants
   const tauMap = {
-    research: PHI * 3,     // Slow, deliberate
-    code: PHI,             // Balanced
-    creative: PHI_INV,     // Fast, impulsive
-    analysis: PHI * 2,     // Moderate
-    security: PHI * PHI,   // Very careful
+    research: PHI * 3,
+    // Slow, deliberate
+    code: PHI,
+    // Balanced
+    creative: PHI_INV,
+    // Fast, impulsive
+    analysis: PHI * 2,
+    // Moderate
+    security: PHI * PHI,
+    // Very careful
     default: PHI
   };
-
   const tau = tauMap[beeType] || tauMap.default;
   const neuron = createCfCNeuron(inputDim, tau);
-
   return {
     type: beeType,
     neuron,
@@ -153,9 +161,15 @@ export function createAdaptiveBee(beeType, inputDim = 8) {
      * @returns {{ response: number, confidence: number }}
      */
     process(inputSignal, timeStep = 1.0) {
-      const { output, neuron: updated } = stepCfCNeuron(this.neuron, inputSignal, timeStep);
+      const {
+        output,
+        neuron: updated
+      } = stepCfCNeuron(this.neuron, inputSignal, timeStep);
       this.neuron = updated;
-      return { response: output, confidence: Math.abs(output) };
+      return {
+        response: output,
+        confidence: Math.abs(output)
+      };
     }
   };
 }

@@ -5,23 +5,16 @@
 
 'use strict';
 
-/**
- * Pattern Recognition Engine.
- * Detects patterns via four analytical lenses: structural, temporal,
- * behavioral, and semantic. Supports registering canonical patterns
- * and suggesting optimizations.
- */
-
 const crypto = require('crypto');
 const logger = require('../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PATTERN_TYPES = Object.freeze({
-  STRUCTURAL:  'structural',
-  TEMPORAL:    'temporal',
-  BEHAVIORAL:  'behavioral',
-  SEMANTIC:    'semantic',
+  STRUCTURAL: 'structural',
+  TEMPORAL: 'temporal',
+  BEHAVIORAL: 'behavioral',
+  SEMANTIC: 'semantic'
 });
 
 // ─── CanonicalPattern factory ─────────────────────────────────────────────────
@@ -43,12 +36,12 @@ const PATTERN_TYPES = Object.freeze({
  */
 function _makeCanonical(def) {
   return {
-    id:          def.id || crypto.randomUUID(),
-    name:        def.name || 'unnamed',
-    type:        def.type || PATTERN_TYPES.STRUCTURAL,
+    id: def.id || crypto.randomUUID(),
+    name: def.name || 'unnamed',
+    type: def.type || PATTERN_TYPES.STRUCTURAL,
     description: def.description || '',
-    confidence:  typeof def.confidence === 'number' ? def.confidence : 0.5,
-    detectedAt:  def.detectedAt || Date.now(),
+    confidence: typeof def.confidence === 'number' ? def.confidence : 0.5,
+    detectedAt: def.detectedAt || Date.now()
   };
 }
 
@@ -65,34 +58,45 @@ function _detectStructural(data) {
       const sample = data[0];
       if (sample && typeof sample === 'object' && !Array.isArray(sample)) {
         const keys = Object.keys(sample).sort().join(',');
-        const homogeneous = data.every(
-          el => typeof el === 'object' && !Array.isArray(el) && Object.keys(el).sort().join(',') === keys,
-        );
-        if (homogeneous) findings.push({ name: 'HomogeneousArray', confidence: 0.9, detail: { keys: keys.split(',') } });
+        const homogeneous = data.every(el => typeof el === 'object' && !Array.isArray(el) && Object.keys(el).sort().join(',') === keys);
+        if (homogeneous) findings.push({
+          name: 'HomogeneousArray',
+          confidence: 0.9,
+          detail: {
+            keys: keys.split(',')
+          }
+        });
       }
       // Check for repeated elements
       const serialised = data.map(el => JSON.stringify(el));
       const unique = new Set(serialised);
       if (unique.size < data.length * 0.5) {
-        findings.push({ name: 'HighRepetition', confidence: 0.8, detail: { repetitionRatio: 1 - unique.size / data.length } });
+        findings.push({
+          name: 'HighRepetition',
+          confidence: 0.8,
+          detail: {
+            repetitionRatio: 1 - unique.size / data.length
+          }
+        });
       }
     }
   }
   if (data && typeof data === 'object' && !Array.isArray(data)) {
     const depth = _maxDepth(data);
-    if (depth >= 4) findings.push({ name: 'DeepNesting', confidence: 0.7, detail: { depth } });
+    if (depth >= 4) findings.push({
+      name: 'DeepNesting',
+      confidence: 0.7,
+      detail: {
+        depth
+      }
+    });
   }
   return findings;
 }
-
 function _maxDepth(obj, current = 0) {
   if (typeof obj !== 'object' || obj === null) return current;
   return Math.max(current + 1, ...Object.values(obj).map(v => _maxDepth(v, current + 1)));
 }
-
-/**
- * Temporal lens: detects timestamps, sequences, periodicity.
- */
 function _detectTemporal(data, context) {
   const findings = [];
   const ctxText = JSON.stringify(context || {});
@@ -110,16 +114,33 @@ function _detectTemporal(data, context) {
           const variance = diffs.map(d => (d - avg) ** 2).reduce((a, b) => a + b, 0) / diffs.length;
           const cv = avg > 0 ? Math.sqrt(variance) / avg : 1;
           if (cv < 0.15) {
-            findings.push({ name: 'RegularInterval', confidence: 0.85, detail: { intervalMs: Math.round(avg), cv } });
+            findings.push({
+              name: 'RegularInterval',
+              confidence: 0.85,
+              detail: {
+                intervalMs: Math.round(avg),
+                cv
+              }
+            });
           } else {
-            findings.push({ name: 'TimeSeries', confidence: 0.7, detail: { count: times.length } });
+            findings.push({
+              name: 'TimeSeries',
+              confidence: 0.7,
+              detail: {
+                count: times.length
+              }
+            });
           }
         }
       }
     }
   }
   if (ctxText.toLowerCase().includes('cron') || ctxText.toLowerCase().includes('schedule')) {
-    findings.push({ name: 'ScheduledExecution', confidence: 0.75, detail: {} });
+    findings.push({
+      name: 'ScheduledExecution',
+      confidence: 0.75,
+      detail: {}
+    });
   }
   return findings;
 }
@@ -132,17 +153,31 @@ function _detectBehavioral(data, context) {
   const str = JSON.stringify(data || {});
   // Retry / backoff signals
   if (/retry|attempt|backoff/i.test(str)) {
-    findings.push({ name: 'RetryPattern', confidence: 0.8, detail: {} });
+    findings.push({
+      name: 'RetryPattern',
+      confidence: 0.8,
+      detail: {}
+    });
   }
   // State transition signals
   if (/state|transition|from.*to|status.*change/i.test(str)) {
-    findings.push({ name: 'StateMachine', confidence: 0.7, detail: {} });
+    findings.push({
+      name: 'StateMachine',
+      confidence: 0.7,
+      detail: {}
+    });
   }
   // Error aggregation
   if (Array.isArray(data)) {
-    const errorCount = data.filter(el => (el && (el.error || el.err || el.status === 'error'))).length;
+    const errorCount = data.filter(el => el && (el.error || el.err || el.status === 'error')).length;
     if (errorCount > 0 && errorCount / data.length > 0.1) {
-      findings.push({ name: 'ErrorBurst', confidence: 0.85, detail: { errorRatio: errorCount / data.length } });
+      findings.push({
+        name: 'ErrorBurst',
+        confidence: 0.85,
+        detail: {
+          errorRatio: errorCount / data.length
+        }
+      });
     }
   }
   return findings;
@@ -155,20 +190,30 @@ function _detectSemantic(data, context) {
   const findings = [];
   const text = JSON.stringify(data || {}).toLowerCase();
   const topics = {
-    Authentication:  /auth|token|jwt|oauth|session|login/,
-    DataIngestion:   /ingest|pipeline|stream|batch|etl/,
-    Notification:    /notify|alert|email|webhook|push/,
-    Configuration:   /config|setting|env|environment|flag/,
-    Analytics:       /metric|analytics|track|event|telemetry/,
+    Authentication: /auth|token|jwt|oauth|session|login/,
+    DataIngestion: /ingest|pipeline|stream|batch|etl/,
+    Notification: /notify|alert|email|webhook|push/,
+    Configuration: /config|setting|env|environment|flag/,
+    Analytics: /metric|analytics|track|event|telemetry/
   };
   for (const [topic, regex] of Object.entries(topics)) {
     if (regex.test(text)) {
-      findings.push({ name: `${topic}Domain`, confidence: 0.65, detail: { topic } });
+      findings.push({
+        name: `${topic}Domain`,
+        confidence: 0.65,
+        detail: {
+          topic
+        }
+      });
     }
   }
   // Detect question-intent in context
   if (context && typeof context.intent === 'string' && context.intent.includes('?')) {
-    findings.push({ name: 'QueryIntent', confidence: 0.7, detail: {} });
+    findings.push({
+      name: 'QueryIntent',
+      confidence: 0.7,
+      detail: {}
+    });
   }
   return findings;
 }
@@ -181,8 +226,9 @@ class PatternEngine {
     this._registry = new Map();
     /** @type {Array<{ detectedAt: number, patterns: CanonicalPattern[], context: object }>} */
     this._history = [];
-
-    logger.info({ component: 'PatternEngine' }, 'PatternEngine initialised');
+    logger.info({
+      component: 'PatternEngine'
+    }, 'PatternEngine initialised');
   }
 
   // ─── Detection ──────────────────────────────────────────────────────────────
@@ -198,20 +244,18 @@ class PatternEngine {
   detect(data, context = {}) {
     const lensResults = {
       structural: _detectStructural(data),
-      temporal:   _detectTemporal(data, context),
+      temporal: _detectTemporal(data, context),
       behavioral: _detectBehavioral(data, context),
-      semantic:   _detectSemantic(data, context),
+      semantic: _detectSemantic(data, context)
     };
-
     const patterns = [];
-
     for (const [lensName, findings] of Object.entries(lensResults)) {
       for (const finding of findings) {
         const canonical = _makeCanonical({
-          name:        finding.name,
-          type:        lensName,
+          name: finding.name,
+          type: lensName,
           description: JSON.stringify(finding.detail || {}),
-          confidence:  finding.confidence,
+          confidence: finding.confidence
         });
         patterns.push(canonical);
       }
@@ -220,14 +264,24 @@ class PatternEngine {
     // Cross-reference registered canonical patterns
     const registeredMatches = this._matchRegistered(data, context);
     for (const match of registeredMatches) {
-      patterns.push({ ...match, detectedAt: Date.now() });
+      patterns.push({
+        ...match,
+        detectedAt: Date.now()
+      });
     }
-
-    const entry = { detectedAt: Date.now(), patterns, context };
+    const entry = {
+      detectedAt: Date.now(),
+      patterns,
+      context
+    };
     this._history.push(entry);
-
-    logger.debug({ patternCount: patterns.length }, 'PatternEngine: detect complete');
-    return { patterns, lenses: lensResults };
+    logger.debug({
+      patternCount: patterns.length
+    }, 'PatternEngine: detect complete');
+    return {
+      patterns,
+      lenses: lensResults
+    };
   }
 
   /**
@@ -240,7 +294,10 @@ class PatternEngine {
       // Naive keyword match on description
       const keywords = pattern.description.toLowerCase().split(/\W+/).filter(w => w.length > 3);
       if (keywords.length > 0 && keywords.some(kw => str.includes(kw))) {
-        matches.push({ ...pattern, confidence: Math.min(1, pattern.confidence * 0.9) });
+        matches.push({
+          ...pattern,
+          confidence: Math.min(1, pattern.confidence * 0.9)
+        });
       }
     }
     return matches;
@@ -255,9 +312,14 @@ class PatternEngine {
    * @returns {CanonicalPattern}
    */
   register(patternId, definition) {
-    const canonical = _makeCanonical({ id: patternId, ...definition });
+    const canonical = _makeCanonical({
+      id: patternId,
+      ...definition
+    });
     this._registry.set(patternId, canonical);
-    logger.info({ patternId }, 'PatternEngine: pattern registered');
+    logger.info({
+      patternId
+    }, 'PatternEngine: pattern registered');
     return canonical;
   }
 
@@ -289,7 +351,6 @@ class PatternEngine {
     const suggestions = [];
     const name = (pattern.name || '').toLowerCase();
     const type = (pattern.type || '').toLowerCase();
-
     if (name.includes('repetition') || name.includes('highrepetition')) {
       suggestions.push('Consider deduplication or caching to reduce redundant data.');
       suggestions.push('Evaluate whether a Set or Map can replace the Array for O(1) lookups.');
@@ -315,8 +376,10 @@ class PatternEngine {
     if (suggestions.length === 0) {
       suggestions.push('No specific optimizations identified for this pattern type.');
     }
-
-    logger.debug({ patternName: pattern.name, suggestionCount: suggestions.length }, 'PatternEngine: optimize');
+    logger.debug({
+      patternName: pattern.name,
+      suggestionCount: suggestions.length
+    }, 'PatternEngine: optimize');
     return suggestions;
   }
 
@@ -331,8 +394,7 @@ class PatternEngine {
     return this._history.slice(-limit);
   }
 }
-
 module.exports = {
   PatternEngine,
-  PATTERN_TYPES,
+  PATTERN_TYPES
 };

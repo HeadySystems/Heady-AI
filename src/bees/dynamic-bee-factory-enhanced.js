@@ -1,56 +1,32 @@
-/**
- * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- *
- * Dynamic Bee Factory Enhanced — Runtime Agent Lifecycle Management
- * Patent Reference: HS-060
- * "System and Method for Runtime Generation, Orchestration, and Dissolution
- *  of Autonomous AI Agent Workers with Template-Driven Swarm Consensus"
- *
- * Implements ALL 9 patent claims:
- *   Claim 1 — Runtime creation from declarative specs with SHA-256 identity
- *   Claim 2 — Template-based creation (health-check, monitor, processor, scanner)
- *   Claim 3 — Ephemeral spawn (in-memory only)
- *   Claim 4 — Persistent to disk (optional)
- *   Claim 5 — Swarm formation with consensus policies (parallel/sequential,
- *              requireConsensus, timeoutMs)
- *   Claim 6 — requireConsensus parameter
- *   Claim 7 — Dissolution protocol
- *   Claim 8 — Work function injection
- *   Claim 9 — Full system
- *
- * PHI = 1.6180339887
- */
-
 'use strict';
 
-const { PHI_TIMING } = require('../shared/phi-math');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
 const crypto = require('crypto');
-const fs     = require('fs');
-const path   = require('path');
+const fs = require('fs');
+const path = require('path');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PHI = 1.6180339887;
-
 const AGENT_TYPES = Object.freeze({
-  DYNAMIC:   'dynamic',
+  DYNAMIC: 'dynamic',
   EPHEMERAL: 'ephemeral',
-  TEMPLATE:  'template',
-  SWARM:     'swarm',
+  TEMPLATE: 'template',
+  SWARM: 'swarm'
 });
-
 const SWARM_POLICY_MODES = Object.freeze({
-  PARALLEL:   'parallel',
+  PARALLEL: 'parallel',
   SEQUENTIAL: 'sequential',
-  PIPELINE:   'pipeline',
+  PIPELINE: 'pipeline'
 });
-
 const DISSOLUTION_REASONS = Object.freeze({
-  MANUAL:      'manual',
-  TIMEOUT:     'timeout',
-  TASK_DONE:   'task_complete',
-  ERROR:       'error',
-  REBALANCE:   'rebalance',
+  MANUAL: 'manual',
+  TIMEOUT: 'timeout',
+  TASK_DONE: 'task_complete',
+  ERROR: 'error',
+  REBALANCE: 'rebalance'
 });
 
 // Default persistence directory for dynamically-created agent files
@@ -78,8 +54,7 @@ class BeeRegistry {
      * @type {Map<string, object>}
      */
     this._ephemeral = new Map();
-
-    this._createdCount  = 0;
+    this._createdCount = 0;
     this._dissolvedCount = 0;
   }
 
@@ -129,10 +104,7 @@ class BeeRegistry {
    * @returns {Array<object>}
    */
   all() {
-    return [
-      ...Array.from(this._persistent.values()),
-      ...Array.from(this._ephemeral.values()),
-    ];
+    return [...Array.from(this._persistent.values()), ...Array.from(this._ephemeral.values())];
   }
 
   /**
@@ -141,11 +113,11 @@ class BeeRegistry {
    */
   stats() {
     return {
-      persistent:     this._persistent.size,
-      ephemeral:      this._ephemeral.size,
-      total:          this._persistent.size + this._ephemeral.size,
-      createdTotal:   this._createdCount,
-      dissolvedTotal: this._dissolvedCount,
+      persistent: this._persistent.size,
+      ephemeral: this._ephemeral.size,
+      total: this._persistent.size + this._ephemeral.size,
+      createdTotal: this._createdCount,
+      dissolvedTotal: this._dissolvedCount
     };
   }
 }
@@ -169,7 +141,7 @@ class WorkInjector {
    */
   constructor(registry, factory) {
     this._registry = registry;
-    this._factory  = factory;
+    this._factory = factory;
     this._injectionLog = [];
   }
 
@@ -187,42 +159,65 @@ class WorkInjector {
     if (typeof fn !== 'function') {
       throw new Error(`WorkInjector: work function for '${workName}' must be callable`);
     }
-
     const existing = this._registry.get(domain);
-
     if (existing) {
       // Inject into existing agent without recreation
       const wrappedFn = async (ctx = {}) => {
         const result = await fn(ctx);
         return {
-          bee:    domain,
+          bee: domain,
           action: workName,
-          ...(typeof result === 'object' && result !== null ? result : { result }),
+          ...(typeof result === 'object' && result !== null ? result : {
+            result
+          })
         };
       };
-
-      const prevGetWork   = existing.getWork;
-      existing.getWork    = (ctx = {}) => {
+      const prevGetWork = existing.getWork;
+      existing.getWork = (ctx = {}) => {
         const existing = prevGetWork(ctx);
         existing.push(wrappedFn);
         return existing;
       };
-      existing.workUnits  = existing.workUnits || [];
-      existing.workUnits.push({ name: workName, injectedAt: Date.now() });
-
-      this._injectionLog.push({ domain, workName, created: false, ts: Date.now() });
-      return { domain, injected: true, created: false, entry: existing };
+      existing.workUnits = existing.workUnits || [];
+      existing.workUnits.push({
+        name: workName,
+        injectedAt: Date.now()
+      });
+      this._injectionLog.push({
+        domain,
+        workName,
+        created: false,
+        ts: Date.now()
+      });
+      return {
+        domain,
+        injected: true,
+        created: false,
+        entry: existing
+      };
     }
 
     // Create new agent with the work unit
     const entry = this._factory.createAgent(domain, {
       description: `Auto-created via work injection: ${workName}`,
-      priority:    0.5,
-      workers:     [{ name: workName, fn }],
+      priority: 0.5,
+      workers: [{
+        name: workName,
+        fn
+      }]
     });
-
-    this._injectionLog.push({ domain, workName, created: true, ts: Date.now() });
-    return { domain, injected: true, created: true, entry };
+    this._injectionLog.push({
+      domain,
+      workName,
+      created: true,
+      ts: Date.now()
+    });
+    return {
+      domain,
+      injected: true,
+      created: true,
+      entry
+    };
   }
 
   /**
@@ -252,9 +247,9 @@ class DissolutionModule {
    * @param {string} [beesDir] - Directory where persisted bee files are stored
    */
   constructor(registry, beesDir) {
-    this._registry    = registry;
-    this._beesDir     = beesDir || DEFAULT_BEES_DIR;
-    this._dissolved   = [];
+    this._registry = registry;
+    this._beesDir = beesDir || DEFAULT_BEES_DIR;
+    this._dissolved = [];
   }
 
   /**
@@ -268,34 +263,32 @@ class DissolutionModule {
    * @returns {{ domain: string, removed: boolean, diskDeleted: boolean, reason: string }}
    */
   dissolve(domain, opts = {}) {
-    const { deleteDisk = true, reason = DISSOLUTION_REASONS.MANUAL } = opts;
-
-    const entry     = this._registry.get(domain);
-    const removed   = this._registry.remove(domain);
+    const {
+      deleteDisk = true,
+      reason = DISSOLUTION_REASONS.MANUAL
+    } = opts;
+    const entry = this._registry.get(domain);
+    const removed = this._registry.remove(domain);
     let diskDeleted = false;
-
     if (removed && deleteDisk) {
-      // Attempt to delete the persisted bee file
-      const filename  = `${domain.replace(/[^a-z0-9-]/gi, '-')}-bee.js`;
-      const filePath  = path.join(this._beesDir, filename);
+      const filename = `${domain.replace(/[^a-z0-9-]/gi, '-')}-bee.js`;
+      const filePath = path.join(this._beesDir, filename);
       if (fs.existsSync(filePath)) {
         try {
           fs.unlinkSync(filePath);
           diskDeleted = true;
-        } catch { /* non-fatal */ }
+        } catch {/* non-fatal */}
       }
     }
-
     const record = {
       domain,
       removed,
       diskDeleted,
       reason,
-      agentType:  entry ? entry.agentType : 'unknown',
-      dissolvedAt: Date.now(),
+      agentType: entry ? entry.agentType : 'unknown',
+      dissolvedAt: Date.now()
     };
     this._dissolved.push(record);
-
     return record;
   }
 
@@ -336,8 +329,8 @@ class SwarmCoordinator {
    * @param {BeeRegistry} registry
    */
   constructor(registry) {
-    this._registry   = registry;
-    this._swarms     = new Map();
+    this._registry = registry;
+    this._swarms = new Map();
     this._executions = [];
   }
 
@@ -356,23 +349,29 @@ class SwarmCoordinator {
    */
   formSwarm(swarmName, agentDomains, policy = {}) {
     const {
-      mode             = SWARM_POLICY_MODES.PARALLEL,
+      mode = SWARM_POLICY_MODES.PARALLEL,
       requireConsensus = false,
-      timeoutMs        = PHI_TIMING.CYCLE,
+      timeoutMs = PHI_TIMING.CYCLE
     } = policy;
-
     const swarmId = `swarm-${swarmName}-${crypto.randomBytes(3).toString('hex')}`;
-
     const swarm = {
-      id:              swarmId,
-      name:            swarmName,
-      agentDomains:    [...agentDomains],
-      policy:          { mode, requireConsensus, timeoutMs },
-      formedAt:        Date.now(),
+      id: swarmId,
+      name: swarmName,
+      agentDomains: [...agentDomains],
+      policy: {
+        mode,
+        requireConsensus,
+        timeoutMs
+      },
+      formedAt: Date.now()
     };
-
     this._swarms.set(swarmId, swarm);
-    return { swarmId, name: swarmName, agentCount: agentDomains.length, policy: swarm.policy };
+    return {
+      swarmId,
+      name: swarmName,
+      agentCount: agentDomains.length,
+      policy: swarm.policy
+    };
   }
 
   /**
@@ -393,8 +392,11 @@ class SwarmCoordinator {
   async executeSwarm(swarmId, ctx = {}) {
     const swarm = this._swarms.get(swarmId);
     if (!swarm) throw new Error(`No swarm registered with id: ${swarmId}`);
-
-    const { mode, requireConsensus, timeoutMs } = swarm.policy;
+    const {
+      mode,
+      requireConsensus,
+      timeoutMs
+    } = swarm.policy;
     const startTime = Date.now();
     const agentResults = [];
 
@@ -407,31 +409,30 @@ class SwarmCoordinator {
 
     // RTP: HS-060 Claim 5(ii) — execute according to parallel or sequential policy
     if (mode === SWARM_POLICY_MODES.PARALLEL) {
-      const settled = await Promise.allSettled(
-        agents.map(agent => this._runAgent(agent, ctx, timeoutMs))
-      );
+      const settled = await Promise.allSettled(agents.map(agent => this._runAgent(agent, ctx, timeoutMs)));
       for (let i = 0; i < settled.length; i++) {
         const s = settled[i];
         if (s.status === 'fulfilled') {
           agentResults.push(s.value);
         } else {
           agentResults.push({
-            domain:     agents[i].domain,
-            id:         agents[i].id,
-            status:     'error',
-            latencyMs:  0,
-            results:    [],
-            error:      s.reason ? s.reason.message : 'unknown error',
+            domain: agents[i].domain,
+            id: agents[i].id,
+            status: 'error',
+            latencyMs: 0,
+            results: [],
+            error: s.reason ? s.reason.message : 'unknown error'
           });
         }
       }
     } else {
       // Sequential or pipeline
-      let pipelineCtx = { ...ctx };
+      let pipelineCtx = {
+        ...ctx
+      };
       for (const agent of agents) {
         const result = await this._runAgent(agent, pipelineCtx, timeoutMs);
         agentResults.push(result);
-
         if (mode === SWARM_POLICY_MODES.PIPELINE && result.status === 'ok') {
           // Merge agent output into next agent's context
           for (const r of result.results) {
@@ -445,28 +446,34 @@ class SwarmCoordinator {
     }
 
     // RTP: HS-060 Claim 5(iii,iv,v) — collect metadata, evaluate consensus, compute aggregates
-    const successCount  = agentResults.filter(r => r.status === 'ok').length;
-    const failureCount  = agentResults.filter(r => r.status !== 'ok').length;
-    const totalLatency  = Date.now() - startTime;
+    const successCount = agentResults.filter(r => r.status === 'ok').length;
+    const failureCount = agentResults.filter(r => r.status !== 'ok').length;
+    const totalLatency = Date.now() - startTime;
 
     // RTP: HS-060 Claim 6 — consensus status
-    const consensus = requireConsensus ? (failureCount === 0) : null;
-
+    const consensus = requireConsensus ? failureCount === 0 : null;
     const execution = {
       swarmId,
-      name:              swarm.name,
+      name: swarm.name,
       mode,
       requireConsensus,
       consensus,
       successCount,
       failureCount,
-      totalLatencyMs:    totalLatency,
-      agentCount:        agents.length,
-      executedAt:        Date.now(),
-      results:           agentResults,
+      totalLatencyMs: totalLatency,
+      agentCount: agents.length,
+      executedAt: Date.now(),
+      results: agentResults
     };
-
-    this._executions.push({ swarmId, executedAt: Date.now(), summary: { successCount, failureCount, consensus } });
+    this._executions.push({
+      swarmId,
+      executedAt: Date.now(),
+      summary: {
+        successCount,
+        failureCount,
+        consensus
+      }
+    });
     return execution;
   }
 
@@ -479,32 +486,25 @@ class SwarmCoordinator {
     try {
       const workFns = agent.getWork(ctx);
       const results = [];
-
       for (const fn of workFns) {
-        const result = await Promise.race([
-          fn(ctx),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error(`agent_timeout:${agent.domain}`)), timeoutMs)
-          ),
-        ]);
+        const result = await Promise.race([fn(ctx), new Promise((_, reject) => setTimeout(() => reject(new Error(`agent_timeout:${agent.domain}`)), timeoutMs))]);
         results.push(result);
       }
-
       return {
-        domain:    agent.domain,
-        id:        agent.id,
-        status:    'ok',
+        domain: agent.domain,
+        id: agent.id,
+        status: 'ok',
         latencyMs: Date.now() - start,
-        results,
+        results
       };
     } catch (err) {
       return {
-        domain:    agent.domain,
-        id:        agent.id,
-        status:    'error',
+        domain: agent.domain,
+        id: agent.id,
+        status: 'error',
         latencyMs: Date.now() - start,
-        results:   [],
-        error:     err.message,
+        results: [],
+        error: err.message
       };
     }
   }
@@ -515,11 +515,11 @@ class SwarmCoordinator {
    */
   listSwarms() {
     return Array.from(this._swarms.values()).map(s => ({
-      id:          s.id,
-      name:        s.name,
-      agentCount:  s.agentDomains.length,
-      policy:      s.policy,
-      formedAt:    s.formedAt,
+      id: s.id,
+      name: s.name,
+      agentCount: s.agentDomains.length,
+      policy: s.policy,
+      formedAt: s.formedAt
     }));
   }
 
@@ -544,27 +544,19 @@ class SwarmCoordinator {
 
 // ─── DynamicBeeFactory ────────────────────────────────────────────────────────
 
-/**
- * Dynamic Bee Factory — creates, templates, persists, and manages
- * autonomous AI agent workers at runtime.
- *
- * RTP: HS-060 Claim 9(a) — "a factory module configured to create agents
- *                           from declarative specifications or predefined templates"
- */
 class DynamicBeeFactory {
   /**
    * @param {object} [opts]
    * @param {string} [opts.beesDir]  - Directory for persisted bee files
    */
   constructor(opts = {}) {
-    this._beesDir  = opts.beesDir || DEFAULT_BEES_DIR;
+    this._beesDir = opts.beesDir || DEFAULT_BEES_DIR;
 
     // Composed subsystems (Claim 9)
-    this.registry         = new BeeRegistry();
+    this.registry = new BeeRegistry();
     this.dissolutionModule = new DissolutionModule(this.registry, this._beesDir);
-    this.swarmCoordinator  = new SwarmCoordinator(this.registry);
-    this.workInjector      = new WorkInjector(this.registry, this);
-
+    this.swarmCoordinator = new SwarmCoordinator(this.registry);
+    this.workInjector = new WorkInjector(this.registry, this);
     this._createdAt = Date.now();
   }
 
@@ -586,37 +578,45 @@ class DynamicBeeFactory {
    */
   createAgent(domain, config = {}) {
     const {
-      description  = `Dynamic agent: ${domain}`,
-      priority     = 0.5,
-      workers      = [],
-      persist      = false,
-      ephemeral    = false,
+      description = `Dynamic agent: ${domain}`,
+      priority = 0.5,
+      workers = [],
+      persist = false,
+      ephemeral = false
     } = config;
 
     // RTP: HS-060 Claim 1(b) — SHA-256 identity from domain + timestamp
     const createdAt = Date.now();
-    const id = crypto
-      .createHash('sha256')
-      .update(`${domain}:${createdAt}`)
-      .digest('hex');
+    const id = crypto.createHash('sha256').update(`${domain}:${createdAt}`).digest('hex');
 
     // Validate workers
     const validatedWorkers = workers.map((w, i) => {
-      if (typeof w === 'function') return { name: `worker-${i}`, fn: w };
+      if (typeof w === 'function') return {
+        name: `worker-${i}`,
+        fn: w
+      };
       if (typeof w === 'object' && typeof w.fn === 'function') return w;
-      return { name: `worker-${i}`, fn: async () => ({ bee: domain, action: `worker-${i}`, status: 'noop' }) };
+      return {
+        name: `worker-${i}`,
+        fn: async () => ({
+          bee: domain,
+          action: `worker-${i}`,
+          status: 'noop'
+        })
+      };
     });
-
     const entry = {
       domain,
       id,
       description,
       priority,
-      agentType:   ephemeral ? AGENT_TYPES.EPHEMERAL : AGENT_TYPES.DYNAMIC,
+      agentType: ephemeral ? AGENT_TYPES.EPHEMERAL : AGENT_TYPES.DYNAMIC,
       ephemeral,
       createdAt,
-      workUnits:   validatedWorkers.map(w => ({ name: w.name, injectedAt: createdAt })),
-
+      workUnits: validatedWorkers.map(w => ({
+        name: w.name,
+        injectedAt: createdAt
+      })),
       /**
        * Return array of bound async work functions.
        * @param {object} [ctx={}]
@@ -625,11 +625,13 @@ class DynamicBeeFactory {
       getWork: (ctx = {}) => validatedWorkers.map(w => async () => {
         const result = await w.fn(ctx);
         return {
-          bee:    domain,
+          bee: domain,
           action: w.name,
-          ...(typeof result === 'object' && result !== null ? result : { result }),
+          ...(typeof result === 'object' && result !== null ? result : {
+            result
+          })
         };
-      }),
+      })
     };
 
     // RTP: HS-060 Claim 3 — ephemeral registry
@@ -646,177 +648,171 @@ class DynamicBeeFactory {
     if (persist && !ephemeral) {
       this._persistToDisk(domain, config, validatedWorkers);
     }
-
     return entry;
   }
-
-  // ── Template-Based Creation (Claim 2) ────────────────────────────────────
-
-  /**
-   * Create an agent from a predefined template.
-   *
-   * RTP: HS-060 Claim 2 — "creating the agent from a predefined template
-   *                        selected from a library of agent patterns"
-   *
-   * Supported templates: health-check, monitor, processor, scanner
-   *
-   * @param {string} template - Template name
-   * @param {object} config   - Template-specific config
-   * @returns {object} Created agent entry
-   */
   createFromTemplate(template, config = {}) {
     const templateFns = {
       /**
        * Health-Check Agent — probes a service endpoint and reports health.
        */
-      'health-check': (cfg) => ({
-        domain:      cfg.domain || `health-${cfg.target || 'service'}`,
+      'health-check': cfg => ({
+        domain: cfg.domain || `health-${cfg.target || 'service'}`,
         description: `Health checker for ${cfg.target || 'service'}`,
-        priority:    0.9,
-        workers: [
-          {
-            name: 'probe',
-            fn: async () => {
-              const url     = cfg.url || `https://${cfg.target}/api/health`;
-              const timeout = cfg.timeout || 5000;
-              const start   = Date.now();
-              try {
-                const res     = await fetch(url, { signal: AbortSignal.timeout(timeout) });
-                const latency = Date.now() - start;
-                const body    = res.headers.get('content-type')?.includes('json')
-                  ? await res.json().catch(() => null)
-                  : await res.text().catch(() => null);
-                return {
-                  target: cfg.target, url, latency,
-                  status: res.ok ? 'healthy' : 'degraded',
-                  statusCode: res.status, body,
-                };
-              } catch (err) {
-                return {
-                  target: cfg.target, url, status: 'down',
-                  error: err.message, latency: Date.now() - start,
-                };
-              }
-            },
-          },
-        ],
+        priority: 0.9,
+        workers: [{
+          name: 'probe',
+          fn: async () => {
+            const url = cfg.url || `https://${cfg.target}/api/health`;
+            const timeout = cfg.timeout || 5000;
+            const start = Date.now();
+            try {
+              const res = await fetch(url, {
+                signal: AbortSignal.timeout(timeout)
+              });
+              const latency = Date.now() - start;
+              const body = res.headers.get('content-type')?.includes('json') ? await res.json().catch(() => null) : await res.text().catch(() => null);
+              return {
+                target: cfg.target,
+                url,
+                latency,
+                status: res.ok ? 'healthy' : 'degraded',
+                statusCode: res.status,
+                body
+              };
+            } catch (err) {
+              return {
+                target: cfg.target,
+                url,
+                status: 'down',
+                error: err.message,
+                latency: Date.now() - start
+              };
+            }
+          }
+        }]
       }),
-
       /**
        * Monitor Agent — reports process/memory/uptime metrics.
        */
-      'monitor': (cfg) => ({
-        domain:      cfg.domain || `monitor-${cfg.target || 'process'}`,
+      'monitor': cfg => ({
+        domain: cfg.domain || `monitor-${cfg.target || 'process'}`,
         description: `Monitor for ${cfg.target || 'process'}`,
-        priority:    0.7,
-        workers: [
-          {
-            name: 'metrics',
-            fn: async () => {
-              const mem = process.memoryUsage();
-              const lagStart = Date.now();
-              await new Promise(r => setImmediate(r));
-              return {
-                target:            cfg.target,
-                heapUsedMB:        +(mem.heapUsed / 1048576).toFixed(1),
-                heapTotalMB:       +(mem.heapTotal / 1048576).toFixed(1),
-                rssMB:             +(mem.rss / 1048576).toFixed(1),
-                eventLoopLagMs:    Date.now() - lagStart,
-                ts:                Date.now(),
-              };
-            },
-          },
-          {
-            name: 'uptime',
-            fn: async () => {
-              const sec = process.uptime();
-              const h   = Math.floor(sec / 3600);
-              const m   = Math.floor((sec % 3600) / 60);
-              const s   = Math.round(sec % 60);
-              return {
-                target:         cfg.target,
-                uptimeSeconds:  Math.round(sec),
-                uptimeHuman:    `${h}h ${m}m ${s}s`,
-                cpuUsage:       process.cpuUsage(),
-                pid:            process.pid,
-                ts:             Date.now(),
-              };
-            },
-          },
-        ],
+        priority: 0.7,
+        workers: [{
+          name: 'metrics',
+          fn: async () => {
+            const mem = process.memoryUsage();
+            const lagStart = Date.now();
+            await new Promise(r => setImmediate(r));
+            return {
+              target: cfg.target,
+              heapUsedMB: +(mem.heapUsed / 1048576).toFixed(1),
+              heapTotalMB: +(mem.heapTotal / 1048576).toFixed(1),
+              rssMB: +(mem.rss / 1048576).toFixed(1),
+              eventLoopLagMs: Date.now() - lagStart,
+              ts: Date.now()
+            };
+          }
+        }, {
+          name: 'uptime',
+          fn: async () => {
+            const sec = process.uptime();
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor(sec % 3600 / 60);
+            const s = Math.round(sec % 60);
+            return {
+              target: cfg.target,
+              uptimeSeconds: Math.round(sec),
+              uptimeHuman: `${h}h ${m}m ${s}s`,
+              cpuUsage: process.cpuUsage(),
+              pid: process.pid,
+              ts: Date.now()
+            };
+          }
+        }]
       }),
-
       /**
        * Processor Agent — runs configurable data-transform tasks.
        */
-      'processor': (cfg) => ({
-        domain:      cfg.domain || `processor-${cfg.name || 'data'}`,
+      'processor': cfg => ({
+        domain: cfg.domain || `processor-${cfg.name || 'data'}`,
         description: `Data processor: ${cfg.name || 'pipeline'}`,
-        priority:    cfg.priority || 0.6,
-        workers:     (cfg.tasks || []).map(task => ({
+        priority: cfg.priority || 0.6,
+        workers: (cfg.tasks || []).map(task => ({
           name: task.name || 'process',
-          fn:   task.fn   || (async () => ({ processed: true, task: task.name, ts: Date.now() })),
-        })),
+          fn: task.fn || (async () => ({
+            processed: true,
+            task: task.name,
+            ts: Date.now()
+          }))
+        }))
       }),
-
       /**
        * Scanner Agent — recursively analyses directory trees.
        */
-      'scanner': (cfg) => ({
-        domain:      cfg.domain || `scanner-${cfg.target || 'filesystem'}`,
+      'scanner': cfg => ({
+        domain: cfg.domain || `scanner-${cfg.target || 'filesystem'}`,
         description: `Scanner for ${cfg.target || 'filesystem'}`,
-        priority:    0.8,
-        workers: [
-          {
-            name: 'scan',
-            fn: cfg.scanFn || (async () => {
-              const scanPath = cfg.scanPath || cfg.target || '.';
-              const patterns = cfg.patterns  || ['.env', '.key', '.pem', 'secret'];
-              const maxDepth = cfg.maxDepth  || 5;
-              const findings = [];
-
-              const walk = (dir, depth) => {
-                if (depth > maxDepth) return;
-                try {
-                  const entries = fs.readdirSync(dir, { withFileTypes: true });
-                  for (const dirent of entries) {
-                    if (dirent.name === 'node_modules' || dirent.name === '.git') continue;
-                    const fp = path.join(dir, dirent.name);
-                    if (dirent.isDirectory()) {
-                      walk(fp, depth + 1);
-                    } else if (patterns.some(p => dirent.name.includes(p))) {
-                      findings.push({
-                        file:    fp,
-                        pattern: patterns.find(p => dirent.name.includes(p)),
-                        size:    fs.statSync(fp).size,
-                      });
-                    }
+        priority: 0.8,
+        workers: [{
+          name: 'scan',
+          fn: cfg.scanFn || (async () => {
+            const scanPath = cfg.scanPath || cfg.target || '.';
+            const patterns = cfg.patterns || ['.env', '.key', '.pem', 'secret'];
+            const maxDepth = cfg.maxDepth || 5;
+            const findings = [];
+            const walk = (dir, depth) => {
+              if (depth > maxDepth) return;
+              try {
+                const entries = fs.readdirSync(dir, {
+                  withFileTypes: true
+                });
+                for (const dirent of entries) {
+                  if (dirent.name === 'node_modules' || dirent.name === '.git') continue;
+                  const fp = path.join(dir, dirent.name);
+                  if (dirent.isDirectory()) {
+                    walk(fp, depth + 1);
+                  } else if (patterns.some(p => dirent.name.includes(p))) {
+                    findings.push({
+                      file: fp,
+                      pattern: patterns.find(p => dirent.name.includes(p)),
+                      size: fs.statSync(fp).size
+                    });
                   }
-                } catch { /* permission denied */ }
-              };
-              walk(scanPath, 0);
-              return { scanned: scanPath, findings, count: findings.length, ts: Date.now() };
-            }),
-          },
-          {
-            name: 'report',
-            fn: cfg.reportFn || (async (ctx) => {
-              const count    = ctx?.count || 0;
-              const severity = count > 5 ? 'high' : count > 0 ? 'medium' : 'clean';
-              return { severity, totalFindings: count, summary: (ctx?.findings || []).slice(0, 10).map(f => f.file) };
-            }),
-          },
-        ],
-      }),
+                }
+              } catch {/* permission denied */}
+            };
+            walk(scanPath, 0);
+            return {
+              scanned: scanPath,
+              findings,
+              count: findings.length,
+              ts: Date.now()
+            };
+          })
+        }, {
+          name: 'report',
+          fn: cfg.reportFn || (async ctx => {
+            const count = ctx?.count || 0;
+            const severity = count > 5 ? 'high' : count > 0 ? 'medium' : 'clean';
+            return {
+              severity,
+              totalFindings: count,
+              summary: (ctx?.findings || []).slice(0, 10).map(f => f.file)
+            };
+          })
+        }]
+      })
     };
-
     const templateFn = templateFns[template];
     if (!templateFn) {
       throw new Error(`Unknown template: '${template}'. Available: ${Object.keys(templateFns).join(', ')}`);
     }
-
     const spec = templateFn(config);
-    return this.createAgent(spec.domain, { ...spec, agentType: AGENT_TYPES.TEMPLATE });
+    return this.createAgent(spec.domain, {
+      ...spec,
+      agentType: AGENT_TYPES.TEMPLATE
+    });
   }
 
   // ── Ephemeral Spawn (Claim 3) ─────────────────────────────────────────────
@@ -836,13 +832,15 @@ class DynamicBeeFactory {
    */
   spawnEphemeral(name, work, priority = 0.8) {
     const workFns = Array.isArray(work) ? work : [work];
-    const domain  = `ephemeral-${name}-${crypto.randomBytes(3).toString('hex')}`;
-
+    const domain = `ephemeral-${name}-${crypto.randomBytes(3).toString('hex')}`;
     return this.createAgent(domain, {
       description: `Ephemeral agent: ${name}`,
       priority,
-      ephemeral:   true,
-      workers:     workFns.map((fn, i) => ({ name: `${name}-work-${i}`, fn })),
+      ephemeral: true,
+      workers: workFns.map((fn, i) => ({
+        name: `${name}-work-${i}`,
+        fn
+      }))
     });
   }
 
@@ -865,27 +863,32 @@ class DynamicBeeFactory {
    * @returns {{ swarm: object, execution?: object }}
    */
   async createSwarm(swarmName, beeConfigs = [], policy = {}) {
-    const { executeNow = false, ctx = {}, ...swarmPolicy } = policy;
+    const {
+      executeNow = false,
+      ctx = {},
+      ...swarmPolicy
+    } = policy;
 
     // Ensure all bees are created
-    for (const { domain, config } of beeConfigs) {
+    for (const {
+      domain,
+      config
+    } of beeConfigs) {
       if (!this.registry.get(domain)) {
         this.createAgent(domain, config || {});
       }
     }
-
-    const swarmInfo = this.swarmCoordinator.formSwarm(
-      swarmName,
-      beeConfigs.map(b => b.domain),
-      swarmPolicy
-    );
-
+    const swarmInfo = this.swarmCoordinator.formSwarm(swarmName, beeConfigs.map(b => b.domain), swarmPolicy);
     if (executeNow) {
       const execution = await this.swarmCoordinator.executeSwarm(swarmInfo.swarmId, ctx);
-      return { swarm: swarmInfo, execution };
+      return {
+        swarm: swarmInfo,
+        execution
+      };
     }
-
-    return { swarm: swarmInfo };
+    return {
+      swarm: swarmInfo
+    };
   }
 
   // ── Dissolution (Claim 7) ────────────────────────────────────────────────
@@ -928,9 +931,14 @@ class DynamicBeeFactory {
    */
   _persistToDisk(domain, config, validatedWorkers) {
     if (!fs.existsSync(this._beesDir)) {
-      try { fs.mkdirSync(this._beesDir, { recursive: true }); } catch { return; }
+      try {
+        fs.mkdirSync(this._beesDir, {
+          recursive: true
+        });
+      } catch {
+        return;
+      }
     }
-
     const filename = `${domain.replace(/[^a-z0-9-]/gi, '-')}-bee.js`;
     const filePath = path.join(this._beesDir, filename);
     if (fs.existsSync(filePath)) return; // Never overwrite
@@ -956,8 +964,9 @@ ${workerNames.map(n => `    async () => ({ bee: domain, action: '${n}', status: 
 
 module.exports = { domain, description, priority, getWork };
 `;
-
-    try { fs.writeFileSync(filePath, code, 'utf8'); } catch { /* non-fatal */ }
+    try {
+      fs.writeFileSync(filePath, code, 'utf8');
+    } catch {/* non-fatal */}
   }
 
   // ── Listing & Status ──────────────────────────────────────────────────────
@@ -967,18 +976,17 @@ module.exports = { domain, description, priority, getWork };
    * @returns {Array<object>}
    */
   listAgents() {
-    return this.registry.all()
-      .filter((v, i, arr) => arr.findIndex(x => x.id === v.id) === i) // dedupe
-      .map(e => ({
-        domain:     e.domain,
-        id:         e.id,
-        agentType:  e.agentType,
-        description: e.description,
-        priority:   e.priority,
-        ephemeral:  e.ephemeral,
-        createdAt:  e.createdAt,
-        workUnits:  (e.workUnits || []).length,
-      }));
+    return this.registry.all().filter((v, i, arr) => arr.findIndex(x => x.id === v.id) === i) // dedupe
+    .map(e => ({
+      domain: e.domain,
+      id: e.id,
+      agentType: e.agentType,
+      description: e.description,
+      priority: e.priority,
+      ephemeral: e.ephemeral,
+      createdAt: e.createdAt,
+      workUnits: (e.workUnits || []).length
+    }));
   }
 
   /**
@@ -987,13 +995,13 @@ module.exports = { domain, description, priority, getWork };
    */
   status() {
     return {
-      createdAt:   this._createdAt,
-      uptime:      Date.now() - this._createdAt,
-      registry:    this.registry.stats(),
-      swarms:      this.swarmCoordinator.listSwarms(),
-      injections:  this.workInjector.getLog(10),
+      createdAt: this._createdAt,
+      uptime: Date.now() - this._createdAt,
+      registry: this.registry.stats(),
+      swarms: this.swarmCoordinator.listSwarms(),
+      injections: this.workInjector.getLog(10),
       dissolutions: this.dissolutionModule.getHistory(10),
-      phi:         PHI,
+      phi: PHI
     };
   }
 }
@@ -1007,10 +1015,9 @@ module.exports = {
   SwarmCoordinator,
   DissolutionModule,
   WorkInjector,
-
   // Constants
   PHI,
   AGENT_TYPES,
   SWARM_POLICY_MODES,
-  DISSOLUTION_REASONS,
+  DISSOLUTION_REASONS
 };

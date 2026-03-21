@@ -4,15 +4,27 @@
  * HeadyChain Express Router
  * All chain execution, tool, agent, and management endpoints.
  */
-
 const express = require('express');
 const router = express.Router();
-
-const { HeadyChain, defaultChain, WORKFLOW_STATUS } = require('./index');
-const { GraphBuilder } = require('./graph');
-const { globalRegistry: toolRegistry } = require('./tools');
-const { AgentFactory } = require('./agents');
-const { getHealth, liveness, readiness } = require('./health');
+const {
+  HeadyChain,
+  defaultChain,
+  WORKFLOW_STATUS
+} = require('./index');
+const {
+  GraphBuilder
+} = require('./graph');
+const {
+  globalRegistry: toolRegistry
+} = require('./tools');
+const {
+  AgentFactory
+} = require('./agents');
+const {
+  getHealth,
+  liveness,
+  readiness
+} = require('./health');
 const config = require('./config');
 
 // Use a shared HeadyChain instance (can be overridden in tests)
@@ -21,8 +33,12 @@ let chain = defaultChain;
 /**
  * Attach a HeadyChain instance to the router (for dependency injection).
  */
-router.setChain = function(c) { chain = c; };
-router.getChain = function() { return chain; };
+router.setChain = function (c) {
+  chain = c;
+};
+router.getChain = function () {
+  return chain;
+};
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
@@ -32,7 +48,7 @@ function validateBody(requiredFields) {
     if (missing.length > 0) {
       return res.status(400).json({
         error: 'Missing required fields',
-        missing,
+        missing
       });
     }
     next();
@@ -50,7 +66,10 @@ router.get('/health', async (req, res) => {
     const health = await getHealth(chain);
     res.json(health);
   } catch (err) {
-    res.status(503).json({ status: 'unhealthy', error: err.message });
+    res.status(503).json({
+      status: 'unhealthy',
+      error: err.message
+    });
   }
 });
 
@@ -87,20 +106,25 @@ router.post('/chain/execute', validateBody(['graph']), async (req, res) => {
     dryRun = false,
     timeoutMs,
     checkpointId,
-    metadata = {},
+    metadata = {}
   } = req.body;
-
   try {
     const result = await chain.execute(graph, state, {
       dryRun,
       timeoutMs: timeoutMs || config.DEFAULT_WORKFLOW_TIMEOUT_MS,
       checkpointId,
-      metadata,
+      metadata
     });
-    res.json({ success: true, ...result });
+    res.json({
+      success: true,
+      ...result
+    });
   } catch (err) {
     const status = err.message.includes('timed out') ? 408 : 400;
-    res.status(status).json({ success: false, error: err.message });
+    res.status(status).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -116,7 +140,7 @@ router.post('/chain/stream', validateBody(['graph']), async (req, res) => {
     state = {},
     dryRun = false,
     timeoutMs,
-    metadata = {},
+    metadata = {}
   } = req.body;
 
   // Set up SSE
@@ -125,7 +149,6 @@ router.post('/chain/stream', validateBody(['graph']), async (req, res) => {
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('X-Accel-Buffering', 'no');
   res.flushHeaders();
-
   const sendEvent = (event, data) => {
     if (!res.writableEnded) {
       res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
@@ -136,22 +159,27 @@ router.post('/chain/stream', validateBody(['graph']), async (req, res) => {
   const heartbeat = setInterval(() => {
     if (!res.writableEnded) res.write(': heartbeat\n\n');
   }, config.SSE_HEARTBEAT_MS);
-
   try {
-    sendEvent('start', { message: 'Workflow starting' });
-
+    sendEvent('start', {
+      message: 'Workflow starting'
+    });
     const result = await chain.execute(graph, state, {
       dryRun,
       timeoutMs: timeoutMs || config.DEFAULT_WORKFLOW_TIMEOUT_MS,
       metadata,
-      streamCallback: (event) => {
+      streamCallback: event => {
         sendEvent(event.type || 'event', event);
-      },
+      }
     });
-
-    sendEvent('complete', { success: true, ...result });
+    sendEvent('complete', {
+      success: true,
+      ...result
+    });
   } catch (err) {
-    sendEvent('error', { success: false, error: err.message });
+    sendEvent('error', {
+      success: false,
+      error: err.message
+    });
   } finally {
     clearInterval(heartbeat);
     res.end();
@@ -165,7 +193,9 @@ router.post('/chain/stream', validateBody(['graph']), async (req, res) => {
 router.get('/chain/:id/status', (req, res) => {
   const status = chain.getWorkflowStatus(req.params.id);
   if (!status) {
-    return res.status(404).json({ error: `Workflow '${req.params.id}' not found` });
+    return res.status(404).json({
+      error: `Workflow '${req.params.id}' not found`
+    });
   }
   res.json(status);
 });
@@ -178,16 +208,26 @@ router.get('/chain/:id/status', (req, res) => {
  *   input {*} - Human-provided input value
  */
 router.post('/chain/:id/resume', (req, res) => {
-  const { input } = req.body;
+  const {
+    input
+  } = req.body;
   if (input === undefined) {
-    return res.status(400).json({ error: 'Missing required field: input' });
+    return res.status(400).json({
+      error: 'Missing required field: input'
+    });
   }
-
   try {
     chain.resume(req.params.id, input);
-    res.json({ success: true, workflowId: req.params.id, message: 'Workflow resumed' });
+    res.json({
+      success: true,
+      workflowId: req.params.id,
+      message: 'Workflow resumed'
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -199,7 +239,9 @@ router.post('/chain/:id/resume', (req, res) => {
  *   graph {object} - GraphBuilder JSON to validate
  */
 router.post('/chain/validate', validateBody(['graph']), (req, res) => {
-  const { graph } = req.body;
+  const {
+    graph
+  } = req.body;
   const result = chain.validateGraph(graph);
   const status = result.valid ? 200 : 400;
   res.status(status).json(result);
@@ -211,7 +253,10 @@ router.post('/chain/validate', validateBody(['graph']), (req, res) => {
  */
 router.get('/chain/workflows', (req, res) => {
   const workflows = chain.listWorkflows();
-  res.json({ count: workflows.length, workflows });
+  res.json({
+    count: workflows.length,
+    workflows
+  });
 });
 
 // ─── Tools ────────────────────────────────────────────────────────────────────
@@ -224,7 +269,7 @@ router.get('/tools', (req, res) => {
   const tools = toolRegistry.list();
   res.json({
     count: tools.length,
-    tools,
+    tools
   });
 });
 
@@ -248,13 +293,21 @@ router.get('/tools/for-llm', (req, res) => {
  *   timeoutMs {number}      - Optional timeout
  */
 router.post('/tools/register', validateBody(['name', 'description', 'handlerCode']), (req, res) => {
-  const { name, description, inputSchema, handlerCode, timeoutMs, tags } = req.body;
+  const {
+    name,
+    description,
+    inputSchema,
+    handlerCode,
+    timeoutMs,
+    tags
+  } = req.body;
 
   // Security: only allow in non-production or with explicit flag
   if (process.env.NODE_ENV === 'production' && process.env.ALLOW_DYNAMIC_TOOLS !== 'true') {
-    return res.status(403).json({ error: 'Dynamic tool registration disabled in production' });
+    return res.status(403).json({
+      error: 'Dynamic tool registration disabled in production'
+    });
   }
-
   try {
     /* eslint-disable no-new-func */
     const handler = new Function('return (async (input) => { ' + handlerCode + ' })')();
@@ -262,15 +315,24 @@ router.post('/tools/register', validateBody(['name', 'description', 'handlerCode
 
     toolRegistry.register(name, {
       description,
-      inputSchema: inputSchema || { type: 'object', properties: {} },
+      inputSchema: inputSchema || {
+        type: 'object',
+        properties: {}
+      },
       handler,
       timeoutMs,
-      tags: tags || [],
+      tags: tags || []
     });
-
-    res.json({ success: true, name, message: `Tool '${name}' registered` });
+    res.json({
+      success: true,
+      name,
+      message: `Tool '${name}' registered`
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -279,19 +341,30 @@ router.post('/tools/register', validateBody(['name', 'description', 'handlerCode
  * Execute a tool directly (for testing/debugging).
  */
 router.post('/tools/:name/execute', async (req, res) => {
-  const { name } = req.params;
+  const {
+    name
+  } = req.params;
   const input = req.body;
-
   const tool = toolRegistry.getTool(name);
   if (!tool) {
-    return res.status(404).json({ error: `Tool '${name}' not found` });
+    return res.status(404).json({
+      error: `Tool '${name}' not found`
+    });
   }
-
   try {
     const result = await toolRegistry.execute(name, input);
-    res.json({ success: true, tool: name, input, result });
+    res.json({
+      success: true,
+      tool: name,
+      input,
+      result
+    });
   } catch (err) {
-    res.status(400).json({ success: false, tool: name, error: err.message });
+    res.status(400).json({
+      success: false,
+      tool: name,
+      error: err.message
+    });
   }
 });
 
@@ -305,32 +378,31 @@ router.get('/tools/stats', (req, res) => {
 
 // ─── Agents ───────────────────────────────────────────────────────────────────
 
-/**
- * POST /agents/react
- * Execute a ReAct (Reasoning + Acting) agent.
- *
- * Body:
- *   input {string}          - User input/question
- *   maxIterations {number}  - Override max iterations
- *   model {string}          - LLM model override
- *   systemPrompt {string}   - Optional system prompt override
- *   context {object}        - Additional context for interpolation
- */
 router.post('/agents/react', validateBody(['input']), async (req, res) => {
-  const { input, maxIterations, model, systemPrompt, context = {} } = req.body;
-
+  const {
+    input,
+    maxIterations,
+    model,
+    systemPrompt,
+    context = {}
+  } = req.body;
   try {
     const agent = AgentFactory.react({
       toolRegistry,
       maxIterations: maxIterations || config.REACT_MAX_ITERATIONS,
       model: model || config.HEADY_INFER_DEFAULT_MODEL,
-      systemPrompt,
+      systemPrompt
     });
-
     const result = await agent.run(input, context);
-    res.json({ success: true, ...result });
+    res.json({
+      success: true,
+      ...result
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -344,44 +416,50 @@ router.post('/agents/react', validateBody(['input']), async (req, res) => {
  *   context {object}    - Background context
  */
 router.post('/agents/plan-execute', validateBody(['objective']), async (req, res) => {
-  const { objective, model, context = {} } = req.body;
-
+  const {
+    objective,
+    model,
+    context = {}
+  } = req.body;
   try {
     const agent = AgentFactory.planAndExecute({
       toolRegistry,
-      model: model || config.HEADY_INFER_DEFAULT_MODEL,
+      model: model || config.HEADY_INFER_DEFAULT_MODEL
     });
-
     const result = await agent.run(objective, context);
-    res.json({ success: true, ...result });
+    res.json({
+      success: true,
+      ...result
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
-
-/**
- * POST /agents/tool-calling
- * Execute a ToolCallingAgent (native function calling).
- *
- * Body:
- *   input {string}      - User input
- *   model {string}      - LLM model
- *   systemPrompt {string}
- */
 router.post('/agents/tool-calling', validateBody(['input']), async (req, res) => {
-  const { input, model, systemPrompt } = req.body;
-
+  const {
+    input,
+    model,
+    systemPrompt
+  } = req.body;
   try {
     const agent = AgentFactory.toolCalling({
       toolRegistry,
       model: model || config.HEADY_INFER_DEFAULT_MODEL,
-      systemPrompt,
+      systemPrompt
     });
-
     const result = await agent.run(input);
-    res.json({ success: true, ...result });
+    res.json({
+      success: true,
+      ...result
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -396,18 +474,27 @@ router.post('/agents/tool-calling', validateBody(['input']), async (req, res) =>
  *   model {string}
  */
 router.post('/agents/critic', validateBody(['content']), async (req, res) => {
-  const { content, task = '', criteria, model } = req.body;
-
+  const {
+    content,
+    task = '',
+    criteria,
+    model
+  } = req.body;
   try {
     const agent = AgentFactory.critic({
       model: model || config.HEADY_INFER_DEFAULT_MODEL,
-      criteria: criteria || ['accuracy', 'completeness', 'clarity'],
+      criteria: criteria || ['accuracy', 'completeness', 'clarity']
     });
-
     const result = await agent.critique(content, task);
-    res.json({ success: true, ...result });
+    res.json({
+      success: true,
+      ...result
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -424,7 +511,7 @@ router.get('/metrics', (req, res) => {
     version: config.SERVICE_VERSION,
     timestamp: new Date().toISOString(),
     phi: config.PHI,
-    ...metrics,
+    ...metrics
   });
 });
 
@@ -441,9 +528,15 @@ router.post('/graph/mermaid', validateBody(['graph']), (req, res) => {
   try {
     const builder = GraphBuilder.fromJSON(req.body.graph);
     const mermaid = builder.toMermaid();
-    res.json({ success: true, mermaid });
+    res.json({
+      success: true,
+      mermaid
+    });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
@@ -455,5 +548,4 @@ router.post('/graph/validate', validateBody(['graph']), (req, res) => {
   const result = chain.validateGraph(req.body.graph);
   res.status(result.valid ? 200 : 400).json(result);
 });
-
 module.exports = router;

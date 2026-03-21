@@ -40,58 +40,65 @@ const path = require('path');
 // ─── Safe Imports (graceful degradation) ────────────────────────────────────
 
 let logger;
-try { logger = require('../utils/logger'); } catch (_) {
-    logger = { info: console.log, warn: console.warn, error: console.error, debug: () => { } };
+try {
+  logger = require('../utils/logger');
+} catch (_) {
+  logger = {
+    info: console.log,
+    warn: console.warn,
+    error: console.error,
+    debug: () => {}
+  };
 }
-
 let VectorMemory;
-try { ({ VectorMemory } = require('../vector-memory')); } catch (_) { VectorMemory = null; }
-
+try {
+  ({
+    VectorMemory
+  } = require('../vector-memory'));
+} catch (_) {
+  VectorMemory = null;
+}
 let cosineSimilarity;
-try { ({ cosineSimilarity } = require('../vector-space-ops')); } catch (_) { cosineSimilarity = null; }
+try {
+  ({
+    cosineSimilarity
+  } = require('../vector-space-ops'));
+} catch (_) {
+  cosineSimilarity = null;
+}
 
 // ─── Constants (φ-scaled) ───────────────────────────────────────────────────
 
 const PHI = 1.618033988749895;
-const PSI = 1 / PHI;  // ≈ 0.618
+const PSI = 1 / PHI; // ≈ 0.618
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
 
 /** Relevance thresholds — CSL gates at φ intervals */
 const CSL_GATES = {
-    include: PSI * PSI,     // ≈ 0.382 — minimum to include in context
-    boost: PSI,             // ≈ 0.618 — high relevance
-    critical: PSI + 0.1,    // ≈ 0.718 — always included
+  include: PSI * PSI,
+  // ≈ 0.382 — minimum to include in context
+  boost: PSI,
+  // ≈ 0.618 — high relevance
+  critical: PSI + 0.1 // ≈ 0.718 — always included
 };
 
 /** Compression tiers — aligned to CSL gates */
 const COMPRESSION_TIERS = {
-    NONE:  'none',   // ≥ critical (0.718) — full content, no compression
-    LIGHT: 'light',  // boost–critical (0.618–0.718) — signatures + exports + key lines
-    HEAVY: 'heavy',  // include–boost (0.382–0.618) — structural summary only
+  NONE: 'none',
+  // ≥ critical (0.718) — full content, no compression
+  LIGHT: 'light',
+  // boost–critical (0.618–0.718) — signatures + exports + key lines
+  HEAVY: 'heavy' // include–boost (0.382–0.618) — structural summary only
 };
 
 /** File extensions to scan */
-const CODE_EXTENSIONS = new Set([
-    '.js', '.ts', '.jsx', '.tsx', '.py', '.go', '.rs',
-    '.json', '.yaml', '.yml', '.md', '.html', '.css',
-    '.sql', '.sh', '.toml', '.mjs', '.cjs',
-]);
+const CODE_EXTENSIONS = new Set(['.js', '.ts', '.jsx', '.tsx', '.py', '.go', '.rs', '.json', '.yaml', '.yml', '.md', '.html', '.css', '.sql', '.sh', '.toml', '.mjs', '.cjs']);
 
 /** Config files with boosted relevance */
-const CONFIG_FILES = new Set([
-    'package.json', 'tsconfig.json', '.env.example',
-    'Dockerfile', 'docker-compose.yml', 'wrangler.toml',
-    'turbo.json', 'firebase.json',
-]);
+const CONFIG_FILES = new Set(['package.json', 'tsconfig.json', '.env.example', 'Dockerfile', 'docker-compose.yml', 'wrangler.toml', 'turbo.json', 'firebase.json']);
 
 /** Directories to skip */
-const SKIP_DIRS = new Set([
-    'node_modules', '.git', 'dist', 'build', '.next',
-    'coverage', '.turbo', '.cache', '__pycache__',
-    '_archive', 'backup', 'backups', '.backup',
-    'Heady-pre-production-9f2f0642-main',
-    '_downloads', 'heady-full-rebuild',
-]);
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'coverage', '.turbo', '.cache', '__pycache__', '_archive', 'backup', 'backups', '.backup', 'Heady-pre-production-9f2f0642-main', '_downloads', 'heady-full-rebuild']);
 
 /** Background indexer interval — φ-scaled (13 seconds) */
 const INDEX_INTERVAL_MS = FIB[7] * 1000; // 21 seconds
@@ -105,1205 +112,1080 @@ const MAX_SCAN_DEPTH = FIB[5]; // 8
 // ─── ContextSource ──────────────────────────────────────────────────────────
 
 class ContextSource {
-    constructor(opts) {
-        this.type = opts.type;       // 'file' | 'config' | 'pattern' | 'schema' | 'vector' | 'prior_build'
-        this.path = opts.path || null;
-        this.content = opts.content;
-        this.relevance = opts.relevance || 0.5;
-        this.tokens = Math.ceil((opts.content || '').length / 4);
-        this.vectorScore = opts.vectorScore || 0;
-    }
+  constructor(opts) {
+    this.type = opts.type; // 'file' | 'config' | 'pattern' | 'schema' | 'vector' | 'prior_build'
+    this.path = opts.path || null;
+    this.content = opts.content;
+    this.relevance = opts.relevance || 0.5;
+    this.tokens = Math.ceil((opts.content || '').length / 4);
+    this.vectorScore = opts.vectorScore || 0;
+  }
 }
 
 // ─── HeadyAutoContext ───────────────────────────────────────────────────────
 
 class HeadyAutoContext extends EventEmitter {
+  /**
+   * @param {Object} opts
+   * @param {string} opts.workspaceRoot - Project root directory
+   * @param {Object} [opts.gateway] - InferenceGateway instance
+   * @param {Object} [opts.vectorMemory] - VectorMemory instance (for latent space search)
+   * @param {string} [opts.patternsDir] - Build learning patterns directory
+   * @param {boolean} [opts.alwaysOn=true] - Enable background indexer
+   * @param {string} [opts.vectorPersistPath] - Path for vector persistence
+   */
+  constructor(opts = {}) {
+    super();
+    if (!opts.workspaceRoot) throw new Error('HeadyAutoContext requires workspaceRoot');
+    this._root = opts.workspaceRoot;
+    this._gateway = opts.gateway || null;
+    this._patternsDir = opts.patternsDir || path.join(this._root, '.heady', 'build-learning');
 
-    /**
-     * @param {Object} opts
-     * @param {string} opts.workspaceRoot - Project root directory
-     * @param {Object} [opts.gateway] - InferenceGateway instance
-     * @param {Object} [opts.vectorMemory] - VectorMemory instance (for latent space search)
-     * @param {string} [opts.patternsDir] - Build learning patterns directory
-     * @param {boolean} [opts.alwaysOn=true] - Enable background indexer
-     * @param {string} [opts.vectorPersistPath] - Path for vector persistence
-     */
-    constructor(opts = {}) {
-        super();
-        if (!opts.workspaceRoot) throw new Error('HeadyAutoContext requires workspaceRoot');
+    // ── Vector Memory (latent space) ─────────────────────────────────
+    this._vectorMemory = opts.vectorMemory || null;
+    if (!this._vectorMemory && VectorMemory) {
+      this._vectorMemory = new VectorMemory({
+        defaultNamespace: 'autocontext'
+      });
+    }
+    this._vectorPersistPath = opts.vectorPersistPath || path.join(this._root, '.heady', 'autocontext-vectors.jsonl');
 
-        this._root = opts.workspaceRoot;
-        this._gateway = opts.gateway || null;
+    // ── Caches ───────────────────────────────────────────────────────
+    this._cache = new Map(); // filePath → { content, mtime, tokens }
+    this._fileIndex = null; // Lazy workspace index
+    this._indexVersion = 0; // Increments on rescan
 
-        this._patternsDir = opts.patternsDir || path.join(this._root, '.heady', 'build-learning');
+    // ── Stats ────────────────────────────────────────────────────────
+    this._stats = {
+      totalEnrichments: 0,
+      totalTokensInjected: 0,
+      totalTokensSaved: 0,
+      avgEnrichTimeMs: 0,
+      vectorSearches: 0,
+      cacheHits: 0,
+      cacheMisses: 0,
+      lastEnrichAt: null
+    };
 
-        // ── Vector Memory (latent space) ─────────────────────────────────
-        this._vectorMemory = opts.vectorMemory || null;
-        if (!this._vectorMemory && VectorMemory) {
-            this._vectorMemory = new VectorMemory({ defaultNamespace: 'autocontext' });
-        }
-        this._vectorPersistPath = opts.vectorPersistPath ||
-            path.join(this._root, '.heady', 'autocontext-vectors.jsonl');
+    // ── Always-On Background Indexer ─────────────────────────────────
+    this._alwaysOn = opts.alwaysOn !== false;
+    this._indexerInterval = null;
+    this._watcher = null;
+    this._dirty = true;
+    if (this._alwaysOn) {
+      this._startBackgroundIndexer();
+    }
 
-        // ── Caches ───────────────────────────────────────────────────────
-        this._cache = new Map();       // filePath → { content, mtime, tokens }
-        this._fileIndex = null;        // Lazy workspace index
-        this._indexVersion = 0;        // Increments on rescan
+    // ── Load persisted vectors ───────────────────────────────────────
+    this._loadPersistedVectors();
+    logger.info('[AutoContext] Initialized', {
+      workspaceRoot: this._root,
+      alwaysOn: this._alwaysOn,
+      vectorMemory: !!this._vectorMemory,
+      tokenBudget: this._tokenBudget
+    });
+  }
 
-        // ── Stats ────────────────────────────────────────────────────────
-        this._stats = {
-            totalEnrichments: 0,
-            totalTokensInjected: 0,
-            totalTokensSaved: 0,
-            avgEnrichTimeMs: 0,
-            vectorSearches: 0,
-            cacheHits: 0,
-            cacheMisses: 0,
-            lastEnrichAt: null,
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ PUBLIC API ═══
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /**
+   * Enrich a prompt with optimal workspace context before AI execution.
+   * THE main entry point — call this before EVERY InferenceGateway call.
+   *
+   * @param {string} task - The task description or user prompt
+   * @param {Object} [opts]
+   * @param {string[]} [opts.focusFiles] - Specific files to prioritize
+   * @param {string} [opts.domain] - 'code' | 'config' | 'deploy' | 'research' | 'battle' | 'council'
+   * @param {number} [opts.tokenBudget] - Override default budget
+   * @param {boolean} [opts.vectorSearch] - Search latent space vectors (default: true)
+   * @param {boolean} [opts.deep] - Deep enrichment mode (more tokens, more sources)
+   * @returns {Object} { systemContext, enrichedPrompt, sources, stats }
+   */
+  async enrich(task, opts = {}) {
+    const startMs = Date.now();
+
+    // ── 1: Ensure index is current ───────────────────────────────────
+    if (!this._fileIndex || this._dirty) {
+      this._fileIndex = this._scanWorkspace();
+      this._dirty = false;
+    }
+
+    // ── 2: Gather ALL context sources ────────────────────────────────
+    const sources = [];
+
+    // 2a: Config files (always relevant)
+    sources.push(...this._gatherConfigs());
+
+    // 2b: Files matching task keywords (filesystem relevance)
+    sources.push(...this._gatherByRelevance(task));
+
+    // 2c: Focus files (explicitly requested)
+    if (opts.focusFiles?.length) {
+      sources.push(...this._gatherFocusFiles(opts.focusFiles));
+    }
+
+    // 2d: Vector memory search (latent space — the key upgrade)
+    if (opts.vectorSearch !== false && this._vectorMemory) {
+      sources.push(...(await this._searchVectorMemory(task)));
+    }
+
+    // 2e: Prior build patterns
+    sources.push(...this._gatherPriorPatterns(task));
+
+    // 2f: Domain-specific context
+    if (opts.domain) {
+      sources.push(...this._gatherDomainContext(opts.domain));
+    }
+
+    // ── 3: Deduplicate ───────────────────────────────────────────────
+    const deduped = this._deduplicateSources(sources);
+
+    // ── 4: CSL-gated relevance filter ────────────────────────────────
+    const gated = deduped.filter(s => s.relevance >= CSL_GATES.include);
+
+    // ── 5: Rank by relevance (include ALL gated sources) ────────────
+    const ranked = this._rankByRelevance(gated);
+
+    // ── 5b: Tiered compression (φ-aligned) ─────────────────────────
+    const packed = this._compressSources(ranked);
+
+    // ── 6: Build context injection block ─────────────────────────────
+    const systemContext = this._buildContextBlock(packed);
+
+    // ── 7: Record stats ──────────────────────────────────────────────
+    const enrichTimeMs = Date.now() - startMs;
+    const tokensPreCompression = ranked.reduce((s, c) => s + c.tokens, 0);
+    const tokensUsed = packed.reduce((s, c) => s + c.tokens, 0);
+    const compressionRatio = tokensPreCompression > 0 ? ((1 - tokensUsed / tokensPreCompression) * 100).toFixed(1) : '0.0';
+    this._stats.totalEnrichments++;
+    this._stats.totalTokensInjected += tokensUsed;
+    this._stats.totalTokensSaved += tokensPreCompression - tokensUsed;
+    this._stats.avgEnrichTimeMs = (this._stats.avgEnrichTimeMs * (this._stats.totalEnrichments - 1) + enrichTimeMs) / this._stats.totalEnrichments;
+    this._stats.lastEnrichAt = Date.now();
+    const stats = {
+      sourcesScanned: sources.length,
+      sourcesGated: gated.length,
+      sourcesIncluded: packed.length,
+      tokensPreCompression,
+      tokensUsed,
+      compressionRatio: `${compressionRatio}%`,
+      scanTimeMs: enrichTimeMs,
+      vectorHits: sources.filter(s => s.type === 'vector').length
+    };
+    this.emit('context:enriched', {
+      task: task.slice(0, 80),
+      ...stats
+    });
+    logger.info('[AutoContext] Enriched', stats);
+    return {
+      systemContext,
+      enrichedPrompt: systemContext ? `${systemContext}\n\n---\n\n${task}` : task,
+      sources: packed.map(s => ({
+        type: s.type,
+        path: s.path,
+        relevance: s.relevance,
+        tokens: s.tokens,
+        vectorScore: s.vectorScore
+      })),
+      stats
+    };
+  }
+
+  /**
+   * Wrap an InferenceGateway call with automatic context enrichment.
+   * Drop-in replacement for gateway.complete().
+   */
+  async completeWithContext(messages, gatewayOpts = {}, contextOpts = {}) {
+    if (!this._gateway) throw new Error('HeadyAutoContext.completeWithContext requires gateway');
+    const userMsg = [...messages].reverse().find(m => m.role === 'user');
+    const task = userMsg?.content || '';
+    const {
+      systemContext
+    } = await this.enrich(task, contextOpts);
+    const enrichedMessages = [...messages];
+    if (systemContext) {
+      const sysIdx = enrichedMessages.findIndex(m => m.role === 'system');
+      if (sysIdx >= 0) {
+        enrichedMessages[sysIdx] = {
+          ...enrichedMessages[sysIdx],
+          content: enrichedMessages[sysIdx].content + '\n\n' + systemContext
         };
-
-        // ── Always-On Background Indexer ─────────────────────────────────
-        this._alwaysOn = opts.alwaysOn !== false;
-        this._indexerInterval = null;
-        this._watcher = null;
-        this._dirty = true;
-
-        if (this._alwaysOn) {
-            this._startBackgroundIndexer();
-        }
-
-        // ── Load persisted vectors ───────────────────────────────────────
-        this._loadPersistedVectors();
-
-        logger.info('[AutoContext] Initialized', {
-            workspaceRoot: this._root,
-            alwaysOn: this._alwaysOn,
-            vectorMemory: !!this._vectorMemory,
-            tokenBudget: this._tokenBudget,
+      } else {
+        enrichedMessages.unshift({
+          role: 'system',
+          content: systemContext
         });
+      }
     }
+    return this._gateway.complete(enrichedMessages, gatewayOpts);
+  }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ PUBLIC API ═══
-    // ═══════════════════════════════════════════════════════════════════════
-
-    /**
-     * Enrich a prompt with optimal workspace context before AI execution.
-     * THE main entry point — call this before EVERY InferenceGateway call.
-     *
-     * @param {string} task - The task description or user prompt
-     * @param {Object} [opts]
-     * @param {string[]} [opts.focusFiles] - Specific files to prioritize
-     * @param {string} [opts.domain] - 'code' | 'config' | 'deploy' | 'research' | 'battle' | 'council'
-     * @param {number} [opts.tokenBudget] - Override default budget
-     * @param {boolean} [opts.vectorSearch] - Search latent space vectors (default: true)
-     * @param {boolean} [opts.deep] - Deep enrichment mode (more tokens, more sources)
-     * @returns {Object} { systemContext, enrichedPrompt, sources, stats }
-     */
-    async enrich(task, opts = {}) {
-        const startMs = Date.now();
-
-        // ── 1: Ensure index is current ───────────────────────────────────
-        if (!this._fileIndex || this._dirty) {
-            this._fileIndex = this._scanWorkspace();
-            this._dirty = false;
-        }
-
-        // ── 2: Gather ALL context sources ────────────────────────────────
-        const sources = [];
-
-        // 2a: Config files (always relevant)
-        sources.push(...this._gatherConfigs());
-
-        // 2b: Files matching task keywords (filesystem relevance)
-        sources.push(...this._gatherByRelevance(task));
-
-        // 2c: Focus files (explicitly requested)
-        if (opts.focusFiles?.length) {
-            sources.push(...this._gatherFocusFiles(opts.focusFiles));
-        }
-
-        // 2d: Vector memory search (latent space — the key upgrade)
-        if (opts.vectorSearch !== false && this._vectorMemory) {
-            sources.push(...await this._searchVectorMemory(task));
-        }
-
-        // 2e: Prior build patterns
-        sources.push(...this._gatherPriorPatterns(task));
-
-        // 2f: Domain-specific context
-        if (opts.domain) {
-            sources.push(...this._gatherDomainContext(opts.domain));
-        }
-
-        // ── 3: Deduplicate ───────────────────────────────────────────────
-        const deduped = this._deduplicateSources(sources);
-
-        // ── 4: CSL-gated relevance filter ────────────────────────────────
-        const gated = deduped.filter(s => s.relevance >= CSL_GATES.include);
-
-        // ── 5: Rank by relevance (include ALL gated sources) ────────────
-        const ranked = this._rankByRelevance(gated);
-
-        // ── 5b: Tiered compression (φ-aligned) ─────────────────────────
-        const packed = this._compressSources(ranked);
-
-        // ── 6: Build context injection block ─────────────────────────────
-        const systemContext = this._buildContextBlock(packed);
-
-        // ── 7: Record stats ──────────────────────────────────────────────
-        const enrichTimeMs = Date.now() - startMs;
-        const tokensPreCompression = ranked.reduce((s, c) => s + c.tokens, 0);
-        const tokensUsed = packed.reduce((s, c) => s + c.tokens, 0);
-        const compressionRatio = tokensPreCompression > 0
-            ? ((1 - tokensUsed / tokensPreCompression) * 100).toFixed(1)
-            : '0.0';
-
-        this._stats.totalEnrichments++;
-        this._stats.totalTokensInjected += tokensUsed;
-        this._stats.totalTokensSaved += (tokensPreCompression - tokensUsed);
-        this._stats.avgEnrichTimeMs = (
-            this._stats.avgEnrichTimeMs * (this._stats.totalEnrichments - 1) + enrichTimeMs
-        ) / this._stats.totalEnrichments;
-        this._stats.lastEnrichAt = Date.now();
-
-        const stats = {
-            sourcesScanned: sources.length,
-            sourcesGated: gated.length,
-            sourcesIncluded: packed.length,
-            tokensPreCompression,
-            tokensUsed,
-            compressionRatio: `${compressionRatio}%`,
-            scanTimeMs: enrichTimeMs,
-            vectorHits: sources.filter(s => s.type === 'vector').length,
+  /**
+   * Create a middleware function that auto-injects context into any gateway call.
+   * Wire this into InferenceGateway or express routes.
+   *
+   * @param {Object} [opts] - Default enrich options
+   * @returns {Function} Middleware: (messages, gatewayOpts) => enrichedMessages
+   */
+  createMiddleware(opts = {}) {
+    const self = this;
+    return async function autoContextMiddleware(messages, gatewayOpts = {}) {
+      const userMsg = [...messages].reverse().find(m => m.role === 'user');
+      const task = userMsg?.content || '';
+      const {
+        systemContext
+      } = await self.enrich(task, {
+        ...opts,
+        domain: gatewayOpts.domain || opts.domain,
+        deep: gatewayOpts.deep || opts.deep
+      });
+      if (!systemContext) return messages;
+      const result = [...messages];
+      const sysIdx = result.findIndex(m => m.role === 'system');
+      if (sysIdx >= 0) {
+        result[sysIdx] = {
+          ...result[sysIdx],
+          content: result[sysIdx].content + '\n\n' + systemContext
         };
-
-        this.emit('context:enriched', { task: task.slice(0, 80), ...stats });
-        logger.info('[AutoContext] Enriched', stats);
-
-        return {
-            systemContext,
-            enrichedPrompt: systemContext
-                ? `${systemContext}\n\n---\n\n${task}`
-                : task,
-            sources: packed.map(s => ({
-                type: s.type,
-                path: s.path,
-                relevance: s.relevance,
-                tokens: s.tokens,
-                vectorScore: s.vectorScore,
-            })),
-            stats,
-        };
-    }
-
-    /**
-     * Wrap an InferenceGateway call with automatic context enrichment.
-     * Drop-in replacement for gateway.complete().
-     */
-    async completeWithContext(messages, gatewayOpts = {}, contextOpts = {}) {
-        if (!this._gateway) throw new Error('HeadyAutoContext.completeWithContext requires gateway');
-
-        const userMsg = [...messages].reverse().find(m => m.role === 'user');
-        const task = userMsg?.content || '';
-
-        const { systemContext } = await this.enrich(task, contextOpts);
-
-        const enrichedMessages = [...messages];
-        if (systemContext) {
-            const sysIdx = enrichedMessages.findIndex(m => m.role === 'system');
-            if (sysIdx >= 0) {
-                enrichedMessages[sysIdx] = {
-                    ...enrichedMessages[sysIdx],
-                    content: enrichedMessages[sysIdx].content + '\n\n' + systemContext,
-                };
-            } else {
-                enrichedMessages.unshift({ role: 'system', content: systemContext });
-            }
-        }
-
-        return this._gateway.complete(enrichedMessages, gatewayOpts);
-    }
-
-    /**
-     * Create a middleware function that auto-injects context into any gateway call.
-     * Wire this into InferenceGateway or express routes.
-     *
-     * @param {Object} [opts] - Default enrich options
-     * @returns {Function} Middleware: (messages, gatewayOpts) => enrichedMessages
-     */
-    createMiddleware(opts = {}) {
-        const self = this;
-        return async function autoContextMiddleware(messages, gatewayOpts = {}) {
-            const userMsg = [...messages].reverse().find(m => m.role === 'user');
-            const task = userMsg?.content || '';
-
-            const { systemContext } = await self.enrich(task, {
-                ...opts,
-                domain: gatewayOpts.domain || opts.domain,
-                deep: gatewayOpts.deep || opts.deep,
-            });
-
-            if (!systemContext) return messages;
-
-            const result = [...messages];
-            const sysIdx = result.findIndex(m => m.role === 'system');
-            if (sysIdx >= 0) {
-                result[sysIdx] = {
-                    ...result[sysIdx],
-                    content: result[sysIdx].content + '\n\n' + systemContext,
-                };
-            } else {
-                result.unshift({ role: 'system', content: systemContext });
-            }
-            return result;
-        };
-    }
-
-    /**
-     * Enrich context for a HeadyBattle round.
-     * Includes all relevant sources — no budget cap.
-     */
-    async enrichForBattle(task, battleConfig = {}) {
-        return this.enrich(task, {
-            domain: 'battle',
-            deep: true,
-            vectorSearch: true,
-            focusFiles: battleConfig.focusFiles,
+      } else {
+        result.unshift({
+          role: 'system',
+          content: systemContext
         });
+      }
+      return result;
+    };
+  }
+
+  /**
+   * Enrich context for a HeadyBattle round.
+   * Includes all relevant sources — no budget cap.
+   */
+  async enrichForBattle(task, battleConfig = {}) {
+    return this.enrich(task, {
+      domain: 'battle',
+      deep: true,
+      vectorSearch: true,
+      focusFiles: battleConfig.focusFiles
+    });
+  }
+
+  /**
+   * Enrich context for HeadyCouncil deliberation.
+   * Provides council-specific context with model capabilities awareness.
+   */
+  async enrichForCouncil(task, councilOpts = {}) {
+    const {
+      systemContext,
+      sources,
+      stats
+    } = await this.enrich(task, {
+      domain: 'council',
+      tokenBudget: TOKEN_BUDGETS.deep,
+      deep: true,
+      vectorSearch: true
+    });
+
+    // Add council-specific preamble
+    const councilPreamble = ['=== COUNCIL DELIBERATION CONTEXT ===', `Models participating: ${(councilOpts.models || ['claude', 'gemini', 'gpt']).join(', ')}`, `Task complexity: ${stats.sourcesIncluded > 10 ? 'HIGH' : stats.sourcesIncluded > 5 ? 'MEDIUM' : 'LOW'}`, `Vector memory hits: ${stats.vectorHits}`, ''].join('\n');
+    return {
+      systemContext: councilPreamble + (systemContext || ''),
+      sources,
+      stats
+    };
+  }
+
+  /**
+   * Enrich context for HeadyMC (Monte Carlo) simulation.
+   * Provides risk-aware context for scenario modeling.
+   */
+  async enrichForMonteCarlo(scenario, signals = {}) {
+    const {
+      systemContext
+    } = await this.enrich(`Monte Carlo simulation: ${scenario.name || 'unnamed'} — ${JSON.stringify(signals).slice(0, 200)}`, {
+      domain: 'config',
+      tokenBudget: TOKEN_BUDGETS.minimal,
+      vectorSearch: true
+    });
+    return {
+      systemContext
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ VECTOR MEMORY (LATENT SPACE) ═══
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /**
+   * Search vector memory for semantically similar context.
+   * Uses lightweight keyword-based vector generation (no external embeddings).
+   */
+  async _searchVectorMemory(task) {
+    if (!this._vectorMemory) return [];
+    const sources = [];
+    try {
+      // Generate a lightweight query vector from task keywords
+      const queryVector = this._textToVector(task);
+      const results = this._vectorMemory.search(queryVector, FIB[5], CSL_GATES.include);
+      this._stats.vectorSearches++;
+      for (const result of results) {
+        sources.push(new ContextSource({
+          type: 'vector',
+          path: result.metadata?.path || result.key,
+          content: result.metadata?.summary || `[Vector match: ${result.key} (score: ${result.score.toFixed(3)})]`,
+          relevance: result.score,
+          vectorScore: result.score
+        }));
+      }
+    } catch (e) {
+      logger.warn('[AutoContext] Vector search failed:', e.message);
+    }
+    return sources;
+  }
+
+  /**
+   * Index a file into vector memory for future semantic search.
+   */
+  indexFile(relPath, content) {
+    if (!this._vectorMemory) return;
+    try {
+      const vector = this._textToVector(content);
+      const summary = this._summarizeContent(content, relPath);
+      this._vectorMemory.store(relPath, vector, {
+        path: relPath,
+        summary,
+        indexedAt: Date.now(),
+        tokens: Math.ceil(content.length / 4)
+      }, 'autocontext');
+    } catch (e) {
+      logger.debug('[AutoContext] Index failed for', relPath, e.message);
+    }
+  }
+
+  /**
+   * Bulk index all workspace files into vector memory.
+   */
+  async indexWorkspace() {
+    if (!this._fileIndex) this._fileIndex = this._scanWorkspace();
+    let indexed = 0;
+    const allFiles = [...(this._fileIndex.files || []), ...(this._fileIndex.configs || []), ...(this._fileIndex.schemas || [])];
+    for (const relPath of allFiles) {
+      const content = this._readFile(relPath);
+      if (content) {
+        this.indexFile(relPath, content);
+        indexed++;
+      }
+    }
+    logger.info('[AutoContext] Workspace indexed', {
+      files: indexed
+    });
+    this.emit('context:indexed', {
+      files: indexed
+    });
+
+    // Persist vectors
+    await this._persistVectors();
+    return indexed;
+  }
+
+  /**
+   * Lightweight text → vector conversion.
+   * Creates a 384-dim feature vector from keyword frequencies.
+   * Not as good as transformer embeddings but works offline with zero latency.
+   */
+  _textToVector(text) {
+    const dim = 384;
+    const vector = new Float64Array(dim);
+    const words = (text || '').toLowerCase().split(/[\s\W]+/).filter(w => w.length > 2);
+    for (const word of words) {
+      // Hash word to deterministic positions in the vector
+      let h = 0;
+      for (let i = 0; i < word.length; i++) {
+        h = (h << 5) - h + word.charCodeAt(i) | 0;
+      }
+
+      // Spread energy across multiple dimensions (like a sparse encoding)
+      for (let i = 0; i < 3; i++) {
+        const idx = Math.abs((h + i * 127) % dim);
+        vector[idx] += 1.0 / (1 + i * PHI); // φ-decay for higher harmonics
+      }
     }
 
-    /**
-     * Enrich context for HeadyCouncil deliberation.
-     * Provides council-specific context with model capabilities awareness.
-     */
-    async enrichForCouncil(task, councilOpts = {}) {
-        const { systemContext, sources, stats } = await this.enrich(task, {
-            domain: 'council',
-            tokenBudget: TOKEN_BUDGETS.deep,
-            deep: true,
-            vectorSearch: true,
+    // L2 normalize
+    let norm = 0;
+    for (let i = 0; i < dim; i++) norm += vector[i] * vector[i];
+    norm = Math.sqrt(norm) || 1;
+    for (let i = 0; i < dim; i++) vector[i] /= norm;
+    return vector;
+  }
+  _summarizeContent(content, relPath) {
+    const ext = path.extname(relPath);
+    const lines = content.split('\n');
+    const parts = [];
+
+    // 1: Module doc comment or first comment
+    const firstComment = lines.find(l => {
+      const t = l.trim();
+      return t.startsWith('/**') || t.startsWith('* ') || t.startsWith('//');
+    });
+    if (firstComment) parts.push(firstComment.trim().replace(/^\/\*\*?\s*|\*\/\s*$/g, '').trim());
+
+    // 2: Exports / module.exports
+    const exportLines = lines.filter(l => /^(export\s+(default\s+)?(class|function|const|let|var|async)|module\.exports)/.test(l.trim())).slice(0, 5);
+    if (exportLines.length > 0) {
+      parts.push('Exports: ' + exportLines.map(l => l.trim().slice(0, 80)).join('; '));
+    }
+
+    // 3: Class/function names
+    const defs = lines.filter(l => /^\s*(class|function|async\s+function)\s+\w+/.test(l)).map(l => l.trim().replace(/\{.*$/, '').trim()).slice(0, 8);
+    if (defs.length > 0) parts.push('Defines: ' + defs.join(', '));
+
+    // 4: Config keys for JSON/YAML
+    if (ext === '.json' || ext === '.yaml' || ext === '.yml') {
+      const keys = lines.filter(l => /^\s*["']?\w+["']?\s*[:=]/.test(l)).map(l => l.trim().split(/[:=]/)[0].replace(/["']/g, '').trim()).slice(0, 10);
+      if (keys.length > 0) parts.push('Keys: ' + keys.join(', '));
+    }
+    return (parts.join(' | ') || lines[0] || relPath).slice(0, 500);
+  }
+  async _persistVectors() {
+    if (!this._vectorMemory) return;
+    try {
+      const dir = path.dirname(this._vectorPersistPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, {
+        recursive: true
+      });
+      await this._vectorMemory.persist(this._vectorPersistPath);
+      logger.debug('[AutoContext] Vectors persisted to', this._vectorPersistPath);
+    } catch (e) {
+      logger.warn('[AutoContext] Vector persist failed:', e.message);
+    }
+  }
+  async _loadPersistedVectors() {
+    if (!this._vectorMemory) return;
+    try {
+      if (fs.existsSync(this._vectorPersistPath)) {
+        const count = await this._vectorMemory.load(this._vectorPersistPath);
+        logger.info('[AutoContext] Loaded', count, 'persisted vectors');
+      }
+    } catch (e) {
+      logger.debug('[AutoContext] No persisted vectors:', e.message);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ BACKGROUND INDEXER (ALWAYS-ON) ═══
+  // ═══════════════════════════════════════════════════════════════════════
+
+  _startBackgroundIndexer() {
+    // Periodic rescan
+    this._indexerInterval = setInterval(() => {
+      if (this._dirty) {
+        this._fileIndex = this._scanWorkspace();
+        this._dirty = false;
+        this.emit('context:reindexed', {
+          version: this._indexVersion
         });
+      }
+    }, INDEX_INTERVAL_MS);
 
-        // Add council-specific preamble
-        const councilPreamble = [
-            '=== COUNCIL DELIBERATION CONTEXT ===',
-            `Models participating: ${(councilOpts.models || ['claude', 'gemini', 'gpt']).join(', ')}`,
-            `Task complexity: ${stats.sourcesIncluded > 10 ? 'HIGH' : stats.sourcesIncluded > 5 ? 'MEDIUM' : 'LOW'}`,
-            `Vector memory hits: ${stats.vectorHits}`,
-            '',
-        ].join('\n');
+    // Don't prevent process exit
+    if (this._indexerInterval.unref) this._indexerInterval.unref();
 
-        return {
-            systemContext: councilPreamble + (systemContext || ''),
-            sources,
-            stats,
-        };
-    }
-
-    /**
-     * Enrich context for HeadyMC (Monte Carlo) simulation.
-     * Provides risk-aware context for scenario modeling.
-     */
-    async enrichForMonteCarlo(scenario, signals = {}) {
-        const { systemContext } = await this.enrich(
-            `Monte Carlo simulation: ${scenario.name || 'unnamed'} — ${JSON.stringify(signals).slice(0, 200)}`,
-            { domain: 'config', tokenBudget: TOKEN_BUDGETS.minimal, vectorSearch: true }
-        );
-        return { systemContext };
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ VECTOR MEMORY (LATENT SPACE) ═══
-    // ═══════════════════════════════════════════════════════════════════════
-
-    /**
-     * Search vector memory for semantically similar context.
-     * Uses lightweight keyword-based vector generation (no external embeddings).
-     */
-    async _searchVectorMemory(task) {
-        if (!this._vectorMemory) return [];
-        const sources = [];
-
+    // Filesystem watcher (marks index as dirty on changes)
+    try {
+      const watchDirs = ['src', 'configs', 'packages', 'apps', 'services'].map(d => path.join(this._root, d)).filter(d => fs.existsSync(d));
+      for (const dir of watchDirs) {
         try {
-            // Generate a lightweight query vector from task keywords
-            const queryVector = this._textToVector(task);
-
-            const results = this._vectorMemory.search(queryVector, FIB[5], CSL_GATES.include);
-            this._stats.vectorSearches++;
-
-            for (const result of results) {
-                sources.push(new ContextSource({
-                    type: 'vector',
-                    path: result.metadata?.path || result.key,
-                    content: result.metadata?.summary ||
-                        `[Vector match: ${result.key} (score: ${result.score.toFixed(3)})]`,
-                    relevance: result.score,
-                    vectorScore: result.score,
-                }));
+          const w = fs.watch(dir, {
+            recursive: true
+          }, (eventType, filename) => {
+            if (filename && !filename.includes('node_modules')) {
+              this._dirty = true;
+              // Also re-index the changed file in vector memory
+              const relPath = path.join(path.relative(this._root, dir), filename);
+              const content = this._readFile(relPath);
+              if (content) this.indexFile(relPath, content);
             }
-        } catch (e) {
-            logger.warn('[AutoContext] Vector search failed:', e.message);
-        }
+          });
+          if (w.unref) w.unref();
+        } catch (_) {/* some dirs may not be watchable */}
+      }
+    } catch (_) {/* fs.watch not available */}
+    logger.info('[AutoContext] Background indexer started (interval: ' + INDEX_INTERVAL_MS + 'ms)');
+  }
 
-        return sources;
+  /**
+   * Stop background indexer. Call on shutdown.
+   */
+  stop() {
+    if (this._indexerInterval) {
+      clearInterval(this._indexerInterval);
+      this._indexerInterval = null;
     }
+    logger.info('[AutoContext] Stopped');
+  }
 
-    /**
-     * Index a file into vector memory for future semantic search.
-     */
-    indexFile(relPath, content) {
-        if (!this._vectorMemory) return;
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ WORKSPACE SCANNING ═══
+  // ═══════════════════════════════════════════════════════════════════════
 
-        try {
-            const vector = this._textToVector(content);
-            const summary = this._summarizeContent(content, relPath);
-
-            this._vectorMemory.store(relPath, vector, {
-                path: relPath,
-                summary,
-                indexedAt: Date.now(),
-                tokens: Math.ceil(content.length / 4),
-            }, 'autocontext');
-        } catch (e) {
-            logger.debug('[AutoContext] Index failed for', relPath, e.message);
-        }
-    }
-
-    /**
-     * Bulk index all workspace files into vector memory.
-     */
-    async indexWorkspace() {
-        if (!this._fileIndex) this._fileIndex = this._scanWorkspace();
-        let indexed = 0;
-
-        const allFiles = [
-            ...(this._fileIndex.files || []),
-            ...(this._fileIndex.configs || []),
-            ...(this._fileIndex.schemas || []),
-        ];
-
-        for (const relPath of allFiles) {
-            const content = this._readFile(relPath);
-            if (content) {
-                this.indexFile(relPath, content);
-                indexed++;
-            }
-        }
-
-        logger.info('[AutoContext] Workspace indexed', { files: indexed });
-        this.emit('context:indexed', { files: indexed });
-
-        // Persist vectors
-        await this._persistVectors();
-        return indexed;
-    }
-
-    /**
-     * Lightweight text → vector conversion.
-     * Creates a 384-dim feature vector from keyword frequencies.
-     * Not as good as transformer embeddings but works offline with zero latency.
-     */
-    _textToVector(text) {
-        const dim = 384;
-        const vector = new Float64Array(dim);
-        const words = (text || '').toLowerCase().split(/[\s\W]+/).filter(w => w.length > 2);
-
-        for (const word of words) {
-            // Hash word to deterministic positions in the vector
-            let h = 0;
-            for (let i = 0; i < word.length; i++) {
-                h = ((h << 5) - h + word.charCodeAt(i)) | 0;
-            }
-
-            // Spread energy across multiple dimensions (like a sparse encoding)
-            for (let i = 0; i < 3; i++) {
-                const idx = Math.abs((h + i * 127) % dim);
-                vector[idx] += 1.0 / (1 + i * PHI); // φ-decay for higher harmonics
-            }
-        }
-
-        // L2 normalize
-        let norm = 0;
-        for (let i = 0; i < dim; i++) norm += vector[i] * vector[i];
-        norm = Math.sqrt(norm) || 1;
-        for (let i = 0; i < dim; i++) vector[i] /= norm;
-
-        return vector;
-    }
-
-    _summarizeContent(content, relPath) {
-        const ext = path.extname(relPath);
-        const lines = content.split('\n');
-        const parts = [];
-
-        // 1: Module doc comment or first comment
-        const firstComment = lines.find(l => {
-            const t = l.trim();
-            return t.startsWith('/**') || t.startsWith('* ') || t.startsWith('//');
+  _scanWorkspace() {
+    const index = {
+      files: [],
+      configs: [],
+      schemas: []
+    };
+    this._indexVersion++;
+    const walk = (dir, depth = 0) => {
+      if (depth > MAX_SCAN_DEPTH) return;
+      let entries;
+      try {
+        entries = fs.readdirSync(dir, {
+          withFileTypes: true
         });
-        if (firstComment) parts.push(firstComment.trim().replace(/^\/\*\*?\s*|\*\/\s*$/g, '').trim());
-
-        // 2: Exports / module.exports
-        const exportLines = lines.filter(l =>
-            /^(export\s+(default\s+)?(class|function|const|let|var|async)|module\.exports)/.test(l.trim())
-        ).slice(0, 5);
-        if (exportLines.length > 0) {
-            parts.push('Exports: ' + exportLines.map(l => l.trim().slice(0, 80)).join('; '));
+      } catch (_) {
+        return;
+      }
+      for (const entry of entries) {
+        if (entry.name.startsWith('.') && entry.name !== '.env.example') continue;
+        if (SKIP_DIRS.has(entry.name)) continue;
+        const fullPath = path.join(dir, entry.name);
+        const relPath = path.relative(this._root, fullPath);
+        if (entry.isDirectory()) {
+          walk(fullPath, depth + 1);
+        } else if (entry.isFile()) {
+          const ext = path.extname(entry.name).toLowerCase();
+          if (!CODE_EXTENSIONS.has(ext)) continue;
+          if (CONFIG_FILES.has(entry.name)) {
+            index.configs.push(relPath);
+          } else if (entry.name.includes('schema') || entry.name.includes('types')) {
+            index.schemas.push(relPath);
+          } else {
+            index.files.push(relPath);
+          }
         }
+      }
+    };
+    walk(this._root);
+    logger.debug('[AutoContext] Workspace scanned v' + this._indexVersion, {
+      files: index.files.length,
+      configs: index.configs.length,
+      schemas: index.schemas.length
+    });
+    return index;
+  }
 
-        // 3: Class/function names
-        const defs = lines.filter(l =>
-            /^\s*(class|function|async\s+function)\s+\w+/.test(l)
-        ).map(l => l.trim().replace(/\{.*$/, '').trim()).slice(0, 8);
-        if (defs.length > 0) parts.push('Defines: ' + defs.join(', '));
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ CONTEXT GATHERERS ═══
+  // ═══════════════════════════════════════════════════════════════════════
 
-        // 4: Config keys for JSON/YAML
-        if (ext === '.json' || ext === '.yaml' || ext === '.yml') {
-            const keys = lines.filter(l => /^\s*["']?\w+["']?\s*[:=]/.test(l))
-                .map(l => l.trim().split(/[:=]/)[0].replace(/["']/g, '').trim())
-                .slice(0, 10);
-            if (keys.length > 0) parts.push('Keys: ' + keys.join(', '));
+  _gatherConfigs() {
+    const sources = [];
+    for (const relPath of this._fileIndex?.configs || []) {
+      const content = this._readFile(relPath);
+      if (content) {
+        sources.push(new ContextSource({
+          type: 'config',
+          path: relPath,
+          content: this._truncate(content, 1500),
+          relevance: 0.9
+        }));
+      }
+    }
+    return sources;
+  }
+  _gatherByRelevance(task) {
+    const sources = [];
+    const taskWords = this._extractKeywords(task);
+    if (taskWords.length === 0) return sources;
+    for (const relPath of (this._fileIndex?.files || []).slice(0, 300)) {
+      const fileName = path.basename(relPath, path.extname(relPath)).toLowerCase();
+      const dirParts = path.dirname(relPath).split('/').map(p => p.toLowerCase());
+      const allParts = [fileName, ...dirParts];
+      let relevance = 0;
+      for (const word of taskWords) {
+        if (allParts.some(p => p.includes(word))) relevance += 0.3;
+      }
+      if (relevance >= CSL_GATES.include) {
+        const content = this._readFile(relPath);
+        if (content) {
+          const contentLower = content.slice(0, 3000).toLowerCase();
+          for (const word of taskWords) {
+            if (contentLower.includes(word)) relevance += 0.1;
+          }
+          sources.push(new ContextSource({
+            type: 'file',
+            path: relPath,
+            content: this._truncate(content, 2000),
+            relevance: Math.min(1.0, relevance)
+          }));
         }
-
-        return (parts.join(' | ') || lines[0] || relPath).slice(0, 500);
+      }
     }
 
-    async _persistVectors() {
-        if (!this._vectorMemory) return;
-        try {
-            const dir = path.dirname(this._vectorPersistPath);
-            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-            await this._vectorMemory.persist(this._vectorPersistPath);
-            logger.debug('[AutoContext] Vectors persisted to', this._vectorPersistPath);
-        } catch (e) {
-            logger.warn('[AutoContext] Vector persist failed:', e.message);
+    // Schemas
+    for (const relPath of this._fileIndex?.schemas || []) {
+      const content = this._readFile(relPath);
+      if (content) {
+        sources.push(new ContextSource({
+          type: 'schema',
+          path: relPath,
+          content: this._truncate(content, 1500),
+          relevance: 0.7
+        }));
+      }
+    }
+    return sources;
+  }
+  _gatherFocusFiles(focusFiles) {
+    const sources = [];
+    for (const filePath of focusFiles) {
+      const relPath = path.isAbsolute(filePath) ? path.relative(this._root, filePath) : filePath;
+      const content = this._readFile(relPath);
+      if (content) {
+        sources.push(new ContextSource({
+          type: 'file',
+          path: relPath,
+          content: this._truncate(content, 4000),
+          relevance: 1.0
+        }));
+      }
+    }
+    return sources;
+  }
+  _gatherPriorPatterns(task) {
+    const sources = [];
+    const patternsFile = path.join(this._patternsDir, 'patterns.json');
+    try {
+      if (fs.existsSync(patternsFile)) {
+        const patterns = JSON.parse(fs.readFileSync(patternsFile, 'utf8'));
+        const entries = Object.values(patterns);
+        if (entries.length > 0) {
+          const taskWords = this._extractKeywords(task);
+          const relevant = entries.map(p => {
+            const specWords = this._extractKeywords(p.spec || '');
+            const overlap = taskWords.filter(w => specWords.includes(w)).length;
+            return {
+              ...p,
+              overlap
+            };
+          }).filter(p => p.overlap > 0).sort((a, b) => b.overlap - a.overlap).slice(0, FIB[4]); // top 5
+
+          if (relevant.length > 0) {
+            const summary = relevant.map(p => `Spec: "${p.spec?.slice(0, 100)}" → ${p.subtaskCount} subtasks, ` + `${p.parallelGroups} groups, determinism: ${p.determinism ?? 'N/A'}, ` + `build: ${p.avgBuildMs}ms`).join('\n');
+            sources.push(new ContextSource({
+              type: 'prior_build',
+              path: 'patterns.json',
+              content: `Prior Build Patterns:\n${summary}`,
+              relevance: PSI // ≈ 0.618
+            }));
+          }
         }
+      }
+    } catch (_) {}
+    return sources;
+  }
+  _gatherDomainContext(domain) {
+    const sources = [];
+    const domainDirs = {
+      code: ['src', 'lib', 'packages'],
+      config: ['configs', 'settings'],
+      deploy: ['scripts', 'cloudflare', 'infra'],
+      research: ['docs', 'heady-cognition'],
+      battle: ['src/services', 'src/orchestration', 'src/intelligence'],
+      council: ['src/orchestration', 'src/services', 'heady-cognition/prompts']
+    };
+    const dirs = domainDirs[domain] || domainDirs.code;
+    for (const dir of dirs) {
+      const fullDir = path.join(this._root, dir);
+      if (!fs.existsSync(fullDir)) continue;
+      try {
+        const entries = fs.readdirSync(fullDir, {
+          withFileTypes: true
+        }).filter(e => e.isFile()).slice(0, FIB[5]); // 8
+
+        for (const entry of entries) {
+          const ext = path.extname(entry.name).toLowerCase();
+          if (!CODE_EXTENSIONS.has(ext)) continue;
+          const relPath = path.join(dir, entry.name);
+          const content = this._readFile(relPath);
+          if (content) {
+            sources.push(new ContextSource({
+              type: 'file',
+              path: relPath,
+              content: this._truncate(content, 1500),
+              relevance: 0.5
+            }));
+          }
+        }
+      } catch (_) {}
+    }
+    return sources;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ PACKING & RANKING ═══
+  // ═══════════════════════════════════════════════════════════════════════
+
+  _deduplicateSources(sources) {
+    const seen = new Set();
+    return sources.filter(s => {
+      const key = s.path || crypto.createHash('md5').update(s.content).digest('hex');
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  /**
+   * Rank all sources by relevance — NO budget cap.
+   * Critical sources first, then by descending relevance.
+   */
+  _rankByRelevance(sources) {
+    const critical = sources.filter(s => s.relevance >= CSL_GATES.critical);
+    const rest = sources.filter(s => s.relevance < CSL_GATES.critical).sort((a, b) => b.relevance - a.relevance);
+    return [...critical, ...rest];
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ TIERED CONTEXT COMPRESSION (φ-aligned) ═══
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /**
+   * Apply tiered compression to ranked sources based on CSL relevance gates.
+   *
+   *   ≥ 0.718 (critical) → NONE  — full content preserved
+   *   0.618–0.718 (boost) → LIGHT — signatures, exports, key lines
+   *   0.382–0.618 (include) → HEAVY — structural summary only
+   *
+   * Config files and focus files (relevance 1.0) are always exempt.
+   * Vector memory hits are already compressed (just metadata), so exempt.
+   *
+   * @param {ContextSource[]} sources - Ranked sources
+   * @returns {ContextSource[]} Sources with compressed content
+   */
+  _compressSources(sources) {
+    return sources.map(s => {
+      // Exempt types: configs (small + need exact values), vectors (already summary),
+      // prior_build (already condensed), focus files (user-requested)
+      if (s.type === 'config' || s.type === 'vector' || s.type === 'prior_build') return s;
+      if (s.relevance >= 1.0) return s; // Focus files
+
+      // Determine tier
+      let tier;
+      if (s.relevance >= CSL_GATES.critical) {
+        tier = COMPRESSION_TIERS.NONE;
+      } else if (s.relevance >= CSL_GATES.boost) {
+        tier = COMPRESSION_TIERS.LIGHT;
+      } else {
+        tier = COMPRESSION_TIERS.HEAVY;
+      }
+      if (tier === COMPRESSION_TIERS.NONE) return s;
+
+      // Apply compression
+      const compressed = this._compressContent(s.content, tier, s.path);
+      return new ContextSource({
+        type: s.type,
+        path: s.path,
+        content: compressed,
+        relevance: s.relevance,
+        vectorScore: s.vectorScore
+      });
+    });
+  }
+  _compressContent(content, tier, filePath = '') {
+    const ext = path.extname(filePath).toLowerCase();
+    const lines = content.split('\n');
+    const totalLines = lines.length;
+
+    // ── JSON: compress by showing structure only ──────────────────────
+    if (ext === '.json') {
+      return this._compressJSON(content, tier, totalLines);
     }
 
-    async _loadPersistedVectors() {
-        if (!this._vectorMemory) return;
-        try {
-            if (fs.existsSync(this._vectorPersistPath)) {
-                const count = await this._vectorMemory.load(this._vectorPersistPath);
-                logger.info('[AutoContext] Loaded', count, 'persisted vectors');
-            }
-        } catch (e) {
-            logger.debug('[AutoContext] No persisted vectors:', e.message);
-        }
+    // ── YAML: compress by showing top-level keys ─────────────────────
+    if (ext === '.yaml' || ext === '.yml') {
+      return this._compressYAML(lines, tier, totalLines);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ BACKGROUND INDEXER (ALWAYS-ON) ═══
-    // ═══════════════════════════════════════════════════════════════════════
-
-    _startBackgroundIndexer() {
-        // Periodic rescan
-        this._indexerInterval = setInterval(() => {
-            if (this._dirty) {
-                this._fileIndex = this._scanWorkspace();
-                this._dirty = false;
-                this.emit('context:reindexed', { version: this._indexVersion });
-            }
-        }, INDEX_INTERVAL_MS);
-
-        // Don't prevent process exit
-        if (this._indexerInterval.unref) this._indexerInterval.unref();
-
-        // Filesystem watcher (marks index as dirty on changes)
-        try {
-            const watchDirs = ['src', 'configs', 'packages', 'apps', 'services'].map(d =>
-                path.join(this._root, d)
-            ).filter(d => fs.existsSync(d));
-
-            for (const dir of watchDirs) {
-                try {
-                    const w = fs.watch(dir, { recursive: true }, (eventType, filename) => {
-                        if (filename && !filename.includes('node_modules')) {
-                            this._dirty = true;
-                            // Also re-index the changed file in vector memory
-                            const relPath = path.join(path.relative(this._root, dir), filename);
-                            const content = this._readFile(relPath);
-                            if (content) this.indexFile(relPath, content);
-                        }
-                    });
-                    if (w.unref) w.unref();
-                } catch (_) { /* some dirs may not be watchable */  }
-            }
-        } catch (_) { /* fs.watch not available */  }
-
-        logger.info('[AutoContext] Background indexer started (interval: ' + INDEX_INTERVAL_MS + 'ms)');
+    // ── Markdown: compress to headings + first paragraph ─────────────
+    if (ext === '.md') {
+      return this._compressMarkdown(lines, tier, totalLines);
     }
 
-    /**
-     * Stop background indexer. Call on shutdown.
-     */
-    stop() {
-        if (this._indexerInterval) {
-            clearInterval(this._indexerInterval);
-            this._indexerInterval = null;
+    // ── Code files (JS/TS/PY/Go/etc.) ────────────────────────────────
+    if (tier === COMPRESSION_TIERS.LIGHT) {
+      return this._compressCodeLight(lines, totalLines, ext);
+    }
+    return this._compressCodeHeavy(lines, totalLines, ext, filePath);
+  }
+
+  /**
+   * LIGHT code compression — signatures + structural lines only.
+   */
+  _compressCodeLight(lines, totalLines, ext) {
+    const kept = [];
+    let inBlockComment = false;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // Track block comments
+      if (trimmed.startsWith('/*')) inBlockComment = true;
+      if (inBlockComment) {
+        // Keep doc comments (/** ... */) as they contain API docs
+        if (trimmed.startsWith('/**') || trimmed.startsWith('* @')) {
+          kept.push(line);
         }
-        logger.info('[AutoContext] Stopped');
+        if (trimmed.includes('*/')) inBlockComment = false;
+        continue;
+      }
+
+      // Always keep: imports, requires, exports
+      if (/^\s*(import\s|const\s+\{.*\}\s*=\s*require|require\s*\(|from\s+['"])/.test(trimmed) || /^\s*(export\s+(default\s+)?(class|function|const|let|var|async|type|interface))/.test(trimmed) || /^\s*module\.exports/.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+
+      // Keep class declarations and method signatures
+      if (/^\s*(class\s+\w+|constructor\s*\(|static\s+|async\s+\w+\s*\(|get\s+\w+\s*\(|set\s+\w+\s*\()/.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+
+      // Keep function declarations (standalone + arrow with name)
+      if (/^\s*(function\s+\w+|async\s+function\s+\w+|const\s+\w+\s*=\s*(async\s+)?\(|const\s+\w+\s*=\s*(async\s+)?function)/.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+
+      // Keep named method definitions (object/class methods)
+      if (/^\s*\w+\s*\(.*\)\s*\{?\s*$/.test(trimmed) && !trimmed.startsWith('if') && !trimmed.startsWith('for') && !trimmed.startsWith('while') && !trimmed.startsWith('switch') && !trimmed.startsWith('return')) {
+        kept.push(line);
+        continue;
+      }
+
+      // Keep key constant assignments (ALL_CAPS or important-looking)
+      if (/^\s*const\s+[A-Z_]{3,}\s*=/.test(trimmed) || /^\s*(let|var)\s+[A-Z_]{3,}\s*=/.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+      if (/\/\/\s*(TODO|FIXME|HACK|NOTE|WARN|XXX|BUG)/i.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+
+      // Python-specific: keep def/class
+      if (ext === '.py' && /^\s*(def\s+\w+|class\s+\w+|@\w+)/.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+
+      // Go-specific: keep func/type
+      if (ext === '.go' && /^\s*(func\s+|type\s+\w+\s+(struct|interface))/.test(trimmed)) {
+        kept.push(line);
+        continue;
+      }
+    }
+    const header = `[light-compressed: ${kept.length}/${totalLines} lines kept]`;
+    return header + '\n' + kept.join('\n');
+  }
+
+  /**
+   * HEAVY code compression — structural summary only.
+   */
+  _compressCodeHeavy(lines, totalLines, ext, filePath) {
+    const parts = [];
+    parts.push(`[${path.basename(filePath)} — ${totalLines} lines]`);
+
+    // Extract file purpose from leading comments
+    const leadingComment = [];
+    for (const line of lines.slice(0, 20)) {
+      const t = line.trim();
+      if (t.startsWith('*') || t.startsWith('//') || t.startsWith('/**') || t === '') {
+        leadingComment.push(t.replace(/^[\/*\s]+/, '').trim());
+      } else break;
+    }
+    const purpose = leadingComment.filter(Boolean).join(' ').slice(0, 200);
+    if (purpose) parts.push(`Purpose: ${purpose}`);
+
+    // Collect exports
+    const exports = lines.filter(l => /^\s*(export\s+(default\s+)?(class|function|const|let|async|type|interface)|module\.exports)/.test(l.trim())).map(l => l.trim().slice(0, 100));
+    if (exports.length > 0) parts.push('Exports: ' + exports.join('; '));
+
+    // Collect class/function names
+    const defs = lines.filter(l => /^\s*(class\s+\w+|function\s+\w+|async\s+function\s+\w+)/.test(l.trim())).map(l => l.trim().replace(/[{(].*$/, '').trim());
+    if (defs.length > 0) parts.push('Defines: ' + defs.join(', '));
+
+    // Python defs
+    if (ext === '.py') {
+      const pyDefs = lines.filter(l => /^\s*(def|class)\s+\w+/.test(l.trim())).map(l => l.trim().replace(/:.*$/, '').trim());
+      if (pyDefs.length > 0) parts.push('Defines: ' + pyDefs.join(', '));
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ WORKSPACE SCANNING ═══
-    // ═══════════════════════════════════════════════════════════════════════
+    // Count key patterns
+    const importCount = lines.filter(l => /^\s*(import\s|require\s*\()/.test(l.trim())).length;
+    if (importCount > 0) parts.push(`Dependencies: ${importCount} imports`);
+    return parts.join('\n');
+  }
 
-    _scanWorkspace() {
-        const index = { files: [], configs: [], schemas: [] };
-        this._indexVersion++;
+  /**
+   * JSON compression — show keys and structure without values.
+   */
+  _compressJSON(content, tier, totalLines) {
+    try {
+      const parsed = JSON.parse(content);
+      if (tier === COMPRESSION_TIERS.HEAVY) {
+        const topKeys = Object.keys(parsed).slice(0, 20);
+        return `[JSON — ${totalLines} lines] Keys: ${topKeys.join(', ')}`;
+      }
+      // LIGHT: show top-level keys with value types
+      const structure = Object.entries(parsed).slice(0, 30).map(([k, v]) => {
+        if (Array.isArray(v)) return `${k}: Array[${v.length}]`;
+        if (v && typeof v === 'object') return `${k}: {${Object.keys(v).slice(0, 5).join(', ')}...}`;
+        return `${k}: ${JSON.stringify(v)}`;
+      });
+      return `[JSON — ${totalLines} lines]\n` + structure.join('\n');
+    } catch (_) {
+      return content.slice(0, 500) + '\n[truncated]';
+    }
+  }
 
-        const walk = (dir, depth = 0) => {
-            if (depth > MAX_SCAN_DEPTH) return;
-
-            let entries;
-            try { entries = fs.readdirSync(dir, { withFileTypes: true }); }
-            catch (_) { return; }
-
-            for (const entry of entries) {
-                if (entry.name.startsWith('.') && entry.name !== '.env.example') continue;
-                if (SKIP_DIRS.has(entry.name)) continue;
-
-                const fullPath = path.join(dir, entry.name);
-                const relPath = path.relative(this._root, fullPath);
-
-                if (entry.isDirectory()) {
-                    walk(fullPath, depth + 1);
-                } else if (entry.isFile()) {
-                    const ext = path.extname(entry.name).toLowerCase();
-                    if (!CODE_EXTENSIONS.has(ext)) continue;
-
-                    if (CONFIG_FILES.has(entry.name)) {
-                        index.configs.push(relPath);
-                    } else if (entry.name.includes('schema') || entry.name.includes('types')) {
-                        index.schemas.push(relPath);
-                    } else {
-                        index.files.push(relPath);
-                    }
-                }
-            }
-        };
-
-        walk(this._root);
-
-        logger.debug('[AutoContext] Workspace scanned v' + this._indexVersion, {
-            files: index.files.length,
-            configs: index.configs.length,
-            schemas: index.schemas.length,
-        });
-
-        return index;
+  /**
+   * YAML compression — show top-level keys and nesting.
+   */
+  _compressYAML(lines, tier, totalLines) {
+    const topKeys = lines.filter(l => /^\w+\s*:/.test(l)).map(l => l.split(':')[0].trim()).slice(0, 20);
+    if (tier === COMPRESSION_TIERS.HEAVY) {
+      return `[YAML — ${totalLines} lines] Keys: ${topKeys.join(', ')}`;
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ CONTEXT GATHERERS ═══
-    // ═══════════════════════════════════════════════════════════════════════
+    // LIGHT: top-level entries with first child
+    const kept = lines.filter(l => /^\w+\s*:/.test(l) || /^\s{2}\w+\s*:/.test(l)).slice(0, 40);
+    return `[YAML — ${totalLines} lines]\n` + kept.join('\n');
+  }
 
-    _gatherConfigs() {
-        const sources = [];
-        for (const relPath of (this._fileIndex?.configs || [])) {
-            const content = this._readFile(relPath);
-            if (content) {
-                sources.push(new ContextSource({
-                    type: 'config',
-                    path: relPath,
-                    content: this._truncate(content, 1500),
-                    relevance: 0.9,
-                }));
-            }
-        }
-        return sources;
+  /**
+   * Markdown compression — headings + first paragraph.
+   */
+  _compressMarkdown(lines, tier, totalLines) {
+    if (tier === COMPRESSION_TIERS.HEAVY) {
+      const headings = lines.filter(l => /^#{1,4}\s+/.test(l)).slice(0, 15);
+      return `[Markdown — ${totalLines} lines]\n` + headings.join('\n');
     }
 
-    _gatherByRelevance(task) {
-        const sources = [];
-        const taskWords = this._extractKeywords(task);
-        if (taskWords.length === 0) return sources;
-
-        for (const relPath of (this._fileIndex?.files || []).slice(0, 300)) {
-            const fileName = path.basename(relPath, path.extname(relPath)).toLowerCase();
-            const dirParts = path.dirname(relPath).split('/').map(p => p.toLowerCase());
-            const allParts = [fileName, ...dirParts];
-
-            let relevance = 0;
-            for (const word of taskWords) {
-                if (allParts.some(p => p.includes(word))) relevance += 0.3;
-            }
-
-            if (relevance >= CSL_GATES.include) {
-                const content = this._readFile(relPath);
-                if (content) {
-                    const contentLower = content.slice(0, 3000).toLowerCase();
-                    for (const word of taskWords) {
-                        if (contentLower.includes(word)) relevance += 0.1;
-                    }
-
-                    sources.push(new ContextSource({
-                        type: 'file',
-                        path: relPath,
-                        content: this._truncate(content, 2000),
-                        relevance: Math.min(1.0, relevance),
-                    }));
-                }
-            }
+    // LIGHT: headings + first non-empty line after each heading
+    const kept = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (/^#{1,4}\s+/.test(lines[i])) {
+        kept.push(lines[i]);
+        // Grab first content line after heading
+        for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+          if (lines[j].trim() && !lines[j].startsWith('#')) {
+            kept.push(lines[j]);
+            break;
+          }
         }
-
-        // Schemas
-        for (const relPath of (this._fileIndex?.schemas || [])) {
-            const content = this._readFile(relPath);
-            if (content) {
-                sources.push(new ContextSource({
-                    type: 'schema',
-                    path: relPath,
-                    content: this._truncate(content, 1500),
-                    relevance: 0.7,
-                }));
-            }
-        }
-
-        return sources;
+      }
     }
+    return `[Markdown — ${totalLines} lines]\n` + kept.join('\n');
+  }
 
-    _gatherFocusFiles(focusFiles) {
-        const sources = [];
-        for (const filePath of focusFiles) {
-            const relPath = path.isAbsolute(filePath)
-                ? path.relative(this._root, filePath)
-                : filePath;
-            const content = this._readFile(relPath);
-            if (content) {
-                sources.push(new ContextSource({
-                    type: 'file',
-                    path: relPath,
-                    content: this._truncate(content, 4000),
-                    relevance: 1.0,
-                }));
-            }
-        }
-        return sources;
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ CONTEXT BLOCK BUILDER ═══
+  // ═══════════════════════════════════════════════════════════════════════
+
+  _buildContextBlock(sources) {
+    if (sources.length === 0) return '';
+    const sections = [];
+    const configs = sources.filter(s => s.type === 'config');
+    const schemas = sources.filter(s => s.type === 'schema');
+    const files = sources.filter(s => s.type === 'file');
+    const vectors = sources.filter(s => s.type === 'vector');
+    const patterns = sources.filter(s => s.type === 'prior_build');
+    if (configs.length > 0) {
+      sections.push('=== PROJECT CONFIGURATION ===\n' + configs.map(s => `--- ${s.path} ---\n${s.content}`).join('\n\n'));
     }
-
-    _gatherPriorPatterns(task) {
-        const sources = [];
-        const patternsFile = path.join(this._patternsDir, 'patterns.json');
-
-        try {
-            if (fs.existsSync(patternsFile)) {
-                const patterns = JSON.parse(fs.readFileSync(patternsFile, 'utf8'));
-                const entries = Object.values(patterns);
-
-                if (entries.length > 0) {
-                    const taskWords = this._extractKeywords(task);
-                    const relevant = entries
-                        .map(p => {
-                            const specWords = this._extractKeywords(p.spec || '');
-                            const overlap = taskWords.filter(w => specWords.includes(w)).length;
-                            return { ...p, overlap };
-                        })
-                        .filter(p => p.overlap > 0)
-                        .sort((a, b) => b.overlap - a.overlap)
-                        .slice(0, FIB[4]); // top 5
-
-                    if (relevant.length > 0) {
-                        const summary = relevant.map(p =>
-                            `Spec: "${p.spec?.slice(0, 100)}" → ${p.subtaskCount} subtasks, ` +
-                            `${p.parallelGroups} groups, determinism: ${p.determinism ?? 'N/A'}, ` +
-                            `build: ${p.avgBuildMs}ms`
-                        ).join('\n');
-
-                        sources.push(new ContextSource({
-                            type: 'prior_build',
-                            path: 'patterns.json',
-                            content: `Prior Build Patterns:\n${summary}`,
-                            relevance: PSI, // ≈ 0.618
-                        }));
-                    }
-                }
-            }
-        } catch (_) { }
-
-        return sources;
+    if (vectors.length > 0) {
+      sections.push('=== LATENT SPACE KNOWLEDGE (Vector Memory) ===\n' + vectors.map(s => `--- ${s.path} (score: ${s.vectorScore.toFixed(3)}) ---\n${s.content}`).join('\n\n'));
     }
-
-    _gatherDomainContext(domain) {
-        const sources = [];
-        const domainDirs = {
-            code: ['src', 'lib', 'packages'],
-            config: ['configs', 'settings'],
-            deploy: ['scripts', 'cloudflare', 'infra'],
-            research: ['docs', 'heady-cognition'],
-            battle: ['src/services', 'src/orchestration', 'src/intelligence'],
-            council: ['src/orchestration', 'src/services', 'heady-cognition/prompts'],
-        };
-
-        const dirs = domainDirs[domain] || domainDirs.code;
-
-        for (const dir of dirs) {
-            const fullDir = path.join(this._root, dir);
-            if (!fs.existsSync(fullDir)) continue;
-
-            try {
-                const entries = fs.readdirSync(fullDir, { withFileTypes: true })
-                    .filter(e => e.isFile())
-                    .slice(0, FIB[5]); // 8
-
-                for (const entry of entries) {
-                    const ext = path.extname(entry.name).toLowerCase();
-                    if (!CODE_EXTENSIONS.has(ext)) continue;
-
-                    const relPath = path.join(dir, entry.name);
-                    const content = this._readFile(relPath);
-                    if (content) {
-                        sources.push(new ContextSource({
-                            type: 'file',
-                            path: relPath,
-                            content: this._truncate(content, 1500),
-                            relevance: 0.5,
-                        }));
-                    }
-                }
-            } catch (_) { }
-        }
-
-        return sources;
+    if (schemas.length > 0) {
+      sections.push('=== SCHEMAS & TYPES ===\n' + schemas.map(s => `--- ${s.path} ---\n${s.content}`).join('\n\n'));
     }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ PACKING & RANKING ═══
-    // ═══════════════════════════════════════════════════════════════════════
-
-    _deduplicateSources(sources) {
-        const seen = new Set();
-        return sources.filter(s => {
-            const key = s.path || crypto.createHash('md5').update(s.content).digest('hex');
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-        });
+    if (files.length > 0) {
+      sections.push('=== RELEVANT SOURCE FILES ===\n' + files.map(s => `--- ${s.path} (relevance: ${s.relevance.toFixed(2)}) ---\n${s.content}`).join('\n\n'));
     }
-
-    /**
-     * Rank all sources by relevance — NO budget cap.
-     * Critical sources first, then by descending relevance.
-     */
-    _rankByRelevance(sources) {
-        const critical = sources.filter(s => s.relevance >= CSL_GATES.critical);
-        const rest = sources.filter(s => s.relevance < CSL_GATES.critical)
-            .sort((a, b) => b.relevance - a.relevance);
-        return [...critical, ...rest];
+    if (patterns.length > 0) {
+      sections.push('=== PRIOR BUILD KNOWLEDGE ===\n' + patterns.map(s => s.content).join('\n'));
     }
+    return sections.join('\n\n');
+  }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ TIERED CONTEXT COMPRESSION (φ-aligned) ═══
-    // ═══════════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+  // ═══ UTILITIES ═══
+  // ═══════════════════════════════════════════════════════════════════════
 
-    /**
-     * Apply tiered compression to ranked sources based on CSL relevance gates.
-     *
-     *   ≥ 0.718 (critical) → NONE  — full content preserved
-     *   0.618–0.718 (boost) → LIGHT — signatures, exports, key lines
-     *   0.382–0.618 (include) → HEAVY — structural summary only
-     *
-     * Config files and focus files (relevance 1.0) are always exempt.
-     * Vector memory hits are already compressed (just metadata), so exempt.
-     *
-     * @param {ContextSource[]} sources - Ranked sources
-     * @returns {ContextSource[]} Sources with compressed content
-     */
-    _compressSources(sources) {
-        return sources.map(s => {
-            // Exempt types: configs (small + need exact values), vectors (already summary),
-            // prior_build (already condensed), focus files (user-requested)
-            if (s.type === 'config' || s.type === 'vector' || s.type === 'prior_build') return s;
-            if (s.relevance >= 1.0) return s; // Focus files
+  _readFile(relPath) {
+    const absPath = path.join(this._root, relPath);
+    const cached = this._cache.get(relPath);
+    try {
+      const stat = fs.statSync(absPath);
+      if (cached && cached.mtime >= stat.mtimeMs) {
+        this._stats.cacheHits++;
+        return cached.content;
+      }
+      this._stats.cacheMisses++;
+      const content = fs.readFileSync(absPath, 'utf8');
+      this._cache.set(relPath, {
+        content,
+        mtime: stat.mtimeMs,
+        tokens: Math.ceil(content.length / 4)
+      });
 
-            // Determine tier
-            let tier;
-            if (s.relevance >= CSL_GATES.critical) {
-                tier = COMPRESSION_TIERS.NONE;
-            } else if (s.relevance >= CSL_GATES.boost) {
-                tier = COMPRESSION_TIERS.LIGHT;
-            } else {
-                tier = COMPRESSION_TIERS.HEAVY;
-            }
-
-            if (tier === COMPRESSION_TIERS.NONE) return s;
-
-            // Apply compression
-            const compressed = this._compressContent(s.content, tier, s.path);
-            return new ContextSource({
-                type: s.type,
-                path: s.path,
-                content: compressed,
-                relevance: s.relevance,
-                vectorScore: s.vectorScore,
-            });
-        });
+      // LRU eviction
+      if (this._cache.size > MAX_CACHE_SIZE) {
+        const oldest = this._cache.keys().next().value;
+        this._cache.delete(oldest);
+      }
+      return content;
+    } catch (_) {
+      return null;
     }
+  }
+  _truncate(content, maxChars) {
+    if (content.length <= maxChars) return content;
+    return content.slice(0, maxChars) + '\n... [truncated]';
+  }
+  _extractKeywords(text) {
+    return (text || '').toLowerCase().split(/[\s\W]+/).filter(w => w.length > 2 && !STOP_WORDS.has(w));
+  }
 
-    /**
-     * Structure-aware content compression.
-     *
-     * LIGHT mode — extracts:
-     *   - Import/require statements
-     *   - Function/class/method signatures (no bodies)
-     *   - Export declarations
-     *   - Key constant/variable assignments
-     *   - Comments marked with TODO/FIXME/HACK/NOTE
-     *
-     * HEAVY mode — produces:
-     *   - File purpose (from leading comments)
-     *   - List of exports and class/function names
-     *   - Key config values (for JSON/YAML)
-     *   - Total line count for scale reference
-     *
-     * @param {string} content - Raw file content
-     * @param {string} tier - COMPRESSION_TIERS.LIGHT or COMPRESSION_TIERS.HEAVY
-     * @param {string} [filePath] - For extension-aware compression
-     * @returns {string} Compressed content
-     */
-    _compressContent(content, tier, filePath = '') {
-        const ext = path.extname(filePath).toLowerCase();
-        const lines = content.split('\n');
-        const totalLines = lines.length;
+  /** Invalidate the workspace index (call after significant changes) */
+  invalidate() {
+    this._fileIndex = null;
+    this._dirty = true;
+    this._cache.clear();
+  }
 
-        // ── JSON: compress by showing structure only ──────────────────────
-        if (ext === '.json') {
-            return this._compressJSON(content, tier, totalLines);
-        }
-
-        // ── YAML: compress by showing top-level keys ─────────────────────
-        if (ext === '.yaml' || ext === '.yml') {
-            return this._compressYAML(lines, tier, totalLines);
-        }
-
-        // ── Markdown: compress to headings + first paragraph ─────────────
-        if (ext === '.md') {
-            return this._compressMarkdown(lines, tier, totalLines);
-        }
-
-        // ── Code files (JS/TS/PY/Go/etc.) ────────────────────────────────
-        if (tier === COMPRESSION_TIERS.LIGHT) {
-            return this._compressCodeLight(lines, totalLines, ext);
-        }
-
-        return this._compressCodeHeavy(lines, totalLines, ext, filePath);
-    }
-
-    /**
-     * LIGHT code compression — signatures + structural lines only.
-     */
-    _compressCodeLight(lines, totalLines, ext) {
-        const kept = [];
-        let inBlockComment = false;
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const trimmed = line.trim();
-
-            // Track block comments
-            if (trimmed.startsWith('/*')) inBlockComment = true;
-            if (inBlockComment) {
-                // Keep doc comments (/** ... */) as they contain API docs
-                if (trimmed.startsWith('/**') || trimmed.startsWith('* @')) {
-                    kept.push(line);
-                }
-                if (trimmed.includes('*/')) inBlockComment = false;
-                continue;
-            }
-
-            // Always keep: imports, requires, exports
-            if (/^\s*(import\s|const\s+\{.*\}\s*=\s*require|require\s*\(|from\s+['"])/.test(trimmed) ||
-                /^\s*(export\s+(default\s+)?(class|function|const|let|var|async|type|interface))/.test(trimmed) ||
-                /^\s*module\.exports/.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-
-            // Keep class declarations and method signatures
-            if (/^\s*(class\s+\w+|constructor\s*\(|static\s+|async\s+\w+\s*\(|get\s+\w+\s*\(|set\s+\w+\s*\()/.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-
-            // Keep function declarations (standalone + arrow with name)
-            if (/^\s*(function\s+\w+|async\s+function\s+\w+|const\s+\w+\s*=\s*(async\s+)?\(|const\s+\w+\s*=\s*(async\s+)?function)/.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-
-            // Keep named method definitions (object/class methods)
-            if (/^\s*\w+\s*\(.*\)\s*\{?\s*$/.test(trimmed) && !trimmed.startsWith('if') &&
-                !trimmed.startsWith('for') && !trimmed.startsWith('while') &&
-                !trimmed.startsWith('switch') && !trimmed.startsWith('return')) {
-                kept.push(line);
-                continue;
-            }
-
-            // Keep key constant assignments (ALL_CAPS or important-looking)
-            if (/^\s*const\s+[A-Z_]{3,}\s*=/.test(trimmed) ||
-                /^\s*(let|var)\s+[A-Z_]{3,}\s*=/.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-
-            // Keep TODO/FIXME/HACK/NOTE comments
-            if (/\/\/\s*(TODO|FIXME|HACK|NOTE|WARN|XXX|BUG)/i.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-
-            // Python-specific: keep def/class
-            if (ext === '.py' && /^\s*(def\s+\w+|class\s+\w+|@\w+)/.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-
-            // Go-specific: keep func/type
-            if (ext === '.go' && /^\s*(func\s+|type\s+\w+\s+(struct|interface))/.test(trimmed)) {
-                kept.push(line);
-                continue;
-            }
-        }
-
-        const header = `[light-compressed: ${kept.length}/${totalLines} lines kept]`;
-        return header + '\n' + kept.join('\n');
-    }
-
-    /**
-     * HEAVY code compression — structural summary only.
-     */
-    _compressCodeHeavy(lines, totalLines, ext, filePath) {
-        const parts = [];
-        parts.push(`[${path.basename(filePath)} — ${totalLines} lines]`);
-
-        // Extract file purpose from leading comments
-        const leadingComment = [];
-        for (const line of lines.slice(0, 20)) {
-            const t = line.trim();
-            if (t.startsWith('*') || t.startsWith('//') || t.startsWith('/**') || t === '') {
-                leadingComment.push(t.replace(/^[\/*\s]+/, '').trim());
-            } else break;
-        }
-        const purpose = leadingComment.filter(Boolean).join(' ').slice(0, 200);
-        if (purpose) parts.push(`Purpose: ${purpose}`);
-
-        // Collect exports
-        const exports = lines.filter(l =>
-            /^\s*(export\s+(default\s+)?(class|function|const|let|async|type|interface)|module\.exports)/.test(l.trim())
-        ).map(l => l.trim().slice(0, 100));
-        if (exports.length > 0) parts.push('Exports: ' + exports.join('; '));
-
-        // Collect class/function names
-        const defs = lines.filter(l =>
-            /^\s*(class\s+\w+|function\s+\w+|async\s+function\s+\w+)/.test(l.trim())
-        ).map(l => l.trim().replace(/[{(].*$/, '').trim());
-        if (defs.length > 0) parts.push('Defines: ' + defs.join(', '));
-
-        // Python defs
-        if (ext === '.py') {
-            const pyDefs = lines.filter(l => /^\s*(def|class)\s+\w+/.test(l.trim()))
-                .map(l => l.trim().replace(/:.*$/, '').trim());
-            if (pyDefs.length > 0) parts.push('Defines: ' + pyDefs.join(', '));
-        }
-
-        // Count key patterns
-        const importCount = lines.filter(l => /^\s*(import\s|require\s*\()/.test(l.trim())).length;
-        if (importCount > 0) parts.push(`Dependencies: ${importCount} imports`);
-
-        return parts.join('\n');
-    }
-
-    /**
-     * JSON compression — show keys and structure without values.
-     */
-    _compressJSON(content, tier, totalLines) {
-        try {
-            const parsed = JSON.parse(content);
-            if (tier === COMPRESSION_TIERS.HEAVY) {
-                const topKeys = Object.keys(parsed).slice(0, 20);
-                return `[JSON — ${totalLines} lines] Keys: ${topKeys.join(', ')}`;
-            }
-            // LIGHT: show top-level keys with value types
-            const structure = Object.entries(parsed).slice(0, 30).map(([k, v]) => {
-                if (Array.isArray(v)) return `${k}: Array[${v.length}]`;
-                if (v && typeof v === 'object') return `${k}: {${Object.keys(v).slice(0, 5).join(', ')}...}`;
-                return `${k}: ${JSON.stringify(v)}`;
-            });
-            return `[JSON — ${totalLines} lines]\n` + structure.join('\n');
-        } catch (_) {
-            return content.slice(0, 500) + '\n[truncated]';
-        }
-    }
-
-    /**
-     * YAML compression — show top-level keys and nesting.
-     */
-    _compressYAML(lines, tier, totalLines) {
-        const topKeys = lines
-            .filter(l => /^\w+\s*:/.test(l))
-            .map(l => l.split(':')[0].trim())
-            .slice(0, 20);
-
-        if (tier === COMPRESSION_TIERS.HEAVY) {
-            return `[YAML — ${totalLines} lines] Keys: ${topKeys.join(', ')}`;
-        }
-
-        // LIGHT: top-level entries with first child
-        const kept = lines.filter(l => /^\w+\s*:/.test(l) || /^\s{2}\w+\s*:/.test(l)).slice(0, 40);
-        return `[YAML — ${totalLines} lines]\n` + kept.join('\n');
-    }
-
-    /**
-     * Markdown compression — headings + first paragraph.
-     */
-    _compressMarkdown(lines, tier, totalLines) {
-        if (tier === COMPRESSION_TIERS.HEAVY) {
-            const headings = lines.filter(l => /^#{1,4}\s+/.test(l)).slice(0, 15);
-            return `[Markdown — ${totalLines} lines]\n` + headings.join('\n');
-        }
-
-        // LIGHT: headings + first non-empty line after each heading
-        const kept = [];
-        for (let i = 0; i < lines.length; i++) {
-            if (/^#{1,4}\s+/.test(lines[i])) {
-                kept.push(lines[i]);
-                // Grab first content line after heading
-                for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
-                    if (lines[j].trim() && !lines[j].startsWith('#')) {
-                        kept.push(lines[j]);
-                        break;
-                    }
-                }
-            }
-        }
-        return `[Markdown — ${totalLines} lines]\n` + kept.join('\n');
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ CONTEXT BLOCK BUILDER ═══
-    // ═══════════════════════════════════════════════════════════════════════
-
-    _buildContextBlock(sources) {
-        if (sources.length === 0) return '';
-
-        const sections = [];
-
-        const configs = sources.filter(s => s.type === 'config');
-        const schemas = sources.filter(s => s.type === 'schema');
-        const files = sources.filter(s => s.type === 'file');
-        const vectors = sources.filter(s => s.type === 'vector');
-        const patterns = sources.filter(s => s.type === 'prior_build');
-
-        if (configs.length > 0) {
-            sections.push('=== PROJECT CONFIGURATION ===\n' +
-                configs.map(s => `--- ${s.path} ---\n${s.content}`).join('\n\n'));
-        }
-
-        if (vectors.length > 0) {
-            sections.push('=== LATENT SPACE KNOWLEDGE (Vector Memory) ===\n' +
-                vectors.map(s => `--- ${s.path} (score: ${s.vectorScore.toFixed(3)}) ---\n${s.content}`).join('\n\n'));
-        }
-
-        if (schemas.length > 0) {
-            sections.push('=== SCHEMAS & TYPES ===\n' +
-                schemas.map(s => `--- ${s.path} ---\n${s.content}`).join('\n\n'));
-        }
-
-        if (files.length > 0) {
-            sections.push('=== RELEVANT SOURCE FILES ===\n' +
-                files.map(s => `--- ${s.path} (relevance: ${s.relevance.toFixed(2)}) ---\n${s.content}`).join('\n\n'));
-        }
-
-        if (patterns.length > 0) {
-            sections.push('=== PRIOR BUILD KNOWLEDGE ===\n' +
-                patterns.map(s => s.content).join('\n'));
-        }
-
-        return sections.join('\n\n');
-    }
-
-    // ═══════════════════════════════════════════════════════════════════════
-    // ═══ UTILITIES ═══
-    // ═══════════════════════════════════════════════════════════════════════
-
-    _readFile(relPath) {
-        const absPath = path.join(this._root, relPath);
-
-        const cached = this._cache.get(relPath);
-        try {
-            const stat = fs.statSync(absPath);
-            if (cached && cached.mtime >= stat.mtimeMs) {
-                this._stats.cacheHits++;
-                return cached.content;
-            }
-
-            this._stats.cacheMisses++;
-            const content = fs.readFileSync(absPath, 'utf8');
-            this._cache.set(relPath, {
-                content,
-                mtime: stat.mtimeMs,
-                tokens: Math.ceil(content.length / 4),
-            });
-
-            // LRU eviction
-            if (this._cache.size > MAX_CACHE_SIZE) {
-                const oldest = this._cache.keys().next().value;
-                this._cache.delete(oldest);
-            }
-
-            return content;
-        } catch (_) {
-            return null;
-        }
-    }
-
-    _truncate(content, maxChars) {
-        if (content.length <= maxChars) return content;
-        return content.slice(0, maxChars) + '\n... [truncated]';
-    }
-
-    _extractKeywords(text) {
-        return (text || '')
-            .toLowerCase()
-            .split(/[\s\W]+/)
-            .filter(w => w.length > 2 && !STOP_WORDS.has(w));
-    }
-
-    /** Invalidate the workspace index (call after significant changes) */
-    invalidate() {
-        this._fileIndex = null;
-        this._dirty = true;
-        this._cache.clear();
-    }
-
-    /** Get service health stats */
-    getStats() {
-        return {
-            ...this._stats,
-            indexVersion: this._indexVersion,
-            cacheSize: this._cache.size,
-            fileIndexSize: this._fileIndex
-                ? (this._fileIndex.files.length + this._fileIndex.configs.length + this._fileIndex.schemas.length)
-                : 0,
-            vectorMemoryStats: this._vectorMemory?.stats() || null,
-            alwaysOn: this._alwaysOn,
-            totalTokensSaved: this._stats.totalTokensSaved,
-        };
-    }
+  /** Get service health stats */
+  getStats() {
+    return {
+      ...this._stats,
+      indexVersion: this._indexVersion,
+      cacheSize: this._cache.size,
+      fileIndexSize: this._fileIndex ? this._fileIndex.files.length + this._fileIndex.configs.length + this._fileIndex.schemas.length : 0,
+      vectorMemoryStats: this._vectorMemory?.stats() || null,
+      alwaysOn: this._alwaysOn,
+      totalTokensSaved: this._stats.totalTokensSaved
+    };
+  }
 }
 
 // ─── Stop Words ──────────────────────────────────────────────────────────────
 
-const STOP_WORDS = new Set([
-    'the', 'and', 'for', 'with', 'that', 'this', 'from', 'are',
-    'was', 'has', 'had', 'not', 'but', 'all', 'can', 'her',
-    'will', 'one', 'each', 'make', 'like', 'use', 'build',
-    'create', 'add', 'new', 'file', 'code', 'function',
-    'should', 'would', 'could', 'also', 'need', 'want',
-    'just', 'get', 'set', 'run', 'let', 'var', 'const',
-]);
+const STOP_WORDS = new Set(['the', 'and', 'for', 'with', 'that', 'this', 'from', 'are', 'was', 'has', 'had', 'not', 'but', 'all', 'can', 'her', 'will', 'one', 'each', 'make', 'like', 'use', 'build', 'create', 'add', 'new', 'file', 'code', 'function', 'should', 'would', 'could', 'also', 'need', 'want', 'just', 'get', 'set', 'run', 'let', 'var', 'const']);
 
 // ─── Singleton Factory ──────────────────────────────────────────────────────
 
@@ -1314,10 +1196,10 @@ let _instance = null;
  * Call this everywhere to ensure a single always-on service.
  */
 function getAutoContext(opts = {}) {
-    if (!_instance && opts.workspaceRoot) {
-        _instance = new HeadyAutoContext(opts);
-    }
-    return _instance;
+  if (!_instance && opts.workspaceRoot) {
+    _instance = new HeadyAutoContext(opts);
+  }
+  return _instance;
 }
 
 /**
@@ -1325,51 +1207,49 @@ function getAutoContext(opts = {}) {
  * After calling this, ALL gateway.complete() calls get auto-context.
  */
 function wireGateway(gateway, autoContext) {
-    if (!gateway || !autoContext) return;
+  if (!gateway || !autoContext) return;
+  const originalComplete = gateway.complete.bind(gateway);
+  const originalBattle = gateway.battle?.bind(gateway);
+  const originalRace = gateway.race?.bind(gateway);
 
-    const originalComplete = gateway.complete.bind(gateway);
-    const originalBattle = gateway.battle?.bind(gateway);
-    const originalRace = gateway.race?.bind(gateway);
+  // Wrap complete()
+  gateway.complete = async function (messages, opts = {}) {
+    const enriched = await autoContext.createMiddleware()(messages, opts);
+    return originalComplete(enriched, opts);
+  };
 
-    // Wrap complete()
-    gateway.complete = async function (messages, opts = {}) {
-        const enriched = await autoContext.createMiddleware()(messages, opts);
-        return originalComplete(enriched, opts);
+  // Wrap battle()
+  if (originalBattle) {
+    gateway.battle = async function (messages, opts = {}) {
+      const {
+        enrichedPrompt
+      } = await autoContext.enrichForBattle(messages.find(m => m.role === 'user')?.content || '', opts);
+      const enrichedMessages = messages.map(m => m.role === 'user' ? {
+        ...m,
+        content: enrichedPrompt
+      } : m);
+      return originalBattle(enrichedMessages, opts);
     };
+  }
 
-    // Wrap battle()
-    if (originalBattle) {
-        gateway.battle = async function (messages, opts = {}) {
-            const { enrichedPrompt } = await autoContext.enrichForBattle(
-                messages.find(m => m.role === 'user')?.content || '',
-                opts
-            );
-            const enrichedMessages = messages.map(m =>
-                m.role === 'user' ? { ...m, content: enrichedPrompt } : m
-            );
-            return originalBattle(enrichedMessages, opts);
-        };
-    }
-
-    // Wrap race()
-    if (originalRace) {
-        gateway.race = async function (messages, opts = {}) {
-            const enriched = await autoContext.createMiddleware()(messages, opts);
-            return originalRace(enriched, opts);
-        };
-    }
-
-    logger.info('[AutoContext] Wired into InferenceGateway (complete, battle, race)');
-    return gateway;
+  // Wrap race()
+  if (originalRace) {
+    gateway.race = async function (messages, opts = {}) {
+      const enriched = await autoContext.createMiddleware()(messages, opts);
+      return originalRace(enriched, opts);
+    };
+  }
+  logger.info('[AutoContext] Wired into InferenceGateway (complete, battle, race)');
+  return gateway;
 }
 
 // ─── Exports ─────────────────────────────────────────────────────────────────
 
 module.exports = {
-    HeadyAutoContext,
-    ContextSource,
-    getAutoContext,
-    wireGateway,
-    CSL_GATES,
-    COMPRESSION_TIERS,
+  HeadyAutoContext,
+  ContextSource,
+  getAutoContext,
+  wireGateway,
+  CSL_GATES,
+  COMPRESSION_TIERS
 };

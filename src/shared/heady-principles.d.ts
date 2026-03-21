@@ -69,9 +69,9 @@ export function phiScale(base: number, level: number): number;
  * @returns {{ major: number, minor: number, split: number }}
  */
 export function goldenSplit(min: number, max: number): {
-    major: number;
-    minor: number;
-    split: number;
+  major: number;
+  minor: number;
+  split: number;
 };
 /**
  * Generate φ-aligned percentage thresholds
@@ -87,14 +87,6 @@ export function phiThresholds(count?: number): number[];
  * @returns {number[]} harmonic sequence
  */
 export function phiHarmonics(base: number, count?: number): number[];
-/**
- * Calculate retry/backoff delays using φ-scaling
- * More natural than exponential backoff
- * @param {number} attempt — attempt number (0-based)
- * @param {number} baseMs — base delay in ms
- * @param {number} maxMs — maximum delay cap
- * @returns {number} delay in ms
- */
 export function phiBackoff(attempt: number, baseMs?: number, maxMs?: number): number;
 /**
  * Map a value to a base-13 tier system
@@ -103,9 +95,9 @@ export function phiBackoff(attempt: number, baseMs?: number, maxMs?: number): nu
  * @returns {{ tier: number, label: string, base13: string }}
  */
 export function toTier(value: number): {
-    tier: number;
-    label: string;
-    base13: string;
+  tier: number;
+  label: string;
+  base13: string;
 };
 /**
  * System capacity parameters derived from Heady™ math

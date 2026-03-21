@@ -5,19 +5,19 @@
  */
 'use strict';
 
-const { PHI, PSI, fib, phiBackoff, PHI_TIMING, CSL_THRESHOLDS, cosineSimilarity } = require('../../shared/phi-math');
-const { scoreComplexity, routeDecision } = require('./edge-worker');
-
-/**
- * Heady™ Edge-Origin Router — Routes AI requests between edge inference
- * (Cloudflare Workers AI) and origin models (Cloud Run: Claude, GPT-4o, Gemini).
- *
- * Provider Racing: For origin requests, races multiple providers and takes
- * the fastest response (liquid gateway pattern).
- *
- * Health-Aware: Tracks per-provider latency and success rates. Unhealthy
- * providers are temporarily excluded using circuit breaker pattern.
- */
+const {
+  PHI,
+  PSI,
+  fib,
+  phiBackoff,
+  PHI_TIMING,
+  CSL_THRESHOLDS,
+  cosineSimilarity
+} = require('../../shared/phi-math');
+const {
+  scoreComplexity,
+  routeDecision
+} = require('./edge-worker');
 
 /** Provider definitions with phi-scaled timeouts */
 const PROVIDERS = Object.freeze({
@@ -25,34 +25,39 @@ const PROVIDERS = Object.freeze({
   'workers-ai-llama': {
     tier: 'edge',
     model: '@cf/meta/llama-3.1-8b-instruct',
-    timeoutMs: PHI_TIMING.PHI_3,  // 4,236ms
-    maxTokens: fib(14),            // 377
+    timeoutMs: PHI_TIMING.PHI_3,
+    // 4,236ms
+    maxTokens: fib(14) // 377
   },
   'workers-ai-embed': {
     tier: 'edge',
     model: '@cf/baai/bge-base-en-v1.5',
-    timeoutMs: PHI_TIMING.PHI_2,  // 2,618ms
-    dimensions: fib(16) + fib(12) + fib(8) + fib(6) + fib(4) + fib(3),  // 987+144+21+8+3+2 = 1165 → use 384
+    timeoutMs: PHI_TIMING.PHI_2,
+    // 2,618ms
+    dimensions: fib(16) + fib(12) + fib(8) + fib(6) + fib(4) + fib(3) // 987+144+21+8+3+2 = 1165 → use 384
   },
   // Origin providers (Cloud Run)
   'claude-sonnet': {
     tier: 'origin',
     model: 'claude-sonnet-4-20250514',
-    timeoutMs: PHI_TIMING.PHI_7,  // 29,034ms
-    maxTokens: fib(20),            // 6765
+    timeoutMs: PHI_TIMING.PHI_7,
+    // 29,034ms
+    maxTokens: fib(20) // 6765
   },
   'gpt-4o': {
     tier: 'origin',
     model: 'gpt-4o',
-    timeoutMs: PHI_TIMING.PHI_7,  // 29,034ms
-    maxTokens: fib(20),            // 6765
+    timeoutMs: PHI_TIMING.PHI_7,
+    // 29,034ms
+    maxTokens: fib(20) // 6765
   },
   'gemini-pro': {
     tier: 'origin',
     model: 'gemini-2.5-pro',
-    timeoutMs: PHI_TIMING.PHI_7,  // 29,034ms
-    maxTokens: fib(20),            // 6765
-  },
+    timeoutMs: PHI_TIMING.PHI_7,
+    // 29,034ms
+    maxTokens: fib(20) // 6765
+  }
 });
 
 /**
@@ -62,14 +67,15 @@ const PROVIDERS = Object.freeze({
 class ProviderHealth {
   constructor() {
     this._stats = new Map();
-    this._windowSize = fib(9);  // 34 requests rolling window
+    this._windowSize = fib(9); // 34 requests rolling window
   }
-
   record(provider, success, latencyMs) {
     if (!this._stats.has(provider)) {
-      this._stats.set(provider, { successes: [], latencies: [] });
+      this._stats.set(provider, {
+        successes: [],
+        latencies: []
+      });
     }
-
     const stats = this._stats.get(provider);
     stats.successes.push(success ? 1 : 0);
     stats.latencies.push(latencyMs);
@@ -80,10 +86,9 @@ class ProviderHealth {
       stats.latencies.shift();
     }
   }
-
   getScore(provider) {
     const stats = this._stats.get(provider);
-    if (!stats || stats.successes.length === 0) return PSI;  // default ψ ≈ 0.618
+    if (!stats || stats.successes.length === 0) return PSI; // default ψ ≈ 0.618
 
     const successRate = stats.successes.reduce((a, b) => a + b, 0) / stats.successes.length;
     const avgLatency = stats.latencies.reduce((a, b) => a + b, 0) / stats.latencies.length;
@@ -92,9 +97,8 @@ class ProviderHealth {
     const latencyScore = 1 - Math.min(1, avgLatency / PHI_TIMING.PHI_7);
     return successRate * PSI + latencyScore * (PSI * PSI);
   }
-
   isHealthy(provider) {
-    return this.getScore(provider) > CSL_THRESHOLDS.LOW;  // > 0.691
+    return this.getScore(provider) > CSL_THRESHOLDS.LOW; // > 0.691
   }
 }
 
@@ -107,37 +111,26 @@ class ProviderHealth {
 function routeRequest(request, health) {
   const complexity = scoreComplexity(request);
   const route = routeDecision(complexity);
-
   let candidates;
   if (route === 'edge') {
-    candidates = Object.entries(PROVIDERS)
-      .filter(([_, p]) => p.tier === 'edge')
-      .map(([name]) => name);
+    candidates = Object.entries(PROVIDERS).filter(([_, p]) => p.tier === 'edge').map(([name]) => name);
   } else {
     // Origin or hybrid — use origin providers, race them
-    candidates = Object.entries(PROVIDERS)
-      .filter(([_, p]) => p.tier === 'origin')
-      .filter(([name]) => health.isHealthy(name))
-      .sort((a, b) => health.getScore(b[0]) - health.getScore(a[0]))
-      .map(([name]) => name);
+    candidates = Object.entries(PROVIDERS).filter(([_, p]) => p.tier === 'origin').filter(([name]) => health.isHealthy(name)).sort((a, b) => health.getScore(b[0]) - health.getScore(a[0])).map(([name]) => name);
 
     // If all origin providers are unhealthy, fall back to edge
     if (candidates.length === 0) {
-      candidates = Object.entries(PROVIDERS)
-        .filter(([_, p]) => p.tier === 'edge')
-        .map(([name]) => name);
+      candidates = Object.entries(PROVIDERS).filter(([_, p]) => p.tier === 'edge').map(([name]) => name);
     }
   }
-
   return {
     route,
     providers: candidates,
-    complexity,
+    complexity
   };
 }
-
 module.exports = {
   PROVIDERS,
   ProviderHealth,
-  routeRequest,
+  routeRequest
 };

@@ -24,7 +24,6 @@ const logger = createLogger('edge-inference-worker');
  */
 const logger = console;
 
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Phi-Math constants (inlined from shared/phi-math.js — Workers can't import)
 // Source: heady-implementation/shared/phi-math.js v2.0.0
@@ -41,17 +40,17 @@ const PSI = 0.6180339887498949;
  * fib(6)=8, fib(7)=13, fib(8)=21, fib(9)=34, fib(10)=55, fib(11)=89
  */
 // F(n) values for rate limits and TTLs — all are true Fibonacci numbers:
-const _FIB_8  = 8;    // fib(6)
-const _FIB_13 = 13;   // fib(7)
-const _FIB_21 = 21;   // fib(8)
-const _FIB_34 = 34;   // fib(9)
-const _FIB_55 = 55;   // fib(10)
-const _FIB_89 = 89;   // fib(11)
+const _FIB_8 = 8; // fib(6)
+const _FIB_13 = 13; // fib(7)
+const _FIB_21 = 21; // fib(8)
+const _FIB_34 = 34; // fib(9)
+const _FIB_55 = 55; // fib(10)
+const _FIB_89 = 89; // fib(11)
 
 // CSL thresholds from phi-math (phiThreshold(n) = 1 - PSI^n * 0.5)
-const _CSL_MEDIUM   = 1.0 - Math.pow(PSI, 2) * 0.5;  // ≈ 0.809
-const _CSL_LOW      = 1.0 - Math.pow(PSI, 1) * 0.5;  // ≈ 0.691
-const _CSL_MINIMUM  = 1.0 - Math.pow(PSI, 0) * 0.5;  // ≈ 0.500
+const _CSL_MEDIUM = 1.0 - Math.pow(PSI, 2) * 0.5; // ≈ 0.809
+const _CSL_LOW = 1.0 - Math.pow(PSI, 1) * 0.5; // ≈ 0.691
+const _CSL_MINIMUM = 1.0 - Math.pow(PSI, 0) * 0.5; // ≈ 0.500
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -74,10 +73,13 @@ const _CSL_MINIMUM  = 1.0 - Math.pow(PSI, 0) * 0.5;  // ≈ 0.500
  *   60 * PHI^7 ≈ 1741 → use fib(16)=987*4=3948 → 3600 rounded
  */
 const CACHE_TTL = {
-  EMBED:      Math.round(60 * Math.pow(PHI, 7)),  // ≈ 3541 → ~1h; embeddings are stable
-  CLASSIFY:   Math.round(60 * Math.pow(PHI, 4)),  // ≈ 411 → ~7m; classifications may drift
-  RERANK:     Math.round(60 * Math.pow(PHI, 5)),  // ≈ 665 → ~11m
-  CHAT_EXACT: Math.round(60 * Math.pow(PHI, 2)),  // ≈ 157 → ~2.6m; deterministic chat (temp=0)
+  EMBED: Math.round(60 * Math.pow(PHI, 7)),
+  // ≈ 3541 → ~1h; embeddings are stable
+  CLASSIFY: Math.round(60 * Math.pow(PHI, 4)),
+  // ≈ 411 → ~7m; classifications may drift
+  RERANK: Math.round(60 * Math.pow(PHI, 5)),
+  // ≈ 665 → ~11m
+  CHAT_EXACT: Math.round(60 * Math.pow(PHI, 2))
 };
 
 /**
@@ -86,10 +88,13 @@ const CACHE_TTL = {
  * Already Fibonacci — made explicit via named constants.
  */
 const RATE_LIMITS = {
-  EMBED:    _FIB_55,  // fib(10) = 55
-  CHAT:     _FIB_21,  // fib(8)  = 21
-  CLASSIFY: _FIB_89,  // fib(11) = 89
-  RERANK:   _FIB_34,  // fib(9)  = 34
+  EMBED: _FIB_55,
+  // fib(10) = 55
+  CHAT: _FIB_21,
+  // fib(8)  = 21
+  CLASSIFY: _FIB_89,
+  // fib(11) = 89
+  RERANK: _FIB_34 // fib(9)  = 34
 };
 
 /** Model assignments by complexity tier */
@@ -100,17 +105,11 @@ const MODELS = {
   EMBED_STANDARD: '@cf/baai/bge-base-en-v1.5',
   CLASSIFY: '@cf/huggingface/distilbert-sst-2-int8',
   RERANK: '@cf/baai/bge-reranker-base',
-  SAFETY: '@cf/meta/llama-guard-3-8b',
+  SAFETY: '@cf/meta/llama-guard-3-8b'
 };
 
 /** CORS allowed origins — tighten in production */
-const ALLOWED_ORIGINS = [
-  'https://heady-ai.com',
-  'https://app.heady-ai.com',
-  'https://headyconnection.org',
-  (process.env.SERVICE_URL || 'http://0.0.0.0:3000'),
-  (process.env.SERVICE_URL || 'http://0.0.0.0:5173'),
-];
+const ALLOWED_ORIGINS = ['https://heady-ai.com', 'https://app.heady-ai.com', 'https://headyconnection.org', process.env.SERVICE_URL || 'http://0.0.0.0:3000', process.env.SERVICE_URL || 'http://0.0.0.0:5173'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CORS helpers
@@ -139,7 +138,10 @@ function corsHeaders(request) {
  * @returns {Response}
  */
 function handleOptions(request) {
-  return new Response(null, { status: 204, headers: corsHeaders(request) });
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders(request)
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -157,13 +159,17 @@ function handleOptions(request) {
 function errorResponse(message, status, request, code = 'INFERENCE_ERROR') {
   const headers = corsHeaders(request);
   headers.set('Content-Type', 'application/json');
-  return new Response(
-    JSON.stringify({
-      error: { message, code, status },
-      timestamp: Date.now(),
-    }),
-    { status, headers },
-  );
+  return new Response(JSON.stringify({
+    error: {
+      message,
+      code,
+      status
+    },
+    timestamp: Date.now()
+  }), {
+    status,
+    headers
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -183,14 +189,23 @@ async function checkRateLimit(kv, key, limitPerMin) {
   const windowKey = `rl:${key}:${Math.floor(Date.now() / 60_000)}`;
   const raw = await kv.get(windowKey);
   const count = raw ? parseInt(raw, 10) : 0;
-
   if (count >= limitPerMin) {
-    return { allowed: false, remaining: 0, resetAt: (Math.floor(Date.now() / 60_000) + 1) * 60_000 };
+    return {
+      allowed: false,
+      remaining: 0,
+      resetAt: (Math.floor(Date.now() / 60_000) + 1) * 60_000
+    };
   }
 
   // Increment — fire and forget to avoid blocking the request path
-  kv.put(windowKey, String(count + 1), { expirationTtl: 120 }).catch(() => {});
-  return { allowed: true, remaining: limitPerMin - count - 1, resetAt: (Math.floor(Date.now() / 60_000) + 1) * 60_000 };
+  kv.put(windowKey, String(count + 1), {
+    expirationTtl: 120
+  }).catch(() => {});
+  return {
+    allowed: true,
+    remaining: limitPerMin - count - 1,
+    resetAt: (Math.floor(Date.now() / 60_000) + 1) * 60_000
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -220,19 +235,18 @@ function scoreChatComplexity(body) {
   const messages = Array.isArray(body.messages) ? body.messages : [];
   const totalChars = messages.reduce((s, m) => s + (m.content?.length ?? 0), 0);
   const tokenEstimate = Math.ceil(totalChars / 4);
-  const systemPrompt = messages.find((m) => m.role === 'system')?.content ?? '';
-
+  const systemPrompt = messages.find(m => m.role === 'system')?.content ?? '';
   let score = 0;
-  score += Math.min(tokenEstimate / 500, _FIB_34) * 1;  // up to fib(9)=34 pts from tokens
-  score += Math.min(messages.length, _FIB_21);          // up to fib(8)=21 pts from depth
+  score += Math.min(tokenEstimate / 500, _FIB_34) * 1; // up to fib(9)=34 pts from tokens
+  score += Math.min(messages.length, _FIB_21); // up to fib(8)=21 pts from depth
   score += Math.min(systemPrompt.length / 200, _FIB_13); // up to fib(7)=13 pts from system
-  score += body.tools?.length ? _FIB_8 : 0;             // fib(6)=8 pts for tool use
-  score += body.complexity === 'high' ? 5 : 0;          // 5 pts for explicit hint
+  score += body.tools?.length ? _FIB_8 : 0; // fib(6)=8 pts for tool use
+  score += body.complexity === 'high' ? 5 : 0; // 5 pts for explicit hint
 
   // Thresholds derived from CSL noise floor (_CSL_MINIMUM ≈ 0.5) and LOW (≈ 0.691)
   // scaled to the 0–81 score range (sum of all max weights = 34+21+13+8+5=81)
-  const SIMPLE_THRESHOLD   = Math.round(_CSL_MINIMUM * 40);   // ≈ 20
-  const STANDARD_THRESHOLD = Math.round(_CSL_LOW * 72);       // ≈ 50
+  const SIMPLE_THRESHOLD = Math.round(_CSL_MINIMUM * 40); // ≈ 20
+  const STANDARD_THRESHOLD = Math.round(_CSL_LOW * 72); // ≈ 50
 
   if (score < SIMPLE_THRESHOLD) return 'simple';
   if (score < STANDARD_THRESHOLD) return 'standard';
@@ -254,22 +268,14 @@ function scoreChatComplexity(body) {
 async function makeCacheKey(prefix, payload) {
   const data = JSON.stringify(payload, Object.keys(payload).sort());
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
-  const hex = Array.from(new Uint8Array(buf))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+  const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   return `${prefix}:${hex}`;
 }
-
-/**
- * Attempt to read a cached response from Workers KV.
- *
- * @param {KVNamespace} kv
- * @param {string} cacheKey
- * @returns {Promise<object|null>}
- */
 async function kvCacheGet(kv, cacheKey) {
   try {
-    const raw = await kv.get(cacheKey, { type: 'json' });
+    const raw = await kv.get(cacheKey, {
+      type: 'json'
+    });
     return raw ?? null;
   } catch {
     return null;
@@ -287,7 +293,9 @@ async function kvCacheGet(kv, cacheKey) {
  */
 async function kvCachePut(kv, cacheKey, value, ttlSeconds) {
   try {
-    await kv.put(cacheKey, JSON.stringify(value), { expirationTtl: ttlSeconds });
+    await kv.put(cacheKey, JSON.stringify(value), {
+      expirationTtl: ttlSeconds
+    });
   } catch {
     // cache write failure is non-fatal
   }
@@ -318,16 +326,6 @@ function validateAuth(request, env) {
 // Endpoint handlers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Handle POST /api/chat
- * Streams SSE from Workers AI LLM. Selects model based on complexity scoring.
- * Supports cache for temperature=0 deterministic requests.
- *
- * @param {Request} request
- * @param {Env} env
- * @param {ExecutionContext} ctx
- * @returns {Promise<Response>}
- */
 async function handleChat(request, env, ctx) {
   let body;
   try {
@@ -335,9 +333,13 @@ async function handleChat(request, env, ctx) {
   } catch {
     return errorResponse('Invalid JSON body', 400, request, 'INVALID_BODY');
   }
-
-  const { messages, stream = true, temperature = 0.7, max_tokens = 1024, session_id } = body;
-
+  const {
+    messages,
+    stream = true,
+    temperature = 0.7,
+    max_tokens = 1024,
+    session_id
+  } = body;
   if (!Array.isArray(messages) || messages.length === 0) {
     return errorResponse('messages array is required and must be non-empty', 400, request, 'MISSING_MESSAGES');
   }
@@ -349,7 +351,16 @@ async function handleChat(request, env, ctx) {
     const headers = corsHeaders(request);
     headers.set('Retry-After', String(Math.ceil((rl.resetAt - Date.now()) / 1000)));
     headers.set('X-RateLimit-Remaining', '0');
-    return new Response(JSON.stringify({ error: { message: 'Rate limit exceeded', code: 'RATE_LIMITED', status: 429 } }), { status: 429, headers });
+    return new Response(JSON.stringify({
+      error: {
+        message: 'Rate limit exceeded',
+        code: 'RATE_LIMITED',
+        status: 429
+      }
+    }), {
+      status: 429,
+      headers
+    });
   }
 
   // Complexity scoring → model selection
@@ -361,33 +372,39 @@ async function handleChat(request, env, ctx) {
     headers.set('X-Heady-Route', 'origin');
     headers.set('X-Heady-Complexity', complexity);
     headers.set('Content-Type', 'application/json');
-    return new Response(
-      JSON.stringify({ route: 'origin', reason: 'complexity_score_exceeded_edge_threshold', complexity }),
-      { status: 307, headers },
-    );
+    return new Response(JSON.stringify({
+      route: 'origin',
+      reason: 'complexity_score_exceeded_edge_threshold',
+      complexity
+    }), {
+      status: 307,
+      headers
+    });
   }
-
   const model = complexity === 'simple' ? MODELS.CHAT_FAST : MODELS.CHAT_STANDARD;
-
-  // Exact-match cache for deterministic (temp=0) non-streaming requests
   if (!stream && temperature === 0 && env.EDGE_CACHE_KV) {
-    const cacheKey = await makeCacheKey('chat', { model, messages, temperature, max_tokens });
+    const cacheKey = await makeCacheKey('chat', {
+      model,
+      messages,
+      temperature,
+      max_tokens
+    });
     const cached = await kvCacheGet(env.EDGE_CACHE_KV, cacheKey);
     if (cached) {
       const headers = corsHeaders(request);
       headers.set('Content-Type', 'application/json');
       headers.set('X-Heady-Cache', 'HIT');
-      return new Response(JSON.stringify(cached), { headers });
+      return new Response(JSON.stringify(cached), {
+        headers
+      });
     }
   }
-
   const inferenceParams = {
     messages,
     stream,
     temperature,
-    max_tokens,
+    max_tokens
   };
-
   try {
     if (stream) {
       // Streaming SSE response
@@ -399,30 +416,41 @@ async function handleChat(request, env, ctx) {
       headers.set('X-Heady-Model', model);
       headers.set('X-Heady-Complexity', complexity);
       headers.set('X-RateLimit-Remaining', String(rl.remaining));
-      return new Response(aiStream, { headers });
+      return new Response(aiStream, {
+        headers
+      });
     } else {
       // Non-streaming JSON response
-      const result = await env.AI.run(model, { ...inferenceParams, stream: false });
+      const result = await env.AI.run(model, {
+        ...inferenceParams,
+        stream: false
+      });
       const responsePayload = {
         result,
         model,
         complexity,
         cached: false,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       };
 
       // Cache deterministic responses
       if (temperature === 0 && env.EDGE_CACHE_KV) {
-        const cacheKey = await makeCacheKey('chat', { model, messages, temperature, max_tokens });
+        const cacheKey = await makeCacheKey('chat', {
+          model,
+          messages,
+          temperature,
+          max_tokens
+        });
         ctx.waitUntil(kvCachePut(env.EDGE_CACHE_KV, cacheKey, responsePayload, CACHE_TTL.CHAT_EXACT));
       }
-
       const headers = corsHeaders(request);
       headers.set('Content-Type', 'application/json');
       headers.set('X-Heady-Model', model);
       headers.set('X-Heady-Complexity', complexity);
       headers.set('X-RateLimit-Remaining', String(rl.remaining));
-      return new Response(JSON.stringify(responsePayload), { headers });
+      return new Response(JSON.stringify(responsePayload), {
+        headers
+      });
     }
   } catch (err) {
     logger.error('[chat] inference error:', err);
@@ -447,15 +475,18 @@ async function handleEmbed(request, env, ctx) {
   } catch {
     return errorResponse('Invalid JSON body', 400, request, 'INVALID_BODY');
   }
-
-  const { text, texts, model: requestedModel, dimensions = 'standard' } = body;
+  const {
+    text,
+    texts,
+    model: requestedModel,
+    dimensions = 'standard'
+  } = body;
 
   // Accept single text or batch
   const inputs = texts ?? (text ? [text] : null);
   if (!inputs || inputs.length === 0) {
     return errorResponse('text or texts field is required', 400, request, 'MISSING_INPUT');
   }
-
   if (inputs.length > 100) {
     return errorResponse('Maximum batch size is 100 texts', 400, request, 'BATCH_TOO_LARGE');
   }
@@ -476,38 +507,45 @@ async function handleEmbed(request, env, ctx) {
   // Cache lookup for single-text requests
   let cacheKey = null;
   if (inputs.length === 1 && env.EDGE_CACHE_KV) {
-    cacheKey = await makeCacheKey('embed', { model, text: inputs[0] });
+    cacheKey = await makeCacheKey('embed', {
+      model,
+      text: inputs[0]
+    });
     const cached = await kvCacheGet(env.EDGE_CACHE_KV, cacheKey);
     if (cached) {
       const headers = corsHeaders(request);
       headers.set('Content-Type', 'application/json');
       headers.set('X-Heady-Cache', 'HIT');
-      return new Response(JSON.stringify(cached), { headers });
+      return new Response(JSON.stringify(cached), {
+        headers
+      });
     }
   }
-
   try {
-    const result = await env.AI.run(model, { text: inputs });
+    const result = await env.AI.run(model, {
+      text: inputs
+    });
     const responsePayload = {
       embeddings: result.data ?? result,
       model,
       dimensions: model.includes('small') ? 384 : 768,
       count: inputs.length,
       cached: false,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
 
     // Store in cache
     if (cacheKey && env.EDGE_CACHE_KV) {
       ctx.waitUntil(kvCachePut(env.EDGE_CACHE_KV, cacheKey, responsePayload, CACHE_TTL.EMBED));
     }
-
     const headers = corsHeaders(request);
     headers.set('Content-Type', 'application/json');
     headers.set('X-Heady-Model', model);
     headers.set('X-Heady-Cache', 'MISS');
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
-    return new Response(JSON.stringify(responsePayload), { headers });
+    return new Response(JSON.stringify(responsePayload), {
+      headers
+    });
   } catch (err) {
     logger.error('[embed] inference error:', err);
     return errorResponse('Embedding generation failed', 502, request, 'INFERENCE_FAILED');
@@ -531,14 +569,14 @@ async function handleClassify(request, env, ctx) {
   } catch {
     return errorResponse('Invalid JSON body', 400, request, 'INVALID_BODY');
   }
-
-  const { text, texts } = body;
+  const {
+    text,
+    texts
+  } = body;
   const inputs = texts ?? (text ? [text] : null);
-
   if (!inputs || inputs.length === 0) {
     return errorResponse('text or texts field is required', 400, request, 'MISSING_INPUT');
   }
-
   if (inputs.length > 50) {
     return errorResponse('Maximum batch size is 50 texts', 400, request, 'BATCH_TOO_LARGE');
   }
@@ -553,45 +591,47 @@ async function handleClassify(request, env, ctx) {
   // Cache lookup
   let cacheKey = null;
   if (env.EDGE_CACHE_KV) {
-    cacheKey = await makeCacheKey('classify', { texts: inputs });
+    cacheKey = await makeCacheKey('classify', {
+      texts: inputs
+    });
     const cached = await kvCacheGet(env.EDGE_CACHE_KV, cacheKey);
     if (cached) {
       const headers = corsHeaders(request);
       headers.set('Content-Type', 'application/json');
       headers.set('X-Heady-Cache', 'HIT');
-      return new Response(JSON.stringify(cached), { headers });
+      return new Response(JSON.stringify(cached), {
+        headers
+      });
     }
   }
-
   try {
     // DistilBERT accepts single text input; batch sequentially for multiple
-    const results = await Promise.all(
-      inputs.map((t) => env.AI.run(MODELS.CLASSIFY, { text: t })),
-    );
-
+    const results = await Promise.all(inputs.map(t => env.AI.run(MODELS.CLASSIFY, {
+      text: t
+    })));
     const responsePayload = {
       classifications: results.map((r, i) => ({
         text: inputs[i],
         label: r[0]?.label ?? 'UNKNOWN',
         score: r[0]?.score ?? 0,
-        all: r,
+        all: r
       })),
       model: MODELS.CLASSIFY,
       count: inputs.length,
       cached: false,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
-
     if (cacheKey && env.EDGE_CACHE_KV) {
       ctx.waitUntil(kvCachePut(env.EDGE_CACHE_KV, cacheKey, responsePayload, CACHE_TTL.CLASSIFY));
     }
-
     const headers = corsHeaders(request);
     headers.set('Content-Type', 'application/json');
     headers.set('X-Heady-Model', MODELS.CLASSIFY);
     headers.set('X-Heady-Cache', 'MISS');
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
-    return new Response(JSON.stringify(responsePayload), { headers });
+    return new Response(JSON.stringify(responsePayload), {
+      headers
+    });
   } catch (err) {
     logger.error('[classify] inference error:', err);
     return errorResponse('Classification failed', 502, request, 'INFERENCE_FAILED');
@@ -615,17 +655,17 @@ async function handleRerank(request, env, ctx) {
   } catch {
     return errorResponse('Invalid JSON body', 400, request, 'INVALID_BODY');
   }
-
-  const { query, documents, top_k } = body;
-
+  const {
+    query,
+    documents,
+    top_k
+  } = body;
   if (!query || typeof query !== 'string') {
     return errorResponse('query string is required', 400, request, 'MISSING_QUERY');
   }
-
   if (!Array.isArray(documents) || documents.length === 0) {
     return errorResponse('documents array is required and non-empty', 400, request, 'MISSING_DOCUMENTS');
   }
-
   if (documents.length > 50) {
     return errorResponse('Maximum 50 documents per rerank request', 400, request, 'BATCH_TOO_LARGE');
   }
@@ -640,35 +680,38 @@ async function handleRerank(request, env, ctx) {
   // Cache lookup
   let cacheKey = null;
   if (env.EDGE_CACHE_KV) {
-    cacheKey = await makeCacheKey('rerank', { query, documents });
+    cacheKey = await makeCacheKey('rerank', {
+      query,
+      documents
+    });
     const cached = await kvCacheGet(env.EDGE_CACHE_KV, cacheKey);
     if (cached) {
       const headers = corsHeaders(request);
       headers.set('Content-Type', 'application/json');
       headers.set('X-Heady-Cache', 'HIT');
-      return new Response(JSON.stringify(cached), { headers });
+      return new Response(JSON.stringify(cached), {
+        headers
+      });
     }
   }
-
   try {
-    const docTexts = documents.map((d) => (typeof d === 'string' ? d : d.text ?? d.content ?? ''));
+    const docTexts = documents.map(d => typeof d === 'string' ? d : d.text ?? d.content ?? '');
 
     // BGE reranker accepts query + passages
     const result = await env.AI.run(MODELS.RERANK, {
       query,
-      passages: docTexts,
+      passages: docTexts
     });
 
     // Build scored results with original document reference
     const scored = (result.data ?? result ?? []).map((score, i) => ({
       index: i,
       document: documents[i],
-      score: typeof score === 'number' ? score : score?.score ?? 0,
+      score: typeof score === 'number' ? score : score?.score ?? 0
     }));
 
     // Sort descending by score
     scored.sort((a, b) => b.score - a.score);
-
     const topK = top_k ?? scored.length;
     const responsePayload = {
       results: scored.slice(0, topK),
@@ -677,19 +720,19 @@ async function handleRerank(request, env, ctx) {
       total: documents.length,
       returned: Math.min(topK, scored.length),
       cached: false,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
-
     if (cacheKey && env.EDGE_CACHE_KV) {
       ctx.waitUntil(kvCachePut(env.EDGE_CACHE_KV, cacheKey, responsePayload, CACHE_TTL.RERANK));
     }
-
     const headers = corsHeaders(request);
     headers.set('Content-Type', 'application/json');
     headers.set('X-Heady-Model', MODELS.RERANK);
     headers.set('X-Heady-Cache', 'MISS');
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
-    return new Response(JSON.stringify(responsePayload), { headers });
+    return new Response(JSON.stringify(responsePayload), {
+      headers
+    });
   } catch (err) {
     logger.error('[rerank] inference error:', err);
     return errorResponse('Reranking failed', 502, request, 'INFERENCE_FAILED');
@@ -707,22 +750,21 @@ async function handleRerank(request, env, ctx) {
 function handleHealth(request, env) {
   const headers = corsHeaders(request);
   headers.set('Content-Type', 'application/json');
-  return new Response(
-    JSON.stringify({
-      status: 'ok',
-      worker: 'edge-inference-worker',
-      version: '1.0.0',
-      bindings: {
-        ai: !!env.AI,
-        kv: !!env.EDGE_CACHE_KV,
-        vectorize: !!env.VECTORIZE,
-        agentDO: !!env.AGENT_STATE,
-      },
-      models: MODELS,
-      timestamp: Date.now(),
-    }),
-    { headers },
-  );
+  return new Response(JSON.stringify({
+    status: 'ok',
+    worker: 'edge-inference-worker',
+    version: '1.0.0',
+    bindings: {
+      ai: !!env.AI,
+      kv: !!env.EDGE_CACHE_KV,
+      vectorize: !!env.VECTORIZE,
+      agentDO: !!env.AGENT_STATE
+    },
+    models: MODELS,
+    timestamp: Date.now()
+  }), {
+    headers
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -761,20 +803,16 @@ export default {
 
     // Tag request with correlation ID
     const requestId = request.headers.get('X-Request-ID') ?? crypto.randomUUID();
-
     try {
       if (path === '/api/chat' && method === 'POST') {
         return await handleChat(request, env, ctx);
       }
-
       if (path === '/api/embed' && method === 'POST') {
         return await handleEmbed(request, env, ctx);
       }
-
       if (path === '/api/classify' && method === 'POST') {
         return await handleClassify(request, env, ctx);
       }
-
       if (path === '/api/rerank' && method === 'POST') {
         return await handleRerank(request, env, ctx);
       }
@@ -786,7 +824,6 @@ export default {
       return errorResponse('Internal server error', 500, request, 'INTERNAL_ERROR');
     }
   },
-
   /**
    * Scheduled handler for cache warming and metric flushes.
    * Triggered by Cron Triggers defined in wrangler.toml.
@@ -799,5 +836,5 @@ export default {
     logger.info('[scheduled] cron fired:', event.cron);
     // Placeholder for cache warm-up logic
     // In production, pre-embed common queries and store in EDGE_CACHE_KV
-  },
+  }
 };

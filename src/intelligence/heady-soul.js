@@ -5,12 +5,17 @@
 
 'use strict';
 
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 const logger = require('../utils/logger');
-const { VectorMemory } = require('../vector-memory');
-const { DriftDetector } = require('../drift-detector');
+const {
+  VectorMemory
+} = require('../vector-memory');
+const {
+  DriftDetector
+} = require('../drift-detector');
 const vectorSpaceOps = require('../vector-space-ops');
-
 const PHI = 1.6180339887;
 
 // ─── Unbreakable Laws ─────────────────────────────────────────────────────────
@@ -24,31 +29,31 @@ const UNBREAKABLE_LAWS = Object.freeze({
     id: 'LAW_1',
     name: 'Structural Integrity',
     description: 'Code compiles, type checks pass, module boundaries respected.',
-    severity: 'CRITICAL',
+    severity: 'CRITICAL'
   },
   SEMANTIC_COHERENCE: {
     id: 'LAW_2',
     name: 'Semantic Coherence',
     description: 'Embedding stays within tolerance of design intent.',
     severity: 'HIGH',
-    toleranceThreshold: 0.25, // cosine distance tolerance
+    toleranceThreshold: 0.25 // cosine distance tolerance
   },
   MISSION_ALIGNMENT: {
     id: 'LAW_3',
     name: 'Mission Alignment',
     description: "Serves HeadyConnection's mission: community, equity, empowerment.",
     severity: 'CRITICAL',
-    missionKeywords: ['community', 'equity', 'empowerment', 'access', 'inclusion', 'connection'],
-  },
+    missionKeywords: ['community', 'equity', 'empowerment', 'access', 'inclusion', 'connection']
+  }
 });
 
 // ─── Soul State ───────────────────────────────────────────────────────────────
 
 const SoulState = Object.freeze({
-  STABLE:   'STABLE',
-  ALERT:    'ALERT',
-  HEALING:  'HEALING',
-  VIOLATED: 'VIOLATED',
+  STABLE: 'STABLE',
+  ALERT: 'ALERT',
+  HEALING: 'HEALING',
+  VIOLATED: 'VIOLATED'
 });
 
 /**
@@ -74,14 +79,12 @@ class HeadySoul extends EventEmitter {
    */
   constructor(options = {}) {
     super();
-
-    this._vectorMemory  = options.vectorMemory  || new VectorMemory();
+    this._vectorMemory = options.vectorMemory || new VectorMemory();
     this._driftDetector = options.driftDetector || new DriftDetector();
-
-    this._state         = SoulState.STABLE;
-    this._violations    = [];
-    this._healingQueue  = [];
-    this._rejections    = [];
+    this._state = SoulState.STABLE;
+    this._violations = [];
+    this._healingQueue = [];
+    this._rejections = [];
 
     // Soul state embedding key — stable reference embedding stored in memory
     this._SOUL_EMBEDDING_KEY = 'heady_soul_core_v1';
@@ -89,27 +92,16 @@ class HeadySoul extends EventEmitter {
     // Mission statement — the canonical values document
     this._mission = options.missionOverride || {
       name: 'HeadyConnection Mission',
-      statement: "HeadyConnection connects the cannabis community through technology, centering equity, " +
-                 "community empowerment, and inclusive access to resources.",
-      values: [
-        'Community: foster authentic connection and belonging',
-        'Equity: prioritize historically underserved communities',
-        'Empowerment: put tools and knowledge in users\' hands',
-        'Transparency: operate openly and honestly',
-        'Safety: protect users from harm',
-      ],
-      constraints: [
-        'Never generate content that harms vulnerable communities',
-        'Never violate user privacy or data sovereignty',
-        'Never prioritize revenue over community wellbeing',
-        'Never undermine equitable access to resources',
-      ],
+      statement: "HeadyConnection connects the cannabis community through technology, centering equity, " + "community empowerment, and inclusive access to resources.",
+      values: ['Community: foster authentic connection and belonging', 'Equity: prioritize historically underserved communities', 'Empowerment: put tools and knowledge in users\' hands', 'Transparency: operate openly and honestly', 'Safety: protect users from harm'],
+      constraints: ['Never generate content that harms vulnerable communities', 'Never violate user privacy or data sovereignty', 'Never prioritize revenue over community wellbeing', 'Never undermine equitable access to resources'],
       version: '1.0.0',
-      updatedAt: new Date('2025-01-01').toISOString(),
+      updatedAt: new Date('2025-01-01').toISOString()
     };
-
     this._initialized = false;
-    logger.info('[HeadySoul] Instantiated', { state: this._state });
+    logger.info('[HeadySoul] Instantiated', {
+      state: this._state
+    });
   }
 
   // ─── Initialization ──────────────────────────────────────────────────────────
@@ -121,34 +113,38 @@ class HeadySoul extends EventEmitter {
    */
   async initialize() {
     if (this._initialized) return;
-
     try {
-      // Attempt to load existing soul embedding
       const existing = await this._vectorMemory.get(this._SOUL_EMBEDDING_KEY).catch(() => null);
-
       if (existing) {
         this._soulEmbedding = existing;
         logger.info('[HeadySoul] Soul embedding loaded from memory');
       } else {
         // Seed the soul embedding from the mission statement
-        this._soulEmbedding = await this._vectorMemory.set(
-          this._SOUL_EMBEDDING_KEY,
-          {
-            text: [this._mission.statement, ...this._mission.values].join(' '),
-            metadata: { type: 'soul_core', version: this._mission.version },
+        this._soulEmbedding = await this._vectorMemory.set(this._SOUL_EMBEDDING_KEY, {
+          text: [this._mission.statement, ...this._mission.values].join(' '),
+          metadata: {
+            type: 'soul_core',
+            version: this._mission.version
           }
-        ).catch(() => ({ key: this._SOUL_EMBEDDING_KEY, seeded: true }));
+        }).catch(() => ({
+          key: this._SOUL_EMBEDDING_KEY,
+          seeded: true
+        }));
         logger.info('[HeadySoul] Soul embedding seeded from mission statement');
       }
     } catch (err) {
       logger.warn('[HeadySoul] Could not initialize soul embedding; using in-memory sentinel', {
-        error: err.message,
+        error: err.message
       });
-      this._soulEmbedding = { key: this._SOUL_EMBEDDING_KEY, fallback: true };
+      this._soulEmbedding = {
+        key: this._SOUL_EMBEDDING_KEY,
+        fallback: true
+      };
     }
-
     this._initialized = true;
-    logger.info('[HeadySoul] Initialized', { state: this._state });
+    logger.info('[HeadySoul] Initialized', {
+      state: this._state
+    });
   }
 
   // ─── Public API ──────────────────────────────────────────────────────────────
@@ -165,46 +161,47 @@ class HeadySoul extends EventEmitter {
    */
   async evaluateCoherence(component) {
     if (!this._initialized) await this.initialize();
-
     const result = {
       componentId: component.id,
       type: component.type,
       timestamp: Date.now(),
       laws: {},
       passed: true,
-      violations: [],
+      violations: []
     };
 
     // Law 1: Structural Integrity
-    result.laws[UNBREAKABLE_LAWS.STRUCTURAL_INTEGRITY.id] =
-      await this._checkStructuralIntegrity(component);
+    result.laws[UNBREAKABLE_LAWS.STRUCTURAL_INTEGRITY.id] = await this._checkStructuralIntegrity(component);
 
     // Law 2: Semantic Coherence
-    result.laws[UNBREAKABLE_LAWS.SEMANTIC_COHERENCE.id] =
-      await this._checkSemanticCoherence(component);
+    result.laws[UNBREAKABLE_LAWS.SEMANTIC_COHERENCE.id] = await this._checkSemanticCoherence(component);
 
     // Law 3: Mission Alignment
-    result.laws[UNBREAKABLE_LAWS.MISSION_ALIGNMENT.id] =
-      await this._checkMissionAlignment(component);
+    result.laws[UNBREAKABLE_LAWS.MISSION_ALIGNMENT.id] = await this._checkMissionAlignment(component);
 
     // Aggregate
     for (const [lawId, check] of Object.entries(result.laws)) {
       if (!check.passed) {
         result.passed = false;
-        result.violations.push({ lawId, reason: check.reason, severity: check.severity });
+        result.violations.push({
+          lawId,
+          reason: check.reason,
+          severity: check.severity
+        });
       }
     }
-
     if (!result.passed) {
-      this._violations.push({ ...result, recordedAt: Date.now() });
+      this._violations.push({
+        ...result,
+        recordedAt: Date.now()
+      });
       this._state = SoulState.VIOLATED;
       this.emit('coherence-violation', result);
       logger.warn('[HeadySoul] Coherence violation detected', {
         componentId: component.id,
-        violations: result.violations,
+        violations: result.violations
       });
     }
-
     return result;
   }
 
@@ -222,37 +219,37 @@ class HeadySoul extends EventEmitter {
    */
   async validateMutation(change) {
     if (!this._initialized) await this.initialize();
-
-    logger.debug('[HeadySoul] Validating mutation', { changeId: change.id, type: change.type });
-
+    logger.debug('[HeadySoul] Validating mutation', {
+      changeId: change.id,
+      type: change.type
+    });
     const coherenceCheck = await this.evaluateCoherence({
       id: change.id,
       type: change.type,
-      content: change.after,
+      content: change.after
     });
-
     const result = {
       changeId: change.id,
       approved: coherenceCheck.passed,
       violations: coherenceCheck.violations,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
-
     if (!result.approved) {
-      this._rejections.push({ ...result, change, rejectedAt: Date.now() });
-
+      this._rejections.push({
+        ...result,
+        change,
+        rejectedAt: Date.now()
+      });
       this.emit('mutation-rejected', {
         changeId: change.id,
         violations: result.violations,
-        change,
+        change
       });
-
       logger.warn('[HeadySoul] Mutation rejected', {
         changeId: change.id,
-        violations: result.violations,
+        violations: result.violations
       });
     }
-
     return result;
   }
 
@@ -268,28 +265,26 @@ class HeadySoul extends EventEmitter {
   async onDriftAlert(alert) {
     logger.warn('[HeadySoul] Drift alert received', {
       driftScore: alert.driftScore,
-      component: alert.component,
+      component: alert.component
     });
-
     if (alert.driftScore > 0.7) {
       this._state = SoulState.HEALING;
       this._healingQueue.push({
         alert,
         queuedAt: Date.now(),
-        healingPriority: this._driftToHealingPriority(alert.driftScore),
+        healingPriority: this._driftToHealingPriority(alert.driftScore)
       });
-
       this.emit('healing-requested', {
         driftScore: alert.driftScore,
         component: alert.component,
-        healingPriority: this._driftToHealingPriority(alert.driftScore),
+        healingPriority: this._driftToHealingPriority(alert.driftScore)
       });
-
-      // Attempt self-healing
       await this._attemptHealing(alert);
     } else if (alert.driftScore > 0.4) {
       this._state = SoulState.ALERT;
-      logger.info('[HeadySoul] Elevated alert state due to drift', { driftScore: alert.driftScore });
+      logger.info('[HeadySoul] Elevated alert state due to drift', {
+        driftScore: alert.driftScore
+      });
     }
   }
 
@@ -302,7 +297,7 @@ class HeadySoul extends EventEmitter {
       ...this._mission,
       soulState: this._state,
       violationCount: this._violations.length,
-      rejectionCount: this._rejections.length,
+      rejectionCount: this._rejections.length
     };
   }
 
@@ -344,14 +339,15 @@ class HeadySoul extends EventEmitter {
       severity: UNBREAKABLE_LAWS.STRUCTURAL_INTEGRITY.severity,
       passed: true,
       reason: null,
-      checks: [],
+      checks: []
     };
 
     // Check 1a: Content is non-null and non-empty
-    const hasContent = component.content !== null &&
-                       component.content !== undefined &&
-                       component.content !== '';
-    check.checks.push({ name: 'non_empty', passed: hasContent });
+    const hasContent = component.content !== null && component.content !== undefined && component.content !== '';
+    check.checks.push({
+      name: 'non_empty',
+      passed: hasContent
+    });
     if (!hasContent) {
       check.passed = false;
       check.reason = 'Component content is empty or null';
@@ -362,7 +358,10 @@ class HeadySoul extends EventEmitter {
     if (component.type === 'code' && typeof component.content === 'string') {
       // Look for catastrophically broken patterns
       const hasUnclosedBlocks = this._detectUnclosedBlocks(component.content);
-      check.checks.push({ name: 'no_unclosed_blocks', passed: !hasUnclosedBlocks });
+      check.checks.push({
+        name: 'no_unclosed_blocks',
+        passed: !hasUnclosedBlocks
+      });
       if (hasUnclosedBlocks) {
         check.passed = false;
         check.reason = 'Code appears to have unclosed blocks';
@@ -371,13 +370,18 @@ class HeadySoul extends EventEmitter {
 
     // Check 1c: Module boundary check — no circular dependency markers
     if (component.type === 'config' && component.content.circularDeps) {
-      check.checks.push({ name: 'no_circular_deps', passed: false });
+      check.checks.push({
+        name: 'no_circular_deps',
+        passed: false
+      });
       check.passed = false;
       check.reason = 'Circular dependency detected in module boundaries';
     } else {
-      check.checks.push({ name: 'no_circular_deps', passed: true });
+      check.checks.push({
+        name: 'no_circular_deps',
+        passed: true
+      });
     }
-
     return check;
   }
 
@@ -392,21 +396,19 @@ class HeadySoul extends EventEmitter {
       severity: law.severity,
       passed: true,
       reason: null,
-      distance: null,
+      distance: null
     };
-
     if (!this._soulEmbedding || !component.embedding) {
       // No embedding available — skip distance check, assume pass
-      check.checks = [{ name: 'embedding_available', passed: false, note: 'No embedding to compare; skipping' }];
+      check.checks = [{
+        name: 'embedding_available',
+        passed: false,
+        note: 'No embedding to compare; skipping'
+      }];
       return check;
     }
-
     try {
-      const distance = await vectorSpaceOps.cosineDistance(
-        this._soulEmbedding,
-        component.embedding
-      );
-
+      const distance = await vectorSpaceOps.cosineDistance(this._soulEmbedding, component.embedding);
       check.distance = distance;
       const tolerance = law.toleranceThreshold;
       check.passed = distance <= tolerance;
@@ -414,9 +416,10 @@ class HeadySoul extends EventEmitter {
         check.reason = `Semantic distance ${distance.toFixed(4)} exceeds tolerance ${tolerance}`;
       }
     } catch (err) {
-      logger.warn('[HeadySoul] Embedding distance check failed; assuming pass', { error: err.message });
+      logger.warn('[HeadySoul] Embedding distance check failed; assuming pass', {
+        error: err.message
+      });
     }
-
     return check;
   }
 
@@ -431,64 +434,67 @@ class HeadySoul extends EventEmitter {
       severity: law.severity,
       passed: true,
       reason: null,
-      checks: [],
+      checks: []
     };
-
-    const content = typeof component.content === 'string'
-      ? component.content
-      : JSON.stringify(component.content);
-
+    const content = typeof component.content === 'string' ? component.content : JSON.stringify(component.content);
     const contentLower = content.toLowerCase();
 
     // Check 3a: Must not violate constraints
-    const constraintViolations = this._mission.constraints.filter((constraint) => {
+    const constraintViolations = this._mission.constraints.filter(constraint => {
       const key = constraint.split(' ')[1] || ''; // e.g. "harm", "privacy"
       return contentLower.includes(key.toLowerCase()) && contentLower.includes('never');
     });
-    check.checks.push({ name: 'constraint_check', passed: constraintViolations.length === 0 });
+    check.checks.push({
+      name: 'constraint_check',
+      passed: constraintViolations.length === 0
+    });
 
     // Check 3b: For content/text — check for actively anti-mission language
     if (component.type === 'content') {
-      const antiMissionPhrases = [
-        'exclude communities',
-        'ignore equity',
-        'profit over people',
-        'deny access',
-      ];
-      const hasAntiMission = antiMissionPhrases.some((phrase) => contentLower.includes(phrase));
-      check.checks.push({ name: 'anti_mission_language', passed: !hasAntiMission });
+      const antiMissionPhrases = ['exclude communities', 'ignore equity', 'profit over people', 'deny access'];
+      const hasAntiMission = antiMissionPhrases.some(phrase => contentLower.includes(phrase));
+      check.checks.push({
+        name: 'anti_mission_language',
+        passed: !hasAntiMission
+      });
       if (hasAntiMission) {
         check.passed = false;
         check.reason = 'Content contains anti-mission language';
       }
     }
-
     if (constraintViolations.length > 0 && check.passed) {
       check.passed = false;
       check.reason = `Constraint violation detected: ${constraintViolations[0]}`;
     }
-
     return check;
   }
 
   // ─── Healing ──────────────────────────────────────────────────────────────────
 
   async _attemptHealing(alert) {
-    logger.info('[HeadySoul] Attempting self-healing', { component: alert.component });
-
+    logger.info('[HeadySoul] Attempting self-healing', {
+      component: alert.component
+    });
     try {
       // Re-anchor the drift detector to current soul embedding
       await this._driftDetector.reanchor({
         component: alert.component,
-        soulEmbedding: this._soulEmbedding,
+        soulEmbedding: this._soulEmbedding
       });
 
       // Transition back to stable if healing was successful
       this._state = SoulState.STABLE;
-      logger.info('[HeadySoul] Healing successful', { component: alert.component });
-      this.emit('healing-complete', { component: alert.component });
+      logger.info('[HeadySoul] Healing successful', {
+        component: alert.component
+      });
+      this.emit('healing-complete', {
+        component: alert.component
+      });
     } catch (err) {
-      logger.error('[HeadySoul] Healing failed', { component: alert.component, error: err.message });
+      logger.error('[HeadySoul] Healing failed', {
+        component: alert.component,
+        error: err.message
+      });
       this._state = SoulState.VIOLATED;
     }
   }
@@ -507,25 +513,22 @@ class HeadySoul extends EventEmitter {
    * Counts braces, brackets, parens.
    */
   _detectUnclosedBlocks(code) {
-    let braces = 0, brackets = 0, parens = 0;
+    let braces = 0,
+      brackets = 0,
+      parens = 0;
     // Strip strings and comments for accuracy
-    const stripped = code.replace(/\/\*[\s\S]*?\*\//g, '')
-                         .replace(/\/\/.*$/gm, '')
-                         .replace(/"(?:[^"\\]|\\.)*"/g, '""')
-                         .replace(/'(?:[^'\\]|\\.)*'/g, "''")
-                         .replace(/`(?:[^`\\]|\\.)*`/g, '``');
-
+    const stripped = code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '').replace(/"(?:[^"\\]|\\.)*"/g, '""').replace(/'(?:[^'\\]|\\.)*'/g, "''").replace(/`(?:[^`\\]|\\.)*`/g, '``');
     for (const ch of stripped) {
-      if (ch === '{') braces++;
-      else if (ch === '}') braces--;
-      else if (ch === '[') brackets++;
-      else if (ch === ']') brackets--;
-      else if (ch === '(') parens++;
-      else if (ch === ')') parens--;
+      if (ch === '{') braces++;else if (ch === '}') braces--;else if (ch === '[') brackets++;else if (ch === ']') brackets--;else if (ch === '(') parens++;else if (ch === ')') parens--;
     }
     return braces !== 0 || brackets !== 0 || parens !== 0;
   }
 }
 
 // ─── Exports ──────────────────────────────────────────────────────────────────
-module.exports = { HeadySoul, UNBREAKABLE_LAWS, SoulState, PHI };
+module.exports = {
+  HeadySoul,
+  UNBREAKABLE_LAWS,
+  SoulState,
+  PHI
+};

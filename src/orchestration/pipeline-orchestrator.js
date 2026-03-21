@@ -1,40 +1,17 @@
-/**
- * @fileoverview pipeline-orchestrator.js — Heady™ Sovereign Phi-100 HCFullPipeline Orchestrator
- * @version 3.2.3
- * @description
- *   Canonical 21-stage pipeline orchestrator for the HCFullPipeline (HCFP). Executes the
- *   complete intelligence pipeline in sequential order with CSL coherence gating between
- *   every stage transition. Resource pools are allocated via phi-geometric weights. Failed
- *   stages attempt phi-backoff retry before triggering rollback to the nearest safe stage.
- *   An EventEmitter-based lifecycle hook system provides full observability of every stage
- *   transition, enabling telemetry, audit logging, and external integrations.
- *
- *   Stage sequence:
- *     CHANNEL_ENTRY → RECON → INTAKE → TRIAGE → STRATEGY → PLANNING →
- *     MONTE_CARLO → ARENA → JUDGE → SWARM_DISPATCH → EXECUTION →
- *     QUALITY_GATE → ASSURANCE_GATE → PATTERN_CAPTURE → STORY_UPDATE →
- *     WISDOM_HARVEST → DEPLOY_GATE → PROJECTION → VERIFICATION →
- *     RECEIPT → RETROSPECTIVE
- *
- *   All numeric constants (timeouts, thresholds, weights, pool splits) derive from
- *   the golden ratio φ via shared/phi-math.js.  No magic numbers.
- *
- * @module pipeline-orchestrator
- * @author Heady™ Core Engineering
- */
-
 'use strict';
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 const EventEmitter = require('events');
-const path         = require('path');
+const path = require('path');
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 1 — PHI-MATH IMPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch (e) { /* graceful */  }
-
+let phiMath = null;
+try {
+  phiMath = require('../../shared/phi-math.js');
+} catch (e) {/* graceful */}
 const {
   PHI,
   PSI,
@@ -47,7 +24,7 @@ const {
   PRESSURE_LEVELS,
   cosineSimilarity,
   cslGate,
-  phiMultiSplit,
+  phiMultiSplit
 } = phiMath;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -55,7 +32,10 @@ const {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @type {Object} Canonical 21-stage pipeline definition from single source of truth. */
-let PIPELINE_CONFIG = null; try { PIPELINE_CONFIG = require('../../configs/hcfullpipeline.json'); } catch (e) { /* graceful */  }
+let PIPELINE_CONFIG = null;
+try {
+  PIPELINE_CONFIG = require('../../configs/hcfullpipeline.json');
+} catch (e) {/* graceful */}
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 3 — STAGE CONSTANTS
@@ -66,29 +46,7 @@ let PIPELINE_CONFIG = null; try { PIPELINE_CONFIG = require('../../configs/hcful
  * Index position is the authoritative stage order; do not reorder.
  * @constant {string[]}
  */
-const STAGE_NAMES = [
-  'CHANNEL_ENTRY',
-  'RECON',
-  'INTAKE',
-  'TRIAGE',
-  'STRATEGY',
-  'PLANNING',
-  'MONTE_CARLO',
-  'ARENA',
-  'JUDGE',
-  'SWARM_DISPATCH',
-  'EXECUTION',
-  'QUALITY_GATE',
-  'ASSURANCE_GATE',
-  'PATTERN_CAPTURE',
-  'STORY_UPDATE',
-  'WISDOM_HARVEST',
-  'DEPLOY_GATE',
-  'PROJECTION',
-  'VERIFICATION',
-  'RECEIPT',
-  'RETROSPECTIVE',
-];
+const STAGE_NAMES = ['CHANNEL_ENTRY', 'RECON', 'INTAKE', 'TRIAGE', 'STRATEGY', 'PLANNING', 'MONTE_CARLO', 'ARENA', 'JUDGE', 'SWARM_DISPATCH', 'EXECUTION', 'QUALITY_GATE', 'ASSURANCE_GATE', 'PATTERN_CAPTURE', 'STORY_UPDATE', 'WISDOM_HARVEST', 'DEPLOY_GATE', 'PROJECTION', 'VERIFICATION', 'RECEIPT', 'RETROSPECTIVE'];
 
 /**
  * Maps canonical stage names to their corresponding config stage IDs in
@@ -97,27 +55,29 @@ const STAGE_NAMES = [
  * @constant {Object.<string, string>}
  */
 const STAGE_ID_MAP = {
-  CHANNEL_ENTRY:  'stage_channel_entry',
-  RECON:          'stage_recon',
-  INTAKE:         'stage_intake',
-  TRIAGE:         'stage_classify',      // classify + triage merged in spec
-  STRATEGY:       'stage_decompose',
-  PLANNING:       'stage_orchestrate',
-  MONTE_CARLO:    'stage_monte_carlo',
-  ARENA:          'stage_arena',
-  JUDGE:          'stage_judge',
+  CHANNEL_ENTRY: 'stage_channel_entry',
+  RECON: 'stage_recon',
+  INTAKE: 'stage_intake',
+  TRIAGE: 'stage_classify',
+  // classify + triage merged in spec
+  STRATEGY: 'stage_decompose',
+  PLANNING: 'stage_orchestrate',
+  MONTE_CARLO: 'stage_monte_carlo',
+  ARENA: 'stage_arena',
+  JUDGE: 'stage_judge',
   SWARM_DISPATCH: 'stage_approve',
-  EXECUTION:      'stage_execute',
-  QUALITY_GATE:   'stage_verify',
+  EXECUTION: 'stage_execute',
+  QUALITY_GATE: 'stage_verify',
   ASSURANCE_GATE: 'stage_self_awareness',
-  PATTERN_CAPTURE:'stage_self_critique',
-  STORY_UPDATE:   'stage_mistake_analysis',
+  PATTERN_CAPTURE: 'stage_self_critique',
+  STORY_UPDATE: 'stage_mistake_analysis',
   WISDOM_HARVEST: 'stage_optimization_ops',
-  DEPLOY_GATE:    'stage_continuous_search',
-  PROJECTION:     'stage_evolution',
-  VERIFICATION:   'stage_verify',        // second verify pass (post-deploy)
-  RECEIPT:        'stage_receipt',
-  RETROSPECTIVE:  'stage_evolution',     // retrospective reuses evolution logic
+  DEPLOY_GATE: 'stage_continuous_search',
+  PROJECTION: 'stage_evolution',
+  VERIFICATION: 'stage_verify',
+  // second verify pass (post-deploy)
+  RECEIPT: 'stage_receipt',
+  RETROSPECTIVE: 'stage_evolution' // retrospective reuses evolution logic
 };
 
 /**
@@ -125,11 +85,11 @@ const STAGE_ID_MAP = {
  * @enum {string}
  */
 const STAGE_STATE = {
-  PENDING:  'PENDING',
-  RUNNING:  'RUNNING',
-  PASSED:   'PASSED',
-  FAILED:   'FAILED',
-  SKIPPED:  'SKIPPED',
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  PASSED: 'PASSED',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
 };
 
 /**
@@ -138,20 +98,7 @@ const STAGE_STATE = {
  * so rollback picks the nearest safe stage first.
  * @constant {string[]}
  */
-const SAFE_ROLLBACK_STAGES = [
-  'PLANNING',
-  'STRATEGY',
-  'TRIAGE',
-  'INTAKE',
-  'RECON',
-  'CHANNEL_ENTRY',
-];
-
-/**
- * Maximum retry attempts for any single stage before triggering rollback.
- * Uses fib(5) = 5 to keep within phi-fibonacci sizing rules.
- * @constant {number}
- */
+const SAFE_ROLLBACK_STAGES = ['PLANNING', 'STRATEGY', 'TRIAGE', 'INTAKE', 'RECON', 'CHANNEL_ENTRY'];
 const MAX_STAGE_RETRIES = PIPELINE_CONFIG.pipeline.retryPolicy.maxRetries; // 3
 
 /**
@@ -178,11 +125,15 @@ const RESOURCE_WEIGHTS = phiResourceWeights(5);
  * @constant {{hot: number, warm: number, cold: number, reserve: number, governance: number}}
  */
 const RESOURCE_POOLS = {
-  hot:        RESOURCE_WEIGHTS[0], // ≈ 0.387  (38.7% ≈ specified 34%)
-  warm:       RESOURCE_WEIGHTS[1], // ≈ 0.239  (23.9% ≈ specified 21%)
-  cold:       RESOURCE_WEIGHTS[2], // ≈ 0.148  (14.8% ≈ specified 13%)
-  reserve:    RESOURCE_WEIGHTS[3], // ≈ 0.092  ( 9.2% ≈ specified  8%)
-  governance: RESOURCE_WEIGHTS[4], // ≈ 0.057  ( 5.7% ≈ specified  5%)
+  hot: RESOURCE_WEIGHTS[0],
+  // ≈ 0.387  (38.7% ≈ specified 34%)
+  warm: RESOURCE_WEIGHTS[1],
+  // ≈ 0.239  (23.9% ≈ specified 21%)
+  cold: RESOURCE_WEIGHTS[2],
+  // ≈ 0.148  (14.8% ≈ specified 13%)
+  reserve: RESOURCE_WEIGHTS[3],
+  // ≈ 0.092  ( 9.2% ≈ specified  8%)
+  governance: RESOURCE_WEIGHTS[4] // ≈ 0.057  ( 5.7% ≈ specified  5%)
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -198,7 +149,6 @@ const RESOURCE_POOLS = {
  */
 function buildTransitionMap() {
   const map = new Map();
-
   for (let i = 0; i < STAGE_NAMES.length; i++) {
     const current = STAGE_NAMES[i];
     const allowed = new Set();
@@ -215,10 +165,8 @@ function buildTransitionMap() {
         allowed.add(safe);
       }
     }
-
     map.set(current, allowed);
   }
-
   return map;
 }
 
@@ -273,7 +221,6 @@ function buildStageIndex(stages) {
  * const result = await orchestrator.run({ type: 'code_generation', payload: {} });
  */
 class PipelineOrchestrator extends EventEmitter {
-
   /**
    * Construct a new PipelineOrchestrator.
    *
@@ -294,7 +241,9 @@ class PipelineOrchestrator extends EventEmitter {
     this._fusionWeights = phiFusionWeights(3);
 
     /** @type {Object} Resource pool allocation ratios. */
-    this.resourcePools = { ...RESOURCE_POOLS };
+    this.resourcePools = {
+      ...RESOURCE_POOLS
+    };
 
     /** @type {Object.<string, string>} Current state of each stage. */
     this._stageStates = {};
@@ -310,7 +259,7 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Initialise all stage states to PENDING
     for (const name of STAGE_NAMES) {
-      this._stageStates[name]  = STAGE_STATE.PENDING;
+      this._stageStates[name] = STAGE_STATE.PENDING;
       this._retryCounters[name] = 0;
     }
   }
@@ -335,7 +284,6 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async run(task) {
     const startTime = Date.now();
-
     const context = this._buildContext(task, startTime);
 
     /**
@@ -345,17 +293,17 @@ class PipelineOrchestrator extends EventEmitter {
      * @property {number} startTime   - Unix timestamp (ms) when pipeline started.
      * @property {Object} pools       - Resource pool allocation ratios.
      */
-    this.emit('pipeline:start', { task, startTime, pools: this.resourcePools });
-
+    this.emit('pipeline:start', {
+      task,
+      startTime,
+      pools: this.resourcePools
+    });
     try {
       for (const stageName of STAGE_NAMES) {
         // Guard: check wall-clock limit
         if (Date.now() - startTime > this.config.pipeline.maxDuration) {
-          throw new Error(
-            `Pipeline wall-clock limit exceeded (${this.config.pipeline.maxDuration}ms)`
-          );
+          throw new Error(`Pipeline wall-clock limit exceeded (${this.config.pipeline.maxDuration}ms)`);
         }
-
         const skipResult = this.shouldSkip(stageName, context);
         if (skipResult.skip) {
           this._markStage(stageName, STAGE_STATE.SKIPPED);
@@ -363,8 +311,14 @@ class PipelineOrchestrator extends EventEmitter {
            * @event PipelineOrchestrator#stage:skip
            * @type {{stage: string, reason: string}}
            */
-          this.emit('stage:skip', { stage: stageName, reason: skipResult.reason });
-          context.stageResults[stageName] = { state: STAGE_STATE.SKIPPED, reason: skipResult.reason };
+          this.emit('stage:skip', {
+            stage: stageName,
+            reason: skipResult.reason
+          });
+          context.stageResults[stageName] = {
+            state: STAGE_STATE.SKIPPED,
+            reason: skipResult.reason
+          };
           continue;
         }
 
@@ -378,25 +332,20 @@ class PipelineOrchestrator extends EventEmitter {
          * @type {{stage: string, score: number, passed: boolean, threshold: number}}
          */
         this.emit('csl:gate', cslResult);
-
         if (!cslResult.passed) {
           const stageConfig = this._resolveStageConfig(stageName);
           if (stageConfig && stageConfig.required) {
-            throw new Error(
-              `CSL gate blocked after required stage ${stageName}: ` +
-              `score ${cslResult.score.toFixed(4)} < threshold ${cslResult.threshold.toFixed(4)}`
-            );
+            throw new Error(`CSL gate blocked after required stage ${stageName}: ` + `score ${cslResult.score.toFixed(4)} < threshold ${cslResult.threshold.toFixed(4)}`);
           }
           // Optional stage CSL failure: log and continue
           context.warnings.push({
-            stage:     stageName,
-            type:      'CSL_GATE_LOW',
-            score:     cslResult.score,
-            threshold: cslResult.threshold,
+            stage: stageName,
+            type: 'CSL_GATE_LOW',
+            score: cslResult.score,
+            threshold: cslResult.threshold
           });
         }
       }
-
       const duration = Date.now() - startTime;
       context.completedAt = new Date().toISOString();
       context.totalDurationMs = duration;
@@ -405,17 +354,24 @@ class PipelineOrchestrator extends EventEmitter {
        * @event PipelineOrchestrator#pipeline:complete
        * @type {{context: Object, duration: number}}
        */
-      this.emit('pipeline:complete', { context, duration });
-
+      this.emit('pipeline:complete', {
+        context,
+        duration
+      });
       return context;
-
     } catch (err) {
-      context.error = { message: err.message, stack: err.stack };
+      context.error = {
+        message: err.message,
+        stack: err.stack
+      };
       /**
        * @event PipelineOrchestrator#pipeline:error
        * @type {{error: Error, context: Object}}
        */
-      this.emit('pipeline:error', { error: err, context });
+      this.emit('pipeline:error', {
+        error: err,
+        context
+      });
       throw err;
     }
   }
@@ -434,9 +390,8 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async executeStage(stageName, context) {
     const stageConfig = this._resolveStageConfig(stageName);
-    const timeout     = this.getStageTimeout(stageName);
-    const startTime   = Date.now();
-
+    const timeout = this.getStageTimeout(stageName);
+    const startTime = Date.now();
     this._markStage(stageName, STAGE_STATE.RUNNING);
     this._activeStage = stageName;
 
@@ -445,19 +400,14 @@ class PipelineOrchestrator extends EventEmitter {
      * @type {{stage: string, configId: string, timeout: number, startTime: number}}
      */
     this.emit('stage:start', {
-      stage:     stageName,
-      configId:  STAGE_ID_MAP[stageName] || stageName,
+      stage: stageName,
+      configId: STAGE_ID_MAP[stageName] || stageName,
       timeout,
-      startTime,
+      startTime
     });
-
     let result;
     try {
-      result = await this._withTimeout(
-        this._dispatchStage(stageName, context, stageConfig),
-        timeout,
-        stageName
-      );
+      result = await this._withTimeout(this._dispatchStage(stageName, context, stageConfig), timeout, stageName);
     } catch (err) {
       const duration = Date.now() - startTime;
       this._markStage(stageName, STAGE_STATE.FAILED);
@@ -466,30 +416,34 @@ class PipelineOrchestrator extends EventEmitter {
        * @event PipelineOrchestrator#stage:fail
        * @type {{stage: string, error: string, duration: number}}
        */
-      this.emit('stage:fail', { stage: stageName, error: err.message, duration });
+      this.emit('stage:fail', {
+        stage: stageName,
+        error: err.message,
+        duration
+      });
       throw err;
     }
-
     const duration = Date.now() - startTime;
     this._markStage(stageName, STAGE_STATE.PASSED);
     this._activeStage = null;
-
     const stageResult = {
-      state:     STAGE_STATE.PASSED,
+      state: STAGE_STATE.PASSED,
       duration,
       startTime,
       completedAt: new Date().toISOString(),
-      output:    result,
+      output: result
     };
-
     context.stageResults[stageName] = stageResult;
 
     /**
      * @event PipelineOrchestrator#stage:pass
      * @type {{stage: string, duration: number, output: *}}
      */
-    this.emit('stage:pass', { stage: stageName, duration, output: result });
-
+    this.emit('stage:pass', {
+      stage: stageName,
+      duration,
+      output: result
+    });
     return stageResult;
   }
 
@@ -510,13 +464,18 @@ class PipelineOrchestrator extends EventEmitter {
     // Already passed or skipped in this run
     const currentState = this._stageStates[stageName];
     if (currentState === STAGE_STATE.PASSED || currentState === STAGE_STATE.SKIPPED) {
-      return { skip: true, reason: `Stage already in state ${currentState}` };
+      return {
+        skip: true,
+        reason: `Stage already in state ${currentState}`
+      };
     }
-
     const stageConfig = this._resolveStageConfig(stageName);
     if (!stageConfig) {
       // No config entry means it's an extended stage not in this config version
-      return { skip: false, reason: null };
+      return {
+        skip: false,
+        reason: null
+      };
     }
 
     // Variant-based skipping: if a variant is active, check inclusion list
@@ -526,8 +485,8 @@ class PipelineOrchestrator extends EventEmitter {
         const configId = STAGE_ID_MAP[stageName];
         if (!variantDef.stageIds.includes(configId)) {
           return {
-            skip:   true,
-            reason: `Excluded by pipeline variant '${context.variant}'`,
+            skip: true,
+            reason: `Excluded by pipeline variant '${context.variant}'`
           };
         }
       }
@@ -538,8 +497,8 @@ class PipelineOrchestrator extends EventEmitter {
       const enabled = this._evaluateCondition(stageConfig.enabledWhen, context);
       if (!enabled) {
         return {
-          skip:   true,
-          reason: `Stage is optional and enabledWhen='${stageConfig.enabledWhen}' is false`,
+          skip: true,
+          reason: `Stage is optional and enabledWhen='${stageConfig.enabledWhen}' is false`
         };
       }
     }
@@ -549,13 +508,15 @@ class PipelineOrchestrator extends EventEmitter {
       const required = this._evaluateCondition(stageConfig.requiredWhen, context);
       if (!required) {
         return {
-          skip:   true,
-          reason: `requiredWhen='${stageConfig.requiredWhen}' not met for priority ${context.priority}`,
+          skip: true,
+          reason: `requiredWhen='${stageConfig.requiredWhen}' not met for priority ${context.priority}`
         };
       }
     }
-
-    return { skip: false, reason: null };
+    return {
+      skip: false,
+      reason: null
+    };
   }
 
   /**
@@ -573,7 +534,6 @@ class PipelineOrchestrator extends EventEmitter {
    */
   rollback(fromStage, context) {
     this._rollingBack = true;
-
     const fromIdx = STAGE_NAMES.indexOf(fromStage);
     if (fromIdx < 0) {
       this._rollingBack = false;
@@ -589,18 +549,16 @@ class PipelineOrchestrator extends EventEmitter {
         break;
       }
     }
-
     if (!targetStage) {
       this._rollingBack = false;
       return null;
     }
-
     const targetIdx = STAGE_NAMES.indexOf(targetStage);
 
     // Reset all stages from targetIdx onward back to PENDING
     for (let i = targetIdx; i < STAGE_NAMES.length; i++) {
       const name = STAGE_NAMES[i];
-      this._stageStates[name]   = STAGE_STATE.PENDING;
+      this._stageStates[name] = STAGE_STATE.PENDING;
       this._retryCounters[name] = 0;
       delete context.stageResults[name];
     }
@@ -610,18 +568,16 @@ class PipelineOrchestrator extends EventEmitter {
      * @type {{from: string, to: string, resetCount: number}}
      */
     this.emit('rollback', {
-      from:       fromStage,
-      to:         targetStage,
-      resetCount: STAGE_NAMES.length - targetIdx,
+      from: fromStage,
+      to: targetStage,
+      resetCount: STAGE_NAMES.length - targetIdx
     });
-
     context.rollbacks = context.rollbacks || [];
     context.rollbacks.push({
-      from:      fromStage,
-      to:        targetStage,
-      timestamp: new Date().toISOString(),
+      from: fromStage,
+      to: targetStage,
+      timestamp: new Date().toISOString()
     });
-
     this._rollingBack = false;
     return targetStage;
   }
@@ -657,21 +613,28 @@ class PipelineOrchestrator extends EventEmitter {
    */
   validateTransition(from, to) {
     if (!STAGE_NAMES.includes(from)) {
-      return { valid: false, reason: `Unknown source stage: '${from}'` };
+      return {
+        valid: false,
+        reason: `Unknown source stage: '${from}'`
+      };
     }
     if (!STAGE_NAMES.includes(to)) {
-      return { valid: false, reason: `Unknown target stage: '${to}'` };
+      return {
+        valid: false,
+        reason: `Unknown target stage: '${to}'`
+      };
     }
-
     const allowed = TRANSITION_MAP.get(from);
     if (!allowed || !allowed.has(to)) {
       return {
-        valid:  false,
-        reason: `Transition from '${from}' to '${to}' is not in the allowed transition set`,
+        valid: false,
+        reason: `Transition from '${from}' to '${to}' is not in the allowed transition set`
       };
     }
-
-    return { valid: true, reason: null };
+    return {
+      valid: true,
+      reason: null
+    };
   }
 
   // ── 7.2  PRIVATE: CONTEXT FACTORY ─────────────────────────────────────────
@@ -689,90 +652,64 @@ class PipelineOrchestrator extends EventEmitter {
    */
   _buildContext(task, startTime) {
     // Allocate pool budgets using phiMultiSplit against the default token pool
-    const totalTokens  = this.config.pools.llm_tokens.default;
-    const poolSplits   = phiMultiSplit(totalTokens, 5);
-
+    const totalTokens = this.config.pools.llm_tokens.default;
+    const poolSplits = phiMultiSplit(totalTokens, 5);
     return {
       // Task identity
-      taskId:     `hcfp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      task:       { ...task },
-      priority:   task.priority || 'MEDIUM',
-      variant:    task.variant  || 'full_path',
-
+      taskId: `hcfp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      task: {
+        ...task
+      },
+      priority: task.priority || 'MEDIUM',
+      variant: task.variant || 'full_path',
       // Timing
       startTime,
-      completedAt:     null,
+      completedAt: null,
       totalDurationMs: null,
-
       // Stage results accumulator: stageName → stageResult
       stageResults: {},
-
       // Resource allocation
       pools: {
-        hot:        poolSplits[0],
-        warm:       poolSplits[1],
-        cold:       poolSplits[2],
-        reserve:    poolSplits[3],
-        governance: poolSplits[4],
+        hot: poolSplits[0],
+        warm: poolSplits[1],
+        cold: poolSplits[2],
+        reserve: poolSplits[3],
+        governance: poolSplits[4]
       },
-
       // Coherence tracking: sliding window of fib(8) = 21 recent scores
       coherenceHistory: [],
-      coherenceWindowSize: fib(8), // 21
+      coherenceWindowSize: fib(8),
+      // 21
 
       // Accumulated warnings (non-fatal issues)
       warnings: [],
-
       // Rollback audit trail
       rollbacks: [],
-
       // Error slot (populated on unrecoverable failure)
-      error: null,
+      error: null
     };
   }
 
   // ── 7.3  PRIVATE: RETRY ORCHESTRATION ─────────────────────────────────────
 
-  /**
-   * Execute a stage with phi-backoff retry and rollback on exhaustion.
-   *
-   * Attempt sequence:
-   *   1. executeStage → success → return.
-   *   2. On failure: increment retry counter, emit 'stage:retry'.
-   *   3. Wait phiBackoff(attempt) ms before re-attempting.
-   *   4. After MAX_STAGE_RETRIES exhausted on a required stage: rollback.
-   *   5. After MAX_STAGE_RETRIES exhausted on an optional stage: mark SKIPPED.
-   *
-   * @private
-   * @param {string} stageName - Canonical stage name.
-   * @param {Object} context   - Mutable execution context.
-   * @returns {Promise<void>}
-   * @throws {Error} If a required stage cannot be recovered after all retries.
-   */
   async _executeWithRetry(stageName, context) {
     const stageConfig = this._resolveStageConfig(stageName);
-    const isRequired  = stageConfig ? stageConfig.required !== false : true;
-    let   lastError   = null;
-
+    const isRequired = stageConfig ? stageConfig.required !== false : true;
+    let lastError = null;
     for (let attempt = 0; attempt <= MAX_STAGE_RETRIES; attempt++) {
       if (attempt > 0) {
         const backoffMs = phiBackoff(attempt - 1, 1000, MAX_BACKOFF_MS);
-        /**
-         * @event PipelineOrchestrator#stage:retry
-         * @type {{stage: string, attempt: number, backoffMs: number, error: string}}
-         */
         this.emit('stage:retry', {
-          stage:     stageName,
+          stage: stageName,
           attempt,
           backoffMs,
-          error:     lastError ? lastError.message : null,
+          error: lastError ? lastError.message : null
         });
         await this._sleep(backoffMs);
 
         // Reset state for re-entry
         this._stageStates[stageName] = STAGE_STATE.PENDING;
       }
-
       try {
         await this.executeStage(stageName, context);
         this._retryCounters[stageName] = attempt;
@@ -785,29 +722,22 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Retries exhausted
     if (isRequired) {
-      // Attempt rollback to nearest safe stage
       const rollbackTarget = this.rollback(stageName, context);
       if (rollbackTarget) {
-        throw new Error(
-          `Required stage '${stageName}' failed after ${MAX_STAGE_RETRIES} retries. ` +
-          `Rolled back to '${rollbackTarget}'. Last error: ${lastError.message}`
-        );
+        throw new Error(`Required stage '${stageName}' failed after ${MAX_STAGE_RETRIES} retries. ` + `Rolled back to '${rollbackTarget}'. Last error: ${lastError.message}`);
       }
-      throw new Error(
-        `Required stage '${stageName}' failed after ${MAX_STAGE_RETRIES} retries ` +
-        `and no safe rollback target found. Last error: ${lastError.message}`
-      );
+      throw new Error(`Required stage '${stageName}' failed after ${MAX_STAGE_RETRIES} retries ` + `and no safe rollback target found. Last error: ${lastError.message}`);
     }
 
     // Optional stage: skip after exhausted retries
     this._markStage(stageName, STAGE_STATE.SKIPPED);
     context.stageResults[stageName] = {
-      state:  STAGE_STATE.SKIPPED,
-      reason: `Optional stage failed after ${MAX_STAGE_RETRIES} retries: ${lastError.message}`,
+      state: STAGE_STATE.SKIPPED,
+      reason: `Optional stage failed after ${MAX_STAGE_RETRIES} retries: ${lastError.message}`
     };
     this.emit('stage:skip', {
-      stage:  stageName,
-      reason: `Skipped after retry exhaustion: ${lastError.message}`,
+      stage: stageName,
+      reason: `Skipped after retry exhaustion: ${lastError.message}`
     });
   }
 
@@ -829,27 +759,48 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _dispatchStage(stageName, context, stageConfig) {
     switch (stageName) {
-      case 'CHANNEL_ENTRY':   return this._stageChannelEntry(context, stageConfig);
-      case 'RECON':           return this._stageRecon(context, stageConfig);
-      case 'INTAKE':          return this._stageIntake(context, stageConfig);
-      case 'TRIAGE':          return this._stageTriage(context, stageConfig);
-      case 'STRATEGY':        return this._stageStrategy(context, stageConfig);
-      case 'PLANNING':        return this._stagePlanning(context, stageConfig);
-      case 'MONTE_CARLO':     return this._stageMonteCarlo(context, stageConfig);
-      case 'ARENA':           return this._stageArena(context, stageConfig);
-      case 'JUDGE':           return this._stageJudge(context, stageConfig);
-      case 'SWARM_DISPATCH':  return this._stageSwarmDispatch(context, stageConfig);
-      case 'EXECUTION':       return this._stageExecution(context, stageConfig);
-      case 'QUALITY_GATE':    return this._stageQualityGate(context, stageConfig);
-      case 'ASSURANCE_GATE':  return this._stageAssuranceGate(context, stageConfig);
-      case 'PATTERN_CAPTURE': return this._stagePatternCapture(context, stageConfig);
-      case 'STORY_UPDATE':    return this._stageStoryUpdate(context, stageConfig);
-      case 'WISDOM_HARVEST':  return this._stageWisdomHarvest(context, stageConfig);
-      case 'DEPLOY_GATE':     return this._stageDeployGate(context, stageConfig);
-      case 'PROJECTION':      return this._stageProjection(context, stageConfig);
-      case 'VERIFICATION':    return this._stageVerification(context, stageConfig);
-      case 'RECEIPT':         return this._stageReceipt(context, stageConfig);
-      case 'RETROSPECTIVE':   return this._stageRetrospective(context, stageConfig);
+      case 'CHANNEL_ENTRY':
+        return this._stageChannelEntry(context, stageConfig);
+      case 'RECON':
+        return this._stageRecon(context, stageConfig);
+      case 'INTAKE':
+        return this._stageIntake(context, stageConfig);
+      case 'TRIAGE':
+        return this._stageTriage(context, stageConfig);
+      case 'STRATEGY':
+        return this._stageStrategy(context, stageConfig);
+      case 'PLANNING':
+        return this._stagePlanning(context, stageConfig);
+      case 'MONTE_CARLO':
+        return this._stageMonteCarlo(context, stageConfig);
+      case 'ARENA':
+        return this._stageArena(context, stageConfig);
+      case 'JUDGE':
+        return this._stageJudge(context, stageConfig);
+      case 'SWARM_DISPATCH':
+        return this._stageSwarmDispatch(context, stageConfig);
+      case 'EXECUTION':
+        return this._stageExecution(context, stageConfig);
+      case 'QUALITY_GATE':
+        return this._stageQualityGate(context, stageConfig);
+      case 'ASSURANCE_GATE':
+        return this._stageAssuranceGate(context, stageConfig);
+      case 'PATTERN_CAPTURE':
+        return this._stagePatternCapture(context, stageConfig);
+      case 'STORY_UPDATE':
+        return this._stageStoryUpdate(context, stageConfig);
+      case 'WISDOM_HARVEST':
+        return this._stageWisdomHarvest(context, stageConfig);
+      case 'DEPLOY_GATE':
+        return this._stageDeployGate(context, stageConfig);
+      case 'PROJECTION':
+        return this._stageProjection(context, stageConfig);
+      case 'VERIFICATION':
+        return this._stageVerification(context, stageConfig);
+      case 'RECEIPT':
+        return this._stageReceipt(context, stageConfig);
+      case 'RETROSPECTIVE':
+        return this._stageRetrospective(context, stageConfig);
       default:
         throw new Error(`Unknown stage: '${stageName}'`);
     }
@@ -868,20 +819,18 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageChannelEntry(context, stageConfig) {
     const channelVector = {
-      timestamp:   context.startTime,
-      taskId:      context.taskId,
-      taskType:    context.task.type || 'unclassified',
+      timestamp: context.startTime,
+      taskId: context.taskId,
+      taskType: context.task.type || 'unclassified'
     };
-
     const callerIdentity = {
-      resolved:   true,
-      tenantId:   context.task.tenantId || 'default',
-      permissions: context.task.permissions || ['read', 'analyze', 'generate'],
+      resolved: true,
+      tenantId: context.task.tenantId || 'default',
+      permissions: context.task.permissions || ['read', 'analyze', 'generate']
     };
-
     const syncState = {
       devicesReconciled: true,
-      sessionToken:      `sess-${context.taskId}`,
+      sessionToken: `sess-${context.taskId}`
     };
 
     // Select branch based on task complexity and urgency signals
@@ -889,10 +838,14 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Update context with resolved identity for downstream stages
     context.callerIdentity = callerIdentity;
-    context.branch         = branch;
-    context.syncState      = syncState;
-
-    return { channelVector, callerIdentity, syncState, branch };
+    context.branch = branch;
+    context.syncState = syncState;
+    return {
+      channelVector,
+      callerIdentity,
+      syncState,
+      branch
+    };
   }
 
   /**
@@ -907,26 +860,51 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageRecon(context, stageConfig) {
     const scanResults = {
-      codebase:      { status: 'clean', issues: 0 },
-      configDrift:   { status: 'nominal', driftScore: 0 },
-      serviceHealth: { status: 'healthy', failingServices: 0 },
-      attackSurface: { status: 'audited', exposedEndpoints: fib(5) },
-      deps:          { status: 'resolved', cveCount: 0 },
-      vectorDensity: { coverage: PSI, clusterCount: fib(9) },
-      resources:     { cpuHeadroom: PSI, memHeadroom: PSI * PSI },
-      cost:          { currentSpendUSD: 0, projectedUSD: 0 },
+      codebase: {
+        status: 'clean',
+        issues: 0
+      },
+      configDrift: {
+        status: 'nominal',
+        driftScore: 0
+      },
+      serviceHealth: {
+        status: 'healthy',
+        failingServices: 0
+      },
+      attackSurface: {
+        status: 'audited',
+        exposedEndpoints: fib(5)
+      },
+      deps: {
+        status: 'resolved',
+        cveCount: 0
+      },
+      vectorDensity: {
+        coverage: PSI,
+        clusterCount: fib(9)
+      },
+      resources: {
+        cpuHeadroom: PSI,
+        memHeadroom: PSI * PSI
+      },
+      cost: {
+        currentSpendUSD: 0,
+        projectedUSD: 0
+      }
     };
-
     const envMap = {
-      generatedAt:  new Date().toISOString(),
+      generatedAt: new Date().toISOString(),
       scanResults,
-      healthScore:  PSI, // ≈ 0.618 baseline nominal
-      riskLevel:    'LOW',
+      healthScore: PSI,
+      // ≈ 0.618 baseline nominal
+      riskLevel: 'LOW'
     };
-
     context.envMap = envMap;
-
-    return { envMap, scanResults };
+    return {
+      envMap,
+      scanResults
+    };
   }
 
   /**
@@ -943,26 +921,30 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Simulate vector search over knowledge store
     const vectorSearchResults = {
-      query:       context.task.type,
+      query: context.task.type,
       topK,
-      hits:        [],
-      coherence:   CSL_THRESHOLDS.LOW + (CSL_THRESHOLDS.MEDIUM - CSL_THRESHOLDS.LOW) * PSI,
+      hits: [],
+      coherence: CSL_THRESHOLDS.LOW + (CSL_THRESHOLDS.MEDIUM - CSL_THRESHOLDS.LOW) * PSI
     };
-
     const patternLookup = {
-      matched:    [],
+      matched: [],
       antiPatterns: [],
-      confidence: CSL_THRESHOLDS.LOW,
+      confidence: CSL_THRESHOLDS.LOW
     };
-
     const storyContext = {
-      arcs:      [],
-      relevance: PSI,
+      arcs: [],
+      relevance: PSI
     };
-
-    context.semanticMemory = { vectorSearchResults, patternLookup, storyContext };
-
-    return { vectorSearchResults, patternLookup, storyContext };
+    context.semanticMemory = {
+      vectorSearchResults,
+      patternLookup,
+      storyContext
+    };
+    return {
+      vectorSearchResults,
+      patternLookup,
+      storyContext
+    };
   }
 
   /**
@@ -977,25 +959,26 @@ class PipelineOrchestrator extends EventEmitter {
   async _stageTriage(context, stageConfig) {
     // Intent classification
     const intent = {
-      category:   this._classifyIntent(context.task),
+      category: this._classifyIntent(context.task),
       confidence: CSL_THRESHOLDS.HIGH,
-      flags:      [],
+      flags: []
     };
 
     // Governance pre-flight
     const governanceResult = {
-      passed:  true,
-      flags:   [],
-      policy:  'default',
+      passed: true,
+      flags: [],
+      policy: 'default'
     };
 
     // Risk scoring: security × w0 + cost × w1 + reversibility × w2
     const [w0, w1, w2] = this._fusionWeights;
-    const riskScore = (
-      0.2  * w0 +  // security risk estimate
-      0.15 * w1 +  // cost risk estimate
-      0.1  * w2    // reversibility risk estimate
-    );
+    const riskScore = 0.2 * w0 +
+    // security risk estimate
+    0.15 * w1 +
+    // cost risk estimate
+    0.1 * w2 // reversibility risk estimate
+;
 
     // Priority band assignment from PRESSURE_LEVELS
     const priority = context.task.priority || this._riskToPriority(riskScore);
@@ -1004,8 +987,13 @@ class PipelineOrchestrator extends EventEmitter {
     // Swarm selection based on task domain
     const swarm = this._selectSwarm(context.task.type);
     context.assignedSwarm = swarm;
-
-    return { intent, governanceResult, riskScore, priority, swarm };
+    return {
+      intent,
+      governanceResult,
+      riskScore,
+      priority,
+      swarm
+    };
   }
 
   /**
@@ -1022,23 +1010,27 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Build a minimal DAG representation
     const dag = {
-      nodes:       [{ id: 'root', type: taskType, deps: [] }],
-      edges:       [],
-      leafCount:   1,
-      cyclic:      false,
-      complete:    true,
-      estimatedMs: this.getStageTimeout('EXECUTION'),
+      nodes: [{
+        id: 'root',
+        type: taskType,
+        deps: []
+      }],
+      edges: [],
+      leafCount: 1,
+      cyclic: false,
+      complete: true,
+      estimatedMs: this.getStageTimeout('EXECUTION')
     };
-
     const validationReport = {
       orphanNodes: 0,
-      cycles:      0,
-      gapsCovered: true,
+      cycles: 0,
+      gapsCovered: true
     };
-
     context.executionDag = dag;
-
-    return { dag, validationReport };
+    return {
+      dag,
+      validationReport
+    };
   }
 
   /**
@@ -1051,28 +1043,29 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with beePool and resourceAllocation.
    */
   async _stagePlanning(context, stageConfig) {
-    const maxBees    = this.config.pools.bee_workers.max; // 13 = fib(7)
-    const leafCount  = (context.executionDag && context.executionDag.leafCount) || 1;
-    const beeCount   = Math.min(leafCount, maxBees);
-
-    const beePool = Array.from({ length: beeCount }, (_, i) => ({
-      id:     `bee-${context.taskId}-${i}`,
+    const maxBees = this.config.pools.bee_workers.max; // 13 = fib(7)
+    const leafCount = context.executionDag && context.executionDag.leafCount || 1;
+    const beeCount = Math.min(leafCount, maxBees);
+    const beePool = Array.from({
+      length: beeCount
+    }, (_, i) => ({
+      id: `bee-${context.taskId}-${i}`,
       status: 'idle',
-      budget: Math.floor(context.pools.hot / beeCount),
+      budget: Math.floor(context.pools.hot / beeCount)
     }));
 
     // Resource split across bees using phi-multi-split
     const beeTokenSplit = phiMultiSplit(context.pools.hot, beeCount);
-
     const resourceAllocation = {
-      bees:       beePool,
+      bees: beePool,
       tokenSplit: beeTokenSplit,
-      concurrencySlots: Math.min(beeCount, this.config.pools.concurrent_requests.default),
+      concurrencySlots: Math.min(beeCount, this.config.pools.concurrent_requests.default)
     };
-
     context.beePool = beePool;
-
-    return { beePool, resourceAllocation };
+    return {
+      beePool,
+      resourceAllocation
+    };
   }
 
   /**
@@ -1089,30 +1082,27 @@ class PipelineOrchestrator extends EventEmitter {
     const baseSuccessRate = CSL_THRESHOLDS.HIGH; // conservative estimate using phi-threshold
 
     // Simulate convergence using PSI-geometric series for variance estimation
-    const variance  = PSI * PSI; // ≈ 0.382 — natural phi-bounded variance
-    const passRate  = Math.min(1, baseSuccessRate + variance * PSI);
-
-    const minPassRate = stageConfig &&
-      stageConfig.steps &&
-      stageConfig.steps.find(s => s.id === 'validate_pass_rate')
-        ? stageConfig.steps.find(s => s.id === 'validate_pass_rate').config.minPassRate
-        : CSL_THRESHOLDS.HIGH;
-
+    const variance = PSI * PSI; // ≈ 0.382 — natural phi-bounded variance
+    const passRate = Math.min(1, baseSuccessRate + variance * PSI);
+    const minPassRate = stageConfig && stageConfig.steps && stageConfig.steps.find(s => s.id === 'validate_pass_rate') ? stageConfig.steps.find(s => s.id === 'validate_pass_rate').config.minPassRate : CSL_THRESHOLDS.HIGH;
     if (passRate < minPassRate) {
-      throw new Error(
-        `Monte Carlo pass rate ${passRate.toFixed(4)} below required ${minPassRate.toFixed(4)}`
-      );
+      throw new Error(`Monte Carlo pass rate ${passRate.toFixed(4)} below required ${minPassRate.toFixed(4)}`);
     }
-
     const percentiles = {
       p10: passRate - variance * PHI,
       p50: passRate,
-      p90: Math.min(1, passRate + variance * PSI),
+      p90: Math.min(1, passRate + variance * PSI)
     };
-
-    context.monteCarlo = { passRate, percentiles };
-
-    return { iterations, passRate, percentiles, minPassRate };
+    context.monteCarlo = {
+      passRate,
+      percentiles
+    };
+    return {
+      iterations,
+      passRate,
+      percentiles,
+      minPassRate
+    };
   }
 
   /**
@@ -1129,24 +1119,28 @@ class PipelineOrchestrator extends EventEmitter {
     const minMargin = 0.05; // from stage config step select_winner
 
     // Generate pseudo-random tournament scores using phi-seeded PRNG
-    const scores = Array.from({ length: candidateCount }, (_, i) => ({
-      id:    `candidate-${i}`,
-      score: CSL_THRESHOLDS.LOW + (i === 0 ? PSI * PSI : PSI * PSI * Math.random()),
+    const scores = Array.from({
+      length: candidateCount
+    }, (_, i) => ({
+      id: `candidate-${i}`,
+      score: CSL_THRESHOLDS.LOW + (i === 0 ? PSI * PSI : PSI * PSI * Math.random())
     })).sort((a, b) => b.score - a.score);
-
-    const winner   = scores[0];
+    const winner = scores[0];
     const runnerUp = scores[1];
-    const margin   = winner.score - runnerUp.score;
-
+    const margin = winner.score - runnerUp.score;
     if (margin < minMargin) {
       // Tiebreaker: apply phi-fusion weight to secondary dimension
       winner.tiebreakerApplied = true;
       winner.score += minMargin * PSI;
     }
-
     context.arenaWinner = winner;
-
-    return { winner, runnerUp, margin, scores, tiebreaker: margin < minMargin };
+    return {
+      winner,
+      runnerUp,
+      margin,
+      scores,
+      tiebreaker: margin < minMargin
+    };
   }
 
   /**
@@ -1162,44 +1156,38 @@ class PipelineOrchestrator extends EventEmitter {
     // Scoring weights from config, verified to sum to 1.00
     const weights = {
       correctness: 0.34,
-      safety:      0.21,
+      safety: 0.21,
       performance: 0.21,
-      quality:     0.13,
-      elegance:    0.11,
+      quality: 0.13,
+      elegance: 0.11
     };
 
     // Dimension scores derived from upstream results
-    const arenaScore  = context.arenaWinner ? context.arenaWinner.score : CSL_THRESHOLDS.LOW;
-    const mcPassRate  = context.monteCarlo  ? context.monteCarlo.passRate : CSL_THRESHOLDS.HIGH;
-
+    const arenaScore = context.arenaWinner ? context.arenaWinner.score : CSL_THRESHOLDS.LOW;
+    const mcPassRate = context.monteCarlo ? context.monteCarlo.passRate : CSL_THRESHOLDS.HIGH;
     const dimensionScores = {
       correctness: mcPassRate,
-      safety:      CSL_THRESHOLDS.HIGH,
+      safety: CSL_THRESHOLDS.HIGH,
       performance: arenaScore,
-      quality:     CSL_THRESHOLDS.MEDIUM,
-      elegance:    CSL_THRESHOLDS.LOW + (arenaScore - CSL_THRESHOLDS.LOW) * PSI,
+      quality: CSL_THRESHOLDS.MEDIUM,
+      elegance: CSL_THRESHOLDS.LOW + (arenaScore - CSL_THRESHOLDS.LOW) * PSI
     };
-
-    const composite =
-      dimensionScores.correctness * weights.correctness +
-      dimensionScores.safety      * weights.safety      +
-      dimensionScores.performance * weights.performance +
-      dimensionScores.quality     * weights.quality     +
-      dimensionScores.elegance    * weights.elegance;
-
+    const composite = dimensionScores.correctness * weights.correctness + dimensionScores.safety * weights.safety + dimensionScores.performance * weights.performance + dimensionScores.quality * weights.quality + dimensionScores.elegance * weights.elegance;
     const gateThreshold = CSL_THRESHOLDS.LOW;
-    const gatePassed    = composite >= gateThreshold;
-
+    const gatePassed = composite >= gateThreshold;
     if (!gatePassed) {
-      throw new Error(
-        `Judge composite score ${composite.toFixed(4)} below CSL gate ` +
-        `${gateThreshold.toFixed(4)}: routing to replan`
-      );
+      throw new Error(`Judge composite score ${composite.toFixed(4)} below CSL gate ` + `${gateThreshold.toFixed(4)}: routing to replan`);
     }
-
-    context.judgeScore = { composite, dimensionScores };
-
-    return { dimensionScores, composite, gateThreshold, gatePassed };
+    context.judgeScore = {
+      composite,
+      dimensionScores
+    };
+    return {
+      dimensionScores,
+      composite,
+      gateThreshold,
+      gatePassed
+    };
   }
 
   /**
@@ -1213,40 +1201,37 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageSwarmDispatch(context, stageConfig) {
     const isHighOrCritical = ['HIGH', 'CRITICAL'].includes(context.priority);
-
     const reviewArtifact = {
-      taskId:     context.taskId,
-      priority:   context.priority,
+      taskId: context.taskId,
+      priority: context.priority,
       judgeScore: context.judgeScore || null,
-      envMap:     context.envMap || null,
-      dag:        context.executionDag || null,
-      timestamp:  new Date().toISOString(),
+      envMap: context.envMap || null,
+      dag: context.executionDag || null,
+      timestamp: new Date().toISOString()
     };
 
     // Auto-approve for LOW/MEDIUM; require explicit approval token for HIGH/CRITICAL
-    const decision = isHighOrCritical
-      ? (context.task.approvalToken ? 'approved' : 'auto_approved_low_risk')
-      : 'auto_approved';
-
+    const decision = isHighOrCritical ? context.task.approvalToken ? 'approved' : 'auto_approved_low_risk' : 'auto_approved';
     if (decision === 'rejected') {
       // Governance deny is final — halt immediately per errorHandling config
       throw new Error('Governance denied: pipeline halted immediately');
     }
-
     context.approvalDecision = decision;
 
     // Select and dispatch swarm
     const swarm = context.assignedSwarm || this._selectSwarm(context.task.type);
     const dispatchManifest = {
       swarm,
-      beePool:    context.beePool || [],
-      startedAt:  new Date().toISOString(),
-      decision,
+      beePool: context.beePool || [],
+      startedAt: new Date().toISOString(),
+      decision
     };
-
     context.swarmDispatch = dispatchManifest;
-
-    return { decision, reviewArtifact, dispatchManifest };
+    return {
+      decision,
+      reviewArtifact,
+      dispatchManifest
+    };
   }
 
   /**
@@ -1262,40 +1247,49 @@ class PipelineOrchestrator extends EventEmitter {
   async _stageExecution(context, stageConfig) {
     // Metacognitive confidence gate threshold = PSI² ≈ 0.382 (φ⁻²)
     const minConfidence = PSI * PSI;
-    const maxBees       = fib(6); // 8 parallel bees per config
+    const maxBees = fib(6); // 8 parallel bees per config
 
     const stepResults = [];
-    const dag = context.executionDag || { nodes: [{ id: 'root', type: 'generic' }] };
-
+    const dag = context.executionDag || {
+      nodes: [{
+        id: 'root',
+        type: 'generic'
+      }]
+    };
     for (const node of dag.nodes) {
       const stepConfidence = minConfidence + (1 - minConfidence) * PSI; // ≈ 0.618
 
       if (stepConfidence < minConfidence) {
-        throw new Error(
-          `Metacognitive confidence ${stepConfidence.toFixed(4)} below threshold ` +
-          `${minConfidence.toFixed(4)} at step '${node.id}' — triggering re-evaluation`
-        );
+        throw new Error(`Metacognitive confidence ${stepConfidence.toFixed(4)} below threshold ` + `${minConfidence.toFixed(4)} at step '${node.id}' — triggering re-evaluation`);
       }
-
       stepResults.push({
-        nodeId:     node.id,
+        nodeId: node.id,
         confidence: stepConfidence,
-        status:     'completed',
-        output:     { success: true },
+        status: 'completed',
+        output: {
+          success: true
+        }
       });
     }
-
     const beeOutputs = (context.beePool || []).slice(0, maxBees).map(bee => ({
-      beeId:  bee.id,
+      beeId: bee.id,
       status: 'completed',
-      output: { success: true },
+      output: {
+        success: true
+      }
     }));
-
-    const overallConfidence = minConfidence + (PSI * PSI * PSI);
-
-    context.executionResults = { stepResults, beeOutputs, confidence: overallConfidence };
-
-    return { stepResults, beeOutputs, confidence: overallConfidence, minConfidence };
+    const overallConfidence = minConfidence + PSI * PSI * PSI;
+    context.executionResults = {
+      stepResults,
+      beeOutputs,
+      confidence: overallConfidence
+    };
+    return {
+      stepResults,
+      beeOutputs,
+      confidence: overallConfidence,
+      minConfidence
+    };
   }
 
   /**
@@ -1309,30 +1303,38 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageQualityGate(context, stageConfig) {
     const integrationTests = {
-      passed:  true,
-      total:   fib(7),  // 13 test cases
+      passed: true,
+      total: fib(7),
+      // 13 test cases
       failures: 0,
-      coverage: PSI + (1 - PSI) * PSI, // ≈ 0.854 (phi-scaled)
+      coverage: PSI + (1 - PSI) * PSI // ≈ 0.854 (phi-scaled)
     };
-
     const healthChecks = {
-      services:  { all_healthy: true, checked: fib(5) },
-      latencyMs: 1000 * PSI,
+      services: {
+        all_healthy: true,
+        checked: fib(5)
+      },
+      latencyMs: 1000 * PSI
     };
-
     const assertions = {
-      total:   fib(6), // 8 assertions
-      passed:  fib(6),
-      failed:  0,
+      total: fib(6),
+      // 8 assertions
+      passed: fib(6),
+      failed: 0
     };
-
     if (!integrationTests.passed || assertions.failed > 0) {
       throw new Error('Quality gate failed: integration tests or assertions did not pass');
     }
-
-    context.qualityGate = { integrationTests, healthChecks, assertions };
-
-    return { integrationTests, healthChecks, assertions };
+    context.qualityGate = {
+      integrationTests,
+      healthChecks,
+      assertions
+    };
+    return {
+      integrationTests,
+      healthChecks,
+      assertions
+    };
   }
 
   /**
@@ -1348,28 +1350,34 @@ class PipelineOrchestrator extends EventEmitter {
     const windowSize = fib(8); // 21 — Fibonacci-aligned recency window
 
     const calibration = {
-      window:          windowSize,
-      sharpness:       CSL_THRESHOLDS.HIGH,
-      overconfidence:  PSI * PSI * PSI, // ≈ 0.236 — small phi-bounded residual
+      window: windowSize,
+      sharpness: CSL_THRESHOLDS.HIGH,
+      overconfidence: PSI * PSI * PSI // ≈ 0.236 — small phi-bounded residual
     };
-
     const blindSpots = {
       detected: [],
-      count:    0,
+      count: 0
     };
-
     const brierScore = PSI * PSI * PSI; // low Brier = good calibration
 
     const biasReport = {
-      recency:        PSI * PSI,
-      anchoring:      PSI * PSI * PSI,
-      confirmation:   PSI * PSI * PSI,
-      overallBias:    PSI * PSI,
+      recency: PSI * PSI,
+      anchoring: PSI * PSI * PSI,
+      confirmation: PSI * PSI * PSI,
+      overallBias: PSI * PSI
     };
-
-    context.selfAwareness = { calibration, blindSpots, brierScore, biasReport };
-
-    return { calibration, blindSpots, brierScore, biasReport };
+    context.selfAwareness = {
+      calibration,
+      blindSpots,
+      brierScore,
+      biasReport
+    };
+    return {
+      calibration,
+      blindSpots,
+      brierScore,
+      biasReport
+    };
   }
 
   /**
@@ -1383,42 +1391,41 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stagePatternCapture(context, stageConfig) {
     // Collect stage durations to find p95 latency outliers
-    const stageDurations = Object.entries(context.stageResults || {})
-      .filter(([, r]) => r.duration)
-      .map(([name, r]) => ({ name, duration: r.duration }))
-      .sort((a, b) => b.duration - a.duration);
-
+    const stageDurations = Object.entries(context.stageResults || {}).filter(([, r]) => r.duration).map(([name, r]) => ({
+      name,
+      duration: r.duration
+    })).sort((a, b) => b.duration - a.duration);
     const p95Threshold = this.getStageTimeout('EXECUTION') * PSI; // phi-scaled budget
 
-    const bottlenecks = stageDurations
-      .filter(s => s.duration > p95Threshold)
-      .slice(0, fib(4)); // top 3 bottlenecks
+    const bottlenecks = stageDurations.filter(s => s.duration > p95Threshold).slice(0, fib(4)); // top 3 bottlenecks
 
     const gaps = {
       uncoveredRequirements: [],
-      untestedEdgeCases:     [],
+      untestedEdgeCases: []
     };
-
     const waste = {
       redundantSteps: 0,
-      zeroValueMs:    0,
+      zeroValueMs: 0
     };
-
     const critiqueArtifact = {
-      generatedAt:  new Date().toISOString(),
+      generatedAt: new Date().toISOString(),
       bottlenecks,
       gaps,
       waste,
-      overallRating: CSL_THRESHOLDS.HIGH,
+      overallRating: CSL_THRESHOLDS.HIGH
     };
-
     context.selfCritique = critiqueArtifact;
 
     // Capture patterns from this run for pattern store
     const capturedPatterns = this._extractPatterns(context);
     context.capturedPatterns = capturedPatterns;
-
-    return { critiqueArtifact, bottlenecks, gaps, waste, capturedPatterns };
+    return {
+      critiqueArtifact,
+      bottlenecks,
+      gaps,
+      waste,
+      capturedPatterns
+    };
   }
 
   /**
@@ -1432,31 +1439,33 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with failureCatalog, preventionRules, storyArc.
    */
   async _stageStoryUpdate(context, stageConfig) {
-    const warnings      = context.warnings || [];
-    const rollbacks     = context.rollbacks || [];
-
-    const failureCatalog = [
-      ...warnings.map(w => ({ type: 'WARNING', ...w })),
-      ...rollbacks.map(r => ({ type: 'ROLLBACK', ...r })),
-    ];
+    const warnings = context.warnings || [];
+    const rollbacks = context.rollbacks || [];
+    const failureCatalog = [...warnings.map(w => ({
+      type: 'WARNING',
+      ...w
+    })), ...rollbacks.map(r => ({
+      type: 'ROLLBACK',
+      ...r
+    }))];
 
     // Root cause analysis only if failures exist
-    const rootCauses = failureCatalog.length > 0
-      ? failureCatalog.map(f => ({
-          failure:     f,
-          rootCause:   'upstream_coherence_drift',
-          whyChain:    ['coherence below threshold', 'insufficient context', 'input ambiguity'],
-          fishbone:    { method: ['process'], environment: ['latency'] },
-        }))
-      : [];
+    const rootCauses = failureCatalog.length > 0 ? failureCatalog.map(f => ({
+      failure: f,
+      rootCause: 'upstream_coherence_drift',
+      whyChain: ['coherence below threshold', 'insufficient context', 'input ambiguity'],
+      fishbone: {
+        method: ['process'],
+        environment: ['latency']
+      }
+    })) : [];
 
     // Generate prevention rules; apply CSL gate before accepting
     const candidateRules = rootCauses.map((rc, i) => ({
-      id:         `rule-${context.taskId}-${i}`,
-      desc:       `Prevent ${rc.rootCause}`,
-      cslScore:   CSL_THRESHOLDS.MEDIUM,
+      id: `rule-${context.taskId}-${i}`,
+      desc: `Prevent ${rc.rootCause}`,
+      cslScore: CSL_THRESHOLDS.MEDIUM
     }));
-
     const preventionRules = candidateRules.filter(rule => {
       const gated = cslGate(rule.cslScore, rule.cslScore, CSL_THRESHOLDS.LOW, 0.1);
       return gated >= CSL_THRESHOLDS.LOW * PSI;
@@ -1464,18 +1473,21 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Build story arc for autobiographical memory
     const storyArc = {
-      taskId:     context.taskId,
-      intent:     context.task.type,
-      execution:  'completed',
-      outcome:    'success',
-      learnings:  preventionRules.map(r => r.desc),
-      timestamp:  new Date().toISOString(),
+      taskId: context.taskId,
+      intent: context.task.type,
+      execution: 'completed',
+      outcome: 'success',
+      learnings: preventionRules.map(r => r.desc),
+      timestamp: new Date().toISOString()
     };
-
-    context.storyArc      = storyArc;
+    context.storyArc = storyArc;
     context.preventionRules = preventionRules;
-
-    return { failureCatalog, rootCauses, preventionRules, storyArc };
+    return {
+      failureCatalog,
+      rootCauses,
+      preventionRules,
+      storyArc
+    };
   }
 
   /**
@@ -1489,39 +1501,51 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageWisdomHarvest(context, stageConfig) {
     // Collect durations from all stage results
-    const durations = Object.values(context.stageResults || {})
-      .filter(r => r.duration)
-      .map(r => r.duration)
-      .sort((a, b) => a - b);
-
+    const durations = Object.values(context.stageResults || {}).filter(r => r.duration).map(r => r.duration).sort((a, b) => a - b);
     const p50 = durations[Math.floor(durations.length * 0.5)] || 0;
     const p95 = durations[Math.floor(durations.length * 0.95)] || 0;
     const p99 = durations[Math.floor(durations.length * 0.99)] || 0;
-
-    const latencyProfile = { p50, p95, p99, sampleCount: durations.length };
+    const latencyProfile = {
+      p50,
+      p95,
+      p99,
+      sampleCount: durations.length
+    };
 
     // Optimization weight coefficients from config
     const optWeights = {
-      cost:        PSI * PSI,        // ≈ 0.382
-      perf:        PSI * PSI,        // ≈ 0.382
+      cost: PSI * PSI,
+      // ≈ 0.382
+      perf: PSI * PSI,
+      // ≈ 0.382
       reliability: 1 - PSI * PSI * 2 // ≈ 0.236
     };
-
-    const optimizationCandidates = [
-      { id: 'reduce_recon_parallelism', cslImpact: PSI * PSI, effort: PSI },
-      { id: 'cache_vector_search',      cslImpact: PSI,       effort: PSI * PSI },
-      { id: 'batch_bee_spawning',       cslImpact: PSI * PSI * PSI, effort: PSI * PSI * PSI },
-    ].sort((a, b) => b.cslImpact - a.cslImpact);
+    const optimizationCandidates = [{
+      id: 'reduce_recon_parallelism',
+      cslImpact: PSI * PSI,
+      effort: PSI
+    }, {
+      id: 'cache_vector_search',
+      cslImpact: PSI,
+      effort: PSI * PSI
+    }, {
+      id: 'batch_bee_spawning',
+      cslImpact: PSI * PSI * PSI,
+      effort: PSI * PSI * PSI
+    }].sort((a, b) => b.cslImpact - a.cslImpact);
 
     // Harvest and store wisdom patterns
     const wisdomEntries = (context.capturedPatterns || []).map(p => ({
       ...p,
-      harvestedAt: new Date().toISOString(),
+      harvestedAt: new Date().toISOString()
     }));
-
     context.wisdomEntries = wisdomEntries;
-
-    return { latencyProfile, optWeights, optimizationCandidates, wisdomEntries };
+    return {
+      latencyProfile,
+      optWeights,
+      optimizationCandidates,
+      wisdomEntries
+    };
   }
 
   /**
@@ -1541,30 +1565,29 @@ class PipelineOrchestrator extends EventEmitter {
     const sources = ['npm', 'arxiv', 'github', 'security'];
     const rawFindings = sources.map(source => ({
       source,
-      hits:      fib(5),
-      relevance: relevanceThreshold + Math.random() * PSI * PSI,
+      hits: fib(5),
+      relevance: relevanceThreshold + Math.random() * PSI * PSI
     }));
-
     const absorbed = rawFindings.filter(f => f.relevance >= relevanceThreshold);
 
     // Deploy gate: validate all quality and assurance gates passed
-    const qualityPassed   = context.qualityGate ? context.qualityGate.integrationTests.passed : false;
+    const qualityPassed = context.qualityGate ? context.qualityGate.integrationTests.passed : false;
     const assurancePassed = context.selfAwareness ? true : false;
-
     const deployGate = {
-      approved:       qualityPassed && assurancePassed,
+      approved: qualityPassed && assurancePassed,
       qualityPassed,
       assurancePassed,
-      timestamp:      new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
-
     if (!deployGate.approved) {
       throw new Error('Deploy gate blocked: quality or assurance gate not satisfied');
     }
-
     context.deployGate = deployGate;
-
-    return { rawFindings, absorbed, deployGate };
+    return {
+      rawFindings,
+      absorbed,
+      deployGate
+    };
   }
 
   /**
@@ -1579,30 +1602,37 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with mutations, promoted, projections.
    */
   async _stageProjection(context, stageConfig) {
-    const mutationRate  = PSI * PSI * PSI * PSI * PSI; // φ⁻⁴ ≈ 0.0618 per config comment
-    const popSize       = fib(6);  // 8 = from config populationSize
-    const iterations    = fib(14); // 377 ≈ 500 Fibonacci-approximated
-    const rollbackThresh = 0.05;   // from config promote_if_beneficial
-    const approvalThresh = 0.08;   // from config promote_if_beneficial
+    const mutationRate = PSI * PSI * PSI * PSI * PSI; // φ⁻⁴ ≈ 0.0618 per config comment
+    const popSize = fib(6); // 8 = from config populationSize
+    const iterations = fib(14); // 377 ≈ 500 Fibonacci-approximated
+    const rollbackThresh = 0.05; // from config promote_if_beneficial
+    const approvalThresh = 0.08; // from config promote_if_beneficial
 
-    const mutations = Array.from({ length: popSize }, (_, i) => ({
-      id:           `mutant-${i}`,
+    const mutations = Array.from({
+      length: popSize
+    }, (_, i) => ({
+      id: `mutant-${i}`,
       mutationRate,
-      improvementScore: mutationRate * PHI * (i + 1),
+      improvementScore: mutationRate * PHI * (i + 1)
     }));
-
     const promoted = mutations.filter(m => m.improvementScore >= rollbackThresh);
 
     // Project performance trends using phi-geometric extrapolation
-    const baselineScore   = context.judgeScore ? context.judgeScore.composite : CSL_THRESHOLDS.MEDIUM;
-    const projections = Array.from({ length: fib(5) }, (_, i) => ({
-      period:       `T+${i + 1}`,
-      projectedScore: Math.min(1, baselineScore * Math.pow(PHI, (i + 1) * PSI * PSI)),
+    const baselineScore = context.judgeScore ? context.judgeScore.composite : CSL_THRESHOLDS.MEDIUM;
+    const projections = Array.from({
+      length: fib(5)
+    }, (_, i) => ({
+      period: `T+${i + 1}`,
+      projectedScore: Math.min(1, baselineScore * Math.pow(PHI, (i + 1) * PSI * PSI))
     }));
-
     context.projections = projections;
-
-    return { mutations, promoted, projections, iterations, mutationRate };
+    return {
+      mutations,
+      promoted,
+      projections,
+      iterations,
+      mutationRate
+    };
   }
 
   /**
@@ -1615,35 +1645,24 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with verificationReport.
    */
   async _stageVerification(context, stageConfig) {
-    const integrationPass = context.qualityGate
-      ? context.qualityGate.integrationTests.passed
-      : true;
-
-    const healthPass = context.qualityGate
-      ? context.qualityGate.healthChecks.services.all_healthy
-      : true;
-
-    const assertionPass = context.qualityGate
-      ? context.qualityGate.assertions.failed === 0
-      : true;
-
+    const integrationPass = context.qualityGate ? context.qualityGate.integrationTests.passed : true;
+    const healthPass = context.qualityGate ? context.qualityGate.healthChecks.services.all_healthy : true;
+    const assertionPass = context.qualityGate ? context.qualityGate.assertions.failed === 0 : true;
     const allPassed = integrationPass && healthPass && assertionPass;
-
     if (!allPassed) {
       throw new Error('Final verification failed: deployment did not pass all checks');
     }
-
     const verificationReport = {
       integrationPass,
       healthPass,
       assertionPass,
       allPassed,
-      verifiedAt: new Date().toISOString(),
+      verifiedAt: new Date().toISOString()
     };
-
     context.verificationReport = verificationReport;
-
-    return { verificationReport };
+    return {
+      verificationReport
+    };
   }
 
   /**
@@ -1657,43 +1676,42 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageReceipt(context, stageConfig) {
     const manifest = {
-      taskId:          context.taskId,
-      startTime:       context.startTime,
-      stages:          Object.keys(context.stageResults),
-      judgeScore:      context.judgeScore || null,
+      taskId: context.taskId,
+      startTime: context.startTime,
+      stages: Object.keys(context.stageResults),
+      judgeScore: context.judgeScore || null,
       preventionRules: context.preventionRules || [],
-      storyArc:        context.storyArc || null,
-      warnings:        context.warnings,
-      rollbacks:       context.rollbacks,
+      storyArc: context.storyArc || null,
+      warnings: context.warnings,
+      rollbacks: context.rollbacks
     };
 
     // Simulate Ed25519 signing (signature is deterministic placeholder)
     const signature = `ed25519:${context.taskId}:${Date.now().toString(36)}`;
-
     const receipt = {
       manifest,
       signature,
       algorithm: 'Ed25519',
-      signedAt:  new Date().toISOString(),
+      signedAt: new Date().toISOString()
     };
-
     const auditEntry = {
-      id:       `audit-${context.taskId}`,
+      id: `audit-${context.taskId}`,
       receipt,
       appendedAt: new Date().toISOString(),
-      tamperEvident: true,
+      tamperEvident: true
     };
-
     const wisdomUpdate = {
-      entries:    context.wisdomEntries || [],
-      patterns:   context.capturedPatterns || [],
-      updatedAt:  new Date().toISOString(),
+      entries: context.wisdomEntries || [],
+      patterns: context.capturedPatterns || [],
+      updatedAt: new Date().toISOString()
     };
-
-    context.receipt    = receipt;
+    context.receipt = receipt;
     context.auditEntry = auditEntry;
-
-    return { receipt, auditEntry, wisdomUpdate };
+    return {
+      receipt,
+      auditEntry,
+      wisdomUpdate
+    };
   }
 
   /**
@@ -1706,35 +1724,23 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with retrospective report.
    */
   async _stageRetrospective(context, stageConfig) {
-    const totalStages  = STAGE_NAMES.length;
-    const passedStages = Object.values(this._stageStates)
-      .filter(s => s === STAGE_STATE.PASSED).length;
-    const skippedStages = Object.values(this._stageStates)
-      .filter(s => s === STAGE_STATE.SKIPPED).length;
-    const failedStages = Object.values(this._stageStates)
-      .filter(s => s === STAGE_STATE.FAILED).length;
-
-    const pipelineScore = cslGate(
-      passedStages / totalStages,
-      passedStages / totalStages,
-      CSL_THRESHOLDS.LOW,
-      0.1
-    );
-
+    const totalStages = STAGE_NAMES.length;
+    const passedStages = Object.values(this._stageStates).filter(s => s === STAGE_STATE.PASSED).length;
+    const skippedStages = Object.values(this._stageStates).filter(s => s === STAGE_STATE.SKIPPED).length;
+    const failedStages = Object.values(this._stageStates).filter(s => s === STAGE_STATE.FAILED).length;
+    const pipelineScore = cslGate(passedStages / totalStages, passedStages / totalStages, CSL_THRESHOLDS.LOW, 0.1);
     const systemicImprovements = (context.preventionRules || []).map(r => ({
-      rule:      r.desc,
-      priority:  CSL_THRESHOLDS.MEDIUM,
-      effort:    PSI * PSI,
+      rule: r.desc,
+      priority: CSL_THRESHOLDS.MEDIUM,
+      effort: PSI * PSI
     }));
-
     const evolutionConfig = {
-      promotedMutations:  (context.projections || []).length > 0,
+      promotedMutations: (context.projections || []).length > 0,
       wisdomEntriesAdded: (context.wisdomEntries || []).length,
-      patternsCapture:    (context.capturedPatterns || []).length,
+      patternsCapture: (context.capturedPatterns || []).length
     };
-
     const retrospectiveReport = {
-      taskId:          context.taskId,
+      taskId: context.taskId,
       totalStages,
       passedStages,
       skippedStages,
@@ -1742,14 +1748,14 @@ class PipelineOrchestrator extends EventEmitter {
       pipelineScore,
       systemicImprovements,
       evolutionConfig,
-      warnings:        context.warnings || [],
-      rollbacks:       context.rollbacks || [],
-      completedAt:     new Date().toISOString(),
+      warnings: context.warnings || [],
+      rollbacks: context.rollbacks || [],
+      completedAt: new Date().toISOString()
     };
-
     context.retrospective = retrospectiveReport;
-
-    return { retrospectiveReport };
+    return {
+      retrospectiveReport
+    };
   }
 
   // ── 7.6  PRIVATE: CSL COHERENCE GATE ──────────────────────────────────────
@@ -1771,34 +1777,39 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {{stage: string, score: number, passed: boolean, threshold: number, gated: number}}
    */
   _evaluateCslGate(stageName, context) {
-    const tau   = CSL_THRESHOLDS.LOW; // ≈ 0.691 per spec
-    const temp  = PSI * PSI;           // ≈ 0.382 for moderate gate sharpness
+    const tau = CSL_THRESHOLDS.LOW; // ≈ 0.691 per spec
+    const temp = PSI * PSI; // ≈ 0.382 for moderate gate sharpness
 
     // Derive coherence proxy from stage result quality metrics
     const stageResult = context.stageResults[stageName];
-    const rawScore    = this._deriveCoherenceScore(stageName, stageResult, context);
+    const rawScore = this._deriveCoherenceScore(stageName, stageResult, context);
 
     // If coherence history has enough samples, validate against FIB-indexed sentinel
     // FIB[4] = 5: after the 5th stage we start comparing against the running mean
     if (context.coherenceHistory.length >= FIB[4]) {
       const window = context.coherenceHistory.slice(-FIB[4]);
       // Use cosineSimilarity to compare recent window against ideal uniform-high vector
-      const idealVec   = window.map(() => CSL_THRESHOLDS.HIGH);
+      const idealVec = window.map(() => CSL_THRESHOLDS.HIGH);
       const similarity = cosineSimilarity(window, idealVec);
       context.coherenceTrend = similarity;
     }
 
     // Apply CSL sigmoid gate
-    const gated   = cslGate(rawScore, rawScore, tau, temp);
-    const passed  = rawScore >= tau;
+    const gated = cslGate(rawScore, rawScore, tau, temp);
+    const passed = rawScore >= tau;
 
     // Update sliding window
     context.coherenceHistory.push(rawScore);
     if (context.coherenceHistory.length > context.coherenceWindowSize) {
       context.coherenceHistory.shift();
     }
-
-    return { stage: stageName, score: rawScore, passed, threshold: tau, gated };
+    return {
+      stage: stageName,
+      score: rawScore,
+      passed,
+      threshold: tau,
+      gated
+    };
   }
 
   /**
@@ -1819,14 +1830,13 @@ class PipelineOrchestrator extends EventEmitter {
     if (!stageResult || stageResult.state !== STAGE_STATE.PASSED) {
       return CSL_THRESHOLDS.MINIMUM; // ≈ 0.5 floor
     }
-
-    const timeout      = this.getStageTimeout(stageName);
-    const duration     = stageResult.duration || timeout;
+    const timeout = this.getStageTimeout(stageName);
+    const duration = stageResult.duration || timeout;
     // Efficiency: stages that complete well within their budget score higher
-    const efficiency   = Math.min(1, timeout / Math.max(duration, 1));
+    const efficiency = Math.min(1, timeout / Math.max(duration, 1));
     // Phi-weighted combination: efficiency is primary signal
-    const [w0, w1]     = phiFusionWeights(2);
-    const baseScore    = CSL_THRESHOLDS.LOW * w0 + efficiency * PSI * w1;
+    const [w0, w1] = phiFusionWeights(2);
+    const baseScore = CSL_THRESHOLDS.LOW * w0 + efficiency * PSI * w1;
 
     // Clamp to [CSL_THRESHOLDS.LOW, 1.0]
     return Math.min(1, Math.max(CSL_THRESHOLDS.LOW, baseScore));
@@ -1870,16 +1880,15 @@ class PipelineOrchestrator extends EventEmitter {
   _withTimeout(promise, timeoutMs, stageName) {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
-        reject(new Error(
-          `Stage '${stageName}' timed out after ${timeoutMs}ms ` +
-          `(phi-power timeout)`
-        ));
+        reject(new Error(`Stage '${stageName}' timed out after ${timeoutMs}ms ` + `(phi-power timeout)`));
       }, timeoutMs);
-
-      promise.then(
-        result => { clearTimeout(timer); resolve(result); },
-        err    => { clearTimeout(timer); reject(err);     }
-      );
+      promise.then(result => {
+        clearTimeout(timer);
+        resolve(result);
+      }, err => {
+        clearTimeout(timer);
+        reject(err);
+      });
     });
   }
 
@@ -1911,7 +1920,7 @@ class PipelineOrchestrator extends EventEmitter {
     // "priority in [HIGH, CRITICAL]"
     const inMatch = condition.match(/^(\w+)\s+in\s+\[([^\]]+)\]$/);
     if (inMatch) {
-      const field  = inMatch[1].trim();
+      const field = inMatch[1].trim();
       const values = inMatch[2].split(',').map(v => v.trim());
       const actual = field === 'priority' ? context.priority : context.task[field];
       return values.includes(String(actual));
@@ -1920,28 +1929,31 @@ class PipelineOrchestrator extends EventEmitter {
     // "complexity >= high"
     const compMatch = condition.match(/^(\w+)\s*(>=|<=|>|<|==|!=)\s*(\w+)$/);
     if (compMatch) {
-      const field    = compMatch[1].trim();
-      const op       = compMatch[2].trim();
+      const field = compMatch[1].trim();
+      const op = compMatch[2].trim();
       const expected = compMatch[3].trim();
-      const actual   = context.task[field] || context[field] || '';
-
+      const actual = context.task[field] || context[field] || '';
       const order = ['low', 'medium', 'high', 'critical'];
       const ai = order.indexOf(String(actual).toLowerCase());
       const ei = order.indexOf(String(expected).toLowerCase());
-
       if (ai >= 0 && ei >= 0) {
         switch (op) {
-          case '>=': return ai >= ei;
-          case '<=': return ai <= ei;
-          case '>':  return ai >  ei;
-          case '<':  return ai <  ei;
-          case '==': return ai === ei;
-          case '!=': return ai !== ei;
+          case '>=':
+            return ai >= ei;
+          case '<=':
+            return ai <= ei;
+          case '>':
+            return ai > ei;
+          case '<':
+            return ai < ei;
+          case '==':
+            return ai === ei;
+          case '!=':
+            return ai !== ei;
         }
       }
       return String(actual) === String(expected);
     }
-
     return true; // Unknown condition format: default to pass
   }
 
@@ -1968,9 +1980,9 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {string} Priority band: LOW | MEDIUM | HIGH | CRITICAL.
    */
   _riskToPriority(riskScore) {
-    if (riskScore <= PRESSURE_LEVELS.NOMINAL[1])  return 'LOW';
+    if (riskScore <= PRESSURE_LEVELS.NOMINAL[1]) return 'LOW';
     if (riskScore <= PRESSURE_LEVELS.ELEVATED[1]) return 'MEDIUM';
-    if (riskScore <= PRESSURE_LEVELS.HIGH[1])     return 'HIGH';
+    if (riskScore <= PRESSURE_LEVELS.HIGH[1]) return 'HIGH';
     return 'CRITICAL';
   }
 
@@ -1983,14 +1995,14 @@ class PipelineOrchestrator extends EventEmitter {
    */
   _selectSwarm(taskType) {
     const type = (taskType || '').toLowerCase();
-    if (type.includes('code') || type.includes('build'))    return 'CodeSwarm';
+    if (type.includes('code') || type.includes('build')) return 'CodeSwarm';
     if (type.includes('security') || type.includes('audit')) return 'SecuritySwarm';
-    if (type.includes('research'))                           return 'ResearchSwarm';
-    if (type.includes('deploy'))                             return 'DeploySwarm';
+    if (type.includes('research')) return 'ResearchSwarm';
+    if (type.includes('deploy')) return 'DeploySwarm';
     if (type.includes('analytics') || type.includes('data')) return 'AnalyticsSwarm';
-    if (type.includes('pattern'))                            return 'PatternSwarm';
-    if (type.includes('memory'))                             return 'MemorySwarm';
-    if (type.includes('governance'))                         return 'GovernanceSwarm';
+    if (type.includes('pattern')) return 'PatternSwarm';
+    if (type.includes('memory')) return 'MemorySwarm';
+    if (type.includes('governance')) return 'GovernanceSwarm';
     return 'CodeSwarm'; // Default to CodeSwarm for unclassified tasks
   }
 
@@ -2007,7 +2019,7 @@ class PipelineOrchestrator extends EventEmitter {
       return context.variant;
     }
     const priority = context.task.priority || 'MEDIUM';
-    if (priority === 'LOW')      return 'fast_path';
+    if (priority === 'LOW') return 'fast_path';
     if (priority === 'CRITICAL') return 'full_path';
     return 'full_path';
   }
@@ -2025,25 +2037,24 @@ class PipelineOrchestrator extends EventEmitter {
     // Capture judge score as a quality pattern if above HIGH threshold
     if (context.judgeScore && context.judgeScore.composite >= CSL_THRESHOLDS.HIGH) {
       patterns.push({
-        type:      'success_pattern',
-        taskType:  context.task.type,
-        score:     context.judgeScore.composite,
-        swarm:     context.assignedSwarm,
-        capturedAt: new Date().toISOString(),
+        type: 'success_pattern',
+        taskType: context.task.type,
+        score: context.judgeScore.composite,
+        swarm: context.assignedSwarm,
+        capturedAt: new Date().toISOString()
       });
     }
 
     // Capture each rollback as a failure pattern
-    for (const rb of (context.rollbacks || [])) {
+    for (const rb of context.rollbacks || []) {
       patterns.push({
-        type:      'failure_pattern',
-        from:      rb.from,
-        to:        rb.to,
-        taskType:  context.task.type,
-        capturedAt: rb.timestamp,
+        type: 'failure_pattern',
+        from: rb.from,
+        to: rb.to,
+        taskType: context.task.type,
+        capturedAt: rb.timestamp
       });
     }
-
     return patterns;
   }
 }
@@ -2061,5 +2072,5 @@ module.exports = {
   SAFE_ROLLBACK_STAGES,
   MAX_STAGE_RETRIES,
   MAX_BACKOFF_MS,
-  TRANSITION_MAP,
+  TRANSITION_MAP
 };

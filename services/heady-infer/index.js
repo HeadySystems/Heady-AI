@@ -1,41 +1,22 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 const EventEmitter = require('events');
-const crypto       = require('crypto');
-
-const config              = require('./config');
-const TaskRouter          = require('./router');
-const ProviderRacing      = require('./racing');
-const { CircuitBreakerManager } = require('./circuit-breaker');
-const ResponseCache       = require('./response-cache');
-const CostTracker         = require('./cost-tracker');
-
-const AnthropicProvider   = require('./providers/anthropic');
-const OpenAIProvider      = require('./providers/openai');
-const GoogleProvider      = require('./providers/google');
-const GroqProvider        = require('./providers/groq');
-const LocalProvider       = require('./providers/local');
-
-/**
- * HeadyInfer — Unified multi-model inference gateway.
- *
- * Provides:
- *  - generate(request)           → Promise<InferResponse>
- *  - chat(request)               → alias for generate with messages[]
- *  - complete(request)           → alias for generate with prompt
- *  - stream(request, onChunk)    → Promise<InferResponse>
- *  - raceGenerate(request)       → Promise<InferResponse>  (explicit racing)
- *  - health()                    → Promise<HealthReport>
- *  - getProviders()              → ProviderInfo[]
- *
- * Internals:
- *  - Request deduplication
- *  - Circuit breaker per provider
- *  - Response cache (LRU, TTL, temp-bypass)
- *  - Cost tracking + auto-downgrade
- *  - Provider racing + progressive failover
- *  - Full audit logging
- */
+const crypto = require('crypto');
+const config = require('./config');
+const TaskRouter = require('./router');
+const ProviderRacing = require('./racing');
+const {
+  CircuitBreakerManager
+} = require('./circuit-breaker');
+const ResponseCache = require('./response-cache');
+const CostTracker = require('./cost-tracker');
+const AnthropicProvider = require('./providers/anthropic');
+const OpenAIProvider = require('./providers/openai');
+const GoogleProvider = require('./providers/google');
+const GroqProvider = require('./providers/groq');
+const LocalProvider = require('./providers/local');
 class HeadyInfer extends EventEmitter {
   constructor(cfg = config) {
     super();
@@ -61,17 +42,17 @@ class HeadyInfer extends EventEmitter {
 
     // ── Core subsystems ───────────────────────────────────────────────────
     this.circuitBreaker = new CircuitBreakerManager(cfg.circuitBreaker);
-    this.cache          = new ResponseCache(cfg.cache);
-    this.costTracker    = new CostTracker(cfg);
-    this.racing         = new ProviderRacing(cfg.racing);
-    this.router         = new TaskRouter({
-      matrix:         cfg.defaultRouting,
-      costTracker:    this.costTracker,
-      circuitBreaker: this.circuitBreaker,
+    this.cache = new ResponseCache(cfg.cache);
+    this.costTracker = new CostTracker(cfg);
+    this.racing = new ProviderRacing(cfg.racing);
+    this.router = new TaskRouter({
+      matrix: cfg.defaultRouting,
+      costTracker: this.costTracker,
+      circuitBreaker: this.circuitBreaker
     });
 
     // ── Deduplication ─────────────────────────────────────────────────────
-    this._dedupMap = new Map();   // dedupKey → Promise
+    this._dedupMap = new Map(); // dedupKey → Promise
 
     // ── Audit log ─────────────────────────────────────────────────────────
     this._auditLog = [];
@@ -79,26 +60,22 @@ class HeadyInfer extends EventEmitter {
 
     // ── Metrics ───────────────────────────────────────────────────────────
     this._metrics = {
-      requests:      0,
-      cacheHits:     0,
-      dedupHits:     0,
-      failures:      0,
-      totalLatencyMs: 0,
+      requests: 0,
+      cacheHits: 0,
+      dedupHits: 0,
+      failures: 0,
+      totalLatencyMs: 0
     };
 
     // Wire up circuit breaker events for logging
-    this.circuitBreaker.on('open',    (id) => this._log('warn',  `Circuit OPEN for ${id}`));
-    this.circuitBreaker.on('close',   (id) => this._log('info',  `Circuit CLOSED for ${id}`));
-    this.circuitBreaker.on('halfOpen',(id) => this._log('info',  `Circuit HALF_OPEN for ${id}`));
+    this.circuitBreaker.on('open', id => this._log('warn', `Circuit OPEN for ${id}`));
+    this.circuitBreaker.on('close', id => this._log('info', `Circuit CLOSED for ${id}`));
+    this.circuitBreaker.on('halfOpen', id => this._log('info', `Circuit HALF_OPEN for ${id}`));
 
     // Cost alerts
-    this.costTracker.on('alert', (a) =>
-      this._log('warn', `Budget alert: ${a.type} at ${(a.pct * 100).toFixed(1)}% ($${a.current.toFixed(4)} / $${a.cap})`));
-    this.costTracker.on('budgetExceeded', (a) =>
-      this._log('error', `Budget EXCEEDED: ${a.type} $${a.current.toFixed(4)} / $${a.cap}`));
-    this.costTracker.on('downgrade', (d) =>
-      this._log('info', `Auto-downgrade: ${d.provider} ${d.from} → ${d.to} (budget ${(d.budgetPct * 100).toFixed(0)}%)`));
-
+    this.costTracker.on('alert', a => this._log('warn', `Budget alert: ${a.type} at ${(a.pct * 100).toFixed(1)}% ($${a.current.toFixed(4)} / $${a.cap})`));
+    this.costTracker.on('budgetExceeded', a => this._log('error', `Budget EXCEEDED: ${a.type} $${a.current.toFixed(4)} / $${a.cap}`));
+    this.costTracker.on('downgrade', d => this._log('info', `Auto-downgrade: ${d.provider} ${d.from} → ${d.to} (budget ${(d.budgetPct * 100).toFixed(0)}%)`));
     this._log('info', `HeadyInfer initialized. Enabled providers: [${Object.keys(this._providers).join(', ')}]`);
     if (cfg.validationWarnings?.length > 0) {
       for (const w of cfg.validationWarnings) {
@@ -123,7 +100,13 @@ class HeadyInfer extends EventEmitter {
    */
   async chat(request) {
     if (!request.messages && request.prompt) {
-      request = { ...request, messages: [{ role: 'user', content: request.prompt }] };
+      request = {
+        ...request,
+        messages: [{
+          role: 'user',
+          content: request.prompt
+        }]
+      };
     }
     return this.generate(request);
   }
@@ -133,7 +116,13 @@ class HeadyInfer extends EventEmitter {
    */
   async complete(request) {
     if (!request.messages && request.prompt) {
-      request = { ...request, messages: [{ role: 'user', content: request.prompt }] };
+      request = {
+        ...request,
+        messages: [{
+          role: 'user',
+          content: request.prompt
+        }]
+      };
     }
     return this.generate(request);
   }
@@ -154,7 +143,10 @@ class HeadyInfer extends EventEmitter {
    * @returns {Promise<InferResponse>}
    */
   async raceGenerate(request) {
-    return this._handleRequest({ ...request, _forceRace: true }, false);
+    return this._handleRequest({
+      ...request,
+      _forceRace: true
+    }, false);
   }
 
   // ─── Core Handler ─────────────────────────────────────────────────────────
@@ -177,23 +169,36 @@ class HeadyInfer extends EventEmitter {
         this._metrics.dedupHits++;
         this._log('debug', `Dedup hit for ${dedupKey.substring(0, 12)}`);
         const result = await this._dedupMap.get(dedupKey);
-        return { ...result, deduplicated: true, requestId };
+        return {
+          ...result,
+          deduplicated: true,
+          requestId
+        };
       }
     }
 
     // Cache check (non-streaming only)
     if (!isStream && !this.cache.shouldBypass(normalized)) {
-      const cacheKey    = this.cache.buildKey(normalized);
+      const cacheKey = this.cache.buildKey(normalized);
       const cachedEntry = this.cache.get(cacheKey);
       if (cachedEntry) {
         this._metrics.cacheHits++;
         this._auditRecord(requestId, normalized, cachedEntry, startTime, 'cache_hit');
-        return { ...cachedEntry, cached: true, cacheKey, requestId };
+        return {
+          ...cachedEntry,
+          cached: true,
+          cacheKey,
+          requestId
+        };
       }
     }
 
     // Resolve routing
-    const { chain, taskType, reason } = this.router.resolve(normalized);
+    const {
+      chain,
+      taskType,
+      reason
+    } = this.router.resolve(normalized);
     if (chain.length === 0) {
       throw this._makeError('No providers available for routing', 'NO_PROVIDERS', 503);
     }
@@ -203,13 +208,11 @@ class HeadyInfer extends EventEmitter {
     if (!budgetCheck.allowed) {
       throw this._makeError(`Budget exceeded: ${budgetCheck.reason}`, 'BUDGET_EXCEEDED', 429);
     }
-
     this._log('debug', `[${requestId}] Routing: task=${taskType} chain=[${chain.map(c => `${c.provider}/${c.model || 'default'}`).join(',')}] reason=${reason}`);
 
     // Execute
     let response;
     let promise;
-
     if (!isStream) {
       promise = this._executeWithFailover(normalized, chain, isStream, onChunk, requestId);
 
@@ -222,7 +225,6 @@ class HeadyInfer extends EventEmitter {
         };
         promise.then(cleanup, cleanup);
       }
-
       response = await promise;
 
       // Store in cache (skip if already a cache hit or bypass)
@@ -237,13 +239,13 @@ class HeadyInfer extends EventEmitter {
     // Track cost
     if (response.usage) {
       this.costTracker.record({
-        provider:     response.provider,
-        model:        response.model,
-        inputTokens:  response.usage.inputTokens,
+        provider: response.provider,
+        model: response.model,
+        inputTokens: response.usage.inputTokens,
         outputTokens: response.usage.outputTokens,
-        costUsd:      response.costUsd || 0,
-        taskType:     taskType,
-        requestId,
+        costUsd: response.costUsd || 0,
+        taskType: taskType,
+        requestId
       });
     }
 
@@ -254,7 +256,6 @@ class HeadyInfer extends EventEmitter {
     // Audit
     this._auditRecord(requestId, normalized, response, startTime, 'success');
     this._metrics.totalLatencyMs += Date.now() - startTime;
-
     return response;
   }
 
@@ -264,26 +265,27 @@ class HeadyInfer extends EventEmitter {
     const errors = [];
 
     // If racing is explicitly requested or auto-racing config
-    if (
-      (request._forceRace || this.config.racing.enabled) &&
-      !isStream &&
-      chain.length > 1
-    ) {
+    if ((request._forceRace || this.config.racing.enabled) && !isStream && chain.length > 1) {
       try {
-        const contestants = chain
-          .map(({ provider, model }) => {
-            const prov = this._providers[provider];
-            if (!prov) return null;
-            const req = model ? { ...request, model } : request;
-            return {
-              id: `${provider}/${model || 'default'}`,
-              fn: () => this.circuitBreaker.execute(provider, () => prov.generate(req)),
-            };
-          })
-          .filter(Boolean);
-
+        const contestants = chain.map(({
+          provider,
+          model
+        }) => {
+          const prov = this._providers[provider];
+          if (!prov) return null;
+          const req = model ? {
+            ...request,
+            model
+          } : request;
+          return {
+            id: `${provider}/${model || 'default'}`,
+            fn: () => this.circuitBreaker.execute(provider, () => prov.generate(req))
+          };
+        }).filter(Boolean);
         if (contestants.length > 0) {
-          const { response } = await this.racing.race(contestants, this.config.racing.timeout);
+          const {
+            response
+          } = await this.racing.race(contestants, this.config.racing.timeout);
           return response;
         }
       } catch (raceErr) {
@@ -293,15 +295,23 @@ class HeadyInfer extends EventEmitter {
     }
 
     // Sequential failover
-    for (const { provider, model } of chain) {
+    for (const {
+      provider,
+      model
+    } of chain) {
       const prov = this._providers[provider];
       if (!prov) {
-        errors.push({ provider, model, error: 'Provider not initialized' });
+        errors.push({
+          provider,
+          model,
+          error: 'Provider not initialized'
+        });
         continue;
       }
-
-      const req = model ? { ...request, model } : request;
-
+      const req = model ? {
+        ...request,
+        model
+      } : request;
       try {
         let response;
         if (isStream) {
@@ -313,10 +323,13 @@ class HeadyInfer extends EventEmitter {
       } catch (err) {
         // Don't continue failover on budget errors
         if (err.code === 'BUDGET_EXCEEDED') throw err;
-
         this._log('warn', `[${requestId}] Provider ${provider}/${model} failed: ${err.message}`);
-        errors.push({ provider, model: model || 'default', error: err.message, code: err.code });
-
+        errors.push({
+          provider,
+          model: model || 'default',
+          error: err.message,
+          code: err.code
+        });
         const taskType = request.taskType || 'general';
         this.router.recordOutcome(taskType, `${provider}/${model || 'default'}`, 'failure');
         this._metrics.failures++;
@@ -324,12 +337,10 @@ class HeadyInfer extends EventEmitter {
     }
 
     // All providers failed
-    const err = new Error(
-      `All providers exhausted: ${errors.map(e => `${e.provider}: ${e.error}`).join('; ')}`
-    );
-    err.name           = 'AllProvidersFailedError';
+    const err = new Error(`All providers exhausted: ${errors.map(e => `${e.provider}: ${e.error}`).join('; ')}`);
+    err.name = 'AllProvidersFailedError';
     err.providerErrors = errors;
-    err.statusCode     = 503;
+    err.statusCode = 503;
     throw err;
   }
 
@@ -347,19 +358,21 @@ class HeadyInfer extends EventEmitter {
       throw this._makeError('temperature must be between 0 and 2', 'INVALID_REQUEST', 400);
     }
   }
-
   _normalizeRequest(request, requestId) {
     const normalized = {
       requestId,
-      taskType:    request.taskType    || 'general',
-      messages:    request.messages    || (request.prompt ? [{ role: 'user', content: request.prompt }] : []),
-      model:       request.model       || null,
-      provider:    request.provider    || null,
+      taskType: request.taskType || 'general',
+      messages: request.messages || (request.prompt ? [{
+        role: 'user',
+        content: request.prompt
+      }] : []),
+      model: request.model || null,
+      provider: request.provider || null,
       temperature: request.temperature ?? 0,
-      maxTokens:   request.maxTokens   || 4096,
+      maxTokens: request.maxTokens || 4096,
       stopSequences: request.stopSequences || null,
-      noCache:     request.noCache     || false,
-      _forceRace:  request._forceRace  || false,
+      noCache: request.noCache || false,
+      _forceRace: request._forceRace || false
     };
 
     // Apply cost-tracker auto-downgrade
@@ -367,7 +380,6 @@ class HeadyInfer extends EventEmitter {
       const downgraded = this.costTracker.suggestDowngrade(normalized.provider, normalized.model);
       if (downgraded) normalized.model = downgraded;
     }
-
     return normalized;
   }
 
@@ -375,11 +387,11 @@ class HeadyInfer extends EventEmitter {
 
   _buildDedupKey(request) {
     const payload = JSON.stringify({
-      messages:    request.messages,
-      model:       request.model,
-      taskType:    request.taskType,
+      messages: request.messages,
+      model: request.model,
+      taskType: request.taskType,
       temperature: request.temperature,
-      maxTokens:   request.maxTokens,
+      maxTokens: request.maxTokens
     });
     return crypto.createHash('sha256').update(payload).digest('hex');
   }
@@ -387,32 +399,35 @@ class HeadyInfer extends EventEmitter {
   // ─── Health ───────────────────────────────────────────────────────────────
 
   async health() {
-    const results = await Promise.allSettled(
-      Object.entries(this._providers).map(async ([id, prov]) => {
-        try {
-          const h = await prov.health();
-          return { ...h, circuitState: this.circuitBreaker.getCircuit(id).state };
-        } catch (err) {
-          return { provider: id, status: 'unhealthy', error: err.message };
-        }
-      })
-    );
-
-    const providers = results.map(r =>
-      r.status === 'fulfilled' ? r.value : { status: 'unknown', error: r.reason?.message }
-    );
-
-    const allHealthy  = providers.every(p => p.status === 'healthy' || p.status === 'disabled');
-    const anyHealthy  = providers.some(p  => p.status === 'healthy');
-
+    const results = await Promise.allSettled(Object.entries(this._providers).map(async ([id, prov]) => {
+      try {
+        const h = await prov.health();
+        return {
+          ...h,
+          circuitState: this.circuitBreaker.getCircuit(id).state
+        };
+      } catch (err) {
+        return {
+          provider: id,
+          status: 'unhealthy',
+          error: err.message
+        };
+      }
+    }));
+    const providers = results.map(r => r.status === 'fulfilled' ? r.value : {
+      status: 'unknown',
+      error: r.reason?.message
+    });
+    const allHealthy = providers.every(p => p.status === 'healthy' || p.status === 'disabled');
+    const anyHealthy = providers.some(p => p.status === 'healthy');
     return {
-      status:    allHealthy ? 'healthy' : (anyHealthy ? 'degraded' : 'unhealthy'),
+      status: allHealthy ? 'healthy' : anyHealthy ? 'degraded' : 'unhealthy',
       providers,
-      cache:     this.cache.getStats(),
-      costs:     this.costTracker.getCurrentTotals(),
-      circuits:  this.circuitBreaker.getAllStats(),
-      metrics:   this.getMetrics(),
-      timestamp: new Date().toISOString(),
+      cache: this.cache.getStats(),
+      costs: this.costTracker.getCurrentTotals(),
+      circuits: this.circuitBreaker.getAllStats(),
+      metrics: this.getMetrics(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -423,10 +438,10 @@ class HeadyInfer extends EventEmitter {
       const circuit = this.circuitBreaker.getCircuit(id);
       return {
         id,
-        enabled:  prov.enabled,
-        models:   Object.values(prov.config.models || {}),
-        circuit:  circuit.getStats(),
-        metrics:  prov.getMetrics(),
+        enabled: prov.enabled,
+        models: Object.values(prov.config.models || {}),
+        circuit: circuit.getStats(),
+        metrics: prov.getMetrics()
       };
     });
   }
@@ -436,15 +451,11 @@ class HeadyInfer extends EventEmitter {
   getMetrics() {
     return {
       ...this._metrics,
-      avgLatencyMs: this._metrics.requests > 0
-        ? Math.round(this._metrics.totalLatencyMs / this._metrics.requests)
-        : 0,
-      cacheHitRate: this._metrics.requests > 0
-        ? this._metrics.cacheHits / this._metrics.requests
-        : 0,
-      racing:   this.racing.getAnalytics(),
-      routing:  this.router.getStats(),
-      circuits: this.circuitBreaker.getAllStats(),
+      avgLatencyMs: this._metrics.requests > 0 ? Math.round(this._metrics.totalLatencyMs / this._metrics.requests) : 0,
+      cacheHitRate: this._metrics.requests > 0 ? this._metrics.cacheHits / this._metrics.requests : 0,
+      racing: this.racing.getAnalytics(),
+      routing: this.router.getStats(),
+      circuits: this.circuitBreaker.getAllStats()
     };
   }
 
@@ -452,28 +463,25 @@ class HeadyInfer extends EventEmitter {
 
   _auditRecord(requestId, request, response, startTime, outcome) {
     if (!this.config.logging.auditEnabled) return;
-
     const entry = {
       requestId,
-      taskType:    request.taskType,
-      provider:    response?.provider,
-      model:       response?.model,
+      taskType: request.taskType,
+      provider: response?.provider,
+      model: response?.model,
       outcome,
-      latencyMs:   Date.now() - startTime,
+      latencyMs: Date.now() - startTime,
       inputTokens: response?.usage?.inputTokens,
-      outputTokens:response?.usage?.outputTokens,
-      costUsd:     response?.costUsd,
-      cached:      response?.cached || false,
-      timestamp:   new Date().toISOString(),
+      outputTokens: response?.usage?.outputTokens,
+      costUsd: response?.costUsd,
+      cached: response?.cached || false,
+      timestamp: new Date().toISOString()
     };
-
     this._auditLog.push(entry);
     if (this._auditLog.length > this._maxAuditEntries) {
       this._auditLog.shift();
     }
     this.emit('audit', entry);
   }
-
   getAuditLog(limit = 100) {
     return this._auditLog.slice(-limit);
   }
@@ -483,21 +491,21 @@ class HeadyInfer extends EventEmitter {
   _newRequestId() {
     return `req_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
   }
-
   _makeError(message, code, statusCode) {
-    const err   = new Error(message);
-    err.name    = 'InferError';
-    err.code    = code;
+    const err = new Error(message);
+    err.name = 'InferError';
+    err.code = code;
     err.statusCode = statusCode;
     return err;
   }
-
   _log(level, message) {
     const entry = `[HeadyInfer] [${level.toUpperCase()}] ${message}`;
-    if (level === 'error')      console.error(entry);
-    else if (level === 'warn')  console.warn(entry);
-    else if (this.config.logging.level !== 'silent') console.log(entry);
-    this.emit('log', { level, message, timestamp: new Date().toISOString() });
+    if (level === 'error') logger.error(entry);else if (level === 'warn') logger.warn(entry);else if (this.config.logging.level !== 'silent') logger.info(entry);
+    this.emit('log', {
+      level,
+      message,
+      timestamp: new Date().toISOString()
+    });
   }
 
   // ─── Graceful Shutdown ────────────────────────────────────────────────────
@@ -513,5 +521,7 @@ class HeadyInfer extends EventEmitter {
 function createHeadyInfer(cfg) {
   return new HeadyInfer(cfg || config);
 }
-
-module.exports = { HeadyInfer, createHeadyInfer };
+module.exports = {
+  HeadyInfer,
+  createHeadyInfer
+};

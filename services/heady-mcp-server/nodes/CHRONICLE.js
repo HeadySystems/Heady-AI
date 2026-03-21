@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * CHRONICLE Node — Immutable history node (Governance layer)
  * Maintains cryptographic audit trail of all system decisions,
@@ -11,9 +13,15 @@
 const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
-const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
-
+const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 class ChronicleNode {
   constructor(config = {}) {
     this.ring = 'governance';
@@ -24,17 +32,26 @@ class ChronicleNode {
     this.lastHash = this.genesisHash;
     this.rotations = 0;
     this.state = 'RECORDING';
-    this.stats = { recorded: 0, verified: 0, rotations: 0, tamperDetections: 0, receiptsIssued: 0 };
+    this.stats = {
+      recorded: 0,
+      verified: 0,
+      rotations: 0,
+      tamperDetections: 0,
+      receiptsIssued: 0
+    };
     this._correlationId = `chronicle-${Date.now().toString(36)}`;
     this._initGenesisBlock();
   }
-
   _initGenesisBlock() {
     const genesis = {
       index: 0,
       timestamp: Date.now(),
       type: 'genesis',
-      data: { message: 'Chronicle initialized', version: '1.0.0', phi: PHI },
+      data: {
+        message: 'Chronicle initialized',
+        version: '1.0.0',
+        phi: PHI
+      },
       previousHash: '0'.repeat(64),
       hash: this.genesisHash,
       nonce: 0
@@ -48,11 +65,17 @@ class ChronicleNode {
    * @returns {object} — receipt with hash proof
    */
   record(event) {
-    const { type = 'action', actor = 'system', action, target, data = {}, severity = CSL.MEDIUM } = event;
+    const {
+      type = 'action',
+      actor = 'system',
+      action,
+      target,
+      data = {},
+      severity = CSL.MEDIUM
+    } = event;
     const index = this.chain.length;
     const timestamp = Date.now();
     const previousHash = this.lastHash;
-
     const block = {
       index,
       timestamp,
@@ -65,7 +88,6 @@ class ChronicleNode {
       previousHash,
       correlationId: `rec-${timestamp.toString(36)}-${index}`
     };
-
     block.hash = this._hashBlock(block);
     this.lastHash = block.hash;
     this.chain.push(block);
@@ -78,8 +100,13 @@ class ChronicleNode {
 
     // Generate receipt
     const receipt = this._generateReceipt(block);
-
-    this._log('info', 'event-recorded', { index, type, actor, action, hash: block.hash.slice(0, 16) });
+    this._log('info', 'event-recorded', {
+      index,
+      type,
+      actor,
+      action,
+      hash: block.hash.slice(0, 16)
+    });
     return receipt;
   }
 
@@ -90,28 +117,37 @@ class ChronicleNode {
   verify() {
     this.stats.verified++;
     const errors = [];
-
     for (let i = 1; i < this.chain.length; i++) {
       const block = this.chain[i];
       const prevBlock = this.chain[i - 1];
 
       // Verify hash chain linkage
       if (block.previousHash !== prevBlock.hash) {
-        errors.push({ index: i, error: 'broken-chain-link', expected: prevBlock.hash, found: block.previousHash });
+        errors.push({
+          index: i,
+          error: 'broken-chain-link',
+          expected: prevBlock.hash,
+          found: block.previousHash
+        });
       }
 
       // Verify block hash integrity
       const computedHash = this._hashBlock(block);
       if (block.hash !== computedHash) {
-        errors.push({ index: i, error: 'tampered-block', expected: computedHash, found: block.hash });
+        errors.push({
+          index: i,
+          error: 'tampered-block',
+          expected: computedHash,
+          found: block.hash
+        });
       }
     }
-
     if (errors.length > 0) {
       this.stats.tamperDetections += errors.length;
-      this._log('error', 'chain-integrity-violated', { errors: errors.length });
+      this._log('error', 'chain-integrity-violated', {
+        errors: errors.length
+      });
     }
-
     return {
       valid: errors.length === 0,
       chainLength: this.chain.length,
@@ -130,7 +166,14 @@ class ChronicleNode {
    * @returns {Array} — matching blocks
    */
   query(query) {
-    const { actor, action, type, since, until, limit = FIB[8] } = query;
+    const {
+      actor,
+      action,
+      type,
+      since,
+      until,
+      limit = FIB[8]
+    } = query;
     let results = [...this.chain];
     if (actor) results = results.filter(b => b.actor === actor);
     if (action) results = results.filter(b => b.action === action);
@@ -175,8 +218,17 @@ class ChronicleNode {
     this.stats.rotations++;
 
     // Record rotation event
-    this.record({ type: 'rotation', actor: 'CHRONICLE', action: 'chain-rotated', data: summary, severity: CSL.MEDIUM });
-    this._log('info', 'chain-rotated', { rotationIndex: this.rotations, retainedBlocks: retained.length });
+    this.record({
+      type: 'rotation',
+      actor: 'CHRONICLE',
+      action: 'chain-rotated',
+      data: summary,
+      severity: CSL.MEDIUM
+    });
+    this._log('info', 'chain-rotated', {
+      rotationIndex: this.rotations,
+      retainedBlocks: retained.length
+    });
   }
 
   /** SHA-256 hash */
@@ -189,16 +241,58 @@ class ChronicleNode {
     const content = `${block.index}:${block.timestamp}:${block.type}:${block.actor}:${block.action}:${JSON.stringify(block.data)}:${block.previousHash}`;
     return this._hash(content);
   }
-
   _calculateCoherence() {
-    const verifyResult = this.chain.length > 1 ? (() => { for (let i = 1; i < Math.min(this.chain.length, FIB[8]); i++) { if (this.chain[i].previousHash !== this.chain[i-1].hash) return 0.5; } return 1.0; })() : 1.0;
+    const verifyResult = this.chain.length > 1 ? (() => {
+      for (let i = 1; i < Math.min(this.chain.length, FIB[8]); i++) {
+        if (this.chain[i].previousHash !== this.chain[i - 1].hash) return 0.5;
+      }
+      return 1.0;
+    })() : 1.0;
     return verifyResult;
   }
-
-  async start() { this.state = 'RECORDING'; this._log('info', 'chronicle-started', { chainLength: this.chain.length, maxLength: this.maxChainLength }); return this; }
-  async stop() { this.state = 'STOPPED'; this._log('info', 'chronicle-stopped', { stats: this.stats, chainLength: this.chain.length }); }
-  health() { return { status: 'ok', nodeId: this.nodeId, ring: this.ring, state: this.state, coherence: this._calculateCoherence(), stats: { ...this.stats }, chainLength: this.chain.length, latestHash: this.lastHash ? this.lastHash.slice(0, 16) + '...' : null, rotations: this.rotations, timestamp: new Date().toISOString() }; }
-  _log(level, event, data = {}) { console.log(JSON.stringify({ level, event, node: this.nodeId, ring: this.ring, correlationId: this._correlationId, ...data, ts: new Date().toISOString() })); }
+  async start() {
+    this.state = 'RECORDING';
+    this._log('info', 'chronicle-started', {
+      chainLength: this.chain.length,
+      maxLength: this.maxChainLength
+    });
+    return this;
+  }
+  async stop() {
+    this.state = 'STOPPED';
+    this._log('info', 'chronicle-stopped', {
+      stats: this.stats,
+      chainLength: this.chain.length
+    });
+  }
+  health() {
+    return {
+      status: 'ok',
+      nodeId: this.nodeId,
+      ring: this.ring,
+      state: this.state,
+      coherence: this._calculateCoherence(),
+      stats: {
+        ...this.stats
+      },
+      chainLength: this.chain.length,
+      latestHash: this.lastHash ? this.lastHash.slice(0, 16) + '...' : null,
+      rotations: this.rotations,
+      timestamp: new Date().toISOString()
+    };
+  }
+  _log(level, event, data = {}) {
+    logger.info(JSON.stringify({
+      level,
+      event,
+      node: this.nodeId,
+      ring: this.ring,
+      correlationId: this._correlationId,
+      ...data,
+      ts: new Date().toISOString()
+    }));
+  }
 }
-
-module.exports = { ChronicleNode };
+module.exports = {
+  ChronicleNode
+};

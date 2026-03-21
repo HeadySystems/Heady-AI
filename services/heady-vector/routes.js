@@ -1,12 +1,15 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyVector Express Router
  * All routes are mounted at the Express app level.
  * The router receives a fully-initialized HeadyVector instance.
  */
-
-const { Router } = require('express');
+const {
+  Router
+} = require('express');
 const config = require('./config');
 
 // ─── Error handling helper ────────────────────────────────────────────────────
@@ -30,7 +33,10 @@ function asyncHandler(fn) {
  * @param {object} [details]
  */
 function sendError(res, status, message, details) {
-  const body = { error: message, status };
+  const body = {
+    error: message,
+    status
+  };
   if (details) body.details = details;
   return res.status(status).json(body);
 }
@@ -74,7 +80,9 @@ function createRouter(hv) {
    */
   router.get('/health/live', asyncHandler(async (req, res) => {
     const alive = await hv.health.isAlive();
-    return res.status(alive ? 200 : 503).json({ alive });
+    return res.status(alive ? 200 : 503).json({
+      alive
+    });
   }));
 
   /**
@@ -82,7 +90,9 @@ function createRouter(hv) {
    */
   router.get('/health/ready', asyncHandler(async (req, res) => {
     const ready = await hv.health.isReady();
-    return res.status(ready ? 200 : 503).json({ ready });
+    return res.status(ready ? 200 : 503).json({
+      ready
+    });
   }));
 
   // ── Metrics ────────────────────────────────────────────────────────────────
@@ -95,7 +105,7 @@ function createRouter(hv) {
     return res.json({
       service: config.serviceName,
       version: config.version,
-      ...m,
+      ...m
     });
   });
 
@@ -109,9 +119,10 @@ function createRouter(hv) {
   router.post('/collections', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['name']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const collection = await hv.createCollection(req.body);
-    return res.status(201).json({ collection });
+    return res.status(201).json({
+      collection
+    });
   }));
 
   /**
@@ -121,7 +132,10 @@ function createRouter(hv) {
   router.get('/collections', asyncHandler(async (req, res) => {
     const limit = Math.min(parseInt(req.query.limit, 10) || 100, 1000);
     const offset = parseInt(req.query.offset, 10) || 0;
-    const result = await hv.listCollections({ limit, offset });
+    const result = await hv.listCollections({
+      limit,
+      offset
+    });
     return res.json(result);
   }));
 
@@ -131,7 +145,9 @@ function createRouter(hv) {
   router.get('/collections/:name', asyncHandler(async (req, res) => {
     const collection = await hv.getCollection(req.params.name);
     if (!collection) return sendError(res, 404, `Collection "${req.params.name}" not found`);
-    return res.json({ collection });
+    return res.json({
+      collection
+    });
   }));
 
   /**
@@ -148,7 +164,9 @@ function createRouter(hv) {
    */
   router.patch('/collections/:name', asyncHandler(async (req, res) => {
     const collection = await hv.collections.update(req.params.name, req.body);
-    return res.json({ collection });
+    return res.json({
+      collection
+    });
   }));
 
   /**
@@ -168,11 +186,18 @@ function createRouter(hv) {
    *                  namespace?, batchSize? }
    */
   router.post('/vectors/upsert', asyncHandler(async (req, res) => {
-    const { collection, vectors, vector, id, namespace, content, metadata, batchSize } = req.body;
-
+    const {
+      collection,
+      vectors,
+      vector,
+      id,
+      namespace,
+      content,
+      metadata,
+      batchSize
+    } = req.body;
     const missing = requireFields(req.body, ['collection']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     if (vectors && Array.isArray(vectors)) {
       // Batch upsert
       if (vectors.length === 0) {
@@ -181,8 +206,10 @@ function createRouter(hv) {
       if (vectors.length > 10000) {
         return sendError(res, 400, 'vectors array exceeds maximum of 10000 per request');
       }
-
-      const result = await hv.upsertBatch(collection, vectors, { batchSize, namespace });
+      const result = await hv.upsertBatch(collection, vectors, {
+        batchSize,
+        namespace
+      });
       return res.json(result);
     } else if (vector !== undefined) {
       // Single upsert
@@ -192,9 +219,11 @@ function createRouter(hv) {
         id,
         vector,
         content,
-        metadata: metadata || {},
+        metadata: metadata || {}
       });
-      return res.status(201).json({ vector: record });
+      return res.status(201).json({
+        vector: record
+      });
     } else {
       return sendError(res, 400, 'Request must include either "vector" (single) or "vectors" (batch)');
     }
@@ -206,7 +235,9 @@ function createRouter(hv) {
   router.get('/vectors/:id', asyncHandler(async (req, res) => {
     const vector = await hv.getVector(req.params.id);
     if (!vector) return sendError(res, 404, `Vector "${req.params.id}" not found`);
-    return res.json({ vector });
+    return res.json({
+      vector
+    });
   }));
 
   /**
@@ -225,8 +256,11 @@ function createRouter(hv) {
   router.post('/vectors/delete-by-filter', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['collection', 'filter']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
-    const { collection, filter, namespace } = req.body;
+    const {
+      collection,
+      filter,
+      namespace
+    } = req.body;
     const result = await hv.deleteByFilter(collection, filter, namespace);
     return res.json(result);
   }));
@@ -252,7 +286,6 @@ function createRouter(hv) {
   router.post('/vectors/search', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['collection']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const {
       collection,
       vector,
@@ -265,42 +298,58 @@ function createRouter(hv) {
       includeVector,
       efSearch,
       offset,
-      useRankCd,
+      useRankCd
     } = req.body;
-
     const topKNum = Math.min(parseInt(topK, 10) || config.search.defaultTopK, config.search.maxTopK);
-
     let result;
     switch (type) {
-      case 'semantic': {
-        if (!vector) return sendError(res, 400, 'Semantic search requires "vector"');
-        result = await hv.semanticSearch({
-          collection, vector, topK: topKNum, namespace, filter,
-          includeVector, efSearch, offset: offset || 0,
-        });
-        break;
-      }
-      case 'bm25': {
-        if (!query) return sendError(res, 400, 'BM25 search requires "query"');
-        result = await hv.bm25Search({
-          collection, query, topK: topKNum, namespace, filter,
-          useRankCd, offset: offset || 0,
-        });
-        break;
-      }
-      case 'hybrid': {
-        result = await hv.hybridSearch({
-          collection, vector, query,
-          alpha: alpha !== undefined ? parseFloat(alpha) : config.search.defaultAlpha,
-          topK: topKNum, namespace, filter, includeVector,
-          offset: offset || 0,
-        });
-        break;
-      }
+      case 'semantic':
+        {
+          if (!vector) return sendError(res, 400, 'Semantic search requires "vector"');
+          result = await hv.semanticSearch({
+            collection,
+            vector,
+            topK: topKNum,
+            namespace,
+            filter,
+            includeVector,
+            efSearch,
+            offset: offset || 0
+          });
+          break;
+        }
+      case 'bm25':
+        {
+          if (!query) return sendError(res, 400, 'BM25 search requires "query"');
+          result = await hv.bm25Search({
+            collection,
+            query,
+            topK: topKNum,
+            namespace,
+            filter,
+            useRankCd,
+            offset: offset || 0
+          });
+          break;
+        }
+      case 'hybrid':
+        {
+          result = await hv.hybridSearch({
+            collection,
+            vector,
+            query,
+            alpha: alpha !== undefined ? parseFloat(alpha) : config.search.defaultAlpha,
+            topK: topKNum,
+            namespace,
+            filter,
+            includeVector,
+            offset: offset || 0
+          });
+          break;
+        }
       default:
         return sendError(res, 400, `Unknown search type "${type}". Use: semantic, bm25, hybrid`);
     }
-
     return res.json(result);
   }));
 
@@ -311,18 +360,24 @@ function createRouter(hv) {
   router.post('/vectors/search/mmr', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['collection', 'vector']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const {
-      collection, vector, topK, lambda, namespace, filter, candidateMultiplier,
+      collection,
+      vector,
+      topK,
+      lambda,
+      namespace,
+      filter,
+      candidateMultiplier
     } = req.body;
-
     const result = await hv.mmrSearch({
-      collection, vector,
+      collection,
+      vector,
       topK: Math.min(parseInt(topK, 10) || config.search.defaultTopK, config.search.maxTopK),
       lambda: lambda !== undefined ? parseFloat(lambda) : config.search.mmrLambda,
-      namespace, filter, candidateMultiplier,
+      namespace,
+      filter,
+      candidateMultiplier
     });
-
     return res.json(result);
   }));
 
@@ -335,9 +390,10 @@ function createRouter(hv) {
   router.post('/graph/nodes', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['label']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const node = await hv.addNode(req.body);
-    return res.status(201).json({ node });
+    return res.status(201).json({
+      node
+    });
   }));
 
   /**
@@ -346,7 +402,9 @@ function createRouter(hv) {
   router.get('/graph/nodes/:id', asyncHandler(async (req, res) => {
     const node = await hv.graph.getNode(req.params.id);
     if (!node) return sendError(res, 404, `Node "${req.params.id}" not found`);
-    return res.json({ node });
+    return res.json({
+      node
+    });
   }));
 
   /**
@@ -363,13 +421,20 @@ function createRouter(hv) {
    * Query: ?direction=outgoing&edgeTypes=references,contains&minWeight=0.1
    */
   router.get('/graph/nodes/:id/edges', asyncHandler(async (req, res) => {
-    const { direction, edgeTypes, minWeight } = req.query;
+    const {
+      direction,
+      edgeTypes,
+      minWeight
+    } = req.query;
     const edges = await hv.graph.getEdges(req.params.id, {
       direction: direction || 'outgoing',
       edgeTypes: edgeTypes ? edgeTypes.split(',') : undefined,
-      minWeight: minWeight ? parseFloat(minWeight) : 0,
+      minWeight: minWeight ? parseFloat(minWeight) : 0
     });
-    return res.json({ edges, count: edges.length });
+    return res.json({
+      edges,
+      count: edges.length
+    });
   }));
 
   /**
@@ -379,9 +444,10 @@ function createRouter(hv) {
   router.post('/graph/edges', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['sourceId', 'targetId']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const edge = await hv.addEdge(req.body);
-    return res.status(201).json({ edge });
+    return res.status(201).json({
+      edge
+    });
   }));
 
   /**
@@ -391,11 +457,9 @@ function createRouter(hv) {
   router.post('/graph/traverse', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['seedNodeIds']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     if (!Array.isArray(req.body.seedNodeIds) || req.body.seedNodeIds.length === 0) {
       return sendError(res, 400, 'seedNodeIds must be a non-empty array');
     }
-
     const result = await hv.traverse(req.body);
     return res.json(result);
   }));
@@ -408,12 +472,14 @@ function createRouter(hv) {
   router.post('/graph/rag', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['collection']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
-    const { collection, vector, query } = req.body;
+    const {
+      collection,
+      vector,
+      query
+    } = req.body;
     if (!vector && !query) {
       return sendError(res, 400, 'Graph RAG requires either "vector" or "query"');
     }
-
     const result = await hv.graphRag(req.body);
     return res.json(result);
   }));
@@ -425,7 +491,6 @@ function createRouter(hv) {
   router.post('/graph/paths', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['sourceId', 'targetId']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const result = await hv.graph.findPaths(req.body);
     return res.json(result);
   }));
@@ -453,12 +518,17 @@ function createRouter(hv) {
    * Query: ?collectionId=...&limit=500&nodeTypes=entity,concept&minEdgeWeight=0.1
    */
   router.get('/graph/visualize', asyncHandler(async (req, res) => {
-    const { collectionId, limit, nodeTypes, minEdgeWeight } = req.query;
+    const {
+      collectionId,
+      limit,
+      nodeTypes,
+      minEdgeWeight
+    } = req.query;
     const result = await hv.graph.exportVisualization({
       collectionId: collectionId || undefined,
       limit: limit ? parseInt(limit, 10) : 500,
       nodeTypes: nodeTypes ? nodeTypes.split(',') : undefined,
-      minEdgeWeight: minEdgeWeight ? parseFloat(minEdgeWeight) : 0.1,
+      minEdgeWeight: minEdgeWeight ? parseFloat(minEdgeWeight) : 0.1
     });
     return res.json(result);
   }));
@@ -472,10 +542,12 @@ function createRouter(hv) {
   router.post('/indexes/rebuild', asyncHandler(async (req, res) => {
     const missing = requireFields(req.body, ['collectionName']);
     if (missing) return sendError(res, 400, `Missing required field: ${missing}`);
-
     const collection = await hv.collections.require(req.body.collectionName);
     await hv.indexes.rebuildIndex(collection);
-    return res.json({ rebuilt: true, collection: collection.name });
+    return res.json({
+      rebuilt: true,
+      collection: collection.name
+    });
   }));
 
   /**
@@ -483,7 +555,9 @@ function createRouter(hv) {
    */
   router.post('/indexes/optimize', asyncHandler(async (req, res) => {
     await hv.indexes.optimize();
-    return res.json({ optimized: true });
+    return res.json({
+      optimized: true
+    });
   }));
 
   /**
@@ -501,7 +575,9 @@ function createRouter(hv) {
    */
   router.get('/migrations/status', asyncHandler(async (req, res) => {
     const status = await hv.migrations.getStatus();
-    return res.json({ migrations: status });
+    return res.json({
+      migrations: status
+    });
   }));
 
   // ── 404 fallthrough ────────────────────────────────────────────────────────
@@ -512,24 +588,19 @@ function createRouter(hv) {
   // ── Error middleware ───────────────────────────────────────────────────────
   // eslint-disable-next-line no-unused-vars
   router.use((err, req, res, next) => {
-    const isUserError =
-      err.message.includes('not found') ||
-      err.message.includes('already exists') ||
-      err.message.includes('required') ||
-      err.message.includes('invalid') ||
-      err.message.includes('mismatch');
-
+    const isUserError = err.message.includes('not found') || err.message.includes('already exists') || err.message.includes('required') || err.message.includes('invalid') || err.message.includes('mismatch');
     const statusCode = isUserError ? 400 : 500;
-    console.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
-
+    logger.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
     return sendError(res, statusCode, err.message, {
       path: req.path,
       method: req.method,
-      ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      ...(config.nodeEnv === 'development' ? {
+        stack: err.stack
+      } : {})
     });
   });
-
   return router;
 }
-
-module.exports = { createRouter };
+module.exports = {
+  createRouter
+};

@@ -7,8 +7,8 @@
  */
 
 'use strict';
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 import { PHI, PSI, fib, phiBackoff, CSL_THRESHOLDS, PHI_TIMING } from '../../shared/phi-math.js';
 import { cslAND } from '../../shared/csl-engine.js';
 
@@ -20,17 +20,15 @@ const DRIFT_THRESHOLD = CSL_THRESHOLDS.MEDIUM;
 
 /** Max quarantine duration — fib(11) × 1000 = 89s */
 const MAX_QUARANTINE_MS = fib(11) * 1000;
-
-/** Max respawn attempts — fib(5) = 5 */
 const MAX_RESPAWN_ATTEMPTS = fib(5);
 
 /** Service states */
 const SERVICE_STATE = Object.freeze({
-  HEALTHY:      'HEALTHY',
-  DEGRADED:     'DEGRADED',
-  QUARANTINED:  'QUARANTINED',
-  RECOVERING:   'RECOVERING',
-  DEAD:         'DEAD',
+  HEALTHY: 'HEALTHY',
+  DEGRADED: 'DEGRADED',
+  QUARANTINED: 'QUARANTINED',
+  RECOVERING: 'RECOVERING',
+  DEAD: 'DEAD'
 });
 
 /**
@@ -61,13 +59,22 @@ export class SelfHealingMesh {
    * @param {Function} [options.embedFn] - Async function to embed service state
    * @param {Object} [options.telemetry]
    */
-  constructor({ respawnFn, embedFn = null, telemetry = null }) {
-    /** @private */ this._respawnFn = respawnFn;
-    /** @private */ this._embedFn = embedFn;
-    /** @private */ this._telemetry = telemetry;
-    /** @private */ this._services = new Map();
-    /** @private */ this._healthCheckTimer = null;
-    /** @private */ this._running = false;
+  constructor({
+    respawnFn,
+    embedFn = null,
+    telemetry = null
+  }) {
+    /** @private */this._respawnFn = respawnFn;
+    /** @private */
+    this._embedFn = embedFn;
+    /** @private */
+    this._telemetry = telemetry;
+    /** @private */
+    this._services = new Map();
+    /** @private */
+    this._healthCheckTimer = null;
+    /** @private */
+    this._running = false;
   }
 
   /**
@@ -77,7 +84,9 @@ export class SelfHealingMesh {
    */
   register(serviceId, config = {}) {
     this._services.set(serviceId, new ServiceRecord(serviceId, config));
-    this._emit('service.registered', { serviceId });
+    this._emit('service.registered', {
+      serviceId
+    });
   }
 
   /**
@@ -86,7 +95,9 @@ export class SelfHealingMesh {
    */
   deregister(serviceId) {
     this._services.delete(serviceId);
-    this._emit('service.deregistered', { serviceId });
+    this._emit('service.deregistered', {
+      serviceId
+    });
   }
 
   /**
@@ -97,7 +108,6 @@ export class SelfHealingMesh {
   heartbeat(serviceId, healthData = {}) {
     const record = this._services.get(serviceId);
     if (!record) return;
-
     record.lastHeartbeat = Date.now();
     if (typeof healthData.coherenceScore === 'number') {
       record.coherenceScore = healthData.coherenceScore;
@@ -109,7 +119,9 @@ export class SelfHealingMesh {
     // Auto-recover if was degraded but now healthy
     if (record.state === SERVICE_STATE.DEGRADED && record.coherenceScore >= DRIFT_THRESHOLD) {
       record.state = SERVICE_STATE.HEALTHY;
-      this._emit('service.recovered', { serviceId });
+      this._emit('service.recovered', {
+        serviceId
+      });
     }
   }
 
@@ -120,7 +132,9 @@ export class SelfHealingMesh {
     if (this._running) return;
     this._running = true;
     this._healthCheckTimer = setInterval(() => this._checkAll(), HEALTH_CHECK_INTERVAL);
-    this._emit('mesh.started', { services: this._services.size });
+    this._emit('mesh.started', {
+      services: this._services.size
+    });
   }
 
   /**
@@ -140,20 +154,28 @@ export class SelfHealingMesh {
    * @returns {Object}
    */
   getStatus() {
-    const stats = { healthy: 0, degraded: 0, quarantined: 0, recovering: 0, dead: 0 };
+    const stats = {
+      healthy: 0,
+      degraded: 0,
+      quarantined: 0,
+      recovering: 0,
+      dead: 0
+    };
     const services = {};
-
     for (const [id, record] of this._services) {
       stats[record.state.toLowerCase()]++;
       services[id] = {
         state: record.state,
         coherenceScore: record.coherenceScore,
         lastHeartbeat: record.lastHeartbeat,
-        respawnAttempts: record.respawnAttempts,
+        respawnAttempts: record.respawnAttempts
       };
     }
-
-    return { stats, services, running: this._running };
+    return {
+      stats,
+      services,
+      running: this._running
+    };
   }
 
   // ─── PRIVATE ───────────────────────────────────────────────────────────────
@@ -164,7 +186,6 @@ export class SelfHealingMesh {
    */
   async _checkAll() {
     const now = Date.now();
-
     for (const [id, record] of this._services) {
       // Check heartbeat freshness
       const heartbeatAge = now - record.lastHeartbeat;
@@ -172,13 +193,19 @@ export class SelfHealingMesh {
 
       if (heartbeatAge > heartbeatTimeout && record.state === SERVICE_STATE.HEALTHY) {
         record.state = SERVICE_STATE.DEGRADED;
-        this._emit('service.degraded', { serviceId: id, reason: 'heartbeat_timeout' });
+        this._emit('service.degraded', {
+          serviceId: id,
+          reason: 'heartbeat_timeout'
+        });
       }
 
       // Check coherence drift
       if (record.coherenceScore < DRIFT_THRESHOLD && record.state === SERVICE_STATE.HEALTHY) {
         record.state = SERVICE_STATE.DEGRADED;
-        this._emit('service.drift', { serviceId: id, coherenceScore: record.coherenceScore });
+        this._emit('service.drift', {
+          serviceId: id,
+          coherenceScore: record.coherenceScore
+        });
       }
 
       // Quarantine degraded services after sustained failure
@@ -206,47 +233,55 @@ export class SelfHealingMesh {
     record.incidents.push({
       type: 'quarantine',
       timestamp: Date.now(),
-      coherenceScore: record.coherenceScore,
+      coherenceScore: record.coherenceScore
     });
-    this._emit('service.quarantined', { serviceId: record.id });
+    this._emit('service.quarantined', {
+      serviceId: record.id
+    });
   }
-
-  /**
-   * Attempt to respawn a quarantined service.
-   * @private
-   */
   async _attemptRespawn(record) {
     if (record.respawnAttempts >= MAX_RESPAWN_ATTEMPTS) {
       record.state = SERVICE_STATE.DEAD;
-      this._emit('service.dead', { serviceId: record.id, attempts: record.respawnAttempts });
+      this._emit('service.dead', {
+        serviceId: record.id,
+        attempts: record.respawnAttempts
+      });
       return;
     }
-
     record.state = SERVICE_STATE.RECOVERING;
     record.respawnAttempts++;
-
     try {
       await this._respawnFn(record.id, record.config);
       record.state = SERVICE_STATE.HEALTHY;
       record.coherenceScore = 1.0;
       record.lastHeartbeat = Date.now();
       record.quarantinedAt = null;
-      this._emit('service.respawned', { serviceId: record.id, attempt: record.respawnAttempts });
-    } catch (err) { // Back to quarantine with phi-backoff
+      this._emit('service.respawned', {
+        serviceId: record.id,
+        attempt: record.respawnAttempts
+      });
+    } catch (err) {
+      // Back to quarantine with phi-backoff
       record.state = SERVICE_STATE.QUARANTINED;
       record.quarantinedAt = Date.now();
       const backoff = phiBackoff(record.respawnAttempts);
-      this._emit('service.respawn.failed', { serviceId: record.id, error: err.message, retryMs: backoff });
+      this._emit('service.respawn.failed', {
+        serviceId: record.id,
+        error: err.message,
+        retryMs: backoff
+      });
     }
   }
 
   /** @private */
   _emit(event, data) {
     if (this._telemetry) {
-      this._telemetry.emit(event, { source: 'SelfHealingMesh', ...data });
+      this._telemetry.emit(event, {
+        source: 'SelfHealingMesh',
+        ...data
+      });
     }
   }
 }
-
 export { SERVICE_STATE, DRIFT_THRESHOLD, HEALTH_CHECK_INTERVAL };
 export default SelfHealingMesh;

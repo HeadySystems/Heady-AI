@@ -1,31 +1,8 @@
-/**
- * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- *
- * ═══ Dynamic Site Template Engine ═══════════════════════════════════════
- *
- * Unifies ALL template engines into a single dynamic rendering pipeline:
- *   1. template-bee.js         → Auth gate, nav, branding data
- *   2. site-projection-renderer.js → CSS design system + HTML generation
- *   3. headybee-ui-templates.js    → Widget layouts, palettes, typography
- *   4. a2ui.js                     → Agent-to-UI protocol streaming
- *   5. generative-engine.js        → AI component generation
- *
- * Usage:
- *   const engine = require('./dynamic-template-engine');
- *   const html = engine.renderDynamic('headyme.com', { withAuth: true });
- *   engine.projectAll();                  // re-project all 9 sites
- *   engine.renderWidget('command-center'); // render a widget layout
- *
- * @module dynamic-template-engine
- */
-
 'use strict';
-const logger = require('../utils/logger') || console;
 
+const logger = require('../utils/logger') || console;
 const path = require('path');
 const fs = require('fs');
-
-// ── Import all template engines ─────────────────────────────────────
 const templateBee = require('../bees/template-bee');
 const siteRenderer = require('../projection/site-projection-renderer');
 
@@ -42,16 +19,9 @@ function loadRegistry() {
 }
 
 // ── Auth Gate Injection ─────────────────────────────────────────────
-/**
- * Injects template-bee auth gate + nav into rendered HTML
- * @param {string} html - Rendered HTML from site-projection-renderer
- * @param {object} siteData - Template bee data (authGate, nav, etc.)
- * @param {object} opts - Options
- * @returns {string} HTML with auth gate + nav injected
- */
+
 function injectAuthGate(html, siteData, opts = {}) {
   if (!siteData || !siteData.authGate) return html;
-
   const authModal = `
   <!-- ══ Auth Gate (injected by dynamic-template-engine) ══ -->
   <div id="heady-auth-gate" class="auth-gate" style="display:none">
@@ -82,11 +52,7 @@ function injectAuthGate(html, siteData, opts = {}) {
 function injectCrossSiteNav(html) {
   const sites = templateBee.HEADY_SITES || [];
   if (!sites.length) return html;
-
-  const navLinks = sites.map(([name, url]) =>
-    `<a href="${url}" class="csn-link" target="_blank">${name}</a>`
-  ).join('');
-
+  const navLinks = sites.map(([name, url]) => `<a href="${url}" class="csn-link" target="_blank">${name}</a>`).join('');
   const crossNav = `
   <!-- ══ Cross-Site Nav (injected by dynamic-template-engine) ══ -->
   <div class="cross-site-nav" id="crossSiteNav">
@@ -105,7 +71,6 @@ function injectCrossSiteNav(html) {
     .csn-link { display:block; padding:8px 12px; color:#94a3b8; text-decoration:none; font-size:12px; border-radius:6px; transition:all .15s; }
     .csn-link:hover { background:rgba(0,212,170,.08); color:#00d4aa; }
   </style>`;
-
   return html.replace('</body>', crossNav + '\n</body>');
 }
 
@@ -139,7 +104,6 @@ function injectBuddyWidget(html) {
     .buddy-input { width:100%; padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:#e2e8f0; font-size:13px; outline:none; font-family:'Inter',system-ui,sans-serif; }
     .buddy-input:focus { border-color:rgba(0,212,170,.4); }
   </style>`;
-
   return html.replace('</body>', widget + '\n</body>');
 }
 
@@ -168,8 +132,11 @@ function domainToSlug(domain, config) {
  * @returns {string|null} Enhanced HTML page, or null if no source file found
  */
 function enhanceSite(domain, opts = {}) {
-  const { withAuth = true, withNav = true, withBuddy = true } = opts;
-
+  const {
+    withAuth = true,
+    withNav = true,
+    withBuddy = true
+  } = opts;
   const registry = loadRegistry();
   const siteConfig = registry[domain];
   if (!siteConfig) {
@@ -184,7 +151,6 @@ function enhanceSite(domain, opts = {}) {
     logger.error(`[dynamic-template-engine] No existing site file for: ${domain} (${filePath})`);
     return null;
   }
-
   let html = fs.readFileSync(filePath, 'utf-8');
 
   // Only inject features if they aren't already present
@@ -192,15 +158,12 @@ function enhanceSite(domain, opts = {}) {
     const siteData = templateBee.renderSite(domain);
     html = injectAuthGate(html, siteData, opts);
   }
-
   if (withNav && !html.includes('cross-site-nav')) {
     html = injectCrossSiteNav(html);
   }
-
   if (withBuddy && !html.includes('heady-buddy-fab')) {
     html = injectBuddyWidget(html);
   }
-
   return html;
 }
 
@@ -213,21 +176,21 @@ function enhanceSite(domain, opts = {}) {
  * @returns {string} Full HTML page (freshly generated)
  */
 function renderFromScratch(domain, opts = {}) {
-  const { withAuth = true, withNav = true, withBuddy = true } = opts;
-
+  const {
+    withAuth = true,
+    withNav = true,
+    withBuddy = true
+  } = opts;
   const registry = loadRegistry();
   const siteConfig = registry[domain];
   if (!siteConfig) return null;
-
   let html = siteRenderer.renderSiteToHTML(siteConfig, domain);
-
   if (withAuth) {
     const siteData = templateBee.renderSite(domain);
     html = injectAuthGate(html, siteData, opts);
   }
   if (withNav) html = injectCrossSiteNav(html);
   if (withBuddy) html = injectBuddyWidget(html);
-
   return html;
 }
 
@@ -240,12 +203,13 @@ function enhanceAll(opts = {}) {
   const enhanced = [];
   const errors = [];
   const bytes = {};
-
   for (const [domain, config] of Object.entries(registry)) {
     try {
       const html = enhanceSite(domain, opts);
-      if (!html) { errors.push(domain); continue; }
-
+      if (!html) {
+        errors.push(domain);
+        continue;
+      }
       const slug = domainToSlug(domain, config);
       const dir = path.join(SITES_DIR, slug);
       const outPath = path.join(dir, 'index.html');
@@ -256,20 +220,20 @@ function enhanceAll(opts = {}) {
       errors.push(`${domain}: ${err.message}`);
     }
   }
-
-  return { enhanced, errors, bytes };
+  return {
+    enhanced,
+    errors,
+    bytes
+  };
 }
 
 // ── CLI Entry Point ─────────────────────────────────────────────────
 if (require.main === module) {
   const mode = process.argv.includes('--scratch') ? 'scratch' : 'enhance';
-
   logger.info('═══ Dynamic Template Engine ═══\n');
-
   if (mode === 'enhance') {
     logger.info('Enhancing all 9 sites (preserving original designs)...\n');
     const result = enhanceAll();
-
     logger.info(`✅ Enhanced: ${result.enhanced.length} sites`);
     result.enhanced.forEach(d => {
       const kb = (result.bytes[d] / 1024).toFixed(1);
@@ -287,14 +251,12 @@ if (require.main === module) {
       if (html) logger.info(`   ${domain} → ${(Buffer.byteLength(html) / 1024).toFixed(1)} KB`);
     }
   }
-
   logger.info('\nFeatures injected:');
   logger.info('   ✓ Auth gate (Google/GitHub/Discord)');
   logger.info('   ✓ Cross-site navigation (Heady™ Network)');
   logger.info('   ✓ HeadyBuddy widget');
   logger.info(`\n   φ = ${PHI}`);
 }
-
 module.exports = {
   enhanceSite,
   enhanceAll,
@@ -302,5 +264,5 @@ module.exports = {
   injectAuthGate,
   injectCrossSiteNav,
   injectBuddyWidget,
-  loadRegistry,
+  loadRegistry
 };

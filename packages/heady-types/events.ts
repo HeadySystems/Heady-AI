@@ -173,10 +173,6 @@ export interface EventBusConfig {
    * NATS servers
    */
   servers: string[];
-
-  /**
-   * Max reconnect attempts
-   */
   maxReconnectAttempts?: number;
 
   /**
@@ -208,9 +204,7 @@ export interface EventBusConfig {
 /**
  * Event handler function
  */
-export type EventHandler<T extends Event = Event> = (
-  event: T
-) => Promise<void> | void;
+export type EventHandler<T extends Event = Event> = (event: T) => Promise<void> | void;
 
 /**
  * Event filter
@@ -313,10 +307,6 @@ export interface DeadLetterMessage {
    * Reason for DLQ placement
    */
   reason: 'max_deliveries' | 'nack' | 'timeout' | 'error';
-
-  /**
-   * Delivery attempts
-   */
   attempts: number;
 
   /**
@@ -452,9 +442,6 @@ export interface EventStats {
  * Event retry policy
  */
 export interface RetryPolicy {
-  /**
-   * Max retry attempts
-   */
   maxAttempts: number;
 
   /**

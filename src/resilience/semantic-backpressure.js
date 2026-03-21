@@ -24,7 +24,6 @@
 
 const EventEmitter = require('events');
 const phiMath = require('../../shared/phi-math.js');
-
 const {
   PHI,
   PSI,
@@ -37,7 +36,7 @@ const {
   PRESSURE_LEVELS,
   ALERT_THRESHOLDS,
   cosineSimilarity,
-  cslGate,
+  cslGate
 } = phiMath;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -114,12 +113,6 @@ const SRE_WINDOW_MS = 120000;
  * @constant {number}
  */
 const SRE_K = 2.0;
-
-/**
- * Base delay for circuit-breaker half-open recovery probing (ms).
- * Uses phi-timing: 1618 ms (PHI × 1000, attempt 1 base).
- * @constant {number}
- */
 const CB_RECOVERY_BASE_MS = Math.round(PHI * 1000); // 1618
 
 /**
@@ -128,10 +121,13 @@ const CB_RECOVERY_BASE_MS = Math.round(PHI * 1000); // 1618
  * @constant {{ CRITICAL_PLUS: number, CRITICAL: number, SHEDDABLE_PLUS: number, SHEDDABLE: number }}
  */
 const CRITICALITY_WEIGHTS = {
-  CRITICAL_PLUS:  fib(7), // 13
-  CRITICAL:       fib(6), // 8
-  SHEDDABLE_PLUS: fib(5), // 5
-  SHEDDABLE:      fib(3), // 2
+  CRITICAL_PLUS: fib(7),
+  // 13
+  CRITICAL: fib(6),
+  // 8
+  SHEDDABLE_PLUS: fib(5),
+  // 5
+  SHEDDABLE: fib(3) // 2
 };
 
 /**
@@ -145,9 +141,9 @@ const CRITICALITY_MAX = CRITICALITY_WEIGHTS.CRITICAL_PLUS; // 13
  * @enum {string}
  */
 const CB_STATE = {
-  CLOSED:    'CLOSED',
-  OPEN:      'OPEN',
-  HALF_OPEN: 'HALF_OPEN',
+  CLOSED: 'CLOSED',
+  OPEN: 'OPEN',
+  HALF_OPEN: 'HALF_OPEN'
 };
 
 /**
@@ -155,10 +151,10 @@ const CB_STATE = {
  * @enum {string}
  */
 const CRITICALITY_TIER = {
-  CRITICAL_PLUS:  'CRITICAL_PLUS',
-  CRITICAL:       'CRITICAL',
+  CRITICAL_PLUS: 'CRITICAL_PLUS',
+  CRITICAL: 'CRITICAL',
   SHEDDABLE_PLUS: 'SHEDDABLE_PLUS',
-  SHEDDABLE:      'SHEDDABLE',
+  SHEDDABLE: 'SHEDDABLE'
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -170,12 +166,12 @@ const CRITICALITY_TIER = {
  * @enum {string}
  */
 const REJECTION_REASON = {
-  DEDUP:            'DEDUP',
-  THROTTLED:        'THROTTLED',
-  CIRCUIT_OPEN:     'CIRCUIT_OPEN',
-  QUEUE_FULL:       'QUEUE_FULL',
-  LOAD_SHED:        'LOAD_SHED',
-  INVALID_TASK:     'INVALID_TASK',
+  DEDUP: 'DEDUP',
+  THROTTLED: 'THROTTLED',
+  CIRCUIT_OPEN: 'CIRCUIT_OPEN',
+  QUEUE_FULL: 'QUEUE_FULL',
+  LOAD_SHED: 'LOAD_SHED',
+  INVALID_TASK: 'INVALID_TASK'
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -225,7 +221,7 @@ function depthToPressure(depth) {
 function ratioToPressureLevel(ratio) {
   // Use phi-math PRESSURE_LEVELS boundaries
   if (ratio >= PRESSURE_LEVELS.CRITICAL[0]) return 'CRITICAL';
-  if (ratio >= PRESSURE_LEVELS.HIGH[0])     return 'HIGH';
+  if (ratio >= PRESSURE_LEVELS.HIGH[0]) return 'HIGH';
   if (ratio >= PRESSURE_LEVELS.ELEVATED[0]) return 'ELEVATED';
   return 'NOMINAL';
 }
@@ -264,7 +260,6 @@ function ratioToPressureLevel(ratio) {
  * if (result.admitted) { ... }
  */
 class SemanticBackpressure extends EventEmitter {
-
   // ───────────────────────────────────────────────────────────────────────────
   //  CONSTRUCTOR
   // ───────────────────────────────────────────────────────────────────────────
@@ -293,19 +288,19 @@ class SemanticBackpressure extends EventEmitter {
     this.dedupThreshold = config.dedupThreshold || DEDUP_THRESHOLD;
 
     /** @type {number} Maximum allowed queue depth. */
-    this.queueMaxDepth  = config.queueMaxDepth  || QUEUE_MAX_DEPTH;
+    this.queueMaxDepth = config.queueMaxDepth || QUEUE_MAX_DEPTH;
 
     /** @type {number} SRE rolling window in milliseconds. */
-    this.sreWindowMs    = config.sreWindowMs    || SRE_WINDOW_MS;
+    this.sreWindowMs = config.sreWindowMs || SRE_WINDOW_MS;
 
     /** @type {number} SRE K-factor for throttle formula. */
-    this.sreK           = config.sreK           || SRE_K;
+    this.sreK = config.sreK || SRE_K;
 
     /** @type {number} Consecutive failure count that opens the circuit breaker. */
     this.cbFailureThreshold = config.cbFailureThreshold || CB_FAILURE_THRESHOLD;
 
     /** @type {number} Number of probe requests to allow in HALF_OPEN state. */
-    this.cbHalfOpenProbes   = config.cbHalfOpenProbes   || CB_HALF_OPEN_PROBES;
+    this.cbHalfOpenProbes = config.cbHalfOpenProbes || CB_HALF_OPEN_PROBES;
 
     /** @type {boolean} Auto-shed tasks on pressure escalation. */
     this.autoShed = config.autoShed !== false;
@@ -338,10 +333,10 @@ class SemanticBackpressure extends EventEmitter {
      * @type {{ state: string, failures: number, lastOpenedAt: number|null, probesSent: number }}
      */
     this._circuitBreaker = {
-      state:        CB_STATE.CLOSED,
-      failures:     0,
+      state: CB_STATE.CLOSED,
+      failures: 0,
       lastOpenedAt: null,
-      probesSent:   0,
+      probesSent: 0
     };
 
     // ── SRE throttle counters ────────────────────────────────────────────────
@@ -350,9 +345,9 @@ class SemanticBackpressure extends EventEmitter {
      * @type {{ requests: number, accepts: number, windowStart: number }}
      */
     this._sre = {
-      requests:    0,
-      accepts:     0,
-      windowStart: now(),
+      requests: 0,
+      accepts: 0,
+      windowStart: now()
     };
 
     // ── Metrics ──────────────────────────────────────────────────────────────
@@ -361,11 +356,11 @@ class SemanticBackpressure extends EventEmitter {
      * @type {{ submitted: number, admitted: number, rejected: number, deduplicated: number, shed: number }}
      */
     this._counters = {
-      submitted:    0,
-      admitted:     0,
-      rejected:     0,
+      submitted: 0,
+      admitted: 0,
+      rejected: 0,
       deduplicated: 0,
-      shed:         0,
+      shed: 0
     };
 
     /**
@@ -417,13 +412,13 @@ class SemanticBackpressure extends EventEmitter {
     }
     // Normalise defaults
     const normTask = {
-      id:        task.id,
-      tier:      task.tier || CRITICALITY_TIER.SHEDDABLE,
+      id: task.id,
+      tier: task.tier || CRITICALITY_TIER.SHEDDABLE,
       embedding: Array.isArray(task.embedding) ? task.embedding : null,
-      urgency:   typeof task.urgency === 'number' ? task.urgency : 0.5,
-      impact:    typeof task.impact  === 'number' ? task.impact  : 0.5,
-      payload:   task.payload || null,
-      submittedAt: now(),
+      urgency: typeof task.urgency === 'number' ? task.urgency : 0.5,
+      impact: typeof task.impact === 'number' ? task.impact : 0.5,
+      payload: task.payload || null,
+      submittedAt: now()
     };
 
     // ── Stage 1: Semantic Dedup ──────────────────────────────────────────────
@@ -435,8 +430,14 @@ class SemanticBackpressure extends EventEmitter {
        * @event SemanticBackpressure#rejected
        * @type {{ task: object, reason: string, duplicateOf: string|undefined }}
        */
-      this.emit('rejected', { task: normTask, reason: REJECTION_REASON.DEDUP, duplicateOf: dedupResult.duplicateOf });
-      return this._reject(normTask, REJECTION_REASON.DEDUP, null, { duplicateOf: dedupResult.duplicateOf });
+      this.emit('rejected', {
+        task: normTask,
+        reason: REJECTION_REASON.DEDUP,
+        duplicateOf: dedupResult.duplicateOf
+      });
+      return this._reject(normTask, REJECTION_REASON.DEDUP, null, {
+        duplicateOf: dedupResult.duplicateOf
+      });
     }
 
     // ── Stage 2: Priority Scoring ────────────────────────────────────────────
@@ -447,33 +448,57 @@ class SemanticBackpressure extends EventEmitter {
     const throttleResult = this.checkThrottle();
     if (throttleResult.rejected) {
       this._counters.rejected++;
-      this.emit('rejected', { task: normTask, reason: REJECTION_REASON.THROTTLED, pReject: throttleResult.pReject });
-      return this._reject(normTask, REJECTION_REASON.THROTTLED, priority, { pReject: throttleResult.pReject });
+      this.emit('rejected', {
+        task: normTask,
+        reason: REJECTION_REASON.THROTTLED,
+        pReject: throttleResult.pReject
+      });
+      return this._reject(normTask, REJECTION_REASON.THROTTLED, priority, {
+        pReject: throttleResult.pReject
+      });
     }
 
     // ── Stage 4: Circuit Breaker ─────────────────────────────────────────────
     const cbResult = this.checkCircuitBreaker();
     if (cbResult.rejected) {
       this._counters.rejected++;
-      this.emit('rejected', { task: normTask, reason: REJECTION_REASON.CIRCUIT_OPEN, cbState: cbResult.state });
-      return this._reject(normTask, REJECTION_REASON.CIRCUIT_OPEN, priority, { cbState: cbResult.state });
+      this.emit('rejected', {
+        task: normTask,
+        reason: REJECTION_REASON.CIRCUIT_OPEN,
+        cbState: cbResult.state
+      });
+      return this._reject(normTask, REJECTION_REASON.CIRCUIT_OPEN, priority, {
+        cbState: cbResult.state
+      });
     }
 
     // ── Stage 5: Load Shed Pre-check ─────────────────────────────────────────
     const currentLevel = this.getPressureLevel();
-    const shedResult   = this._shouldShed(normTask, currentLevel);
+    const shedResult = this._shouldShed(normTask, currentLevel);
     if (shedResult) {
       this._counters.rejected++;
-      this.emit('rejected', { task: normTask, reason: REJECTION_REASON.LOAD_SHED, pressureLevel: currentLevel });
-      return this._reject(normTask, REJECTION_REASON.LOAD_SHED, priority, { pressureLevel: currentLevel });
+      this.emit('rejected', {
+        task: normTask,
+        reason: REJECTION_REASON.LOAD_SHED,
+        pressureLevel: currentLevel
+      });
+      return this._reject(normTask, REJECTION_REASON.LOAD_SHED, priority, {
+        pressureLevel: currentLevel
+      });
     }
 
     // ── Stage 6: Queue Admission ─────────────────────────────────────────────
     const admitResult = this.admitToQueue(normTask);
     if (!admitResult.admitted) {
       this._counters.rejected++;
-      this.emit('rejected', { task: normTask, reason: REJECTION_REASON.QUEUE_FULL, queueDepth: this._queue.length });
-      return this._reject(normTask, REJECTION_REASON.QUEUE_FULL, priority, { queueDepth: this._queue.length });
+      this.emit('rejected', {
+        task: normTask,
+        reason: REJECTION_REASON.QUEUE_FULL,
+        queueDepth: this._queue.length
+      });
+      return this._reject(normTask, REJECTION_REASON.QUEUE_FULL, priority, {
+        queueDepth: this._queue.length
+      });
     }
 
     // ── Admission success ────────────────────────────────────────────────────
@@ -486,13 +511,16 @@ class SemanticBackpressure extends EventEmitter {
      * @event SemanticBackpressure#admitted
      * @type {{ task: object, priority: number, queueDepth: number }}
      */
-    this.emit('admitted', { task: normTask, priority, queueDepth: this._queue.length });
-
-    return {
-      admitted:   true,
-      reason:     null,
+    this.emit('admitted', {
+      task: normTask,
       priority,
-      queueDepth: this._queue.length,
+      queueDepth: this._queue.length
+    });
+    return {
+      admitted: true,
+      reason: null,
+      priority,
+      queueDepth: this._queue.length
     };
   }
 
@@ -522,7 +550,11 @@ class SemanticBackpressure extends EventEmitter {
     if (this._dedupCache.has(task.id)) {
       const entry = this._dedupCache.get(task.id);
       if (t < entry.expiresAt) {
-        return { isDuplicate: true, duplicateOf: task.id, similarity: 1.0 };
+        return {
+          isDuplicate: true,
+          duplicateOf: task.id,
+          similarity: 1.0
+        };
       }
       // Entry expired — remove and continue
       this._removeDedup(task.id);
@@ -539,12 +571,19 @@ class SemanticBackpressure extends EventEmitter {
           continue;
         }
         if (similarity >= this.dedupThreshold) {
-          return { isDuplicate: true, duplicateOf: cachedId, similarity };
+          return {
+            isDuplicate: true,
+            duplicateOf: cachedId,
+            similarity
+          };
         }
       }
     }
-
-    return { isDuplicate: false, duplicateOf: undefined, similarity: null };
+    return {
+      isDuplicate: false,
+      duplicateOf: undefined,
+      similarity: null
+    };
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -571,9 +610,9 @@ class SemanticBackpressure extends EventEmitter {
    * @returns {number} Priority score in [0, 1].
    */
   scorePriority(task) {
-    const crit    = normalisedCriticality(task.tier);
+    const crit = normalisedCriticality(task.tier);
     const urgency = Math.max(0, Math.min(1, task.urgency));
-    const impact  = Math.max(0, Math.min(1, task.impact));
+    const impact = Math.max(0, Math.min(1, task.impact));
     return phiPriorityScore(crit, urgency, impact);
   }
 
@@ -598,20 +637,26 @@ class SemanticBackpressure extends EventEmitter {
 
     // Roll window if expired
     if (t - this._sre.windowStart >= this.sreWindowMs) {
-      this._sre.requests    = 0;
-      this._sre.accepts     = 0;
+      this._sre.requests = 0;
+      this._sre.accepts = 0;
       this._sre.windowStart = t;
     }
-
     this._sre.requests++;
-
-    const { requests, accepts } = this._sre;
+    const {
+      requests,
+      accepts
+    } = this._sre;
     const pReject = Math.max(0, (requests - this.sreK * accepts) / (requests + 1));
-
     if (pReject > 0 && Math.random() < pReject) {
-      return { rejected: true, pReject };
+      return {
+        rejected: true,
+        pReject
+      };
     }
-    return { rejected: false, pReject };
+    return {
+      rejected: false,
+      pReject
+    };
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -637,48 +682,69 @@ class SemanticBackpressure extends EventEmitter {
    */
   checkCircuitBreaker() {
     const cb = this._circuitBreaker;
-    const t  = now();
-
+    const t = now();
     if (cb.state === CB_STATE.CLOSED) {
-      return { rejected: false, state: CB_STATE.CLOSED };
+      return {
+        rejected: false,
+        state: CB_STATE.CLOSED
+      };
     }
-
     if (cb.state === CB_STATE.OPEN) {
       // Compute phi-backoff recovery delay
       const failureCount = Math.min(cb.failures, 8); // cap exponent
-      const recoveryMs   = phiBackoff(failureCount, CB_RECOVERY_BASE_MS, 46979);
-      const elapsed      = t - (cb.lastOpenedAt || t);
-
+      const recoveryMs = phiBackoff(failureCount, CB_RECOVERY_BASE_MS, 46979);
+      const elapsed = t - (cb.lastOpenedAt || t);
       if (elapsed >= recoveryMs) {
         // Transition to HALF_OPEN
-        cb.state       = CB_STATE.HALF_OPEN;
-        cb.probesSent  = 0;
+        cb.state = CB_STATE.HALF_OPEN;
+        cb.probesSent = 0;
         /**
          * @event SemanticBackpressure#circuit
          * @type {{ from: string, to: string, failures: number }}
          */
-        this.emit('circuit', { from: CB_STATE.OPEN, to: CB_STATE.HALF_OPEN, failures: cb.failures });
-        return { rejected: false, state: CB_STATE.HALF_OPEN };
+        this.emit('circuit', {
+          from: CB_STATE.OPEN,
+          to: CB_STATE.HALF_OPEN,
+          failures: cb.failures
+        });
+        return {
+          rejected: false,
+          state: CB_STATE.HALF_OPEN
+        };
       }
-      return { rejected: true, state: CB_STATE.OPEN };
+      return {
+        rejected: true,
+        state: CB_STATE.OPEN
+      };
     }
-
     if (cb.state === CB_STATE.HALF_OPEN) {
       if (cb.probesSent < this.cbHalfOpenProbes) {
         cb.probesSent++;
         if (cb.probesSent >= this.cbHalfOpenProbes) {
           // All probes sent without failure — close the circuit
-          cb.state    = CB_STATE.CLOSED;
+          cb.state = CB_STATE.CLOSED;
           cb.failures = 0;
-          this.emit('circuit', { from: CB_STATE.HALF_OPEN, to: CB_STATE.CLOSED, failures: 0 });
+          this.emit('circuit', {
+            from: CB_STATE.HALF_OPEN,
+            to: CB_STATE.CLOSED,
+            failures: 0
+          });
         }
-        return { rejected: false, state: CB_STATE.HALF_OPEN };
+        return {
+          rejected: false,
+          state: CB_STATE.HALF_OPEN
+        };
       }
       // Should not reach here — probes should have closed the circuit
-      return { rejected: false, state: CB_STATE.HALF_OPEN };
+      return {
+        rejected: false,
+        state: CB_STATE.HALF_OPEN
+      };
     }
-
-    return { rejected: false, state: cb.state };
+    return {
+      rejected: false,
+      state: cb.state
+    };
   }
 
   /**
@@ -691,19 +757,25 @@ class SemanticBackpressure extends EventEmitter {
   recordFailure() {
     const cb = this._circuitBreaker;
     cb.failures++;
-
     if (cb.state === CB_STATE.HALF_OPEN) {
       // Failure during probing — re-open immediately
-      cb.state        = CB_STATE.OPEN;
+      cb.state = CB_STATE.OPEN;
       cb.lastOpenedAt = now();
-      this.emit('circuit', { from: CB_STATE.HALF_OPEN, to: CB_STATE.OPEN, failures: cb.failures });
+      this.emit('circuit', {
+        from: CB_STATE.HALF_OPEN,
+        to: CB_STATE.OPEN,
+        failures: cb.failures
+      });
       return;
     }
-
     if (cb.state === CB_STATE.CLOSED && cb.failures >= this.cbFailureThreshold) {
-      cb.state        = CB_STATE.OPEN;
+      cb.state = CB_STATE.OPEN;
       cb.lastOpenedAt = now();
-      this.emit('circuit', { from: CB_STATE.CLOSED, to: CB_STATE.OPEN, failures: cb.failures });
+      this.emit('circuit', {
+        from: CB_STATE.CLOSED,
+        to: CB_STATE.OPEN,
+        failures: cb.failures
+      });
     }
   }
 
@@ -724,24 +796,17 @@ class SemanticBackpressure extends EventEmitter {
   //  STAGE 6 — QUEUE ADMISSION
   // ───────────────────────────────────────────────────────────────────────────
 
-  /**
-   * Attempt to admit a task into the priority queue.
-   * Rejects when queue depth >= queueMaxDepth (fib(13)=233).
-   * Inserts in descending priority order for O(n) worst case, acceptable
-   * given the Fibonacci-bounded queue size.
-   *
-   * @param {object} task          - Normalised task (must have task.priority).
-   * @returns {{ admitted: boolean, queueDepth: number }}
-   */
   admitToQueue(task) {
     if (this._queue.length >= this.queueMaxDepth) {
-      return { admitted: false, queueDepth: this._queue.length };
+      return {
+        admitted: false,
+        queueDepth: this._queue.length
+      };
     }
-
     const entry = {
       task,
-      priority:   task.priority,
-      admittedAt: now(),
+      priority: task.priority,
+      admittedAt: now()
     };
 
     // Insert in descending priority order
@@ -753,8 +818,10 @@ class SemanticBackpressure extends EventEmitter {
       }
     }
     this._queue.splice(insertIdx, 0, entry);
-
-    return { admitted: true, queueDepth: this._queue.length };
+    return {
+      admitted: true,
+      queueDepth: this._queue.length
+    };
   }
 
   /**
@@ -816,31 +883,33 @@ class SemanticBackpressure extends EventEmitter {
   shed(level) {
     const pressureLevel = level || this.getPressureLevel();
     let shedCount = 0;
-
     const tiersToDrop = this._shedTiers(pressureLevel);
     if (tiersToDrop.length === 0) {
-      return { shed: 0, remaining: this._queue.length };
+      return {
+        shed: 0,
+        remaining: this._queue.length
+      };
     }
-
     const before = this._queue.length;
     this._queue = this._queue.filter(entry => !tiersToDrop.includes(entry.task.tier));
     shedCount = before - this._queue.length;
     this._counters.shed += shedCount;
-
     if (shedCount > 0) {
       /**
        * @event SemanticBackpressure#shed
        * @type {{ level: string, shed: number, remaining: number, tiers: string[] }}
        */
       this.emit('shed', {
-        level:     pressureLevel,
-        shed:      shedCount,
+        level: pressureLevel,
+        shed: shedCount,
         remaining: this._queue.length,
-        tiers:     tiersToDrop,
+        tiers: tiersToDrop
       });
     }
-
-    return { shed: shedCount, remaining: this._queue.length };
+    return {
+      shed: shedCount,
+      remaining: this._queue.length
+    };
   }
 
   /**
@@ -881,39 +950,21 @@ class SemanticBackpressure extends EventEmitter {
   //  BACKPRESSURE PROPAGATION
   // ───────────────────────────────────────────────────────────────────────────
 
-  /**
-   * Propagate a backpressure signal upstream to callers or connected systems.
-   *
-   * The signal is phi-gated using the current pressure ratio so that mild
-   * pressure produces a weak signal and critical pressure a full signal.
-   *
-   * Signal encoding:
-   *   gatedSignal = cslGate(signal.magnitude, pressureRatio, tau, temperature)
-   *   where tau = ALERT_THRESHOLDS.warning ≈ 0.618
-   *         temperature = PSI² ≈ 0.382 (medium sharpness)
-   *
-   * @param {object}  signal             - Upstream backpressure descriptor.
-   * @param {number}  signal.magnitude   - Raw signal strength in [0, 1].
-   * @param {string}  [signal.target]    - Upstream subsystem identifier.
-   * @param {object}  [signal.metadata]  - Arbitrary additional metadata.
-   * @returns {{ propagated: boolean, gatedMagnitude: number, level: string, ratio: number }}
-   */
   propagateBackpressure(signal) {
-    const ratio    = this.getPressureRatio();
-    const level    = ratioToPressureLevel(ratio);
-    const tau      = ALERT_THRESHOLDS.warning;          // PSI ≈ 0.618
-    const temp     = PSI * PSI;                         // PSI² ≈ 0.382
-    const rawMag   = typeof signal.magnitude === 'number' ? signal.magnitude : 1.0;
+    const ratio = this.getPressureRatio();
+    const level = ratioToPressureLevel(ratio);
+    const tau = ALERT_THRESHOLDS.warning; // PSI ≈ 0.618
+    const temp = PSI * PSI; // PSI² ≈ 0.382
+    const rawMag = typeof signal.magnitude === 'number' ? signal.magnitude : 1.0;
     const gatedMag = cslGate(rawMag, ratio, tau, temp);
-
     const payload = {
-      source:         this.label,
-      target:         signal.target || 'upstream',
+      source: this.label,
+      target: signal.target || 'upstream',
       level,
       ratio,
       gatedMagnitude: gatedMag,
-      timestamp:      now(),
-      metadata:       signal.metadata || {},
+      timestamp: now(),
+      metadata: signal.metadata || {}
     };
 
     /**
@@ -921,12 +972,11 @@ class SemanticBackpressure extends EventEmitter {
      * @type {{ source: string, target: string, level: string, ratio: number, gatedMagnitude: number, timestamp: number }}
      */
     this.emit('backpressure', payload);
-
     return {
-      propagated:     true,
+      propagated: true,
       gatedMagnitude: gatedMag,
       level,
-      ratio,
+      ratio
     };
   }
 
@@ -954,32 +1004,37 @@ class SemanticBackpressure extends EventEmitter {
    * }}
    */
   getMetrics() {
-    const queueDepth    = this._queue.length;
+    const queueDepth = this._queue.length;
     const pressureRatio = depthToPressure(queueDepth);
     const pressureLevel = ratioToPressureLevel(pressureRatio);
-    const { submitted, admitted, rejected, deduplicated, shed } = this._counters;
+    const {
+      submitted,
+      admitted,
+      rejected,
+      deduplicated,
+      shed
+    } = this._counters;
     const rejectionRate = submitted > 0 ? rejected / submitted : 0;
-
     return {
-      label:           this.label,
+      label: this.label,
       queueDepth,
-      queueMaxDepth:   this.queueMaxDepth,
+      queueMaxDepth: this.queueMaxDepth,
       pressureRatio,
       pressureLevel,
-      circuitState:    this._circuitBreaker.state,
+      circuitState: this._circuitBreaker.state,
       circuitFailures: this._circuitBreaker.failures,
-      sreRequests:     this._sre.requests,
-      sreAccepts:      this._sre.accepts,
+      sreRequests: this._sre.requests,
+      sreAccepts: this._sre.accepts,
       rejectionRate,
       counters: {
         submitted,
         admitted,
         rejected,
         deduplicated,
-        shed,
+        shed
       },
       dedupCacheSize: this._dedupCache.size,
-      uptimeMs:       now() - this._startedAt,
+      uptimeMs: now() - this._startedAt
     };
   }
 
@@ -999,12 +1054,12 @@ class SemanticBackpressure extends EventEmitter {
       this._evictOldestDedup();
     }
     const entry = {
-      id:          task.id,
-      embedding:   task.embedding || null,
-      tier:        task.tier,
-      priority:    task.priority || 0,
-      insertedAt:  now(),
-      expiresAt:   now() + DEDUP_TTL_MS,
+      id: task.id,
+      embedding: task.embedding || null,
+      tier: task.tier,
+      priority: task.priority || 0,
+      insertedAt: now(),
+      expiresAt: now() + DEDUP_TTL_MS
     };
     this._dedupCache.set(task.id, entry);
     this._dedupOrder.push(task.id);
@@ -1066,12 +1121,11 @@ class SemanticBackpressure extends EventEmitter {
        * @type {{ from: string, to: string, ratio: number }}
        */
       this.emit('pressure', {
-        from:  this._lastPressureLevel,
-        to:    level,
-        ratio: this.getPressureRatio(),
+        from: this._lastPressureLevel,
+        to: level,
+        ratio: this.getPressureRatio()
       });
       this._lastPressureLevel = level;
-
       if (this.autoShed && (level === 'HIGH' || level === 'CRITICAL')) {
         this.shed(level);
       }
@@ -1093,10 +1147,12 @@ class SemanticBackpressure extends EventEmitter {
    * @private
    */
   _reject(task, reason, priority, extra = {}) {
-    return Object.assign(
-      { admitted: false, reason, priority, queueDepth: this._queue.length },
-      extra
-    );
+    return Object.assign({
+      admitted: false,
+      reason,
+      priority,
+      queueDepth: this._queue.length
+    }, extra);
   }
 }
 
@@ -1110,7 +1166,6 @@ module.exports = {
   CRITICALITY_TIER,
   CRITICALITY_WEIGHTS,
   CB_STATE,
-
   // Phi-derived constants (exported for testing and external reference)
   DEDUP_THRESHOLD,
   DEDUP_CACHE_SIZE,
@@ -1123,5 +1178,5 @@ module.exports = {
   CB_RECOVERY_BASE_MS,
   SRE_WINDOW_MS,
   SRE_K,
-  CRITICALITY_MAX,
+  CRITICALITY_MAX
 };

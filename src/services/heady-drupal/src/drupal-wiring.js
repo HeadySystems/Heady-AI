@@ -26,11 +26,7 @@
 
 'use strict';
 
-import {
-  PSI, CSL_THRESHOLDS, TIMEOUTS, phiBackoff,
-  MeshClient, CircuitBreaker,
-  createLogger, logConfidenceEvent,
-} from '@heady/platform';
+import { PSI, CSL_THRESHOLDS, TIMEOUTS, phiBackoff, MeshClient, CircuitBreaker, createLogger, logConfidenceEvent } from '@heady/platform';
 
 // ─── DRUPAL CONFIG ────────────────────────────────────────────────────────────
 
@@ -41,16 +37,16 @@ import {
 function getDrupalConfig() {
   const baseUrl = process.env.DRUPAL_BASE_URL;
   if (!baseUrl) throw new Error('DRUPAL_BASE_URL env var not set');
-  if (baseUrl.includes('localhost') && process.env.NODE_ENV !== 'development') {
+  if (baseUrl.includes("0.0.0.0") && process.env.NODE_ENV !== 'development') {
     throw new Error('Drupal localhost URL detected in non-development environment (Law #5 violation)');
   }
   return {
-    baseUrl:     baseUrl.replace(/\/$/, ''),
-    apiBase:     `${baseUrl.replace(/\/$/, '')}/jsonapi`,
-    username:    process.env.DRUPAL_USERNAME,
-    password:    process.env.DRUPAL_PASSWORD,
+    baseUrl: baseUrl.replace(/\/$/, ''),
+    apiBase: `${baseUrl.replace(/\/$/, '')}/jsonapi`,
+    username: process.env.DRUPAL_USERNAME,
+    password: process.env.DRUPAL_PASSWORD,
     bearerToken: process.env.DRUPAL_BEARER_TOKEN,
-    timeoutMs:   TIMEOUTS.PHI_5, // 11090ms — φ⁵
+    timeoutMs: TIMEOUTS.PHI_5 // 11090ms — φ⁵
   };
 }
 
@@ -62,14 +58,20 @@ export class DrupalClient {
    * @param {import('pino').Logger} [opts.logger]
    */
   constructor(opts = {}) {
-    this._logger = opts.logger ?? createLogger({ service: 'heady-drupal', domain: 'headyconnection.org' });
+    this._logger = opts.logger ?? createLogger({
+      service: 'heady-drupal',
+      domain: 'headyconnection.org'
+    });
     this._config = null;
-    this._cb     = new CircuitBreaker({
+    this._cb = new CircuitBreaker({
       name: 'drupal-cms',
-      failureThreshold: 5,    // F(5) = 5
-      successThreshold: 3,    // F(4) = 3
-      timeoutMs: 34000,       // F(9) × 1000
-      logger: this._logger,
+      failureThreshold: 5,
+      // F(5) = 5
+      successThreshold: 3,
+      // F(4) = 3
+      timeoutMs: 34000,
+      // F(9) × 1000
+      logger: this._logger
     });
   }
 
@@ -79,8 +81,10 @@ export class DrupalClient {
    */
   init() {
     this._config = getDrupalConfig();
-    this._logger.info({ event: 'drupal.client.init', base: this._config.baseUrl },
-      'Drupal client initialized');
+    this._logger.info({
+      event: 'drupal.client.init',
+      base: this._config.baseUrl
+    }, 'Drupal client initialized');
     return this;
   }
 
@@ -124,8 +128,10 @@ export class DrupalClient {
       data: {
         type: contentType,
         attributes,
-        ...(Object.keys(relationships).length > 0 ? { relationships } : {}),
-      },
+        ...(Object.keys(relationships).length > 0 ? {
+          relationships
+        } : {})
+      }
     };
     const path = `/jsonapi/${entity}/${bundle}`;
     return this._post(path, body);
@@ -141,10 +147,10 @@ export class DrupalClient {
   async getHeadySites() {
     const data = await this._get('/jsonapi/taxonomy_term/heady_sites');
     return (data?.data ?? []).map(term => ({
-      id:     term.id,
-      name:   term.attributes?.name,
+      id: term.id,
+      name: term.attributes?.name,
       domain: term.attributes?.field_domain_url,
-      active: term.attributes?.field_active ?? true,
+      active: term.attributes?.field_active ?? true
     }));
   }
 
@@ -158,7 +164,7 @@ export class DrupalClient {
     return this.createNode('taxonomy_term--heady_sites', {
       name,
       field_domain_url: domainUrl,
-      field_active: true,
+      field_active: true
     });
   }
 
@@ -180,13 +186,13 @@ export class DrupalClient {
         type: 'heady_task--heady_task',
         attributes: {
           title: task.type,
-          field_task_type:   task.type,
-          field_task_data:   JSON.stringify(task.data),
-          field_csl_domain:  task.domain ?? 'headyconnection.org',
-          field_confidence:  task.confidence ?? PSI,
-          field_status:      'pending',
-        },
-      },
+          field_task_type: task.type,
+          field_task_data: JSON.stringify(task.data),
+          field_csl_domain: task.domain ?? 'headyconnection.org',
+          field_confidence: task.confidence ?? PSI,
+          field_status: 'pending'
+        }
+      }
     };
     return this._post('/jsonapi/heady_task/heady_task', body);
   }
@@ -197,9 +203,7 @@ export class DrupalClient {
    * @returns {Promise<Object[]>}
    */
   async getPendingTasks(limit = 21) {
-    const data = await this._get(
-      `/jsonapi/heady_task/heady_task?filter[field_status]=pending&page[limit]=${limit}`
-    );
+    const data = await this._get(`/jsonapi/heady_task/heady_task?filter[field_status]=pending&page[limit]=${limit}`);
     return data?.data ?? [];
   }
 
@@ -226,14 +230,14 @@ export class DrupalClient {
       data: {
         type: 'node--liquid_node',
         attributes: {
-          title:            nodeData.title,
-          field_domain:     nodeData.domain ?? 'headyconnection.org',
-          field_content:    nodeData.content ?? '',
-          field_csl_score:  nodeData.cslScore ?? PSI,
-          field_phi_tier:   nodeData.phiTier ?? 'PASS',
-          field_active:     true,
-        },
-      },
+          title: nodeData.title,
+          field_domain: nodeData.domain ?? 'headyconnection.org',
+          field_content: nodeData.content ?? '',
+          field_csl_score: nodeData.cslScore ?? PSI,
+          field_phi_tier: nodeData.phiTier ?? 'PASS',
+          field_active: true
+        }
+      }
     };
     return this._post('/jsonapi/node/liquid_node', body);
   }
@@ -250,10 +254,10 @@ export class DrupalClient {
    */
   async triggerHCFP(params) {
     return this._post('/admin/heady/hcfp/trigger', {
-      pipeline:   params.pipeline ?? 'full',
-      input:      params.input,
-      domain:     params.domain ?? 'headyconnection.org',
-      confidence: PSI,
+      pipeline: params.pipeline ?? 'full',
+      input: params.input,
+      domain: params.domain ?? 'headyconnection.org',
+      confidence: PSI
     });
   }
 
@@ -266,7 +270,11 @@ export class DrupalClient {
    * @returns {Promise<Object>}
    */
   async deliverContent(domain, content) {
-    return this._post('/heady/content/deliver', { domain, content, timestamp: new Date().toISOString() });
+    return this._post('/heady/content/deliver', {
+      domain,
+      content,
+      timestamp: new Date().toISOString()
+    });
   }
 
   // ─── HEALTH CHECK ─────────────────────────────────────────────────────────
@@ -277,16 +285,27 @@ export class DrupalClient {
    */
   async healthCheck() {
     if (!this._config) {
-      return { status: 'unhealthy', message: 'Drupal client not initialized' };
+      return {
+        status: 'unhealthy',
+        message: 'Drupal client not initialized'
+      };
     }
     try {
       const ctl = new AbortController();
       const t = setTimeout(() => ctl.abort(), TIMEOUTS.PHI_3);
-      const res = await fetch(`${this._config.baseUrl}/api/heady/health`, { signal: ctl.signal });
+      const res = await fetch(`${this._config.baseUrl}/api/heady/health`, {
+        signal: ctl.signal
+      });
       clearTimeout(t);
-      return { status: res.ok ? 'healthy' : 'degraded', message: `Drupal CMS HTTP ${res.status}` };
+      return {
+        status: res.ok ? 'healthy' : 'degraded',
+        message: `Drupal CMS HTTP ${res.status}`
+      };
     } catch (err) {
-      return { status: 'unhealthy', message: err.message };
+      return {
+        status: 'unhealthy',
+        message: err.message
+      };
     }
   }
 
@@ -295,49 +314,45 @@ export class DrupalClient {
   async _get(path) {
     return this._cb.execute(() => this._fetch('GET', path));
   }
-
   async _post(path, body) {
     return this._cb.execute(() => this._fetch('POST', path, body));
   }
-
   async _fetch(method, path, body = null) {
     if (!this._config) throw new Error('DrupalClient not initialized — call init() first');
-
     const url = `${this._config.baseUrl}${path}`;
     const headers = {
       'Content-Type': 'application/vnd.api+json',
-      'Accept':       'application/vnd.api+json',
-      'X-Heady-Service': 'heady-drupal',
+      'Accept': 'application/vnd.api+json',
+      'X-Heady-Service': 'heady-drupal'
     };
-
     if (this._config.bearerToken) {
       headers['Authorization'] = `Bearer ${this._config.bearerToken}`;
     }
-
     const ctl = new AbortController();
     const t = setTimeout(() => ctl.abort(), this._config.timeoutMs);
-
     try {
       const res = await fetch(url, {
         method,
         headers,
         body: body ? JSON.stringify(body) : null,
-        signal: ctl.signal,
+        signal: ctl.signal
       });
       clearTimeout(t);
-
       if (!res.ok) {
         const errBody = await res.text().catch(() => '');
         const err = new Error(`Drupal API ${method} ${path} returned ${res.status}: ${errBody.slice(0, 200)}`);
         err.status = res.status;
         throw err;
       }
-
       return res.json();
     } catch (err) {
       clearTimeout(t);
-      this._logger.error({ event: 'drupal.fetch.error', method, path, error: err.message },
-        `Drupal ${method} ${path} failed`);
+      this._logger.error({
+        event: 'drupal.fetch.error',
+        method,
+        path,
+        error: err.message
+      }, `Drupal ${method} ${path} failed`);
       throw err;
     }
   }
@@ -352,17 +367,14 @@ export class DrupalClient {
  */
 function buildJsonApiParams(query) {
   const params = {};
-
   if (query.filter) {
     for (const [field, value] of Object.entries(query.filter)) {
       params[`filter[${field}]`] = value;
     }
   }
-
-  if (query.sort)    params['sort']          = Array.isArray(query.sort) ? query.sort.join(',') : query.sort;
-  if (query.include) params['include']       = Array.isArray(query.include) ? query.include.join(',') : query.include;
-  if (query.limit)   params['page[limit]']   = query.limit;
-  if (query.offset)  params['page[offset]']  = query.offset;
-
+  if (query.sort) params['sort'] = Array.isArray(query.sort) ? query.sort.join(',') : query.sort;
+  if (query.include) params['include'] = Array.isArray(query.include) ? query.include.join(',') : query.include;
+  if (query.limit) params['page[limit]'] = query.limit;
+  if (query.offset) params['page[offset]'] = query.offset;
   return params;
 }

@@ -26,11 +26,6 @@
  * @type {Map<string, Promise<unknown>>}
  */
 const _remoteCache = new Map();
-
-/**
- * Diagnostic log of all remote load attempts.
- * @type {Array<{url: string, scope: string, status: 'ok'|'error', timestamp: number, durationMs: number, error?: string}>}
- */
 const _loadLog = [];
 
 // ── Script Loader ─────────────────────────────────────────────────────────────
@@ -57,57 +52,71 @@ function _loadScript(url, scope, timeoutMs = 10000) {
     _remoteCache.set(url, resolved);
     return resolved;
   }
-
   const promise = new Promise((resolve, reject) => {
     const startTime = Date.now();
-
     const script = document.createElement('script');
     script.src = url;
     script.async = true;
     script.setAttribute('data-heady-remote', scope);
     script.setAttribute('data-heady-url', url);
-
     let timer = null;
-
     const cleanup = () => {
       if (timer) clearTimeout(timer);
       script.removeEventListener('load', onLoad);
       script.removeEventListener('error', onError);
     };
-
     const onLoad = () => {
       cleanup();
       const durationMs = Date.now() - startTime;
-      _loadLog.push({ url, scope, status: 'ok', timestamp: startTime, durationMs });
+      _loadLog.push({
+        url,
+        scope,
+        status: 'ok',
+        timestamp: startTime,
+        durationMs
+      });
       resolve();
     };
-
-    const onError = (event) => {
+    const onError = event => {
       cleanup();
       const durationMs = Date.now() - startTime;
       const message = `Failed to load remote script: ${url}`;
-      _loadLog.push({ url, scope, status: 'error', timestamp: startTime, durationMs, error: message });
+      _loadLog.push({
+        url,
+        scope,
+        status: 'error',
+        timestamp: startTime,
+        durationMs,
+        error: message
+      });
       // Remove the failed script tag so it can be retried
       script.remove();
       _remoteCache.delete(url);
       reject(new Error(message));
     };
-
     timer = setTimeout(() => {
       cleanup();
       script.remove();
       _remoteCache.delete(url);
       const message = `Remote script load timed out after ${timeoutMs}ms: ${url}`;
-      _loadLog.push({ url, scope, status: 'error', timestamp: startTime, durationMs: timeoutMs, error: message });
+      _loadLog.push({
+        url,
+        scope,
+        status: 'error',
+        timestamp: startTime,
+        durationMs: timeoutMs,
+        error: message
+      });
       reject(new Error(message));
     }, timeoutMs);
-
-    script.addEventListener('load', onLoad, { once: true });
-    script.addEventListener('error', onError, { once: true });
-
+    script.addEventListener('load', onLoad, {
+      once: true
+    });
+    script.addEventListener('error', onError, {
+      once: true
+    });
     document.head.appendChild(script);
   });
-
   _remoteCache.set(url, promise);
   return promise;
 }
@@ -123,12 +132,8 @@ function _loadScript(url, scope, timeoutMs = 10000) {
  */
 async function _initContainer(scope, module) {
   const container = window[scope];
-
   if (!container) {
-    throw new Error(
-      `Module Federation container "${scope}" not found on window. ` +
-      `Ensure the remote entry script was loaded correctly.`
-    );
+    throw new Error(`Module Federation container "${scope}" not found on window. ` + `Ensure the remote entry script was loaded correctly.`);
   }
 
   // Initialize the container with the current shared scope
@@ -141,7 +146,6 @@ async function _initContainer(scope, module) {
   if (!factory) {
     throw new Error(`Module "${module}" not found in container "${scope}"`);
   }
-
   return factory;
 }
 
@@ -166,11 +170,15 @@ async function _initContainer(scope, module) {
  * });
  * const AppModule = factory();
  */
-async function loadDynamicRemote({ url, scope, module: modulePath, timeoutMs = 10000 }) {
+async function loadDynamicRemote({
+  url,
+  scope,
+  module: modulePath,
+  timeoutMs = 10000
+}) {
   if (!url || !scope || !modulePath) {
     throw new TypeError('loadDynamicRemote: url, scope, and module are all required');
   }
-
   try {
     await _loadScript(url, scope, timeoutMs);
     const factory = await _initContainer(scope, modulePath);
@@ -204,11 +212,16 @@ async function loadDynamicRemote({ url, scope, module: modulePath, timeoutMs = 1
  *   props: { theme: 'dark' },
  * });
  */
-async function mountRemote({ url, scope, module: modulePath, container, props = {} }) {
+async function mountRemote({
+  url,
+  scope,
+  module: modulePath,
+  container,
+  props = {}
+}) {
   if (!(container instanceof HTMLElement)) {
     throw new TypeError('mountRemote: container must be an HTMLElement');
   }
-
   let mountFn = null;
   let unmountFn = null;
 
@@ -217,11 +230,10 @@ async function mountRemote({ url, scope, module: modulePath, container, props = 
     const mountFactory = await loadDynamicRemote({
       url,
       scope,
-      module: './mount',
+      module: './mount'
     });
     const mountModule = mountFactory();
     const defaultExport = mountModule?.default || mountModule;
-
     if (typeof defaultExport?.mount === 'function') {
       mountFn = defaultExport.mount;
       unmountFn = defaultExport.unmount;
@@ -234,10 +246,13 @@ async function mountRemote({ url, scope, module: modulePath, container, props = 
 
   // ── Fall back to ./App ────────────────────────────────────────────────────
   if (!mountFn) {
-    const factory = await loadDynamicRemote({ url, scope, module: modulePath });
+    const factory = await loadDynamicRemote({
+      url,
+      scope,
+      module: modulePath
+    });
     const appModule = factory();
     const appExport = appModule?.default || appModule;
-
     if (typeof appExport?.mount === 'function') {
       mountFn = appExport.mount;
       unmountFn = appExport.unmount;
@@ -245,10 +260,7 @@ async function mountRemote({ url, scope, module: modulePath, container, props = 
       // Treat the export itself as the mount function
       mountFn = appExport;
     } else {
-      throw new Error(
-        `Remote "${scope}" does not export a mount function. ` +
-        `Expected export { mount } or default function.`
-      );
+      throw new Error(`Remote "${scope}" does not export a mount function. ` + `Expected export { mount } or default function.`);
     }
   }
 
@@ -264,8 +276,9 @@ async function mountRemote({ url, scope, module: modulePath, container, props = 
   } else if (typeof unmountFn === 'function') {
     finalUnmount = () => unmountFn(container);
   }
-
-  return { unmount: finalUnmount };
+  return {
+    unmount: finalUnmount
+  };
 }
 
 /**
@@ -277,10 +290,8 @@ async function mountRemote({ url, scope, module: modulePath, container, props = 
  */
 function preloadRemote(url, scope) {
   if (!url) return;
-
   const existingLink = document.querySelector(`link[data-heady-preload="${scope}"]`);
   if (existingLink) return;
-
   const link = document.createElement('link');
   link.rel = 'preload';
   link.as = 'script';
@@ -307,10 +318,4 @@ function getLoadLog() {
 
 // ── Exports ───────────────────────────────────────────────────────────────────
 
-export {
-  loadDynamicRemote,
-  mountRemote,
-  preloadRemote,
-  clearRemoteCache,
-  getLoadLog,
-};
+export { loadDynamicRemote, mountRemote, preloadRemote, clearRemoteCache, getLoadLog };

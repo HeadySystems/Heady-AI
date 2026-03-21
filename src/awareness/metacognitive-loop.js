@@ -1,42 +1,18 @@
-/**
- * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- *
- * Metacognitive Self-Awareness Loop
- * Patent Reference: HS-061
- * "Metacognitive Self-Awareness Loop for Autonomous AI Systems with
- *  First-Person Operational State Introspection"
- *
- * Implements ALL 7 patent claims:
- *   Claim 1 — Ring buffer of telemetry events, rolling error rates, confidence
- *              score, natural-language context, prompt injection
- *   Claim 2 — Confidence formula: 1.0 - (errorRate1m * w1) - (errorRate5m * w2)
- *   Claim 3 — Recommendations ("defer to human review", "reduce inference
- *              temperature", "increase monitoring frequency")
- *   Claim 4 — Critical event penalty applied to confidence score
- *   Claim 5 — Configurable ring buffer size with eviction of oldest event
- *   Claim 6 — Multi-domain branding awareness monitoring
- *   Claim 7 — Full system
- *
- * PHI = 1.6180339887
- */
-
 'use strict';
 
 const crypto = require('crypto');
-const http   = require('http');
-const https  = require('https');
+const http = require('http');
+const https = require('https');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PHI = 1.6180339887;
-
 const SEVERITY = Object.freeze({
-  INFO:     'info',
-  WARN:     'warn',
-  ERROR:    'error',
-  CRITICAL: 'critical',
+  INFO: 'info',
+  WARN: 'warn',
+  ERROR: 'error',
+  CRITICAL: 'critical'
 });
-
 const ERROR_SEVERITIES = new Set([SEVERITY.ERROR, SEVERITY.CRITICAL]);
 
 /**
@@ -44,23 +20,26 @@ const ERROR_SEVERITIES = new Set([SEVERITY.ERROR, SEVERITY.CRITICAL]);
  * RTP: HS-061 Claim 2 — w1=2, w2=0.5
  */
 const DEFAULT_WEIGHTS = Object.freeze({
-  w1: 2.0,   // 1-minute error rate weight
-  w2: 0.5,   // 5-minute error rate weight
+  w1: 2.0,
+  // 1-minute error rate weight
+  w2: 0.5 // 5-minute error rate weight
 });
-
-const DEFAULT_RING_BUFFER_SIZE     = 500;
-const DEFAULT_CRITICAL_PENALTY     = 0.1;   // per critical event in last 5 min
-const DEFAULT_MAX_CRITICAL_PENALTY = 0.4;   // maximum total critical penalty
-const WINDOW_1_MIN_MS              = 60_000;
-const WINDOW_5_MIN_MS              = 300_000;
+const DEFAULT_RING_BUFFER_SIZE = 500;
+const DEFAULT_CRITICAL_PENALTY = 0.1; // per critical event in last 5 min
+const DEFAULT_MAX_CRITICAL_PENALTY = 0.4; // maximum total critical penalty
+const WINDOW_1_MIN_MS = 60_000;
+const WINDOW_5_MIN_MS = 300_000;
 
 /** Confidence thresholds that govern recommendation generation. */
 const CONFIDENCE_THRESHOLDS = Object.freeze({
-  HEALTHY:         0.90,  // >= 0.90 → proceed normally
-  REDUCE_TEMP:     0.75,  // < 0.90 → reduce inference temperature
-  INCREASE_MON:    0.60,  // < 0.75 → increase monitoring
-  DEFER_HUMAN:     0.45,  // < 0.60 → defer to human review
-  CRITICAL:        0.30,  // < 0.45 → critical — halt high-stakes actions
+  HEALTHY: 0.90,
+  // >= 0.90 → proceed normally
+  REDUCE_TEMP: 0.75,
+  INCREASE_MON: 0.60,
+  // < 0.75 → increase monitoring
+  DEFER_HUMAN: 0.45,
+  // < 0.60 → defer to human review
+  CRITICAL: 0.30 // < 0.45 → critical — halt high-stakes actions
 });
 
 // ─── TelemetryRingBuffer ──────────────────────────────────────────────────────
@@ -82,11 +61,11 @@ class TelemetryRingBuffer {
     if (!Number.isInteger(size) || size < 1) {
       throw new RangeError(`Ring buffer size must be a positive integer, got: ${size}`);
     }
-    this._size     = size;
-    this._buffer   = new Array(size).fill(null);
-    this._head     = 0;   // index of the next write slot
-    this._count    = 0;   // total events written (may exceed size)
-    this._occupied = 0;   // entries currently in buffer (min(count, size))
+    this._size = size;
+    this._buffer = new Array(size).fill(null);
+    this._head = 0; // index of the next write slot
+    this._count = 0; // total events written (may exceed size)
+    this._occupied = 0; // entries currently in buffer (min(count, size))
   }
 
   /**
@@ -105,19 +84,17 @@ class TelemetryRingBuffer {
    */
   push(event) {
     const normalised = {
-      id:        crypto.randomBytes(4).toString('hex'),
-      type:      event.type      || 'unknown',
-      summary:   event.summary   || '',
-      data:      event.data      || {},
-      severity:  event.severity  || SEVERITY.INFO,
-      timestamp: event.timestamp || Date.now(),
+      id: crypto.randomBytes(4).toString('hex'),
+      type: event.type || 'unknown',
+      summary: event.summary || '',
+      data: event.data || {},
+      severity: event.severity || SEVERITY.INFO,
+      timestamp: event.timestamp || Date.now()
     };
-
     this._buffer[this._head] = normalised;
-    this._head     = (this._head + 1) % this._size;
+    this._head = (this._head + 1) % this._size;
     this._count++;
     this._occupied = Math.min(this._count, this._size);
-
     return normalised;
   }
 
@@ -127,7 +104,6 @@ class TelemetryRingBuffer {
    */
   toArray() {
     if (this._occupied === 0) return [];
-
     if (this._count <= this._size) {
       // Buffer not yet full — elements are contiguous from slot 0
       return this._buffer.slice(0, this._occupied).filter(Boolean);
@@ -157,19 +133,25 @@ class TelemetryRingBuffer {
    * Current number of events stored in the buffer.
    * @returns {number}
    */
-  get size() { return this._occupied; }
+  get size() {
+    return this._occupied;
+  }
 
   /**
    * Maximum capacity of the buffer.
    * @returns {number}
    */
-  get capacity() { return this._size; }
+  get capacity() {
+    return this._size;
+  }
 
   /**
    * Total events ever ingested (including evicted ones).
    * @returns {number}
    */
-  get totalIngested() { return this._count; }
+  get totalIngested() {
+    return this._count;
+  }
 
   /**
    * Ring buffer statistics.
@@ -177,10 +159,10 @@ class TelemetryRingBuffer {
    */
   stats() {
     return {
-      capacity:       this._size,
-      occupied:       this._occupied,
-      totalIngested:  this._count,
-      utilizationPct: +(this._occupied / this._size * 100).toFixed(1),
+      capacity: this._size,
+      occupied: this._occupied,
+      totalIngested: this._count,
+      utilizationPct: +(this._occupied / this._size * 100).toFixed(1)
     };
   }
 }
@@ -210,14 +192,16 @@ class ErrorRateComputer {
    * @returns {{ errorRate: number, errorCount: number, totalCount: number }}
    */
   compute(windowMs, now) {
-    const nowMs  = now || Date.now();
+    const nowMs = now || Date.now();
     const events = this._ringBuffer.getInWindow(windowMs, nowMs);
-
     const totalCount = events.length;
     const errorCount = events.filter(e => ERROR_SEVERITIES.has(e.severity)).length;
-    const errorRate  = totalCount === 0 ? 0 : errorCount / totalCount;
-
-    return { errorRate: +errorRate.toFixed(6), errorCount, totalCount };
+    const errorRate = totalCount === 0 ? 0 : errorCount / totalCount;
+    return {
+      errorRate: +errorRate.toFixed(6),
+      errorCount,
+      totalCount
+    };
   }
 
   /**
@@ -230,8 +214,8 @@ class ErrorRateComputer {
   computeBoth(now) {
     const nowMs = now || Date.now();
     return {
-      rate1m: this.compute(WINDOW_1_MIN_MS,  nowMs),
-      rate5m: this.compute(WINDOW_5_MIN_MS,  nowMs),
+      rate1m: this.compute(WINDOW_1_MIN_MS, nowMs),
+      rate5m: this.compute(WINDOW_5_MIN_MS, nowMs)
     };
   }
 
@@ -244,8 +228,8 @@ class ErrorRateComputer {
    * @returns {number}
    */
   countCritical(windowMs, now) {
-    const wMs    = windowMs || WINDOW_5_MIN_MS;
-    const nowMs  = now      || Date.now();
+    const wMs = windowMs || WINDOW_5_MIN_MS;
+    const nowMs = now || Date.now();
     const events = this._ringBuffer.getInWindow(wMs, nowMs);
     return events.filter(e => e.severity === SEVERITY.CRITICAL).length;
   }
@@ -273,13 +257,13 @@ class StateAssessmentModule {
    * @param {number} [opts.maxCriticalPenalty] - Max total critical penalty (default: 0.4)
    */
   constructor(ringBuffer, errorRateComputer, opts = {}) {
-    this._ringBuffer         = ringBuffer;
-    this._errorRateComputer  = errorRateComputer;
-    this._w1                 = opts.w1                !== undefined ? opts.w1 : DEFAULT_WEIGHTS.w1;
-    this._w2                 = opts.w2                !== undefined ? opts.w2 : DEFAULT_WEIGHTS.w2;
-    this._criticalPenalty    = opts.criticalPenalty   !== undefined ? opts.criticalPenalty : DEFAULT_CRITICAL_PENALTY;
+    this._ringBuffer = ringBuffer;
+    this._errorRateComputer = errorRateComputer;
+    this._w1 = opts.w1 !== undefined ? opts.w1 : DEFAULT_WEIGHTS.w1;
+    this._w2 = opts.w2 !== undefined ? opts.w2 : DEFAULT_WEIGHTS.w2;
+    this._criticalPenalty = opts.criticalPenalty !== undefined ? opts.criticalPenalty : DEFAULT_CRITICAL_PENALTY;
     this._maxCriticalPenalty = opts.maxCriticalPenalty !== undefined ? opts.maxCriticalPenalty : DEFAULT_MAX_CRITICAL_PENALTY;
-    this._assessmentHistory  = [];
+    this._assessmentHistory = [];
   }
 
   /**
@@ -303,57 +287,54 @@ class StateAssessmentModule {
    * }}
    */
   assessSystemState(now) {
-    const nowMs  = now || Date.now();
-    const { rate1m, rate5m } = this._errorRateComputer.computeBoth(nowMs);
+    const nowMs = now || Date.now();
+    const {
+      rate1m,
+      rate5m
+    } = this._errorRateComputer.computeBoth(nowMs);
 
     // RTP: HS-061 Claim 2 — confidence formula
     // confidence = 1.0 − (errorRate1m × w1) − (errorRate5m × w2)
-    let confidence = 1.0
-      - (rate1m.errorRate * this._w1)
-      - (rate5m.errorRate * this._w2);
+    let confidence = 1.0 - rate1m.errorRate * this._w1 - rate5m.errorRate * this._w2;
 
     // RTP: HS-061 Claim 4 — apply penalty for critical events in last 5 min
-    const criticalCount   = this._errorRateComputer.countCritical(WINDOW_5_MIN_MS, nowMs);
-    const criticalPenalty = Math.min(
-      criticalCount * this._criticalPenalty,
-      this._maxCriticalPenalty
-    );
+    const criticalCount = this._errorRateComputer.countCritical(WINDOW_5_MIN_MS, nowMs);
+    const criticalPenalty = Math.min(criticalCount * this._criticalPenalty, this._maxCriticalPenalty);
     confidence = Math.max(0, Math.min(1, confidence - criticalPenalty));
     confidence = +confidence.toFixed(4);
 
     // Extract recent errors for the context string
-    const recentErrors = this._ringBuffer.getInWindow(WINDOW_5_MIN_MS, nowMs)
-      .filter(e => ERROR_SEVERITIES.has(e.severity))
-      .slice(-5)
-      .map(e => ({ type: e.type, summary: e.summary, severity: e.severity }));
+    const recentErrors = this._ringBuffer.getInWindow(WINDOW_5_MIN_MS, nowMs).filter(e => ERROR_SEVERITIES.has(e.severity)).slice(-5).map(e => ({
+      type: e.type,
+      summary: e.summary,
+      severity: e.severity
+    }));
 
     // RTP: HS-061 Claim 1(d) — natural-language context string
-    const contextString = this._buildContextString(
-      confidence, rate5m.errorCount, criticalCount, nowMs
-    );
-
+    const contextString = this._buildContextString(confidence, rate5m.errorCount, criticalCount, nowMs);
     const assessment = {
       confidence,
-      errorRate1m:     rate1m.errorRate,
-      errorRate5m:     rate5m.errorRate,
-      totalEvents1m:   rate1m.totalCount,
-      totalEvents5m:   rate5m.totalCount,
+      errorRate1m: rate1m.errorRate,
+      errorRate5m: rate5m.errorRate,
+      totalEvents1m: rate1m.totalCount,
+      totalEvents5m: rate5m.totalCount,
       criticalCount,
       criticalPenalty: +criticalPenalty.toFixed(4),
       contextString,
       recentErrors,
-      assessedAt:      nowMs,
-      weights:         { w1: this._w1, w2: this._w2 },
+      assessedAt: nowMs,
+      weights: {
+        w1: this._w1,
+        w2: this._w2
+      }
     };
-
     this._assessmentHistory.push({
       confidence,
-      errorRate1m:  rate1m.errorRate,
-      errorRate5m:  rate5m.errorRate,
+      errorRate1m: rate1m.errorRate,
+      errorRate5m: rate5m.errorRate,
       criticalCount,
-      assessedAt:   nowMs,
+      assessedAt: nowMs
     });
-
     return assessment;
   }
 
@@ -363,7 +344,6 @@ class StateAssessmentModule {
    */
   _buildContextString(confidence, errorCount5m, criticalCount, nowMs) {
     const pct = Math.round(confidence * 100);
-
     if (confidence >= CONFIDENCE_THRESHOLDS.HEALTHY) {
       return `System healthy — ${errorCount5m} error(s) in last 5 minutes, confidence ${confidence.toFixed(2)}`;
     }
@@ -391,14 +371,6 @@ class StateAssessmentModule {
 
 // ─── RecommendationEngine ─────────────────────────────────────────────────────
 
-/**
- * Generates operational recommendations based on the current confidence score.
- *
- * RTP: HS-061 Claim 3 — "generating one or more operational recommendations
- *                        based on the confidence score, including at least one of:
- *                        'defer to human review', 'reduce inference temperature',
- *                        or 'increase monitoring frequency'"
- */
 class RecommendationEngine {
   /**
    * Generate recommendations from an assessment object.
@@ -408,61 +380,58 @@ class RecommendationEngine {
    * @returns {Array<{ code: string, message: string, priority: string }>}
    */
   generateRecommendations(assessment) {
-    const { confidence, criticalCount, errorRate1m, errorRate5m } = assessment;
+    const {
+      confidence,
+      criticalCount,
+      errorRate1m,
+      errorRate5m
+    } = assessment;
     const recommendations = [];
-
     if (confidence < CONFIDENCE_THRESHOLDS.DEFER_HUMAN) {
       // RTP: HS-061 Claim 3 — "defer to human review"
       recommendations.push({
-        code:     'DEFER_TO_HUMAN_REVIEW',
-        message:  'Defer to human review — system confidence is critically low. Do not execute autonomous high-stakes actions.',
-        priority: 'critical',
+        code: 'DEFER_TO_HUMAN_REVIEW',
+        message: 'Defer to human review — system confidence is critically low. Do not execute autonomous high-stakes actions.',
+        priority: 'critical'
       });
     }
-
     if (confidence < CONFIDENCE_THRESHOLDS.HEALTHY && confidence >= CONFIDENCE_THRESHOLDS.DEFER_HUMAN) {
-      // RTP: HS-061 Claim 3 — "reduce inference temperature"
       // Fires for any confidence below the HEALTHY threshold (0.90) down to DEFER_HUMAN (0.45)
       recommendations.push({
-        code:     'REDUCE_INFERENCE_TEMPERATURE',
-        message:  'Reduce inference temperature — elevated error rate detected. Generate more conservative (lower-temperature) responses.',
-        priority: 'high',
+        code: 'REDUCE_INFERENCE_TEMPERATURE',
+        message: 'Reduce inference temperature — elevated error rate detected. Generate more conservative (lower-temperature) responses.',
+        priority: 'high'
       });
     }
-
     if (confidence < CONFIDENCE_THRESHOLDS.INCREASE_MON) {
       // RTP: HS-061 Claim 3 — "increase monitoring frequency"
       recommendations.push({
-        code:     'INCREASE_MONITORING_FREQUENCY',
-        message:  'Increase monitoring frequency — confidence below 60%. Shorten telemetry poll intervals and alert thresholds.',
-        priority: 'high',
+        code: 'INCREASE_MONITORING_FREQUENCY',
+        message: 'Increase monitoring frequency — confidence below 60%. Shorten telemetry poll intervals and alert thresholds.',
+        priority: 'high'
       });
     }
-
     if (criticalCount > 0) {
       recommendations.push({
-        code:     'CRITICAL_EVENT_REVIEW',
-        message:  `Review ${criticalCount} critical event(s) recorded in the last 5 minutes before proceeding.`,
-        priority: 'critical',
+        code: 'CRITICAL_EVENT_REVIEW',
+        message: `Review ${criticalCount} critical event(s) recorded in the last 5 minutes before proceeding.`,
+        priority: 'critical'
       });
     }
-
     if (errorRate1m > 0.2) {
       recommendations.push({
-        code:     'HIGH_1M_ERROR_RATE',
-        message:  `1-minute error rate is ${(errorRate1m * 100).toFixed(1)}% — pause non-essential operations until rate normalises.`,
-        priority: 'high',
+        code: 'HIGH_1M_ERROR_RATE',
+        message: `1-minute error rate is ${(errorRate1m * 100).toFixed(1)}% — pause non-essential operations until rate normalises.`,
+        priority: 'high'
       });
     }
-
     if (confidence >= CONFIDENCE_THRESHOLDS.HEALTHY) {
       recommendations.push({
-        code:     'PROCEED_NORMALLY',
-        message:  'Proceed with standard confidence — system operational state is healthy.',
-        priority: 'info',
+        code: 'PROCEED_NORMALLY',
+        message: 'Proceed with standard confidence — system operational state is healthy.',
+        priority: 'info'
       });
     }
-
     return recommendations;
   }
 }
@@ -482,7 +451,7 @@ class PromptInjectionModule {
    * @param {RecommendationEngine} recommendationEngine
    */
   constructor(assessmentModule, recommendationEngine) {
-    this._assessmentModule    = assessmentModule;
+    this._assessmentModule = assessmentModule;
     this._recommendationEngine = recommendationEngine;
   }
 
@@ -496,32 +465,22 @@ class PromptInjectionModule {
    * @returns {string} The formatted context block to prepend to any AI prompt
    */
   buildContextBlock(opts = {}) {
-    const { includeRecommendations = true, includeRecentErrors = true } = opts;
-    const assessment      = this._assessmentModule.assessSystemState();
-    const recommendations = includeRecommendations
-      ? this._recommendationEngine.generateRecommendations(assessment)
-      : [];
-
-    const lines = [
-      '[System Self-Assessment]',
-      `Confidence: ${assessment.confidence.toFixed(2)}`,
-      `Recent errors (1m): ${assessment.totalEvents1m > 0 ? Math.round(assessment.errorRate1m * 100) : 0}% (${assessment.errorRate1m > 0 ? Math.round(assessment.errorRate1m * assessment.totalEvents1m) : 0} of ${assessment.totalEvents1m} events)`,
-      `Recent errors (5m): ${Math.round(assessment.errorRate5m * 100)}% (${assessment.errorRate5m > 0 ? Math.round(assessment.errorRate5m * assessment.totalEvents5m) : 0} of ${assessment.totalEvents5m} events)`,
-      `Critical events (5m): ${assessment.criticalCount}`,
-      `State: ${assessment.contextString}`,
-    ];
-
+    const {
+      includeRecommendations = true,
+      includeRecentErrors = true
+    } = opts;
+    const assessment = this._assessmentModule.assessSystemState();
+    const recommendations = includeRecommendations ? this._recommendationEngine.generateRecommendations(assessment) : [];
+    const lines = ['[System Self-Assessment]', `Confidence: ${assessment.confidence.toFixed(2)}`, `Recent errors (1m): ${assessment.totalEvents1m > 0 ? Math.round(assessment.errorRate1m * 100) : 0}% (${assessment.errorRate1m > 0 ? Math.round(assessment.errorRate1m * assessment.totalEvents1m) : 0} of ${assessment.totalEvents1m} events)`, `Recent errors (5m): ${Math.round(assessment.errorRate5m * 100)}% (${assessment.errorRate5m > 0 ? Math.round(assessment.errorRate5m * assessment.totalEvents5m) : 0} of ${assessment.totalEvents5m} events)`, `Critical events (5m): ${assessment.criticalCount}`, `State: ${assessment.contextString}`];
     if (includeRecommendations && recommendations.length > 0) {
       lines.push(`Recommendation: ${recommendations[0].message}`);
       if (recommendations.length > 1) {
         lines.push(`Additional: ${recommendations.slice(1).map(r => r.code).join(', ')}`);
       }
     }
-
     if (includeRecentErrors && assessment.recentErrors.length > 0) {
       lines.push(`Recent error types: ${assessment.recentErrors.map(e => e.type).join(', ')}`);
     }
-
     lines.push('[End Self-Assessment]');
     return lines.join('\n');
   }
@@ -549,8 +508,8 @@ class PromptInjectionModule {
    */
   buildSystemMessage(opts = {}) {
     return {
-      role:    'system',
-      content: this.buildContextBlock(opts),
+      role: 'system',
+      content: this.buildContextBlock(opts)
     };
   }
 }
@@ -572,8 +531,8 @@ class BrandingMonitor {
    * @param {number} [opts.timeoutMs=5000] - HTTP request timeout
    */
   constructor(opts = {}) {
-    this._domains     = new Map();
-    this._timeoutMs   = opts.timeoutMs || 5000;
+    this._domains = new Map();
+    this._timeoutMs = opts.timeoutMs || 5000;
     this._checkHistory = [];
   }
 
@@ -588,17 +547,17 @@ class BrandingMonitor {
    */
   registerDomain(domainId, url, brandingElements = []) {
     const descriptor = {
-      id:               domainId,
+      id: domainId,
       url,
       brandingElements,
-      lastChecked:      null,
-      lastStatus:       'unknown',
-      lastStatusCode:   null,
-      lastLatencyMs:    null,
-      brandingFound:    [],
-      brandingMissing:  [],
-      errorCount:       0,
-      checkCount:       0,
+      lastChecked: null,
+      lastStatus: 'unknown',
+      lastStatusCode: null,
+      lastLatencyMs: null,
+      brandingFound: [],
+      brandingMissing: [],
+      errorCount: 0,
+      checkCount: 0
     };
     this._domains.set(domainId, descriptor);
     return descriptor;
@@ -615,26 +574,22 @@ class BrandingMonitor {
   async checkDomain(domainId) {
     const descriptor = this._domains.get(domainId);
     if (!descriptor) throw new Error(`Domain not registered: ${domainId}`);
-
     const start = Date.now();
     let statusCode = null;
-    let body       = '';
-    let error      = null;
-
+    let body = '';
+    let error = null;
     try {
-      body       = await this._httpGet(descriptor.url);
+      body = await this._httpGet(descriptor.url);
       statusCode = 200; // If no throw, assume 200-class
     } catch (err) {
-      error      = err.message;
+      error = err.message;
       statusCode = null;
     }
-
     const latency = Date.now() - start;
 
     // Check branding elements
-    const brandingFound   = [];
+    const brandingFound = [];
     const brandingMissing = [];
-
     for (const element of descriptor.brandingElements) {
       if (body.includes(element)) {
         brandingFound.push(element);
@@ -642,28 +597,26 @@ class BrandingMonitor {
         brandingMissing.push(element);
       }
     }
-
-    const status = error
-      ? 'down'
-      : brandingMissing.length > 0
-        ? 'degraded'
-        : 'healthy';
-
-    descriptor.lastChecked     = Date.now();
-    descriptor.lastStatus      = status;
-    descriptor.lastStatusCode  = statusCode;
-    descriptor.lastLatencyMs   = latency;
-    descriptor.brandingFound   = brandingFound;
+    const status = error ? 'down' : brandingMissing.length > 0 ? 'degraded' : 'healthy';
+    descriptor.lastChecked = Date.now();
+    descriptor.lastStatus = status;
+    descriptor.lastStatusCode = statusCode;
+    descriptor.lastLatencyMs = latency;
+    descriptor.brandingFound = brandingFound;
     descriptor.brandingMissing = brandingMissing;
     descriptor.checkCount++;
     if (error) descriptor.errorCount++;
-
     const result = {
-      domainId, url: descriptor.url, status, statusCode,
-      latencyMs: latency, brandingFound, brandingMissing, error,
-      checkedAt: descriptor.lastChecked,
+      domainId,
+      url: descriptor.url,
+      status,
+      statusCode,
+      latencyMs: latency,
+      brandingFound,
+      brandingMissing,
+      error,
+      checkedAt: descriptor.lastChecked
     };
-
     this._checkHistory.push(result);
     return result;
   }
@@ -675,10 +628,10 @@ class BrandingMonitor {
    * @returns {Promise<Array<object>>}
    */
   async checkAll() {
-    const results = await Promise.allSettled(
-      Array.from(this._domains.keys()).map(id => this.checkDomain(id))
-    );
-    return results.map(r => r.status === 'fulfilled' ? r.value : { error: r.reason?.message });
+    const results = await Promise.allSettled(Array.from(this._domains.keys()).map(id => this.checkDomain(id)));
+    return results.map(r => r.status === 'fulfilled' ? r.value : {
+      error: r.reason?.message
+    });
   }
 
   /**
@@ -690,23 +643,22 @@ class BrandingMonitor {
   brandHealthReport() {
     const domains = Array.from(this._domains.values());
     const healthy = domains.filter(d => d.lastStatus === 'healthy').length;
-    const total   = domains.length;
-
+    const total = domains.length;
     return {
-      totalDomains:   total,
+      totalDomains: total,
       healthyDomains: healthy,
-      healthRatio:    total > 0 ? +(healthy / total).toFixed(3) : 1,
+      healthRatio: total > 0 ? +(healthy / total).toFixed(3) : 1,
       domains: domains.map(d => ({
-        id:            d.id,
-        url:           d.url,
-        status:        d.lastStatus,
-        lastChecked:   d.lastChecked,
-        latencyMs:     d.lastLatencyMs,
+        id: d.id,
+        url: d.url,
+        status: d.lastStatus,
+        lastChecked: d.lastChecked,
+        latencyMs: d.lastLatencyMs,
         brandingFound: d.brandingFound,
         brandingMissing: d.brandingMissing,
-        checkCount:    d.checkCount,
-        errorCount:    d.errorCount,
-      })),
+        checkCount: d.checkCount,
+        errorCount: d.errorCount
+      }))
     };
   }
 
@@ -725,12 +677,13 @@ class BrandingMonitor {
    */
   _httpGet(url) {
     return new Promise((resolve, reject) => {
-      const lib     = url.startsWith('https') ? https : http;
+      const lib = url.startsWith('https') ? https : http;
       const timeout = setTimeout(() => reject(new Error('timeout')), this._timeoutMs);
-
-      lib.get(url, (res) => {
+      lib.get(url, res => {
         let data = '';
-        res.on('data', chunk => { data += chunk; });
+        res.on('data', chunk => {
+          data += chunk;
+        });
         res.on('end', () => {
           clearTimeout(timeout);
           if (res.statusCode >= 400) {
@@ -739,7 +692,7 @@ class BrandingMonitor {
             resolve(data);
           }
         });
-      }).on('error', (err) => {
+      }).on('error', err => {
         clearTimeout(timeout);
         reject(err);
       });
@@ -779,10 +732,10 @@ class MetacognitiveLoop {
 
     // (c) State assessment — RTP: HS-061 Claim 2, 4
     this.stateAssessment = new StateAssessmentModule(this.ringBuffer, this.errorRateComputer, {
-      w1:                opts.w1,
-      w2:                opts.w2,
-      criticalPenalty:   opts.criticalPenalty,
-      maxCriticalPenalty: opts.maxCriticalPenalty,
+      w1: opts.w1,
+      w2: opts.w2,
+      criticalPenalty: opts.criticalPenalty,
+      maxCriticalPenalty: opts.maxCriticalPenalty
     });
 
     // (e) Recommendation engine — RTP: HS-061 Claim 3
@@ -793,7 +746,6 @@ class MetacognitiveLoop {
 
     // Claim 6 — branding monitor
     this.brandingMonitor = new BrandingMonitor(opts.brandingOpts || {});
-
     this._createdAt = Date.now();
   }
 
@@ -813,9 +765,12 @@ class MetacognitiveLoop {
    * @returns {{ assessment: object, recommendations: Array }}
    */
   assess() {
-    const assessment      = this.stateAssessment.assessSystemState();
+    const assessment = this.stateAssessment.assessSystemState();
     const recommendations = this.recommendationEngine.generateRecommendations(assessment);
-    return { assessment, recommendations };
+    return {
+      assessment,
+      recommendations
+    };
   }
 
   /**
@@ -837,18 +792,21 @@ class MetacognitiveLoop {
    * @returns {object}
    */
   fullReport() {
-    const { assessment, recommendations } = this.assess();
+    const {
+      assessment,
+      recommendations
+    } = this.assess();
     return {
-      confidence:       assessment.confidence,
-      contextString:    assessment.contextString,
-      errorRate1m:      assessment.errorRate1m,
-      errorRate5m:      assessment.errorRate5m,
-      criticalCount:    assessment.criticalCount,
+      confidence: assessment.confidence,
+      contextString: assessment.contextString,
+      errorRate1m: assessment.errorRate1m,
+      errorRate5m: assessment.errorRate5m,
+      criticalCount: assessment.criticalCount,
       recommendations,
-      ringBuffer:       this.ringBuffer.stats(),
-      branding:         this.brandingMonitor.brandHealthReport(),
-      phi:              PHI,
-      assessedAt:       assessment.assessedAt,
+      ringBuffer: this.ringBuffer.stats(),
+      branding: this.brandingMonitor.brandHealthReport(),
+      phi: PHI,
+      assessedAt: assessment.assessedAt
     };
   }
 }
@@ -864,7 +822,6 @@ module.exports = {
   RecommendationEngine,
   BrandingMonitor,
   MetacognitiveLoop,
-
   // Constants
   PHI,
   SEVERITY,
@@ -872,5 +829,5 @@ module.exports = {
   DEFAULT_WEIGHTS,
   DEFAULT_RING_BUFFER_SIZE,
   WINDOW_1_MIN_MS,
-  WINDOW_5_MIN_MS,
+  WINDOW_5_MIN_MS
 };

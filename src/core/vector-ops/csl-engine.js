@@ -18,13 +18,7 @@
  * @module core/vector-ops/csl-engine
  */
 
-import {
-  PHI, PSI, fib,
-  CSL_THRESHOLDS,
-  cslGate,
-  cslBlend,
-} from '@heady/phi-math-foundation';
-
+import { PHI, PSI, fib, CSL_THRESHOLDS, cslGate, cslBlend } from '@heady/phi-math-foundation';
 const DIM = 384;
 
 // ── Fundamental Vector Operations ──────────────────────────────────
@@ -119,7 +113,6 @@ function cslNOT(a, b) {
   const dim = a.length;
   const bNorm = normalize(b);
   const projection = dot(a, bNorm);
-
   const out = new Float64Array(dim);
   for (let i = 0; i < dim; i++) {
     out[i] = a[i] - projection * bNorm[i];
@@ -140,7 +133,6 @@ function cslIMPLY(a, b) {
   const dim = a.length;
   const bNorm = normalize(b);
   const projection = dot(a, bNorm);
-
   const out = new Float64Array(dim);
   for (let i = 0; i < dim; i++) {
     out[i] = projection * bNorm[i];
@@ -173,7 +165,6 @@ function cslXOR(a, b) {
 function cslCONSENSUS(vectors) {
   if (vectors.length === 0) return new Float64Array(DIM);
   if (vectors.length === 1) return normalize(vectors[0]);
-
   const dim = vectors[0].length;
   const avg = new Float64Array(dim);
   for (const v of vectors) {
@@ -182,17 +173,6 @@ function cslCONSENSUS(vectors) {
   for (let i = 0; i < dim; i++) avg[i] /= vectors.length;
   return normalize(avg);
 }
-
-/**
- * CSL GATE — Sigmoid soft threshold.
- * output = value × σ((cosScore − τ) / temperature)
- *
- * @param {number} value - Input value
- * @param {number} cosScore - Cosine similarity score
- * @param {number} [tau=CSL_THRESHOLDS.MEDIUM] - Threshold
- * @param {number} [temperature=0.1] - Softness (lower = harder gate)
- * @returns {number} Gated value
- */
 function cslGATE(value, cosScore, tau = CSL_THRESHOLDS.MEDIUM, temperature = 0.1) {
   return cslGate(value, cosScore, tau, temperature);
 }
@@ -222,7 +202,7 @@ function cslBLEND(weightHigh, weightLow, cosScore, tau = CSL_THRESHOLDS.MEDIUM) 
 function topK(query, candidates, k = 10) {
   const scored = candidates.map(c => ({
     id: c.id,
-    score: cslAND(query, c.vector),
+    score: cslAND(query, c.vector)
   }));
   scored.sort((a, b) => b.score - a.score);
   return scored.slice(0, k);
@@ -238,21 +218,17 @@ function topK(query, candidates, k = 10) {
 function slerp(a, b, t) {
   const aNorm = normalize(a);
   const bNorm = normalize(b);
-
   let cosTheta = dot(aNorm, bNorm);
   // Clamp to avoid NaN from acos
   cosTheta = Math.max(-1, Math.min(1, cosTheta));
   const theta = Math.acos(cosTheta);
-
   if (theta < 1e-10) {
     // Vectors nearly identical, linear interp
     return cslOR(aNorm, bNorm, t);
   }
-
   const sinTheta = Math.sin(theta);
   const wa = Math.sin((1 - t) * theta) / sinTheta;
   const wb = Math.sin(t * theta) / sinTheta;
-
   const dim = aNorm.length;
   const out = new Float64Array(dim);
   for (let i = 0; i < dim; i++) {
@@ -296,29 +272,12 @@ function reduceDimensions(v, targetDim) {
   for (let i = 0; i < targetDim; i++) out[i] = v[i];
   return normalize(out);
 }
-
 export {
-  // Fundamental
-  normalize,
-  dot,
-  magnitude,
-
-  // CSL Gates
-  cslAND,
-  cslOR,
-  cslNOT,
-  cslIMPLY,
-  cslXOR,
-  cslCONSENSUS,
-  cslGATE,
-  cslBLEND,
-
-  // Spatial
-  topK,
-  slerp,
-  rotate,
-  reduceDimensions,
-
-  // Constants
-  DIM,
-};
+// Fundamental
+normalize, dot, magnitude,
+// CSL Gates
+cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS, cslGATE, cslBLEND,
+// Spatial
+topK, slerp, rotate, reduceDimensions,
+// Constants
+DIM };

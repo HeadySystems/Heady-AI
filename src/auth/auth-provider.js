@@ -19,7 +19,6 @@ import qrcode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
 import { createLogger } from '../utils/logger.js';
 const logger = createLogger('auth-provider');
-
 const randomBytes = promisify(crypto.randomBytes);
 
 // ─── Custom Error Classes ────────────────────────────────────────────────────
@@ -43,7 +42,6 @@ export class HeadyError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
-
 export class AuthError extends HeadyError {
   constructor(message, code = 'AUTH_ERROR', status = 401, meta = {}) {
     super(message, code, status, meta);
@@ -58,8 +56,6 @@ const ACCESS_TOKEN_TTL = 15 * 60;
 
 /** Refresh token lifetime in seconds (30 days) */
 const REFRESH_TOKEN_TTL = 30 * 24 * 60 * 60;
-
-/** Number of failed attempts before account lockout */
 const MAX_FAILED_ATTEMPTS = 5;
 
 /** Lockout duration in seconds (15 minutes) */
@@ -77,36 +73,38 @@ const OAUTH_CONFIGS = {
     authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
     tokenUrl: 'https://oauth2.googleapis.com/token',
     userInfoUrl: 'https://www.googleapis.com/oauth2/v3/userinfo',
-    scopes: ['openid', 'email', 'profile'],
+    scopes: ['openid', 'email', 'profile']
   },
   github: {
     authUrl: 'https://github.com/login/oauth/authorize',
     tokenUrl: 'https://github.com/login/oauth/access_token',
     userInfoUrl: 'https://api.github.com/user',
-    scopes: ['user:email', 'read:user'],
+    scopes: ['user:email', 'read:user']
   },
   microsoft: {
     authUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
     tokenUrl: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
     userInfoUrl: 'https://graph.microsoft.com/v1.0/me',
-    scopes: ['openid', 'email', 'profile', 'User.Read'],
+    scopes: ['openid', 'email', 'profile', 'User.Read']
   },
   apple: {
     authUrl: 'https://appleid.apple.com/auth/authorize',
     tokenUrl: 'https://appleid.apple.com/auth/token',
-    userInfoUrl: null, // Apple returns user info in the id_token only
-    scopes: ['name', 'email'],
-  },
+    userInfoUrl: null,
+    // Apple returns user info in the id_token only
+    scopes: ['name', 'email']
+  }
 };
 
 // ─── Argon2 Configuration (OWASP recommended) ────────────────────────────────
 
 const ARGON2_OPTIONS = {
   type: argon2.argon2id,
-  memoryCost: 65536, // 64 MiB
+  memoryCost: 65536,
+  // 64 MiB
   timeCost: 3,
   parallelism: 4,
-  hashLength: 32,
+  hashLength: 32
 };
 
 // ─── AuthProvider Class ──────────────────────────────────────────────────────
@@ -127,7 +125,11 @@ export class AuthProvider {
    * @param {object}  opts.redis   - Redis client (ioredis)
    * @param {object}  opts.config  - Platform configuration object
    */
-  constructor({ db, redis, config }) {
+  constructor({
+    db,
+    redis,
+    config
+  }) {
     this.db = db;
     this.redis = redis;
     this.config = config;
@@ -159,18 +161,23 @@ export class AuthProvider {
       this._publicKey = crypto.createPublicKey(this.config.jwt.publicKey);
     } else {
       // Generate new RS256 key pair (4096-bit for production security)
-      const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
+      const {
+        privateKey,
+        publicKey
+      } = crypto.generateKeyPairSync('rsa', {
         modulusLength: 4096,
-        publicKeyEncoding: { type: 'spki', format: 'pem' },
-        privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+        publicKeyEncoding: {
+          type: 'spki',
+          format: 'pem'
+        },
+        privateKeyEncoding: {
+          type: 'pkcs8',
+          format: 'pem'
+        }
       });
       this._privateKey = crypto.createPrivateKey(privateKey);
       this._publicKey = crypto.createPublicKey(publicKey);
-
-      logger.warn(
-        '[HeadyAuth] Generated ephemeral RS256 key pair. ' +
-        'Set config.jwt.privateKey and config.jwt.publicKey in production.'
-      );
+      logger.warn('[HeadyAuth] Generated ephemeral RS256 key pair. ' + 'Set config.jwt.privateKey and config.jwt.publicKey in production.');
     }
   }
 
@@ -204,22 +211,14 @@ export class AuthProvider {
    */
   _validatePasswordStrength(password) {
     if (!password || password.length < 12) {
-      throw new AuthError(
-        'Password must be at least 12 characters long.',
-        'AUTH_WEAK_PASSWORD',
-        400
-      );
+      throw new AuthError('Password must be at least 12 characters long.', 'AUTH_WEAK_PASSWORD', 400);
     }
     const hasUpper = /[A-Z]/.test(password);
     const hasLower = /[a-z]/.test(password);
     const hasDigit = /\d/.test(password);
     const hasSpecial = /[^A-Za-z0-9]/.test(password);
     if (!hasUpper || !hasLower || !hasDigit || !hasSpecial) {
-      throw new AuthError(
-        'Password must contain uppercase, lowercase, a digit, and a special character.',
-        'AUTH_WEAK_PASSWORD',
-        400
-      );
+      throw new AuthError('Password must contain uppercase, lowercase, a digit, and a special character.', 'AUTH_WEAK_PASSWORD', 400);
     }
   }
 
@@ -232,20 +231,16 @@ export class AuthProvider {
    */
   generateAccessToken(payload) {
     const jwtId = uuidv4();
-    return jwt.sign(
-      {
-        ...payload,
-        jti: jwtId,
-        iss: 'https://headyme.com',
-        aud: 'heady-platform',
-        iat: Math.floor(Date.now() / 1000),
-      },
-      this._privateKey,
-      {
-        algorithm: 'RS256',
-        expiresIn: ACCESS_TOKEN_TTL,
-      }
-    );
+    return jwt.sign({
+      ...payload,
+      jti: jwtId,
+      iss: 'https://headyme.com',
+      aud: 'heady-platform',
+      iat: Math.floor(Date.now() / 1000)
+    }, this._privateKey, {
+      algorithm: 'RS256',
+      expiresIn: ACCESS_TOKEN_TTL
+    });
   }
 
   /**
@@ -258,15 +253,17 @@ export class AuthProvider {
     const tokenBytes = await randomBytes(64);
     const token = tokenBytes.toString('base64url');
     const key = this._refreshTokenKey(token);
-
-    await this.redis.setex(
-      key,
-      REFRESH_TOKEN_TTL,
-      JSON.stringify({ userId, sessionId, createdAt: Date.now() })
-    );
-
+    await this.redis.setex(key, REFRESH_TOKEN_TTL, JSON.stringify({
+      userId,
+      sessionId,
+      createdAt: Date.now()
+    }));
     const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL * 1000);
-    return { token, expiresAt, sessionId };
+    return {
+      token,
+      expiresAt,
+      sessionId
+    };
   }
 
   /**
@@ -278,16 +275,13 @@ export class AuthProvider {
   async rotateRefreshToken(oldToken) {
     const key = this._refreshTokenKey(oldToken);
     const raw = await this.redis.get(key);
-
     if (!raw) {
-      throw new AuthError(
-        'Refresh token is invalid or expired.',
-        'AUTH_INVALID_REFRESH_TOKEN',
-        401
-      );
+      throw new AuthError('Refresh token is invalid or expired.', 'AUTH_INVALID_REFRESH_TOKEN', 401);
     }
-
-    const { userId, sessionId } = JSON.parse(raw);
+    const {
+      userId,
+      sessionId
+    } = JSON.parse(raw);
 
     // Delete old token immediately (single-use rotation)
     await this.redis.del(key);
@@ -300,11 +294,16 @@ export class AuthProvider {
     if (user.locked_until && new Date(user.locked_until) > new Date()) {
       throw new AuthError('Account is locked.', 'AUTH_ACCOUNT_LOCKED', 403);
     }
-
     const accessToken = this.generateAccessToken(this._buildTokenPayload(user));
-    const { token: newRefreshToken, expiresAt } = await this.generateRefreshToken(userId, sessionId);
-
-    return { accessToken, refreshToken: newRefreshToken, expiresAt };
+    const {
+      token: newRefreshToken,
+      expiresAt
+    } = await this.generateRefreshToken(userId, sessionId);
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+      expiresAt
+    };
   }
 
   /**
@@ -318,7 +317,7 @@ export class AuthProvider {
       return jwt.verify(token, this._publicKey, {
         algorithms: ['RS256'],
         issuer: 'https://headyme.com',
-        audience: 'heady-platform',
+        audience: 'heady-platform'
       });
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
@@ -343,22 +342,12 @@ export class AuthProvider {
       tier: user.tier,
       mfa_enabled: user.mfa_enabled,
       email_verified: user.email_verified,
-      permissions: user.permissions ?? {},
+      permissions: user.permissions ?? {}
     };
   }
 
   // ── Email/Password Authentication ──────────────────────────────────────────
 
-  /**
-   * Authenticate a user with email and password.
-   * Handles account lockout and failed attempt tracking.
-   *
-   * @param {string} email    - User email address
-   * @param {string} password - Plaintext password
-   * @param {string} ip       - Client IP address (for rate limiting)
-   * @returns {Promise<{user: object, accessToken: string, refreshToken: string, requiresMfa: boolean}>}
-   * @throws {AuthError}
-   */
   async loginWithPassword(email, password, ip) {
     if (!email || !password) {
       throw new AuthError('Email and password are required.', 'AUTH_MISSING_CREDENTIALS', 400);
@@ -366,65 +355,49 @@ export class AuthProvider {
 
     // Check IP-based rate limit
     await this._checkIpRateLimit(ip, 'login');
-
     const user = await this._getUserByEmail(email.toLowerCase().trim());
-
     if (!user) {
       // Use constant-time dummy comparison to prevent user enumeration
       await argon2.hash('dummy-password-to-prevent-timing-attacks', ARGON2_OPTIONS);
-      throw new AuthError(
-        'Invalid email or password.',
-        'AUTH_INVALID_CREDENTIALS',
-        401
-      );
+      throw new AuthError('Invalid email or password.', 'AUTH_INVALID_CREDENTIALS', 401);
     }
 
     // Check account lockout
     if (user.locked_until && new Date(user.locked_until) > new Date()) {
       const remaining = Math.ceil((new Date(user.locked_until) - Date.now()) / 60000);
-      throw new AuthError(
-        `Account is locked. Try again in ${remaining} minute(s).`,
-        'AUTH_ACCOUNT_LOCKED',
-        403,
-        { lockedUntil: user.locked_until }
-      );
+      throw new AuthError(`Account is locked. Try again in ${remaining} minute(s).`, 'AUTH_ACCOUNT_LOCKED', 403, {
+        lockedUntil: user.locked_until
+      });
     }
-
     const passwordValid = await this.verifyPassword(password, user.password_hash);
-
     if (!passwordValid) {
       await this._recordFailedAttempt(user.id, ip);
-      throw new AuthError(
-        'Invalid email or password.',
-        'AUTH_INVALID_CREDENTIALS',
-        401
-      );
+      throw new AuthError('Invalid email or password.', 'AUTH_INVALID_CREDENTIALS', 401);
     }
-
-    // Reset failed attempts on success
     await this._clearFailedAttempts(user.id);
 
     // Update last_login
-    await this.db.query(
-      'UPDATE users SET last_login = NOW() WHERE id = $1',
-      [user.id]
-    );
-
+    await this.db.query('UPDATE users SET last_login = NOW() WHERE id = $1', [user.id]);
     if (user.mfa_enabled) {
       // Return partial session — requires MFA verification
       const mfaToken = await this._generateMfaToken(user.id);
-      return { requiresMfa: true, mfaToken, userId: user.id };
+      return {
+        requiresMfa: true,
+        mfaToken,
+        userId: user.id
+      };
     }
-
     const accessToken = this.generateAccessToken(this._buildTokenPayload(user));
-    const { token: refreshToken, expiresAt } = await this.generateRefreshToken(user.id);
-
+    const {
+      token: refreshToken,
+      expiresAt
+    } = await this.generateRefreshToken(user.id);
     return {
       requiresMfa: false,
       user: this._sanitizeUser(user),
       accessToken,
       refreshToken,
-      expiresAt,
+      expiresAt
     };
   }
 
@@ -440,41 +413,27 @@ export class AuthProvider {
    */
   async getOAuthAuthorizationUrl(provider, redirectUri) {
     if (!SUPPORTED_PROVIDERS.includes(provider)) {
-      throw new AuthError(
-        `Unsupported OAuth provider: ${provider}`,
-        'AUTH_UNSUPPORTED_PROVIDER',
-        400
-      );
+      throw new AuthError(`Unsupported OAuth provider: ${provider}`, 'AUTH_UNSUPPORTED_PROVIDER', 400);
     }
-
     const providerConfig = OAUTH_CONFIGS[provider];
     const oauthConfig = this.config.oauth?.[provider];
-
     if (!oauthConfig?.clientId) {
-      throw new AuthError(
-        `OAuth provider "${provider}" is not configured.`,
-        'AUTH_PROVIDER_NOT_CONFIGURED',
-        500
-      );
+      throw new AuthError(`OAuth provider "${provider}" is not configured.`, 'AUTH_PROVIDER_NOT_CONFIGURED', 500);
     }
 
     // Generate PKCE verifier and challenge
     const verifier = (await randomBytes(32)).toString('base64url');
-    const challenge = crypto
-      .createHash('sha256')
-      .update(verifier)
-      .digest('base64url');
+    const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
 
     // Generate state token (CSRF protection for OAuth flow)
     const state = (await randomBytes(32)).toString('base64url');
 
     // Store in Redis for 10 minutes
-    await this.redis.setex(
-      `oauth:state:${state}`,
-      600,
-      JSON.stringify({ provider, verifier, redirectUri })
-    );
-
+    await this.redis.setex(`oauth:state:${state}`, 600, JSON.stringify({
+      provider,
+      verifier,
+      redirectUri
+    }));
     const params = new URLSearchParams({
       client_id: oauthConfig.clientId,
       redirect_uri: redirectUri || this._oauthRedirectUri(provider),
@@ -482,15 +441,17 @@ export class AuthProvider {
       scope: providerConfig.scopes.join(' '),
       state,
       code_challenge: challenge,
-      code_challenge_method: 'S256',
+      code_challenge_method: 'S256'
     });
 
     // Apple requires response_mode=form_post
     if (provider === 'apple') {
       params.set('response_mode', 'form_post');
     }
-
-    return { url: `${providerConfig.authUrl}?${params}`, state };
+    return {
+      url: `${providerConfig.authUrl}?${params}`,
+      state
+    };
   }
 
   /**
@@ -507,14 +468,13 @@ export class AuthProvider {
     const stateKey = `oauth:state:${state}`;
     const stateRaw = await this.redis.get(stateKey);
     if (!stateRaw) {
-      throw new AuthError(
-        'OAuth state token is invalid or expired.',
-        'AUTH_INVALID_STATE',
-        400
-      );
+      throw new AuthError('OAuth state token is invalid or expired.', 'AUTH_INVALID_STATE', 400);
     }
     await this.redis.del(stateKey);
-    const { verifier, redirectUri } = JSON.parse(stateRaw);
+    const {
+      verifier,
+      redirectUri
+    } = JSON.parse(stateRaw);
 
     // Exchange code for tokens with the provider
     const oauthTokens = await this._exchangeOAuthCode(provider, code, verifier, redirectUri);
@@ -523,26 +483,34 @@ export class AuthProvider {
     const providerUser = await this._fetchOAuthUserInfo(provider, oauthTokens);
 
     // Find or create local user account
-    const { user, isNewUser } = await this._findOrCreateOAuthUser(provider, providerUser);
+    const {
+      user,
+      isNewUser
+    } = await this._findOrCreateOAuthUser(provider, providerUser);
 
     // Update last_login
     await this.db.query('UPDATE users SET last_login = NOW() WHERE id = $1', [user.id]);
-
     if (user.mfa_enabled) {
       const mfaToken = await this._generateMfaToken(user.id);
-      return { requiresMfa: true, mfaToken, userId: user.id, isNewUser };
+      return {
+        requiresMfa: true,
+        mfaToken,
+        userId: user.id,
+        isNewUser
+      };
     }
-
     const accessToken = this.generateAccessToken(this._buildTokenPayload(user));
-    const { token: refreshToken, expiresAt } = await this.generateRefreshToken(user.id);
-
+    const {
+      token: refreshToken,
+      expiresAt
+    } = await this.generateRefreshToken(user.id);
     return {
       requiresMfa: false,
       user: this._sanitizeUser(user),
       accessToken,
       refreshToken,
       expiresAt,
-      isNewUser,
+      isNewUser
     };
   }
 
@@ -553,34 +521,26 @@ export class AuthProvider {
   async _exchangeOAuthCode(provider, code, verifier, redirectUri) {
     const providerConfig = OAUTH_CONFIGS[provider];
     const oauthConfig = this.config.oauth[provider];
-
     const body = new URLSearchParams({
       grant_type: 'authorization_code',
       code,
       redirect_uri: redirectUri || this._oauthRedirectUri(provider),
       client_id: oauthConfig.clientId,
       client_secret: oauthConfig.clientSecret,
-      code_verifier: verifier,
+      code_verifier: verifier
     });
-
     const resp = await fetch(providerConfig.tokenUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Accept: 'application/json',
+        Accept: 'application/json'
       },
-      body,
+      body
     });
-
     if (!resp.ok) {
       const text = await resp.text();
-      throw new AuthError(
-        `OAuth token exchange failed for ${provider}: ${text}`,
-        'AUTH_OAUTH_TOKEN_EXCHANGE_FAILED',
-        502
-      );
+      throw new AuthError(`OAuth token exchange failed for ${provider}: ${text}`, 'AUTH_OAUTH_TOKEN_EXCHANGE_FAILED', 502);
     }
-
     return resp.json();
   }
 
@@ -598,31 +558,43 @@ export class AuthProvider {
         id: decoded.sub,
         email: decoded.email,
         name: tokens.user ? JSON.parse(tokens.user).name : null,
-        provider: 'apple',
+        provider: 'apple'
       };
     }
-
     const resp = await fetch(providerConfig.userInfoUrl, {
-      headers: { Authorization: `Bearer ${tokens.access_token}` },
+      headers: {
+        Authorization: `Bearer ${tokens.access_token}`
+      }
     });
-
     if (!resp.ok) {
-      throw new AuthError(
-        `Failed to fetch user info from ${provider}.`,
-        'AUTH_OAUTH_USERINFO_FAILED',
-        502
-      );
+      throw new AuthError(`Failed to fetch user info from ${provider}.`, 'AUTH_OAUTH_USERINFO_FAILED', 502);
     }
-
     const info = await resp.json();
 
     // Normalize to a common shape
     const normalizers = {
-      google: (u) => ({ id: u.sub, email: u.email, name: u.name, avatar: u.picture, provider: 'google' }),
-      github: (u) => ({ id: String(u.id), email: u.email, name: u.name || u.login, avatar: u.avatar_url, provider: 'github' }),
-      microsoft: (u) => ({ id: u.id, email: u.mail || u.userPrincipalName, name: u.displayName, avatar: null, provider: 'microsoft' }),
+      google: u => ({
+        id: u.sub,
+        email: u.email,
+        name: u.name,
+        avatar: u.picture,
+        provider: 'google'
+      }),
+      github: u => ({
+        id: String(u.id),
+        email: u.email,
+        name: u.name || u.login,
+        avatar: u.avatar_url,
+        provider: 'github'
+      }),
+      microsoft: u => ({
+        id: u.id,
+        email: u.mail || u.userPrincipalName,
+        name: u.displayName,
+        avatar: null,
+        provider: 'microsoft'
+      })
     };
-
     return normalizers[provider](info);
   }
 
@@ -632,15 +604,14 @@ export class AuthProvider {
    */
   async _findOrCreateOAuthUser(provider, providerUser) {
     // Look up by oauth_accounts table
-    const existing = await this.db.query(
-      `SELECT u.* FROM users u
+    const existing = await this.db.query(`SELECT u.* FROM users u
        JOIN oauth_accounts oa ON oa.user_id = u.id
-       WHERE oa.provider = $1 AND oa.provider_user_id = $2`,
-      [provider, providerUser.id]
-    );
-
+       WHERE oa.provider = $1 AND oa.provider_user_id = $2`, [provider, providerUser.id]);
     if (existing.rows.length > 0) {
-      return { user: existing.rows[0], isNewUser: false };
+      return {
+        user: existing.rows[0],
+        isNewUser: false
+      };
     }
 
     // Check if email already exists (link accounts)
@@ -648,13 +619,13 @@ export class AuthProvider {
       const byEmail = await this._getUserByEmail(providerUser.email);
       if (byEmail) {
         // Link OAuth identity to existing account
-        await this.db.query(
-          `INSERT INTO oauth_accounts (user_id, provider, provider_user_id, access_token_hash, created_at)
+        await this.db.query(`INSERT INTO oauth_accounts (user_id, provider, provider_user_id, access_token_hash, created_at)
            VALUES ($1, $2, $3, $4, NOW())
-           ON CONFLICT (provider, provider_user_id) DO NOTHING`,
-          [byEmail.id, provider, providerUser.id, this._hashToken(provider + ':' + providerUser.id)]
-        );
-        return { user: byEmail, isNewUser: false };
+           ON CONFLICT (provider, provider_user_id) DO NOTHING`, [byEmail.id, provider, providerUser.id, this._hashToken(provider + ':' + providerUser.id)]);
+        return {
+          user: byEmail,
+          isNewUser: false
+        };
       }
     }
 
@@ -662,7 +633,7 @@ export class AuthProvider {
     return {
       user: null,
       isNewUser: true,
-      providerData: providerUser,
+      providerData: providerUser
     };
   }
 
@@ -680,25 +651,23 @@ export class AuthProvider {
     const secret = speakeasy.generateSecret({
       name: `Heady:${username}@headyme.com`,
       issuer: 'Heady',
-      length: 32,
+      length: 32
     });
 
     // Store pending secret in Redis (not committed until verification)
-    await this.redis.setex(
-      `mfa:pending:${userId}`,
-      300, // 5 minutes to complete setup
-      JSON.stringify({ secret: secret.base32 })
-    );
-
+    await this.redis.setex(`mfa:pending:${userId}`, 300,
+    // 5 minutes to complete setup
+    JSON.stringify({
+      secret: secret.base32
+    }));
     const qrCodeDataUrl = await qrcode.toDataURL(secret.otpauth_url);
 
     // Generate 8 one-time backup codes
     const backupCodes = await this._generateBackupCodes(8);
-
     return {
       secret: secret.base32,
       qrCodeDataUrl,
-      backupCodes,
+      backupCodes
     };
   }
 
@@ -713,45 +682,32 @@ export class AuthProvider {
   async confirmMfaSetup(userId, token) {
     const pending = await this.redis.get(`mfa:pending:${userId}`);
     if (!pending) {
-      throw new AuthError(
-        'MFA setup session expired. Please restart setup.',
-        'AUTH_MFA_SETUP_EXPIRED',
-        400
-      );
+      throw new AuthError('MFA setup session expired. Please restart setup.', 'AUTH_MFA_SETUP_EXPIRED', 400);
     }
-    const { secret } = JSON.parse(pending);
-
+    const {
+      secret
+    } = JSON.parse(pending);
     const verified = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
       token,
-      window: 1,
+      window: 1
     });
-
     if (!verified) {
-      throw new AuthError(
-        'Invalid TOTP code. Please check your authenticator app.',
-        'AUTH_MFA_INVALID_CODE',
-        400
-      );
+      throw new AuthError('Invalid TOTP code. Please check your authenticator app.', 'AUTH_MFA_INVALID_CODE', 400);
     }
 
     // Persist MFA secret (encrypted)
     const encryptedSecret = this._encryptMfaSecret(secret);
     const backupCodes = await this._generateBackupCodes(8);
-    const hashedCodes = await Promise.all(
-      backupCodes.map((c) => argon2.hash(c, ARGON2_OPTIONS))
-    );
-
-    await this.db.query(
-      `UPDATE users SET mfa_enabled = TRUE, mfa_secret = $1, mfa_backup_codes = $2, updated_at = NOW()
-       WHERE id = $3`,
-      [encryptedSecret, JSON.stringify(hashedCodes), userId]
-    );
-
+    const hashedCodes = await Promise.all(backupCodes.map(c => argon2.hash(c, ARGON2_OPTIONS)));
+    await this.db.query(`UPDATE users SET mfa_enabled = TRUE, mfa_secret = $1, mfa_backup_codes = $2, updated_at = NOW()
+       WHERE id = $3`, [encryptedSecret, JSON.stringify(hashedCodes), userId]);
     await this.redis.del(`mfa:pending:${userId}`);
-
-    return { success: true, backupCodes };
+    return {
+      success: true,
+      backupCodes
+    };
   }
 
   /**
@@ -773,30 +729,22 @@ export class AuthProvider {
     if (session.userId !== userId) {
       throw new AuthError('MFA session mismatch.', 'AUTH_MFA_SESSION_MISMATCH', 401);
     }
-
     const user = await this._getUserById(userId);
     if (!user?.mfa_secret) {
       throw new AuthError('MFA is not configured.', 'AUTH_MFA_NOT_CONFIGURED', 400);
     }
-
     const secret = this._decryptMfaSecret(user.mfa_secret);
-
     const totpValid = speakeasy.totp.verify({
       secret,
       encoding: 'base32',
       token,
-      window: 1,
+      window: 1
     });
-
     if (!totpValid) {
       // Try backup codes
       const backupValid = await this._verifyAndConsumeBackupCode(user, token);
       if (!backupValid) {
-        throw new AuthError(
-          'Invalid authentication code.',
-          'AUTH_MFA_INVALID_CODE',
-          401
-        );
+        throw new AuthError('Invalid authentication code.', 'AUTH_MFA_INVALID_CODE', 401);
       }
     }
 
@@ -805,15 +753,16 @@ export class AuthProvider {
 
     // Issue tokens
     const accessToken = this.generateAccessToken(this._buildTokenPayload(user));
-    const { token: refreshToken, expiresAt } = await this.generateRefreshToken(user.id);
-
+    const {
+      token: refreshToken,
+      expiresAt
+    } = await this.generateRefreshToken(user.id);
     await this.db.query('UPDATE users SET last_login = NOW() WHERE id = $1', [user.id]);
-
     return {
       user: this._sanitizeUser(user),
       accessToken,
       refreshToken,
-      expiresAt,
+      expiresAt
     };
   }
 
@@ -828,22 +777,16 @@ export class AuthProvider {
   async createSession(userId, metadata = {}) {
     const sessionId = uuidv4();
     const sessionKey = `session:${sessionId}`;
-
-    await this.redis.setex(
-      sessionKey,
-      REFRESH_TOKEN_TTL,
-      JSON.stringify({
-        userId,
-        createdAt: Date.now(),
-        lastActivity: Date.now(),
-        ip: metadata.ip,
-        userAgent: metadata.userAgent,
-      })
-    );
+    await this.redis.setex(sessionKey, REFRESH_TOKEN_TTL, JSON.stringify({
+      userId,
+      createdAt: Date.now(),
+      lastActivity: Date.now(),
+      ip: metadata.ip,
+      userAgent: metadata.userAgent
+    }));
 
     // Track sessions per user for session listing/revocation
     await this.redis.sadd(`user:sessions:${userId}`, sessionId);
-
     return sessionId;
   }
 
@@ -854,9 +797,10 @@ export class AuthProvider {
   async revokeSession(sessionId) {
     const sessionKey = `session:${sessionId}`;
     const raw = await this.redis.get(sessionKey);
-
     if (raw) {
-      const { userId } = JSON.parse(raw);
+      const {
+        userId
+      } = JSON.parse(raw);
       await this.redis.del(sessionKey);
       await this.redis.srem(`user:sessions:${userId}`, sessionId);
     }
@@ -869,7 +813,7 @@ export class AuthProvider {
   async revokeAllSessions(userId) {
     const sessionIds = await this.redis.smembers(`user:sessions:${userId}`);
     if (sessionIds.length > 0) {
-      const keys = sessionIds.map((id) => `session:${id}`);
+      const keys = sessionIds.map(id => `session:${id}`);
       await this.redis.del(...keys);
     }
     await this.redis.del(`user:sessions:${userId}`);
@@ -917,66 +861,59 @@ export class AuthProvider {
    */
   async _checkIpRateLimit(ip, action) {
     const limits = {
-      login: { max: 20, window: 900 },      // 20 per 15 min
-      register: { max: 5, window: 3600 },   // 5 per hour
-      'forgot-password': { max: 3, window: 3600 }, // 3 per hour
-      mfa: { max: 10, window: 300 },        // 10 per 5 min
+      login: {
+        max: 20,
+        window: 900
+      },
+      // 20 per 15 min
+      register: {
+        max: 5,
+        window: 3600
+      },
+      // 5 per hour
+      'forgot-password': {
+        max: 3,
+        window: 3600
+      },
+      // 3 per hour
+      mfa: {
+        max: 10,
+        window: 300
+      } // 10 per 5 min
     };
-
-    const limit = limits[action] || { max: 30, window: 60 };
+    const limit = limits[action] || {
+      max: 30,
+      window: 60
+    };
     const key = `rate:${action}:${ip}`;
-
     const count = await this.redis.incr(key);
     if (count === 1) {
       await this.redis.expire(key, limit.window);
     }
-
     if (count > limit.max) {
       const ttl = await this.redis.ttl(key);
-      throw new AuthError(
-        `Too many ${action} attempts. Try again in ${Math.ceil(ttl / 60)} minute(s).`,
-        'AUTH_RATE_LIMIT_EXCEEDED',
-        429,
-        { retryAfter: ttl }
-      );
+      throw new AuthError(`Too many ${action} attempts. Try again in ${Math.ceil(ttl / 60)} minute(s).`, 'AUTH_RATE_LIMIT_EXCEEDED', 429, {
+        retryAfter: ttl
+      });
     }
   }
 
   // ── Account Lockout ────────────────────────────────────────────────────────
 
-  /**
-   * Record a failed login attempt and lock the account if threshold reached.
-   * @private
-   */
   async _recordFailedAttempt(userId, ip) {
     const key = `failedAttempts:${userId}`;
     const count = await this.redis.incr(key);
     await this.redis.expire(key, LOCKOUT_DURATION);
-
     if (count >= MAX_FAILED_ATTEMPTS) {
       const lockedUntil = new Date(Date.now() + LOCKOUT_DURATION * 1000);
-      await this.db.query(
-        'UPDATE users SET locked_until = $1, failed_attempts = $2 WHERE id = $3',
-        [lockedUntil, count, userId]
-      );
+      await this.db.query('UPDATE users SET locked_until = $1, failed_attempts = $2 WHERE id = $3', [lockedUntil, count, userId]);
     } else {
-      await this.db.query(
-        'UPDATE users SET failed_attempts = $1 WHERE id = $2',
-        [count, userId]
-      );
+      await this.db.query('UPDATE users SET failed_attempts = $1 WHERE id = $2', [count, userId]);
     }
   }
-
-  /**
-   * Clear failed login attempts after a successful login.
-   * @private
-   */
   async _clearFailedAttempts(userId) {
     await this.redis.del(`failedAttempts:${userId}`);
-    await this.db.query(
-      'UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = $1',
-      [userId]
-    );
+    await this.db.query('UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = $1', [userId]);
   }
 
   // ── Email Verification ─────────────────────────────────────────────────────
@@ -989,11 +926,12 @@ export class AuthProvider {
    */
   async generateEmailVerificationToken(userId, email) {
     const token = (await randomBytes(32)).toString('base64url');
-    await this.redis.setex(
-      `email:verify:${token}`,
-      86400, // 24 hours
-      JSON.stringify({ userId, email })
-    );
+    await this.redis.setex(`email:verify:${token}`, 86400,
+    // 24 hours
+    JSON.stringify({
+      userId,
+      email
+    }));
     return token;
   }
 
@@ -1005,23 +943,12 @@ export class AuthProvider {
   async verifyEmailToken(token) {
     const key = `email:verify:${token}`;
     const raw = await this.redis.get(key);
-
     if (!raw) {
-      throw new AuthError(
-        'Email verification token is invalid or expired.',
-        'AUTH_VERIFY_TOKEN_INVALID',
-        400
-      );
+      throw new AuthError('Email verification token is invalid or expired.', 'AUTH_VERIFY_TOKEN_INVALID', 400);
     }
-
     const data = JSON.parse(raw);
     await this.redis.del(key);
-
-    await this.db.query(
-      'UPDATE users SET email_verified = TRUE, updated_at = NOW() WHERE id = $1',
-      [data.userId]
-    );
-
+    await this.db.query('UPDATE users SET email_verified = TRUE, updated_at = NOW() WHERE id = $1', [data.userId]);
     return data;
   }
 
@@ -1037,13 +964,17 @@ export class AuthProvider {
     if (!user) return null; // Silent — don't reveal whether email exists
 
     const token = (await randomBytes(32)).toString('base64url');
-    await this.redis.setex(
-      `pw:reset:${token}`,
-      3600, // 1 hour
-      JSON.stringify({ userId: user.id, email: user.email, createdAt: Date.now() })
-    );
-
-    return { token, user };
+    await this.redis.setex(`pw:reset:${token}`, 3600,
+    // 1 hour
+    JSON.stringify({
+      userId: user.id,
+      email: user.email,
+      createdAt: Date.now()
+    }));
+    return {
+      token,
+      user
+    };
   }
 
   /**
@@ -1054,23 +985,14 @@ export class AuthProvider {
   async resetPassword(token, newPassword) {
     const key = `pw:reset:${token}`;
     const raw = await this.redis.get(key);
-
     if (!raw) {
-      throw new AuthError(
-        'Password reset token is invalid or expired.',
-        'AUTH_RESET_TOKEN_INVALID',
-        400
-      );
+      throw new AuthError('Password reset token is invalid or expired.', 'AUTH_RESET_TOKEN_INVALID', 400);
     }
-
-    const { userId } = JSON.parse(raw);
-
+    const {
+      userId
+    } = JSON.parse(raw);
     const passwordHash = await this.hashPassword(newPassword);
-    await this.db.query(
-      'UPDATE users SET password_hash = $1, updated_at = NOW(), failed_attempts = 0, locked_until = NULL WHERE id = $2',
-      [passwordHash, userId]
-    );
-
+    await this.db.query('UPDATE users SET password_hash = $1, updated_at = NOW(), failed_attempts = 0, locked_until = NULL WHERE id = $2', [passwordHash, userId]);
     await this.redis.del(key);
 
     // Revoke all existing sessions (security best practice)
@@ -1087,11 +1009,13 @@ export class AuthProvider {
   getCookieOptions(maxAge = REFRESH_TOKEN_TTL) {
     return {
       httpOnly: true,
-      secure: this.config.env !== 'development', // HTTPS only in production
+      secure: this.config.env !== 'development',
+      // HTTPS only in production
       sameSite: 'strict',
-      maxAge: maxAge * 1000, // Express uses milliseconds
+      maxAge: maxAge * 1000,
+      // Express uses milliseconds
       path: '/',
-      domain: this.config.cookieDomain || 'headyme.com',
+      domain: this.config.cookieDomain || 'headyme.com'
     };
   }
 
@@ -1105,16 +1029,18 @@ export class AuthProvider {
 
   /** @private */
   async _getUserByEmail(email) {
-    const result = await this.db.query(
-      'SELECT * FROM users WHERE LOWER(email) = LOWER($1)',
-      [email]
-    );
+    const result = await this.db.query('SELECT * FROM users WHERE LOWER(email) = LOWER($1)', [email]);
     return result.rows[0] || null;
   }
 
   /** @private */
   _sanitizeUser(user) {
-    const { password_hash, mfa_secret, mfa_backup_codes, ...safe } = user;
+    const {
+      password_hash,
+      mfa_secret,
+      mfa_backup_codes,
+      ...safe
+    } = user;
     return safe;
   }
 
@@ -1158,11 +1084,12 @@ export class AuthProvider {
   /** @private */
   async _generateMfaToken(userId) {
     const token = (await randomBytes(32)).toString('base64url');
-    await this.redis.setex(
-      `mfa:session:${token}`,
-      300, // 5 minutes to complete MFA
-      JSON.stringify({ userId, createdAt: Date.now() })
-    );
+    await this.redis.setex(`mfa:session:${token}`, 300,
+    // 5 minutes to complete MFA
+    JSON.stringify({
+      userId,
+      createdAt: Date.now()
+    }));
     return token;
   }
 
@@ -1184,15 +1111,11 @@ export class AuthProvider {
       if (match) {
         // Remove used backup code
         stored.splice(i, 1);
-        await this.db.query(
-          'UPDATE users SET mfa_backup_codes = $1 WHERE id = $2',
-          [JSON.stringify(stored), user.id]
-        );
+        await this.db.query('UPDATE users SET mfa_backup_codes = $1 WHERE id = $2', [JSON.stringify(stored), user.id]);
         return true;
       }
     }
     return false;
   }
 }
-
 export default AuthProvider;

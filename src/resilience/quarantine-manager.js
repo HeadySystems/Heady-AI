@@ -17,12 +17,12 @@
  *
  * @module src/resilience/quarantine-manager
  */
-
 const EventEmitter = require('events');
-
 const logger = require('../utils/logger');
 const HeadySemanticLogic = require('../core/semantic-logic');
-const { PHI_INVERSE } = require('../core/phi-scales');
+const {
+  PHI_INVERSE
+} = require('../core/phi-scales');
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -37,16 +37,6 @@ const BAD_SCORE_THRESHOLD = PHI_INVERSE; // 0.618
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-
-/**
- * @typedef {Object} QuarantineEntry
- * @property {string}   serviceId      - Quarantined service ID.
- * @property {number}   entryTime      - Unix ms timestamp when quarantine began.
- * @property {string}   reason         - Human-readable reason for quarantine.
- * @property {number}   lastScore      - CSL score at time of quarantine.
- * @property {number}   respawnAttempts - How many respawn attempts have been made.
- * @property {string}   [respawnStatus] - Latest status from RespawnController.
- */
 
 /**
  * @typedef {Object} ServiceRecord
@@ -88,8 +78,9 @@ class QuarantineManager extends EventEmitter {
 
     /** @type {Function|null} Optional RespawnController reference. */
     this._respawnController = null;
-
-    this._log = logger.child({ component: 'QuarantineManager' });
+    this._log = logger.child({
+      component: 'QuarantineManager'
+    });
   }
 
   // -------------------------------------------------------------------------
@@ -146,7 +137,9 @@ class QuarantineManager extends EventEmitter {
    */
   registerService(serviceId, attestor = null) {
     if (this._registry.has(serviceId)) {
-      this._log.warn({ serviceId }, 'Service already registered; overwriting record');
+      this._log.warn({
+        serviceId
+      }, 'Service already registered; overwriting record');
     }
 
     /** @type {ServiceRecord} */
@@ -156,16 +149,15 @@ class QuarantineManager extends EventEmitter {
       consecutiveBad: 0,
       lastScore: 1,
       lastSeen: Date.now(),
-      status: 'healthy',
+      status: 'healthy'
     };
-
     this._registry.set(serviceId, record);
-
     if (attestor && typeof attestor.on === 'function') {
       attestor.on('attestation', payload => this.receiveAttestation(payload));
     }
-
-    this._log.info({ serviceId }, 'Service registered with QuarantineManager');
+    this._log.info({
+      serviceId
+    }, 'Service registered with QuarantineManager');
   }
 
   /**
@@ -174,7 +166,9 @@ class QuarantineManager extends EventEmitter {
    */
   deregisterService(serviceId) {
     this._registry.delete(serviceId);
-    this._log.info({ serviceId }, 'Service deregistered');
+    this._log.info({
+      serviceId
+    }, 'Service deregistered');
   }
 
   // -------------------------------------------------------------------------
@@ -188,13 +182,15 @@ class QuarantineManager extends EventEmitter {
    * @param {import('./health-attestor').AttestationPayload} payload
    */
   receiveAttestation(payload) {
-    const { serviceId, cslScore } = payload;
+    const {
+      serviceId,
+      cslScore
+    } = payload;
 
     // Auto-register previously unknown services (mesh discovery).
     if (!this._registry.has(serviceId)) {
       this.registerService(serviceId);
     }
-
     const record = this._registry.get(serviceId);
     record.lastScore = cslScore;
     record.lastSeen = payload.timestamp;
@@ -204,15 +200,14 @@ class QuarantineManager extends EventEmitter {
       this._quarantine.get(serviceId).lastScore = cslScore;
       return;
     }
-
     if (cslScore < BAD_SCORE_THRESHOLD) {
       record.consecutiveBad += 1;
       record.status = 'degraded';
-      this._log.warn(
-        { serviceId, cslScore, consecutiveBad: record.consecutiveBad },
-        'Degraded attestation received'
-      );
-
+      this._log.warn({
+        serviceId,
+        cslScore,
+        consecutiveBad: record.consecutiveBad
+      }, 'Degraded attestation received');
       if (record.consecutiveBad >= CONSECUTIVE_BAD_THRESHOLD) {
         this.quarantine(serviceId, `CSL score ${cslScore.toFixed(3)} below ${BAD_SCORE_THRESHOLD} for ${record.consecutiveBad} consecutive attestations`);
       }
@@ -242,10 +237,11 @@ class QuarantineManager extends EventEmitter {
    */
   quarantine(serviceId, reason = 'manual') {
     if (this._quarantine.has(serviceId)) {
-      this._log.warn({ serviceId }, 'Service already quarantined');
+      this._log.warn({
+        serviceId
+      }, 'Service already quarantined');
       return;
     }
-
     const record = this._registry.get(serviceId);
     const lastScore = record ? record.lastScore : 0;
 
@@ -256,20 +252,25 @@ class QuarantineManager extends EventEmitter {
       reason,
       lastScore,
       respawnAttempts: 0,
-      respawnStatus: 'pending',
+      respawnStatus: 'pending'
     };
-
     this._quarantine.set(serviceId, entry);
     if (record) record.status = 'quarantined';
-
-    this._log.error({ serviceId, reason, lastScore }, 'Service quarantined');
+    this._log.error({
+      serviceId,
+      reason,
+      lastScore
+    }, 'Service quarantined');
 
     // Remove from MCP router.
     if (this._mcpRouter) {
       try {
         this._mcpRouter.unregister(serviceId);
       } catch (err) {
-        this._log.error({ err, serviceId }, 'Failed to unregister from MCP router');
+        this._log.error({
+          err,
+          serviceId
+        }, 'Failed to unregister from MCP router');
       }
     }
 
@@ -278,11 +279,18 @@ class QuarantineManager extends EventEmitter {
       try {
         this._loadBalancer.remove(serviceId);
       } catch (err) {
-        this._log.error({ err, serviceId }, 'Failed to remove from load balancer');
+        this._log.error({
+          err,
+          serviceId
+        }, 'Failed to remove from load balancer');
       }
     }
-
-    this.emit('QUARANTINE_ENTERED', { serviceId, reason, lastScore, timestamp: entry.entryTime });
+    this.emit('QUARANTINE_ENTERED', {
+      serviceId,
+      reason,
+      lastScore,
+      timestamp: entry.entryTime
+    });
 
     // Trigger respawn.
     if (this._respawnController) {
@@ -291,7 +299,10 @@ class QuarantineManager extends EventEmitter {
         entry.respawnStatus = 'initiated';
         entry.respawnAttempts += 1;
       } catch (err) {
-        this._log.error({ err, serviceId }, 'Failed to initiate respawn');
+        this._log.error({
+          err,
+          serviceId
+        }, 'Failed to initiate respawn');
       }
     }
   }
@@ -304,14 +315,14 @@ class QuarantineManager extends EventEmitter {
    */
   release(serviceId) {
     if (!this._quarantine.has(serviceId)) {
-      this._log.warn({ serviceId }, 'release() called for non-quarantined service');
+      this._log.warn({
+        serviceId
+      }, 'release() called for non-quarantined service');
       return;
     }
-
     const entry = this._quarantine.get(serviceId);
     const downtime = Date.now() - entry.entryTime;
     this._quarantine.delete(serviceId);
-
     const record = this._registry.get(serviceId);
     if (record) {
       record.status = 'healthy';
@@ -323,12 +334,21 @@ class QuarantineManager extends EventEmitter {
       try {
         this._loadBalancer.add(serviceId);
       } catch (err) {
-        this._log.error({ err, serviceId }, 'Failed to re-add to load balancer after release');
+        this._log.error({
+          err,
+          serviceId
+        }, 'Failed to re-add to load balancer after release');
       }
     }
-
-    this._log.info({ serviceId, downtime }, 'Service released from quarantine');
-    this.emit('QUARANTINE_RELEASED', { serviceId, downtime, timestamp: Date.now() });
+    this._log.info({
+      serviceId,
+      downtime
+    }, 'Service released from quarantine');
+    this.emit('QUARANTINE_RELEASED', {
+      serviceId,
+      downtime,
+      timestamp: Date.now()
+    });
   }
 
   // -------------------------------------------------------------------------
@@ -345,15 +365,12 @@ class QuarantineManager extends EventEmitter {
     const scores = [];
     let healthyCount = 0;
     let degradedCount = 0;
-
     for (const [, record] of this._registry) {
       if (record.status !== 'quarantined') {
         scores.push(record.lastScore);
-        if (record.status === 'healthy') healthyCount += 1;
-        else degradedCount += 1;
+        if (record.status === 'healthy') healthyCount += 1;else degradedCount += 1;
       }
     }
-
     let fleetScore = 0;
     if (scores.length > 0) {
       try {
@@ -362,13 +379,12 @@ class QuarantineManager extends EventEmitter {
         fleetScore = scores.reduce((a, b) => a + b, 0) / scores.length;
       }
     }
-
     return {
       score: fleetScore,
       healthy: healthyCount,
       degraded: degradedCount,
       quarantined: this._quarantine.size,
-      total: this._registry.size,
+      total: this._registry.size
     };
   }
 
@@ -409,12 +425,6 @@ class QuarantineManager extends EventEmitter {
   isQuarantined(serviceId) {
     return this._quarantine.has(serviceId);
   }
-
-  /**
-   * Increment the respawn attempt counter for a quarantined service.
-   * @param {string} serviceId
-   * @param {string} [status]
-   */
   recordRespawnAttempt(serviceId, status = 'attempted') {
     const entry = this._quarantine.get(serviceId);
     if (entry) {

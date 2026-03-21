@@ -47,8 +47,8 @@ class IntakeHandler {
    */
   constructor(options = {}) {
     this._allowedTypes = options.allowedTypes ?? null;
-    this._sanitise     = options.sanitise     ?? (x => x);
-    this._logger       = options.logger       ?? console;
+    this._sanitise = options.sanitise ?? (x => x);
+    this._logger = options.logger ?? console;
   }
 
   /**
@@ -59,22 +59,23 @@ class IntakeHandler {
     const raw = ctx.input;
 
     // Normalise to object
-    const normalised = typeof raw === 'string'
-      ? { type: 'text', content: raw }
-      : { ...raw };
+    const normalised = typeof raw === 'string' ? {
+      type: 'text',
+      content: raw
+    } : {
+      ...raw
+    };
 
     // Apply sanitiser
     const sanitised = this._sanitise(normalised);
 
     // Assign defaults
-    sanitised.type     = sanitised.type     ?? 'generic';
+    sanitised.type = sanitised.type ?? 'generic';
     sanitised.priority = sanitised.priority ?? 50;
-    sanitised.id       = sanitised.id       ?? crypto.randomUUID();
+    sanitised.id = sanitised.id ?? crypto.randomUUID();
     sanitised.receivedAt = Date.now();
-
-    ctx.data.request   = sanitised;
+    ctx.data.request = sanitised;
     ctx.data.requestId = sanitised.id;
-
     this._logger.info(`[IntakeHandler] Intake complete — type: ${sanitised.type}, id: ${sanitised.id}`);
   }
 
@@ -85,12 +86,10 @@ class IntakeHandler {
   async validate(ctx) {
     const req = ctx.data.request;
     if (!req) return false;
-
     if (this._allowedTypes && !this._allowedTypes.includes(req.type)) {
       ctx.errors.push(`IntakeHandler: Unknown type "${req.type}"`);
       return false;
     }
-
     return true;
   }
 
@@ -120,27 +119,24 @@ class TriageHandler {
    */
   constructor(options = {}) {
     this._classifier = options.classifier ?? this._defaultClassifier;
-    this._logger     = options.logger     ?? console;
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const request    = ctx.data.request;
-    const result     = await this._classifier(request);
-
-    ctx.data.triage  = {
-      urgency:  result.urgency  ?? 'P2',  // P0=critical, P1=high, P2=normal, P3=low
-      domain:   result.domain   ?? 'generic',
-      tags:     result.tags     ?? [],
+    const request = ctx.data.request;
+    const result = await this._classifier(request);
+    ctx.data.triage = {
+      urgency: result.urgency ?? 'P2',
+      // P0=critical, P1=high, P2=normal, P3=low
+      domain: result.domain ?? 'generic',
+      tags: result.tags ?? [],
       poolName: this._urgencyToPool(result.urgency ?? 'P2'),
-      classifiedAt: Date.now(),
+      classifiedAt: Date.now()
     };
-
-    this._logger.info(
-      `[TriageHandler] Classified — urgency: ${ctx.data.triage.urgency}, domain: ${ctx.data.triage.domain}`
-    );
+    this._logger.info(`[TriageHandler] Classified — urgency: ${ctx.data.triage.urgency}, domain: ${ctx.data.triage.domain}`);
   }
 
   /**
@@ -164,15 +160,11 @@ class TriageHandler {
   async _defaultClassifier(request) {
     const p = request.priority ?? 50;
     let urgency;
-    if (p <= 10)      urgency = 'P0';
-    else if (p <= 30) urgency = 'P1';
-    else if (p <= 70) urgency = 'P2';
-    else              urgency = 'P3';
-
+    if (p <= 10) urgency = 'P0';else if (p <= 30) urgency = 'P1';else if (p <= 70) urgency = 'P2';else urgency = 'P3';
     return {
       urgency,
       domain: request.type ?? 'generic',
-      tags:   [],
+      tags: []
     };
   }
 
@@ -182,7 +174,12 @@ class TriageHandler {
    * @returns {string}
    */
   _urgencyToPool(urgency) {
-    const map = { P0: 'hot', P1: 'hot', P2: 'warm', P3: 'cold' };
+    const map = {
+      P0: 'hot',
+      P1: 'hot',
+      P2: 'warm',
+      P3: 'cold'
+    };
     return map[urgency] ?? 'warm';
   }
 }
@@ -211,8 +208,8 @@ class MonteCarloHandler {
    */
   constructor(options = {}) {
     this._simulations = options.simulations ?? 50;
-    this._simulator   = options.simulator   ?? this._defaultSimulator.bind(this);
-    this._logger      = options.logger      ?? console;
+    this._simulator = options.simulator ?? this._defaultSimulator.bind(this);
+    this._logger = options.logger ?? console;
   }
 
   /**
@@ -221,37 +218,35 @@ class MonteCarloHandler {
   async execute(ctx) {
     const request = ctx.data.request;
     const results = [];
-
     for (let i = 0; i < this._simulations; i++) {
-      const seed   = Math.random();
+      const seed = Math.random();
       const result = await this._simulator(request, seed);
-      results.push({ seed, ...result });
+      results.push({
+        seed,
+        ...result
+      });
     }
 
     // Compute statistics
-    const scores   = results.map(r => r.score ?? 0);
+    const scores = results.map(r => r.score ?? 0);
     const meanScore = scores.reduce((s, v) => s + v, 0) / scores.length;
-    const variance  = scores.reduce((s, v) => s + Math.pow(v - meanScore, 2), 0) / scores.length;
-    const stdDev    = Math.sqrt(variance);
+    const variance = scores.reduce((s, v) => s + Math.pow(v - meanScore, 2), 0) / scores.length;
+    const stdDev = Math.sqrt(variance);
 
     // Sort by score, pick best
     results.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-
     ctx.data.monteCarlo = {
-      simulations:    this._simulations,
-      results:        results.slice(0, 5), // Keep top-5 for ARENA
-      meanScore:      +meanScore.toFixed(4),
-      stdDev:         +stdDev.toFixed(4),
-      bestScore:      +(results[0]?.score ?? 0).toFixed(4),
-      worstScore:     +(results[results.length - 1]?.score ?? 0).toFixed(4),
-      confidence:     this._computeConfidence(meanScore, stdDev),
-      simulatedAt:    Date.now(),
+      simulations: this._simulations,
+      results: results.slice(0, 5),
+      // Keep top-5 for ARENA
+      meanScore: +meanScore.toFixed(4),
+      stdDev: +stdDev.toFixed(4),
+      bestScore: +(results[0]?.score ?? 0).toFixed(4),
+      worstScore: +(results[results.length - 1]?.score ?? 0).toFixed(4),
+      confidence: this._computeConfidence(meanScore, stdDev),
+      simulatedAt: Date.now()
     };
-
-    this._logger.info(
-      `[MonteCarloHandler] ${this._simulations} sims — mean: ${ctx.data.monteCarlo.meanScore}, ` +
-      `stdDev: ${ctx.data.monteCarlo.stdDev}, confidence: ${ctx.data.monteCarlo.confidence}`
-    );
+    this._logger.info(`[MonteCarloHandler] ${this._simulations} sims — mean: ${ctx.data.monteCarlo.meanScore}, ` + `stdDev: ${ctx.data.monteCarlo.stdDev}, confidence: ${ctx.data.monteCarlo.confidence}`);
   }
 
   /**
@@ -276,11 +271,13 @@ class MonteCarloHandler {
    */
   async _defaultSimulator(request, seed) {
     // Simple stochastic model: base score perturbed by Gaussian-ish noise
-    const base  = 0.6 + (request.priority ?? 50) / 200;
+    const base = 0.6 + (request.priority ?? 50) / 200;
     const noise = (seed - 0.5) * 0.4;
     return {
       score: Math.min(1, Math.max(0, base + noise)),
-      data:  { seed },
+      data: {
+        seed
+      }
     };
   }
 
@@ -321,50 +318,45 @@ class ArenaHandler {
    * @param {Function} [options.logger=console]
    */
   constructor(options = {}) {
-    this._evaluator     = options.evaluator    ?? this._defaultEvaluator.bind(this);
+    this._evaluator = options.evaluator ?? this._defaultEvaluator.bind(this);
     this._maxCandidates = options.maxCandidates ?? 5;
-    this._logger        = options.logger        ?? console;
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const mcResults  = ctx.data.monteCarlo?.results ?? [{ score: 0.5, data: {} }];
+    const mcResults = ctx.data.monteCarlo?.results ?? [{
+      score: 0.5,
+      data: {}
+    }];
     const candidates = mcResults.slice(0, this._maxCandidates);
-    const request    = ctx.data.request;
+    const request = ctx.data.request;
 
     // Evaluate each candidate
-    const battles = await Promise.all(
-      candidates.map(async (c, idx) => {
-        const eval_ = await this._evaluator(c, request);
-        return {
-          rank:       idx + 1,
-          candidate:  c,
-          evalScore:  eval_.score ?? 0,
-          detail:     eval_.detail ?? {},
-          totalScore: ((c.score ?? 0) + (eval_.score ?? 0)) / 2,
-        };
-      })
-    );
+    const battles = await Promise.all(candidates.map(async (c, idx) => {
+      const eval_ = await this._evaluator(c, request);
+      return {
+        rank: idx + 1,
+        candidate: c,
+        evalScore: eval_.score ?? 0,
+        detail: eval_.detail ?? {},
+        totalScore: ((c.score ?? 0) + (eval_.score ?? 0)) / 2
+      };
+    }));
 
     // Sort by totalScore descending
     battles.sort((a, b) => b.totalScore - a.totalScore);
-
     const winner = battles[0];
-
     ctx.data.arena = {
-      candidates:   battles,
+      candidates: battles,
       winner,
-      winnerScore:  +winner.totalScore.toFixed(4),
-      battleCount:  battles.length,
-      evaluatedAt:  Date.now(),
+      winnerScore: +winner.totalScore.toFixed(4),
+      battleCount: battles.length,
+      evaluatedAt: Date.now()
     };
-
-    this._logger.info(
-      `[ArenaHandler] Battle complete — winner score: ${ctx.data.arena.winnerScore} ` +
-      `(${battles.length} candidates)`
-    );
+    this._logger.info(`[ArenaHandler] Battle complete — winner score: ${ctx.data.arena.winnerScore} ` + `(${battles.length} candidates)`);
   }
 
   /**
@@ -388,7 +380,12 @@ class ArenaHandler {
    */
   async _defaultEvaluator(candidate, request) {
     const score = Math.min(1, (candidate.score ?? 0.5) * (0.9 + Math.random() * 0.2));
-    return { score, detail: { evaluated: true } };
+    return {
+      score,
+      detail: {
+        evaluated: true
+      }
+    };
   }
 }
 
@@ -416,45 +413,42 @@ class JudgeHandler {
    * @param {Function} [options.logger=console]
    */
   constructor(options = {}) {
-    this._minScore   = options.minScore   ?? 0.5;
-    this._safetyCheck = options.safetyCheck ?? (async () => ({ safe: true }));
-    this._logger     = options.logger     ?? console;
+    this._minScore = options.minScore ?? 0.5;
+    this._safetyCheck = options.safetyCheck ?? (async () => ({
+      safe: true
+    }));
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const winner   = ctx.data.arena?.winner;
-    const request  = ctx.data.request;
-    const mc       = ctx.data.monteCarlo;
+    const winner = ctx.data.arena?.winner;
+    const request = ctx.data.request;
+    const mc = ctx.data.monteCarlo;
 
     // If ARENA was skipped, derive a synthetic winner from Monte Carlo or request
     const effectiveScore = winner?.totalScore ?? mc?.meanScore ?? 0.7;
 
     // Score dimensions
     const correctness = effectiveScore;
-    const confidence  = mc?.confidence === 'high' ? 1.0 : mc?.confidence === 'medium' ? 0.7 : 0.4;
+    const confidence = mc?.confidence === 'high' ? 1.0 : mc?.confidence === 'medium' ? 0.7 : 0.4;
     const safetyResult = await this._safetyCheck(winner?.candidate?.data ?? {});
-    const safety      = safetyResult.safe ? 1.0 : 0.0;
-
-    const composite = (correctness * 0.50) + (confidence * 0.30) + (safety * 0.20);
-    const accepted  = composite >= this._minScore && safety === 1.0;
-
+    const safety = safetyResult.safe ? 1.0 : 0.0;
+    const composite = correctness * 0.50 + confidence * 0.30 + safety * 0.20;
+    const accepted = composite >= this._minScore && safety === 1.0;
     ctx.data.verdict = {
       accepted,
-      composite:    +composite.toFixed(4),
-      correctness:  +correctness.toFixed(4),
-      confidence:   +confidence.toFixed(4),
-      safety:       safety,
+      composite: +composite.toFixed(4),
+      correctness: +correctness.toFixed(4),
+      confidence: +confidence.toFixed(4),
+      safety: safety,
       safetyDetail: safetyResult.reason ?? null,
-      minScore:     this._minScore,
-      judgedAt:     Date.now(),
+      minScore: this._minScore,
+      judgedAt: Date.now()
     };
-
-    this._logger.info(
-      `[JudgeHandler] Verdict: ${accepted ? 'ACCEPTED' : 'REJECTED'} (score: ${composite.toFixed(4)})`
-    );
+    this._logger.info(`[JudgeHandler] Verdict: ${accepted ? 'ACCEPTED' : 'REJECTED'} (score: ${composite.toFixed(4)})`);
   }
 
   /**
@@ -499,21 +493,21 @@ class ApproveHandler {
    * @param {Function} [options.logger=console]
    */
   constructor(options = {}) {
-    this._headyCheck  = options.headyCheck  ?? (async () => ({ pass: true }));
-    this._headyAssure = options.headyAssure ?? (async () => ({ pass: true }));
-    this._humanGate   = options.humanGate   ?? null;
-    this._logger      = options.logger      ?? console;
+    this._headyCheck = options.headyCheck ?? (async () => ({
+      pass: true
+    }));
+    this._headyAssure = options.headyAssure ?? (async () => ({
+      pass: true
+    }));
+    this._humanGate = options.humanGate ?? null;
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const [checkResult, assureResult] = await Promise.all([
-      this._headyCheck(ctx),
-      this._headyAssure(ctx),
-    ]);
-
+    const [checkResult, assureResult] = await Promise.all([this._headyCheck(ctx), this._headyAssure(ctx)]);
     let humanApproved = true;
     let humanRequired = false;
 
@@ -521,21 +515,18 @@ class ApproveHandler {
     if (this._humanGate && (!checkResult.pass || !assureResult.pass)) {
       humanRequired = true;
       const gateResult = await this._humanGate(ctx);
-      humanApproved    = gateResult.approved;
+      humanApproved = gateResult.approved;
     }
-
     const approved = checkResult.pass && assureResult.pass && humanApproved;
-
     ctx.data.approval = {
       approved,
-      headyCheck:    checkResult,
-      headyAssure:   assureResult,
+      headyCheck: checkResult,
+      headyAssure: assureResult,
       humanRequired,
       humanApproved,
-      approvedAt:    approved ? Date.now() : null,
-      rejectedAt:    !approved ? Date.now() : null,
+      approvedAt: approved ? Date.now() : null,
+      rejectedAt: !approved ? Date.now() : null
     };
-
     this._logger.info(`[ApproveHandler] Approval: ${approved ? 'GRANTED' : 'DENIED'}`);
   }
 
@@ -576,28 +567,23 @@ class ExecuteHandler {
    */
   constructor(options = {}) {
     this._executor = options.executor ?? this._defaultExecutor.bind(this);
-    this._logger   = options.logger   ?? console;
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const startMs  = Date.now();
-    const result   = await this._executor(ctx);
-
+    const startMs = Date.now();
+    const result = await this._executor(ctx);
     ctx.data.execution = {
-      result:      result?.result ?? result,
-      nodeId:      result?.nodeId ?? 'local',
-      durationMs:  Date.now() - startMs,
-      executedAt:  Date.now(),
-      success:     result?.success !== false,
+      result: result?.result ?? result,
+      nodeId: result?.nodeId ?? 'local',
+      durationMs: Date.now() - startMs,
+      executedAt: Date.now(),
+      success: result?.success !== false
     };
-
-    this._logger.info(
-      `[ExecuteHandler] Executed on node ${ctx.data.execution.nodeId} ` +
-      `in ${ctx.data.execution.durationMs}ms`
-    );
+    this._logger.info(`[ExecuteHandler] Executed on node ${ctx.data.execution.nodeId} ` + `in ${ctx.data.execution.durationMs}ms`);
   }
 
   /**
@@ -610,7 +596,6 @@ class ExecuteHandler {
 
   /** @param {PipelineContext} ctx */
   async rollback(ctx) {
-    // Attempt compensating action if provided on the context
     if (typeof ctx.data.execution?.compensate === 'function') {
       await ctx.data.execution.compensate(ctx).catch(() => {});
     }
@@ -624,9 +609,9 @@ class ExecuteHandler {
   async _defaultExecutor(ctx) {
     await new Promise(r => setTimeout(r, 5));
     return {
-      result:  ctx.data.arena?.winner?.candidate ?? ctx.data.request,
-      nodeId:  'local-default',
-      success: true,
+      result: ctx.data.arena?.winner?.candidate ?? ctx.data.request,
+      nodeId: 'local-default',
+      success: true
     };
   }
 }
@@ -653,18 +638,20 @@ class VerifyHandler {
    * @param {Function} [options.logger=console]
    */
   constructor(options = {}) {
-    this._validator      = options.resultValidator ?? (async () => ({ valid: true }));
-    this._processedRuns  = options.processedRunIds ?? new Set();
-    this._logger         = options.logger          ?? console;
+    this._validator = options.resultValidator ?? (async () => ({
+      valid: true
+    }));
+    this._processedRuns = options.processedRunIds ?? new Set();
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const result     = ctx.data.execution?.result;
-    const request    = ctx.data.request;
-    const verdict    = ctx.data.verdict;
+    const result = ctx.data.execution?.result;
+    const request = ctx.data.request;
+    const verdict = ctx.data.verdict;
 
     // Idempotency guard
     const alreadyProcessed = this._processedRuns.has(ctx.runId);
@@ -674,24 +661,20 @@ class VerifyHandler {
     const validation = await this._validator(result, request);
 
     // Regression check: result score vs MC baseline
-    const mcBaseline  = ctx.data.monteCarlo?.meanScore ?? 0;
+    const mcBaseline = ctx.data.monteCarlo?.meanScore ?? 0;
     const resultScore = verdict?.composite ?? 0;
-    const regression  = resultScore < (mcBaseline * 0.80); // Allow 20% degradation
+    const regression = resultScore < mcBaseline * 0.80; // Allow 20% degradation
 
     ctx.data.verification = {
-      valid:           validation.valid && !regression,
+      valid: validation.valid && !regression,
       validationDetail: validation.reason ?? null,
       regression,
-      idempotent:      !alreadyProcessed,
+      idempotent: !alreadyProcessed,
       mcBaseline,
       resultScore,
-      verifiedAt:      Date.now(),
+      verifiedAt: Date.now()
     };
-
-    this._logger.info(
-      `[VerifyHandler] Verification: ${ctx.data.verification.valid ? 'PASS' : 'FAIL'} ` +
-      `(regression: ${regression}, idempotent: ${!alreadyProcessed})`
-    );
+    this._logger.info(`[VerifyHandler] Verification: ${ctx.data.verification.valid ? 'PASS' : 'FAIL'} ` + `(regression: ${regression}, idempotent: ${!alreadyProcessed})`);
   }
 
   /**
@@ -738,52 +721,41 @@ class ReceiptHandler {
    */
   constructor(options = {}) {
     this._autobiographer = options.autobiographer ?? null;
-    this._logger         = options.logger         ?? console;
+    this._logger = options.logger ?? console;
   }
 
   /**
    * @param {PipelineContext} ctx
    */
   async execute(ctx) {
-    const now        = Date.now();
-    const resultStr  = JSON.stringify(ctx.data.execution?.result ?? '');
-    const fingerprint = crypto
-      .createHash('sha256')
-      .update(`${ctx.runId}:${resultStr}`)
-      .digest('hex');
-
+    const now = Date.now();
+    const resultStr = JSON.stringify(ctx.data.execution?.result ?? '');
+    const fingerprint = crypto.createHash('sha256').update(`${ctx.runId}:${resultStr}`).digest('hex');
     const receipt = {
-      receiptId:    crypto.randomUUID(),
-      runId:        ctx.runId,
-      requestId:    ctx.data.requestId,
+      receiptId: crypto.randomUUID(),
+      runId: ctx.runId,
+      requestId: ctx.data.requestId,
       fingerprint,
-      requestType:  ctx.data.request?.type,
-      domain:       ctx.data.triage?.domain,
-      urgency:      ctx.data.triage?.urgency,
-      verdict:      ctx.data.verdict?.accepted,
+      requestType: ctx.data.request?.type,
+      domain: ctx.data.triage?.domain,
+      urgency: ctx.data.triage?.urgency,
+      verdict: ctx.data.verdict?.accepted,
       verdictScore: ctx.data.verdict?.composite,
-      approved:     ctx.data.approval?.approved,
-      verified:     ctx.data.verification?.valid,
+      approved: ctx.data.approval?.approved,
+      verified: ctx.data.verification?.valid,
       executionNode: ctx.data.execution?.nodeId,
-      durationMs:   now - ctx.startedAt,
-      generatedAt:  now,
-      stageTimings: this._extractTimings(ctx),
+      durationMs: now - ctx.startedAt,
+      generatedAt: now,
+      stageTimings: this._extractTimings(ctx)
     };
-
     ctx.data.receipt = receipt;
-    ctx.output       = receipt;
+    ctx.output = receipt;
 
     // Log to autobiographer
     if (typeof this._autobiographer === 'function') {
-      await this._autobiographer(receipt).catch(err =>
-        this._logger.warn(`[ReceiptHandler] Autobiographer log failed: ${err.message}`)
-      );
+      await this._autobiographer(receipt).catch(err => this._logger.warn(`[ReceiptHandler] Autobiographer log failed: ${err.message}`));
     }
-
-    this._logger.info(
-      `[ReceiptHandler] Receipt generated — id: ${receipt.receiptId}, ` +
-      `duration: ${receipt.durationMs}ms, fingerprint: ${fingerprint.slice(0, 16)}…`
-    );
+    this._logger.info(`[ReceiptHandler] Receipt generated — id: ${receipt.receiptId}, ` + `duration: ${receipt.durationMs}ms, fingerprint: ${fingerprint.slice(0, 16)}…`);
   }
 
   /**
@@ -807,14 +779,14 @@ class ReceiptHandler {
    */
   _extractTimings(ctx) {
     return {
-      intake:      ctx.data.request?.receivedAt     ? Date.now() - ctx.data.request.receivedAt     : null,
-      triage:      ctx.data.triage?.classifiedAt    ? Date.now() - ctx.data.triage.classifiedAt    : null,
-      monteCarlo:  ctx.data.monteCarlo?.simulatedAt ? Date.now() - ctx.data.monteCarlo.simulatedAt : null,
-      arena:       ctx.data.arena?.evaluatedAt      ? Date.now() - ctx.data.arena.evaluatedAt      : null,
-      judge:       ctx.data.verdict?.judgedAt       ? Date.now() - ctx.data.verdict.judgedAt       : null,
-      approve:     ctx.data.approval?.approvedAt    ? Date.now() - ctx.data.approval.approvedAt    : null,
-      execute:     ctx.data.execution?.executedAt   ? Date.now() - ctx.data.execution.executedAt   : null,
-      verify:      ctx.data.verification?.verifiedAt ? Date.now() - ctx.data.verification.verifiedAt : null,
+      intake: ctx.data.request?.receivedAt ? Date.now() - ctx.data.request.receivedAt : null,
+      triage: ctx.data.triage?.classifiedAt ? Date.now() - ctx.data.triage.classifiedAt : null,
+      monteCarlo: ctx.data.monteCarlo?.simulatedAt ? Date.now() - ctx.data.monteCarlo.simulatedAt : null,
+      arena: ctx.data.arena?.evaluatedAt ? Date.now() - ctx.data.arena.evaluatedAt : null,
+      judge: ctx.data.verdict?.judgedAt ? Date.now() - ctx.data.verdict.judgedAt : null,
+      approve: ctx.data.approval?.approvedAt ? Date.now() - ctx.data.approval.approvedAt : null,
+      execute: ctx.data.execution?.executedAt ? Date.now() - ctx.data.execution.executedAt : null,
+      verify: ctx.data.verification?.verifiedAt ? Date.now() - ctx.data.verification.verifiedAt : null
     };
   }
 }
@@ -839,30 +811,18 @@ class ReceiptHandler {
  */
 function createHandlers(options = {}) {
   return {
-    INTAKE:      new IntakeHandler(options.intake       ?? {}),
-    TRIAGE:      new TriageHandler(options.triage       ?? {}),
+    INTAKE: new IntakeHandler(options.intake ?? {}),
+    TRIAGE: new TriageHandler(options.triage ?? {}),
     MONTE_CARLO: new MonteCarloHandler(options.monteCarlo ?? {}),
-    ARENA:       new ArenaHandler(options.arena         ?? {}),
-    JUDGE:       new JudgeHandler(options.judge         ?? {}),
-    APPROVE:     new ApproveHandler(options.approve     ?? {}),
-    EXECUTE:     new ExecuteHandler(options.execute     ?? {}),
-    VERIFY:      new VerifyHandler(options.verify       ?? {}),
-    RECEIPT:     new ReceiptHandler(options.receipt     ?? {}),
+    ARENA: new ArenaHandler(options.arena ?? {}),
+    JUDGE: new JudgeHandler(options.judge ?? {}),
+    APPROVE: new ApproveHandler(options.approve ?? {}),
+    EXECUTE: new ExecuteHandler(options.execute ?? {}),
+    VERIFY: new VerifyHandler(options.verify ?? {}),
+    RECEIPT: new ReceiptHandler(options.receipt ?? {})
   };
 }
 
 // ─── Exports ──────────────────────────────────────────────────────────────────
 
-export {
-
-  IntakeHandler,
-  TriageHandler,
-  MonteCarloHandler,
-  ArenaHandler,
-  JudgeHandler,
-  ApproveHandler,
-  ExecuteHandler,
-  VerifyHandler,
-  ReceiptHandler,
-  createHandlers,
-};
+export { IntakeHandler, TriageHandler, MonteCarloHandler, ArenaHandler, JudgeHandler, ApproveHandler, ExecuteHandler, VerifyHandler, ReceiptHandler, createHandlers };

@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * HeadyDiplomatAgent — Inter-service negotiation agent
  * Mediates resource conflicts between swarms, negotiates SLA terms,
@@ -9,9 +11,15 @@
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
-const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
-
+const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 class HeadyDiplomatAgent {
   constructor(config = {}) {
     this.maxNegotiationRounds = config.maxNegotiationRounds || FIB[8];
@@ -20,7 +28,12 @@ class HeadyDiplomatAgent {
     this.negotiationHistory = [];
     this.trustScores = new Map();
     this.state = 'IDLE';
-    this.stats = { negotiations: 0, treatiesSigned: 0, conflictsResolved: 0, escalations: 0 };
+    this.stats = {
+      negotiations: 0,
+      treatiesSigned: 0,
+      conflictsResolved: 0,
+      escalations: 0
+    };
     this._correlationId = `diplomat-${Date.now().toString(36)}`;
   }
 
@@ -30,7 +43,12 @@ class HeadyDiplomatAgent {
    * @returns {object} — resolution with allocations
    */
   async mediateConflict(conflict) {
-    const { parties, resource, demanded, available } = conflict;
+    const {
+      parties,
+      resource,
+      demanded,
+      available
+    } = conflict;
     this.state = 'NEGOTIATING';
     this.stats.negotiations++;
     const correlationId = `neg-${Date.now().toString(36)}`;
@@ -38,16 +56,14 @@ class HeadyDiplomatAgent {
     // Calculate trust-weighted fair shares
     const trustWeights = parties.map(p => this.trustScores.get(p) || CSL.MEDIUM);
     const totalTrust = trustWeights.reduce((s, w) => s + w, 0);
-    const fairShares = trustWeights.map(w => (w / totalTrust) * available);
+    const fairShares = trustWeights.map(w => w / totalTrust * available);
 
     // Nash bargaining: iterative convergence toward Pareto optimal
     let allocations = [...fairShares];
     let round = 0;
     let converged = false;
-
     while (round < this.maxNegotiationRounds && !converged) {
       const prevAllocations = [...allocations];
-
       for (let i = 0; i < parties.length; i++) {
         const deficit = (demanded[i] || 0) - allocations[i];
         if (deficit > 0) {
@@ -77,11 +93,15 @@ class HeadyDiplomatAgent {
       const scale = available / totalAllocated;
       allocations = allocations.map(a => a * scale);
     }
-
     const resolution = {
       correlationId,
       resource,
-      parties: parties.map((p, i) => ({ party: p, demanded: demanded[i] || 0, allocated: Math.round(allocations[i] * 100) / 100, satisfaction: demanded[i] ? allocations[i] / demanded[i] : 1.0 })),
+      parties: parties.map((p, i) => ({
+        party: p,
+        demanded: demanded[i] || 0,
+        allocated: Math.round(allocations[i] * 100) / 100,
+        satisfaction: demanded[i] ? allocations[i] / demanded[i] : 1.0
+      })),
       rounds: round,
       converged,
       totalAvailable: available,
@@ -95,11 +115,16 @@ class HeadyDiplomatAgent {
       const currentTrust = this.trustScores.get(parties[i]) || CSL.MEDIUM;
       this.trustScores.set(parties[i], Math.min(1.0, currentTrust + satisfaction * 0.01));
     }
-
     this.stats.conflictsResolved++;
     this.negotiationHistory.push(resolution);
     this.state = 'IDLE';
-    this._log('info', 'conflict-resolved', { correlationId, resource, parties, rounds: round, converged });
+    this._log('info', 'conflict-resolved', {
+      correlationId,
+      resource,
+      parties,
+      rounds: round,
+      converged
+    });
     return resolution;
   }
 
@@ -108,7 +133,11 @@ class HeadyDiplomatAgent {
    * @param {object} params — { provider, consumer, requestedSLA }
    */
   async negotiateSLA(params) {
-    const { provider, consumer, requestedSLA } = params;
+    const {
+      provider,
+      consumer,
+      requestedSLA
+    } = params;
     const correlationId = `sla-${Date.now().toString(36)}`;
     const providerTrust = this.trustScores.get(provider) || CSL.MEDIUM;
     const consumerTrust = this.trustScores.get(consumer) || CSL.MEDIUM;
@@ -122,11 +151,24 @@ class HeadyDiplomatAgent {
       throughput: Math.round((requestedSLA.throughput || FIB[8]) * Math.min(providerTrust, consumerTrust)),
       errorBudget: Math.round((requestedSLA.errorBudget || FIB[5]) * PHI * (1.0 - Math.min(providerTrust, consumerTrust) * PSI))
     };
-
-    const treaty = { id: correlationId, provider, consumer, agreedSLA, providerTrust, consumerTrust, signedAt: Date.now(), expiresAt: Date.now() + FIB[11] * 86400000 };
+    const treaty = {
+      id: correlationId,
+      provider,
+      consumer,
+      agreedSLA,
+      providerTrust,
+      consumerTrust,
+      signedAt: Date.now(),
+      expiresAt: Date.now() + FIB[11] * 86400000
+    };
     this.activeTreaties.set(correlationId, treaty);
     this.stats.treatiesSigned++;
-    this._log('info', 'sla-negotiated', { correlationId, provider, consumer, agreedSLA });
+    this._log('info', 'sla-negotiated', {
+      correlationId,
+      provider,
+      consumer,
+      agreedSLA
+    });
     return treaty;
   }
 
@@ -135,20 +177,53 @@ class HeadyDiplomatAgent {
    * @param {object} request — { requester, targetDomain, permission, justification }
    */
   async escalatePermission(request) {
-    const { requester, targetDomain, permission, justification } = request;
+    const {
+      requester,
+      targetDomain,
+      permission,
+      justification
+    } = request;
     const requesterTrust = this.trustScores.get(requester) || CSL.MINIMUM;
 
     // CSL gate: trust must exceed threshold for the permission level
     const requiredThreshold = permission === 'write' ? CSL.HIGH : permission === 'admin' ? CSL.CRITICAL : CSL.MEDIUM;
-
     if (requesterTrust >= requiredThreshold) {
-      this._log('info', 'permission-granted', { requester, targetDomain, permission, trust: requesterTrust, threshold: requiredThreshold });
-      return { granted: true, requester, targetDomain, permission, trust: requesterTrust, threshold: requiredThreshold, expiresIn: FIB[8] * 60000 };
+      this._log('info', 'permission-granted', {
+        requester,
+        targetDomain,
+        permission,
+        trust: requesterTrust,
+        threshold: requiredThreshold
+      });
+      return {
+        granted: true,
+        requester,
+        targetDomain,
+        permission,
+        trust: requesterTrust,
+        threshold: requiredThreshold,
+        expiresIn: FIB[8] * 60000
+      };
     }
-
     this.stats.escalations++;
-    this._log('warn', 'permission-escalated', { requester, targetDomain, permission, trust: requesterTrust, threshold: requiredThreshold, justification });
-    return { granted: false, escalated: true, requester, targetDomain, permission, trust: requesterTrust, required: requiredThreshold, justification };
+    this._log('warn', 'permission-escalated', {
+      requester,
+      targetDomain,
+      permission,
+      trust: requesterTrust,
+      threshold: requiredThreshold,
+      justification
+    });
+    return {
+      granted: false,
+      escalated: true,
+      requester,
+      targetDomain,
+      permission,
+      trust: requesterTrust,
+      required: requiredThreshold,
+      justification
+    };
   }
 
   /** Decay trust scores over time (phi-scaled decay) */
@@ -158,29 +233,47 @@ class HeadyDiplomatAgent {
       this.trustScores.set(entity, Math.max(CSL.MINIMUM, decayed));
     }
   }
-
   _calculateCoherence() {
     const avgTrust = this.trustScores.size > 0 ? [...this.trustScores.values()].reduce((s, v) => s + v, 0) / this.trustScores.size : CSL.MEDIUM;
     return avgTrust;
   }
-
   async start() {
-    this._log('info', 'diplomat-started', { maxRounds: this.maxNegotiationRounds });
+    this._log('info', 'diplomat-started', {
+      maxRounds: this.maxNegotiationRounds
+    });
     return this;
   }
-
   async stop() {
     this.state = 'STOPPED';
-    this._log('info', 'diplomat-stopped', { stats: this.stats, treaties: this.activeTreaties.size });
+    this._log('info', 'diplomat-stopped', {
+      stats: this.stats,
+      treaties: this.activeTreaties.size
+    });
   }
-
   health() {
-    return { status: 'ok', state: this.state, coherence: this._calculateCoherence(), stats: { ...this.stats }, activeTreaties: this.activeTreaties.size, trackedEntities: this.trustScores.size, timestamp: new Date().toISOString() };
+    return {
+      status: 'ok',
+      state: this.state,
+      coherence: this._calculateCoherence(),
+      stats: {
+        ...this.stats
+      },
+      activeTreaties: this.activeTreaties.size,
+      trackedEntities: this.trustScores.size,
+      timestamp: new Date().toISOString()
+    };
   }
-
   _log(level, event, data = {}) {
-    console.log(JSON.stringify({ level, event, agent: 'HeadyDiplomatAgent', correlationId: this._correlationId, ...data, ts: new Date().toISOString() }));
+    logger.info(JSON.stringify({
+      level,
+      event,
+      agent: 'HeadyDiplomatAgent',
+      correlationId: this._correlationId,
+      ...data,
+      ts: new Date().toISOString()
+    }));
   }
 }
-
-module.exports = { HeadyDiplomatAgent };
+module.exports = {
+  HeadyDiplomatAgent
+};

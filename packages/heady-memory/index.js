@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -26,7 +28,9 @@
  */
 
 const crypto = require('crypto');
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 
 // ═══════════════════════════════════════════════════════════════════
 // φ-Constants
@@ -36,7 +40,6 @@ const PHI = 1.618034;
 const PSI = 0.618034; // 1/φ
 const PSI2 = PSI * PSI; // ψ² ≈ 0.382
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
-
 const EMBEDDING_DIM = 1536;
 const T0_CAPSULE_CAP = FIB[7]; // fib(8) = 21
 const T1_CAPACITY = FIB[11] * 1000; // fib(12) = 144K vectors
@@ -47,15 +50,15 @@ const CONSOLIDATION_EXPIRE = PSI2; // < 0.382 → allow to expire
 
 // Consolidation weights (φ-derived, sum = 1.0)
 const SIGMA = PHI + 1.0 + PSI + PSI2; // ≈ 3.618
-const W_ACCESS = PHI / SIGMA;          // 0.447
-const W_REINFORCEMENT = 1.0 / SIGMA;   // 0.276
-const W_IMPORTANCE = PSI / SIGMA;       // 0.171
-const W_SIMILARITY = PSI2 / SIGMA;      // 0.106
+const W_ACCESS = PHI / SIGMA; // 0.447
+const W_REINFORCEMENT = 1.0 / SIGMA; // 0.276
+const W_IMPORTANCE = PSI / SIGMA; // 0.171
+const W_SIMILARITY = PSI2 / SIGMA; // 0.106
 
 // Decay rates per cognitive sub-space
-const DECAY_SEMANTIC = Math.pow(PSI, 4);  // ≈ 0.146 — very slow
-const DECAY_EPISODIC = PSI2;              // ≈ 0.382 — moderate
-const DECAY_PROCEDURAL = 0;               // none — write-once-update-only
+const DECAY_SEMANTIC = Math.pow(PSI, 4); // ≈ 0.146 — very slow
+const DECAY_EPISODIC = PSI2; // ≈ 0.382 — moderate
+const DECAY_PROCEDURAL = 0; // none — write-once-update-only
 
 // ═══════════════════════════════════════════════════════════════════
 // T0: Working Memory
@@ -81,10 +84,8 @@ class WorkingMemory {
     if (this.capsules.size > T0_CAPSULE_CAP) {
       this._evict();
     }
-
     return capsule;
   }
-
   get(id) {
     const capsule = this.capsules.get(id);
     if (capsule) {
@@ -93,22 +94,21 @@ class WorkingMemory {
     }
     return capsule || null;
   }
-
   delete(id) {
     return this.capsules.delete(id);
   }
-
   list() {
     return Array.from(this.capsules.entries()).map(([id, c]) => ({
       id,
       pipelineStage: c.pipelineStage,
       confidence: c.confidence,
       accessCount: c._accessCount,
-      age: Date.now() - c._createdAt,
+      age: Date.now() - c._createdAt
     }));
   }
-
-  get size() { return this.capsules.size; }
+  get size() {
+    return this.capsules.size;
+  }
 
   /**
    * φ-weighted eviction: remove capsule with lowest eviction score.
@@ -117,22 +117,22 @@ class WorkingMemory {
   _evict() {
     let lowestId = null;
     let lowestScore = Infinity;
-
     for (const [id, c] of this.capsules) {
       const recency = Math.exp(-PSI * (Date.now() - c._lastAccess) / 3600000);
       const cslRelevance = c.confidence || PSI;
-      const score = (c._accessCount * recency * cslRelevance) / PHI;
-
+      const score = c._accessCount * recency * cslRelevance / PHI;
       if (score < lowestScore) {
         lowestScore = score;
         lowestId = id;
       }
     }
-
     if (lowestId) {
       const evicted = this.capsules.get(lowestId);
       this.capsules.delete(lowestId);
-      return { evictedId: lowestId, capsule: evicted };
+      return {
+        evictedId: lowestId,
+        capsule: evicted
+      };
     }
     return null;
   }
@@ -166,7 +166,6 @@ class ShortTermMemory {
         return existing;
       }
     }
-
     const id = crypto.randomUUID();
     const record = {
       id,
@@ -175,15 +174,15 @@ class ShortTermMemory {
       content: entry.content,
       domain: entry.domain || 'general',
       sourceNode: entry.sourceNode || 'unknown',
-      importance: entry.importance || PSI, // ψ-initialized
+      importance: entry.importance || PSI,
+      // ψ-initialized
       accessCount: 0,
       lastAccessedAt: Date.now(),
       createdAt: Date.now(),
       expiresAt: Date.now() + T1_TTL_MS,
       consolidated: false,
-      metadata: entry.metadata || {},
+      metadata: entry.metadata || {}
     };
-
     this.vectors.set(id, record);
     this.contentIndex.set(contentHash, id);
 
@@ -191,7 +190,6 @@ class ShortTermMemory {
     if (this.vectors.size > T1_CAPACITY) {
       this._evictOldest();
     }
-
     return record;
   }
 
@@ -202,23 +200,29 @@ class ShortTermMemory {
    */
   search(queryEmbedding, topK = 5, minScore = PSI2) {
     const results = [];
-
     for (const [id, record] of this.vectors) {
       if (record.consolidated) continue;
       const score = this._cosineSimilarity(queryEmbedding, record.embedding);
       if (score >= minScore) {
-        results.push({ id, score, record });
+        results.push({
+          id,
+          score,
+          record
+        });
       }
     }
-
     results.sort((a, b) => b.score - a.score);
     return results.slice(0, topK).map(r => {
       r.record.accessCount++;
       r.record.lastAccessedAt = Date.now();
-      return { id: r.id, score: r.score, content: r.record.content, domain: r.record.domain };
+      return {
+        id: r.id,
+        score: r.score,
+        content: r.record.content,
+        domain: r.record.domain
+      };
     });
   }
-
   get(id) {
     const record = this.vectors.get(id);
     if (record) {
@@ -227,7 +231,6 @@ class ShortTermMemory {
     }
     return record;
   }
-
   delete(id) {
     const record = this.vectors.get(id);
     if (record) {
@@ -237,8 +240,9 @@ class ShortTermMemory {
     }
     return false;
   }
-
-  get size() { return this.vectors.size; }
+  get size() {
+    return this.vectors.size;
+  }
 
   /**
    * Get all memories that need consolidation evaluation (near TTL expiry).
@@ -247,13 +251,11 @@ class ShortTermMemory {
     const now = Date.now();
     const window = T1_EXTENSION_MS; // evaluate within one extension window of expiry
     const candidates = [];
-
     for (const [id, record] of this.vectors) {
-      if (!record.consolidated && (record.expiresAt - now) < window) {
+      if (!record.consolidated && record.expiresAt - now < window) {
         candidates.push(record);
       }
     }
-
     return candidates;
   }
 
@@ -265,18 +267,13 @@ class ShortTermMemory {
     const maxAccess = Math.max(1, ...Array.from(this.vectors.values()).map(v => v.accessCount));
     const accessFreq = record.accessCount / maxAccess;
     const reinforcement = record.accessCount > 1 ? 1.0 : 0.0;
-
-    return (
-      W_ACCESS * accessFreq +
-      W_REINFORCEMENT * reinforcement +
-      W_IMPORTANCE * record.importance +
-      W_SIMILARITY * existingT2Similarity
-    );
+    return W_ACCESS * accessFreq + W_REINFORCEMENT * reinforcement + W_IMPORTANCE * record.importance + W_SIMILARITY * existingT2Similarity;
   }
-
   _cosineSimilarity(a, b) {
     if (!a || !b || a.length !== b.length) return 0;
-    let dot = 0, magA = 0, magB = 0;
+    let dot = 0,
+      magA = 0,
+      magB = 0;
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       magA += a[i] * a[i];
@@ -285,7 +282,6 @@ class ShortTermMemory {
     const denom = Math.sqrt(magA) * Math.sqrt(magB);
     return denom === 0 ? 0 : dot / denom;
   }
-
   _evictOldest() {
     let oldestId = null;
     let oldestTime = Infinity;
@@ -306,8 +302,8 @@ class ShortTermMemory {
 class LongTermMemory {
   constructor() {
     // Three cognitive sub-spaces
-    this.semantic = new Map();   // facts, knowledge, learned patterns
-    this.episodic = new Map();   // specific task executions, conversations
+    this.semantic = new Map(); // facts, knowledge, learned patterns
+    this.episodic = new Map(); // specific task executions, conversations
     this.procedural = new Map(); // how-to configs, optimal parameters per domain
   }
 
@@ -320,11 +316,7 @@ class LongTermMemory {
     const id = entry.id || crypto.randomUUID();
     const store = this[subspace];
     if (!store) throw new Error(`Unknown subspace: ${subspace}`);
-
-    const decayRate = subspace === 'semantic' ? DECAY_SEMANTIC
-      : subspace === 'episodic' ? DECAY_EPISODIC
-      : DECAY_PROCEDURAL;
-
+    const decayRate = subspace === 'semantic' ? DECAY_SEMANTIC : subspace === 'episodic' ? DECAY_EPISODIC : DECAY_PROCEDURAL;
     const record = {
       id,
       embedding: entry.embedding || new Float32Array(EMBEDDING_DIM),
@@ -337,9 +329,8 @@ class LongTermMemory {
       lastAccessedAt: Date.now(),
       epoch: this._currentEpoch(),
       partition: 'hot',
-      metadata: entry.metadata || {},
+      metadata: entry.metadata || {}
     };
-
     store.set(id, record);
     return record;
   }
@@ -350,7 +341,6 @@ class LongTermMemory {
   search(queryEmbedding, topK = 5, subspace = null) {
     const stores = subspace ? [this[subspace]] : [this.semantic, this.episodic, this.procedural];
     const results = [];
-
     for (const store of stores) {
       if (!store) continue;
       for (const [id, record] of store) {
@@ -359,13 +349,15 @@ class LongTermMemory {
         const age = (Date.now() - record.createdAt) / (3600000 * 24); // days
         const decayFactor = Math.exp(-record.decayRate * age);
         const adjustedScore = score * decayFactor * (1 + record.importance * PSI);
-
         if (adjustedScore > PSI2) {
-          results.push({ id, score: adjustedScore, record });
+          results.push({
+            id,
+            score: adjustedScore,
+            record
+          });
         }
       }
     }
-
     results.sort((a, b) => b.score - a.score);
     return results.slice(0, topK).map(r => {
       r.record.accessCount++;
@@ -378,7 +370,7 @@ class LongTermMemory {
         content: r.record.content,
         domain: r.record.domain,
         subspace: this._subspaceOf(r.id),
-        partition: r.record.partition,
+        partition: r.record.partition
       };
     });
   }
@@ -401,7 +393,7 @@ class LongTermMemory {
       semantic: this.semantic.size,
       episodic: this.episodic.size,
       procedural: this.procedural.size,
-      total: this.semantic.size + this.episodic.size + this.procedural.size,
+      total: this.semantic.size + this.episodic.size + this.procedural.size
     };
   }
 
@@ -412,7 +404,6 @@ class LongTermMemory {
     const now = Date.now();
     const dayMs = 86400000;
     let transitions = 0;
-
     for (const store of [this.semantic, this.episodic]) {
       for (const [id, record] of store) {
         const ageDays = (now - record.createdAt) / dayMs;
@@ -427,24 +418,24 @@ class LongTermMemory {
         }
       }
     }
-
-    return { transitions };
+    return {
+      transitions
+    };
   }
-
   _currentEpoch() {
     return Math.floor(Date.now() / (FIB[7] * 86400000)); // 21-day epochs
   }
-
   _subspaceOf(id) {
     if (this.semantic.has(id)) return 'semantic';
     if (this.episodic.has(id)) return 'episodic';
     if (this.procedural.has(id)) return 'procedural';
     return 'unknown';
   }
-
   _cosineSimilarity(a, b) {
     if (!a || !b || a.length !== b.length) return 0;
-    let dot = 0, magA = 0, magB = 0;
+    let dot = 0,
+      magA = 0,
+      magB = 0;
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       magA += a[i] * a[i];
@@ -473,10 +464,14 @@ class HeadyMemory extends EventEmitter {
    */
   store(tier, entry) {
     switch (tier) {
-      case 't0': return this.t0.store(entry.id || crypto.randomUUID(), entry);
-      case 't1': return this.t1.store(entry);
-      case 't2': return this.t2.store(entry.subspace || 'episodic', entry);
-      default: throw new Error(`Unknown tier: ${tier}`);
+      case 't0':
+        return this.t0.store(entry.id || crypto.randomUUID(), entry);
+      case 't1':
+        return this.t1.store(entry);
+      case 't2':
+        return this.t2.store(entry.subspace || 'episodic', entry);
+      default:
+        throw new Error(`Unknown tier: ${tier}`);
     }
   }
 
@@ -488,10 +483,13 @@ class HeadyMemory extends EventEmitter {
     const t2Results = this.t2.search(queryEmbedding, topK);
 
     // Merge and re-rank
-    const all = [
-      ...t1Results.map(r => ({ ...r, tier: 't1' })),
-      ...t2Results.map(r => ({ ...r, tier: 't2' })),
-    ];
+    const all = [...t1Results.map(r => ({
+      ...r,
+      tier: 't1'
+    })), ...t2Results.map(r => ({
+      ...r,
+      tier: 't2'
+    }))];
     all.sort((a, b) => b.score - a.score);
     return all.slice(0, topK);
   }
@@ -504,33 +502,36 @@ class HeadyMemory extends EventEmitter {
     let promoted = 0;
     let expired = 0;
     let extended = 0;
-
     for (const record of candidates) {
       const score = this.t1.consolidationScore(record);
-
       if (score >= CONSOLIDATION_PROMOTE) {
         // Promote to T2
-        const subspace = record.domain === 'procedural' ? 'procedural'
-          : record.accessCount > 3 ? 'semantic'
-          : 'episodic';
-
+        const subspace = record.domain === 'procedural' ? 'procedural' : record.accessCount > 3 ? 'semantic' : 'episodic';
         this.t2.store(subspace, {
           embedding: record.embedding,
           content: record.content,
           domain: record.domain,
           importance: record.importance,
-          metadata: { ...record.metadata, promotedFrom: 't1', originalId: record.id },
+          metadata: {
+            ...record.metadata,
+            promotedFrom: 't1',
+            originalId: record.id
+          }
         });
-
         record.consolidated = true;
         promoted++;
-        this.emit('memory:promoted', { id: record.id, subspace, score });
-
+        this.emit('memory:promoted', {
+          id: record.id,
+          subspace,
+          score
+        });
       } else if (score < CONSOLIDATION_EXPIRE) {
         // Allow to expire (will be cleaned up by TTL)
         expired++;
-        this.emit('memory:expired', { id: record.id, score });
-
+        this.emit('memory:expired', {
+          id: record.id,
+          score
+        });
       } else {
         // Extend TTL
         record.expiresAt += T1_EXTENSION_MS;
@@ -540,14 +541,13 @@ class HeadyMemory extends EventEmitter {
 
     // Run T2 partition sweep
     const partitionResult = this.t2.partitionSweep();
-
     return {
       candidates: candidates.length,
       promoted,
       expired,
       extended,
       partitionTransitions: partitionResult.transitions,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -558,15 +558,12 @@ class HeadyMemory extends EventEmitter {
   startConsolidation(intervalMs) {
     const interval = intervalMs || T1_EXTENSION_MS;
     if (this.consolidationTimer) return;
-
     this.consolidationTimer = setInterval(() => {
       const result = this.consolidate();
       this.emit('consolidation:complete', result);
     }, interval);
-
-    console.log(`[heady-memory] Consolidation started: every ${Math.round(interval / 3600000 * 100) / 100}h`);
+    logger.info(`[heady-memory] Consolidation started: every ${Math.round(interval / 3600000 * 100) / 100}h`);
   }
-
   stopConsolidation() {
     if (this.consolidationTimer) {
       clearInterval(this.consolidationTimer);
@@ -579,10 +576,22 @@ class HeadyMemory extends EventEmitter {
    */
   stats() {
     return {
-      t0: { capsules: this.t0.size, cap: T0_CAPSULE_CAP },
-      t1: { vectors: this.t1.size, capacity: T1_CAPACITY, ttlHours: Math.round(T1_TTL_MS / 3600000) },
+      t0: {
+        capsules: this.t0.size,
+        cap: T0_CAPSULE_CAP
+      },
+      t1: {
+        vectors: this.t1.size,
+        capacity: T1_CAPACITY,
+        ttlHours: Math.round(T1_TTL_MS / 3600000)
+      },
       t2: this.t2.stats(),
-      constants: { phi: PHI, psi: PSI, psi2: PSI2, embeddingDim: EMBEDDING_DIM },
+      constants: {
+        phi: PHI,
+        psi: PSI,
+        psi2: PSI2,
+        embeddingDim: EMBEDDING_DIM
+      }
     };
   }
 }
@@ -597,9 +606,21 @@ module.exports = {
   ShortTermMemory,
   LongTermMemory,
   // Constants
-  PHI, PSI, PSI2, FIB, EMBEDDING_DIM,
-  T0_CAPSULE_CAP, T1_CAPACITY, T1_TTL_MS,
-  CONSOLIDATION_PROMOTE, CONSOLIDATION_EXPIRE,
-  W_ACCESS, W_REINFORCEMENT, W_IMPORTANCE, W_SIMILARITY,
-  DECAY_SEMANTIC, DECAY_EPISODIC, DECAY_PROCEDURAL,
+  PHI,
+  PSI,
+  PSI2,
+  FIB,
+  EMBEDDING_DIM,
+  T0_CAPSULE_CAP,
+  T1_CAPACITY,
+  T1_TTL_MS,
+  CONSOLIDATION_PROMOTE,
+  CONSOLIDATION_EXPIRE,
+  W_ACCESS,
+  W_REINFORCEMENT,
+  W_IMPORTANCE,
+  W_SIMILARITY,
+  DECAY_SEMANTIC,
+  DECAY_EPISODIC,
+  DECAY_PROCEDURAL
 };

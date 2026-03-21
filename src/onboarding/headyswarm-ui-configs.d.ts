@@ -10,12 +10,6 @@ export function getSwarmsByPriority(): HeadySwarmConfig[];
  * @returns {HeadySwarmConfig[]}
  */
 export function getSwarmsByAllocation(): HeadySwarmConfig[];
-/**
- * Returns the swarm config responsible for a given HeadyBee template ID.
- *
- * @param {string} templateId
- * @returns {HeadySwarmConfig|null}
- */
 export function getSwarmForTemplate(templateId: string): HeadySwarmConfig | null;
 /**
  * Returns all communication channels between two swarms (bidirectional lookup).
@@ -32,9 +26,9 @@ export function getChannelsBetween(swarmIdA: string, swarmIdB: string): object[]
  * @returns {{ valid: boolean, totalAllocation: number, warning?: string }}
  */
 export function validateFibonacciAllocation(): {
-    valid: boolean;
-    totalAllocation: number;
-    warning?: string;
+  valid: boolean;
+  totalAllocation: number;
+  warning?: string;
 };
 /**
  * Complete HeadySwarm UI configuration registry.
@@ -43,37 +37,34 @@ export function validateFibonacciAllocation(): {
  * @type {Object.<string, HeadySwarmConfig>}
  */
 export const HEADY_SWARM_CONFIGS: {
-    [x: string]: HeadySwarmConfig;
+  [x: string]: HeadySwarmConfig;
 };
 export type HeadySwarmConfig = {
-    swarmId: string;
-    name: string;
-    description: string;
-    /**
-     * - Raw Fibonacci number
-     */
-    fibAllocation: number;
-    /**
-     * - Effective resource allocation percentage
-     */
-    allocationPct: number;
-    /**
-     * - 1 = highest priority
-     */
-    priorityLevel: number;
-    /**
-     * - UI_REGION value
-     */
-    uiLayoutRegion: string;
-    /**
-     * - HeadyBee template IDs managed by this swarm
-     */
-    includedTemplates: string[];
-    workerAssignments: object[];
-    interSwarmChannels: object[];
-    autoScalingRules: object[];
-    healthChecks: object[];
-    uiWidgetRegions: object;
-    slaTargets: object;
+  swarmId: string;
+  name: string;
+  description: string;
+  /**
+   * - Raw Fibonacci number
+   */
+  fibAllocation: number;
+  /**
+   * - Effective resource allocation percentage
+   */
+  allocationPct: number;
+  /**
+   * - 1 = highest priority
+   */
+  priorityLevel: number;
+  /**
+   * - UI_REGION value
+   */
+  uiLayoutRegion: string;
+  includedTemplates: string[];
+  workerAssignments: object[];
+  interSwarmChannels: object[];
+  autoScalingRules: object[];
+  healthChecks: object[];
+  uiWidgetRegions: object;
+  slaTargets: object;
 };
 //# sourceMappingURL=headyswarm-ui-configs.d.ts.map

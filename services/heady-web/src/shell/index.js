@@ -1,3 +1,5 @@
+const { createLogger } = require('../../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * HeadyWeb Universal Shell — Entry Point
  *
@@ -42,44 +44,44 @@ const REMOTE_REGISTRY = {
     url: '/remotes/antigravity/remoteEntry.js',
     scope: 'antigravity',
     module: './App',
-    description: '3D vector space visualization with Sacred Geometry',
+    description: '3D vector space visualization with Sacred Geometry'
   },
   landing: {
     url: '/remotes/landing/remoteEntry.js',
     scope: 'headyLanding',
     module: './App',
-    description: 'Marketing landing page for Heady™Systems',
+    description: 'Marketing landing page for Heady™Systems'
   },
   'heady-ide': {
     url: '/remotes/heady-ide/remoteEntry.js',
     scope: 'headyIDE',
     module: './App',
-    description: 'Code editor and IDE interface with Heady™Buddy AI',
+    description: 'Code editor and IDE interface with Heady™Buddy AI'
   },
   'swarm-dashboard': {
     url: '/remotes/swarm-dashboard/remoteEntry.js',
     scope: 'swarmDashboard',
     module: './App',
-    description: 'Real-time agent swarm monitoring dashboard',
+    description: 'Real-time agent swarm monitoring dashboard'
   },
   'governance-panel': {
     url: '/remotes/governance/remoteEntry.js',
     scope: 'governancePanel',
     module: './App',
-    description: 'Policy engine, approval gates, and audit log',
+    description: 'Policy engine, approval gates, and audit log'
   },
   'projection-monitor': {
     url: '/remotes/projections/remoteEntry.js',
     scope: 'projectionMonitor',
     module: './App',
-    description: 'Deployment projection monitoring for Heady™ domains',
+    description: 'Deployment projection monitoring for Heady™ domains'
   },
   'vector-explorer': {
     url: '/remotes/vectors/remoteEntry.js',
     scope: 'vectorExplorer',
     module: './App',
-    description: 'Semantic vector memory exploration and federation',
-  },
+    description: 'Semantic vector memory exploration and federation'
+  }
 };
 
 // ── UI Helpers ───────────────────────────────────────────────────────────────
@@ -112,10 +114,11 @@ function hideLoader() {
 function renderFallbackUI(projection) {
   const root = document.getElementById('heady-root');
   if (!root) return;
-
   setLoaderStatus('Mounting integrated workspace fallback…');
-  console.info(`[HeadyShell] No remote for "${projection || 'unknown'}" — loading integrated workspace.`);
-  renderIntegratedWorkspace(root, { projection });
+  logger.info(`[HeadyShell] No remote for "${projection || 'unknown'}" — loading integrated workspace.`);
+  renderIntegratedWorkspace(root, {
+    projection
+  });
 }
 
 /**
@@ -125,7 +128,6 @@ function renderFallbackUI(projection) {
 function renderErrorUI(error) {
   const errOverlay = document.getElementById('heady-error');
   const errMsg = document.getElementById('heady-error-message');
-
   if (errOverlay && errMsg) {
     errMsg.textContent = error?.message || String(error);
     errOverlay.classList.add('visible');
@@ -156,17 +158,11 @@ function renderErrorUI(error) {
  */
 function preloadFrequentRemotes() {
   try {
-    preloadRemote(
-      REMOTE_REGISTRY.antigravity.url,
-      REMOTE_REGISTRY.antigravity.scope
-    );
-    preloadRemote(
-      REMOTE_REGISTRY.landing.url,
-      REMOTE_REGISTRY.landing.scope
-    );
+    preloadRemote(REMOTE_REGISTRY.antigravity.url, REMOTE_REGISTRY.antigravity.scope);
+    preloadRemote(REMOTE_REGISTRY.landing.url, REMOTE_REGISTRY.landing.scope);
   } catch (err) {
     // Preload failures are non-fatal
-    console.warn('[HeadyShell] Preload warning:', err.message);
+    logger.warn('[HeadyShell] Preload warning:', err.message);
   }
 }
 
@@ -181,20 +177,19 @@ function preloadFrequentRemotes() {
 async function bootShell() {
   const container = document.getElementById('heady-root');
   if (!container) {
-    console.error('[HeadyShell] #heady-root not found in DOM');
+    logger.error('[HeadyShell] #heady-root not found in DOM');
     return;
   }
-
   let projection = DEFAULT_REMOTE;
-
   try {
     // ── Step 1: Resolve domain → projection ──────────────────────────────
     setLoaderStatus('Resolving domain projection…');
-
     try {
       const res = await fetch(DOMAIN_API_URL, {
         signal: AbortSignal.timeout(5000),
-        headers: { 'X-Heady-Shell': SHELL_VERSION },
+        headers: {
+          'X-Heady-Shell': SHELL_VERSION
+        }
       });
       if (res.ok) {
         const data = await res.json();
@@ -202,15 +197,14 @@ async function bootShell() {
       }
     } catch (fetchErr) {
       // Domain API is optional — fall back to DEFAULT_REMOTE
-      console.warn('[HeadyShell] Domain API unavailable, using default remote:', fetchErr.message);
+      logger.warn('[HeadyShell] Domain API unavailable, using default remote:', fetchErr.message);
     }
 
     // ── Step 2: Look up remote ────────────────────────────────────────────
     setLoaderStatus(`Loading module: ${projection}…`);
-
     const remote = REMOTE_REGISTRY[projection];
     if (!remote) {
-      console.warn(`[HeadyShell] No remote registered for projection "${projection}". Rendering fallback.`);
+      logger.warn(`[HeadyShell] No remote registered for projection "${projection}". Rendering fallback.`);
       hideLoader();
       renderFallbackUI(projection);
       return;
@@ -218,7 +212,6 @@ async function bootShell() {
 
     // ── Step 3: Mount remote ──────────────────────────────────────────────
     setLoaderStatus(`Mounting ${projection}…`);
-
     await mountRemote({
       url: remote.url,
       scope: remote.scope,
@@ -228,15 +221,13 @@ async function bootShell() {
         shellVersion: SHELL_VERSION,
         projection,
         domain: window.location.hostname,
-        theme: 'dark',
-      },
+        theme: 'dark'
+      }
     });
-
     hideLoader();
-    console.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
-
+    logger.info(`[HeadyShell] ✓ Mounted remote "${projection}" (shell v${SHELL_VERSION})`);
   } catch (err) {
-    console.error('[HeadyShell] Boot failure:', err);
+    logger.error('[HeadyShell] Boot failure:', err);
     hideLoader();
     renderErrorUI(err);
   }
@@ -245,15 +236,11 @@ async function bootShell() {
 // ── Entry Point ──────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.info(`[HeadyShell] Starting up — shell v${SHELL_VERSION} | platform v3.1.0`);
+  logger.info(`[HeadyShell] Starting up — shell v${SHELL_VERSION} | platform v3.1.0`);
   preloadFrequentRemotes();
   bootShell();
 });
 
 // ── Exports ──────────────────────────────────────────────────────────────────
 
-export {
-  bootShell,
-  REMOTE_REGISTRY,
-  SHELL_VERSION,
-};
+export { bootShell, REMOTE_REGISTRY, SHELL_VERSION };

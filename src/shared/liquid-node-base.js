@@ -15,7 +15,9 @@
 'use strict';
 
 const http = require('http');
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 const crypto = require('crypto');
 
 // ─── φ-MATH CONSTANTS (Zero Magic Numbers) ──────────────────────────────────
@@ -24,14 +26,16 @@ const PSI = 1 / PHI;
 const PSI2 = PSI * PSI;
 const PSI3 = PSI * PSI * PSI;
 const PSI4 = PSI * PSI * PSI * PSI;
-const FIB = [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765];
+const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765];
 
 /**
  * Fibonacci accessor (1-based).
  * @param {number} n - Index into Fibonacci sequence
  * @returns {number}
  */
-function fib(n) { return FIB[n - 1] || 0; }
+function fib(n) {
+  return FIB[n - 1] || 0;
+}
 
 /**
  * Phi-harmonic threshold: 1 - ψ^level × spread
@@ -43,14 +47,6 @@ function phiThreshold(level, spread) {
   const s = typeof spread === 'number' ? spread : 0.5;
   return 1 - Math.pow(PSI, level) * s;
 }
-
-/**
- * Phi-exponential backoff with optional jitter.
- * @param {number} attempt - Current attempt (0-based)
- * @param {number} [baseMs=1000] - Base milliseconds
- * @param {number} [maxMs=60000] - Maximum milliseconds
- * @returns {number}
- */
 function phiBackoff(attempt, baseMs, maxMs) {
   const base = typeof baseMs === 'number' ? baseMs : 1000;
   const max = typeof maxMs === 'number' ? maxMs : 60000;
@@ -61,11 +57,11 @@ function phiBackoff(attempt, baseMs, maxMs) {
 
 /** CSL gate thresholds — phi-derived, zero magic numbers */
 const CSL_THRESHOLDS = Object.freeze({
-  MINIMUM:  phiThreshold(0),
-  LOW:      phiThreshold(1),
-  MEDIUM:   phiThreshold(2),
-  HIGH:     phiThreshold(3),
-  CRITICAL: phiThreshold(4),
+  MINIMUM: phiThreshold(0),
+  LOW: phiThreshold(1),
+  MEDIUM: phiThreshold(2),
+  HIGH: phiThreshold(3),
+  CRITICAL: phiThreshold(4)
 });
 
 /** Resource pool ratios — Fibonacci-derived */
@@ -74,7 +70,7 @@ const POOL_RATIOS = Object.freeze({
   WARM: 0.21,
   COLD: 0.13,
   RESERVE: 0.08,
-  GOVERNANCE: 0.05,
+  GOVERNANCE: 0.05
 });
 
 // ─── STRUCTURED LOGGER ──────────────────────────────────────────────────────
@@ -103,21 +99,23 @@ function createLogger(serviceName, domain, port) {
       message,
       correlationId: m.correlationId || null,
       traceId: m.traceId || null,
-      ...m,
+      ...m
     });
-    if (level === 'error') { process.stderr.write(entry + '\n'); }
-    else { process.stdout.write(entry + '\n'); }
+    if (level === 'error') {
+      process.stderr.write(entry + '\n');
+    } else {
+      process.stdout.write(entry + '\n');
+    }
   }
-
   return Object.freeze({
     /** @param {string} msg @param {Object} [meta] */
-    info:  (msg, meta) => emit('info', msg, meta),
+    info: (msg, meta) => emit('info', msg, meta),
     /** @param {string} msg @param {Object} [meta] */
-    warn:  (msg, meta) => emit('warn', msg, meta),
+    warn: (msg, meta) => emit('warn', msg, meta),
     /** @param {string} msg @param {Object} [meta] */
     error: (msg, meta) => emit('error', msg, meta),
     /** @param {string} msg @param {Object} [meta] */
-    debug: (msg, meta) => emit('debug', msg, meta),
+    debug: (msg, meta) => emit('debug', msg, meta)
   });
 }
 
@@ -130,7 +128,7 @@ function createLogger(serviceName, domain, port) {
 const CB_STATE = Object.freeze({
   CLOSED: 'CLOSED',
   OPEN: 'OPEN',
-  HALF_OPEN: 'HALF_OPEN',
+  HALF_OPEN: 'HALF_OPEN'
 });
 
 /**
@@ -166,7 +164,6 @@ class CircuitBreaker {
    */
   async execute(fn) {
     this.totalCalls++;
-
     if (this.state === CB_STATE.OPEN) {
       if (Date.now() - this.lastFailure > this.resetTimeout) {
         this.state = CB_STATE.HALF_OPEN;
@@ -175,13 +172,13 @@ class CircuitBreaker {
         throw new Error(`Circuit ${this.name} is OPEN`);
       }
     }
-
     if (this.state === CB_STATE.HALF_OPEN && this.halfOpenCount >= this.halfOpenMax) {
       throw new Error(`Circuit ${this.name} HALF_OPEN limit reached`);
     }
-
     try {
-      if (this.state === CB_STATE.HALF_OPEN) { this.halfOpenCount++; }
+      if (this.state === CB_STATE.HALF_OPEN) {
+        this.halfOpenCount++;
+      }
       const result = await fn();
       this.onSuccess();
       return result;
@@ -217,7 +214,7 @@ class CircuitBreaker {
       failures: this.failures,
       successCount: this.successCount,
       totalCalls: this.totalCalls,
-      failureRate: this.totalCalls > 0 ? (this.totalCalls - this.successCount) / this.totalCalls : 0,
+      failureRate: this.totalCalls > 0 ? (this.totalCalls - this.successCount) / this.totalCalls : 0
     };
   }
 }
@@ -235,10 +232,13 @@ class RateLimiter {
   constructor(tiers) {
     /** @type {Object<string, number>} */
     this.tiers = tiers || {
-      public: fib(10),      // 55 rpm
-      authenticated: fib(12), // 144 rpm
-      apiKey: fib(14),       // 377 rpm
-      internal: fib(16),     // 987 rpm
+      public: fib(10),
+      // 55 rpm
+      authenticated: fib(12),
+      // 144 rpm
+      apiKey: fib(14),
+      // 377 rpm
+      internal: fib(16) // 987 rpm
     };
     /** @type {Map<string, {tokens: number, lastRefill: number}>} */
     this.buckets = new Map();
@@ -255,25 +255,32 @@ class RateLimiter {
     const maxTokens = this.tiers[t] || this.tiers.public;
     const now = Date.now();
     const bucketKey = `${t}:${key}`;
-
     let bucket = this.buckets.get(bucketKey);
     if (!bucket) {
-      bucket = { tokens: maxTokens, lastRefill: now };
+      bucket = {
+        tokens: maxTokens,
+        lastRefill: now
+      };
       this.buckets.set(bucketKey, bucket);
     }
-
     const elapsed = now - bucket.lastRefill;
     const refillRate = maxTokens / 60000;
     bucket.tokens = Math.min(maxTokens, bucket.tokens + elapsed * refillRate);
     bucket.lastRefill = now;
-
     if (bucket.tokens >= 1) {
       bucket.tokens -= 1;
-      return { allowed: true, remaining: Math.floor(bucket.tokens), retryAfter: 0 };
+      return {
+        allowed: true,
+        remaining: Math.floor(bucket.tokens),
+        retryAfter: 0
+      };
     }
-
     const retryAfter = Math.ceil((1 - bucket.tokens) / refillRate);
-    return { allowed: false, remaining: 0, retryAfter };
+    return {
+      allowed: false,
+      remaining: 0,
+      retryAfter
+    };
   }
 
   /**
@@ -376,7 +383,7 @@ class LiquidNodeBase extends EventEmitter {
       requestLatencySum: 0,
       activeConnections: 0,
       circuitBreakerTrips: 0,
-      rateLimitRejects: 0,
+      rateLimitRejects: 0
     };
 
     /** @type {Map<string, Function>} Registered domain handlers */
@@ -417,7 +424,10 @@ class LiquidNodeBase extends EventEmitter {
    * @param {Function} fn - Async cleanup function
    */
   onShutdown(label, fn) {
-    this._shutdownHooks.push({ label, fn });
+    this._shutdownHooks.push({
+      label,
+      fn
+    });
   }
 
   // ─── CIRCUIT BREAKER FACTORY ────────────────────────────────────────────
@@ -429,7 +439,9 @@ class LiquidNodeBase extends EventEmitter {
    */
   breaker(name) {
     if (!this.breakers.has(name)) {
-      this.breakers.set(name, new CircuitBreaker({ name }));
+      this.breakers.set(name, new CircuitBreaker({
+        name
+      }));
     }
     return this.breakers.get(name);
   }
@@ -452,14 +464,10 @@ class LiquidNodeBase extends EventEmitter {
     const method = opts.method || 'GET';
     const timeout = opts.timeout || Math.round(PHI * PHI * PHI * 1000);
     const cb = this.breaker(serviceName);
-
     return cb.execute(() => {
       return new Promise((resolve, reject) => {
-        const serviceHost = process.env[`${serviceName.toUpperCase().replace(/-/g, '_')}_HOST`]
-          || `${serviceName}.heady.internal`;
-        const servicePort = process.env[`${serviceName.toUpperCase().replace(/-/g, '_')}_PORT`]
-          || this.port;
-
+        const serviceHost = process.env[`${serviceName.toUpperCase().replace(/-/g, '_')}_HOST`] || `${serviceName}.heady.internal`;
+        const servicePort = process.env[`${serviceName.toUpperCase().replace(/-/g, '_')}_PORT`] || this.port;
         const reqOpts = {
           hostname: serviceHost,
           port: servicePort,
@@ -469,14 +477,15 @@ class LiquidNodeBase extends EventEmitter {
             'Content-Type': 'application/json',
             'X-Correlation-ID': correlationId(this.name.replace('heady-', 'h')),
             'X-Source-Service': this.name,
-            ...(opts.headers || {}),
+            ...(opts.headers || {})
           },
-          timeout: timeout,
+          timeout: timeout
         };
-
-        const req = http.request(reqOpts, (res) => {
+        const req = http.request(reqOpts, res => {
           let data = '';
-          res.on('data', (chunk) => { data += chunk; });
+          res.on('data', chunk => {
+            data += chunk;
+          });
           res.on('end', () => {
             try {
               const parsed = JSON.parse(data);
@@ -490,13 +499,11 @@ class LiquidNodeBase extends EventEmitter {
             }
           });
         });
-
         req.on('error', reject);
         req.on('timeout', () => {
           req.destroy();
           reject(new Error(`${serviceName} request timeout after ${timeout}ms`));
         });
-
         if (opts.body) {
           req.write(JSON.stringify(opts.body));
         }
@@ -513,10 +520,7 @@ class LiquidNodeBase extends EventEmitter {
    */
   _handleHealth(res) {
     const uptime = (Date.now() - this.startTime) / 1000;
-    const errorRate = this.metrics.requestsTotal > 0
-      ? this.metrics.requestsError / this.metrics.requestsTotal
-      : 0;
-
+    const errorRate = this.metrics.requestsTotal > 0 ? this.metrics.requestsError / this.metrics.requestsTotal : 0;
     const body = {
       status: this.alive ? 'healthy' : 'degraded',
       service: this.name,
@@ -527,10 +531,11 @@ class LiquidNodeBase extends EventEmitter {
       uptime: parseFloat(uptime.toFixed(fib(3))),
       coherence: parseFloat((1 - errorRate).toFixed(fib(6))),
       phi: PHI,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, {
+      'Content-Type': 'application/json'
+    });
     res.end(JSON.stringify(body));
   }
 
@@ -540,11 +545,21 @@ class LiquidNodeBase extends EventEmitter {
    */
   _handleReady(res) {
     if (this.ready) {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ status: 'ready', service: this.name }));
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      });
+      res.end(JSON.stringify({
+        status: 'ready',
+        service: this.name
+      }));
     } else {
-      res.writeHead(503, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ status: 'not_ready', service: this.name }));
+      res.writeHead(503, {
+        'Content-Type': 'application/json'
+      });
+      res.end(JSON.stringify({
+        status: 'not_ready',
+        service: this.name
+      }));
     }
   }
 
@@ -553,8 +568,13 @@ class LiquidNodeBase extends EventEmitter {
    * @param {http.ServerResponse} res
    */
   _handleLive(res) {
-    res.writeHead(this.alive ? 200 : 503, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ alive: this.alive, service: this.name }));
+    res.writeHead(this.alive ? 200 : 503, {
+      'Content-Type': 'application/json'
+    });
+    res.end(JSON.stringify({
+      alive: this.alive,
+      service: this.name
+    }));
   }
 
   /**
@@ -567,32 +587,10 @@ class LiquidNodeBase extends EventEmitter {
     for (const [name, cb] of this.breakers) {
       breakers[name] = cb.status();
     }
-
-    const lines = [
-      `# HELP heady_requests_total Total requests`,
-      `# TYPE heady_requests_total counter`,
-      `heady_requests_total{service="${this.name}",domain="${this.domain}"} ${this.metrics.requestsTotal}`,
-      `# HELP heady_requests_success Successful requests`,
-      `# TYPE heady_requests_success counter`,
-      `heady_requests_success{service="${this.name}"} ${this.metrics.requestsSuccess}`,
-      `# HELP heady_requests_error Error requests`,
-      `# TYPE heady_requests_error counter`,
-      `heady_requests_error{service="${this.name}"} ${this.metrics.requestsError}`,
-      `# HELP heady_uptime_seconds Service uptime`,
-      `# TYPE heady_uptime_seconds gauge`,
-      `heady_uptime_seconds{service="${this.name}"} ${uptime.toFixed(3)}`,
-      `# HELP heady_active_connections Active connections`,
-      `# TYPE heady_active_connections gauge`,
-      `heady_active_connections{service="${this.name}"} ${this.metrics.activeConnections}`,
-      `# HELP heady_rate_limit_rejects Rate limit rejections`,
-      `# TYPE heady_rate_limit_rejects counter`,
-      `heady_rate_limit_rejects{service="${this.name}"} ${this.metrics.rateLimitRejects}`,
-      `# HELP heady_circuit_breaker_trips Circuit breaker trips`,
-      `# TYPE heady_circuit_breaker_trips counter`,
-      `heady_circuit_breaker_trips{service="${this.name}"} ${this.metrics.circuitBreakerTrips}`,
-    ];
-
-    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+    const lines = [`# HELP heady_requests_total Total requests`, `# TYPE heady_requests_total counter`, `heady_requests_total{service="${this.name}",domain="${this.domain}"} ${this.metrics.requestsTotal}`, `# HELP heady_requests_success Successful requests`, `# TYPE heady_requests_success counter`, `heady_requests_success{service="${this.name}"} ${this.metrics.requestsSuccess}`, `# HELP heady_requests_error Error requests`, `# TYPE heady_requests_error counter`, `heady_requests_error{service="${this.name}"} ${this.metrics.requestsError}`, `# HELP heady_uptime_seconds Service uptime`, `# TYPE heady_uptime_seconds gauge`, `heady_uptime_seconds{service="${this.name}"} ${uptime.toFixed(3)}`, `# HELP heady_active_connections Active connections`, `# TYPE heady_active_connections gauge`, `heady_active_connections{service="${this.name}"} ${this.metrics.activeConnections}`, `# HELP heady_rate_limit_rejects Rate limit rejections`, `# TYPE heady_rate_limit_rejects counter`, `heady_rate_limit_rejects{service="${this.name}"} ${this.metrics.rateLimitRejects}`, `# HELP heady_circuit_breaker_trips Circuit breaker trips`, `# TYPE heady_circuit_breaker_trips counter`, `heady_circuit_breaker_trips{service="${this.name}"} ${this.metrics.circuitBreakerTrips}`];
+    res.writeHead(200, {
+      'Content-Type': 'text/plain; charset=utf-8'
+    });
     res.end(lines.join('\n') + '\n');
   }
 
@@ -605,7 +603,6 @@ class LiquidNodeBase extends EventEmitter {
     for (const key of this._domainHandlers.keys()) {
       routes.push(key);
     }
-
     const body = {
       service: this.name,
       version: this.version,
@@ -614,19 +611,16 @@ class LiquidNodeBase extends EventEmitter {
       pool: this.pool,
       nodeId: this.nodeId,
       dependencies: this.dependencies,
-      routes: [
-        'GET:/health', 'GET:/healthz', 'GET:/ready', 'GET:/readyz',
-        'GET:/livez', 'GET:/metrics', 'GET:/info',
-        ...routes,
-      ],
+      routes: ['GET:/health', 'GET:/healthz', 'GET:/ready', 'GET:/readyz', 'GET:/livez', 'GET:/metrics', 'GET:/info', ...routes],
       phi: PHI,
       cslThresholds: CSL_THRESHOLDS,
       poolRatios: POOL_RATIOS,
       copyright: '© 2026 HeadySystems Inc. — Eric Haywood, Founder',
-      patents: '51 Provisional Patents',
+      patents: '51 Provisional Patents'
     };
-
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, {
+      'Content-Type': 'application/json'
+    });
     res.end(JSON.stringify(body, null, 2));
   }
 
@@ -678,23 +672,33 @@ class LiquidNodeBase extends EventEmitter {
     const rlResult = this.rateLimiter.check(clientIp, tier);
     if (!rlResult.allowed) {
       this.metrics.rateLimitRejects++;
-      res.writeHead(429, { 'Content-Type': 'application/json', 'Retry-After': String(Math.ceil(rlResult.retryAfter / 1000)) });
-      res.end(JSON.stringify({ error: 'Rate limit exceeded', retryAfter: rlResult.retryAfter, service: this.name }));
+      res.writeHead(429, {
+        'Content-Type': 'application/json',
+        'Retry-After': String(Math.ceil(rlResult.retryAfter / 1000))
+      });
+      res.end(JSON.stringify({
+        error: 'Rate limit exceeded',
+        retryAfter: rlResult.retryAfter,
+        service: this.name
+      }));
       this.metrics.activeConnections--;
       return;
     }
-
     const url = (req.url || '/').split('?')[0];
     const method = (req.method || 'GET').toUpperCase();
-
     try {
       // Built-in routes
-      if (url === '/health' || url === '/healthz') { this._handleHealth(res); }
-      else if (url === '/ready' || url === '/readyz') { this._handleReady(res); }
-      else if (url === '/livez') { this._handleLive(res); }
-      else if (url === '/metrics') { this._handleMetrics(res); }
-      else if (url === '/info') { this._handleInfo(res); }
-      else {
+      if (url === '/health' || url === '/healthz') {
+        this._handleHealth(res);
+      } else if (url === '/ready' || url === '/readyz') {
+        this._handleReady(res);
+      } else if (url === '/livez') {
+        this._handleLive(res);
+      } else if (url === '/metrics') {
+        this._handleMetrics(res);
+      } else if (url === '/info') {
+        this._handleInfo(res);
+      } else {
         // Domain-specific routes
         const routeKey = `${method}:${url}`;
         const handler = this._domainHandlers.get(routeKey);
@@ -712,23 +716,31 @@ class LiquidNodeBase extends EventEmitter {
             path: url,
             query: this._parseQuery(req.url || ''),
             body,
-            startTime: start,
+            startTime: start
           };
           await handler(req, res, ctx);
         } else if (url === '/' || url === '/api') {
           // Default root handler
-          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.writeHead(200, {
+            'Content-Type': 'application/json'
+          });
           res.end(JSON.stringify({
             service: this.name,
             version: this.version,
             domain: this.domain,
             description: this.description,
             status: 'operational',
-            endpoints: Array.from(this._domainHandlers.keys()),
+            endpoints: Array.from(this._domainHandlers.keys())
           }));
         } else {
-          res.writeHead(404, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Not found', path: url, service: this.name }));
+          res.writeHead(404, {
+            'Content-Type': 'application/json'
+          });
+          res.end(JSON.stringify({
+            error: 'Not found',
+            path: url,
+            service: this.name
+          }));
         }
       }
       this.metrics.requestsSuccess++;
@@ -736,19 +748,32 @@ class LiquidNodeBase extends EventEmitter {
       this.metrics.requestsError++;
       const statusCode = err.statusCode || 500;
       const errorCode = err.code || 'INTERNAL_ERROR';
-      this.log.error(err.message, { correlationId: corrId, errorCode, statusCode, stack: err.stack });
-      res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+      this.log.error(err.message, {
+        correlationId: corrId,
+        errorCode,
+        statusCode,
+        stack: err.stack
+      });
+      res.writeHead(statusCode, {
+        'Content-Type': 'application/json'
+      });
       res.end(JSON.stringify({
         error: err.message,
         code: errorCode,
         service: this.name,
-        correlationId: corrId,
+        correlationId: corrId
       }));
     } finally {
       this.metrics.activeConnections--;
       const duration = Date.now() - start;
       this.metrics.requestLatencySum += duration;
-      this.log.debug('request', { correlationId: corrId, method, path: url, duration, status: res.statusCode });
+      this.log.debug('request', {
+        correlationId: corrId,
+        method,
+        path: url,
+        duration,
+        status: res.statusCode
+      });
     }
   }
 
@@ -761,16 +786,26 @@ class LiquidNodeBase extends EventEmitter {
     return new Promise((resolve, reject) => {
       let data = '';
       const maxSize = fib(16) * 1024; // 987KB
-      req.on('data', (chunk) => {
+      req.on('data', chunk => {
         data += chunk;
         if (data.length > maxSize) {
-          reject(Object.assign(new Error('Payload too large'), { statusCode: 413 }));
+          reject(Object.assign(new Error('Payload too large'), {
+            statusCode: 413
+          }));
         }
       });
       req.on('end', () => {
-        if (!data) { resolve(null); return; }
-        try { resolve(JSON.parse(data)); }
-        catch (e) { reject(Object.assign(new Error('Invalid JSON'), { statusCode: 400 })); }
+        if (!data) {
+          resolve(null);
+          return;
+        }
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(Object.assign(new Error('Invalid JSON'), {
+            statusCode: 400
+          }));
+        }
       });
       req.on('error', reject);
     });
@@ -802,7 +837,11 @@ class LiquidNodeBase extends EventEmitter {
    */
   async start() {
     this.startTime = Date.now();
-    this.log.info(`${this.name} initializing`, { nodeId: this.nodeId, domain: this.domain, pool: this.pool });
+    this.log.info(`${this.name} initializing`, {
+      nodeId: this.nodeId,
+      domain: this.domain,
+      pool: this.pool
+    });
 
     // Register custom routes from config
     for (const [path, handler] of Object.entries(this.customRoutes)) {
@@ -817,8 +856,10 @@ class LiquidNodeBase extends EventEmitter {
     this.server = http.createServer((req, res) => this._handleRequest(req, res));
 
     // Graceful shutdown handlers
-    const shutdown = async (signal) => {
-      this.log.info(`${signal} received, shutting down gracefully`, { nodeId: this.nodeId });
+    const shutdown = async signal => {
+      this.log.info(`${signal} received, shutting down gracefully`, {
+        nodeId: this.nodeId
+      });
       this.alive = false;
       this.ready = false;
 
@@ -829,15 +870,17 @@ class LiquidNodeBase extends EventEmitter {
           this.log.info(`Shutdown: ${hook.label}`);
           await hook.fn();
         } catch (err) {
-          this.log.error(`Shutdown hook failed: ${hook.label}`, { error: err.message });
+          this.log.error(`Shutdown hook failed: ${hook.label}`, {
+            error: err.message
+          });
         }
       }
-
       await this.onStop();
-
       if (this.server) {
         this.server.close(() => {
-          this.log.info(`${this.name} stopped`, { uptime: (Date.now() - this.startTime) / 1000 });
+          this.log.info(`${this.name} stopped`, {
+            uptime: (Date.now() - this.startTime) / 1000
+          });
           process.exit(0);
         });
         // Force exit after phi-scaled timeout
@@ -846,22 +889,26 @@ class LiquidNodeBase extends EventEmitter {
         process.exit(0);
       }
     };
-
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT', () => shutdown('SIGINT'));
-    process.on('uncaughtException', (err) => {
-      this.log.error('Uncaught exception', { error: err.message, stack: err.stack });
+    process.on('uncaughtException', err => {
+      this.log.error('Uncaught exception', {
+        error: err.message,
+        stack: err.stack
+      });
       shutdown('UNCAUGHT_EXCEPTION');
     });
-    process.on('unhandledRejection', (reason) => {
-      this.log.error('Unhandled rejection', { reason: String(reason) });
+    process.on('unhandledRejection', reason => {
+      this.log.error('Unhandled rejection', {
+        reason: String(reason)
+      });
     });
 
     // Periodic rate limiter cleanup
     setInterval(() => this.rateLimiter.cleanup(), fib(10) * 1000);
 
     // Listen
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.listen(this.port, () => {
         this.ready = true;
         this.log.info(`${this.name} operational`, {
@@ -870,9 +917,12 @@ class LiquidNodeBase extends EventEmitter {
           pool: this.pool,
           nodeId: this.nodeId,
           routes: Array.from(this._domainHandlers.keys()).length,
-          phi: PHI,
+          phi: PHI
         });
-        this.emit('ready', { port: this.port, nodeId: this.nodeId });
+        this.emit('ready', {
+          port: this.port,
+          nodeId: this.nodeId
+        });
         resolve();
       });
     });
@@ -882,13 +932,13 @@ class LiquidNodeBase extends EventEmitter {
    * Lifecycle hook for subclass initialization. Override this.
    * @returns {Promise<void>}
    */
-  async onStart() { /* override in subclass */ }
+  async onStart() {/* override in subclass */}
 
   /**
    * Lifecycle hook for subclass cleanup. Override this.
    * @returns {Promise<void>}
    */
-  async onStop() { /* override in subclass */ }
+  async onStop() {/* override in subclass */}
 
   // ─── UTILITY HELPERS ──────────────────────────────────────────────────────
 
@@ -899,7 +949,9 @@ class LiquidNodeBase extends EventEmitter {
    * @param {Object} body
    */
   json(res, statusCode, body) {
-    res.writeHead(statusCode, { 'Content-Type': 'application/json' });
+    res.writeHead(statusCode, {
+      'Content-Type': 'application/json'
+    });
     res.end(JSON.stringify(body));
   }
 
@@ -914,7 +966,7 @@ class LiquidNodeBase extends EventEmitter {
     this.json(res, statusCode, {
       error: message,
       code: code || 'ERROR',
-      service: this.name,
+      service: this.name
     });
   }
 
@@ -926,7 +978,9 @@ class LiquidNodeBase extends EventEmitter {
    */
   cosineSimilarity(a, b) {
     if (a.length !== b.length) return 0;
-    let dot = 0, magA = 0, magB = 0;
+    let dot = 0,
+      magA = 0,
+      magB = 0;
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       magA += a[i] * a[i];
@@ -956,5 +1010,5 @@ module.exports = {
   phiBackoff,
   CSL_THRESHOLDS,
   POOL_RATIOS,
-  CB_STATE,
+  CB_STATE
 };

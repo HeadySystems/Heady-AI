@@ -29,24 +29,9 @@
  */
 
 'use strict';
-const logger = require('../utils/logger') || console;
 
-import {
-  PHI,
-  PSI,
-  fib,
-  phiThreshold,
-  phiFusionWeights,
-  phiBackoff,
-  cosineSimilarity,
-  placeholderVector,
-  CSL_THRESHOLDS,
-  cslGate,
-  VECTOR_DIMENSIONS,
-  normalize,
-  dot,
-  magnitude,
-} from '../shared/phi-math.js';
+const logger = require('../utils/logger') || console;
+import { PHI, PSI, fib, phiThreshold, phiFusionWeights, phiBackoff, cosineSimilarity, placeholderVector, CSL_THRESHOLDS, cslGate, VECTOR_DIMENSIONS, normalize, dot, magnitude } from '../shared/phi-math.js';
 
 // ─── Scoring Constants ────────────────────────────────────────────────────────
 
@@ -60,7 +45,7 @@ const SCORE_WEIGHTS = Object.freeze({
   completeness: 0.21,
   reasoning: 0.21,
   novelty: 0.13,
-  safety: 0.11,
+  safety: 0.11
 });
 
 /** Minimum council members to convene */
@@ -79,7 +64,11 @@ const AGREEMENT_THRESHOLD = CSL_THRESHOLDS.HIGH;
 const DISAGREEMENT_THRESHOLD = CSL_THRESHOLDS.LOW;
 
 /** Cost tier ordering for budget-aware member selection */
-const COST_TIER_ORDER = Object.freeze({ LOW: 0, MEDIUM: 1, HIGH: 2 });
+const COST_TIER_ORDER = Object.freeze({
+  LOW: 0,
+  MEDIUM: 1,
+  HIGH: 2
+});
 
 // ─── Council Member Definitions ───────────────────────────────────────────────
 
@@ -97,68 +86,56 @@ const COST_TIER_ORDER = Object.freeze({ LOW: 0, MEDIUM: 1, HIGH: 2 });
  */
 
 /** @type {Object.<string, CouncilMember>} */
-const COUNCIL_MEMBERS = Object.fromEntries(
-  [
-    {
-      id: 'claude_opus',
-      provider: 'anthropic',
-      model: 'claude-opus-4.6',
-      strength: 'deep reasoning',
-      costTier: 'HIGH',
-    },
-    {
-      id: 'gpt5',
-      provider: 'openai',
-      model: 'gpt-5.4',
-      strength: 'broad knowledge',
-      costTier: 'HIGH',
-    },
-    {
-      id: 'gemini_pro',
-      provider: 'google',
-      model: 'gemini-3.1-pro',
-      strength: 'pattern recognition',
-      costTier: 'MEDIUM',
-    },
-    {
-      id: 'o1_pro',
-      provider: 'openai',
-      model: 'o1-pro',
-      strength: 'mathematical reasoning',
-      costTier: 'HIGH',
-    },
-    {
-      id: 'sonar_pro',
-      provider: 'perplexity',
-      model: 'sonar-pro',
-      strength: 'real-time research',
-      costTier: 'MEDIUM',
-    },
-    {
-      id: 'groq_llama',
-      provider: 'groq',
-      model: 'llama-3.1-405b',
-      strength: 'fast inference',
-      costTier: 'LOW',
-    },
-    {
-      id: 'workers_ai',
-      provider: 'cloudflare',
-      model: 'workers-ai',
-      strength: 'edge classification',
-      costTier: 'LOW',
-    },
-  ].map(m => [
-    m.id,
-    {
-      ...m,
-      capabilityVector: placeholderVector(`council:${m.id}`, VECTOR_DIMENSIONS),
-      performance: {},    // taskType → { wins, total }
-      totalSessions: 0,
-      wins: 0,
-    },
-  ])
-);
+const COUNCIL_MEMBERS = Object.fromEntries([{
+  id: 'claude_opus',
+  provider: 'anthropic',
+  model: 'claude-opus-4.6',
+  strength: 'deep reasoning',
+  costTier: 'HIGH'
+}, {
+  id: 'gpt5',
+  provider: 'openai',
+  model: 'gpt-5.4',
+  strength: 'broad knowledge',
+  costTier: 'HIGH'
+}, {
+  id: 'gemini_pro',
+  provider: 'google',
+  model: 'gemini-3.1-pro',
+  strength: 'pattern recognition',
+  costTier: 'MEDIUM'
+}, {
+  id: 'o1_pro',
+  provider: 'openai',
+  model: 'o1-pro',
+  strength: 'mathematical reasoning',
+  costTier: 'HIGH'
+}, {
+  id: 'sonar_pro',
+  provider: 'perplexity',
+  model: 'sonar-pro',
+  strength: 'real-time research',
+  costTier: 'MEDIUM'
+}, {
+  id: 'groq_llama',
+  provider: 'groq',
+  model: 'llama-3.1-405b',
+  strength: 'fast inference',
+  costTier: 'LOW'
+}, {
+  id: 'workers_ai',
+  provider: 'cloudflare',
+  model: 'workers-ai',
+  strength: 'edge classification',
+  costTier: 'LOW'
+}].map(m => [m.id, {
+  ...m,
+  capabilityVector: placeholderVector(`council:${m.id}`, VECTOR_DIMENSIONS),
+  performance: {},
+  // taskType → { wins, total }
+  totalSessions: 0,
+  wins: 0
+}]));
 
 // ─── Class: HeadyCouncil ──────────────────────────────────────────────────────
 
@@ -225,7 +202,9 @@ export class HeadyCouncil {
   constructor(opts = {}) {
     // Support legacy call: constructor(budgetTracker)
     if (opts && typeof opts.getAvailable !== 'function' && !opts.gateway) {
-      opts = { budgetTracker: opts };
+      opts = {
+        budgetTracker: opts
+      };
     }
 
     /** @type {Object|null} Budget tracker reference */
@@ -240,7 +219,7 @@ export class HeadyCouncil {
       openai: 'openai',
       google: 'gemini',
       groq: 'groq',
-      huggingface: 'huggingface',
+      huggingface: 'huggingface'
     };
 
     /** @type {Map<string, CouncilMember>} active member registry */
@@ -267,16 +246,15 @@ export class HeadyCouncil {
       });
       this._log('info', 'HeadyCouncil initialized with InferenceGateway', {
         gatewayProviders: [...available],
-        activeMembers,
+        activeMembers
       });
     }
-
     this._log('info', 'HeadyCouncil initialized', {
       members: Array.from(this.members.keys()),
       agreementThreshold: AGREEMENT_THRESHOLD,
       disagreementThreshold: DISAGREEMENT_THRESHOLD,
       defaultTimeout: DEFAULT_TIMEOUT_MS,
-      gatewayConnected: !!this._gateway,
+      gatewayConnected: !!this._gateway
     });
   }
 
@@ -297,30 +275,27 @@ export class HeadyCouncil {
       timeout = DEFAULT_TIMEOUT_MS,
       costCeiling = null,
       taskType = 'general',
-      requiredMembers = [],
+      requiredMembers = []
     } = options;
-
     if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
       throw new Error('convene: prompt must be a non-empty string');
     }
-
     const sessionId = this._generateSessionId();
     const startedAt = Date.now();
-
-    this._log('info', `council convening [${sessionId}]`, { taskType, minMembers, maxMembers });
+    this._log('info', `council convening [${sessionId}]`, {
+      taskType,
+      minMembers,
+      maxMembers
+    });
 
     // 1. Select members
     const selectedIds = this.selectMembers(taskType, costCeiling, {
       minMembers,
       maxMembers,
-      required: requiredMembers,
+      required: requiredMembers
     });
-
     if (selectedIds.length < minMembers) {
-      throw new Error(
-        `convene: could not select ${minMembers} members; only ${selectedIds.length} available. ` +
-        `Consider relaxing costCeiling or adjusting minMembers.`
-      );
+      throw new Error(`convene: could not select ${minMembers} members; only ${selectedIds.length} available. ` + `Consider relaxing costCeiling or adjusting minMembers.`);
     }
 
     // 2. AutoContext enrichment — inject workspace context into council prompt
@@ -330,15 +305,17 @@ export class HeadyCouncil {
       try {
         const enrichResult = await autoCtx.enrichForCouncil(prompt, {
           taskType,
-          councilMembers: selectedIds,
+          councilMembers: selectedIds
         });
         enrichedPrompt = enrichResult.enrichedPrompt || prompt;
         this._log('info', `AutoContext enriched council prompt`, {
           sourcesUsed: enrichResult.stats?.sourcesUsed || 0,
-          tokensUsed: enrichResult.stats?.tokensUsed || 0,
+          tokensUsed: enrichResult.stats?.tokensUsed || 0
         });
       } catch (e) {
-        this._log('warn', `AutoContext enrichment failed (proceeding without):`, { error: e.message });
+        this._log('warn', `AutoContext enrichment failed (proceeding without):`, {
+          error: e.message
+        });
       }
     }
 
@@ -347,12 +324,8 @@ export class HeadyCouncil {
 
     // Filter successful responses
     const validResponses = responses.filter(r => !r.timedOut && !r.error);
-
     if (validResponses.length < minMembers) {
-      throw new Error(
-        `convene: only ${validResponses.length}/${selectedIds.length} members responded ` +
-        `within ${timeout}ms (minimum required: ${minMembers})`
-      );
+      throw new Error(`convene: only ${validResponses.length}/${selectedIds.length} members responded ` + `within ${timeout}ms (minimum required: ${minMembers})`);
     }
 
     // 3. Score responses
@@ -367,13 +340,13 @@ export class HeadyCouncil {
 
     // 6. Update member win stats
     this._updateWinStats(synthesis.winnerId, taskType);
-
     const completedAt = Date.now();
 
     /** @type {CouncilSession} */
     const session = {
       sessionId,
-      prompt: prompt.slice(0, 500), // Truncate for storage
+      prompt: prompt.slice(0, 500),
+      // Truncate for storage
       memberIds: selectedIds,
       scoredResponses,
       agreementPoints: agreement.points,
@@ -381,7 +354,7 @@ export class HeadyCouncil {
       synthesis,
       startedAt,
       completedAt,
-      totalMs: completedAt - startedAt,
+      totalMs: completedAt - startedAt
     };
 
     // Store history — cap at fib(9)=34 sessions
@@ -389,15 +362,13 @@ export class HeadyCouncil {
     if (this._history.length > fib(9)) {
       this._history.splice(0, this._history.length - fib(9));
     }
-
     this._log('info', `council complete [${sessionId}]`, {
       winner: synthesis.winnerId,
       confidence: synthesis.confidence,
       agreementCount: agreement.points.length,
       disagreementCount: disagreement.points.length,
-      totalMs: session.totalMs,
+      totalMs: session.totalMs
     });
-
     return session;
   }
 
@@ -414,8 +385,11 @@ export class HeadyCouncil {
    * @returns {string[]} selected member ids
    */
   selectMembers(taskType, budget = null, opts = {}) {
-    const { minMembers = MIN_MEMBERS, maxMembers = MAX_MEMBERS, required = [] } = opts;
-
+    const {
+      minMembers = MIN_MEMBERS,
+      maxMembers = MAX_MEMBERS,
+      required = []
+    } = opts;
     const taskVec = placeholderVector(`task_type:${taskType}`, VECTOR_DIMENSIONS);
 
     // Build candidate list with CSL scores
@@ -425,15 +399,15 @@ export class HeadyCouncil {
       if (budget === 'LOW' && member.costTier === 'HIGH' && !required.includes(member.id)) {
         return;
       }
-
       const cslScore = cosineSimilarity(taskVec, member.capabilityVector);
       // Performance boost: win rate bonus
-      const winRate = member.totalSessions > 0
-        ? member.wins / member.totalSessions
-        : PSI; // Default PSI = 0.618 for unknown
+      const winRate = member.totalSessions > 0 ? member.wins / member.totalSessions : PSI; // Default PSI = 0.618 for unknown
       const compositeScore = cslScore * PSI + winRate * (1 - PSI);
-
-      candidates.push({ id: member.id, score: compositeScore, member });
+      candidates.push({
+        id: member.id,
+        score: compositeScore,
+        member
+      });
     });
 
     // Sort by composite score descending
@@ -455,45 +429,24 @@ export class HeadyCouncil {
         selected.add(c.id);
       }
     }
-
     return Array.from(selected).slice(0, maxMembers);
   }
 
   // ─── Collect Responses ────────────────────────────────────────────────────────
 
-  /**
-   * Send prompt to all selected members in parallel with timeout.
-   * Uses phi-backoff retry on transient failures (max fib(4)=3 attempts).
-   *
-   * NOTE: In production, each member.provider would route to the actual API client.
-   * This implementation provides the complete contract and placeholder response
-   * generation for testing without live API keys.
-   *
-   * @param {string} prompt
-   * @param {string[]} memberIds
-   * @param {number} [timeoutMs=DEFAULT_TIMEOUT_MS]
-   * @returns {Promise<CouncilResponse[]>}
-   */
   async collectResponses(prompt, memberIds, timeoutMs = DEFAULT_TIMEOUT_MS) {
     const calls = memberIds.map(async memberId => {
       const member = this.members.get(memberId);
       if (!member) {
         return this._makeErrorResponse(memberId, 'unknown', 'unknown', 'Member not found');
       }
-
       const startMs = Date.now();
       let lastError = null;
       const maxAttempts = fib(4); // 3
 
       for (let attempt = 0; attempt < maxAttempts; attempt++) {
         try {
-          const response = await Promise.race([
-            this._callMember(member, prompt),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('TIMEOUT')), timeoutMs)
-            ),
-          ]);
-
+          const response = await Promise.race([this._callMember(member, prompt), new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), timeoutMs))]);
           member.totalSessions++;
           return {
             ...response,
@@ -502,7 +455,7 @@ export class HeadyCouncil {
             provider: member.provider,
             latencyMs: Date.now() - startMs,
             timedOut: false,
-            error: null,
+            error: null
           };
         } catch (err) {
           lastError = err;
@@ -513,16 +466,10 @@ export class HeadyCouncil {
           }
         }
       }
-
       member.totalSessions++;
       const isTimeout = lastError?.message === 'TIMEOUT';
-      return this._makeErrorResponse(
-        memberId, member.model, member.provider,
-        lastError?.message ?? 'unknown error',
-        isTimeout
-      );
+      return this._makeErrorResponse(memberId, member.model, member.provider, lastError?.message ?? 'unknown error', isTimeout);
     });
-
     return Promise.all(calls);
   }
 
@@ -540,43 +487,32 @@ export class HeadyCouncil {
    * @returns {ScoredResponse[]}
    */
   scoreResponses(responses) {
-    return responses
-      .filter(r => !r.timedOut && !r.error)
-      .map(response => {
-        // Heuristic scoring based on response properties
-        // In production: run evaluation prompts against a fast scorer (e.g. groq_llama)
-        const textLen = response.text?.length ?? 0;
+    return responses.filter(r => !r.timedOut && !r.error).map(response => {
+      // Heuristic scoring based on response properties
+      // In production: run evaluation prompts against a fast scorer (e.g. groq_llama)
+      const textLen = response.text?.length ?? 0;
 
-        // Length-based proxies (to be replaced with real evaluation)
-        const completeness = Math.min(1, textLen / (fib(11) * 10)); // 890 chars = 1.0
-        const accuracy = response._simulatedAccuracy ?? (PSI + Math.random() * (1 - PSI));
-        const reasoning = response._simulatedReasoning ?? (PSI * PSI + Math.random() * PSI);
-        const novelty = response._simulatedNovelty ?? (PSI * PSI * PSI + Math.random() * PSI * PSI);
-        const safety = response._simulatedSafety ?? (CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH));
-
-        const scores = {
-          accuracy: parseFloat(Math.min(1, accuracy).toFixed(4)),
-          completeness: parseFloat(Math.min(1, completeness).toFixed(4)),
-          reasoning: parseFloat(Math.min(1, reasoning).toFixed(4)),
-          novelty: parseFloat(Math.min(1, novelty).toFixed(4)),
-          safety: parseFloat(Math.min(1, safety).toFixed(4)),
-        };
-
-        const composite =
-          scores.accuracy * SCORE_WEIGHTS.accuracy +
-          scores.completeness * SCORE_WEIGHTS.completeness +
-          scores.reasoning * SCORE_WEIGHTS.reasoning +
-          scores.novelty * SCORE_WEIGHTS.novelty +
-          scores.safety * SCORE_WEIGHTS.safety;
-
-        return {
-          memberId: response.memberId,
-          response,
-          scores,
-          composite: parseFloat(composite.toFixed(6)),
-        };
-      })
-      .sort((a, b) => b.composite - a.composite); // Best first
+      // Length-based proxies (to be replaced with real evaluation)
+      const completeness = Math.min(1, textLen / (fib(11) * 10)); // 890 chars = 1.0
+      const accuracy = response._simulatedAccuracy ?? PSI + Math.random() * (1 - PSI);
+      const reasoning = response._simulatedReasoning ?? PSI * PSI + Math.random() * PSI;
+      const novelty = response._simulatedNovelty ?? PSI * PSI * PSI + Math.random() * PSI * PSI;
+      const safety = response._simulatedSafety ?? CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH);
+      const scores = {
+        accuracy: parseFloat(Math.min(1, accuracy).toFixed(4)),
+        completeness: parseFloat(Math.min(1, completeness).toFixed(4)),
+        reasoning: parseFloat(Math.min(1, reasoning).toFixed(4)),
+        novelty: parseFloat(Math.min(1, novelty).toFixed(4)),
+        safety: parseFloat(Math.min(1, safety).toFixed(4))
+      };
+      const composite = scores.accuracy * SCORE_WEIGHTS.accuracy + scores.completeness * SCORE_WEIGHTS.completeness + scores.reasoning * SCORE_WEIGHTS.reasoning + scores.novelty * SCORE_WEIGHTS.novelty + scores.safety * SCORE_WEIGHTS.safety;
+      return {
+        memberId: response.memberId,
+        response,
+        scores,
+        composite: parseFloat(composite.toFixed(6))
+      };
+    }).sort((a, b) => b.composite - a.composite); // Best first
   }
 
   // ─── Agreement Detection ──────────────────────────────────────────────────────
@@ -597,25 +533,22 @@ export class HeadyCouncil {
       for (let j = i + 1; j < scoredResponses.length; j++) {
         const embA = scoredResponses[i].response.embedding;
         const embB = scoredResponses[j].response.embedding;
-
         if (!embA || !embB) continue;
-
         const sim = cosineSimilarity(embA, embB);
         if (sim >= AGREEMENT_THRESHOLD) {
           pairs.push({
             a: scoredResponses[i].memberId,
             b: scoredResponses[j].memberId,
-            similarity: parseFloat(sim.toFixed(6)),
+            similarity: parseFloat(sim.toFixed(6))
           });
-          agreementPoints.push(
-            `${scoredResponses[i].memberId}↔${scoredResponses[j].memberId} ` +
-            `[similarity=${sim.toFixed(3)}]`
-          );
+          agreementPoints.push(`${scoredResponses[i].memberId}↔${scoredResponses[j].memberId} ` + `[similarity=${sim.toFixed(3)}]`);
         }
       }
     }
-
-    return { points: agreementPoints, pairs };
+    return {
+      points: agreementPoints,
+      pairs
+    };
   }
 
   // ─── Disagreement Detection ───────────────────────────────────────────────────
@@ -630,14 +563,11 @@ export class HeadyCouncil {
   findDisagreement(scoredResponses) {
     const pairs = [];
     const disagreementPoints = [];
-
     for (let i = 0; i < scoredResponses.length; i++) {
       for (let j = i + 1; j < scoredResponses.length; j++) {
         const embA = scoredResponses[i].response.embedding;
         const embB = scoredResponses[j].response.embedding;
-
         if (!embA || !embB) continue;
-
         const sim = cosineSimilarity(embA, embB);
         if (sim < DISAGREEMENT_THRESHOLD) {
           const scoreDelta = Math.abs(scoredResponses[i].composite - scoredResponses[j].composite);
@@ -645,17 +575,16 @@ export class HeadyCouncil {
             a: scoredResponses[i].memberId,
             b: scoredResponses[j].memberId,
             similarity: parseFloat(sim.toFixed(6)),
-            scoreDelta: parseFloat(scoreDelta.toFixed(6)),
+            scoreDelta: parseFloat(scoreDelta.toFixed(6))
           });
-          disagreementPoints.push(
-            `CONFLICT: ${scoredResponses[i].memberId}↔${scoredResponses[j].memberId} ` +
-            `[sim=${sim.toFixed(3)}, Δscore=${scoreDelta.toFixed(3)}]`
-          );
+          disagreementPoints.push(`CONFLICT: ${scoredResponses[i].memberId}↔${scoredResponses[j].memberId} ` + `[sim=${sim.toFixed(3)}, Δscore=${scoreDelta.toFixed(3)}]`);
         }
       }
     }
-
-    return { points: disagreementPoints, pairs };
+    return {
+      points: disagreementPoints,
+      pairs
+    };
   }
 
   // ─── Synthesis ────────────────────────────────────────────────────────────────
@@ -683,10 +612,9 @@ export class HeadyCouncil {
         confidence: 0,
         agreementZones: [],
         disagreementZones: [],
-        contributingIds: [],
+        contributingIds: []
       };
     }
-
     const winner = scoredResponses[0];
 
     // Phi-weighted confidence from top-fib(3)=3 responses (or all if fewer)
@@ -696,16 +624,9 @@ export class HeadyCouncil {
 
     // Synthesized text: winner text + unique insights
     const winnerText = winner.response.text ?? '';
-    const runnerUps = scoredResponses
-      .slice(1, fib(3)) // up to 2 runner-ups
-      .filter(sr => sr.composite > CSL_THRESHOLDS.MINIMUM)
-      .map(sr => `[${sr.memberId}]: ${(sr.response.text ?? '').slice(0, 200)}`)
-      .join('\n---\n');
-
-    const synthesizedText = runnerUps
-      ? `${winnerText}\n\n=== Additional Perspectives ===\n${runnerUps}`
-      : winnerText;
-
+    const runnerUps = scoredResponses.slice(1, fib(3)) // up to 2 runner-ups
+    .filter(sr => sr.composite > CSL_THRESHOLDS.MINIMUM).map(sr => `[${sr.memberId}]: ${(sr.response.text ?? '').slice(0, 200)}`).join('\n---\n');
+    const synthesizedText = runnerUps ? `${winnerText}\n\n=== Additional Perspectives ===\n${runnerUps}` : winnerText;
     return {
       text: synthesizedText,
       winnerId: winner.memberId,
@@ -715,8 +636,8 @@ export class HeadyCouncil {
       contributingIds: scoredResponses.map(sr => sr.memberId),
       scores: {
         winner: winner.scores,
-        winnerComposite: winner.composite,
-      },
+        winnerComposite: winner.composite
+      }
     };
   }
 
@@ -740,14 +661,14 @@ export class HeadyCouncil {
       result[id] = {
         wins: member.wins,
         total: member.totalSessions,
-        winRate: member.totalSessions > 0
-          ? parseFloat((member.wins / member.totalSessions).toFixed(4))
-          : null,
-        byTaskType: { ...member.performance },
+        winRate: member.totalSessions > 0 ? parseFloat((member.wins / member.totalSessions).toFixed(4)) : null,
+        byTaskType: {
+          ...member.performance
+        },
         model: member.model,
         provider: member.provider,
         strength: member.strength,
-        costTier: member.costTier,
+        costTier: member.costTier
       };
     });
     return result;
@@ -761,10 +682,7 @@ export class HeadyCouncil {
    */
   getStatus() {
     const totalSessions = this._history.length;
-    const avgConfidence = totalSessions > 0
-      ? this._history.reduce((s, h) => s + (h.synthesis?.confidence ?? 0), 0) / totalSessions
-      : 0;
-
+    const avgConfidence = totalSessions > 0 ? this._history.reduce((s, h) => s + (h.synthesis?.confidence ?? 0), 0) / totalSessions : 0;
     return {
       version: '2.0.0',
       uptime: Date.now() - this._startedAt,
@@ -779,7 +697,7 @@ export class HeadyCouncil {
         defaultTimeoutMs: DEFAULT_TIMEOUT_MS,
         agreementThreshold: AGREEMENT_THRESHOLD,
         disagreementThreshold: DISAGREEMENT_THRESHOLD,
-        scoreWeights: SCORE_WEIGHTS,
+        scoreWeights: SCORE_WEIGHTS
       },
       sacredGeometry: {
         phi: PHI,
@@ -789,9 +707,9 @@ export class HeadyCouncil {
           LOW: CSL_THRESHOLDS.LOW,
           MEDIUM: CSL_THRESHOLDS.MEDIUM,
           HIGH: CSL_THRESHOLDS.HIGH,
-          CRITICAL: CSL_THRESHOLDS.CRITICAL,
-        },
-      },
+          CRITICAL: CSL_THRESHOLDS.CRITICAL
+        }
+      }
     };
   }
 
@@ -814,36 +732,36 @@ export class HeadyCouncil {
       const available = this._gateway.getAvailable();
       if (available.includes(gwProviderKey)) {
         try {
-          const result = await this._gateway.complete(
-            [
-              { role: 'system', content: `You are ${member.model}, a ${member.strength} specialist. Provide your best analysis.` },
-              { role: 'user', content: prompt },
-            ],
-            { provider: gwProviderKey, model: member.model }
-          );
-
+          const result = await this._gateway.complete([{
+            role: 'system',
+            content: `You are ${member.model}, a ${member.strength} specialist. Provide your best analysis.`
+          }, {
+            role: 'user',
+            content: prompt
+          }], {
+            provider: gwProviderKey,
+            model: member.model
+          });
           const text = result.content || '';
           // Generate embedding from text for agreement/disagreement comparison
           const embedding = placeholderVector(`response:${member.id}:${text.slice(0, 100)}`, VECTOR_DIMENSIONS);
-
           this._log('info', `_callMember: real response from ${member.id}`, {
             provider: gwProviderKey,
             model: result.model,
             latencyMs: result.gatewayLatencyMs,
-            contentLength: text.length,
+            contentLength: text.length
           });
-
           return {
             text,
             embedding,
             realResponse: true,
             gatewayModel: result.model,
             gatewayProvider: result.provider,
-            usage: result.usage || null,
+            usage: result.usage || null
           };
         } catch (err) {
           this._log('warn', `_callMember: ${member.id} real call failed, using placeholder`, {
-            error: err.message,
+            error: err.message
           });
           // Fall through to placeholder
         }
@@ -853,16 +771,8 @@ export class HeadyCouncil {
     // Placeholder fallback for providers not in gateway or when gateway unavailable
     const simulatedLatency = Math.min(100, 50 + Math.random() * 50);
     await new Promise(r => setTimeout(r, simulatedLatency));
-
-    const text = [
-      `[${member.model}] Response to: "${prompt.slice(0, 80)}..."`,
-      `Provider: ${member.provider} | Strength: ${member.strength}`,
-      `Analysis: ${member.strength} perspective with ${fib(7)} key insights.`,
-      `Note: This is a placeholder — provider ${member.provider} not connected to InferenceGateway.`,
-    ].join('\n');
-
+    const text = [`[${member.model}] Response to: "${prompt.slice(0, 80)}..."`, `Provider: ${member.provider} | Strength: ${member.strength}`, `Analysis: ${member.strength} perspective with ${fib(7)} key insights.`, `Note: This is a placeholder — provider ${member.provider} not connected to InferenceGateway.`].join('\n');
     const embedding = placeholderVector(`response:${member.id}:${prompt.slice(0, 50)}`, VECTOR_DIMENSIONS);
-
     return {
       text,
       embedding,
@@ -870,7 +780,7 @@ export class HeadyCouncil {
       _simulatedAccuracy: PSI + Math.random() * (1 - PSI),
       _simulatedReasoning: PSI * PSI + Math.random() * PSI,
       _simulatedNovelty: PSI * PSI * PSI + Math.random() * PSI * PSI,
-      _simulatedSafety: CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH),
+      _simulatedSafety: CSL_THRESHOLDS.HIGH + Math.random() * (1 - CSL_THRESHOLDS.HIGH)
     };
   }
 
@@ -882,10 +792,12 @@ export class HeadyCouncil {
   _updateWinStats(winnerId, taskType) {
     const member = this.members.get(winnerId);
     if (!member) return;
-
     member.wins++;
     if (!member.performance[taskType]) {
-      member.performance[taskType] = { wins: 0, total: 0 };
+      member.performance[taskType] = {
+        wins: 0,
+        total: 0
+      };
     }
     member.performance[taskType].wins++;
     member.performance[taskType].total++;
@@ -895,7 +807,10 @@ export class HeadyCouncil {
       if (id === winnerId) return;
       const m = this.members.get(id);
       if (m) {
-        if (!m.performance[taskType]) m.performance[taskType] = { wins: 0, total: 0 };
+        if (!m.performance[taskType]) m.performance[taskType] = {
+          wins: 0,
+          total: 0
+        };
         m.performance[taskType].total++;
       }
     });
@@ -921,7 +836,7 @@ export class HeadyCouncil {
       embedding: null,
       latencyMs: 0,
       timedOut,
-      error: errorMsg,
+      error: errorMsg
     };
   }
 
@@ -937,7 +852,7 @@ export class HeadyCouncil {
       level,
       module: 'HeadyCouncil',
       message,
-      ...meta,
+      ...meta
     };
     if (level === 'error') {
       logger.error(JSON.stringify(entry));
@@ -951,14 +866,5 @@ export class HeadyCouncil {
 
 // ─── Named Exports ────────────────────────────────────────────────────────────
 
-export {
-  COUNCIL_MEMBERS,
-  SCORE_WEIGHTS,
-  MIN_MEMBERS,
-  MAX_MEMBERS,
-  DEFAULT_TIMEOUT_MS,
-  AGREEMENT_THRESHOLD,
-  DISAGREEMENT_THRESHOLD,
-};
-
+export { COUNCIL_MEMBERS, SCORE_WEIGHTS, MIN_MEMBERS, MAX_MEMBERS, DEFAULT_TIMEOUT_MS, AGREEMENT_THRESHOLD, DISAGREEMENT_THRESHOLD };
 export default HeadyCouncil;

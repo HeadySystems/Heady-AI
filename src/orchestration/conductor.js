@@ -1,4 +1,5 @@
 'use strict';
+
 /**
  * conductor.js — HeadyConductor
  * Central orchestration authority for the Heady™ Sovereign AI Platform.
@@ -10,14 +11,26 @@
  *   - Arena Mode multi-node evaluation
  *   - Phi-derived latency budgets and backoff
  */
-
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 const phi = require('../../shared/phi-math.js');
 const {
-  PHI, PSI, PHI_SQ, FIBONACCI, fib, phiBackoff,
-  phiThreshold, phiFusionWeights, phiResourceWeights,
-  phiTimeout, cslGate, pressureLevel,
-  CSL_THRESHOLDS, PRESSURE_LEVELS, ALERT_THRESHOLDS,
+  PHI,
+  PSI,
+  PHI_SQ,
+  FIBONACCI,
+  fib,
+  phiBackoff,
+  phiThreshold,
+  phiFusionWeights,
+  phiResourceWeights,
+  phiTimeout,
+  cslGate,
+  pressureLevel,
+  CSL_THRESHOLDS,
+  PRESSURE_LEVELS,
+  ALERT_THRESHOLDS,
   nearestFib
 } = phi;
 
@@ -28,17 +41,21 @@ const {
 // NOTE: These constants must be plain expressions (no fib() call at top scope).
 // fib values used literally: fib(9)=34, fib(10)=55, fib(11)=89, fib(12)=144, fib(13)=233
 const POOL_LATENCY = {
-  Hot:        Math.round(PHI_SQ * 1000),                                     // 2618ms
-  Warm:       Math.round(PHI_SQ * PHI_SQ * PHI * 618),                       // ~11090ms
-  Cold:       Math.round(55 * Math.pow(PHI, 5) * 15.56),                     // ~46979ms
-  Reserve:    Math.round(144 * PHI_SQ * 1000 * 0.08541),                     // ~32148ms
-  Governance: Math.round(233 * PHI     * 1000 * 0.07416)                     // ~28076ms
+  Hot: Math.round(PHI_SQ * 1000),
+  // 2618ms
+  Warm: Math.round(PHI_SQ * PHI_SQ * PHI * 618),
+  // ~11090ms
+  Cold: Math.round(55 * Math.pow(PHI, 5) * 15.56),
+  // ~46979ms
+  Reserve: Math.round(144 * PHI_SQ * 1000 * 0.08541),
+  // ~32148ms
+  Governance: Math.round(233 * PHI * 1000 * 0.07416) // ~28076ms
 };
 
 // Ensure exact spec values (phi-derived targets, enforced after init)
-POOL_LATENCY.Hot        = 2618;   // φ² × 1000 ms
-POOL_LATENCY.Warm       = 11090;  // spec target
-POOL_LATENCY.Cold       = 46979;  // spec target
+POOL_LATENCY.Hot = 2618; // φ² × 1000 ms
+POOL_LATENCY.Warm = 11090; // spec target
+POOL_LATENCY.Cold = 46979; // spec target
 
 // ─── Resource Allocation Weights ──────────────────────────────────────────────
 //   phiResourceWeights(5) → [~0.420, ~0.259, ~0.160, ~0.099, ~0.061]
@@ -47,69 +64,126 @@ const [W_HOT, W_WARM, W_COLD, W_RESERVE, W_GOVERNANCE] = phiResourceWeights(5);
 
 // Pool allocation percentages (displayed as rounded for logging only)
 const POOL_ALLOCATION = {
-  Hot:        W_HOT,        // ≈ 34% (φ²-derived)
-  Warm:       W_WARM,       // ≈ 21% (φ-derived)
-  Cold:       W_COLD,       // ≈ 13% (fib-derived)
-  Reserve:    W_RESERVE,    // ≈ 8%
-  Governance: W_GOVERNANCE  // ≈ 5%
+  Hot: W_HOT,
+  // ≈ 34% (φ²-derived)
+  Warm: W_WARM,
+  // ≈ 21% (φ-derived)
+  Cold: W_COLD,
+  // ≈ 13% (fib-derived)
+  Reserve: W_RESERVE,
+  // ≈ 8%
+  Governance: W_GOVERNANCE // ≈ 5%
 };
 
 // ─── 12 Task Domains ──────────────────────────────────────────────────────────
 const DOMAINS = {
-  CodeGeneration:  { pool: 'Hot',  primaryNodes: ['bee-codegen-01', 'bee-codegen-02'],  cslWeight: phiThreshold(3) },
-  CodeReview:      { pool: 'Hot',  primaryNodes: ['bee-review-01', 'bee-review-02'],   cslWeight: phiThreshold(3) },
-  Security:        { pool: 'Hot',  primaryNodes: ['bee-sec-01', 'bee-sec-02'],          cslWeight: phiThreshold(4) },
-  Architecture:    { pool: 'Hot',  primaryNodes: ['bee-arch-01'],                       cslWeight: phiThreshold(3) },
-  Research:        { pool: 'Warm', primaryNodes: ['bee-research-01', 'bee-research-02'],cslWeight: phiThreshold(2) },
-  Documentation:   { pool: 'Warm', primaryNodes: ['bee-docs-01'],                       cslWeight: phiThreshold(2) },
-  Creative:        { pool: 'Warm', primaryNodes: ['bee-creative-01'],                   cslWeight: phiThreshold(1) },
-  Translation:     { pool: 'Warm', primaryNodes: ['bee-translate-01'],                  cslWeight: phiThreshold(2) },
-  Monitoring:      { pool: 'Cold', primaryNodes: ['bee-monitor-01', 'bee-monitor-02'], cslWeight: phiThreshold(2) },
-  Cleanup:         { pool: 'Cold', primaryNodes: ['bee-cleanup-01'],                    cslWeight: phiThreshold(1) },
-  Analytics:       { pool: 'Cold', primaryNodes: ['bee-analytics-01'],                  cslWeight: phiThreshold(2) },
-  Maintenance:     { pool: 'Cold', primaryNodes: ['bee-maint-01'],                      cslWeight: phiThreshold(1) }
+  CodeGeneration: {
+    pool: 'Hot',
+    primaryNodes: ['bee-codegen-01', 'bee-codegen-02'],
+    cslWeight: phiThreshold(3)
+  },
+  CodeReview: {
+    pool: 'Hot',
+    primaryNodes: ['bee-review-01', 'bee-review-02'],
+    cslWeight: phiThreshold(3)
+  },
+  Security: {
+    pool: 'Hot',
+    primaryNodes: ['bee-sec-01', 'bee-sec-02'],
+    cslWeight: phiThreshold(4)
+  },
+  Architecture: {
+    pool: 'Hot',
+    primaryNodes: ['bee-arch-01'],
+    cslWeight: phiThreshold(3)
+  },
+  Research: {
+    pool: 'Warm',
+    primaryNodes: ['bee-research-01', 'bee-research-02'],
+    cslWeight: phiThreshold(2)
+  },
+  Documentation: {
+    pool: 'Warm',
+    primaryNodes: ['bee-docs-01'],
+    cslWeight: phiThreshold(2)
+  },
+  Creative: {
+    pool: 'Warm',
+    primaryNodes: ['bee-creative-01'],
+    cslWeight: phiThreshold(1)
+  },
+  Translation: {
+    pool: 'Warm',
+    primaryNodes: ['bee-translate-01'],
+    cslWeight: phiThreshold(2)
+  },
+  Monitoring: {
+    pool: 'Cold',
+    primaryNodes: ['bee-monitor-01', 'bee-monitor-02'],
+    cslWeight: phiThreshold(2)
+  },
+  Cleanup: {
+    pool: 'Cold',
+    primaryNodes: ['bee-cleanup-01'],
+    cslWeight: phiThreshold(1)
+  },
+  Analytics: {
+    pool: 'Cold',
+    primaryNodes: ['bee-analytics-01'],
+    cslWeight: phiThreshold(2)
+  },
+  Maintenance: {
+    pool: 'Cold',
+    primaryNodes: ['bee-maint-01'],
+    cslWeight: phiThreshold(1)
+  }
 };
 
 // ─── CSL cosine gate threshold ─────────────────────────────────────────────────
 const ROUTING_CSL_THRESHOLD = PSI; // 0.618 = 1/φ (spec requirement)
 
 // ─── Circuit Breaker configuration ────────────────────────────────────────────
-const CB_FAILURE_THRESHOLD = fib(5);  // 5 failures → OPEN
-const CB_PROBE_COUNT        = fib(4); // 3 probes in HALF_OPEN
+const CB_FAILURE_THRESHOLD = fib(5); // 5 failures → OPEN
+const CB_PROBE_COUNT = fib(4); // 3 probes in HALF_OPEN
 
 // ─── Latency histogram bucket boundaries (phi-scaled ms) ──────────────────────
-const LATENCY_BUCKETS = [
-  fib(5)  * PHI * 10,   // ≈ 80.9ms
-  fib(7)  * PHI * 10,   // ≈ 210ms
-  fib(9)  * PHI * 10,   // ≈ 549ms
-  fib(10) * PHI * 10,   // ≈ 889ms
-  POOL_LATENCY.Hot,     // 2618ms
-  POOL_LATENCY.Warm,    // 11090ms
-  POOL_LATENCY.Cold     // 46979ms
+const LATENCY_BUCKETS = [fib(5) * PHI * 10,
+// ≈ 80.9ms
+fib(7) * PHI * 10,
+// ≈ 210ms
+fib(9) * PHI * 10,
+// ≈ 549ms
+fib(10) * PHI * 10,
+// ≈ 889ms
+POOL_LATENCY.Hot,
+// 2618ms
+POOL_LATENCY.Warm,
+// 11090ms
+POOL_LATENCY.Cold // 46979ms
 ];
 
 // ─── Percentile calculation ────────────────────────────────────────────────────
 function percentile(sortedArr, p) {
   if (sortedArr.length === 0) return 0;
-  const idx = Math.ceil((p / 100) * sortedArr.length) - 1;
+  const idx = Math.ceil(p / 100 * sortedArr.length) - 1;
   return sortedArr[Math.max(0, idx)];
 }
 
 // ─── Domain keyword vectors (simplified bag-of-words cosine routing) ──────────
 // Each domain has a feature vector in a 16-dim keyword space
 const DOMAIN_KEYWORDS = {
-  CodeGeneration:  ['code','generate','write','implement','function','class','module','build','create','develop','script','program','refactor','boilerplate','scaffold','template'],
-  CodeReview:      ['review','audit','check','lint','quality','smell','bug','fix','improve','feedback','comment','pr','diff','static','analysis','coverage'],
-  Security:        ['security','vuln','exploit','auth','token','secret','encrypt','xss','sql','injection','pentest','cve','threat','hardening','sanitize','zero-day'],
-  Architecture:    ['architecture','design','pattern','system','diagram','microservice','monolith','api','schema','topology','orchestrate','component','structure','blueprint','ddd','event'],
-  Research:        ['research','study','find','explore','investigate','paper','literature','survey','benchmark','hypothesis','analysis','data','insight','discovery','experiment','question'],
-  Documentation:   ['doc','readme','wiki','guide','manual','spec','comment','jsdoc','typedoc','markdown','tutorial','how-to','reference','changelog','example','usage'],
-  Creative:        ['creative','story','poem','art','narrative','generate','brainstorm','idea','concept','design','vision','metaphor','analogy','content','copywrite','marketing'],
-  Translation:     ['translate','localize','i18n','l10n','language','convert','transform','map','reformat','port','migrate','adapt','internationalize','version','upgrade','downgrade'],
-  Monitoring:      ['monitor','alert','metric','log','trace','dashboard','health','status','uptime','latency','error','incident','observe','telemetry','sla','slo'],
-  Cleanup:         ['cleanup','delete','purge','archive','remove','prune','gc','garbage','stale','orphan','temp','cache','flush','sweep','tidy','consolidate'],
-  Analytics:       ['analytics','report','chart','graph','trend','kpi','metric','aggregate','statistics','dashboard','funnel','cohort','segment','forecast','predict','visualize'],
-  Maintenance:     ['maintenance','patch','update','upgrade','dependency','version','cron','schedule','job','housekeeping','backup','restore','migrate','sync','rotate','refresh']
+  CodeGeneration: ['code', 'generate', 'write', 'implement', 'function', 'class', 'module', 'build', 'create', 'develop', 'script', 'program', 'refactor', 'boilerplate', 'scaffold', 'template'],
+  CodeReview: ['review', 'audit', 'check', 'lint', 'quality', 'smell', 'bug', 'fix', 'improve', 'feedback', 'comment', 'pr', 'diff', 'static', 'analysis', 'coverage'],
+  Security: ['security', 'vuln', 'exploit', 'auth', 'token', 'secret', 'encrypt', 'xss', 'sql', 'injection', 'pentest', 'cve', 'threat', 'hardening', 'sanitize', 'zero-day'],
+  Architecture: ['architecture', 'design', 'pattern', 'system', 'diagram', 'microservice', 'monolith', 'api', 'schema', 'topology', 'orchestrate', 'component', 'structure', 'blueprint', 'ddd', 'event'],
+  Research: ['research', 'study', 'find', 'explore', 'investigate', 'paper', 'literature', 'survey', 'benchmark', 'hypothesis', 'analysis', 'data', 'insight', 'discovery', 'experiment', 'question'],
+  Documentation: ['doc', 'readme', 'wiki', 'guide', 'manual', 'spec', 'comment', 'jsdoc', 'typedoc', 'markdown', 'tutorial', 'how-to', 'reference', 'changelog', 'example', 'usage'],
+  Creative: ['creative', 'story', 'poem', 'art', 'narrative', 'generate', 'brainstorm', 'idea', 'concept', 'design', 'vision', 'metaphor', 'analogy', 'content', 'copywrite', 'marketing'],
+  Translation: ['translate', 'localize', 'i18n', 'l10n', 'language', 'convert', 'transform', 'map', 'reformat', 'port', 'migrate', 'adapt', 'internationalize', 'version', 'upgrade', 'downgrade'],
+  Monitoring: ['monitor', 'alert', 'metric', 'log', 'trace', 'dashboard', 'health', 'status', 'uptime', 'latency', 'error', 'incident', 'observe', 'telemetry', 'sla', 'slo'],
+  Cleanup: ['cleanup', 'delete', 'purge', 'archive', 'remove', 'prune', 'gc', 'garbage', 'stale', 'orphan', 'temp', 'cache', 'flush', 'sweep', 'tidy', 'consolidate'],
+  Analytics: ['analytics', 'report', 'chart', 'graph', 'trend', 'kpi', 'metric', 'aggregate', 'statistics', 'dashboard', 'funnel', 'cohort', 'segment', 'forecast', 'predict', 'visualize'],
+  Maintenance: ['maintenance', 'patch', 'update', 'upgrade', 'dependency', 'version', 'cron', 'schedule', 'job', 'housekeeping', 'backup', 'restore', 'migrate', 'sync', 'rotate', 'refresh']
 };
 
 // Build normalized TF vectors
@@ -151,12 +225,13 @@ function cosineSim(a, b) {
 class HeadyConductor extends EventEmitter {
   constructor(options = {}) {
     super();
-    this.nodeRegistry    = new Map(); // nodeId → { dispatch fn, pool, domain }
+    this.nodeRegistry = new Map(); // nodeId → { dispatch fn, pool, domain }
     this.circuitBreakers = new Map(); // nodeId → CircuitBreaker
     this.metrics = {
-      routingLatencies:  [],          // raw ms samples (capped at fib(14)=377)
-      tasksByPool:       {},
-      tasksByDomain:     {},
+      routingLatencies: [],
+      // raw ms samples (capped at fib(14)=377)
+      tasksByPool: {},
+      tasksByDomain: {},
       circuitBreakerStates: {}
     };
     // Initialize per-pool and per-domain counters
@@ -166,19 +241,15 @@ class HeadyConductor extends EventEmitter {
     for (const domain of Object.keys(DOMAINS)) {
       this.metrics.tasksByDomain[domain] = 0;
     }
-
     this._latencyWindowSize = fib(14); // 377 samples max
-    this._taskCounter       = 0;
-    this._startedAt         = Date.now();
+    this._taskCounter = 0;
+    this._startedAt = Date.now();
 
     // Register built-in nodes from domain config
     this._bootstrapNodes();
 
     // Metrics aggregation interval: fib(9)×1000 = 34000ms
-    this._metricsInterval = setInterval(
-      () => this._aggregateMetrics(),
-      fib(9) * 1000
-    ).unref();
+    this._metricsInterval = setInterval(() => this._aggregateMetrics(), fib(9) * 1000).unref();
   }
 
   // ─── Bootstrap ──────────────────────────────────────────────────────────────
@@ -189,10 +260,11 @@ class HeadyConductor extends EventEmitter {
       }
     }
   }
-
   _registerNode(nodeId, domain, pool, dispatchFn = null) {
     this.nodeRegistry.set(nodeId, {
-      nodeId, domain, pool,
+      nodeId,
+      domain,
+      pool,
       dispatch: dispatchFn || this._defaultDispatch.bind(this, nodeId),
       registeredAt: Date.now()
     });
@@ -208,19 +280,23 @@ class HeadyConductor extends EventEmitter {
     const budgetMs = POOL_LATENCY[entry.pool] || POOL_LATENCY.Warm;
     const simLatency = PSI * PSI * budgetMs * Math.random(); // random 0–ψ²×budget
     await new Promise(r => setTimeout(r, Math.min(simLatency, 50))); // cap sim at 50ms
-    return { nodeId, taskId: task.id, status: 'dispatched', simulated: true };
+    return {
+      nodeId,
+      taskId: task.id,
+      status: 'dispatched',
+      simulated: true
+    };
   }
 
   // ─── Domain Classification ───────────────────────────────────────────────────
   classifyDomain(task) {
     const taskVec = tokenizeIntent(task);
     let bestDomain = 'Research'; // fallback
-    let bestScore  = -Infinity;
-
+    let bestScore = -Infinity;
     for (const [domain, domVec] of Object.entries(DOMAIN_VECTORS)) {
       const score = cosineSim(taskVec, domVec);
       if (score > bestScore) {
-        bestScore  = score;
+        bestScore = score;
         bestDomain = domain;
       }
     }
@@ -239,11 +315,10 @@ class HeadyConductor extends EventEmitter {
         gated: false
       };
     }
-
     return {
-      domain:       bestDomain,
-      config:       domainConfig,
-      cosineScore:  bestScore,
+      domain: bestDomain,
+      config: domainConfig,
+      cosineScore: bestScore,
       gatedScore,
       gated: bestScore < ROUTING_CSL_THRESHOLD
     };
@@ -253,7 +328,7 @@ class HeadyConductor extends EventEmitter {
   selectPool(classification, task) {
     // Respect explicit task.priority override
     if (task.priority === 'critical' || task.urgent === true) return 'Hot';
-    if (task.priority === 'low')                              return 'Cold';
+    if (task.priority === 'low') return 'Cold';
     // Default: use domain's designated pool
     return classification.config.pool;
   }
@@ -287,7 +362,10 @@ class HeadyConductor extends EventEmitter {
 
     // 1. Classify
     const classification = this.classifyDomain(task);
-    const { domain, gated } = classification;
+    const {
+      domain,
+      gated
+    } = classification;
 
     // 2. Pool assignment
     const pool = this.selectPool(classification, task);
@@ -296,22 +374,32 @@ class HeadyConductor extends EventEmitter {
     const targetNodes = this.selectNodes(domain, pool, 1);
     if (targetNodes.length === 0) {
       const err = new Error(`No available nodes for domain=${domain} pool=${pool}`);
-      this.emit('routing:failed', { task, domain, pool, error: err.message });
+      this.emit('routing:failed', {
+        task,
+        domain,
+        pool,
+        error: err.message
+      });
       throw err;
     }
     const targetNode = targetNodes[0];
 
     // 4. Dispatch through circuit breaker
-    const cb     = this.circuitBreakers.get(targetNode);
+    const cb = this.circuitBreakers.get(targetNode);
     const nodeEntry = this.nodeRegistry.get(targetNode);
-
     let result;
     try {
       result = await cb.call(() => nodeEntry.dispatch(task));
       this.metrics.circuitBreakerStates[targetNode] = cb.state;
     } catch (err) {
       this.metrics.circuitBreakerStates[targetNode] = cb.state;
-      this.emit('routing:error', { task, domain, pool, targetNode, error: err.message });
+      this.emit('routing:error', {
+        task,
+        domain,
+        pool,
+        targetNode,
+        error: err.message
+      });
       throw err;
     }
 
@@ -320,11 +408,16 @@ class HeadyConductor extends EventEmitter {
     this._recordLatency(latencyMs);
     this.metrics.tasksByPool[pool]++;
     this.metrics.tasksByDomain[domain]++;
-
-    this.emit('routing:complete', { task, domain, pool, targetNode, latencyMs, gated });
-
+    this.emit('routing:complete', {
+      task,
+      domain,
+      pool,
+      targetNode,
+      latencyMs,
+      gated
+    });
     return {
-      taskId:     task.id,
+      taskId: task.id,
       domain,
       pool,
       targetNode,
@@ -339,10 +432,11 @@ class HeadyConductor extends EventEmitter {
   async arenaRoute(task, candidateCount = fib(4)) {
     // fib(4) = 3 candidates by default
     task.id = task.id || `arena-${++this._taskCounter}-${Date.now()}`;
-
     const classification = this.classifyDomain(task);
-    const { domain }     = classification;
-    const pool           = this.selectPool(classification, task);
+    const {
+      domain
+    } = classification;
+    const pool = this.selectPool(classification, task);
 
     // Collect unique node configs: up to candidateCount
     const candidates = this.selectNodes(domain, pool, candidateCount);
@@ -357,41 +451,43 @@ class HeadyConductor extends EventEmitter {
         }
       }
     }
-
     const arenaStart = Date.now();
-    const arenaResults = await Promise.allSettled(
-      candidates.map(async (nodeId) => {
-        const cb        = this.circuitBreakers.get(nodeId);
-        const nodeEntry = this.nodeRegistry.get(nodeId);
-        const nodeStart = Date.now();
-        const result    = await cb.call(() => nodeEntry.dispatch({ ...task, arenaMode: true }));
-        return { nodeId, latencyMs: Date.now() - nodeStart, result };
-      })
-    );
-
-    const successes = arenaResults
-      .filter(r => r.status === 'fulfilled')
-      .map(r => r.value)
-      .sort((a, b) => a.latencyMs - b.latencyMs);
-
+    const arenaResults = await Promise.allSettled(candidates.map(async nodeId => {
+      const cb = this.circuitBreakers.get(nodeId);
+      const nodeEntry = this.nodeRegistry.get(nodeId);
+      const nodeStart = Date.now();
+      const result = await cb.call(() => nodeEntry.dispatch({
+        ...task,
+        arenaMode: true
+      }));
+      return {
+        nodeId,
+        latencyMs: Date.now() - nodeStart,
+        result
+      };
+    }));
+    const successes = arenaResults.filter(r => r.status === 'fulfilled').map(r => r.value).sort((a, b) => a.latencyMs - b.latencyMs);
     const winner = successes[0] || null;
     const arenaLatencyMs = Date.now() - arenaStart;
-
     if (winner) {
       this._recordLatency(winner.latencyMs);
       this.metrics.tasksByPool[pool]++;
       this.metrics.tasksByDomain[domain]++;
     }
-
-    this.emit('arena:complete', { task, candidates, winner, arenaLatencyMs });
-
+    this.emit('arena:complete', {
+      task,
+      candidates,
+      winner,
+      arenaLatencyMs
+    });
     return {
-      taskId:       task.id,
-      domain, pool,
-      candidates:   candidates.length,
+      taskId: task.id,
+      domain,
+      pool,
+      candidates: candidates.length,
       winner,
       arenaLatencyMs,
-      allResults:   arenaResults
+      allResults: arenaResults
     };
   }
 
@@ -413,35 +509,42 @@ class HeadyConductor extends EventEmitter {
     this.metrics.latencyP99 = percentile(sorted, 99);
     this.emit('metrics:updated', this.getMetrics());
   }
-
   getMetrics() {
     const sorted = [...this.metrics.routingLatencies].sort((a, b) => a - b);
     return {
-      routingLatencyP50:    percentile(sorted, 50),
-      routingLatencyP95:    percentile(sorted, 95),
-      routingLatencyP99:    percentile(sorted, 99),
-      tasksByPool:          { ...this.metrics.tasksByPool },
-      tasksByDomain:        { ...this.metrics.tasksByDomain },
-      circuitBreakerStates: { ...this.metrics.circuitBreakerStates },
-      totalRouted:          this._taskCounter,
-      uptimeMs:             Date.now() - this._startedAt,
-      poolAllocation:       POOL_ALLOCATION,
-      poolLatencyBudgets:   POOL_LATENCY,
-      cslRoutingThreshold:  ROUTING_CSL_THRESHOLD
+      routingLatencyP50: percentile(sorted, 50),
+      routingLatencyP95: percentile(sorted, 95),
+      routingLatencyP99: percentile(sorted, 99),
+      tasksByPool: {
+        ...this.metrics.tasksByPool
+      },
+      tasksByDomain: {
+        ...this.metrics.tasksByDomain
+      },
+      circuitBreakerStates: {
+        ...this.metrics.circuitBreakerStates
+      },
+      totalRouted: this._taskCounter,
+      uptimeMs: Date.now() - this._startedAt,
+      poolAllocation: POOL_ALLOCATION,
+      poolLatencyBudgets: POOL_LATENCY,
+      cslRoutingThreshold: ROUTING_CSL_THRESHOLD
     };
   }
 
   // ─── Node Management ─────────────────────────────────────────────────────────
   registerExternalNode(nodeId, domain, pool, dispatchFn) {
     this._registerNode(nodeId, domain, pool, dispatchFn);
-    this.emit('node:registered', { nodeId, domain, pool });
+    this.emit('node:registered', {
+      nodeId,
+      domain,
+      pool
+    });
   }
-
   getCircuitBreakerState(nodeId) {
     const cb = this.circuitBreakers.get(nodeId);
     return cb ? cb.state : null;
   }
-
   resetCircuitBreaker(nodeId) {
     const cb = this.circuitBreakers.get(nodeId);
     if (cb) cb.reset();
@@ -450,39 +553,39 @@ class HeadyConductor extends EventEmitter {
   // ─── Lifecycle ───────────────────────────────────────────────────────────────
   shutdown() {
     clearInterval(this._metricsInterval);
-    this.emit('conductor:shutdown', { uptimeMs: Date.now() - this._startedAt });
+    this.emit('conductor:shutdown', {
+      uptimeMs: Date.now() - this._startedAt
+    });
   }
 }
 
 // ─── CircuitBreaker ───────────────────────────────────────────────────────────
 // States: CLOSED → OPEN → HALF_OPEN → CLOSED
 // Failure threshold: fib(5) = 5
-// Recovery: phi-backoff per attempt
+
 class CircuitBreaker {
   constructor(nodeId, failureThreshold = CB_FAILURE_THRESHOLD) {
-    this.nodeId           = nodeId;
+    this.nodeId = nodeId;
     this.failureThreshold = failureThreshold;
-    this.state            = 'CLOSED';
-    this.failureCount     = 0;
-    this.probeCount       = 0;
-    this.lastFailureAt    = null;
-    this.openedAt         = null;
-    this.recoveryAttempt  = 0;
+    this.state = 'CLOSED';
+    this.failureCount = 0;
+    this.probeCount = 0;
+    this.lastFailureAt = null;
+    this.openedAt = null;
+    this.recoveryAttempt = 0;
   }
-
   async call(fn) {
     if (this.state === 'OPEN') {
       // Check if recovery backoff has elapsed
       const backoffMs = phiBackoff(this.recoveryAttempt, fib(7) * PHI * 100, fib(12) * 1000);
-      const elapsed   = Date.now() - (this.openedAt || 0);
+      const elapsed = Date.now() - (this.openedAt || 0);
       if (elapsed < backoffMs) {
         throw new Error(`Circuit OPEN for ${this.nodeId} — backoff ${Math.round(backoffMs)}ms`);
       }
       // Transition to HALF_OPEN
-      this.state      = 'HALF_OPEN';
+      this.state = 'HALF_OPEN';
       this.probeCount = 0;
     }
-
     try {
       const result = await fn();
       this._onSuccess();
@@ -492,7 +595,6 @@ class CircuitBreaker {
       throw err;
     }
   }
-
   _onSuccess() {
     if (this.state === 'HALF_OPEN') {
       this.probeCount++;
@@ -503,7 +605,6 @@ class CircuitBreaker {
       this.failureCount = Math.max(0, this.failureCount - 1);
     }
   }
-
   _onFailure() {
     this.failureCount++;
     this.lastFailureAt = Date.now();
@@ -514,30 +615,26 @@ class CircuitBreaker {
       this._open();
     }
   }
-
   _open() {
-    this.state           = 'OPEN';
-    this.openedAt        = Date.now();
+    this.state = 'OPEN';
+    this.openedAt = Date.now();
     this.recoveryAttempt++;
   }
-
   _close() {
-    this.state           = 'CLOSED';
-    this.failureCount    = 0;
-    this.probeCount      = 0;
+    this.state = 'CLOSED';
+    this.failureCount = 0;
+    this.probeCount = 0;
     this.recoveryAttempt = 0;
   }
-
   reset() {
     this._close();
     this.lastFailureAt = null;
-    this.openedAt      = null;
+    this.openedAt = null;
   }
 }
-
 module.exports = HeadyConductor;
 module.exports.CircuitBreaker = CircuitBreaker;
-module.exports.DOMAINS        = DOMAINS;
-module.exports.POOL_LATENCY   = POOL_LATENCY;
+module.exports.DOMAINS = DOMAINS;
+module.exports.POOL_LATENCY = POOL_LATENCY;
 module.exports.POOL_ALLOCATION = POOL_ALLOCATION;
 module.exports.ROUTING_CSL_THRESHOLD = ROUTING_CSL_THRESHOLD;

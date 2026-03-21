@@ -11,22 +11,13 @@
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  */
 
-import {
-  MANUFACTURER_ID, SYSEX_VERSION, SYSEX_CMD, SYSEX_CMD_NAMES,
-  STATUS, TRANSPORT, QUANTIZE,
-} from './midi-constants.js';
+import { MANUFACTURER_ID, SYSEX_VERSION, SYSEX_CMD, SYSEX_CMD_NAMES, STATUS, TRANSPORT, QUANTIZE } from './midi-constants.js';
 
 // ─── 7-Bit Encoding Utilities ──────────────────────────────────────
 
-/**
- * Encode a 14-bit value into two 7-bit bytes (MSB first).
- * Used for tempo (BPM × 10), position values, etc.
- * @param {number} value - 14-bit value (0-16383)
- * @returns {number[]} [msb, lsb] each 0-127
- */
 export function encode14bit(value) {
   const clamped = Math.max(0, Math.min(16383, Math.round(value)));
-  return [(clamped >> 7) & 0x7F, clamped & 0x7F];
+  return [clamped >> 7 & 0x7F, clamped & 0x7F];
 }
 
 /**
@@ -36,7 +27,7 @@ export function encode14bit(value) {
  * @returns {number} 14-bit value (0-16383)
  */
 export function decode14bit(msb, lsb) {
-  return ((msb & 0x7F) << 7) | (lsb & 0x7F);
+  return (msb & 0x7F) << 7 | lsb & 0x7F;
 }
 
 /**
@@ -68,8 +59,8 @@ export function encodeJSON(obj) {
   const bytes = new TextEncoder().encode(json);
   const result = [];
   for (const b of bytes) {
-    result.push((b >> 4) & 0x0F);    // High nibble (always < 0x10, so 7-bit safe)
-    result.push(b & 0x0F);            // Low nibble
+    result.push(b >> 4 & 0x0F); // High nibble (always < 0x10, so 7-bit safe)
+    result.push(b & 0x0F); // Low nibble
   }
   return result;
 }
@@ -82,7 +73,7 @@ export function encodeJSON(obj) {
 export function decodeJSON(nibbles) {
   const bytes = [];
   for (let i = 0; i < nibbles.length - 1; i += 2) {
-    bytes.push(((nibbles[i] & 0x0F) << 4) | (nibbles[i + 1] & 0x0F));
+    bytes.push((nibbles[i] & 0x0F) << 4 | nibbles[i + 1] & 0x0F);
   }
   const str = new TextDecoder().decode(new Uint8Array(bytes));
   return JSON.parse(str);
@@ -97,11 +88,7 @@ export function decodeJSON(nibbles) {
  * @returns {number[]} [r7, g7, b7] each 0-127
  */
 export function encodeRGB(r, g, b) {
-  return [
-    Math.round((r / 255) * 127),
-    Math.round((g / 255) * 127),
-    Math.round((b / 255) * 127),
-  ];
+  return [Math.round(r / 255 * 127), Math.round(g / 255 * 127), Math.round(b / 255 * 127)];
 }
 
 /**
@@ -112,11 +99,7 @@ export function encodeRGB(r, g, b) {
  * @returns {number[]} [r, g, b] each 0-255
  */
 export function decodeRGB(r7, g7, b7) {
-  return [
-    Math.round((r7 / 127) * 255),
-    Math.round((g7 / 127) * 255),
-    Math.round((b7 / 127) * 255),
-  ];
+  return [Math.round(r7 / 127 * 255), Math.round(g7 / 127 * 255), Math.round(b7 / 127 * 255)];
 }
 
 // ─── SysEx Frame Builder ───────────────────────────────────────────
@@ -129,8 +112,8 @@ export function decodeRGB(r7, g7, b7) {
  */
 export function buildSysEx(cmd, payload = []) {
   const frame = new Uint8Array(3 + payload.length + 1);
-  frame[0] = STATUS.SYSEX_START;    // 0xF0
-  frame[1] = MANUFACTURER_ID;        // 0x7D
+  frame[0] = STATUS.SYSEX_START; // 0xF0
+  frame[1] = MANUFACTURER_ID; // 0x7D
   frame[2] = cmd & 0x7F;
   for (let i = 0; i < payload.length; i++) {
     frame[3 + i] = payload[i] & 0x7F;
@@ -146,19 +129,34 @@ export function buildSysEx(cmd, payload = []) {
  */
 export function parseSysEx(data) {
   const bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
-
   if (bytes.length < 4 || bytes[0] !== STATUS.SYSEX_START || bytes[bytes.length - 1] !== STATUS.SYSEX_END) {
-    return { cmd: 0, cmdName: 'INVALID', payload: [], valid: false, version: null };
+    return {
+      cmd: 0,
+      cmdName: 'INVALID',
+      payload: [],
+      valid: false,
+      version: null
+    };
   }
   if (bytes[1] !== MANUFACTURER_ID) {
-    return { cmd: 0, cmdName: 'UNKNOWN_MANUFACTURER', payload: [], valid: false, version: null };
+    return {
+      cmd: 0,
+      cmdName: 'UNKNOWN_MANUFACTURER',
+      payload: [],
+      valid: false,
+      version: null
+    };
   }
-
   const cmd = bytes[2];
   const payload = Array.from(bytes.slice(3, bytes.length - 1));
   const cmdName = SYSEX_CMD_NAMES[cmd] || `UNKNOWN_0x${cmd.toString(16).padStart(2, '0')}`;
-
-  return { cmd, cmdName, payload, valid: true, version: SYSEX_VERSION };
+  return {
+    cmd,
+    cmdName,
+    payload,
+    valid: true,
+    version: SYSEX_VERSION
+  };
 }
 
 // ─── Command Encoders ──────────────────────────────────────────────
@@ -173,17 +171,9 @@ export function parseSysEx(data) {
 export function encodeVersionNegotiate(version = SYSEX_VERSION) {
   return buildSysEx(SYSEX_CMD.VERSION_NEGOTIATE, [version & 0x7F]);
 }
-
-/**
- * 0x01 SET_TEMPO — Set BPM (14-bit: BPM × 10 for 0.1 BPM resolution).
- * @param {number} bpm - Beats per minute (20.0 - 999.9)
- * @returns {Uint8Array}
- */
 export function encodeSetTempo(bpm) {
   return buildSysEx(SYSEX_CMD.SET_TEMPO, encode14bit(Math.round(bpm * 10)));
 }
-
-/** Decode SET_TEMPO payload → BPM */
 export function decodeSetTempo(payload) {
   return decode14bit(payload[0], payload[1]) / 10;
 }
@@ -217,9 +207,7 @@ export function encodeTriggerClip(track, scene) {
  * @returns {Uint8Array}
  */
 export function encodeSetDeviceParam(track, device, param, value) {
-  return buildSysEx(SYSEX_CMD.SET_DEVICE_PARAM, [
-    track & 0x7F, device & 0x7F, param & 0x7F, value & 0x7F,
-  ]);
+  return buildSysEx(SYSEX_CMD.SET_DEVICE_PARAM, [track & 0x7F, device & 0x7F, param & 0x7F, value & 0x7F]);
 }
 
 /**
@@ -271,9 +259,7 @@ export function encodeSetTrackSend(track, send, value) {
  * @returns {Uint8Array}
  */
 export function encodeSetTrackEQ(track, band, freqHi, freqLo, gain, q) {
-  return buildSysEx(SYSEX_CMD.SET_TRACK_EQ, [
-    track & 0x7F, band & 0x7F, freqHi & 0x7F, freqLo & 0x7F, gain & 0x7F, q & 0x7F,
-  ]);
+  return buildSysEx(SYSEX_CMD.SET_TRACK_EQ, [track & 0x7F, band & 0x7F, freqHi & 0x7F, freqLo & 0x7F, gain & 0x7F, q & 0x7F]);
 }
 
 /**
@@ -296,9 +282,7 @@ export function encodeArmTrack(track, armState) {
  * @returns {Uint8Array}
  */
 export function encodeSetClipColor(track, scene, r, g, b) {
-  return buildSysEx(SYSEX_CMD.SET_CLIP_COLOR, [
-    track & 0x7F, scene & 0x7F, ...encodeRGB(r, g, b),
-  ]);
+  return buildSysEx(SYSEX_CMD.SET_CLIP_COLOR, [track & 0x7F, scene & 0x7F, ...encodeRGB(r, g, b)]);
 }
 
 /**
@@ -332,9 +316,7 @@ export function encodeQuantizeClip(track, scene, quantizeValue) {
  * @returns {Uint8Array}
  */
 export function encodeDuplicateClip(srcTrack, srcScene, dstTrack, dstScene) {
-  return buildSysEx(SYSEX_CMD.DUPLICATE_CLIP, [
-    srcTrack & 0x7F, srcScene & 0x7F, dstTrack & 0x7F, dstScene & 0x7F,
-  ]);
+  return buildSysEx(SYSEX_CMD.DUPLICATE_CLIP, [srcTrack & 0x7F, srcScene & 0x7F, dstTrack & 0x7F, dstScene & 0x7F]);
 }
 
 /**
@@ -381,9 +363,7 @@ export function encodeGetDeviceChain(track) {
  * @returns {Uint8Array}
  */
 export function encodeSetMacro(track, device, macroIndex, value) {
-  return buildSysEx(SYSEX_CMD.SET_MACRO, [
-    track & 0x7F, device & 0x7F, macroIndex & 0x7F, value & 0x7F,
-  ]);
+  return buildSysEx(SYSEX_CMD.SET_MACRO, [track & 0x7F, device & 0x7F, macroIndex & 0x7F, value & 0x7F]);
 }
 
 /**
@@ -417,9 +397,7 @@ export function encodeCCRecordEnable(track, ccNumber, enable) {
  * @returns {Uint8Array}
  */
 export function encodeSetLoopRegion(startBar, startBeat, endBar, endBeat) {
-  return buildSysEx(SYSEX_CMD.SET_LOOP_REGION, [
-    startBar & 0x7F, startBeat & 0x7F, endBar & 0x7F, endBeat & 0x7F,
-  ]);
+  return buildSysEx(SYSEX_CMD.SET_LOOP_REGION, [startBar & 0x7F, startBeat & 0x7F, endBar & 0x7F, endBeat & 0x7F]);
 }
 
 /**
@@ -507,12 +485,6 @@ export function encodeConsolidateClip(track, scene) {
 export function encodeUndo() {
   return buildSysEx(SYSEX_CMD.UNDO, []);
 }
-
-/**
- * 0x20 AI_ARRANGEMENT — Send AI arrangement data as JSON.
- * @param {Object} arrangement - Arrangement config { tempo, sections: [...] }
- * @returns {Uint8Array}
- */
 export function encodeAIArrangement(arrangement) {
   return buildSysEx(SYSEX_CMD.AI_ARRANGEMENT, encodeJSON(arrangement));
 }
@@ -539,11 +511,22 @@ export function encodeAIGeneratePattern(params) {
  * @returns {Object} Decoded command with type-specific fields
  */
 export function decodeSysExCommand(data) {
-  const { cmd, cmdName, payload, valid } = parseSysEx(data);
-  if (!valid) return { valid: false, cmd, cmdName };
-
-  const result = { valid: true, cmd, cmdName };
-
+  const {
+    cmd,
+    cmdName,
+    payload,
+    valid
+  } = parseSysEx(data);
+  if (!valid) return {
+    valid: false,
+    cmd,
+    cmdName
+  };
+  const result = {
+    valid: true,
+    cmd,
+    cmdName
+  };
   switch (cmd) {
     case SYSEX_CMD.VERSION_NEGOTIATE:
       result.version = payload[0] || 1;
@@ -552,14 +535,18 @@ export function decodeSysExCommand(data) {
       result.bpm = decode14bit(payload[0], payload[1]) / 10;
       break;
     case SYSEX_CMD.SET_TRACK_VOLUME:
-      result.track = payload[0]; result.volume = payload[1];
+      result.track = payload[0];
+      result.volume = payload[1];
       break;
     case SYSEX_CMD.TRIGGER_CLIP:
-      result.track = payload[0]; result.scene = payload[1];
+      result.track = payload[0];
+      result.scene = payload[1];
       break;
     case SYSEX_CMD.SET_DEVICE_PARAM:
-      result.track = payload[0]; result.device = payload[1];
-      result.param = payload[2]; result.value = payload[3];
+      result.track = payload[0];
+      result.device = payload[1];
+      result.param = payload[2];
+      result.value = payload[3];
       break;
     case SYSEX_CMD.TRANSPORT:
       result.action = payload[0];
@@ -570,85 +557,118 @@ export function decodeSysExCommand(data) {
       result.name = decodeString(payload);
       break;
     case SYSEX_CMD.SET_TRACK_SEND:
-      result.track = payload[0]; result.send = payload[1]; result.value = payload[2];
+      result.track = payload[0];
+      result.send = payload[1];
+      result.value = payload[2];
       break;
     case SYSEX_CMD.SET_TRACK_EQ:
-      result.track = payload[0]; result.band = payload[1];
+      result.track = payload[0];
+      result.band = payload[1];
       result.freq = decode14bit(payload[2], payload[3]);
-      result.gain = payload[4]; result.q = payload[5];
+      result.gain = payload[4];
+      result.q = payload[5];
       break;
     case SYSEX_CMD.ARM_TRACK:
-      result.track = payload[0]; result.armed = payload[1] === 1;
+      result.track = payload[0];
+      result.armed = payload[1] === 1;
       break;
     case SYSEX_CMD.SET_CLIP_COLOR:
-      result.track = payload[0]; result.scene = payload[1];
+      result.track = payload[0];
+      result.scene = payload[1];
       [result.r, result.g, result.b] = decodeRGB(payload[2], payload[3], payload[4]);
       break;
     case SYSEX_CMD.SET_CLIP_NAME:
-      result.track = payload[0]; result.scene = payload[1];
+      result.track = payload[0];
+      result.scene = payload[1];
       result.name = decodeString(payload.slice(2));
       break;
     case SYSEX_CMD.QUANTIZE_CLIP:
-      result.track = payload[0]; result.scene = payload[1]; result.quantize = payload[2];
+      result.track = payload[0];
+      result.scene = payload[1];
+      result.quantize = payload[2];
       break;
     case SYSEX_CMD.DUPLICATE_CLIP:
-      result.srcTrack = payload[0]; result.srcScene = payload[1];
-      result.dstTrack = payload[2]; result.dstScene = payload[3];
+      result.srcTrack = payload[0];
+      result.srcScene = payload[1];
+      result.dstTrack = payload[2];
+      result.dstScene = payload[3];
       break;
     case SYSEX_CMD.DELETE_CLIP:
-      result.track = payload[0]; result.scene = payload[1];
+      result.track = payload[0];
+      result.scene = payload[1];
       break;
     case SYSEX_CMD.STATUS_REQUEST:
     case SYSEX_CMD.GET_TRACK_NAMES:
-      break; // No payload to decode
+      break;
+    // No payload to decode
     case SYSEX_CMD.GET_DEVICE_CHAIN:
       result.track = payload[0];
       break;
     case SYSEX_CMD.SET_MACRO:
-      result.track = payload[0]; result.device = payload[1];
-      result.macroIndex = payload[2]; result.value = payload[3];
+      result.track = payload[0];
+      result.device = payload[1];
+      result.macroIndex = payload[2];
+      result.value = payload[3];
       break;
     case SYSEX_CMD.LOAD_PRESET:
-      result.track = payload[0]; result.device = payload[1]; result.presetIndex = payload[2];
+      result.track = payload[0];
+      result.device = payload[1];
+      result.presetIndex = payload[2];
       break;
     case SYSEX_CMD.CC_RECORD_ENABLE:
-      result.track = payload[0]; result.ccNumber = payload[1]; result.enabled = payload[2] === 1;
+      result.track = payload[0];
+      result.ccNumber = payload[1];
+      result.enabled = payload[2] === 1;
       break;
     case SYSEX_CMD.SET_LOOP_REGION:
-      result.startBar = payload[0]; result.startBeat = payload[1];
-      result.endBar = payload[2]; result.endBeat = payload[3];
+      result.startBar = payload[0];
+      result.startBeat = payload[1];
+      result.endBar = payload[2];
+      result.endBeat = payload[3];
       break;
     case SYSEX_CMD.SET_TIME_SIGNATURE:
-      result.numerator = payload[0]; result.denominator = payload[1];
+      result.numerator = payload[0];
+      result.denominator = payload[1];
       break;
     case SYSEX_CMD.SET_TRACK_ROUTING:
-      result.track = payload[0]; result.inputType = payload[1]; result.inputChannel = payload[2];
+      result.track = payload[0];
+      result.inputType = payload[1];
+      result.inputChannel = payload[2];
       break;
     case SYSEX_CMD.SOLO_TRACK:
-      result.track = payload[0]; result.solo = payload[1] === 1;
+      result.track = payload[0];
+      result.solo = payload[1] === 1;
       break;
     case SYSEX_CMD.MUTE_TRACK:
-      result.track = payload[0]; result.mute = payload[1] === 1;
+      result.track = payload[0];
+      result.mute = payload[1] === 1;
       break;
     case SYSEX_CMD.SET_SCENE_NAME:
-      result.scene = payload[0]; result.name = decodeString(payload.slice(1));
+      result.scene = payload[0];
+      result.name = decodeString(payload.slice(1));
       break;
     case SYSEX_CMD.FIRE_SCENE:
       result.sceneIndex = payload[0];
       break;
     case SYSEX_CMD.CAPTURE_MIDI:
     case SYSEX_CMD.UNDO:
-      break; // No payload
+      break;
+    // No payload
     case SYSEX_CMD.CONSOLIDATE_CLIP:
-      result.track = payload[0]; result.scene = payload[1];
+      result.track = payload[0];
+      result.scene = payload[1];
       break;
     case SYSEX_CMD.AI_ARRANGEMENT:
     case SYSEX_CMD.AI_GENERATE_PATTERN:
-      try { result.data = decodeJSON(payload); } catch { result.data = null; result.decodeError = true; }
+      try {
+        result.data = decodeJSON(payload);
+      } catch {
+        result.data = null;
+        result.decodeError = true;
+      }
       break;
     default:
       result.rawPayload = payload;
   }
-
   return result;
 }

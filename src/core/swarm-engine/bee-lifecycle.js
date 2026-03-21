@@ -11,33 +11,24 @@
 
 import { EventEmitter } from 'events';
 import { randomUUID } from 'crypto';
-import {
-  PHI, PSI, fib,
-  CSL_THRESHOLDS,
-  EVICTION_WEIGHTS,
-  phiBackoff,
-  cslGate,
-} from '@heady/phi-math-foundation';
+import { PHI, PSI, fib, CSL_THRESHOLDS, EVICTION_WEIGHTS, phiBackoff, cslGate } from '@heady/phi-math-foundation';
 import { createLogger } from '@heady/structured-logger';
-
 const logger = createLogger('bee-lifecycle');
-
 const PSI2 = PSI * PSI;
 
 /** Bee state machine */
 const BEE_STATE = Object.freeze({
-  SPAWNING:    'spawning',
-  IDLE:        'idle',
-  WORKING:     'working',
-  PAUSED:      'paused',
-  DRAINING:    'draining',
-  TERMINATED:  'terminated',
+  SPAWNING: 'spawning',
+  IDLE: 'idle',
+  WORKING: 'working',
+  PAUSED: 'paused',
+  DRAINING: 'draining',
+  TERMINATED: 'terminated'
 });
 
 /** Maximum task queue depth per bee */
 const MAX_QUEUE_DEPTH = fib(12); // 144
 
-/** Maximum retry attempts per task */
 const MAX_RETRIES = fib(5); // 5
 
 /**
@@ -48,7 +39,9 @@ const MAX_RETRIES = fib(5); // 5
  */
 function cosine(a, b) {
   if (a.length !== b.length) return 0;
-  let dot = 0, magA = 0, magB = 0;
+  let dot = 0,
+    magA = 0,
+    magB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     magA += a[i] * a[i];
@@ -71,11 +64,11 @@ function domainToVector(domain, dim = 384) {
   const v = new Float64Array(dim);
   let hash = 5381;
   for (let i = 0; i < domain.length; i++) {
-    hash = ((hash << 5) + hash + domain.charCodeAt(i)) >>> 0;
+    hash = (hash << 5) + hash + domain.charCodeAt(i) >>> 0;
   }
   for (let i = 0; i < dim; i++) {
-    hash = ((hash << 5) + hash + i) >>> 0;
-    v[i] = ((hash % 2000) - 1000) / 1000;
+    hash = (hash << 5) + hash + i >>> 0;
+    v[i] = (hash % 2000 - 1000) / 1000;
   }
   // Normalize
   let mag = 0;
@@ -86,7 +79,6 @@ function domainToVector(domain, dim = 384) {
   }
   return v;
 }
-
 class HeadyBee extends EventEmitter {
   /**
    * @param {object} config
@@ -103,16 +95,13 @@ class HeadyBee extends EventEmitter {
     this.vector = config.vector || domainToVector(config.domain);
     this.state = BEE_STATE.SPAWNING;
     this._executor = config.executor || defaultExecutor;
-
     this.createdAt = Date.now();
     this.lastActiveAt = Date.now();
     this.tasksCompleted = 0;
     this.tasksFailed = 0;
     this.errorCount = 0;
-
     this.currentTask = null;
     this.taskQueue = [];
-
     this._healthScore = 1.0;
     this._uptimeStart = Date.now();
   }
@@ -123,8 +112,15 @@ class HeadyBee extends EventEmitter {
    */
   spawn() {
     this.state = BEE_STATE.IDLE;
-    this.emit('spawned', { beeId: this.id, domain: this.domain });
-    logger.info('Bee spawned', { beeId: this.id, domain: this.domain, swarmId: this.swarmId });
+    this.emit('spawned', {
+      beeId: this.id,
+      domain: this.domain
+    });
+    logger.info('Bee spawned', {
+      beeId: this.id,
+      domain: this.domain,
+      swarmId: this.swarmId
+    });
     return this;
   }
 
@@ -139,9 +135,11 @@ class HeadyBee extends EventEmitter {
     if (this.state === BEE_STATE.TERMINATED || this.state === BEE_STATE.DRAINING) {
       return false;
     }
-
     if (this.taskQueue.length >= MAX_QUEUE_DEPTH) {
-      logger.warn('Bee queue full, rejecting task', { beeId: this.id, taskId: task.id });
+      logger.warn('Bee queue full, rejecting task', {
+        beeId: this.id,
+        taskId: task.id
+      });
       return false;
     }
 
@@ -153,20 +151,21 @@ class HeadyBee extends EventEmitter {
           beeId: this.id,
           taskId: task.id,
           similarity,
-          threshold: CSL_THRESHOLDS.LOW,
+          threshold: CSL_THRESHOLDS.LOW
         });
         return false;
       }
     }
-
     this.taskQueue.push(task);
-    this.emit('task:assigned', { beeId: this.id, taskId: task.id });
+    this.emit('task:assigned', {
+      beeId: this.id,
+      taskId: task.id
+    });
 
     // If idle, start processing
     if (this.state === BEE_STATE.IDLE) {
       this._processNext();
     }
-
     return true;
   }
 
@@ -179,28 +178,23 @@ class HeadyBee extends EventEmitter {
     this.state = BEE_STATE.WORKING;
     this.currentTask = task;
     this.lastActiveAt = Date.now();
-
     let lastError = null;
-
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
         const result = await this._executor(task);
         this.tasksCompleted++;
         this.currentTask = null;
         this.state = BEE_STATE.IDLE;
-
         this.emit('task:completed', {
           beeId: this.id,
           taskId: task.id,
           attempt,
-          result,
+          result
         });
-
         return result;
       } catch (err) {
         lastError = err;
         this.errorCount++;
-
         if (attempt < MAX_RETRIES - 1) {
           const backoffMs = phiBackoff(attempt, fib(7) * 1000);
           logger.warn('Task execution failed, retrying', {
@@ -208,7 +202,7 @@ class HeadyBee extends EventEmitter {
             taskId: task.id,
             attempt,
             backoffMs,
-            error: err.message,
+            error: err.message
           });
           await sleep(backoffMs);
         }
@@ -219,21 +213,18 @@ class HeadyBee extends EventEmitter {
     this.tasksFailed++;
     this.currentTask = null;
     this.state = BEE_STATE.IDLE;
-
     this.emit('task:failed', {
       beeId: this.id,
       taskId: task.id,
       error: lastError?.message,
-      attempts: MAX_RETRIES,
+      attempts: MAX_RETRIES
     });
-
     logger.error('Task failed after all retries', {
       beeId: this.id,
       taskId: task.id,
       attempts: MAX_RETRIES,
-      error: lastError?.message,
+      error: lastError?.message
     });
-
     throw lastError;
   }
 
@@ -243,8 +234,12 @@ class HeadyBee extends EventEmitter {
   pause() {
     if (this.state === BEE_STATE.TERMINATED) return;
     this.state = BEE_STATE.PAUSED;
-    this.emit('paused', { beeId: this.id });
-    logger.info('Bee paused', { beeId: this.id });
+    this.emit('paused', {
+      beeId: this.id
+    });
+    logger.info('Bee paused', {
+      beeId: this.id
+    });
   }
 
   /**
@@ -253,9 +248,13 @@ class HeadyBee extends EventEmitter {
   resume() {
     if (this.state !== BEE_STATE.PAUSED) return;
     this.state = BEE_STATE.IDLE;
-    this.emit('resumed', { beeId: this.id });
+    this.emit('resumed', {
+      beeId: this.id
+    });
     this._processNext();
-    logger.info('Bee resumed', { beeId: this.id });
+    logger.info('Bee resumed', {
+      beeId: this.id
+    });
   }
 
   /**
@@ -263,8 +262,14 @@ class HeadyBee extends EventEmitter {
    */
   drain() {
     this.state = BEE_STATE.DRAINING;
-    this.emit('draining', { beeId: this.id, queuedTasks: this.taskQueue.length });
-    logger.info('Bee draining', { beeId: this.id, queuedTasks: this.taskQueue.length });
+    this.emit('draining', {
+      beeId: this.id,
+      queuedTasks: this.taskQueue.length
+    });
+    logger.info('Bee draining', {
+      beeId: this.id,
+      queuedTasks: this.taskQueue.length
+    });
   }
 
   /**
@@ -274,8 +279,13 @@ class HeadyBee extends EventEmitter {
     this.state = BEE_STATE.TERMINATED;
     this.currentTask = null;
     this.taskQueue = [];
-    this.emit('terminated', { beeId: this.id });
-    logger.info('Bee terminated', { beeId: this.id, tasksCompleted: this.tasksCompleted });
+    this.emit('terminated', {
+      beeId: this.id
+    });
+    logger.info('Bee terminated', {
+      beeId: this.id,
+      tasksCompleted: this.tasksCompleted
+    });
   }
 
   /**
@@ -285,7 +295,6 @@ class HeadyBee extends EventEmitter {
   heartbeat() {
     this.lastActiveAt = Date.now();
     this._computeHealth();
-
     const metrics = {
       beeId: this.id,
       domain: this.domain,
@@ -295,9 +304,8 @@ class HeadyBee extends EventEmitter {
       tasksCompleted: this.tasksCompleted,
       tasksFailed: this.tasksFailed,
       queueDepth: this.taskQueue.length,
-      uptimeMs: Date.now() - this._uptimeStart,
+      uptimeMs: Date.now() - this._uptimeStart
     };
-
     this.emit('heartbeat', metrics);
     return metrics;
   }
@@ -324,19 +332,13 @@ class HeadyBee extends EventEmitter {
 
     // Success rate
     const totalTasks = this.tasksCompleted + this.tasksFailed;
-    const successRate = totalTasks > 0
-      ? this.tasksCompleted / totalTasks
-      : 1.0;
+    const successRate = totalTasks > 0 ? this.tasksCompleted / totalTasks : 1.0;
 
     // Response time factor (inverse of queue depth relative to max)
-    const responseTimeFactor = 1.0 - (this.taskQueue.length / MAX_QUEUE_DEPTH);
+    const responseTimeFactor = 1.0 - this.taskQueue.length / MAX_QUEUE_DEPTH;
 
     // Phi-weighted combination using EVICTION_WEIGHTS
-    this._healthScore = Math.max(0, Math.min(1.0,
-      uptimeFactor * EVICTION_WEIGHTS.importance +
-      successRate * EVICTION_WEIGHTS.recency +
-      Math.max(0, responseTimeFactor) * EVICTION_WEIGHTS.relevance
-    ));
+    this._healthScore = Math.max(0, Math.min(1.0, uptimeFactor * EVICTION_WEIGHTS.importance + successRate * EVICTION_WEIGHTS.recency + Math.max(0, responseTimeFactor) * EVICTION_WEIGHTS.relevance));
   }
 
   /**
@@ -345,7 +347,6 @@ class HeadyBee extends EventEmitter {
    */
   _processNext() {
     if (this.state !== BEE_STATE.IDLE || this.taskQueue.length === 0) return;
-
     const task = this.taskQueue.shift();
     this.execute(task).catch(() => {
       // Error already handled in execute(), continue processing
@@ -373,7 +374,7 @@ class HeadyBee extends EventEmitter {
       tasksFailed: this.tasksFailed,
       queueDepth: this.taskQueue.length,
       createdAt: this.createdAt,
-      lastActiveAt: this.lastActiveAt,
+      lastActiveAt: this.lastActiveAt
     };
   }
 }
@@ -384,18 +385,13 @@ class HeadyBee extends EventEmitter {
  * @returns {Promise<object>}
  */
 async function defaultExecutor(task) {
-  return { taskId: task.id, status: 'completed', executedAt: Date.now() };
+  return {
+    taskId: task.id,
+    status: 'completed',
+    executedAt: Date.now()
+  };
 }
-
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-export {
-  HeadyBee,
-  BEE_STATE,
-  MAX_QUEUE_DEPTH,
-  MAX_RETRIES,
-  cosine,
-  domainToVector,
-};
+export { HeadyBee, BEE_STATE, MAX_QUEUE_DEPTH, MAX_RETRIES, cosine, domainToVector };

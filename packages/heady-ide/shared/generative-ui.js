@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Generative UI Renderer v1.0                            ║
 // ║  A2UI protocol: agents generate rich interactive UI via JSON    ║
@@ -28,7 +30,6 @@
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;
-
 const COMPONENT_REGISTRY = {
   text: renderText,
   card: renderCard,
@@ -40,7 +41,7 @@ const COMPONENT_REGISTRY = {
   actions: renderActions,
   status: renderStatus,
   swarm: renderSwarm,
-  pipeline: renderPipeline,
+  pipeline: renderPipeline
 };
 
 /**
@@ -50,8 +51,10 @@ export function render(spec) {
   if (!spec || !spec.type) return null;
   const renderer = COMPONENT_REGISTRY[spec.type];
   if (!renderer) {
-    console.warn(`[HeadyGenUI] Unknown component type: ${spec.type}`);
-    return renderText({ content: `[Unknown component: ${spec.type}]` });
+    logger.warn(`[HeadyGenUI] Unknown component type: ${spec.type}`);
+    return renderText({
+      content: `[Unknown component: ${spec.type}]`
+    });
   }
   const el = renderer(spec);
   if (spec.id) el.id = spec.id;
@@ -74,10 +77,11 @@ export function createStreamRenderer(container) {
     replace(id, spec) {
       const existing = document.getElementById(id);
       const el = render(spec);
-      if (existing && el) existing.replaceWith(el);
-      else if (el) container.appendChild(el);
+      if (existing && el) existing.replaceWith(el);else if (el) container.appendChild(el);
     },
-    clear() { container.innerHTML = ''; },
+    clear() {
+      container.innerHTML = '';
+    }
   };
 }
 
@@ -89,7 +93,6 @@ function renderText(spec) {
   el.innerHTML = markdownToHTML(spec.content || '');
   return el;
 }
-
 function renderCard(spec) {
   const el = document.createElement('div');
   el.className = 'genui-card glass-card';
@@ -102,7 +105,6 @@ function renderCard(spec) {
   `;
   return el;
 }
-
 function renderTable(spec) {
   const el = document.createElement('div');
   el.className = 'genui-table-wrap';
@@ -110,14 +112,11 @@ function renderTable(spec) {
   el.innerHTML = `
     <table class="genui-table">
       <thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
-      <tbody>${(spec.rows || []).map(row =>
-        `<tr>${headers.map(h => `<td>${esc(String(row[h] ?? ''))}</td>`).join('')}</tr>`
-      ).join('')}</tbody>
+      <tbody>${(spec.rows || []).map(row => `<tr>${headers.map(h => `<td>${esc(String(row[h] ?? ''))}</td>`).join('')}</tr>`).join('')}</tbody>
     </table>
   `;
   return el;
 }
-
 function renderChart(spec) {
   const el = document.createElement('div');
   el.className = 'genui-chart';
@@ -132,14 +131,12 @@ function renderChart(spec) {
     const data = spec.data || [];
     const maxVal = Math.max(...data.map(d => d.value), 1);
     const barWidth = canvas.width / data.length - 4;
-
     ctx.fillStyle = spec.color || '#00d4aa';
     data.forEach((d, i) => {
-      const barHeight = (d.value / maxVal) * (canvas.height - 30);
+      const barHeight = d.value / maxVal * (canvas.height - 30);
       const x = i * (barWidth + 4) + 2;
       const y = canvas.height - barHeight - 20;
       ctx.fillRect(x, y, barWidth, barHeight);
-
       ctx.fillStyle = '#9898aa';
       ctx.font = '10px DM Sans';
       ctx.textAlign = 'center';
@@ -147,10 +144,8 @@ function renderChart(spec) {
       ctx.fillStyle = spec.color || '#00d4aa';
     });
   });
-
   return el;
 }
-
 function renderProgress(spec) {
   const el = document.createElement('div');
   el.className = 'genui-progress';
@@ -161,7 +156,6 @@ function renderProgress(spec) {
   `;
   return el;
 }
-
 function renderCodeblock(spec) {
   const el = document.createElement('pre');
   el.className = 'genui-code';
@@ -171,7 +165,6 @@ function renderCodeblock(spec) {
   el.appendChild(code);
   return el;
 }
-
 function renderForm(spec) {
   const el = document.createElement('div');
   el.className = 'genui-form';
@@ -182,7 +175,6 @@ function renderForm(spec) {
              ${f.required ? 'required' : ''} value="${esc(f.value || '')}">
     </div>
   `).join('');
-
   el.innerHTML = `
     ${spec.title ? `<h3>${esc(spec.title)}</h3>` : ''}
     ${fields}
@@ -192,14 +184,12 @@ function renderForm(spec) {
   `;
   return el;
 }
-
 function renderActions(spec) {
   const el = document.createElement('div');
   el.className = 'genui-actions';
   el.innerHTML = renderActionsHTML(spec.actions || spec.buttons || []);
   return el;
 }
-
 function renderActionsHTML(actions) {
   return `<div class="genui-actions">${(actions || []).map(a => `
     <button class="genui-btn genui-btn-${a.variant || 'ghost'}"
@@ -209,7 +199,6 @@ function renderActionsHTML(actions) {
     </button>
   `).join('')}</div>`;
 }
-
 function renderStatus(spec) {
   const el = document.createElement('div');
   el.className = 'genui-status';
@@ -228,7 +217,6 @@ function renderStatus(spec) {
   `;
   return el;
 }
-
 function renderSwarm(spec) {
   const el = document.createElement('div');
   el.className = 'genui-swarm';
@@ -246,7 +234,6 @@ function renderSwarm(spec) {
   `;
   return el;
 }
-
 function renderPipeline(spec) {
   const el = document.createElement('div');
   el.className = 'genui-pipeline';
@@ -272,13 +259,8 @@ function esc(str) {
   div.textContent = str;
   return div.innerHTML;
 }
-
 function markdownToHTML(md) {
-  return md
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/`(.*?)`/g, '<code>$1</code>')
-    .replace(/\n/g, '<br>');
+  return md.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>').replace(/\n/g, '<br>');
 }
 
 // ── CSS (inject once) ───────────────────────────────────────────────
@@ -335,8 +317,16 @@ export function injectGenUIStyles() {
 
 // Auto-init
 if (typeof window !== 'undefined') {
-  window.HeadyGenUI = { render, createStreamRenderer, injectGenUIStyles };
+  window.HeadyGenUI = {
+    render,
+    createStreamRenderer,
+    injectGenUIStyles
+  };
   document.addEventListener('DOMContentLoaded', injectGenUIStyles);
 }
-
-export default { render, createStreamRenderer, injectGenUIStyles, COMPONENT_REGISTRY };
+export default {
+  render,
+  createStreamRenderer,
+  injectGenUIStyles,
+  COMPONENT_REGISTRY
+};

@@ -5,7 +5,9 @@
 
 'use strict';
 
-const { PHI_TIMING } = require('../shared/phi-math');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
 /**
  * @fileoverview Built-in fetch wrapper for the Heady™ AI Platform.
  * Provides retry logic, configurable timeouts, and a circuit breaker
@@ -15,9 +17,12 @@ const { PHI_TIMING } = require('../shared/phi-math');
 
 const https = require('https');
 const http = require('http');
-const { URL } = require('url');
-const { createLogger } = require('../utils/logger');
-
+const {
+  URL
+} = require('url');
+const {
+  createLogger
+} = require('../utils/logger');
 const logger = createLogger('heady-fetch');
 
 // ---------------------------------------------------------------------------
@@ -58,7 +63,12 @@ const CB_SUCCESS_THRESHOLD = 2;
  */
 function _getCircuit(host) {
   if (!_circuits.has(host)) {
-    _circuits.set(host, { state: 'CLOSED', failures: 0, successes: 0, openedAt: null });
+    _circuits.set(host, {
+      state: 'CLOSED',
+      failures: 0,
+      successes: 0,
+      openedAt: null
+    });
   }
   return _circuits.get(host);
 }
@@ -141,23 +151,20 @@ function _request(url, options = {}) {
       method = 'GET',
       headers = {},
       body = null,
-      timeoutMs = PHI_TIMING.CYCLE,
+      timeoutMs = PHI_TIMING.CYCLE
     } = options;
-
     let parsed;
     try {
       parsed = new URL(url);
     } catch (e) {
       return reject(new Error(`Invalid URL: ${url}`));
     }
-
     const isHttps = parsed.protocol === 'https:';
     const transport = isHttps ? https : http;
-
     const bodyBuf = body ? Buffer.from(typeof body === 'string' ? body : JSON.stringify(body)) : null;
     const reqHeaders = {
       'User-Agent': 'HeadyFetch/3.1.0 (HeadySystems Inc.)',
-      ...headers,
+      ...headers
     };
     if (bodyBuf) {
       reqHeaders['Content-Length'] = String(bodyBuf.length);
@@ -165,18 +172,16 @@ function _request(url, options = {}) {
         reqHeaders['Content-Type'] = 'application/json';
       }
     }
-
     const reqOptions = {
       hostname: parsed.hostname,
       port: parsed.port || (isHttps ? 443 : 80),
       path: parsed.pathname + (parsed.search || ''),
       method,
-      headers: reqHeaders,
+      headers: reqHeaders
     };
-
-    const req = transport.request(reqOptions, (res) => {
+    const req = transport.request(reqOptions, res => {
       const chunks = [];
-      res.on('data', (chunk) => chunks.push(chunk));
+      res.on('data', chunk => chunks.push(chunk));
       res.on('end', () => {
         const rawBody = Buffer.concat(chunks).toString('utf8');
         resolve({
@@ -190,18 +195,16 @@ function _request(url, options = {}) {
               throw new Error(`Failed to parse JSON response: ${e.message}`);
             }
           },
-          ok: res.statusCode >= 200 && res.statusCode < 300,
+          ok: res.statusCode >= 200 && res.statusCode < 300
         });
       });
       res.on('error', reject);
     });
-
     req.on('error', reject);
     req.setTimeout(timeoutMs, () => {
       req.destroy();
       reject(new Error(`Request timeout after ${timeoutMs}ms: ${method} ${url}`));
     });
-
     if (bodyBuf) req.write(bodyBuf);
     req.end();
   });
@@ -210,19 +213,6 @@ function _request(url, options = {}) {
 // ---------------------------------------------------------------------------
 // Main headyFetch with retry + circuit breaker
 // ---------------------------------------------------------------------------
-
-/**
- * @typedef {Object} FetchOptions
- * @property {string} [method='GET'] - HTTP method
- * @property {Object} [headers={}] - Request headers
- * @property {*} [body] - Request body (auto-serialised to JSON)
- * @property {number} [timeoutMs=PHI_TIMING.CYCLE] - Request timeout in ms
- * @property {number} [retries=3] - Number of retry attempts
- * @property {number} [retryDelayMs=500] - Initial retry delay (doubles on each attempt)
- * @property {number[]} [retryOn=[408, 429, 500, 502, 503, 504]] - Status codes to retry on
- * @property {boolean} [circuitBreaker=true] - Enable circuit breaker
- * @property {string} [correlationId] - For request tracing
- */
 
 /**
  * Fetches a URL with retry logic and circuit breaker protection.
@@ -240,29 +230,26 @@ async function headyFetch(url, options = {}) {
     retryDelayMs = 500,
     retryOn = [408, 429, 500, 502, 503, 504],
     circuitBreaker: useCB = true,
-    correlationId,
+    correlationId
   } = options;
-
   let parsed;
   try {
     parsed = new URL(url);
   } catch (e) {
     throw new Error(`headyFetch: Invalid URL "${url}"`);
   }
-
   const host = parsed.hostname;
 
   // Circuit breaker check
   if (useCB && _isCircuitOpen(host)) {
     throw new Error(`headyFetch: Circuit breaker OPEN for ${host} — request blocked`);
   }
-
-  const reqHeaders = { ...headers };
+  const reqHeaders = {
+    ...headers
+  };
   if (correlationId) reqHeaders['X-Heady-Correlation-Id'] = correlationId;
-
   let lastError;
   let attempt = 0;
-
   while (attempt <= retries) {
     const t0 = Date.now();
     try {
@@ -270,36 +257,37 @@ async function headyFetch(url, options = {}) {
         method,
         headers: reqHeaders,
         body,
-        timeoutMs,
+        timeoutMs
       });
-
       const durationMs = Date.now() - t0;
       logger.debug(`${method} ${url} → ${response.status}`, {
         status: response.status,
         durationMs,
         attempt,
-        correlationId,
+        correlationId
       });
-
       if (retryOn.includes(response.status) && attempt < retries) {
         // Retry on specific status codes
         attempt++;
         const delay = retryDelayMs * Math.pow(2, attempt - 1);
-        logger.warn(`headyFetch: Retrying (${attempt}/${retries}) due to status ${response.status}`, { url, delay });
+        logger.warn(`headyFetch: Retrying (${attempt}/${retries}) due to status ${response.status}`, {
+          url,
+          delay
+        });
         await _sleep(delay);
         continue;
       }
-
       if (useCB) _recordSuccess(host);
       return response;
-
     } catch (err) {
       lastError = err;
       const durationMs = Date.now() - t0;
       logger.warn(`headyFetch: Request failed (attempt ${attempt + 1}/${retries + 1})`, {
-        url, method, err: err.message, durationMs,
+        url,
+        method,
+        err: err.message,
+        durationMs
       });
-
       if (attempt < retries) {
         attempt++;
         const delay = retryDelayMs * Math.pow(2, attempt - 1);
@@ -309,7 +297,6 @@ async function headyFetch(url, options = {}) {
       }
     }
   }
-
   if (useCB) _recordFailure(host);
   throw lastError || new Error(`headyFetch: All ${retries + 1} attempts failed for ${url}`);
 }
@@ -323,7 +310,10 @@ async function headyFetch(url, options = {}) {
  * @param {string} url
  * @param {FetchOptions} [options]
  */
-headyFetch.get = (url, options = {}) => headyFetch(url, { ...options, method: 'GET' });
+headyFetch.get = (url, options = {}) => headyFetch(url, {
+  ...options,
+  method: 'GET'
+});
 
 /**
  * POST request with JSON body.
@@ -331,22 +321,37 @@ headyFetch.get = (url, options = {}) => headyFetch(url, { ...options, method: 'G
  * @param {*} body
  * @param {FetchOptions} [options]
  */
-headyFetch.post = (url, body, options = {}) => headyFetch(url, { ...options, method: 'POST', body });
+headyFetch.post = (url, body, options = {}) => headyFetch(url, {
+  ...options,
+  method: 'POST',
+  body
+});
 
 /**
  * PUT request with JSON body.
  */
-headyFetch.put = (url, body, options = {}) => headyFetch(url, { ...options, method: 'PUT', body });
+headyFetch.put = (url, body, options = {}) => headyFetch(url, {
+  ...options,
+  method: 'PUT',
+  body
+});
 
 /**
  * PATCH request with JSON body.
  */
-headyFetch.patch = (url, body, options = {}) => headyFetch(url, { ...options, method: 'PATCH', body });
+headyFetch.patch = (url, body, options = {}) => headyFetch(url, {
+  ...options,
+  method: 'PATCH',
+  body
+});
 
 /**
  * DELETE request.
  */
-headyFetch.delete = (url, options = {}) => headyFetch(url, { ...options, method: 'DELETE' });
+headyFetch.delete = (url, options = {}) => headyFetch(url, {
+  ...options,
+  method: 'DELETE'
+});
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -358,7 +363,7 @@ headyFetch.delete = (url, options = {}) => headyFetch(url, { ...options, method:
  * @returns {Promise<void>}
  */
 function _sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
+  return new Promise(r => setTimeout(r, ms));
 }
 
 /**
@@ -373,7 +378,7 @@ function getCircuitStatus() {
       state: cb.state,
       failures: cb.failures,
       successes: cb.successes,
-      openedAt: cb.openedAt ? new Date(cb.openedAt).toISOString() : null,
+      openedAt: cb.openedAt ? new Date(cb.openedAt).toISOString() : null
     };
   }
   return result;
@@ -384,10 +389,14 @@ function getCircuitStatus() {
  * @param {string} host
  */
 function resetCircuit(host) {
-  _circuits.set(host, { state: 'CLOSED', failures: 0, successes: 0, openedAt: null });
+  _circuits.set(host, {
+    state: 'CLOSED',
+    failures: 0,
+    successes: 0,
+    openedAt: null
+  });
   logger.info(`Circuit breaker manually reset for ${host}`);
 }
-
 module.exports = headyFetch;
 module.exports.headyFetch = headyFetch;
 module.exports.getCircuitStatus = getCircuitStatus;

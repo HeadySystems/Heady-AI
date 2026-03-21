@@ -5,7 +5,9 @@
 
 'use strict';
 
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 const logger = require('../../utils/logger');
 const HeadyScheduler = require('../core/heady-scheduler');
 
@@ -13,36 +15,33 @@ const HeadyScheduler = require('../core/heady-scheduler');
 
 const MODES = Object.freeze({
   USER_PRESENT: 'user-present',
-  USER_ABSENT:  'user-absent',
+  USER_ABSENT: 'user-absent'
 });
 
 // In user-absent mode consume up to 90% of resources; present = 10%
 const RESOURCE_CAPS = {
-  [MODES.USER_ABSENT]:  0.90,
-  [MODES.USER_PRESENT]: 0.10,
+  [MODES.USER_ABSENT]: 0.90,
+  [MODES.USER_PRESENT]: 0.10
 };
-
 const TASK_PRIORITIES = Object.freeze({
-  ERROR_REPAIR:        1,
-  PERFORMANCE_OPT:     2,
-  SECURITY_SCAN:       3,
-  DOCS_SYNC:           4,
-  TRAINING:            5,
-  CACHE_WARMUP:        6,
-  HOUSEKEEPING:        7,
+  ERROR_REPAIR: 1,
+  PERFORMANCE_OPT: 2,
+  SECURITY_SCAN: 3,
+  DOCS_SYNC: 4,
+  TRAINING: 5,
+  CACHE_WARMUP: 6,
+  HOUSEKEEPING: 7
 });
-
 const TASK_STATUS = Object.freeze({
-  PENDING:    'pending',
-  RUNNING:    'running',
-  COMPLETED:  'completed',
-  FAILED:     'failed',
-  SKIPPED:    'skipped',
-  CANCELLED:  'cancelled',
+  PENDING: 'pending',
+  RUNNING: 'running',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+  SKIPPED: 'skipped',
+  CANCELLED: 'cancelled'
 });
-
-const CYCLE_INTERVAL_MS = 15_000;   // How often to run the autonomy loop
-const MAX_CONCURRENT    = 4;        // Max parallel background tasks
+const CYCLE_INTERVAL_MS = 15_000; // How often to run the autonomy loop
+const MAX_CONCURRENT = 4; // Max parallel background tasks
 
 // ─── AutonomousEngine ─────────────────────────────────────────────────────────
 
@@ -56,37 +55,37 @@ class AutonomousEngine extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-
     this.mode = opts.mode || MODES.USER_PRESENT;
     this.cycleIntervalMs = opts.cycleIntervalMs ?? CYCLE_INTERVAL_MS;
-    this.maxConcurrent   = opts.maxConcurrent   ?? MAX_CONCURRENT;
-
-    this._scheduler = opts.scheduler || new HeadyScheduler({ namespace: 'autonomous-engine' });
+    this.maxConcurrent = opts.maxConcurrent ?? MAX_CONCURRENT;
+    this._scheduler = opts.scheduler || new HeadyScheduler({
+      namespace: 'autonomous-engine'
+    });
 
     /** @type {Map<string, QueuedTask>} taskId → task */
     this._queue = new Map();
 
     /** @type {Map<string, Promise>} taskId → running promise */
     this._running = new Map();
-
-    this._cycleTimer  = null;
-    this._cycleCount  = 0;
-    this._paused      = false;
+    this._cycleTimer = null;
+    this._cycleCount = 0;
+    this._paused = false;
 
     // Stats
     this._stats = {
-      tasksEnqueued:  0,
+      tasksEnqueued: 0,
       tasksCompleted: 0,
-      tasksFailed:    0,
-      tasksSkipped:   0,
-      cyclesRun:      0,
-      startedAt:      null,
+      tasksFailed: 0,
+      tasksSkipped: 0,
+      cyclesRun: 0,
+      startedAt: null
     };
 
     // Built-in recurring task definitions
     this._builtInTasks = _buildBuiltInTasks();
-
-    logger.info('[AutonomousEngine] initialized', { mode: this.mode });
+    logger.info('[AutonomousEngine] initialized', {
+      mode: this.mode
+    });
   }
 
   // ─── Lifecycle ───────────────────────────────────────────────────────────────
@@ -101,7 +100,6 @@ class AutonomousEngine extends EventEmitter {
     logger.info('[AutonomousEngine] started');
     return this;
   }
-
   stop() {
     if (this._cycleTimer) {
       clearInterval(this._cycleTimer);
@@ -109,13 +107,11 @@ class AutonomousEngine extends EventEmitter {
     }
     logger.info('[AutonomousEngine] stopped');
   }
-
   pause() {
     this._paused = true;
     logger.info('[AutonomousEngine] paused');
     this.emit('paused');
   }
-
   resume() {
     this._paused = false;
     logger.info('[AutonomousEngine] resumed');
@@ -136,10 +132,17 @@ class AutonomousEngine extends EventEmitter {
     const prev = this.mode;
     this.mode = mode;
     const cap = Math.round(RESOURCE_CAPS[mode] * 100);
-    logger.info('[AutonomousEngine] mode changed', { prev, mode, resourceCap: `${cap}%` });
-    this.emit('modeChange', { prev, mode, resourceCap: cap });
+    logger.info('[AutonomousEngine] mode changed', {
+      prev,
+      mode,
+      resourceCap: `${cap}%`
+    });
+    this.emit('modeChange', {
+      prev,
+      mode,
+      resourceCap: cap
+    });
   }
-
   get resourceCap() {
     return RESOURCE_CAPS[this.mode] ?? 0.10;
   }
@@ -158,16 +161,15 @@ class AutonomousEngine extends EventEmitter {
    * @returns {QueuedTask}
    */
   enqueue(task) {
-    if (!task.id)  throw new Error('task.id is required');
+    if (!task.id) throw new Error('task.id is required');
     if (!task.run) throw new Error('task.run (function) is required');
-
     if (this._queue.has(task.id) || this._running.has(task.id)) {
-      logger.debug('[AutonomousEngine] task already queued/running', { id: task.id });
+      logger.debug('[AutonomousEngine] task already queued/running', {
+        id: task.id
+      });
       return this._queue.get(task.id) || null;
     }
-
     const priority = task.priority ?? TASK_PRIORITIES[task.type] ?? TASK_PRIORITIES.HOUSEKEEPING;
-
     const queued = {
       id: task.id,
       name: task.name || task.id,
@@ -180,13 +182,15 @@ class AutonomousEngine extends EventEmitter {
       startedAt: null,
       completedAt: null,
       error: null,
-      result: null,
+      result: null
     };
-
     this._queue.set(task.id, queued);
     this._stats.tasksEnqueued++;
-
-    logger.debug('[AutonomousEngine] task enqueued', { id: task.id, priority, type: task.type });
+    logger.debug('[AutonomousEngine] task enqueued', {
+      id: task.id,
+      priority,
+      type: task.type
+    });
     this.emit('taskEnqueued', queued);
     return queued;
   }
@@ -199,7 +203,9 @@ class AutonomousEngine extends EventEmitter {
     if (task && task.status === TASK_STATUS.PENDING) {
       task.status = TASK_STATUS.CANCELLED;
       this._queue.delete(taskId);
-      this.emit('taskCancelled', { id: taskId });
+      this.emit('taskCancelled', {
+        id: taskId
+      });
       return true;
     }
     return false;
@@ -217,36 +223,25 @@ class AutonomousEngine extends EventEmitter {
     if (slots <= 0) return;
 
     // Sort queue by priority
-    const pending = [...this._queue.values()]
-      .filter(t => t.status === TASK_STATUS.PENDING)
-      .sort((a, b) => a.priority - b.priority);
-
+    const pending = [...this._queue.values()].filter(t => t.status === TASK_STATUS.PENDING).sort((a, b) => a.priority - b.priority);
     if (pending.length === 0) {
       // Inject built-in tasks if queue is empty
       this._injectBuiltIns();
       return;
     }
-
     const toRun = pending.slice(0, slots);
-
     for (const task of toRun) {
       this._runTask(task);
     }
   }
-
   _availableSlots() {
-    const maxAllowed = this.mode === MODES.USER_ABSENT
-      ? this.maxConcurrent
-      : Math.max(1, Math.floor(this.maxConcurrent * this.resourceCap));
-
+    const maxAllowed = this.mode === MODES.USER_ABSENT ? this.maxConcurrent : Math.max(1, Math.floor(this.maxConcurrent * this.resourceCap));
     return maxAllowed - this._running.size;
   }
-
   _runTask(task) {
     task.status = TASK_STATUS.RUNNING;
     task.startedAt = new Date().toISOString();
     this._queue.delete(task.id);
-
     const taskPromise = (async () => {
       try {
         const result = await task.run(task.meta);
@@ -254,20 +249,25 @@ class AutonomousEngine extends EventEmitter {
         task.status = TASK_STATUS.COMPLETED;
         task.completedAt = new Date().toISOString();
         this._stats.tasksCompleted++;
-        logger.debug('[AutonomousEngine] task completed', { id: task.id, name: task.name });
+        logger.debug('[AutonomousEngine] task completed', {
+          id: task.id,
+          name: task.name
+        });
         this.emit('taskCompleted', task);
       } catch (err) {
         task.error = err.message;
         task.status = TASK_STATUS.FAILED;
         task.completedAt = new Date().toISOString();
         this._stats.tasksFailed++;
-        logger.error('[AutonomousEngine] task failed', { id: task.id, err: err.message });
+        logger.error('[AutonomousEngine] task failed', {
+          id: task.id,
+          err: err.message
+        });
         this.emit('taskFailed', task);
       } finally {
         this._running.delete(task.id);
       }
     })();
-
     this._running.set(task.id, taskPromise);
     return taskPromise;
   }
@@ -276,40 +276,42 @@ class AutonomousEngine extends EventEmitter {
 
   _injectBuiltIns() {
     const now = Date.now();
-
     for (const def of this._builtInTasks) {
       // Only inject if enough time has elapsed since last run
       if (def.lastRun && now - def.lastRun < def.intervalMs) continue;
 
       // In user-present mode, only high-priority tasks
       if (this.mode === MODES.USER_PRESENT && def.priority > TASK_PRIORITIES.ERROR_REPAIR) continue;
-
       def.lastRun = now;
       this.enqueue({
         id: `builtin:${def.name}:${now}`,
         name: def.name,
         type: def.type,
         priority: def.priority,
-        run: def.run,
+        run: def.run
       });
     }
   }
-
   _schedulerSetup() {
     // Register recurring self-improvement cycle with Heady™Scheduler
     try {
       this._scheduler.schedule('autonomous-improvement-cycle', {
-        cronExpression: '*/15 * * * *',  // every 15 min
-        handler: () => this._selfImprovementCycle(),
+        cronExpression: '*/15 * * * *',
+        // every 15 min
+        handler: () => this._selfImprovementCycle()
       });
     } catch (err) {
-      logger.debug('[AutonomousEngine] scheduler not available', { err: err.message });
+      logger.debug('[AutonomousEngine] scheduler not available', {
+        err: err.message
+      });
     }
   }
-
   async _selfImprovementCycle() {
     logger.debug('[AutonomousEngine] self-improvement cycle start');
-    this.emit('selfImprovementCycle', { cycleCount: this._cycleCount, mode: this.mode });
+    this.emit('selfImprovementCycle', {
+      cycleCount: this._cycleCount,
+      mode: this.mode
+    });
   }
 
   // ─── Status ──────────────────────────────────────────────────────────────────
@@ -321,10 +323,17 @@ class AutonomousEngine extends EventEmitter {
       paused: this._paused,
       running: this._running.size,
       queued: this._queue.size,
-      stats: { ...this._stats },
+      stats: {
+        ...this._stats
+      },
       queue: [...this._queue.values()].map(t => ({
-        id: t.id, name: t.name, type: t.type, priority: t.priority, status: t.status, enqueuedAt: t.enqueuedAt,
-      })),
+        id: t.id,
+        name: t.name,
+        type: t.type,
+        priority: t.priority,
+        status: t.status,
+        enqueuedAt: t.enqueuedAt
+      }))
     };
   }
 }
@@ -332,66 +341,82 @@ class AutonomousEngine extends EventEmitter {
 // ─── Built-in task definitions ────────────────────────────────────────────────
 
 function _buildBuiltInTasks() {
-  return [
-    {
-      name: 'error-repair-scan',
-      type: 'ERROR_REPAIR',
-      priority: TASK_PRIORITIES.ERROR_REPAIR,
-      intervalMs: 60_000,   // min 1 min between runs
-      lastRun: null,
-      run: async () => {
-        logger.debug('[AutonomousEngine] running error-repair-scan');
-        // Scan for error patterns in logs and attempt automatic repair
-        return { action: 'error-repair-scan', result: 'no errors found' };
-      },
-    },
-    {
-      name: 'performance-optimization',
-      type: 'PERFORMANCE_OPT',
-      priority: TASK_PRIORITIES.PERFORMANCE_OPT,
-      intervalMs: 5 * 60_000,
-      lastRun: null,
-      run: async () => {
-        logger.debug('[AutonomousEngine] running performance-optimization');
-        return { action: 'perf-opt', result: 'analyzed' };
-      },
-    },
-    {
-      name: 'docs-sync',
-      type: 'DOCS_SYNC',
-      priority: TASK_PRIORITIES.DOCS_SYNC,
-      intervalMs: 30 * 60_000,
-      lastRun: null,
-      run: async () => {
-        logger.debug('[AutonomousEngine] running docs-sync');
-        return { action: 'docs-sync', result: 'synced' };
-      },
-    },
-    {
-      name: 'training-feedback-loop',
-      type: 'TRAINING',
-      priority: TASK_PRIORITIES.TRAINING,
-      intervalMs: 60 * 60_000,  // 1 h
-      lastRun: null,
-      run: async () => {
-        logger.debug('[AutonomousEngine] running training-feedback-loop');
-        return { action: 'training', result: 'feedback processed' };
-      },
-    },
-    {
-      name: 'housekeeping',
-      type: 'HOUSEKEEPING',
-      priority: TASK_PRIORITIES.HOUSEKEEPING,
-      intervalMs: 15 * 60_000,
-      lastRun: null,
-      run: async () => {
-        logger.debug('[AutonomousEngine] running housekeeping');
-        return { action: 'housekeeping', result: 'cleaned' };
-      },
-    },
-  ];
+  return [{
+    name: 'error-repair-scan',
+    type: 'ERROR_REPAIR',
+    priority: TASK_PRIORITIES.ERROR_REPAIR,
+    intervalMs: 60_000,
+    // min 1 min between runs
+    lastRun: null,
+    run: async () => {
+      logger.debug('[AutonomousEngine] running error-repair-scan');
+      return {
+        action: 'error-repair-scan',
+        result: 'no errors found'
+      };
+    }
+  }, {
+    name: 'performance-optimization',
+    type: 'PERFORMANCE_OPT',
+    priority: TASK_PRIORITIES.PERFORMANCE_OPT,
+    intervalMs: 5 * 60_000,
+    lastRun: null,
+    run: async () => {
+      logger.debug('[AutonomousEngine] running performance-optimization');
+      return {
+        action: 'perf-opt',
+        result: 'analyzed'
+      };
+    }
+  }, {
+    name: 'docs-sync',
+    type: 'DOCS_SYNC',
+    priority: TASK_PRIORITIES.DOCS_SYNC,
+    intervalMs: 30 * 60_000,
+    lastRun: null,
+    run: async () => {
+      logger.debug('[AutonomousEngine] running docs-sync');
+      return {
+        action: 'docs-sync',
+        result: 'synced'
+      };
+    }
+  }, {
+    name: 'training-feedback-loop',
+    type: 'TRAINING',
+    priority: TASK_PRIORITIES.TRAINING,
+    intervalMs: 60 * 60_000,
+    // 1 h
+    lastRun: null,
+    run: async () => {
+      logger.debug('[AutonomousEngine] running training-feedback-loop');
+      return {
+        action: 'training',
+        result: 'feedback processed'
+      };
+    }
+  }, {
+    name: 'housekeeping',
+    type: 'HOUSEKEEPING',
+    priority: TASK_PRIORITIES.HOUSEKEEPING,
+    intervalMs: 15 * 60_000,
+    lastRun: null,
+    run: async () => {
+      logger.debug('[AutonomousEngine] running housekeeping');
+      return {
+        action: 'housekeeping',
+        result: 'cleaned'
+      };
+    }
+  }];
 }
 
 // ─── Exports ──────────────────────────────────────────────────────────────────
 
-module.exports = { AutonomousEngine, MODES, TASK_PRIORITIES, TASK_STATUS, RESOURCE_CAPS };
+module.exports = {
+  AutonomousEngine,
+  MODES,
+  TASK_PRIORITIES,
+  TASK_STATUS,
+  RESOURCE_CAPS
+};

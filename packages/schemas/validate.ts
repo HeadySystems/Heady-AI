@@ -28,7 +28,7 @@ function getAjv(): Ajv {
       strictSchema: true,
       validateSchema: true,
       useDefaults: true,
-      coerceTypes: false,
+      coerceTypes: false
     });
     addFormats(ajvInstance);
   }
@@ -70,52 +70,25 @@ export function compileSchema(schemaId: string, schema: any): ValidateFunction {
   if (validatorCache.has(schemaId)) {
     return validatorCache.get(schemaId)!;
   }
-
   const ajv = getAjv();
   const validator = ajv.compile(schema);
   validatorCache.set(schemaId, validator);
   return validator;
 }
-
-/**
- * Validate data against a schema
- *
- * @template T - Expected data type
- * @param data - Data to validate
- * @param schemaId - Schema identifier
- * @param schema - JSON Schema object
- * @returns Validation result with typed data
- *
- * @example
- * ```typescript
- * const result = validateSchema(userData, 'auth-session', sessionSchema);
- * if (result.valid) {
- *   console.log(result.data); // Typed as Session
- * } else {
- *   console.error(result.errors);
- * }
- * ```
- */
-export function validateSchema<T>(
-  data: unknown,
-  schemaId: string,
-  schema: any
-): ValidationResult<T> {
+export function validateSchema<T>(data: unknown, schemaId: string, schema: any): ValidationResult<T> {
   try {
     const validator = compileSchema(schemaId, schema);
     const valid = validator(data);
-
     if (valid) {
       return {
         valid: true,
-        data: data as T,
+        data: data as T
       };
     }
-
     const errors = formatValidationErrors(validator.errors || []);
     return {
       valid: false,
-      errors,
+      errors
     };
   } catch (error) {
     return {
@@ -123,8 +96,8 @@ export function validateSchema<T>(
       errors: [{
         path: '$',
         message: error instanceof Error ? error.message : 'Unknown validation error',
-        keyword: 'error',
-      }],
+        keyword: 'error'
+      }]
     };
   }
 }
@@ -136,11 +109,11 @@ export function validateSchema<T>(
  * @returns Formatted validation errors
  */
 function formatValidationErrors(ajvErrors: any[]): ValidationError[] {
-  return ajvErrors.map((error) => ({
+  return ajvErrors.map(error => ({
     path: error.instancePath || '$',
     message: buildErrorMessage(error),
     keyword: error.keyword,
-    params: error.params,
+    params: error.params
   }));
 }
 
@@ -152,7 +125,6 @@ function formatValidationErrors(ajvErrors: any[]): ValidationError[] {
  */
 function buildErrorMessage(error: any): string {
   const path = error.instancePath || '$';
-
   switch (error.keyword) {
     case 'type':
       return `${path} must be of type ${error.params.type}`;
@@ -180,52 +152,20 @@ function buildErrorMessage(error: any): string {
       return error.message || `Validation failed at ${path}`;
   }
 }
-
-/**
- * Validate request/response payload
- *
- * @template T - Expected payload type
- * @param payload - Payload to validate
- * @param schemaId - Schema identifier
- * @param schema - JSON Schema
- * @throws ValidationError if validation fails
- * @returns Validated payload
- */
-export function validateOrThrow<T>(
-  payload: unknown,
-  schemaId: string,
-  schema: any
-): T {
+export function validateOrThrow<T>(payload: unknown, schemaId: string, schema: any): T {
   const result = validateSchema<T>(payload, schemaId, schema);
-
   if (!result.valid) {
-    const errorMsg = result.errors
-      ?.map(e => `${e.path}: ${e.message}`)
-      .join('; ') || 'Validation failed';
-
+    const errorMsg = result.errors?.map(e => `${e.path}: ${e.message}`).join('; ') || 'Validation failed';
     const error = new Error(`Schema validation failed: ${errorMsg}`);
     (error as any).code = 'HEADY_VALIDATION_ERROR';
-    (error as any).details = { errors: result.errors };
+    (error as any).details = {
+      errors: result.errors
+    };
     throw error;
   }
-
   return result.data!;
 }
-
-/**
- * Batch validate multiple items
- *
- * @template T - Expected item type
- * @param items - Items to validate
- * @param schemaId - Schema identifier
- * @param schema - JSON Schema
- * @returns Array of validation results
- */
-export function validateBatch<T>(
-  items: unknown[],
-  schemaId: string,
-  schema: any
-): ValidationResult<T>[] {
+export function validateBatch<T>(items: unknown[], schemaId: string, schema: any): ValidationResult<T>[] {
   return items.map(item => validateSchema<T>(item, schemaId, schema));
 }
 
@@ -266,9 +206,12 @@ export function clearValidatorCache(): void {
  *
  * @returns Cache statistics
  */
-export function getCacheStats(): { size: number; schemaIds: string[] } {
+export function getCacheStats(): {
+  size: number;
+  schemaIds: string[];
+} {
   return {
     size: validatorCache.size,
-    schemaIds: Array.from(validatorCache.keys()),
+    schemaIds: Array.from(validatorCache.keys())
   };
 }

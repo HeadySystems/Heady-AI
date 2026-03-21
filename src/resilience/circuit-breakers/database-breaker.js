@@ -14,18 +14,27 @@
  */
 'use strict';
 
-const { PHI_TIMING } = require('../../shared/phi-math');
-const { EventEmitter } = require('events');
-const { registry, PHI } = require('./external-api-breakers');
-const { STATES } = require('../../circuit-breaker');
+const {
+  PHI_TIMING
+} = require('../../shared/phi-math');
+const {
+  EventEmitter
+} = require('events');
+const {
+  registry,
+  PHI
+} = require('./external-api-breakers');
+const {
+  STATES
+} = require('../../circuit-breaker');
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-const READ_TIMEOUT_MS  =  5_000;
+const READ_TIMEOUT_MS = 5_000;
 const WRITE_TIMEOUT_MS = PHI_TIMING.CYCLE;
 const HEALTH_PING_INTERVAL_MS = 15_000;
-const MAX_RECONNECT_ATTEMPTS  = 10;
+const MAX_RECONNECT_ATTEMPTS = 10;
 const BASE_RECONNECT_DELAY_MS = 500;
 
 // ---------------------------------------------------------------------------
@@ -34,15 +43,18 @@ const BASE_RECONNECT_DELAY_MS = 500;
 function withTimeout(promise, ms, label) {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error(`DB timeout: ${label} (${ms}ms)`)), ms);
-    promise.then(v => { clearTimeout(t); resolve(v); },
-                 e => { clearTimeout(t); reject(e); });
+    promise.then(v => {
+      clearTimeout(t);
+      resolve(v);
+    }, e => {
+      clearTimeout(t);
+      reject(e);
+    });
   });
 }
-
 function jitter(ms) {
   return ms * (1 + (Math.random() - 0.5) * 0.4); // ±20 % jitter
 }
-
 async function reconnectDelay(attempt) {
   const base = Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), PHI_TIMING.CYCLE);
   await new Promise(r => setTimeout(r, jitter(base)));
@@ -69,9 +81,9 @@ class PostgresBreaker extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-    this._primaryPool  = opts.primaryPool  || null;
-    this._replicaPool  = opts.replicaPool  || null;
-    this._readTimeoutMs  = opts.readTimeoutMs  || READ_TIMEOUT_MS;
+    this._primaryPool = opts.primaryPool || null;
+    this._replicaPool = opts.replicaPool || null;
+    this._readTimeoutMs = opts.readTimeoutMs || READ_TIMEOUT_MS;
     this._writeTimeoutMs = opts.writeTimeoutMs || WRITE_TIMEOUT_MS;
 
     // Active connections being drained on OPEN
@@ -80,21 +92,27 @@ class PostgresBreaker extends EventEmitter {
 
     // Reconnect state
     this._reconnectAttempt = 0;
-    this._reconnectTimer   = null;
+    this._reconnectTimer = null;
 
     // Health-ping timer
     this._healthTimer = null;
 
     // Circuit breakers from master registry
     this._breaker = registry.get('postgresql-neon');
-    this._breaker.on('stateChange', ({ to }) => this._onStateChange(to));
+    this._breaker.on('stateChange', ({
+      to
+    }) => this._onStateChange(to));
   }
 
   // -------------------------------------------------------------------------
   // Pool injection (for DI / testing)
   // -------------------------------------------------------------------------
-  setPrimaryPool(pool)  { this._primaryPool  = pool; }
-  setReplicaPool(pool)  { this._replicaPool  = pool; }
+  setPrimaryPool(pool) {
+    this._primaryPool = pool;
+  }
+  setReplicaPool(pool) {
+    this._replicaPool = pool;
+  }
 
   // -------------------------------------------------------------------------
   // Query execution
@@ -110,32 +128,23 @@ class PostgresBreaker extends EventEmitter {
     const sqlText = typeof sql === 'string' ? sql : sql.text;
     const queryType = classifyQuery(sqlText);
     const timeoutMs = queryType === 'read' ? this._readTimeoutMs : this._writeTimeoutMs;
-
-    // For reads, attempt replica first
     if (queryType === 'read' && this._replicaPool) {
       try {
         return await this._executeOnPool(this._replicaPool, sql, params, timeoutMs, 'replica');
       } catch (err) {
-        this.emit('replicaFallback', { reason: err.message });
+        this.emit('replicaFallback', {
+          reason: err.message
+        });
         // Fall through to primary
       }
     }
-
     return this._executeOnPool(this._primaryPool, sql, params, timeoutMs, 'primary');
   }
-
   async _executeOnPool(pool, sql, params, timeoutMs, poolLabel) {
     if (!pool) throw new Error(`PostgresBreaker: ${poolLabel} pool not initialised`);
-
     this._activeConnections++;
     try {
-      return await this._breaker.execute(() =>
-        withTimeout(
-          typeof sql === 'string' ? pool.query(sql, params) : pool.query(sql),
-          timeoutMs,
-          `postgres-${poolLabel}`
-        )
-      );
+      return await this._breaker.execute(() => withTimeout(typeof sql === 'string' ? pool.query(sql, params) : pool.query(sql), timeoutMs, `postgres-${poolLabel}`));
     } finally {
       this._activeConnections--;
       if (this._draining && this._activeConnections === 0) {
@@ -157,19 +166,11 @@ class PostgresBreaker extends EventEmitter {
   async transaction(fn) {
     if (!this._primaryPool) throw new Error('PostgresBreaker: primary pool not initialised');
     if (this._draining) throw new Error('PostgresBreaker: connection draining, rejecting new transactions');
-
-    const client = await withTimeout(
-      this._primaryPool.connect(),
-      this._writeTimeoutMs,
-      'postgres-connect'
-    );
+    const client = await withTimeout(this._primaryPool.connect(), this._writeTimeoutMs, 'postgres-connect');
     this._activeConnections++;
-
     try {
       await client.query('BEGIN');
-      const result = await this._breaker.execute(() =>
-        withTimeout(fn(client), this._writeTimeoutMs, 'postgres-transaction')
-      );
+      const result = await this._breaker.execute(() => withTimeout(fn(client), this._writeTimeoutMs, 'postgres-transaction'));
       await client.query('COMMIT');
       return result;
     } catch (err) {
@@ -190,14 +191,18 @@ class PostgresBreaker extends EventEmitter {
     this._healthTimer = setInterval(async () => {
       try {
         await this.query('SELECT 1');
-        this.emit('healthOk', { pool: 'primary' });
+        this.emit('healthOk', {
+          pool: 'primary'
+        });
       } catch (err) {
-        this.emit('healthFail', { pool: 'primary', error: err.message });
+        this.emit('healthFail', {
+          pool: 'primary',
+          error: err.message
+        });
       }
     }, HEALTH_PING_INTERVAL_MS);
     this._healthTimer.unref?.();
   }
-
   stopHealthMonitor() {
     if (this._healthTimer) {
       clearInterval(this._healthTimer);
@@ -221,36 +226,40 @@ class PostgresBreaker extends EventEmitter {
       }
     }
   }
-
   _startDraining() {
     this._draining = true;
-    this.emit('draining', { activeConnections: this._activeConnections });
+    this.emit('draining', {
+      activeConnections: this._activeConnections
+    });
     if (this._activeConnections === 0) this.emit('drained');
   }
-
   _scheduleReconnect() {
     if (this._reconnectAttempt >= MAX_RECONNECT_ATTEMPTS) {
-      this.emit('reconnectGiveUp', { attempts: this._reconnectAttempt });
+      this.emit('reconnectGiveUp', {
+        attempts: this._reconnectAttempt
+      });
       return;
     }
-
     const attempt = this._reconnectAttempt++;
     const delay = Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), PHI_TIMING.CYCLE);
     const delayWithJitter = jitter(delay);
-
     this._reconnectTimer = setTimeout(async () => {
-      this.emit('reconnectAttempt', { attempt, delayMs: delayWithJitter });
+      this.emit('reconnectAttempt', {
+        attempt,
+        delayMs: delayWithJitter
+      });
       try {
         await this.query('SELECT 1');
         this._breaker.reset();
         this._draining = false;
         this._reconnectAttempt = 0;
-        this.emit('reconnected', { attempt });
+        this.emit('reconnected', {
+          attempt
+        });
       } catch {
         this._scheduleReconnect();
       }
     }, delayWithJitter);
-
     this._reconnectTimer.unref?.();
   }
 
@@ -265,7 +274,7 @@ class PostgresBreaker extends EventEmitter {
       draining: this._draining,
       reconnectAttempt: this._reconnectAttempt,
       hasPrimary: !!this._primaryPool,
-      hasReplica:  !!this._replicaPool,
+      hasReplica: !!this._replicaPool
     };
   }
 }
@@ -283,20 +292,21 @@ class RedisBreaker extends EventEmitter {
   constructor(opts = {}) {
     super();
     this._client = opts.client || null;
-    this._readTimeoutMs  = opts.readTimeoutMs  || READ_TIMEOUT_MS;
+    this._readTimeoutMs = opts.readTimeoutMs || READ_TIMEOUT_MS;
     this._writeTimeoutMs = opts.writeTimeoutMs || WRITE_TIMEOUT_MS;
-
     this._activeOps = 0;
-    this._draining  = false;
+    this._draining = false;
     this._reconnectAttempt = 0;
-    this._reconnectTimer   = null;
-    this._healthTimer      = null;
-
+    this._reconnectTimer = null;
+    this._healthTimer = null;
     this._breaker = registry.get('redis');
-    this._breaker.on('stateChange', ({ to }) => this._onStateChange(to));
+    this._breaker.on('stateChange', ({
+      to
+    }) => this._onStateChange(to));
   }
-
-  setClient(client) { this._client = client; }
+  setClient(client) {
+    this._client = client;
+  }
 
   // -------------------------------------------------------------------------
   // Core execute
@@ -304,12 +314,9 @@ class RedisBreaker extends EventEmitter {
   async _exec(op, timeoutMs, label) {
     if (!this._client) throw new Error('RedisBreaker: client not initialised');
     if (this._draining) throw new Error('RedisBreaker: draining, rejecting new operations');
-
     this._activeOps++;
     try {
-      return await this._breaker.execute(() =>
-        withTimeout(op(), timeoutMs, label)
-      );
+      return await this._breaker.execute(() => withTimeout(op(), timeoutMs, label));
     } finally {
       this._activeOps--;
       if (this._draining && this._activeOps === 0) this.emit('drained');
@@ -319,18 +326,42 @@ class RedisBreaker extends EventEmitter {
   // -------------------------------------------------------------------------
   // Key-value operations
   // -------------------------------------------------------------------------
-  get(key)            { return this._exec(() => this._client.get(key),         this._readTimeoutMs,  `redis.get(${key})`); }
-  set(key, val, opts) { return this._exec(() => this._client.set(key, val, opts), this._writeTimeoutMs, `redis.set(${key})`); }
-  del(...keys)        { return this._exec(() => this._client.del(...keys),     this._writeTimeoutMs, `redis.del`); }
-  exists(key)         { return this._exec(() => this._client.exists(key),      this._readTimeoutMs,  `redis.exists(${key})`); }
-  expire(key, secs)   { return this._exec(() => this._client.expire(key, secs), this._writeTimeoutMs, `redis.expire`); }
-  ttl(key)            { return this._exec(() => this._client.ttl(key),         this._readTimeoutMs,  `redis.ttl`); }
-  incr(key)           { return this._exec(() => this._client.incr(key),        this._writeTimeoutMs, `redis.incr`); }
-  hget(key, field)    { return this._exec(() => this._client.hget(key, field), this._readTimeoutMs,  `redis.hget`); }
-  hset(key, field, v) { return this._exec(() => this._client.hset(key, field, v), this._writeTimeoutMs, `redis.hset`); }
-  hgetall(key)        { return this._exec(() => this._client.hgetall(key),     this._readTimeoutMs,  `redis.hgetall`); }
-  lpush(key, ...vals) { return this._exec(() => this._client.lpush(key, ...vals), this._writeTimeoutMs, `redis.lpush`); }
-  lrange(key, s, e)   { return this._exec(() => this._client.lrange(key, s, e),   this._readTimeoutMs,  `redis.lrange`); }
+  get(key) {
+    return this._exec(() => this._client.get(key), this._readTimeoutMs, `redis.get(${key})`);
+  }
+  set(key, val, opts) {
+    return this._exec(() => this._client.set(key, val, opts), this._writeTimeoutMs, `redis.set(${key})`);
+  }
+  del(...keys) {
+    return this._exec(() => this._client.del(...keys), this._writeTimeoutMs, `redis.del`);
+  }
+  exists(key) {
+    return this._exec(() => this._client.exists(key), this._readTimeoutMs, `redis.exists(${key})`);
+  }
+  expire(key, secs) {
+    return this._exec(() => this._client.expire(key, secs), this._writeTimeoutMs, `redis.expire`);
+  }
+  ttl(key) {
+    return this._exec(() => this._client.ttl(key), this._readTimeoutMs, `redis.ttl`);
+  }
+  incr(key) {
+    return this._exec(() => this._client.incr(key), this._writeTimeoutMs, `redis.incr`);
+  }
+  hget(key, field) {
+    return this._exec(() => this._client.hget(key, field), this._readTimeoutMs, `redis.hget`);
+  }
+  hset(key, field, v) {
+    return this._exec(() => this._client.hset(key, field, v), this._writeTimeoutMs, `redis.hset`);
+  }
+  hgetall(key) {
+    return this._exec(() => this._client.hgetall(key), this._readTimeoutMs, `redis.hgetall`);
+  }
+  lpush(key, ...vals) {
+    return this._exec(() => this._client.lpush(key, ...vals), this._writeTimeoutMs, `redis.lpush`);
+  }
+  lrange(key, s, e) {
+    return this._exec(() => this._client.lrange(key, s, e), this._readTimeoutMs, `redis.lrange`);
+  }
 
   /** Pipeline — runs multiple commands; entire pipeline is one breaker call. */
   async pipeline(commands) {
@@ -352,14 +383,18 @@ class RedisBreaker extends EventEmitter {
         await this._exec(() => this._client.ping(), this._readTimeoutMs, 'redis.ping');
         this.emit('healthOk');
       } catch (err) {
-        this.emit('healthFail', { error: err.message });
+        this.emit('healthFail', {
+          error: err.message
+        });
       }
     }, HEALTH_PING_INTERVAL_MS);
     this._healthTimer.unref?.();
   }
-
   stopHealthMonitor() {
-    if (this._healthTimer) { clearInterval(this._healthTimer); this._healthTimer = null; }
+    if (this._healthTimer) {
+      clearInterval(this._healthTimer);
+      this._healthTimer = null;
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -372,31 +407,37 @@ class RedisBreaker extends EventEmitter {
     } else if (newState === STATES.CLOSED) {
       this._draining = false;
       this._reconnectAttempt = 0;
-      if (this._reconnectTimer) { clearTimeout(this._reconnectTimer); this._reconnectTimer = null; }
+      if (this._reconnectTimer) {
+        clearTimeout(this._reconnectTimer);
+        this._reconnectTimer = null;
+      }
     }
   }
-
   _startDraining() {
     this._draining = true;
-    this.emit('draining', { activeOps: this._activeOps });
+    this.emit('draining', {
+      activeOps: this._activeOps
+    });
     if (this._activeOps === 0) this.emit('drained');
   }
-
   _scheduleReconnect() {
     if (this._reconnectAttempt >= MAX_RECONNECT_ATTEMPTS) {
-      this.emit('reconnectGiveUp', { attempts: this._reconnectAttempt });
+      this.emit('reconnectGiveUp', {
+        attempts: this._reconnectAttempt
+      });
       return;
     }
     const attempt = this._reconnectAttempt++;
     const delay = jitter(Math.min(BASE_RECONNECT_DELAY_MS * Math.pow(PHI, attempt), PHI_TIMING.CYCLE));
-
     this._reconnectTimer = setTimeout(async () => {
       try {
         await this._exec(() => this._client.ping(), this._readTimeoutMs, 'redis.ping');
         this._breaker.reset();
         this._draining = false;
         this._reconnectAttempt = 0;
-        this.emit('reconnected', { attempt });
+        this.emit('reconnected', {
+          attempt
+        });
       } catch {
         this._scheduleReconnect();
       }
@@ -412,9 +453,9 @@ class RedisBreaker extends EventEmitter {
       service: 'redis',
       breaker: this._breaker.snapshot(),
       activeOps: this._activeOps,
-      draining:  this._draining,
+      draining: this._draining,
       reconnectAttempt: this._reconnectAttempt,
-      hasClient: !!this._client,
+      hasClient: !!this._client
     };
   }
 }
@@ -423,8 +464,7 @@ class RedisBreaker extends EventEmitter {
 // Singletons
 // ---------------------------------------------------------------------------
 const postgresBreaker = new PostgresBreaker();
-const redisBreaker    = new RedisBreaker();
-
+const redisBreaker = new RedisBreaker();
 module.exports = {
   postgresBreaker,
   redisBreaker,
@@ -432,5 +472,5 @@ module.exports = {
   RedisBreaker,
   classifyQuery,
   READ_TIMEOUT_MS,
-  WRITE_TIMEOUT_MS,
+  WRITE_TIMEOUT_MS
 };

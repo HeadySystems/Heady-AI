@@ -8,12 +8,22 @@
 'use strict';
 
 // ─── RE-EXPORT CANONICAL CONSTANTS ─────────────────────────────────────────
-const phiConstants = require('../heady-phi-constants');  // src/lib/ -> src/heady-phi-constants
+const phiConstants = require('../heady-phi-constants'); // src/lib/ -> src/heady-phi-constants
 const {
-  PHI, PSI, PHI_SQUARED, PHI_CUBED,
-  FIB, CSL, POOLS,
-  MEMORY_TIERS, CACHE_TTLS, HNSW,
-  phiBackoff, confidenceToPool, phiDistribute, fibQuantize,
+  PHI,
+  PSI,
+  PHI_SQUARED,
+  PHI_CUBED,
+  FIB,
+  CSL,
+  POOLS,
+  MEMORY_TIERS,
+  CACHE_TTLS,
+  HNSW,
+  phiBackoff,
+  confidenceToPool,
+  phiDistribute,
+  fibQuantize
 } = phiConstants;
 
 // ─── ALIASES (match naming conventions used by subsystems) ─────────────────
@@ -66,10 +76,13 @@ function phiMs(n) {
  *   TIDE   = round(PHI^5 * 1000) ≈ 11090 — phi-5 tide (~11s)
  */
 const PHI_TIMING = Object.freeze({
-  TICK:  1000,                                   // 1s — base unit
-  PULSE: Math.round(PHI * 1000),                 // ~1618ms
-  CYCLE: Math.round(Math.pow(PHI, FIB[5]) * 1000), // PHI^5 ≈ 11090ms
-  TIDE:  Math.round(Math.pow(PHI, FIB[7]) * 1000), // PHI^13 ≈ 521002ms (~8.7min)
+  TICK: 1000,
+  // 1s — base unit
+  PULSE: Math.round(PHI * 1000),
+  // ~1618ms
+  CYCLE: Math.round(Math.pow(PHI, FIB[5]) * 1000),
+  // PHI^5 ≈ 11090ms
+  TIDE: Math.round(Math.pow(PHI, FIB[7]) * 1000) // PHI^13 ≈ 521002ms (~8.7min)
 });
 
 /**
@@ -87,7 +100,7 @@ function cosineSimilarity(a, b) {
   let magA = 0;
   let magB = 0;
   for (let i = 0; i < len; i++) {
-    dot  += a[i] * b[i];
+    dot += a[i] * b[i];
     magA += a[i] * a[i];
     magB += b[i] * b[i];
   }
@@ -117,11 +130,11 @@ function placeholderVector(seed, dims) {
   for (let i = 0; i < dims; i++) {
     // Hash mixing: combine char codes with phi-scaled index
     const charCode = str.charCodeAt(i % (str.length || 1)) || FIB[3];
-    h = ((h * FIB[10] + charCode * FIB[8] + i * FIB[6]) & 0x7FFFFFFF);
+    h = h * FIB[10] + charCode * FIB[8] + i * FIB[6] & 0x7FFFFFFF;
     // Map to [-1, 1] range using phi normalization
-    vec[i] = ((h % FIB[17]) / FIB[17]) * 2 - 1;
+    vec[i] = h % FIB[17] / FIB[17] * 2 - 1;
     // Apply phi-scaled rotation
-    h = ((h >>> FIB[4]) ^ (h << FIB[3])) & 0x7FFFFFFF;
+    h = (h >>> FIB[4] ^ h << FIB[3]) & 0x7FFFFFFF;
   }
   // L2-normalize the vector
   let mag = 0;
@@ -155,16 +168,6 @@ function phiFusionWeights(n) {
   // Normalize to sum to 1.0
   return raw.map(w => w / total);
 }
-
-/**
- * phiBackoffWithJitter(attempt, baseMs) — Exponential backoff using phi
- * as the growth factor, with PSI-scaled jitter. Same as phiBackoff from
- * phi-constants but guaranteed to include jitter component.
- *
- * @param {number} attempt — Attempt number (0-based)
- * @param {number} [baseMs=1000] — Base delay in milliseconds
- * @returns {number} Delay in milliseconds
- */
 function phiBackoffWithJitter(attempt, baseMs) {
   baseMs = baseMs || 1000;
   const delay = Math.pow(PHI, attempt) * baseMs;
@@ -209,16 +212,24 @@ function cslBlend(scores, weights) {
 // ─── MODULE EXPORTS ────────────────────────────────────────────────────────
 module.exports = {
   // Re-exports from heady-phi-constants
-  PHI, PSI, PHI_SQUARED, PHI_CUBED,
-  FIB, CSL, POOLS,
-  MEMORY_TIERS, CACHE_TTLS, HNSW,
-  phiBackoff, confidenceToPool, phiDistribute, fibQuantize,
-
+  PHI,
+  PSI,
+  PHI_SQUARED,
+  PHI_CUBED,
+  FIB,
+  CSL,
+  POOLS,
+  MEMORY_TIERS,
+  CACHE_TTLS,
+  HNSW,
+  phiBackoff,
+  confidenceToPool,
+  phiDistribute,
+  fibQuantize,
   // Aliases
   FIB_SEQUENCE,
   CSL_THRESHOLDS,
   VECTOR_DIMENSIONS,
-
   // Derived utilities
   fib,
   phiMs,
@@ -228,5 +239,5 @@ module.exports = {
   phiFusionWeights,
   phiBackoffWithJitter,
   cslGate,
-  cslBlend,
+  cslBlend
 };

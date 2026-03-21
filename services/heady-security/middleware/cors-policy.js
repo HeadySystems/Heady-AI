@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * Advanced CORS Policy Middleware
  * @module security-middleware/cors-policy
@@ -18,17 +20,7 @@
 // ─── Allowed Origins ──────────────────────────────────────────────────────────
 
 // All HeadyMe first-party domains — credentials: true is safe for these
-const FIRST_PARTY_DOMAINS = [
-  'headyme.com',
-  'headysystems.com',
-  'headymcp.com',
-  'headybuddy.org',
-  'headyconnection.org',
-  'headyapi.com',
-  'headybot.com',
-  'headyos.com',
-  'headyio.com',
-];
+const FIRST_PARTY_DOMAINS = ['headyme.com', 'headysystems.com', 'headymcp.com', 'headybuddy.org', 'headyconnection.org', 'headyapi.com', 'headybot.com', 'headyos.com', 'headyio.com'];
 
 // Third-party domains — allowed but no credentials
 const THIRD_PARTY_DOMAINS = [
@@ -39,36 +31,10 @@ const THIRD_PARTY_DOMAINS = [
 const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'];
 
 // Exposed response headers
-const EXPOSED_HEADERS = [
-  'X-Request-ID',
-  'X-RateLimit-Remaining',
-  'X-RateLimit-Limit',
-  'X-RateLimit-Reset',
-  'X-Circuit-State',
-  'X-Processing-Purpose',
-  'X-Legal-Basis',
-  'X-Session-Expires-In',
-  'Content-Disposition',
-  'X-Checksum-SHA256',
-];
+const EXPOSED_HEADERS = ['X-Request-ID', 'X-RateLimit-Remaining', 'X-RateLimit-Limit', 'X-RateLimit-Reset', 'X-Circuit-State', 'X-Processing-Purpose', 'X-Legal-Basis', 'X-Session-Expires-In', 'Content-Disposition', 'X-Checksum-SHA256'];
 
 // Allowed request headers
-const ALLOWED_HEADERS = [
-  'Content-Type',
-  'Authorization',
-  'X-Request-ID',
-  'X-Session-ID',
-  'X-API-Key',
-  'X-Tenant-ID',
-  'X-Access-Purpose',
-  'X-Data-Destination-Country',
-  'Accept',
-  'Accept-Language',
-  'Cache-Control',
-  'If-None-Match',
-  'If-Modified-Since',
-];
-
+const ALLOWED_HEADERS = ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Session-ID', 'X-API-Key', 'X-Tenant-ID', 'X-Access-Purpose', 'X-Data-Destination-Country', 'Accept', 'Accept-Language', 'Cache-Control', 'If-None-Match', 'If-Modified-Since'];
 const PREFLIGHT_MAX_AGE = 86400; // 24 hours
 
 // ─── Origin Validator ─────────────────────────────────────────────────────────
@@ -83,42 +49,68 @@ const PREFLIGHT_MAX_AGE = 86400; // 24 hours
  * @returns {{ allowed: boolean, credentials: boolean, matchedDomain: string|null }}
  */
 function validateOrigin(origin, opts = {}) {
-  if (!origin) return { allowed: false, credentials: false, matchedDomain: null };
-
+  if (!origin) return {
+    allowed: false,
+    credentials: false,
+    matchedDomain: null
+  };
   let hostname;
   try {
     hostname = new URL(origin).hostname;
   } catch {
-    return { allowed: false, credentials: false, matchedDomain: null };
+    return {
+      allowed: false,
+      credentials: false,
+      matchedDomain: null
+    };
   }
 
   // Dev: allow localhost
-  if (opts.allowLocalhost && (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local'))) {
-    return { allowed: true, credentials: true, matchedDomain: hostname };
+  if (opts.allowLocalhost && (hostname === "0.0.0.0" || hostname === "0.0.0.0" || hostname.endsWith('.local'))) {
+    return {
+      allowed: true,
+      credentials: true,
+      matchedDomain: hostname
+    };
   }
 
   // First-party domains (exact + subdomain match)
   for (const domain of FIRST_PARTY_DOMAINS) {
     if (hostname === domain || hostname.endsWith('.' + domain)) {
-      return { allowed: true, credentials: true, matchedDomain: domain };
+      return {
+        allowed: true,
+        credentials: true,
+        matchedDomain: domain
+      };
     }
   }
 
   // Additional first-party domains from config
-  for (const domain of (opts.additionalDomains || [])) {
+  for (const domain of opts.additionalDomains || []) {
     if (hostname === domain || hostname.endsWith('.' + domain)) {
-      return { allowed: true, credentials: true, matchedDomain: domain };
+      return {
+        allowed: true,
+        credentials: true,
+        matchedDomain: domain
+      };
     }
   }
 
   // Third-party domains (no credentials)
   for (const domain of THIRD_PARTY_DOMAINS) {
     if (hostname === domain || hostname.endsWith('.' + domain)) {
-      return { allowed: true, credentials: false, matchedDomain: domain };
+      return {
+        allowed: true,
+        credentials: false,
+        matchedDomain: domain
+      };
     }
   }
-
-  return { allowed: false, credentials: false, matchedDomain: null };
+  return {
+    allowed: false,
+    credentials: false,
+    matchedDomain: null
+  };
 }
 
 // ─── Route-Level Override Registry ───────────────────────────────────────────
@@ -178,17 +170,15 @@ class CORSRouteRegistry {
 function corsPolicy(opts = {}) {
   const {
     additionalDomains = [],
-    allowLocalhost    = process.env.NODE_ENV !== 'production',
-    routeRegistry     = new CORSRouteRegistry(),
-    allowedHeaders    = ALLOWED_HEADERS,
-    exposedHeaders    = EXPOSED_HEADERS,
-    maxAge            = PREFLIGHT_MAX_AGE,
+    allowLocalhost = process.env.NODE_ENV !== 'production',
+    routeRegistry = new CORSRouteRegistry(),
+    allowedHeaders = ALLOWED_HEADERS,
+    exposedHeaders = EXPOSED_HEADERS,
+    maxAge = PREFLIGHT_MAX_AGE
   } = opts;
-
   const allowedHeadersStr = allowedHeaders.join(', ');
   const exposedHeadersStr = exposedHeaders.join(', ');
   const allowedMethodsStr = ALLOWED_METHODS.join(', ');
-
   return (req, res, next) => {
     const origin = req.headers.origin;
 
@@ -200,10 +190,18 @@ function corsPolicy(opts = {}) {
 
     // Handle public API (no credentials — reflect validated origin, never wildcard)
     if (routeOverride?.allowAll) {
-      const { allowed } = validateOrigin(origin, { additionalDomains, allowLocalhost });
+      const {
+        allowed
+      } = validateOrigin(origin, {
+        additionalDomains,
+        allowLocalhost
+      });
       if (!allowed) {
-        console.warn('[CORS] Blocked public-route origin:', origin, 'path:', req.path);
-        if (req.method === 'OPTIONS') return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
+        logger.warn('[CORS] Blocked public-route origin:', origin, 'path:', req.path);
+        if (req.method === 'OPTIONS') return res.status(403).json({
+          error: 'CORS: Origin not allowed',
+          origin
+        });
         return next();
       }
       res.set('Access-Control-Allow-Origin', origin);
@@ -219,42 +217,44 @@ function corsPolicy(opts = {}) {
     }
 
     // Validate origin
-    const { allowed, credentials, matchedDomain } = validateOrigin(origin, { additionalDomains, allowLocalhost });
-
+    const {
+      allowed,
+      credentials,
+      matchedDomain
+    } = validateOrigin(origin, {
+      additionalDomains,
+      allowLocalhost
+    });
     if (!allowed) {
-      // Log blocked CORS attempt
-      console.warn('[CORS] Blocked origin:', origin, 'path:', req.path);
+      logger.warn('[CORS] Blocked origin:', origin, 'path:', req.path);
       if (req.method === 'OPTIONS') {
-        return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
+        return res.status(403).json({
+          error: 'CORS: Origin not allowed',
+          origin
+        });
       }
       // For non-preflight, don't set CORS headers (browser will block it)
       return next();
     }
 
     // Compute effective credentials flag
-    const effectiveCredentials = routeOverride?.credentials !== undefined
-      ? routeOverride.credentials
-      : credentials;
+    const effectiveCredentials = routeOverride?.credentials !== undefined ? routeOverride.credentials : credentials;
 
     // Compute effective methods
     const effectiveMethods = routeOverride?.methods || ALLOWED_METHODS;
 
     // Compute effective additional exposed headers
-    const effectiveExposedHeaders = [
-      ...exposedHeaders,
-      ...(routeOverride?.exposedHeaders || []),
-    ];
+    const effectiveExposedHeaders = [...exposedHeaders, ...(routeOverride?.exposedHeaders || [])];
 
     // Set CORS headers
     res.set('Access-Control-Allow-Origin', origin);
-    res.set('Vary', 'Origin');  // Must vary cache by Origin
+    res.set('Vary', 'Origin'); // Must vary cache by Origin
 
     if (effectiveCredentials) {
       res.set('Access-Control-Allow-Credentials', 'true');
     }
-
-    res.set('Access-Control-Allow-Methods',  effectiveMethods.join(', '));
-    res.set('Access-Control-Allow-Headers',  allowedHeadersStr);
+    res.set('Access-Control-Allow-Methods', effectiveMethods.join(', '));
+    res.set('Access-Control-Allow-Headers', allowedHeadersStr);
     res.set('Access-Control-Expose-Headers', effectiveExposedHeaders.join(', '));
 
     // Handle preflight
@@ -262,7 +262,6 @@ function corsPolicy(opts = {}) {
       res.set('Access-Control-Max-Age', String(maxAge));
       return res.status(204).end();
     }
-
     next();
   };
 }
@@ -278,12 +277,17 @@ function publicCors(methods = ['GET', 'POST']) {
   return (req, res, next) => {
     const origin = req.headers.origin;
     if (origin) {
-      const { allowed } = validateOrigin(origin, {
-        allowLocalhost: process.env.NODE_ENV !== 'production',
+      const {
+        allowed
+      } = validateOrigin(origin, {
+        allowLocalhost: process.env.NODE_ENV !== 'production'
       });
       if (!allowed) {
-        console.warn('[CORS] Blocked public-route origin:', origin, 'path:', req.path);
-        if (req.method === 'OPTIONS') return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
+        logger.warn('[CORS] Blocked public-route origin:', origin, 'path:', req.path);
+        if (req.method === 'OPTIONS') return res.status(403).json({
+          error: 'CORS: Origin not allowed',
+          origin
+        });
         return next();
       }
       res.set('Access-Control-Allow-Origin', origin);
@@ -306,7 +310,9 @@ function publicCors(methods = ['GET', 'POST']) {
 function noCors() {
   return (req, res, next) => {
     if (req.headers.origin) {
-      return res.status(403).json({ error: 'Cross-origin requests not allowed for this endpoint' });
+      return res.status(403).json({
+        error: 'Cross-origin requests not allowed for this endpoint'
+      });
     }
     next();
   };
@@ -324,7 +330,7 @@ module.exports = {
   ALLOWED_METHODS,
   ALLOWED_HEADERS,
   EXPOSED_HEADERS,
-  PREFLIGHT_MAX_AGE,
+  PREFLIGHT_MAX_AGE
 };
 
 // ─── Usage Example ────────────────────────────────────────────────────────────

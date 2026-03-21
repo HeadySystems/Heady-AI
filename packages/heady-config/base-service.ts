@@ -130,39 +130,32 @@ export interface BaseServiceConfig {
  * });
  * ```
  */
-export function getBaseServiceConfig(
-  overrides?: Partial<BaseServiceConfig>
-): BaseServiceConfig {
+export function getBaseServiceConfig(overrides?: Partial<BaseServiceConfig>): BaseServiceConfig {
   const config: BaseServiceConfig = {
     name: process.env.SERVICE_NAME || 'heady-service',
     version: process.env.SERVICE_VERSION || '1.0.0',
-    host: process.env.SERVICE_HOST || 'localhost',
+    host: process.env.SERVICE_HOST || "0.0.0.0",
     port: parseInt(process.env.SERVICE_PORT || '3000', 10),
-    environment: (process.env.NODE_ENV as ServiceEnvironment) || 'development',
-    logLevel: (process.env.LOG_LEVEL as LogLevel) || 'info',
+    environment: process.env.NODE_ENV as ServiceEnvironment || 'development',
+    logLevel: process.env.LOG_LEVEL as LogLevel || 'info',
     debug: process.env.DEBUG === 'true',
     requestTimeout: parseInt(process.env.REQUEST_TIMEOUT || '30000', 10),
-    gracefulShutdownTimeout: parseInt(
-      process.env.GRACEFUL_SHUTDOWN_TIMEOUT || '30000',
-      10
-    ),
+    gracefulShutdownTimeout: parseInt(process.env.GRACEFUL_SHUTDOWN_TIMEOUT || '30000', 10),
     maxConnections: parseInt(process.env.MAX_CONNECTIONS || '1000', 10),
     keepAliveTimeout: parseInt(process.env.KEEP_ALIVE_TIMEOUT || '65000', 10),
     compression: process.env.COMPRESSION !== 'false',
-    trustProxy: process.env.TRUST_PROXY === 'true'
-      ? true
-      : process.env.TRUST_PROXY === 'false'
-        ? false
-        : process.env.TRUST_PROXY || false,
+    trustProxy: process.env.TRUST_PROXY === 'true' ? true : process.env.TRUST_PROXY === 'false' ? false : process.env.TRUST_PROXY || false,
     requestBodyLimit: process.env.REQUEST_BODY_LIMIT || '10mb',
     metadata: {
       team: process.env.SERVICE_TEAM,
       repository: process.env.SERVICE_REPO,
-      documentation: process.env.SERVICE_DOCS,
-    },
+      documentation: process.env.SERVICE_DOCS
+    }
   };
-
-  return { ...config, ...overrides };
+  return {
+    ...config,
+    ...overrides
+  };
 }
 
 /**
@@ -178,43 +171,33 @@ export function getBaseServiceConfig(
  */
 export function validateBaseServiceConfig(config: BaseServiceConfig): void {
   const errors: string[] = [];
-
   if (!config.name || config.name.trim() === '') {
     errors.push('Service name is required');
   }
-
   if (!config.version || config.version.trim() === '') {
     errors.push('Service version is required');
   }
-
   if (!config.host || config.host.trim() === '') {
     errors.push('Service host is required');
   }
-
   if (config.port < 1 || config.port > 65535) {
     errors.push('Service port must be between 1 and 65535');
   }
-
   if (!config.environment || !['production', 'staging', 'development', 'test'].includes(config.environment)) {
     errors.push('Service environment must be one of: production, staging, development, test');
   }
-
   if (!config.logLevel || !['debug', 'info', 'warn', 'error', 'fatal'].includes(config.logLevel)) {
     errors.push('Log level must be one of: debug, info, warn, error, fatal');
   }
-
   if (config.requestTimeout < 0) {
     errors.push('Request timeout must be non-negative');
   }
-
   if (config.gracefulShutdownTimeout < 0) {
     errors.push('Graceful shutdown timeout must be non-negative');
   }
-
   if (config.maxConnections < 1) {
     errors.push('Max connections must be at least 1');
   }
-
   if (errors.length > 0) {
     throw new Error(`Invalid service configuration:\n${errors.join('\n')}`);
   }
@@ -269,7 +252,7 @@ export function getLogLevelValue(level: LogLevel): number {
     info: 1,
     warn: 2,
     error: 3,
-    fatal: 4,
+    fatal: 4
   };
   return levels[level];
 }

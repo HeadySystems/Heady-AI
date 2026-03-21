@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 /*
  * © 2026 Heady™ Systems Inc.
  * Consciousness Dashboard — Real-time Swarm Visualization
@@ -14,9 +16,7 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-
 const PORT = process.env.PORT || 8093;
-
 const DASHBOARD_HTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,14 +280,19 @@ const DASHBOARD_HTML = `<!DOCTYPE html>
   </script>
 </body>
 </html>`;
-
 const server = http.createServer((req, res) => {
   if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ status: 'ok', service: 'consciousness-dashboard' }));
+    res.writeHead(200, {
+      'Content-Type': 'application/json'
+    });
+    return res.end(JSON.stringify({
+      status: 'ok',
+      service: 'consciousness-dashboard'
+    }));
   }
-  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.writeHead(200, {
+    'Content-Type': 'text/html'
+  });
   res.end(DASHBOARD_HTML);
 });
-
-server.listen(PORT, () => console.log(`🧠 Consciousness Dashboard on :${PORT}`));
+server.listen(PORT, () => logger.info(`🧠 Consciousness Dashboard on :${PORT}`));

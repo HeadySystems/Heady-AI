@@ -13,43 +13,29 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-/**
- * Heady MCP Gateway — Optimized Model Context Protocol Server
- * 
- * Canonical MCP entry point for the Heady foundation. Exposes all
- * core tools (filesystem, terminal, browser, github, slack, etc.)
- * and routes MCP requests through the HCSysOrchestrator for brain-
- * aware tool execution.
- * 
- * Endpoints:
- *   GET  /health              — Gateway health
- *   GET  /tools               — List available MCP tools
- *   POST /tools/:toolId/call  — Execute a tool
- *   GET  /resources           — List MCP resources
- *   POST /prompts/:promptId   — Execute a prompt template
- *   WS   /mcp                 — MCP protocol websocket
- * 
- * @module MCPGateway
- */
 
 const express = require('express');
 const cors = require('cors');
-const { HCSysOrchestrator } = require('../orchestrator/hc-sys-orchestrator');
+const {
+  HCSysOrchestrator
+} = require('../orchestrator/hc-sys-orchestrator');
 const logger = require('../../src/shared/logger')('MCPGateway');
-const { PHI_TIMEOUT_PIPELINE } = require('../../src/shared/phi-timeouts');
-
+const {
+  PHI_TIMEOUT_PIPELINE
+} = require('../../src/shared/phi-timeouts');
 const app = express();
 const PORT = process.env.MCP_PORT || 3500;
-
-const MCP_ORIGINS = (process.env.MCP_CORS_ORIGINS || 'https://headyio.com,https://me.headysystems.com,http://localhost:3001,http://localhost:3300').split(',');
+const MCP_ORIGINS = (process.env.MCP_CORS_ORIGINS || "https://headyio.com,https://me.headysystems.com,http://0.0.0.0:3001,http://0.0.0.0:3300").split(',');
 app.use(cors({
   origin: (origin, cb) => {
     if (!origin || MCP_ORIGINS.includes(origin)) return cb(null, true);
     cb(new Error('CORS: origin not allowed'));
   },
-  credentials: true,
+  credentials: true
 }));
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({
+  limit: '10mb'
+}));
 
 // ─── Initialize Orchestrator ──────────────────────────────────────────
 const orchestrator = new HCSysOrchestrator();
@@ -63,13 +49,22 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['read', 'write', 'list', 'search', 'stat'] },
-        path: { type: 'string' },
-        content: { type: 'string' },
-        query: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['read', 'write', 'list', 'search', 'stat']
+        },
+        path: {
+          type: 'string'
+        },
+        content: {
+          type: 'string'
+        },
+        query: {
+          type: 'string'
+        }
       },
-      required: ['action', 'path'],
-    },
+      required: ['action', 'path']
+    }
   },
   terminal: {
     id: 'terminal',
@@ -78,12 +73,19 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        command: { type: 'string' },
-        cwd: { type: 'string' },
-        timeout: { type: 'number', default: PHI_TIMEOUT_PIPELINE },
+        command: {
+          type: 'string'
+        },
+        cwd: {
+          type: 'string'
+        },
+        timeout: {
+          type: 'number',
+          default: PHI_TIMEOUT_PIPELINE
+        }
       },
-      required: ['command'],
-    },
+      required: ['command']
+    }
   },
   browser: {
     id: 'browser',
@@ -92,13 +94,22 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['navigate', 'screenshot', 'click', 'type', 'extract'] },
-        url: { type: 'string' },
-        selector: { type: 'string' },
-        text: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['navigate', 'screenshot', 'click', 'type', 'extract']
+        },
+        url: {
+          type: 'string'
+        },
+        selector: {
+          type: 'string'
+        },
+        text: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   github: {
     id: 'github',
@@ -107,14 +118,25 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['list-repos', 'get-repo', 'create-issue', 'list-issues', 'create-pr', 'get-pr', 'list-actions'] },
-        owner: { type: 'string' },
-        repo: { type: 'string' },
-        title: { type: 'string' },
-        body: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['list-repos', 'get-repo', 'create-issue', 'list-issues', 'create-pr', 'get-pr', 'list-actions']
+        },
+        owner: {
+          type: 'string'
+        },
+        repo: {
+          type: 'string'
+        },
+        title: {
+          type: 'string'
+        },
+        body: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   slack: {
     id: 'slack',
@@ -123,13 +145,22 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['send', 'list-channels', 'read-channel', 'search'] },
-        channel: { type: 'string' },
-        message: { type: 'string' },
-        query: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['send', 'list-channels', 'read-channel', 'search']
+        },
+        channel: {
+          type: 'string'
+        },
+        message: {
+          type: 'string'
+        },
+        query: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   drive: {
     id: 'drive',
@@ -138,12 +169,19 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['list', 'read', 'search', 'upload'] },
-        fileId: { type: 'string' },
-        query: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['list', 'read', 'search', 'upload']
+        },
+        fileId: {
+          type: 'string'
+        },
+        query: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   notion: {
     id: 'notebooklm',
@@ -152,13 +190,22 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['query-db', 'get-page', 'create-page', 'update-page', 'search'] },
-        databaseId: { type: 'string' },
-        pageId: { type: 'string' },
-        query: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['query-db', 'get-page', 'create-page', 'update-page', 'search']
+        },
+        databaseId: {
+          type: 'string'
+        },
+        pageId: {
+          type: 'string'
+        },
+        query: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   docker: {
     id: 'docker',
@@ -167,13 +214,22 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['ps', 'up', 'down', 'logs', 'build', 'exec'] },
-        service: { type: 'string' },
-        compose_file: { type: 'string' },
-        command: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['ps', 'up', 'down', 'logs', 'build', 'exec']
+        },
+        service: {
+          type: 'string'
+        },
+        compose_file: {
+          type: 'string'
+        },
+        command: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   calendar: {
     id: 'calendar',
@@ -182,13 +238,22 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['list', 'create', 'update', 'delete', 'find-free'] },
-        title: { type: 'string' },
-        start: { type: 'string' },
-        end: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['list', 'create', 'update', 'delete', 'find-free']
+        },
+        title: {
+          type: 'string'
+        },
+        start: {
+          type: 'string'
+        },
+        end: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   heady_registry: {
     id: 'heady_registry',
@@ -197,12 +262,19 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['list', 'get', 'search', 'update-status'] },
-        service_id: { type: 'string' },
-        query: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['list', 'get', 'search', 'update-status']
+        },
+        service_id: {
+          type: 'string'
+        },
+        query: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   heady_pipeline: {
     id: 'heady_pipeline',
@@ -211,12 +283,19 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['run', 'status', 'history', 'cancel'] },
-        run_id: { type: 'string' },
-        lane: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['run', 'status', 'history', 'cancel']
+        },
+        run_id: {
+          type: 'string'
+        },
+        lane: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
+      required: ['action']
+    }
   },
   heady_brain: {
     id: 'heady_brain',
@@ -225,15 +304,26 @@ const TOOL_REGISTRY = {
     inputSchema: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['plan', 'feedback', 'arena', 'health'] },
-        message: { type: 'string' },
-        workspace_id: { type: 'string' },
-        brain_profile_id: { type: 'string' },
-        task_type: { type: 'string' },
+        action: {
+          type: 'string',
+          enum: ['plan', 'feedback', 'arena', 'health']
+        },
+        message: {
+          type: 'string'
+        },
+        workspace_id: {
+          type: 'string'
+        },
+        brain_profile_id: {
+          type: 'string'
+        },
+        task_type: {
+          type: 'string'
+        }
       },
-      required: ['action'],
-    },
-  },
+      required: ['action']
+    }
+  }
 };
 
 // ─── ROUTES ───────────────────────────────────────────────────────────
@@ -245,84 +335,104 @@ app.get('/health', (req, res) => {
     version: '1.0.0',
     tools_count: Object.keys(TOOL_REGISTRY).length,
     orchestrator: orchestrator.getHealth(),
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   });
 });
-
 app.get('/tools', (req, res) => {
   const tools = Object.values(TOOL_REGISTRY).map(t => ({
     name: t.id,
     description: t.description,
-    inputSchema: t.inputSchema,
+    inputSchema: t.inputSchema
   }));
-  res.json({ tools });
+  res.json({
+    tools
+  });
 });
-
 app.post('/tools/:toolId/call', async (req, res) => {
-  const { toolId } = req.params;
+  const {
+    toolId
+  } = req.params;
   const tool = TOOL_REGISTRY[toolId];
-
   if (!tool) {
-    return res.status(404).json({ error: `Tool '${toolId}' not found` });
+    return res.status(404).json({
+      error: `Tool '${toolId}' not found`
+    });
   }
-
   const workspaceId = req.headers['x-workspace-id'] || 'default';
   const brainProfile = req.headers['x-brain-profile'] || null;
-
   try {
     // Route through orchestrator for brain-aware execution
     const result = await orchestrator.routeTask({
       workspace_id: workspaceId,
       brain_profile_id: brainProfile,
       task_type: 'TOOL_CALL',
-      message: JSON.stringify({ tool: toolId, args: req.body }),
-      channel: 'mcp',
+      message: JSON.stringify({
+        tool: toolId,
+        args: req.body
+      }),
+      channel: 'mcp'
     });
-
     res.json({
       content: [{
         type: 'text',
-        text: JSON.stringify(result, null, 2),
+        text: JSON.stringify(result, null, 2)
       }],
-      isError: !result.success,
+      isError: !result.success
     });
   } catch (err) {
     res.status(500).json({
       content: [{
         type: 'text',
-        text: `Tool execution error: ${err.message}`,
+        text: `Tool execution error: ${err.message}`
       }],
-      isError: true,
+      isError: true
     });
   }
 });
-
 app.get('/resources', (req, res) => {
   res.json({
-    resources: [
-      { uri: 'heady://registry', name: 'Heady Registry', mimeType: 'application/json' },
-      { uri: 'heady://pipeline/status', name: 'Pipeline Status', mimeType: 'application/json' },
-      { uri: 'heady://brain/health', name: 'Brain Health', mimeType: 'application/json' },
-      { uri: 'heady://metrics', name: 'System Metrics', mimeType: 'application/json' },
-    ],
+    resources: [{
+      uri: 'heady://registry',
+      name: 'Heady Registry',
+      mimeType: 'application/json'
+    }, {
+      uri: 'heady://pipeline/status',
+      name: 'Pipeline Status',
+      mimeType: 'application/json'
+    }, {
+      uri: 'heady://brain/health',
+      name: 'Brain Health',
+      mimeType: 'application/json'
+    }, {
+      uri: 'heady://metrics',
+      name: 'System Metrics',
+      mimeType: 'application/json'
+    }]
   });
 });
-
 app.post('/prompts/:promptId', async (req, res) => {
-  const { promptId } = req.params;
-  const { arguments: args } = req.body;
-
+  const {
+    promptId
+  } = req.params;
+  const {
+    arguments: args
+  } = req.body;
   const result = await orchestrator.routeTask({
     task_type: 'PROMPT',
-    message: JSON.stringify({ prompt: promptId, args }),
-    channel: 'mcp',
+    message: JSON.stringify({
+      prompt: promptId,
+      args
+    }),
+    channel: 'mcp'
   });
-
   res.json({
     messages: [{
       role: 'assistant',
-      content: { type: 'text', text: JSON.stringify(result) },
-    }],
+      content: {
+        type: 'text',
+        text: JSON.stringify(result)
+      }
+    }]
   });
 });
 
@@ -335,5 +445,8 @@ if (require.main === module) {
     logger.info(`Running on port ${PORT} | Tools: ${Object.keys(TOOL_REGISTRY).length} | Orchestrator: ${JSON.stringify(orchestrator.getHealth().metrics)}`);
   });
 }
-
-module.exports = { app, TOOL_REGISTRY, orchestrator };
+module.exports = {
+  app,
+  TOOL_REGISTRY,
+  orchestrator
+};

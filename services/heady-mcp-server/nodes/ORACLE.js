@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * ORACLE Node — Wisdom synthesis node (Governance layer)
  * Aggregates insights from Dream Engine, Prophet Agent, and historical patterns
@@ -9,19 +11,34 @@
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
-const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
-
+const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 class OracleNode {
   constructor(config = {}) {
     this.ring = 'governance';
     this.nodeId = 'ORACLE';
     this.wisdomStore = new Map();
     this.maxWisdom = config.maxWisdom || FIB[12]; // 144 wisdom entries
-    this.sources = { dreamEngine: null, prophetAgent: null, patternsService: null };
+    this.sources = {
+      dreamEngine: null,
+      prophetAgent: null,
+      patternsService: null
+    };
     this.synthesisHistory = [];
     this.state = 'DORMANT';
-    this.stats = { syntheses: 0, wisdomCreated: 0, consultations: 0, accuracy: 0 };
+    this.stats = {
+      syntheses: 0,
+      wisdomCreated: 0,
+      consultations: 0,
+      accuracy: 0
+    };
     this._correlationId = `oracle-${Date.now().toString(36)}`;
   }
 
@@ -31,20 +48,39 @@ class OracleNode {
    * @returns {object} — synthesized wisdom
    */
   async synthesize(inputs) {
-    const { dreams = [], predictions = [], patterns = [], context = '' } = inputs;
+    const {
+      dreams = [],
+      predictions = [],
+      patterns = [],
+      context = ''
+    } = inputs;
     this.state = 'SYNTHESIZING';
     this.stats.syntheses++;
     const correlationId = `synth-${Date.now().toString(36)}`;
 
     // Weight sources: predictions(PHI) > patterns(1.0) > dreams(PSI)
-    const weightedInsights = [
-      ...predictions.map(p => ({ ...p, source: 'prophet', weight: PHI, relevance: p.failureProbability || p.confidence || CSL.MEDIUM })),
-      ...patterns.map(p => ({ ...p, source: 'patterns', weight: 1.0, relevance: p.significance || p.frequency || CSL.MEDIUM })),
-      ...dreams.map(d => ({ ...d, source: 'dream', weight: PSI, relevance: d.novelty || d.significance || CSL.LOW }))
-    ];
+    const weightedInsights = [...predictions.map(p => ({
+      ...p,
+      source: 'prophet',
+      weight: PHI,
+      relevance: p.failureProbability || p.confidence || CSL.MEDIUM
+    })), ...patterns.map(p => ({
+      ...p,
+      source: 'patterns',
+      weight: 1.0,
+      relevance: p.significance || p.frequency || CSL.MEDIUM
+    })), ...dreams.map(d => ({
+      ...d,
+      source: 'dream',
+      weight: PSI,
+      relevance: d.novelty || d.significance || CSL.LOW
+    }))];
 
     // Phi-weighted fusion: sort by weighted relevance
-    const fused = weightedInsights.map(i => ({ ...i, fusedScore: i.relevance * i.weight })).sort((a, b) => b.fusedScore - a.fusedScore);
+    const fused = weightedInsights.map(i => ({
+      ...i,
+      fusedScore: i.relevance * i.weight
+    })).sort((a, b) => b.fusedScore - a.fusedScore);
 
     // Extract top wisdom entries
     const topInsights = fused.slice(0, FIB[8]);
@@ -84,7 +120,6 @@ class OracleNode {
       const oldest = [...this.wisdomStore.entries()].sort((a, b) => a[1].createdAt - b[1].createdAt)[0];
       this.wisdomStore.delete(oldest[0]);
     }
-
     const result = {
       correlationId,
       wisdomEntries,
@@ -94,10 +129,17 @@ class OracleNode {
       coherence: this._calculateCoherence(),
       timestamp: new Date().toISOString()
     };
-
-    this.synthesisHistory.push({ correlationId, timestamp: Date.now(), wisdomCount: wisdomEntries.length });
+    this.synthesisHistory.push({
+      correlationId,
+      timestamp: Date.now(),
+      wisdomCount: wisdomEntries.length
+    });
     this.state = 'DORMANT';
-    this._log('info', 'wisdom-synthesized', { correlationId, entries: wisdomEntries.length, insights: weightedInsights.length });
+    this._log('info', 'wisdom-synthesized', {
+      correlationId,
+      entries: wisdomEntries.length,
+      insights: weightedInsights.length
+    });
     return result;
   }
 
@@ -107,22 +149,64 @@ class OracleNode {
    * @returns {object} — relevant wisdom
    */
   async consult(query) {
-    const { question = '', minConfidence = CSL.LOW } = query;
+    const {
+      question = '',
+      minConfidence = CSL.LOW
+    } = query;
     this.stats.consultations++;
     const relevant = [...this.wisdomStore.values()].filter(w => w.confidence >= minConfidence).sort((a, b) => b.confidence - a.confidence).slice(0, FIB[8]);
-    return { question, wisdomCount: relevant.length, wisdom: relevant, coherence: this._calculateCoherence(), timestamp: new Date().toISOString() };
+    return {
+      question,
+      wisdomCount: relevant.length,
+      wisdom: relevant,
+      coherence: this._calculateCoherence(),
+      timestamp: new Date().toISOString()
+    };
   }
-
   _calculateCoherence() {
     if (this.wisdomStore.size === 0) return CSL.MEDIUM;
     const avgConfidence = [...this.wisdomStore.values()].reduce((s, w) => s + w.confidence, 0) / this.wisdomStore.size;
     return Math.min(1.0, avgConfidence * PHI);
   }
-
-  async start() { this.state = 'DORMANT'; this._log('info', 'oracle-started', { maxWisdom: this.maxWisdom }); return this; }
-  async stop() { this.state = 'STOPPED'; this._log('info', 'oracle-stopped', { stats: this.stats }); }
-  health() { return { status: 'ok', nodeId: this.nodeId, ring: this.ring, state: this.state, coherence: this._calculateCoherence(), stats: { ...this.stats }, wisdomStoreSize: this.wisdomStore.size, timestamp: new Date().toISOString() }; }
-  _log(level, event, data = {}) { console.log(JSON.stringify({ level, event, node: this.nodeId, ring: this.ring, correlationId: this._correlationId, ...data, ts: new Date().toISOString() })); }
+  async start() {
+    this.state = 'DORMANT';
+    this._log('info', 'oracle-started', {
+      maxWisdom: this.maxWisdom
+    });
+    return this;
+  }
+  async stop() {
+    this.state = 'STOPPED';
+    this._log('info', 'oracle-stopped', {
+      stats: this.stats
+    });
+  }
+  health() {
+    return {
+      status: 'ok',
+      nodeId: this.nodeId,
+      ring: this.ring,
+      state: this.state,
+      coherence: this._calculateCoherence(),
+      stats: {
+        ...this.stats
+      },
+      wisdomStoreSize: this.wisdomStore.size,
+      timestamp: new Date().toISOString()
+    };
+  }
+  _log(level, event, data = {}) {
+    logger.info(JSON.stringify({
+      level,
+      event,
+      node: this.nodeId,
+      ring: this.ring,
+      correlationId: this._correlationId,
+      ...data,
+      ts: new Date().toISOString()
+    }));
+  }
 }
-
-module.exports = { OracleNode };
+module.exports = {
+  OracleNode
+};

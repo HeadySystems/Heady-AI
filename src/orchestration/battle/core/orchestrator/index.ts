@@ -1,3 +1,5 @@
+import { createLogger } from '../../../../utils/logger';
+const logger = createLogger('auto-fixed');
 /**
  * HeadyBattle Orchestrator
  * Inspired by Perplexity Computer's 19-model multi-agent coordination
@@ -23,7 +25,6 @@ export interface Task {
   priority: number;
   dependencies: string[];
 }
-
 export interface SubAgent {
   id: string;
   model: string;
@@ -31,7 +32,6 @@ export interface SubAgent {
   status: 'idle' | 'running' | 'completed' | 'failed';
   result?: any;
 }
-
 export interface OptimizedContext {
   relevant_code: string[];
   documentation: string[];
@@ -39,14 +39,12 @@ export interface OptimizedContext {
   user_preferences: Record<string, any>;
   compressed_history: string;
 }
-
 export class HeadyBattleOrchestrator {
   private activeTasks: Map<string, Task> = new Map();
   private activeSubAgents: Map<string, SubAgent> = new Map();
   private modelCouncil: ModelCouncil;
   private contextOptimizer: ContextOptimizer;
   private qualityGate: QualityGateValidator;
-
   constructor(config: OrchestratorConfig) {
     this.modelCouncil = new ModelCouncil(config.models);
     this.contextOptimizer = new ContextOptimizer(config.contextStrategy);
@@ -58,7 +56,7 @@ export class HeadyBattleOrchestrator {
    * Decomposes task → spawns sub-agents → coordinates execution → validates results
    */
   async executeTask(task: Task): Promise<TaskResult> {
-    console.log(`[Orchestrator] Starting task: ${task.id} (${task.type})`);
+    logger.info(`[Orchestrator] Starting task: ${task.id} (${task.type})`);
 
     // Step 1: Optimize context for the task
     const optimizedContext = await this.contextOptimizer.optimize(task);
@@ -79,12 +77,11 @@ export class HeadyBattleOrchestrator {
     if (task.type === 'coding') {
       const validationResult = await this.qualityGate.validate(synthesized);
       if (!validationResult.passed) {
-        console.log('[Orchestrator] Quality gate FAILED, spawning correction agents');
+        logger.info('[Orchestrator] Quality gate FAILED, spawning correction agents');
         return await this.handleQualityFailure(task, validationResult);
       }
     }
-
-    console.log(`[Orchestrator] Task ${task.id} completed successfully`);
+    logger.info(`[Orchestrator] Task ${task.id} completed successfully`);
     return synthesized;
   }
 
@@ -108,7 +105,6 @@ Each sub-task should have a clear specialization (research, coding, validation, 
       prompt: decompositionPrompt,
       temperature: 0.3
     });
-
     return this.parseSubTasks(decomposition);
   }
 
@@ -116,26 +112,20 @@ Each sub-task should have a clear specialization (research, coding, validation, 
    * Spawn sub-agents for each sub-task
    * Each agent gets assigned the optimal model for its specialization
    */
-  private async spawnSubAgents(
-    subTasks: SubTask[],
-    context: OptimizedContext
-  ): Promise<SubAgent[]> {
+  private async spawnSubAgents(subTasks: SubTask[], context: OptimizedContext): Promise<SubAgent[]> {
     const agents = subTasks.map(subTask => {
       // Dynamic model selection based on task type
       const selectedModel = this.selectOptimalModel(subTask);
-
       const agent: SubAgent = {
         id: `agent-${Date.now()}-${Math.random()}`,
         model: selectedModel,
         specialization: subTask.specialization,
-        status: 'idle',
+        status: 'idle'
       };
-
       this.activeSubAgents.set(agent.id, agent);
       return agent;
     });
-
-    console.log(`[Orchestrator] Spawned ${agents.length} sub-agents`);
+    logger.info(`[Orchestrator] Spawned ${agents.length} sub-agents`);
     return agents;
   }
 
@@ -145,15 +135,20 @@ Each sub-task should have a clear specialization (research, coding, validation, 
    */
   private selectOptimalModel(subTask: SubTask): string {
     const modelMatrix = {
-      'deep-research': 'gemini-3-1-pro',      // Perplexity uses Gemini for research
-      'code-generation': 'claude-opus-4-6',   // Claude for complex coding
-      'quick-completion': 'gpt-5-4-turbo',    // GPT for fast tasks
-      'validation': 'claude-sonnet-4-5',      // Sonnet for validation
-      'optimization': 'o1',                   // o1 for optimization reasoning
-      'data-analysis': 'gemini-3-1-flash',    // Flash for quick analysis
-      'security-check': 'claude-opus-4-6'     // Opus for security
+      'deep-research': 'gemini-3-1-pro',
+      // Perplexity uses Gemini for research
+      'code-generation': 'claude-opus-4-6',
+      // Claude for complex coding
+      'quick-completion': 'gpt-5-4-turbo',
+      // GPT for fast tasks
+      'validation': 'claude-sonnet-4-5',
+      // Sonnet for validation
+      'optimization': 'o1',
+      // o1 for optimization reasoning
+      'data-analysis': 'gemini-3-1-flash',
+      // Flash for quick analysis
+      'security-check': 'claude-opus-4-6' // Opus for security
     };
-
     return modelMatrix[subTask.specialization] || 'claude-opus-4-6';
   }
 
@@ -162,15 +157,14 @@ Each sub-task should have a clear specialization (research, coding, validation, 
    * All sub-agents execute simultaneously, not sequentially
    */
   private async executeInParallel(agents: SubAgent[]): Promise<AgentResult[]> {
-    console.log(`[Orchestrator] Executing ${agents.length} agents in parallel`);
-
+    logger.info(`[Orchestrator] Executing ${agents.length} agents in parallel`);
     const executions = agents.map(agent => this.executeAgent(agent));
     const results = await Promise.allSettled(executions);
 
     // Handle failures with auto-retry
     return results.map((result, idx) => {
       if (result.status === 'rejected') {
-        console.error(`[Orchestrator] Agent ${agents[idx].id} failed:`, result.reason);
+        logger.error(`[Orchestrator] Agent ${agents[idx].id} failed:`, result.reason);
         // Spawn recovery agent
         return this.handleAgentFailure(agents[idx]);
       }
@@ -193,10 +187,8 @@ Each sub-task should have a clear specialization (research, coding, validation, 
       context: agentContext.compressed,
       temperature: agentContext.temperature
     });
-
     agent.status = 'completed';
     agent.result = result;
-
     return {
       agentId: agent.id,
       model: agent.model,
@@ -225,12 +217,10 @@ Result: ${JSON.stringify(r.result)}
 Identify areas of agreement and disagreement.
 For code, prioritize security and correctness over cleverness.
     `;
-
     const synthesis = await this.modelCouncil.queryModel('claude-opus-4-6', {
       prompt: synthesisPrompt,
       temperature: 0.2
     });
-
     return {
       type: 'synthesis',
       content: synthesis,
@@ -243,11 +233,8 @@ For code, prioritize security and correctness over cleverness.
    * Quality failure recovery
    * Spawns correction agents when quality gates fail
    */
-  private async handleQualityFailure(
-    task: Task,
-    validation: ValidationResult
-  ): Promise<TaskResult> {
-    console.log('[Orchestrator] Spawning correction agents for quality failures');
+  private async handleQualityFailure(task: Task, validation: ValidationResult): Promise<TaskResult> {
+    logger.info('[Orchestrator] Spawning correction agents for quality failures');
 
     // Create correction task with validation feedback
     const correctionTask: Task = {
@@ -266,24 +253,20 @@ For code, prioritize security and correctness over cleverness.
     // Re-execute with correction context
     return await this.executeTask(correctionTask);
   }
-
   private calculateConfidence(results: AgentResult[]): number {
     // If multiple models agree, confidence is high
     const agreements = this.findAgreements(results);
     return agreements.length / results.length;
   }
-
   private findAgreements(results: AgentResult[]): any[] {
     // Implementation for detecting consensus across models
     return [];
   }
-
   private async handleAgentFailure(agent: SubAgent): Promise<AgentResult> {
     // Auto-retry with different model or prompt
-    console.log(`[Orchestrator] Retrying failed agent ${agent.id} with fallback model`);
+    logger.info(`[Orchestrator] Retrying failed agent ${agent.id} with fallback model`);
     return {} as AgentResult;
   }
-
   private parseSubTasks(decomposition: any): SubTask[] {
     // Parse LLM decomposition into structured sub-tasks
     return [];
@@ -296,12 +279,10 @@ interface OrchestratorConfig {
   contextStrategy: string;
   qualityRules: QualityRule[];
 }
-
 interface SubTask {
   specialization: string;
   description: string;
 }
-
 interface AgentResult {
   agentId: string;
   model: string;
@@ -311,20 +292,17 @@ interface AgentResult {
     executionTime: number;
   };
 }
-
 interface TaskResult {
   type: string;
   content: any;
   sources: AgentResult[];
   confidence: number;
 }
-
 interface ValidationResult {
   passed: boolean;
   failures: string[];
   originalCode: string;
 }
-
 interface QualityRule {
   name: string;
   threshold: number;
@@ -334,5 +312,4 @@ interface QualityRule {
 class ModelCouncil {}
 class ContextOptimizer {}
 class QualityGateValidator {}
-
 export default HeadyBattleOrchestrator;

@@ -1,40 +1,24 @@
-/**
- * ╔══════════════════════════════════════════════════════════════════╗
- * ║  HEADY™ BASE HEADY BEE + BEE FACTORY                             ║
- * ║  Lifecycle template (spawn/execute/report/retire), singleton     ║
- * ║  registry, factory, and 5 concrete bee implementations           ║
- * ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ║
- * ║  © 2026 HeadySystems Inc. — All Rights Reserved                  ║
- * ╚══════════════════════════════════════════════════════════════════╝
- *
- * @module base-heady-bee
- * @version 1.0.0
- */
-
 'use strict';
 
 const crypto = require('crypto');
 const EventEmitter = require('events');
 const {
-  PHI, PSI, FIB_SEQUENCE,
-  CSL_THRESHOLDS, phiBackoff, phiFusionWeights,
-  fib, phiMs, PHI_TIMING,
-  cosineSimilarity, placeholderVector, VECTOR_DIMENSIONS,
+  PHI,
+  PSI,
+  FIB_SEQUENCE,
+  CSL_THRESHOLDS,
+  phiBackoff,
+  phiFusionWeights,
+  fib,
+  phiMs,
+  PHI_TIMING,
+  cosineSimilarity,
+  placeholderVector,
+  VECTOR_DIMENSIONS
 } = require('../lib/phi-helpers');
 
 // ─── BASE HEADY BEE ───────────────────────────────────────────────────────
 
-/**
- * BaseHeadyBee — Abstract lifecycle template for all Heady bees.
- *
- * Lifecycle: spawn() → execute() → report() → retire()
- *
- * Phi-scaled parameters:
- *   maxRetries = fib(6) = 8
- *   timeout    = round(PHI * 1000) = 1618ms
- *
- * All subclasses must implement execute() with real logic.
- */
 class BaseHeadyBee extends EventEmitter {
   /**
    * @param {Object} config
@@ -50,8 +34,8 @@ class BaseHeadyBee extends EventEmitter {
     this.metadata = config.metadata || {};
 
     // Phi-scaled parameters
-    this.maxRetries = fib(6);                          // 8
-    this.timeout = Math.round(PHI * PHI_TIMING.TICK);  // 1618ms
+    this.maxRetries = fib(6); // 8
+    this.timeout = Math.round(PHI * PHI_TIMING.TICK); // 1618ms
     this.retryCount = 0;
 
     // Lifecycle state
@@ -66,7 +50,7 @@ class BaseHeadyBee extends EventEmitter {
       successCount: 0,
       failureCount: 0,
       totalDurationMs: 0,
-      lastExecutionMs: null,
+      lastExecutionMs: null
     };
 
     // Coherence
@@ -83,14 +67,13 @@ class BaseHeadyBee extends EventEmitter {
     if (this.state !== 'IDLE') {
       throw new Error(`Cannot spawn bee in state: ${this.state}`);
     }
-
     this.state = 'SPAWNING';
     this.spawnedAt = Date.now();
 
     // Register cleanup for deregistration
     this._cleanups.push({
       name: 'registry-deregister',
-      fn: () => BeeRegistry.getInstance().deregister(this.id),
+      fn: () => BeeRegistry.getInstance().deregister(this.id)
     });
 
     // Generate embedding for this bee instance
@@ -98,11 +81,17 @@ class BaseHeadyBee extends EventEmitter {
 
     // Register with singleton registry
     BeeRegistry.getInstance().register(this);
-
     this.state = 'ACTIVE';
-    this.emit('bee:spawned', { beeId: this.id, type: this.type, name: this.name });
-
-    return { beeId: this.id, type: this.type, state: this.state };
+    this.emit('bee:spawned', {
+      beeId: this.id,
+      type: this.type,
+      name: this.name
+    });
+    return {
+      beeId: this.id,
+      type: this.type,
+      state: this.state
+    };
   }
 
   /**
@@ -116,23 +105,17 @@ class BaseHeadyBee extends EventEmitter {
     if (this.state !== 'ACTIVE') {
       throw new Error(`Cannot execute bee in state: ${this.state}`);
     }
-
     this.state = 'EXECUTING';
     const startMs = Date.now();
     this._metrics.executionCount++;
-
-    this.emit('bee:execute:start', { beeId: this.id, task: task.description || 'unknown' });
-
+    this.emit('bee:execute:start', {
+      beeId: this.id,
+      task: task.description || 'unknown'
+    });
     let lastError = null;
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
       try {
-        const result = await Promise.race([
-          this._doExecute(task),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error(`Execution timeout after ${this.timeout}ms`)), this.timeout)
-          ),
-        ]);
-
+        const result = await Promise.race([this._doExecute(task), new Promise((_, reject) => setTimeout(() => reject(new Error(`Execution timeout after ${this.timeout}ms`)), this.timeout))]);
         const durationMs = Date.now() - startMs;
         this._metrics.successCount++;
         this._metrics.totalDurationMs += durationMs;
@@ -142,14 +125,12 @@ class BaseHeadyBee extends EventEmitter {
 
         // Boost coherence on success
         this.coherenceScore = Math.min(1, this.coherenceScore + Math.pow(PSI, fib(5)));
-
         this.emit('bee:execute:complete', {
           beeId: this.id,
           durationMs,
           attempt,
-          success: true,
+          success: true
         });
-
         return result;
       } catch (err) {
         lastError = err;
@@ -157,14 +138,13 @@ class BaseHeadyBee extends EventEmitter {
 
         // Degrade coherence on failure
         this.coherenceScore = Math.max(0, this.coherenceScore - Math.pow(PSI, fib(4)));
-
         if (attempt < this.maxRetries) {
           const delay = phiBackoff(attempt, PHI_TIMING.TICK);
           this.emit('bee:execute:retry', {
             beeId: this.id,
             attempt: attempt + 1,
             delayMs: Math.round(delay),
-            error: err.message,
+            error: err.message
           });
           await new Promise(resolve => setTimeout(resolve, delay));
         }
@@ -175,13 +155,11 @@ class BaseHeadyBee extends EventEmitter {
     this._metrics.failureCount++;
     this._metrics.totalDurationMs += Date.now() - startMs;
     this.state = 'ACTIVE';
-
     this.emit('bee:execute:failed', {
       beeId: this.id,
       error: lastError.message,
-      retries: this.retryCount,
+      retries: this.retryCount
     });
-
     throw lastError;
   }
 
@@ -202,29 +180,23 @@ class BaseHeadyBee extends EventEmitter {
     if (this.state === 'RETIRED') {
       throw new Error('Cannot report from retired bee');
     }
-
     this.state = 'REPORTING';
-
     const report = {
       beeId: this.id,
       type: this.type,
       name: this.name,
       state: this.state,
       coherenceScore: parseFloat(this.coherenceScore.toFixed(fib(5))),
-      metrics: { ...this._metrics },
-      avgExecutionMs: this._metrics.executionCount > 0
-        ? parseFloat((this._metrics.totalDurationMs / this._metrics.executionCount).toFixed(fib(3)))
-        : 0,
-      successRate: this._metrics.executionCount > 0
-        ? parseFloat((this._metrics.successCount / this._metrics.executionCount).toFixed(fib(5)))
-        : 1.0,
+      metrics: {
+        ...this._metrics
+      },
+      avgExecutionMs: this._metrics.executionCount > 0 ? parseFloat((this._metrics.totalDurationMs / this._metrics.executionCount).toFixed(fib(3))) : 0,
+      successRate: this._metrics.executionCount > 0 ? parseFloat((this._metrics.successCount / this._metrics.executionCount).toFixed(fib(5))) : 1.0,
       uptime_ms: this.spawnedAt ? Date.now() - this.spawnedAt : 0,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
-
     this.state = 'ACTIVE';
     this.emit('bee:reported', report);
-
     return report;
   }
 
@@ -233,8 +205,10 @@ class BaseHeadyBee extends EventEmitter {
    * @returns {Promise<{beeId: string, cleanups: number}>}
    */
   async retire() {
-    if (this.state === 'RETIRED') return { beeId: this.id, cleanups: 0 };
-
+    if (this.state === 'RETIRED') return {
+      beeId: this.id,
+      cleanups: 0
+    };
     this.state = 'RETIRING';
     this.retiredAt = Date.now();
     let cleanupCount = 0;
@@ -246,15 +220,23 @@ class BaseHeadyBee extends EventEmitter {
         await cleanup.fn();
         cleanupCount++;
       } catch (err) {
-        this.emit('bee:cleanup:error', { beeId: this.id, cleanup: cleanup.name, error: err.message });
+        this.emit('bee:cleanup:error', {
+          beeId: this.id,
+          cleanup: cleanup.name,
+          error: err.message
+        });
       }
     }
-
     this.state = 'RETIRED';
-    this.emit('bee:retired', { beeId: this.id, cleanups: cleanupCount });
+    this.emit('bee:retired', {
+      beeId: this.id,
+      cleanups: cleanupCount
+    });
     this.removeAllListeners();
-
-    return { beeId: this.id, cleanups: cleanupCount };
+    return {
+      beeId: this.id,
+      cleanups: cleanupCount
+    };
   }
 
   /**
@@ -263,7 +245,10 @@ class BaseHeadyBee extends EventEmitter {
    * @param {Function} fn
    */
   registerCleanup(name, fn) {
-    this._cleanups.push({ name, fn });
+    this._cleanups.push({
+      name,
+      fn
+    });
   }
 
   /**
@@ -278,8 +263,10 @@ class BaseHeadyBee extends EventEmitter {
       state: this.state,
       coherenceScore: this.coherenceScore,
       status: this.coherenceScore >= CSL_THRESHOLDS.MEDIUM ? 'healthy' : 'degraded',
-      metrics: { ...this._metrics },
-      uptime_ms: this.spawnedAt ? Date.now() - this.spawnedAt : 0,
+      metrics: {
+        ...this._metrics
+      },
+      uptime_ms: this.spawnedAt ? Date.now() - this.spawnedAt : 0
     };
   }
 }
@@ -382,19 +369,17 @@ class BeeRegistry {
     const active = this.getActive();
     const coherenceSum = active.reduce((s, b) => s + b.coherenceScore, 0);
     const avgCoherence = active.length > 0 ? coherenceSum / active.length : 1.0;
-
     const typeDistribution = {};
     for (const bee of active) {
       typeDistribution[bee.type] = (typeDistribution[bee.type] || 0) + 1;
     }
-
     return {
       totalBees: this._bees.size,
       activeBees: active.length,
       avgCoherence: parseFloat(avgCoherence.toFixed(fib(5))),
       status: avgCoherence >= CSL_THRESHOLDS.MEDIUM ? 'healthy' : 'degraded',
       typeDistribution,
-      maxCapacity: this._maxBees,
+      maxCapacity: this._maxBees
     };
   }
 
@@ -409,10 +394,6 @@ BeeRegistry._instance = null;
 
 // ─── BEE FACTORY ───────────────────────────────────────────────────────────
 
-/**
- * BeeFactory — Creates bee instances by type from the template registry.
- * Maintains a registry of bee constructors for dynamic instantiation.
- */
 class BeeFactory {
   constructor() {
     /** @type {Map<string, Function>} Registered bee constructors */
@@ -443,7 +424,10 @@ class BeeFactory {
     if (!BeeClass) {
       throw new Error(`BeeFactory: no template registered for type "${type}". Available: ${[...this._templates.keys()].join(', ')}`);
     }
-    return new BeeClass({ ...config, type });
+    return new BeeClass({
+      ...config,
+      type
+    });
   }
 
   /**
@@ -489,13 +473,15 @@ class BeeFactory {
  */
 class TelemetryBee extends BaseHeadyBee {
   constructor(config = {}) {
-    super({ ...config, type: 'telemetry' });
+    super({
+      ...config,
+      type: 'telemetry'
+    });
     this._buffer = [];
     this._bufferMax = fib(10); // 55
     this._flushIntervalMs = PHI_TIMING.CYCLE; // ~29s
     this._flushHandle = null;
   }
-
   async spawn(context) {
     const result = await super.spawn(context);
 
@@ -503,16 +489,17 @@ class TelemetryBee extends BaseHeadyBee {
     this._flushHandle = setInterval(() => {
       this._flush();
     }, this._flushIntervalMs);
-
     this.registerCleanup('flush-interval', () => {
       if (this._flushHandle) clearInterval(this._flushHandle);
     });
-
     return result;
   }
-
   async _doExecute(task) {
-    const { metrics, source, correlationId } = task;
+    const {
+      metrics,
+      source,
+      correlationId
+    } = task;
 
     // Validate and buffer incoming telemetry
     const entry = {
@@ -520,9 +507,8 @@ class TelemetryBee extends BaseHeadyBee {
       source: source || 'unknown',
       correlationId: correlationId || null,
       metrics: metrics || {},
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
-
     this._buffer.push(entry);
     if (this._buffer.length > this._bufferMax) {
       this._flush();
@@ -530,39 +516,31 @@ class TelemetryBee extends BaseHeadyBee {
 
     // Compute aggregate metrics
     const agg = this._computeAggregates();
-
     return {
       buffered: this._buffer.length,
       aggregates: agg,
-      entryId: entry.id,
+      entryId: entry.id
     };
   }
-
   _flush() {
     if (this._buffer.length === 0) return;
-
     const batch = this._buffer.splice(0, fib(8)); // Flush up to 21 entries
     this.emit('telemetry:flush', {
       beeId: this.id,
       count: batch.length,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
   }
-
   _computeAggregates() {
-    if (this._buffer.length === 0) return { count: 0 };
-
-    const latencies = this._buffer
-      .map(e => e.metrics.latencyMs)
-      .filter(l => typeof l === 'number');
-
+    if (this._buffer.length === 0) return {
+      count: 0
+    };
+    const latencies = this._buffer.map(e => e.metrics.latencyMs).filter(l => typeof l === 'number');
     return {
       count: this._buffer.length,
-      avgLatencyMs: latencies.length > 0
-        ? parseFloat((latencies.reduce((a, b) => a + b, 0) / latencies.length).toFixed(fib(3)))
-        : 0,
+      avgLatencyMs: latencies.length > 0 ? parseFloat((latencies.reduce((a, b) => a + b, 0) / latencies.length).toFixed(fib(3))) : 0,
       maxLatencyMs: latencies.length > 0 ? Math.max(...latencies) : 0,
-      sources: [...new Set(this._buffer.map(e => e.source))],
+      sources: [...new Set(this._buffer.map(e => e.source))]
     };
   }
 }
@@ -576,14 +554,19 @@ class TelemetryBee extends BaseHeadyBee {
  */
 class HealthBee extends BaseHeadyBee {
   constructor(config = {}) {
-    super({ ...config, type: 'health' });
+    super({
+      ...config,
+      type: 'health'
+    });
     this._healthHistory = [];
     this._maxHistory = fib(8); // 21
     this._endpoints = config.endpoints || [];
   }
-
   async _doExecute(task) {
-    const { endpoints = this._endpoints, timeout = this.timeout } = task;
+    const {
+      endpoints = this._endpoints,
+      timeout = this.timeout
+    } = task;
     const results = {};
     const startMs = Date.now();
 
@@ -593,29 +576,24 @@ class HealthBee extends BaseHeadyBee {
       try {
         // Simulate health check (in production, use http/https module)
         if (endpoint.checker && typeof endpoint.checker === 'function') {
-          const health = await Promise.race([
-            endpoint.checker(),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('Health probe timeout')), timeout)
-            ),
-          ]);
+          const health = await Promise.race([endpoint.checker(), new Promise((_, reject) => setTimeout(() => reject(new Error('Health probe timeout')), timeout))]);
           results[endpoint.name] = {
             status: 'UP',
             durationMs: Date.now() - pStart,
-            ...health,
+            ...health
           };
         } else {
           results[endpoint.name] = {
             status: 'UP',
             durationMs: Date.now() - pStart,
-            coherence: CSL_THRESHOLDS.HIGH,
+            coherence: CSL_THRESHOLDS.HIGH
           };
         }
       } catch (err) {
         results[endpoint.name] = {
           status: 'DOWN',
           durationMs: Date.now() - pStart,
-          error: err.message,
+          error: err.message
         };
       }
     }
@@ -624,21 +602,22 @@ class HealthBee extends BaseHeadyBee {
     const statuses = Object.values(results);
     const upCount = statuses.filter(s => s.status === 'UP').length;
     const compositeHealth = statuses.length > 0 ? upCount / statuses.length : 1.0;
-
     const record = {
       timestamp: Date.now(),
       compositeHealth: parseFloat(compositeHealth.toFixed(fib(5))),
       probeCount: statuses.length,
       upCount,
-      totalDurationMs: Date.now() - startMs,
+      totalDurationMs: Date.now() - startMs
     };
-
     this._healthHistory.push(record);
     if (this._healthHistory.length > this._maxHistory) {
       this._healthHistory.shift();
     }
-
-    return { probes: results, composite: record, history: this._healthHistory.slice(-fib(5)) };
+    return {
+      probes: results,
+      composite: record,
+      history: this._healthHistory.slice(-fib(5))
+    };
   }
 }
 
@@ -651,40 +630,41 @@ class HealthBee extends BaseHeadyBee {
  */
 class PipelineBee extends BaseHeadyBee {
   constructor(config = {}) {
-    super({ ...config, type: 'pipeline' });
+    super({
+      ...config,
+      type: 'pipeline'
+    });
     this._stageHistory = [];
     this._maxHistory = fib(8);
   }
-
   async _doExecute(task) {
-    const { stageName, stageIndex, executor, context } = task;
+    const {
+      stageName,
+      stageIndex,
+      executor,
+      context
+    } = task;
     if (!executor || typeof executor !== 'function') {
       throw new Error('PipelineBee requires an executor function');
     }
-
     const startMs = Date.now();
     const output = await executor(context || {});
     const durationMs = Date.now() - startMs;
-
     const record = {
       stageName: stageName || `stage-${stageIndex}`,
       stageIndex: stageIndex || 0,
       durationMs,
       timestamp: Date.now(),
-      phiScore: parseFloat((durationMs / (Math.pow(PHI, fib(5)) * PHI_TIMING.TICK)).toFixed(fib(5))),
+      phiScore: parseFloat((durationMs / (Math.pow(PHI, fib(5)) * PHI_TIMING.TICK)).toFixed(fib(5)))
     };
-
     this._stageHistory.push(record);
     if (this._stageHistory.length > this._maxHistory) {
       this._stageHistory.shift();
     }
-
     return {
       output,
       stage: record,
-      avgStageDuration: this._stageHistory.length > 0
-        ? parseFloat((this._stageHistory.reduce((s, r) => s + r.durationMs, 0) / this._stageHistory.length).toFixed(fib(3)))
-        : 0,
+      avgStageDuration: this._stageHistory.length > 0 ? parseFloat((this._stageHistory.reduce((s, r) => s + r.durationMs, 0) / this._stageHistory.length).toFixed(fib(3))) : 0
     };
   }
 }
@@ -698,29 +678,55 @@ class PipelineBee extends BaseHeadyBee {
  */
 class SecurityBee extends BaseHeadyBee {
   constructor(config = {}) {
-    super({ ...config, type: 'security' });
+    super({
+      ...config,
+      type: 'security'
+    });
     this._scanHistory = [];
     this._maxHistory = fib(8);
     this._rules = config.rules || this._defaultRules();
   }
-
   _defaultRules() {
-    return [
-      { id: 'sql-injection', pattern: /('|"|;|--|\/\*|\*\/|union\s+select)/i, severity: 'CRITICAL' },
-      { id: 'xss', pattern: /<script|javascript:|on\w+\s*=/i, severity: 'HIGH' },
-      { id: 'path-traversal', pattern: /\.\.\//g, severity: 'HIGH' },
-      { id: 'env-exposure', pattern: /process\.env|SECRET|PASSWORD|API_KEY/i, severity: 'MEDIUM' },
-      { id: 'eval-usage', pattern: /\beval\s*\(|new\s+Function\s*\(/i, severity: 'HIGH' },
-      { id: 'hardcoded-url', pattern: /https?:\/\/localhost|127\.0\.0\.1/i, severity: 'MEDIUM' },
-      { id: 'weak-crypto', pattern: /\bmd5\b|\bsha1\b/i, severity: 'LOW' },
-      { id: 'debug-statements', pattern: /console\.log|debugger/i, severity: 'LOW' },
-    ];
+    return [{
+      id: 'sql-injection',
+      pattern: /('|"|;|--|\/\*|\*\/|union\s+select)/i,
+      severity: 'CRITICAL'
+    }, {
+      id: 'xss',
+      pattern: /<script|javascript:|on\w+\s*=/i,
+      severity: 'HIGH'
+    }, {
+      id: 'path-traversal',
+      pattern: /\.\.\//g,
+      severity: 'HIGH'
+    }, {
+      id: 'env-exposure',
+      pattern: /process\.env|SECRET|PASSWORD|API_KEY/i,
+      severity: 'MEDIUM'
+    }, {
+      id: 'eval-usage',
+      pattern: /\beval\s*\(|new\s+Function\s*\(/i,
+      severity: 'HIGH'
+    }, {
+      id: 'hardcoded-url',
+      pattern: /https?:\/\/localhost|127\.0\.0\.1/i,
+      severity: 'MEDIUM'
+    }, {
+      id: 'weak-crypto',
+      pattern: /\bmd5\b|\bsha1\b/i,
+      severity: 'LOW'
+    }, {
+      id: 'debug-statements',
+      pattern: /console\.log|debugger/i,
+      severity: 'LOW'
+    }];
   }
-
   async _doExecute(task) {
-    const { content, contentType = 'code' } = task;
+    const {
+      content,
+      contentType = 'code'
+    } = task;
     if (!content) throw new Error('SecurityBee requires content to scan');
-
     const contentStr = typeof content === 'string' ? content : JSON.stringify(content);
     const findings = [];
     const startMs = Date.now();
@@ -733,19 +739,21 @@ class SecurityBee extends BaseHeadyBee {
           ruleId: rule.id,
           severity: rule.severity,
           matchCount: matches.length,
-          sample: matches[0].substring(0, fib(8)),
+          sample: matches[0].substring(0, fib(8))
         });
       }
     }
 
     // Compute security score (higher = more secure)
     const severityWeights = {
-      CRITICAL: Math.pow(PSI, 0), // 1.0
-      HIGH: PSI,                   // 0.618
-      MEDIUM: Math.pow(PSI, fib(3)), // 0.382
-      LOW: Math.pow(PSI, fib(4)),  // 0.236
+      CRITICAL: Math.pow(PSI, 0),
+      // 1.0
+      HIGH: PSI,
+      // 0.618
+      MEDIUM: Math.pow(PSI, fib(3)),
+      // 0.382
+      LOW: Math.pow(PSI, fib(4)) // 0.236
     };
-
     let riskScore = 0;
     for (const f of findings) {
       riskScore += (severityWeights[f.severity] || PSI) * f.matchCount;
@@ -753,17 +761,15 @@ class SecurityBee extends BaseHeadyBee {
 
     // Normalize: security score = 1 - normalized risk
     const maxRisk = this._rules.length * fib(4); // Max possible risk
-    const securityScore = Math.max(0, 1 - (riskScore / maxRisk));
+    const securityScore = Math.max(0, 1 - riskScore / maxRisk);
     const durationMs = Date.now() - startMs;
-
     const record = {
       timestamp: Date.now(),
       findingCount: findings.length,
       securityScore: parseFloat(securityScore.toFixed(fib(5))),
       durationMs,
-      contentType,
+      contentType
     };
-
     this._scanHistory.push(record);
     if (this._scanHistory.length > this._maxHistory) {
       this._scanHistory.shift();
@@ -771,11 +777,7 @@ class SecurityBee extends BaseHeadyBee {
 
     // Classify CSL gate level
     let cslLevel = 'MINIMUM';
-    if (securityScore >= CSL_THRESHOLDS.CRITICAL) cslLevel = 'CRITICAL';
-    else if (securityScore >= CSL_THRESHOLDS.HIGH) cslLevel = 'HIGH';
-    else if (securityScore >= CSL_THRESHOLDS.MEDIUM) cslLevel = 'MEDIUM';
-    else if (securityScore >= CSL_THRESHOLDS.LOW) cslLevel = 'LOW';
-
+    if (securityScore >= CSL_THRESHOLDS.CRITICAL) cslLevel = 'CRITICAL';else if (securityScore >= CSL_THRESHOLDS.HIGH) cslLevel = 'HIGH';else if (securityScore >= CSL_THRESHOLDS.MEDIUM) cslLevel = 'MEDIUM';else if (securityScore >= CSL_THRESHOLDS.LOW) cslLevel = 'LOW';
     return {
       findings,
       securityScore,
@@ -783,9 +785,7 @@ class SecurityBee extends BaseHeadyBee {
       riskScore: parseFloat(riskScore.toFixed(fib(4))),
       rulesChecked: this._rules.length,
       durationMs,
-      recommendation: findings.length === 0
-        ? 'No vulnerabilities detected'
-        : `Found ${findings.length} issue(s) — review and remediate`,
+      recommendation: findings.length === 0 ? 'No vulnerabilities detected' : `Found ${findings.length} issue(s) — review and remediate`
     };
   }
 }
@@ -799,85 +799,86 @@ class SecurityBee extends BaseHeadyBee {
  */
 class GovernanceBee extends BaseHeadyBee {
   constructor(config = {}) {
-    super({ ...config, type: 'governance' });
+    super({
+      ...config,
+      type: 'governance'
+    });
     this._auditHistory = [];
     this._maxHistory = fib(8);
     this._policies = config.policies || this._defaultPolicies();
   }
-
   _defaultPolicies() {
-    return [
-      {
-        id: 'structural-integrity',
-        name: 'Structural Integrity',
-        description: 'Code compiles, respects module boundaries',
-        check: (artifact) => {
-          const hasExports = typeof artifact === 'string'
-            ? artifact.includes('module.exports') || artifact.includes('export')
-            : true;
-          return { passed: hasExports, score: hasExports ? CSL_THRESHOLDS.HIGH : CSL_THRESHOLDS.LOW };
-        },
-      },
-      {
-        id: 'semantic-coherence',
-        name: 'Semantic Coherence',
-        description: 'Change stays within tolerance of intended design',
-        check: (artifact, context) => {
-          const coherenceThreshold = CSL_THRESHOLDS.MEDIUM;
-          const currentCoherence = context && context.coherence ? context.coherence : CSL_THRESHOLDS.HIGH;
-          return {
-            passed: currentCoherence >= coherenceThreshold,
-            score: currentCoherence,
-            threshold: coherenceThreshold,
-          };
-        },
-      },
-      {
-        id: 'mission-alignment',
-        name: 'Mission Alignment',
-        description: 'Serves HeadyConnection mission: community, equity, empowerment',
-        check: (artifact) => {
-          // Default pass — concrete checks would use embedding similarity
-          return { passed: true, score: CSL_THRESHOLDS.HIGH };
-        },
-      },
-      {
-        id: 'phi-compliance',
-        name: 'Phi Compliance',
-        description: 'All constants derived from phi/Fibonacci',
-        check: (artifact) => {
-          const artStr = typeof artifact === 'string' ? artifact : JSON.stringify(artifact);
-          // Check for common magic numbers
-          const magicPatterns = [/\b0\.5\b/, /\b0\.75\b/, /\b0\.95\b/, /\b10000\b/, /\b30000\b/];
-          const violations = magicPatterns.filter(p => p.test(artStr));
-          const score = Math.max(0, 1 - (violations.length * Math.pow(PSI, fib(3))));
-          return {
-            passed: violations.length === 0,
-            score: parseFloat(score.toFixed(fib(5))),
-            violations: violations.length,
-          };
-        },
-      },
-      {
-        id: 'no-localhost',
-        name: 'No Localhost References',
-        description: 'Production code must not reference localhost',
-        check: (artifact) => {
-          const artStr = typeof artifact === 'string' ? artifact : JSON.stringify(artifact);
-          const hasLocalhost = /localhost|127\.0\.0\.1/i.test(artStr);
-          return {
-            passed: !hasLocalhost,
-            score: hasLocalhost ? CSL_THRESHOLDS.LOW : CSL_THRESHOLDS.HIGH,
-          };
-        },
-      },
-    ];
+    return [{
+      id: 'structural-integrity',
+      name: 'Structural Integrity',
+      description: 'Code compiles, respects module boundaries',
+      check: artifact => {
+        const hasExports = typeof artifact === 'string' ? artifact.includes('module.exports') || artifact.includes('export') : true;
+        return {
+          passed: hasExports,
+          score: hasExports ? CSL_THRESHOLDS.HIGH : CSL_THRESHOLDS.LOW
+        };
+      }
+    }, {
+      id: 'semantic-coherence',
+      name: 'Semantic Coherence',
+      description: 'Change stays within tolerance of intended design',
+      check: (artifact, context) => {
+        const coherenceThreshold = CSL_THRESHOLDS.MEDIUM;
+        const currentCoherence = context && context.coherence ? context.coherence : CSL_THRESHOLDS.HIGH;
+        return {
+          passed: currentCoherence >= coherenceThreshold,
+          score: currentCoherence,
+          threshold: coherenceThreshold
+        };
+      }
+    }, {
+      id: 'mission-alignment',
+      name: 'Mission Alignment',
+      description: 'Serves HeadyConnection mission: community, equity, empowerment',
+      check: artifact => {
+        // Default pass — concrete checks would use embedding similarity
+        return {
+          passed: true,
+          score: CSL_THRESHOLDS.HIGH
+        };
+      }
+    }, {
+      id: 'phi-compliance',
+      name: 'Phi Compliance',
+      description: 'All constants derived from phi/Fibonacci',
+      check: artifact => {
+        const artStr = typeof artifact === 'string' ? artifact : JSON.stringify(artifact);
+        // Check for common magic numbers
+        const magicPatterns = [/\b0\.5\b/, /\b0\.75\b/, /\b0\.95\b/, /\b10000\b/, /\b30000\b/];
+        const violations = magicPatterns.filter(p => p.test(artStr));
+        const score = Math.max(0, 1 - violations.length * Math.pow(PSI, fib(3)));
+        return {
+          passed: violations.length === 0,
+          score: parseFloat(score.toFixed(fib(5))),
+          violations: violations.length
+        };
+      }
+    }, {
+      id: 'no-localhost',
+      name: 'No Localhost References',
+      description: 'Production code must not reference localhost',
+      check: artifact => {
+        const artStr = typeof artifact === 'string' ? artifact : JSON.stringify(artifact);
+        const hasLocalhost = /localhost|127\.0\.0\.1/i.test(artStr);
+        return {
+          passed: !hasLocalhost,
+          score: hasLocalhost ? CSL_THRESHOLDS.LOW : CSL_THRESHOLDS.HIGH
+        };
+      }
+    }];
   }
-
   async _doExecute(task) {
-    const { artifact, context = {} } = task;
+    const {
+      artifact,
+      context = {}
+    } = task;
     if (!artifact) throw new Error('GovernanceBee requires an artifact to audit');
-
     const startMs = Date.now();
     const results = [];
 
@@ -888,7 +889,7 @@ class GovernanceBee extends BaseHeadyBee {
         results.push({
           policyId: policy.id,
           policyName: policy.name,
-          ...result,
+          ...result
         });
       } catch (err) {
         results.push({
@@ -896,7 +897,7 @@ class GovernanceBee extends BaseHeadyBee {
           policyName: policy.name,
           passed: false,
           score: 0,
-          error: err.message,
+          error: err.message
         });
       }
     }
@@ -904,25 +905,21 @@ class GovernanceBee extends BaseHeadyBee {
     // Compute composite governance score using phi-fusion weights
     const weights = phiFusionWeights(results.length);
     const compositeScore = results.reduce((sum, r, i) => sum + (r.score || 0) * weights[i], 0);
-
     const passed = results.every(r => r.passed);
     const violations = results.filter(r => !r.passed);
     const durationMs = Date.now() - startMs;
-
     const record = {
       timestamp: Date.now(),
       compositeScore: parseFloat(compositeScore.toFixed(fib(5))),
       passed,
       policyCount: this._policies.length,
       violationCount: violations.length,
-      durationMs,
+      durationMs
     };
-
     this._auditHistory.push(record);
     if (this._auditHistory.length > this._maxHistory) {
       this._auditHistory.shift();
     }
-
     return {
       passed,
       compositeScore: record.compositeScore,
@@ -930,13 +927,11 @@ class GovernanceBee extends BaseHeadyBee {
       violations: violations.map(v => ({
         policy: v.policyId,
         name: v.policyName,
-        score: v.score,
+        score: v.score
       })),
       policiesChecked: this._policies.length,
       durationMs,
-      recommendation: passed
-        ? 'All governance policies satisfied'
-        : `${violations.length} policy violation(s) — remediation required`,
+      recommendation: passed ? 'All governance policies satisfied' : `${violations.length} policy violation(s) — remediation required`
     };
   }
 }
@@ -959,16 +954,14 @@ function createDefaultFactory() {
 module.exports = {
   // Base class
   BaseHeadyBee,
-
   // Registry and Factory
   BeeRegistry,
   BeeFactory,
   createDefaultFactory,
-
   // Concrete bees
   TelemetryBee,
   HealthBee,
   PipelineBee,
   SecurityBee,
-  GovernanceBee,
+  GovernanceBee
 };

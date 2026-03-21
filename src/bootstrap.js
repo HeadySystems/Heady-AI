@@ -23,23 +23,34 @@
 
 'use strict';
 
-const { PHI, PSI, fibonacci, phiBackoff, CSL_THRESHOLDS, SERVICE_PORTS } = require('../shared/phi-math');
-const { createLogger } = require('../shared/logger');
-const { GracefulShutdown, SHUTDOWN_PHASE } = require('./lifecycle/graceful-shutdown');
-
+const {
+  PHI,
+  PSI,
+  fibonacci,
+  phiBackoff,
+  CSL_THRESHOLDS,
+  SERVICE_PORTS
+} = require('../shared/phi-math');
+const {
+  createLogger
+} = require('../shared/logger');
+const {
+  GracefulShutdown,
+  SHUTDOWN_PHASE
+} = require('./lifecycle/graceful-shutdown');
 const logger = createLogger('bootstrap');
 
 // ─── Startup Phases ─────────────────────────────────────────────────────────
 const STARTUP_PHASE = {
-  SECRETS:        'secrets',
-  SHARED:         'shared_resources',
-  MIGRATIONS:     'migrations',
-  CORE_SERVICES:  'core_services',
-  APP_SERVICES:   'app_services',
-  WEBSITES:       'websites',
-  COLAB:          'colab_runtimes',
-  HEALTH:         'health_registration',
-  SELF_HEALING:   'self_healing'
+  SECRETS: 'secrets',
+  SHARED: 'shared_resources',
+  MIGRATIONS: 'migrations',
+  CORE_SERVICES: 'core_services',
+  APP_SERVICES: 'app_services',
+  WEBSITES: 'websites',
+  COLAB: 'colab_runtimes',
+  HEALTH: 'health_registration',
+  SELF_HEALING: 'self_healing'
 };
 
 // Maximum startup time: fib(14) seconds = 377s ≈ 6.3 minutes
@@ -58,11 +69,12 @@ class Bootstrap {
       enableWebsites: config.enableWebsites !== false,
       ...config
     };
-
-    this.shutdown = new GracefulShutdown({ timeout: fibonacci(13) * 1000 });
-    this.resources = {};   // Shared resource instances
-    this.services = {};    // Running service instances
-    this.startupLog = [];  // Phase completion log
+    this.shutdown = new GracefulShutdown({
+      timeout: fibonacci(13) * 1000
+    });
+    this.resources = {}; // Shared resource instances
+    this.services = {}; // Running service instances
+    this.startupLog = []; // Phase completion log
     this.startedAt = null;
     this._state = 'idle';
   }
@@ -73,7 +85,6 @@ class Bootstrap {
   async start() {
     this.startedAt = Date.now();
     this._state = 'starting';
-
     logger.info({
       environment: this.config.environment,
       projectId: this.config.projectId,
@@ -83,32 +94,29 @@ class Bootstrap {
 
     // Install signal handlers
     this.shutdown.installSignalHandlers();
-
     try {
       // Phase 1: Load secrets
       await this._phase(STARTUP_PHASE.SECRETS, async () => {
-        const { SecretManager } = require('../shared/secret-manager');
+        const {
+          SecretManager
+        } = require('../shared/secret-manager');
         this.resources.secrets = new SecretManager({
           projectId: this.config.projectId
         });
         await this.resources.secrets.initialize();
 
         // Load required secrets
-        const secretNames = [
-          'firebase-service-account',
-          'database-url',
-          'redis-url',
-          'nats-url',
-          'encryption-key',
-          'jwt-signing-key'
-        ];
-
+        const secretNames = ['firebase-service-account', 'database-url', 'redis-url', 'nats-url', 'encryption-key', 'jwt-signing-key'];
         this.resources.secretValues = {};
         for (const name of secretNames) {
           try {
             this.resources.secretValues[name] = await this.resources.secrets.getSecret(name);
           } catch (err) {
-            logger.warn({ secret: name, err: err.message, msg: 'Secret not available — using defaults' });
+            logger.warn({
+              secret: name,
+              err: err.message,
+              msg: 'Secret not available — using defaults'
+            });
           }
         }
       });
@@ -116,7 +124,9 @@ class Bootstrap {
       // Phase 2: Initialize shared resources
       await this._phase(STARTUP_PHASE.SHARED, async () => {
         // PostgreSQL + pgvector
-        const { PgVectorClient } = require('../shared/pgvector-client');
+        const {
+          PgVectorClient
+        } = require('../shared/pgvector-client');
         this.resources.pg = new PgVectorClient({
           connectionString: this.resources.secretValues?.['database-url']
         });
@@ -125,18 +135,25 @@ class Bootstrap {
 
         // NATS JetStream
         try {
-          const { NatsClient } = require('../shared/nats-client');
+          const {
+            NatsClient
+          } = require('../shared/nats-client');
           this.resources.nats = new NatsClient({
             url: this.resources.secretValues?.['nats-url']
           });
           await this.resources.nats.connect();
           this.shutdown.registerCache('nats', this.resources.nats);
         } catch (err) {
-          logger.warn({ err: err.message, msg: 'NATS connection failed — running without messaging' });
+          logger.warn({
+            err: err.message,
+            msg: 'NATS connection failed — running without messaging'
+          });
         }
 
         // Firebase Admin
-        const { initializeFirebase } = require('../shared/firebase-admin');
+        const {
+          initializeFirebase
+        } = require('../shared/firebase-admin');
         this.resources.firebase = await initializeFirebase({
           serviceAccount: this.resources.secretValues?.['firebase-service-account']
         });
@@ -144,71 +161,93 @@ class Bootstrap {
 
       // Phase 3: Run database migrations
       await this._phase(STARTUP_PHASE.MIGRATIONS, async () => {
-        const { runMigrations } = require('../migrations/migrate');
+        const {
+          runMigrations
+        } = require('../migrations/migrate');
         await runMigrations(this.resources.pg);
       });
 
       // Phase 4: Core services
       await this._phase(STARTUP_PHASE.CORE_SERVICES, async () => {
         // HeadySoul — Values arbiter
-        const { HeadySoul } = require('./intelligence/heady-soul');
+        const {
+          HeadySoul
+        } = require('./intelligence/heady-soul');
         this.services.soul = new HeadySoul({
           pgClient: this.resources.pg
         });
         await this.services.soul.initialize();
-        this.shutdown.register('heady-soul', SHUTDOWN_PHASE.APPLICATION,
-          () => this.services.soul.shutdown());
+        this.shutdown.register('heady-soul', SHUTDOWN_PHASE.APPLICATION, () => this.services.soul.shutdown());
 
         // HeadyBrains — Context assembler
-        const { HeadyBrains } = require('./intelligence/heady-brains');
+        const {
+          HeadyBrains
+        } = require('./intelligence/heady-brains');
         this.services.brains = new HeadyBrains({
           pgClient: this.resources.pg
         });
         await this.services.brains.initialize();
-        this.shutdown.register('heady-brains', SHUTDOWN_PHASE.APPLICATION,
-          () => this.services.brains.shutdown());
+        this.shutdown.register('heady-brains', SHUTDOWN_PHASE.APPLICATION, () => this.services.brains.shutdown());
 
         // HeadyMemory — Vector memory
-        const { HeadyMemory } = require('./memory/heady-memory');
+        const {
+          HeadyMemory
+        } = require('./memory/heady-memory');
         this.services.memory = new HeadyMemory({
           pgClient: this.resources.pg
         });
         await this.services.memory.initialize();
-        this.shutdown.register('heady-memory', SHUTDOWN_PHASE.PERSISTENCE,
-          () => this.services.memory.shutdown());
+        this.shutdown.register('heady-memory', SHUTDOWN_PHASE.PERSISTENCE, () => this.services.memory.shutdown());
 
         // HeadyAutobiographer — Event logging
-        const { HeadyAutobiographer } = require('./intelligence/heady-autobiographer');
+        const {
+          HeadyAutobiographer
+        } = require('./intelligence/heady-autobiographer');
         this.services.autobiographer = new HeadyAutobiographer({
-          persistFn: (event) => this.services.memory?.store({
+          persistFn: event => this.services.memory?.store({
             namespace: 'system',
             content: JSON.stringify(event),
             importance: event.severity
           })
         });
-        this.shutdown.register('heady-autobiographer', SHUTDOWN_PHASE.OBSERVABILITY,
-          () => this.services.autobiographer.shutdown());
+        this.shutdown.register('heady-autobiographer', SHUTDOWN_PHASE.OBSERVABILITY, () => this.services.autobiographer.shutdown());
 
         // Record startup milestone
-        this.services.autobiographer.recordMilestone(
-          'Core Services Started',
-          'HeadySoul, HeadyBrains, HeadyMemory, HeadyAutobiographer initialized'
-        );
+        this.services.autobiographer.recordMilestone('Core Services Started', 'HeadySoul, HeadyBrains, HeadyMemory, HeadyAutobiographer initialized');
       });
 
       // Phase 5: Application services
       await this._phase(STARTUP_PHASE.APP_SERVICES, async () => {
         // These are started as HTTP servers on their respective ports
-        const servicesToStart = [
-          { name: 'auth-session', port: SERVICE_PORTS?.AUTH_SESSION || 3310, module: './services/auth/auth-session-server' },
-          { name: 'notification', port: SERVICE_PORTS?.NOTIFICATION || 3320, module: './services/notification/notification-service' },
-          { name: 'analytics', port: SERVICE_PORTS?.ANALYTICS || 3330, module: './services/analytics/analytics-service' },
-          { name: 'scheduler', port: SERVICE_PORTS?.SCHEDULER || 3340, module: './services/scheduler/scheduler-service' },
-          { name: 'rate-limiter', port: SERVICE_PORTS?.RATE_LIMITER || 3350, module: './services/rate-limiter/rate-limiter-service' },
-          { name: 'conductor', port: SERVICE_PORTS?.CONDUCTOR || 3360, module: './orchestration/heady-conductor' },
-          { name: 'backup', port: SERVICE_PORTS?.BACKUP || 3396, module: './services/backup/backup-service' }
-        ];
-
+        const servicesToStart = [{
+          name: 'auth-session',
+          port: SERVICE_PORTS?.AUTH_SESSION || 3310,
+          module: './services/auth/auth-session-server'
+        }, {
+          name: 'notification',
+          port: SERVICE_PORTS?.NOTIFICATION || 3320,
+          module: './services/notification/notification-service'
+        }, {
+          name: 'analytics',
+          port: SERVICE_PORTS?.ANALYTICS || 3330,
+          module: './services/analytics/analytics-service'
+        }, {
+          name: 'scheduler',
+          port: SERVICE_PORTS?.SCHEDULER || 3340,
+          module: './services/scheduler/scheduler-service'
+        }, {
+          name: 'rate-limiter',
+          port: SERVICE_PORTS?.RATE_LIMITER || 3350,
+          module: './services/rate-limiter/rate-limiter-service'
+        }, {
+          name: 'conductor',
+          port: SERVICE_PORTS?.CONDUCTOR || 3360,
+          module: './orchestration/heady-conductor'
+        }, {
+          name: 'backup',
+          port: SERVICE_PORTS?.BACKUP || 3396,
+          module: './services/backup/backup-service'
+        }];
         for (const svc of servicesToStart) {
           try {
             const mod = require(svc.module);
@@ -220,13 +259,19 @@ class Bootstrap {
                 nats: this.resources.nats
               });
               this.services[svc.name] = instance;
-              this.shutdown.register(svc.name, SHUTDOWN_PHASE.CONNECTIONS,
-                () => instance.server?.close?.() || Promise.resolve());
+              this.shutdown.register(svc.name, SHUTDOWN_PHASE.CONNECTIONS, () => instance.server?.close?.() || Promise.resolve());
             }
-
-            logger.info({ service: svc.name, port: svc.port, msg: 'Service started' });
+            logger.info({
+              service: svc.name,
+              port: svc.port,
+              msg: 'Service started'
+            });
           } catch (err) {
-            logger.error({ service: svc.name, err: err.message, msg: 'Service start failed' });
+            logger.error({
+              service: svc.name,
+              err: err.message,
+              msg: 'Service start failed'
+            });
           }
         }
       });
@@ -235,14 +280,18 @@ class Bootstrap {
       if (this.config.enableWebsites) {
         await this._phase(STARTUP_PHASE.WEBSITES, async () => {
           try {
-            const { startServer: startWebsites } = require('./websites/website-server');
+            const {
+              startServer: startWebsites
+            } = require('./websites/website-server');
             this.services.websites = await startWebsites({
               firebase: this.resources.firebase
             });
-            this.shutdown.register('websites', SHUTDOWN_PHASE.CONNECTIONS,
-              () => this.services.websites?.close?.() || Promise.resolve());
+            this.shutdown.register('websites', SHUTDOWN_PHASE.CONNECTIONS, () => this.services.websites?.close?.() || Promise.resolve());
           } catch (err) {
-            logger.warn({ err: err.message, msg: 'Website server start failed' });
+            logger.warn({
+              err: err.message,
+              msg: 'Website server start failed'
+            });
           }
         });
       }
@@ -251,13 +300,17 @@ class Bootstrap {
       if (this.config.enableColab) {
         await this._phase(STARTUP_PHASE.COLAB, async () => {
           try {
-            const { ColabDeployAutomation } = require('./colab/colab-deploy-automation');
+            const {
+              ColabDeployAutomation
+            } = require('./colab/colab-deploy-automation');
             this.services.colabDeploy = new ColabDeployAutomation();
             await this.services.colabDeploy.initialize();
-            this.shutdown.register('colab-deploy', SHUTDOWN_PHASE.APPLICATION,
-              () => this.services.colabDeploy.shutdown());
+            this.shutdown.register('colab-deploy', SHUTDOWN_PHASE.APPLICATION, () => this.services.colabDeploy.shutdown());
           } catch (err) {
-            logger.warn({ err: err.message, msg: 'Colab automation init failed' });
+            logger.warn({
+              err: err.message,
+              msg: 'Colab automation init failed'
+            });
           }
         });
       }
@@ -266,29 +319,22 @@ class Bootstrap {
       await this._phase(STARTUP_PHASE.HEALTH, async () => {
         // All services should have /health endpoints already
         // Register global health aggregator
-        this.services.autobiographer?.recordMilestone(
-          'System Fully Started',
-          `All ${Object.keys(this.services).length} services initialized`
-        );
+        this.services.autobiographer?.recordMilestone('System Fully Started', `All ${Object.keys(this.services).length} services initialized`);
       });
-
       this._state = 'running';
       const startupDuration = Date.now() - this.startedAt;
-
       logger.info({
         duration: startupDuration,
         services: Object.keys(this.services).length,
         phases: this.startupLog.length,
         msg: 'Heady system bootstrap complete'
       });
-
       return {
         status: 'running',
         duration: startupDuration,
         services: Object.keys(this.services),
         phases: this.startupLog
       };
-
     } catch (err) {
       this._state = 'failed';
       logger.error({
@@ -297,8 +343,6 @@ class Bootstrap {
         duration: Date.now() - this.startedAt,
         msg: 'Bootstrap failed'
       });
-
-      // Attempt graceful shutdown of anything that started
       await this.shutdown.shutdown('bootstrap_failure');
       throw err;
     }
@@ -309,17 +353,37 @@ class Bootstrap {
    */
   async _phase(name, fn) {
     const start = Date.now();
-    logger.info({ phase: name, msg: `Starting phase: ${name}` });
-
+    logger.info({
+      phase: name,
+      msg: `Starting phase: ${name}`
+    });
     try {
       await fn();
       const duration = Date.now() - start;
-      this.startupLog.push({ phase: name, status: 'ok', duration });
-      logger.info({ phase: name, duration, msg: `Phase complete: ${name}` });
+      this.startupLog.push({
+        phase: name,
+        status: 'ok',
+        duration
+      });
+      logger.info({
+        phase: name,
+        duration,
+        msg: `Phase complete: ${name}`
+      });
     } catch (err) {
       const duration = Date.now() - start;
-      this.startupLog.push({ phase: name, status: 'error', duration, error: err.message });
-      logger.error({ phase: name, duration, err: err.message, msg: `Phase failed: ${name}` });
+      this.startupLog.push({
+        phase: name,
+        status: 'error',
+        duration,
+        error: err.message
+      });
+      logger.error({
+        phase: name,
+        duration,
+        err: err.message,
+        msg: `Phase failed: ${name}`
+      });
       throw err;
     }
   }
@@ -348,18 +412,25 @@ async function main() {
     enableColab: process.env.ENABLE_COLAB !== 'false',
     enableWebsites: process.env.ENABLE_WEBSITES !== 'false'
   });
-
   try {
     const result = await bootstrap.start();
-    logger.info({ result, msg: 'Heady system is live' });
+    logger.info({
+      result,
+      msg: 'Heady system is live'
+    });
   } catch (err) {
-    logger.error({ err: err.message, msg: 'Fatal: System bootstrap failed' });
+    logger.error({
+      err: err.message,
+      msg: 'Fatal: System bootstrap failed'
+    });
     process.exit(1);
   }
 }
-
-module.exports = { Bootstrap, STARTUP_PHASE, main };
-
+module.exports = {
+  Bootstrap,
+  STARTUP_PHASE,
+  main
+};
 if (require.main === module) {
   main();
 }

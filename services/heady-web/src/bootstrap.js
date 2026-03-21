@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * HeadyWeb — Remote Entry Bootstrap
  *
@@ -19,35 +21,29 @@
 // This dynamic import creates the async boundary required by Module Federation.
 // All application code must be imported from here (never directly from index.js)
 // to ensure shared modules are initialized before they are used.
+import('./mount').then(({
+  mount,
+  unmount
+}) => {
+  // Auto-mount if we find a container in the DOM
+  const container = document.getElementById('heady-root') || document.getElementById('app') || document.body;
+  if (container) {
+    const props = {
+      autoMount: true,
+      domain: typeof window !== 'undefined' ? window.location.hostname : 'unknown',
+      theme: 'dark'
+    };
+    const result = mount(container, props);
 
-import('./mount')
-  .then(({ mount, unmount }) => {
-    // Auto-mount if we find a container in the DOM
-    const container = document.getElementById('heady-root')
-      || document.getElementById('app')
-      || document.body;
-
-    if (container) {
-      const props = {
-        autoMount: true,
-        domain: typeof window !== 'undefined' ? window.location.hostname : 'unknown',
-        theme: 'dark',
+    // Expose mount/unmount API for host shell integration
+    if (typeof window !== 'undefined') {
+      window.__heady_app__ = {
+        mount,
+        unmount: typeof result?.unmount === 'function' ? result.unmount : () => unmount && unmount(container),
+        container
       };
-
-      const result = mount(container, props);
-
-      // Expose mount/unmount API for host shell integration
-      if (typeof window !== 'undefined') {
-        window.__heady_app__ = {
-          mount,
-          unmount: typeof result?.unmount === 'function'
-            ? result.unmount
-            : () => unmount && unmount(container),
-          container,
-        };
-      }
     }
-  })
-  .catch((err) => {
-    console.error('[HeadyBootstrap] Failed to mount application:', err);
-  });
+  }
+}).catch(err => {
+  logger.error('[HeadyBootstrap] Failed to mount application:', err);
+});

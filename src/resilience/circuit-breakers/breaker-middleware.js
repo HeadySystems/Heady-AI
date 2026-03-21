@@ -21,29 +21,50 @@
  */
 'use strict';
 
-const { PHI_TIMING } = require('../../shared/phi-math');
-const { EventEmitter } = require('events');
-const { registry, SERVICE_CONFIGS, EnhancedCircuitBreaker } = require('./external-api-breakers');
-const { modelBridgeBreaker }  = require('./model-bridge-breaker');
-const { postgresBreaker, redisBreaker } = require('./database-breaker');
-const { githubBreaker }       = require('./github-api-breaker');
-const { cloudflareBreaker }   = require('./cloudflare-breaker');
-const { mcpBreaker }          = require('./mcp-breaker');
-const { STATES }              = require('../../circuit-breaker');
+const {
+  PHI_TIMING
+} = require('../../shared/phi-math');
+const {
+  EventEmitter
+} = require('events');
+const {
+  registry,
+  SERVICE_CONFIGS,
+  EnhancedCircuitBreaker
+} = require('./external-api-breakers');
+const {
+  modelBridgeBreaker
+} = require('./model-bridge-breaker');
+const {
+  postgresBreaker,
+  redisBreaker
+} = require('./database-breaker');
+const {
+  githubBreaker
+} = require('./github-api-breaker');
+const {
+  cloudflareBreaker
+} = require('./cloudflare-breaker');
+const {
+  mcpBreaker
+} = require('./mcp-breaker');
+const {
+  STATES
+} = require('../../circuit-breaker');
 
 // ---------------------------------------------------------------------------
 // URL → service mapping
 // hostname substring → service name in registry
 // ---------------------------------------------------------------------------
 const HOST_TO_SERVICE = {
-  'api.openai.com':                        'openai',
-  'api.anthropic.com':                     'anthropic',
-  'generativelanguage.googleapis.com':     'google-genai',
-  'api.groq.com':                          'groq',
-  'api-inference.huggingface.co':          'huggingface',
-  'huggingface.co':                        'huggingface',
-  'api.cloudflare.com':                    'cloudflare-ai',
-  'api.github.com':                        'github-api',
+  'api.openai.com': 'openai',
+  'api.anthropic.com': 'anthropic',
+  'generativelanguage.googleapis.com': 'google-genai',
+  'api.groq.com': 'groq',
+  'api-inference.huggingface.co': 'huggingface',
+  'huggingface.co': 'huggingface',
+  'api.cloudflare.com': 'cloudflare-ai',
+  'api.github.com': 'github-api'
 };
 
 /**
@@ -55,11 +76,13 @@ const HOST_TO_SERVICE = {
  */
 function serviceForUrl(urlString) {
   try {
-    const { hostname } = new URL(urlString);
+    const {
+      hostname
+    } = new URL(urlString);
     for (const [host, service] of Object.entries(HOST_TO_SERVICE)) {
       if (hostname === host || hostname.endsWith(`.${host}`)) return service;
     }
-  } catch { /* malformed URL */ }
+  } catch {/* malformed URL */}
   return null;
 }
 
@@ -69,22 +92,21 @@ function serviceForUrl(urlString) {
 // Call installFetchInterceptor() once at application startup.
 // ---------------------------------------------------------------------------
 let _fetchIntercepted = false;
-
 function installFetchInterceptor() {
   if (_fetchIntercepted || typeof globalThis.fetch !== 'function') return;
   _fetchIntercepted = true;
-
   const originalFetch = globalThis.fetch.bind(globalThis);
-
   globalThis.fetch = async function interceptedFetch(input, init) {
     const urlString = typeof input === 'string' ? input : input?.url || String(input);
-    const service   = serviceForUrl(urlString);
-
-    if (!service) return originalFetch(input, init);   // not a tracked service
+    const service = serviceForUrl(urlString);
+    if (!service) return originalFetch(input, init); // not a tracked service
 
     let breaker;
-    try { breaker = registry.get(service); }
-    catch { return originalFetch(input, init); }        // unregistered — pass through
+    try {
+      breaker = registry.get(service);
+    } catch {
+      return originalFetch(input, init);
+    } // unregistered — pass through
 
     if (breaker.state === STATES.OPEN) {
       const retryAfter = Math.ceil(SERVICE_CONFIGS[service]?.recoveryTimeout / 1000 || 30);
@@ -94,7 +116,6 @@ function installFetchInterceptor() {
       err.retryAfter = retryAfter;
       throw err;
     }
-
     return breaker.execute(() => originalFetch(input, init));
   };
 }
@@ -110,33 +131,26 @@ function circuitStateHeaders() {
       try {
         const breaker = registry.get(service);
         res.setHeader('X-Circuit-Service', service);
-        res.setHeader('X-Circuit-State',   breaker.state);
-      } catch { /* unknown service — skip */ }
+        res.setHeader('X-Circuit-State', breaker.state);
+      } catch {/* unknown service — skip */}
     }
     next();
   };
 }
-
-/**
- * Attempt to infer which external service a request is proxying.
- * Checks headers, query params, and path prefixes.
- */
 function detectServiceFromRequest(req) {
   const target = req.headers['x-proxy-target'] || req.query?.service || '';
   if (target) return serviceForUrl(target) || target;
-
   const path = req.path || '';
-  if (path.startsWith('/api/openai'))        return 'openai';
-  if (path.startsWith('/api/anthropic'))     return 'anthropic';
-  if (path.startsWith('/api/google'))        return 'google-genai';
-  if (path.startsWith('/api/groq'))          return 'groq';
-  if (path.startsWith('/api/huggingface'))   return 'huggingface';
-  if (path.startsWith('/api/cloudflare'))    return 'cloudflare-ai';
-  if (path.startsWith('/api/github'))        return 'github-api';
-  if (path.startsWith('/api/db'))            return 'postgresql-neon';
+  if (path.startsWith('/api/openai')) return 'openai';
+  if (path.startsWith('/api/anthropic')) return 'anthropic';
+  if (path.startsWith('/api/google')) return 'google-genai';
+  if (path.startsWith('/api/groq')) return 'groq';
+  if (path.startsWith('/api/huggingface')) return 'huggingface';
+  if (path.startsWith('/api/cloudflare')) return 'cloudflare-ai';
+  if (path.startsWith('/api/github')) return 'github-api';
+  if (path.startsWith('/api/db')) return 'postgresql-neon';
   if (path.startsWith('/api/redis') || path.startsWith('/api/kv')) return 'redis';
-  if (path.startsWith('/api/mcp'))           return 'mcp-sdk';
-
+  if (path.startsWith('/api/mcp')) return 'mcp-sdk';
   return null;
 }
 
@@ -152,39 +166,34 @@ function circuitGuard(serviceMap = {}) {
    */
   return (req, res, next) => {
     // Explicit map first
-    const service = serviceMap[req.path]
-      || Object.entries(serviceMap).find(([prefix]) => req.path.startsWith(prefix))?.[1]
-      || detectServiceFromRequest(req);
-
+    const service = serviceMap[req.path] || Object.entries(serviceMap).find(([prefix]) => req.path.startsWith(prefix))?.[1] || detectServiceFromRequest(req);
     if (!service) return next();
-
     req._resolvedCircuitService = service;
-
     let breaker;
-    try { breaker = registry.get(service); }
-    catch { return next(); }
-
+    try {
+      breaker = registry.get(service);
+    } catch {
+      return next();
+    }
     if (breaker.state === STATES.OPEN) {
       const recoveryTimeout = SERVICE_CONFIGS[service]?.recoveryTimeout || PHI_TIMING.CYCLE;
-      const retryAfterSecs  = Math.ceil(recoveryTimeout / 1000);
-      res.setHeader('X-Circuit-State',   STATES.OPEN);
+      const retryAfterSecs = Math.ceil(recoveryTimeout / 1000);
+      res.setHeader('X-Circuit-State', STATES.OPEN);
       res.setHeader('X-Circuit-Service', service);
-      res.setHeader('Retry-After',       String(retryAfterSecs));
+      res.setHeader('Retry-After', String(retryAfterSecs));
       return res.status(503).json({
-        error:       'Service Unavailable',
+        error: 'Service Unavailable',
         service,
         circuitState: STATES.OPEN,
-        retryAfter:  retryAfterSecs,
-        message:     `The ${service} circuit is open. Retry after ${retryAfterSecs}s.`,
-        timestamp:   new Date().toISOString(),
+        retryAfter: retryAfterSecs,
+        message: `The ${service} circuit is open. Retry after ${retryAfterSecs}s.`,
+        timestamp: new Date().toISOString()
       });
     }
-
     if (breaker.state === STATES.HALF_OPEN) {
-      res.setHeader('X-Circuit-State',   STATES.HALF_OPEN);
+      res.setHeader('X-Circuit-State', STATES.HALF_OPEN);
       res.setHeader('X-Circuit-Service', service);
     }
-
     next();
   };
 }
@@ -205,48 +214,46 @@ class AlertManager extends EventEmitter {
    * @param {Function} handler  async ({ service, from, to, at, ... }) => void
    */
   addHandler(name, handler) {
-    this._handlers.push({ name, handler });
+    this._handlers.push({
+      name,
+      handler
+    });
     return this;
   }
-
   removeHandler(name) {
     this._handlers = this._handlers.filter(h => h.name !== name);
   }
-
   async dispatch(event) {
     this.emit('alert', event);
-    await Promise.allSettled(
-      this._handlers.map(({ name, handler }) =>
-        handler(event).catch(err =>
-          this.emit('alertError', { handler: name, error: err.message })
-        )
-      )
-    );
+    await Promise.allSettled(this._handlers.map(({
+      name,
+      handler
+    }) => handler(event).catch(err => this.emit('alertError', {
+      handler: name,
+      error: err.message
+    }))));
   }
 
   /** Built-in console handler (active by default in non-production). */
   static consoleHandler() {
-    return async (event) => {
+    return async event => {
       const level = event.to === STATES.OPEN ? 'error' : 'info';
-      console[level](
-        `[CircuitBreaker] ${event.service}: ${event.from} → ${event.to} at ${event.at}`
-      );
+      console[level](`[CircuitBreaker] ${event.service}: ${event.from} → ${event.to} at ${event.at}`);
     };
   }
 }
-
 const alertManager = new AlertManager();
 
 // Wire up alerts for all known breakers
 function _wireAlerts() {
   registry.on('stateChange', event => alertManager.dispatch(event));
-  modelBridgeBreaker.on('stateChange',    event => alertManager.dispatch(event));
-  postgresBreaker.on('stateChange',       event => alertManager.dispatch(event));
-  redisBreaker.on('stateChange',          event => alertManager.dispatch(event));
-  githubBreaker.on('stateChange',         event => alertManager.dispatch(event));
-  cloudflareBreaker.on('stateChange',     event => alertManager.dispatch(event));
-  mcpBreaker.on('stateChange',            event => alertManager.dispatch(event));
-  mcpBreaker.on('toolStateChange',        event => alertManager.dispatch(event));
+  modelBridgeBreaker.on('stateChange', event => alertManager.dispatch(event));
+  postgresBreaker.on('stateChange', event => alertManager.dispatch(event));
+  redisBreaker.on('stateChange', event => alertManager.dispatch(event));
+  githubBreaker.on('stateChange', event => alertManager.dispatch(event));
+  cloudflareBreaker.on('stateChange', event => alertManager.dispatch(event));
+  mcpBreaker.on('stateChange', event => alertManager.dispatch(event));
+  mcpBreaker.on('toolStateChange', event => alertManager.dispatch(event));
 }
 
 // ---------------------------------------------------------------------------
@@ -257,28 +264,25 @@ function aggregatedDashboardHandler() {
   return (_req, res) => {
     const data = {
       timestamp: new Date().toISOString(),
-      external:   registry.dashboard(),
+      external: registry.dashboard(),
       modelBridge: modelBridgeBreaker.snapshot(),
       database: {
         postgres: postgresBreaker.snapshot(),
-        redis:    redisBreaker.snapshot(),
+        redis: redisBreaker.snapshot()
       },
-      github:     githubBreaker.snapshot(),
+      github: githubBreaker.snapshot(),
       cloudflare: cloudflareBreaker.snapshot(),
-      mcp:        mcpBreaker.dashboard(),
+      mcp: mcpBreaker.dashboard()
     };
 
     // Overall health
-    const allBreakers = [
-      ...Object.values(data.external.breakers),
-    ];
+    const allBreakers = [...Object.values(data.external.breakers)];
     const openCount = allBreakers.filter(b => b.state === STATES.OPEN).length;
     data.overall = {
       healthy: openCount === 0,
       openCount,
-      totalTracked: allBreakers.length,
+      totalTracked: allBreakers.length
     };
-
     res.json(data);
   };
 }
@@ -298,10 +302,10 @@ function aggregatedDashboardHandler() {
  */
 function attachBreakers(app, opts = {}) {
   const {
-    installFetch    = true,
-    consoleAlerts   = process.env.NODE_ENV !== 'production',
-    serviceMap      = {},
-    alertHandlers   = [],
+    installFetch = true,
+    consoleAlerts = process.env.NODE_ENV !== 'production',
+    serviceMap = {},
+    alertHandlers = []
   } = opts;
 
   // Patch fetch
@@ -309,9 +313,11 @@ function attachBreakers(app, opts = {}) {
 
   // Wire alerts
   _wireAlerts();
-
   if (consoleAlerts) alertManager.addHandler('console', AlertManager.consoleHandler());
-  for (const { name, handler } of alertHandlers) alertManager.addHandler(name, handler);
+  for (const {
+    name,
+    handler
+  } of alertHandlers) alertManager.addHandler(name, handler);
 
   // Global state-header middleware (runs on every request)
   app.use(circuitStateHeaders());
@@ -321,12 +327,20 @@ function attachBreakers(app, opts = {}) {
 
   // Per-service reset
   app.post('/api/circuit-breakers/:service/reset', (req, res) => {
-    const { service } = req.params;
+    const {
+      service
+    } = req.params;
     try {
       registry.get(service).reset();
-      res.json({ service, reset: true, timestamp: new Date().toISOString() });
+      res.json({
+        service,
+        reset: true,
+        timestamp: new Date().toISOString()
+      });
     } catch (err) {
-      res.status(404).json({ error: err.message });
+      res.status(404).json({
+        error: err.message
+      });
     }
   });
 
@@ -350,5 +364,5 @@ module.exports = {
   AlertManager,
   serviceForUrl,
   detectServiceFromRequest,
-  HOST_TO_SERVICE,
+  HOST_TO_SERVICE
 };

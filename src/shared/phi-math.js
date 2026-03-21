@@ -107,7 +107,8 @@ function fib(n) {
   if (_fibCache.has(n)) return _fibCache.get(n);
 
   // Iterative fill to avoid stack overflow on large n
-  let a = _fibCache.get(1), b = _fibCache.get(2);
+  let a = _fibCache.get(1),
+    b = _fibCache.get(2);
   for (let i = 3; i <= n; i++) {
     if (_fibCache.has(i)) {
       a = _fibCache.get(i - 1);
@@ -126,7 +127,9 @@ function fib(n) {
  * The first 20 Fibonacci numbers (1-indexed, starting from F(1)).
  * @constant {number[]}
  */
-const FIB_SEQUENCE = Array.from({ length: 20 }, (_, i) => fib(i + 1));
+const FIB_SEQUENCE = Array.from({
+  length: 20
+}, (_, i) => fib(i + 1));
 // [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181,6765]
 
 /** @type {Set<number>} Precomputed set for O(1) isFib lookups */
@@ -149,7 +152,7 @@ for (let i = 21; i <= 30; i++) _fibSet.add(fib(i));
 function isFib(n) {
   if (!Number.isFinite(n) || n < 0) return false;
   if (_fibSet.has(n)) return true;
-  const isPerfectSquare = (x) => {
+  const isPerfectSquare = x => {
     const s = Math.round(Math.sqrt(x));
     return s * s === x;
   };
@@ -201,7 +204,7 @@ const CSL_THRESHOLDS = Object.freeze({
   /** Strong alignment ≈ 0.882 */
   HIGH: phiThreshold(3),
   /** Near-certain alignment ≈ 0.927 */
-  CRITICAL: phiThreshold(4),
+  CRITICAL: phiThreshold(4)
 });
 
 /**
@@ -223,40 +226,10 @@ const COHERENCE_DRIFT_THRESHOLD = CSL_THRESHOLDS.MEDIUM;
 // SECTION 4: PHI-BACKOFF TIMING
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Computes a phi-exponential backoff delay for retry attempt n.
- * Formula: min(baseMs × φ^attempt, maxMs)
- *
- * Attempt sequence (baseMs=1000):
- *   0 → 1000ms, 1 → 1618ms, 2 → 2618ms, 3 → 4236ms, 4 → 6854ms, 5 → 11090ms
- *
- * @param {number} attempt  - Zero-based attempt number
- * @param {number} [baseMs=1000] - Base delay in milliseconds
- * @param {number} [maxMs=60000] - Maximum delay cap in milliseconds
- * @returns {number} Delay in milliseconds
- *
- * @example
- * phiBackoff(0)  // 1000
- * phiBackoff(3)  // 4236
- * phiBackoff(10) // 60000 (capped)
- */
 function phiBackoff(attempt, baseMs = 1000, maxMs = 60000) {
   const delay = baseMs * Math.pow(PHI, attempt);
   return Math.min(delay, maxMs);
 }
-
-/**
- * Phi-backoff with ±ψ² jitter to prevent thundering herd.
- * Jitter factor: ±PSI² ≈ ±0.382 (38.2% variance)
- *
- * @param {number} attempt  - Zero-based attempt number
- * @param {number} [baseMs=1000] - Base delay in milliseconds
- * @param {number} [maxMs=60000] - Maximum delay cap in milliseconds
- * @returns {number} Jittered delay in milliseconds
- *
- * @example
- * phiBackoffWithJitter(2) // ~2618ms ± 38.2%
- */
 function phiBackoffWithJitter(attempt, baseMs = 1000, maxMs = 60000) {
   const base = phiBackoff(attempt, baseMs, maxMs);
   // Jitter range: ±PSI² = ±0.3819...  mapped to [1 - PSI², 1 + PSI²]
@@ -287,7 +260,9 @@ function phiFusionWeights(n) {
   if (n === 1) return [1.0];
 
   // Raw phi-geometric series: PSI^0, PSI^1, ..., PSI^(n-1)
-  const raw = Array.from({ length: n }, (_, i) => Math.pow(PSI, i));
+  const raw = Array.from({
+    length: n
+  }, (_, i) => Math.pow(PSI, i));
   const total = raw.reduce((sum, w) => sum + w, 0);
   return raw.map(w => w / total);
 }
@@ -321,7 +296,11 @@ function phiPriorityScore(factors) {
  */
 const EVICTION_WEIGHTS = Object.freeze((() => {
   const [w1, w2, w3] = phiFusionWeights(3);
-  return { importance: w1, recency: w2, relevance: w3 };
+  return {
+    importance: w1,
+    recency: w2,
+    relevance: w3
+  };
 })());
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -342,10 +321,10 @@ const EVICTION_WEIGHTS = Object.freeze((() => {
  * @constant {Object.<string, [number, number]>}
  */
 const PRESSURE_LEVELS = Object.freeze({
-  NOMINAL:  [0,            PSI * PSI],
-  ELEVATED: [PSI * PSI,    PSI],
-  HIGH:     [PSI,          1 - PSI * PSI * PSI],
-  CRITICAL: [1 - PSI * PSI * PSI * PSI, 1.0],
+  NOMINAL: [0, PSI * PSI],
+  ELEVATED: [PSI * PSI, PSI],
+  HIGH: [PSI, 1 - PSI * PSI * PSI],
+  CRITICAL: [1 - PSI * PSI * PSI * PSI, 1.0]
 });
 
 /**
@@ -365,11 +344,11 @@ const PRESSURE_LEVELS = Object.freeze({
  * @constant {{ warning: number, caution: number, critical: number, exceeded: number, hard_max: number }}
  */
 const ALERT_THRESHOLDS = Object.freeze({
-  warning:  PSI,
-  caution:  1 - PSI * PSI * PSI,
+  warning: PSI,
+  caution: 1 - PSI * PSI * PSI,
   critical: 1 - PSI * PSI * PSI * PSI,
   exceeded: 1 - PSI * PSI * PSI * PSI * PSI,
-  hard_max: 1.0,
+  hard_max: 1.0
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -393,10 +372,12 @@ const ALERT_THRESHOLDS = Object.freeze({
  */
 function phiTokenBudgets(base = 8192) {
   return {
-    working:   Math.round(base),
-    session:   Math.round(base * PHI_SQ),           // base × φ²
-    memory:    Math.round(base * PHI_SQ * PHI_SQ),  // base × φ⁴
-    artifacts: Math.round(base * Math.pow(PHI, 6)), // base × φ⁶
+    working: Math.round(base),
+    session: Math.round(base * PHI_SQ),
+    // base × φ²
+    memory: Math.round(base * PHI_SQ * PHI_SQ),
+    // base × φ⁴
+    artifacts: Math.round(base * Math.pow(PHI, 6)) // base × φ⁶
   };
 }
 
@@ -447,25 +428,6 @@ function phiMultiSplit(whole, n) {
 function _sigmoid(x) {
   return 1 / (1 + Math.exp(-x));
 }
-
-/**
- * CSL sigmoid gate — smoothly gates a value based on cosine similarity.
- * Output = value × σ((cosScore - τ) / temperature)
- *
- * When cosScore >> τ: gate ≈ 1.0 (fully open)
- * When cosScore << τ: gate ≈ 0.0 (fully closed)
- * When cosScore == τ: gate = 0.5 (half open)
- *
- * @param {number} value     - The value to gate (any real)
- * @param {number} cosScore  - Cosine similarity score in [-1, 1]
- * @param {number} [tau=CSL_THRESHOLDS.MEDIUM] - Gate threshold (default MEDIUM ≈ 0.809)
- * @param {number} [temp=PSI] - Temperature controls sharpness (lower = sharper)
- * @returns {number} Gated value
- *
- * @example
- * cslGate(1.0, 0.9, CSL_THRESHOLDS.HIGH) // ≈ 0.86 (near-open above HIGH)
- * cslGate(1.0, 0.5, CSL_THRESHOLDS.HIGH) // ≈ 0.09 (near-closed below HIGH)
- */
 function cslGate(value, cosScore, tau = CSL_THRESHOLDS.MEDIUM, temp = PSI) {
   const gate = _sigmoid((cosScore - tau) / temp);
   return value * gate;
@@ -489,21 +451,6 @@ function cslBlend(weightHigh, weightLow, cosScore, tau = CSL_THRESHOLDS.MEDIUM) 
   const alpha = _sigmoid((cosScore - tau) / PSI);
   return alpha * weightHigh + (1 - alpha) * weightLow;
 }
-
-/**
- * Computes an entropy-responsive softmax temperature.
- * As entropy rises toward maxEntropy, temperature increases (softer distributions).
- * Formula: PSI + (entropy / maxEntropy) × (1 - PSI)
- *
- * @param {number} entropy    - Current entropy (0 to maxEntropy)
- * @param {number} maxEntropy - Maximum possible entropy
- * @returns {number} Temperature in [PSI, 1.0]
- *
- * @example
- * adaptiveTemperature(0, 10)   // PSI ≈ 0.618 (minimal entropy = sharp)
- * adaptiveTemperature(10, 10)  // 1.0 (maximum entropy = flat)
- * adaptiveTemperature(5, 10)   // ~0.809 (mid entropy = moderate)
- */
 function adaptiveTemperature(entropy, maxEntropy) {
   if (maxEntropy <= 0) return PSI;
   const ratio = Math.min(1, Math.max(0, entropy / maxEntropy));
@@ -556,19 +503,31 @@ function phiMs(n) {
  * @constant {Object.<string, number>}
  */
 const PHI_TIMING = Object.freeze({
-  TICK:     phiMs(0),   // φ⁰ × 1s  =   1000ms
-  PULSE:    phiMs(1),   // φ¹ × 1s  =   1618ms
-  BEAT:     phiMs(2),   // φ² × 1s  =   2618ms
-  BREATH:   phiMs(3),   // φ³ × 1s  =   4236ms
-  WAVE:     phiMs(4),   // φ⁴ × 1s  =   6854ms
-  SURGE:    phiMs(5),   // φ⁵ × 1s  =  11090ms
-  FLOW:     phiMs(6),   // φ⁶ × 1s  =  17944ms
-  CYCLE:    phiMs(7),   // φ⁷ × 1s  =  29034ms
-  TIDE:     phiMs(8),   // φ⁸ × 1s  =  46979ms
-  EPOCH:    phiMs(9),   // φ⁹ × 1s  =  76013ms
-  ERA:      phiMs(10),  // φ¹⁰ × 1s = 122992ms
-  SEASON:   phiMs(11),  // φ¹¹ × 1s = 199005ms
-  HORIZON:  phiMs(12),  // φ¹² × 1s = 321997ms
+  TICK: phiMs(0),
+  // φ⁰ × 1s  =   1000ms
+  PULSE: phiMs(1),
+  // φ¹ × 1s  =   1618ms
+  BEAT: phiMs(2),
+  // φ² × 1s  =   2618ms
+  BREATH: phiMs(3),
+  // φ³ × 1s  =   4236ms
+  WAVE: phiMs(4),
+  // φ⁴ × 1s  =   6854ms
+  SURGE: phiMs(5),
+  // φ⁵ × 1s  =  11090ms
+  FLOW: phiMs(6),
+  // φ⁶ × 1s  =  17944ms
+  CYCLE: phiMs(7),
+  // φ⁷ × 1s  =  29034ms
+  TIDE: phiMs(8),
+  // φ⁸ × 1s  =  46979ms
+  EPOCH: phiMs(9),
+  // φ⁹ × 1s  =  76013ms
+  ERA: phiMs(10),
+  // φ¹⁰ × 1s = 122992ms
+  SEASON: phiMs(11),
+  // φ¹¹ × 1s = 199005ms
+  HORIZON: phiMs(12) // φ¹² × 1s = 321997ms
 });
 
 /**
@@ -592,7 +551,7 @@ const PHI_TIMING = Object.freeze({
  */
 function cslAdaptiveInterval(baseTier, pressure, contractFactor = PSI, expandFactor = PHI) {
   const contracted = Math.round(baseTier * contractFactor);
-  const expanded   = Math.round(baseTier * expandFactor);
+  const expanded = Math.round(baseTier * expandFactor);
   return Math.round(cslBlend(contracted, expanded, pressure, CSL_THRESHOLDS.MEDIUM));
 }
 
@@ -609,11 +568,11 @@ function cslAdaptiveInterval(baseTier, pressure, contractFactor = PSI, expandFac
  */
 function phiTimeouts(baseMs = 5000) {
   return {
-    fast:     Math.round(baseMs * PSI * PSI),
-    medium:   Math.round(baseMs),
-    slow:     Math.round(baseMs * PHI),
-    patient:  Math.round(baseMs * PHI_SQ),
-    marathon: Math.round(baseMs * PHI_CUBE),
+    fast: Math.round(baseMs * PSI * PSI),
+    medium: Math.round(baseMs),
+    slow: Math.round(baseMs * PHI),
+    patient: Math.round(baseMs * PHI_SQ),
+    marathon: Math.round(baseMs * PHI_CUBE)
   };
 }
 
@@ -632,11 +591,11 @@ function phiIntervals(baseMs) {
   const base = baseMs ?? PHI_TIMING.CYCLE;
   return {
     heartbeat: Math.round(base * Math.pow(PSI, 3)),
-    health:    Math.round(base),
-    sync:      Math.round(base * PHI),
-    audit:     Math.round(base * PHI_SQ),
-    gc:        Math.round(base * PHI_CUBE),
-    deepScan:  Math.round(base * Math.pow(PHI, 4)),
+    health: Math.round(base),
+    sync: Math.round(base * PHI),
+    audit: Math.round(base * PHI_SQ),
+    gc: Math.round(base * PHI_CUBE),
+    deepScan: Math.round(base * Math.pow(PHI, 4))
   };
 }
 
@@ -657,29 +616,16 @@ function phiIntervals(baseMs) {
  * Any numeric config value near one of these is considered phi-compliant.
  * @type {number[]}
  */
-const _PHI_REFERENCE_VALUES = [
-  PHI, PSI, PHI_SQ, PHI_CUBE,
-  PSI * PSI, PSI * PSI * PSI, PSI * PSI * PSI * PSI,
-  1 - PSI, 1 - PSI * PSI, 1 - PSI * PSI * PSI, 1 - PSI * PSI * PSI * PSI,
-  GOLDEN_ANGLE,
-  CSL_THRESHOLDS.MINIMUM, CSL_THRESHOLDS.LOW, CSL_THRESHOLDS.MEDIUM,
-  CSL_THRESHOLDS.HIGH, CSL_THRESHOLDS.CRITICAL, DEDUP_THRESHOLD,
-  ALERT_THRESHOLDS.warning, ALERT_THRESHOLDS.caution,
-  ALERT_THRESHOLDS.critical, ALERT_THRESHOLDS.exceeded,
-  EVICTION_WEIGHTS.importance, EVICTION_WEIGHTS.recency, EVICTION_WEIGHTS.relevance,
-  ...FIB_SEQUENCE,
-  // Common phi-derived timing multiples (phi-backoff: 1, 1.618, 2.618, 4.236, 6.854...)
-  ...Array.from({ length: 8 }, (_, i) => Math.pow(PHI, i)),
-  // PHI_TIMING tier values (φⁿ × 1000)
-  ...Object.values(PHI_TIMING),
-];
+const _PHI_REFERENCE_VALUES = [PHI, PSI, PHI_SQ, PHI_CUBE, PSI * PSI, PSI * PSI * PSI, PSI * PSI * PSI * PSI, 1 - PSI, 1 - PSI * PSI, 1 - PSI * PSI * PSI, 1 - PSI * PSI * PSI * PSI, GOLDEN_ANGLE, CSL_THRESHOLDS.MINIMUM, CSL_THRESHOLDS.LOW, CSL_THRESHOLDS.MEDIUM, CSL_THRESHOLDS.HIGH, CSL_THRESHOLDS.CRITICAL, DEDUP_THRESHOLD, ALERT_THRESHOLDS.warning, ALERT_THRESHOLDS.caution, ALERT_THRESHOLDS.critical, ALERT_THRESHOLDS.exceeded, EVICTION_WEIGHTS.importance, EVICTION_WEIGHTS.recency, EVICTION_WEIGHTS.relevance, ...FIB_SEQUENCE,
+// Common phi-derived timing multiples (phi-backoff: 1, 1.618, 2.618, 4.236, 6.854...)
+...Array.from({
+  length: 8
+}, (_, i) => Math.pow(PHI, i)),
+// PHI_TIMING tier values (φⁿ × 1000)
+...Object.values(PHI_TIMING)];
 
 /** Magic number patterns to flag — common arbitrary constants */
-const _MAGIC_ROUND_NUMBERS = [
-  0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99,
-  100, 500, 1000, 5000, 10000, 30000, 60000,
-  0.1, 0.2, 0.3, 0.4,
-];
+const _MAGIC_ROUND_NUMBERS = [0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99, 100, 500, 1000, 5000, 10000, 30000, 60000, 0.1, 0.2, 0.3, 0.4];
 
 /**
  * Checks if a value is approximately phi-compliant (within tolerance).
@@ -710,7 +656,6 @@ function validatePhiCompliance(config) {
   const violations = [];
   let checked = 0;
   let flagged = 0;
-
   function _scan(obj, path) {
     if (obj === null || obj === undefined) return;
     if (typeof obj === 'number') {
@@ -739,11 +684,14 @@ function validatePhiCompliance(config) {
       }
     }
   }
-
   _scan(config, '');
-
-  const score = checked === 0 ? 100 : Math.round(((checked - flagged) / checked) * 100);
-  return { score, violations, checked, flagged };
+  const score = checked === 0 ? 100 : Math.round((checked - flagged) / checked * 100);
+  return {
+    score,
+    violations,
+    checked,
+    flagged
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -868,11 +816,13 @@ function cosineSimilarity(a, b) {
   if (a.length !== b.length) {
     throw new Error(`cosineSimilarity: dimension mismatch (${a.length} vs ${b.length})`);
   }
-  let dotSum = 0, normA = 0, normB = 0;
+  let dotSum = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < a.length; i++) {
     dotSum += a[i] * b[i];
-    normA  += a[i] * a[i];
-    normB  += b[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
   }
   const denom = Math.sqrt(normA) * Math.sqrt(normB);
   return denom === 0 ? 0 : dotSum / denom;
@@ -890,12 +840,12 @@ function cosineSimilarity(a, b) {
 function placeholderVector(label, dims = VECTOR_DIMENSIONS) {
   let seed = 0;
   for (let i = 0; i < label.length; i++) {
-    seed = (seed * 31 + label.charCodeAt(i)) >>> 0;
+    seed = seed * 31 + label.charCodeAt(i) >>> 0;
   }
   const raw = [];
   for (let i = 0; i < dims; i++) {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    raw.push((seed / 0xFFFFFFFF) * 2 - 1);
+    seed = seed * 1664525 + 1013904223 >>> 0;
+    raw.push(seed / 0xFFFFFFFF * 2 - 1);
   }
   return normalize(raw);
 }
@@ -918,11 +868,15 @@ function placeholderVector(label, dims = VECTOR_DIMENSIONS) {
  * @constant {{ HOT: number, WARM: number, COLD: number, RESERVE: number, GOVERNANCE: number }}
  */
 const POOL_RATIOS = Object.freeze({
-  HOT:        fib(9)  / fib(11), // 34/89 ≈ 0.382
-  WARM:       fib(8)  / fib(11), // 21/89 ≈ 0.236
-  COLD:       fib(7)  / fib(11), // 13/89 ≈ 0.146
-  RESERVE:    fib(6)  / fib(11), // 8/89  ≈ 0.090
-  GOVERNANCE: fib(5)  / fib(11), // 5/89  ≈ 0.056
+  HOT: fib(9) / fib(11),
+  // 34/89 ≈ 0.382
+  WARM: fib(8) / fib(11),
+  // 21/89 ≈ 0.236
+  COLD: fib(7) / fib(11),
+  // 13/89 ≈ 0.146
+  RESERVE: fib(6) / fib(11),
+  // 8/89  ≈ 0.090
+  GOVERNANCE: fib(5) / fib(11) // 5/89  ≈ 0.056
 });
 
 /**
@@ -932,10 +886,10 @@ const POOL_RATIOS = Object.freeze({
  * @returns {'NOMINAL'|'ELEVATED'|'HIGH'|'CRITICAL'}
  */
 function getPressureLevel(pressure) {
-  if (pressure < PSI * PSI)             return 'NOMINAL';   // < ψ² ≈ 0.382
-  if (pressure < PSI)                   return 'ELEVATED';  // < ψ  ≈ 0.618
-  if (pressure < 1 - PSI * PSI * PSI)   return 'HIGH';      // < 1-ψ³ ≈ 0.854
-  return 'CRITICAL';                                         // ≥ 1-ψ⁴ ≈ 0.910
+  if (pressure < PSI * PSI) return 'NOMINAL'; // < ψ² ≈ 0.382
+  if (pressure < PSI) return 'ELEVATED'; // < ψ  ≈ 0.618
+  if (pressure < 1 - PSI * PSI * PSI) return 'HIGH'; // < 1-ψ³ ≈ 0.854
+  return 'CRITICAL'; // ≥ 1-ψ⁴ ≈ 0.910
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -954,31 +908,69 @@ function getPressureLevel(pressure) {
  */
 function sacredGeometryPosition(ring, index, total) {
   const radius = Math.pow(PHI, ring + 1); // φ, φ², φ³, φ⁴
-  const offset = (ring * Math.PI) / fib(5); // fib(5)=5
-  const angle  = total > 1
-    ? (2 * Math.PI * index) / total + offset
-    : offset;
+  const offset = ring * Math.PI / fib(5); // fib(5)=5
+  const angle = total > 1 ? 2 * Math.PI * index / total + offset : offset;
   return {
     x: parseFloat((Math.cos(angle) * radius).toFixed(6)),
     y: parseFloat((Math.sin(angle) * radius).toFixed(6)),
-    ring,
+    ring
   };
 }
 
 // ─── CommonJS Exports ─────────────────────────────────────────────────────────
 module.exports = {
-  PHI, PSI, PHI_SQ, PSI2, PSI3, PSI4, PHI_CUBE, GOLDEN_ANGLE,
-  fib, FIB_SEQUENCE, isFib, phiThreshold,
-  CSL_THRESHOLDS, DEDUP_THRESHOLD, COHERENCE_DRIFT_THRESHOLD,
-  phiBackoff, phiBackoffWithJitter, phiFusionWeights, phiPriorityScore,
-  EVICTION_WEIGHTS, PRESSURE_LEVELS, ALERT_THRESHOLDS,
-  phiTokenBudgets, phiResourceWeights, phiMultiSplit,
-  cslGate, cslBlend, adaptiveTemperature,
-  phiMs, PHI_TIMING, cslAdaptiveInterval,
-  phiTimeouts, phiIntervals,
-  _PHI_REFERENCE_VALUES, _MAGIC_ROUND_NUMBERS, _isPhiDerived, validatePhiCompliance,
-  TASK_TIMEOUT_MS, CYCLE_INTERVAL_MS, MAX_TASK_RETRIES, MAX_CYCLE_FAILURES,
-  CATEGORY_COUNT, TASKS_PER_CATEGORY, PHI_MATH_VERSION, PHI_MATH_CHECKSUM,
-  VECTOR_DIMENSIONS, dot, magnitude, normalize, cosineSimilarity, placeholderVector,
-  POOL_RATIOS, getPressureLevel, sacredGeometryPosition,
+  PHI,
+  PSI,
+  PHI_SQ,
+  PSI2,
+  PSI3,
+  PSI4,
+  PHI_CUBE,
+  GOLDEN_ANGLE,
+  fib,
+  FIB_SEQUENCE,
+  isFib,
+  phiThreshold,
+  CSL_THRESHOLDS,
+  DEDUP_THRESHOLD,
+  COHERENCE_DRIFT_THRESHOLD,
+  phiBackoff,
+  phiBackoffWithJitter,
+  phiFusionWeights,
+  phiPriorityScore,
+  EVICTION_WEIGHTS,
+  PRESSURE_LEVELS,
+  ALERT_THRESHOLDS,
+  phiTokenBudgets,
+  phiResourceWeights,
+  phiMultiSplit,
+  cslGate,
+  cslBlend,
+  adaptiveTemperature,
+  phiMs,
+  PHI_TIMING,
+  cslAdaptiveInterval,
+  phiTimeouts,
+  phiIntervals,
+  _PHI_REFERENCE_VALUES,
+  _MAGIC_ROUND_NUMBERS,
+  _isPhiDerived,
+  validatePhiCompliance,
+  TASK_TIMEOUT_MS,
+  CYCLE_INTERVAL_MS,
+  MAX_TASK_RETRIES,
+  MAX_CYCLE_FAILURES,
+  CATEGORY_COUNT,
+  TASKS_PER_CATEGORY,
+  PHI_MATH_VERSION,
+  PHI_MATH_CHECKSUM,
+  VECTOR_DIMENSIONS,
+  dot,
+  magnitude,
+  normalize,
+  cosineSimilarity,
+  placeholderVector,
+  POOL_RATIOS,
+  getPressureLevel,
+  sacredGeometryPosition
 };

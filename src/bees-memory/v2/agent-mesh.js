@@ -1,7 +1,9 @@
 'use strict';
-const logger = console;
 
-const { PHI_TIMING } = require('../../shared/phi-math');
+const logger = console;
+const {
+  PHI_TIMING
+} = require('../../shared/phi-math');
 /**
  * @file agent-mesh.js
  * @description Agent Mesh Network — inter-agent pub/sub, broadcast, and topology-aware routing.
@@ -41,28 +43,24 @@ const EventEmitter = require('events');
 // ---------------------------------------------------------------------------
 
 /** @type {string[]} All recognised agent IDs in the Heady™ platform */
-const KNOWN_AGENTS = [
-  'JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS',
-  'PYTHIA', 'BRIDGE', 'MUSE', 'SENTINEL', 'NOVA',
-  'JANITOR', 'SOPHIA', 'CIPHER', 'LENS',
-];
+const KNOWN_AGENTS = ['JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS', 'PYTHIA', 'BRIDGE', 'MUSE', 'SENTINEL', 'NOVA', 'JANITOR', 'SOPHIA', 'CIPHER', 'LENS'];
 
 /** Default capability catalogue inferred from agent names and analysis */
 const DEFAULT_CAPABILITIES = {
-  JULES:    ['code', 'review', 'refactor', 'test'],
-  BUILDER:  ['build', 'compile', 'deploy', 'ci'],
+  JULES: ['code', 'review', 'refactor', 'test'],
+  BUILDER: ['build', 'compile', 'deploy', 'ci'],
   OBSERVER: ['monitor', 'observe', 'trace', 'log'],
-  MURPHY:   ['chaos', 'test', 'fault-injection', 'resilience'],
-  ATLAS:    ['map', 'topology', 'graph', 'discovery'],
-  PYTHIA:   ['forecast', 'predict', 'analytics', 'insight'],
-  BRIDGE:   ['integrate', 'transform', 'bridge', 'etl'],
-  MUSE:     ['create', 'design', 'content', 'generate'],
+  MURPHY: ['chaos', 'test', 'fault-injection', 'resilience'],
+  ATLAS: ['map', 'topology', 'graph', 'discovery'],
+  PYTHIA: ['forecast', 'predict', 'analytics', 'insight'],
+  BRIDGE: ['integrate', 'transform', 'bridge', 'etl'],
+  MUSE: ['create', 'design', 'content', 'generate'],
   SENTINEL: ['alert', 'security', 'policy', 'audit'],
-  NOVA:     ['experiment', 'ab-test', 'feature-flag', 'rollout'],
-  JANITOR:  ['cleanup', 'gc', 'archive', 'purge'],
-  SOPHIA:   ['learn', 'adapt', 'train', 'improve'],
-  CIPHER:   ['encrypt', 'decrypt', 'secret', 'auth'],
-  LENS:     ['search', 'query', 'retrieve', 'index'],
+  NOVA: ['experiment', 'ab-test', 'feature-flag', 'rollout'],
+  JANITOR: ['cleanup', 'gc', 'archive', 'purge'],
+  SOPHIA: ['learn', 'adapt', 'train', 'improve'],
+  CIPHER: ['encrypt', 'decrypt', 'secret', 'auth'],
+  LENS: ['search', 'query', 'retrieve', 'index']
 };
 
 // ---------------------------------------------------------------------------
@@ -80,33 +78,41 @@ function dijkstra(graph, src, dst) {
   const dist = new Map();
   const prev = new Map();
   const visited = new Set();
-  const queue = [{ id: src, d: 0 }]; // min-heap approximated with sort
+  const queue = [{
+    id: src,
+    d: 0
+  }]; // min-heap approximated with sort
 
   for (const node of graph.keys()) dist.set(node, Infinity);
   dist.set(src, 0);
-
   while (queue.length > 0) {
     queue.sort((a, b) => a.d - b.d);
-    const { id } = queue.shift();
+    const {
+      id
+    } = queue.shift();
     if (visited.has(id)) continue;
     visited.add(id);
     if (id === dst) break;
-
     const neighbours = graph.get(id) || new Map();
     for (const [nbr, w] of neighbours) {
       const alt = dist.get(id) + w;
       if (alt < (dist.get(nbr) ?? Infinity)) {
         dist.set(nbr, alt);
         prev.set(nbr, id);
-        queue.push({ id: nbr, d: alt });
+        queue.push({
+          id: nbr,
+          d: alt
+        });
       }
     }
   }
-
   if (!prev.has(dst) && src !== dst) return []; // no path
   const path = [];
   let cur = dst;
-  while (cur !== undefined) { path.unshift(cur); cur = prev.get(cur); }
+  while (cur !== undefined) {
+    path.unshift(cur);
+    cur = prev.get(cur);
+  }
   return path;
 }
 
@@ -141,7 +147,10 @@ class TopologyGraph {
    */
   addNode(agentId, meta = {}) {
     if (!this._edges.has(agentId)) this._edges.set(agentId, new Map());
-    this._nodes.set(agentId, { ...meta, registeredAt: Date.now() });
+    this._nodes.set(agentId, {
+      ...meta,
+      registeredAt: Date.now()
+    });
   }
 
   /**
@@ -202,7 +211,11 @@ class TopologyGraph {
     for (const [from, nbrs] of this._edges) {
       edges[from] = Object.fromEntries(nbrs);
     }
-    return { nodes, edges, snapshotAt: new Date().toISOString() };
+    return {
+      nodes,
+      edges,
+      snapshotAt: new Date().toISOString()
+    };
   }
 }
 
@@ -244,7 +257,10 @@ class CapabilityIndex {
     const caps = this._agentCaps.get(agentId) || [];
     for (const cap of caps) {
       const s = this._index.get(cap);
-      if (s) { s.delete(agentId); if (s.size === 0) this._index.delete(cap); }
+      if (s) {
+        s.delete(agentId);
+        if (s.size === 0) this._index.delete(cap);
+      }
     }
     this._agentCaps.delete(agentId);
   }
@@ -268,15 +284,16 @@ class CapabilityIndex {
   fuzzyMatch(query, threshold = 0.3) {
     const qTokens = new Set(query.toLowerCase().split(/[\s\-_.]+/).filter(Boolean));
     const results = [];
-
     for (const [agentId, caps] of this._agentCaps) {
       const aTokens = new Set(caps.flatMap(c => c.split(/[\s\-_.]+/).filter(Boolean)));
       const intersection = [...qTokens].filter(t => aTokens.has(t)).length;
       const union = new Set([...qTokens, ...aTokens]).size;
       const score = union > 0 ? intersection / union : 0;
-      if (score >= threshold) results.push({ agentId, score });
+      if (score >= threshold) results.push({
+        agentId,
+        score
+      });
     }
-
     return results.sort((a, b) => b.score - a.score);
   }
 }
@@ -285,28 +302,18 @@ class CapabilityIndex {
 // MessageBus
 // ---------------------------------------------------------------------------
 
-/** @typedef {{ id: string, from: string, topic: string, payload: any, ts: number, ttl: number, attempt: number }} MeshMessage */
-
 /**
  * Async delivery engine with acknowledgement tracking, retry, and a dead-letter queue (DLQ).
  * Dedup window prevents the same message from being delivered twice within `dedupWindowMs`.
  */
 class MessageBus extends EventEmitter {
-  /**
-   * @param {object} [opts]
-   * @param {number} [opts.maxRetries=3]         max delivery attempts per subscriber
-   * @param {number} [opts.retryBaseMs=200]      base backoff delay (doubles each retry)
-   * @param {number} [opts.dedupWindowMs=5000]   dedup window in ms
-   * @param {number} [opts.defaultTtlMs=PHI_TIMING.CYCLE]   message TTL after which it is dropped
-   * @param {number} [opts.dlqMaxSize=500]        max dead-letter entries retained
-   */
   constructor(opts = {}) {
     super();
-    this._maxRetries    = opts.maxRetries    ?? 3;
-    this._retryBaseMs   = opts.retryBaseMs   ?? 200;
+    this._maxRetries = opts.maxRetries ?? 3;
+    this._retryBaseMs = opts.retryBaseMs ?? 200;
     this._dedupWindowMs = opts.dedupWindowMs ?? 5_000;
-    this._defaultTtlMs  = opts.defaultTtlMs  ?? PHI_TIMING.CYCLE;
-    this._dlqMaxSize    = opts.dlqMaxSize    ?? 500;
+    this._defaultTtlMs = opts.defaultTtlMs ?? PHI_TIMING.CYCLE;
+    this._dlqMaxSize = opts.dlqMaxSize ?? 500;
 
     /** @type {Map<string, number>} msgId → deliveredAt for dedup */
     this._delivered = new Map();
@@ -339,13 +346,20 @@ class MessageBus extends EventEmitter {
       try {
         await handler(msg);
         this._delivered.set(msg.id, Date.now());
-        this.emit('delivered', { msgId: msg.id, attempt, agentHandler: handler.name });
+        this.emit('delivered', {
+          msgId: msg.id,
+          attempt,
+          agentHandler: handler.name
+        });
         return true;
       } catch (err) {
         attempt++;
         if (attempt > this._maxRetries) {
           this._toDlq(msg, err.message);
-          this.emit('dlq', { msgId: msg.id, reason: err.message });
+          this.emit('dlq', {
+            msgId: msg.id,
+            reason: err.message
+          });
           return false;
         }
         const delay = this._retryBaseMs * Math.pow(2, attempt - 1);
@@ -357,7 +371,11 @@ class MessageBus extends EventEmitter {
 
   /** @private */
   _toDlq(msg, reason) {
-    this._dlq.push({ ...msg, dlqReason: reason, dlqAt: Date.now() });
+    this._dlq.push({
+      ...msg,
+      dlqReason: reason,
+      dlqAt: Date.now()
+    });
     if (this._dlq.length > this._dlqMaxSize) this._dlq.shift();
   }
 
@@ -403,14 +421,24 @@ class MeshMetrics {
   /** @private */
   _ensure(agentId) {
     if (!this._agents.has(agentId)) {
-      this._agents.set(agentId, { sent: 0, recv: 0, errors: 0, latencies: [] });
+      this._agents.set(agentId, {
+        sent: 0,
+        recv: 0,
+        errors: 0,
+        latencies: []
+      });
     }
     return this._agents.get(agentId);
   }
-
-  recordSend(agentId) { this._ensure(agentId).sent++; }
-  recordRecv(agentId) { this._ensure(agentId).recv++; }
-  recordError(agentId) { this._ensure(agentId).errors++; }
+  recordSend(agentId) {
+    this._ensure(agentId).sent++;
+  }
+  recordRecv(agentId) {
+    this._ensure(agentId).recv++;
+  }
+  recordError(agentId) {
+    this._ensure(agentId).errors++;
+  }
 
   /**
    * Record an observed end-to-end latency for an agent.
@@ -434,7 +462,7 @@ class MeshMetrics {
     const m = this._agents.get(agentId);
     if (!m || m.latencies.length === 0) return null;
     const sorted = [...m.latencies].sort((a, b) => a - b);
-    const idx = Math.ceil((pct / 100) * sorted.length) - 1;
+    const idx = Math.ceil(pct / 100 * sorted.length) - 1;
     return sorted[Math.max(0, idx)];
   }
 
@@ -451,7 +479,7 @@ class MeshMetrics {
         errors: m.errors,
         p50Latency: this.percentile(id, 50),
         p95Latency: this.percentile(id, 95),
-        sampleCount: m.latencies.length,
+        sampleCount: m.latencies.length
       };
     }
     return out;
@@ -484,7 +512,10 @@ class SubscriptionRegistry {
     // Prevent duplicate subscriptions for same agent+topic
     const existing = this._subs.get(topic);
     if (!existing.find(s => s.agentId === agentId)) {
-      existing.push({ agentId, handler });
+      existing.push({
+        agentId,
+        handler
+      });
     }
   }
 
@@ -496,8 +527,7 @@ class SubscriptionRegistry {
     const subs = this._subs.get(topic);
     if (!subs) return;
     const filtered = subs.filter(s => s.agentId !== agentId);
-    if (filtered.length === 0) this._subs.delete(topic);
-    else this._subs.set(topic, filtered);
+    if (filtered.length === 0) this._subs.delete(topic);else this._subs.set(topic, filtered);
   }
 
   /**
@@ -507,8 +537,7 @@ class SubscriptionRegistry {
   unsubscribeAll(agentId) {
     for (const [topic, subs] of this._subs) {
       const filtered = subs.filter(s => s.agentId !== agentId);
-      if (filtered.length === 0) this._subs.delete(topic);
-      else this._subs.set(topic, filtered);
+      if (filtered.length === 0) this._subs.delete(topic);else this._subs.set(topic, filtered);
     }
   }
 
@@ -536,14 +565,11 @@ class SubscriptionRegistry {
     if (pattern === topic) return true;
     if (pattern === '**') return true;
     // Convert pattern to regex
-    const re = '^' + pattern
-      .split('.')
-      .map(seg => {
-        if (seg === '**') return '(?:[^.]+\\.)*[^.]+';  // one or more segments
-        if (seg === '*')  return '[^.]+';                 // exactly one segment
-        return seg.replace(/[$()+?[\\\]^{|}]/g, '\\$&'); // escape regex chars
-      })
-      .join('\\.') + '$';
+    const re = '^' + pattern.split('.').map(seg => {
+      if (seg === '**') return '(?:[^.]+\\.)*[^.]+'; // one or more segments
+      if (seg === '*') return '[^.]+'; // exactly one segment
+      return seg.replace(/[$()+?[\\\]^{|}]/g, '\\$&'); // escape regex chars
+    }).join('\\.') + '$';
     return new RegExp(re).test(topic);
   }
 }
@@ -586,22 +612,23 @@ class AgentMesh extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-    this._topology    = new TopologyGraph();
+    this._topology = new TopologyGraph();
     this._capabilities = new CapabilityIndex();
     this._subscriptions = new SubscriptionRegistry();
-    this._bus         = new MessageBus(opts);
-    this._metrics     = new MeshMetrics();
+    this._bus = new MessageBus(opts);
+    this._metrics = new MeshMetrics();
 
     /** @type {Map<string, object>} agentId → registration metadata */
     this._agents = new Map();
 
     // Forward bus events for observability
     this._bus.on('delivered', e => this.emit('message:delivered', e));
-    this._bus.on('dlq',       e => this.emit('message:dlq', e));
-
+    this._bus.on('dlq', e => this.emit('message:dlq', e));
     if (opts.autoRegisterKnown !== false) {
       for (const id of KNOWN_AGENTS) {
-        this.registerAgent(id, { capabilities: DEFAULT_CAPABILITIES[id] || [] });
+        this.registerAgent(id, {
+          capabilities: DEFAULT_CAPABILITIES[id] || []
+        });
       }
     }
   }
@@ -621,15 +648,17 @@ class AgentMesh extends EventEmitter {
   registerAgent(agentId, opts = {}) {
     const caps = opts.capabilities || DEFAULT_CAPABILITIES[agentId] || [];
     const meta = opts.meta || {};
-
-    this._topology.addNode(agentId, { capabilities: caps, ...meta });
+    this._topology.addNode(agentId, {
+      capabilities: caps,
+      ...meta
+    });
     this._capabilities.register(agentId, caps);
     this._agents.set(agentId, {
       agentId,
       capabilities: caps,
       meta,
       dispatchFn: opts.dispatchFn || null,
-      registeredAt: Date.now(),
+      registeredAt: Date.now()
     });
 
     // Add bidirectional edges with default latency for known topology connections
@@ -639,8 +668,10 @@ class AgentMesh extends EventEmitter {
         this._topology.addEdge(other, agentId, 1);
       }
     }
-
-    this.emit('agent:registered', { agentId, capabilities: caps });
+    this.emit('agent:registered', {
+      agentId,
+      capabilities: caps
+    });
     return this;
   }
 
@@ -653,7 +684,9 @@ class AgentMesh extends EventEmitter {
     this._capabilities.deregister(agentId);
     this._subscriptions.unsubscribeAll(agentId);
     this._agents.delete(agentId);
-    this.emit('agent:deregistered', { agentId });
+    this.emit('agent:deregistered', {
+      agentId
+    });
     return this;
   }
 
@@ -669,7 +702,10 @@ class AgentMesh extends EventEmitter {
    */
   subscribe(agentId, topic, handler) {
     this._subscriptions.subscribe(agentId, topic, handler);
-    this.emit('subscription:added', { agentId, topic });
+    this.emit('subscription:added', {
+      agentId,
+      topic
+    });
     return this;
   }
 
@@ -680,7 +716,10 @@ class AgentMesh extends EventEmitter {
    */
   unsubscribe(agentId, topic) {
     this._subscriptions.unsubscribe(agentId, topic);
-    this.emit('subscription:removed', { agentId, topic });
+    this.emit('subscription:removed', {
+      agentId,
+      topic
+    });
     return this;
   }
 
@@ -697,23 +736,27 @@ class AgentMesh extends EventEmitter {
    */
   async publish(fromAgentId, topic, payload, opts = {}) {
     const msg = {
-      id:      msgId(),
-      from:    fromAgentId,
+      id: msgId(),
+      from: fromAgentId,
       topic,
       payload,
-      ts:      Date.now(),
-      ttl:     opts.ttl,
+      ts: Date.now(),
+      ttl: opts.ttl
     };
-
     const subscribers = this._subscriptions.matching(topic);
     if (subscribers.length === 0) {
-      this.emit('publish:no_subscribers', { topic, from: fromAgentId });
+      this.emit('publish:no_subscribers', {
+        topic,
+        from: fromAgentId
+      });
     }
-
-    let delivered = 0, failed = 0;
+    let delivered = 0,
+      failed = 0;
     const t0 = Date.now();
-
-    await Promise.all(subscribers.map(async ({ agentId, handler }) => {
+    await Promise.all(subscribers.map(async ({
+      agentId,
+      handler
+    }) => {
       this._metrics.recordSend(fromAgentId);
       this._metrics.recordRecv(agentId);
       const ok = await this._bus.deliver(msg, handler);
@@ -726,9 +769,16 @@ class AgentMesh extends EventEmitter {
         this._metrics.recordError(agentId);
       }
     }));
-
-    this.emit('publish:complete', { topic, from: fromAgentId, delivered, failed });
-    return { delivered, failed };
+    this.emit('publish:complete', {
+      topic,
+      from: fromAgentId,
+      delivered,
+      failed
+    });
+    return {
+      delivered,
+      failed
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -751,17 +801,16 @@ class AgentMesh extends EventEmitter {
     if (!this._agents.has(toAgentId)) {
       throw new Error(`AgentMesh.sendTo: unknown target agent "${toAgentId}"`);
     }
-
     const path = this._topology.shortestPath(fromAgentId, toAgentId);
     const msg = {
-      id:      msgId(),
-      from:    fromAgentId,
-      to:      toAgentId,
-      topic:   `direct.${toAgentId}`,
+      id: msgId(),
+      from: fromAgentId,
+      to: toAgentId,
+      topic: `direct.${toAgentId}`,
       payload,
-      ts:      Date.now(),
-      ttl:     opts.ttl,
-      path,
+      ts: Date.now(),
+      ttl: opts.ttl,
+      path
     };
 
     // Route via direct topic subscription (agents can subscribe to 'direct.<id>')
@@ -782,14 +831,19 @@ class AgentMesh extends EventEmitter {
         }
       }
       // No subscriber and no dispatchFn — emit warning
-      this.emit('sendTo:no_handler', { from: fromAgentId, to: toAgentId });
+      this.emit('sendTo:no_handler', {
+        from: fromAgentId,
+        to: toAgentId
+      });
       return false;
     }
-
     this._metrics.recordSend(fromAgentId);
     const t0 = Date.now();
     let ok = false;
-    for (const { agentId, handler } of subscribers) {
+    for (const {
+      agentId,
+      handler
+    } of subscribers) {
       ok = await this._bus.deliver(msg, handler);
       this._metrics.recordRecv(agentId);
       if (ok) {
@@ -821,45 +875,58 @@ class AgentMesh extends EventEmitter {
   async broadcast(fromAgentId, payload, opts = {}) {
     const exclude = new Set(opts.exclude || [fromAgentId]);
     const targets = [...this._agents.keys()].filter(id => !exclude.has(id));
-
     const msg = {
-      id:      msgId(),
-      from:    fromAgentId,
-      topic:   'mesh.broadcast',
+      id: msgId(),
+      from: fromAgentId,
+      topic: 'mesh.broadcast',
       payload,
-      ts:      Date.now(),
-      ttl:     opts.ttl,
-      isBroadcast: true,
+      ts: Date.now(),
+      ttl: opts.ttl,
+      isBroadcast: true
     };
-
-    let delivered = 0, failed = 0;
-
-    await Promise.all(targets.map(async (agentId) => {
+    let delivered = 0,
+      failed = 0;
+    await Promise.all(targets.map(async agentId => {
       // Deliver to all subscribers on 'mesh.broadcast' that belong to this agent
-      const subscribers = this._subscriptions
-        .matching('mesh.broadcast')
-        .filter(s => s.agentId === agentId);
+      const subscribers = this._subscriptions.matching('mesh.broadcast').filter(s => s.agentId === agentId);
 
       // Fallback: if no subscription but agent has a dispatchFn, use that
       if (subscribers.length === 0) {
         const reg = this._agents.get(agentId);
         if (reg?.dispatchFn) {
           try {
-            await reg.dispatchFn({ ...msg, to: agentId });
+            await reg.dispatchFn({
+              ...msg,
+              to: agentId
+            });
             delivered++;
-          } catch { failed++; }
+          } catch {
+            failed++;
+          }
         }
         return;
       }
-
-      for (const { handler } of subscribers) {
-        const ok = await this._bus.deliver({ ...msg, to: agentId }, handler);
-        if (ok) delivered++; else failed++;
+      for (const {
+        handler
+      } of subscribers) {
+        const ok = await this._bus.deliver({
+          ...msg,
+          to: agentId
+        }, handler);
+        if (ok) delivered++;else failed++;
       }
     }));
-
-    this.emit('broadcast:complete', { from: fromAgentId, delivered, failed, agentCount: targets.length });
-    return { delivered, failed, agentCount: targets.length };
+    this.emit('broadcast:complete', {
+      from: fromAgentId,
+      delivered,
+      failed,
+      agentCount: targets.length
+    });
+    return {
+      delivered,
+      failed,
+      agentCount: targets.length
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -879,15 +946,19 @@ class AgentMesh extends EventEmitter {
    */
   async routeByCapability(fromAgentId, capability, payload, opts = {}) {
     let candidates = this._capabilities.exactMatch(capability);
-
     if (candidates.length === 0) {
       const fuzzy = this._capabilities.fuzzyMatch(capability, 0.25);
       candidates = fuzzy.map(f => f.agentId);
     }
-
     if (candidates.length === 0) {
-      this.emit('route:no_candidates', { capability, from: fromAgentId });
-      return { agentId: null, delivered: false };
+      this.emit('route:no_candidates', {
+        capability,
+        from: fromAgentId
+      });
+      return {
+        agentId: null,
+        delivered: false
+      };
     }
 
     // Pick candidate with best (lowest) p50 latency; fall back to first if no data
@@ -896,9 +967,11 @@ class AgentMesh extends EventEmitter {
       const bestP50 = this._metrics.percentile(chosen, 50) ?? Infinity;
       return p50 < bestP50 ? id : chosen;
     });
-
     const delivered = await this.sendTo(fromAgentId, best, payload, opts);
-    return { agentId: best, delivered };
+    return {
+      agentId: best,
+      delivered
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -911,17 +984,15 @@ class AgentMesh extends EventEmitter {
    */
   getTopology() {
     return {
-      topology:    this._topology.snapshot(),
-      agents:      Object.fromEntries(
-        [...this._agents.entries()].map(([id, reg]) => [id, {
-          capabilities: reg.capabilities,
-          registeredAt: reg.registeredAt,
-          hasDispatchFn: !!reg.dispatchFn,
-        }])
-      ),
-      metrics:     this._metrics.snapshot(),
-      dlqSize:     this._bus._dlq.length,
-      timestamp:   new Date().toISOString(),
+      topology: this._topology.snapshot(),
+      agents: Object.fromEntries([...this._agents.entries()].map(([id, reg]) => [id, {
+        capabilities: reg.capabilities,
+        registeredAt: reg.registeredAt,
+        hasDispatchFn: !!reg.dispatchFn
+      }])),
+      metrics: this._metrics.snapshot(),
+      dlqSize: this._bus._dlq.length,
+      timestamp: new Date().toISOString()
     };
   }
 
@@ -933,7 +1004,7 @@ class AgentMesh extends EventEmitter {
   findAgentsForCapability(capability) {
     return {
       exact: this._capabilities.exactMatch(capability),
-      fuzzy: this._capabilities.fuzzyMatch(capability, 0.2),
+      fuzzy: this._capabilities.fuzzyMatch(capability, 0.2)
     };
   }
 
@@ -970,7 +1041,6 @@ function getAgentMesh(opts) {
   if (!_singleton) _singleton = new AgentMesh(opts);
   return _singleton;
 }
-
 module.exports = {
   AgentMesh,
   TopologyGraph,
@@ -980,5 +1050,5 @@ module.exports = {
   SubscriptionRegistry,
   KNOWN_AGENTS,
   DEFAULT_CAPABILITIES,
-  getAgentMesh,
+  getAgentMesh
 };

@@ -1,125 +1,107 @@
-/**
- * Heady™ MCP Input Validator
- * =========================
- * Validates and sanitizes MCP tool call arguments against:
- * - SQL injection
- * - Path traversal
- * - SSRF (Server-Side Request Forgery)
- * - Command injection
- * - XSS (Cross-Site Scripting)
- * - Prototype pollution
- * - Template injection
- * - NoSQL injection
- *
- * @module src/security/input-validator
- * @version 1.0.0
- */
-
 'use strict';
 
-const { URL } = require('url');
-const { fib, CSL_THRESHOLDS } = require('../../shared/phi-math');
+const {
+  URL
+} = require('url');
+const {
+  fib,
+  CSL_THRESHOLDS
+} = require('../../shared/phi-math');
 
 // ── Threat Detection Patterns ───────────────────────────────────────────────
 const THREAT_PATTERNS = {
-  SQL_INJECTION: [
-    /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC|EXECUTE)\b\s)/i,
-    /('|"|;)\s*(OR|AND)\s+\d+\s*=\s*\d+/i,
-    /(\bOR\b\s+\d+\s*=\s*\d+|\b1\s*=\s*1\b)/i,
-    /--\s*$/m,
-    /\/\*[\s\S]*?\*\//,
-    /(\bWAITFOR\b\s+\bDELAY\b)/i,
-    /(\bBENCHMARK\b\s*\()/i,
-    /(\bSLEEP\b\s*\()/i,
-    /(\bLOAD_FILE\b\s*\()/i,
-    /(\bINTO\s+(?:OUT|DUMP)FILE\b)/i,
+  SQL_INJECTION: [/(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC|EXECUTE)\b\s)/i, /('|"|;)\s*(OR|AND)\s+\d+\s*=\s*\d+/i, /(\bOR\b\s+\d+\s*=\s*\d+|\b1\s*=\s*1\b)/i, /--\s*$/m, /\/\*[\s\S]*?\*\//, /(\bWAITFOR\b\s+\bDELAY\b)/i, /(\bBENCHMARK\b\s*\()/i, /(\bSLEEP\b\s*\()/i, /(\bLOAD_FILE\b\s*\()/i, /(\bINTO\s+(?:OUT|DUMP)FILE\b)/i],
+  PATH_TRAVERSAL: [/\.\.[/\\]/, /[/\\]\.\.[/\\]/, /%2e%2e[%2f%5c]/i, /%252e%252e/i, /\.\.%c0%af/i, /\.\.%c1%9c/i, /\0/,
+  // null byte
+  /\/etc\/(passwd|shadow|hosts)/i, /\/proc\/self\//i, /[/\\](windows|winnt)[/\\]system32/i],
+  SSRF: [/^https?:\/\/(?:localhost|127\.\d+\.\d+\.\d+|0\.0\.0\.0|::1|0x7f)/i, /^https?:\/\/(?:10\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+|192\.168\.\d+)\.\d+/i, /^https?:\/\/169\.254\.\d+\.\d+/i,
+  // AWS metadata
+  /^https?:\/\/metadata\.google\.internal/i,
+  // GCP metadata
+  /^https?:\/\/\[::(?:ffff:)?\d+/i,
+  // IPv6 mapped
+  /^(?:file|gopher|dict|ftp):\/\//i // Dangerous protocols
   ],
-  PATH_TRAVERSAL: [
-    /\.\.[/\\]/,
-    /[/\\]\.\.[/\\]/,
-    /%2e%2e[%2f%5c]/i,
-    /%252e%252e/i,
-    /\.\.%c0%af/i,
-    /\.\.%c1%9c/i,
-    /\0/,                        // null byte
-    /\/etc\/(passwd|shadow|hosts)/i,
-    /\/proc\/self\//i,
-    /[/\\](windows|winnt)[/\\]system32/i,
+  COMMAND_INJECTION: [/[;&|`$](?!\s*$)/, /\$\(/, /`[^`]*`/, /\|\s*(?:bash|sh|cmd|powershell|python|node|ruby|perl|php)/i, /(?:;|\||&&)\s*(?:cat|ls|dir|echo|wget|curl|nc|ncat|netcat)/i, />\s*\/(?:dev|tmp|etc)/, /\beval\s*\(/, /\bexec\s*\(/, /\bchild_process/, /\brequire\s*\(\s*['"](?:child_process|fs|net|http|os)['"]\)/],
+  XSS: [/<script[\s>]/i, /javascript\s*:/i, /on(?:load|error|click|mouseover|focus|blur)\s*=/i, /<(?:img|svg|iframe|object|embed|link|style|meta|base)\b/i, /expression\s*\(/i, /url\s*\(\s*['"]?javascript/i, /data:\s*text\/html/i],
+  PROTOTYPE_POLLUTION: [/__proto__/, /constructor\.prototype/, /Object\.(?:assign|defineProperty|setPrototypeOf)/, /\["__proto__"\]/, /\['__proto__'\]/],
+  TEMPLATE_INJECTION: [/\{\{[^}]+\}\}/,
+  // Handlebars/Mustache
+  /\$\{[^}]+\}/, /<%= .+ %>/,
+  // EJS
+  /\{%[^%]+%\}/,
+  // Jinja2/Nunjucks
+  /#\{[^}]+\}/ // Ruby/Pug
   ],
-  SSRF: [
-    /^https?:\/\/(?:localhost|127\.\d+\.\d+\.\d+|0\.0\.0\.0|::1|0x7f)/i,
-    /^https?:\/\/(?:10\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+|192\.168\.\d+)\.\d+/i,
-    /^https?:\/\/169\.254\.\d+\.\d+/i,  // AWS metadata
-    /^https?:\/\/metadata\.google\.internal/i, // GCP metadata
-    /^https?:\/\/\[::(?:ffff:)?\d+/i, // IPv6 mapped
-    /^(?:file|gopher|dict|ftp):\/\//i, // Dangerous protocols
-  ],
-  COMMAND_INJECTION: [
-    /[;&|`$](?!\s*$)/,
-    /\$\(/,
-    /`[^`]*`/,
-    /\|\s*(?:bash|sh|cmd|powershell|python|node|ruby|perl|php)/i,
-    /(?:;|\||&&)\s*(?:cat|ls|dir|echo|wget|curl|nc|ncat|netcat)/i,
-    />\s*\/(?:dev|tmp|etc)/,
-    /\beval\s*\(/,
-    /\bexec\s*\(/,
-    /\bchild_process/,
-    /\brequire\s*\(\s*['"](?:child_process|fs|net|http|os)['"]\)/,
-  ],
-  XSS: [
-    /<script[\s>]/i,
-    /javascript\s*:/i,
-    /on(?:load|error|click|mouseover|focus|blur)\s*=/i,
-    /<(?:img|svg|iframe|object|embed|link|style|meta|base)\b/i,
-    /expression\s*\(/i,
-    /url\s*\(\s*['"]?javascript/i,
-    /data:\s*text\/html/i,
-  ],
-  PROTOTYPE_POLLUTION: [
-    /__proto__/,
-    /constructor\.prototype/,
-    /Object\.(?:assign|defineProperty|setPrototypeOf)/,
-    /\["__proto__"\]/,
-    /\['__proto__'\]/,
-  ],
-  TEMPLATE_INJECTION: [
-    /\{\{[^}]+\}\}/,       // Handlebars/Mustache
-    /\$\{[^}]+\}/,         // ES6 template literal
-    /<%= .+ %>/,            // EJS
-    /\{%[^%]+%\}/,          // Jinja2/Nunjucks
-    /#\{[^}]+\}/,           // Ruby/Pug
-  ],
-  NOSQL_INJECTION: [
-    /\$(?:gt|gte|lt|lte|ne|in|nin|regex|exists|type|where|all|elemMatch)\b/,
-    /\{\s*\$(?:gt|lt|ne|regex)/,
-    /\bfunction\s*\(\s*\)\s*\{/,  // JavaScript in MongoDB queries
-  ],
+  NOSQL_INJECTION: [/\$(?:gt|gte|lt|lte|ne|in|nin|regex|exists|type|where|all|elemMatch)\b/, /\{\s*\$(?:gt|lt|ne|regex)/, /\bfunction\s*\(\s*\)\s*\{/ // JavaScript in MongoDB queries
+  ]
 };
 
 // ── SSRF — Blocked Internal CIDR Ranges ─────────────────────────────────────
-const BLOCKED_CIDRS = [
-  { prefix: '127.',      label: 'loopback' },
-  { prefix: '10.',       label: 'private-class-a' },
-  { prefix: '172.16.',   label: 'private-class-b' },
-  { prefix: '172.17.',   label: 'private-class-b' },
-  { prefix: '172.18.',   label: 'private-class-b' },
-  { prefix: '172.19.',   label: 'private-class-b' },
-  { prefix: '172.20.',   label: 'private-class-b' },
-  { prefix: '172.21.',   label: 'private-class-b' },
-  { prefix: '172.22.',   label: 'private-class-b' },
-  { prefix: '172.23.',   label: 'private-class-b' },
-  { prefix: '172.24.',   label: 'private-class-b' },
-  { prefix: '172.25.',   label: 'private-class-b' },
-  { prefix: '172.26.',   label: 'private-class-b' },
-  { prefix: '172.27.',   label: 'private-class-b' },
-  { prefix: '172.28.',   label: 'private-class-b' },
-  { prefix: '172.29.',   label: 'private-class-b' },
-  { prefix: '172.30.',   label: 'private-class-b' },
-  { prefix: '172.31.',   label: 'private-class-b' },
-  { prefix: '192.168.',  label: 'private-class-c' },
-  { prefix: '169.254.',  label: 'link-local/cloud-metadata' },
-  { prefix: '0.0.0.0',   label: 'unspecified' },
-];
+const BLOCKED_CIDRS = [{
+  prefix: '127.',
+  label: 'loopback'
+}, {
+  prefix: '10.',
+  label: 'private-class-a'
+}, {
+  prefix: '172.16.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.17.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.18.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.19.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.20.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.21.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.22.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.23.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.24.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.25.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.26.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.27.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.28.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.29.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.30.',
+  label: 'private-class-b'
+}, {
+  prefix: '172.31.',
+  label: 'private-class-b'
+}, {
+  prefix: '192.168.',
+  label: 'private-class-c'
+}, {
+  prefix: '169.254.',
+  label: 'link-local/cloud-metadata'
+}, {
+  prefix: '0.0.0.0',
+  label: 'unspecified'
+}];
 
 // ── Input Validator ─────────────────────────────────────────────────────────
 class InputValidator {
@@ -130,7 +112,12 @@ class InputValidator {
     this.customPatterns = config.customPatterns || {};
     this.allowedProtocols = new Set(config.allowedProtocols || ['https', 'http']);
     this.allowedDomains = config.allowedDomains || null; // null = all external allowed
-    this._stats = { validated: 0, rejected: 0, sanitized: 0, byThreat: {} };
+    this._stats = {
+      validated: 0,
+      rejected: 0,
+      sanitized: 0,
+      byThreat: {}
+    };
   }
 
   /**
@@ -163,7 +150,6 @@ class InputValidator {
       // Sanitize: strip known-dangerous characters but preserve intent
       sanitized[key] = this._sanitize(key, value);
     }
-
     if (threats.length > 0) {
       this._stats.rejected++;
       for (const t of threats) {
@@ -171,17 +157,15 @@ class InputValidator {
         this._stats.byThreat[type] = (this._stats.byThreat[type] || 0) + 1;
       }
     }
-
     return {
       safe: threats.length === 0,
-      sanitized: threats.length === 0 ? sanitized : args, // only use sanitized if safe
-      threats,
+      sanitized: threats.length === 0 ? sanitized : args,
+      // only use sanitized if safe
+      threats
     };
   }
-
   _validateField(key, value) {
     const threats = [];
-
     if (typeof value === 'string') {
       // Check length
       if (value.length > this.maxArgLength) {
@@ -220,10 +204,8 @@ class InputValidator {
         }
       }
     }
-
     return threats;
   }
-
   _validateURL(value, key) {
     const threats = [];
     try {
@@ -237,7 +219,7 @@ class InputValidator {
       // Internal IP check
       const hostname = url.hostname.toLowerCase();
       for (const cidr of BLOCKED_CIDRS) {
-        if (hostname.startsWith(cidr.prefix) || hostname === 'localhost') {
+        if (hostname.startsWith(cidr.prefix) || hostname === "0.0.0.0") {
           threats.push(`SSRF: Blocked internal address "${hostname}" (${cidr.label}) in field "${key}"`);
           break;
         }
@@ -249,8 +231,7 @@ class InputValidator {
       }
 
       // Cloud metadata check
-      if (hostname === 'metadata.google.internal' ||
-          hostname === '169.254.169.254') {
+      if (hostname === 'metadata.google.internal' || hostname === '169.254.169.254') {
         threats.push(`SSRF: Blocked cloud metadata endpoint in field "${key}"`);
       }
     } catch {
@@ -258,7 +239,6 @@ class InputValidator {
     }
     return threats;
   }
-
   _sanitize(key, value) {
     if (typeof value === 'string') {
       // Remove null bytes
@@ -282,11 +262,9 @@ class InputValidator {
     }
     return value;
   }
-
   _looksLikeURL(str) {
     return /^(?:https?|ftp|file|gopher|dict):\/\//i.test(str);
   }
-
   _getDepth(obj, depth = 0) {
     if (typeof obj !== 'object' || obj === null) return depth;
     let maxDepth = depth;
@@ -295,8 +273,14 @@ class InputValidator {
     }
     return maxDepth;
   }
-
-  getStats() { return { ...this._stats }; }
+  getStats() {
+    return {
+      ...this._stats
+    };
+  }
 }
-
-module.exports = { InputValidator, THREAT_PATTERNS, BLOCKED_CIDRS };
+module.exports = {
+  InputValidator,
+  THREAT_PATTERNS,
+  BLOCKED_CIDRS
+};

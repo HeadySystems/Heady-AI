@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -15,7 +17,9 @@
 // HEADY_BRAND:END
 
 const os = require('os');
-const { PHI_CIRCUIT_BREAKER } = require('@heady/phi-math');
+const {
+  PHI_CIRCUIT_BREAKER
+} = require('@heady/phi-math');
 
 // ═══════════════════════════════════════════════════════════════════
 // HC Health — System Health Monitoring and Diagnostics
@@ -27,9 +31,8 @@ const HEALTH_STATUS = {
   HEALTHY: 'healthy',
   DEGRADED: 'degraded',
   UNHEALTHY: 'unhealthy',
-  UNKNOWN: 'unknown',
+  UNKNOWN: 'unknown'
 };
-
 class HCHealth {
   constructor() {
     this.history = [];
@@ -61,7 +64,10 @@ class HCHealth {
       try {
         results[name] = await fn();
       } catch (err) {
-        results[name] = { status: HEALTH_STATUS.UNHEALTHY, message: err.message };
+        results[name] = {
+          status: HEALTH_STATUS.UNHEALTHY,
+          message: err.message
+        };
       }
     }
 
@@ -72,19 +78,16 @@ class HCHealth {
     } else if (statuses.includes(HEALTH_STATUS.DEGRADED)) {
       overallStatus = HEALTH_STATUS.DEGRADED;
     }
-
     const snapshot = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
       checks: results,
       nodeVersion: process.version,
-      uptime: process.uptime(),
+      uptime: process.uptime()
     };
-
     this.history.push(snapshot);
     // Keep last 100 entries
     if (this.history.length > 100) this.history.shift();
-
     return snapshot;
   }
 
@@ -95,22 +98,28 @@ class HCHealth {
     const snapshot = await this.check();
     const issues = [];
     const recommendations = [];
-
     for (const [name, result] of Object.entries(snapshot.checks)) {
       if (result.status === HEALTH_STATUS.UNHEALTHY) {
-        issues.push({ check: name, severity: 'critical', message: result.message });
+        issues.push({
+          check: name,
+          severity: 'critical',
+          message: result.message
+        });
         recommendations.push(`Fix critical issue in ${name}: ${result.message}`);
       } else if (result.status === HEALTH_STATUS.DEGRADED) {
-        issues.push({ check: name, severity: 'warning', message: result.message });
+        issues.push({
+          check: name,
+          severity: 'warning',
+          message: result.message
+        });
         recommendations.push(`Investigate degraded state in ${name}: ${result.message}`);
       }
     }
-
     return {
       snapshot,
       issues,
       recommendations,
-      diagnosedAt: new Date().toISOString(),
+      diagnosedAt: new Date().toISOString()
     };
   }
 
@@ -118,7 +127,10 @@ class HCHealth {
    * Get the current health snapshot without running checks.
    */
   snapshot() {
-    return this.history[this.history.length - 1] || { status: HEALTH_STATUS.UNKNOWN, checks: {} };
+    return this.history[this.history.length - 1] || {
+      status: HEALTH_STATUS.UNKNOWN,
+      checks: {}
+    };
   }
 
   /**
@@ -135,7 +147,7 @@ class HCHealth {
   startCron(intervalMs = 60000) {
     if (this.cronInterval) return;
     this.cronInterval = setInterval(() => this.check(), intervalMs);
-    console.log(`[hc-health] Cron started: every ${intervalMs}ms`);
+    logger.info(`[hc-health] Cron started: every ${intervalMs}ms`);
   }
 
   /**
@@ -145,7 +157,7 @@ class HCHealth {
     if (this.cronInterval) {
       clearInterval(this.cronInterval);
       this.cronInterval = null;
-      console.log('[hc-health] Cron stopped.');
+      logger.info('[hc-health] Cron stopped.');
     }
   }
 
@@ -155,27 +167,26 @@ class HCHealth {
   _checkSystem() {
     const totalMem = os.totalmem();
     const freeMem = os.freemem();
-    const memUsageRatio = 1 - (freeMem / totalMem);
+    const memUsageRatio = 1 - freeMem / totalMem;
     const loadAvg = os.loadavg()[0];
     const cpuCount = os.cpus().length;
     const loadPerCore = loadAvg / cpuCount;
-
     let status = HEALTH_STATUS.HEALTHY;
-    const details = { memUsageRatio: Math.round(memUsageRatio * 100), loadPerCore: loadPerCore.toFixed(2) };
-
+    const details = {
+      memUsageRatio: Math.round(memUsageRatio * 100),
+      loadPerCore: loadPerCore.toFixed(2)
+    };
     if (memUsageRatio > 0.95 || loadPerCore > 2.0) {
       status = HEALTH_STATUS.UNHEALTHY;
     } else if (memUsageRatio > 0.80 || loadPerCore > 1.0) {
       status = HEALTH_STATUS.DEGRADED;
     }
-
     return {
       status,
       message: `mem=${details.memUsageRatio}% load/core=${details.loadPerCore}`,
-      details,
+      details
     };
   }
 }
-
 module.exports = new HCHealth();
 module.exports.HEALTH_STATUS = HEALTH_STATUS;

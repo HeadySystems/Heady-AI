@@ -10,15 +10,10 @@
  */
 
 import { EventEmitter } from 'events';
-import {
-  PHI, PSI, fib,
-  CSL_THRESHOLDS,
-} from '@heady/phi-math-foundation';
+import { PHI, PSI, fib, CSL_THRESHOLDS } from '@heady/phi-math-foundation';
 import { createLogger } from '@heady/structured-logger';
 import { cosine } from './bee-lifecycle.js';
-
 const logger = createLogger('work-stealer');
-
 const PSI2 = PSI * PSI;
 
 /** Steal batch size: fib(6) = 8 tasks per steal operation */
@@ -37,30 +32,31 @@ class WorkStealer extends EventEmitter {
     this._stealHistory = [];
     this._rebalanceInterval = null;
   }
-
-  /**
-   * Attempt to steal work for a hungry swarm.
-   * A swarm is "hungry" if it has idle bees and a short queue.
-   *
-   * @param {string} hungrySwarmId
-   * @returns {object} { stolen: number, from: string[] }
-   */
   stealWork(hungrySwarmId) {
     const hungrySwarm = this._swarmManager.getSwarm(hungrySwarmId);
-    if (!hungrySwarm) return { stolen: 0, from: [] };
+    if (!hungrySwarm) return {
+      stolen: 0,
+      from: []
+    };
 
     // Only steal if queue is low and bees are idle
     if (hungrySwarm.taskBuffer.length >= fib(3)) {
-      return { stolen: 0, from: [], reason: 'queue not empty enough' };
+      return {
+        stolen: 0,
+        from: [],
+        reason: 'queue not empty enough'
+      };
     }
     if (hungrySwarm.getIdleBeeCount() === 0) {
-      return { stolen: 0, from: [], reason: 'no idle bees' };
+      return {
+        stolen: 0,
+        from: [],
+        reason: 'no idle bees'
+      };
     }
-
     const allSwarms = this._swarmManager.getAllSwarms();
     const sources = [];
     let totalStolen = 0;
-
     for (const sourceSwarm of allSwarms) {
       if (sourceSwarm.id === hungrySwarmId) continue;
       if (sourceSwarm.taskBuffer.length < fib(5)) continue; // Not overloaded enough
@@ -70,51 +66,47 @@ class WorkStealer extends EventEmitter {
       if (similarity < STEAL_MIN_SIMILARITY) continue;
 
       // Steal up to STEAL_BATCH_SIZE tasks
-      const toSteal = Math.min(
-        STEAL_BATCH_SIZE,
-        sourceSwarm.taskBuffer.length - fib(3), // Keep at least fib(3) in source
-        fib(12) - hungrySwarm.taskBuffer.length  // Don't overflow hungry queue
+      const toSteal = Math.min(STEAL_BATCH_SIZE, sourceSwarm.taskBuffer.length - fib(3),
+      // Keep at least fib(3) in source
+      fib(12) - hungrySwarm.taskBuffer.length // Don't overflow hungry queue
       );
-
       if (toSteal <= 0) continue;
 
       // Pick tasks from the back of the source queue (least recently added)
       const stolen = sourceSwarm.taskBuffer.splice(-toSteal, toSteal);
       hungrySwarm.taskBuffer.push(...stolen);
       totalStolen += stolen.length;
-
       sources.push({
         swarmId: sourceSwarm.id,
         swarmName: sourceSwarm.name,
         tasksStolen: stolen.length,
-        similarity: Math.round(similarity * 10000) / 10000,
+        similarity: Math.round(similarity * 10000) / 10000
       });
-
       logger.info('Work stolen', {
         from: sourceSwarm.name,
         to: hungrySwarm.name,
         count: stolen.length,
-        similarity,
+        similarity
       });
     }
-
     if (totalStolen > 0) {
       this._recordSteal({
         hungrySwarmId,
         totalStolen,
         sources,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
-
       this.emit('work:stolen', {
         hungrySwarmId,
         hungrySwarmName: hungrySwarm.name,
         totalStolen,
-        sources,
+        sources
       });
     }
-
-    return { stolen: totalStolen, from: sources };
+    return {
+      stolen: totalStolen,
+      from: sources
+    };
   }
 
   /**
@@ -125,12 +117,17 @@ class WorkStealer extends EventEmitter {
    */
   donateWork(overloadedSwarmId, count = STEAL_BATCH_SIZE) {
     const overloaded = this._swarmManager.getSwarm(overloadedSwarmId);
-    if (!overloaded) return { donated: 0, to: [] };
-
+    if (!overloaded) return {
+      donated: 0,
+      to: []
+    };
     if (overloaded.taskBuffer.length < fib(5)) {
-      return { donated: 0, to: [], reason: 'not enough tasks to donate' };
+      return {
+        donated: 0,
+        to: [],
+        reason: 'not enough tasks to donate'
+      };
     }
-
     const allSwarms = this._swarmManager.getAllSwarms();
     const recipients = [];
     let totalDonated = 0;
@@ -147,42 +144,35 @@ class WorkStealer extends EventEmitter {
       // Check compatibility
       const similarity = cosine(overloaded.centroidVector, targetSwarm.centroidVector);
       if (similarity < STEAL_MIN_SIMILARITY) continue;
-
-      const toDonate = Math.min(
-        count - totalDonated,
-        fib(14) - targetSwarm.taskBuffer.length
-      );
-
+      const toDonate = Math.min(count - totalDonated, fib(14) - targetSwarm.taskBuffer.length);
       if (toDonate <= 0) continue;
-
       const donated = overloaded.taskBuffer.splice(0, toDonate);
       targetSwarm.taskBuffer.push(...donated);
       totalDonated += donated.length;
-
       recipients.push({
         swarmId: targetSwarm.id,
         swarmName: targetSwarm.name,
         tasksDonated: donated.length,
-        similarity: Math.round(similarity * 10000) / 10000,
+        similarity: Math.round(similarity * 10000) / 10000
       });
-
       logger.info('Work donated', {
         from: overloaded.name,
         to: targetSwarm.name,
-        count: donated.length,
+        count: donated.length
       });
     }
-
     if (totalDonated > 0) {
       this.emit('work:donated', {
         overloadedSwarmId,
         overloadedSwarmName: overloaded.name,
         totalDonated,
-        recipients,
+        recipients
       });
     }
-
-    return { donated: totalDonated, to: recipients };
+    return {
+      donated: totalDonated,
+      to: recipients
+    };
   }
 
   /**
@@ -194,7 +184,6 @@ class WorkStealer extends EventEmitter {
     const swarms = this._swarmManager.getAllSwarms();
     const hungry = [];
     const overloaded = [];
-
     for (const swarm of swarms) {
       const utilization = swarm.getUtilization();
       const queueRatio = swarm.taskBuffer.length / fib(14);
@@ -205,12 +194,14 @@ class WorkStealer extends EventEmitter {
       }
 
       // Overloaded: utilization above (1 - PSI2) = 0.618
-      if (utilization > (1 - PSI2) || queueRatio > PSI) {
+      if (utilization > 1 - PSI2 || queueRatio > PSI) {
         overloaded.push(swarm);
       }
     }
-
-    const results = { steals: [], donations: [] };
+    const results = {
+      steals: [],
+      donations: []
+    };
 
     // Hungry swarms try to steal
     for (const hungrySwarm of hungry) {
@@ -218,7 +209,7 @@ class WorkStealer extends EventEmitter {
       if (result.stolen > 0) {
         results.steals.push({
           swarm: hungrySwarm.name,
-          ...result,
+          ...result
         });
       }
     }
@@ -229,19 +220,17 @@ class WorkStealer extends EventEmitter {
       if (result.donated > 0) {
         results.donations.push({
           swarm: overloadedSwarm.name,
-          ...result,
+          ...result
         });
       }
     }
-
     if (results.steals.length > 0 || results.donations.length > 0) {
       this.emit('rebalance:complete', results);
       logger.info('Rebalance complete', {
         steals: results.steals.length,
-        donations: results.donations.length,
+        donations: results.donations.length
       });
     }
-
     return results;
   }
 
@@ -254,7 +243,9 @@ class WorkStealer extends EventEmitter {
     this._rebalanceInterval = setInterval(() => {
       this.rebalance();
     }, intervalMs);
-    logger.info('Work-stealing rebalancer started', { intervalMs });
+    logger.info('Work-stealing rebalancer started', {
+      intervalMs
+    });
   }
 
   /**
@@ -285,9 +276,8 @@ class WorkStealer extends EventEmitter {
   getStats() {
     return {
       totalSteals: this._stealHistory.length,
-      recentSteals: this._stealHistory.slice(-fib(8)),
+      recentSteals: this._stealHistory.slice(-fib(8))
     };
   }
 }
-
 export { WorkStealer, STEAL_BATCH_SIZE, STEAL_MIN_SIMILARITY };

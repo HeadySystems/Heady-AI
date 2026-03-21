@@ -37,43 +37,45 @@ export class Bulkhead {
     maxConcurrent = DEFAULT_MAX_CONCURRENT,
     maxQueue = DEFAULT_QUEUE_DEPTH,
     timeoutMs = DEFAULT_TIMEOUT_MS,
-    telemetry = null,
+    telemetry = null
   }) {
     this.name = name;
-    /** @private */ this._maxConcurrent = maxConcurrent;
-    /** @private */ this._maxQueue = maxQueue;
-    /** @private */ this._timeoutMs = timeoutMs;
-    /** @private */ this._telemetry = telemetry;
-    /** @private */ this._active = 0;
-    /** @private */ this._queue = [];
-    /** @private */ this._totalExecuted = 0;
-    /** @private */ this._totalRejected = 0;
-    /** @private */ this._totalTimedOut = 0;
+    /** @private */
+    this._maxConcurrent = maxConcurrent;
+    /** @private */
+    this._maxQueue = maxQueue;
+    /** @private */
+    this._timeoutMs = timeoutMs;
+    /** @private */
+    this._telemetry = telemetry;
+    /** @private */
+    this._active = 0;
+    /** @private */
+    this._queue = [];
+    /** @private */
+    this._totalExecuted = 0;
+    /** @private */
+    this._totalRejected = 0;
+    /** @private */
+    this._totalTimedOut = 0;
   }
-
-  /**
-   * Execute a function within the bulkhead's isolation boundary.
-   * @template T
-   * @param {Function} fn - Async function to execute
-   * @returns {Promise<T>}
-   * @throws {BulkheadError} If bulkhead is full (concurrent + queue)
-   */
   async execute(fn) {
     if (this._active >= this._maxConcurrent) {
       if (this._queue.length >= this._maxQueue) {
         this._totalRejected++;
-        throw new BulkheadError(
-          `Bulkhead ${this.name} full: ${this._active}/${this._maxConcurrent} active, ${this._queue.length}/${this._maxQueue} queued`,
-          this.name
-        );
+        throw new BulkheadError(`Bulkhead ${this.name} full: ${this._active}/${this._maxConcurrent} active, ${this._queue.length}/${this._maxQueue} queued`, this.name);
       }
 
       // Queue the request
       return new Promise((resolve, reject) => {
-        this._queue.push({ fn, resolve, reject, enqueuedAt: Date.now() });
+        this._queue.push({
+          fn,
+          resolve,
+          reject,
+          enqueuedAt: Date.now()
+        });
       });
     }
-
     return this._run(fn);
   }
 
@@ -84,18 +86,11 @@ export class Bulkhead {
   async _run(fn) {
     this._active++;
     const startMs = Date.now();
-
     try {
-      const result = await Promise.race([
-        fn(),
-        new Promise((_, reject) =>
-          setTimeout(() => {
-            this._totalTimedOut++;
-            reject(new BulkheadError(`Bulkhead ${this.name} timeout after ${this._timeoutMs}ms`, this.name));
-          }, this._timeoutMs)
-        ),
-      ]);
-
+      const result = await Promise.race([fn(), new Promise((_, reject) => setTimeout(() => {
+        this._totalTimedOut++;
+        reject(new BulkheadError(`Bulkhead ${this.name} timeout after ${this._timeoutMs}ms`, this.name));
+      }, this._timeoutMs))]);
       this._totalExecuted++;
       return result;
     } finally {
@@ -110,7 +105,11 @@ export class Bulkhead {
    */
   _processQueue() {
     if (this._queue.length > 0 && this._active < this._maxConcurrent) {
-      const { fn, resolve, reject } = this._queue.shift();
+      const {
+        fn,
+        resolve,
+        reject
+      } = this._queue.shift();
       this._run(fn).then(resolve).catch(reject);
     }
   }
@@ -129,7 +128,7 @@ export class Bulkhead {
       utilization: this._active / this._maxConcurrent,
       totalExecuted: this._totalExecuted,
       totalRejected: this._totalRejected,
-      totalTimedOut: this._totalTimedOut,
+      totalTimedOut: this._totalTimedOut
     };
   }
 }
@@ -144,6 +143,5 @@ export class BulkheadError extends Error {
     this.bulkheadName = bulkheadName;
   }
 }
-
 export { DEFAULT_MAX_CONCURRENT, DEFAULT_QUEUE_DEPTH };
 export default Bulkhead;

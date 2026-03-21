@@ -14,7 +14,28 @@
  *   -1 = antipodal (FALSE)
  */
 
-const { PHI, PSI, PSI_2, PSI_3, PSI_4, PSI_5, PSI_8, PSI_9, CSL_THRESHOLDS, phiThreshold, phiFusionWeights, cslGate, adaptiveTemperature, fib, } = (function() { try { return require("./phi-math.js"); } catch(e) { return {}; } })();
+const {
+  PHI,
+  PSI,
+  PSI_2,
+  PSI_3,
+  PSI_4,
+  PSI_5,
+  PSI_8,
+  PSI_9,
+  CSL_THRESHOLDS,
+  phiThreshold,
+  phiFusionWeights,
+  cslGate,
+  adaptiveTemperature,
+  fib
+} = function () {
+  try {
+    return require("./phi-math.js");
+  } catch (e) {
+    return {};
+  }
+}();
 
 // ─── VECTOR OPERATIONS ───────────────────────────────────────────────────────
 
@@ -157,28 +178,17 @@ function cslCONSENSUS(vectors, weights) {
   }
   return normalize(result);
 }
-
-/**
- * CSL GATE — Soft sigmoid gating.
- * GATE(value, cosScore, τ, temp) = value × σ((cosScore - τ) / temp)
- *
- * @param {number} value - Value to gate
- * @param {number} cosScore - Cosine similarity score
- * @param {number} [tau=CSL_THRESHOLDS.MINIMUM] - Gate threshold
- * @param {number} [temperature=PSI_3] - Temperature (ψ³ ≈ 0.236)
- * @returns {number}
- */
 export { cslGate as cslGATE } from './phi-math.js';
 
 // ─── TERNARY LOGIC ───────────────────────────────────────────────────────────
 
 /** Ternary logic modes */
 const TERNARY_MODES = Object.freeze({
-  KLEENE_K3:   'kleene_k3',
+  KLEENE_K3: 'kleene_k3',
   LUKASIEWICZ: 'lukasiewicz',
-  GODEL:       'godel',
-  PRODUCT:     'product',
-  CSL:         'csl_continuous',
+  GODEL: 'godel',
+  PRODUCT: 'product',
+  CSL: 'csl_continuous'
 });
 
 /**
@@ -194,8 +204,8 @@ const TERNARY_MODES = Object.freeze({
  * @returns {'TRUE'|'UNKNOWN'|'FALSE'}
  */
 function ternaryClassify(cosScore) {
-  if (cosScore >= PSI) return 'TRUE';        // ≥ 0.618 (φ⁻¹)
-  if (cosScore <= -PSI) return 'FALSE';      // ≤ -0.618
+  if (cosScore >= PSI) return 'TRUE'; // ≥ 0.618 (φ⁻¹)
+  if (cosScore <= -PSI) return 'FALSE'; // ≤ -0.618
   return 'UNKNOWN';
 }
 
@@ -208,12 +218,18 @@ function ternaryClassify(cosScore) {
  */
 function ternaryAND(a, b, mode = TERNARY_MODES.CSL) {
   switch (mode) {
-    case TERNARY_MODES.KLEENE_K3:   return Math.min(a, b);
-    case TERNARY_MODES.LUKASIEWICZ: return Math.max(-1, a + b - 1);
-    case TERNARY_MODES.GODEL:       return Math.min(a, b);
-    case TERNARY_MODES.PRODUCT:     return a * b;
+    case TERNARY_MODES.KLEENE_K3:
+      return Math.min(a, b);
+    case TERNARY_MODES.LUKASIEWICZ:
+      return Math.max(-1, a + b - 1);
+    case TERNARY_MODES.GODEL:
+      return Math.min(a, b);
+    case TERNARY_MODES.PRODUCT:
+      return a * b;
     case TERNARY_MODES.CSL:
-    default:                         return a * b; // Geometric product
+    default:
+      return a * b;
+    // Geometric product
   }
 }
 
@@ -226,12 +242,17 @@ function ternaryAND(a, b, mode = TERNARY_MODES.CSL) {
  */
 function ternaryOR(a, b, mode = TERNARY_MODES.CSL) {
   switch (mode) {
-    case TERNARY_MODES.KLEENE_K3:   return Math.max(a, b);
-    case TERNARY_MODES.LUKASIEWICZ: return Math.min(1, a + b + 1);
-    case TERNARY_MODES.GODEL:       return Math.max(a, b);
-    case TERNARY_MODES.PRODUCT:     return a + b - a * b;
+    case TERNARY_MODES.KLEENE_K3:
+      return Math.max(a, b);
+    case TERNARY_MODES.LUKASIEWICZ:
+      return Math.min(1, a + b + 1);
+    case TERNARY_MODES.GODEL:
+      return Math.max(a, b);
+    case TERNARY_MODES.PRODUCT:
+      return a + b - a * b;
     case TERNARY_MODES.CSL:
-    default:                         return (a + b) / (1 + a * b || 1);
+    default:
+      return (a + b) / (1 + a * b || 1);
   }
 }
 
@@ -246,16 +267,6 @@ function ternaryNOT(a) {
 
 // ─── MIXTURE OF EXPERTS (CSL-BASED ROUTER) ───────────────────────────────────
 
-/**
- * CSL-based Mixture of Experts router.
- * Routes input to top-K experts using cosine similarity instead of learned weights.
- *
- * Configuration uses phi-math constants:
- *   - Temperature: PSI_3 ≈ 0.236 (adaptive via entropy)
- *   - Anti-collapse weight: PSI_8 ≈ 0.0131
- *   - Collapse detection: PSI_9 ≈ 0.0081
- *   - Top-K: fib(3) = 2
- */
 class CSLMoERouter {
   /**
    * @param {number} numExperts - Number of experts
@@ -270,7 +281,9 @@ class CSLMoERouter {
     this.collapseThreshold = PSI_9;
 
     // Initialize expert gate vectors with phi-scaled random values
-    this.expertGates = Array.from({ length: numExperts }, () => {
+    this.expertGates = Array.from({
+      length: numExperts
+    }, () => {
       const gate = new Float64Array(inputDim);
       for (let i = 0; i < inputDim; i++) {
         gate[i] = (Math.random() - PSI) * PHI;
@@ -281,24 +294,10 @@ class CSLMoERouter {
     // Expert usage tracking for load balancing
     this.usageCounts = new Float64Array(numExperts);
   }
-
-  /**
-   * Route an input to the top-K experts.
-   * @param {Float64Array|number[]} input - Input vector
-   * @param {number} [entropy=0] - Current entropy for adaptive temperature
-   * @param {number} [maxEntropy=1] - Maximum entropy
-   * @returns {{ expertIndices: number[], weights: number[], scores: number[] }}
-   */
   route(input, entropy = 0, maxEntropy = 1) {
     // Compute cosine similarity with each expert gate
     const scores = this.expertGates.map(gate => cslAND(input, gate));
-
-    // Adaptive temperature based on entropy
-    const temp = entropy > 0
-      ? adaptiveTemperature(entropy, maxEntropy)
-      : this.temperature;
-
-    // Softmax with temperature
+    const temp = entropy > 0 ? adaptiveTemperature(entropy, maxEntropy) : this.temperature;
     const expScores = scores.map(s => Math.exp(s / temp));
     const expSum = expScores.reduce((a, b) => a + b, 0);
     const probs = expScores.map(s => s / expSum);
@@ -308,13 +307,16 @@ class CSLMoERouter {
     if (minProb < this.collapseThreshold) {
       const uniform = 1 / this.numExperts;
       for (let i = 0; i < probs.length; i++) {
-        probs[i] = (1 - this.antiCollapseWeight) * probs[i] +
-                   this.antiCollapseWeight * uniform;
+        probs[i] = (1 - this.antiCollapseWeight) * probs[i] + this.antiCollapseWeight * uniform;
       }
     }
 
     // Select top-K experts
-    const indexed = probs.map((p, i) => ({ prob: p, index: i, score: scores[i] }));
+    const indexed = probs.map((p, i) => ({
+      prob: p,
+      index: i,
+      score: scores[i]
+    }));
     indexed.sort((a, b) => b.prob - a.prob);
     const selected = indexed.slice(0, this.topK);
 
@@ -324,11 +326,10 @@ class CSLMoERouter {
 
     // Update usage tracking
     selected.forEach(s => this.usageCounts[s.index]++);
-
     return {
       expertIndices: selected.map(s => s.index),
       weights,
-      scores: selected.map(s => s.score),
+      scores: selected.map(s => s.score)
     };
   }
 
@@ -388,7 +389,7 @@ function hdcBundle(vectors) {
  */
 function hdcPermute(v, n) {
   const dim = v.length;
-  const shift = ((n % dim) + dim) % dim;
+  const shift = (n % dim + dim) % dim;
   const result = new Float64Array(dim);
   for (let i = 0; i < dim; i++) {
     result[(i + shift) % dim] = v[i];
@@ -439,13 +440,7 @@ function isSemanticDuplicate(a, b, threshold = CSL_THRESHOLDS.CRITICAL) {
  * @returns {number} Composite score
  */
 function cslCompositeScore(scores) {
-  const factors = [
-    scores.correctness || 0,
-    scores.safety || 0,
-    scores.performance || 0,
-    scores.quality || 0,
-    scores.elegance || 0,
-  ];
+  const factors = [scores.correctness || 0, scores.safety || 0, scores.performance || 0, scores.quality || 0, scores.elegance || 0];
   const weights = phiFusionWeights(5);
   return factors.reduce((sum, f, i) => sum + f * weights[i], 0);
 }
@@ -455,53 +450,68 @@ function cslCompositeScore(scores) {
  * Matches hcfullpipeline.yaml cslScoringWeights.
  */
 const TRIAL_SCORING_WEIGHTS = Object.freeze({
-  correctness:         0.34,  // F(9)/100
-  performance:         0.21,  // F(8)/100
-  safety:              0.21,  // F(8)/100
-  elegance:            0.13,  // F(7)/100
-  resource_efficiency: 0.11,  // ~F(6.5)/100 → F(7)-F(3)=11
+  correctness: 0.34,
+  // F(9)/100
+  performance: 0.21,
+  // F(8)/100
+  safety: 0.21,
+  // F(8)/100
+  elegance: 0.13,
+  // F(7)/100
+  resource_efficiency: 0.11 // ~F(6.5)/100 → F(7)-F(3)=11
 });
 
 /**
  * CSL optimization scoring weights (for optimization ops stage).
  */
 const OPTIMIZATION_SCORING_WEIGHTS = Object.freeze({
-  cost:        PSI_2,  // 0.382
-  performance: PSI_2,  // 0.382
-  reliability: PSI_3,  // 0.236
+  cost: PSI_2,
+  // 0.382
+  performance: PSI_2,
+  // 0.382
+  reliability: PSI_3 // 0.236
 });
 
 /**
  * CSL evolution fitness weights.
  */
 const EVOLUTION_FITNESS_WEIGHTS = Object.freeze({
-  latency_improvement:     0.34,
-  cost_reduction:          0.21,
-  quality_improvement:     0.21,
+  latency_improvement: 0.34,
+  cost_reduction: 0.21,
+  quality_improvement: 0.21,
   reliability_improvement: 0.13,
-  elegance_improvement:    0.11,
+  elegance_improvement: 0.11
 });
-
 module.exports = {
   // Vector operations
-  dot, norm, normalize,
-
+  dot,
+  norm,
+  normalize,
   // CSL gates
-  cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS,
-
+  cslAND,
+  cslOR,
+  cslNOT,
+  cslIMPLY,
+  cslXOR,
+  cslCONSENSUS,
   // Ternary logic
-  TERNARY_MODES, ternaryClassify, ternaryAND, ternaryOR, ternaryNOT,
-
+  TERNARY_MODES,
+  ternaryClassify,
+  ternaryAND,
+  ternaryOR,
+  ternaryNOT,
   // MoE Router
   CSLMoERouter,
-
   // HDC/VSA
-  hdcBind, hdcBundle, hdcPermute, hdcCapacity,
-
+  hdcBind,
+  hdcBundle,
+  hdcPermute,
+  hdcCapacity,
   // Deduplication
   isSemanticDuplicate,
-
   // Scoring
-  cslCompositeScore, TRIAL_SCORING_WEIGHTS,
-  OPTIMIZATION_SCORING_WEIGHTS, EVOLUTION_FITNESS_WEIGHTS,
+  cslCompositeScore,
+  TRIAL_SCORING_WEIGHTS,
+  OPTIMIZATION_SCORING_WEIGHTS,
+  EVOLUTION_FITNESS_WEIGHTS
 };

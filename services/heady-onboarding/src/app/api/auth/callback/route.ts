@@ -1,3 +1,5 @@
+import { createLogger } from '../../../../../../utils/logger';
+const logger = createLogger('auto-fixed');
 /**
  * Heady™ Auth Callback API Route
  * 
@@ -14,7 +16,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { OnboardingStage } from '../../../../middleware/onboarding-guard';
-
 const SESSION_COOKIE = 'heady_session';
 const ONBOARDING_COOKIE = 'heady_onboarding_stage';
 const SESSION_MAX_AGE = 60 * 60 * 24 * 14; // 14 days
@@ -27,21 +28,20 @@ interface AuthCallbackBody {
   photoURL: string | null;
   uid: string;
 }
-
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body: AuthCallbackBody = await request.json();
-
     if (!body.idToken || !body.uid) {
-      return NextResponse.json(
-        { error: 'Missing idToken or uid' },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        error: 'Missing idToken or uid'
+      }, {
+        status: 400
+      });
     }
 
     // Verify token with Firebase Admin (in production)
     // For now, trust the client-side Firebase Auth verification
-    // TODO: Add firebase-admin verification for production hardening
+
     const sessionToken = generateSessionToken(body.uid);
 
     // Check if user exists in database
@@ -54,14 +54,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       provider: body.provider,
       displayName: body.displayName,
       email: body.email,
-      photoURL: body.photoURL,
+      photoURL: body.photoURL
     });
 
     // Build response
     const response = NextResponse.json({
       sessionToken,
       isNewUser,
-      provider: body.provider,
+      provider: body.provider
     });
 
     // Set session cookie
@@ -71,73 +71,68 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       sameSite: 'lax',
       maxAge: SESSION_MAX_AGE,
       path: '/',
-      domain: '.headyme.com', // Accessible across subdomains
+      domain: '.headyme.com' // Accessible across subdomains
     });
 
     // CRITICAL FIX: Set onboarding state
     if (isNewUser || !existingUser?.onboardingComplete) {
       // Determine starting stage
-      const startStage = isNewUser
-        ? OnboardingStage.CREATE_ACCOUNT
-        : (existingUser?.lastOnboardingStage ?? OnboardingStage.CREATE_ACCOUNT);
-
+      const startStage = isNewUser ? OnboardingStage.CREATE_ACCOUNT : existingUser?.lastOnboardingStage ?? OnboardingStage.CREATE_ACCOUNT;
       const onboardingState = {
         stage: startStage,
         stageIndex: Object.values(OnboardingStage).indexOf(startStage),
         userId: body.uid,
         provider: body.provider,
-        startedAt: new Date().toISOString(),
+        startedAt: new Date().toISOString()
       };
-
       response.cookies.set(ONBOARDING_COOKIE, JSON.stringify(onboardingState), {
-        httpOnly: false, // Needs to be readable by middleware
+        httpOnly: false,
+        // Needs to be readable by middleware
         secure: true,
         sameSite: 'lax',
         maxAge: SESSION_MAX_AGE,
         path: '/',
-        domain: '.headyme.com',
+        domain: '.headyme.com'
       });
     }
 
     // Log the decision
-    console.log('[AUTH_CALLBACK]', JSON.stringify({
+    logger.info('[AUTH_CALLBACK]', JSON.stringify({
       timestamp: new Date().toISOString(),
       uid: body.uid,
       provider: body.provider,
       isNewUser,
       onboardingComplete: existingUser?.onboardingComplete ?? false,
-      action: isNewUser ? 'NEW_USER_ONBOARDING' : 'RETURNING_USER',
+      action: isNewUser ? 'NEW_USER_ONBOARDING' : 'RETURNING_USER'
     }));
-
     return response;
   } catch (error) {
-    console.error('[AUTH_CALLBACK_ERROR]', error);
-    return NextResponse.json(
-      { error: 'Authentication failed' },
-      { status: 500 }
-    );
+    logger.error('[AUTH_CALLBACK_ERROR]', error);
+    return NextResponse.json({
+      error: 'Authentication failed'
+    }, {
+      status: 500
+    });
   }
 }
-
 export async function DELETE(): Promise<NextResponse> {
-  const response = NextResponse.json({ success: true });
-
+  const response = NextResponse.json({
+    success: true
+  });
   response.cookies.set(SESSION_COOKIE, '', {
     httpOnly: true,
     secure: true,
     maxAge: 0,
     path: '/',
-    domain: '.headyme.com',
+    domain: '.headyme.com'
   });
-
   response.cookies.set(ONBOARDING_COOKIE, '', {
     httpOnly: false,
     secure: true,
     maxAge: 0,
     path: '/',
-    domain: '.headyme.com',
+    domain: '.headyme.com'
   });
-
   return response;
 }
 
@@ -149,33 +144,27 @@ function generateSessionToken(uid: string): string {
   const random = Math.random().toString(36).substring(2, 15);
   return `heady_${uid.substring(0, 8)}_${timestamp}_${random}`;
 }
-
 interface UserRecord {
   firebaseUid: string;
   onboardingComplete: boolean;
   lastOnboardingStage: OnboardingStage | null;
 }
-
 async function lookupUser(uid: string): Promise<UserRecord | null> {
   // In production: query Prisma/PostgreSQL
   // Placeholder for database lookup
   try {
-    const response = await fetch(
-      `${process.env.HEADY_API_URL ?? 'https://api.headyapi.com'}/internal/users/${uid}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.HEADY_INTERNAL_KEY}`,
-          'X-Service': 'heady-onboarding',
-        },
+    const response = await fetch(`${process.env.HEADY_API_URL ?? 'https://api.headyapi.com'}/internal/users/${uid}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.HEADY_INTERNAL_KEY}`,
+        'X-Service': 'heady-onboarding'
       }
-    );
+    });
     if (!response.ok) return null;
     return response.json();
   } catch {
     return null;
   }
 }
-
 async function upsertUser(data: {
   firebaseUid: string;
   provider: string;
@@ -184,19 +173,16 @@ async function upsertUser(data: {
   photoURL: string | null;
 }): Promise<void> {
   try {
-    await fetch(
-      `${process.env.HEADY_API_URL ?? 'https://api.headyapi.com'}/internal/users`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.HEADY_INTERNAL_KEY}`,
-          'X-Service': 'heady-onboarding',
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    await fetch(`${process.env.HEADY_API_URL ?? 'https://api.headyapi.com'}/internal/users`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.HEADY_INTERNAL_KEY}`,
+        'X-Service': 'heady-onboarding'
+      },
+      body: JSON.stringify(data)
+    });
   } catch (error) {
-    console.error('[UPSERT_USER_ERROR]', error);
+    logger.error('[UPSERT_USER_ERROR]', error);
   }
 }

@@ -11,9 +11,8 @@ const {
   EmotionDetector,
   BiometricSync,
   ResponseModulator,
-  TRAIT_DIMENSIONS,
+  TRAIT_DIMENSIONS
 } = require('../persona/empathic-persona-engine');
-
 const PHI = 1.6180339887;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -22,12 +21,14 @@ function respond(res, status, body) {
   if (res && typeof res.status === 'function') return res.status(status).json(body);
   if (res && typeof res.writeHead === 'function') {
     const data = JSON.stringify(body);
-    res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) });
+    res.writeHead(status, {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(data)
+    });
     res.end(data);
   }
   return body;
 }
-
 function serializeProfile(p) {
   return p ? p.toJSON() : null;
 }
@@ -45,17 +46,27 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'POST',
-    path:   '/persona/profiles',
+    path: '/persona/profiles',
     handler: async (req, res) => {
-      const { id, name, traits, baseEmotion } = req.body || {};
-      const profile = new PersonaProfile({ id, name, traits, baseEmotion });
+      const {
+        id,
+        name,
+        traits,
+        baseEmotion
+      } = req.body || {};
+      const profile = new PersonaProfile({
+        id,
+        name,
+        traits,
+        baseEmotion
+      });
       engine.registerProfile(profile);
       return respond(res, 201, {
-        ok:      true,
+        ok: true,
         profile: serializeProfile(profile),
-        phi:     PHI,
+        phi: PHI
       });
-    },
+    }
   });
 
   /**
@@ -64,11 +75,15 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'GET',
-    path:   '/persona/profiles',
+    path: '/persona/profiles',
     handler: async (req, res) => {
       const profiles = engine.listProfiles();
-      return respond(res, 200, { ok: true, profiles, count: profiles.length });
-    },
+      return respond(res, 200, {
+        ok: true,
+        profiles,
+        count: profiles.length
+      });
+    }
   });
 
   /**
@@ -77,18 +92,27 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'PUT',
-    path:   '/persona/profiles/:id/activate',
+    path: '/persona/profiles/:id/activate',
     handler: async (req, res) => {
-      const { id } = req.params || {};
-      if (!id) return respond(res, 400, { error: 'Missing profile id' });
+      const {
+        id
+      } = req.params || {};
+      if (!id) return respond(res, 400, {
+        error: 'Missing profile id'
+      });
       try {
         engine.activateProfile(id);
         const profile = engine.getActiveProfile();
-        return respond(res, 200, { ok: true, activeProfile: serializeProfile(profile) });
+        return respond(res, 200, {
+          ok: true,
+          activeProfile: serializeProfile(profile)
+        });
       } catch (err) {
-        return respond(res, 404, { error: err.message });
+        return respond(res, 404, {
+          error: err.message
+        });
       }
-    },
+    }
   });
 
   /**
@@ -97,12 +121,17 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'GET',
-    path:   '/persona/profiles/active',
+    path: '/persona/profiles/active',
     handler: async (req, res) => {
       const profile = engine.getActiveProfile();
-      if (!profile) return respond(res, 404, { error: 'No active profile' });
-      return respond(res, 200, { ok: true, profile: serializeProfile(profile) });
-    },
+      if (!profile) return respond(res, 404, {
+        error: 'No active profile'
+      });
+      return respond(res, 200, {
+        ok: true,
+        profile: serializeProfile(profile)
+      });
+    }
   });
 
   /**
@@ -113,17 +142,28 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'POST',
-    path:   '/persona/process',
+    path: '/persona/process',
     handler: async (req, res) => {
-      const { text, voiceMeta } = req.body || {};
-      if (!text) return respond(res, 400, { error: 'Missing text field' });
+      const {
+        text,
+        voiceMeta
+      } = req.body || {};
+      if (!text) return respond(res, 400, {
+        error: 'Missing text field'
+      });
       try {
         const result = engine.process(text, voiceMeta || null);
-        return respond(res, 200, { ok: true, result, phi: PHI });
+        return respond(res, 200, {
+          ok: true,
+          result,
+          phi: PHI
+        });
       } catch (err) {
-        return respond(res, 422, { error: err.message });
+        return respond(res, 422, {
+          error: err.message
+        });
       }
-    },
+    }
   });
 
   /**
@@ -134,18 +174,28 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'POST',
-    path:   '/persona/biometric',
+    path: '/persona/biometric',
     handler: async (req, res) => {
-      const { type, value } = req.body || {};
-      if (!type || value === undefined) return respond(res, 400, { error: 'Missing type or value' });
+      const {
+        type,
+        value
+      } = req.body || {};
+      if (!type || value === undefined) return respond(res, 400, {
+        error: 'Missing type or value'
+      });
       try {
         engine.updateBiometric(type, Number(value));
         const state = engine.getBiometricSync().getState();
-        return respond(res, 200, { ok: true, biometricState: state });
+        return respond(res, 200, {
+          ok: true,
+          biometricState: state
+        });
       } catch (err) {
-        return respond(res, 422, { error: err.message });
+        return respond(res, 422, {
+          error: err.message
+        });
       }
-    },
+    }
   });
 
   /**
@@ -155,30 +205,34 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'POST',
-    path:   '/persona/emotion/detect',
+    path: '/persona/emotion/detect',
     handler: async (req, res) => {
-      const { text } = req.body || {};
-      if (!text) return respond(res, 400, { error: 'Missing text field' });
+      const {
+        text
+      } = req.body || {};
+      if (!text) return respond(res, 400, {
+        error: 'Missing text field'
+      });
       const detector = engine.getDetector();
-      const emotion  = detector.detectFromText(text);
-      return respond(res, 200, { ok: true, emotion: emotion.toJSON() });
-    },
+      const emotion = detector.detectFromText(text);
+      return respond(res, 200, {
+        ok: true,
+        emotion: emotion.toJSON()
+      });
+    }
   });
-
-  /**
-   * POST /persona/emotion/voice
-   * Detect emotion from voice metadata.
-   * Body: { pitch?: number, energy?: number, tempo?: number, jitter?: number }
-   */
   routes.push({
     method: 'POST',
-    path:   '/persona/emotion/voice',
+    path: '/persona/emotion/voice',
     handler: async (req, res) => {
       const meta = req.body || {};
       const detector = engine.getDetector();
-      const emotion  = detector.detectFromVoiceMeta(meta);
-      return respond(res, 200, { ok: true, emotion: emotion.toJSON() });
-    },
+      const emotion = detector.detectFromVoiceMeta(meta);
+      return respond(res, 200, {
+        ok: true,
+        emotion: emotion.toJSON()
+      });
+    }
   });
 
   /**
@@ -188,28 +242,34 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'POST',
-    path:   '/persona/modulate',
+    path: '/persona/modulate',
     handler: async (req, res) => {
-      const { emotion: emotionData = {}, profileId } = req.body || {};
-      const emotion = new EmotionVector(
-        emotionData.valence   || 0,
-        emotionData.arousal   || 0,
-        emotionData.dominance || 0,
-      );
-
+      const {
+        emotion: emotionData = {},
+        profileId
+      } = req.body || {};
+      const emotion = new EmotionVector(emotionData.valence || 0, emotionData.arousal || 0, emotionData.dominance || 0);
       let profile = engine.getActiveProfile();
       if (profileId) {
         const profiles = engine.listProfiles();
-        const found    = profiles.find(p => p.id === profileId);
-        if (!found) return respond(res, 404, { error: `Profile '${profileId}' not found` });
+        const found = profiles.find(p => p.id === profileId);
+        if (!found) return respond(res, 404, {
+          error: `Profile '${profileId}' not found`
+        });
         profile = new PersonaProfile(found);
       }
-      if (!profile) return respond(res, 422, { error: 'No active profile; activate one first or pass profileId' });
-
+      if (!profile) return respond(res, 422, {
+        error: 'No active profile; activate one first or pass profileId'
+      });
       const modulator = engine.getModulator();
       const directive = modulator.modulate(emotion, profile);
-      return respond(res, 200, { ok: true, directive, emotion: emotion.toJSON(), phi: PHI });
-    },
+      return respond(res, 200, {
+        ok: true,
+        directive,
+        emotion: emotion.toJSON(),
+        phi: PHI
+      });
+    }
   });
 
   /**
@@ -218,10 +278,14 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'GET',
-    path:   '/persona/traits',
+    path: '/persona/traits',
     handler: async (req, res) => {
-      return respond(res, 200, { ok: true, traits: TRAIT_DIMENSIONS, phi: PHI });
-    },
+      return respond(res, 200, {
+        ok: true,
+        traits: TRAIT_DIMENSIONS,
+        phi: PHI
+      });
+    }
   });
 
   /**
@@ -231,20 +295,27 @@ function createPersonaRoutes(opts = {}) {
    */
   routes.push({
     method: 'POST',
-    path:   '/persona/profiles/compare',
+    path: '/persona/profiles/compare',
     handler: async (req, res) => {
-      const { profileA, profileB } = req.body || {};
-      if (!profileA || !profileB) return respond(res, 400, { error: 'Missing profileA or profileB' });
-      const a   = new PersonaProfile(profileA);
-      const b   = new PersonaProfile(profileB);
+      const {
+        profileA,
+        profileB
+      } = req.body || {};
+      if (!profileA || !profileB) return respond(res, 400, {
+        error: 'Missing profileA or profileB'
+      });
+      const a = new PersonaProfile(profileA);
+      const b = new PersonaProfile(profileB);
       const sim = a.similarityTo(b);
-      return respond(res, 200, { ok: true, similarity: sim, phi: PHI });
-    },
+      return respond(res, 200, {
+        ok: true,
+        similarity: sim,
+        phi: PHI
+      });
+    }
   });
-
   return routes;
 }
-
 function attachPersonaRoutes(app, opts = {}) {
   const routes = createPersonaRoutes(opts);
   for (const route of routes) {
@@ -253,5 +324,7 @@ function attachPersonaRoutes(app, opts = {}) {
   }
   return app;
 }
-
-module.exports = { createPersonaRoutes, attachPersonaRoutes };
+module.exports = {
+  createPersonaRoutes,
+  attachPersonaRoutes
+};

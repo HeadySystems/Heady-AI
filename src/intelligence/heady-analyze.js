@@ -14,60 +14,99 @@
 'use strict';
 
 const {
-  PHI, PSI, PSI_SQ, PSI_CUBE,
-  fibonacci, phiThreshold, phiBackoff, phiFusionWeights,
-  CSL_THRESHOLDS, TIMING, SERVICE_PORTS,
-  cosineSimilarity, cslGate, cslBlend, adaptiveTemperature,
-  cslAND, cslOR, cslNOT, cslIMPLY, cslCONSENSUS,
-  SIZING, POOL_SIZES, PHI_TEMPERATURE,
-  phiPriorityScore, phiAdaptiveInterval,
+  PHI,
+  PSI,
+  PSI_SQ,
+  PSI_CUBE,
+  fibonacci,
+  phiThreshold,
+  phiBackoff,
+  phiFusionWeights,
+  CSL_THRESHOLDS,
+  TIMING,
+  SERVICE_PORTS,
+  cosineSimilarity,
+  cslGate,
+  cslBlend,
+  adaptiveTemperature,
+  cslAND,
+  cslOR,
+  cslNOT,
+  cslIMPLY,
+  cslCONSENSUS,
+  SIZING,
+  POOL_SIZES,
+  PHI_TEMPERATURE,
+  phiPriorityScore,
+  phiAdaptiveInterval
 } = require('../../shared/phi-math');
-const { createLogger } = require('../../shared/logger');
-const { createHealthCheck } = require('../../shared/health');
-
+const {
+  createLogger
+} = require('../../shared/logger');
+const {
+  createHealthCheck
+} = require('../../shared/health');
 const logger = createLogger('heady-analyze');
 
 // ═══════════════════════════════════════════════════════════
 // CONSTANTS — All Phi/Fibonacci Derived
 // ═══════════════════════════════════════════════════════════
 
-const MAX_CAUSAL_DEPTH = fibonacci(6);              // 8 levels deep in cause chain
-const MAX_SYMPTOMS_PER_ANALYSIS = fibonacci(8);     // 21 symptoms per investigation
-const MAX_HYPOTHESES = fibonacci(7);                // 13 competing hypotheses
-const ANALYSIS_TIMEOUT_MS = fibonacci(13) * 1000;   // 233 seconds
-const HISTORY_BUFFER_SIZE = fibonacci(14);           // 377 past analyses
-const EVIDENCE_CACHE_SIZE = fibonacci(16);           // 987 evidence entries
-const CORRELATION_WINDOW_MS = fibonacci(11) * 1000;  // 89 seconds for temporal correlation
-const MIN_EVIDENCE_STRENGTH = CSL_THRESHOLDS.LOW;   // ≈ 0.691 — minimum to consider evidence
+const MAX_CAUSAL_DEPTH = fibonacci(6); // 8 levels deep in cause chain
+const MAX_SYMPTOMS_PER_ANALYSIS = fibonacci(8); // 21 symptoms per investigation
+const MAX_HYPOTHESES = fibonacci(7); // 13 competing hypotheses
+const ANALYSIS_TIMEOUT_MS = fibonacci(13) * 1000; // 233 seconds
+const HISTORY_BUFFER_SIZE = fibonacci(14); // 377 past analyses
+const EVIDENCE_CACHE_SIZE = fibonacci(16); // 987 evidence entries
+const CORRELATION_WINDOW_MS = fibonacci(11) * 1000;
+const MIN_EVIDENCE_STRENGTH = CSL_THRESHOLDS.LOW; // ≈ 0.691 — minimum to consider evidence
 const DIAGNOSIS_CONFIDENCE_THRESHOLD = CSL_THRESHOLDS.MEDIUM; // ≈ 0.809 — confident diagnosis
-const ROOT_CAUSE_THRESHOLD = CSL_THRESHOLDS.HIGH;   // ≈ 0.882 — root cause identification
+const ROOT_CAUSE_THRESHOLD = CSL_THRESHOLDS.HIGH; // ≈ 0.882 — root cause identification
 
 // Analysis dimensions — phi-weighted importance
 const ANALYSIS_DIMENSIONS = Object.freeze({
-  temporal:    { weight: phiFusionWeights(5)[0], label: 'Temporal Correlation' },    // ≈ 0.387
-  structural:  { weight: phiFusionWeights(5)[1], label: 'Structural Proximity' },   // ≈ 0.239
-  semantic:    { weight: phiFusionWeights(5)[2], label: 'Semantic Similarity' },     // ≈ 0.148
-  behavioral:  { weight: phiFusionWeights(5)[3], label: 'Behavioral Pattern' },      // ≈ 0.092
-  statistical: { weight: phiFusionWeights(5)[4], label: 'Statistical Anomaly' },     // ≈ 0.057
+  temporal: {
+    weight: phiFusionWeights(5)[0],
+    label: 'Temporal Correlation'
+  },
+  // ≈ 0.387
+  structural: {
+    weight: phiFusionWeights(5)[1],
+    label: 'Structural Proximity'
+  },
+  // ≈ 0.239
+  semantic: {
+    weight: phiFusionWeights(5)[2],
+    label: 'Semantic Similarity'
+  },
+  // ≈ 0.148
+  behavioral: {
+    weight: phiFusionWeights(5)[3],
+    label: 'Behavioral Pattern'
+  },
+  // ≈ 0.092
+  statistical: {
+    weight: phiFusionWeights(5)[4],
+    label: 'Statistical Anomaly'
+  } // ≈ 0.057
 });
-
 const DIMENSION_KEYS = Object.keys(ANALYSIS_DIMENSIONS);
 
 // Symptom categories
 const SYMPTOM_TYPES = Object.freeze({
-  LATENCY_SPIKE:      'latency_spike',
-  ERROR_BURST:        'error_burst',
-  THROUGHPUT_DROP:     'throughput_drop',
-  MEMORY_PRESSURE:    'memory_pressure',
-  CONNECTION_FAILURE:  'connection_failure',
-  COHERENCE_DRIFT:    'coherence_drift',
-  EMBEDDING_ANOMALY:  'embedding_anomaly',
-  CASCADE_FAILURE:    'cascade_failure',
+  LATENCY_SPIKE: 'latency_spike',
+  ERROR_BURST: 'error_burst',
+  THROUGHPUT_DROP: 'throughput_drop',
+  MEMORY_PRESSURE: 'memory_pressure',
+  CONNECTION_FAILURE: 'connection_failure',
+  COHERENCE_DRIFT: 'coherence_drift',
+  EMBEDDING_ANOMALY: 'embedding_anomaly',
+  CASCADE_FAILURE: 'cascade_failure',
   RESOURCE_EXHAUSTION: 'resource_exhaustion',
-  CONFIG_MISMATCH:    'config_mismatch',
-  AUTH_FAILURE:       'auth_failure',
-  DATA_CORRUPTION:    'data_corruption',
-  TIMEOUT:            'timeout',
+  CONFIG_MISMATCH: 'config_mismatch',
+  AUTH_FAILURE: 'auth_failure',
+  DATA_CORRUPTION: 'data_corruption',
+  TIMEOUT: 'timeout'
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -96,9 +135,8 @@ class EvidenceCollector {
       id,
       ...evidence,
       timestamp: evidence.timestamp || Date.now(),
-      recordedAt: Date.now(),
+      recordedAt: Date.now()
     };
-
     this._cache.set(id, entry);
     this._temporalIndex.push(entry);
 
@@ -107,7 +145,6 @@ class EvidenceCollector {
       const oldest = this._temporalIndex.shift();
       if (oldest) this._cache.delete(oldest.id);
     }
-
     return entry;
   }
 
@@ -119,9 +156,7 @@ class EvidenceCollector {
    */
   getRecent(windowMs = CORRELATION_WINDOW_MS, source = null) {
     const cutoff = Date.now() - windowMs;
-    return this._temporalIndex.filter(e =>
-      e.timestamp >= cutoff && (!source || e.source === source)
-    );
+    return this._temporalIndex.filter(e => e.timestamp >= cutoff && (!source || e.source === source));
   }
 
   /**
@@ -133,13 +168,11 @@ class EvidenceCollector {
   findCorrelated(event, windowMs = CORRELATION_WINDOW_MS) {
     const start = event.timestamp - windowMs;
     const end = event.timestamp + windowMs;
-    return this._temporalIndex.filter(e =>
-      e.timestamp >= start && e.timestamp <= end && e.id !== event.id
-    );
+    return this._temporalIndex.filter(e => e.timestamp >= start && e.timestamp <= end && e.id !== event.id);
   }
-
-  get size() { return this._cache.size; }
-
+  get size() {
+    return this._cache.size;
+  }
   clear() {
     this._cache.clear();
     this._temporalIndex = [];
@@ -166,13 +199,10 @@ class Hypothesis {
     this.refutations = [];
     this.createdAt = Date.now();
   }
-
-  /**
-   * Score this hypothesis across all analysis dimensions.
-   * @param {Object} dimensionScores — { temporal: 0.8, structural: 0.6, ... }
-   */
   scoreDimensions(dimensionScores) {
-    this.scores = { ...dimensionScores };
+    this.scores = {
+      ...dimensionScores
+    };
     // Composite = phi-weighted fusion of dimension scores
     const weights = DIMENSION_KEYS.map(k => ANALYSIS_DIMENSIONS[k].weight);
     const values = DIMENSION_KEYS.map(k => dimensionScores[k] || 0);
@@ -185,11 +215,14 @@ class Hypothesis {
    * @param {number} strength — 0..1
    */
   refute(reason, strength) {
-    this.refutations.push({ reason, strength, timestamp: Date.now() });
+    this.refutations.push({
+      reason,
+      strength,
+      timestamp: Date.now()
+    });
     // Reduce composite score by refutation strength × ψ
-    this.compositeScore *= (1 - strength * PSI);
+    this.compositeScore *= 1 - strength * PSI;
   }
-
   toJSON() {
     return {
       id: this.id,
@@ -198,7 +231,7 @@ class Hypothesis {
       scores: this.scores,
       compositeScore: Math.round(this.compositeScore * 1000) / 1000,
       evidenceCount: this.evidence.length,
-      refutationCount: this.refutations.length,
+      refutationCount: this.refutations.length
     };
   }
 }
@@ -210,7 +243,7 @@ class Hypothesis {
 class CausalGraph {
   constructor() {
     this._nodes = new Map(); // cause → { cause, effects: Set, parents: Set, depth, embedding }
-    this._edges = [];        // { from, to, strength, type }
+    this._edges = []; // { from, to, strength, type }
   }
 
   /**
@@ -222,15 +255,31 @@ class CausalGraph {
    */
   addEdge(cause, effect, strength, type = 'direct') {
     if (!this._nodes.has(cause)) {
-      this._nodes.set(cause, { cause, effects: new Set(), parents: new Set(), depth: 0, embedding: null });
+      this._nodes.set(cause, {
+        cause,
+        effects: new Set(),
+        parents: new Set(),
+        depth: 0,
+        embedding: null
+      });
     }
     if (!this._nodes.has(effect)) {
-      this._nodes.set(effect, { cause: effect, effects: new Set(), parents: new Set(), depth: 0, embedding: null });
+      this._nodes.set(effect, {
+        cause: effect,
+        effects: new Set(),
+        parents: new Set(),
+        depth: 0,
+        embedding: null
+      });
     }
-
     this._nodes.get(cause).effects.add(effect);
     this._nodes.get(effect).parents.add(cause);
-    this._edges.push({ from: cause, to: effect, strength, type });
+    this._edges.push({
+      from: cause,
+      to: effect,
+      strength,
+      type
+    });
   }
 
   /**
@@ -242,27 +291,26 @@ class CausalGraph {
   traceRootCauses(symptom, maxDepth = MAX_CAUSAL_DEPTH) {
     const results = [];
     const visited = new Set();
-
     const dfs = (node, path, cumulativeStrength, depth) => {
       if (depth > maxDepth || visited.has(node)) return;
       visited.add(node);
-
       const nodeData = this._nodes.get(node);
       if (!nodeData) return;
-
       if (nodeData.parents.size === 0 && path.length > 0) {
         // This is a root cause (no parents)
-        results.push({ cause: node, path: [...path], strength: cumulativeStrength });
+        results.push({
+          cause: node,
+          path: [...path],
+          strength: cumulativeStrength
+        });
         return;
       }
-
       for (const parent of nodeData.parents) {
         const edge = this._edges.find(e => e.from === parent && e.to === node);
         const edgeStrength = edge ? edge.strength : PSI;
         dfs(parent, [...path, node], cumulativeStrength * edgeStrength, depth + 1);
       }
     };
-
     dfs(symptom, [], 1.0, 0);
 
     // Sort by cumulative strength descending
@@ -279,29 +327,40 @@ class CausalGraph {
   traceEffects(cause, maxDepth = MAX_CAUSAL_DEPTH) {
     const results = [];
     const visited = new Set();
-
-    const bfs = (queue) => {
+    const bfs = queue => {
       while (queue.length > 0) {
-        const { node, depth, strength } = queue.shift();
+        const {
+          node,
+          depth,
+          strength
+        } = queue.shift();
         if (depth > maxDepth || visited.has(node)) continue;
         visited.add(node);
-
         const nodeData = this._nodes.get(node);
         if (!nodeData) continue;
-
         if (depth > 0) {
-          results.push({ effect: node, depth, strength });
+          results.push({
+            effect: node,
+            depth,
+            strength
+          });
         }
-
         for (const effect of nodeData.effects) {
           const edge = this._edges.find(e => e.from === node && e.to === effect);
           const edgeStrength = edge ? edge.strength : PSI;
-          queue.push({ node: effect, depth: depth + 1, strength: strength * edgeStrength });
+          queue.push({
+            node: effect,
+            depth: depth + 1,
+            strength: strength * edgeStrength
+          });
         }
       }
     };
-
-    bfs([{ node: cause, depth: 0, strength: 1.0 }]);
+    bfs([{
+      node: cause,
+      depth: 0,
+      strength: 1.0
+    }]);
     return results;
   }
 
@@ -312,9 +371,12 @@ class CausalGraph {
     const roots = this.traceRootCauses(symptom);
     return roots.length > 0 ? roots[0] : null;
   }
-
-  get nodeCount() { return this._nodes.size; }
-  get edgeCount() { return this._edges.length; }
+  get nodeCount() {
+    return this._nodes.size;
+  }
+  get edgeCount() {
+    return this._edges.length;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -332,7 +394,6 @@ class HeadyAnalyze {
     this.pgClient = options.pgClient || null;
     this.conductor = options.conductor || null;
     this.patterns = options.patterns || null;
-
     this.evidenceCollector = new EvidenceCollector();
     this.causalGraph = new CausalGraph();
     this.analysisHistory = [];
@@ -341,8 +402,10 @@ class HeadyAnalyze {
 
     // Build known causal relationships
     this._buildKnownCausalGraph();
-
-    logger.info({ msg: 'HeadyAnalyze initialized', knownCauses: this.causalGraph.nodeCount });
+    logger.info({
+      msg: 'HeadyAnalyze initialized',
+      knownCauses: this.causalGraph.nodeCount
+    });
   }
 
   /**
@@ -400,11 +463,10 @@ class HeadyAnalyze {
   async analyze(symptoms, context = {}) {
     const analysisId = `analysis-${Date.now()}-${Math.random().toString(36).substring(2, fibonacci(6))}`;
     const startTime = Date.now();
-
     logger.info({
       analysisId,
       symptomCount: symptoms.length,
-      msg: 'Starting root cause analysis',
+      msg: 'Starting root cause analysis'
     });
 
     // Record all symptoms as evidence
@@ -415,11 +477,9 @@ class HeadyAnalyze {
         timestamp: symptom.timestamp || Date.now(),
         severity: symptom.severity || PSI,
         metadata: symptom.metadata || {},
-        embedding: symptom.embedding || null,
+        embedding: symptom.embedding || null
       });
     }
-
-    // Phase 1: Temporal correlation — find co-occurring events
     const temporalCorrelations = this._analyzeTemporalCorrelation(symptoms);
 
     // Phase 2: Structural analysis — map symptoms to service topology
@@ -435,10 +495,7 @@ class HeadyAnalyze {
     const statisticalAnalysis = this._analyzeStatisticalAnomalies(symptoms);
 
     // Phase 6: Generate hypotheses
-    const hypotheses = this._generateHypotheses(
-      symptoms, temporalCorrelations, structuralAnalysis,
-      semanticAnalysis, behavioralAnalysis, statisticalAnalysis
-    );
+    const hypotheses = this._generateHypotheses(symptoms, temporalCorrelations, structuralAnalysis, semanticAnalysis, behavioralAnalysis, statisticalAnalysis);
 
     // Phase 7: Score and rank hypotheses
     for (const hyp of hypotheses) {
@@ -447,7 +504,7 @@ class HeadyAnalyze {
         structural: structuralAnalysis.scores[hyp.category] || 0,
         semantic: semanticAnalysis.scores[hyp.category] || 0,
         behavioral: behavioralAnalysis.scores[hyp.category] || 0,
-        statistical: statisticalAnalysis.scores[hyp.category] || 0,
+        statistical: statisticalAnalysis.scores[hyp.category] || 0
       });
     }
 
@@ -460,7 +517,10 @@ class HeadyAnalyze {
       const typeKey = symptom.type || 'unknown';
       const roots = this.causalGraph.traceRootCauses(typeKey);
       if (roots.length > 0) {
-        graphResults.push({ symptom: typeKey, rootCauses: roots });
+        graphResults.push({
+          symptom: typeKey,
+          rootCauses: roots
+        });
       }
     }
 
@@ -468,7 +528,6 @@ class HeadyAnalyze {
     const topHypothesis = hypotheses[0] || null;
     const isConfident = topHypothesis && topHypothesis.compositeScore >= DIAGNOSIS_CONFIDENCE_THRESHOLD;
     const isRootCauseIdentified = topHypothesis && topHypothesis.compositeScore >= ROOT_CAUSE_THRESHOLD;
-
     const report = {
       analysisId,
       timestamp: Date.now(),
@@ -479,21 +538,21 @@ class HeadyAnalyze {
         rootCauseIdentified: isRootCauseIdentified,
         primaryHypothesis: topHypothesis ? topHypothesis.toJSON() : null,
         alternativeHypotheses: hypotheses.slice(1, fibonacci(5)).map(h => h.toJSON()),
-        confidenceScore: topHypothesis ? topHypothesis.compositeScore : 0,
+        confidenceScore: topHypothesis ? topHypothesis.compositeScore : 0
       },
       dimensions: {
         temporal: temporalCorrelations.summary,
         structural: structuralAnalysis.summary,
         semantic: semanticAnalysis.summary,
         behavioral: behavioralAnalysis.summary,
-        statistical: statisticalAnalysis.summary,
+        statistical: statisticalAnalysis.summary
       },
       causalGraph: {
         tracedPaths: graphResults,
         knownNodes: this.causalGraph.nodeCount,
-        knownEdges: this.causalGraph.edgeCount,
+        knownEdges: this.causalGraph.edgeCount
       },
-      recommendations: this._generateRecommendations(topHypothesis, graphResults, isRootCauseIdentified),
+      recommendations: this._generateRecommendations(topHypothesis, graphResults, isRootCauseIdentified)
     };
 
     // Store in history
@@ -501,7 +560,6 @@ class HeadyAnalyze {
     if (this.analysisHistory.length > HISTORY_BUFFER_SIZE) {
       this.analysisHistory = this.analysisHistory.slice(-HISTORY_BUFFER_SIZE);
     }
-
     logger.info({
       analysisId,
       confident: isConfident,
@@ -509,14 +567,10 @@ class HeadyAnalyze {
       primaryCause: topHypothesis?.cause,
       score: topHypothesis?.compositeScore,
       duration: report.duration,
-      msg: 'Root cause analysis complete',
+      msg: 'Root cause analysis complete'
     });
-
     return report;
   }
-
-  // ─── Phase 1: Temporal Correlation ───
-
   _analyzeTemporalCorrelation(symptoms) {
     const scores = {};
     const clusters = [];
@@ -524,16 +578,13 @@ class HeadyAnalyze {
     // Group symptoms by time proximity
     const sorted = [...symptoms].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
     let currentCluster = [];
-
     for (let i = 0; i < sorted.length; i++) {
       if (currentCluster.length === 0) {
         currentCluster.push(sorted[i]);
         continue;
       }
-
       const lastTs = currentCluster[currentCluster.length - 1].timestamp || 0;
       const thisTs = sorted[i].timestamp || 0;
-
       if (thisTs - lastTs <= CORRELATION_WINDOW_MS) {
         currentCluster.push(sorted[i]);
       } else {
@@ -547,20 +598,16 @@ class HeadyAnalyze {
     for (const cluster of clusters) {
       const types = new Set(cluster.map(s => s.type || 'unknown'));
       for (const type of types) {
-        scores[type] = Math.min(
-          (scores[type] || 0) + cluster.length / MAX_SYMPTOMS_PER_ANALYSIS,
-          1.0
-        );
+        scores[type] = Math.min((scores[type] || 0) + cluster.length / MAX_SYMPTOMS_PER_ANALYSIS, 1.0);
       }
     }
-
     return {
       scores,
       summary: {
         clusterCount: clusters.length,
         largestCluster: clusters.reduce((max, c) => Math.max(max, c.length), 0),
-        correlationWindow: CORRELATION_WINDOW_MS,
-      },
+        correlationWindow: CORRELATION_WINDOW_MS
+      }
     };
   }
 
@@ -583,23 +630,15 @@ class HeadyAnalyze {
     for (const [source, syms] of Object.entries(bySource)) {
       const category = syms[0]?.type || 'unknown';
       // More sources affected → higher structural score
-      const structuralScore = cslGate(
-        syms.length / MAX_SYMPTOMS_PER_ANALYSIS,
-        sourceCounts / fibonacci(5),
-        CSL_THRESHOLDS.MINIMUM,
-        PHI_TEMPERATURE
-      );
+      const structuralScore = cslGate(syms.length / MAX_SYMPTOMS_PER_ANALYSIS, sourceCounts / fibonacci(5), CSL_THRESHOLDS.MINIMUM, PHI_TEMPERATURE);
       scores[category] = Math.max(scores[category] || 0, structuralScore);
     }
-
     return {
       scores,
       summary: {
         affectedSources: sourceCounts,
-        symptomsBySource: Object.fromEntries(
-          Object.entries(bySource).map(([k, v]) => [k, v.length])
-        ),
-      },
+        symptomsBySource: Object.fromEntries(Object.entries(bySource).map(([k, v]) => [k, v.length]))
+      }
     };
   }
 
@@ -610,14 +649,17 @@ class HeadyAnalyze {
 
     // Compare symptom embeddings pairwise
     const withEmbeddings = symptoms.filter(s => s.embedding && s.embedding.length > 0);
-
     if (withEmbeddings.length < 2) {
-      return { scores, summary: { pairsCompared: 0, averageSimilarity: 0 } };
+      return {
+        scores,
+        summary: {
+          pairsCompared: 0,
+          averageSimilarity: 0
+        }
+      };
     }
-
     let totalSim = 0;
     let pairCount = 0;
-
     for (let i = 0; i < withEmbeddings.length - 1; i++) {
       for (let j = i + 1; j < withEmbeddings.length; j++) {
         const sim = cosineSimilarity(withEmbeddings[i].embedding, withEmbeddings[j].embedding);
@@ -631,14 +673,13 @@ class HeadyAnalyze {
         }
       }
     }
-
     return {
       scores,
       summary: {
         pairsCompared: pairCount,
-        averageSimilarity: pairCount > 0 ? Math.round((totalSim / pairCount) * 1000) / 1000 : 0,
-        highSimilarityPairs: Object.values(scores).filter(s => s >= CSL_THRESHOLDS.HIGH).length,
-      },
+        averageSimilarity: pairCount > 0 ? Math.round(totalSim / pairCount * 1000) / 1000 : 0,
+        highSimilarityPairs: Object.values(scores).filter(s => s >= CSL_THRESHOLDS.HIGH).length
+      }
     };
   }
 
@@ -650,14 +691,14 @@ class HeadyAnalyze {
     // Known behavioral signatures
     const SIGNATURES = {
       cascade_failure: {
-        pattern: (syms) => {
+        pattern: syms => {
           // Multiple services failing within seconds → cascade
           const sources = new Set(syms.map(s => s.source));
           return sources.size >= fibonacci(3) && syms.length >= fibonacci(5);
-        },
+        }
       },
       resource_exhaustion: {
-        pattern: (syms) => {
+        pattern: syms => {
           // Increasing severity over time
           const sorted = [...syms].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
           let increasing = 0;
@@ -665,10 +706,10 @@ class HeadyAnalyze {
             if ((sorted[i].severity || 0) > (sorted[i - 1].severity || 0)) increasing++;
           }
           return sorted.length > 1 && increasing / (sorted.length - 1) > PSI;
-        },
+        }
       },
       periodic_failure: {
-        pattern: (syms) => {
+        pattern: syms => {
           // Regular intervals between failures
           if (syms.length < fibonacci(4)) return false;
           const sorted = [...syms].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
@@ -681,22 +722,20 @@ class HeadyAnalyze {
           const variance = intervals.reduce((s, v) => s + (v - avg) ** 2, 0) / intervals.length;
           const cv = Math.sqrt(variance) / avg;
           return cv < PSI_SQ; // Low coefficient of variation → periodic
-        },
-      },
+        }
+      }
     };
-
     for (const [name, sig] of Object.entries(SIGNATURES)) {
       if (sig.pattern(symptoms)) {
         scores[name] = CSL_THRESHOLDS.HIGH;
       }
     }
-
     return {
       scores,
       summary: {
         matchedPatterns: Object.keys(scores),
-        patternCount: Object.keys(scores).length,
-      },
+        patternCount: Object.keys(scores).length
+      }
     };
   }
 
@@ -704,11 +743,16 @@ class HeadyAnalyze {
 
   _analyzeStatisticalAnomalies(symptoms) {
     const scores = {};
-
     if (symptoms.length === 0) {
-      return { scores, summary: { anomalyCount: 0, meanSeverity: 0, stdDevSeverity: 0 } };
+      return {
+        scores,
+        summary: {
+          anomalyCount: 0,
+          meanSeverity: 0,
+          stdDevSeverity: 0
+        }
+      };
     }
-
     const severities = symptoms.map(s => s.severity || 0);
     const mean = severities.reduce((a, b) => a + b, 0) / severities.length;
     const variance = severities.reduce((s, v) => s + (v - mean) ** 2, 0) / severities.length;
@@ -724,15 +768,14 @@ class HeadyAnalyze {
         scores[category] = Math.max(scores[category] || 0, Math.min(z / PHI, 1.0));
       }
     }
-
     return {
       scores,
       summary: {
         anomalyCount,
         meanSeverity: Math.round(mean * 1000) / 1000,
         stdDevSeverity: Math.round(stdDev * 1000) / 1000,
-        zThreshold: PHI,
-      },
+        zThreshold: PHI
+      }
     };
   }
 
@@ -743,52 +786,30 @@ class HeadyAnalyze {
 
     // Extract unique symptom types
     const types = [...new Set(symptoms.map(s => s.type || 'unknown'))];
-
-    // Hypothesis from temporal clusters
     if (temporal.summary.clusterCount > 0) {
-      hypotheses.push(new Hypothesis(
-        'Correlated failure — multiple symptoms co-occurring suggest shared root cause',
-        'cascade_failure',
-        symptoms,
-      ));
+      hypotheses.push(new Hypothesis('Correlated failure — multiple symptoms co-occurring suggest shared root cause', 'cascade_failure', symptoms));
     }
 
     // Hypothesis from structural proximity
     if (structural.summary.affectedSources >= fibonacci(3)) {
-      hypotheses.push(new Hypothesis(
-        `Multi-service failure across ${structural.summary.affectedSources} sources — infrastructure dependency likely`,
-        'infrastructure_failure',
-        symptoms,
-      ));
+      hypotheses.push(new Hypothesis(`Multi-service failure across ${structural.summary.affectedSources} sources — infrastructure dependency likely`, 'infrastructure_failure', symptoms));
     }
 
     // Hypothesis from behavioral patterns
     for (const pattern of behavioral.summary.matchedPatterns) {
-      hypotheses.push(new Hypothesis(
-        `Behavioral pattern match: ${pattern}`,
-        pattern,
-        symptoms,
-      ));
+      hypotheses.push(new Hypothesis(`Behavioral pattern match: ${pattern}`, pattern, symptoms));
     }
 
     // Hypothesis from statistical anomalies
     if (statistical.summary.anomalyCount > 0) {
-      hypotheses.push(new Hypothesis(
-        `Statistical anomaly — ${statistical.summary.anomalyCount} symptoms exceed φ standard deviations`,
-        'statistical_anomaly',
-        symptoms.filter(s => (s.severity || 0) > statistical.summary.meanSeverity + PHI * statistical.summary.stdDevSeverity),
-      ));
+      hypotheses.push(new Hypothesis(`Statistical anomaly — ${statistical.summary.anomalyCount} symptoms exceed φ standard deviations`, 'statistical_anomaly', symptoms.filter(s => (s.severity || 0) > statistical.summary.meanSeverity + PHI * statistical.summary.stdDevSeverity)));
     }
 
     // Hypothesis per symptom type
     for (const type of types) {
       const typeSymptoms = symptoms.filter(s => s.type === type);
       if (typeSymptoms.length >= fibonacci(3)) {
-        hypotheses.push(new Hypothesis(
-          `Recurring ${type} — ${typeSymptoms.length} occurrences suggest systematic issue`,
-          type,
-          typeSymptoms,
-        ));
+        hypotheses.push(new Hypothesis(`Recurring ${type} — ${typeSymptoms.length} occurrences suggest systematic issue`, type, typeSymptoms));
       }
     }
 
@@ -796,14 +817,9 @@ class HeadyAnalyze {
     for (const type of types) {
       const roots = this.causalGraph.traceRootCauses(type);
       for (const root of roots.slice(0, fibonacci(3))) {
-        hypotheses.push(new Hypothesis(
-          `Graph-traced root cause: ${root.cause} → ${type} (path length: ${root.path.length})`,
-          root.cause,
-          symptoms.filter(s => s.type === type),
-        ));
+        hypotheses.push(new Hypothesis(`Graph-traced root cause: ${root.cause} → ${type} (path length: ${root.path.length})`, root.cause, symptoms.filter(s => s.type === type)));
       }
     }
-
     return hypotheses.slice(0, MAX_HYPOTHESES);
   }
 
@@ -811,21 +827,19 @@ class HeadyAnalyze {
 
   _generateRecommendations(topHypothesis, graphResults, isRootCauseIdentified) {
     const recommendations = [];
-
     if (!topHypothesis) {
       recommendations.push({
         action: 'gather_more_data',
         description: 'Insufficient evidence for diagnosis — collect more symptoms and retry',
-        urgency: PSI,
+        urgency: PSI
       });
       return recommendations;
     }
-
     if (isRootCauseIdentified) {
       recommendations.push({
         action: 'fix_root_cause',
         description: `Address root cause: ${topHypothesis.cause}`,
-        urgency: topHypothesis.compositeScore,
+        urgency: topHypothesis.compositeScore
       });
     }
 
@@ -836,16 +850,18 @@ class HeadyAnalyze {
         for (const rc of gr.rootCauses) {
           const effects = this.causalGraph.traceEffects(rc.cause);
           if (effects.length >= fibonacci(3)) {
-            cascadeTargets.push({ cause: rc.cause, affectedCount: effects.length });
+            cascadeTargets.push({
+              cause: rc.cause,
+              affectedCount: effects.length
+            });
           }
         }
       }
-
       if (cascadeTargets.length > 0) {
         recommendations.push({
           action: 'circuit_break',
           description: `Isolate cascade source — ${cascadeTargets[0].cause} affects ${cascadeTargets[0].affectedCount} downstream components`,
-          urgency: CSL_THRESHOLDS.HIGH,
+          urgency: CSL_THRESHOLDS.HIGH
         });
       }
     }
@@ -855,16 +871,13 @@ class HeadyAnalyze {
       action: 'evaluate_strategies',
       description: 'Forward to HeadyMC for Monte Carlo strategy evaluation',
       urgency: topHypothesis.compositeScore * PSI,
-      strategies: this._suggestStrategies(topHypothesis),
+      strategies: this._suggestStrategies(topHypothesis)
     });
-
     return recommendations;
   }
-
   _suggestStrategies(hypothesis) {
     const strategies = [];
     const cat = hypothesis.category;
-
     if (cat.includes('failure') || cat.includes('down')) {
       strategies.push('restart', 'rollback', 'reroute');
     }
@@ -877,7 +890,6 @@ class HeadyAnalyze {
     if (cat.includes('cascade')) {
       strategies.push('circuit_break', 'quarantine', 'scale_out');
     }
-
     return strategies.length > 0 ? strategies : ['restart', 'rollback', 'reroute'];
   }
 
@@ -886,37 +898,45 @@ class HeadyAnalyze {
   async start() {
     if (this._active) return;
     this._active = true;
-
     this._heartbeatInterval = setInterval(() => {
       logger.info({
         evidenceCount: this.evidenceCollector.size,
         analysisCount: this.analysisHistory.length,
         causalNodes: this.causalGraph.nodeCount,
-        msg: 'HeadyAnalyze heartbeat',
+        msg: 'HeadyAnalyze heartbeat'
       });
     }, TIMING.HEARTBEAT_MS);
-
-    logger.info({ msg: 'HeadyAnalyze started' });
+    logger.info({
+      msg: 'HeadyAnalyze started'
+    });
   }
-
   async stop() {
     this._active = false;
     if (this._heartbeatInterval) {
       clearInterval(this._heartbeatInterval);
       this._heartbeatInterval = null;
     }
-    logger.info({ msg: 'HeadyAnalyze stopped' });
+    logger.info({
+      msg: 'HeadyAnalyze stopped'
+    });
   }
-
   health() {
     return {
       service: 'heady-analyze',
       status: this._active ? 'healthy' : 'stopped',
       evidenceCache: this.evidenceCollector.size,
       analysisCount: this.analysisHistory.length,
-      causalGraph: { nodes: this.causalGraph.nodeCount, edges: this.causalGraph.edgeCount },
+      causalGraph: {
+        nodes: this.causalGraph.nodeCount,
+        edges: this.causalGraph.edgeCount
+      }
     };
   }
 }
-
-module.exports = { HeadyAnalyze, EvidenceCollector, CausalGraph, Hypothesis, SYMPTOM_TYPES };
+module.exports = {
+  HeadyAnalyze,
+  EvidenceCollector,
+  CausalGraph,
+  Hypothesis,
+  SYMPTOM_TYPES
+};

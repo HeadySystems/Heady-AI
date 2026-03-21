@@ -20,11 +20,6 @@ export function fibonacci(n: number): number[] {
   }
   return seq.slice(0, n);
 }
-
-/**
- * Phi-scaled backoff for retries (replaces arbitrary exponential backoff)
- * Base delay × φ^attempt
- */
 export function phiBackoff(attempt: number, baseMs = 1000): number {
   return Math.round(baseMs * Math.pow(PHI, attempt));
 }
@@ -34,11 +29,13 @@ export function phiBackoff(attempt: number, baseMs = 1000): number {
  * Returns thresholds at phi intervals: [0.382, 0.618, 0.786, 0.854]
  */
 export function phiThresholds(): number[] {
-  return [
-    1 - PHI_INV,           // 0.382 — low confidence
-    PHI_INV,               // 0.618 — medium confidence
-    1 - (1 / PHI_SQ),     // 0.618... — adjusted
-    PHI_INV * PHI_INV,    // 0.382... — inverse
+  return [1 - PHI_INV,
+  // 0.382 — low confidence
+  PHI_INV,
+  // 0.618 — medium confidence
+  1 - 1 / PHI_SQ,
+  // 0.618... — adjusted
+  PHI_INV * PHI_INV // 0.382... — inverse
   ].sort();
 }
 
@@ -82,6 +79,6 @@ export function phiSpacingCSS(baseRem = 1): Record<string, string> {
     '--phi-md': `${(baseRem * PHI).toFixed(4)}rem`,
     '--phi-lg': `${(baseRem * PHI_SQ).toFixed(4)}rem`,
     '--phi-xl': `${(baseRem * PHI_CUBE).toFixed(4)}rem`,
-    '--phi': `${PHI}`,
+    '--phi': `${PHI}`
   };
 }

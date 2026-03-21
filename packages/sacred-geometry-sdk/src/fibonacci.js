@@ -7,7 +7,12 @@
 
 'use strict';
 
-const { PHI, PSI, FIB_CACHE, phiMs } = require('./constants');
+const {
+  PHI,
+  PSI,
+  FIB_CACHE,
+  phiMs
+} = require('./constants');
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // FIBONACCI COMPUTATION
@@ -67,8 +72,8 @@ function fibFloor(n) {
 function nearestFib(n) {
   if (n <= 1) return 1;
   const floor = fibFloor(n);
-  const ceil  = fibCeil(n);
-  return (n - floor) <= (ceil - n) ? floor : ceil;
+  const ceil = fibCeil(n);
+  return n - floor <= ceil - n ? floor : ceil;
 }
 
 /**
@@ -80,7 +85,7 @@ function nearestFib(n) {
 function isFibonacci(n) {
   if (!Number.isInteger(n) || n < 0) return false;
   if (n === 0) return true;
-  const check = (val) => {
+  const check = val => {
     const sqrt = Math.round(Math.sqrt(val));
     return sqrt * sqrt === val;
   };
@@ -116,26 +121,10 @@ function fibRange(min, max) {
 function phiPower(n) {
   return Math.pow(PHI, n);
 }
-
-/**
- * Phi-backoff: baseMs × φ^attempt, capped at maxMs.
- * @param {number} attempt — 0-based attempt number
- * @param {number} [baseMs=1000]
- * @param {number} [maxMs=60000]
- * @returns {number} delay in milliseconds
- */
 function phiBackoff(attempt, baseMs = 1000, maxMs = 60000) {
   const delay = Math.min(baseMs * Math.pow(PHI, attempt), maxMs);
   return Math.round(delay);
 }
-
-/**
- * Phi-backoff with ±38.2% jitter (ψ²).
- * @param {number} attempt
- * @param {number} [baseMs=1000]
- * @param {number} [maxMs=60000]
- * @returns {number}
- */
 function phiBackoffWithJitter(attempt, baseMs = 1000, maxMs = 60000) {
   const delay = phiBackoff(attempt, baseMs, maxMs);
   const jitter = (Math.random() * 2 - 1) * PSI * PSI; // ±38.2%
@@ -152,12 +141,17 @@ function phiBackoffWithJitter(attempt, baseMs = 1000, maxMs = 60000) {
  * Each breakpoint name maps to a px width derived from Fibonacci numbers.
  */
 const FIB_BREAKPOINTS = Object.freeze({
-  xs:   233,    // fib(13) — small mobile
-  sm:   377,    // fib(14) — mobile
-  md:   610,    // fib(15) — tablet portrait
-  lg:   987,    // fib(16) — tablet landscape / small desktop
-  xl:   1597,   // fib(17) — desktop
-  xxl:  2584,   // fib(18) — large desktop / ultra-wide
+  xs: 233,
+  // fib(13) — small mobile
+  sm: 377,
+  // fib(14) — mobile
+  md: 610,
+  // fib(15) — tablet portrait
+  lg: 987,
+  // fib(16) — tablet landscape / small desktop
+  xl: 1597,
+  // fib(17) — desktop
+  xxl: 2584 // fib(18) — large desktop / ultra-wide
 });
 
 /**
@@ -171,14 +165,21 @@ function breakpointQuery(name, direction = 'min') {
   if (px === undefined) throw new Error(`Unknown breakpoint: ${name}`);
   return `@media (${direction}-width: ${px}px)`;
 }
-
 module.exports = {
   // Fibonacci computation
-  fib, fibCeil, fibFloor, nearestFib, isFibonacci, fibRange,
+  fib,
+  fibCeil,
+  fibFloor,
+  nearestFib,
+  isFibonacci,
+  fibRange,
   // Phi-power
-  phiPower, phiMs,
+  phiPower,
+  phiMs,
   // Backoff
-  phiBackoff, phiBackoffWithJitter,
+  phiBackoff,
+  phiBackoffWithJitter,
   // CSS breakpoints
-  FIB_BREAKPOINTS, breakpointQuery,
+  FIB_BREAKPOINTS,
+  breakpointQuery
 };

@@ -1,21 +1,30 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HEADY™ Analytics Service Event Store
  * Privacy-first in-memory event storage with LRU eviction
  * Copyright (c) HeadySystems Inc. Eric Haywood, founder. All rights reserved.
  */
-
-const { createHash } = require('crypto');
-const { appendFileSync, existsSync, writeFileSync, readFileSync } = require('fs');
-const { resolve } = require('path');
+const {
+  createHash
+} = require('crypto');
+const {
+  appendFileSync,
+  existsSync,
+  writeFileSync,
+  readFileSync
+} = require('fs');
+const {
+  resolve
+} = require('path');
 const {
   MAX_EVENTS_IN_BUFFER,
   EVENT_PERSISTENCE_INTERVAL,
   SESSION_ID_HASH_ALGORITHM,
-  ANONYMIZATION_ENABLED,
+  ANONYMIZATION_ENABLED
 } = require('./constants');
-
 class EventStore {
   constructor() {
     this.circularBuffer = [];
@@ -27,26 +36,24 @@ class EventStore {
     this.lastPersistTime = Date.now();
     this.persistenceInterval = EVENT_PERSISTENCE_INTERVAL;
     this.isShuttingDown = false;
-
     this.initializePersistenceFile();
     this.schedulePeriodicPersistence();
   }
-
   initializePersistenceFile() {
     const dir = resolve(__dirname, '../data');
     if (!existsSync(dir)) {
       try {
-        require('fs').mkdirSync(dir, { recursive: true });
+        require('fs').mkdirSync(dir, {
+          recursive: true
+        });
       } catch (e) {
         // Directory may already exist
       }
     }
-
     if (!existsSync(this.persistencePath)) {
       writeFileSync(this.persistencePath, '', 'utf8');
     }
   }
-
   schedulePeriodicPersistence() {
     this.persistenceTimer = setInterval(() => {
       if (!this.isShuttingDown && this.eventCount > 0) {
@@ -54,21 +61,16 @@ class EventStore {
       }
     }, this.persistenceInterval);
   }
-
   hashSessionId(sessionId) {
     if (!ANONYMIZATION_ENABLED) {
       return sessionId;
     }
-    return createHash(SESSION_ID_HASH_ALGORITHM)
-      .update(sessionId)
-      .digest('hex');
+    return createHash(SESSION_ID_HASH_ALGORITHM).update(sessionId).digest('hex');
   }
-
   addEvent(event) {
     if (this.isShuttingDown) {
       return null;
     }
-
     const sanitizedEvent = {
       id: this.generateEventId(),
       timestamp: event.timestamp || Date.now(),
@@ -84,9 +86,8 @@ class EventStore {
       funnelName: event.funnelName || null,
       funnelStep: event.funnelStep || null,
       agentId: event.agentId || null,
-      skillName: event.skillName || null,
+      skillName: event.skillName || null
     };
-
     if (this.eventCount < this.maxSize) {
       this.circularBuffer.push(sanitizedEvent);
       this.eventCount++;
@@ -100,18 +101,14 @@ class EventStore {
     this.lruMap.set(sanitizedEvent.id, Date.now());
     if (this.lruMap.size > this.maxSize) {
       // Remove oldest LRU entry
-      const oldestId = Array.from(this.lruMap.entries())
-        .sort((a, b) => a[1] - b[1])[0][0];
+      const oldestId = Array.from(this.lruMap.entries()).sort((a, b) => a[1] - b[1])[0][0];
       this.lruMap.delete(oldestId);
     }
-
     return sanitizedEvent.id;
   }
-
   generateEventId() {
     return `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
-
   getEvent(eventId) {
     const event = this.circularBuffer.find(e => e.id === eventId);
     if (event) {
@@ -119,110 +116,83 @@ class EventStore {
     }
     return event || null;
   }
-
   getEventsByTimeRange(startTime, endTime) {
     return this.circularBuffer.filter(e => e.timestamp >= startTime && e.timestamp <= endTime);
   }
-
   getEventsByServiceName(serviceName) {
     return this.circularBuffer.filter(e => e.serviceName === serviceName);
   }
-
   getEventsByType(type) {
     return this.circularBuffer.filter(e => e.type === type);
   }
-
   getAllEvents() {
     return [...this.circularBuffer];
   }
-
   getEventStats() {
     return {
       totalEventsStored: this.eventCount,
       bufferCapacity: this.maxSize,
       bufferUtilization: (this.eventCount / this.maxSize * 100).toFixed(2),
-      lruTrackedCount: this.lruMap.size,
+      lruTrackedCount: this.lruMap.size
     };
   }
-
   flushToFile() {
     if (this.eventCount === 0) {
       return;
     }
-
     try {
-      const eventsToWrite = this.circularBuffer
-        .slice(0, this.eventCount)
-        .map(e => JSON.stringify(e))
-        .join('\n');
-
+      const eventsToWrite = this.circularBuffer.slice(0, this.eventCount).map(e => JSON.stringify(e)).join('\n');
       if (eventsToWrite) {
         appendFileSync(this.persistencePath, eventsToWrite + '\n', 'utf8');
       }
-
       this.lastPersistTime = Date.now();
     } catch (error) {
-      console.error('Failed to flush events to file:', error);
+      logger.error('Failed to flush events to file:', error);
     }
   }
-
   loadEventsFromFile() {
     if (!existsSync(this.persistencePath)) {
       return [];
     }
-
     try {
       const content = readFileSync(this.persistencePath, 'utf8');
       if (!content) {
         return [];
       }
-
-      return content
-        .split('\n')
-        .filter(line => line.trim())
-        .map(line => {
-          try {
-            return JSON.parse(line);
-          } catch (e) {
-            return null;
-          }
-        })
-        .filter(e => e !== null);
+      return content.split('\n').filter(line => line.trim()).map(line => {
+        try {
+          return JSON.parse(line);
+        } catch (e) {
+          return null;
+        }
+      }).filter(e => e !== null);
     } catch (error) {
-      console.error('Failed to load events from file:', error);
+      logger.error('Failed to load events from file:', error);
       return [];
     }
   }
-
   clearBuffer() {
     this.circularBuffer = [];
     this.writePointer = 0;
     this.eventCount = 0;
     this.lruMap.clear();
   }
-
   getBufferUtilization() {
-    return (this.eventCount / this.maxSize) * 100;
+    return this.eventCount / this.maxSize * 100;
   }
-
   evictLRUEvent() {
     if (this.lruMap.size === 0) {
       return null;
     }
-
-    const oldestId = Array.from(this.lruMap.entries())
-      .sort((a, b) => a[1] - b[1])[0][0];
-
+    const oldestId = Array.from(this.lruMap.entries()).sort((a, b) => a[1] - b[1])[0][0];
     this.lruMap.delete(oldestId);
     const index = this.circularBuffer.findIndex(e => e.id === oldestId);
     if (index !== -1) {
       this.circularBuffer.splice(index, 1);
       this.eventCount--;
     }
-
     return oldestId;
   }
-
   shutdown() {
     this.isShuttingDown = true;
     if (this.persistenceTimer) {
@@ -231,5 +201,4 @@ class EventStore {
     this.flushToFile();
   }
 }
-
 module.exports = new EventStore();

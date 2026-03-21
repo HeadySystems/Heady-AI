@@ -45,7 +45,6 @@ export const SQRT5 = Math.sqrt(5);
 /** Numerical epsilon for CSL gate stability */
 export const EPSILON = 1e-10;
 
-
 // ─── Fibonacci Sequence ──────────────────────────────────────────────────────
 
 /**
@@ -56,7 +55,8 @@ export const EPSILON = 1e-10;
 export function fib(n) {
   if (n <= 0) return 0;
   if (n === 1) return 1;
-  let a = 0, b = 1;
+  let a = 0,
+    b = 1;
   for (let i = 2; i <= n; i++) [a, b] = [b, a + b];
   return b;
 }
@@ -82,7 +82,6 @@ export function fibSequence(n) {
 export function fibContinuous(x) {
   return (Math.pow(PHI, x) - Math.pow(-PSI, x)) / SQRT5;
 }
-
 
 // ─── Phi-Scaled Thresholds ──────────────────────────────────────────────────
 
@@ -120,7 +119,6 @@ export function phiThresholdLevel(threshold, spread = 0.5) {
   return Math.log(ratio) / Math.log(PSI);
 }
 
-
 // ─── CSL Gate Thresholds (replacing arbitrary 0.72, 0.85, 0.55, etc.) ───────
 
 /**
@@ -139,11 +137,15 @@ export function phiThresholdLevel(threshold, spread = 0.5) {
  *   gap(LOW→MED)/gap(MED→HIGH) ≈ φ
  */
 export const CSL_THRESHOLDS = Object.freeze({
-  CRITICAL: phiThreshold(4),  // ≈ 0.927
-  HIGH:     phiThreshold(3),  // ≈ 0.882
-  MEDIUM:   phiThreshold(2),  // ≈ 0.809
-  LOW:      phiThreshold(1),  // ≈ 0.691
-  MINIMUM:  phiThreshold(0),  // ≈ 0.500
+  CRITICAL: phiThreshold(4),
+  // ≈ 0.927
+  HIGH: phiThreshold(3),
+  // ≈ 0.882
+  MEDIUM: phiThreshold(2),
+  // ≈ 0.809
+  LOW: phiThreshold(1),
+  // ≈ 0.691
+  MINIMUM: phiThreshold(0) // ≈ 0.500
 });
 
 /**
@@ -162,7 +164,6 @@ export const DEDUP_THRESHOLD = CSL_THRESHOLDS.CRITICAL + (1 - CSL_THRESHOLDS.CRI
  * Replaces arbitrary 0.75.
  */
 export const COHERENCE_DRIFT_THRESHOLD = CSL_THRESHOLDS.MEDIUM;
-
 
 // ─── Phi-Scaled Resource Allocation ─────────────────────────────────────────
 
@@ -195,8 +196,9 @@ export function phiResourceWeights(n) {
  */
 export function phiSplit(whole) {
   return {
-    major: whole * PSI,        // ≈ 0.618 × whole
-    minor: whole * PSI * PSI,  // ≈ 0.382 × whole
+    major: whole * PSI,
+    // ≈ 0.618 × whole
+    minor: whole * PSI * PSI // ≈ 0.382 × whole
   };
 }
 
@@ -212,27 +214,11 @@ export function phiMultiSplit(whole, n) {
   const raw = [];
   for (let i = 0; i < n; i++) raw.push(Math.pow(PSI, i));
   const sum = raw.reduce((a, b) => a + b, 0);
-  return raw.map(r => (r / sum) * whole);
+  return raw.map(r => r / sum * whole);
 }
-
 
 // ─── Phi-Scaled Timing / Backoff ────────────────────────────────────────────
 
-/**
- * Golden-ratio exponential backoff delay.
- *
- * delay(attempt) = baseMs × φ^attempt, clamped to maxMs
- *
- * Sequence with baseMs=1000:  1s → 1.618s → 2.618s → 4.236s → 6.854s → 11.09s → 17.94s → 29.03s
- * Compared to 2× doubling:   1s → 2s     → 4s     → 8s     → 16s    → 32s
- * φ-scaling is gentler early but still grows exponentially.
- *
- * @param {number} attempt  - 0-based attempt number
- * @param {number} [baseMs=1000]  - Base delay
- * @param {number} [maxMs=60000]  - Maximum delay
- * @param {boolean} [jitter=true] - Add ±ψ² jitter (≈ ±38.2%)
- * @returns {number} Delay in milliseconds
- */
 export function phiBackoff(attempt, baseMs = 1000, maxMs = 60_000, jitter = true) {
   const raw = baseMs * Math.pow(PHI, attempt);
   const clamped = Math.min(raw, maxMs);
@@ -258,7 +244,6 @@ export function phiIntervalSequence(baseMs, steps) {
   return intervals;
 }
 
-
 // ─── Phi-Scaled Cache / Pool Sizing ─────────────────────────────────────────
 
 /**
@@ -273,12 +258,12 @@ export function phiIntervalSequence(baseMs, steps) {
  */
 export function phiCacheSizes(basePower = 10) {
   return {
-    xs:  fib(basePower),
-    sm:  fib(basePower + 1),
-    md:  fib(basePower + 2),
-    lg:  fib(basePower + 3),
-    xl:  fib(basePower + 4),
-    xxl: fib(basePower + 5),
+    xs: fib(basePower),
+    sm: fib(basePower + 1),
+    md: fib(basePower + 2),
+    lg: fib(basePower + 3),
+    xl: fib(basePower + 4),
+    xxl: fib(basePower + 5)
   };
 }
 
@@ -295,7 +280,6 @@ export function phiCacheSizes(basePower = 10) {
 export function phiQueueDepth(base, loadLevel) {
   return Math.round(base * Math.pow(PHI, loadLevel));
 }
-
 
 // ─── Phi-Scaled Weights for Fusion / Scoring ────────────────────────────────
 
@@ -331,7 +315,6 @@ export function phiPriorityScore(...factors) {
   return factors.reduce((sum, f, i) => sum + f * weights[i], 0);
 }
 
-
 // ─── Pressure / Throttling Thresholds ───────────────────────────────────────
 
 /**
@@ -344,10 +327,13 @@ export function phiPriorityScore(...factors) {
  *   CRITICAL:  > 1-ψ³      ≈ 0.854 – 1.000
  */
 export const PRESSURE_LEVELS = Object.freeze({
-  NOMINAL_MAX:   PSI * PSI,                    // ≈ 0.382
-  ELEVATED_MAX:  PSI,                          // ≈ 0.618
-  HIGH_MAX:      1 - Math.pow(PSI, 3),         // ≈ 0.854  (= 1 - 0.146)
-  CRITICAL:      1 - Math.pow(PSI, 4),         // ≈ 0.910
+  NOMINAL_MAX: PSI * PSI,
+  // ≈ 0.382
+  ELEVATED_MAX: PSI,
+  // ≈ 0.618
+  HIGH_MAX: 1 - Math.pow(PSI, 3),
+  // ≈ 0.854  (= 1 - 0.146)
+  CRITICAL: 1 - Math.pow(PSI, 4) // ≈ 0.910
 });
 
 /**
@@ -356,12 +342,11 @@ export const PRESSURE_LEVELS = Object.freeze({
  * @returns {'nominal'|'elevated'|'high'|'critical'}
  */
 export function classifyPressure(ratio) {
-  if (ratio >= PRESSURE_LEVELS.CRITICAL)   return 'critical';
-  if (ratio >= PRESSURE_LEVELS.HIGH_MAX)   return 'high';
+  if (ratio >= PRESSURE_LEVELS.CRITICAL) return 'critical';
+  if (ratio >= PRESSURE_LEVELS.HIGH_MAX) return 'high';
   if (ratio >= PRESSURE_LEVELS.ELEVATED_MAX) return 'elevated';
   return 'nominal';
 }
-
 
 // ─── Alert Thresholds (replacing arbitrary 0.80/0.95/1.00) ─────────────────
 
@@ -374,13 +359,16 @@ export function classifyPressure(ratio) {
  *   hard_max = 1.0                (100%)
  */
 export const ALERT_THRESHOLDS = Object.freeze({
-  warning:  PSI,                         // ≈ 0.618
-  caution:  1 - PSI * PSI,              // ≈ 0.764  (≡ ψ + ψ³ series partial)
-  critical: 1 - Math.pow(PSI, 3),       // ≈ 0.854
-  exceeded: 1 - Math.pow(PSI, 4),       // ≈ 0.910
-  hard_max: 1.0,
+  warning: PSI,
+  // ≈ 0.618
+  caution: 1 - PSI * PSI,
+  // ≈ 0.764  (≡ ψ + ψ³ series partial)
+  critical: 1 - Math.pow(PSI, 3),
+  // ≈ 0.854
+  exceeded: 1 - Math.pow(PSI, 4),
+  // ≈ 0.910
+  hard_max: 1.0
 });
-
 
 // ─── Token Budget Scaling ───────────────────────────────────────────────────
 
@@ -401,13 +389,12 @@ export const ALERT_THRESHOLDS = Object.freeze({
  */
 export function phiTokenBudgets(base = 8192) {
   return {
-    working:   Math.round(base),
-    session:   Math.round(base * Math.pow(PHI, 2)),
-    memory:    Math.round(base * Math.pow(PHI, 4)),
-    artifacts: Math.round(base * Math.pow(PHI, 6)),
+    working: Math.round(base),
+    session: Math.round(base * Math.pow(PHI, 2)),
+    memory: Math.round(base * Math.pow(PHI, 4)),
+    artifacts: Math.round(base * Math.pow(PHI, 6))
   };
 }
-
 
 // ─── Eviction / Priority Weights ────────────────────────────────────────────
 
@@ -421,43 +408,19 @@ export function phiTokenBudgets(base = 8192) {
  */
 export const EVICTION_WEIGHTS = (() => {
   const w = phiFusionWeights(3);
-  return Object.freeze({ importance: w[0], recency: w[1], relevance: w[2] });
+  return Object.freeze({
+    importance: w[0],
+    recency: w[1],
+    relevance: w[2]
+  });
 })();
+export const PHI_TEMPERATURE = Math.pow(PSI, 3); // ≈ 0.236
 
-
-// ─── Softmax Temperature ────────────────────────────────────────────────────
-
-/**
- * Phi-derived softmax temperature for CSL routing.
- *
- * τ = ψ³ ≈ 0.236
- *
- * This is sharper than τ=1.0 (standard) but gentler than τ=0.1 (old hardcoded).
- * The phi-derived value ensures routing decisions are decisive without
- * collapsing to a single expert.
- */
-export const PHI_TEMPERATURE = Math.pow(PSI, 3);  // ≈ 0.236
-
-/**
- * Temperature function that adapts based on routing entropy.
- * When entropy is low (routing concentrated), raise temperature.
- * When entropy is high (routing spread), lower temperature.
- *
- * τ(H) = ψ^(1 + 2·(1-H/H_max))
- *
- * At max entropy: τ = ψ³ ≈ 0.236 (sharp)
- * At min entropy: τ = ψ¹ ≈ 0.618 (diffuse, to prevent collapse)
- *
- * @param {number} entropy     - Current routing entropy
- * @param {number} maxEntropy  - Maximum possible entropy (ln(numExperts))
- * @returns {number} Adaptive temperature
- */
 export function adaptiveTemperature(entropy, maxEntropy) {
   const normalized = Math.min(1.0, entropy / (maxEntropy + EPSILON));
   const exponent = 1 + 2 * (1 - normalized);
   return Math.pow(PSI, exponent);
 }
-
 
 // ─── Quality / Correction Thresholds ────────────────────────────────────────
 
@@ -471,32 +434,17 @@ export function adaptiveTemperature(entropy, maxEntropy) {
  *   incomplete:    phiThreshold(1) ≈ 0.691  (some missing content ok)
  */
 export const QUALITY_THRESHOLDS = Object.freeze({
-  syntax:        phiThreshold(4),  // ≈ 0.927
-  hallucination: phiThreshold(3),  // ≈ 0.882
-  logic:         phiThreshold(2),  // ≈ 0.809
-  incomplete:    phiThreshold(1),  // ≈ 0.691
+  syntax: phiThreshold(4),
+  // ≈ 0.927
+  hallucination: phiThreshold(3),
+  // ≈ 0.882
+  logic: phiThreshold(2),
+  // ≈ 0.809
+  incomplete: phiThreshold(1) // ≈ 0.691
 });
-
 
 // ─── Continuous CSL Gate Integration ────────────────────────────────────────
 
-/**
- * CSL-gated value.  Passes `value` through a continuous CSL gate:
- *
- *   output = value × sigmoid((cos_score - τ) / temperature)
- *
- * When cos_score >> τ, output ≈ value (gate open).
- * When cos_score << τ, output ≈ 0 (gate closed).
- * The transition width is controlled by temperature.
- *
- * This replaces hard if/else threshold checks with smooth, differentiable gating.
- *
- * @param {number} value      - Value to gate
- * @param {number} cosScore   - CSL cosine similarity score
- * @param {number} [tau]      - Gate threshold (default: CSL_THRESHOLDS.MEDIUM)
- * @param {number} [temp]     - Temperature (default: PHI_TEMPERATURE)
- * @returns {number} Gated value
- */
 export function cslGate(value, cosScore, tau = CSL_THRESHOLDS.MEDIUM, temp = PHI_TEMPERATURE) {
   const x = (cosScore - tau) / (temp + EPSILON);
   const sigmoid = 1 / (1 + Math.exp(-x));
@@ -535,7 +483,6 @@ export function cslRouteScore(cosineSim, ageMs = 0, halflifeMs = Math.pow(PHI, 5
   return cosineSim * decayFactor;
 }
 
-
 // ─── Phi-Harmonic Window / Batch Sizing ─────────────────────────────────────
 
 /**
@@ -550,9 +497,9 @@ export function cslRouteScore(cosineSim, ageMs = 0, halflifeMs = Math.pow(PHI, 5
  * @returns {number[]}
  */
 export function phiWindows(baseMs, count) {
-  return Array.from({ length: count }, (_, i) =>
-    Math.round(baseMs * Math.pow(PHI, i))
-  );
+  return Array.from({
+    length: count
+  }, (_, i) => Math.round(baseMs * Math.pow(PHI, i)));
 }
 
 /**
@@ -565,14 +512,14 @@ export function phiWindows(baseMs, count) {
  */
 export function fibBatchSizes(minBatch, maxBatch) {
   const sizes = [];
-  let a = 0, b = 1;
+  let a = 0,
+    b = 1;
   while (b <= maxBatch) {
     if (b >= minBatch) sizes.push(b);
     [a, b] = [b, a + b];
   }
   return sizes;
 }
-
 
 // ─── Phi-Continuous Monitor Intervals ───────────────────────────────────────
 
@@ -594,27 +541,45 @@ export function phiAdaptiveInterval(currentInterval, healthy, minMs = 1000, maxM
   }
 }
 
-
 // ─── Export summary object for introspection ────────────────────────────────
 
 export const PHI_MATH_VERSION = '2.0.0';
-
 export default {
-  PHI, PSI, PHI_SQ, PHI_CUBE, SQRT5, EPSILON,
-  fib, fibSequence, fibContinuous,
-  phiThreshold, phiThresholdLevel,
-  CSL_THRESHOLDS, DEDUP_THRESHOLD, COHERENCE_DRIFT_THRESHOLD,
-  phiResourceWeights, phiSplit, phiMultiSplit,
-  phiBackoff, phiIntervalSequence,
-  phiCacheSizes, phiQueueDepth,
-  phiFusionWeights, phiPriorityScore,
-  PRESSURE_LEVELS, classifyPressure,
+  PHI,
+  PSI,
+  PHI_SQ,
+  PHI_CUBE,
+  SQRT5,
+  EPSILON,
+  fib,
+  fibSequence,
+  fibContinuous,
+  phiThreshold,
+  phiThresholdLevel,
+  CSL_THRESHOLDS,
+  DEDUP_THRESHOLD,
+  COHERENCE_DRIFT_THRESHOLD,
+  phiResourceWeights,
+  phiSplit,
+  phiMultiSplit,
+  phiBackoff,
+  phiIntervalSequence,
+  phiCacheSizes,
+  phiQueueDepth,
+  phiFusionWeights,
+  phiPriorityScore,
+  PRESSURE_LEVELS,
+  classifyPressure,
   ALERT_THRESHOLDS,
   phiTokenBudgets,
   EVICTION_WEIGHTS,
-  PHI_TEMPERATURE, adaptiveTemperature,
+  PHI_TEMPERATURE,
+  adaptiveTemperature,
   QUALITY_THRESHOLDS,
-  cslGate, cslBlend, cslRouteScore,
-  phiWindows, fibBatchSizes,
-  phiAdaptiveInterval,
+  cslGate,
+  cslBlend,
+  cslRouteScore,
+  phiWindows,
+  fibBatchSizes,
+  phiAdaptiveInterval
 };

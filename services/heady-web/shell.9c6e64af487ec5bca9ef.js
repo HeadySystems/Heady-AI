@@ -1,2 +1,487 @@
-(()=>{"use strict";var n={594(n,e,t){const o=new Map,r=[];async function a({url:n,scope:e,module:a,timeoutMs:i=1e4}){if(!n||!e||!a)throw new TypeError("loadDynamicRemote: url, scope, and module are all required");try{await function(n,e,t=1e4){if(o.has(n))return o.get(n);if(document.querySelector(`script[data-heady-remote="${e}"]`)){const e=Promise.resolve();return o.set(n,e),e}const a=new Promise((a,i)=>{const s=Date.now(),c=document.createElement("script");c.src=n,c.async=!0,c.setAttribute("data-heady-remote",e),c.setAttribute("data-heady-url",n);let A=null;const d=()=>{A&&clearTimeout(A),c.removeEventListener("load",l),c.removeEventListener("error",p)},l=()=>{d();const t=Date.now()-s;r.push({url:n,scope:e,status:"ok",timestamp:s,durationMs:t}),a()},p=t=>{d();const a=Date.now()-s,A=`Failed to load remote script: ${n}`;r.push({url:n,scope:e,status:"error",timestamp:s,durationMs:a,error:A}),c.remove(),o.delete(n),i(new Error(A))};A=setTimeout(()=>{d(),c.remove(),o.delete(n);const a=`Remote script load timed out after ${t}ms: ${n}`;r.push({url:n,scope:e,status:"error",timestamp:s,durationMs:t,error:a}),i(new Error(a))},t),c.addEventListener("load",l,{once:!0}),c.addEventListener("error",p,{once:!0}),document.head.appendChild(c)});return o.set(n,a),a}(n,e,i);const s=await async function(n,e){const o=window[n];if(!o)throw new Error(`Module Federation container "${n}" not found on window. Ensure the remote entry script was loaded correctly.`);await t.I("default"),await o.init(t.S.default);const r=await o.get(e);if(!r)throw new Error(`Module "${e}" not found in container "${n}"`);return r}(e,a);return s}catch(n){throw new Error(`[HeadyShell] loadDynamicRemote failed for "${e}/${a}": ${n.message}`)}}function i(n,e){if(!n)return;if(document.querySelector(`link[data-heady-preload="${e}"]`))return;const t=document.createElement("link");t.rel="preload",t.as="script",t.href=n,t.setAttribute("data-heady-preload",e),document.head.appendChild(t)}var s=t(407),c=t.n(s),A=t(820),d=t.n(A),l=t(856),p=t.n(l),u=t(847),m=t.n(u),f=t(355),g=t.n(f),C=t(0),w=t.n(C),b=t(770),h={};h.styleTagTransform=w(),h.setAttributes=m(),h.insert=p().bind(null,"head"),h.domAPI=d(),h.insertStyleElement=g(),c()(b.A,h),b.A&&b.A.locals&&b.A.locals;const B="3.0.1",x="landing",I={antigravity:{url:"/remotes/antigravity/remoteEntry.js",scope:"antigravity",module:"./App",description:"3D vector space visualization with Sacred Geometry"},landing:{url:"/remotes/landing/remoteEntry.js",scope:"headyLanding",module:"./App",description:"Marketing landing page for Heady™Systems"},"heady-ide":{url:"/remotes/heady-ide/remoteEntry.js",scope:"headyIDE",module:"./App",description:"Code editor and IDE interface with Heady™Buddy AI"},"swarm-dashboard":{url:"/remotes/swarm-dashboard/remoteEntry.js",scope:"swarmDashboard",module:"./App",description:"Real-time agent swarm monitoring dashboard"},"governance-panel":{url:"/remotes/governance/remoteEntry.js",scope:"governancePanel",module:"./App",description:"Policy engine, approval gates, and audit log"},"projection-monitor":{url:"/remotes/projections/remoteEntry.js",scope:"projectionMonitor",module:"./App",description:"Deployment projection monitoring for Heady™ domains"},"vector-explorer":{url:"/remotes/vectors/remoteEntry.js",scope:"vectorExplorer",module:"./App",description:"Semantic vector memory exploration and federation"}};function y(n){const e=document.getElementById("loader-status-text");e&&(e.textContent=n)}function v(){const n=document.getElementById("heady-loader");n&&(n.classList.add("hidden"),setTimeout(()=>n.remove(),500))}document.addEventListener("DOMContentLoaded",()=>{console.info(`[HeadyShell] Starting up — shell v${B} | platform v3.1.0`),function(){try{i(I.antigravity.url,I.antigravity.scope),i(I.landing.url,I.landing.scope)}catch(n){console.warn("[HeadyShell] Preload warning:",n.message)}}(),async function(){const n=document.getElementById("heady-root");if(!n)return void console.error("[HeadyShell] #heady-root not found in DOM");let e=x;try{y("Resolving domain projection…");try{const n=await fetch("/api/domains/current",{signal:AbortSignal.timeout(5e3),headers:{"X-Heady-Shell":B}});if(n.ok){const t=await n.json();e=t?.projection||t?.uiId||x}}catch(n){console.warn("[HeadyShell] Domain API unavailable, using default remote:",n.message)}y(`Loading module: ${e}…`);const t=I[e];if(!t)return console.warn(`[HeadyShell] No remote registered for projection "${e}". Rendering fallback.`),v(),void function(n){const e=document.getElementById("heady-root");e&&(y("Mounting integrated workspace fallback…"),console.info(`[HeadyShell] No remote for "${n||"unknown"}" — loading integrated workspace.`),function(n,e={}){const t=e.projection||"default";n.innerHTML=`\n    <div class="iw-shell">\n      <header class="iw-header">\n        <div class="iw-logo">\n          <span class="iw-logo-icon">🜃</span>\n          <span class="iw-logo-text">Heady<span class="iw-accent">Web</span></span>\n        </div>\n        <nav class="iw-nav">\n          <button class="iw-nav-btn iw-active" data-tab="workspace">Workspace</button>\n          <button class="iw-nav-btn" data-tab="vectors">Vectors</button>\n          <button class="iw-nav-btn" data-tab="chat">Chat</button>\n          <button class="iw-nav-btn" data-tab="docs">Docs</button>\n        </nav>\n        <div class="iw-auth-area">\n          <button class="iw-sign-in auth-trigger" id="iw-sign-in">Sign In</button>\n        </div>\n      </header>\n\n      <main class="iw-content" id="iw-content">\n        <div class="iw-hero">\n          <h1>Welcome to Heady™Web</h1>\n          <p>Your sovereign AI workspace — vector memory, code edits, semantic chat, and agent orchestration.</p>\n          <p class="iw-projection-label">Projection: <code>${t}</code></p>\n        </div>\n\n        <div class="iw-cards">\n          <div class="iw-card">\n            <div class="iw-card-icon">🧠</div>\n            <h3>Vector Memory</h3>\n            <p>Store and search semantic memories. Persistent vector workspace with cosine similarity retrieval.</p>\n          </div>\n          <div class="iw-card">\n            <div class="iw-card-icon">💻</div>\n            <h3>IDE Workspace</h3>\n            <p>Read, write, and modify files directly in the Heady codebase with path-safe operations.</p>\n          </div>\n          <div class="iw-card">\n            <div class="iw-card-icon">🤖</div>\n            <h3>Buddy Chat</h3>\n            <p>Conversational interface powered by HeadyBuddy — your AI companion for code and context.</p>\n          </div>\n          <div class="iw-card">\n            <div class="iw-card-icon">🔐</div>\n            <h3>Auth & Identity</h3>\n            <p>Secure session management with JWT tokens, role-based access, and BYOK model keys.</p>\n          </div>\n        </div>\n      </main>\n\n      <footer class="iw-footer">\n        <span>© 2026 Heady™Systems Inc.</span>\n        <span class="iw-version">Shell v3.0.1</span>\n      </footer>\n    </div>\n  `;const o=n.querySelectorAll(".iw-nav-btn");o.forEach(n=>{n.addEventListener("click",()=>{o.forEach(n=>n.classList.remove("iw-active")),n.classList.add("iw-active")})})}(e,{projection:n}))}(e);y(`Mounting ${e}…`),await async function({url:n,scope:e,module:t,container:o,props:r={}}){if(!(o instanceof HTMLElement))throw new TypeError("mountRemote: container must be an HTMLElement");let i=null,s=null;try{const t=(await a({url:n,scope:e,module:"./mount"}))(),o=t?.default||t;"function"==typeof o?.mount?(i=o.mount,s=o.unmount):"function"==typeof o&&(i=o)}catch(n){}if(!i){const o=(await a({url:n,scope:e,module:t}))(),r=o?.default||o;if("function"==typeof r?.mount)i=r.mount,s=r.unmount;else{if("function"!=typeof r)throw new Error(`Remote "${e}" does not export a mount function. Expected export { mount } or default function.`);i=r}}const c=await i(o,r);let A=()=>{};return"function"==typeof c?.unmount?A=c.unmount:"function"==typeof c?A=c:"function"==typeof s&&(A=()=>s(o)),{unmount:A}}({url:t.url,scope:t.scope,module:t.module,container:n,props:{shellVersion:B,projection:e,domain:window.location.hostname,theme:"dark"}}),v(),console.info(`[HeadyShell] ✓ Mounted remote "${e}" (shell v${B})`)}catch(n){console.error("[HeadyShell] Boot failure:",n),v(),function(n){const e=document.getElementById("heady-error"),t=document.getElementById("heady-error-message");if(e&&t)t.textContent=n?.message||String(n),e.classList.add("visible");else{const e=document.getElementById("heady-root");e&&(e.innerHTML=`\n        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;\n          min-height:100vh;gap:12px;padding:32px;color:#e8eaf0;font-family:'Inter',system-ui,sans-serif;">\n          <div style="color:#ef4444;font-size:16px;font-weight:600;">Shell Boot Error</div>\n          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6b7280;\n            max-width:480px;word-break:break-all;text-align:center;">${n?.message||n}</div>\n          <button onclick="window.location.reload()" style="\n            padding:10px 24px;background:#7B61FF;color:#fff;border:none;border-radius:6px;\n            cursor:pointer;font-size:14px;margin-top:8px;">Retry</button>\n        </div>\n      `)}}(n)}}()})},770(n,e,t){t.d(e,{A:()=>s});var o=t(913),r=t.n(o),a=t(535),i=t.n(a)()(r());i.push([n.id,"/* ══ HeadyWeb Integrated Workspace Styles ══ */\n\n.iw-shell {\n    display: flex;\n    flex-direction: column;\n    min-height: 100vh;\n    background: #0a0e17;\n    color: #e2e8f0;\n    font-family: 'Inter', system-ui, -apple-system, sans-serif;\n}\n\n/* ── Header ── */\n.iw-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    padding: 12px 24px;\n    border-bottom: 1px solid rgba(255, 255, 255, 0.06);\n    background: rgba(10, 14, 23, 0.95);\n    backdrop-filter: blur(16px);\n    position: sticky;\n    top: 0;\n    z-index: 100;\n}\n\n.iw-logo {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-size: 18px;\n    font-weight: 700;\n}\n\n.iw-logo-icon {\n    font-size: 24px;\n}\n\n.iw-accent {\n    background: linear-gradient(135deg, #00d4aa, #3b82f6);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-nav {\n    display: flex;\n    gap: 4px;\n}\n\n.iw-nav-btn {\n    padding: 8px 16px;\n    border: none;\n    background: transparent;\n    color: #64748b;\n    font-size: 13px;\n    font-weight: 500;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-nav-btn:hover {\n    color: #94a3b8;\n    background: rgba(255, 255, 255, 0.04);\n}\n\n.iw-nav-btn.iw-active {\n    color: #00d4aa;\n    background: rgba(0, 212, 170, 0.08);\n}\n\n.iw-sign-in {\n    padding: 8px 20px;\n    border: 1px solid rgba(0, 212, 170, 0.3);\n    background: rgba(0, 212, 170, 0.08);\n    color: #00d4aa;\n    font-size: 13px;\n    font-weight: 600;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-sign-in:hover {\n    background: rgba(0, 212, 170, 0.15);\n    border-color: rgba(0, 212, 170, 0.5);\n}\n\n/* ── Content ── */\n.iw-content {\n    flex: 1;\n    padding: 48px 32px;\n    max-width: 1200px;\n    margin: 0 auto;\n    width: 100%;\n    box-sizing: border-box;\n}\n\n.iw-hero {\n    text-align: center;\n    margin-bottom: 48px;\n}\n\n.iw-hero h1 {\n    font-size: 2.2rem;\n    font-weight: 700;\n    margin: 0 0 12px;\n    background: linear-gradient(135deg, #e2e8f0, #00d4aa);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-hero p {\n    color: #64748b;\n    font-size: 16px;\n    margin: 0 0 8px;\n    line-height: 1.6;\n}\n\n.iw-projection-label {\n    font-size: 12px !important;\n    color: #475569 !important;\n}\n\n.iw-projection-label code {\n    background: rgba(255, 255, 255, 0.06);\n    padding: 2px 8px;\n    border-radius: 4px;\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 12px;\n}\n\n/* ── Cards ── */\n.iw-cards {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n    gap: 20px;\n}\n\n.iw-card {\n    background: rgba(255, 255, 255, 0.03);\n    border: 1px solid rgba(255, 255, 255, 0.06);\n    border-radius: 16px;\n    padding: 24px;\n    transition: all 0.3s;\n}\n\n.iw-card:hover {\n    border-color: rgba(0, 212, 170, 0.2);\n    background: rgba(255, 255, 255, 0.05);\n    transform: translateY(-2px);\n}\n\n.iw-card-icon {\n    font-size: 28px;\n    margin-bottom: 12px;\n}\n\n.iw-card h3 {\n    margin: 0 0 8px;\n    font-size: 16px;\n    font-weight: 600;\n    color: #e2e8f0;\n}\n\n.iw-card p {\n    margin: 0;\n    font-size: 13px;\n    color: #64748b;\n    line-height: 1.6;\n}\n\n/* ── Footer ── */\n.iw-footer {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    padding: 16px 24px;\n    border-top: 1px solid rgba(255, 255, 255, 0.06);\n    font-size: 12px;\n    color: #475569;\n}\n\n.iw-version {\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 11px;\n    color: #334155;\n}\n\n/* ── Responsive ── */\n@media (max-width: 768px) {\n    .iw-header {\n        flex-wrap: wrap;\n        gap: 8px;\n    }\n\n    .iw-nav {\n        order: 3;\n        width: 100%;\n        overflow-x: auto;\n    }\n\n    .iw-content {\n        padding: 24px 16px;\n    }\n\n    .iw-hero h1 {\n        font-size: 1.6rem;\n    }\n\n    .iw-cards {\n        grid-template-columns: 1fr;\n    }\n}","",{version:3,sources:["webpack://./src/shell/integrated-workspace.css"],names:[],mappings:"AAAA,+CAA+C;;AAE/C;IACI,aAAa;IACb,sBAAsB;IACtB,iBAAiB;IACjB,mBAAmB;IACnB,cAAc;IACd,0DAA0D;AAC9D;;AAEA,iBAAiB;AACjB;IACI,aAAa;IACb,mBAAmB;IACnB,8BAA8B;IAC9B,kBAAkB;IAClB,kDAAkD;IAClD,kCAAkC;IAClC,2BAA2B;IAC3B,gBAAgB;IAChB,MAAM;IACN,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,mBAAmB;IACnB,QAAQ;IACR,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qDAAqD;IACrD,6BAA6B;IAC7B,oCAAoC;IACpC,qBAAqB;AACzB;;AAEA;IACI,aAAa;IACb,QAAQ;AACZ;;AAEA;IACI,iBAAiB;IACjB,YAAY;IACZ,uBAAuB;IACvB,cAAc;IACd,eAAe;IACf,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,oBAAoB;IACpB,oBAAoB;AACxB;;AAEA;IACI,cAAc;IACd,qCAAqC;AACzC;;AAEA;IACI,cAAc;IACd,mCAAmC;AACvC;;AAEA;IACI,iBAAiB;IACjB,wCAAwC;IACxC,mCAAmC;IACnC,cAAc;IACd,eAAe;IACf,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,oBAAoB;IACpB,oBAAoB;AACxB;;AAEA;IACI,mCAAmC;IACnC,oCAAoC;AACxC;;AAEA,kBAAkB;AAClB;IACI,OAAO;IACP,kBAAkB;IAClB,iBAAiB;IACjB,cAAc;IACd,WAAW;IACX,sBAAsB;AAC1B;;AAEA;IACI,kBAAkB;IAClB,mBAAmB;AACvB;;AAEA;IACI,iBAAiB;IACjB,gBAAgB;IAChB,gBAAgB;IAChB,qDAAqD;IACrD,6BAA6B;IAC7B,oCAAoC;IACpC,qBAAqB;AACzB;;AAEA;IACI,cAAc;IACd,eAAe;IACf,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,0BAA0B;IAC1B,yBAAyB;AAC7B;;AAEA;IACI,qCAAqC;IACrC,gBAAgB;IAChB,kBAAkB;IAClB,wCAAwC;IACxC,eAAe;AACnB;;AAEA,gBAAgB;AAChB;IACI,aAAa;IACb,2DAA2D;IAC3D,SAAS;AACb;;AAEA;IACI,qCAAqC;IACrC,2CAA2C;IAC3C,mBAAmB;IACnB,aAAa;IACb,oBAAoB;AACxB;;AAEA;IACI,oCAAoC;IACpC,qCAAqC;IACrC,2BAA2B;AAC/B;;AAEA;IACI,eAAe;IACf,mBAAmB;AACvB;;AAEA;IACI,eAAe;IACf,eAAe;IACf,gBAAgB;IAChB,cAAc;AAClB;;AAEA;IACI,SAAS;IACT,eAAe;IACf,cAAc;IACd,gBAAgB;AACpB;;AAEA,iBAAiB;AACjB;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;IACnB,kBAAkB;IAClB,+CAA+C;IAC/C,eAAe;IACf,cAAc;AAClB;;AAEA;IACI,wCAAwC;IACxC,eAAe;IACf,cAAc;AAClB;;AAEA,qBAAqB;AACrB;IACI;QACI,eAAe;QACf,QAAQ;IACZ;;IAEA;QACI,QAAQ;QACR,WAAW;QACX,gBAAgB;IACpB;;IAEA;QACI,kBAAkB;IACtB;;IAEA;QACI,iBAAiB;IACrB;;IAEA;QACI,0BAA0B;IAC9B;AACJ",sourcesContent:["/* ══ HeadyWeb Integrated Workspace Styles ══ */\n\n.iw-shell {\n    display: flex;\n    flex-direction: column;\n    min-height: 100vh;\n    background: #0a0e17;\n    color: #e2e8f0;\n    font-family: 'Inter', system-ui, -apple-system, sans-serif;\n}\n\n/* ── Header ── */\n.iw-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    padding: 12px 24px;\n    border-bottom: 1px solid rgba(255, 255, 255, 0.06);\n    background: rgba(10, 14, 23, 0.95);\n    backdrop-filter: blur(16px);\n    position: sticky;\n    top: 0;\n    z-index: 100;\n}\n\n.iw-logo {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-size: 18px;\n    font-weight: 700;\n}\n\n.iw-logo-icon {\n    font-size: 24px;\n}\n\n.iw-accent {\n    background: linear-gradient(135deg, #00d4aa, #3b82f6);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-nav {\n    display: flex;\n    gap: 4px;\n}\n\n.iw-nav-btn {\n    padding: 8px 16px;\n    border: none;\n    background: transparent;\n    color: #64748b;\n    font-size: 13px;\n    font-weight: 500;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-nav-btn:hover {\n    color: #94a3b8;\n    background: rgba(255, 255, 255, 0.04);\n}\n\n.iw-nav-btn.iw-active {\n    color: #00d4aa;\n    background: rgba(0, 212, 170, 0.08);\n}\n\n.iw-sign-in {\n    padding: 8px 20px;\n    border: 1px solid rgba(0, 212, 170, 0.3);\n    background: rgba(0, 212, 170, 0.08);\n    color: #00d4aa;\n    font-size: 13px;\n    font-weight: 600;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-sign-in:hover {\n    background: rgba(0, 212, 170, 0.15);\n    border-color: rgba(0, 212, 170, 0.5);\n}\n\n/* ── Content ── */\n.iw-content {\n    flex: 1;\n    padding: 48px 32px;\n    max-width: 1200px;\n    margin: 0 auto;\n    width: 100%;\n    box-sizing: border-box;\n}\n\n.iw-hero {\n    text-align: center;\n    margin-bottom: 48px;\n}\n\n.iw-hero h1 {\n    font-size: 2.2rem;\n    font-weight: 700;\n    margin: 0 0 12px;\n    background: linear-gradient(135deg, #e2e8f0, #00d4aa);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-hero p {\n    color: #64748b;\n    font-size: 16px;\n    margin: 0 0 8px;\n    line-height: 1.6;\n}\n\n.iw-projection-label {\n    font-size: 12px !important;\n    color: #475569 !important;\n}\n\n.iw-projection-label code {\n    background: rgba(255, 255, 255, 0.06);\n    padding: 2px 8px;\n    border-radius: 4px;\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 12px;\n}\n\n/* ── Cards ── */\n.iw-cards {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n    gap: 20px;\n}\n\n.iw-card {\n    background: rgba(255, 255, 255, 0.03);\n    border: 1px solid rgba(255, 255, 255, 0.06);\n    border-radius: 16px;\n    padding: 24px;\n    transition: all 0.3s;\n}\n\n.iw-card:hover {\n    border-color: rgba(0, 212, 170, 0.2);\n    background: rgba(255, 255, 255, 0.05);\n    transform: translateY(-2px);\n}\n\n.iw-card-icon {\n    font-size: 28px;\n    margin-bottom: 12px;\n}\n\n.iw-card h3 {\n    margin: 0 0 8px;\n    font-size: 16px;\n    font-weight: 600;\n    color: #e2e8f0;\n}\n\n.iw-card p {\n    margin: 0;\n    font-size: 13px;\n    color: #64748b;\n    line-height: 1.6;\n}\n\n/* ── Footer ── */\n.iw-footer {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    padding: 16px 24px;\n    border-top: 1px solid rgba(255, 255, 255, 0.06);\n    font-size: 12px;\n    color: #475569;\n}\n\n.iw-version {\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 11px;\n    color: #334155;\n}\n\n/* ── Responsive ── */\n@media (max-width: 768px) {\n    .iw-header {\n        flex-wrap: wrap;\n        gap: 8px;\n    }\n\n    .iw-nav {\n        order: 3;\n        width: 100%;\n        overflow-x: auto;\n    }\n\n    .iw-content {\n        padding: 24px 16px;\n    }\n\n    .iw-hero h1 {\n        font-size: 1.6rem;\n    }\n\n    .iw-cards {\n        grid-template-columns: 1fr;\n    }\n}"],sourceRoot:""}]);const s=i},535(n){n.exports=function(n){var e=[];return e.toString=function(){return this.map(function(e){var t="",o=void 0!==e[5];return e[4]&&(t+="@supports (".concat(e[4],") {")),e[2]&&(t+="@media ".concat(e[2]," {")),o&&(t+="@layer".concat(e[5].length>0?" ".concat(e[5]):""," {")),t+=n(e),o&&(t+="}"),e[2]&&(t+="}"),e[4]&&(t+="}"),t}).join("")},e.i=function(n,t,o,r,a){"string"==typeof n&&(n=[[null,n,void 0]]);var i={};if(o)for(var s=0;s<this.length;s++){var c=this[s][0];null!=c&&(i[c]=!0)}for(var A=0;A<n.length;A++){var d=[].concat(n[A]);o&&i[d[0]]||(void 0!==a&&(void 0===d[5]||(d[1]="@layer".concat(d[5].length>0?" ".concat(d[5]):""," {").concat(d[1],"}")),d[5]=a),t&&(d[2]?(d[1]="@media ".concat(d[2]," {").concat(d[1],"}"),d[2]=t):d[2]=t),r&&(d[4]?(d[1]="@supports (".concat(d[4],") {").concat(d[1],"}"),d[4]=r):d[4]="".concat(r)),e.push(d))}},e}},913(n){n.exports=function(n){var e=n[1],t=n[3];if(!t)return e;if("function"==typeof btoa){var o=btoa(unescape(encodeURIComponent(JSON.stringify(t)))),r="sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(o),a="/*# ".concat(r," */");return[e].concat([a]).join("\n")}return[e].join("\n")}},407(n){var e=[];function t(n){for(var t=-1,o=0;o<e.length;o++)if(e[o].identifier===n){t=o;break}return t}function o(n,o){for(var a={},i=[],s=0;s<n.length;s++){var c=n[s],A=o.base?c[0]+o.base:c[0],d=a[A]||0,l="".concat(A," ").concat(d);a[A]=d+1;var p=t(l),u={css:c[1],media:c[2],sourceMap:c[3],supports:c[4],layer:c[5]};if(-1!==p)e[p].references++,e[p].updater(u);else{var m=r(u,o);o.byIndex=s,e.splice(s,0,{identifier:l,updater:m,references:1})}i.push(l)}return i}function r(n,e){var t=e.domAPI(e);return t.update(n),function(e){if(e){if(e.css===n.css&&e.media===n.media&&e.sourceMap===n.sourceMap&&e.supports===n.supports&&e.layer===n.layer)return;t.update(n=e)}else t.remove()}}n.exports=function(n,r){var a=o(n=n||[],r=r||{});return function(n){n=n||[];for(var i=0;i<a.length;i++){var s=t(a[i]);e[s].references--}for(var c=o(n,r),A=0;A<a.length;A++){var d=t(a[A]);0===e[d].references&&(e[d].updater(),e.splice(d,1))}a=c}}},856(n){var e={};n.exports=function(n,t){var o=function(n){if(void 0===e[n]){var t=document.querySelector(n);if(window.HTMLIFrameElement&&t instanceof window.HTMLIFrameElement)try{t=t.contentDocument.head}catch(n){t=null}e[n]=t}return e[n]}(n);if(!o)throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");o.appendChild(t)}},355(n){n.exports=function(n){var e=document.createElement("style");return n.setAttributes(e,n.attributes),n.insert(e,n.options),e}},847(n,e,t){n.exports=function(n){var e=t.nc;e&&n.setAttribute("nonce",e)}},820(n){n.exports=function(n){if("undefined"==typeof document)return{update:function(){},remove:function(){}};var e=n.insertStyleElement(n);return{update:function(t){!function(n,e,t){var o="";t.supports&&(o+="@supports (".concat(t.supports,") {")),t.media&&(o+="@media ".concat(t.media," {"));var r=void 0!==t.layer;r&&(o+="@layer".concat(t.layer.length>0?" ".concat(t.layer):""," {")),o+=t.css,r&&(o+="}"),t.media&&(o+="}"),t.supports&&(o+="}");var a=t.sourceMap;a&&"undefined"!=typeof btoa&&(o+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(a))))," */")),e.styleTagTransform(o,n,e.options)}(e,n,t)},remove:function(){!function(n){if(null===n.parentNode)return!1;n.parentNode.removeChild(n)}(e)}}}},0(n){n.exports=function(n,e){if(e.styleSheet)e.styleSheet.cssText=n;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(n))}}}},e={};function t(o){var r=e[o];if(void 0!==r)return r.exports;var a=e[o]={id:o,exports:{}};return n[o](a,a.exports,t),a.exports}t.m=n,t.c=e,t.n=n=>{var e=n&&n.__esModule?()=>n.default:()=>n;return t.d(e,{a:e}),e},t.d=(n,e)=>{for(var o in e)t.o(e,o)&&!t.o(n,o)&&Object.defineProperty(n,o,{enumerable:!0,get:e[o]})},t.o=(n,e)=>Object.prototype.hasOwnProperty.call(n,e),(()=>{t.S={};var n={},e={};t.I=(o,r)=>{r||(r=[]);var a=e[o];if(a||(a=e[o]={}),!(r.indexOf(a)>=0)){if(r.push(a),n[o])return n[o];t.o(t.S,o)||(t.S[o]={}),t.S[o];var i=[];return n[o]=i.length?Promise.all(i).then(()=>n[o]=1):1}}})(),t.nc=void 0,t(594)})();
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
+(() => {
+  "use strict";
+
+  var n = {
+      594(n, e, t) {
+        const o = new Map(),
+          r = [];
+        async function a({
+          url: n,
+          scope: e,
+          module: a,
+          timeoutMs: i = 1e4
+        }) {
+          if (!n || !e || !a) throw new TypeError("loadDynamicRemote: url, scope, and module are all required");
+          try {
+            await function (n, e, t = 1e4) {
+              if (o.has(n)) return o.get(n);
+              if (document.querySelector(`script[data-heady-remote="${e}"]`)) {
+                const e = Promise.resolve();
+                return o.set(n, e), e;
+              }
+              const a = new Promise((a, i) => {
+                const s = Date.now(),
+                  c = document.createElement("script");
+                c.src = n, c.async = !0, c.setAttribute("data-heady-remote", e), c.setAttribute("data-heady-url", n);
+                let A = null;
+                const d = () => {
+                    A && clearTimeout(A), c.removeEventListener("load", l), c.removeEventListener("error", p);
+                  },
+                  l = () => {
+                    d();
+                    const t = Date.now() - s;
+                    r.push({
+                      url: n,
+                      scope: e,
+                      status: "ok",
+                      timestamp: s,
+                      durationMs: t
+                    }), a();
+                  },
+                  p = t => {
+                    d();
+                    const a = Date.now() - s,
+                      A = `Failed to load remote script: ${n}`;
+                    r.push({
+                      url: n,
+                      scope: e,
+                      status: "error",
+                      timestamp: s,
+                      durationMs: a,
+                      error: A
+                    }), c.remove(), o.delete(n), i(new Error(A));
+                  };
+                A = setTimeout(() => {
+                  d(), c.remove(), o.delete(n);
+                  const a = `Remote script load timed out after ${t}ms: ${n}`;
+                  r.push({
+                    url: n,
+                    scope: e,
+                    status: "error",
+                    timestamp: s,
+                    durationMs: t,
+                    error: a
+                  }), i(new Error(a));
+                }, t), c.addEventListener("load", l, {
+                  once: !0
+                }), c.addEventListener("error", p, {
+                  once: !0
+                }), document.head.appendChild(c);
+              });
+              return o.set(n, a), a;
+            }(n, e, i);
+            const s = await async function (n, e) {
+              const o = window[n];
+              if (!o) throw new Error(`Module Federation container "${n}" not found on window. Ensure the remote entry script was loaded correctly.`);
+              await t.I("default"), await o.init(t.S.default);
+              const r = await o.get(e);
+              if (!r) throw new Error(`Module "${e}" not found in container "${n}"`);
+              return r;
+            }(e, a);
+            return s;
+          } catch (n) {
+            throw new Error(`[HeadyShell] loadDynamicRemote failed for "${e}/${a}": ${n.message}`);
+          }
+        }
+        function i(n, e) {
+          if (!n) return;
+          if (document.querySelector(`link[data-heady-preload="${e}"]`)) return;
+          const t = document.createElement("link");
+          t.rel = "preload", t.as = "script", t.href = n, t.setAttribute("data-heady-preload", e), document.head.appendChild(t);
+        }
+        var s = t(407),
+          c = t.n(s),
+          A = t(820),
+          d = t.n(A),
+          l = t(856),
+          p = t.n(l),
+          u = t(847),
+          m = t.n(u),
+          f = t(355),
+          g = t.n(f),
+          C = t(0),
+          w = t.n(C),
+          b = t(770),
+          h = {};
+        h.styleTagTransform = w(), h.setAttributes = m(), h.insert = p().bind(null, "head"), h.domAPI = d(), h.insertStyleElement = g(), c()(b.A, h), b.A && b.A.locals && b.A.locals;
+        const B = "3.0.1",
+          x = "landing",
+          I = {
+            antigravity: {
+              url: "/remotes/antigravity/remoteEntry.js",
+              scope: "antigravity",
+              module: "./App",
+              description: "3D vector space visualization with Sacred Geometry"
+            },
+            landing: {
+              url: "/remotes/landing/remoteEntry.js",
+              scope: "headyLanding",
+              module: "./App",
+              description: "Marketing landing page for Heady™Systems"
+            },
+            "heady-ide": {
+              url: "/remotes/heady-ide/remoteEntry.js",
+              scope: "headyIDE",
+              module: "./App",
+              description: "Code editor and IDE interface with Heady™Buddy AI"
+            },
+            "swarm-dashboard": {
+              url: "/remotes/swarm-dashboard/remoteEntry.js",
+              scope: "swarmDashboard",
+              module: "./App",
+              description: "Real-time agent swarm monitoring dashboard"
+            },
+            "governance-panel": {
+              url: "/remotes/governance/remoteEntry.js",
+              scope: "governancePanel",
+              module: "./App",
+              description: "Policy engine, approval gates, and audit log"
+            },
+            "projection-monitor": {
+              url: "/remotes/projections/remoteEntry.js",
+              scope: "projectionMonitor",
+              module: "./App",
+              description: "Deployment projection monitoring for Heady™ domains"
+            },
+            "vector-explorer": {
+              url: "/remotes/vectors/remoteEntry.js",
+              scope: "vectorExplorer",
+              module: "./App",
+              description: "Semantic vector memory exploration and federation"
+            }
+          };
+        function y(n) {
+          const e = document.getElementById("loader-status-text");
+          e && (e.textContent = n);
+        }
+        function v() {
+          const n = document.getElementById("heady-loader");
+          n && (n.classList.add("hidden"), setTimeout(() => n.remove(), 500));
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+          logger.info(`[HeadyShell] Starting up — shell v${B} | platform v3.1.0`), function () {
+            try {
+              i(I.antigravity.url, I.antigravity.scope), i(I.landing.url, I.landing.scope);
+            } catch (n) {
+              logger.warn("[HeadyShell] Preload warning:", n.message);
+            }
+          }(), async function () {
+            const n = document.getElementById("heady-root");
+            if (!n) return void logger.error("[HeadyShell] #heady-root not found in DOM");
+            let e = x;
+            try {
+              y("Resolving domain projection…");
+              try {
+                const n = await fetch("/api/domains/current", {
+                  signal: AbortSignal.timeout(5e3),
+                  headers: {
+                    "X-Heady-Shell": B
+                  }
+                });
+                if (n.ok) {
+                  const t = await n.json();
+                  e = t?.projection || t?.uiId || x;
+                }
+              } catch (n) {
+                logger.warn("[HeadyShell] Domain API unavailable, using default remote:", n.message);
+              }
+              y(`Loading module: ${e}…`);
+              const t = I[e];
+              if (!t) return logger.warn(`[HeadyShell] No remote registered for projection "${e}". Rendering fallback.`), v(), void function (n) {
+                const e = document.getElementById("heady-root");
+                e && (y("Mounting integrated workspace fallback…"), logger.info(`[HeadyShell] No remote for "${n || "unknown"}" — loading integrated workspace.`), function (n, e = {}) {
+                  const t = e.projection || "default";
+                  n.innerHTML = `\n    <div class="iw-shell">\n      <header class="iw-header">\n        <div class="iw-logo">\n          <span class="iw-logo-icon">🜃</span>\n          <span class="iw-logo-text">Heady<span class="iw-accent">Web</span></span>\n        </div>\n        <nav class="iw-nav">\n          <button class="iw-nav-btn iw-active" data-tab="workspace">Workspace</button>\n          <button class="iw-nav-btn" data-tab="vectors">Vectors</button>\n          <button class="iw-nav-btn" data-tab="chat">Chat</button>\n          <button class="iw-nav-btn" data-tab="docs">Docs</button>\n        </nav>\n        <div class="iw-auth-area">\n          <button class="iw-sign-in auth-trigger" id="iw-sign-in">Sign In</button>\n        </div>\n      </header>\n\n      <main class="iw-content" id="iw-content">\n        <div class="iw-hero">\n          <h1>Welcome to Heady™Web</h1>\n          <p>Your sovereign AI workspace — vector memory, code edits, semantic chat, and agent orchestration.</p>\n          <p class="iw-projection-label">Projection: <code>${t}</code></p>\n        </div>\n\n        <div class="iw-cards">\n          <div class="iw-card">\n            <div class="iw-card-icon">🧠</div>\n            <h3>Vector Memory</h3>\n            <p>Store and search semantic memories. Persistent vector workspace with cosine similarity retrieval.</p>\n          </div>\n          <div class="iw-card">\n            <div class="iw-card-icon">💻</div>\n            <h3>IDE Workspace</h3>\n            <p>Read, write, and modify files directly in the Heady codebase with path-safe operations.</p>\n          </div>\n          <div class="iw-card">\n            <div class="iw-card-icon">🤖</div>\n            <h3>Buddy Chat</h3>\n            <p>Conversational interface powered by HeadyBuddy — your AI companion for code and context.</p>\n          </div>\n          <div class="iw-card">\n            <div class="iw-card-icon">🔐</div>\n            <h3>Auth & Identity</h3>\n            <p>Secure session management with JWT tokens, role-based access, and BYOK model keys.</p>\n          </div>\n        </div>\n      </main>\n\n      <footer class="iw-footer">\n        <span>© 2026 Heady™Systems Inc.</span>\n        <span class="iw-version">Shell v3.0.1</span>\n      </footer>\n    </div>\n  `;
+                  const o = n.querySelectorAll(".iw-nav-btn");
+                  o.forEach(n => {
+                    n.addEventListener("click", () => {
+                      o.forEach(n => n.classList.remove("iw-active")), n.classList.add("iw-active");
+                    });
+                  });
+                }(e, {
+                  projection: n
+                }));
+              }(e);
+              y(`Mounting ${e}…`), await async function ({
+                url: n,
+                scope: e,
+                module: t,
+                container: o,
+                props: r = {}
+              }) {
+                if (!(o instanceof HTMLElement)) throw new TypeError("mountRemote: container must be an HTMLElement");
+                let i = null,
+                  s = null;
+                try {
+                  const t = (await a({
+                      url: n,
+                      scope: e,
+                      module: "./mount"
+                    }))(),
+                    o = t?.default || t;
+                  "function" == typeof o?.mount ? (i = o.mount, s = o.unmount) : "function" == typeof o && (i = o);
+                } catch (n) {}
+                if (!i) {
+                  const o = (await a({
+                      url: n,
+                      scope: e,
+                      module: t
+                    }))(),
+                    r = o?.default || o;
+                  if ("function" == typeof r?.mount) i = r.mount, s = r.unmount;else {
+                    if ("function" != typeof r) throw new Error(`Remote "${e}" does not export a mount function. Expected export { mount } or default function.`);
+                    i = r;
+                  }
+                }
+                const c = await i(o, r);
+                let A = () => {};
+                return "function" == typeof c?.unmount ? A = c.unmount : "function" == typeof c ? A = c : "function" == typeof s && (A = () => s(o)), {
+                  unmount: A
+                };
+              }({
+                url: t.url,
+                scope: t.scope,
+                module: t.module,
+                container: n,
+                props: {
+                  shellVersion: B,
+                  projection: e,
+                  domain: window.location.hostname,
+                  theme: "dark"
+                }
+              }), v(), logger.info(`[HeadyShell] ✓ Mounted remote "${e}" (shell v${B})`);
+            } catch (n) {
+              logger.error("[HeadyShell] Boot failure:", n), v(), function (n) {
+                const e = document.getElementById("heady-error"),
+                  t = document.getElementById("heady-error-message");
+                if (e && t) t.textContent = n?.message || String(n), e.classList.add("visible");else {
+                  const e = document.getElementById("heady-root");
+                  e && (e.innerHTML = `\n        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;\n          min-height:100vh;gap:12px;padding:32px;color:#e8eaf0;font-family:'Inter',system-ui,sans-serif;">\n          <div style="color:#ef4444;font-size:16px;font-weight:600;">Shell Boot Error</div>\n          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6b7280;\n            max-width:480px;word-break:break-all;text-align:center;">${n?.message || n}</div>\n          <button onclick="window.location.reload()" style="\n            padding:10px 24px;background:#7B61FF;color:#fff;border:none;border-radius:6px;\n            cursor:pointer;font-size:14px;margin-top:8px;">Retry</button>\n        </div>\n      `);
+                }
+              }(n);
+            }
+          }();
+        });
+      },
+      770(n, e, t) {
+        t.d(e, {
+          A: () => s
+        });
+        var o = t(913),
+          r = t.n(o),
+          a = t(535),
+          i = t.n(a)()(r());
+        i.push([n.id, "/* ══ HeadyWeb Integrated Workspace Styles ══ */\n\n.iw-shell {\n    display: flex;\n    flex-direction: column;\n    min-height: 100vh;\n    background: #0a0e17;\n    color: #e2e8f0;\n    font-family: 'Inter', system-ui, -apple-system, sans-serif;\n}\n\n/* ── Header ── */\n.iw-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    padding: 12px 24px;\n    border-bottom: 1px solid rgba(255, 255, 255, 0.06);\n    background: rgba(10, 14, 23, 0.95);\n    backdrop-filter: blur(16px);\n    position: sticky;\n    top: 0;\n    z-index: 100;\n}\n\n.iw-logo {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-size: 18px;\n    font-weight: 700;\n}\n\n.iw-logo-icon {\n    font-size: 24px;\n}\n\n.iw-accent {\n    background: linear-gradient(135deg, #00d4aa, #3b82f6);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-nav {\n    display: flex;\n    gap: 4px;\n}\n\n.iw-nav-btn {\n    padding: 8px 16px;\n    border: none;\n    background: transparent;\n    color: #64748b;\n    font-size: 13px;\n    font-weight: 500;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-nav-btn:hover {\n    color: #94a3b8;\n    background: rgba(255, 255, 255, 0.04);\n}\n\n.iw-nav-btn.iw-active {\n    color: #00d4aa;\n    background: rgba(0, 212, 170, 0.08);\n}\n\n.iw-sign-in {\n    padding: 8px 20px;\n    border: 1px solid rgba(0, 212, 170, 0.3);\n    background: rgba(0, 212, 170, 0.08);\n    color: #00d4aa;\n    font-size: 13px;\n    font-weight: 600;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-sign-in:hover {\n    background: rgba(0, 212, 170, 0.15);\n    border-color: rgba(0, 212, 170, 0.5);\n}\n\n/* ── Content ── */\n.iw-content {\n    flex: 1;\n    padding: 48px 32px;\n    max-width: 1200px;\n    margin: 0 auto;\n    width: 100%;\n    box-sizing: border-box;\n}\n\n.iw-hero {\n    text-align: center;\n    margin-bottom: 48px;\n}\n\n.iw-hero h1 {\n    font-size: 2.2rem;\n    font-weight: 700;\n    margin: 0 0 12px;\n    background: linear-gradient(135deg, #e2e8f0, #00d4aa);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-hero p {\n    color: #64748b;\n    font-size: 16px;\n    margin: 0 0 8px;\n    line-height: 1.6;\n}\n\n.iw-projection-label {\n    font-size: 12px !important;\n    color: #475569 !important;\n}\n\n.iw-projection-label code {\n    background: rgba(255, 255, 255, 0.06);\n    padding: 2px 8px;\n    border-radius: 4px;\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 12px;\n}\n\n/* ── Cards ── */\n.iw-cards {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n    gap: 20px;\n}\n\n.iw-card {\n    background: rgba(255, 255, 255, 0.03);\n    border: 1px solid rgba(255, 255, 255, 0.06);\n    border-radius: 16px;\n    padding: 24px;\n    transition: all 0.3s;\n}\n\n.iw-card:hover {\n    border-color: rgba(0, 212, 170, 0.2);\n    background: rgba(255, 255, 255, 0.05);\n    transform: translateY(-2px);\n}\n\n.iw-card-icon {\n    font-size: 28px;\n    margin-bottom: 12px;\n}\n\n.iw-card h3 {\n    margin: 0 0 8px;\n    font-size: 16px;\n    font-weight: 600;\n    color: #e2e8f0;\n}\n\n.iw-card p {\n    margin: 0;\n    font-size: 13px;\n    color: #64748b;\n    line-height: 1.6;\n}\n\n/* ── Footer ── */\n.iw-footer {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    padding: 16px 24px;\n    border-top: 1px solid rgba(255, 255, 255, 0.06);\n    font-size: 12px;\n    color: #475569;\n}\n\n.iw-version {\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 11px;\n    color: #334155;\n}\n\n/* ── Responsive ── */\n@media (max-width: 768px) {\n    .iw-header {\n        flex-wrap: wrap;\n        gap: 8px;\n    }\n\n    .iw-nav {\n        order: 3;\n        width: 100%;\n        overflow-x: auto;\n    }\n\n    .iw-content {\n        padding: 24px 16px;\n    }\n\n    .iw-hero h1 {\n        font-size: 1.6rem;\n    }\n\n    .iw-cards {\n        grid-template-columns: 1fr;\n    }\n}", "", {
+          version: 3,
+          sources: ["webpack://./src/shell/integrated-workspace.css"],
+          names: [],
+          mappings: "AAAA,+CAA+C;;AAE/C;IACI,aAAa;IACb,sBAAsB;IACtB,iBAAiB;IACjB,mBAAmB;IACnB,cAAc;IACd,0DAA0D;AAC9D;;AAEA,iBAAiB;AACjB;IACI,aAAa;IACb,mBAAmB;IACnB,8BAA8B;IAC9B,kBAAkB;IAClB,kDAAkD;IAClD,kCAAkC;IAClC,2BAA2B;IAC3B,gBAAgB;IAChB,MAAM;IACN,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,mBAAmB;IACnB,QAAQ;IACR,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qDAAqD;IACrD,6BAA6B;IAC7B,oCAAoC;IACpC,qBAAqB;AACzB;;AAEA;IACI,aAAa;IACb,QAAQ;AACZ;;AAEA;IACI,iBAAiB;IACjB,YAAY;IACZ,uBAAuB;IACvB,cAAc;IACd,eAAe;IACf,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,oBAAoB;IACpB,oBAAoB;AACxB;;AAEA;IACI,cAAc;IACd,qCAAqC;AACzC;;AAEA;IACI,cAAc;IACd,mCAAmC;AACvC;;AAEA;IACI,iBAAiB;IACjB,wCAAwC;IACxC,mCAAmC;IACnC,cAAc;IACd,eAAe;IACf,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,oBAAoB;IACpB,oBAAoB;AACxB;;AAEA;IACI,mCAAmC;IACnC,oCAAoC;AACxC;;AAEA,kBAAkB;AAClB;IACI,OAAO;IACP,kBAAkB;IAClB,iBAAiB;IACjB,cAAc;IACd,WAAW;IACX,sBAAsB;AAC1B;;AAEA;IACI,kBAAkB;IAClB,mBAAmB;AACvB;;AAEA;IACI,iBAAiB;IACjB,gBAAgB;IAChB,gBAAgB;IAChB,qDAAqD;IACrD,6BAA6B;IAC7B,oCAAoC;IACpC,qBAAqB;AACzB;;AAEA;IACI,cAAc;IACd,eAAe;IACf,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,0BAA0B;IAC1B,yBAAyB;AAC7B;;AAEA;IACI,qCAAqC;IACrC,gBAAgB;IAChB,kBAAkB;IAClB,wCAAwC;IACxC,eAAe;AACnB;;AAEA,gBAAgB;AAChB;IACI,aAAa;IACb,2DAA2D;IAC3D,SAAS;AACb;;AAEA;IACI,qCAAqC;IACrC,2CAA2C;IAC3C,mBAAmB;IACnB,aAAa;IACb,oBAAoB;AACxB;;AAEA;IACI,oCAAoC;IACpC,qCAAqC;IACrC,2BAA2B;AAC/B;;AAEA;IACI,eAAe;IACf,mBAAmB;AACvB;;AAEA;IACI,eAAe;IACf,eAAe;IACf,gBAAgB;IAChB,cAAc;AAClB;;AAEA;IACI,SAAS;IACT,eAAe;IACf,cAAc;IACd,gBAAgB;AACpB;;AAEA,iBAAiB;AACjB;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;IACnB,kBAAkB;IAClB,+CAA+C;IAC/C,eAAe;IACf,cAAc;AAClB;;AAEA;IACI,wCAAwC;IACxC,eAAe;IACf,cAAc;AAClB;;AAEA,qBAAqB;AACrB;IACI;QACI,eAAe;QACf,QAAQ;IACZ;;IAEA;QACI,QAAQ;QACR,WAAW;QACX,gBAAgB;IACpB;;IAEA;QACI,kBAAkB;IACtB;;IAEA;QACI,iBAAiB;IACrB;;IAEA;QACI,0BAA0B;IAC9B;AACJ",
+          sourcesContent: ["/* ══ HeadyWeb Integrated Workspace Styles ══ */\n\n.iw-shell {\n    display: flex;\n    flex-direction: column;\n    min-height: 100vh;\n    background: #0a0e17;\n    color: #e2e8f0;\n    font-family: 'Inter', system-ui, -apple-system, sans-serif;\n}\n\n/* ── Header ── */\n.iw-header {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    padding: 12px 24px;\n    border-bottom: 1px solid rgba(255, 255, 255, 0.06);\n    background: rgba(10, 14, 23, 0.95);\n    backdrop-filter: blur(16px);\n    position: sticky;\n    top: 0;\n    z-index: 100;\n}\n\n.iw-logo {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-size: 18px;\n    font-weight: 700;\n}\n\n.iw-logo-icon {\n    font-size: 24px;\n}\n\n.iw-accent {\n    background: linear-gradient(135deg, #00d4aa, #3b82f6);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-nav {\n    display: flex;\n    gap: 4px;\n}\n\n.iw-nav-btn {\n    padding: 8px 16px;\n    border: none;\n    background: transparent;\n    color: #64748b;\n    font-size: 13px;\n    font-weight: 500;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-nav-btn:hover {\n    color: #94a3b8;\n    background: rgba(255, 255, 255, 0.04);\n}\n\n.iw-nav-btn.iw-active {\n    color: #00d4aa;\n    background: rgba(0, 212, 170, 0.08);\n}\n\n.iw-sign-in {\n    padding: 8px 20px;\n    border: 1px solid rgba(0, 212, 170, 0.3);\n    background: rgba(0, 212, 170, 0.08);\n    color: #00d4aa;\n    font-size: 13px;\n    font-weight: 600;\n    border-radius: 8px;\n    cursor: pointer;\n    transition: all 0.2s;\n    font-family: inherit;\n}\n\n.iw-sign-in:hover {\n    background: rgba(0, 212, 170, 0.15);\n    border-color: rgba(0, 212, 170, 0.5);\n}\n\n/* ── Content ── */\n.iw-content {\n    flex: 1;\n    padding: 48px 32px;\n    max-width: 1200px;\n    margin: 0 auto;\n    width: 100%;\n    box-sizing: border-box;\n}\n\n.iw-hero {\n    text-align: center;\n    margin-bottom: 48px;\n}\n\n.iw-hero h1 {\n    font-size: 2.2rem;\n    font-weight: 700;\n    margin: 0 0 12px;\n    background: linear-gradient(135deg, #e2e8f0, #00d4aa);\n    -webkit-background-clip: text;\n    -webkit-text-fill-color: transparent;\n    background-clip: text;\n}\n\n.iw-hero p {\n    color: #64748b;\n    font-size: 16px;\n    margin: 0 0 8px;\n    line-height: 1.6;\n}\n\n.iw-projection-label {\n    font-size: 12px !important;\n    color: #475569 !important;\n}\n\n.iw-projection-label code {\n    background: rgba(255, 255, 255, 0.06);\n    padding: 2px 8px;\n    border-radius: 4px;\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 12px;\n}\n\n/* ── Cards ── */\n.iw-cards {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n    gap: 20px;\n}\n\n.iw-card {\n    background: rgba(255, 255, 255, 0.03);\n    border: 1px solid rgba(255, 255, 255, 0.06);\n    border-radius: 16px;\n    padding: 24px;\n    transition: all 0.3s;\n}\n\n.iw-card:hover {\n    border-color: rgba(0, 212, 170, 0.2);\n    background: rgba(255, 255, 255, 0.05);\n    transform: translateY(-2px);\n}\n\n.iw-card-icon {\n    font-size: 28px;\n    margin-bottom: 12px;\n}\n\n.iw-card h3 {\n    margin: 0 0 8px;\n    font-size: 16px;\n    font-weight: 600;\n    color: #e2e8f0;\n}\n\n.iw-card p {\n    margin: 0;\n    font-size: 13px;\n    color: #64748b;\n    line-height: 1.6;\n}\n\n/* ── Footer ── */\n.iw-footer {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    padding: 16px 24px;\n    border-top: 1px solid rgba(255, 255, 255, 0.06);\n    font-size: 12px;\n    color: #475569;\n}\n\n.iw-version {\n    font-family: 'JetBrains Mono', monospace;\n    font-size: 11px;\n    color: #334155;\n}\n\n/* ── Responsive ── */\n@media (max-width: 768px) {\n    .iw-header {\n        flex-wrap: wrap;\n        gap: 8px;\n    }\n\n    .iw-nav {\n        order: 3;\n        width: 100%;\n        overflow-x: auto;\n    }\n\n    .iw-content {\n        padding: 24px 16px;\n    }\n\n    .iw-hero h1 {\n        font-size: 1.6rem;\n    }\n\n    .iw-cards {\n        grid-template-columns: 1fr;\n    }\n}"],
+          sourceRoot: ""
+        }]);
+        const s = i;
+      },
+      535(n) {
+        n.exports = function (n) {
+          var e = [];
+          return e.toString = function () {
+            return this.map(function (e) {
+              var t = "",
+                o = void 0 !== e[5];
+              return e[4] && (t += "@supports (".concat(e[4], ") {")), e[2] && (t += "@media ".concat(e[2], " {")), o && (t += "@layer".concat(e[5].length > 0 ? " ".concat(e[5]) : "", " {")), t += n(e), o && (t += "}"), e[2] && (t += "}"), e[4] && (t += "}"), t;
+            }).join("");
+          }, e.i = function (n, t, o, r, a) {
+            "string" == typeof n && (n = [[null, n, void 0]]);
+            var i = {};
+            if (o) for (var s = 0; s < this.length; s++) {
+              var c = this[s][0];
+              null != c && (i[c] = !0);
+            }
+            for (var A = 0; A < n.length; A++) {
+              var d = [].concat(n[A]);
+              o && i[d[0]] || (void 0 !== a && (void 0 === d[5] || (d[1] = "@layer".concat(d[5].length > 0 ? " ".concat(d[5]) : "", " {").concat(d[1], "}")), d[5] = a), t && (d[2] ? (d[1] = "@media ".concat(d[2], " {").concat(d[1], "}"), d[2] = t) : d[2] = t), r && (d[4] ? (d[1] = "@supports (".concat(d[4], ") {").concat(d[1], "}"), d[4] = r) : d[4] = "".concat(r)), e.push(d));
+            }
+          }, e;
+        };
+      },
+      913(n) {
+        n.exports = function (n) {
+          var e = n[1],
+            t = n[3];
+          if (!t) return e;
+          if ("function" == typeof btoa) {
+            var o = btoa(unescape(encodeURIComponent(JSON.stringify(t)))),
+              r = "sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(o),
+              a = "/*# ".concat(r, " */");
+            return [e].concat([a]).join("\n");
+          }
+          return [e].join("\n");
+        };
+      },
+      407(n) {
+        var e = [];
+        function t(n) {
+          for (var t = -1, o = 0; o < e.length; o++) if (e[o].identifier === n) {
+            t = o;
+            break;
+          }
+          return t;
+        }
+        function o(n, o) {
+          for (var a = {}, i = [], s = 0; s < n.length; s++) {
+            var c = n[s],
+              A = o.base ? c[0] + o.base : c[0],
+              d = a[A] || 0,
+              l = "".concat(A, " ").concat(d);
+            a[A] = d + 1;
+            var p = t(l),
+              u = {
+                css: c[1],
+                media: c[2],
+                sourceMap: c[3],
+                supports: c[4],
+                layer: c[5]
+              };
+            if (-1 !== p) e[p].references++, e[p].updater(u);else {
+              var m = r(u, o);
+              o.byIndex = s, e.splice(s, 0, {
+                identifier: l,
+                updater: m,
+                references: 1
+              });
+            }
+            i.push(l);
+          }
+          return i;
+        }
+        function r(n, e) {
+          var t = e.domAPI(e);
+          return t.update(n), function (e) {
+            if (e) {
+              if (e.css === n.css && e.media === n.media && e.sourceMap === n.sourceMap && e.supports === n.supports && e.layer === n.layer) return;
+              t.update(n = e);
+            } else t.remove();
+          };
+        }
+        n.exports = function (n, r) {
+          var a = o(n = n || [], r = r || {});
+          return function (n) {
+            n = n || [];
+            for (var i = 0; i < a.length; i++) {
+              var s = t(a[i]);
+              e[s].references--;
+            }
+            for (var c = o(n, r), A = 0; A < a.length; A++) {
+              var d = t(a[A]);
+              0 === e[d].references && (e[d].updater(), e.splice(d, 1));
+            }
+            a = c;
+          };
+        };
+      },
+      856(n) {
+        var e = {};
+        n.exports = function (n, t) {
+          var o = function (n) {
+            if (void 0 === e[n]) {
+              var t = document.querySelector(n);
+              if (window.HTMLIFrameElement && t instanceof window.HTMLIFrameElement) try {
+                t = t.contentDocument.head;
+              } catch (n) {
+                t = null;
+              }
+              e[n] = t;
+            }
+            return e[n];
+          }(n);
+          if (!o) throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+          o.appendChild(t);
+        };
+      },
+      355(n) {
+        n.exports = function (n) {
+          var e = document.createElement("style");
+          return n.setAttributes(e, n.attributes), n.insert(e, n.options), e;
+        };
+      },
+      847(n, e, t) {
+        n.exports = function (n) {
+          var e = t.nc;
+          e && n.setAttribute("nonce", e);
+        };
+      },
+      820(n) {
+        n.exports = function (n) {
+          if ("undefined" == typeof document) return {
+            update: function () {},
+            remove: function () {}
+          };
+          var e = n.insertStyleElement(n);
+          return {
+            update: function (t) {
+              !function (n, e, t) {
+                var o = "";
+                t.supports && (o += "@supports (".concat(t.supports, ") {")), t.media && (o += "@media ".concat(t.media, " {"));
+                var r = void 0 !== t.layer;
+                r && (o += "@layer".concat(t.layer.length > 0 ? " ".concat(t.layer) : "", " {")), o += t.css, r && (o += "}"), t.media && (o += "}"), t.supports && (o += "}");
+                var a = t.sourceMap;
+                a && "undefined" != typeof btoa && (o += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(a)))), " */")), e.styleTagTransform(o, n, e.options);
+              }(e, n, t);
+            },
+            remove: function () {
+              !function (n) {
+                if (null === n.parentNode) return !1;
+                n.parentNode.removeChild(n);
+              }(e);
+            }
+          };
+        };
+      },
+      0(n) {
+        n.exports = function (n, e) {
+          if (e.styleSheet) e.styleSheet.cssText = n;else {
+            for (; e.firstChild;) e.removeChild(e.firstChild);
+            e.appendChild(document.createTextNode(n));
+          }
+        };
+      }
+    },
+    e = {};
+  function t(o) {
+    var r = e[o];
+    if (void 0 !== r) return r.exports;
+    var a = e[o] = {
+      id: o,
+      exports: {}
+    };
+    return n[o](a, a.exports, t), a.exports;
+  }
+  t.m = n, t.c = e, t.n = n => {
+    var e = n && n.__esModule ? () => n.default : () => n;
+    return t.d(e, {
+      a: e
+    }), e;
+  }, t.d = (n, e) => {
+    for (var o in e) t.o(e, o) && !t.o(n, o) && Object.defineProperty(n, o, {
+      enumerable: !0,
+      get: e[o]
+    });
+  }, t.o = (n, e) => Object.prototype.hasOwnProperty.call(n, e), (() => {
+    t.S = {};
+    var n = {},
+      e = {};
+    t.I = (o, r) => {
+      r || (r = []);
+      var a = e[o];
+      if (a || (a = e[o] = {}), !(r.indexOf(a) >= 0)) {
+        if (r.push(a), n[o]) return n[o];
+        t.o(t.S, o) || (t.S[o] = {}), t.S[o];
+        var i = [];
+        return n[o] = i.length ? Promise.all(i).then(() => n[o] = 1) : 1;
+      }
+    };
+  })(), t.nc = void 0, t(594);
+})();
 //# sourceMappingURL=shell.9c6e64af487ec5bca9ef.js.map

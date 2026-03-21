@@ -1,20 +1,3 @@
-/**
- * @fileoverview Heady™ CSL Router — Mixture-of-Experts Cosine Routing
- *
- * Routes input embeddings to the best-matched expert modules using cosine
- * similarity scoring, phi-temperature softmax, and anti-collapse detection.
- *
- * Algorithm:
- *   scores[i] = cos(input, expertGate[i])         ← alignment score
- *   probs[i]  = softmax(scores / temperature)[i]  ← routing probability
- *   selected  = topK(probs, k = fib(3) = 2)       ← chosen experts
- *
- * Anti-collapse: if max(probs) > 1 - ψ⁹ all weight converges to one expert,
- * so we inject a uniform noise floor of ψ⁸ per expert.
- *
- * © 2026-2026 HeadySystems Inc. All Rights Reserved.
- */
-
 'use strict';
 
 const {
@@ -25,12 +8,11 @@ const {
   cosineSimilarity,
   VECTOR,
   normalize,
-  adaptiveTemperature,
+  adaptiveTemperature
 } = require('../../shared/phi-math.js');
 
 // ─── Router constants (all from phi-math) ────────────────────────────────────
 
-/** Default routing temperature: ψ³ ≈ 0.236 */
 const ROUTE_TEMPERATURE = Math.pow(PSI, 3);
 
 /** Anti-collapse detection threshold: ψ⁹ ≈ 0.0081 */
@@ -50,17 +32,11 @@ const EXPERT_INIT_SPREAD = PHI;
 
 // ─── Softmax ─────────────────────────────────────────────────────────────────
 
-/**
- * Numerically-stable softmax with temperature scaling.
- * @param {number[]} scores - raw cosine scores
- * @param {number} [temperature=ROUTE_TEMPERATURE]
- * @returns {number[]} probability distribution (sums to 1)
- */
 function softmax(scores, temperature = ROUTE_TEMPERATURE) {
   const scaled = scores.map(s => s / Math.max(temperature, 1e-12));
   const maxVal = Math.max(...scaled);
-  const exps   = scaled.map(s => Math.exp(s - maxVal));
-  const sum    = exps.reduce((a, b) => a + b, 0);
+  const exps = scaled.map(s => Math.exp(s - maxVal));
+  const sum = exps.reduce((a, b) => a + b, 0);
   return exps.map(e => e / (sum || 1));
 }
 
@@ -75,7 +51,7 @@ function softmax(scores, temperature = ROUTE_TEMPERATURE) {
 function isCollapsed(probs) {
   if (probs.length <= 1) return false;
   const maxP = Math.max(...probs);
-  return (1 - maxP) < COLLAPSE_THRESHOLD;
+  return 1 - maxP < COLLAPSE_THRESHOLD;
 }
 
 /**
@@ -86,7 +62,7 @@ function isCollapsed(probs) {
  */
 function applyAntiCollapse(probs) {
   const noisy = probs.map(p => p + COLLAPSE_NOISE);
-  const sum   = noisy.reduce((a, b) => a + b, 0);
+  const sum = noisy.reduce((a, b) => a + b, 0);
   return noisy.map(p => p / sum);
 }
 
@@ -99,10 +75,10 @@ function applyAntiCollapse(probs) {
  * @returns {Array<{index: number, prob: number}>} sorted descending by prob
  */
 function topKSelect(probs, k = DEFAULT_TOP_K) {
-  return probs
-    .map((prob, index) => ({ index, prob }))
-    .sort((a, b) => b.prob - a.prob)
-    .slice(0, Math.min(k, probs.length));
+  return probs.map((prob, index) => ({
+    index,
+    prob
+  })).sort((a, b) => b.prob - a.prob).slice(0, Math.min(k, probs.length));
 }
 
 // ─── CSLRouter class ─────────────────────────────────────────────────────────
@@ -117,36 +93,24 @@ function topKSelect(probs, k = DEFAULT_TOP_K) {
  * // result.selected = [{name, index, prob, score}]
  */
 class CSLRouter {
-  /**
-   * @param {string[]} expertNames - names of available experts
-   * @param {object}   [opts]
-   * @param {number}   [opts.dims=384]        - embedding dimension
-   * @param {number}   [opts.temperature]     - softmax temperature (default ψ³)
-   * @param {number}   [opts.topK]            - experts to select (default fib(3)=2)
-   * @param {boolean}  [opts.adaptiveTemp]    - enable entropy-adaptive temperature
-   */
   constructor(expertNames, opts = {}) {
-    this.expertNames   = expertNames;
-    this.dims          = opts.dims || VECTOR.DIMS;
-    this.temperature   = opts.temperature || ROUTE_TEMPERATURE;
-    this.topK          = opts.topK || DEFAULT_TOP_K;
-    this.adaptiveTemp  = opts.adaptiveTemp !== false;
+    this.expertNames = expertNames;
+    this.dims = opts.dims || VECTOR.DIMS;
+    this.temperature = opts.temperature || ROUTE_TEMPERATURE;
+    this.topK = opts.topK || DEFAULT_TOP_K;
+    this.adaptiveTemp = opts.adaptiveTemp !== false;
 
     // Initialize random unit-vector gates for each expert
     // Using (random - PSI) * PHI range as per CSL spec
-    this.expertGates = expertNames.map(() =>
-      normalize(
-        Array.from({ length: this.dims }, () =>
-          (Math.random() - PSI) * EXPERT_INIT_SPREAD
-        )
-      )
-    );
+    this.expertGates = expertNames.map(() => normalize(Array.from({
+      length: this.dims
+    }, () => (Math.random() - PSI) * EXPERT_INIT_SPREAD)));
 
     // Routing telemetry
-    this._routeCount    = 0;
+    this._routeCount = 0;
     this._collapseCount = 0;
-    this._lastScores    = null;
-    this._lastProbs     = null;
+    this._lastScores = null;
+    this._lastProbs = null;
   }
 
   /**
@@ -159,31 +123,12 @@ class CSLRouter {
     if (idx === -1) throw new Error(`CSLRouter: unknown expert "${name}"`);
     this.expertGates[idx] = normalize(gateVector);
   }
-
-  /**
-   * Route an input embedding to the top experts.
-   *
-   * @param {number[]} input - query embedding (will be normalized internally)
-   * @param {object}   [opts]
-   * @param {number}   [opts.topK]      - override default topK
-   * @param {number}   [opts.entropy]   - current system entropy (for adaptive temp)
-   * @param {number}   [opts.maxEntropy]
-   * @returns {{
-   *   selected: Array<{name:string, index:number, prob:number, score:number}>,
-   *   scores:   number[],
-   *   probs:    number[],
-   *   collapsed: boolean,
-   *   temperature: number
-   * }}
-   */
   route(input, opts = {}) {
-    const k      = opts.topK || this.topK;
+    const k = opts.topK || this.topK;
     const normed = normalize(input);
 
     // Compute cosine scores against each expert gate
     const scores = this.expertGates.map(gate => cosineSimilarity(normed, gate));
-
-    // Determine temperature — adaptive or fixed
     let temp = this.temperature;
     if (this.adaptiveTemp && opts.entropy != null && opts.maxEntropy != null) {
       temp = adaptiveTemperature(opts.entropy, opts.maxEntropy);
@@ -201,31 +146,33 @@ class CSLRouter {
 
     // Top-K expert selection
     const topExperts = topKSelect(probs, k);
-    const selected = topExperts
-      .filter(e => scores[e.index] >= MIN_EXPERT_SCORE)
-      .map(e => ({
-        name:  this.expertNames[e.index],
-        index: e.index,
-        prob:  e.prob,
-        score: scores[e.index],
-      }));
+    const selected = topExperts.filter(e => scores[e.index] >= MIN_EXPERT_SCORE).map(e => ({
+      name: this.expertNames[e.index],
+      index: e.index,
+      prob: e.prob,
+      score: scores[e.index]
+    }));
 
     // Fallback: if all experts below threshold, take the best one regardless
     if (selected.length === 0) {
       const best = topExperts[0];
       selected.push({
-        name:  this.expertNames[best.index],
+        name: this.expertNames[best.index],
         index: best.index,
-        prob:  best.prob,
-        score: scores[best.index],
+        prob: best.prob,
+        score: scores[best.index]
       });
     }
-
     this._routeCount++;
     this._lastScores = scores;
-    this._lastProbs  = probs;
-
-    return { selected, scores, probs, collapsed, temperature: temp };
+    this._lastProbs = probs;
+    return {
+      selected,
+      scores,
+      probs,
+      collapsed,
+      temperature: temp
+    };
   }
 
   /**
@@ -234,16 +181,14 @@ class CSLRouter {
    */
   stats() {
     return {
-      expertCount:    this.expertNames.length,
-      routeCount:     this._routeCount,
-      collapseCount:  this._collapseCount,
-      collapseRate:   this._routeCount > 0
-        ? this._collapseCount / this._routeCount
-        : 0,
-      lastScores:     this._lastScores,
-      lastProbs:      this._lastProbs,
-      temperature:    this.temperature,
-      topK:           this.topK,
+      expertCount: this.expertNames.length,
+      routeCount: this._routeCount,
+      collapseCount: this._collapseCount,
+      collapseRate: this._routeCount > 0 ? this._collapseCount / this._routeCount : 0,
+      lastScores: this._lastScores,
+      lastProbs: this._lastProbs,
+      temperature: this.temperature,
+      topK: this.topK
     };
   }
 }
@@ -262,5 +207,5 @@ module.exports = {
   COLLAPSE_THRESHOLD,
   COLLAPSE_NOISE,
   DEFAULT_TOP_K,
-  MIN_EXPERT_SCORE,
+  MIN_EXPERT_SCORE
 };

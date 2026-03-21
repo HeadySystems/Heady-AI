@@ -32,16 +32,18 @@
  */
 
 'use strict';
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 const EventEmitter = require('events');
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 1 — PHI-MATH IMPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch (e) { /* graceful */  }
-
+let phiMath = null;
+try {
+  phiMath = require('../../shared/phi-math.js');
+} catch (e) {/* graceful */}
 const {
   PHI,
   PSI,
@@ -53,7 +55,7 @@ const {
   phiPriorityScore,
   PRESSURE_LEVELS,
   cosineSimilarity,
-  cslGate,
+  cslGate
 } = phiMath;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -61,7 +63,17 @@ const {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @type {Object} Canonical cognitive architecture configuration. */
-const COGNITIVE_CONFIG = (function() { try { return require("../../configs/heady-cognitive-config.json"); } catch { try { return require("../../heady-cognition/config/heady-cognitive-config.json"); } catch { return {}; } } })();
+const COGNITIVE_CONFIG = function () {
+  try {
+    return require("../../configs/heady-cognitive-config.json");
+  } catch {
+    try {
+      return require("../../heady-cognition/config/heady-cognitive-config.json");
+    } catch {
+      return {};
+    }
+  }
+}();
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 3 — LAYER CONSTANTS
@@ -74,15 +86,7 @@ const COGNITIVE_CONFIG = (function() { try { return require("../../configs/heady
  * execution-plane parallelism.
  * @constant {string[]}
  */
-const LAYER_PRIORITY_ORDER = [
-  'OWL',
-  'OCTOPUS',
-  'ELEPHANT',
-  'DOLPHIN',
-  'CROW',
-  'BEE',
-  'ANT',
-];
+const LAYER_PRIORITY_ORDER = ['OWL', 'OCTOPUS', 'ELEPHANT', 'DOLPHIN', 'CROW', 'BEE', 'ANT'];
 
 /**
  * Maximum concurrent activations per layer, assigned from the Fibonacci
@@ -93,13 +97,19 @@ const LAYER_PRIORITY_ORDER = [
  * @constant {Object.<string, number>}
  */
 const LAYER_MAX_CONCURRENCY = {
-  OWL:      fib(1),   // 1  — deep wisdom is single-threaded by design
-  OCTOPUS:  fib(2),   // 2  — dual-hemisphere adaptation
-  ELEPHANT: fib(3),   // 3  — triple-store memory (episodic, semantic, spatial)
-  DOLPHIN:  fib(4),   // 5  — social pod dynamics
-  CROW:     fib(5),   // 8  — tool cache size aligns with Fibonacci cache rule
-  BEE:      fib(6),   // 13 — hive quorum scale
-  ANT:      fib(7),   // 21 — swarm micro-parallelism
+  OWL: fib(1),
+  // 1  — deep wisdom is single-threaded by design
+  OCTOPUS: fib(2),
+  // 2  — dual-hemisphere adaptation
+  ELEPHANT: fib(3),
+  // 3  — triple-store memory (episodic, semantic, spatial)
+  DOLPHIN: fib(4),
+  // 5  — social pod dynamics
+  CROW: fib(5),
+  // 8  — tool cache size aligns with Fibonacci cache rule
+  BEE: fib(6),
+  // 13 — hive quorum scale
+  ANT: fib(7) // 21 — swarm micro-parallelism
 };
 
 /**
@@ -131,11 +141,15 @@ const ACTIVATION_THRESHOLD = CSL_THRESHOLDS.LOW; // ≈ 0.691
  * @constant {Object.<string, number>}
  */
 const TIMEOUTS = {
-  CLASSIFY:   Math.round(PHI  * 1000),  // 1618 ms  — classification pass
-  ACTIVATE:   Math.round(PHI * PHI * 1000),  // 2618 ms  — layer activation
-  ORCHESTRATE: Math.round(Math.pow(PHI, 3) * 1000), // 4236 ms  — full orchestration
-  BLEND:      Math.round(Math.pow(PHI, 4) * 1000),  // 6854 ms  — multi-layer blend
-  HEALTH:     Math.round(Math.pow(PHI, 2) * 1000),  // 2618 ms  — health check
+  CLASSIFY: Math.round(PHI * 1000),
+  // 1618 ms  — classification pass
+  ACTIVATE: Math.round(PHI * PHI * 1000),
+  // 2618 ms  — layer activation
+  ORCHESTRATE: Math.round(Math.pow(PHI, 3) * 1000),
+  // 4236 ms  — full orchestration
+  BLEND: Math.round(Math.pow(PHI, 4) * 1000),
+  // 6854 ms  — multi-layer blend
+  HEALTH: Math.round(Math.pow(PHI, 2) * 1000) // 2618 ms  — health check
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -169,13 +183,13 @@ function generateCapabilityEmbedding(seed) {
  * @constant {Object.<string, number[]>}
  */
 const LAYER_EMBEDDINGS = {
-  OWL:      generateCapabilityEmbedding(1),
-  OCTOPUS:  generateCapabilityEmbedding(Math.round(PHI)),
+  OWL: generateCapabilityEmbedding(1),
+  OCTOPUS: generateCapabilityEmbedding(Math.round(PHI)),
   ELEPHANT: generateCapabilityEmbedding(Math.round(PHI * PHI)),
-  DOLPHIN:  generateCapabilityEmbedding(Math.round(Math.pow(PHI, 3))),
-  CROW:     generateCapabilityEmbedding(Math.round(Math.pow(PHI, 4))),
-  BEE:      generateCapabilityEmbedding(Math.round(Math.pow(PHI, 5))),
-  ANT:      generateCapabilityEmbedding(Math.round(Math.pow(PHI, 6))),
+  DOLPHIN: generateCapabilityEmbedding(Math.round(Math.pow(PHI, 3))),
+  CROW: generateCapabilityEmbedding(Math.round(Math.pow(PHI, 4))),
+  BEE: generateCapabilityEmbedding(Math.round(Math.pow(PHI, 5))),
+  ANT: generateCapabilityEmbedding(Math.round(Math.pow(PHI, 6)))
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -194,9 +208,7 @@ const RESOURCE_WEIGHTS = phiResourceWeights(7);
  * Map of layer name → allocated resource weight fraction.
  * @constant {Object.<string, number>}
  */
-const LAYER_RESOURCE_ALLOCATION = Object.fromEntries(
-  LAYER_PRIORITY_ORDER.map((name, i) => [name, RESOURCE_WEIGHTS[i]])
-);
+const LAYER_RESOURCE_ALLOCATION = Object.fromEntries(LAYER_PRIORITY_ORDER.map((name, i) => [name, RESOURCE_WEIGHTS[i]]));
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 6 — LAYER DESCRIPTORS
@@ -223,151 +235,96 @@ const LAYER_RESOURCE_ALLOCATION = Object.fromEntries(
  */
 const LAYER_DESCRIPTORS = {
   ANT: {
-    name:             'ANT',
-    archetype:        'ANT',
-    mode:             'Swarm Intelligence',
-    description:      'Parallel micro-task decomposition, emergent coordination, zero-skip batch execution',
-    capabilities: [
-      'parallel_task_decomposition',
-      'micro_task_execution',
-      'swarm_coordination',
-      'emergent_consensus',
-      'batch_processing',
-      'queue_discipline',
-      'instruction_fidelity',
-      'repetition_consistency',
-    ],
-    activationWeight:  PSI * PSI,                        // ≈ 0.382 — execution plane baseline
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.ANT,        // 21
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.ANT,
-    embedding:         LAYER_EMBEDDINGS.ANT,
+    name: 'ANT',
+    archetype: 'ANT',
+    mode: 'Swarm Intelligence',
+    description: 'Parallel micro-task decomposition, emergent coordination, zero-skip batch execution',
+    capabilities: ['parallel_task_decomposition', 'micro_task_execution', 'swarm_coordination', 'emergent_consensus', 'batch_processing', 'queue_discipline', 'instruction_fidelity', 'repetition_consistency'],
+    activationWeight: PSI * PSI,
+    // ≈ 0.382 — execution plane baseline
+    maxConcurrency: LAYER_MAX_CONCURRENCY.ANT,
+    // 21
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.ANT,
+    embedding: LAYER_EMBEDDINGS.ANT
   },
-
   BEE: {
-    name:             'BEE',
-    archetype:        'BEE',
-    mode:             'Hive Mind',
-    description:      'Collaborative workflows, resource sharing, hive consensus, 10 000-bee scale design',
-    capabilities: [
-      'collaborative_workflow',
-      'resource_sharing',
-      'hive_consensus',
-      'swarm_dispatch',
-      'ten_thousand_bee_scale',
-      'collective_decision_making',
-      'workflow_orchestration',
-      'distributed_coordination',
-    ],
-    activationWeight:  PSI,                              // ≈ 0.618 — natural phi inverse
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.BEE,        // 13
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.BEE,
-    embedding:         LAYER_EMBEDDINGS.BEE,
+    name: 'BEE',
+    archetype: 'BEE',
+    mode: 'Hive Mind',
+    description: 'Collaborative workflows, resource sharing, hive consensus, 10 000-bee scale design',
+    capabilities: ['collaborative_workflow', 'resource_sharing', 'hive_consensus', 'swarm_dispatch', 'ten_thousand_bee_scale', 'collective_decision_making', 'workflow_orchestration', 'distributed_coordination'],
+    activationWeight: PSI,
+    // ≈ 0.618 — natural phi inverse
+    maxConcurrency: LAYER_MAX_CONCURRENCY.BEE,
+    // 13
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.BEE,
+    embedding: LAYER_EMBEDDINGS.BEE
   },
-
   DOLPHIN: {
-    name:             'DOLPHIN',
-    archetype:        'DOLPHIN',
-    mode:             'Social Intelligence',
-    description:      'Multi-agent communication, empathy modelling, group dynamics, lateral ideation',
-    capabilities: [
-      'multi_agent_communication',
-      'empathy_modelling',
-      'group_dynamics',
-      'lateral_ideation',
-      'cross_domain_synthesis',
-      'analogy_generation',
-      'constraint_inversion',
-      'novel_recombination',
-    ],
-    activationWeight:  1.0,                              // CRITICAL layer from config
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.DOLPHIN,    // 5
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.DOLPHIN,
-    embedding:         LAYER_EMBEDDINGS.DOLPHIN,
+    name: 'DOLPHIN',
+    archetype: 'DOLPHIN',
+    mode: 'Social Intelligence',
+    description: 'Multi-agent communication, empathy modelling, group dynamics, lateral ideation',
+    capabilities: ['multi_agent_communication', 'empathy_modelling', 'group_dynamics', 'lateral_ideation', 'cross_domain_synthesis', 'analogy_generation', 'constraint_inversion', 'novel_recombination'],
+    activationWeight: 1.0,
+    // CRITICAL layer from config
+    maxConcurrency: LAYER_MAX_CONCURRENCY.DOLPHIN,
+    // 5
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.DOLPHIN,
+    embedding: LAYER_EMBEDDINGS.DOLPHIN
   },
-
   CROW: {
-    name:             'CROW',
-    archetype:        'CROW',
-    mode:             'Tool Use',
-    description:      'External tool orchestration, creative problem solving, cache strategies, adaptive retrieval',
-    capabilities: [
-      'external_tool_orchestration',
-      'creative_problem_solving',
-      'cache_strategy',
-      'adaptive_retrieval',
-      'api_integration',
-      'resource_discovery',
-      'intelligent_caching',
-      'tool_selection',
-    ],
-    activationWeight:  PSI,                              // ≈ 0.618 — pragmatic execution tier
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.CROW,       // 8
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.CROW,
-    embedding:         LAYER_EMBEDDINGS.CROW,
+    name: 'CROW',
+    archetype: 'CROW',
+    mode: 'Tool Use',
+    description: 'External tool orchestration, creative problem solving, cache strategies, adaptive retrieval',
+    capabilities: ['external_tool_orchestration', 'creative_problem_solving', 'cache_strategy', 'adaptive_retrieval', 'api_integration', 'resource_discovery', 'intelligent_caching', 'tool_selection'],
+    activationWeight: PSI,
+    // ≈ 0.618 — pragmatic execution tier
+    maxConcurrency: LAYER_MAX_CONCURRENCY.CROW,
+    // 8
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.CROW,
+    embedding: LAYER_EMBEDDINGS.CROW
   },
-
   ELEPHANT: {
-    name:             'ELEPHANT',
-    archetype:        'ELEPHANT',
-    mode:             'Memory',
-    description:      'Long-term recall, episodic memory, spatial mapping, cross-session continuity',
-    capabilities: [
-      'long_term_recall',
-      'episodic_memory_retrieval',
-      'spatial_mapping',
-      'cross_session_continuity',
-      'context_threading',
-      'preference_persistence',
-      'decision_history_tracking',
-      'deep_focus_maintenance',
-    ],
-    activationWeight:  PSI,                              // ≈ 0.618 — memory tier uses phi inverse
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.ELEPHANT,   // 3
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.ELEPHANT,
-    embedding:         LAYER_EMBEDDINGS.ELEPHANT,
+    name: 'ELEPHANT',
+    archetype: 'ELEPHANT',
+    mode: 'Memory',
+    description: 'Long-term recall, episodic memory, spatial mapping, cross-session continuity',
+    capabilities: ['long_term_recall', 'episodic_memory_retrieval', 'spatial_mapping', 'cross_session_continuity', 'context_threading', 'preference_persistence', 'decision_history_tracking', 'deep_focus_maintenance'],
+    activationWeight: PSI,
+    // ≈ 0.618 — memory tier uses phi inverse
+    maxConcurrency: LAYER_MAX_CONCURRENCY.ELEPHANT,
+    // 3
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.ELEPHANT,
+    embedding: LAYER_EMBEDDINGS.ELEPHANT
   },
-
   OWL: {
-    name:             'OWL',
-    archetype:        'OWL',
-    mode:             'Wisdom',
-    description:      'Pattern recognition, strategic planning, nocturnal deep processing, first principles reasoning',
-    capabilities: [
-      'pattern_recognition',
-      'strategic_planning',
-      'first_principles_analysis',
-      'temporal_pattern_recognition',
-      'socratic_decomposition',
-      'logical_consistency_checking',
-      'assumption_surfacing',
-      'wisdom_synthesis',
-    ],
-    activationWeight:  1.0,                              // CRITICAL layer — highest authority
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.OWL,        // 1
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.OWL,
-    embedding:         LAYER_EMBEDDINGS.OWL,
+    name: 'OWL',
+    archetype: 'OWL',
+    mode: 'Wisdom',
+    description: 'Pattern recognition, strategic planning, nocturnal deep processing, first principles reasoning',
+    capabilities: ['pattern_recognition', 'strategic_planning', 'first_principles_analysis', 'temporal_pattern_recognition', 'socratic_decomposition', 'logical_consistency_checking', 'assumption_surfacing', 'wisdom_synthesis'],
+    activationWeight: 1.0,
+    // CRITICAL layer — highest authority
+    maxConcurrency: LAYER_MAX_CONCURRENCY.OWL,
+    // 1
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.OWL,
+    embedding: LAYER_EMBEDDINGS.OWL
   },
-
   OCTOPUS: {
-    name:             'OCTOPUS',
-    archetype:        'OCTOPUS',
-    mode:             'Adaptation',
-    description:      'Multi-modal processing, camouflage (context switching), distributed intelligence across 8 cognitive arms',
-    capabilities: [
-      'multi_modal_processing',
-      'context_switching',
-      'distributed_intelligence',
-      'adaptive_camouflage',
-      'parallel_arm_cognition',
-      'environment_sensing',
-      'dynamic_reconfiguration',
-      'modality_fusion',
-    ],
-    activationWeight:  1.0,                              // CRITICAL layer — adaptive coverage
-    maxConcurrency:    LAYER_MAX_CONCURRENCY.OCTOPUS,    // 2
-    resourceWeight:    LAYER_RESOURCE_ALLOCATION.OCTOPUS,
-    embedding:         LAYER_EMBEDDINGS.OCTOPUS,
-  },
+    name: 'OCTOPUS',
+    archetype: 'OCTOPUS',
+    mode: 'Adaptation',
+    description: 'Multi-modal processing, camouflage (context switching), distributed intelligence across 8 cognitive arms',
+    capabilities: ['multi_modal_processing', 'context_switching', 'distributed_intelligence', 'adaptive_camouflage', 'parallel_arm_cognition', 'environment_sensing', 'dynamic_reconfiguration', 'modality_fusion'],
+    activationWeight: 1.0,
+    // CRITICAL layer — adaptive coverage
+    maxConcurrency: LAYER_MAX_CONCURRENCY.OCTOPUS,
+    // 2
+    resourceWeight: LAYER_RESOURCE_ALLOCATION.OCTOPUS,
+    embedding: LAYER_EMBEDDINGS.OCTOPUS
+  }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -399,19 +356,13 @@ function deriveTaskEmbedding(task) {
   }
 
   // Build a deterministic character-sum seed from all textual task fields.
-  const text = [
-    task.description || '',
-    task.type        || '',
-    ...(task.tags    || []),
-  ].join(' ');
-
+  const text = [task.description || '', task.type || '', ...(task.tags || [])].join(' ');
   let charSum = 0;
   for (let i = 0; i < text.length; i++) {
     charSum += text.charCodeAt(i) * PHI * (i + 1);
   }
   // Normalise the seed to a stable float in [1, PHI^6] to avoid degenerate cases
-  const seed = 1 + (charSum % Math.pow(PHI, 6));
-
+  const seed = 1 + charSum % Math.pow(PHI, 6);
   return generateCapabilityEmbedding(seed);
 }
 
@@ -434,7 +385,6 @@ function deriveTaskEmbedding(task) {
  *   - `blendCompleted`    {layers, blendedResult, weights, timestamp}
  */
 class CognitiveLayers extends EventEmitter {
-
   /**
    * @constructor
    * @param {Object} [config={}] - Optional runtime configuration overrides.
@@ -449,12 +399,9 @@ class CognitiveLayers extends EventEmitter {
      * Runtime configuration merged with defaults from the cognitive config.
      * @type {Object}
      */
-    this._config = Object.assign(
-      {},
-      COGNITIVE_CONFIG.fusion_engine,
-      { activationThreshold: ACTIVATION_THRESHOLD },
-      config
-    );
+    this._config = Object.assign({}, COGNITIVE_CONFIG.fusion_engine, {
+      activationThreshold: ACTIVATION_THRESHOLD
+    }, config);
 
     /**
      * Activation threshold — CSL_THRESHOLDS.LOW unless overridden.
@@ -502,15 +449,16 @@ class CognitiveLayers extends EventEmitter {
   _initLayers() {
     LAYER_PRIORITY_ORDER.forEach((name, priorityIndex) => {
       this._layers.set(name, {
-        descriptor:        LAYER_DESCRIPTORS[name],
-        isActive:          false,
-        activeCount:       0,
-        healthWindow:      [],      // boolean[] — true = success, false = failure
-        totalActivations:  0,
-        totalSuccesses:    0,
-        lastActivatedAt:   null,
+        descriptor: LAYER_DESCRIPTORS[name],
+        isActive: false,
+        activeCount: 0,
+        healthWindow: [],
+        // boolean[] — true = success, false = failure
+        totalActivations: 0,
+        totalSuccesses: 0,
+        lastActivatedAt: null,
         lastDeactivatedAt: null,
-        priorityIndex,
+        priorityIndex
       });
     });
   }
@@ -539,23 +487,16 @@ class CognitiveLayers extends EventEmitter {
    */
   classifyTask(task) {
     const taskEmbedding = deriveTaskEmbedding(task);
-    const matches       = [];
-
+    const matches = [];
     for (const [name, state] of this._layers) {
-      const rawScore   = cosineSimilarity(taskEmbedding, state.descriptor.embedding);
-      const gatedScore = cslGate(
-        rawScore,
-        rawScore,
-        this._activationThreshold,
-        PSI * PSI  // temperature = ≈0.382 — sharp gate for clean classification
-      );
-
+      const rawScore = cosineSimilarity(taskEmbedding, state.descriptor.embedding);
+      const gatedScore = cslGate(rawScore, rawScore, this._activationThreshold, PSI * PSI);
       if (rawScore >= this._activationThreshold) {
         matches.push({
-          layerName:   name,
-          score:       rawScore,
+          layerName: name,
+          score: rawScore,
           gatedScore,
-          priorityIdx: state.priorityIndex,
+          priorityIdx: state.priorityIndex
         });
       }
     }
@@ -563,18 +504,15 @@ class CognitiveLayers extends EventEmitter {
     // Sort by descending raw score; break ties by priority index (lower = higher priority)
     matches.sort((a, b) => {
       const scoreDiff = b.score - a.score;
-      return Math.abs(scoreDiff) > PSI * PSI * PSI  // > ~0.236 is a meaningful difference
-        ? scoreDiff
-        : a.priorityIdx - b.priorityIdx;
+      return Math.abs(scoreDiff) > PSI * PSI * PSI // > ~0.236 is a meaningful difference
+      ? scoreDiff : a.priorityIdx - b.priorityIdx;
     });
-
     this.emit('taskClassified', {
       task,
       matches,
-      scores:    Object.fromEntries(matches.map(m => [m.layerName, m.score])),
-      timestamp: Date.now(),
+      scores: Object.fromEntries(matches.map(m => [m.layerName, m.score])),
+      timestamp: Date.now()
     });
-
     return matches;
   }
 
@@ -609,52 +547,43 @@ class CognitiveLayers extends EventEmitter {
     if (!state) {
       throw new Error(`CognitiveLayers.activateLayer: unknown layer "${layerName}"`);
     }
-
     const descriptor = state.descriptor;
 
     // Enforce Fibonacci max-concurrency limit
     if (state.activeCount >= descriptor.maxConcurrency) {
       return {
         layerName,
-        success:   false,
-        output:    null,
-        score:     0,
-        duration:  0,
+        success: false,
+        output: null,
+        score: 0,
+        duration: 0,
         timestamp: Date.now(),
-        reason:    `Layer ${layerName} at max concurrency (${descriptor.maxConcurrency})`,
+        reason: `Layer ${layerName} at max concurrency (${descriptor.maxConcurrency})`
       };
     }
-
     const startMs = Date.now();
 
     // Update activation state
-    state.activeCount      += 1;
-    state.isActive          = true;
+    state.activeCount += 1;
+    state.isActive = true;
     state.totalActivations += 1;
-    state.lastActivatedAt   = startMs;
-
+    state.lastActivatedAt = startMs;
     this.emit('layerActivated', {
       layerName,
       task,
-      score:     descriptor.activationWeight,
-      timestamp: startMs,
+      score: descriptor.activationWeight,
+      timestamp: startMs
     });
 
     // Compute CSL score for this specific task→layer pairing
     const taskEmbedding = deriveTaskEmbedding(task);
-    const rawCslScore   = cosineSimilarity(taskEmbedding, descriptor.embedding);
-    const gatedScore    = cslGate(
-      rawCslScore,
-      rawCslScore,
-      this._activationThreshold,
-      PSI * PSI
-    );
+    const rawCslScore = cosineSimilarity(taskEmbedding, descriptor.embedding);
+    const gatedScore = cslGate(rawCslScore, rawCslScore, this._activationThreshold, PSI * PSI);
 
     // Build synthetic layer output — in production this would delegate to the
     // layer's actual processing pipeline; here we produce a structured envelope.
     const output = this._buildLayerOutput(layerName, task, gatedScore);
-
-    const success  = gatedScore >= this._activationThreshold * PSI; // ≥ LOW × PSI ≈ 0.427
+    const success = gatedScore >= this._activationThreshold * PSI; // ≥ LOW × PSI ≈ 0.427
     const duration = Date.now() - startMs;
 
     // Update health window (rolling HEALTH_WINDOW_SIZE entries)
@@ -665,24 +594,22 @@ class CognitiveLayers extends EventEmitter {
     if (success) state.totalSuccesses += 1;
 
     // Deactivation bookkeeping
-    state.activeCount       = Math.max(0, state.activeCount - 1);
-    state.isActive          = state.activeCount > 0;
+    state.activeCount = Math.max(0, state.activeCount - 1);
+    state.isActive = state.activeCount > 0;
     state.lastDeactivatedAt = Date.now();
-
     this.emit('layerDeactivated', {
       layerName,
-      taskId:    task.id || task.description || 'unknown',
-      outcome:   success ? 'SUCCESS' : 'BELOW_THRESHOLD',
-      timestamp: state.lastDeactivatedAt,
+      taskId: task.id || task.description || 'unknown',
+      outcome: success ? 'SUCCESS' : 'BELOW_THRESHOLD',
+      timestamp: state.lastDeactivatedAt
     });
-
     return {
       layerName,
       success,
       output,
-      score:     gatedScore,
+      score: gatedScore,
       duration,
-      timestamp: startMs,
+      timestamp: startMs
     };
   }
 
@@ -702,86 +629,95 @@ class CognitiveLayers extends EventEmitter {
    * @private
    */
   _buildLayerOutput(layerName, task, cslScore) {
-    const descriptor  = LAYER_DESCRIPTORS[layerName];
+    const descriptor = LAYER_DESCRIPTORS[layerName];
     const resourceFrac = descriptor.resourceWeight;
     const base = {
-      layer:       layerName,
-      mode:        descriptor.mode,
+      layer: layerName,
+      mode: descriptor.mode,
       cslScore,
       resourceFrac,
-      taskId:      task.id || null,
-      processedAt: Date.now(),
+      taskId: task.id || null,
+      processedAt: Date.now()
     };
-
     switch (layerName) {
       case 'ANT':
         return Object.assign(base, {
-          strategy:       'PARALLEL_MICRO_DECOMPOSITION',
-          microTasks:     this._decomposeIntoMicroTasks(task),
-          batchSize:      fib(5),                        // 5 — minimum viable Fibonacci batch
-          concurrencySlots: LAYER_MAX_CONCURRENCY.ANT,   // 21
-          emergenceScore: cslScore * PSI,               // dampened by PSI for emergence uncertainty
+          strategy: 'PARALLEL_MICRO_DECOMPOSITION',
+          microTasks: this._decomposeIntoMicroTasks(task),
+          batchSize: fib(5),
+          // 5 — minimum viable Fibonacci batch
+          concurrencySlots: LAYER_MAX_CONCURRENCY.ANT,
+          // 21
+          emergenceScore: cslScore * PSI // dampened by PSI for emergence uncertainty
         });
-
       case 'BEE':
         return Object.assign(base, {
-          strategy:          'HIVE_CONSENSUS',
-          hiveSize:          fib(6),                     // 13 — hive quorum count
-          quorumThreshold:   CSL_THRESHOLDS.MEDIUM,      // ≈ 0.764 — consensus requires medium confidence
-          resourcePools:     phiResourceWeights(fib(4)), // 5-way phi resource split
-          collaborationScore: cslScore * descriptor.activationWeight,
+          strategy: 'HIVE_CONSENSUS',
+          hiveSize: fib(6),
+          // 13 — hive quorum count
+          quorumThreshold: CSL_THRESHOLDS.MEDIUM,
+          // ≈ 0.764 — consensus requires medium confidence
+          resourcePools: phiResourceWeights(fib(4)),
+          // 5-way phi resource split
+          collaborationScore: cslScore * descriptor.activationWeight
         });
-
       case 'DOLPHIN':
         return Object.assign(base, {
-          strategy:        'SOCIAL_INTELLIGENCE',
-          agentCount:      LAYER_MAX_CONCURRENCY.DOLPHIN,  // 5 — dolphin pod
-          empathyScore:    cslScore * PHI * PSI,           // PHI × PSI = 1 (golden ratio identity)
-          groupDynamics:   'DISTRIBUTED_CONSENSUS',
-          communicationBandwidth: phiPriorityScore(cslScore, PSI, PSI * PSI),
+          strategy: 'SOCIAL_INTELLIGENCE',
+          agentCount: LAYER_MAX_CONCURRENCY.DOLPHIN,
+          // 5 — dolphin pod
+          empathyScore: cslScore * PHI * PSI,
+          // PHI × PSI = 1 (golden ratio identity)
+          groupDynamics: 'DISTRIBUTED_CONSENSUS',
+          communicationBandwidth: phiPriorityScore(cslScore, PSI, PSI * PSI)
         });
-
       case 'CROW':
         return Object.assign(base, {
-          strategy:     'TOOL_ORCHESTRATION',
-          cacheSize:    fib(5),                           // 8 — Fibonacci cache rule
-          toolSlots:    LAYER_MAX_CONCURRENCY.CROW,       // 8
-          creativityIndex: cslScore * PHI,               // amplified by PHI for creative boost
-          cacheStrategy:   'PHI_LRU',                    // phi-weighted least-recently-used
+          strategy: 'TOOL_ORCHESTRATION',
+          cacheSize: fib(5),
+          // 8 — Fibonacci cache rule
+          toolSlots: LAYER_MAX_CONCURRENCY.CROW,
+          // 8
+          creativityIndex: cslScore * PHI,
+          // amplified by PHI for creative boost
+          cacheStrategy: 'PHI_LRU' // phi-weighted least-recently-used
         });
-
       case 'ELEPHANT':
         return Object.assign(base, {
-          strategy:       'EPISODIC_RECALL',
-          memoryDepth:    fib(9),                        // 34 — deep memory horizon
-          recallScore:    cslScore,
-          spatialDims:    COGNITIVE_CONFIG.phi_constants.projection_dimensions, // 3
-          evictionPolicy: COGNITIVE_CONFIG.cognitive_layers.elephant_memory
-            ? COGNITIVE_CONFIG.cognitive_layers.elephant_memory.eviction_weights
-            : { importance: 0.486, recency: 0.300, relevance: 0.214 },
-          continuityScore: cslScore * PSI,
+          strategy: 'EPISODIC_RECALL',
+          memoryDepth: fib(9),
+          // 34 — deep memory horizon
+          recallScore: cslScore,
+          spatialDims: COGNITIVE_CONFIG.phi_constants.projection_dimensions,
+          // 3
+          evictionPolicy: COGNITIVE_CONFIG.cognitive_layers.elephant_memory ? COGNITIVE_CONFIG.cognitive_layers.elephant_memory.eviction_weights : {
+            importance: 0.486,
+            recency: 0.300,
+            relevance: 0.214
+          },
+          continuityScore: cslScore * PSI
         });
-
       case 'OWL':
         return Object.assign(base, {
-          strategy:         'DEEP_WISDOM',
-          patternDepth:     fib(7),                      // 13 — pattern recognition horizon
-          strategicScore:   cslScore * descriptor.activationWeight,
-          firstPrinciples:  true,
-          nocturnalMode:    new Date().getHours() >= 20 || new Date().getHours() < 6,
-          wisdomThreshold:  CSL_THRESHOLDS.HIGH,         // ≈ 0.809 — OWL demands high coherence
+          strategy: 'DEEP_WISDOM',
+          patternDepth: fib(7),
+          // 13 — pattern recognition horizon
+          strategicScore: cslScore * descriptor.activationWeight,
+          firstPrinciples: true,
+          nocturnalMode: new Date().getHours() >= 20 || new Date().getHours() < 6,
+          wisdomThreshold: CSL_THRESHOLDS.HIGH // ≈ 0.809 — OWL demands high coherence
         });
-
       case 'OCTOPUS':
         return Object.assign(base, {
-          strategy:         'MULTI_MODAL_ADAPTATION',
-          cognitiveArms:    fib(5),                      // 8 — octopus has 8 arms / cognitive channels
+          strategy: 'MULTI_MODAL_ADAPTATION',
+          cognitiveArms: fib(5),
+          // 8 — octopus has 8 arms / cognitive channels
           modalitiesActive: Math.min(fib(5), Math.ceil(cslScore * fib(5))),
-          camouflageDepth:  cslScore * PHI,             // context-switching depth
-          adaptationScore:  cslScore * descriptor.activationWeight,
-          distributedIQ:    phiPriorityScore(cslScore, cslScore * PSI, cslScore * PSI * PSI),
+          camouflageDepth: cslScore * PHI,
+          // context-switching depth
+          adaptationScore: cslScore * descriptor.activationWeight,
+          distributedIQ: phiPriorityScore(cslScore, cslScore * PSI, cslScore * PSI * PSI)
         });
-
       default:
         return base;
     }
@@ -801,19 +737,18 @@ class CognitiveLayers extends EventEmitter {
    * @private
    */
   _decomposeIntoMicroTasks(task) {
-    const complexity  = task.complexity || PSI;   // default to PSI for unknown complexity
-    const rawCount    = Math.ceil(complexity * LAYER_MAX_CONCURRENCY.ANT);
+    const complexity = task.complexity || PSI; // default to PSI for unknown complexity
+    const rawCount = Math.ceil(complexity * LAYER_MAX_CONCURRENCY.ANT);
     // Snap to nearest Fibonacci number ≤ ANT max concurrency (21)
-    const fibCounts   = FIB.filter(f => f <= LAYER_MAX_CONCURRENCY.ANT);
-    const microCount  = fibCounts.reduce((prev, curr) =>
-      Math.abs(curr - rawCount) < Math.abs(prev - rawCount) ? curr : prev
-    );
-
-    return Array.from({ length: microCount }, (_, i) => ({
-      microId:    `${task.id || 'task'}_micro_${i + 1}`,
-      slot:       i,
-      weight:     phiFusionWeights(microCount)[i],
-      priority:   Math.pow(PSI, i),                // phi-decay priority per slot
+    const fibCounts = FIB.filter(f => f <= LAYER_MAX_CONCURRENCY.ANT);
+    const microCount = fibCounts.reduce((prev, curr) => Math.abs(curr - rawCount) < Math.abs(prev - rawCount) ? curr : prev);
+    return Array.from({
+      length: microCount
+    }, (_, i) => ({
+      microId: `${task.id || 'task'}_micro_${i + 1}`,
+      slot: i,
+      weight: phiFusionWeights(microCount)[i],
+      priority: Math.pow(PSI, i) // phi-decay priority per slot
     }));
   }
 
@@ -840,17 +775,15 @@ class CognitiveLayers extends EventEmitter {
    * }} Orchestration result with full provenance.
    */
   orchestrate(task) {
-    const startMs          = Date.now();
+    const startMs = Date.now();
     this._orchestrationCount += 1;
-    const orchestrationId  = this._orchestrationCount;
+    const orchestrationId = this._orchestrationCount;
 
     // Step 1 — Classify the task to find matching layers
     const matches = this.classifyTask(task);
-
     let activatedLayers;
     let result;
     let blended = false;
-
     if (matches.length === 0) {
       // No layer cleared the threshold — escalate to OWL as sovereign fallback
       activatedLayers = ['OWL'];
@@ -867,26 +800,19 @@ class CognitiveLayers extends EventEmitter {
 
       // Sort matches by LAYER_PRIORITY_ORDER to ensure phi-weight assignment
       // follows the canonical priority sequence
-      const sortedMatches = matches.slice().sort(
-        (a, b) => a.priorityIdx - b.priorityIdx
-      );
-
-      const layerResults = sortedMatches.map(m =>
-        this.activateLayer(m.layerName, task)
-      );
-
-      result  = this.blendLayers(layerResults, task);
+      const sortedMatches = matches.slice().sort((a, b) => a.priorityIdx - b.priorityIdx);
+      const layerResults = sortedMatches.map(m => this.activateLayer(m.layerName, task));
+      result = this.blendLayers(layerResults, task);
       blended = true;
     }
-
     return {
-      taskId:          task.id || null,
+      taskId: task.id || null,
       activatedLayers,
       blended,
       result,
       orchestrationId,
-      duration:        Date.now() - startMs,
-      timestamp:       startMs,
+      duration: Date.now() - startMs,
+      timestamp: startMs
     };
   }
 
@@ -911,21 +837,21 @@ class CognitiveLayers extends EventEmitter {
    * @returns {Object} Blended cognitive output envelope.
    */
   blendLayers(layerResults, task) {
-    const n       = layerResults.length;
+    const n = layerResults.length;
     const weights = phiFusionWeights(n);
 
     // Base envelope from highest-weight layer
-    const primary  = layerResults[0].output || {};
-    const blended  = Object.assign({}, primary, {
-      _blend:        true,
-      _blendedFrom:  layerResults.map(r => r.layerName),
+    const primary = layerResults[0].output || {};
+    const blended = Object.assign({}, primary, {
+      _blend: true,
+      _blendedFrom: layerResults.map(r => r.layerName),
       _blendWeights: weights,
-      _blendN:       n,
+      _blendN: n
     });
 
     // Accumulate numeric fields weighted by fusion weights
     for (let i = 1; i < n; i++) {
-      const w      = weights[i];
+      const w = weights[i];
       const output = layerResults[i].output || {};
       for (const key of Object.keys(output)) {
         if (typeof output[key] === 'number' && typeof blended[key] === 'number') {
@@ -938,14 +864,12 @@ class CognitiveLayers extends EventEmitter {
 
     // Overall blended CSL score is the phi-weighted average of individual scores
     blended.cslScore = layerResults.reduce((acc, r, i) => acc + (r.score || 0) * weights[i], 0);
-
     this.emit('blendCompleted', {
-      layers:        layerResults.map(r => r.layerName),
+      layers: layerResults.map(r => r.layerName),
       blendedResult: blended,
       weights,
-      timestamp:     Date.now(),
+      timestamp: Date.now()
     });
-
     return blended;
   }
 
@@ -979,20 +903,13 @@ class CognitiveLayers extends EventEmitter {
     if (!state) {
       throw new Error(`CognitiveLayers.getLayerHealth: unknown layer "${layerName}"`);
     }
-
-    const window       = state.healthWindow;
-    const windowSize   = window.length;
+    const window = state.healthWindow;
+    const windowSize = window.length;
     const successCount = window.filter(Boolean).length;
 
     // Phi-neutral baseline when no history exists
-    const health = windowSize === 0
-      ? PSI
-      : successCount / windowSize;
-
-    const lifetimeSuccess = state.totalActivations === 0
-      ? PSI
-      : state.totalSuccesses / state.totalActivations;
-
+    const health = windowSize === 0 ? PSI : successCount / windowSize;
+    const lifetimeSuccess = state.totalActivations === 0 ? PSI : state.totalSuccesses / state.totalActivations;
     return {
       layerName,
       health,
@@ -1000,8 +917,8 @@ class CognitiveLayers extends EventEmitter {
       successCount,
       totalActivations: state.totalActivations,
       lifetimeSuccess,
-      isActive:         state.isActive,
-      activeCount:      state.activeCount,
+      isActive: state.isActive,
+      activeCount: state.activeCount
     };
   }
 
@@ -1030,25 +947,20 @@ class CognitiveLayers extends EventEmitter {
    */
   getSystemCognition() {
     const layerHealthReports = {};
-    let weightedHealthSum    = 0;
-    let totalActivations     = 0;
-    let totalActiveCount     = 0;
-    let totalConcurrencyMax  = 0;
-
+    let weightedHealthSum = 0;
+    let totalActivations = 0;
+    let totalActiveCount = 0;
+    let totalConcurrencyMax = 0;
     LAYER_PRIORITY_ORDER.forEach((name, i) => {
       const report = this.getLayerHealth(name);
       layerHealthReports[name] = report;
-
-      weightedHealthSum  += report.health * RESOURCE_WEIGHTS[i];
-      totalActivations   += report.totalActivations;
-      totalActiveCount   += report.activeCount;
+      weightedHealthSum += report.health * RESOURCE_WEIGHTS[i];
+      totalActivations += report.totalActivations;
+      totalActiveCount += report.activeCount;
       totalConcurrencyMax += LAYER_MAX_CONCURRENCY[name];
     });
-
-    const systemHealth       = weightedHealthSum; // weights already sum to 1.0
-    const resourceUtilisation = totalConcurrencyMax > 0
-      ? totalActiveCount / totalConcurrencyMax
-      : 0;
+    const systemHealth = weightedHealthSum; // weights already sum to 1.0
+    const resourceUtilisation = totalConcurrencyMax > 0 ? totalActiveCount / totalConcurrencyMax : 0;
 
     // Map utilisation to PRESSURE_LEVELS
     let pressureLevel = 'NOMINAL';
@@ -1059,16 +971,15 @@ class CognitiveLayers extends EventEmitter {
     } else if (resourceUtilisation >= PRESSURE_LEVELS.ELEVATED[0]) {
       pressureLevel = 'ELEVATED';
     }
-
     return {
       systemHealth,
       pressureLevel,
-      activeLayerCount:    this.getActiveCount(),
+      activeLayerCount: this.getActiveCount(),
       totalActivations,
       resourceUtilisation,
-      layers:              layerHealthReports,
-      orchestrationCount:  this._orchestrationCount,
-      timestamp:           Date.now(),
+      layers: layerHealthReports,
+      orchestrationCount: this._orchestrationCount,
+      timestamp: Date.now()
     };
   }
 
@@ -1189,10 +1100,8 @@ function createCognitiveLayers(overrides = {}) {
 module.exports = {
   // Primary class
   CognitiveLayers,
-
   // Factory
   createCognitiveLayers,
-
   // Static constants (exposed for testing and external introspection)
   LAYER_PRIORITY_ORDER,
   LAYER_MAX_CONCURRENCY,
@@ -1203,7 +1112,6 @@ module.exports = {
   HEALTH_WINDOW_SIZE,
   TIMEOUTS,
   EMBEDDING_DIM,
-
   // Re-export phi-math primitives used by this module
-  phiMath,
+  phiMath
 };

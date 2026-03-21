@@ -1,4 +1,6 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyVector — Main Service Entry Point
@@ -7,21 +9,37 @@
  *
  * Sacred Geometry: PHI = 1.618033988749895
  */
-
-const { Pool } = require('pg');
+const {
+  Pool
+} = require('pg');
 const config = require('./config');
-const { MigrationRunner } = require('./migrations');
-const { CollectionManager } = require('./collections');
-const { IndexManager } = require('./indexes');
-const { SearchEngine } = require('./search');
-const { GraphRAG } = require('./graph-rag');
-const { HealthChecker } = require('./health');
+const {
+  MigrationRunner
+} = require('./migrations');
+const {
+  CollectionManager
+} = require('./collections');
+const {
+  IndexManager
+} = require('./indexes');
+const {
+  SearchEngine
+} = require('./search');
+const {
+  GraphRAG
+} = require('./graph-rag');
+const {
+  HealthChecker
+} = require('./health');
 
 // ─── HeadyVector class ────────────────────────────────────────────────────────
 
 class HeadyVector {
   constructor(opts = {}) {
-    this.config = { ...config, ...opts };
+    this.config = {
+      ...config,
+      ...opts
+    };
 
     // PostgreSQL connection pool
     this.pool = new Pool({
@@ -30,11 +48,10 @@ class HeadyVector {
       idleTimeoutMillis: this.config.database.idleTimeoutMillis,
       connectionTimeoutMillis: this.config.database.connectionTimeoutMillis,
       statement_timeout: this.config.database.statementTimeout,
-      ssl: this.config.database.ssl || undefined,
+      ssl: this.config.database.ssl || undefined
     });
-
-    this.pool.on('error', (err) => {
-      console.error('[heady-vector] Pool error:', err.message);
+    this.pool.on('error', err => {
+      logger.error('[heady-vector] Pool error:', err.message);
     });
 
     // Sub-systems (initialized in start())
@@ -44,13 +61,12 @@ class HeadyVector {
     this.search = null;
     this.graph = null;
     this.health = null;
-
     this._ready = false;
     this._metrics = {
       upserts: 0,
       queries: 0,
       errors: 0,
-      startTime: null,
+      startTime: null
     };
   }
 
@@ -61,14 +77,16 @@ class HeadyVector {
    * @returns {Promise<void>}
    */
   async start() {
-    console.log(`[heady-vector] Starting service v${this.config.version}...`);
+    logger.info(`[heady-vector] Starting service v${this.config.version}...`);
     this._metrics.startTime = new Date();
 
     // Run migrations
     this.migrations = new MigrationRunner(this.pool);
-    const { applied } = await this.migrations.runAll();
+    const {
+      applied
+    } = await this.migrations.runAll();
     if (applied.length > 0) {
-      console.log(`[heady-vector] Applied ${applied.length} migration(s): ${applied.join(', ')}`);
+      logger.info(`[heady-vector] Applied ${applied.length} migration(s): ${applied.join(', ')}`);
     }
 
     // Initialize subsystems
@@ -77,9 +95,8 @@ class HeadyVector {
     this.search = new SearchEngine(this.pool, this.indexes, this.collections);
     this.graph = new GraphRAG(this.pool, this.indexes);
     this.health = new HealthChecker(this.pool, this.indexes);
-
     this._ready = true;
-    console.log(`[heady-vector] Ready on port ${this.config.port}`);
+    logger.info(`[heady-vector] Ready on port ${this.config.port}`);
   }
 
   /**
@@ -89,7 +106,7 @@ class HeadyVector {
   async stop() {
     this._ready = false;
     await this.pool.end();
-    console.log('[heady-vector] Stopped');
+    logger.info('[heady-vector] Stopped');
   }
 
   /**
@@ -184,34 +201,36 @@ class HeadyVector {
     const batchSize = opts.batchSize || this.config.batch.upsertSize;
     const namespace = opts.namespace || 'default';
     const collection = await this.collections.require(collectionName);
-
     let upserted = 0;
     const errors = [];
-
     for (let i = 0; i < vectors.length; i += batchSize) {
       const batch = vectors.slice(i, i + batchSize);
-      await Promise.all(
-        batch.map(async (v, j) => {
-          try {
-            await this._upsertOne({
-              collection: collectionName,
-              collectionObj: collection,
-              namespace: v.namespace || namespace,
-              id: v.id,
-              vector: v.vector || v.embedding,
-              content: v.content,
-              metadata: v.metadata || {},
-            });
-            upserted++;
-            this._metrics.upserts++;
-          } catch (err) {
-            errors.push({ index: i + j, id: v.id, error: err.message });
-          }
-        })
-      );
+      await Promise.all(batch.map(async (v, j) => {
+        try {
+          await this._upsertOne({
+            collection: collectionName,
+            collectionObj: collection,
+            namespace: v.namespace || namespace,
+            id: v.id,
+            vector: v.vector || v.embedding,
+            content: v.content,
+            metadata: v.metadata || {}
+          });
+          upserted++;
+          this._metrics.upserts++;
+        } catch (err) {
+          errors.push({
+            index: i + j,
+            id: v.id,
+            error: err.message
+          });
+        }
+      }));
     }
-
-    return { upserted, errors };
+    return {
+      upserted,
+      errors
+    };
   }
 
   /**
@@ -227,14 +246,16 @@ class HeadyVector {
       id: externalId,
       vector,
       content,
-      metadata = {},
+      metadata = {}
     } = opts;
-
-    const collection = collectionObj || await this.collections.require(collectionName);
+    const collection = collectionObj || (await this.collections.require(collectionName));
 
     // Validate metadata schema if present
     if (collection.metadata_schema) {
-      const { valid, errors } = this.collections.validateMetadata(collection, metadata);
+      const {
+        valid,
+        errors
+      } = this.collections.validateMetadata(collection, metadata);
       if (!valid) {
         throw new Error(`Metadata validation failed: ${errors.join('; ')}`);
       }
@@ -242,23 +263,18 @@ class HeadyVector {
 
     // Validate vector dimensions
     if (vector && vector.length !== collection.dimension) {
-      throw new Error(
-        `Vector dimension mismatch: expected ${collection.dimension}, got ${vector.length}`
-      );
+      throw new Error(`Vector dimension mismatch: expected ${collection.dimension}, got ${vector.length}`);
     }
 
     // Format vector as PostgreSQL array literal
     const vecArray = vector ? `[${Array.from(vector).join(',')}]` : null;
     const embeddingCol = collection.dimension === 768 ? 'embedding_768' : 'embedding';
-
     const client = await this.pool.connect();
     try {
       let result;
-
       if (externalId) {
         // Upsert by external_id
-        result = await client.query(
-          `INSERT INTO heady_vectors
+        result = await client.query(`INSERT INTO heady_vectors
              (collection_id, namespace, external_id, ${embeddingCol}, dimension, content, metadata)
            VALUES ($1, $2, $3, $4::vector, $5, $6, $7)
            ON CONFLICT (collection_id, namespace, external_id)
@@ -267,22 +283,14 @@ class HeadyVector {
              content         = EXCLUDED.content,
              metadata        = EXCLUDED.metadata,
              updated_at      = NOW()
-           RETURNING *`,
-          [collection.id, namespace, externalId, vecArray, collection.dimension,
-           content || null, JSON.stringify(metadata)]
-        );
+           RETURNING *`, [collection.id, namespace, externalId, vecArray, collection.dimension, content || null, JSON.stringify(metadata)]);
       } else {
         // Insert new vector (no external_id)
-        result = await client.query(
-          `INSERT INTO heady_vectors
+        result = await client.query(`INSERT INTO heady_vectors
              (collection_id, namespace, ${embeddingCol}, dimension, content, metadata)
            VALUES ($1, $2, $3::vector, $4, $5, $6)
-           RETURNING *`,
-          [collection.id, namespace, vecArray, collection.dimension,
-           content || null, JSON.stringify(metadata)]
-        );
+           RETURNING *`, [collection.id, namespace, vecArray, collection.dimension, content || null, JSON.stringify(metadata)]);
       }
-
       return result.rows[0];
     } finally {
       client.release();
@@ -296,13 +304,10 @@ class HeadyVector {
    */
   async getVector(id) {
     this._assertReady();
-    const result = await this.pool.query(
-      `SELECT v.*, c.name AS collection_name
+    const result = await this.pool.query(`SELECT v.*, c.name AS collection_name
        FROM heady_vectors v
        JOIN heady_collections c ON c.id = v.collection_id
-       WHERE v.id = $1`,
-      [id]
-    );
+       WHERE v.id = $1`, [id]);
     return result.rows[0] || null;
   }
 
@@ -316,11 +321,8 @@ class HeadyVector {
   async getVectorByExternalId(collectionName, externalId, namespace = 'default') {
     this._assertReady();
     const collection = await this.collections.require(collectionName);
-    const result = await this.pool.query(
-      `SELECT * FROM heady_vectors
-       WHERE collection_id = $1 AND namespace = $2 AND external_id = $3`,
-      [collection.id, namespace, externalId]
-    );
+    const result = await this.pool.query(`SELECT * FROM heady_vectors
+       WHERE collection_id = $1 AND namespace = $2 AND external_id = $3`, [collection.id, namespace, externalId]);
     return result.rows[0] || null;
   }
 
@@ -331,11 +333,10 @@ class HeadyVector {
    */
   async deleteVector(id) {
     this._assertReady();
-    const result = await this.pool.query(
-      'DELETE FROM heady_vectors WHERE id = $1 RETURNING id',
-      [id]
-    );
-    return { deleted: result.rows.length > 0 };
+    const result = await this.pool.query('DELETE FROM heady_vectors WHERE id = $1 RETURNING id', [id]);
+    return {
+      deleted: result.rows.length > 0
+    };
   }
 
   /**
@@ -351,22 +352,20 @@ class HeadyVector {
     const conditions = ['collection_id = $1'];
     const params = [collection.id];
     let idx = 2;
-
     if (namespace) {
       conditions.push(`namespace = $${idx++}`);
       params.push(namespace);
     }
-
     for (const [key, value] of Object.entries(filter)) {
       conditions.push(`metadata @> $${idx++}::jsonb`);
-      params.push(JSON.stringify({ [key]: value }));
+      params.push(JSON.stringify({
+        [key]: value
+      }));
     }
-
-    const result = await this.pool.query(
-      `DELETE FROM heady_vectors WHERE ${conditions.join(' AND ')} RETURNING id`,
-      params
-    );
-    return { deleted: result.rows.length };
+    const result = await this.pool.query(`DELETE FROM heady_vectors WHERE ${conditions.join(' AND ')} RETURNING id`, params);
+    return {
+      deleted: result.rows.length
+    };
   }
 
   // ─── Search operations ──────────────────────────────────────────────────────
@@ -464,7 +463,10 @@ class HeadyVector {
    * @returns {Promise<object>}
    */
   async healthCheck() {
-    if (!this._ready) return { status: 'starting', ready: false };
+    if (!this._ready) return {
+      status: 'starting',
+      ready: false
+    };
     return this.health.check();
   }
 
@@ -475,12 +477,10 @@ class HeadyVector {
   getMetrics() {
     return {
       ...this._metrics,
-      uptime: this._metrics.startTime
-        ? Date.now() - this._metrics.startTime.getTime()
-        : 0,
+      uptime: this._metrics.startTime ? Date.now() - this._metrics.startTime.getTime() : 0,
       poolTotal: this.pool.totalCount,
       poolIdle: this.pool.idleCount,
-      poolWaiting: this.pool.waitingCount,
+      poolWaiting: this.pool.waitingCount
     };
   }
 }
@@ -500,5 +500,7 @@ function getInstance(opts) {
   }
   return _instance;
 }
-
-module.exports = { HeadyVector, getInstance };
+module.exports = {
+  HeadyVector,
+  getInstance
+};

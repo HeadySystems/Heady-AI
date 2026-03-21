@@ -33,7 +33,7 @@ const UI_REGISTRY = {
     label: 'HeadyMe Antigravity',
     description: '3D vector space visualization and autonomous agent interface',
     themeAccent: '#10B981',
-    preload: true,
+    preload: true
   },
   'www.headyme.com': {
     uiId: 'antigravity',
@@ -42,7 +42,7 @@ const UI_REGISTRY = {
     label: 'HeadyMe Antigravity',
     description: '3D vector space visualization and autonomous agent interface',
     themeAccent: '#10B981',
-    preload: true,
+    preload: true
   },
   'app.headyme.com': {
     uiId: 'swarm-dashboard',
@@ -51,9 +51,8 @@ const UI_REGISTRY = {
     label: 'Swarm Dashboard',
     description: 'Real-time agent swarm monitoring',
     themeAccent: '#F5A623',
-    preload: false,
+    preload: false
   },
-
   // ── HeadySystems — Engineering domain ──────────────────────────────────────
   'headysystems.com': {
     uiId: 'landing',
@@ -62,7 +61,7 @@ const UI_REGISTRY = {
     label: 'HeadySystems Landing',
     description: 'Marketing landing page and product overview',
     themeAccent: '#4c8fff',
-    preload: true,
+    preload: true
   },
   'www.headysystems.com': {
     uiId: 'landing',
@@ -71,7 +70,7 @@ const UI_REGISTRY = {
     label: 'HeadySystems Landing',
     description: 'Marketing landing page and product overview',
     themeAccent: '#4c8fff',
-    preload: true,
+    preload: true
   },
   'ide.headysystems.com': {
     uiId: 'heady-ide',
@@ -80,9 +79,8 @@ const UI_REGISTRY = {
     label: 'Heady™ IDE',
     description: 'Code editor and AI-assisted development environment',
     themeAccent: '#4c8fff',
-    preload: false,
+    preload: false
   },
-
   // ── HeadyMCP — Model Context Protocol domain ────────────────────────────────
   'headymcp.com': {
     uiId: 'governance-panel',
@@ -91,7 +89,7 @@ const UI_REGISTRY = {
     label: 'Governance Panel',
     description: 'Policy engine, MCP governance, and audit log',
     themeAccent: '#8b5cf6',
-    preload: false,
+    preload: false
   },
   'www.headymcp.com': {
     uiId: 'governance-panel',
@@ -100,9 +98,8 @@ const UI_REGISTRY = {
     label: 'Governance Panel',
     description: 'Policy engine, MCP governance, and audit log',
     themeAccent: '#8b5cf6',
-    preload: false,
+    preload: false
   },
-
   // ── HeadyConnection — Community / connection domain ─────────────────────────
   'headyconnection.org': {
     uiId: 'vector-explorer',
@@ -111,7 +108,7 @@ const UI_REGISTRY = {
     label: 'Vector Explorer',
     description: 'Semantic vector memory exploration across the Heady™Network',
     themeAccent: '#10B981',
-    preload: false,
+    preload: false
   },
   'www.headyconnection.org': {
     uiId: 'vector-explorer',
@@ -120,9 +117,8 @@ const UI_REGISTRY = {
     label: 'Vector Explorer',
     description: 'Semantic vector memory exploration across the Heady™Network',
     themeAccent: '#10B981',
-    preload: false,
+    preload: false
   },
-
   // ── HeadyDeploy / Projections ───────────────────────────────────────────────
   'deploy.headyme.com': {
     uiId: 'projection-monitor',
@@ -131,7 +127,7 @@ const UI_REGISTRY = {
     label: 'Projection Monitor',
     description: 'Deployment projection health and domain routing status',
     themeAccent: '#00d4ff',
-    preload: false,
+    preload: false
   },
   'projections.headysystems.com': {
     uiId: 'projection-monitor',
@@ -140,28 +136,27 @@ const UI_REGISTRY = {
     label: 'Projection Monitor',
     description: 'Deployment projection health and domain routing status',
     themeAccent: '#00d4ff',
-    preload: false,
+    preload: false
   },
-
   // ── Local development ───────────────────────────────────────────────────────
-  'localhost': {
+  "0.0.0.0": {
     uiId: 'landing',
     scope: 'headyLanding',
     category: 'marketing',
     label: 'HeadySystems Landing (Dev)',
     description: 'Local development — marketing landing page',
     themeAccent: '#4c8fff',
-    preload: true,
+    preload: true
   },
-  '127.0.0.1': {
+  "0.0.0.0": {
     uiId: 'landing',
     scope: 'headyLanding',
     category: 'marketing',
     label: 'HeadySystems Landing (Dev)',
     description: 'Local development — marketing landing page',
     themeAccent: '#4c8fff',
-    preload: true,
-  },
+    preload: true
+  }
 };
 
 // ── Service Methods ───────────────────────────────────────────────────────────
@@ -207,7 +202,7 @@ function resolveUI(hostname) {
 function listRegisteredUIs() {
   return Object.entries(UI_REGISTRY).map(([hostname, config]) => ({
     hostname,
-    ...config,
+    ...config
   }));
 }
 
@@ -217,5 +212,5 @@ module.exports = {
   UI_REGISTRY,
   registerUI,
   resolveUI,
-  listRegisteredUIs,
+  listRegisteredUIs
 };

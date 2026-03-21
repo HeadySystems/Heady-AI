@@ -1,4 +1,6 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyCache Express Router
@@ -15,7 +17,6 @@
  *   POST   /cache/warm              — Warm cache from data
  *   GET    /health                  — Health check
  */
-
 const express = require('express');
 
 /**
@@ -32,16 +33,19 @@ function createRouter(cache) {
   function requireFields(res, body, fields) {
     for (const f of fields) {
       if (body[f] === undefined || body[f] === null) {
-        res.status(400).json({ error: `Missing required field: ${f}` });
+        res.status(400).json({
+          error: `Missing required field: ${f}`
+        });
         return false;
       }
     }
     return true;
   }
-
   function handleError(res, err) {
-    console.error('[heady-cache] route error:', err);
-    res.status(500).json({ error: err.message || 'Internal error' });
+    logger.error('[heady-cache] route error:', err);
+    res.status(500).json({
+      error: err.message || 'Internal error'
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -56,12 +60,17 @@ function createRouter(cache) {
         key: req.body.key,
         namespace: req.body.namespace,
         threshold: req.body.threshold,
-        exactOnly: req.body.exactOnly,
+        exactOnly: req.body.exactOnly
       });
       if (!result) {
-        return res.status(200).json({ hit: false });
+        return res.status(200).json({
+          hit: false
+        });
       }
-      res.json({ hit: true, ...result });
+      res.json({
+        hit: true,
+        ...result
+      });
     } catch (err) {
       handleError(res, err);
     }
@@ -81,7 +90,7 @@ function createRouter(cache) {
         namespace: req.body.namespace,
         ttl: req.body.ttl,
         vector: req.body.vector,
-        skipEmbed: req.body.skipEmbed,
+        skipEmbed: req.body.skipEmbed
       });
       res.status(201).json(result);
     } catch (err) {
@@ -112,7 +121,7 @@ function createRouter(cache) {
       const key = decodeURIComponent(req.params.key);
       const result = await cache.delete({
         key,
-        namespace: req.query.namespace,
+        namespace: req.query.namespace
       });
       res.json(result);
     } catch (err) {
@@ -128,15 +137,24 @@ function createRouter(cache) {
   router.post('/cache/batch/get', async (req, res) => {
     if (!requireFields(res, req.body, ['requests'])) return;
     if (!Array.isArray(req.body.requests)) {
-      return res.status(400).json({ error: 'requests must be an array' });
+      return res.status(400).json({
+        error: 'requests must be an array'
+      });
     }
     if (req.body.requests.length > 1000) {
-      return res.status(400).json({ error: 'Batch size exceeds maximum of 1000' });
+      return res.status(400).json({
+        error: 'Batch size exceeds maximum of 1000'
+      });
     }
     try {
       const results = await cache.batchGet(req.body.requests);
       res.json({
-        results: results.map((r) => r ? { hit: true, ...r } : { hit: false }),
+        results: results.map(r => r ? {
+          hit: true,
+          ...r
+        } : {
+          hit: false
+        })
       });
     } catch (err) {
       handleError(res, err);
@@ -151,14 +169,20 @@ function createRouter(cache) {
   router.post('/cache/batch/set', async (req, res) => {
     if (!requireFields(res, req.body, ['requests'])) return;
     if (!Array.isArray(req.body.requests)) {
-      return res.status(400).json({ error: 'requests must be an array' });
+      return res.status(400).json({
+        error: 'requests must be an array'
+      });
     }
     if (req.body.requests.length > 1000) {
-      return res.status(400).json({ error: 'Batch size exceeds maximum of 1000' });
+      return res.status(400).json({
+        error: 'Batch size exceeds maximum of 1000'
+      });
     }
     try {
       const results = await cache.batchSet(req.body.requests);
-      res.status(201).json({ results });
+      res.status(201).json({
+        results
+      });
     } catch (err) {
       handleError(res, err);
     }
@@ -196,10 +220,14 @@ function createRouter(cache) {
   router.post('/cache/warm', async (req, res) => {
     if (!requireFields(res, req.body, ['entries'])) return;
     if (!Array.isArray(req.body.entries)) {
-      return res.status(400).json({ error: 'entries must be an array' });
+      return res.status(400).json({
+        error: 'entries must be an array'
+      });
     }
     if (req.body.entries.length > 10000) {
-      return res.status(400).json({ error: 'Warm batch exceeds maximum of 10000' });
+      return res.status(400).json({
+        error: 'Warm batch exceeds maximum of 10000'
+      });
     }
     try {
       const result = await cache.warm(req.body.entries);
@@ -218,11 +246,14 @@ function createRouter(cache) {
       const status = health.status === 'ok' ? 200 : 503;
       res.status(status).json(health);
     } catch (err) {
-      res.status(503).json({ status: 'error', error: err.message });
+      res.status(503).json({
+        status: 'error',
+        error: err.message
+      });
     }
   });
-
   return router;
 }
-
-module.exports = { createRouter };
+module.exports = {
+  createRouter
+};

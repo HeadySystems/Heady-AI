@@ -16,76 +16,68 @@
  */
 
 import { EventEmitter } from 'events';
-import {
-  PHI,
-  PSI,
-  PSI_2,
-  PSI_3,
-  CSL_THRESHOLDS,
-  fib,
-  phiBackoffSequence,
-} from '../../shared/phi-math.js';
+import { PHI, PSI, PSI_2, PSI_3, CSL_THRESHOLDS, fib, phiBackoffSequence } from '../../shared/phi-math.js';
 import { CSLEngine } from '../../shared/csl-engine.js';
 
 // ─── Phi-derived constants ────────────────────────────────────────────────────
 
 /** ψ  = 0.618 — health score below which a component becomes SUSPECT */
-const HEALTH_SUSPECT_THRESHOLD    = PSI;                          // 0.618
+const HEALTH_SUSPECT_THRESHOLD = PSI; // 0.618
 
 /** ψ² = 0.382 — health score below which a component is QUARANTINED */
-const HEALTH_QUARANTINE_THRESHOLD = PSI_2;                        // 0.382
+const HEALTH_QUARANTINE_THRESHOLD = PSI_2; // 0.382
 
 /** fib(5) = 5 — consecutive bad checks before quarantine */
-const QUARANTINE_BAD_CHECKS       = fib(5);                       // 5
+const QUARANTINE_BAD_CHECKS = fib(5); // 5
 
 /** fib(4) = 3 — respawn failures before alert */
-const RESPAWN_FAIL_ALERT          = fib(4);                       // 3
+const RESPAWN_FAIL_ALERT = fib(4); // 3
 
 /** fib(5) = 5 — respawn failures before permanent quarantine */
-const RESPAWN_FAIL_PERM           = fib(5);                       // 5
+const RESPAWN_FAIL_PERM = fib(5); // 5
 
 /** fib(4) = 3 — consecutive health checks required for attestation */
-const ATTESTATION_PASS_REQUIRED   = fib(4);                       // 3
+const ATTESTATION_PASS_REQUIRED = fib(4); // 3
 
 /** fib(5) = 5 — circuit breaker trip threshold */
-const CIRCUIT_BREAKER_TRIP        = fib(5);                       // 5
+const CIRCUIT_BREAKER_TRIP = fib(5); // 5
 
 /** φ × 5000 ms ≈ 8090 ms — self-healing cycle interval */
-const HEALING_CYCLE_MS            = Math.round(PHI * 5000);       // 8090
+const HEALING_CYCLE_MS = Math.round(PHI * 5000); // 8090
 
 /** CSL drift threshold: cosine < 0.691 → drift alert */
-const DRIFT_ALERT_THRESHOLD       = CSL_THRESHOLDS.LOW;           // 0.691
+const DRIFT_ALERT_THRESHOLD = CSL_THRESHOLDS.LOW; // 0.691
 
 /** Phi-backoff respawn sequence (8 steps, base 1000ms): [1000, 1618, 2618, 4236, 6854, 11090, ...] */
-const RESPAWN_BACKOFF_SEQ         = phiBackoffSequence(8, 1000);  // 6 values used
+const RESPAWN_BACKOFF_SEQ = phiBackoffSequence(8, 1000); // 6 values used
 
 // ─── Lifecycle State Machine ──────────────────────────────────────────────────
 
 export const LIFECYCLE = Object.freeze({
-  HEALTHY     : 'HEALTHY',
-  SUSPECT     : 'SUSPECT',
-  QUARANTINED : 'QUARANTINED',
-  RECOVERING  : 'RECOVERING',
-  RESTORED    : 'RESTORED',
+  HEALTHY: 'HEALTHY',
+  SUSPECT: 'SUSPECT',
+  QUARANTINED: 'QUARANTINED',
+  RECOVERING: 'RECOVERING',
+  RESTORED: 'RESTORED'
 });
 
 /** Valid state transitions */
 const VALID_TRANSITIONS = Object.freeze({
-  [LIFECYCLE.HEALTHY]     : [LIFECYCLE.SUSPECT],
-  [LIFECYCLE.SUSPECT]     : [LIFECYCLE.HEALTHY, LIFECYCLE.QUARANTINED],
-  [LIFECYCLE.QUARANTINED] : [LIFECYCLE.RECOVERING],
-  [LIFECYCLE.RECOVERING]  : [LIFECYCLE.RESTORED, LIFECYCLE.QUARANTINED],
-  [LIFECYCLE.RESTORED]    : [LIFECYCLE.HEALTHY, LIFECYCLE.QUARANTINED],
+  [LIFECYCLE.HEALTHY]: [LIFECYCLE.SUSPECT],
+  [LIFECYCLE.SUSPECT]: [LIFECYCLE.HEALTHY, LIFECYCLE.QUARANTINED],
+  [LIFECYCLE.QUARANTINED]: [LIFECYCLE.RECOVERING],
+  [LIFECYCLE.RECOVERING]: [LIFECYCLE.RESTORED, LIFECYCLE.QUARANTINED],
+  [LIFECYCLE.RESTORED]: [LIFECYCLE.HEALTHY, LIFECYCLE.QUARANTINED]
 });
 
 // ─── Component Types ──────────────────────────────────────────────────────────
 
 export const COMPONENT_TYPE = Object.freeze({
-  SERVICE         : 'service',
-  WORKER          : 'worker',
-  AGENT           : 'agent',
-  TOOL_CONNECTOR  : 'tool_connector',
-  PROVIDER_ROUTE  : 'provider_route',
+  SERVICE: 'service',
+  WORKER: 'worker',
+  AGENT: 'agent',
+  TOOL_CONNECTOR: 'tool_connector',
+  PROVIDER_ROUTE: 'provider_route'
 });
 
 // ─── ComponentRecord ──────────────────────────────────────────────────────────
@@ -103,53 +95,58 @@ class ComponentRecord {
    * @param {number[]} [baseline] State vector for drift detection
    */
   constructor(id, type, healthFn, spawnFn, baseline) {
-    this.id              = id;
-    this.type            = type;
-    this.healthFn        = healthFn;
-    this.spawnFn         = spawnFn    ?? null;
-    this.baseline        = baseline   ?? [];
-    this.registeredAt    = Date.now();
-
-    this.state           = LIFECYCLE.HEALTHY;
-    this.healthScore     = 1.0;
-    this.consecutiveBad  = 0;
+    this.id = id;
+    this.type = type;
+    this.healthFn = healthFn;
+    this.spawnFn = spawnFn ?? null;
+    this.baseline = baseline ?? [];
+    this.registeredAt = Date.now();
+    this.state = LIFECYCLE.HEALTHY;
+    this.healthScore = 1.0;
+    this.consecutiveBad = 0;
     this.consecutiveGood = 0;
-    this.respawnCount    = 0;
+    this.respawnCount = 0;
     this.respawnFailures = 0;
     this.permQuarantined = false;
-    this.lastCheckedAt   = null;
-    this.stateHistory    = [{ state: LIFECYCLE.HEALTHY, ts: Date.now() }];
+    this.lastCheckedAt = null;
+    this.stateHistory = [{
+      state: LIFECYCLE.HEALTHY,
+      ts: Date.now()
+    }];
 
     // Circuit breaker
-    this.cbFailures      = 0;
-    this.cbOpen          = false;
-    this.cbOpenedAt      = null;
+    this.cbFailures = 0;
+    this.cbOpen = false;
+    this.cbOpenedAt = null;
     this.cbRecoveryIndex = 0;
 
     // Current state vector (for drift)
-    this.stateVector     = baseline.slice();
+    this.stateVector = baseline.slice();
   }
 
   /** Append a state transition to history */
   recordTransition(newState) {
     this.state = newState;
-    this.stateHistory.push({ state: newState, ts: Date.now() });
+    this.stateHistory.push({
+      state: newState,
+      ts: Date.now()
+    });
   }
 
   /** Summary snapshot for external consumers */
   toSummary() {
     return {
-      id           : this.id,
-      type         : this.type,
-      state        : this.state,
-      healthScore  : this.healthScore,
+      id: this.id,
+      type: this.type,
+      state: this.state,
+      healthScore: this.healthScore,
       consecutiveBad: this.consecutiveBad,
-      respawnCount : this.respawnCount,
+      respawnCount: this.respawnCount,
       respawnFailures: this.respawnFailures,
       permQuarantined: this.permQuarantined,
-      cbOpen       : this.cbOpen,
+      cbOpen: this.cbOpen,
       lastCheckedAt: this.lastCheckedAt,
-      registeredAt : this.registeredAt,
+      registeredAt: this.registeredAt
     };
   }
 }
@@ -185,10 +182,10 @@ export class SelfHealingMesh extends EventEmitter {
   constructor() {
     super();
     /** @type {Map<string, ComponentRecord>} */
-    this._registry   = new Map();
+    this._registry = new Map();
     this._cycleTimer = null;
-    this._running    = false;
-    this._csl        = new CSLEngine();
+    this._running = false;
+    this._csl = new CSLEngine();
   }
 
   // ── Public API ─────────────────────────────────────────────────────────────
@@ -209,10 +206,13 @@ export class SelfHealingMesh extends EventEmitter {
       throw new Error(`Unknown component type: ${type}`);
     }
     if (typeof healthFn !== 'function') throw new TypeError(`healthFn must be a function for: ${id}`);
-
     const record = new ComponentRecord(id, type, healthFn, spawnFn, baseline);
     this._registry.set(id, record);
-    this.emit('component:registered', { id, type, ts: Date.now() });
+    this.emit('component:registered', {
+      id,
+      type,
+      ts: Date.now()
+    });
     return record;
   }
 
@@ -225,10 +225,10 @@ export class SelfHealingMesh extends EventEmitter {
   getHealth(id) {
     const rec = this._requireRecord(id);
     return {
-      id        : rec.id,
-      state     : rec.state,
+      id: rec.id,
+      state: rec.state,
       healthScore: rec.healthScore,
-      cbOpen    : rec.cbOpen,
+      cbOpen: rec.cbOpen
     };
   }
 
@@ -264,33 +264,37 @@ export class SelfHealingMesh extends EventEmitter {
    */
   getFleetStatus() {
     const records = Array.from(this._registry.values());
-    if (records.length === 0) return { overall: 1, components: [], counts: {} };
+    if (records.length === 0) return {
+      overall: 1,
+      components: [],
+      counts: {}
+    };
 
     // Phi-weighted average: assign higher weight to lower-health components
     // so that sick components drag the fleet score down more strongly
     const sorted = [...records].sort((a, b) => a.healthScore - b.healthScore);
     let weightSum = 0;
-    let scoreSum  = 0;
+    let scoreSum = 0;
     sorted.forEach((r, i) => {
-      const w  = Math.pow(PSI, i / sorted.length);
+      const w = Math.pow(PSI, i / sorted.length);
       weightSum += w;
-      scoreSum  += r.healthScore * w;
+      scoreSum += r.healthScore * w;
     });
     const overall = weightSum > 0 ? scoreSum / weightSum : 1;
-
     const counts = {
-      [LIFECYCLE.HEALTHY]     : 0,
-      [LIFECYCLE.SUSPECT]     : 0,
-      [LIFECYCLE.QUARANTINED] : 0,
-      [LIFECYCLE.RECOVERING]  : 0,
-      [LIFECYCLE.RESTORED]    : 0,
+      [LIFECYCLE.HEALTHY]: 0,
+      [LIFECYCLE.SUSPECT]: 0,
+      [LIFECYCLE.QUARANTINED]: 0,
+      [LIFECYCLE.RECOVERING]: 0,
+      [LIFECYCLE.RESTORED]: 0
     };
-    records.forEach(r => { if (counts[r.state] !== undefined) counts[r.state]++; });
-
+    records.forEach(r => {
+      if (counts[r.state] !== undefined) counts[r.state]++;
+    });
     return {
       overall,
       components: records.map(r => r.toSummary()),
-      counts,
+      counts
     };
   }
 
@@ -299,7 +303,7 @@ export class SelfHealingMesh extends EventEmitter {
    */
   start() {
     if (this._running) return;
-    this._running    = true;
+    this._running = true;
     this._cycleTimer = setInterval(() => this._runHealingCycle(), HEALING_CYCLE_MS);
   }
 
@@ -309,7 +313,7 @@ export class SelfHealingMesh extends EventEmitter {
   stop() {
     if (this._cycleTimer) clearInterval(this._cycleTimer);
     this._cycleTimer = null;
-    this._running    = false;
+    this._running = false;
   }
 
   // ── Healing Cycle ──────────────────────────────────────────────────────────
@@ -322,9 +326,11 @@ export class SelfHealingMesh extends EventEmitter {
   async _runHealingCycle() {
     const tasks = Array.from(this._registry.values()).map(rec => this._checkComponent(rec));
     await Promise.allSettled(tasks);
-
     const fleet = this.getFleetStatus();
-    this.emit('cycle:complete', { ts: Date.now(), fleet });
+    this.emit('cycle:complete', {
+      ts: Date.now(),
+      fleet
+    });
   }
 
   /**
@@ -340,10 +346,9 @@ export class SelfHealingMesh extends EventEmitter {
     if (rec.cbOpen) {
       const delay = RESPAWN_BACKOFF_SEQ[rec.cbRecoveryIndex] ?? RESPAWN_BACKOFF_SEQ.at(-1);
       const elapsed = Date.now() - (rec.cbOpenedAt ?? 0);
-      if (elapsed < delay) return;  // still in recovery window
+      if (elapsed < delay) return; // still in recovery window
       // Half-open probe
     }
-
     let score;
     try {
       score = await rec.healthFn();
@@ -351,20 +356,24 @@ export class SelfHealingMesh extends EventEmitter {
       rec.cbFailures = 0;
       if (rec.cbOpen) {
         rec.cbOpen = false;
-        this.emit('circuit:close', { id: rec.id });
+        this.emit('circuit:close', {
+          id: rec.id
+        });
       }
     } catch (err) {
       score = 0;
       rec.cbFailures++;
       if (rec.cbFailures >= CIRCUIT_BREAKER_TRIP && !rec.cbOpen) {
-        rec.cbOpen      = true;
-        rec.cbOpenedAt  = Date.now();
+        rec.cbOpen = true;
+        rec.cbOpenedAt = Date.now();
         rec.cbRecoveryIndex = Math.min(rec.cbRecoveryIndex + 1, RESPAWN_BACKOFF_SEQ.length - 1);
-        this.emit('circuit:open', { id: rec.id, failures: rec.cbFailures });
+        this.emit('circuit:open', {
+          id: rec.id,
+          failures: rec.cbFailures
+        });
       }
     }
-
-    rec.healthScore   = score;
+    rec.healthScore = score;
     rec.lastCheckedAt = Date.now();
 
     // Drift detection
@@ -383,7 +392,6 @@ export class SelfHealingMesh extends EventEmitter {
    */
   async _advanceStateMachine(rec) {
     const score = rec.healthScore;
-
     switch (rec.state) {
       case LIFECYCLE.HEALTHY:
         if (score < HEALTH_SUSPECT_THRESHOLD) {
@@ -395,7 +403,6 @@ export class SelfHealingMesh extends EventEmitter {
           rec.consecutiveBad = 0;
         }
         break;
-
       case LIFECYCLE.SUSPECT:
         if (score >= HEALTH_SUSPECT_THRESHOLD) {
           rec.consecutiveBad = 0;
@@ -412,13 +419,10 @@ export class SelfHealingMesh extends EventEmitter {
           }
         }
         break;
-
       case LIFECYCLE.QUARANTINED:
-        // Begin recovery — attempt respawn
         this._transitionTo(rec, LIFECYCLE.RECOVERING, 'respawn_initiated');
         await this._doRespawn(rec);
         break;
-
       case LIFECYCLE.RECOVERING:
         // Check attestation
         if (score >= HEALTH_SUSPECT_THRESHOLD) {
@@ -437,7 +441,6 @@ export class SelfHealingMesh extends EventEmitter {
           rec.consecutiveGood = 0;
         }
         break;
-
       case LIFECYCLE.RESTORED:
         if (score >= HEALTH_SUSPECT_THRESHOLD) {
           this._transitionTo(rec, LIFECYCLE.HEALTHY, 'fully_restored');
@@ -445,7 +448,6 @@ export class SelfHealingMesh extends EventEmitter {
           this._transitionTo(rec, LIFECYCLE.QUARANTINED, 'regression_after_restore');
         }
         break;
-
       default:
         break;
     }
@@ -461,40 +463,51 @@ export class SelfHealingMesh extends EventEmitter {
    */
   async _doRespawn(rec) {
     if (!rec.spawnFn) {
-      this.emit('respawn:failure', { id: rec.id, reason: 'no_spawn_fn' });
+      this.emit('respawn:failure', {
+        id: rec.id,
+        reason: 'no_spawn_fn'
+      });
       return false;
     }
-
     const attemptIndex = rec.respawnFailures;
-    const delay        = RESPAWN_BACKOFF_SEQ[Math.min(attemptIndex, RESPAWN_BACKOFF_SEQ.length - 1)];
+    const delay = RESPAWN_BACKOFF_SEQ[Math.min(attemptIndex, RESPAWN_BACKOFF_SEQ.length - 1)];
     await sleep(delay);
-
     rec.respawnCount++;
-    this.emit('respawn:start', { id: rec.id, attempt: rec.respawnCount, delay });
-
+    this.emit('respawn:start', {
+      id: rec.id,
+      attempt: rec.respawnCount,
+      delay
+    });
     try {
       await rec.spawnFn();
       rec.consecutiveGood = 0;
-      this.emit('respawn:success', { id: rec.id, attempt: rec.respawnCount });
+      this.emit('respawn:success', {
+        id: rec.id,
+        attempt: rec.respawnCount
+      });
       return true;
     } catch (err) {
       rec.respawnFailures++;
-      this.emit('respawn:failure', { id: rec.id, attempt: rec.respawnCount, error: err.message });
-
+      this.emit('respawn:failure', {
+        id: rec.id,
+        attempt: rec.respawnCount,
+        error: err.message
+      });
       if (rec.respawnFailures >= RESPAWN_FAIL_ALERT && rec.respawnFailures < RESPAWN_FAIL_PERM) {
         this.emit('respawn:alert', {
-          id      : rec.id,
+          id: rec.id,
           failures: rec.respawnFailures,
-          threshold: RESPAWN_FAIL_ALERT,
+          threshold: RESPAWN_FAIL_ALERT
         });
       }
-
       if (rec.respawnFailures >= RESPAWN_FAIL_PERM) {
         rec.permQuarantined = true;
         this._transitionTo(rec, LIFECYCLE.QUARANTINED, 'permanent_quarantine');
-        this.emit('health:perm_quarantined', { id: rec.id, failures: rec.respawnFailures });
+        this.emit('health:perm_quarantined', {
+          id: rec.id,
+          failures: rec.respawnFailures
+        });
       }
-
       return false;
     }
   }
@@ -506,22 +519,26 @@ export class SelfHealingMesh extends EventEmitter {
    * @private
    */
   async _checkDrift(rec) {
-    const current  = rec.stateVector;
+    const current = rec.stateVector;
     const baseline = rec.baseline;
     if (current.length === 0 || baseline.length === 0) return;
-
-    const len    = Math.min(current.length, baseline.length);
-    let dot = 0, magA = 0, magB = 0;
+    const len = Math.min(current.length, baseline.length);
+    let dot = 0,
+      magA = 0,
+      magB = 0;
     for (let i = 0; i < len; i++) {
-      dot  += current[i] * baseline[i];
+      dot += current[i] * baseline[i];
       magA += current[i] * current[i];
       magB += baseline[i] * baseline[i];
     }
-    const denom   = Math.sqrt(magA) * Math.sqrt(magB);
-    const cosine  = denom > 0 ? dot / denom : 1;
-
+    const denom = Math.sqrt(magA) * Math.sqrt(magB);
+    const cosine = denom > 0 ? dot / denom : 1;
     if (cosine < DRIFT_ALERT_THRESHOLD) {
-      this.emit('drift:detected', { id: rec.id, cosine, threshold: DRIFT_ALERT_THRESHOLD });
+      this.emit('drift:detected', {
+        id: rec.id,
+        cosine,
+        threshold: DRIFT_ALERT_THRESHOLD
+      });
     }
   }
 
@@ -535,11 +552,17 @@ export class SelfHealingMesh extends EventEmitter {
   async _runCanary(rec) {
     try {
       const score = await rec.healthFn();
-      const pass  = Number(score) >= HEALTH_SUSPECT_THRESHOLD;
-      this.emit(pass ? 'canary:pass' : 'canary:fail', { id: rec.id, score });
+      const pass = Number(score) >= HEALTH_SUSPECT_THRESHOLD;
+      this.emit(pass ? 'canary:pass' : 'canary:fail', {
+        id: rec.id,
+        score
+      });
       return pass;
     } catch {
-      this.emit('canary:fail', { id: rec.id, score: 0 });
+      this.emit('canary:fail', {
+        id: rec.id,
+        score: 0
+      });
       return false;
     }
   }
@@ -560,18 +583,26 @@ export class SelfHealingMesh extends EventEmitter {
     }
     const prev = rec.state;
     rec.recordTransition(newState);
-
-    this.emit('state:transition', { id: rec.id, from: prev, to: newState, reason, ts: Date.now() });
-
+    this.emit('state:transition', {
+      id: rec.id,
+      from: prev,
+      to: newState,
+      reason,
+      ts: Date.now()
+    });
     const eventMap = {
-      [LIFECYCLE.SUSPECT]     : 'health:suspect',
-      [LIFECYCLE.QUARANTINED] : 'health:quarantined',
-      [LIFECYCLE.RECOVERING]  : 'health:recovering',
-      [LIFECYCLE.RESTORED]    : 'health:restored',
-      [LIFECYCLE.HEALTHY]     : null,
+      [LIFECYCLE.SUSPECT]: 'health:suspect',
+      [LIFECYCLE.QUARANTINED]: 'health:quarantined',
+      [LIFECYCLE.RECOVERING]: 'health:recovering',
+      [LIFECYCLE.RESTORED]: 'health:restored',
+      [LIFECYCLE.HEALTHY]: null
     };
     const namedEvent = eventMap[newState];
-    if (namedEvent) this.emit(namedEvent, { id: rec.id, prev, reason });
+    if (namedEvent) this.emit(namedEvent, {
+      id: rec.id,
+      prev,
+      reason
+    });
   }
 
   /**

@@ -1,15 +1,3 @@
-/**
- * HeadyBee Template Registry — Canonical 33 Bee Type Definitions
- * 
- * Every bee type in the Heady ecosystem with its lifecycle config,
- * domain embedding (8D), swarm affinity, resource class, and capability profile.
- * All parameters use φ-scaled constants.
- * 
- * @module core/bee-registry/bee-templates
- * @author Eric Haywood — HeadySystems Inc.
- * @license PROPRIETARY — 51+ Provisional Patents
- */
-
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;
 const PSI2 = PSI * PSI;
@@ -20,46 +8,47 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
  */
 const RESOURCE_CLASSES = {
   lightweight: {
-    maxMemoryMB: FIB[8] * 8,       // 168 MB
-    maxCpuShares: FIB[8],           // 21
-    timeoutMs: Math.round(PHI * 1000 * FIB[5]),  // ~8090ms
-    maxConcurrent: FIB[7],          // 13
+    maxMemoryMB: FIB[8] * 8,
+    // 168 MB
+    maxCpuShares: FIB[8],
+    // 21
+    timeoutMs: Math.round(PHI * 1000 * FIB[5]),
+    // ~8090ms
+    maxConcurrent: FIB[7] // 13
   },
   standard: {
-    maxMemoryMB: FIB[10] * 8,      // 440 MB
-    maxCpuShares: FIB[9],           // 34
-    timeoutMs: Math.round(PHI * 1000 * FIB[7]),  // ~21s
-    maxConcurrent: FIB[6],          // 8
+    maxMemoryMB: FIB[10] * 8,
+    // 440 MB
+    maxCpuShares: FIB[9],
+    // 34
+    timeoutMs: Math.round(PHI * 1000 * FIB[7]),
+    // ~21s
+    maxConcurrent: FIB[6] // 8
   },
   heavy: {
-    maxMemoryMB: FIB[12] * 8,      // 1152 MB
-    maxCpuShares: FIB[10],          // 55
-    timeoutMs: Math.round(PHI * 1000 * FIB[9]),  // ~55s
-    maxConcurrent: FIB[5],          // 5
+    maxMemoryMB: FIB[12] * 8,
+    // 1152 MB
+    maxCpuShares: FIB[10],
+    // 55
+    timeoutMs: Math.round(PHI * 1000 * FIB[9]),
+    // ~55s
+    maxConcurrent: FIB[5] // 5
   },
   critical: {
-    maxMemoryMB: FIB[13] * 8,      // 1864 MB
-    maxCpuShares: FIB[11],          // 89
-    timeoutMs: Math.round(PHI * 1000 * FIB[10]), // ~89s
-    maxConcurrent: FIB[4],          // 3
-  },
+    maxMemoryMB: FIB[13] * 8,
+    // 1864 MB
+    maxCpuShares: FIB[11],
+    // 89
+    timeoutMs: Math.round(PHI * 1000 * FIB[10]),
+    // ~89s
+    maxConcurrent: FIB[4] // 3
+  }
 };
 
 /**
  * Swarm affinities — which of the 17 canonical swarms each bee can join
  */
-const SWARM_TYPES = [
-  'Deploy', 'Battle', 'Research', 'Security', 'Memory', 'Creative',
-  'Trading', 'Health', 'Governance', 'Documentation', 'Testing',
-  'Migration', 'Monitoring', 'Cleanup', 'Onboarding', 'Analytics', 'Emergency',
-];
-
-/**
- * Canonical 33 Bee Type Templates
- * 
- * Domain embedding: 8D vector [reasoning, coding, creative, speed, cost, multimodal, context, reliability]
- * Values represent capability strength on 0–1 scale
- */
+const SWARM_TYPES = ['Deploy', 'Battle', 'Research', 'Security', 'Memory', 'Creative', 'Trading', 'Health', 'Governance', 'Documentation', 'Testing', 'Migration', 'Monitoring', 'Cleanup', 'Onboarding', 'Analytics', 'Emergency'];
 export const BEE_TEMPLATES = {
   'agents-bee': {
     displayName: 'Agents Bee',
@@ -69,12 +58,12 @@ export const BEE_TEMPLATES = {
     domainEmbedding: [0.85, 0.70, 0.40, 0.75, 0.60, 0.30, 0.80, 0.90],
     swarmAffinity: ['Deploy', 'Onboarding', 'Emergency'],
     pool: 'hot',
-    retries: FIB[5],        // 5
+    retries: FIB[5],
+    // 5
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['agent-spawn', 'agent-route', 'agent-retire'],
+    capabilities: ['agent-spawn', 'agent-route', 'agent-retire']
   },
-
   'auth-provider-bee': {
     displayName: 'Auth Provider Bee',
     description: 'Authentication provider orchestration and token management',
@@ -86,9 +75,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['auth-validate', 'token-refresh', 'session-manage'],
+    capabilities: ['auth-validate', 'token-refresh', 'session-manage']
   },
-
   'auto-success-bee': {
     displayName: 'Auto Success Bee',
     description: 'Automated success pipeline execution (HeadyAutoFlow)',
@@ -100,9 +88,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['pipeline-execute', 'battle-mode', 'pattern-capture'],
+    capabilities: ['pipeline-execute', 'battle-mode', 'pattern-capture']
   },
-
   'brain-bee': {
     displayName: 'Brain Bee',
     description: 'LLM provider routing and model selection intelligence',
@@ -114,9 +101,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['model-select', 'provider-route', 'context-assemble'],
+    capabilities: ['model-select', 'provider-route', 'context-assemble']
   },
-
   'config-bee': {
     displayName: 'Config Bee',
     description: 'Configuration management, validation, and distribution',
@@ -128,9 +114,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['config-validate', 'config-distribute', 'env-manage'],
+    capabilities: ['config-validate', 'config-distribute', 'env-manage']
   },
-
   'connectors-bee': {
     displayName: 'Connectors Bee',
     description: 'External service connector management and OAuth flows',
@@ -142,9 +127,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['connector-register', 'oauth-flow', 'webhook-manage'],
+    capabilities: ['connector-register', 'oauth-flow', 'webhook-manage']
   },
-
   'creative-bee': {
     displayName: 'Creative Bee',
     description: 'Creative content generation — images, music, text, UX',
@@ -156,9 +140,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['image-generate', 'text-create', 'music-compose', 'ux-design'],
+    capabilities: ['image-generate', 'text-create', 'music-compose', 'ux-design']
   },
-
   'deployment-bee': {
     displayName: 'Deployment Bee',
     description: 'Cloud deployment automation across GCP, Cloudflare, Docker',
@@ -170,9 +153,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['docker-build', 'cloud-run-deploy', 'cf-deploy', 'rollback'],
+    capabilities: ['docker-build', 'cloud-run-deploy', 'cf-deploy', 'rollback']
   },
-
   'device-provisioner-bee': {
     displayName: 'Device Provisioner Bee',
     description: 'Device onboarding, provisioning, and cross-device bridge',
@@ -184,9 +166,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[9]),
-    capabilities: ['device-register', 'device-provision', 'bridge-setup'],
+    capabilities: ['device-register', 'device-provision', 'bridge-setup']
   },
-
   'documentation-bee': {
     displayName: 'Documentation Bee',
     description: 'Auto-documentation generation from code and architecture',
@@ -198,9 +179,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 1500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[9]),
-    capabilities: ['doc-generate', 'api-doc', 'readme-update', 'changelog'],
+    capabilities: ['doc-generate', 'api-doc', 'readme-update', 'changelog']
   },
-
   'engines-bee': {
     displayName: 'Engines Bee',
     description: 'Engine orchestration — start, stop, monitor compute engines',
@@ -212,9 +192,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['engine-start', 'engine-stop', 'engine-scale'],
+    capabilities: ['engine-start', 'engine-stop', 'engine-scale']
   },
-
   'governance-bee': {
     displayName: 'Governance Bee',
     description: 'Policy enforcement, compliance gates, approval workflows',
@@ -226,9 +205,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['policy-enforce', 'approval-gate', 'audit-log'],
+    capabilities: ['policy-enforce', 'approval-gate', 'audit-log']
   },
-
   'health-bee': {
     displayName: 'Health Bee',
     description: 'Health probe execution, liveness, readiness reporting',
@@ -240,9 +218,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['liveness-probe', 'readiness-probe', 'dependency-check'],
+    capabilities: ['liveness-probe', 'readiness-probe', 'dependency-check']
   },
-
   'intelligence-bee': {
     displayName: 'Intelligence Bee',
     description: 'Intelligence gathering, analysis, and insight synthesis',
@@ -254,9 +231,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['intel-gather', 'trend-analyze', 'insight-synthesize'],
+    capabilities: ['intel-gather', 'trend-analyze', 'insight-synthesize']
   },
-
   'lifecycle-bee': {
     displayName: 'Lifecycle Bee',
     description: 'Service lifecycle management — graceful shutdown, LIFO cleanup',
@@ -268,9 +244,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['graceful-shutdown', 'lifo-cleanup', 'state-persist'],
+    capabilities: ['graceful-shutdown', 'lifo-cleanup', 'state-persist']
   },
-
   'mcp-bee': {
     displayName: 'MCP Bee',
     description: 'MCP protocol tool execution and transport management',
@@ -282,9 +257,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['tool-execute', 'transport-manage', 'schema-validate'],
+    capabilities: ['tool-execute', 'transport-manage', 'schema-validate']
   },
-
   'memory-bee': {
     displayName: 'Memory Bee',
     description: 'Vector memory operations — store, retrieve, embed, search',
@@ -296,9 +270,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['vector-store', 'vector-search', 'embed', 'memory-compress'],
+    capabilities: ['vector-store', 'vector-search', 'embed', 'memory-compress']
   },
-
   'middleware-bee': {
     displayName: 'Middleware Bee',
     description: 'Middleware chain management and request pipeline protection',
@@ -310,9 +283,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['middleware-chain', 'request-filter', 'response-transform'],
+    capabilities: ['middleware-chain', 'request-filter', 'response-transform']
   },
-
   'midi-bee': {
     displayName: 'MIDI Bee',
     description: 'MIDI event processing and music integration',
@@ -324,9 +296,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[9]),
-    capabilities: ['midi-process', 'audio-generate', 'rhythm-analyze'],
+    capabilities: ['midi-process', 'audio-generate', 'rhythm-analyze']
   },
-
   'ops-bee': {
     displayName: 'Ops Bee',
     description: 'Operations automation — cron, batch jobs, maintenance tasks',
@@ -338,9 +309,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['cron-manage', 'batch-execute', 'maintenance-run'],
+    capabilities: ['cron-manage', 'batch-execute', 'maintenance-run']
   },
-
   'orchestration-bee': {
     displayName: 'Orchestration Bee',
     description: 'Multi-bee orchestration coordination and swarm dispatch',
@@ -352,9 +322,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['swarm-dispatch', 'bee-coordinate', 'workflow-chain'],
+    capabilities: ['swarm-dispatch', 'bee-coordinate', 'workflow-chain']
   },
-
   'pipeline-bee': {
     displayName: 'Pipeline Bee',
     description: 'Pipeline stage execution for HCFullPipeline',
@@ -366,9 +335,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['stage-execute', 'pipeline-chain', 'checkpoint-save'],
+    capabilities: ['stage-execute', 'pipeline-chain', 'checkpoint-save']
   },
-
   'providers-bee': {
     displayName: 'Providers Bee',
     description: 'AI provider health monitoring and failover management',
@@ -380,9 +348,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['provider-health', 'failover-manage', 'circuit-break'],
+    capabilities: ['provider-health', 'failover-manage', 'circuit-break']
   },
-
   'refactor-bee': {
     displayName: 'Refactor Bee',
     description: 'Code refactoring automation and quality improvement',
@@ -394,9 +361,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[9]),
-    capabilities: ['code-refactor', 'dead-code-remove', 'pattern-apply'],
+    capabilities: ['code-refactor', 'dead-code-remove', 'pattern-apply']
   },
-
   'resilience-bee': {
     displayName: 'Resilience Bee',
     description: 'Resilience pattern enforcement — circuit breakers, retries, bulkheads',
@@ -408,9 +374,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['circuit-break', 'retry-manage', 'bulkhead-enforce'],
+    capabilities: ['circuit-break', 'retry-manage', 'bulkhead-enforce']
   },
-
   'routes-bee': {
     displayName: 'Routes Bee',
     description: 'API route management and endpoint registration',
@@ -422,9 +387,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['route-register', 'route-validate', 'openapi-generate'],
+    capabilities: ['route-register', 'route-validate', 'openapi-generate']
   },
-
   'security-bee': {
     displayName: 'Security Bee',
     description: 'Security scanning, vulnerability detection, and enforcement',
@@ -436,9 +400,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['vuln-scan', 'secret-detect', 'policy-enforce', 'audit-trail'],
+    capabilities: ['vuln-scan', 'secret-detect', 'policy-enforce', 'audit-trail']
   },
-
   'services-bee': {
     displayName: 'Services Bee',
     description: 'Service catalog management and discovery',
@@ -450,9 +413,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['service-register', 'service-discover', 'catalog-manage'],
+    capabilities: ['service-register', 'service-discover', 'catalog-manage']
   },
-
   'sync-projection-bee': {
     displayName: 'Sync Projection Bee',
     description: 'Repository projection synchronization and monorepo management',
@@ -464,9 +426,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 2000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[9]),
-    capabilities: ['repo-sync', 'projection-map', 'diff-detect'],
+    capabilities: ['repo-sync', 'projection-map', 'diff-detect']
   },
-
   'telemetry-bee': {
     displayName: 'Telemetry Bee',
     description: 'Telemetry collection, aggregation, and export',
@@ -478,9 +439,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[6]),
-    capabilities: ['metric-collect', 'trace-export', 'log-aggregate'],
+    capabilities: ['metric-collect', 'trace-export', 'log-aggregate']
   },
-
   'trading-bee': {
     displayName: 'Trading Bee',
     description: 'Financial trading operations and HeadyCoin management',
@@ -492,9 +452,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 500),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[5]),
-    capabilities: ['trade-execute', 'risk-assess', 'ledger-update'],
+    capabilities: ['trade-execute', 'risk-assess', 'ledger-update']
   },
-
   'vector-ops-bee': {
     displayName: 'Vector Ops Bee',
     description: 'Vector space operations — CSL gates, embeddings, similarity',
@@ -506,9 +465,8 @@ export const BEE_TEMPLATES = {
     retries: FIB[5],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[7]),
-    capabilities: ['csl-gate', 'vector-embed', 'similarity-search', 'hdc-bind'],
+    capabilities: ['csl-gate', 'vector-embed', 'similarity-search', 'hdc-bind']
   },
-
   'vector-template-bee': {
     displayName: 'Vector Template Bee',
     description: 'Vector template management and codebook operations',
@@ -520,15 +478,14 @@ export const BEE_TEMPLATES = {
     retries: FIB[4],
     backoffBaseMs: Math.round(PHI * 1000),
     healthCheckIntervalMs: Math.round(PHI * 1000 * FIB[8]),
-    capabilities: ['template-create', 'codebook-manage', 'embedding-cache'],
-  },
+    capabilities: ['template-create', 'codebook-manage', 'embedding-cache']
+  }
 };
 
 /** Pool distribution counts — φ-scaled resource allocation */
 export const POOL_DISTRIBUTION = {
   hot: Object.values(BEE_TEMPLATES).filter(b => b.pool === 'hot').length,
   warm: Object.values(BEE_TEMPLATES).filter(b => b.pool === 'warm').length,
-  cold: Object.values(BEE_TEMPLATES).filter(b => b.pool === 'cold').length,
+  cold: Object.values(BEE_TEMPLATES).filter(b => b.pool === 'cold').length
 };
-
 export { RESOURCE_CLASSES, SWARM_TYPES };

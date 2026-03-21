@@ -14,17 +14,17 @@
  */
 
 'use strict';
-const logger = require('../utils/logger') || console;
 
+const logger = require('../utils/logger') || console;
 const crypto = require('crypto');
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const REQUEST_ID_HEADER    = 'X-Request-ID';
-const TRACE_ID_HEADER      = 'traceparent';           // W3C Trace Context
-const B3_TRACE_ID_HEADER   = 'X-B3-TraceId';          // B3 (Zipkin)
-const B3_SPAN_ID_HEADER    = 'X-B3-SpanId';
-const B3_SAMPLED_HEADER    = 'X-B3-Sampled';
+const REQUEST_ID_HEADER = 'X-Request-ID';
+const TRACE_ID_HEADER = 'traceparent'; // W3C Trace Context
+const B3_TRACE_ID_HEADER = 'X-B3-TraceId'; // B3 (Zipkin)
+const B3_SPAN_ID_HEADER = 'X-B3-SpanId';
+const B3_SAMPLED_HEADER = 'X-B3-Sampled';
 const CORRELATION_ID_HEADER = 'X-Correlation-ID';
 
 // Regex for validating incoming request IDs (UUID v4 or custom alphanumeric)
@@ -52,8 +52,8 @@ function generateRequestId() {
  * @returns {string}
  */
 function generateTraceparent(traceId, spanId, sampled = true) {
-  const tid  = traceId || crypto.randomBytes(16).toString('hex');
-  const sid  = spanId  || crypto.randomBytes(8).toString('hex');
+  const tid = traceId || crypto.randomBytes(16).toString('hex');
+  const sid = spanId || crypto.randomBytes(8).toString('hex');
   const flags = sampled ? '01' : '00';
   return `${TRACEPARENT_VERSION}-${tid}-${sid}-${flags}`;
 }
@@ -73,7 +73,7 @@ function parseTraceparent(value) {
     traceId,
     spanId,
     sampled: flags === '01',
-    raw:     value,
+    raw: value
   };
 }
 
@@ -92,15 +92,22 @@ function isValidRequestId(id) {
  * Creates a tracing context object attached to each request.
  */
 class TracingContext {
-  constructor({ requestId, traceId, spanId, parentSpanId, sampled, correlationId }) {
-    this.requestId    = requestId;
-    this.traceId      = traceId     || crypto.randomBytes(16).toString('hex');
-    this.spanId       = spanId      || crypto.randomBytes(8).toString('hex');
+  constructor({
+    requestId,
+    traceId,
+    spanId,
+    parentSpanId,
+    sampled,
+    correlationId
+  }) {
+    this.requestId = requestId;
+    this.traceId = traceId || crypto.randomBytes(16).toString('hex');
+    this.spanId = spanId || crypto.randomBytes(8).toString('hex');
     this.parentSpanId = parentSpanId || null;
-    this.sampled      = sampled     !== undefined ? sampled : true;
+    this.sampled = sampled !== undefined ? sampled : true;
     this.correlationId = correlationId || requestId;
-    this.startTime    = Date.now();
-    this._spans       = [];
+    this.startTime = Date.now();
+    this._spans = [];
   }
 
   /**
@@ -110,12 +117,12 @@ class TracingContext {
    */
   createChildSpan(operationName) {
     const child = new TracingContext({
-      requestId:    this.requestId,
-      traceId:      this.traceId,
-      spanId:       crypto.randomBytes(8).toString('hex'),
+      requestId: this.requestId,
+      traceId: this.traceId,
+      spanId: crypto.randomBytes(8).toString('hex'),
       parentSpanId: this.spanId,
-      sampled:      this.sampled,
-      correlationId: this.correlationId,
+      sampled: this.sampled,
+      correlationId: this.correlationId
     });
     child.operationName = operationName;
     this._spans.push(child);
@@ -135,13 +142,13 @@ class TracingContext {
    */
   toPropagationHeaders() {
     return {
-      [REQUEST_ID_HEADER]:     this.requestId,
+      [REQUEST_ID_HEADER]: this.requestId,
       [CORRELATION_ID_HEADER]: this.correlationId,
-      [TRACE_ID_HEADER]:       this.toTraceparent(),
+      [TRACE_ID_HEADER]: this.toTraceparent(),
       // B3 format for Zipkin compatibility
-      [B3_TRACE_ID_HEADER]:    this.traceId,
-      [B3_SPAN_ID_HEADER]:     this.spanId,
-      [B3_SAMPLED_HEADER]:     this.sampled ? '1' : '0',
+      [B3_TRACE_ID_HEADER]: this.traceId,
+      [B3_SPAN_ID_HEADER]: this.spanId,
+      [B3_SAMPLED_HEADER]: this.sampled ? '1' : '0'
     };
   }
 
@@ -151,30 +158,22 @@ class TracingContext {
   get duration() {
     return Date.now() - this.startTime;
   }
-
   toJSON() {
     return {
-      requestId:    this.requestId,
-      traceId:      this.traceId,
-      spanId:       this.spanId,
+      requestId: this.requestId,
+      traceId: this.traceId,
+      spanId: this.spanId,
       parentSpanId: this.parentSpanId,
       correlationId: this.correlationId,
-      sampled:      this.sampled,
+      sampled: this.sampled,
       operationName: this.operationName,
-      duration:     this.duration,
+      duration: this.duration
     };
   }
 }
 
 // ─── OpenTelemetry Integration ────────────────────────────────────────────────
 
-/**
- * Attempt to integrate with the existing telemetry.js module.
- * If @opentelemetry/api is available, attach trace context to the OTel span.
- *
- * @param {TracingContext} ctx
- * @param {object} [otel]  - @opentelemetry/api module (optional)
- */
 function attachToOTelContext(ctx, otel) {
   if (!otel) {
     try {
@@ -183,11 +182,10 @@ function attachToOTelContext(ctx, otel) {
       return null; // OTel not installed — skip
     }
   }
-
   try {
     const activeSpan = otel.trace.getActiveSpan();
     if (activeSpan) {
-      activeSpan.setAttribute('request.id',     ctx.requestId);
+      activeSpan.setAttribute('request.id', ctx.requestId);
       activeSpan.setAttribute('correlation.id', ctx.correlationId);
       activeSpan.setAttribute('request.sampled', ctx.sampled);
     }
@@ -210,15 +208,16 @@ function attachToOTelContext(ctx, otel) {
 function createPropagatingFetch(ctx, baseFetch) {
   const _fetch = baseFetch || globalThis.fetch;
   if (!_fetch) throw new Error('[REQUEST-ID] No fetch implementation available');
-
   return async (url, options = {}) => {
     const childCtx = ctx.createChildSpan(url.toString());
-    const headers  = {
+    const headers = {
       ...childCtx.toPropagationHeaders(),
-      ...(options.headers || {}),
+      ...(options.headers || {})
     };
-
-    return _fetch(url, { ...options, headers });
+    return _fetch(url, {
+      ...options,
+      headers
+    });
   };
 }
 
@@ -231,30 +230,33 @@ function createPropagatingFetch(ctx, baseFetch) {
  * @param {Function} [opts.getContext]  - fn() → TracingContext | null
  */
 function patchNodeHttpModules(opts = {}) {
-  const http  = require('http');
+  const http = require('http');
   const https = require('https');
-
   const _originalRequest = http.request.bind(http);
   const _originalHttpsRequest = https.request.bind(https);
-
   function wrapRequest(original) {
     return function patchedRequest(url, options, callback) {
-      if (typeof options === 'function') { callback = options; options = {}; }
+      if (typeof options === 'function') {
+        callback = options;
+        options = {};
+      }
       const ctx = opts.getContext?.();
       if (ctx) {
         options = options || {};
-        options.headers = { ...ctx.toPropagationHeaders(), ...(options.headers || {}) };
+        options.headers = {
+          ...ctx.toPropagationHeaders(),
+          ...(options.headers || {})
+        };
       }
       return original(url, options, callback);
     };
   }
-
-  http.request  = wrapRequest(_originalRequest);
+  http.request = wrapRequest(_originalRequest);
   https.request = wrapRequest(_originalHttpsRequest);
 
   // Restore function
   return () => {
-    http.request  = _originalRequest;
+    http.request = _originalRequest;
     https.request = _originalHttpsRequest;
   };
 }
@@ -271,7 +273,6 @@ function patchNodeHttpModules(opts = {}) {
 function createTracedLogger(logger, getCtx) {
   const methods = ['log', 'info', 'warn', 'error', 'debug', 'trace'];
   const wrapped = Object.create(logger);
-
   for (const method of methods) {
     if (typeof logger[method] !== 'function') continue;
     wrapped[method] = function (...args) {
@@ -280,17 +281,16 @@ function createTracedLogger(logger, getCtx) {
         // Inject tracing fields into first argument if it's an object
         if (args.length > 0 && args[0] !== null && typeof args[0] === 'object' && !Array.isArray(args[0])) {
           args[0] = {
-            requestId:     ctx.requestId,
-            traceId:       ctx.traceId,
+            requestId: ctx.requestId,
+            traceId: ctx.traceId,
             correlationId: ctx.correlationId,
-            ...args[0],
+            ...args[0]
           };
         }
       }
       return logger[method].apply(logger, args);
     };
   }
-
   return wrapped;
 }
 
@@ -314,66 +314,62 @@ function createTracedLogger(logger, getCtx) {
  */
 function requestIdMiddleware(opts = {}) {
   const {
-    headerName         = REQUEST_ID_HEADER,
-    trustIncoming      = true,
-    generateIfMissing  = true,
-    propagateW3C       = true,
-    propagateB3        = true,
-    attachOTel         = true,
-    logOnRequest       = false,
-    logOnResponse      = true,
-    logger             = null,
-    sanitizeId         = null,
+    headerName = REQUEST_ID_HEADER,
+    trustIncoming = true,
+    generateIfMissing = true,
+    propagateW3C = true,
+    propagateB3 = true,
+    attachOTel = true,
+    logOnRequest = false,
+    logOnResponse = true,
+    logger = null,
+    sanitizeId = null
   } = opts;
-
-  const log = (entry) => {
+  const log = entry => {
     if (logger) {
       logger(entry);
     } else if (logOnRequest || logOnResponse) {
       logger.info(JSON.stringify(entry));
     }
   };
-
   return (req, res, next) => {
     // ── Extract or generate request ID ──────────────────────────────────
     let requestId = null;
-
     if (trustIncoming) {
-      const incoming = req.headers[headerName.toLowerCase()]
-        || req.headers['x-request-id']
-        || req.headers['x-correlation-id'];
-
+      const incoming = req.headers[headerName.toLowerCase()] || req.headers['x-request-id'] || req.headers['x-correlation-id'];
       if (incoming && isValidRequestId(incoming)) {
         requestId = sanitizeId ? sanitizeId(incoming) : incoming;
       }
     }
-
     if (!requestId && generateIfMissing) {
       requestId = generateRequestId();
     }
-
     if (!requestId) return next();
 
     // ── Parse W3C traceparent ────────────────────────────────────────────
-    let traceCtx = { traceId: null, spanId: null, sampled: true, parentSpanId: null };
-
+    let traceCtx = {
+      traceId: null,
+      spanId: null,
+      sampled: true,
+      parentSpanId: null
+    };
     if (propagateW3C) {
       const traceparent = req.headers[TRACE_ID_HEADER];
       if (traceparent) {
         const parsed = parseTraceparent(traceparent);
         if (parsed) {
-          traceCtx.traceId      = parsed.traceId;
+          traceCtx.traceId = parsed.traceId;
           traceCtx.parentSpanId = parsed.spanId;
-          traceCtx.sampled      = parsed.sampled;
+          traceCtx.sampled = parsed.sampled;
         }
       }
     }
 
     // B3 headers (Zipkin)
     if (propagateB3 && !traceCtx.traceId) {
-      traceCtx.traceId      = req.headers[B3_TRACE_ID_HEADER.toLowerCase()] || null;
+      traceCtx.traceId = req.headers[B3_TRACE_ID_HEADER.toLowerCase()] || null;
       traceCtx.parentSpanId = req.headers[B3_SPAN_ID_HEADER.toLowerCase()] || null;
-      const b3Sampled       = req.headers[B3_SAMPLED_HEADER.toLowerCase()];
+      const b3Sampled = req.headers[B3_SAMPLED_HEADER.toLowerCase()];
       if (b3Sampled !== undefined) traceCtx.sampled = b3Sampled === '1';
     }
 
@@ -381,13 +377,13 @@ function requestIdMiddleware(opts = {}) {
     const ctx = new TracingContext({
       requestId,
       correlationId: req.headers[CORRELATION_ID_HEADER.toLowerCase()] || requestId,
-      ...traceCtx,
+      ...traceCtx
     });
 
     // ── Attach to request ────────────────────────────────────────────────
-    req.id          = requestId;
-    req.tracing     = ctx;
-    req.requestId   = requestId;  // convenience alias
+    req.id = requestId;
+    req.tracing = ctx;
+    req.requestId = requestId; // convenience alias
 
     // Propagating fetch for this request
     req.tracedFetch = createPropagatingFetch(ctx);
@@ -400,7 +396,6 @@ function requestIdMiddleware(opts = {}) {
     // ── Set response headers ─────────────────────────────────────────────
     res.set(headerName, requestId);
     res.set(CORRELATION_ID_HEADER, ctx.correlationId);
-
     if (propagateW3C) {
       res.set(TRACE_ID_HEADER, ctx.toTraceparent());
     }
@@ -408,14 +403,14 @@ function requestIdMiddleware(opts = {}) {
     // ── Log request start ────────────────────────────────────────────────
     if (logOnRequest) {
       log({
-        event:      'request:start',
+        event: 'request:start',
         requestId,
-        traceId:    ctx.traceId,
-        method:     req.method,
-        path:       req.path,
-        ip:         req.ip,
-        userAgent:  req.headers['user-agent'],
-        timestamp:  new Date().toISOString(),
+        traceId: ctx.traceId,
+        method: req.method,
+        path: req.path,
+        ip: req.ip,
+        userAgent: req.headers['user-agent'],
+        timestamp: new Date().toISOString()
       });
     }
 
@@ -423,21 +418,20 @@ function requestIdMiddleware(opts = {}) {
     if (logOnResponse) {
       const onFinish = () => {
         log({
-          event:      'request:complete',
+          event: 'request:complete',
           requestId,
-          traceId:    ctx.traceId,
-          method:     req.method,
-          path:       req.path,
+          traceId: ctx.traceId,
+          method: req.method,
+          path: req.path,
           statusCode: res.statusCode,
           durationMs: ctx.duration,
-          ip:         req.ip,
-          timestamp:  new Date().toISOString(),
+          ip: req.ip,
+          timestamp: new Date().toISOString()
         });
       };
       res.once('finish', onFinish);
-      res.once('close',  onFinish);
+      res.once('close', onFinish);
     }
-
     next();
   };
 }
@@ -452,16 +446,16 @@ function requestIdMiddleware(opts = {}) {
  * @returns {Function} interceptor ID (for ejection)
  */
 function createAxiosInterceptor(axiosInstance, getCtx) {
-  return axiosInstance.interceptors.request.use(
-    (config) => {
-      const ctx = getCtx?.();
-      if (ctx) {
-        config.headers = { ...config.headers, ...ctx.toPropagationHeaders() };
-      }
-      return config;
-    },
-    (error) => Promise.reject(error),
-  );
+  return axiosInstance.interceptors.request.use(config => {
+    const ctx = getCtx?.();
+    if (ctx) {
+      config.headers = {
+        ...config.headers,
+        ...ctx.toPropagationHeaders()
+      };
+    }
+    return config;
+  }, error => Promise.reject(error));
 }
 
 // ─── AsyncLocalStorage Context Storage ───────────────────────────────────────
@@ -474,7 +468,9 @@ let _asyncLocalStorage = null;
  */
 function initContextStorage() {
   if (!_asyncLocalStorage) {
-    const { AsyncLocalStorage } = require('async_hooks');
+    const {
+      AsyncLocalStorage
+    } = require('async_hooks');
     _asyncLocalStorage = new AsyncLocalStorage();
   }
   return _asyncLocalStorage;
@@ -509,10 +505,8 @@ module.exports = {
   // Middleware
   requestIdMiddleware,
   contextStorageMiddleware,
-
   // Classes
   TracingContext,
-
   // Utilities
   generateRequestId,
   generateTraceparent,
@@ -523,17 +517,15 @@ module.exports = {
   createAxiosInterceptor,
   createTracedLogger,
   patchNodeHttpModules,
-
   // Context storage
   initContextStorage,
   getCurrentContext,
-
   // Constants
   REQUEST_ID_HEADER,
   TRACE_ID_HEADER,
   B3_TRACE_ID_HEADER,
   B3_SPAN_ID_HEADER,
-  CORRELATION_ID_HEADER,
+  CORRELATION_ID_HEADER
 };
 
 // ─── Usage Example ────────────────────────────────────────────────────────────

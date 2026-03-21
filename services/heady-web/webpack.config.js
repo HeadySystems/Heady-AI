@@ -13,7 +13,9 @@
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ModuleFederationPlugin } = require('webpack').container;
+const {
+  ModuleFederationPlugin
+} = require('webpack').container;
 
 /**
  * Registry of all micro-frontend remotes exposed by the shell.
@@ -24,38 +26,38 @@ const REMOTE_CONFIG = {
   antigravity: {
     scope: 'antigravity',
     module: './App',
-    exposes: './remotes/antigravity/src',
+    exposes: './remotes/antigravity/src'
   },
   landing: {
     scope: 'headyLanding',
     module: './App',
-    exposes: './remotes/landing/src',
+    exposes: './remotes/landing/src'
   },
   'heady-ide': {
     scope: 'headyIDE',
     module: './App',
-    exposes: './remotes/heady-ide/src',
+    exposes: './remotes/heady-ide/src'
   },
   'swarm-dashboard': {
     scope: 'swarmDashboard',
     module: './App',
-    exposes: './remotes/swarm-dashboard/src',
+    exposes: './remotes/swarm-dashboard/src'
   },
   'governance-panel': {
     scope: 'governancePanel',
     module: './App',
-    exposes: './remotes/governance-panel/src',
+    exposes: './remotes/governance-panel/src'
   },
   'projection-monitor': {
     scope: 'projectionMonitor',
     module: './App',
-    exposes: './remotes/projection-monitor/src',
+    exposes: './remotes/projection-monitor/src'
   },
   'vector-explorer': {
     scope: 'vectorExplorer',
     module: './App',
-    exposes: './remotes/vector-explorer/src',
-  },
+    exposes: './remotes/vector-explorer/src'
+  }
 };
 
 /**
@@ -88,7 +90,7 @@ function buildHostRemotes() {
 function buildRemoteExposes(appName) {
   return {
     './App': `./remotes/${appName}/src/App.js`,
-    './mount': `./remotes/${appName}/src/mount.js`,
+    './mount': `./remotes/${appName}/src/mount.js`
   };
 }
 
@@ -106,11 +108,9 @@ module.exports = (env = {}, argv = {}) => {
   const isRemote = Boolean(env.remote);
   const appName = env.appName || null;
   const isDev = argv.mode === 'development' || process.env.NODE_ENV === 'development';
-
   if (isRemote && !appName) {
     throw new Error('--env appName=<name> is required when building a remote');
   }
-
   const remoteCfg = appName ? REMOTE_CONFIG[appName] : null;
   if (isRemote && !remoteCfg) {
     throw new Error(`Unknown remote app name: "${appName}". Valid names: ${Object.keys(REMOTE_CONFIG).join(', ')}`);
@@ -119,151 +119,113 @@ module.exports = (env = {}, argv = {}) => {
   /** @type {import('webpack').Configuration} */
   const config = {
     mode: isDev ? 'development' : 'production',
-
-    entry: isHost
-      ? './src/shell/index.js'
-      : `./remotes/${appName}/src/bootstrap.js`,
-
+    entry: isHost ? './src/shell/index.js' : `./remotes/${appName}/src/bootstrap.js`,
     output: {
-      path: isHost
-        ? path.resolve(__dirname, 'dist')
-        : path.resolve(__dirname, `dist/remotes/${appName}`),
+      path: isHost ? path.resolve(__dirname, 'dist') : path.resolve(__dirname, `dist/remotes/${appName}`),
       filename: isHost ? 'shell.[contenthash].js' : '[name].[contenthash].js',
       publicPath: isHost ? '/' : `/remotes/${appName}/`,
       clean: true,
-      uniqueName: isHost ? 'headyShell' : remoteCfg?.scope,
+      uniqueName: isHost ? 'headyShell' : remoteCfg?.scope
     },
-
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
         '@heady-ai/shell': path.resolve(__dirname, 'src/shell'),
-        '@heady-ai/services': path.resolve(__dirname, 'src/services'),
-      },
+        '@heady-ai/services': path.resolve(__dirname, 'src/services')
+      }
     },
-
     module: {
-      rules: [
-        {
-          test: /\.jsx?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                ['@babel/preset-env', {
-                  targets: '> 0.5%, last 2 versions, not dead',
-                  useBuiltIns: 'usage',
-                  corejs: 3,
-                }],
-              ],
-              cacheDirectory: true,
-            },
-          },
-        },
-        {
-          test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
-        },
-        {
-          test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
-          type: 'asset/resource',
-        },
-        {
-          test: /\.(woff|woff2|eot|ttf|otf)$/i,
-          type: 'asset/resource',
-        },
-      ],
-    },
-
-    plugins: [
-      new ModuleFederationPlugin(
-        isHost
-          ? {
-              name: 'headyShell',
-              remotes: buildHostRemotes(),
-              shared: {
-                three: { singleton: true, requiredVersion: '^0.163.0' },
-              },
-            }
-          : {
-              name: remoteCfg.scope,
-              filename: 'remoteEntry.js',
-              exposes: buildRemoteExposes(appName),
-              shared: {
-                three: { singleton: true, requiredVersion: '^0.163.0' },
-              },
-            }
-      ),
-      ...(isHost
-        ? [
-            new HtmlWebpackPlugin({
-              template: './src/shell/index.html',
-              filename: 'index.html',
-              title: 'HeadyWeb — Universal Shell v3.1.0',
-              inject: 'body',
-              minify: !isDev,
-            }),
-          ]
-        : []),
-    ],
-
-    devServer: isHost
-      ? {
-          port: 3000,
-          historyApiFallback: true,
-          hot: true,
-          open: true,
-          static: [
-            { directory: path.resolve(__dirname, 'dist'), publicPath: '/' },
-          ],
-          proxy: [
-            {
-              context: ['/api'],
-              target: 'http://localhost:8080',
-              changeOrigin: true,
-            },
-          ],
-          headers: (req) => {
-            const origin = req.headers.origin;
-            const HEADY_ORIGINS = new Set([
-              'https://headyme.com','https://www.headyme.com','https://headysystems.com','https://www.headysystems.com',
-              'https://heady-ai.com','https://www.heady-ai.com','https://headybuddy.org','https://headybuddy.org',
-              'https://headybuddy.org','https://www.headybuddy.org','https://headymcp.com','https://www.headymcp.com',
-              'https://headyio.com','https://www.headyio.com','https://headybot.com','https://www.headybot.com',
-              'https://headyapi.com','https://www.headyapi.com','https://headylens.com','https://www.headylens.com',
-              'https://headyfinance.com','https://www.headyfinance.com','https://headyconnection.org','https://www.headyconnection.org',
-              'https://headyconnection.com','https://www.headyconnection.com','https://admin.headysystems.com',
-              'http://localhost:3000','http://localhost:8080',
-            ]);
-            return { 'Access-Control-Allow-Origin': origin && HEADY_ORIGINS.has(origin) ? origin : 'null' };
-          },
-        }
-      : undefined,
-
-    devtool: isDev ? 'eval-source-map' : 'source-map',
-
-    optimization: {
-      splitChunks: isHost
-        ? {
-            chunks: 'all',
-            cacheGroups: {
-              vendors: {
-                test: /[\\/]node_modules[\\/]/,
-                name: 'vendors',
-                chunks: 'all',
-              },
-            },
+      rules: [{
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [['@babel/preset-env', {
+              targets: '> 0.5%, last 2 versions, not dead',
+              useBuiltIns: 'usage',
+              corejs: 3
+            }]],
+            cacheDirectory: true
           }
-        : false,
+        }
+      }, {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }, {
+        test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
+        type: 'asset/resource'
+      }, {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource'
+      }]
     },
-
+    plugins: [new ModuleFederationPlugin(isHost ? {
+      name: 'headyShell',
+      remotes: buildHostRemotes(),
+      shared: {
+        three: {
+          singleton: true,
+          requiredVersion: '^0.163.0'
+        }
+      }
+    } : {
+      name: remoteCfg.scope,
+      filename: 'remoteEntry.js',
+      exposes: buildRemoteExposes(appName),
+      shared: {
+        three: {
+          singleton: true,
+          requiredVersion: '^0.163.0'
+        }
+      }
+    }), ...(isHost ? [new HtmlWebpackPlugin({
+      template: './src/shell/index.html',
+      filename: 'index.html',
+      title: 'HeadyWeb — Universal Shell v3.1.0',
+      inject: 'body',
+      minify: !isDev
+    })] : [])],
+    devServer: isHost ? {
+      port: 3000,
+      historyApiFallback: true,
+      hot: true,
+      open: true,
+      static: [{
+        directory: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
+      }],
+      proxy: [{
+        context: ['/api'],
+        target: "http://0.0.0.0:8080",
+        changeOrigin: true
+      }],
+      headers: req => {
+        const origin = req.headers.origin;
+        const HEADY_ORIGINS = new Set(['https://headyme.com', 'https://www.headyme.com', 'https://headysystems.com', 'https://www.headysystems.com', 'https://heady-ai.com', 'https://www.heady-ai.com', 'https://headybuddy.org', 'https://headybuddy.org', 'https://headybuddy.org', 'https://www.headybuddy.org', 'https://headymcp.com', 'https://www.headymcp.com', 'https://headyio.com', 'https://www.headyio.com', 'https://headybot.com', 'https://www.headybot.com', 'https://headyapi.com', 'https://www.headyapi.com', 'https://headylens.com', 'https://www.headylens.com', 'https://headyfinance.com', 'https://www.headyfinance.com', 'https://headyconnection.org', 'https://www.headyconnection.org', 'https://headyconnection.com', 'https://www.headyconnection.com', 'https://admin.headysystems.com', "http://0.0.0.0:3000", "http://0.0.0.0:8080"]);
+        return {
+          'Access-Control-Allow-Origin': origin && HEADY_ORIGINS.has(origin) ? origin : 'null'
+        };
+      }
+    } : undefined,
+    devtool: isDev ? 'eval-source-map' : 'source-map',
+    optimization: {
+      splitChunks: isHost ? {
+        chunks: 'all',
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all'
+          }
+        }
+      } : false
+    },
     performance: {
       hints: isDev ? false : 'warning',
       maxEntrypointSize: 512000,
-      maxAssetSize: 512000,
-    },
+      maxAssetSize: 512000
+    }
   };
-
   return config;
 };

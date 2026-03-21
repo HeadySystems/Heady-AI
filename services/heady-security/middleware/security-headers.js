@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * Security Headers Middleware — Comprehensive Production Implementation
  * @module security-middleware/security-headers
@@ -28,68 +30,63 @@ const crypto = require('crypto');
 
 const DEFAULTS = {
   // HSTS
-  hstsMaxAge:               31536000,  // 1 year
-  hstsIncludeSubdomains:    true,
-  hstsPreload:              true,
-
+  hstsMaxAge: 31536000,
+  // 1 year
+  hstsIncludeSubdomains: true,
+  hstsPreload: true,
   // CSP
-  cspReportUri:             '/csp-violations',
-  cspReportOnlyMode:        false,
-
+  cspReportUri: '/csp-violations',
+  cspReportOnlyMode: false,
   // X-Frame-Options
-  frameOptions:             'DENY',    // 'DENY' | 'SAMEORIGIN' | null (to disable)
+  frameOptions: 'DENY',
+  // 'DENY' | 'SAMEORIGIN' | null (to disable)
 
   // Referrer Policy
-  referrerPolicy:           'strict-origin-when-cross-origin',
-
+  referrerPolicy: 'strict-origin-when-cross-origin',
   // COOP / COEP / CORP
-  crossOriginOpenerPolicy:  'same-origin',
-  crossOriginEmbedderPolicy:'require-corp',
-  crossOriginResourcePolicy:'same-origin',
-
+  crossOriginOpenerPolicy: 'same-origin',
+  crossOriginEmbedderPolicy: 'require-corp',
+  crossOriginResourcePolicy: 'same-origin',
   // Cache-Control for authenticated routes
-  cacheControlAuthenticated:'no-store, max-age=0',
-  cacheControlPublic:       'public, max-age=3600',
-
+  cacheControlAuthenticated: 'no-store, max-age=0',
+  cacheControlPublic: 'public, max-age=3600',
   // Request ID
-  requestIdHeader:          'X-Request-ID',
-
+  requestIdHeader: 'X-Request-ID',
   // Report-To endpoint
-  reportToGroupName:        'heady-csp-violations',
-  reportToEndpoint:         '/csp-violations',
-  reportToMaxAge:           86400,
-
+  reportToGroupName: 'heady-csp-violations',
+  reportToEndpoint: '/csp-violations',
+  reportToMaxAge: 86400,
   // Permissions Policy defaults (deny all sensitive APIs)
   permissionsPolicy: {
-    accelerometer:    '()',
+    accelerometer: '()',
     'ambient-light-sensor': '()',
-    autoplay:         '()',
-    battery:          '()',
-    camera:           '()',
+    autoplay: '()',
+    battery: '()',
+    camera: '()',
     'display-capture': '()',
     'document-domain': '()',
     'encrypted-media': '()',
     'execution-while-not-rendered': '()',
     'execution-while-out-of-viewport': '()',
-    fullscreen:       '()',
-    geolocation:      '()',
-    gyroscope:        '()',
-    'keyboard-map':   '()',
-    magnetometer:     '()',
-    microphone:       '()',
-    midi:             '()',
+    fullscreen: '()',
+    geolocation: '()',
+    gyroscope: '()',
+    'keyboard-map': '()',
+    magnetometer: '()',
+    microphone: '()',
+    midi: '()',
     'navigation-override': '()',
-    payment:          '()',
+    payment: '()',
     'picture-in-picture': '()',
     'publickey-credentials-get': '()',
     'screen-wake-lock': '()',
-    'serial':         '()',
+    'serial': '()',
     'speaker-selection': '()',
-    'sync-xhr':       '()',
-    usb:              '()',
-    'web-share':      '()',
-    'xr-spatial-tracking': '()',
-  },
+    'sync-xhr': '()',
+    usb: '()',
+    'web-share': '()',
+    'xr-spatial-tracking': '()'
+  }
 };
 
 // ─── CSP Nonce Generation ─────────────────────────────────────────────────────
@@ -114,53 +111,49 @@ function generateNonce() {
  */
 function buildCSP(nonce, overrides = {}, reportUri = '/csp-violations') {
   const directives = {
-    'default-src':   ["'self'"],
-    'script-src':    ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"],
-    'style-src':     ["'self'", `'nonce-${nonce}'`],
-    'img-src':       ["'self'", 'data:', 'blob:', 'https:'],
-    'font-src':      ["'self'", 'data:'],
-    'connect-src':   ["'self'", 'https://api.headyme.com', 'https://api.headysystems.com', 'wss://api.headyme.com'],
-    'frame-src':     ["'none'"],
+    'default-src': ["'self'"],
+    'script-src': ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"],
+    'style-src': ["'self'", `'nonce-${nonce}'`],
+    'img-src': ["'self'", 'data:', 'blob:', 'https:'],
+    'font-src': ["'self'", 'data:'],
+    'connect-src': ["'self'", 'https://api.headyme.com', 'https://api.headysystems.com', 'wss://api.headyme.com'],
+    'frame-src': ["'none'"],
     'frame-ancestors': ["'none'"],
-    'object-src':    ["'none'"],
-    'base-uri':      ["'self'"],
-    'form-action':   ["'self'"],
-    'manifest-src':  ["'self'"],
-    'worker-src':    ["'self'", 'blob:'],
-    'media-src':     ["'self'"],
+    'object-src': ["'none'"],
+    'base-uri': ["'self'"],
+    'form-action': ["'self'"],
+    'manifest-src': ["'self'"],
+    'worker-src': ["'self'", 'blob:'],
+    'media-src': ["'self'"],
     'upgrade-insecure-requests': [],
-    'block-all-mixed-content':   [],
-    ...overrides,
+    'block-all-mixed-content': [],
+    ...overrides
   };
-
   if (reportUri) {
     directives['report-uri'] = [reportUri];
   }
-
-  return Object.entries(directives)
-    .map(([directive, values]) => {
-      if (!values || values.length === 0) return directive;
-      return `${directive} ${values.join(' ')}`;
-    })
-    .join('; ');
+  return Object.entries(directives).map(([directive, values]) => {
+    if (!values || values.length === 0) return directive;
+    return `${directive} ${values.join(' ')}`;
+  }).join('; ');
 }
 
 // ─── Permissions Policy Builder ───────────────────────────────────────────────
 
 function buildPermissionsPolicy(policy) {
-  return Object.entries(policy)
-    .map(([feature, value]) => `${feature}=${value}`)
-    .join(', ');
+  return Object.entries(policy).map(([feature, value]) => `${feature}=${value}`).join(', ');
 }
 
 // ─── Report-To Header Builder ─────────────────────────────────────────────────
 
 function buildReportTo(groupName, endpoint, maxAge) {
   return JSON.stringify({
-    group:      groupName,
-    max_age:    maxAge,
-    endpoints:  [{ url: endpoint }],
-    include_subdomains: true,
+    group: groupName,
+    max_age: maxAge,
+    endpoints: [{
+      url: endpoint
+    }],
+    include_subdomains: true
   });
 }
 
@@ -183,27 +176,33 @@ function buildReportTo(groupName, endpoint, maxAge) {
  * @returns {Function} Express middleware
  */
 function securityHeaders(opts = {}) {
-  const config = { ...DEFAULTS, ...opts };
-  const permPolicy = buildPermissionsPolicy({ ...DEFAULTS.permissionsPolicy, ...(opts.permissionsPolicy || {}) });
-  const reportTo   = buildReportTo(config.reportToGroupName, config.reportToEndpoint, config.reportToMaxAge);
+  const config = {
+    ...DEFAULTS,
+    ...opts
+  };
+  const permPolicy = buildPermissionsPolicy({
+    ...DEFAULTS.permissionsPolicy,
+    ...(opts.permissionsPolicy || {})
+  });
+  const reportTo = buildReportTo(config.reportToGroupName, config.reportToEndpoint, config.reportToMaxAge);
 
   // Build HSTS value
   let hsts = `max-age=${config.hstsMaxAge}`;
   if (config.hstsIncludeSubdomains) hsts += '; includeSubDomains';
-  if (config.hstsPreload)           hsts += '; preload';
-
+  if (config.hstsPreload) hsts += '; preload';
   return (req, res, next) => {
     // ── Generate per-request CSP nonce ──────────────────────────────────
     const nonce = generateNonce();
     res.locals.cspNonce = nonce;
 
     // ── Determine if route is authenticated ──────────────────────────────
-    const isAuth = typeof config.isAuthenticated === 'function'
-      ? config.isAuthenticated(req)
-      : !!(req.user || req.session?.userId);
+    const isAuth = typeof config.isAuthenticated === 'function' ? config.isAuthenticated(req) : !!(req.user || req.session?.userId);
 
     // ── Build CSP (allow per-request overrides via res.locals.cspOverrides) ──
-    const cspValue = buildCSP(nonce, { ...config.cspOverrides, ...res.locals.cspOverrides }, config.cspReportUri);
+    const cspValue = buildCSP(nonce, {
+      ...config.cspOverrides,
+      ...res.locals.cspOverrides
+    }, config.cspReportUri);
 
     // ── Set headers ──────────────────────────────────────────────────────
 
@@ -232,7 +231,7 @@ function securityHeaders(opts = {}) {
     res.set('Permissions-Policy', permPolicy);
 
     // Cross-Origin Policies
-    res.set('Cross-Origin-Opener-Policy',   config.crossOriginOpenerPolicy);
+    res.set('Cross-Origin-Opener-Policy', config.crossOriginOpenerPolicy);
     res.set('Cross-Origin-Embedder-Policy', config.crossOriginEmbedderPolicy);
     res.set('Cross-Origin-Resource-Policy', config.crossOriginResourcePolicy);
 
@@ -252,18 +251,13 @@ function securityHeaders(opts = {}) {
     res.set('Report-To', reportTo);
 
     // Request ID — use existing or generate new
-    const requestId = req.id
-      || req.headers[config.requestIdHeader.toLowerCase()]
-      || req.headers['x-request-id']
-      || crypto.randomUUID();
-
+    const requestId = req.id || req.headers[config.requestIdHeader.toLowerCase()] || req.headers['x-request-id'] || crypto.randomUUID();
     req.id = requestId;
     res.set(config.requestIdHeader, requestId);
 
     // Remove server info headers (defense in depth)
     res.removeHeader('X-Powered-By');
     res.removeHeader('Server');
-
     next();
   };
 }
@@ -297,7 +291,10 @@ function frameOptions(value) {
  */
 function cspOverride(directives) {
   return (req, res, next) => {
-    res.locals.cspOverrides = { ...(res.locals.cspOverrides || {}), ...directives };
+    res.locals.cspOverrides = {
+      ...(res.locals.cspOverrides || {}),
+      ...directives
+    };
     next();
   };
 }
@@ -320,30 +317,30 @@ function cspViolationHandler(opts = {}) {
     if (!report['document-uri'] && !report['blocked-uri']) {
       return res.status(204).end();
     }
-
     const violation = {
-      timestamp:     new Date().toISOString(),
-      documentUri:   report['document-uri'],
-      referrer:      report['referrer'],
-      violatedDir:   report['violated-directive'],
-      effectiveDir:  report['effective-directive'],
+      timestamp: new Date().toISOString(),
+      documentUri: report['document-uri'],
+      referrer: report['referrer'],
+      violatedDir: report['violated-directive'],
+      effectiveDir: report['effective-directive'],
       originalPolicy: report['original-policy'],
-      blockedUri:    report['blocked-uri'],
-      statusCode:    report['status-code'],
-      scriptSample:  report['script-sample'],
-      ip:            req.ip || req.headers['x-forwarded-for'],
-      userAgent:     req.headers['user-agent'],
-      requestId:     req.id,
+      blockedUri: report['blocked-uri'],
+      statusCode: report['status-code'],
+      scriptSample: report['script-sample'],
+      ip: req.ip || req.headers['x-forwarded-for'],
+      userAgent: req.headers['user-agent'],
+      requestId: req.id
     };
 
     // Call optional handler
     if (typeof opts.onViolation === 'function') {
-      try { opts.onViolation(violation, req); } catch {}
+      try {
+        opts.onViolation(violation, req);
+      } catch {}
     }
 
     // Default: log to stderr
-    console.warn('[CSP-VIOLATION]', JSON.stringify(violation));
-
+    logger.warn('[CSP-VIOLATION]', JSON.stringify(violation));
     res.status(204).end();
   };
 }
@@ -359,7 +356,7 @@ module.exports = {
   buildCSP,
   buildPermissionsPolicy,
   buildReportTo,
-  DEFAULTS,
+  DEFAULTS
 };
 
 // ─── Usage Example ────────────────────────────────────────────────────────────

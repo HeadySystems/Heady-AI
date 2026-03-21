@@ -1,3 +1,5 @@
+const { createLogger } = require('../../../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * HeadyMe Antigravity — Webpack Remote Entry Bootstrap
  *
@@ -5,13 +7,15 @@
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  */
 
-import('./mount').then(({ mount }) => {
+import('./mount').then(({
+  mount
+}) => {
   const container = document.getElementById('heady-root') || document.body;
   mount(container, {
     autoMount: true,
-    domain: typeof window !== 'undefined' ? window.location.hostname : 'localhost',
-    theme: 'dark',
+    domain: typeof window !== 'undefined' ? window.location.hostname : "0.0.0.0",
+    theme: 'dark'
   });
-}).catch((err) => {
-  console.error('[Antigravity] Bootstrap failed:', err);
+}).catch(err => {
+  logger.error('[Antigravity] Bootstrap failed:', err);
 });

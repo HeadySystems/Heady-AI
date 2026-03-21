@@ -16,20 +16,32 @@ const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 
 /** Phi-weighted priority tiers for context assembly */
 const CONTEXT_WEIGHTS = {
-  SYSTEM: PHI * PHI * PHI,    // ~4.236
-  TASK: PHI * PHI,             // ~2.618
-  HISTORY: PHI,                // ~1.618
-  AMBIENT: 1                   // 1.000
+  SYSTEM: PHI * PHI * PHI,
+  // ~4.236
+  TASK: PHI * PHI,
+  // ~2.618
+  HISTORY: PHI,
+  // ~1.618
+  AMBIENT: 1 // 1.000
 };
 
 /** Compression ratios per phi-hierarchical layer */
 const COMPRESSION_LAYERS = {
-  L1: PSI,          // ~0.618 — light summarization
-  L2: PSI * PSI,    // ~0.382 — medium compression
+  L1: PSI,
+  // ~0.618 — light summarization
+  L2: PSI * PSI,
+  // ~0.382 — medium compression
   L3: PSI * PSI * PSI // ~0.236 — aggressive compression
 };
 
@@ -62,7 +74,9 @@ function log(level, msg, meta = {}, correlationId = null) {
  */
 function cosineSimilarity(a, b) {
   if (!a || !b || a.length !== b.length) return 0;
-  let dot = 0, magA = 0, magB = 0;
+  let dot = 0,
+    magA = 0,
+    magB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     magA += a[i] * a[i];
@@ -71,12 +85,6 @@ function cosineSimilarity(a, b) {
   const denom = Math.sqrt(magA) * Math.sqrt(magB);
   return denom === 0 ? 0 : dot / denom;
 }
-
-/**
- * Phi-backoff delay calculation.
- * @param {number} attempt - Attempt number
- * @returns {number} Delay in ms
- */
 function phiBackoff(attempt) {
   return FIB[Math.min(attempt, FIB.length - 1)] * PSI * 1000;
 }
@@ -122,8 +130,13 @@ class HeadyContextFabricService {
       assembled: null,
       createdAt: Date.now()
     });
-    log('info', 'Context session created', { sessionId });
-    return { sessionId, embeddingDim: this.embeddingDim };
+    log('info', 'Context session created', {
+      sessionId
+    });
+    return {
+      sessionId,
+      embeddingDim: this.embeddingDim
+    };
   }
 
   /**
@@ -139,7 +152,6 @@ class HeadyContextFabricService {
   addPiece(sessionId, piece) {
     const session = this.sessions.get(sessionId);
     if (!session) throw new Error('Session not found');
-
     const tier = piece.tier || 'AMBIENT';
     const weight = CONTEXT_WEIGHTS[tier] || CONTEXT_WEIGHTS.AMBIENT;
     const embedding = piece.embedding || [];
@@ -152,8 +164,16 @@ class HeadyContextFabricService {
 
     // Skip if below minimum CSL threshold
     if (relevance < CSL.MINIMUM && tier !== 'SYSTEM') {
-      log('info', 'Context piece rejected: below CSL.MINIMUM', { sessionId, tier, relevance });
-      return { accepted: false, reason: 'below_threshold', relevance };
+      log('info', 'Context piece rejected: below CSL.MINIMUM', {
+        sessionId,
+        tier,
+        relevance
+      });
+      return {
+        accepted: false,
+        reason: 'below_threshold',
+        relevance
+      };
     }
 
     // Semantic deduplication
@@ -166,12 +186,18 @@ class HeadyContextFabricService {
             session.pieces.splice(idx, 1);
             break;
           }
-          log('info', 'Context piece deduplicated', { sessionId, tier });
-          return { accepted: false, reason: 'duplicate', relevance };
+          log('info', 'Context piece deduplicated', {
+            sessionId,
+            tier
+          });
+          return {
+            accepted: false,
+            reason: 'duplicate',
+            relevance
+          };
         }
       }
     }
-
     const phiScore = relevance * weight;
     session.pieces.push({
       id: crypto.randomUUID(),
@@ -189,7 +215,12 @@ class HeadyContextFabricService {
     session.pieces.sort((a, b) => b.phiScore - a.phiScore);
     session.assembled = null; // invalidate cache
 
-    return { accepted: true, relevance, phiScore, totalPieces: session.pieces.length };
+    return {
+      accepted: true,
+      relevance,
+      phiScore,
+      totalPieces: session.pieces.length
+    };
   }
 
   /**
@@ -219,9 +250,7 @@ class HeadyContextFabricService {
   assemble(sessionId) {
     const session = this.sessions.get(sessionId);
     if (!session) throw new Error('Session not found');
-
     if (session.assembled) return session.assembled;
-
     const correlationId = crypto.randomUUID();
     const pieces = [...session.pieces];
 
@@ -233,7 +262,12 @@ class HeadyContextFabricService {
     }
 
     // Group by tier
-    const byTier = { SYSTEM: [], TASK: [], HISTORY: [], AMBIENT: [] };
+    const byTier = {
+      SYSTEM: [],
+      TASK: [],
+      HISTORY: [],
+      AMBIENT: []
+    };
     for (const piece of pieces) {
       if (byTier[piece.tier]) byTier[piece.tier].push(piece);
     }
@@ -241,13 +275,11 @@ class HeadyContextFabricService {
     // Assemble with compression
     const capsuleSections = [];
     let totalTokensUsed = 0;
-
     for (const tier of ['SYSTEM', 'TASK', 'HISTORY', 'AMBIENT']) {
       const budget = tierBudgets[tier];
       const tierPieces = byTier[tier];
       let tierContent = '';
       let tierTokens = 0;
-
       for (const piece of tierPieces) {
         const estimatedTokens = Math.ceil(piece.content.length / FIB[5]);
         if (tierTokens + estimatedTokens > budget) {
@@ -264,7 +296,6 @@ class HeadyContextFabricService {
         }
         if (tierTokens >= budget) break;
       }
-
       capsuleSections.push({
         tier,
         weight: CONTEXT_WEIGHTS[tier],
@@ -274,7 +305,6 @@ class HeadyContextFabricService {
       });
       totalTokensUsed += tierTokens;
     }
-
     const capsule = {
       sessionId,
       correlationId,
@@ -286,7 +316,6 @@ class HeadyContextFabricService {
       coherence: this._calculateCapsuleCoherence(pieces),
       assembledAt: new Date().toISOString()
     };
-
     session.assembled = capsule;
 
     // Cache management
@@ -295,11 +324,11 @@ class HeadyContextFabricService {
       this.capsuleCache.delete(oldest);
     }
     this.capsuleCache.set(sessionId, capsule);
-
     log('info', 'Context capsule assembled', {
-      sessionId, totalPieces: pieces.length, totalTokens: totalTokensUsed
+      sessionId,
+      totalPieces: pieces.length,
+      totalTokens: totalTokensUsed
     }, correlationId);
-
     return capsule;
   }
 
@@ -325,18 +354,17 @@ class HeadyContextFabricService {
   destroySession(sessionId) {
     const removed = this.sessions.delete(sessionId);
     this.capsuleCache.delete(sessionId);
-    if (removed) log('info', 'Context session destroyed', { sessionId });
+    if (removed) log('info', 'Context session destroyed', {
+      sessionId
+    });
     return removed;
   }
 
   /** Set up Express routes. @private */
   _setupRoutes() {
     this.app.use(express.json());
-
     this.app.get('/health', (_req, res) => {
-      this._coherence = this.sessions.size > 0
-        ? Array.from(this.sessions.values()).reduce((sum, s) => sum + (s.assembled?.coherence || CSL.MEDIUM), 0) / this.sessions.size
-        : CSL.HIGH;
+      this._coherence = this.sessions.size > 0 ? Array.from(this.sessions.values()).reduce((sum, s) => sum + (s.assembled?.coherence || CSL.MEDIUM), 0) / this.sessions.size : CSL.HIGH;
       res.json({
         status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
         coherence: this._coherence,
@@ -345,38 +373,41 @@ class HeadyContextFabricService {
         timestamp: new Date().toISOString()
       });
     });
-
     this.app.post('/session', (req, res) => {
       const session = this.createSession(req.body.taskEmbedding);
       res.status(201).json(session);
     });
-
     this.app.post('/session/:id/piece', (req, res) => {
       try {
         const result = this.addPiece(req.params.id, req.body);
         res.status(result.accepted ? 201 : 200).json(result);
       } catch (err) {
-        res.status(404).json({ error: err.message });
+        res.status(404).json({
+          error: err.message
+        });
       }
     });
-
     this.app.post('/session/:id/assemble', (req, res) => {
       try {
         const capsule = this.assemble(req.params.id);
         res.json(capsule);
       } catch (err) {
-        res.status(404).json({ error: err.message });
+        res.status(404).json({
+          error: err.message
+        });
       }
     });
-
     this.app.delete('/session/:id', (req, res) => {
       const removed = this.destroySession(req.params.id);
-      res.json({ removed });
+      res.json({
+        removed
+      });
     });
-
     this.app.get('/capsule/:id', (req, res) => {
       const capsule = this.capsuleCache.get(req.params.id);
-      if (!capsule) return res.status(404).json({ error: 'Capsule not found' });
+      if (!capsule) return res.status(404).json({
+        error: 'Capsule not found'
+      });
       res.json(capsule);
     });
   }
@@ -388,10 +419,13 @@ class HeadyContextFabricService {
   async start() {
     if (this._started) return;
     this._setupRoutes();
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server = this.app.listen(this.port, () => {
         this._started = true;
-        log('info', 'HeadyContextFabricService started', { port: this.port, embeddingDim: this.embeddingDim });
+        log('info', 'HeadyContextFabricService started', {
+          port: this.port,
+          embeddingDim: this.embeddingDim
+        });
         resolve();
       });
     });
@@ -403,7 +437,7 @@ class HeadyContextFabricService {
    */
   async stop() {
     if (!this._started) return;
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server.close(() => {
         this._started = false;
         this.sessions.clear();
@@ -419,8 +453,21 @@ class HeadyContextFabricService {
    * @returns {Object} Health status
    */
   health() {
-    return { status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded', coherence: this._coherence, activeSessions: this.sessions.size };
+    return {
+      status: this._coherence >= CSL.MEDIUM ? 'healthy' : 'degraded',
+      coherence: this._coherence,
+      activeSessions: this.sessions.size
+    };
   }
 }
-
-module.exports = { HeadyContextFabricService, PHI, PSI, FIB, CSL, CONTEXT_WEIGHTS, COMPRESSION_LAYERS, cosineSimilarity, phiBackoff };
+module.exports = {
+  HeadyContextFabricService,
+  PHI,
+  PSI,
+  FIB,
+  CSL,
+  CONTEXT_WEIGHTS,
+  COMPRESSION_LAYERS,
+  cosineSimilarity,
+  phiBackoff
+};

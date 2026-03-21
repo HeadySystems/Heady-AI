@@ -1,8 +1,10 @@
 'use strict';
 
-const http  = require('http');
+const http = require('http');
 const https = require('https');
-const { URL } = require('url');
+const {
+  URL
+} = require('url');
 const BaseProvider = require('./base-provider');
 
 /**
@@ -13,32 +15,31 @@ const BaseProvider = require('./base-provider');
 class LocalProvider extends BaseProvider {
   constructor(config) {
     super('local', config);
-    this.baseUrl = config.baseUrl || 'http://localhost:11434';
+    this.baseUrl = config.baseUrl || "http://0.0.0.0:11434";
   }
-
   _request(path, body, timeoutMs, signal) {
     return new Promise((resolve, reject) => {
-      const parsed  = new URL(path, this.baseUrl);
+      const parsed = new URL(path, this.baseUrl);
       const payload = body ? JSON.stringify(body) : '';
       const isHttps = parsed.protocol === 'https:';
-      const lib     = isHttps ? https : http;
-
+      const lib = isHttps ? https : http;
       const options = {
         hostname: parsed.hostname,
-        port:     parsed.port || (isHttps ? 443 : 80),
-        path:     parsed.pathname,
-        method:   body ? 'POST' : 'GET',
+        port: parsed.port || (isHttps ? 443 : 80),
+        path: parsed.pathname,
+        method: body ? 'POST' : 'GET',
         headers: {
-          'Content-Type':   'application/json',
+          'Content-Type': 'application/json',
           'Content-Length': Buffer.byteLength(payload),
-          'User-Agent':     'heady-infer/1.0',
+          'User-Agent': 'heady-infer/1.0'
         },
-        timeout: timeoutMs,
+        timeout: timeoutMs
       };
-
-      const req = lib.request(options, (res) => {
+      const req = lib.request(options, res => {
         let data = '';
-        res.on('data', (c) => { data += c; });
+        res.on('data', c => {
+          data += c;
+        });
         res.on('end', () => {
           try {
             // Ollama returns NDJSON for some endpoints; try array first
@@ -54,8 +55,14 @@ class LocalProvider extends BaseProvider {
         });
       });
       req.on('error', reject);
-      req.on('timeout', () => { req.destroy(); reject(this.providerError('Timeout', 'timeout', 408, null)); });
-      if (signal) signal.addEventListener('abort', () => { req.destroy(); reject(this.providerError('Aborted', 'aborted', 499, null)); });
+      req.on('timeout', () => {
+        req.destroy();
+        reject(this.providerError('Timeout', 'timeout', 408, null));
+      });
+      if (signal) signal.addEventListener('abort', () => {
+        req.destroy();
+        reject(this.providerError('Aborted', 'aborted', 499, null));
+      });
       if (payload) req.write(payload);
       req.end();
     });
@@ -66,54 +73,58 @@ class LocalProvider extends BaseProvider {
    */
   _toOllamaMessages(messages) {
     return messages.map(m => ({
-      role:    m.role,
-      content: m.content,
+      role: m.role,
+      content: m.content
     }));
   }
-
   async generate(request) {
     if (!this.enabled) throw this.providerError('Local (Ollama) provider disabled', 'disabled', 503, null);
-
     const startTime = Date.now();
-    const model     = request.model || this.config.models?.default || 'llama3.1';
-    const messages  = this.normalizeMessages(request);
+    const model = request.model || this.config.models?.default || 'llama3.1';
+    const messages = this.normalizeMessages(request);
 
     // Use /api/chat for multi-turn, /api/generate for single prompt
     const body = {
       model,
       messages: this._toOllamaMessages(messages),
-      stream:   false,
+      stream: false,
       options: {
         num_predict: request.maxTokens || 4096,
-        ...(request.temperature !== undefined && { temperature: request.temperature }),
-        ...(request.stopSequences && { stop: request.stopSequences }),
-      },
+        ...(request.temperature !== undefined && {
+          temperature: request.temperature
+        }),
+        ...(request.stopSequences && {
+          stop: request.stopSequences
+        })
+      }
     };
-
-    const { controller, clear } = this.withTimeout(this.config.timeout);
+    const {
+      controller,
+      clear
+    } = this.withTimeout(this.config.timeout);
     try {
       const raw = await this._request('/api/chat', body, this.config.timeout, controller.signal);
-
       const response = {
-        provider:     'local',
-        model:        raw.model || model,
-        content:      raw.message?.content || raw.response || '',
-        role:         'assistant',
+        provider: 'local',
+        model: raw.model || model,
+        content: raw.message?.content || raw.response || '',
+        role: 'assistant',
         finishReason: raw.done ? 'stop' : 'length',
         usage: {
-          inputTokens:  raw.prompt_eval_count  || 0,
-          outputTokens: raw.eval_count          || 0,
-          totalTokens:  (raw.prompt_eval_count || 0) + (raw.eval_count || 0),
+          inputTokens: raw.prompt_eval_count || 0,
+          outputTokens: raw.eval_count || 0,
+          totalTokens: (raw.prompt_eval_count || 0) + (raw.eval_count || 0)
         },
         latencyMs: Date.now() - startTime,
-        costUsd:   0,  // local models are free
+        costUsd: 0,
+        // local models are free
         localMetrics: {
-          evalDurationNs:       raw.eval_duration,
+          evalDurationNs: raw.eval_duration,
           promptEvalDurationNs: raw.prompt_eval_duration,
-          loadDurationNs:       raw.load_duration,
+          loadDurationNs: raw.load_duration
         },
         timestamp: new Date().toISOString(),
-        raw,
+        raw
       };
       this.recordMetric('success', response.latencyMs, response.usage, 0);
       return response;
@@ -124,51 +135,46 @@ class LocalProvider extends BaseProvider {
       clear();
     }
   }
-
   async stream(request, onChunk) {
     if (!this.enabled) throw this.providerError('Local (Ollama) provider disabled', 'disabled', 503, null);
-
     const startTime = Date.now();
-    const model     = request.model || this.config.models?.default || 'llama3.1';
-    const messages  = this.normalizeMessages(request);
-
+    const model = request.model || this.config.models?.default || 'llama3.1';
+    const messages = this.normalizeMessages(request);
     return new Promise((resolve, reject) => {
-      const parsed  = new URL('/api/chat', this.baseUrl);
+      const parsed = new URL('/api/chat', this.baseUrl);
       const payload = JSON.stringify({
         model,
         messages: this._toOllamaMessages(messages),
-        stream:   true,
+        stream: true,
         options: {
           num_predict: request.maxTokens || 4096,
-          ...(request.temperature !== undefined && { temperature: request.temperature }),
-        },
+          ...(request.temperature !== undefined && {
+            temperature: request.temperature
+          })
+        }
       });
       const isHttps = parsed.protocol === 'https:';
-      const lib     = isHttps ? https : http;
-
+      const lib = isHttps ? https : http;
       const options = {
         hostname: parsed.hostname,
-        port:     parsed.port || (isHttps ? 443 : 80),
-        path:     parsed.pathname,
-        method:   'POST',
+        port: parsed.port || (isHttps ? 443 : 80),
+        path: parsed.pathname,
+        method: 'POST',
         headers: {
-          'Content-Type':   'application/json',
-          'Content-Length': Buffer.byteLength(payload),
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload)
         },
-        timeout: this.config.timeout * 4,
+        timeout: this.config.timeout * 4
       };
-
       let buffer = '';
       let accContent = '';
       let inputTokens = 0;
       let outputTokens = 0;
-
-      const req = lib.request(options, (res) => {
-        res.on('data', (chunk) => {
+      const req = lib.request(options, res => {
+        res.on('data', chunk => {
           buffer += chunk.toString();
           const lines = buffer.split('\n');
           buffer = lines.pop();
-
           for (const line of lines) {
             if (!line.trim()) continue;
             try {
@@ -176,56 +182,75 @@ class LocalProvider extends BaseProvider {
               const text = evt.message?.content || '';
               if (text) {
                 accContent += text;
-                onChunk({ type: 'delta', text, provider: 'local' });
+                onChunk({
+                  type: 'delta',
+                  text,
+                  provider: 'local'
+                });
               }
               if (evt.done) {
-                inputTokens  = evt.prompt_eval_count || 0;
-                outputTokens = evt.eval_count         || 0;
+                inputTokens = evt.prompt_eval_count || 0;
+                outputTokens = evt.eval_count || 0;
               }
             } catch (_) {}
           }
         });
-
         res.on('end', () => {
-          onChunk({ type: 'done', provider: 'local' });
+          onChunk({
+            type: 'done',
+            provider: 'local'
+          });
           resolve({
             provider: 'local',
             model,
             content: accContent,
             role: 'assistant',
             finishReason: 'stop',
-            usage: { inputTokens, outputTokens, totalTokens: inputTokens + outputTokens },
-            costUsd:   0,
+            usage: {
+              inputTokens,
+              outputTokens,
+              totalTokens: inputTokens + outputTokens
+            },
+            costUsd: 0,
             latencyMs: Date.now() - startTime,
-            timestamp: new Date().toISOString(),
+            timestamp: new Date().toISOString()
           });
         });
         res.on('error', reject);
       });
-
       req.on('error', reject);
-      req.on('timeout', () => { req.destroy(); reject(this.providerError('Stream timeout', 'timeout', 408, null)); });
+      req.on('timeout', () => {
+        req.destroy();
+        reject(this.providerError('Stream timeout', 'timeout', 408, null));
+      });
       req.write(payload);
       req.end();
     });
   }
-
   async health() {
-    if (!this.enabled) return { provider: 'local', status: 'disabled', latencyMs: 0 };
+    if (!this.enabled) return {
+      provider: 'local',
+      status: 'disabled',
+      latencyMs: 0
+    };
     const start = Date.now();
     try {
       const result = await this._request('/', null, 3000, null);
       return {
         provider: 'local',
-        status:   'healthy',
+        status: 'healthy',
         latencyMs: Date.now() - start,
-        info:     result,
+        info: result
       };
     } catch (err) {
-      return { provider: 'local', status: 'unhealthy', latencyMs: Date.now() - start, error: err.message };
+      return {
+        provider: 'local',
+        status: 'unhealthy',
+        latencyMs: Date.now() - start,
+        error: err.message
+      };
     }
   }
-
   async getModels() {
     try {
       const result = await this._request('/api/tags', null, 5000, null);
@@ -234,10 +259,8 @@ class LocalProvider extends BaseProvider {
       return [this.config.models?.default || 'llama3.1'];
     }
   }
-
   estimateCost() {
-    return 0;  // local is always free
+    return 0; // local is always free
   }
 }
-
 module.exports = LocalProvider;

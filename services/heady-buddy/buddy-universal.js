@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * ═══ HeadyBuddy Universal — SPEC-6 ═══
  *
@@ -14,25 +16,25 @@
  */
 
 (function () {
-    "use strict";
+  "use strict";
 
-    const BUDDY_VERSION = "2.0.0";
-    const API_BASE = "https://heady-onboarding-609590223909.us-east1.run.app";
-    const EDGE_BASE = "https://heady-onboarding-609590223909.us-east1.run.app";
+  const BUDDY_VERSION = "2.0.0";
+  const API_BASE = "https://heady-onboarding-609590223909.us-east1.run.app";
+  const EDGE_BASE = "https://heady-onboarding-609590223909.us-east1.run.app";
 
-    // ─── State ───────────────────────────────────────────────────
-    const state = {
-        open: false,
-        messages: [],
-        userId: null,
-        deviceId: null,
-        consentGiven: false,
-        voiceActive: false,
-    };
+  // ─── State ───────────────────────────────────────────────────
+  const state = {
+    open: false,
+    messages: [],
+    userId: null,
+    deviceId: null,
+    consentGiven: false,
+    voiceActive: false
+  };
 
-    // ─── Styles ──────────────────────────────────────────────────
-    const styles = document.createElement("style");
-    styles.textContent = `
+  // ─── Styles ──────────────────────────────────────────────────
+  const styles = document.createElement("style");
+  styles.textContent = `
         #heady-buddy-fab {
             position: fixed;
             bottom: 24px;
@@ -195,20 +197,20 @@
             }
         }
     `;
-    document.head.appendChild(styles);
+  document.head.appendChild(styles);
 
-    // ─── FAB ─────────────────────────────────────────────────────
-    const fab = document.createElement("button");
-    fab.id = "heady-buddy-fab";
-    fab.innerHTML = "🧠";
-    fab.title = "HeadyBuddy (Alt+H)";
-    fab.setAttribute("aria-label", "Open HeadyBuddy AI assistant");
-    document.body.appendChild(fab);
+  // ─── FAB ─────────────────────────────────────────────────────
+  const fab = document.createElement("button");
+  fab.id = "heady-buddy-fab";
+  fab.innerHTML = "🧠";
+  fab.title = "HeadyBuddy (Alt+H)";
+  fab.setAttribute("aria-label", "Open HeadyBuddy AI assistant");
+  document.body.appendChild(fab);
 
-    // ─── Panel ───────────────────────────────────────────────────
-    const panel = document.createElement("div");
-    panel.id = "heady-buddy-panel";
-    panel.innerHTML = `
+  // ─── Panel ───────────────────────────────────────────────────
+  const panel = document.createElement("div");
+  panel.id = "heady-buddy-panel";
+  panel.innerHTML = `
         <div class="buddy-header">
             <div>
                 <h3>HeadyBuddy</h3>
@@ -224,130 +226,135 @@
             <button id="buddy-send">→</button>
         </div>
     `;
-    document.body.appendChild(panel);
+  document.body.appendChild(panel);
 
-    // ─── Toggle ──────────────────────────────────────────────────
-    function toggle() {
-        state.open = !state.open;
-        panel.classList.toggle("visible", state.open);
-        fab.classList.toggle("open", state.open);
-        if (state.open) {
-            document.getElementById("buddy-input").focus();
-        }
+  // ─── Toggle ──────────────────────────────────────────────────
+  function toggle() {
+    state.open = !state.open;
+    panel.classList.toggle("visible", state.open);
+    fab.classList.toggle("open", state.open);
+    if (state.open) {
+      document.getElementById("buddy-input").focus();
     }
+  }
+  fab.addEventListener("click", toggle);
 
-    fab.addEventListener("click", toggle);
-
-    // Keyboard shortcut: Alt+H
-    document.addEventListener("keydown", (e) => {
-        if (e.altKey && e.key === "h") {
-            e.preventDefault();
-            toggle();
-        }
-    });
-
-    // ─── Send message ────────────────────────────────────────────
-    async function sendMessage(text) {
-        if (!text.trim()) return;
-
-        addMessage("user", text);
-        const input = document.getElementById("buddy-input");
-        const sendBtn = document.getElementById("buddy-send");
-        input.value = "";
-        sendBtn.disabled = true;
-
-        try {
-            // Try edge first, fallback to origin
-            let response;
-            try {
-                response = await fetch(`${EDGE_BASE}/api/chat`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: text, userId: state.userId }),
-                    signal: AbortSignal.timeout(8000),
-                });
-            } catch {
-                response = await fetch(`${API_BASE}/api/chat`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: text }),
-                });
-            }
-
-            const data = await response.json();
-            addMessage("assistant", data.response || data.message || data.text || "I'm thinking...");
-        } catch (err) {
-            addMessage("assistant", "Sorry, I couldn't connect. Please try again.");
-        }
-
-        sendBtn.disabled = false;
+  // Keyboard shortcut: Alt+H
+  document.addEventListener("keydown", e => {
+    if (e.altKey && e.key === "h") {
+      e.preventDefault();
+      toggle();
     }
+  });
 
-    function addMessage(role, text) {
-        const messagesEl = document.getElementById("buddy-messages");
-        const msg = document.createElement("div");
-        msg.className = `buddy-msg ${role}`;
-        msg.textContent = text;
-        messagesEl.appendChild(msg);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-        state.messages.push({ role, text, ts: Date.now() });
-    }
-
-    // Send on Enter or button click
-    document.getElementById("buddy-send").addEventListener("click", () => {
-        sendMessage(document.getElementById("buddy-input").value);
-    });
-    document.getElementById("buddy-input").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") sendMessage(e.target.value);
-    });
-
-    // ─── Voice Input ─────────────────────────────────────────────
-    const voiceBtn = document.getElementById("buddy-voice-btn");
-    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = "en-US";
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            document.getElementById("buddy-input").value = transcript;
-            sendMessage(transcript);
-        };
-
-        recognition.onend = () => {
-            voiceBtn.textContent = "🎤";
-            state.voiceActive = false;
-        };
-
-        voiceBtn.addEventListener("click", () => {
-            if (state.voiceActive) {
-                recognition.stop();
-            } else {
-                recognition.start();
-                voiceBtn.textContent = "🔴";
-                state.voiceActive = true;
-            }
+  // ─── Send message ────────────────────────────────────────────
+  async function sendMessage(text) {
+    if (!text.trim()) return;
+    addMessage("user", text);
+    const input = document.getElementById("buddy-input");
+    const sendBtn = document.getElementById("buddy-send");
+    input.value = "";
+    sendBtn.disabled = true;
+    try {
+      // Try edge first, fallback to origin
+      let response;
+      try {
+        response = await fetch(`${EDGE_BASE}/api/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: text,
+            userId: state.userId
+          }),
+          signal: AbortSignal.timeout(8000)
         });
-    } else {
-        voiceBtn.style.display = "none";
+      } catch {
+        response = await fetch(`${API_BASE}/api/chat`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message: text
+          })
+        });
+      }
+      const data = await response.json();
+      addMessage("assistant", data.response || data.message || data.text || "I'm thinking...");
+    } catch (err) {
+      addMessage("assistant", "Sorry, I couldn't connect. Please try again.");
     }
+    sendBtn.disabled = false;
+  }
+  function addMessage(role, text) {
+    const messagesEl = document.getElementById("buddy-messages");
+    const msg = document.createElement("div");
+    msg.className = `buddy-msg ${role}`;
+    msg.textContent = text;
+    messagesEl.appendChild(msg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    state.messages.push({
+      role,
+      text,
+      ts: Date.now()
+    });
+  }
 
-    // ─── Device ID ───────────────────────────────────────────────
-    state.deviceId = localStorage.getItem("heady-device-id");
-    if (!state.deviceId) {
-        state.deviceId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
-        localStorage.setItem("heady-device-id", state.deviceId);
-    }
+  // Send on Enter or button click
+  document.getElementById("buddy-send").addEventListener("click", () => {
+    sendMessage(document.getElementById("buddy-input").value);
+  });
+  document.getElementById("buddy-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") sendMessage(e.target.value);
+  });
 
-    // ─── Expose global ──────────────────────────────────────────
-    window.HeadyBuddy = {
-        toggle,
-        sendMessage,
-        getState: () => ({ ...state }),
-        version: BUDDY_VERSION,
+  // ─── Voice Input ─────────────────────────────────────────────
+  const voiceBtn = document.getElementById("buddy-voice-btn");
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+    recognition.onresult = event => {
+      const transcript = event.results[0][0].transcript;
+      document.getElementById("buddy-input").value = transcript;
+      sendMessage(transcript);
     };
+    recognition.onend = () => {
+      voiceBtn.textContent = "🎤";
+      state.voiceActive = false;
+    };
+    voiceBtn.addEventListener("click", () => {
+      if (state.voiceActive) {
+        recognition.stop();
+      } else {
+        recognition.start();
+        voiceBtn.textContent = "🔴";
+        state.voiceActive = true;
+      }
+    });
+  } else {
+    voiceBtn.style.display = "none";
+  }
 
-    console.log(`🧠 HeadyBuddy v${BUDDY_VERSION} loaded • Alt+H to toggle`);
+  // ─── Device ID ───────────────────────────────────────────────
+  state.deviceId = localStorage.getItem("heady-device-id");
+  if (!state.deviceId) {
+    state.deviceId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+    localStorage.setItem("heady-device-id", state.deviceId);
+  }
+
+  // ─── Expose global ──────────────────────────────────────────
+  window.HeadyBuddy = {
+    toggle,
+    sendMessage,
+    getState: () => ({
+      ...state
+    }),
+    version: BUDDY_VERSION
+  };
+  logger.info(`🧠 HeadyBuddy v${BUDDY_VERSION} loaded • Alt+H to toggle`);
 })();

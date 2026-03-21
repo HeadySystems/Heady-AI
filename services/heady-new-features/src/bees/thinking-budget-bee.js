@@ -6,15 +6,15 @@
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import pino from 'pino';
-
-const logger = pino({ name: 'thinking-budget-bee' });
-
+const logger = pino({
+  name: 'thinking-budget-bee'
+});
 const InputSchema = z.object({
   task: z.string().min(1),
   model: z.string().default('gemini-2.5-flash'),
   urgency: z.enum(['instant', 'fast', 'balanced', 'deep', 'ultra', 'max']).optional(),
   complexity: z.number().min(0).max(1).optional(),
-  forceMax: z.boolean().default(false),
+  forceMax: z.boolean().default(false)
 });
 
 /**
@@ -23,18 +23,40 @@ const InputSchema = z.object({
  */
 const PHI = 1.618033988749895;
 const TIERS = {
-  INSTANT:  { tokens: 0,     label: 'instant',  keywords: ['route','classify','sort','lookup','ping'] },
-  FAST:     { tokens: 618,   label: 'fast',      keywords: ['summarize','quick','brief','translate','format'] },
-  BALANCED: { tokens: 1618,  label: 'balanced',  keywords: ['explain','write','code','generate','analyze'] },
-  DEEP:     { tokens: 4096,  label: 'deep',      keywords: ['design','architect','debug','optimize','review'] },
-  ULTRA:    { tokens: 16180, label: 'ultra',     keywords: ['research','patent','strategy','proof','theorem'] },
-  MAX:      { tokens: 24576, label: 'max',       keywords: ['grant','sbir','dissertation','comprehensive','full'] },
+  INSTANT: {
+    tokens: 0,
+    label: 'instant',
+    keywords: ['route', 'classify', 'sort', 'lookup', 'ping']
+  },
+  FAST: {
+    tokens: 618,
+    label: 'fast',
+    keywords: ['summarize', 'quick', 'brief', 'translate', 'format']
+  },
+  BALANCED: {
+    tokens: 1618,
+    label: 'balanced',
+    keywords: ['explain', 'write', 'code', 'generate', 'analyze']
+  },
+  DEEP: {
+    tokens: 4096,
+    label: 'deep',
+    keywords: ['design', 'architect', 'debug', 'optimize', 'review']
+  },
+  ULTRA: {
+    tokens: 16180,
+    label: 'ultra',
+    keywords: ['research', 'patent', 'strategy', 'proof', 'theorem']
+  },
+  MAX: {
+    tokens: 24576,
+    label: 'max',
+    keywords: ['grant', 'sbir', 'dissertation', 'comprehensive', 'full']
+  }
 };
-
 export default class ThinkingBudgetBee {
   #env;
   #beeId;
-
   constructor(env) {
     this.#env = env;
     this.#beeId = uuidv4();
@@ -49,10 +71,16 @@ export default class ThinkingBudgetBee {
     // Check from MAX down so we pick the highest needed tier
     for (const [name, tier] of Object.entries(TIERS).reverse()) {
       if (tier.keywords.some(kw => lower.includes(kw))) {
-        return { tier: name, ...tier };
+        return {
+          tier: name,
+          ...tier
+        };
       }
     }
-    return { tier: 'BALANCED', ...TIERS.BALANCED };
+    return {
+      tier: 'BALANCED',
+      ...TIERS.BALANCED
+    };
   }
 
   /**
@@ -72,33 +100,40 @@ export default class ThinkingBudgetBee {
    * Build model-specific config with correct thinking budget structure
    */
   #buildConfig(model, tokens) {
-    const isGemini  = model.startsWith('gemini');
-    const isClaude  = model.startsWith('claude');
-    const isGroq    = model.startsWith('llama') || model.startsWith('mixtral');
-
+    const isGemini = model.startsWith('gemini');
+    const isClaude = model.startsWith('claude');
+    const isGroq = model.startsWith('llama') || model.startsWith('mixtral');
     if (isGroq || tokens === 0) {
-      return { model, maxTokens: 4096, temperature: 0.7 };
+      return {
+        model,
+        maxTokens: 4096,
+        temperature: 0.7
+      };
     }
-
     if (isGemini) {
       return {
         model,
         generationConfig: {
-          thinkingConfig: { thinkingBudget: tokens, includeThoughts: false },
+          thinkingConfig: {
+            thinkingBudget: tokens,
+            includeThoughts: false
+          },
           maxOutputTokens: Math.min(8192, tokens * PHI | 0),
-          temperature: tokens === 0 ? 0.7 : 0.3,
-        },
+          temperature: tokens === 0 ? 0.7 : 0.3
+        }
       };
     }
-
     if (isClaude) {
       return {
         model,
         max_tokens: Math.min(16000, tokens * PHI | 0),
-        thinking: tokens > 0
-          ? { type: 'enabled', budget_tokens: tokens }
-          : { type: 'disabled' },
-        temperature: tokens > 0 ? 1.0 : 0.7, // Claude extended thinking requires temp=1
+        thinking: tokens > 0 ? {
+          type: 'enabled',
+          budget_tokens: tokens
+        } : {
+          type: 'disabled'
+        },
+        temperature: tokens > 0 ? 1.0 : 0.7
       };
     }
 
@@ -106,7 +141,7 @@ export default class ThinkingBudgetBee {
     return {
       model,
       max_completion_tokens: Math.min(8192, tokens * PHI | 0),
-      temperature: 0.5,
+      temperature: 0.5
     };
   }
 
@@ -118,7 +153,6 @@ export default class ThinkingBudgetBee {
   allocate(rawInput) {
     const input = InputSchema.parse(rawInput);
     const id = uuidv4();
-
     let tierName;
     if (input.forceMax) {
       tierName = 'MAX';
@@ -129,12 +163,14 @@ export default class ThinkingBudgetBee {
     } else {
       tierName = this.#detectTier(input.task).tier;
     }
-
     const tier = TIERS[tierName];
     const modelConfig = this.#buildConfig(input.model, tier.tokens);
-
-    logger.info({ budgetId: id, tierName, tokens: tier.tokens, model: input.model }, 'budget_allocated');
-
+    logger.info({
+      budgetId: id,
+      tierName,
+      tokens: tier.tokens,
+      model: input.model
+    }, 'budget_allocated');
     return {
       budgetId: id,
       tier: tierName,
@@ -142,9 +178,9 @@ export default class ThinkingBudgetBee {
       label: tier.label,
       modelConfig,
       // Convenience direct accessors
-      geminiConfig:  modelConfig.generationConfig ?? null,
-      claudeConfig:  modelConfig.thinking ?? null,
-      costMultiplier: tier.tokens === 0 ? 1.0 : (1.0 + (tier.tokens / 24576) * PHI).toFixed(3),
+      geminiConfig: modelConfig.generationConfig ?? null,
+      claudeConfig: modelConfig.thinking ?? null,
+      costMultiplier: tier.tokens === 0 ? 1.0 : (1.0 + tier.tokens / 24576 * PHI).toFixed(3)
     };
   }
 
@@ -163,7 +199,12 @@ export default class ThinkingBudgetBee {
     const actualTokens = allocations.reduce((sum, a) => sum + a.tokens, 0);
     const worstCaseTokens = allocations.length * maxTokens;
     const savedTokens = worstCaseTokens - actualTokens;
-    const savingsPercent = ((savedTokens / worstCaseTokens) * 100).toFixed(1);
-    return { savedTokens, savingsPercent, actualTokens, worstCaseTokens };
+    const savingsPercent = (savedTokens / worstCaseTokens * 100).toFixed(1);
+    return {
+      savedTokens,
+      savingsPercent,
+      actualTokens,
+      worstCaseTokens
+    };
   }
 }

@@ -36,29 +36,22 @@
 
 import { EventEmitter } from 'events';
 import crypto from 'crypto';
-import {
-  PHI, PSI,
-  phiFusionWeights,
-  CSL_THRESHOLDS,
-  DEDUP_THRESHOLD,
-  PHI_TEMPERATURE,
-  fib,
-} from '../../shared/phi-math.js';
+import { PHI, PSI, phiFusionWeights, CSL_THRESHOLDS, DEDUP_THRESHOLD, PHI_TEMPERATURE, fib } from '../../shared/phi-math.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 /** Relationship type registry — extend as needed */
 const RELATIONSHIP_TYPES = {
-  CAUSES:         'causes',
-  CAUSED_BY:      'caused_by',
-  PART_OF:        'part_of',
-  CONTAINS:       'contains',
-  RELATED_TO:     'related_to',
-  DEPENDS_ON:     'depends_on',
-  PRECEDES:       'precedes',
-  FOLLOWS:        'follows',
-  SAME_AS:        'same_as',
-  CONTRASTS_WITH: 'contrasts_with',
+  CAUSES: 'causes',
+  CAUSED_BY: 'caused_by',
+  PART_OF: 'part_of',
+  CONTAINS: 'contains',
+  RELATED_TO: 'related_to',
+  DEPENDS_ON: 'depends_on',
+  PRECEDES: 'precedes',
+  FOLLOWS: 'follows',
+  SAME_AS: 'same_as',
+  CONTRASTS_WITH: 'contrasts_with'
 };
 
 /**
@@ -73,19 +66,19 @@ const [PHI_LOCAL_WEIGHT, PHI_GLOBAL_WEIGHT] = phiFusionWeights(2);
  * Math.pow(PSI, 4) = psi^4 ~= 0.146 — replaces the old 0.1 minimum.
  * Derived as the 4th power of the golden ratio conjugate.
  */
-const PHI_MIN_WEIGHT = Math.pow(PSI, 4);  // ~0.146
+const PHI_MIN_WEIGHT = Math.pow(PSI, 4); // ~0.146
 
 /**
  * Default fallback relationship weight.
  * PSI ~= 0.618 — replaces the old default weight: 0.5.
  */
-const PHI_DEFAULT_REL_WEIGHT = PSI;  // ~0.618
+const PHI_DEFAULT_REL_WEIGHT = PSI; // ~0.618
 
 /**
  * Fallback/co-occurrence relationship weight (lower confidence).
  * Math.pow(PSI, 2) ~= 0.382 — replaces the old weight: 0.3 in regex fallback.
  */
-const PHI_FALLBACK_REL_WEIGHT = Math.pow(PSI, 2);  // ~0.382
+const PHI_FALLBACK_REL_WEIGHT = Math.pow(PSI, 2); // ~0.382
 
 /** Default options for graph construction */
 const DEFAULT_BUILD_OPTIONS = {
@@ -95,43 +88,40 @@ const DEFAULT_BUILD_OPTIONS = {
    * Replaces arbitrary 0.92 — two vectors at this cosine distance are
    * semantically identical for graph deduplication purposes.
    */
-  similarityThreshold:  DEDUP_THRESHOLD,
+  similarityThreshold: DEDUP_THRESHOLD,
   /** fib(10) = 55 — Fibonacci-scaled entity cap, replaces 50 */
-  maxEntitiesPerDoc:    fib(10),
+  maxEntitiesPerDoc: fib(10),
   /** fib(11) = 89 — Fibonacci-scaled relationship cap, replaces 100 */
   maxRelationshipsPerDoc: fib(11),
-  updateCommunities:    false,   // Deferred; run communityDetection() explicitly
+  updateCommunities: false // Deferred; run communityDetection() explicitly
 };
 
 /** Default query options */
 const DEFAULT_QUERY_OPTIONS = {
-  mode:          'hybrid',
-  hops:           2,
+  mode: 'hybrid',
+  hops: 2,
   /** fib(7) = 13 — Fibonacci-scaled default result limit, replaces 10 */
-  limit:          fib(7),
+  limit: fib(7),
   /** phiFusionWeights(2)[0] ≈ 0.618 — phi-derived local weight, replaces 0.6 */
-  localWeight:    PHI_LOCAL_WEIGHT,
+  localWeight: PHI_LOCAL_WEIGHT,
   /** phiFusionWeights(2)[1] ≈ 0.382 — phi-derived global weight, replaces 0.4 */
-  globalWeight:   PHI_GLOBAL_WEIGHT,
+  globalWeight: PHI_GLOBAL_WEIGHT,
   /** Math.pow(PSI, 4) ≈ 0.146 — phi-derived minimum edge weight, replaces 0.1 */
-  minWeight:      PHI_MIN_WEIGHT,
+  minWeight: PHI_MIN_WEIGHT,
   includeContext: true,
-  beeId:          null,
-  workspaceId:    null,
+  beeId: null,
+  workspaceId: null
 };
 
 /** Community detection Leiden-like parameters */
 const COMMUNITY_OPTIONS = {
-  resolution:    1.0,
+  resolution: 1.0,
   /** fib(4) = 3 — same value as before, now Fibonacci-derived */
   minCommunitySize: fib(4),
   /** fib(7) = 13 — Fibonacci-scaled iteration cap, replaces 10 */
-  maxIterations: fib(7),
+  maxIterations: fib(7)
 };
-
-// ─── LLM prompt templates ─────────────────────────────────────────────────────
-
-const ENTITY_EXTRACTION_PROMPT = (text) => `You are a knowledge graph extraction system. Extract all entities and relationships from the text below.
+const ENTITY_EXTRACTION_PROMPT = text => `You are a knowledge graph extraction system. Extract all entities and relationships from the text below.
 
 Return a JSON object with this exact structure:
 {
@@ -165,7 +155,6 @@ Text to analyze:
 ---
 ${text.substring(0, 8000)}
 ---`;
-
 const COMMUNITY_SUMMARY_PROMPT = (entities, relationships) => `Summarize the following knowledge graph community into a concise paragraph (2-4 sentences) that captures the main theme, key entities, and their relationships.
 
 Entities: ${entities.map(e => `${e.name} (${e.type}): ${e.description}`).join('\n')}
@@ -195,12 +184,12 @@ export class GraphRAGEngine extends EventEmitter {
    */
   constructor(pool, options = {}) {
     super();
-    this.pool            = pool;
-    this.llmClient       = options.llmClient       ?? null;
+    this.pool = pool;
+    this.llmClient = options.llmClient ?? null;
     this.embeddingRouter = options.embeddingRouter ?? null;
-    this.graphId         = options.graphId         ?? 'default';
-    this.embeddingDim    = options.embeddingDim    ?? 384;
-    this.logger          = options.logger          ?? console;
+    this.graphId = options.graphId ?? 'default';
+    this.embeddingDim = options.embeddingDim ?? 384;
+    this.logger = options.logger ?? console;
 
     // In-memory LRU cache for entity embeddings (avoid redundant DB calls)
     this._entityEmbedCache = new Map();
@@ -209,15 +198,15 @@ export class GraphRAGEngine extends EventEmitter {
      * F(16) is the nearest Fibonacci number to 1000 and follows the
      * phi-harmonic cache sizing principle.
      */
-    this._maxCacheSize     = options.maxCacheSize ?? fib(16);
+    this._maxCacheSize = options.maxCacheSize ?? fib(16);
 
     // Stats
     this._stats = {
-      entitiesInserted:      0,
-      entitiesUpdated:       0,
+      entitiesInserted: 0,
+      entitiesUpdated: 0,
       relationshipsInserted: 0,
-      queriesExecuted:       0,
-      cacheHits:             0,
+      queriesExecuted: 0,
+      cacheHits: 0
     };
   }
 
@@ -235,14 +224,14 @@ export class GraphRAGEngine extends EventEmitter {
    */
   async extractEntities(text, options = {}) {
     if (!text || text.trim().length === 0) {
-      return { entities: [], relationships: [] };
+      return {
+        entities: [],
+        relationships: []
+      };
     }
-
     const startTime = Date.now();
-
     try {
       let result;
-
       if (this.llmClient) {
         result = await this._extractWithLLM(text, options);
       } else {
@@ -255,26 +244,21 @@ export class GraphRAGEngine extends EventEmitter {
         ...e,
         documentId,
         beeId: options.beeId ?? null,
-        extractedAt: new Date().toISOString(),
+        extractedAt: new Date().toISOString()
       }));
-
       result.relationships = result.relationships.map(r => ({
         ...r,
         documentId,
         beeId: options.beeId ?? null,
-        extractedAt: new Date().toISOString(),
+        extractedAt: new Date().toISOString()
       }));
-
       this.logger.info(`[GraphRAG] Extracted ${result.entities.length} entities, ${result.relationships.length} relationships in ${Date.now() - startTime}ms`);
-
       this.emit('entities:extracted', {
-        count:    result.entities.length,
+        count: result.entities.length,
         relCount: result.relationships.length,
-        durationMs: Date.now() - startTime,
+        durationMs: Date.now() - startTime
       });
-
       return result;
-
     } catch (err) {
       this.logger.error('[GraphRAG] Entity extraction failed:', err.message);
       throw err;
@@ -285,36 +269,30 @@ export class GraphRAGEngine extends EventEmitter {
    * @private LLM-based entity extraction
    */
   async _extractWithLLM(text, options) {
-    const prompt  = ENTITY_EXTRACTION_PROMPT(text);
-    const response = await this.llmClient.chat([
-      { role: 'user', content: prompt },
-    ], {
-      /**
-       * PHI_TEMPERATURE = PSI^3 ~= 0.236 — phi-derived softmax temperature.
-       * Sharper than 1.0 (standard) but more stable than 0.1 (old hardcoded).
-       * Prevents routing collapse while maintaining decisiveness.
-       */
+    const prompt = ENTITY_EXTRACTION_PROMPT(text);
+    const response = await this.llmClient.chat([{
+      role: 'user',
+      content: prompt
+    }], {
       temperature: PHI_TEMPERATURE,
-      maxTokens:   2000,
-      responseFormat: { type: 'json_object' },
+      maxTokens: 2000,
+      responseFormat: {
+        type: 'json_object'
+      }
     });
-
     let parsed;
     try {
       // Handle both direct JSON and markdown-wrapped JSON
       const raw = response.content ?? response.message ?? response;
-      const jsonStr = typeof raw === 'string'
-        ? raw.replace(/```json\n?|\n?```/g, '').trim()
-        : JSON.stringify(raw);
+      const jsonStr = typeof raw === 'string' ? raw.replace(/```json\n?|\n?```/g, '').trim() : JSON.stringify(raw);
       parsed = JSON.parse(jsonStr);
     } catch (parseErr) {
       this.logger.warn('[GraphRAG] LLM returned non-JSON, falling back to regex extraction');
       return this._extractWithRegex(text, options);
     }
-
     return {
-      entities:      Array.isArray(parsed.entities)      ? parsed.entities      : [],
-      relationships: Array.isArray(parsed.relationships) ? parsed.relationships : [],
+      entities: Array.isArray(parsed.entities) ? parsed.entities : [],
+      relationships: Array.isArray(parsed.relationships) ? parsed.relationships : []
     };
   }
 
@@ -324,9 +302,9 @@ export class GraphRAGEngine extends EventEmitter {
    * basic graph construction without an LLM dependency.
    */
   async _extractWithRegex(text, _options) {
-    const entities      = [];
+    const entities = [];
     const relationships = [];
-    const seen          = new Set();
+    const seen = new Set();
 
     // Match capitalized phrases (2–5 words) as candidate entities
     const phraseRe = /\b([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,4})\b/g;
@@ -337,9 +315,9 @@ export class GraphRAGEngine extends EventEmitter {
         seen.add(name);
         entities.push({
           name,
-          type:        'CONCEPT',
+          type: 'CONCEPT',
           description: `Mentioned in document`,
-          aliases:     [],
+          aliases: []
         });
       }
       if (entities.length >= DEFAULT_BUILD_OPTIONS.maxEntitiesPerDoc) break;
@@ -348,19 +326,21 @@ export class GraphRAGEngine extends EventEmitter {
     // Build simple co-occurrence relationships for entities close together
     for (let i = 0; i < Math.min(entities.length - 1, 20); i++) {
       relationships.push({
-        source:      entities[i].name,
-        target:      entities[i + 1].name,
-        type:        RELATIONSHIP_TYPES.RELATED_TO,
+        source: entities[i].name,
+        target: entities[i + 1].name,
+        type: RELATIONSHIP_TYPES.RELATED_TO,
         description: 'Co-occurring entities',
         /**
          * PHI_FALLBACK_REL_WEIGHT = PSI^2 ~= 0.382 — phi-derived co-occurrence
          * weight for regex-extracted relationships. Replaces arbitrary 0.3.
          */
-        weight:      PHI_FALLBACK_REL_WEIGHT,
+        weight: PHI_FALLBACK_REL_WEIGHT
       });
     }
-
-    return { entities, relationships };
+    return {
+      entities,
+      relationships
+    };
   }
 
   // ─── Graph Construction ─────────────────────────────────────────────────────
@@ -378,12 +358,16 @@ export class GraphRAGEngine extends EventEmitter {
    * @returns {Promise<{entityIds: string[], relationshipIds: string[]}>}
    */
   async buildGraph(entities, relationships, options = {}) {
-    const opts = { ...DEFAULT_BUILD_OPTIONS, ...options };
-
+    const opts = {
+      ...DEFAULT_BUILD_OPTIONS,
+      ...options
+    };
     if (!entities?.length && !relationships?.length) {
-      return { entityIds: [], relationshipIds: [] };
+      return {
+        entityIds: [],
+        relationshipIds: []
+      };
     }
-
     const client = await this.pool.connect();
     try {
       await client.query('BEGIN');
@@ -393,7 +377,7 @@ export class GraphRAGEngine extends EventEmitter {
       for (const entity of entities.slice(0, opts.maxEntitiesPerDoc)) {
         const dbId = await this._upsertEntity(client, entity, opts);
         entityIdMap.set(entity.name, dbId);
-        for (const alias of (entity.aliases ?? [])) {
+        for (const alias of entity.aliases ?? []) {
           entityIdMap.set(alias, dbId);
         }
       }
@@ -404,31 +388,25 @@ export class GraphRAGEngine extends EventEmitter {
         const sourceId = entityIdMap.get(rel.source);
         const targetId = entityIdMap.get(rel.target);
         if (!sourceId || !targetId) continue;
-
         const relId = await this._upsertRelationship(client, {
           ...rel,
           sourceId,
-          targetId,
+          targetId
         });
         if (relId) relationshipIds.push(relId);
       }
-
       await client.query('COMMIT');
-
-      this._stats.entitiesInserted      += entityIdMap.size;
+      this._stats.entitiesInserted += entityIdMap.size;
       this._stats.relationshipsInserted += relationshipIds.length;
-
       this.emit('graph:updated', {
-        entityCount:       entityIdMap.size,
+        entityCount: entityIdMap.size,
         relationshipCount: relationshipIds.length,
-        graphId:           this.graphId,
+        graphId: this.graphId
       });
-
       return {
-        entityIds:       Array.from(entityIdMap.values()),
-        relationshipIds,
+        entityIds: Array.from(entityIdMap.values()),
+        relationshipIds
       };
-
     } catch (err) {
       await client.query('ROLLBACK');
       this.logger.error('[GraphRAG] buildGraph failed:', err.message);
@@ -444,9 +422,8 @@ export class GraphRAGEngine extends EventEmitter {
   async _upsertEntity(client, entity, opts) {
     // Generate embedding for the entity (name + description)
     const entityText = `${entity.name}: ${entity.description ?? ''}`;
-    const embedding  = await this._getEmbedding(entityText);
+    const embedding = await this._getEmbedding(entityText);
     const embeddingStr = embedding ? `[${embedding.join(',')}]` : null;
-
     if (opts.deduplicateEntities && embedding) {
       // Check for similar existing entity
       const dupCheck = await client.query(`
@@ -458,7 +435,6 @@ export class GraphRAGEngine extends EventEmitter {
         ORDER BY embedding <=> $2::vector
         LIMIT 1
       `, [this.graphId, embeddingStr, opts.similarityThreshold]);
-
       if (dupCheck.rows.length > 0) {
         const existing = dupCheck.rows[0];
         // Merge: update description if we have more info; increment mention count
@@ -477,7 +453,6 @@ export class GraphRAGEngine extends EventEmitter {
             updated_at    = NOW()
           WHERE id = $1
         `, [existing.id, entity.description ?? existing.description, entity.aliases ?? []]);
-
         this._stats.entitiesUpdated++;
         return existing.id;
       }
@@ -500,17 +475,7 @@ export class GraphRAGEngine extends EventEmitter {
         ),
         updated_at    = NOW()
       RETURNING id
-    `, [
-      this.graphId,
-      entity.name,
-      entity.type ?? 'CONCEPT',
-      entity.description ?? '',
-      entity.aliases ?? [],
-      embeddingStr,
-      entity.documentId ?? null,
-      entity.beeId ?? null,
-    ]);
-
+    `, [this.graphId, entity.name, entity.type ?? 'CONCEPT', entity.description ?? '', entity.aliases ?? [], embeddingStr, entity.documentId ?? null, entity.beeId ?? null]);
     return result.rows[0].id;
   }
 
@@ -534,18 +499,8 @@ export class GraphRAGEngine extends EventEmitter {
         occurrence_count = graph_rag_relationships.occurrence_count + 1,
         updated_at  = NOW()
       RETURNING id
-    `, [
-      this.graphId,
-      rel.sourceId,
-      rel.targetId,
-      rel.type ?? RELATIONSHIP_TYPES.RELATED_TO,
-      rel.description ?? '',
-      /** PHI_DEFAULT_REL_WEIGHT = PSI ~= 0.618 — phi-derived default, replaces 0.5 */
-      rel.weight ?? PHI_DEFAULT_REL_WEIGHT,
-      rel.documentId ?? null,
-      rel.beeId ?? null,
-    ]);
-
+    `, [this.graphId, rel.sourceId, rel.targetId, rel.type ?? RELATIONSHIP_TYPES.RELATED_TO, rel.description ?? '', /** PHI_DEFAULT_REL_WEIGHT = PSI ~= 0.618 — phi-derived default, replaces 0.5 */
+    rel.weight ?? PHI_DEFAULT_REL_WEIGHT, rel.documentId ?? null, rel.beeId ?? null]);
     return result.rows[0]?.id ?? null;
   }
 
@@ -570,52 +525,48 @@ export class GraphRAGEngine extends EventEmitter {
    * @returns {Promise<GraphQueryResult>}
    */
   async queryGraph(question, options = {}) {
-    const opts = { ...DEFAULT_QUERY_OPTIONS, ...options };
+    const opts = {
+      ...DEFAULT_QUERY_OPTIONS,
+      ...options
+    };
     const startTime = Date.now();
     this._stats.queriesExecuted++;
-
     const queryEmbedding = await this._getEmbedding(question);
     if (!queryEmbedding) {
       throw new Error('[GraphRAG] Cannot query graph without embedding support');
     }
-
-    let localContext  = [];
+    let localContext = [];
     let globalContext = [];
 
     // Parallel retrieval for hybrid mode
     if (opts.mode === 'local' || opts.mode === 'hybrid') {
       localContext = await this._localRetrieval(queryEmbedding, question, opts);
     }
-
     if (opts.mode === 'global' || opts.mode === 'hybrid') {
       globalContext = await this._globalRetrieval(queryEmbedding, question, opts);
     }
-
     if (opts.mode === 'naive') {
       localContext = await this._naiveRetrieval(queryEmbedding, opts);
     }
 
     // Merge and deduplicate results
     const merged = this._mergeResults(localContext, globalContext, opts);
-
     const result = {
       question,
-      mode:           opts.mode,
-      entities:       merged.entities,
-      relationships:  merged.relationships,
-      communities:    merged.communities,
-      context:        this._buildContextString(merged),
+      mode: opts.mode,
+      entities: merged.entities,
+      relationships: merged.relationships,
+      communities: merged.communities,
+      context: this._buildContextString(merged),
       queryEmbedding: opts.includeEmbedding ? queryEmbedding : undefined,
-      durationMs:     Date.now() - startTime,
-      hops:           opts.hops,
+      durationMs: Date.now() - startTime,
+      hops: opts.hops
     };
-
     this.emit('graph:queried', {
-      mode:         opts.mode,
-      entityCount:  result.entities.length,
-      durationMs:   result.durationMs,
+      mode: opts.mode,
+      entityCount: result.entities.length,
+      durationMs: result.durationMs
     });
-
     return result;
   }
 
@@ -624,7 +575,7 @@ export class GraphRAGEngine extends EventEmitter {
    */
   async _localRetrieval(queryEmbedding, question, opts) {
     const embeddingStr = `[${queryEmbedding.join(',')}]`;
-    const beeFilter    = opts.beeId ? `AND e.bee_id = '${opts.beeId}'` : '';
+    const beeFilter = opts.beeId ? `AND e.bee_id = '${opts.beeId}'` : '';
 
     // Step 1: Find anchor entities via dense similarity
     const anchorQuery = await this.pool.query(`
@@ -642,16 +593,16 @@ export class GraphRAGEngine extends EventEmitter {
       ORDER BY e.embedding <=> $1::vector
       LIMIT $3
     `, [embeddingStr, this.graphId, Math.ceil(opts.limit * PHI)]);
-
-    if (anchorQuery.rows.length === 0) return { entities: [], relationships: [] };
-
+    if (anchorQuery.rows.length === 0) return {
+      entities: [],
+      relationships: []
+    };
     const anchorIds = anchorQuery.rows.map(r => r.id);
 
     // Step 2: Multi-hop BFS traversal
     const visitedEntityIds = new Set(anchorIds);
-    let   frontier         = [...anchorIds];
+    let frontier = [...anchorIds];
     const allRelationships = [];
-
     for (let hop = 0; hop < opts.hops && frontier.length > 0; hop++) {
       const placeholders = frontier.map((_, i) => `$${i + 3}`).join(',');
       const relQuery = await this.pool.query(`
@@ -677,7 +628,6 @@ export class GraphRAGEngine extends EventEmitter {
         ORDER BY r.weight DESC
         LIMIT 200
       `, [this.graphId, opts.minWeight, ...frontier, ...frontier]);
-
       allRelationships.push(...relQuery.rows);
 
       // Discover new entities for next hop
@@ -695,15 +645,14 @@ export class GraphRAGEngine extends EventEmitter {
 
     // Fetch full entity details for all visited nodes
     const allEntityIds = Array.from(visitedEntityIds);
-    const entityQuery  = await this.pool.query(`
+    const entityQuery = await this.pool.query(`
       SELECT id, name, entity_type, description, mention_count
       FROM graph_rag_entities
       WHERE id = ANY($1::uuid[])
     `, [allEntityIds]);
-
     return {
-      entities:      entityQuery.rows,
-      relationships: this._deduplicateRelationships(allRelationships),
+      entities: entityQuery.rows,
+      relationships: this._deduplicateRelationships(allRelationships)
     };
   }
 
@@ -712,7 +661,6 @@ export class GraphRAGEngine extends EventEmitter {
    */
   async _globalRetrieval(queryEmbedding, question, opts) {
     const embeddingStr = `[${queryEmbedding.join(',')}]`;
-
     const communityQuery = await this.pool.query(`
       SELECT
         c.id,
@@ -727,11 +675,10 @@ export class GraphRAGEngine extends EventEmitter {
       ORDER BY c.summary_embedding <=> $1::vector
       LIMIT $3
     `, [embeddingStr, this.graphId, opts.limit]);
-
     return {
-      entities:      [],
+      entities: [],
       relationships: [],
-      communities:   communityQuery.rows,
+      communities: communityQuery.rows
     };
   }
 
@@ -740,7 +687,6 @@ export class GraphRAGEngine extends EventEmitter {
    */
   async _naiveRetrieval(queryEmbedding, opts) {
     const embeddingStr = `[${queryEmbedding.join(',')}]`;
-
     const result = await this.pool.query(`
       SELECT
         id, name, entity_type, description, mention_count,
@@ -750,46 +696,51 @@ export class GraphRAGEngine extends EventEmitter {
       ORDER BY embedding <=> $1::vector
       LIMIT $3
     `, [embeddingStr, this.graphId, opts.limit]);
-
-    return { entities: result.rows, relationships: [], communities: [] };
+    return {
+      entities: result.rows,
+      relationships: [],
+      communities: []
+    };
   }
 
   /**
    * @private Merge local + global results; weight and deduplicate.
    */
   _mergeResults(local, global, opts) {
-    const entityMap      = new Map();
+    const entityMap = new Map();
     const relationshipMap = new Map();
 
     // Add local entities (weighted by localWeight)
-    for (const entity of (local.entities ?? [])) {
+    for (const entity of local.entities ?? []) {
       if (!entityMap.has(entity.id)) {
-        entityMap.set(entity.id, { ...entity, score: (entity.similarity ?? 1) * opts.localWeight });
+        entityMap.set(entity.id, {
+          ...entity,
+          score: (entity.similarity ?? 1) * opts.localWeight
+        });
       }
     }
 
     // Add global entities (if any)
-    for (const entity of (global.entities ?? [])) {
+    for (const entity of global.entities ?? []) {
       if (entityMap.has(entity.id)) {
         entityMap.get(entity.id).score += (entity.similarity ?? 1) * opts.globalWeight;
       } else {
-        entityMap.set(entity.id, { ...entity, score: (entity.similarity ?? 1) * opts.globalWeight });
+        entityMap.set(entity.id, {
+          ...entity,
+          score: (entity.similarity ?? 1) * opts.globalWeight
+        });
       }
     }
 
     // Deduplicate relationships
-    for (const rel of (local.relationships ?? [])) {
+    for (const rel of local.relationships ?? []) {
       relationshipMap.set(rel.id, rel);
     }
-
-    const sortedEntities = Array.from(entityMap.values())
-      .sort((a, b) => b.score - a.score)
-      .slice(0, opts.limit);
-
+    const sortedEntities = Array.from(entityMap.values()).sort((a, b) => b.score - a.score).slice(0, opts.limit);
     return {
-      entities:      sortedEntities,
+      entities: sortedEntities,
       relationships: Array.from(relationshipMap.values()),
-      communities:   global.communities ?? [],
+      communities: global.communities ?? []
     };
   }
 
@@ -798,34 +749,15 @@ export class GraphRAGEngine extends EventEmitter {
    */
   _buildContextString(merged) {
     const parts = [];
-
     if (merged.entities.length > 0) {
-      parts.push('## Relevant Entities\n' +
-        merged.entities
-          .slice(0, 15)
-          .map(e => `- **${e.name}** (${e.entity_type}): ${e.description}`)
-          .join('\n')
-      );
+      parts.push('## Relevant Entities\n' + merged.entities.slice(0, 15).map(e => `- **${e.name}** (${e.entity_type}): ${e.description}`).join('\n'));
     }
-
     if (merged.relationships.length > 0) {
-      parts.push('\n## Key Relationships\n' +
-        merged.relationships
-          .slice(0, 20)
-          .map(r => `- ${r.source_name} --[${r.relationship_type}]--> ${r.target_name}: ${r.description}`)
-          .join('\n')
-      );
+      parts.push('\n## Key Relationships\n' + merged.relationships.slice(0, 20).map(r => `- ${r.source_name} --[${r.relationship_type}]--> ${r.target_name}: ${r.description}`).join('\n'));
     }
-
     if (merged.communities.length > 0) {
-      parts.push('\n## Community Summaries\n' +
-        merged.communities
-          .slice(0, 3)
-          .map(c => `### Theme (relevance: ${(c.similarity ?? 0).toFixed(2)})\n${c.summary}`)
-          .join('\n\n')
-      );
+      parts.push('\n## Community Summaries\n' + merged.communities.slice(0, 3).map(c => `### Theme (relevance: ${(c.similarity ?? 0).toFixed(2)})\n${c.summary}`).join('\n\n'));
     }
-
     return parts.join('\n');
   }
 
@@ -845,11 +777,12 @@ export class GraphRAGEngine extends EventEmitter {
    * @returns {Promise<{communitiesCreated: number, entitiesAssigned: number}>}
    */
   async communityDetection(options = {}) {
-    const opts = { ...COMMUNITY_OPTIONS, ...options };
+    const opts = {
+      ...COMMUNITY_OPTIONS,
+      ...options
+    };
     const startTime = Date.now();
-
     this.logger.info('[GraphRAG] Starting community detection...');
-
     const client = await this.pool.connect();
     try {
       await client.query('BEGIN');
@@ -863,10 +796,12 @@ export class GraphRAGEngine extends EventEmitter {
         FROM graph_rag_relationships r
         WHERE r.graph_id = $1 AND r.weight >= 0.2
       `, [this.graphId]);
-
       if (graphData.rows.length === 0) {
         await client.query('COMMIT');
-        return { communitiesCreated: 0, entitiesAssigned: 0 };
+        return {
+          communitiesCreated: 0,
+          entitiesAssigned: 0
+        };
       }
 
       // Step 2: Build adjacency map in memory for modularity computation
@@ -874,17 +809,15 @@ export class GraphRAGEngine extends EventEmitter {
 
       // Step 3: Persist communities
       let communitiesCreated = 0;
-      let entitiesAssigned   = 0;
+      let entitiesAssigned = 0;
 
       // Clear existing communities for this graph
       await client.query(`
         DELETE FROM graph_rag_communities WHERE graph_id = $1
       `, [this.graphId]);
-
       await client.query(`
         UPDATE graph_rag_entities SET community_id = NULL WHERE graph_id = $1
       `, [this.graphId]);
-
       for (const [communityIdx, entityIds] of communities.entries()) {
         if (entityIds.length < opts.minCommunitySize) continue;
 
@@ -893,13 +826,10 @@ export class GraphRAGEngine extends EventEmitter {
           SELECT id, name, entity_type, description FROM graph_rag_entities
           WHERE id = ANY($1::uuid[]) AND graph_id = $2
         `, [entityIds, this.graphId]);
-
         const communityEntities = entitiesResult.rows;
 
         // Generate summary if LLM available
-        let summary = `Community of ${communityEntities.length} entities: ` +
-          communityEntities.slice(0, 5).map(e => e.name).join(', ');
-
+        let summary = `Community of ${communityEntities.length} entities: ` + communityEntities.slice(0, 5).map(e => e.name).join(', ');
         if (this.llmClient && options.generateSummaries !== false) {
           const relQuery = await client.query(`
             SELECT r.relationship_type, r.description, se.name AS source_name, te.name AS target_name
@@ -911,12 +841,14 @@ export class GraphRAGEngine extends EventEmitter {
               AND r.target_entity_id = ANY($2::uuid[])
             LIMIT 20
           `, [this.graphId, entityIds]);
-
           try {
-            const prompt   = COMMUNITY_SUMMARY_PROMPT(communityEntities, relQuery.rows);
-            const response = await this.llmClient.chat([{ role: 'user', content: prompt }], {
+            const prompt = COMMUNITY_SUMMARY_PROMPT(communityEntities, relQuery.rows);
+            const response = await this.llmClient.chat([{
+              role: 'user',
+              content: prompt
+            }], {
               temperature: 0.3,
-              maxTokens:   200,
+              maxTokens: 200
             });
             summary = response.content ?? summary;
           } catch (llmErr) {
@@ -926,7 +858,7 @@ export class GraphRAGEngine extends EventEmitter {
 
         // Embed the summary
         const summaryEmbedding = await this._getEmbedding(summary);
-        const summaryEmbStr    = summaryEmbedding ? `[${summaryEmbedding.join(',')}]` : null;
+        const summaryEmbStr = summaryEmbedding ? `[${summaryEmbedding.join(',')}]` : null;
 
         // Insert community record
         const communityResult = await client.query(`
@@ -935,16 +867,11 @@ export class GraphRAGEngine extends EventEmitter {
              relationship_count, summary, summary_embedding)
           VALUES ($1, $2, $3, $4, $5, $6, $7::vector)
           RETURNING id
-        `, [
-          this.graphId,
-          0,                              // level (0 = base communities)
-          entityIds,
-          communityEntities.length,
-          0,                              // relationship_count updated below
-          summary,
-          summaryEmbStr,
-        ]);
-
+        `, [this.graphId, 0,
+        // level (0 = base communities)
+        entityIds, communityEntities.length, 0,
+        // relationship_count updated below
+        summary, summaryEmbStr]);
         const communityId = communityResult.rows[0].id;
 
         // Update entity community assignments
@@ -953,18 +880,19 @@ export class GraphRAGEngine extends EventEmitter {
           SET community_id = $1, updated_at = NOW()
           WHERE id = ANY($2::uuid[]) AND graph_id = $3
         `, [communityId, entityIds, this.graphId]);
-
         communitiesCreated++;
         entitiesAssigned += communityEntities.length;
       }
-
       await client.query('COMMIT');
-
       this.logger.info(`[GraphRAG] Community detection complete: ${communitiesCreated} communities, ${entitiesAssigned} entities assigned in ${Date.now() - startTime}ms`);
-
-      this.emit('communities:detected', { communitiesCreated, entitiesAssigned });
-      return { communitiesCreated, entitiesAssigned };
-
+      this.emit('communities:detected', {
+        communitiesCreated,
+        entitiesAssigned
+      });
+      return {
+        communitiesCreated,
+        entitiesAssigned
+      };
     } catch (err) {
       await client.query('ROLLBACK');
       this.logger.error('[GraphRAG] Community detection failed:', err.message);
@@ -981,17 +909,26 @@ export class GraphRAGEngine extends EventEmitter {
    */
   _runGreedyModularity(edges, opts) {
     // Build adjacency set
-    const adj      = new Map();
+    const adj = new Map();
     const allNodes = new Set();
-
     for (const edge of edges) {
-      const { source_entity_id: s, target_entity_id: t, weight: w } = edge;
+      const {
+        source_entity_id: s,
+        target_entity_id: t,
+        weight: w
+      } = edge;
       allNodes.add(s);
       allNodes.add(t);
       if (!adj.has(s)) adj.set(s, []);
       if (!adj.has(t)) adj.set(t, []);
-      adj.get(s).push({ neighbor: t, weight: w });
-      adj.get(t).push({ neighbor: s, weight: w });
+      adj.get(s).push({
+        neighbor: t,
+        weight: w
+      });
+      adj.get(t).push({
+        neighbor: s,
+        weight: w
+      });
     }
 
     // Initialize: each node in its own community
@@ -1011,22 +948,22 @@ export class GraphRAGEngine extends EventEmitter {
 
         // Find best community among neighbors (by total edge weight)
         const communityWeights = new Map();
-        for (const { neighbor, weight } of neighbors) {
+        for (const {
+          neighbor,
+          weight
+        } of neighbors) {
           const c = community.get(neighbor);
           communityWeights.set(c, (communityWeights.get(c) ?? 0) + weight);
         }
-
         const currentCommunity = community.get(node);
-        let   bestCommunity    = currentCommunity;
-        let   bestWeight       = communityWeights.get(currentCommunity) ?? 0;
-
+        let bestCommunity = currentCommunity;
+        let bestWeight = communityWeights.get(currentCommunity) ?? 0;
         for (const [c, w] of communityWeights) {
           if (w > bestWeight) {
-            bestWeight    = w;
+            bestWeight = w;
             bestCommunity = c;
           }
         }
-
         if (bestCommunity !== currentCommunity) {
           community.set(node, bestCommunity);
           changed = true;
@@ -1040,7 +977,6 @@ export class GraphRAGEngine extends EventEmitter {
       if (!groups.has(c)) groups.set(c, []);
       groups.get(c).push(node);
     }
-
     return Array.from(groups.values());
   }
 
@@ -1051,13 +987,11 @@ export class GraphRAGEngine extends EventEmitter {
    */
   async _getEmbedding(text) {
     if (!this.embeddingRouter) return null;
-
     const cacheKey = crypto.createHash('sha256').update(text).digest('hex').slice(0, 16);
     if (this._entityEmbedCache.has(cacheKey)) {
       this._stats.cacheHits++;
       return this._entityEmbedCache.get(cacheKey);
     }
-
     try {
       const embedding = await this.embeddingRouter.embed(text);
       // LRU eviction: drop oldest entry when at capacity
@@ -1120,11 +1054,12 @@ export class GraphRAGEngine extends EventEmitter {
         (SELECT COUNT(*) FROM graph_rag_relationships WHERE graph_id = $1) AS relationship_count,
         (SELECT COUNT(*) FROM graph_rag_communities   WHERE graph_id = $1) AS community_count
     `, [this.graphId]);
-
     return {
       ...result.rows[0],
-      runtimeStats: { ...this._stats },
-      graphId:      this.graphId,
+      runtimeStats: {
+        ...this._stats
+      },
+      graphId: this.graphId
     };
   }
 }

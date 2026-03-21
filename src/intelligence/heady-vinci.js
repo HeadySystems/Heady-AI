@@ -5,42 +5,52 @@
 
 'use strict';
 
-const { EventEmitter } = require('events');
+const {
+  EventEmitter
+} = require('events');
 const logger = require('../utils/logger');
-const { PatternEngine } = require('../patterns/pattern-engine');
-const { HeadyConductor } = require('../orchestration/heady-conductor');
-const { InstructionPatternLearner } = require('./instruction-pattern-learner');
-
+const {
+  PatternEngine
+} = require('../patterns/pattern-engine');
+const {
+  HeadyConductor
+} = require('../orchestration/heady-conductor');
+const {
+  InstructionPatternLearner
+} = require('./instruction-pattern-learner');
 const PHI = 1.6180339887;
 
 // ─── Plan node types ──────────────────────────────────────────────────────────
 const NodeType = Object.freeze({
-  LLM:         'LLM',
-  BEE:         'BEE',
-  MEMORY:      'MEMORY',
-  PATTERN:     'PATTERN',
-  TOOL:        'TOOL',
-  GOVERNANCE:  'GOVERNANCE',
-  CONDUCTOR:   'CONDUCTOR',
-  PARALLEL:    'PARALLEL',
-  CONDITIONAL: 'CONDITIONAL',
+  LLM: 'LLM',
+  BEE: 'BEE',
+  MEMORY: 'MEMORY',
+  PATTERN: 'PATTERN',
+  TOOL: 'TOOL',
+  GOVERNANCE: 'GOVERNANCE',
+  CONDUCTOR: 'CONDUCTOR',
+  PARALLEL: 'PARALLEL',
+  CONDITIONAL: 'CONDITIONAL'
 });
 
 // ─── Conflict resolution strategies ─────────────────────────────────────────
 const ConflictStrategy = Object.freeze({
-  PRIORITY:   'PRIORITY',    // Higher priority node wins
-  MERGE:      'MERGE',       // Attempt to merge proposals
-  ESCALATE:   'ESCALATE',    // Escalate to human review
-  VOTE:       'VOTE',        // Majority vote across proposals
-  SOCRATIC:   'SOCRATIC',    // Socratic dialogue to find truth
+  PRIORITY: 'PRIORITY',
+  // Higher priority node wins
+  MERGE: 'MERGE',
+  ESCALATE: 'ESCALATE',
+  // Escalate to human review
+  VOTE: 'VOTE',
+  // Majority vote across proposals
+  SOCRATIC: 'SOCRATIC' // Socratic dialogue to find truth
 });
 
 // ─── Reasoning validation states ─────────────────────────────────────────────
 const ReasoningState = Object.freeze({
-  PENDING:   'PENDING',
-  VALID:     'VALID',
-  INVALID:   'INVALID',
-  ESCALATED: 'ESCALATED',
+  PENDING: 'PENDING',
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  ESCALATED: 'ESCALATED'
 });
 
 /**
@@ -68,22 +78,17 @@ class HeadyVinci extends EventEmitter {
    */
   constructor(options = {}) {
     super();
-
-    this._patternEngine  = options.patternEngine || new PatternEngine();
-    this._conductor      = options.conductor     || new HeadyConductor();
+    this._patternEngine = options.patternEngine || new PatternEngine();
+    this._conductor = options.conductor || new HeadyConductor();
     this._patternLearner = options.patternLearner || new InstructionPatternLearner();
-    this._maxPlanDepth   = options.maxPlanDepth   || 5;
+    this._maxPlanDepth = options.maxPlanDepth || 5;
     this._socraticRounds = options.socraticRounds || 3;
 
     // Global mission + values
     this._mission = options.mission || {
       goal: "Serve HeadyConnection's community through equitable, empowering technology",
       values: ['community', 'equity', 'empowerment', 'transparency', 'safety'],
-      constraints: [
-        'No harmful content',
-        'No privacy violations',
-        'Mission-aligned output only',
-      ],
+      constraints: ['No harmful content', 'No privacy violations', 'Mission-aligned output only']
     };
 
     // Node topology registry: nodeId → NodeDescriptor
@@ -99,19 +104,18 @@ class HeadyVinci extends EventEmitter {
     this._reasoningTrace = [];
 
     // Forward pattern learner events
-    this._patternLearner.on('pattern:repeated', (data) => {
+    this._patternLearner.on('pattern:repeated', data => {
       logger.info('[HeadyVinci] 🔄 Repeated pattern detected', data);
       this.emit('pattern:repeated', data);
     });
-    this._patternLearner.on('pattern:automated', (data) => {
+    this._patternLearner.on('pattern:automated', data => {
       logger.info('[HeadyVinci] ⚡ New automation rule created', data);
       this.emit('pattern:automated', data);
     });
-
     logger.info('[HeadyVinci] Initialized', {
       maxPlanDepth: this._maxPlanDepth,
       socraticRounds: this._socraticRounds,
-      learnedRules: this._patternLearner.getAutomationRules().length,
+      learnedRules: this._patternLearner.getAutomationRules().length
     });
   }
 
@@ -130,7 +134,10 @@ class HeadyVinci extends EventEmitter {
    */
   async plan(task, context = {}) {
     const planId = `plan-${task.id}-${Date.now()}`;
-    logger.debug('[HeadyVinci] Planning', { planId, taskType: task.type });
+    logger.debug('[HeadyVinci] Planning', {
+      planId,
+      taskType: task.type
+    });
 
     // Step 0: Check for known instruction patterns (auto-handle repeated commands)
     const instructionText = task.payload?.instruction || task.payload?.text || '';
@@ -139,9 +146,12 @@ class HeadyVinci extends EventEmitter {
       logger.info('[HeadyVinci] ⚡ Auto-matched instruction pattern', {
         ruleId: matchedRule.id,
         canonical: matchedRule.canonical,
-        confidence: matchedRule.confidence,
+        confidence: matchedRule.confidence
       });
-      this.emit('pattern:auto_matched', { planId, rule: matchedRule });
+      this.emit('pattern:auto_matched', {
+        planId,
+        rule: matchedRule
+      });
     }
 
     // Record instruction for future learning
@@ -153,7 +163,7 @@ class HeadyVinci extends EventEmitter {
     const patterns = await this._patternEngine.match({
       taskType: task.type,
       payload: task.payload,
-      limit: 5,
+      limit: 5
     }).catch(() => []);
 
     // Step 2: Build initial plan
@@ -164,7 +174,6 @@ class HeadyVinci extends EventEmitter {
 
     // Step 4: Prioritize
     const prioritized = this._prioritizeNodes(validated.plan, context);
-
     const executionPlan = {
       planId,
       taskId: task.id,
@@ -172,18 +181,22 @@ class HeadyVinci extends EventEmitter {
       nodes: prioritized,
       strategy: validated.strategy,
       reasoning: validated.reasoning,
-      patterns: patterns.map((p) => p.id || p.name),
+      patterns: patterns.map(p => p.id || p.name),
       missionAlignment: this._assessMissionAlignment(task, context),
       createdAt: Date.now(),
-      depth: this._computeDepth(prioritized),
+      depth: this._computeDepth(prioritized)
     };
-
     this._plans.set(planId, executionPlan);
-    this.emit('plan:created', { planId, taskId: task.id, nodeCount: prioritized.length });
-    logger.info('[HeadyVinci] Plan created', {
-      planId, taskId: task.id, nodes: prioritized.length,
+    this.emit('plan:created', {
+      planId,
+      taskId: task.id,
+      nodeCount: prioritized.length
     });
-
+    logger.info('[HeadyVinci] Plan created', {
+      planId,
+      taskId: task.id,
+      nodes: prioritized.length
+    });
     return executionPlan;
   }
 
@@ -199,53 +212,52 @@ class HeadyVinci extends EventEmitter {
     if (!proposals || proposals.length === 0) {
       throw new Error('[HeadyVinci] resolveConflicts: no proposals provided');
     }
-    if (proposals.length === 1) return { resolved: proposals[0], strategy: 'UNCONTESTED' };
-
+    if (proposals.length === 1) return {
+      resolved: proposals[0],
+      strategy: 'UNCONTESTED'
+    };
     logger.debug('[HeadyVinci] Resolving conflicts', {
-      count: proposals.length, strategy,
+      count: proposals.length,
+      strategy
     });
-
     let resolved;
-
     switch (strategy) {
       case ConflictStrategy.PRIORITY:
         resolved = this._resolveByPriority(proposals);
         break;
-
       case ConflictStrategy.MERGE:
         resolved = this._resolveByMerge(proposals);
         break;
-
       case ConflictStrategy.VOTE:
         resolved = this._resolveByVote(proposals);
         break;
-
-      case ConflictStrategy.SOCRATIC: {
-        const socratic = await this._socraticConflictResolution(proposals);
-        resolved = socratic;
-        break;
-      }
-
+      case ConflictStrategy.SOCRATIC:
+        {
+          const socratic = await this._socraticConflictResolution(proposals);
+          resolved = socratic;
+          break;
+        }
       case ConflictStrategy.ESCALATE:
-        this.emit('conflict:escalated', { proposals });
+        this.emit('conflict:escalated', {
+          proposals
+        });
         resolved = proposals[0]; // Return first pending escalation
         break;
-
       default:
         resolved = this._resolveByPriority(proposals);
     }
-
     const result = {
       resolved,
       strategy,
       competingCount: proposals.length,
-      resolvedAt: Date.now(),
+      resolvedAt: Date.now()
     };
-
     this._conflictHistory.push(result);
     this.emit('conflict:resolved', result);
-    logger.info('[HeadyVinci] Conflict resolved', { strategy, competingCount: proposals.length });
-
+    logger.info('[HeadyVinci] Conflict resolved', {
+      strategy,
+      competingCount: proposals.length
+    });
     return result;
   }
 
@@ -261,18 +273,23 @@ class HeadyVinci extends EventEmitter {
   registerNode(node) {
     if (!node.id) throw new Error('[HeadyVinci] registerNode: node.id required');
     if (!node.type) throw new Error('[HeadyVinci] registerNode: node.type required');
-
     const descriptor = {
       id: node.id,
       type: node.type,
       meta: node.meta || {},
       registeredAt: Date.now(),
       status: 'ACTIVE',
-      relationships: [],
+      relationships: []
     };
     this._topology.set(node.id, descriptor);
-    this.emit('topology:node:registered', { nodeId: node.id, type: node.type });
-    logger.debug('[HeadyVinci] Node registered', { nodeId: node.id, type: node.type });
+    this.emit('topology:node:registered', {
+      nodeId: node.id,
+      type: node.type
+    });
+    logger.debug('[HeadyVinci] Node registered', {
+      nodeId: node.id,
+      type: node.type
+    });
   }
 
   /**
@@ -283,12 +300,18 @@ class HeadyVinci extends EventEmitter {
    */
   linkNodes(fromNodeId, toNodeId, relation = 'feeds') {
     const from = this._topology.get(fromNodeId);
-    const to   = this._topology.get(toNodeId);
+    const to = this._topology.get(toNodeId);
     if (!from) throw new Error(`[HeadyVinci] Node not found: ${fromNodeId}`);
-    if (!to)   throw new Error(`[HeadyVinci] Node not found: ${toNodeId}`);
-
-    from.relationships.push({ target: toNodeId, relation });
-    this.emit('topology:link', { from: fromNodeId, to: toNodeId, relation });
+    if (!to) throw new Error(`[HeadyVinci] Node not found: ${toNodeId}`);
+    from.relationships.push({
+      target: toNodeId,
+      relation
+    });
+    this.emit('topology:link', {
+      from: fromNodeId,
+      to: toNodeId,
+      relation
+    });
   }
 
   /**
@@ -299,7 +322,7 @@ class HeadyVinci extends EventEmitter {
     return {
       nodes: Array.from(this._topology.values()),
       nodeCount: this._topology.size,
-      snapshotAt: Date.now(),
+      snapshotAt: Date.now()
     };
   }
 
@@ -341,7 +364,7 @@ class HeadyVinci extends EventEmitter {
     return {
       patterns: this._patternLearner.getPatterns(),
       rules: this._patternLearner.getAutomationRules(),
-      stats: this._patternLearner.getStats(),
+      stats: this._patternLearner.getStats()
     };
   }
 
@@ -377,7 +400,7 @@ class HeadyVinci extends EventEmitter {
       order: order++,
       priority: 10,
       label: 'Retrieve relevant memory',
-      required: false,
+      required: false
     });
 
     // Pattern-based node injection
@@ -389,7 +412,7 @@ class HeadyVinci extends EventEmitter {
         priority: 8,
         label: 'Apply matching patterns',
         required: false,
-        patterns: patterns.map((p) => p.id),
+        patterns: patterns.map(p => p.id)
       });
     }
 
@@ -398,9 +421,10 @@ class HeadyVinci extends EventEmitter {
       id: `${task.id}:governance`,
       type: NodeType.GOVERNANCE,
       order: order++,
-      priority: 100, // Highest — always runs
+      priority: 100,
+      // Highest — always runs
       label: 'Governance and policy check',
-      required: true,
+      required: true
     });
 
     // Main execution node — type depends on task
@@ -411,7 +435,7 @@ class HeadyVinci extends EventEmitter {
         order: order++,
         priority: 9,
         label: 'LLM inference',
-        required: true,
+        required: true
       });
     } else if (task.type === 'search' || task.type === 'lookup') {
       nodes.push({
@@ -421,7 +445,7 @@ class HeadyVinci extends EventEmitter {
         priority: 9,
         label: 'Search tool execution',
         required: true,
-        tool: 'search',
+        tool: 'search'
       });
     } else {
       // Default: route through conductor
@@ -431,67 +455,63 @@ class HeadyVinci extends EventEmitter {
         order: order++,
         priority: 9,
         label: 'Conductor routing',
-        required: true,
+        required: true
       });
     }
-
     return {
       nodes,
       strategy: 'SEQUENTIAL',
-      reasoning: [`Initial plan for task type: ${task.type}`],
+      reasoning: [`Initial plan for task type: ${task.type}`]
     };
   }
 
   // ─── Socratic Loop ────────────────────────────────────────────────────────────
 
-  /**
-   * Validate and refine a plan draft through Socratic questioning.
-   * Each round challenges an assumption in the plan and attempts to
-   * find a better answer.
-   *
-   * @param {object} draft   - Draft plan
-   * @param {object} task
-   * @returns {Promise<ValidatedPlan>}
-   */
   async _socraticLoop(draft, task) {
-    let current = { ...draft };
+    let current = {
+      ...draft
+    };
     const traceEntry = {
       taskId: task.id,
       rounds: [],
       state: ReasoningState.PENDING,
-      startedAt: Date.now(),
+      startedAt: Date.now()
     };
-
     for (let round = 0; round < this._socraticRounds; round++) {
       const challenge = this._generateChallenge(current, task, round);
-      const response  = await this._answerChallenge(challenge, current, task);
-
-      traceEntry.rounds.push({ round, challenge, response });
-
+      const response = await this._answerChallenge(challenge, current, task);
+      traceEntry.rounds.push({
+        round,
+        challenge,
+        response
+      });
       if (response.refine) {
         current = response.refinedPlan || current;
-        logger.debug('[HeadyVinci:Socratic] Plan refined', { round, taskId: task.id });
+        logger.debug('[HeadyVinci:Socratic] Plan refined', {
+          round,
+          taskId: task.id
+        });
       }
-
       if (response.state === ReasoningState.INVALID) {
         traceEntry.state = ReasoningState.ESCALATED;
-        this.emit('reasoning:escalated', { taskId: task.id, round, challenge });
+        this.emit('reasoning:escalated', {
+          taskId: task.id,
+          round,
+          challenge
+        });
         break;
       }
     }
-
     if (traceEntry.state !== ReasoningState.ESCALATED) {
       traceEntry.state = ReasoningState.VALID;
     }
-
     traceEntry.completedAt = Date.now();
     this._reasoningTrace.push(traceEntry);
-
     return {
       plan: current.nodes,
       strategy: current.strategy,
       reasoning: current.reasoning,
-      socraticTrace: traceEntry,
+      socraticTrace: traceEntry
     };
   }
 
@@ -499,13 +519,7 @@ class HeadyVinci extends EventEmitter {
    * Generate a Socratic challenge for the current plan.
    */
   _generateChallenge(plan, task, round) {
-    const challenges = [
-      `Why is this the right order of nodes for task type "${task.type}"?`,
-      `Are all required nodes present? Could any be removed without loss?`,
-      `Does this plan align with the mission values: ${this._mission.values.join(', ')}?`,
-      `What is the failure mode if the LLM node returns empty? Is there a fallback?`,
-      `Is governance check positioned before execution? (It must be.)`,
-    ];
+    const challenges = [`Why is this the right order of nodes for task type "${task.type}"?`, `Are all required nodes present? Could any be removed without loss?`, `Does this plan align with the mission values: ${this._mission.values.join(', ')}?`, `What is the failure mode if the LLM node returns empty? Is there a fallback?`, `Is governance check positioned before execution? (It must be.)`];
     return challenges[round % challenges.length];
   }
 
@@ -518,26 +532,25 @@ class HeadyVinci extends EventEmitter {
       answer: null,
       refine: false,
       refinedPlan: null,
-      state: ReasoningState.VALID,
+      state: ReasoningState.VALID
     };
 
     // Check: governance before execution
-    const govIndex  = plan.nodes.findIndex((n) => n.type === NodeType.GOVERNANCE);
-    const execIndex = plan.nodes.findIndex((n) =>
-      [NodeType.LLM, NodeType.TOOL, NodeType.CONDUCTOR, NodeType.BEE].includes(n.type)
-    );
-
+    const govIndex = plan.nodes.findIndex(n => n.type === NodeType.GOVERNANCE);
+    const execIndex = plan.nodes.findIndex(n => [NodeType.LLM, NodeType.TOOL, NodeType.CONDUCTOR, NodeType.BEE].includes(n.type));
     if (govIndex !== -1 && execIndex !== -1 && govIndex > execIndex) {
       // Governance is after execution — fix it
       const nodes = [...plan.nodes];
       const govNode = nodes.splice(govIndex, 1)[0];
       nodes.splice(execIndex, 0, govNode);
       response.refine = true;
-      response.refinedPlan = { ...plan, nodes };
+      response.refinedPlan = {
+        ...plan,
+        nodes
+      };
       response.answer = 'Governance node repositioned before execution';
       plan.reasoning.push('Socratic: governance moved before execution node');
     }
-
     return response;
   }
 
@@ -549,13 +562,12 @@ class HeadyVinci extends EventEmitter {
   _prioritizeNodes(nodes, context) {
     const priority = context?.priority || 'normal';
     const boost = priority === 'high' ? 5 : priority === 'low' ? -2 : 0;
-
     return [...nodes].sort((a, b) => {
       // Required nodes always first
       if (a.required && !b.required) return -1;
       if (!a.required && b.required) return 1;
       // Then by priority score
-      return (b.priority + boost) - (a.priority + boost);
+      return b.priority + boost - (a.priority + boost);
     });
   }
 
@@ -568,14 +580,12 @@ class HeadyVinci extends EventEmitter {
       return pScore > bScore ? p : best;
     });
   }
-
   _resolveByMerge(proposals) {
     // Deep merge all proposal objects
     return proposals.reduce((merged, p) => {
       return this._deepMerge(merged, p);
     }, {});
   }
-
   _resolveByVote(proposals) {
     // Each proposal votes for itself; winner is most common value
     const counts = new Map();
@@ -593,13 +603,14 @@ class HeadyVinci extends EventEmitter {
     }
     return best;
   }
-
   async _socraticConflictResolution(proposals) {
-    logger.debug('[HeadyVinci] Socratic conflict resolution', { count: proposals.length });
+    logger.debug('[HeadyVinci] Socratic conflict resolution', {
+      count: proposals.length
+    });
     // Challenge each proposal against the mission
-    const scored = proposals.map((p) => ({
+    const scored = proposals.map(p => ({
       proposal: p,
-      alignment: this._assessMissionAlignment(p, {}),
+      alignment: this._assessMissionAlignment(p, {})
     }));
     scored.sort((a, b) => b.alignment.score - a.alignment.score);
     return scored[0].proposal;
@@ -622,8 +633,10 @@ class HeadyVinci extends EventEmitter {
       score -= 0.3;
       flags.push('potential_harm');
     }
-
-    return { score: Math.max(0, score), flags };
+    return {
+      score: Math.max(0, score),
+      flags
+    };
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -631,17 +644,12 @@ class HeadyVinci extends EventEmitter {
   _computeDepth(nodes) {
     return nodes.reduce((max, n) => Math.max(max, n.order || 0), 0) + 1;
   }
-
   _deepMerge(target, source) {
-    const out = { ...target };
+    const out = {
+      ...target
+    };
     for (const key of Object.keys(source)) {
-      if (
-        source[key] !== null &&
-        typeof source[key] === 'object' &&
-        !Array.isArray(source[key]) &&
-        key in target &&
-        typeof target[key] === 'object'
-      ) {
+      if (source[key] !== null && typeof source[key] === 'object' && !Array.isArray(source[key]) && key in target && typeof target[key] === 'object') {
         out[key] = this._deepMerge(target[key], source[key]);
       } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
         out[key] = [...target[key], ...source[key]];
@@ -654,4 +662,10 @@ class HeadyVinci extends EventEmitter {
 }
 
 // ─── Exports ──────────────────────────────────────────────────────────────────
-module.exports = { HeadyVinci, NodeType, ConflictStrategy, ReasoningState, PHI };
+module.exports = {
+  HeadyVinci,
+  NodeType,
+  ConflictStrategy,
+  ReasoningState,
+  PHI
+};

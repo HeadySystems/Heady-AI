@@ -1,3 +1,5 @@
+import { createLogger } from '../utils/logger';
+const logger = createLogger('auto-fixed');
 /**
  * Common Express Middleware Stack
  *
@@ -99,10 +101,7 @@ export interface MiddlewareStackConfig {
  * });
  * ```
  */
-export function buildMiddlewareStack(
-  app: Express,
-  config: MiddlewareStackConfig = {}
-): void {
+export function buildMiddlewareStack(app: Express, config: MiddlewareStackConfig = {}): void {
   // Set config defaults
   const {
     cors: enableCors = true,
@@ -113,11 +112,12 @@ export function buildMiddlewareStack(
     errorHandler: enableErrorHandler = true,
     environment = process.env.NODE_ENV,
     rateLimitConfig = {
-      windowMs: 60 * 1000, // 1 minute
-      maxRequests: 100,
+      windowMs: 60 * 1000,
+      // 1 minute
+      maxRequests: 100
     },
     excludeFromLogging = ['/health', '/alive', '/ready', '/metrics'],
-    redactFields = ['password', 'token', 'apiKey', 'authorization'],
+    redactFields = ['password', 'token', 'apiKey', 'authorization']
   } = config;
 
   // Middleware order is critical!
@@ -138,17 +138,21 @@ export function buildMiddlewareStack(
 
   // 4. Compression middleware
   if (enableCompression) {
-    app.use(
-      compression({
-        threshold: 1024, // Only compress responses > 1KB
-        level: 6, // Compression level (0-9)
-      })
-    );
+    app.use(compression({
+      threshold: 1024,
+      // Only compress responses > 1KB
+      level: 6 // Compression level (0-9)
+    }));
   }
 
   // 5. Body parsing middleware
-  app.use(require('express').json({ limit: '10mb' }));
-  app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
+  app.use(require('express').json({
+    limit: '10mb'
+  }));
+  app.use(require('express').urlencoded({
+    limit: '10mb',
+    extended: true
+  }));
 
   // 6. Request logging middleware
   if (enableRequestLogging) {
@@ -175,15 +179,9 @@ export function buildMiddlewareStack(
  */
 export function createRequestIdMiddleware() {
   return (req: Request, res: Response, next: NextFunction) => {
-    const requestId =
-      req.headers['x-request-id']
-      || req.headers['x-correlation-id']
-      || req.headers['trace-id']
-      || generateRequestId();
-
+    const requestId = req.headers['x-request-id'] || req.headers['x-correlation-id'] || req.headers['trace-id'] || generateRequestId();
     req.id = String(requestId);
     res.setHeader('X-Request-ID', req.id);
-
     next();
   };
 }
@@ -197,16 +195,12 @@ export function createRequestIdMiddleware() {
  * @param redactFields - Fields to redact from logs
  * @returns Express middleware
  */
-export function createRequestLoggingMiddleware(
-  excludedPaths: string[] = [],
-  redactFields: string[] = []
-) {
+export function createRequestLoggingMiddleware(excludedPaths: string[] = [], redactFields: string[] = []) {
   return (req: Request, res: Response, next: NextFunction) => {
     // Skip logging for excluded paths
     if (excludedPaths.some(path => req.path.startsWith(path))) {
       return next();
     }
-
     const startTime = Date.now();
     const context = createLogContextFromRequest(req);
 
@@ -215,10 +209,9 @@ export function createRequestLoggingMiddleware(
       method: req.method,
       path: req.path,
       query: redactSensitiveFields(req.query, redactFields),
-      headers: redactSensitiveFields(req.headers, redactFields),
+      headers: redactSensitiveFields(req.headers, redactFields)
     });
-
-    console.log(formatLogEntry(requestLog));
+    logger.info(formatLogEntry(requestLog));
 
     // Hook response finish event
     res.on('finish', () => {
@@ -232,12 +225,10 @@ export function createRequestLoggingMiddleware(
         path: req.path,
         statusCode,
         duration,
-        contentLength: res.get('content-length'),
+        contentLength: res.get('content-length')
       });
-
-      console.log(formatLogEntry(responseLog));
+      logger.info(formatLogEntry(responseLog));
     });
-
     next();
   };
 }
@@ -256,7 +247,6 @@ export function createRateLimitMiddleware(config: {
   message?: string;
 }) {
   const requests = new Map<string, number[]>();
-
   return (req: Request, res: Response, next: NextFunction) => {
     const ip = req.ip || 'unknown';
     const now = Date.now();
@@ -265,23 +255,18 @@ export function createRateLimitMiddleware(config: {
     // Get or create request times for this IP
     let times = requests.get(ip) || [];
     times = times.filter(time => time > windowStart);
-
     if (times.length >= config.maxRequests) {
       // Set rate limit headers
       res.setHeader('X-RateLimit-Limit', config.maxRequests);
       res.setHeader('X-RateLimit-Remaining', 0);
-      res.setHeader(
-        'X-RateLimit-Reset',
-        new Date(Math.max(...times) + config.windowMs).toISOString()
-      );
-
+      res.setHeader('X-RateLimit-Reset', new Date(Math.max(...times) + config.windowMs).toISOString());
       return res.status(429).json({
         error: {
           code: 'HEADY_RATE_LIMIT_EXCEEDED',
           message: config.message || 'Too many requests',
           statusCode: 429,
-          timestamp: new Date().toISOString(),
-        },
+          timestamp: new Date().toISOString()
+        }
       });
     }
 
@@ -292,11 +277,7 @@ export function createRateLimitMiddleware(config: {
     // Set rate limit headers
     res.setHeader('X-RateLimit-Limit', config.maxRequests);
     res.setHeader('X-RateLimit-Remaining', config.maxRequests - times.length);
-    res.setHeader(
-      'X-RateLimit-Reset',
-      new Date(Math.max(...times) + config.windowMs).toISOString()
-    );
-
+    res.setHeader('X-RateLimit-Reset', new Date(Math.max(...times) + config.windowMs).toISOString());
     next();
   };
 }
@@ -322,23 +303,21 @@ export function createErrorHandlerMiddleware() {
         statusCode,
         timestamp: new Date().toISOString(),
         requestId,
-        details: err.details || {},
-      },
+        details: err.details || {}
+      }
     };
 
     // Log error
     const errorLog = createLogEntry('error', `Request failed: ${message}`, {
       requestId,
-      service: req.app?.locals?.serviceName,
+      service: req.app?.locals?.serviceName
     });
-
-    console.error(formatLogEntry(errorLog));
+    logger.error(formatLogEntry(errorLog));
 
     // Include stack trace in development
     if (process.env.NODE_ENV === 'development' && err.stack) {
       (errorResponse.error as any).stack = err.stack.split('\n');
     }
-
     res.status(statusCode).json(errorResponse);
   };
 }
@@ -367,10 +346,7 @@ export function generateRequestId(): string {
  * });
  * ```
  */
-export function createCustomMiddleware(
-  name: string,
-  handler: (req: Request, res: Response, next: NextFunction) => Promise<void> | void
-) {
+export function createCustomMiddleware(name: string, handler: (req: Request, res: Response, next: NextFunction) => Promise<void> | void) {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(handler(req, res, next)).catch(next);
   };

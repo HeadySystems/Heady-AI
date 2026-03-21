@@ -13,10 +13,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import {
-  PHI, PSI, FIB,
-  DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING,
-} from '../../shared/midi-constants.js';
+import { PHI, PSI, FIB, DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING } from '../../shared/midi-constants.js';
 
 // ─── Constants ────────────────────────────────────────────────────
 /** API base for sequencer endpoints */
@@ -36,47 +33,28 @@ const POLL_INTERVAL_MS = Math.round(FIB[6] * 100 * PSI); // ≈ 494ms
  * @returns {{ bar: number, beat: number, tick: number }}
  */
 function defaultPosition() {
-  return { bar: 1, beat: 1, tick: 0 };
+  return {
+    bar: 1,
+    beat: 1,
+    tick: 0
+  };
 }
-
-/**
- * Custom React hook for sequencer transport and pattern control.
- *
- * On mount the hook fetches the current sequencer state from the REST API and
- * then subscribes to real-time position updates via the WebSocket event stream.
- * Exposes play/stop/setTempo/setSwing/addPattern actions and a φ-swing display
- * value showing the current swing as a percentage of the golden ratio offset.
- *
- * @param {Object} params
- * @param {Object[]} params.events    - Live event array from useMidiWebSocket
- * @param {boolean}  params.connected - WebSocket connection state
- * @param {Function} params.sendSysEx - SysEx sender from useMidiWebSocket
- * @returns {{
- *   playing: boolean,
- *   bpm: number,
- *   position: { bar: number, beat: number, tick: number },
- *   swing: number,
- *   swingDisplay: string,
- *   patterns: Object[],
- *   play: () => Promise<void>,
- *   stop: () => Promise<void>,
- *   setTempo: (bpm: number) => Promise<void>,
- *   setSwing: (amount: number) => Promise<void>,
- *   addPattern: (pattern: Object) => Promise<void>
- * }}
- */
-export function useSequencer({ events, connected, sendSysEx }) {
+export function useSequencer({
+  events,
+  connected,
+  sendSysEx
+}) {
   // ── State ────────────────────────────────────────────────────────
-  const [playing, setPlaying]     = useState(false);
-  const [bpm, setBpm]             = useState(DEFAULT_BPM);
-  const [position, setPosition]   = useState(defaultPosition);
-  const [swing, setSwingState]    = useState(PHI_SWING);
-  const [patterns, setPatterns]   = useState(/** @type {Object[]} */ ([]));
+  const [playing, setPlaying] = useState(false);
+  const [bpm, setBpm] = useState(DEFAULT_BPM);
+  const [position, setPosition] = useState(defaultPosition);
+  const [swing, setSwingState] = useState(PHI_SWING);
+  const [patterns, setPatterns] = useState(/** @type {Object[]} */[]);
 
   // ── Refs ─────────────────────────────────────────────────────────
-  const pollTimer     = useRef(null);
-  const mountedRef    = useRef(true);
-  const lastEventIdx  = useRef(0);
+  const pollTimer = useRef(null);
+  const mountedRef = useRef(true);
+  const lastEventIdx = useRef(0);
 
   // ── φ-swing display: percentage of golden ratio offset ──────────
   const swingDisplay = useMemo(() => {
@@ -84,7 +62,7 @@ export function useSequencer({ events, connected, sendSysEx }) {
     // Display as percentage: (swing - 0.5) / (PSI - 0.5) × 100
     const range = PSI - 0.5; // ≈ 0.118
     const offset = Math.max(0, swing - 0.5);
-    const pct = Math.min(100, (offset / range) * 100);
+    const pct = Math.min(100, offset / range * 100);
     return `${pct.toFixed(1)}% φ`;
   }, [swing]);
 
@@ -103,11 +81,12 @@ export function useSequencer({ events, connected, sendSysEx }) {
       // Server not available — use defaults
     }
   }, []);
-
   useEffect(() => {
     mountedRef.current = true;
     fetchState();
-    return () => { mountedRef.current = false; };
+    return () => {
+      mountedRef.current = false;
+    };
   }, [fetchState]);
 
   // ── Subscribe to WS events for real-time position ────────────────
@@ -118,26 +97,26 @@ export function useSequencer({ events, connected, sendSysEx }) {
     const startIdx = Math.max(0, lastEventIdx.current);
     const newEvents = events.slice(startIdx);
     lastEventIdx.current = events.length;
-
     for (const evt of newEvents) {
       if (evt.type === 'position' || evt.type === 'seq:position') {
         setPosition({
-          bar:  evt.bar  ?? evt.position?.bar  ?? position.bar,
+          bar: evt.bar ?? evt.position?.bar ?? position.bar,
           beat: evt.beat ?? evt.position?.beat ?? position.beat,
-          tick: evt.tick ?? evt.position?.tick ?? position.tick,
+          tick: evt.tick ?? evt.position?.tick ?? position.tick
         });
       }
-
       if (evt.type === 'seq:state' || evt.type === 'sequencer') {
         if (evt.playing != null) setPlaying(evt.playing);
         if (evt.bpm != null) setBpm(evt.bpm);
         if (evt.swing != null) setSwingState(evt.swing);
         if (evt.patterns) setPatterns(evt.patterns);
       }
-
       if (evt.type === 'transport') {
-        if (evt.action === 'play')  setPlaying(true);
-        if (evt.action === 'stop')  { setPlaying(false); setPosition(defaultPosition()); }
+        if (evt.action === 'play') setPlaying(true);
+        if (evt.action === 'stop') {
+          setPlaying(false);
+          setPosition(defaultPosition());
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -159,37 +138,39 @@ export function useSequencer({ events, connected, sendSysEx }) {
   /** Start playback via REST + SysEx broadcast. */
   const play = useCallback(async () => {
     try {
-      await fetch(`${SEQ_API}/play`, { method: 'POST' });
+      await fetch(`${SEQ_API}/play`, {
+        method: 'POST'
+      });
       setPlaying(true);
-    } catch { /* silent */ }
+    } catch {/* silent */}
     if (sendSysEx) sendSysEx(0x05, 0x01); // TRANSPORT PLAY
   }, [sendSysEx]);
 
   /** Stop playback via REST + SysEx broadcast. */
   const stop = useCallback(async () => {
     try {
-      await fetch(`${SEQ_API}/stop`, { method: 'POST' });
+      await fetch(`${SEQ_API}/stop`, {
+        method: 'POST'
+      });
       setPlaying(false);
       setPosition(defaultPosition());
-    } catch { /* silent */ }
+    } catch {/* silent */}
     if (sendSysEx) sendSysEx(0x05, 0x00); // TRANSPORT STOP
   }, [sendSysEx]);
-
-  /**
-   * Set sequencer tempo. Clamped to [MIN_BPM, MAX_BPM].
-   * @param {number} newBpm - Desired BPM
-   */
-  const setTempo = useCallback(async (newBpm) => {
+  const setTempo = useCallback(async newBpm => {
     const clamped = Math.max(MIN_BPM, Math.min(MAX_BPM, newBpm));
     try {
       await fetch(`${SEQ_API}/tempo`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bpm: clamped }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          bpm: clamped
+        })
       });
       setBpm(clamped);
-    } catch { /* silent */ }
-    // SysEx SET_TEMPO: BPM × 10 encoded as 14-bit (handled server-side)
+    } catch {/* silent */}
     if (sendSysEx) sendSysEx(0x01, Math.round(clamped * 10));
   }, [sendSysEx]);
 
@@ -197,34 +178,40 @@ export function useSequencer({ events, connected, sendSysEx }) {
    * Set swing amount. Value is clamped to [0.5, PSI] where PSI ≈ 0.618.
    * @param {number} amount - Swing offset (0.5 = straight, PSI = full golden ratio)
    */
-  const setSwing = useCallback(async (amount) => {
+  const setSwing = useCallback(async amount => {
     const clamped = Math.max(0.5, Math.min(PSI, amount));
     try {
       await fetch(`${SEQ_API}/swing`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ swing: clamped }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          swing: clamped
+        })
       });
       setSwingState(clamped);
-    } catch { /* silent */ }
+    } catch {/* silent */}
   }, []);
 
   /**
    * Add a pattern to the sequencer.
    * @param {Object} pattern - Pattern definition { name, steps, channel, ... }
    */
-  const addPattern = useCallback(async (pattern) => {
+  const addPattern = useCallback(async pattern => {
     try {
       const res = await fetch(`${SEQ_API}/patterns`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pattern),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(pattern)
       });
       if (res.ok && mountedRef.current) {
         const data = await res.json();
-        setPatterns((prev) => [...prev, data.pattern || pattern]);
+        setPatterns(prev => [...prev, data.pattern || pattern]);
       }
-    } catch { /* silent */ }
+    } catch {/* silent */}
   }, []);
 
   // ── Cleanup ──────────────────────────────────────────────────────
@@ -233,7 +220,6 @@ export function useSequencer({ events, connected, sendSysEx }) {
       clearInterval(pollTimer.current);
     };
   }, []);
-
   return {
     playing,
     bpm,
@@ -245,6 +231,6 @@ export function useSequencer({ events, connected, sendSysEx }) {
     stop,
     setTempo,
     setSwing,
-    addPattern,
+    addPattern
   };
 }

@@ -16,10 +16,7 @@ export const PHI_6: number = 8 * PHI + 5; // φ⁶ ≈ 17.944271909999163
 export const PHI_7: number = 13 * PHI + 8; // φ⁷ ≈ 29.034441853748634
 
 // ═══ Fibonacci Sequence (first 20) ═══
-export const FIB: readonly number[] = Object.freeze([
-  1, 1, 2, 3, 5, 8, 13, 21, 34, 55,
-  89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765
-]);
+export const FIB: readonly number[] = Object.freeze([1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765]);
 
 /**
  * Generate Fibonacci number at index n using closed-form (Binet's formula)
@@ -34,15 +31,17 @@ export function fibonacci(n: number): number {
 export function phiThreshold(level: number, spread: number = 0.5): number {
   return 1 - Math.pow(PSI, level) * spread;
 }
-
 export const CSL_THRESHOLDS = Object.freeze({
-  MINIMUM:  phiThreshold(0),  // ≈ 0.500 — noise floor
-  LOW:      phiThreshold(1),  // ≈ 0.691 — weak alignment
-  MEDIUM:   phiThreshold(2),  // ≈ 0.809 — moderate alignment
-  HIGH:     phiThreshold(3),  // ≈ 0.882 — strong alignment
-  CRITICAL: phiThreshold(4),  // ≈ 0.927 — near-certain
+  MINIMUM: phiThreshold(0),
+  // ≈ 0.500 — noise floor
+  LOW: phiThreshold(1),
+  // ≈ 0.691 — weak alignment
+  MEDIUM: phiThreshold(2),
+  // ≈ 0.809 — moderate alignment
+  HIGH: phiThreshold(3),
+  // ≈ 0.882 — strong alignment
+  CRITICAL: phiThreshold(4) // ≈ 0.927 — near-certain
 });
-
 export const DEDUP_THRESHOLD: number = phiThreshold(6); // ≈ 0.972 — semantic identity
 
 // ═══ Phi-Backoff Timing ═══
@@ -53,16 +52,17 @@ export function phiBackoff(attempt: number, baseMs: number = 1000, maxMs: number
 }
 
 // ═══ Fibonacci Retry Sequence (ms) ═══
-export const RETRY_BACKOFF_MS: readonly number[] = Object.freeze(
-  FIB.slice(4, 9).map(n => n * 100)
-  // → [500, 800, 1300, 2100, 3400]
+export const RETRY_BACKOFF_MS: readonly number[] = Object.freeze(FIB.slice(4, 9).map(n => n * 100)
+// → [500, 800, 1300, 2100, 3400]
 );
 
 // ═══ Connection Pool Sizing ═══
 export const POOL_SIZES = Object.freeze({
-  min: FIB[2],   // 2
-  max: FIB[7],   // 21
-  idle: FIB[4],  // 5
+  min: FIB[2],
+  // 2
+  max: FIB[7],
+  // 21
+  idle: FIB[4] // 5
 });
 
 // ═══ Phi-Fusion Weights ═══
@@ -80,39 +80,63 @@ export function phiFusionWeights(n: number): number[] {
 export function phiResourceWeights(n: number): number[] {
   return phiFusionWeights(n);
 }
-
 export const RESOURCE_POOLS = Object.freeze({
-  hot:        0.387,  // phiFusionWeights(5)[0]
-  warm:       0.239,  // phiFusionWeights(5)[1]
-  cold:       0.148,  // phiFusionWeights(5)[2]
-  reserve:    0.092,  // phiFusionWeights(5)[3]
-  governance: 0.057,  // phiFusionWeights(5)[4]
+  hot: 0.387,
+  // phiFusionWeights(5)[0]
+  warm: 0.239,
+  // phiFusionWeights(5)[1]
+  cold: 0.148,
+  // phiFusionWeights(5)[2]
+  reserve: 0.092,
+  // phiFusionWeights(5)[3]
+  governance: 0.057 // phiFusionWeights(5)[4]
 });
 
 // ═══ Pressure Levels ═══
 export const PRESSURE_LEVELS = Object.freeze({
-  NOMINAL:   { min: 0,             max: Math.pow(PSI, 2) },       // 0 → 0.382
-  ELEVATED:  { min: Math.pow(PSI, 2), max: PSI },                 // 0.382 → 0.618
-  HIGH:      { min: PSI,           max: 1 - Math.pow(PSI, 3) },   // 0.618 → 0.854
-  CRITICAL:  { min: 1 - Math.pow(PSI, 4), max: 1.0 },            // 0.910 → 1.0
+  NOMINAL: {
+    min: 0,
+    max: Math.pow(PSI, 2)
+  },
+  // 0 → 0.382
+  ELEVATED: {
+    min: Math.pow(PSI, 2),
+    max: PSI
+  },
+  // 0.382 → 0.618
+  HIGH: {
+    min: PSI,
+    max: 1 - Math.pow(PSI, 3)
+  },
+  // 0.618 → 0.854
+  CRITICAL: {
+    min: 1 - Math.pow(PSI, 4),
+    max: 1.0
+  } // 0.910 → 1.0
 });
 
 // ═══ Alert Thresholds ═══
 export const ALERT_THRESHOLDS = Object.freeze({
-  warning:  PSI,                          // ≈ 0.618
-  caution:  1 - Math.pow(PSI, 2),         // ≈ 0.764
-  critical: 1 - Math.pow(PSI, 3),         // ≈ 0.854
-  exceeded: 1 - Math.pow(PSI, 4),         // ≈ 0.910
-  hard_max: 1.0,
+  warning: PSI,
+  // ≈ 0.618
+  caution: 1 - Math.pow(PSI, 2),
+  // ≈ 0.764
+  critical: 1 - Math.pow(PSI, 3),
+  // ≈ 0.854
+  exceeded: 1 - Math.pow(PSI, 4),
+  // ≈ 0.910
+  hard_max: 1.0
 });
 
 // ═══ Token Budgets (phi-geometric progression) ═══
 export function phiTokenBudgets(base: number = 8192): Record<string, number> {
   return {
-    working:   base,
-    session:   Math.round(base * PHI_SQ),    // ≈ 21,450
-    memory:    Math.round(base * PHI_4),      // ≈ 56,131
-    artifacts: Math.round(base * PHI_6),      // ≈ 146,920
+    working: base,
+    session: Math.round(base * PHI_SQ),
+    // ≈ 21,450
+    memory: Math.round(base * PHI_4),
+    // ≈ 56,131
+    artifacts: Math.round(base * PHI_6) // ≈ 146,920
   };
 }
 
@@ -120,8 +144,6 @@ export function phiTokenBudgets(base: number = 8192): Record<string, number> {
 function sigmoid(x: number): number {
   return 1 / (1 + Math.exp(-x));
 }
-
-/** Smooth sigmoid gate: value × σ((cos - τ) / temp) */
 export function cslGate(value: number, cosScore: number, tau: number, temp: number = Math.pow(PSI, 3)): number {
   return value * sigmoid((cosScore - tau) / temp);
 }
@@ -131,8 +153,6 @@ export function cslBlend(weightHigh: number, weightLow: number, cosScore: number
   const gate = sigmoid((cosScore - tau) / Math.pow(PSI, 3));
   return weightHigh * gate + weightLow * (1 - gate);
 }
-
-/** Adaptive temperature based on entropy */
 export function adaptiveTemperature(entropy: number, maxEntropy: number): number {
   const baseTemp = Math.pow(PSI, 3); // ≈ 0.236
   const ratio = Math.min(entropy / maxEntropy, 1.0);
@@ -142,7 +162,9 @@ export function adaptiveTemperature(entropy: number, maxEntropy: number): number
 // ═══ Vector Operations ═══
 export function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length !== b.length) throw new Error('HEADY-2001: Vector dimension mismatch');
-  let dot = 0, normA = 0, normB = 0;
+  let dot = 0,
+    normA = 0,
+    normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     normA += a[i] * a[i];
@@ -151,7 +173,6 @@ export function cosineSimilarity(a: number[], b: number[]): number {
   const denom = Math.sqrt(normA) * Math.sqrt(normB);
   return denom === 0 ? 0 : dot / denom;
 }
-
 export function normalize(v: number[]): number[] {
   const norm = Math.sqrt(v.reduce((s, x) => s + x * x, 0));
   return norm === 0 ? v : v.map(x => x / norm);
@@ -203,13 +224,19 @@ export function cslCONSENSUS(vectors: number[][], weights?: number[]): number[] 
 
 // ═══ Phi-Scaled Time Constants ═══
 export const TIMING = Object.freeze({
-  FAST:    Math.round(1000 * Math.pow(PSI, 3)),  // 236ms
-  BASE:    Math.round(1000 * Math.pow(PSI, 2)),   // 382ms
-  SLOW:    Math.round(1000 * PSI),                 // 618ms
-  GLACIAL: 1000,                                    // 1000ms
-  HEARTBEAT_MS: FIB[9] * 1000,                     // 34s
-  SESSION_TTL_MS: FIB[13] * 60 * 1000,             // 233 min
-  REFRESH_TTL_MS: FIB[15] * 60 * 1000,             // 610 min
+  FAST: Math.round(1000 * Math.pow(PSI, 3)),
+  // 236ms
+  BASE: Math.round(1000 * Math.pow(PSI, 2)),
+  // 382ms
+  SLOW: Math.round(1000 * PSI),
+  // 618ms
+  GLACIAL: 1000,
+  // 1000ms
+  HEARTBEAT_MS: FIB[9] * 1000,
+  // 34s
+  SESSION_TTL_MS: FIB[13] * 60 * 1000,
+  // 233 min
+  REFRESH_TTL_MS: FIB[15] * 60 * 1000 // 610 min
 });
 
 // ═══ Embedding Constants ═══
@@ -219,5 +246,5 @@ export const EMBEDDING = Object.freeze({
   // Correct: use exact value for all-MiniLM-L6-v2
   DIMS_384: 384,
   PROJECTION_3D: 3,
-  DENSITY_GATE: 1 - Math.pow(PSI, 5), // ≈ 0.920 (was hardcoded 0.92)
+  DENSITY_GATE: 1 - Math.pow(PSI, 5) // ≈ 0.920 (was hardcoded 0.92)
 });

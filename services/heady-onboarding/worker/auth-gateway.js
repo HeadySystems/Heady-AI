@@ -1,3 +1,5 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * Heady Onboarding — Cloudflare Worker Edge Auth Gateway
  * Verifies Firebase JWTs at edge, enforces rate limits, handles CORS,
@@ -10,29 +12,14 @@
  */
 
 // ─── Allowed Origins ────────────────────────────────────────────────
-const ALLOWED_ORIGINS = new Set([
-  'https://heady.ai',
-  'https://www.heady.ai',
-  'https://app.heady.ai',
-  'https://api.heady.ai',
-  'https://headyme.com',
-  'https://www.headyme.com',
-  'https://app.headyme.com',
-  'https://mail.headyme.com',
-  'https://heady.dev',
-  'https://www.heady.dev',
-  'https://app.heady.dev',
-  'https://api.heady.dev',
-  'https://mail.heady.dev',
-]);
+const ALLOWED_ORIGINS = new Set(['https://heady.ai', 'https://www.heady.ai', 'https://app.heady.ai', 'https://api.heady.ai', 'https://headyme.com', 'https://www.headyme.com', 'https://app.headyme.com', 'https://mail.headyme.com', 'https://heady.dev', 'https://www.heady.dev', 'https://app.heady.dev', 'https://api.heady.dev', 'https://mail.heady.dev']);
 
 // ─── Rate Limit Config ─────────────────────────────────────────────
-const RATE_LIMIT_MAX = 1000;       // requests per window
-const RATE_LIMIT_WINDOW_SEC = 60;  // 1-minute window
+const RATE_LIMIT_MAX = 1000; // requests per window
+const RATE_LIMIT_WINDOW_SEC = 60; // 1-minute window
 
 // ─── Firebase JWKS endpoint ─────────────────────────────────────────
-const FIREBASE_JWKS_URL =
-  'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
+const FIREBASE_JWKS_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
 const FIREBASE_ISSUER_PREFIX = 'https://securetoken.google.com/';
 
 // ─── JWK cache (in-memory, per-isolate) ─────────────────────────────
@@ -47,7 +34,6 @@ export default {
     const start = Date.now();
     const url = new URL(request.url);
     const clientIp = request.headers.get('CF-Connecting-IP') || '0.0.0.0';
-
     try {
       // 1. CORS preflight
       if (request.method === 'OPTIONS') {
@@ -57,7 +43,9 @@ export default {
       // 2. Rate limiting
       const rateLimited = await checkRateLimit(env, clientIp);
       if (rateLimited) {
-        return jsonResponse(429, { error: 'Too Many Requests' }, requestId, request);
+        return jsonResponse(429, {
+          error: 'Too Many Requests'
+        }, requestId, request);
       }
 
       // 3. Health / readiness probes — passthrough (no auth)
@@ -73,13 +61,16 @@ export default {
       // 5. All other requests — verify JWT
       const authHeader = request.headers.get('Authorization');
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return jsonResponse(401, { error: 'Missing or malformed Authorization header' }, requestId, request);
+        return jsonResponse(401, {
+          error: 'Missing or malformed Authorization header'
+        }, requestId, request);
       }
-
       const token = authHeader.slice(7);
       const payload = await verifyFirebaseJWT(token, env.FIREBASE_PROJECT_ID);
       if (!payload) {
-        return jsonResponse(401, { error: 'Invalid or expired token' }, requestId, request);
+        return jsonResponse(401, {
+          error: 'Invalid or expired token'
+        }, requestId, request);
       }
 
       // Forward with verified user info
@@ -91,11 +82,13 @@ export default {
         clientIp,
         error: err.message,
         stack: err.stack,
-        durationMs: Date.now() - start,
+        durationMs: Date.now() - start
       });
-      return jsonResponse(500, { error: 'Internal Server Error' }, requestId, request);
+      return jsonResponse(500, {
+        error: 'Internal Server Error'
+      }, requestId, request);
     }
-  },
+  }
 };
 
 // ─── CORS Handling ──────────────────────────────────────────────────
@@ -103,21 +96,20 @@ export default {
 function handleCORS(request, requestId) {
   const origin = request.headers.get('Origin');
   const headers = new Headers();
-
   if (origin && ALLOWED_ORIGINS.has(origin)) {
     headers.set('Access-Control-Allow-Origin', origin);
     headers.set('Vary', 'Origin');
   }
-
   headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Request-ID');
   headers.set('Access-Control-Max-Age', '86400');
   headers.set('X-Request-ID', requestId);
   addSecurityHeaders(headers);
-
-  return new Response(null, { status: 204, headers });
+  return new Response(null, {
+    status: 204,
+    headers
+  });
 }
-
 function addCORSHeaders(headers, request) {
   const origin = request.headers.get('Origin');
   if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -141,27 +133,31 @@ function addSecurityHeaders(headers) {
 async function checkRateLimit(env, clientIp) {
   const key = `rl:${clientIp}`;
   const now = Math.floor(Date.now() / 1000);
-
-  const raw = await env.RATE_LIMIT.get(key, { type: 'json' });
-  let record = raw || { count: 0, windowStart: now };
+  const raw = await env.RATE_LIMIT.get(key, {
+    type: 'json'
+  });
+  let record = raw || {
+    count: 0,
+    windowStart: now
+  };
 
   // Window expired — reset
   if (now - record.windowStart >= RATE_LIMIT_WINDOW_SEC) {
-    record = { count: 1, windowStart: now };
+    record = {
+      count: 1,
+      windowStart: now
+    };
     await env.RATE_LIMIT.put(key, JSON.stringify(record), {
-      expirationTtl: RATE_LIMIT_WINDOW_SEC * 2,
+      expirationTtl: RATE_LIMIT_WINDOW_SEC * 2
     });
     return false;
   }
-
   record.count += 1;
-
   if (record.count > RATE_LIMIT_MAX) {
     return true;
   }
-
   await env.RATE_LIMIT.put(key, JSON.stringify(record), {
-    expirationTtl: RATE_LIMIT_WINDOW_SEC * 2,
+    expirationTtl: RATE_LIMIT_WINDOW_SEC * 2
   });
   return false;
 }
@@ -172,7 +168,6 @@ async function verifyFirebaseJWT(token, projectId) {
   // Split token
   const parts = token.split('.');
   if (parts.length !== 3) return null;
-
   const [headerB64, payloadB64, signatureB64] = parts;
 
   // Decode header to get kid
@@ -184,9 +179,9 @@ async function verifyFirebaseJWT(token, projectId) {
 
   // Time validation
   const now = Math.floor(Date.now() / 1000);
-  if (payload.exp <= now) return null;          // expired
-  if (payload.iat > now + 300) return null;     // issued in the future (5m grace)
-  if (payload.auth_time > now) return null;     // auth_time in future
+  if (payload.exp <= now) return null; // expired
+  if (payload.iat > now + 300) return null; // issued in the future (5m grace)
+  if (payload.auth_time > now) return null; // auth_time in future
 
   // Issuer & audience validation
   const expectedIssuer = FIREBASE_ISSUER_PREFIX + projectId;
@@ -201,42 +196,34 @@ async function verifyFirebaseJWT(token, projectId) {
   if (!jwk) return null;
 
   // Import public key
-  const cryptoKey = await crypto.subtle.importKey(
-    'jwk',
-    jwk,
-    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
-    false,
-    ['verify'],
-  );
+  const cryptoKey = await crypto.subtle.importKey('jwk', jwk, {
+    name: 'RSASSA-PKCS1-v1_5',
+    hash: 'SHA-256'
+  }, false, ['verify']);
 
   // Verify signature
   const data = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
   const signature = base64UrlToArrayBuffer(signatureB64);
-
   const valid = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', cryptoKey, signature, data);
   if (!valid) return null;
-
   return payload;
 }
-
 async function getJWK(kid) {
   const now = Date.now();
 
   // Use cached JWKs if fresh
   if (jwkCache && now < jwkCacheExpiry) {
-    const match = jwkCache.find((k) => k.kid === kid);
+    const match = jwkCache.find(k => k.kid === kid);
     if (match) return match;
   }
 
   // Fetch fresh JWKs
   const resp = await fetch(FIREBASE_JWKS_URL);
   if (!resp.ok) return null;
-
   const data = await resp.json();
   jwkCache = data.keys;
   jwkCacheExpiry = now + JWK_CACHE_TTL_MS;
-
-  return jwkCache.find((k) => k.kid === kid) || null;
+  return jwkCache.find(k => k.kid === kid) || null;
 }
 
 // ─── Base64URL Helpers ──────────────────────────────────────────────
@@ -250,7 +237,6 @@ function base64UrlDecode(str) {
   }
   return new TextDecoder().decode(bytes);
 }
-
 function base64UrlToArrayBuffer(str) {
   const padded = str.replace(/-/g, '+').replace(/_/g, '/');
   const binary = atob(padded);
@@ -269,24 +255,20 @@ async function routeToOrigin(request, env, requestId, jwtPayload) {
   originUrl.protocol = 'https:';
   originUrl.hostname = new URL(env.ORIGIN_URL).hostname;
   originUrl.port = '';
-
   const headers = new Headers(request.headers);
   headers.set('X-Request-ID', requestId);
   headers.set('X-Forwarded-For', request.headers.get('CF-Connecting-IP') || '0.0.0.0');
   headers.set('X-Forwarded-Proto', 'https');
-
   if (jwtPayload) {
     headers.set('X-Firebase-UID', jwtPayload.sub);
     headers.set('X-Firebase-Email', jwtPayload.email || '');
     headers.set('X-Firebase-Provider', jwtPayload.firebase?.sign_in_provider || '');
   }
-
   const originRequest = new Request(originUrl.toString(), {
     method: request.method,
     headers,
-    body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : null,
+    body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : null
   });
-
   const response = await fetch(originRequest);
 
   // Clone response to add our headers
@@ -294,7 +276,6 @@ async function routeToOrigin(request, env, requestId, jwtPayload) {
   responseHeaders.set('X-Request-ID', requestId);
   addCORSHeaders(responseHeaders, request);
   addSecurityHeaders(responseHeaders);
-
   logStructured('info', {
     requestId,
     method: request.method,
@@ -302,13 +283,12 @@ async function routeToOrigin(request, env, requestId, jwtPayload) {
     clientIp: request.headers.get('CF-Connecting-IP') || '0.0.0.0',
     status: response.status,
     uid: jwtPayload?.sub || null,
-    durationMs: Date.now() - (parseInt(request.headers.get('CF-Request-Start') || '0', 10) || Date.now()),
+    durationMs: Date.now() - (parseInt(request.headers.get('CF-Request-Start') || '0', 10) || Date.now())
   });
-
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
-    headers: responseHeaders,
+    headers: responseHeaders
   });
 }
 
@@ -317,13 +297,16 @@ async function routeToOrigin(request, env, requestId, jwtPayload) {
 function jsonResponse(status, body, requestId, request) {
   const headers = new Headers({
     'Content-Type': 'application/json',
-    'X-Request-ID': requestId,
+    'X-Request-ID': requestId
   });
   addSecurityHeaders(headers);
   if (request) {
     addCORSHeaders(headers, request);
   }
-  return new Response(JSON.stringify(body), { status, headers });
+  return new Response(JSON.stringify(body), {
+    status,
+    headers
+  });
 }
 
 // ─── Structured Logging ─────────────────────────────────────────────
@@ -333,7 +316,7 @@ function logStructured(level, data) {
     timestamp: new Date().toISOString(),
     level,
     service: 'heady-edge-gateway',
-    ...data,
+    ...data
   };
-  console.log(JSON.stringify(entry));
+  logger.info(JSON.stringify(entry));
 }

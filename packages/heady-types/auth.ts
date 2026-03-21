@@ -14,13 +14,7 @@ export type UserRole = 'admin' | 'user' | 'editor' | 'viewer' | 'guest' | 'servi
 /**
  * User permission
  */
-export type UserPermission =
-  | 'read'
-  | 'write'
-  | 'delete'
-  | 'admin'
-  | 'moderate'
-  | 'audit';
+export type UserPermission = 'read' | 'write' | 'delete' | 'admin' | 'moderate' | 'audit';
 
 /**
  * User information
@@ -368,30 +362,15 @@ export interface MFAChallenge {
    * Expiry time
    */
   expiresAt: Date;
-
-  /**
-   * Attempts remaining
-   */
   attemptsRemaining: number;
 }
-
-/**
- * Login attempt
- */
 export interface LoginAttempt {
-  /**
-   * Attempt ID
-   */
   id: string;
 
   /**
    * User email
    */
   email: string;
-
-  /**
-   * Attempt status
-   */
   status: 'success' | 'failed' | 'mfa_required';
 
   /**
@@ -408,10 +387,6 @@ export interface LoginAttempt {
    * User agent
    */
   userAgent?: string;
-
-  /**
-   * Attempt timestamp
-   */
   timestamp: Date;
 
   /**

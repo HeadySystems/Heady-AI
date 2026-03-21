@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -26,7 +28,6 @@ const crypto = require('crypto');
 
 const CHECKPOINT_DIR = path.join(__dirname, '../../.checkpoints');
 const CONFIGS_DIR = path.join(__dirname, '../../configs');
-
 class HCCheckpoint {
   constructor() {
     this.records = [];
@@ -44,13 +45,11 @@ class HCCheckpoint {
       timestamp: new Date().toISOString(),
       configHashes: this.hashConfigs(),
       context,
-      status: 'captured',
+      status: 'captured'
     };
-
     this.records.push(record);
     this._persist(record);
-
-    console.log(`[hc-checkpoint] Checkpoint captured: stage=${stage} id=${record.id}`);
+    logger.info(`[hc-checkpoint] Checkpoint captured: stage=${stage} id=${record.id}`);
     return record;
   }
 
@@ -60,36 +59,37 @@ class HCCheckpoint {
    */
   sync(referenceId) {
     const currentHashes = this.hashConfigs();
-    const reference = referenceId
-      ? this.records.find(r => r.id === referenceId)
-      : this.records[this.records.length - 1];
-
+    const reference = referenceId ? this.records.find(r => r.id === referenceId) : this.records[this.records.length - 1];
     if (!reference) {
-      console.log('[hc-checkpoint] No reference checkpoint found; creating initial.');
-      return { drifted: false, initial: true, record: this.checkpoint('initial-sync') };
+      logger.info('[hc-checkpoint] No reference checkpoint found; creating initial.');
+      return {
+        drifted: false,
+        initial: true,
+        record: this.checkpoint('initial-sync')
+      };
     }
-
     const drifts = [];
     for (const [file, hash] of Object.entries(currentHashes)) {
       if (reference.configHashes[file] && reference.configHashes[file] !== hash) {
-        drifts.push({ file, expected: reference.configHashes[file], actual: hash });
+        drifts.push({
+          file,
+          expected: reference.configHashes[file],
+          actual: hash
+        });
       }
     }
-
     const result = {
       drifted: drifts.length > 0,
       drifts,
       referenceId: reference.id,
-      checkedAt: new Date().toISOString(),
+      checkedAt: new Date().toISOString()
     };
-
     if (drifts.length > 0) {
-      console.warn(`[hc-checkpoint] Config drift detected in ${drifts.length} file(s):`);
-      drifts.forEach(d => console.warn(`  - ${d.file}`));
+      logger.warn(`[hc-checkpoint] Config drift detected in ${drifts.length} file(s):`);
+      drifts.forEach(d => logger.warn(`  - ${d.file}`));
     } else {
-      console.log('[hc-checkpoint] No config drift detected.');
+      logger.info('[hc-checkpoint] No config drift detected.');
     }
-
     return result;
   }
 
@@ -100,8 +100,10 @@ class HCCheckpoint {
   analyze(stage = 'manual') {
     const currentHashes = this.hashConfigs();
     const lastCheckpoint = this.records[this.records.length - 1];
-    const drift = lastCheckpoint ? this.sync(lastCheckpoint.id) : { drifted: false, initial: true };
-
+    const drift = lastCheckpoint ? this.sync(lastCheckpoint.id) : {
+      drifted: false,
+      initial: true
+    };
     return {
       stage,
       analyzedAt: new Date().toISOString(),
@@ -109,7 +111,7 @@ class HCCheckpoint {
       configHashes: currentHashes,
       drift,
       recordCount: this.records.length,
-      lastCheckpoint: lastCheckpoint || null,
+      lastCheckpoint: lastCheckpoint || null
     };
   }
 
@@ -133,7 +135,7 @@ class HCCheckpoint {
         hashes[file] = crypto.createHash('sha256').update(content).digest('hex').slice(0, 16);
       }
     } catch (err) {
-      console.error('[hc-checkpoint] Error hashing configs:', err.message);
+      logger.error('[hc-checkpoint] Error hashing configs:', err.message);
     }
     return hashes;
   }
@@ -144,14 +146,15 @@ class HCCheckpoint {
   _persist(record) {
     try {
       if (!fs.existsSync(CHECKPOINT_DIR)) {
-        fs.mkdirSync(CHECKPOINT_DIR, { recursive: true });
+        fs.mkdirSync(CHECKPOINT_DIR, {
+          recursive: true
+        });
       }
       const filePath = path.join(CHECKPOINT_DIR, `${record.id}.json`);
       fs.writeFileSync(filePath, JSON.stringify(record, null, 2));
     } catch (err) {
-      console.error('[hc-checkpoint] Failed to persist checkpoint:', err.message);
+      logger.error('[hc-checkpoint] Failed to persist checkpoint:', err.message);
     }
   }
 }
-
 module.exports = new HCCheckpoint();

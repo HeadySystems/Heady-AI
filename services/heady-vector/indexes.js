@@ -1,25 +1,26 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyVector Index Management
  * Handles HNSW and IVFFlat index lifecycle for pgvector.
  * Index names are deterministic: heady_hnsw_{collectionId_short}_{dim}
  */
-
 const config = require('./config');
 
 // ─── Distance operator map ────────────────────────────────────────────────────
 const DISTANCE_OPS = {
   cosine: 'vector_cosine_ops',
-  l2:     'vector_l2_ops',
-  ip:     'vector_ip_ops',    // inner product
+  l2: 'vector_l2_ops',
+  ip: 'vector_ip_ops' // inner product
 };
 
 // Query operators for similarity
 const SIMILARITY_OPS = {
   cosine: '<=>',
-  l2:     '<->',
-  ip:     '<#>',
+  l2: '<->',
+  ip: '<#>'
 };
 
 // ─── IndexManager class ───────────────────────────────────────────────────────
@@ -77,11 +78,16 @@ class IndexManager {
    * @returns {Promise<void>}
    */
   async createHNSWIndex(collection) {
-    const { id, dimension, hnsw_m, hnsw_ef_construction, distance_metric } = collection;
+    const {
+      id,
+      dimension,
+      hnsw_m,
+      hnsw_ef_construction,
+      distance_metric
+    } = collection;
     const col = this._embeddingColumn(dimension);
     const ops = DISTANCE_OPS[distance_metric] || DISTANCE_OPS.cosine;
     const indexName = this._indexName(id, 'hnsw', dimension);
-
     const sql = `
       CREATE INDEX CONCURRENTLY IF NOT EXISTS "${indexName}"
       ON heady_vectors
@@ -89,14 +95,13 @@ class IndexManager {
       WITH (m = ${hnsw_m}, ef_construction = ${hnsw_ef_construction})
       WHERE collection_id = '${id}'
     `;
-
     try {
       await this.pool.query(sql);
       this._indexCache.delete(id);
-      console.log(`[indexes] Created HNSW index "${indexName}" for collection ${id} (m=${hnsw_m}, ef_construction=${hnsw_ef_construction})`);
+      logger.info(`[indexes] Created HNSW index "${indexName}" for collection ${id} (m=${hnsw_m}, ef_construction=${hnsw_ef_construction})`);
     } catch (err) {
       if (err.message.includes('already exists')) {
-        console.log(`[indexes] HNSW index "${indexName}" already exists, skipping`);
+        logger.info(`[indexes] HNSW index "${indexName}" already exists, skipping`);
         return;
       }
       throw err;
@@ -110,12 +115,15 @@ class IndexManager {
    * @returns {Promise<void>}
    */
   async createIVFFlatIndex(collection, lists) {
-    const { id, dimension, distance_metric } = collection;
+    const {
+      id,
+      dimension,
+      distance_metric
+    } = collection;
     const nLists = lists || config.ivfflat.lists;
     const col = this._embeddingColumn(dimension);
     const ops = DISTANCE_OPS[distance_metric] || DISTANCE_OPS.cosine;
     const indexName = this._indexName(id, 'ivfflat', dimension);
-
     const sql = `
       CREATE INDEX CONCURRENTLY IF NOT EXISTS "${indexName}"
       ON heady_vectors
@@ -123,14 +131,13 @@ class IndexManager {
       WITH (lists = ${nLists})
       WHERE collection_id = '${id}'
     `;
-
     try {
       await this.pool.query(sql);
       this._indexCache.delete(id);
-      console.log(`[indexes] Created IVFFlat index "${indexName}" for collection ${id} (lists=${nLists})`);
+      logger.info(`[indexes] Created IVFFlat index "${indexName}" for collection ${id} (lists=${nLists})`);
     } catch (err) {
       if (err.message.includes('already exists')) {
-        console.log(`[indexes] IVFFlat index "${indexName}" already exists, skipping`);
+        logger.info(`[indexes] IVFFlat index "${indexName}" already exists, skipping`);
         return;
       }
       throw err;
@@ -160,19 +167,14 @@ class IndexManager {
     const shortId = this._shortId(collectionId);
 
     // Find all matching indexes
-    const result = await this.pool.query(
-      `SELECT indexname
+    const result = await this.pool.query(`SELECT indexname
        FROM pg_indexes
        WHERE tablename = 'heady_vectors'
-         AND indexname LIKE $1`,
-      [`heady_%_${shortId}_%`]
-    );
-
+         AND indexname LIKE $1`, [`heady_%_${shortId}_%`]);
     for (const row of result.rows) {
       await this.pool.query(`DROP INDEX CONCURRENTLY IF EXISTS "${row.indexname}"`);
-      console.log(`[indexes] Dropped index "${row.indexname}"`);
+      logger.info(`[indexes] Dropped index "${row.indexname}"`);
     }
-
     this._indexCache.delete(collectionId);
   }
 
@@ -213,11 +215,8 @@ class IndexManager {
     if (this._indexCache.has(collectionId)) {
       return this._indexCache.get(collectionId);
     }
-
     const shortId = this._shortId(collectionId);
-
-    const result = await this.pool.query(
-      `SELECT
+    const result = await this.pool.query(`SELECT
          i.indexname,
          i.indexdef,
          s.idx_scan,
@@ -228,10 +227,7 @@ class IndexManager {
        LEFT JOIN pg_stat_user_indexes s
          ON s.indexrelname = i.indexname AND s.relname = 'heady_vectors'
        WHERE i.tablename = 'heady_vectors'
-         AND i.indexname LIKE $1`,
-      [`heady_%_${shortId}_%`]
-    );
-
+         AND i.indexname LIKE $1`, [`heady_%_${shortId}_%`]);
     const info = result.rows;
     this._indexCache.set(collectionId, info);
     return info;
@@ -243,13 +239,9 @@ class IndexManager {
    * @returns {Promise<'hnsw'|'ivfflat'|'none'>}
    */
   async recommendIndexType(collection) {
-    const result = await this.pool.query(
-      'SELECT COUNT(*) AS cnt FROM heady_vectors WHERE collection_id = $1',
-      [collection.id]
-    );
+    const result = await this.pool.query('SELECT COUNT(*) AS cnt FROM heady_vectors WHERE collection_id = $1', [collection.id]);
     const count = parseInt(result.rows[0].cnt, 10);
-
-    if (count < 1000) return 'none';   // too small, sequential scan is faster
+    if (count < 1000) return 'none'; // too small, sequential scan is faster
     if (count < 100000) return 'hnsw';
     return 'ivfflat';
   }
@@ -264,7 +256,7 @@ class IndexManager {
     try {
       await client.query('VACUUM ANALYZE heady_vectors');
       await client.query('VACUUM ANALYZE heady_graph_nodes');
-      console.log('[indexes] VACUUM ANALYZE complete');
+      logger.info('[indexes] VACUUM ANALYZE complete');
     } finally {
       client.release();
     }
@@ -288,12 +280,14 @@ class IndexManager {
         AND i.indexname LIKE 'heady_%'
       ORDER BY i.indexname
     `);
-
     return {
       indexes: result.rows,
-      count: result.rows.length,
+      count: result.rows.length
     };
   }
 }
-
-module.exports = { IndexManager, DISTANCE_OPS, SIMILARITY_OPS };
+module.exports = {
+  IndexManager,
+  DISTANCE_OPS,
+  SIMILARITY_OPS
+};

@@ -1,5 +1,7 @@
 const logger = console;
-const { PHI_TIMING } = require('../shared/phi-math');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
 /**
  * @fileoverview MCP Multi-Transport Adapter
  *
@@ -27,10 +29,10 @@ import { createInterface } from 'readline';
 
 export const TransportId = Object.freeze({
   STREAMABLE_HTTP: 'streamable-http',
-  SSE:             'sse',
-  STDIO:           'stdio',
-  WEBSOCKET:       'websocket',
-  AUTO:            'auto',
+  SSE: 'sse',
+  STDIO: 'stdio',
+  WEBSOCKET: 'websocket',
+  AUTO: 'auto'
 });
 
 /** MCP protocol versions in preference order (newest first) */
@@ -50,7 +52,10 @@ const DEFAULT_PROTOCOL_VERSION = '2025-11-25';
  * @returns {string} Serialized JSON string
  */
 export function serializeRequest(method, params, id) {
-  const msg = { jsonrpc: '2.0', method };
+  const msg = {
+    jsonrpc: '2.0',
+    method
+  };
   if (params !== undefined) msg.params = params;
   if (id !== undefined) msg.id = id;
   return JSON.stringify(msg);
@@ -88,10 +93,7 @@ export function parseSSEChunk(chunk) {
   for (const block of blocks) {
     const evt = {};
     for (const line of block.split('\n')) {
-      if (line.startsWith('data:')) evt.data = line.slice(5).trim();
-      else if (line.startsWith('event:')) evt.event = line.slice(6).trim();
-      else if (line.startsWith('id:')) evt.id = line.slice(3).trim();
-      else if (line.startsWith('retry:')) evt.retry = parseInt(line.slice(6).trim(), 10);
+      if (line.startsWith('data:')) evt.data = line.slice(5).trim();else if (line.startsWith('event:')) evt.event = line.slice(6).trim();else if (line.startsWith('id:')) evt.id = line.slice(3).trim();else if (line.startsWith('retry:')) evt.retry = parseInt(line.slice(6).trim(), 10);
     }
     if (Object.keys(evt).length > 0) events.push(evt);
   }
@@ -115,13 +117,10 @@ export async function detectTransport(endpoint) {
   if (!endpoint || endpoint === 'stdio' || String(endpoint).startsWith('stdio://')) {
     return TransportId.STDIO;
   }
-
   const url = typeof endpoint === 'string' ? new URL(endpoint) : endpoint;
-
   if (url.protocol === 'ws:' || url.protocol === 'wss:') {
     return TransportId.WEBSOCKET;
   }
-
   if (url.protocol === 'http:' || url.protocol === 'https:') {
     // Probe for Streamable HTTP support (POST with MCP-Protocol-Version header)
     try {
@@ -130,10 +129,14 @@ export async function detectTransport(endpoint) {
         headers: {
           'Content-Type': 'application/json',
           'MCP-Protocol-Version': DEFAULT_PROTOCOL_VERSION,
-          Accept: 'application/json, text/event-stream',
+          Accept: 'application/json, text/event-stream'
         },
-        body: JSON.stringify({ jsonrpc: '2.0', method: 'initialize', id: 'probe' }),
-        signal: AbortSignal.timeout(3000),
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'initialize',
+          id: 'probe'
+        }),
+        signal: AbortSignal.timeout(3000)
       });
 
       // Streamable HTTP returns 200 or 202 with JSON or event-stream
@@ -147,12 +150,11 @@ export async function detectTransport(endpoint) {
       if (response.status === 404 || response.status === 405) {
         return TransportId.SSE;
       }
-    } catch (_) { /* fall through */  }
+    } catch (_) {/* fall through */}
 
     // Default to SSE for HTTP if detection fails
     return TransportId.SSE;
   }
-
   throw new Error(`Unsupported endpoint protocol: ${url.protocol}`);
 }
 
@@ -178,14 +180,18 @@ class BaseTransport extends EventEmitter {
   }
 
   /** @returns {boolean} */
-  get connected() { return this._connected; }
+  get connected() {
+    return this._connected;
+  }
 
   /**
    * Connect to the server.
    * @returns {Promise<void>}
    * @abstract
    */
-  async connect() { throw new Error('Not implemented'); }
+  async connect() {
+    throw new Error('Not implemented');
+  }
 
   /**
    * Send a message.
@@ -193,14 +199,18 @@ class BaseTransport extends EventEmitter {
    * @returns {Promise<void>}
    * @abstract
    */
-  async send(message) { throw new Error('Not implemented'); }
+  async send(message) {
+    throw new Error('Not implemented');
+  }
 
   /**
    * Close the connection.
    * @returns {Promise<void>}
    * @abstract
    */
-  async close() { throw new Error('Not implemented'); }
+  async close() {
+    throw new Error('Not implemented');
+  }
 
   /** @protected */
   _handleIncoming(raw) {
@@ -209,13 +219,19 @@ class BaseTransport extends EventEmitter {
       this.emit('message', msg);
       this.onMessage?.(msg);
     } catch (err) {
-      this.emit('parse_error', { raw, error: err.message });
+      this.emit('parse_error', {
+        raw,
+        error: err.message
+      });
     }
   }
 
   /** @protected */
   _log(event, data) {
-    if (this.enableLogging) this.emit('log', { event, ...data });
+    if (this.enableLogging) this.emit('log', {
+      event,
+      ...data
+    });
   }
 }
 
@@ -231,14 +247,6 @@ class BaseTransport extends EventEmitter {
  * @extends BaseTransport
  */
 export class StreamableHTTPTransport extends BaseTransport {
-  /**
-   * @param {string|URL} url - Server endpoint URL
-   * @param {Object} [options={}]
-   * @param {Object} [options.headers={}] - Additional request headers (auth, etc.)
-   * @param {boolean} [options.enableStreaming=true] - Accept SSE streaming responses
-   * @param {number} [options.reconnectDelayMs=1000] - Base reconnect delay
-   * @param {number} [options.maxReconnectAttempts=5]
-   */
   constructor(url, options = {}) {
     super(options);
     this._url = typeof url === 'string' ? new URL(url) : url;
@@ -254,10 +262,14 @@ export class StreamableHTTPTransport extends BaseTransport {
   }
 
   /** @returns {string|null} Active MCP session ID */
-  get sessionId() { return this._sessionId; }
+  get sessionId() {
+    return this._sessionId;
+  }
 
   /** @returns {string|null} Negotiated protocol version */
-  get protocolVersion() { return this._negotiatedVersion; }
+  get protocolVersion() {
+    return this._negotiatedVersion;
+  }
 
   /**
    * Connect by performing the MCP initialize handshake.
@@ -265,26 +277,36 @@ export class StreamableHTTPTransport extends BaseTransport {
    * @returns {Promise<void>}
    */
   async connect() {
-    const response = await this._post(
-      serializeRequest('initialize', {
-        protocolVersion: DEFAULT_PROTOCOL_VERSION,
-        capabilities: { tools: {} },
-        clientInfo: { name: 'heady-transport-adapter', version: '1.0.0' },
-      }, 'init-0')
-    );
-
+    const response = await this._post(serializeRequest('initialize', {
+      protocolVersion: DEFAULT_PROTOCOL_VERSION,
+      capabilities: {
+        tools: {}
+      },
+      clientInfo: {
+        name: 'heady-transport-adapter',
+        version: '1.0.0'
+      }
+    }, 'init-0'));
     this._negotiatedVersion = response.headers.get('MCP-Protocol-Version') ?? DEFAULT_PROTOCOL_VERSION;
     this._sessionId = response.headers.get('MCP-Session-Id') ?? null;
     this._connected = true;
     this._reconnectAttempts = 0;
-
-    this._log('connected', { url: this._url.toString(), version: this._negotiatedVersion, sessionId: this._sessionId });
-    this.emit('connected', { sessionId: this._sessionId, version: this._negotiatedVersion });
+    this._log('connected', {
+      url: this._url.toString(),
+      version: this._negotiatedVersion,
+      sessionId: this._sessionId
+    });
+    this.emit('connected', {
+      sessionId: this._sessionId,
+      version: this._negotiatedVersion
+    });
 
     // If server wants server-initiated messages, open the SSE GET channel
     if (this._enableStreaming) {
       this._openSSEChannel().catch(err => {
-        this._log('sse_channel_error', { error: err.message });
+        this._log('sse_channel_error', {
+          error: err.message
+        });
       });
     }
   }
@@ -298,7 +320,6 @@ export class StreamableHTTPTransport extends BaseTransport {
   async send(message) {
     const response = await this._post(message);
     const contentType = response.headers.get('content-type') ?? '';
-
     if (contentType.includes('text/event-stream')) {
       // Streaming response — consume SSE events
       return this._consumeSSEResponse(response);
@@ -323,16 +344,14 @@ export class StreamableHTTPTransport extends BaseTransport {
       'Content-Type': 'application/json',
       'MCP-Protocol-Version': this._negotiatedVersion ?? DEFAULT_PROTOCOL_VERSION,
       Accept: 'application/json, text/event-stream',
-      ...this._headers,
+      ...this._headers
     };
     if (this._sessionId) headers['MCP-Session-Id'] = this._sessionId;
-
     const response = await fetch(this._url.toString(), {
       method: 'POST',
       headers,
-      body,
+      body
     });
-
     if (!response.ok && response.status !== 202) {
       const errText = await response.text().catch(() => '');
       throw new Error(`MCP HTTP ${response.status}: ${errText.slice(0, 200)}`);
@@ -341,7 +360,6 @@ export class StreamableHTTPTransport extends BaseTransport {
     // Capture session ID from response if provided
     const newSessionId = response.headers.get('MCP-Session-Id');
     if (newSessionId) this._sessionId = newSessionId;
-
     return response;
   }
 
@@ -355,28 +373,32 @@ export class StreamableHTTPTransport extends BaseTransport {
     const headers = {
       Accept: 'text/event-stream',
       'MCP-Protocol-Version': this._negotiatedVersion ?? DEFAULT_PROTOCOL_VERSION,
-      ...this._headers,
+      ...this._headers
     };
     if (this._sessionId) headers['MCP-Session-Id'] = this._sessionId;
     if (this._lastEventId) headers['Last-Event-ID'] = this._lastEventId;
-
-    const response = await fetch(this._url.toString(), { method: 'GET', headers });
+    const response = await fetch(this._url.toString(), {
+      method: 'GET',
+      headers
+    });
     if (!response.ok) {
       // Server doesn't support server-initiated messages — that's ok
       return;
     }
-
     const reader = response.body?.getReader();
     if (!reader) return;
-
     const decoder = new TextDecoder();
     let buffer = '';
-
     const pump = async () => {
       while (this._connected) {
-        const { done, value } = await reader.read();
+        const {
+          done,
+          value
+        } = await reader.read();
         if (done) break;
-        buffer += decoder.decode(value, { stream: true });
+        buffer += decoder.decode(value, {
+          stream: true
+        });
         const parts = buffer.split('\n\n');
         buffer = parts.pop() ?? '';
         for (const part of parts) {
@@ -388,10 +410,11 @@ export class StreamableHTTPTransport extends BaseTransport {
         }
       }
     };
-
     pump().catch(err => {
       if (this._connected) {
-        this.emit('sse_error', { error: err.message });
+        this.emit('sse_error', {
+          error: err.message
+        });
         this._scheduleSSEReconnect();
       }
     });
@@ -416,15 +439,18 @@ export class StreamableHTTPTransport extends BaseTransport {
   async _consumeSSEResponse(response) {
     const reader = response.body?.getReader();
     if (!reader) return null;
-
     const decoder = new TextDecoder();
     let buffer = '';
     let lastResult = null;
-
     while (true) {
-      const { done, value } = await reader.read();
+      const {
+        done,
+        value
+      } = await reader.read();
       if (done) break;
-      buffer += decoder.decode(value, { stream: true });
+      buffer += decoder.decode(value, {
+        stream: true
+      });
       const parts = buffer.split('\n\n');
       buffer = parts.pop() ?? '';
       for (const part of parts) {
@@ -433,7 +459,9 @@ export class StreamableHTTPTransport extends BaseTransport {
           if (evt.id) this._lastEventId = evt.id;
           if (evt.data) {
             this._handleIncoming(evt.data);
-            try { lastResult = deserializeMessage(evt.data); } catch (_) { }
+            try {
+              lastResult = deserializeMessage(evt.data);
+            } catch (_) {}
           }
         }
       }
@@ -453,9 +481,12 @@ export class StreamableHTTPTransport extends BaseTransport {
       const headers = {
         'MCP-Session-Id': this._sessionId,
         'MCP-Protocol-Version': this._negotiatedVersion ?? DEFAULT_PROTOCOL_VERSION,
-        ...this._headers,
+        ...this._headers
       };
-      await fetch(this._url.toString(), { method: 'DELETE', headers }).catch(() => {});
+      await fetch(this._url.toString(), {
+        method: 'DELETE',
+        headers
+      }).catch(() => {});
     }
     this._sessionId = null;
     this.emit('disconnected', {});
@@ -497,25 +528,30 @@ export class LegacySSETransport extends BaseTransport {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(this._sseUrl.toString(), {
-          headers: { Accept: 'text/event-stream', ...this._headers },
+          headers: {
+            Accept: 'text/event-stream',
+            ...this._headers
+          }
         });
         if (!response.ok) {
           return reject(new Error(`SSE connect failed: ${response.status}`));
         }
-
         const reader = response.body?.getReader();
         if (!reader) return reject(new Error('No response body'));
         this._sseReader = reader;
-
         let resolved = false;
         const decoder = new TextDecoder();
         let buffer = '';
-
         const pump = async () => {
           while (true) {
-            const { done, value } = await reader.read();
+            const {
+              done,
+              value
+            } = await reader.read();
             if (done) break;
-            buffer += decoder.decode(value, { stream: true });
+            buffer += decoder.decode(value, {
+              stream: true
+            });
             const parts = buffer.split('\n\n');
             buffer = parts.pop() ?? '';
             for (const part of parts) {
@@ -525,7 +561,10 @@ export class LegacySSETransport extends BaseTransport {
                 if (evt.event === 'endpoint') {
                   this._sessionEndpoint = new URL(evt.data, this._sseUrl);
                   this._connected = true;
-                  if (!resolved) { resolved = true; resolve(); }
+                  if (!resolved) {
+                    resolved = true;
+                    resolve();
+                  }
                 } else if (evt.data) {
                   this._handleIncoming(evt.data);
                 }
@@ -534,10 +573,10 @@ export class LegacySSETransport extends BaseTransport {
           }
           if (!resolved) reject(new Error('SSE stream ended before endpoint event'));
         };
-
         pump().catch(err => {
-          if (!resolved) reject(err);
-          else this.emit('sse_error', { error: err.message });
+          if (!resolved) reject(err);else this.emit('sse_error', {
+            error: err.message
+          });
         });
       } catch (err) {
         reject(err);
@@ -555,8 +594,11 @@ export class LegacySSETransport extends BaseTransport {
     const url = this._sessionEndpoint ?? this._messagesUrl;
     const response = await fetch(url.toString(), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...this._headers },
-      body: message,
+      headers: {
+        'Content-Type': 'application/json',
+        ...this._headers
+      },
+      body: message
     });
     if (!response.ok) {
       const text = await response.text().catch(() => '');
@@ -571,7 +613,9 @@ export class LegacySSETransport extends BaseTransport {
    */
   async close() {
     this._connected = false;
-    try { await this._sseReader?.cancel(); } catch (_) { }
+    try {
+      await this._sseReader?.cancel();
+    } catch (_) {}
     this._sseReader = null;
     this.emit('disconnected', {});
   }
@@ -601,7 +645,10 @@ export class StdioTransport extends BaseTransport {
     super(options);
     this._command = command;
     this._args = args;
-    this._env = { ...process.env, ...options.env };
+    this._env = {
+      ...process.env,
+      ...options.env
+    };
     this._cwd = options.cwd;
     this._passStderr = options.passStderr ?? true;
     this._process = null;
@@ -614,36 +661,41 @@ export class StdioTransport extends BaseTransport {
    * @returns {Promise<void>}
    */
   async connect() {
-    const { spawn } = await import('child_process');
-
+    const {
+      spawn
+    } = await import('child_process');
     this._process = spawn(this._command, this._args, {
       stdio: ['pipe', 'pipe', this._passStderr ? 'inherit' : 'pipe'],
       env: this._env,
-      cwd: this._cwd,
+      cwd: this._cwd
     });
-
     this._process.on('error', err => {
       this._connected = false;
-      this.emit('process_error', { error: err.message });
+      this.emit('process_error', {
+        error: err.message
+      });
     });
-
     this._process.on('exit', (code, signal) => {
       this._connected = false;
-      this.emit('process_exit', { code, signal });
+      this.emit('process_exit', {
+        code,
+        signal
+      });
     });
 
     // Read line-delimited JSON-RPC from stdout
     this._rl = createInterface({
       input: this._process.stdout,
-      crlfDelay: Infinity,
+      crlfDelay: Infinity
     });
-
     this._rl.on('line', line => {
       if (line.trim()) this._handleIncoming(line.trim());
     });
-
     this._connected = true;
-    this.emit('connected', { command: this._command, pid: this._process.pid });
+    this.emit('connected', {
+      command: this._command,
+      pid: this._process.pid
+    });
   }
 
   /**
@@ -658,8 +710,7 @@ export class StdioTransport extends BaseTransport {
     }
     return new Promise((resolve, reject) => {
       this._process.stdin.write(message + '\n', err => {
-        if (err) reject(err);
-        else resolve();
+        if (err) reject(err);else resolve();
       });
     });
   }
@@ -679,14 +730,21 @@ export class StdioTransport extends BaseTransport {
           this._process?.kill('SIGKILL');
           resolve();
         }, 2000);
-        this._process.on('exit', () => { clearTimeout(timer); resolve(); });
+        this._process.on('exit', () => {
+          clearTimeout(timer);
+          resolve();
+        });
       });
     }
-    this.emit('disconnected', { pid: this._process?.pid });
+    this.emit('disconnected', {
+      pid: this._process?.pid
+    });
   }
 
   /** @returns {import('child_process').ChildProcess|null} Underlying child process */
-  get process() { return this._process; }
+  get process() {
+    return this._process;
+  }
 }
 
 // ─── WebSocket Transport ──────────────────────────────────────────────────────
@@ -700,14 +758,6 @@ export class StdioTransport extends BaseTransport {
  * @extends BaseTransport
  */
 export class WebSocketTransport extends BaseTransport {
-  /**
-   * @param {string|URL} url - WebSocket endpoint (ws:// or wss://)
-   * @param {Object} [options={}]
-   * @param {string[]} [options.protocols=[]] - WebSocket sub-protocols
-   * @param {Object} [options.headers={}] - HTTP upgrade headers
-   * @param {number} [options.reconnectDelayMs=1000] - Base reconnect delay
-   * @param {number} [options.maxReconnectAttempts=8]
-   */
   constructor(url, options = {}) {
     super(options);
     this._url = url.toString();
@@ -734,12 +784,13 @@ export class WebSocketTransport extends BaseTransport {
       // Use native WebSocket (Node 22+) or ws library
       const WSClass = globalThis.WebSocket ?? require('ws');
       this._ws = new WSClass(this._url, this._protocols);
-
       this._ws.onopen = () => {
         clearTimeout(connectTimeout);
         this._connected = true;
         this._reconnectAttempts = 0;
-        this.emit('connected', { url: this._url });
+        this.emit('connected', {
+          url: this._url
+        });
 
         // Flush queued messages
         while (this._messageQueue.length > 0) {
@@ -747,23 +798,25 @@ export class WebSocketTransport extends BaseTransport {
         }
         resolve();
       };
-
       this._ws.onmessage = evt => {
         const data = typeof evt.data === 'string' ? evt.data : evt.data.toString();
         this._handleIncoming(data);
       };
-
       this._ws.onerror = evt => {
         if (!this._connected) {
           clearTimeout(connectTimeout);
           reject(new Error(`WebSocket error: ${evt.message ?? 'unknown'}`));
         }
-        this.emit('ws_error', { error: evt.message });
+        this.emit('ws_error', {
+          error: evt.message
+        });
       };
-
       this._ws.onclose = evt => {
         this._connected = false;
-        this.emit('ws_closed', { code: evt.code, reason: evt.reason });
+        this.emit('ws_closed', {
+          code: evt.code,
+          reason: evt.reason
+        });
         if (this._reconnectAttempts < this._maxReconnectAttempts) {
           this._scheduleReconnect();
         }
@@ -777,13 +830,12 @@ export class WebSocketTransport extends BaseTransport {
    * @private
    */
   _scheduleReconnect() {
-    const delay = Math.min(
-      this._reconnectDelayMs * Math.pow(1.618, this._reconnectAttempts++),
-      60_000
-    );
+    const delay = Math.min(this._reconnectDelayMs * Math.pow(1.618, this._reconnectAttempts++), 60_000);
     setTimeout(() => {
       this.connect().catch(err => {
-        this.emit('reconnect_failed', { error: err.message });
+        this.emit('reconnect_failed', {
+          error: err.message
+        });
         this._scheduleReconnect();
       });
     }, delay);
@@ -805,8 +857,7 @@ export class WebSocketTransport extends BaseTransport {
     }
     return new Promise((resolve, reject) => {
       this._ws.send(message, err => {
-        if (err) reject(err);
-        else resolve();
+        if (err) reject(err);else resolve();
       });
     });
   }
@@ -857,19 +908,6 @@ export class WebSocketTransport extends BaseTransport {
  * ```
  */
 export class MCPTransportAdapter extends EventEmitter {
-  /**
-   * @param {string|URL} endpoint - Server endpoint or 'stdio'
-   * @param {Object} [options={}] - Transport options
-   * @param {string} [options.transportType=TransportId.AUTO] - Force transport type
-   * @param {Object} [options.headers={}] - HTTP headers (for HTTP transports)
-   * @param {string} [options.command] - Executable (for stdio)
-   * @param {string[]} [options.args=[]] - Arguments (for stdio)
-   * @param {Object} [options.env={}] - Environment variables (for stdio)
-   * @param {string} [options.messagesUrl] - POST endpoint (for legacy SSE)
-   * @param {number} [options.reconnectDelayMs=1000]
-   * @param {number} [options.maxReconnectAttempts=8]
-   * @param {boolean} [options.enableLogging=false]
-   */
   constructor(endpoint, options = {}) {
     super();
     this._endpoint = endpoint;
@@ -893,21 +931,21 @@ export class MCPTransportAdapter extends EventEmitter {
     } else {
       this._resolvedType = this._requestedType;
     }
-
     this._transport = this._createTransport(this._resolvedType);
 
     // Bubble transport events
     this._transport.on('message', msg => this.emit('message', msg));
-    this._transport.on('connected', data => this.emit('connected', { ...data, transportType: this._resolvedType }));
+    this._transport.on('connected', data => this.emit('connected', {
+      ...data,
+      transportType: this._resolvedType
+    }));
     this._transport.on('disconnected', data => this.emit('disconnected', data));
     this._transport.on('error', err => this.emit('error', err));
     this._transport.on('log', data => this.emit('log', data));
-
     await this._transport.connect();
-
     return {
       transportType: this._resolvedType,
-      protocolVersion: this._transport._negotiatedVersion ?? null,
+      protocolVersion: this._transport._negotiatedVersion ?? null
     };
   }
 
@@ -947,33 +985,24 @@ export class MCPTransportAdapter extends EventEmitter {
       enableLogging: this._options.enableLogging ?? false,
       reconnectDelayMs: this._options.reconnectDelayMs ?? 1000,
       maxReconnectAttempts: this._options.maxReconnectAttempts ?? 8,
-      onMessage: msg => this.emit('message', msg),
+      onMessage: msg => this.emit('message', msg)
     };
-
     switch (type) {
       case TransportId.STREAMABLE_HTTP:
         return new StreamableHTTPTransport(this._endpoint, opts);
-
       case TransportId.SSE:
-        return new LegacySSETransport(
-          this._endpoint,
-          this._options.messagesUrl,
-          opts
-        );
-
+        return new LegacySSETransport(this._endpoint, this._options.messagesUrl, opts);
       case TransportId.STDIO:
-        return new StdioTransport(
-          this._options.command ?? this._endpoint.toString().replace('stdio://', ''),
-          this._options.args ?? [],
-          { ...opts, env: this._options.env ?? {}, cwd: this._options.cwd }
-        );
-
+        return new StdioTransport(this._options.command ?? this._endpoint.toString().replace('stdio://', ''), this._options.args ?? [], {
+          ...opts,
+          env: this._options.env ?? {},
+          cwd: this._options.cwd
+        });
       case TransportId.WEBSOCKET:
         return new WebSocketTransport(this._endpoint, {
           ...opts,
-          protocols: this._options.protocols ?? [],
+          protocols: this._options.protocols ?? []
         });
-
       default:
         throw new Error(`Unknown transport type: ${type}`);
     }
@@ -982,13 +1011,19 @@ export class MCPTransportAdapter extends EventEmitter {
   // ─── Helpers ───────────────────────────────────────────────────────────────
 
   /** @returns {boolean} Whether the transport is connected */
-  get connected() { return this._transport?.connected ?? false; }
+  get connected() {
+    return this._transport?.connected ?? false;
+  }
 
   /** @returns {string|null} Resolved transport type */
-  get transportType() { return this._resolvedType; }
+  get transportType() {
+    return this._resolvedType;
+  }
 
   /** @returns {string|null} MCP session ID (Streamable HTTP only) */
-  get sessionId() { return this._transport?.sessionId ?? null; }
+  get sessionId() {
+    return this._transport?.sessionId ?? null;
+  }
 
   /**
    * Convenience helper: send a JSON-RPC request and wait for response.
@@ -1003,5 +1038,4 @@ export class MCPTransportAdapter extends EventEmitter {
     return this.send(msg);
   }
 }
-
 export default MCPTransportAdapter;

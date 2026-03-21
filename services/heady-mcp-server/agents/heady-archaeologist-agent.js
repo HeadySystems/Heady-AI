@@ -1,17 +1,18 @@
-/**
- * HeadyArchaeologistAgent — Knowledge archaeology agent
- * Traverses historical vector memory finding buried insights, forgotten patterns,
- * dormant knowledge. Uses temporal decay reversal to resurface old but relevant memories.
- * @module heady-archaeologist-agent
- * © 2026 HeadySystems Inc. — Eric Haywood, Founder
- */
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('auto-fixed');
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
-const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
-
+const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 class HeadyArchaeologistAgent {
   /**
    * @param {object} config
@@ -26,7 +27,12 @@ class HeadyArchaeologistAgent {
     this.discoveredArtifacts = [];
     this.excavationHistory = [];
     this.state = 'IDLE';
-    this.stats = { excavations: 0, artifactsFound: 0, insightsGenerated: 0, resurfaced: 0 };
+    this.stats = {
+      excavations: 0,
+      artifactsFound: 0,
+      insightsGenerated: 0,
+      resurfaced: 0
+    };
     this._correlationId = `archaeologist-${Date.now().toString(36)}`;
   }
 
@@ -36,7 +42,11 @@ class HeadyArchaeologistAgent {
    * @returns {object} — excavation report
    */
   async excavate(context) {
-    const { queryEmbedding, domain = 'all', minAge = FIB[14] * 3600000 } = context;
+    const {
+      queryEmbedding,
+      domain = 'all',
+      minAge = FIB[14] * 3600000
+    } = context;
     this.state = 'EXCAVATING';
     this.stats.excavations++;
     const correlationId = `excav-${Date.now().toString(36)}`;
@@ -48,45 +58,47 @@ class HeadyArchaeologistAgent {
       const windowEnd = minAge * Math.pow(PHI, depth + 1);
       const layerArtifacts = await this._excavateLayer(queryEmbedding, domain, windowStart, windowEnd, depth);
       artifacts.push(...layerArtifacts);
-
-      this._log('info', 'layer-excavated', { correlationId, depth, windowStartHours: Math.round(windowStart / 3600000), windowEndHours: Math.round(windowEnd / 3600000), found: layerArtifacts.length });
+      this._log('info', 'layer-excavated', {
+        correlationId,
+        depth,
+        windowStartHours: Math.round(windowStart / 3600000),
+        windowEndHours: Math.round(windowEnd / 3600000),
+        found: layerArtifacts.length
+      });
     }
-
-    // Score and rank artifacts by relevance with temporal decay reversal
     const scored = this._scoreArtifacts(artifacts, queryEmbedding);
     const topArtifacts = scored.slice(0, this.maxArtifacts);
 
     // Generate insights from cross-layer patterns
     const insights = this._generateInsights(topArtifacts);
-
     this.discoveredArtifacts = topArtifacts;
     this.stats.artifactsFound += topArtifacts.length;
     this.stats.insightsGenerated += insights.length;
-
     const report = {
       correlationId,
       domain,
       depthLayers: this.excavationDepths,
       totalArtifacts: topArtifacts.length,
       insights,
-      artifacts: topArtifacts.map(a => ({ id: a.id, relevance: a.finalScore, age: a.age, layer: a.layer, summary: a.summary })),
+      artifacts: topArtifacts.map(a => ({
+        id: a.id,
+        relevance: a.finalScore,
+        age: a.age,
+        layer: a.layer,
+        summary: a.summary
+      })),
       coherence: this._calculateCoherence(),
       timestamp: new Date().toISOString()
     };
-
-    this.excavationHistory.push({ correlationId, timestamp: Date.now(), artifactCount: topArtifacts.length, insightCount: insights.length });
+    this.excavationHistory.push({
+      correlationId,
+      timestamp: Date.now(),
+      artifactCount: topArtifacts.length,
+      insightCount: insights.length
+    });
     this.state = 'IDLE';
     return report;
   }
-
-  /**
-   * Excavate a single temporal layer
-   * @param {Float32Array} queryEmbedding
-   * @param {string} domain
-   * @param {number} windowStart — ms ago (older boundary)
-   * @param {number} windowEnd — ms ago (newer boundary)
-   * @param {number} depth
-   */
   async _excavateLayer(queryEmbedding, domain, windowStart, windowEnd, depth) {
     const now = Date.now();
     const results = await this.memoryQueryFn({
@@ -97,18 +109,16 @@ class HeadyArchaeologistAgent {
       limit: FIB[8 + depth] || FIB[8],
       minSimilarity: CSL.MINIMUM
     });
-    return results.map(r => ({ ...r, layer: depth, age: now - (r.timestamp || now), windowDepth: depth }));
+    return results.map(r => ({
+      ...r,
+      layer: depth,
+      age: now - (r.timestamp || now),
+      windowDepth: depth
+    }));
   }
-
-  /**
-   * Score artifacts with temporal decay REVERSAL — older forgotten memories get BONUS
-   * @param {Array} artifacts
-   * @param {Float32Array} queryEmbedding
-   */
   _scoreArtifacts(artifacts, queryEmbedding) {
     return artifacts.map(artifact => {
       const baseSimilarity = artifact.similarity || CSL.MINIMUM;
-      // Temporal decay reversal: older = more valuable (forgotten knowledge premium)
       const ageHours = artifact.age / 3600000;
       const forgottenBonus = Math.log(1 + ageHours) * PSI * 0.1;
       // Layer depth bonus: deeper excavation = rarer finds
@@ -116,7 +126,14 @@ class HeadyArchaeologistAgent {
       // Access frequency penalty: frequently accessed = less novel
       const accessPenalty = (artifact.accessCount || 0) * 0.01;
       const finalScore = Math.min(1.0, baseSimilarity + forgottenBonus + depthBonus - accessPenalty);
-      return { ...artifact, baseSimilarity, forgottenBonus, depthBonus, accessPenalty, finalScore };
+      return {
+        ...artifact,
+        baseSimilarity,
+        forgottenBonus,
+        depthBonus,
+        accessPenalty,
+        finalScore
+      };
     }).sort((a, b) => b.finalScore - a.finalScore);
   }
 
@@ -127,8 +144,6 @@ class HeadyArchaeologistAgent {
   _generateInsights(artifacts) {
     const insights = [];
     if (artifacts.length < 2) return insights;
-
-    // Pattern 1: Cross-temporal bridges (similar content at very different time depths)
     for (let i = 0; i < Math.min(artifacts.length, FIB[8]); i++) {
       for (let j = i + 1; j < Math.min(artifacts.length, FIB[8]); j++) {
         if (artifacts[i].layer !== artifacts[j].layer) {
@@ -170,7 +185,6 @@ class HeadyArchaeologistAgent {
         timestamp: Date.now()
       });
     }
-
     return insights;
   }
 
@@ -178,30 +192,47 @@ class HeadyArchaeologistAgent {
   async _defaultMemoryQuery(params) {
     return [];
   }
-
   _calculateCoherence() {
     if (this.stats.excavations === 0) return 1.0;
     const efficiency = this.stats.artifactsFound / Math.max(1, this.stats.excavations * this.maxArtifacts);
     return Math.min(1.0, CSL.MEDIUM + efficiency * PSI);
   }
-
   async start() {
-    this._log('info', 'archaeologist-started', { excavationDepths: this.excavationDepths, maxArtifacts: this.maxArtifacts });
+    this._log('info', 'archaeologist-started', {
+      excavationDepths: this.excavationDepths,
+      maxArtifacts: this.maxArtifacts
+    });
     return this;
   }
-
   async stop() {
     this.state = 'STOPPED';
-    this._log('info', 'archaeologist-stopped', { stats: this.stats });
+    this._log('info', 'archaeologist-stopped', {
+      stats: this.stats
+    });
   }
-
   health() {
-    return { status: 'ok', state: this.state, coherence: this._calculateCoherence(), stats: { ...this.stats }, excavationHistory: this.excavationHistory.length, timestamp: new Date().toISOString() };
+    return {
+      status: 'ok',
+      state: this.state,
+      coherence: this._calculateCoherence(),
+      stats: {
+        ...this.stats
+      },
+      excavationHistory: this.excavationHistory.length,
+      timestamp: new Date().toISOString()
+    };
   }
-
   _log(level, event, data = {}) {
-    console.log(JSON.stringify({ level, event, agent: 'HeadyArchaeologistAgent', correlationId: this._correlationId, ...data, ts: new Date().toISOString() }));
+    logger.info(JSON.stringify({
+      level,
+      event,
+      agent: 'HeadyArchaeologistAgent',
+      correlationId: this._correlationId,
+      ...data,
+      ts: new Date().toISOString()
+    }));
   }
 }
-
-module.exports = { HeadyArchaeologistAgent };
+module.exports = {
+  HeadyArchaeologistAgent
+};

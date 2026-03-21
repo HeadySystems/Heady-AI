@@ -33,8 +33,18 @@
 
 'use strict';
 
-const { CSL_THRESHOLDS, PHI_TEMPERATURE } = require('../../shared/phi-math.js');
-const { CSLEngine, norm, normalize, dot, clamp, EPSILON } = require('./csl-engine/csl-engine');
+const {
+  CSL_THRESHOLDS,
+  PHI_TEMPERATURE
+} = require('../../shared/phi-math.js');
+const {
+  CSLEngine,
+  norm,
+  normalize,
+  dot,
+  clamp,
+  EPSILON
+} = require('./csl-engine/csl-engine');
 
 // ─── Ternary Value Constants ──────────────────────────────────────────────────
 
@@ -47,9 +57,9 @@ const { CSLEngine, norm, normalize, dot, clamp, EPSILON } = require('./csl-engin
  *   FALSE   = -1.0  → antipodal vectors (contradiction)
  */
 const TERNARY = {
-  TRUE:    1.0,
+  TRUE: 1.0,
   UNKNOWN: 0.0,
-  FALSE:  -1.0,
+  FALSE: -1.0
 };
 
 /** Threshold above which a value is classified as TRUE.
@@ -88,10 +98,14 @@ function toTernarySymbol(x, trueThreshold = TRUE_THRESHOLD, falseThreshold = FAL
  */
 function fromTernarySymbol(symbol) {
   switch (symbol) {
-    case 'TRUE':    return TERNARY.TRUE;
-    case 'UNKNOWN': return TERNARY.UNKNOWN;
-    case 'FALSE':   return TERNARY.FALSE;
-    default: throw new Error(`Unknown ternary symbol: ${symbol}`);
+    case 'TRUE':
+      return TERNARY.TRUE;
+    case 'UNKNOWN':
+      return TERNARY.UNKNOWN;
+    case 'FALSE':
+      return TERNARY.FALSE;
+    default:
+      throw new Error(`Unknown ternary symbol: ${symbol}`);
   }
 }
 
@@ -134,7 +148,6 @@ class TernaryLogicEngine {
     this.trueThreshold = options.trueThreshold !== undefined ? options.trueThreshold : TRUE_THRESHOLD;
     this.falseThreshold = options.falseThreshold !== undefined ? options.falseThreshold : FALSE_THRESHOLD;
     this.normalizeOutput = options.normalizeOutput !== false;
-
     this._csl = new CSLEngine();
 
     // Validate mode
@@ -179,22 +192,18 @@ class TernaryLogicEngine {
     const result = this._applyAND(a, b);
     return this.normalizeOutput ? clamp(result, -1.0, 1.0) : result;
   }
-
   _applyAND(a, b) {
     switch (this.mode) {
       case 'kleene':
       case 'godel':
         return Math.min(a, b);
-
       case 'lukasiewicz':
         // Bounded difference: max(-1, a + b - 1)
         return Math.max(-1.0, a + b - 1.0);
-
       case 'product':
       case 'csl':
         // Product t-norm
         return a * b;
-
       default:
         return Math.min(a, b);
     }
@@ -224,23 +233,19 @@ class TernaryLogicEngine {
     const result = this._applyOR(a, b);
     return this.normalizeOutput ? clamp(result, -1.0, 1.0) : result;
   }
-
   _applyOR(a, b) {
     switch (this.mode) {
       case 'kleene':
       case 'godel':
       case 'csl':
         return Math.max(a, b);
-
       case 'lukasiewicz':
         // Bounded sum: min(1, a + b + 1)
         return Math.min(1.0, a + b + 1.0);
-
       case 'product':
         // Probabilistic sum: a + b - a·b (for values in [0,1])
         // Adapted to [-1,+1]: use scaled version
         return a + b - a * b;
-
       default:
         return Math.max(a, b);
     }
@@ -297,14 +302,12 @@ class TernaryLogicEngine {
    */
   IMPLY(a, b) {
     let result;
-
     switch (this.mode) {
       case 'kleene':
       case 'godel':
         // K3 implication = OR(NOT(a), b)
         result = Math.max(-a, b);
         break;
-
       case 'lukasiewicz':
         // Ł3: min(1, 1 - a + b) → mapped: min(+1, -a + b + 1) - 1... use:
         // Standard Łukasiewicz: →(a,b) = min(1, 1-a+b) in [0,1]
@@ -319,7 +322,6 @@ class TernaryLogicEngine {
           result = 2.0 * impl01 - 1.0;
         }
         break;
-
       case 'product':
       case 'csl':
         // Product implication: b/a for a ≠ 0, clamped to [0,1] → [-1,+1]
@@ -329,11 +331,9 @@ class TernaryLogicEngine {
           result = clamp(b / Math.abs(a), -1.0, 1.0);
         }
         break;
-
       default:
         result = Math.max(-a, b);
     }
-
     return this.normalizeOutput ? clamp(result, -1.0, 1.0) : result;
   }
 
@@ -430,8 +430,12 @@ class TernaryLogicEngine {
 
     // Confidence: 0 = maximum uncertainty (x=0), 1 = certain (x=±1)
     const confidence = Math.abs(x);
-
-    return { lower, upper, symbol, confidence };
+    return {
+      lower,
+      upper,
+      symbol,
+      confidence
+    };
   }
 
   // ─── Vector-Level Ternary Operations ─────────────────────────────────────
@@ -455,7 +459,10 @@ class TernaryLogicEngine {
       score,
       symbol: this.discretize(score),
       confidence: Math.abs(score),
-      inputs: { cosAB, cosCD },
+      inputs: {
+        cosAB,
+        cosCD
+      }
     };
   }
 
@@ -476,7 +483,10 @@ class TernaryLogicEngine {
       score,
       symbol: this.discretize(score),
       confidence: Math.abs(score),
-      inputs: { cosAB, cosCD },
+      inputs: {
+        cosAB,
+        cosCD
+      }
     };
   }
 
@@ -491,8 +501,10 @@ class TernaryLogicEngine {
    * @returns {{ score: number, symbol: string, premiseScores: number[] }}
    */
   evaluateFormula(premises, reduction = 'AND') {
-    const scores = premises.map(({ a, b }) => this._csl.AND(a, b));
-
+    const scores = premises.map(({
+      a,
+      b
+    }) => this._csl.AND(a, b));
     let combined = scores[0];
     for (let i = 1; i < scores.length; i++) {
       if (reduction === 'AND') {
@@ -501,12 +513,11 @@ class TernaryLogicEngine {
         combined = this.OR(combined, scores[i]);
       }
     }
-
     return {
       score: combined,
       symbol: this.discretize(combined),
       premiseScores: scores,
-      confidence: Math.abs(combined),
+      confidence: Math.abs(combined)
     };
   }
 
@@ -520,36 +531,46 @@ class TernaryLogicEngine {
    * @returns {Object} Truth tables
    */
   getKleeneTruthTable() {
-    const vals = [
-      { sym: 'F', val: -1.0 },
-      { sym: 'U', val: 0.0 },
-      { sym: 'T', val: 1.0 },
-    ];
-
+    const vals = [{
+      sym: 'F',
+      val: -1.0
+    }, {
+      sym: 'U',
+      val: 0.0
+    }, {
+      sym: 'T',
+      val: 1.0
+    }];
     const andTable = {};
     const orTable = {};
     const implTable = {};
     const notTable = {};
-
-    for (const { sym: symA, val: a } of vals) {
+    for (const {
+      sym: symA,
+      val: a
+    } of vals) {
       notTable[symA] = toTernarySymbol(-a, 0.5, -0.5);
       andTable[symA] = {};
       orTable[symA] = {};
       implTable[symA] = {};
-
-      for (const { sym: symB, val: b } of vals) {
+      for (const {
+        sym: symB,
+        val: b
+      } of vals) {
         const prevMode = this.mode;
         this.mode = 'kleene';
-
         andTable[symA][symB] = toTernarySymbol(this.AND(a, b), 0.5, -0.5);
-        orTable[symA][symB]  = toTernarySymbol(this.OR(a, b), 0.5, -0.5);
+        orTable[symA][symB] = toTernarySymbol(this.OR(a, b), 0.5, -0.5);
         implTable[symA][symB] = toTernarySymbol(this.IMPLY(a, b), 0.5, -0.5);
-
         this.mode = prevMode;
       }
     }
-
-    return { andTable, orTable, implTable, notTable };
+    return {
+      andTable,
+      orTable,
+      implTable,
+      notTable
+    };
   }
 
   /**
@@ -560,34 +581,43 @@ class TernaryLogicEngine {
    * @returns {Object} Truth tables
    */
   getLukasiewiczTruthTable() {
-    const vals = [
-      { sym: 'F', val: -1.0 },
-      { sym: 'U', val: 0.0 },
-      { sym: 'T', val: 1.0 },
-    ];
-
+    const vals = [{
+      sym: 'F',
+      val: -1.0
+    }, {
+      sym: 'U',
+      val: 0.0
+    }, {
+      sym: 'T',
+      val: 1.0
+    }];
     const andTable = {};
     const orTable = {};
     const implTable = {};
-
-    for (const { sym: symA, val: a } of vals) {
+    for (const {
+      sym: symA,
+      val: a
+    } of vals) {
       andTable[symA] = {};
       orTable[symA] = {};
       implTable[symA] = {};
-
-      for (const { sym: symB, val: b } of vals) {
+      for (const {
+        sym: symB,
+        val: b
+      } of vals) {
         const prevMode = this.mode;
         this.mode = 'lukasiewicz';
-
         andTable[symA][symB] = toTernarySymbol(this.AND(a, b), 0.5, -0.5);
         orTable[symA][symB] = toTernarySymbol(this.OR(a, b), 0.5, -0.5);
         implTable[symA][symB] = toTernarySymbol(this.IMPLY(a, b), 0.5, -0.5);
-
         this.mode = prevMode;
       }
     }
-
-    return { andTable, orTable, implTable };
+    return {
+      andTable,
+      orTable,
+      implTable
+    };
   }
 
   // ─── Discretization ───────────────────────────────────────────────────────
@@ -641,26 +671,12 @@ class TernaryLogicEngine {
   ternaryGate(gateScore, conditionScore) {
     const combined = this.AND(gateScore, conditionScore);
     const symbol = this.discretize(combined);
-
     return {
       passed: symbol === 'TRUE',
       score: combined,
-      symbol,
+      symbol
     };
   }
-
-  /**
-   * Compute a ternary-aware softmax over truth values.
-   *
-   * Maps the ternary values to probabilities:
-   *   p_TRUE    = softmax(scores)[TRUE zone indices]
-   *   p_UNKNOWN = softmax(scores)[UNKNOWN zone indices]
-   *   p_FALSE   = softmax(scores)[FALSE zone indices]
-   *
-   * @param {number[]|Float64Array} scores - Array of cosine scores
-   * @param {number} [temperature=1.0]
-   * @returns {{ pTrue: number, pUnknown: number, pFalse: number }}
-   */
   ternarySoftmax(scores, temperature = PHI_TEMPERATURE) {
     // Compute standard softmax
     const maxScore = Math.max(...scores);
@@ -669,15 +685,18 @@ class TernaryLogicEngine {
     const probs = exps.map(x => x / sumExp);
 
     // Aggregate by ternary zone
-    let pTrue = 0, pUnknown = 0, pFalse = 0;
+    let pTrue = 0,
+      pUnknown = 0,
+      pFalse = 0;
     for (let i = 0; i < scores.length; i++) {
       const sym = this.discretize(scores[i]);
-      if (sym === 'TRUE') pTrue += probs[i];
-      else if (sym === 'FALSE') pFalse += probs[i];
-      else pUnknown += probs[i];
+      if (sym === 'TRUE') pTrue += probs[i];else if (sym === 'FALSE') pFalse += probs[i];else pUnknown += probs[i];
     }
-
-    return { pTrue, pUnknown, pFalse };
+    return {
+      pTrue,
+      pUnknown,
+      pFalse
+    };
   }
 }
 
@@ -704,11 +723,9 @@ function formatTruthTable(opName, table) {
   const vals = Object.keys(table);
   let out = `\n${opName}:\n`;
   out += `  \\ B: ${vals.join('  ')}\nA:\n`;
-
   for (const a of vals) {
     out += `  ${a}:   ${vals.map(b => table[a][b]).join('   ')}\n`;
   }
-
   return out;
 }
 
@@ -723,5 +740,5 @@ module.exports = {
   toTernarySymbol,
   fromTernarySymbol,
   formatTruthTable,
-  phiInterpolateTruth,
+  phiInterpolateTruth
 };

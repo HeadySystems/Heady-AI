@@ -1,4 +1,6 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyEval — LLM-as-Judge Evaluation Framework
@@ -16,15 +18,26 @@
  *
  * @module heady-eval
  */
-
 const crypto = require('crypto');
-const { EventEmitter } = require('events');
-
+const {
+  EventEmitter
+} = require('events');
 const config = require('./config');
-const { Dataset, DatasetManager } = require('./datasets');
-const { JudgeClient, JudgeConfig } = require('./judges');
-const { Runner, RUN_STATUSES } = require('./runner');
-const { ReportGenerator } = require('./reports');
+const {
+  Dataset,
+  DatasetManager
+} = require('./datasets');
+const {
+  JudgeClient,
+  JudgeConfig
+} = require('./judges');
+const {
+  Runner,
+  RUN_STATUSES
+} = require('./runner');
+const {
+  ReportGenerator
+} = require('./reports');
 
 // Scorers
 const BaseScorer = require('./scorers/base-scorer');
@@ -42,7 +55,7 @@ const BUILT_IN_SCORERS = {
   faithfulness: FaithfulnessScorer,
   safety: SafetyScorer,
   coherence: CoherenceScorer,
-  helpfulness: HelpfulnessScorer,
+  helpfulness: HelpfulnessScorer
 };
 
 // ─── HeadyEval class ──────────────────────────────────────────────────────────
@@ -61,19 +74,18 @@ class HeadyEval extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-
     this.config = {
       ...config,
       judgeModel: opts.judgeModel || config.judgeModel,
       concurrency: opts.concurrency || config.concurrency,
-      defaultScorers: opts.defaultScorers || config.defaultScorers,
+      defaultScorers: opts.defaultScorers || config.defaultScorers
     };
 
     // Judge configuration
     this.judgeConfig = new JudgeConfig({
       inferUrl: opts.inferUrl || config.headyInferUrl,
       model: this.config.judgeModel,
-      ...(opts.judgeOpts || {}),
+      ...(opts.judgeOpts || {})
     });
 
     // Embed client (lightweight HTTP call)
@@ -91,14 +103,14 @@ class HeadyEval extends EventEmitter {
       checkpointsDir: opts.checkpointsDir || config.checkpointsDir,
       judgeClient: this.judgeConfig.primary,
       embedClient: this.embedClient,
-      guardClient: this.guardClient,
+      guardClient: this.guardClient
     });
 
     // Forward runner events
-    this.runner.on('run:start', (e) => this.emit('run:start', e));
-    this.runner.on('run:progress', (e) => this.emit('run:progress', e));
-    this.runner.on('run:complete', (e) => this.emit('run:complete', e));
-    this.runner.on('run:error', (e) => this.emit('run:error', e));
+    this.runner.on('run:start', e => this.emit('run:start', e));
+    this.runner.on('run:progress', e => this.emit('run:progress', e));
+    this.runner.on('run:complete', e => this.emit('run:complete', e));
+    this.runner.on('run:error', e => this.emit('run:error', e));
 
     // Report generator
     this.reporter = new ReportGenerator();
@@ -121,7 +133,7 @@ class HeadyEval extends EventEmitter {
    * @returns {BaseScorer[]}
    */
   buildScorers(scorerNames, scorerOpts = {}) {
-    return scorerNames.map((name) => {
+    return scorerNames.map(name => {
       const opts = scorerOpts[name] || {};
 
       // Check custom registry first
@@ -129,7 +141,6 @@ class HeadyEval extends EventEmitter {
         const def = this._customScorers.get(name);
         return CustomScorer.create(def, opts);
       }
-
       const ScorerClass = BUILT_IN_SCORERS[name];
       if (!ScorerClass) {
         throw new Error(`Unknown scorer '${name}'. Built-in: ${Object.keys(BUILT_IN_SCORERS).join(', ')}. Custom: ${[...this._customScorers.keys()].join(', ')}`);
@@ -157,19 +168,17 @@ class HeadyEval extends EventEmitter {
       name,
       description: Cls.description || '',
       dimensions: Cls.dimensions || [],
-      type: 'built-in',
+      type: 'built-in'
     }));
-
     for (const [name, def] of this._customScorers.entries()) {
       scorers.push({
         name,
         description: def.description || '',
         dimensions: def.dimensions || [],
         type: 'custom',
-        rubric: def.rubric || null,
+        rubric: def.rubric || null
       });
     }
-
     return scorers;
   }
 
@@ -214,25 +223,23 @@ class HeadyEval extends EventEmitter {
     if (!dataset || !(dataset instanceof Dataset)) {
       throw new Error('opts.dataset must be a Dataset instance or dataset ID/name');
     }
-
     const scorerNames = opts.scorers || this.config.defaultScorers;
     const scorers = this.buildScorers(scorerNames, opts.scorerOpts || {});
     const runId = opts.runId || crypto.randomUUID();
-
     const run = await this.runner.execute({
       runId,
       name: opts.name || `eval_${dataset.name}_${Date.now()}`,
       dataset,
       scorers,
-      metadata: opts.metadata || {},
+      metadata: opts.metadata || {}
     });
-
     this._runs.set(run.id, run);
-
     const report = this.reporter.buildReport(run, opts.reportOpts || {});
     this._runReports.set(run.id, report);
-
-    return { run, report };
+    return {
+      run,
+      report
+    };
   }
 
   // ─── Comparison mode ──────────────────────────────────────────────────────
@@ -247,43 +254,51 @@ class HeadyEval extends EventEmitter {
    * @returns {Promise<object>} comparison report
    */
   async compare(opts = {}) {
-    const { dataset, models, scorers: scorerNames } = opts;
-
+    const {
+      dataset,
+      models,
+      scorers: scorerNames
+    } = opts;
     if (!Array.isArray(models) || models.length < 2) {
       throw new Error('compare() requires at least 2 models');
     }
-
     const runModels = [];
-
     for (const modelDef of models) {
       // Build dataset for this model: replace output with model-specific output
       let modelExamples = dataset.examples;
       if (modelDef.examples) {
         modelExamples = modelDef.examples;
       } else if (modelDef.outputField) {
-        modelExamples = dataset.examples.map((ex) => ({
+        modelExamples = dataset.examples.map(ex => ({
           ...ex,
-          output: ex.metadata?.[modelDef.outputField] || ex.output,
+          output: ex.metadata?.[modelDef.outputField] || ex.output
         }));
       }
-
       const modelDataset = new Dataset({
         name: `${dataset.name}_${modelDef.name}`,
         examples: modelExamples,
-        metadata: { ...dataset.metadata, modelName: modelDef.name },
+        metadata: {
+          ...dataset.metadata,
+          modelName: modelDef.name
+        }
       });
-
-      const { run } = await this.evaluate({
+      const {
+        run
+      } = await this.evaluate({
         dataset: modelDataset,
         scorers: scorerNames,
         name: `compare_${modelDef.name}_${Date.now()}`,
-        metadata: { comparisonModel: modelDef.name, ...opts.metadata },
-        scorerOpts: opts.scorerOpts,
+        metadata: {
+          comparisonModel: modelDef.name,
+          ...opts.metadata
+        },
+        scorerOpts: opts.scorerOpts
       });
-
-      runModels.push({ run, modelName: modelDef.name });
+      runModels.push({
+        run,
+        modelName: modelDef.name
+      });
     }
-
     return this.reporter.buildComparisonReport(runModels);
   }
 
@@ -301,17 +316,21 @@ class HeadyEval extends EventEmitter {
    * @returns {Promise<object>}
    */
   async abTest(opts = {}) {
-    const { dataset, variantA, variantB } = opts;
+    const {
+      dataset,
+      variantA,
+      variantB
+    } = opts;
     const comparison = await this.compare({
       dataset,
       models: [variantA, variantB],
       scorers: opts.scorers,
-      metadata: { abTest: true },
+      metadata: {
+        abTest: true
+      }
     });
-
     const [a, b] = comparison.models;
     const scorerNames = Object.keys(a.scorers);
-
     const abResult = {
       variantA: variantA.name,
       variantB: variantB.name,
@@ -319,9 +338,8 @@ class HeadyEval extends EventEmitter {
       overallDelta: (b.overall.mean || 0) - (a.overall.mean || 0),
       scorerComparison: {},
       recommendation: null,
-      comparison,
+      comparison
     };
-
     for (const scorer of scorerNames) {
       const aScore = a.scorers[scorer]?.mean || 0;
       const bScore = b.scorers[scorer]?.mean || 0;
@@ -330,10 +348,9 @@ class HeadyEval extends EventEmitter {
         [variantA.name]: aScore,
         [variantB.name]: bScore,
         delta: parseFloat(delta.toFixed(4)),
-        winner: delta > 0.05 ? variantB.name : (delta < -0.05 ? variantA.name : 'tie'),
+        winner: delta > 0.05 ? variantB.name : delta < -0.05 ? variantA.name : 'tie'
       };
     }
-
     const deltaOverall = abResult.overallDelta;
     if (Math.abs(deltaOverall) < 0.05) {
       abResult.recommendation = 'No significant difference between variants.';
@@ -342,7 +359,6 @@ class HeadyEval extends EventEmitter {
     } else {
       abResult.recommendation = `${variantA.name} outperforms ${variantB.name} by ${Math.abs(deltaOverall).toFixed(3)} on the overall aggregate.`;
     }
-
     return abResult;
   }
 
@@ -352,14 +368,12 @@ class HeadyEval extends EventEmitter {
     const run = this._runs.get(runId) || this.runner.getRun(runId);
     return run || null;
   }
-
   getRunReport(runId) {
     return this._runReports.get(runId) || null;
   }
-
   listRuns() {
     const inMemory = this.runner.listRuns();
-    const fromFramework = Array.from(this._runs.values()).map((r) => ({
+    const fromFramework = Array.from(this._runs.values()).map(r => ({
       id: r.id,
       name: r.name,
       status: r.status,
@@ -367,12 +381,12 @@ class HeadyEval extends EventEmitter {
       totalExamples: r.totalExamples,
       createdAt: r.createdAt,
       completedAt: r.completedAt,
-      durationMs: r.durationMs,
+      durationMs: r.durationMs
     }));
 
     // Merge, dedup by id
     const seen = new Set();
-    return [...fromFramework, ...inMemory].filter((r) => {
+    return [...fromFramework, ...inMemory].filter(r => {
       if (seen.has(r.id)) return false;
       seen.add(r.id);
       return true;
@@ -384,20 +398,17 @@ class HeadyEval extends EventEmitter {
   async loadDataset(source, opts = {}) {
     return this.datasets.load(source, opts);
   }
-
   async saveDataset(dataset, format = 'json') {
     return this.datasets.save(dataset, format);
   }
-
   async listDatasets() {
     return this.datasets.list();
   }
-
   async generateSyntheticDataset(opts) {
     return this.datasets.generateSynthetic({
       ...opts,
       judgeClient: this.judgeConfig.primary,
-      model: opts.model || this.config.judgeModel,
+      model: opts.model || this.config.judgeModel
     });
   }
 
@@ -405,13 +416,16 @@ class HeadyEval extends EventEmitter {
 
   exportReport(report, format = 'json') {
     switch (format) {
-      case 'json': return this.reporter.toJSON(report);
-      case 'csv': return this.reporter.toCSV(report);
-      case 'html': return this.reporter.toHTML(report);
-      default: throw new Error(`Unsupported report format: ${format}`);
+      case 'json':
+        return this.reporter.toJSON(report);
+      case 'csv':
+        return this.reporter.toCSV(report);
+      case 'html':
+        return this.reporter.toHTML(report);
+      default:
+        throw new Error(`Unsupported report format: ${format}`);
     }
   }
-
   buildTrends(reports) {
     return this.reporter.buildTrends(reports);
   }
@@ -420,10 +434,14 @@ class HeadyEval extends EventEmitter {
 
   _buildEmbedClient(baseUrl) {
     return {
-      embed: async (text) => {
-        const { default: fetch } = await Promise.resolve().then(() => {
+      embed: async text => {
+        const {
+          default: fetch
+        } = await Promise.resolve().then(() => {
           // Use native fetch (Node 18+) or fall back to http module
-          if (typeof globalThis.fetch === 'function') return { default: globalThis.fetch };
+          if (typeof globalThis.fetch === 'function') return {
+            default: globalThis.fetch
+          };
           const http = require('http');
           const https = require('https');
           return {
@@ -436,59 +454,76 @@ class HeadyEval extends EventEmitter {
                 port: parsed.port,
                 path: parsed.pathname,
                 method: opts.method || 'GET',
-                headers: opts.headers || {},
-              }, (res) => {
+                headers: opts.headers || {}
+              }, res => {
                 let data = '';
-                res.on('data', (c) => { data += c; });
+                res.on('data', c => {
+                  data += c;
+                });
                 res.on('end', () => resolve({
                   ok: res.statusCode >= 200 && res.statusCode < 300,
-                  json: () => Promise.resolve(JSON.parse(data)),
+                  json: () => Promise.resolve(JSON.parse(data))
                 }));
               });
               req.on('error', reject);
               if (bodyStr) req.write(bodyStr);
               req.end();
-            }),
+            })
           };
         });
-
         const res = await fetch(`${baseUrl}/v1/embed`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text
+          })
         });
         if (!res.ok) throw new Error(`HeadyEmbed error: ${res.status}`);
         const data = await res.json();
         return data.embedding || data.vector || data.embeddings?.[0];
-      },
+      }
     };
   }
-
   _buildGuardClient(baseUrl) {
     return {
-      check: async (text) => {
+      check: async text => {
         try {
           const http = require('http');
           const https = require('https');
           const parsed = new URL(`${baseUrl}/v1/check`);
           const transport = parsed.protocol === 'https:' ? https : http;
-          const body = JSON.stringify({ text });
+          const body = JSON.stringify({
+            text
+          });
           return new Promise((resolve, reject) => {
             const req = transport.request({
               hostname: parsed.hostname,
               port: parsed.port || (parsed.protocol === 'https:' ? 443 : 80),
               path: parsed.pathname,
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-            }, (res) => {
+              headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(body)
+              }
+            }, res => {
               let data = '';
-              res.on('data', (c) => { data += c; });
+              res.on('data', c => {
+                data += c;
+              });
               res.on('end', () => {
-                try { resolve(JSON.parse(data)); }
-                catch { reject(new Error(`Invalid JSON from Heady™Guard`)); }
+                try {
+                  resolve(JSON.parse(data));
+                } catch {
+                  reject(new Error(`Invalid JSON from Heady™Guard`));
+                }
               });
             });
-            req.setTimeout(5000, () => { req.destroy(); reject(new Error('HeadyGuard timeout')); });
+            req.setTimeout(5000, () => {
+              req.destroy();
+              reject(new Error('HeadyGuard timeout'));
+            });
             req.on('error', reject);
             req.write(body);
             req.end();
@@ -496,7 +531,7 @@ class HeadyEval extends EventEmitter {
         } catch {
           return null;
         }
-      },
+      }
     };
   }
 
@@ -522,18 +557,24 @@ async function createService(opts = {}) {
   const compression = require('compression');
   const routes = require('./routes');
   const health = require('./health');
-
   const evalInstance = new HeadyEval(opts);
-
   const app = express();
   app.set('trust proxy', config.trustProxy);
 
   // Security & middleware
-  app.use(helmet({ contentSecurityPolicy: false }));
-  app.use(cors({ origin: config.corsOrigins }));
+  app.use(helmet({
+    contentSecurityPolicy: false
+  }));
+  app.use(cors({
+    origin: config.corsOrigins
+  }));
   app.use(compression());
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json({
+    limit: '10mb'
+  }));
+  app.use(express.urlencoded({
+    extended: false
+  }));
 
   // Attach eval instance to app for routes
   app.locals.eval = evalInstance;
@@ -547,22 +588,30 @@ async function createService(opts = {}) {
 
   // 404
   app.use((req, res) => {
-    res.status(404).json({ error: 'Not found', path: req.path });
+    res.status(404).json({
+      error: 'Not found',
+      path: req.path
+    });
   });
 
   // Error handler
   app.use((err, req, res, _next) => {
-    console.error('[heady-eval] Unhandled error:', err);
+    logger.error('[heady-eval] Unhandled error:', err);
     res.status(err.status || 500).json({
       error: err.message || 'Internal server error',
-      ...(config.isDev && { stack: err.stack }),
+      ...(config.isDev && {
+        stack: err.stack
+      })
     });
   });
-
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const server = app.listen(config.port, config.host, () => {
-      console.log(`[heady-eval] Service listening on ${config.host}:${config.port}`);
-      resolve({ app, server, eval: evalInstance });
+      logger.info(`[heady-eval] Service listening on ${config.host}:${config.port}`);
+      resolve({
+        app,
+        server,
+        eval: evalInstance
+      });
     });
   });
 }
@@ -592,14 +641,14 @@ module.exports = {
   // Reports
   ReportGenerator,
   // Config
-  config,
+  config
 };
 
 // ─── CLI entry point ─────────────────────────────────────────────────────────
 
 if (require.main === module) {
-  createService().catch((err) => {
-    console.error('[heady-eval] Fatal startup error:', err);
+  createService().catch(err => {
+    logger.error('[heady-eval] Fatal startup error:', err);
     process.exit(1);
   });
 }

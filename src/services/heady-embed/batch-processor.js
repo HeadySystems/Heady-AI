@@ -6,7 +6,6 @@
  * Dynamic batch sizing, priority queue, deduplication, PHI-scaled retry backoff,
  * and concurrency limiting to prevent OOM during high-throughput workloads.
  */
-
 const EventEmitter = require('events');
 const config = require('./config');
 
@@ -25,11 +24,14 @@ class PriorityQueue {
    * @param {number} priority - Lower number = higher priority (0 = urgent)
    */
   enqueue(item, priority = 5) {
-    const node = { item, priority, seq: this._counter++ };
+    const node = {
+      item,
+      priority,
+      seq: this._counter++
+    };
     this._heap.push(node);
     this._bubbleUp(this._heap.length - 1);
   }
-
   dequeue() {
     if (this._heap.length === 0) return null;
     this._swap(0, this._heap.length - 1);
@@ -37,7 +39,6 @@ class PriorityQueue {
     this._siftDown(0);
     return node.item;
   }
-
   dequeueN(n) {
     const items = [];
     while (items.length < n && this._heap.length > 0) {
@@ -45,15 +46,16 @@ class PriorityQueue {
     }
     return items;
   }
-
-  get size() { return this._heap.length; }
-  get isEmpty() { return this._heap.length === 0; }
-
+  get size() {
+    return this._heap.length;
+  }
+  get isEmpty() {
+    return this._heap.length === 0;
+  }
   _compare(a, b) {
     if (a.priority !== b.priority) return a.priority - b.priority;
     return a.seq - b.seq;
   }
-
   _bubbleUp(i) {
     while (i > 0) {
       const parent = Math.floor((i - 1) / 2);
@@ -62,7 +64,6 @@ class PriorityQueue {
       i = parent;
     }
   }
-
   _siftDown(i) {
     const n = this._heap.length;
     while (true) {
@@ -76,7 +77,6 @@ class PriorityQueue {
       i = smallest;
     }
   }
-
   _swap(i, j) {
     [this._heap[i], this._heap[j]] = [this._heap[j], this._heap[i]];
   }
@@ -104,7 +104,10 @@ class BatchRequest {
 
     // Resolved by BatchProcessor
     let _resolve, _reject;
-    this.promise = new Promise((res, rej) => { _resolve = res; _reject = rej; });
+    this.promise = new Promise((res, rej) => {
+      _resolve = res;
+      _reject = rej;
+    });
     this.resolve = _resolve;
     this.reject = _reject;
   }
@@ -115,39 +118,27 @@ class BatchRequest {
 // ---------------------------------------------------------------------------
 
 class BatchProcessor extends EventEmitter {
-  /**
-   * @param {object} options
-   * @param {Function} options.embedFn          - async (texts, modelId) => Float32Array[]
-   * @param {number}   options.batchSize         - Base batch size
-   * @param {number}   options.maxConcurrent     - Max simultaneous batches
-   * @param {number}   options.maxMemoryMb       - Soft memory cap for dynamic sizing
-   * @param {number}   options.retryMaxAttempts  - Max retry attempts
-   */
   constructor(options = {}) {
     super();
-
     if (typeof options.embedFn !== 'function') {
       throw new Error('BatchProcessor requires embedFn option');
     }
-
     this._embedFn = options.embedFn;
     this._baseBatchSize = options.batchSize || config.batchSize;
     this._maxConcurrent = options.maxConcurrent || config.maxConcurrentBatches;
     this._maxMemoryMb = options.maxMemoryMb || config.maxMemoryMb;
     this._retryMaxAttempts = options.retryMaxAttempts || config.retryMaxAttempts;
-
     this._queue = new PriorityQueue();
     this._activeBatches = 0;
     this._processing = false;
     this._shuttingDown = false;
-
     this._stats = {
       totalRequests: 0,
       totalTexts: 0,
       totalBatches: 0,
       dedupSavings: 0,
       retries: 0,
-      errors: 0,
+      errors: 0
     };
   }
 
@@ -167,20 +158,20 @@ class BatchProcessor extends EventEmitter {
     if (this._shuttingDown) {
       throw new Error('BatchProcessor is shutting down');
     }
-
     const arr = Array.isArray(texts) ? texts : [texts];
     if (arr.length === 0) return [];
-
     const req = new BatchRequest(arr, options);
     this._queue.enqueue(req, req.priority);
     this._stats.totalRequests++;
     this._stats.totalTexts += arr.length;
-
-    this.emit('queued', { requestId: req.id, count: arr.length, queueSize: this._queue.size });
+    this.emit('queued', {
+      requestId: req.id,
+      count: arr.length,
+      queueSize: this._queue.size
+    });
 
     // Trigger processing loop
     this._scheduleFlush();
-
     return req.promise;
   }
 
@@ -192,7 +183,7 @@ class BatchProcessor extends EventEmitter {
       ...this._stats,
       queueSize: this._queue.size,
       activeBatches: this._activeBatches,
-      currentBatchSize: this._computeBatchSize(),
+      currentBatchSize: this._computeBatchSize()
     };
   }
 
@@ -212,7 +203,6 @@ class BatchProcessor extends EventEmitter {
     while (this._activeBatches > 0) {
       await sleep(100);
     }
-
     this.emit('shutdown');
   }
 
@@ -225,25 +215,23 @@ class BatchProcessor extends EventEmitter {
     // Use setImmediate to allow multiple enqueues to coalesce
     setImmediate(() => this._flush());
   }
-
   async _flush() {
     if (this._processing) return;
     this._processing = true;
-
     try {
       while (!this._queue.isEmpty && this._activeBatches < this._maxConcurrent) {
         const batchSize = this._computeBatchSize();
         const requests = this._queue.dequeueN(batchSize);
-
         if (requests.length === 0) break;
-
         this._activeBatches++;
         this._stats.totalBatches++;
 
         // Fire-and-forget; promise tracked internally
         this._processBatch(requests).finally(() => {
           this._activeBatches--;
-          this.emit('batchComplete', { activeBatches: this._activeBatches });
+          this.emit('batchComplete', {
+            activeBatches: this._activeBatches
+          });
           // Continue flushing
           this._scheduleFlush();
         });
@@ -268,12 +256,18 @@ class BatchProcessor extends EventEmitter {
     }
 
     // Deduplication: unique texts + index mapping
-    const { uniqueTexts, indexMap } = this._deduplicate(allTexts);
+    const {
+      uniqueTexts,
+      indexMap
+    } = this._deduplicate(allTexts);
     const savedCount = allTexts.length - uniqueTexts.length;
     this._stats.dedupSavings += savedCount;
-
     if (savedCount > 0) {
-      this.emit('dedup', { original: allTexts.length, unique: uniqueTexts.length, saved: savedCount });
+      this.emit('dedup', {
+        original: allTexts.length,
+        unique: uniqueTexts.length,
+        saved: savedCount
+      });
     }
 
     // Get model ID from first request (all in batch should use same model for efficiency)
@@ -292,7 +286,7 @@ class BatchProcessor extends EventEmitter {
     }
 
     // Re-expand results to original order (undo dedup)
-    const expanded = indexMap.map((i) => results[i]);
+    const expanded = indexMap.map(i => results[i]);
 
     // Distribute results back to each request
     for (let r = 0; r < requests.length; r++) {
@@ -309,7 +303,7 @@ class BatchProcessor extends EventEmitter {
   _deduplicate(texts) {
     const seen = new Map(); // text -> index in uniqueTexts
     const uniqueTexts = [];
-    const indexMap = [];    // allTexts index -> uniqueTexts index
+    const indexMap = []; // allTexts index -> uniqueTexts index
 
     for (const text of texts) {
       if (!seen.has(text)) {
@@ -318,8 +312,10 @@ class BatchProcessor extends EventEmitter {
       }
       indexMap.push(seen.get(text));
     }
-
-    return { uniqueTexts, indexMap };
+    return {
+      uniqueTexts,
+      indexMap
+    };
   }
 
   /**
@@ -328,7 +324,6 @@ class BatchProcessor extends EventEmitter {
    */
   async _embedWithRetry(texts, modelId, requestsForProgress) {
     let lastError;
-
     for (let attempt = 0; attempt < this._retryMaxAttempts; attempt++) {
       try {
         const results = await this._embedFn(texts, modelId, (processed, total) => {
@@ -341,15 +336,17 @@ class BatchProcessor extends EventEmitter {
       } catch (err) {
         lastError = err;
         this._stats.retries++;
-
         if (attempt < this._retryMaxAttempts - 1) {
           const delay = config.getRetryDelay(attempt);
-          this.emit('retry', { attempt: attempt + 1, delay, error: err.message });
+          this.emit('retry', {
+            attempt: attempt + 1,
+            delay,
+            error: err.message
+          });
           await sleep(delay);
         }
       }
     }
-
     throw new Error(`Embedding failed after ${this._retryMaxAttempts} attempts: ${lastError.message}`);
   }
 
@@ -362,11 +359,10 @@ class BatchProcessor extends EventEmitter {
       const memUsage = process.memoryUsage();
       const usedMb = memUsage.heapUsed / (1024 * 1024);
       const ratio = usedMb / this._maxMemoryMb;
-
-      if (ratio < 0.5) return this._baseBatchSize;           // Plenty of memory
-      if (ratio < 0.7) return Math.ceil(this._baseBatchSize * 0.75);  // Slightly constrained
-      if (ratio < 0.85) return Math.ceil(this._baseBatchSize * 0.5);  // Constrained
-      return Math.max(1, Math.ceil(this._baseBatchSize * 0.25));      // Very tight
+      if (ratio < 0.5) return this._baseBatchSize; // Plenty of memory
+      if (ratio < 0.7) return Math.ceil(this._baseBatchSize * 0.75); // Slightly constrained
+      if (ratio < 0.85) return Math.ceil(this._baseBatchSize * 0.5); // Constrained
+      return Math.max(1, Math.ceil(this._baseBatchSize * 0.25)); // Very tight
     } catch (_) {
       return this._baseBatchSize;
     }
@@ -378,11 +374,15 @@ class BatchProcessor extends EventEmitter {
 // ---------------------------------------------------------------------------
 
 function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // ---------------------------------------------------------------------------
 // Module exports
 // ---------------------------------------------------------------------------
 
-module.exports = { BatchProcessor, PriorityQueue, BatchRequest };
+module.exports = {
+  BatchProcessor,
+  PriorityQueue,
+  BatchRequest
+};

@@ -1,31 +1,29 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyVector Migration System
  * Auto-runs on startup, tracks versions in PostgreSQL.
  * Each migration is idempotent (IF NOT EXISTS / CREATE OR REPLACE).
  */
-
 const config = require('./config');
 
 // ─── Migration definitions ────────────────────────────────────────────────────
 // Ordered array; never remove or reorder. Add new entries at the end.
 
-const MIGRATIONS = [
-  {
-    version: 1,
-    name: 'create_pgvector_extension',
-    up: `CREATE EXTENSION IF NOT EXISTS vector;`,
-  },
-  {
-    version: 2,
-    name: 'create_pg_trgm_extension',
-    up: `CREATE EXTENSION IF NOT EXISTS pg_trgm;`,
-  },
-  {
-    version: 3,
-    name: 'create_collections_table',
-    up: `
+const MIGRATIONS = [{
+  version: 1,
+  name: 'create_pgvector_extension',
+  up: `CREATE EXTENSION IF NOT EXISTS vector;`
+}, {
+  version: 2,
+  name: 'create_pg_trgm_extension',
+  up: `CREATE EXTENSION IF NOT EXISTS pg_trgm;`
+}, {
+  version: 3,
+  name: 'create_collections_table',
+  up: `
       CREATE TABLE IF NOT EXISTS heady_collections (
         id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
         name          TEXT        NOT NULL UNIQUE,
@@ -44,12 +42,11 @@ const MIGRATIONS = [
 
       CREATE INDEX IF NOT EXISTS idx_heady_collections_name
         ON heady_collections (name);
-    `,
-  },
-  {
-    version: 4,
-    name: 'create_vectors_table',
-    up: `
+    `
+}, {
+  version: 4,
+  name: 'create_vectors_table',
+  up: `
       CREATE TABLE IF NOT EXISTS heady_vectors (
         id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
         collection_id UUID        NOT NULL REFERENCES heady_collections(id) ON DELETE CASCADE,
@@ -82,12 +79,11 @@ const MIGRATIONS = [
 
       CREATE INDEX IF NOT EXISTS idx_heady_vectors_created_at
         ON heady_vectors (created_at DESC);
-    `,
-  },
-  {
-    version: 5,
-    name: 'create_graph_tables',
-    up: `
+    `
+}, {
+  version: 5,
+  name: 'create_graph_tables',
+  up: `
       CREATE TABLE IF NOT EXISTS heady_graph_nodes (
         id          UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
         collection_id UUID  REFERENCES heady_collections(id) ON DELETE CASCADE,
@@ -146,12 +142,11 @@ const MIGRATIONS = [
 
       CREATE INDEX IF NOT EXISTS idx_graph_edges_weight
         ON heady_graph_edges (weight DESC);
-    `,
-  },
-  {
-    version: 6,
-    name: 'create_query_metrics_table',
-    up: `
+    `
+}, {
+  version: 6,
+  name: 'create_query_metrics_table',
+  up: `
       CREATE TABLE IF NOT EXISTS heady_query_metrics (
         id            BIGSERIAL   PRIMARY KEY,
         collection_id UUID        REFERENCES heady_collections(id) ON DELETE SET NULL,
@@ -167,12 +162,11 @@ const MIGRATIONS = [
 
       CREATE INDEX IF NOT EXISTS idx_query_metrics_type
         ON heady_query_metrics (query_type, created_at DESC);
-    `,
-  },
-  {
-    version: 7,
-    name: 'create_updated_at_trigger',
-    up: `
+    `
+}, {
+  version: 7,
+  name: 'create_updated_at_trigger',
+  up: `
       CREATE OR REPLACE FUNCTION heady_update_updated_at()
       RETURNS TRIGGER AS $$
       BEGIN
@@ -195,22 +189,20 @@ const MIGRATIONS = [
       CREATE TRIGGER trg_graph_nodes_updated_at
         BEFORE UPDATE ON heady_graph_nodes
         FOR EACH ROW EXECUTE FUNCTION heady_update_updated_at();
-    `,
-  },
-  {
-    version: 8,
-    name: 'create_hnsw_indexes_default_collection',
-    up: `
+    `
+}, {
+  version: 8,
+  name: 'create_hnsw_indexes_default_collection',
+  up: `
       -- HNSW indexes are created per-collection dynamically.
       -- This migration creates a placeholder to track the version.
       -- Actual HNSW index creation is handled by indexes.js.
       SELECT 1;
-    `,
-  },
-  {
-    version: 9,
-    name: 'add_collection_stats_view',
-    up: `
+    `
+}, {
+  version: 9,
+  name: 'add_collection_stats_view',
+  up: `
       CREATE OR REPLACE VIEW heady_collection_stats AS
       SELECT
         c.id,
@@ -228,12 +220,11 @@ const MIGRATIONS = [
       LEFT JOIN heady_vectors v ON v.collection_id = c.id
       LEFT JOIN heady_query_metrics qm ON qm.collection_id = c.id
       GROUP BY c.id, c.name, c.dimension, c.index_type, c.distance_metric, c.created_at, c.updated_at;
-    `,
-  },
-  {
-    version: 10,
-    name: 'add_community_detection_table',
-    up: `
+    `
+}, {
+  version: 10,
+  name: 'add_community_detection_table',
+  up: `
       CREATE TABLE IF NOT EXISTS heady_graph_communities (
         id            INTEGER     PRIMARY KEY,
         collection_id UUID        REFERENCES heady_collections(id) ON DELETE CASCADE,
@@ -248,9 +239,8 @@ const MIGRATIONS = [
 
       CREATE INDEX IF NOT EXISTS idx_communities_collection
         ON heady_graph_communities (collection_id);
-    `,
-  },
-];
+    `
+}];
 
 // ─── Migration runner ─────────────────────────────────────────────────────────
 
@@ -283,9 +273,7 @@ class MigrationRunner {
    * @returns {Promise<number>}
    */
   async getCurrentVersion(client) {
-    const result = await client.query(
-      `SELECT COALESCE(MAX(version), 0) AS version FROM ${this.tableName}`
-    );
+    const result = await client.query(`SELECT COALESCE(MAX(version), 0) AS version FROM ${this.tableName}`);
     return parseInt(result.rows[0].version, 10);
   }
 
@@ -298,39 +286,28 @@ class MigrationRunner {
     try {
       // Advisory lock to prevent concurrent migration runs
       await client.query('SELECT pg_advisory_lock(987654321)');
-
       await this.ensureMigrationsTable(client);
       const currentVersion = await this.getCurrentVersion(client);
-
-      const pending = MIGRATIONS.filter((m) => m.version > currentVersion);
+      const pending = MIGRATIONS.filter(m => m.version > currentVersion);
       const applied = [];
       const skipped = [];
-
       if (pending.length === 0) {
-        console.log(`[migrations] All ${MIGRATIONS.length} migrations already applied (current v${currentVersion})`);
+        logger.info(`[migrations] All ${MIGRATIONS.length} migrations already applied (current v${currentVersion})`);
       }
-
       for (const migration of pending) {
         const start = Date.now();
         try {
           await client.query('BEGIN');
           await client.query(migration.up);
-          await client.query(
-            `INSERT INTO ${this.tableName} (version, name, duration_ms)
+          await client.query(`INSERT INTO ${this.tableName} (version, name, duration_ms)
              VALUES ($1, $2, $3)
-             ON CONFLICT (version) DO NOTHING`,
-            [migration.version, migration.name, Date.now() - start]
-          );
+             ON CONFLICT (version) DO NOTHING`, [migration.version, migration.name, Date.now() - start]);
           await client.query('COMMIT');
           applied.push(migration.version);
-          console.log(
-            `[migrations] Applied v${migration.version}: ${migration.name} (${Date.now() - start}ms)`
-          );
+          logger.info(`[migrations] Applied v${migration.version}: ${migration.name} (${Date.now() - start}ms)`);
         } catch (err) {
           await client.query('ROLLBACK');
-          throw new Error(
-            `Migration v${migration.version} "${migration.name}" failed: ${err.message}`
-          );
+          throw new Error(`Migration v${migration.version} "${migration.name}" failed: ${err.message}`);
         }
       }
 
@@ -338,11 +315,11 @@ class MigrationRunner {
       await client.query('SELECT pg_advisory_unlock(987654321)');
 
       // Mark skipped (already applied)
-      MIGRATIONS.filter((m) => m.version <= currentVersion).forEach((m) =>
-        skipped.push(m.version)
-      );
-
-      return { applied, skipped };
+      MIGRATIONS.filter(m => m.version <= currentVersion).forEach(m => skipped.push(m.version));
+      return {
+        applied,
+        skipped
+      };
     } finally {
       client.release();
     }
@@ -356,21 +333,20 @@ class MigrationRunner {
     const client = await this.pool.connect();
     try {
       await this.ensureMigrationsTable(client);
-      const result = await client.query(
-        `SELECT version, name, applied_at, duration_ms FROM ${this.tableName} ORDER BY version`
-      );
-      const appliedVersions = new Set(result.rows.map((r) => r.version));
-
-      return MIGRATIONS.map((m) => ({
+      const result = await client.query(`SELECT version, name, applied_at, duration_ms FROM ${this.tableName} ORDER BY version`);
+      const appliedVersions = new Set(result.rows.map(r => r.version));
+      return MIGRATIONS.map(m => ({
         version: m.version,
         name: m.name,
         applied: appliedVersions.has(m.version),
-        ...(result.rows.find((r) => r.version === m.version) || {}),
+        ...(result.rows.find(r => r.version === m.version) || {})
       }));
     } finally {
       client.release();
     }
   }
 }
-
-module.exports = { MigrationRunner, MIGRATIONS };
+module.exports = {
+  MigrationRunner,
+  MIGRATIONS
+};

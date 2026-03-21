@@ -1,16 +1,14 @@
-/**
- * KRONOS v2 — Temporal Memory Indexer
- * Bi-level temporal graphs with φ-decay
- * Priority: 1.000
- */
-const { PHI } = require('../../mandala/constants');
-
+const {
+  PHI
+} = require('../../mandala/constants');
 class KronosV2 {
   constructor(db) {
     this.db = db;
-    this.temporalGraph = { nodes: [], edges: [] };
+    this.temporalGraph = {
+      nodes: [],
+      edges: []
+    };
   }
-
   async indexTemporalFact(fact) {
     const node = {
       id: crypto.randomUUID(),
@@ -25,7 +23,6 @@ class KronosV2 {
     this.temporalGraph.nodes.push(node);
     return node;
   }
-
   async invalidateEdge(edgeId, reason) {
     const edge = this.temporalGraph.edges.find(e => e.id === edgeId);
     if (edge) {
@@ -33,13 +30,11 @@ class KronosV2 {
       edge.invalidationReason = reason;
     }
   }
-
   async queryTemporal(query, asOfDate = Date.now()) {
     // Filter nodes valid at the given timestamp
-    return this.temporalGraph.nodes
-      .filter(n => n.validFrom <= asOfDate && (!n.validTo || n.validTo >= asOfDate))
-      .sort((a, b) => b.timestamp - a.timestamp);
+    return this.temporalGraph.nodes.filter(n => n.validFrom <= asOfDate && (!n.validTo || n.validTo >= asOfDate)).sort((a, b) => b.timestamp - a.timestamp);
   }
 }
-
-module.exports = { KronosV2 };
+module.exports = {
+  KronosV2
+};

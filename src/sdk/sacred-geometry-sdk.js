@@ -64,22 +64,6 @@ function fibonacci(n) {
 function phiScale(base, power) {
   return base * Math.pow(PHI, power);
 }
-
-/**
- * Exponential back-off whose growth factor is φ rather than 2.
- *
- * delay = baseMs × φ^attempt
- *
- * Produces a gentler curve than doubling, well-suited for retry logic
- * and progressive loading strategies.
- *
- * @param {number} attempt       — Zero-based attempt index
- * @param {number} [baseMs=1000] — Base delay in milliseconds
- * @returns {number} Delay in milliseconds
- * @example
- * phiBackoff(0) // => 1000
- * phiBackoff(3) // => 4235.8...
- */
 function phiBackoff(attempt, baseMs = 1000) {
   return baseMs * Math.pow(PHI, attempt);
 }
@@ -101,17 +85,15 @@ function phiBackoff(attempt, baseMs = 1000) {
 function goldenSpiral(numPoints) {
   const goldenAngleRad = GOLDEN_ANGLE_DEG * (Math.PI / 180);
   const points = [];
-
   for (let i = 0; i < numPoints; i++) {
     const angle = i * goldenAngleRad;
     const radius = Math.sqrt(i);
     points.push({
       x: radius * Math.cos(angle),
       y: radius * Math.sin(angle),
-      angle,
+      angle
     });
   }
-
   return points;
 }
 
@@ -137,20 +119,17 @@ function torusLayout(numItems, majorRadius = 100, minorRadius = 30) {
   // Approximate a nice square-ish distribution around the torus
   const cols = Math.ceil(Math.sqrt(numItems * PHI));
   const rows = Math.ceil(numItems / cols);
-
   for (let i = 0; i < numItems; i++) {
     const row = Math.floor(i / cols);
     const col = i % cols;
-    const u = (col / cols) * 2 * Math.PI;
-    const v = (row / rows) * 2 * Math.PI;
-
+    const u = col / cols * 2 * Math.PI;
+    const v = row / rows * 2 * Math.PI;
     points.push({
       x: (majorRadius + minorRadius * Math.cos(v)) * Math.cos(u),
       y: (majorRadius + minorRadius * Math.cos(v)) * Math.sin(u),
-      z: minorRadius * Math.sin(v),
+      z: minorRadius * Math.sin(v)
     });
   }
-
   return points;
 }
 
@@ -179,8 +158,9 @@ function metatronGrid(rows, cols) {
       const offset = r % 2 === 1 ? spacing / 2 : 0;
       nodes.push({
         x: c * spacing + offset,
-        y: r * spacing * PSI, // Row height compressed by ψ (≈ hex ratio)
-        connections: [],
+        y: r * spacing * PSI,
+        // Row height compressed by ψ (≈ hex ratio)
+        connections: []
       });
     }
   }
@@ -199,23 +179,18 @@ function metatronGrid(rows, cols) {
       if (r - 1 >= 0) {
         const topLeft = isOddRow ? c : c - 1;
         const topRight = isOddRow ? c + 1 : c;
-        if (topLeft >= 0 && topLeft < cols)
-          nodes[idx].connections.push((r - 1) * cols + topLeft);
-        if (topRight >= 0 && topRight < cols)
-          nodes[idx].connections.push((r - 1) * cols + topRight);
+        if (topLeft >= 0 && topLeft < cols) nodes[idx].connections.push((r - 1) * cols + topLeft);
+        if (topRight >= 0 && topRight < cols) nodes[idx].connections.push((r - 1) * cols + topRight);
       }
       // Bottom-left / Bottom-right
       if (r + 1 < rows) {
         const botLeft = isOddRow ? c : c - 1;
         const botRight = isOddRow ? c + 1 : c;
-        if (botLeft >= 0 && botLeft < cols)
-          nodes[idx].connections.push((r + 1) * cols + botLeft);
-        if (botRight >= 0 && botRight < cols)
-          nodes[idx].connections.push((r + 1) * cols + botRight);
+        if (botLeft >= 0 && botLeft < cols) nodes[idx].connections.push((r + 1) * cols + botLeft);
+        if (botRight >= 0 && botRight < cols) nodes[idx].connections.push((r + 1) * cols + botRight);
       }
     }
   }
-
   return nodes;
 }
 
@@ -234,25 +209,15 @@ function metatronGrid(rows, cols) {
 function phiBreakpoints() {
   return [320, 518, 838, 1356, 2194];
 }
-
-/**
- * Typographic scale where each step grows by φ from the base size.
- *
- * @param {number} [baseSize=16] — The base font size in px
- * @returns {{xs: number, sm: number, base: number, lg: number, xl: number, xxl: number, xxxl: number}}
- * @example
- * phiTypography(16)
- * // => { xs: 6.11, sm: 9.89, base: 16, lg: 25.89, xl: 41.89, xxl: 67.77, xxxl: 109.66 }
- */
 function phiTypography(baseSize = 16) {
   return {
-    xs:    round(baseSize * Math.pow(PSI, 2)),
-    sm:    round(baseSize * PSI),
-    base:  baseSize,
-    lg:    round(baseSize * PHI),
-    xl:    round(baseSize * PHI_SQ),
-    xxl:   round(baseSize * Math.pow(PHI, 3)),
-    xxxl:  round(baseSize * Math.pow(PHI, 4)),
+    xs: round(baseSize * Math.pow(PSI, 2)),
+    sm: round(baseSize * PSI),
+    base: baseSize,
+    lg: round(baseSize * PHI),
+    xl: round(baseSize * PHI_SQ),
+    xxl: round(baseSize * Math.pow(PHI, 3)),
+    xxxl: round(baseSize * Math.pow(PHI, 4))
   };
 }
 
@@ -268,12 +233,12 @@ function phiTypography(baseSize = 16) {
 function phiSpacing(baseUnit = 8) {
   return {
     xxs: round(baseUnit * Math.pow(PSI, 2)),
-    xs:  round(baseUnit * PSI),
-    sm:  baseUnit,
-    md:  round(baseUnit * PHI),
-    lg:  round(baseUnit * PHI_SQ),
-    xl:  round(baseUnit * Math.pow(PHI, 3)),
-    xxl: round(baseUnit * Math.pow(PHI, 4)),
+    xs: round(baseUnit * PSI),
+    sm: baseUnit,
+    md: round(baseUnit * PHI),
+    lg: round(baseUnit * PHI_SQ),
+    xl: round(baseUnit * Math.pow(PHI, 3)),
+    xxl: round(baseUnit * Math.pow(PHI, 4))
   };
 }
 
@@ -291,10 +256,10 @@ function phiTiming() {
   const normal = 300;
   return {
     instant: Math.round(normal * Math.pow(PSI, 2)),
-    fast:    Math.round(normal * PSI),
+    fast: Math.round(normal * PSI),
     normal,
-    slow:    Math.round(normal * PHI),
-    glacial: Math.round(normal * PHI_SQ),
+    slow: Math.round(normal * PHI),
+    glacial: Math.round(normal * PHI_SQ)
   };
 }
 
@@ -315,10 +280,10 @@ function phiTiming() {
 function phiColors(count = 12, saturation = 70, lightness = 55) {
   const colors = [];
   for (let i = 0; i < count; i++) {
-    const hue = round((i * GOLDEN_ANGLE_DEG) % 360);
+    const hue = round(i * GOLDEN_ANGLE_DEG % 360);
     colors.push({
       hue,
-      hsl: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+      hsl: `hsl(${hue}, ${saturation}%, ${lightness}%)`
     });
   }
   return colors;
@@ -343,12 +308,11 @@ function phiColors(count = 12, saturation = 70, lightness = 55) {
  * // }
  */
 function generateCSSCustomProperties() {
-  const typo    = phiTypography();
-  const space   = phiSpacing();
-  const timing  = phiTiming();
-  const bps     = phiBreakpoints();
-  const colors  = phiColors();
-
+  const typo = phiTypography();
+  const space = phiSpacing();
+  const timing = phiTiming();
+  const bps = phiBreakpoints();
+  const colors = phiColors();
   const lines = [':root {'];
 
   // Constants
@@ -393,7 +357,6 @@ function generateCSSCustomProperties() {
   colors.forEach((c, i) => {
     lines.push(`  --color-phi-${i}: ${c.hsl};`);
   });
-
   lines.push('}');
   return lines.join('\n');
 }
@@ -419,24 +382,20 @@ module.exports = {
   PHI_SQ,
   SQRT5,
   GOLDEN_ANGLE_DEG,
-
   // Core
   fibonacci,
   phiScale,
   phiBackoff,
-
   // Geometry
   goldenSpiral,
   torusLayout,
   metatronGrid,
-
   // Design-system scales
   phiBreakpoints,
   phiTypography,
   phiSpacing,
   phiTiming,
   phiColors,
-
   // CSS generation
-  generateCSSCustomProperties,
+  generateCSSCustomProperties
 };

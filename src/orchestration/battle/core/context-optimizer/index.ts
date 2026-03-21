@@ -1,3 +1,5 @@
+import { createLogger } from '../../../../utils/logger';
+const logger = createLogger('auto-fixed');
 /**
  * Context Optimizer
  * Intelligent context compression and relevance scoring
@@ -14,7 +16,6 @@ export interface ContextWindow {
   used: number;
   available: number;
 }
-
 export interface OptimizedContext {
   prompt: string;
   compressed: string;
@@ -22,7 +23,6 @@ export interface OptimizedContext {
   temperature: number;
   metadata: ContextMetadata;
 }
-
 export interface ContextMetadata {
   originalSize: number;
   compressedSize: number;
@@ -30,11 +30,9 @@ export interface ContextMetadata {
   relevanceScores: Map<string, number>;
   pruned: string[];
 }
-
 export class ContextOptimizer {
   private strategy: 'aggressive' | 'balanced' | 'conservative';
   private modelContextLimits: Map<string, number>;
-
   constructor(strategy: 'aggressive' | 'balanced' | 'conservative' = 'balanced') {
     this.strategy = strategy;
     this.modelContextLimits = this.initializeContextLimits();
@@ -45,7 +43,7 @@ export class ContextOptimizer {
    * Key insight: Different tasks need different context
    */
   async optimize(task: any): Promise<OptimizedContext> {
-    console.log(`[ContextOptimizer] Optimizing context for ${task.type} task`);
+    logger.info(`[ContextOptimizer] Optimizing context for ${task.type} task`);
 
     // Step 1: Gather all available context
     const rawContext = await this.gatherContext(task);
@@ -61,7 +59,6 @@ export class ContextOptimizer {
 
     // Step 5: Build optimized prompt
     const prompt = this.buildPrompt(task, compressed);
-
     return {
       prompt,
       compressed: compressed.content,
@@ -86,7 +83,6 @@ export class ContextOptimizer {
 
     // Specialization-specific context
     const contextStrategy = this.getStrategyForSpecialization(agent.specialization);
-
     return await this.optimize({
       type: agent.specialization,
       description: `Agent ${agent.id} - ${agent.specialization}`,
@@ -112,8 +108,6 @@ export class ContextOptimizer {
     if (task.context?.documentation) {
       sources.push(...task.context.documentation);
     }
-
-    // Prior attempts (learning from failures)
     if (task.context?.prior_attempts) {
       sources.push('Prior attempts:', ...task.context.prior_attempts);
     }
@@ -122,7 +116,6 @@ export class ContextOptimizer {
     if (task.context?.user_preferences) {
       sources.push('User preferences:', JSON.stringify(task.context.user_preferences));
     }
-
     return sources.join('\n\n');
   }
 
@@ -130,47 +123,49 @@ export class ContextOptimizer {
    * Score relevance using semantic similarity
    * High relevance = include, low relevance = prune
    */
-  private async scoreRelevance(
-    context: string,
-    task: any
-  ): Promise<Map<string, number>> {
+  private async scoreRelevance(context: string, task: any): Promise<Map<string, number>> {
     const scores = new Map<string, number>();
     const sections = context.split('\n\n');
-
     for (const section of sections) {
       // Calculate relevance score (0.0 to 1.0)
       const score = await this.calculateSemanticSimilarity(section, task.description);
       scores.set(section, score);
     }
-
     return scores;
   }
 
   /**
    * Prune low-relevance context based on strategy
    */
-  private pruneByRelevance(scored: Map<string, number>): { kept: string[]; removed: string[] } {
+  private pruneByRelevance(scored: Map<string, number>): {
+    kept: string[];
+    removed: string[];
+  } {
     const threshold = this.getRelevanceThreshold();
     const kept: string[] = [];
     const removed: string[] = [];
-
     for (const [section, score] of scored.entries()) {
       if (score >= threshold) {
         kept.push(section);
       } else {
         removed.push(section);
-        console.log(`[ContextOptimizer] Pruned (score ${score.toFixed(2)}): ${section.substring(0, 50)}...`);
+        logger.info(`[ContextOptimizer] Pruned (score ${score.toFixed(2)}): ${section.substring(0, 50)}...`);
       }
     }
-
-    console.log(`[ContextOptimizer] Kept ${kept.length} sections, pruned ${removed.length}`);
-    return { kept, removed };
+    logger.info(`[ContextOptimizer] Kept ${kept.length} sections, pruned ${removed.length}`);
+    return {
+      kept,
+      removed
+    };
   }
 
   /**
    * Compress context using summarization
    */
-  private async compress(pruned: { kept: string[]; removed: string[] }): Promise<{
+  private async compress(pruned: {
+    kept: string[];
+    removed: string[];
+  }): Promise<{
     content: string;
     files: string[];
   }> {
@@ -181,16 +176,20 @@ export class ContextOptimizer {
 
     // Extract file references
     const files = this.extractFileReferences(content);
-
-    return { content, files };
+    return {
+      content,
+      files
+    };
   }
 
   /**
    * Build optimized prompt for the task
    */
-  private buildPrompt(task: any, compressed: { content: string; files: string[] }): string {
+  private buildPrompt(task: any, compressed: {
+    content: string;
+    files: string[];
+  }): string {
     const systemPrompt = this.getSystemPromptForTask(task.type);
-
     return `${systemPrompt}
 
 ## Task
@@ -209,40 +208,30 @@ ${compressed.content}
 Provide complete, production-ready code.
 `;
   }
-
-  /**
-   * Temperature selection based on task type
-   */
   private selectTemperature(taskType: string): number {
     const temperatureMap = {
-      'coding': 0.2,         // Low temperature for deterministic code
-      'research': 0.7,       // Higher for creative research
-      'validation': 0.0,     // Zero for strict validation
-      'optimization': 0.3    // Low-medium for optimization
+      'coding': 0.2,
+      'research': 0.7,
+      // Higher for creative research
+      'validation': 0.0,
+      // Zero for strict validation
+      'optimization': 0.3 // Low-medium for optimization
     };
-
     return temperatureMap[taskType] || 0.5;
   }
-
   private getRelevanceThreshold(): number {
     const thresholds = {
-      'aggressive': 0.7,   // Keep only highly relevant
-      'balanced': 0.5,     // Keep moderately relevant
-      'conservative': 0.3  // Keep most context
+      'aggressive': 0.7,
+      // Keep only highly relevant
+      'balanced': 0.5,
+      // Keep moderately relevant
+      'conservative': 0.3 // Keep most context
     };
     return thresholds[this.strategy];
   }
-
   private initializeContextLimits(): Map<string, number> {
-    return new Map([
-      ['claude-opus-4-6', 200000],
-      ['claude-sonnet-4-5', 200000],
-      ['gpt-5-4-turbo', 128000],
-      ['gemini-3-1-pro', 1000000],
-      ['o1', 200000]
-    ]);
+    return new Map([['claude-opus-4-6', 200000], ['claude-sonnet-4-5', 200000], ['gpt-5-4-turbo', 128000], ['gemini-3-1-pro', 1000000], ['o1', 200000]]);
   }
-
   private getSystemPromptForTask(taskType: string): string {
     const prompts = {
       'coding': 'You are an expert software engineer. Write clean, maintainable, well-tested code.',
@@ -252,28 +241,22 @@ Provide complete, production-ready code.
     };
     return prompts[taskType] || 'You are a helpful AI assistant.';
   }
-
   private getStrategyForSpecialization(specialization: string): any {
     // Return context strategy tailored to agent specialization
     return {};
   }
-
   private async calculateSemanticSimilarity(text1: string, text2: string): Promise<number> {
     // Simple keyword overlap for now (could use embeddings)
     const words1 = new Set(text1.toLowerCase().split(/\s+/));
     const words2 = new Set(text2.toLowerCase().split(/\s+/));
-
     const intersection = new Set([...words1].filter(w => words2.has(w)));
     const union = new Set([...words1, ...words2]);
-
     return intersection.size / union.size;
   }
-
   private extractFileReferences(content: string): string[] {
     // Extract file paths from context
     const filePattern = /\b[\w\-\.]+\.(ts|js|tsx|jsx|py|go|rs)\b/g;
     return Array.from(content.matchAll(filePattern)).map(m => m[0]);
   }
 }
-
 export default ContextOptimizer;

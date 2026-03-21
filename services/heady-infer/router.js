@@ -21,11 +21,9 @@ class TaskRouter extends EventEmitter {
    */
   constructor(options = {}) {
     super();
-    this._matrix      = options.matrix      || {};
-    this.costTracker  = options.costTracker  || null;
+    this._matrix = options.matrix || {};
+    this.costTracker = options.costTracker || null;
     this.circuitBreaker = options.circuitBreaker || null;
-
-    // Affinity learning: taskType → model → { attempts, successes }
     this._affinity = new Map();
 
     // Custom rules: array of { condition: fn(request), route: [provider/model] }
@@ -41,7 +39,9 @@ class TaskRouter extends EventEmitter {
    * Get the routing matrix (copy).
    */
   getMatrix() {
-    return { ...this._matrix };
+    return {
+      ...this._matrix
+    };
   }
 
   /**
@@ -61,7 +61,10 @@ class TaskRouter extends EventEmitter {
    * @param {string[]} route      [provider/model, ...]
    */
   addCustomRule(condition, route) {
-    this._customRules.push({ condition, route });
+    this._customRules.push({
+      condition,
+      route
+    });
   }
 
   // ─── Routing Resolution ───────────────────────────────────────────────────
@@ -83,9 +86,12 @@ class TaskRouter extends EventEmitter {
     // 1. Explicit provider+model override
     if (request.provider && request.model) {
       return {
-        chain:    [{ provider: request.provider, model: request.model }],
+        chain: [{
+          provider: request.provider,
+          model: request.model
+        }],
         taskType,
-        reason:   'explicit_override',
+        reason: 'explicit_override'
       };
     }
 
@@ -94,7 +100,11 @@ class TaskRouter extends EventEmitter {
       try {
         if (rule.condition(request)) {
           const chain = this._parseRouteList(rule.route);
-          return { chain, taskType, reason: 'custom_rule' };
+          return {
+            chain,
+            taskType,
+            reason: 'custom_rule'
+          };
         }
       } catch (_) {}
     }
@@ -114,9 +124,12 @@ class TaskRouter extends EventEmitter {
     const filtered = routeList.filter(r => this._isAvailable(r));
     // Always include at least the first entry even if circuit is open (failover will handle it)
     const finalList = filtered.length > 0 ? filtered : routeList.slice(0, 1);
-
     const chain = this._parseRouteList(finalList);
-    return { chain, taskType, reason: 'matrix' };
+    return {
+      chain,
+      taskType,
+      reason: 'matrix'
+    };
   }
 
   /**
@@ -125,10 +138,13 @@ class TaskRouter extends EventEmitter {
   _parseRouteList(list) {
     return list.map(entry => {
       if (typeof entry === 'object' && entry.provider) return entry;
-      const parts    = (entry || '').split('/');
+      const parts = (entry || '').split('/');
       const provider = parts[0];
-      const model    = parts.slice(1).join('/') || undefined;
-      return { provider, model };
+      const model = parts.slice(1).join('/') || undefined;
+      return {
+        provider,
+        model
+      };
     });
   }
 
@@ -139,10 +155,9 @@ class TaskRouter extends EventEmitter {
     if (!this.costTracker) return routeList;
     try {
       const totals = this.costTracker.getCurrentTotals();
-      const dailyPct   = totals.daily.pct;
+      const dailyPct = totals.daily.pct;
       const monthlyPct = totals.monthly.pct;
-      const maxPct     = Math.max(dailyPct, monthlyPct);
-
+      const maxPct = Math.max(dailyPct, monthlyPct);
       if (maxPct >= 0.9) {
         // At 90%: only use cheapest (last) entry
         return [routeList[routeList.length - 1]].filter(Boolean);
@@ -161,16 +176,18 @@ class TaskRouter extends EventEmitter {
   _applyAffinity(taskType, routeList) {
     const affinityMap = this._affinity.get(taskType);
     if (!affinityMap) return routeList;
-
     return [...routeList].sort((a, b) => {
-      const aStats = affinityMap.get(a) || { attempts: 0, successes: 0 };
-      const bStats = affinityMap.get(b) || { attempts: 0, successes: 0 };
-
-      // Need minimum 5 attempts before trusting affinity data
+      const aStats = affinityMap.get(a) || {
+        attempts: 0,
+        successes: 0
+      };
+      const bStats = affinityMap.get(b) || {
+        attempts: 0,
+        successes: 0
+      };
       const aRate = aStats.attempts >= 5 ? aStats.successes / aStats.attempts : 0.5;
       const bRate = bStats.attempts >= 5 ? bStats.successes / bStats.attempts : 0.5;
-
-      return bRate - aRate;  // descending
+      return bRate - aRate; // descending
     });
   }
 
@@ -179,9 +196,7 @@ class TaskRouter extends EventEmitter {
    */
   _isAvailable(routeEntry) {
     if (!this.circuitBreaker) return true;
-    const parsed = typeof routeEntry === 'string'
-      ? routeEntry.split('/')[0]
-      : routeEntry.provider;
+    const parsed = typeof routeEntry === 'string' ? routeEntry.split('/')[0] : routeEntry.provider;
     return this.circuitBreaker.isAvailable(parsed);
   }
 
@@ -199,7 +214,10 @@ class TaskRouter extends EventEmitter {
     }
     const affinityMap = this._affinity.get(taskType);
     if (!affinityMap.has(routeKey)) {
-      affinityMap.set(routeKey, { attempts: 0, successes: 0 });
+      affinityMap.set(routeKey, {
+        attempts: 0,
+        successes: 0
+      });
     }
     const stats = affinityMap.get(routeKey);
     stats.attempts++;
@@ -216,21 +234,19 @@ class TaskRouter extends EventEmitter {
       for (const [routeKey, stats] of modelMap) {
         result[taskType][routeKey] = {
           ...stats,
-          successRate: stats.attempts > 0 ? stats.successes / stats.attempts : null,
+          successRate: stats.attempts > 0 ? stats.successes / stats.attempts : null
         };
       }
     }
     return result;
   }
-
   getStats() {
     return {
       routingDecisions: this._routingDecisions,
-      customRules:      this._customRules.length,
-      taskTypes:        Object.keys(this._matrix),
-      affinityStats:    this.getAffinityStats(),
+      customRules: this._customRules.length,
+      taskTypes: Object.keys(this._matrix),
+      affinityStats: this.getAffinityStats()
     };
   }
 }
-
 module.exports = TaskRouter;

@@ -13,10 +13,20 @@
 
 'use strict';
 
-const { PHI_TIMING } = require('../shared/phi-math');
-const { EventEmitter } = require('events');
-const { VectorMemory } = require('./vector-memory');
-const { cosineSimilarity, DIMS, isValidVector } = require('./vector-space-ops');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
+const {
+  EventEmitter
+} = require('events');
+const {
+  VectorMemory
+} = require('./vector-memory');
+const {
+  cosineSimilarity,
+  DIMS,
+  isValidVector
+} = require('./vector-space-ops');
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -94,11 +104,11 @@ class ConsistentHashRing {
     if (this.sortedKeys.length === 0) return [];
     const pos = this._hash(key);
     // Find the first position >= pos (binary search).
-    let lo = 0, hi = this.sortedKeys.length;
+    let lo = 0,
+      hi = this.sortedKeys.length;
     while (lo < hi) {
-      const mid = (lo + hi) >>> 1;
-      if (this.sortedKeys[mid] < pos) lo = mid + 1;
-      else hi = mid;
+      const mid = lo + hi >>> 1;
+      if (this.sortedKeys[mid] < pos) lo = mid + 1;else hi = mid;
     }
     // Walk the ring collecting unique node IDs.
     const selected = [];
@@ -168,18 +178,16 @@ class FederatedMemory extends EventEmitter {
     this.replicationFactor = options.replicationFactor || DEFAULT_REPLICATION_FACTOR;
     this.healthIntervalMs = options.healthIntervalMs || DEFAULT_HEALTH_INTERVAL_MS;
     this.memoryOptions = options.memoryOptions || {};
-
     this.ring = new ConsistentHashRing();
     /** @type {Map<string, NodeState>} nodeId → state */
     this.nodes = new Map();
-
     this._healthTimer = null;
     this._stats = {
       totalStores: 0,
       totalRecalls: 0,
       rebalances: 0,
       nodeJoins: 0,
-      nodeLeaves: 0,
+      nodeLeaves: 0
     };
   }
 
@@ -203,7 +211,7 @@ class FederatedMemory extends EventEmitter {
     }
     const memory = existingMemory || new VectorMemory({
       ...this.memoryOptions,
-      instanceId: nodeId,
+      instanceId: nodeId
     });
     const state = {
       id: nodeId,
@@ -211,7 +219,7 @@ class FederatedMemory extends EventEmitter {
       status: 'healthy',
       lastHealthCheck: Date.now(),
       errorCount: 0,
-      metrics: {},
+      metrics: {}
     };
     this.nodes.set(nodeId, state);
     this.ring.addNode(nodeId);
@@ -221,13 +229,15 @@ class FederatedMemory extends EventEmitter {
      * @event FederatedMemory#node-added
      * @type {{ nodeId: string, timestamp: number }}
      */
-    this.emit('node-added', { nodeId, timestamp: Date.now() });
+    this.emit('node-added', {
+      nodeId,
+      timestamp: Date.now()
+    });
 
     // Rebalance only if there are already existing keys somewhere.
     if (this.nodes.size > 1) {
       this._rebalance(nodeId);
     }
-
     return state;
   }
 
@@ -246,7 +256,6 @@ class FederatedMemory extends EventEmitter {
 
     // Migrate all keys from the departing node to remaining nodes.
     this._migrateFrom(nodeId);
-
     this.ring.removeNode(nodeId);
     this.nodes.delete(nodeId);
     this._stats.nodeLeaves += 1;
@@ -255,7 +264,10 @@ class FederatedMemory extends EventEmitter {
      * @event FederatedMemory#node-removed
      * @type {{ nodeId: string, timestamp: number }}
      */
-    this.emit('node-removed', { nodeId, timestamp: Date.now() });
+    this.emit('node-removed', {
+      nodeId,
+      timestamp: Date.now()
+    });
     return true;
   }
 
@@ -279,7 +291,6 @@ class FederatedMemory extends EventEmitter {
     const targetNodes = this.ring.getNodes(key, this.replicationFactor);
     const storedOn = [];
     const failed = [];
-
     for (const nodeId of targetNodes) {
       const state = this.nodes.get(nodeId);
       if (!state || state.status === 'offline') {
@@ -294,13 +305,14 @@ class FederatedMemory extends EventEmitter {
         failed.push(nodeId);
       }
     }
-
     this._stats.totalStores += 1;
-
     if (storedOn.length === 0) {
       throw new Error(`FederatedMemory.store: all replicas failed for key "${key}"`);
     }
-    return { storedOn, failed };
+    return {
+      storedOn,
+      failed
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -325,17 +337,13 @@ class FederatedMemory extends EventEmitter {
     const healthyNodes = [...this.nodes.values()].filter(n => n.status !== 'offline');
 
     // Parallel query all nodes.
-    const perNodePromises = healthyNodes.map(state =>
-      Promise.resolve()
-        .then(() => state.memory.recall(queryVector, k, options)
-          .map(r => ({ ...r, nodeId: state.id }))
-        )
-        .catch(err => {
-          this._recordError(state, err);
-          return [];
-        })
-    );
-
+    const perNodePromises = healthyNodes.map(state => Promise.resolve().then(() => state.memory.recall(queryVector, k, options).map(r => ({
+      ...r,
+      nodeId: state.id
+    }))).catch(err => {
+      this._recordError(state, err);
+      return [];
+    }));
     const allResults = (await Promise.all(perNodePromises)).flat();
 
     // Deduplicate by key, keep highest similarity.
@@ -347,11 +355,7 @@ class FederatedMemory extends EventEmitter {
         bestByKey.set(key, result);
       }
     }
-
-    const merged = [...bestByKey.values()]
-      .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, k);
-
+    const merged = [...bestByKey.values()].sort((a, b) => b.similarity - a.similarity).slice(0, k);
     this._stats.totalRecalls += 1;
 
     /**
@@ -363,7 +367,7 @@ class FederatedMemory extends EventEmitter {
       k,
       resultsCount: merged.length,
       nodesQueried: healthyNodes.length,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
     return merged;
   }
@@ -399,7 +403,9 @@ class FederatedMemory extends EventEmitter {
       if (!state) continue;
       if (state.memory.forget(key)) forgotOn.push(nodeId);
     }
-    return { forgotOn };
+    return {
+      forgotOn
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -445,12 +451,23 @@ class FederatedMemory extends EventEmitter {
       const prevStatus = state.status;
       state.status = state.errorCount >= 5 ? 'degraded' : 'healthy';
       if (prevStatus !== 'healthy' && state.status === 'healthy') {
-        this.emit('node-recovered', { nodeId, timestamp: Date.now() });
+        this.emit('node-recovered', {
+          nodeId,
+          timestamp: Date.now()
+        });
       }
-      return { nodeId, status: state.status, metrics };
+      return {
+        nodeId,
+        status: state.status,
+        metrics
+      };
     } catch (err) {
       this._recordError(state, err);
-      return { nodeId, status: state.status, error: err.message };
+      return {
+        nodeId,
+        status: state.status,
+        error: err.message
+      };
     }
   }
 
@@ -465,7 +482,7 @@ class FederatedMemory extends EventEmitter {
       status: state.status,
       lastHealthCheck: state.lastHealthCheck,
       errorCount: state.errorCount,
-      metrics: state.metrics,
+      metrics: state.metrics
     }));
   }
 
@@ -478,7 +495,7 @@ class FederatedMemory extends EventEmitter {
       nodes: this.nodes.size,
       healthyNodes: [...this.nodes.values()].filter(n => n.status === 'healthy').length,
       replicationFactor: this.replicationFactor,
-      ...this._stats,
+      ...this._stats
     };
   }
 
@@ -507,7 +524,11 @@ class FederatedMemory extends EventEmitter {
        * @event FederatedMemory#node-degraded
        * @type {{ nodeId: string, status: string, error: string }}
        */
-      this.emit('node-degraded', { nodeId: state.id, status: state.status, error: err.message });
+      this.emit('node-degraded', {
+        nodeId: state.id,
+        status: state.status,
+        error: err.message
+      });
     }
   }
 
@@ -519,10 +540,8 @@ class FederatedMemory extends EventEmitter {
   _migrateFrom(departingNodeId) {
     const state = this.nodes.get(departingNodeId);
     if (!state) return;
-
     let migrated = 0;
     for (const entry of state.memory) {
-      // Remove the departing node from ring temporarily to find new owners.
       const tempRing = new ConsistentHashRing();
       for (const [id] of this.nodes) {
         if (id !== departingNodeId) tempRing.addNode(id);
@@ -547,7 +566,10 @@ class FederatedMemory extends EventEmitter {
    */
   _rebalance(newNodeId) {
     this._stats.rebalances += 1;
-    this.emit('rebalance-start', { targetNode: newNodeId, timestamp: Date.now() });
+    this.emit('rebalance-start', {
+      targetNode: newNodeId,
+      timestamp: Date.now()
+    });
     let transferred = 0;
 
     // Walk all existing nodes and migrate keys that now belong to newNodeId.
@@ -564,10 +586,14 @@ class FederatedMemory extends EventEmitter {
         }
       }
     }
-
-    this.emit('rebalance-complete', { targetNode: newNodeId, transferred, timestamp: Date.now() });
+    this.emit('rebalance-complete', {
+      targetNode: newNodeId,
+      transferred,
+      timestamp: Date.now()
+    });
   }
 }
-
-
-module.exports = { FederatedMemory, ConsistentHashRing };
+module.exports = {
+  FederatedMemory,
+  ConsistentHashRing
+};

@@ -23,14 +23,17 @@ export const FIBONACCI_SEQUENCE = {
   F5: 8,
   F6: 13,
   F7: 21,
-  F8: 34, // Anonymous rate limit (requests per minute)
+  F8: 34,
+  // Anonymous rate limit (requests per minute)
   F9: 55,
-  F10: 89, // Authenticated rate limit (requests per minute)
+  F10: 89,
+  // Authenticated rate limit (requests per minute)
   F11: 144,
-  F12: 233, // Enterprise rate limit (requests per minute)
+  F12: 233,
+  // Enterprise rate limit (requests per minute)
   F13: 377,
   F14: 610,
-  F15: 987,
+  F15: 987
 } as const;
 
 /**
@@ -39,25 +42,27 @@ export const FIBONACCI_SEQUENCE = {
  */
 export const PHI_TIMING = {
   // Session TTL: 12 hours (φ-scaled approach: (12 * 60 * 60 * 1000) / φ²)
-  SESSION_TTL_MS: Math.round((12 * 60 * 60 * 1000) / PHI_SQUARED), // ≈ 16,680,000ms (4.63 hours baseline)
+  SESSION_TTL_MS: Math.round(12 * 60 * 60 * 1000 / PHI_SQUARED),
+  // ≈ 16,680,000ms (4.63 hours baseline)
 
   // Refresh token validity: 30 days
   REFRESH_TTL_MS: 30 * 24 * 60 * 60 * 1000,
-
   // Rate limit window: 1 minute
   RATE_LIMIT_WINDOW_MS: 60 * 1000,
-
   // Exponential backoff base (φ ms)
-  BACKOFF_BASE_MS: Math.round(PHI * 1000), // ≈ 1618ms
+  BACKOFF_BASE_MS: Math.round(PHI * 1000),
+  // ≈ 1618ms
 
   // Max backoff: φ² × 10 seconds
-  MAX_BACKOFF_MS: Math.round(PHI_SQUARED * 10000), // ≈ 26,180ms
+  MAX_BACKOFF_MS: Math.round(PHI_SQUARED * 10000),
+  // ≈ 26,180ms
 
   // Request timeout: φ × 3 seconds
-  REQUEST_TIMEOUT_MS: Math.round(PHI * 3000), // ≈ 4854ms
+  REQUEST_TIMEOUT_MS: Math.round(PHI * 3000),
+  // ≈ 4854ms
 
   // Token verification cache TTL: φ minutes
-  TOKEN_CACHE_TTL_MS: Math.round(PHI * 60 * 1000), // ≈ 97,082ms
+  TOKEN_CACHE_TTL_MS: Math.round(PHI * 60 * 1000) // ≈ 97,082ms
 } as const;
 
 /**
@@ -66,16 +71,19 @@ export const PHI_TIMING = {
  */
 export const PHI_SIZES = {
   // Maximum concurrent sessions per user (Fibonacci)
-  MAX_SESSIONS_PER_USER: FIBONACCI_SEQUENCE.F8, // 34 sessions
+  MAX_SESSIONS_PER_USER: FIBONACCI_SEQUENCE.F8,
+  // 34 sessions
 
   // Session cache batch size
-  SESSION_BATCH_SIZE: FIBONACCI_SEQUENCE.F7, // 21 items
+  SESSION_BATCH_SIZE: FIBONACCI_SEQUENCE.F7,
+  // 21 items
 
   // Maximum relay frames per domain
-  MAX_RELAY_FRAMES: FIBONACCI_SEQUENCE.F6, // 13 frames
+  MAX_RELAY_FRAMES: FIBONACCI_SEQUENCE.F6,
+  // 13 frames
 
   // Connection pool size (φ-scaled)
-  CONNECTION_POOL_SIZE: Math.round(PHI * 32), // ≈ 52 connections
+  CONNECTION_POOL_SIZE: Math.round(PHI * 32) // ≈ 52 connections
 } as const;
 
 /**
@@ -84,26 +92,27 @@ export const PHI_SIZES = {
  */
 export const RATE_LIMIT_TIERS = {
   ANONYMOUS: {
-    requestsPerMinute: FIBONACCI_SEQUENCE.F8, // 34
-    requestsPerHour: FIBONACCI_SEQUENCE.F8 * 60, // 2,040
-    description: 'Anonymous users',
+    requestsPerMinute: FIBONACCI_SEQUENCE.F8,
+    // 34
+    requestsPerHour: FIBONACCI_SEQUENCE.F8 * 60,
+    // 2,040
+    description: 'Anonymous users'
   },
   AUTHENTICATED: {
-    requestsPerMinute: FIBONACCI_SEQUENCE.F10, // 89
-    requestsPerHour: FIBONACCI_SEQUENCE.F10 * 60, // 5,340
-    description: 'Authenticated users',
+    requestsPerMinute: FIBONACCI_SEQUENCE.F10,
+    // 89
+    requestsPerHour: FIBONACCI_SEQUENCE.F10 * 60,
+    // 5,340
+    description: 'Authenticated users'
   },
   ENTERPRISE: {
-    requestsPerMinute: FIBONACCI_SEQUENCE.F12, // 233
-    requestsPerHour: FIBONACCI_SEQUENCE.F12 * 60, // 13,980
-    description: 'Enterprise customers',
-  },
+    requestsPerMinute: FIBONACCI_SEQUENCE.F12,
+    // 233
+    requestsPerHour: FIBONACCI_SEQUENCE.F12 * 60,
+    // 13,980
+    description: 'Enterprise customers'
+  }
 } as const;
-
-/**
- * Calculate exponential backoff using φ
- * backoff = baseDelay × φ^attempt, capped at maxDelay
- */
 export function calculatePhiBackoff(attempt: number): number {
   const backoff = PHI_TIMING.BACKOFF_BASE_MS * Math.pow(PHI, attempt);
   return Math.min(backoff, PHI_TIMING.MAX_BACKOFF_MS);
@@ -125,7 +134,6 @@ export function addPhiJitter(delay: number): number {
 export const GOLDEN_RATIO = PHI;
 export const GOLDEN_RATIO_SQUARED = PHI_SQUARED;
 export const GOLDEN_RATIO_CUBED = PHI_CUBED;
-
 export default {
   FIBONACCI_SEQUENCE,
   PHI_TIMING,
@@ -135,5 +143,5 @@ export default {
   GOLDEN_RATIO_SQUARED,
   GOLDEN_RATIO_CUBED,
   calculatePhiBackoff,
-  addPhiJitter,
+  addPhiJitter
 };

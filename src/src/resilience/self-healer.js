@@ -32,44 +32,44 @@ const {
   PHI,
   CSL_THRESHOLDS,
   phiBackoffWithJitter,
-  PHI_TIMING,
+  PHI_TIMING
 } = require('../../shared/phi-math.js');
 
 // ─── Lifecycle states ─────────────────────────────────────────────────────────
 
 const HEALTH_STATE = Object.freeze({
-  HEALTHY:     'HEALTHY',
-  SUSPECT:     'SUSPECT',
+  HEALTHY: 'HEALTHY',
+  SUSPECT: 'SUSPECT',
   QUARANTINED: 'QUARANTINED',
-  RECOVERING:  'RECOVERING',
-  RESTORED:    'RESTORED',
+  RECOVERING: 'RECOVERING',
+  RESTORED: 'RESTORED'
 });
 
 // ─── Threshold constants (all phi-math) ──────────────────────────────────────
 
 /** Health → SUSPECT transition: CSL HIGH ≈ 0.882 */
-const SUSPECT_THRESHOLD     = CSL_THRESHOLDS.HIGH;
+const SUSPECT_THRESHOLD = CSL_THRESHOLDS.HIGH;
 
 /** SUSPECT → QUARANTINE transition: CSL LOW ≈ 0.691 */
-const QUARANTINE_THRESHOLD  = CSL_THRESHOLDS.LOW;
+const QUARANTINE_THRESHOLD = CSL_THRESHOLDS.LOW;
 
 /** Recovery → RESTORED: CSL CRITICAL ≈ 0.927 */
-const RESTORE_THRESHOLD     = CSL_THRESHOLDS.CRITICAL;
+const RESTORE_THRESHOLD = CSL_THRESHOLDS.CRITICAL;
 
 /** SUSPECT → HEALTHY recovery: CSL CRITICAL ≈ 0.927 */
 const RECOVER_HEALTHY_THRESHOLD = CSL_THRESHOLDS.CRITICAL;
 
 /** Required attestation probe successes: fib(4) = 3 */
-const ATTESTATION_PROBES    = fib(4);
+const ATTESTATION_PROBES = fib(4);
 
 /** Stable cycles before RESTORED → HEALTHY: fib(3) = 2 */
-const STABLE_CYCLES         = fib(3);
+const STABLE_CYCLES = fib(3);
 
 /** Base isolation (quarantine) duration: PHI_TIMING.PHI_3 ≈ 4,236ms */
-const ISOLATION_BASE_MS     = PHI_TIMING.PHI_3;
+const ISOLATION_BASE_MS = PHI_TIMING.PHI_3;
 
 /** Max isolation duration: PHI_TIMING.PHI_7 ≈ 29,034ms */
-const ISOLATION_MAX_MS      = PHI_TIMING.PHI_7;
+const ISOLATION_MAX_MS = PHI_TIMING.PHI_7;
 
 // ─── SelfHealer class ─────────────────────────────────────────────────────────
 
@@ -103,38 +103,45 @@ class SelfHealer {
    * @param {number}   [opts.isolationMaxMs]   - quarantine duration max
    */
   constructor(name, opts = {}) {
-    this.name            = name;
-    this.circuitBreaker  = opts.circuitBreaker  || null;
-    this.onStateChange   = opts.onStateChange   || null;
-    this.onQuarantine    = opts.onQuarantine    || null;
-    this.onRestore       = opts.onRestore       || null;
+    this.name = name;
+    this.circuitBreaker = opts.circuitBreaker || null;
+    this.onStateChange = opts.onStateChange || null;
+    this.onQuarantine = opts.onQuarantine || null;
+    this.onRestore = opts.onRestore || null;
     this.isolationBaseMs = opts.isolationBaseMs || ISOLATION_BASE_MS;
-    this.isolationMaxMs  = opts.isolationMaxMs  || ISOLATION_MAX_MS;
+    this.isolationMaxMs = opts.isolationMaxMs || ISOLATION_MAX_MS;
 
     // State
-    this._state           = HEALTH_STATE.HEALTHY;
-    this._healthScore     = 1.0;
+    this._state = HEALTH_STATE.HEALTHY;
+    this._healthScore = 1.0;
     this._isolationAttempt = 0;
-    this._isolationEndsAt  = null;
+    this._isolationEndsAt = null;
     this._attestationPassed = 0;
-    this._stableCycles     = 0;
+    this._stableCycles = 0;
 
     // History log (fib(9)=34 entries, ring buffer)
-    this._historySize  = fib(9);
-    this._history      = [];
+    this._historySize = fib(9);
+    this._history = [];
     this._incidentCount = 0;
     this._stateEnteredAt = Date.now();
   }
 
   // ─── State accessors ───────────────────────────────────────────────────────
 
-  get state() { return this._state; }
-  get isHealthy() { return this._state === HEALTH_STATE.HEALTHY; }
-  get isQuarantined() { return this._state === HEALTH_STATE.QUARANTINED; }
-  get isRecovering() { return this._state === HEALTH_STATE.RECOVERING; }
+  get state() {
+    return this._state;
+  }
+  get isHealthy() {
+    return this._state === HEALTH_STATE.HEALTHY;
+  }
+  get isQuarantined() {
+    return this._state === HEALTH_STATE.QUARANTINED;
+  }
+  get isRecovering() {
+    return this._state === HEALTH_STATE.RECOVERING;
+  }
   get canAcceptWork() {
-    return this._state === HEALTH_STATE.HEALTHY ||
-           this._state === HEALTH_STATE.RESTORED;
+    return this._state === HEALTH_STATE.HEALTHY || this._state === HEALTH_STATE.RESTORED;
   }
 
   // ─── Transitions ──────────────────────────────────────────────────────────
@@ -145,44 +152,46 @@ class SelfHealer {
   _transition(newState, reason = '') {
     const prev = this._state;
     if (prev === newState) return;
-
     this._state = newState;
     this._stateEnteredAt = Date.now();
-    this._logEvent('transition', { from: prev, to: newState, reason });
-
+    this._logEvent('transition', {
+      from: prev,
+      to: newState,
+      reason
+    });
     if (this.onStateChange) {
-      try { this.onStateChange(newState, prev, reason); }
-      catch (_) { }
+      try {
+        this.onStateChange(newState, prev, reason);
+      } catch (_) {}
     }
-
     if (newState === HEALTH_STATE.QUARANTINED && this.onQuarantine) {
-      try { this.onQuarantine(this.name, reason); }
-      catch (_) { }
+      try {
+        this.onQuarantine(this.name, reason);
+      } catch (_) {}
     }
-
     if (newState === HEALTH_STATE.HEALTHY && this.onRestore) {
-      try { this.onRestore(this.name); }
-      catch (_) { }
+      try {
+        this.onRestore(this.name);
+      } catch (_) {}
     }
   }
-
-  /**
-   * @private
-   * Schedule release from quarantine (phi-backoff based on isolation attempt).
-   */
   _scheduleRelease() {
-    const delay = phiBackoffWithJitter(
-      this._isolationAttempt,
-      this.isolationBaseMs,
-      this.isolationMaxMs
-    );
+    const delay = phiBackoffWithJitter(this._isolationAttempt, this.isolationBaseMs, this.isolationMaxMs);
     this._isolationEndsAt = Date.now() + delay;
-    this._logEvent('quarantine_scheduled', { delay, attempt: this._isolationAttempt });
+    this._logEvent('quarantine_scheduled', {
+      delay,
+      attempt: this._isolationAttempt
+    });
   }
 
   /** @private */
   _logEvent(type, data = {}) {
-    const entry = { ts: Date.now(), type, state: this._state, ...data };
+    const entry = {
+      ts: Date.now(),
+      type,
+      state: this._state,
+      ...data
+    };
     this._history.push(entry);
     if (this._history.length > this._historySize) this._history.shift();
   }
@@ -198,8 +207,10 @@ class SelfHealer {
    */
   signal(healthScore, source = 'unknown') {
     this._healthScore = healthScore;
-    this._logEvent('signal', { score: healthScore, source });
-
+    this._logEvent('signal', {
+      score: healthScore,
+      source
+    });
     switch (this._state) {
       case HEALTH_STATE.HEALTHY:
         if (healthScore < SUSPECT_THRESHOLD) {
@@ -207,7 +218,6 @@ class SelfHealer {
           this._transition(HEALTH_STATE.SUSPECT, `score ${healthScore.toFixed(3)} < ${SUSPECT_THRESHOLD} from ${source}`);
         }
         break;
-
       case HEALTH_STATE.SUSPECT:
         if (healthScore < QUARANTINE_THRESHOLD) {
           this._isolationAttempt++;
@@ -218,7 +228,6 @@ class SelfHealer {
           this._transition(HEALTH_STATE.HEALTHY, `score ${healthScore.toFixed(3)} recovered`);
         }
         break;
-
       case HEALTH_STATE.QUARANTINED:
         // Check if isolation period has elapsed → move to RECOVERING
         if (this._isolationEndsAt && Date.now() >= this._isolationEndsAt) {
@@ -226,7 +235,6 @@ class SelfHealer {
           this._transition(HEALTH_STATE.RECOVERING, 'isolation period elapsed');
         }
         break;
-
       case HEALTH_STATE.RECOVERING:
         // Recovering is driven by probe(), not signal()
         // But if health score is catastrophic, re-quarantine
@@ -237,7 +245,6 @@ class SelfHealer {
           this._transition(HEALTH_STATE.QUARANTINED, `score ${healthScore.toFixed(3)} deteriorated during recovery`);
         }
         break;
-
       case HEALTH_STATE.RESTORED:
         if (healthScore >= RECOVER_HEALTHY_THRESHOLD) {
           this._stableCycles++;
@@ -265,9 +272,7 @@ class SelfHealer {
    */
   _syncCircuitBreaker() {
     if (!this.circuitBreaker) return;
-    if (this.circuitBreaker.isOpen &&
-        this._state !== HEALTH_STATE.QUARANTINED &&
-        this._state !== HEALTH_STATE.RECOVERING) {
+    if (this.circuitBreaker.isOpen && this._state !== HEALTH_STATE.QUARANTINED && this._state !== HEALTH_STATE.RECOVERING) {
       this._isolationAttempt++;
       this._scheduleRelease();
       this._transition(HEALTH_STATE.QUARANTINED, 'circuit breaker OPEN');
@@ -296,19 +301,25 @@ class SelfHealer {
    */
   async probe(probeFn) {
     if (this._state !== HEALTH_STATE.RECOVERING) {
-      return { passed: false, attestationPassed: this._attestationPassed, needed: ATTESTATION_PROBES };
+      return {
+        passed: false,
+        attestationPassed: this._attestationPassed,
+        needed: ATTESTATION_PROBES
+      };
     }
-
     let passed = false;
     try {
       passed = !!(await probeFn());
     } catch (err) {
-      this._logEvent('probe_error', { error: err.message });
+      this._logEvent('probe_error', {
+        error: err.message
+      });
       passed = false;
     }
-
-    this._logEvent('probe', { passed, count: this._attestationPassed + 1 });
-
+    this._logEvent('probe', {
+      passed,
+      count: this._attestationPassed + 1
+    });
     if (passed) {
       this._attestationPassed++;
       if (this._attestationPassed >= ATTESTATION_PROBES) {
@@ -322,11 +333,10 @@ class SelfHealer {
       this._scheduleRelease();
       this._transition(HEALTH_STATE.QUARANTINED, 'attestation probe failed');
     }
-
     return {
       passed,
       attestationPassed: this._attestationPassed,
-      needed: ATTESTATION_PROBES,
+      needed: ATTESTATION_PROBES
     };
   }
 
@@ -336,21 +346,19 @@ class SelfHealer {
    */
   status() {
     return {
-      name:              this.name,
-      state:             this._state,
-      healthScore:       this._healthScore,
-      canAcceptWork:     this.canAcceptWork,
-      isolationAttempt:  this._isolationAttempt,
-      isolationEndsIn:   this._isolationEndsAt
-        ? Math.max(0, this._isolationEndsAt - Date.now())
-        : null,
+      name: this.name,
+      state: this._state,
+      healthScore: this._healthScore,
+      canAcceptWork: this.canAcceptWork,
+      isolationAttempt: this._isolationAttempt,
+      isolationEndsIn: this._isolationEndsAt ? Math.max(0, this._isolationEndsAt - Date.now()) : null,
       attestationPassed: this._attestationPassed,
       attestationNeeded: ATTESTATION_PROBES,
-      stableCycles:      this._stableCycles,
+      stableCycles: this._stableCycles,
       stableCyclesNeeded: STABLE_CYCLES,
-      stateEnteredAt:    this._stateEnteredAt,
-      incidentCount:     this._incidentCount,
-      recentHistory:     this._history.slice(-fib(6) /* 8 */),
+      stateEnteredAt: this._stateEnteredAt,
+      incidentCount: this._incidentCount,
+      recentHistory: this._history.slice(-fib(6) /* 8 */)
     };
   }
 }
@@ -367,5 +375,5 @@ module.exports = {
   ATTESTATION_PROBES,
   STABLE_CYCLES,
   ISOLATION_BASE_MS,
-  ISOLATION_MAX_MS,
+  ISOLATION_MAX_MS
 };

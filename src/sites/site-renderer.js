@@ -1,15 +1,3 @@
-/*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
- *
- * DYNAMIC SITE RENDERER — One template, infinite sites
- * ═══════════════════════════════════════════════════════
- * Renders a fully branded, interactive site from a config object.
- * Preconfigured sites load from site-registry.json.
- * Custom sites load from user config created during onboarding.
- * No React, no build step, no static files. Pure server-rendered HTML.
- * ═══════════════════════════════════════════════════════
- */
-
 "use strict";
 
 const fs = require("fs");
@@ -20,9 +8,8 @@ const logger = require("../utils/logger");
 // Normalize registry key: support both preconfiguredSites (current) and preconfigured (legacy)
 const registry = {
   ...rawRegistry,
-  preconfigured: rawRegistry.preconfiguredSites || rawRegistry.preconfigured || {},
+  preconfigured: rawRegistry.preconfiguredSites || rawRegistry.preconfigured || {}
 };
-
 const USER_SITES_PATH = path.join(__dirname, "..", "..", "data", "user-sites.json");
 
 /**
@@ -35,20 +22,32 @@ const USER_SITES_PATH = path.join(__dirname, "..", "..", "data", "user-sites.jso
 function resolveSite(hostname) {
   const canonical = registry.domainAliases[hostname] || hostname;
   if (registry.preconfigured[canonical]) {
-    return { ...registry.preconfigured[canonical], domain: canonical, type: "preconfigured" };
+    return {
+      ...registry.preconfigured[canonical],
+      domain: canonical,
+      type: "preconfigured"
+    };
   }
   // Check user-created sites
   try {
     if (fs.existsSync(USER_SITES_PATH)) {
       const userSites = JSON.parse(fs.readFileSync(USER_SITES_PATH, "utf8"));
       if (userSites[canonical]) {
-        return { ...userSites[canonical], domain: canonical, type: "custom" };
+        return {
+          ...userSites[canonical],
+          domain: canonical,
+          type: "custom"
+        };
       }
     }
-  } catch { /* corrupted user-sites.json — ignore */ }
+  } catch {/* corrupted user-sites.json — ignore */}
 
   // Fallback
-  return { ...registry.preconfigured["headyme.com"], domain: "headyme.com", type: "fallback" };
+  return {
+    ...registry.preconfigured["headyme.com"],
+    domain: "headyme.com",
+    type: "fallback"
+  };
 }
 
 /**
@@ -56,10 +55,15 @@ function resolveSite(hostname) {
  */
 function resolveSiteBySlug(slug) {
   const domain = {
-    headyme: "headyme.com", headysystems: "headysystems.com",
-    headyconnection: "headyconnection.org", headymcp: "headymcp.com",
-    headyos: "headyos.com", headyapi: "headyapi.com", headyio: "headyio.com",
-    headybuddy: "headybuddy.org", headybot: "headybot.com",
+    headyme: "headyme.com",
+    headysystems: "headysystems.com",
+    headyconnection: "headyconnection.org",
+    headymcp: "headymcp.com",
+    headyos: "headyos.com",
+    headyapi: "headyapi.com",
+    headyio: "headyio.com",
+    headybuddy: "headybuddy.org",
+    headybot: "headybot.com"
   }[slug];
   if (domain) return resolveSite(domain);
 
@@ -68,10 +72,14 @@ function resolveSiteBySlug(slug) {
     if (fs.existsSync(USER_SITES_PATH)) {
       const userSites = JSON.parse(fs.readFileSync(USER_SITES_PATH, "utf8"));
       for (const [d, cfg] of Object.entries(userSites)) {
-        if (cfg.slug === slug) return { ...cfg, domain: d, type: "custom" };
+        if (cfg.slug === slug) return {
+          ...cfg,
+          domain: d,
+          type: "custom"
+        };
       }
     }
-  } catch { }
+  } catch {}
   return null;
 }
 
@@ -79,20 +87,23 @@ function resolveSiteBySlug(slug) {
  * Get nav items for a site
  */
 function getNavItems(site) {
-  const allSites = { ...registry.preconfigured };
+  const allSites = {
+    ...registry.preconfigured
+  };
   try {
     if (fs.existsSync(USER_SITES_PATH)) {
       Object.assign(allSites, JSON.parse(fs.readFileSync(USER_SITES_PATH, "utf8")));
     }
-  } catch { }
-
+  } catch {}
   const items = [];
   for (const [domain, cfg] of Object.entries(allSites)) {
     const slug = domain.replace(/\.(com|org|io)$/, "");
     items.push({
-      slug, name: cfg.name, domain,
+      slug,
+      name: cfg.name,
+      domain,
       active: domain === site.domain,
-      href: domain === site.domain ? "#" : `https://${domain}`,
+      href: domain === site.domain ? "#" : `https://${domain}`
     });
   }
   return items;
@@ -106,24 +117,19 @@ function renderSite(site) {
   const cd = site.accentDark || site.accent || "#6366f1";
   const geo = site.sacredGeometry || "Flower of Life";
   const nav = getNavItems(site);
-
   const featuresHTML = (site.features || []).map(f => `
     <div class="card">
       <div class="card-icon">${f.icon}</div>
       <h3>${f.title}</h3>
       <p>${f.desc}</p>
     </div>`).join("");
-
   const statsHTML = (site.stats || []).map(s => `
     <div class="stat">
       <div class="stat-val">${s.value}</div>
       <div class="stat-lbl">${s.label}</div>
     </div>`).join("");
-
   const navHTML = nav.map(n => `<a href="${n.href}" class="${n.active ? "active" : ""}">${n.name}</a>`).join("");
-
   const chatHTML = site.chatEnabled !== false ? renderChatWidget(site) : "";
-
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,28 +157,28 @@ function renderSite(site) {
 <link rel="canonical" href="https://${site.domain || 'headyme.com'}">
 <script type="application/ld+json">
 ${JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": site.name,
-  "url": "https://" + (site.domain || "headyme.com"),
-  "description": site.description || site.tagline || "",
-  "publisher": {
-    "@type": "Organization",
-    "name": "HeadySystems Inc.",
-    "url": "https://headysystems.com",
-    "founder": {
-      "@type": "Person",
-      "name": "Eric Haywood"
-    },
-    "foundingDate": "2024",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Fort Collins",
-      "addressRegion": "CO",
-      "addressCountry": "US"
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": site.name,
+    "url": "https://" + (site.domain || "headyme.com"),
+    "description": site.description || site.tagline || "",
+    "publisher": {
+      "@type": "Organization",
+      "name": "HeadySystems Inc.",
+      "url": "https://headysystems.com",
+      "founder": {
+        "@type": "Person",
+        "name": "Eric Haywood"
+      },
+      "foundingDate": "2024",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Fort Collins",
+        "addressRegion": "CO",
+        "addressCountry": "US"
+      }
     }
-  }
-})}
+  })}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -368,5 +374,9 @@ function renderChatWidget(site) {
 })();
 </script>`;
 }
-
-module.exports = { renderSite, resolveSite, resolveSiteBySlug, getNavItems };
+module.exports = {
+  renderSite,
+  resolveSite,
+  resolveSiteBySlug,
+  getNavItems
+};

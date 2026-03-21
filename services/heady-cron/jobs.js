@@ -1,12 +1,15 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 // services/heady-cron/src/jobs.js
 // §13 — QStash + Sentry Crons Heartbeats
 import { PHI_7, PHI_SQ } from '../../../packages/heady-core/src/phi.js';
-
 const QSTASH_TOKEN = process.env.QSTASH_TOKEN;
 const API_BASE = process.env.CLOUD_RUN_URL || 'https://api.headysystems.com';
-
 async function publishToQStash(url, body, retries = 3) {
-  if (!QSTASH_TOKEN) { console.warn('[heady-cron] QSTASH_TOKEN not set, skipping'); return; }
+  if (!QSTASH_TOKEN) {
+    logger.warn('[heady-cron] QSTASH_TOKEN not set, skipping');
+    return;
+  }
   const res = await fetch('https://qstash.upstash.io/v2/publish/' + url, {
     method: 'POST',
     headers: {
@@ -17,7 +20,7 @@ async function publishToQStash(url, body, retries = 3) {
     },
     body: JSON.stringify(body)
   });
-  if (!res.ok) console.error(`[heady-cron] QStash publish failed: ${res.status}`);
+  if (!res.ok) logger.error(`[heady-cron] QStash publish failed: ${res.status}`);
 }
 
 // ── Heartbeat – φ⁷ = 29,034ms ──────────────────────────────────────────────
@@ -51,5 +54,4 @@ setInterval(async () => {
     timestamp: Date.now()
   }, 5);
 }, WEEK_MS);
-
-console.log('[heady-cron] All cron jobs registered — heartbeat interval:', PHI_7, 'ms');
+logger.info('[heady-cron] All cron jobs registered — heartbeat interval:', PHI_7, 'ms');

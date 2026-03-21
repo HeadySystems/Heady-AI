@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * Three.js 3D Projection Visual Debugger
  * Real-time visualization of agent trajectories, projection states,
@@ -18,21 +20,21 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597
  * a WebSocket feed of real-time projection/agent events.
  */
 class SpatialDebuggerServer {
-    constructor(port = 3333) {
-        this.port = port;
-        this.clients = new Set();
-        this.projections = new Map();
-        this.agents = new Map();
-        this.trailHistory = [];
-        this.maxTrailPoints = FIB[14]; // 610
-    }
+  constructor(port = 3333) {
+    this.port = port;
+    this.clients = new Set();
+    this.projections = new Map();
+    this.agents = new Map();
+    this.trailHistory = [];
+    this.maxTrailPoints = FIB[14]; // 610
+  }
 
-    /**
-     * Generate the full Three.js dashboard HTML.
-     * Self-contained — no external CDN dependencies needed at runtime.
-     */
-    generateDashboardHTML() {
-        return `<!DOCTYPE html>
+  /**
+   * Generate the full Three.js dashboard HTML.
+   * Self-contained — no external CDN dependencies needed at runtime.
+   */
+  generateDashboardHTML() {
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -293,60 +295,86 @@ class SpatialDebuggerServer {
   </script>
 </body>
 </html>`;
-    }
+  }
 
-    /**
-     * Create and start the HTTP + WS server
-     */
-    start() {
-        const http = require('http');
-        const { WebSocketServer } = require('ws');
-        const server = http.createServer((req, res) => {
-            if (req.url === '/' || req.url === '/debugger') {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end(this.generateDashboardHTML());
-            } else {
-                res.writeHead(404);
-                res.end('Not found');
-            }
+  /**
+   * Create and start the HTTP + WS server
+   */
+  start() {
+    const http = require('http');
+    const {
+      WebSocketServer
+    } = require('ws');
+    const server = http.createServer((req, res) => {
+      if (req.url === '/' || req.url === '/debugger') {
+        res.writeHead(200, {
+          'Content-Type': 'text/html'
         });
+        res.end(this.generateDashboardHTML());
+      } else {
+        res.writeHead(404);
+        res.end('Not found');
+      }
+    });
+    const wss = new WebSocketServer({
+      server,
+      path: '/ws'
+    });
+    wss.on('connection', ws => {
+      this.clients.add(ws);
+      ws.on('close', () => this.clients.delete(ws));
+    });
+    server.listen(this.port, () => {
+      logger.info(`🧠 Heady Spatial Debugger → http://localhost:${this.port}`);
+    });
+    this.server = server;
+    this.wss = wss;
+  }
 
-        const wss = new WebSocketServer({ server, path: '/ws' });
-        wss.on('connection', (ws) => {
-            this.clients.add(ws);
-            ws.on('close', () => this.clients.delete(ws));
-        });
-
-        server.listen(this.port, () => {
-            console.log(`🧠 Heady Spatial Debugger → http://localhost:${this.port}`);
-        });
-        this.server = server;
-        this.wss = wss;
+  /** Broadcast an event to all connected dashboard clients */
+  broadcast(event) {
+    const data = JSON.stringify(event);
+    for (const ws of this.clients) {
+      if (ws.readyState === 1) ws.send(data);
     }
+  }
 
-    /** Broadcast an event to all connected dashboard clients */
-    broadcast(event) {
-        const data = JSON.stringify(event);
-        for (const ws of this.clients) {
-            if (ws.readyState === 1) ws.send(data);
-        }
-    }
+  /** Push agent position update to the dashboard */
+  updateAgent(id, x, y, z) {
+    this.agents.set(id, {
+      x,
+      y,
+      z,
+      t: Date.now()
+    });
+    this.broadcast({
+      type: 'agent_update',
+      id,
+      x,
+      y,
+      z
+    });
+  }
 
-    /** Push agent position update to the dashboard */
-    updateAgent(id, x, y, z) {
-        this.agents.set(id, { x, y, z, t: Date.now() });
-        this.broadcast({ type: 'agent_update', id, x, y, z });
-    }
+  /** Report a drift event */
+  reportDrift(agentId, value) {
+    this.broadcast({
+      type: 'drift',
+      agentId,
+      value
+    });
+  }
 
-    /** Report a drift event */
-    reportDrift(agentId, value) {
-        this.broadcast({ type: 'drift', agentId, value });
-    }
-
-    /** Report a collision event */
-    reportCollision(agentA, agentB, distance) {
-        this.broadcast({ type: 'collision', agentA, agentB, distance });
-    }
+  /** Report a collision event */
+  reportCollision(agentA, agentB, distance) {
+    this.broadcast({
+      type: 'collision',
+      agentA,
+      agentB,
+      distance
+    });
+  }
 }
-
-module.exports = { SpatialDebuggerServer };
+module.exports = {
+  SpatialDebuggerServer
+};

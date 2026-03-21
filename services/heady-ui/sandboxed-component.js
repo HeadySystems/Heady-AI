@@ -1,3 +1,5 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 /**
  * ═══════════════════════════════════════════════════════════════
  * UI-002: SandboxedComponent — Safe AI-generated UI execution
@@ -11,23 +13,19 @@
 'use strict';
 
 class SandboxedComponent {
-    /**
-     * Create a sandboxed HTML document from generated component
-     */
-    static createSandbox(component, options = {}) {
-        const { html, css, js } = component;
-        const allowScripts = options.allowScripts !== false;
-        const theme = options.theme || 'dark';
-
-        const csp = [
-            "default-src 'none'",
-            "style-src 'unsafe-inline'",
-            allowScripts ? "script-src 'unsafe-inline'" : "script-src 'none'",
-            "img-src data: https:",
-            "font-src https://fonts.gstatic.com",
-        ].join('; ');
-
-        return `<!DOCTYPE html>
+  /**
+   * Create a sandboxed HTML document from generated component
+   */
+  static createSandbox(component, options = {}) {
+    const {
+      html,
+      css,
+      js
+    } = component;
+    const allowScripts = options.allowScripts !== false;
+    const theme = options.theme || 'dark';
+    const csp = ["default-src 'none'", "style-src 'unsafe-inline'", allowScripts ? "script-src 'unsafe-inline'" : "script-src 'none'", "img-src data: https:", "font-src https://fonts.gstatic.com"].join('; ');
+    return `<!DOCTYPE html>
 <html lang="en" data-theme="${theme}">
 <head>
   <meta charset="UTF-8">
@@ -70,76 +68,69 @@ class SandboxedComponent {
   </script>
 </body>
 </html>`;
-    }
+  }
 
-    /**
-     * Generate an iframe embedding string for the sandboxed component
-     */
-    static createIframe(component, options = {}) {
-        const sandbox = this.createSandbox(component, options);
-        const blob = `data:text/html;charset=utf-8,${encodeURIComponent(sandbox)}`;
-
-        return `<iframe
+  /**
+   * Generate an iframe embedding string for the sandboxed component
+   */
+  static createIframe(component, options = {}) {
+    const sandbox = this.createSandbox(component, options);
+    const blob = `data:text/html;charset=utf-8,${encodeURIComponent(sandbox)}`;
+    return `<iframe
   src="${blob}"
   sandbox="allow-scripts"
   style="width: ${options.width || '100%'}; height: ${options.height || '400px'}; border: none; border-radius: 12px;"
   title="Heady Generated Component: ${component.id || 'unknown'}"
   loading="lazy"
 ></iframe>`;
-    }
+  }
 
-    /**
-     * Validate component safety
-     */
-    static validate(component) {
-        const issues = [];
+  /**
+   * Validate component safety
+   */
+  static validate(component) {
+    const issues = [];
 
-        // Check for dangerous patterns
-        if (component.js) {
-            const dangerous = [/eval\s*\(/, /Function\s*\(/, /document\.cookie/, /localStorage/, /fetch\s*\(/];
-            for (const pattern of dangerous) {
-                if (pattern.test(component.js)) {
-                    issues.push(`Potentially dangerous JS pattern: ${pattern.source}`);
-                }
-            }
+    // Check for dangerous patterns
+    if (component.js) {
+      const dangerous = [/eval\s*\(/, /Function\s*\(/, /document\.cookie/, /localStorage/, /fetch\s*\(/];
+      for (const pattern of dangerous) {
+        if (pattern.test(component.js)) {
+          issues.push(`Potentially dangerous JS pattern: ${pattern.source}`);
         }
-
-        if (component.html) {
-            if (/<script[^>]*src/i.test(component.html)) {
-                issues.push('External script loading detected');
-            }
-            if (/on\w+\s*=/i.test(component.html)) {
-                issues.push('Inline event handlers detected');
-            }
-        }
-
-        return {
-            safe: issues.length === 0,
-            issues,
-            component: component.id,
-        };
+      }
     }
+    if (component.html) {
+      if (/<script[^>]*src/i.test(component.html)) {
+        issues.push('External script loading detected');
+      }
+      if (/on\w+\s*=/i.test(component.html)) {
+        issues.push('Inline event handlers detected');
+      }
+    }
+    return {
+      safe: issues.length === 0,
+      issues,
+      component: component.id
+    };
+  }
 }
-
 if (require.main === module) {
-    const { GenerativeUIEngine } = require('./generative-engine');
-
-    const engine = new GenerativeUIEngine();
-
-    engine.generate('status dashboard with live metrics').then(component => {
-        console.log('═══ Sandboxed Component ═══\n');
-
-        const validation = SandboxedComponent.validate(component);
-        console.log('Validation:', validation);
-
-        const sandboxHtml = SandboxedComponent.createSandbox(component);
-        console.log(`Sandbox HTML: ${sandboxHtml.length} chars`);
-
-        const iframe = SandboxedComponent.createIframe(component);
-        console.log(`Iframe: ${iframe.length} chars`);
-
-        console.log('✅ SandboxedComponent operational');
-    });
+  const {
+    GenerativeUIEngine
+  } = require('./generative-engine');
+  const engine = new GenerativeUIEngine();
+  engine.generate('status dashboard with live metrics').then(component => {
+    logger.info('═══ Sandboxed Component ═══\n');
+    const validation = SandboxedComponent.validate(component);
+    logger.info('Validation:', validation);
+    const sandboxHtml = SandboxedComponent.createSandbox(component);
+    logger.info(`Sandbox HTML: ${sandboxHtml.length} chars`);
+    const iframe = SandboxedComponent.createIframe(component);
+    logger.info(`Iframe: ${iframe.length} chars`);
+    logger.info('✅ SandboxedComponent operational');
+  });
 }
-
-module.exports = { SandboxedComponent };
+module.exports = {
+  SandboxedComponent
+};

@@ -1,39 +1,20 @@
-/**
- * @fileoverview MoE-CSL Router — Mixture-of-Experts routing via CSL gates
- *
- * Heady™ Latent OS — Section 5: CSL & Geometric AI
- *
- * Routes inputs to expert agents using cosine similarity gates. The router
- * uses semantic alignment (CSL AND) rather than learned linear weights to
- * determine which experts are semantically relevant for each input.
- *
- * Key advantages over standard MoE routers:
- *   - Scale invariance: routing based on direction, not magnitude
- *   - Semantic interpretability: expert gate vectors have semantic meaning
- *   - Anti-collapse: cosine similarity naturally prevents expert collapse
- *   - Cross-domain robustness: geometric routing excels on diverse inputs
- *
- * Architecture:
- *   1. Each expert has a "gate vector" eᵢ ∈ ℝᴰ defining its semantic domain
- *   2. For input x, compute cosine scores: sᵢ = cos(x, eᵢ)
- *   3. Apply temperature-controlled softmax: pᵢ = softmax(sᵢ / τ)
- *   4. Select top-k experts by probability
- *   5. Load-balance via auxiliary anti-collapse loss
- *
- * References:
- *   - MoE Survey (arXiv:2503.07137, March 2025): cosine routing superiority
- *   - DeepSeekMoE (2024): cosine routing for stable sparse expert selection
- *   - Cottention (arXiv:2409.18747): cosine attention for linear transformers
- *
- * @module moe-csl-router
- * @version 1.0.0
- * @patent Heady™ Connection — 60+ provisional patents on CSL/routing techniques
- */
-
 'use strict';
 
-const { PHI, PSI, PHI_TEMPERATURE, adaptiveTemperature, fib } = require('../../shared/phi-math.js');
-const { CSLEngine, norm, normalize, dot, clamp, EPSILON } = require('./csl-engine');
+const {
+  PHI,
+  PSI,
+  PHI_TEMPERATURE,
+  adaptiveTemperature,
+  fib
+} = require('../../shared/phi-math.js');
+const {
+  CSLEngine,
+  norm,
+  normalize,
+  dot,
+  clamp,
+  EPSILON
+} = require('./csl-engine');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -41,8 +22,6 @@ const { CSLEngine, norm, normalize, dot, clamp, EPSILON } = require('./csl-engin
  * fib(3) = 2 — already Fibonacci, made explicit via fib(). */
 const DEFAULT_TOP_K = fib(3); // fib(3) = 2 (already Fibonacci — made explicit)
 
-/** Default temperature for softmax over cosine scores.
- * PHI_TEMPERATURE = PSI^3 ≈ 0.236 — phi-harmonic softmax sharpness. */
 const DEFAULT_TEMPERATURE = PHI_TEMPERATURE; // PSI^3 ≈ 0.236
 
 /** Default load-balance penalty weight (anti-collapse regularization).
@@ -74,24 +53,12 @@ const COLLAPSE_THRESHOLD = Math.pow(PSI, 9); // ≈ 0.0081 (PSI^9 phi-scaled)
  * const { experts, weights } = router.route(inputVec);
  */
 class MoECSLRouter {
-  /**
-   * @param {Object} [options]
-   * @param {number} [options.numExperts=8] - Total number of experts
-   * @param {number} [options.topK=2] - Experts activated per input
-   * @param {number} [options.dim=384] - Vector dimension
-   * @param {number} [options.temperature=0.1] - Softmax temperature (lower = sharper)
-   * @param {number} [options.balanceWeight=0.01] - Anti-collapse regularization weight
-   * @param {boolean} [options.normalizeGates=true] - Normalize gate vectors to unit sphere
-   * @param {'hard'|'soft'} [options.selectionMode='soft'] - Expert selection mode
-   */
   constructor(options = {}) {
     this.numExperts = options.numExperts || 8;
     this.topK = Math.min(options.topK || DEFAULT_TOP_K, this.numExperts);
     this.dim = options.dim || 384;
     this.temperature = options.temperature || DEFAULT_TEMPERATURE;
-    this.balanceWeight = options.balanceWeight !== undefined
-      ? options.balanceWeight
-      : DEFAULT_BALANCE_WEIGHT;
+    this.balanceWeight = options.balanceWeight !== undefined ? options.balanceWeight : DEFAULT_BALANCE_WEIGHT;
     this.normalizeGates = options.normalizeGates !== false;
     this.selectionMode = options.selectionMode || 'soft';
 
@@ -99,22 +66,28 @@ class MoECSLRouter {
     this.expertGates = new Array(this.numExperts).fill(null);
 
     // Expert metadata
-    this.expertMeta = Array.from({ length: this.numExperts }, (_, i) => ({
+    this.expertMeta = Array.from({
+      length: this.numExperts
+    }, (_, i) => ({
       id: i,
       name: `expert_${i}`,
-      description: '',
+      description: ''
     }));
 
     // Running statistics for load balancing
     this._stats = {
       totalRoutings: 0,
-      expertCounts: new Float64Array(this.numExperts),  // cumulative activations
-      expertTokens: new Float64Array(this.numExperts),  // weighted token count
-      routingEntropies: [],                              // history of routing entropy
-      batchSize: 0,
+      expertCounts: new Float64Array(this.numExperts),
+      // cumulative activations
+      expertTokens: new Float64Array(this.numExperts),
+      // weighted token count
+      routingEntropies: [],
+      // history of routing entropy
+      batchSize: 0
     };
-
-    this._csl = new CSLEngine({ dim: this.dim });
+    this._csl = new CSLEngine({
+      dim: this.dim
+    });
   }
 
   // ─── Expert Configuration ─────────────────────────────────────────────────
@@ -131,14 +104,11 @@ class MoECSLRouter {
    */
   setExpertGate(expertId, gateVector, meta = null) {
     this._validateExpertId(expertId);
-
     if (gateVector.length !== this.dim) {
       throw new Error(`Gate vector dim ${gateVector.length} != router dim ${this.dim}`);
     }
-
     const gate = this.normalizeGates ? normalize(gateVector) : new Float64Array(gateVector);
     this.expertGates[expertId] = gate;
-
     if (meta) {
       Object.assign(this.expertMeta[expertId], meta);
     }
@@ -177,33 +147,8 @@ class MoECSLRouter {
 
   // ─── Routing ─────────────────────────────────────────────────────────────
 
-  /**
-   * Route a single input vector to the top-k most relevant experts.
-   *
-   * Algorithm:
-   *   1. Compute cosine similarity: sᵢ = cos(input, eᵢ) for each expert
-   *   2. Apply load-balance adjustment: s̃ᵢ = sᵢ - λ · utilization_penalty(i)
-   *   3. Temperature softmax: pᵢ = exp(s̃ᵢ/τ) / Σⱼ exp(s̃ⱼ/τ)
-   *   4. Select top-k experts by probability
-   *   5. Renormalize selected weights to sum to 1
-   *   6. Update utilization statistics
-   *
-   * @param {Float32Array|Float64Array|number[]} input - Input vector to route
-   * @param {Object} [options]
-   * @param {boolean} [options.applyLoadBalance=true] - Apply anti-collapse penalty
-   * @param {number} [options.topK] - Override default topK for this routing
-   * @returns {{
-   *   experts: number[],       // selected expert indices (topK)
-   *   weights: number[],       // routing weights (sum to 1)
-   *   cosScores: Float64Array, // raw cosine scores for all experts
-   *   softmaxScores: Float64Array, // softmax probabilities for all experts
-   *   entropy: number,         // routing distribution entropy (nats)
-   *   dominantExpert: number,  // highest-weight expert
-   * }}
-   */
   route(input, options = {}) {
     this._validateGatesInitialized();
-
     const applyLB = options.applyLoadBalance !== false;
     const k = options.topK || this.topK;
 
@@ -213,13 +158,9 @@ class MoECSLRouter {
     // Step 2: Apply load-balance penalty (anti-collapse regularization)
     const adjustedScores = new Float64Array(this.numExperts);
     const utilizationPenalties = this._computeUtilizationPenalties();
-
     for (let i = 0; i < this.numExperts; i++) {
-      adjustedScores[i] = cosScores[i]
-        - (applyLB ? this.balanceWeight * utilizationPenalties[i] : 0);
+      adjustedScores[i] = cosScores[i] - (applyLB ? this.balanceWeight * utilizationPenalties[i] : 0);
     }
-
-    // Step 3: Temperature-controlled softmax
     const softmaxScores = this._softmax(adjustedScores, this.temperature);
 
     // Step 4: Select top-k experts
@@ -235,13 +176,9 @@ class MoECSLRouter {
     // Compute routing entropy: H = -Σᵢ pᵢ log(pᵢ)
     const entropy = this._computeEntropy(softmaxScores);
 
-    // Adaptive temperature: use phi-harmonic adaptiveTemperature() for next routing call.
     // PSI^(1 + 2*(1 - H/Hmax)) — sharper when distribution is concentrated, softer at max entropy.
     // maxEntropy = log(numExperts) for uniform distribution over all experts.
     const _adaptiveTemp = adaptiveTemperature(entropy, Math.log(this.numExperts));
-    // Note: _adaptiveTemp is computed and exposed for callers; next route() call may use it
-    // by passing options.temperature. See adaptiveRoute() pattern in documentation.
-
     return {
       experts: topExperts,
       weights,
@@ -249,7 +186,7 @@ class MoECSLRouter {
       softmaxScores,
       entropy,
       dominantExpert: topExperts[0],
-      adaptiveTemp: _adaptiveTemp,  // phi-harmonic temperature for next routing step
+      adaptiveTemp: _adaptiveTemp
     };
   }
 
@@ -275,14 +212,14 @@ class MoECSLRouter {
    */
   softRoute(input, expertOutputs) {
     this._validateGatesInitialized();
-
     const cosScores = this._computeCosineScores(input);
     const weights = this._softmax(cosScores, this.temperature);
-
     const dim = expertOutputs[0].vector.length;
     const combined = new Float64Array(dim);
-
-    for (const { id, vector } of expertOutputs) {
+    for (const {
+      id,
+      vector
+    } of expertOutputs) {
       if (id >= 0 && id < this.numExperts) {
         const w = weights[id];
         for (let i = 0; i < dim; i++) {
@@ -290,8 +227,10 @@ class MoECSLRouter {
         }
       }
     }
-
-    return { combined: normalize(combined), weights };
+    return {
+      combined: normalize(combined),
+      weights
+    };
   }
 
   // ─── Load Balancing ───────────────────────────────────────────────────────
@@ -314,7 +253,6 @@ class MoECSLRouter {
     const total = this._stats.totalRoutings + EPSILON;
     const fractions = new Float64Array(this.numExperts);
     const probs = new Float64Array(this.numExperts);
-
     for (let i = 0; i < this.numExperts; i++) {
       fractions[i] = this._stats.expertCounts[i] / total;
       probs[i] = this._stats.expertTokens[i] / total;
@@ -331,8 +269,11 @@ class MoECSLRouter {
     const meanFrac = 1.0 / this.numExperts;
     const maxFrac = Math.max(...fractions);
     const loadImbalance = maxFrac / meanFrac;
-
-    return { loss, expertFractions: fractions, loadImbalance };
+    return {
+      loss,
+      expertFractions: fractions,
+      loadImbalance
+    };
   }
 
   /**
@@ -343,14 +284,12 @@ class MoECSLRouter {
   detectCollapse() {
     const total = this._stats.totalRoutings + EPSILON;
     const collapsed = [];
-
     for (let i = 0; i < this.numExperts; i++) {
       const utilRate = this._stats.expertCounts[i] / total;
       if (utilRate < COLLAPSE_THRESHOLD) {
         collapsed.push(i);
       }
     }
-
     return collapsed;
   }
 
@@ -361,7 +300,6 @@ class MoECSLRouter {
    */
   resetCollapsedExperts() {
     const collapsed = this.detectCollapse();
-
     for (const id of collapsed) {
       const vec = new Float64Array(this.dim);
       for (let j = 0; j < this.dim; j++) {
@@ -371,7 +309,6 @@ class MoECSLRouter {
       // Reset utilization to give fresh start
       this._stats.expertCounts[id] = this._stats.totalRoutings * COLLAPSE_THRESHOLD;
     }
-
     return collapsed;
   }
 
@@ -391,26 +328,20 @@ class MoECSLRouter {
   getMetrics() {
     const total = this._stats.totalRoutings + EPSILON;
     const expertUtilization = new Float64Array(this.numExperts);
-
     for (let i = 0; i < this.numExperts; i++) {
       expertUtilization[i] = this._stats.expertCounts[i] / total;
     }
-
     const meanUtil = 1.0 / this.numExperts;
     const maxUtil = Math.max(...expertUtilization);
     const loadImbalance = maxUtil / meanUtil;
-
     const entropies = this._stats.routingEntropies;
-    const routingEntropy = entropies.length > 0
-      ? entropies.reduce((s, x) => s + x, 0) / entropies.length
-      : 0;
-
+    const routingEntropy = entropies.length > 0 ? entropies.reduce((s, x) => s + x, 0) / entropies.length : 0;
     return {
       expertUtilization,
       routingEntropy,
       loadImbalance,
       collapsedExperts: this.detectCollapse(),
-      totalRoutings: this._stats.totalRoutings,
+      totalRoutings: this._stats.totalRoutings
     };
   }
 
@@ -423,7 +354,7 @@ class MoECSLRouter {
       expertCounts: new Float64Array(this.numExperts),
       expertTokens: new Float64Array(this.numExperts),
       routingEntropies: [],
-      batchSize: 0,
+      batchSize: 0
     };
   }
 
@@ -435,12 +366,12 @@ class MoECSLRouter {
    */
   expertSimilarityMatrix() {
     const n = this.numExperts;
-    const matrix = Array.from({ length: n }, () => new Float64Array(n));
-
+    const matrix = Array.from({
+      length: n
+    }, () => new Float64Array(n));
     for (let i = 0; i < n; i++) {
       matrix[i][i] = 1.0;
       if (!this.expertGates[i]) continue;
-
       for (let j = i + 1; j < n; j++) {
         if (!this.expertGates[j]) continue;
         const sim = this._csl.AND(this.expertGates[i], this.expertGates[j]);
@@ -448,7 +379,6 @@ class MoECSLRouter {
         matrix[j][i] = sim;
       }
     }
-
     return matrix;
   }
 
@@ -461,11 +391,9 @@ class MoECSLRouter {
   _computeCosineScores(input) {
     const scores = new Float64Array(this.numExperts);
     const normInput = norm(input);
-
     if (normInput < EPSILON) {
       return scores; // degenerate input: all zeros
     }
-
     for (let i = 0; i < this.numExperts; i++) {
       if (!this.expertGates[i]) {
         scores[i] = 0.0;
@@ -475,17 +403,8 @@ class MoECSLRouter {
       const normGate = norm(this.expertGates[i]);
       scores[i] = normGate < EPSILON ? 0.0 : clamp(d / (normInput * normGate), -1.0, 1.0);
     }
-
     return scores;
   }
-
-  /**
-   * Temperature-controlled softmax.
-   * σ(x)ᵢ = exp(xᵢ/τ) / Σⱼ exp(xⱼ/τ)
-   *
-   * Numerically stable: subtracts max before exponentiation.
-   * @private
-   */
   _softmax(scores, temperature) {
     const tau = temperature || this.temperature;
     const result = new Float64Array(scores.length);
@@ -495,13 +414,11 @@ class MoECSLRouter {
     for (let i = 0; i < scores.length; i++) {
       if (scores[i] > maxScore) maxScore = scores[i];
     }
-
     let sumExp = 0.0;
     for (let i = 0; i < scores.length; i++) {
       result[i] = Math.exp((scores[i] - maxScore) / tau);
       sumExp += result[i];
     }
-
     if (sumExp < EPSILON) {
       // Uniform fallback
       const uniform = 1.0 / scores.length;
@@ -511,7 +428,6 @@ class MoECSLRouter {
         result[i] /= sumExp;
       }
     }
-
     return result;
   }
 
@@ -521,7 +437,10 @@ class MoECSLRouter {
    * @private
    */
   _topK(probs, k) {
-    const indexed = Array.from(probs, (p, i) => ({ i, p }));
+    const indexed = Array.from(probs, (p, i) => ({
+      i,
+      p
+    }));
     indexed.sort((a, b) => b.p - a.p);
     return indexed.slice(0, k).map(x => x.i);
   }
@@ -536,12 +455,10 @@ class MoECSLRouter {
     const total = this._stats.totalRoutings + EPSILON;
     const expected = 1.0 / this.numExperts;
     const penalties = new Float64Array(this.numExperts);
-
     for (let i = 0; i < this.numExperts; i++) {
       const actual = this._stats.expertCounts[i] / total;
       penalties[i] = Math.max(0, actual - expected) / expected; // excess utilization ratio
     }
-
     return penalties;
   }
 
@@ -566,7 +483,6 @@ class MoECSLRouter {
    */
   _updateStats(selectedExperts, weights) {
     this._stats.totalRoutings++;
-
     for (let k = 0; k < selectedExperts.length; k++) {
       const id = selectedExperts[k];
       this._stats.expertCounts[id]++;
@@ -578,20 +494,17 @@ class MoECSLRouter {
     for (let k = 0; k < selectedExperts.length; k++) {
       scores[selectedExperts[k]] = weights[k];
     }
-
     const entropy = this._computeEntropy(scores);
     this._stats.routingEntropies.push(entropy);
     if (this._stats.routingEntropies.length > 1000) {
       this._stats.routingEntropies.shift();
     }
   }
-
   _validateExpertId(id) {
     if (id < 0 || id >= this.numExperts || !Number.isInteger(id)) {
       throw new Error(`Invalid expert ID: ${id}. Must be integer in [0, ${this.numExperts})`);
     }
   }
-
   _validateGatesInitialized() {
     const unset = this.expertGates.findIndex(g => g === null);
     if (unset !== -1) {
@@ -607,5 +520,5 @@ module.exports = {
   DEFAULT_TOP_K,
   DEFAULT_TEMPERATURE,
   DEFAULT_BALANCE_WEIGHT,
-  COLLAPSE_THRESHOLD,
+  COLLAPSE_THRESHOLD
 };

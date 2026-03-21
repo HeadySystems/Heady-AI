@@ -1,34 +1,8 @@
-/*
- * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
- *
- * ═══════════════════════════════════════════════════════════════════
- * Bee Factory V2 — Production-Grade Dynamic Bee Creation
- * ═══════════════════════════════════════════════════════════════════
- *
- * CHANGES FROM V1 (bee-factory.js):
- *   [NEW] Dependency Injection container — bees receive injected deps
- *   [NEW] Lifecycle hooks: onCreate, onStart, onStop, onError, onHotReload
- *   [NEW] Hot reload via fs.watch() — no restarts needed when bee files change
- *   [NEW] Bee versioning — domain collisions are versioned, not silently overwritten
- *   [NEW] Per-bee circuit breaker — individual bee health isolation
- *   [NEW] Backpressure in swarms — bounded concurrency with queue overflow handling
- *   [NEW] Dependency graph — detects circular bee dependencies at registration time
- *   [NEW] Bee health registry — tracks per-bee execution stats
- *   [FIXED] _persistBee generates real implementation stubs, not no-ops
- *   [IMPROVED] createFromTemplate adds 'validator' and 'scheduler' templates
- *
- * Usage:
- *   const factory = new BeeFactoryV2({
- *     deps: { vectorMemory, redis, conductor },
- *     hooks: { onCreate: (domain, entry) => track(entry) }
- *   });
- *   factory.createBee('analytics', { workers: [...] });
- *   factory.startHotReload('/path/to/bees-dir');
- */
-
 'use strict';
 
-const { PHI_TIMING } = require('../shared/phi-math');
+const {
+  PHI_TIMING
+} = require('../shared/phi-math');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -59,7 +33,9 @@ class BeeCB {
   }
 
   /** @returns {'closed'|'open'|'half-open'} */
-  get state() { return this._state; }
+  get state() {
+    return this._state;
+  }
 
   /** @returns {boolean} true if the bee is allowed to run */
   isAllowed() {
@@ -89,14 +65,13 @@ class BeeCB {
       this._trippedAt = Date.now();
     }
   }
-
   getStats() {
     return {
       domain: this.domain,
       state: this._state,
       failures: this._failures,
       trippedAt: this._trippedAt,
-      willResetAt: this._trippedAt ? new Date(this._trippedAt + this.recoveryMs).toISOString() : null,
+      willResetAt: this._trippedAt ? new Date(this._trippedAt + this.recoveryMs).toISOString() : null
     };
   }
 }
@@ -146,9 +121,12 @@ class DIContainer {
   resolveAll() {
     return Object.fromEntries(this._deps.entries());
   }
-
-  has(name) { return this._deps.has(name); }
-  list() { return [...this._deps.keys()]; }
+  has(name) {
+    return this._deps.has(name);
+  }
+  list() {
+    return [...this._deps.keys()];
+  }
 }
 
 // ─── Bee Health Registry ────────────────────────────────────────────────────
@@ -158,7 +136,6 @@ class BeeHealthRegistry {
     /** @type {Map<string, Object>} */
     this._health = new Map();
   }
-
   init(domain) {
     if (!this._health.has(domain)) {
       this._health.set(domain, {
@@ -171,18 +148,20 @@ class BeeHealthRegistry {
         lastError: null,
         p50Ms: 0,
         p95Ms: 0,
-        latencies: [], // ring buffer, max 100 samples
+        latencies: [] // ring buffer, max 100 samples
       });
     }
   }
-
-  record(domain, { success, latencyMs, error }) {
+  record(domain, {
+    success,
+    latencyMs,
+    error
+  }) {
     this.init(domain);
     const h = this._health.get(domain);
     h.executions++;
     h.totalLatencyMs += latencyMs;
     h.lastRunAt = new Date().toISOString();
-
     if (success) {
       h.successes++;
     } else {
@@ -200,21 +179,23 @@ class BeeHealthRegistry {
     h.p50Ms = sorted[Math.floor(sorted.length * 0.5)] ?? 0;
     h.p95Ms = sorted[Math.floor(sorted.length * 0.95)] ?? 0;
   }
-
   get(domain) {
     const h = this._health.get(domain);
     if (!h) return null;
     const total = h.executions;
     return {
       ...h,
-      latencies: undefined, // don't expose raw ring buffer
-      successRate: total > 0 ? ((h.successes / total) * 100).toFixed(1) + '%' : 'N/A',
-      avgLatencyMs: total > 0 ? Math.round(h.totalLatencyMs / total) : 0,
+      latencies: undefined,
+      // don't expose raw ring buffer
+      successRate: total > 0 ? (h.successes / total * 100).toFixed(1) + '%' : 'N/A',
+      avgLatencyMs: total > 0 ? Math.round(h.totalLatencyMs / total) : 0
     };
   }
-
   getAll() {
-    return [...this._health.keys()].map(d => ({ domain: d, ...this.get(d) }));
+    return [...this._health.keys()].map(d => ({
+      domain: d,
+      ...this.get(d)
+    }));
   }
 }
 
@@ -242,7 +223,6 @@ class BeeFactoryV2 extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-
     this.version = FACTORY_VERSION;
 
     // Dependency injection
@@ -259,9 +239,8 @@ class BeeFactoryV2 extends EventEmitter {
       onStart: opts.hooks?.onStart || null,
       onStop: opts.hooks?.onStop || null,
       onError: opts.hooks?.onError || null,
-      onHotReload: opts.hooks?.onHotReload || null,
+      onHotReload: opts.hooks?.onHotReload || null
     };
-
     this._defaultTimeoutMs = opts.defaultTimeoutMs ?? DEFAULT_BEE_TIMEOUT_MS;
 
     /** @type {Map<string, Object>} domain → bee entry */
@@ -275,7 +254,6 @@ class BeeFactoryV2 extends EventEmitter {
 
     /** @type {Map<string, string[]>} domain → dependency domains */
     this._depGraph = new Map();
-
     this._health = new BeeHealthRegistry();
 
     /** @type {Map<string, fs.FSWatcher>} filePath → watcher */
@@ -283,12 +261,11 @@ class BeeFactoryV2 extends EventEmitter {
 
     /** @type {Map<string, NodeJS.Timeout>} filePath → debounce timer */
     this._reloadDebounce = new Map();
-
     this._stats = {
       created: 0,
       dissolved: 0,
       hotReloads: 0,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     };
   }
 
@@ -332,7 +309,7 @@ class BeeFactoryV2 extends EventEmitter {
       persist = false,
       dependsOn = [],
       circuitBreaker: cbOpts = {},
-      timeoutMs = this._defaultTimeoutMs,
+      timeoutMs = this._defaultTimeoutMs
     } = config;
 
     // Validate workers
@@ -341,7 +318,10 @@ class BeeFactoryV2 extends EventEmitter {
       const w = workers[i];
       if (typeof w !== 'function' && (typeof w !== 'object' || typeof w.fn !== 'function')) {
         validated = false;
-        this.emit('warn', { domain, msg: `Worker ${i} is not callable` });
+        this.emit('warn', {
+          domain,
+          msg: `Worker ${i} is not callable`
+        });
       }
     }
 
@@ -379,51 +359,69 @@ class BeeFactoryV2 extends EventEmitter {
         return workers.map((w, i) => {
           const workName = (typeof w === 'object' ? w.name : null) || `work-${i}`;
           const workFn = typeof w === 'function' ? w : w.fn;
-          const workDeps = (typeof w === 'object' && Array.isArray(w.deps)) ? w.deps : [];
-
+          const workDeps = typeof w === 'object' && Array.isArray(w.deps) ? w.deps : [];
           return async () => {
             const cb = factory._breakers.get(domain);
             if (cb && !cb.isAllowed()) {
               return {
-                bee: domain, action: workName,
+                bee: domain,
+                action: workName,
                 status: 'circuit-open',
-                circuitState: cb.state,
+                circuitState: cb.state
               };
             }
 
             // Call onStart hook
             factory._callHook('onStart', domain, i, ctx);
-
             const deps = factory.di.resolve(workDeps);
-            const mergedCtx = { ...ctx, deps };
+            const mergedCtx = {
+              ...ctx,
+              deps
+            };
             const start = Date.now();
-
             try {
               const resultPromise = workFn(mergedCtx, deps);
-              const result = await Promise.race([
-                resultPromise,
-                new Promise((_, rej) =>
-                  setTimeout(() => rej(new Error(`Bee '${domain}:${workName}' timed out after ${timeoutMs}ms`)), timeoutMs)
-                ),
-              ]);
-
+              const result = await Promise.race([resultPromise, new Promise((_, rej) => setTimeout(() => rej(new Error(`Bee '${domain}:${workName}' timed out after ${timeoutMs}ms`)), timeoutMs))]);
               const latencyMs = Date.now() - start;
               cb?.onSuccess();
-              factory._health.record(domain, { success: true, latencyMs });
+              factory._health.record(domain, {
+                success: true,
+                latencyMs
+              });
               factory._callHook('onStop', domain, i, result);
-
-              return { bee: domain, action: workName, latencyMs, ...(typeof result === 'object' ? result : { result }) };
+              return {
+                bee: domain,
+                action: workName,
+                latencyMs,
+                ...(typeof result === 'object' ? result : {
+                  result
+                })
+              };
             } catch (err) {
               const latencyMs = Date.now() - start;
               cb?.onFailure();
-              factory._health.record(domain, { success: false, latencyMs, error: err });
+              factory._health.record(domain, {
+                success: false,
+                latencyMs,
+                error: err
+              });
               factory._callHook('onError', domain, err, ctx);
-              factory.emit('bee:error', { domain, action: workName, error: err.message });
-              return { bee: domain, action: workName, error: err.message, latencyMs, status: 'failed' };
+              factory.emit('bee:error', {
+                domain,
+                action: workName,
+                error: err.message
+              });
+              return {
+                bee: domain,
+                action: workName,
+                error: err.message,
+                latencyMs,
+                status: 'failed'
+              };
             }
           };
         });
-      },
+      }
     };
 
     // Versioning: if domain already exists, bump version
@@ -432,18 +430,18 @@ class BeeFactoryV2 extends EventEmitter {
       entry.version = (existing.version || 1) + 1;
       entry.replacedAt = new Date().toISOString();
     }
-
     this._registry.set(domain, entry);
     this._health.init(domain);
     this._stats.created++;
-
     this._callHook('onCreate', domain, entry);
-    this.emit('bee:created', { domain, csl_relevance, version: entry.version });
-
+    this.emit('bee:created', {
+      domain,
+      csl_relevance,
+      version: entry.version
+    });
     if (persist) {
       this._persistBee(domain, config);
     }
-
     return entry;
   }
 
@@ -458,7 +456,6 @@ class BeeFactoryV2 extends EventEmitter {
   spawnBee(name, work, csl_relevance = 0.8) {
     const workFns = Array.isArray(work) ? work : [work];
     const id = `ephemeral-${name}-${crypto.randomBytes(3).toString('hex')}`;
-
     const factory = this;
     const entry = {
       domain: id,
@@ -471,18 +468,39 @@ class BeeFactoryV2 extends EventEmitter {
         const start = Date.now();
         try {
           const result = await fn(ctx, factory.di.resolveAll());
-          factory._health.record(id, { success: true, latencyMs: Date.now() - start });
-          return { bee: id, action: name, ...(typeof result === 'object' ? result : { result }) };
+          factory._health.record(id, {
+            success: true,
+            latencyMs: Date.now() - start
+          });
+          return {
+            bee: id,
+            action: name,
+            ...(typeof result === 'object' ? result : {
+              result
+            })
+          };
         } catch (err) {
-          factory._health.record(id, { success: false, latencyMs: Date.now() - start, error: err });
-          return { bee: id, action: name, error: err.message, status: 'failed' };
+          factory._health.record(id, {
+            success: false,
+            latencyMs: Date.now() - start,
+            error: err
+          });
+          return {
+            bee: id,
+            action: name,
+            error: err.message,
+            status: 'failed'
+          };
         }
-      }),
+      })
     };
-
     this._ephemeral.set(id, entry);
     this._health.init(id);
-    this.emit('bee:spawned', { id, name, csl_relevance });
+    this.emit('bee:spawned', {
+      id,
+      name,
+      csl_relevance
+    });
     return entry;
   }
 
@@ -502,9 +520,12 @@ class BeeFactoryV2 extends EventEmitter {
       // Dynamically append work to existing bee
       // We rebuild getWork to include the new function
       const workers = existing._workers || [];
-      workers.push({ name, fn, deps });
+      workers.push({
+        name,
+        fn,
+        deps
+      });
       existing._workers = workers;
-
       const origGetWork = existing.getWork.bind(existing);
       const factory = this;
       existing.getWork = (ctx = {}) => {
@@ -513,36 +534,42 @@ class BeeFactoryV2 extends EventEmitter {
         base.push(async () => {
           const start = Date.now();
           try {
-            const result = await fn({ ...ctx, deps: resolvedDeps }, resolvedDeps);
-            return { bee: domain, action: name, ...(typeof result === 'object' ? result : { result }), latencyMs: Date.now() - start };
+            const result = await fn({
+              ...ctx,
+              deps: resolvedDeps
+            }, resolvedDeps);
+            return {
+              bee: domain,
+              action: name,
+              ...(typeof result === 'object' ? result : {
+                result
+              }),
+              latencyMs: Date.now() - start
+            };
           } catch (err) {
-            return { bee: domain, action: name, error: err.message, status: 'failed' };
+            return {
+              bee: domain,
+              action: name,
+              error: err.message,
+              status: 'failed'
+            };
           }
         });
         return base;
       };
       return existing;
     }
-
-    return this.createBee(domain, { workers: [{ name, fn, deps }] });
+    return this.createBee(domain, {
+      workers: [{
+        name,
+        fn,
+        deps
+      }]
+    });
   }
-
-  // ─── Templates ───────────────────────────────────────────────────────────
-
-  /**
-   * Create a bee from a named template.
-   *
-   * Templates: health-check, monitor, processor, scanner, alerter, validator, scheduler
-   *
-   * CHANGE FROM V1: Added 'validator' and 'scheduler' templates.
-   *
-   * @param {string} template
-   * @param {object} config
-   * @returns {object}
-   */
   createFromTemplate(template, config = {}) {
     const templates = {
-      'health-check': (cfg) => ({
+      'health-check': cfg => ({
         description: `Health checker for ${cfg.target}`,
         csl_relevance: 0.9,
         workers: [{
@@ -551,59 +578,77 @@ class BeeFactoryV2 extends EventEmitter {
             const url = cfg.url || `https://${cfg.target}/api/health`;
             const start = Date.now();
             try {
-              const res = await fetch(url, { signal: AbortSignal.timeout(cfg.timeout || 5000) });
+              const res = await fetch(url, {
+                signal: AbortSignal.timeout(cfg.timeout || 5000)
+              });
               const latency = Date.now() - start;
-              const body = res.headers.get('content-type')?.includes('json')
-                ? await res.json().catch(() => null) : null;
-              return { target: cfg.target, url, status: res.ok ? 'healthy' : 'degraded', statusCode: res.status, latency, body };
-            } catch (err) {
-              return { target: cfg.target, url, status: 'down', error: err.message, latency: Date.now() - start };
-            }
-          },
-        }],
-      }),
-
-      'monitor': (cfg) => ({
-        description: `Process monitor for ${cfg.target}`,
-        csl_relevance: 0.7,
-        workers: [
-          {
-            name: 'metrics',
-            fn: async () => {
-              const mem = process.memoryUsage();
-              const lagStart = Date.now();
-              await new Promise(r => setImmediate(r));
+              const body = res.headers.get('content-type')?.includes('json') ? await res.json().catch(() => null) : null;
               return {
                 target: cfg.target,
-                heapUsedMB: +(mem.heapUsed / 1048576).toFixed(1),
-                heapTotalMB: +(mem.heapTotal / 1048576).toFixed(1),
-                rssMB: +(mem.rss / 1048576).toFixed(1),
-                eventLoopLagMs: Date.now() - lagStart,
-                ts: Date.now(),
+                url,
+                status: res.ok ? 'healthy' : 'degraded',
+                statusCode: res.status,
+                latency,
+                body
               };
-            },
-          },
-          {
-            name: 'uptime',
-            fn: async () => {
-              const s = process.uptime();
-              const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
-              return { target: cfg.target, uptimeSeconds: Math.round(s), uptimeHuman: `${h}h ${m}m`, pid: process.pid, ts: Date.now() };
-            },
-          },
-        ],
+            } catch (err) {
+              return {
+                target: cfg.target,
+                url,
+                status: 'down',
+                error: err.message,
+                latency: Date.now() - start
+              };
+            }
+          }
+        }]
       }),
-
-      'processor': (cfg) => ({
+      'monitor': cfg => ({
+        description: `Process monitor for ${cfg.target}`,
+        csl_relevance: 0.7,
+        workers: [{
+          name: 'metrics',
+          fn: async () => {
+            const mem = process.memoryUsage();
+            const lagStart = Date.now();
+            await new Promise(r => setImmediate(r));
+            return {
+              target: cfg.target,
+              heapUsedMB: +(mem.heapUsed / 1048576).toFixed(1),
+              heapTotalMB: +(mem.heapTotal / 1048576).toFixed(1),
+              rssMB: +(mem.rss / 1048576).toFixed(1),
+              eventLoopLagMs: Date.now() - lagStart,
+              ts: Date.now()
+            };
+          }
+        }, {
+          name: 'uptime',
+          fn: async () => {
+            const s = process.uptime();
+            const h = Math.floor(s / 3600),
+              m = Math.floor(s % 3600 / 60);
+            return {
+              target: cfg.target,
+              uptimeSeconds: Math.round(s),
+              uptimeHuman: `${h}h ${m}m`,
+              pid: process.pid,
+              ts: Date.now()
+            };
+          }
+        }]
+      }),
+      'processor': cfg => ({
         description: `Data processor: ${cfg.name}`,
         csl_relevance: cfg.csl_relevance || 0.6,
         workers: (cfg.tasks || []).map(task => ({
           name: task.name || 'process',
-          fn: task.fn || (async () => ({ processed: true, task: task.name })),
-        })),
+          fn: task.fn || (async () => ({
+            processed: true,
+            task: task.name
+          }))
+        }))
       }),
-
-      'scanner': (cfg) => ({
+      'scanner': cfg => ({
         description: `Scanner for ${cfg.target}`,
         csl_relevance: 0.8,
         workers: [{
@@ -615,99 +660,151 @@ class BeeFactoryV2 extends EventEmitter {
             const walk = (dir, depth = 0) => {
               if (depth > 5) return;
               try {
-                const entries = fs.readdirSync(dir, { withFileTypes: true });
+                const entries = fs.readdirSync(dir, {
+                  withFileTypes: true
+                });
                 for (const entry of entries) {
                   if (entry.name === 'node_modules' || entry.name === '.git') continue;
                   const fullPath = path.join(dir, entry.name);
-                  if (entry.isDirectory()) walk(fullPath, depth + 1);
-                  else if (patterns.some(p => entry.name.includes(p))) {
-                    findings.push({ file: fullPath, pattern: patterns.find(p => entry.name.includes(p)), size: fs.statSync(fullPath).size });
+                  if (entry.isDirectory()) walk(fullPath, depth + 1);else if (patterns.some(p => entry.name.includes(p))) {
+                    findings.push({
+                      file: fullPath,
+                      pattern: patterns.find(p => entry.name.includes(p)),
+                      size: fs.statSync(fullPath).size
+                    });
                   }
                 }
-              } catch { /* permission denied */ }
+              } catch {/* permission denied */}
             };
             walk(targetDir);
-            return { scanned: targetDir, findings, count: findings.length, ts: Date.now() };
-          }),
-        }],
+            return {
+              scanned: targetDir,
+              findings,
+              count: findings.length,
+              ts: Date.now()
+            };
+          })
+        }]
       }),
-
-      'alerter': (cfg) => ({
+      'alerter': cfg => ({
         description: `Threshold alerter for ${cfg.target}`,
         csl_relevance: 0.85,
         workers: [{
           name: 'check-thresholds',
           fn: async () => {
             const mem = process.memoryUsage();
-            const heapPercent = (mem.heapUsed / mem.heapTotal) * 100;
+            const heapPercent = mem.heapUsed / mem.heapTotal * 100;
             const alerts = [];
             if (heapPercent > (cfg.heapThreshold || 85)) {
-              alerts.push({ type: 'heap', level: 'warning', value: `${heapPercent.toFixed(1)}%` });
+              alerts.push({
+                type: 'heap',
+                level: 'warning',
+                value: `${heapPercent.toFixed(1)}%`
+              });
             }
-            return { target: cfg.target, alerts, alertCount: alerts.length, ts: Date.now() };
-          },
-        }],
+            return {
+              target: cfg.target,
+              alerts,
+              alertCount: alerts.length,
+              ts: Date.now()
+            };
+          }
+        }]
       }),
-
       // NEW in V2
-      'validator': (cfg) => ({
+      'validator': cfg => ({
         description: `Schema validator for ${cfg.target || 'data'}`,
         csl_relevance: 0.9,
         workers: [{
           name: 'validate',
-          fn: async (ctx) => {
+          fn: async ctx => {
             const data = ctx.data || cfg.data || {};
             const schema = cfg.schema || {};
             const errors = [];
             for (const [field, rules] of Object.entries(schema)) {
               const value = data[field];
               if (rules.required && (value === undefined || value === null || value === '')) {
-                errors.push({ field, rule: 'required', value });
+                errors.push({
+                  field,
+                  rule: 'required',
+                  value
+                });
               }
               if (rules.type && value !== undefined && typeof value !== rules.type) {
-                errors.push({ field, rule: 'type', expected: rules.type, got: typeof value });
+                errors.push({
+                  field,
+                  rule: 'type',
+                  expected: rules.type,
+                  got: typeof value
+                });
               }
               if (rules.minLength && typeof value === 'string' && value.length < rules.minLength) {
-                errors.push({ field, rule: 'minLength', expected: rules.minLength, got: value.length });
+                errors.push({
+                  field,
+                  rule: 'minLength',
+                  expected: rules.minLength,
+                  got: value.length
+                });
               }
               if (rules.maxLength && typeof value === 'string' && value.length > rules.maxLength) {
-                errors.push({ field, rule: 'maxLength', expected: rules.maxLength, got: value.length });
+                errors.push({
+                  field,
+                  rule: 'maxLength',
+                  expected: rules.maxLength,
+                  got: value.length
+                });
               }
             }
-            return { target: cfg.target, valid: errors.length === 0, errors, ts: Date.now() };
-          },
-        }],
+            return {
+              target: cfg.target,
+              valid: errors.length === 0,
+              errors,
+              ts: Date.now()
+            };
+          }
+        }]
       }),
-
       // NEW in V2
-      'scheduler': (cfg) => ({
+      'scheduler': cfg => ({
         description: `Scheduled task bee for ${cfg.name}`,
         csl_relevance: cfg.csl_relevance || 0.5,
         workers: [{
           name: 'tick',
-          fn: async (ctx) => {
+          fn: async ctx => {
             const now = Date.now();
             const lastRun = ctx._lastRun || 0;
             const intervalMs = cfg.intervalMs || 60_000;
             if (now - lastRun < intervalMs) {
-              return { name: cfg.name, skipped: true, nextRunIn: intervalMs - (now - lastRun) };
+              return {
+                name: cfg.name,
+                skipped: true,
+                nextRunIn: intervalMs - (now - lastRun)
+              };
             }
             try {
               const result = await cfg.task(ctx);
-              return { name: cfg.name, ran: true, result, ts: now };
+              return {
+                name: cfg.name,
+                ran: true,
+                result,
+                ts: now
+              };
             } catch (err) {
-              return { name: cfg.name, ran: true, error: err.message, ts: now };
+              return {
+                name: cfg.name,
+                ran: true,
+                error: err.message,
+                ts: now
+              };
             }
-          },
-        }],
-      }),
+          }
+        }]
+      })
     };
-
     const tplFn = templates[template];
     if (!tplFn) {
       throw new Error(`[BeeFactoryV2] Unknown template: '${template}'. Available: ${Object.keys(templates).join(', ')}`);
     }
-
     const domain = config.domain || `${template}-${config.target || config.name || 'dynamic'}`;
     return this.createBee(domain, tplFn(config));
   }
@@ -733,11 +830,12 @@ class BeeFactoryV2 extends EventEmitter {
       mode = 'parallel',
       requireConsensus = false,
       timeoutMs = PHI_TIMING.CYCLE,
-      maxConcurrentBees = 20,
+      maxConcurrentBees = 20
     } = policy;
-
-    const bees = beeConfigs.map(({ domain, config }) => this.createBee(domain, config || {}));
-
+    const bees = beeConfigs.map(({
+      domain,
+      config
+    }) => this.createBee(domain, config || {}));
     const factory = this;
     return this.createBee(`swarm-${name}`, {
       description: `Swarm: ${name} (${mode}, ${bees.length} bees)`,
@@ -747,25 +845,28 @@ class BeeFactoryV2 extends EventEmitter {
         fn: async (ctx = {}) => {
           const results = {};
           const start = Date.now();
-
           if (mode === 'parallel') {
             // Bounded concurrency via sliding window
             const queue = [...bees];
             const active = new Set();
-
-            const runBee = async (bee) => {
+            const runBee = async bee => {
               try {
                 const workFns = bee.getWork(ctx);
                 const beeResults = await Promise.all(workFns.map(fn => fn(ctx)));
-                results[bee.domain] = { status: 'ok', results: beeResults };
+                results[bee.domain] = {
+                  status: 'ok',
+                  results: beeResults
+                };
               } catch (err) {
-                results[bee.domain] = { status: 'error', error: err.message };
+                results[bee.domain] = {
+                  status: 'error',
+                  error: err.message
+                };
               } finally {
                 active.delete(bee.domain);
               }
             };
-
-            await new Promise((resolve) => {
+            await new Promise(resolve => {
               const tick = () => {
                 while (queue.length > 0 && active.size < maxConcurrentBees) {
                   const bee = queue.shift();
@@ -776,9 +877,10 @@ class BeeFactoryV2 extends EventEmitter {
               };
               tick();
             });
-
           } else {
-            let pipelineCtx = { ...ctx };
+            let pipelineCtx = {
+              ...ctx
+            };
             for (const bee of bees) {
               try {
                 const workFns = bee.getWork(pipelineCtx);
@@ -787,26 +889,36 @@ class BeeFactoryV2 extends EventEmitter {
                   const r = await fn(pipelineCtx);
                   beeResults.push(r);
                   if (mode === 'pipeline' && typeof r === 'object') {
-                    pipelineCtx = { ...pipelineCtx, ...r };
+                    pipelineCtx = {
+                      ...pipelineCtx,
+                      ...r
+                    };
                   }
                 }
-                results[bee.domain] = { status: 'ok', results: beeResults };
+                results[bee.domain] = {
+                  status: 'ok',
+                  results: beeResults
+                };
               } catch (err) {
-                results[bee.domain] = { status: 'error', error: err.message };
+                results[bee.domain] = {
+                  status: 'error',
+                  error: err.message
+                };
                 if (requireConsensus) break;
               }
             }
           }
-
           const allOk = Object.values(results).every(r => r.status === 'ok');
           return {
-            swarm: name, mode, beeCount: bees.length,
+            swarm: name,
+            mode,
+            beeCount: bees.length,
             consensus: requireConsensus ? allOk : null,
             durationMs: Date.now() - start,
-            results,
+            results
           };
-        },
-      }],
+        }
+      }]
     });
   }
 
@@ -822,14 +934,16 @@ class BeeFactoryV2 extends EventEmitter {
    */
   startHotReload(beesDir) {
     if (!fs.existsSync(beesDir)) {
-      this.emit('warn', { msg: `[BeeFactoryV2] Hot-reload: directory not found: ${beesDir}` });
+      this.emit('warn', {
+        msg: `[BeeFactoryV2] Hot-reload: directory not found: ${beesDir}`
+      });
       return;
     }
-
-    const watcher = fs.watch(beesDir, { recursive: false }, (eventType, filename) => {
+    const watcher = fs.watch(beesDir, {
+      recursive: false
+    }, (eventType, filename) => {
       if (!filename || !filename.endsWith('.js')) return;
       if (filename === 'registry.js' || filename === 'bee-factory.js' || filename === 'bee-factory-v2.js') return;
-
       const filePath = path.join(beesDir, filename);
 
       // Debounce rapid changes (e.g., editor save storms)
@@ -841,9 +955,10 @@ class BeeFactoryV2 extends EventEmitter {
         this._hotReloadFile(filePath);
       }, HOT_RELOAD_DEBOUNCE_MS));
     });
-
     this._watchers.set(beesDir, watcher);
-    this.emit('hot-reload:started', { beesDir });
+    this.emit('hot-reload:started', {
+      beesDir
+    });
   }
 
   /**
@@ -865,28 +980,30 @@ class BeeFactoryV2 extends EventEmitter {
       // Bust the require cache for this module
       delete require.cache[require.resolve(filePath)];
       const mod = require(filePath);
-
       if (!mod.domain || typeof mod.getWork !== 'function') return;
-
       const existing = this._registry.get(mod.domain);
       const newVersion = existing ? (existing.version || 1) + 1 : 1;
-
       const entry = {
         ...mod,
         file: filePath,
         dynamic: false,
         version: newVersion,
         hotReloadedAt: new Date().toISOString(),
-        getWork: mod.getWork,
+        getWork: mod.getWork
       };
-
       this._registry.set(mod.domain, entry);
       this._stats.hotReloads++;
-
       this._callHook('onHotReload', filePath, mod.domain);
-      this.emit('bee:hot-reloaded', { domain: mod.domain, file: filePath, version: newVersion });
+      this.emit('bee:hot-reloaded', {
+        domain: mod.domain,
+        file: filePath,
+        version: newVersion
+      });
     } catch (err) {
-      this.emit('bee:reload-failed', { filePath, error: err.message });
+      this.emit('bee:reload-failed', {
+        filePath,
+        error: err.message
+      });
     }
   }
 
@@ -903,7 +1020,9 @@ class BeeFactoryV2 extends EventEmitter {
       this._breakers.delete(domain);
       this._depGraph.delete(domain);
       this._stats.dissolved++;
-      this.emit('bee:dissolved', { domain });
+      this.emit('bee:dissolved', {
+        domain
+      });
     }
     return deleted;
   }
@@ -912,10 +1031,23 @@ class BeeFactoryV2 extends EventEmitter {
   listBees() {
     const all = [];
     for (const [id, entry] of this._registry) {
-      all.push({ domain: id, description: entry.description, csl_relevance: entry.csl_relevance, type: 'registered', version: entry.version, createdAt: entry.createdAt });
+      all.push({
+        domain: id,
+        description: entry.description,
+        csl_relevance: entry.csl_relevance,
+        type: 'registered',
+        version: entry.version,
+        createdAt: entry.createdAt
+      });
     }
     for (const [id, entry] of this._ephemeral) {
-      all.push({ domain: id, description: entry.description, csl_relevance: entry.csl_relevance, type: 'ephemeral', createdAt: entry.createdAt });
+      all.push({
+        domain: id,
+        description: entry.description,
+        csl_relevance: entry.csl_relevance,
+        type: 'ephemeral',
+        createdAt: entry.createdAt
+      });
     }
     return all;
   }
@@ -929,7 +1061,7 @@ class BeeFactoryV2 extends EventEmitter {
   getBeeHealth(domain) {
     return {
       health: this._health.get(domain),
-      circuitBreaker: this._breakers.get(domain)?.getStats() || null,
+      circuitBreaker: this._breakers.get(domain)?.getStats() || null
     };
   }
 
@@ -937,7 +1069,7 @@ class BeeFactoryV2 extends EventEmitter {
   getAllHealth() {
     return this._health.getAll().map(h => ({
       ...h,
-      circuitBreaker: this._breakers.get(h.domain)?.getStats() || null,
+      circuitBreaker: this._breakers.get(h.domain)?.getStats() || null
     }));
   }
 
@@ -950,7 +1082,7 @@ class BeeFactoryV2 extends EventEmitter {
       ephemeral: this._ephemeral.size,
       breakers: this._breakers.size,
       hotReloadWatchers: this._watchers.size,
-      deps: this.di.list(),
+      deps: this.di.list()
     };
   }
 
@@ -960,9 +1092,14 @@ class BeeFactoryV2 extends EventEmitter {
   _callHook(hookName, ...args) {
     const fn = this._hooks[hookName];
     if (typeof fn === 'function') {
-      try { fn(...args); } catch { /* hooks must not crash the factory */ }
+      try {
+        fn(...args);
+      } catch {/* hooks must not crash the factory */}
     }
-    this.emit(`hook:${hookName}`, { hookName, args });
+    this.emit(`hook:${hookName}`, {
+      hookName,
+      args
+    });
   }
 
   /**
@@ -971,7 +1108,7 @@ class BeeFactoryV2 extends EventEmitter {
    */
   _hasCycle(startDomain) {
     const visited = new Set();
-    const dfs = (domain) => {
+    const dfs = domain => {
       if (visited.has(domain)) return true;
       visited.add(domain);
       const deps = this._depGraph.get(domain) || [];
@@ -996,14 +1133,15 @@ class BeeFactoryV2 extends EventEmitter {
     // Caller should specify persist path via config.persistPath
     const persistDir = config.persistPath || path.join(process.cwd(), 'generated-bees');
     const filePath = path.join(persistDir, filename);
-
     if (fs.existsSync(filePath)) return;
-    try { fs.mkdirSync(persistDir, { recursive: true }); } catch { return; }
-
-    const workerNames = (config.workers || []).map((w, i) =>
-      typeof w === 'function' ? `worker-${i}` : (w.name || `worker-${i}`)
-    );
-
+    try {
+      fs.mkdirSync(persistDir, {
+        recursive: true
+      });
+    } catch {
+      return;
+    }
+    const workerNames = (config.workers || []).map((w, i) => typeof w === 'function' ? `worker-${i}` : w.name || `worker-${i}`);
     const code = `/*
  * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Auto-generated by BeeFactoryV2
@@ -1047,8 +1185,9 @@ ${workerNames.map(name => `        /**
 
 module.exports = { domain, description, csl_relevance, getWork };
 `;
-
-    try { fs.writeFileSync(filePath, code, 'utf8'); } catch { /* non-fatal */ }
+    try {
+      fs.writeFileSync(filePath, code, 'utf8');
+    } catch {/* non-fatal */}
   }
 }
 
@@ -1081,5 +1220,5 @@ module.exports = {
   createFromTemplate: (template, config) => getFactory().createFromTemplate(template, config),
   createSwarm: (name, configs, policy) => getFactory().createSwarm(name, configs, policy),
   listBees: () => getFactory().listBees(),
-  dissolveBee: (domain) => getFactory().dissolveBee(domain),
+  dissolveBee: domain => getFactory().dissolveBee(domain)
 };

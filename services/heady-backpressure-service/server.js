@@ -15,17 +15,25 @@ const crypto = require('crypto');
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const FIB = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
-const CSL = { MINIMUM: 0.500, LOW: 0.691, MEDIUM: 0.809, HIGH: 0.882, CRITICAL: 0.927, DEDUP: 0.972 };
+const CSL = {
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+};
 
 /** Pool allocation percentages derived from Fibonacci */
-const POOL_ALLOC = { HOT: FIB[9] / 100, WARM: FIB[8] / 100, COLD: FIB[7] / 100, RESERVE: FIB[6] / 100 };
+const POOL_ALLOC = {
+  HOT: FIB[9] / 100,
+  WARM: FIB[8] / 100,
+  COLD: FIB[7] / 100,
+  RESERVE: FIB[6] / 100
+};
 
 /** Swarm names for queue monitoring */
-const SWARMS = [
-  'Code', 'Security', 'Architecture', 'Research', 'Creative', 'Documentation',
-  'Monitoring', 'Cleanup', 'Analytics', 'Deployment', 'Memory', 'Pipeline',
-  'Trading', 'Resilience', 'Connector', 'Intelligence', 'Governance'
-];
+const SWARMS = ['Code', 'Security', 'Architecture', 'Research', 'Creative', 'Documentation', 'Monitoring', 'Cleanup', 'Analytics', 'Deployment', 'Memory', 'Pipeline', 'Trading', 'Resilience', 'Connector', 'Intelligence', 'Governance'];
 
 /**
  * Structured JSON logger with correlation IDs.
@@ -44,12 +52,6 @@ function log(level, msg, meta = {}, correlationId = null) {
     ...meta
   }) + '\n');
 }
-
-/**
- * Phi-backoff delay calculation.
- * @param {number} attempt - Attempt number (0-indexed)
- * @returns {number} Delay in milliseconds
- */
 function phiBackoff(attempt) {
   return FIB[Math.min(attempt, FIB.length - 1)] * PSI * 1000;
 }
@@ -62,7 +64,9 @@ function phiBackoff(attempt) {
  */
 function cosineSimilarity(a, b) {
   if (a.length !== b.length) return 0;
-  let dot = 0, magA = 0, magB = 0;
+  let dot = 0,
+    magA = 0,
+    magB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
     magA += a[i] * a[i];
@@ -108,9 +112,15 @@ class HeadyBackpressureService {
   _initializeQueues() {
     for (const swarm of SWARMS) {
       this.queues.set(swarm, []);
-      this.swarmMetrics.set(swarm, { accepts: 0, requests: 0, throttleRatio: 0 });
+      this.swarmMetrics.set(swarm, {
+        accepts: 0,
+        requests: 0,
+        throttleRatio: 0
+      });
     }
-    log('info', 'Queues initialized', { swarmCount: SWARMS.length });
+    log('info', 'Queues initialized', {
+      swarmCount: SWARMS.length
+    });
   }
 
   /**
@@ -128,7 +138,7 @@ class HeadyBackpressureService {
     const accepted = Math.random() > rejectionProb;
     metrics.requests++;
     if (accepted) metrics.accepts++;
-    metrics.throttleRatio = metrics.requests > 0 ? 1 - (metrics.accepts / metrics.requests) : 0;
+    metrics.throttleRatio = metrics.requests > 0 ? 1 - metrics.accepts / metrics.requests : 0;
     return accepted;
   }
 
@@ -163,37 +173,86 @@ class HeadyBackpressureService {
   enqueue(swarm, task) {
     const correlationId = crypto.randomUUID();
     const queue = this.queues.get(swarm);
-    if (!queue) return { accepted: false, reason: 'Unknown swarm', correlationId };
+    if (!queue) return {
+      accepted: false,
+      reason: 'Unknown swarm',
+      correlationId
+    };
     const csl = task.csl || CSL.MEDIUM;
-
     if (this.isDuplicate(swarm, task.embedding)) {
-      log('info', 'Semantic duplicate rejected', { swarm }, correlationId);
-      return { accepted: false, reason: 'semantic_duplicate', correlationId };
+      log('info', 'Semantic duplicate rejected', {
+        swarm
+      }, correlationId);
+      return {
+        accepted: false,
+        reason: 'semantic_duplicate',
+        correlationId
+      };
     }
-
     if (!this.shouldAccept(swarm, csl)) {
-      log('warn', 'Request throttled by SRE adaptive throttling', { swarm, csl }, correlationId);
-      this._broadcastSSE({ type: 'throttle', swarm, csl, correlationId });
-      return { accepted: false, reason: 'throttled', correlationId };
+      log('warn', 'Request throttled by SRE adaptive throttling', {
+        swarm,
+        csl
+      }, correlationId);
+      this._broadcastSSE({
+        type: 'throttle',
+        swarm,
+        csl,
+        correlationId
+      });
+      return {
+        accepted: false,
+        reason: 'throttled',
+        correlationId
+      };
     }
-
     if (queue.length >= this.maxQueueDepth) {
       if (csl < CSL.HIGH) {
-        log('warn', 'Queue full, shedding low-priority request', { swarm, csl, queueDepth: queue.length }, correlationId);
-        this._broadcastSSE({ type: 'shed', swarm, csl, correlationId });
-        return { accepted: false, reason: 'load_shed', correlationId };
+        log('warn', 'Queue full, shedding low-priority request', {
+          swarm,
+          csl,
+          queueDepth: queue.length
+        }, correlationId);
+        this._broadcastSSE({
+          type: 'shed',
+          swarm,
+          csl,
+          correlationId
+        });
+        return {
+          accepted: false,
+          reason: 'load_shed',
+          correlationId
+        };
       }
       const lowestIdx = queue.reduce((minIdx, item, idx, arr) => item.priority < arr[minIdx].priority ? idx : minIdx, 0);
       const removed = queue.splice(lowestIdx, 1)[0];
-      log('info', 'Evicted lowest priority to make room', { swarm, evictedId: removed.id }, correlationId);
+      log('info', 'Evicted lowest priority to make room', {
+        swarm,
+        evictedId: removed.id
+      }, correlationId);
     }
-
     const phiPriority = (task.priority || PSI) * (csl >= CSL.CRITICAL ? PHI * PHI : csl >= CSL.HIGH ? PHI : 1);
-    const entry = { id: correlationId, priority: phiPriority, embedding: task.embedding || [], csl, timestamp: Date.now() };
+    const entry = {
+      id: correlationId,
+      priority: phiPriority,
+      embedding: task.embedding || [],
+      csl,
+      timestamp: Date.now()
+    };
     queue.push(entry);
     queue.sort((a, b) => b.priority - a.priority);
-    log('info', 'Task enqueued', { swarm, priority: phiPriority, queueDepth: queue.length }, correlationId);
-    return { accepted: true, position: queue.indexOf(entry), queueDepth: queue.length, correlationId };
+    log('info', 'Task enqueued', {
+      swarm,
+      priority: phiPriority,
+      queueDepth: queue.length
+    }, correlationId);
+    return {
+      accepted: true,
+      position: queue.indexOf(entry),
+      queueDepth: queue.length,
+      correlationId
+    };
   }
 
   /**
@@ -233,7 +292,11 @@ class HeadyBackpressureService {
   _broadcastSSE(data) {
     const payload = `data: ${JSON.stringify(data)}\n\n`;
     for (const client of this.sseClients) {
-      try { client.write(payload); } catch { this.sseClients.delete(client); }
+      try {
+        client.write(payload);
+      } catch {
+        this.sseClients.delete(client);
+      }
     }
   }
 
@@ -247,16 +310,25 @@ class HeadyBackpressureService {
     for (const swarm of SWARMS) {
       const queue = this.queues.get(swarm);
       const metrics = this.swarmMetrics.get(swarm);
-      swarmStatus[swarm] = { depth: queue ? queue.length : 0, throttleRatio: metrics ? metrics.throttleRatio : 0 };
+      swarmStatus[swarm] = {
+        depth: queue ? queue.length : 0,
+        throttleRatio: metrics ? metrics.throttleRatio : 0
+      };
     }
-    this._broadcastSSE({ type: 'pressure', systemPressure: pressure, swarmStatus, timestamp: new Date().toISOString() });
-    if (pressure > PSI) log('warn', 'System pressure exceeds PSI threshold', { pressure });
+    this._broadcastSSE({
+      type: 'pressure',
+      systemPressure: pressure,
+      swarmStatus,
+      timestamp: new Date().toISOString()
+    });
+    if (pressure > PSI) log('warn', 'System pressure exceeds PSI threshold', {
+      pressure
+    });
   }
 
   /** Set up Express routes. @private */
   _setupRoutes() {
     this.app.use(express.json());
-
     this.app.get('/health', (_req, res) => {
       const pressure = this.calculateSystemPressure();
       const coherence = 1 - pressure;
@@ -268,41 +340,57 @@ class HeadyBackpressureService {
         timestamp: new Date().toISOString()
       });
     });
-
     this.app.post('/enqueue/:swarm', (req, res) => {
       const result = this.enqueue(req.params.swarm, req.body);
       res.status(result.accepted ? 201 : 429).json(result);
     });
-
     this.app.post('/dequeue/:swarm', (req, res) => {
       const task = this.dequeue(req.params.swarm);
       if (!task) return res.status(204).end();
       res.json(task);
     });
-
     this.app.get('/pressure', (_req, res) => {
       const pressure = this.calculateSystemPressure();
       const swarmPressures = {};
       for (const swarm of SWARMS) {
         const q = this.queues.get(swarm);
-        swarmPressures[swarm] = { depth: q ? q.length : 0, utilization: q ? q.length / this.maxQueueDepth : 0, metrics: this.swarmMetrics.get(swarm) };
+        swarmPressures[swarm] = {
+          depth: q ? q.length : 0,
+          utilization: q ? q.length / this.maxQueueDepth : 0,
+          metrics: this.swarmMetrics.get(swarm)
+        };
       }
-      res.json({ systemPressure: pressure, swarms: swarmPressures, timestamp: new Date().toISOString() });
+      res.json({
+        systemPressure: pressure,
+        swarms: swarmPressures,
+        timestamp: new Date().toISOString()
+      });
     });
-
     this.app.get('/sse/pressure', (req, res) => {
-      res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
+      res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive'
+      });
       this.sseClients.add(res);
       req.on('close', () => this.sseClients.delete(res));
     });
-
     this.app.post('/reset/:swarm', (req, res) => {
       const queue = this.queues.get(req.params.swarm);
-      if (!queue) return res.status(404).json({ error: 'Unknown swarm' });
+      if (!queue) return res.status(404).json({
+        error: 'Unknown swarm'
+      });
       const cleared = queue.length;
       queue.length = 0;
-      this.swarmMetrics.set(req.params.swarm, { accepts: 0, requests: 0, throttleRatio: 0 });
-      res.json({ swarm: req.params.swarm, cleared });
+      this.swarmMetrics.set(req.params.swarm, {
+        accepts: 0,
+        requests: 0,
+        throttleRatio: 0
+      });
+      res.json({
+        swarm: req.params.swarm,
+        cleared
+      });
     });
   }
 
@@ -313,11 +401,14 @@ class HeadyBackpressureService {
   async start() {
     if (this._started) return;
     this._setupRoutes();
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.server = this.app.listen(this.port, () => {
         this._started = true;
         this._monitorTimer = setInterval(() => this._monitorCycle(), this.monitorIntervalMs);
-        log('info', 'HeadyBackpressureService started', { port: this.port, swarms: SWARMS.length });
+        log('info', 'HeadyBackpressureService started', {
+          port: this.port,
+          swarms: SWARMS.length
+        });
         resolve();
       });
     });
@@ -330,10 +421,18 @@ class HeadyBackpressureService {
   async stop() {
     if (!this._started) return;
     clearInterval(this._monitorTimer);
-    for (const client of this.sseClients) { try { client.end(); } catch { /* noop */ } }
+    for (const client of this.sseClients) {
+      try {
+        client.end();
+      } catch {/* noop */}
+    }
     this.sseClients.clear();
-    return new Promise((resolve) => {
-      this.server.close(() => { this._started = false; log('info', 'HeadyBackpressureService stopped'); resolve(); });
+    return new Promise(resolve => {
+      this.server.close(() => {
+        this._started = false;
+        log('info', 'HeadyBackpressureService stopped');
+        resolve();
+      });
     });
   }
 
@@ -343,8 +442,21 @@ class HeadyBackpressureService {
    */
   health() {
     const pressure = this.calculateSystemPressure();
-    return { status: pressure < PSI ? 'healthy' : 'pressured', coherence: 1 - pressure, systemPressure: pressure };
+    return {
+      status: pressure < PSI ? 'healthy' : 'pressured',
+      coherence: 1 - pressure,
+      systemPressure: pressure
+    };
   }
 }
-
-module.exports = { HeadyBackpressureService, PHI, PSI, FIB, CSL, SWARMS, POOL_ALLOC, cosineSimilarity, phiBackoff };
+module.exports = {
+  HeadyBackpressureService,
+  PHI,
+  PSI,
+  FIB,
+  CSL,
+  SWARMS,
+  POOL_ALLOC,
+  cosineSimilarity,
+  phiBackoff
+};

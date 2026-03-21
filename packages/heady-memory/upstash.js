@@ -1,4 +1,6 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HEADY™ Upstash Redis Client — Full Liquid Architecture v9
@@ -12,10 +14,9 @@
  * - Worker heartbeats with dead-worker recovery
  * - Pipeline event publishing
  */
-
 const PHI = 1.618033988749895;
-const PHI_7_MS = 29034;  // φ⁷ × 1000
-const PHI_7_S  = 29;     // Rounded for Redis TTL
+const PHI_7_MS = 29034; // φ⁷ × 1000
+const PHI_7_S = 29; // Rounded for Redis TTL
 
 class UpstashRedis {
   /**
@@ -25,13 +26,12 @@ class UpstashRedis {
    * @param {string} [config.tenant] - Tenant ID for namespacing (default: 'heady')
    */
   constructor(config = {}) {
-    this.url    = config.url   || process.env.UPSTASH_REDIS_URL;
-    this.token  = config.token || process.env.UPSTASH_REDIS_TOKEN;
+    this.url = config.url || process.env.UPSTASH_REDIS_URL;
+    this.token = config.token || process.env.UPSTASH_REDIS_TOKEN;
     this.tenant = config.tenant || 'heady';
-
     if (!this.url || !this.token) {
       this.mock = true;
-      console.warn('[UpstashRedis] No URL/TOKEN — running in mock mode');
+      logger.warn('[UpstashRedis] No URL/TOKEN — running in mock mode');
     }
   }
 
@@ -41,16 +41,14 @@ class UpstashRedis {
 
   async _fetch(command, ...args) {
     if (this.mock) return null;
-
     const res = await fetch(this.url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.token}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify([command, ...args]),
+      body: JSON.stringify([command, ...args])
     });
-
     const data = await res.json();
     if (data.error) throw new Error(`Upstash: ${data.error}`);
     return data.result;
@@ -59,16 +57,14 @@ class UpstashRedis {
   /** Pipeline: batch multiple commands in one HTTP roundtrip. */
   async _pipeline(commands) {
     if (this.mock) return commands.map(() => null);
-
     const res = await fetch(`${this.url}/pipeline`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.token}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(commands),
+      body: JSON.stringify(commands)
     });
-
     const data = await res.json();
     return data.map(r => r.result);
   }
@@ -80,7 +76,6 @@ class UpstashRedis {
   _key(...parts) {
     return `tenant:${this.tenant}:${parts.join(':')}`;
   }
-
   _systemKey(...parts) {
     return `heady:${parts.join(':')}`;
   }
@@ -93,7 +88,6 @@ class UpstashRedis {
     const key = this._key('session', userId);
     return this._fetch('SETEX', key, PHI_7_S, JSON.stringify(memories));
   }
-
   async getWorkingMemory(userId) {
     const key = this._key('session', userId);
     const raw = await this._fetch('GET', key);
@@ -117,7 +111,6 @@ class UpstashRedis {
   _streamKey(stage) {
     return this._key('pipeline', `stage${stage}`);
   }
-
   _dlqKey(stage) {
     return this._key('pipeline', `stage${stage}:dlq`);
   }
@@ -163,12 +156,7 @@ class UpstashRedis {
    */
   async xreadgroup(stage, group, consumer, count = 10) {
     const key = this._streamKey(stage);
-    const result = await this._fetch(
-      'XREADGROUP', 'GROUP', group, consumer,
-      'COUNT', String(count),
-      'STREAMS', key, '>'
-    );
-
+    const result = await this._fetch('XREADGROUP', 'GROUP', group, consumer, 'COUNT', String(count), 'STREAMS', key, '>');
     if (!result || !result[0]) return [];
 
     // Parse [[streamName, [[id, [field, value, ...]], ...]]]
@@ -177,10 +165,16 @@ class UpstashRedis {
       const fields = {};
       for (let i = 0; i < fieldArray.length; i += 2) {
         const val = fieldArray[i + 1];
-        try { fields[fieldArray[i]] = JSON.parse(val); }
-        catch { fields[fieldArray[i]] = val; }
+        try {
+          fields[fieldArray[i]] = JSON.parse(val);
+        } catch {
+          fields[fieldArray[i]] = val;
+        }
       }
-      return { id, fields };
+      return {
+        id,
+        fields
+      };
     });
   }
 
@@ -206,22 +200,23 @@ class UpstashRedis {
    */
   async xautoclaim(stage, group, consumer, minIdleMs = 300000, count = 10) {
     const key = this._streamKey(stage);
-    const result = await this._fetch(
-      'XAUTOCLAIM', key, group, consumer,
-      String(minIdleMs), '0-0',
-      'COUNT', String(count)
-    );
+    const result = await this._fetch('XAUTOCLAIM', key, group, consumer, String(minIdleMs), '0-0', 'COUNT', String(count));
     if (!result || !result[1]) return [];
-
     return result[1].map(([id, fieldArray]) => {
       const fields = {};
       if (fieldArray) {
         for (let i = 0; i < fieldArray.length; i += 2) {
-          try { fields[fieldArray[i]] = JSON.parse(fieldArray[i + 1]); }
-          catch { fields[fieldArray[i]] = fieldArray[i + 1]; }
+          try {
+            fields[fieldArray[i]] = JSON.parse(fieldArray[i + 1]);
+          } catch {
+            fields[fieldArray[i]] = fieldArray[i + 1];
+          }
         }
       }
-      return { id, fields };
+      return {
+        id,
+        fields
+      };
     });
   }
 
@@ -245,7 +240,11 @@ class UpstashRedis {
   async routeToDLQ(stage, entryId, data) {
     const dlqKey = this._dlqKey(stage);
     const fields = [];
-    for (const [k, v] of Object.entries({ ...data, original_id: entryId, dlq_at: Date.now() })) {
+    for (const [k, v] of Object.entries({
+      ...data,
+      original_id: entryId,
+      dlq_at: Date.now()
+    })) {
       fields.push(k, typeof v === 'string' ? v : JSON.stringify(v));
     }
     return this._fetch('XADD', dlqKey, 'MAXLEN', '~', '10000', '*', ...fields);
@@ -259,10 +258,9 @@ class UpstashRedis {
     const key = this._systemKey('worker', workerId, 'heartbeat');
     return this._fetch('SETEX', key, 30, JSON.stringify({
       ts: Date.now(),
-      ...metadata,
+      ...metadata
     }));
   }
-
   async isWorkerAlive(workerId) {
     const key = this._systemKey('worker', workerId, 'heartbeat');
     const result = await this._fetch('EXISTS', key);
@@ -285,33 +283,28 @@ class UpstashRedis {
    * @returns {{allowed: boolean, remaining: number, resetMs: number}}
    */
   async rateLimit(identifier, limit, windowMs = 60000) {
-    if (this.mock) return { allowed: true, remaining: limit, resetMs: 0 };
-
+    if (this.mock) return {
+      allowed: true,
+      remaining: limit,
+      resetMs: 0
+    };
     const key = this._key('quota', `api:${identifier}`);
     const now = Date.now();
     const windowStart = now - windowMs;
     const member = `${now}:${Math.random().toString(36).slice(2, 8)}`;
 
     // Pipeline: clean expired + add + count + set TTL
-    const results = await this._pipeline([
-      ['ZREMRANGEBYSCORE', key, '0', String(windowStart)],
-      ['ZADD', key, String(now), member],
-      ['ZCARD', key],
-      ['PEXPIRE', key, String(windowMs * 2)],
-    ]);
-
+    const results = await this._pipeline([['ZREMRANGEBYSCORE', key, '0', String(windowStart)], ['ZADD', key, String(now), member], ['ZCARD', key], ['PEXPIRE', key, String(windowMs * 2)]]);
     const count = results[2] || 0;
     const allowed = count <= limit;
-
     if (!allowed) {
       // Remove the entry we just added (over limit)
       await this._fetch('ZREM', key, member);
     }
-
     return {
       allowed,
       remaining: Math.max(0, limit - count),
-      resetMs: windowMs,
+      resetMs: windowMs
     };
   }
 
@@ -324,19 +317,21 @@ class UpstashRedis {
    */
   async tokenBucket(userId, tokens, maxTokens, windowMs = 3600000) {
     const key = this._key('quota', `tokens:${userId}`);
-    const current = parseInt(await this._fetch('GET', key) || '0', 10);
-
+    const current = parseInt((await this._fetch('GET', key)) || '0', 10);
     if (current + tokens > maxTokens) {
       const ttl = await this._fetch('PTTL', key);
-      return { allowed: false, remaining: maxTokens - current, resetMs: ttl > 0 ? ttl : windowMs };
+      return {
+        allowed: false,
+        remaining: maxTokens - current,
+        resetMs: ttl > 0 ? ttl : windowMs
+      };
     }
-
-    await this._pipeline([
-      ['INCRBY', key, String(tokens)],
-      ['PEXPIRE', key, String(windowMs)],
-    ]);
-
-    return { allowed: true, remaining: maxTokens - current - tokens, resetMs: windowMs };
+    await this._pipeline([['INCRBY', key, String(tokens)], ['PEXPIRE', key, String(windowMs)]]);
+    return {
+      allowed: true,
+      remaining: maxTokens - current - tokens,
+      resetMs: windowMs
+    };
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -348,7 +343,6 @@ class UpstashRedis {
     const raw = await this._fetch('GET', key);
     return raw ? JSON.parse(raw) : null;
   }
-
   async setCachedLLM(hash, response, ttlSeconds = 3600) {
     const key = this._key('cache', 'llm', hash);
     return this._fetch('SETEX', key, ttlSeconds, JSON.stringify(response));
@@ -362,12 +356,14 @@ class UpstashRedis {
     const key = this._key('job', jobId, 'status');
     return this._fetch('SETEX', key, 172800, typeof status === 'string' ? status : JSON.stringify(status));
   }
-
   async getJobStatus(jobId) {
     const key = this._key('job', jobId, 'status');
     const raw = await this._fetch('GET', key);
-    try { return JSON.parse(raw); }
-    catch { return raw; }
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return raw;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -377,11 +373,9 @@ class UpstashRedis {
   async addToSwarm(swarmName, memberId) {
     return this._fetch('SADD', this._systemKey('swarm', swarmName, 'roster'), memberId);
   }
-
   async removeFromSwarm(swarmName, memberId) {
     return this._fetch('SREM', this._systemKey('swarm', swarmName, 'roster'), memberId);
   }
-
   async getSwarmMembers(swarmName) {
     return this._fetch('SMEMBERS', this._systemKey('swarm', swarmName, 'roster')) || [];
   }
@@ -394,7 +388,7 @@ class UpstashRedis {
     return this._fetch('PUBLISH', 'heady.pipeline.events', JSON.stringify({
       stage,
       timestamp: Date.now(),
-      ...eventData,
+      ...eventData
     }));
   }
 
@@ -403,10 +397,20 @@ class UpstashRedis {
   // ═══════════════════════════════════════════════════════════════
 
   async ping() {
-    if (this.mock) return { ok: false, mode: 'mock' };
+    if (this.mock) return {
+      ok: false,
+      mode: 'mock'
+    };
     const result = await this._fetch('PING');
-    return { ok: result === 'PONG', mode: 'live' };
+    return {
+      ok: result === 'PONG',
+      mode: 'live'
+    };
   }
 }
-
-module.exports = { UpstashRedis, PHI, PHI_7_MS, PHI_7_S };
+module.exports = {
+  UpstashRedis,
+  PHI,
+  PHI_7_MS,
+  PHI_7_S
+};

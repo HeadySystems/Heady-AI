@@ -1,29 +1,38 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
-/**
- * HeadyBee Generator CLI
- * Generates domain-specific bee files and their test stubs.
- *
- * Usage:
- *   node scripts/generate-bee.js --domain my-domain --description "Does something" --priority 0.7 --category ops
- *   node scripts/generate-bee.js --template monitor --domain cpu-monitor
- */
-
-const { mkdir, writeFile } = require('node:fs/promises');
-const { existsSync } = require('node:fs');
-const { join, resolve } = require('node:path');
-
+const {
+  mkdir,
+  writeFile
+} = require('node:fs/promises');
+const {
+  existsSync
+} = require('node:fs');
+const {
+  join,
+  resolve
+} = require('node:path');
 const ROOT = resolve(__dirname, '..');
 
 // ── ANSI helpers ─────────────────────────────────────────────────────────────
 const c = {
-  reset: '\x1b[0m', bold: '\x1b[1m', dim: '\x1b[2m',
-  green: '\x1b[32m', yellow: '\x1b[33m', blue: '\x1b[34m',
-  cyan: '\x1b[36m', red: '\x1b[31m', magenta: '\x1b[35m',
+  reset: '\x1b[0m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  cyan: '\x1b[36m',
+  red: '\x1b[31m',
+  magenta: '\x1b[35m'
 };
-const ok   = (m) => console.log(`${c.green}✔${c.reset}  ${m}`);
-const info = (m) => console.log(`${c.blue}▶${c.reset}  ${m}`);
-const err  = (m, exit) => { console.error(`${c.red}✖${c.reset}  ${m}`); if (exit) process.exit(1); };
+const ok = m => logger.info(`${c.green}✔${c.reset}  ${m}`);
+const info = m => logger.info(`${c.blue}▶${c.reset}  ${m}`);
+const err = (m, exit) => {
+  logger.error(`${c.red}✖${c.reset}  ${m}`);
+  if (exit) process.exit(1);
+};
 
 // ── Arg parsing ───────────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -31,12 +40,11 @@ function getArg(flag) {
   const i = args.indexOf(flag);
   return i !== -1 && args[i + 1] ? args[i + 1] : null;
 }
-
-const domain      = getArg('--domain');
+const domain = getArg('--domain');
 const description = getArg('--description') || `HeadyBee for ${domain} domain`;
-const priority    = parseFloat(getArg('--priority') || '0.5');
-const category    = getArg('--category') || 'general';
-const template    = getArg('--template') || 'default';
+const priority = parseFloat(getArg('--priority') || '0.5');
+const category = getArg('--category') || 'general';
+const template = getArg('--template') || 'default';
 
 // ── Validation ────────────────────────────────────────────────────────────────
 if (!domain) {
@@ -48,7 +56,6 @@ if (!/^[a-z][a-z0-9-]*$/.test(domain)) {
 if (priority < 0 || priority > 1) {
   err('Priority must be between 0.0 and 1.0', true);
 }
-
 const VALID_TEMPLATES = ['default', 'health-check', 'monitor', 'processor', 'scanner', 'projection'];
 if (!VALID_TEMPLATES.includes(template)) {
   err(`Invalid template "${template}". Choose from: ${VALID_TEMPLATES.join(', ')}`, true);
@@ -57,15 +64,18 @@ if (!VALID_TEMPLATES.includes(template)) {
 // ── CSL Vector generator ──────────────────────────────────────────────────────
 function genCslVector(domain, category) {
   const domainHash = domain.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  const x = ((domainHash * 1.6180339887) % 1).toFixed(6);
-  const y = ((domainHash * 2.7182818284) % 1).toFixed(6);
-  const z = ((domainHash * 3.1415926535) % 1).toFixed(6);
-  return { x: parseFloat(x), y: parseFloat(y), z: parseFloat(z), category };
+  const x = (domainHash * 1.6180339887 % 1).toFixed(6);
+  const y = (domainHash * 2.7182818284 % 1).toFixed(6);
+  const z = (domainHash * 3.1415926535 % 1).toFixed(6);
+  return {
+    x: parseFloat(x),
+    y: parseFloat(y),
+    z: parseFloat(z),
+    category
+  };
 }
-
-// ── Template bodies ───────────────────────────────────────────────────────────
 const TEMPLATES = {
-  'health-check': (domain) => `
+  'health-check': domain => `
   async function checkServiceHealth() {
     const start = Date.now();
     let healthy = true;
@@ -90,8 +100,7 @@ const TEMPLATES = {
       ts: Date.now(),
     };
   },`,
-
-  'monitor': (domain) => `
+  'monitor': domain => `
   async function collectMetrics() {
     const metrics = {
       // TODO: Add domain-specific metric collection
@@ -121,8 +130,7 @@ const TEMPLATES = {
       ts: Date.now(),
     };
   },`,
-
-  'processor': (domain) => `
+  'processor': domain => `
   async function processQueue() {
     const processed = [];
     const errors = [];
@@ -149,8 +157,7 @@ const TEMPLATES = {
       ts: Date.now(),
     };
   },`,
-
-  'scanner': (domain) => `
+  'scanner': domain => `
   async function scanResources() {
     const discovered = [];
     const stale = [];
@@ -177,8 +184,7 @@ const TEMPLATES = {
       ts: Date.now(),
     };
   },`,
-
-  'projection': (domain) => `
+  'projection': domain => `
   async function computeProjection() {
     const state = {};
 
@@ -204,8 +210,7 @@ const TEMPLATES = {
       ts: Date.now(),
     };
   },`,
-
-  'default': (domain) => `
+  'default': domain => `
   async function run() {
     // TODO: Implement primary worker logic for ${domain}
     return {
@@ -214,15 +219,12 @@ const TEMPLATES = {
       result: null,
       ts: Date.now(),
     };
-  },`,
+  },`
 };
-
-// ── Bee file template ─────────────────────────────────────────────────────────
 function genBeeFile(domain, description, priority, category, template) {
-  const csl      = genCslVector(domain, category);
+  const csl = genCslVector(domain, category);
   const className = domain.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
-  const workers  = (TEMPLATES[template] || TEMPLATES['default'])(domain);
-
+  const workers = (TEMPLATES[template] || TEMPLATES['default'])(domain);
   return `/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -286,8 +288,6 @@ export default {
 };
 `;
 }
-
-// ── Test file template ────────────────────────────────────────────────────────
 function genTestFile(domain, description) {
   return `/* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
@@ -356,31 +356,29 @@ describe('${domain}-bee', () => {
 }
 
 // ── Write files ───────────────────────────────────────────────────────────────
-const srcBeesDir   = join(ROOT, 'src', 'bees');
+const srcBeesDir = join(ROOT, 'src', 'bees');
 const testsBeesDir = join(ROOT, 'tests', 'bees');
-
-const beeFile  = join(srcBeesDir,   `${domain}-bee.js`);
+const beeFile = join(srcBeesDir, `${domain}-bee.js`);
 const testFile = join(testsBeesDir, `${domain}-bee.test.js`);
-
 if (existsSync(beeFile)) {
   err(`Bee already exists: src/bees/${domain}-bee.js`, true);
 }
-
-await mkdir(srcBeesDir,   { recursive: true });
-await mkdir(testsBeesDir, { recursive: true });
-
-const beeContent  = genBeeFile(domain, description, priority, category, template);
+await mkdir(srcBeesDir, {
+  recursive: true
+});
+await mkdir(testsBeesDir, {
+  recursive: true
+});
+const beeContent = genBeeFile(domain, description, priority, category, template);
 const testContent = genTestFile(domain, description);
-
-await writeFile(beeFile,  beeContent,  'utf8');
+await writeFile(beeFile, beeContent, 'utf8');
 await writeFile(testFile, testContent, 'utf8');
-
-console.log('');
-console.log(`${c.bold}${c.magenta}  HeadyBee Generator${c.reset}`);
-console.log(`${c.dim}  Domain: ${c.reset}${c.cyan}${domain}${c.reset}  ${c.dim}Template: ${template}  Priority: ${priority}  Category: ${category}${c.reset}`);
-console.log('');
+logger.info('');
+logger.info(`${c.bold}${c.magenta}  HeadyBee Generator${c.reset}`);
+logger.info(`${c.dim}  Domain: ${c.reset}${c.cyan}${domain}${c.reset}  ${c.dim}Template: ${template}  Priority: ${priority}  Category: ${category}${c.reset}`);
+logger.info('');
 ok(`Created ${c.cyan}src/bees/${domain}-bee.js${c.reset}`);
 ok(`Created ${c.cyan}tests/bees/${domain}-bee.test.js${c.reset}`);
-console.log('');
+logger.info('');
 info(`Run tests: ${c.dim}node --test tests/bees/${domain}-bee.test.js${c.reset}`);
-console.log('');
+logger.info('');

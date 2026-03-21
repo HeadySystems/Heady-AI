@@ -11,54 +11,38 @@
 
 'use strict';
 
-const { PHI, PSI, fib, phiBackoff, PSI_POWERS } = require('../../shared/phi-math');
-
-/**
- * Retry an async function with phi-exponential backoff.
- *
- * @param {Function} fn - Async function to retry
- * @param {object} [opts]
- * @param {number} [opts.maxRetries] - Maximum retries (default fib(5)=5)
- * @param {number} [opts.baseMs] - Base delay (default 1000)
- * @param {number} [opts.maxDelayMs] - Maximum delay cap (default 60000)
- * @param {boolean} [opts.jitter] - Apply ±ψ² jitter (default true)
- * @param {Function} [opts.shouldRetry] - Predicate(error, attempt) → boolean
- * @param {Function} [opts.onRetry] - Callback(error, attempt, delayMs)
- * @param {AbortSignal} [opts.signal] - AbortSignal for cancellation
- * @returns {Promise<*>}
- */
+const {
+  PHI,
+  PSI,
+  fib,
+  phiBackoff,
+  PSI_POWERS
+} = require('../../shared/phi-math');
 async function withBackoff(fn, opts = {}) {
-  const maxRetries = opts.maxRetries ?? fib(5);        // 5
-  const baseMs     = opts.baseMs ?? 1000;
+  const maxRetries = opts.maxRetries ?? fib(5); // 5
+  const baseMs = opts.baseMs ?? 1000;
   const maxDelayMs = opts.maxDelayMs ?? 60000;
-  const jitter     = opts.jitter ?? true;
+  const jitter = opts.jitter ?? true;
   const shouldRetry = opts.shouldRetry || defaultShouldRetry;
-  const onRetry    = opts.onRetry || (() => {});
-  const signal     = opts.signal;
-
+  const onRetry = opts.onRetry || (() => {});
+  const signal = opts.signal;
   let lastError;
-
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     if (signal?.aborted) {
       throw new BackoffAbortedError('Backoff aborted by signal');
     }
-
     try {
       return await fn(attempt);
     } catch (err) {
       lastError = err;
-
       if (attempt >= maxRetries || !shouldRetry(err, attempt)) {
         throw err;
       }
-
       const delayMs = phiBackoff(attempt, baseMs, maxDelayMs, jitter);
       onRetry(err, attempt, delayMs);
-
       await sleep(delayMs, signal);
     }
   }
-
   throw lastError;
 }
 
@@ -89,15 +73,15 @@ function defaultShouldRetry(error) {
 function sleep(ms, signal) {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) return reject(new BackoffAbortedError('Aborted'));
-
     const timer = setTimeout(resolve, ms);
-
     if (signal) {
       const onAbort = () => {
         clearTimeout(timer);
         reject(new BackoffAbortedError('Aborted during backoff'));
       };
-      signal.addEventListener('abort', onAbort, { once: true });
+      signal.addEventListener('abort', onAbort, {
+        once: true
+      });
     }
   });
 }
@@ -108,7 +92,10 @@ function sleep(ms, signal) {
  * @returns {Function} (fn, overrides?) → Promise
  */
 function createRetrier(defaults = {}) {
-  return (fn, overrides = {}) => withBackoff(fn, { ...defaults, ...overrides });
+  return (fn, overrides = {}) => withBackoff(fn, {
+    ...defaults,
+    ...overrides
+  });
 }
 
 /**
@@ -116,27 +103,41 @@ function createRetrier(defaults = {}) {
  */
 const retriers = {
   /** Quick retry for latency-sensitive operations: 3 retries, 500ms base */
-  fast: createRetrier({ maxRetries: fib(4), baseMs: 500, maxDelayMs: 5000 }),
-
+  fast: createRetrier({
+    maxRetries: fib(4),
+    baseMs: 500,
+    maxDelayMs: 5000
+  }),
   /** Standard retry for API calls: 5 retries, 1s base */
-  standard: createRetrier({ maxRetries: fib(5), baseMs: 1000, maxDelayMs: 60000 }),
-
+  standard: createRetrier({
+    maxRetries: fib(5),
+    baseMs: 1000,
+    maxDelayMs: 60000
+  }),
   /** Patient retry for external services: 8 retries, 2s base */
-  patient: createRetrier({ maxRetries: fib(6), baseMs: 2000, maxDelayMs: 120000 }),
-
+  patient: createRetrier({
+    maxRetries: fib(6),
+    baseMs: 2000,
+    maxDelayMs: 120000
+  }),
   /** Persistent retry for critical operations: 13 retries, 1s base */
-  persistent: createRetrier({ maxRetries: fib(7), baseMs: 1000, maxDelayMs: 300000 }),
+  persistent: createRetrier({
+    maxRetries: fib(7),
+    baseMs: 1000,
+    maxDelayMs: 300000
+  })
 };
-
 class BackoffAbortedError extends Error {
   constructor(message) {
     super(message);
     this.name = 'BackoffAbortedError';
   }
 }
-
 module.exports = {
-  withBackoff, createRetrier, retriers,
-  sleep, defaultShouldRetry,
-  BackoffAbortedError,
+  withBackoff,
+  createRetrier,
+  retriers,
+  sleep,
+  defaultShouldRetry,
+  BackoffAbortedError
 };

@@ -1,4 +1,5 @@
 'use strict';
+
 const logger = require('../utils/logger') || console;
 
 /**
@@ -19,7 +20,6 @@ const logger = require('../utils/logger') || console;
  */
 
 const EventEmitter = require('events');
-
 const {
   PHI,
   PSI,
@@ -27,9 +27,12 @@ const {
   PHI_CB,
   PHI_TEMPERATURE,
   fib,
-  fibNearest,   // nearestFib
-  fibCeil,      // ceilFib
-  fibFloor,     // floorFib
+  fibNearest,
+  // nearestFib
+  fibCeil,
+  // ceilFib
+  fibFloor,
+  // floorFib
   CSL_THRESHOLDS,
   PRESSURE_LEVELS,
   phiFusionWeights,
@@ -41,7 +44,7 @@ const {
   adaptiveTemperature,
   cosineSimilarity,
   phiPriorityScore,
-  phiBackoff,   // phiBackoff already includes jitter; use as phiBackoffWithJitter
+  phiBackoff // phiBackoff already includes jitter; use as phiBackoffWithJitter
 } = require('../shared/phi-math');
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -50,9 +53,10 @@ const {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @type {number[]} Deterministic phi-backoff sequence (no jitter) for reference */
-const PHI_BACKOFF_SEQUENCE = Object.freeze(
-  Array.from({ length: fib(5) + fib(4) }, (_, i) => Math.round(1000 * PHI ** i))
-  // fib(5)=5 + fib(4)=3 = 8 entries — matches DEAD threshold fib(6)=8
+const PHI_BACKOFF_SEQUENCE = Object.freeze(Array.from({
+  length: fib(5) + fib(4)
+}, (_, i) => Math.round(1000 * PHI ** i))
+// fib(5)=5 + fib(4)=3 = 8 entries — matches DEAD threshold fib(6)=8
 );
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -60,12 +64,15 @@ const PHI_BACKOFF_SEQUENCE = Object.freeze(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @type {number[]} Fibonacci-derived pool sizes for component instance management */
-const FIBONACCI_POOLS = Object.freeze([
-  fib(5),   // 5   — micro pool
-  fib(6),   // 8   — small pool
-  fib(7),   // 13  — medium pool
-  fib(8),   // 21  — large pool
-  fib(9),   // 34  — XL pool
+const FIBONACCI_POOLS = Object.freeze([fib(5),
+// 5   — micro pool
+fib(6),
+// 8   — small pool
+fib(7),
+// 13  — medium pool
+fib(8),
+// 21  — large pool
+fib(9) // 34  — XL pool
 ]);
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -77,13 +84,13 @@ const FIBONACCI_POOLS = Object.freeze([
  * @enum {string}
  */
 const STATE = Object.freeze({
-  HEALTHY:     'HEALTHY',
-  SUSPECT:     'SUSPECT',
+  HEALTHY: 'HEALTHY',
+  SUSPECT: 'SUSPECT',
   QUARANTINED: 'QUARANTINED',
-  RECOVERING:  'RECOVERING',
-  RESTORED:    'RESTORED',
-  DEGRADED:    'DEGRADED',
-  DEAD:        'DEAD',
+  RECOVERING: 'RECOVERING',
+  RESTORED: 'RESTORED',
+  DEGRADED: 'DEGRADED',
+  DEAD: 'DEAD'
 });
 
 /**
@@ -91,11 +98,11 @@ const STATE = Object.freeze({
  * @enum {string}
  */
 const COMPONENT_TYPE = Object.freeze({
-  SERVICE:        'service',
-  WORKER:         'worker',
-  AGENT:          'agent',
+  SERVICE: 'service',
+  WORKER: 'worker',
+  AGENT: 'agent',
   TOOL_CONNECTOR: 'tool_connector',
-  PROVIDER_ROUTE: 'provider_route',
+  PROVIDER_ROUTE: 'provider_route'
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -122,12 +129,6 @@ const ATTESTATION_PASS_THRESHOLD = CSL_THRESHOLDS.HIGH;
  * @type {number}
  */
 const QUARANTINE_FAILURE_THRESHOLD = fib(5);
-
-/**
- * Maximum total recovery attempts before declaring DEAD.
- * fib(6) = 8
- * @type {number}
- */
 const MAX_RECOVERY_ATTEMPTS = fib(6);
 
 /**
@@ -204,24 +205,17 @@ class DriftDetector {
     }
     this._baseline = vector.slice();
   }
-
-  /**
-   * Computes cosine similarity between the current vector and the baseline.
-   * Applies adaptive temperature to soften the gate when entropy is high.
-   *
-   * @param {number[]} currentVector - Current embedding snapshot
-   * @returns {{ score: number, isDrift: boolean, gated: number }}
-   */
   check(currentVector) {
     if (!this._baseline) {
-      return { score: 1.0, isDrift: false, gated: 1.0 };
+      return {
+        score: 1.0,
+        isDrift: false,
+        gated: 1.0
+      };
     }
     if (currentVector.length !== this._baseline.length) {
-      throw new Error(
-        `DriftDetector: vector length mismatch (${currentVector.length} vs ${this._baseline.length})`
-      );
+      throw new Error(`DriftDetector: vector length mismatch (${currentVector.length} vs ${this._baseline.length})`);
     }
-
     const score = cosineSimilarity(currentVector, this._baseline);
     this._lastScore = score;
     this._checkCount++;
@@ -231,10 +225,12 @@ class DriftDetector {
     const temp = adaptiveTemperature(entropy, 1.0);
     const gated = cslGate(score, score, this.threshold, temp);
     const isDrift = score < this.threshold;
-
     if (isDrift) this._anomalyCount++;
-
-    return { score, isDrift, gated };
+    return {
+      score,
+      isDrift,
+      gated
+    };
   }
 
   /**
@@ -253,11 +249,11 @@ class DriftDetector {
    */
   stats() {
     return {
-      componentId:  this.componentId,
-      lastScore:    this._lastScore,
-      checkCount:   this._checkCount,
+      componentId: this.componentId,
+      lastScore: this._lastScore,
+      checkCount: this._checkCount,
       anomalyCount: this._anomalyCount,
-      threshold:    this.threshold,
+      threshold: this.threshold
     };
   }
 }
@@ -351,10 +347,10 @@ class CircuitBreaker {
    */
   status() {
     return {
-      componentId:  this.componentId,
-      state:        this._state,
+      componentId: this.componentId,
+      state: this._state,
       failureCount: this._failureCount,
-      openedAt:     this._openedAt,
+      openedAt: this._openedAt
     };
   }
 }
@@ -405,9 +401,7 @@ class AttestationGate {
    * @returns {{ passed: boolean, gatedScore: number, reason: string }}
    */
   evaluate(coherenceScore) {
-    const canaryAvg = this._canaryScores.length > 0
-      ? this._canaryScores.reduce((s, v) => s + v, 0) / this._canaryScores.length
-      : 0;
+    const canaryAvg = this._canaryScores.length > 0 ? this._canaryScores.reduce((s, v) => s + v, 0) / this._canaryScores.length : 0;
 
     // Phi-priority fusion: coherence is primary factor, canary rate is secondary
     const fused = phiPriorityScore(coherenceScore, canaryAvg);
@@ -415,12 +409,12 @@ class AttestationGate {
     // Apply CSL gate with attestation threshold
     const gatedScore = cslGate(fused, fused, this.threshold, PHI_TEMPERATURE);
     const passed = fused >= this.threshold;
-
-    const reason = passed
-      ? `Coherence ${coherenceScore.toFixed(4)} × canary ${canaryAvg.toFixed(4)} fused=${fused.toFixed(4)} ≥ threshold ${this.threshold.toFixed(4)}`
-      : `Fused score ${fused.toFixed(4)} below attestation threshold ${this.threshold.toFixed(4)}`;
-
-    return { passed, gatedScore, reason };
+    const reason = passed ? `Coherence ${coherenceScore.toFixed(4)} × canary ${canaryAvg.toFixed(4)} fused=${fused.toFixed(4)} ≥ threshold ${this.threshold.toFixed(4)}` : `Fused score ${fused.toFixed(4)} below attestation threshold ${this.threshold.toFixed(4)}`;
+    return {
+      passed,
+      gatedScore,
+      reason
+    };
   }
 
   /**
@@ -436,15 +430,7 @@ class AttestationGate {
 // RECOVERY PROTOCOL
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * RecoveryProtocol manages the sequence of timed recovery attempts for one
- * component, using phi-backoff delays and tracking attempt counts.
- */
 class RecoveryProtocol {
-  /**
-   * @param {string} componentId
-   * @param {{ maxAttempts?: number, baseMs?: number, maxMs?: number }} [opts]
-   */
   constructor(componentId, opts = {}) {
     /** @type {string} */
     this.componentId = componentId;
@@ -454,19 +440,12 @@ class RecoveryProtocol {
     this.baseMs = opts.baseMs ?? 1000;
     /** @type {number} */
     this.maxMs = opts.maxMs ?? 60000;
-
-    /** @type {number} Current attempt index (0-based) */
     this._attempt = 0;
     /** @type {number[]} History of delay values used */
     this._delayHistory = [];
     /** @type {number|null} */
     this._cooldownUntil = null;
   }
-
-  /**
-   * Returns true if more recovery attempts are available.
-   * @returns {boolean}
-   */
   hasAttemptsRemaining() {
     return this._attempt < this.maxAttempts;
   }
@@ -478,20 +457,23 @@ class RecoveryProtocol {
   isInCooldown() {
     return this._cooldownUntil !== null && Date.now() < this._cooldownUntil;
   }
-
-  /**
-   * Computes the next phi-backoff delay (with jitter) and increments the attempt counter.
-   * @returns {{ delayMs: number, attempt: number, exhausted: boolean }}
-   */
   nextDelay() {
     if (!this.hasAttemptsRemaining()) {
-      return { delayMs: 0, attempt: this._attempt, exhausted: true };
+      return {
+        delayMs: 0,
+        attempt: this._attempt,
+        exhausted: true
+      };
     }
     const delayMs = phiBackoff(this._attempt, this.baseMs, this.maxMs);
     this._delayHistory.push(delayMs);
     const attempt = this._attempt;
     this._attempt++;
-    return { delayMs, attempt, exhausted: false };
+    return {
+      delayMs,
+      attempt,
+      exhausted: false
+    };
   }
 
   /**
@@ -511,18 +493,13 @@ class RecoveryProtocol {
     this._delayHistory = [];
     this._cooldownUntil = null;
   }
-
-  /**
-   * Returns protocol summary.
-   * @returns {{ componentId: string, attempt: number, maxAttempts: number, delayHistory: number[], cooldownUntil: number|null }}
-   */
   summary() {
     return {
-      componentId:  this.componentId,
-      attempt:      this._attempt,
-      maxAttempts:  this.maxAttempts,
+      componentId: this.componentId,
+      attempt: this._attempt,
+      maxAttempts: this.maxAttempts,
       delayHistory: this._delayHistory.slice(),
-      cooldownUntil: this._cooldownUntil,
+      cooldownUntil: this._cooldownUntil
     };
   }
 }
@@ -598,7 +575,12 @@ class ComponentState {
    * @returns {void}
    */
   recordTransition(from, to, reason) {
-    const entry = { from, to, reason, at: Date.now() };
+    const entry = {
+      from,
+      to,
+      reason,
+      at: Date.now()
+    };
     this._history.push(entry);
     if (this._history.length > MAX_HISTORY_SIZE) {
       this._history.shift();
@@ -620,19 +602,19 @@ class ComponentState {
    */
   snapshot() {
     return {
-      id:                  this.id,
-      type:                this.type,
-      state:               this.state,
-      healthScore:         this.healthScore,
-      driftScore:          this.driftScore,
+      id: this.id,
+      type: this.type,
+      state: this.state,
+      healthScore: this.healthScore,
+      driftScore: this.driftScore,
       consecutiveFailures: this.consecutiveFailures,
-      totalFailures:       this.totalFailures,
-      totalRecoveries:     this.totalRecoveries,
-      lastTransitionAt:    this.lastTransitionAt,
-      circuitBreaker:      this.circuitBreaker.status(),
-      recovery:            this.recoveryProtocol.summary(),
-      drift:               this.driftDetector.stats(),
-      meta:                this.meta,
+      totalFailures: this.totalFailures,
+      totalRecoveries: this.totalRecoveries,
+      lastTransitionAt: this.lastTransitionAt,
+      circuitBreaker: this.circuitBreaker.status(),
+      recovery: this.recoveryProtocol.summary(),
+      drift: this.driftDetector.stats(),
+      meta: this.meta
     };
   }
 }
@@ -707,12 +689,14 @@ class SelfHealingLifecycle extends EventEmitter {
     }
     const cs = new ComponentState(id, type, opts);
     this._components.set(id, cs);
-
-    this._log('info', `Component registered`, { id, type, state: STATE.HEALTHY });
+    this._log('info', `Component registered`, {
+      id,
+      type,
+      state: STATE.HEALTHY
+    });
 
     // Start periodic drift checks
     this._startDriftTimer(id);
-
     return cs;
   }
 
@@ -726,7 +710,9 @@ class SelfHealingLifecycle extends EventEmitter {
     if (!this._components.has(id)) return false;
     this._clearTimers(id);
     this._components.delete(id);
-    this._log('info', `Component deregistered`, { id });
+    this._log('info', `Component deregistered`, {
+      id
+    });
     return true;
   }
 
@@ -766,15 +752,18 @@ class SelfHealingLifecycle extends EventEmitter {
     cs.circuitBreaker.recordFailure();
     cs.healthScore = Math.max(0, cs.healthScore - PSI ** fib(3)); // degrade by ψ³≈0.236
 
-    this._log('warn', `Failure reported`, { id, reason, consecutiveFailures: cs.consecutiveFailures, state: cs.state });
-
+    this._log('warn', `Failure reported`, {
+      id,
+      reason,
+      consecutiveFailures: cs.consecutiveFailures,
+      state: cs.state
+    });
     switch (cs.state) {
       case STATE.HEALTHY:
       case STATE.RESTORED:
         // First sign of trouble — move to SUSPECT
         this._transition(cs, STATE.SUSPECT, `Failure detected: ${reason}`);
         break;
-
       case STATE.SUSPECT:
         if (cs.consecutiveFailures >= QUARANTINE_FAILURE_THRESHOLD) {
           cs.circuitBreaker.trip();
@@ -782,13 +771,13 @@ class SelfHealingLifecycle extends EventEmitter {
           this._initiateRecovery(cs);
         }
         break;
-
       case STATE.QUARANTINED:
       case STATE.RECOVERING:
         // Failure during recovery — handled by the recovery protocol itself
-        this._log('debug', `Failure signal while ${cs.state} — deferred to recovery protocol`, { id });
+        this._log('debug', `Failure signal while ${cs.state} — deferred to recovery protocol`, {
+          id
+        });
         break;
-
       case STATE.DEGRADED:
         // Degraded components track failures but don't auto-escalate beyond QUARANTINE
         if (cs.consecutiveFailures >= QUARANTINE_FAILURE_THRESHOLD) {
@@ -797,7 +786,6 @@ class SelfHealingLifecycle extends EventEmitter {
           this._initiateRecovery(cs);
         }
         break;
-
       default:
         break;
     }
@@ -814,14 +802,22 @@ class SelfHealingLifecycle extends EventEmitter {
   reportDrift(id, currentVector) {
     const cs = this._requireComponent(id);
     if (cs.state === STATE.DEAD) return;
-
-    const { score, isDrift } = cs.driftDetector.check(currentVector);
+    const {
+      score,
+      isDrift
+    } = cs.driftDetector.check(currentVector);
     cs.driftScore = score;
-
     if (isDrift) {
-      this._log('warn', `Drift detected`, { id, driftScore: score.toFixed(4), threshold: ANOMALY_DRIFT_THRESHOLD.toFixed(4) });
-      this.emit('anomaly:detected', { componentId: id, driftScore: score, threshold: ANOMALY_DRIFT_THRESHOLD });
-
+      this._log('warn', `Drift detected`, {
+        id,
+        driftScore: score.toFixed(4),
+        threshold: ANOMALY_DRIFT_THRESHOLD.toFixed(4)
+      });
+      this.emit('anomaly:detected', {
+        componentId: id,
+        driftScore: score,
+        threshold: ANOMALY_DRIFT_THRESHOLD
+      });
       if (cs.state === STATE.HEALTHY || cs.state === STATE.RESTORED) {
         this._transition(cs, STATE.SUSPECT, `Drift score ${score.toFixed(4)} < threshold ${ANOMALY_DRIFT_THRESHOLD.toFixed(4)}`);
       }
@@ -845,16 +841,18 @@ class SelfHealingLifecycle extends EventEmitter {
   reportHealthCheck(id, passed, score = passed ? 1.0 : 0.0) {
     const cs = this._requireComponent(id);
     if (cs.state === STATE.DEAD) return;
-
     cs.attestationGate.submitCanaryResult(passed ? 1.0 : 0.0);
     cs.healthScore = score;
-
     if (passed) {
       cs.circuitBreaker.recordSuccess();
       cs.consecutiveFailures = 0;
     }
-
-    this._log('debug', `Health check reported`, { id, passed, score: score.toFixed(4), state: cs.state });
+    this._log('debug', `Health check reported`, {
+      id,
+      passed,
+      score: score.toFixed(4),
+      state: cs.state
+    });
   }
 
   /**
@@ -879,7 +877,10 @@ class SelfHealingLifecycle extends EventEmitter {
   triggerRecovery(id) {
     const cs = this._requireComponent(id);
     if (cs.state !== STATE.QUARANTINED && cs.state !== STATE.DEGRADED) {
-      this._log('warn', `triggerRecovery called on component not in QUARANTINED/DEGRADED state`, { id, state: cs.state });
+      this._log('warn', `triggerRecovery called on component not in QUARANTINED/DEGRADED state`, {
+        id,
+        state: cs.state
+      });
       return;
     }
     this._initiateRecovery(cs);
@@ -895,27 +896,37 @@ class SelfHealingLifecycle extends EventEmitter {
    */
   runAttestation(id, currentVector) {
     const cs = this._requireComponent(id);
-
     if (cs.state !== STATE.RECOVERING) {
-      return { passed: false, reason: `Component ${id} is not in RECOVERING state (current: ${cs.state})` };
+      return {
+        passed: false,
+        reason: `Component ${id} is not in RECOVERING state (current: ${cs.state})`
+      };
     }
-
-    const { score } = cs.driftDetector.check(currentVector);
+    const {
+      score
+    } = cs.driftDetector.check(currentVector);
     cs.driftScore = score;
-
     const attestation = cs.attestationGate.evaluate(score);
-
     if (attestation.passed) {
       cs.driftDetector.updateBaseline(currentVector);
       this._transition(cs, STATE.RESTORED, `Attestation passed: ${attestation.reason}`);
-      this.emit('attestation:passed', { componentId: id, gatedScore: attestation.gatedScore, reason: attestation.reason });
+      this.emit('attestation:passed', {
+        componentId: id,
+        gatedScore: attestation.gatedScore,
+        reason: attestation.reason
+      });
       // Schedule final RESTORED → HEALTHY transition after canary window
       this._scheduleRestoration(cs);
     } else {
-      this._log('warn', `Attestation failed`, { id, reason: attestation.reason });
+      this._log('warn', `Attestation failed`, {
+        id,
+        reason: attestation.reason
+      });
     }
-
-    return { passed: attestation.passed, reason: attestation.reason };
+    return {
+      passed: attestation.passed,
+      reason: attestation.reason
+    };
   }
 
   // ─── Internal State Machine ────────────────────────────────────────────────
@@ -935,36 +946,40 @@ class SelfHealingLifecycle extends EventEmitter {
 
     cs.state = toState;
     cs.recordTransition(fromState, toState, reason);
-
-    const logLevel = toState === STATE.DEAD ? 'error'
-      : toState === STATE.QUARANTINED ? 'error'
-      : toState === STATE.SUSPECT ? 'warn'
-      : 'info';
-
+    const logLevel = toState === STATE.DEAD ? 'error' : toState === STATE.QUARANTINED ? 'error' : toState === STATE.SUSPECT ? 'warn' : 'info';
     this._log(logLevel, `State transition: ${fromState} → ${toState}`, {
       componentId: cs.id,
-      type:        cs.type,
-      from:        fromState,
-      to:          toState,
+      type: cs.type,
+      from: fromState,
+      to: toState,
       reason,
-      at:          new Date(cs.lastTransitionAt).toISOString(),
+      at: new Date(cs.lastTransitionAt).toISOString()
     });
-
     this.emit('state:changed', {
       componentId: cs.id,
-      type:        cs.type,
-      from:        fromState,
-      to:          toState,
+      type: cs.type,
+      from: fromState,
+      to: toState,
       reason,
-      at:          cs.lastTransitionAt,
+      at: cs.lastTransitionAt
     });
 
     // Emit focused events for specific transitions
     if (toState === STATE.QUARANTINED) {
-      this.emit('quarantine:entered', { componentId: cs.id, type: cs.type, reason, at: cs.lastTransitionAt });
+      this.emit('quarantine:entered', {
+        componentId: cs.id,
+        type: cs.type,
+        reason,
+        at: cs.lastTransitionAt
+      });
     }
     if (toState === STATE.DEAD) {
-      this.emit('component:dead', { componentId: cs.id, type: cs.type, reason, at: cs.lastTransitionAt });
+      this.emit('component:dead', {
+        componentId: cs.id,
+        type: cs.type,
+        reason,
+        at: cs.lastTransitionAt
+      });
     }
   }
 
@@ -983,50 +998,39 @@ class SelfHealingLifecycle extends EventEmitter {
     if (cs.recoveryProtocol.isInCooldown()) {
       this._log('info', `Recovery deferred — cooldown active`, {
         id: cs.id,
-        cooldownUntil: cs.recoveryProtocol.summary().cooldownUntil,
+        cooldownUntil: cs.recoveryProtocol.summary().cooldownUntil
       });
       return;
     }
-
     if (!cs.recoveryProtocol.hasAttemptsRemaining()) {
-      // Exhausted all recovery attempts
       this._transition(cs, STATE.DEAD, `Max recovery attempts exhausted (fib(6)=${MAX_RECOVERY_ATTEMPTS})`);
       return;
     }
-
     this._transition(cs, STATE.RECOVERING, `Recovery initiated (attempt ${cs.recoveryProtocol._attempt + 1}/${MAX_RECOVERY_ATTEMPTS})`);
     this.emit('recovery:started', {
       componentId: cs.id,
-      attempt:     cs.recoveryProtocol._attempt,
+      attempt: cs.recoveryProtocol._attempt,
       maxAttempts: MAX_RECOVERY_ATTEMPTS,
-      at:          Date.now(),
+      at: Date.now()
     });
     cs.attestationGate.reset();
-
     this._scheduleRecoveryAttempt(cs);
   }
-
-  /**
-   * Schedules the next phi-backoff recovery attempt.
-   *
-   * @private
-   * @param {ComponentState} cs
-   * @returns {void}
-   */
   _scheduleRecoveryAttempt(cs) {
-    const { delayMs, attempt, exhausted } = cs.recoveryProtocol.nextDelay();
-
+    const {
+      delayMs,
+      attempt,
+      exhausted
+    } = cs.recoveryProtocol.nextDelay();
     if (exhausted) {
       this._transition(cs, STATE.DEAD, `Max recovery attempts exhausted (fib(6)=${MAX_RECOVERY_ATTEMPTS})`);
       return;
     }
-
     this._log('info', `Recovery attempt ${attempt + 1}/${MAX_RECOVERY_ATTEMPTS} scheduled`, {
       id: cs.id,
       delayMs,
-      backoffSequence: PHI_BACKOFF_SEQUENCE,
+      backoffSequence: PHI_BACKOFF_SEQUENCE
     });
-
     const timer = setTimeout(() => {
       this._recoveryTimers.delete(cs.id);
       this._executeRecoveryAttempt(cs, attempt);
@@ -1036,55 +1040,36 @@ class SelfHealingLifecycle extends EventEmitter {
     if (timer.unref) timer.unref();
     this._recoveryTimers.set(cs.id, timer);
   }
-
-  /**
-   * Executes one recovery attempt. Emits recovery:succeeded or recovery:failed.
-   * In production, override this method or listen to events to inject real
-   * restart / respawn logic.
-   *
-   * @private
-   * @param {ComponentState} cs
-   * @param {number} attempt
-   * @returns {void}
-   */
   _executeRecoveryAttempt(cs, attempt) {
     if (cs.state !== STATE.RECOVERING) return; // state may have changed
 
-    this._log('info', `Executing recovery attempt ${attempt + 1}`, { id: cs.id });
+    this._log('info', `Executing recovery attempt ${attempt + 1}`, {
+      id: cs.id
+    });
 
     // Emit event so external handlers can perform the actual restart/respawn
     this.emit('recovery:attempt', {
       componentId: cs.id,
-      type:        cs.type,
+      type: cs.type,
       attempt,
       maxAttempts: MAX_RECOVERY_ATTEMPTS,
-      at:          Date.now(),
+      at: Date.now(),
       /**
        * Callback to report the result back to the lifecycle.
        * Call `resolve(true)` on success, `resolve(false)` on failure.
        * @param {boolean} success
        */
-      resolve: (success) => {
+      resolve: success => {
         if (success) {
           this._onRecoveryAttemptSuccess(cs, attempt);
         } else {
           this._onRecoveryAttemptFailure(cs, attempt);
         }
-      },
+      }
     });
   }
-
-  /**
-   * Handles a successful recovery attempt — moves to RESTORED pending attestation.
-   *
-   * @private
-   * @param {ComponentState} cs
-   * @param {number} attempt
-   * @returns {void}
-   */
   _onRecoveryAttemptSuccess(cs, attempt) {
     if (cs.state !== STATE.RECOVERING) return;
-
     cs.consecutiveFailures = 0;
     cs.circuitBreaker.recordSuccess();
     cs.healthScore = Math.min(1.0, cs.healthScore + PSI); // boost by ψ≈0.618
@@ -1092,44 +1077,31 @@ class SelfHealingLifecycle extends EventEmitter {
     this.emit('recovery:succeeded', {
       componentId: cs.id,
       attempt,
-      at:          Date.now(),
+      at: Date.now()
     });
-
-    this._log('info', `Recovery attempt ${attempt + 1} succeeded — awaiting attestation`, { id: cs.id });
+    this._log('info', `Recovery attempt ${attempt + 1} succeeded — awaiting attestation`, {
+      id: cs.id
+    });
 
     // Transition to RESTORED; full HEALTHY restoration requires attestation
     this._transition(cs, STATE.RESTORED, `Recovery attempt ${attempt + 1} succeeded`);
     this._scheduleRestoration(cs);
   }
-
-  /**
-   * Handles a failed recovery attempt — retries with next phi-backoff step
-   * or escalates to DEAD.
-   *
-   * @private
-   * @param {ComponentState} cs
-   * @param {number} attempt
-   * @returns {void}
-   */
   _onRecoveryAttemptFailure(cs, attempt) {
     if (cs.state !== STATE.RECOVERING) return;
-
     cs.totalFailures++;
     cs.circuitBreaker.recordFailure();
     cs.healthScore = Math.max(0, cs.healthScore - PSI ** fib(3));
-
     this.emit('recovery:failed', {
       componentId: cs.id,
       attempt,
       attemptsRemaining: MAX_RECOVERY_ATTEMPTS - attempt - 1,
-      at:          Date.now(),
+      at: Date.now()
     });
-
     this._log('warn', `Recovery attempt ${attempt + 1} failed`, {
       id: cs.id,
-      attemptsRemaining: MAX_RECOVERY_ATTEMPTS - attempt - 1,
+      attemptsRemaining: MAX_RECOVERY_ATTEMPTS - attempt - 1
     });
-
     if (!cs.recoveryProtocol.hasAttemptsRemaining()) {
       // Mark DEAD before transitioning back through QUARANTINED
       cs.recoveryProtocol.startCooldown();
@@ -1151,9 +1123,9 @@ class SelfHealingLifecycle extends EventEmitter {
    */
   _scheduleRestoration(cs) {
     if (cs.state !== STATE.RESTORED) return;
-
-    this._log('info', `Canary validation window started (${CANARY_VALIDATION_MS}ms)`, { id: cs.id });
-
+    this._log('info', `Canary validation window started (${CANARY_VALIDATION_MS}ms)`, {
+      id: cs.id
+    });
     const timer = setTimeout(() => {
       this._recoveryTimers.delete(cs.id);
       if (cs.state !== STATE.RESTORED) return;
@@ -1166,28 +1138,27 @@ class SelfHealingLifecycle extends EventEmitter {
         this._transition(cs, STATE.HEALTHY, 'Canary window passed — no baseline for attestation; granting HEALTHY');
         return;
       }
-
-      // Attempt auto-attestation using the last known drift score as proxy
       const proxyScore = cs.driftScore;
       const attestation = cs.attestationGate.evaluate(proxyScore);
-
       if (attestation.passed) {
         cs.totalRecoveries++;
         cs.recoveryProtocol.reset();
         cs.healthScore = 1.0;
         this._transition(cs, STATE.HEALTHY, `Attestation passed after canary window: ${attestation.reason}`);
         this.emit('attestation:passed', {
-          componentId:  cs.id,
-          gatedScore:   attestation.gatedScore,
-          reason:       attestation.reason,
+          componentId: cs.id,
+          gatedScore: attestation.gatedScore,
+          reason: attestation.reason
         });
       } else {
-        this._log('warn', `Attestation failed after canary window — re-quarantining`, { id: cs.id, reason: attestation.reason });
+        this._log('warn', `Attestation failed after canary window — re-quarantining`, {
+          id: cs.id,
+          reason: attestation.reason
+        });
         this._transition(cs, STATE.QUARANTINED, `Attestation failed after canary window: ${attestation.reason}`);
         this._initiateRecovery(cs);
       }
     }, CANARY_VALIDATION_MS);
-
     if (timer.unref) timer.unref();
     this._recoveryTimers.set(cs.id, timer);
   }
@@ -1213,17 +1184,16 @@ class SelfHealingLifecycle extends EventEmitter {
       // Emit a drift:check event so the host can provide the current embedding
       this.emit('drift:check', {
         componentId: id,
-        type:        cs.type,
-        state:       cs.state,
-        at:          Date.now(),
+        type: cs.type,
+        state: cs.state,
+        at: Date.now(),
         /**
          * Provide the current embedding vector to perform the drift check.
          * @param {number[]} vector
          */
-        provide: (vector) => this.reportDrift(id, vector),
+        provide: vector => this.reportDrift(id, vector)
       });
     }, this._driftCheckIntervalMs);
-
     if (interval.unref) interval.unref();
     this._driftTimers.set(id, interval);
   }
@@ -1234,7 +1204,10 @@ class SelfHealingLifecycle extends EventEmitter {
    */
   _clearDriftTimer(id) {
     const t = this._driftTimers.get(id);
-    if (t) { clearInterval(t); this._driftTimers.delete(id); }
+    if (t) {
+      clearInterval(t);
+      this._driftTimers.delete(id);
+    }
   }
 
   /**
@@ -1243,7 +1216,10 @@ class SelfHealingLifecycle extends EventEmitter {
    */
   _clearRecoveryTimer(id) {
     const t = this._recoveryTimers.get(id);
-    if (t) { clearTimeout(t); this._recoveryTimers.delete(id); }
+    if (t) {
+      clearTimeout(t);
+      this._recoveryTimers.delete(id);
+    }
   }
 
   /**
@@ -1279,7 +1255,7 @@ class SelfHealingLifecycle extends EventEmitter {
       this._clearTimers(id);
     }
     this._log('info', 'SelfHealingLifecycle shutdown complete', {
-      componentCount: this._components.size,
+      componentCount: this._components.size
     });
   }
 
@@ -1300,23 +1276,19 @@ class SelfHealingLifecycle extends EventEmitter {
     // Compute fleet health index: phi-weighted fusion of individual health scores,
     // but penalise DEAD/QUARANTINED heavily using PRESSURE_LEVELS thresholds.
     const scores = all.map(cs => {
-      if (cs.state === STATE.DEAD)        return 0;
-      if (cs.state === STATE.QUARANTINED) return PRESSURE_LEVELS.NOMINAL_MAX;  // ≈0.382
-      if (cs.state === STATE.RECOVERING)  return PRESSURE_LEVELS.ELEVATED_MAX; // ≈0.618
-      if (cs.state === STATE.SUSPECT)     return cs.healthScore * CSL_THRESHOLDS.MEDIUM;
-      if (cs.state === STATE.DEGRADED)    return cs.healthScore * CSL_THRESHOLDS.LOW;
+      if (cs.state === STATE.DEAD) return 0;
+      if (cs.state === STATE.QUARANTINED) return PRESSURE_LEVELS.NOMINAL_MAX; // ≈0.382
+      if (cs.state === STATE.RECOVERING) return PRESSURE_LEVELS.ELEVATED_MAX; // ≈0.618
+      if (cs.state === STATE.SUSPECT) return cs.healthScore * CSL_THRESHOLDS.MEDIUM;
+      if (cs.state === STATE.DEGRADED) return cs.healthScore * CSL_THRESHOLDS.LOW;
       return cs.healthScore; // HEALTHY / RESTORED
     });
-
-    const healthIndex = scores.length > 0
-      ? phiPriorityScore(...scores) / (scores.length > 1 ? scores.length / PHI : 1)
-      : 1.0;
-
+    const healthIndex = scores.length > 0 ? phiPriorityScore(...scores) / (scores.length > 1 ? scores.length / PHI : 1) : 1.0;
     return {
       totalComponents: all.length,
       byState,
       healthIndex: Math.max(0, Math.min(1, healthIndex)),
-      components:  all.map(cs => cs.snapshot()),
+      components: all.map(cs => cs.snapshot())
     };
   }
 
@@ -1350,7 +1322,6 @@ module.exports = {
   AttestationGate,
   STATE,
   COMPONENT_TYPE,
-
   // Phi-derived thresholds (re-exported for consumers)
   ANOMALY_DRIFT_THRESHOLD,
   ATTESTATION_PASS_THRESHOLD,
@@ -1361,8 +1332,7 @@ module.exports = {
   RECOVERY_COOLDOWN_MS,
   CANARY_VALIDATION_MS,
   MAX_HISTORY_SIZE,
-
   // Sequence constants
   PHI_BACKOFF_SEQUENCE,
-  FIBONACCI_POOLS,
+  FIBONACCI_POOLS
 };

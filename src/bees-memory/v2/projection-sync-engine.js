@@ -1,58 +1,13 @@
 'use strict';
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
-
-/**
- * @file projection-sync-engine.js
- * @description Robust Projection Sync Engine — replaces sync-projection-bee.js.
- *
- * CHANGE LOG (vs sync-projection-bee.js — 277 lines):
- *
- *  CRITICAL BUGS FIXED:
- *  1. `execSync` for git operations blocks the Node.js event loop up to 60s.
- *     CHANGE: All git operations now use async `spawn()` wrapped in Promises.
- *
- *  2. No CAS or versioning — concurrent sync processes silently clobber each other.
- *     CHANGE: Version vectors (VClock) with compare-and-swap semantics. A sync only
- *     proceeds if its local version ≥ last-known-remote version.
- *
- *  3. No retry on push failure.
- *     CHANGE: Exponential backoff retry (max 3 attempts, base 2 000 ms, jitter ±20%).
- *
- *  4. No rollback on partial failure.
- *     CHANGE: Pre-sync snapshot is saved; if push fails after commit, the local branch
- *     is reset to the snapshot HEAD via `git reset --hard`.
- *
- *  5. Cloudflare target declared in `_syncState.targets.cloudflare` but no sync code.
- *     CHANGE: Full Cloudflare Workers KV sync implementation using the REST API.
- *
- *  6. No staleness budget enforcement.
- *     CHANGE: Reads `projections[].stalenessbudgetms` from heady-registry.json;
- *     skips sync if data is within budget (no-op), forces sync if overdue.
- *
- *  ARCHITECTURE:
- *    ProjectionSyncEngine
- *      ├─ GitSyncTarget           – async git operations (spawn-based)
- *      ├─ CloudflareSyncTarget    – Cloudflare Workers KV REST implementation
- *      ├─ HuggingFaceSyncTarget   – HF Spaces git push (already partially in original)
- *      ├─ VClock                  – version vector for CAS conflict detection
- *      ├─ SyncLock                – per-projection mutex to prevent concurrent syncs
- *      ├─ StalenessGuard          – enforces stalenessbudgetms from heady-registry.json
- *      └─ SyncRetry               – exponential backoff with jitter
- *
- *  USAGE:
- *    const { ProjectionSyncEngine } = require('./projection-sync-engine');
- *    const engine = new ProjectionSyncEngine({ registryPath: './heady-registry.json' });
- *    await engine.init();
- *    await engine.syncProjection('heady-connection');   // single projection
- *    await engine.syncAll();                            // all projections in registry
- *    engine.startScheduler();                           // background polling
- */
-
 const EventEmitter = require('events');
-const { spawn }    = require('child_process');
-const fs           = require('fs');
-const path         = require('path');
-const https        = require('https');
+const {
+  spawn
+} = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
 
 // ---------------------------------------------------------------------------
 // Constants (from analysis of heady-registry.json and sync-projection-bee.js)
@@ -60,16 +15,16 @@ const https        = require('https');
 
 /** Cloud Run project used for authentication */
 const CLOUD_RUN_PROJECT = 'heady-pre-production';
-const CLOUD_RUN_REGION  = 'us-central1';
+const CLOUD_RUN_REGION = 'us-central1';
 
 /** Cloudflare account ID from heady-registry.json */
 const CF_ACCOUNT_ID = '8b1fa38f282c691423c6399247d53323';
 
 /** Known HuggingFace spaces (from analysis) */
 const HF_SPACES = {
-  'heady-ai':          'HeadyMe/heady-ai',
-  'heady-systems':     'HeadyMe/heady-systems',
-  'heady-connection':  'HeadyConnection/heady-connection',
+  'heady-ai': 'HeadyMe/heady-ai',
+  'heady-systems': 'HeadyMe/heady-systems',
+  'heady-connection': 'HeadyConnection/heady-connection'
 };
 
 /** Default staleness budget if not specified in registry (5 minutes) */
@@ -77,8 +32,8 @@ const DEFAULT_STALENESS_MS = 5 * 60 * 1_000;
 
 /** Retry configuration */
 const RETRY_MAX_ATTEMPTS = 3;
-const RETRY_BASE_MS      = 2_000;
-const RETRY_JITTER       = 0.2;  // ±20% random jitter
+const RETRY_BASE_MS = 2_000;
+const RETRY_JITTER = 0.2; // ±20% random jitter
 
 /** Scheduler default polling interval */
 const DEFAULT_POLL_MS = 60_000; // 1 minute
@@ -97,7 +52,9 @@ class VClock {
    * @param {object} [initial={}]  initial clock state { nodeId: counter, ... }
    */
   constructor(initial = {}) {
-    this._clock = { ...initial };
+    this._clock = {
+      ...initial
+    };
   }
 
   /**
@@ -137,19 +94,17 @@ class VClock {
    * @returns {'equal'|'dominates'|'dominated'|'concurrent'}
    */
   compare(other) {
-    let thisDominates  = true;
+    let thisDominates = true;
     let otherDominates = true;
-
     const allKeys = new Set([...Object.keys(this._clock), ...Object.keys(other._clock)]);
     for (const k of allKeys) {
-      const a = this._clock[k]  || 0;
+      const a = this._clock[k] || 0;
       const b = other._clock[k] || 0;
-      if (a < b) thisDominates  = false;
+      if (a < b) thisDominates = false;
       if (a > b) otherDominates = false;
     }
-
     if (thisDominates && otherDominates) return 'equal';
-    if (thisDominates)  return 'dominates';
+    if (thisDominates) return 'dominates';
     if (otherDominates) return 'dominated';
     return 'concurrent';
   }
@@ -158,14 +113,20 @@ class VClock {
    * Serialise to a plain object for storage.
    * @returns {object}
    */
-  toJSON() { return { ...this._clock }; }
+  toJSON() {
+    return {
+      ...this._clock
+    };
+  }
 
   /**
    * Deserialise from a plain object.
    * @param {object} obj
    * @returns {VClock}
    */
-  static from(obj) { return new VClock(obj || {}); }
+  static from(obj) {
+    return new VClock(obj || {});
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -192,9 +153,10 @@ class SyncLock {
     // Wait for any in-progress sync to finish
     const existing = this._locks.get(key) || Promise.resolve();
     let release;
-    const next = new Promise(res => { release = res; });
+    const next = new Promise(res => {
+      release = res;
+    });
     this._locks.set(key, existing.then(() => next));
-
     await existing;
     try {
       return await fn();
@@ -209,7 +171,9 @@ class SyncLock {
    * Returns true if the given key is currently locked.
    * @param {string} key
    */
-  isLocked(key) { return this._locks.has(key); }
+  isLocked(key) {
+    return this._locks.has(key);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -240,9 +204,13 @@ class StalenessGuard {
    */
   check(projectionId) {
     const lastSync = this._lastSync.get(projectionId) || 0;
-    const ageMs    = Date.now() - lastSync;
+    const ageMs = Date.now() - lastSync;
     const budgetMs = this._budgets[projectionId] || DEFAULT_STALENESS_MS;
-    return { needsSync: ageMs >= budgetMs, ageMs, budgetMs };
+    return {
+      needsSync: ageMs >= budgetMs,
+      ageMs,
+      budgetMs
+    };
   }
 
   /**
@@ -258,23 +226,10 @@ class StalenessGuard {
 // SyncRetry — exponential backoff with jitter
 // ---------------------------------------------------------------------------
 
-/**
- * Runs an async operation with exponential backoff and jitter.
- * CHANGE: original code had no retry — a single git push failure was unhandled.
- *
- * @param {Function} fn              async function to retry
- * @param {object}   [opts]
- * @param {number}   [opts.maxAttempts=3]
- * @param {number}   [opts.baseMs=2000]
- * @param {number}   [opts.jitter=0.2]  ±fraction random jitter
- * @param {Function} [opts.onRetry]  (attempt, err) => void
- * @returns {Promise<any>}
- */
 async function withRetry(fn, opts = {}) {
   const maxAttempts = opts.maxAttempts ?? RETRY_MAX_ATTEMPTS;
-  const baseMs      = opts.baseMs      ?? RETRY_BASE_MS;
-  const jitter      = opts.jitter      ?? RETRY_JITTER;
-
+  const baseMs = opts.baseMs ?? RETRY_BASE_MS;
+  const jitter = opts.jitter ?? RETRY_JITTER;
   let lastErr;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -282,11 +237,9 @@ async function withRetry(fn, opts = {}) {
     } catch (err) {
       lastErr = err;
       if (attempt === maxAttempts) break;
-
       const delay = baseMs * Math.pow(2, attempt - 1);
-      const j     = delay * jitter * (Math.random() * 2 - 1);
-      const wait  = Math.max(100, Math.round(delay + j));
-
+      const j = delay * jitter * (Math.random() * 2 - 1);
+      const wait = Math.max(100, Math.round(delay + j));
       if (opts.onRetry) opts.onRetry(attempt, err, wait);
       await new Promise(r => setTimeout(r, wait));
     }
@@ -312,17 +265,23 @@ async function withRetry(fn, opts = {}) {
  */
 function spawnGit(args, opts = {}) {
   return new Promise((resolve, reject) => {
-    const env  = { ...process.env, ...(opts.env || {}) };
+    const env = {
+      ...process.env,
+      ...(opts.env || {})
+    };
     const proc = spawn('git', args, {
-      cwd:   opts.cwd,
+      cwd: opts.cwd,
       env,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ['ignore', 'pipe', 'pipe']
     });
-
     let stdout = '';
     let stderr = '';
-    proc.stdout.on('data', d => { stdout += d.toString(); });
-    proc.stderr.on('data', d => { stderr += d.toString(); });
+    proc.stdout.on('data', d => {
+      stdout += d.toString();
+    });
+    proc.stderr.on('data', d => {
+      stderr += d.toString();
+    });
 
     // Enforce timeout via SIGTERM
     const timeoutMs = opts.timeout || 60_000;
@@ -330,20 +289,26 @@ function spawnGit(args, opts = {}) {
       proc.kill('SIGTERM');
       reject(new Error(`git ${args[0]} timed out after ${timeoutMs}ms`));
     }, timeoutMs);
-
     proc.on('close', code => {
       clearTimeout(timer);
       if (code === 0) {
-        resolve({ stdout: stdout.trim(), stderr: stderr.trim(), exitCode: 0 });
+        resolve({
+          stdout: stdout.trim(),
+          stderr: stderr.trim(),
+          exitCode: 0
+        });
       } else {
-        reject(Object.assign(
-          new Error(`git ${args[0]} exited ${code}: ${stderr.trim() || stdout.trim()}`),
-          { stdout, stderr, exitCode: code }
-        ));
+        reject(Object.assign(new Error(`git ${args[0]} exited ${code}: ${stderr.trim() || stdout.trim()}`), {
+          stdout,
+          stderr,
+          exitCode: code
+        }));
       }
     });
-
-    proc.on('error', err => { clearTimeout(timer); reject(err); });
+    proc.on('error', err => {
+      clearTimeout(timer);
+      reject(err);
+    });
   });
 }
 
@@ -365,10 +330,10 @@ class GitSyncTarget {
    * @param {string} [opts.remoteUrl] full remote URL (overrides token injection)
    */
   constructor(opts) {
-    this._repoPath  = opts.repoPath;
-    this._remote    = opts.remote  || 'origin';
-    this._branch    = opts.branch  || 'main';
-    this._token     = opts.token;
+    this._repoPath = opts.repoPath;
+    this._remote = opts.remote || 'origin';
+    this._branch = opts.branch || 'main';
+    this._token = opts.token;
     this._remoteUrl = opts.remoteUrl;
   }
 
@@ -381,7 +346,11 @@ class GitSyncTarget {
 
   /** @private */
   async _git(args, timeout) {
-    return spawnGit(args, { cwd: this._repoPath, env: this._gitEnv, timeout });
+    return spawnGit(args, {
+      cwd: this._repoPath,
+      env: this._gitEnv,
+      timeout
+    });
   }
 
   /**
@@ -389,7 +358,9 @@ class GitSyncTarget {
    * @returns {Promise<string>}
    */
   async snapshotHead() {
-    const { stdout } = await this._git(['rev-parse', 'HEAD']);
+    const {
+      stdout
+    } = await this._git(['rev-parse', 'HEAD']);
     return stdout;
   }
 
@@ -436,9 +407,9 @@ class GitSyncTarget {
    * @returns {Promise<string>}
    */
   async remoteHead() {
-    const { stdout } = await this._git(
-      ['ls-remote', this._remote, `refs/heads/${this._branch}`]
-    );
+    const {
+      stdout
+    } = await this._git(['ls-remote', this._remote, `refs/heads/${this._branch}`]);
     // Output: "<sha>\trefs/heads/<branch>"
     return stdout.split('\t')[0] || '';
   }
@@ -468,10 +439,10 @@ class CloudflareSyncTarget {
    * @param {number} [opts.ttl]         optional KV entry TTL in seconds
    */
   constructor(opts) {
-    this._accountId   = opts.accountId   || CF_ACCOUNT_ID;
+    this._accountId = opts.accountId || CF_ACCOUNT_ID;
     this._namespaceId = opts.namespaceId;
-    this._apiToken    = opts.apiToken    || process.env.CF_KV_API_TOKEN;
-    this._ttl         = opts.ttl;
+    this._apiToken = opts.apiToken || process.env.CF_KV_API_TOKEN;
+    this._ttl = opts.ttl;
   }
 
   /**
@@ -482,20 +453,19 @@ class CloudflareSyncTarget {
    */
   async write(projectionId, state) {
     if (!this._namespaceId) throw new Error('CloudflareSyncTarget: namespaceId is required');
-    if (!this._apiToken)    throw new Error('CloudflareSyncTarget: API token not configured (set CF_KV_API_TOKEN)');
-
-    const key  = `heady:projection:${projectionId}`;
+    if (!this._apiToken) throw new Error('CloudflareSyncTarget: API token not configured (set CF_KV_API_TOKEN)');
+    const key = `heady:projection:${projectionId}`;
     const body = JSON.stringify([{
       key,
-      value:       JSON.stringify({ ...state, syncedAt: Date.now() }),
-      ...(this._ttl ? { expiration_ttl: this._ttl } : {}),
+      value: JSON.stringify({
+        ...state,
+        syncedAt: Date.now()
+      }),
+      ...(this._ttl ? {
+        expiration_ttl: this._ttl
+      } : {})
     }]);
-
-    await this._request(
-      'PUT',
-      `/accounts/${this._accountId}/storage/kv/namespaces/${this._namespaceId}/bulk`,
-      body
-    );
+    await this._request('PUT', `/accounts/${this._accountId}/storage/kv/namespaces/${this._namespaceId}/bulk`, body);
   }
 
   /**
@@ -505,13 +475,9 @@ class CloudflareSyncTarget {
    */
   async read(projectionId) {
     if (!this._namespaceId || !this._apiToken) return null;
-
     const key = `heady:projection:${projectionId}`;
     try {
-      const raw = await this._request(
-        'GET',
-        `/accounts/${this._accountId}/storage/kv/namespaces/${this._namespaceId}/values/${encodeURIComponent(key)}`
-      );
+      const raw = await this._request('GET', `/accounts/${this._accountId}/storage/kv/namespaces/${this._namespaceId}/values/${encodeURIComponent(key)}`);
       return JSON.parse(raw);
     } catch {
       return null;
@@ -523,18 +489,21 @@ class CloudflareSyncTarget {
     return new Promise((resolve, reject) => {
       const options = {
         hostname: 'api.cloudflare.com',
-        path:     `/client/v4${urlPath}`,
+        path: `/client/v4${urlPath}`,
         method,
         headers: {
           'Authorization': `Bearer ${this._apiToken}`,
-          'Content-Type':  'application/json',
-          ...(body ? { 'Content-Length': Buffer.byteLength(body) } : {}),
-        },
+          'Content-Type': 'application/json',
+          ...(body ? {
+            'Content-Length': Buffer.byteLength(body)
+          } : {})
+        }
       };
-
       const req = https.request(options, res => {
         let data = '';
-        res.on('data', d => { data += d; });
+        res.on('data', d => {
+          data += d;
+        });
         res.on('end', () => {
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve(data);
@@ -543,7 +512,6 @@ class CloudflareSyncTarget {
           }
         });
       });
-
       req.on('error', reject);
       if (body) req.write(body);
       req.end();
@@ -570,18 +538,14 @@ class HuggingFaceSyncTarget extends GitSyncTarget {
   constructor(opts) {
     const token = opts.token || process.env.HF_TOKEN;
     const [org, space] = (opts.spaceId || '').split('/');
-    const remoteUrl = token
-      ? `https://user:${token}@huggingface.co/spaces/${org}/${space}`
-      : `https://huggingface.co/spaces/${org}/${space}`;
-
+    const remoteUrl = token ? `https://user:${token}@huggingface.co/spaces/${org}/${space}` : `https://huggingface.co/spaces/${org}/${space}`;
     super({
-      repoPath:  opts.repoPath,
-      remote:    'hf',
-      branch:    'main',
+      repoPath: opts.repoPath,
+      remote: 'hf',
+      branch: 'main',
       remoteUrl,
-      token,
+      token
     });
-
     this._spaceId = opts.spaceId;
   }
 
@@ -621,24 +585,23 @@ class ProjectionSyncEngine extends EventEmitter {
    */
   constructor(opts = {}) {
     super();
-
-    this._registryPath  = opts.registryPath   || path.join(process.cwd(), 'heady-registry.json');
-    this._workspaceRoot = opts.workspaceRoot  || process.cwd();
-    this._dryRun        = opts.dryRun         || false;
+    this._registryPath = opts.registryPath || path.join(process.cwd(), 'heady-registry.json');
+    this._workspaceRoot = opts.workspaceRoot || process.cwd();
+    this._dryRun = opts.dryRun || false;
     this._pollIntervalMs = opts.pollIntervalMs || DEFAULT_POLL_MS;
 
     // Cloudflare
     this._cf = opts.cfNamespaceId ? new CloudflareSyncTarget({
-      accountId:   CF_ACCOUNT_ID,
+      accountId: CF_ACCOUNT_ID,
       namespaceId: opts.cfNamespaceId,
-      apiToken:    opts.cfApiToken || process.env.CF_KV_API_TOKEN,
+      apiToken: opts.cfApiToken || process.env.CF_KV_API_TOKEN
     }) : null;
 
     // Token store
     this._tokens = {
       github: opts.githubToken || process.env.GITHUB_TOKEN,
-      hf:     opts.hfToken     || process.env.HF_TOKEN,
-      cf:     opts.cfApiToken  || process.env.CF_KV_API_TOKEN,
+      hf: opts.hfToken || process.env.HF_TOKEN,
+      cf: opts.cfApiToken || process.env.CF_KV_API_TOKEN
     };
 
     // Per-projection version clocks (CAS)
@@ -656,7 +619,6 @@ class ProjectionSyncEngine extends EventEmitter {
 
     /** @type {Array<SyncReport>} recent sync reports */
     this._reports = [];
-
     this._registry = null;
     this._initialised = false;
   }
@@ -671,18 +633,20 @@ class ProjectionSyncEngine extends EventEmitter {
    */
   async init() {
     if (this._initialised) return;
-
     try {
       const raw = fs.readFileSync(this._registryPath, 'utf8');
       this._registry = JSON.parse(raw);
     } catch (err) {
       this.emit('warn', `Could not read heady-registry.json: ${err.message} — using defaults`);
-      this._registry = { projections: {} };
+      this._registry = {
+        projections: {}
+      };
     }
-
     this._staleness = new StalenessGuard(this._registry.projections || {});
     this._initialised = true;
-    this.emit('init:complete', { projections: Object.keys(this._registry.projections || {}) });
+    this.emit('init:complete', {
+      projections: Object.keys(this._registry.projections || {})
+    });
   }
 
   /**
@@ -692,17 +656,19 @@ class ProjectionSyncEngine extends EventEmitter {
   startScheduler() {
     if (!this._initialised) throw new Error('Call init() before startScheduler()');
     if (this._schedulerTimer) return this;
-
     this._schedulerTimer = setInterval(async () => {
       try {
-        await this.syncAll({ respectStaleness: true });
+        await this.syncAll({
+          respectStaleness: true
+        });
       } catch (err) {
         this.emit('error', err);
       }
     }, this._pollIntervalMs);
-
     if (this._schedulerTimer.unref) this._schedulerTimer.unref();
-    this.emit('scheduler:started', { intervalMs: this._pollIntervalMs });
+    this.emit('scheduler:started', {
+      intervalMs: this._pollIntervalMs
+    });
     return this;
   }
 
@@ -729,20 +695,19 @@ class ProjectionSyncEngine extends EventEmitter {
    */
   async syncAll(opts = {}) {
     if (!this._initialised) await this.init();
-
     const projections = Object.keys(this._registry.projections || {});
     if (projections.length === 0) {
       this.emit('warn', 'No projections defined in heady-registry.json');
       return [];
     }
-
-    const results = await Promise.allSettled(
-      projections.map(id => this.syncProjection(id, opts))
-    );
-
+    const results = await Promise.allSettled(projections.map(id => this.syncProjection(id, opts)));
     return results.map((r, i) => {
       if (r.status === 'fulfilled') return r.value;
-      return { projectionId: projections[i], status: 'error', error: r.reason?.message };
+      return {
+        projectionId: projections[i],
+        status: 'error',
+        error: r.reason?.message
+      };
     });
   }
 
@@ -767,39 +732,48 @@ class ProjectionSyncEngine extends EventEmitter {
    */
   async syncProjection(projectionId, opts = {}) {
     if (!this._initialised) await this.init();
-
     const cfg = (this._registry.projections || {})[projectionId] || {};
     const force = opts.force || false;
 
     // --- Staleness check ---
-    const { needsSync, ageMs, budgetMs } = this._staleness.check(projectionId);
+    const {
+      needsSync,
+      ageMs,
+      budgetMs
+    } = this._staleness.check(projectionId);
     if (!force && !needsSync) {
-      const report = { projectionId, status: 'skipped', reason: 'within_staleness_budget', ageMs, budgetMs };
+      const report = {
+        projectionId,
+        status: 'skipped',
+        reason: 'within_staleness_budget',
+        ageMs,
+        budgetMs
+      };
       this.emit('sync:skipped', report);
       return report;
     }
-
-    return this._lock.withLock(projectionId, () =>
-      this._doSync(projectionId, cfg, opts)
-    );
+    return this._lock.withLock(projectionId, () => this._doSync(projectionId, cfg, opts));
   }
 
   /** @private */
   async _doSync(projectionId, cfg, opts = {}) {
     const report = {
       projectionId,
-      status:    'running',
+      status: 'running',
       startedAt: Date.now(),
-      targets:   { github: null, hf: null, cloudflare: null },
-      errors:    [],
+      targets: {
+        github: null,
+        hf: null,
+        cloudflare: null
+      },
+      errors: []
     };
-
-    this.emit('sync:start', { projectionId });
+    this.emit('sync:start', {
+      projectionId
+    });
 
     // Resolve local repo path
-    const repoPath = cfg.localPath
-      ? path.resolve(this._workspaceRoot, cfg.localPath)
-      : this._workspaceRoot;
+    const repoPath = cfg.localPath ? path.resolve(this._workspaceRoot, cfg.localPath) : this._workspaceRoot;
 
     // --- GitHub sync ---
     if (cfg.github !== false && fs.existsSync(path.join(repoPath, '.git'))) {
@@ -808,8 +782,15 @@ class ProjectionSyncEngine extends EventEmitter {
         report.targets.github = 'ok';
       } catch (err) {
         report.targets.github = 'error';
-        report.errors.push({ target: 'github', message: err.message });
-        this.emit('sync:target_error', { projectionId, target: 'github', err });
+        report.errors.push({
+          target: 'github',
+          message: err.message
+        });
+        this.emit('sync:target_error', {
+          projectionId,
+          target: 'github',
+          err
+        });
       }
     }
 
@@ -821,8 +802,15 @@ class ProjectionSyncEngine extends EventEmitter {
         report.targets.hf = 'ok';
       } catch (err) {
         report.targets.hf = 'error';
-        report.errors.push({ target: 'hf', message: err.message });
-        this.emit('sync:target_error', { projectionId, target: 'hf', err });
+        report.errors.push({
+          target: 'hf',
+          message: err.message
+        });
+        this.emit('sync:target_error', {
+          projectionId,
+          target: 'hf',
+          err
+        });
       }
     }
 
@@ -833,22 +821,25 @@ class ProjectionSyncEngine extends EventEmitter {
         report.targets.cloudflare = 'ok';
       } catch (err) {
         report.targets.cloudflare = 'error';
-        report.errors.push({ target: 'cloudflare', message: err.message });
-        this.emit('sync:target_error', { projectionId, target: 'cloudflare', err });
+        report.errors.push({
+          target: 'cloudflare',
+          message: err.message
+        });
+        this.emit('sync:target_error', {
+          projectionId,
+          target: 'cloudflare',
+          err
+        });
       }
     }
-
-    report.status     = report.errors.length === 0 ? 'ok' : 'partial';
+    report.status = report.errors.length === 0 ? 'ok' : 'partial';
     report.finishedAt = Date.now();
     report.durationMs = report.finishedAt - report.startedAt;
-
     if (report.status === 'ok') {
       this._staleness.markSynced(projectionId);
     }
-
     this._reports.push(report);
     if (this._reports.length > 100) this._reports.shift();
-
     this.emit('sync:complete', report);
     return report;
   }
@@ -856,28 +847,39 @@ class ProjectionSyncEngine extends EventEmitter {
   /** @private */
   async _syncGitHub(projectionId, repoPath, cfg, report) {
     if (this._dryRun) {
-      this.emit('dryrun', { action: 'github_sync', projectionId });
+      this.emit('dryrun', {
+        action: 'github_sync',
+        projectionId
+      });
       return;
     }
-
     const git = new GitSyncTarget({
       repoPath,
-      remote:    'origin',
-      branch:    cfg.branch     || 'main',
-      token:     this._tokens.github,
+      remote: 'origin',
+      branch: cfg.branch || 'main',
+      token: this._tokens.github
     });
 
     // CAS check
     const remoteSha = await git.remoteHead().catch(() => null);
-    const localClock  = this._clocks.get(projectionId) || new VClock();
-    const remoteClock = VClock.from({ github: remoteSha ? 1 : 0 });
-
+    const localClock = this._clocks.get(projectionId) || new VClock();
+    const remoteClock = VClock.from({
+      github: remoteSha ? 1 : 0
+    });
     const rel = localClock.compare(remoteClock);
     if (rel === 'dominated' || rel === 'concurrent') {
       // Pull first to bring local up to date
-      this.emit('sync:cas_pull', { projectionId, reason: rel });
+      this.emit('sync:cas_pull', {
+        projectionId,
+        reason: rel
+      });
       await withRetry(() => git.pull(), {
-        onRetry: (att, err) => this.emit('sync:retry', { projectionId, target: 'github', attempt: att, error: err.message }),
+        onRetry: (att, err) => this.emit('sync:retry', {
+          projectionId,
+          target: 'github',
+          attempt: att,
+          error: err.message
+        })
       });
     }
 
@@ -887,19 +889,29 @@ class ProjectionSyncEngine extends EventEmitter {
     // Commit + push with retry + rollback
     const commitMsg = `chore: projection sync ${projectionId} @ ${new Date().toISOString()}`;
     await git.commitAll(commitMsg);
-
     try {
       await withRetry(() => git.push(), {
         maxAttempts: RETRY_MAX_ATTEMPTS,
-        baseMs:      RETRY_BASE_MS,
+        baseMs: RETRY_BASE_MS,
         onRetry: (att, err, wait) => {
-          this.emit('sync:retry', { projectionId, target: 'github', attempt: att, error: err.message, waitMs: wait });
-        },
+          this.emit('sync:retry', {
+            projectionId,
+            target: 'github',
+            attempt: att,
+            error: err.message,
+            waitMs: wait
+          });
+        }
       });
-    } catch (pushErr) { // Rollback on push failure
+    } catch (pushErr) {
+      // Rollback on push failure
       if (snapshotSha) {
-        await git.rollbackTo(snapshotSha).catch(() => { });
-        this.emit('sync:rollback', { projectionId, target: 'github', snapshotSha });
+        await git.rollbackTo(snapshotSha).catch(() => {});
+        this.emit('sync:rollback', {
+          projectionId,
+          target: 'github',
+          snapshotSha
+        });
       }
       throw pushErr;
     }
@@ -912,40 +924,50 @@ class ProjectionSyncEngine extends EventEmitter {
   /** @private */
   async _syncHuggingFace(projectionId, repoPath, hfSpace, report) {
     if (this._dryRun) {
-      this.emit('dryrun', { action: 'hf_sync', projectionId, hfSpace });
+      this.emit('dryrun', {
+        action: 'hf_sync',
+        projectionId,
+        hfSpace
+      });
       return;
     }
-
     const hfRepoPath = path.join(repoPath, '.hf_sync', hfSpace.replace('/', '_'));
     // HF target reuses the same working tree (no separate clone for now)
     const hf = new HuggingFaceSyncTarget({
-      spaceId:  hfSpace,
+      spaceId: hfSpace,
       repoPath: fs.existsSync(hfRepoPath) ? hfRepoPath : repoPath,
-      token:    this._tokens.hf,
+      token: this._tokens.hf
     });
-
     await hf.ensureRemote().catch(() => {});
-
     const snapshotSha = await hf.snapshotHead().catch(() => null);
-    const commitMsg   = `chore: HF sync ${projectionId} @ ${new Date().toISOString()}`;
+    const commitMsg = `chore: HF sync ${projectionId} @ ${new Date().toISOString()}`;
     await hf.commitAll(commitMsg).catch(() => {}); // allow empty commit
 
     try {
       await withRetry(() => hf.push(), {
         maxAttempts: RETRY_MAX_ATTEMPTS,
-        baseMs:      RETRY_BASE_MS,
+        baseMs: RETRY_BASE_MS,
         onRetry: (att, err, wait) => {
-          this.emit('sync:retry', { projectionId, target: 'hf', attempt: att, error: err.message, waitMs: wait });
-        },
+          this.emit('sync:retry', {
+            projectionId,
+            target: 'hf',
+            attempt: att,
+            error: err.message,
+            waitMs: wait
+          });
+        }
       });
     } catch (pushErr) {
       if (snapshotSha) {
         await hf.rollbackTo(snapshotSha).catch(() => {});
-        this.emit('sync:rollback', { projectionId, target: 'hf', snapshotSha });
+        this.emit('sync:rollback', {
+          projectionId,
+          target: 'hf',
+          snapshotSha
+        });
       }
       throw pushErr;
     }
-
     const clock = this._clocks.get(projectionId) || new VClock();
     clock.increment('hf');
     this._clocks.set(projectionId, clock);
@@ -955,10 +977,12 @@ class ProjectionSyncEngine extends EventEmitter {
   async _syncCloudflare(projectionId, cfg, report) {
     if (!this._cf) return;
     if (this._dryRun) {
-      this.emit('dryrun', { action: 'cloudflare_sync', projectionId });
+      this.emit('dryrun', {
+        action: 'cloudflare_sync',
+        projectionId
+      });
       return;
     }
-
     const clock = this._clocks.get(projectionId) || new VClock();
 
     // Read remote clock from KV for CAS comparison
@@ -970,22 +994,25 @@ class ProjectionSyncEngine extends EventEmitter {
         throw new Error(`CAS conflict for ${projectionId}: local clock dominated by Cloudflare remote`);
       }
     }
-
     const state = {
       projectionId,
-      vclock:    clock.toJSON(),
-      syncedAt:  Date.now(),
-      metadata:  cfg.metadata || {},
+      vclock: clock.toJSON(),
+      syncedAt: Date.now(),
+      metadata: cfg.metadata || {}
     };
-
     await withRetry(() => this._cf.write(projectionId, state), {
       maxAttempts: RETRY_MAX_ATTEMPTS,
-      baseMs:      RETRY_BASE_MS,
+      baseMs: RETRY_BASE_MS,
       onRetry: (att, err, wait) => {
-        this.emit('sync:retry', { projectionId, target: 'cloudflare', attempt: att, error: err.message, waitMs: wait });
-      },
+        this.emit('sync:retry', {
+          projectionId,
+          target: 'cloudflare',
+          attempt: att,
+          error: err.message,
+          waitMs: wait
+        });
+      }
     });
-
     clock.increment('cloudflare');
     this._clocks.set(projectionId, clock);
   }
@@ -1032,17 +1059,17 @@ class ProjectionSyncEngine extends EventEmitter {
    */
   status() {
     return {
-      initialised:      this._initialised,
-      schedulerActive:  !!this._schedulerTimer,
-      dryRun:           this._dryRun,
-      projections:      this.stalenessStatus(),
-      reportCount:      this._reports.length,
-      lastReport:       this._reports[this._reports.length - 1] || null,
+      initialised: this._initialised,
+      schedulerActive: !!this._schedulerTimer,
+      dryRun: this._dryRun,
+      projections: this.stalenessStatus(),
+      reportCount: this._reports.length,
+      lastReport: this._reports[this._reports.length - 1] || null,
       targets: {
-        github:     !!this._tokens.github,
-        hf:         !!this._tokens.hf,
-        cloudflare: !!this._cf,
-      },
+        github: !!this._tokens.github,
+        hf: !!this._tokens.hf,
+        cloudflare: !!this._cf
+      }
     };
   }
 }
@@ -1066,7 +1093,7 @@ module.exports = {
   HF_SPACES,
   DEFAULT_STALENESS_MS,
   RETRY_MAX_ATTEMPTS,
-  RETRY_BASE_MS,
+  RETRY_BASE_MS
 };
 
 /**

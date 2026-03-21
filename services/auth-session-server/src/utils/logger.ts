@@ -1,16 +1,12 @@
 import type { Request, Response } from 'express';
-
 export interface LogContext {
   [key: string]: unknown;
 }
-
 export class Logger {
   private context: string;
-
   constructor(context: string) {
     this.context = context;
   }
-
   private log(level: string, message: string, data?: LogContext): void {
     const timestamp = new Date().toISOString();
     const logEntry = {
@@ -18,48 +14,42 @@ export class Logger {
       level,
       context: this.context,
       message,
-      ...data,
+      ...data
     };
 
     // Use console methods to output structured JSON
     // In production, pipe to centralized logging service
     if (level === 'ERROR') {
-      console.error(JSON.stringify(logEntry));
+      logger.error(JSON.stringify(logEntry));
     } else if (level === 'WARN') {
-      console.warn(JSON.stringify(logEntry));
+      logger.warn(JSON.stringify(logEntry));
     } else {
-      console.log(JSON.stringify(logEntry));
+      logger.info(JSON.stringify(logEntry));
     }
   }
-
   info(message: string, data?: LogContext): void {
     this.log('INFO', message, data);
   }
-
   debug(message: string, data?: LogContext): void {
     this.log('DEBUG', message, data);
   }
-
   warn(message: string, data?: LogContext): void {
     this.log('WARN', message, data);
   }
-
   error(message: string, error?: unknown, data?: LogContext): void {
     const errorData = {
       ...data,
-      ...(error instanceof Error
-        ? {
-            errorName: error.name,
-            errorMessage: error.message,
-            errorStack: error.stack,
-          }
-        : { error: String(error) }),
+      ...(error instanceof Error ? {
+        errorName: error.name,
+        errorMessage: error.message,
+        errorStack: error.stack
+      } : {
+        error: String(error)
+      })
     };
-
     this.log('ERROR', message, errorData);
   }
 }
-
 export function createLogger(context: string): Logger {
   return new Logger(context);
 }
@@ -82,7 +72,6 @@ export function requestLoggingMiddleware(req: Request, res: Response, next: Func
   res.send = function (data: unknown): Response {
     const duration = Date.now() - startTime;
     const status = res.statusCode;
-
     logger.info('Request completed', {
       requestId,
       method: req.method,
@@ -92,20 +81,18 @@ export function requestLoggingMiddleware(req: Request, res: Response, next: Func
       duration,
       ip: req.ip,
       userAgent: req.headers['user-agent'],
-      size: typeof data === 'string' ? data.length : 0,
+      size: typeof data === 'string' ? data.length : 0
     });
 
     // Call original send
     return originalSend.call(this, data);
   };
-
   logger.debug('Request started', {
     requestId,
     method: req.method,
     path: req.path,
-    ip: req.ip,
+    ip: req.ip
   });
-
   next();
 }
 
@@ -115,8 +102,7 @@ export function requestLoggingMiddleware(req: Request, res: Response, next: Func
 function generateRequestId(): string {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
-
 export default {
   createLogger,
-  requestLoggingMiddleware,
+  requestLoggingMiddleware
 };

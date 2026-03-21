@@ -1,4 +1,5 @@
 'use strict';
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
@@ -19,7 +20,6 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
  */
 
 const EventEmitter = require('events');
-
 const {
   PHI,
   PSI,
@@ -30,7 +30,7 @@ const {
   CSL_THRESHOLDS,
   phiFusionWeights,
   cosineSimilarity,
-  cslGate,
+  cslGate
 } = require('../shared/phi-math.js');
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -65,13 +65,7 @@ const MAX_WHY_DEPTH = fib(5); // 5
 const SEVERITY_LEVELS = Object.freeze(['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']);
 
 /** Fishbone (Ishikawa) root-cause categories */
-const FISHBONE_CATEGORIES = Object.freeze([
-  'Technology',
-  'Process',
-  'Data',
-  'People',
-  'Environment',
-]);
+const FISHBONE_CATEGORIES = Object.freeze(['Technology', 'Process', 'Data', 'People', 'Environment']);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FailureCatalog
@@ -119,10 +113,10 @@ class FailureCatalog {
       id: `failure-${++this._idCounter}-${Date.now()}`,
       stage: String(stage),
       message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? (error.stack || null) : null,
+      stack: error instanceof Error ? error.stack || null : null,
       severity,
       context: Object.assign({}, context),
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
     this._failures.push(entry);
     return entry;
@@ -182,20 +176,19 @@ class FailureCatalog {
    */
   toVector() {
     const total = this._failures.length || 1;
-    const severityCounts = SEVERITY_LEVELS.map(s =>
-      this._failures.filter(f => f.severity === s).length
-    );
+    const severityCounts = SEVERITY_LEVELS.map(s => this._failures.filter(f => f.severity === s).length);
     const normalizedCounts = severityCounts.map(c => c / total);
-
     const phiWeights = phiFusionWeights(4);
-    const severityWeighted = severityCounts.map((c, i) => (c / total) * phiWeights[i]);
+    const severityWeighted = severityCounts.map((c, i) => c / total * phiWeights[i]);
 
     // Stage fingerprint: hash stage names into [0,1] range using circular encoding
     const stages = [...new Set(this._failures.map(f => f.stage))].slice(0, 5);
-    const stageFingerprints = Array.from({ length: 5 }, (_, i) => {
+    const stageFingerprints = Array.from({
+      length: 5
+    }, (_, i) => {
       if (!stages[i]) return 0;
       const hash = _hashString(stages[i]);
-      return (hash % 1000) / 1000;
+      return hash % 1000 / 1000;
     });
 
     // Error message bigram fingerprint (8 buckets)
@@ -210,13 +203,15 @@ class FailureCatalog {
 
     // Density scalar
     const density = Math.min(total / HISTORICAL_LOOKBACK, 1);
-
-    return [
-      ...normalizedCounts,    // [0-3]
-      ...severityWeighted,    // [4-7]
-      ...stageFingerprints,   // [8-12]
-      ...normalizedBigrams,   // [13-20]
-      density,                // [21]
+    return [...normalizedCounts,
+    // [0-3]
+    ...severityWeighted,
+    // [4-7]
+    ...stageFingerprints,
+    // [8-12]
+    ...normalizedBigrams,
+    // [13-20]
+    density // [21]
     ];
   }
 }
@@ -268,19 +263,14 @@ class RootCauseAnalyzer {
    */
   fiveWhys(failure, depth = 1) {
     if (depth > MAX_WHY_DEPTH) return null;
-
-    const question = depth === 1
-      ? `Why did stage "${failure.stage}" fail with: "${failure.message}"?`
-      : `Why did that happen?`;
-
+    const question = depth === 1 ? `Why did stage "${failure.stage}" fail with: "${failure.message}"?` : `Why did that happen?`;
     const answer = this._inferWhy(failure, depth);
     const isRootLevel = depth === MAX_WHY_DEPTH || this._isSystemFundamental(answer);
-
     return {
       depth,
       question,
       answer,
-      child: isRootLevel ? null : this.fiveWhys(failure, depth + 1),
+      child: isRootLevel ? null : this.fiveWhys(failure, depth + 1)
     };
   }
 
@@ -296,13 +286,14 @@ class RootCauseAnalyzer {
       const relevance = this._scoreFishboneArm(failure, category);
       const cause = this._describeArm(failure, category);
       // Use CSL gate to compute phi-calibrated confidence
-      const confidence = cslGate(
-        relevance,
-        relevance,
-        PSI, // tau = ψ ≈ 0.618
-        PSI * PSI, // temp = ψ² ≈ 0.236
-      );
-      return { category, cause, confidence };
+      const confidence = cslGate(relevance, relevance, PSI,
+      // tau = ψ ≈ 0.618
+      PSI * PSI);
+      return {
+        category,
+        cause,
+        confidence
+      };
     }).sort((a, b) => b.confidence - a.confidence);
   }
 
@@ -318,7 +309,6 @@ class RootCauseAnalyzer {
     const depth = this._chainDepth(whyChain);
     const deepestNode = this._deepestNode(whyChain);
     const primaryArm = fishboneResults[0];
-
     return {
       class: `${failure.stage}::${failure.severity}`,
       category: primaryArm ? primaryArm.category : 'Unknown',
@@ -326,7 +316,7 @@ class RootCauseAnalyzer {
       rootCause: deepestNode ? deepestNode.answer : failure.message,
       whyChain,
       fishboneCategory: primaryArm ? primaryArm.category : 'Unknown',
-      fishboneArms: fishboneResults,
+      fishboneArms: fishboneResults
     };
   }
 
@@ -342,55 +332,54 @@ class RootCauseAnalyzer {
    * @returns {string} Inferred answer
    */
   _inferWhy(failure, depth) {
-    const { stage, message, severity, context } = failure;
+    const {
+      stage,
+      message,
+      severity,
+      context
+    } = failure;
     const msgLower = message.toLowerCase();
-    const hasTimeout    = msgLower.includes('timeout') || msgLower.includes('timed out');
-    const hasMemory     = msgLower.includes('memory') || msgLower.includes('heap') || msgLower.includes('oom');
-    const hasAuth       = msgLower.includes('auth') || msgLower.includes('unauthorized') || msgLower.includes('403') || msgLower.includes('401');
-    const hasNetwork    = msgLower.includes('network') || msgLower.includes('econnrefused') || msgLower.includes('connection');
+    const hasTimeout = msgLower.includes('timeout') || msgLower.includes('timed out');
+    const hasMemory = msgLower.includes('memory') || msgLower.includes('heap') || msgLower.includes('oom');
+    const hasAuth = msgLower.includes('auth') || msgLower.includes('unauthorized') || msgLower.includes('403') || msgLower.includes('401');
+    const hasNetwork = msgLower.includes('network') || msgLower.includes('econnrefused') || msgLower.includes('connection');
     const hasValidation = msgLower.includes('invalid') || msgLower.includes('schema') || msgLower.includes('validation');
-    const hasConfig     = msgLower.includes('config') || msgLower.includes('missing') || msgLower.includes('undefined');
-    const ctxKeys       = Object.keys(context);
-
+    const hasConfig = msgLower.includes('config') || msgLower.includes('missing') || msgLower.includes('undefined');
+    const ctxKeys = Object.keys(context);
     switch (depth) {
       case 1:
-        if (hasTimeout)    return `Stage "${stage}" exceeded its allotted execution window`;
-        if (hasMemory)     return `Stage "${stage}" exhausted available memory resources`;
-        if (hasAuth)       return `Stage "${stage}" encountered an authorization or credential failure`;
-        if (hasNetwork)    return `Stage "${stage}" could not reach a required external dependency`;
+        if (hasTimeout) return `Stage "${stage}" exceeded its allotted execution window`;
+        if (hasMemory) return `Stage "${stage}" exhausted available memory resources`;
+        if (hasAuth) return `Stage "${stage}" encountered an authorization or credential failure`;
+        if (hasNetwork) return `Stage "${stage}" could not reach a required external dependency`;
         if (hasValidation) return `Stage "${stage}" received input that did not conform to expected schema`;
-        if (hasConfig)     return `Stage "${stage}" encountered a missing or misconfigured dependency`;
+        if (hasConfig) return `Stage "${stage}" encountered a missing or misconfigured dependency`;
         return `Stage "${stage}" produced an unexpected runtime error (severity: ${severity})`;
-
       case 2:
-        if (hasTimeout)    return `Resource contention or upstream latency caused the stage to block`;
-        if (hasMemory)     return `Accumulated state or unbounded data growth consumed available heap`;
-        if (hasAuth)       return `Credentials were rotated, expired, or never provisioned for this stage`;
-        if (hasNetwork)    return `The target service was unavailable, rate-limiting, or misconfigured`;
+        if (hasTimeout) return `Resource contention or upstream latency caused the stage to block`;
+        if (hasMemory) return `Accumulated state or unbounded data growth consumed available heap`;
+        if (hasAuth) return `Credentials were rotated, expired, or never provisioned for this stage`;
+        if (hasNetwork) return `The target service was unavailable, rate-limiting, or misconfigured`;
         if (hasValidation) return `Upstream stage produced output with unexpected shape or missing fields`;
-        if (hasConfig)     return `Environment configuration was incomplete or not propagated correctly`;
+        if (hasConfig) return `Environment configuration was incomplete or not propagated correctly`;
         if (ctxKeys.length) return `Unexpected interaction between context values: ${ctxKeys.slice(0, 3).join(', ')}`;
         return `An intermediate dependency failed silently before reaching this stage`;
-
       case 3:
-        if (hasTimeout)    return `Stage had insufficient phi-backoff tolerance in its retry strategy`;
-        if (hasMemory)     return `Memory eviction policy was not triggered at the right pressure threshold`;
-        if (hasAuth)       return `Secret rotation lifecycle was not wired into the pipeline health check`;
-        if (hasNetwork)    return `No circuit breaker or fallback was defined for this external dependency`;
+        if (hasTimeout) return `Stage had insufficient phi-backoff tolerance in its retry strategy`;
+        if (hasMemory) return `Memory eviction policy was not triggered at the right pressure threshold`;
+        if (hasAuth) return `Secret rotation lifecycle was not wired into the pipeline health check`;
+        if (hasNetwork) return `No circuit breaker or fallback was defined for this external dependency`;
         if (hasValidation) return `Schema versioning was not enforced between producing and consuming stages`;
         return `The pipeline lacked a guard condition that should have detected this state earlier`;
-
       case 4:
-        if (hasTimeout)    return `Pipeline timeout budget was not derived from phi-scaled constants (φⁿ × 1000)`;
-        if (hasMemory)     return `Stage did not implement a phi-proportioned memory pressure backpressure gate`;
-        if (hasAuth)       return `Credential lifecycle was treated as infrastructure concern rather than pipeline concern`;
-        if (hasNetwork)    return `Resilience patterns (retry, bulkhead, fallback) were not codified as CSL gates`;
+        if (hasTimeout) return `Pipeline timeout budget was not derived from phi-scaled constants (φⁿ × 1000)`;
+        if (hasMemory) return `Stage did not implement a phi-proportioned memory pressure backpressure gate`;
+        if (hasAuth) return `Credential lifecycle was treated as infrastructure concern rather than pipeline concern`;
+        if (hasNetwork) return `Resilience patterns (retry, bulkhead, fallback) were not codified as CSL gates`;
         return `Design assumed a happy path; no phi-harmonic fault tolerance envelope was specified`;
-
       case 5:
         // Root cause — always systemic
         return `Root cause: lack of phi-compliant defensive design at the "${stage}" boundary. Every stage must assert its preconditions via CSL gate before proceeding.`;
-
       default:
         return `Unresolved causal chain beyond depth ${depth}`;
     }
@@ -405,13 +394,7 @@ class RootCauseAnalyzer {
    * @returns {boolean}
    */
   _isSystemFundamental(answer) {
-    const fundamentalPatterns = [
-      'root cause',
-      'phi-compliant',
-      'csl gate',
-      'design assumed',
-      'no guard',
-    ];
+    const fundamentalPatterns = ['root cause', 'phi-compliant', 'csl gate', 'design assumed', 'no guard'];
     const lower = answer.toLowerCase();
     return fundamentalPatterns.some(p => lower.includes(p));
   }
@@ -427,15 +410,13 @@ class RootCauseAnalyzer {
   _scoreFishboneArm(failure, category) {
     const msgLower = (failure.message || '').toLowerCase();
     const stageLower = (failure.stage || '').toLowerCase();
-
     const patterns = {
       Technology: ['bug', 'error', 'exception', 'crash', 'timeout', 'memory', 'heap', 'stack', 'null', 'undefined', 'type'],
       Process: ['sequence', 'order', 'step', 'missing', 'skip', 'retry', 'loop', 'deadlock', 'race'],
       Data: ['invalid', 'schema', 'format', 'null', 'empty', 'stale', 'corrupt', 'parse', 'serialize', 'json'],
       People: ['assumption', 'config', 'parameter', 'wrong', 'incorrect', 'misunderstand', 'gap', 'knowledge'],
-      Environment: ['network', 'connection', 'auth', 'credential', 'external', 'api', 'service', 'infra', 'cloud', 'disk', 'env'],
+      Environment: ['network', 'connection', 'auth', 'credential', 'external', 'api', 'service', 'infra', 'cloud', 'disk', 'env']
     };
-
     const keywords = patterns[category] || [];
     let hits = 0;
     for (const kw of keywords) {
@@ -445,11 +426,12 @@ class RootCauseAnalyzer {
     // Base score: keyword hit rate weighted by severity
     const severityMultiplier = {
       CRITICAL: 1.0,
-      HIGH: PHI - 1,   // ≈ 0.618
-      MEDIUM: PSI * PSI, // ≈ 0.382
-      LOW: PSI * PSI * PSI, // ≈ 0.236
+      HIGH: PHI - 1,
+      // ≈ 0.618
+      MEDIUM: PSI * PSI,
+      // ≈ 0.382
+      LOW: PSI * PSI * PSI // ≈ 0.236
     }[failure.severity] || PSI;
-
     const rawScore = Math.min(hits / Math.max(keywords.length * 0.3, 1), 1);
     return Math.min(rawScore * severityMultiplier + 0.1, 1.0);
   }
@@ -468,7 +450,7 @@ class RootCauseAnalyzer {
       Process: `Incorrect execution sequence or missing pipeline step in stage "${failure.stage}"`,
       Data: `Invalid, stale, or malformed data encountered by stage "${failure.stage}"`,
       People: `Incorrect assumption or knowledge gap led to improper configuration of "${failure.stage}"`,
-      Environment: `External infrastructure or dependency failure impacted stage "${failure.stage}"`,
+      Environment: `External infrastructure or dependency failure impacted stage "${failure.stage}"`
     };
     return descMap[category] || `Unknown cause in "${failure.stage}"`;
   }
@@ -569,7 +551,7 @@ class RecurrenceDetector {
           centroid: vectors[i].slice(),
           trend: 'stable',
           occurrences: 1,
-          shouldEscalate: false,
+          shouldEscalate: false
         });
       }
     }
@@ -581,7 +563,6 @@ class RecurrenceDetector {
       cluster.trend = this.getTrend(cluster);
       cluster.centroid = cluster._centroid.slice();
     }
-
     return clusters.sort((a, b) => b.occurrences - a.occurrences);
   }
 
@@ -606,42 +587,25 @@ class RecurrenceDetector {
   shouldEscalate(cluster) {
     return cluster.members.length > MAX_RECURRENCES_BEFORE_ESCALATION;
   }
-
-  /**
-   * Analyzes the temporal distribution of failures in a cluster to determine
-   * whether the recurrence frequency is increasing, stable, or decreasing.
-   *
-   * Uses the ratio of recent-half to early-half occurrence timestamps.
-   *
-   * @param {FailureCluster} cluster - The failure cluster
-   * @returns {'increasing'|'stable'|'decreasing'} Trend label
-   */
   getTrend(cluster) {
     const members = cluster.members;
     if (members.length < 2) return 'stable';
-
-    const sorted = members
-      .filter(m => m.timestamp)
-      .sort((a, b) => a.timestamp - b.timestamp);
-
+    const sorted = members.filter(m => m.timestamp).sort((a, b) => a.timestamp - b.timestamp);
     if (sorted.length < 2) return 'stable';
-
     const mid = Math.floor(sorted.length / 2);
     const earlyHalf = sorted.slice(0, mid);
-    const lateHalf  = sorted.slice(mid);
+    const lateHalf = sorted.slice(mid);
 
     // Count failures per unit time in each half
-    const earlySpan = (earlyHalf[earlyHalf.length - 1].timestamp - earlyHalf[0].timestamp) || 1;
-    const lateSpan  = (lateHalf[lateHalf.length - 1].timestamp  - lateHalf[0].timestamp)  || 1;
-
+    const earlySpan = earlyHalf[earlyHalf.length - 1].timestamp - earlyHalf[0].timestamp || 1;
+    const lateSpan = lateHalf[lateHalf.length - 1].timestamp - lateHalf[0].timestamp || 1;
     const earlyRate = earlyHalf.length / earlySpan;
-    const lateRate  = lateHalf.length  / lateSpan;
-
+    const lateRate = lateHalf.length / lateSpan;
     const ratio = lateRate / (earlyRate || Number.EPSILON);
 
     // Phi-derived thresholds for trend classification
-    if (ratio > PHI)      return 'increasing';  // ratio > 1.618
-    if (ratio < PSI)      return 'decreasing';  // ratio < 0.618
+    if (ratio > PHI) return 'increasing'; // ratio > 1.618
+    if (ratio < PSI) return 'decreasing'; // ratio < 0.618
     return 'stable';
   }
 }
@@ -683,16 +647,19 @@ class PreventionRuleGenerator {
       targetStage: rootCause.class.split('::')[0],
       rootCauseClass: rootCause.class,
       gate: {
-        tau: PSI,                  // sharpness ψ ≈ 0.618
-        threshold,                 // phi-derived gate threshold
-        temperature: PSI * PSI,    // ψ² ≈ 0.236
+        tau: PSI,
+        // sharpness ψ ≈ 0.618
+        threshold,
+        // phi-derived gate threshold
+        temperature: PSI * PSI,
+        // ψ² ≈ 0.236
         action: 'block_and_escalate',
         preconditionVector: 'stage.preconditionScore',
-        description: `Block stage execution when precondition score < ${threshold.toFixed(4)} (phi-derived)`,
+        description: `Block stage execution when precondition score < ${threshold.toFixed(4)} (phi-derived)`
       },
       description: `CSL gate preventing recurrence of ${rootCause.rootCause}`,
       confidence: this._computeRuleConfidence(rootCause),
-      createdAt: Date.now(),
+      createdAt: Date.now()
     };
   }
 
@@ -713,11 +680,14 @@ class PreventionRuleGenerator {
         assertionType: 'regression',
         scenario: `Reproduce ${rootCause.fishboneCategory} failure in stage "${stage}"`,
         expectedOutcome: 'BLOCKED_BY_CSL_GATE',
-        fixtureContext: { rootCause: rootCause.rootCause, depth: rootCause.depth },
+        fixtureContext: {
+          rootCause: rootCause.rootCause,
+          depth: rootCause.depth
+        }
       },
       description: `Auto regression test: verify CSL gate prevents "${rootCause.rootCause}"`,
       confidence: this._computeRuleConfidence(rootCause),
-      createdAt: Date.now(),
+      createdAt: Date.now()
     };
   }
 
@@ -739,12 +709,13 @@ class PreventionRuleGenerator {
         scanTarget: stage,
         checkType: rootCause.fishboneCategory,
         probes: this._buildReconProbes(rootCause),
-        threshold: CSL_THRESHOLDS.MEDIUM, // ≈ 0.809 — medium CSL gate
-        action: 'warn_and_recommend',
+        threshold: CSL_THRESHOLDS.MEDIUM,
+        // ≈ 0.809 — medium CSL gate
+        action: 'warn_and_recommend'
       },
       description: `RECON pre-scan: detect ${rootCause.fishboneCategory} preconditions for "${stage}" failure`,
       confidence: this._computeRuleConfidence(rootCause),
-      createdAt: Date.now(),
+      createdAt: Date.now()
     };
   }
 
@@ -765,13 +736,15 @@ class PreventionRuleGenerator {
       gate: {
         knownBadPattern: rootCause.rootCause,
         affectedStage: stage,
-        penalty: PSI,     // ψ ≈ 0.618 — reduce trial score for this pattern
-        avoidanceWeight: PSI * PSI, // ψ² ≈ 0.236
-        whyChainDepth: rootCause.depth,
+        penalty: PSI,
+        // ψ ≈ 0.618 — reduce trial score for this pattern
+        avoidanceWeight: PSI * PSI,
+        // ψ² ≈ 0.236
+        whyChainDepth: rootCause.depth
       },
       description: `Trial warning: known failure mode "${rootCause.rootCause}" — penalize experiments targeting "${stage}"`,
       confidence: this._computeRuleConfidence(rootCause),
-      createdAt: Date.now(),
+      createdAt: Date.now()
     };
   }
 
@@ -788,10 +761,13 @@ class PreventionRuleGenerator {
   _deriveCslThreshold(rootCause) {
     const severity = (rootCause.class.split('::')[1] || 'MEDIUM').toUpperCase();
     const categoryMap = {
-      CRITICAL: CSL_THRESHOLDS.CRITICAL, // ≈ 0.927
-      HIGH:     CSL_THRESHOLDS.HIGH,     // ≈ 0.882
-      MEDIUM:   CSL_THRESHOLDS.MEDIUM,   // ≈ 0.809
-      LOW:      CSL_THRESHOLDS.LOW,      // ≈ 0.691
+      CRITICAL: CSL_THRESHOLDS.CRITICAL,
+      // ≈ 0.927
+      HIGH: CSL_THRESHOLDS.HIGH,
+      // ≈ 0.882
+      MEDIUM: CSL_THRESHOLDS.MEDIUM,
+      // ≈ 0.809
+      LOW: CSL_THRESHOLDS.LOW // ≈ 0.691
     };
     return categoryMap[severity] || CSL_THRESHOLDS.MEDIUM;
   }
@@ -805,9 +781,7 @@ class PreventionRuleGenerator {
    */
   _computeRuleConfidence(rootCause) {
     const depthScore = rootCause.depth / MAX_WHY_DEPTH;
-    const fishboneScore = (rootCause.fishboneArms && rootCause.fishboneArms[0])
-      ? rootCause.fishboneArms[0].confidence
-      : 0.5;
+    const fishboneScore = rootCause.fishboneArms && rootCause.fishboneArms[0] ? rootCause.fishboneArms[0].confidence : 0.5;
     const [w1, w2] = phiFusionWeights(2); // [0.618, 0.382]
     return Math.min(w1 * depthScore + w2 * fishboneScore, 1.0);
   }
@@ -822,10 +796,10 @@ class PreventionRuleGenerator {
   _buildReconProbes(rootCause) {
     const probeMap = {
       Technology: ['check_service_health', 'verify_dependencies', 'assert_memory_headroom'],
-      Process:    ['verify_stage_order', 'check_prerequisite_outputs', 'validate_pipeline_state'],
-      Data:       ['validate_input_schema', 'check_data_freshness', 'verify_data_completeness'],
-      People:     ['validate_configuration', 'check_parameter_bounds', 'assert_assumptions'],
-      Environment: ['ping_external_dependencies', 'check_credentials', 'verify_network_access'],
+      Process: ['verify_stage_order', 'check_prerequisite_outputs', 'validate_pipeline_state'],
+      Data: ['validate_input_schema', 'check_data_freshness', 'verify_data_completeness'],
+      People: ['validate_configuration', 'check_parameter_bounds', 'assert_assumptions'],
+      Environment: ['ping_external_dependencies', 'check_credentials', 'verify_network_access']
     };
     return probeMap[rootCause.fishboneCategory] || ['generic_precondition_check'];
   }
@@ -860,10 +834,13 @@ class MistakeCostCalculator {
    */
   computeTimeCost(failure, whyDepth = 1) {
     const severityHours = {
-      CRITICAL: PHI * PHI * PHI,  // φ³ ≈ 4.236 hours
-      HIGH:     PHI * PHI,         // φ² ≈ 2.618 hours
-      MEDIUM:   PHI,               // φ  ≈ 1.618 hours
-      LOW:      1 / PHI,           // ψ  ≈ 0.618 hours
+      CRITICAL: PHI * PHI * PHI,
+      // φ³ ≈ 4.236 hours
+      HIGH: PHI * PHI,
+      // φ² ≈ 2.618 hours
+      MEDIUM: PHI,
+      // φ  ≈ 1.618 hours
+      LOW: 1 / PHI // ψ  ≈ 0.618 hours
     };
     const base = severityHours[failure.severity] || 1;
     // Scale by why-depth: deeper root cause = more investigation time
@@ -880,10 +857,13 @@ class MistakeCostCalculator {
    */
   computeMoneyCost(failure) {
     const severityCost = {
-      CRITICAL: PHI_SQ * 10,    // φ² × $10 ≈ $26.18
-      HIGH:     PHI * 10,        // φ  × $10 ≈ $16.18
-      MEDIUM:   PHI * 5,         // φ  × $5  ≈ $8.09
-      LOW:      PSI * 5,         // ψ  × $5  ≈ $3.09
+      CRITICAL: PHI_SQ * 10,
+      // φ² × $10 ≈ $26.18
+      HIGH: PHI * 10,
+      // φ  × $10 ≈ $16.18
+      MEDIUM: PHI * 5,
+      // φ  × $5  ≈ $8.09
+      LOW: PSI * 5 // ψ  × $5  ≈ $3.09
     };
     const base = severityCost[failure.severity] || PHI;
     // LLM-heavy stages cost more on failure
@@ -901,9 +881,11 @@ class MistakeCostCalculator {
   computeQualityCost(failure) {
     const severityQuality = {
       CRITICAL: 1.0,
-      HIGH:     1 - PSI * PSI,   // 1 - ψ² ≈ 0.764
-      MEDIUM:   1 - PSI,          // 1 - ψ  ≈ 0.382
-      LOW:      PSI * PSI,        // ψ²    ≈ 0.236
+      HIGH: 1 - PSI * PSI,
+      // 1 - ψ² ≈ 0.764
+      MEDIUM: 1 - PSI,
+      // 1 - ψ  ≈ 0.382
+      LOW: PSI * PSI // ψ²    ≈ 0.236
     };
     return severityQuality[failure.severity] || PSI;
   }
@@ -918,11 +900,7 @@ class MistakeCostCalculator {
    * @returns {number} Phi-weighted total
    */
   computeTotal(time, money, quality) {
-    return parseFloat((
-      COST_WEIGHT_TIME    * time  +
-      COST_WEIGHT_MONEY   * money +
-      COST_WEIGHT_QUALITY * quality
-    ).toFixed(4));
+    return parseFloat((COST_WEIGHT_TIME * time + COST_WEIGHT_MONEY * money + COST_WEIGHT_QUALITY * quality).toFixed(4));
   }
 
   /**
@@ -936,24 +914,19 @@ class MistakeCostCalculator {
     let totalTime = 0;
     let totalMoney = 0;
     let totalQuality = 0;
-
     failures.forEach((failure, idx) => {
       const rc = rootCauses[idx] || null;
       const depth = rc ? rc.depth : 1;
-      totalTime    += this.computeTimeCost(failure, depth);
-      totalMoney   += this.computeMoneyCost(failure);
+      totalTime += this.computeTimeCost(failure, depth);
+      totalMoney += this.computeMoneyCost(failure);
       totalQuality += this.computeQualityCost(failure);
     });
-
-    const qualityScore = failures.length > 0
-      ? Math.min(totalQuality / failures.length, 1.0)
-      : 0;
-
+    const qualityScore = failures.length > 0 ? Math.min(totalQuality / failures.length, 1.0) : 0;
     return {
-      time_hours:    parseFloat(totalTime.toFixed(4)),
-      money_usd:     parseFloat(totalMoney.toFixed(4)),
+      time_hours: parseFloat(totalTime.toFixed(4)),
+      money_usd: parseFloat(totalMoney.toFixed(4)),
       quality_score: parseFloat(qualityScore.toFixed(4)),
-      total: this.computeTotal(totalTime, totalMoney, qualityScore),
+      total: this.computeTotal(totalTime, totalMoney, qualityScore)
     };
   }
 }
@@ -984,17 +957,22 @@ class MistakeReport {
    * @param {number}   data.analysisMs               - Time taken for analysis (ms)
    */
   constructor(data) {
-    this.currentRunFailures     = data.currentRunFailures     || 0;
-    this.historicalMatches      = data.historicalMatches      || 0;
-    this.rootCauses             = data.rootCauses             || [];
-    this.recurringPatterns      = data.recurringPatterns      || [];
+    this.currentRunFailures = data.currentRunFailures || 0;
+    this.historicalMatches = data.historicalMatches || 0;
+    this.rootCauses = data.rootCauses || [];
+    this.recurringPatterns = data.recurringPatterns || [];
     this.preventionRulesGenerated = data.preventionRulesGenerated || 0;
-    this.antiRegressionGuards   = data.antiRegressionGuards   || 0;
-    this.totalMistakeCost       = data.totalMistakeCost       || { time_hours: 0, money_usd: 0, quality_score: 0, total: 0 };
-    this.immunizationActions    = data.immunizationActions    || [];
-    this.runId                  = data.runId                  || 'unknown';
-    this.analysisTimestamp      = data.analysisTimestamp      || Date.now();
-    this.analysisMs             = data.analysisMs             || 0;
+    this.antiRegressionGuards = data.antiRegressionGuards || 0;
+    this.totalMistakeCost = data.totalMistakeCost || {
+      time_hours: 0,
+      money_usd: 0,
+      quality_score: 0,
+      total: 0
+    };
+    this.immunizationActions = data.immunizationActions || [];
+    this.runId = data.runId || 'unknown';
+    this.analysisTimestamp = data.analysisTimestamp || Date.now();
+    this.analysisMs = data.analysisMs || 0;
   }
 
   /**
@@ -1015,19 +993,19 @@ class MistakeReport {
         category: rc.category,
         depth: rc.depth,
         rootCause: rc.rootCause,
-        fishboneCategory: rc.fishboneCategory,
+        fishboneCategory: rc.fishboneCategory
       })),
       recurringPatterns: this.recurringPatterns.map(p => ({
         pattern: p.patternId,
         occurrences: p.occurrences,
         severity: p.members && p.members[0] ? p.members[0].severity : 'UNKNOWN',
         trend: p.trend,
-        shouldEscalate: p.shouldEscalate,
+        shouldEscalate: p.shouldEscalate
       })),
       preventionRulesGenerated: this.preventionRulesGenerated,
       antiRegressionGuards: this.antiRegressionGuards,
       totalMistakeCost: this.totalMistakeCost,
-      immunizationActions: this.immunizationActions,
+      immunizationActions: this.immunizationActions
     };
   }
 
@@ -1037,72 +1015,27 @@ class MistakeReport {
    * @returns {string} Markdown-formatted report
    */
   toMarkdown() {
-    const lines = [
-      `# MISTAKE_ANALYSIS Report`,
-      ``,
-      `**Run ID**: \`${this.runId}\`  `,
-      `**Analysis Time**: ${new Date(this.analysisTimestamp).toISOString()}  `,
-      `**Duration**: ${this.analysisMs}ms  `,
-      ``,
-      `## Summary`,
-      ``,
-      `| Metric | Value |`,
-      `|--------|-------|`,
-      `| Current Run Failures | ${this.currentRunFailures} |`,
-      `| Historical Matches | ${this.historicalMatches} |`,
-      `| Root Causes Found | ${this.rootCauses.length} |`,
-      `| Recurring Patterns | ${this.recurringPatterns.length} |`,
-      `| Prevention Rules Generated | ${this.preventionRulesGenerated} |`,
-      `| Anti-Regression Guards | ${this.antiRegressionGuards} |`,
-      ``,
-      `## Mistake Cost (φ-weighted)`,
-      ``,
-      `| Dimension | Value | Weight |`,
-      `|-----------|-------|--------|`,
-      `| Time | ${this.totalMistakeCost.time_hours} hours | 0.382 (1-1/φ) |`,
-      `| Money | $${this.totalMistakeCost.money_usd} | 0.382 (1-1/φ) |`,
-      `| Quality | ${this.totalMistakeCost.quality_score} | 0.236 (1/φ²) |`,
-      `| **Total** | **${this.totalMistakeCost.total}** | — |`,
-      ``,
-    ];
-
+    const lines = [`# MISTAKE_ANALYSIS Report`, ``, `**Run ID**: \`${this.runId}\`  `, `**Analysis Time**: ${new Date(this.analysisTimestamp).toISOString()}  `, `**Duration**: ${this.analysisMs}ms  `, ``, `## Summary`, ``, `| Metric | Value |`, `|--------|-------|`, `| Current Run Failures | ${this.currentRunFailures} |`, `| Historical Matches | ${this.historicalMatches} |`, `| Root Causes Found | ${this.rootCauses.length} |`, `| Recurring Patterns | ${this.recurringPatterns.length} |`, `| Prevention Rules Generated | ${this.preventionRulesGenerated} |`, `| Anti-Regression Guards | ${this.antiRegressionGuards} |`, ``, `## Mistake Cost (φ-weighted)`, ``, `| Dimension | Value | Weight |`, `|-----------|-------|--------|`, `| Time | ${this.totalMistakeCost.time_hours} hours | 0.382 (1-1/φ) |`, `| Money | $${this.totalMistakeCost.money_usd} | 0.382 (1-1/φ) |`, `| Quality | ${this.totalMistakeCost.quality_score} | 0.236 (1/φ²) |`, `| **Total** | **${this.totalMistakeCost.total}** | — |`, ``];
     if (this.rootCauses.length > 0) {
       lines.push(`## Root Causes`, ``);
       this.rootCauses.forEach((rc, i) => {
-        lines.push(
-          `### ${i + 1}. ${rc.class}`,
-          ``,
-          `- **Category**: ${rc.category}  `,
-          `- **Fishbone Arm**: ${rc.fishboneCategory}  `,
-          `- **Why-Depth**: ${rc.depth}/${MAX_WHY_DEPTH}  `,
-          `- **Root Cause**: ${rc.rootCause}  `,
-          ``,
-        );
+        lines.push(`### ${i + 1}. ${rc.class}`, ``, `- **Category**: ${rc.category}  `, `- **Fishbone Arm**: ${rc.fishboneCategory}  `, `- **Why-Depth**: ${rc.depth}/${MAX_WHY_DEPTH}  `, `- **Root Cause**: ${rc.rootCause}  `, ``);
       });
     }
-
     if (this.recurringPatterns.length > 0) {
       lines.push(`## Recurring Patterns`, ``);
       this.recurringPatterns.forEach((p, i) => {
         const sev = p.members && p.members[0] ? p.members[0].severity : 'UNKNOWN';
-        lines.push(
-          `${i + 1}. **${p.patternId}** — ${p.occurrences} occurrences (${p.trend}) [${sev}]${p.shouldEscalate ? ' ⚠ ESCALATE' : ''}`,
-        );
+        lines.push(`${i + 1}. **${p.patternId}** — ${p.occurrences} occurrences (${p.trend}) [${sev}]${p.shouldEscalate ? ' ⚠ ESCALATE' : ''}`);
       });
       lines.push(``);
     }
-
     if (this.immunizationActions.length > 0) {
       lines.push(`## Immunization Actions`, ``);
       this.immunizationActions.forEach(action => lines.push(`- ${action}`));
       lines.push(``);
     }
-
-    lines.push(
-      `---`,
-      `*Timeout: φ⁵ × 1000 = ${ANALYSIS_TIMEOUT_MS}ms | Lookback: fib(11) = ${HISTORICAL_LOOKBACK} runs | Threshold: 1/φ = ${SAME_MISTAKE_THRESHOLD.toFixed(6)}*`,
-    );
-
+    lines.push(`---`, `*Timeout: φ⁵ × 1000 = ${ANALYSIS_TIMEOUT_MS}ms | Lookback: fib(11) = ${HISTORICAL_LOOKBACK} runs | Threshold: 1/φ = ${SAME_MISTAKE_THRESHOLD.toFixed(6)}*`);
     return lines.join('\n');
   }
 }
@@ -1139,12 +1072,11 @@ class MistakeAnalysisEngine extends EventEmitter {
   constructor(vectorMemory, wisdomStore) {
     super();
     this._vectorMemory = vectorMemory || _nullVectorMemory();
-    this._wisdomStore  = wisdomStore  || _nullWisdomStore();
-
-    this._rootCauseAnalyzer   = new RootCauseAnalyzer();
-    this._recurrenceDetector  = new RecurrenceDetector();
+    this._wisdomStore = wisdomStore || _nullWisdomStore();
+    this._rootCauseAnalyzer = new RootCauseAnalyzer();
+    this._recurrenceDetector = new RecurrenceDetector();
     this._preventionGenerator = new PreventionRuleGenerator();
-    this._costCalculator      = new MistakeCostCalculator();
+    this._costCalculator = new MistakeCostCalculator();
 
     /** @type {MistakeReport[]} History of all past analyses (permanent, never deleted) */
     this._analysisHistory = [];
@@ -1172,13 +1104,8 @@ class MistakeAnalysisEngine extends EventEmitter {
    */
   async analyze(pipelineRun) {
     const startMs = Date.now();
-
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`MISTAKE_ANALYSIS timeout after ${ANALYSIS_TIMEOUT_MS}ms (φ⁵ × 1000)`)), ANALYSIS_TIMEOUT_MS)
-    );
-
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error(`MISTAKE_ANALYSIS timeout after ${ANALYSIS_TIMEOUT_MS}ms (φ⁵ × 1000)`)), ANALYSIS_TIMEOUT_MS));
     const analysisPromise = this._runAnalysisCycle(pipelineRun, startMs);
-
     return Promise.race([analysisPromise, timeoutPromise]);
   }
 
@@ -1209,36 +1136,47 @@ class MistakeAnalysisEngine extends EventEmitter {
       const stageId = stage.id || stage.name || 'UNKNOWN_STAGE';
 
       // Hard errors
-      for (const err of (stage.errors || [])) {
+      for (const err of stage.errors || []) {
         const severity = _classifySeverity(err, stage);
         catalog.addFailure(stageId, err, severity, {
           stageStatus: stage.status,
           durationMs: stage.durationMs,
-          ...(err.context || {}),
+          ...(err.context || {})
         });
-        this.emit('mistake:cataloged', { stage: stageId, severity, message: String(err.message || err) });
+        this.emit('mistake:cataloged', {
+          stage: stageId,
+          severity,
+          message: String(err.message || err)
+        });
       }
 
       // Warnings treated as MEDIUM or LOW
-      for (const warn of (stage.warnings || [])) {
+      for (const warn of stage.warnings || []) {
         catalog.addFailure(stageId, warn, 'LOW', {
           type: 'warning',
           stageStatus: stage.status,
-          ...(warn.context || {}),
+          ...(warn.context || {})
         });
-        this.emit('mistake:cataloged', { stage: stageId, severity: 'LOW', message: String(warn.message || warn) });
+        this.emit('mistake:cataloged', {
+          stage: stageId,
+          severity: 'LOW',
+          message: String(warn.message || warn)
+        });
       }
 
       // Suboptimal results (e.g., partial success, quality below threshold)
       if (stage.qualityScore !== undefined && stage.qualityScore < PSI) {
         catalog.addFailure(stageId, `Suboptimal quality score: ${stage.qualityScore} (threshold: ${PSI.toFixed(4)})`, 'MEDIUM', {
           qualityScore: stage.qualityScore,
-          threshold: PSI,
+          threshold: PSI
         });
-        this.emit('mistake:cataloged', { stage: stageId, severity: 'MEDIUM', message: 'Suboptimal quality score' });
+        this.emit('mistake:cataloged', {
+          stage: stageId,
+          severity: 'MEDIUM',
+          message: 'Suboptimal quality score'
+        });
       }
     }
-
     return catalog;
   }
 
@@ -1252,23 +1190,18 @@ class MistakeAnalysisEngine extends EventEmitter {
    */
   async retrieveHistorical(catalog) {
     if (catalog.size === 0) return [];
-
     const catalogVector = catalog.toVector();
     try {
-      const results = await this._vectorMemory.search(
-        'failures',
-        catalogVector,
-        HISTORICAL_LOOKBACK,
-      );
+      const results = await this._vectorMemory.search('failures', catalogVector, HISTORICAL_LOOKBACK);
 
       // Filter to only results above the same-mistake threshold
-      return (results || [])
-        .filter(r => r.score >= SAME_MISTAKE_THRESHOLD)
-        .map(r => r.entry || r.data || r)
-        .flat()
-        .filter(Boolean);
-    } catch (err) { // Non-fatal: historical retrieval failure degrades gracefully
-      this.emit('error', { stage: 'retrieveHistorical', error: err.message });
+      return (results || []).filter(r => r.score >= SAME_MISTAKE_THRESHOLD).map(r => r.entry || r.data || r).flat().filter(Boolean);
+    } catch (err) {
+      // Non-fatal: historical retrieval failure degrades gracefully
+      this.emit('error', {
+        stage: 'retrieveHistorical',
+        error: err.message
+      });
       return [];
     }
   }
@@ -1284,7 +1217,11 @@ class MistakeAnalysisEngine extends EventEmitter {
     const whyChain = this._rootCauseAnalyzer.fiveWhys(failureClass);
     const fishboneResults = this._rootCauseAnalyzer.fishbone(failureClass);
     const result = this._rootCauseAnalyzer.synthesize(whyChain, fishboneResults, failureClass);
-    this.emit('rootcause:found', { class: result.class, rootCause: result.rootCause, depth: result.depth });
+    this.emit('rootcause:found', {
+      class: result.class,
+      rootCause: result.rootCause,
+      depth: result.depth
+    });
     return result;
   }
 
@@ -1298,23 +1235,21 @@ class MistakeAnalysisEngine extends EventEmitter {
    */
   detectRecurring(currentFailures, historicalFailures) {
     const clusters = this._recurrenceDetector.cluster(currentFailures, historicalFailures);
-
     for (const cluster of clusters) {
       this.emit('recurrence:detected', {
         patternId: cluster.patternId,
         occurrences: cluster.occurrences,
-        trend: cluster.trend,
+        trend: cluster.trend
       });
       if (cluster.shouldEscalate) {
         this.emit('recurrence:escalated', {
           patternId: cluster.patternId,
           occurrences: cluster.occurrences,
           maxAllowed: MAX_RECURRENCES_BEFORE_ESCALATION,
-          message: `Pattern "${cluster.patternId}" has recurred ${cluster.occurrences} times — exceeds fib(4)=${MAX_RECURRENCES_BEFORE_ESCALATION}`,
+          message: `Pattern "${cluster.patternId}" has recurred ${cluster.occurrences} times — exceeds fib(4)=${MAX_RECURRENCES_BEFORE_ESCALATION}`
         });
       }
     }
-
     return clusters;
   }
 
@@ -1328,17 +1263,15 @@ class MistakeAnalysisEngine extends EventEmitter {
   generatePreventionRules(rootCauses) {
     const rules = [];
     for (const rc of rootCauses) {
-      const cslGateRule    = this._preventionGenerator.generateCSLGate(rc);
-      const testCaseRule   = this._preventionGenerator.generateTestCase(rc);
+      const cslGateRule = this._preventionGenerator.generateCSLGate(rc);
+      const testCaseRule = this._preventionGenerator.generateTestCase(rc);
       const reconCheckRule = this._preventionGenerator.generateReconCheck(rc);
-      const trialWarnRule  = this._preventionGenerator.generateTrialWarning(rc);
-
+      const trialWarnRule = this._preventionGenerator.generateTrialWarning(rc);
       rules.push(cslGateRule, testCaseRule, reconCheckRule, trialWarnRule);
-
       this.emit('prevention:generated', {
         rootCauseClass: rc.class,
         rulesGenerated: 4,
-        ruleIds: [cslGateRule.ruleId, testCaseRule.ruleId, reconCheckRule.ruleId, trialWarnRule.ruleId],
+        ruleIds: [cslGateRule.ruleId, testCaseRule.ruleId, reconCheckRule.ruleId, trialWarnRule.ruleId]
       });
     }
     this._preventionRules.push(...rules);
@@ -1355,16 +1288,15 @@ class MistakeAnalysisEngine extends EventEmitter {
   updateAntiRegressionGuards(rules) {
     const reconRules = rules.filter(r => r.type === 'recon_check');
     const trialRules = rules.filter(r => r.type === 'trial_warning');
-    const testRules  = rules.filter(r => r.type === 'test_case');
-    const gateRules  = rules.filter(r => r.type === 'csl_gate');
+    const testRules = rules.filter(r => r.type === 'test_case');
+    const gateRules = rules.filter(r => r.type === 'csl_gate');
 
     // Persist to wisdom store for RECON and TRIAL_AND_ERROR stages
     try {
-      this._wisdomStore.set('anti_regression.recon_checks',  reconRules.map(r => r.gate));
+      this._wisdomStore.set('anti_regression.recon_checks', reconRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.trial_warnings', trialRules.map(r => r.gate));
-      this._wisdomStore.set('anti_regression.csl_gates',      gateRules.map(r => r.gate));
-    } catch (_) { /* Non-fatal: degraded persistence */ }
-
+      this._wisdomStore.set('anti_regression.csl_gates', gateRules.map(r => r.gate));
+    } catch (_) {/* Non-fatal: degraded persistence */}
     return reconRules.length + trialRules.length + testRules.length + gateRules.length;
   }
 
@@ -1422,8 +1354,10 @@ class MistakeAnalysisEngine extends EventEmitter {
     if (trialWarnings.length > 0) {
       actions.push(`Registered ${trialWarnings.length} known failure modes with TRIAL_AND_ERROR`);
     }
-
-    this.emit('immunization:applied', { actionsCount: actions.length, rulesCount: rules.length });
+    this.emit('immunization:applied', {
+      actionsCount: actions.length,
+      rulesCount: rules.length
+    });
     return actions;
   }
 
@@ -1450,7 +1384,7 @@ class MistakeAnalysisEngine extends EventEmitter {
    * @returns {Promise<MistakeReport>}
    */
   async _runAnalysisCycle(pipelineRun, startMs) {
-    const runId = (pipelineRun && pipelineRun.id) || `run-${Date.now()}`;
+    const runId = pipelineRun && pipelineRun.id || `run-${Date.now()}`;
 
     // ── Step 1: CATALOG ──────────────────────────────────────────────────────
     const catalog = this.catalogFailures(pipelineRun);
@@ -1499,21 +1433,19 @@ class MistakeAnalysisEngine extends EventEmitter {
       immunizationActions,
       runId,
       analysisTimestamp: Date.now(),
-      analysisMs,
+      analysisMs
     });
 
     // Permanent history (never deleted)
     this._analysisHistory.push(report);
-
     this.emit('analysis:complete', {
       runId,
       currentRunFailures: currentFailures.length,
       historicalMatches: historicalFailures.length,
       rootCausesFound: rootCauses.length,
       preventionRulesGenerated: preventionRules.length,
-      analysisMs,
+      analysisMs
     });
-
     return report;
   }
 }
@@ -1532,7 +1464,7 @@ class MistakeAnalysisEngine extends EventEmitter {
 function _hashString(str) {
   let hash = 5381;
   for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) + hash) + str.charCodeAt(i);
+    hash = (hash << 5) + hash + str.charCodeAt(i);
     hash = hash & 0x7fffffff; // keep positive 31-bit
   }
   return hash;
@@ -1564,9 +1496,8 @@ function _vectorMean(vectors) {
  * @returns {'CRITICAL'|'HIGH'|'MEDIUM'|'LOW'}
  */
 function _classifySeverity(err, stage) {
-  const msg = ((err && err.message) || String(err) || '').toLowerCase();
+  const msg = (err && err.message || String(err) || '').toLowerCase();
   const stageStatus = (stage && stage.status || '').toLowerCase();
-
   if (stageStatus === 'crashed' || stageStatus === 'fatal') return 'CRITICAL';
   if (msg.includes('fatal') || msg.includes('crash') || msg.includes('out of memory')) return 'CRITICAL';
   if (stageStatus === 'failed' || msg.includes('error') || msg.includes('exception')) return 'HIGH';
@@ -1596,7 +1527,7 @@ function _isLLMStage(stageId) {
 function _nullVectorMemory() {
   return {
     search: async () => [],
-    store:  () => {},
+    store: () => {}
   };
 }
 
@@ -1608,9 +1539,9 @@ function _nullVectorMemory() {
  */
 function _nullWisdomStore() {
   return {
-    get:    () => null,
-    set:    () => {},
-    append: () => {},
+    get: () => null,
+    set: () => {},
+    append: () => {}
   };
 }
 
@@ -1626,7 +1557,6 @@ module.exports = {
   PreventionRuleGenerator,
   MistakeCostCalculator,
   MistakeReport,
-
   // Expose constants for integration/testing
   HISTORICAL_LOOKBACK,
   SAME_MISTAKE_THRESHOLD,
@@ -1637,5 +1567,5 @@ module.exports = {
   COST_WEIGHT_QUALITY,
   MAX_WHY_DEPTH,
   SEVERITY_LEVELS,
-  FISHBONE_CATEGORIES,
+  FISHBONE_CATEGORIES
 };

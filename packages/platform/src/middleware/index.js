@@ -40,17 +40,16 @@ export function headyRequestId() {
     if (traceparent) {
       const parts = traceparent.split('-');
       req.traceId = parts[1] ?? randomHex(16);
-      req.spanId  = parts[2] ?? randomHex(8);
+      req.spanId = parts[2] ?? randomHex(8);
     } else {
       req.traceId = req.headers['x-b3-traceid'] ?? randomHex(16);
-      req.spanId  = req.headers['x-b3-spanid']  ?? randomHex(8);
+      req.spanId = req.headers['x-b3-spanid'] ?? randomHex(8);
     }
     req.requestId = req.headers['x-request-id'] ?? randomHex(8);
 
     // Forward propagation headers
     res.setHeader('x-request-id', req.requestId);
-    res.setHeader('x-trace-id',   req.traceId);
-
+    res.setHeader('x-trace-id', req.traceId);
     next();
   };
 }
@@ -69,20 +68,18 @@ export function headyRequestId() {
 export function headyAutoContext(autoContextInstance = null) {
   return async (req, res, next) => {
     req.autoContext = autoContextInstance;
-
     if (!autoContextInstance) {
       req.contextSources = [];
       return next();
     }
-
     try {
       const enriched = await autoContextInstance.enrich({
         query: `${req.method} ${req.path}`,
         metadata: {
           service: req.headers['x-heady-service'],
-          domain:  req.headers['x-heady-domain'],
-          traceId: req.traceId,
-        },
+          domain: req.headers['x-heady-domain'],
+          traceId: req.traceId
+        }
       });
       req.contextSources = enriched?.sources ?? [];
       req.contextCoherence = enriched?.coherence ?? PSI;
@@ -91,10 +88,11 @@ export function headyAutoContext(autoContextInstance = null) {
       req.contextSources = [];
       req.contextCoherence = 0;
       // Log at warn, not error — context enrichment failure is non-fatal
-      if (req.log) req.log.warn({ event: 'autocontext.enrich.failed', error: err.message },
-        'HeadyAutoContext enrichment failed (degraded gracefully)');
+      if (req.log) req.log.warn({
+        event: 'autocontext.enrich.failed',
+        error: err.message
+      }, 'HeadyAutoContext enrichment failed (degraded gracefully)');
     }
-
     next();
   };
 }
@@ -117,37 +115,34 @@ export function headyCslDomain(domains, getEmbedding = null) {
   return async (req, res, next) => {
     req.headyDomain = null;
     req.cslMatch = null;
-
     if (!getEmbedding || !domains.length) {
-      // No embedding function — attempt header-based domain passthrough
       const headerDomain = req.headers['x-heady-domain'];
       if (headerDomain) {
         req.headyDomain = headerDomain;
       }
       return next();
     }
-
     try {
       const embedding = await getEmbedding(req);
       if (!embedding) return next();
-
       const matches = cslDomainMatch(embedding, domains, CSL_THRESHOLDS.PASS);
       if (matches.length > 0) {
-        req.cslMatch   = matches[0];
+        req.cslMatch = matches[0];
         req.headyDomain = matches[0].domain.id;
         recordCslGate(matches[0].similarity, 'csl.domain_match');
-
         if (req.log) {
-          logConfidenceEvent(req.log, 'csl.domain_match',
-            matches[0].similarity, { domain: req.headyDomain });
+          logConfidenceEvent(req.log, 'csl.domain_match', matches[0].similarity, {
+            domain: req.headyDomain
+          });
         }
       }
     } catch (err) {
       // Non-fatal — continue without CSL assignment
-      if (req.log) req.log.warn({ event: 'csl.domain_match.failed', error: err.message },
-        'CSL domain matching failed (degraded gracefully)');
+      if (req.log) req.log.warn({
+        event: 'csl.domain_match.failed',
+        error: err.message
+      }, 'CSL domain matching failed (degraded gracefully)');
     }
-
     next();
   };
 }
@@ -168,43 +163,47 @@ export function headyCslDomain(domains, getEmbedding = null) {
  */
 export function headyRateLimit(opts = {}) {
   const {
-    windowMs   = TIMEOUTS.PHI_4,    // 6854 ms
-    maxRequests = fib(11),           // 89
-    burst       = fib(8),            // 21
+    windowMs = TIMEOUTS.PHI_4,
+    // 6854 ms
+    maxRequests = fib(11),
+    // 89
+    burst = fib(8) // 21
   } = opts;
 
   // In-memory per-IP token buckets (for production, use Redis/CF KV)
   const buckets = new Map();
-
   return (req, res, next) => {
     const key = req.ip ?? req.headers['x-forwarded-for'] ?? 'unknown';
     const now = Date.now();
-
     let bucket = buckets.get(key);
     if (!bucket || now - bucket.windowStart > windowMs) {
-      bucket = { windowStart: now, count: 0, burst: burst };
+      bucket = {
+        windowStart: now,
+        count: 0,
+        burst: burst
+      };
       buckets.set(key, bucket);
     }
-
     bucket.count++;
-
     if (bucket.count > maxRequests + burst) {
       res.setHeader('Retry-After', Math.ceil(windowMs / 1000));
-      res.setHeader('X-RateLimit-Limit',     maxRequests);
+      res.setHeader('X-RateLimit-Limit', maxRequests);
       res.setHeader('X-RateLimit-Remaining', 0);
-      res.setHeader('X-RateLimit-Reset',     new Date(bucket.windowStart + windowMs).toISOString());
+      res.setHeader('X-RateLimit-Reset', new Date(bucket.windowStart + windowMs).toISOString());
       return res.status(429).json({
         error: 'rate_limit_exceeded',
         message: 'Request rate exceeds φ-scaled limit',
         retry_after_ms: windowMs,
-        phi_context: { threshold: PSI, window_ms: windowMs },
+        phi_context: {
+          threshold: PSI,
+          window_ms: windowMs
+        }
       });
     }
-
     const remaining = Math.max(0, maxRequests - bucket.count);
-    res.setHeader('X-RateLimit-Limit',     maxRequests);
+    res.setHeader('X-RateLimit-Limit', maxRequests);
     res.setHeader('X-RateLimit-Remaining', remaining);
-    res.setHeader('X-RateLimit-Reset',     new Date(bucket.windowStart + windowMs).toISOString());
+    res.setHeader('X-RateLimit-Reset', new Date(bucket.windowStart + windowMs).toISOString());
     next();
   };
 }
@@ -223,30 +222,26 @@ export function headyAccessLog(logger) {
 
     // Attach enriched child logger to req
     req.log = requestLogger(logger, {
-      traceId:    req.traceId,
-      spanId:     req.spanId,
-      requestId:  req.requestId,
-      domain:     req.headyDomain,
-      confidence: req.cslMatch?.similarity,
+      traceId: req.traceId,
+      spanId: req.spanId,
+      requestId: req.requestId,
+      domain: req.headyDomain,
+      confidence: req.cslMatch?.similarity
     });
-
     res.on('finish', () => {
       const latencyMs = Date.now() - start;
-      const level = res.statusCode >= 500 ? 'error' :
-                    res.statusCode >= 400 ? 'warn'  : 'info';
-
+      const level = res.statusCode >= 500 ? 'error' : res.statusCode >= 400 ? 'warn' : 'info';
       req.log[level]({
         event: 'http.request',
         method: req.method,
-        path:   req.path,
+        path: req.path,
         status: res.statusCode,
         latency_ms: latencyMs,
-        domain:     req.headyDomain ?? 'unassigned',
-        csl_score:  req.cslMatch?.similarity,
-        content_length: parseInt(res.getHeader('content-length') ?? '0', 10),
+        domain: req.headyDomain ?? 'unassigned',
+        csl_score: req.cslMatch?.similarity,
+        content_length: parseInt(res.getHeader('content-length') ?? '0', 10)
       }, `${req.method} ${req.path} ${res.statusCode} ${latencyMs}ms`);
     });
-
     next();
   };
 }
@@ -266,34 +261,31 @@ export function headyErrorHandler(logger) {
     const log = req.log ?? logger;
     const status = err.status ?? err.statusCode ?? 500;
     const errorType = classifyError(err);
-
     log.error({
       event: 'http.error',
       error_type: errorType,
       error_message: err.message,
       status,
       method: req.method,
-      path:   req.path,
-      stack:  process.env.NODE_ENV === 'development' ? err.stack : undefined,
+      path: req.path,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
       phi_context: {
         coherence: 0,
         confidence: 0,
-        state: 'BELOW_THRESHOLD',
-      },
+        state: 'BELOW_THRESHOLD'
+      }
     }, `Error handling ${req.method} ${req.path}: ${err.message}`);
 
     // Never leak stack traces in production
     const body = {
-      error:      errorType,
-      message:    status < 500 ? err.message : 'Internal service error',
+      error: errorType,
+      message: status < 500 ? err.message : 'Internal service error',
       request_id: req.requestId,
-      timestamp:  new Date().toISOString(),
+      timestamp: new Date().toISOString()
     };
-
     if (process.env.NODE_ENV === 'development') {
       body.stack = err.stack;
     }
-
     res.status(status).json(body);
   };
 }
@@ -306,12 +298,12 @@ export function headyErrorHandler(logger) {
  */
 export function headySecurityHeaders() {
   return (req, res, next) => {
-    res.setHeader('X-Content-Type-Options',   'nosniff');
-    res.setHeader('X-Frame-Options',           'DENY');
-    res.setHeader('X-XSS-Protection',          '1; mode=block');
-    res.setHeader('Referrer-Policy',           'strict-origin-when-cross-origin');
-    res.setHeader('X-Heady-Service',           process.env.SERVICE_NAME ?? 'heady');
-    res.setHeader('X-Heady-Version',           process.env.SERVICE_VERSION ?? 'unknown');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('X-Heady-Service', process.env.SERVICE_NAME ?? 'heady');
+    res.setHeader('X-Heady-Version', process.env.SERVICE_VERSION ?? 'unknown');
     res.removeHeader('X-Powered-By');
     next();
   };
@@ -320,11 +312,10 @@ export function headySecurityHeaders() {
 // ─── UTILITIES ───────────────────────────────────────────────────────────────
 
 function randomHex(bytes) {
-  return Array.from({ length: bytes }, () =>
-    Math.floor(Math.random() * 256).toString(16).padStart(2, '0')
-  ).join('');
+  return Array.from({
+    length: bytes
+  }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join('');
 }
-
 function classifyError(err) {
   if (err.name === 'ValidationError') return 'validation_error';
   if (err.name === 'AuthenticationError' || err.status === 401) return 'authentication_error';

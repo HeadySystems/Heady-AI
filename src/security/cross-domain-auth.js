@@ -21,19 +21,28 @@
 
 const crypto = require('crypto');
 const {
-  PHI, PSI, fib, CSL_THRESHOLDS, PHI_TIMING,
-  cslGate, sigmoid,
+  PHI,
+  PSI,
+  fib,
+  CSL_THRESHOLDS,
+  PHI_TIMING,
+  cslGate,
+  sigmoid
 } = require('../../shared/phi-math');
-const { HEADY_DOMAINS, ALLOWED_ORIGINS, isAllowedOrigin } = require('../../shared/heady-domains');
+const {
+  HEADY_DOMAINS,
+  ALLOWED_ORIGINS,
+  isAllowedOrigin
+} = require('../../shared/heady-domains');
 
 // ─── φ-Constants ─────────────────────────────────────────────────────────────
 
-const RELAY_CODE_TTL_MS   = PHI_TIMING.PHI_5;        // 11 090ms — relay code expiry
-const RELAY_CODE_LENGTH   = fib(8);                   // 21 bytes
-const NONCE_LENGTH        = fib(7);                   // 13 bytes
-const MAX_RELAY_ATTEMPTS  = fib(6);                   // 8 attempts before lockout
-const LOCKOUT_TTL_MS      = PHI_TIMING.PHI_7;        // 29 034ms lockout
-const BRIDGE_CHECK_MS     = PHI_TIMING.PHI_3;        // 4 236ms bridge ping interval
+const RELAY_CODE_TTL_MS = PHI_TIMING.PHI_5; // 11 090ms — relay code expiry
+const RELAY_CODE_LENGTH = fib(8); // 21 bytes
+const NONCE_LENGTH = fib(7); // 13 bytes
+const MAX_RELAY_ATTEMPTS = fib(6);
+const LOCKOUT_TTL_MS = PHI_TIMING.PHI_7; // 29 034ms lockout
+const BRIDGE_CHECK_MS = PHI_TIMING.PHI_3; // 4 236ms bridge ping interval
 
 // ─── In-memory relay code store (replace with Redis in production) ───────────
 
@@ -48,7 +57,7 @@ function log(level, msg, meta = {}) {
     level,
     service: 'cross-domain-auth',
     msg,
-    ...meta,
+    ...meta
   });
   process.stdout.write(entry + '\n');
 }
@@ -59,43 +68,63 @@ function generateRelayCode(userId, sourceDomain) {
   const code = crypto.randomBytes(RELAY_CODE_LENGTH).toString('base64url');
   const nonce = crypto.randomBytes(NONCE_LENGTH).toString('base64url');
   const expiresAt = Date.now() + RELAY_CODE_TTL_MS;
-
   relayCodeStore.set(code, {
     userId,
     sourceDomain,
     nonce,
     expiresAt,
-    usedAt: null,
+    usedAt: null
   });
-
-  log('info', 'Relay code generated', { userId, sourceDomain, expiresMs: RELAY_CODE_TTL_MS });
-  return { code, nonce, expiresAt };
+  log('info', 'Relay code generated', {
+    userId,
+    sourceDomain,
+    expiresMs: RELAY_CODE_TTL_MS
+  });
+  return {
+    code,
+    nonce,
+    expiresAt
+  };
 }
 
 // ─── Verify and consume relay code (one-time use) ───────────────────────────
 
 function consumeRelayCode(code, expectedNonce) {
   const entry = relayCodeStore.get(code);
-
   if (!entry) {
     log('warn', 'Relay code not found');
-    return { valid: false, reason: 'code_not_found' };
+    return {
+      valid: false,
+      reason: 'code_not_found'
+    };
   }
-
   if (entry.usedAt) {
-    log('warn', 'Relay code replay attempt', { userId: entry.userId });
-    return { valid: false, reason: 'code_already_used' };
+    log('warn', 'Relay code replay attempt', {
+      userId: entry.userId
+    });
+    return {
+      valid: false,
+      reason: 'code_already_used'
+    };
   }
-
   if (Date.now() > entry.expiresAt) {
     relayCodeStore.delete(code);
-    log('warn', 'Relay code expired', { userId: entry.userId });
-    return { valid: false, reason: 'code_expired' };
+    log('warn', 'Relay code expired', {
+      userId: entry.userId
+    });
+    return {
+      valid: false,
+      reason: 'code_expired'
+    };
   }
-
   if (entry.nonce !== expectedNonce) {
-    log('warn', 'Relay code nonce mismatch', { userId: entry.userId });
-    return { valid: false, reason: 'nonce_mismatch' };
+    log('warn', 'Relay code nonce mismatch', {
+      userId: entry.userId
+    });
+    return {
+      valid: false,
+      reason: 'nonce_mismatch'
+    };
   }
 
   // Consume — mark as used
@@ -104,40 +133,49 @@ function consumeRelayCode(code, expectedNonce) {
 
   // Schedule cleanup
   setTimeout(() => relayCodeStore.delete(code), RELAY_CODE_TTL_MS);
-
-  log('info', 'Relay code consumed', { userId: entry.userId, sourceDomain: entry.sourceDomain });
-  return { valid: true, userId: entry.userId, sourceDomain: entry.sourceDomain };
+  log('info', 'Relay code consumed', {
+    userId: entry.userId,
+    sourceDomain: entry.sourceDomain
+  });
+  return {
+    valid: true,
+    userId: entry.userId,
+    sourceDomain: entry.sourceDomain
+  };
 }
 
 // ─── Check lockout status ───────────────────────────────────────────────────
 
 function checkLockout(identifier) {
   const entry = lockoutStore.get(identifier);
-  if (!entry) return { locked: false };
-
+  if (!entry) return {
+    locked: false
+  };
   if (Date.now() > entry.unlocksAt) {
     lockoutStore.delete(identifier);
-    return { locked: false };
+    return {
+      locked: false
+    };
   }
-
   return {
     locked: true,
     remainingMs: entry.unlocksAt - Date.now(),
-    attempts: entry.attempts,
+    attempts: entry.attempts
   };
 }
-
-// ─── Record failed attempt ──────────────────────────────────────────────────
-
 function recordFailedAttempt(identifier) {
-  const entry = lockoutStore.get(identifier) || { attempts: 0, unlocksAt: 0 };
+  const entry = lockoutStore.get(identifier) || {
+    attempts: 0,
+    unlocksAt: 0
+  };
   entry.attempts += 1;
-
   if (entry.attempts >= MAX_RELAY_ATTEMPTS) {
     entry.unlocksAt = Date.now() + LOCKOUT_TTL_MS;
-    log('warn', 'Relay lockout triggered', { identifier, attempts: entry.attempts });
+    log('warn', 'Relay lockout triggered', {
+      identifier,
+      attempts: entry.attempts
+    });
   }
-
   lockoutStore.set(identifier, entry);
   return entry;
 }
@@ -148,7 +186,6 @@ function recordFailedAttempt(identifier) {
 
 function generateBridgeHTML(sessionValid, userInfo) {
   const originsJSON = JSON.stringify(ALLOWED_ORIGINS);
-
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,7 +199,10 @@ function generateBridgeHTML(sessionValid, userInfo) {
 (function() {
   'use strict';
   var ALLOWED = ${originsJSON};
-  var SESSION = ${JSON.stringify({ valid: sessionValid, user: userInfo || null })};
+  var SESSION = ${JSON.stringify({
+    valid: sessionValid,
+    user: userInfo || null
+  })};
   var BRIDGE_INTERVAL = ${BRIDGE_CHECK_MS};
 
   function isAllowed(origin) {
@@ -208,9 +248,8 @@ function buildAuthorizationURL(params) {
     state,
     codeChallenge,
     codeChallengeMethod = 'S256',
-    provider = 'firebase',
+    provider = 'firebase'
   } = params;
-
   const baseURL = 'https://auth.headysystems.com/authorize';
   const queryParams = new URLSearchParams({
     response_type: 'code',
@@ -220,9 +259,8 @@ function buildAuthorizationURL(params) {
     state,
     code_challenge: codeChallenge,
     code_challenge_method: codeChallengeMethod,
-    provider,
+    provider
   });
-
   return `${baseURL}?${queryParams.toString()}`;
 }
 
@@ -231,12 +269,12 @@ function buildAuthorizationURL(params) {
 function generatePKCE() {
   const verifierBytes = fib(8) * 2; // 42 bytes
   const verifier = crypto.randomBytes(verifierBytes).toString('base64url');
-  const challenge = crypto
-    .createHash('sha256')
-    .update(verifier)
-    .digest('base64url');
-
-  return { verifier, challenge, method: 'S256' };
+  const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
+  return {
+    verifier,
+    challenge,
+    method: 'S256'
+  };
 }
 
 // ─── CSL-gated auth decision ─────────────────────────────────────────────────
@@ -248,17 +286,11 @@ function evaluateAuthConfidence(factors) {
     fingerprintMatch = false,
     originTrusted = false,
     sessionFresh = false,
-    mfaVerified = false,
+    mfaVerified = false
   } = factors;
 
   // Convert boolean factors to scores [0, 1]
-  const scores = [
-    tokenValid ? 1.0 : 0.0,
-    fingerprintMatch ? 1.0 : 0.0,
-    originTrusted ? 1.0 : 0.0,
-    sessionFresh ? 1.0 : 0.0,
-    mfaVerified ? 1.0 : 0.0,
-  ];
+  const scores = [tokenValid ? 1.0 : 0.0, fingerprintMatch ? 1.0 : 0.0, originTrusted ? 1.0 : 0.0, sessionFresh ? 1.0 : 0.0, mfaVerified ? 1.0 : 0.0];
 
   // φ-weighted average (most important factors first)
   const weights = [PSI, PSI * PSI, PSI * PSI * PSI, Math.pow(PSI, 4), Math.pow(PSI, 5)];
@@ -269,7 +301,6 @@ function evaluateAuthConfidence(factors) {
   // CSL_THRESHOLDS.LOW (0.691) used as auth gate: token + fingerprint sufficient
   const gateThreshold = CSL_THRESHOLDS.LOW;
   const gated = sigmoid((rawScore - gateThreshold) / PSI);
-
   return {
     rawScore: Math.round(rawScore * 1000) / 1000,
     gatedScore: Math.round(gated * 1000) / 1000,
@@ -280,8 +311,8 @@ function evaluateAuthConfidence(factors) {
       fingerprintMatch,
       originTrusted,
       sessionFresh,
-      mfaVerified,
-    },
+      mfaVerified
+    }
   };
 }
 
@@ -289,13 +320,11 @@ function evaluateAuthConfidence(factors) {
 
 function cleanupExpired() {
   const now = Date.now();
-
   for (const [code, entry] of relayCodeStore) {
     if (now > entry.expiresAt + RELAY_CODE_TTL_MS) {
       relayCodeStore.delete(code);
     }
   }
-
   for (const [id, entry] of lockoutStore) {
     if (now > entry.unlocksAt + LOCKOUT_TTL_MS) {
       lockoutStore.delete(id);
@@ -319,5 +348,5 @@ module.exports = {
   RELAY_CODE_TTL_MS,
   RELAY_CODE_LENGTH,
   MAX_RELAY_ATTEMPTS,
-  BRIDGE_CHECK_MS,
+  BRIDGE_CHECK_MS
 };

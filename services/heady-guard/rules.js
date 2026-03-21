@@ -1,4 +1,6 @@
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyGuard — Rule Engine
@@ -33,77 +35,107 @@
  *   { type: 'rate_limit',level: 'warn'|'block' }
  *   { type: 'allow' }  // override and allow (bypasses subsequent rules)
  */
-
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 // ── In-memory rule store ──────────────────────────────────────────────────────
 
-let _rules   = [];
+let _rules = [];
 let _rulesTs = 0; // last-modified timestamp for hot-reload
 
 // ── Default built-in rules ────────────────────────────────────────────────────
 
-const DEFAULT_RULES = [
-  {
-    id:       'rule-deny-token-exfil',
-    name:     'Block API key / token exfiltration in output',
-    enabled:  true,
-    priority: 5,
-    conditionOp: 'AND',
-    conditions: [
-      { type: 'source', value: 'output' },
-      { type: 'regex', pattern: '(?:sk-|Bearer\\s+)[A-Za-z0-9_\\-]{16,}', flags: 'i' },
-    ],
-    action: { type: 'block', message: 'Potential credential exfiltration detected in response.' },
-    metadata: { tags: ['security', 'output'] },
+const DEFAULT_RULES = [{
+  id: 'rule-deny-token-exfil',
+  name: 'Block API key / token exfiltration in output',
+  enabled: true,
+  priority: 5,
+  conditionOp: 'AND',
+  conditions: [{
+    type: 'source',
+    value: 'output'
+  }, {
+    type: 'regex',
+    pattern: '(?:sk-|Bearer\\s+)[A-Za-z0-9_\\-]{16,}',
+    flags: 'i'
+  }],
+  action: {
+    type: 'block',
+    message: 'Potential credential exfiltration detected in response.'
   },
-  {
-    id:       'rule-csam-hard-block',
-    name:     'Hard block CSAM references',
-    enabled:  true,
-    priority: 1,
-    conditionOp: 'OR',
-    conditions: [
-      { type: 'regex', pattern: '\\b(loli|shota|child\\s+porn|cp\\s+link|underage\\s+nude)\\b', flags: 'i' },
-    ],
-    action: { type: 'block', message: 'CSAM content detected. Request blocked.' },
-    metadata: { tags: ['csam', 'critical'] },
+  metadata: {
+    tags: ['security', 'output']
+  }
+}, {
+  id: 'rule-csam-hard-block',
+  name: 'Hard block CSAM references',
+  enabled: true,
+  priority: 1,
+  conditionOp: 'OR',
+  conditions: [{
+    type: 'regex',
+    pattern: '\\b(loli|shota|child\\s+porn|cp\\s+link|underage\\s+nude)\\b',
+    flags: 'i'
+  }],
+  action: {
+    type: 'block',
+    message: 'CSAM content detected. Request blocked.'
   },
-  {
-    id:       'rule-excessive-input',
-    name:     'Flag excessively long inputs',
-    enabled:  true,
-    priority: 100,
-    conditions: [
-      { type: 'length', op: 'gt', value: 20000 },
-    ],
-    action: { type: 'flag', label: 'excessive_length', score: 30 },
-    metadata: { tags: ['abuse'] },
+  metadata: {
+    tags: ['csam', 'critical']
+  }
+}, {
+  id: 'rule-excessive-input',
+  name: 'Flag excessively long inputs',
+  enabled: true,
+  priority: 100,
+  conditions: [{
+    type: 'length',
+    op: 'gt',
+    value: 20000
+  }],
+  action: {
+    type: 'flag',
+    label: 'excessive_length',
+    score: 30
   },
-  {
-    id:       'rule-empty-input',
-    name:     'Flag empty inputs',
-    enabled:  true,
-    priority: 99,
-    conditions: [
-      { type: 'length', op: 'lt', value: 1 },
-    ],
-    action: { type: 'flag', label: 'empty_input', score: 10 },
-    metadata: { tags: ['quality'] },
+  metadata: {
+    tags: ['abuse']
+  }
+}, {
+  id: 'rule-empty-input',
+  name: 'Flag empty inputs',
+  enabled: true,
+  priority: 99,
+  conditions: [{
+    type: 'length',
+    op: 'lt',
+    value: 1
+  }],
+  action: {
+    type: 'flag',
+    label: 'empty_input',
+    score: 10
   },
-  {
-    id:       'rule-allow-health-check',
-    name:     'Always allow health check requests',
-    enabled:  true,
-    priority: 2,
-    conditions: [
-      { type: 'contains', value: '__heady_health_check__' },
-    ],
-    action: { type: 'allow' },
-    metadata: { tags: ['internal'] },
+  metadata: {
+    tags: ['quality']
+  }
+}, {
+  id: 'rule-allow-health-check',
+  name: 'Always allow health check requests',
+  enabled: true,
+  priority: 2,
+  conditions: [{
+    type: 'contains',
+    value: '__heady_health_check__'
+  }],
+  action: {
+    type: 'allow'
   },
-];
+  metadata: {
+    tags: ['internal']
+  }
+}];
 
 // ── Condition evaluators ──────────────────────────────────────────────────────
 
@@ -116,62 +148,71 @@ const DEFAULT_RULES = [
  */
 function _evalCondition(condition, payload) {
   const text = payload.text || payload.output || '';
-
   switch (condition.type) {
-    case 'contains': {
-      const needle = condition.value || '';
-      if (condition.caseSensitive) return text.includes(needle);
-      return text.toLowerCase().includes(needle.toLowerCase());
-    }
-
-    case 'regex': {
-      try {
-        const re = new RegExp(condition.pattern, condition.flags || 'i');
-        return re.test(text);
-      } catch {
-        return false;
+    case 'contains':
+      {
+        const needle = condition.value || '';
+        if (condition.caseSensitive) return text.includes(needle);
+        return text.toLowerCase().includes(needle.toLowerCase());
       }
-    }
-
-    case 'length': {
-      const len = text.length;
-      switch (condition.op) {
-        case 'gt':  return len >  condition.value;
-        case 'lt':  return len <  condition.value;
-        case 'gte': return len >= condition.value;
-        case 'lte': return len <= condition.value;
-        case 'eq':  return len === condition.value;
-        default:    return false;
-      }
-    }
-
-    case 'category': {
-      // Check a score from a previous stage result
-      const stageResults = payload.stageResults || {};
-      const category     = condition.category;
-      const threshold    = condition.threshold || 0.5;
-      for (const result of Object.values(stageResults)) {
-        if (result.meta?.categories?.[category]?.score !== undefined) {
-          if (parseFloat(result.meta.categories[category].score) >= threshold) return true;
+    case 'regex':
+      {
+        try {
+          const re = new RegExp(condition.pattern, condition.flags || 'i');
+          return re.test(text);
+        } catch {
+          return false;
         }
       }
-      return false;
-    }
-
-    case 'userId': {
-      const uid = payload.userId || '';
-      switch (condition.op) {
-        case 'eq':     return uid === condition.value;
-        case 'in':     return Array.isArray(condition.value) && condition.value.includes(uid);
-        case 'not_in': return Array.isArray(condition.value) && !condition.value.includes(uid);
-        default:       return false;
+    case 'length':
+      {
+        const len = text.length;
+        switch (condition.op) {
+          case 'gt':
+            return len > condition.value;
+          case 'lt':
+            return len < condition.value;
+          case 'gte':
+            return len >= condition.value;
+          case 'lte':
+            return len <= condition.value;
+          case 'eq':
+            return len === condition.value;
+          default:
+            return false;
+        }
       }
-    }
-
-    case 'source': {
-      return (payload.source || 'input') === condition.value;
-    }
-
+    case 'category':
+      {
+        // Check a score from a previous stage result
+        const stageResults = payload.stageResults || {};
+        const category = condition.category;
+        const threshold = condition.threshold || 0.5;
+        for (const result of Object.values(stageResults)) {
+          if (result.meta?.categories?.[category]?.score !== undefined) {
+            if (parseFloat(result.meta.categories[category].score) >= threshold) return true;
+          }
+        }
+        return false;
+      }
+    case 'userId':
+      {
+        const uid = payload.userId || '';
+        switch (condition.op) {
+          case 'eq':
+            return uid === condition.value;
+          case 'in':
+            return Array.isArray(condition.value) && condition.value.includes(uid);
+          case 'not_in':
+            return Array.isArray(condition.value) && !condition.value.includes(uid);
+          default:
+            return false;
+        }
+      }
+    case 'source':
+      {
+        return (payload.source || 'input') === condition.value;
+      }
     default:
       return false;
   }
@@ -183,7 +224,6 @@ function _evalCondition(condition, payload) {
 function _evalRule(rule, payload) {
   if (!rule.enabled) return false;
   if (!rule.conditions || rule.conditions.length === 0) return false;
-
   const op = rule.conditionOp || 'AND';
   if (op === 'OR') {
     return rule.conditions.some(c => _evalCondition(c, payload));
@@ -203,72 +243,63 @@ function _evalRule(rule, payload) {
 function evaluate(payload, ruleset) {
   const rules = ruleset || _getRules();
   const sorted = [...rules].sort((a, b) => (a.priority || 50) - (b.priority || 50));
-
   const matchedRules = [];
-  let finalAction    = null;
-  const addedFlags   = [];
-  let addedScore     = 0;
-
+  let finalAction = null;
+  const addedFlags = [];
+  let addedScore = 0;
   for (const rule of sorted) {
     if (!_evalRule(rule, payload)) continue;
     matchedRules.push(rule.id);
-
     switch (rule.action.type) {
       case 'allow':
         // Hard allow — stop processing, return allowed
         return {
-          action:       'ALLOW',
+          action: 'ALLOW',
           matchedRules: [...matchedRules],
-          addedFlags:   [],
-          addedScore:   0,
-          allowOverride: true,
+          addedFlags: [],
+          addedScore: 0,
+          allowOverride: true
         };
-
       case 'block':
         finalAction = 'BLOCK';
         return {
-          action:        'BLOCK',
-          matchedRules:  [...matchedRules],
+          action: 'BLOCK',
+          matchedRules: [...matchedRules],
           addedFlags,
           addedScore,
-          blockMessage:  rule.action.message,
+          blockMessage: rule.action.message
         };
-
       case 'flag':
         addedFlags.push(rule.action.label || rule.id);
-        addedScore += (rule.action.score || 20);
+        addedScore += rule.action.score || 20;
         break;
-
       case 'redact':
         addedFlags.push(`redact:${rule.action.target || 'match'}`);
         break;
-
       case 'rate_limit':
         if (rule.action.level === 'block') {
           finalAction = 'BLOCK';
           return {
-            action:       'BLOCK',
+            action: 'BLOCK',
             matchedRules: [...matchedRules],
             addedFlags,
             addedScore,
-            blockMessage: 'Rate limit rule triggered.',
+            blockMessage: 'Rate limit rule triggered.'
           };
         }
         addedFlags.push('rate_limit_warning');
         addedScore += 40;
         break;
-
       default:
         break;
     }
   }
-
   return {
-    action:       finalAction,
+    action: finalAction,
     matchedRules,
     addedFlags,
-    addedScore:   Math.min(addedScore, 100),
-    allowOverride: false,
+    addedScore: Math.min(addedScore, 100),
+    allowOverride: false
   };
 }
 
@@ -287,7 +318,6 @@ function loadFromFile(filePath, mergeDefaults = true) {
     _rules = [...DEFAULT_RULES];
     return;
   }
-
   try {
     const content = fs.readFileSync(filePath, 'utf8');
     let loaded;
@@ -304,11 +334,13 @@ function loadFromFile(filePath, mergeDefaults = true) {
     } else {
       loaded = JSON.parse(content);
     }
-
     const fileRules = Array.isArray(loaded) ? loaded : loaded.rules || [];
     _rules = mergeDefaults ? [...DEFAULT_RULES, ...fileRules] : fileRules;
     _rulesTs = fs.statSync(filePath).mtimeMs;
-    return { loaded: fileRules.length, total: _rules.length };
+    return {
+      loaded: fileRules.length,
+      total: _rules.length
+    };
   } catch (err) {
     throw new Error(`HeadyGuard rules: failed to load "${filePath}": ${err.message}`);
   }
@@ -321,7 +353,9 @@ function setRules(newRules, mergeDefaults = true) {
   if (!Array.isArray(newRules)) throw new TypeError('rules must be an array');
   _rules = mergeDefaults ? [...DEFAULT_RULES, ...newRules] : newRules;
   _rulesTs = Date.now();
-  return { total: _rules.length };
+  return {
+    total: _rules.length
+  };
 }
 
 /**
@@ -337,8 +371,7 @@ function getRules() {
 function addRule(rule) {
   if (!rule.id) throw new Error('Rule must have an id');
   const existing = _rules.findIndex(r => r.id === rule.id);
-  if (existing >= 0) _rules[existing] = rule;
-  else               _rules.push(rule);
+  if (existing >= 0) _rules[existing] = rule;else _rules.push(rule);
   _rulesTs = Date.now();
 }
 
@@ -367,10 +400,8 @@ function checkReload(filePath) {
 // Initialize with defaults
 _rules = [...DEFAULT_RULES];
 
-
 // ── Load external guard-rules.json (auto-merged with defaults) ───────────────
 const GUARD_RULES_PATH = path.resolve(__dirname, '../../configs/guard-rules.json');
-
 function _loadExternalRules() {
   try {
     if (fs.existsSync(GUARD_RULES_PATH)) {
@@ -381,21 +412,19 @@ function _loadExternalRules() {
         const merged = [...DEFAULT_RULES];
         for (const ext of extRules) {
           const idx = merged.findIndex(r => r.id === ext.id);
-          if (idx >= 0) merged[idx] = ext;
-          else merged.push(ext);
+          if (idx >= 0) merged[idx] = ext;else merged.push(ext);
         }
         return merged;
       }
     }
   } catch (e) {
-    console.warn('[HeadyGuard] Failed to load guard-rules.json:', e.message);
+    logger.warn('[HeadyGuard] Failed to load guard-rules.json:', e.message);
   }
   return DEFAULT_RULES;
 }
 
 // Initialize rules from external config on load
 _rules = _loadExternalRules();
-
 module.exports = {
   evaluate,
   loadFromFile,
@@ -404,5 +433,5 @@ module.exports = {
   addRule,
   removeRule,
   checkReload,
-  DEFAULT_RULES,
+  DEFAULT_RULES
 };

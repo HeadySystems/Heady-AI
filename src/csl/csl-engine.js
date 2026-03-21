@@ -1,22 +1,3 @@
-/**
- * @fileoverview Heady™ CSL Engine — Continuous Semantic Logic Gate Operations
- *
- * Implements vector-space logical gates over unit-hypersphere embeddings.
- * Truth value: τ(a,b) = cos(θ) ∈ [-1, +1]
- *   +1 = aligned (TRUE)
- *    0 = orthogonal (UNKNOWN)
- *   -1 = antipodal (FALSE)
- *
- * All thresholds and temperatures import from phi-math — ZERO magic numbers.
- *
- * References:
- *   Widdows (ACL 2003): orthogonal negation → NOT(a,b) = a − (a·b)b
- *   Grand et al. (Nature 2022): semantic projection recovers human judgments
- *   Birkhoff & von Neumann (1936): quantum logic over Hilbert subspaces
- *
- * © 2024-2026 HeadySystems Inc. All Rights Reserved.
- */
-
 'use strict';
 
 const {
@@ -28,12 +9,8 @@ const {
   cosineSimilarity,
   normalize,
   phiFusionWeights,
-  adaptiveTemperature,
+  adaptiveTemperature
 } = require('../../shared/phi-math.js');
-
-// ─── Gate temperature constants (derived from phi-math, no literals) ────────
-
-/** Default softmax temperature: ψ³ ≈ 0.236 */
 const PHI_TEMPERATURE = Math.pow(PSI, 3);
 
 /** Default gate threshold (noise floor): ≈ 0.500 */
@@ -146,7 +123,6 @@ function cslConsensus(agents) {
   const total = agents.reduce((s, a) => s + (a.weight != null ? a.weight : 1), 0);
   const dims = agents[0].vector.length;
   const centroid = new Array(dims).fill(0);
-
   for (const agent of agents) {
     const w = (agent.weight != null ? agent.weight : 1) / (total || 1);
     for (let i = 0; i < dims; i++) {
@@ -155,17 +131,6 @@ function cslConsensus(agents) {
   }
   return normalize(centroid);
 }
-
-/**
- * CSL GATE — smooth sigmoid gating of a scalar value by cosine alignment.
- * output = value × σ((cosScore − τ) / temperature)
- * Re-exports the phi-math primitive with CSL-standard defaults.
- * @param {number} value - scalar to gate
- * @param {number} cosScore - cosine similarity triggering the gate
- * @param {number} [tau=DEFAULT_TAU] - threshold (noise floor ≈ 0.500)
- * @param {number} [temp=PHI_TEMPERATURE] - temperature (ψ³ ≈ 0.236)
- * @returns {number}
- */
 function cslGateOp(value, cosScore, tau = DEFAULT_TAU, temp = PHI_TEMPERATURE) {
   return cslGate(value, cosScore, tau, temp);
 }
@@ -194,17 +159,6 @@ function cslClassify(cosScore) {
   if (cosScore <= -CSL_THRESHOLDS.MINIMUM) return 'FALSE';
   return 'UNKNOWN';
 }
-
-/**
- * Adaptive-temperature gate — uses entropy to modulate temperature.
- * Higher entropy → higher temperature → softer gating.
- * @param {number} value
- * @param {number} cosScore
- * @param {number} entropy - current system entropy [0, maxEntropy]
- * @param {number} maxEntropy
- * @param {number} [tau=DEFAULT_TAU]
- * @returns {number}
- */
 function cslAdaptiveGate(value, cosScore, entropy, maxEntropy, tau = DEFAULT_TAU) {
   const temp = adaptiveTemperature(entropy, maxEntropy);
   return cslGate(value, cosScore, tau, temp);
@@ -241,8 +195,8 @@ module.exports = {
   cslIMPLY,
   cslXOR,
   cslConsensus,
-  cslGate:    cslGateOp,
-  cslBlend:   cslBlendOp,
+  cslGate: cslGateOp,
+  cslBlend: cslBlendOp,
   // Utilities
   cslClassify,
   cslAdaptiveGate,
@@ -252,5 +206,5 @@ module.exports = {
   DEFAULT_TAU,
   // Vector primitives
   dot,
-  project,
+  project
 };

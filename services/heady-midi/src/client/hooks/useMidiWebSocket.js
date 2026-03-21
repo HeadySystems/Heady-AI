@@ -13,24 +13,13 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import {
-  PHI, PSI, FIB,
-  STATUS, CHANNEL, CC,
-  BACKOFF_BASE_MS, BACKOFF_MAX_MS, EVENT_BUFFER_SIZE,
-} from '../../shared/midi-constants.js';
+import { PHI, PSI, FIB, STATUS, CHANNEL, CC, BACKOFF_BASE_MS, BACKOFF_MAX_MS, EVENT_BUFFER_SIZE } from '../../shared/midi-constants.js';
 
 // ─── Constants ────────────────────────────────────────────────────
-const PING_INTERVAL_MS = FIB[5] * 1000;          // 5s
-const NUM_CHANNELS     = Object.keys(CHANNEL).length; // 8
-const WS_JSON_PATH     = '/ws/midi';
-const WS_UMP_PATH      = '/ws/midi/ump';
-
-/**
- * Compute φ-exponential backoff delay for a given attempt.
- * delay = BACKOFF_BASE_MS × PHI^attempt, clamped to BACKOFF_MAX_MS.
- * @param {number} attempt - Reconnection attempt (0-indexed)
- * @returns {number} Delay in milliseconds
- */
+const PING_INTERVAL_MS = FIB[5] * 1000; // 5s
+const NUM_CHANNELS = Object.keys(CHANNEL).length; // 8
+const WS_JSON_PATH = '/ws/midi';
+const WS_UMP_PATH = '/ws/midi/ump';
 function phiBackoff(attempt) {
   return Math.min(BACKOFF_BASE_MS * Math.pow(PHI, attempt), BACKOFF_MAX_MS);
 }
@@ -40,7 +29,11 @@ function phiBackoff(attempt) {
  * @returns {Object} Channel state with lastActivity, eventCount, and cc map
  */
 function createChannelState() {
-  return { lastActivity: 0, eventCount: 0, cc: {} };
+  return {
+    lastActivity: 0,
+    eventCount: 0,
+    cc: {}
+  };
 }
 
 /**
@@ -79,27 +72,30 @@ function buildInitialChannels() {
  * }}
  */
 export function useMidiWebSocket(options = {}) {
-  const { host = typeof window !== 'undefined' ? window.location.host : 'localhost:8089', enableUmp = false } = options;
+  const {
+    host = typeof window !== 'undefined' ? window.location.host : 'localhost:8089',
+    enableUmp = false
+  } = options;
 
   // ── Connection state ─────────────────────────────────────────────
-  const [connected, setConnected]       = useState(false);
+  const [connected, setConnected] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
-  const [latencyMs, setLatencyMs]       = useState(0);
-  const [peerCount, setPeerCount]       = useState(0);
+  const [latencyMs, setLatencyMs] = useState(0);
+  const [peerCount, setPeerCount] = useState(0);
 
   // ── Ring buffer & channel state ─────────────────────────────────
-  const eventsRef   = useRef(/** @type {Object[]} */ ([]));
-  const writeIdx    = useRef(0);
+  const eventsRef = useRef(/** @type {Object[]} */[]);
+  const writeIdx = useRef(0);
   const [eventTick, setEventTick] = useState(0); // force re-render on new events
   const channelsRef = useRef(buildInitialChannels());
   const [channelTick, setChannelTick] = useState(0);
 
   // ── Refs for WS instances and timers ─────────────────────────────
-  const wsRef        = useRef(/** @type {WebSocket|null} */ (null));
-  const umpWsRef     = useRef(/** @type {WebSocket|null} */ (null));
-  const attemptRef   = useRef(0);
-  const pingTimer    = useRef(null);
-  const pingSentAt   = useRef(0);
+  const wsRef = useRef(/** @type {WebSocket|null} */null);
+  const umpWsRef = useRef(/** @type {WebSocket|null} */null);
+  const attemptRef = useRef(0);
+  const pingTimer = useRef(null);
+  const pingSentAt = useRef(0);
   const reconnectTimer = useRef(null);
   const unmountedRef = useRef(false);
 
@@ -117,7 +113,7 @@ export function useMidiWebSocket(options = {}) {
   }, [channelTick]);
 
   // ── Push an event into the ring buffer ───────────────────────────
-  const pushEvent = useCallback((evt) => {
+  const pushEvent = useCallback(evt => {
     const buf = eventsRef.current;
     if (buf.length < EVENT_BUFFER_SIZE) {
       buf.push(evt);
@@ -125,11 +121,11 @@ export function useMidiWebSocket(options = {}) {
       buf[writeIdx.current % EVENT_BUFFER_SIZE] = evt;
     }
     writeIdx.current++;
-    setEventTick((t) => t + 1);
+    setEventTick(t => t + 1);
   }, []);
 
   // ── Update channel state from an incoming MIDI message ──────────
-  const updateChannel = useCallback((msg) => {
+  const updateChannel = useCallback(msg => {
     const ch = msg.channel;
     if (ch == null || ch < 0 || ch >= NUM_CHANNELS) return;
     const state = channelsRef.current[ch];
@@ -138,32 +134,42 @@ export function useMidiWebSocket(options = {}) {
     if (msg.status === STATUS.CC && msg.data1 != null && msg.data2 != null) {
       state.cc[msg.data1] = msg.data2;
     }
-    setChannelTick((t) => t + 1);
+    setChannelTick(t => t + 1);
   }, []);
 
   // ── sendMidi: transmit a 3-byte MIDI message via JSON WS ────────
   const sendMidi = useCallback((status, channel, data1, data2) => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) return;
-    ws.send(JSON.stringify({ type: 'midi', status, channel, data1, data2, ts: Date.now() }));
+    ws.send(JSON.stringify({
+      type: 'midi',
+      status,
+      channel,
+      data1,
+      data2,
+      ts: Date.now()
+    }));
   }, []);
 
   // ── sendSysEx: transmit a SysEx command via JSON WS ─────────────
   const sendSysEx = useCallback((cmd, ...params) => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) return;
-    ws.send(JSON.stringify({ type: 'sysex', cmd, params, ts: Date.now() }));
+    ws.send(JSON.stringify({
+      type: 'sysex',
+      cmd,
+      params,
+      ts: Date.now()
+    }));
   }, []);
 
   // ── Connect / reconnect logic ────────────────────────────────────
   const connect = useCallback(() => {
     if (unmountedRef.current) return;
-
     const protocol = typeof window !== 'undefined' && window.location.protocol === 'https:' ? 'wss' : 'ws';
     const url = `${protocol}://${host}${WS_JSON_PATH}`;
     const ws = new WebSocket(url);
     wsRef.current = ws;
-
     ws.onopen = () => {
       setConnected(true);
       setReconnecting(false);
@@ -173,12 +179,14 @@ export function useMidiWebSocket(options = {}) {
       pingTimer.current = setInterval(() => {
         if (ws.readyState === WebSocket.OPEN) {
           pingSentAt.current = Date.now();
-          ws.send(JSON.stringify({ type: 'ping', ts: pingSentAt.current }));
+          ws.send(JSON.stringify({
+            type: 'ping',
+            ts: pingSentAt.current
+          }));
         }
       }, PING_INTERVAL_MS);
     };
-
-    ws.onmessage = (e) => {
+    ws.onmessage = e => {
       try {
         const msg = JSON.parse(e.data);
 
@@ -207,14 +215,12 @@ export function useMidiWebSocket(options = {}) {
         // Non-JSON — ignore on the JSON socket
       }
     };
-
     ws.onclose = () => {
       setConnected(false);
       clearInterval(pingTimer.current);
       if (unmountedRef.current) return;
       scheduleReconnect();
     };
-
     ws.onerror = () => {
       ws.close();
     };
@@ -225,13 +231,15 @@ export function useMidiWebSocket(options = {}) {
       const umpWs = new WebSocket(umpUrl);
       umpWs.binaryType = 'arraybuffer';
       umpWsRef.current = umpWs;
-
-      umpWs.onmessage = (e) => {
+      umpWs.onmessage = e => {
         if (e.data instanceof ArrayBuffer) {
-          pushEvent({ type: 'ump', data: new Uint8Array(e.data), ts: Date.now() });
+          pushEvent({
+            type: 'ump',
+            data: new Uint8Array(e.data),
+            ts: Date.now()
+          });
         }
       };
-
       umpWs.onerror = () => umpWs.close();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -252,7 +260,6 @@ export function useMidiWebSocket(options = {}) {
   useEffect(() => {
     unmountedRef.current = false;
     connect();
-
     return () => {
       unmountedRef.current = true;
       clearInterval(pingTimer.current);
@@ -272,7 +279,6 @@ export function useMidiWebSocket(options = {}) {
     return [...buf.slice(idx), ...buf.slice(0, idx)];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventTick]);
-
   return {
     connected,
     reconnecting,
@@ -282,6 +288,6 @@ export function useMidiWebSocket(options = {}) {
     channels: channelsRef.current,
     sendMidi,
     sendSysEx,
-    ccValues,
+    ccValues
   };
 }

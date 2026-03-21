@@ -1,7 +1,9 @@
 'use strict';
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
-const { PHI_TIMING } = require('../../shared/phi-math');
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+const {
+  PHI_TIMING
+} = require('../../shared/phi-math');
 /**
  * HeadyChain Built-in Node Types
  * Each node type defines how it executes within the DAG engine.
@@ -15,22 +17,19 @@ const config = require('./config');
 // ─── Node Type Registry ──────────────────────────────────────────────────────
 
 const NODE_TYPES = {
-  LLM:         'llm',
-  TOOL:        'tool',
+  LLM: 'llm',
+  TOOL: 'tool',
   CONDITIONAL: 'conditional',
-  PARALLEL:    'parallel',
-  REDUCE:      'reduce',
-  TRANSFORM:   'transform',
-  HUMAN:       'human',
-  SUBCHAIN:    'subchain',
-  RETRY:       'retry',
+  PARALLEL: 'parallel',
+  REDUCE: 'reduce',
+  TRANSFORM: 'transform',
+  HUMAN: 'human',
+  SUBCHAIN: 'subchain',
+  RETRY: 'retry'
 };
 
 // ─── Utility ─────────────────────────────────────────────────────────────────
 
-/**
- * Interpolate {key} placeholders in a template string from a state object.
- */
 function interpolate(template, state) {
   if (typeof template !== 'string') return template;
   return template.replace(/\{([^}]+)\}/g, (match, key) => {
@@ -49,7 +48,9 @@ function interpolate(template, state) {
  */
 function mergeState(target, source) {
   if (!source || typeof source !== 'object') return target;
-  const result = { ...target };
+  const result = {
+    ...target
+  };
   for (const [k, v] of Object.entries(source)) {
     if (v && typeof v === 'object' && !Array.isArray(v) && result[k] && typeof result[k] === 'object') {
       result[k] = mergeState(result[k], v);
@@ -65,19 +66,26 @@ function mergeState(target, source) {
  */
 function getPath(obj, path) {
   if (!path) return obj;
-  return path.split('.').reduce((acc, k) => (acc == null ? acc : acc[k]), obj);
+  return path.split('.').reduce((acc, k) => acc == null ? acc : acc[k], obj);
 }
 
 /**
  * Set a dot-path value in a state clone.
  */
 function setPath(obj, path, value) {
-  if (!path) return { ...obj, ...value };
+  if (!path) return {
+    ...obj,
+    ...value
+  };
   const keys = path.split('.');
-  const result = { ...obj };
+  const result = {
+    ...obj
+  };
   let cur = result;
   for (let i = 0; i < keys.length - 1; i++) {
-    cur[keys[i]] = { ...(cur[keys[i]] || {}) };
+    cur[keys[i]] = {
+      ...(cur[keys[i]] || {})
+    };
     cur = cur[keys[i]];
   }
   cur[keys[keys.length - 1]] = value;
@@ -91,7 +99,6 @@ async function httpPost(url, body, timeoutMs = PHI_TIMING.CYCLE) {
   const parsed = new URL(url);
   const isHttps = parsed.protocol === 'https:';
   const lib = isHttps ? https : http;
-
   return new Promise((resolve, reject) => {
     const data = JSON.stringify(body);
     const options = {
@@ -101,17 +108,25 @@ async function httpPost(url, body, timeoutMs = PHI_TIMING.CYCLE) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(data),
-      },
+        'Content-Length': Buffer.byteLength(data)
+      }
     };
-    const req = lib.request(options, (res) => {
+    const req = lib.request(options, res => {
       let body = '';
-      res.on('data', chunk => { body += chunk; });
+      res.on('data', chunk => {
+        body += chunk;
+      });
       res.on('end', () => {
         try {
-          resolve({ status: res.statusCode, body: JSON.parse(body) });
+          resolve({
+            status: res.statusCode,
+            body: JSON.parse(body)
+          });
         } catch {
-          resolve({ status: res.statusCode, body });
+          resolve({
+            status: res.statusCode,
+            body
+          });
         }
       });
     });
@@ -126,19 +141,6 @@ async function httpPost(url, body, timeoutMs = PHI_TIMING.CYCLE) {
 
 // ─── Node Executors ───────────────────────────────────────────────────────────
 
-/**
- * LLMNode — Calls HeadyInfer with a prompt template.
- *
- * config:
- *   prompt {string}           - Prompt template with {state.key} placeholders
- *   systemPrompt {string}     - System message template
- *   model {string}            - Override model
- *   outputKey {string}        - State key to store LLM response (default: 'llmOutput')
- *   messages {Array}          - Static messages array (overrides prompt if set)
- *   maxTokens {number}
- *   temperature {number}
- *   parseJSON {boolean}       - Attempt to parse response as JSON
- */
 async function executeLLMNode(nodeConfig, state, context) {
   const {
     prompt,
@@ -148,28 +150,36 @@ async function executeLLMNode(nodeConfig, state, context) {
     messages: staticMessages,
     maxTokens = config.DEFAULT_MAX_TOKENS,
     temperature = 0.7,
-    parseJSON = false,
+    parseJSON = false
   } = nodeConfig;
-
   let messages;
   if (staticMessages) {
     messages = staticMessages.map(m => ({
       role: m.role,
-      content: interpolate(m.content, state),
+      content: interpolate(m.content, state)
     }));
   } else {
     messages = [];
     if (systemPrompt) {
-      messages.push({ role: 'system', content: interpolate(systemPrompt, state) });
+      messages.push({
+        role: 'system',
+        content: interpolate(systemPrompt, state)
+      });
     }
     if (prompt) {
-      messages.push({ role: 'user', content: interpolate(prompt, state) });
+      messages.push({
+        role: 'user',
+        content: interpolate(prompt, state)
+      });
     }
   }
-
   const inferUrl = `${config.HEADY_INFER_URL}/infer`;
-  const payload = { model, messages, max_tokens: maxTokens, temperature };
-
+  const payload = {
+    model,
+    messages,
+    max_tokens: maxTokens,
+    temperature
+  };
   let response;
   try {
     const result = await httpPost(inferUrl, payload, config.HEADY_INFER_TIMEOUT_MS);
@@ -177,11 +187,14 @@ async function executeLLMNode(nodeConfig, state, context) {
       throw new Error(`HeadyInfer returned ${result.status}: ${JSON.stringify(result.body)}`);
     }
     response = result.body;
-  } catch (err) { // In development/test without HeadyInfer, generate a mock response
+  } catch (err) {
+    // In development/test without HeadyInfer, generate a mock response
     if (process.env.NODE_ENV === 'test' || process.env.HEADY_INFER_MOCK === 'true') {
       const mockText = `[MOCK LLM RESPONSE for: ${messages[messages.length - 1]?.content?.slice(0, 50)}...]`;
       const newState = setPath(state, outputKey, mockText);
-      return { state: newState };
+      return {
+        state: newState
+      };
     }
     throw err;
   }
@@ -197,7 +210,6 @@ async function executeLLMNode(nodeConfig, state, context) {
   } else if (typeof response.text === 'string') {
     text = response.text;
   }
-
   let output = text;
   if (parseJSON) {
     try {
@@ -208,13 +220,16 @@ async function executeLLMNode(nodeConfig, state, context) {
       output = text; // fallback to raw text
     }
   }
-
   const newState = setPath(state, outputKey, output);
   // Also store usage info if available
   if (response.usage) {
-    return { state: setPath(newState, '_llmUsage', response.usage) };
+    return {
+      state: setPath(newState, '_llmUsage', response.usage)
+    };
   }
-  return { state: newState };
+  return {
+    state: newState
+  };
 }
 
 /**
@@ -230,12 +245,10 @@ async function executeToolNode(nodeConfig, state, context) {
   const {
     toolName,
     inputMapping = {},
-    outputKey = 'toolOutput',
+    outputKey = 'toolOutput'
   } = nodeConfig;
-
   const toolRegistry = context.toolRegistry;
   if (!toolRegistry) throw new Error('ToolNode requires toolRegistry in context');
-
   const tool = toolRegistry.getTool(toolName);
   if (!tool) throw new Error(`Tool '${toolName}' not found in registry`);
 
@@ -252,10 +265,11 @@ async function executeToolNode(nodeConfig, state, context) {
       }
     }
   }
-
   const result = await toolRegistry.execute(toolName, toolInput);
   const newState = setPath(state, outputKey, result);
-  return { state: newState };
+  return {
+    state: newState
+  };
 }
 
 /**
@@ -268,16 +282,20 @@ async function executeToolNode(nodeConfig, state, context) {
  * Returns nextEdge hint consumed by the execution engine.
  */
 async function executeConditionalNode(nodeConfig, state, context) {
-  const { condition, branches = {} } = nodeConfig;
-
+  const {
+    condition,
+    branches = {}
+  } = nodeConfig;
   if (typeof condition !== 'function') {
     throw new Error('ConditionalNode requires a condition function in config');
   }
-
   const result = await condition(state, context);
   const nextNode = branches[result] || result; // allow returning node id directly
 
-  return { state, nextEdge: String(nextNode) };
+  return {
+    state,
+    nextEdge: String(nextNode)
+  };
 }
 
 /**
@@ -294,31 +312,33 @@ async function executeParallelNode(nodeConfig, state, context) {
   const {
     branches = [],
     outputKey = 'parallelResults',
-    mergeStrategy = 'array',
+    mergeStrategy = 'array'
   } = nodeConfig;
-
   if (branches.length === 0) {
-    return { state: setPath(state, outputKey, []) };
+    return {
+      state: setPath(state, outputKey, [])
+    };
   }
-
-  const results = await Promise.all(
-    branches.map(async (branch) => {
-      const executor = NODE_EXECUTORS[branch.type];
-      if (!executor) throw new Error(`Unknown branch node type: ${branch.type}`);
-      const { state: branchState } = await executor(branch.config, { ...state }, context);
-      return branchState;
-    })
-  );
-
+  const results = await Promise.all(branches.map(async branch => {
+    const executor = NODE_EXECUTORS[branch.type];
+    if (!executor) throw new Error(`Unknown branch node type: ${branch.type}`);
+    const {
+      state: branchState
+    } = await executor(branch.config, {
+      ...state
+    }, context);
+    return branchState;
+  }));
   let mergedOutput;
   if (mergeStrategy === 'merge') {
     mergedOutput = results.reduce((acc, s) => mergeState(acc, s), {});
   } else {
     mergedOutput = results;
   }
-
   const newState = setPath(state, outputKey, mergedOutput);
-  return { state: newState };
+  return {
+    state: newState
+  };
 }
 
 /**
@@ -335,21 +355,20 @@ async function executeReduceNode(nodeConfig, state, context) {
     inputKey = 'parallelResults',
     reducer,
     initialValue,
-    outputKey = 'reducedResult',
+    outputKey = 'reducedResult'
   } = nodeConfig;
-
   if (typeof reducer !== 'function') {
     throw new Error('ReduceNode requires a reducer function in config');
   }
-
   const items = getPath(state, inputKey);
   if (!Array.isArray(items)) {
     throw new Error(`ReduceNode inputKey '${inputKey}' must be an array`);
   }
-
   const result = items.reduce(reducer, initialValue);
   const newState = setPath(state, outputKey, result);
-  return { state: newState };
+  return {
+    state: newState
+  };
 }
 
 /**
@@ -360,18 +379,22 @@ async function executeReduceNode(nodeConfig, state, context) {
  *   merge {boolean}       - If true, merge return value into state; else replace
  */
 async function executeTransformNode(nodeConfig, state, context) {
-  const { transform, merge = true } = nodeConfig;
-
+  const {
+    transform,
+    merge = true
+  } = nodeConfig;
   if (typeof transform !== 'function') {
     throw new Error('TransformNode requires a transform function in config');
   }
-
   const result = await transform(state, context);
-
   if (merge) {
-    return { state: mergeState(state, result) };
+    return {
+      state: mergeState(state, result)
+    };
   }
-  return { state: result };
+  return {
+    state: result
+  };
 }
 
 /**
@@ -389,9 +412,8 @@ async function executeHumanNode(nodeConfig, state, context) {
   const {
     prompt: promptTemplate = 'Please provide input to continue.',
     inputKey = 'humanInput',
-    timeoutMs = config.HUMAN_TIMEOUT_MS,
+    timeoutMs = config.HUMAN_TIMEOUT_MS
   } = nodeConfig;
-
   const displayPrompt = interpolate(promptTemplate, state);
 
   // Signal the execution engine to pause
@@ -402,8 +424,8 @@ async function executeHumanNode(nodeConfig, state, context) {
       prompt: displayPrompt,
       inputKey,
       timeoutMs,
-      pausedAt: Date.now(),
-    },
+      pausedAt: Date.now()
+    }
   };
 }
 
@@ -423,9 +445,8 @@ async function executeSubChainNode(nodeConfig, state, context) {
     graph: inlineGraph,
     inputMapping = {},
     outputKey = 'subChainResult',
-    outputMapping = {},
+    outputMapping = {}
   } = nodeConfig;
-
   const orchestrator = context.orchestrator;
   if (!orchestrator) throw new Error('SubChainNode requires orchestrator in context');
 
@@ -434,10 +455,11 @@ async function executeSubChainNode(nodeConfig, state, context) {
   for (const [subKey, parentPath] of Object.entries(inputMapping)) {
     subState[subKey] = getPath(state, parentPath);
   }
-
   let finalSubState;
   if (inlineGraph) {
-    const { GraphBuilder } = require('./graph');
+    const {
+      GraphBuilder
+    } = require('./graph');
     const builder = GraphBuilder.fromJSON(inlineGraph);
     finalSubState = await orchestrator.executeGraph(builder, subState, context);
   } else if (chainId) {
@@ -451,34 +473,22 @@ async function executeSubChainNode(nodeConfig, state, context) {
   for (const [parentPath, subPath] of Object.entries(outputMapping)) {
     newState = setPath(newState, parentPath, getPath(finalSubState, subPath));
   }
-
-  return { state: newState };
+  return {
+    state: newState
+  };
 }
-
-/**
- * RetryNode — Wrap an inner node with PHI-backoff retry logic.
- *
- * config:
- *   inner {object}        - { type, config } of the wrapped node
- *   maxAttempts {number}  - Max retry attempts (default from config)
- *   retryOn {Function}    - (error) => boolean — which errors to retry
- *   backoffMs {number}    - Base backoff override
- */
 async function executeRetryNode(nodeConfig, state, context) {
   const {
     inner,
     maxAttempts = config.MAX_RETRY_ATTEMPTS,
     retryOn = () => true,
-    backoffMs,
+    backoffMs
   } = nodeConfig;
-
   if (!inner || !inner.type) {
     throw new Error('RetryNode requires inner.type in config');
   }
-
   const executor = NODE_EXECUTORS[inner.type];
   if (!executor) throw new Error(`RetryNode: unknown inner type '${inner.type}'`);
-
   let lastError;
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
@@ -488,31 +498,27 @@ async function executeRetryNode(nodeConfig, state, context) {
       lastError = err;
       if (!retryOn(err)) throw err;
       if (attempt < maxAttempts - 1) {
-        const delay = backoffMs != null
-          ? backoffMs * Math.pow(config.PHI, attempt)
-          : config.phiBackoff(attempt);
+        const delay = backoffMs != null ? backoffMs * Math.pow(config.PHI, attempt) : config.phiBackoff(attempt);
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
   }
-
   throw new Error(`RetryNode exhausted ${maxAttempts} attempts. Last error: ${lastError.message}`);
 }
 
 // ─── Node Executor Map ────────────────────────────────────────────────────────
 
 const NODE_EXECUTORS = {
-  [NODE_TYPES.LLM]:         executeLLMNode,
-  [NODE_TYPES.TOOL]:        executeToolNode,
+  [NODE_TYPES.LLM]: executeLLMNode,
+  [NODE_TYPES.TOOL]: executeToolNode,
   [NODE_TYPES.CONDITIONAL]: executeConditionalNode,
-  [NODE_TYPES.PARALLEL]:    executeParallelNode,
-  [NODE_TYPES.REDUCE]:      executeReduceNode,
-  [NODE_TYPES.TRANSFORM]:   executeTransformNode,
-  [NODE_TYPES.HUMAN]:       executeHumanNode,
-  [NODE_TYPES.SUBCHAIN]:    executeSubChainNode,
-  [NODE_TYPES.RETRY]:       executeRetryNode,
+  [NODE_TYPES.PARALLEL]: executeParallelNode,
+  [NODE_TYPES.REDUCE]: executeReduceNode,
+  [NODE_TYPES.TRANSFORM]: executeTransformNode,
+  [NODE_TYPES.HUMAN]: executeHumanNode,
+  [NODE_TYPES.SUBCHAIN]: executeSubChainNode,
+  [NODE_TYPES.RETRY]: executeRetryNode
 };
-
 module.exports = {
   NODE_TYPES,
   NODE_EXECUTORS,
@@ -521,5 +527,5 @@ module.exports = {
   mergeState,
   getPath,
   setPath,
-  httpPost,
+  httpPost
 };

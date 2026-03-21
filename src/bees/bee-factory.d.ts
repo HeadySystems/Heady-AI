@@ -11,10 +11,10 @@
  * @returns {Object} The registered bee entry
  */
 export function createBee(domain: string, config?: {
-    description: string;
-    priority: number;
-    workers: any[];
-    persist: boolean;
+  description: string;
+  priority: number;
+  workers: any[];
+  persist: boolean;
 }): Object;
 /**
  * Spawn a single-purpose ephemeral bee for one-off tasks.
@@ -36,14 +36,6 @@ export function spawnBee(name: string, work: Function | Function[], priority?: n
  * @returns {Object} The updated/created bee entry
  */
 export function createWorkUnit(domain: string, name: string, fn: Function): Object;
-/**
- * Create a bee from a template/pattern.
- * Useful for spawning service-monitoring bees, health-check bees, etc.
- *
- * @param {string} template - Template name ('health-check', 'monitor', 'processor', 'scanner')
- * @param {Object} config - Template-specific configuration
- * @returns {Object} The created bee entry
- */
 export function createFromTemplate(template: string, config?: Object): Object;
 /**
  * Create a coordinated swarm of bees with an orchestration policy.
@@ -58,19 +50,19 @@ export function createFromTemplate(template: string, config?: Object): Object;
  * @returns {Object} The swarm bee entry
  */
 export function createSwarm(name: string, beeConfigs?: any[], policy?: {
-    mode: string;
-    requireConsensus: boolean;
-    timeoutMs: number;
+  mode: string;
+  requireConsensus: boolean;
+  timeoutMs: number;
 }): Object;
 /**
  * Get all dynamic and ephemeral bees.
  */
 export function listDynamicBees(): {
-    domain: any;
-    description: any;
-    priority: any;
-    type: string;
-    createdAt: any;
+  domain: any;
+  description: any;
+  priority: any;
+  type: string;
+  createdAt: any;
 }[];
 /**
  * Dissolve (remove) a dynamic or ephemeral bee.
