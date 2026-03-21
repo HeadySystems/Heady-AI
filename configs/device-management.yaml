@@ -125,8 +125,8 @@ device_profiles:
             
         - git:
             config:
-              user.name: "Heady Developer"
-              user.email: "dev@heady.io"
+              user.name: "Eric Haywood"
+              user.email: "eric@headyconnection.org"
               init.defaultBranch: main
               pull.rebase: true
               

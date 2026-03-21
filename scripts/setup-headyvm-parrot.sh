@@ -256,8 +256,8 @@ phase 5 "Git & SSH Configuration"
 git lfs install --skip-repo 2>&1 | tee -a "$LOG_FILE"
 
 # Git global config
-git config --global user.name "Eric (HeadyVM)"
-git config --global user.email "dev@heady.io"
+git config --global user.name "Eric Haywood"
+git config --global user.email "eric@headyconnection.org"
 git config --global init.defaultBranch main
 git config --global pull.rebase true
 git config --global core.autocrlf input

@@ -250,8 +250,8 @@ jobs:
           echo "🏷️ Tagging successful build: $BUILD_TAG"
           
           # Create git tag for successful builds
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "Eric Haywood"
+          git config user.email "eric@headyconnection.org"
           git tag -a "$BUILD_TAG" -m "Automated build tag from CI" || echo "Tag creation skipped"
 
   # Phase 7: Artifact cleanup and retention

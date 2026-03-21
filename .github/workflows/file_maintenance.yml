@@ -42,8 +42,8 @@ jobs:
         
       - name: Commit and push updates
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "eric@headyconnection.org"
+          git config --local user.name "Eric Haywood"
           git add .
           git commit -m "[FMSAP] Weekly scan updates" || echo "No changes to commit"
           git push
@@ -200,8 +200,8 @@ jobs:
 
       - name: Commit and push updates
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "eric@headyconnection.org"
+          git config --local user.name "Eric Haywood"
           git add .
           git diff --staged --quiet || git commit -m "[FMSAP] Weekly scan updates - Run #${{ github.run_number }}"
           git push

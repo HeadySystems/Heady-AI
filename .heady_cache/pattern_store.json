@@ -1098,7 +1098,7 @@
         "n": 120
       },
       "trend": "degrading",
-      "improvementAttempts": 273,
+      "improvementAttempts": 279,
       "lastImproved": "2026-03-21T12:47:03.640Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -1118,8 +1118,8 @@
     "created": "2026-03-20T23:20:04Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-03-21T13:40:01.307Z",
-  "version": 4,
+  "lastUpdated": "2026-03-21T13:45:01.539Z",
+  "version": 5,
   "phi": 1.618033988749895,
   "resourcePatterns": [
     {
@@ -1127,16 +1127,16 @@
       "confidence": 1,
       "severity": "LOW",
       "firstSeen": "2026-03-21T13:25:02.119Z",
-      "lastSeen": "2026-03-21T13:40:01.307Z",
-      "occurrences": 4
+      "lastSeen": "2026-03-21T13:45:01.539Z",
+      "occurrences": 5
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 97,
+  "commitCount24h": 100,
   "topTopics": [
     {
       "word": "chore(auto)",
-      "count": 69
+      "count": 71
     },
     {
       "word": "[tier=significant]",
@@ -1148,27 +1148,27 @@
     },
     {
       "word": "pattern_store.json",
-      "count": 41
+      "count": 43
     },
     {
       "word": "hcfp-auto",
-      "count": 24
+      "count": 25
     },
     {
       "word": "file(s)",
-      "count": 24
+      "count": 25
     },
     {
       "word": "changed",
-      "count": 24
+      "count": 25
+    },
+    {
+      "word": "[tier=trivial]",
+      "count": 12
     },
     {
       "word": "index.html",
       "count": 12
-    },
-    {
-      "word": "[tier=trivial]",
-      "count": 11
     },
     {
       "word": "resource-events.jsonl",

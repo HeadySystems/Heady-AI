@@ -255,8 +255,8 @@ jobs:
           git remote add staging "https://${{ secrets.HEADY_PAT }}@github.com/HeadyConnection/Heady-Staging.git" || true
           git push staging HEAD:main --force
         env:
-          GIT_AUTHOR_NAME: "HeadyCI"
-          GIT_AUTHOR_EMAIL: "ci@headysystems.com"
+          GIT_AUTHOR_NAME: "Eric Haywood"
+          GIT_AUTHOR_EMAIL: "eric@headyconnection.org"
 
       - name: Staging health check
         run: |

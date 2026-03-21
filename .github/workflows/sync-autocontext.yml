@@ -83,8 +83,8 @@ jobs:
 
         # Commit + Push
         cd /tmp/autocontext
-        git config user.name "HeadyAutoContext Bot"
-        git config user.email "bot@headysystems.com"
+        git config user.name "Eric Haywood"
+        git config user.email "eric@headyconnection.org"
         git add -A
         git diff --cached --quiet && echo "No changes" && exit 0
         git commit -m "sync: AutoContext github-action — $(date -u +%Y-%m-%dT%H:%M)"
