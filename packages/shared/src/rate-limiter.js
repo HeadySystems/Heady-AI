@@ -1,5 +1,5 @@
 'use strict';
-const { createLogger } = require('../../utils/logger');
+const { createLogger } = require('../../../src/utils/logger');
 const logger = createLogger('auto-fixed');
 
 /**

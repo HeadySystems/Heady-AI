@@ -1,4 +1,4 @@
-const { createLogger } = require('../../utils/logger');
+const { createLogger } = require('../../../src/utils/logger');
 const logger = createLogger('auto-fixed');
 // packages/heady-ui/src/HeadyPostAuthBootstrap.js
 // §18 — Shared Post-Auth Bootstrap Component

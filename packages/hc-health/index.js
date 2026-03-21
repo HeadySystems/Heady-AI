@@ -1,4 +1,4 @@
-const { createLogger } = require('../utils/logger');
+const { createLogger } = require('../../src/utils/logger');
 const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -19,7 +19,7 @@ const logger = createLogger('auto-fixed');
 const os = require('os');
 const {
   PHI_CIRCUIT_BREAKER
-} = require('@heady/phi-math');
+} = require('../../src/shared/phi-math-v2');
 
 // ═══════════════════════════════════════════════════════════════════
 // HC Health — System Health Monitoring and Diagnostics

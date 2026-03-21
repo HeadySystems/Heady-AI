@@ -34,12 +34,12 @@ describe("deterministic-embedding-orchestrator", () => {
 
   test("should have expected interface", () => {
     // Common patterns in Heady™ services:
-    const hasRoutes = typeof service.registerRoutes === "function" 
-      || typeof service.router !== "undefined"
+    const hasRoutes = typeof service?.registerRoutes === "function" 
+      || typeof service?.router !== "undefined"
       || typeof service === "function";
-    const hasClass = service.constructor && service.constructor.name !== "Object";
-    const hasBoot = typeof service.boot === "function";
-    const hasHealth = typeof service.health === "function";
+    const hasClass = service?.constructor && service?.constructor.name !== "Object";
+    const hasBoot = typeof service?.boot === "function";
+    const hasHealth = typeof service?.health === "function";
 
     // Service should expose at least one interface
     expect(hasRoutes || hasClass || hasBoot || hasHealth || Object.keys(service).length > 0).toBe(true);

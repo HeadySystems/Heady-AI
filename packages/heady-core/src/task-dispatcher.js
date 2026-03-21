@@ -21,7 +21,7 @@
 const path = require('path');
 const fs = require('fs');
 const { midiBus, CHANNELS } = require("../engines/midi-event-bus");
-const logger = require("../utils/logger");
+const logger = require('../../../src/utils/logger');
 
 // ═══ Pipeline Source ═══
 const PIPELINE_FILE = path.join(__dirname, '..', 'auto-flow-200-tasks.json');

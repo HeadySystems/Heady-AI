@@ -14,7 +14,7 @@ const {
   PHI_TIMEOUT_REQUEST,
   phiBackoff,
   phiScale,
-} = require('@heady/phi-math');
+} = require('../../src/shared/phi-math-v2');
 const { createLogger } = require('@heady/structured-logger');
 
 // ═══════════════════════════════════════════════════════════════════

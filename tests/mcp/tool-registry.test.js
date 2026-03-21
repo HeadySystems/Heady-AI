@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { toolRegistry } from '../../src/mcp/tool-registry.js';
+const ToolRegistry = require('../../src/mcp/tool-registry.js');
+const toolRegistry = new ToolRegistry();
 
 describe('MCP Tool Registry', () => {
+  beforeAll(() => {
+    toolRegistry.register({ name: 'heady_chat', description: 'desc', inputSchema: {} });
+  });
+
   it('should list registered tools', () => {
     const tools = toolRegistry.list();
     expect(tools.length).toBeGreaterThan(0);

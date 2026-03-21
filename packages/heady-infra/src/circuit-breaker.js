@@ -8,7 +8,7 @@
  * When error rate exceeds threshold, circuit opens and fails fast.
  */
 
-const logger = require('../utils/logger');
+const logger = require('../../../src/utils/logger');
 
 const STATES = { CLOSED: 'CLOSED', OPEN: 'OPEN', HALF_OPEN: 'HALF_OPEN' };
 

@@ -12,7 +12,7 @@
  *   - Cost tracking via budget-tracker
  */
 
-const _logger = require("../utils/logger");
+const _logger = require('../../../src/utils/logger');
 const logger = {
     logNodeActivity: _logger.logNodeActivity?.bind(_logger) || ((_n, msg) => (_logger.info || console.log)(msg)),
     logError: _logger.logError?.bind(_logger) || ((_n, msg) => (_logger.error || console.error)(msg)),

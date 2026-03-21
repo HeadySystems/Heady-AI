@@ -1,4 +1,4 @@
-const { createLogger } = require('../../utils/logger');
+const { createLogger } = require('../../../src/utils/logger');
 const logger = createLogger('auto-fixed');
 // Generated via MCP Orchestration - COMPLETED
 // Task: Collect project data from Gemini URLs and integrate into project

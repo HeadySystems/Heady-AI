@@ -17,7 +17,7 @@
 
 'use strict';
 
-const logger = require('../utils/logger');
+const logger = require('../../../src/utils/logger');
 
 // ── Lazy-load CSL engine (try/require pattern) ────────────────────────────
 let _engine = null;

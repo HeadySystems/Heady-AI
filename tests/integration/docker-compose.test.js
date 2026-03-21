@@ -26,7 +26,7 @@
 'use strict';
 
 const { PHI, PSI, PSI_SQ, fibonacci, phiThreshold, CSL_THRESHOLDS,
-  SERVICE_PORTS } = require('../../shared/phi-math');
+  SERVICE_PORTS } = require('../../src/shared/phi-math-v2');
 
 // ─── Test Framework (zero-dep) ──────────────────────────────────────────────
 let totalTests = 0;

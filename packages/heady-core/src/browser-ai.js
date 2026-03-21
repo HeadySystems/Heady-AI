@@ -1,4 +1,4 @@
-const { createLogger } = require('../../utils/logger');
+const { createLogger } = require('../../../src/utils/logger');
 const logger = createLogger('auto-fixed');
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Browser AI v1.0                                        ║
