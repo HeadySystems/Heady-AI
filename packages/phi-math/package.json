@@ -1,5 +1,5 @@
 {
-  "name": "@heady-ai/phi-math",
+  "name": "@heady/phi-math",
   "version": "4.0.0",
   "description": "Phi and Fibonacci scaling primitives, CSL bands, and vector helpers for HeadyOS.",
   "main": "dist/index.js",

@@ -178,9 +178,13 @@ const { TenantIsolation } = require('../../src/services/tenant-isolation');
 
 describe('TenantIsolation', () => {
     let isolation;
+    const mockDb = {
+        query: vi.fn().mockResolvedValue({ ok: true, rows: [{ tenant_id: 'tid-1' }] }),
+    };
 
     beforeEach(() => {
-        isolation = new TenantIsolation();
+        isolation = new TenantIsolation({ db: mockDb });
+        mockDb.query.mockClear();
     });
 
     test('initializes without database', () => {

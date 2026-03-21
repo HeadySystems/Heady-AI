@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady-ai/phi-math-foundation": "workspace:*",
-    "@heady-ai/phi-math": "workspace:*"
+    "@heady/phi-math-foundation": "workspace:*",
+    "@heady/phi-math": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

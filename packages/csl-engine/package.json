@@ -37,7 +37,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@heady-ai/phi-math-foundation": "workspace:*"
+    "@heady/phi-math-foundation": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
