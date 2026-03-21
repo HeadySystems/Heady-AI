@@ -1,0 +1,39 @@
+{
+  "name": "heady-desktop-suite",
+  "version": "4.0.0",
+  "description": "Enterprise distribution executables for HeadyBuddy, HeadyWeb, and HeadyAI-IDE",
+  "main": "main.js",
+  "author": "HeadySystems Inc",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "build:web": "cross-env APP_TARGET=HeadyWeb electron-builder --win --mac --linux",
+    "build:buddy": "cross-env APP_TARGET=HeadyBuddy electron-builder --win --mac --linux",
+    "build:ide": "cross-env APP_TARGET=HeadyAI-IDE electron-builder --win --mac --linux",
+    "build:all": "npm run build:web && npm run build:buddy && npm run build:ide"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "productName": "${env.APP_TARGET}",
+    "appId": "com.headysystems.${env.APP_TARGET}",
+    "directories": {
+      "output": "dist/${env.APP_TARGET}"
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": "nsis"
+    },
+    "mac": {
+      "icon": "assets/icon.icns",
+      "target": "dmg"
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": "AppImage"
+    }
+  }
+}
