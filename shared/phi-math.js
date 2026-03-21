@@ -320,7 +320,7 @@ function cslAND(a, b, threshold = 0) {
 
 function phiFusionScore(scores, weights) {
   if (!scores || scores.length === 0) return 0;
-  const w = weights || scores.map(() => 1 / scores.length);
+  const w = weights || phiFusionWeights(scores.length);
   const total = w.reduce((s, x) => s + x, 0);
   return scores.reduce((acc, score, i) => acc + score * (w[i] / total), 0);
 }
