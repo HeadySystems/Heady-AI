@@ -1,5 +1,5 @@
 {
-  "name": "@heady/hc-checkpoint",
+  "name": "@heady-ai/hc-checkpoint",
   "version": "1.0.0",
   "description": "System checkpointing, config drift detection, and synchronization for HCFullPipeline",
   "main": "index.js",

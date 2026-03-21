@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-federation",
+  "name": "@heady-ai/heady-federation",
   "version": "3.2.3",
   "description": "Module federation \u2014 micro-frontend composition, contracts",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

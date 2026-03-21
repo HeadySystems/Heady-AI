@@ -1,5 +1,5 @@
 {
-  "name": "@heady/billing",
+  "name": "@heady-ai/billing",
   "version": "1.0.0",
   "description": "Unified Billing — usage-based, subscription, licensing, platform-fees, consulting; Stripe-ready",
   "main": "index.js",

@@ -762,7 +762,7 @@ class LiquidOrchestrator extends EventEmitter {
     // Graceful shutdown: drain all bees
     const drainPromises = [];
     for (const bee of this._allBees.values()) {
-      drainPromises.push(bee.shutdown().catch(() => {}));
+      drainPromises.push(bee.shutdown().catch((e) => { /* absorbed: */ console.error(e.message); }));
     }
     await Promise.all(drainPromises);
 

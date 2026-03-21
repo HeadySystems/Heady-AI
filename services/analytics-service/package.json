@@ -1,5 +1,5 @@
 {
-  "name": "@heady/analytics-service",
+  "name": "@heady-ai/analytics-service",
   "version": "1.0.0",
   "description": "HEADY privacy-first analytics service with φ-scaled batch processing",
   "main": "dist/index.js",

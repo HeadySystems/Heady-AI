@@ -155,10 +155,10 @@ class HCPatternEngine extends EventEmitter {
   start() {
     if (this.analysisInterval) return;
     this.analysisInterval = setInterval(() => {
-      this._runAnalysisCycle().catch(() => {});
+      this._runAnalysisCycle().catch((e) => { /* absorbed: */ console.error(e.message); });
     }, this.analysisIntervalMs);
     // Immediate first cycle (async)
-    this._runAnalysisCycle().catch(() => {});
+    this._runAnalysisCycle().catch((e) => { /* absorbed: */ console.error(e.message); });
     this.emit("engine:started");
   }
 

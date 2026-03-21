@@ -8,6 +8,21 @@
 
 const { NODE_TYPES } = require('./nodes');
 
+// SECURITY: Sandboxed dynamic code execution
+function safeFunctionCreate(code) {
+  if (typeof code !== 'string' || code.length > 10000) {
+    throw new Error('Invalid code input for dynamic function');
+  }
+  // Block dangerous patterns
+  const blocked = ['require', 'import', 'process', 'child_process', 'fs', 'eval', '__proto__', 'constructor'];
+  for (const pattern of blocked) {
+    if (code.includes(pattern)) {
+      throw new Error(`Blocked pattern "${pattern}" in dynamic code`);
+    }
+  }
+  return new Function(code);
+}
+
 class GraphBuilder {
   constructor(id) {
     this.id = id || `graph_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -276,7 +291,7 @@ class GraphBuilder {
           throw new Error(`Unsafe condition in edge ${edge.from}→${edge.to}: contains forbidden token`);
         }
         try {
-          condFn = new Function('ctx', `"use strict"; return (${edge.condition})(ctx);`);
+          condFn = safeFunctionCreate(`"use strict"; return (${edge.condition})(ctx);`);
         } catch (parseErr) {
           throw new Error(`Invalid condition in edge ${edge.from}→${edge.to}: ${parseErr.message}`);
         }

@@ -41,7 +41,7 @@ import {
   cslAND, cslDomainMatch, cslMultiDomainAssign, cslSelectDomain,
   normalize, phiFusion,
   createLogger, logConfidenceEvent,
-} from '@heady/platform';
+} from '@heady-ai/platform';
 
 // ─── DOMAIN REGISTRY ─────────────────────────────────────────────────────────
 

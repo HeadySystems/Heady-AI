@@ -207,7 +207,7 @@ async function runFullBenchmark(vectorMem) {
         await vectorMem.ingestMemory({
             content: `Provider benchmark: fastest=${report.fastest} (${sorted[0]?.totalLatency}ms). Ranking: ${report.ranking.map(r => `${r.rank}.${r.provider}(${r.totalLatency}ms)`).join(", ")}`,
             metadata: { type: "benchmark", fastest: report.fastest, ts: report.timestamp },
-        }).catch(() => { });
+        }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     return report;

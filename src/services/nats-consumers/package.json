@@ -1,5 +1,5 @@
 {
-  "name": "@heady/nats-consumers",
+  "name": "@heady-ai/nats-consumers",
   "version": "2.0.0",
   "type": "module",
   "description": "NATS JetStream consumers for Heady event-driven architecture with φ-scaled backpressure",
@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "@heady-ai/phi-math-foundation": "workspace:*",
-    "@heady/structured-logger": "workspace:*"
+    "@heady-ai/structured-logger": "workspace:*"
   }
 }

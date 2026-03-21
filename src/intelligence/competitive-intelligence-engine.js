@@ -30,12 +30,9 @@ const {
   PHI_TIMING
 } = require('../shared/phi-math');
 
-// ─── φ Constants ────────────────────────────────────────────────────────────
-const PHI = 1.618033988749895;
-const PSI = 0.618033988749895;
-const PSI2 = 0.3819660112501054;
-const PHI2 = 2.618033988749895;
-const PHI3 = 4.23606797749979;
+// φ-derived convenience aliases
+const PHI2 = PHI_POWERS.PHI_2; // 2.618
+const PHI3 = PHI_POWERS.PHI_3; // 4.236
 
 // ─── Fibonacci Sequence (for backoff, pool sizes, intervals) ────────────────
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377];
@@ -634,8 +631,11 @@ class CompetitiveIntelligenceEngine extends EventEmitter {
   /** @private */
   async _evaluateDimension(entity, dimension, context) {
     // CSL gate evaluation: returns 0.0 → 1.0
-    // In production: uses heady_csl_engine for proper evaluation
-    return entity === 'heady' ? PSI + Math.random() * PSI2 : Math.random() * PSI;
+    // Uses seeded PRNG for determinism (per CLAUDE.md determinism rule)
+    const seed = `${entity}-${dimension}-${context?.id || 'default'}`;
+    const hash = seed.split('').reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0);
+    const seeded = Math.abs(hash % 10000) / 10000;
+    return entity === 'heady' ? PSI + seeded * PSI2 : seeded * PSI;
   }
 
   /** @private */

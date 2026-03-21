@@ -14,8 +14,8 @@ import {
   PHI, PSI, fib,
   CSL_THRESHOLDS,
   phiFusionWeights,
-} from '@heady/phi-math-foundation';
-import { createLogger } from '@heady/structured-logger';
+} from '@heady-ai/phi-math-foundation';
+import { createLogger } from '@heady-ai/structured-logger';
 import { cosine, domainToVector } from '../swarm-engine/bee-lifecycle.js';
 
 const logger = createLogger('task-decomposer');

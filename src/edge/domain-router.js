@@ -264,7 +264,7 @@ class HealthMonitor extends EventEmitter {
   async _poll() {
     const domains = this._domains ?? DOMAIN_REGISTRY;
     for (const [domain, config] of Object.entries(domains)) {
-      this._checkOne(domain, config).catch(() => {});
+      this._checkOne(domain, config).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 

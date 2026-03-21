@@ -114,7 +114,7 @@ class SearchEngine {
       `INSERT INTO heady_query_metrics (collection_id, query_type, latency_ms, results_count, error)
        VALUES ($1, $2, $3, $4, $5)`,
       [collectionId, queryType, latencyMs, resultsCount, error]
-    ).catch(() => {}); // Non-critical
+    ).catch((e) => { /* absorbed: */ console.error(e.message); }); // Non-critical
   }
 
   /**

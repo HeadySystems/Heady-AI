@@ -1,5 +1,5 @@
 {
-  "name": "@heady/asset-pipeline",
+  "name": "@heady-ai/asset-pipeline",
   "version": "1.0.0",
   "description": "Static asset processing, optimization, and CDN push",
   "main": "server.js",

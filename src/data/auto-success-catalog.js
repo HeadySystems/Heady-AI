@@ -380,7 +380,7 @@ const TASK_CATALOG = [
     { id: "bundle-005", name: "Bundle CI engine + patent tracker as IP kit", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Package competitive-intelligence + patentTracker for IP management" },
     { id: "bundle-006", name: "Bundle agents (argus+hermes+kronos) as swarm kit", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Package v2 agents as deployable multi-agent swarm module" },
     { id: "bundle-007", name: "Bundle CSL + benchmark as quality SDK", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Package cslBenchmark + changeClassifier as quality assurance SDK" },
-    { id: "bundle-008", name: "Generate npm package.json per bundle", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Create scoped @heady/ package manifests for each bundle" },
+    { id: "bundle-008", name: "Generate npm package.json per bundle", cat: "beneficial-bundle", pool: "warm", w: 3, desc: "Create scoped @heady-ai/ package manifests for each bundle" },
     { id: "bundle-009", name: "Generate bundle documentation", cat: "beneficial-bundle", pool: "cold", w: 2, desc: "Auto-generate README + API docs for each module bundle" },
     { id: "bundle-010", name: "Validate bundle cross-dependency isolation", cat: "beneficial-bundle", pool: "warm", w: 4, desc: "Ensure bundles can be deployed independently without leaking deps" },
 

@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — health/index.js                               ║
+ * ║  @heady-ai/platform — health/index.js                               ║
  * ║  Health endpoint factory (live/ready/startup/details)            ║
  * ║  © 2026 HeadySystems Inc.                                        ║
  * ╚══════════════════════════════════════════════════════════════════╝

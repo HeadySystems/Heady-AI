@@ -405,6 +405,13 @@ for (const svc of HEADY_SERVICES) {
 }
 
 // ─── Express App ────────────────────────────────────────────
+const HEADY_ORIGINS = [
+  'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+  'https://headybuddy.org', 'https://headymcp.com', 'https://headyio.com',
+  'https://headybot.com', 'https://headyapi.com', 'https://headyai.com',
+  'https://headylens.com', 'https://headyfinance.com',
+  ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3000', 'http://localhost:3300', 'http://localhost:3301'] : [])
+];
 const app = express();
 app.use(helmet());
 app.use(cors());

@@ -484,7 +484,7 @@ class HCBrain {
         const indexContent = fs.readFileSync(path.join(packagesDir, pkg, 'index.js'), 'utf8');
         const exports = indexContent.match(/module\.exports\s*=\s*\{([^}]+)\}/);
         const exportList = exports ? exports[1].trim() : 'default export';
-        const content = `# @heady/${pkg}\n\nPart of the HeadyMonorepo.\n\n## Exports\n\n${exportList}\n`;
+        const content = `# @heady-ai/${pkg}\n\nPart of the HeadyMonorepo.\n\n## Exports\n\n${exportList}\n`;
         fs.writeFileSync(readmePath, content);
         docs.push(readmePath);
       }

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/schemas",
+  "name": "@heady-ai/schemas",
   "version": "1.0.0",
   "description": "HEADY platform shared schema registry with JSON Schema definitions and TypeScript types",
   "main": "dist/index.js",

@@ -147,7 +147,7 @@ function createServer(port = 3384) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
       if (url.pathname === '/schemas/register' && req.method === 'POST') { const b = await readBody(); respond(201, registerSchema(b.subject, b.version, b.schema, b.compatibility)); }
       else if (url.pathname === '/schemas/get' && req.method === 'GET') { const s = getSchema(url.searchParams.get('subject'), parseInt(url.searchParams.get('version')) || undefined); respond(s ? 200 : 404, s || { error: 'not_found' }); }
@@ -155,9 +155,9 @@ function createServer(port = 3384) {
       else if (url.pathname === '/schemas/validate' && req.method === 'POST') { const b = await readBody(); respond(200, validatePayload(b.subject, b.payload, b.version)); }
       else if (url.pathname === '/schemas/list' && req.method === 'GET') respond(200, listSchemas());
       else if (url.pathname === '/contracts/register' && req.method === 'POST') respond(201, registerContract((await readBody()).name, await readBody()));
-      else if (url.pathname === '/health') respond(200, { service: 'api-contracts', status: 'healthy', schemas: schemas.size, contracts: contracts.size, metrics });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/health') respond(200, { service: 'api-contracts', status: 'healthy', schemas: schemas.size, contracts: contracts.size, metrics }});
+      else respond(404, { error: 'not_found' }});
+    }});
     server.listen(port);
     return server;
   });

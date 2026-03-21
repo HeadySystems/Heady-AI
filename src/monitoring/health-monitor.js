@@ -156,7 +156,7 @@ class HealthMonitor extends EventEmitter {
         maxRetriesPerRequest: 1,
         enableOfflineQueue: false,
       });
-      await this._redisClient.connect().catch(() => {});
+      await this._redisClient.connect().catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     // Start background check loop
@@ -167,8 +167,8 @@ class HealthMonitor extends EventEmitter {
 
   async destroy() {
     clearInterval(this._checkTimer);
-    await this._pgPool?.end().catch(() => {});
-    await this._redisClient?.quit().catch(() => {});
+    await this._pgPool?.end().catch((e) => { /* absorbed: */ console.error(e.message); });
+    await this._redisClient?.quit().catch((e) => { /* absorbed: */ console.error(e.message); });
   }
 
   // ---------------------------------------------------------------------------
@@ -596,7 +596,7 @@ class HealthMonitor extends EventEmitter {
         // Force idle connections to be recycled
         this._pgPool._clients
           .filter(c => c._idle)
-          .forEach(c => c.end().catch(() => {}));
+          .forEach(c => c.end().catch((e) => { /* absorbed: */ console.error(e.message); }));
         actions.push('db-pool-recycle');
       }
 
@@ -692,7 +692,7 @@ class HealthMonitor extends EventEmitter {
     this._checkTimer.unref?.();
 
     // Run immediately on start
-    setImmediate(() => this.check().catch(() => {}));
+    setImmediate(() => this.check().catch((e) => { /* absorbed: */ console.error(e.message); }));
   }
 
   // ---------------------------------------------------------------------------

@@ -138,7 +138,7 @@ function createServer(port = 3383) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
       if (url.pathname === '/dlq/enqueue' && req.method === 'POST') respond(202, enqueue(await readBody()));
       else if (url.pathname === '/dlq/reprocess' && req.method === 'POST') { const b = await readBody(); respond(200, b.batch ? reprocessBatch(b.count) : reprocess(b.id)); }
@@ -147,9 +147,9 @@ function createServer(port = 3383) {
       else if (url.pathname === '/dlq/alerts' && req.method === 'GET') respond(200, getAlerts());
       else if (url.pathname === '/dlq/analytics' && req.method === 'GET') respond(200, getAnalytics());
       else if (url.pathname === '/dlq/purge' && req.method === 'POST') respond(200, purgeOld());
-      else if (url.pathname === '/health') respond(200, { service: 'dead-letter-queue', status: 'healthy', depth: deadLetters.length, quarantine: quarantine.length, metrics });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/health') respond(200, { service: 'dead-letter-queue', status: 'healthy', depth: deadLetters.length, quarantine: quarantine.length, metrics }});
+      else respond(404, { error: 'not_found' }});
+    }});
     server.listen(port);
     return server;
   });

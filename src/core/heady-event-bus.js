@@ -641,7 +641,7 @@ function getEventBus(opts) {
  * @param {HeadyEventBus} [bus]
  */
 function resetEventBus(bus) {
-  if (_instance) _instance.destroy().catch(() => {});
+  if (_instance) _instance.destroy().catch((e) => { /* absorbed: */ console.error(e.message); });
   _instance = bus || null;
 }
 
@@ -664,7 +664,7 @@ function bootstrapEventBus(opts = {}) {
   const _originalEmit = process.emit.bind(process);
   process.emit = function (event, ...args) {
     if (typeof event === 'string' && event.startsWith('heady:')) {
-      bus.publish(event, args[0] || {}).catch(() => {});
+      bus.publish(event, args[0] || {}).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
     return _originalEmit(event, ...args);
   };

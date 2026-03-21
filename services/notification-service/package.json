@@ -1,5 +1,5 @@
 {
-  "name": "@heady/notification-service",
+  "name": "@heady-ai/notification-service",
   "version": "1.0.0",
   "description": "HEADY notification service with WebSocket, SSE, and push channels",
   "main": "dist/index.js",

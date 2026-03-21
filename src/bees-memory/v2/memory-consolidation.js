@@ -745,7 +745,7 @@ class MemoryConsolidationEngine extends EventEmitter {
 
     // Persist run metadata to DuckDB
     if (this._archive) {
-      await this._persistRunMeta(report).catch(() => {});
+      await this._persistRunMeta(report).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     this._runHistory.push(report);
@@ -843,7 +843,7 @@ class MemoryConsolidationEngine extends EventEmitter {
 
         const { discard, mergeMap } = this._dedup.findDuplicates(entries);
         for (const id of discard) {
-          await this._vm.delete(ns, id).catch(() => {});
+          await this._vm.delete(ns, id).catch((e) => { /* absorbed: */ console.error(e.message); });
           count++;
         }
 
@@ -851,7 +851,7 @@ class MemoryConsolidationEngine extends EventEmitter {
         for (const [discardId, keepId] of mergeMap) {
           const discardEntry = entries.find(e => e.id === discardId);
           if (discardEntry) {
-            await this._vm.mergeMetadata?.(ns, keepId, discardEntry.metadata).catch(() => {});
+            await this._vm.mergeMetadata?.(ns, keepId, discardEntry.metadata).catch((e) => { /* absorbed: */ console.error(e.message); });
           }
         }
       }
@@ -881,8 +881,8 @@ class MemoryConsolidationEngine extends EventEmitter {
           await this._runDdb(
             `INSERT INTO ${TABLES.archive} SELECT *, 'dedup' AS archive_reason, ${now} AS archived_at ` +
             `FROM ${TABLES.memories} WHERE id IN (${ids})`
-          ).catch(() => {});
-          await this._runDdb(`DELETE FROM ${TABLES.memories} WHERE id IN (${ids})`).catch(() => {});
+          ).catch((e) => { /* absorbed: */ console.error(e.message); });
+          await this._runDdb(`DELETE FROM ${TABLES.memories} WHERE id IN (${ids})`).catch((e) => { /* absorbed: */ console.error(e.message); });
           count    += discard.length;
           archived += discard.length;
         }
@@ -902,7 +902,7 @@ class MemoryConsolidationEngine extends EventEmitter {
       const { evicted } = this._eviction.evictFromMemory(allEntries);
       for (const id of evicted) {
         const entry = allEntries.get(id);
-        await this._vm.delete(entry?.namespace || 'episodic', id).catch(() => {});
+        await this._vm.delete(entry?.namespace || 'episodic', id).catch((e) => { /* absorbed: */ console.error(e.message); });
         count++;
       }
     }
@@ -925,7 +925,7 @@ class MemoryConsolidationEngine extends EventEmitter {
 
       if (total > this._eviction._maxRows) {
         const lruSqls = this._eviction.buildLruSql(total);
-        for (const sql of lruSqls) await this._runDdb(sql).catch(() => {});
+        for (const sql of lruSqls) await this._runDdb(sql).catch((e) => { /* absorbed: */ console.error(e.message); });
         const overflow = total - this._eviction._maxRows;
         count    += overflow;
         archived += overflow;
@@ -962,7 +962,7 @@ class MemoryConsolidationEngine extends EventEmitter {
         report.errors.length,
         report.errors.length === 0 ? 'ok' : 'partial',
       ]
-    ).catch(() => {});
+    ).catch((e) => { /* absorbed: */ console.error(e.message); });
   }
 
   /** @private */

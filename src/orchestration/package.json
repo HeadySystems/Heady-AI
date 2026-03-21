@@ -1,5 +1,5 @@
 {
-  "name": "@heady/orchestration",
+  "name": "@heady-ai/orchestration",
   "version": "5.0.0",
   "description": "Heady™ Liquid Nodes — Agent orchestration intelligence layer",
   "author": "Eric Haywood <eric@headyconnection.org>",
@@ -11,7 +11,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@heady/shared": "workspace:*"
+    "@heady-ai/shared": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.0"

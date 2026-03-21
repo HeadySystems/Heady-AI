@@ -288,7 +288,7 @@ class HeadyChain extends EventEmitter {
         // Save checkpoint after each node if enabled
         if (config.CHECKPOINT_ENABLED) {
           record.state = currentState;
-          await this._saveCheckpoint(record.workflowId, record).catch(() => {});
+          await this._saveCheckpoint(record.workflowId, record).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
       }
     }

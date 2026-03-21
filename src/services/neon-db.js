@@ -411,7 +411,7 @@ async function validateApiKey(plaintextKey) {
     }
 
     // Update last_used_at
-    query("UPDATE api_keys SET last_used_at = NOW() WHERE key_hash = $1", [keyHash]).catch(() => {});
+    query("UPDATE api_keys SET last_used_at = NOW() WHERE key_hash = $1", [keyHash]).catch((e) => { /* absorbed: */ console.error(e.message); });
 
     return {
         ok: true,

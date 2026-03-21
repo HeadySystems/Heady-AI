@@ -1,5 +1,5 @@
 {
-  "name": "@heady/hc-readiness",
+  "name": "@heady-ai/hc-readiness",
   "version": "1.0.0",
   "description": "Operational Readiness Evaluator — computes ORS score from app-readiness probes",
   "main": "index.js",

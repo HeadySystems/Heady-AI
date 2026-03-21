@@ -206,7 +206,7 @@ const SEED_SERVICES = [
     name: 'redis',
     domain: null,
     instances: [
-      { url: 'redis://localhost:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
+      { url: process.env.REDIS_URL || 'redis://0.0.0.0:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
     ],
     healthPath: null,
     version: '7.0',
@@ -852,7 +852,7 @@ class HeadyServiceMesh extends EventEmitter {
   _publish(topic, payload) {
     this.emit(topic, payload);
     if (this._eventBus && typeof this._eventBus.publish === 'function') {
-      this._eventBus.publish(topic, payload).catch(() => {});
+      this._eventBus.publish(topic, payload).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 }

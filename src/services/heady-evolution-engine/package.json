@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-evolution-engine",
+  "name": "@heady-ai/heady-evolution-engine",
   "version": "3.2.3",
   "description": "Evolution engine \u2014 continuous learning, pattern DB updates",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

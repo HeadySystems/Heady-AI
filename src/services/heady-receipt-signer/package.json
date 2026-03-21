@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-receipt-signer",
+  "name": "@heady-ai/heady-receipt-signer",
   "version": "3.2.3",
   "description": "Receipt signer \u2014 Ed25519 audit trail for every action",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

@@ -5,7 +5,7 @@
  * SECURITY: No wildcard (*) origins — only known Heady domains.
  *
  * Usage:
- *   const { isOriginAllowed, getAllowedOrigin, CORS_HEADERS } = require('@heady/shared/cors-whitelist');
+ *   const { isOriginAllowed, getAllowedOrigin, CORS_HEADERS } = require('@heady-ai/shared/cors-whitelist');
  *   const origin = req.headers.origin;
  *   res.setHeader('Access-Control-Allow-Origin', getAllowedOrigin(origin));
  */

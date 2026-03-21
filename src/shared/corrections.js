@@ -214,7 +214,7 @@ function recordInteraction(input, analysis, vectorMemory) {
         vectorMemory.ingestMemory({
             content: `Behavioral signal: ${analysis.dominant} (intensity ${analysis.intensity.toFixed(2)}) — "${(input || "").substring(0, 200)}"`,
             metadata: { type: "behavior_signal", signal: analysis.dominant, intensity: analysis.intensity },
-        }).catch(() => { });
+        }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 }
 

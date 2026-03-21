@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-hallucination-watchdog",
+  "name": "@heady-ai/heady-hallucination-watchdog",
   "version": "3.2.3",
   "description": "Hallucination watchdog \u2014 real-time output quality monitor",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

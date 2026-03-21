@@ -426,7 +426,7 @@ export class EdgeEmbeddingCache {
     const key = await this._makeKey(text, model);
     this._l1.delete(key);
     if (this.enableKv && this.kv) {
-      await this.kv.delete(`${KV_PREFIX}${key}`).catch(() => {});
+      await this.kv.delete(`${KV_PREFIX}${key}`).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 
@@ -466,7 +466,7 @@ export class EdgeEmbeddingCache {
       this._lastMetricsFlush = Date.now();
       ctx.waitUntil(
         this.kv.put('emb:metrics', JSON.stringify({ ...metrics, updatedAt: Date.now() }), { expirationTtl: 86400 })
-          .catch(() => {}),
+          .catch((e) => { /* absorbed: */ console.error(e.message); }),
       );
     }
 

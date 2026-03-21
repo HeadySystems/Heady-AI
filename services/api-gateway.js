@@ -41,9 +41,16 @@ const SERVICES = [
 function createGateway() {
   const app = express();
 
-  // Middleware
+  // Middleware — strict CORS, no wildcard
+  const HEADY_ORIGINS = [
+    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+    'https://headybuddy.org', 'https://headymcp.com', 'https://headyio.com',
+    'https://headybot.com', 'https://headyapi.com', 'https://headyai.com',
+    'https://headylens.com', 'https://headyfinance.com',
+    ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3000', 'http://localhost:3300', 'http://localhost:3301'] : [])
+  ];
   app.use(helmet());
-  app.use(cors());
+  app.use(cors({ origin: HEADY_ORIGINS, credentials: true }));
   app.use(compression());
   app.use(express.json({ limit: '50mb' }));
 

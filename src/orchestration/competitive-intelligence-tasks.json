@@ -1,0 +1,137 @@
+{
+  "category": "competitive_intelligence",
+  "version": "1.0.0",
+  "description": "Auto-success tasks for competitive intelligence harvester (Pythia engine)",
+  "tasks": [
+    {
+      "id": "ci-discover-orchestration",
+      "name": "Discover competing orchestration solutions",
+      "category": "competitive_intelligence",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "orchestration" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-discover-memory",
+      "name": "Discover competing memory/vector solutions",
+      "category": "competitive_intelligence",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "memory_systems" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-discover-mcp",
+      "name": "Discover competing MCP protocol implementations",
+      "category": "competitive_intelligence",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "mcp_protocol" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-discover-agents",
+      "name": "Discover competing agent frameworks",
+      "category": "competitive_intelligence",
+      "weight": 1.0,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "agent_frameworks" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-discover-code-gen",
+      "name": "Discover competing code generation tools",
+      "category": "competitive_intelligence",
+      "weight": 1.0,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "code_generation" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-discover-observability",
+      "name": "Discover competing observability solutions",
+      "category": "competitive_intelligence",
+      "weight": 0.618,
+      "pool": "cold",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "observability" },
+      "schedule": "biweekly"
+    },
+    {
+      "id": "ci-discover-security",
+      "name": "Discover competing AI security solutions",
+      "category": "competitive_intelligence",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "security" },
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-discover-voice",
+      "name": "Discover competing voice AI solutions",
+      "category": "competitive_intelligence",
+      "weight": 0.618,
+      "pool": "cold",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "voice_ai" },
+      "schedule": "monthly"
+    },
+    {
+      "id": "ci-discover-knowledge-graphs",
+      "name": "Discover competing knowledge graph solutions",
+      "category": "competitive_intelligence",
+      "weight": 1.0,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.discover",
+      "args": { "category": "knowledge_graphs" },
+      "schedule": "biweekly"
+    },
+    {
+      "id": "ci-full-audit-weekly",
+      "name": "Run full competitive audit across all categories",
+      "category": "competitive_intelligence",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "competitive-intelligence-engine.runFullAudit",
+      "args": {},
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-patent-triage",
+      "name": "Run patent portfolio triage report",
+      "category": "competitive_intelligence",
+      "weight": 2.618,
+      "pool": "hot",
+      "executor": "patentTracker.triagePortfolio",
+      "args": {},
+      "schedule": "daily"
+    },
+    {
+      "id": "ci-integrate-findings",
+      "name": "Integrate beneficial findings from latest CI scan",
+      "category": "competitive_intelligence",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.integrate",
+      "args": {},
+      "schedule": "weekly"
+    },
+    {
+      "id": "ci-surpass-verify",
+      "name": "Verify Heady surpasses all competitors post-integration",
+      "category": "competitive_intelligence",
+      "weight": 1.618,
+      "pool": "warm",
+      "executor": "competitive-intelligence-engine.surpass",
+      "args": {},
+      "schedule": "biweekly"
+    }
+  ]
+}

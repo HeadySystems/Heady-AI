@@ -511,10 +511,10 @@ class MemoryManager {
     this.buffer.add(role, content, metadata);
     if (this.summary) {
       this.summary.add(role, content, metadata);
-      await this.summary.maybeSummarize().catch(() => {});
+      await this.summary.maybeSummarize().catch((e) => { /* absorbed: */ console.error(e.message); });
     }
     if (this.vector) {
-      await this.vector.store(`${role}: ${content}`, metadata).catch(() => {});
+      await this.vector.store(`${role}: ${content}`, metadata).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
     // Extract entities
     if (this.entity) {

@@ -965,7 +965,7 @@ function createGateway(opts) {
 }
 
 function _resetGatewayForTests() {
-  if (_instance) _instance.stop().catch(() => {});
+  if (_instance) _instance.stop().catch((e) => { /* absorbed: */ console.error(e.message); });
   _instance = null;
 }
 

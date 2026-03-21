@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-council",
+  "name": "@heady-ai/heady-council",
   "version": "3.2.3",
   "description": "HeadyCouncil \u2014 7-model deliberation, CSL consensus gate",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

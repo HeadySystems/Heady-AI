@@ -469,9 +469,9 @@ export class ProviderRacer extends EventEmitter {
                 results.map(r => `${r.provider}:${r.error}`).join(', ')));
             }
           }
-        });
+        }});
       }
-    });
+    }});
   }
 
   /**

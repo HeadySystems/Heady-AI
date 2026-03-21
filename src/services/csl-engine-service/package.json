@@ -1,5 +1,5 @@
 {
-  "name": "@heady/csl-engine-service",
+  "name": "@heady-ai/csl-engine-service",
   "version": "4.0.0",
   "type": "module",
   "main": "dist/index.js",

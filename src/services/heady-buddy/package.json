@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-buddy",
+  "name": "@heady-ai/heady-buddy",
   "version": "3.2.3",
   "description": "HeadyBuddy \u2014 AI companion, persistent memory, 10 personas",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

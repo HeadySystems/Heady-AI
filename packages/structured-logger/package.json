@@ -1,5 +1,5 @@
 {
-  "name": "@heady/structured-logger",
+  "name": "@heady-ai/structured-logger",
   "version": "1.0.0",
   "description": "Structured JSON logging for Heady services",
   "main": "index.js",

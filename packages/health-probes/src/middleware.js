@@ -1,7 +1,7 @@
 'use strict';
 
 const { createHealthProbe, HealthStatus } = require('./probes');
-const { FIB, PHI, nearestFib } = require('@heady/phi-math-foundation');
+const { FIB, PHI, nearestFib } = require('@heady-ai/phi-math-foundation');
 
 /**
  * Default health check interval schedule using Fibonacci numbers (in seconds).

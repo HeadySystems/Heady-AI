@@ -76,7 +76,7 @@ async function readiness(gateway) {
 function buildHttpResponse(report, detailed = false) {
   const healthy   = report.status === 'healthy' || report.status === 'ok';
   const degraded  = report.status === 'degraded';
-  const statusCode = healthy ? 200 : (degraded ? 200 : 503);
+  const statusCode = healthy ? 200 : 503;
 
   if (!detailed) {
     return {

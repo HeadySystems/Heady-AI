@@ -38,9 +38,16 @@ const cache = new HeadyCache();
 
 const app = express();
 
-// Security & middleware
+// Security & middleware — strict CORS, no wildcard
+const HEADY_ORIGINS = [
+  'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
+  'https://headybuddy.org', 'https://headymcp.com', 'https://headyio.com',
+  'https://headybot.com', 'https://headyapi.com', 'https://headyai.com',
+  'https://headylens.com', 'https://headyfinance.com',
+  ...(process.env.NODE_ENV !== 'production' ? [process.env.SERVICE_URL || 'http://0.0.0.0:3000', process.env.SERVICE_URL || 'http://0.0.0.0:3300', process.env.SERVICE_URL || 'http://0.0.0.0:3301'] : [])
+];
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: HEADY_ORIGINS, credentials: true }));
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 

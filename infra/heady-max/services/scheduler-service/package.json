@@ -1,5 +1,5 @@
 {
-  "name": "@heady/scheduler-service",
+  "name": "@heady-ai/scheduler-service",
   "version": "1.0.0",
   "description": "Heady Distributed Job Scheduler with DAG Execution",
   "author": "Eric Haywood <eric@headyconnection.org>",

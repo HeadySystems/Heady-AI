@@ -78,7 +78,7 @@ class HeadySupervisor {
 }
 
 // ─── HeadyConductor (federated routing) ────────────────────────────
-const { getConductor } = (function(){try{return require("./heady-conductor")}catch(e){return {}}})();
+const { getConductor } = (function(){try{return require("./heady-conductor")}catch(e){console.error('[agent-orchestrator] heady-conductor load failed:', e.message || e);return {}}})();
 
 class AgentOrchestrator extends EventEmitter {
     constructor(options = {}) {
@@ -647,9 +647,10 @@ class AgentOrchestrator extends EventEmitter {
         app.get("/api/orchestrator/audit", (req, res) => {
             try {
                 const lines = fs.readFileSync(AUDIT_PATH, "utf-8").trim().split("\n").slice(-100);
-                const entries = lines.map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+                const entries = lines.map(l => { try { return JSON.parse(l); } catch { return null; /* eslint-disable-line no-empty — skip malformed lines */ } }).filter(Boolean);
                 res.json({ ok: true, entries, total: entries.length });
-            } catch {
+            } catch (err) {
+                console.error('[agent-orchestrator] audit read failed:', err.message || err);
                 res.json({ ok: true, entries: [], total: 0 });
             }
         });

@@ -142,18 +142,18 @@ function createServer(port = 3380) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
       if (url.pathname === '/cqrs/command' && req.method === 'POST') respond(200, await executeCommand(await readBody()));
       else if (url.pathname === '/cqrs/query' && req.method === 'POST') respond(200, await executeQuery(await readBody()));
       else if (url.pathname === '/cqrs/events' && req.method === 'GET') respond(200, getEventStream(url.searchParams.get('aggregateId')));
       else if (url.pathname === '/cqrs/replay' && req.method === 'POST') respond(200, replayEvents((await readBody()).aggregateId));
-      else if (url.pathname === '/health') respond(200, { service: 'cqrs-manager', status: 'healthy', events: eventStore.length, projections: projections.size, metrics });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/health') respond(200, { service: 'cqrs-manager', status: 'healthy', events: eventStore.length, projections: projections.size, metrics }});
+      else respond(404, { error: 'not_found' }});
+    }});
     server.listen(port);
     return server;
-  });
+  }});
 }
 
 export default { createServer, executeCommand, executeQuery, registerCommandHandler, registerQueryHandler, registerProjection, replayEvents, getEventStream };

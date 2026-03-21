@@ -337,7 +337,7 @@ const _sseManager = new SSEManager();
  */
 function createSSERouter(projectionManager) {
     let express;
-    try { express = require('express'); } catch (_) {
+    try { express = require('express'); } catch (err) {
         throw new Error('[projection-sse] express is required');
     }
 

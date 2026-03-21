@@ -1,8 +1,6 @@
 'use strict';
 
-const PHI = 1.618033988749895;
-const PSI = 0.618033988749895;
-const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
+const { PHI, PSI, FIB, CSL, TIMING } = require('../../core/constants/phi');
 
 // φ-decay: weight halves every φ cycles (mimics biological forgetting)
 const PHI_DECAY_RATE = PSI; // multiply weight by PSI per cycle

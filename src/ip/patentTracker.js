@@ -26,25 +26,25 @@
 'use strict';
 const logger = require('../utils/logger') || console;
 
-const PHI = 1.618033988749895;
+const { PHI, PHI_POWERS } = require('../../core/constants/phi');
 const MS_PER_DAY = 86_400_000;
 
 // φ-scaled urgency day thresholds
 const URGENCY_DAYS = Object.freeze({
-  URGENT:  Math.round(PHI * 30),       // 49 days
-  WARNING: Math.round(PHI * PHI * 30), // 79 days
-  MONITOR: Math.round(PHI * PHI * PHI * 30), // 127 days
+  URGENT:  Math.round(PHI * 30),              // 49 days
+  WARNING: Math.round(PHI_POWERS.PHI_2 * 30), // 79 days
+  MONITOR: Math.round(PHI_POWERS.PHI_3 * 30), // 127 days
 });
 
 // Patent tiers
-export const PatentTier = Object.freeze({
+const PatentTier = Object.freeze({
   HIGH:   'HIGH',
   MEDIUM: 'MEDIUM',
   LOW:    'LOW',
 });
 
 // Urgency levels
-export const UrgencyLevel = Object.freeze({
+const UrgencyLevel = Object.freeze({
   EXPIRED: 'EXPIRED',
   URGENT:  'URGENT',
   WARNING: 'WARNING',
@@ -57,7 +57,7 @@ export const UrgencyLevel = Object.freeze({
  * @param {Object} patent - { id, title, filedDate: ISO string, pctFiled?: bool, pctFiledDate?: ISO string }
  * @returns {Object} deadline details
  */
-export function calculateDeadlines(patent) {
+function calculateDeadlines(patent) {
   const filed       = new Date(patent.filedDate);
   const now         = new Date();
   const pctDeadline = new Date(filed);
@@ -106,7 +106,7 @@ export function calculateDeadlines(patent) {
  * @param {Array} patents - array of patent objects
  * @returns {Array} sorted and enriched patent records
  */
-export function triagePortfolio(patents) {
+function triagePortfolio(patents) {
   const urgencyOrder = { EXPIRED: 0, URGENT: 1, WARNING: 2, MONITOR: 3, OK: 4 };
   const tierOrder    = { HIGH: 0, MEDIUM: 1, LOW: 2 };
 
@@ -124,7 +124,7 @@ export function triagePortfolio(patents) {
  * @param {Array} patents
  * @returns {string} Markdown
  */
-export function generateTriageReport(patents) {
+function generateTriageReport(patents) {
   const triaged = triagePortfolio(patents);
   const now     = new Date().toISOString().split('T')[0];
 
@@ -199,7 +199,7 @@ This gives the US application a head start while preserving all 148 PCT member c
  * Neon Postgres schema for the patent portfolio database.
  * Apply with: psql $DATABASE_URL -f schema.sql
  */
-export const PATENTS_DDL = `
+const PATENTS_DDL = `
 -- Heady™ Patent Portfolio — Neon Postgres Schema
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -250,4 +250,4 @@ WHERE status NOT IN ('granted', 'abandoned')
 ORDER BY pct_deadline ASC;
 `;
 
-export { URGENCY_DAYS, PHI };
+module.exports = { PatentTier, UrgencyLevel, calculateDeadlines, triagePortfolio, generateTriageReport, PATENTS_DDL, URGENCY_DAYS, PHI };

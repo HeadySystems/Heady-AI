@@ -437,7 +437,7 @@ class MapeK {
         anomalies: anomalies.length,
         actions_taken: results.filter(r => r.success).length,
         timestamp: Date.now(),
-      }), { ex: 300 }).catch(() => {});
+      }), { ex: 300 }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 

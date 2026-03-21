@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — config/index.js                               ║
+ * ║  @heady-ai/platform — config/index.js                               ║
  * ║  Phi-scaled configuration loader with env-based resolution       ║
  * ║  © 2026 HeadySystems Inc.                                        ║
  * ╚══════════════════════════════════════════════════════════════════╝

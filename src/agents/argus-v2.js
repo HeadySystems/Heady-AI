@@ -3,6 +3,7 @@
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
 const crypto = require('crypto');
+const FIB_89 = FIB[11]; // 89
 
 // φ-health thresholds
 const PHI_HEALTH = {

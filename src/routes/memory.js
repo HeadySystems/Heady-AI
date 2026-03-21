@@ -359,7 +359,7 @@ router.post("/ingest-chat", (req, res) => {
                 memories.set(memory.id, memory);
                 vectors.set(memory.id, vector);
                 persistMemory(memory, vector);
-                upsertToQdrant(memory, vector).catch(() => { });
+                upsertToQdrant(memory, vector).catch((e) => { /* absorbed: */ console.error(e.message); });
                 results.extracted.push({ id: memory.id, significance: significance.toFixed(3), type: unit.type, preview: memory.content.substring(0, 60) });
                 persistAudit({ id: memory.id, ts: memory.createdAt, decision: "GAINED", reason: "chat-extraction", detail: `sig=${significance.toFixed(3)}`, significance: significance.toFixed(4), type: memory.type, source: memory.source, contentPreview: memory.content.substring(0, 80), tags: memory.tags, memoryCount: memories.size, vectorCount: vectors.size, totalProcessed: ++stats.totalProcessed, gainRate: ((stats.gained / stats.totalProcessed) * 100).toFixed(1) + "%" });
             }

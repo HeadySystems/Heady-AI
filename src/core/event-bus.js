@@ -185,12 +185,12 @@ class HeadyEventBus extends EventEmitter {
 
     // Run wildcard handlers asynchronously (fire-and-forget)
     if (this._wildcardHandlers.size > 0) {
-      this._dispatchWildcards(event, args).catch(() => {});
+      this._dispatchWildcards(event, args).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     // Run middleware asynchronously if any
     if (this._middleware.length > 0) {
-      this._runMiddleware(event, args).catch(() => {});
+      this._runMiddleware(event, args).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     return super.emit(event, ...args);

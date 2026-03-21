@@ -52,7 +52,7 @@ const PREFLIGHT_MAX_AGE = 86400; // 24 hours
  * @param {string} origin
  * @param {object} opts
  * @param {string[]} [opts.additionalDomains] - Extra allowed domains
- * @param {boolean} [opts.allowLocalhost]     - Allow localhost/127.0.0.1 (dev)
+ * @param {boolean} [opts.allowLocalhost]     - Allow localhost/0.0.0.0 (dev)
  * @returns {{ allowed: boolean, credentials: boolean, matchedDomain: string|null }}
  */
 function validateOrigin(origin, opts = {}) {

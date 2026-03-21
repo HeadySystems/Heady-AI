@@ -1,5 +1,5 @@
 {
-  "name": "@heady/auth-session-server",
+  "name": "@heady-ai/auth-session-server",
   "version": "1.0.0",
   "description": "Central auth session manager",
   "main": "src/index.js",

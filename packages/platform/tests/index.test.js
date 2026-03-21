@@ -1,9 +1,9 @@
 /**
- * @heady/platform — Test Suite
+ * @heady-ai/platform — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/platform', () => {
+describe('@heady-ai/platform', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/index.js');

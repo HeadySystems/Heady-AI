@@ -1,5 +1,5 @@
 {
-  "name": "@heady/conductor-service",
+  "name": "@heady-ai/conductor-service",
   "version": "4.0.0",
   "type": "module",
   "main": "dist/index.js",

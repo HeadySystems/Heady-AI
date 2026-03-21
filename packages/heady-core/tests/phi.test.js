@@ -1,9 +1,9 @@
 /**
- * @heady/heady-core — Test Suite
+ * @heady-ai/heady-core — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/heady-core', () => {
+describe('@heady-ai/heady-core', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/phi.js');

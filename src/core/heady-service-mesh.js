@@ -917,7 +917,7 @@ class HeadyServiceMesh extends EventEmitter {
   _publish(topic, payload) {
     this.emit(topic, payload);
     if (this._eventBus && typeof this._eventBus.publish === 'function') {
-      this._eventBus.publish(topic, payload).catch(() => {});
+      this._eventBus.publish(topic, payload).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 }

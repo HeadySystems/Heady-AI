@@ -186,7 +186,7 @@ function createServer(port = 3386) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
       if (url.pathname === '/proto/message' && req.method === 'POST') { const b = await readBody(); respond(201, defineMessage(b.name, b.fields)); }
       else if (url.pathname === '/proto/service' && req.method === 'POST') { const b = await readBody(); respond(201, defineService(b.name, b.methods)); }
@@ -194,9 +194,9 @@ function createServer(port = 3386) {
       else if (url.pathname === '/proto/descriptor' && req.method === 'GET') { const d = getServiceDescriptor(url.searchParams.get('service')); respond(d ? 200 : 404, d || { error: 'not_found' }); }
       else if (url.pathname === '/proto/list' && req.method === 'GET') respond(200, listServices());
       else if (url.pathname === '/proto/generate' && req.method === 'GET') { res.writeHead(200, { 'Content-Type': 'text/plain' }); res.end(generateProtoText()); }
-      else if (url.pathname === '/health') respond(200, { service: 'heady-services-proto', status: 'healthy', services: serviceDefinitions.size, messages: messageTypes.size, metrics });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/health') respond(200, { service: 'heady-services-proto', status: 'healthy', services: serviceDefinitions.size, messages: messageTypes.size, metrics }});
+      else respond(404, { error: 'not_found' }});
+    }});
     server.listen(port);
     return server;
   });

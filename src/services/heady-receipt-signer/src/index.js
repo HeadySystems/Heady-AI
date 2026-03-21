@@ -18,7 +18,7 @@ import {
   headyRequestId, headyAutoContext, headyCslDomain,
   headyAccessLog, headyRateLimit, headySecurityHeaders, headyErrorHandler,
   PSI, CSL_THRESHOLDS, TIMEOUTS, AUTO_SUCCESS_CYCLE_MS,
-} from '@heady/platform';
+} from '@heady-ai/platform';
 
 const SERVICE_NAME = 'heady-receipt-signer';
 const config = loadConfig(SERVICE_NAME);

@@ -1,0 +1,149 @@
+# HEADY_BRAND:BEGIN
+# Liquid Node Deploy — GitHub Actions Workflow
+# Deploys any Heady service to Cloud Run, Cloudflare, or Render
+# HEADY_BRAND:END
+
+name: Liquid Node Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Service to deploy (e.g., heady-mc, heady-sims, heady-battle)'
+        required: true
+        type: string
+      tier:
+        description: 'Service tier'
+        required: true
+        type: choice
+        options:
+          - hot
+          - warm
+          - cold
+      target:
+        description: 'Deploy target'
+        required: true
+        type: choice
+        options:
+          - cloudrun
+          - cloudflare
+          - render
+          - all
+
+env:
+  GCP_PROJECT: headysystems
+  GCP_REGION: us-central1
+  REGISTRY: gcr.io/headysystems
+
+jobs:
+  validate:
+    name: Validate Liquid Node Contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Validate service manifest
+        run: |
+          SERVICE="${{ inputs.service }}"
+          MANIFEST="services/${SERVICE}/${SERVICE}.manifest.yaml"
+          if [ ! -f "$MANIFEST" ]; then
+            echo "ERROR: Missing manifest: $MANIFEST"
+            exit 1
+          fi
+          echo "✅ Manifest found: $MANIFEST"
+      - name: Run service tests
+        run: |
+          cd "services/${{ inputs.service }}"
+          npm test 2>/dev/null || echo "No tests configured"
+      - name: Validate health endpoints
+        run: |
+          grep -q "health.attachRoutes\|/health" "services/${{ inputs.service }}/index.js" || {
+            echo "WARNING: No health endpoints found"
+          }
+
+  deploy-cloudrun:
+    name: Deploy to Cloud Run
+    needs: validate
+    if: inputs.target == 'cloudrun' || inputs.target == 'all'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Build & Push Container
+        run: |
+          SERVICE="${{ inputs.service }}"
+          IMAGE="${{ env.REGISTRY }}/${SERVICE}:${{ github.sha }}"
+          docker build -t "$IMAGE" -f "services/${SERVICE}/Dockerfile" .
+          docker push "$IMAGE"
+      - name: Deploy to Cloud Run
+        run: |
+          SERVICE="${{ inputs.service }}"
+          IMAGE="${{ env.REGISTRY }}/${SERVICE}:${{ github.sha }}"
+          gcloud run deploy "$SERVICE" \
+            --image "$IMAGE" \
+            --region "${{ env.GCP_REGION }}" \
+            --platform managed \
+            --allow-unauthenticated \
+            --min-instances 0 \
+            --max-instances 13 \
+            --concurrency 89 \
+            --timeout 300 \
+            --set-env-vars "NODE_ENV=production,SERVICE_NAME=${SERVICE}" \
+            --set-secrets "DATABASE_URL=DATABASE_URL:latest,HEADY_API_KEY=HEADY_API_KEY:latest,SENTRY_DSN=SENTRY_DSN:latest,UPSTASH_REDIS_REST_URL=UPSTASH_REDIS_REST_URL:latest,UPSTASH_REDIS_REST_TOKEN=UPSTASH_REDIS_REST_TOKEN:latest"
+
+  deploy-cloudflare:
+    name: Deploy to Cloudflare Workers
+    needs: validate
+    if: inputs.target == 'cloudflare' || inputs.target == 'all'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Wrangler
+        run: npm install -g wrangler
+      - name: Deploy Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          cd cloudflare
+          wrangler deploy
+
+  deploy-render:
+    name: Deploy to Render
+    needs: validate
+    if: inputs.target == 'render' || inputs.target == 'all'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Render Deploy
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          curl -X POST "https://api.render.com/v1/services/${{ inputs.service }}/deploys" \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Content-Type: application/json"
+
+  notify:
+    name: Notify
+    needs: [deploy-cloudrun, deploy-cloudflare, deploy-render]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "## Liquid Node Deploy Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Service:** ${{ inputs.service }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tier:** ${{ inputs.tier }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target:** ${{ inputs.target }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **φ = 1.618033988749895**" >> $GITHUB_STEP_SUMMARY

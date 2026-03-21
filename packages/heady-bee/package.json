@@ -1,5 +1,5 @@
 {
-  "name": "@heady/bee",
+  "name": "@heady-ai/bee",
   "version": "1.0.0",
   "description": "HeadyBee — Concurrent-equals swarm task orchestration with φ-scaled timing",
   "main": "index.js",
@@ -22,6 +22,6 @@
   },
   "dependencies": {
     "@heady-ai/phi-math": "workspace:*",
-    "@heady/structured-logger": "workspace:*"
+    "@heady-ai/structured-logger": "workspace:*"
   }
 }

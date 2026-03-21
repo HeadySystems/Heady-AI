@@ -10,6 +10,21 @@ const os = require('os');
 
 const POOL_SIZE = parseInt(process.env.WORKER_POOL_SIZE || String(Math.max(2, os.cpus().length - 1)), 10);
 
+// SECURITY: Sandboxed dynamic code execution
+function safeFunctionCreate(code) {
+    if (typeof code !== 'string' || code.length > 10000) {
+        throw new Error('Invalid code input for dynamic function');
+    }
+    // Block dangerous patterns
+    const blocked = ['require', 'import', 'process', 'child_process', 'fs', 'eval', '__proto__', 'constructor'];
+    for (const pattern of blocked) {
+        if (code.includes(pattern)) {
+            throw new Error(`Blocked pattern "${pattern}" in dynamic code`);
+        }
+    }
+    return new Function(code);
+}
+
 class WorkerPool {
     constructor(opts = {}) {
         this.size = opts.size || POOL_SIZE;
@@ -35,7 +50,7 @@ class WorkerPool {
         // See: AUDIT-2026-03-19 Phase 17 — High finding #2
         const workerCode = `
       const { parentPort, workerData } = require('worker_threads');
-      const fn = new Function('return (' + workerData.taskFn + ')')();
+      const fn = safeFunctionCreate('return (' + workerData.taskFn + ')')();
       Promise.resolve(fn(workerData.data))
         .then(result => parentPort.postMessage({ result }))
         .catch(err => parentPort.postMessage({ error: err.message }));

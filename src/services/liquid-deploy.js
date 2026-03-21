@@ -88,7 +88,7 @@ async function exhale(opts = {}) {
             `INSERT INTO ast_projections (node_id, projection_target, compiled_hash, status)
              VALUES ($1, 'dev-repo', $2, 'projected')`,
             [nodeId, node.source_hash]
-        ).catch(() => { }); // Non-fatal
+        ).catch((e) => { /* absorbed: */ console.error(e.message); }); // Non-fatal
     }
 
     const deployRecord = {
@@ -158,7 +158,7 @@ async function inhale(opts = {}) {
              SELECT id, 'inhale', 'antigravity-proxy', $2
              FROM ast_nodes WHERE node_path = $1`,
             [file.path, JSON.stringify({ source: 'dev-repo', hash })]
-        ).catch(() => { }); // Non-fatal
+        ).catch((e) => { /* absorbed: */ console.error(e.message); }); // Non-fatal
     }
 
     const deployRecord = {
@@ -218,7 +218,7 @@ async function compile(opts = {}) {
             `INSERT INTO ast_projections (node_id, projection_target, compiled_hash, status)
              VALUES ($1, $2, $3, 'compiled')`,
             [row.id, edgeTarget, compiledBundle.hash]
-        ).catch(() => { }); // Non-fatal if duplicate
+        ).catch((e) => { /* absorbed: */ console.error(e.message); }); // Non-fatal if duplicate
     }
 
     const deployRecord = {

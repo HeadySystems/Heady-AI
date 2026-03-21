@@ -1,5 +1,5 @@
 {
-  "name": "@heady/heady-brain",
+  "name": "@heady-ai/heady-brain",
   "version": "3.2.3",
   "description": "HeadyBrain \u2014 7-archetype cognitive orchestration, CSL fusion",
   "type": "module",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@heady/platform": "workspace:*",
+    "@heady-ai/platform": "workspace:*",
     "express": "^4.21.1"
   },
   "devDependencies": {

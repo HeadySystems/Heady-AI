@@ -1,5 +1,5 @@
 {
-  "name": "@heady/migration-service",
+  "name": "@heady-ai/migration-service",
   "version": "1.0.0",
   "description": "Heady Database Migration Engine with Rollback",
   "author": "Eric Haywood <eric@headyconnection.org>",

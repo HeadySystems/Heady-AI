@@ -149,7 +149,7 @@ class CrossDeviceSyncHub extends EventEmitter {
                     eventType,
                     ts: Date.now(),
                 },
-            }, 0.95).catch(() => { });
+            }, 0.95).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
 
         if (global.eventBus) {

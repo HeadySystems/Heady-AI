@@ -597,7 +597,7 @@ class ExecuteHandler {
   /** @param {PipelineContext} ctx */
   async rollback(ctx) {
     if (typeof ctx.data.execution?.compensate === 'function') {
-      await ctx.data.execution.compensate(ctx).catch(() => {});
+      await ctx.data.execution.compensate(ctx).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
     delete ctx.data.execution;
   }

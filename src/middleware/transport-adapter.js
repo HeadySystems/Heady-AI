@@ -425,7 +425,7 @@ export class StreamableHTTPTransport extends BaseTransport {
     if (this._reconnectAttempts >= this._maxReconnectAttempts) return;
     const delay = this._reconnectDelayMs * Math.pow(1.618, this._reconnectAttempts++);
     setTimeout(() => {
-      if (this._connected) this._openSSEChannel().catch(() => {});
+      if (this._connected) this._openSSEChannel().catch((e) => { /* absorbed: */ console.error(e.message); });
     }, Math.min(delay, PHI_TIMING.CYCLE));
   }
 

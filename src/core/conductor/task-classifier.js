@@ -1,5 +1,5 @@
 /**
- * @heady/conductor — Task Classifier
+ * @heady-ai/conductor — Task Classifier
  * 
  * Classifies incoming tasks into domains and routes to appropriate
  * resource pools using CSL cosine-similarity routing.
@@ -8,7 +8,7 @@
  * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 
-import { PHI, PSI, PSI2, FIB, phiThreshold, cslGate } from '@heady/phi-math-foundation';
+import { PHI, PSI, PSI2, FIB, phiThreshold, cslGate } from '@heady-ai/phi-math-foundation';
 
 /** Domain definitions — maps to node capabilities */
 const DOMAINS = Object.freeze({

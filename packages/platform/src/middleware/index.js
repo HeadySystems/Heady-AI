@@ -1,6 +1,6 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
- * ║  @heady/platform — middleware/index.js                           ║
+ * ║  @heady-ai/platform — middleware/index.js                           ║
  * ║  HeadyAutoContext middleware hooks + request enrichment          ║
  * ║  © 2026 HeadySystems Inc. — 60+ Provisional Patents             ║
  * ╚══════════════════════════════════════════════════════════════════╝

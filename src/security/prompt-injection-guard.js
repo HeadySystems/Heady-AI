@@ -120,16 +120,16 @@ function createServer(port = 3391) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
       if (url.pathname === '/guard/scan' && req.method === 'POST') { const b = await readBody(); respond(200, scanInput(b.input || b.text || '')); }
       else if (url.pathname === '/guard/sanitize' && req.method === 'POST') { const b = await readBody(); respond(200, { sanitized: sanitizeInput(b.input || b.text || '') }); }
       else if (url.pathname === '/guard/canary' && req.method === 'POST') { const b = await readBody(); respond(200, generateCanaryToken(b.sessionId || 'default')); }
       else if (url.pathname === '/guard/check-canary' && req.method === 'POST') { const b = await readBody(); respond(200, checkCanaryLeakage(b.output, b.token)); }
       else if (url.pathname === '/guard/analytics' && req.method === 'GET') respond(200, getDetectionAnalytics());
-      else if (url.pathname === '/health') respond(200, { service: 'prompt-injection-guard', status: 'healthy', patterns: INJECTION_PATTERNS.length, detections: detectionLog.length });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/health') respond(200, { service: 'prompt-injection-guard', status: 'healthy', patterns: INJECTION_PATTERNS.length, detections: detectionLog.length }});
+      else respond(404, { error: 'not_found' }});
+    }});
     server.listen(port);
     return server;
   });

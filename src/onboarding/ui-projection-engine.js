@@ -277,8 +277,8 @@ export class UIProjectionEngine {
       ts: Date.now()
     };
     if (this._redis) {
-      await this._redis.rPush(logKey, JSON.stringify(event)).catch(() => {});
-      await this._redis.expire(logKey, 60 * 60 * 24 * PATTERN_WINDOW_DAYS).catch(() => {});
+      await this._redis.rPush(logKey, JSON.stringify(event)).catch((e) => { /* absorbed: */ console.error(e.message); });
+      await this._redis.expire(logKey, 60 * 60 * 24 * PATTERN_WINDOW_DAYS).catch((e) => { /* absorbed: */ console.error(e.message); });
     } else {
       const log = this._behaviorLog.get(userId) || [];
       log.push(event);

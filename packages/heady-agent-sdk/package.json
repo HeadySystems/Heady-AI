@@ -1,5 +1,5 @@
 {
-  "name": "@heady/agent-sdk",
+  "name": "@heady-ai/agent-sdk",
   "version": "1.0.0",
   "description": "Heady Agent SDK — build, package, and publish agents for the Heady Agent Marketplace",
   "main": "index.js",

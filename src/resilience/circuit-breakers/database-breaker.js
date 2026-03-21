@@ -174,7 +174,7 @@ class PostgresBreaker extends EventEmitter {
       await client.query('COMMIT');
       return result;
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {});
+      await client.query('ROLLBACK').catch((e) => { /* absorbed: */ console.error(e.message); });
       throw err;
     } finally {
       client.release();

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/memory",
+  "name": "@heady-ai/memory",
   "version": "1.0.0",
   "description": "HeadyMemory — 3D Latent Space Vector Memory with 3-tier cognitive architecture (T0/T1/T2) and φ-decay consolidation",
   "main": "index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "@heady/colab-runtime",
+  "name": "@heady-ai/colab-runtime",
   "version": "1.0.0",
   "description": "Colab Runtime Intelligence — session persistence, 3-tier memory, knowledge distillation",
   "main": "index.js",

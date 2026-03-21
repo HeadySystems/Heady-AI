@@ -1,5 +1,5 @@
 /**
- * @heady/edge-runtime — Barrel Export
+ * @heady-ai/edge-runtime — Barrel Export
  * Founder: Eric Haywood | HeadySystems Inc. | 51+ Provisional Patents
  */
 export { DurableAgentState, AgentState, VALID_TRANSITIONS, AGENT_STATE_CONFIG } from './durable-agent-state.js';

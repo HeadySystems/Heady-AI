@@ -1,9 +1,9 @@
 /**
- * @heady/heady-ui — Test Suite
+ * @heady-ai/heady-ui — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/heady-ui', () => {
+describe('@heady-ai/heady-ui', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/HeadyPostAuthBootstrap.js');

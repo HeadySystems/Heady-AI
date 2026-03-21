@@ -62,9 +62,15 @@ const log = getLogger('heady-manager');
  * @description Service health check
  * @returns {Object} Service health data
  */
-// Initialize event bus
-const { EventEmitter } = require('events');
-const eventBus = new EventEmitter();
+// Initialize event bus (use structured HeadyEventBus from core)
+let eventBus;
+try {
+  const { getEventBus } = require('./src/core/heady-event-bus');
+  eventBus = getEventBus();
+} catch {
+  const { EventEmitter } = require('events');
+  eventBus = new EventEmitter();
+}
 
 // Make available to other modules
 global.eventBus = eventBus;
@@ -195,7 +201,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:"],
@@ -226,6 +232,10 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
 
   // Generate or use provided request ID
   const crypto = require('crypto');
@@ -2056,7 +2066,8 @@ app.post("/api/buddy/pipeline/continuous", (req, res) => {
 
   runCycle();
   if (continuousPipeline.running) {
-    continuousPipeline.intervalId = setInterval(runCycle, req.body.intervalMs || 30000);
+    const intervalMs = Math.max(5000, Math.min(300000, parseInt(req.body.intervalMs) || 30000));
+    continuousPipeline.intervalId = setInterval(runCycle, intervalMs);
   }
 
   res.json({
@@ -2636,9 +2647,14 @@ if (colabLatentOps && colabLatentOps.router) {
 }
 app.get('/api/colab/notebook-template/:runtime', (req, res) => {
   if (!colabLatentOps) return res.status(503).json({ error: 'colab_not_loaded' });
+  const ALLOWED_RUNTIMES = ['python3', 'node18', 'node20', 'deno', 'bun'];
+  const runtime = req.params.runtime;
+  if (!ALLOWED_RUNTIMES.includes(runtime)) {
+    return res.status(400).json({ error: `Invalid runtime: ${runtime}` });
+  }
   try {
-    const template = colabLatentOps.getNotebookTemplate(req.params.runtime);
-    res.json({ status: 'ok', runtime: req.params.runtime, template });
+    const template = colabLatentOps.getNotebookTemplate(runtime);
+    res.json({ status: 'ok', runtime, template });
   } catch (e) {
     res.status(500).json({ status: 'error', error: e.message });
   }
@@ -3110,6 +3126,21 @@ app.get("/api/brain/health", (req, res) => {
   res.json(healthResponse());
 });
 
+// Standard Cloud Run /healthz endpoint (Kubernetes convention)
+app.get("/healthz", (req, res) => {
+  res.json(healthResponse());
+});
+
+// Readiness probe
+app.get("/readiness", (req, res) => {
+  res.json({ status: 'ready', service: 'heady-manager', version: '4.1.0', timestamp: new Date().toISOString() });
+});
+
+// Startup probe
+app.get("/startup", (req, res) => {
+  res.json({ status: 'started', service: 'heady-manager', version: '4.1.0', uptime_ms: process.uptime() * 1000, timestamp: new Date().toISOString() });
+});
+
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: "Not found", path: req.path, hint: "Try /api/health or visit /" });
@@ -3117,7 +3148,7 @@ app.use((req, res) => {
 
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
-  log.info(`Heady Manager v3.0.0 listening`, { port: PORT });
+  log.info(`Heady Manager v4.1.0 listening`, { port: PORT });
   log.info(`Health check available`, { port: PORT });
   log.info(`Environment: ${process.env.NODE_ENV || "development"}`);
 });

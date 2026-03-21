@@ -32,7 +32,7 @@ const SECURITY_HEADERS = {
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.headyme.com https://*.headyconnection.org; frame-ancestors 'none';",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.headyme.com https://*.headyconnection.org; frame-ancestors 'none';",
 };
 
 const HEADY_BRAND_HEADERS = {

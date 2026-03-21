@@ -139,7 +139,7 @@ function createServer(port = 3392) {
     const server = http.createServer(async (req, res) => {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
       if (url.pathname === '/ws-auth/ticket' && req.method === 'POST') { const b = await readBody(); respond(201, issueTicket(b.userId, b.sessionId, b.fingerprint)); }
       else if (url.pathname === '/ws-auth/authenticate' && req.method === 'POST') { const b = await readBody(); respond(200, authenticateConnection(b.ticketId, b.connectionId, b.fingerprint)); }
@@ -147,9 +147,9 @@ function createServer(port = 3392) {
       else if (url.pathname === '/ws-auth/rate-check' && req.method === 'POST') { const b = await readBody(); respond(200, checkMessageRate(b.connectionId)); }
       else if (url.pathname === '/ws-auth/disconnect' && req.method === 'POST') { const b = await readBody(); respond(200, disconnectConnection(b.connectionId)); }
       else if (url.pathname === '/ws-auth/prune' && req.method === 'POST') respond(200, pruneStaleConnections());
-      else if (url.pathname === '/health') respond(200, { service: 'websocket-auth', status: 'healthy', connections: connections.size, tickets: tickets.size, metrics });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/health') respond(200, { service: 'websocket-auth', status: 'healthy', connections: connections.size, tickets: tickets.size, metrics }});
+      else respond(404, { error: 'not_found' }});
+    }});
     server.listen(port);
     return server;
   });

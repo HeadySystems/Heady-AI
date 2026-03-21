@@ -1,0 +1,46 @@
+node_modules
+.git
+.env
+.env.*
+!.env.example
+*.zip
+*.exe
+*.log
+
+# Large binary directories
+AndroidSDK
+ventoy
+nginx
+gradle
+cmake.zip
+nasm.zip
+platform-tools.zip
+gradle-8.5-bin.zip
+
+# Build artifacts
+deploy-package-*
+dist
+build
+
+# Test/dev directories
+test-electron
+test-electron-2
+electron-test
+
+# Sub-project node_modules
+desktop-overlay/node_modules
+headybuddy/node_modules
+frontend/node_modules
+
+# IDE and tool caches
+windsurf-next
+.heady
+offline-packages
+.vscode
+.idea
+
+# Documentation (not needed in container)
+docs
+notebooks
+*.md
+!README.md

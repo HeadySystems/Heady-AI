@@ -268,7 +268,7 @@ function renderAuthPage() {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email: currentApiKeyProvider+'@heady.apikey', password: 'apikey-'+Date.now(), displayName: currentApiKeyProvider.charAt(0).toUpperCase()+currentApiKeyProvider.slice(1)+' User', provider: currentApiKeyProvider, connectedKey: key})
-            }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d, currentApiKeyProvider); }).catch(()=>{});
+            }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d, currentApiKeyProvider); }).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
 
         function toggleEmail() {
@@ -286,10 +286,10 @@ function renderAuthPage() {
                 body: JSON.stringify({email, password: pw, displayName: name || email.split('@')[0], provider: 'email'})
             }).then(r=>r.json()).then(d=>{
                 if (d.error && d.error.includes('exists')) {
-                    fetch('/api/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})}).then(r=>r.json()).then(d2=>{if(!d2.error)showSuccess(d2,'email');else alert(d2.error);});
+                    fetch('/api/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})}).then(r=>r.json()).then(d2=>{if(!d2.error)showSuccess(d2,'email');else alert(d2.error);}});
                 } else if (!d.error) showSuccess(d, 'email');
                 else alert(d.error);
-            });
+            }});
         }
 
         function showSuccess(data, provider) {
@@ -308,9 +308,9 @@ function renderAuthPage() {
         }
 
         // Close modal on escape
-        document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
-        document.getElementById('apikeyModal').addEventListener('click', e=>{ if(e.target.id==='apikeyModal') closeModal(); });
-        document.getElementById('modalKey').addEventListener('keydown', e=>{ if(e.key==='Enter') connectApiKey(); });
+        document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); }});
+        document.getElementById('apikeyModal').addEventListener('click', e=>{ if(e.target.id==='apikeyModal') closeModal(); }});
+        document.getElementById('modalKey').addEventListener('keydown', e=>{ if(e.key==='Enter') connectApiKey(); }});
     </script>
 </body>
 </html>`;

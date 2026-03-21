@@ -1,9 +1,9 @@
 /**
- * @heady/heady-guard — Test Suite
+ * @heady-ai/heady-guard — Test Suite
  * © 2026 Heady Systems LLC
  */
 
-describe('@heady/heady-guard', () => {
+describe('@heady-ai/heady-guard', () => {
   test('module loads without error', () => {
     expect(() => {
       require('../src/schemas.js');

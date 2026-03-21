@@ -74,12 +74,12 @@ module.exports = function createHarmonyRouter(deps = {}) {
         }
 
         if (engines.realtimeIntelligenceEngine && before.pressures.realtimeQueueDepth > 0) {
-            engines.realtimeIntelligenceEngine.flush().catch(() => { });
+            engines.realtimeIntelligenceEngine.flush().catch((e) => { /* absorbed: */ console.error(e.message); });
             actions.push({ type: "flush", target: "realtime-intelligence" });
         }
 
         if (engines.autoSuccessEngine && typeof engines.autoSuccessEngine.forceCycle === "function") {
-            engines.autoSuccessEngine.forceCycle().catch(() => { });
+            engines.autoSuccessEngine.forceCycle().catch((e) => { /* absorbed: */ console.error(e.message); });
             actions.push({ type: "force-cycle", target: "auto-success" });
         }
 

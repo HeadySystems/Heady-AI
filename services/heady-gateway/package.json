@@ -1,5 +1,5 @@
 {
-  "name": "@heady/gateway-service",
+  "name": "@heady-ai/gateway-service",
   "version": "1.0.0",
   "description": "Heady Central API Gateway — CSL-based intent routing, health aggregation, rate limiting",
   "main": "src/server.js",
