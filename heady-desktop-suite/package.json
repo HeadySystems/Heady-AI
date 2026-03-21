@@ -20,6 +20,11 @@
   "build": {
     "productName": "${env.APP_TARGET}",
     "appId": "com.headysystems.${env.APP_TARGET}",
+    "files": [
+      "main.js",
+      "package.json",
+      "assets/**/*"
+    ],
     "directories": {
       "output": "dist/${env.APP_TARGET}"
     },
